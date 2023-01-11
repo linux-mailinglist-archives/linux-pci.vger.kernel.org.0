@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA10E6661EA
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 18:31:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB12B6662A0
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 19:18:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238088AbjAKRao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 12:30:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56218 "EHLO
+        id S233540AbjAKSSn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 13:18:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239785AbjAKR3C (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 12:29:02 -0500
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 102DD18693
-        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 09:26:11 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFer9-0002Xh-6S; Wed, 11 Jan 2023 18:25:43 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFer6-005M1d-0J; Wed, 11 Jan 2023 18:25:40 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1pFer5-00C1Yo-7Q; Wed, 11 Jan 2023 18:25:39 +0100
-Date:   Wed, 11 Jan 2023 18:25:39 +0100
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+        with ESMTP id S232042AbjAKSSm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 13:18:42 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBF6664CC;
+        Wed, 11 Jan 2023 10:18:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 681CF61CAD;
+        Wed, 11 Jan 2023 18:18:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 268DDC433EF;
+        Wed, 11 Jan 2023 18:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673461120;
+        bh=Ft6ts49/fdxZzt/+lIGE0K5qPyLC/HSErr1aisZrG78=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jmPyapBajBJmsUZ/i0FdFZcz5bzc13Um8acMKnukZjL0n+l9flQk20HAYozaMvC0q
+         eCj2+Da18yD40Hx4KC9AVLra2V9syHAQ9l4LrDDB8DmgnajtZq04bOY9SxrHIpvU2y
+         EIBFvTnWCyP2tImK+8/Sdh5UuJBtElqyCF8iXPRd8EQp6HOuppJ7KjwnEOT0TaJ25H
+         h34ZGNCu1+NvvMJWz/ZSW5rWI+vVh3frDv3xgSWV9+PKhV7sdbE0qzxQfvN/BWfkIX
+         zok8Z18lxUNdkgV1PACztsRVX1fBl4rQwWKdeFeuyo1TbxVDBJi6mlpIUrkW438w2F
+         hFnV/Iz2Ttb2w==
+Date:   Wed, 11 Jan 2023 18:18:35 +0000
+From:   Conor Dooley <conor@kernel.org>
 To:     daire.mcnamara@microchip.com
 Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
         palmer@dabbelt.com, aou@eecs.berkeley.edu, lpieralisi@kernel.org,
         kw@linux.com, bhelgaas@google.com, linux-riscv@lists.infradead.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 03/11] PCI: microchip: enable building this driver as
- a module
-Message-ID: <20230111172539.syrrxnghl5qwdcg6@pengutronix.de>
+Subject: Re: [PATCH v3 02/11] PCI: microchip: Remove cast warning for
+ devm_add_action_or_reset() arg
+Message-ID: <Y779e4gfZW5P5gDP@spud>
 References: <20230111125323.1911373-1-daire.mcnamara@microchip.com>
- <20230111125323.1911373-4-daire.mcnamara@microchip.com>
+ <20230111125323.1911373-3-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qdzkzcp4mrdjbo6i"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3ul3IBHmWNX2j1kt"
 Content-Disposition: inline
-In-Reply-To: <20230111125323.1911373-4-daire.mcnamara@microchip.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230111125323.1911373-3-daire.mcnamara@microchip.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -58,54 +59,80 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---qdzkzcp4mrdjbo6i
-Content-Type: text/plain; charset=iso-8859-1
+--3ul3IBHmWNX2j1kt
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+Hey Daire,
 
-On Wed, Jan 11, 2023 at 12:53:15PM +0000, daire.mcnamara@microchip.com wrot=
+On Wed, Jan 11, 2023 at 12:53:14PM +0000, daire.mcnamara@microchip.com wrot=
 e:
 > From: Daire McNamara <daire.mcnamara@microchip.com>
 >=20
-> Enable building this driver as a module. The expected use case is the
-> driver is built as a module, is installed when needed, and cannot be
-> removed once installed.
+> The kernel test robot reported that the ugly cast from
+> void(*)(struct clk *) to void (*)(void *) converts to incompatible
+> function type.  This commit adopts the common convention of creating a
+> trivial stub function that takes a void * and passes it to the
+> underlying function that expects the more specific type.
 >=20
-> The remove() callback is not implemented as removing a driver with
-> INTx and MSI interrupt handling is inherently unsafe.
+> Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe contro=
+ller driver")
 
-Note this is a misconception. Not providing a remove callback doesn't
-prevent the driver from being unbound.
+Reported-by: kernel test robot <lkp@intel.com>
 
-However the driver has
+> Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
+> ---
+>  drivers/pci/controller/pcie-microchip-host.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/c=
+ontroller/pcie-microchip-host.c
+> index 5c89caaab8c9..5efd480e42fa 100644
+> --- a/drivers/pci/controller/pcie-microchip-host.c
+> +++ b/drivers/pci/controller/pcie-microchip-host.c
+> @@ -848,6 +848,13 @@ static const struct irq_domain_ops event_domain_ops =
+=3D {
+>  	.map =3D mc_pcie_event_map,
+>  };
+> =20
+> +static inline void mc_pcie_chip_off_action(void *data)
+> +{
+> +	struct clk *clk =3D data;
+> +
+> +	clk_disable_unprepare(clk);
+> +}
+> +
+>  static inline struct clk *mc_pcie_init_clk(struct device *dev, const cha=
+r *id)
+>  {
+>  	struct clk *clk;
+> @@ -863,8 +870,7 @@ static inline struct clk *mc_pcie_init_clk(struct dev=
+ice *dev, const char *id)
+>  	if (ret)
+>  		return ERR_PTR(ret);
+> =20
+> -	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
+> -				 clk);
+> +	devm_add_action_or_reset(dev, mc_pcie_chip_off_action, clk);
 
-	.suppress_bind_attrs =3D true,
+Certainly looks a lot nicer this way, so 2 for the price of 1 I think.
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-which prevents unbinding. (So the patch looks fine to me, just the
-commit log could be improved.)
+> =20
+>  	return clk;
+>  }
 
-Best regards
-Uwe
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---qdzkzcp4mrdjbo6i
+--3ul3IBHmWNX2j1kt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmO+8RAACgkQwfwUeK3K
-7AkkbAf/X4viZiqE5wwHL4ML0OPl/vMba9lkh/d9F46mYh4tI/PTfLHXZevkebHH
-bmTsNEqtMFwTNarNuMy6GGyJ5om5kStbfhOMaSHEI1xA12sSNydmD0Nb7kwfL5Fy
-Y1fIPQ+cKRRN95qa1FO/mwZMeRDEkQWPG99jsylhCyw9odHdWwSPkkMf3Yt7NtaG
-LtFTTCzSs5tKxyidItAxYxZsGSVAV5kaUC5KK9b/cLQVbcjJhjakxyOgxeadq2rP
-8Twqr+zrx+8T834mlssCzvfKGauVfY8bm1yNBDLXEl+A26W5NYHNBb7PuzT48v1m
-ukKeE5nVQLK3EvU8AMcppOG5i1TGnQ==
-=syYC
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCY779ewAKCRB4tDGHoIJi
+0g87AQCzYmsXqLFuq7CSIqE4rNjc0xNU0VmLAlH+Se9kAa/SeAEAgxgokT1hVUtr
+DSyU7fifErOQxZrXgkYnSguhZVGMvQQ=
+=GEx/
 -----END PGP SIGNATURE-----
 
---qdzkzcp4mrdjbo6i--
+--3ul3IBHmWNX2j1kt--
