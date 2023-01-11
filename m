@@ -2,62 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8167466663A
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 23:31:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A9866666FB
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 00:10:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236292AbjAKWbG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 17:31:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40262 "EHLO
+        id S235605AbjAKXKi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 18:10:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236111AbjAKWa7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 17:30:59 -0500
+        with ESMTP id S235566AbjAKXKh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 18:10:37 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A08F35F48;
-        Wed, 11 Jan 2023 14:30:58 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9B232255;
+        Wed, 11 Jan 2023 15:10:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3A94461EE7;
-        Wed, 11 Jan 2023 22:30:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6359AC433EF;
-        Wed, 11 Jan 2023 22:30:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B55F861ED6;
+        Wed, 11 Jan 2023 23:10:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04C6C433EF;
+        Wed, 11 Jan 2023 23:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673476257;
-        bh=KUi1HGeABxjWRsu8PJIH+JwPcZ8NI+ELZCnpYlQMHT4=;
+        s=k20201202; t=1673478635;
+        bh=++uluPFMowPrY8s1xfgmEUXDgen39mn6C1pbnUZ2MU4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Kf0tL8z6062nMukSXj1bvr1p2+gTipJIIAonn6AF+NvYFqLCjffe3AnTHerJKON4X
-         4XlVyqh7SbpnYnHGKCJbqki8pLXtRRlMGXCjRA2bX1+cAM/MWZh6Y2PqP5kOi4P8aA
-         TAU6ux9d7GP3M2hHkNjcAdghPQeR+OEVwmJoRHDZOUGGdb0Wsf01iMHwJfU8Zms/5z
-         E4yextY1IkFAA1H7ZGLXLOvrYvuC6m2qjKYBlQwvzX8m3JRi3zg/98ASwD1hvhjIEP
-         7EzqVSMkcUU0QWS7IPBmijS7p9sO2De9edsnyvU/9V/1m7ZblnP86jQCSVw1BazflW
-         zALJ7OVhpjOEw==
-Date:   Wed, 11 Jan 2023 16:30:55 -0600
+        b=kBqcCXiYgbOo0fz6xo/YOGVM2XLI/TGaRt6I6q6PjPGZghKE/om05zyqfQApLqDYT
+         jmtXbxl6mYgeTjvYJzO/uS6FXr7Jtgv4Vt9rxojdIH0almjY/NGOnq8M98oF8kwfKv
+         mCwqtmnaMLXuy53tHGIvRSpO6jJpLEDBsKoIBdgEktC94gHq4mrfugdJv1Tl6xx0Op
+         Kf2NLycwahihsEOlR2wzo34lyCEDQAN00QCHEvDa7CZKU+ikaJv0Sg+J3cVXJ9bOw8
+         YdLlhfDNoHLfjF0ARFO6qKNG2/37bTKDikGli5xn/eqK7HJNGt8MYp2vc2UsdDCZZn
+         X5NH/nGhjaa4A==
+Date:   Wed, 11 Jan 2023 17:10:33 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Dan J Williams <dan.j.williams@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        David E Box <david.e.box@intel.com>,
-        Yunying Sun <yunying.sun@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giovanni Cabiddu <giovanni.cabiddu@intel.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Florent DELAHAYE <linuxkernelml@undead.fr>,
-        Konrad J Hambrick <kjhambrick@gmail.com>,
-        Matt Hansen <2lprbe78@duck.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        Werner Sembach <wse@tuxedocomputers.com>,
-        mumblingdrunkard@protonmail.com, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH 0/2] PCI: Fix extended config space regression
-Message-ID: <20230111223055.GA1712775@bhelgaas>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+        ruscur@russell.cc, oohall@gmail.com, treding@nvidia.com,
+        jonathanh@nvidia.com, mmaddireddy@nvidia.com, kthota@nvidia.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        vsethi@nvidia.com, linuxppc-dev@lists.ozlabs.org,
+        sagar.tv@gmail.com
+Subject: Re: [PATCH V1] PCI/AER: Configure ECRC only AER is native
+Message-ID: <20230111231033.GA1714672@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230110180243.1590045-1-helgaas@kernel.org>
+In-Reply-To: <a9126d49-6e98-956c-f4a3-699cc86d8b11@linux.intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -67,30 +56,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 12:02:41PM -0600, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jan 11, 2023 at 01:42:21PM -0800, Sathyanarayanan Kuppuswamy wrote:
+> On 1/11/23 12:31 PM, Vidya Sagar wrote:
+> > As the ECRC configuration bits are part of AER registers, configure
+> > ECRC only if AER is natively owned by the kernel.
 > 
-> 07eab0901ede ("efi/x86: Remove EfiMemoryMappedIO from E820 map") appeared
-> in v6.2-rc1 and broke extended config space on several machines.
-> 
-> This broke drivers that use things in extended config space, e.g., perf,
-> VSEC telemetry, EDAC, QAT, etc.
-> 
-> This happened because mmconfig-shared.c checks to see that ECAM space is
-> reserved in E820 or ACPI motherboard resources.  If it's not, it assumes
-> ECAM doesn't work.  07eab0901ede removed some E820 entries, so it looked
-> like ECAM was no longer reserved, so we stopped using it.
-> 
-> The machines where this broke don't reserve the ECAM in ACPI PNP0C02
-> devices (which seems to be what the PCI Firmware spec requires), but they
-> do mention it in the EFI memory map as EfiMemoryMappedIO.
-> 
-> Bjorn Helgaas (2):
->   x86/pci: Simplify is_mmconf_reserved() messages
->   x86/pci: Treat EfiMemoryMappedIO as reservation of ECAM space
-> 
->  arch/x86/pci/mmconfig-shared.c | 44 +++++++++++++++++++++++++++++-----
->  1 file changed, 38 insertions(+), 6 deletions(-)
+> ecrc command line option takes "bios/on/off" as possible options. It
+> does not clarify whether "on/off" choices can only be used if AER is
+> owned by OS or it can override the ownership of ECRC configuration 
+> similar to pcie_ports=native option. Maybe that needs to be clarified.
 
-Applied to for-linus for v6.2.  Sorry for the breakage and thank you
-very much for the debugging and testing help!
+Good point, what do you think of an update like this:
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 6cfa6e3996cf..f7b40a439194 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4296,7 +4296,9 @@
+ 				specified, e.g., 12@pci:8086:9c22:103c:198f
+ 				for 4096-byte alignment.
+ 		ecrc=		Enable/disable PCIe ECRC (transaction layer
+-				end-to-end CRC checking).
++				end-to-end CRC checking).  Only effective
++				if OS has native AER control (either granted by
++				ACPI _OSC or forced via "pcie_ports=native").
+ 				bios: Use BIOS/firmware settings. This is the
+ 				the default.
+ 				off: Turn ECRC off
+
+I don't know whether the "ecrc=" parameter is really needed.  If we
+were adding it today, I would ask "why not enable ECRC wherever it is
+supported?"  If there are devices where it's broken, we could always
+add quirks to disable it on a case-by-case basis.
+
+But I think the patch below is the right thing to do for now.  Vidya,
+did you trip over an issue because of this, e.g., a conflict between
+firmware use of AER and Linux use of it?  If so, maybe we could
+mention a symptom on the commit log.  But my guess is you probably
+found this by inspection.
+
+Bjorn
+
+> > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> > ---
+> >  drivers/pci/pcie/aer.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index e2d8a74f83c3..730b47bdcdef 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -184,6 +184,9 @@ static int disable_ecrc_checking(struct pci_dev *dev)
+> >   */
+> >  void pcie_set_ecrc_checking(struct pci_dev *dev)
+> >  {
+> > +	if (!pcie_aer_is_native(dev))
+> > +		return;
+> > +
+> >  	switch (ecrc_policy) {
+> >  	case ECRC_POLICY_DEFAULT:
+> >  		return;
+> 
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
