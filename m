@@ -2,130 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CFBF66598F
-	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 11:57:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C798B665A51
+	for <lists+linux-pci@lfdr.de>; Wed, 11 Jan 2023 12:37:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232233AbjAKK5D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 11 Jan 2023 05:57:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
+        id S229737AbjAKLgd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 11 Jan 2023 06:36:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238209AbjAKK4p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 05:56:45 -0500
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382729584;
-        Wed, 11 Jan 2023 02:56:18 -0800 (PST)
-Received: by mail-ej1-f42.google.com with SMTP id ss4so28555703ejb.11;
-        Wed, 11 Jan 2023 02:56:18 -0800 (PST)
+        with ESMTP id S236548AbjAKLfv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 11 Jan 2023 06:35:51 -0500
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74C34AE4C
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 03:33:15 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id jn22so16453721plb.13
+        for <linux-pci@vger.kernel.org>; Wed, 11 Jan 2023 03:33:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fv2lNIsN5RpdQca9OCm9rk90hHk7bweKV30f5J8WYYQ=;
+        b=VieXLAyvO2y4YPOm+zc7KcDX0PVHDgjfApEMJu0ylXH5BmdgjvdvOKxl8yyGBi95sq
+         4JZ26LQEdFA0H8UjBEBzTSM0rTz9l8vohHxXfGISDOyE5jOHZL7CafWvix7eu7tGkgj6
+         +91SapGiL2oyzKJaH2aW4os0TvMCrDvVLDFCqk9hGtSixJoxZCn8OQvMa+LC06xOTTGT
+         Qx4L6kSjNOFGgJd31oV/lyvobTPCfoY22IVTBtmsfQ+t+YScVuJh7vgwKQuN+E5QCopG
+         ThTzKcmDs0qoBNDZnYx/e+TjsQN41n7++hxI3uxGlZ64tyahB2xHa2gYdBk7VmqtFjbb
+         1z2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=vdvvzyZdZq8xmpLVIyIUoDQf3llEu3/kVz88+13kWoQ=;
-        b=Ne1nQdDtMwDsHjv86+g+Hn9SiSX1QUpf1BZrf/v4VjTsC1GAOC3jFRewSFU8P+wJFX
-         nLF6MbKY3aHzev1TkSTI4c0oQMJ7KEX9is5Pd0mNW+Ff86NBX8tkxlc8pLK+BFzmx6nz
-         wUNqFBCDu9rDO0YyRlzh3EkF9AFCgFl5kU7We3m76DDB+xGP/30F86SqdDlLmgnAolBw
-         3ChMjAXnIUFyIqgbRvWrZRBodjziQVdbiF4SSrwWlUrLtotkPKBINo7OPYIpQmFnDYgy
-         I7h/OslDj6AML1ZWhHBCaw8CQDxnp5weNkl3hLmFdLZiIf/eU53PZeBZ4katx12zYWLW
-         Oj+Q==
-X-Gm-Message-State: AFqh2krBYYsBjDxle3C4vA3qU3WsOM/+sHkxA2RaQGAAMK3MxwtOn3By
-        GlgXpj9DtViXOcrCMtGlVW3REflLh5o7rVLyyok=
-X-Google-Smtp-Source: AMrXdXt1plBP+LE1QwuwoQLl6tLh8CL+APXUWo2TR995RXqPSeXeTjYKbXCGIIKfQxByeQwwDwqRlSj0SKxBirAKrkw=
-X-Received: by 2002:a17:907:29c3:b0:84d:4b8e:efc with SMTP id
- ev3-20020a17090729c300b0084d4b8e0efcmr729548ejc.390.1673434577482; Wed, 11
- Jan 2023 02:56:17 -0800 (PST)
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fv2lNIsN5RpdQca9OCm9rk90hHk7bweKV30f5J8WYYQ=;
+        b=fUuB305yEZ0M1uWSvT/4wb28c/GLJSj+EwTmoa/cz8dTgi8ZseCMtu7M+1e2MuqPvJ
+         VxCPmkmvg3fl/m0294+L3U2pg+//xKo65vEOWhjVKfss70+aew4l+H6r7SOx9so6JyUC
+         Iwc5/U8ZgDnrzbheEsunw61u6zO9GMSxo2AHAyTzjhYQ42QPkIzZNmk+HH1We8gZX9Ch
+         gCXv4BcGfYaIu1C7ztakhWFs0YNorm+ekVhnIujvknhpdfLFi3i7oHnu54FaHotfdSTJ
+         ZVw1dfDtOxpWBbyIP9asshIQK5OZPQffzDi4fNUlsEV0DrGFW3+qgCpz+DE6J+nL4Idc
+         JBzg==
+X-Gm-Message-State: AFqh2kpC/vvecRsAtMbXrftnt0bv2eRiCtUTqD5nE+zY845q3JWs5pi4
+        mZJYWCV1B4m02iM72pedGTjW
+X-Google-Smtp-Source: AMrXdXvyHPHT1WibJbM3qxTpu5HLeZq89WaLpiM9yod6LlcXn5b+fAQP9wznHzVahmXGRKKL2US16w==
+X-Received: by 2002:a17:902:7c8a:b0:192:835d:c861 with SMTP id y10-20020a1709027c8a00b00192835dc861mr52121497pll.68.1673436789834;
+        Wed, 11 Jan 2023 03:33:09 -0800 (PST)
+Received: from thinkpad ([117.217.177.1])
+        by smtp.gmail.com with ESMTPSA id m18-20020a170902db1200b00192d07b8222sm9985139plx.100.2023.01.11.03.33.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Jan 2023 03:33:08 -0800 (PST)
+Date:   Wed, 11 Jan 2023 17:03:01 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     andersson@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        bhelgaas@google.com, konrad.dybcio@linaro.org,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lpieralisi@kernel.org
+Subject: Re: [PATCH v3 2/3] dt-bindings: PCI: qcom: Document msi-map and
+ msi-map-mask properties
+Message-ID: <20230111113301.GC4873@thinkpad>
+References: <20230102105821.28243-1-manivannan.sadhasivam@linaro.org>
+ <20230102105821.28243-3-manivannan.sadhasivam@linaro.org>
+ <20230108203340.GA229573-robh@kernel.org>
 MIME-Version: 1.0
-References: <1945994.PYKUYFuaPT@kreacher> <20230110205513.GA1608269@bhelgaas>
-In-Reply-To: <20230110205513.GA1608269@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 11 Jan 2023 11:56:05 +0100
-Message-ID: <CAJZ5v0gwLU2rsUWga+aEyWtXb=CHx2wqbrXX1hc+M_Po64a11A@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Limonciello, Mario" <mario.limonciello@amd.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Mehta Sanju <Sanju.Mehta@amd.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230108203340.GA229573-robh@kernel.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 9:55 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Mon, Jan 02, 2023 at 05:59:36PM +0100, Rafael J. Wysocki wrote:
-> > On Monday, January 2, 2023 5:34:19 PM CET Rafael J. Wysocki wrote:
-> > ...
->
-> > > I don't really think that Root Port support is required for a bridge below
-> > > a Root Port if that bridge itself is power-manageable via ACPI.  Moreover,
-> > > I don't think that the _S0W of a Root Port has any bearing on devices below
-> > > it that have their own _S0W.
-> > >
-> > > So what we really want appears to be to evaluate _S0W for the target bridge,
-> > > regardless of whether or not it is a Root Port, and return 'false' if that
-> > > produces D2 or a shallower power state.  Otherwise, we can do what we've
-> > > done so far.
->
-> > +bool acpi_dev_no_wakeup_from_d3(struct acpi_device *adev)
-> > +{
-> > +     unsigned long long state;
-> > +     acpi_status status;
-> > +
-> > +     status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
-> > +     return ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT;
->
-> This returns "false" (i.e., "yes, device can signal wakeup from D3")
-> if _S0W doesn't exist.  Is that right?
+On Sun, Jan 08, 2023 at 02:33:40PM -0600, Rob Herring wrote:
+> On Mon, Jan 02, 2023 at 04:28:20PM +0530, Manivannan Sadhasivam wrote:
+> > The Qcom PCIe controller is capable of using either internal MSI controller
+> > or the external GIC-ITS for signaling MSIs sent by endpoint devices.
+> > Currently, the binding only documents the internal MSI implementation.
+> > 
+> > Let's document the GIC-ITS imeplementation by making use of msi-map and
+> > msi-map-mask properties. Only one of the implementation should be used
+> > at a time.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > index a3639920fcbb..01208450e05c 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > @@ -114,14 +114,20 @@ required:
+> >    - compatible
+> >    - reg
+> >    - reg-names
+> > -  - interrupts
+> > -  - interrupt-names
+> > -  - "#interrupt-cells"
+> >    - interrupt-map-mask
+> >    - interrupt-map
+> >    - clocks
+> >    - clock-names
+> >  
+> > +oneOf:
+> 
+> anyOf
+> 
+> The OS should have the option of both being present and pick which MSI 
+> path it wants to use. 
+> 
 
-Yes, it is.
+Makes sense. Given that the current series merged by Bjorn, I'll send a
+follow-up patch.
 
-The reason why I did it that way was because the bridge cannot signal
-wakeup from D3 if both the following conditions take place:
+Thanks,
+Mani
 
-1. There is _S0W and it can be evaluated successfully.
-2. _S0W produces D2 or a shallower power state.
+> Rob
 
-In particular, if 1 is not the case, it is still not clear whether or
-not the bridge can signal wakeup from D3 and additional checks are
-needed.
-
-> I think this might be less confusing as:
->
->   bool acpi_dev_can_wake_from_d3(struct acpi_device *adev)
->   {
->     status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
->     return ACPI_SUCCESS(status) && state >= ACPI_STATE_D3_HOT;
->   }
-
-So I don't think the above will work, because
-!acpi_dev_can_wake_from_d3(adev) is also true if _S0W is not present,
-for example, in which case acpi_pci_bridge_d3() should not return
-'false' right away.
-
-However, the additional function can simply return the value produced
-by _S0W or ACPI_STATE_UNKNOWN on all errors and its caller can do the
-checks as needed which is done here:
-
-https://patchwork.kernel.org/project/linux-acpi/patch/5659681.DvuYhMxLoT@kreacher/
-
-(posted as a proper patch, because I wanted patchwork to pick it up).
-
-I've also picked up the idea of using rpadev for representing the ACPI
-companion of the Root Port in acpi_pci_bridge_d3().
-
-Cheers!
+-- 
+மணிவண்ணன் சதாசிவம்
