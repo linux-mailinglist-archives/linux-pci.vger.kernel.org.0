@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 24F3366842B
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 21:46:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C1862668449
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 21:50:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240175AbjALUqJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Jan 2023 15:46:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51030 "EHLO
+        id S240099AbjALUuy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Jan 2023 15:50:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231218AbjALUpe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 15:45:34 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2823BE95;
-        Thu, 12 Jan 2023 12:14:12 -0800 (PST)
+        with ESMTP id S240129AbjALUuJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 15:50:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87418193E5;
+        Thu, 12 Jan 2023 12:21:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5E80ACE1FA8;
-        Thu, 12 Jan 2023 20:13:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E29CC433EF;
-        Thu, 12 Jan 2023 20:13:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 104E3B81E62;
+        Thu, 12 Jan 2023 20:21:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63674C433EF;
+        Thu, 12 Jan 2023 20:21:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673554431;
-        bh=dgALZAgbs41xLV2eRAqoof3IDtaLXBo8BQEMmUCfrNo=;
+        s=k20201202; t=1673554894;
+        bh=sJrQxbgpJcSinpuASwh8fpAZzuBQXGPnSzJI9r6rvLM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rYe+WnA5FyajCXZgUtwJywvlVSPRGkvbXKRyalv4mILowuAIusK5v1s64YU3bXxOz
-         gdx1bRGSOtLBq9s9EK3VfKus9/TbBSB0ZNp0/gYAH+UwJ/kYD/XkhBjh7Mv++vDWx7
-         pBJBS2+M53m3oiAf22jjfGPmeRKFwISyPUIsymA/d1CFIyXsiOulExGwpsgs2wcOm/
-         RUvsPoLyMXWPFq/2O8str1tif68F9nh3Ms51onaJKeLJ9qmzGmMONO1yWYbpwXJgLh
-         kZrisw1luuv0oo3RG81N+8bL+1tuun9dBQVwv16AZ8otheW6t2ivK97KK65qD1RfRV
-         BCww5P8wVmT/w==
-Date:   Thu, 12 Jan 2023 14:13:49 -0600
+        b=vGxTMm1eCbLw6Lz4iwxfmvpA7r3nsuuArRggVP3zFlyP2FP8SaongTVQKaMHrKNwp
+         E3RMgJZdc0whOAU/M9HpyhYfhx5etE/y1qFzWTIDQWU2kRRsbVefjYrJHk5RJ6EXRW
+         eTdBIdhTS8fqabNekWIoz7Y5RfBN814//OgH+qDmFtNfw3XfP/4QUxCg9UPPWKi3XN
+         eGJo+d0/u1WejTmNiOUgHZJHtTc8VE9udws++58RJq59NmTuudsf3L5EnL+0GPvGza
+         +g3S7Bl6Jh2oCLFn7m9hC07x1qCundByOpXqlu6eXDWGvN9xbhZWo+w5FCIH3bfZ+K
+         LLa0Tuw3JsIRA==
+Date:   Thu, 12 Jan 2023 14:21:32 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-pci@vger.kernel.org,
         "Limonciello, Mario" <mario.limonciello@amd.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
         Len Brown <lenb@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mehta Sanju <Sanju.Mehta@amd.com>,
         Lukas Wunner <lukas@wunner.de>,
         "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5] PCI/ACPI: PCI/ACPI: Validate devices with power
- resources support D3
-Message-ID: <20230112201349.GA1787315@bhelgaas>
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v3] PCI / ACPI: PM: Take _S0W of the target bridge into
+ account in acpi_pci_bridge_d3(()
+Message-ID: <20230112202132.GA1788706@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJZ5v0gwLU2rsUWga+aEyWtXb=CHx2wqbrXX1hc+M_Po64a11A@mail.gmail.com>
+In-Reply-To: <5659681.DvuYhMxLoT@kreacher>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -60,69 +61,172 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 11:56:05AM +0100, Rafael J. Wysocki wrote:
-> On Tue, Jan 10, 2023 at 9:55 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Mon, Jan 02, 2023 at 05:59:36PM +0100, Rafael J. Wysocki wrote:
-> > > On Monday, January 2, 2023 5:34:19 PM CET Rafael J. Wysocki wrote:
-> > > ...
-> >
-> > > > I don't really think that Root Port support is required for a bridge below
-> > > > a Root Port if that bridge itself is power-manageable via ACPI.  Moreover,
-> > > > I don't think that the _S0W of a Root Port has any bearing on devices below
-> > > > it that have their own _S0W.
-> > > >
-> > > > So what we really want appears to be to evaluate _S0W for the target bridge,
-> > > > regardless of whether or not it is a Root Port, and return 'false' if that
-> > > > produces D2 or a shallower power state.  Otherwise, we can do what we've
-> > > > done so far.
-> >
-> > > +bool acpi_dev_no_wakeup_from_d3(struct acpi_device *adev)
-> > > +{
-> > > +     unsigned long long state;
-> > > +     acpi_status status;
-> > > +
-> > > +     status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
-> > > +     return ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT;
-> >
-> > This returns "false" (i.e., "yes, device can signal wakeup from D3")
-> > if _S0W doesn't exist.  Is that right?
+On Wed, Jan 11, 2023 at 11:38:55AM +0100, Rafael J. Wysocki wrote:
+> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > 
-> Yes, it is.
+> It is generally questionable to allow a PCI bridge to go into D3 if
+> it has _S0W returning D2 or a shallower power state, so modify
+> acpi_pci_bridge_d3(() to always take the return value of _S0W for the
+> target bridge into accout.  That is, make it return 'false' if _S0W
+> returns D2 or a shallower power state for the target bridge regardless
+> of its ancestor PCIe Root Port properties.  Of course, this also causes
+> 'false' to be returned if the PCIe Root Port itself is the target and
+> its _S0W returns D2 or a shallower power state.
 > 
-> The reason why I did it that way was because the bridge cannot signal
-> wakeup from D3 if both the following conditions take place:
+> However, still allow bridges without _S0W that are power-manageable via
+> ACPI to enter D3 to retain the current code behavior in that case.
 > 
-> 1. There is _S0W and it can be evaluated successfully.
-> 2. _S0W produces D2 or a shallower power state.
+> Link: https://lore.kernel.org/linux-pci/20221031223356.32570-1-mario.limonciello@amd.com/
+> Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> ---
 > 
-> In particular, if 1 is not the case, it is still not clear whether or
-> not the bridge can signal wakeup from D3 and additional checks are
-> needed.
+> v2 -> v3:
+>    * Use rpadev for the ACPI companion of the Root Port in acpi_pci_bridge_d3(()
+>      to avoid confusion.
+>    * Make the function evaluating _S0W return the value produced by it or "unknown
+>      state" on errors and let its caller deal with that value.
 > 
-> > I think this might be less confusing as:
-> >
-> >   bool acpi_dev_can_wake_from_d3(struct acpi_device *adev)
-> >   {
-> >     status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
-> >     return ACPI_SUCCESS(status) && state >= ACPI_STATE_D3_HOT;
-> >   }
+> ---
+>  drivers/acpi/device_pm.c |   19 +++++++++++++++++++
+>  drivers/pci/pci-acpi.c   |   45 +++++++++++++++++++++++++++++++--------------
+>  include/acpi/acpi_bus.h  |    1 +
+>  3 files changed, 51 insertions(+), 14 deletions(-)
 > 
-> So I don't think the above will work, because
-> !acpi_dev_can_wake_from_d3(adev) is also true if _S0W is not present,
-> for example, in which case acpi_pci_bridge_d3() should not return
-> 'false' right away.
+> Index: linux-pm/drivers/pci/pci-acpi.c
+> ===================================================================
+> --- linux-pm.orig/drivers/pci/pci-acpi.c
+> +++ linux-pm/drivers/pci/pci-acpi.c
+> @@ -976,24 +976,41 @@ bool acpi_pci_power_manageable(struct pc
+>  bool acpi_pci_bridge_d3(struct pci_dev *dev)
+>  {
+>  	struct pci_dev *rpdev;
+> -	struct acpi_device *adev;
+> -	acpi_status status;
+> -	unsigned long long state;
+> +	struct acpi_device *adev, *rpadev;
+>  	const union acpi_object *obj;
+>  
+>  	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+>  		return false;
+>  
+> -	/* Assume D3 support if the bridge is power-manageable by ACPI. */
+> -	if (acpi_pci_power_manageable(dev))
+> -		return true;
+> +	adev = ACPI_COMPANION(&dev->dev);
+> +	if (adev) {
+> +		/*
+> +		 * If the bridge has _S0W, whether or not it can go into D3
+> +		 * depends on what is returned by that object.  In particular,
+> +		 * if the power state returned by _S0W is D2 or shallower,
+> +		 * entering D3 should not be allowed.
+> +		 */
+> +		if (acpi_dev_power_state_for_wake(adev) <= ACPI_STATE_D3_HOT)
 
-OK, that makes sense, thanks!
+The comment suggests that this should check for "<= ACPI_STATE_D2"
+(not ACPI_STATE_D3_HOT).  Or is there some subtlety here that I'm
+missing?
 
-> However, the additional function can simply return the value produced
-> by _S0W or ACPI_STATE_UNKNOWN on all errors and its caller can do the
-> checks as needed which is done here:
+> +			return false;
+> +
+> +		/*
+> +		 * Otherwise, assume that the bridge can enter D3 so long as it
+> +		 * is power-manageable via ACPI.
+> +		 */
+> +		if (acpi_device_power_manageable(adev))
+> +			return true;
+> +	}
+>  
+>  	rpdev = pcie_find_root_port(dev);
+>  	if (!rpdev)
+>  		return false;
+>  
+> -	adev = ACPI_COMPANION(&rpdev->dev);
+> -	if (!adev)
+> +	if (rpdev == dev)
+> +		rpadev = adev;
+> +	else
+> +		rpadev = ACPI_COMPANION(&rpdev->dev);
+> +
+> +	if (!rpadev)
+>  		return false;
+>  
+>  	/*
+> @@ -1001,15 +1018,15 @@ bool acpi_pci_bridge_d3(struct pci_dev *
+>  	 * doesn't supply a wakeup GPE via _PRW, it cannot signal hotplug
+>  	 * events from low-power states including D3hot and D3cold.
+>  	 */
+> -	if (!adev->wakeup.flags.valid)
+> +	if (!rpadev->wakeup.flags.valid)
+>  		return false;
+>  
+>  	/*
+> -	 * If the Root Port cannot wake itself from D3hot or D3cold, we
+> -	 * can't use D3.
+> +	 * In the bridge-below-a-Root-Port case, evaluate _S0W for the Root Port
+> +	 * to verify whether or not it can signal wakeup from D3.
+>  	 */
+> -	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
+> -	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
+> +	if (rpadev != adev &&
+> +	    acpi_dev_power_state_for_wake(rpadev) <= ACPI_STATE_D3_HOT)
+
+Same question here.
+
+>  		return false;
+>  
+>  	/*
+> @@ -1018,7 +1035,7 @@ bool acpi_pci_bridge_d3(struct pci_dev *
+>  	 * bridges *below* that Root Port can also signal hotplug events
+>  	 * while in D3.
+>  	 */
+> -	if (!acpi_dev_get_property(adev, "HotPlugSupportInD3",
+> +	if (!acpi_dev_get_property(rpadev, "HotPlugSupportInD3",
+>  				   ACPI_TYPE_INTEGER, &obj) &&
+>  	    obj->integer.value == 1)
+>  		return true;
+> Index: linux-pm/drivers/acpi/device_pm.c
+> ===================================================================
+> --- linux-pm.orig/drivers/acpi/device_pm.c
+> +++ linux-pm/drivers/acpi/device_pm.c
+> @@ -484,6 +484,25 @@ void acpi_dev_power_up_children_with_adr
+>  	acpi_dev_for_each_child(adev, acpi_power_up_if_adr_present, NULL);
+>  }
+>  
+> +/**
+> + * acpi_dev_power_state_for_wake - Deepest power state for wakeup signaling
+> + * @adev: ACPI companion of the target device.
+> + *
+> + * Evaluate _S0W for @adev and return the value produced by it or return
+> + * ACPI_STATE_UNKNOWN on errors (including _S0W not present).
+> + */
+> +u8 acpi_dev_power_state_for_wake(struct acpi_device *adev)
+> +{
+> +	unsigned long long state;
+> +	acpi_status status;
+> +
+> +	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
+> +	if (ACPI_FAILURE(status))
+> +		return ACPI_STATE_UNKNOWN;
+> +
+> +	return state;
+> +}
+> +
+>  #ifdef CONFIG_PM
+>  static DEFINE_MUTEX(acpi_pm_notifier_lock);
+>  static DEFINE_MUTEX(acpi_pm_notifier_install_lock);
+> Index: linux-pm/include/acpi/acpi_bus.h
+> ===================================================================
+> --- linux-pm.orig/include/acpi/acpi_bus.h
+> +++ linux-pm/include/acpi/acpi_bus.h
+> @@ -533,6 +533,7 @@ int acpi_bus_update_power(acpi_handle ha
+>  int acpi_device_update_power(struct acpi_device *device, int *state_p);
+>  bool acpi_bus_power_manageable(acpi_handle handle);
+>  void acpi_dev_power_up_children_with_adr(struct acpi_device *adev);
+> +u8 acpi_dev_power_state_for_wake(struct acpi_device *adev);
+>  int acpi_device_power_add_dependent(struct acpi_device *adev,
+>  				    struct device *dev);
+>  void acpi_device_power_remove_dependent(struct acpi_device *adev,
 > 
-> https://patchwork.kernel.org/project/linux-acpi/patch/5659681.DvuYhMxLoT@kreacher/
 > 
-> (posted as a proper patch, because I wanted patchwork to pick it up).
 > 
-> I've also picked up the idea of using rpadev for representing the ACPI
-> companion of the Root Port in acpi_pci_bridge_d3().
-> 
-> Cheers!
