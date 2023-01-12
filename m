@@ -2,175 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D74F766717D
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 13:01:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E0607667258
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 13:38:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232183AbjALMBD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Jan 2023 07:01:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36708 "EHLO
+        id S229730AbjALMij (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Jan 2023 07:38:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232545AbjALMAb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 07:00:31 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9533C72B
-        for <linux-pci@vger.kernel.org>; Thu, 12 Jan 2023 03:55:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1673524502; x=1705060502;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=+T6KqXfs6+TVKU3k7AEnGKtQN9mHYeweywYOEsPk+cA=;
-  b=Iafp10W8ThhgbXxRhwA0Pw/oBqbUCKplmmyB/A5W7bkM8SuEWkIpvfJl
-   LqVAirAPj0eWBVuxhdwxk8CDyrhJPliWDQRIrEvM5D0LgUQOAivNdWOlI
-   KLftqXd4NMf0fvnQmVZIen+dh2zKDv6Alt//35z951kgGPsAMJt5nD3Cl
-   lq+QgQ6Ely5CMVP4ck5B6Hf8XbcfFExPcAeaF5CjWVrhHtZDB6H6q3xu2
-   r3lURWlhnzlfOh8kXHxdCeYBB2zUYRJrG0GGvuyijfdDvVGdqVwjUJUsv
-   lVp5v4W4tURFoxYNPF1wxSnw2GPsYCbZyM/isll3wQmXlQokKlbHQChER
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="324920631"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="324920631"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 03:55:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10586"; a="831667471"
-X-IronPort-AV: E=Sophos;i="5.97,319,1669104000"; 
-   d="scan'208";a="831667471"
-Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
-  by orsmga005.jf.intel.com with ESMTP; 12 Jan 2023 03:55:00 -0800
-Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pFwAb-000A5s-0r;
-        Thu, 12 Jan 2023 11:54:58 +0000
-Date:   Thu, 12 Jan 2023 19:54:14 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:for-linus] BUILD SUCCESS
- 674279b8575ec24f0c39498029684480129bb3e9
-Message-ID: <63bff4e6.FQr94AoQoD3RSktf%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
-MIME-Version: 1.0
+        with ESMTP id S230118AbjALMig (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 07:38:36 -0500
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2053.outbound.protection.outlook.com [40.107.243.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DC6B49167;
+        Thu, 12 Jan 2023 04:38:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ks6ab+Qs04fBsYjcOtNrmK09OsiKsurzPmnB473TJzhJhhK06jRrmYlFG00OPftR8h05Vn4offwf2hClvFtJRU3Xji7P4uyr7Z9jjtWAKAz9mwi1vZTub/GfSTQCpU8fsLSVI5BQjVMSOrVA5UTD6N99UBYPetd9Uk+EkB5r9o+yW5fr7efwW83FSzRpJHF8q5CYatEKDbUZrJh5h4ADnMcHuDPJDcIA5IFLTa/F3bDVIYAHD1Kq/RzQshCmW1FPtmwrdr9Pv2OcqFNsspVXj+mfN647sEbzVGITb8RWksB3cndStLM5LJepLvwx7Ake7pjFOnytHghwff6HNYaXBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=iPbMNpYJ1Dkfv4g3OwIgT87bnkTMtrMGWyhHb5+/oJM=;
+ b=Vcr190PojWMYihFSv4aKA05YqcCuSzU2TIu6zi+x+G2ZE+hwZlv5/qzQZiGMUsS99l3BIeD3uLiP7or2B1ldrs2GrJ9PSqHhDN9NGzVDXWeznq5axE8fqKI3KaDTOchkL+4zYH8RvVlcyxNDBT2AAg7sSjzrEhFfBs467tuTGgKPycXhJJEafreyOddhGPyuWPRP63E/MZ34rWTQVolfhswMEGkwlirYyW7HouUxZ31MEoM/HN6xwgaCRpY/TwlulOfTMtItJ2Js3g2M4IKot89RNT5Njx/4cMwn5VWKd2Z/icJG7qj7S/LYzG1AIjn6MXp0/9XyWS20WZ8Lt72dBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=iPbMNpYJ1Dkfv4g3OwIgT87bnkTMtrMGWyhHb5+/oJM=;
+ b=cAa/VKIFUQYZ7FPxA0Jx2NftEo4JhmN+N+SZKJANDZp/jcmDrZwCdQE3EnuSK37RxRLjqhmb+c5xS622VktwHWB/jt4aRUP+wVH1A4CABQliUgHP6/H55SXcDN5/PxhdpRPJJF3KlEmhcgX5vqqjNSW4kY81ZdURVwjT5uUqUs0w1exysbtRuWJvgLss3Z/Ec4VRAKJNN9lWGyHT2OIAfmOXSnHnTMbbkSc86G7A2roq2I+6u8lQ0J3CWeMpnJ9FOozfvjkmUpFBSIC6czcJTRYvQaIr+ezKmOCdT1DIXY27N3skOQf+k70hsHOOQPJWDTcLmQqQWokMxi7hkTGe5A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by DM6PR12MB4370.namprd12.prod.outlook.com (2603:10b6:5:2aa::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.13; Thu, 12 Jan
+ 2023 12:38:33 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::f8b0:df13:5f8d:12a%9]) with mapi id 15.20.6002.013; Thu, 12 Jan 2023
+ 12:38:33 +0000
+Date:   Thu, 12 Jan 2023 08:38:32 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Vasant Hegde <vasant.hegde@amd.com>,
+        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Matt Fagnani <matt.fagnani@bell.net>
+Subject: Re: [PATCH 1/1] PCI: Add translated request only opt-in for
+ pci_enable_pasid()
+Message-ID: <Y7//SDtnfXGHfior@nvidia.com>
+References: <20230112084629.737653-1-baolu.lu@linux.intel.com>
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Disposition: inline
+In-Reply-To: <20230112084629.737653-1-baolu.lu@linux.intel.com>
+X-ClientProxiedBy: BLAPR03CA0116.namprd03.prod.outlook.com
+ (2603:10b6:208:32a::31) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM6PR12MB4370:EE_
+X-MS-Office365-Filtering-Correlation-Id: aa25338e-846e-4f4d-688d-08daf499eaeb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: OjabO9q1YIy17EOQkyKfCp7N1g0Gqtxnred0CpiLL2CK/4MKJeL3yculPVgAvPAapOFB+jf5XW6WJwRfeI3iqcWk/5ftKRhAQXk7ojLs3AvKAv95U7pgVgEfN3RgHXJ20mJYqI5EIna59KTc2/unUHDXOT5puEAY46oCAIBfnfqSg0BzOBP30X0oWllS+L+hniiWfJ5bUV4Fu2GNf6/ghtAAOMZv+QZRnpobyoRasHOs8D6l0CFKOAcxSWVuN3LqcjY5BeAUn8SekEkOk6YeUzSvTwFUqV+kG3UyjeQG9Z7DuioLxX9Gz6uldfvLAP+8creQ2nED6ArVQ1eI3WiZ/c69gsExcP504/0xrP/wGAJtDuBZBPcKpLNSo0Rpz9RaAfkIBTDTtvPM6LybnBF91lpsflmqjr9TI5O1K9S0LaEWAJDWuRVNZj2Cto4DiNNBKnc+AHr26Q2JAGQsbtHcSKYJLhYblrZwFYd1YTy0PWaVCzgwIXo/vL3qSOeC6xOjepBOKHAGrSr0y5H3Q1IjHYbHA0YQHt2FJhngSl+70u7vdplq5gQ2VnjGVfoLihCX03L3QanbD06ERA7daAfvWInzNUBdfIZm33u5mVRSqki01sx88Jm+QwSqBmlHySK+VRbz1go9N9dF1dJ/bP1iTQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(451199015)(4326008)(6486002)(41300700001)(478600001)(38100700002)(54906003)(2616005)(316002)(26005)(66946007)(186003)(86362001)(8676002)(66476007)(36756003)(5660300002)(6916009)(6506007)(7416002)(2906002)(83380400001)(4744005)(66556008)(6512007)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?LGZ0YqmmNkoiIibvLseVvMyPQGhY6EsFhNkztmAO2l/WfC5xVFsXLd9obwrt?=
+ =?us-ascii?Q?QvF19fdm4ikmOHu3IFDn1TAbjsG04HTRmUgVo8WHL8TGQe0r9WmKizTL5ySp?=
+ =?us-ascii?Q?QrRNYXkAJLy81flecdwlWn+TVlJU5FLIPwn3EvAQ9sd1o85LSs6+2ssSIZEj?=
+ =?us-ascii?Q?XHnTKfvpdJplbB93SfwmjhyvNtN4Mke0fhS38hA52S1LmW6y9FjajEaaTKwK?=
+ =?us-ascii?Q?ozNzJ95Z7hQRn3crH67NsVDS776bVkXGdYi0Sf/+oDdc4Ywo6UbD8IKbrKq0?=
+ =?us-ascii?Q?Hh9ti2Q6Yjfc4TAxOjD8VXJKBN5LcBG02FvHKWghzHri0nWh0nuNOABTbQEO?=
+ =?us-ascii?Q?3THk8NVjSW8SCFJOMW/T7SZToAp+4SQYN4jmrCbm5TW3DqI+nka1uvIJGzlz?=
+ =?us-ascii?Q?10Z91DoSlL3j7qmKfKPwSRQHhE5Elkws95zlH25purqxmISsks0U3DHH0GtC?=
+ =?us-ascii?Q?gwIW0Q2nweAB1g6sgStOGKh4K5/KE9R75FnWo7hq0tgNmEFEebCMLVJNUX7u?=
+ =?us-ascii?Q?aGNPg3EJgQwKgd/92v82wS+Gi4W3SUhOsk809Um2iyoEyW4oGjWK20svzU7I?=
+ =?us-ascii?Q?dpMLqteSXS/SCY3k1xf2A/NDEemB6PfaSf3bVOrVf1dGBwS5WN18FvlcXywD?=
+ =?us-ascii?Q?xybB/Mra0a2sWuR3YDIUu+cwxJPZ0yhymE3hkWVQkZjf0VqrbEVB2cK6SNdH?=
+ =?us-ascii?Q?dpx/K0x8wHCrzBFqeVM4grHuvsxymeUOcE3UTJqrUk6whNbctDg9va9Ucq+A?=
+ =?us-ascii?Q?0cQYGFR2x27uE/ZpcF0HFJltTiwfxXK6HWO1o6MMB7NgLM5EqrlXGRdtsKmM?=
+ =?us-ascii?Q?JTNe23gYnXLewV1eczcaCLXGAjbV+ghSQOdqA5DW5i7xK5wfIcMADyTR6Yo7?=
+ =?us-ascii?Q?oa0VCGL9GKNemLp+B9+bqBxi8L+bKb9lrkligbJtpq0XC5LXESZwcXdQfH0R?=
+ =?us-ascii?Q?oUOKH4yo3a6EDIhofx96BP29l/M7ON98D0G7PV76lTY2Ni5uWLhRV2Js4kbg?=
+ =?us-ascii?Q?Z58KMRwOVOLG4n1b/J0BewKI8vYIbJ4dGtVc0XYnKz25gn5xm5ldJxzB3/P/?=
+ =?us-ascii?Q?34GvxAsbc1smQvnSO4QG8oxvAtvSGb6btYxv57c57EwnSg/5gVodaByaAkWq?=
+ =?us-ascii?Q?Cy+bsUBAThq4RlsnLveZX8Lq/GBiXTusOU4Ob4D6H7U/5vZXlCg5CYuVBKUu?=
+ =?us-ascii?Q?GiDXiw8YsoYxJgvDUA59aU9wYkw5Brd0rn+S0d0NyxCQ05XLpp4qKhR4epXl?=
+ =?us-ascii?Q?1yRky7lCL1et9P49flwNakpDaOYGS5SzMi7iycHUfCnWlfU1RQxto7VI2xwB?=
+ =?us-ascii?Q?QoyEC+2xila6ct+qOE/5HF/ued6hb/RbTuohqGMHis8ao9v9coYAq0dC7fYX?=
+ =?us-ascii?Q?t9SpLEFCcaBKgQQ3asOYwZZIgP68v69EccGLmf71ChIJSe2RXPMOYubjS8mS?=
+ =?us-ascii?Q?wLY/cZ+3kuO311FKa+iTr3L6z/1RFS4fC8Orn6GWkc695oJrntrdt78IFNG9?=
+ =?us-ascii?Q?TCK2uUfIICsOrpt89Kjax3IwuQbUjjXVJ2Fe8vT2tMV7tjjuWBM9q5M5LYk6?=
+ =?us-ascii?Q?MDlr9drK/B8rcoriPacIVJwXLDEmT2/EMjiy8OmK?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa25338e-846e-4f4d-688d-08daf499eaeb
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2023 12:38:33.5753
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: bRdjcNdMpubm3RP8fuR8ma1zfBG6GYwebr2+lHRLx6zrL/yWZtcS3GBFX8AKpSg6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4370
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git for-linus
-branch HEAD: 674279b8575ec24f0c39498029684480129bb3e9  x86/pci: Treat EfiMemoryMappedIO as reservation of ECAM space
+On Thu, Jan 12, 2023 at 04:46:29PM +0800, Lu Baolu wrote:
 
-elapsed time: 744m
+> -int pci_enable_pasid(struct pci_dev *pdev, int features);
+> +int pci_enable_pasid(struct pci_dev *pdev, int features, bool
+> transled_only);
 
-configs tested: 93
-configs skipped: 2
+Please use a named flag so we can grep for it..
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Discuss in the commit message that this is a temporary step and that
+pci_enable_pasid() needs to be moved to the drivers
 
-gcc tested configs:
-x86_64                            allnoconfig
-arc                                 defconfig
-s390                             allmodconfig
-arm                                 defconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-arm64                            allyesconfig
-arm                              allyesconfig
-i386                          randconfig-a014
-i386                          randconfig-a012
-powerpc                           allnoconfig
-i386                          randconfig-a016
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-bpf
-i386                                defconfig
-x86_64                        randconfig-a004
-mips                             allyesconfig
-x86_64                        randconfig-a002
-powerpc                          allmodconfig
-ia64                             allmodconfig
-sh                               allmodconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-x86_64                              defconfig
-m68k                             allmodconfig
-x86_64                               rhel-8.3
-arc                              allyesconfig
-x86_64                        randconfig-a006
-x86_64                        randconfig-a013
-alpha                            allyesconfig
-x86_64                        randconfig-a011
-i386                          randconfig-a005
-m68k                             allyesconfig
-x86_64                        randconfig-a015
-um                           x86_64_defconfig
-x86_64                           allyesconfig
-i386                             allyesconfig
-um                             i386_defconfig
-arc                  randconfig-r043-20230110
-s390                 randconfig-r044-20230110
-riscv                randconfig-r042-20230110
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-m68k                         amcore_defconfig
-arm                        multi_v7_defconfig
-sh                              ul2_defconfig
-m68k                             alldefconfig
-powerpc                 mpc85xx_cds_defconfig
-powerpc                    klondike_defconfig
-arm                          gemini_defconfig
-powerpc                     tqm8548_defconfig
-sh                ecovec24-romimage_defconfig
-sparc                       sparc64_defconfig
-powerpc                      mgcoge_defconfig
-openrisc                 simple_smp_defconfig
-nios2                            allyesconfig
-nios2                               defconfig
-parisc                              defconfig
-parisc64                            defconfig
-parisc                           allyesconfig
-sparc                               defconfig
-xtensa                           allyesconfig
-csky                                defconfig
-sparc                            allyesconfig
-x86_64                                  kexec
-xtensa                         virt_defconfig
-arc                        nsim_700_defconfig
-loongarch                 loongson3_defconfig
-mips                         rt305x_defconfig
-i386                          debian-10.3-kvm
-i386                        debian-10.3-kunit
-i386                         debian-10.3-func
-
-clang tested configs:
-i386                          randconfig-a013
-i386                          randconfig-a011
-i386                          randconfig-a015
-i386                          randconfig-a002
-x86_64                        randconfig-a001
-x86_64                        randconfig-a014
-i386                          randconfig-a004
-x86_64                        randconfig-a003
-x86_64                        randconfig-a005
-i386                          randconfig-a006
-x86_64                        randconfig-a016
-x86_64                        randconfig-a012
-hexagon              randconfig-r041-20230110
-arm                  randconfig-r046-20230110
-hexagon              randconfig-r045-20230110
-x86_64                          rhel-8.3-rust
-arm                      tct_hammer_defconfig
-powerpc                        icon_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Jason
