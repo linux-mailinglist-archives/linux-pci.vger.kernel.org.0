@@ -2,59 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 424B0667A21
-	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 16:59:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 06988667BB2
+	for <lists+linux-pci@lfdr.de>; Thu, 12 Jan 2023 17:45:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231174AbjALP7k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 12 Jan 2023 10:59:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42066 "EHLO
+        id S238942AbjALQoy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 12 Jan 2023 11:44:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236181AbjALP7L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 10:59:11 -0500
+        with ESMTP id S240609AbjALQnI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 12 Jan 2023 11:43:08 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB6DFE70;
-        Thu, 12 Jan 2023 07:50:46 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B368A1B5
+        for <linux-pci@vger.kernel.org>; Thu, 12 Jan 2023 08:37:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 68593B81EB8;
-        Thu, 12 Jan 2023 15:50:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10935C433EF;
-        Thu, 12 Jan 2023 15:50:40 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 90CEEB81E3B
+        for <linux-pci@vger.kernel.org>; Thu, 12 Jan 2023 16:37:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4224C433F0;
+        Thu, 12 Jan 2023 16:37:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673538644;
-        bh=56hHJDsmg+aMaj3QZPHGVjwdZvjGg+53Y+wWNaKhYAw=;
+        s=k20201202; t=1673541464;
+        bh=VP+bv1sIlCedADn+6h8q+hg8D0YmhUlHd70hQ4kpwqM=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d4giMpFzAv8KQ4w0ui8ugaeRwaolxyDPbRIHurora702Io29haIJ9ZySWNUBH5ltK
-         wxEHrB2x1YUZQtlOvLNeL5K7BDpDPjIXMMRMMtTHxKcD14FXROAOCUNx0LjlJhU9gC
-         jAazybdLcqwV9L4LoNlPNCRhdXWOqO5YKtFGrRTkk/qrVfj2FXgr3CGRZ2bqQJ2pO8
-         bfxRQL0vi14RmaBNmI06t6Ptrsc9gKadgFQwC3GUlotBaRvITT8+69xaBM6s+P64fO
-         LMX6cKvlI3TvuMG+V8yDR/lceuhTXYxQqVEIhxo6Ixowmb9/99dAZDbbcDhnW91Y/s
-         99IUpoA/3O8rg==
-Date:   Thu, 12 Jan 2023 16:50:37 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Frank Li <frank.li@nxp.com>
-Cc:     "M.H. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: Re: [PATCH 1/1] PCI: layerscape: Add EP mode support for ls1028a
-Message-ID: <Y8AsTaMwC/L/M+ve@lpieralisi>
-References: <20221216161537.1003595-1-Frank.Li@nxp.com>
- <HE1PR0401MB2331BA1F1CDF8F8B8A4D26E488FE9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+        b=Tp2xL2fldgwI76fxNbq8SyuEBGy0mMY9UFtf2AzTBtgXpiGS0fca72EyKIQpFxmLO
+         +lgFdQjZ2hrPIVxgWqrC9bJYa6lCCye9J4zXqjmAmBe4fmuPrP+In4XxRg2HynQ3tM
+         GQx42cOEBLNrtF86gQXA6ttgrku/gsGM/M1Dijaaf5dt59VvnAtH/BSWLIZUYJ28Hn
+         QCMKpqbHreTsp3msBGssTuKexCgOwhulGa9qF13wgwDapXGUiuPuV0f8aPB+6vJh4y
+         RnhMSd7sxx77GU00EmydD5e90/M+DV1ZCd3tCsk8SS90/Q2MSlQbSpj10OyF/mTkkF
+         3Tw/4O8j3H0Mw==
+Date:   Thu, 12 Jan 2023 09:37:41 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Julian =?iso-8859-1?Q?Gro=DF?= <julian.g@posteo.de>
+Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org
+Subject: Re: Regression in Kernel 6.0: System partially freezes with "nvme
+ controller is down"
+Message-ID: <Y8A3VftFnNT7wjl0@kbusch-mbp.dhcp.thefacebook.com>
+References: <d5d8d106-acce-e20c-827d-1b37de2b2188@posteo.de>
+ <0d3206be-fae8-4bbd-4b6c-a5d1f038356d@posteo.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <HE1PR0401MB2331BA1F1CDF8F8B8A4D26E488FE9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <0d3206be-fae8-4bbd-4b6c-a5d1f038356d@posteo.de>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -64,31 +54,11 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 09, 2023 at 03:41:31PM +0000, Frank Li wrote:
-> > 
-> > From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > 
-> > Add PCIe EP mode support for ls1028a.
-> > 
-> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > ---
-> > 
-> > All other patches were already accepte by maintainer in
-> > https://lore.kernel.org/lkml/20211112223457.10599-1-leoyang.li@nxp.com/
-> > 
-> > But missed this one.
-> > 
-> > Re-post.
-> > 
+On Wed, Jan 11, 2023 at 10:11:22PM +0000, Julian Groß wrote:
 > 
-> Ping.
+> Currently, I am using git bisect to narrow down the window of possible
+> commits, but since the issue appears seemingly random, it will take many
+> months to identify the offending commit this way.
 
-You must sign it off since you obviously are in the patch delivery chain:
-
-https://docs.kernel.org/process/submitting-patches.html
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Unfortunately bisect may be our best option. Link loss like that usually
+is a problem below the nvme driver level.
