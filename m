@@ -2,38 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77A7E669993
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 15:07:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26EF5669A23
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 15:31:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241514AbjAMOHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 09:07:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35720 "EHLO
+        id S229662AbjAMObA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 09:31:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240798AbjAMOGw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 09:06:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 604BCFC;
-        Fri, 13 Jan 2023 06:03:34 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E6501B8215D;
-        Fri, 13 Jan 2023 14:03:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3437EC433EF;
-        Fri, 13 Jan 2023 14:03:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673618611;
-        bh=RTvuy+dTqPShiRNonoOL20JdR0sMfhjyNaV/ObiJjNo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cBXyW3TB7xwWQEdHbF0HBJVQWmAP09DEFS5FsjhH5+QpSafAaJuZ/eR8/C0DcJvxQ
-         LVAv9hp5CZKm/JWaMXfSqMyPY4Fh3Vza2Gj8U2jHVfoVVXs3BvD50uH8zGuDpWjASS
-         X2o8LKldguRLZWRwF4HTVaLXjHpCT5x4YoyRQATVjXAxPpxUh49BIEDtQTC7xd9t0k
-         OzDxLKXQQwq2ScW+0sxBBeQPF6M4zch8lbyuDMgmhoevhSY4eIJgIzpQmh+0AyCmPY
-         BoLspTGFKt/kwtP8FSTAsT0Xwk9Ph4m4MjwJQRHjWriu3LHc0JJ454hasio35v1rDH
-         sMVS0cnzD5NoQ==
-Date:   Fri, 13 Jan 2023 08:03:28 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        with ESMTP id S229811AbjAMOaS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 09:30:18 -0500
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E89EE8409D
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 06:23:22 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id v10so30165345edi.8
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 06:23:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jltJ1PtaljceVmLtUNZy4GkzBy9Rz0omnda+TqjQGk0=;
+        b=VBhMWoJtRRYKon+iIS+tTXfxLPkHkUgxz1XzLA/c/iY8SCPSKqmTEUzGmJ60XXsw0j
+         xdMPM9MJK9sFONsRksBoJKFnb/z7gtfHNC+tlom7DjTkL5IE+hN27SkBSARwm8vsrBxy
+         MsZRm+gUd1BgSjaYJQmZaJCKMlTSAH8EZC1qiXGXid1NUWaPZNoXVno4bDuKozhrZdDz
+         A0YZQ5nlUbw21Hjw6veiqJaXijY8I7atT7FsouwrcBD8DQhjN/EAqGSSWrMGXfbbMIVJ
+         WqLE0fdbt0ITXpfMHdFNnitsqm9JtXrG+9JtKAhWr/ZlHg8yoTBmc0XEGjVZ6yXo10nh
+         27Gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=jltJ1PtaljceVmLtUNZy4GkzBy9Rz0omnda+TqjQGk0=;
+        b=7yvqMXP8rxcqDXSbQxCNSY1VPPXBBjqBVRDi16POaC/5664yKT630Qc4zv6bQu/PSY
+         TSpWRvOLKG/H2yikjgdA8Kpi25YxbfxhoA+/59YsnVRn/Gb2JrHv4T1bDHrR2rGjQK0n
+         RabgXP3VASDrTJPdUfNyyqIyGolaDB1BtUOQndZbDe+AzKMlTE9+NFZjoNgHrYnY1hqG
+         yVz/MA4i10aRBkmv+eBkkBO73jr5utOsdcxiGCx8R0R6Phs3LWENL349yFaY4uzcAu+O
+         6hGZYV1hlAznAtkl0VQssaExMbs73Wfc078Wo8R5AGGkDmH5x+rShMRjytHIATa1hmbj
+         U4Sw==
+X-Gm-Message-State: AFqh2krTA2A+B6CO6a6dDRP/gi0gWFoA1/uGdweAmvbTZjRKYEy9ilN6
+        X4hcAVwfZ13grHjgx9i6xQH5jw==
+X-Google-Smtp-Source: AMrXdXuKgO9JGCXCLsX54cOWfaiZHFKYD32Qa/1wbUnbXVzxem7IzAMkCrTUpbAMgPNaFfCwCzrvcw==
+X-Received: by 2002:a05:6402:357:b0:49b:b274:b816 with SMTP id r23-20020a056402035700b0049bb274b816mr4324189edw.37.1673619801564;
+        Fri, 13 Jan 2023 06:23:21 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id w21-20020aa7d295000000b0046c4553010fsm669382edq.1.2023.01.13.06.23.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 13 Jan 2023 06:23:21 -0800 (PST)
+Message-ID: <9016ea51-9ca2-551d-d4a1-0b70232b5dc5@linaro.org>
+Date:   Fri, 13 Jan 2023 15:23:18 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2] dt-bindings: PCI: qcom,pcie-ep: correct
+ qcom,perst-regs
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -47,38 +71,44 @@ Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
         Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: PCI: qcom,pcie-ep: correct
- qcom,perst-regs
-Message-ID: <20230113140328.GA1836008@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7831a607-db55-274c-8fba-d01d5bac3a7a@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230113140328.GA1836008@bhelgaas>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230113140328.GA1836008@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 10:02:27AM +0100, Krzysztof Kozlowski wrote:
-> On 30/12/2022 14:42, Lorenzo Pieralisi wrote:
-> > On Wed, 9 Nov 2022 12:32:02 +0100, Krzysztof Kozlowski wrote:
-> >> qcom,perst-regs is an phandle array of one item with a phandle and its
-> >> arguments.
-> > 
-> > Applied to pci/dt, thanks!
-> > 
-> > [1/1] dt-bindings: PCI: qcom,pcie-ep: correct qcom,perst-regs
-> >       https://git.kernel.org/lpieralisi/pci/c/68909a813609
+On 13/01/2023 15:03, Bjorn Helgaas wrote:
+> On Fri, Jan 13, 2023 at 10:02:27AM +0100, Krzysztof Kozlowski wrote:
+>> On 30/12/2022 14:42, Lorenzo Pieralisi wrote:
+>>> On Wed, 9 Nov 2022 12:32:02 +0100, Krzysztof Kozlowski wrote:
+>>>> qcom,perst-regs is an phandle array of one item with a phandle and its
+>>>> arguments.
+>>>
+>>> Applied to pci/dt, thanks!
+>>>
+>>> [1/1] dt-bindings: PCI: qcom,pcie-ep: correct qcom,perst-regs
+>>>       https://git.kernel.org/lpieralisi/pci/c/68909a813609
+>>
+>> It's still not in linux-next. Is you tree correctly included in the next?
 > 
-> It's still not in linux-next. Is you tree correctly included in the next?
+> It's on Lorenzo's branch
+> (https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/)
+> but I haven't pulled it into my "next" branch yet.  Will try to do
+> that today.
 
-It's on Lorenzo's branch
-(https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/)
-but I haven't pulled it into my "next" branch yet.  Will try to do
-that today.
+If Lorenzo picks up patches which at some point are merged by another
+maintainer, his tree should be in linux-next as well (and in LKP tests).
+Otherwise we loose some build and test coverage.
 
-Bjorn
+Best regards,
+Krzysztof
+
