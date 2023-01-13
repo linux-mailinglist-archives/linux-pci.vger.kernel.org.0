@@ -2,67 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC91669EA9
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 17:48:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67151669EFE
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 18:02:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjAMQsL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 11:48:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35712 "EHLO
+        id S229501AbjAMRCj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 12:02:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229511AbjAMQrT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 11:47:19 -0500
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B715C7BCC6;
-        Fri, 13 Jan 2023 08:45:03 -0800 (PST)
-Received: by mail-ej1-x62a.google.com with SMTP id hw16so41768452ejc.10;
-        Fri, 13 Jan 2023 08:45:03 -0800 (PST)
+        with ESMTP id S229502AbjAMRCi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 12:02:38 -0500
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8155F5792F
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 09:02:37 -0800 (PST)
+Received: by mail-qv1-xf2a.google.com with SMTP id h10so15166194qvq.7
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 09:02:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZSzg8ro4VicBsd4Z6YxYop5coys1WHe/3Ul2C/JMj58=;
-        b=iL3CqfCmDWIfqj8iaZc9rPyCV2YPsBuDEozU94ki+7XD4R0RT+Kh5o8qmygei5yHdF
-         eLJA4LegAfQsvVHVrTFTSI8DfNaFwJT3nTx6RyBpAl4DuGeFJQN9KEC1s5fYvFu7ubRu
-         QwLwMLNZpNJLghiKsV6J30uZD2lg0pW8rf0MXarJoMm6/gGkzwg0kZDU66cKzMVA1t87
-         15hsoepyRlZSRAKxNezL4LOx4CTzU3BafwZ6ZxtMva8cNjoV3FKrWMNeaaqMuF6HvfCq
-         +iT0ToavwrrgLj8tVZs+MUuPj1GUIY3bLmB+Wm67+coFFGWubGl29mKPG4WM312D8uds
-         Gm6g==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=mtm4pvPjWMYrozLxNwOe/qUwVMP4EPvQdbHa6k655vM=;
+        b=OFC4DPMCXWmfDYQpcLka7Es9nd7nQ37mQnH0PgM+j+NdHtz2dSvvVg6zCRe/1W87xF
+         oP2vYuC+UtO8v5SpgB0l84LWymJ3xZDJtkqgSmRSsM1KcH4q1Pqs7qjegqtsmItaRfOm
+         BzMWhzq1GrLlFoUEyGMUhfr40QkFXwBsylOMdkHycRaZDYN6hzXgqoQ2ZrYGodLK9PXj
+         dafYULgl1Cg5iISym1Sb9IH7IUSwJAVH9me89azyTCq/+LevuCjT+yeARSwDkypjMrl2
+         iUV0XUP4l+MdNOCjCn7Qh56GM49ztu2qsdORvmykjIUcImwFh6XKoU+R6eDEnZiyqdPT
+         bNRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZSzg8ro4VicBsd4Z6YxYop5coys1WHe/3Ul2C/JMj58=;
-        b=pL9sgTbblHvYxfgAdh27xinVODkhnKS2EqnmUgc651e/PwaOHR8g/B7kxYmGDwW/ba
-         KZTwn5soin/zieMuJFCzKbWAW5kgGGgYkw3eveCi/KMxqup3H+HNBazMLwggw1vRX5HE
-         7BsThZ1hVFX5iFkeeoHyDCx4s4T/KhjJrT/oYpfH2nq6ns0Mco5QjalgxMgHe+mDud4q
-         hwMdk7S1Z8Kqo2ghC2ISxrv845USKK3Jn9Emv2mHjxD6Yy3O6gZ+MqVQBiOBEMiNGX3r
-         7LGLpK7TdLIigI8UGiW6mbd9l77GjLiZ3h9lycZm8ij7pTqea+GJyA4noBT0p272aodl
-         O7Cw==
-X-Gm-Message-State: AFqh2kpCfTyUHtaarvvCqfgyWtKb9NmrIzyuED0OXeN4gm7ZB3KI05Wo
-        z74g94qlCjSr7jfMLz8vThmifWeKeCqlCw==
-X-Google-Smtp-Source: AMrXdXsKNJd2j8ldjOFQzjdF0s0MkRvf9VWdq5hj7FDnJ97o4yTcaNfmrBKrsU+GlumFI5iEsecz4w==
-X-Received: by 2002:a17:906:5dad:b0:7c0:dfba:54d3 with SMTP id n13-20020a1709065dad00b007c0dfba54d3mr11846198ejv.20.1673628303265;
-        Fri, 13 Jan 2023 08:45:03 -0800 (PST)
-Received: from fedora.. (dh207-97-147.xnet.hr. [88.207.97.147])
-        by smtp.googlemail.com with ESMTPSA id sb25-20020a1709076d9900b007b2a58e31dasm8777831ejc.145.2023.01.13.08.45.02
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=mtm4pvPjWMYrozLxNwOe/qUwVMP4EPvQdbHa6k655vM=;
+        b=QE1EehHai6Z3QBBbk1ORCeUk33t5DXCKKougkKSqcTub66abBBzQaPZsIFB1o2uqjG
+         Ym22+9shpnjsnYbvc0Uw5yTiF+vEXN3VhKnVzYXqdvtw4dOAqMgNOsMfP0iWz90edAhY
+         oVxPs7Ngy0m55/OqVDwkzVdIQYZKBnOEnSaNYNclHcFcTFCcZyQSoeEw3blLl7oghTWu
+         1CQAfB7Znx8aGa88a2FOwgzOzUBTs2z7rTixyTItyzt+PNKNLsmlV712+Bc3d6JHkizJ
+         T2f7XHpvAq3TBa6jl/GlPfhRcognzuv3Ch6Qfjm/snnLElawSV1rZ7MHZnTRi24kljrX
+         2O0A==
+X-Gm-Message-State: AFqh2kqvkUlxTxpihBS9U8N/1GCLGrjCP9IL4HATWPxSm2gNzIhjQHJ/
+        eHpA2WqOUvQBLnG6HKlJcKz8TLY4qLzuV/Il
+X-Google-Smtp-Source: AMrXdXvpEMqxqZnyYwJjA2Wsk0U+UFnZxwFXqNXzBsxQUAnIV5QVOBZC1hnbueLh3hPx5pTQRrK0Pg==
+X-Received: by 2002:a0c:ab1b:0:b0:534:86f1:bcb5 with SMTP id h27-20020a0cab1b000000b0053486f1bcb5mr3324781qvb.41.1673629356285;
+        Fri, 13 Jan 2023 09:02:36 -0800 (PST)
+Received: from localhost.localdomain (76-10-173-44.dsl.teksavvy.com. [76.10.173.44])
+        by smtp.gmail.com with ESMTPSA id v9-20020a05620a440900b006fc6529abaesm13094955qkp.101.2023.01.13.09.02.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 08:45:02 -0800 (PST)
-From:   Robert Marko <robimarko@gmail.com>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, krzysztof.kozlowski+dt@linaro.org, mani@kernel.org,
-        svarbanov@mm-sol.com, shawn.guo@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Robert Marko <robimarko@gmail.com>
-Subject: [PATCH v2 9/9] arm64: dts: qcom: ipq8074: correct PCIe QMP PHY output clock names
-Date:   Fri, 13 Jan 2023 17:44:49 +0100
-Message-Id: <20230113164449.906002-9-robimarko@gmail.com>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230113164449.906002-1-robimarko@gmail.com>
-References: <20230113164449.906002-1-robimarko@gmail.com>
+        Fri, 13 Jan 2023 09:02:35 -0800 (PST)
+From:   Anatoli Antonovitch <a.antonovitch@gmail.com>
+To:     linux-pci@vger.kernel.org
+Cc:     bhelgaas@google.com, lukas@wunner.de, Alexander.Deucher@amd.com,
+        christian.koenig@amd.com,
+        Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+Subject: [PATCH] PCI/hotplug: Replaced down_write_nested with hotplug_slot_rwsem if ctrl->depth > 0 when taking the ctrl->reset_lock.
+Date:   Fri, 13 Jan 2023 12:01:31 -0500
+Message-Id: <20230113170131.5086-1-a.antonovitch@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -75,42 +69,122 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Current PCIe QMP PHY output name were changed in ("arm64: dts: qcom: Fix
-IPQ8074 PCIe PHY nodes") however it did not account for the fact that GCC
-driver is relying on the old names to match them as they are being used as
-the parent for the gcc_pcie0_pipe_clk and gcc_pcie1_pipe_clk.
+From: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
 
-This broke parenting as GCC could not find the parent clock, so fix it by
-changing to the names that driver is expecting.
+It is to avoid any potential issues when S3 resume but at the same time we want to hot-unplug.
 
-Fixes: 942bcd33ed45 ("arm64: dts: qcom: Fix IPQ8074 PCIe PHY nodes")
-Signed-off-by: Robert Marko <robimarko@gmail.com>
+To fix the race between pciehp and AER reported in https://bugzilla.kernel.org/show_bug.cgi?id=215590
+
+INFO: task irq/26-aerdrv:95 blocked for more than 120 seconds.
+Tainted: G        W          6.2.0-rc3-custom-norework-jan11+ #29
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:irq/26-aerdrv   state:D stack:0     pid:95    ppid:2      flags:0x00004000
+Call Trace:
+<TASK>
+__schedule+0x3df/0xec0
+? rcu_read_lock_held_common+0x12/0x60
+schedule+0x6b/0x100
+rwsem_down_write_slowpath+0x3b2/0x9c0
+down_write_nested+0x16b/0x220
+pciehp_reset_slot+0x63/0x160
+pci_reset_hotplug_slot+0x44/0x80
+pci_slot_reset+0x10d/0x1a0
+pci_bus_error_reset+0xb2/0xe0
+aer_root_reset+0x144/0x1a0
+pcie_do_recovery+0x15a/0x280
+? __pfx_aer_root_reset+0x20/0x20
+aer_process_err_devices+0xfa/0x115
+aer_isr.cold+0x52/0xa1
+? __kmem_cache_free+0x36a/0x3c0
+? irq_thread+0xb0/0x1e0
+? irq_thread+0xb0/0x1e0
+irq_thread_fn+0x28/0x80
+irq_thread+0x106/0x1e0
+? __pfx_irq_thread_fn+0x20/0x20
+? __pfx_irq_thread_dtor+0x20/0x20
+? __pfx_irq_thread+0x20/0x20
+kthread+0x10a/0x140
+? __pfx_kthread+0x20/0x20
+ret_from_fork+0x35/0x60
+</TASK>
+
+INFO: task irq/26-pciehp:96 blocked for more than 120 seconds.
+Tainted: G        W          6.2.0-rc3-custom-norework-jan11+ #29
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:irq/26-pciehp   state:D stack:0     pid:96    ppid:2      flags:0x00004000
+Call Trace:
+<TASK>
+__schedule+0x3df/0xec0
+? rcu_read_lock_sched_held+0x25/0x80
+schedule+0x6b/0x100
+schedule_preempt_disabled+0x18/0x40
+__mutex_lock+0x685/0xf60
+? rcu_read_lock_sched_held+0x25/0x80
+? rcu_read_lock_held_common+0x12/0x60
+? pci_dev_set_disconnected+0x1b/0x80
+mutex_lock_nested+0x1b/0x40
+? mutex_lock_nested+0x1b/0x40
+pci_dev_set_disconnected+0x1b/0x80
+? __pfx_pci_dev_set_disconnected+0x20/0x20
+pci_walk_bus+0x48/0xa0
+pciehp_unconfigure_device+0x129/0x140
+pciehp_disable_slot+0x6e/0x120
+pciehp_handle_presence_or_link_change+0xf1/0x320
+pciehp_ist+0x1a0/0x1c0
+? irq_thread+0xb0/0x1e0
+irq_thread_fn+0x28/0x80
+irq_thread+0x106/0x1e0
+? __pfx_irq_thread_fn+0x20/0x20
+? __pfx_irq_thread_dtor+0x20/0x20
+? __pfx_irq_thread+0x20/0x20
+kthread+0x10a/0x140
+? __pfx_kthread+0x20/0x20
+ret_from_fork+0x35/0x60
+</TASK>
+
+Signed-off-by: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
 ---
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/hotplug/pciehp_hpc.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 74eecca4f9e3..c6cbeb66c0e7 100644
---- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -257,7 +257,7 @@ pcie_phy0: phy@84200 {
- 				#clock-cells = <0>;
- 				clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
- 				clock-names = "pipe0";
--				clock-output-names = "pcie_0_pipe_clk";
-+				clock-output-names = "pcie20_phy0_pipe_clk";
- 			};
- 		};
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index 10e9670eea0b..b1084e67f798 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -27,6 +27,8 @@
+ #include "../pci.h"
+ #include "pciehp.h"
  
-@@ -285,7 +285,7 @@ pcie_phy1: phy@8e200 {
- 				#clock-cells = <0>;
- 				clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
- 				clock-names = "pipe0";
--				clock-output-names = "pcie_1_pipe_clk";
-+				clock-output-names = "pcie20_phy1_pipe_clk";
- 			};
- 		};
++static DECLARE_RWSEM(hotplug_slot_rwsem);
++
+ static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
+ 	/*
+ 	 * Match all Dell systems, as some Dell systems have inband
+@@ -911,7 +913,10 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
+ 	if (probe)
+ 		return 0;
+ 
+-	down_write_nested(&ctrl->reset_lock, ctrl->depth);
++	if (ctrl->depth > 0)
++		down_write_nested(&ctrl->reset_lock, ctrl->depth);
++	else
++		down_write(&hotplug_slot_rwsem);
+ 
+ 	if (!ATTN_BUTTN(ctrl)) {
+ 		ctrl_mask |= PCI_EXP_SLTCTL_PDCE;
+@@ -931,7 +936,11 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
+ 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
+ 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, ctrl_mask);
+ 
+-	up_write(&ctrl->reset_lock);
++	if (ctrl->depth > 0)
++		up_write(&ctrl->reset_lock);
++	else
++		up_write(&hotplug_slot_rwsem);
++
+ 	return rc;
+ }
  
 -- 
-2.39.0
+2.25.1
 
