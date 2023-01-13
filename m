@@ -2,103 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D3DF66921C
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 10:02:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E9766923D
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 10:05:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232202AbjAMJCg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 04:02:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35090 "EHLO
+        id S241106AbjAMJFL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 04:05:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233125AbjAMJCe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 04:02:34 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1114A34743
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 01:02:32 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id l22so21058288eja.12
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 01:02:31 -0800 (PST)
+        with ESMTP id S240928AbjAMJEI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 04:04:08 -0500
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D4C74587
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 01:03:58 -0800 (PST)
+Received: by mail-pj1-x1030.google.com with SMTP id b9-20020a17090a7ac900b00226ef160dcaso22022832pjl.2
+        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 01:03:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PH7OlCwVBqDHHfs+JSk/+04xmU8OFLEPIXeMIr7O+K4=;
-        b=R6PTJjwBiwB9xYnySQbQq+6zMBNbkNQmJG1WPz1JIBywRDz8uFDoGZbAaBD98WpPrQ
-         lTDtPEF4Kplo+VoCP7hPulTqFXD0pQSb/KBxuPoBNE4UppOWs02N0ZsSG5pnrY5Cdb9x
-         V2iI62SRZhXDyyjqjFHQSULfG2qGDzCAw8HVBuEk14IXG4uX6LGKcPmEg3FRWbv08x3X
-         J7F8mymJ1Jm3x8ePzCU42mfyJ5ac4EIS1O7F7K67VE24DRD19Ua+xotOSJ3qLP+T/pGd
-         ErLpTgmZt5ChnLc7x3rhRtdWZ8TBQ1VodfVPfDyg13wtuIhbizLsIuwb7uwxc+LK32H0
-         Sdog==
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2IGTDiZZXtJu9cR7T8erEmC5AfST+0ZDpypGxRmfERY=;
+        b=LRJ3p9XiclsVeIR3PUf7eY8K7aD9yrcYSJDDVcXjRarKOLB+UrAGGjl2s2fiCl78Pv
+         xkG0NCT9d4jpNm2RJjIxJgPhG4sFMynJX+uaZYf2L2so0Bc6U2OiNsQurAuwyvrg95dw
+         4DZDPs656oolqZdRZJkqT7rDYPI1zOy/6l96FymZLJXetlBY9XBAi9ZRVoHWTxsqfl0/
+         oIM+dLDZ+TXsUb2A18u0Fw9R8T49Q8qe8wT6ZyAdpsjb1TKmjKYfq1jG5iWVRMo3zbDC
+         w1HJ+v0O1CQa828lig78yqXcTDedtaRnnXV5uY13Chkt/Jznpah1jMk2p/1uLJ7iNDCq
+         hNWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PH7OlCwVBqDHHfs+JSk/+04xmU8OFLEPIXeMIr7O+K4=;
-        b=aQT5XqWZZoMc8UrnMK0Spigzme9jrWRgTc/NxCeG0l80fAp3sRlwt3TMDrnoH2KdK0
-         SlOnJ2IIP4olm4oGPTo5TvCISGClGVdU2k4Tm89VM8Sc53NcBiyeMxafWspRjvTvqyBL
-         ZSSJWKdezTagQG+XzFL7Jue/mzf+TvYUtd6HyyK0j/di9wbMw8GOd2LXaT1OW3yt5vne
-         IH3tzZyiUfNo0w3k2oXYAdopfnZiA6yEtP/vbWUoimbDA0Ekwzk0XJA7/u9yLsMWeZ/8
-         xgBHhMvkMHj9oFaPQxqix3hBO9JHvkaLUqbwEJQ6qIoWoO7MDzSnnApXFX1132QEK4YS
-         D8Kg==
-X-Gm-Message-State: AFqh2kqE4pMCZxi0M4RCJwA19w9CVnlfsy4pvV2fEmJSWlWuimfl/0Y8
-        SjsQfT31uMg1sTDlGaAwIXaoPw==
-X-Google-Smtp-Source: AMrXdXsyW969IDKKtuXbksmxNsiYIqySHVhsQ6MPJueutAvxOAcEwTbsLVVG0rhORP4+jJ4rKBACsA==
-X-Received: by 2002:a17:906:7046:b0:7ae:8194:7e06 with SMTP id r6-20020a170906704600b007ae81947e06mr71277358ejj.56.1673600550596;
-        Fri, 13 Jan 2023 01:02:30 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id lj1-20020a170906f9c100b0078d22b0bcf2sm8240254ejb.168.2023.01.13.01.02.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 13 Jan 2023 01:02:30 -0800 (PST)
-Message-ID: <7831a607-db55-274c-8fba-d01d5bac3a7a@linaro.org>
-Date:   Fri, 13 Jan 2023 10:02:27 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v2] dt-bindings: PCI: qcom,pcie-ep: correct
- qcom,perst-regs
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2IGTDiZZXtJu9cR7T8erEmC5AfST+0ZDpypGxRmfERY=;
+        b=hAIHNmHz5NHA9tUmiUkaiA7iPVWmzNpjqL+M6Sb0dFrdbrKUg7ezSgsqZ8eJjoKEEg
+         Puhc1IeSX5j8FFmugTdVs2wsl93aj4oXfwlSG4yC8/xDV5qrasadM/6bPuEixQiB2ZZY
+         9gc4S87HVTaHJsRBIL2jE5hyXCjuJrvPVpJ29Bc6cAe+Seu2zfn6qABGZfpvwvghGiHt
+         /vhq15YrMGNyOWIhSqL2q6fciqBeA9nUgdoPofJpaocH/QQQW6hcmPgDwsA7kW8LRmlw
+         KUC8Yb4etjQdfIW3NbcdZo0vdel/Sy2Nov3SxJJ8Q+7NKam/uC2p6vI5egjGKMcxZt+o
+         MkEQ==
+X-Gm-Message-State: AFqh2koY5jM7qDb5ofn/8487toMeZlczcrM55jL+KpjLPwfOFEgbz6gr
+        Z1dSQ5mn4o1wEspbusUcAG7Edg==
+X-Google-Smtp-Source: AMrXdXtpZSgowNq73sjmSDHhDEN5OcDqcZlw7Rr6wKeiNZQk/sUbNQwMNnjflJMQTGU/aJ4BUP8n/w==
+X-Received: by 2002:a17:902:e8d4:b0:192:6b23:e38b with SMTP id v20-20020a170902e8d400b001926b23e38bmr8413010plg.24.1673600638396;
+        Fri, 13 Jan 2023 01:03:58 -0800 (PST)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id p15-20020a170902e74f00b00189bf5deda3sm13645510plf.133.2023.01.13.01.03.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 01:03:58 -0800 (PST)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Jingoo Han <jingoohan1@gmail.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org,
         Manivannan Sadhasivam <mani@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Rob Herring <robh@kernel.org>
-References: <20221109113202.74406-1-krzysztof.kozlowski@linaro.org>
- <167240770788.754221.16859969124148517946.b4-ty@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <167240770788.754221.16859969124148517946.b4-ty@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Shunsuke Mie <mie@igel.co.jp>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/3] Deal with alignment restriction on EP side
+Date:   Fri, 13 Jan 2023 18:03:47 +0900
+Message-Id: <20230113090350.1103494-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/12/2022 14:42, Lorenzo Pieralisi wrote:
-> On Wed, 9 Nov 2022 12:32:02 +0100, Krzysztof Kozlowski wrote:
->> qcom,perst-regs is an phandle array of one item with a phandle and its
->> arguments.
->>
->>
-> 
-> Applied to pci/dt, thanks!
-> 
-> [1/1] dt-bindings: PCI: qcom,pcie-ep: correct qcom,perst-regs
->       https://git.kernel.org/lpieralisi/pci/c/68909a813609
+Some PCIe EPC controllers have restriction to map PCIe address space to the
+local memory space. The mapping is needed to access memory of other side.
+On epf test, RC module prepares an aligned memory, and EP module maps the
+region. However, a EP module which emulate a device (e.g. VirtIO, NVMe and
+etc) cannot expect that a driver for the device prepares an aligned memory.
+So, a EP side should deal with the alignment restriction.
 
-It's still not in linux-next. Is you tree correctly included in the next?
+This patchset addresses with the alignment restriction on EP size. A
+content as follows:
+1. Improve a pci epc unmap/map functions to cover the alignment restriction
+with adding epc driver support as EPC ops.
+2. Implement the support function for DWC EPC driver.
+3. Adapt the pci-epf-test to the map/unmap function updated at first patch.
 
-Best regards,
-Krzysztof
+I tested this changes on RENESAS board has DWC PCIeC.
+
+This is a RFC, and it has patches for testing only. Following changes are
+not included yet:
+1. Removing alignment codes on RC side completely
+2. Adapting map/unmap() changes to pci-epf-ntb/vntb
+
+Best,
+Shunsuke
+
+Shunsuke Mie (3):
+  PCI: endpoint: support an alignment aware map/unmaping
+  PCI: dwc: support align_mem() callback for pci_epc_epc
+  PCI: endpoint: support pci_epc_mem_map/unmap API changes
+
+ .../pci/controller/dwc/pcie-designware-ep.c   | 13 +++
+ drivers/pci/endpoint/functions/pci-epf-test.c | 89 +++++--------------
+ drivers/pci/endpoint/pci-epc-core.c           | 57 +++++++++---
+ include/linux/pci-epc.h                       | 10 ++-
+ 4 files changed, 90 insertions(+), 79 deletions(-)
+
+-- 
+2.25.1
 
