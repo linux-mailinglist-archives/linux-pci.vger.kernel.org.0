@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 709E7669C87
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 16:36:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03A30669C99
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 16:40:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbjAMPgN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 10:36:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52706 "EHLO
+        id S230206AbjAMPkU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 10:40:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjAMPfw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 10:35:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01D2A1805;
-        Fri, 13 Jan 2023 07:29:04 -0800 (PST)
+        with ESMTP id S229738AbjAMPjy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 10:39:54 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51C2B81439;
+        Fri, 13 Jan 2023 07:31:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4D97FB820D2;
-        Fri, 13 Jan 2023 15:29:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B9E2C433EF;
-        Fri, 13 Jan 2023 15:28:56 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1133B82176;
+        Fri, 13 Jan 2023 15:31:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CC1C433D2;
+        Fri, 13 Jan 2023 15:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673623741;
-        bh=0F5BGpRsAhTyUDS+p9XLf5M6oCxZt8EqZJMiDBtQUDg=;
+        s=k20201202; t=1673623895;
+        bh=ld/JC3MDX643nDYZTH91vPHFhEqhIDAmDfqRY+zkWLQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MekYq8puj8d38lB62dIIhfQ0htdD0Zmrry3w1pLRDZ2Rfd7J5A+r/BQYSEqimbh+e
-         ZZtiEOEDIh8YxmzV9bjttoArpqfS0BCGCE1aQQmbWRW9l6h6ykE0SrGk0R47gn0RyK
-         oI8WCuSd2toejsUsGC3VP1o1gsmh/XfxTcnB4uMjFkz/+44uqcAqgJ5F6QwxR0/uCZ
-         28bGKNMHYxF8CbWb6QAJBAJXMvNb9mr2pDUtWpkYSJRhC4IRS1dQH5Dq8gnotBCKc1
-         1dyADUNHIsJfkKPpFJ3yLsRzYpkO3nVeOlZoW/cp/9QGWD4A0PVA/63Ks679Coo1Yt
-         OaFr1y6re5UZA==
-Date:   Fri, 13 Jan 2023 16:28:54 +0100
+        b=m7OJf/XvFInmNZK2gZ7Ja7rD+MD1VA5g35Kf/Zl0h02zAVvvvgGTCKWTj30NF0Uqo
+         yJfqXP6cE/mA4ddrrJpSh+Ybyu+rJKgxmlio1nLh4tz45UMWFoHuE0Adp/BxdMEHh4
+         J1mktqIXkRgd78zMQ3UsxrwZn8IyAi31/GO1JWb21MTEijPkUTEdF+Bvvp3tcji5OV
+         5BE8BYyVe/Pxgl5gEDwm3LlApp7Y6Ey78zzB5uX5tRpHIJ3beiZ7I39yPnf3k481Gp
+         vv+yrZpr/y8hqFVyOtTUoTRVWL8DCdplz83nQFSq09Dbmyt3JzSEnxxhSRr0njBkFh
+         9XBTT+gRWNwDA==
+Date:   Fri, 13 Jan 2023 16:31:26 +0100
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
 To:     Vidya Sagar <vidyas@nvidia.com>
 Cc:     robh@kernel.org, kw@linux.com, bhelgaas@google.com,
@@ -41,15 +41,14 @@ Cc:     robh@kernel.org, kw@linux.com, bhelgaas@google.com,
         linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
         kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V3 19/21] PCI: tegra194: Free up EP resources during
- remove()
-Message-ID: <Y8F4tucf4U7wxaFp@lpieralisi>
+Subject: Re: [PATCH V3 17/21] PCI: tegra194: Reduce AXI slave timeout value
+Message-ID: <Y8F5TmgRwItQrRLW@lpieralisi>
 References: <20221013183854.21087-1-vidyas@nvidia.com>
- <20221013183854.21087-20-vidyas@nvidia.com>
+ <20221013183854.21087-18-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221013183854.21087-20-vidyas@nvidia.com>
+In-Reply-To: <20221013183854.21087-18-vidyas@nvidia.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,40 +58,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Oct 14, 2022 at 12:08:52AM +0530, Vidya Sagar wrote:
-> Free up the resources during remove() that were acquired by the DesignWare
-> driver for the endpoint mode during proble().
+On Fri, Oct 14, 2022 at 12:08:50AM +0530, Vidya Sagar wrote:
+> Reduce the AXI slave timeout value to 7ms to be in line with the CBB
 
-s/proble/probe
+It would be good to understand where this 7ms delay comes from.
 
+Please spell out what CBB is.
+
+> logic's timeout value and to avoid CBB reporting errors because of no
+> response from the PCIe IPs AXI slave logic for configuration space accesses
+> through ECAM when the PCIe link is down. Also, set the Completion Timeout
+> value to Range-A: 1ms~10ms to be inline with the AXI timeout value.
+> 
 > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 > ---
 > V3:
 > * This is a new patch in this series
 > 
->  drivers/pci/controller/dwc/pcie-tegra194.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
 > diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 3baf1a26fe68..c88c36d85ee5 100644
+> index 23ca97401339..7890e0c0c0d2 100644
 > --- a/drivers/pci/controller/dwc/pcie-tegra194.c
 > +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -2383,6 +2383,7 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->  static int tegra_pcie_dw_remove(struct platform_device *pdev)
->  {
->  	struct tegra_pcie_dw *pcie = platform_get_drvdata(pdev);
-> +	struct dw_pcie_ep *ep = &pcie->pci.ep;
+> @@ -198,6 +198,12 @@
+>  #define AMBA_ERROR_RESPONSE_CRS_OKAY_FFFFFFFF	1
+>  #define AMBA_ERROR_RESPONSE_CRS_OKAY_FFFF0001	2
 >  
->  	if (pcie->of_data->mode == DW_PCIE_RC_TYPE) {
->  		if (!pcie->link_state && !pcie->slot_pluggable)
-> @@ -2396,6 +2397,7 @@ static int tegra_pcie_dw_remove(struct platform_device *pdev)
->  	} else {
->  		disable_irq(pcie->pex_rst_irq);
->  		pex_ep_event_pex_rst_assert(pcie);
-> +		dw_pcie_ep_exit(ep);
->  	}
+> +#define PORT_LOGIC_AMBA_LINK_TIMEOUT		0x8D4
+> +#define AMBA_LINK_TIMEOUT_PERIOD_MASK		GENMASK(7, 0)
+> +#define AMBA_LINK_TIMEOUT_PERIOD_VAL		0x7
+> +
+> +#define PCI_EXP_DEVCTL2_CPL_TO_VAL		0x2 /* Range-A: 1ms to 10ms */
+> +
+>  #define MSIX_ADDR_MATCH_LOW_OFF			0x940
+>  #define MSIX_ADDR_MATCH_LOW_OFF_EN		BIT(0)
+>  #define MSIX_ADDR_MATCH_LOW_OFF_MASK		GENMASK(31, 2)
+> @@ -922,6 +928,18 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  		AMBA_ERROR_RESPONSE_CRS_SHIFT);
+>  	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
 >  
->  	pm_runtime_disable(pcie->dev);
+> +	/* Reduce the AXI slave Timeout value to 7ms */
+> +	val  = dw_pcie_readl_dbi(pci, PORT_LOGIC_AMBA_LINK_TIMEOUT);
+> +	val &= ~AMBA_LINK_TIMEOUT_PERIOD_MASK;
+> +	val |= AMBA_LINK_TIMEOUT_PERIOD_VAL;
+> +	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_LINK_TIMEOUT, val);
+> +
+> +	/* Set the Completion Timeout value in 1ms~10ms range */
+> +	val_16  = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL2);
+> +	val_16 &= ~PCI_EXP_DEVCTL2_COMP_TIMEOUT;
+> +	val_16 |= PCI_EXP_DEVCTL2_CPL_TO_VAL;
+> +	dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL2, val_16);
+> +
+>  	/* Configure Max lane width from DT */
+>  	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
+>  	val &= ~PCI_EXP_LNKCAP_MLW;
+> @@ -1988,6 +2006,12 @@ static void pex_ep_event_pex_rst_deassert(struct tegra_pcie_dw *pcie)
+>  	val_16 |= PCI_EXP_DEVCTL_PAYLOAD_256B;
+>  	dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL, val_16);
+>  
+> +	/* Set the Completion Timeout value in 1ms~10ms range */
+> +	val_16  = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL2);
+> +	val_16 &= ~PCI_EXP_DEVCTL2_COMP_TIMEOUT;
+> +	val_16 |= PCI_EXP_DEVCTL2_CPL_TO_VAL;
+> +	dw_pcie_writew_dbi(pci, pcie->pcie_cap_base + PCI_EXP_DEVCTL2, val_16);
+> +
+>  	/* Clear Slot Clock Configuration bit if SRNS configuration */
+>  	if (pcie->enable_srns) {
+>  		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
 > -- 
 > 2.17.1
 > 
