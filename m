@@ -2,189 +2,271 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 67151669EFE
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 18:02:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C36D66A04B
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 18:23:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjAMRCj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 12:02:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50300 "EHLO
+        id S230469AbjAMRXA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 12:23:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33298 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229502AbjAMRCi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 12:02:38 -0500
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8155F5792F
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 09:02:37 -0800 (PST)
-Received: by mail-qv1-xf2a.google.com with SMTP id h10so15166194qvq.7
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 09:02:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mtm4pvPjWMYrozLxNwOe/qUwVMP4EPvQdbHa6k655vM=;
-        b=OFC4DPMCXWmfDYQpcLka7Es9nd7nQ37mQnH0PgM+j+NdHtz2dSvvVg6zCRe/1W87xF
-         oP2vYuC+UtO8v5SpgB0l84LWymJ3xZDJtkqgSmRSsM1KcH4q1Pqs7qjegqtsmItaRfOm
-         BzMWhzq1GrLlFoUEyGMUhfr40QkFXwBsylOMdkHycRaZDYN6hzXgqoQ2ZrYGodLK9PXj
-         dafYULgl1Cg5iISym1Sb9IH7IUSwJAVH9me89azyTCq/+LevuCjT+yeARSwDkypjMrl2
-         iUV0XUP4l+MdNOCjCn7Qh56GM49ztu2qsdORvmykjIUcImwFh6XKoU+R6eDEnZiyqdPT
-         bNRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mtm4pvPjWMYrozLxNwOe/qUwVMP4EPvQdbHa6k655vM=;
-        b=QE1EehHai6Z3QBBbk1ORCeUk33t5DXCKKougkKSqcTub66abBBzQaPZsIFB1o2uqjG
-         Ym22+9shpnjsnYbvc0Uw5yTiF+vEXN3VhKnVzYXqdvtw4dOAqMgNOsMfP0iWz90edAhY
-         oVxPs7Ngy0m55/OqVDwkzVdIQYZKBnOEnSaNYNclHcFcTFCcZyQSoeEw3blLl7oghTWu
-         1CQAfB7Znx8aGa88a2FOwgzOzUBTs2z7rTixyTItyzt+PNKNLsmlV712+Bc3d6JHkizJ
-         T2f7XHpvAq3TBa6jl/GlPfhRcognzuv3Ch6Qfjm/snnLElawSV1rZ7MHZnTRi24kljrX
-         2O0A==
-X-Gm-Message-State: AFqh2kqvkUlxTxpihBS9U8N/1GCLGrjCP9IL4HATWPxSm2gNzIhjQHJ/
-        eHpA2WqOUvQBLnG6HKlJcKz8TLY4qLzuV/Il
-X-Google-Smtp-Source: AMrXdXvpEMqxqZnyYwJjA2Wsk0U+UFnZxwFXqNXzBsxQUAnIV5QVOBZC1hnbueLh3hPx5pTQRrK0Pg==
-X-Received: by 2002:a0c:ab1b:0:b0:534:86f1:bcb5 with SMTP id h27-20020a0cab1b000000b0053486f1bcb5mr3324781qvb.41.1673629356285;
-        Fri, 13 Jan 2023 09:02:36 -0800 (PST)
-Received: from localhost.localdomain (76-10-173-44.dsl.teksavvy.com. [76.10.173.44])
-        by smtp.gmail.com with ESMTPSA id v9-20020a05620a440900b006fc6529abaesm13094955qkp.101.2023.01.13.09.02.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 09:02:35 -0800 (PST)
-From:   Anatoli Antonovitch <a.antonovitch@gmail.com>
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, lukas@wunner.de, Alexander.Deucher@amd.com,
-        christian.koenig@amd.com,
-        Anatoli Antonovitch <anatoli.antonovitch@amd.com>
-Subject: [PATCH] PCI/hotplug: Replaced down_write_nested with hotplug_slot_rwsem if ctrl->depth > 0 when taking the ctrl->reset_lock.
-Date:   Fri, 13 Jan 2023 12:01:31 -0500
-Message-Id: <20230113170131.5086-1-a.antonovitch@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S230478AbjAMRWA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 12:22:00 -0500
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BAC0FA08AB;
+        Fri, 13 Jan 2023 09:14:19 -0800 (PST)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id D87BAE0F1B;
+        Fri, 13 Jan 2023 20:14:18 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=XY5ZrHH
+        RzvcaWVuA9j4006TYz9B4dSsrKM/Qh6SRJpM=; b=op5ZiJV5nWlefeE6RDaWLmb
+        5sJGb2jEvh3qeCcVb6DegNHPpGctkfLApuF/V6Dr4odxTWm75JVCxRXx640nT/R4
+        l+qGroE219YldZN9PSBNDZbh5faVKZu/KEsIwINyM53c2UBQTcLxEnqS+EhZnMFX
+        Uqr2f1rQI3SXUvqodjAI=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id BC6A6E0F13;
+        Fri, 13 Jan 2023 20:14:18 +0300 (MSK)
+Received: from localhost (10.8.30.26) by mail (192.168.51.25) with Microsoft
+ SMTP Server (TLS) id 15.0.1395.4; Fri, 13 Jan 2023 20:14:18 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 00/27] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Date:   Fri, 13 Jan 2023 20:13:42 +0300
+Message-ID: <20230113171409.30470-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.8.30.26]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+This is a final patchset in the series created in the framework of
+my Baikal-T1 PCIe/eDMA-related work:
 
-It is to avoid any potential issues when S3 resume but at the same time we want to hot-unplug.
+[1: Done v5] PCI: dwc: Various fixes and cleanups
+Link: https://lore.kernel.org/linux-pci/20220624143428.8334-1-Sergey.Semin@baikalelectronics.ru/
+Merged: kernel 6.0-rc1
+[2: Done v4] PCI: dwc: Add hw version and dma-ranges support
+Link: https://lore.kernel.org/linux-pci/20220624143947.8991-1-Sergey.Semin@baikalelectronics.ru/
+Merged: kernel 6.0-rc1
+[3: Done v7] PCI: dwc: Add generic resources and Baikal-T1 support
+Link: https://lore.kernel.org/linux-pci/20221113191301.5526-1-Sergey.Semin@baikalelectronics.ru/
+Merged: kernel 6.2-rc1
+[4: In-review v9] dmaengine: dw-edma: Add RP/EP local DMA controllers support
+Link: ---you are looking at it---
 
-To fix the race between pciehp and AER reported in https://bugzilla.kernel.org/show_bug.cgi?id=215590
+Note it is very recommended to merge the patchsets in the same order as
+they are listed in the set above in order to have them applied smoothly.
+Since the patchsets 1-3 have already been merged into the mainline kernel
+this series can be applied via any DMA-engine or PCI repos.
 
-INFO: task irq/26-aerdrv:95 blocked for more than 120 seconds.
-Tainted: G        W          6.2.0-rc3-custom-norework-jan11+ #29
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:irq/26-aerdrv   state:D stack:0     pid:95    ppid:2      flags:0x00004000
-Call Trace:
-<TASK>
-__schedule+0x3df/0xec0
-? rcu_read_lock_held_common+0x12/0x60
-schedule+0x6b/0x100
-rwsem_down_write_slowpath+0x3b2/0x9c0
-down_write_nested+0x16b/0x220
-pciehp_reset_slot+0x63/0x160
-pci_reset_hotplug_slot+0x44/0x80
-pci_slot_reset+0x10d/0x1a0
-pci_bus_error_reset+0xb2/0xe0
-aer_root_reset+0x144/0x1a0
-pcie_do_recovery+0x15a/0x280
-? __pfx_aer_root_reset+0x20/0x20
-aer_process_err_devices+0xfa/0x115
-aer_isr.cold+0x52/0xa1
-? __kmem_cache_free+0x36a/0x3c0
-? irq_thread+0xb0/0x1e0
-? irq_thread+0xb0/0x1e0
-irq_thread_fn+0x28/0x80
-irq_thread+0x106/0x1e0
-? __pfx_irq_thread_fn+0x20/0x20
-? __pfx_irq_thread_dtor+0x20/0x20
-? __pfx_irq_thread+0x20/0x20
-kthread+0x10a/0x140
-? __pfx_kthread+0x20/0x20
-ret_from_fork+0x35/0x60
-</TASK>
+Here is a short summary regarding this patchset. The series starts with
+fixes patches. We discovered that the dw-edma-pcie.c driver incorrectly
+initializes the LL/DT base addresses for the platforms with not matching
+CPU and PCIe memory spaces. It is fixed by using the pci_bus_address()
+method to get a correct base address. After that you can find a series of
+the interleaved xfers fixes. It turned out the interleaved transfers
+implementation didn't work quite correctly from the very beginning for
+instance missing src/dst addresses initialization, etc. In the framework
+of the next two patches we suggest to add a new platform-specific
+callback - pci_address() and use it to convert the CPU address to the PCIe
+space address. It is at least required for the DW eDMA remote End-point
+setup on the platforms with not-matching CPU/PCIe address spaces. In case
+of the DW eDMA local RP/EP setup the conversion will be done automatically
+by the outbound iATU (if no DMA-bypass flag is specified for the
+corresponding iATU window). Then we introduce a set of the patches to make
+the DebugFS part of the code supporting the multi-eDMA controllers
+platforms. It starts with several cleanup patches and is closed joining
+the Read/Write channels into a single DMA-device as they originally should
+have been. After that you can find the patches with adding the non-atomic
+io-64 methods usage, dropping DT-region descriptors allocation, replacing
+chip IDs with the device name. In addition to that in order to have the
+eDMA embedded into the DW PCIe RP/EP supported we need to bypass the
+dma-ranges-based memory ranges mapping since in case of the root port DT
+node it's applicable for the peripheral PCIe devices only. Finally at the
+series closure we introduce a generic DW eDMA controller support being
+available in the DW PCIe Root Port/Endpoint driver.
 
-INFO: task irq/26-pciehp:96 blocked for more than 120 seconds.
-Tainted: G        W          6.2.0-rc3-custom-norework-jan11+ #29
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:irq/26-pciehp   state:D stack:0     pid:96    ppid:2      flags:0x00004000
-Call Trace:
-<TASK>
-__schedule+0x3df/0xec0
-? rcu_read_lock_sched_held+0x25/0x80
-schedule+0x6b/0x100
-schedule_preempt_disabled+0x18/0x40
-__mutex_lock+0x685/0xf60
-? rcu_read_lock_sched_held+0x25/0x80
-? rcu_read_lock_held_common+0x12/0x60
-? pci_dev_set_disconnected+0x1b/0x80
-mutex_lock_nested+0x1b/0x40
-? mutex_lock_nested+0x1b/0x40
-pci_dev_set_disconnected+0x1b/0x80
-? __pfx_pci_dev_set_disconnected+0x20/0x20
-pci_walk_bus+0x48/0xa0
-pciehp_unconfigure_device+0x129/0x140
-pciehp_disable_slot+0x6e/0x120
-pciehp_handle_presence_or_link_change+0xf1/0x320
-pciehp_ist+0x1a0/0x1c0
-? irq_thread+0xb0/0x1e0
-irq_thread_fn+0x28/0x80
-irq_thread+0x106/0x1e0
-? __pfx_irq_thread_fn+0x20/0x20
-? __pfx_irq_thread_dtor+0x20/0x20
-? __pfx_irq_thread+0x20/0x20
-kthread+0x10a/0x140
-? __pfx_kthread+0x20/0x20
-ret_from_fork+0x35/0x60
-</TASK>
+Link: https://lore.kernel.org/linux-pci/20220324014836.19149-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Drop the patches:
+  [PATCH 1/25] dmaengine: dw-edma: Drop dma_slave_config.direction field usage
+  [PATCH 2/25] dmaengine: dw-edma: Fix eDMA Rd/Wr-channels and DMA-direction semantics
+  since they are going to be merged in in the framework of the
+  Frank's patchset.
+- Add a new patch: "dmaengine: dw-edma: Release requested IRQs on
+  failure."
+- Drop __iomem qualifier from the struct dw_edma_debugfs_entry instance
+  definition in the dw_edma_debugfs_u32_get() method. (@Manivannan)
+- Add a new patch: "dmaengine: dw-edma: Rename DebugFS dentry variables to
+  'dent'." (@Manivannan)
+- Slightly extend the eDMA name array size. (@Manivannan)
+- Change the specific DMA mapping comment a bit to being
+  clearer. (@Manivannan)
+- Add a new patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+  method."
+- Don't fail eDMA detection procedure if the DW eDMA driver couldn't probe
+  device. That happens if the driver is disabled. (@Manivannan)
+- Add "dma" registers resource mapping procedure. (@Manivannan)
+- Move the eDMA CSRs space detection into the dw_pcie_map_detect() method.
+- Remove eDMA on the dw_pcie_ep_init() internal errors. (@Manivannan)
+- Remove eDMA in the dw_pcie_ep_exit() method.
+- Move the dw_pcie_edma_detect() method execution to the tail of the
+  dw_pcie_ep_init() function.
 
-Signed-off-by: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
----
- drivers/pci/hotplug/pciehp_hpc.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Link: https://lore.kernel.org/linux-pci/20220503225104.12108-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Conditionally set dchan->dev->device.dma_coherent field since it can
+  be missing on some platforms. (@Manivannan)
+- Drop the patch: "PCI: dwc: Add generic iATU/eDMA CSRs space detection
+  method". A similar modification has been done in another patchset.
+- Add more comprehensive and less regression prune eDMA block detection
+  procedure.
+- Drop the patch: "dma-direct: take dma-ranges/offsets into account in
+  resource mapping". It will be separately reviewed.
+- Remove Manivannan tb tag from the modified patches.
+- Rebase onto the kernel v5.18.
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index 10e9670eea0b..b1084e67f798 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -27,6 +27,8 @@
- #include "../pci.h"
- #include "pciehp.h"
- 
-+static DECLARE_RWSEM(hotplug_slot_rwsem);
-+
- static const struct dmi_system_id inband_presence_disabled_dmi_table[] = {
- 	/*
- 	 * Match all Dell systems, as some Dell systems have inband
-@@ -911,7 +913,10 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
- 	if (probe)
- 		return 0;
- 
--	down_write_nested(&ctrl->reset_lock, ctrl->depth);
-+	if (ctrl->depth > 0)
-+		down_write_nested(&ctrl->reset_lock, ctrl->depth);
-+	else
-+		down_write(&hotplug_slot_rwsem);
- 
- 	if (!ATTN_BUTTN(ctrl)) {
- 		ctrl_mask |= PCI_EXP_SLTCTL_PDCE;
-@@ -931,7 +936,11 @@ int pciehp_reset_slot(struct hotplug_slot *hotplug_slot, bool probe)
- 	ctrl_dbg(ctrl, "%s: SLOTCTRL %x write cmd %x\n", __func__,
- 		 pci_pcie_cap(ctrl->pcie->port) + PCI_EXP_SLTCTL, ctrl_mask);
- 
--	up_write(&ctrl->reset_lock);
-+	if (ctrl->depth > 0)
-+		up_write(&ctrl->reset_lock);
-+	else
-+		up_write(&hotplug_slot_rwsem);
-+
- 	return rc;
- }
- 
+Link: https://lore.kernel.org/linux-pci/20220610091459.17612-1-Sergey.Semin@baikalelectronics.ru
+Changelog v4:
+- Rabase onto the laters Frank Li series:
+Link: https://lore.kernel.org/all/20220524152159.2370739-1-Frank.Li@nxp.com/
+- Add Vinod' Ab-tag.
+- Rebase onto the kernel v5.19-rcX.
+
+Link: https://lore.kernel.org/linux-pci/20220728142841.12305-1-Sergey.Semin@baikalelectronics.ru
+Changelog v5:
+- Just resend.
+- Rebase onto the kernel v6.0-rc2.
+
+Link: https://lore.kernel.org/linux-pci/20220822185332.26149-1-Sergey.Semin@baikalelectronics.ru
+Changelog v6:
+- Fix some patchlog and in-line comments misspells. (@Bjorn)
+- Directly call *_dma_configure() method on the DW eDMA channel child
+  device used for the DMA buffers mapping. (@Robin)
+- Explicitly set the DMA-mask of the child device in the channel
+  allocation proecedure. (@Robin)
+- Rebase onto the kernel v6.1-rc3.
+
+Link: https://lore.kernel.org/linux-pci/20221107210438.1515-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v7:
+- Activate the mapping auto-detection procedure for IP-cores older than
+  5.40a. The viewport-based access has been removed since that
+  version. (@Yoshihiro)
+- Drop the patch
+  [PATCH v6 22/24] dmaengine: dw-edma: Bypass dma-ranges mapping for the local setup
+  since the problem has been fixed in the commit f1ad5338a4d5 ("of: Fix
+  "dma-ranges" handling for bus controllers"). (@Robin)
+- Add a new patch:
+  [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data allocation
+  (@Robin)
+- Add a new patch:
+  [PATCH v7 24/25] PCI: bt1: Set 64-bit DMA-mask
+  (@Robin)
+
+Link: https://lore.kernel.org/linux-pci/20221214235305.31744-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v8:
+- Add a new patch:
+  [PATCH v8 23/26] dmaengine: dw-edma: Relax driver config settings
+  (@tbot)
+- Replace the patch
+  [PATCH v7 23/25] PCI: dwc: Restore DMA-mask after MSI-data allocation
+  with a new one:
+  [PATCH v8 24/26] PCI: dwc: Set coherent DMA-mask on MSI-address allocation
+  (@Robin, @Christoph)
+
+Link: https://lore.kernel.org/linux-pci/20221219144658.26620-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v9:
+- Add a new patch:
+  [PATCH v9 23/27] dmaengine: dw-edma: Add mem-mapped LL-entries support
+  (@tbot)
+- Rebase onto the kernel 6.2-rc3.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: "Krzysztof Wilczyński" <kw@linux.com>
+Cc: caihuoqing <caihuoqing@baidu.com>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (27):
+  dmaengine: Fix dma_slave_config.dst_addr description
+  dmaengine: dw-edma: Release requested IRQs on failure
+  dmaengine: dw-edma: Convert ll/dt phys-address to PCIe bus/DMA address
+  dmaengine: dw-edma: Fix missing src/dst address of the interleaved
+    xfers
+  dmaengine: dw-edma: Don't permit non-inc interleaved xfers
+  dmaengine: dw-edma: Fix invalid interleaved xfers semantics
+  dmaengine: dw-edma: Add CPU to PCIe bus address translation
+  dmaengine: dw-edma: Add PCIe bus address getter to the remote EP
+    glue-driver
+  dmaengine: dw-edma: Drop chancnt initialization
+  dmaengine: dw-edma: Fix DebugFS reg entry type
+  dmaengine: dw-edma: Stop checking debugfs_create_*() return value
+  dmaengine: dw-edma: Add dw_edma prefix to the DebugFS nodes descriptor
+  dmaengine: dw-edma: Convert DebugFS descs to being kz-allocated
+  dmaengine: dw-edma: Rename DebugFS dentry variables to 'dent'
+  dmaengine: dw-edma: Simplify the DebugFS context CSRs init procedure
+  dmaengine: dw-edma: Move eDMA data pointer to DebugFS node descriptor
+  dmaengine: dw-edma: Join Write/Read channels into a single device
+  dmaengine: dw-edma: Use DMA-engine device DebugFS subdirectory
+  dmaengine: dw-edma: Use non-atomic io-64 methods
+  dmaengine: dw-edma: Drop DT-region allocation
+  dmaengine: dw-edma: Replace chip ID number with device name
+  dmaengine: dw-edma: Skip cleanup procedure if no private data found
+  dmaengine: dw-edma: Add mem-mapped LL-entries support
+  dmaengine: dw-edma: Relax driver config settings
+  PCI: dwc: Set coherent DMA-mask on MSI-address allocation
+  PCI: bt1: Set 64-bit DMA-mask
+  PCI: dwc: Add DW eDMA engine support
+
+ drivers/dma/dw-edma/Kconfig                   |   5 +-
+ drivers/dma/dw-edma/dw-edma-core.c            | 196 ++++-----
+ drivers/dma/dw-edma/dw-edma-core.h            |  10 +-
+ drivers/dma/dw-edma/dw-edma-pcie.c            |  56 ++-
+ drivers/dma/dw-edma/dw-edma-v0-core.c         | 121 +++---
+ drivers/dma/dw-edma/dw-edma-v0-core.h         |   1 -
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.c      | 372 ++++++++----------
+ drivers/dma/dw-edma/dw-edma-v0-debugfs.h      |   5 -
+ drivers/pci/controller/dwc/pcie-bt1.c         |   4 +
+ .../pci/controller/dwc/pcie-designware-ep.c   |  12 +-
+ .../pci/controller/dwc/pcie-designware-host.c |  24 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 195 +++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  |  21 +
+ include/linux/dma/edma.h                      |  25 +-
+ include/linux/dmaengine.h                     |   2 +-
+ 15 files changed, 652 insertions(+), 397 deletions(-)
+
 -- 
-2.25.1
+2.39.0
+
 
