@@ -2,102 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D316B66A392
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 20:44:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A978B66A2BD
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 20:17:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231214AbjAMTn7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 14:43:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        id S229639AbjAMTRR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 14:17:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231309AbjAMTnh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 14:43:37 -0500
-Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F35A8B50B;
-        Fri, 13 Jan 2023 11:42:51 -0800 (PST)
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-        by relay.mailchannels.net (Postfix) with ESMTP id 10D61141713;
-        Fri, 13 Jan 2023 19:35:57 +0000 (UTC)
-Received: from pdx1-sub0-mail-a315.dreamhost.com (unknown [127.0.0.6])
-        (Authenticated sender: dreamhost)
-        by relay.mailchannels.net (Postfix) with ESMTPA id 233AA14116F;
-        Fri, 13 Jan 2023 19:35:56 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1673638556; a=rsa-sha256;
-        cv=none;
-        b=cG+Z2qAz4cvzhunoxANkxGEe2NGjw1Tb1TdfYu2QMjzlyT7iVB62nR8eeN2esf70BavIK7
-        naYklHrfGUZOhvh754wUsFVruu6YtoMoUc1Yp01e8Oso5WVh2s37MnQ8SEoxSPwBttS4YB
-        nt8rpCY3t3QOtcsPjU1yMyb/14YHz6Xz43HK66ngvjgtigvI419vU7orzk9a/et9LaBebI
-        c/nOK5I08t0KC42jqWFuUfYBvKJE7Rk8Yi7NF0prQu1TeEsLbhUeeniFHRyINsPb+aZOlD
-        5cgYfEyg9/eIdvGCTAVLz508L/PfgTeSfTpPTHEoNHg8vNVC8u0YSOmZseuGZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-        s=arc-2022; t=1673638556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:dkim-signature;
-        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
-        b=SFsUmo4XcY0lL/gkoncDmDebZPTyS8N5n3LcP2g6aYoCX6VG20vOfk35q8vISx7EYk+5lR
-        EwHJryKFEeh6dvSOX/FlUC4GNH0/i3F4GEOby3/+n5sRpqlPVYEIGT7464xSUOdCzqaZSp
-        /hJex31XDhUG5rKggAyiFsLScbzc8JgPQDj/oF3Uobxn35FxiCahyTygXAV5Buf5/2I9w3
-        xWAZO1+tJYpUvM44u+Ja7Qca0DnStlieUwj6OgoQ41rDIOto4YTvVCAz6k9T7iyrBzHgfk
-        Er+xVvOjTnUm39D3s9Slcby3/ne1nWe+533FS2GVup18HnEwuiq93QL1DJfH0w==
-ARC-Authentication-Results: i=1;
-        rspamd-7cf955c847-95cc5;
-        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Tangy-Tasty: 1331cd9b1eee83f2_1673638556780_816576564
-X-MC-Loop-Signature: 1673638556780:4214692273
-X-MC-Ingress-Time: 1673638556780
-Received: from pdx1-sub0-mail-a315.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-        by 100.107.134.75 (trex/6.7.1);
-        Fri, 13 Jan 2023 19:35:56 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: dave@stgolabs.net)
-        by pdx1-sub0-mail-a315.dreamhost.com (Postfix) with ESMTPSA id 4Nts8p3FR4z3g;
-        Fri, 13 Jan 2023 11:35:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-        s=dreamhost; t=1673638555;
-        bh=4BLKm052qLnpFlYXMLi9U0yMb6GrF0x2PZhYEYe6tjs=;
-        h=Date:From:To:Cc:Subject:Content-Type;
-        b=ei7fzggKdsKBEfNTyASrwafKvnYprM7I18ZA+QVy1OkOR3FQv0Xl8bmPZxwsFQTNX
-         uV0BiixDIiwfGh8v3NtVtfZMhsR+wwA4FSYmdQjesHtOhiSMbW0ejInTVbNrENgKka
-         3KOiNFMzZLhaYEtPI/mJh62uof8KTGm62ZiKa2XY9b4LLbWlWKQrGAZ/r3rBa4BTTl
-         zzWnl4cr2F5a0D7P1QqAKs2ENLzz140giLXCFmzk5KyoayLDntVoqy6FGNfNmB3Bc/
-         3jHJglrAfmB6KvJrwaynZlwkSiIdJfUFALFLJfiu3GHmET9/UoZyjmgOqUxfNjOTdl
-         Rj+7PgX4zzfTA==
-Date:   Fri, 13 Jan 2023 11:09:50 -0800
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v6 4/8] cxl/mem: Trace DRAM Event Record
-Message-ID: <20230113190950.okeaanjymyhy4ec4@offworld>
-References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
- <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
+        with ESMTP id S230134AbjAMTRI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 14:17:08 -0500
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com [209.85.210.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A9BF857FA;
+        Fri, 13 Jan 2023 11:17:07 -0800 (PST)
+Received: by mail-ot1-f41.google.com with SMTP id m6-20020a9d7e86000000b0066ec505ae93so12738059otp.9;
+        Fri, 13 Jan 2023 11:17:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FapQoxkKDls/b9akC1v16cEe+PDIce/Iikxy1EziQ8I=;
+        b=CbkhNGkAE1kk2anaTOnhr8kY9ruYlZpwTO46Ai8SkCnQ1ufndr8NyqGiAsXNzWyFm1
+         vwIH0BhhvsgC5ml9kXkCCTBOQ0c0DuJ4hgBf5FGouINfuiWQSSegS4bb1k0+EXKOPGT1
+         RRYUmYu1JIR1xyLhEWEy4IOm+Lon+JvVkcTwosvd4LfgNaaZa+xQcL9M/KFcUoCIoxG3
+         p1tavotmwF+4/+6qQaD+RRTag6XzZ1hbndzUru37NoHVnajJE5la8xwmuCXxJmleT7uD
+         lYOpNRgViudI/Up/X0kbSEjlDVMHYx/lQnJXOdS+saUKLybmU5yCL0F8Sm4Iu2ygv887
+         rzzw==
+X-Gm-Message-State: AFqh2kqHPFnG+StSBgDu553tscT4M7WFUFQ/PhgHPNuBYYgWHHhi19O/
+        GqnWbWU1sKe36gUZxP+i/Bfd3m4o6A==
+X-Google-Smtp-Source: AMrXdXvwi/XqjBgQXuKc8TT4fT5fBqWRCmJ2xZ0Xa3GhPV+vqWZTcy9OJrE7vk2Mj1YjWeMDnmNFzg==
+X-Received: by 2002:a9d:19e9:0:b0:684:9f0e:57f6 with SMTP id k96-20020a9d19e9000000b006849f0e57f6mr8165074otk.10.1673637426694;
+        Fri, 13 Jan 2023 11:17:06 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id g72-20020a9d12ce000000b00684ccbfe012sm1767009otg.27.2023.01.13.11.17.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 11:17:06 -0800 (PST)
+Received: (nullmailer pid 2751067 invoked by uid 1000);
+        Fri, 13 Jan 2023 19:17:05 -0000
+Date:   Fri, 13 Jan 2023 13:17:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     krzysztof.kozlowski+dt@linaro.org, konrad.dybcio@linaro.org,
+        andersson@kernel.org, bhelgaas@google.com,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        lpieralisi@kernel.org, robh+dt@kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: qcom: Allow both GIC-ITS and
+ internal MSI controller
+Message-ID: <167363742427.2750717.3455349071670736976.robh@kernel.org>
+References: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221216-cxl-ev-log-v6-4-346583105b30@intel.com>
-User-Agent: NeoMutt/20220429
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+In-Reply-To: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -105,14 +66,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 09 Jan 2023, Ira Weiny wrote:
 
->CXL rev 3.0 section 8.2.9.2.1.2 defines the DRAM Event Record.
->
->Determine if the event read is a DRAM event record and if so trace the
->record.
->
->Reviewed-by: Dan Williams <dan.j.williams@intel.com>
->Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+On Wed, 11 Jan 2023 18:00:03 +0530, Manivannan Sadhasivam wrote:
+> The binding should specify both MSI implementations and the OS/driver
+> should choose the one based on the platform requirements.
+> 
+> Fixes: 2b0d557419cd ("dt-bindings: PCI: qcom: Allow both GIC-ITS and internal MSI controller")
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
