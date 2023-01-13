@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38216669E8A
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 17:47:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B61CC669E8F
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 17:47:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230186AbjAMQr1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 11:47:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34008 "EHLO
+        id S230213AbjAMQr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 11:47:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33766 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbjAMQrF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 11:47:05 -0500
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07EF665E1;
-        Fri, 13 Jan 2023 08:44:55 -0800 (PST)
-Received: by mail-ej1-x62b.google.com with SMTP id ud5so53646599ejc.4;
-        Fri, 13 Jan 2023 08:44:54 -0800 (PST)
+        with ESMTP id S229490AbjAMQrH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 11:47:07 -0500
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60987BDC5;
+        Fri, 13 Jan 2023 08:44:56 -0800 (PST)
+Received: by mail-ej1-x62a.google.com with SMTP id ss4so46355397ejb.11;
+        Fri, 13 Jan 2023 08:44:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JZtHSB0eCc8lOVuNfyokAmhYTSqa4Jdvmr66zlOUrvk=;
-        b=ZrTOQtwAkJSneXkJZLjZKlc/0Nkl52jz7jsKdEpo5HfWRitKDqZKZWDXOMjmyQ5dLp
-         9sVVZSdDXRSw7BCWZvdEnoph1YAPOD4UUW3fIN2AM9EAlhDBqd6icKLcGuCarC3cL7qS
-         5p1xd7nSKKX1NvdgSksOP4mWvYx6K7RtHIk3Px4IBb7QybQbQ4KVyQLxndy7mKkhn5qC
-         fCmuARsE3kttt/xK9Vh0ezsTZjiA6/Q1cN3orCieUyITDFMRxiGOu/M5dQNYZVUWrfXf
-         3VMTpWzukj3EVBeDAMYZRmgPKuU8I4PryehGP1OE2DivKkdTmhCVlLZmaNCL/oNU/DOj
-         kerA==
+        bh=EQcb/oB3xwlOm2s48lLOAq9nyVmzgn+8crtA0/+mZ6I=;
+        b=EMGWF/60kpr/l/+9wKwakDK9XdOz38PcYFeA7MDzQldjdl4x03vknBOGOPhoFBMI+0
+         /HIBACCJ/OuWYQnHFrvKnN758S7TWNsHCC3eI4BWDVGM0zQH9Ct4nYPP/LHeuwbz3okI
+         WS2yn5yiskrYPSVKUA7x9zsPskcxd0br5xZWRUcjlRQV/ck2kOsNNfuXj6H15n8WgWsl
+         opshIvdMpsqLo9yVKpErnzIk/flj4HA9FP6+8PQN9rmoRcHUzuSZqxi1XxFRa9AxEZXp
+         sFV3Aw4lslSF4UuHYd5ruzo4m9aTgmHXq6LWqgZv15rmhtQ0hIFRWJ4mDOdtIkb0tAaC
+         GTCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JZtHSB0eCc8lOVuNfyokAmhYTSqa4Jdvmr66zlOUrvk=;
-        b=wHN4uvtylIA66nbOVhdRTI+vthE7StcVWt2G6qDHwDCkli+KowC5rQt7yOKM6JbUGu
-         TT7JOfG264VVNEnvvMyZvxer8U9RFH9vyTLxBMbovAY4a79NZfeWRnJ7D/4rZyf1h9BQ
-         dln4yREZuetvb2w76RKJJTM07L8yv0E99diFRUyM6zFuXk0ejlH26e1lEZa8v0y090aa
-         nxCXvg0yjr1cCwO7jb9mdGDIsYxDn5OG31FJyPqonMrXnLFnMReicCFnPHE+MTBkf5Kz
-         H9rhsbcZ5WxIM3W92HTU9lbRLnBPwFoK9rf6bPieRvcTwyGQ10I1Xsr5HqAWUolYf2mu
-         t+gQ==
-X-Gm-Message-State: AFqh2krKG10tmSOa2E7fkhyFbvT0wnwQ4fg+YHfNFsdx4AcW8ywRqW40
-        U908Lsv6tPti4Z7KHthIaOI=
-X-Google-Smtp-Source: AMrXdXv9i5QiJy931McagquuWcZOzuNb//Nlso6EjfyMxHqIRj4RFhCBKMt9Z8Da2FFXnBLkJzBikQ==
-X-Received: by 2002:a17:906:99c7:b0:7ae:b637:633f with SMTP id s7-20020a17090699c700b007aeb637633fmr92461686ejn.4.1673628293556;
-        Fri, 13 Jan 2023 08:44:53 -0800 (PST)
+        bh=EQcb/oB3xwlOm2s48lLOAq9nyVmzgn+8crtA0/+mZ6I=;
+        b=78cIM6vzJ9zfcqZCQ4X5kAC4Uyt494l6GeCE1IizFs9fteKt62rZAgkPWGgotGufkh
+         alVgm7r/tY3uon/OqAd7ViHx8Tc7QtYTFUDNLLz+J5xspfhGTi9DhaMPK0Du1DNQn+v8
+         ktXV074ScLNiNHRCUR6NerGsziwtxOsQANmhI/z0qfi1c0H8SPtBQkxg3cQLi9H+oedB
+         Cr4d+NbgZmq5Kt75XjD7x1A98WCANhpWcRkBbVzyPecDyyfRqM4YG4Er8Kc9ANoZ5LTL
+         nsKh8k3UzmSFYB4qeGJhTMwpZsqRYXY/5nT/YHREIp40DmNfRK4FwUnQjLT+esf+dyn8
+         +Pyw==
+X-Gm-Message-State: AFqh2kqUJLXepsZLCsA6ptsJHvOJQ7EoesP7pSh6hOGiXezwwna71JrQ
+        o6aULrEL27WLErWGaxRjNoo=
+X-Google-Smtp-Source: AMrXdXtq9iCGPs4Wpz7bJkFbhICFBu+rxsGSDjAFwBCgsNBgrK6z/7GUEyYpBoNZDufRG1jNqKEtYQ==
+X-Received: by 2002:a17:906:6693:b0:7c1:8ba7:3182 with SMTP id z19-20020a170906669300b007c18ba73182mr77501370ejo.69.1673628294893;
+        Fri, 13 Jan 2023 08:44:54 -0800 (PST)
 Received: from fedora.. (dh207-97-147.xnet.hr. [88.207.97.147])
-        by smtp.googlemail.com with ESMTPSA id sb25-20020a1709076d9900b007b2a58e31dasm8777831ejc.145.2023.01.13.08.44.52
+        by smtp.googlemail.com with ESMTPSA id sb25-20020a1709076d9900b007b2a58e31dasm8777831ejc.145.2023.01.13.08.44.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 08:44:53 -0800 (PST)
+        Fri, 13 Jan 2023 08:44:54 -0800 (PST)
 From:   Robert Marko <robimarko@gmail.com>
 To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
@@ -57,9 +57,9 @@ To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Robert Marko <robimarko@gmail.com>
-Subject: [PATCH v2 2/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe QMP PHY
-Date:   Fri, 13 Jan 2023 17:44:42 +0100
-Message-Id: <20230113164449.906002-2-robimarko@gmail.com>
+Subject: [PATCH v2 3/9] arm64: dts: qcom: ipq8074: correct Gen2 PCIe ranges
+Date:   Fri, 13 Jan 2023 17:44:43 +0100
+Message-Id: <20230113164449.906002-3-robimarko@gmail.com>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <20230113164449.906002-1-robimarko@gmail.com>
 References: <20230113164449.906002-1-robimarko@gmail.com>
@@ -75,58 +75,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-IPQ8074 comes in 2 silicon versions:
-* v1 with 2x Gen2 PCIe ports and QMP PHY-s
-* v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
-
-v2 is the final and production version that is actually supported by the
-kernel, however it looks like PCIe related nodes were added for the v1 SoC.
-
-Now that we have Gen3 QMP PHY support, we can start fixing the PCIe support
-by fixing the Gen3 QMP PHY node first.
-
-Change the compatible to the Gen3 QMP PHY, correct the register space start
-and size, add the missing misc PCS register space.
+Current ranges property set in Gen2 PCIe node is incorrect, replace it
+with the downstream 5.4 QCA kernel value.
 
 Fixes: 33057e1672fe ("ARM: dts: ipq8074: Add pcie nodes")
 Signed-off-by: Robert Marko <robimarko@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/ipq8074.dtsi | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-index 31ec24100213..c93e3f39f33d 100644
+index c93e3f39f33d..06e1da176334 100644
 --- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
 +++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
-@@ -232,9 +232,9 @@ qusb_phy_0: phy@79000 {
- 			status = "disabled";
- 		};
+@@ -808,9 +808,9 @@ pcie1: pci@10000000 {
+ 			phy-names = "pciephy";
  
--		pcie_qmp0: phy@86000 {
--			compatible = "qcom,ipq8074-qmp-pcie-phy";
--			reg = <0x00086000 0x1c4>;
-+		pcie_qmp0: phy@84000 {
-+			compatible = "qcom,ipq8074-qmp-gen3-pcie-phy";
-+			reg = <0x00084000 0x1bc>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-@@ -248,10 +248,11 @@ pcie_qmp0: phy@86000 {
- 				      "common";
- 			status = "disabled";
+ 			ranges = <0x81000000 0 0x10200000 0x10200000
+-				  0 0x100000   /* downstream I/O */
+-				  0x82000000 0 0x10300000 0x10300000
+-				  0 0xd00000>; /* non-prefetchable memory */
++				  0 0x10000>,   /* downstream I/O */
++				 <0x82000000 0 0x10220000 0x10220000
++				  0 0xfde0000>; /* non-prefetchable memory */
  
--			pcie_phy0: phy@86200 {
--				reg = <0x86200 0x16c>,
--				      <0x86400 0x200>,
--				      <0x86800 0x4f4>;
-+			pcie_phy0: phy@84200 {
-+				reg = <0x84200 0x16c>,
-+				      <0x84400 0x200>,
-+				      <0x84800 0x1f0>,
-+				      <0x84c00 0xf4>;
- 				#phy-cells = <0>;
- 				#clock-cells = <0>;
- 				clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+ 			interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-names = "msi";
 -- 
 2.39.0
 
