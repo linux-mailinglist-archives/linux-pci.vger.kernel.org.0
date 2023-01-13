@@ -2,81 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22DA8668E6D
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 07:55:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E205668EF8
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 08:19:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233394AbjAMGzu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 01:55:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59596 "EHLO
+        id S240929AbjAMHTx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 02:19:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240729AbjAMGyy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 01:54:54 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1A726A0C2;
-        Thu, 12 Jan 2023 22:39:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=36aG/7kZ1C9JaZkQzVGJwQdSc9mIi2Y4ZSbtcZoy2ZY=; b=A5XT35Y8Z3foFbYDNMdpcz+thJ
-        VQL1qblA4dcmJ53VhsomGXP5C0z6ZYQFXvY8Nfkl2Y1c+V1uh3VltLFGej1tytG8bA8y9qP1QownD
-        FJkhtXYL807cGFA1Rvn2XoRE4WYGaUuGa3mu6hS99htIf+4Dp4Gv/kSwtV0/7lB6j0M9T447agLuf
-        fP/T58E3vJbnxu7lRMK9TTAbGwhmhGkWRhUzZVmgKl0UT4KubCwiq8HTL6T94FTV3mix0amN6KIOL
-        GZS1A0teOa5Wx2K99+fgwuYay4r7MoPb7+veBe16S/zTqW4V3DLkVFIAKU7KhqIELK61U99jpw6ua
-        q40uBuqg==;
-Received: from [2601:1c2:d80:3110::9307] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pGDj0-000qVL-AV; Fri, 13 Jan 2023 06:39:38 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] misc: pci_endpoint_test: drop initial kernel-doc marker
-Date:   Thu, 12 Jan 2023 22:39:37 -0800
-Message-Id: <20230113063937.20912-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.39.0
+        with ESMTP id S240683AbjAMHT1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 02:19:27 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 621DE74595
+        for <linux-pci@vger.kernel.org>; Thu, 12 Jan 2023 23:04:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673593458; x=1705129458;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=jNC9BbuUJx0FUD84sy73dzcIWIOQPP03qUVpNAyWTGU=;
+  b=KMC9aD3bOs/ll5bYjprkPO72SpnEvcafqlTxJn4W9svPTYdqirOBUz5J
+   yTlV6WIQmInOzPGkYkXVIBrCDDHRPqVvPBHv2Jle8Zkd4TIjoi628TQPu
+   cVdjncGXbzlyM2RCwgE5LSPQVaixj/CsEyflNZmG9Li+0gV2aMjpI3vLh
+   m2Y6K93Szzh6myr5IhDtYMpGe0rtzh6DhgAJetCz8tMyCWhfRVXTJz4nC
+   zzL8Q/uMttbePH75zgqVqf6x2pXEkScEV7bnjjSXF79BlGkxfSuLezIDu
+   z67euncbCQU6/M+OLFDua6IS+J7lpxfqijl9yuiXO5czw8fHndhO5VL/y
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="322632781"
+X-IronPort-AV: E=Sophos;i="5.97,213,1669104000"; 
+   d="scan'208";a="322632781"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jan 2023 23:04:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10588"; a="721424148"
+X-IronPort-AV: E=Sophos;i="5.97,213,1669104000"; 
+   d="scan'208";a="721424148"
+Received: from lkp-server02.sh.intel.com (HELO f1920e93ebb5) ([10.239.97.151])
+  by fmsmga008.fm.intel.com with ESMTP; 12 Jan 2023 23:04:17 -0800
+Received: from kbuild by f1920e93ebb5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pGE6l-000ArU-1e;
+        Fri, 13 Jan 2023 07:04:11 +0000
+Date:   Fri, 13 Jan 2023 15:04:10 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/aer] BUILD SUCCESS
+ bba5065963f8ade14f3caa5b0f5b4a53d3054dfd
+Message-ID: <63c1026a.u0U6Q+tdXYuGAEdO%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This beginning comment is not kernel-doc, so change the "/**" to a
-normal "/*" comment to prevent a kernel-doc warning:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aer
+branch HEAD: bba5065963f8ade14f3caa5b0f5b4a53d3054dfd  PCI/AER: Configure ECRC only if AER is native
 
-drivers/misc/pci_endpoint_test.c:3: warning: This comment starts with '/**', but isn't a kernel-doc comment. Refer Documentation/doc-guide/kernel-doc.rst
- * Host side test driver to test endpoint functionality
+elapsed time: 724m
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc: Krzysztof Wilczyński <kw@linux.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@kernel.org>
-Cc: linux-pci@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/misc/pci_endpoint_test.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+configs tested: 88
+configs skipped: 2
 
-diff -- a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/**
-+/*
-  * Host side test driver to test endpoint functionality
-  *
-  * Copyright (C) 2017 Texas Instruments
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+gcc tested configs:
+x86_64                            allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+ia64                             allmodconfig
+x86_64                              defconfig
+x86_64                           allyesconfig
+x86_64                               rhel-8.3
+m68k                             allyesconfig
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+riscv                randconfig-r042-20230112
+s390                 randconfig-r044-20230112
+arc                  randconfig-r043-20230112
+nios2                            allyesconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+parisc                           allyesconfig
+i386                             allyesconfig
+i386                                defconfig
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-syz
+x86_64                           rhel-8.3-bpf
+x86_64                         rhel-8.3-kunit
+arm                      integrator_defconfig
+sh                           se7721_defconfig
+m68k                          atari_defconfig
+arc                          axs103_defconfig
+m68k                       bvme6000_defconfig
+x86_64                        randconfig-a011
+x86_64                        randconfig-a013
+x86_64                        randconfig-a015
+i386                          randconfig-a012
+i386                          randconfig-a014
+i386                          randconfig-a016
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+powerpc                           allnoconfig
+sh                               allmodconfig
+arc                                 defconfig
+s390                                defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                             allyesconfig
+sparc                               defconfig
+xtensa                           allyesconfig
+csky                                defconfig
+sparc                            allyesconfig
+x86_64                                  kexec
+mips                             allyesconfig
+arm                          pxa3xx_defconfig
+sh                         ap325rxa_defconfig
+sh                         microdev_defconfig
+powerpc                          allmodconfig
+arm                                 defconfig
+arm                           h3600_defconfig
+arm                               allnoconfig
+alpha                            alldefconfig
+arc                              alldefconfig
+sparc                       sparc64_defconfig
+sh                        apsh4ad0a_defconfig
+arm64                            allyesconfig
+arm                              allyesconfig
+arm                        realview_defconfig
+mips                            ar7_defconfig
+arm                            zeus_defconfig
+arc                            hsdk_defconfig
+
+clang tested configs:
+i386                          randconfig-a002
+i386                          randconfig-a006
+i386                          randconfig-a004
+x86_64                        randconfig-a005
+x86_64                        randconfig-a003
+x86_64                        randconfig-a001
+x86_64                        randconfig-k001
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+x86_64                        randconfig-a016
+x86_64                          rhel-8.3-rust
+powerpc                      walnut_defconfig
+s390                             alldefconfig
+mips                       rbtx49xx_defconfig
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
