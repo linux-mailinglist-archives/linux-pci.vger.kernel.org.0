@@ -2,111 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CBA16692D7
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 10:27:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E95E6693E5
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 11:19:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241108AbjAMJ07 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 04:26:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53662 "EHLO
+        id S240856AbjAMKTL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 05:19:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232463AbjAMJ0A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 04:26:00 -0500
-X-Greylist: delayed 541 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 13 Jan 2023 01:19:54 PST
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1991F13F67
-        for <linux-pci@vger.kernel.org>; Fri, 13 Jan 2023 01:19:52 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id B1B7528088D6F;
-        Fri, 13 Jan 2023 10:10:33 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 93E2B77A3E; Fri, 13 Jan 2023 10:10:23 +0100 (CET)
-Date:   Fri, 13 Jan 2023 10:10:23 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Keith Busch <kbusch@kernel.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>
-Subject: Re: [PATCH 3/3] PCI/DPC: Await readiness of secondary bus after reset
-Message-ID: <20230113091023.GA29495@wunner.de>
-References: <a2ff8481c3f08458dcd2b4028a838730e965c72f.1672511017.git.lukas@wunner.de>
- <20230112223533.GA1798809@bhelgaas>
+        with ESMTP id S241039AbjAMKSn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 05:18:43 -0500
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D11A6B596;
+        Fri, 13 Jan 2023 02:18:41 -0800 (PST)
+Received: by mail-ed1-x52e.google.com with SMTP id m21so30538706edc.3;
+        Fri, 13 Jan 2023 02:18:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kzDOK1JJgHEyW0UkKAsgNd5XNzteE1HhYTj65aQgafA=;
+        b=flhQ/myVHK6JKteIP002IwYUQ1HLE+TmwKWGqM44yzp/wk8RhnYAAPRjqXegQMU8if
+         d6UkFENK/I2Ko4Cb15fraqKWzsmk3OYAbY+jKgaNgczi/cP/YUAJOpFRBXFEhG/amnDM
+         MKt96Tk+X16N9/QqPHILjSezJSRLF6NKMxI4CbKjK0YPFaPqzaZIQdlh45W4JTxdQe7Q
+         Ujc6FxGNYml+oEhvlLnVApd2aS3tQUewdiS9+lDC7hrYBIVDa5bRcGrhPtD2+i8PajKn
+         Mpe6V3OYsmoY/ds0Lt5Fw2llEK7vENozV9/3+oyJqCSmilDe6yDMCoCbTW9q6xCyyYCT
+         Jy4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kzDOK1JJgHEyW0UkKAsgNd5XNzteE1HhYTj65aQgafA=;
+        b=Fu0SlLUABAV0baO0qzaCj/Wl19GIrg7i2yVI+1XjHQF5xlzvYwpl/jjDUJYN5qvPZM
+         kGC3Tg2VJAYhuSmd94spoRcFXWsv9SFqRUZpXI64hG+PlM0pBgDnMMAijTHITtcuZxsF
+         xaoWf+shoGWSd09IcI3S/IeC8BYWuMkZgsyv8Nw/mAeogWy8ZT3lmPERxbyHPsSOoUmZ
+         PxGOiaMI6m3/HS/XSzPEIf5AIAxFFpOYzhFIEPCzq6bjtz52R23LsRpsS/A+ALMp0Wsu
+         W5FKbO7mY4skp98aQJ+HR5PzBMCmhTaG4MOGZuXFE+2ke+x3Wli0odkYT9Itpn8SSKwl
+         xmiA==
+X-Gm-Message-State: AFqh2kqqiCAQMk5sal9Ch77Zs3tEB9lgZnuUiMszSt6uR7Yxd1AcDSHC
+        KXflTkRaynoVgTAEoDaGKtx2U2UQbHlQoDqXo9Kre3MWAkI=
+X-Google-Smtp-Source: AMrXdXvp/ij2CcKdAeoXa+bxrKAsBQX0J149SYtq9TQsQyh6L5bKkEtpxP6cToqRfrtaE1cNii7nZUYGchM8ODW9oZk=
+X-Received: by 2002:a05:6402:40d3:b0:48e:c1a0:119f with SMTP id
+ z19-20020a05640240d300b0048ec1a0119fmr3971521edb.115.1673605119927; Fri, 13
+ Jan 2023 02:18:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230112223533.GA1798809@bhelgaas>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20221228120248.GA508080@bhelgaas> <20230112200819.GA1785077@bhelgaas>
+In-Reply-To: <20230112200819.GA1785077@bhelgaas>
+From:   Zeno Davatz <zdavatz@gmail.com>
+Date:   Fri, 13 Jan 2023 11:18:29 +0100
+Message-ID: <CAOkhzLU_F9O0TxUzkb9YdHr357O3muj9V7GLTLsWzHm5mUsr-w@mail.gmail.com>
+Subject: Re: [Bug 216859] New: PCI bridge to bus boot hang at enumeration
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Takashi Iwai <tiwai@suse.de>, Jaroslav Kysela <perex@perex.cz>,
+        alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 12, 2023 at 04:35:33PM -0600, Bjorn Helgaas wrote:
-> On Sat, Dec 31, 2022 at 07:33:39PM +0100, Lukas Wunner wrote:
-> > We're calling pci_bridge_wait_for_secondary_bus() after performing a
-> > Secondary Bus Reset, but neglect to do the same after coming out of a
-> > DPC-induced Hot Reset.  As a result, we're not observing the delays
-> > prescribed by PCIe r6.0 sec 6.6.1 and may access devices on the
-> > secondary bus before they're ready.  Fix it.
-> > 
-> > Tested-by: Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>
-> 
-> I assume this patch is the one that makes the difference for the
-> Intel Ponte Vecchio HPC GPU?
+Dear Bjorn
 
-Right.
+On Thu, Jan 12, 2023 at 9:08 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc sound folks]
+>
+> On Wed, Dec 28, 2022 at 06:02:48AM -0600, Bjorn Helgaas wrote:
+> > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
+> >
+> > >            Summary: PCI bridge to bus boot hang at enumeration
+> > >     Kernel Version: 6.1-rc1
+> > > ...
+> >
+> > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
+> > > see attachments.
+> > >
+> > > The enumeration works fine with Kernel 6.0 and below.
+> > >
+> > > Same problem still exists with v6.1. and v6.2.-rc1
+> >
+> > Thank you very much for your report, Zeno!
+> >
+> > v6.0 works, v6.1-rc1 fails.  Would you mind booting v6.1-rc1 with the
+> > "ignore_loglevel initcall_debug" kernel parameters and taking a photo
+> > when it hangs?
+> >
+> > How did you conclude that the hang is related to a PCI bridge?  I see
+> > recent PCI messages in the photo, but it looks like the last message
+> > is from NFS, so I'm wondering if I'm missing some context.  The v6.0
+> > dmesg shows several other ntfs, fuse, JFS, etc messages before more
+> > PCI-related things.  Anyway, the "initcall_debug" might help us narrow
+> > it down a bit.
+>
+> Thanks very much for the bisection (complete log at [1])!
+>
+> The bisection claims the first bad commit is:
+>
+>   833477fce7a1 ("Merge tag 'sound-6.1-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound")
+>
+> with parents:
+>
+>   7e6739b9336e ("Merge tag 'drm-next-2022-10-05' of git://anongit.freedesktop.org/drm/drm")
+>   86a4d29e7554 ("Merge tag 'asoc-v6.1' of https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound into for-linus")
+>
+> Both 7e6739b9336e and 86a4d29e7554 tested "good" during the bisection.
+>
+> There is a minor conflict when merging 86a4d29e7554 into the upstream,
+> but I can't imagine that being resolved incorrectly.
+>
+> Would you mind turning off CONFIG_SOUND in your .config and testing
+> 833477fce7a1 again?  I'm a little skeptical that the hang would be
+> sound-related, but I guess it's a place to start.
+>
+> Bjorn
+>
+> [1] https://bugzilla.kernel.org/show_bug.cgi?id=216859#c35
 
+Booting without sound into the commit 833477fce7a1 did not help. Same hang.
 
-> Is there a URL to a problem report, or
-> at least a sentence or two we can include here to connect the patch
-> with the problem users may see?
-
-There's no public problem report.  My understanding is that Ponte Vecchio
-was formally launched this Tuesday and mass distribution starts only now:
-
-https://www.tomshardware.com/news/intel-launches-sapphire-rapids-fourth-gen-xeon-cpus-and-ponte-vecchio-max-gpu-series
-
-The idea is to get the issue in the kernel fixed early so that users will
-never even see it.
-
-
-> Most people won't know how to
-> recognize accesses to devices on the secondary bus before they're
-> ready.
-
-With Ponte Vecchio, the GPU is located below a PCIe switch and the
-Downstream Port Containment happens at the Root Port.  So the Root
-Port needs to wait for the Switch Upstream Port to re-appear.
-
-Because config space is currently restored too early on the Switch
-Upstream Port, it remains in D0uninitialized once it comes out of
-reset, so all its registers, in particular the bridge windows,
-are in power-on reset state.  As a result, anything downstream of it
-(including the GPU) remains inaccessible and the user-visible
-error messages look like this:
-
-i915 0000:8c:00.0: can't change power state from D3cold to D0 (config space inaccessible)
-intel_vsec 0000:8e:00.1: can't change power state from D3cold to D0 (config space inaccessible)
-
-Where intel_vsec is a sibling of the GPU which is used for
-telemetry I believe.
-
-I'll be sure to include that additional information in the commit
-message when respinning.
-
-Thanks,
-
-Lukas
+Best
+Zeno
