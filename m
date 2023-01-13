@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C18CD6697C2
-	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 13:55:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55A416698A7
+	for <lists+linux-pci@lfdr.de>; Fri, 13 Jan 2023 14:34:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241777AbjAMMza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 13 Jan 2023 07:55:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33998 "EHLO
+        id S234010AbjAMNew (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 13 Jan 2023 08:34:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241650AbjAMMzA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 07:55:00 -0500
+        with ESMTP id S241567AbjAMNdw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 13 Jan 2023 08:33:52 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C650DAE48;
-        Fri, 13 Jan 2023 04:41:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E45B60CCD;
+        Fri, 13 Jan 2023 05:27:08 -0800 (PST)
 Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Ntgyg69p0z6J9YS;
-        Fri, 13 Jan 2023 20:41:31 +0800 (CST)
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Nthw807hfz67Ls2;
+        Fri, 13 Jan 2023 21:24:24 +0800 (CST)
 Received: from localhost (10.81.201.219) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 13 Jan
- 2023 12:41:40 +0000
-Date:   Fri, 13 Jan 2023 12:41:39 +0000
+ 2023 13:27:04 +0000
+Date:   Fri, 13 Jan 2023 13:27:03 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Ira Weiny <ira.weiny@intel.com>
 CC:     Dan Williams <dan.j.williams@intel.com>,
@@ -34,18 +34,18 @@ CC:     Dan Williams <dan.j.williams@intel.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v6 5/8] cxl/mem: Trace Memory Module Event Record
-Message-ID: <20230113124139.000034c0@Huawei.com>
-In-Reply-To: <20221216-cxl-ev-log-v6-5-346583105b30@intel.com>
+Subject: Re: [PATCH v6 6/8] cxl/test: Add generic mock events
+Message-ID: <20230113132703.0000664a@Huawei.com>
+In-Reply-To: <20221216-cxl-ev-log-v6-6-346583105b30@intel.com>
 References: <20221216-cxl-ev-log-v6-0-346583105b30@intel.com>
-        <20221216-cxl-ev-log-v6-5-346583105b30@intel.com>
+        <20221216-cxl-ev-log-v6-6-346583105b30@intel.com>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.81.201.219]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -57,46 +57,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 09 Jan 2023 11:42:24 -0800
+On Mon, 09 Jan 2023 11:42:25 -0800
 Ira Weiny <ira.weiny@intel.com> wrote:
 
-> CXL rev 3.0 section 8.2.9.2.1.3 defines the Memory Module Event Record.
+> Facilitate testing basic Get/Clear Event functionality by creating
+> multiple logs and generic events with made up UUID's.
 > 
-> Determine if the event read is memory module record and if so trace the
-> record.
+> Data is completely made up with data patterns which should be easy to
+> spot in trace output.
+> 
+> A single sysfs entry resets the event data and triggers collecting the
+> events for testing.
+> 
+> Test traces are easy to obtain with a small script such as this:
+> 
+> 	#!/bin/bash -x
+> 
+> 	devices=`find /sys/devices/platform -name cxl_mem*`
+> 
+> 	# Turn on tracing
+> 	echo "" > /sys/kernel/tracing/trace
+> 	echo 1 > /sys/kernel/tracing/events/cxl/enable
+> 	echo 1 > /sys/kernel/tracing/tracing_on
+> 
+> 	# Generate fake interrupt
+> 	for device in $devices; do
+> 	        echo 1 > $device/event_trigger
+> 	done
+> 
+> 	# Turn off tracing and report events
+> 	echo 0 > /sys/kernel/tracing/tracing_on
+> 	cat /sys/kernel/tracing/trace
 > 
 > Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-Typo inline.  With that fixed
+
+Looks like it will test the kernel functionality in this
+patch set correctly to me. 
+
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
-> index b6321cfb1d9f..ebb4c8ce8587 100644
-> --- a/drivers/cxl/core/trace.h
-> +++ b/drivers/cxl/core/trace.h
-> @@ -439,6 +439,149 @@ TRACE_EVENT(cxl_dram,
->  	)
->  );
->  
-> +/*
-> + * Memory Module Event Record - MMER
-> + *
-> + * CXL res 3.0 section 8.2.9.2.1.3; Table 8-45
-> + */
-> +#define CXL_MMER_HEALTH_STATUS_CHANGE		0x00
-> +#define CXL_MMER_MEDIA_STATUS_CHANGE		0x01
-> +#define CXL_MMER_LIFE_USED_CHANGE		0x02
-> +#define CXL_MMER_TEMP_CHANGE			0x03
-> +#define CXL_MMER_DATA_PATH_ERROR		0x04
-> +#define CXL_MMER_LAS_ERROR			0x05
-
-CXL_MMER_LSA_ERROR
-
-> +#define show_dev_evt_type(type)	__print_symbolic(type,			   \
-> +	{ CXL_MMER_HEALTH_STATUS_CHANGE,	"Health Status Change"	}, \
-> +	{ CXL_MMER_MEDIA_STATUS_CHANGE,		"Media Status Change"	}, \
-> +	{ CXL_MMER_LIFE_USED_CHANGE,		"Life Used Change"	}, \
-> +	{ CXL_MMER_TEMP_CHANGE,			"Temperature Change"	}, \
-> +	{ CXL_MMER_DATA_PATH_ERROR,		"Data Path Error"	}, \
-> +	{ CXL_MMER_LAS_ERROR,			"LSA Error"		}  \
-> +)
