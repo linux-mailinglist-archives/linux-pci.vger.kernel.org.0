@@ -2,106 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7AEB66B01E
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Jan 2023 10:21:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5187566B09B
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Jan 2023 12:27:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjAOJVy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Jan 2023 04:21:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40780 "EHLO
+        id S231150AbjAOL1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Jan 2023 06:27:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230088AbjAOJVx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Jan 2023 04:21:53 -0500
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A1159E4
-        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:51 -0800 (PST)
-Received: by mail-pj1-f46.google.com with SMTP id u1-20020a17090a450100b0022936a63a21so4700557pjg.4
-        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:51 -0800 (PST)
+        with ESMTP id S231133AbjAOL1s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Jan 2023 06:27:48 -0500
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0C7DF777
+        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 03:27:46 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id hw16so50173750ejc.10
+        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 03:27:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=z7PMxCsJkAb5zQbRqwSXZpv3C+Wn4fU0jkcRwYX713M=;
+        b=rIySFykUfWGYkFwiPEQBuQY1wcbV/spapzk7yC2TgMBXItfkAdcx3xt9QrzCimtYqP
+         ab+UU/N2yr4kLb8AKlIXAnezibB/pmpY7LO5AP5/EIlNy0w2oBHX71BIPRc24YexWXJm
+         hLJ+V1rUuu+OMPtEYGaNqzwfuSCcqg+kUd+hRYME2EB72LN244c63HqKWBfiHXEu2MuR
+         FofzhNTxMc7zsddKuPJMwqPgqSX9nrwcbB/ZFHom9Y2sSlgRhcGo7apoXCuXbMDID3MN
+         pJjPpwxtfFfTVI7TXLBorILiFMMY6Z2O8lut/gXiUSIVTVP7g222E9G2/4hTsj+URcla
+         UCQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LIULLdFP9e5GK7VAsZJfbRrocIEnNIPLUhOzuA4qczM=;
-        b=tTaNTa1Hqf1Xh+NeCY0IfXIhnDKR+1lXlyMuOU5idn9XRFMkQDxMJ1qsHxycuqXjyd
-         WDW2xj4TFfp7i05eOxAf1uzjNeC23FaZg/XrXVv2eRXWUCPILlj+W6mYBlKorIWowrIT
-         Hyy+a6HXuOnTsKKMvGmUWbw1Osz8p74E96d+S32XHUeQic0vWxp9TvEQD1PVVp578tlx
-         AljUXu9RhI2ee//VEduOnNewEK4YTMXPPj2zP81jqfHsDk2QcSuuIbt2Vja4DAHsAvlH
-         l0Hv8j5RiKAxGBKJHzSalk2nxqN0XSvbmiNjNCFiIV7g8CwdjkcoB/zy8hetYfrlw3mz
-         r9BA==
-X-Gm-Message-State: AFqh2krc5IvgEobMA3EA/ouWhLV00mH2rzFA9sy6l2tBXGwfM9U1+gQH
-        LBLH9arSU/UFzz0Ow6RPTByIyJJ/iuPholg=
-X-Google-Smtp-Source: AMrXdXtdHtMy57L288byrYn3zQWL4WhnOnXBVD2PhshcxduljL3a4Xsda0EXW3JEwUT6WO6/8pHv0g==
-X-Received: by 2002:a17:902:ccc5:b0:185:441e:4cfc with SMTP id z5-20020a170902ccc500b00185441e4cfcmr101010664ple.44.1673774511376;
-        Sun, 15 Jan 2023 01:21:51 -0800 (PST)
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com. [209.85.210.180])
-        by smtp.gmail.com with ESMTPSA id s21-20020a170902b19500b00189e1522982sm17054801plr.168.2023.01.15.01.21.50
-        for <linux-pci@vger.kernel.org>
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z7PMxCsJkAb5zQbRqwSXZpv3C+Wn4fU0jkcRwYX713M=;
+        b=bsPugI1ENsLvQOkIfnb6mAtZcujvyOhtFu4/O/qBTFJOVYYJ8j9A5nupVftWIQRVff
+         VTWhmrmB9K17CSDnrNBhSDgmpofEdGHiVNryVBF7OjWlGWId9qa1Hy0zD3C0drEP6tQY
+         H8gauHISTK1WA+FP/+qq9qSARM5WCv/ds5BJwA8PSQyicGVRWZ6d3feCq6AA67CjOJX2
+         SVX5v0WHjew57HpFBNlmmnH3/63va+R9Y4BFgpAY+4R6fRjS+4ds3Z6PMl5UgReW8WUj
+         L8wB9U2rCE2pZtj8Q0Z2xVcvRBFm+EuvYTC5ggyJVAp+UOLQjzhD5LF20N0Ruak04R51
+         H12g==
+X-Gm-Message-State: AFqh2kpgh5KkNxarX4RpOfywUs6SFJjw6atlOaoFuxAO/qoF8TFcwg3S
+        0uyR3vwMS+Nrar+pRAaS3RWnxA==
+X-Google-Smtp-Source: AMrXdXtFQYrU3vox5pa2TLu8mIB/4/EHzl+qM0gUfAC2BhQ6WOmoJrEabT2e49RH4k51j7LrglEA+A==
+X-Received: by 2002:a17:906:7e0c:b0:86c:df3:4bbc with SMTP id e12-20020a1709067e0c00b0086c0df34bbcmr6363079ejr.4.1673782065346;
+        Sun, 15 Jan 2023 03:27:45 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id c23-20020a170906155700b0084c7f96d023sm10713809ejd.147.2023.01.15.03.27.43
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Jan 2023 01:21:50 -0800 (PST)
-Received: by mail-pf1-f180.google.com with SMTP id w2so3600680pfc.11
-        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:50 -0800 (PST)
-X-Received: by 2002:a65:674e:0:b0:48d:a8d8:6f73 with SMTP id
- c14-20020a65674e000000b0048da8d86f73mr4342639pgu.396.1673774510283; Sun, 15
- Jan 2023 01:21:50 -0800 (PST)
+        Sun, 15 Jan 2023 03:27:44 -0800 (PST)
+Message-ID: <48785391-2da5-08b3-6bc4-b485aacdf231@linaro.org>
+Date:   Sun, 15 Jan 2023 12:27:42 +0100
 MIME-Version: 1.0
-From:   Peifeng Qiu <linux@qiupf.dev>
-Date:   Sun, 15 Jan 2023 18:21:39 +0900
-X-Gmail-Original-Message-ID: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
-Message-ID: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
-Subject: Missing sriov_numvfs after removal of EfiMemoryMappedIO from E820 map
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v2] dt-bindings: PCI: qcom,pcie-ep: correct
+ qcom,perst-regs
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Andy Gross <agross@kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        devicetree@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Herring <robh@kernel.org>
+References: <20230113224749.GA1867364@bhelgaas>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230113224749.GA1867364@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi.
+On 13/01/2023 23:47, Bjorn Helgaas wrote:
+>   dt-bindings: PCI: qcom: add MSM8998 specific compatible
+>   dt-bindings: PCI: qcom: Add sm8350 to bindings
+> 
+> I asked about splitting the first and if you did that, I missed it,
+> and in the meantime I got distracted by my E820/EfiMemoryMappedIO
+> regression.
+> 
+> In any event, I updated "next" with this.  Check my conflict
+> resolution because I'm not a DT expert:
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/helgaas/pci.git/tree/Documentation/devicetree/bindings/pci/qcom,pcie.yaml?id=25cfdd48a4bd
 
-I'm using a dual Xeon system with Intel e810 25G network card and make use
-of SRIOV feature heavily. I have a script to setup the NIC the first step is
-echo $VFS > /sys/class/net/$DEVNAME/device/sriov_numvfs
-
-After switching from v6.1 to v6.2-rc1 "sriov_numvfs" is no longer present. If I
-switch back to v6.1 it's back. Command line parameters are the same so it's
-most likely kernel changes. I did git bisect and found the culprit to be
-07eab0901ed(efi/x86: Remove EfiMemoryMappedIO from E820 map)
-
-I tested v6.2-rc3 and it's the same. I reverted this commit on top of v6.2-rc3
-then sriov_numvfs is back again. Comparing the dmesg output, I found that
-with commit 07eab0901ed these lines are present:
-[    0.000000] efi: Remove mem94: MMIO range=[0x80000000-0x8fffffff]
-(256MB) from e820 map
-[    0.000000] e820: remove [mem 0x80000000-0x8fffffff] reserved
-[    0.000000] efi: Remove mem95: MMIO range=[0xfd000000-0xfe7fffff]
-(24MB) from e820 map
-[    0.000000] e820: remove [mem 0xfd000000-0xfe7fffff] reserved
-[    0.000000] efi: Not removing mem96: MMIO
-range=[0xfed20000-0xfed44fff] (148KB) from e820 map
-[    0.000000] efi: Remove mem97: MMIO range=[0xff000000-0xffffffff]
-(16MB) from e820 map
-[    0.000000] e820: remove [mem 0xff000000-0xffffffff] reserved
-[    0.000000] efi: Remove mem99: MMIO
-range=[0x1ffc00000000-0x1fffffffffff] (16384MB) from e820 map
-[    0.000000] e820: remove [mem 0x1ffc00000000-0x1fffffffffff] reserved
-
-I think that's what the commit actually does. But the following are missing:
-[    2.516119] pci 0000:ca:00.0: reg 0x184: [mem
-0x208ffd000000-0x208ffd01ffff 64bit pref]
-[    2.516121] pci 0000:ca:00.0: VF(n) BAR0 space: [mem
-0x208ffd000000-0x208ffdffffff 64bit pref] (contains BAR0 for 128 VFs)
-[    2.516134] pci 0000:ca:00.0: reg 0x190: [mem
-0x208ffe220000-0x208ffe223fff 64bit pref]
-[    2.516136] pci 0000:ca:00.0: VF(n) BAR3 space: [mem
-0x208ffe220000-0x208ffe41ffff 64bit pref] (contains BAR3 for 128 VFs)
-
-Not sure whether this is a driver issue specific to Intel e810(module ice) or
-a more general one. Any thoughts on this issue?
+Look good, thanks!
 
 Best regards,
-Peifeng Qiu
+Krzysztof
+
