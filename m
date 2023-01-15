@@ -2,137 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B05F66AFEF
-	for <lists+linux-pci@lfdr.de>; Sun, 15 Jan 2023 09:32:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7AEB66B01E
+	for <lists+linux-pci@lfdr.de>; Sun, 15 Jan 2023 10:21:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjAOIcS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 15 Jan 2023 03:32:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
+        id S229599AbjAOJVy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 15 Jan 2023 04:21:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbjAOIcS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Jan 2023 03:32:18 -0500
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06201B75B
-        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 00:32:16 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 3908C10189A3D;
-        Sun, 15 Jan 2023 09:32:00 +0100 (CET)
-Received: from localhost (unknown [89.246.108.87])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id F41AF603DB87;
-        Sun, 15 Jan 2023 09:31:49 +0100 (CET)
-X-Mailbox-Line: From 9f5ff00e1593d8d9a4b452398b98aa14d23fca11 Mon Sep 17 00:00:00 2001
-Message-Id: <9f5ff00e1593d8d9a4b452398b98aa14d23fca11.1673769517.git.lukas@wunner.de>
-In-Reply-To: <cover.1673769517.git.lukas@wunner.de>
-References: <cover.1673769517.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Sun, 15 Jan 2023 09:20:33 +0100
-Subject: [PATCH v2 3/3] PCI/DPC: Await readiness of secondary bus after reset
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Keith Busch <kbusch@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S230088AbjAOJVx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 15 Jan 2023 04:21:53 -0500
+Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7A1159E4
+        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:51 -0800 (PST)
+Received: by mail-pj1-f46.google.com with SMTP id u1-20020a17090a450100b0022936a63a21so4700557pjg.4
+        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LIULLdFP9e5GK7VAsZJfbRrocIEnNIPLUhOzuA4qczM=;
+        b=tTaNTa1Hqf1Xh+NeCY0IfXIhnDKR+1lXlyMuOU5idn9XRFMkQDxMJ1qsHxycuqXjyd
+         WDW2xj4TFfp7i05eOxAf1uzjNeC23FaZg/XrXVv2eRXWUCPILlj+W6mYBlKorIWowrIT
+         Hyy+a6HXuOnTsKKMvGmUWbw1Osz8p74E96d+S32XHUeQic0vWxp9TvEQD1PVVp578tlx
+         AljUXu9RhI2ee//VEduOnNewEK4YTMXPPj2zP81jqfHsDk2QcSuuIbt2Vja4DAHsAvlH
+         l0Hv8j5RiKAxGBKJHzSalk2nxqN0XSvbmiNjNCFiIV7g8CwdjkcoB/zy8hetYfrlw3mz
+         r9BA==
+X-Gm-Message-State: AFqh2krc5IvgEobMA3EA/ouWhLV00mH2rzFA9sy6l2tBXGwfM9U1+gQH
+        LBLH9arSU/UFzz0Ow6RPTByIyJJ/iuPholg=
+X-Google-Smtp-Source: AMrXdXtdHtMy57L288byrYn3zQWL4WhnOnXBVD2PhshcxduljL3a4Xsda0EXW3JEwUT6WO6/8pHv0g==
+X-Received: by 2002:a17:902:ccc5:b0:185:441e:4cfc with SMTP id z5-20020a170902ccc500b00185441e4cfcmr101010664ple.44.1673774511376;
+        Sun, 15 Jan 2023 01:21:51 -0800 (PST)
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com. [209.85.210.180])
+        by smtp.gmail.com with ESMTPSA id s21-20020a170902b19500b00189e1522982sm17054801plr.168.2023.01.15.01.21.50
+        for <linux-pci@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 15 Jan 2023 01:21:50 -0800 (PST)
+Received: by mail-pf1-f180.google.com with SMTP id w2so3600680pfc.11
+        for <linux-pci@vger.kernel.org>; Sun, 15 Jan 2023 01:21:50 -0800 (PST)
+X-Received: by 2002:a65:674e:0:b0:48d:a8d8:6f73 with SMTP id
+ c14-20020a65674e000000b0048da8d86f73mr4342639pgu.396.1673774510283; Sun, 15
+ Jan 2023 01:21:50 -0800 (PST)
+MIME-Version: 1.0
+From:   Peifeng Qiu <linux@qiupf.dev>
+Date:   Sun, 15 Jan 2023 18:21:39 +0900
+X-Gmail-Original-Message-ID: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
+Message-ID: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
+Subject: Missing sriov_numvfs after removal of EfiMemoryMappedIO from E820 map
+To:     bhelgaas@google.com, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_bridge_wait_for_secondary_bus() is called after a Secondary Bus
-Reset, but not after a DPC-induced Hot Reset.
+Hi.
 
-As a result, the delays prescribed by PCIe r6.0 sec 6.6.1 are not
-observed and devices on the secondary bus may be accessed before
-they're ready.
+I'm using a dual Xeon system with Intel e810 25G network card and make use
+of SRIOV feature heavily. I have a script to setup the NIC the first step is
+echo $VFS > /sys/class/net/$DEVNAME/device/sriov_numvfs
 
-One affected device is Intel's Ponte Vecchio HPC GPU.  It comprises a
-PCIe switch whose upstream port is not immediately ready after reset.
-Because its config space is restored too early, it remains in
-D0uninitialized, its subordinate devices remain inaccessible and DPC
-recovery fails with messages such as:
+After switching from v6.1 to v6.2-rc1 "sriov_numvfs" is no longer present. If I
+switch back to v6.1 it's back. Command line parameters are the same so it's
+most likely kernel changes. I did git bisect and found the culprit to be
+07eab0901ed(efi/x86: Remove EfiMemoryMappedIO from E820 map)
 
-i915 0000:8c:00.0: can't change power state from D3cold to D0 (config space inaccessible)
-intel_vsec 0000:8e:00.1: can't change power state from D3cold to D0 (config space inaccessible)
-pcieport 0000:89:02.0: AER: device recovery failed
+I tested v6.2-rc3 and it's the same. I reverted this commit on top of v6.2-rc3
+then sriov_numvfs is back again. Comparing the dmesg output, I found that
+with commit 07eab0901ed these lines are present:
+[    0.000000] efi: Remove mem94: MMIO range=[0x80000000-0x8fffffff]
+(256MB) from e820 map
+[    0.000000] e820: remove [mem 0x80000000-0x8fffffff] reserved
+[    0.000000] efi: Remove mem95: MMIO range=[0xfd000000-0xfe7fffff]
+(24MB) from e820 map
+[    0.000000] e820: remove [mem 0xfd000000-0xfe7fffff] reserved
+[    0.000000] efi: Not removing mem96: MMIO
+range=[0xfed20000-0xfed44fff] (148KB) from e820 map
+[    0.000000] efi: Remove mem97: MMIO range=[0xff000000-0xffffffff]
+(16MB) from e820 map
+[    0.000000] e820: remove [mem 0xff000000-0xffffffff] reserved
+[    0.000000] efi: Remove mem99: MMIO
+range=[0x1ffc00000000-0x1fffffffffff] (16384MB) from e820 map
+[    0.000000] e820: remove [mem 0x1ffc00000000-0x1fffffffffff] reserved
 
-Fix it.
+I think that's what the commit actually does. But the following are missing:
+[    2.516119] pci 0000:ca:00.0: reg 0x184: [mem
+0x208ffd000000-0x208ffd01ffff 64bit pref]
+[    2.516121] pci 0000:ca:00.0: VF(n) BAR0 space: [mem
+0x208ffd000000-0x208ffdffffff 64bit pref] (contains BAR0 for 128 VFs)
+[    2.516134] pci 0000:ca:00.0: reg 0x190: [mem
+0x208ffe220000-0x208ffe223fff 64bit pref]
+[    2.516136] pci 0000:ca:00.0: VF(n) BAR3 space: [mem
+0x208ffe220000-0x208ffe41ffff 64bit pref] (contains BAR3 for 128 VFs)
 
-Tested-by: Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: stable@vger.kernel.org
----
-Changes v1 -> v2:
- * Move PCIE_RESET_READY_POLL_MS macro below the newly introduced
-   PCI_RESET_WAIT from patch [2/3] and extend its code comment
- * Mention errors seen on Ponte Vecchio in commit message (Bjorn)
- * Avoid first person plural in commit message (Sathyanarayanan)
- * Add Reviewed-by tag (Mika)
+Not sure whether this is a driver issue specific to Intel e810(module ice) or
+a more general one. Any thoughts on this issue?
 
- drivers/pci/pci.c      | 3 ---
- drivers/pci/pci.h      | 6 ++++++
- drivers/pci/pcie/dpc.c | 4 ++--
- 3 files changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 509f6b5c9e14..d31c21ea9688 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -167,9 +167,6 @@ static int __init pcie_port_pm_setup(char *str)
- }
- __setup("pcie_port_pm=", pcie_port_pm_setup);
- 
--/* Time to wait after a reset for device to become responsive */
--#define PCIE_RESET_READY_POLL_MS 60000
--
- /**
-  * pci_bus_max_busnr - returns maximum PCI bus number of given bus' children
-  * @bus: pointer to PCI bus structure to search
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index ce1fc3a90b3f..8f5d4bd5b410 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -70,6 +70,12 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
-  * Reset (PCIe r6.0 sec 5.8).
-  */
- #define PCI_RESET_WAIT		1000	/* msec */
-+/*
-+ * Devices may extend the 1 sec period through Request Retry Status completions
-+ * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
-+ * ought to be enough for any device to become responsive.
-+ */
-+#define PCIE_RESET_READY_POLL_MS 60000	/* msec */
- 
- void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
- void pci_refresh_power_state(struct pci_dev *dev);
-diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index f5ffea17c7f8..a5d7c69b764e 100644
---- a/drivers/pci/pcie/dpc.c
-+++ b/drivers/pci/pcie/dpc.c
-@@ -170,8 +170,8 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
- 			      PCI_EXP_DPC_STATUS_TRIGGER);
- 
--	if (!pcie_wait_for_link(pdev, true)) {
--		pci_info(pdev, "Data Link Layer Link Active not set in 1000 msec\n");
-+	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC",
-+					      PCIE_RESET_READY_POLL_MS)) {
- 		clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
- 		ret = PCI_ERS_RESULT_DISCONNECT;
- 	} else {
--- 
-2.39.0
-
+Best regards,
+Peifeng Qiu
