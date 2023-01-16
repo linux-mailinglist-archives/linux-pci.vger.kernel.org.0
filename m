@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DECD466B72D
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 07:06:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B106866B72E
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 07:06:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231905AbjAPGGP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Jan 2023 01:06:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45386 "EHLO
+        id S231985AbjAPGGS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Jan 2023 01:06:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231916AbjAPGGG (ORCPT
+        with ESMTP id S231917AbjAPGGG (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Jan 2023 01:06:06 -0500
 Received: from inva020.nxp.com (inva020.nxp.com [92.121.34.13])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB96444AD;
-        Sun, 15 Jan 2023 22:06:02 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD12455BA;
+        Sun, 15 Jan 2023 22:06:03 -0800 (PST)
 Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A58051A06BD;
-        Mon, 16 Jan 2023 07:06:01 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6D2171A06D5;
+        Mon, 16 Jan 2023 07:06:02 +0100 (CET)
 Received: from aprdc01srsp001v.ap-rdc01.nxp.com (aprdc01srsp001v.ap-rdc01.nxp.com [165.114.16.16])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id E20BA1A06D5;
-        Mon, 16 Jan 2023 07:06:00 +0100 (CET)
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 356F81A06E3;
+        Mon, 16 Jan 2023 07:06:02 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 20D32183ABF9;
-        Mon, 16 Jan 2023 14:05:59 +0800 (+08)
+        by aprdc01srsp001v.ap-rdc01.nxp.com (Postfix) with ESMTP id 6F1F7183ABEF;
+        Mon, 16 Jan 2023 14:06:00 +0800 (+08)
 From:   Richard Zhu <hongxing.zhu@nxp.com>
 To:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
         lorenzo.pieralisi@arm.com, shawnguo@kernel.org, kishon@ti.com,
@@ -31,9 +31,9 @@ Cc:     hongxing.zhu@nxp.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, kernel@pengutronix.de,
         linux-imx@nxp.com
-Subject: [PATCH v5 05/14] arm64: dts: Add i.MX8MM PCIe EP support on EVK board
-Date:   Mon, 16 Jan 2023 13:41:15 +0800
-Message-Id: <1673847684-31893-6-git-send-email-hongxing.zhu@nxp.com>
+Subject: [PATCH v5 06/14] arm64: dts: Add i.MX8MQ PCIe EP support
+Date:   Mon, 16 Jan 2023 13:41:16 +0800
+Message-Id: <1673847684-31893-7-git-send-email-hongxing.zhu@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1673847684-31893-1-git-send-email-hongxing.zhu@nxp.com>
 References: <1673847684-31893-1-git-send-email-hongxing.zhu@nxp.com>
@@ -46,38 +46,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add i.MX8MM PCIe EP support on EVK board.
+Add i.MX8MQ PCIe EP support.
 
 Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 27 +++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-index e0b604ac0da4..894118704156 100644
---- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dtsi
-@@ -372,6 +372,20 @@ &pcie0 {
- 	status = "okay";
- };
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+index 7ce99c084e54..90a1f026ea48 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -1583,6 +1583,33 @@ pcie1: pcie@33c00000 {
+ 			status = "disabled";
+ 		};
  
-+&pcie0_ep{
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pcie0>;
-+	clocks = <&clk IMX8MM_CLK_PCIE1_ROOT>, <&clk IMX8MM_CLK_PCIE1_AUX>,
-+		 <&pcie0_refclk>;
-+	clock-names = "pcie", "pcie_aux", "pcie_bus";
-+	assigned-clocks = <&clk IMX8MM_CLK_PCIE1_AUX>,
-+			  <&clk IMX8MM_CLK_PCIE1_CTRL>;
-+	assigned-clock-rates = <10000000>, <250000000>;
-+	assigned-clock-parents = <&clk IMX8MM_SYS_PLL2_50M>,
-+				 <&clk IMX8MM_SYS_PLL2_250M>;
-+	status = "disabled";
-+};
++		pcie1_ep: pcie_ep@33c00000 {
++			compatible = "fsl,imx8mq-pcie-ep";
++			reg = <0x33c00000 0x000400000>,
++			      <0x20000000 0x08000000>;
++			reg-names = "regs", "addr_space";
++			num-lanes = <1>;
++			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "dma";
++			fsl,max-link-speed = <2>;
++			power-domains = <&pgc_pcie>;
++			resets = <&src IMX8MQ_RESET_PCIEPHY2>,
++				 <&src IMX8MQ_RESET_PCIE2_CTRL_APPS_EN>,
++				 <&src IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF>;
++			reset-names = "pciephy", "apps", "turnoff";
++			assigned-clocks = <&clk IMX8MQ_CLK_PCIE2_CTRL>,
++					  <&clk IMX8MQ_CLK_PCIE2_PHY>,
++					  <&clk IMX8MQ_CLK_PCIE2_AUX>;
++			assigned-clock-parents = <&clk IMX8MQ_SYS2_PLL_250M>,
++						 <&clk IMX8MQ_SYS2_PLL_100M>,
++						 <&clk IMX8MQ_SYS1_PLL_80M>;
++			assigned-clock-rates = <250000000>, <100000000>,
++					       <10000000>;
++			num-ib-windows = <4>;
++			num-ob-windows = <4>;
++			status = "disabled";
++		};
 +
- &sai2 {
- 	#sound-dai-cells = <0>;
- 	pinctrl-names = "default";
+ 		gic: interrupt-controller@38800000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x38800000 0x10000>,	/* GIC Dist */
 -- 
 2.25.1
 
