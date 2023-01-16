@@ -2,54 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 078E866B9F0
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 10:11:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0200E66BA03
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 10:15:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232225AbjAPJLw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Jan 2023 04:11:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
+        id S231796AbjAPJPl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Jan 2023 04:15:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232222AbjAPJLO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Jan 2023 04:11:14 -0500
+        with ESMTP id S232270AbjAPJO5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Jan 2023 04:14:57 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A6B613D72;
-        Mon, 16 Jan 2023 01:10:44 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0EF16AE8;
+        Mon, 16 Jan 2023 01:14:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0095960E26;
-        Mon, 16 Jan 2023 09:10:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6764C433EF;
-        Mon, 16 Jan 2023 09:10:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B716360E84;
+        Mon, 16 Jan 2023 09:14:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08433C433F1;
+        Mon, 16 Jan 2023 09:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673860243;
-        bh=SP3Gv9ZKZ+68IMBMm04XGefGc1oCfUgde1seLUmBLWM=;
+        s=k20201202; t=1673860482;
+        bh=Mv0LFnabOP+tyT97O6XPlBRFQ9+cJvyPwRJ9a26ox8s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VicEGCYcltCUtNeOX/9QpyAxjr0ObvSifGJr9fXaznAnzixmKLLbdog2rvDaWmXm6
-         wBWwJVJgtA1mGubRuj9me7foCyBnRNWlij3LqxDrK3fZwl/CICdsWtfLMnFS4ZJ5B+
-         pVwzDaxGylMC/+c5+OIZIEXgT0nrLokowT4hRmTOw/2Qk7upfCebmM3n32j8QKfwSk
-         jhh71r+otAjQ+t2MuqpPmBczPyjGyhEmK2uDGLGRevJUD+9gM3Fmb8pTlrCJm6TtGl
-         wpERUpv2UGM++nAw2LEf8ayRv+8QjsMMt5yY/m8NnSxht16rsXez0Q8L7KCpT1u/3H
-         rDSK7VKhCJ8HA==
+        b=L7jNNZUftu6HSGIobL57nEuo6+dTbYmVo4gHcgi32i1M4iDVw0LMSZJIsCQKe4Eqz
+         R/ZohjQkyZbQ8eTBzQOOrN8TTqMGCRy1zpa1wFJ741YuGlKW38DS5xpXSJlANEhm4q
+         vJ9FLh0NEXAY2xJ/o2yKGi6nK1h9MbGTLFLyBKwiiPinEv7yYiTyk+ftcxRlSAYip2
+         fIxEZj10gxq0WAdv6GpdFbk5imEk5QmfiOChvP36qJkgMsPPk3p7AHmJRRRKWnryya
+         Hdy43LBMu0CqSPSDOgWLrNckq8BXyiI28EjSOD+iaQejrxzSusP3mBEKTdWfcKwAmR
+         pLSH6XrwW0ERg==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Johan Hovold <johan+linaro@kernel.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: (subset) [PATCH v3 0/2] PCI: qcom: Add support for modular builds
-Date:   Mon, 16 Jan 2023 10:10:30 +0100
-Message-Id: <167386021054.7036.13346493378677218649.b4-ty@kernel.org>
+To:     mani@kernel.org, shawn.guo@linaro.org, devicetree@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, konrad.dybcio@linaro.org,
+        krzysztof.kozlowski+dt@linaro.org, linux-pci@vger.kernel.org,
+        Robert Marko <robimarko@gmail.com>,
+        linux-kernel@vger.kernel.org, bhelgaas@google.com,
+        agross@kernel.org, robh@kernel.org, kw@linux.com,
+        svarbanov@mm-sol.com, andersson@kernel.org
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: (subset) [PATCH v2 1/9] arm64: dts: qcom: ipq8074: fix Gen2 PCIe QMP PHY
+Date:   Mon, 16 Jan 2023 10:14:32 +0100
+Message-Id: <167386042520.7526.13563822566607822845.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20221017114705.8277-1-johan+linaro@kernel.org>
-References: <20221017114705.8277-1-johan+linaro@kernel.org>
+In-Reply-To: <20230113164449.906002-1-robimarko@gmail.com>
+References: <20230113164449.906002-1-robimarko@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -62,23 +58,20 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 17 Oct 2022 13:47:03 +0200, Johan Hovold wrote:
-> Allow the Qualcomm PCIe controller driver to be built as a module, which
-> is useful for multi-platform kernels as well as during development.
+On Fri, 13 Jan 2023 17:44:41 +0100, Robert Marko wrote:
+> Serdes register space sizes are incorrect, update them to match the
+> actual sizes from downstream QCA 5.4 kernel.
 > 
-> There's no rush with this, but I figured I'd send an updated version
-> that has been rebased on 6.1-rc1 (where post_deinit() has been removed).
 > 
-> I also broke out the qcom_pcie_host_deinit() handler in a separate patch
-> as the host_deinit() callback has now been added to dwc core and can be
-> used to fixes some late-probe error handling.
-> 
-> [...]
 
 Applied to pci/qcom, thanks!
 
-[1/2] PCI: qcom: Fix host-init error handling
-      https://git.kernel.org/lpieralisi/pci/c/6996d631fa33
+[5/9] dt-bindings: PCI: qcom: alphabetically sort compatibles
+      https://git.kernel.org/lpieralisi/pci/c/4bc08cf23aaa
+[6/9] dt-bindings: PCI: qcom: document IPQ8074 Gen3 port
+      https://git.kernel.org/lpieralisi/pci/c/3271543941d8
+[7/9] PCI: qcom: Add support for IPQ8074 Gen3 port
+      https://git.kernel.org/lpieralisi/pci/c/0591d47a0217
 
 Thanks,
 Lorenzo
