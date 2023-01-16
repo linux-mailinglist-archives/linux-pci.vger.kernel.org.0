@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0200E66BA03
-	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 10:15:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 735FC66BAC7
+	for <lists+linux-pci@lfdr.de>; Mon, 16 Jan 2023 10:45:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231796AbjAPJPl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 16 Jan 2023 04:15:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44660 "EHLO
+        id S229481AbjAPJpi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 16 Jan 2023 04:45:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232270AbjAPJO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Jan 2023 04:14:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E0EF16AE8;
-        Mon, 16 Jan 2023 01:14:43 -0800 (PST)
+        with ESMTP id S229737AbjAPJpX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 16 Jan 2023 04:45:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56DCF14E82;
+        Mon, 16 Jan 2023 01:45:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B716360E84;
-        Mon, 16 Jan 2023 09:14:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08433C433F1;
-        Mon, 16 Jan 2023 09:14:36 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id EC6E8B80DC7;
+        Mon, 16 Jan 2023 09:45:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E45F6C433D2;
+        Mon, 16 Jan 2023 09:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673860482;
-        bh=Mv0LFnabOP+tyT97O6XPlBRFQ9+cJvyPwRJ9a26ox8s=;
+        s=k20201202; t=1673862319;
+        bh=IErqy72fWGEyGg5hdpkN3ppofTEo7PnQJT5cOsOKvm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L7jNNZUftu6HSGIobL57nEuo6+dTbYmVo4gHcgi32i1M4iDVw0LMSZJIsCQKe4Eqz
-         R/ZohjQkyZbQ8eTBzQOOrN8TTqMGCRy1zpa1wFJ741YuGlKW38DS5xpXSJlANEhm4q
-         vJ9FLh0NEXAY2xJ/o2yKGi6nK1h9MbGTLFLyBKwiiPinEv7yYiTyk+ftcxRlSAYip2
-         fIxEZj10gxq0WAdv6GpdFbk5imEk5QmfiOChvP36qJkgMsPPk3p7AHmJRRRKWnryya
-         Hdy43LBMu0CqSPSDOgWLrNckq8BXyiI28EjSOD+iaQejrxzSusP3mBEKTdWfcKwAmR
-         pLSH6XrwW0ERg==
+        b=KHgKyPKYIgqEMoIVatH9p/4iERtqC93oeW8sprIPuwYQVJnvGkxk5QvDe3MDB2SbM
+         tc7FhG0YzDz+kRpja1HDPyWPTJrGnstMoyp3Mp9WpAJQqlTplptPiuJZQt5FuglG17
+         X1Wi+DxUdHIIZRjjek9cs4wkp29aNvaYgZsNYUKUjLmhTpWW2QVZX7WlvRUowVUcRN
+         jHROf4lsxiAkWEwcp5ph5yWOEny2StO9Eu5dMzSUuQSd6g4Fqb/lrt88dXsyrGh1Yo
+         hI4ufx69zc6BUtA2990xizH0UgWYqB/hv8rhplvr4ZqXfMn4psg16TVe9aG7T3UGg/
+         4rO/YHNEX/3sw==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     mani@kernel.org, shawn.guo@linaro.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, konrad.dybcio@linaro.org,
-        krzysztof.kozlowski+dt@linaro.org, linux-pci@vger.kernel.org,
-        Robert Marko <robimarko@gmail.com>,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        agross@kernel.org, robh@kernel.org, kw@linux.com,
-        svarbanov@mm-sol.com, andersson@kernel.org
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Subject: Re: (subset) [PATCH v2 1/9] arm64: dts: qcom: ipq8074: fix Gen2 PCIe QMP PHY
-Date:   Mon, 16 Jan 2023 10:14:32 +0100
-Message-Id: <167386042520.7526.13563822566607822845.b4-ty@kernel.org>
+To:     bhelgaas@google.com, kw@linux.com, robh+dt@kernel.org,
+        shawnguo@kernel.org, frank.li@nxp.com,
+        Richard Zhu <hongxing.zhu@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        l.stach@pengutronix.de, kishon@ti.com
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        linux-pci@vger.kernel.org, linux-imx@nxp.com
+Subject: Re: (subset) [PATCH v5 0/14] Add i.MX PCIe EP mode support
+Date:   Mon, 16 Jan 2023 10:45:10 +0100
+Message-Id: <167386225326.10305.6865038680474291144.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230113164449.906002-1-robimarko@gmail.com>
-References: <20230113164449.906002-1-robimarko@gmail.com>
+In-Reply-To: <1673847684-31893-1-git-send-email-hongxing.zhu@nxp.com>
+References: <1673847684-31893-1-git-send-email-hongxing.zhu@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -58,20 +58,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 13 Jan 2023 17:44:41 +0100, Robert Marko wrote:
-> Serdes register space sizes are incorrect, update them to match the
-> actual sizes from downstream QCA 5.4 kernel.
+On Mon, 16 Jan 2023 13:41:10 +0800, Richard Zhu wrote:
+> i.MX PCIe controller is one dual mode PCIe controller, and can work either
+> as RC or EP.
 > 
+> This series add the i.MX PCIe EP mode support. And had been verified on
+> i.MX8MQ EVK, i.MX8MM EVK and i.MX8MP EVK boards.
 > 
+> In the verification, one EVK board used as RC, the other one used as EP.
+> Use the cross TX/RX differential cable connect the two PCIe ports of these
+> two EVK boards.
+> 
+> [...]
 
-Applied to pci/qcom, thanks!
+dts changes should go via the platform tree.
 
-[5/9] dt-bindings: PCI: qcom: alphabetically sort compatibles
-      https://git.kernel.org/lpieralisi/pci/c/4bc08cf23aaa
-[6/9] dt-bindings: PCI: qcom: document IPQ8074 Gen3 port
-      https://git.kernel.org/lpieralisi/pci/c/3271543941d8
-[7/9] PCI: qcom: Add support for IPQ8074 Gen3 port
-      https://git.kernel.org/lpieralisi/pci/c/0591d47a0217
+Applied to pci/imx6, thanks!
+
+[01/14] dt-bindings: imx6q-pcie: Add i.MX8MM PCIe EP mode compatible string
+        https://git.kernel.org/lpieralisi/pci/c/1af5ea1dc2df
+[02/14] dt-bindings: imx6q-pcie: Add i.MX8MQ PCIe EP mode compatible string
+        https://git.kernel.org/lpieralisi/pci/c/dea44b629ae1
+[03/14] dt-bindings: imx6q-pcie: Add i.MX8MP PCIe EP mode compatible string
+        https://git.kernel.org/lpieralisi/pci/c/2dd6dc57d2da
+[10/14] misc: pci_endpoint_test: Add i.MX8 PCIe EP device support
+        https://git.kernel.org/lpieralisi/pci/c/01ea5ede4197
+[11/14] PCI: imx6: Add i.MX PCIe EP mode support
+        https://git.kernel.org/lpieralisi/pci/c/75c2f26da03f
+[12/14] PCI: imx6: Add i.MX8MQ PCIe EP support
+        https://git.kernel.org/lpieralisi/pci/c/530ba41250b6
+[13/14] PCI: imx6: Add i.MX8MM PCIe EP support
+        https://git.kernel.org/lpieralisi/pci/c/fb3217e2cfc6
+[14/14] PCI: imx6: Add i.MX8MP PCIe EP support
+        https://git.kernel.org/lpieralisi/pci/c/c435669a41dd
 
 Thanks,
 Lorenzo
