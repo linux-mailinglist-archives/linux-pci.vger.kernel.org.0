@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C3CD670B7A
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 23:14:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6286766E909
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 22:58:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjAQWN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Jan 2023 17:13:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54974 "EHLO
+        id S229665AbjAQV6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Jan 2023 16:58:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbjAQWM7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 17:12:59 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A00360BF;
-        Tue, 17 Jan 2023 12:32:20 -0800 (PST)
+        with ESMTP id S229664AbjAQV5R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 16:57:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0BA53E5F;
+        Tue, 17 Jan 2023 12:41:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id ED3DCB81A0C;
-        Tue, 17 Jan 2023 20:32:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CEC9C433EF;
-        Tue, 17 Jan 2023 20:32:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B50B06153B;
+        Tue, 17 Jan 2023 20:41:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D29C433D2;
+        Tue, 17 Jan 2023 20:41:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673987537;
-        bh=oWArDaU1DZ8qSMwUfX0DJS1kByfHC40zRhFfLw4sElw=;
+        s=k20201202; t=1673988093;
+        bh=9vSCvidurA7NN50P4dOMjeVPl/22ufhHiPbZ/5hpRbE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=So0CGmlLd0rpIGyI1GLq77v0BmHP+sTo1hURjyCdtUdg6xg1ABSapvnbdUl94W3rY
-         2p1hElP35LI+u7wMLC7UEzcrcbPPWtHBdiXO0kzXLmiOH2Wx8cQRXFDVkc3yxFVGBf
-         ioeYYCQPpV6Fxpn8KPdNI3fxGCA+Cm/jiALg8+Znof2ifM1bS0CUQxC2Qe9Qi0qNMQ
-         lHc4ylkndFepazbC0Q9fOPYJJCJmGmVtJQhFKdvuAJ79ckSNtYL2KwfqCn6UYUsVxA
-         0NgFveb9erbKvtimViaQ7MqGatjUZJHgyBReX+dGffuUzqvOj9uiBvYe63vhUQV9iS
-         qge43omTJNOuQ==
-Date:   Tue, 17 Jan 2023 14:32:15 -0600
+        b=hLxUnXr/h5rkjsavwaN7w9C1HbDO68wwmvBcpI1EfGM+LG+r9v9nprdw0PWk96Kdq
+         OD/t1jTfbqamiLMfMpw0nDNiC61xAwah0vccuJVDIN87UNHZusXGe1xEqHqnDlShqF
+         vW9YB+rrYll/QCrCdMga4LoiXMeEGQDVIwdmjRPOExSDNKRFxvn+nPof7RsRbE4M2Q
+         S+x+tN+aK6k/X0xtLhFA98rxZLv/2kfPd1uuFn/EyDFBDN94YXiJR/pYu1CEokMCKe
+         te8nMHrkJDKAhyG1uhf++S5eYMTNcPzqbab6DA516oKKuWo6xMKskLKYwh+EVc3bKS
+         ++q4LDn4F1ctA==
+Date:   Tue, 17 Jan 2023 14:41:31 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Shunsuke Mie <mie@igel.co.jp>
 Cc:     Jingoo Han <jingoohan1@gmail.com>,
@@ -46,12 +46,13 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>,
         Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
         Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/3] Deal with alignment restriction on EP side
-Message-ID: <20230117203215.GA144880@bhelgaas>
+Subject: Re: [RFC PATCH 1/3] PCI: endpoint: support an alignment aware
+ map/unmaping
+Message-ID: <20230117204131.GA145312@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230113090350.1103494-1-mie@igel.co.jp>
+In-Reply-To: <20230113090350.1103494-2-mie@igel.co.jp>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -61,53 +62,163 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 06:03:47PM +0900, Shunsuke Mie wrote:
-> Some PCIe EPC controllers have restriction to map PCIe address space to the
-> local memory space. The mapping is needed to access memory of other side.
-> On epf test, RC module prepares an aligned memory, and EP module maps the
-> region. However, a EP module which emulate a device (e.g. VirtIO, NVMe and
-> etc) cannot expect that a driver for the device prepares an aligned memory.
-> So, a EP side should deal with the alignment restriction.
-> 
-> This patchset addresses with the alignment restriction on EP size. A
-> content as follows:
-> 1. Improve a pci epc unmap/map functions to cover the alignment restriction
-> with adding epc driver support as EPC ops.
-> 2. Implement the support function for DWC EPC driver.
-> 3. Adapt the pci-epf-test to the map/unmap function updated at first patch.
-> 
-> I tested this changes on RENESAS board has DWC PCIeC.
-> 
-> This is a RFC, and it has patches for testing only. Following changes are
-> not included yet:
-> 1. Removing alignment codes on RC side completely
-> 2. Adapting map/unmap() changes to pci-epf-ntb/vntb
-> 
-> Best,
-> Shunsuke
-> 
-> Shunsuke Mie (3):
->   PCI: endpoint: support an alignment aware map/unmaping
->   PCI: dwc: support align_mem() callback for pci_epc_epc
->   PCI: endpoint: support pci_epc_mem_map/unmap API changes
+On Fri, Jan 13, 2023 at 06:03:48PM +0900, Shunsuke Mie wrote:
+> Add an align_mem operation to the EPC ops, which function is used to
+> pci_epc_map/unmap_addr(). These change to enable mapping for any alignment
+> restriction of EPC. The map function maps an aligned memory to include a
+> requested memory region.
 
-s/unmaping/unmapping/
+I think this does two things: 1) add the .align_mem() function
+pointer, and 2) move the pci_epc_mem_alloc_addr() call into
+pci_epc_map_addr().  For 2), I would expect to see
+pci_epc_mem_alloc_addr() being *removed* from somewhere else.
 
-Capitalize subject lines ("Support ...").
+Anyway, both are significant and should be mentioned in the commit
+log.  Possibly they could even be separate commits: move the
+alloc/free first, then add .align_mem().
 
-Would be nice to say something more specific than "support ... API
-changes."
+Another question below.
 
-The last patch seems to be for a test case.  Some previous changes to
-it use the "PCI: pci-epf-test" prefix so it's distinct from the
-pci-epc-core changes.
-
->  .../pci/controller/dwc/pcie-designware-ep.c   | 13 +++
->  drivers/pci/endpoint/functions/pci-epf-test.c | 89 +++++--------------
->  drivers/pci/endpoint/pci-epc-core.c           | 57 +++++++++---
->  include/linux/pci-epc.h                       | 10 ++-
->  4 files changed, 90 insertions(+), 79 deletions(-)
+> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> ---
+>  drivers/pci/endpoint/pci-epc-core.c | 57 ++++++++++++++++++++++++-----
+>  include/linux/pci-epc.h             | 10 +++--
+>  2 files changed, 53 insertions(+), 14 deletions(-)
 > 
+> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+> index 2542196e8c3d..60d586e05e7d 100644
+> --- a/drivers/pci/endpoint/pci-epc-core.c
+> +++ b/drivers/pci/endpoint/pci-epc-core.c
+> @@ -430,8 +430,12 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
+>   * Invoke to unmap the CPU address from PCI address.
+>   */
+>  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> -			phys_addr_t phys_addr)
+> +			phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
+>  {
+> +	u64 aligned_phys;
+> +	void __iomem *aligned_virt;
+> +	size_t offset;
+> +
+>  	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+>  		return;
+>  
+> @@ -441,9 +445,22 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  	if (!epc->ops->unmap_addr)
+>  		return;
+>  
+> +	if (epc->ops->align_mem) {
+> +		mutex_lock(&epc->lock);
+> +		aligned_phys = epc->ops->align_mem(epc, phys_addr, &size);
+> +		mutex_unlock(&epc->lock);
+> +	} else {
+> +		aligned_phys = phys_addr;
+> +	}
+> +
+> +	offset = phys_addr - aligned_phys;
+> +	aligned_virt = virt_addr - offset;
+> +
+>  	mutex_lock(&epc->lock);
+> -	epc->ops->unmap_addr(epc, func_no, vfunc_no, phys_addr);
+> +	epc->ops->unmap_addr(epc, func_no, vfunc_no, aligned_phys);
+>  	mutex_unlock(&epc->lock);
+> +
+> +	pci_epc_mem_free_addr(epc, aligned_phys, aligned_virt, size);
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>  
+> @@ -458,26 +475,46 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
+>   *
+>   * Invoke to map CPU address with PCI address.
+>   */
+> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
+> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +		u64 pci_addr, phys_addr_t *phys_addr, size_t size)
+>  {
+>  	int ret;
+> +	u64 aligned_addr;
+> +	size_t offset;
+> +	void __iomem *virt_addr;
+>  
+>  	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
+> -		return -EINVAL;
+> +		return ERR_PTR(-EINVAL);
+>  
+>  	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
+> -		return -EINVAL;
+> +		return ERR_PTR(-EINVAL);
+>  
+>  	if (!epc->ops->map_addr)
+> -		return 0;
+> +		return ERR_PTR(-ENOPTSUPP);
+> +
+> +	if (epc->ops->align_mem) {
+> +		mutex_lock(&epc->lock);
+> +		aligned_addr = epc->ops->align_mem(epc, pci_addr, &size);
+> +		mutex_unlock(&epc->lock);
+> +	} else {
+> +		aligned_addr = pci_addr;
+> +	}
+> +
+> +	offset = pci_addr - aligned_addr;
+> +
+> +	virt_addr = pci_epc_mem_alloc_addr(epc, phys_addr, size);
+> +	if (!virt_addr)
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	mutex_lock(&epc->lock);
+> -	ret = epc->ops->map_addr(epc, func_no, vfunc_no, phys_addr, pci_addr,
+> -				 size);
+> +	ret = epc->ops->map_addr(epc, func_no, vfunc_no, *phys_addr, aligned_addr, size);
+>  	mutex_unlock(&epc->lock);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+>  
+> -	return ret;
+> +	*phys_addr += offset;
+> +
+> +	return virt_addr + offset;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
+>  
+> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+> index a48778e1a4ee..8f29161bce80 100644
+> --- a/include/linux/pci-epc.h
+> +++ b/include/linux/pci-epc.h
+> @@ -84,6 +84,7 @@ struct pci_epc_ops {
+>  			       phys_addr_t phys_addr, u8 interrupt_num,
+>  			       u32 entry_size, u32 *msi_data,
+>  			       u32 *msi_addr_offset);
+> +	u64	(*align_mem)(struct pci_epc *epc, u64 addr, size_t *size);
+
+Is there a requirement for multiple implementations of .align_mem()?
+
+There's only one implementation in this series
+(dw_pcie_ep_align_mem()), and it only needs pci->region_align.  That
+*value* might be DWC-specific, but the concept really isn't, so maybe
+there could be a generic function that uses the device-specific value.
+
+>  	int	(*start)(struct pci_epc *epc);
+>  	void	(*stop)(struct pci_epc *epc);
+>  	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
+> @@ -218,11 +219,12 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  		    struct pci_epf_bar *epf_bar);
+>  void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  		       struct pci_epf_bar *epf_bar);
+> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> -		     phys_addr_t phys_addr,
+> -		     u64 pci_addr, size_t size);
+> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> +			       u64 pci_addr, phys_addr_t *phys_addr,
+> +			       size_t size);
+>  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+> -			phys_addr_t phys_addr);
+> +			phys_addr_t phys_addr, void __iomem *virt_addr,
+> +			size_t size);
+>  int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
+>  		    u8 interrupts);
+>  int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
 > -- 
 > 2.25.1
 > 
