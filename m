@@ -2,48 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8BEF66E866
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 22:28:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0723A66E890
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 22:39:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjAQV2c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Jan 2023 16:28:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48524 "EHLO
+        id S229760AbjAQVi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Jan 2023 16:38:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229691AbjAQV0z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 16:26:55 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F43303F8;
-        Tue, 17 Jan 2023 11:46:16 -0800 (PST)
+        with ESMTP id S229896AbjAQVgz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 16:36:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C537C59779;
+        Tue, 17 Jan 2023 11:59:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 88ADB6127C;
-        Tue, 17 Jan 2023 19:46:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA3EAC433D2;
-        Tue, 17 Jan 2023 19:46:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5DF5BB81A20;
+        Tue, 17 Jan 2023 19:59:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC97DC433D2;
+        Tue, 17 Jan 2023 19:59:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673984775;
-        bh=xnGXOoNgDFnCfGFqkYWtMg89FKyKMFlSJejrent0z50=;
+        s=k20201202; t=1673985545;
+        bh=nF3mX0FRh5dgfCx3CVH/H+twTc/Spc+GztkzKFwfJ0M=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=itmvIkkVnXQD3R7IotNEycsLmC3O4tBaQYU5mOCcXZqCOMI7i9dA0geFJippxBuCK
-         /aBw2JY3GAwurtKKME1uROUPqbpNjCmCzq1L5+G7uRfkOB+BYO02iVCR9oTp8qP4I3
-         V9CkPwOEPS6E7i+oygkth6Eb9ynfobPtAIzEe3ExtTIxSTzs1pCrz3uycYQXEVywoW
-         ptJNobblHKki+s3DSFOrtSw4sFyb5xy1SOSUtzyrKTRpKj2fdDPAI2qSz1lBb0M2hV
-         se8QXiRH5Cc2WqjoHsheaHMf7gy12LBFc+kB4M/OPAigSFuPHHWjc1eytqydHO16hc
-         ZRopnLwgpukPQ==
-Date:   Tue, 17 Jan 2023 13:46:14 -0600
+        b=EVYSaePle3s9HVyeSNst0WS+9A4ElwfjNRTUGzsRXGbUSGfyWJxPk1v4xjGZcM9KV
+         buGSvhH3wHE9AXYl6CajZQ8Xo8Y2firfcqsbUHuOL02CqjmrdTMVeDzz22cx3Bqk+6
+         yifdf9/Pt+whcGHQasn9YT2nWvDzqpgNOsJ3wefMo/2Bq7+d+89Via9SphmLhSUq7d
+         NF3X2oMoE+bobemZwmoVO/SvG8S5l7ZUlmS1f9IJEtpPpMIY2MAErbWyQfA171+UzX
+         cA9rhBT6wY3zS7TGlVyLRGZBvxb1T9VqS4b2kiIz2nOJcVxL7Kni35ENAQJ2l7jbcS
+         2aJjSuxbudzoA==
+Date:   Tue, 17 Jan 2023 13:59:03 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Edward Chow <persmule@gmail.com>
-Cc:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org,
-        linux-pci@vger.kernel.org, robh@kernel.org,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        Edward Chow <equu@openmail.cc>
-Subject: Re: [PATCH 2/3] wifi: ath9k: stop loading incompatible DT cal data
-Message-ID: <20230117194614.GA135447@bhelgaas>
+To:     Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics 
+        <aman1.gupta@samsung.com>
+Cc:     'Shuah Khan' <skhan@linuxfoundation.org>,
+        'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>,
+        shradha.t@samsung.com, pankaj.dubey@samsung.com, kishon@ti.com,
+        lpieralisi@kernel.org, kw@linux.com, shuah@kernel.org,
+        linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>
+Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
+ endpoint driver test
+Message-ID: <20230117195903.GA142672@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230117092746.1149155-1-equu@openmail.cc>
+In-Reply-To: <003d01d919b2$3c7d54a0$b577fde0$@samsung.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -53,109 +57,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 05:27:46PM +0800, Edward Chow wrote:
-> Loading calibration data from an OF device tree node not declared
-> compatible with the device (e.g. a PCI device with calibration data
-> from corresponding DT node gets replaced, so the newly installed
-> device become incompatible with the node) or driver may lead to fatal
-> result, e.g. kernel panic.
-
-Please include a link to a bug report and include a few lines of the
-oops or panic directly in the commit log so when users see this
-problem, they can search for the text and possibly find this fix.
-
-> The driver should check whether the DT node corresponding to the
-> device compatible with it, and load calibration data only from
-> compatible node.
-
-If you read this commit log carefully, it doesn't actually say what
-this patch *does*.  It has some background and this assertion about
-what drivers *should* do, but it doesn't say what this patch does.
-
-Suggest structure like this (flesh out with the relevant DT property
-names, etc):
-
-  For PCI ath9k devices, load calibration data only if there is a DT
-  node corresponding to the device with XXX ...
-
-More details: https://chris.beams.io/posts/git-commit/
-
-> Signed-off-by: Edward Chow <equu@openmail.cc>
-> ---
->  drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
->  drivers/net/wireless/ath/ath9k/init.c  | 26 ++++++++++++++++++++++++++
->  drivers/net/wireless/ath/ath9k/pci.c   |  2 +-
->  3 files changed, 28 insertions(+), 1 deletion(-)
+On Tue, Dec 27, 2022 at 10:45:26AM +0530, Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics wrote:
+> ...
+> Thanks for review and suggestion. I understand that we would like to
+> reuse and preserve the history of tools/pci/pcietest.c. So we have
+> two approaches:
 > 
-> diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-> index 2cc23605c9fc..4f6f0383a5f8 100644
-> --- a/drivers/net/wireless/ath/ath9k/ath9k.h
-> +++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-> @@ -35,6 +35,7 @@ struct ath_node;
->  struct ath_vif;
->  
->  extern struct ieee80211_ops ath9k_ops;
-> +extern struct pci_driver ath_pci_driver;
->  extern int ath9k_modparam_nohwcrypt;
->  extern int ath9k_led_blink;
->  extern bool is_ath9k_unloaded;
-> diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-> index 4f00400c7ffb..f88a48e8456b 100644
-> --- a/drivers/net/wireless/ath/ath9k/init.c
-> +++ b/drivers/net/wireless/ath/ath9k/init.c
-> @@ -22,6 +22,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_net.h>
-> +#include <linux/pci.h>
->  #include <linux/nvmem-consumer.h>
->  #include <linux/relay.h>
->  #include <linux/dmi.h>
-> @@ -577,6 +578,31 @@ static int ath9k_nvmem_request_eeprom(struct ath_softc *sc)
->  	size_t len;
->  	int err;
->  
-> +	/* devm_nvmem_cell_get() will get a cell first from the OF
-> +	 * DT node representing the given device with nvmem-cell-name
-> +	 * "calibration", and from the global lookup table as a fallback,
-> +	 * and an ath9k device could be either a pci one or a platform one.
-> +	 *
-> +	 * If the OF DT node is not compatible with the real device, the
-> +	 * calibration data got from the node should not be applied.
-> +	 *
-> +	 * dev_is_pci(sc->dev) && ( no OF node || caldata not from node
-> +	 * || not compatible ) -> do not use caldata .
-> +	 *
-> +	 * !dev_is_pci(sc->dev) -> always use caldata .
-> +	 */
-> +	if (dev_is_pci(sc->dev) &&
-> +	    (!sc->dev->of_node ||
-> +	     !of_property_match_string(sc->dev->of_node,
-> +				       "nvmem-cell-names",
-> +				       "calibration") ||
-> +	     !of_pci_node_match_driver(sc->dev->of_node,
-> +				       &ath_pci_driver)))
-> +		/* follow the "just return 0;" convention as
-> +		 * noted below.
-> +		 */
-> +		return 0;
-> +
->  	cell = devm_nvmem_cell_get(sc->dev, "calibration");
->  	if (IS_ERR(cell)) {
->  		err = PTR_ERR(cell);
-> diff --git a/drivers/net/wireless/ath/ath9k/pci.c b/drivers/net/wireless/ath/ath9k/pci.c
-> index a074e23013c5..fcb19761e60d 100644
-> --- a/drivers/net/wireless/ath/ath9k/pci.c
-> +++ b/drivers/net/wireless/ath/ath9k/pci.c
-> @@ -1074,7 +1074,7 @@ static SIMPLE_DEV_PM_OPS(ath9k_pm_ops, ath_pci_suspend, ath_pci_resume);
->  
->  MODULE_DEVICE_TABLE(pci, ath_pci_id_table);
->  
-> -static struct pci_driver ath_pci_driver = {
-> +struct pci_driver ath_pci_driver = {
->  	.name       = "ath9k",
->  	.id_table   = ath_pci_id_table,
->  	.probe      = ath_pci_probe,
-> -- 
-> 2.39.0
+> 1: Using git mv command move existing code from tools/pci/ to
+> tools/testing/selftest/drivers/pci/ and then update the file to
+> convert to kselftest framework. I thought about this but after
+> movement, when we move it to kselftest format it is going to be huge
+> churn and we will be having modification in almost all lines.
 > 
+> 2: Develop kselftest based driver in
+> tools/testing/selftest/drivers/pci/ and eventually delete existing
+> file from tools/pci/ folder providing justification in commit
+> message.
+> 
+> From my viewpoint, going with the second approach makes more sense
+> because if almost complete file is getting modified, and it will
+> make the review process complex and anyways there is not much code
+> reusability.
+>
+> Please let me know if you have any other thought
+> process or if I am missing anything to understand your approach.
+
+I vote for the first approach, with "git mv" and subsequent conversion
+(in separate patches, of course).  If git knows about the move,
+"git log --follow" will be useful even though the conversion will be a
+big patch.  Adding a new test with the connection to the old one only
+in the commit log makes more work for people who dig through the
+history in the future.
+
+Bjorn
