@@ -2,194 +2,573 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F033966DA4F
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 10:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE3A366DA7D
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 11:02:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236077AbjAQJuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Jan 2023 04:50:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
+        id S236408AbjAQKCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Jan 2023 05:02:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235491AbjAQJuT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 04:50:19 -0500
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6438517170
-        for <linux-pci@vger.kernel.org>; Tue, 17 Jan 2023 01:50:18 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id ss4so66740655ejb.11
-        for <linux-pci@vger.kernel.org>; Tue, 17 Jan 2023 01:50:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=nSMMJbna904D/HY34WkPwGeNj/vI3mpAT3YuSUunxOw=;
-        b=m+cSvVlOsZYulX+mufMjkwbBCn193mhWufNoHSjOP2xLiadxvbEQ8y0CB+XYDTYHin
-         WGdsi+KMrcO+RHbqzflKz+jO+t5lPbzzNXwmrevqgWITZwoWZvlLJXRAklG4kVwvwVc9
-         0q5SiIdIFY4hGyZqIbRSg+J2Ny56hvFw94navQhKbhYyihRrRavrfsoOwx5wYW1Dd8Hw
-         o+hiCKuAtyDcLXQ0mN3qUlSN7uPdk0jS8OyiopHZd2M6qT8MEeLFwe/8+nVS9sc2fT1x
-         MQfPZTeMxUkv92d8bQOrc8Ox2SIDZIL27CCMucSjIuKihAzwHsh4oLpvy2s6pnnHyoEc
-         LtDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nSMMJbna904D/HY34WkPwGeNj/vI3mpAT3YuSUunxOw=;
-        b=NmxivdV0P26vYvMOknF0doNeIe399d1pHNXaZ7P9kpdc321qysIabobIpHwlwRLl80
-         zX00YoJBsoCcWjikI2ZkY5UEgzOrTC+ALSxSrs1oWe36xVOnDSQz5fK60zLjbb8ysYlH
-         32d9k3JVx2xYnmR70nTqJzjygN1GbePpIs/ESuBPyY+3DW/L0Cjlr84WuIGXwaKJlcr7
-         qBRrBEjj24KFdk52WxliZJE1JmnCgF9Knf7HixuWPTFM+zQRZrUxHIJ156Y/1kMuDcDe
-         JIwJ7sFFCBMY+uEPMA/63sMePe3gBxNPQ3YulESV1MeiyGNdhhOA1HF8gWFXHSg4+7gy
-         WtkA==
-X-Gm-Message-State: AFqh2kosO9y2hEE6NyypFTvvvJzuKWGv8l8Imaxq4tmqpzHTfx7YvY+B
-        Eci54Y0JnZeoTx2Es/c2g6lipETkjbYVk2ZwgKY=
-X-Google-Smtp-Source: AMrXdXs0GswGSCPsa0/AJL/Ql0WStZ7vNPwUgOCyhTuvnjaUux9fJgCRCabqUfoQTqAuIv5bKh6oE9ePZo8bsbP3Cxw=
-X-Received: by 2002:a17:907:c98a:b0:86d:9435:5d1f with SMTP id
- uj10-20020a170907c98a00b0086d94355d1fmr145878ejc.570.1673949016825; Tue, 17
- Jan 2023 01:50:16 -0800 (PST)
+        with ESMTP id S236028AbjAQKBv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 05:01:51 -0500
+Received: from smtp161.vfemail.net (smtp161.vfemail.net [146.59.185.161])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA2712CC5C
+        for <linux-pci@vger.kernel.org>; Tue, 17 Jan 2023 02:01:39 -0800 (PST)
+Received: (qmail 4805 invoked from network); 17 Jan 2023 10:01:37 +0000
+Received: from localhost (HELO nl101-3.vfemail.net) ()
+  by smtpout.vfemail.net with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 17 Jan 2023 10:01:37 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=vfemail.net; h=message-id
+        :date:mime-version:from:subject:to:cc:references:in-reply-to
+        :content-type:content-transfer-encoding; s=2018; bh=2bP9qx6s30zi
+        oPg76k/6WJbCmn0UlZhBcVuSoMZmBUg=; b=E7m3yBmw1khStbDOaByL3bVuihRX
+        hmBYH4S/L74Rsg5x2OVv/+nXD2bciwnaBk9hKZ/qKdIGFVjtQ/i7QH3eWjb+GD98
+        favYAg9/TEf7ve1avd/ZHcVQV6lQucLwndBvssXnzUCOvLAJUtfVpq91q+BuTO2j
+        k4Q8WiuSjQXJkGg=
+Received: (qmail 65935 invoked from network); 17 Jan 2023 10:01:37 -0000
+Received: by simscan 1.4.0 ppid: 65810, pid: 65899, t: 0.6732s
+         scanners:none
+Received: from unknown (HELO bmwxMDEudmZlbWFpbC5uZXQ=) (ZXF1dUBvcGVubWFpbC5jYw==@MTkyLjE2OC4xLjE5Mg==)
+  by nl101.vfemail.net with ESMTPA; 17 Jan 2023 10:01:36 -0000
+Message-ID: <47958543-e90a-578d-94ea-facee04ac8c6@openmail.cc>
+Date:   Tue, 17 Jan 2023 18:01:30 +0800
 MIME-Version: 1.0
-References: <20230111092911.8039-1-adrianhuang0701@gmail.com> <20230111155833.GA1668483@bhelgaas>
-In-Reply-To: <20230111155833.GA1668483@bhelgaas>
-From:   Huang Adrian <adrianhuang0701@gmail.com>
-Date:   Tue, 17 Jan 2023 17:50:05 +0800
-Message-ID: <CAHKZfL1PPo=fyukj8UA5=m4TUSjFiUj65wC4FmU6w-XW1mJyqw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] PCI: vmd: Avoid acceidental enablement of window
- when zeroing config space of VMD root ports
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Nirmal Patel <nirmal.patel@linux.intel.com>,
-        Adrian Huang <ahuang12@lenovo.com>,
-        Jon Derrick <jonathan.derrick@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   Mad Horse <equu@openmail.cc>
+Subject: [PATCH 1/3] PCI: of: Match pci devices or drivers against OF DT nodes
+To:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org
+Cc:     linux-pci@vger.kernel.org, robh@kernel.org,
+        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+        Edward Chow <equu@openmail.cc>,
+        Bjorn Helgaas <helgaas@kernel.org>
+References: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
+Content-Language: en-US
+In-Reply-To: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,FREEMAIL_FROM,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 11:58 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> s/acceidental/accidental/ in subject
+Currently, whether a compatibility string within an OF DT node for a
+PCI device (whose spec is at
+https://www.devicetree.org/open-firmware/bindings/pci/ ) matches the
+vendor and device id of either the PCI device installed on the
+corresponding location or the driver suggested by the compatibility
+string is not supported.
 
-Thanks. Sorry for the fat-finger error.
+This patch introduces a function to decode a compatibility string into
+a struct pci_device_id, which could further be matched against PCI
+devices or drivers, as well as functions to match a compatibility
+string or OF DT node against PCI devices or drivers.
 
-> > When memset_io() clears prefetchable base 32 bits register, the
-> > prefetchable memory becomes 0000000000000000-575000fffff, which is enabled.
-> > This behavior (accidental enablement of window) causes that config accesses
-> > get routed to the wrong place, and the access content of PCI configuration
-> > space of VMD root ports is 0xff after invoking memset_io() in
-> > vmd_domain_reset():
->
-> I was thinking the problem was only between clearing
-> PCI_PREF_MEMORY_BASE and PCI_PREF_BASE_UPPER32, but that would be a
-> pretty small window, and you're seeing a lot of config accesses going
-> wrong.  Why is that?  Is there enumeration that races with this domain
-> reset?
+Signed-off-by: Edward Chow <equu@openmail.cc>
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+---
+drivers/pci/of.c | 299 +++++++++++++++++++++++++++++++++++++++
+drivers/pci/pci-driver.c | 5 -
+drivers/pci/pci.h | 56 ++++++++
+include/linux/of_pci.h | 25 ++++
+include/linux/pci.h | 6 +
+5 files changed, 386 insertions(+), 5 deletions(-)
 
-Well, I didn't see the races. The problem is that: memset_io() uses
-enhanced REP STOSB, fast-string operation or legacy method (see
-arch/x86/lib/memset_64.S) to *sequentially* clear the memory location
-from lower memory location to higher one. When clearing at
-PCI_PREF_BASE_UPPER32, the prefetchable memory window is accidentally
-enabled. The subsequent accesses (each read returns 0xff, and each
-write does not take any effect) cannot be made correctly. In this
-case, clearing at PCI_PREF_LIMIT_UPPER32 cannot take any effect. So,
-we're unable to configure VMD devices anymore for subsequent writes.
-
-Here are the test codes for emulating memset_io(), and they are 4-byte
-writes. The issue can be reproduced:
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..e27e2a0f68e0 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -526,8 +526,15 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
-                                     PCI_CLASS_BRIDGE_PCI))
-                                        continue;
-
--                               memset_io(base + PCI_IO_BASE, 0,
--                                         PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-+                               writel(0, base + PCI_IO_BASE);
-+                               writel(0, base + PCI_MEMORY_BASE);
-+                               writel(0, base + PCI_PREF_MEMORY_BASE);
-+
-+                               writel(0, base + PCI_PREF_BASE_UPPER32);
-+                               writel(0, base + PCI_PREF_LIMIT_UPPER32);
-+
-+                               writel(0, base + PCI_IO_BASE_UPPER16);
-+                               writel(0, base + PCI_CAPABILITY_LIST);
-                        }
-                }
-        }
-
-
-The following test codes can fix the issue (clear
-PCI_PREF_LIMIT_UPPER32 firstly):
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..b9140e081793 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -526,8 +526,15 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
-                                     PCI_CLASS_BRIDGE_PCI))
-                                        continue;
-
--                               memset_io(base + PCI_IO_BASE, 0,
--                                         PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-+                               writel(0, base + PCI_IO_BASE);
-+                               writel(0, base + PCI_MEMORY_BASE);
-+                               writel(0, base + PCI_PREF_MEMORY_BASE);
-+
-+                               writel(0, base + PCI_PREF_LIMIT_UPPER32);
-+                               writel(0, base + PCI_PREF_BASE_UPPER32);
-+
-+                               writel(0, base + PCI_IO_BASE_UPPER16);
-+                               writel(0, base + PCI_CAPABILITY_LIST);
-
-
-> I guess the same problem occurs with PCI_IO_BASE/PCI_IO_BASE_UPPER16,
-> but maybe there's no concurrent I/O port access?
-
-For the general case, how about the following code snippets?
-
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 769eedeb8802..e29e33f7b70e 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -499,6 +499,19 @@ static inline void vmd_acpi_begin(void) { }
- static inline void vmd_acpi_end(void) { }
- #endif /* CONFIG_ACPI */
-
-+static inline void vmd_clear_cfg_space(char __iomem *base, int start, int end)
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 196834ed44fe..edb61195ea53 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -13,6 +13,8 @@
+#include <linux/of_irq.h>
+#include <linux/of_address.h>
+#include <linux/of_pci.h>
++#include <linux/string.h>
++#include <linux/kstrtox.h>
+#include "pci.h"
+#ifdef CONFIG_PCI
+@@ -251,6 +253,303 @@ void of_pci_check_probe_only(void)
+}
+EXPORT_SYMBOL_GPL(of_pci_check_probe_only);
++/**
++ * of_pci_compat_to_device_id() - Decode an OF compatibility string into a
++ * pci_device_id structure.
++ * @compat: the compatibility string to decode, could be NULL
++ * @id: pointer to a struct pci_device_id, to store the result
++ * @rev: pointer to output revision info, PCI_ANY_ID if no revision in 
+@compat
++ * @req_pcie: pointer to output whether @compat mandates PCIe compatibility
++ *
++ * returns 0 when success, -EINVAL when failed.
++ */
++int of_pci_compat_to_device_id(const char *compat, struct pci_device_id 
+*id,
++ u32 *rev, u32 *req_pcie)
 +{
-+       int i;
++ union {
++ u8 u8;
++ u16 u16;
++ u32 u32;
++ } res = {0};
++ *req_pcie = 0;
++ *rev = PCI_ANY_ID;
++ if (!compat || strncasecmp(compat, "pci", 3) != 0)
++ return -EINVAL;
++ compat += 3;
 +
-+       /*
-+        * Clear PCI configuration space from higher memory location
-+        * to lower one. This prevents from enabling IO window or
-+        * prefetchable memory window if it is disabled initially.
-+        */
-+       for (i = end - 1; i >= start; i--)
-+               writeb(0, base + i);
++ if (strncasecmp(compat, "class,", 6) == 0) {
++ /* pciclass,CCSSPP */
++ compat += 6;
++ if ((strlen(compat) < 4)
++ || kstrtouint(compat, 16, &id->class))
++ return -EINVAL;
++ if (id->class < 0x10000) {
++ id->class <<= 8;
++ id->class_mask = 0xFFFF00;
++ } else {
++ id->class_mask = PCI_ANY_ID;
++ }
++ id->vendor = PCI_ANY_ID;
++ id->device = PCI_ANY_ID;
++ id->subvendor = PCI_ANY_ID;
++ id->subdevice = PCI_ANY_ID;
++ return 0
++ }
++
++ if (strncasecmp(compat, "ex", 2) == 0) {
++ /* pciex... */
++ *req_pcie = 1;
++ compat += 2;
++ }
++ if (kstrtou16(compat, 16, &res.u16))
++ return -EINVAL;
++ id->vendor = res.u16;
++ compat = strchr(compat, ',');
++ if (!compat)
++ return -EINVAL;
++ compat++;
++ if (kstrtou16(compat, 16, &res.u16))
++ return -EINVAL;
++ id->device = res.u16;
++ compat = strchr(compat, '.');
++ if (compat == NULL) {
++ /* pciVVVV,DDDD */
++ id->subvendor = PCI_ANY_ID;
++ id->subdevice = PCI_ANY_ID;
++ return 0
++ }
++
++ compat++;
++ if (strlen(compat) == 2) {
++ /* pciVVVV,DDDD.RR */
++ if (kstrtou8(compat, 16, &res.u8))
++ return -EINVAL;
++ *rev = res.u8;
++ id->subvendor = PCI_ANY_ID;
++ id->subdevice = PCI_ANY_ID;
++ return 0
++ }
++
++ if (kstrtou16(compat, 16, &res.u16))
++ return -EINVAL;
++ id->subvendor = res.u16;
++ compat = strchr(compat, '.');
++ if (!compat)
++ return -EINVAL;
++ compat++;
++ if (kstrtou16(compat, 16, &res.u16))
++ return -EINVAL;
++ id->subdevice = res.u16;
++ compat = strchr(compat, '.');
++ if (compat == NULL)
++ /* pciVVVV,DDDD.SSSS.ssss */
++ return 0
++
++ compat++;
++ if (strlen(compat) == 2) {
++ /* pciVVVV,DDDD.SSSS.ssss.RR */
++ if (kstrtou8(compat, 16, &res.u8))
++ return -EINVAL;
++ *rev = res.u8;
++ }
++ return 0;
 +}
 +
- static void vmd_domain_reset(struct vmd_dev *vmd)
- {
-        u16 bus, max_buses = resource_size(&vmd->resources[0]);
-@@ -526,8 +539,8 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
-                                     PCI_CLASS_BRIDGE_PCI))
-                                        continue;
++/**
++ * of_pci_compat_match_device() - Tell whether a PCI device structure 
+matches
++ * a given OF compatibility string
++ * @compat: single OF compatibility string to match, could be NULL
++ * @dev the PCI device structure to match against
++ *
++ * Returns whether they match.
++ */
++bool of_pci_compat_match_device(const char *compat, const struct 
+pci_dev *dev)
++{
++ __u32 rev = PCI_ANY_ID;
++ __u32 req_pcie = 0;
++ struct pci_device_id id = {0};
++
++ if (of_pci_compat_to_device_id(compat, &id, &rev, &req_pcie))
++ return false;
++ return pci_match_one_device(&id, dev) &&
++ (rev == PCI_ANY_ID || rev == dev->revision) &&
++ req_pcie ? dev->pcie_cap : true;
++}
++
++/**
++ * of_pci_node_match_device() - Tell whether an OF device tree node
++ * matches the given pci device
++ * @node: single OF device tree node to match, could be NULL
++ * @dev: the PCI device structure to match against, could be NULL
++ *
++ * Returns whether they match.
++ */
++bool of_pci_node_match_device(const struct device_node *node,
++ const struct pci_dev *dev)
++{
++ struct property *prop;
++ const char *cp;
++
++ if (!node || !dev)
++ return false;
++ prop = of_find_property(node, "compatible", NULL);
++ for (cp = of_prop_next_string(prop, NULL); cp;
++ cp = of_prop_next_string(prop, cp)) {
++ if (of_pci_compat_match_device(cp, dev))
++ return true;
++ }
++ return false;
++}
++EXPORT_SYMBOL_GPL(of_pci_node_match_device);
++
++/**
++ * of_pci_compat_match_one_id() - Tell whether a PCI device ID 
+structure matches
++ * a given OF compatibility string, note that there is no revision nor PCIe
++ * capability info in PCI device ID structures
++ *
++ * @compat: single OF compatibility string to match, could be NULL
++ * @id the PCI device ID structure to match against, could be NULL
++ *
++ * Returns the matching pci_device_id structure pointed by ID
++ * or %NULL if there is no match.
++ */
++const struct pci_device_id *
++of_pci_compat_match_one_id(const char *compat, const struct 
+pci_device_id *id)
++{
++ __u32 rev = PCI_ANY_ID;
++ __u32 req_pcie = 0;
++ struct pci_device_id pr = {0};
++
++ if (!compat || !id ||
++ of_pci_compat_to_device_id(compat, &pr, &rev, &req_pcie))
++ return NULL;
++ return pci_match_one_id(id, &pr);
++}
++
++/**
++ * of_pci_compat_match_id_table() - Tell whether a given OF 
+compatibility string
++ * matches a given pci_id table
++ *
++ * @compat: single OF compatibility string to match, could be NULL
++ * @table the PCI device ID table to match against, could be NULL
++ *
++ * Returns the matching pci_device_id structure or %NULL if there is no 
+match.
++ */
++const struct pci_device_id *
++of_pci_compat_match_id_table(const char *compat, const struct 
+pci_device_id *table)
++{
++ if (compat && table) {
++ while (table->vendor || table->subvendor || table->class_mask) {
++ if (of_pci_compat_match_one_id(compat, table))
++ return table;
++ table++;
++ }
++ }
++ return NULL;
++}
++
++/**
++ * of_pci_node_match_id_table() - Tell whether an OF device tree node
++ * matches the given pci_id table
++ * @node: single OF device tree node to match, could be NULL
++ * @table: the PCI device ID table to match against, could be NULL
++ *
++ * Returns the matching pci_device_id structure
++ * or %NULL if there is no match.
++ */
++const struct pci_device_id *
++of_pci_node_match_id_table(const struct device_node *node,
++ const struct pci_device_id *table)
++{
++ struct property *prop;
++ const char *cp;
++ const struct pci_device_id *id;
++
++ if (!node || !table)
++ return NULL;
++ prop = of_find_property(node, "compatible", NULL);
++ for (cp = of_prop_next_string(prop, NULL); cp;
++ cp = of_prop_next_string(prop, cp)) {
++ id = of_pci_compat_match_id_table(cp, table);
++ if (id)
++ return id;
++ }
++ return NULL;
++}
++EXPORT_SYMBOL_GPL(of_pci_node_match_id_table);
++
++/**
++ * of_pci_compat_match_driver - See if a given OF compatibility string 
+matches
++ * a driver's list of IDs
++ * @compat: single OF compatibility string to match, could be NULL
++ * @drv: the PCI driver to match against, could be NULL
++ *
++ * Used by a driver to check whether an OF compatibility string matches 
+one of
++ * (dynamically) supported devices, which may have been augmented
++ * via the sysfs "new_id" file. Returns the matching pci_device_id
++ * structure or %NULL if there is no match.
++ */
++const struct pci_device_id *
++of_pci_compat_match_driver(const char *compat, struct pci_driver *drv)
++{
++ struct pci_dynid *dynid;
++ const struct pci_device_id *found_id = NULL, *ids;
++
++ if (!compat || !drv)
++ return NULL;
++ /* Look at the dynamic ids first, before the static ones */
++ spin_lock(&drv->dynids.lock);
++ list_for_each_entry(dynid, &drv->dynids.list, node) {
++ if (of_pci_compat_match_one_id(compat, &dynid->id)) {
++ found_id = &dynid->id;
++ break;
++ }
++ }
++ spin_unlock(&drv->dynids.lock);
++
++ if (found_id)
++ return found_id;
++
++ for (ids = drv->id_table; (found_id = 
+of_pci_compat_match_one_id(compat, ids));
++ ids = found_id + 1) {
++ /* exclude ids in id_table with override_only */
++ if (!found_id->override_only)
++ return found_id;
++ }
++
++ return NULL;
++}
++
++/**
++ * of_pci_node_match_driver() - Tell whether an OF device tree node
++ * matches the given pci driver
++ * @node: single OF device tree node to match, could be NULL
++ * @drv: the PCI driver structure to match against, could be NULL
++ *
++ * Returns the matching pci_device_id structure
++ * or %NULL if there is no match.
++ */
++const struct pci_device_id *
++of_pci_node_match_driver(const struct device_node *node,
++ struct pci_driver *drv)
++{
++ struct property *prop;
++ const char *cp;
++ const struct pci_device_id *id;
++
++ if (!node || !drv)
++ return NULL;
++ prop = of_find_property(node, "compatible", NULL);
++ for (cp = of_prop_next_string(prop, NULL); cp;
++ cp = of_prop_next_string(prop, cp)) {
++ id = of_pci_compat_match_driver(cp, drv);
++ if (id)
++ return id;
++ }
++ return NULL;
++}
++EXPORT_SYMBOL_GPL(of_pci_node_match_driver);
++
+/**
+* devm_of_pci_get_host_bridge_resources() - Resource-managed parsing of PCI
+* host bridge resources from DT
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index a2ceeacc33eb..aa212d12353f 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -24,11 +24,6 @@
+#include "pci.h"
+#include "pcie/portdrv.h"
+-struct pci_dynid {
+- struct list_head node;
+- struct pci_device_id id;
+-};
+-
+/**
+* pci_add_dynid - add a new PCI device ID to this driver and re-probe 
+devices
+* @drv: target pci driver
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9ed3b5550043..e30652021a63 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -204,6 +204,29 @@ pci_match_one_device(const struct pci_device_id 
+*id, const struct pci_dev *dev)
+return NULL;
+}
++/**
++ * pci_match_one_id - Tell if a PCI device id structure matches another
++ * PCI device id structure
++ * @id: single PCI device id structure to match, usually in a list or array
++ * @pr: the probing PCI device id structure to match against, usually 
+converted from
++ * other format
++ *
++ * Returns the matching pci_device_id structure pointed by id
++ * or %NULL if there is no match.
++ */
++static inline const struct pci_device_id *
++pci_match_one_id(const struct pci_device_id *id, const struct 
+pci_device_id *pr)
++{
++ if ((id->vendor == pr->vendor) &&
++ (id->device == pr->device) &&
++ (id->subvendor == pr->subvendor) &&
++ (id->subdevice == pr->subdevice) &&
++ (id->class == pr->class) &&
++ (id->class_mask == pr->class_mask))
++ return id;
++ return NULL;
++}
++
+/* PCI slot sysfs helper code */
+#define to_pci_slot(s) container_of(s, struct pci_slot, kobj)
+@@ -638,6 +661,15 @@ void pci_release_bus_of_node(struct pci_bus *bus);
+int devm_of_pci_bridge_init(struct device *dev, struct pci_host_bridge 
+*bridge);
++int of_pci_compat_to_device_id(const char *compat, struct pci_device_id 
+*id,
++ __u32 *rev, __u32 *req_pcie);
++bool of_pci_compat_match_device(const char *compat, const struct 
+pci_dev *dev);
++const struct pci_device_id *
++of_pci_compat_match_one_id(const char *compat, const struct 
+pci_device_id *id);
++const struct pci_device_id *
++of_pci_compat_match_id_table(const char *compat, const struct 
+pci_device_id *table);
++const struct pci_device_id *
++of_pci_compat_match_driver(const char *compat, struct pci_driver *drv);
+#else
+static inline int
+of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+@@ -679,6 +711,30 @@ static inline int devm_of_pci_bridge_init(struct 
+device *dev, struct pci_host_br
+return 0;
+}
++static inline int of_pci_compat_to_device_id(const char *compat, struct 
+pci_device_id *id,
++ __u32 *rev, __u32 *req_pcie)
++{
++ return -EINVAL;
++}
++static inline bool of_pci_compat_match_device(const char *compat, const 
+struct pci_dev *dev)
++{
++ return false;
++}
++static inline const struct pci_device_id *
++of_pci_compat_match_one_id(const char *compat, const struct 
+pci_device_id *id)
++{
++ return NULL;
++}
++static inline const struct pci_device_id *
++of_pci_compat_match_id_table(const char *compat, const struct 
+pci_device_id *table)
++{
++ return NULL;
++}
++static inline const struct pci_device_id *
++of_pci_compat_match_driver(const char *compat, struct pci_driver *drv)
++{
++ return NULL;
++}
+#endif /* CONFIG_OF */
+#ifdef CONFIG_PCIEAER
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 29658c0ee71f..eef1eaafc03d 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -13,6 +13,14 @@ struct device_node *of_pci_find_child_device(struct 
+device_node *parent,
+unsigned int devfn);
+int of_pci_get_devfn(struct device_node *np);
+void of_pci_check_probe_only(void);
++bool of_pci_node_match_device(const struct device_node *node,
++ const struct pci_dev *dev);
++const struct pci_device_id *
++of_pci_node_match_id_table(const struct device_node *node,
++ const struct pci_device_id *table);
++const struct pci_device_id *
++of_pci_node_match_driver(const struct device_node *node,
++ struct pci_driver *drv);
+#else
+static inline struct device_node *of_pci_find_child_device(struct 
+device_node *parent,
+unsigned int devfn)
+@@ -26,6 +34,23 @@ static inline int of_pci_get_devfn(struct device_node 
+*np)
+}
+static inline void of_pci_check_probe_only(void) { }
++static inline bool of_pci_node_match_device(const struct device_node *node,
++ const struct pci_dev *dev)
++{
++ return false;
++}
++static inline const struct pci_device_id *
++of_pci_node_match_id_table(const struct device_node *node,
++ const struct pci_device_id *table)
++{
++ return NULL;
++}
++static inline const struct pci_device_id *
++of_pci_node_match_driver(const struct device_node *node,
++ struct pci_driver *drv)
++{
++ return NULL;
++}
+#endif
+#if IS_ENABLED(CONFIG_OF_IRQ)
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index adffd65e84b4..04c908d84b90 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1513,6 +1513,12 @@ void pci_unregister_driver(struct pci_driver *dev);
+builtin_driver(__pci_driver, pci_register_driver)
+struct pci_driver *pci_dev_driver(const struct pci_dev *dev);
++
++struct pci_dynid {
++ struct list_head node;
++ struct pci_device_id id;
++};
++
+int pci_add_dynid(struct pci_driver *drv,
+unsigned int vendor, unsigned int device,
+unsigned int subvendor, unsigned int subdevice,
 
--                               memset_io(base + PCI_IO_BASE, 0,
--                                         PCI_ROM_ADDRESS1 - PCI_IO_BASE);
-+                               vmd_clear_cfg_space(base, PCI_IO_BASE,
-+                                                       PCI_ROM_ADDRESS1);
-                        }
-                }
-        }
+-- 
+2.39.0
 
-
--- Adrian
