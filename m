@@ -2,57 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6286766E909
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 22:58:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E57FA670E4B
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 01:00:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbjAQV6G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Jan 2023 16:58:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39784 "EHLO
+        id S229458AbjARAAL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Jan 2023 19:00:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbjAQV5R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 16:57:17 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0BA53E5F;
-        Tue, 17 Jan 2023 12:41:34 -0800 (PST)
+        with ESMTP id S229485AbjAQX7c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 18:59:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02C1893CC;
+        Tue, 17 Jan 2023 15:14:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B50B06153B;
-        Tue, 17 Jan 2023 20:41:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D29C433D2;
-        Tue, 17 Jan 2023 20:41:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 53FABB81A62;
+        Tue, 17 Jan 2023 23:14:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7012C433D2;
+        Tue, 17 Jan 2023 23:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673988093;
-        bh=9vSCvidurA7NN50P4dOMjeVPl/22ufhHiPbZ/5hpRbE=;
+        s=k20201202; t=1673997258;
+        bh=UyCduLUKDHMuOlRKdVS07Ic8VuPeGTimn3Gjp7iIcuQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hLxUnXr/h5rkjsavwaN7w9C1HbDO68wwmvBcpI1EfGM+LG+r9v9nprdw0PWk96Kdq
-         OD/t1jTfbqamiLMfMpw0nDNiC61xAwah0vccuJVDIN87UNHZusXGe1xEqHqnDlShqF
-         vW9YB+rrYll/QCrCdMga4LoiXMeEGQDVIwdmjRPOExSDNKRFxvn+nPof7RsRbE4M2Q
-         S+x+tN+aK6k/X0xtLhFA98rxZLv/2kfPd1uuFn/EyDFBDN94YXiJR/pYu1CEokMCKe
-         te8nMHrkJDKAhyG1uhf++S5eYMTNcPzqbab6DA516oKKuWo6xMKskLKYwh+EVc3bKS
-         ++q4LDn4F1ctA==
-Date:   Tue, 17 Jan 2023 14:41:31 -0600
+        b=prWGvCBKzqqnRYOonvhjMq6+HuXZbQ2bfu69j6jTopGc49O7slkoNWl99+J3sTOOv
+         fqpj0RKNXt9Fm/40r3Th2EjwutW6hokYmVsQpnNMBDaBIIO+5qQ24qhMVkFY/cYezZ
+         3w9sh5VsObHXNzDod1HUKS5obzITXfKfbY6JI4JgsntOOULF/alKpv0szDoiOT7sbT
+         HJ1Qkj/Yu8/o/QR/q4DeRFj85RJPR9GnJVdP8MK3UwWtEvPTmsWK+Tz5XTNpGCn2b5
+         BEPGKuw6GqJ3DgkhLhboFjXXfl1s0ZUV7fuPncg9oQJDREU3lRngcQdIzt/qmLRCEU
+         k0Oj0YW3kfYGw==
+Date:   Tue, 17 Jan 2023 17:14:16 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/3] PCI: endpoint: support an alignment aware
- map/unmaping
-Message-ID: <20230117204131.GA145312@bhelgaas>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Stefan Roese <sr@denx.de>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/portdrv: Avoid enabling AER on Thunderbolt devices
+Message-ID: <20230117231416.GA158056@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230113090350.1103494-2-mie@igel.co.jp>
+In-Reply-To: <20221226153048.1208359-1-kai.heng.feng@canonical.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -62,163 +57,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 06:03:48PM +0900, Shunsuke Mie wrote:
-> Add an align_mem operation to the EPC ops, which function is used to
-> pci_epc_map/unmap_addr(). These change to enable mapping for any alignment
-> restriction of EPC. The map function maps an aligned memory to include a
-> requested memory region.
+On Mon, Dec 26, 2022 at 11:30:31PM +0800, Kai-Heng Feng wrote:
+> We are seeing igc ethernet device on Thunderbolt dock stops working
+> after S3 resume because of AER error, or even make S3 resume freeze:
+> pcieport 0000:00:1d.0: AER: Multiple Corrected error received: 0000:00:1d.0
+> pcieport 0000:00:1d.0: PCIe Bus Error: severity=Corrected, type=Transaction Layer, (Receiver ID)
+> pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00008000/00002000
+> pcieport 0000:00:1d.0:    [15] HeaderOF
+> pcieport 0000:00:1d.0: AER: Multiple Uncorrected (Non-Fatal) error received: 0000:00:1d.0
+> pcieport 0000:00:1d.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> pcieport 0000:00:1d.0:   device [8086:7ab0] error status/mask=00100000/00004000
+> pcieport 0000:00:1d.0:    [20] UnsupReq               (First)
+> pcieport 0000:00:1d.0: AER:   TLP Header: 34000000 0a000052 00000000 00000000
+> pcieport 0000:00:1d.0: AER:   Error of this Agent is reported first
+> pcieport 0000:04:01.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> pcieport 0000:04:01.0:   device [8086:1136] error status/mask=00300000/00000000
+> pcieport 0000:04:01.0:    [20] UnsupReq               (First)
+> pcieport 0000:04:01.0:    [21] ACSViol
+> pcieport 0000:04:01.0: AER:   TLP Header: 34000000 04000052 00000000 00000000
+> thunderbolt 0000:05:00.0: AER: can't recover (no error_detected callback)
 
-I think this does two things: 1) add the .align_mem() function
-pointer, and 2) move the pci_epc_mem_alloc_addr() call into
-pci_epc_map_addr().  For 2), I would expect to see
-pci_epc_mem_alloc_addr() being *removed* from somewhere else.
+Is this a regression?  E.g., is this something that started after
+f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native") or
+something similar?
 
-Anyway, both are significant and should be mentioned in the commit
-log.  Possibly they could even be separate commits: move the
-alloc/free first, then add .align_mem().
-
-Another question below.
-
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
->  drivers/pci/endpoint/pci-epc-core.c | 57 ++++++++++++++++++++++++-----
->  include/linux/pci-epc.h             | 10 +++--
->  2 files changed, 53 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-> index 2542196e8c3d..60d586e05e7d 100644
-> --- a/drivers/pci/endpoint/pci-epc-core.c
-> +++ b/drivers/pci/endpoint/pci-epc-core.c
-> @@ -430,8 +430,12 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
->   * Invoke to unmap the CPU address from PCI address.
->   */
->  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -			phys_addr_t phys_addr)
-> +			phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
->  {
-> +	u64 aligned_phys;
-> +	void __iomem *aligned_virt;
-> +	size_t offset;
-> +
->  	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->  		return;
->  
-> @@ -441,9 +445,22 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	if (!epc->ops->unmap_addr)
->  		return;
->  
-> +	if (epc->ops->align_mem) {
-> +		mutex_lock(&epc->lock);
-> +		aligned_phys = epc->ops->align_mem(epc, phys_addr, &size);
-> +		mutex_unlock(&epc->lock);
-> +	} else {
-> +		aligned_phys = phys_addr;
-> +	}
-> +
-> +	offset = phys_addr - aligned_phys;
-> +	aligned_virt = virt_addr - offset;
-> +
->  	mutex_lock(&epc->lock);
-> -	epc->ops->unmap_addr(epc, func_no, vfunc_no, phys_addr);
-> +	epc->ops->unmap_addr(epc, func_no, vfunc_no, aligned_phys);
->  	mutex_unlock(&epc->lock);
-> +
-> +	pci_epc_mem_free_addr(epc, aligned_phys, aligned_virt, size);
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->  
-> @@ -458,26 +475,46 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->   *
->   * Invoke to map CPU address with PCI address.
->   */
-> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
-> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +		u64 pci_addr, phys_addr_t *phys_addr, size_t size)
->  {
->  	int ret;
-> +	u64 aligned_addr;
-> +	size_t offset;
-> +	void __iomem *virt_addr;
->  
->  	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  
->  	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
-> -		return -EINVAL;
-> +		return ERR_PTR(-EINVAL);
->  
->  	if (!epc->ops->map_addr)
-> -		return 0;
-> +		return ERR_PTR(-ENOPTSUPP);
-> +
-> +	if (epc->ops->align_mem) {
-> +		mutex_lock(&epc->lock);
-> +		aligned_addr = epc->ops->align_mem(epc, pci_addr, &size);
-> +		mutex_unlock(&epc->lock);
-> +	} else {
-> +		aligned_addr = pci_addr;
-> +	}
-> +
-> +	offset = pci_addr - aligned_addr;
-> +
-> +	virt_addr = pci_epc_mem_alloc_addr(epc, phys_addr, size);
-> +	if (!virt_addr)
-> +		return ERR_PTR(-ENOMEM);
->  
->  	mutex_lock(&epc->lock);
-> -	ret = epc->ops->map_addr(epc, func_no, vfunc_no, phys_addr, pci_addr,
-> -				 size);
-> +	ret = epc->ops->map_addr(epc, func_no, vfunc_no, *phys_addr, aligned_addr, size);
->  	mutex_unlock(&epc->lock);
-> +	if (ret)
-> +		return ERR_PTR(ret);
->  
-> -	return ret;
-> +	*phys_addr += offset;
-> +
-> +	return virt_addr + offset;
->  }
->  EXPORT_SYMBOL_GPL(pci_epc_map_addr);
->  
-> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
-> index a48778e1a4ee..8f29161bce80 100644
-> --- a/include/linux/pci-epc.h
-> +++ b/include/linux/pci-epc.h
-> @@ -84,6 +84,7 @@ struct pci_epc_ops {
->  			       phys_addr_t phys_addr, u8 interrupt_num,
->  			       u32 entry_size, u32 *msi_data,
->  			       u32 *msi_addr_offset);
-> +	u64	(*align_mem)(struct pci_epc *epc, u64 addr, size_t *size);
-
-Is there a requirement for multiple implementations of .align_mem()?
-
-There's only one implementation in this series
-(dw_pcie_ep_align_mem()), and it only needs pci->region_align.  That
-*value* might be DWC-specific, but the concept really isn't, so maybe
-there could be a generic function that uses the device-specific value.
-
->  	int	(*start)(struct pci_epc *epc);
->  	void	(*stop)(struct pci_epc *epc);
->  	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
-> @@ -218,11 +219,12 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  		    struct pci_epf_bar *epf_bar);
->  void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  		       struct pci_epf_bar *epf_bar);
-> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -		     phys_addr_t phys_addr,
-> -		     u64 pci_addr, size_t size);
-> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> +			       u64 pci_addr, phys_addr_t *phys_addr,
-> +			       size_t size);
->  void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
-> -			phys_addr_t phys_addr);
-> +			phys_addr_t phys_addr, void __iomem *virt_addr,
-> +			size_t size);
->  int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  		    u8 interrupts);
->  int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
-> -- 
-> 2.25.1
-> 
+Bjorn
