@@ -2,62 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3626266DB7F
-	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 11:49:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2144266DB81
+	for <lists+linux-pci@lfdr.de>; Tue, 17 Jan 2023 11:50:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236503AbjAQKtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 17 Jan 2023 05:49:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49936 "EHLO
+        id S236327AbjAQKuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 17 Jan 2023 05:50:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236200AbjAQKtk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 05:49:40 -0500
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5A94302BF;
-        Tue, 17 Jan 2023 02:49:38 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id mp20so27778842ejc.7;
-        Tue, 17 Jan 2023 02:49:38 -0800 (PST)
+        with ESMTP id S236302AbjAQKuF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 17 Jan 2023 05:50:05 -0500
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E655D305DD;
+        Tue, 17 Jan 2023 02:49:56 -0800 (PST)
+Received: by mail-ej1-x631.google.com with SMTP id kt14so15479775ejc.3;
+        Tue, 17 Jan 2023 02:49:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CuaI7HnIZyG0fRa/jgz3CE2/4ZxeGjEPtxv49RcTc3c=;
-        b=BulVPYSG/zGDhw+AdNH2RQMc/BdqfZwU0TOqLpIX/pTvsgd97KpkpF2maR8OEQuB7z
-         xT5atGxwfIHBEPrnhWiIAveMxT2rRlkoyO/sEke9V2Uit6E0jR8/4n0pn0M5QK8yUzRu
-         IZiB/XrGboUcBD8IVbcHHYh4JXzSXadNY3NnnB5fqgSHN7qw5e2G8PxKgYX9wjb9sDT9
-         wm+U+JOsO4RF0VqU0hJZk5f2ZbOfkA2eoS+jLRxd0++7u+65IuUzR5LPQyOF1AWsA/nl
-         +8mGn7BKKVUY6tnsvjfuSs0IKDSe8oVb2vYuqB6aDLVBxJ4pJOuRGl/dSCImMWBSneAJ
-         vGDA==
+        bh=oEl5w3M2BxeInD007F9yz+ClAXsGzIrzPwOm53wRn2c=;
+        b=MJEaKEJ7fdlL6OHko24C4S6CQ/GRhC/Olgy2IwdB4J3UWS7LDT51are5lq/HsDDIRo
+         qI53dnKoU1AH/yv01DDjk58f/jpnM5ryJQocP4PbwZmttIMIRUGvEU/G1oFdZB3NOCBH
+         I91JDyx2LQHkzK6PlTadjjBTtwo/eoECzKF6tPfdhwXvqy89ZLypDEw9OuebK1cnv09e
+         ZL7awtJN6J9Yp0gDko2zsctw9OOgwh53KWVnZwXb+8v4WwEg81P/nMvNzDChVSJgsBf7
+         H/m9SxWhpKW+1MW5KjgiCWzqOjtuvI6lmzbsZ43PnpY6c2n5eECtNXri2qKJXRxZX7wz
+         yz9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CuaI7HnIZyG0fRa/jgz3CE2/4ZxeGjEPtxv49RcTc3c=;
-        b=g5Sam6JGCR1lsppWsn/bO7qrFxqGHhJPBukVwdsqeRfNuFEvAxhzkIoU3cGccJ6/5V
-         ZcF9d5BjI290R3RcU+oVlvJ47LXhj2ecSp7ZpFNiRjLYXFGVia0+LeowSJSoPOYJUtei
-         nqMBIxnFf8GzcvwHlM2GOmLmKJTArPG+amvYymdjmzHyoYcmyaSdabDSYncP1mdduxrX
-         ctPsTxQkDmhx8iuNHTQqHtJl3G03Y4EUsiBf1JV8Bk3oLBPr83T32opWBxpnm9vSUqUJ
-         fbCs4UXh3jYNoBTlnVIlkkJ7BWvgCp6Jwn8txVpGGD7J+NcTMRu1PSIydwYA70/J6w33
-         ve9Q==
-X-Gm-Message-State: AFqh2kog7lJNSrc+ftCktxoeRRzFOzHBIEMpE8mroAQGtwXG8FsHeeDQ
-        r5CMd59bOiuSjd+6Q8MWrb2tAe1SApACWA==
-X-Google-Smtp-Source: AMrXdXuMjOXZPp0x4cT+w3EpgnBoxWwZ8qUrmVfris5ntiId9iczztwI96C0i7ABZPvkXhSzoxVMgw==
-X-Received: by 2002:a17:906:1c81:b0:86f:d1c4:ed08 with SMTP id g1-20020a1709061c8100b0086fd1c4ed08mr2267497ejh.69.1673952578503;
-        Tue, 17 Jan 2023 02:49:38 -0800 (PST)
+        bh=oEl5w3M2BxeInD007F9yz+ClAXsGzIrzPwOm53wRn2c=;
+        b=AuKMhJ3okkgpyXndMd1LNmxnygVSCjneCAr+cW13aZxh6YmMF6neLs+EqvgDd93r+b
+         T5Y59GuRkqSAZBvxVj/5DrS4ytovNnIDJR7xcVmwPQZIVnT2MVR+TQrQq5591OwsvqEt
+         136TZiK19DgeL0GVe2dkcoaK3Hhxh+ea7rJLcCYvdjqfEX/H3Bu4VLwD7cg0+LedPd08
+         9Bdfz7KkUZl8kbrO6U20dOl2gk2XfqtMaWtnXVDESi67bfcgyG5KoZfvhoxVKWaL4+aW
+         JSLdkMKwFRsD+R2yVl/DNLir0tr/lZZiUsYPIne9oVH897eFXkLznQsxiBwFc36DndUk
+         lBoQ==
+X-Gm-Message-State: AFqh2kpLU3Zl7eBdAT4OkvpL/CE+KkH5ksO8hcI3TelZVLlTmkmdFXeE
+        KNh35rXM1Wb8ZBG4XrkLH2SpvDnEBmrqJQ==
+X-Google-Smtp-Source: AMrXdXs+YTxG71f1EHeVsqTMCFdl+RK6LpG9x3XKcBukWeJcgYcI4IvSMfkNMIQKloUClzbW68FJNw==
+X-Received: by 2002:a17:906:b299:b0:86e:a013:c26f with SMTP id q25-20020a170906b29900b0086ea013c26fmr2433012ejz.19.1673952595335;
+        Tue, 17 Jan 2023 02:49:55 -0800 (PST)
 Received: from [0.0.0.0] (tor-exit-13.zbau.f3netze.de. [2a0b:f4c0:16c:13::1])
-        by smtp.gmail.com with ESMTPSA id v18-20020aa7dbd2000000b0049ac6f53e6asm1877329edt.80.2023.01.17.02.49.33
+        by smtp.gmail.com with ESMTPSA id rf26-20020a1709076a1a00b00871a4ab4736sm1666699ejc.97.2023.01.17.02.49.45
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 17 Jan 2023 02:49:38 -0800 (PST)
+        Tue, 17 Jan 2023 02:49:54 -0800 (PST)
 From:   Edward Chow <persmule@gmail.com>
 X-Google-Original-From: Edward Chow <equu@openmail.cc>
 To:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org
 Cc:     linux-pci@vger.kernel.org, robh@kernel.org,
         linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
         Edward Chow <equu@openmail.cc>
-Subject: [PATCH 2/3] wifi: ath9k: stop loading incompatible DT cal data
-Date:   Tue, 17 Jan 2023 17:27:46 +0800
-Message-Id: <20230117092746.1149155-1-equu@openmail.cc>
+Subject: [PATCH 3/3] wifi: ath10k: only load compatible DT cal data
+Date:   Tue, 17 Jan 2023 17:28:10 +0800
+Message-Id: <20230117092810.1149187-1-equu@openmail.cc>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
 References: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
@@ -85,38 +85,26 @@ compatible node.
 
 Signed-off-by: Edward Chow <equu@openmail.cc>
 ---
- drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
- drivers/net/wireless/ath/ath9k/init.c  | 26 ++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath9k/pci.c   |  2 +-
- 3 files changed, 28 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/core.c | 28 ++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/pci.c  |  2 +-
+ drivers/net/wireless/ath/ath10k/pci.h  |  2 ++
+ 3 files changed, 31 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-index 2cc23605c9fc..4f6f0383a5f8 100644
---- a/drivers/net/wireless/ath/ath9k/ath9k.h
-+++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-@@ -35,6 +35,7 @@ struct ath_node;
- struct ath_vif;
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index 5eb131ab916f..e4d7ec7f3b59 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -26,6 +26,7 @@
+ #include "testmode.h"
+ #include "wmi-ops.h"
+ #include "coredump.h"
++#include "pci.h"
  
- extern struct ieee80211_ops ath9k_ops;
-+extern struct pci_driver ath_pci_driver;
- extern int ath9k_modparam_nohwcrypt;
- extern int ath9k_led_blink;
- extern bool is_ath9k_unloaded;
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index 4f00400c7ffb..f88a48e8456b 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_net.h>
-+#include <linux/pci.h>
- #include <linux/nvmem-consumer.h>
- #include <linux/relay.h>
- #include <linux/dmi.h>
-@@ -577,6 +578,31 @@ static int ath9k_nvmem_request_eeprom(struct ath_softc *sc)
+ unsigned int ath10k_debug_mask;
+ EXPORT_SYMBOL(ath10k_debug_mask);
+@@ -1958,6 +1959,33 @@ static int ath10k_download_cal_nvmem(struct ath10k *ar, const char *cell_name)
  	size_t len;
- 	int err;
+ 	int ret;
  
 +	/* devm_nvmem_cell_get() will get a cell first from the OF
 +	 * DT node representing the given device with nvmem-cell-name
@@ -126,39 +114,54 @@ index 4f00400c7ffb..f88a48e8456b 100644
 +	 * If the OF DT node is not compatible with the real device, the
 +	 * calibration data got from the node should not be applied.
 +	 *
-+	 * dev_is_pci(sc->dev) && ( no OF node || caldata not from node
++	 * dev_is_pci(ar->dev) && ( no OF node || caldata not from node
 +	 * || not compatible ) -> do not use caldata .
 +	 *
-+	 * !dev_is_pci(sc->dev) -> always use caldata .
++	 * !dev_is_pci(ar->dev) -> always use caldata .
++	 *
++	 * The judgement for compatibility differs with ath9k for many
++	 * DT using "qcom,ath10k" as compatibility string.
 +	 */
-+	if (dev_is_pci(sc->dev) &&
-+	    (!sc->dev->of_node ||
-+	     !of_property_match_string(sc->dev->of_node,
++	if (dev_is_pci(ar->dev) &&
++	    (!ar->dev->of_node ||
++	     (of_property_match_string(ar->dev->of_node,
 +				       "nvmem-cell-names",
-+				       "calibration") ||
-+	     !of_pci_node_match_driver(sc->dev->of_node,
-+				       &ath_pci_driver)))
-+		/* follow the "just return 0;" convention as
-+		 * noted below.
-+		 */
-+		return 0;
++				       cell_name) < 0) ||
++	     !of_device_is_compatible(ar->dev->of_node,
++				      "qcom,ath10k") ||
++	     !of_pci_node_match_device(ar->dev->of_node,
++				       &ath10k_pci_driver)))
++		return ERR_PTR(-ENOENT);
 +
- 	cell = devm_nvmem_cell_get(sc->dev, "calibration");
+ 	cell = devm_nvmem_cell_get(ar->dev, cell_name);
  	if (IS_ERR(cell)) {
- 		err = PTR_ERR(cell);
-diff --git a/drivers/net/wireless/ath/ath9k/pci.c b/drivers/net/wireless/ath/ath9k/pci.c
-index a074e23013c5..fcb19761e60d 100644
---- a/drivers/net/wireless/ath/ath9k/pci.c
-+++ b/drivers/net/wireless/ath/ath9k/pci.c
-@@ -1074,7 +1074,7 @@ static SIMPLE_DEV_PM_OPS(ath9k_pm_ops, ath_pci_suspend, ath_pci_resume);
+ 		ret = PTR_ERR(cell);
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 728d607289c3..5d9f6046f8cf 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -3780,7 +3780,7 @@ static SIMPLE_DEV_PM_OPS(ath10k_pci_pm_ops,
+ 			 ath10k_pci_pm_suspend,
+ 			 ath10k_pci_pm_resume);
  
- MODULE_DEVICE_TABLE(pci, ath_pci_id_table);
+-static struct pci_driver ath10k_pci_driver = {
++struct pci_driver ath10k_pci_driver = {
+ 	.name = "ath10k_pci",
+ 	.id_table = ath10k_pci_id_table,
+ 	.probe = ath10k_pci_probe,
+diff --git a/drivers/net/wireless/ath/ath10k/pci.h b/drivers/net/wireless/ath/ath10k/pci.h
+index 480cd97ab739..de676797b736 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.h
++++ b/drivers/net/wireless/ath/ath10k/pci.h
+@@ -209,6 +209,8 @@ static inline struct ath10k_pci *ath10k_pci_priv(struct ath10k *ar)
+ #define DIAG_ACCESS_CE_TIMEOUT_US 10000 /* 10 ms */
+ #define DIAG_ACCESS_CE_WAIT_US	50
  
--static struct pci_driver ath_pci_driver = {
-+struct pci_driver ath_pci_driver = {
- 	.name       = "ath9k",
- 	.id_table   = ath_pci_id_table,
- 	.probe      = ath_pci_probe,
++extern struct pci_driver ath10k_pci_driver;
++
+ void ath10k_pci_write32(struct ath10k *ar, u32 offset, u32 value);
+ void ath10k_pci_soc_write32(struct ath10k *ar, u32 addr, u32 val);
+ void ath10k_pci_reg_write32(struct ath10k *ar, u32 addr, u32 val);
 -- 
 2.39.0
 
