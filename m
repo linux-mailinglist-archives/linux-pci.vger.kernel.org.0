@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F07B6671364
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 06:56:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2340167135A
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 06:56:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjARF4g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 00:56:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45820 "EHLO
+        id S229502AbjARF4X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 00:56:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229695AbjARFyQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 00:54:16 -0500
+        with ESMTP id S229696AbjARFyR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 00:54:17 -0500
 Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294FA577FC;
-        Tue, 17 Jan 2023 21:53:53 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A175C582A6;
+        Tue, 17 Jan 2023 21:53:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1674021234; x=1705557234;
   h=from:date:subject:mime-version:content-transfer-encoding:
    message-id:references:in-reply-to:to:cc;
-  bh=EAMBg85KrKQalkxPOf/xlvUVsAy6pNQIs/aIu9osXZ8=;
-  b=NFz8q8EA7MJbW2hdT7/igQ06CiTmkAN3JHNs9kkAv3xFzuCpTrh5HSxt
-   e4LS8diFIVWmegFRvncc/m+6CJ51HwQeKSQcsDQ6ZgnfT3vDz8CR72TLJ
-   AVBB/2qfYet8ZbqF5vEyKsFJH2ijgJz1PZ6JV8YtjW46e+ARp+O/omBR3
-   i4vwHlmpygk2zMPKnExG9gHe6aBJFY1zgY++rdfQeahsnV/tnwBsDWBRu
-   xHmyxW8tOzo4huKz48oGxDBlFyhX2avemycGzytWzUxzYk6/YBRlG26AV
-   1bX+nOMpj5BvP5kQTmSgkOHv7hVd1KxJ9cey4b8atqC7nDSSXTBOndypL
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="304586783"
+  bh=vePUcG0MfrZ82iDXuuJNwB1QN+7zxEHwLEF/MiNLMbE=;
+  b=KRJ4xekkxEsS7NsxokCQDRMLp8Pbb4/2YEiACm/SpNRzdAHux0efiAxC
+   byVUMLFpJ1A7vR1W3lVbkYyn/6vME5Z6oIxLMD/awQhHngYlmWy3+dLzW
+   97TKznvcR+8vW2AgGfaLdEUoYPXjk1hN9rSGK3wrPk5buwnKK7NwcsX5N
+   QrfEBFMVX6CZky6ZEChu92f+2/8Z7qg2oKyGgUjDXRKYL/A+IIicN/pWJ
+   4OsJ/22kYjGWAc7yv5xIEKgTPDnUzf3MhZ7lr+TxGpb39jcvKPDL9V2SX
+   ep4l+hLQyl1yHX2itj9/AJTneZiwzOLAtJRIc7vc2Oej+Lpsij6vworrq
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="304586791"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="304586783"
+   d="scan'208";a="304586791"
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:53:52 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="802043176"
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:53:54 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10593"; a="802043191"
 X-IronPort-AV: E=Sophos;i="5.97,224,1669104000"; 
-   d="scan'208";a="802043176"
+   d="scan'208";a="802043191"
 Received: from iweiny-mobl.amr.corp.intel.com (HELO localhost) ([10.209.10.122])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:53:51 -0800
-From:   ira.weiny@intel.com
-Date:   Tue, 17 Jan 2023 21:53:37 -0800
-Subject: [PATCH v7 2/8] cxl/mem: Wire up event interrupts
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jan 2023 21:53:53 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Tue, 17 Jan 2023 21:53:38 -0800
+Subject: [PATCH v7 3/8] cxl/mem: Trace General Media Event Record
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20221216-cxl-ev-log-v7-2-2316a5c8f7d8@intel.com>
+Message-Id: <20221216-cxl-ev-log-v7-3-2316a5c8f7d8@intel.com>
 References: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
 In-Reply-To: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
 To:     Dan Williams <dan.j.williams@intel.com>
@@ -57,14 +57,13 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Ben Widawsky <bwidawsk@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org,
-        Bjorn Helgaas <helgaas@kernel.org>
+        linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org
 X-Mailer: b4 0.12-dev-cc11a
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1674021228; l=10838;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1674021228; l=8073;
  i=ira.weiny@intel.com; s=20221211; h=from:subject:message-id;
- bh=bcTk75q4xcJxW0GPEV/SIkJJUbNxLsvKadxlnk+kwlQ=;
- b=UmC83T76IFAc28C+hldp2zl7xC5celYKzgNwzwtaEKZchel2Q8t5c61wExGZR5zxfNgbSvFYdBW7
- zvK6XThBBKOX7XcCgI251Mcb77EZx/UBqh1sDGCE077KjMyYSeQQ
+ bh=vePUcG0MfrZ82iDXuuJNwB1QN+7zxEHwLEF/MiNLMbE=;
+ b=GA0DBn29SvYbHAfzrf1Bq8fA77fdj9QgxGUNQuSAwaz8lIasrM/hKmsoytdUuA89vKvGDy/ea/RC
+ KW1gDP6OCX74TGXY5MrHVNLAt79hlyliL5AGUX68uneFRO56LiNm
 X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
  pk=noldbkG+Wp1qXRrrkfY1QJpDf7QsOEthbOT7vm0PqsE=
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -76,370 +75,236 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Davidlohr Bueso <dave@stgolabs.net>
+CXL rev 3.0 section 8.2.9.2.1.1 defines the General Media Event Record.
 
-Currently the only CXL features targeted for irq support require their
-message numbers to be within the first 16 entries.  The device may
-however support less than 16 entries depending on the support it
-provides.
+Determine if the event read is a general media record and if so trace
+the record as a General Media Event Record.
 
-Attempt to allocate these 16 irq vectors.  If the device supports less
-then the PCI infrastructure will allocate that number.  Upon successful
-allocation, users can plug in their respective isr at any point
-thereafter.
-
-CXL device events are signaled via interrupts.  Each event log may have
-a different interrupt message number.  These message numbers are
-reported in the Get Event Interrupt Policy mailbox command.
-
-Add interrupt support for event logs.  Interrupts are allocated as
-shared interrupts.  Therefore, all or some event logs can share the same
-message number.
-
-In addition all logs are queried on any interrupt in order of the most
-to least severe based on the status register.
-
-Finally place all event configuration logic into cxl_event_config().
-Previously the logic was a simple 'read all' on start up.  But
-interrupts must be configured prior to any reads to ensure no events are
-missed.  A single event configuration function results in a cleaner over
-all implementation.
-
-Cc: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Co-developed-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Davidlohr Bueso <dave@stgolabs.net>
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
 Changes in v7:
-	<no change>
+        <no change>
 ---
- drivers/cxl/cxl.h    |   4 +
- drivers/cxl/cxlmem.h |  19 +++++
- drivers/cxl/cxlpci.h |   6 ++
- drivers/cxl/pci.c    | 221 ++++++++++++++++++++++++++++++++++++++++++++++++---
- 4 files changed, 240 insertions(+), 10 deletions(-)
+ drivers/cxl/core/mbox.c  |  29 ++++++++++-
+ drivers/cxl/core/trace.h | 124 +++++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h     |  19 ++++++++
+ 3 files changed, 170 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 5974d1082210..b3964149c77b 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -168,6 +168,10 @@ static inline int ways_to_eiw(unsigned int ways, u8 *eiw)
- 				 CXLDEV_EVENT_STATUS_FAIL |	\
- 				 CXLDEV_EVENT_STATUS_FATAL)
- 
-+/* CXL rev 3.0 section 8.2.9.2.4; Table 8-52 */
-+#define CXLDEV_EVENT_INT_MODE_MASK	GENMASK(1, 0)
-+#define CXLDEV_EVENT_INT_MSGNUM_MASK	GENMASK(7, 4)
-+
- /* CXL 2.0 8.2.8.4 Mailbox Registers */
- #define CXLDEV_MBOX_CAPS_OFFSET 0x00
- #define   CXLDEV_MBOX_CAP_PAYLOAD_SIZE_MASK GENMASK(4, 0)
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 0f272206e294..5bef485cd8d9 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -194,6 +194,23 @@ struct cxl_endpoint_dvsec_info {
- 	struct range dvsec_range[2];
- };
- 
-+/**
-+ * Event Interrupt Policy
-+ *
-+ * CXL rev 3.0 section 8.2.9.2.4; Table 8-52
-+ */
-+enum cxl_event_int_mode {
-+	CXL_INT_NONE		= 0x00,
-+	CXL_INT_MSI_MSIX	= 0x01,
-+	CXL_INT_FW		= 0x02
-+};
-+struct cxl_event_interrupt_policy {
-+	u8 info_settings;
-+	u8 warn_settings;
-+	u8 failure_settings;
-+	u8 fatal_settings;
-+} __packed;
-+
- /**
-  * struct cxl_event_state - Event log driver state
-  *
-@@ -288,6 +305,8 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_RAW			= CXL_MBOX_OP_INVALID,
- 	CXL_MBOX_OP_GET_EVENT_RECORD	= 0x0100,
- 	CXL_MBOX_OP_CLEAR_EVENT_RECORD	= 0x0101,
-+	CXL_MBOX_OP_GET_EVT_INT_POLICY	= 0x0102,
-+	CXL_MBOX_OP_SET_EVT_INT_POLICY	= 0x0103,
- 	CXL_MBOX_OP_GET_FW_INFO		= 0x0200,
- 	CXL_MBOX_OP_ACTIVATE_FW		= 0x0202,
- 	CXL_MBOX_OP_GET_SUPPORTED_LOGS	= 0x0400,
-diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-index 77dbdb980b12..a8ea04f536ab 100644
---- a/drivers/cxl/cxlpci.h
-+++ b/drivers/cxl/cxlpci.h
-@@ -53,6 +53,12 @@
- #define	    CXL_DVSEC_REG_LOCATOR_BLOCK_ID_MASK			GENMASK(15, 8)
- #define     CXL_DVSEC_REG_LOCATOR_BLOCK_OFF_LOW_MASK		GENMASK(31, 16)
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index c329c1e67a2c..d5fe2f2a23ad 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -718,6 +718,31 @@ int cxl_enumerate_cmds(struct cxl_dev_state *cxlds)
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_enumerate_cmds, CXL);
  
 +/*
-+ * NOTE: Currently all the functions which are enabled for CXL require their
-+ * vectors to be in the first 16.  Use this as the default max.
++ * General Media Event Record
++ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
 + */
-+#define CXL_PCI_DEFAULT_MAX_VECTORS 16
++static const uuid_t gen_media_event_uuid =
++	UUID_INIT(0xfbcd0a77, 0xc260, 0x417f,
++		  0x85, 0xa9, 0x08, 0x8b, 0x16, 0x21, 0xeb, 0xa6);
 +
- /* Register Block Identifier (RBI) */
- enum cxl_regloc_type {
- 	CXL_REGLOC_RBI_EMPTY = 0,
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 0fd7742ee70c..a4ee073fd16d 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -447,6 +447,209 @@ static int cxl_mem_alloc_event_buf(struct cxl_dev_state *cxlds)
- 	return 0;
- }
++static void cxl_event_trace_record(const struct device *dev,
++				   enum cxl_event_log_type type,
++				   struct cxl_event_record_raw *record)
++{
++	uuid_t *id = &record->hdr.id;
++
++	if (uuid_equal(id, &gen_media_event_uuid)) {
++		struct cxl_event_gen_media *rec =
++				(struct cxl_event_gen_media *)record;
++
++		trace_cxl_general_media(dev, type, rec);
++	} else {
++		/* For unknown record types print just the header */
++		trace_cxl_generic_event(dev, type, record);
++	}
++}
++
+ static int cxl_clear_event_record(struct cxl_dev_state *cxlds,
+ 				  enum cxl_event_log_type log,
+ 				  struct cxl_get_event_payload *get_pl)
+@@ -821,8 +846,8 @@ static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
+ 			break;
  
-+static int cxl_alloc_irq_vectors(struct pci_dev *pdev)
-+{
-+	int nvecs;
-+
-+	/*
-+	 * Per CXL 3.0 3.1.1 CXL.io Endpoint a function on a CXL device must
-+	 * not generate INTx messages if that function participates in
-+	 * CXL.cache or CXL.mem.
-+	 *
-+	 * Additionally pci_alloc_irq_vectors() handles calling
-+	 * pci_free_irq_vectors() automatically despite not being called
-+	 * pcim_*.  See pci_setup_msi_context().
-+	 */
-+	nvecs = pci_alloc_irq_vectors(pdev, 1, CXL_PCI_DEFAULT_MAX_VECTORS,
-+				      PCI_IRQ_MSIX | PCI_IRQ_MSI);
-+	if (nvecs < 1) {
-+		dev_dbg(&pdev->dev, "Failed to alloc irq vectors: %d\n", nvecs);
-+		return -ENXIO;
-+	}
-+	return 0;
-+}
-+
-+struct cxl_dev_id {
-+	struct cxl_dev_state *cxlds;
-+};
-+
-+static irqreturn_t cxl_event_thread(int irq, void *id)
-+{
-+	struct cxl_dev_id *dev_id = id;
-+	struct cxl_dev_state *cxlds = dev_id->cxlds;
-+	u32 status;
-+
-+	do {
-+		/*
-+		 * CXL 3.0 8.2.8.3.1: The lower 32 bits are the status;
-+		 * ignore the reserved upper 32 bits
-+		 */
-+		status = readl(cxlds->regs.status + CXLDEV_DEV_EVENT_STATUS_OFFSET);
-+		/* Ignore logs unknown to the driver */
-+		status &= CXLDEV_EVENT_STATUS_ALL;
-+		if (!status)
-+			break;
-+		cxl_mem_get_event_records(cxlds, status);
-+		cond_resched();
-+	} while (status);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int cxl_event_req_irq(struct cxl_dev_state *cxlds, u8 setting)
-+{
-+	struct device *dev = cxlds->dev;
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct cxl_dev_id *dev_id;
-+	int irq;
-+
-+	if (FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting) != CXL_INT_MSI_MSIX)
-+		return -ENXIO;
-+
-+	/* dev_id must be globally unique and must contain the cxlds */
-+	dev_id = devm_kzalloc(dev, sizeof(*dev_id), GFP_KERNEL);
-+	if (!dev_id)
-+		return -ENOMEM;
-+	dev_id->cxlds = cxlds;
-+
-+	irq =  pci_irq_vector(pdev,
-+			      FIELD_GET(CXLDEV_EVENT_INT_MSGNUM_MASK, setting));
-+	if (irq < 0)
-+		return irq;
-+
-+	return devm_request_threaded_irq(dev, irq, NULL, cxl_event_thread,
-+					 IRQF_SHARED, NULL, dev_id);
-+}
-+
-+static int cxl_event_get_int_policy(struct cxl_dev_state *cxlds,
-+				    struct cxl_event_interrupt_policy *policy)
-+{
-+	struct cxl_mbox_cmd mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_GET_EVT_INT_POLICY,
-+		.payload_out = policy,
-+		.size_out = sizeof(*policy),
-+	};
-+	int rc;
-+
-+	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-+	if (rc < 0)
-+		dev_err(cxlds->dev, "Failed to get event interrupt policy : %d",
-+			rc);
-+
-+	return rc;
-+}
-+
-+static int cxl_event_config_msgnums(struct cxl_dev_state *cxlds,
-+				    struct cxl_event_interrupt_policy *policy)
-+{
-+	struct cxl_mbox_cmd mbox_cmd;
-+	int rc;
-+
-+	*policy = (struct cxl_event_interrupt_policy) {
-+		.info_settings = CXL_INT_MSI_MSIX,
-+		.warn_settings = CXL_INT_MSI_MSIX,
-+		.failure_settings = CXL_INT_MSI_MSIX,
-+		.fatal_settings = CXL_INT_MSI_MSIX,
-+	};
-+
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_SET_EVT_INT_POLICY,
-+		.payload_in = policy,
-+		.size_in = sizeof(*policy),
-+	};
-+
-+	rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-+	if (rc < 0) {
-+		dev_err(cxlds->dev, "Failed to set event interrupt policy : %d",
-+			rc);
-+		return rc;
-+	}
-+
-+	/* Retrieve final interrupt settings */
-+	return cxl_event_get_int_policy(cxlds, policy);
-+}
-+
-+static int cxl_event_irqsetup(struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_event_interrupt_policy policy;
-+	int rc;
-+
-+	rc = cxl_event_config_msgnums(cxlds, &policy);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_event_req_irq(cxlds, policy.info_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Info log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.warn_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Warn log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.failure_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Failure log\n");
-+		return rc;
-+	}
-+
-+	rc = cxl_event_req_irq(cxlds, policy.fatal_settings);
-+	if (rc) {
-+		dev_err(cxlds->dev, "Failed to get interrupt for event Fatal log\n");
-+		return rc;
-+	}
-+
-+	return 0;
-+}
-+
-+static bool cxl_event_int_is_fw(u8 setting)
-+{
-+	u8 mode = FIELD_GET(CXLDEV_EVENT_INT_MODE_MASK, setting);
-+
-+	return mode == CXL_INT_FW;
-+}
-+
-+static int cxl_event_config(struct pci_host_bridge *host_bridge,
-+			    struct cxl_dev_state *cxlds)
-+{
-+	struct cxl_event_interrupt_policy policy;
-+	int rc;
-+
-+	/*
-+	 * When BIOS maintains CXL error reporting control, it will process
-+	 * event records.  Only one agent can do so.
-+	 */
-+	if (!host_bridge->native_cxl_error)
-+		return 0;
-+
-+	rc = cxl_mem_alloc_event_buf(cxlds);
-+	if (rc)
-+		return rc;
-+
-+	rc = cxl_event_get_int_policy(cxlds, &policy);
-+	if (rc)
-+		return rc;
-+
-+	if (cxl_event_int_is_fw(policy.info_settings) ||
-+	    cxl_event_int_is_fw(policy.warn_settings) ||
-+	    cxl_event_int_is_fw(policy.failure_settings) ||
-+	    cxl_event_int_is_fw(policy.fatal_settings)) {
-+		dev_err(cxlds->dev, "FW still in control of Event Logs despite _OSC settings\n");
-+		return -EBUSY;
-+	}
-+
-+	rc = cxl_event_irqsetup(cxlds);
-+	if (rc)
-+		return rc;
-+
-+	cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
-+
-+	return 0;
-+}
-+
- static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- {
- 	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
-@@ -465,6 +668,7 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	rc = pcim_enable_device(pdev);
- 	if (rc)
- 		return rc;
-+	pci_set_master(pdev);
+ 		for (i = 0; i < nr_rec; i++)
+-			trace_cxl_generic_event(cxlds->dev, type,
+-						&payload->records[i]);
++			cxl_event_trace_record(cxlds->dev, type,
++					       &payload->records[i]);
  
- 	cxlds = cxl_dev_state_create(&pdev->dev);
- 	if (IS_ERR(cxlds))
-@@ -521,20 +725,17 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
+ 		if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
+ 			trace_cxl_overflow(cxlds->dev, type, payload);
+diff --git a/drivers/cxl/core/trace.h b/drivers/cxl/core/trace.h
+index 6898212fcb47..d85f0481661d 100644
+--- a/drivers/cxl/core/trace.h
++++ b/drivers/cxl/core/trace.h
+@@ -223,6 +223,130 @@ TRACE_EVENT(cxl_generic_event,
+ 		__print_hex(__entry->data, CXL_EVENT_RECORD_DATA_LENGTH))
+ );
  
-+	rc = cxl_alloc_irq_vectors(pdev);
-+	if (rc)
-+		return rc;
++/*
++ * Physical Address field masks
++ *
++ * General Media Event Record
++ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
++ *
++ * DRAM Event Record
++ * CXL rev 3.0 section 8.2.9.2.1.2; Table 8-44
++ */
++#define CXL_DPA_FLAGS_MASK			0x3F
++#define CXL_DPA_MASK				(~CXL_DPA_FLAGS_MASK)
 +
- 	cxlmd = devm_cxl_add_memdev(cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
++#define CXL_DPA_VOLATILE			BIT(0)
++#define CXL_DPA_NOT_REPAIRABLE			BIT(1)
++#define show_dpa_flags(flags)	__print_flags(flags, "|",		   \
++	{ CXL_DPA_VOLATILE,			"VOLATILE"		}, \
++	{ CXL_DPA_NOT_REPAIRABLE,		"NOT_REPAIRABLE"	}  \
++)
++
++/*
++ * General Media Event Record - GMER
++ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
++ */
++#define CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT		BIT(0)
++#define CXL_GMER_EVT_DESC_THRESHOLD_EVENT		BIT(1)
++#define CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW		BIT(2)
++#define show_event_desc_flags(flags)	__print_flags(flags, "|",		   \
++	{ CXL_GMER_EVT_DESC_UNCORECTABLE_EVENT,		"UNCORRECTABLE_EVENT"	}, \
++	{ CXL_GMER_EVT_DESC_THRESHOLD_EVENT,		"THRESHOLD_EVENT"	}, \
++	{ CXL_GMER_EVT_DESC_POISON_LIST_OVERFLOW,	"POISON_LIST_OVERFLOW"	}  \
++)
++
++#define CXL_GMER_MEM_EVT_TYPE_ECC_ERROR			0x00
++#define CXL_GMER_MEM_EVT_TYPE_INV_ADDR			0x01
++#define CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR		0x02
++#define show_mem_event_type(type)	__print_symbolic(type,			\
++	{ CXL_GMER_MEM_EVT_TYPE_ECC_ERROR,		"ECC Error" },		\
++	{ CXL_GMER_MEM_EVT_TYPE_INV_ADDR,		"Invalid Address" },	\
++	{ CXL_GMER_MEM_EVT_TYPE_DATA_PATH_ERROR,	"Data Path Error" }	\
++)
++
++#define CXL_GMER_TRANS_UNKNOWN				0x00
++#define CXL_GMER_TRANS_HOST_READ			0x01
++#define CXL_GMER_TRANS_HOST_WRITE			0x02
++#define CXL_GMER_TRANS_HOST_SCAN_MEDIA			0x03
++#define CXL_GMER_TRANS_HOST_INJECT_POISON		0x04
++#define CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB		0x05
++#define CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT	0x06
++#define show_trans_type(type)	__print_symbolic(type,					\
++	{ CXL_GMER_TRANS_UNKNOWN,			"Unknown" },			\
++	{ CXL_GMER_TRANS_HOST_READ,			"Host Read" },			\
++	{ CXL_GMER_TRANS_HOST_WRITE,			"Host Write" },			\
++	{ CXL_GMER_TRANS_HOST_SCAN_MEDIA,		"Host Scan Media" },		\
++	{ CXL_GMER_TRANS_HOST_INJECT_POISON,		"Host Inject Poison" },		\
++	{ CXL_GMER_TRANS_INTERNAL_MEDIA_SCRUB,		"Internal Media Scrub" },	\
++	{ CXL_GMER_TRANS_INTERNAL_MEDIA_MANAGEMENT,	"Internal Media Management" }	\
++)
++
++#define CXL_GMER_VALID_CHANNEL				BIT(0)
++#define CXL_GMER_VALID_RANK				BIT(1)
++#define CXL_GMER_VALID_DEVICE				BIT(2)
++#define CXL_GMER_VALID_COMPONENT			BIT(3)
++#define show_valid_flags(flags)	__print_flags(flags, "|",		   \
++	{ CXL_GMER_VALID_CHANNEL,			"CHANNEL"	}, \
++	{ CXL_GMER_VALID_RANK,				"RANK"		}, \
++	{ CXL_GMER_VALID_DEVICE,			"DEVICE"	}, \
++	{ CXL_GMER_VALID_COMPONENT,			"COMPONENT"	}  \
++)
++
++TRACE_EVENT(cxl_general_media,
++
++	TP_PROTO(const struct device *dev, enum cxl_event_log_type log,
++		 struct cxl_event_gen_media *rec),
++
++	TP_ARGS(dev, log, rec),
++
++	TP_STRUCT__entry(
++		CXL_EVT_TP_entry
++		/* General Media */
++		__field(u64, dpa)
++		__field(u8, descriptor)
++		__field(u8, type)
++		__field(u8, transaction_type)
++		__field(u8, channel)
++		__field(u32, device)
++		__array(u8, comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE)
++		__field(u16, validity_flags)
++		/* Following are out of order to pack trace record */
++		__field(u8, rank)
++		__field(u8, dpa_flags)
++	),
++
++	TP_fast_assign(
++		CXL_EVT_TP_fast_assign(dev, log, rec->hdr);
++
++		/* General Media */
++		__entry->dpa = le64_to_cpu(rec->phys_addr);
++		__entry->dpa_flags = __entry->dpa & CXL_DPA_FLAGS_MASK;
++		/* Mask after flags have been parsed */
++		__entry->dpa &= CXL_DPA_MASK;
++		__entry->descriptor = rec->descriptor;
++		__entry->type = rec->type;
++		__entry->transaction_type = rec->transaction_type;
++		__entry->channel = rec->channel;
++		__entry->rank = rec->rank;
++		__entry->device = get_unaligned_le24(rec->device);
++		memcpy(__entry->comp_id, &rec->component_id,
++			CXL_EVENT_GEN_MED_COMP_ID_SIZE);
++		__entry->validity_flags = get_unaligned_le16(&rec->validity_flags);
++	),
++
++	CXL_EVT_TP_printk("dpa=%llx dpa_flags='%s' " \
++		"descriptor='%s' type='%s' transaction_type='%s' channel=%u rank=%u " \
++		"device=%x comp_id=%s validity_flags='%s'",
++		__entry->dpa, show_dpa_flags(__entry->dpa_flags),
++		show_event_desc_flags(__entry->descriptor),
++		show_mem_event_type(__entry->type),
++		show_trans_type(__entry->transaction_type),
++		__entry->channel, __entry->rank, __entry->device,
++		__print_hex(__entry->comp_id, CXL_EVENT_GEN_MED_COMP_ID_SIZE),
++		show_valid_flags(__entry->validity_flags)
++	)
++);
++
+ #endif /* _CXL_EVENTS_H */
  
--	/*
--	 * When BIOS maintains CXL error reporting control, it will process
--	 * event records.  Only one agent can do so.
--	 */
--	if (host_bridge->native_cxl_error) {
--		rc = cxl_mem_alloc_event_buf(cxlds);
--		if (rc)
--			return rc;
--		cxl_mem_get_event_records(cxlds, CXLDEV_EVENT_STATUS_ALL);
--	}
-+	rc = cxl_event_config(host_bridge, cxlds);
-+	if (rc)
-+		return rc;
+ #define TRACE_INCLUDE_FILE trace
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 5bef485cd8d9..910a1b2a30e0 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -444,6 +444,25 @@ struct cxl_mbox_clear_event_payload {
+ } __packed;
+ #define CXL_CLEAR_EVENT_MAX_HANDLES 0xff /* max based on nr_recs */
  
- 	if (cxlds->regs.ras) {
- 		pci_enable_pcie_error_reporting(pdev);
++/*
++ * General Media Event Record
++ * CXL rev 3.0 Section 8.2.9.2.1.1; Table 8-43
++ */
++#define CXL_EVENT_GEN_MED_COMP_ID_SIZE	0x10
++struct cxl_event_gen_media {
++	struct cxl_event_record_hdr hdr;
++	__le64 phys_addr;
++	u8 descriptor;
++	u8 type;
++	u8 transaction_type;
++	u8 validity_flags[2];
++	u8 channel;
++	u8 rank;
++	u8 device[3];
++	u8 component_id[CXL_EVENT_GEN_MED_COMP_ID_SIZE];
++	u8 reserved[46];
++} __packed;
++
+ struct cxl_mbox_get_partition_info {
+ 	__le64 active_volatile_cap;
+ 	__le64 active_persistent_cap;
 
 -- 
 2.39.0
