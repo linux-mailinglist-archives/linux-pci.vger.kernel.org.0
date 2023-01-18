@@ -2,257 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37D1D671A59
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 12:20:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F66A671B56
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 13:00:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbjARLUU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 06:20:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36804 "EHLO
+        id S230318AbjARMA1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 07:00:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjARLSk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 06:18:40 -0500
-Received: from mail-pl1-x636.google.com (mail-pl1-x636.google.com [IPv6:2607:f8b0:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04CD457F2
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 02:33:56 -0800 (PST)
-Received: by mail-pl1-x636.google.com with SMTP id k18so12420924pll.5
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 02:33:56 -0800 (PST)
+        with ESMTP id S230302AbjARL75 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 06:59:57 -0500
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79A2B95742
+        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 03:17:13 -0800 (PST)
+Received: by mail-wm1-x32e.google.com with SMTP id m15so3214921wms.4
+        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 03:17:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S5FkcmWc4Vga+pPOybEWy6+7SA1iVavl4uDEeNULrMI=;
-        b=wAGIUjhhAOdClQfmVJIVZ/wlUnqkhd7XzlX8pd+D1t3PJUni3MwHmLvieZZbiYYC0D
-         1uOOaFJ8jkHLvLueIkjVwWgeJOqSHuwSMDU8yIGFhVGyjb0wNcy+CiysiKf0Y6S43Umv
-         lS/cT/qG1A0G3DLVxVL1VSIdq1XAPIEvmK+Daip9zYXLUH0L1zIpA5uqaP6w7e8LosWJ
-         YzsThEA/r69nkOETtBMVNpQXu/tEiWtuEeQI3PCzIwEwS35mWaP0TdDRWW7HdReYSkUx
-         S0Hnec565F7+5Wsfy/tZqrcCpx7al8V64m1qjO3EGRa/Gr5ttbl7ek2TEaubTof9Tj2o
-         4kKw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qJPpRBOxYrwV3urnbAOkyowip1c70w+6VVPiwttYqU0=;
+        b=VjzElyUH5tKgy1A6onEbnf+jZfZ1iO6VSxup5z4UTgEgYTrS7iXuYRq0eRTdzXozaq
+         0dTa7U7nhJfNPTzdg5kLsy2Rn69lpWi+UgzZKKnpvlS+LVpR1n5yPPVpteRHaUJjZfIK
+         5UGtquqFFZoiOzd+YUjBAVukyjFtQdTjRILuEUvoDHW/Ph24vyJfipA8OYzThSkVeiHy
+         wtyfgq4105oUa8qJWElFy78nZCE5leLjnBBKqMv/z+v3ULNhKZxz4uh3RqfIM3KHbBi9
+         f8F18gf0E9xa/m0/K8DjSSCWD/3/75zzVenyp8CaFpoD/d1ria/SU4D7xL68OU2B31ca
+         X9ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S5FkcmWc4Vga+pPOybEWy6+7SA1iVavl4uDEeNULrMI=;
-        b=5ct7yGEHfj3WSmNI/fekCsCSdRW+e6w5vjhJbIz5el1mJZmFsStxyahO1HXzXUTgna
-         4LEJQGgf6ANiLgwvQpdmg4l5EX6WgiHkOKK280kQOia9iyWV8yz6WV2fFv/EmpSjhvGG
-         OdrFJTKkMFcZihrnlFOgza+CkUoRK7/pcnA04HCIMIimypR+Lx70Wa/QphS7JSk95df+
-         yRNaXrYGPha4Cq/1T/j56+tVbtjJv8g24ySLPIyTDIKiyAaUua8vdU9RDVOLCrXlZnDu
-         Xwlhm4wP6b9q6cEz4NZoydfod9k8zn/Gm9i1AoBnRFzNDkJnlMveS7xCuhKeK3lTQuaI
-         Vy2w==
-X-Gm-Message-State: AFqh2kqZuCZ14GmGq+kMay5YzYghdc1Rv1HixdboMFudtfw0hFOE2gGg
-        AlYH2xDApU8rMv5gOhwkreJJS/sSKmCwsu2y68M=
-X-Google-Smtp-Source: AMrXdXtX45t86W7xZiRJIdmxkLa3KehQKQPiRPHi1ed+/Yo0xHWCcPRFI78HkW2R6fX24CJtDTrscQ==
-X-Received: by 2002:a17:90a:2fca:b0:227:b49:6233 with SMTP id n10-20020a17090a2fca00b002270b496233mr6518931pjm.45.1674038036202;
-        Wed, 18 Jan 2023 02:33:56 -0800 (PST)
-Received: from [10.16.128.218] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id rm10-20020a17090b3eca00b00229b00cc8desm1510122pjb.0.2023.01.18.02.33.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 02:33:55 -0800 (PST)
-Message-ID: <5a87a5b1-270c-5756-f3f1-ecbd01c4091b@igel.co.jp>
-Date:   Wed, 18 Jan 2023 19:33:51 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.6.1
-Subject: Re: [RFC PATCH 1/3] PCI: endpoint: support an alignment aware
- map/unmaping
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qJPpRBOxYrwV3urnbAOkyowip1c70w+6VVPiwttYqU0=;
+        b=vtCLBBHLCJIH/k8fuygo2O5gnaE4GUYZfOIlV1nybJuDl5r/HhzAA8qPCAvf6ohJ3D
+         d+6HdwV1cBqyODsQy9ylnC4WISSpLAs4CSJcCtZi1Viuu5z5t9s8ivUC17DqyQgqEO3C
+         IMBG1dW47e/gd0ojb97wpxfUcfe8PP47baZXKlr2duwKiZReDRMXYoc4GTbwJX5fAijJ
+         /iY/6sS7LtwU38zWZUeLzFn0CZULwSrWY6cQF/9j6lhAp78J0l52EsfiVuae9tC+NURV
+         vXNZYxdTjZoJkSwK+7NICglIIrDyJxcpX3c3p4tguuUOAD4sG6sxBJ2mZz9sbJxAcbkW
+         uDRw==
+X-Gm-Message-State: AFqh2komn0z2foc5CBKH+sXTaC10B88gbsUmUQ7WP/JZAuMg+Bo9VJGi
+        DiP5sJxzY1/ftqojtKncF0xkTA==
+X-Google-Smtp-Source: AMrXdXuNKL5QlpIkxMMyfGxpCC1ZZ+/CZChk3sqyQtk21VYUjYYdvCxlEOblKvAMefuB8UJVi0ZQqA==
+X-Received: by 2002:a05:600c:3b1e:b0:3cf:497c:c4f5 with SMTP id m30-20020a05600c3b1e00b003cf497cc4f5mr6638401wms.13.1674040631990;
+        Wed, 18 Jan 2023 03:17:11 -0800 (PST)
+Received: from hackbox.lan ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id q10-20020a1cf30a000000b003d1e3b1624dsm1670998wmq.2.2023.01.18.03.17.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Jan 2023 03:17:11 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230117204131.GA145312@bhelgaas>
-From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <20230117204131.GA145312@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: PCI: qcom: Add SM8550 compatible
+Date:   Wed, 18 Jan 2023 13:17:03 +0200
+Message-Id: <20230118111704.3553542-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add the SM8550 platform to the binding.
 
-On 2023/01/18 5:41, Bjorn Helgaas wrote:
-> On Fri, Jan 13, 2023 at 06:03:48PM +0900, Shunsuke Mie wrote:
->> Add an align_mem operation to the EPC ops, which function is used to
->> pci_epc_map/unmap_addr(). These change to enable mapping for any alignment
->> restriction of EPC. The map function maps an aligned memory to include a
->> requested memory region.
-> I think this does two things: 1) add the .align_mem() function
-> pointer, and 2) move the pci_epc_mem_alloc_addr() call into
-> pci_epc_map_addr().  For 2), I would expect to see
-> pci_epc_mem_alloc_addr() being *removed* from somewhere else.
->
-> Anyway, both are significant and should be mentioned in the commit
-> log.  Possibly they could even be separate commits: move the
-> alloc/free first, then add .align_mem().
-I understood. I attempt to arrange commits as your mention.
->
-> Another question below.
->
->> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
->> ---
->>   drivers/pci/endpoint/pci-epc-core.c | 57 ++++++++++++++++++++++++-----
->>   include/linux/pci-epc.h             | 10 +++--
->>   2 files changed, 53 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->> index 2542196e8c3d..60d586e05e7d 100644
->> --- a/drivers/pci/endpoint/pci-epc-core.c
->> +++ b/drivers/pci/endpoint/pci-epc-core.c
->> @@ -430,8 +430,12 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
->>    * Invoke to unmap the CPU address from PCI address.
->>    */
->>   void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> -			phys_addr_t phys_addr)
->> +			phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
->>   {
->> +	u64 aligned_phys;
->> +	void __iomem *aligned_virt;
->> +	size_t offset;
->> +
->>   	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>   		return;
->>   
->> @@ -441,9 +445,22 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>   	if (!epc->ops->unmap_addr)
->>   		return;
->>   
->> +	if (epc->ops->align_mem) {
->> +		mutex_lock(&epc->lock);
->> +		aligned_phys = epc->ops->align_mem(epc, phys_addr, &size);
->> +		mutex_unlock(&epc->lock);
->> +	} else {
->> +		aligned_phys = phys_addr;
->> +	}
->> +
->> +	offset = phys_addr - aligned_phys;
->> +	aligned_virt = virt_addr - offset;
->> +
->>   	mutex_lock(&epc->lock);
->> -	epc->ops->unmap_addr(epc, func_no, vfunc_no, phys_addr);
->> +	epc->ops->unmap_addr(epc, func_no, vfunc_no, aligned_phys);
->>   	mutex_unlock(&epc->lock);
->> +
->> +	pci_epc_mem_free_addr(epc, aligned_phys, aligned_virt, size);
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>   
->> @@ -458,26 +475,46 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>    *
->>    * Invoke to map CPU address with PCI address.
->>    */
->> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
->> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> +		u64 pci_addr, phys_addr_t *phys_addr, size_t size)
->>   {
->>   	int ret;
->> +	u64 aligned_addr;
->> +	size_t offset;
->> +	void __iomem *virt_addr;
->>   
->>   	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->> -		return -EINVAL;
->> +		return ERR_PTR(-EINVAL);
->>   
->>   	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
->> -		return -EINVAL;
->> +		return ERR_PTR(-EINVAL);
->>   
->>   	if (!epc->ops->map_addr)
->> -		return 0;
->> +		return ERR_PTR(-ENOPTSUPP);
->> +
->> +	if (epc->ops->align_mem) {
->> +		mutex_lock(&epc->lock);
->> +		aligned_addr = epc->ops->align_mem(epc, pci_addr, &size);
->> +		mutex_unlock(&epc->lock);
->> +	} else {
->> +		aligned_addr = pci_addr;
->> +	}
->> +
->> +	offset = pci_addr - aligned_addr;
->> +
->> +	virt_addr = pci_epc_mem_alloc_addr(epc, phys_addr, size);
->> +	if (!virt_addr)
->> +		return ERR_PTR(-ENOMEM);
->>   
->>   	mutex_lock(&epc->lock);
->> -	ret = epc->ops->map_addr(epc, func_no, vfunc_no, phys_addr, pci_addr,
->> -				 size);
->> +	ret = epc->ops->map_addr(epc, func_no, vfunc_no, *phys_addr, aligned_addr, size);
->>   	mutex_unlock(&epc->lock);
->> +	if (ret)
->> +		return ERR_PTR(ret);
->>   
->> -	return ret;
->> +	*phys_addr += offset;
->> +
->> +	return virt_addr + offset;
->>   }
->>   EXPORT_SYMBOL_GPL(pci_epc_map_addr);
->>   
->> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->> index a48778e1a4ee..8f29161bce80 100644
->> --- a/include/linux/pci-epc.h
->> +++ b/include/linux/pci-epc.h
->> @@ -84,6 +84,7 @@ struct pci_epc_ops {
->>   			       phys_addr_t phys_addr, u8 interrupt_num,
->>   			       u32 entry_size, u32 *msi_data,
->>   			       u32 *msi_addr_offset);
->> +	u64	(*align_mem)(struct pci_epc *epc, u64 addr, size_t *size);
-> Is there a requirement for multiple implementations of .align_mem()?
-> There's only one implementation in this series
-> (dw_pcie_ep_align_mem()), and it only needs pci->region_align.  That
-> *value* might be DWC-specific, but the concept really isn't, so maybe
-> there could be a generic function that uses the device-specific value.
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
 
-That is the correct way, but some handlers require different implementation.
+The v1 was here:
+https://lore.kernel.org/all/20221116123505.2760397-1-abel.vesa@linaro.org/
 
-Sorry, this patch could have been misleading. it is my fault. I'll add 
-the other
+Changes since v1:
+ * Switched to single compatible for both PCIes (qcom,pcie-sm8550)
+ * dropped enable-gpios property
+ * dropped interconnects related properties, the power-domains properties
+   and resets related properties the sm8550 specific allOf:if:then
+ * dropped pipe_mux, phy_pipe and ref clocks from the sm8550 specific
+   allOf:if:then clock-names array and decreased the minItems and
+   maxItems for clocks property accordingly
 
-handlers to a next version.
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
->
->>   	int	(*start)(struct pci_epc *epc);
->>   	void	(*stop)(struct pci_epc *epc);
->>   	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
->> @@ -218,11 +219,12 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>   		    struct pci_epf_bar *epf_bar);
->>   void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>   		       struct pci_epf_bar *epf_bar);
->> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> -		     phys_addr_t phys_addr,
->> -		     u64 pci_addr, size_t size);
->> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> +			       u64 pci_addr, phys_addr_t *phys_addr,
->> +			       size_t size);
->>   void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->> -			phys_addr_t phys_addr);
->> +			phys_addr_t phys_addr, void __iomem *virt_addr,
->> +			size_t size);
->>   int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>   		    u8 interrupts);
->>   int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
->> -- 
->> 2.25.1
->>
-Best,
-
-Shunsuke
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index a5859bb3dc28..78e8babd11d9 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -34,6 +34,7 @@ properties:
+       - qcom,pcie-sm8250
+       - qcom,pcie-sm8450-pcie0
+       - qcom,pcie-sm8450-pcie1
++      - qcom,pcie-sm8550
+       - qcom,pcie-ipq6018
+ 
+   reg:
+@@ -197,6 +198,7 @@ allOf:
+               - qcom,pcie-sm8250
+               - qcom,pcie-sm8450-pcie0
+               - qcom,pcie-sm8450-pcie1
++              - qcom,pcie-sm8550
+     then:
+       properties:
+         reg:
+@@ -611,6 +613,40 @@ allOf:
+           items:
+             - const: pci # PCIe core reset
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-sm8550
++    then:
++      properties:
++        clocks:
++          minItems: 8
++          maxItems: 9
++        clock-names:
++          items:
++            - const: pipe # PIPE clock
++            - const: aux # Auxiliary clock
++            - const: cfg # Configuration clock
++            - const: bus_master # Master AXI clock
++            - const: bus_slave # Slave AXI clock
++            - const: slave_q2a # Slave Q2A clock
++            - const: ddrss_sf_tbu # PCIe SF TBU clock
++            - const: aggre # Aggre NoC PCIe0 AXI clock
++            - const: cnoc_pcie_sf_axi # Config NoC PCIe1 AXI clock
++        iommus:
++          maxItems: 1
++        iommu-map:
++          maxItems: 2
++        resets:
++          minItems: 1
++          maxItems: 2
++        reset-names:
++          items:
++            - const: pci # PCIe core reset
++            - const: pcie_1_link_down_reset # PCIe link down reset
++
+   - if:
+       properties:
+         compatible:
+@@ -694,6 +730,7 @@ allOf:
+               - qcom,pcie-sm8250
+               - qcom,pcie-sm8450-pcie0
+               - qcom,pcie-sm8450-pcie1
++              - qcom,pcie-sm8550
+     then:
+       oneOf:
+         - properties:
+-- 
+2.34.1
 
