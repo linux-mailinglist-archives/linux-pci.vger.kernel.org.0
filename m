@@ -2,142 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 44973672413
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 17:50:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 12D32672445
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 17:56:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229980AbjARQuT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 11:50:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
+        id S229941AbjARQ4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 11:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjARQuR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 11:50:17 -0500
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9FCB18AA5;
-        Wed, 18 Jan 2023 08:50:15 -0800 (PST)
-Received: by mail-qt1-f177.google.com with SMTP id q15so6419692qtn.0;
-        Wed, 18 Jan 2023 08:50:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5eGZCXxPoQAmJ0txjytBJor7KBRzIjhRUq2JtcYKMyc=;
-        b=zxXsA3PsAxNJlc/vHhsKADw+uOEVJ4Z11N/IrFWwKilJ3I33eNLfcHMo1END6YvOzX
-         qYCQlz/B8QNTQvidg0T2BU6tDfUDm2D3CSk5K6w02sydoY03xZky0BJYvlgCyDY4txOC
-         wKZLZzDListilZxOjSeUl1plHYnj3/pwWyJDkAUYlPvL09sr3S8jKKmkOZseBIUN0UxR
-         45SjFw4NGnsCU0LhQ/OpicVOVf4N7nz5W/hoAcO72HfPRJIKHngiPrnAdfnf+oZWMP9x
-         0TF3Rrofd3gcdCh/khFyh/zjeZwNwmOkZ1tjb1sKv/9nV1Pbohx/oiWbzH76kOjMN2YF
-         Zh9g==
-X-Gm-Message-State: AFqh2kqO5dBTXvKoebKOULBzgzHuiPQuDO6/E8hPt7DW8esiINDECMEF
-        FQ5moY6X62NtsMv1ZysxraZLsBn0Hd9+BisU
-X-Google-Smtp-Source: AMrXdXuQBIESpTUtyLs9kMzi3ikAcnU2clAWT40BpCtEkbtpDFvVXAxAbVSkyeAPwHxSUJviIHDMbw==
-X-Received: by 2002:ac8:51ce:0:b0:3b6:3b81:9a99 with SMTP id d14-20020ac851ce000000b003b63b819a99mr9820213qtn.14.1674060614519;
-        Wed, 18 Jan 2023 08:50:14 -0800 (PST)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id r3-20020ac87943000000b003a82562c90fsm3657280qtt.62.2023.01.18.08.50.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 18 Jan 2023 08:50:13 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-4e4a6af2d99so157036367b3.4;
-        Wed, 18 Jan 2023 08:50:13 -0800 (PST)
-X-Received: by 2002:a81:6e46:0:b0:37e:6806:a5f9 with SMTP id
- j67-20020a816e46000000b0037e6806a5f9mr952154ywc.47.1674060612772; Wed, 18 Jan
- 2023 08:50:12 -0800 (PST)
+        with ESMTP id S230306AbjARQ4s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 11:56:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50C9A31E3B;
+        Wed, 18 Jan 2023 08:56:48 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DB98561910;
+        Wed, 18 Jan 2023 16:56:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1C02C433D2;
+        Wed, 18 Jan 2023 16:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674061007;
+        bh=E3RoN2UBLg+xbugtNCvURjAmNDgUh/BpOKAe6HdbGW0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=KndQMtq/s2qsD+r9i7Tv7PA3agwEwLPlR+Ka3/+3DuE+IpjL6sxoNFPVUf86IypTj
+         LoH3245g9TQkuYMuowKL5JE6d5r+fQ/r77x9qCfOrwnBYSMKniWvxud5QFUIAvgRIX
+         scgBech16DpDYSvTgGHQv4YzaJanSIiQgZr1JO/vohV/MiKqQ92W9YiiRCbDKDy0rE
+         2pUwyJx1pX1gMDZJaCxlNN37s5vTQMszbhq2sGqbFTt1mlqWaT3s3vX0iOW7Ru5UnI
+         xyXw0MT5hihBzBfEHxXYDW0Ephdsdw4lPfpliXJiBIrTK/JmV9DiWtd4mhmFVoMeb1
+         3pe7GvBQTyNzQ==
+Date:   Wed, 18 Jan 2023 10:56:44 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Achal Verma <a-verma1@ti.com>
+Cc:     mranostay@ti.com, rogerq@kernel.org, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        krzysztof.kozlowski@linaro.org, vigneshr@ti.com,
+        tjoseph@cadence.com, sergio.paracuellos@gmail.com,
+        pthombar@cadence.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 5/5] PCI: j721e: add j784s4 PCIe configuration
+Message-ID: <20230118165644.GA225110@bhelgaas>
 MIME-Version: 1.0
-References: <cover.1674036164.git.geert+renesas@glider.be> <cd685d8e4d6754c384acfc1796065d539a2c3ea8.1674036164.git.geert+renesas@glider.be>
- <Y8gb8l18XzYOPhoD@rowland.harvard.edu>
-In-Reply-To: <Y8gb8l18XzYOPhoD@rowland.harvard.edu>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 18 Jan 2023 17:50:00 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUsULA0PM26Y8WL2bGiBHGAGADS6eYLUp0CDVgm4N5kow@mail.gmail.com>
-Message-ID: <CAMuHMdUsULA0PM26Y8WL2bGiBHGAGADS6eYLUp0CDVgm4N5kow@mail.gmail.com>
-Subject: Re: [PATCH 7/7] usb: host: ohci-exynos: Convert to devm_of_phy_optional_get()
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230118125936.3456716-6-a-verma1@ti.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Alan,
+If you repost for some other reason, fix the subject typo ("Add ..."
+to match the others).  Otherwise, Lorenzo may fix it up while
+applying.
 
-On Wed, Jan 18, 2023 at 5:26 PM Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Wed, Jan 18, 2023 at 11:15:20AM +0100, Geert Uytterhoeven wrote:
-> > Use the new devm_of_phy_optional_get() helper instead of open-coding the
-> > same operation.
-> >
-> > This lets us drop several checks for IS_ERR(), as phy_power_{on,off}()
-> > handle NULL parameters fine.
->
-> The patch ignores a possible -ENOSYS error return.  Is it known that
-> this will never happen?
-
-While some phy_*() dummies in include/linux/phy/phy.h do return -ENOSYS
-if CONFIG_GENERIC_PHY is not enabled, devm_of_phy_optional_get()
-returns NULL in that case, so I think this cannot happen.
-
-> > --- a/drivers/usb/host/ohci-exynos.c
-> > +++ b/drivers/usb/host/ohci-exynos.c
-> > @@ -69,19 +69,12 @@ static int exynos_ohci_get_phy(struct device *dev,
-> >                       return -EINVAL;
-> >               }
-> >
-> > -             phy = devm_of_phy_get(dev, child, NULL);
-> > +             phy = devm_of_phy_optional_get(dev, child, NULL);
-> >               exynos_ohci->phy[phy_number] = phy;
-> >               if (IS_ERR(phy)) {
-> > -                     ret = PTR_ERR(phy);
-> > -                     if (ret == -EPROBE_DEFER) {
-> > -                             of_node_put(child);
-> > -                             return ret;
-> > -                     } else if (ret != -ENOSYS && ret != -ENODEV) {
-> > -                             dev_err(dev,
-> > -                                     "Error retrieving usb2 phy: %d\n", ret);
-> > -                             of_node_put(child);
-> > -                             return ret;
-> > -                     }
-> > +                     of_node_put(child);
-> > +                     return dev_err_probe(dev, PTR_ERR(phy),
-> > +                                          "Error retrieving usb2 phy\n");
-> >               }
-> >       }
-> >
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+On Wed, Jan 18, 2023 at 06:29:36PM +0530, Achal Verma wrote:
+> From: Matt Ranostay <mranostay@ti.com>
+> 
+> Add PCIe configuration for j784s4 platform which has 4x lane support.
+> 
+> Tested-by: Achal Verma <a-verma1@ti.com>
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> Reviewed-by: Roger Quadros <rogerq@kernel.org>
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
