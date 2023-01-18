@@ -2,130 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A835F671B5D
-	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 13:00:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9373671DDF
+	for <lists+linux-pci@lfdr.de>; Wed, 18 Jan 2023 14:33:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjARMAd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 07:00:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37590 "EHLO
+        id S230381AbjARNd2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 08:33:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjARMAB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 07:00:01 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E729F7EE57
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 03:17:14 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id iv8-20020a05600c548800b003db04a0a46bso1224564wmb.0
-        for <linux-pci@vger.kernel.org>; Wed, 18 Jan 2023 03:17:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Ax0S1Mi21dQMczSaAgM0TaYM+PtE4awHpXsqNp1yeTs=;
-        b=LVO8wtaTw/mwetQHWmbQRBGMm1Qwm1fXYLm1TMwUAF0rVno1eQ4vfawC8DHGgibq85
-         Ca9IuilPgvfjwM7dPmJKpoLHPQ5t8tg1ITDXefjjYttak0nnHOVJG9bYNKic3uQ/NqaX
-         rDj+UszO828Jvel8gZgKI2WU6kFW4aO3jcrlqQZC0VJXOQdRtpyGRr1ztBSyh8PQHE4C
-         uTZftHL8faguXRqYtbMlMPdK4SIATcGt15ZsYErjJVPQpbyUtj9a72xHhQlotxaWS11n
-         axniRJOKC1NJ3AElrqOKee4fpzy3vHCHRAb8wjQ09Q8ad1kg6+n9VfI0yXFnhEulGcNc
-         bb/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Ax0S1Mi21dQMczSaAgM0TaYM+PtE4awHpXsqNp1yeTs=;
-        b=T/BqJoyWyRmE0MYymabgBUthRRvUs9+zp3DMFrPTN8E8dJ9GSJtpgHYNqhhDbetqM5
-         lHLFYW1ccpjWGIPkKiJO0mIijIDFbrZ5dnSIBYrh/i0nZ32vYrlZHtR5PIlYAVRoevCw
-         phapFpVOPEAjUM0ZiP4zjlNHK5w66aVGcdieNYVNYGjfXbgZuc1quf1LAoJ+7AA4Mo0s
-         dSh62XiPPJKiBhPYj0eUmI4N0QDBv0/eQnax1HMpLLpjK7omq7Ixw5h2Ql/k90Bz2FTM
-         P6Nnt6ALLzChtVNKqeTh8xvWLMJtKS9Krx3MxlvnKMA7Y/q2grtwOYvN6KfSm/kjO3T8
-         mD4Q==
-X-Gm-Message-State: AFqh2kp+k52mNtKQw77ZdaSLQX4KfwNJ/XZg2jnhNfxWY0sfYwrlbZoD
-        2In52s/wMNZrrm4jpMjyOetiRD11cPC5hbQj
-X-Google-Smtp-Source: AMrXdXu/jsgeI9CfpoJSfBwQlQSHFQhbqZk8oQ0dhQ1qE3VJqvmj418GDaH2fhc0Fdp0lB7bGnPoRg==
-X-Received: by 2002:a05:600c:3c8a:b0:3da:2a78:d7a4 with SMTP id bg10-20020a05600c3c8a00b003da2a78d7a4mr6183108wmb.21.1674040633455;
-        Wed, 18 Jan 2023 03:17:13 -0800 (PST)
-Received: from hackbox.lan ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id q10-20020a1cf30a000000b003d1e3b1624dsm1670998wmq.2.2023.01.18.03.17.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 18 Jan 2023 03:17:12 -0800 (PST)
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 2/2] PCI: qcom: Add SM8550 PCIe support
-Date:   Wed, 18 Jan 2023 13:17:04 +0200
-Message-Id: <20230118111704.3553542-2-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230118111704.3553542-1-abel.vesa@linaro.org>
-References: <20230118111704.3553542-1-abel.vesa@linaro.org>
+        with ESMTP id S231247AbjARNc7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 08:32:59 -0500
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 248F486EEC;
+        Wed, 18 Jan 2023 04:59:59 -0800 (PST)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30ICxc3K018296;
+        Wed, 18 Jan 2023 06:59:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1674046778;
+        bh=Rrp1kRwx0MGS+enp+4KSRGdA9RMC/KlL6Pz1/lL3dsk=;
+        h=From:To:CC:Subject:Date;
+        b=am179xat3X8XIpQ3Tszj8oBAN9uU/vDunwOJXbQqxPSpvcGr/eYPyDGIzv8tfgPcK
+         86xd6z7NN9lbr75jymxbGcdFoy9FyjuTJtHCGO8DNpCoTksM0YLsw4733EtJBG0UKy
+         sdnQPSi1niddbmHm2m2+cv0mDJOsx9zzQG4w20ok=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30ICxcFC010060
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 18 Jan 2023 06:59:38 -0600
+Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 18
+ Jan 2023 06:59:37 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Wed, 18 Jan 2023 06:59:38 -0600
+Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30ICxbkF110604;
+        Wed, 18 Jan 2023 06:59:37 -0600
+From:   Achal Verma <a-verma1@ti.com>
+To:     <mranostay@ti.com>, <rogerq@kernel.org>, <lpieralisi@kernel.org>,
+        <robh@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski@linaro.org>, <vigneshr@ti.com>,
+        <tjoseph@cadence.com>, <sergio.paracuellos@gmail.com>,
+        <pthombar@cadence.com>, <linux-pci@vger.kernel.org>
+CC:     <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 0/5] PCI: add 4x lane support for pci-j721e controllers
+Date:   Wed, 18 Jan 2023 18:29:31 +0530
+Message-ID: <20230118125936.3456716-1-a-verma1@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add compatible for both PCIe found on SM8550.
-Also add the cnoc_pcie_sf_axi clock needed by the SM8550.
+From: Matt Ranostay <mranostay@ti.com>
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
+Adding of additional support to Cadence PCIe controller (i.e. pci-j721e.c)
+for up to 4x lanes, and reworking of driver to define maximum lanes per
+board configuration.
 
-The v1 was here:
-https://lore.kernel.org/all/20221116123505.2760397-2-abel.vesa@linaro.org/
+Changes from v1:
+* Reworked 'PCI: j721e: Add PCIe 4x lane selection support' to not cause
+  regressions on 1-2x lane platforms
 
-Changes since v1:
- * changed the subject line prefix for the patch to match the history,
-   like Bjorn Helgaas suggested.
- * added Konrad's R-b tag
+Changes from v2:
+* Correct dev_warn format string from %d to %u since lane count is a
+  unsigned integer
+* Update CC list
 
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Changes from v3:
+* Use the max_lanes setting per chip for the mask size required since
+  bootloader could have set num_lanes to a higher value that the
+  device tree which would leave in an undefined state
+* Reorder patches do the previous change to not break bisect
+* Remove line breaking for dev_warn to allow better grepping and since
+  no strict 80 columns anymore
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 77e5dc7b88ad..85988b3fd4f6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -182,7 +182,7 @@ struct qcom_pcie_resources_2_3_3 {
- 
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
--	struct clk_bulk_data clks[12];
-+	struct clk_bulk_data clks[13];
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
- 	struct reset_control *pci_reset;
-@@ -1208,6 +1208,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	res->clks[idx++].id = "noc_aggr_4";
- 	res->clks[idx++].id = "noc_aggr_south_sf";
- 	res->clks[idx++].id = "cnoc_qx";
-+	res->clks[idx++].id = "cnoc_pcie_sf_axi";
- 
- 	num_opt_clks = idx - num_clks;
- 	res->num_clks = idx;
-@@ -1828,6 +1829,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-+	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
- 	{ }
- };
- 
+Changes from v4:
+* Correct invalid settings for j7200 PCIe RC + EP
+* Add j784s4 configuration for selection of 4x lanes
+
+Changes from v5:
+* Dropped 'PCI: j721e: Add warnings on num-lanes misconfiguration' patch
+  from series
+* Reworded 'PCI: j721e: Add per platform maximum lane settings' commit
+  message
+* Added yaml documentation and schema checks for ti,j721e-pci-* lane
+  checking
+
+Changes from v6:
+* Fix wordwrapping in commit messages from ~65 columns to correct 75
+  columns
+* Re-ran get_maintainers.pl to add missing maintainers in CC
+
+Changes from v7:
+* Addressed review comments in ti,j721e-pci-ep.yaml and
+  ti,j721e-pci-host.yaml from v6
+* Added warn message if num-lanes property value is invalid.
+* Addressed build issue reported in
+  https://lore.kernel.org/all/202211260346.4JvNnDdc-lkp@intel.com/
+
+Matt Ranostay (5):
+  dt-bindings: PCI: ti,j721e-pci-*: add checks for num-lanes
+  PCI: j721e: Add per platform maximum lane settings
+  PCI: j721e: Add PCIe 4x lane selection support
+  dt-bindings: PCI: ti,j721e-pci-*: add j784s4-pci-* compatible strings
+  PCI: j721e: add j784s4 PCIe configuration
+
+ .../bindings/pci/ti,j721e-pci-ep.yaml         | 40 ++++++++++++++--
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 40 ++++++++++++++--
+ drivers/pci/controller/cadence/pci-j721e.c    | 46 +++++++++++++++++--
+ 3 files changed, 115 insertions(+), 11 deletions(-)
+
 -- 
-2.34.1
+2.25.1
 
