@@ -2,75 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 80C61673B8F
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 15:22:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FFE0673B98
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 15:22:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230266AbjASOWW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 09:22:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45418 "EHLO
+        id S231348AbjASOWy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 09:22:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231494AbjASOWT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 09:22:19 -0500
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049D23A82
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 06:22:12 -0800 (PST)
-Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        with ESMTP id S231183AbjASOWp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 09:22:45 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271A375A30;
+        Thu, 19 Jan 2023 06:22:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4FF6B41933
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 14:22:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1674138130;
-        bh=cgpSJDuhoHdYNyebTdBDMFK/DhdY7FLUq4k1xDyDUX0=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=NW+0ytyxk4R7hhM0JakPaXXCh3FAC0GTt8kTSZa2CJ1m0YhljRBgKnr54pOe5Gw94
-         lYVUnO14gieEiBSOOMMXLrYsB1ex9X1UVs1ACoOSPSmIglxYbhwYgIGUr9TyFIY4NS
-         ZF6VdFQVxvoHJOzd6TnLoldIYrpvVQlv1oqLYtf/xVCFOquYDyKuW91Km4Ja6Cgwi4
-         Aw228H97JYcr6jPLIkPEfYfrUv9N2gp7x0TkXMSeoK81ijaFcKy1Zyy6y5wPRanxw1
-         Ubiix3qwhx7MD3AKgLL7oFGoabgZ/ona5c2d3Ryq5btwOr5xyFm77x+DGH193mtYUu
-         qzYqsot2nkyww==
-Received: by mail-pj1-f69.google.com with SMTP id g20-20020a17090adb1400b0022941a246aaso1152588pjv.0
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 06:22:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cgpSJDuhoHdYNyebTdBDMFK/DhdY7FLUq4k1xDyDUX0=;
-        b=WucezXjBLC8Hw5e0Iy5NOTYbrHQhmQ10e2bq/CNdO4HJ/7vExzNCJci4SYRTihhWoz
-         59BDGApVO1shIiTNvbz+bIvNjnJmWy7ArgWNCX1ere6EtEkk4pWSrLQK/QuIMLtGtUZ6
-         ZW9jUY/sPyN7icxvZD6BpnWOyWmKaEJKLyvlBYVxQhZt5X2IJl38GDNmcLHfs95EUFqD
-         5bV3rhYzpfoKiTBzvwrJ8bk/7QlMM3jN5A6NkpWM1E2L1i+LMrAPpD9PRA9M+7Ri5CQ4
-         w/OlvYk1gl81xnKsfXxEKcA+KL1+OGblo8lqcgNlsjROEsvn9S8DZai9CUYInMrKd6lq
-         Kvxg==
-X-Gm-Message-State: AFqh2koZWtdpQc8WTdgMpPs2BaqJTNQjXCi/YIHCXR3CyzIwVbzci2rV
-        foALTS8oyqDPpSF4crPRB4SjZfndeL/+oU4JxI2AMIwPNhirQAxcIL0pZ7Z6OYgAQMWpAgUKYZH
-        3mqqnTIQoZxExZkV+sE1nmcglYZXvbbx2kcT3nkQfXh3kEG9su1Sz6g==
-X-Received: by 2002:a62:e317:0:b0:588:cb81:9221 with SMTP id g23-20020a62e317000000b00588cb819221mr1089723pfh.69.1674138128685;
-        Thu, 19 Jan 2023 06:22:08 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXsC4VqSbP6q7GcLRsSobmOhfD0wGXev/8fvUb7iRmApAcePDZET6T0MXxQUkEqNtvXxMmo3r5VRnX+ZyxXyci8=
-X-Received: by 2002:a62:e317:0:b0:588:cb81:9221 with SMTP id
- g23-20020a62e317000000b00588cb819221mr1089712pfh.69.1674138128350; Thu, 19
- Jan 2023 06:22:08 -0800 (PST)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B437A6170E;
+        Thu, 19 Jan 2023 14:22:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76F0BC433EF;
+        Thu, 19 Jan 2023 14:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674138160;
+        bh=mDh1LDHRJOGkqTlnK3QxHsjTBRyPM7cJRW+pfnInBI0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IyxHAJF9pl/t/6vUxnb085JR8Fse9frezRoj62Ci+GTte2karxrFQjXRCGnI2n5QB
+         cfRl/Wylx74MNTHCVcwBKeudh25jvj5I6Cw+bBUOtxER6LCNKhshzmu603O/Y10cSG
+         cxjaeRvjs5woG6NCYfNUnPwVXmERdpUxdQQt1/DAoKX1tRF+FNQSNOl4l6R4ImBkMU
+         p+nO/iSozt4VVbEe5QfHRWCBhwrfgNIGfUvk4DSsA6wwb7t+3tLwol1YQec/VVA3dH
+         RSwzr05WSYF6Ab3JCjGAOtsQtdmI8PGUvZMyXOwXjzJ2wpOdxHwNGJGsbNckwLhn18
+         zSU5OCLO7LqUg==
+Date:   Thu, 19 Jan 2023 14:22:30 +0000
+From:   Lee Jones <lee@kernel.org>
+To:     Tianfei Zhang <tianfei.zhang@intel.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
+        mani@kernel.org, pali@kernel.org, mdf@kernel.org, hao.wu@intel.com,
+        yilun.xu@intel.com, trix@redhat.com, jgg@ziepe.ca,
+        ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
+        dan.j.williams@intel.com, keescook@chromium.org, rafael@kernel.org,
+        russell.h.weight@intel.com, corbet@lwn.net,
+        linux-doc@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
+        gregkh@linuxfoundation.org, matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH v1 11/12] fpga: m10bmc-sec: add m10bmc_sec_retimer_load
+ callback
+Message-ID: <Y8lSJsuLQ9DyXZ4U@google.com>
+References: <20230119013602.607466-1-tianfei.zhang@intel.com>
+ <20230119013602.607466-12-tianfei.zhang@intel.com>
 MIME-Version: 1.0
-References: <20230119094913.20536-1-vidyas@nvidia.com>
-In-Reply-To: <20230119094913.20536-1-vidyas@nvidia.com>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 19 Jan 2023 22:21:57 +0800
-Message-ID: <CAAd53p5R9BHoYpHq6WNgwtUAXmvNQnk6gA=C27JTfqeozRKCzQ@mail.gmail.com>
-Subject: Re: [PATCH V1] PCI/ASPM: Skip L1SS save/restore if not already enabled
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        rafael.j.wysocki@intel.com, enriquezmark36@gmail.com,
-        tasev.stefanoska@skynet.be, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, treding@nvidia.com,
-        jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
-        sagar.tv@gmail.com
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230119013602.607466-12-tianfei.zhang@intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,71 +62,21 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Vidya,
+On Wed, 18 Jan 2023, Tianfei Zhang wrote:
 
-On Thu, Jan 19, 2023 at 5:49 PM Vidya Sagar <vidyas@nvidia.com> wrote:
->
-> Skip save and restore of ASPM L1 Sub-States specific registers if they
-> are not already enabled in the system. This is to avoid issues observed
-> on certain platforms during restoration process, particularly when
-> restoring the L1SS registers contents.
->
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216782
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> Create m10bmc_sec_retimer_load() callback function to provide
+> a trigger to update a new retimer (Intel C827 Ethernet
+> transceiver) firmware on Intel PAC N3000 Card.
+> 
+> Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+> Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
 > ---
->  drivers/pci/pcie/aspm.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 53a1fa306e1e..5d3f09b0a6a9 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -757,15 +757,29 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
->                                 PCI_L1SS_CTL1_L1SS_MASK, val);
->  }
->
-> +static bool skip_l1ss_restore;
+>  drivers/fpga/intel-m10-bmc-sec-update.c | 136 ++++++++++++++++++++++++
+>  include/linux/mfd/intel-m10-bmc.h       |  31 ++++++
 
-Maybe move it inside "struct pci_dev"?
+Looks mostly fine - no need to send this to me again, thanks:
 
-Kai-Heng
+Acked-by: Lee Jones <lee@kernel.org>
 
-> +
->  void pci_save_aspm_l1ss_state(struct pci_dev *dev)
->  {
->         struct pci_cap_saved_state *save_state;
->         u16 l1ss = dev->l1ss;
-> -       u32 *cap;
-> +       u32 *cap, val;
->
->         if (!l1ss)
->                 return;
->
-> +       /*
-> +        * Skip save and restore of L1 Sub-States registers if they are not
-> +        * already enabled in the system
-> +        */
-> +       pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL1, &val);
-> +       if (!(val & PCI_L1SS_CTL1_L1SS_MASK)) {
-> +               skip_l1ss_restore = 1;
-> +               return;
-> +       }
-> +
-> +       skip_l1ss_restore = 0;
-> +
->         save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
->         if (!save_state)
->                 return;
-> @@ -784,6 +798,9 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
->         if (!l1ss)
->                 return;
->
-> +       if (skip_l1ss_restore)
-> +               return;
-> +
->         save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
->         if (!save_state)
->                 return;
-> --
-> 2.17.1
->
+-- 
+Lee Jones [李琼斯]
