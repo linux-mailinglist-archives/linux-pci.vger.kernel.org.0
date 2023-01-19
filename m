@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5494E672E46
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:34:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FC73672E41
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:34:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbjASBeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 20:34:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
+        id S229719AbjASBeU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 20:34:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47236 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjASBak (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:30:40 -0500
+        with ESMTP id S230083AbjASBbQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:31:16 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F9B5AB76;
-        Wed, 18 Jan 2023 17:29:07 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457D26C56D;
+        Wed, 18 Jan 2023 17:29:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674091747; x=1705627747;
+  t=1674091759; x=1705627759;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8i69sD1dc8EqIXhwoHYyaLvbsgr6RGeo037UG511anQ=;
-  b=SSxwFZq4uBFKu8kQZvgrngxkHfHkXif4lEh8zG/60minPevtOUJ3k1V1
-   bHTh6TV057zQL/J101xkHIkexDxMerEMgfXA+RVCbLBy4i8YwswbPhDLC
-   4BzJUMu9nUZuP5jNwd6tbfuAwg/QFW4YvmJiqlxTPyoe4B6lNZHYuDxT9
-   I22B96f3+ViuUyxLS+p/yVJaSjKiy/qPlEcukctfNJJE9b/lkbFK8b/o2
-   ptFSOr2m8ICpyduAyF6EgayiX6Ybj2d3Qu8C7186NIU/RhWEvnzFosQak
-   L3s7KVr+JoABfcW5DGvWEQ1KHkd6BEjzN1KuWbGqLkThRZfGXrSKjyp+C
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847623"
+  bh=Txos19R8DyvDzhERcj8uKGox4wLE09dcHL2zQgioezU=;
+  b=mzbI3w4OcbcTydS5LbrNrf1WUybgd4bXfsssC0iDOCyf9EBupRSbEafO
+   NwkCiguYwrqhU/hyMG1JXJpvNKV4o3TQi6CIboyhb4AbZE1aPJJtHAAAW
+   RhA+IESmlmfDoZ+zjOM/OROXQWHliONfh7uO2uj6rEAAJwlNA3YwPmKmm
+   qzVjCuPZ7/Y6aIxwaGgkrq8d1XS7p7H6wI9Is6Z3VjDebKgSCtDBbUgME
+   NvKden6Ho+Kx4VFIGBqPmptk/lPAzhgNIEGBzM7HTyWW0xtIVyBFFTNvH
+   +ekwmJF9sEqGt2a0tbEQ8r0nfl9327bP5i3EzSQwMyS4xtYggVjtzeHYu
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847637"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="322847623"
+   d="scan'208";a="322847637"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:29:07 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:29:13 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995709"
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995719"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="767995709"
+   d="scan'208";a="767995719"
 Received: from unknown (HELO fedora.sh.intel.com) ([10.238.175.104])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:29:01 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:29:07 -0800
 From:   Tianfei Zhang <tianfei.zhang@intel.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
@@ -50,9 +50,9 @@ To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         lee@kernel.org, gregkh@linuxfoundation.org,
         matthew.gerlach@linux.intel.com
 Cc:     Tianfei Zhang <tianfei.zhang@intel.com>
-Subject: [PATCH v1 11/12] fpga: m10bmc-sec: add m10bmc_sec_retimer_load callback
-Date:   Wed, 18 Jan 2023 20:36:01 -0500
-Message-Id: <20230119013602.607466-12-tianfei.zhang@intel.com>
+Subject: [PATCH v1 12/12] Documentation: fpga: add description of fpgahp driver
+Date:   Wed, 18 Jan 2023 20:36:02 -0500
+Message-Id: <20230119013602.607466-13-tianfei.zhang@intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20230119013602.607466-1-tianfei.zhang@intel.com>
 References: <20230119013602.607466-1-tianfei.zhang@intel.com>
@@ -67,212 +67,74 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Create m10bmc_sec_retimer_load() callback function to provide
-a trigger to update a new retimer (Intel C827 Ethernet
-transceiver) firmware on Intel PAC N3000 Card.
+Add the description of fpgahp driver.
 
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
 ---
- drivers/fpga/intel-m10-bmc-sec-update.c | 136 ++++++++++++++++++++++++
- include/linux/mfd/intel-m10-bmc.h       |  31 ++++++
- 2 files changed, 167 insertions(+)
+ Documentation/fpga/fpgahp.rst | 29 +++++++++++++++++++++++++++++
+ Documentation/fpga/index.rst  |  1 +
+ MAINTAINERS                   |  1 +
+ 3 files changed, 31 insertions(+)
+ create mode 100644 Documentation/fpga/fpgahp.rst
 
-diff --git a/drivers/fpga/intel-m10-bmc-sec-update.c b/drivers/fpga/intel-m10-bmc-sec-update.c
-index 647531094b3b..053be33713c5 100644
---- a/drivers/fpga/intel-m10-bmc-sec-update.c
-+++ b/drivers/fpga/intel-m10-bmc-sec-update.c
-@@ -291,6 +291,137 @@ static int m10bmc_sec_bmc_image_load_1(struct m10bmc_sec *sec)
- 	return m10bmc_sec_bmc_image_load(sec, 1);
- }
+diff --git a/Documentation/fpga/fpgahp.rst b/Documentation/fpga/fpgahp.rst
+new file mode 100644
+index 000000000000..3ec34bbffde1
+--- /dev/null
++++ b/Documentation/fpga/fpgahp.rst
+@@ -0,0 +1,29 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++===========================
++FPGA Hotplug Manager Driver
++===========================
++
++Authors:
++
++- Tianfei Zhang <tianfei.zhang@intel.com>
++
++There are some board managements for PCIe-based FPGA card like burning the entire
++image, loading a new FPGA image or BMC firmware in FPGA deployment of data center
++or cloud. For example, loading a new FPGA image, the driver needs to remove all of
++PCI devices like PFs/VFs and as well as any other types of devices (platform, etc.)
++defined within the FPGA. After triggering the image load of the FPGA card via BMC,
++the driver reconfigures the PCI bus. The FPGA Hotplug Manager (fpgahp) driver manages
++those devices and functions leveraging the PCI hotplug framework to deal with the
++reconfiguration of the PCI bus and removal/probe of PCI devices below the FPGA card.
++
++This fpgahp driver adds 2 new callbacks to extend the hotplug mechanism to
++allow selecting and loading a new FPGA image.
++
++ - available_images: Optional: called to return the available images of a FPGA card.
++ - image_load: Optional: called to load a new image for a FPGA card.
++
++In general, the fpgahp driver provides some sysfs files::
++
++        /sys/bus/pci/slots/<X-X>/available_images
++        /sys/bus/pci/slots/<X-X>/image_load
+diff --git a/Documentation/fpga/index.rst b/Documentation/fpga/index.rst
+index f80f95667ca2..8973a8a3f066 100644
+--- a/Documentation/fpga/index.rst
++++ b/Documentation/fpga/index.rst
+@@ -8,6 +8,7 @@ fpga
+     :maxdepth: 1
  
-+static int trigger_retimer_eeprom_load(struct m10bmc_sec *sec)
-+{
-+	struct intel_m10bmc *m10bmc = sec->m10bmc;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_update_bits(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
-+				 DRBL_PKVL_EEPROM_LOAD_SEC, DRBL_PKVL_EEPROM_LOAD_SEC);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * If the current NIOS FW supports this retimer update feature, then
-+	 * it will clear the same PKVL_EEPROM_LOAD bit in 2 seconds. Otherwise
-+	 * the driver needs to clear the PKVL_EEPROM_LOAD bit manually and
-+	 * return an error code.
-+	 */
-+	ret = regmap_read_poll_timeout(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
-+				       val, !(val & DRBL_PKVL_EEPROM_LOAD_SEC),
-+				       M10BMC_PKVL_LOAD_INTERVAL_US, M10BMC_PKVL_LOAD_TIMEOUT_US);
-+	if (ret == -ETIMEDOUT) {
-+		dev_err(sec->dev, "PKVL_EEPROM_LOAD clear timeout\n");
-+		regmap_update_bits(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
-+				   DRBL_PKVL_EEPROM_LOAD_SEC, 0);
-+	} else if (ret) {
-+		dev_err(sec->dev, "EEPROM_LOAD poll error %d\n", ret);
-+	}
-+
-+	return ret;
-+}
-+
-+static int poll_retimer_eeprom_load_done(struct m10bmc_sec *sec)
-+{
-+	struct intel_m10bmc *m10bmc = sec->m10bmc;
-+	unsigned int doorbell;
-+	int ret;
-+
-+	/*
-+	 * RSU_STAT_PKVL_REJECT indicates that the current image is
-+	 * already programmed. RSU_PROG_PKVL_PROM_DONE that the firmware
-+	 * update process has finished, but does not necessarily indicate
-+	 * a successful update.
-+	 */
-+	ret = regmap_read_poll_timeout(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
-+				       doorbell, (rsu_prog(doorbell) == RSU_PROG_PKVL_PROM_DONE) ||
-+				       (rsu_stat(doorbell) == RSU_STAT_PKVL_REJECT),
-+				       M10BMC_PKVL_PRELOAD_INTERVAL_US,
-+				       M10BMC_PKVL_PRELOAD_TIMEOUT_US);
-+	if (ret) {
-+		if (ret == -ETIMEDOUT)
-+			dev_err(sec->dev,
-+				"Doorbell check timeout, last value 0x%08x\n", doorbell);
-+		else
-+			dev_err(sec->dev, "Doorbell poll error\n");
-+		return ret;
-+	}
-+
-+	if (rsu_stat(doorbell) == RSU_STAT_PKVL_REJECT) {
-+		dev_err(sec->dev, "Duplicate image rejected\n");
-+		return -EEXIST;
-+	}
-+
-+	return 0;
-+}
-+
-+static int poll_retimer_preload_done(struct m10bmc_sec *sec)
-+{
-+	struct intel_m10bmc *m10bmc = sec->m10bmc;
-+	unsigned int val;
-+	int ret;
-+
-+	/*
-+	 * Wait for the updated firmware to be loaded by the PKVL device
-+	 * and confirm that the updated firmware is operational
-+	 */
-+	ret = regmap_read_poll_timeout(m10bmc->regmap,
-+				       M10BMC_SYS_BASE + M10BMC_PKVL_POLL_CTRL, val,
-+				       (val & M10BMC_PKVL_PRELOAD) == M10BMC_PKVL_PRELOAD,
-+				       M10BMC_PKVL_PRELOAD_INTERVAL_US,
-+				       M10BMC_PKVL_PRELOAD_TIMEOUT_US);
-+	if (ret) {
-+		dev_err(sec->dev, "M10BMC_PKVL_PRELOAD poll error %d\n", ret);
-+		return ret;
-+	}
-+
-+	if ((val & M10BMC_PKVL_UPG_STATUS_MASK) != M10BMC_PKVL_UPG_STATUS_GOOD) {
-+		dev_err(sec->dev, "Error detected during upgrade\n");
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int retimer_check_idle(struct m10bmc_sec *sec)
-+{
-+	u32 doorbell;
-+	int ret;
-+
-+	ret = m10bmc_sys_read(sec->m10bmc, M10BMC_DOORBELL, &doorbell);
-+	if (ret)
-+		return -EIO;
-+
-+	if (rsu_prog(doorbell) != RSU_PROG_IDLE &&
-+	    rsu_prog(doorbell) != RSU_PROG_RSU_DONE &&
-+	    rsu_prog(doorbell) != RSU_PROG_PKVL_PROM_DONE) {
-+		log_error_regs(sec, doorbell);
-+		return -EBUSY;
-+	}
-+
-+	return 0;
-+}
-+
-+static int m10bmc_sec_retimer_eeprom_load(struct m10bmc_sec *sec)
-+{
-+	int ret;
-+
-+	ret = retimer_check_idle(sec);
-+	if (ret)
-+		return ret;
-+
-+	ret = trigger_retimer_eeprom_load(sec);
-+	if (ret)
-+		return ret;
-+
-+	ret = poll_retimer_eeprom_load_done(sec);
-+	if (ret)
-+		return ret;
-+
-+	return poll_retimer_preload_done(sec);
-+}
-+
- static struct image_load m10bmc_image_load_hndlrs[] = {
- 	{
- 		.name = "bmc_factory",
-@@ -302,6 +433,11 @@ static struct image_load m10bmc_image_load_hndlrs[] = {
- 		.load_image = m10bmc_sec_bmc_image_load_0,
- 		.wait_time_msec = RELOAD_DEFAULT_WAIT_MSECS,
- 	},
-+	{
-+		.name = "retimer_fw",
-+		.load_image = m10bmc_sec_retimer_eeprom_load,
-+		.wait_time_msec = 2 * RELOAD_DEFAULT_WAIT_MSECS,
-+	},
- 	{}
- };
+     dfl
++    fpgahp
  
-diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
-index f0044b14136e..35ce0c35138b 100644
---- a/include/linux/mfd/intel-m10-bmc.h
-+++ b/include/linux/mfd/intel-m10-bmc.h
-@@ -36,6 +36,37 @@
- #define M10BMC_VER_PCB_INFO_MSK		GENMASK(31, 24)
- #define M10BMC_VER_LEGACY_INVALID	0xffffffff
+ .. only::  subproject and html
  
-+/* Retimer related registers, in system register region */
-+#define M10BMC_PKVL_POLL_CTRL		0x80
-+#define M10BMC_PKVL_A_PRELOAD		BIT(16)
-+#define M10BMC_PKVL_A_PRELOAD_TO	BIT(17)
-+#define M10BMC_PKVL_A_DATA_TOO_BIG	BIT(18)
-+#define M10BMC_PKVL_A_HDR_CKSUM	BIT(20)
-+#define M10BMC_PKVL_B_PRELOAD		BIT(24)
-+#define M10BMC_PKVL_B_PRELOAD_TO	BIT(25)
-+#define M10BMC_PKVL_B_DATA_TOO_BIG	BIT(26)
-+#define M10BMC_PKVL_B_HDR_CKSUM	BIT(28)
-+
-+#define M10BMC_PKVL_PRELOAD		(M10BMC_PKVL_A_PRELOAD | M10BMC_PKVL_B_PRELOAD)
-+#define M10BMC_PKVL_PRELOAD_TIMEOUT	(M10BMC_PKVL_A_PRELOAD_TO | M10BMC_PKVL_B_PRELOAD_TO)
-+#define M10BMC_PKVL_DATA_TOO_BIG	(M10BMC_PKVL_A_DATA_TOO_BIG | M10BMC_PKVL_B_DATA_TOO_BIG)
-+#define M10BMC_PKVL_HDR_CHECKSUM	(M10BMC_PKVL_A_HDR_CKSUM | M10BMC_PKVL_B_HDR_CKSUM)
-+
-+#define M10BMC_PKVL_UPG_STATUS_MASK \
-+	(M10BMC_PKVL_PRELOAD | \
-+	M10BMC_PKVL_PRELOAD_TIMEOUT | \
-+	M10BMC_PKVL_DATA_TOO_BIG | \
-+	M10BMC_PKVL_HDR_CHECKSUM)
-+#define M10BMC_PKVL_UPG_STATUS_GOOD	(M10BMC_PKVL_PRELOAD | M10BMC_PKVL_HDR_CHECKSUM)
-+
-+/* interval 100ms and timeout 2s */
-+#define M10BMC_PKVL_LOAD_INTERVAL_US	(100 * USEC_PER_MSEC)
-+#define M10BMC_PKVL_LOAD_TIMEOUT_US	(2 * USEC_PER_SEC)
-+
-+/* interval 100ms and timeout 30s */
-+#define M10BMC_PKVL_PRELOAD_INTERVAL_US (100 * USEC_PER_MSEC)
-+#define M10BMC_PKVL_PRELOAD_TIMEOUT_US  (30 * USEC_PER_SEC)
-+
- /* Secure update doorbell register, in system register region */
- #define M10BMC_DOORBELL			0x400
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 85d4e3a0e986..569c7f680229 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8169,6 +8169,7 @@ L:	linux-fpga@vger.kernel.org
+ L:	linux-pci@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/ABI/testing/sysfs-driver-fpgahp
++F:	Documentation/fpga/fpgahp.rst
+ F:	drivers/pci/hotplug/fpgahp.c
+ F:	include/linux/fpga/fpgahp_manager.h
  
 -- 
 2.38.1
