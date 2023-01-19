@@ -2,73 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4DEDC67367C
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 12:14:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F4EF6736B2
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 12:25:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjASLOz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 06:14:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57222 "EHLO
+        id S230152AbjASLZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 06:25:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230310AbjASLOt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 06:14:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85D266DB33;
-        Thu, 19 Jan 2023 03:14:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 23CCB611F8;
-        Thu, 19 Jan 2023 11:14:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A48B6C433D2;
-        Thu, 19 Jan 2023 11:14:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674126879;
-        bh=p3Z8Q4RuUEKmn89jofySoCuckl7D3b7GECL7f6tdmis=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Oammpthbp+k17llgdvjQtywF/mkmiCatFL8NT7ZjboYjzeOzvWUj2onOepljpgKr9
-         HO+1huJW58CWoSX2gypnx7qm4NT4/YTZcSBGg2qy4Ydk7BptInzehY7Ts0j2eOIbda
-         WOgP8/Z6oN5qBuhhnGqqxzN7HCBuf/b6GXCURSK/7+VNS45FUoOjxhX87s2gAbABFH
-         EkCxym/b2Jy9Hle3z7lY1IpT+Rhc7/TjX63MLpoANzR0cmUL2ACLFjmpbg+/xbhEHL
-         lTlU0X6yKDV5QqO9TRRze5eXx5WNAAJUThQibPM36+eObIIlidHCmBi9IVthNt5kUB
-         YJOvCNYogX6Rg==
-Date:   Thu, 19 Jan 2023 16:44:35 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Jakub Kicinski <kuba@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        UNGLinuxDriver@microchip.com,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S229876AbjASLZH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 06:25:07 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3986171784
+        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 03:25:05 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id r9so1534458wrw.4
+        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 03:25:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KhSiUckYJfa4o89CtDf2AZXZu6HVpjJ+//JV2rKmVLg=;
+        b=WvcFi6kJBN9JAXBniyOPQnvo2unN7GntUV7VMw6qzjHsVIy5jHYUnhcRq++hAEZ+PY
+         j0vI+SHcPqh6cfLmrpzHL+nE0kfZ6V4EXh+1jKfHL38b+NW4daapZvFLIxYXfb4/N7I8
+         LHRI5dPr2PU6Y/WEAzqohuH4QfP2RSONIXoCl7ZrT12eRJRipR04Ij/a2Js5pvMCTezl
+         mu/CfGR50FwaVQ0S1FueBqPI5ytLIrKTnrcC/Tw/Evl+9h7s6ASJKObzhlYUeFSptYWS
+         pvnqQsr74m6Ul4JTxLnS8FgmOUu7IReNcayob4NEuLXoAK5pS75hAsViqPzHlvgR6k+3
+         3wkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KhSiUckYJfa4o89CtDf2AZXZu6HVpjJ+//JV2rKmVLg=;
+        b=a4r5YfyYh2Wj+4l6y4qkIySAkg0CGFVHBvhw4o5nHhKYw3eMmkV1GtIriweesH/Udf
+         8qEY8sMeM3OdQOmlAhUdJKIYXCJk02nTBgpGngKLXhi1ZcNnfxwJf4MM9KWmEGZE8WCh
+         jkRjqQgGXjWLGm5l/UtqIG17uhuKWlqgC3EXZLtgrPRpUiLs9PDTHHIu9I4rI3Bro3Jb
+         D+acaP8ZfnfRTUhUT+/qqa+8E4IGG1ydHQMMgCaRsYIplnUGRwl0Y3SCUkVs0GX9vEVm
+         +7GRBr+KpPuXeQvR+EBzSPonKzjjZGWTB3/H60o7GoCNQci4bqBaerX0ETy0YkSKwvYe
+         LNtQ==
+X-Gm-Message-State: AFqh2kqb3N1ujczBfYS18qqumMGFj7mJi25C/aOPIOtzW1f6tnbQYM3h
+        hV2zaGk20KQUE5H+/+LoXUghrg==
+X-Google-Smtp-Source: AMrXdXtr/1SnwzKV1Ymz1oTGH63DnBZsafreFHgSL4qxEjoJgRNo39jDHtIL6+V7oqnUunap0UQDAA==
+X-Received: by 2002:a5d:40ce:0:b0:2bd:e8a6:f7cd with SMTP id b14-20020a5d40ce000000b002bde8a6f7cdmr9099417wrq.62.1674127503766;
+        Thu, 19 Jan 2023 03:25:03 -0800 (PST)
+Received: from hackbox.lan ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id w10-20020a5d404a000000b00275970a85f4sm33436999wrp.74.2023.01.19.03.25.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jan 2023 03:25:03 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Siddharth Vadapalli <s-vadapalli@ti.com>,
-        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH 1/7] phy: Add devm_of_phy_optional_get() helper
-Message-ID: <Y8kmG+jB/s7stebA@matsya>
-References: <cover.1674036164.git.geert+renesas@glider.be>
- <f53a1bcca637ceeafb04ce3540a605532d3bc34a.1674036164.git.geert+renesas@glider.be>
- <20230118192809.2082b004@kernel.org>
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v3 1/2] dt-bindings: PCI: qcom: Add SM8550 compatible
+Date:   Thu, 19 Jan 2023 13:24:52 +0200
+Message-Id: <20230119112453.3393911-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230118192809.2082b004@kernel.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,17 +76,131 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 18-01-23, 19:28, Jakub Kicinski wrote:
-> On Wed, 18 Jan 2023 11:15:14 +0100 Geert Uytterhoeven wrote:
-> > Add an optional variant of devm_of_phy_get(), so drivers no longer have
-> > to open-code this operation.
-> 
-> For merging could you put this one on an immutable branch and then
-> everyone can pull + apply patches for callers from their section?
+Add the SM8550 platform to the binding.
 
-Since this is phy, I can do that and everyone else can merge that in or
-all changes can go thru phy tree
+Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+---
 
-Thanks
+The v2 was here:
+https://lore.kernel.org/all/20230118111704.3553542-1-abel.vesa@linaro.org/
+
+Changes since v2:
+ * dropped the pipe from clock-names
+ * removed the pcie instance number from aggre clock-names comment
+ * renamed aggre clock-names to noc_aggr
+ * dropped the _pcie infix from cnoc_pcie_sf_axi
+ * renamed pcie_1_link_down_reset to simply link_down
+ * added enable-gpios back, since pcie1 node will use it
+
+Changes since v1:
+ * Switched to single compatible for both PCIes (qcom,pcie-sm8550)
+ * dropped enable-gpios property
+ * dropped interconnects related properties, the power-domains
+ * properties
+   and resets related properties the sm8550 specific allOf:if:then
+ * dropped pipe_mux, phy_pipe and ref clocks from the sm8550 specific
+   allOf:if:then clock-names array and decreased the minItems and
+   maxItems for clocks property accordingly
+ * added "minItems: 1" to interconnects, since sm8550 pcie uses just one,
+   same for interconnect-names
+
+
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+index a5859bb3dc28..93e86dfdd6fe 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+@@ -34,6 +34,7 @@ properties:
+       - qcom,pcie-sm8250
+       - qcom,pcie-sm8450-pcie0
+       - qcom,pcie-sm8450-pcie1
++      - qcom,pcie-sm8550
+       - qcom,pcie-ipq6018
+ 
+   reg:
+@@ -65,9 +66,11 @@ properties:
+   dma-coherent: true
+ 
+   interconnects:
++    minItems: 1
+     maxItems: 2
+ 
+   interconnect-names:
++    minItems: 1
+     items:
+       - const: pcie-mem
+       - const: cpu-pcie
+@@ -102,6 +105,10 @@ properties:
+   power-domains:
+     maxItems: 1
+ 
++  enable-gpios:
++    description: GPIO controlled connection to ENABLE# signal
++    maxItems: 1
++
+   perst-gpios:
+     description: GPIO controlled connection to PERST# signal
+     maxItems: 1
+@@ -197,6 +204,7 @@ allOf:
+               - qcom,pcie-sm8250
+               - qcom,pcie-sm8450-pcie0
+               - qcom,pcie-sm8450-pcie1
++              - qcom,pcie-sm8550
+     then:
+       properties:
+         reg:
+@@ -611,6 +619,41 @@ allOf:
+           items:
+             - const: pci # PCIe core reset
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-sm8550
++    then:
++      properties:
++        clocks:
++          minItems: 7
++          maxItems: 8
++        clock-names:
++          minItems: 7
++          items:
++            - const: aux # Auxiliary clock
++            - const: cfg # Configuration clock
++            - const: bus_master # Master AXI clock
++            - const: bus_slave # Slave AXI clock
++            - const: slave_q2a # Slave Q2A clock
++            - const: ddrss_sf_tbu # PCIe SF TBU clock
++            - const: noc_aggr # Aggre NoC PCIe AXI clock
++            - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
++        iommus:
++          maxItems: 1
++        iommu-map:
++          maxItems: 2
++        resets:
++          minItems: 1
++          maxItems: 2
++        reset-names:
++          minItems: 1
++          items:
++            - const: pci # PCIe core reset
++            - const: link_down # PCIe link down reset
++
+   - if:
+       properties:
+         compatible:
+@@ -694,6 +737,7 @@ allOf:
+               - qcom,pcie-sm8250
+               - qcom,pcie-sm8450-pcie0
+               - qcom,pcie-sm8450-pcie1
++              - qcom,pcie-sm8550
+     then:
+       oneOf:
+         - properties:
 -- 
-~Vinod
+2.34.1
+
