@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 945DC672E50
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:36:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5494E672E46
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:34:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229939AbjASBej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 20:34:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45146 "EHLO
+        id S229901AbjASBeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 20:34:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229615AbjASBak (ORCPT
+        with ESMTP id S230040AbjASBak (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:30:40 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8E91539BA;
-        Wed, 18 Jan 2023 17:29:01 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0F9B5AB76;
+        Wed, 18 Jan 2023 17:29:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674091741; x=1705627741;
+  t=1674091747; x=1705627747;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=zpGmqtftN4NRkVDaDuKNzSeyqodohwPhHO6gHRCoQQ8=;
-  b=eCRmFJu3Fpngkiuls/smB6SlNrCX4ZUVKx6WKs1oj7R1XupkDL+ug/GS
-   ekANAraZkSoAINb/aVmmnRaYVjUuxxhumcymUX6MzcWKCqP1OFRC3ahkO
-   m6d7pnEvVF/WjUI90KDsOGy5CevarhY74hkbwn7A09eho2pmOigqkMMO7
-   wQYREyOUCUFeAiCT0R0WXr/w82fnpzg9j+/FZKB0Ze2HFvs916KeRTf+P
-   LMhVD++7yfma1M9BtDiHpVJsFZpui9CubWXoCpC3Ra/vbrDR9c0Metjk0
-   Hcc7wOgMUJs+lSTfnFgDdC63S8rGrtBaJ3vYgYP7vR/IkGLULsBAngS1F
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847597"
+  bh=8i69sD1dc8EqIXhwoHYyaLvbsgr6RGeo037UG511anQ=;
+  b=SSxwFZq4uBFKu8kQZvgrngxkHfHkXif4lEh8zG/60minPevtOUJ3k1V1
+   bHTh6TV057zQL/J101xkHIkexDxMerEMgfXA+RVCbLBy4i8YwswbPhDLC
+   4BzJUMu9nUZuP5jNwd6tbfuAwg/QFW4YvmJiqlxTPyoe4B6lNZHYuDxT9
+   I22B96f3+ViuUyxLS+p/yVJaSjKiy/qPlEcukctfNJJE9b/lkbFK8b/o2
+   ptFSOr2m8ICpyduAyF6EgayiX6Ybj2d3Qu8C7186NIU/RhWEvnzFosQak
+   L3s7KVr+JoABfcW5DGvWEQ1KHkd6BEjzN1KuWbGqLkThRZfGXrSKjyp+C
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847623"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="322847597"
+   d="scan'208";a="322847623"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:29:01 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:29:07 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995700"
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995709"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="767995700"
+   d="scan'208";a="767995709"
 Received: from unknown (HELO fedora.sh.intel.com) ([10.238.175.104])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:28:55 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:29:01 -0800
 From:   Tianfei Zhang <tianfei.zhang@intel.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
@@ -50,9 +50,9 @@ To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         lee@kernel.org, gregkh@linuxfoundation.org,
         matthew.gerlach@linux.intel.com
 Cc:     Tianfei Zhang <tianfei.zhang@intel.com>
-Subject: [PATCH v1 10/12] PCI: hotplug: implement the hotplug_slot_ops callback for fpgahp
-Date:   Wed, 18 Jan 2023 20:36:00 -0500
-Message-Id: <20230119013602.607466-11-tianfei.zhang@intel.com>
+Subject: [PATCH v1 11/12] fpga: m10bmc-sec: add m10bmc_sec_retimer_load callback
+Date:   Wed, 18 Jan 2023 20:36:01 -0500
+Message-Id: <20230119013602.607466-12-tianfei.zhang@intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20230119013602.607466-1-tianfei.zhang@intel.com>
 References: <20230119013602.607466-1-tianfei.zhang@intel.com>
@@ -67,286 +67,213 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Implement the image_load and available_images callback functions
-for fpgahp driver. This patch leverages some APIs from pciehp
-driver to implement the device reconfiguration below the PCI hotplug
-bridge.
+Create m10bmc_sec_retimer_load() callback function to provide
+a trigger to update a new retimer (Intel C827 Ethernet
+transceiver) firmware on Intel PAC N3000 Card.
 
-Here are the steps for a process of image load.
-1. remove all PFs and VFs except the PF0.
-2. remove all non-reserved devices of PF0.
-3. trigger a image load via BMC.
-4. disable the link of the hotplug bridge.
-5. remove all reserved devices under PF0 and PCI devices
-   below the hotplug bridge.
-6. wait for image load done via BMC, e.g. 10s.
-7. re-enable the link of the hotplug bridge.
-8. re-enumerate PCI devices below the hotplug bridge.
-
+Signed-off-by: Russ Weight <russell.h.weight@intel.com>
 Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
 ---
- Documentation/ABI/testing/sysfs-driver-fpgahp |  21 ++
- MAINTAINERS                                   |   1 +
- drivers/pci/hotplug/fpgahp.c                  | 179 ++++++++++++++++++
- 3 files changed, 201 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-driver-fpgahp
+ drivers/fpga/intel-m10-bmc-sec-update.c | 136 ++++++++++++++++++++++++
+ include/linux/mfd/intel-m10-bmc.h       |  31 ++++++
+ 2 files changed, 167 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-driver-fpgahp b/Documentation/ABI/testing/sysfs-driver-fpgahp
-new file mode 100644
-index 000000000000..8d4b1bfc4012
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-driver-fpgahp
-@@ -0,0 +1,21 @@
-+What:		/sys/bus/pci/slots/X-X/available_images
-+Date:		May 2023
-+KernelVersion:	6.3
-+Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
-+Description:	Read-only. This file returns a space separated list of
-+		key words that may be written into the image_load file
-+		described below. These keywords decribe an FPGA, BMC,
-+		or firmware image in FLASH or EEPROM storage that may
-+		be loaded.
-+
-+What:		/sys/bus/pci/slots/X-X/image_load
-+Date:		May 2023
-+KernelVersion:	6.3
-+Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
-+Description:	Write-only. A key word may be written to this file to
-+		trigger a new image loading of an FPGA, BMC, or firmware
-+		image from FLASH or EEPROM. Refer to the available_images
-+		file for a list of supported key words for the underlying
-+		device.
-+		Writing an unsupported string to this file will result in
-+		EINVAL being returned.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7ac38b7cc44c..85d4e3a0e986 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8168,6 +8168,7 @@ M:	Tianfei Zhang <tianfei.zhang@intel.com>
- L:	linux-fpga@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- S:	Maintained
-+F:	Documentation/ABI/testing/sysfs-driver-fpgahp
- F:	drivers/pci/hotplug/fpgahp.c
- F:	include/linux/fpga/fpgahp_manager.h
+diff --git a/drivers/fpga/intel-m10-bmc-sec-update.c b/drivers/fpga/intel-m10-bmc-sec-update.c
+index 647531094b3b..053be33713c5 100644
+--- a/drivers/fpga/intel-m10-bmc-sec-update.c
++++ b/drivers/fpga/intel-m10-bmc-sec-update.c
+@@ -291,6 +291,137 @@ static int m10bmc_sec_bmc_image_load_1(struct m10bmc_sec *sec)
+ 	return m10bmc_sec_bmc_image_load(sec, 1);
+ }
  
-diff --git a/drivers/pci/hotplug/fpgahp.c b/drivers/pci/hotplug/fpgahp.c
-index 79bae97a1d39..3fdf37b238c6 100644
---- a/drivers/pci/hotplug/fpgahp.c
-+++ b/drivers/pci/hotplug/fpgahp.c
-@@ -9,6 +9,7 @@
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/pci_hotplug.h>
-+#include <linux/pm_runtime.h>
- 
- #include "pciehp.h"
- 
-@@ -25,8 +26,182 @@ struct fpgahp_controller {
- 	struct pcie_device *pcie;
- 	struct controller ctrl;
- 	struct pci_dev *hotplug_bridge;
-+	struct mutex lock;  /* parallel access into image_load callback */
- };
- 
-+static inline struct fpgahp_controller *to_fhpc(struct controller *ctrl)
++static int trigger_retimer_eeprom_load(struct m10bmc_sec *sec)
 +{
-+	return container_of(ctrl, struct fpgahp_controller, ctrl);
-+}
-+
-+static int fpgahp_available_images(struct hotplug_slot *slot, char *buf)
-+{
-+	struct controller *ctrl = to_ctrl(slot);
-+	struct fpgahp_controller *fhpc = to_fhpc(ctrl);
-+	struct fpgahp_manager *mgr = &fhpc->mgr;
-+	struct fpgahp_bmc_device *bmc = &mgr->bmc;
-+	ssize_t count;
-+
-+	mutex_lock(&mgr->lock);
-+
-+	if (!mgr->registered || !bmc->registered)
-+		goto err_unlock;
-+
-+	if (!bmc->ops->available_images)
-+		goto err_unlock;
-+
-+	count = bmc->ops->available_images(bmc, buf);
-+
-+	mutex_unlock(&mgr->lock);
-+
-+	return count;
-+
-+err_unlock:
-+	mutex_unlock(&mgr->lock);
-+	return -EINVAL;
-+}
-+
-+static void fpgahp_remove_sibling_pci_dev(struct pci_dev *pcidev)
-+{
-+	struct pci_bus *bus = pcidev->bus;
-+	struct pci_dev *sibling, *tmp;
-+
-+	if (!bus)
-+		return;
-+
-+	list_for_each_entry_safe_reverse(sibling, tmp, &bus->devices, bus_list)
-+		if (sibling != pcidev)
-+			pci_stop_and_remove_bus_device_locked(sibling);
-+}
-+
-+static int fpgahp_link_enable(struct controller *ctrl)
-+{
-+	int retval;
-+
-+	retval = pciehp_link_enable(ctrl);
-+	if (retval) {
-+		ctrl_err(ctrl, "Can not enable the link!\n");
-+		return retval;
-+	}
-+
-+	retval = pciehp_check_link_status(ctrl);
-+	if (retval) {
-+		ctrl_err(ctrl, "Check link status fail!\n");
-+		return retval;
-+	}
-+
-+	retval = pciehp_query_power_fault(ctrl);
-+	if (retval)
-+		ctrl_err(ctrl, "Slot(%s): Power fault\n", slot_name(ctrl));
-+
-+	return retval;
-+}
-+
-+static int fpgahp_rescan_slot(struct controller *ctrl)
-+{
-+	int retval;
-+	struct pci_bus *parent = ctrl->pcie->port->subordinate;
-+
-+	retval = pciehp_configure_device(ctrl);
-+	if (retval && retval != -EEXIST)
-+		ctrl_err(ctrl, "Cannot add device at %04x:%02x:00\n",
-+			 pci_domain_nr(parent), parent->number);
-+
-+	return retval;
-+}
-+
-+static int __fpgahp_image_load(struct fpgahp_controller *fhpc, const char *buf)
-+{
-+	struct pci_dev *hotplug_bridge = fhpc->hotplug_bridge;
-+	struct fpgahp_manager *mgr = &fhpc->mgr;
-+	struct fpgahp_bmc_device *bmc = &mgr->bmc;
-+	struct controller *ctrl = &fhpc->ctrl;
-+	struct pci_dev *pcidev = mgr->priv;
-+	u32 wait_time_msec;
++	struct intel_m10bmc *m10bmc = sec->m10bmc;
++	unsigned int val;
 +	int ret;
 +
-+	ret = pm_runtime_resume_and_get(&hotplug_bridge->dev);
++	ret = regmap_update_bits(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
++				 DRBL_PKVL_EEPROM_LOAD_SEC, DRBL_PKVL_EEPROM_LOAD_SEC);
 +	if (ret)
 +		return ret;
 +
-+	mutex_lock(&mgr->lock);
-+
-+	if (!pcidev || !mgr->registered || !bmc->registered || !bmc->ops->image_trigger) {
-+		ret = -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	mgr->state = FPGAHP_MGR_LOADING;
-+
-+	/* 1. remove all PFs and VFs except the PF0 */
-+	fpgahp_remove_sibling_pci_dev(pcidev);
-+
-+	/* 2. remove all non-reserved devices */
-+	if (mgr->ops->hotplug_prepare) {
-+		ret = mgr->ops->hotplug_prepare(mgr);
-+		if (ret) {
-+			ctrl_err(ctrl, "Prepare hotplug failed\n");
-+			goto out_unlock;
-+		}
-+	}
-+
-+	/* 3. trigger loading a new image of BMC */
-+	ret = bmc->ops->image_trigger(bmc, buf, &wait_time_msec);
-+	if (ret) {
-+		ctrl_err(ctrl, "Image trigger failed\n");
-+		goto out_unlock;
-+	}
-+
-+	/* 4. disable link of hotplug bridge */
-+	pciehp_link_disable(ctrl);
-+
 +	/*
-+	 * unlock the mrg->lock temporarily to avoid the dead lock while re-gain
-+	 * the same lock on fpgahp_unregister() during remove PCI devices below the
-+	 * hotplug bridge
++	 * If the current NIOS FW supports this retimer update feature, then
++	 * it will clear the same PKVL_EEPROM_LOAD bit in 2 seconds. Otherwise
++	 * the driver needs to clear the PKVL_EEPROM_LOAD bit manually and
++	 * return an error code.
 +	 */
-+	mutex_unlock(&mgr->lock);
++	ret = regmap_read_poll_timeout(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
++				       val, !(val & DRBL_PKVL_EEPROM_LOAD_SEC),
++				       M10BMC_PKVL_LOAD_INTERVAL_US, M10BMC_PKVL_LOAD_TIMEOUT_US);
++	if (ret == -ETIMEDOUT) {
++		dev_err(sec->dev, "PKVL_EEPROM_LOAD clear timeout\n");
++		regmap_update_bits(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
++				   DRBL_PKVL_EEPROM_LOAD_SEC, 0);
++	} else if (ret) {
++		dev_err(sec->dev, "EEPROM_LOAD poll error %d\n", ret);
++	}
 +
-+	/* 5. remove PCI devices below hotplug bridge */
-+	pciehp_unconfigure_device(ctrl, true);
-+
-+	/* 6. wait for FPGA/BMC load done */
-+	msleep(wait_time_msec);
-+
-+	mutex_lock(&mgr->lock);
-+
-+	/* 7. re-enable link */
-+	ret = fpgahp_link_enable(ctrl);
-+
-+out_unlock:
-+	if (ret)
-+		mgr->state = FPGAHP_MGR_HP_FAIL;
-+	else
-+		mgr->state = FPGAHP_MGR_LOAD_DONE;
-+
-+	mutex_unlock(&mgr->lock);
-+
-+	/* re-enumerate PCI devices below hotplug bridge */
-+	if (!ret)
-+		ret = fpgahp_rescan_slot(ctrl);
-+
-+	pm_runtime_put(&hotplug_bridge->dev);
 +	return ret;
 +}
 +
-+static int fpgahp_image_load(struct hotplug_slot *slot, const char *buf)
++static int poll_retimer_eeprom_load_done(struct m10bmc_sec *sec)
 +{
-+	struct controller *ctrl = to_ctrl(slot);
-+	struct fpgahp_controller *fhpc = to_fhpc(ctrl);
++	struct intel_m10bmc *m10bmc = sec->m10bmc;
++	unsigned int doorbell;
 +	int ret;
 +
-+	mutex_lock(&fhpc->lock);
-+	ret = __fpgahp_image_load(fhpc, buf);
-+	mutex_unlock(&fhpc->lock);
++	/*
++	 * RSU_STAT_PKVL_REJECT indicates that the current image is
++	 * already programmed. RSU_PROG_PKVL_PROM_DONE that the firmware
++	 * update process has finished, but does not necessarily indicate
++	 * a successful update.
++	 */
++	ret = regmap_read_poll_timeout(m10bmc->regmap, M10BMC_SYS_BASE + M10BMC_DOORBELL,
++				       doorbell, (rsu_prog(doorbell) == RSU_PROG_PKVL_PROM_DONE) ||
++				       (rsu_stat(doorbell) == RSU_STAT_PKVL_REJECT),
++				       M10BMC_PKVL_PRELOAD_INTERVAL_US,
++				       M10BMC_PKVL_PRELOAD_TIMEOUT_US);
++	if (ret) {
++		if (ret == -ETIMEDOUT)
++			dev_err(sec->dev,
++				"Doorbell check timeout, last value 0x%08x\n", doorbell);
++		else
++			dev_err(sec->dev, "Doorbell poll error\n");
++		return ret;
++	}
 +
-+	return ret;
++	if (rsu_stat(doorbell) == RSU_STAT_PKVL_REJECT) {
++		dev_err(sec->dev, "Duplicate image rejected\n");
++		return -EEXIST;
++	}
++
++	return 0;
 +}
 +
- static void fpgahp_add_fhpc(struct fpgahp_controller *fhpc)
- {
- 	mutex_lock(&fhpc_lock);
-@@ -128,6 +303,8 @@ static int fpgahp_init_controller(struct controller *ctrl, struct pcie_device *d
- }
- 
- static const struct hotplug_slot_ops fpgahp_slot_ops = {
-+	.available_images	= fpgahp_available_images,
-+	.image_load		= fpgahp_image_load,
++static int poll_retimer_preload_done(struct m10bmc_sec *sec)
++{
++	struct intel_m10bmc *m10bmc = sec->m10bmc;
++	unsigned int val;
++	int ret;
++
++	/*
++	 * Wait for the updated firmware to be loaded by the PKVL device
++	 * and confirm that the updated firmware is operational
++	 */
++	ret = regmap_read_poll_timeout(m10bmc->regmap,
++				       M10BMC_SYS_BASE + M10BMC_PKVL_POLL_CTRL, val,
++				       (val & M10BMC_PKVL_PRELOAD) == M10BMC_PKVL_PRELOAD,
++				       M10BMC_PKVL_PRELOAD_INTERVAL_US,
++				       M10BMC_PKVL_PRELOAD_TIMEOUT_US);
++	if (ret) {
++		dev_err(sec->dev, "M10BMC_PKVL_PRELOAD poll error %d\n", ret);
++		return ret;
++	}
++
++	if ((val & M10BMC_PKVL_UPG_STATUS_MASK) != M10BMC_PKVL_UPG_STATUS_GOOD) {
++		dev_err(sec->dev, "Error detected during upgrade\n");
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int retimer_check_idle(struct m10bmc_sec *sec)
++{
++	u32 doorbell;
++	int ret;
++
++	ret = m10bmc_sys_read(sec->m10bmc, M10BMC_DOORBELL, &doorbell);
++	if (ret)
++		return -EIO;
++
++	if (rsu_prog(doorbell) != RSU_PROG_IDLE &&
++	    rsu_prog(doorbell) != RSU_PROG_RSU_DONE &&
++	    rsu_prog(doorbell) != RSU_PROG_PKVL_PROM_DONE) {
++		log_error_regs(sec, doorbell);
++		return -EBUSY;
++	}
++
++	return 0;
++}
++
++static int m10bmc_sec_retimer_eeprom_load(struct m10bmc_sec *sec)
++{
++	int ret;
++
++	ret = retimer_check_idle(sec);
++	if (ret)
++		return ret;
++
++	ret = trigger_retimer_eeprom_load(sec);
++	if (ret)
++		return ret;
++
++	ret = poll_retimer_eeprom_load_done(sec);
++	if (ret)
++		return ret;
++
++	return poll_retimer_preload_done(sec);
++}
++
+ static struct image_load m10bmc_image_load_hndlrs[] = {
+ 	{
+ 		.name = "bmc_factory",
+@@ -302,6 +433,11 @@ static struct image_load m10bmc_image_load_hndlrs[] = {
+ 		.load_image = m10bmc_sec_bmc_image_load_0,
+ 		.wait_time_msec = RELOAD_DEFAULT_WAIT_MSECS,
+ 	},
++	{
++		.name = "retimer_fw",
++		.load_image = m10bmc_sec_retimer_eeprom_load,
++		.wait_time_msec = 2 * RELOAD_DEFAULT_WAIT_MSECS,
++	},
+ 	{}
  };
  
- static int fpgahp_init_slot(struct controller *ctrl)
-@@ -183,6 +360,7 @@ fpgahp_create_new_fhpc(struct fpgahp_controller *fhpc, struct pci_dev *hotplug_b
- 	}
+diff --git a/include/linux/mfd/intel-m10-bmc.h b/include/linux/mfd/intel-m10-bmc.h
+index f0044b14136e..35ce0c35138b 100644
+--- a/include/linux/mfd/intel-m10-bmc.h
++++ b/include/linux/mfd/intel-m10-bmc.h
+@@ -36,6 +36,37 @@
+ #define M10BMC_VER_PCB_INFO_MSK		GENMASK(31, 24)
+ #define M10BMC_VER_LEGACY_INVALID	0xffffffff
  
- 	mutex_init(&mgr->lock);
-+	mutex_init(&fhpc->lock);
++/* Retimer related registers, in system register region */
++#define M10BMC_PKVL_POLL_CTRL		0x80
++#define M10BMC_PKVL_A_PRELOAD		BIT(16)
++#define M10BMC_PKVL_A_PRELOAD_TO	BIT(17)
++#define M10BMC_PKVL_A_DATA_TOO_BIG	BIT(18)
++#define M10BMC_PKVL_A_HDR_CKSUM	BIT(20)
++#define M10BMC_PKVL_B_PRELOAD		BIT(24)
++#define M10BMC_PKVL_B_PRELOAD_TO	BIT(25)
++#define M10BMC_PKVL_B_DATA_TOO_BIG	BIT(26)
++#define M10BMC_PKVL_B_HDR_CKSUM	BIT(28)
++
++#define M10BMC_PKVL_PRELOAD		(M10BMC_PKVL_A_PRELOAD | M10BMC_PKVL_B_PRELOAD)
++#define M10BMC_PKVL_PRELOAD_TIMEOUT	(M10BMC_PKVL_A_PRELOAD_TO | M10BMC_PKVL_B_PRELOAD_TO)
++#define M10BMC_PKVL_DATA_TOO_BIG	(M10BMC_PKVL_A_DATA_TOO_BIG | M10BMC_PKVL_B_DATA_TOO_BIG)
++#define M10BMC_PKVL_HDR_CHECKSUM	(M10BMC_PKVL_A_HDR_CKSUM | M10BMC_PKVL_B_HDR_CKSUM)
++
++#define M10BMC_PKVL_UPG_STATUS_MASK \
++	(M10BMC_PKVL_PRELOAD | \
++	M10BMC_PKVL_PRELOAD_TIMEOUT | \
++	M10BMC_PKVL_DATA_TOO_BIG | \
++	M10BMC_PKVL_HDR_CHECKSUM)
++#define M10BMC_PKVL_UPG_STATUS_GOOD	(M10BMC_PKVL_PRELOAD | M10BMC_PKVL_HDR_CHECKSUM)
++
++/* interval 100ms and timeout 2s */
++#define M10BMC_PKVL_LOAD_INTERVAL_US	(100 * USEC_PER_MSEC)
++#define M10BMC_PKVL_LOAD_TIMEOUT_US	(2 * USEC_PER_SEC)
++
++/* interval 100ms and timeout 30s */
++#define M10BMC_PKVL_PRELOAD_INTERVAL_US (100 * USEC_PER_MSEC)
++#define M10BMC_PKVL_PRELOAD_TIMEOUT_US  (30 * USEC_PER_SEC)
++
+ /* Secure update doorbell register, in system register region */
+ #define M10BMC_DOORBELL			0x400
  
- 	fpgahp_add_fhpc(fhpc);
- 
-@@ -345,3 +523,4 @@ module_exit(fpgahp_exit);
- MODULE_DESCRIPTION("FPGA PCI Hotplug Manager Driver");
- MODULE_AUTHOR("Tianfei Zhang <tianfei.zhang@intel.com>");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(PCIEHP);
 -- 
 2.38.1
 
