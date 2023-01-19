@@ -2,161 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7834A673D9A
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 16:35:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 67120673DAE
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 16:38:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbjASPfa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 10:35:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36750 "EHLO
+        id S231223AbjASPiR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 10:38:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40834 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjASPfN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 10:35:13 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6A08455B
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 07:35:12 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so3835642wma.1
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 07:35:12 -0800 (PST)
+        with ESMTP id S231239AbjASPiO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 10:38:14 -0500
+Received: from mail-wr1-x429.google.com (mail-wr1-x429.google.com [IPv6:2a00:1450:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B36E82D7E
+        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 07:38:08 -0800 (PST)
+Received: by mail-wr1-x429.google.com with SMTP id r2so2251322wrv.7
+        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 07:38:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=nZL+EvzEvrAfF5w1mqqATHNa4cpLOo+MW+TpXyhWCHM=;
-        b=fHNkuVltpvcapP0msNuKmLRanamZBxuyYOCRyGewd+VVXRtvCT05Y0ai/WF9vSz6tY
-         TRuA/6COyvo+EKDIiGLuUJgzKH9Da54RNY2XhWFp2zzifPR5lPQY60bXYGtOAlaYj2v1
-         1veATYgBXA+Ef+YmS6+HrYl8Z4VpAvFwaCMx8llsjf+ONQDIaYANiA1G29ghHxM7Xqjw
-         ZqEuz5FLtSNtH+N8mPcMaIp+Ovqni62lJnuOjkOkD+ymGZg6lYlKYSOpcNhbeoQIqcCO
-         b/qClz1B42F/M7/TS0B1R9NTOWpPwFLD+aLhuvRR8X9LdAtufdcLvTv5mzrjeYYpaBH8
-         91Tw==
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9OtQKUy3O/wxA8BJ9fjP5SexIZ7HSW4yV7WQUNilHvg=;
+        b=qDUwzHhP9WiwfxC3rlJQQt3rmBKzAJQWEgZSjeuvbrGSHyfBIW/UX9axTeJ6b72khJ
+         nuKAXboBweC0hJWpbxz8lKKA/LnMWK6FVlKVnTbRWCjSPEo64nNMp2KlZ34+2sRJOzIG
+         w5Pkh1vzqJ+4Oh0VMMRTZdEF8LNYlPreCV4X3ezWjMhVWaV0vb4PR7FTNwmjuxDFFyH8
+         j0gaTvYTvn02jK0UrXzu3iNyLVoRgyDu8v/Ga5OBWjGnHIsPe+YocS/3c9uyxbp8qwlq
+         ntBWEClNF60A8WwLce1bSXWX4CdZHPYKzLpv0liw3XO2N4Ql2wVqCYtrPqZn8eEW9VYe
+         enAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nZL+EvzEvrAfF5w1mqqATHNa4cpLOo+MW+TpXyhWCHM=;
-        b=Z1VKcwTCjpXqR3SqelhnGVQcKCLMFHvxPn/JLLqGJQNo7wTqSYLVT90q7OoDf/wrSY
-         BjUEoOUfdDfLX+EIdisc96qoRpgmKFzmzGA9tu43emp9Vj9W6BVWmZXCsuVEDrJGBMy5
-         Q1Uov6Y8gy9ZbYEQVWaljZOv5wYhQH3PCrQ0DnGcO0eafWoD+xwrxXQkdYhDn2tv6AJu
-         ep9It115aNsnd0C7XtnEZOHqRZ6qRbJc08BIOMdXPH8200YIuPOSdkvZ8cnfgnpHqWRw
-         K/Gng7B5uLuefz2GbNrkJxVQaPYeBoNZMVC2c6fx4bUoMn4yndOeZhoOiA20Wmow77Kj
-         pR8g==
-X-Gm-Message-State: AFqh2korbI7k+0aPI/TD3xS5Peg4uGCODJh++YGkx8lDrYZjPgmNGb7t
-        sYiJcKmaWGG8wykZvlW6qzRiUg==
-X-Google-Smtp-Source: AMrXdXsQgjNOKgyBhRiFhNp7IpHqVoVUV1i9ePpAWGBcvM/SHjIii/CsB63IjRkyDA7IeZ0KuvPI0w==
-X-Received: by 2002:a1c:7414:0:b0:3d9:779e:9788 with SMTP id p20-20020a1c7414000000b003d9779e9788mr6884710wmc.37.1674142510780;
-        Thu, 19 Jan 2023 07:35:10 -0800 (PST)
-Received: from linaro.org ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id j15-20020a05600c190f00b003d9aa76dc6asm7608427wmq.0.2023.01.19.07.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jan 2023 07:35:09 -0800 (PST)
-Date:   Thu, 19 Jan 2023 17:35:08 +0200
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 10/12] PCI: qcom: Add SM8550 PCIe support
-Message-ID: <Y8ljLJ8vsqxdQtW8@linaro.org>
-References: <20230119140453.3942340-1-abel.vesa@linaro.org>
- <20230119140453.3942340-11-abel.vesa@linaro.org>
- <20230119142155.GA101896@thinkpad>
+        bh=9OtQKUy3O/wxA8BJ9fjP5SexIZ7HSW4yV7WQUNilHvg=;
+        b=tZb5sNBNPfJPL0hjftenpbXZLZeXcLFcyzzAw5yX/o+u99NZZngazArPSiZ0MjtGUH
+         +mouaYjl5cSHcPYyIRrBzEFMGb/oD3K5Da03eI6cG7elFGOL9afI9PW/oL0ZTvhVRVs8
+         JX/WzIjcIwZjrrHCISiBlKhYyHvgHibEgek2A6+xLaZr4ngru/iT/Wdo4fjLI0wZYDNW
+         2p1bitpvdRcr6p2yLURaMW2/tk/wgEQl7Pd+0OlRPs2PP3y6lP4qcwdJkkg+BaOBPzyT
+         IRPVGJ4wuxjD8YNGJee/zR1GE/4tMc80AXmyDfjxalMn2q1cIL1xb903DHyGCcyKeTYS
+         2wvw==
+X-Gm-Message-State: AFqh2kqBE1SODtPPWK4YtgyV6CtN5XMEAL/NUxteIdf9Ojp2Ce27uiIy
+        mMPNeyuyJgQj+XBdF3CdIWibGg==
+X-Google-Smtp-Source: AMrXdXt3ur3QfDs3VlwSTaNjxSdTD7GrQQEI25qrf//XEtQ+vibijcjrDE3k3n/epLp7Qdx9CSeVCA==
+X-Received: by 2002:adf:f501:0:b0:2ba:dce5:ee28 with SMTP id q1-20020adff501000000b002badce5ee28mr9249903wro.18.1674142686828;
+        Thu, 19 Jan 2023 07:38:06 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id c18-20020adffb52000000b0025e86026866sm40281182wrs.0.2023.01.19.07.38.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jan 2023 07:38:06 -0800 (PST)
+Message-ID: <7b6603d6-3ca9-ff74-0a3e-c76ba555e554@linaro.org>
+Date:   Thu, 19 Jan 2023 16:38:03 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230119142155.GA101896@thinkpad>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH v8 1/5] dt-bindings: PCI: ti,j721e-pci-*: add checks for
+ num-lanes
+To:     Achal Verma <a-verma1@ti.com>, mranostay@ti.com, rogerq@kernel.org,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, vigneshr@ti.com, tjoseph@cadence.com,
+        sergio.paracuellos@gmail.com, pthombar@cadence.com,
+        linux-pci@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230118125936.3456716-1-a-verma1@ti.com>
+ <20230118125936.3456716-2-a-verma1@ti.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230118125936.3456716-2-a-verma1@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23-01-19 19:51:55, Manivannan Sadhasivam wrote:
-> On Thu, Jan 19, 2023 at 04:04:51PM +0200, Abel Vesa wrote:
-> > Add compatible for both PCIe found on SM8550.
-> > Also add the cnoc_pcie_sf_axi clock needed by the SM8550.
-> > 
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+On 18/01/2023 13:59, Achal Verma wrote:
+> From: Matt Ranostay <mranostay@ti.com>
 > 
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> Add num-lanes schema checks based on compatible string on available lanes
+> for that platform.
 > 
-> > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > ---
-> > 
-> > The v3 of this patchset is:
-> > https://lore.kernel.org/all/20230119112453.3393911-1-abel.vesa@linaro.org/
-> > 
-> > Changes since v3:
-> >  * renamed cnoc_pcie_sf_axi to cnoc_sf_axi
-> > 
-> > Changes since v2:
-> >  * none
-> >  
-> > Changes since v1:
-> >  * changed the subject line prefix for the patch to match the history,
-> >    like Bjorn Helgaas suggested.
-> >  * added Konrad's R-b tag
-> > 
-> > 
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index 77e5dc7b88ad..30f74bc51dbf 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -182,7 +182,7 @@ struct qcom_pcie_resources_2_3_3 {
-> >  
-> >  /* 6 clocks typically, 7 for sm8250 */
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> ---
+>  .../bindings/pci/ti,j721e-pci-ep.yaml         | 28 +++++++++++++++++--
+>  .../bindings/pci/ti,j721e-pci-host.yaml       | 28 +++++++++++++++++--
+>  2 files changed, 50 insertions(+), 6 deletions(-)
 > 
-> Now this comment is outdated ;)
-> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> index 10e6eabdff53..403cd3ef1177 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+> @@ -10,9 +10,6 @@ title: TI J721E PCI EP (PCIe Wrapper)
+>  maintainers:
+>    - Kishon Vijay Abraham I <kishon@ti.com>
+>  
+> -allOf:
+> -  - $ref: "cdns-pcie-ep.yaml#"
+> -
+>  properties:
+>    compatible:
+>      oneOf:
+> @@ -65,6 +62,31 @@ properties:
+>      items:
+>        - const: link_state
+>  
+> +allOf:
+> +  - $ref: cdns-pcie-ep.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - ti,am64-pcie-ep
+> +    then:
+> +      properties:
+> +        num-lanes:
+> +          minimum: 1
+> +          maximum: 1
+> +
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - ti,j7200-pcie-ep
+> +            - ti,j721e-pcie-ep
+> +    then:
+> +      properties:
+> +        num-lanes:
+> +          minimum: 1
+> +          maximum: 2
+> +
+>  required:
+>    - compatible
+>    - reg
+> diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> index b0513b197d08..7bd78cfca845 100644
+> --- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> +++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+> @@ -10,9 +10,6 @@ title: TI J721E PCI Host (PCIe Wrapper)
+>  maintainers:
+>    - Kishon Vijay Abraham I <kishon@ti.com>
+>  
+> -allOf:
+> -  - $ref: "cdns-pcie-host.yaml#"
+> -
+>  properties:
+>    compatible:
+>      oneOf:
+> @@ -98,6 +95,31 @@ properties:
+>        interrupts:
+>          maxItems: 1
+>  
+> +allOf:
+> +  - $ref: cdns-pcie-host.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          enum:
+> +            - ti,am64-pcie-host
+> +    then:
+> +      properties:
+> +        num-lanes:
+> +          minimum: 1
+> +          maximum: 1
 
-Fair point. I'll wait for some more comments before
-I'll send a new version.
+Why not what I asked for?
 
-> Thanks,
-> Mani
-> 
-> >  struct qcom_pcie_resources_2_7_0 {
-> > -	struct clk_bulk_data clks[12];
-> > +	struct clk_bulk_data clks[13];
-> >  	int num_clks;
-> >  	struct regulator_bulk_data supplies[2];
-> >  	struct reset_control *pci_reset;
-> > @@ -1208,6 +1208,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
-> >  	res->clks[idx++].id = "noc_aggr_4";
-> >  	res->clks[idx++].id = "noc_aggr_south_sf";
-> >  	res->clks[idx++].id = "cnoc_qx";
-> > +	res->clks[idx++].id = "cnoc_sf_axi";
-> >  
-> >  	num_opt_clks = idx - num_clks;
-> >  	res->num_clks = idx;
-> > @@ -1828,6 +1829,7 @@ static const struct of_device_id qcom_pcie_match[] = {
-> >  	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
-> >  	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
-> >  	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-> > +	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
-> >  	{ }
-> >  };
-> >  
-> > -- 
-> > 2.34.1
-> > 
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+Best regards,
+Krzysztof
+
