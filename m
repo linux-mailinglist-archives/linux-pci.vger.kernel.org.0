@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 78C78672E29
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:31:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F4198672E2D
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:31:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbjASBbi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 20:31:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
+        id S229710AbjASBbm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 20:31:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229884AbjASBai (ORCPT
+        with ESMTP id S229877AbjASBai (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:30:38 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4FB94743B;
-        Wed, 18 Jan 2023 17:28:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72D0649014;
+        Wed, 18 Jan 2023 17:28:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674091706; x=1705627706;
+  t=1674091712; x=1705627712;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=KPGjabqA2xbyaF9SYja3ZNMTTS1jWgIeumEfuSq6gFg=;
-  b=iju031K4Q2uddBw4xo2pPG6/1Cjt07E8yHy2ddzzEXC8YNeVEjidaNco
-   TOKMyObUhCkmgfQZoMV6DaaoKUtkhMhbjgt10og/TbuxyAELhnHgoI2hg
-   fgGnvEuDUa3roM2SeEnuemqf9XIHUXRbM17TEsS7T8Wmebck35MoWWdXO
-   zoSFPpO4kpmqoQnwt9NMrKEgZaAefY65f8JxfH7KdswoAd16Uh2XiTHqx
-   BBEr2hMSGakAjNh92LIWh5u2a93HSQ5bho5TG2wfUu73bLgJE5ZUWZ9ze
-   k5+UGnAj/Ef3xUH4SnpmaJmr9+DaPLq57vqwCDDrxJLd1EjyROO7WUmsd
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847477"
+  bh=GvU06Z85RmPFE/pi869emfsoWw0RS0LLYaPIuGFx11Q=;
+  b=eR8wII3cosr/5+alDuR9kxOBLjt3BdeKpfKgPCZ5ypCO0qXyYfxusEIx
+   7NufkMssC6tRILX5DoHYoE+9EhdoR7cu0Y1x/QU4VRXKiycg8+of4qgWd
+   ca6jDk8eWR1cyG2rJo04h0scR1WuqfiRlh5usEQ2xp0H1v4dGOmqmIRLL
+   F1RUP2OciVC3FqQPmUKl8lv7Dxu3CCnTEaJv+Duf1sHhsYWFQp27/CDE6
+   aWfWQ1QiJdo+34pZt3WzUAUO6QkuzbJCi/rgrdQ5tidOK2J86WMVait5z
+   6mf72wk3M7YZzK5+pz2Y0Q3xddn8VKG9OrzBlYhvh53I6Vn2BUY5peSzG
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847496"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="322847477"
+   d="scan'208";a="322847496"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:28:26 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:28:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995634"
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995647"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="767995634"
+   d="scan'208";a="767995647"
 Received: from unknown (HELO fedora.sh.intel.com) ([10.238.175.104])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:28:20 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:28:26 -0800
 From:   Tianfei Zhang <tianfei.zhang@intel.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
@@ -50,9 +50,9 @@ To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         lee@kernel.org, gregkh@linuxfoundation.org,
         matthew.gerlach@linux.intel.com
 Cc:     Tianfei Zhang <tianfei.zhang@intel.com>
-Subject: [PATCH v1 04/12] PCI: hotplug: add FPGA PCI hotplug manager driver
-Date:   Wed, 18 Jan 2023 20:35:54 -0500
-Message-Id: <20230119013602.607466-5-tianfei.zhang@intel.com>
+Subject: [PATCH v1 05/12] fpga: dfl: register dfl-pci device into fpgahph driver
+Date:   Wed, 18 Jan 2023 20:35:55 -0500
+Message-Id: <20230119013602.607466-6-tianfei.zhang@intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20230119013602.607466-1-tianfei.zhang@intel.com>
 References: <20230119013602.607466-1-tianfei.zhang@intel.com>
@@ -68,437 +68,200 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After burning a new FPGA/BMC image, the driver should stop the
-current running FPGA image and load a new image from the flash
-to FPGA. Before reloading a new image, the driver needs to remove
-all of PCI devices like PFs/VFs and as well as any other types of
-devices (platform, etc.) defined within the FPGA which are running
-in the old image. To help manage the PCIe-based FPGA card, leverage
-the PCIe hotplug framework to implement the card management during
-loading the new FPGA image.
+Add a registration of dfl-pci device into fpgahp driver by
+fpgahp_register() API.
 
-Introduce new APIs to register/unregister a PCI device into PCI
-hotplug core. The fpgahp driver instances a hotplug controller and
-then registers into pci hotplug core which leverages the hotplug_slot_ops
-callbacks to manage the FPGA card.
-
-The new data structure fpgahp_manager is used for a fpga hotplug manager
-instance. The fpgahp_manager has some callbacks in fpgahp_manager_ops.
-The hotplug_prepare callback does some preparations, like removing
-sub-devices below the PCI device to avoid data corruption during the
-hotplug.
+For Intel N3000 Card, FPGA devices like PFs/VFs and some ethernet
+controllers are connected with a PCI switch, so the hotplug bridge
+is the root hub of PCI device. This patch instances this hotplug
+bridge as a hotplug controller.
 
 Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
 Reviewed-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- MAINTAINERS                         |   8 +
- drivers/pci/hotplug/Kconfig         |  14 ++
- drivers/pci/hotplug/Makefile        |   1 +
- drivers/pci/hotplug/fpgahp.c        | 269 ++++++++++++++++++++++++++++
- include/linux/fpga/fpgahp_manager.h |  62 +++++++
- 5 files changed, 354 insertions(+)
- create mode 100644 drivers/pci/hotplug/fpgahp.c
- create mode 100644 include/linux/fpga/fpgahp_manager.h
+ drivers/fpga/Kconfig   |  1 +
+ drivers/fpga/dfl-pci.c | 77 ++++++++++++++++++++++++++++++++++++++----
+ drivers/fpga/dfl.h     |  2 ++
+ 3 files changed, 74 insertions(+), 6 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 42fc47c6edfd..7ac38b7cc44c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8163,6 +8163,14 @@ F:	drivers/uio/uio_dfl.c
- F:	include/linux/dfl.h
- F:	include/uapi/linux/fpga-dfl.h
+diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+index 6ce143dafd04..2188c5658e06 100644
+--- a/drivers/fpga/Kconfig
++++ b/drivers/fpga/Kconfig
+@@ -213,6 +213,7 @@ config FPGA_DFL_NIOS_INTEL_PAC_N3000
+ config FPGA_DFL_PCI
+ 	tristate "FPGA DFL PCIe Device Driver"
+ 	depends on PCI && FPGA_DFL
++	depends on HOTPLUG_PCI_FPGA
+ 	help
+ 	  Select this option to enable PCIe driver for PCIe-based
+ 	  Field-Programmable Gate Array (FPGA) solutions which implement
+diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+index 0914e7328b1a..0409cb30e563 100644
+--- a/drivers/fpga/dfl-pci.c
++++ b/drivers/fpga/dfl-pci.c
+@@ -23,6 +23,8 @@
+ #include <linux/errno.h>
+ #include <linux/aer.h>
  
-+FPGA PCI Hotplug Driver
-+M:	Tianfei Zhang <tianfei.zhang@intel.com>
-+L:	linux-fpga@vger.kernel.org
-+L:	linux-pci@vger.kernel.org
-+S:	Maintained
-+F:	drivers/pci/hotplug/fpgahp.c
-+F:	include/linux/fpga/fpgahp_manager.h
-+
- FPGA MANAGER FRAMEWORK
- M:	Moritz Fischer <mdf@kernel.org>
- M:	Wu Hao <hao.wu@intel.com>
-diff --git a/drivers/pci/hotplug/Kconfig b/drivers/pci/hotplug/Kconfig
-index 48113b210cf9..57a20e60afd4 100644
---- a/drivers/pci/hotplug/Kconfig
-+++ b/drivers/pci/hotplug/Kconfig
-@@ -61,6 +61,20 @@ config HOTPLUG_PCI_ACPI
- 
- 	  When in doubt, say N.
- 
-+config HOTPLUG_PCI_FPGA
-+	tristate "FPGA PCI Hotplug Manager Driver"
-+	depends on HOTPLUG_PCI_PCIE
-+	help
-+          Select this option to enable FPGA hotplug driver for PCIe-based
-+          Field-Programmable Gate Array (FPGA) solutions. This driver provides
-+          sysfs files for userspace applications to manager the FPGA card like
-+          load a new FPGA image, reset the FPGA card.
-+
-+          To compile this driver as a module, choose M here: the
-+          module will be called fpgahp.
-+
-+          When in doubt, say N.
-+
- config HOTPLUG_PCI_ACPI_IBM
- 	tristate "ACPI PCI Hotplug driver IBM extensions"
- 	depends on HOTPLUG_PCI_ACPI
-diff --git a/drivers/pci/hotplug/Makefile b/drivers/pci/hotplug/Makefile
-index 5196983220df..b055592924ea 100644
---- a/drivers/pci/hotplug/Makefile
-+++ b/drivers/pci/hotplug/Makefile
-@@ -19,6 +19,7 @@ obj-$(CONFIG_HOTPLUG_PCI_POWERNV)	+= pnv-php.o
- obj-$(CONFIG_HOTPLUG_PCI_RPA)		+= rpaphp.o
- obj-$(CONFIG_HOTPLUG_PCI_RPA_DLPAR)	+= rpadlpar_io.o
- obj-$(CONFIG_HOTPLUG_PCI_ACPI)		+= acpiphp.o
-+obj-$(CONFIG_HOTPLUG_PCI_FPGA)	        += fpgahp.o
- obj-$(CONFIG_HOTPLUG_PCI_S390)		+= s390_pci_hpc.o
- 
- # acpiphp_ibm extends acpiphp, so should be linked afterwards.
-diff --git a/drivers/pci/hotplug/fpgahp.c b/drivers/pci/hotplug/fpgahp.c
-new file mode 100644
-index 000000000000..71cee65383e2
---- /dev/null
-+++ b/drivers/pci/hotplug/fpgahp.c
-@@ -0,0 +1,269 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * FPGA PCI Hotplug Manager Driver
-+ *
-+ * Copyright (C) 2023 Intel Corporation
-+ */
-+
 +#include <linux/fpga/fpgahp_manager.h>
-+#include <linux/module.h>
-+#include <linux/pci.h>
-+#include <linux/pci_hotplug.h>
 +
-+#include "pciehp.h"
+ #include "dfl.h"
+ 
+ #define DRV_VERSION	"0.8"
+@@ -40,6 +42,9 @@ struct cci_drvdata {
+ 	struct dfl_fpga_cdev *cdev;	/* container device */
+ };
+ 
++static const struct fpgahp_manager_ops fpgahp_ops = {
++};
 +
+ static void __iomem *cci_pci_ioremap_bar0(struct pci_dev *pcidev)
+ {
+ 	if (pcim_iomap_regions(pcidev, BIT(0), DRV_NAME))
+@@ -118,6 +123,15 @@ static struct pci_device_id cci_pcie_id_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cci_pcie_id_tbl);
+ 
 +/*
-+ * a global fhpc_list is used to manage all
-+ * registered FPGA hotplug controllers.
++ * List the FPGA cards which have some ethernet controllers connected to a PCI
++ * switch like PAC N3000, used to find hotplug bridge for fpgahp driver.
 + */
-+static LIST_HEAD(fhpc_list);
-+static DEFINE_MUTEX(fhpc_lock);
++static const struct pci_device_id has_pci_switch_devids[] = {
++	{ PCI_VDEVICE(INTEL, PCIE_DEVICE_ID_INTEL_PAC_N3000) },
++	{}
++};
 +
-+struct fpgahp_controller {
-+	struct list_head node;
-+	struct fpgahp_manager mgr;
-+	struct pcie_device *pcie;
-+	struct controller ctrl;
+ static int cci_init_drvdata(struct pci_dev *pcidev)
+ {
+ 	struct cci_drvdata *drvdata;
+@@ -306,12 +320,33 @@ static int find_dfls_by_default(struct pci_dev *pcidev,
+ 	return ret;
+ }
+ 
++/*
++ * On N3000 Card, FPGA devices like PFs/VFs and some ethernet controllers
++ * are connected to a PCI switch, so the hotplug bridge on the root port of
++ * FPGA PF0 PCI device.
++ */
++static struct pci_dev *cci_find_hotplug_bridge(struct pci_dev *pcidev)
++{
 +	struct pci_dev *hotplug_bridge;
-+};
 +
-+static void fpgahp_add_fhpc(struct fpgahp_controller *fhpc)
-+{
-+	mutex_lock(&fhpc_lock);
-+	list_add_tail(&fhpc->node, &fhpc_list);
-+	mutex_unlock(&fhpc_lock);
++	if (!pci_match_id(has_pci_switch_devids, pcidev))
++		return pcidev;
++
++	hotplug_bridge = pcie_find_root_port(pcidev);
++	if (!hotplug_bridge)
++		return NULL;
++
++	return hotplug_bridge;
 +}
 +
-+static int fpgahp_init_controller(struct controller *ctrl, struct pcie_device *dev)
-+{
-+	struct pci_dev *hotplug_bridge = dev->port;
-+	u32 slot_cap;
+ /* enumerate feature devices under pci device */
+ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+ {
+ 	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
+ 	struct dfl_fpga_enum_info *info;
++	struct pci_dev *hotplug_bridge;
+ 	struct dfl_fpga_cdev *cdev;
++	struct fpgahp_manager *mgr;
+ 	int nvec, ret = 0;
+ 	int *irq_table;
+ 
+@@ -346,23 +381,47 @@ static int cci_enumerate_feature_devs(struct pci_dev *pcidev)
+ 	if (ret)
+ 		goto irq_free_exit;
+ 
++	/* register hotplug bridge of PF0 device into fpgahp driver */
++	if (dev_is_pf(&pcidev->dev)) {
++		hotplug_bridge = cci_find_hotplug_bridge(pcidev);
++		if (!hotplug_bridge) {
++			dev_err(&pcidev->dev, "Hotplug bridge not found\n");
++			ret = -ENODEV;
++			goto irq_free_exit;
++		}
 +
-+	ctrl->pcie = dev;
-+
-+	if (pcie_capability_read_dword(hotplug_bridge, PCI_EXP_SLTCAP, &slot_cap))
-+		return -EINVAL;
-+
-+	ctrl->slot_cap = slot_cap;
-+
-+	return 0;
-+}
-+
-+static const struct hotplug_slot_ops fpgahp_slot_ops = {
-+};
-+
-+static int fpgahp_init_slot(struct controller *ctrl)
-+{
-+	char name[SLOT_NAME_SIZE];
-+	struct pci_dev *hotplug_bridge = ctrl->pcie->port;
-+	int ret;
-+
-+	snprintf(name, sizeof(name), "%u", PSN(ctrl));
-+
-+	ctrl->hotplug_slot.ops = &fpgahp_slot_ops;
-+
-+	ret = pci_hp_register(&ctrl->hotplug_slot, hotplug_bridge->subordinate,
-+			      PCI_SLOT(hotplug_bridge->devfn), name);
-+	if (ret) {
-+		ctrl_err(ctrl, "Register PCI hotplug core failed with error %d\n", ret);
-+		return ret;
-+	}
-+
-+	ctrl_info(ctrl, "Slot [%s] registered\n", hotplug_slot_name(&ctrl->hotplug_slot));
-+
-+	return 0;
-+}
-+
-+static int
-+fpgahp_create_new_fhpc(struct fpgahp_controller *fhpc, struct pci_dev *hotplug_bridge,
-+		       const char *name, const struct fpgahp_manager_ops *ops)
-+{
-+	struct fpgahp_manager *mgr = &fhpc->mgr;
-+	struct controller *ctrl = &fhpc->ctrl;
-+	struct pcie_device *pcie;
-+	int ret;
-+
-+	pcie = kzalloc(sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pcie->port = hotplug_bridge;
-+	fhpc->hotplug_bridge = hotplug_bridge;
-+	fhpc->pcie = pcie;
-+
-+	ret = fpgahp_init_controller(ctrl, pcie);
-+	if (ret)
-+		goto free_pcie;
-+
-+	ret = fpgahp_init_slot(ctrl);
-+	if (ret) {
-+		if (ret == -EBUSY)
-+			ctrl_warn(ctrl, "Slot already registered by another hotplug driver\n");
-+		else
-+			ctrl_err(ctrl, "Slot initialization failed (%d)\n", ret);
-+		goto free_pcie;
-+	}
-+
-+	mutex_init(&mgr->lock);
-+
-+	fpgahp_add_fhpc(fhpc);
-+
-+	return 0;
-+
-+free_pcie:
-+	kfree(pcie);
-+	return ret;
-+}
-+
-+static struct fpgahp_controller *
-+fpgahp_find_exist_fhpc(struct pci_dev *hotplug_bridge,
-+		       struct pci_dev *pcidev, const struct fpgahp_manager_ops *ops)
-+{
-+	struct fpgahp_controller *iter, *fhpc = NULL;
-+
-+	mutex_lock(&fhpc_lock);
-+
-+	list_for_each_entry(iter, &fhpc_list, node) {
-+		struct controller *ctrl = &iter->ctrl;
-+
-+		if (!iter->mgr.registered)
-+			continue;
-+
-+		if (iter->hotplug_bridge == hotplug_bridge &&
-+		    iter->mgr.priv == pcidev && iter->mgr.ops == ops) {
-+			fhpc = iter;
-+			ctrl_dbg(ctrl, "Found existing fhpc slot(%s)\n", slot_name(ctrl));
-+			break;
++		mgr = fpgahp_register(hotplug_bridge, dev_name(&pcidev->dev),
++				      &fpgahp_ops, pcidev);
++		if (IS_ERR(mgr)) {
++			dev_err(&pcidev->dev, "Registering fpga hotplug failed\n");
++			ret = PTR_ERR(mgr);
++			goto irq_free_exit;
 +		}
 +	}
 +
-+	mutex_unlock(&fhpc_lock);
+ 	/* start enumeration with prepared enumeration information */
+ 	cdev = dfl_fpga_feature_devs_enumerate(info);
+ 	if (IS_ERR(cdev)) {
+ 		dev_err(&pcidev->dev, "Enumeration failure\n");
+ 		ret = PTR_ERR(cdev);
+-		goto irq_free_exit;
++		goto free_register;
+ 	}
+ 
++	if (dev_is_pf(&pcidev->dev))
++		cdev->fpgahp_mgr = mgr;
 +
-+	return fhpc;
-+}
+ 	drvdata->cdev = cdev;
+ 
+-irq_free_exit:
+-	if (ret)
+-		cci_pci_free_irq(pcidev);
+ enum_info_free_exit:
+ 	dfl_fpga_enum_info_free(info);
+-
+ 	return ret;
 +
-+static struct fpgahp_controller *fpgahp_reclaim_fhpc(struct pci_dev *hotplug_bridge)
-+{
-+	struct fpgahp_controller *iter, *fhpc = NULL;
++free_register:
++	if (dev_is_pf(&pcidev->dev))
++		fpgahp_unregister(mgr);
++irq_free_exit:
++	cci_pci_free_irq(pcidev);
++	goto enum_info_free_exit;
+ }
+ 
+ static
+@@ -444,8 +503,13 @@ static int cci_pci_sriov_configure(struct pci_dev *pcidev, int num_vfs)
+ 
+ static void cci_pci_remove(struct pci_dev *pcidev)
+ {
+-	if (dev_is_pf(&pcidev->dev))
++	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
++	struct dfl_fpga_cdev *cdev = drvdata->cdev;
 +
-+	mutex_lock(&fhpc_lock);
-+
-+	list_for_each_entry(iter, &fhpc_list, node) {
-+		struct controller *ctrl = &iter->ctrl;
-+
-+		if (iter->mgr.registered)
-+			continue;
-+
-+		/* reclaim unused fhpc, will reuse it later */
-+		if (iter->hotplug_bridge == hotplug_bridge) {
-+			fhpc = iter;
-+			ctrl_dbg(ctrl, "Found unused fhpc, reuse slot(%s)\n", slot_name(ctrl));
-+			break;
-+		}
++	if (dev_is_pf(&pcidev->dev)) {
+ 		cci_pci_sriov_configure(pcidev, 0);
++		fpgahp_unregister(cdev->fpgahp_mgr);
 +	}
-+
-+	mutex_unlock(&fhpc_lock);
-+
-+	return fhpc;
-+}
-+
-+static void fpgahp_remove_fhpc(void)
-+{
-+	struct fpgahp_controller *fhpc, *tmp;
-+
-+	mutex_lock(&fhpc_lock);
-+
-+	list_for_each_entry_safe(fhpc, tmp, &fhpc_list, node) {
-+		struct controller *ctrl = &fhpc->ctrl;
-+
-+		list_del(&fhpc->node);
-+		pci_hp_deregister(&ctrl->hotplug_slot);
-+		kfree(fhpc);
-+	}
-+
-+	mutex_unlock(&fhpc_lock);
-+}
-+
-+/**
-+ * fpgahp_register - register FPGA device into fpgahp driver
-+ * @hotplug_bridge: the hotplug bridge of the FPGA device
-+ * @name: the name of the FPGA device
-+ * @ops: pointer to structure of fpgahp manager ops
-+ * @priv: private data for FPGA device
-+ *
-+ * Return: pointer to struct fpgahp_manager pointer or ERR_PTR()
-+ */
-+struct fpgahp_manager *fpgahp_register(struct pci_dev *hotplug_bridge, const char *name,
-+				       const struct fpgahp_manager_ops *ops, void *priv)
-+{
-+	struct fpgahp_controller *fhpc;
-+	struct pci_dev *pcidev = priv;
-+	int ret;
-+
-+	if (!hotplug_bridge || !ops || !pcidev)
-+		return ERR_PTR(-EINVAL);
-+
-+	dev_dbg(&pcidev->dev, "Register hotplug bridge: %04x:%02x:%02x\n",
-+		pci_domain_nr(hotplug_bridge->bus), hotplug_bridge->bus->number,
-+		PCI_SLOT(hotplug_bridge->devfn));
-+
-+	/* find existing matching fpgahp_controller */
-+	fhpc = fpgahp_find_exist_fhpc(hotplug_bridge, pcidev, ops);
-+	if (fhpc)
-+		return &fhpc->mgr;
-+
-+	/* can it reuse the free fpgahp_controller? */
-+	fhpc = fpgahp_reclaim_fhpc(hotplug_bridge);
-+	if (fhpc)
-+		goto reuse;
-+
-+	fhpc = kzalloc(sizeof(*fhpc), GFP_KERNEL);
-+	if (!fhpc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = fpgahp_create_new_fhpc(fhpc, hotplug_bridge, name, ops);
-+	if (ret) {
-+		kfree(fhpc);
-+		return ERR_PTR(ret);
-+	}
-+
-+reuse:
-+	mutex_lock(&fhpc->mgr.lock);
-+	fhpc->mgr.ops = ops;
-+	fhpc->mgr.name = name;
-+	fhpc->mgr.priv = pcidev;
-+	fhpc->mgr.registered = true;
-+	fhpc->mgr.state = FPGAHP_MGR_UNKNOWN;
-+	mutex_unlock(&fhpc->mgr.lock);
-+
-+	return &fhpc->mgr;
-+}
-+EXPORT_SYMBOL_NS_GPL(fpgahp_register, FPGAHP);
-+
-+/**
-+ * fpgahp_unregister - unregister FPGA device from fpgahp driver
-+ * @mgr: point to the fpgahp_manager
-+ */
-+void fpgahp_unregister(struct fpgahp_manager *mgr)
-+{
-+	mutex_lock(&mgr->lock);
-+	mgr->registered = false;
-+	mutex_unlock(&mgr->lock);
-+}
-+EXPORT_SYMBOL_NS_GPL(fpgahp_unregister, FPGAHP);
-+
-+static int __init fpgahp_init(void)
-+{
-+	return 0;
-+}
-+module_init(fpgahp_init);
-+
-+static void __exit fpgahp_exit(void)
-+{
-+	fpgahp_remove_fhpc();
-+}
-+module_exit(fpgahp_exit);
-+
-+MODULE_DESCRIPTION("FPGA PCI Hotplug Manager Driver");
-+MODULE_AUTHOR("Tianfei Zhang <tianfei.zhang@intel.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/fpga/fpgahp_manager.h b/include/linux/fpga/fpgahp_manager.h
-new file mode 100644
-index 000000000000..5e31877f03de
---- /dev/null
-+++ b/include/linux/fpga/fpgahp_manager.h
-@@ -0,0 +1,62 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Driver Header File for FPGA PCI Hotplug Driver
-+ *
-+ * Copyright (C) 2023 Intel Corporation
-+ */
-+#ifndef _LINUX_FPGAHP_MANAGER_H
-+#define _LINUX_FPGAHP_MANAGER_H
-+
-+#include <linux/mutex.h>
-+
-+struct pci_dev;
-+struct fpgahp_manager;
-+
-+/**
-+ * struct fpgahp_manager_ops - fpgahp manager specific operations
-+ * @hotplug_prepare: Required: hotplug prepare like removing subdevices
-+ *                   below the PCI device.
-+ */
-+struct fpgahp_manager_ops {
-+	int (*hotplug_prepare)(struct fpgahp_manager *mgr);
-+};
-+
-+/**
-+ * enum fpgahp_manager_states - FPGA hotplug states
-+ * @FPGAHP_MGR_UNKNOWN: can't determine state
-+ * @FPGAHP_MGR_LOADING: image loading
-+ * @FPGAHP_MGR_LOAD_DONE: image load done
-+ * @FPGAHP_MGR_HP_FAIL: hotplug failed
-+ */
-+enum fpgahp_manager_states {
-+	FPGAHP_MGR_UNKNOWN,
-+	FPGAHP_MGR_LOADING,
-+	FPGAHP_MGR_LOAD_DONE,
-+	FPGAHP_MGR_HP_FAIL,
-+};
-+
-+/**
-+ * struct fpgahp_manager - represent a FPGA hotplug manager instance
-+ *
-+ * @lock: mutex to protect fpgahp manager data
-+ * @priv: private data for fpgahp manager
-+ * @ops: ops of this fpgahp_manager
-+ * @state: the status of fpgahp_manager
-+ * @name: name of the fpgahp_manager
-+ * @registered: register status
-+ */
-+struct fpgahp_manager {
-+	struct mutex lock; /* protect registered state of fpgahp_manager */
-+	void *priv;
-+	const struct fpgahp_manager_ops *ops;
-+	enum fpgahp_manager_states state;
-+	const char *name;
-+	bool registered;
-+};
-+
-+struct fpgahp_manager *fpgahp_register(struct pci_dev *hotplug_bridge,
-+				       const char *name, const struct fpgahp_manager_ops *ops,
-+				       void *priv);
-+void fpgahp_unregister(struct fpgahp_manager *mgr);
-+
-+#endif
+ 
+ 	cci_remove_feature_devs(pcidev);
+ 	pci_disable_pcie_error_reporting(pcidev);
+@@ -464,3 +528,4 @@ module_pci_driver(cci_pci_driver);
+ MODULE_DESCRIPTION("FPGA DFL PCIe Device Driver");
+ MODULE_AUTHOR("Intel Corporation");
+ MODULE_LICENSE("GPL v2");
++MODULE_IMPORT_NS(FPGAHP);
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 06cfcd5e84bb..898c05c269fb 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -469,6 +469,7 @@ void dfl_fpga_enum_info_free(struct dfl_fpga_enum_info *info);
+  * @fme_dev: FME feature device under this container device.
+  * @lock: mutex lock to protect the port device list.
+  * @port_dev_list: list of all port feature devices under this container device.
++ * @fpgahp_mgr: fpga hotplug manager.
+  * @released_port_num: released port number under this container device.
+  */
+ struct dfl_fpga_cdev {
+@@ -477,6 +478,7 @@ struct dfl_fpga_cdev {
+ 	struct device *fme_dev;
+ 	struct mutex lock;
+ 	struct list_head port_dev_list;
++	struct fpgahp_manager *fpgahp_mgr;
+ 	int released_port_num;
+ };
+ 
 -- 
 2.38.1
 
