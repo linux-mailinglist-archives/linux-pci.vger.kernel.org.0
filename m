@@ -2,140 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FC73672E41
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:34:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F2421672F22
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 03:43:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229719AbjASBeU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 20:34:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47236 "EHLO
+        id S229919AbjASCm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 21:42:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230083AbjASBbQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:31:16 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 457D26C56D;
-        Wed, 18 Jan 2023 17:29:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674091759; x=1705627759;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=Txos19R8DyvDzhERcj8uKGox4wLE09dcHL2zQgioezU=;
-  b=mzbI3w4OcbcTydS5LbrNrf1WUybgd4bXfsssC0iDOCyf9EBupRSbEafO
-   NwkCiguYwrqhU/hyMG1JXJpvNKV4o3TQi6CIboyhb4AbZE1aPJJtHAAAW
-   RhA+IESmlmfDoZ+zjOM/OROXQWHliONfh7uO2uj6rEAAJwlNA3YwPmKmm
-   qzVjCuPZ7/Y6aIxwaGgkrq8d1XS7p7H6wI9Is6Z3VjDebKgSCtDBbUgME
-   NvKden6Ho+Kx4VFIGBqPmptk/lPAzhgNIEGBzM7HTyWW0xtIVyBFFTNvH
-   +ekwmJF9sEqGt2a0tbEQ8r0nfl9327bP5i3EzSQwMyS4xtYggVjtzeHYu
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847637"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="322847637"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:29:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995719"
-X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="767995719"
-Received: from unknown (HELO fedora.sh.intel.com) ([10.238.175.104])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:29:07 -0800
-From:   Tianfei Zhang <tianfei.zhang@intel.com>
-To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
-        mani@kernel.org, pali@kernel.org, mdf@kernel.org, hao.wu@intel.com,
-        yilun.xu@intel.com, trix@redhat.com, jgg@ziepe.ca,
-        ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
-        dan.j.williams@intel.com, keescook@chromium.org, rafael@kernel.org,
-        russell.h.weight@intel.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-        lee@kernel.org, gregkh@linuxfoundation.org,
-        matthew.gerlach@linux.intel.com
-Cc:     Tianfei Zhang <tianfei.zhang@intel.com>
-Subject: [PATCH v1 12/12] Documentation: fpga: add description of fpgahp driver
-Date:   Wed, 18 Jan 2023 20:36:02 -0500
-Message-Id: <20230119013602.607466-13-tianfei.zhang@intel.com>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20230119013602.607466-1-tianfei.zhang@intel.com>
-References: <20230119013602.607466-1-tianfei.zhang@intel.com>
+        with ESMTP id S229832AbjASCm6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 21:42:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38637B47E;
+        Wed, 18 Jan 2023 18:42:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DE44EB80A29;
+        Thu, 19 Jan 2023 02:42:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B68C5C433F0;
+        Thu, 19 Jan 2023 02:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674096175;
+        bh=ynDeNozJvjU7+2OdaF3xoRj/R1KFU7FIil+EFkOuDRY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rnXICSpVfBfXZci7nc2q8kkT7++j7vPT5f8MJjKsdvQ1H41xzmuXgGvjMYGhdUK4F
+         wSwAX3+iFQWay5xUcDusoa38bDHqbhUylPnY2dc5ybACrK/wRf8tphdHD7gf3ebHbE
+         SaE8GSo9y36ZyrYt7dcJFhdvBlK/pjOOT0b6gYQfHpUM9RKbqgJUCZSVbbK/UEP8kU
+         2+AZgFTw7R5F2+0cH1G6RMdz44GbWNliVB/6gx//xcUMvbJOf6Umyd/8rvf1WNSkHU
+         MeoWsZFpW3G2IBFa6BLTzsY/YTogGC48D9Fi1ttzYvlv14JUW4ajom5TPt6UfqRWTl
+         7Ha3vnxP2YjeA==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Manivannan Sadhasivam <mani@kernel.org>, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, lpieralisi@kernel.org,
+        devicetree@vger.kernel.org, bhelgaas@google.com, robh@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        konrad.dybcio@linaro.org
+Subject: Re: (subset) [PATCH 1/2] dt-bindings: PCI: qcom: Allow both GIC-ITS and internal MSI controller
+Date:   Wed, 18 Jan 2023 20:42:50 -0600
+Message-Id: <167409616954.3024582.9628170500602623153.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.37.1
+In-Reply-To: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
+References: <20230111123004.21048-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add the description of fpgahp driver.
+On Wed, 11 Jan 2023 18:00:03 +0530, Manivannan Sadhasivam wrote:
+> The binding should specify both MSI implementations and the OS/driver
+> should choose the one based on the platform requirements.
+> 
+> 
 
-Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
----
- Documentation/fpga/fpgahp.rst | 29 +++++++++++++++++++++++++++++
- Documentation/fpga/index.rst  |  1 +
- MAINTAINERS                   |  1 +
- 3 files changed, 31 insertions(+)
- create mode 100644 Documentation/fpga/fpgahp.rst
+Applied, thanks!
 
-diff --git a/Documentation/fpga/fpgahp.rst b/Documentation/fpga/fpgahp.rst
-new file mode 100644
-index 000000000000..3ec34bbffde1
---- /dev/null
-+++ b/Documentation/fpga/fpgahp.rst
-@@ -0,0 +1,29 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===========================
-+FPGA Hotplug Manager Driver
-+===========================
-+
-+Authors:
-+
-+- Tianfei Zhang <tianfei.zhang@intel.com>
-+
-+There are some board managements for PCIe-based FPGA card like burning the entire
-+image, loading a new FPGA image or BMC firmware in FPGA deployment of data center
-+or cloud. For example, loading a new FPGA image, the driver needs to remove all of
-+PCI devices like PFs/VFs and as well as any other types of devices (platform, etc.)
-+defined within the FPGA. After triggering the image load of the FPGA card via BMC,
-+the driver reconfigures the PCI bus. The FPGA Hotplug Manager (fpgahp) driver manages
-+those devices and functions leveraging the PCI hotplug framework to deal with the
-+reconfiguration of the PCI bus and removal/probe of PCI devices below the FPGA card.
-+
-+This fpgahp driver adds 2 new callbacks to extend the hotplug mechanism to
-+allow selecting and loading a new FPGA image.
-+
-+ - available_images: Optional: called to return the available images of a FPGA card.
-+ - image_load: Optional: called to load a new image for a FPGA card.
-+
-+In general, the fpgahp driver provides some sysfs files::
-+
-+        /sys/bus/pci/slots/<X-X>/available_images
-+        /sys/bus/pci/slots/<X-X>/image_load
-diff --git a/Documentation/fpga/index.rst b/Documentation/fpga/index.rst
-index f80f95667ca2..8973a8a3f066 100644
---- a/Documentation/fpga/index.rst
-+++ b/Documentation/fpga/index.rst
-@@ -8,6 +8,7 @@ fpga
-     :maxdepth: 1
- 
-     dfl
-+    fpgahp
- 
- .. only::  subproject and html
- 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 85d4e3a0e986..569c7f680229 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8169,6 +8169,7 @@ L:	linux-fpga@vger.kernel.org
- L:	linux-pci@vger.kernel.org
- S:	Maintained
- F:	Documentation/ABI/testing/sysfs-driver-fpgahp
-+F:	Documentation/fpga/fpgahp.rst
- F:	drivers/pci/hotplug/fpgahp.c
- F:	include/linux/fpga/fpgahp_manager.h
- 
+[2/2] arm64: dts: qcom: sm8450: Allow both GIC-ITS and internal MSI controller
+      commit: 0da2eff44e78ded247fe35d8a3f73508263d0948
+
+Best regards,
 -- 
-2.38.1
-
+Bjorn Andersson <andersson@kernel.org>
