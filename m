@@ -2,80 +2,102 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90C52673494
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 10:39:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35C1D6734C1
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 10:49:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229792AbjASJjC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 04:39:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51758 "EHLO
+        id S230135AbjASJtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 04:49:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229796AbjASJjA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 04:39:00 -0500
-Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DDA36C55E;
-        Thu, 19 Jan 2023 01:38:46 -0800 (PST)
-Received: by mail-pl1-x62b.google.com with SMTP id jm10so1765478plb.13;
-        Thu, 19 Jan 2023 01:38:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JfBVelv4aEwBb1YzL1pBGhsM2qMsLGoSKaCTLvIA0+8=;
-        b=gD7dQBEZntcLnhi3RB0+MltROhlLsf5/kauy3NlLvWIlHO4r+oXbj2VSr0s7alIWbJ
-         ahCizbBH0629aGlsniSEGqgst8nnu5pOsHdVnjx4giV5VSPeiXvRfUNvabaRnGCkXciK
-         e+nYdaGEdgamTMI93jakjkyz9/q5tn2o61CBWveHQg2VX5lagXmC+zFJ5pm6yzaGwf7v
-         R4fUach8vU3WR8YRaL4+wL7xBNgVI3e81WbxDU5/KDwlAEiP1RMr6Ukp3xxRxTTVKMHb
-         HPGJ4SODFhxwj9rkrOD1t7OmIf1mD1apjcC992ySJXg508UpkqW24dsjHmgFWJ0jO5eM
-         Ecqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JfBVelv4aEwBb1YzL1pBGhsM2qMsLGoSKaCTLvIA0+8=;
-        b=guZ8oQL8ESj0c1Cq04Cr8TJ6/GZJoPDldxxnXgBCfHV5fATKgFRKtbRgFIWwtflZS9
-         uFntH1o7ZeUGrVPPPFPF96EkNLIqACAghIXrozCSRWGNlitFPr8nC+i3UbjU16RjiSuy
-         I3ppeTNuEsKaQPuJq7mZtsxoAJOW3Pw1h6IQlr3aS0teMIhG/3g8p5fvHIatbrji60o+
-         veEMgVS34t0zpB5E3pwsza7fVd6X61IgbOuopBQjVmTBbAfeZFYW35vWNEQRXs73IJm4
-         OKEijcOnsPLcCkU3xhK7jATjwWcGtcvFzugDM8bPoRc+D2dLs9BLmxX3B74vh0L7zBgl
-         Pvkg==
-X-Gm-Message-State: AFqh2krkLiCX4H8OliQN6ybMQW9X7KGHTwYuO9/ycjBSqYhuqYyhGBMc
-        A5jr3AovHd4hMFKoDPBWQO8=
-X-Google-Smtp-Source: AMrXdXs5XnufN19FRhDIUPqVcKaRcXpI/o3i6WXBhY2Ma29PsyPKg1QDVY4pRPpdqeTdsS2FHynAiw==
-X-Received: by 2002:a17:902:7042:b0:189:7548:2096 with SMTP id h2-20020a170902704200b0018975482096mr9808913plt.45.1674121125970;
-        Thu, 19 Jan 2023 01:38:45 -0800 (PST)
-Received: from debian.me (subs02-180-214-232-69.three.co.id. [180.214.232.69])
-        by smtp.gmail.com with ESMTPSA id n3-20020a170903110300b00189f2fdbdd0sm24604975plh.234.2023.01.19.01.38.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jan 2023 01:38:45 -0800 (PST)
-Received: by debian.me (Postfix, from userid 1000)
-        id E4998105027; Thu, 19 Jan 2023 16:38:41 +0700 (WIB)
-Date:   Thu, 19 Jan 2023 16:38:41 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Tianfei Zhang <tianfei.zhang@intel.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org,
-        lukas@wunner.de, kabel@kernel.org, mani@kernel.org,
-        pali@kernel.org, mdf@kernel.org, hao.wu@intel.com,
-        yilun.xu@intel.com, trix@redhat.com, jgg@ziepe.ca,
-        ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
-        dan.j.williams@intel.com, keescook@chromium.org, rafael@kernel.org,
-        russell.h.weight@intel.com, corbet@lwn.net,
-        linux-doc@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-        lee@kernel.org, gregkh@linuxfoundation.org,
-        matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v1 12/12] Documentation: fpga: add description of fpgahp
- driver
-Message-ID: <Y8kPoXnCNyB7AwUv@debian.me>
-References: <20230119013602.607466-1-tianfei.zhang@intel.com>
- <20230119013602.607466-13-tianfei.zhang@intel.com>
+        with ESMTP id S230119AbjASJtm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 04:49:42 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0D869B36;
+        Thu, 19 Jan 2023 01:49:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EBKYAPrwU/QwtMJqzU23mMXYCXTsGvtxdssuQ3n7a+S4jf6y54ZNcjUt4tLymP2P56R4ENlbcH5KGevjWZQuCwZgcSpUVkXdNpXj+atcPw5tVyReKDvvQeOMsAjI+xVJtZEevCqQRDIhKmhY4nvHqWV++eNFHEsVHAIqspUM6CnE6f+t6UUPLw17dU/WB9ygbL+uwOAcHlBMpfVhnNIoG5+yzmdk4jt/FDL9nlP92b+tU1PGThxZFgEbpRyGh7uuWaWQ243T9EZxOQJ63vFnNIpaJIPOy5NgPZoyX5kk0AkXW+0eI66ZTUn5LmWYmRLE+LfrisTexf+jSqlfTQWNmw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XescRYhO7C3uQSTUROPJMg8doD2uzGVYdJpPp5Pnfo4=;
+ b=ElgCHzhFD8vWevp9izKei6yVTUgxm7OIY83p8/gAyN8tEnPDLNnakz0x95QG+9jVW5fc5mpWe8P9z8dv8XcIoIiZoF0Icsg4wx890zIKTmS+QOzZ9pwzZvxi/+EHqokxbcCeaJ5SPQpqmf5zmLhBCGroupBwExFN0mj9YMfKq5EchCpZXbDbOxStvu2aPP6MK81DD1wAn1j0eOe0QbCaacSv+nEehXva8r4we9U7i7/tcqcUPWljV5JiJkLoTnhiOoptyKaebZWAm+3rDDUwv+u8MOI5mqb4URMaKetUU7b/GTNF6v8hNBis4/TvJuGXQ28HJgp4Y8VSdPML527/Nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XescRYhO7C3uQSTUROPJMg8doD2uzGVYdJpPp5Pnfo4=;
+ b=T5XFuzCQFVtDCPy4YrfpUYl1TG5NjAIQMpAQvp+jW7LG7ncoO2Gt6w6HY35OcfySctscRhOUFBqDFI1QEK10q57GXyWBdqGXDrxLQhX8y1tmmXEhl7dkFqdinLa6gDsjdkaI0TbjNHCeNVSMkS+wNZYdgacs3Li1sygVBgopacsarZ6j0QnkqsI3z9kuEc0WmRXZwFjwgzINV17OHNu6IIpJk8Zf9xvkuS2H0IcqAj9+FIoRIfFtnuPvobP42cZfwlfMif/e33zylu0J5UU8RBRf9N2rs7AW4ylcVMi6Wxk2LNq3aUcdYL+z6Rk8IvE8VOZkxGgM7L3RKk8nzXBO9Q==
+Received: from BL1PR13CA0432.namprd13.prod.outlook.com (2603:10b6:208:2c3::17)
+ by CH0PR12MB5299.namprd12.prod.outlook.com (2603:10b6:610:d6::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.25; Thu, 19 Jan
+ 2023 09:49:34 +0000
+Received: from BL02EPF0000EE3D.namprd05.prod.outlook.com
+ (2603:10b6:208:2c3:cafe::67) by BL1PR13CA0432.outlook.office365.com
+ (2603:10b6:208:2c3::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.17 via Frontend
+ Transport; Thu, 19 Jan 2023 09:49:34 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL02EPF0000EE3D.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6002.11 via Frontend Transport; Thu, 19 Jan 2023 09:49:34 +0000
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 19 Jan
+ 2023 01:49:20 -0800
+Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail205.nvidia.com
+ (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 19 Jan
+ 2023 01:49:19 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.6) with Microsoft SMTP Server id 15.2.986.36 via Frontend
+ Transport; Thu, 19 Jan 2023 01:49:16 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <rafael.j.wysocki@intel.com>, <kai.heng.feng@canonical.com>,
+        <enriquezmark36@gmail.com>, <tasev.stefanoska@skynet.be>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V1] PCI/ASPM: Skip L1SS save/restore if not already enabled
+Date:   Thu, 19 Jan 2023 15:19:13 +0530
+Message-ID: <20230119094913.20536-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qVl6dm7wN+8OEMm3"
-Content-Disposition: inline
-In-Reply-To: <20230119013602.607466-13-tianfei.zhang@intel.com>
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF0000EE3D:EE_|CH0PR12MB5299:EE_
+X-MS-Office365-Filtering-Correlation-Id: c25bd968-019b-4287-42fb-08dafa027864
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Trkn4Mp01B9r+ctroPhs/f8IVj0Tz9s6R0WzC0eiA/2HLbBZrEZxcR9ZVCggO1tWrN+P/NJRy6mlZZLmJeR4oecLjT/JKtlrJYAVf9mTO88pUi/aT2P1k4ZKYsnMNWCrAgNAjoEnPJDtRrqlEhVXhy2N+CTOuWiwgi9Tu1DYP8F6mo57uV4hVCsLUKKHVLdNJgJB0VUzBNiz6v/wcYh1XCljhRGNRGkkbVrwyW0REyrXkadqywf65Imgb8/HfC65SgLQHa9CoKAEro8FYC/tkh9sRbPiFKxd3WV2FtZBOXZPdphyONr22Wea4P3c83r321zAoWtT60AFWDPJkU7UEiK291uuAyOZRz0ApmurifQwXWRAwX5sOuSlWcAXUJhPC45UjS1tVO5MDBfmvnMGK+ZntlPnXVe8JZO9QG7YpgbSjOgsDNLk021uCyKJvJaSQNhbrvLnQ6pCDJ4xfSSXWHA4UGpldMeLsRcgJZOceORGAtrPSjDwWg804qMEmBAigOMbqwekIM57XAYesGlGfGUVkR1TqvlosflMHpkKhlHF4Qj1nveFOdp5TN6T18EcdfkEe2h7edI0Lb68GWYfD0+cvQtl/bHVd1CMCalxwPLScH8ipADBbiTIbsiyRRzaVKMC6lO4OUeDaIKIqDGCcbFLiXPx1QqdjBg1EvfvQV9yvFcXsVsxrFQhqlP2XXanaJFiuewA0XPSfIgAiEx8aJAZ9I/9Xhr4cFM/SE896X9KeBhGawFRR8YFhgKJPHlPyaHfLJznE3f7LovxDs3d2BahIItbdEOX3CxDZGQ0brVBfHAgUXOroTFIhiJRN/yOTIy3tWJVk9mnvmOxT4hp0w==
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(376002)(346002)(396003)(39860400002)(136003)(451199015)(40470700004)(36840700001)(46966006)(1076003)(8936002)(316002)(5660300002)(86362001)(40460700003)(966005)(36756003)(7696005)(478600001)(6666004)(2906002)(82310400005)(2616005)(426003)(47076005)(110136005)(54906003)(336012)(7636003)(83380400001)(70206006)(70586007)(4326008)(8676002)(40480700001)(82740400003)(36860700001)(26005)(186003)(356005)(41300700001)(32563001)(473944003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 09:49:34.0874
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c25bd968-019b-4287-42fb-08dafa027864
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0000EE3D.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5299
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
         autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -83,126 +105,62 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Skip save and restore of ASPM L1 Sub-States specific registers if they
+are not already enabled in the system. This is to avoid issues observed
+on certain platforms during restoration process, particularly when
+restoring the L1SS registers contents.
 
---qVl6dm7wN+8OEMm3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216782
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/pcie/aspm.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-On Wed, Jan 18, 2023 at 08:36:02PM -0500, Tianfei Zhang wrote:
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> +FPGA Hotplug Manager Driver
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> +
-> +Authors:
-> +
-> +- Tianfei Zhang <tianfei.zhang@intel.com>
-> +
-> +There are some board managements for PCIe-based FPGA card like burning t=
-he entire
-> +image, loading a new FPGA image or BMC firmware in FPGA deployment of da=
-ta center
-> +or cloud. For example, loading a new FPGA image, the driver needs to rem=
-ove all of
-> +PCI devices like PFs/VFs and as well as any other types of devices (plat=
-form, etc.)
-> +defined within the FPGA. After triggering the image load of the FPGA car=
-d via BMC,
-> +the driver reconfigures the PCI bus. The FPGA Hotplug Manager (fpgahp) d=
-river manages
-> +those devices and functions leveraging the PCI hotplug framework to deal=
- with the
-> +reconfiguration of the PCI bus and removal/probe of PCI devices below th=
-e FPGA card.
-> +
-> +This fpgahp driver adds 2 new callbacks to extend the hotplug mechanism =
-to
-> +allow selecting and loading a new FPGA image.
-> +
-> + - available_images: Optional: called to return the available images of =
-a FPGA card.
-> + - image_load: Optional: called to load a new image for a FPGA card.
-> +
-> +In general, the fpgahp driver provides some sysfs files::
-> +
-> +        /sys/bus/pci/slots/<X-X>/available_images
-> +        /sys/bus/pci/slots/<X-X>/image_load
-
-The doc reads a rather confused to me, so I have to make wording improv:
-
----- >8 ----
-diff --git a/Documentation/fpga/fpgahp.rst b/Documentation/fpga/fpgahp.rst
-index 3ec34bbffde10c..73f1b53de1cf85 100644
---- a/Documentation/fpga/fpgahp.rst
-+++ b/Documentation/fpga/fpgahp.rst
-@@ -8,22 +8,22 @@ Authors:
-=20
- - Tianfei Zhang <tianfei.zhang@intel.com>
-=20
--There are some board managements for PCIe-based FPGA card like burning the=
- entire
--image, loading a new FPGA image or BMC firmware in FPGA deployment of data=
- center
--or cloud. For example, loading a new FPGA image, the driver needs to remov=
-e all of
--PCI devices like PFs/VFs and as well as any other types of devices (platfo=
-rm, etc.)
--defined within the FPGA. After triggering the image load of the FPGA card =
-via BMC,
--the driver reconfigures the PCI bus. The FPGA Hotplug Manager (fpgahp) dri=
-ver manages
--those devices and functions leveraging the PCI hotplug framework to deal w=
-ith the
--reconfiguration of the PCI bus and removal/probe of PCI devices below the =
-FPGA card.
-=20
--This fpgahp driver adds 2 new callbacks to extend the hotplug mechanism to
--allow selecting and loading a new FPGA image.
-+The FPGA Hotplug Manager (fpgahp) manages PCIe-based FPGA card devices.
-+The PCI bus reconfiguration and device probe for devices below the FPGA
-+card are done by leveraging the PCI hotplug framework.
-=20
-- - available_images: Optional: called to return the available images of a =
-FPGA card.
-- - image_load: Optional: called to load a new image for a FPGA card.
-+The driver can be helpful in device management tasks like burning the enti=
-re
-+image and loading a new FPGA image or BMC firmware in FPGA deployment of d=
-ata
-+center or cloud. For example, when loading the image, the driver needs to
-+remove all of PCI devices like PFs/VFs and as well as any other types of
-+devices (platform, etc.) defined within the FPGA. After triggering the ima=
-ge
-+load of the FPGA card via BMC, the driver reconfigures the appropriate PCI=
- bus.
-=20
--In general, the fpgahp driver provides some sysfs files::
-+The driver adds 2 new sysfs callbacks to extend the hotplug mechanism to
-+allow selecting and loading a new FPGA image:
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 53a1fa306e1e..5d3f09b0a6a9 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -757,15 +757,29 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
++static bool skip_l1ss_restore;
 +
-+ - ``/sys/bus/pci/slots/<X-X>/available_images``: list available images for
-+   a FPGA card.
-+ - ``/sys/bus/pci/slots/<X-X>/image_load``: load the image.
-=20
--        /sys/bus/pci/slots/<X-X>/available_images
--        /sys/bus/pci/slots/<X-X>/image_load
+ void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+ {
+ 	struct pci_cap_saved_state *save_state;
+ 	u16 l1ss = dev->l1ss;
+-	u32 *cap;
++	u32 *cap, val;
+ 
+ 	if (!l1ss)
+ 		return;
+ 
++	/*
++	 * Skip save and restore of L1 Sub-States registers if they are not
++	 * already enabled in the system
++	 */
++	pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL1, &val);
++	if (!(val & PCI_L1SS_CTL1_L1SS_MASK)) {
++		skip_l1ss_restore = 1;
++		return;
++	}
++
++	skip_l1ss_restore = 0;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+ 	if (!save_state)
+ 		return;
+@@ -784,6 +798,9 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
+ 	if (!l1ss)
+ 		return;
+ 
++	if (skip_l1ss_restore)
++		return;
++
+ 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
+ 	if (!save_state)
+ 		return;
+-- 
+2.17.1
 
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---qVl6dm7wN+8OEMm3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY8kPmwAKCRD2uYlJVVFO
-o3lrAQCct9H3y0zT3VjVNdLXNHJtFvNc7pF6h6RyrlsIR6FxAQD+KDkAExbGLjkL
-pruDqPa1E0ukAI5fDYmeWbWLP7kPaAw=
-=Eigz
------END PGP SIGNATURE-----
-
---qVl6dm7wN+8OEMm3--
