@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1035B672E49
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:34:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9977A672E51
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 02:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjASBek (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 18 Jan 2023 20:34:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
+        id S229932AbjASBei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 18 Jan 2023 20:34:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230031AbjASBaj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:30:39 -0500
+        with ESMTP id S230036AbjASBak (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 18 Jan 2023 20:30:40 -0500
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A84B37F20;
-        Wed, 18 Jan 2023 17:28:50 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB7453B14;
+        Wed, 18 Jan 2023 17:28:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674091730; x=1705627730;
+  t=1674091735; x=1705627735;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=92WpI/CMYfwGiXcsjcP/NI5y3TpYtmkZChXGGpFRbp8=;
-  b=NZ6hYGX/bDPHMCNa6Y0TYUPAH9sltl7RFp1xTiX3yfeST5hNmphUh/PJ
-   ScqsRoK6AHXMHPHaxSqZyzC/DOTzt+4Brcefp7CpT3Lh8qrk9qe74F6K5
-   7+ImcGqQtCs1Ul70BAzSHhjKiyo0JoTDXuGnn9C9x25cKPd5nXOj0gN8w
-   MqdliTxHmktLVtEqdcfnUPWPpwQ9dva61fLFuFDiNwmFj5VRtAkae84D1
-   vUtj+DbEPNIBoFkAPYjo4OAFkjAIYeSR5E9wgKmpabzjDUspjhSlmNDat
-   jFoMfJmPbKW3sjshoBS7kPSJn2+av4tmno3Q/algaoA5DX+Ms1gJhfoTt
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847566"
+  bh=TeaiRTr0nE3XGyPN3OH2Cm6fN99UPz2BR1FgceW1lYE=;
+  b=UTEROJI5YJnorU80L4J+TSeW052c63YIkcl+1N6G+ubVTnoeVblhVLi0
+   AvuKqXdpyTwnCNZLHzFws7fqt3dmwSK6+raTDIk3P8VBh+1SIRNQDiuT9
+   ecjyj/KnWYb045mMm+NIohGyTLk+etdvf6kD1FdSbArZTDeoBqgTGZnnS
+   0SyJ4F5pgupw/l7mu3EUBBhxCOvWX20j5xpCowX/I6KrxoyIgGtOHZKxj
+   kUNQ3pDz0QrrS0t2+Nb8vZmpmPUliKAlImFJBcZjhOVlvY0BC1XhliF4p
+   Z/9b16tCCqLum8nKHMtaF45nsZ6wjVMYHpxua3o2DfCx3lR14OwcDiLcE
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="322847584"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="322847566"
+   d="scan'208";a="322847584"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:28:49 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2023 17:28:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995682"
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="767995692"
 X-IronPort-AV: E=Sophos;i="5.97,226,1669104000"; 
-   d="scan'208";a="767995682"
+   d="scan'208";a="767995692"
 Received: from unknown (HELO fedora.sh.intel.com) ([10.238.175.104])
-  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:28:44 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 18 Jan 2023 17:28:49 -0800
 From:   Tianfei Zhang <tianfei.zhang@intel.com>
 To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-fpga@vger.kernel.org, lukas@wunner.de, kabel@kernel.org,
@@ -50,9 +50,9 @@ To:     bhelgaas@google.com, linux-pci@vger.kernel.org,
         lee@kernel.org, gregkh@linuxfoundation.org,
         matthew.gerlach@linux.intel.com
 Cc:     Tianfei Zhang <tianfei.zhang@intel.com>
-Subject: [PATCH v1 08/12] fpga: m10bmc-sec: register BMC device into fpgahp driver
-Date:   Wed, 18 Jan 2023 20:35:58 -0500
-Message-Id: <20230119013602.607466-9-tianfei.zhang@intel.com>
+Subject: [PATCH v1 09/12] fpga: dfl: remove non-reserved devices
+Date:   Wed, 18 Jan 2023 20:35:59 -0500
+Message-Id: <20230119013602.607466-10-tianfei.zhang@intel.com>
 X-Mailer: git-send-email 2.38.1
 In-Reply-To: <20230119013602.607466-1-tianfei.zhang@intel.com>
 References: <20230119013602.607466-1-tianfei.zhang@intel.com>
@@ -67,199 +67,148 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add a registration of Intel M10 BMC security update device
-into fpgahp driver by fpgahp_bmc_device_register() API.
+Introduce a new concept of non-reserved devices and reserved devices
+on DFL bus. Reserved devices mean that devices under DFL bus will be
+reserved before triggering the image load, because those devices are
+provided a communication link to BMC during the trigger, for example
+SPI/NIOS private feature device on Intel PAC N3000 card, security
+update device. On the other hand, the reset of devices are
+non-reserved devices, which will be removed before triggering the
+image load.
 
-Signed-off-by: Russ Weight <russell.h.weight@intel.com>
+After loading a new image, all of reserved and non-reserved devices
+will be removed.
+
 Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
 ---
- drivers/fpga/Kconfig                    |   1 +
- drivers/fpga/intel-m10-bmc-sec-update.c | 110 ++++++++++++++++++++++++
- 2 files changed, 111 insertions(+)
+ drivers/fpga/dfl-pci.c | 18 +++++++++++++
+ drivers/fpga/dfl.c     | 58 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/fpga/dfl.h     |  2 ++
+ 3 files changed, 78 insertions(+)
 
-diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-index 2188c5658e06..f83682d00a1b 100644
---- a/drivers/fpga/Kconfig
-+++ b/drivers/fpga/Kconfig
-@@ -248,6 +248,7 @@ config FPGA_MGR_VERSAL_FPGA
- config FPGA_M10_BMC_SEC_UPDATE
- 	tristate "Intel MAX10 BMC Secure Update driver"
- 	depends on MFD_INTEL_M10_BMC
-+	depends on HOTPLUG_PCI_FPGA
- 	select FW_LOADER
- 	select FW_UPLOAD
- 	help
-diff --git a/drivers/fpga/intel-m10-bmc-sec-update.c b/drivers/fpga/intel-m10-bmc-sec-update.c
-index 79d48852825e..647531094b3b 100644
---- a/drivers/fpga/intel-m10-bmc-sec-update.c
-+++ b/drivers/fpga/intel-m10-bmc-sec-update.c
-@@ -8,6 +8,7 @@
- #include <linux/bitfield.h>
- #include <linux/device.h>
- #include <linux/firmware.h>
-+#include <linux/fpga/fpgahp_manager.h>
- #include <linux/mfd/intel-m10-bmc.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-@@ -19,10 +20,21 @@ struct m10bmc_sec {
- 	struct intel_m10bmc *m10bmc;
- 	struct fw_upload *fwl;
- 	char *fw_name;
-+	struct image_load *image_load;
-+	struct fpgahp_bmc_device *fpgahp_bmc;
- 	u32 fw_name_id;
- 	bool cancel_request;
+diff --git a/drivers/fpga/dfl-pci.c b/drivers/fpga/dfl-pci.c
+index 0409cb30e563..64cf6c623a5a 100644
+--- a/drivers/fpga/dfl-pci.c
++++ b/drivers/fpga/dfl-pci.c
+@@ -42,7 +42,24 @@ struct cci_drvdata {
+ 	struct dfl_fpga_cdev *cdev;	/* container device */
  };
  
-+struct image_load {
-+	const char *name;
-+	int (*load_image)(struct m10bmc_sec *sec);
-+	u32 wait_time_msec;
-+};
-+
-+/* default wait 10 seconds for FPGA/BMC image reload */
-+#define RELOAD_DEFAULT_WAIT_MSECS  (10 * MSEC_PER_SEC)
-+
- static DEFINE_XARRAY_ALLOC(fw_upload_xa);
- 
- /* Root Entry Hash (REH) support */
-@@ -137,6 +149,43 @@ DEVICE_ATTR_SEC_CSK_RO(pr, PR_PROG_ADDR + CSK_VEC_OFFSET);
- 
- #define FLASH_COUNT_SIZE 4096	/* count stored as inverted bit vector */
- 
-+static ssize_t m10bmc_available_images(struct fpgahp_bmc_device *bmc, char *buf)
++static int dfl_hp_prepare(struct fpgahp_manager *mgr)
 +{
-+	struct m10bmc_sec *sec = bmc->priv;
-+	const struct image_load *hndlr;
-+	ssize_t count = 0;
++	struct pci_dev *pcidev = mgr->priv;
++	struct cci_drvdata *drvdata = pci_get_drvdata(pcidev);
++	struct dfl_fpga_cdev *cdev = drvdata->cdev;
++	struct platform_device *fme = to_platform_device(cdev->fme_dev);
 +
-+	for (hndlr = sec->image_load; hndlr->name; hndlr++)
-+		count += scnprintf(buf + count, PAGE_SIZE - count, "%s ", hndlr->name);
++	/* remove all of non-reserved fme devices of PF0 */
++	dfl_reload_remove_non_reserved_devs(fme, mgr->bmc.device);
 +
-+	buf[count - 1] = '\n';
++	/* remove all AFU devices of PF0 */
++	dfl_reload_remove_afus(cdev);
 +
-+	return count;
++	return 0;
 +}
 +
-+static int m10bmc_image_trigger(struct fpgahp_bmc_device *bmc, const char *buf,
-+				u32 *wait_time_msec)
+ static const struct fpgahp_manager_ops fpgahp_ops = {
++	.hotplug_prepare = dfl_hp_prepare,
+ };
+ 
+ static void __iomem *cci_pci_ioremap_bar0(struct pci_dev *pcidev)
+@@ -529,3 +546,4 @@ MODULE_DESCRIPTION("FPGA DFL PCIe Device Driver");
+ MODULE_AUTHOR("Intel Corporation");
+ MODULE_LICENSE("GPL v2");
+ MODULE_IMPORT_NS(FPGAHP);
++MODULE_IMPORT_NS(DFL_CORE);
+diff --git a/drivers/fpga/dfl.c b/drivers/fpga/dfl.c
+index b9aae85ba930..613a8fef47d8 100644
+--- a/drivers/fpga/dfl.c
++++ b/drivers/fpga/dfl.c
+@@ -486,6 +486,60 @@ EXPORT_SYMBOL(dfl_driver_unregister);
+ 
+ #define is_header_feature(feature) ((feature)->id == FEATURE_ID_FIU_HEADER)
+ 
++static void dfl_devs_remove_non_reserved(struct dfl_feature_platform_data *pdata,
++					 struct device *trigger_dev)
 +{
-+	struct m10bmc_sec *sec = bmc->priv;
-+	const struct image_load *hndlr;
-+	int ret = -EINVAL;
++	struct dfl_feature *feature;
 +
-+	for (hndlr = sec->image_load; hndlr->name; hndlr++) {
-+		if (sysfs_streq(buf, hndlr->name)) {
-+			ret = hndlr->load_image(sec);
-+			*wait_time_msec = hndlr->wait_time_msec;
-+			break;
++	dfl_fpga_dev_for_each_feature(pdata, feature) {
++		if (!feature->ddev)
++			continue;
++
++		/* find and skip reserved dfl device */
++		if (device_is_ancestor(&feature->ddev->dev, trigger_dev))
++			continue;
++
++		device_unregister(&feature->ddev->dev);
++		feature->ddev = NULL;
++	}
++}
++
++void dfl_reload_remove_non_reserved_devs(struct platform_device *pdev, struct device *trigger_dev)
++{
++	struct dfl_feature_platform_data *pdata = dev_get_platdata(&pdev->dev);
++	struct dfl_feature *feature;
++
++	dfl_devs_remove_non_reserved(pdata, trigger_dev);
++
++	dfl_fpga_dev_for_each_feature(pdata, feature) {
++		if (feature->ops) {
++			if (feature->ops->uinit)
++				feature->ops->uinit(pdev, feature);
++			feature->ops = NULL;
 +		}
 +	}
-+
-+	return ret;
 +}
++EXPORT_SYMBOL_NS_GPL(dfl_reload_remove_non_reserved_devs, DFL_CORE);
 +
-+static const struct fpgahp_bmc_ops fpgahp_bmc_ops = {
-+	.image_trigger = m10bmc_image_trigger,
-+	.available_images = m10bmc_available_images,
-+};
-+
- static ssize_t flash_count_show(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
-@@ -208,6 +257,54 @@ static void log_error_regs(struct m10bmc_sec *sec, u32 doorbell)
- 		dev_err(sec->dev, "RSU auth result: 0x%08x\n", auth_result);
- }
- 
-+static int m10bmc_sec_bmc_image_load(struct m10bmc_sec *sec,
-+				     unsigned int val)
++void dfl_reload_remove_afus(struct dfl_fpga_cdev *cdev)
 +{
-+	u32 doorbell;
-+	int ret;
++	struct dfl_feature_platform_data *pdata, *ptmp;
 +
-+	if (val > 1) {
-+		dev_err(sec->dev, "invalid reload val = %u\n", val);
-+		return -EINVAL;
++	mutex_lock(&cdev->lock);
++
++	list_for_each_entry_safe(pdata, ptmp, &cdev->port_dev_list, node) {
++		struct platform_device *port_dev = pdata->dev;
++		enum dfl_id_type type = feature_dev_id_type(port_dev);
++		int id = port_dev->id;
++
++		list_del(&pdata->node);
++		platform_device_unregister(port_dev);
++		dfl_id_free(type, id);
 +	}
-+
-+	ret = m10bmc_sys_read(sec->m10bmc, M10BMC_DOORBELL, &doorbell);
-+	if (ret)
-+		return ret;
-+
-+	if (doorbell & DRBL_REBOOT_DISABLED)
-+		return -EBUSY;
-+
-+	return regmap_update_bits(sec->m10bmc->regmap,
-+				  M10BMC_SYS_BASE + M10BMC_DOORBELL,
-+				  DRBL_CONFIG_SEL | DRBL_REBOOT_REQ,
-+				  FIELD_PREP(DRBL_CONFIG_SEL, val) | DRBL_REBOOT_REQ);
++	mutex_unlock(&cdev->lock);
 +}
++EXPORT_SYMBOL_NS_GPL(dfl_reload_remove_afus, DFL_CORE);
 +
-+static int m10bmc_sec_bmc_image_load_0(struct m10bmc_sec *sec)
-+{
-+	return m10bmc_sec_bmc_image_load(sec, 0);
-+}
-+
-+static int m10bmc_sec_bmc_image_load_1(struct m10bmc_sec *sec)
-+{
-+	return m10bmc_sec_bmc_image_load(sec, 1);
-+}
-+
-+static struct image_load m10bmc_image_load_hndlrs[] = {
-+	{
-+		.name = "bmc_factory",
-+		.load_image = m10bmc_sec_bmc_image_load_1,
-+		.wait_time_msec = RELOAD_DEFAULT_WAIT_MSECS,
-+	},
-+	{
-+		.name = "bmc_user",
-+		.load_image = m10bmc_sec_bmc_image_load_0,
-+		.wait_time_msec = RELOAD_DEFAULT_WAIT_MSECS,
-+	},
-+	{}
-+};
-+
- static enum fw_upload_err rsu_check_idle(struct m10bmc_sec *sec)
- {
- 	u32 doorbell;
-@@ -565,6 +662,7 @@ static int m10bmc_sec_probe(struct platform_device *pdev)
- 	sec->dev = &pdev->dev;
- 	sec->m10bmc = dev_get_drvdata(pdev->dev.parent);
- 	dev_set_drvdata(&pdev->dev, sec);
-+	sec->image_load = m10bmc_image_load_hndlrs;
+ /**
+  * dfl_fpga_dev_feature_uinit - uinit for sub features of dfl feature device
+  * @pdev: feature device.
+@@ -1376,6 +1430,10 @@ static int remove_feature_dev(struct device *dev, void *data)
+ 	enum dfl_id_type type = feature_dev_id_type(pdev);
+ 	int id = pdev->id;
  
- 	ret = xa_alloc(&fw_upload_xa, &sec->fw_name_id, sec,
- 		       xa_limit_32b, GFP_KERNEL);
-@@ -587,6 +685,16 @@ static int m10bmc_sec_probe(struct platform_device *pdev)
- 	}
- 
- 	sec->fwl = fwl;
++	/* pdev has been released */
++	if (!device_is_registered(&pdev->dev))
++		return 0;
 +
-+	sec->fpgahp_bmc = fpgahp_bmc_device_register(&fpgahp_bmc_ops, sec->dev, sec);
-+	if (IS_ERR(sec->fpgahp_bmc)) {
-+		dev_err(sec->dev, "register hotplug bmc failed\n");
-+		kfree(sec->fw_name);
-+		xa_erase(&fw_upload_xa, sec->fw_name_id);
-+		firmware_upload_unregister(sec->fwl);
-+		return PTR_ERR(sec->fpgahp_bmc);
-+	}
-+
- 	return 0;
- }
+ 	platform_device_unregister(pdev);
  
-@@ -594,6 +702,7 @@ static int m10bmc_sec_remove(struct platform_device *pdev)
- {
- 	struct m10bmc_sec *sec = dev_get_drvdata(&pdev->dev);
+ 	dfl_id_free(type, id);
+diff --git a/drivers/fpga/dfl.h b/drivers/fpga/dfl.h
+index 898c05c269fb..3cbe1b21f001 100644
+--- a/drivers/fpga/dfl.h
++++ b/drivers/fpga/dfl.h
+@@ -485,6 +485,8 @@ struct dfl_fpga_cdev {
+ struct dfl_fpga_cdev *
+ dfl_fpga_feature_devs_enumerate(struct dfl_fpga_enum_info *info);
+ void dfl_fpga_feature_devs_remove(struct dfl_fpga_cdev *cdev);
++void dfl_reload_remove_afus(struct dfl_fpga_cdev *cdev);
++void dfl_reload_remove_non_reserved_devs(struct platform_device *pdev, struct device *trigger_dev);
  
-+	fpgahp_bmc_device_unregister(sec->fpgahp_bmc);
- 	firmware_upload_unregister(sec->fwl);
- 	kfree(sec->fw_name);
- 	xa_erase(&fw_upload_xa, sec->fw_name_id);
-@@ -626,3 +735,4 @@ module_platform_driver(intel_m10bmc_sec_driver);
- MODULE_AUTHOR("Intel Corporation");
- MODULE_DESCRIPTION("Intel MAX10 BMC Secure Update");
- MODULE_LICENSE("GPL");
-+MODULE_IMPORT_NS(FPGAHP);
+ /*
+  * need to drop the device reference with put_device() after use port platform
 -- 
 2.38.1
 
