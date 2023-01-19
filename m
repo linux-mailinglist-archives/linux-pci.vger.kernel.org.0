@@ -2,135 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B6C6736B6
-	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 12:25:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1662C6736C4
+	for <lists+linux-pci@lfdr.de>; Thu, 19 Jan 2023 12:28:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbjASLZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 06:25:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34530 "EHLO
+        id S229752AbjASL2G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 06:28:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjASLZM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 06:25:12 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B3171F0E
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 03:25:06 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id b7so1538160wrt.3
-        for <linux-pci@vger.kernel.org>; Thu, 19 Jan 2023 03:25:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Jjumn+I+wkHZk5NVVYexup8sGnkZ4VyPciwtVSYN3y8=;
-        b=IhWrXLqtYqFTRUG0/z62w2T8MBWpTFNipnLhMR3XSGokgY5LWm+zCPvIqgcL8TBcum
-         9RJSAoS/ZyYyCjOIxDuoGmYWV1TXamIMZ3LkVvbazMZENQ+KFF2lJAyazU60T9jEDaW3
-         yZWvEXiINvKtfv9DuI6+5TpHSbnTJ7EUmtigC/wdKeJTnp/7pt+VGTPjC1r9H0RfMStO
-         Nb47ANOONNt3/SCJhyhPwWzZ126MB/89DJxndPWGJAcPh30t7FJWqsNl83CuBZCA07Pa
-         3I2Gs4UV8QSr7sBTkf+QKitlKpDx+ILC51YXIOWhp+xxh5IFcJxTdGcDS0QaucSr89of
-         9LdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Jjumn+I+wkHZk5NVVYexup8sGnkZ4VyPciwtVSYN3y8=;
-        b=6VWWGB0tosXw6/JDkNwEoxiGWRxKBxpRLxD70NfjLyl0pMk+FHXRZY+/xxh0+K23Tx
-         M7gpLelYE+yTwiUNW3L5UjPflsAmsfGCy6QlprarA8Ed4i53Fxe0RKiQYLJH8WBXjMQs
-         aQZ8E5S1C5bGvBF7jUufb3NwjhZPDQs9mPJsK4wXXDYXJrLCQ5a0F92lWJdqSK9F9BoO
-         +xkcBtJYWBN1gOGBsoZixLcUoJEgnbpw9YxQQV6Lkfgs4OOc51I5IkRGzNO6X0m90RkF
-         nNKogbAClaCKrLRO08EeT20PVwjibM/A/NNA6OQQh4PS/2w5kaPXfog85eTcIVy9oHeN
-         FaNg==
-X-Gm-Message-State: AFqh2kp+h7d66zeDY/Mlap865tok1B+6GP3+LJN2YhYFEmTzSpKMEGnS
-        BvuJBVRoJ8sjvMi0kUVHpKs4ZCwktZ6Ej5Mp
-X-Google-Smtp-Source: AMrXdXvPbSq3xK4D65Edtw3e5PzfKKeFt2TmJ1e+1mU6FlJ7V9ToKuqrWDNM9rZCGzZV+8Bh5Vkceg==
-X-Received: by 2002:a5d:548d:0:b0:2aa:438a:2165 with SMTP id h13-20020a5d548d000000b002aa438a2165mr8615483wrv.24.1674127505074;
-        Thu, 19 Jan 2023 03:25:05 -0800 (PST)
-Received: from hackbox.lan ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id w10-20020a5d404a000000b00275970a85f4sm33436999wrp.74.2023.01.19.03.25.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jan 2023 03:25:04 -0800 (PST)
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 2/2] PCI: qcom: Add SM8550 PCIe support
-Date:   Thu, 19 Jan 2023 13:24:53 +0200
-Message-Id: <20230119112453.3393911-2-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230119112453.3393911-1-abel.vesa@linaro.org>
-References: <20230119112453.3393911-1-abel.vesa@linaro.org>
+        with ESMTP id S229724AbjASL2C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 06:28:02 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484F126A2;
+        Thu, 19 Jan 2023 03:27:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674127677; x=1705663677;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=Bccrp8lmZ8ukBj/EyZ3CSpmIYfTSsrD0V3yh5r4NP20=;
+  b=h5CHOQLjr7BXR84chydtbnMLgHqT9OQ1e4/4Ery8A+pE2ww9PG3nQYTq
+   hft/2VYsSYsq7UirUTGef9yYFTCTu6XOS8OrnlW16+0JsPjOQSCzESTB5
+   IxLYumJexMfW3+vz/0AqZdsZgVOjcNQWZpR0QxsHfxQeAz3lYKy0KfeH6
+   j+iahKkEDMADowNP8DOUJ7aM46iVXWcwpJbOvKUo4nDtPo+7FDc1w9nr9
+   c5UJ0ZxZg3PI8co0uJ/m2YM6sJIi9KbNZb/OSxZcBt/YB7tKz1g5orF1V
+   tW1HYtM3gryKQLe33TYc4FzFdsJqRK8QstVFDItA2p9x74L3zthZD/2R6
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="323947823"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="323947823"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 03:27:47 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10594"; a="728628016"
+X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
+   d="scan'208";a="728628016"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP; 19 Jan 2023 03:27:41 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pIT51-00BcYE-0X;
+        Thu, 19 Jan 2023 13:27:39 +0200
+Date:   Thu, 19 Jan 2023 13:27:38 +0200
+From:   "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>
+To:     "Zhang, Tianfei" <tianfei.zhang@intel.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-fpga@vger.kernel.org" <linux-fpga@vger.kernel.org>,
+        "lukas@wunner.de" <lukas@wunner.de>,
+        "kabel@kernel.org" <kabel@kernel.org>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "mdf@kernel.org" <mdf@kernel.org>, "Wu, Hao" <hao.wu@intel.com>,
+        "Xu, Yilun" <yilun.xu@intel.com>, "Rix, Tom" <trix@redhat.com>,
+        "jgg@ziepe.ca" <jgg@ziepe.ca>, "Weiny, Ira" <ira.weiny@intel.com>,
+        "Williams, Dan J" <dan.j.williams@intel.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "Weight, Russell H" <russell.h.weight@intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "ilpo.jarvinen@linux.intel.com" <ilpo.jarvinen@linux.intel.com>,
+        "lee@kernel.org" <lee@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "matthew.gerlach@linux.intel.com" <matthew.gerlach@linux.intel.com>
+Subject: Re: [PATCH v1 00/12] add FPGA hotplug manager driver
+Message-ID: <Y8kpKm51YryPz9F5@smile.fi.intel.com>
+References: <20230119013602.607466-1-tianfei.zhang@intel.com>
+ <20230119080606.tnjqwkseial7vpyq@pali>
+ <BN9PR11MB54839E8851853A4251451719E3C49@BN9PR11MB5483.namprd11.prod.outlook.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <BN9PR11MB54839E8851853A4251451719E3C49@BN9PR11MB5483.namprd11.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add compatible for both PCIe found on SM8550.
-Also add the cnoc_pcie_sf_axi clock needed by the SM8550.
+On Thu, Jan 19, 2023 at 08:17:05AM +0000, Zhang, Tianfei wrote:
+> > From: Pali Rohár <pali@kernel.org>
+> > Sent: Thursday, January 19, 2023 4:06 PM
+> > On Wednesday 18 January 2023 20:35:50 Tianfei Zhang wrote:
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
----
+...
 
-The v2 was here:
-https://lore.kernel.org/all/20230118111704.3553542-2-abel.vesa@linaro.org/
+> > > To change the FPGA image, the kernel burns a new image into the flash
+> > > on the card, and then triggers the card BMC to load the new image into FPGA.
+> > > A new FPGA hotplug manager driver is introduced that leverages the
+> > > PCIe hotplug framework to trigger and manage the update of the FPGA
+> > > image, including the disappearance and reappearance of the card on the PCIe bus.
+> > > The fpgahp driver uses APIs from the pciehp driver.
+> > 
+> > Just I'm thinking about one thing. PCIe cards can support PCIe hotplug mechanism
+> > (via standard PCIe capabilities). So what would happen when FPGA based PCIe card is
+> > also hotplug-able? Will be there two PCI hotplug drivers/devices (one fpgahp and
+> > one pciehp)? Or just one and which?
+> 
+> For our Intel PAC N3000 and N6000 FPGA card, there are not support PCIe
+> hotplug capability from hardware side now, but from software perspective, the
+> process of FPGA image load is very similar with PCIe hotplug, like removing
+> all of devices under PCIe bridge, re-scan the PCIe device under the bridge,
+> so we are looking for the PCIe hotplug framework and APIs from pciehp driver
+> to manager this process, and reduce some duplicate code.
 
-Changes since v2:
- * none
+Exactly, from the OS perspective they both should be equivalent.
 
-Changes since v1:
- * changed the subject line prefix for the patch to match the history,
-   like Bjorn Helgaas suggested.
- * added Konrad's R-b tag
-
-
- drivers/pci/controller/dwc/pcie-qcom.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 77e5dc7b88ad..85988b3fd4f6 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -182,7 +182,7 @@ struct qcom_pcie_resources_2_3_3 {
- 
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
--	struct clk_bulk_data clks[12];
-+	struct clk_bulk_data clks[13];
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
- 	struct reset_control *pci_reset;
-@@ -1208,6 +1208,7 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	res->clks[idx++].id = "noc_aggr_4";
- 	res->clks[idx++].id = "noc_aggr_south_sf";
- 	res->clks[idx++].id = "cnoc_qx";
-+	res->clks[idx++].id = "cnoc_pcie_sf_axi";
- 
- 	num_opt_clks = idx - num_clks;
- 	res->num_clks = idx;
-@@ -1828,6 +1829,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8250", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-+	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
- 	{ }
- };
- 
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
