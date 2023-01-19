@@ -2,52 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E3356749ED
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 04:17:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3A80674BF0
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 06:15:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbjATDRp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 22:17:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36034 "EHLO
+        id S231261AbjATFPJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Jan 2023 00:15:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229769AbjATDRm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 22:17:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CF6B1ECB;
-        Thu, 19 Jan 2023 19:17:37 -0800 (PST)
+        with ESMTP id S231414AbjATFOz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 00:14:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D829545212;
+        Thu, 19 Jan 2023 21:03:36 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F181961DF5;
-        Fri, 20 Jan 2023 03:17:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03EE5C433F1;
-        Fri, 20 Jan 2023 03:17:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E3972B82015;
+        Thu, 19 Jan 2023 04:26:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B590C433EF;
+        Thu, 19 Jan 2023 04:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674184656;
-        bh=uU3oYI54L8VUNcIszGsQrFwwcTkBniJmQ4MJV8jgxeU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=X3IJSsoJlyArYgPxfFji8JJ141V1EnCDTsHj9ob0eTDDZV0plBOD289ABFprkPp2B
-         AOPSuN8cf9XjiRx2B7m0rbBnfdY1zVSBAqImK4HcrYZ3nD71tMO7/IrjZwt1foHMH9
-         XT35k/MAw3kgcM6jQUZDW628l8GyrtxPY4FuURpp1+ovx2k6bqF4494bpV8kqeeZ3n
-         qKFT9XD6KolBzJJtZM1Qoq+JU8bVOddZRgFb0n8FoLX1vKj9D6qWG7+HEA/mc05KIt
-         x4ICHCaEUBvtbM5KHlVNRXvETKVMJBbac76tNDpJW5seXBx3XyqF30XgS2MvFct1rx
-         ZQjWWK3/GmIpw==
-Date:   Thu, 19 Jan 2023 19:17:35 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
+        s=k20201202; t=1674102381;
+        bh=Mfk8kWgrggh7nLfPyOq/xtH5uobwBVywJEcQt80do9w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=O+/lT7YvCltvh3aXo3p5FdOCc6qZIONAmVtNYqX5UY80lHSuJrC8/mMfq4xQXSeIU
+         LUeG3Owic9BOxrXKhO8UhYFIMgD5Y97kMZb3SWScz8uzbAN9CkCUvaRFYcCC4qF206
+         rwoRxp7h9b9vOGf3i4TpltaoBO4d9bNM7TUp6QXGN8SZ/hpzJPUD04zhrSVGKXrznZ
+         xOCAWki2QdNb+uUd0l2VgHoKbKUKGhsJ27JKG8OX/O6HFelcZ5kahfPkVTmg9Ky2p9
+         ZUHHONT6BgB9fj4/XDGE49oQExT0BxxVkhh2gShlrjyS6J8+Pzjv4lQEz2inJeyTQ3
+         FuQMfiBCw8mWg==
+Date:   Wed, 18 Jan 2023 22:26:19 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Subject: Re: [PATCH 2/9] e1000e: Remove redundant
- pci_enable_pcie_error_reporting()
-Message-ID: <20230119191735.4bc11fd2@kernel.org>
-In-Reply-To: <20230118234612.272916-3-helgaas@kernel.org>
-References: <20230118234612.272916-1-helgaas@kernel.org>
-        <20230118234612.272916-3-helgaas@kernel.org>
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/9] PCI/AER: Remove redundant Device Control Error
+ Reporting Enable
+Message-ID: <20230119042619.GA288847@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e773b789-9ac1-eb45-b1ab-11fc93aede40@linux.intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -57,22 +53,56 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 18 Jan 2023 17:46:05 -0600 Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Wed, Jan 18, 2023 at 07:55:33PM -0800, Sathyanarayanan Kuppuswamy wrote:
+> On 1/18/23 3:46 PM, Bjorn Helgaas wrote:
+> > From: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native"),
+> > ths PCI core sets the Device Control bits that enable error reporting for
+> > PCIe devices.
+> > 
+> > This series removes redundant calls to pci_enable_pcie_error_reporting()
+> > that do the same thing from the AER driver and several NIC drivers.
+> > 
+> > There are several more drivers where this should be removed; I started with
+> > just the Intel drivers here.
+> > 
+> > Bjorn Helgaas (9):
+> >   PCI/AER: Remove redundant Device Control Error Reporting Enable
+> >   e1000e: Remove redundant pci_enable_pcie_error_reporting()
+> >   fm10k: Remove redundant pci_enable_pcie_error_reporting()
+> >   i40e: Remove redundant pci_enable_pcie_error_reporting()
+> >   iavf: Remove redundant pci_enable_pcie_error_reporting()
+> >   ice: Remove redundant pci_enable_pcie_error_reporting()
+> >   igb: Remove redundant pci_enable_pcie_error_reporting()
+> >   igc: Remove redundant pci_enable_pcie_error_reporting()
+> >   ixgbe: Remove redundant pci_enable_pcie_error_reporting()
 > 
-> pci_enable_pcie_error_reporting() enables the device to send ERR_*
-> Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> native"), the PCI core does this for all devices during enumeration.
-> 
-> Remove the redundant pci_enable_pcie_error_reporting() call from the
-> driver.  Also remove the corresponding pci_disable_pcie_error_reporting()
-> from the driver .remove() path.
-> 
-> Note that this doesn't control interrupt generation by the Root Port; that
-> is controlled by the AER Root Error Command register, which is managed by
-> the AER service driver.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> It should be simpler to do in one patch. Any reason to split
+> it into multiple patches?
 
-How would you like to route these? Looks like there's no dependency 
-so we can pick them up?
+Sure, the driver patches could easily be squashed, either by me or be
+the netdev folks if they prefer it that way.  There are close to 50
+callers, and I hesitate to do them all in a single patch because it
+becomes unwieldy to backport (probably pointless for this situation)
+or to revert if there's any issue.
+
+These are all trivial removals, but there are a few that are more
+complicated and will require closer review, so I didn't include those
+here.
+
+> >  drivers/net/ethernet/intel/e1000e/netdev.c    |  7 ---
+> >  drivers/net/ethernet/intel/fm10k/fm10k_pci.c  |  5 --
+> >  drivers/net/ethernet/intel/i40e/i40e_main.c   |  4 --
+> >  drivers/net/ethernet/intel/iavf/iavf_main.c   |  5 --
+> >  drivers/net/ethernet/intel/ice/ice_main.c     |  3 --
+> >  drivers/net/ethernet/intel/igb/igb_main.c     |  5 --
+> >  drivers/net/ethernet/intel/igc/igc_main.c     |  5 --
+> >  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c |  5 --
+> >  drivers/pci/pcie/aer.c                        | 48 -------------------
+> >  9 files changed, 87 deletions(-)
+> > 
+> 
+> -- 
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
