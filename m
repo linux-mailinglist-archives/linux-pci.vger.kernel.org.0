@@ -2,215 +2,351 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D68FC674B73
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 05:54:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CEA66749B2
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 04:03:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230447AbjATEys (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 19 Jan 2023 23:54:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47662 "EHLO
+        id S229578AbjATDDR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 19 Jan 2023 22:03:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231225AbjATEyO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 23:54:14 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECE2DBC76B;
-        Thu, 19 Jan 2023 20:45:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674189933; x=1705725933;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Gs6TYfqQRhBk8a/4fGiK0acKobPiw+O5dGe4GOkRsws=;
-  b=IvlipMoZnBsPVD9oOsSui8ADQwKP6UdSa2L2XSrehLJS70FKD9NxMapn
-   WJbVW+HAFm1jAkyE3330CHXjMeycJk5Kjzb9fWfiIJLvgK8g//gdBHiz1
-   Tt+Z2tDk2pVUqbMOabrb2typQpSqoUGHno4HvGIO8l6WYZN0o/2Owq1Kt
-   QlZK/i1yOPL914p2eXnoANt3ztYH+g4k53dnx7Mef1wF2YHHYEURl6Vto
-   3k6FuS+ScIgH8nXb9hwXQ6rOtjpa4Z4SQAPmn0esA218vcFC66qNqErcF
-   A53OjQ8+C7R4jfXpBNmZLKgz63OhUYcR4xrPgSQwReRZwl1vr8c5yzRQz
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="387742718"
-X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
-   d="scan'208";a="387742718"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jan 2023 10:28:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10595"; a="662206944"
-X-IronPort-AV: E=Sophos;i="5.97,229,1669104000"; 
-   d="scan'208";a="662206944"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Jan 2023 10:28:51 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Thu, 19 Jan 2023 10:28:51 -0800
-Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Thu, 19 Jan 2023 10:28:51 -0800
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.106)
- by edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Thu, 19 Jan 2023 10:28:51 -0800
+        with ESMTP id S229562AbjATDDQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 19 Jan 2023 22:03:16 -0500
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on20613.outbound.protection.outlook.com [IPv6:2a01:111:f400:7eb2::613])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0C936F30D;
+        Thu, 19 Jan 2023 19:02:58 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nDCnD0Rxmc5ozt1BFFqp16+kpc2vW7uwICL620AWg0P8tiicRSWZaWYbbYk/sMx+GgGFXhuXp6xRD5SjwJ5NY1mPsy3XCr89g6dGMm63npzlZOlA6U9sIXHaiMDeBMOFT1oQDHKnRZBqjpASCOVFHCEILK+vFtz5q4vz1rvriaKsU3jWc5R/Gmb6n8qX22ytDNsBNd5JYM2hi0F6VbilmXmVU1FgtCOfWAvvZa8bOzsrcUIq7JsdikiIGPVBh3wH5bztJZ80C/bG7WHNS/YqGQCH/THI6NsKrAHZj35VMyR1mHvqnT64kdpt6oB4HXGz/AcuecDyCcdjKW0F9A+avw==
+ b=BHPLMdeM15+ru+oErtG1sSdklbC3zTbQB4SHbb3f0Hv4z4k8abiPqOUKHdXvxZej7Ue6MXwACqNi4ToV6wnApZSzRRULKg9/gUa0Dk0ox87VrzQChUQhdyFNZ6bJioX81EMC890xBBMOyLzikDcDbPjnPhMzwmgERxYlYbHOemgwNIJCvnQhIAO0IFOnaAlCJtlZIdmcI5xlPu80VZ34NLnCJOnlEDw5iekAvx/eyOMVpiX0JGL5zgfhpskbmY86KzLYNtbdBd2ID1DQm0LOkh9fmijo3UEq+QxONd0g6lUtG3SViSz0SvZqqKg/MrnXau6ucP3Dr2a7FZWpptUnbQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hFcFpz99Lp7HjTh84GjBchXguZQ7BchlAOr3bHJgpYg=;
- b=nLD387rOSm6Vfb6KDtqqIx6wktuiTBlYjEtdq2Bv2vOR/gOKchyhbNzqQ/8EdFlT1gP8UrryOFljyxzRA/vUEzb/p9ZiJUpeB7PRpwYKrGzghQqF/U5dhbBs1nhBk0d7mV+TaOaT6xtPDda96S/wwFdvmAHbAz8XBbUQqbfZjr26ebpCj0zMWgyq8lvpZRT2PonxMA/zfENTD0forpPkgbh2L1XTSz83tisWTK+laIsBYcJ8JrnikbOXxEkWSLsLaZZqzDIAWUPOA2ZYBaeBBLT3k9AKl0aMgVq/Ytim7sG0GyLdm8svrbkInylSMXm7ZBFoKBJsrfhqDJUBPahOqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SN6PR11MB3229.namprd11.prod.outlook.com (2603:10b6:805:ba::28)
- by DS0PR11MB7410.namprd11.prod.outlook.com (2603:10b6:8:151::11) with
+ bh=WsTh5yqBsZMjKGIanT+DdEKMqqB+jawe6RyzlqrqhME=;
+ b=BSBvCjKcIb4Y7yUI7hzqYsB3A9tIOuw+uu/O31tPBp/wp2e0suNkeSKBJxUIrqrArPtHIWyauXYyJa1wVlD0UA/32RsCrWrKTiVTS3iAYsj8mLSlO/kYZBZMyDS+1JzxU24xvqlM/pbJb1j+a03oB6ZWKG7rKA7GAAdcdIDhD7oZLWl+5kH80vJcuMojzEM/d5IJ76c97dqGVs49hTj3xpt9LaopujBtgtjxWa/NwqB3zF0jtzxa8KRYxE//hSHWaniOuoq3zL5Bp1gk7qn43FGdaTxsTPZVEcny4udL9RyjzEn8mqw4zM0WWoySebek3yD9e1sZflTK9/r99dxlqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WsTh5yqBsZMjKGIanT+DdEKMqqB+jawe6RyzlqrqhME=;
+ b=EnPlLixiKYFp11qtfVEKs2uDIfQ3nUomFnCC4sdJ3QHlwC8YTx02FPaI4/YZ99x1bCn9xrjkOLqbM3sDo+COmzrhA3eaD8nTmYQ8Q1YrCElLuabIobLPzI5Z8SyPxiwldcsBI1h3wVk14sxSDUtCwOrP3HRDT8Z7YZs4m6JZ5l0=
+Received: from DS7PR05CA0010.namprd05.prod.outlook.com (2603:10b6:5:3b9::15)
+ by SA0PR12MB4446.namprd12.prod.outlook.com (2603:10b6:806:71::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.24; Thu, 19 Jan
- 2023 18:28:50 +0000
-Received: from SN6PR11MB3229.namprd11.prod.outlook.com
- ([fe80::4700:1fa1:1b49:1d5c]) by SN6PR11MB3229.namprd11.prod.outlook.com
- ([fe80::4700:1fa1:1b49:1d5c%7]) with mapi id 15.20.6002.026; Thu, 19 Jan 2023
- 18:28:50 +0000
-Message-ID: <efdaecf3-4630-77b7-dd98-7f59b9f744b8@intel.com>
-Date:   Thu, 19 Jan 2023 10:28:47 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 6/9] ice: Remove redundant
- pci_enable_pcie_error_reporting()
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Jesse Brandeburg" <jesse.brandeburg@intel.com>,
-        <intel-wired-lan@lists.osuosl.org>, <netdev@vger.kernel.org>
-References: <20230118234612.272916-1-helgaas@kernel.org>
- <20230118234612.272916-7-helgaas@kernel.org>
-From:   Tony Nguyen <anthony.l.nguyen@intel.com>
-In-Reply-To: <20230118234612.272916-7-helgaas@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR03CA0230.namprd03.prod.outlook.com
- (2603:10b6:a03:39f::25) To SN6PR11MB3229.namprd11.prod.outlook.com
- (2603:10b6:805:ba::28)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.27; Fri, 20 Jan
+ 2023 03:02:55 +0000
+Received: from DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3b9:cafe::ad) by DS7PR05CA0010.outlook.office365.com
+ (2603:10b6:5:3b9::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6023.17 via Frontend
+ Transport; Fri, 20 Jan 2023 03:02:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT063.mail.protection.outlook.com (10.13.172.219) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6023.16 via Frontend Transport; Fri, 20 Jan 2023 03:02:55 +0000
+Received: from SATLEXMB06.amd.com (10.181.40.147) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 19 Jan
+ 2023 21:02:54 -0600
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB06.amd.com
+ (10.181.40.147) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 19 Jan
+ 2023 21:02:25 -0600
+Received: from xsjlizhih40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Thu, 19 Jan 2023 21:02:24 -0600
+From:   Lizhi Hou <lizhi.hou@amd.com>
+To:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <robh@kernel.org>,
+        <frowand.list@gmail.com>, <helgaas@kernel.org>
+CC:     Lizhi Hou <lizhi.hou@amd.com>, <clement.leger@bootlin.com>,
+        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
+        <brian.xu@amd.com>, <stefano.stabellini@xilinx.com>,
+        <trix@redhat.com>
+Subject: [PATCH V7 0/3] Generate device tree node for pci devices
+Date:   Thu, 19 Jan 2023 19:02:09 -0800
+Message-ID: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
+X-Mailer: git-send-email 1.8.3.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR11MB3229:EE_|DS0PR11MB7410:EE_
-X-MS-Office365-Filtering-Correlation-Id: 31c954eb-f61d-488a-3256-08dafa4b0268
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT063:EE_|SA0PR12MB4446:EE_
+X-MS-Office365-Filtering-Correlation-Id: 5e7d11c5-6893-4739-d39d-08dafa92d3e8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: zmb1lGYaTcXQOjVTpDbxy3AiAaX4CbNafbb7hHqmk4hYfGJQRWNfiqxxryJgRL0zG2PJAI79gyCk1+PlWKhW+Mln4/Okwg7TD1zJ4s20EkMiHwC/YzHK76TUYxDK5RJI1bIvqVa+wOablNNJTQkbCTZ7g1fAwoKPuSyeT8Z4D11xabNnnK7ulZfCV+6omIkw8pvli4JnsG/AgDr6M1/b4TmAvnbEr0keNxSRd29vZzPVWlj7q0Vp3P2JhFaeGAsrRDexmvTcuZuMbazLXx/ZMPUP6uR23CQdrEAzYjPnskirKu4ZcVIWbxDPIopeBf+4wq2Do/AZ/vCAKow+E6mBqlBEWYSwe+WUz36j6acBicltclTMUCcaaFYc7k1V/B7XEvic/4BDtQX3sw5S1wwVc5fpWS3xsp2ZEQ2An4W4JpG6HoHv9t+gUBo2n9yK/8bInaJ6Stcs2UoYltGyg1YiOzSvwmGrwysrU/q3TxuSc/g/R2eVPG28wOx2aXKtYKOfGPgC5NWcNhx6wACiYHJQss/WdiNkvmEv/nLgr4fCzipEr7Rh7p+MB0LRabSY46Lz12rXC2ULxrJM1p/JgDfHvg/0u8BPzv8pQlVoSbQnFdQAgrBs2aJeLKWnnjkuVQIls6ENo1cJ2jMuTamx0mBkYMbJC4XDC6d40HXn5pjs+eSY3DVbOMvKq087BEIFz7MJpbfL/3JRWaO3N07mM22IUP644865tsy4SBVYPr+Ge8s=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR11MB3229.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(39860400002)(346002)(136003)(366004)(396003)(451199015)(38100700002)(31696002)(36756003)(82960400001)(86362001)(31686004)(2616005)(6666004)(186003)(53546011)(6506007)(6486002)(478600001)(26005)(6512007)(5660300002)(8936002)(2906002)(41300700001)(66556008)(66946007)(66476007)(54906003)(4326008)(8676002)(316002)(83380400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?YUJRUGk0UTdzODdMTzc0cHIwSU9KcGZ0SS9TS1pvTDNXc29DbUN1dTcveURm?=
- =?utf-8?B?Smk3aUdJQWQvcU0zdk9nQlpYaXNoYm9XaE5PNm1LanRSb0cyaWlpQ0lRcW54?=
- =?utf-8?B?dklGTVVxNjZieTZaSGxEbVJLMlRvbU10OFY2aG9YQWpQc2wxdUMrYmg3YnZC?=
- =?utf-8?B?dURzSGVFZ1R3Sit5YTgzVkt3dnFHc2FiUVZMeDVxUmlnbTk4emtMdUU5Y2xK?=
- =?utf-8?B?UklsaytGWG5Xd3Y1NGh3cnJYSU5hRXI4K2cvWDdHdmJVejU2ZURqNVBaVXBP?=
- =?utf-8?B?OTM2Z3JaeFRRc0lXV0xBU2FyTGprSlpIY0RCdXl2dG1GV21UclE4MnhSUXpH?=
- =?utf-8?B?dHNtbEltL1NaTUJ1akxRYlVXV0ZMYWw5ZVdmSHNvSW83MjhoYU9IV2srTjYw?=
- =?utf-8?B?bzlHR0hmWGZhN2FMZDFOSlRLRFRKMkswVzNXeXorQUY0bWFwVUt5dUlQaU82?=
- =?utf-8?B?Nm1ONWFsYkJVeElvODRTN2tvU3dNait5NFRQMjRzZFdRVDZIM21qOVdUYlBz?=
- =?utf-8?B?N1haZ0thUGkwVmhHemFOWm9sK2d6bXg0VVIzVnhHa3gzUVZGcW5SaGprcWNl?=
- =?utf-8?B?QWx6K3hmbWZaUUhCUHpiNWhWbFFiU013Zmw1bGJDbElob0NvLzd0MGN4bFc3?=
- =?utf-8?B?dUloeXo3eHRtVlVnZVNPb3hwSFJlZ2Y2ejEvUXdYNzhEYjI1blpnYjVhWU5M?=
- =?utf-8?B?bUoyWHlhUGwzbm8zZVUrb2I4U2Y5dGlFWTNMQThxUDlpbGdmT1hpbGpFcmdX?=
- =?utf-8?B?c05VL3hlZlVaVzBwSWh0T014azBiRzByOW4xNGN0TjVpeE05OHRvOE4xMHlB?=
- =?utf-8?B?WDg5TGNJT1cxaXpSVVFYL2xSVU4rRUJ5bnFjV0F1bllaM2ZOOHRxTzlxUmRF?=
- =?utf-8?B?Kzk1R1NoUHpiaTJtSGYycUFKTjRJUWcyNmhMYkR4UGpZcjcvOXlOYURKc0pB?=
- =?utf-8?B?WnZSOTlQVHNydDNFWlJOWlkya21rOEtrbXJua2E3V2JpVHRyUE5zcVVuYTFo?=
- =?utf-8?B?WEpFWUdLYmlGaTM3d2Z1TENyQWdVNWJoWnVETTV6cTA2cWY1Si9JNHNiQ2J4?=
- =?utf-8?B?R0V4QitZYXorUnZTWG1GV3F1UThzR3J0bmdOdWE3R21lTHNIeE5UcVlQNFBB?=
- =?utf-8?B?eGllK2Z2NnB2R0czdjhCT0J0QVc3MHB0TGRQRDVNSXN2cllFU1AwSFc3Z0Q0?=
- =?utf-8?B?anpZQWpCcTVRUi9hZFF6WHBRZDhiS0ZoZmVjZEgyRkY1TDZuMmMrNUwxcXdR?=
- =?utf-8?B?NEU5UURlWkpvaStFbFhzMHhVOXppU05ISlZSWHIwV0Q1cE1JQkRlSHFiNDBJ?=
- =?utf-8?B?ZjRuRDFVN3VRWitCcHpqTC9uUkJGU1RnUXV4RFlnVWprZGcvek11TS9wZVFx?=
- =?utf-8?B?K0NyWnFNTUNJSmVoOE8xTHlqdzNqeFJGaG9Vb1hrdDdJWTNJSTljRFV5cDI2?=
- =?utf-8?B?SWs0bDVXWGJZSU5PbUlGS1EvcjZ0WUdXZkQvOUtXNmRGNGdVNm8wcnVGOEVq?=
- =?utf-8?B?d3d5WXFhcGM3MkdZdVc2TnkzLzBqL0hWUU1MNmlYSEpYdkdRTndMU0d3MGpD?=
- =?utf-8?B?MUlpQlpjZElIM3l2a3NFVnF4cm9KeHJ1dkFpd0xMVmJDUk0vTHl0bmlxRWZK?=
- =?utf-8?B?WFpoZSt4Z25zWUczZGN2U0pINHMrN1hrK0k3S2FuRE9IWi9ObWh6SVVVWnh2?=
- =?utf-8?B?T2dlM1lYcU1wb1NPRXRwZVBZTERjVHdnVUQwZ2p1N1hSSjFHbXRST2tjbFBY?=
- =?utf-8?B?WnVHNVZ5WWM3Mks2T0x4MENjUEJjTElZWjhlWVBiZHAxTVVqWHl1eWF6ZUpU?=
- =?utf-8?B?Lzk4TWN2aFN3M05RYmJvZitsLzRSYS9CZm9NYmovaUZORURpSitKYk44eTNK?=
- =?utf-8?B?Zm1qYUpvNEFuVDYvZ1ptL08yK2xSK3Q3ZG9oUGhsblptYm1aZG5mNEFCNmNh?=
- =?utf-8?B?b2E5eUJEb1UwV0lCNTBQWlVVSDMzWGpmV0krTjFYN1ZOcVRDYzk5OE1BYkQ2?=
- =?utf-8?B?UTZoVG0zYWZ2bElxeWFsQUxudkh6bnRrdkcweXRVSnFkYXJSb0pJU0s3NVZW?=
- =?utf-8?B?SnZmaHhMYnhTdmxXcW5rdS9mUjVrbXluSWoycjVFall5Sy9sbEI5dXFVc1Uy?=
- =?utf-8?B?SlFXazkwRUJXcHBmS2o2MVZQWVJpTnZIOFVtOGJpRkNWakdhZkVjeGUzZmsy?=
- =?utf-8?B?UkE9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 31c954eb-f61d-488a-3256-08dafa4b0268
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR11MB3229.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2023 18:28:49.9189
+X-Microsoft-Antispam-Message-Info: WV+gcjCMqrz62JjXtANoqCgRM3BKfC/mEau3qTu1wxEAd0HsDovCt3ZCG9XdnP5gOIc4c/+lnLk2XUmdUE7LuL8BA2iGzn+dwUg/cbfiDWRdw7Vi1IUYLavmKkzypaYFpplsoOtDqS9TDLz5z/Sj60pkkRGyAI7lXrxx6kt6megvwnR9DXLulOSZ1JLFgYk1Clj17EngZraXFlV1zJzR4HKxdUnrfjCK0eNd0kTaW3O2gCK8C2EfUCVW+BPPTXhTo+ACY5bCh2/WKGX6U1Ff4Kvk/xdFCwbxArE0f1rlymlwQS/w7D0rCKVFHcorYJxT6IvK/wTpeNMKUW/cSIqoV29csiraKxcbJY1irCG2dyVsITGHymRJMl4zC9lLKtHgJY1+aJfNfmE4h2DIfmzdi2IaYQEYcJ5/OLhGc+4N/jpvcV/yu59bjVjZ+S9E5NIUKS1X2ZZSEOEIdPPHGMJA+DCUqOsKgGpJYUfiRUddsIrQZWz76J2mkzi+UiCNnplVX7Yx8iZhn4GcE5YgEb76FVemydYOd+u8F0jaFfQ/6J6DNc1+GbZrohLVuARtQOc/7G4q6OPO9Ugtzz7RUwmK0boeEJGw+RHN408ZhnYomYIJIVsSZDtUXuDtpiSP87NrR+3bJySrv29YTtuc5hKQXQdcHM2OPlrCtAA8OYBDFuW54oV0B5AcXIihUAEZY9i8mZstMiM8QbW+7H+4CZirGPWO1Kbw1myu0jR07WzO6S0kzcpL2NpspAgDO6/p/xeV869MYOtFWJc//0kHOBI3tcdGE3hN4v+eD1tx/gyzrZlP9U/7MKcZxGZ4t4ZjOAC2
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230022)(4636009)(376002)(396003)(39860400002)(136003)(346002)(451199015)(36840700001)(46966006)(40470700004)(966005)(81166007)(316002)(478600001)(54906003)(41300700001)(82740400003)(36756003)(82310400005)(40480700001)(83380400001)(110136005)(44832011)(26005)(40460700003)(336012)(8936002)(86362001)(5660300002)(186003)(6666004)(36860700001)(356005)(47076005)(2906002)(2616005)(70586007)(8676002)(426003)(70206006)(4326008)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2023 03:02:55.2985
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2LxWL19z6jtJ7KcQfPoQKuqAFktJZ4esLT9tE92BGAXWWAklSSmPD+3qVzzt88sLntxpuJpqLQWrN0VXGGsEjDKYvCVTEJPHOBJkrl4Vaeg=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7410
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e7d11c5-6893-4739-d39d-08dafa92d3e8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT063.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4446
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/18/2023 3:46 PM, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> pci_enable_pcie_error_reporting() enables the device to send ERR_*
-> Messages.  Since f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
-> native"), the PCI core does this for all devices during enumeration.
-> 
-> Remove the redundant pci_enable_pcie_error_reporting() call from the
-> driver.  Also remove the corresponding pci_disable_pcie_error_reporting()
-> from the driver .remove() path.
-> 
-> Note that this doesn't control interrupt generation by the Root Port; that
-> is controlled by the AER Root Error Command register, which is managed by
-> the AER service driver.
-> 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Jesse Brandeburg <jesse.brandeburg@intel.com>
-> Cc: Tony Nguyen <anthony.l.nguyen@intel.com>
-> Cc: intel-wired-lan@lists.osuosl.org
-> Cc: netdev@vger.kernel.org
-> ---
->   drivers/net/ethernet/intel/ice/ice_main.c | 3 ---
->   1 file changed, 3 deletions(-)
+This patch series introduces OF overlay support for PCI devices which
+primarily addresses two use cases. First, it provides a data driven method
+to describe hardware peripherals that are present in a PCI endpoint and
+hence can be accessed by the PCI host. Second, it allows reuse of a OF
+compatible driver -- often used in SoC platforms -- in a PCI host based
+system.
 
-Reviewed-by: Tony Nguyen <anthony.l.nguyen@intel.com>
+There are 2 series devices rely on this patch:
 
-> diff --git a/drivers/net/ethernet/intel/ice/ice_main.c b/drivers/net/ethernet/intel/ice/ice_main.c
-> index a9a7f8b52140..9fb68919df02 100644
-> --- a/drivers/net/ethernet/intel/ice/ice_main.c
-> +++ b/drivers/net/ethernet/intel/ice/ice_main.c
-> @@ -4672,7 +4672,6 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
->   		return err;
->   	}
->   
-> -	pci_enable_pcie_error_reporting(pdev);
->   	pci_set_master(pdev);
->   
->   	pf->pdev = pdev;
-> @@ -4975,7 +4974,6 @@ ice_probe(struct pci_dev *pdev, const struct pci_device_id __always_unused *ent)
->   	ice_devlink_destroy_regions(pf);
->   	ice_deinit_hw(hw);
->   err_exit_unroll:
-> -	pci_disable_pcie_error_reporting(pdev);
->   	pci_disable_device(pdev);
->   	return err;
->   }
-> @@ -5103,7 +5101,6 @@ static void ice_remove(struct pci_dev *pdev)
->   	ice_reset(&pf->hw, ICE_RESET_PFR);
->   	pci_wait_for_pending_transaction(pdev);
->   	ice_clear_interrupt_scheme(pf);
-> -	pci_disable_pcie_error_reporting(pdev);
->   	pci_disable_device(pdev);
->   }
->   
+  1) Xilinx Alveo Accelerator cards (FPGA based device)
+  2) Microchip LAN9662 Ethernet Controller
+
+     Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+
+Normally, the PCI core discovers PCI devices and their BARs using the
+PCI enumeration process. However, the process does not provide a way to
+discover the hardware peripherals that are present in a PCI device, and
+which can be accessed through the PCI BARs. Also, the enumeration process
+does not provide a way to associate MSI-X vectors of a PCI device with the
+hardware peripherals that are present in the device. PCI device drivers
+often use header files to describe the hardware peripherals and their
+resources as there is no standard data driven way to do so. This patch
+series proposes to use flattened device tree blob to describe the
+peripherals in a data driven way. Based on previous discussion, using
+device tree overlay is the best way to unflatten the blob and populate
+platform devices. To use device tree overlay, there are three obvious
+problems that need to be resolved.
+
+First, we need to create a base tree for non-DT system such as x86_64. A
+patch series has been submitted for this:
+https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
+https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
+
+Second, a device tree node corresponding to the PCI endpoint is required
+for overlaying the flattened device tree blob for that PCI endpoint.
+Because PCI is a self-discoverable bus, a device tree node is usually not
+created for PCI devices. This series adds support to generate a device
+tree node for a PCI device which advertises itself using PCI quirks
+infrastructure.
+
+Third, we need to generate device tree nodes for PCI bridges since a child
+PCI endpoint may choose to have a device tree node created.
+
+This patch series is made up of three patches.
+
+The first patch is adding OF interface to create or destroy OF node
+dynamically.
+
+The second patch introduces a kernel option, CONFIG_DYNAMIC_PCI_OF_NODEX.
+When the option is turned on, the kernel will generate device tree nodes
+for all PCI bridges unconditionally. The patch also shows how to use the
+PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
+tree node for a device. Specifically, the patch generates a device tree
+node for Xilinx Alveo U50 PCIe accelerator device. The generated device
+tree nodes do not have any property.
+
+The third patch adds basic properties ('reg', 'compatible' and
+'device_type') to the dynamically generated device tree nodes. More
+properties can be added in the future.
+
+Here is the example of device tree nodes generated within the ARM64 QEMU.
+# lspci -t    
+-[0000:00]-+-00.0
+           +-01.0-[01]--
+           +-01.1-[02]----00.0
+           +-01.2-[03]----00.0
+           +-01.3-[04]----00.0
+           +-01.4-[05]----00.0
+           +-01.5-[06]--
+           +-01.6-[07]--
+           +-01.7-[08]--
+           +-02.0-[09-0b]----00.0-[0a-0b]----00.0-[0b]--+-00.0
+           |                                            \-00.1
+           +-02.1-[0c]--
+           \-03.0-[0d-0e]----00.0-[0e]----01.0
+
+# tree /sys/firmware/devicetree/base/pcie\@10000000
+/sys/firmware/devicetree/base/pcie@10000000
+|-- #address-cells
+|-- #interrupt-cells
+|-- #size-cells
+|-- bus-range
+|-- compatible
+|-- device_type
+|-- dma-coherent
+|-- interrupt-map
+|-- interrupt-map-mask
+|-- linux,pci-domain
+|-- msi-parent
+|-- name
+|-- pci@1,0
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,1
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,2
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,3
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,4
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,5
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,6
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@1,7
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@2,0
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- pci@0,0
+|   |   |   |-- #address-cells
+|   |   |   |-- #size-cells
+|   |   |   |-- compatible
+|   |   |   |-- dev@0,0
+|   |   |   |   |-- compatible
+|   |   |   |   `-- reg
+|   |   |   |-- dev@0,1
+|   |   |   |   |-- compatible
+|   |   |   |   `-- reg
+|   |   |   |-- device_type
+|   |   |   |-- ranges
+|   |   |   `-- reg
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- pci@2,1
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- ranges
+|   `-- reg
+|-- pci@3,0
+|   |-- #address-cells
+|   |-- #size-cells
+|   |-- compatible
+|   |-- device_type
+|   |-- pci@0,0
+|   |   |-- #address-cells
+|   |   |-- #size-cells
+|   |   |-- compatible
+|   |   |-- device_type
+|   |   |-- ranges
+|   |   `-- reg
+|   |-- ranges
+|   `-- reg
+|-- ranges
+`-- reg
+
+Changes since v6:
+- Removed single line wrapper functions
+- Added Signed-off-by Clément Léger <clement.leger@bootlin.com>
+
+Changes since v5:
+- Fixed code review comments
+- Fixed incorrect 'ranges' and 'reg' properties and verified address
+  translation.
+
+Changes since RFC v4:
+- Fixed code review comments
+
+Changes since RFC v3:
+- Split the Xilinx Alveo U50 PCI quirk to a separate patch
+- Minor changes in commit description and code comment
+
+Changes since RFC v2:
+- Merged patch 3 with patch 2
+- Added OF interfaces of_changeset_add_prop_* and use them to create
+  properties.
+- Added '#address-cells', '#size-cells' and 'ranges' properties.
+
+Changes since RFC v1:
+- Added one patch to create basic properties.
+- To move DT related code out of PCI subsystem, replaced of_node_alloc()
+  with of_create_node()/of_destroy_node()
+
+Lizhi Hou (3):
+  of: dynamic: Add interfaces for creating device node dynamically
+  PCI: Create device tree node for selected devices
+  PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
+
+ drivers/of/dynamic.c        | 197 +++++++++++++++++++++++++++++++++
+ drivers/pci/Kconfig         |  12 ++
+ drivers/pci/Makefile        |   1 +
+ drivers/pci/bus.c           |   2 +
+ drivers/pci/msi/irqdomain.c |   6 +-
+ drivers/pci/of.c            |  71 ++++++++++++
+ drivers/pci/of_property.c   | 212 ++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci-driver.c    |   3 +-
+ drivers/pci/pci.h           |  19 ++++
+ drivers/pci/quirks.c        |  11 ++
+ drivers/pci/remove.c        |   1 +
+ include/linux/of.h          |  24 ++++
+ 12 files changed, 556 insertions(+), 3 deletions(-)
+ create mode 100644 drivers/pci/of_property.c
+
+-- 
+2.34.1
+
