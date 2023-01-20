@@ -2,177 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B77F767507B
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 10:16:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F62F675099
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 10:19:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229910AbjATJQl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Jan 2023 04:16:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
+        id S230107AbjATJT2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Jan 2023 04:19:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbjATJQk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 04:16:40 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2073.outbound.protection.outlook.com [40.107.92.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B0559574F;
-        Fri, 20 Jan 2023 01:16:15 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ebWCwISwP3DxV4kF4lSWfa3UNl7GJzMa9EMhj5iipdXW0LGSblDkh8RcXQlOd2aEyWwcJYYKKrKf/gokY0CzWT48UKCZZvVsINrYt7fn3Eij1gkWVQ/f5QL8q8E3+rUBYHHoBQP9HAWGQQiNJLMLpp3JpDHcFoNsYDBwgC7/DFdV+2ebHGzjE3qPAnr6nKcMxShC34mrp6LSIP3NaZ/280fUUmEjtXOkoaRN1K+ni5BMWN6wIspMcNdPWzt+th/xnX5L6tLgkQyYJom1GdsYULwVrJCnFel1XaVdCM/XeNbcqUFeUKGIfcg4wXsuUz2FgD5PHaa04Y4AJwWihvOJrA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=y/XRqw8pSYYNuJH25BnLnvNDDvANusGXglmfcHQRjQg=;
- b=f0RKYAIOLIPlV5zuSeHVLhuzO11mVVIw9IUIvgLwviyC2rsTqHbGExei6k/z4oCqUAO48MADB7rPyzUd+HzXZG5Zm5huS61n7xvtiDFaJKPuZVGTm6NLl0CRz4Zdguiuu7XLdxz0gJmxrwNrkD78UQ8dW5dq7wqITsRpiFKFZTMJ9+lBs7742dZ7j5zZ4G9dUhwc69OhbBVxw2awrl41Csxt9pHC2Deuyn7d8r46EK0HJvAZyLgyNrpgBaYBEHZFkVom6uZKWPvCvP5LD4iumVBGg9ltCTjhMdQzU2y9Lro+rZc7ghPXUPssjdRW7znsVG0RFPg7kzk7aI9mKUNXUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=y/XRqw8pSYYNuJH25BnLnvNDDvANusGXglmfcHQRjQg=;
- b=ZVzp0HgLlQYHhFiiIeIolrpSZbY2vpf8rntVdW/QuJWKnwBrjWgEdqnRtEvy1IPuKmyku5QmwCugCU4APw+g/bXv1VpeB/4y4jjhaIyIw92E9L90ET7oM+tlrhXTS1rAim/+XjolNxtkGlQmkD4abRQPzQbgnj3VGjJVV1AUtgclUPTp2LnMHJ8/mXM6j4GCU5Fyc/Qg19lz1ssMcB1zDWOvLtbAJfP+BbSu2fZumqSbmgOdMQ9SrBdXCk7jVxYOIJAyCp65EG+z04+4DHApn62CfO9unY/j4wKa8+u7HEJpJY5F/QiSPIO4mLZr6/gIwtJIEpnDWm51Ti8bJaJYSQ==
-Received: from DS7PR03CA0202.namprd03.prod.outlook.com (2603:10b6:5:3b6::27)
- by PH7PR12MB7163.namprd12.prod.outlook.com (2603:10b6:510:202::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.27; Fri, 20 Jan
- 2023 09:16:00 +0000
-Received: from DM6NAM11FT018.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:3b6:cafe::a7) by DS7PR03CA0202.outlook.office365.com
- (2603:10b6:5:3b6::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.27 via Frontend
- Transport; Fri, 20 Jan 2023 09:16:00 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- DM6NAM11FT018.mail.protection.outlook.com (10.13.172.110) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6023.16 via Frontend Transport; Fri, 20 Jan 2023 09:16:00 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Fri, 20 Jan
- 2023 01:15:52 -0800
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Fri, 20 Jan 2023 01:15:51 -0800
-Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Fri, 20 Jan 2023 01:15:48 -0800
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     <bhelgaas@google.com>,
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        <rafael.j.wysocki@intel.com>, <kai.heng.feng@canonical.com>,
-        <enriquezmark36@gmail.com>, <tasev.stefanoska@skynet.be>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V2] PCI/ASPM: Skip L1SS save/restore if not already enabled
-Date:   Fri, 20 Jan 2023 14:45:40 +0530
-Message-ID: <20230120091540.3305-1-vidyas@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230119094913.20536-1-vidyas@nvidia.com>
-References: <20230119094913.20536-1-vidyas@nvidia.com>
-X-NVConfidentiality: public
-MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT018:EE_|PH7PR12MB7163:EE_
-X-MS-Office365-Filtering-Correlation-Id: e0220294-ac66-42fd-5a8d-08dafac6f27e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: hRkmx+eztIoh3b28U8vne+LWFFdWq19Rit8907iBYkxhfRjsCVNhdwIEJ340d8M8LB4rwIdqnAwsCJaBsvSQpopaw/w9uxpSitJoxKOa5DKtAzshGAlGkrkKImSUqm7g48BNRZOxu0G5mhjhmT/6LW+drLBhWyoKRtILxs0172qDFq0mZ+aIR2o1htJ4E+JYkOHEu/Q+ibog2iaJIIAxUzB2CQaEIvHfAzQ56GAp12drobJnjFwE/sGvbQWagY283J3Bn80Vc7pYMOahA2TDbR5TnmLY6+QlEiE+5q88GItDQhTRFSztj25VXZ8vKWJEvdxjtFL6wbKUw7MvEab8uu+P7mGwWzpp0D0NtVedvgRVNXcz46KpAn4oJkBgi/Fir4Sa0XYHCQmV2uaunFB20xPUiTWqp2xgxzUMPWoQdET3jeGRa3x2+bxMRsF1xlZM9wy8nTBZosyi6glUySOCnPNc8/9lyh1s9DXB12MuD29w4kEOyxk576NaVw03og3T3OlsBht1dmhJvpPkHETlLZr8BIQcdvWmSNuLkolrEwbPxzS9ICNH0crGdwLpjEaEGWUROxcxVjY8tIfbg7jylOlBdbXZcsJZxTIGq6isNa80zpEEqR/IP9NUuXZytcRsgATdelh6T0wgEh5fSnSsMUpO7HozfZ/tJgukVVqeWWptBT/Uovo7UfAqagm44ks2O966JbJPfWMEZmnKS0B6DneX45y+PcJPBumfTh2Y+ykz/OT7HNt79NXSIEHo7GfGVRbwTm8nbDwt34UD/REfCP6aeuwH3aO0bDEJhLluFWt1iC+yxgkQNx/Se8TQxvEmrmLlwZ3jMeaFYdbdJ3CDrQ==
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230022)(4636009)(396003)(39860400002)(136003)(346002)(376002)(451199015)(46966006)(40470700004)(36840700001)(26005)(2906002)(186003)(54906003)(110136005)(316002)(2616005)(966005)(7696005)(36756003)(478600001)(6666004)(36860700001)(7636003)(86362001)(40460700003)(356005)(82740400003)(40480700001)(336012)(1076003)(47076005)(426003)(83380400001)(41300700001)(4326008)(5660300002)(8936002)(70206006)(70586007)(82310400005)(8676002)(32563001)(473944003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jan 2023 09:16:00.3775
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: e0220294-ac66-42fd-5a8d-08dafac6f27e
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT018.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7163
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S230087AbjATJT1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 04:19:27 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8ACF6A327
+        for <linux-pci@vger.kernel.org>; Fri, 20 Jan 2023 01:19:16 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0A13E300160EC;
+        Fri, 20 Jan 2023 10:19:13 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id F20C71D7C40; Fri, 20 Jan 2023 10:19:12 +0100 (CET)
+Message-Id: <3dc88ea82bdc0e37d9000e413d5ebce481cbd629.1674205689.git.lukas@wunner.de>
+From:   Lukas Wunner <lukas@wunner.de>
+Date:   Fri, 20 Jan 2023 10:19:02 +0100
+Subject: [PATCH] PCI: hotplug: Allow marking devices as disconnected during
+ bind/unbind
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Skip save and restore of ASPM L1 Sub-States specific registers if they
-are not already enabled in the system. This is to avoid issues observed
-on certain platforms during restoration process, particularly when
-restoring the L1SS registers contents.
+On surprise removal, pciehp_unconfigure_device() and acpiphp's
+trim_stale_devices() call pci_dev_set_disconnected() to mark removed
+devices as permanently offline.  Thereby, the PCI core and drivers know
+to skip device accesses.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216782
-Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+However pci_dev_set_disconnected() takes the device_lock and thus waits
+for a concurrent driver bind or unbind to complete.  As a result, the
+driver's ->probe and ->remove hooks have no chance to learn that the
+device is gone.
+
+That doesn't make any sense, so drop the device_lock and instead use
+atomic xchg() and cmpxchg() operations to update the device state.
+
+As a byproduct, an AB-BA deadlock reported by Anatoli is fixed which
+occurs on surprise removal with AER concurrently performing a bus reset.
+
+AER bus reset:
+
+  INFO: task irq/26-aerdrv:95 blocked for more than 120 seconds.
+  Tainted: G        W          6.2.0-rc3-custom-norework-jan11+
+  schedule
+  rwsem_down_write_slowpath
+  down_write_nested
+  pciehp_reset_slot                      # acquires reset_lock
+  pci_reset_hotplug_slot
+  pci_slot_reset                         # acquires device_lock
+  pci_bus_error_reset
+  aer_root_reset
+  pcie_do_recovery
+  aer_process_err_devices
+  aer_isr
+
+pciehp surprise removal:
+
+  INFO: task irq/26-pciehp:96 blocked for more than 120 seconds.
+  Tainted: G        W          6.2.0-rc3-custom-norework-jan11+
+  schedule_preempt_disabled
+  __mutex_lock
+  mutex_lock_nested
+  pci_dev_set_disconnected               # acquires device_lock
+  pci_walk_bus
+  pciehp_unconfigure_device
+  pciehp_disable_slot
+  pciehp_handle_presence_or_link_change
+  pciehp_ist                             # acquires reset_lock
+
+Fixes: a6bd101b8f84 ("PCI: Unify device inaccessible")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=215590
+Reported-by: Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.20+
+Cc: Keith Busch <kbusch@kernel.org>
 ---
-v2:
-* Address review comments from Kai-Heng Feng and Rafael
+ drivers/pci/pci.h | 43 +++++++++++++------------------------------
+ 1 file changed, 13 insertions(+), 30 deletions(-)
 
- drivers/pci/pcie/aspm.c | 17 ++++++++++++++++-
- include/linux/pci.h     |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 53a1fa306e1e..bd2a922081bd 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -761,11 +761,23 @@ void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9ed3b55..5d5a44a 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -310,53 +310,36 @@ struct pci_sriov {
+  * @dev: PCI device to set new error_state
+  * @new: the state we want dev to be in
+  *
+- * Must be called with device_lock held.
++ * If the device is experiencing perm_failure, it has to remain in that state.
++ * Any other transition is allowed.
+  *
+  * Returns true if state has been changed to the requested state.
+  */
+ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
+ 					pci_channel_state_t new)
  {
- 	struct pci_cap_saved_state *save_state;
- 	u16 l1ss = dev->l1ss;
--	u32 *cap;
-+	u32 *cap, val;
+-	bool changed = false;
++	pci_channel_state_t old;
  
- 	if (!l1ss)
- 		return;
+-	device_lock_assert(&dev->dev);
+ 	switch (new) {
+ 	case pci_channel_io_perm_failure:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-		case pci_channel_io_perm_failure:
+-			changed = true;
+-			break;
+-		}
+-		break;
++		xchg(&dev->error_state, pci_channel_io_perm_failure);
++		return true;
+ 	case pci_channel_io_frozen:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-			changed = true;
+-			break;
+-		}
+-		break;
++		old = cmpxchg(&dev->error_state, pci_channel_io_normal,
++			      pci_channel_io_frozen);
++		return old != pci_channel_io_perm_failure;
+ 	case pci_channel_io_normal:
+-		switch (dev->error_state) {
+-		case pci_channel_io_frozen:
+-		case pci_channel_io_normal:
+-			changed = true;
+-			break;
+-		}
+-		break;
++		old = cmpxchg(&dev->error_state, pci_channel_io_frozen,
++			      pci_channel_io_normal);
++		return old != pci_channel_io_perm_failure;
++	default:
++		return false;
+ 	}
+-	if (changed)
+-		dev->error_state = new;
+-	return changed;
+ }
  
-+	/*
-+	 * Skip save and restore of L1 Sub-States registers if they are not
-+	 * already enabled in the system
-+	 */
-+	pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL1, &val);
-+	if (!(val & PCI_L1SS_CTL1_L1SS_MASK)) {
-+		dev->skip_l1ss_restore = true;
-+		return;
-+	}
-+
-+	dev->skip_l1ss_restore = false;
-+
- 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
- 	if (!save_state)
- 		return;
-@@ -784,6 +796,9 @@ void pci_restore_aspm_l1ss_state(struct pci_dev *dev)
- 	if (!l1ss)
- 		return;
+ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ {
+-	device_lock(&dev->dev);
+ 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+-	device_unlock(&dev->dev);
  
-+	if (dev->skip_l1ss_restore)
-+		return;
-+
- 	save_state = pci_find_saved_ext_cap(dev, PCI_EXT_CAP_ID_L1SS);
- 	if (!save_state)
- 		return;
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 22319ea71ab0..39534602b55e 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -395,6 +395,7 @@ struct pci_dev {
- 	unsigned int	ltr_path:1;	/* Latency Tolerance Reporting
- 					   supported from root to here */
- 	u16		l1ss;		/* L1SS Capability pointer */
-+	bool		skip_l1ss_restore;	/* Skip L1SS Save/Restore */
- #endif
- 	unsigned int	pasid_no_tlp:1;		/* PASID works without TLP Prefix */
- 	unsigned int	eetlp_prefix_path:1;	/* End-to-End TLP Prefix */
+ 	return 0;
+ }
 -- 
-2.17.1
+2.39.1
 
