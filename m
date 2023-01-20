@@ -2,158 +2,170 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38F9F674D2A
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 07:18:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 44BD9674EC1
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 08:56:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229495AbjATGSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Jan 2023 01:18:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
+        id S230016AbjATH4u (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Jan 2023 02:56:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjATGSb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 01:18:31 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9955081986;
-        Thu, 19 Jan 2023 22:18:28 -0800 (PST)
-Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Nyq5C1S38zRrKw;
-        Fri, 20 Jan 2023 14:16:31 +0800 (CST)
-Received: from [10.136.108.160] (10.136.108.160) by
- kwepemi500002.china.huawei.com (7.221.188.171) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 20 Jan 2023 14:18:25 +0800
-Message-ID: <42dc3ab2-8129-7186-c777-07848ee01f66@huawei.com>
-Date:   Fri, 20 Jan 2023 14:18:24 +0800
+        with ESMTP id S229963AbjATH4t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 02:56:49 -0500
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138DF73EE7;
+        Thu, 19 Jan 2023 23:56:44 -0800 (PST)
+Received: by mail-qt1-f169.google.com with SMTP id a25so3555807qto.10;
+        Thu, 19 Jan 2023 23:56:44 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3Twh/RMOkW9lPwocGUUWk5FJezMEMoAxY5/88HPIqIY=;
+        b=EwUyQMHeOHqY2GKAdCsEkXJ2TZv/+ReqBKQSreh0RxjG484Rw2k8mlvcEfiAc1VBKA
+         c6Sxq/Nt5E67PI9xPNUKr+fu2A4YqZGAdEt/l0s3EiAVWGMWr1fEyYKsbnVrFdjNpMmR
+         UdEZRSGFZXsS3VhxAm3u1hOoPaYKBn71rhOgv77ls4708IRzfhcILzSjrleIWxzyuuVn
+         SsNy4H8cBznPwN+dZajfz3oqz3Zo/EbfxT7oJ0RFGRpBtZyp6Tw/FRtNbwib5nxbV0xQ
+         o/3GCAAIkDC/w9ap6pRX5a0yPUgxkQiZoB9UDSQJA2w5ZYm0U70mMnICDuHyu287O9aw
+         Ezwg==
+X-Gm-Message-State: AFqh2koqCQvI7uIliXlvNlVPc8Voe5jAU8z2F0dzebxesYzz848izQ3b
+        UBAeiUIGtOay8F86y8ZPaO4Hbtv0cyIR2Q==
+X-Google-Smtp-Source: AMrXdXt/BLKDHBvWbLEE8cp0teZsHzSzsAkhF0/bWgDgxdvI4+cOc2P+di7V32BYK20iSjYC3BWjxg==
+X-Received: by 2002:ac8:5ed6:0:b0:3ab:9974:3a06 with SMTP id s22-20020ac85ed6000000b003ab99743a06mr16795498qtx.38.1674201402988;
+        Thu, 19 Jan 2023 23:56:42 -0800 (PST)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id ca24-20020a05622a1f1800b003b697038179sm1016499qtb.35.2023.01.19.23.56.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 19 Jan 2023 23:56:42 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-4d0f843c417so61481887b3.7;
+        Thu, 19 Jan 2023 23:56:42 -0800 (PST)
+X-Received: by 2002:a0d:db07:0:b0:500:8d0d:7feb with SMTP id
+ d7-20020a0ddb07000000b005008d0d7febmr79917ywe.358.1674201401946; Thu, 19 Jan
+ 2023 23:56:41 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] PCI: Exit restore process when device is still powerdown
-Content-Language: en-US
-References: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
-To:     "zhangjianrong (E)" <zhangjianrong5@huawei.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   jiantao zhang <water.zhangjiantao@huawei.com>
-In-Reply-To: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
-X-Forwarded-Message-Id: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.136.108.160]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- kwepemi500002.china.huawei.com (7.221.188.171)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <cover.1674036164.git.geert+renesas@glider.be> <cd685d8e4d6754c384acfc1796065d539a2c3ea8.1674036164.git.geert+renesas@glider.be>
+ <CAL_JsqJS2JTZ1BxMbG_2zgzu5xtxMFPqjxc_vUjuZp3k1xUmaQ@mail.gmail.com>
+ <CAMuHMdXGsmNjYy-ofmuHLkr8yaDEzy+SGnhtbmc_2ezbEKAMjw@mail.gmail.com> <CAL_JsqJWEzb_hxi0_sSj-5F0q4A9UcJEhwcSArWT6eAffpeqHA@mail.gmail.com>
+In-Reply-To: <CAL_JsqJWEzb_hxi0_sSj-5F0q4A9UcJEhwcSArWT6eAffpeqHA@mail.gmail.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 20 Jan 2023 08:56:29 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXFjJJq=XqBZmL+EC9x5DMmucyncKE5ExS89bb00sir1g@mail.gmail.com>
+Message-ID: <CAMuHMdXFjJJq=XqBZmL+EC9x5DMmucyncKE5ExS89bb00sir1g@mail.gmail.com>
+Subject: Re: [PATCH 7/7] usb: host: ohci-exynos: Convert to devm_of_phy_optional_get()
+To:     Rob Herring <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-在 2023/1/13 6:13, Bjorn Helgaas 写道:
-> On Thu, Dec 22, 2022 at 12:41:04PM +0000, Jiantao Zhang wrote:
->> We get this stack when the rp doesn't power up in resume noirq:
-> 
-> s/rp/Root Port/
-> 
-> "resume noirq" seems to refer to a function, so please mention the
-> exact function name.
-> 
->>      dump_backtrace.cfi_jt+0x0/0x4
->>      dump_stack_lvl+0xb4/0x10c
->>      show_regs_before_dump_stack+0x1c/0x30
->>      arm64_serror_panic+0x110/0x1a8
->>      do_serror+0x16c/0x1cc
->>      el1_error+0x8c/0x10c
->>      do_raw_spin_unlock+0x74/0xdc
->>      pci_bus_read_config_word+0xdc/0x1dc
->>      pci_restore_msi_state+0x2f4/0x36c
->>      pci_restore_state+0x13f0/0x1444
->>      pci_pm_resume_noirq+0x158/0x318
->>      dpm_run_callback+0x178/0x5e8
->>      device_resume_noirq+0x250/0x264
->>      async_resume_noirq+0x20/0xf8
->>      async_run_entry_fn+0xfc/0x364
->>      process_one_work+0x37c/0x7f4
->>      worker_thread+0x3e8/0x754
->>      kthread+0x168/0x204
->>      ret_from_fork+0x10/0x18
->> The ep device uses msix, the restore process will write bar space
->> in __pci_msix_desc_mask_irq, which will result in accessing the
->> powerdown area when the rp doesn't power on.
-> 
-> s/ep/endpoint/
-> s/msix/MSI-X/ to match spec usage
-> s/bar/BAR/
-> Add "()" after function names, e.g., __pci_msix_desc_mask_irq()
-> s/rp/Root Port/
-> 
->> It makes sense we should do nothing when the device is still powerdown.
->>
->> Signed-off-by: Jianrong Zhang <zhangjianrong5@huawei.com>
->> Signed-off-by: Jiantao Zhang <water.zhangjiantao@huawei.com>
->> ---
->>   drivers/pci/pci.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index fba95486caaf..279f6e8c5a00 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -1764,7 +1764,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
->>    */
->>   void pci_restore_state(struct pci_dev *dev)
->>   {
->> -	if (!dev->state_saved)
->> +	if (!dev->state_saved || dev->current_state == PCI_UNKNOWN)
->>   		return;
-> 
-> This doesn't seem right to me because it seems like we're covering up
-> a problem elsewhere.
-> 
-> If we need access to the endpoint to restore state, shouldn't we
-> ensure that the endpoint is powered up before we try to access it?
-> 
-> We depend on the state being restored, so if we skip the restore here,
-> where *will* it happen?
-As the call stack shows the serror happens in pci_pm_resume_noirq(),
-which belongs to pci pm framework. The resume process related to pci
-devices goes like this:
+Hi Rob,
 
-stage noirq:
-Root Port's call stack: device_resume_noirq() --> pci_pm_resume_noirq() 
---> resume_noirq callback
-endpoint's call stack: device_resume_noirq() --> pci_pm_resume_noirq() 
---> resume_noirq callback
+On Wed, Jan 18, 2023 at 8:49 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jan 18, 2023 at 12:28 PM Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > On Wed, Jan 18, 2023 at 6:30 PM Rob Herring <robh@kernel.org> wrote:
+> > > On Wed, Jan 18, 2023 at 4:15 AM Geert Uytterhoeven
+> > > <geert+renesas@glider.be> wrote:
+> > > > Use the new devm_of_phy_optional_get() helper instead of open-coding the
+> > > > same operation.
+> > > >
+> > > > This lets us drop several checks for IS_ERR(), as phy_power_{on,off}()
+> > > > handle NULL parameters fine.
+> > > >
+> > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > > ---
+> > > >  drivers/usb/host/ohci-exynos.c | 24 +++++++-----------------
+> > > >  1 file changed, 7 insertions(+), 17 deletions(-)
+> > > >
+> > > > diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
+> > > > index 8d7977fd5d3bd502..8dd9c3b2411c383f 100644
+> > > > --- a/drivers/usb/host/ohci-exynos.c
+> > > > +++ b/drivers/usb/host/ohci-exynos.c
+> > > > @@ -69,19 +69,12 @@ static int exynos_ohci_get_phy(struct device *dev,
+> > > >                         return -EINVAL;
+> > > >                 }
+> > > >
+> > > > -               phy = devm_of_phy_get(dev, child, NULL);
+> > > > +               phy = devm_of_phy_optional_get(dev, child, NULL);
+> > > >                 exynos_ohci->phy[phy_number] = phy;
+> > > >                 if (IS_ERR(phy)) {
+> > > > -                       ret = PTR_ERR(phy);
+> > > > -                       if (ret == -EPROBE_DEFER) {
+> > > > -                               of_node_put(child);
+> > > > -                               return ret;
+> > > > -                       } else if (ret != -ENOSYS && ret != -ENODEV) {
+> > > > -                               dev_err(dev,
+> > > > -                                       "Error retrieving usb2 phy: %d\n", ret);
+> > > > -                               of_node_put(child);
+> > > > -                               return ret;
+> > > > -                       }
+> > > > +                       of_node_put(child);
+> > > > +                       return dev_err_probe(dev, PTR_ERR(phy),
+> > > > +                                            "Error retrieving usb2 phy\n");
+> > >
+> > > Optional is really the only reason for the caller to decide whether to
+> > > print an error message or not. If we have both flavors of 'get', then
+> > > really the 'get' functions should print an error message.
+> >
+> > In case of a real error, both should print an error message, right?
+> >
+> > Anyway, I understand that's a three step operation:
+> >   1. Introduce and convert to the _optional variant,
+> >   2. Add error printing to callees.
+> >   3. Remove error printing from callers.
+>
+> I think you only need 2 out of 3 steps depending on the situation. In
+> this case, you can add error printing in the _optional variant when
+> you introduce it and then convert callers to it.
+>
+> Where we already have an optional variant, then you need steps 2 and 3.
 
-stage early:
-Root Port's call stack: device_resume_early() --> pci_pm_resume_early() 
---> device resume_early callback
-endpoint's call stack: device_resume_early() --> pci_pm_resume_early() 
---> device resume_early callback
+Right, so the error printing can be done now, while introducing
+devm_of_phy_optional_get().
 
-stage normal:
-Root Port's call stack: device_resume() --> pci_pm_resume() --> device 
-resume callback
-endpoint's call stack: device_resume() --> pci_pm_resume() --> device 
-resume callback
+Vinod: Do you agree?
+If yes, I can respin with that change.
+If not, I'll have to respin anyway, as the bug in
+am65_cpsw_init_serdes_phy() has been fixed in the meantime.
 
-The problem is we don't power up the controller in Root Port's 
-resume_noirq callback
-(actually we don't even register resume_noirq callback for some reason),
-so the serror happens because of accessing powerdown area when 
-endpoint's pci_pm_resume_noirq()
-calls pci_restore_state() which will call pci_restore_msi_state() to 
-restore MSI-X state.
-So we wonder if there is strong restriction that we must poweron in Root 
-Port's resume_noirq callback.
-The pci_restore_state() can't restore anything when the device is still 
-at PCI_UNKNOWN state,
-and if the device is accessible it can't be at PCI_UNKNOWN state, so the 
-patch doesn't make any difference
-for original process.
-> 
-> Bjorn
-> .
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
