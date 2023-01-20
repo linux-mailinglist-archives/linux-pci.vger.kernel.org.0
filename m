@@ -2,78 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5540E674CA7
-	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 06:39:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 38F9F674D2A
+	for <lists+linux-pci@lfdr.de>; Fri, 20 Jan 2023 07:18:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230373AbjATFi7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Jan 2023 00:38:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46824 "EHLO
+        id S229495AbjATGSc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Jan 2023 01:18:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231566AbjATFip (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 00:38:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD3E65FC1;
-        Thu, 19 Jan 2023 21:35:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6481661E23;
-        Fri, 20 Jan 2023 05:35:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61686C433D2;
-        Fri, 20 Jan 2023 05:35:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674192958;
-        bh=8fStNEoSsGqotQjU+mQkrtNKHP0mDcCwZkH9P+/tZzk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Nia8b2pq9XxzIMd3lyGpEAN0Pu2CG6R/GrdcTOZCV4rgawIEe5u3WFJu2zMwOjyZG
-         8eEBY+03XA+j95KK5CCOiiWA9sXNPWwz2vFhJzWV3mNQotav9sq+K0i/IZJ/Cr6itK
-         q1pRC7CcHDb23n3UfaPPtScqf9+o5Y9UBXKndLHQRiR7KKYi4BfKO6EIjltz9VBnHe
-         ORM8i89pvcJDHieagLHpp1wDMAZCl8BnxhP/qDOrPJfe+bxGoUK/FpTrjLrFUv5JmJ
-         qpfaAS6LoYjQeyVqWaQEbykyPEh8BPopyy8Jop/IBYEorFcFoXeAlfgN6kfHfE8lsX
-         n5v0uF+zOoXUQ==
-Date:   Thu, 19 Jan 2023 21:35:57 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Tony Nguyen <anthony.l.nguyen@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, <netdev@vger.kernel.org>,
-        <intel-wired-lan@lists.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [Intel-wired-lan] [PATCH 2/9] e1000e: Remove redundant
- pci_enable_pcie_error_reporting()
-Message-ID: <20230119213557.57598e8f@kernel.org>
-In-Reply-To: <2c722338-c113-14a1-040b-70326e2e2451@intel.com>
-References: <20230119184045.GA482553@bhelgaas>
-        <2c722338-c113-14a1-040b-70326e2e2451@intel.com>
+        with ESMTP id S229453AbjATGSb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 01:18:31 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9955081986;
+        Thu, 19 Jan 2023 22:18:28 -0800 (PST)
+Received: from kwepemi500002.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Nyq5C1S38zRrKw;
+        Fri, 20 Jan 2023 14:16:31 +0800 (CST)
+Received: from [10.136.108.160] (10.136.108.160) by
+ kwepemi500002.china.huawei.com (7.221.188.171) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Fri, 20 Jan 2023 14:18:25 +0800
+Message-ID: <42dc3ab2-8129-7186-c777-07848ee01f66@huawei.com>
+Date:   Fri, 20 Jan 2023 14:18:24 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] PCI: Exit restore process when device is still powerdown
+Content-Language: en-US
+References: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
+To:     "zhangjianrong (E)" <zhangjianrong5@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   jiantao zhang <water.zhangjiantao@huawei.com>
+In-Reply-To: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
+X-Forwarded-Message-Id: <4691af50-b718-d0ec-7dff-fd6fa1ff081a@huawei.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.136.108.160]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemi500002.china.huawei.com (7.221.188.171)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 19 Jan 2023 13:31:39 -0800 Tony Nguyen wrote:
-> > Thanks a million for taking a look at these, Tony!
-> > 
-> > These driver patches are all independent and have no dependency on the
-> > 1/9 PCI/AER patch.  What's your opinion on merging these?  Should they
-> > go via netdev?  Should they be squashed into a single patch that does
-> > all the Intel drivers at once?
-> > 
-> > I'm happy to squash them and/or merge them via the PCI tree, whatever
-> > is easiest.  
+在 2023/1/13 6:13, Bjorn Helgaas 写道:
+> On Thu, Dec 22, 2022 at 12:41:04PM +0000, Jiantao Zhang wrote:
+>> We get this stack when the rp doesn't power up in resume noirq:
 > 
-> Since there's no dependency, IMO, it'd make sense to go through 
-> Intel-wired-lan/netdev. Keeping them per driver is fine.
+> s/rp/Root Port/
+> 
+> "resume noirq" seems to refer to a function, so please mention the
+> exact function name.
+> 
+>>      dump_backtrace.cfi_jt+0x0/0x4
+>>      dump_stack_lvl+0xb4/0x10c
+>>      show_regs_before_dump_stack+0x1c/0x30
+>>      arm64_serror_panic+0x110/0x1a8
+>>      do_serror+0x16c/0x1cc
+>>      el1_error+0x8c/0x10c
+>>      do_raw_spin_unlock+0x74/0xdc
+>>      pci_bus_read_config_word+0xdc/0x1dc
+>>      pci_restore_msi_state+0x2f4/0x36c
+>>      pci_restore_state+0x13f0/0x1444
+>>      pci_pm_resume_noirq+0x158/0x318
+>>      dpm_run_callback+0x178/0x5e8
+>>      device_resume_noirq+0x250/0x264
+>>      async_resume_noirq+0x20/0xf8
+>>      async_run_entry_fn+0xfc/0x364
+>>      process_one_work+0x37c/0x7f4
+>>      worker_thread+0x3e8/0x754
+>>      kthread+0x168/0x204
+>>      ret_from_fork+0x10/0x18
+>> The ep device uses msix, the restore process will write bar space
+>> in __pci_msix_desc_mask_irq, which will result in accessing the
+>> powerdown area when the rp doesn't power on.
+> 
+> s/ep/endpoint/
+> s/msix/MSI-X/ to match spec usage
+> s/bar/BAR/
+> Add "()" after function names, e.g., __pci_msix_desc_mask_irq()
+> s/rp/Root Port/
+> 
+>> It makes sense we should do nothing when the device is still powerdown.
+>>
+>> Signed-off-by: Jianrong Zhang <zhangjianrong5@huawei.com>
+>> Signed-off-by: Jiantao Zhang <water.zhangjiantao@huawei.com>
+>> ---
+>>   drivers/pci/pci.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+>> index fba95486caaf..279f6e8c5a00 100644
+>> --- a/drivers/pci/pci.c
+>> +++ b/drivers/pci/pci.c
+>> @@ -1764,7 +1764,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
+>>    */
+>>   void pci_restore_state(struct pci_dev *dev)
+>>   {
+>> -	if (!dev->state_saved)
+>> +	if (!dev->state_saved || dev->current_state == PCI_UNKNOWN)
+>>   		return;
+> 
+> This doesn't seem right to me because it seems like we're covering up
+> a problem elsewhere.
+> 
+> If we need access to the endpoint to restore state, shouldn't we
+> ensure that the endpoint is powered up before we try to access it?
+> 
+> We depend on the state being restored, so if we skip the restore here,
+> where *will* it happen?
+As the call stack shows the serror happens in pci_pm_resume_noirq(),
+which belongs to pci pm framework. The resume process related to pci
+devices goes like this:
 
-Ah, damn, I spammed Bjorn with the same question because email was
-pooped most of the day :/ Reportedly not vger, email in general but 
-fool me once...
+stage noirq:
+Root Port's call stack: device_resume_noirq() --> pci_pm_resume_noirq() 
+--> resume_noirq callback
+endpoint's call stack: device_resume_noirq() --> pci_pm_resume_noirq() 
+--> resume_noirq callback
 
-Tony, if you could take these via your tree that'd be best.
+stage early:
+Root Port's call stack: device_resume_early() --> pci_pm_resume_early() 
+--> device resume_early callback
+endpoint's call stack: device_resume_early() --> pci_pm_resume_early() 
+--> device resume_early callback
+
+stage normal:
+Root Port's call stack: device_resume() --> pci_pm_resume() --> device 
+resume callback
+endpoint's call stack: device_resume() --> pci_pm_resume() --> device 
+resume callback
+
+The problem is we don't power up the controller in Root Port's 
+resume_noirq callback
+(actually we don't even register resume_noirq callback for some reason),
+so the serror happens because of accessing powerdown area when 
+endpoint's pci_pm_resume_noirq()
+calls pci_restore_state() which will call pci_restore_msi_state() to 
+restore MSI-X state.
+So we wonder if there is strong restriction that we must poweron in Root 
+Port's resume_noirq callback.
+The pci_restore_state() can't restore anything when the device is still 
+at PCI_UNKNOWN state,
+and if the device is accessible it can't be at PCI_UNKNOWN state, so the 
+patch doesn't make any difference
+for original process.
+> 
+> Bjorn
+> .
