@@ -2,147 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB5E26764FC
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 08:35:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FFB1676591
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 11:04:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjAUHfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Jan 2023 02:35:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50922 "EHLO
+        id S229493AbjAUKEn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Jan 2023 05:04:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjAUHfX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 02:35:23 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B497135D;
-        Fri, 20 Jan 2023 23:35:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60D33B82A2B;
-        Sat, 21 Jan 2023 07:35:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A2DAC433EF;
-        Sat, 21 Jan 2023 07:35:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1674286520;
-        bh=WjefWdiCL/8Sz2EGJFW9nb3fkDOMUyc6/UNjuyE0PTQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gQgeRDVc+OYVn7BZ+U1l4syouVdAqIOBf7OnNvPENNlJshtIlQecaetgk5H3u8KS1
-         Q2vfMuva0LU8CW7u4UEg4Xtj7sJZy/dBcgiWK9q+ObA1n6QCjxr/lsGVimlOyt9L7w
-         wUJxBNtsN/lAiUP6FvwZW0rVI9HfUn6ejatG+zxU=
-Date:   Sat, 21 Jan 2023 08:35:17 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Russ Weight <russell.h.weight@intel.com>
-Cc:     Tianfei Zhang <tianfei.zhang@intel.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org,
-        lukas@wunner.de, kabel@kernel.org, mani@kernel.org,
-        pali@kernel.org, mdf@kernel.org, hao.wu@intel.com,
-        yilun.xu@intel.com, trix@redhat.com, jgg@ziepe.ca,
-        ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
-        dan.j.williams@intel.com, keescook@chromium.org, rafael@kernel.org,
-        corbet@lwn.net, linux-doc@vger.kernel.org,
-        ilpo.jarvinen@linux.intel.com, lee@kernel.org,
-        matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v1 10/12] PCI: hotplug: implement the hotplug_slot_ops
- callback for fpgahp
-Message-ID: <Y8uVtSw1qXhfHrNk@kroah.com>
-References: <20230119013602.607466-1-tianfei.zhang@intel.com>
- <20230119013602.607466-11-tianfei.zhang@intel.com>
- <Y8lFgKZGKYrM02Wm@kroah.com>
- <ea85cb02-a13d-f232-8ebd-c13893fc00c4@intel.com>
+        with ESMTP id S229484AbjAUKEm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 05:04:42 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56AAF65EDC;
+        Sat, 21 Jan 2023 02:04:40 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id az20so19669927ejc.1;
+        Sat, 21 Jan 2023 02:04:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lFsFRg5RfveDHrVd5rP7zwnXWjQK+oYVFSSoe+tPeXw=;
+        b=Jj7Dy3+LLiPdBvAlYJp3+zJIodOkOFiksEI2pP/I6babOKOr+gv4y5L7N3VJqmBEoi
+         vQoeZvtPojAtqhRc2JTn1Iz6wHkDzUmGlW97AA9D69aCDJC0cei67YUL9wOm3abggcmS
+         zipZFdO6v3962PvVf01trernDsiGneXNgOYOfW19I04BCEZVE+GJeDRIq8U9S0DH5UyW
+         acjUBGuooGgvTfp26uPTLf699XJfVTat8x9AvCODtjgezfU9wazkWXX9zKQbOrGf0lIe
+         BYzOQsXbS1yyOFz5zx3pxqTg86tKdF0K4ff/KtDYaCZdKP8zL6aii8wI9mGvjEwYKvks
+         OwIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lFsFRg5RfveDHrVd5rP7zwnXWjQK+oYVFSSoe+tPeXw=;
+        b=QvBg4MBwljsx7b4mcSQ0C5/2pMZoqF9WN3lMrwJSqTtEm1tPDf5pZ8ZpBPCycVbP/m
+         fPQ7Ozl+gG3vqlfb+QBs93lvLNF0WhUO+MT+pX6IJqz8jSEc2PsmY/3F4iWVnucQzfSz
+         037bDqztl/VVTWtVOqOO9HOSvXXw/roa3V++ferVdHVij92s5W3NnD2riJH4YrFrhbBq
+         ldgJoY9fqYtHoMBh2UvtOU7HZ+pgzsdv5SRxTuQw54IcVWIKJaeWwOvoQGDSLpqtl7C5
+         If3SFDDLh4x1v8CyfDOdEGwWRE/42wH8OmYWCzbbTShPwWx+ZrKXuQhftdc+SHiJIE2U
+         zlsA==
+X-Gm-Message-State: AFqh2kofyCs/tnLwuQOTSLEBrZp74Bs+qZbRKrvuCQut9NmxRv+ozIxg
+        aveMaK/3X7RHPJCfjUmc+UM=
+X-Google-Smtp-Source: AMrXdXsBi+GE/siU9cL+3WOKY7qtamXDMRh7RT8xax/vg8C7zX2vxKrmKrcKgL4RFLvccYLYvHKi9w==
+X-Received: by 2002:a17:906:ddb:b0:7b2:757a:1411 with SMTP id p27-20020a1709060ddb00b007b2757a1411mr28388788eji.9.1674295478807;
+        Sat, 21 Jan 2023 02:04:38 -0800 (PST)
+Received: from [0.0.0.0] (tor-exit-46.for-privacy.net. [2a0b:f4c2:2::46])
+        by smtp.gmail.com with ESMTPSA id q18-20020a17090676d200b00857c2c29553sm14854715ejn.197.2023.01.21.02.04.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 21 Jan 2023 02:04:38 -0800 (PST)
+From:   persmule@gmail.com
+X-Google-Original-From: equu@openmail.cc
+To:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org
+Cc:     linux-pci@vger.kernel.org, robh@kernel.org,
+        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
+        equu@openmail.cc
+Subject: [PATCH 2/3] wifi: ath9k: stop loading incompatible DT cal data
+Date:   Sat, 21 Jan 2023 18:00:43 +0800
+Message-Id: <20230121100043.1497633-1-equu@openmail.cc>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
+References: <ea4e2fed-383d-829d-8a2a-9239768ccd94@openmail.cc>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ea85cb02-a13d-f232-8ebd-c13893fc00c4@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 02:38:43PM -0800, Russ Weight wrote:
-> 
-> 
-> On 1/19/23 05:28, Greg KH wrote:
-> > On Wed, Jan 18, 2023 at 08:36:00PM -0500, Tianfei Zhang wrote:
-> >> Implement the image_load and available_images callback functions
-> >> for fpgahp driver. This patch leverages some APIs from pciehp
-> >> driver to implement the device reconfiguration below the PCI hotplug
-> >> bridge.
-> >>
-> >> Here are the steps for a process of image load.
-> >> 1. remove all PFs and VFs except the PF0.
-> >> 2. remove all non-reserved devices of PF0.
-> >> 3. trigger a image load via BMC.
-> >> 4. disable the link of the hotplug bridge.
-> >> 5. remove all reserved devices under PF0 and PCI devices
-> >>    below the hotplug bridge.
-> >> 6. wait for image load done via BMC, e.g. 10s.
-> >> 7. re-enable the link of the hotplug bridge.
-> >> 8. re-enumerate PCI devices below the hotplug bridge.
-> >>
-> >> Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
-> >> ---
-> >>  Documentation/ABI/testing/sysfs-driver-fpgahp |  21 ++
-> >>  MAINTAINERS                                   |   1 +
-> >>  drivers/pci/hotplug/fpgahp.c                  | 179 ++++++++++++++++++
-> >>  3 files changed, 201 insertions(+)
-> >>  create mode 100644 Documentation/ABI/testing/sysfs-driver-fpgahp
-> >>
-> >> diff --git a/Documentation/ABI/testing/sysfs-driver-fpgahp b/Documentation/ABI/testing/sysfs-driver-fpgahp
-> >> new file mode 100644
-> >> index 000000000000..8d4b1bfc4012
-> >> --- /dev/null
-> >> +++ b/Documentation/ABI/testing/sysfs-driver-fpgahp
-> >> @@ -0,0 +1,21 @@
-> >> +What:		/sys/bus/pci/slots/X-X/available_images
-> >> +Date:		May 2023
-> >> +KernelVersion:	6.3
-> >> +Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
-> >> +Description:	Read-only. This file returns a space separated list of
-> >> +		key words that may be written into the image_load file
-> >> +		described below. These keywords decribe an FPGA, BMC,
-> >> +		or firmware image in FLASH or EEPROM storage that may
-> >> +		be loaded.
-> > No, sysfs is "one value per file", why is this a list?
-> >
-> > And what exactly defines the values in this list?
-> >
-> >> +
-> >> +What:		/sys/bus/pci/slots/X-X/image_load
-> >> +Date:		May 2023
-> >> +KernelVersion:	6.3
-> >> +Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
-> >> +Description:	Write-only. A key word may be written to this file to
-> >> +		trigger a new image loading of an FPGA, BMC, or firmware
-> >> +		image from FLASH or EEPROM. Refer to the available_images
-> >> +		file for a list of supported key words for the underlying
-> >> +		device.
-> >> +		Writing an unsupported string to this file will result in
-> >> +		EINVAL being returned.
-> > Why is this a separate file from the "read the list" file?
-> 
-> The intended usage is like this:
-> 
-> $ cat available_images
-> bmc_factory bmc_user fpga_factory fpga_user1 fpga_user2
-> $ echo bmc_user > image_load
-> 
-> This specifies which image stored in flash that you want to have activated
-> on the device.
-> 
-> An existing example of something like this is in the tracing code:
-> available_tracers and current_tracer
-> 
-> Would it be preferable to just create a file for each possible image,
-> and echo 1 to trigger the event? (echo 1 > bmc_user)
+From: Edward Chow <equu@openmail.cc>
 
-That would make things much more simpler overall and not force people to
-have to parse a sysfs file, which is the main reason we created sysfs in
-the first place.
+As reported in https://github.com/openwrt/openwrt/pull/11345 , ath9k
+would load calibration data from a device tree node declared
+incompatible.
 
-thanks,
+Now, ath9k will first check whether the device tree node is compatible
+with it, using the functionality introduced with the first patch of
+this series, ("PCI: of: Match pci devices or drivers against OF DT
+nodes") and only proceed loading calibration data from compatible node.
 
-greg k-h
+Signed-off-by: Edward Chow <equu@openmail.cc>
+---
+ drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
+ drivers/net/wireless/ath/ath9k/init.c  | 26 ++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath9k/pci.c   |  2 +-
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
+index 2cc23605c9fc..4f6f0383a5f8 100644
+--- a/drivers/net/wireless/ath/ath9k/ath9k.h
++++ b/drivers/net/wireless/ath/ath9k/ath9k.h
+@@ -35,6 +35,7 @@ struct ath_node;
+ struct ath_vif;
+ 
+ extern struct ieee80211_ops ath9k_ops;
++extern struct pci_driver ath_pci_driver;
+ extern int ath9k_modparam_nohwcrypt;
+ extern int ath9k_led_blink;
+ extern bool is_ath9k_unloaded;
+diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
+index 4f00400c7ffb..f88a48e8456b 100644
+--- a/drivers/net/wireless/ath/ath9k/init.c
++++ b/drivers/net/wireless/ath/ath9k/init.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_net.h>
++#include <linux/pci.h>
+ #include <linux/nvmem-consumer.h>
+ #include <linux/relay.h>
+ #include <linux/dmi.h>
+@@ -577,6 +578,31 @@ static int ath9k_nvmem_request_eeprom(struct ath_softc *sc)
+ 	size_t len;
+ 	int err;
+ 
++	/* devm_nvmem_cell_get() will get a cell first from the OF
++	 * DT node representing the given device with nvmem-cell-name
++	 * "calibration", and from the global lookup table as a fallback,
++	 * and an ath9k device could be either a pci one or a platform one.
++	 *
++	 * If the OF DT node is not compatible with the real device, the
++	 * calibration data got from the node should not be applied.
++	 *
++	 * dev_is_pci(sc->dev) && ( no OF node || caldata not from node
++	 * || not compatible ) -> do not use caldata .
++	 *
++	 * !dev_is_pci(sc->dev) -> always use caldata .
++	 */
++	if (dev_is_pci(sc->dev) &&
++	    (!sc->dev->of_node ||
++	     !of_property_match_string(sc->dev->of_node,
++				       "nvmem-cell-names",
++				       "calibration") ||
++	     !of_pci_node_match_driver(sc->dev->of_node,
++				       &ath_pci_driver)))
++		/* follow the "just return 0;" convention as
++		 * noted below.
++		 */
++		return 0;
++
+ 	cell = devm_nvmem_cell_get(sc->dev, "calibration");
+ 	if (IS_ERR(cell)) {
+ 		err = PTR_ERR(cell);
+diff --git a/drivers/net/wireless/ath/ath9k/pci.c b/drivers/net/wireless/ath/ath9k/pci.c
+index a074e23013c5..fcb19761e60d 100644
+--- a/drivers/net/wireless/ath/ath9k/pci.c
++++ b/drivers/net/wireless/ath/ath9k/pci.c
+@@ -1074,7 +1074,7 @@ static SIMPLE_DEV_PM_OPS(ath9k_pm_ops, ath_pci_suspend, ath_pci_resume);
+ 
+ MODULE_DEVICE_TABLE(pci, ath_pci_id_table);
+ 
+-static struct pci_driver ath_pci_driver = {
++struct pci_driver ath_pci_driver = {
+ 	.name       = "ath9k",
+ 	.id_table   = ath_pci_id_table,
+ 	.probe      = ath_pci_probe,
+-- 
+2.39.0
+
