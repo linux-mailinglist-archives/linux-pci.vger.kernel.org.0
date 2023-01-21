@@ -2,288 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F538676706
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 16:10:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07E5667673F
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 16:40:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbjAUPK2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Jan 2023 10:10:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44678 "EHLO
+        id S229685AbjAUPkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Jan 2023 10:40:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229699AbjAUPK1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 10:10:27 -0500
-Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5593234FA;
-        Sat, 21 Jan 2023 07:10:25 -0800 (PST)
-Received: by mail-ej1-x631.google.com with SMTP id bk15so20686619ejb.9;
-        Sat, 21 Jan 2023 07:10:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bfTLTRbRZ/hpg7GJwMI9/8DsFVyW9rI61TePGTxtz9M=;
-        b=KrSPKmS09qpqHQr7sUwCLKg777685P4ZDEEsG1lHeb0qUsuT2HDGkPrhitvHpjUu/t
-         VJKgu2lXkyTLvKxtBGuNysSp4JLMV08C/qAamG+L20x/PYJQX01s/g7O56JCMdLDmTAh
-         6FjPg1ai9zHwe7neRK+nLwRayamMD/R/gyRUM4gFiUzYkm9xaZzBBW4wt2rIfCRposH5
-         GcFBQPR4N0DnIQ12HC8oYeyoQaGORpj1Wz2QPKDBQbd4IX+js3yEyX/wW2cFHkGcuy/F
-         v7FYUbKXa/HjqTgSOsBQxOlodp8e1sk2wEWhHFjDCOuGCyxNciA2C/YXwJjO+AuqLmgz
-         Cu3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bfTLTRbRZ/hpg7GJwMI9/8DsFVyW9rI61TePGTxtz9M=;
-        b=MmRmPtfiePmoilhQ1cXRHyl6Z8nNjfdEMY7uNV7B0zM2v2anzFAXI0RG57p6KpyA1E
-         Lmdlzd8Lr2HezQ+EIe5RllCjx+NefMvPAL702YTqt2ge99r+j8JfdSGVsQxyXWEmzRJI
-         n/Bn8WLvOrDkVCOrqWDbcu3YBpTNj/33CYj+DFq05SjrqUe3UM5uBNg6xyPOueTcclyj
-         0DVHF8C/f52gby3tCQpP83IUQrESdNL2TIidkzdg3BLrA8SGo8qP0HUEtm2bVBVpWADw
-         eFG0dTH2gkWaEDoysEOj2PG3NRRBxiqHtUg14GP/WmDi5K/7sLJrSuPupB3yHM3SYSQn
-         EReA==
-X-Gm-Message-State: AFqh2kq6NSCqGZMy+J7/HH/toAcgSzZw4zDwwx0yvhACAeDgy58Hf+29
-        xSxpkxDvXv1bKbtGnG2kmhFwL14INUHJezEUzaw=
-X-Google-Smtp-Source: AMrXdXsdO2/OAYC7SoSxzhcJCVKyAMAQ0sxpHyUR77rCL83GcmNV/0yKXXnBKN3xJ701cqQ4LiLtDJhHgcVSQmaHPis=
-X-Received: by 2002:a17:906:eb13:b0:84d:4cb1:2591 with SMTP id
- mb19-20020a170906eb1300b0084d4cb12591mr2708214ejb.202.1674313823986; Sat, 21
- Jan 2023 07:10:23 -0800 (PST)
-MIME-Version: 1.0
-References: <CAAhV-H59FLAFGD8oDZGjXWgL2ei_L=rYAaFWWp1skUT9nUPVYg@mail.gmail.com>
- <20230120153644.GA636025@bhelgaas>
-In-Reply-To: <20230120153644.GA636025@bhelgaas>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Sat, 21 Jan 2023 23:10:09 +0800
-Message-ID: <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        with ESMTP id S229562AbjAUPkO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 10:40:14 -0500
+X-Greylist: delayed 399 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 21 Jan 2023 07:40:10 PST
+Received: from mx-out.tlen.pl (mx-out.tlen.pl [193.222.135.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253CC6A5A
+        for <linux-pci@vger.kernel.org>; Sat, 21 Jan 2023 07:40:09 -0800 (PST)
+Received: (wp-smtpd smtp.tlen.pl 5118 invoked from network); 21 Jan 2023 16:33:26 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=o2.pl; s=1024a;
+          t=1674315207; bh=j49fyTZuXHFI6X5P9xxO+FvrjtQNHDDAy2/hQSULGl8=;
+          h=From:To:Cc:Subject;
+          b=Te4mBrd9zzBmuxQoTEYCBZ+3J0rXDODpLtirBnYNci72Qrujyrqc80rcm4c5RlZYA
+           kV+NrDmI6LxKUTDaI1MwM2E0juY6Xt6jruF7f5UCbqiTeaTXdurZzEkPVHlQ9oOEo9
+           S5PMtWkq31bQb6axIkxzTIlH9Hz1o7cWSVZPHItc=
+Received: from aafi207.neoplus.adsl.tpnet.pl (HELO localhost.localdomain) (mat.jonczyk@o2.pl@[83.4.138.207])
+          (envelope-sender <mat.jonczyk@o2.pl>)
+          by smtp.tlen.pl (WP-SMTPD) with SMTP
+          for <linux-kernel@vger.kernel.org>; 21 Jan 2023 16:33:26 +0100
+From:   =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-i2c@vger.kernel.org
+Cc:     =?UTF-8?q?Mateusz=20Jo=C5=84czyk?= <mat.jonczyk@o2.pl>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Jean Delvare <jdelvare@suse.com>,
+        Jean Delvare <jdelvare@suse.de>
+Subject: [PATCH v3 RESEND] acpi,pci: warn about duplicate IRQ routing entries returned from _PRT
+Date:   Sat, 21 Jan 2023 16:33:14 +0100
+Message-Id: <20230121153314.6109-1-mat.jonczyk@o2.pl>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-WP-MailID: eb4a1e9ec8bdc6ebb59f01f5815b9b5f
+X-WP-AV: skaner antywirusowy Poczty o2
+X-WP-SPAM: NO 000000A [oSNk]                               
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 11:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Fri, Jan 20, 2023 at 09:31:43PM +0800, Huacai Chen wrote:
-> > On Thu, Jan 19, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Thu, Jan 19, 2023 at 08:25:20PM +0800, Huacai Chen wrote:
-> > > > Ping?
-> > >
-> > > I suggested another possible way to do this that wasn't so much of a
-> > > special case.  Did you explore that at all?
-> >
-> > That is a little difficult for me, but what is worse is that the root
-> > cause doesn't come from gpu or console drivers, but from the root
-> > port. That means: even if we can workaround the gpu issue in another
-> > way, there are still problems on other devices. Besides the graphics
-> > card, the most frequent problematic device is the sata controller
-> > connected on LS7A chipset, there are incomplete I/O accesses after the
-> > root port disabled and also cause reboot failure.
->
-> Yes, SATA sounds like another case where we want to use the device
-> after we call the driver's remove/shutdown method.  That's not
-> *worse*, it's just another case where we might have to mark devices
-> for special handling.
-That needs too much effort because we need to modify nearly every pci
-driver, and it exceeds my ability. :)
+On some platforms, the ACPI _PRT function returns duplicate interrupt
+routing entries. Linux uses the first matching entry, but sometimes the
+second matching entry contains the correct interrupt vector.
 
->
-> If we remove/shutdown *any* Root Port, not just LS7A, I think the idea
-> of assuming downstream devices can continue to work as usual is a
-> little suspect.  They might continue to work by accident today, but it
-> doesn't seem like a robust design.
-The existing design works for so many years, so it is mostly
-reasonable. For the LS7A case, the root cause comes from the root
-port, so a workaround on the root port seems somewhat reasonable.
+Print an error to dmesg if duplicate interrupt routing entries are
+present, so that we could check how many models are affected.
 
-Huacai
->
-> > > I know there's no *existing* way to mark devices that we need to use
-> > > all the way through shutdown or reboot, but if it makes sense, there's
-> > > no reason we couldn't add one.  That has the potential of being more
-> > > generic, e.g., we could do it for all console devices, as opposed to
-> > > quirking a Root Port that just happens to be in the path to the
-> > > console.
-> > >
-> > > > On Sat, Jan 7, 2023 at 10:25 AM Huacai Chen <chenhuacai@gmail.com> wrote:
-> > > > > On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
-> > > > > > > After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe
-> > > > > > > services during shutdown") we observe poweroff/reboot
-> > > > > > > failures on systems with LS7A chipset.
-> > > > > > >
-> > > > > > > We found that if we remove "pci_command &=
-> > > > > > > ~PCI_COMMAND_MASTER" in do_pci_disable_device(), it can
-> > > > > > > work well. The hardware engineer says that the root cause
-> > > > > > > is that CPU is still accessing PCIe devices while
-> > > > > > > poweroff/reboot, and if we disable the Bus Master Bit at
-> > > > > > > this time, the PCIe controller doesn't forward requests to
-> > > > > > > downstream devices, and also does not send TIMEOUT to CPU,
-> > > > > > > which causes CPU wait forever (hardware deadlock).
-> > > > > > >
-> > > > > > > To be clear, the sequence is like this:
-> > > > > > >
-> > > > > > >   - CPU issues MMIO read to device below Root Port
-> > > > > > >
-> > > > > > >   - LS7A Root Port fails to forward transaction to secondary bus
-> > > > > > >     because of LS7A Bus Master defect
-> > > > > > >
-> > > > > > >   - CPU hangs waiting for response to MMIO read
-> > > > > > >
-> > > > > > > Then how is userspace able to use a device after the
-> > > > > > > device is removed?
-> > > > > > >
-> > > > > > > To give more details, let's take the graphics driver (e.g.
-> > > > > > > amdgpu) as an example. The userspace programs call
-> > > > > > > printf() to display "shutting down xxx service" during
-> > > > > > > shutdown/reboot, or the kernel calls printk() to display
-> > > > > > > something during shutdown/reboot. These can happen at any
-> > > > > > > time, even after we call pcie_port_device_remove() to
-> > > > > > > disable the pcie port on the graphic card.
-> > > > > > >
-> > > > > > > The call stack is: printk() --> call_console_drivers() -->
-> > > > > > > con->write() --> vt_console_print() --> fbcon_putcs()
-> > > > > > >
-> > > > > > > This scenario happens because userspace programs (or the
-> > > > > > > kernel itself) don't know whether a device is 'usable',
-> > > > > > > they just use it, at any time.
-> > > > > >
-> > > > > > Thanks for this background.  So basically we want to call
-> > > > > > .remove() on a console device (or a bridge leading to it),
-> > > > > > but we expect it to keep working as usual afterwards?
-> > > > > >
-> > > > > > That seems a little weird.  Is that the design we want?
-> > > > > > Maybe we should have a way to mark devices so we don't
-> > > > > > remove them during shutdown or reboot?
-> > > > >
-> > > > > Sounds reasonable, but it seems no existing way can mark this.
-> > > > >
-> > > > > Huacai
-> > > > > >
-> > > > > > > This hardware behavior is a PCIe protocol violation (Bus Master should
-> > > > > > > not be involved in CPU MMIO transactions), and it will be fixed in new
-> > > > > > > revisions of hardware (add timeout mechanism for CPU read request,
-> > > > > > > whether or not Bus Master bit is cleared).
-> > > > > > >
-> > > > > > > On some x86 platforms, radeon/amdgpu devices can cause similar problems
-> > > > > > > [1][2]. Once before I wanted to make a single patch to solve "all of
-> > > > > > > these problems" together, but it seems unreasonable because maybe they
-> > > > > > > are not exactly the same problem. So, this patch add a new function
-> > > > > > > pcie_portdrv_shutdown(), a slight modified copy of pcie_portdrv_remove()
-> > > > > > > dedicated for the shutdown path, and then add a quirk just for LS7A to
-> > > > > > > avoid clearing Bus Master bit in pcie_portdrv_shutdown(). Leave other
-> > > > > > > platforms behave as before.
-> > > > > > >
-> > > > > > > [1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
-> > > > > > > [2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
-> > > > > > >
-> > > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > > > > > ---
-> > > > > > >  drivers/pci/controller/pci-loongson.c | 17 +++++++++++++++++
-> > > > > > >  drivers/pci/pcie/portdrv.c            | 21 +++++++++++++++++++--
-> > > > > > >  include/linux/pci.h                   |  1 +
-> > > > > > >  3 files changed, 37 insertions(+), 2 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> > > > > > > index 759ec211c17b..641308ba4126 100644
-> > > > > > > --- a/drivers/pci/controller/pci-loongson.c
-> > > > > > > +++ b/drivers/pci/controller/pci-loongson.c
-> > > > > > > @@ -93,6 +93,24 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > > > > >  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > > > > >                       DEV_PCIE_PORT_2, loongson_mrrs_quirk);
-> > > > > > >
-> > > > > > > +static void loongson_bmaster_quirk(struct pci_dev *pdev)
-> > > > > > > +{
-> > > > > > > +     /*
-> > > > > > > +      * Some Loongson PCIe ports will cause CPU deadlock if there is
-> > > > > > > +      * MMIO access to a downstream device when the root port disable
-> > > > > > > +      * the Bus Master bit during poweroff/reboot.
-> > > > > > > +      */
-> > > > > > > +     struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-> > > > > > > +
-> > > > > > > +     bridge->no_dis_bmaster = 1;
-> > > > > > > +}
-> > > > > > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > > > > > +                     DEV_PCIE_PORT_0, loongson_bmaster_quirk);
-> > > > > > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > > > > > +                     DEV_PCIE_PORT_1, loongson_bmaster_quirk);
-> > > > > > > +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-> > > > > > > +                     DEV_PCIE_PORT_2, loongson_bmaster_quirk);
-> > > > > > > +
-> > > > > > >  static void loongson_pci_pin_quirk(struct pci_dev *pdev)
-> > > > > > >  {
-> > > > > > >       pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
-> > > > > > > diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
-> > > > > > > index 2cc2e60bcb39..96f45c444422 100644
-> > > > > > > --- a/drivers/pci/pcie/portdrv.c
-> > > > > > > +++ b/drivers/pci/pcie/portdrv.c
-> > > > > > > @@ -501,7 +501,6 @@ static void pcie_port_device_remove(struct pci_dev *dev)
-> > > > > > >  {
-> > > > > > >       device_for_each_child(&dev->dev, NULL, remove_iter);
-> > > > > > >       pci_free_irq_vectors(dev);
-> > > > > > > -     pci_disable_device(dev);
-> > > > > > >  }
-> > > > > > >
-> > > > > > >  /**
-> > > > > > > @@ -727,6 +726,24 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
-> > > > > > >       }
-> > > > > > >
-> > > > > > >       pcie_port_device_remove(dev);
-> > > > > > > +
-> > > > > > > +     pci_disable_device(dev);
-> > > > > > > +}
-> > > > > > > +
-> > > > > > > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> > > > > > > +{
-> > > > > > > +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> > > > > > > +
-> > > > > > > +     if (pci_bridge_d3_possible(dev)) {
-> > > > > > > +             pm_runtime_forbid(&dev->dev);
-> > > > > > > +             pm_runtime_get_noresume(&dev->dev);
-> > > > > > > +             pm_runtime_dont_use_autosuspend(&dev->dev);
-> > > > > > > +     }
-> > > > > > > +
-> > > > > > > +     pcie_port_device_remove(dev);
-> > > > > > > +
-> > > > > > > +     if (!bridge->no_dis_bmaster)
-> > > > > > > +             pci_disable_device(dev);
-> > > > > > >  }
-> > > > > > >
-> > > > > > >  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
-> > > > > > > @@ -777,7 +794,7 @@ static struct pci_driver pcie_portdriver = {
-> > > > > > >
-> > > > > > >       .probe          = pcie_portdrv_probe,
-> > > > > > >       .remove         = pcie_portdrv_remove,
-> > > > > > > -     .shutdown       = pcie_portdrv_remove,
-> > > > > > > +     .shutdown       = pcie_portdrv_shutdown,
-> > > > > > >
-> > > > > > >       .err_handler    = &pcie_portdrv_err_handler,
-> > > > > > >
-> > > > > > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > > > > > index 3df2049ec4a8..a64dbcb89231 100644
-> > > > > > > --- a/include/linux/pci.h
-> > > > > > > +++ b/include/linux/pci.h
-> > > > > > > @@ -573,6 +573,7 @@ struct pci_host_bridge {
-> > > > > > >       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy */
-> > > > > > >       unsigned int    no_ext_tags:1;          /* No Extended Tags */
-> > > > > > >       unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
-> > > > > > > +     unsigned int    no_dis_bmaster:1;       /* No Disable Bus Master */
-> > > > > > >       unsigned int    native_aer:1;           /* OS may use PCIe AER */
-> > > > > > >       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplug */
-> > > > > > >       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplug */
-> > > > > > > --
-> > > > > > > 2.31.1
-> > > > > > >
+This happens on a Dell Latitude E6500 laptop with the i2c-i801 Intel
+SMBus controller. This controller was nonfunctional unless its interrupt
+usage was disabled (using the "disable_features=0x10" module parameter).
+
+After investigation, it turned out that the driver was using an
+incorrect interrupt vector: in lspci output for this device there was:
+        Interrupt: pin B routed to IRQ 19
+but after running i2cdetect (without using any i2c-i801 module
+parameters) the following was logged to dmesg:
+
+        [...]
+        i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+        i801_smbus 0000:00:1f.3: Transaction timeout
+        i801_smbus 0000:00:1f.3: Timeout waiting for interrupt!
+        i801_smbus 0000:00:1f.3: Transaction timeout
+        irq 17: nobody cared (try booting with the "irqpoll" option)
+
+Existence of duplicate entries in a table returned by the _PRT method
+was confirmed by disassembling the ACPI DSDT table.
+
+Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Jean Delvare <jdelvare@suse.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Tested-by: Jean Delvare <jdelvare@suse.de>
+
+--
+v2: - add a newline at the end of the kernel log message,
+    - replace: "if (match == NULL)" -> "if (!match)"
+    - patch description tweaks.
+v3: - fix C style issues pointed by Jean Delvare,
+    - switch severity from warning to error.
+v3 RESEND: retested on top of v6.2-rc4
+
+To consider: should we print a warning or an error in case of duplicate
+entries? This may be not serious enough to disturb the user with an
+error message at boot. On the other hand, hardware vendors should see
+it and the kernel uses this logging severity in similar cases.
+---
+ drivers/acpi/pci_irq.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/acpi/pci_irq.c b/drivers/acpi/pci_irq.c
+index ff30ceca2203..28fcae93cc24 100644
+--- a/drivers/acpi/pci_irq.c
++++ b/drivers/acpi/pci_irq.c
+@@ -203,6 +203,8 @@ static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
+ 	struct acpi_buffer buffer = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	struct acpi_pci_routing_table *entry;
+ 	acpi_handle handle = NULL;
++	struct acpi_prt_entry *match = NULL;
++	const char *match_int_source = NULL;
+ 
+ 	if (dev->bus->bridge)
+ 		handle = ACPI_HANDLE(dev->bus->bridge);
+@@ -219,13 +221,31 @@ static int acpi_pci_irq_find_prt_entry(struct pci_dev *dev,
+ 
+ 	entry = buffer.pointer;
+ 	while (entry && (entry->length > 0)) {
+-		if (!acpi_pci_irq_check_entry(handle, dev, pin,
+-						 entry, entry_ptr))
+-			break;
++		struct acpi_prt_entry *curr;
++
++		if (!acpi_pci_irq_check_entry(handle, dev, pin, entry, &curr)) {
++			if (!match) {
++				match = curr;
++				match_int_source = entry->source;
++			} else {
++				pr_err(FW_BUG
++				       "ACPI _PRT returned duplicate IRQ routing entries for device %04x:%02x:%02x[INT%c]: %s[%d] and %s[%d]\n",
++				       curr->id.segment, curr->id.bus, curr->id.device,
++				       pin_name(curr->pin),
++				       match_int_source, match->index,
++				       entry->source, curr->index);
++				/* We use the first matching entry nonetheless,
++				 * for compatibility with older kernels.
++				 */
++			}
++		}
++
+ 		entry = (struct acpi_pci_routing_table *)
+ 		    ((unsigned long)entry + entry->length);
+ 	}
+ 
++	*entry_ptr = match;
++
+ 	kfree(buffer.pointer);
+ 	return 0;
+ }
+
+base-commit: 5dc4c995db9eb45f6373a956eb1f69460e69e6d4
+-- 
+2.25.1
+
