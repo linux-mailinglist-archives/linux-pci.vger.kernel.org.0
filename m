@@ -2,169 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3AFB676293
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 01:54:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8759A6762B7
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 02:36:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjAUAyH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 20 Jan 2023 19:54:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57076 "EHLO
+        id S229608AbjAUBgo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 20 Jan 2023 20:36:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjAUAyH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 19:54:07 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48AEE5B595;
-        Fri, 20 Jan 2023 16:54:06 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 00025B829E7;
-        Sat, 21 Jan 2023 00:54:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66671C433EF;
-        Sat, 21 Jan 2023 00:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674262443;
-        bh=vljIIVvvzMtlYSzt6a6DW1k+oWO9BkaIoO7pt3gn6EA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=PkFTwLN4JLJgJVusl5GYFnZCMFw9SPrMAGvks/AWdp0rwpldUIwSK84wwdw+e/aoi
-         aYOdPczoJtOT3kBJ+MbUVxGkng0JBBvQ3TMJYMc/tiWfP52ng2sLumzwU8ra6la5rx
-         k2v7BaSTj7RhT5C0F15DlGQW4qZV83KAWM7U0lnlgnficozn721cE6+nOpNKE0TgQK
-         iIhad/wILlppx3cZUhH2/zbvZwZ4zhpQzJrEdBz3CuXLC5n+zlZ17Ncbc7PU+y4HOh
-         Yt8zXYrwpMdN6FqnhIUKrIcLgJ9b1T/eFQ3wNTLtM/PrVbrq9mWKQbi8KpmK/nzftB
-         igqzGzx5/hpBQ==
-Date:   Fri, 20 Jan 2023 18:54:01 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 19/27] dmaengine: dw-edma: Use non-atomic io-64 methods
-Message-ID: <20230121005401.GA686892@bhelgaas>
+        with ESMTP id S229575AbjAUBgn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 20 Jan 2023 20:36:43 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 965576A331
+        for <linux-pci@vger.kernel.org>; Fri, 20 Jan 2023 17:36:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674265002; x=1705801002;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=EtTrNVhYJCGbrVn3kGI98rfYa82GuaBXeovn7ltVauY=;
+  b=TY6DLgHSQw75jVQfSxMsZ1rSuX1MZQqV+wc3l8bSBhfy4Z3Xm0vwSPDs
+   oZNVXNt3tCp9m7To2qCng2TWs2q6XSzUSJsgfJGBWLPuIDCcFen8AYY/X
+   Q/d6wzPf23BNcKkrhXEPZqwgXsWylyc2encrQHU2j4gFyMWhv/e9VoaH/
+   U1ki1X/389Lgk3pPH464TMHltQS9LHg763xIwUAN4c18WH+Uc+c/wKPos
+   lg2iYlCq31EmelyQPLW4zlpcdcaIbOSH63BXe47flDs412Zmfe93dD9vz
+   sn6I0PLU2IayJlnBABta8uGH2sxhonC59LggyA5OqfhNNY8/0aoiowp8W
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="388104669"
+X-IronPort-AV: E=Sophos;i="5.97,233,1669104000"; 
+   d="scan'208";a="388104669"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Jan 2023 17:36:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10596"; a="691264401"
+X-IronPort-AV: E=Sophos;i="5.97,233,1669104000"; 
+   d="scan'208";a="691264401"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 20 Jan 2023 17:36:39 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pJ2oA-0003E1-0j;
+        Sat, 21 Jan 2023 01:36:38 +0000
+Date:   Sat, 21 Jan 2023 09:35:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [helgaas-pci:pci/pm] BUILD SUCCESS
+ 8133844a8f2434be9576850c6978179d7cca5c81
+Message-ID: <63cb4175.q2mdTmgD+G2rlmEB%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230113171409.30470-20-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 08:14:01PM +0300, Serge Semin wrote:
-> Instead of splitting the 64-bits IOs up into two 32-bits ones it's
-> possible to use the already available non-atomic readq/writeq methods
-> implemented exactly for such cases. They are defined in the dedicated
-> header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
-> if the 64-bits readq/writeq methods are unavailable on some platforms at
-> consideration, the corresponding drivers can have any of these headers
-> included and stop locally re-implementing the 64-bits IO accessors taking
-> into account the non-atomic nature of the included methods. Let's do that
-> in the DW eDMA driver too. Note by doing so we can discard the
-> CONFIG_64BIT config ifdefs from the code.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Acked-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  drivers/dma/dw-edma/dw-edma-v0-core.c | 55 +++++++++------------------
->  1 file changed, 18 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> index 66f296daac5a..51a34b43434c 100644
-> --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> @@ -8,6 +8,8 @@
->  
->  #include <linux/bitfield.h>
->  
-> +#include <linux/io-64-nonatomic-lo-hi.h>
-> +
->  #include "dw-edma-core.h"
->  #include "dw-edma-v0-core.h"
->  #include "dw-edma-v0-regs.h"
-> @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
->  		SET_32(dw, rd_##name, value);		\
->  	} while (0)
->  
-> -#ifdef CONFIG_64BIT
-> -
->  #define SET_64(dw, name, value)				\
->  	writeq(value, &(__dw_regs(dw)->name))
->  
-> @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
->  		SET_64(dw, rd_##name, value);		\
->  	} while (0)
->  
-> -#endif /* CONFIG_64BIT */
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/pm
+branch HEAD: 8133844a8f2434be9576850c6978179d7cca5c81  PCI/ACPI: Account for _S0W of the target bridge in acpi_pci_bridge_d3()
 
-Great to get rid of these #ifdefs!
+elapsed time: 727m
 
-Am I missing something?  It looks like SET_64 is used only by
-SET_RW_64 and SET_BOTH_64, and neither of *them is used at all.
+configs tested: 81
+configs skipped: 2
 
-Similarly for GET_64 and GET_RW_64.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-So maybe we could get rid of everything inside the #ifdefs as well?
+gcc tested configs:
+x86_64                            allnoconfig
+um                             i386_defconfig
+arc                                 defconfig
+um                           x86_64_defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+x86_64                    rhel-8.3-kselftests
+x86_64                          rhel-8.3-func
+m68k                             allmodconfig
+arc                              allyesconfig
+alpha                            allyesconfig
+s390                             allyesconfig
+m68k                             allyesconfig
+arm                  randconfig-r046-20230119
+arc                  randconfig-r043-20230119
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+x86_64                        randconfig-a004
+x86_64                        randconfig-a002
+x86_64                        randconfig-a006
+arm                                 defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+ia64                             allmodconfig
+x86_64                              defconfig
+i386                          randconfig-a005
+x86_64                        randconfig-a013
+x86_64                        randconfig-a011
+arm64                            allyesconfig
+x86_64                               rhel-8.3
+x86_64                        randconfig-a015
+arm                              allyesconfig
+x86_64                           allyesconfig
+powerpc                           allnoconfig
+mips                             allyesconfig
+powerpc                          allmodconfig
+sh                               allmodconfig
+i386                                defconfig
+i386                          randconfig-a014
+i386                          randconfig-a012
+i386                          randconfig-a016
+i386                             allyesconfig
+i386                          randconfig-c001
+i386                          debian-10.3-kvm
+i386                        debian-10.3-kunit
+i386                         debian-10.3-func
+riscv                    nommu_virt_defconfig
+riscv                          rv32_defconfig
+riscv                    nommu_k210_defconfig
+riscv                             allnoconfig
+i386                   debian-10.3-kselftests
+i386                              debian-10.3
+sh                           se7724_defconfig
+powerpc                      ppc6xx_defconfig
+loongarch                        alldefconfig
+sh                   sh7770_generic_defconfig
+nios2                               defconfig
+powerpc                   currituck_defconfig
 
->  #define SET_COMPAT(dw, name, value)			\
->  	writel(value, &(__dw_regs(dw)->type.unroll.name))
->  
-> @@ -164,14 +162,13 @@ static inline u32 readl_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  #define SET_LL_32(ll, value) \
->  	writel(value, ll)
->  
-> -#ifdef CONFIG_64BIT
-> -
->  static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  			     u64 value, void __iomem *addr)
->  {
-> +	unsigned long flags;
-> +
->  	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY) {
->  		u32 viewport_sel;
-> -		unsigned long flags;
->  
->  		raw_spin_lock_irqsave(&dw->lock, flags);
->  
-> @@ -181,22 +178,22 @@ static inline void writeq_ch(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch,
->  
->  		writel(viewport_sel,
->  		       &(__dw_regs(dw)->type.legacy.viewport_sel));
-> -		writeq(value, addr);
-> +	}
-> +
-> +	writeq(value, addr);
->  
-> +	if (dw->chip->mf == EDMA_MF_EDMA_LEGACY)
->  		raw_spin_unlock_irqrestore(&dw->lock, flags);
-> -	} else {
-> -		writeq(value, addr);
-> -	}
+clang tested configs:
+x86_64                          rhel-8.3-rust
+riscv                randconfig-r042-20230119
+hexagon              randconfig-r041-20230119
+hexagon              randconfig-r045-20230119
+s390                 randconfig-r044-20230119
+x86_64                        randconfig-a001
+x86_64                        randconfig-a003
+x86_64                        randconfig-a005
+i386                          randconfig-a002
+i386                          randconfig-a004
+x86_64                        randconfig-a014
+x86_64                        randconfig-a012
+i386                          randconfig-a006
+x86_64                        randconfig-a016
+i386                          randconfig-a013
+i386                          randconfig-a011
+i386                          randconfig-a015
+mips                       lemote2f_defconfig
+powerpc                 mpc832x_mds_defconfig
+powerpc                     ksi8560_defconfig
 
-This is basically a cosmetic change unrelated to the commit log.  I
-don't really object to the change, although I think it's of dubious
-value to remove the repetition of the writeq() at the cost of adding
-another "if" and unlock.
-
-Lorenzo already applied this, so it's OK as-is unless you think it's
-worth reworking to drop the unused stuff mentioned above, in which
-case this rearrangement could be moved to a separate patch to make
-both of them more focused.
-
-Bjorn
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
