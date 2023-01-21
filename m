@@ -2,55 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B616764FA
-	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 08:34:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5E26764FC
+	for <lists+linux-pci@lfdr.de>; Sat, 21 Jan 2023 08:35:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjAUHei (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Jan 2023 02:34:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50836 "EHLO
+        id S229682AbjAUHfY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 21 Jan 2023 02:35:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjAUHeh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 02:34:37 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 052A27135D;
-        Fri, 20 Jan 2023 23:34:36 -0800 (PST)
+        with ESMTP id S229450AbjAUHfX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 02:35:23 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2B497135D;
+        Fri, 20 Jan 2023 23:35:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B1182B80967;
-        Sat, 21 Jan 2023 07:34:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B272FC433EF;
-        Sat, 21 Jan 2023 07:34:32 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 60D33B82A2B;
+        Sat, 21 Jan 2023 07:35:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A2DAC433EF;
+        Sat, 21 Jan 2023 07:35:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1674286473;
-        bh=bJ0CXR3r1BYYKPNARKc/Pw8CQLUJuFyDf4P7y0d3azM=;
+        s=korg; t=1674286520;
+        bh=WjefWdiCL/8Sz2EGJFW9nb3fkDOMUyc6/UNjuyE0PTQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VfqAMkqqqcUrR2XiDd7yjEi1PcaJlIc8l5bVzSfEgIw1a+rJgo2g/7CBUCFdw05yC
-         HUGN4KclAuxcHeAGqBp/zxBqXjjNUr1xgwuHTDtVdseGX09fo5qdz/ZpnlK6pRE+Xz
-         LEjy0IlmYFJJwxJC42iw3GQT3Hmy0xliuD02NQuw=
-Date:   Sat, 21 Jan 2023 08:34:30 +0100
+        b=gQgeRDVc+OYVn7BZ+U1l4syouVdAqIOBf7OnNvPENNlJshtIlQecaetgk5H3u8KS1
+         Q2vfMuva0LU8CW7u4UEg4Xtj7sJZy/dBcgiWK9q+ObA1n6QCjxr/lsGVimlOyt9L7w
+         wUJxBNtsN/lAiUP6FvwZW0rVI9HfUn6ejatG+zxU=
+Date:   Sat, 21 Jan 2023 08:35:17 +0100
 From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Russ Weight <russell.h.weight@intel.com>,
-        Tianfei Zhang <tianfei.zhang@intel.com>, bhelgaas@google.com,
+To:     Russ Weight <russell.h.weight@intel.com>
+Cc:     Tianfei Zhang <tianfei.zhang@intel.com>, bhelgaas@google.com,
         linux-pci@vger.kernel.org, linux-fpga@vger.kernel.org,
-        kabel@kernel.org, mani@kernel.org, pali@kernel.org, mdf@kernel.org,
-        hao.wu@intel.com, yilun.xu@intel.com, trix@redhat.com,
-        jgg@ziepe.ca, ira.weiny@intel.com,
-        andriy.shevchenko@linux.intel.com, dan.j.williams@intel.com,
-        keescook@chromium.org, rafael@kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org, ilpo.jarvinen@linux.intel.com,
-        lee@kernel.org, matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH v1 00/12] add FPGA hotplug manager driver
-Message-ID: <Y8uVho0UDP/1A1JG@kroah.com>
+        lukas@wunner.de, kabel@kernel.org, mani@kernel.org,
+        pali@kernel.org, mdf@kernel.org, hao.wu@intel.com,
+        yilun.xu@intel.com, trix@redhat.com, jgg@ziepe.ca,
+        ira.weiny@intel.com, andriy.shevchenko@linux.intel.com,
+        dan.j.williams@intel.com, keescook@chromium.org, rafael@kernel.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        ilpo.jarvinen@linux.intel.com, lee@kernel.org,
+        matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH v1 10/12] PCI: hotplug: implement the hotplug_slot_ops
+ callback for fpgahp
+Message-ID: <Y8uVtSw1qXhfHrNk@kroah.com>
 References: <20230119013602.607466-1-tianfei.zhang@intel.com>
- <Y8lGxqjuLS8NfJtg@kroah.com>
- <a896be81-e482-9d52-ece5-a2ef28822072@intel.com>
- <20230120184253.GA25018@wunner.de>
+ <20230119013602.607466-11-tianfei.zhang@intel.com>
+ <Y8lFgKZGKYrM02Wm@kroah.com>
+ <ea85cb02-a13d-f232-8ebd-c13893fc00c4@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230120184253.GA25018@wunner.de>
+In-Reply-To: <ea85cb02-a13d-f232-8ebd-c13893fc00c4@intel.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -61,61 +62,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 07:42:53PM +0100, Lukas Wunner wrote:
-> On Fri, Jan 20, 2023 at 08:28:51AM -0800, Russ Weight wrote:
-> > On 1/19/23 05:33, Greg KH wrote:
-> > > On Wed, Jan 18, 2023 at 08:35:50PM -0500, Tianfei Zhang wrote:
-> > > > This patchset introduces the FPGA hotplug manager (fpgahp) driver which
-> > > > has been verified on the Intel N3000 card.
-> > > >
-> > > > When a PCIe-based FPGA card is reprogrammed, it temporarily disappears
-> > > > from the PCIe bus. This needs to be managed to avoid PCIe errors and to
-> > > > reprobe the device after reprogramming.
-> > > >
-> > > > To change the FPGA image, the kernel burns a new image into the flash on
-> > > > the card, and then triggers the card BMC to load the new image into FPGA.
-> > > > A new FPGA hotplug manager driver is introduced that leverages the PCIe
-> > > > hotplug framework to trigger and manage the update of the FPGA image,
-> > > > including the disappearance and reappearance of the card on the PCIe bus.
-> > > > The fpgahp driver uses APIs from the pciehp driver. Two new operation
-> > > > callbacks are defined in hotplug_slot_ops:
-> > > >
-> > > >   - available_images: Optional: available FPGA images
-> > > >   - image_load: Optional: trigger the FPGA to load a new image
-> > > 
-> > > Why is all of this tied into the pci hotplug code? Shouldn't it be
-> > > specific to this one driver instead?  pci hotplug is for removing/adding
-> > > PCI devices to the system, not messing with FPGA images.
-> > >
-> > > This feels like an abuse of the pci hotplug bus to me as this is NOT
-> > > really a PCI hotplug bus at all, right?
-> > 
-> > While it is true that triggering an FPGA image-load does not involve
-> > hotplug specific registers to be managed, the RTL that comprises
-> > the PCIe interface will disappear and then reappear after the FPGA
-> > is reprogrammed. When it reappears, it_could/_/have a different PCI
-> > ID. The process of managing this event has a lot of similarity to a
-> > PCIe hotplug event; there is a lot of existing PCIe hotplug related
-> > code that could be leveraged.
+On Fri, Jan 20, 2023 at 02:38:43PM -0800, Russ Weight wrote:
 > 
-> It sounds like the N3000 is a PCI endpoint device which, when reprogrammed,
-> briefly disappears from the bus and then may reappear under a different
-> device ID.
 > 
-> What you want to do then is make sure that the slot into which the N3000
-> is plugged is hotplug-capable.  In that case, pciehp will handle
-> disappearance and reappearance of the card just fine.  Once the N3000
-> disables the link, pciehp will bring down the slot.  Once it re-enables
-> the link, it will bring the slot up again.  It's as if the card was
-> removed and replaced with a different one.  pciehp will bind to the
-> Root Port or Downstream Port associated with the hotplug slot.
+> On 1/19/23 05:28, Greg KH wrote:
+> > On Wed, Jan 18, 2023 at 08:36:00PM -0500, Tianfei Zhang wrote:
+> >> Implement the image_load and available_images callback functions
+> >> for fpgahp driver. This patch leverages some APIs from pciehp
+> >> driver to implement the device reconfiguration below the PCI hotplug
+> >> bridge.
+> >>
+> >> Here are the steps for a process of image load.
+> >> 1. remove all PFs and VFs except the PF0.
+> >> 2. remove all non-reserved devices of PF0.
+> >> 3. trigger a image load via BMC.
+> >> 4. disable the link of the hotplug bridge.
+> >> 5. remove all reserved devices under PF0 and PCI devices
+> >>    below the hotplug bridge.
+> >> 6. wait for image load done via BMC, e.g. 10s.
+> >> 7. re-enable the link of the hotplug bridge.
+> >> 8. re-enumerate PCI devices below the hotplug bridge.
+> >>
+> >> Signed-off-by: Tianfei Zhang <tianfei.zhang@intel.com>
+> >> ---
+> >>  Documentation/ABI/testing/sysfs-driver-fpgahp |  21 ++
+> >>  MAINTAINERS                                   |   1 +
+> >>  drivers/pci/hotplug/fpgahp.c                  | 179 ++++++++++++++++++
+> >>  3 files changed, 201 insertions(+)
+> >>  create mode 100644 Documentation/ABI/testing/sysfs-driver-fpgahp
+> >>
+> >> diff --git a/Documentation/ABI/testing/sysfs-driver-fpgahp b/Documentation/ABI/testing/sysfs-driver-fpgahp
+> >> new file mode 100644
+> >> index 000000000000..8d4b1bfc4012
+> >> --- /dev/null
+> >> +++ b/Documentation/ABI/testing/sysfs-driver-fpgahp
+> >> @@ -0,0 +1,21 @@
+> >> +What:		/sys/bus/pci/slots/X-X/available_images
+> >> +Date:		May 2023
+> >> +KernelVersion:	6.3
+> >> +Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
+> >> +Description:	Read-only. This file returns a space separated list of
+> >> +		key words that may be written into the image_load file
+> >> +		described below. These keywords decribe an FPGA, BMC,
+> >> +		or firmware image in FLASH or EEPROM storage that may
+> >> +		be loaded.
+> > No, sysfs is "one value per file", why is this a list?
+> >
+> > And what exactly defines the values in this list?
+> >
+> >> +
+> >> +What:		/sys/bus/pci/slots/X-X/image_load
+> >> +Date:		May 2023
+> >> +KernelVersion:	6.3
+> >> +Contact:	Tianfei Zhang <tianfei.zhang@intel.com>
+> >> +Description:	Write-only. A key word may be written to this file to
+> >> +		trigger a new image loading of an FPGA, BMC, or firmware
+> >> +		image from FLASH or EEPROM. Refer to the available_images
+> >> +		file for a list of supported key words for the underlying
+> >> +		device.
+> >> +		Writing an unsupported string to this file will result in
+> >> +		EINVAL being returned.
+> > Why is this a separate file from the "read the list" file?
 > 
-> The pci_hotplug_port infrastructure is for hotplug controllers which
-> handle devices disappearing and reappearing *below* them.  It is not
-> for endpoint devices.
+> The intended usage is like this:
+> 
+> $ cat available_images
+> bmc_factory bmc_user fpga_factory fpga_user1 fpga_user2
+> $ echo bmc_user > image_load
+> 
+> This specifies which image stored in flash that you want to have activated
+> on the device.
+> 
+> An existing example of something like this is in the tracing code:
+> available_tracers and current_tracer
+> 
+> Would it be preferable to just create a file for each possible image,
+> and echo 1 to trigger the event? (echo 1 > bmc_user)
 
-Yes, thank you for expressing my concerns about this design much better
-than I originally did.  I totally agree.
+That would make things much more simpler overall and not force people to
+have to parse a sysfs file, which is the main reason we created sysfs in
+the first place.
 
 thanks,
 
