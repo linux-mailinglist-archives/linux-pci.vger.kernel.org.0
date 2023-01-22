@@ -2,77 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D6C0676DAB
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jan 2023 15:30:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A30567702E
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jan 2023 16:34:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230053AbjAVOaI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Jan 2023 09:30:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48264 "EHLO
+        id S230017AbjAVPen convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Sun, 22 Jan 2023 10:34:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbjAVOaI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Jan 2023 09:30:08 -0500
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE9DC17175
-        for <linux-pci@vger.kernel.org>; Sun, 22 Jan 2023 06:30:06 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id z5so8644347wrt.6
-        for <linux-pci@vger.kernel.org>; Sun, 22 Jan 2023 06:30:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=PpDZ5sD5zv7Y/iHdpyDxn61pvRVZoLIH2VkNs6bDVos=;
-        b=h8leWq/zMCW4MAdZeD/mLJTV3TO3KXwN/Nhat4PLODvqeXmeLDwiI7gORQoEl8cgj4
-         EQ/l/PKgKi/aCM+FXHkpU3MKTEO70mPY1wo1d9wInRF6avgckw6m0OIHehX5a5Aqnudr
-         77WDisoz2o11SGIrQtlFeUsnAx38jzQDDG63qMFvtyNZqRpFBGOCGm83HNtT3VZ3RLpr
-         OT2p3RU2tvCEr7BCXDRbAIPrg33a4DTtLetexg+JpRLyKa0iB7jyLlMhr/MLqE6BTHTB
-         AiTNK5oB1CpIS6iU8K3FsiRMls9eczSC7ih0CTQbOrkiF0DdgSzOM8nA7JzU5AMm5K/U
-         HIbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PpDZ5sD5zv7Y/iHdpyDxn61pvRVZoLIH2VkNs6bDVos=;
-        b=LMfhFSAhJ669PZ09PAKyAQ2RQcgu2Tj0HDYMxNB8BcsKfF7HSiDkI4e+ZcHOCO70BY
-         LRaYbPmcjTy2L9aetFrc35WWjzFBFVSZ91gIwVAjqQTWUt2r+M9ktPHs6snq4olGUud2
-         QB2WXlyut9jF0J6yQ4WpHKt95G34e44jQH5Sb1FWtkvIXoVWDqH7u8Xbg3w9QGKR64Im
-         Oj6drXq7H9K8nD7z0LowzXV93MI37r3jCdZGJmX9O9Y0PRHqQNWMaTLfMZgcoiUuO1ZA
-         4a8b7NrA1MEUg3V1vcSdD9RNKhf5yJs1cKBGjWEav3+exr2cS9aFnAf+Ib5jtzIuuFX5
-         jZ8A==
-X-Gm-Message-State: AFqh2kqanw1l6DIVt5jyxAB0adZxm4b/HtI63uehakp+PjbAc2CTy+7w
-        cEfqKXuwjaunphbdZvF2VnDlZw==
-X-Google-Smtp-Source: AMrXdXtQRKKv9PeFSBCBuLQmkmKWOPSml2EWvIudir73H5SyynbDp6Qmdt9W/FGruq86o5qm6WMgGQ==
-X-Received: by 2002:adf:ce06:0:b0:2bf:95cc:744c with SMTP id p6-20020adfce06000000b002bf95cc744cmr6173296wrn.0.1674397805293;
-        Sun, 22 Jan 2023 06:30:05 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id a9-20020a5d5089000000b00287da7ee033sm2086281wrt.46.2023.01.22.06.30.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jan 2023 06:30:04 -0800 (PST)
-Message-ID: <a20028e6-3318-26ca-117a-26c87c292139@linaro.org>
-Date:   Sun, 22 Jan 2023 15:30:02 +0100
+        with ESMTP id S229795AbjAVPen (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Jan 2023 10:34:43 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DB922017
+        for <linux-pci@vger.kernel.org>; Sun, 22 Jan 2023 07:34:40 -0800 (PST)
+Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ uk-mta-119-RGTkmPo5N8SxIyIu6i-JoQ-1; Sun, 22 Jan 2023 15:34:37 +0000
+X-MC-Unique: RGTkmPo5N8SxIyIu6i-JoQ-1
+Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
+ (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Sun, 22 Jan
+ 2023 15:34:35 +0000
+Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
+ id 15.00.1497.044; Sun, 22 Jan 2023 15:34:35 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Marc Zyngier' <maz@kernel.org>, Leon Romanovsky <leon@kernel.org>
+CC:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "darwi@linutronix.de" <darwi@linutronix.de>,
+        "elena.reshetova@intel.com" <elena.reshetova@intel.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 1/2] PCI/MSI: Cache the MSIX table size
+Thread-Topic: [PATCH 1/2] PCI/MSI: Cache the MSIX table size
+Thread-Index: AQHZLlBNW/hs6U8HNk6tbQqnXl3oAq6qh0bQ
+Date:   Sun, 22 Jan 2023 15:34:34 +0000
+Message-ID: <70d987962acf454f8db4dd131a858b55@AcuMS.aculab.com>
+References: <20230119170633.40944-1-alexander.shishkin@linux.intel.com>
+        <20230119170633.40944-2-alexander.shishkin@linux.intel.com>
+        <Y8z7FPcuDXDBi+1U@unreal> <86fsc2n8fp.wl-maz@kernel.org>
+In-Reply-To: <86fsc2n8fp.wl-maz@kernel.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH v9 1/5] dt-bindings: PCI: ti,j721e-pci-*: add checks for
- num-lanes
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
 Content-Language: en-US
-To:     Achal Verma <a-verma1@ti.com>, mranostay@ti.com, rogerq@kernel.org,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, vigneshr@ti.com, tjoseph@cadence.com,
-        sergio.paracuellos@gmail.com, pthombar@cadence.com,
-        linux-pci@vger.kernel.org
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230122122121.3552375-1-a-verma1@ti.com>
- <20230122122121.3552375-2-a-verma1@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230122122121.3552375-2-a-verma1@ti.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,18 +65,96 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 22/01/2023 13:21, Achal Verma wrote:
-> From: Matt Ranostay <mranostay@ti.com>
+From: Marc Zyngier
+> Sent: 22 January 2023 10:57
 > 
-> Add num-lanes schema checks based on compatible string on available lanes
-> for that platform.
+> On Sun, 22 Jan 2023 09:00:04 +0000,
+> Leon Romanovsky <leon@kernel.org> wrote:
+> >
+> > On Thu, Jan 19, 2023 at 07:06:32PM +0200, Alexander Shishkin wrote:
+> > > A malicious device can change its MSIX table size between the table
+> > > ioremap() and subsequent accesses, resulting in a kernel page fault in
+> > > pci_write_msg_msix().
+> > >
+> > > To avoid this, cache the table size observed at the moment of table
+> > > ioremap() and use the cached value. This, however, does not help drivers
+> > > that peek at the PCIE_MSIX_FLAGS register directly.
+> > >
+> > > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Cc: stable@vger.kernel.org
+> > > ---
+> > >  drivers/pci/msi/api.c | 7 ++++++-
+> > >  drivers/pci/msi/msi.c | 2 +-
+> > >  include/linux/pci.h   | 1 +
+> > >  3 files changed, 8 insertions(+), 2 deletions(-)
+> >
+> > I'm not security expert here, but not sure that this protects from anything.
+> > 1. Kernel relies on working and not-malicious HW. There are gazillion ways
+> > to cause crashes other than changing MSI-X.
+> > 2. Device can report large table size, kernel will cache it and
+> > malicious device will reduce it back. It is not handled and will cause
+> > to kernel crash too.
+> >
 > 
-> Signed-off-by: Matt Ranostay <mranostay@ti.com>
-> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> Indeed, this was my exact reaction reading this patch. This only makes
+> sure the same (potentially wrong) value is used at all times. So while
+> this results in a consistent use, this doesn't give much guarantee.
 
+Yep, the device can 'choose' to error any PCIe read.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> The only way to deal with this is to actually handle the resulting
+> fault, similar to what the kernel does when accessing userspace. Not
+> sure how possible this is with something like PCIe.
 
-Best regards,
-Krzysztof
+I don't think you get a fault, the PCIe read completes with value ~0.
+You might get an AER indication, that may not be helpful at all.
+We've some x86 systems where that ends up as an NMI and panic!
+
+A more valid reason for caching the MSIX table size is to avoid
+doing a slow PCIe read.
+I'm not sure how fast they are on 'normal' hardware, but the Altera
+fpga we use is particularly pedestrian.
+I just measured back-to-back reads at 126 clocks of the internal
+125MHz clock so almost exactly 1us - or 3000 clocks of a 3GHz cpu.
+(I added PCIe trace to the fpga so we can see what goes on.)
+
+There is actually a much more 'interesting' issue with MSIX.
+There are 16 bytes of data for each interrupt.
+
+The kernel doesn't even try to ensure they are written as
+a single PCIe TLP, and even if it did there is no real
+guarantee the writes aren't split before the logic that
+raises interrupts reads the values.
+
+It is also quite likely that the interrupt raising logic
+doesn't to an atomic read of all 16 bytes, so a cpu write
+could split the reads.
+
+This doesn't normally matter - the interrupt is enabled long
+after the address/data fields are initialised.
+But if the interrupt affinity is changed both the address and
+data fields are likely to be changed on an interrupt that is
+(nominally) enabled.
+
+It is pretty easy to imagine the new address being used with
+the old data (or v.v.) or even a 'torn read' of the 64bit
+address field.
+
+I don't remember seeing anything in the MSIX spec about
+requirements on the hardware - which puts the onus on
+the software to ensure the MSIX data is always valid.
+This means that changing the vector needs to:
+	Disable the interrupt.
+	Delay (a read from the MSIX block is probably enough).
+	Update the address and data.
+	Delay.
+	Enable the interrupt.
+But I don't remember seeing the kernel to any of that.
+
+	David.
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
