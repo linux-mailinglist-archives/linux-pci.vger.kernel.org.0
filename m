@@ -2,169 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E20D7676A74
-	for <lists+linux-pci@lfdr.de>; Sun, 22 Jan 2023 01:35:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D05C676BBB
+	for <lists+linux-pci@lfdr.de>; Sun, 22 Jan 2023 10:00:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjAVAfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 21 Jan 2023 19:35:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39808 "EHLO
+        id S229643AbjAVJAQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 22 Jan 2023 04:00:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjAVAfB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 21 Jan 2023 19:35:01 -0500
-Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607411F486;
-        Sat, 21 Jan 2023 16:35:00 -0800 (PST)
-Received: by mail-lj1-x236.google.com with SMTP id g14so9532040ljh.10;
-        Sat, 21 Jan 2023 16:35:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YdrGZsJ+QDC0ry+jJcKChDlMQ9gtWypeGkHtFi0scYc=;
-        b=CQZjiL+L3V6Gh5EvD7jQqZi//1HouVKj82uMkBzA7PfDut+xGKcQ0+3RAo5hitAcEZ
-         aXx5OuO3ZFaWpBP7/Eb+nHZsiFiJUIdtVzvR7Geg9fSlMR9aakwWjQ4JYEFRiovEbJYM
-         d+U5wENUVBzAVpfh46y8hoh/U7vfpGD3OeSgzPsSFFK/yrdsWy9oyWzztGHAlN/B7Lmo
-         gZo/4lONauqZiI+fB0KqPE5XughTSJ1nVRAd4ylm0j6KJIMJ1DpM/WM7hPDd/93/QrhO
-         BiY4MVnHc1TrRJ1MMcl0et3aJRzyIv2t9zejjPSEheZ6Z0T5PyVVZLvRdFlKyXqCTbOm
-         /oSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YdrGZsJ+QDC0ry+jJcKChDlMQ9gtWypeGkHtFi0scYc=;
-        b=SEe0cVqoUNdLcfiz2ILLOYpFKE/Yk2fQsqXCXVRy/GaWRBN706UIj10oUVL6Wl/Lyi
-         /vr4PYuIPGPxo7MQ5BjqADYwGAWWC1NyI+e1HeKtgcIbqPFg9r+ZVtCKuHVIpT2sKA7a
-         BKMDZzBzc4ZG0GkyS42IMeOSzoT5GSg/h2zITEIIT/pZSpYPfHNd8QzaK8rEM/Z1fWYP
-         fYwy6VtIouQHx7pL2ATtiiazjxhSf3ErZ9GWu/nmUhfIC6P37X35d8qt02jjwBt/digO
-         gO4AmXy/4cdvbD4BGS4Aa3SIqZBH2BP4qS/5h/+L3VwbBnJ459uPT8TLdhh8TIIRRFy6
-         +lzA==
-X-Gm-Message-State: AFqh2kq1PtOLUBxAwmWRZ+GeUGO1j6GNrC2zUHujumpCOolWH/p8Np0t
-        7CzIbrXurNhUs/S2PlMdgPs=
-X-Google-Smtp-Source: AMrXdXty0R5D4eSYIJE+CK657Fg4n7cCqeRZAzmb77gZrk7tgljRcjEQzY1HaT7LJwmdTl1zvbELng==
-X-Received: by 2002:a2e:b17c:0:b0:28b:79d7:58bc with SMTP id a28-20020a2eb17c000000b0028b79d758bcmr5059018ljm.45.1674347698720;
-        Sat, 21 Jan 2023 16:34:58 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id f27-20020a2eb5bb000000b0027fd72dd6a1sm3071426ljn.70.2023.01.21.16.34.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jan 2023 16:34:58 -0800 (PST)
-Date:   Sun, 22 Jan 2023 03:34:55 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 25/27] PCI: dwc: Set coherent DMA-mask on MSI-address
- allocation
-Message-ID: <20230122003455.mftnxdsjyemxz7bb@mobilestation>
-References: <20230113171409.30470-26-Sergey.Semin@baikalelectronics.ru>
- <20230120215952.GA672871@bhelgaas>
+        with ESMTP id S229480AbjAVJAQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Jan 2023 04:00:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A1651E5DE;
+        Sun, 22 Jan 2023 01:00:11 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F1B97B80975;
+        Sun, 22 Jan 2023 09:00:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB7E9C433EF;
+        Sun, 22 Jan 2023 09:00:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674378008;
+        bh=dNgodQPXGnAJJaCbMcCFeKdcblqgglKHrbatu82Jl7w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KRA/hQreQBQb0nEgQ4CnN27BhVV7L3kshNH3EpCddpUdpIS9/nxyNBnbXRUvIgiKP
+         BWJCM8kLEODe2iKZgvdgorwzxF5mKxqlRjXKw+YMcImPkeZ8F51yKrLh6K4QcGow5M
+         za5q+mMQ205brfuTg5Z6To0Gsg5BXfx+XJGfGfQOQV7ofKc31A13Gv/S2S1NOFE8rs
+         I0zw+pspqZDKfyj2TPCOs/Ft8XCxHEPpr3EQ3LCQPvp/xTKYf89AsDAhzZV9YlyPCs
+         WAtKVBJUJkxxrBJ6J2xBDA2/arDEkJa0CXR4MOosD7SIQYeTJ6Lf4axLjjT1n7y318
+         O1BvkJnMmrQ7w==
+Date:   Sun, 22 Jan 2023 11:00:04 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>, darwi@linutronix.de,
+        elena.reshetova@intel.com, kirill.shutemov@linux.intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 1/2] PCI/MSI: Cache the MSIX table size
+Message-ID: <Y8z7FPcuDXDBi+1U@unreal>
+References: <20230119170633.40944-1-alexander.shishkin@linux.intel.com>
+ <20230119170633.40944-2-alexander.shishkin@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230120215952.GA672871@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230119170633.40944-2-alexander.shishkin@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 20, 2023 at 03:59:52PM -0600, Bjorn Helgaas wrote:
-> On Fri, Jan 13, 2023 at 08:14:07PM +0300, Serge Semin wrote:
-> > The MSI target address requires to be reserved within the lowest 4GB
-> > memory in order to support the PCIe peripherals with no 64-bit MSI TLPs
-> > support. Since the allocation is done from the DMA-coherent memory let's
-> > modify the allocation procedure to setting the coherent DMA-mask only and
-> > avoiding the streaming DMA-mask modification. Thus at least the streaming
-> > DMA operations would work with no artificial limitations. It will be
-> > specifically useful for the eDMA-capable controllers so the corresponding
-> > DMA-engine clients would map the DMA buffers with no need in the SWIOTLB
-> > intervention for the buffers allocated above the 4GB memory region.
-> > 
-> > While at it let's add a brief comment about the reason of having the MSI
-> > target address allocated from the DMA-coherent memory limited with the 4GB
-> > upper bound.
-> > 
-> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-> > 
-> > ---
-> > 
-> > Changelog v8:
-> > - This is a new patch added on v8 stage of the series.
-> >   (@Robin, @Christoph)
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > index 3ab6ae3712c4..e10608af39b4 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -366,7 +366,16 @@ static int dw_pcie_msi_host_init(struct dw_pcie_rp *pp)
-> >  						    dw_chained_msi_isr, pp);
-> >  	}
-> >  
-> > -	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
-> > +	/*
-> > +	 * Even though the iMSI-RX Module supports 64-bit addresses some
-> > +	 * peripheral PCIe devices may lack the 64-bit messages support. In
-> > +	 * order not to miss MSI TLPs from those devices the MSI target address
-> > +	 * has to be reserved within the lowest 4GB.
-> > +	 * Note until there is a better alternative found the reservation is
-> > +	 * done by allocating from the artificially limited DMA-coherent
-> > +	 * memory.
-> > +	 */
-> > +	ret = dma_set_coherent_mask(dev, DMA_BIT_MASK(32));
+On Thu, Jan 19, 2023 at 07:06:32PM +0200, Alexander Shishkin wrote:
+> A malicious device can change its MSIX table size between the table
+> ioremap() and subsequent accesses, resulting in a kernel page fault in
+> pci_write_msg_msix().
 > 
-
-> We used to restrict both streaming and coherent DMA masks to 32 bits.
-> Now we will only restrict coherent DMA to 32 bits.
+> To avoid this, cache the table size observed at the moment of table
+> ioremap() and use the cached value. This, however, does not help drivers
+> that peek at the PCIE_MSIX_FLAGS register directly.
 > 
-> So in essence this change removes a restriction on the streaming DMA
-> mask, right?
+> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/pci/msi/api.c | 7 ++++++-
+>  drivers/pci/msi/msi.c | 2 +-
+>  include/linux/pci.h   | 1 +
+>  3 files changed, 8 insertions(+), 2 deletions(-)
 
-Right.
+I'm not security expert here, but not sure that this protects from anything.
+1. Kernel relies on working and not-malicious HW. There are gazillion ways
+to cause crashes other than changing MSI-X.
+2. Device can report large table size, kernel will cache it and
+malicious device will reduce it back. It is not handled and will cause
+to kernel crash too.
+
+Thanks
 
 > 
-> And I guess bt1 is the only driver where this will make a difference
-> (after the next patch) because no other dwc drivers set their own DMA
-> masks?
-
-Right. But that's only because I am sure the Baikal-T1 PCIe eDMA
-engine is able to reach memory above 4GB limits. If you know any other
-DW PCIe RP/EP controller with eDMA-capability and which can work with
-the memory space wider than 4GB then you can update it' streaming
-DMA-mask too. Note lacking to do so doesn't mean the eDMA-engine
-driver won't work for them. The eDMA-engine will be forced to work
-with the lowest 4GB space to which the upper memory will be mapped via
-SWIOTLB.
-
--Serge(y)
-
+> diff --git a/drivers/pci/msi/api.c b/drivers/pci/msi/api.c
+> index b8009aa11f3c..617ea1256487 100644
+> --- a/drivers/pci/msi/api.c
+> +++ b/drivers/pci/msi/api.c
+> @@ -75,8 +75,13 @@ int pci_msix_vec_count(struct pci_dev *dev)
+>  	if (!dev->msix_cap)
+>  		return -EINVAL;
+>  
+> +	if (dev->flags_qsize)
+> +		return dev->flags_qsize;
+> +
+>  	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
+> -	return msix_table_size(control);
+> +	dev->flags_qsize = msix_table_size(control);
+> +
+> +	return dev->flags_qsize;
+>  }
+>  EXPORT_SYMBOL(pci_msix_vec_count);
+>  
+> diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> index 1f716624ca56..d50cd45119f1 100644
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -715,7 +715,7 @@ static int msix_capability_init(struct pci_dev *dev, struct msix_entry *entries,
+>  
+>  	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &control);
+>  	/* Request & Map MSI-X table region */
+> -	tsize = msix_table_size(control);
+> +	tsize = pci_msix_vec_count(dev);
+>  	dev->msix_base = msix_map_region(dev, tsize);
+>  	if (!dev->msix_base) {
+>  		ret = -ENOMEM;
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index adffd65e84b4..2e1a72a2139d 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -352,6 +352,7 @@ struct pci_dev {
+>  	u8		rom_base_reg;	/* Config register controlling ROM */
+>  	u8		pin;		/* Interrupt pin this device uses */
+>  	u16		pcie_flags_reg;	/* Cached PCIe Capabilities Register */
+> +	u16		flags_qsize;	/* Cached MSIX table size */
+>  	unsigned long	*dma_alias_mask;/* Mask of enabled devfn aliases */
+>  
+>  	struct pci_driver *driver;	/* Driver bound to this device */
+> -- 
+> 2.39.0
 > 
-> >  	if (ret)
-> >  		dev_warn(dev, "Failed to set DMA mask to 32-bit. Devices with only 32-bit MSI support may not work properly\n");
-> >  
-> > -- 
-> > 2.39.0
-> > 
-> > 
