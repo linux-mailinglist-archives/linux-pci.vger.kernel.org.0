@@ -2,62 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4E74767819B
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:37:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 11BBC6781EC
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:42:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231936AbjAWQhO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 11:37:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39348 "EHLO
+        id S233265AbjAWQl7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 11:41:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231963AbjAWQhN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:37:13 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A4228874;
-        Mon, 23 Jan 2023 08:37:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB20760FA8;
-        Mon, 23 Jan 2023 16:37:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBEDDC4339E;
-        Mon, 23 Jan 2023 16:37:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674491831;
-        bh=ygXrCk7lDXCPU5TBq4c9PYUWWb7/Dwti3oEPNHVlqjw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n0/vgn+MbdfyrYca+Yykeer/Kv9KF0bqvzPYNixmggG9j1ZoqwuU7+Bf3OCL+nmgf
-         gbFUkhlZrsRudPEaqd0Q4/BpnHri3kmTZV3nXiKHoao2OQqeYRRYDsf9JkD+rz1eG/
-         6jjytERYhnhYslVn4dYCZc0D8XhHeTr1NvEJ9bBVHbuCMNk7Gj4QArcxJS/Bf+RV14
-         gAYDVDiC7auZKlDpNcCjhzrtAdYHzNDvKC6IceHYxw1vdm/JFtx7hXmCQLaI0hC4VU
-         yUhGJIBVwyycjVhiOJh48njecnHzKU3e95Q32LN2qgaay4o7N4cgMREXCDh7T+Obmh
-         +NOmWE5OMvodw==
-Date:   Mon, 23 Jan 2023 10:37:09 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S233370AbjAWQln (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:41:43 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB3F2C65B
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 08:41:00 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id t5so11406028wrq.1
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 08:41:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kkvs3S3jr+7/Bm5mSPQZ0AOsz6TtEKnjkCb8fldDeko=;
+        b=sxlUQKDkfXET+VlBQxjalijTLTwZYIN6OydmvyTwluUIvYogXNszJqiBOmCY3cmuGK
+         BmWwzUdmYl4PCJTzTJXipHPf6E5+67/fX9x0FYPmZy7wGYe7uAskiUdya5Sjfa/YxU2a
+         1z7w4NvmozUvPVVdQ3pTs3zfpJJFAFGwg8l5wP6WW/b+ZYInpDx9Kieo6e/tueywQIAA
+         P4LkpexHLx38dlsty2V0eQ0MGKWxOw6bJR3BArrgaXbmuaWnYC0XECUIaF2OoqOzE5L3
+         Ee46RZMFLWZtfX6dU3mIwFbUYgU28pZw8eoEbDElc1wqri6tTa3uUwJR1Qfdvsg0xADF
+         XXPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kkvs3S3jr+7/Bm5mSPQZ0AOsz6TtEKnjkCb8fldDeko=;
+        b=yb+ihCiUlgTK7nPDa3+a3c5e4NMsj28kRi8UZns16gz5tMs6AvbzGEUoXBwj2SaLzk
+         X3Kvodw39NgM+QdjBEVAJj6jW8soVctRoKNdcX0lqEKcu76L/Y6p2Ee8sRvVcy7zcVkq
+         c/HYuLYdvCvgEkMSA2Y1gNaQmgUMODMmzCeXW93b7yZElEWaCSvlwtNTp2SUVDdNgtLf
+         9MZ4h47UmOaS22+gejYP37FOEAOpA6OcYS6/anlA+iq/zAJcHxIHzrTeAFQVFtJ1HdG3
+         1aIgBnj6QG2JlGf/NzW9zLrcHLsFIZwPlDaXCGdhLfwi1R9iPudnV9J380JwSWbI/Vpn
+         xcmw==
+X-Gm-Message-State: AFqh2kod4KyMiMX4vmUKa9K9EQtXdQ1mWnc3Gwze0qXm6Mn5UNe5KQcF
+        D1axtL6i3eW3QjaglwzTXAcQlA==
+X-Google-Smtp-Source: AMrXdXt9F4i0NyH8/CCuBUxnEMaqGRQq4GQ/LpYPY1JEUJbveDf+Md21yVg7s3aVlpQTbFuYCOcjkQ==
+X-Received: by 2002:a5d:65d2:0:b0:2bb:6c04:4598 with SMTP id e18-20020a5d65d2000000b002bb6c044598mr22477407wrw.67.1674492054178;
+        Mon, 23 Jan 2023 08:40:54 -0800 (PST)
+Received: from linaro.org ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id d5-20020adfa345000000b002be546f947asm8496694wrb.61.2023.01.23.08.40.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Jan 2023 08:40:53 -0800 (PST)
+Date:   Mon, 23 Jan 2023 18:40:52 +0200
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 19/27] dmaengine: dw-edma: Use non-atomic io-64 methods
-Message-ID: <20230123163709.GA891421@bhelgaas>
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: qcom: Add SM8550 compatible
+Message-ID: <Y864lFLEQyCwZLef@linaro.org>
+References: <20230119112453.3393911-1-abel.vesa@linaro.org>
+ <7befa113-c45a-93d0-2696-17bbf62af711@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230121230359.kqfm4kvwys2jdan6@mobilestation>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <7befa113-c45a-93d0-2696-17bbf62af711@linaro.org>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,87 +80,157 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 22, 2023 at 02:03:59AM +0300, Serge Semin wrote:
-> On Fri, Jan 20, 2023 at 06:54:01PM -0600, Bjorn Helgaas wrote:
-> > On Fri, Jan 13, 2023 at 08:14:01PM +0300, Serge Semin wrote:
-> > > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
-> > > possible to use the already available non-atomic readq/writeq methods
-> > > implemented exactly for such cases. They are defined in the dedicated
-> > > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
-> > > if the 64-bits readq/writeq methods are unavailable on some platforms at
-> > > consideration, the corresponding drivers can have any of these headers
-> > > included and stop locally re-implementing the 64-bits IO accessors taking
-> > > into account the non-atomic nature of the included methods. Let's do that
-> > > in the DW eDMA driver too. Note by doing so we can discard the
-> > > CONFIG_64BIT config ifdefs from the code.
-> > > 
-> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Acked-by: Vinod Koul <vkoul@kernel.org>
-> > > ---
-> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 55 +++++++++------------------
-> > >  1 file changed, 18 insertions(+), 37 deletions(-)
-> > > 
-> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > index 66f296daac5a..51a34b43434c 100644
-> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
-> > > @@ -8,6 +8,8 @@
-> > >  
-> > >  #include <linux/bitfield.h>
-> > >  
-> > > +#include <linux/io-64-nonatomic-lo-hi.h>
-> > > +
-> > >  #include "dw-edma-core.h"
-> > >  #include "dw-edma-v0-core.h"
-> > >  #include "dw-edma-v0-regs.h"
-> > > @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
-> > >  		SET_32(dw, rd_##name, value);		\
-> > >  	} while (0)
-> > >  
-> > > -#ifdef CONFIG_64BIT
-> > > -
-> > >  #define SET_64(dw, name, value)				\
-> > >  	writeq(value, &(__dw_regs(dw)->name))
-> > >  
-> > > @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
-> > >  		SET_64(dw, rd_##name, value);		\
-> > >  	} while (0)
-> > >  
-> > > -#endif /* CONFIG_64BIT */
+On 23-01-20 09:37:32, Krzysztof Kozlowski wrote:
+> On 19/01/2023 12:24, Abel Vesa wrote:
+> > Add the SM8550 platform to the binding.
 > > 
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > ---
+> > 
+> > The v2 was here:
+> > https://lore.kernel.org/all/20230118111704.3553542-1-abel.vesa@linaro.org/
+> > 
+> > Changes since v2:
+> >  * dropped the pipe from clock-names
+> >  * removed the pcie instance number from aggre clock-names comment
+> >  * renamed aggre clock-names to noc_aggr
+> >  * dropped the _pcie infix from cnoc_pcie_sf_axi
+> >  * renamed pcie_1_link_down_reset to simply link_down
+> >  * added enable-gpios back, since pcie1 node will use it
+> > 
+> > Changes since v1:
+> >  * Switched to single compatible for both PCIes (qcom,pcie-sm8550)
+> >  * dropped enable-gpios property
+> >  * dropped interconnects related properties, the power-domains
+> >  * properties
+> >    and resets related properties the sm8550 specific allOf:if:then
+> >  * dropped pipe_mux, phy_pipe and ref clocks from the sm8550 specific
+> >    allOf:if:then clock-names array and decreased the minItems and
+> >    maxItems for clocks property accordingly
+> >  * added "minItems: 1" to interconnects, since sm8550 pcie uses just one,
+> >    same for interconnect-names
+> > 
+> > 
+> >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 44 +++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > index a5859bb3dc28..93e86dfdd6fe 100644
+> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> > @@ -34,6 +34,7 @@ properties:
+> >        - qcom,pcie-sm8250
+> >        - qcom,pcie-sm8450-pcie0
+> >        - qcom,pcie-sm8450-pcie1
+> > +      - qcom,pcie-sm8550
+> >        - qcom,pcie-ipq6018
+> >  
+> >    reg:
+> > @@ -65,9 +66,11 @@ properties:
+> >    dma-coherent: true
+> >  
+> >    interconnects:
+> > +    minItems: 1
+> >      maxItems: 2
 > 
-> > Great to get rid of these #ifdefs!
-> > 
-> > Am I missing something?  It looks like SET_64 is used only by
-> > SET_RW_64 and SET_BOTH_64, and neither of *them is used at all.
-> > 
-> > Similarly for GET_64 and GET_RW_64.
-> > 
-> > So maybe we could get rid of everything inside the #ifdefs as well?
+> 1. Why do you skip cpu-pcie interconnect on SM8550?
+> 2. This should not be allowed on other variants.
+
+That is a good point. Will add the cpu-pcie in v5.
+
 > 
-> Even though these macros are indeed unused in the driver they are
-> still a part of the DW eDMA CSRs access interface. In particular they
-> are supposed to be used to access the 64-bit registers declared in the
-> dw_edma_v0_regs, dw_edma_v0_unroll and dw_edma_v0_ch_regs structures.
-> So until the interface is converted to a more preferable direct MMIO
-> usage without any packed-structures I'd rather leave these macros
-> be.
-> ...
+> >  
+> >    interconnect-names:
+> > +    minItems: 1
+> >      items:
+> >        - const: pcie-mem
+> >        - const: cpu-pcie
+> > @@ -102,6 +105,10 @@ properties:
+> >    power-domains:
+> >      maxItems: 1
+> >  
+> > +  enable-gpios:
+> > +    description: GPIO controlled connection to ENABLE# signal
+> > +    maxItems: 1
+> > +
+> >    perst-gpios:
+> >      description: GPIO controlled connection to PERST# signal
+> >      maxItems: 1
+> > @@ -197,6 +204,7 @@ allOf:
+> >                - qcom,pcie-sm8250
+> >                - qcom,pcie-sm8450-pcie0
+> >                - qcom,pcie-sm8450-pcie1
+> > +              - qcom,pcie-sm8550
+> >      then:
+> >        properties:
+> >          reg:
+> > @@ -611,6 +619,41 @@ allOf:
+> >            items:
+> >              - const: pci # PCIe core reset
+> >  
+> > +  - if:
+> > +      properties:
+> > +        compatible:
+> > +          contains:
+> > +            enum:
+> > +              - qcom,pcie-sm8550
+> > +    then:
+> > +      properties:
+> > +        clocks:
+> > +          minItems: 7
+> > +          maxItems: 8
+> > +        clock-names:
+> > +          minItems: 7
+> > +          items:
+> > +            - const: aux # Auxiliary clock
+> > +            - const: cfg # Configuration clock
+> > +            - const: bus_master # Master AXI clock
+> > +            - const: bus_slave # Slave AXI clock
+> > +            - const: slave_q2a # Slave Q2A clock
+> > +            - const: ddrss_sf_tbu # PCIe SF TBU clock
+> > +            - const: noc_aggr # Aggre NoC PCIe AXI clock
+> > +            - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
+> > +        iommus:
+> > +          maxItems: 1
+> > +        iommu-map:
+> > +          maxItems: 2
+> 
+> 1. Don't define new properties in allOf. It makes the binding
+> unmaintainable.
+> 
+> 2. Why only SM8550?
 
-> As I said above I'd rather leave the 64-bit accessors be until the
-> packed structure-based interface is removed from the driver.
+Good point again. Will make both iommus and iommu-map properties global
+as even SM8450 has them.
 
-I wouldn't bother polishing something that's unused since it can't be
-tested, it's easy to resurrect from the history if/when it becomes
-necessary, and it makes it much harder to connect the commit log with
-the code change.  But this isn't a drivers/pci change, so I'm fine
-with it since Vinod acked it.
+> 
+> > +        resets:
+> > +          minItems: 1
+> 
+> Why second reset is optional?
 
-I guess the point is that when !CONFIG_64BIT, there was no writeq() so
-we used SET_LL_32 twice.  linux/io-64-nonatomic-lo-hi.h provides that
-writeq() implementation, so we can define and use SET_LL_64 for that
-case.
+link_down reset is needed only by g4x2 pcie, AFAICT.
 
-Bjorn
+> 
+> > +          maxItems: 2
+> > +        reset-names:
+> > +          minItems: 1
+> > +          items:
+> > +            - const: pci # PCIe core reset
+> > +            - const: link_down # PCIe link down reset
+> > +
+> >    - if:
+> >        properties:
+> >          compatible:
+> > @@ -694,6 +737,7 @@ allOf:
+> >                - qcom,pcie-sm8250
+> >                - qcom,pcie-sm8450-pcie0
+> >                - qcom,pcie-sm8450-pcie1
+> > +              - qcom,pcie-sm8550
+> >      then:
+> >        oneOf:
+> >          - properties:
+> 
+> Best regards,
+> Krzysztof
+> 
