@@ -2,69 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD6D677789
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 10:42:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C0E2F6777A2
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 10:46:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231132AbjAWJmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 04:42:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
+        id S231723AbjAWJqW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 04:46:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230103AbjAWJmY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 04:42:24 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B4E16338
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:42:22 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id f25-20020a1c6a19000000b003da221fbf48so8059778wmc.1
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:42:22 -0800 (PST)
+        with ESMTP id S231680AbjAWJqV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 04:46:21 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A46531F935
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:46:18 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id t5so10215330wrq.1
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:46:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:in-reply-to:organization:references:cc:to
          :content-language:subject:reply-to:from:user-agent:mime-version:date
          :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=bb3ehCbsmnDNOeIeuOp9X6FACVdZxwB9flFsEny7tkU=;
-        b=dV+vmkhPJupVDkDKPKw/2uJe9dhCfz2931ZZfmSlTiTucpZhV2Dz+B6f9Fv3oiI5Qg
-         xdALFShfLxjvVlVQ2K1bLQ5/4uPa6Q7gCQlFkO7bDQBoW/r8L1iBLX9dM/ZknvefkDGC
-         6iJRk6CRvJJo7qipP+9FC4RrGHDwX//qae/qj8wJurKg8c+1OHYsm56cHw4p7MWRyk1K
-         nfquz3KQcfaO9EzCTs/SUKrcWz3tEvEos7SFv6WhgRiugJpJ3DnoGoOyT8+BCgVZIzQS
-         gVFXE4RIK7gcAlT4NdXcPy1iZVBPSkMbc+B1+QYLkW51SQ6p0ODeYa+m2ek55Zj8+RQZ
-         DWEQ==
+        bh=60INGmxwRr+8yD/I9JtxQHZJy+MthHAPjebxgVXSq4A=;
+        b=F1RmlI6Jr+ymKyy8lqwEzZBkmqqB13nNXYBYvHtOeWRGeqsuz7xzXBmaWhSw3I8Ebm
+         TcBhF+tktlNXSXYa7GGd+4cSp7Mx1MA292zlI/YBhsesf8m2OPtOBU4CzkRYYDY+VJKD
+         rZKktCGYO6MieFBnhFrnXP96yNjjCazN4NtubEGY3US83//z/ammPRj/L4Pxrc2Z6tmr
+         QKPZ+KdqFIhF4uxc434VoygrrqrdBU0wTWSgMlQyI+fyCqgR08BCpwX5nBT4NXsRkGFu
+         8nu27yExklJVwN9h22VU1oVuSZqcQ+pTlG/IoT6VZa6i92mv0KfUGLb3dqJ4/aHoExHh
+         cArg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:organization:references:cc:to
          :content-language:subject:reply-to:from:user-agent:mime-version:date
          :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bb3ehCbsmnDNOeIeuOp9X6FACVdZxwB9flFsEny7tkU=;
-        b=5DrEq4CSLcjOucLT0duyN0Db6E46cruGKAZPzFblFNmEEZX686r9J2lBjhR8cJK1m5
-         hdkgCbfpSkECEmhsKde0LoTL/TLR1piCUjEIEXx3sQ+C03F2p9MABbM7tDYH1qYJx01X
-         gHE/AHQ3thUi9T33QnNsE1V6FmE+6u2WRmI7ir0kfdabCtKZfOF7hzZIGDHCPTml6Ym5
-         uhVkDp0eK9HzInOdzpzg2FDjY075ydE8Z9znT+JAjVsstAcsGaiBmsCikSDW22WtgwgX
-         uhMoAxoB5lLiaF25/UDwzRW2ABvnNbZAzQmjzwEZ9419HK8QIE5AZSKH/z18FhXUBcnd
-         35HA==
-X-Gm-Message-State: AFqh2kqYMHXZmH7zcyoNz7RF66+0PPzxeLNk7FGXUT+bgivxGf5Hl+zO
-        aanWk0IULaPghdorhvkVj6GxuA==
-X-Google-Smtp-Source: AMrXdXsm6TcBoxPPxS02VMNxznfImdfA7EnRpT/eJPmFB8AVCLXvlWQuATnvGBXA13pmaGAeWzaHKQ==
-X-Received: by 2002:a05:600c:1d12:b0:3db:53f:baea with SMTP id l18-20020a05600c1d1200b003db053fbaeamr23030706wms.6.1674466941329;
-        Mon, 23 Jan 2023 01:42:21 -0800 (PST)
+        bh=60INGmxwRr+8yD/I9JtxQHZJy+MthHAPjebxgVXSq4A=;
+        b=6uYhFltRNQ7LqqQkOyGl7MotMDWXQh0KCtGdZ+2/BqP29ueXJoP1tVZ9a54eP/4VSR
+         ZP9TbDfTflNoAbQH0hp8MsxhyiynBaJb51feN9LaiKnDmATJFzFpjeFS7S1u1mdxi87p
+         1Zpc/2tU0x2E38cjWEWLCLDwztuxsXwxWBLbJkuASEA33za0PwQE7CML3Lh1bz7S3kQ3
+         uW0QkZ/I5Du4MXkTQ7wCsWG2i7v6kvEOTiGZ7QjfENBiXptjo24oUHKTKKxSKLiLy1xu
+         DPTK1CYaB/70oEqkJq3ryGzF/zSNwfw8deEJoEuWHsgF5g22M+usxapNL4nNLU2te0QL
+         7wEg==
+X-Gm-Message-State: AFqh2krng/daPVmSlw2F9wCXhbUomWj4bAYXOP44FCuvleQIysE+GbCo
+        0QHejofwHcQFkxFEZR+oH9rMSQ==
+X-Google-Smtp-Source: AMrXdXuHEVHo54bmjGJT3gC7SenPuHW6sVZSyn52AJ8UqKixwTSKOJoGk+qB0zPe/lhc1Ohi58pW5Q==
+X-Received: by 2002:a05:6000:98d:b0:2bd:c6ce:7bfb with SMTP id by13-20020a056000098d00b002bdc6ce7bfbmr23917833wrb.28.1674467177213;
+        Mon, 23 Jan 2023 01:46:17 -0800 (PST)
 Received: from [192.168.7.111] (679773502.box.freepro.com. [212.114.21.58])
-        by smtp.gmail.com with ESMTPSA id t13-20020a1c770d000000b003db1ca20170sm9963482wmi.37.2023.01.23.01.42.19
+        by smtp.gmail.com with ESMTPSA id q12-20020adff50c000000b002bc83b85180sm7139415wro.114.2023.01.23.01.46.15
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 01:42:20 -0800 (PST)
-Message-ID: <d8f78a24-398c-8bb0-8964-778d8a0e8998@linaro.org>
-Date:   Mon, 23 Jan 2023 10:42:19 +0100
+        Mon, 23 Jan 2023 01:46:16 -0800 (PST)
+Message-ID: <c590a842-0074-8f19-6bc7-5de101a88661@linaro.org>
+Date:   Mon, 23 Jan 2023 10:46:15 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.0
 From:   Neil Armstrong <neil.armstrong@linaro.org>
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH v2 04/11] dt-bindings: watchdog: convert meson-wdt.txt to
- dt-schema
+Subject: Re: [PATCH v2 10/11] dt-bindings: PCI: convert amlogic,meson-pcie.txt
+ to dt-schema
 Content-Language: en-US
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Kevin Hilman <khilman@baylibre.com>,
         Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
         Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
         Wim Van Sebroeck <wim@linux-watchdog.org>,
         Guenter Roeck <linux@roeck-us.net>,
@@ -90,54 +91,72 @@ Cc:     Rob Herring <robh+dt@kernel.org>,
         linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
         netdev@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
- <20221117-b4-amlogic-bindings-convert-v2-4-36ad050bb625@linaro.org>
- <CAFBinCDd1MJEmSHR1XPsfBoRasBq+cV1F+66sCBXALtCCmoyUA@mail.gmail.com>
+References: <20230110150328.GA1502381@bhelgaas>
 Organization: Linaro Developer Services
-In-Reply-To: <CAFBinCDd1MJEmSHR1XPsfBoRasBq+cV1F+66sCBXALtCCmoyUA@mail.gmail.com>
+In-Reply-To: <20230110150328.GA1502381@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 10/01/2023 22:48, Martin Blumenstingl wrote:
-> Hi Neil,
+On 10/01/2023 16:03, Bjorn Helgaas wrote:
+> Is this the same sort of conversion done by one of these?
 > 
-> On Mon, Jan 9, 2023 at 1:53 PM Neil Armstrong <neil.armstrong@linaro.org> wrote:
-> [...]
->> +  compatible:
->> +    oneOf:
->> +      - enum:
->> +          - amlogic,meson6-wdt
->> +          - amlogic,meson8-wdt
-> Technically this is not an identical representation of what we had
-> before which was:
-> -       "amlogic,meson8-wdt" and "amlogic,meson6-wdt" on Meson8 SoCs
+>    e4dffb674cfd ("dt-bindings: PCI: tegra194: Convert to json-schema")
+>    075a9d55932e ("dt-bindings: PCI: qcom: Convert to YAML")
 > 
-> We're not using the "amlogic,meson8-wdt" compatible anywhere at the moment.
-> In the meson_wdt driver it's defined with the same per-SoC data as
-> "amlogic,meson6-wdt".
-> 
-> Long story short: In my opinion there's no need to change what you
-> have right now.
-> If you have to re-spin this then maybe you can add a note to the patch
-> description.
-> Please add my:
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> It's helpful to non-experts like me if the subject lines use similar
+> style (capitalized) and similar terminology ("dt-schema" vs
+> "json-schema" vs "YAML").
 
-Sorry I was distracted, I'll add a node on the commit message.
+Yes and honestly, I don't know what's the right name to use.
 
-Thanks,
-Neil
+I use dt-schema since it's the "official" name of the tool
+used to validate those.
 
 > 
+> On Mon, Jan 09, 2023 at 01:53:34PM +0100, Neil Armstrong wrote:
+>> Convert the Amlogic Meson AXG DWC PCIE SoC controller bindings to
+>> dt-schema.
 > 
-> Best regards,
-> Martin
+> Some references here and below are "PCIE" (inherited from the
+> original) and others are "PCIe".  Could be made consistent here.
+
+Ack
+
+> 
+>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+>> ---
+>>   .../devicetree/bindings/pci/amlogic,axg-pcie.yaml  | 134 +++++++++++++++++++++
+>>   .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 -----------
+>>   2 files changed, 134 insertions(+), 70 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..a08f15fe9a9a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
+>> @@ -0,0 +1,134 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/amlogic,axg-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Amlogic Meson AXG DWC PCIE SoC controller
+>> +
+>> +maintainers:
+>> +  - Neil Armstrong <neil.armstrong@linaro.org>
+>> +
+>> +description:
+>> +  Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
+>> ...
 
