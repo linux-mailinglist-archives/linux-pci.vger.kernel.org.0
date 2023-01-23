@@ -2,102 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4AD56782E5
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 18:20:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02381678449
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 19:17:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233598AbjAWRUQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 12:20:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57294 "EHLO
+        id S231679AbjAWSRb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 13:17:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233586AbjAWRUP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 12:20:15 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 265926584
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 09:20:13 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id fl11-20020a05600c0b8b00b003daf72fc844so11157416wmb.0
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 09:20:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=V0msOilVBY3pjgMACo3Te8zEGERavlW1uoU0JEDp1xM=;
-        b=pah5q2Hj/GvzfjsYuW6mAtlCdeIXaWMAxaTQUuLqDBUXpQT10XeRsLwX0d52wTpeBO
-         WvgF9ZkJm7ER3iakvA+Me3DBjferPoGSnV3hT11DUHH96u79pVd1PqT1tiTpYHmU/ytp
-         aRDojCASz9NqsQMDmFUOd8KvhXN7WfxKvVEdYm11sWvWYoi3vyHT0vpqEZN4K7ShrpyA
-         0Ls93gY3yE7/xvMU49fDBX0WCiISaT1QCsNOI2cVFrq5Ticm/FTAeqjl9CEXnmxaf/34
-         Sqer/ZDtQTdIdZ/sJ1nkoBKl952d1+xsNMc+FvvbLmF33oRTKPY5Jz3vMOhDCYIJzz8T
-         NUpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V0msOilVBY3pjgMACo3Te8zEGERavlW1uoU0JEDp1xM=;
-        b=0+qWciqcmNSIDwrU8LCPDS/U6iWYqVYUgcqxR1lV1LKGIOTDF4Cy4I2hZ7LvnEerDi
-         o1DgjNRRhz+mXDKJl5maec+p9TyQsm9wHY1/PQxtNI7HAnBc3jsO2IDOzLUT5v0i3yMN
-         3mcLC+UJj1R+FaEg5MX67E038ZZ4xdp2lR3DDPA0/bxdJ0Fatu4ThYlzibdWixrjwjb5
-         Q7NydraEaf4Iqcql+JmQKZ9uWx1nD/gn3dBIUv5nvPza+jnAgl9dlTJNJA2/i/GDDqiw
-         gt60332foa0SVJnFlGVHMGMRPr4rNDetdfES4JMCZFHarUSaFCgv51Jc8ve8U2uJW7Mr
-         JfUA==
-X-Gm-Message-State: AFqh2kqraNb25wM4wRVsdDb8G5WuJyIGG4sOuZ9d1YlqJUdViKpY9DfA
-        9cyGE0F/uZSqCwnnsIzodz94Tw==
-X-Google-Smtp-Source: AMrXdXsOd0W6F4AyRHz94PTRyrytWVwh2ZPNKPOiNOKdtIRejMRkoAOE9QGRdRKQ3WxJBLGOkq0Fpw==
-X-Received: by 2002:a05:600c:35d4:b0:3db:3694:b93c with SMTP id r20-20020a05600c35d400b003db3694b93cmr11899304wmq.15.1674494411786;
-        Mon, 23 Jan 2023 09:20:11 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id f14-20020a05600c154e00b003daff80f16esm15530766wmg.27.2023.01.23.09.20.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 09:20:11 -0800 (PST)
-Message-ID: <bfe19712-5801-573b-220e-c96494f11393@linaro.org>
-Date:   Mon, 23 Jan 2023 18:20:09 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: qcom: Add SM8550 compatible
-Content-Language: en-US
-To:     Abel Vesa <abel.vesa@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        with ESMTP id S229848AbjAWSRb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 13:17:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F32459FA;
+        Mon, 23 Jan 2023 10:17:30 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BA556B80E5C;
+        Mon, 23 Jan 2023 18:17:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A3E0C433D2;
+        Mon, 23 Jan 2023 18:17:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674497847;
+        bh=BZEO8SDQ8/Vkc7GQ657ERlWHgTSZADVcbO3BThEGNLM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bvnB7JP4zU9lnf+VoRMzrNsdyd7+16HsB1fwP94Of3IPA0jZcb66ZfnY98IGJdI6J
+         KKIlByypjx8FdDgaSTMhSn3JyYOnmMMxdNQMxi8GIYtKijz0tqySBDGiO4acc8q/gb
+         1CNcSAUlamyofG8sGplSaaWK1MsMjbiNxJv9h/8fToxFisaH5hAfSUsxNwADRP5qpN
+         K5DG+eh7fTsr/nTX8rYTCqoo3MV7HY2sUrXEqRNQhdJZz73Hx/JpcSwuxd1go59U4Y
+         ve1gvHhBJoow4ZaZWGdSzIX5geABezwJGfTNv/N76WtY8e4HB03rKNSAJfT2a8CIZI
+         e7sXmSECDgWEw==
+Date:   Mon, 23 Jan 2023 12:17:25 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20230119112453.3393911-1-abel.vesa@linaro.org>
- <7befa113-c45a-93d0-2696-17bbf62af711@linaro.org>
- <Y864lFLEQyCwZLef@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <Y864lFLEQyCwZLef@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Russell King <linux@armlinux.org.uk>, netdev@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH 5/7] PCI: tegra: Convert to devm_of_phy_optional_get()
+Message-ID: <20230123181725.GA903141@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e9e0aa207d531ccea00e8947678a4f6ce1c625ac.1674036164.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23/01/2023 17:40, Abel Vesa wrote:
+On Wed, Jan 18, 2023 at 11:15:18AM +0100, Geert Uytterhoeven wrote:
+> Use the new devm_of_phy_optional_get() helper instead of open-coding the
+> same operation.
 > 
->>
->>> +        resets:
->>> +          minItems: 1
->>
->> Why second reset is optional?
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Thanks!
+
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+
+Let me know if you want me to apply; otherwise I'll assume you will
+merge along with the [1/7] patch.
+
+> ---
+>  drivers/pci/controller/pci-tegra.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> link_down reset is needed only by g4x2 pcie, AFAICT.
-
-OK
-
-Best regards,
-Krzysztof
-
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 929f9363e94bec71..5b8907c663e516ad 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -1330,12 +1330,9 @@ static struct phy *devm_of_phy_optional_get_index(struct device *dev,
+>  	if (!name)
+>  		return ERR_PTR(-ENOMEM);
+>  
+> -	phy = devm_of_phy_get(dev, np, name);
+> +	phy = devm_of_phy_optional_get(dev, np, name);
+>  	kfree(name);
+>  
+> -	if (PTR_ERR(phy) == -ENODEV)
+> -		phy = NULL;
+> -
+>  	return phy;
+>  }
+>  
+> -- 
+> 2.34.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
