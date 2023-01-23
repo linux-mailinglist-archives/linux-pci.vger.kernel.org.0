@@ -2,77 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 11BBC6781EC
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:42:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A41D67820E
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:44:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233265AbjAWQl7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 11:41:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43066 "EHLO
+        id S233321AbjAWQo1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 11:44:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233370AbjAWQln (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:41:43 -0500
-Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB3F2C65B
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 08:41:00 -0800 (PST)
-Received: by mail-wr1-x42d.google.com with SMTP id t5so11406028wrq.1
-        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 08:41:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kkvs3S3jr+7/Bm5mSPQZ0AOsz6TtEKnjkCb8fldDeko=;
-        b=sxlUQKDkfXET+VlBQxjalijTLTwZYIN6OydmvyTwluUIvYogXNszJqiBOmCY3cmuGK
-         BmWwzUdmYl4PCJTzTJXipHPf6E5+67/fX9x0FYPmZy7wGYe7uAskiUdya5Sjfa/YxU2a
-         1z7w4NvmozUvPVVdQ3pTs3zfpJJFAFGwg8l5wP6WW/b+ZYInpDx9Kieo6e/tueywQIAA
-         P4LkpexHLx38dlsty2V0eQ0MGKWxOw6bJR3BArrgaXbmuaWnYC0XECUIaF2OoqOzE5L3
-         Ee46RZMFLWZtfX6dU3mIwFbUYgU28pZw8eoEbDElc1wqri6tTa3uUwJR1Qfdvsg0xADF
-         XXPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kkvs3S3jr+7/Bm5mSPQZ0AOsz6TtEKnjkCb8fldDeko=;
-        b=yb+ihCiUlgTK7nPDa3+a3c5e4NMsj28kRi8UZns16gz5tMs6AvbzGEUoXBwj2SaLzk
-         X3Kvodw39NgM+QdjBEVAJj6jW8soVctRoKNdcX0lqEKcu76L/Y6p2Ee8sRvVcy7zcVkq
-         c/HYuLYdvCvgEkMSA2Y1gNaQmgUMODMmzCeXW93b7yZElEWaCSvlwtNTp2SUVDdNgtLf
-         9MZ4h47UmOaS22+gejYP37FOEAOpA6OcYS6/anlA+iq/zAJcHxIHzrTeAFQVFtJ1HdG3
-         1aIgBnj6QG2JlGf/NzW9zLrcHLsFIZwPlDaXCGdhLfwi1R9iPudnV9J380JwSWbI/Vpn
-         xcmw==
-X-Gm-Message-State: AFqh2kod4KyMiMX4vmUKa9K9EQtXdQ1mWnc3Gwze0qXm6Mn5UNe5KQcF
-        D1axtL6i3eW3QjaglwzTXAcQlA==
-X-Google-Smtp-Source: AMrXdXt9F4i0NyH8/CCuBUxnEMaqGRQq4GQ/LpYPY1JEUJbveDf+Md21yVg7s3aVlpQTbFuYCOcjkQ==
-X-Received: by 2002:a5d:65d2:0:b0:2bb:6c04:4598 with SMTP id e18-20020a5d65d2000000b002bb6c044598mr22477407wrw.67.1674492054178;
-        Mon, 23 Jan 2023 08:40:54 -0800 (PST)
-Received: from linaro.org ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id d5-20020adfa345000000b002be546f947asm8496694wrb.61.2023.01.23.08.40.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 08:40:53 -0800 (PST)
-Date:   Mon, 23 Jan 2023 18:40:52 +0200
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S233461AbjAWQoV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:44:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECFC614EB4;
+        Mon, 23 Jan 2023 08:44:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D51B0B80BA2;
+        Mon, 23 Jan 2023 16:43:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54EF1C433D2;
+        Mon, 23 Jan 2023 16:43:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674492221;
+        bh=WqiKybcgqHZWpuB4CvE00HHXeoUcUZQ/JLOLaoCTkjs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VMfiu99BCpzXWevJaNTFsM7TvomFshh155tDVnj617ku4vl+uGiV/afQxhpl51xYZ
+         5/aKaa6OyNCwO6e9q1Vrp0kXheC3K/ETLPsFeLWBxiS76uDirPdh160vf5J6uYiz4s
+         abPu/xzky904dYcqdiC27e2B/YUuSdYp0QkTDKD3s7TYgO1rVggtOtHeJJEICbtUqK
+         wXB15hTfqe4/ZKJ4kmibkxznxf+m9eoUNboDd8ENZZhMWVzt6Z4m4AXWkVCeXy+OT+
+         /RqlQf1xn6I79xpgZQ0hxAAQ2lauf9uN/3pFVTk/Vv2c6KA1atbyBUIH4Vj85Y3SnA
+         pCFUI5I27C/uA==
+Date:   Mon, 23 Jan 2023 10:43:39 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: PCI: qcom: Add SM8550 compatible
-Message-ID: <Y864lFLEQyCwZLef@linaro.org>
-References: <20230119112453.3393911-1-abel.vesa@linaro.org>
- <7befa113-c45a-93d0-2696-17bbf62af711@linaro.org>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
+Message-ID: <20230123164339.GA892847@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7befa113-c45a-93d0-2696-17bbf62af711@linaro.org>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+In-Reply-To: <20230122001116.jbhttuaed7zuls26@mobilestation>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,157 +65,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23-01-20 09:37:32, Krzysztof Kozlowski wrote:
-> On 19/01/2023 12:24, Abel Vesa wrote:
-> > Add the SM8550 platform to the binding.
+On Sun, Jan 22, 2023 at 03:11:16AM +0300, Serge Semin wrote:
+> On Fri, Jan 20, 2023 at 04:50:36PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 13, 2023 at 08:14:06PM +0300, Serge Semin wrote:
+> > > Since the DW PCIe RP/EP driver is about to be updated to register the DW
+> > > eDMA-based DMA-engine the drivers build modes must be synchronized.
+> > > Currently the DW PCIe RP/EP driver is always built as a builtin module.
+> > > Meanwhile the DW eDMA driver can be built as a loadable module. Thus in
+> > > the later case the kernel with DW PCIe controllers support will fail to be
+> > > linked due to lacking the DW eDMA probe/remove symbols. At the same time
+> > > forcibly selecting the DW eDMA driver from the DW PCIe RP/EP kconfig will
+> > > effectively eliminate the tristate type of the former driver fixing it to
+> > > just the builtin kernel module.
+> > > 
+> > > Seeing the DW eDMA engine isn't that often met built into the DW PCIe
+> > > Root-ports and End-points let's convert the DW eDMA driver config to being
+> > > more flexible instead of just forcibly selecting the DW eDMA kconfig. In
+> > > order to do that first the DW eDMA PCIe driver config should be converted
+> > > to being depended from the DW eDMA core config instead of selecting the
+> > > one. Second the DW eDMA probe and remove symbols should be referenced only
+> > > if they are reachable by the caller. Thus the user will be able to build
+> > > the DW eDMA core driver with any type, meanwhile the dependent code will
+> > > be either restricted to the same build type (e.g. DW eDMA PCIe driver if
+> > > DW eDMA driver is built as a loadable module) or just won't be able to use
+> > > the eDMA engine registration/de-registration functionality (e.g. DW PCIe
+> > > RP/EP driver if DW eDMA driver is built as a loadable module).
 > > 
-> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > ---
+> > I'm trying to write the merge commit log, and I understand the linking
+> > issue, but I'm having a hard time figuring out what the user-visible
+> > scenarios are here.
 > > 
-> > The v2 was here:
-> > https://lore.kernel.org/all/20230118111704.3553542-1-abel.vesa@linaro.org/
-> > 
-> > Changes since v2:
-> >  * dropped the pipe from clock-names
-> >  * removed the pcie instance number from aggre clock-names comment
-> >  * renamed aggre clock-names to noc_aggr
-> >  * dropped the _pcie infix from cnoc_pcie_sf_axi
-> >  * renamed pcie_1_link_down_reset to simply link_down
-> >  * added enable-gpios back, since pcie1 node will use it
-> > 
-> > Changes since v1:
-> >  * Switched to single compatible for both PCIes (qcom,pcie-sm8550)
-> >  * dropped enable-gpios property
-> >  * dropped interconnects related properties, the power-domains
-> >  * properties
-> >    and resets related properties the sm8550 specific allOf:if:then
-> >  * dropped pipe_mux, phy_pipe and ref clocks from the sm8550 specific
-> >    allOf:if:then clock-names array and decreased the minItems and
-> >    maxItems for clocks property accordingly
-> >  * added "minItems: 1" to interconnects, since sm8550 pcie uses just one,
-> >    same for interconnect-names
-> > 
-> > 
-> >  .../devicetree/bindings/pci/qcom,pcie.yaml    | 44 +++++++++++++++++++
-> >  1 file changed, 44 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > index a5859bb3dc28..93e86dfdd6fe 100644
-> > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > @@ -34,6 +34,7 @@ properties:
-> >        - qcom,pcie-sm8250
-> >        - qcom,pcie-sm8450-pcie0
-> >        - qcom,pcie-sm8450-pcie1
-> > +      - qcom,pcie-sm8550
-> >        - qcom,pcie-ipq6018
-> >  
-> >    reg:
-> > @@ -65,9 +66,11 @@ properties:
-> >    dma-coherent: true
-> >  
-> >    interconnects:
-> > +    minItems: 1
-> >      maxItems: 2
+> > I assume there's something that works when CONFIG_PCIE_DW=y and
+> > CONFIG_DW_EDMA_PCIE=y but does *not* work when CONFIG_PCIE_DW=y and
+> > CONFIG_DW_EDMA_PCIE=m?
 > 
-> 1. Why do you skip cpu-pcie interconnect on SM8550?
-> 2. This should not be allowed on other variants.
+> No. The DW eDMA code availability (in other words the CONFIG_DW_EDMA
+> config value) determines whether the corresponding driver (DW PCIe
+> RP/EP or DW eDMA PCI) is capable to perform the eDMA engine probe
+> procedure. Additionally both drivers has the opposite dependency from
+> the DW eDMA code.
+> |                |     DW PCIe RP/EP    |     DW eDMA PCIe     |
+> | CONFIG_DW_EDMA +----------------------+----------------------+
+> |                | Probe eDMA | KConfig | Probe eDMA | Kconfig |
+> +----------------+------------+---------+------------+---------+
+> |        y       |     YES    |   y,n   |     YES    |  y,m,n  |
+> |        m       |     NO     |   y,n   |     YES    |    m,n  |
+> |        n       |     NO     |   y,n   |     NO     |      n  |
+> +--------------------------------------------------------------+
+> 
+> Basically it means the DW PCIe RP/EP driver will be able to probe the
+> DW eDMA engine only if the corresponding driver is built into the
+> kernel. At the same time the DW PCIe RP/EP driver doesn't depend on
+> the DW eDMA core module config state. The DW eDMA PCIe driver in
+> opposite depends on the DW eDMA code config state, but will always be
+> able to probe the DW eDMA engine as long as the corresponding code is
+> loaded as either a part of the kernel or as a loadable module.
+> 
+> > If both scenarios worked the same, I would think the existing
+> > dw_edma_pcie_probe() would be enough, and you wouldn't need to call
+> > dw_pcie_edma_detect() from dw_pcie_host_init() and dw_pcie_ep_init().
+> 
+> No. These methods have been implemented for the absolutely different
+> drivers.
+> dw_edma_pcie_probe() is called for an end-point PCIe-device found on a
+> PCIe-bus.
+> dw_pcie_host_init()/dw_pcie_ep_init() and dw_pcie_edma_detect() are
+> called for a platform-device representing a DW PCIe RP/EP controller.
+> In other words dw_pcie_edma_detect() and dw_edma_pcie_probe() are in
+> no means interchangeable.
 
-That is a good point. Will add the cpu-pcie in v5.
+The question is what the user-visible difference between
+CONFIG_DW_EDMA_PCIE=y and CONFIG_DW_EDMA_PCIE=m is.  If there were no
+difference, dw_pcie_host_init() would not need to call
+dw_pcie_edma_detect().
 
-> 
-> >  
-> >    interconnect-names:
-> > +    minItems: 1
-> >      items:
-> >        - const: pcie-mem
-> >        - const: cpu-pcie
-> > @@ -102,6 +105,10 @@ properties:
-> >    power-domains:
-> >      maxItems: 1
-> >  
-> > +  enable-gpios:
-> > +    description: GPIO controlled connection to ENABLE# signal
-> > +    maxItems: 1
-> > +
-> >    perst-gpios:
-> >      description: GPIO controlled connection to PERST# signal
-> >      maxItems: 1
-> > @@ -197,6 +204,7 @@ allOf:
-> >                - qcom,pcie-sm8250
-> >                - qcom,pcie-sm8450-pcie0
-> >                - qcom,pcie-sm8450-pcie1
-> > +              - qcom,pcie-sm8550
-> >      then:
-> >        properties:
-> >          reg:
-> > @@ -611,6 +619,41 @@ allOf:
-> >            items:
-> >              - const: pci # PCIe core reset
-> >  
-> > +  - if:
-> > +      properties:
-> > +        compatible:
-> > +          contains:
-> > +            enum:
-> > +              - qcom,pcie-sm8550
-> > +    then:
-> > +      properties:
-> > +        clocks:
-> > +          minItems: 7
-> > +          maxItems: 8
-> > +        clock-names:
-> > +          minItems: 7
-> > +          items:
-> > +            - const: aux # Auxiliary clock
-> > +            - const: cfg # Configuration clock
-> > +            - const: bus_master # Master AXI clock
-> > +            - const: bus_slave # Slave AXI clock
-> > +            - const: slave_q2a # Slave Q2A clock
-> > +            - const: ddrss_sf_tbu # PCIe SF TBU clock
-> > +            - const: noc_aggr # Aggre NoC PCIe AXI clock
-> > +            - const: cnoc_sf_axi # Config NoC PCIe1 AXI clock
-> > +        iommus:
-> > +          maxItems: 1
-> > +        iommu-map:
-> > +          maxItems: 2
-> 
-> 1. Don't define new properties in allOf. It makes the binding
-> unmaintainable.
-> 
-> 2. Why only SM8550?
+Can you give me a one- or two-sentence merge commit comment that
+explains why we want to merge this?  "Relax driver config settings"
+doesn't tell us that.
 
-Good point again. Will make both iommus and iommu-map properties global
-as even SM8450 has them.
-
-> 
-> > +        resets:
-> > +          minItems: 1
-> 
-> Why second reset is optional?
-
-link_down reset is needed only by g4x2 pcie, AFAICT.
-
-> 
-> > +          maxItems: 2
-> > +        reset-names:
-> > +          minItems: 1
-> > +          items:
-> > +            - const: pci # PCIe core reset
-> > +            - const: link_down # PCIe link down reset
-> > +
-> >    - if:
-> >        properties:
-> >          compatible:
-> > @@ -694,6 +737,7 @@ allOf:
-> >                - qcom,pcie-sm8250
-> >                - qcom,pcie-sm8450-pcie0
-> >                - qcom,pcie-sm8450-pcie1
-> > +              - qcom,pcie-sm8550
-> >      then:
-> >        oneOf:
-> >          - properties:
-> 
-> Best regards,
-> Krzysztof
-> 
+Bjorn
