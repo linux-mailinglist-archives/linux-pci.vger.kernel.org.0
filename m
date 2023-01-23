@@ -2,332 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92EDF6774AB
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 05:32:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B13D677581
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 08:22:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231483AbjAWEcR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 22 Jan 2023 23:32:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46698 "EHLO
+        id S230352AbjAWHWg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 02:22:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231480AbjAWEcQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 22 Jan 2023 23:32:16 -0500
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F0FF12068;
-        Sun, 22 Jan 2023 20:32:15 -0800 (PST)
-Received: by mail-qt1-x836.google.com with SMTP id jr19so7634434qtb.7;
-        Sun, 22 Jan 2023 20:32:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8prGQr8Vfaec3pEoqAbLPG61rDuM0C3fQ7rQgQW79rI=;
-        b=V4L9E5ETJryULz7qLbNew6CGMxIVX6SASckRpk9e2nzcYCWidZ8IRudiB9KVFMxA0M
-         4V8sut3LTV2qtgDS1/olyFGA0VqOQngGpatyDGySRbjk2dONKfGud6oQNhFzE2Sb8t5w
-         f5Vng5f7gEHNdM72MaQ+grYsu/aJNPukmh5k1C+pOIPAJdnJY4V1RtGnNPx1EN09JeBQ
-         UHdC7/7Oae0NQxUKgLxqqQEhVfdseaAWWhZ56mf4xT1WgN7ypUV7+W1HaU6wbp7qcAZY
-         1Ami3On3Ob7QrE3F2znTrz6IwAxsJiLvIwtvAnguBlRQI7Y5/SEqI9oM6mqoOikmkYdP
-         2yDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8prGQr8Vfaec3pEoqAbLPG61rDuM0C3fQ7rQgQW79rI=;
-        b=L3gTYBZUDKaPIhPg0TZ9BTlxdBPQJaFN5Mu2zb6Y9QrfJWXBb4jgLUuzhcl5dxNCOP
-         PrvTf2Y3pQvhzryvSV03emTS11Jx300toS8IUT2E8EYRn1qb8DvLEwKLIdIiJkJqD6pO
-         pja/Nu+Bz+8POSggvc6pmgRzJRYXvNmv+hUXwDcDSaxPOwI+nqBIju288V9C/1bOGnsc
-         en2pMibvJs/QpF1WLXUr8tJhD6Ru9wRENhKtps9De4S9I5HYPPtD8nOlUT1ehAjWV0aA
-         2Ccec9xo5iyNzj4q1nnPez1iWG7my9YsMzTJfStpy0Ct2pHwZ0JbLEPhSpHtDipHhbYR
-         pdJg==
-X-Gm-Message-State: AFqh2kpZTg0bGFd8oG0v0JuuvKLUTzySAXaBUR9pLA2uZsBs5TGc2BOR
-        UXczjysXgQSSVNn8r/4q9+g=
-X-Google-Smtp-Source: AMrXdXvnGIr1XFz6sfgi9Wpu9mTqt+hNX2osMI21ATgH82yevhMyTYz7UJPddA+j6f92rbjmBEZu5Q==
-X-Received: by 2002:ac8:6e83:0:b0:3b6:3787:679d with SMTP id c3-20020ac86e83000000b003b63787679dmr30013729qtv.8.1674448334250;
-        Sun, 22 Jan 2023 20:32:14 -0800 (PST)
-Received: from ?IPV6:2600:1700:2442:6db0:f188:4fdb:4a:b729? ([2600:1700:2442:6db0:f188:4fdb:4a:b729])
-        by smtp.gmail.com with ESMTPSA id bm37-20020a05620a19a500b00704d8ad2e11sm13948206qkb.42.2023.01.22.20.32.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 22 Jan 2023 20:32:13 -0800 (PST)
-Message-ID: <0b44ec45-a5d8-87ff-34e9-cfed58eb060c@gmail.com>
-Date:   Sun, 22 Jan 2023 22:32:13 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH V7 0/3] Generate device tree node for pci devices
+        with ESMTP id S229549AbjAWHWf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 02:22:35 -0500
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2077.outbound.protection.outlook.com [40.107.101.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B12E910268;
+        Sun, 22 Jan 2023 23:22:33 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f5ICSY7j1KmhcDaE+OWtHyx5jsUFhBFY9EaHYidTa8kBi56hyebiJF8yYcixKXbOzG1oEQ3kU/Cg3S0+OgbeNRrQUfFzfqgyAQGaaAqG58XKWPPl9dhhQHlP0MzuGEChMW4Mr4A0h9JKurWN174+vKun8jmdSLucpsKf9csCg6c6a5cbIzIoLAahRwW9bBm1NOFWRMLDIQyLUXMRYSUqRr31ThcvucpmoXKFgIFyIIgQSO9Mb+pCPu0yCNDgiDaxqj2CFvuA5dPKVzPT9yU2f80E+aesuD9JIvg6OEIuIF+eyhV2De1nWoV0TfWi1QwCfx07IlYiUAGyxWoa9YIECA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tIahqwCZK1SlNpeHyqNRNijgGDNNvkPXrvQ5QG1zX0U=;
+ b=J8a96rxgj4UAjDC/iKHNesXQ7eS10aWEwXw+Le1I2nLHn9nNLVcVWJ6kEDTdt/QIqGg5ruqBzjmjxNq9i81TKmTWoXjjrGuZXy/0dhx2HDUqNtbtcNvRNfjXMDAV3Ste3t2jEWoW9vYGyN2JvDaZWt+Sz4YqUXzBVh5MrXF5LLqoTWH9KC/vu90GdnI7x9H4u1QqIZ+6yaoOxGungAojg7lUwsjCBPkRIbQ4QdbxV2iapxaSVIOEjFOBTwV3+bJKp5SVtb0T01NfPUgb+S7pQQDkPNDGtJ3EfuOYG7LcZZ90LueOrq5/2IgvoMyBcjcVKrz23Pl2BbMbACZuaA43CA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tIahqwCZK1SlNpeHyqNRNijgGDNNvkPXrvQ5QG1zX0U=;
+ b=Gy0UwniFQTK7RXk/28DS5rThIk4ZUupZ/u1UOg2O6oTtWuekCvxRuuBdwy383Y/1qi6IebLeu7J7/Yx9+6UECdVY6EmsvPsqPHyLcI0ljaYEprt3GwDjE0O0MiJ5BGVrjd/OvWWCHFHF14Szcn9/bCI6IB6ocaSI4ZYoVoQ5BojJ8Zhy205TC+rrHEIHd7nsPP5QEd1+L42/awyxuTqtXN5l9DWWYJYsukeTEIe630QCVrSZ0mERNYYPCxGnVCUbTgT8w0g9URE1bUZLTkz8OMbHLfdr3TBNwNP92BqdbA2W1fijqaknJxvdYurOzyWt5K763iRTE/hT8ffQufoyAw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com (2603:10b6:408:69::18)
+ by BL1PR12MB5077.namprd12.prod.outlook.com (2603:10b6:208:310::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Mon, 23 Jan
+ 2023 07:22:31 +0000
+Received: from BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::8ae8:c68e:57a9:6dae]) by BN8PR12MB2900.namprd12.prod.outlook.com
+ ([fe80::8ae8:c68e:57a9:6dae%3]) with mapi id 15.20.6002.033; Mon, 23 Jan 2023
+ 07:22:31 +0000
+Message-ID: <7c9c11e5-c5f2-d36f-6204-ebc76646ee35@nvidia.com>
+Date:   Mon, 23 Jan 2023 12:52:18 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [RESEND v4 2/5] PCI: tegra194: Move dw_pcie_ep_linkup() to
+ threaded IRQ handler
 Content-Language: en-US
-To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, helgaas@kernel.org
-Cc:     clement.leger@bootlin.com, max.zhen@amd.com, sonal.santan@amd.com,
-        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
-        trix@redhat.com
-References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
-From:   Frank Rowand <frowand.list@gmail.com>
-In-Reply-To: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kw@linux.com, robh@kernel.org, vigneshr@ti.com
+References: <20230111114059.6553-1-manivannan.sadhasivam@linaro.org>
+ <20230111114059.6553-3-manivannan.sadhasivam@linaro.org>
+From:   Vidya Sagar <vidyas@nvidia.com>
+In-Reply-To: <20230111114059.6553-3-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: MA0PR01CA0079.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a01:ae::7) To BN8PR12MB2900.namprd12.prod.outlook.com
+ (2603:10b6:408:69::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8PR12MB2900:EE_|BL1PR12MB5077:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6c14da10-2c9e-458b-4d93-08dafd1296e3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KB/AjuX5pmwmgJ6bap64nFCA0ZCi5PVBcb1GLHxd1UiAN742K/296sykD2BYooyZcD0Vp8ooKUSlh71qeDvcCe7AHdQElZGQZzeY8g5EG7BMk5RCLg/8DjgaJjOveoaQKFMk04QRFcH/wkKHTa0sUPyC4EtINa/WsRAozcHNXgFkJp6FjVnD+Cx83E2OOfxHwuhbPuZa6Je1pJ7XAOmQ/AcwtNFpBUQJvVXwx4KW4M0cNcBiyw8hBfhws7O5HHk4aq7/7UV0mkvhSQ+01Qo7eNI8p1nTY4tCX1aFteJItGfm1evD9nX+/N1SCg3x2oRobrhNZW/mLcri2qeiko1/3IrPi+VHBejsyq6I8vPErUmtt1KFr2U/d36Jg4SKEvqVIRGQxUU3xTvY0Qq3vHQ5aN8Gwqi9X74drWpBWgzFzPlq8easa4CNE2P3dI6qXe8hTxltR2VYb4u/2alnwU1XaiVd1TzC8BJNx6LfWeumeGjD4Rmpzqgb5ZvaslCGiPPV1ZPLRYLxdotkqpkdnUFWZIibTGjxv9K0dsEB9daSNrc7GgNKg5DAKZlEBgB8fucGzF5hdtMqumoGCjSZewPdYlvhOtiLQwSyrT8I+lEqVR2ZgUmXXHBheOH/dppCfA7ne96UJW+ay/Lw9VpYjd7SX1rru2IGCDQhBW+BuHMRggqnsDj84Qg7D/4YbazhOpsihMf6eQ8QdA2epPOLxRneoC7Fs3tc/ASJd+BFe+p10zI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2900.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(39860400002)(346002)(366004)(376002)(451199015)(83380400001)(31696002)(38100700002)(86362001)(2906002)(5660300002)(41300700001)(8936002)(4326008)(8676002)(186003)(53546011)(6506007)(6512007)(26005)(6666004)(2616005)(66946007)(66556008)(66476007)(316002)(478600001)(6486002)(31686004)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cVVpaDBZeVJzQk9KQVJnazAzc1NFQXV0QkZlKzRuMndHOTJrZWo5cHE2SzJ0?=
+ =?utf-8?B?WlVFY1hiSjZBandJeFlyMWhOaDdBbHRMZXNuWkl5NUJ1UXZkNmtuS29VZGZn?=
+ =?utf-8?B?eVcySVpuRkY0OWc5em1VRmJrUVdkSGNSbFFQUU5ueVZxdTQ4WVMwUG1uZldx?=
+ =?utf-8?B?TUlOeC94QmM4OTFWZmM1Ky9CcXk1M01GTTBXREFJMGE3eWhNNmNobkFvOTdB?=
+ =?utf-8?B?ZGV3VUFEejVHY3d1YkVRZWg1OWRYbmFKbjhMUWNxL1A0RXpZVW9jV1luVUJK?=
+ =?utf-8?B?c0Y1U2todER4QytheEVUNUR3R2EvUHFYdXRuQlV6SEUxMzVRQkpOMWJjVldU?=
+ =?utf-8?B?VnhhYU9vN3Mrc2tscUN1Yi8ySklLNzlvbEhac0g2am9vcFR1SzhwNloxelhU?=
+ =?utf-8?B?bWRBdXVnTDA3SXRsMFh2ZVdwSjFRNFlTSmdlR0h1ZEtVSVhFNDRjOStyb1J6?=
+ =?utf-8?B?ZVNMRWxKbm40cXBUOU93Q2RGNGxKeFlYQmNQVEd3VjBqZ0czckpBbGNZNHEv?=
+ =?utf-8?B?Qkk3cTFTVjZocHI3aTQzelBpdTVSWjRiT2JGeGRpQTU0eXdoc25oczlaTVBK?=
+ =?utf-8?B?aGxka2l3VVF2dkxPYkx6bE1XNEhNbGxPeThuSVE0ekRvOElIaHQyS2dJbjg1?=
+ =?utf-8?B?ZTNEclFybkNTd1dzTGhDa2VmLzVmbTFPemJUaGY3ZzdwS0NMZFpzNUxmMmht?=
+ =?utf-8?B?S3ZQa1NMZVZSRVNZVW11MlBjaHFrdWF6Y2lpMnFmVWpSNE1keXlseHE5ejVO?=
+ =?utf-8?B?czM0VHF1dHBrWTBxQkNaUFhvbjhzaXRzU1lEZ1RCa0JSZmRkdGcvYU55djdW?=
+ =?utf-8?B?WkNRUmJmQy9RaFNoVlVseXRiOEhRSE8rK0FYMmZONG5vY2VhQ1RwVzUvUGZE?=
+ =?utf-8?B?TVlDRngwbjQvcWRxNFdYOGVXTmxPYnZoV2hGN3A2WElZUmd4ald4NnE3a09P?=
+ =?utf-8?B?WXM1RHNtV3RtK3ZNQlI0VjFWRFhTeVVRUkpyR0o3NnZoVFAvSXhuZEpSMUxj?=
+ =?utf-8?B?ZEVtK205Z0IrWHdNUWVZWnBNemFpUEthZ3JXeHUxZXZtZ1NBWWh2Y1BncnYr?=
+ =?utf-8?B?NjBvbDZLeDZRVjVLSHJPT1dRWWlWTEl0cS9samY3M1lEQzZxWHBGOHNnbTJG?=
+ =?utf-8?B?eklNZzZUVERCZjJTUkhoa3NtcVA2VENraEFTUTJXUWRUTjI3NEVNWTd6R283?=
+ =?utf-8?B?a2lRYTl1VnhhbWFaS0FJdVRoeXNqanBvVWM0alluKzJ0YlNhZWxablQweEI4?=
+ =?utf-8?B?WWIvRm5wMmlFdnIvclhtUnJkMWFPejY0TlhBTkV2WkxlTSt2STJDcm4vcWNs?=
+ =?utf-8?B?VSttTmdYZmp4L3p3VFY4TkV1NkYrQmhQZGk2dy84VUNOa3hLdjNxSmhkL0pP?=
+ =?utf-8?B?ZjNONjlrSnI3NzhKQUdwSW4xVFNFQWpZRWpzRXNnREdQUDBGaTFPbU81ZFhJ?=
+ =?utf-8?B?eWlNMWcxMFVLYWk5Rk02b3pKUzRuOWcvZ0RiNzNNbStwM3M2RWJieVhVTGVI?=
+ =?utf-8?B?LytnNVA5NDlQOER5ZkdBekRJTGkvdURrYXR1R2dPRisyT3hTd2ZLcmlpbHlo?=
+ =?utf-8?B?bktIaEo4TmU1YzNxemM3VEJvR3lhWkw0UXo1aHk2cUsrVk9hSzFYS2REUS9F?=
+ =?utf-8?B?OTNHOG5NN29senBsZi9URlpiSVNXaUtaQjZIUy9Yak90R2d0bWdOTG9PMEtE?=
+ =?utf-8?B?MzBWZUFldXRjUUQwZUhOdHBtQldoTTVQVlAvN1BwbGRWZzFoYnFvaTVkOWpM?=
+ =?utf-8?B?dVBydi9IMzJ2MkZQNUJLWkdlZE1hbWRvaHY4enNaUGxtUVlnMktJZTJwZXhE?=
+ =?utf-8?B?aSswRmk3RGlaTXNBN3BqeDhWd1J3TUtOUzRQRWpLTXlKWWhWQmIxYm4wb2R5?=
+ =?utf-8?B?WGF3NXpOYzEvZy8vbWE1Yk9vekZiWGp2TXZCZnFjbEtGaFpMVDZYelUxTjJL?=
+ =?utf-8?B?UFl5d1piMGVLMmZhWGtMSlcwZUMvc1U0anRYVmdwV3NUY01WeGU5ZXlYVHAw?=
+ =?utf-8?B?bTA1VkVMUTFTZGdReVh5SEw2dDU4SjdqdDczWVRweXQrbm1LSmVGdmRybmNl?=
+ =?utf-8?B?eEtpc25reHJrT29yOEtxNk1rOE9QUWFxcG96V2FFRlo4bE9DTW8vRmtXTmZm?=
+ =?utf-8?Q?FRWNmGsMKEksNcOn+mwppXcpe?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6c14da10-2c9e-458b-4d93-08dafd1296e3
+X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2900.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2023 07:22:31.3595
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B/8xWWl20JfajyJ8F6THMBfZ483jI07qsdZBwhEoyLOjut7lJgswdSKC1Owa9qQtR4wmhFzhv9U1ymGzS54i2A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR12MB5077
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rob, Lizhi,
+Thanks for pushing this change.
 
-On 1/19/23 21:02, Lizhi Hou wrote:
-> This patch series introduces OF overlay support for PCI devices which
-> primarily addresses two use cases. First, it provides a data driven method
-> to describe hardware peripherals that are present in a PCI endpoint and
-> hence can be accessed by the PCI host. Second, it allows reuse of a OF
-> compatible driver -- often used in SoC platforms -- in a PCI host based
-> system.
+Reviewed-by: Vidya Sagar <vidyas@nvidia.com>
 
-I had hoped to review this series by today, but have not yet due to working
-on some new unittest features.  I hope to get to this series Monday.
-
--Frank
-
+On 1/11/2023 5:10 PM, Manivannan Sadhasivam wrote:
+> External email: Use caution opening links or attachments
 > 
-> There are 2 series devices rely on this patch:
 > 
->   1) Xilinx Alveo Accelerator cards (FPGA based device)
->   2) Microchip LAN9662 Ethernet Controller
+> dw_pcie_ep_linkup() may take more time to execute depending on the EPF
+> driver implementation. Calling this API in the hard IRQ handler is not
+> encouraged since the hard IRQ handlers are supposed to complete quickly.
 > 
->      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+> So move the dw_pcie_ep_linkup() call to threaded IRQ handler.
 > 
-> Normally, the PCI core discovers PCI devices and their BARs using the
-> PCI enumeration process. However, the process does not provide a way to
-> discover the hardware peripherals that are present in a PCI device, and
-> which can be accessed through the PCI BARs. Also, the enumeration process
-> does not provide a way to associate MSI-X vectors of a PCI device with the
-> hardware peripherals that are present in the device. PCI device drivers
-> often use header files to describe the hardware peripherals and their
-> resources as there is no standard data driven way to do so. This patch
-> series proposes to use flattened device tree blob to describe the
-> peripherals in a data driven way. Based on previous discussion, using
-> device tree overlay is the best way to unflatten the blob and populate
-> platform devices. To use device tree overlay, there are three obvious
-> problems that need to be resolved.
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>   drivers/pci/controller/dwc/pcie-tegra194.c | 9 +++++++--
+>   1 file changed, 7 insertions(+), 2 deletions(-)
 > 
-> First, we need to create a base tree for non-DT system such as x86_64. A
-> patch series has been submitted for this:
-> https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
-> https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 02d78a12b6e7..09825b4a075e 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -286,6 +286,7 @@ struct tegra_pcie_dw {
+>          struct gpio_desc *pex_refclk_sel_gpiod;
+>          unsigned int pex_rst_irq;
+>          int ep_state;
+> +       long link_status;
+>   };
 > 
-> Second, a device tree node corresponding to the PCI endpoint is required
-> for overlaying the flattened device tree blob for that PCI endpoint.
-> Because PCI is a self-discoverable bus, a device tree node is usually not
-> created for PCI devices. This series adds support to generate a device
-> tree node for a PCI device which advertises itself using PCI quirks
-> infrastructure.
+>   static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+> @@ -449,9 +450,13 @@ static void pex_ep_event_hot_rst_done(struct tegra_pcie_dw *pcie)
+>   static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>   {
+>          struct tegra_pcie_dw *pcie = arg;
+> +       struct dw_pcie_ep *ep = &pcie->pci.ep;
+>          struct dw_pcie *pci = &pcie->pci;
+>          u32 val, speed;
 > 
-> Third, we need to generate device tree nodes for PCI bridges since a child
-> PCI endpoint may choose to have a device tree node created.
+> +       if (test_and_clear_bit(0, &pcie->link_status))
+> +               dw_pcie_ep_linkup(ep);
+> +
+>          speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+>                  PCI_EXP_LNKSTA_CLS;
+>          clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
+> @@ -498,7 +503,6 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>   static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
+>   {
+>          struct tegra_pcie_dw *pcie = arg;
+> -       struct dw_pcie_ep *ep = &pcie->pci.ep;
+>          int spurious = 1;
+>          u32 status_l0, status_l1, link_status;
 > 
-> This patch series is made up of three patches.
+> @@ -514,7 +518,8 @@ static irqreturn_t tegra_pcie_ep_hard_irq(int irq, void *arg)
+>                          link_status = appl_readl(pcie, APPL_LINK_STATUS);
+>                          if (link_status & APPL_LINK_STATUS_RDLH_LINK_UP) {
+>                                  dev_dbg(pcie->dev, "Link is up with Host\n");
+> -                               dw_pcie_ep_linkup(ep);
+> +                               set_bit(0, &pcie->link_status);
+> +                               return IRQ_WAKE_THREAD;
+>                          }
+>                  }
 > 
-> The first patch is adding OF interface to create or destroy OF node
-> dynamically.
+> --
+> 2.25.1
 > 
-> The second patch introduces a kernel option, CONFIG_DYNAMIC_PCI_OF_NODEX.
-> When the option is turned on, the kernel will generate device tree nodes
-> for all PCI bridges unconditionally. The patch also shows how to use the
-> PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
-> tree node for a device. Specifically, the patch generates a device tree
-> node for Xilinx Alveo U50 PCIe accelerator device. The generated device
-> tree nodes do not have any property.
-> 
-> The third patch adds basic properties ('reg', 'compatible' and
-> 'device_type') to the dynamically generated device tree nodes. More
-> properties can be added in the future.
-> 
-> Here is the example of device tree nodes generated within the ARM64 QEMU.
-> # lspci -t    
-> -[0000:00]-+-00.0
->            +-01.0-[01]--
->            +-01.1-[02]----00.0
->            +-01.2-[03]----00.0
->            +-01.3-[04]----00.0
->            +-01.4-[05]----00.0
->            +-01.5-[06]--
->            +-01.6-[07]--
->            +-01.7-[08]--
->            +-02.0-[09-0b]----00.0-[0a-0b]----00.0-[0b]--+-00.0
->            |                                            \-00.1
->            +-02.1-[0c]--
->            \-03.0-[0d-0e]----00.0-[0e]----01.0
-> 
-> # tree /sys/firmware/devicetree/base/pcie\@10000000
-> /sys/firmware/devicetree/base/pcie@10000000
-> |-- #address-cells
-> |-- #interrupt-cells
-> |-- #size-cells
-> |-- bus-range
-> |-- compatible
-> |-- device_type
-> |-- dma-coherent
-> |-- interrupt-map
-> |-- interrupt-map-mask
-> |-- linux,pci-domain
-> |-- msi-parent
-> |-- name
-> |-- pci@1,0
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,1
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,2
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,3
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,4
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,5
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,6
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@1,7
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@2,0
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- pci@0,0
-> |   |   |-- #address-cells
-> |   |   |-- #size-cells
-> |   |   |-- compatible
-> |   |   |-- device_type
-> |   |   |-- pci@0,0
-> |   |   |   |-- #address-cells
-> |   |   |   |-- #size-cells
-> |   |   |   |-- compatible
-> |   |   |   |-- dev@0,0
-> |   |   |   |   |-- compatible
-> |   |   |   |   `-- reg
-> |   |   |   |-- dev@0,1
-> |   |   |   |   |-- compatible
-> |   |   |   |   `-- reg
-> |   |   |   |-- device_type
-> |   |   |   |-- ranges
-> |   |   |   `-- reg
-> |   |   |-- ranges
-> |   |   `-- reg
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@2,1
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- ranges
-> |   `-- reg
-> |-- pci@3,0
-> |   |-- #address-cells
-> |   |-- #size-cells
-> |   |-- compatible
-> |   |-- device_type
-> |   |-- pci@0,0
-> |   |   |-- #address-cells
-> |   |   |-- #size-cells
-> |   |   |-- compatible
-> |   |   |-- device_type
-> |   |   |-- ranges
-> |   |   `-- reg
-> |   |-- ranges
-> |   `-- reg
-> |-- ranges
-> `-- reg
-> 
-> Changes since v6:
-> - Removed single line wrapper functions
-> - Added Signed-off-by Clément Léger <clement.leger@bootlin.com>
-> 
-> Changes since v5:
-> - Fixed code review comments
-> - Fixed incorrect 'ranges' and 'reg' properties and verified address
->   translation.
-> 
-> Changes since RFC v4:
-> - Fixed code review comments
-> 
-> Changes since RFC v3:
-> - Split the Xilinx Alveo U50 PCI quirk to a separate patch
-> - Minor changes in commit description and code comment
-> 
-> Changes since RFC v2:
-> - Merged patch 3 with patch 2
-> - Added OF interfaces of_changeset_add_prop_* and use them to create
->   properties.
-> - Added '#address-cells', '#size-cells' and 'ranges' properties.
-> 
-> Changes since RFC v1:
-> - Added one patch to create basic properties.
-> - To move DT related code out of PCI subsystem, replaced of_node_alloc()
->   with of_create_node()/of_destroy_node()
-> 
-> Lizhi Hou (3):
->   of: dynamic: Add interfaces for creating device node dynamically
->   PCI: Create device tree node for selected devices
->   PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
-> 
->  drivers/of/dynamic.c        | 197 +++++++++++++++++++++++++++++++++
->  drivers/pci/Kconfig         |  12 ++
->  drivers/pci/Makefile        |   1 +
->  drivers/pci/bus.c           |   2 +
->  drivers/pci/msi/irqdomain.c |   6 +-
->  drivers/pci/of.c            |  71 ++++++++++++
->  drivers/pci/of_property.c   | 212 ++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci-driver.c    |   3 +-
->  drivers/pci/pci.h           |  19 ++++
->  drivers/pci/quirks.c        |  11 ++
->  drivers/pci/remove.c        |   1 +
->  include/linux/of.h          |  24 ++++
->  12 files changed, 556 insertions(+), 3 deletions(-)
->  create mode 100644 drivers/pci/of_property.c
-> 
-
