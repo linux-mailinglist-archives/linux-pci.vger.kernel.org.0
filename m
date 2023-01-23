@@ -2,135 +2,142 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E25006776D2
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 09:55:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AFD6D677789
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 10:42:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230056AbjAWIzg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 03:55:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42904 "EHLO
+        id S231132AbjAWJmZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 04:42:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjAWIzg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 03:55:36 -0500
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 290C4A5CE;
-        Mon, 23 Jan 2023 00:55:33 -0800 (PST)
-Received: by mail-oi1-x230.google.com with SMTP id p185so9776268oif.2;
-        Mon, 23 Jan 2023 00:55:33 -0800 (PST)
+        with ESMTP id S230103AbjAWJmY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 04:42:24 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9B4E16338
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:42:22 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id f25-20020a1c6a19000000b003da221fbf48so8059778wmc.1
+        for <linux-pci@vger.kernel.org>; Mon, 23 Jan 2023 01:42:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nz1b0tYnbdGuwNiYEgWVCe87UPcyrKr95U2drhDArGg=;
-        b=Y8rs70rSL+WtVk2hD1RSSpcyDqEWAWkbVWwT5Eh8Wlm8FeSaq4vqLgstHNaFuFpHib
-         /wM4h/lmAmVq2IjwBj/zOadpIzTuSRw3ickeLiGI2Ps3t1p4hkR19OTTBEu+SVYOMxCL
-         xHqlZaIoehi/XkLGtWpz+eiKYSAKt7rE2aZsVlRVV3huuO4f8V0A/FEUxdESUveDaXN3
-         FpqF0ihNTg9k/l2B0SayvkoTWeQAIAHeJyiDeEGakNdzzIPTZ39em97okplWwF3rHrwp
-         SR/H6bLuqmu1aaPZ3zu2uZ2ro/0lIpgb8L2mqapNLZoFbsgIm7f97uPEnsw0jwdIJckm
-         uJLQ==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=bb3ehCbsmnDNOeIeuOp9X6FACVdZxwB9flFsEny7tkU=;
+        b=dV+vmkhPJupVDkDKPKw/2uJe9dhCfz2931ZZfmSlTiTucpZhV2Dz+B6f9Fv3oiI5Qg
+         xdALFShfLxjvVlVQ2K1bLQ5/4uPa6Q7gCQlFkO7bDQBoW/r8L1iBLX9dM/ZknvefkDGC
+         6iJRk6CRvJJo7qipP+9FC4RrGHDwX//qae/qj8wJurKg8c+1OHYsm56cHw4p7MWRyk1K
+         nfquz3KQcfaO9EzCTs/SUKrcWz3tEvEos7SFv6WhgRiugJpJ3DnoGoOyT8+BCgVZIzQS
+         gVFXE4RIK7gcAlT4NdXcPy1iZVBPSkMbc+B1+QYLkW51SQ6p0ODeYa+m2ek55Zj8+RQZ
+         DWEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
+         :content-language:subject:reply-to:from:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Nz1b0tYnbdGuwNiYEgWVCe87UPcyrKr95U2drhDArGg=;
-        b=sSSqY2bmj/p958xIGzmlcRCQW21DQ03HY1QnJhqZBPqjo51EPtOaZxpo/0SMSkNrD2
-         rYtx1gQJfbisgAN6QqSRkcYAcJmel3mpgZn8gK8gLNB1SVt4B1T93moVC3W4Gg8NpmrU
-         IDL01pZk2HQ/e/ScObU7kdp6vtC+VpU2y1WRi1mVzyvJ17TaVXMl2axes/EhlIH21odq
-         zisBAWu/pGrbiMvhxLBkUFCoLb0oKOEJ8dErNBmhvaJWEZiWyBEJqQlnr8uhyXEmkwqp
-         725+UMaRvu7OITokGYXX9+aTPGJVzBMjD3kcLIH13n2iJjLCEkPvMYvuNsTSCa2ZaH94
-         1NFQ==
-X-Gm-Message-State: AFqh2kqXAo0zoHHUxgfEzGrVFNIpmRyfDZIL8PfMUVHyfPRLol/rF6qH
-        1frCjGVlAt7e9haMDoLarGifp+RoEZhUNVM1Dt1sL8fR
-X-Google-Smtp-Source: AMrXdXsFpkpf6JNCJC+UnVQ2GWxr+RKrSZfJN7kCMuajGyMtF11SY9Z9r46EdQFqCUuzJfmg5pA+x6uyJvLOk7tl92A=
-X-Received: by 2002:a05:6808:428c:b0:35e:2720:ddb3 with SMTP id
- dq12-20020a056808428c00b0035e2720ddb3mr1503922oib.83.1674464132210; Mon, 23
- Jan 2023 00:55:32 -0800 (PST)
+        bh=bb3ehCbsmnDNOeIeuOp9X6FACVdZxwB9flFsEny7tkU=;
+        b=5DrEq4CSLcjOucLT0duyN0Db6E46cruGKAZPzFblFNmEEZX686r9J2lBjhR8cJK1m5
+         hdkgCbfpSkECEmhsKde0LoTL/TLR1piCUjEIEXx3sQ+C03F2p9MABbM7tDYH1qYJx01X
+         gHE/AHQ3thUi9T33QnNsE1V6FmE+6u2WRmI7ir0kfdabCtKZfOF7hzZIGDHCPTml6Ym5
+         uhVkDp0eK9HzInOdzpzg2FDjY075ydE8Z9znT+JAjVsstAcsGaiBmsCikSDW22WtgwgX
+         uhMoAxoB5lLiaF25/UDwzRW2ABvnNbZAzQmjzwEZ9419HK8QIE5AZSKH/z18FhXUBcnd
+         35HA==
+X-Gm-Message-State: AFqh2kqYMHXZmH7zcyoNz7RF66+0PPzxeLNk7FGXUT+bgivxGf5Hl+zO
+        aanWk0IULaPghdorhvkVj6GxuA==
+X-Google-Smtp-Source: AMrXdXsm6TcBoxPPxS02VMNxznfImdfA7EnRpT/eJPmFB8AVCLXvlWQuATnvGBXA13pmaGAeWzaHKQ==
+X-Received: by 2002:a05:600c:1d12:b0:3db:53f:baea with SMTP id l18-20020a05600c1d1200b003db053fbaeamr23030706wms.6.1674466941329;
+        Mon, 23 Jan 2023 01:42:21 -0800 (PST)
+Received: from [192.168.7.111] (679773502.box.freepro.com. [212.114.21.58])
+        by smtp.gmail.com with ESMTPSA id t13-20020a1c770d000000b003db1ca20170sm9963482wmi.37.2023.01.23.01.42.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 23 Jan 2023 01:42:20 -0800 (PST)
+Message-ID: <d8f78a24-398c-8bb0-8964-778d8a0e8998@linaro.org>
+Date:   Mon, 23 Jan 2023 10:42:19 +0100
 MIME-Version: 1.0
-References: <20221231074041.264738-1-sergio.paracuellos@gmail.com>
-In-Reply-To: <20221231074041.264738-1-sergio.paracuellos@gmail.com>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Mon, 23 Jan 2023 09:55:20 +0100
-Message-ID: <CAMhs-H8sSvn5bfHde-RT0ejqpCujCWvgRFJLtbLXqPcnvGdgtQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: mt7621: Sleep a bit after power on the PCIs phy ports
-To:     linux-pci@vger.kernel.org
-Cc:     bhelgaas@google.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+From:   Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v2 04/11] dt-bindings: watchdog: convert meson-wdt.txt to
+ dt-schema
+Content-Language: en-US
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20221117-b4-amlogic-bindings-convert-v2-0-36ad050bb625@linaro.org>
+ <20221117-b4-amlogic-bindings-convert-v2-4-36ad050bb625@linaro.org>
+ <CAFBinCDd1MJEmSHR1XPsfBoRasBq+cV1F+66sCBXALtCCmoyUA@mail.gmail.com>
+Organization: Linaro Developer Services
+In-Reply-To: <CAFBinCDd1MJEmSHR1XPsfBoRasBq+cV1F+66sCBXALtCCmoyUA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi!
+On 10/01/2023 22:48, Martin Blumenstingl wrote:
+> Hi Neil,
+> 
+> On Mon, Jan 9, 2023 at 1:53 PM Neil Armstrong <neil.armstrong@linaro.org> wrote:
+> [...]
+>> +  compatible:
+>> +    oneOf:
+>> +      - enum:
+>> +          - amlogic,meson6-wdt
+>> +          - amlogic,meson8-wdt
+> Technically this is not an identical representation of what we had
+> before which was:
+> -       "amlogic,meson8-wdt" and "amlogic,meson6-wdt" on Meson8 SoCs
+> 
+> We're not using the "amlogic,meson8-wdt" compatible anywhere at the moment.
+> In the meson_wdt driver it's defined with the same per-SoC data as
+> "amlogic,meson6-wdt".
+> 
+> Long story short: In my opinion there's no need to change what you
+> have right now.
+> If you have to re-spin this then maybe you can add a note to the patch
+> description.
+> Please add my:
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-On Sat, Dec 31, 2022 at 8:40 AM Sergio Paracuellos
-<sergio.paracuellos@gmail.com> wrote:
->
-> Some devices like ZBT WE1326 and ZBT WF3526-P and some Netgear models need
-> to sleep a bit after call to mt7621_pcie_init_port() driver function to get
-> into reliable boots for both warm and hard resets. The needed time for these
-> devices to always detect the ports seems to be from 75 to 100 milliseconds.
-> There is no datasheet or something similar to really understand why this
-> extra time is needed in these devices but not in most of the boards which
-> use mt7621 SoC. This issue has been reported by openWRT community and the
-> complete discussion is in [0]. The selected time of 100 milliseconds has
-> been also tested in these devices ending up in an always working platform.
-> Hence, properly add the extra 100 milliseconds msleep() function call to make
-> also these devices work.
->
-> [0]: https://github.com/openwrt/openwrt/pull/11220
->
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
-> Hi Bjorn / Lorenzo,
->
-> As per Lorenzo comments in v1[0] here it is the patch with changes in commit
-> message and introducing a new definition for this needed extra delay time.
-> I wish you the best new year for you both.
->
-> Changes in v2:
-> - Add a new define 'INIT_PORTS_DELAY_MS' avoiding to reuse 'PERST_DELAY_MS'.
-> - Rewrite commit message and add a link to openWRT discussion.
->
-> Previous patch lore link:
-> [0]: https://lore.kernel.org/lkml/20221209071703.2891714-1-sergio.paracuellos@gmail.com/T/
->
-> Thanks,
->     Sergio Paracuellos
->
->  drivers/pci/controller/pcie-mt7621.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-> index ee7aad09d627..63a5f4463a9f 100644
-> --- a/drivers/pci/controller/pcie-mt7621.c
-> +++ b/drivers/pci/controller/pcie-mt7621.c
-> @@ -60,6 +60,7 @@
->  #define PCIE_PORT_LINKUP               BIT(0)
->  #define PCIE_PORT_CNT                  3
->
-> +#define INIT_PORTS_DELAY_MS            100
->  #define PERST_DELAY_MS                 100
->
->  /**
-> @@ -369,6 +370,7 @@ static int mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
->                 }
->         }
->
-> +       msleep(INIT_PORTS_DELAY_MS);
->         mt7621_pcie_reset_ep_deassert(pcie);
->
->         tmp = NULL;
-> --
-> 2.25.1
->
-
-Gentle ping on this patch :-).
+Sorry I was distracted, I'll add a node on the commit message.
 
 Thanks,
-    Sergio Paracuellos
+Neil
+
+> 
+> 
+> Best regards,
+> Martin
+
