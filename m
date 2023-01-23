@@ -2,61 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB5F6678198
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:36:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E74767819B
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 17:37:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233197AbjAWQg1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 11:36:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38618 "EHLO
+        id S231936AbjAWQhO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 11:37:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233206AbjAWQgZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:36:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E25C2BEDE;
-        Mon, 23 Jan 2023 08:36:22 -0800 (PST)
+        with ESMTP id S231963AbjAWQhN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 11:37:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A4228874;
+        Mon, 23 Jan 2023 08:37:12 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B3820B80E1B;
-        Mon, 23 Jan 2023 16:36:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 506C0C433EF;
-        Mon, 23 Jan 2023 16:36:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BB20760FA8;
+        Mon, 23 Jan 2023 16:37:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBEDDC4339E;
+        Mon, 23 Jan 2023 16:37:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674491779;
-        bh=AxBO3V3F1xrbiz/Mbhffwx/FnH412OzsVmPsuOaEMLQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LUKX/or37qqcXl54rVudS4L7c9LgcbyoESwmvzIP+WdYxcIFtgvGOr3QZzdgTGtWt
-         vf/vfYxAPfinJy2bVOWntkWM+l3MnF7VRcKY51QLvD/Qf0NA2e5p/daQtDKbKefWY6
-         pPe5LcZobi61A9ah9xc27hDW7PZK9nDBnsGlmPAG65KEwAfvWIV3z30SrW4rXVt5dc
-         9bRmaI/rtS17WZRzZVd3/2ijy3LfqugfYz8gj95JEFrh/2nsG5HWRNnRyw8lyWhoe3
-         AXw6V69DwCpmy/2z27RzOa+depb6XzvZINcMl1Uv+F3Y177yHjxXso4TT2PtKpfSnT
-         2QeuXeuzNnFBg==
-Received: by mail-vs1-f41.google.com with SMTP id 187so13500765vsv.10;
-        Mon, 23 Jan 2023 08:36:19 -0800 (PST)
-X-Gm-Message-State: AFqh2kpU9mNk219TD4bmUh6B2SzkLwqpION2W9TT/gXnoocS4LaRolxn
-        nuxaQKy/ddEfkphE+VDguAs0A6VrEzHOwWfg3w==
-X-Google-Smtp-Source: AMrXdXu3pCIoB8dsXe8Tvo5zBJoxkgd1o5Vu4tzxyPoIid2tct1oVfjZC2MhOb+NxgPmPOi4l8vIxC08ulBVxn321RU=
-X-Received: by 2002:a67:f506:0:b0:3d3:c767:4570 with SMTP id
- u6-20020a67f506000000b003d3c7674570mr3764389vsn.85.1674491778189; Mon, 23 Jan
- 2023 08:36:18 -0800 (PST)
+        s=k20201202; t=1674491831;
+        bh=ygXrCk7lDXCPU5TBq4c9PYUWWb7/Dwti3oEPNHVlqjw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=n0/vgn+MbdfyrYca+Yykeer/Kv9KF0bqvzPYNixmggG9j1ZoqwuU7+Bf3OCL+nmgf
+         gbFUkhlZrsRudPEaqd0Q4/BpnHri3kmTZV3nXiKHoao2OQqeYRRYDsf9JkD+rz1eG/
+         6jjytERYhnhYslVn4dYCZc0D8XhHeTr1NvEJ9bBVHbuCMNk7Gj4QArcxJS/Bf+RV14
+         gAYDVDiC7auZKlDpNcCjhzrtAdYHzNDvKC6IceHYxw1vdm/JFtx7hXmCQLaI0hC4VU
+         yUhGJIBVwyycjVhiOJh48njecnHzKU3e95Q32LN2qgaay4o7N4cgMREXCDh7T+Obmh
+         +NOmWE5OMvodw==
+Date:   Mon, 23 Jan 2023 10:37:09 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 19/27] dmaengine: dw-edma: Use non-atomic io-64 methods
+Message-ID: <20230123163709.GA891421@bhelgaas>
 MIME-Version: 1.0
-References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
- <Y86op9oh5ldrZQyG@google.com> <Y86vm0zDOeb1G3zh@axis.com>
-In-Reply-To: <Y86vm0zDOeb1G3zh@axis.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 23 Jan 2023 10:36:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLHi_1QJ4s28uM1b_Z2f+Nsu_CusAsqsx6vVOCCAPLMgw@mail.gmail.com>
-Message-ID: <CAL_JsqLHi_1QJ4s28uM1b_Z2f+Nsu_CusAsqsx6vVOCCAPLMgw@mail.gmail.com>
-Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Lizhi Hou <lizhi.hou@amd.com>
-Cc:     Lee Jones <lee@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230121230359.kqfm4kvwys2jdan6@mobilestation>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -66,83 +65,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 10:02 AM Vincent Whitchurch
-<vincent.whitchurch@axis.com> wrote:
->
-> On Mon, Jan 23, 2023 at 04:32:55PM +0100, Lee Jones wrote:
-> > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
-> > > Add a PCI driver which registers all child nodes specified in the
-> > > devicetree.  It will allow platform devices to be used on virtual
-> > > systems which already support PCI and devicetree, such as UML with
-> > > virt-pci.
-> > >
-> > > The driver has no id_table by default; user space needs to provide one
-> > > using the new_id mechanism in sysfs.
-> >
-> > This feels wrong for several reasons.
-> >
-> > Firstly, I think Greg (Cc:ed) will have something to say about this.
-> >
-> > Secondly, this driver does literally nothing.
->
-> Well, it does do what the commit message says.  If there's another way
-> of accomplishing that, I'm all ears.
->
-> > Why can't you use of of the other, pre-existing "also register my
-> > children" compatibles?
-> >
-> > See: drivers/bus/simple-pm-bus.c
-> >      drivers/of/platform.c
->
-> simple-pm-bus registers a platform driver, and drivers/of/platform.c
-> works on the platform bus.  The driver added by this patch is a PCI
-> driver.  So I don't understand how the files you mention could be used
-> here?
->
-> In case it helps, the relevant nodes in my UML devicetree look something
-> like this:
->
->     virtio@2 {
+On Sun, Jan 22, 2023 at 02:03:59AM +0300, Serge Semin wrote:
+> On Fri, Jan 20, 2023 at 06:54:01PM -0600, Bjorn Helgaas wrote:
+> > On Fri, Jan 13, 2023 at 08:14:01PM +0300, Serge Semin wrote:
+> > > Instead of splitting the 64-bits IOs up into two 32-bits ones it's
+> > > possible to use the already available non-atomic readq/writeq methods
+> > > implemented exactly for such cases. They are defined in the dedicated
+> > > header files io-64-nonatomic-lo-hi.h/io-64-nonatomic-hi-lo.h. So in case
+> > > if the 64-bits readq/writeq methods are unavailable on some platforms at
+> > > consideration, the corresponding drivers can have any of these headers
+> > > included and stop locally re-implementing the 64-bits IO accessors taking
+> > > into account the non-atomic nature of the included methods. Let's do that
+> > > in the DW eDMA driver too. Note by doing so we can discard the
+> > > CONFIG_64BIT config ifdefs from the code.
+> > > 
+> > > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> > > Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Tested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Acked-by: Vinod Koul <vkoul@kernel.org>
+> > > ---
+> > >  drivers/dma/dw-edma/dw-edma-v0-core.c | 55 +++++++++------------------
+> > >  1 file changed, 18 insertions(+), 37 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma/dw-edma/dw-edma-v0-core.c b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > index 66f296daac5a..51a34b43434c 100644
+> > > --- a/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > +++ b/drivers/dma/dw-edma/dw-edma-v0-core.c
+> > > @@ -8,6 +8,8 @@
+> > >  
+> > >  #include <linux/bitfield.h>
+> > >  
+> > > +#include <linux/io-64-nonatomic-lo-hi.h>
+> > > +
+> > >  #include "dw-edma-core.h"
+> > >  #include "dw-edma-v0-core.h"
+> > >  #include "dw-edma-v0-regs.h"
+> > > @@ -53,8 +55,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> > >  		SET_32(dw, rd_##name, value);		\
+> > >  	} while (0)
+> > >  
+> > > -#ifdef CONFIG_64BIT
+> > > -
+> > >  #define SET_64(dw, name, value)				\
+> > >  	writeq(value, &(__dw_regs(dw)->name))
+> > >  
+> > > @@ -80,8 +80,6 @@ static inline struct dw_edma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> > >  		SET_64(dw, rd_##name, value);		\
+> > >  	} while (0)
+> > >  
+> > > -#endif /* CONFIG_64BIT */
+> > 
+> 
+> > Great to get rid of these #ifdefs!
+> > 
+> > Am I missing something?  It looks like SET_64 is used only by
+> > SET_RW_64 and SET_BOTH_64, and neither of *them is used at all.
+> > 
+> > Similarly for GET_64 and GET_RW_64.
+> > 
+> > So maybe we could get rid of everything inside the #ifdefs as well?
+> 
+> Even though these macros are indeed unused in the driver they are
+> still a part of the DW eDMA CSRs access interface. In particular they
+> are supposed to be used to access the 64-bit registers declared in the
+> dw_edma_v0_regs, dw_edma_v0_unroll and dw_edma_v0_ch_regs structures.
+> So until the interface is converted to a more preferable direct MMIO
+> usage without any packed-structures I'd rather leave these macros
+> be.
+> ...
 
-dtc should complain about this...
+> As I said above I'd rather leave the 64-bit accessors be until the
+> packed structure-based interface is removed from the driver.
 
->         compatible = "virtio,uml";
+I wouldn't bother polishing something that's unused since it can't be
+tested, it's easy to resurrect from the history if/when it becomes
+necessary, and it makes it much harder to connect the commit log with
+the code change.  But this isn't a drivers/pci change, so I'm fine
+with it since Vinod acked it.
 
-Binding?
+I guess the point is that when !CONFIG_64BIT, there was no writeq() so
+we used SET_LL_32 twice.  linux/io-64-nonatomic-lo-hi.h provides that
+writeq() implementation, so we can define and use SET_LL_64 for that
+case.
 
->         virtio-device-id = <1234>;
->         ranges;
->
->         pci {
->                 #address-cells = <3>;
->                 #size-cells = <2>;
->                 ranges = <0x0000000 0 0 0 0xf0000000 0 0x20000>;
->                 compatible = "virtio,device4d2", "pci";
-
-"pci" is not a valid compatible string.
-
->                 device_type = "pci";
->                 bus-range = <0 0>;
->
->                 platform_parent: device@0,0 {
->                         compatible = "pci494f,dc8";
->                         reg = <0x00000 0 0 0x0 0x10000>;
->                         ranges;
->
->                         uart@10000 {
->                                 compatible = "google,goldfish-tty";
->                                 reg = <0x00000 0 0x10000 0 0x10000>;
-
-This is not a PCI device, so it shouldn't be using PCI addressing.
-'ranges' needs an entry (for each BAR) to translate to just a normal
-MMIO bus with 1 or 2 address/size cells. Maybe we want a 'simple-bus'
-node for each BAR. The FPGA series needs the same things, but that
-aspect hasn't really been addressed as the first issue is populating
-the PCI devices dynamically.
-
-The DT address translation code should support all this
-(MMIO->PCI->MMIO), but I don't think there's any existing examples. An
-example (that I can test) would be great. If the unittest had that
-example, I'd be thrilled.
-
-Rob
+Bjorn
