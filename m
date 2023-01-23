@@ -2,117 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AA14677DE7
-	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 15:24:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CEC2677E1D
+	for <lists+linux-pci@lfdr.de>; Mon, 23 Jan 2023 15:32:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232267AbjAWOYf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 09:24:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
+        id S232288AbjAWOcr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 09:32:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44230 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231614AbjAWOYe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 09:24:34 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003372410E;
-        Mon, 23 Jan 2023 06:24:32 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8ED8C60F1E;
-        Mon, 23 Jan 2023 14:24:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAECFC433EF;
-        Mon, 23 Jan 2023 14:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674483871;
-        bh=ebj5u9dzYTnqnlc6aYkM6fkr6bAweecaoU1qF2KA9ow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RgjmabJGqw1ELqa2NhEcYDmnv9A+oZ7Jeoe9tjjYxnArTElg9uV49XTPjcZqKt8x4
-         yRq//o7h8iv2Dm1Fa+1LROKmU5jLMf5PVL3QIcYwWhBPYwlTRZzR3x5gQfOF0YAT+K
-         S/a0OjPr47JrZFVSXDO5NUsxChgjY/6juNkrn1ZUNmHMtdiRIf6ReWDef2nFqytE6f
-         greUtAF/btPyWKuE7k+2j1QR158+15cGvqqqHqIzHzYaLbUbKd5IxqGruJyRWYUM7G
-         mZflMGn0ezQ+1YCVcCzo/UCxF4NSip2beVVwmMYk242fZYCwrJ+CelMdttPkXHpj1M
-         LHDjhQhortKww==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pJxkK-0003jJ-TX; Mon, 23 Jan 2023 15:24:29 +0100
-Date:   Mon, 23 Jan 2023 15:24:28 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Abel Vesa <abel.vesa@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 11/12] arm64: dts: qcom: sm8550: Add PCIe PHYs and
- controllers nodes
-Message-ID: <Y86YnAxmTcQTmqwH@hovoldconsulting.com>
-References: <20230119140453.3942340-1-abel.vesa@linaro.org>
- <20230119140453.3942340-12-abel.vesa@linaro.org>
- <Y85KiKD+iQamchB5@hovoldconsulting.com>
- <Y86AG7ev++wYiza4@linaro.org>
- <Y86WqGW6pj5re3FU@hovoldconsulting.com>
+        with ESMTP id S230520AbjAWOco (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 09:32:44 -0500
+Received: from smtp1.axis.com (smtp1.axis.com [195.60.68.17])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C516C673;
+        Mon, 23 Jan 2023 06:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1674484362;
+  x=1706020362;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=1RiHrwj6ISB7lKtNwWNe0bcD7KzheIvmO/6WEMs8K5k=;
+  b=PanAXpHfYvkoUSB4r4BNj818WVY5h/V3Aq1oaiW6Tp67j/D+MvqjxdiK
+   TfJsxOAiOZlI6OQMCW0jkCF8Fsjpub4SrWFRa9fyWfL8BSlSghpeb76sF
+   LrI2DGO1oi/quavQeWXhoVL+5o/h2ynIZzbG30/RgCg0g7DnjegKTtjtk
+   1xnHuddvmBX921Vt4/QlAHUpxc0wiOnuDkuZY9aaqwHGyZ+ILyLcr/MaR
+   yQkGu72Bp1mRt73L93A/mijwD3XvnYjNnidZYOYVqxKLnr4eN57KN9NgP
+   w57X59e95wQ895QQ/F298+S0ondpgH0/2omXlQxcwo6tbhLm+c374/ZNI
+   A==;
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+Date:   Mon, 23 Jan 2023 15:32:31 +0100
+Subject: [PATCH] mfd: Add Simple PCI MFD driver
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y86WqGW6pj5re3FU@hovoldconsulting.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
+X-B4-Tracking: v=1; b=H4sIAH+azmMC/x2NywqDMBAAf0X27MKatgf7K+Ihj01daNKQFSmI/
+ 270OAPD7KBchRXe3Q6VN1H55QZD34FfbP4wSmgMhsyDBkOoksqXMcWAxQu+npHC6EYK0UOLnFVG
+ V232y5WtqVy2VI7yvzfTfBwny19zpHYAAAA=
+To:     Lee Jones <lee@kernel.org>
+CC:     <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        <kernel@axis.com>
+X-Mailer: b4 0.11.2
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 03:16:09PM +0100, Johan Hovold wrote:
-> On Mon, Jan 23, 2023 at 02:39:55PM +0200, Abel Vesa wrote:
-> > On 23-01-23 09:51:20, Johan Hovold wrote:
+Add a PCI driver which registers all child nodes specified in the
+devicetree.  It will allow platform devices to be used on virtual
+systems which already support PCI and devicetree, such as UML with
+virt-pci.
+
+The driver has no id_table by default; user space needs to provide one
+using the new_id mechanism in sysfs.
+
+Signed-off-by: Vincent Whitchurch <vincent.whitchurch@axis.com>
+---
+ drivers/mfd/Kconfig          | 11 +++++++++++
+ drivers/mfd/Makefile         |  1 +
+ drivers/mfd/simple-mfd-pci.c | 21 +++++++++++++++++++++
+ 3 files changed, 33 insertions(+)
+
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 30db49f31866..1e325334e9ae 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1277,6 +1277,17 @@ config MFD_SIMPLE_MFD_I2C
+ 	  sub-devices represented by child nodes in Device Tree will be
+ 	  subsequently registered.
  
-> > > > +		pcie1_phy: phy@1c0e000 {
-> > > > +			compatible = "qcom,sm8550-qmp-gen4x2-pcie-phy";
-> > > > +			reg = <0x0 0x01c0e000 0x0 0x2000>;
-> > > > +
-> > > > +			clocks = <&gcc GCC_PCIE_1_PHY_AUX_CLK>,
-> > > > +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
-> > > > +				 <&tcsr TCSR_PCIE_1_CLKREF_EN>,
-> > > > +				 <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>,
-> > > > +				 <&gcc GCC_PCIE_1_PIPE_CLK>;
-> > > > +			clock-names = "aux", "cfg_ahb", "ref", "rchng",
-> > > > +				      "pipe";
-> > > > +
-> > > > +			resets = <&gcc GCC_PCIE_1_PHY_BCR>,
-> > > > +				 <&gcc GCC_PCIE_1_NOCSR_COM_PHY_BCR>;
-> > > > +			reset-names = "phy", "nocsr";
-> > > 
-> > > Do you know why only the second PHY uses two resets here? Did you intend
-> > > to add it also for the first PHY?
-> > 
-> > Please notice that this is a g4x2 phy. The documentation specifically
-> > says that both the pciephy_reset and pciephy_nocsr_reset should be
-> > asserted on power-up. Now, even the g3x2 has the nocsr reset (at least
-> > in GCC) but its documentation doesn't seem to say anything about
-> > nocsr needed to be asserted (ever).
-> 
-> Ok. Thanks for confirming. I did not notice the difference in generation
-> at first.
-> 
-> > > Both of these resets exists also on sc8280xp, and I believe downstream
-> > > used the NOCSR_COM variant, which does not reset all registers in the
-> > > PHY so you could unknowingly be relying on firmware to setup things up
-> > > for you.
-> > 
-> > That is also the case for the g3x2 phy on sm8550.
++config MFD_SIMPLE_MFD_PCI
++	tristate "Simple Multi-Functional Device support (PCI)"
++	depends on PCI
++	depends on OF || COMPILE_TEST
++	help
++	  This enables support for a PCI driver for which any sub-devices
++	  represented by child nodes in the devicetree will be registered.
++
++	  The driver does not bind to any devices by default; that should
++	  be done via sysfs using new_id.
++
+ config MFD_SL28CPLD
+ 	tristate "Kontron sl28cpld Board Management Controller"
+ 	depends on I2C
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 457471478a93..7ae329039a13 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -268,6 +268,7 @@ obj-$(CONFIG_MFD_QCOM_PM8008)	+= qcom-pm8008.o
+ 
+ obj-$(CONFIG_SGI_MFD_IOC3)	+= ioc3.o
+ obj-$(CONFIG_MFD_SIMPLE_MFD_I2C)	+= simple-mfd-i2c.o
++obj-$(CONFIG_MFD_SIMPLE_MFD_PCI)	+= simple-mfd-pci.o
+ obj-$(CONFIG_MFD_SMPRO)		+= smpro-core.o
+ obj-$(CONFIG_MFD_INTEL_M10_BMC)   += intel-m10-bmc.o
+ 
+diff --git a/drivers/mfd/simple-mfd-pci.c b/drivers/mfd/simple-mfd-pci.c
+new file mode 100644
+index 000000000000..c5b2540e924a
+--- /dev/null
++++ b/drivers/mfd/simple-mfd-pci.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-only
++
++#include <linux/module.h>
++#include <linux/of_platform.h>
++#include <linux/pci.h>
++
++static int simple_mfd_pci_probe(struct pci_dev *pdev,
++				const struct pci_device_id *id)
++{
++	return devm_of_platform_populate(&pdev->dev);
++}
++
++static struct pci_driver simple_mfd_pci_driver = {
++	/* No id_table, use new_id in sysfs */
++	.name = "simple-mfd-pci",
++	.probe = simple_mfd_pci_probe,
++};
++
++module_pci_driver(simple_mfd_pci_driver);
++
++MODULE_LICENSE("GPL");
 
-One more thing: Shouldn't the second reset be named 'nocsr_com' or
-similar?
+---
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+change-id: 20230120-simple-mfd-pci-54f0d9b90dfc
 
-Johan
+Best regards,
+-- 
+Vincent Whitchurch <vincent.whitchurch@axis.com>
