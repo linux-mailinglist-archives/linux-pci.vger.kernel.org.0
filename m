@@ -2,76 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A994678D28
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 02:14:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03306678D38
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 02:18:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232483AbjAXBOY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 20:14:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        id S232694AbjAXBSq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 20:18:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232312AbjAXBOX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 20:14:23 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED3C33451;
-        Mon, 23 Jan 2023 17:14:22 -0800 (PST)
+        with ESMTP id S232701AbjAXBSn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 20:18:43 -0500
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3EACDDA;
+        Mon, 23 Jan 2023 17:18:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674522862; x=1706058862;
+  t=1674523115; x=1706059115;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=/kCFmxo/f+JOS8yU2geSITRq6EGDMXsfxLpT2Nx75JI=;
-  b=C5hoeHlsg++XuBB/E3IVy7NcOoc0agM1/lYTkcY1hD4ERy8/GYmqfnzD
-   jkoiV//s1Anxn7G5lcw7mb5AEyaa7/R0OnuS0fvGWzEonlZjL2sL5wbEk
-   BQkxtyvbR2OFkunAO/+IOciqA0/lTeM//pX1qumExrlnMbZ+0cN7Oges6
-   lOVR2ZNmSS72a5iIzsbJN9tXuG9PNYrv8rEfjcDxEv5MuzcZjsMDaH3m2
-   GwcqDfU550LkU5NTCmkvNT30v7bDVHeZjSt6g4TnblvrFBJ8W773nSovp
-   /rCxEH6w+He/zsoqnK5iMMJD3ffBMiI+0PawEHjjBGNH9mnJpmw66CyWP
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="314105891"
+  bh=93hrz68O9G/Pro7pFnpUAO+ufm7TNY366ibzwxcJ9bg=;
+  b=gMSsmpFjfea//9OXwFmLvTdJdsjfir+iq17VpRMqg4kr0kV2w3pBXYw6
+   DZi2kqRVCUsi7UldnbiHb4wv4bRa69c9IX3vmzsLIOIA0cjjOC4YMGQ4D
+   pWbaOs20h5cDRMhEHhQnw2SVGSHwiixnF3lfnkUg0YdFSvdscH4SuACIo
+   b4tSJIP1bgCtcZEaNqJuNinIOkmjm2HFeE8BY8PO4r+LY5iRt1Fda9xoc
+   IykdtJrGP7v2yPgjvVHMW4ml9lP/XlH5i6lz41/te/9y4NKk/f2OjrrRn
+   43fNQV8ASRBVKPNafEB6nIF/yPFQZOAPNws320b3hrgvw+Uc8RhSziTNK
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="309784244"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="314105891"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 17:14:21 -0800
+   d="scan'208";a="309784244"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 17:18:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="750656372"
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="725290937"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="750656372"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by FMSMGA003.fm.intel.com with ESMTP; 23 Jan 2023 17:14:21 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+   d="scan'208";a="725290937"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by fmsmga008.fm.intel.com with ESMTP; 23 Jan 2023 17:18:34 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 23 Jan 2023 17:14:21 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 23 Jan 2023 17:18:34 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 17:14:20 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 23 Jan 2023 17:18:34 -0800
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 17:18:34 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.175)
+ by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 23 Jan 2023 17:14:20 -0800
+ 15.1.2507.16; Mon, 23 Jan 2023 17:18:33 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J+k9QMabaKFK/foh1I6XUvuMdyOPvDNw5ZMZqANp/3nID34apbZYy4sJPuknhC63LSQWHvG90H9PVxjEZFb+/qGAgjQ7rIa4w9ZGaVvRvdnQZ0NhcPE4R8rWH7SfrWksq+Lp3vS1XtnjTzk5xQYAQTNNOC/flq2h8qN+xOuzj+LUYfoYzn4HQasFytHkENBhl2gR3DdahXJO3GEMLlLyiQen0JM+3MJ4w4D/TIVHWMbiVN6ZramUPrACAcsKmxUZpeAYQUCpo1G6ouDeaIvVEfUjQ8IpbScdMdFKebFnfjAxviF9yELOlRp9xEgMaE/vUrfBs+2EMK/uOW081k4KJw==
+ b=bDv3R76TEW0hVaPbQbrw+bx4NfY3ImIG1HmHVfJCAGMPYzRAKxOo71UguYLyZQQbEBqvFV52e9QRzQjGwD17QQbe4+rrb4Cge+wcJBMv4y20ubkgOZHq5BmiUFVkdZ9g7Dyd5G3b4Ph52RE1JXdTy6vR5CfbmPLCBkKqQpYGrCeYGvgarEHmQAcbhqKHGsOpSj+QmvDyhsCjbpLDir6qxax8ItA6irIlt2yP2hEBfv5TOqS/AIcHxX3qSgMsGtXO1NWx7uTPCEvl4K5zQLIzfSz8xFgjiDh3VTvBVK8f0ZDiJEV/a4ThkhojFmKnx1f2uKw0qIuW8xruB/N6cUbJdw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UJO+/PM6lk3my+5LreR1sPLTdBuz+51iPQBLFz6nlUs=;
- b=NsifxRc/CuXSfBh7ywgCGSTkzquc/pLGzM11S1J0HaitRI3hkqaO+XxvVceHTx4wA/A5M66NEaDSU4KOO8htSDgCK+l0G9eH5pUB2l6dF5E1kW5/FgMBJNlLGZct2W7iYV58B76jP7kp9S1eZN91fnAaE53S7pKd+TZkrVMjv1dpDfHjBwR/Oged37WVgpZWC81R7t6mKHntNYvYtdezgKb5M8qdMbLFYiFXqwkaVKglaZTGKwf0sJ4xR3tOT/9yM+Vk8ZuLvduh5k9CzWG9rxAymv6yz+Vv5r+wQqfUdAAtkMn7WX63328LkEhEK5k2tImrj1UXp4lVYYH1+PlZHw==
+ bh=gbpqyYLVevbD9IAR3NHTbxsn096aLIeIi4e5LGiPd+I=;
+ b=RHA4YVrT0tklcjxFvsD+NxOuW5alXW+VML2PNJT4Sf+igEHpQEIUDT4c4pPbEPbN/wgqxioAH3cvpPe8QItfNfdwTx10mtcnwJRPj/EIbQ7s1WOuN5YvP9ohL+l9hT6X3SZbXniph8rcJ6rchcAOS65rGRbVBAFSBERsv5rQYGglW2YCRJ3W9mg1fRzEMJvddR+L5HiXVPrFdWDvf64x41s2rz6rr1PEltyyMS9xvVDL9kLGq/ccYdCf0AFGqlmSrHsv7NvwNndUhcJleyb3SWj0RKJ7uMz8Wtn1FUQpGHdoHwRiX6dipTtBl7bgcSZFULyrIK/L2rakWTR6RvhUMw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by SA2PR11MB5035.namprd11.prod.outlook.com (2603:10b6:806:116::21) with
+ by BL1PR11MB5397.namprd11.prod.outlook.com (2603:10b6:208:308::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Tue, 24 Jan
- 2023 01:14:13 +0000
+ 2023 01:18:30 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6%7]) with mapi id 15.20.6002.027; Tue, 24 Jan 2023
- 01:14:13 +0000
-Date:   Mon, 23 Jan 2023 17:14:09 -0800
+ 01:18:29 +0000
+Date:   Mon, 23 Jan 2023 17:18:25 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
         <linux-pci@vger.kernel.org>
@@ -85,70 +89,70 @@ CC:     Gregory Price <gregory.price@memverge.com>,
         "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 07/10] PCI/DOE: Create mailboxes on device enumeration
-Message-ID: <63cf30e1136fb_570929481@iweiny-mobl.notmuch>
+Subject: Re: [PATCH v2 08/10] cxl/pci: Use CDAT DOE mailbox created by PCI
+ core
+Message-ID: <63cf31e1ae7ed_5709294ee@iweiny-mobl.notmuch>
 References: <cover.1674468099.git.lukas@wunner.de>
- <5b03b8f4d2d04cf7e4997c71daee667c73eb427b.1674468099.git.lukas@wunner.de>
+ <45e6f7b2ab780e78b42490bb49e9a193a5598a07.1674468099.git.lukas@wunner.de>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <5b03b8f4d2d04cf7e4997c71daee667c73eb427b.1674468099.git.lukas@wunner.de>
-X-ClientProxiedBy: SJ0PR13CA0131.namprd13.prod.outlook.com
- (2603:10b6:a03:2c6::16) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <45e6f7b2ab780e78b42490bb49e9a193a5598a07.1674468099.git.lukas@wunner.de>
+X-ClientProxiedBy: SJ0PR03CA0122.namprd03.prod.outlook.com
+ (2603:10b6:a03:33c::7) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA2PR11MB5035:EE_
-X-MS-Office365-Filtering-Correlation-Id: 28508731-1cc1-4a38-4ffd-08dafda84dcc
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BL1PR11MB5397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ce8999f-91a9-4d63-9caa-08dafda8e6c7
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ZER+FkZQfXnJeTzbRRwQVrs0jRdPk0I+Ws9H0QSDlFKBw5dVeRE/9rmC3E9xzr9qhw32XcrMwMwq93VPxNSEblR8mRlCqXYnxEj9Z148gvbXCsaO9Ymi4hvI6Nvm3ka/rzTfwb8zVH7+RBY70T3G+dJntNpMTDR7f9I/3KiKUfIICjV+shTY2+txU8oXZgQMep9qF+flNI6POl7reTNSIArcoNfUiBxHIcC4jQ6OsUL0gTZM+uJbQxiTHyqQj/llTLWAqP7iLJFgrZZWvN4pJyn/zfhzFQnmsyymQiCyoTTa059Sz0tby34wIRuHqFQLUHelVaovc2DbaD6Z07JKs7VzyYetE5qj+RuirzvhbXnFQW/XsEwj4Uis1QFCJB66466a+K1HpdqeNdUVvKB3ULrqEdNqsf11xjmk/veB74pIlHesOBoLMq4Kg+76yU9I/ZrTIge5fnqjDx0f0I03CMFjClFImOsVHKMeDJaFoStwUPv2/U0N6PezoGcCBvl/9s04+SNI0sASY4vi3GA4+ne/WPiefxQBAs8zvwK7XXyIcZWhS/NKpWCBKo6Qfg5VVa1fBD6KK5uJyfU8z5X1vgEzaT9buBLYVP10JIwyMYOE0kWU7J/qh9aRUpNWLVW5MBIEKWci+vj20f8lF2ZZGw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(366004)(396003)(376002)(39860400002)(451199015)(8936002)(4326008)(8676002)(66556008)(66476007)(66946007)(83380400001)(6486002)(478600001)(6506007)(6666004)(6512007)(26005)(186003)(9686003)(54906003)(110136005)(86362001)(44832011)(316002)(5660300002)(2906002)(15650500001)(82960400001)(38100700002)(41300700001);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: UHFwidmfcxmTPR7vOhIUDTDR1thK9uXXqA1/yrtB5QAG+dHWerWzesi+JBvK/MC0bkn1cbXYYrvAM5spF65udRU+rmemkbHah7KJh/NjFnd9VmMDFOwZo1j6NS0SRKcJIIvkdrDs6BL24hwrshJ/3+iLvX3fK/bvrWLGaQfh+JqcUPEAqqRvaHTG2KNkWp71D82GBwg7GxelIfaR7xZn4iE28UkDItEuHXu9nkA9BkV4PJABC81JMqwbT2wdLqwLjVkm19FEVuco11zgXdaQfUA5sqvF06k0sQ/f6IciXR61ig3MNa0KM6nMrMInTkJgC3drlsYK2YiEJZyTFycJ5ED3T4iAWwa8zx8rnqNR3pQJZ3qg8E8Tyh2AEru+gXL0Oju5y6sCtEE/RbJYwAPusEeelST2mXd++bjZqVHeuGZ31G6mBjmNPxDwMhPUSiKHPXFL24RBf6umf4lkP71ke5uc+OJrOkXY/ua8D2SiTPhbYIVTPRMNyykHoP4Tg891VcicqOIMizw+6uWhJHwmbw+dwFFDJ79dsAP6MT/mrFHkwYzFQR/TzJ2uwLr1qzpxBtSM1SVcXeg++tnQUSB88GGcp+sxvmnuLV1eB8vRJJe5rjmXD80NLE+JRxFpA2Yt+m2Jsh6cZUZulh3IHX/DzQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(376002)(39860400002)(136003)(366004)(346002)(451199015)(15650500001)(38100700002)(82960400001)(41300700001)(2906002)(44832011)(8936002)(5660300002)(4326008)(8676002)(6506007)(316002)(54906003)(83380400001)(66556008)(66946007)(66476007)(86362001)(110136005)(478600001)(6486002)(6666004)(9686003)(26005)(6512007)(186003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H7YyPhObGDDuLbgvMwpxUeI4+zrnFqqxKBswz3R9fFF6JdGf5dDcB+O6dKWA?=
- =?us-ascii?Q?nB9NfChtK7/U9vX+Mu02E7Ua2jlYNvZl2wb9IJNmR6fBOzBUjSsFzGLOXyNX?=
- =?us-ascii?Q?H3pxGDRgDs3zXmQqQCWjzTeyjAwAtPIS/HRKeHJjcVaB+Mnae+YXW2WxenDP?=
- =?us-ascii?Q?A9T0m1GCXLU8HS/y5hmqhudF0f3UAj1IpvB6fbV0nv36JnSHF2PkkNyE2BXn?=
- =?us-ascii?Q?GVXPGaxKxkJYYXDBfutgCmR0jCGbPDXtgey6R1fK9ozXHUsPT9edq8jRZU2I?=
- =?us-ascii?Q?z2EuG6CnwfYELoBwSe+Q5KTU0DorHa1Rj0k+uY/KAVOM1MJjj0ChB95nBVrz?=
- =?us-ascii?Q?2qmY3p3Mmb56ljH/ZWiToj9bGkJcxUMYuQVSyJ5RB2LEmNQSvAJh9TADxbs8?=
- =?us-ascii?Q?s8hN6vhLaIq0L7zs5tAR3+j4LlsQSNM7yBpzsxNQoQQ+cJh9jJB4WQokRXVC?=
- =?us-ascii?Q?+sVwR+HWPzSF6hcVno1/T2wGqHp863/XtqNzUnkQMKZMAmJusYj9uwq5qmp7?=
- =?us-ascii?Q?FvbUcaDS5Zma5KpEqaGrqIFR/ju3T2qAcMIPfIg2UUKIJX6KpQ5gHy7woEJv?=
- =?us-ascii?Q?Y/rTWom6yx9SKGlj1rNIkZ77bC4NqfmL3Ej4ePV4vVwzM/5XAlrPEOpIIz8f?=
- =?us-ascii?Q?1PGFZBZxwnapybNxFWsQfPFiMAqjAnU+gHvfdMUnaJmSGD6ijzgFMszBOgB6?=
- =?us-ascii?Q?S8iYXu/UJwAMFf5MAwc0dtMpkSl1n9GGVSSHb90pxsb9JX63ndSdWuhIuoFN?=
- =?us-ascii?Q?KtrAwo29+FBfRykzWy/bdKl1U8eLMaO45dVJNO3e/M3LPfmfiIGXCJmQVDQQ?=
- =?us-ascii?Q?2crSn5OunufWaDvIT1zqWLy8mTLohZVvNQxmHtcwICffhRx6O7VwoQec8/ga?=
- =?us-ascii?Q?38rylKpsUCUINEftFJNnmxU421e1g0X3/hDVdlnOWIKj187KxmrYSRPU8PIK?=
- =?us-ascii?Q?62aXIIiU/HgEkWo04Nqmz8p8bjQECc4km6j9O7C2DT0f1dZEt+v5pWdNOiV+?=
- =?us-ascii?Q?TcV2mWQXJF+6PtrM7zjsHQIWzh1cXFaveFhaezfcirA4OMlETI3iHDgpDA0a?=
- =?us-ascii?Q?JMkccXnEnXzhFLV+gaIL0ypn1+gF82h/5bMV6IEw39B7scGsTo4TE4D9O97x?=
- =?us-ascii?Q?Sxa37nx5Pn3KVEe47IIGHJhRp07ZyA/PrACWMWxRirEXXNwUeL0falt7xaHO?=
- =?us-ascii?Q?F7fLJ9B2baohp5VcGaVuzGKlRYaztyo2TmeAdw6ApOVhbwk1wkcTg3lO0VRM?=
- =?us-ascii?Q?jac7KTWe8oe61FAbJvyy6k5jMAmfZ51/E19GUEVLA8vEmtgdKpE6jx9/o2OD?=
- =?us-ascii?Q?EyFwvqcgNwllT8lXvsZYMNjg6RvVGAjyr8zshJQVy/osvLq323VpMFTO/dfQ?=
- =?us-ascii?Q?6d1nrVS/cXVpaQY4GvQc02INP4FGygS4VzXNIMqQtdTlf2s2FkPC/w5Y8zGN?=
- =?us-ascii?Q?MJ2qX5aHyFRp7lPmY4aoouvkxajn0KEckRtF/03dtJmYAtAnclZOyTWtAnXD?=
- =?us-ascii?Q?1846zdk++2IPFtok9UOPQORJT+7V+/UILg1bEZ9ofcQn4CCR/4DgM26NBuIu?=
- =?us-ascii?Q?KRPpGjEN8fOV5PbYZfJUIhEmo+kZROv9SJLjAvHFv5Q3gWpsBzvizuOV5+Fl?=
- =?us-ascii?Q?NQ=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 28508731-1cc1-4a38-4ffd-08dafda84dcc
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xH6i+GG5zmEdpdDXK2i7OyRpXNkCYoL708FLxitQDA/1gjPQhpGEYCdRbs1s?=
+ =?us-ascii?Q?3+9RXoQSIsjeCUXHAvWalGypFg48WQOpwij5ISSZADxjgM8oqMnxvDe7963u?=
+ =?us-ascii?Q?dqOx+UZjfaP/L1mVetimmeSxnL/JnNgVARYjMO7FoKjHpGs29/h47e0z1VbF?=
+ =?us-ascii?Q?ZYVdA1k9GREtczQPETU0+JbYqHAeTeWQp4OSiVcUZNkUIxLEfkPmGTTwzVlf?=
+ =?us-ascii?Q?AhZ6vBVkH2bDytRMUXDcWKmgFQG0IVzLhxQcIRQBCXhb3JiPAj3ToNPlJnUP?=
+ =?us-ascii?Q?eNB44ilFzWkVfAOIrk6J5IrT91jKyudG4zhvY+I5VUx9mSAO8bOeMZ1QXBes?=
+ =?us-ascii?Q?fDfrYuPJOoQaZsfnexatdQN7qV7ws+Juuml7nQ8ydZQ3t8/zoACXHDKd7GJ0?=
+ =?us-ascii?Q?OhdD/FplhHb1KIA8E4E0gl+rL+4KCn2cx8nUqs7Ev237ybkAxsZrQq7XB/kT?=
+ =?us-ascii?Q?2exFQwm0goJBN+SxPMWooSsI+mRKIgWNIXDf6PzTd8nmTbE7azwM4n2/3Ogs?=
+ =?us-ascii?Q?cPCLQh7Top7GY/XSagElZXC7TJaBuA/j7jkputz5s8kQISvolis2mBpa6LQP?=
+ =?us-ascii?Q?loKpjDJF3PWh8LAL5S0/3vTVtd09RXpecWLrVvqLOEqPqjlvvX23QOo4VLsD?=
+ =?us-ascii?Q?G3CLnV/BaWyHHmq9J4c5lZoYM7sGTlmCPV3SY9AwaNvT7+KWgY0Riop1kfZE?=
+ =?us-ascii?Q?G+bpXhCVZYe5WVqhDfgSYqIiL5mOJ3w+SzC01k3hJpWONVf+uZebL0W/xhwe?=
+ =?us-ascii?Q?bM+coQs683DoWix2m6mIt6qOInqUGKgT5oAv2oq6P3U8j3NCIsFSJNhVtfx4?=
+ =?us-ascii?Q?9GpCfitoVnCY666LR7XWyrBNP5IePWE6J5P4G7L99IQdO7nDRpEekhe+n5TU?=
+ =?us-ascii?Q?1bVO6jP7+wbJNdw8/W8VEhE90pJ+zKtBZiysvjmaTuN4ww4bgmEvCMwogZ+U?=
+ =?us-ascii?Q?2Dtv6ANjiBjSyoADq3V02WN8dSPKTKd3sv9XJuvy3U7iL0KY80wJGZZYMcnV?=
+ =?us-ascii?Q?KWgld0AEEUymLlhmeT+cs/6UGnfQO7rN7U4/VRiSOGQ1WmDxN0qjMV5fxm+Q?=
+ =?us-ascii?Q?61gzXPHj5/e453W7zAeTzpek1603JmHndXbN7rnjlURaNYjC2hgYCq3EeC7s?=
+ =?us-ascii?Q?16Wqo0M2p0FVqiGR3RvO3nwzAmz1V5NU1TPUJVzAPhFeTINjiLHkntfB+BiL?=
+ =?us-ascii?Q?58/koi53C34GKsg0pH12IPoRZli/+Ta8rPwNxY3rqACWff0P2L/N+pcbz9TZ?=
+ =?us-ascii?Q?L2cbpdeRaPgjfveSIwpVw1eCralV9SO1Vkya+hVyV28wMvV5XDjGF1ieE3zI?=
+ =?us-ascii?Q?cj+WO3zhymi+dJIKlkXAjfqDCwVEdBeK9tWTzGpmt89rA4bAKJXfPvxNz42u?=
+ =?us-ascii?Q?MTMzoVnzW8sQZCYmOz57Uc4IK3i6ihBgpeO9tsTZ9cJrduPDyHp9yeXw+9B0?=
+ =?us-ascii?Q?JG9lhvF1g1sm90epI1QTtyTUJXUF3NdG9ymBFd4LAbHhJtvotEhSX3a1TdA4?=
+ =?us-ascii?Q?VTVYhVqQbeRDjGPw+nGVo9QYhrQBJoxRIPKU2TDoPTd4AC1RH0s3LixHwIpk?=
+ =?us-ascii?Q?pmIaV8mOsH41pHWpOyVTuH0U/LyHMrSCtAjg4u4lXVB9Q8RvjnZ0pJHNWic6?=
+ =?us-ascii?Q?Ow=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ce8999f-91a9-4d63-9caa-08dafda8e6c7
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 01:14:12.9789
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 01:18:29.7176
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 73xSCGz1R6Q70Pr2ehOhMaYv22cZSJBvVUFkGIUMcejrMmkA9r6+3h8xaR0V3qUBfTgA514ZxPIDg5AAU1ASMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5035
+X-MS-Exchange-CrossTenant-UserPrincipalName: y3VJaujx+pEdm7TPEgA7iiwDq2JALLai7zZTHMIgWkGWGX82Xvq2YSvt4qJ2YagAadeP9iBYp/K9u+TDw/95Kw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR11MB5397
 X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -156,214 +160,166 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Lukas Wunner wrote:
-> Currently a DOE instance cannot be shared by multiple drivers because
-> each driver creates its own pci_doe_mb struct for a given DOE instance.
-> For the same reason a DOE instance cannot be shared between the PCI core
-> and a driver.
+> The PCI core has just been amended to create a pci_doe_mb struct for
+> every DOE instance on device enumeration.
 > 
-> Overcome this limitation by creating mailboxes in the PCI core on device
-> enumeration.  Provide a pci_find_doe_mailbox() API call to allow drivers
-> to get a pci_doe_mb for a given (pci_dev, vendor, protocol) triple.
-> 
-> On device removal, tear down mailboxes in two steps:
-> 
-> In pci_stop_dev(), before the driver is unbound, stop ongoing DOE
-> exchanges and prevent new ones from being scheduled.  This ensures that
-> a hot-removed device doesn't needlessly wait for a running exchange to
-> time out.
-> 
-> In pci_destroy_dev(), after the driver is unbound, free the mailboxes
-> and their internal data structures.
+> Drop creation of a (duplicate) CDAT DOE mailbox on cxl probing in favor
+> of the one already created by the PCI core.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
-
-I rather like this.  Much cleaner, thanks!
-
-Minor comment below.
 
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
 > ---
->  drivers/pci/doe.c       | 71 +++++++++++++++++++++++++++++++++++++++++
->  drivers/pci/pci.h       | 10 ++++++
->  drivers/pci/probe.c     |  1 +
->  drivers/pci/remove.c    |  2 ++
->  include/linux/pci-doe.h |  2 ++
->  include/linux/pci.h     |  3 ++
->  6 files changed, 89 insertions(+)
+>  drivers/cxl/core/pci.c | 27 +++++------------------
+>  drivers/cxl/cxlmem.h   |  3 ---
+>  drivers/cxl/pci.c      | 49 ------------------------------------------
+>  3 files changed, 5 insertions(+), 74 deletions(-)
 > 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index cc1fdd75ad2a..06c57af05570 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -20,6 +20,8 @@
->  #include <linux/pci-doe.h>
->  #include <linux/workqueue.h>
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index a02a2b005e6a..5cb6ffa8df0e 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -459,27 +459,6 @@ EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
+>  #define CXL_DOE_TABLE_ACCESS_LAST_ENTRY		0xffff
+>  #define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
 >  
-> +#include "pci.h"
-> +
->  #define PCI_DOE_PROTOCOL_DISCOVERY 0
+> -static struct pci_doe_mb *find_cdat_doe(struct device *uport)
+> -{
+> -	struct cxl_memdev *cxlmd;
+> -	struct cxl_dev_state *cxlds;
+> -	unsigned long index;
+> -	void *entry;
+> -
+> -	cxlmd = to_cxl_memdev(uport);
+> -	cxlds = cxlmd->cxlds;
+> -
+> -	xa_for_each(&cxlds->doe_mbs, index, entry) {
+> -		struct pci_doe_mb *cur = entry;
+> -
+> -		if (pci_doe_supports_prot(cur, PCI_DVSEC_VENDOR_ID_CXL,
+> -					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+> -			return cur;
+> -	}
+> -
+> -	return NULL;
+> -}
+> -
+>  #define CDAT_DOE_REQ(entry_handle)					\
+>  	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
+>  		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
+> @@ -569,10 +548,14 @@ void read_cdat_data(struct cxl_port *port)
+>  	struct pci_doe_mb *cdat_doe;
+>  	struct device *dev = &port->dev;
+>  	struct device *uport = port->uport;
+> +	struct cxl_memdev *cxlmd = to_cxl_memdev(uport);
+> +	struct cxl_dev_state *cxlds = cxlmd->cxlds;
+> +	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+>  	size_t cdat_length;
+>  	int rc;
 >  
->  /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
-> @@ -662,3 +664,72 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
->  	return task.rv;
->  }
->  EXPORT_SYMBOL_GPL(pci_doe);
-> +
-> +/**
-> + * pci_find_doe_mailbox() - Find Data Object Exchange mailbox
-> + *
-> + * @pdev: PCI device
-> + * @vendor: Vendor ID
-> + * @type: Data Object Type
-> + *
-> + * Find first DOE mailbox of a PCI device which supports the given protocol.
-> + *
-> + * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
-> + */
-> +struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
-> +					u8 type)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-> +		if (pci_doe_supports_prot(doe_mb, vendor, type))
-> +			return doe_mb;
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_find_doe_mailbox);
-> +
-> +void pci_doe_init(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	u16 offset = 0;
-> +	int rc;
-> +
-> +	xa_init(&pdev->doe_mbs);
-> +
-> +	while ((offset = pci_find_next_ext_capability(pdev, offset,
-> +						      PCI_EXT_CAP_ID_DOE))) {
-> +		doe_mb = pci_doe_create_mb(pdev, offset);
-> +		if (IS_ERR(doe_mb))
-> +			continue;
-
-I feel like a pci_dbg() would be nice here.  But not needed.
-
-Ira
-
-> +
-> +		rc = xa_insert(&pdev->doe_mbs, offset, doe_mb, GFP_KERNEL);
-> +		if (rc) {
-> +			pci_doe_flush_mb(doe_mb);
-> +			pci_doe_destroy_mb(doe_mb);
-> +			pci_err(pdev, "[%x] failed to insert mailbox: %d\n",
-> +				offset, rc);
-> +		}
-> +	}
-> +}
-> +
-> +void pci_doe_stop(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-> +		pci_doe_flush_mb(doe_mb);
-> +}
-> +
-> +void pci_doe_destroy(struct pci_dev *pdev)
-> +{
-> +	struct pci_doe_mb *doe_mb;
-> +	unsigned long index;
-> +
-> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-> +		pci_doe_destroy_mb(doe_mb);
-> +
-> +	xa_destroy(&pdev->doe_mbs);
-> +}
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9ed3b5550043..94656c1a01c0 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -777,6 +777,16 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
->  }
->  #endif
->  
-> +#ifdef CONFIG_PCI_DOE
-> +void pci_doe_init(struct pci_dev *pdev);
-> +void pci_doe_stop(struct pci_dev *pdev);
-> +void pci_doe_destroy(struct pci_dev *pdev);
-> +#else
-> +static inline void pci_doe_init(struct pci_dev *pdev) { }
-> +static inline void pci_doe_stop(struct pci_dev *pdev) { }
-> +static inline void pci_doe_destroy(struct pci_dev *pdev) { }
-> +#endif
-> +
->  /*
->   * Config Address for PCI Configuration Mechanism #1
+> -	cdat_doe = find_cdat_doe(uport);
+> +	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
+> +					CXL_DOE_PROTOCOL_TABLE_ACCESS);
+>  	if (!cdat_doe) {
+>  		dev_dbg(dev, "No CDAT mailbox\n");
+>  		return;
+> diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+> index ab138004f644..e1a1b23cf56c 100644
+> --- a/drivers/cxl/cxlmem.h
+> +++ b/drivers/cxl/cxlmem.h
+> @@ -227,7 +227,6 @@ struct cxl_endpoint_dvsec_info {
+>   * @component_reg_phys: register base of component registers
+>   * @info: Cached DVSEC information about the device.
+>   * @serial: PCIe Device Serial Number
+> - * @doe_mbs: PCI DOE mailbox array
+>   * @mbox_send: @dev specific transport for transmitting mailbox commands
 >   *
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 1779582fb500..65e60ee50489 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -2476,6 +2476,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
->  	pci_aer_init(dev);		/* Advanced Error Reporting */
->  	pci_dpc_init(dev);		/* Downstream Port Containment */
->  	pci_rcec_init(dev);		/* Root Complex Event Collector */
-> +	pci_doe_init(dev);		/* Data Object Exchange */
+>   * See section 8.2.9.5.2 Capacity Configuration and Label Storage for
+> @@ -264,8 +263,6 @@ struct cxl_dev_state {
+>  	resource_size_t component_reg_phys;
+>  	u64 serial;
 >  
->  	pcie_report_downtraining(dev);
->  	pci_init_reset_methods(dev);
-> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-> index 0145aef1b930..739c7b0f5b91 100644
-> --- a/drivers/pci/remove.c
-> +++ b/drivers/pci/remove.c
-> @@ -16,6 +16,7 @@ static void pci_free_resources(struct pci_dev *dev)
+> -	struct xarray doe_mbs;
+> -
+>  	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+>  };
 >  
->  static void pci_stop_dev(struct pci_dev *dev)
->  {
-> +	pci_doe_stop(dev);
->  	pci_pme_active(dev, false);
+> diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+> index 33083a522fd1..f8b8e514a3c6 100644
+> --- a/drivers/cxl/pci.c
+> +++ b/drivers/cxl/pci.c
+> @@ -8,7 +8,6 @@
+>  #include <linux/mutex.h>
+>  #include <linux/list.h>
+>  #include <linux/pci.h>
+> -#include <linux/pci-doe.h>
+>  #include <linux/aer.h>
+>  #include <linux/io.h>
+>  #include "cxlmem.h"
+> @@ -359,52 +358,6 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+>  	return rc;
+>  }
 >  
->  	if (pci_dev_is_added(dev)) {
-> @@ -39,6 +40,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
->  	list_del(&dev->bus_list);
->  	up_write(&pci_bus_sem);
+> -static void cxl_pci_destroy_doe(void *mbs)
+> -{
+> -	xa_destroy(mbs);
+> -}
+> -
+> -static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+> -{
+> -	struct device *dev = cxlds->dev;
+> -	struct pci_dev *pdev = to_pci_dev(dev);
+> -	u16 off = 0;
+> -
+> -	xa_init(&cxlds->doe_mbs);
+> -	if (devm_add_action(&pdev->dev, cxl_pci_destroy_doe, &cxlds->doe_mbs)) {
+> -		dev_err(dev, "Failed to create XArray for DOE's\n");
+> -		return;
+> -	}
+> -
+> -	/*
+> -	 * Mailbox creation is best effort.  Higher layers must determine if
+> -	 * the lack of a mailbox for their protocol is a device failure or not.
+> -	 */
+> -	pci_doe_for_each_off(pdev, off) {
+> -		struct pci_doe_mb *doe_mb;
+> -
+> -		doe_mb = pcim_doe_create_mb(pdev, off);
+> -		if (IS_ERR(doe_mb)) {
+> -			dev_err(dev, "Failed to create MB object for MB @ %x\n",
+> -				off);
+> -			continue;
+> -		}
+> -
+> -		if (!pci_request_config_region_exclusive(pdev, off,
+> -							 PCI_DOE_CAP_SIZEOF,
+> -							 dev_name(dev)))
+> -			pci_err(pdev, "Failed to exclude DOE registers\n");
+> -
+> -		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
+> -			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
+> -				off);
+> -			continue;
+> -		}
+> -
+> -		dev_dbg(dev, "Created DOE mailbox @%x\n", off);
+> -	}
+> -}
+> -
+>  /*
+>   * Assume that any RCIEP that emits the CXL memory expander class code
+>   * is an RCD
+> @@ -469,8 +422,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
 >  
-> +	pci_doe_destroy(dev);
->  	pcie_aspm_exit_link_state(dev);
->  	pci_bridge_d3_update(dev);
->  	pci_free_resources(dev);
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index 7f16749c6aa3..d6192ee0ac07 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -29,6 +29,8 @@ struct pci_doe_mb;
+>  	cxlds->component_reg_phys = map.resource;
 >  
->  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> +struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
-> +					u8 type);
->  
->  int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
->  	    const void *request, size_t request_sz,
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index adffd65e84b4..254c79f9013a 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -511,6 +511,9 @@ struct pci_dev {
->  #endif
->  #ifdef CONFIG_PCI_P2PDMA
->  	struct pci_p2pdma __rcu *p2pdma;
-> +#endif
-> +#ifdef CONFIG_PCI_DOE
-> +	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
->  #endif
->  	u16		acs_cap;	/* ACS Capability offset */
->  	phys_addr_t	rom;		/* Physical address if not from BAR */
+> -	devm_cxl_pci_create_doe(cxlds);
+> -
+>  	rc = cxl_map_component_regs(&pdev->dev, &cxlds->regs.component,
+>  				    &map, BIT(CXL_CM_CAP_CAP_ID_RAS));
+>  	if (rc)
 > -- 
 > 2.39.1
 > 
