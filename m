@@ -2,80 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B366B678CF9
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 01:48:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA32D678D04
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 01:52:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231975AbjAXAsW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 19:48:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33572 "EHLO
+        id S232073AbjAXAwe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 19:52:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231787AbjAXAsU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 19:48:20 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946D21E281;
-        Mon, 23 Jan 2023 16:48:19 -0800 (PST)
+        with ESMTP id S231932AbjAXAwd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 19:52:33 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6B02B28C;
+        Mon, 23 Jan 2023 16:52:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674521299; x=1706057299;
+  t=1674521552; x=1706057552;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=Wmj1g65iZxx9hjkt5qLNnjf8S3H+IluPJ9W1227V27Y=;
-  b=JOL55E9q1nRgM0dWwzPH/qSPa5oN544CIuYE6TQ5o026VzJQ+PoXRj5G
-   QwmPHEiPV8vauh4bw2bqg2XbK/fpVKfb6iL9PHksPk1thOxC48PL3FCIQ
-   RoYfRkjHxbq4OsS57iTVVzIauNWbIi2sNhKsVxq/7A4GqM/CZf+b1BRoi
-   BReHG/QDopXNzS4ouIn4abW9kbYxZGd3jYCtPI08t5Kd9/iw0Dr8nSlVA
-   KYHgFbcfdo4h9eSZEzgfbSl+sdQ/v1W6bVC9AdugGjywq2nTkrnFhj/Cb
-   zlDzEU6z33PiWrTU51r4poXEeJ+dTO95MWCM7vaOnwCS3t7Yr8iAETvR6
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="390708752"
+  bh=QqEIO+lNt9aSVcBSqqa6kBXFMEmUClc9/elPMX7Z2io=;
+  b=ntoJUBWVkDlhc7JSuS2yJNif+W399SUoIp6Hvg4X5C6TkI2aJ4atbEdh
+   mggill1Pup9QoLEjKEpIIlneyfUo/OrUVna7A//Rk8iq6t4uEvLhuWXq4
+   GFbB6OTqEZPJsHx228SBVABvGfyrnmsbf+eH5FFbYM+NAWzQAmtxE2Qjg
+   a8PRhoZfQVZnHFpQlmrjimaTG3QLCs/QfYSE4TElRTHszm19UDxkgJGMp
+   Ac133dd4llKXEGnnnVsoz+mYdIxfIEl4VlasvOvPxyHboDDW2go9LtqYt
+   3jxjg/GkTxDvatgGoGNpzbMg+Q5QhCJIzBqsyul46fyFKMOP2ccAaBgMg
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="412432774"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="390708752"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 16:48:19 -0800
+   d="scan'208";a="412432774"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 16:52:32 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="692430411"
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="785884103"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="692430411"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by orsmga008.jf.intel.com with ESMTP; 23 Jan 2023 16:48:18 -0800
-Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+   d="scan'208";a="785884103"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga004.jf.intel.com with ESMTP; 23 Jan 2023 16:52:31 -0800
+Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 23 Jan 2023 16:48:18 -0800
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 23 Jan 2023 16:52:30 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 23 Jan 2023 16:48:17 -0800
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 16:48:17 -0800
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.171)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 16:52:30 -0800
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.172)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 23 Jan 2023 16:48:14 -0800
+ 15.1.2507.16; Mon, 23 Jan 2023 16:52:30 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ntaG2W9yhI7bCZR0Uwqkd6RSk8G6BeG53MOb9pGQPn/CfQA+HHpsVPGA3mQC+ZtHJsefOtNzoRpEjJObSSx3k2J7xg45T1FSm6V7cnA42EKaUahpYQr8TqF3wJ4in0qsTIiot0JMQIOcTBvN4YybSKHVwfLV6+oVxw0yjYHaY+THjKwF4k6UYsHlON5IuJPiuHCDRQ8hNKP1qvEqv5D6DFFf9TpKNW5LCcstbcq1qpR0hdD50j5VjCu2qJkKNqM2b22YOxu61nm+hFG8bcjGHoqQhdCaU0arvCAryQENN/wGDa6kpVeY1z+IGnFLevcrcsywewPlc5UpvQKxfDFhkQ==
+ b=CRM9WXZGMY4qDrOJ6XklF/6xEuh5D+PkHnjjSihDpQ+a70egEvnOQpStMxq6eCC0W8GCvDGqh/Lfvi08Seo25Y8/PtnDJy5YkFXt/mKzsMdgP0VGMYXWq0jqcpfg9GBrPV4OsoYJwApUtfp4eK/RZBQlwKPjbkFc4QZ+oRG+v1pbrHOMgf6CSfLEnef4qvEGWV9NVKU9tzZ9Xks4ZG7iosInNXitDq6k2bpras/ayOeQilJgDyKOcqVUsghEGH/y3qIjueJ3QfjCzhnvCKyAI5Mk3ULFGpM53o7o4VS1jkwHdkVNHBXcgjCUAOAEuRz4haALYBWzW40+3vx96BNUeg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ouv3eo7LMlir0L1JS22kPDWa6NKjTYErsxS6SkHEtWU=;
- b=E61GSL1qK7geulgk3pGW7RKuOIeX5kHuzW3duulyOJu2s+JruseJZJHKI0NuGfQCI3JiPNB5U9obGvF80OT5x9VixJ2NDjT4k9r9Sb5gHDnTNKEhtDrDxoCk/cq6t6vo2rbFKkXFpCWYQJDW7NADwNr8nMbnWw7KZjbmwdgc5toCha39tkzu3POYummqgRN3gVEgEjhfdiIYlDuwQyvVPCHJcN9v5dtEh7U3XAsDK80Oloxjo1IsmzESwbE8/pCcKJnzNEl/xwz8CYO9Tl4pmsU8q6RruC5zbG2kURt0W9Zu+J7eKTYiLPxcu4vnzkyFgMfJWob7JXhfGReMP52VSA==
+ bh=qjfBHjPmWWZt8JFPJGEO8TFm4i5M4Qs7LQBNkiNakqA=;
+ b=IJPqs0wp6oIMWg+W74mGlzIuSeF/ujeAcaGispDOVAQ6yWU2SNbcZ2wSpDuc+jemJb0eR3GD8y29d2Uy9nfqW7CYIZMtFjYe6s8mY/tADUxfA/Y64lVKm1ov7fPlw+5vAzx7SVTWumLryb31Hhlf9NP64FreqhX/T+2OgByXfoXB+UpyQOItJGiOKqNwVbvXviR+qU69yqFx+sKlTbwi0ph9fg0WUnRjYna4ZKlf/aI60nHSqmjIpRzz7JGrvAU3GXYLa0MyngN9G72kW7ZnGAGlKnrGhS9vzXERHXYqGmfl12yy/3fSpv0wN8enCVzRAGMPrmoOC8xIOp9HN7d4Zw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by DM6PR11MB4561.namprd11.prod.outlook.com (2603:10b6:5:2ae::20) with
+ by PH8PR11MB6999.namprd11.prod.outlook.com (2603:10b6:510:221::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Tue, 24 Jan
- 2023 00:48:11 +0000
+ 2023 00:52:22 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6%7]) with mapi id 15.20.6002.027; Tue, 24 Jan 2023
- 00:48:11 +0000
-Date:   Mon, 23 Jan 2023 16:48:07 -0800
+ 00:52:22 +0000
+Date:   Mon, 23 Jan 2023 16:52:19 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
         <linux-pci@vger.kernel.org>
@@ -89,65 +85,64 @@ CC:     Gregory Price <gregory.price@memverge.com>,
         "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 03/10] PCI/DOE: Provide synchronous API and use it
- internally
-Message-ID: <63cf2ac78c080_521a29468@iweiny-mobl.notmuch>
+Subject: Re: [PATCH v2 04/10] cxl/pci: Use synchronous API for DOE
+Message-ID: <63cf2bc3cf76_521a294a1@iweiny-mobl.notmuch>
 References: <cover.1674468099.git.lukas@wunner.de>
- <b589059ddc82039f00d695d75ac4017504df6bf6.1674468099.git.lukas@wunner.de>
+ <b5469cbb8a3e138a1c709ed3eaab02d7ca8e84b2.1674468099.git.lukas@wunner.de>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <b589059ddc82039f00d695d75ac4017504df6bf6.1674468099.git.lukas@wunner.de>
-X-ClientProxiedBy: BY5PR17CA0026.namprd17.prod.outlook.com
- (2603:10b6:a03:1b8::39) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <b5469cbb8a3e138a1c709ed3eaab02d7ca8e84b2.1674468099.git.lukas@wunner.de>
+X-ClientProxiedBy: BY5PR20CA0017.namprd20.prod.outlook.com
+ (2603:10b6:a03:1f4::30) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|DM6PR11MB4561:EE_
-X-MS-Office365-Filtering-Correlation-Id: a40baf4b-bde2-4ab8-26e3-08dafda4aaee
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH8PR11MB6999:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1b3cfcda-d107-4fbb-e9c8-08dafda540b4
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qSG9CVcT1gbEG808pK0ox9zt2Ag82ST5JA8/dlJG9Zn/7tVi4tAQeVQV08J7ZgD0Pc/UJoBq7MoDsnbH7vU29qgIK6rDeTWDcrIpCmz6WFlpcTOu/uTy2jIxuONdE63FK/kaTFBRX05SA1Zrm/xb9NFVou3Wn0Il2pcUtI2FxHWoBRIfYTZSAnzmEzgZMxOq4seyxaoMWKzYudjm1HX4l+J4n9WRE8kw20DCC0wGrbATFDAQLYl+lbol/905c7N282hYTz6P6CY04AdRIVzq6erXN8C9TirNIHPZUpP9brqJErrUgPAfGifQUWjOPIRhsSZJgnq6KXvPZKndjXsYxrxrCd64EdcSwD2s6t1heHHFdzEysaZZlNu3lnb/gQr39Dqh4ulqUPZXSE+rz3Q5x5KlC1732Ey8dPbx+TlPvNY8gZxNqB4H5aRot/7CCCy/FfUjSmXxmR1mVdPPdX9FVTQgUbAk+VnlTzqREQCNrPIe14Xf+RDge/SZx7rcaB14YX5pAXklxMmzP8SZc3n4C3Q9Ul8y2a0HA+B7cndd4EM9+Pd3Ldg8Y38dajFVbqipjwcGm+JGE/mV0DszBXugtzrwTQWwiVpU2wwC2JsVC5mAaEXXJUh7C2Z62oZmoRhZPPsLBkNiq3KgW5wTrp0f+w==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(136003)(346002)(376002)(366004)(39860400002)(451199015)(83380400001)(86362001)(38100700002)(82960400001)(2906002)(44832011)(5660300002)(41300700001)(8936002)(4326008)(9686003)(6506007)(6512007)(8676002)(186003)(6666004)(66556008)(66946007)(54906003)(316002)(6486002)(110136005)(66476007)(478600001)(26005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 4LCOOYnUmybyGZPpzEu9ydqe7yyP+JIxrTZnb9rQUJS800R9ZGfTuLocex5XgDUgCbkGZGSBWtu18mWqX+CJZooFRJRb9cR5qxbgP1QEsBPgCT9hxvj5gvkeqJ6ya13Y02Su3DOktxqZQPhGR8GipWkVfC5LMg1O32MO40zUvFO6Q73uz+gsV4S9X/G5zWoxt9Abl/Ign67Uj1DdldIiPM4nlpx/gI46AfpSR3NdrsG+I0MIakVbgv8Jzf+ggSYJJwLJX9Z3YlT5HWRZdxHxBqnBgryUCYsH4FqeK1XM0Nq2G9TPwkhF2qqE8tf9gF2A8B8d5F8gK7uIm6xxJKrmYyQkJSI28/bZIGin0gti5K6iqyT5vG7c50scdohIXhlKzj83f0rWQ05ROYJwn7FMrd+ulJleryK47SrbOkdDiZwR1xPw+PtsE0Pymhtcx5Y/4l2k2YBGhAXIXwm4CJvRbXYxA9UmbhhxPSXzrpZKEg2nbTbit/1v4v98RMIc0oN8MgZVLzxkiEQ36YNAgir/yQ/fp+ioiBb0qtYNlhCePluizcB08V2CegWqv6JIBVy3p5d2LnX8fNLo0nYeJuX1h5TWWye4pv6oApSvOcpjuPbwOOy+6UuCYUh+eYbvG3nCVfWNbENE/rTn9wHlc9KxkA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(136003)(39860400002)(366004)(376002)(451199015)(83380400001)(26005)(6512007)(186003)(9686003)(6506007)(6666004)(86362001)(38100700002)(82960400001)(41300700001)(2906002)(8936002)(5660300002)(44832011)(478600001)(6486002)(316002)(8676002)(66476007)(4326008)(66946007)(66556008)(110136005)(54906003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?HiXy3XPJZ0K8GQrXaffcoZkhFu4OkfkaoxXyoMVqsfMvzgldVidnSii+rvhp?=
- =?us-ascii?Q?E6ZtYPJK0sdnvy7kMTV/x0WbyUh6bsoPhiwbrOpxIGYU7ZER9ajr3fnJLDTP?=
- =?us-ascii?Q?XWP2kv4tBYNSKOxHL6ZuCLfTUVfsLLkzRsii0P7jvp7dQe8ICYDB2Vi6xaRh?=
- =?us-ascii?Q?jjN7xV4JcsntfftGK1KYp2WRdQ79rjgsjw24qy4D4yARP/ERl1zq+jtcOabm?=
- =?us-ascii?Q?1Z8P73Bb388d4kY7Au/HAdhjflHXJN64B2G74XxE/JR254REzxB6eqodfa8p?=
- =?us-ascii?Q?yAJG/NWWm+zNRKQg3fJfTk6+Ecy3Yx26Em4j+WABDJp7yFCHHJudCnzSQSTW?=
- =?us-ascii?Q?p1hd0BVnzEQdqkBFPRM6QKMQbIG7A09el5AMsFqHKIe+n8/aM87jpbVzhEUM?=
- =?us-ascii?Q?Dnn2X/prjNqtZFF+Iw6PJlbziGUfZaPRZ9WjOvLzPTzPfI6YYcdMrV5qJ7hZ?=
- =?us-ascii?Q?rSBO3DGp85nVJ9j/3wjjbeHrLdV05JNojnVapr1kU2gBYv1M1zESRsjI4Yiy?=
- =?us-ascii?Q?CrDhVThLWAbr2ddEUu6ExhNu2mW7rs5OnFZYXyvnTFHF0yW0DF1yZALr4cJs?=
- =?us-ascii?Q?H+4unQuSFd7Ohc12wNaddbZHZbVhoDVgbyKPbHWX2b/xv2qNbVH8a0gIH7VR?=
- =?us-ascii?Q?CMJwI95ie5hZ8WXYX9NVgxbo6q7QWk44LHO4gyr7i+hhBFOCrBXxY4Qe7epo?=
- =?us-ascii?Q?DSE6wgvEt2IsBNgp9u74bDzNGnULE6jwaRHITky3u8+jie+C3rs5Jd54l9Dg?=
- =?us-ascii?Q?PSoUHAL5gRr3VkKONL+EpKLMV+sykvi2FVD8pB9laUG+lhW83MnuL4P3AYry?=
- =?us-ascii?Q?GDadEhvPmOL5WjV3ZDZtJEqJZ/X3I7GLGiCAFzORE1MSJrBE3+DNlb7pto/r?=
- =?us-ascii?Q?dS1iAAwU33SJzqYUFNpy6hryCAFEkflABUdzXatWk6eghY/nABy09XEsIZPu?=
- =?us-ascii?Q?UvBRKQXZ1fXNeV5uQoEr6mV8Rau48IX2wdNtibqoQJTUUIR7YHv6ajHMSp2L?=
- =?us-ascii?Q?NGJ2FcYZPeQ6wSebzGPl/djrgXcNrwFPSYxePPqMkOyL6UytaGwZ23TbtEwL?=
- =?us-ascii?Q?pY5hn/ndstRLDyqkO+gNwI8KWYAY6abq84dL5kJ9xVJN/d8ug3WzfATIGkP7?=
- =?us-ascii?Q?tIxJMHwkRv6YMtgb7uSvf7YdtutIhjvhwohzB0mwuPcinWHbdD6x2SmlRCJV?=
- =?us-ascii?Q?ugTSDxNBvCWgniYXNUFUAt/iKxff3EHTUvw74kQuRgU6xleEKS3oepKnKWpO?=
- =?us-ascii?Q?61Q6spGNxuBLOD3sUE8P20+NLtu0MsVoy8CgWqYlYFJqEZ4EA2ZDtVk5E0Ct?=
- =?us-ascii?Q?LImKclKl0XbqbfMSOAPeuRC7lqTV1PrKSblWCqw6WyklnxVCIsUj0MZjyaHA?=
- =?us-ascii?Q?OxOwfNqcOdTpwDtWPTIgeU+akCvY4jY8QUwgBq5rnV1e71aNnEA6ysfswPYn?=
- =?us-ascii?Q?Clw+d3yJ3zc1YPgdGS5dLtOJIgRStkXOUwhR1RwV21wZJnjAw6cJCxcG/xOc?=
- =?us-ascii?Q?+dXk/3Eraq/vlAjwXnr89TtYd+8shj3D/uhNJyyNf5r5ou1YQlNFbrQek8mX?=
- =?us-ascii?Q?nQBuYErjVaUWUgUce/RMF7F2ljd0OY/fBTEkYufx?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: a40baf4b-bde2-4ab8-26e3-08dafda4aaee
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RRIzVoFI5qEoE9BztEOkVLbjjtO0YyooWCGkH+l+/GQYMnNYWOb4OFZ3FlYn?=
+ =?us-ascii?Q?Fl8GuqDpKLLw1tasYZfAQBEDeOhXoHt1NIV4CZxLGf3O/i76EhTH3kFjKql1?=
+ =?us-ascii?Q?MOHJ0IeoSytEBK8xEAoD9z7woMKH7mEvQ6UnaL2zb/cVvcjhoQ/D43V7LBFR?=
+ =?us-ascii?Q?5mWbU43zLCyRNeUddFntl+1Vi5X6ugMbbVWlQCw8rJ50McWM7ij/1yhONHnc?=
+ =?us-ascii?Q?rTXiTn5j/t2cDeYhdU/WQy0UcL25Z4/q1nhGOH+5BwjhUmu5620OObIKuyk4?=
+ =?us-ascii?Q?bZkuu6JvNTTfwnvEq076CEN7VQG4+rlV0ob/fmhF9pU+gsm/1A365Hy3ZcC6?=
+ =?us-ascii?Q?jdWXgehGsKn5I6HmqsNUff9jTPSo4F3zwAxLO9UJZpdC5lBkPl9DAhwhI6lV?=
+ =?us-ascii?Q?uJjJDcz73vmSSq8WEeYX3f0huTtWI7Aj+smUzii46Tp2AVrT4fkRLWSh4vpA?=
+ =?us-ascii?Q?PBW93eqCEJhrTLeOA7+tdXeOrGuAIqNomgTN1hqaVJi96ifd911yFmyPP4ZL?=
+ =?us-ascii?Q?5PTKo1G2plav0fUPYg+uJxacYk+J/cF9OhZ9mX2OXDoFTeYOAI05VlSqna61?=
+ =?us-ascii?Q?abpc6ibNqI8plyaUVP2N8om8DwPIHMYHGkgWSypt+E8xjIPK+b6fBJVS7laC?=
+ =?us-ascii?Q?G7s18AmrjLJycp/xSfNtmME8VnZgpi/W9qf0ovimqms4A5ZLoYuloCe17qNH?=
+ =?us-ascii?Q?mhPiw6UtgZcZSZMLVGUWfMxsI5Kv6yaXAQTdvT+EOG1Y9C0crOinE5r3P0RQ?=
+ =?us-ascii?Q?3BoLHHs3Uol9XKPefFMT+8tvYqYgdhF1qYw1f1DDD87kSrNcB25erhl0h0fp?=
+ =?us-ascii?Q?tNpa5phB2d6kLgSZzXE1MaK7wtxjIZErbR7UQ6IVF3QhZU5ulHnYRoaM/Opa?=
+ =?us-ascii?Q?ouCvzBTnR0PbtliXKoAEah9T0yHFX/DGnsjgXuMuxKG5GmEHDPtFCrsCN69s?=
+ =?us-ascii?Q?LXijMLLWqyY364/yCCxfq6d74LXydhdQDKKF7cm+oxJC2cTJmFjDENiR2rlF?=
+ =?us-ascii?Q?CNSu/mSEWT8tVzOrwnRzDZlyEYzc25YviYwTVnnmmamK8gFwasfA0oE4ye5c?=
+ =?us-ascii?Q?2PzFjzPwqxtxFdTAxSJ3DhTdEfafs9ChWwTGm3wo5zTEYnM6etS94/S7DxvM?=
+ =?us-ascii?Q?Q/0FDgbT1ITG/+chIHVZDYZMEFFbCAmu0jwyFWJNM+Y6MKAWi51AkkkrBMx9?=
+ =?us-ascii?Q?OfcAWXfyywgtbs1tPTN5+/b8FEZ0mMNWzDqjCLamtLgdpK/mAugL7qtKj0Pm?=
+ =?us-ascii?Q?DUd3s91QLq0GKFJyT6dA1Z1flw4Mgwj1oByCEOuSnnNbSpm4RvlbvDflR0tJ?=
+ =?us-ascii?Q?SCOE07+3m/PyBgm0xkkI64Up87m7dL0OEG3VpNO0f/++0z2Ra4o3GK4NhSHl?=
+ =?us-ascii?Q?kcyUOKeE5rgsSjm2a4ImN/ejtkH+TcKa/uOYxQcQJ+o+iGVaVKUJHQHlt+Ip?=
+ =?us-ascii?Q?qttKlTeK9Yb4u8WEnZC3bA5e92GM/WFqH4sgQdWE7NayaAo4OyxEUVxV0rPF?=
+ =?us-ascii?Q?8WJ9Xt3OQxiED7ml375ggGM0TKM7/T3hbVX03mj2RE+6dHLGmYWu0Tryr8gJ?=
+ =?us-ascii?Q?/uUna7ckZih4KnTnzA4/6D6sU2ZzuNSDs+1x0dLM?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b3cfcda-d107-4fbb-e9c8-08dafda540b4
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 00:48:11.2575
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 00:52:22.5406
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: qeG6sawfbVb7ljX39AyFh7rfieO7pAAbBWffKsNvp/6TQwAcpQdjQWQgHC+mav31Al/zo4OXQ+fXXmNIa8ZRhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4561
+X-MS-Exchange-CrossTenant-UserPrincipalName: XxhCc+tS59IjKsLVx0wucAtA07HgqL3LCzyvuUldiHro5yUQGDpfUgxyLztgKu7mY/jIFEIdywdK/kBclnkoFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6999
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
@@ -159,19 +154,8 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Lukas Wunner wrote:
-> The DOE API only allows asynchronous exchanges and forces callers to
-> provide a completion callback.  Yet all existing callers only perform
-> synchronous exchanges.  Upcoming commits for CMA (Component Measurement
-> and Authentication, PCIe r6.0 sec 6.31) likewise require only
-> synchronous DOE exchanges.
-> 
-> Provide a synchronous pci_doe() API call which builds on the internal
-> asynchronous machinery.
-> 
-> Convert the internal pci_doe_discovery() to the new call.
-> 
-> The new API allows submission of const-declared requests, necessitating
-> the addition of a const qualifier in struct pci_doe_task.
+> A synchronous API for DOE has just been introduced.  Convert CXL CDAT
+> retrieval over to it.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
 
@@ -181,117 +165,112 @@ Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 > Cc: Dan Williams <dan.j.williams@intel.com>
 > Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 > ---
->  drivers/pci/doe.c       | 65 +++++++++++++++++++++++++++++++----------
->  include/linux/pci-doe.h |  6 +++-
->  2 files changed, 55 insertions(+), 16 deletions(-)
+>  drivers/cxl/core/pci.c | 62 ++++++++++++++----------------------------
+>  1 file changed, 20 insertions(+), 42 deletions(-)
 > 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 7451b5732044..dce6af2ab574 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -319,26 +319,15 @@ static int pci_doe_discovery(struct pci_doe_mb *doe_mb, u8 *index, u16 *vid,
->  	u32 request_pl = FIELD_PREP(PCI_DOE_DATA_OBJECT_DISC_REQ_3_INDEX,
->  				    *index);
->  	u32 response_pl;
-> -	DECLARE_COMPLETION_ONSTACK(c);
-> -	struct pci_doe_task task = {
-> -		.prot.vid = PCI_VENDOR_ID_PCI_SIG,
-> -		.prot.type = PCI_DOE_PROTOCOL_DISCOVERY,
-> -		.request_pl = &request_pl,
-> -		.request_pl_sz = sizeof(request_pl),
-> -		.response_pl = &response_pl,
-> -		.response_pl_sz = sizeof(response_pl),
-> -		.complete = pci_doe_task_complete,
-> -		.private = &c,
-> -	};
+> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+> index 57764e9cd19d..a02a2b005e6a 100644
+> --- a/drivers/cxl/core/pci.c
+> +++ b/drivers/cxl/core/pci.c
+> @@ -487,51 +487,26 @@ static struct pci_doe_mb *find_cdat_doe(struct device *uport)
+>  		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
+>  	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
+>  
+> -static void cxl_doe_task_complete(struct pci_doe_task *task)
+> -{
+> -	complete(task->private);
+> -}
+> -
+> -struct cdat_doe_task {
+> -	u32 request_pl;
+> -	u32 response_pl[32];
+> -	struct completion c;
+> -	struct pci_doe_task task;
+> -};
+> -
+> -#define DECLARE_CDAT_DOE_TASK(req, cdt)                       \
+> -struct cdat_doe_task cdt = {                                  \
+> -	.c = COMPLETION_INITIALIZER_ONSTACK(cdt.c),           \
+> -	.request_pl = req,				      \
+> -	.task = {                                             \
+> -		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,        \
+> -		.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS, \
+> -		.request_pl = &cdt.request_pl,                \
+> -		.request_pl_sz = sizeof(cdt.request_pl),      \
+> -		.response_pl = cdt.response_pl,               \
+> -		.response_pl_sz = sizeof(cdt.response_pl),    \
+> -		.complete = cxl_doe_task_complete,            \
+> -		.private = &cdt.c,                            \
+> -	}                                                     \
+> -}
+> -
+>  static int cxl_cdat_get_length(struct device *dev,
+>  			       struct pci_doe_mb *cdat_doe,
+>  			       size_t *length)
+>  {
+> -	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
+> +	u32 request = CDAT_DOE_REQ(0);
+> +	u32 response[32];
 >  	int rc;
 >  
-> -	rc = pci_doe_submit_task(doe_mb, &task);
-> +	rc = pci_doe(doe_mb, PCI_VENDOR_ID_PCI_SIG, PCI_DOE_PROTOCOL_DISCOVERY,
-> +		     &request_pl, sizeof(request_pl),
-> +		     &response_pl, sizeof(response_pl));
->  	if (rc < 0)
+> -	rc = pci_doe_submit_task(cdat_doe, &t.task);
+> +	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> +		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> +		     &request, sizeof(request),
+> +		     &response, sizeof(response));
+>  	if (rc < 0) {
+> -		dev_err(dev, "DOE submit failed: %d", rc);
+> +		dev_err(dev, "DOE failed: %d", rc);
 >  		return rc;
->  
-> -	wait_for_completion(&c);
-> -
-> -	if (task.rv != sizeof(response_pl))
-> +	if (rc != sizeof(response_pl))
+>  	}
+> -	wait_for_completion(&t.c);
+> -	if (t.task.rv < sizeof(u32))
+> +	if (rc < sizeof(u32))
 >  		return -EIO;
 >  
->  	*vid = FIELD_GET(PCI_DOE_DATA_OBJECT_DISC_RSP_3_VID, response_pl);
-> @@ -549,3 +538,49 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(pci_doe_submit_task);
-> +
-> +/**
-> + * pci_doe() - Perform Data Object Exchange
-> + *
-> + * @doe_mb: DOE Mailbox
-> + * @vendor: Vendor ID
-> + * @type: Data Object Type
-> + * @request: Request payload
-> + * @request_sz: Size of request payload (bytes)
-> + * @response: Response payload
-> + * @response_sz: Size of response payload (bytes)
-> + *
-> + * Submit @request to @doe_mb and store the @response.
-> + * The DOE exchange is performed synchronously and may therefore sleep.
-> + *
-> + * RETURNS: Length of received response or negative errno.
-> + * Received data in excess of @response_sz is discarded.
-> + * The length may be smaller than @response_sz and the caller
-> + * is responsible for checking that.
-> + */
-> +int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
-> +	    const void *request, size_t request_sz,
-> +	    void *response, size_t response_sz)
-> +{
-> +	DECLARE_COMPLETION_ONSTACK(c);
-> +	struct pci_doe_task task = {
-> +		.prot.vid = vendor,
-> +		.prot.type = type,
-> +		.request_pl = request,
-> +		.request_pl_sz = request_sz,
-> +		.response_pl = response,
-> +		.response_pl_sz = response_sz,
-> +		.complete = pci_doe_task_complete,
-> +		.private = &c,
-> +	};
-> +	int rc;
-> +
-> +	rc = pci_doe_submit_task(doe_mb, &task);
-> +	if (rc)
-> +		return rc;
-> +
-> +	wait_for_completion(&c);
-> +
-> +	return task.rv;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_doe);
-> diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index ed9b4df792b8..1608e1536284 100644
-> --- a/include/linux/pci-doe.h
-> +++ b/include/linux/pci-doe.h
-> @@ -45,7 +45,7 @@ struct pci_doe_mb;
->   */
->  struct pci_doe_task {
->  	struct pci_doe_protocol prot;
-> -	u32 *request_pl;
-> +	const u32 *request_pl;
->  	size_t request_pl_sz;
->  	u32 *response_pl;
->  	size_t response_pl_sz;
-> @@ -74,4 +74,8 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
->  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
->  int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> -	*length = t.response_pl[1];
+> +	*length = response[1];
+>  	dev_dbg(dev, "CDAT length %zu\n", *length);
 >  
-> +int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
-> +	    const void *request, size_t request_sz,
-> +	    void *response, size_t response_sz);
-> +
->  #endif
+>  	return 0;
+> @@ -546,26 +521,29 @@ static int cxl_cdat_read_table(struct device *dev,
+>  	int entry_handle = 0;
+>  
+>  	do {
+> -		DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(entry_handle), t);
+> +		u32 request = CDAT_DOE_REQ(entry_handle);
+> +		u32 response[32];
+>  		size_t entry_dw;
+>  		u32 *entry;
+>  		int rc;
+>  
+> -		rc = pci_doe_submit_task(cdat_doe, &t.task);
+> +		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> +			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> +			     &request, sizeof(request),
+> +			     &response, sizeof(response));
+>  		if (rc < 0) {
+> -			dev_err(dev, "DOE submit failed: %d", rc);
+> +			dev_err(dev, "DOE failed: %d", rc);
+>  			return rc;
+>  		}
+> -		wait_for_completion(&t.c);
+>  		/* 1 DW header + 1 DW data min */
+> -		if (t.task.rv < (2 * sizeof(u32)))
+> +		if (rc < (2 * sizeof(u32)))
+>  			return -EIO;
+>  
+>  		/* Get the CXL table access header entry handle */
+>  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
+> -					 t.response_pl[0]);
+> -		entry = t.response_pl + 1;
+> -		entry_dw = t.task.rv / sizeof(u32);
+> +					 response[0]);
+> +		entry = response + 1;
+> +		entry_dw = rc / sizeof(u32);
+>  		/* Skip Header */
+>  		entry_dw -= 1;
+>  		entry_dw = min(length / sizeof(u32), entry_dw);
 > -- 
 > 2.39.1
 > 
