@@ -2,76 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A7C2678D0A
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 01:55:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A994678D28
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 02:14:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231589AbjAXAz0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 23 Jan 2023 19:55:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36752 "EHLO
+        id S232483AbjAXBOY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 23 Jan 2023 20:14:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjAXAzZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 19:55:25 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFE8A1A972;
-        Mon, 23 Jan 2023 16:55:22 -0800 (PST)
+        with ESMTP id S232312AbjAXBOX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 23 Jan 2023 20:14:23 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED3C33451;
+        Mon, 23 Jan 2023 17:14:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674521723; x=1706057723;
+  t=1674522862; x=1706058862;
   h=date:from:to:cc:subject:message-id:references:
    in-reply-to:mime-version;
-  bh=1BTKIXpBmt6CR0gzqal6okFsh2+ph0rW4WhV1n2Ozfc=;
-  b=SrkEhQ7JEJLes7VLGA5wedkH24W1H4s12ORio1cf7SICcXnGs6n3gVw2
-   nj8Ylm0vRqrqx4/RZToyjunsPfgOy/jgG5x0f+twkuaqj2f8rhfkNZyL4
-   2Hce7QcBASz+/WxYofcMbGg5M4lxN4+DsqC2ORMHG29UECI8XXgPTdbZe
-   3PMTwJFBJAMoIzgot/98CM5gVx+7lb4MU1+yvewxi1PBgtj8jCtOON7v/
-   EOnsvTYbFE/8mNUnuBvRg5xYy5Q3bd4/uBa+/1speDlEzVlm4cKh00wFx
-   lI2+2T/A2iUegE4rrghP2wRYN3ESrEXnwldeX5aX8ql1eMVF/0DrsjKP4
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="323896753"
+  bh=/kCFmxo/f+JOS8yU2geSITRq6EGDMXsfxLpT2Nx75JI=;
+  b=C5hoeHlsg++XuBB/E3IVy7NcOoc0agM1/lYTkcY1hD4ERy8/GYmqfnzD
+   jkoiV//s1Anxn7G5lcw7mb5AEyaa7/R0OnuS0fvGWzEonlZjL2sL5wbEk
+   BQkxtyvbR2OFkunAO/+IOciqA0/lTeM//pX1qumExrlnMbZ+0cN7Oges6
+   lOVR2ZNmSS72a5iIzsbJN9tXuG9PNYrv8rEfjcDxEv5MuzcZjsMDaH3m2
+   GwcqDfU550LkU5NTCmkvNT30v7bDVHeZjSt6g4TnblvrFBJ8W773nSovp
+   /rCxEH6w+He/zsoqnK5iMMJD3ffBMiI+0PawEHjjBGNH9mnJpmw66CyWP
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="314105891"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="323896753"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 16:55:19 -0800
+   d="scan'208";a="314105891"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 17:14:21 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="907303508"
+X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="750656372"
 X-IronPort-AV: E=Sophos;i="5.97,240,1669104000"; 
-   d="scan'208";a="907303508"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Jan 2023 16:55:19 -0800
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+   d="scan'208";a="750656372"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by FMSMGA003.fm.intel.com with ESMTP; 23 Jan 2023 17:14:21 -0800
+Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 23 Jan 2023 16:55:18 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ 15.1.2507.16; Mon, 23 Jan 2023 17:14:21 -0800
+Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
+ fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 16:55:18 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.176)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ 15.1.2507.16 via Frontend Transport; Mon, 23 Jan 2023 17:14:20 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.168)
+ by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 23 Jan 2023 16:55:18 -0800
+ 15.1.2507.16; Mon, 23 Jan 2023 17:14:20 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Vx0fILrbz4yscJ+WIP0V90wYCkOKPnTehBhIq6XdcyvAo6sRzI9MsHJiZZjkMPixDEmsOR/uHf/YFRsfKKSmPvTJX3o1BRCuU/PJ2W1jD4QlwU1r2qXoVhUh5W9VtIZjGpfCb5IPf/5Ev1UHgTiwThAQzPwX25y+mCdYSEGOpLVuA6c4MrBFmnCHuOiftt0hYgYb+vAhJDOgkj/uEjPisrAo3lqVOAoCqKECZbVPcgANXuOI3oRmpjApTM8VL6wpsSr5Y9ayz2Iuv5ZrDrpMVkLr0AIIIvQh0LM2lpO8fDDRCvwrXmKPu4w6gz2EdBzvWPuv65Fko/ftg7ekJXhRPg==
+ b=J+k9QMabaKFK/foh1I6XUvuMdyOPvDNw5ZMZqANp/3nID34apbZYy4sJPuknhC63LSQWHvG90H9PVxjEZFb+/qGAgjQ7rIa4w9ZGaVvRvdnQZ0NhcPE4R8rWH7SfrWksq+Lp3vS1XtnjTzk5xQYAQTNNOC/flq2h8qN+xOuzj+LUYfoYzn4HQasFytHkENBhl2gR3DdahXJO3GEMLlLyiQen0JM+3MJ4w4D/TIVHWMbiVN6ZramUPrACAcsKmxUZpeAYQUCpo1G6ouDeaIvVEfUjQ8IpbScdMdFKebFnfjAxviF9yELOlRp9xEgMaE/vUrfBs+2EMK/uOW081k4KJw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=21XvMSLEB7/91uJlB3oBn4fyAhf5TJfSvdthRiRTfGM=;
- b=KsdQ+KSw2UeFxY0hXnoIzTaINXZp8q5PYOYzHvUHG4gTsw6JyZCGs6wi3JieuUpL6zXl8Gg/+SHZWCnTVBAtQrclYFj6Q9uy193CpSpG9ZW9AH1AdbZl7FWd42p4j1cYaxf4AGvcb+GX0TNp1SXSlYd2TAY9ECP8+d/bmVkxt7pMf5+NUcEP0jc4ZDRxKVLybB0SXc/CmsOlMY4ihkSNe4MjKWHxOPv3l6t9TGus3zMZR8Kg64XZtv6NDxFeQ+XvkSz4vlBEjE7+DHfP1k19WRoQQvWoi0ctDNidM3cyxjGOagG07yVtS+RFqx6KwBVKyXlop4voknbXCvCBo5MmPw==
+ bh=UJO+/PM6lk3my+5LreR1sPLTdBuz+51iPQBLFz6nlUs=;
+ b=NsifxRc/CuXSfBh7ywgCGSTkzquc/pLGzM11S1J0HaitRI3hkqaO+XxvVceHTx4wA/A5M66NEaDSU4KOO8htSDgCK+l0G9eH5pUB2l6dF5E1kW5/FgMBJNlLGZct2W7iYV58B76jP7kp9S1eZN91fnAaE53S7pKd+TZkrVMjv1dpDfHjBwR/Oged37WVgpZWC81R7t6mKHntNYvYtdezgKb5M8qdMbLFYiFXqwkaVKglaZTGKwf0sJ4xR3tOT/9yM+Vk8ZuLvduh5k9CzWG9rxAymv6yz+Vv5r+wQqfUdAAtkMn7WX63328LkEhEK5k2tImrj1UXp4lVYYH1+PlZHw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
  dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=intel.com;
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by PH8PR11MB6999.namprd11.prod.outlook.com (2603:10b6:510:221::14) with
+ by SA2PR11MB5035.namprd11.prod.outlook.com (2603:10b6:806:116::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Tue, 24 Jan
- 2023 00:55:15 +0000
+ 2023 01:14:13 +0000
 Received: from SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
  ([fe80::6851:3db2:1166:dda6%7]) with mapi id 15.20.6002.027; Tue, 24 Jan 2023
- 00:55:15 +0000
-Date:   Mon, 23 Jan 2023 16:55:11 -0800
+ 01:14:13 +0000
+Date:   Mon, 23 Jan 2023 17:14:09 -0800
 From:   Ira Weiny <ira.weiny@intel.com>
 To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
         <linux-pci@vger.kernel.org>
@@ -85,68 +85,70 @@ CC:     Gregory Price <gregory.price@memverge.com>,
         "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 05/10] PCI/DOE: Make asynchronous API private
-Message-ID: <63cf2c6fd2660_521a2941b@iweiny-mobl.notmuch>
+Subject: Re: [PATCH v2 07/10] PCI/DOE: Create mailboxes on device enumeration
+Message-ID: <63cf30e1136fb_570929481@iweiny-mobl.notmuch>
 References: <cover.1674468099.git.lukas@wunner.de>
- <ec7155b88895ab6a644c0ba33aaa10012d0e4fd7.1674468099.git.lukas@wunner.de>
+ <5b03b8f4d2d04cf7e4997c71daee667c73eb427b.1674468099.git.lukas@wunner.de>
 Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <ec7155b88895ab6a644c0ba33aaa10012d0e4fd7.1674468099.git.lukas@wunner.de>
-X-ClientProxiedBy: BY5PR13CA0013.namprd13.prod.outlook.com
- (2603:10b6:a03:180::26) To SA1PR11MB6733.namprd11.prod.outlook.com
+In-Reply-To: <5b03b8f4d2d04cf7e4997c71daee667c73eb427b.1674468099.git.lukas@wunner.de>
+X-ClientProxiedBy: SJ0PR13CA0131.namprd13.prod.outlook.com
+ (2603:10b6:a03:2c6::16) To SA1PR11MB6733.namprd11.prod.outlook.com
  (2603:10b6:806:25c::17)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|PH8PR11MB6999:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebbc6254-99a1-4d95-0718-08dafda5a7aa
+X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|SA2PR11MB5035:EE_
+X-MS-Office365-Filtering-Correlation-Id: 28508731-1cc1-4a38-4ffd-08dafda84dcc
 X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 6v+w+b31VuUv8W7LEs09GS2z8vyCPmHqOo9bynvIQpUtLprp9+5HjQVZeFuiU06QRXkAX32W4Oa/y+GKijJu84H3pvSZmeUQro+2NKnXxADdrElyzIXJI0t5tCDwWxRSHDKDVjtfp0tSRVIsy4ax1T6gzo2AyRR/mqUJQnRqPezu1OU89/TjDYJ0uMyk/oCGHvmf37eMEdnPFOcKnmw4jR0s1O4+rqH5TAImNmrLQbNJhf/XNN5EmsSM5WXaAlE0qvwVf5rpFtXBFI/kSisT2wngwzo4MySWW4xVgCm8cKKhcqqu3MK802rGsowlMnjgPFYswXqHP+gpJmqPioyv+WUYs/bBZ3kbiWM36y8ImDhIWiB1FISXRw2xO8A7SMUR8ATQwPO4X3w2IiVxB1DgWirrODujdxfzDkRxtcf+7DQ7tobITwFnQ3juMWnutcud24C8KIdv0YZxMo4UB/iFAB8GnRoumRnaiG7EiJv1O33riGBJO0iVRqaXi1xiXi4RkYl6I7c/QcfJB19Kz9WanoLd04eGzlhZmdu4hnERfUNmw1mp9lA7KBBz9vKdkk8kmh8McUupO03+UXGoi89mEDdHEMVTJFuSrlB/jM3KS9KPOGYWhvibKu+rE7JlwgCJG8fNyY4LqO5J3+zrP5t+Hg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(396003)(346002)(136003)(39860400002)(366004)(376002)(451199015)(83380400001)(26005)(6512007)(186003)(9686003)(6506007)(6666004)(86362001)(38100700002)(82960400001)(41300700001)(2906002)(8936002)(5660300002)(44832011)(478600001)(6486002)(316002)(8676002)(66476007)(4326008)(66946007)(66556008)(110136005)(54906003);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: ZER+FkZQfXnJeTzbRRwQVrs0jRdPk0I+Ws9H0QSDlFKBw5dVeRE/9rmC3E9xzr9qhw32XcrMwMwq93VPxNSEblR8mRlCqXYnxEj9Z148gvbXCsaO9Ymi4hvI6Nvm3ka/rzTfwb8zVH7+RBY70T3G+dJntNpMTDR7f9I/3KiKUfIICjV+shTY2+txU8oXZgQMep9qF+flNI6POl7reTNSIArcoNfUiBxHIcC4jQ6OsUL0gTZM+uJbQxiTHyqQj/llTLWAqP7iLJFgrZZWvN4pJyn/zfhzFQnmsyymQiCyoTTa059Sz0tby34wIRuHqFQLUHelVaovc2DbaD6Z07JKs7VzyYetE5qj+RuirzvhbXnFQW/XsEwj4Uis1QFCJB66466a+K1HpdqeNdUVvKB3ULrqEdNqsf11xjmk/veB74pIlHesOBoLMq4Kg+76yU9I/ZrTIge5fnqjDx0f0I03CMFjClFImOsVHKMeDJaFoStwUPv2/U0N6PezoGcCBvl/9s04+SNI0sASY4vi3GA4+ne/WPiefxQBAs8zvwK7XXyIcZWhS/NKpWCBKo6Qfg5VVa1fBD6KK5uJyfU8z5X1vgEzaT9buBLYVP10JIwyMYOE0kWU7J/qh9aRUpNWLVW5MBIEKWci+vj20f8lF2ZZGw==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(136003)(346002)(366004)(396003)(376002)(39860400002)(451199015)(8936002)(4326008)(8676002)(66556008)(66476007)(66946007)(83380400001)(6486002)(478600001)(6506007)(6666004)(6512007)(26005)(186003)(9686003)(54906003)(110136005)(86362001)(44832011)(316002)(5660300002)(2906002)(15650500001)(82960400001)(38100700002)(41300700001);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Iagz7o9E0/6vqdYAgDqmiwwdlWdOawAyJLVAYUPZzTkGCaUy12GPDUthGqcw?=
- =?us-ascii?Q?f9ZuOXj9V2zcmsYdK7UWkeSC03/9f6zGsCrysSK2wdl6JUjWpVT3Fb9dVpXl?=
- =?us-ascii?Q?LgT47wcgd86XsX+jiCmkXF9wubUM4qKhWUV4S6cx+Y71ucrVo77zwMbka+E9?=
- =?us-ascii?Q?jHhDUX7zOQ1sNA0oSfn10bmALKtqylFZvSUKR6W0w+/W/270uVNNtFlLLSiN?=
- =?us-ascii?Q?qA4NEHjHgAu7lP8IX//VWJHsPH8XyyZG22l7o/ax0ENGojEKZ5GwuJWZydG6?=
- =?us-ascii?Q?Krietq6ljfJXA1l/SRRv90QIDXSBoByTkKD/HIvYm1Vcjx2W9FD+oQHwi9Rw?=
- =?us-ascii?Q?ubhbH+WUw4/eBa7Tx5n364voIlESycRdNfWhIWZ5lTkN8O+a49JOht5C67II?=
- =?us-ascii?Q?0eY3TVS4pP/Zz+d4ACf3mWWpnYVqZFFvmuKB/FMtl/cVivIqSJnpoSeeorb1?=
- =?us-ascii?Q?jlo3AfmYSrU12xXDVXyODQjRvIYqZqQUql9ThwxVAoeVws2ZKyqA8IpABfAW?=
- =?us-ascii?Q?RA7MZnvXeDx4JqtS14eJL5PSep3rLR5TwCrzj7j/AgDwf0xOJgj0rTY1uDTk?=
- =?us-ascii?Q?+m+ZP6SBz7EgebLJsjP2xF0qczgLFGlZmpje/4OjmkytXarMsENqZ5xK0Pre?=
- =?us-ascii?Q?T+wy4TwwAG0XKAGYPo09gogZWgefnnGVp2yOzOxboTNXOVMhvqDCKIPxh6Hm?=
- =?us-ascii?Q?4zEWvppS6pEyqUml3fGIbSzJnOO1+iyGbj7O0M9VPt6+1IgJJ+nB9aLqBSWR?=
- =?us-ascii?Q?OSAcypTyE15Xs0KDN7pf1jUO5lc9lKfVxoas7GsregQ/ZO2Y/Q2pzetesvg6?=
- =?us-ascii?Q?MC3zgzDb5oqFxI6V8cPXPHZCP07WsbbdLcrYQtbsNZKHvj862wQzP7BN4lrN?=
- =?us-ascii?Q?suuT6p3Fg0bLzZgFIL9b0rcwLJDgCiez0p9DAwzlQSNU4lLnEmtzJwAUeetL?=
- =?us-ascii?Q?Iq46NiD1/GRV6qASsL+8/Lh/Axf6c5LzxYO7WyVjqaYyUHJ+UU7DOe0h/JQJ?=
- =?us-ascii?Q?Vv9D0XCjNx5tl1nkmvxPoEic9e/sPGLEa0KaxEtwqXvOByICyuU8y7cuWwxx?=
- =?us-ascii?Q?y6SJSYhh+GbJh5m4JG7iv0CG+20CbWnkAOe97KmL8jBG2AwOrsWiGstNWoPb?=
- =?us-ascii?Q?aU984GSTFtqTZoPzKDgvlIn4ird23DvF/jZFk2BNym+fHqQWNeKu5NLKwo+0?=
- =?us-ascii?Q?Wi/GpmOJB9wcPC8qS+NVzbqBVv5yRDEYzyroVWrFlz+umxOTHAnFhFe00Zgb?=
- =?us-ascii?Q?zgd0I7STREYMz5/tFMrUKU0gNpRIukdX1PhwSvuSDKM3JbGqI9h2iOyza769?=
- =?us-ascii?Q?YXwBV9nuPpZ6Ca5iHlSrvgJJ2gYZepto34yb6Xr0Dig2D5n0e9VMQQd6VuuJ?=
- =?us-ascii?Q?YNdyT+DbKK2Zu6Mzs3XOtpL/9GvYBThU7hlWGxWCMAA5yMS4DCtMnfaUvPDv?=
- =?us-ascii?Q?ACGhbGYznT3pZ5P68vwKCNcnTAqp0kHsWjr1H9zkSVYCx5gRqvbSBpnqWA8O?=
- =?us-ascii?Q?LQI83td0fKgSXVxzvKYny7itntLdBUuHxggIT+7sW3M2GyF9MCZUuB3svjT9?=
- =?us-ascii?Q?UOAaSb3SIMnZ7XrAtt5k59V5pMO8LrD84ZJ9qlkJ?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebbc6254-99a1-4d95-0718-08dafda5a7aa
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H7YyPhObGDDuLbgvMwpxUeI4+zrnFqqxKBswz3R9fFF6JdGf5dDcB+O6dKWA?=
+ =?us-ascii?Q?nB9NfChtK7/U9vX+Mu02E7Ua2jlYNvZl2wb9IJNmR6fBOzBUjSsFzGLOXyNX?=
+ =?us-ascii?Q?H3pxGDRgDs3zXmQqQCWjzTeyjAwAtPIS/HRKeHJjcVaB+Mnae+YXW2WxenDP?=
+ =?us-ascii?Q?A9T0m1GCXLU8HS/y5hmqhudF0f3UAj1IpvB6fbV0nv36JnSHF2PkkNyE2BXn?=
+ =?us-ascii?Q?GVXPGaxKxkJYYXDBfutgCmR0jCGbPDXtgey6R1fK9ozXHUsPT9edq8jRZU2I?=
+ =?us-ascii?Q?z2EuG6CnwfYELoBwSe+Q5KTU0DorHa1Rj0k+uY/KAVOM1MJjj0ChB95nBVrz?=
+ =?us-ascii?Q?2qmY3p3Mmb56ljH/ZWiToj9bGkJcxUMYuQVSyJ5RB2LEmNQSvAJh9TADxbs8?=
+ =?us-ascii?Q?s8hN6vhLaIq0L7zs5tAR3+j4LlsQSNM7yBpzsxNQoQQ+cJh9jJB4WQokRXVC?=
+ =?us-ascii?Q?+sVwR+HWPzSF6hcVno1/T2wGqHp863/XtqNzUnkQMKZMAmJusYj9uwq5qmp7?=
+ =?us-ascii?Q?FvbUcaDS5Zma5KpEqaGrqIFR/ju3T2qAcMIPfIg2UUKIJX6KpQ5gHy7woEJv?=
+ =?us-ascii?Q?Y/rTWom6yx9SKGlj1rNIkZ77bC4NqfmL3Ej4ePV4vVwzM/5XAlrPEOpIIz8f?=
+ =?us-ascii?Q?1PGFZBZxwnapybNxFWsQfPFiMAqjAnU+gHvfdMUnaJmSGD6ijzgFMszBOgB6?=
+ =?us-ascii?Q?S8iYXu/UJwAMFf5MAwc0dtMpkSl1n9GGVSSHb90pxsb9JX63ndSdWuhIuoFN?=
+ =?us-ascii?Q?KtrAwo29+FBfRykzWy/bdKl1U8eLMaO45dVJNO3e/M3LPfmfiIGXCJmQVDQQ?=
+ =?us-ascii?Q?2crSn5OunufWaDvIT1zqWLy8mTLohZVvNQxmHtcwICffhRx6O7VwoQec8/ga?=
+ =?us-ascii?Q?38rylKpsUCUINEftFJNnmxU421e1g0X3/hDVdlnOWIKj187KxmrYSRPU8PIK?=
+ =?us-ascii?Q?62aXIIiU/HgEkWo04Nqmz8p8bjQECc4km6j9O7C2DT0f1dZEt+v5pWdNOiV+?=
+ =?us-ascii?Q?TcV2mWQXJF+6PtrM7zjsHQIWzh1cXFaveFhaezfcirA4OMlETI3iHDgpDA0a?=
+ =?us-ascii?Q?JMkccXnEnXzhFLV+gaIL0ypn1+gF82h/5bMV6IEw39B7scGsTo4TE4D9O97x?=
+ =?us-ascii?Q?Sxa37nx5Pn3KVEe47IIGHJhRp07ZyA/PrACWMWxRirEXXNwUeL0falt7xaHO?=
+ =?us-ascii?Q?F7fLJ9B2baohp5VcGaVuzGKlRYaztyo2TmeAdw6ApOVhbwk1wkcTg3lO0VRM?=
+ =?us-ascii?Q?jac7KTWe8oe61FAbJvyy6k5jMAmfZ51/E19GUEVLA8vEmtgdKpE6jx9/o2OD?=
+ =?us-ascii?Q?EyFwvqcgNwllT8lXvsZYMNjg6RvVGAjyr8zshJQVy/osvLq323VpMFTO/dfQ?=
+ =?us-ascii?Q?6d1nrVS/cXVpaQY4GvQc02INP4FGygS4VzXNIMqQtdTlf2s2FkPC/w5Y8zGN?=
+ =?us-ascii?Q?MJ2qX5aHyFRp7lPmY4aoouvkxajn0KEckRtF/03dtJmYAtAnclZOyTWtAnXD?=
+ =?us-ascii?Q?1846zdk++2IPFtok9UOPQORJT+7V+/UILg1bEZ9ofcQn4CCR/4DgM26NBuIu?=
+ =?us-ascii?Q?KRPpGjEN8fOV5PbYZfJUIhEmo+kZROv9SJLjAvHFv5Q3gWpsBzvizuOV5+Fl?=
+ =?us-ascii?Q?NQ=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 28508731-1cc1-4a38-4ffd-08dafda84dcc
 X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 00:55:15.2746
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 01:14:12.9789
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: jf8483806xmDj6nLyS5AeCI3Dz62p2hLLNvxJLOiyq4kjt3k5ExsiqjIVy2ndUw+R7FheJ7I/uct5KJp8mCFmw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB6999
+X-MS-Exchange-CrossTenant-UserPrincipalName: 73xSCGz1R6Q70Pr2ehOhMaYv22cZSJBvVUFkGIUMcejrMmkA9r6+3h8xaR0V3qUBfTgA514ZxPIDg5AAU1ASMA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA2PR11MB5035
 X-OriginatorOrg: intel.com
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -154,162 +156,214 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Lukas Wunner wrote:
-> A synchronous API for DOE has just been introduced.  CXL (the only
-> in-tree DOE user so far) was converted to use it instead of the
-> asynchronous API.
+> Currently a DOE instance cannot be shared by multiple drivers because
+> each driver creates its own pci_doe_mb struct for a given DOE instance.
+> For the same reason a DOE instance cannot be shared between the PCI core
+> and a driver.
 > 
-> Consequently, pci_doe_submit_task() as well as the pci_doe_task struct
-> are only used internally, so make them private.
+> Overcome this limitation by creating mailboxes in the PCI core on device
+> enumeration.  Provide a pci_find_doe_mailbox() API call to allow drivers
+> to get a pci_doe_mb for a given (pci_dev, vendor, protocol) triple.
+> 
+> On device removal, tear down mailboxes in two steps:
+> 
+> In pci_stop_dev(), before the driver is unbound, stop ongoing DOE
+> exchanges and prevent new ones from being scheduled.  This ensures that
+> a hot-removed device doesn't needlessly wait for a running exchange to
+> time out.
+> 
+> In pci_destroy_dev(), after the driver is unbound, free the mailboxes
+> and their internal data structures.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
+
+I rather like this.  Much cleaner, thanks!
+
+Minor comment below.
 
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 > ---
->  Changes v1 -> v2:
->  * Deduplicate note in kernel-doc of struct pci_doe_task that caller need
->    not initialize certain fields (Jonathan)
-> 
->  drivers/pci/doe.c       | 45 +++++++++++++++++++++++++++++++++++++++--
->  include/linux/pci-doe.h | 44 ----------------------------------------
->  2 files changed, 43 insertions(+), 46 deletions(-)
+>  drivers/pci/doe.c       | 71 +++++++++++++++++++++++++++++++++++++++++
+>  drivers/pci/pci.h       | 10 ++++++
+>  drivers/pci/probe.c     |  1 +
+>  drivers/pci/remove.c    |  2 ++
+>  include/linux/pci-doe.h |  2 ++
+>  include/linux/pci.h     |  3 ++
+>  6 files changed, 89 insertions(+)
 > 
 > diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index dce6af2ab574..066400531d09 100644
+> index cc1fdd75ad2a..06c57af05570 100644
 > --- a/drivers/pci/doe.c
 > +++ b/drivers/pci/doe.c
-> @@ -56,6 +56,47 @@ struct pci_doe_mb {
->  	unsigned long flags;
->  };
+> @@ -20,6 +20,8 @@
+>  #include <linux/pci-doe.h>
+>  #include <linux/workqueue.h>
 >  
-> +struct pci_doe_protocol {
-> +	u16 vid;
-> +	u8 type;
-> +};
+> +#include "pci.h"
+> +
+>  #define PCI_DOE_PROTOCOL_DISCOVERY 0
+>  
+>  /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+> @@ -662,3 +664,72 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+>  	return task.rv;
+>  }
+>  EXPORT_SYMBOL_GPL(pci_doe);
 > +
 > +/**
-> + * struct pci_doe_task - represents a single query/response
+> + * pci_find_doe_mailbox() - Find Data Object Exchange mailbox
 > + *
-> + * @prot: DOE Protocol
-> + * @request_pl: The request payload
-> + * @request_pl_sz: Size of the request payload (bytes)
-> + * @response_pl: The response payload
-> + * @response_pl_sz: Size of the response payload (bytes)
-> + * @rv: Return value.  Length of received response or error (bytes)
-> + * @complete: Called when task is complete
-> + * @private: Private data for the consumer
-> + * @work: Used internally by the mailbox
-> + * @doe_mb: Used internally by the mailbox
+> + * @pdev: PCI device
+> + * @vendor: Vendor ID
+> + * @type: Data Object Type
 > + *
-> + * The payload sizes and rv are specified in bytes with the following
-> + * restrictions concerning the protocol.
+> + * Find first DOE mailbox of a PCI device which supports the given protocol.
 > + *
-> + *	1) The request_pl_sz must be a multiple of double words (4 bytes)
-> + *	2) The response_pl_sz must be >= a single double word (4 bytes)
-> + *	3) rv is returned as bytes but it will be a multiple of double words
+> + * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
 > + */
-> +struct pci_doe_task {
-> +	struct pci_doe_protocol prot;
-> +	const u32 *request_pl;
-> +	size_t request_pl_sz;
-> +	u32 *response_pl;
-> +	size_t response_pl_sz;
-> +	int rv;
-> +	void (*complete)(struct pci_doe_task *task);
-> +	void *private;
-> +
-> +	/* initialized by pci_doe_submit_task() */
-> +	struct work_struct work;
+> +struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
+> +					u8 type)
+> +{
 > +	struct pci_doe_mb *doe_mb;
-> +};
+> +	unsigned long index;
 > +
->  static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
->  {
->  	if (wait_event_timeout(doe_mb->wq,
-> @@ -516,7 +557,8 @@ EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
->   *
->   * RETURNS: 0 when task has been successfully queued, -ERRNO on error
->   */
-> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
-> +static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
-> +			       struct pci_doe_task *task)
->  {
->  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->  		return -EINVAL;
-> @@ -537,7 +579,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  	queue_work(doe_mb->work_queue, &task->work);
->  	return 0;
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+> +		if (pci_doe_supports_prot(doe_mb, vendor, type))
+> +			return doe_mb;
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(pci_find_doe_mailbox);
+> +
+> +void pci_doe_init(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	u16 offset = 0;
+> +	int rc;
+> +
+> +	xa_init(&pdev->doe_mbs);
+> +
+> +	while ((offset = pci_find_next_ext_capability(pdev, offset,
+> +						      PCI_EXT_CAP_ID_DOE))) {
+> +		doe_mb = pci_doe_create_mb(pdev, offset);
+> +		if (IS_ERR(doe_mb))
+> +			continue;
+
+I feel like a pci_dbg() would be nice here.  But not needed.
+
+Ira
+
+> +
+> +		rc = xa_insert(&pdev->doe_mbs, offset, doe_mb, GFP_KERNEL);
+> +		if (rc) {
+> +			pci_doe_flush_mb(doe_mb);
+> +			pci_doe_destroy_mb(doe_mb);
+> +			pci_err(pdev, "[%x] failed to insert mailbox: %d\n",
+> +				offset, rc);
+> +		}
+> +	}
+> +}
+> +
+> +void pci_doe_stop(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+> +		pci_doe_flush_mb(doe_mb);
+> +}
+> +
+> +void pci_doe_destroy(struct pci_dev *pdev)
+> +{
+> +	struct pci_doe_mb *doe_mb;
+> +	unsigned long index;
+> +
+> +	xa_for_each(&pdev->doe_mbs, index, doe_mb)
+> +		pci_doe_destroy_mb(doe_mb);
+> +
+> +	xa_destroy(&pdev->doe_mbs);
+> +}
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 9ed3b5550043..94656c1a01c0 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -777,6 +777,16 @@ static inline pci_power_t mid_pci_get_power_state(struct pci_dev *pdev)
 >  }
-> -EXPORT_SYMBOL_GPL(pci_doe_submit_task);
+>  #endif
 >  
->  /**
->   * pci_doe() - Perform Data Object Exchange
+> +#ifdef CONFIG_PCI_DOE
+> +void pci_doe_init(struct pci_dev *pdev);
+> +void pci_doe_stop(struct pci_dev *pdev);
+> +void pci_doe_destroy(struct pci_dev *pdev);
+> +#else
+> +static inline void pci_doe_init(struct pci_dev *pdev) { }
+> +static inline void pci_doe_stop(struct pci_dev *pdev) { }
+> +static inline void pci_doe_destroy(struct pci_dev *pdev) { }
+> +#endif
+> +
+>  /*
+>   * Config Address for PCI Configuration Mechanism #1
+>   *
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 1779582fb500..65e60ee50489 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2476,6 +2476,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+>  	pci_aer_init(dev);		/* Advanced Error Reporting */
+>  	pci_dpc_init(dev);		/* Downstream Port Containment */
+>  	pci_rcec_init(dev);		/* Root Complex Event Collector */
+> +	pci_doe_init(dev);		/* Data Object Exchange */
+>  
+>  	pcie_report_downtraining(dev);
+>  	pci_init_reset_methods(dev);
+> diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+> index 0145aef1b930..739c7b0f5b91 100644
+> --- a/drivers/pci/remove.c
+> +++ b/drivers/pci/remove.c
+> @@ -16,6 +16,7 @@ static void pci_free_resources(struct pci_dev *dev)
+>  
+>  static void pci_stop_dev(struct pci_dev *dev)
+>  {
+> +	pci_doe_stop(dev);
+>  	pci_pme_active(dev, false);
+>  
+>  	if (pci_dev_is_added(dev)) {
+> @@ -39,6 +40,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
+>  	list_del(&dev->bus_list);
+>  	up_write(&pci_bus_sem);
+>  
+> +	pci_doe_destroy(dev);
+>  	pcie_aspm_exit_link_state(dev);
+>  	pci_bridge_d3_update(dev);
+>  	pci_free_resources(dev);
 > diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-> index 1608e1536284..7f16749c6aa3 100644
+> index 7f16749c6aa3..d6192ee0ac07 100644
 > --- a/include/linux/pci-doe.h
 > +++ b/include/linux/pci-doe.h
-> @@ -13,51 +13,8 @@
->  #ifndef LINUX_PCI_DOE_H
->  #define LINUX_PCI_DOE_H
->  
-> -struct pci_doe_protocol {
-> -	u16 vid;
-> -	u8 type;
-> -};
-> -
->  struct pci_doe_mb;
->  
-> -/**
-> - * struct pci_doe_task - represents a single query/response
-> - *
-> - * @prot: DOE Protocol
-> - * @request_pl: The request payload
-> - * @request_pl_sz: Size of the request payload (bytes)
-> - * @response_pl: The response payload
-> - * @response_pl_sz: Size of the response payload (bytes)
-> - * @rv: Return value.  Length of received response or error (bytes)
-> - * @complete: Called when task is complete
-> - * @private: Private data for the consumer
-> - * @work: Used internally by the mailbox
-> - * @doe_mb: Used internally by the mailbox
-> - *
-> - * The payload sizes and rv are specified in bytes with the following
-> - * restrictions concerning the protocol.
-> - *
-> - *	1) The request_pl_sz must be a multiple of double words (4 bytes)
-> - *	2) The response_pl_sz must be >= a single double word (4 bytes)
-> - *	3) rv is returned as bytes but it will be a multiple of double words
-> - *
-> - * NOTE there is no need for the caller to initialize work or doe_mb.
-> - */
-> -struct pci_doe_task {
-> -	struct pci_doe_protocol prot;
-> -	const u32 *request_pl;
-> -	size_t request_pl_sz;
-> -	u32 *response_pl;
-> -	size_t response_pl_sz;
-> -	int rv;
-> -	void (*complete)(struct pci_doe_task *task);
-> -	void *private;
-> -
-> -	/* No need for the user to initialize these fields */
-> -	struct work_struct work;
-> -	struct pci_doe_mb *doe_mb;
-> -};
-> -
->  /**
->   * pci_doe_for_each_off - Iterate each DOE capability
->   * @pdev: struct pci_dev to iterate
-> @@ -72,7 +29,6 @@ struct pci_doe_task {
+> @@ -29,6 +29,8 @@ struct pci_doe_mb;
 >  
 >  struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
 >  bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-> -int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
+> +struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
+> +					u8 type);
 >  
 >  int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
 >  	    const void *request, size_t request_sz,
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index adffd65e84b4..254c79f9013a 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -511,6 +511,9 @@ struct pci_dev {
+>  #endif
+>  #ifdef CONFIG_PCI_P2PDMA
+>  	struct pci_p2pdma __rcu *p2pdma;
+> +#endif
+> +#ifdef CONFIG_PCI_DOE
+> +	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
+>  #endif
+>  	u16		acs_cap;	/* ACS Capability offset */
+>  	phys_addr_t	rom;		/* Physical address if not from BAR */
 > -- 
 > 2.39.1
 > 
