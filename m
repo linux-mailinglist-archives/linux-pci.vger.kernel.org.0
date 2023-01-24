@@ -2,118 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 532A7679720
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 12:59:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59DA167977D
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 13:16:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232999AbjAXL7i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Jan 2023 06:59:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45862 "EHLO
+        id S233542AbjAXMQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Jan 2023 07:16:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjAXL7i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 06:59:38 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF993C2B6;
-        Tue, 24 Jan 2023 03:59:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674561577; x=1706097577;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version;
-  bh=pu6QJ5RV9LyVJNpkIVe152Ce044Cxxkxyc2BLBxj7s0=;
-  b=RD/3yl+ElryZ3vyhDqNKNxVyyme0fmvAvPeamzQMNS5YRXXGOWQkxvn3
-   Y8ZQFITjGgY5vBGYZftxNIQgJZTNjpFLPfVdu+YFSGk0ZMz6gCjqtbgn9
-   2bzpVO2DeBMRFL1mXTfZjZ1vP3hdVlvahMCBKCz8U7Xz0JozSx+5oJTDr
-   3Lkb50f3O90oGpKb9608KrnVIv3cYpuXoje6/vkj6Z0lnU3EbKrD+hjVs
-   ayA8iW4wu+1MdoPV6cXsA1MntebB3TpjxJAzJ4aPDrjOQYesc6IUr8VgG
-   ovLeZdf/eT+QpaoCTwTAmeCmY2+3Sb2TkDfJaCqcXJrVo3geRdqKQrhbQ
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="412509689"
-X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="412509689"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jan 2023 03:59:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10599"; a="804571134"
-X-IronPort-AV: E=Sophos;i="5.97,242,1669104000"; 
-   d="scan'208";a="804571134"
-Received: from ubik.fi.intel.com (HELO localhost) ([10.237.72.184])
-  by fmsmga001.fm.intel.com with ESMTP; 24 Jan 2023 03:59:34 -0800
-From:   Alexander Shishkin <alexander.shishkin@linux.intel.com>
-To:     Marc Zyngier <maz@kernel.org>, Leon Romanovsky <leon@kernel.org>
+        with ESMTP id S233563AbjAXMQT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 07:16:19 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 908DD44BF7;
+        Tue, 24 Jan 2023 04:16:00 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3535EB8119B;
+        Tue, 24 Jan 2023 12:15:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54894C433EF;
+        Tue, 24 Jan 2023 12:15:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674562557;
+        bh=ZoftrceXUaqA2kBi9O+ilwVUQNnrtgaDLfaHZCd8ubA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YYm2dIq2ZFMYVNUCwjNz1Dn3HVAf8cuEwyGqDIJ4frSnt1GVNyg28BzWsPUxP9XVf
+         VzI4oqRWnCluaQeR8WXD93u74uXe2NpkClV7dqJrRGrdb9QDqUwe/Te0tYuuO2gqZ+
+         yASPGcROUDRVlqiNP6sRdyMkvyi0QUI0FChtmuJE6LyrrMWC4Djm01bCgHK0EgPjTA
+         CyCQJSrxxT6EDWf0Kg8dsnj5/7Mdwmt22WGtTq/rKXqNo7Dc5LCgjLHVFrBQ2mmI0A
+         lHEBRYC4Crgbs08vcrYmBHRvsCSmSLLo/f3im98cuBWG268dUF6QFp1VvTiJlApX5C
+         6KR6m5hPqzydw==
+Date:   Tue, 24 Jan 2023 14:10:51 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        darwi@linutronix.de, elena.reshetova@intel.com,
-        kirill.shutemov@linux.intel.com,
+        Marc Zyngier <maz@kernel.org>, darwi@linutronix.de,
+        elena.reshetova@intel.com, kirill.shutemov@linux.intel.com,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        stable@vger.kernel.org, alexander.shishkin@linux.intel.com
+        stable@vger.kernel.org
 Subject: Re: [PATCH 1/2] PCI/MSI: Cache the MSIX table size
-In-Reply-To: <86fsc2n8fp.wl-maz@kernel.org>
+Message-ID: <Y8/Kyzh+stow83lQ@unreal>
 References: <20230119170633.40944-1-alexander.shishkin@linux.intel.com>
  <20230119170633.40944-2-alexander.shishkin@linux.intel.com>
- <Y8z7FPcuDXDBi+1U@unreal> <86fsc2n8fp.wl-maz@kernel.org>
-Date:   Tue, 24 Jan 2023 13:59:33 +0200
-Message-ID: <87sfg0p2hm.fsf@ubik.fi.intel.com>
+ <Y8z7FPcuDXDBi+1U@unreal>
+ <87v8kwp2t6.fsf@ubik.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87v8kwp2t6.fsf@ubik.fi.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Marc Zyngier <maz@kernel.org> writes:
+On Tue, Jan 24, 2023 at 01:52:37PM +0200, Alexander Shishkin wrote:
+> Leon Romanovsky <leon@kernel.org> writes:
+> 
+> > On Thu, Jan 19, 2023 at 07:06:32PM +0200, Alexander Shishkin wrote:
+> >> A malicious device can change its MSIX table size between the table
+> >> ioremap() and subsequent accesses, resulting in a kernel page fault in
+> >> pci_write_msg_msix().
+> >> 
+> >> To avoid this, cache the table size observed at the moment of table
+> >> ioremap() and use the cached value. This, however, does not help drivers
+> >> that peek at the PCIE_MSIX_FLAGS register directly.
+> >> 
+> >> Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> >> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> Cc: stable@vger.kernel.org
+> >> ---
+> >>  drivers/pci/msi/api.c | 7 ++++++-
+> >>  drivers/pci/msi/msi.c | 2 +-
+> >>  include/linux/pci.h   | 1 +
+> >>  3 files changed, 8 insertions(+), 2 deletions(-)
+> >
+> > I'm not security expert here, but not sure that this protects from anything.
+> > 1. Kernel relies on working and not-malicious HW. There are gazillion ways
+> > to cause crashes other than changing MSI-X.
+> 
+> This particular bug was preventing our fuzzing from going deeper into
+> the code and reaching some more of the aforementioned gazillion bugs.
 
-> On Sun, 22 Jan 2023 09:00:04 +0000,
-> Leon Romanovsky <leon@kernel.org> wrote:
->> 
->> On Thu, Jan 19, 2023 at 07:06:32PM +0200, Alexander Shishkin wrote:
->> > A malicious device can change its MSIX table size between the table
->> > ioremap() and subsequent accesses, resulting in a kernel page fault in
->> > pci_write_msg_msix().
->> > 
->> > To avoid this, cache the table size observed at the moment of table
->> > ioremap() and use the cached value. This, however, does not help drivers
->> > that peek at the PCIE_MSIX_FLAGS register directly.
->> > 
->> > Signed-off-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
->> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->> > Cc: stable@vger.kernel.org
->> > ---
->> >  drivers/pci/msi/api.c | 7 ++++++-
->> >  drivers/pci/msi/msi.c | 2 +-
->> >  include/linux/pci.h   | 1 +
->> >  3 files changed, 8 insertions(+), 2 deletions(-)
->> 
->> I'm not security expert here, but not sure that this protects from anything.
->> 1. Kernel relies on working and not-malicious HW. There are gazillion ways
->> to cause crashes other than changing MSI-X.
->> 2. Device can report large table size, kernel will cache it and
->> malicious device will reduce it back. It is not handled and will cause
->> to kernel crash too.
->> 
->
-> Indeed, this was my exact reaction reading this patch. This only makes
-> sure the same (potentially wrong) value is used at all times. So while
-> this results in a consistent use, this doesn't give much guarantee.
+Your commit message says nothing about fuzzing, but talks about
+malicious device. 
+Do you see "gazillion bugs" for devices which don't change their MSI-X
+table size under the hood, which is main kernel assumption?
 
-It guarantees that the MSIX table is big enough to fit all the vectors,
-so it should prevent the page faults from out-of-bounds accesses.
+If yes, you should fix these bugs.
 
-> The only way to deal with this is to actually handle the resulting
-> fault, similar to what the kernel does when accessing userspace. Not
-> sure how possible this is with something like PCIe.
+> 
+> > 2. Device can report large table size, kernel will cache it and
+> > malicious device will reduce it back. It is not handled and will cause
+> > to kernel crash too.
+> 
+> How would that happen? If the device decides to have fewer vectors,
+> they'll all still fit in the ioremapped MSIX table. The worst thing that
+> can happen is 0xffffffff reads from the mmio space, which a device can
+> do anyway. But that shouldn't trigger a page fault or otherwise
+> crash. Or am I missing something?
 
-Do you mean replacing MMIO accesses with exception handling accessors?
-That seems like a monumental effort. And then we'd have to figure out
-how to handle errors in the __pci_write_msi_msg() path.
+Like I said, I'm no expert. You should tell me if it safe for all
+callers of pci_msix_vec_count().
 
-Preventing page faults from happening in the first place seems like a
-more reasonable solution, or what do you think?
+Thanks
 
-Thanks,
---
-Alex
+> 
+> Thanks,
+> --
+> Alex
