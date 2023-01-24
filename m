@@ -2,236 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 12412679843
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 13:43:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01BD567984E
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 13:47:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233957AbjAXMnX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Jan 2023 07:43:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48510 "EHLO
+        id S233975AbjAXMrY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Jan 2023 07:47:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233959AbjAXMnW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 07:43:22 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 666464523F;
-        Tue, 24 Jan 2023 04:43:19 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.201])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1RNx0Yw1z6J7Xn;
-        Tue, 24 Jan 2023 20:39:13 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Tue, 24 Jan
- 2023 12:43:16 +0000
-Date:   Tue, 24 Jan 2023 12:43:15 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        "Gregory Price" <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] PCI/DOE: Relax restrictions on request and
- response size
-Message-ID: <20230124124315.00000a5c@Huawei.com>
-In-Reply-To: <4dba01ff87d630abdd5a09d52e954d3c212d2018.1674468099.git.lukas@wunner.de>
-References: <cover.1674468099.git.lukas@wunner.de>
-        <4dba01ff87d630abdd5a09d52e954d3c212d2018.1674468099.git.lukas@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231510AbjAXMrX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 07:47:23 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73A511BD9
+        for <linux-pci@vger.kernel.org>; Tue, 24 Jan 2023 04:47:22 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id t18so944063wro.1
+        for <linux-pci@vger.kernel.org>; Tue, 24 Jan 2023 04:47:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=NQY35x77x8kOxBsXweZuI8QRw64wWTJF3dft8bDEqWY=;
+        b=PiMMyODDWRQalMesG3gfe5bcjonEYBSCvJw/RQKhDkj8rVDL85SL3V7NUqvU9Tx7mg
+         /jjHHUivYBes8xRQhqokxAILXlynP0KUbQEtTYVND0yahLoiHyL3CLqktoQr+Y/NopUX
+         mHRTyBITWCcndRFO3zkI2UKFAEi1CwWBHFsWy6+Opp7h9M8nLoXOeuuh6BEqXcKbE3p0
+         NNN3ugOyaK/TpA53cLo0F9droSpVeNMnGo0xnmk7yd7LjVYiVMfYC550vflqOhnLpUm8
+         P0m4j9boYN5yD3rSOCy0pwlVHipMjULnvDxnMtDMUqcFUmY88DJwyEw9lZLbaGbf59Hn
+         8EHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=NQY35x77x8kOxBsXweZuI8QRw64wWTJF3dft8bDEqWY=;
+        b=GEe5HoHgo5g74Q6Y9FVz7vK44D0c6xfTLv2RTEJR0FedmivZ5uF5lkWfhtZhibmppB
+         TQecu2ivMQKRQ5Y3IPVtE+5qdU4HftkRv2ugCdcFbdG+JQrwfMHSNmgUEjUoJb1L/60i
+         VFLObrcumXuVCWml2w9nuZLwykVLMTPcXzl/6fa/0ksKGegdcOgowB8CmoB1g0J23sNs
+         a3tP7PbTRa/xaEZdK0P1tbwbO60YioXKgiU1aAXB1OqmYBYgQoGeHczxhPA8nhvUL+Nj
+         XMZjOL7DRjzuZz+zxJxpq3c200mQ+jTxlC0Mg201jrMgsYr+w8jaaa14EPe9TatKuECj
+         cKVg==
+X-Gm-Message-State: AFqh2kqTPAh6mwtU13CeYM9NLrjJkSUR9n6BkuheQPPsFel7zQtb66aK
+        ty9sOe/cCoX/Bnyn8P6Y8w/tXA==
+X-Google-Smtp-Source: AMrXdXv5jJuf7e8t1rbwRrcG+mysui5oKWwSENlk39CSpsFbmdFPiRUPasU4MUTSIxXuNY1nRxqWrg==
+X-Received: by 2002:a5d:457a:0:b0:2bb:e993:6c85 with SMTP id a26-20020a5d457a000000b002bbe9936c85mr23682176wrc.35.1674564440879;
+        Tue, 24 Jan 2023 04:47:20 -0800 (PST)
+Received: from hackbox.lan ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id a5-20020a5d5705000000b002bdbde1d3absm1766840wrv.78.2023.01.24.04.47.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Jan 2023 04:47:20 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-phy@lists.infradead.org
+Subject: [PATCH v5 00/12] sm8550: Add PCIe HC and PHY support
+Date:   Tue, 24 Jan 2023 14:47:02 +0200
+Message-Id: <20230124124714.3087948-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 23 Jan 2023 11:20:00 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+For changelogs please look at each patch individually.
 
-> An upcoming user of DOE is CMA (Component Measurement and Authentication,
-> PCIe r6.0 sec 6.31).
-> 
-> It builds on SPDM (Security Protocol and Data Model):
-> https://www.dmtf.org/dsp/DSP0274
-> 
-> SPDM message sizes are not always a multiple of dwords.  To transport
-> them over DOE without using bounce buffers, allow sending requests and
-> receiving responses whose final dword is only partially populated.
-> 
-> Tested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Ah. This...
+Abel Vesa (12):
+  dt-bindings: phy: Add QMP PCIe PHY comptible for SM8550
+  phy: qcom-qmp: pcs: Add v6 register offsets
+  phy: qcom-qmp: pcs: Add v6.20 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-txrx: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-lane-shared: Add v6 register offsets
+  phy: qcom-qmp-pcie: Add support for SM8550 g3x2 and g4x2 PCIEs
+  dt-bindings: PCI: qcom: Add SM8550 compatible
+  PCI: qcom: Add SM8550 PCIe support
+  arm64: dts: qcom: sm8550: Add PCIe PHYs and controllers nodes
+  arm64: dts: qcom: sm8550-mtp: Add PCIe PHYs and controllers nodes
 
-I can't immediately find the original discussion thread, but I'm fairly
-sure we had a version of the DOE code that did this (maybe we just
-discussed doing it and never had code...)
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  44 +++
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  30 +-
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts       |  37 ++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi          | 203 +++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c        |  25 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 369 +++++++++++++++++-
+ .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h   |  15 +
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h    |  23 ++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h    |  16 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h |  18 +
+ .../phy-qcom-qmp-qserdes-ln-shrd-v6.h         |  32 ++
+ .../phy-qcom-qmp-qserdes-txrx-v6_20.h         |  45 +++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |   6 +
+ 13 files changed, 846 insertions(+), 17 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
 
-IIRC, at the time feedback was strongly in favour of making
-the handling of non dword payloads a problem for the caller (e.g. PCI/CMA)
-not the DOE core, mainly so that we could keep the layering simple.
-DOE part of PCI spec says DWORD multiples only, CMA has non dword
-entries.
-
-Personally I'm fully in favour of making our lives easier and handling
-this at the DOE layer!  The CMA padding code is nasty as we have to deal
-with caching just the right bits of the payload for the running hashes.
-With it at this layer I'd imagine that code gets much simpler
-
-Assuming resolution to Ira's question on endianness is resolved.
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  drivers/pci/doe.c | 66 ++++++++++++++++++++++++++++-------------------
->  1 file changed, 40 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index 0263bcfdddd8..2113ec95379f 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -76,13 +76,6 @@ struct pci_doe_protocol {
->   * @private: Private data for the consumer
->   * @work: Used internally by the mailbox
->   * @doe_mb: Used internally by the mailbox
-> - *
-> - * The payload sizes and rv are specified in bytes with the following
-> - * restrictions concerning the protocol.
-> - *
-> - *	1) The request_pl_sz must be a multiple of double words (4 bytes)
-> - *	2) The response_pl_sz must be >= a single double word (4 bytes)
-> - *	3) rv is returned as bytes but it will be a multiple of double words
->   */
->  struct pci_doe_task {
->  	struct pci_doe_protocol prot;
-> @@ -153,7 +146,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
->  {
->  	struct pci_dev *pdev = doe_mb->pdev;
->  	int offset = doe_mb->cap_offset;
-> -	size_t length;
-> +	size_t length, remainder;
->  	u32 val;
->  	int i;
->  
-> @@ -171,7 +164,7 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
->  		return -EIO;
->  
->  	/* Length is 2 DW of header + length of payload in DW */
-> -	length = 2 + task->request_pl_sz / sizeof(u32);
-> +	length = 2 + DIV_ROUND_UP(task->request_pl_sz, sizeof(u32));
->  	if (length > PCI_DOE_MAX_LENGTH)
->  		return -EIO;
->  	if (length == PCI_DOE_MAX_LENGTH)
-> @@ -184,10 +177,20 @@ static int pci_doe_send_req(struct pci_doe_mb *doe_mb,
->  	pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
->  			       FIELD_PREP(PCI_DOE_DATA_OBJECT_HEADER_2_LENGTH,
->  					  length));
-> +
-> +	/* Write payload */
->  	for (i = 0; i < task->request_pl_sz / sizeof(u32); i++)
->  		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE,
->  				       task->request_pl[i]);
->  
-> +	/* Write last payload dword */
-> +	remainder = task->request_pl_sz % sizeof(u32);
-> +	if (remainder) {
-> +		val = 0;
-> +		memcpy(&val, &task->request_pl[i], remainder);
-> +		pci_write_config_dword(pdev, offset + PCI_DOE_WRITE, val);
-> +	}
-> +
->  	pci_doe_write_ctrl(doe_mb, PCI_DOE_CTRL_GO);
->  
->  	return 0;
-> @@ -207,11 +210,11 @@ static bool pci_doe_data_obj_ready(struct pci_doe_mb *doe_mb)
->  
->  static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
->  {
-> +	size_t length, payload_length, remainder, received;
->  	struct pci_dev *pdev = doe_mb->pdev;
->  	int offset = doe_mb->cap_offset;
-> -	size_t length, payload_length;
-> +	int i = 0;
->  	u32 val;
-> -	int i;
->  
->  	/* Read the first dword to get the protocol */
->  	pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> @@ -238,15 +241,34 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->  
->  	/* First 2 dwords have already been read */
->  	length -= 2;
-> -	payload_length = min(length, task->response_pl_sz / sizeof(u32));
-> -	/* Read the rest of the response payload */
-> -	for (i = 0; i < payload_length; i++) {
-> -		pci_read_config_dword(pdev, offset + PCI_DOE_READ,
-> -				      &task->response_pl[i]);
-> +	received = task->response_pl_sz;
-> +	payload_length = DIV_ROUND_UP(task->response_pl_sz, sizeof(u32));
-> +	remainder = task->response_pl_sz % sizeof(u32);
-> +	if (!remainder)
-> +		remainder = sizeof(u32);
-> +
-> +	if (length < payload_length) {
-> +		received = length * sizeof(u32);
-> +		payload_length = length;
-> +		remainder = sizeof(u32);
-> +	}
-> +
-> +	if (payload_length) {
-> +		/* Read all payload dwords except the last */
-> +		for (; i < payload_length - 1; i++) {
-> +			pci_read_config_dword(pdev, offset + PCI_DOE_READ,
-> +					      &task->response_pl[i]);
-> +			pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +		}
-> +
-> +		/* Read last payload dword */
-> +		pci_read_config_dword(pdev, offset + PCI_DOE_READ, &val);
-> +		memcpy(&task->response_pl[i], &val, remainder);
->  		/* Prior to the last ack, ensure Data Object Ready */
-> -		if (i == (payload_length - 1) && !pci_doe_data_obj_ready(doe_mb))
-> +		if (!pci_doe_data_obj_ready(doe_mb))
->  			return -EIO;
->  		pci_write_config_dword(pdev, offset + PCI_DOE_READ, 0);
-> +		i++;
->  	}
->  
->  	/* Flush excess length */
-> @@ -260,7 +282,7 @@ static int pci_doe_recv_resp(struct pci_doe_mb *doe_mb, struct pci_doe_task *tas
->  	if (FIELD_GET(PCI_DOE_STATUS_ERROR, val))
->  		return -EIO;
->  
-> -	return min(length, task->response_pl_sz / sizeof(u32)) * sizeof(u32);
-> +	return received;
->  }
->  
->  static void signal_task_complete(struct pci_doe_task *task, int rv)
-> @@ -560,14 +582,6 @@ static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
->  	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
->  		return -EINVAL;
->  
-> -	/*
-> -	 * DOE requests must be a whole number of DW and the response needs to
-> -	 * be big enough for at least 1 DW
-> -	 */
-> -	if (task->request_pl_sz % sizeof(u32) ||
-> -	    task->response_pl_sz < sizeof(u32))
-> -		return -EINVAL;
-> -
->  	if (test_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags))
->  		return -EIO;
->  
+-- 
+2.34.1
 
