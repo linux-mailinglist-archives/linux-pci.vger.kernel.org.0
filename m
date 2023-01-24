@@ -2,138 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCB9C679E68
-	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 17:18:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ED3D67A136
+	for <lists+linux-pci@lfdr.de>; Tue, 24 Jan 2023 19:38:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233638AbjAXQSe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 24 Jan 2023 11:18:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51574 "EHLO
+        id S233586AbjAXSiF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 24 Jan 2023 13:38:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232896AbjAXQSd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 11:18:33 -0500
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2060.outbound.protection.outlook.com [40.107.243.60])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6C472F7BD;
-        Tue, 24 Jan 2023 08:18:31 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=eLlsl27+LjtJkzJ6fYeo5SQkeJXmtUAaNHd0v2RYhG/TSo2W6lTIwl61W7YvPEiCZFo0c6/UI/dATKSdCwYpEU1OPyAlV4qG7KKRHkl1xCxRMf+8y7S4vF9VCFGzV6Gj4rZSjokrVGzGg72eWfRPD6xMt35AKj2KFEPAqLDGo23DNsxMqudGkd+0euZA0dZ1dOOv1JK+QK1QbeuHj2znJYgDyC3ZwW6+rnsdCzytzfGUW1q4z9jlrgES+WgMID/HX1QK3Eo1QopeL7cOBLsDZ1vEjJ3FgiWIIGvQCNMJBRdGx1QwWiTSfjSfJTfD9DUID5QAMM2WVvc4UnEgvGASjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZJ2cBXaW224piCeW+p7NPSgvojY4Ftw/XuLM+/MN7V0=;
- b=l1YVnHLyHtjX7IjcbVcPh1zRFNZ0dB/eenP4Kw7ainkqZ8LiN/dcISn+5pHJzfjmTpRu5PW7ulmpvG4GDQSmiiVp6/SwQHDPZjslzDTDLMdUMhnanw4UiaqRW6yGikz6UgScRV6m+Az66JIy6G7ioik8PCPNy0rzJCL0XyPiTj3lQDzhrEeuCl2EPP68mU5S1ZCykXIZKBMGAIXAWpouhAh30+jVW+Dp3arfwyf3iYcv67mW7cEFXFEJOGHS2RGMQWYuvHHxFnSo8WNLDx8XoyoCmrGrRF52TZaaoGTwet7yw9txK2HSZjc/qfSFPkkx9B3zvxYzaYNp0j+mbvlqLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=memverge.com; dmarc=pass action=none header.from=memverge.com;
- dkim=pass header.d=memverge.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=memverge.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZJ2cBXaW224piCeW+p7NPSgvojY4Ftw/XuLM+/MN7V0=;
- b=Lyd+jo1+CYFg685oIXMa7PhuncJA2lhWxk6b7fMiWSaVG2YBH2S/+uiKdkgmaQYfmMtkP3JaSoXmhCNmRBQjQL/WQ9Zc9kp8jyBj/DxFWxtm8hAxriPib2CT5sOtFnU5h4+jOJ0lN+/ynB5fssEaduZCubedqiaii7x3FvuWEGo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=memverge.com;
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com (2603:10b6:405:7c::19)
- by MN2PR17MB3999.namprd17.prod.outlook.com (2603:10b6:208:202::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Tue, 24 Jan
- 2023 16:18:28 +0000
-Received: from BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660]) by BN6PR17MB3121.namprd17.prod.outlook.com
- ([fe80::d253:1eb3:9347:c660%4]) with mapi id 15.20.6002.033; Tue, 24 Jan 2023
- 16:18:28 +0000
-Date:   Tue, 24 Jan 2023 11:18:21 -0500
-From:   Gregory Price <gregory.price@memverge.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v2 01/10] PCI/DOE: Silence WARN splat with
- CONFIG_DEBUG_OBJECTS=y
-Message-ID: <Y9AEzVrTB4Sobufr@memverge.com>
-References: <cover.1674468099.git.lukas@wunner.de>
- <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc4b61809e2520d835cf3d4f62e7d5ed00a9d031.1674468099.git.lukas@wunner.de>
-X-ClientProxiedBy: SJ0PR05CA0025.namprd05.prod.outlook.com
- (2603:10b6:a03:33b::30) To BN6PR17MB3121.namprd17.prod.outlook.com
- (2603:10b6:405:7c::19)
+        with ESMTP id S233524AbjAXSiE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 24 Jan 2023 13:38:04 -0500
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D40237B7D
+        for <linux-pci@vger.kernel.org>; Tue, 24 Jan 2023 10:37:58 -0800 (PST)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed50:2f4a:8573:c294:b2ce])
+        by xavier.telenet-ops.be with bizsmtp
+        id CidZ2900656uRqi01idZDF; Tue, 24 Jan 2023 19:37:56 +0100
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan.of.borg with esmtp (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pKOAe-007HCL-GZ;
+        Tue, 24 Jan 2023 19:37:33 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1pKOAm-002n0W-Uv;
+        Tue, 24 Jan 2023 19:37:32 +0100
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Russell King <linux@armlinux.org.uk>
+Cc:     linux-phy@lists.infradead.org, linux-doc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH treewide v2 0/9] phy: Add devm_of_phy_optional_get() helper
+Date:   Tue, 24 Jan 2023 19:37:19 +0100
+Message-Id: <cover.1674584626.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN6PR17MB3121:EE_|MN2PR17MB3999:EE_
-X-MS-Office365-Filtering-Correlation-Id: 80a2d3fe-cb25-40c1-bdf7-08dafe26a068
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Sncl7c1EHPH0vSM5msFBTfA+OB90dEp37Dxs91L20z0L+zdK9RDoNkxkvHUPK+UALVH8Kn5eGtXnFPpmUIfq9eHnoVUmbBTZyxnAeZLwhTTndjaA7InnaUYg1SpWNA6LFpO0PuQs+qN8dmMZbg5x/m5wXhez9nGRbcTeFNpdykC31KewgGNkBtJJu8gn2FF/WypGD5a7StS+zkZbXfrescrq//2oLBmfgnrCoIF4DtyUtBw6/WM+yOkwjhkScUHcf66KnqRenBd23BoiYMKnxcY0sC3C8oBnINfYj192rh3MJXgdv0E9AowCivU7HqxJwB3g3Jux3dFA+42u/09L6Yt1zEDOpSg438cqfJi8erPaW4WM4JkRfHxlxz5L3E0AH3vl2WxdcsdZZ0UloLQ3g3QxfDblSdayx+QCc4uxqhFq/mMAGKg3dxZaAoJQYshQQQ4pEtP8LpYNNJGExw/GOGApM0KQRErT6RQkgO5dJlZGTF05ddQyybYjG+SEcE+hxPFkH1dcpUZ5J4fTj14U3T5bM2wLorffBDmWERBeP6XljW6OuH7J/36Ulxc9JYsgZ58MNGsUxqAKy3EZlQOw5HXug0ZOXQ9AETJKQn/8/BS6q9gM/CtN+FQ5CV6q+Kxo9Er6CqTUZKi1b3RMTZ2igg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN6PR17MB3121.namprd17.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(136003)(376002)(366004)(39840400004)(396003)(451199015)(36756003)(41300700001)(86362001)(7416002)(8936002)(5660300002)(4326008)(44832011)(4744005)(2906002)(38100700002)(478600001)(6486002)(66946007)(6512007)(6916009)(26005)(6506007)(8676002)(186003)(316002)(6666004)(54906003)(2616005)(66476007)(66556008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?Qz/dUOwSxltSQvSnlxzM2OU2VMpQ8BTxaHN8Lf2pLOJk3oQojzAIuhB2FugL?=
- =?us-ascii?Q?SjMNkvQpOfZDfTW2wfuqugyOXmi+8Qmfs8Ao1gI3ABOuYvN9KWokGLmpqgQk?=
- =?us-ascii?Q?M0O5IHmTnWmesX2FmUqzzoJXrFt2gDhRIa0yLJKp0W6QOUz8yCSZeNr1Gge8?=
- =?us-ascii?Q?fvblAOMuzRQBhF7VvNt9DrhY2XtVLc4fCP5x+M7Z9FMzlrAbE/u+BzaCSu8Z?=
- =?us-ascii?Q?nggGY5xx86Jtjk2rw2ovn8ZF71SOIkTCikaMWmu3DUflcxE0unRxXBQLKscM?=
- =?us-ascii?Q?hLmBSNA9Vc8RgUvMZdrOXsMEEOh6gHr4seP8oDHZ/6GqwTwcpMfPhxcSmnh3?=
- =?us-ascii?Q?BCQnTn4aujPhNRWQ+NeqmlErxnMg4NQeWHANJfcP0oCf6HKHzM3uJC3KV36T?=
- =?us-ascii?Q?s5oM+1QWhQWi/KA2EOfcUW6m0Kx0aGYUUxiPPJPmV5WUsZYXhMYgunxlHbvB?=
- =?us-ascii?Q?yF68POE5St3CuOj/pTh88+FxIU8QbyWXxCDl5V7eKm+1ow74GmsSWP7rKdda?=
- =?us-ascii?Q?8XeerH6bpK+OPpYR1o31SH0A7avjPpK+R4gWY2euTG068qe2RPIACxErLR8/?=
- =?us-ascii?Q?GYcxmsMhXHCYOs5AguGCmCe6+Fx3Wy8jew1SUNY+C/q+N5fnBIi2+SOkgg1l?=
- =?us-ascii?Q?uTjwn3fIx4Vd5H48G5I2xja0w69MxPfsm4iaO8CFqUnWpNGvpqa9jcBaX3Io?=
- =?us-ascii?Q?KfXhPZ6DnUT4Woo9L9hmvxi4FY1dYDYEiQ9fDp0Xw1mhbkAPeGNb3tLgsWqd?=
- =?us-ascii?Q?AYYxKikAT2yZOmkrCJAEaaikCBZbupSsktpZb7FhrW6zciT1avfkrFmwDMNv?=
- =?us-ascii?Q?xYwJM5hrxhHhCAyCWZHaqklKv5Jymwjs+7ZV+BwnAhrY6RoPq5vrAkTIa5sv?=
- =?us-ascii?Q?oRltdov5R+PA0LBw1dQl/+ZAihYEVQB1sYadENRY2+T3+NuGBh7QUo9gYt0n?=
- =?us-ascii?Q?tNlw3FHE0zN3sxPjwRzAvJp+IOF0j9QD2tZYNd1D8elY4NrJ9VV1LhsiYqeF?=
- =?us-ascii?Q?NxeCBujswQIGnHYf1itdEkhGxdZdbsxlxUWu8e2QyMQiNoMRrmk0MZA9q6W3?=
- =?us-ascii?Q?dSYyuY6pOkY3AiId04J9yj8zcQ+UBiRsRpoBauNA+yGLWNZaxQ/7DrUPK7Nl?=
- =?us-ascii?Q?dHFNfd8q2feDFtvWOsNQHW4YwmD/Vw913u+clGU3MmbZ3tUJhLqxS0HybcQG?=
- =?us-ascii?Q?qpGodv/luYxGNOTO4CP5LEsLRB8AztCjwUmhruXyDCHvSWZeqyRs3NimRKTT?=
- =?us-ascii?Q?EShJVvIZFoDrTuvYO+67v6LnOklc58aDFhd05+TlTTZ4AIqkaYyCL4uY5iNl?=
- =?us-ascii?Q?+6zVL8N5rVuOKzw9tdjra7onjHh2LFM97FjJfx/XcQsgscbAXK9dohvQhAOa?=
- =?us-ascii?Q?95CBvsUEAPsFqvOXhj1Epbyw6UbUd24XW2ZE90BjxsVkQm4F8BuUVwsn8O+7?=
- =?us-ascii?Q?nR8Mht72fRagMDx1Hso3l101mLtl77TnCMwnuHz5PwUTwStTIYimszA8SE0c?=
- =?us-ascii?Q?hzQ0n/329stuWzfL8IXRmjJHHne3ullXBz+oyLRPa9s4svD182PFR98My+Kg?=
- =?us-ascii?Q?9n9vpgd1zEPpYkAhy3aEZzmauQOYpvWlTbWjO2DnqlzatC6VecFfTL59L3/t?=
- =?us-ascii?Q?eQ=3D=3D?=
-X-OriginatorOrg: memverge.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 80a2d3fe-cb25-40c1-bdf7-08dafe26a068
-X-MS-Exchange-CrossTenant-AuthSource: BN6PR17MB3121.namprd17.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2023 16:18:28.3683
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5c90cb59-37e7-4c81-9c07-00473d5fb682
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JXdPMFWnmJ0YcMq/91q+ukVsAqjhO57IU5+2JMUS3BRgeiB1NpjULkdvdeLjmzxZLabDFBEoI5hRuckiKhG0gH+R8Ew96ZOqiWs6IlrSw5o=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR17MB3999
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 11:11:00AM +0100, Lukas Wunner wrote:
-> Gregory Price reports a WARN splat with CONFIG_DEBUG_OBJECTS=y upon CXL
-> probing because pci_doe_submit_task() invokes INIT_WORK() instead of
-> INIT_WORK_ONSTACK() for a work_struct that was allocated on the stack.
-> 
-> All callers of pci_doe_submit_task() allocate the work_struct on the
-> stack, so replace INIT_WORK() with INIT_WORK_ONSTACK() as a backportable
-> short-term fix.
->
-> ... snip ...
-> Reported-by: Gregory Price <gregory.price@memverge.com>
+	Hi Vinod et al,
 
-Tested-by: Gregory Price <gregory.price@memverge.com>
-Reviewed-by: Gregory Price <gregory.price@memverge.com>
+While there exist several optional_get() PHY helper functions, there is
+no optional variant of devm_of_phy_get(), leading to several drivers
+implementing this theirselves, sometimes in buggy ways.
+
+Hence this series, after two cleanup patches, introduces a
+devm_of_phy_optional_get() helper(), and converts existing users of
+devm_of_phy_get() where appropriate.
+
+Changes compared to v1[1]:
+  - Incorporate "[PATCH v2 1/9] phy: Remove unused phy_optional_get()",
+    as it touches the same documentation,
+  - New patch "[PATCH v2 2/9] doc: phy: Document devm_of_phy_get()",
+  - Print an error message in case of failure, as requested by RobH,
+  - Update Documentation,
+  - Clarify removed checks for -ENODEV and -ENOSYS,
+  - Remove error printing in case of real failures from callers,
+  - Rebase am65-cpsw change on top of commit 854617f52ab42418 ("net:
+    ethernet: ti: am65-cpsw: Handle -EPROBE_DEFER for Serdes PHY") in
+    net-next (next-20230123 and later),
+  - Add Reviewed-by, Acked-by.
+
+Most of this series been compile-tested only, but the new helper itself
+has been tested with a new user[2].
+
+Thanks for your comments!
+
+[1] "[PATCH treewide 0/7] phy: Add devm_of_phy_optional_get() helper"
+    https://lore.kernel.org/r/cover.1674036164.git.geert+renesas@glider.be
+[2] "[PATCH 12/12] can: rcar_canfd: Add transceiver support"
+    https://lore.kernel.org/r/e825b50a843ffe40e33f34e4d858c07c1b2ff259.1674499048.git.geert+renesas@glider.be
+
+Geert Uytterhoeven (9):
+  phy: Remove unused phy_optional_get()
+  doc: phy: Document devm_of_phy_get()
+  phy: Add devm_of_phy_optional_get() helper
+  net: fman: memac: Convert to devm_of_phy_optional_get()
+  net: lan966x: Convert to devm_of_phy_optional_get()
+  net: ethernet: ti: am65-cpsw: Convert to devm_of_phy_optional_get()
+  PCI: tegra: Convert to devm_of_phy_optional_get()
+  usb: host: ehci-exynos: Convert to devm_of_phy_optional_get()
+  usb: host: ohci-exynos: Convert to devm_of_phy_optional_get()
+
+ Documentation/driver-api/phy/phy.rst          | 24 +++++----
+ .../net/ethernet/freescale/fman/fman_memac.c  |  9 ++--
+ .../ethernet/microchip/lan966x/lan966x_main.c |  5 +-
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c      |  8 ++-
+ drivers/pci/controller/pci-tegra.c            |  5 +-
+ drivers/phy/phy-core.c                        | 51 +++++++++++--------
+ drivers/usb/host/ehci-exynos.c                | 23 +++------
+ drivers/usb/host/ohci-exynos.c                | 23 +++------
+ include/linux/phy/phy.h                       | 16 +++---
+ 9 files changed, 75 insertions(+), 89 deletions(-)
+
+-- 
+2.34.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
