@@ -2,157 +2,184 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA50B67B524
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:54:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFA6967B531
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:55:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235768AbjAYOyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 09:54:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
+        id S235949AbjAYOz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 09:55:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235807AbjAYOyh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:54:37 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6FC4ABDA;
-        Wed, 25 Jan 2023 06:54:35 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S235922AbjAYOzs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:55:48 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A9C630FE;
+        Wed, 25 Jan 2023 06:55:46 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4513861507;
-        Wed, 25 Jan 2023 14:54:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C046C4339E;
-        Wed, 25 Jan 2023 14:54:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674658474;
-        bh=OfPsqjCdfFGmgTfZWF16Hureluoun8bR802TAkI8y0Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YpDWd2c/L3Fg7tEV/kyHX50qE4tOoMfiaX0Ql1NqzkeZqn0++BDMVCV/9Gg62QbJ0
-         qVX1PKCM3QXMo4Nfr9yNGvjAQsKmGoq2Q8gT8tl7JuaADcwHjh4VVszqKhGmrAf9Ce
-         9bk+MAhbg53vhg6MAQFFqd2oo6xagxjYszFdJxj5E0EGj83qELXSToc/O8Q9tcY+x7
-         h0BmX9vUIZLgE0EjX80u9IhmRv/S8kxMUa6fOVJFNSojqWGUHmscOKkdjG51Kwnn0X
-         GFDDkgF6f1rYmQHE5QHKOuTI5Y9khWNCWEhTsq38JC+tPBbVtNaxJvloTF03Ci7P6e
-         sVZtvclFz2E8w==
-Received: by mail-vk1-f182.google.com with SMTP id bs10so834735vkb.3;
-        Wed, 25 Jan 2023 06:54:34 -0800 (PST)
-X-Gm-Message-State: AFqh2kpyUBI9Sa0Hm3ETlUVBl+PxJZT9qdMuhk5wuvFuq79pp+hdmykg
-        ADpo6oT39SDz8NGriYNR3pWpAyUxQ4mHCHSrtA==
-X-Google-Smtp-Source: AMrXdXsGnF21V74TEUY0OqpSRYqnRbaeqnTLdr1tTSTaPicCis6dSTocq4eqS+YQxRC+ADr9ygRwEn3I7glaWEetrn4=
-X-Received: by 2002:a1f:a002:0:b0:3d5:d30f:81c2 with SMTP id
- j2-20020a1fa002000000b003d5d30f81c2mr4144648vke.14.1674658473582; Wed, 25 Jan
- 2023 06:54:33 -0800 (PST)
-MIME-Version: 1.0
-References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
- <Y86op9oh5ldrZQyG@google.com> <Y862WTT03/JxXUG8@kroah.com>
- <Y9EBSmOoE5+83jS5@axis.com> <Y9EgrKT3hDyx+ULy@kroah.com>
-In-Reply-To: <Y9EgrKT3hDyx+ULy@kroah.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Jan 2023 08:54:21 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
-Message-ID: <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
-Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Lee Jones <lee@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C565B1EC0493;
+        Wed, 25 Jan 2023 15:55:43 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1674658543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Y5InzrMMR7tYD7K8IQxbCKmCrcbndsF98jURDpiEvtA=;
+        b=QhsVXgG9+mQg62pSTSotZNXiTHgj4Kr6DjoD6RzyyIrLoNuw0inT+OEDkhvYR4sZ9y9twf
+        dkUtWiZR9A2rC/a29R9t7FALlEu268HgkolBGU6CkU1ELWPMp15xxUqQFFuhLce3GKLUNv
+        ZZy1MIaPxdrIzvmknDNQqsceFa0jwx4=
+Date:   Wed, 25 Jan 2023 15:55:40 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y9FC7Dpzr5Uge/Mi@zn.tnic>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+ <Y8r2TjW/R3jymmqT@zn.tnic>
+ <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 6:29 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jan 25, 2023 at 11:15:38AM +0100, Vincent Whitchurch wrote:
-> > On Mon, Jan 23, 2023 at 05:31:21PM +0100, Greg Kroah-Hartman wrote:
-> > > On Mon, Jan 23, 2023 at 03:32:55PM +0000, Lee Jones wrote:
-> > > > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
-> > > >
-> > > > > Add a PCI driver which registers all child nodes specified in the
-> > > > > devicetree.  It will allow platform devices to be used on virtual
-> > > > > systems which already support PCI and devicetree, such as UML with
-> > > > > virt-pci.
-> > > > >
-> > > > > The driver has no id_table by default; user space needs to provide one
-> > > > > using the new_id mechanism in sysfs.
-> > > >
-> > > > This feels wrong for several reasons.
-> > > >
-> > > > Firstly, I think Greg (Cc:ed) will have something to say about this.
-> > >
-> > > Yes, this isn't ok.  Please write a real driver for the hardware under
-> > > control here, and that would NOT be a MFD driver (hint, if you want to
-> > > split up a PCI device into different drivers, use the aux bus code, that
-> > > is what it is there for.)
-> >
-> > I hope it's clear from my other replies in this thread that the entire
-> > purpose of this driver is to allow arbitrary platform devices to be used
-> > via a PCI device in virtual environments like User Mode Linux in order
-> > to test existing platform drivers using mocked hardware.
->
-> That still feels wrong, why is PCI involved here at all?
->
-> Don't abuse platform devices like this please, mock up a platform device
-> framework instead if you want to test them that way, don't think that
-> adding a platform device "below" a PCI device is somehow allowed at all.
+On Sat, Jan 21, 2023 at 04:10:23AM +0000, Michael Kelley (LINUX) wrote:
+> Per the commit message for 009767dbf42a, it's not safe to read MSR_AMD64_SEV
+> on all implementations of AMD processors.
 
-My question as well. However, that's only for Vincent's usecase. The
-other ones I'm aware of are definitely non-discoverable MMIO devices
-behind a PCI device.
+1. Why does that matter to you? This is Hygon.
 
-It is perfectly valid in DT to have the same device either directly on
-an MMIO bus or behind some other MMIO capable bus. So what bus type
-should they all be?
+2. The MSR access is behind CPUID check.
 
-> > Given this "hardware", it's not clear what a "real driver" would do
-> > differently.
->
-> Again, you can not have a platform device below a PCI device, that's not
-> what a platform device is for at all.
->
-> > The auxiliary bus cannot be used since it naturally does
-> > not support platform devices.
->
-> The aux bus can support any type of bus (it's there to be used as you
-> want, it's just that people are currently using it for PCI devices right
-> now).
->
-> > A hard coded list of sub-devices cannot be used since arbitrary
-> > platform devices with arbitrary devicetree properties need to be
-> > supported.
->
-> Then make a new bus type and again, do not abuse platform devices.
+> CC_ATTR_ACCESS_IOAPIC_ENCRYPTED is used in io_apic_set_fixmap(), which is
+> called on all Intel/AMD systems without any qualifications.   Even if
+> rdmsrl_safe() works at this point in boot, I'm a little leery of reading a new
+> MSR in a path that essentially every x86 bare-metal system or VM takes during
+> boot.
 
-How about of_platform_bus[1]?
+You read the MSR once and cache it. sme_enable() already does that. I don't see
+what the problem is.
 
-At this point, it would be easier to create a new bus type for
-whatever it is you think *should* be a platform device and move those
-to the new bus leaving platform_bus as the DT/ACPI devices bus.
+> Or am I being overly paranoid about old processor models or hypervisor
+> versions potentially doing something weird?
 
-> > I could move this driver to drivers/bus/ and pitch it as a
-> > "PCI<->platform bridge for testing in virtual environments", if that
-> > makes more sense.
->
-> Again, nope, a platform device is NOT ever a child of a PCI device.
-> That's just not how PCI works at all.
->
-> Would you do the attempt to do this for USB?  (hint, no.)  So why is PCI
-> somehow special here?
+Yes, you are. :)
 
-Actually, yes. It is limited since USB cannot tunnel MMIO accesses
-(though I suppose USB4 PCIe tunneling can?), but we do have some
-platform drivers which don't do MMIO.
+If they're doing something weird which is out of spec, then we'll deal with them
+later.
 
-Suppose I have an FTDI chip with GPIOs on it and I want to do GPIO
-LEDs, keys, bitbanged I2C, etc. Those would use the leds-gpio,
-gpio-keys, i2c-gpio platform drivers.
+> But in any case, the whole point of cc_platform_has() is to provide a level of
+> abstraction from the hardware registers, and it's fully safe to use on every x86
+> bare-metal system or VM.  And while I don't anticipate it now, maybe there's
+> some future scheme where a paravisor-like entity could be used with Intel
+> TDX.  It seems like using a cc_platform_has() abstraction is better than directly
+> accessing the MSR.
 
-Rob
+That's fine but we're talking about this particular implementation and that is
+vTOM-like with the address space split. If TDX does address space split later,
+we can accomodate it too. (Although I think they are not interested in this).
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eca3930163ba8884060ce9d9ff5ef0d9b7c7b00f
+And if you really want to use cc_platform_has(), we could do
+
+	cc_platform_has(CC_ADDRESS_SPACE_SPLIT_ON_A_PARAVISOR)
+
+or something with a better name.
+
+The point is, you want to do things which are specific for this particular
+implementation. If so, then check for it. Do not do hacky things which get the
+work done for your case but can very easily be misused by others.
+
+> My resolution of the TPM driver issue is admittedly a work-around.   I think
+> of it as temporary in anticipation of future implementations of PCIe TDISP
+> hardware, which allows PCI devices to DMA directly into guest encrypted
+> memory.
+
+Yap, that sounds real nice.
+
+> TDISP also places the device's BAR values in an encrypted portion
+> of the GPA space. Assuming TDISP hardware comes along in the next couple
+> of years, Linux will need a robust way to deal with a mix of PCI devices
+> being in unencrypted and encrypted GPA space.  I don't know how a
+> specific device will be mapped correctly, but I hope it can happen in the
+> generic PCI code, and not by modifying each device driver.
+
+I guess those devices would advertize that capability somehow so that code can
+query it and act accordingly.
+
+> It's probably premature to build that robust mechanism now, but when it comes,
+> my work-around would be replaced.
+
+It would be replaced if it doesn't have any users. By the looks of it, it'll
+soon grow others and then good luck removing it.
+
+> With all that in mind, I don't want to modify the TPM driver to special-case
+> its MMIO space being encrypted.  FWIW, the TPM driver today uses
+> devm_ioremap_resource() to do the mapping, which defaults to mapping
+> decrypted except for the exceptions implemented in __ioremap_caller().
+> There's no devm_* option for specifying encrypted.
+
+You mean, it is hard to add a DEVM_IOREMAP_ENCRYPTED type which will have
+__devm_ioremap() call ioremap_encrypted()?
+
+Or define a IORESOURCE_ENCRYPTED and pass it through the ioresource flags?
+
+Why is that TPM driver so precious that it can be touched and the arch code
+would have to accept hacks?
+
+> Handling decrypted vs. encrypted in the driver would require extending the
+> driver API to provide an "encrypted" option, and that seems like going in the
+> wrong long-term direction.
+
+Sorry, I can't follow here.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
