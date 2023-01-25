@@ -2,157 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5485467B358
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 14:34:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1663F67B386
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 14:38:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235449AbjAYNeI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 08:34:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59000 "EHLO
+        id S234879AbjAYNim (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 08:38:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233330AbjAYNeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 08:34:08 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 980FE4CE47;
-        Wed, 25 Jan 2023 05:34:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2F7C361449;
-        Wed, 25 Jan 2023 13:34:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 344F7C433D2;
-        Wed, 25 Jan 2023 13:34:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1674653643;
-        bh=CzW3zBsYmO2eQ//HaKiDjgXblnunSy6jgP+bU4BqWoU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r4WLmbpJI8HKn3osqJ8KAZo5aHIkW3hBs7gPzTOOOST0azfTJ8nwZJZgEEe6KcFmB
-         0NYqXXkQQBDiJZ3WFP2TvfRbr31EaUzHtmhH1yIhS3fyecMkexfPk139LsG8CM1MYj
-         6bbBfRaGsF7tz2AwG6rx1xYLVRCBuMlONGUwgXhU=
-Date:   Wed, 25 Jan 2023 14:34:01 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
-Cc:     Lee Jones <lee@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>, "robh@kernel.org" <robh@kernel.org>
-Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
-Message-ID: <Y9EvyRqdpzJCcD63@kroah.com>
-References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
- <Y86op9oh5ldrZQyG@google.com>
- <Y862WTT03/JxXUG8@kroah.com>
- <Y9EBSmOoE5+83jS5@axis.com>
- <Y9EgrKT3hDyx+ULy@kroah.com>
- <Y9EpUnRDmWPobcrL@axis.com>
+        with ESMTP id S232999AbjAYNil (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 08:38:41 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF2355287;
+        Wed, 25 Jan 2023 05:38:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MN2o1tmobPwsFbAvPtTmkzG8pom4NNKLlKIt+9vmDfSvziHjhaenhIlVJNVDYa3dd+/QyqwK9Es/mUz7vj7b0zB9hJlcFBhSsju76FOk/ph27tWy8rbD/rskuQka9N9hp+VaoEX3kE2Pp9lCN/P4qDryBkbdHLAJD18qO2s9GkaIrH7aHrjHoorwAgJ1IwmmPmbbj9HNb5SWXvrdMA/D06a7+/RKz+QwsvVBO94Wh9dljjloalhEPUjaPLBTrq3+bE+y+2oMGegHTa4SGJ2fQ9lSWc0bqfysCIQo4/00qPpDNIw96gsVEkjcfjFL9+rBCXcNrS9VK7ebHrU25tg7EA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=/hbbEmp/tNCntjFwtt0pqVXSqee6QGw8Pkya/zDrDA8=;
+ b=HJuR78MvCvVCzZBuyj6hu8gY+O9AYlKNBo97kxPN0hIhzUS7WggplXHQCqMx4mG2D7yNCRiNibBD1HIWJmj1FR7CZFW+DWD8YezTtWpsrie9XeTRTNW21cQ8RjqpUIc5ZE85uYKgcvSzC3OgdMIll2kADrkMkeNk/EnEhz5n2u39HSaELzI00QTvEBpIk8AyP+RlkDb6MumN3ELkqFsH4qs2zehBEKX1mDyYHaI/CYA0FIQauogWmhjfh6eOAlMAWAxm202lg4xy5cw//S8FFarFY69STx0H20IjkgEx1Wo4TZjmh7bsIzBFvUxeAZhLs6VOx0zPK+ySgLiLRAK4ng==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/hbbEmp/tNCntjFwtt0pqVXSqee6QGw8Pkya/zDrDA8=;
+ b=GN37D+FuJSDnDzRGtw3bE1b/R/rcMY43HYmMCoLrUhjMq8u4VueMGDwQyVE2o+fzF9NKhD1NdH6QJIDjJ8glfPPzJOnBGS0OFyoY8A0YkHXEXo4dNi+jUEQzZWzG/VEVksA79mQlzu2lBvQcNaA/CNbe9UfBdS82MIvYm2OgtXEl608VQbQexOtv05hPqKdJtEbBVxJoPYjYGyGIV123BQM8XOnzfHjPZYMKCocyM4nLZ6kVSEsjJ6JSDoGDTEGsg3Xbx/zihREFVfoL+5txgroOOderm5PULr/1TYPMbnAXPCXqnDSkkymbfya7LLt6qEmKTyk9Y1ssJgrLafLomg==
+Received: from MW4PR02CA0029.namprd02.prod.outlook.com (2603:10b6:303:16d::34)
+ by DS0PR12MB8272.namprd12.prod.outlook.com (2603:10b6:8:fc::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6043.21; Wed, 25 Jan 2023 13:38:38 +0000
+Received: from CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:16d:cafe::7) by MW4PR02CA0029.outlook.office365.com
+ (2603:10b6:303:16d::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.21 via Frontend
+ Transport; Wed, 25 Jan 2023 13:38:38 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ CO1NAM11FT027.mail.protection.outlook.com (10.13.174.224) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6023.16 via Frontend Transport; Wed, 25 Jan 2023 13:38:38 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 25 Jan
+ 2023 05:38:37 -0800
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Wed, 25 Jan 2023 05:38:36 -0800
+Received: from vidyas-desktop.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.986.36 via Frontend
+ Transport; Wed, 25 Jan 2023 05:38:33 -0800
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <bhelgaas@google.com>,
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        <rafael.j.wysocki@intel.com>, <kai.heng.feng@canonical.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <treding@nvidia.com>, <jonathanh@nvidia.com>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
+Subject: [PATCH V1] PCI/ASPM: Update saved buffers with latest ASPM configuration
+Date:   Wed, 25 Jan 2023 19:08:30 +0530
+Message-ID: <20230125133830.20620-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y9EpUnRDmWPobcrL@axis.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT027:EE_|DS0PR12MB8272:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78eadf38-d1a6-46c2-c59b-08dafed976e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: s20q6Ov20a1VKSXYXBuAQ0wsg8RIJx7WiKn2vSLG/PqYlIWdWI+thcWW1wqdXjVZpVwMwIaEH78n6PAF7GiFT4d0t17cb0mTfQwA5j5OUKNQTwguD9Fu4iKDhPPVFilSndYLEQU80rIMAU1NqoH0at+5UWKOPG1i5w1xfIWQA1maOruTQ1ewfR+EW3vIJ3ysvgvSBhcvJklZA6r3A3D4tnACh5dA65FqLJHUT/2xI7aC6FT5iUXIoL69bei+oqtaBXoNcU4clsxcRXBphtR/e9EQ6U6SOAUs95GvdvhLvQ2Fv5cgPTeINeAeBHSB+apTsY6lG1me5AdzUJqL64olZWmeLdgA3jwH7wazw/EIm7QLc4/A2e5l5lpoYEu/LXbdnJUcRdBHQ0LMUFWHoaW2DvCDlsTumcYJJkaNWx57HVnaFCAspP9rvM219RUVp/KHGKsXvsH6WXFFg7ylOE6xmt+E7gWy6b/MKAHOJ9zLRnP4xP5y1PMFfL8wcha7NHK4c4ACZhMqBXf56XviKcPBpqrKQQBWBIl/FKNck5ofx+Fq2/EaoTaW8cCgBPcuSmV8V3ielAB8rPA/dSD4rvDIySFuetU16fdePJteqk+FwiDlZjLJK+J+VhiZFH1WsccT6nllC8y/kDVRVvfPwrmTy2/DIm/xIaV3KZALgb0fShMvEiie5xmdW1Kou5qJIMlDtkPshmMTUOgrnnh6dw7VQaT3Gttr4laN/nR4elI9hvQ=
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(39860400002)(396003)(346002)(451199018)(36840700001)(40470700004)(46966006)(36756003)(426003)(41300700001)(2616005)(47076005)(8936002)(336012)(356005)(7636003)(82740400003)(15650500001)(2906002)(5660300002)(83380400001)(1076003)(86362001)(82310400005)(186003)(26005)(478600001)(7696005)(70206006)(70586007)(8676002)(4326008)(316002)(36860700001)(54906003)(110136005)(40480700001)(40460700003)(309714004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Jan 2023 13:38:38.1733
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78eadf38-d1a6-46c2-c59b-08dafed976e8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT027.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8272
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 02:06:26PM +0100, Vincent Whitchurch wrote:
-> On Wed, Jan 25, 2023 at 01:29:32PM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Jan 25, 2023 at 11:15:38AM +0100, Vincent Whitchurch wrote:
-> > > I hope it's clear from my other replies in this thread that the entire
-> > > purpose of this driver is to allow arbitrary platform devices to be used
-> > > via a PCI device in virtual environments like User Mode Linux in order
-> > > to test existing platform drivers using mocked hardware.
-> > 
-> > That still feels wrong, why is PCI involved here at all?
-> >
-> > Don't abuse platform devices like this please, mock up a platform device
-> > framework instead if you want to test them that way, don't think that
-> > adding a platform device "below" a PCI device is somehow allowed at all.
-> 
-> As you know, PCI allows exposing an MMIO region to the host, so the host
-> can use ioremap() and readl()/writel() on it.  This allows reusing
-> platform drivers even though the device is on the other side of a PCI
-> bus.
-> 
-> There is hardware already supported by the kernel since a long time ago
-> which is handled by putting platform devices below PCI devices.  See
-> add_bus_probe() in arch/x86/kernel/devicetree.c.
+Many PCIe device drivers save the configuration state of their respective
+devices during probe and restore the same when their 'slot_reset' hook
+is called through PCIe Error Recovery System.
+If the system has a change in ASPM policy after the driver's probe is
+called and before error event occurred, 'slot_reset' hook restores the
+PCIe configuration state to what it was at the time of probe but not with
+what it was just before the occurrence of the error event.
+This effectively leads to a mismatch in the ASPM configuration between
+the device and its upstream parent device.
+This patch addresses that issue by updating the saved configuration state
+of the device with the latest info whenever there is a change w.r.t ASPM
+policy.
 
-Those are not platform devices below a PCI device from what I can tell,
-and if it is, it's wrong and should be fixed up.  Don't perpetuate bad
-design decisions of the past please.
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+---
+ drivers/pci/pci.h       |  4 ++++
+ drivers/pci/pcie/aspm.c | 40 ++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 44 insertions(+)
 
-> And this hardware also wants to do the same thing:
-> 
->  https://lore.kernel.org/lkml/1674183732-5157-1-git-send-email-lizhi.hou@amd.com/
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 9ed3b5550043..f4a91d4fe96d 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -566,12 +566,16 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+ void pcie_aspm_init_link_state(struct pci_dev *pdev);
+ void pcie_aspm_exit_link_state(struct pci_dev *pdev);
+ void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
++void pci_save_aspm_state(struct pci_dev *dev);
++void pci_restore_aspm_state(struct pci_dev *dev);
+ void pci_save_aspm_l1ss_state(struct pci_dev *dev);
+ void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
+ #else
+ static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
+ static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
++static inline void pci_save_aspm_state(struct pci_dev *dev) { }
++static inline void pci_restore_aspm_state(struct pci_dev *dev) { }
+ static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
+ static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
+ #endif
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 53a1fa306e1e..f25e0440d36b 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -151,6 +151,7 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
+ 						   PCI_EXP_LNKCTL_CLKREQ_EN,
+ 						   val);
+ 	link->clkpm_enabled = !!enable;
++	pci_save_aspm_state(child);
+ }
+ 
+ static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
+@@ -757,6 +758,39 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ 				PCI_L1SS_CTL1_L1SS_MASK, val);
+ }
+ 
++void pci_save_aspm_state(struct pci_dev *dev)
++{
++	int i = 0;
++	struct pci_cap_saved_state *save_state;
++	u16 *cap;
++
++	if (!pci_is_pcie(dev))
++		return;
++
++	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
++	if (!save_state)
++		return;
++
++	cap = (u16 *)&save_state->cap.data[0];
++	i++;
++	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &cap[i++]);
++}
++
++void pci_restore_aspm_state(struct pci_dev *dev)
++{
++	int i = 0;
++	struct pci_cap_saved_state *save_state;
++	u16 *cap;
++
++	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
++	if (!save_state)
++		return;
++
++	cap = (u16 *)&save_state->cap.data[0];
++	i++;
++	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
++}
++
+ void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+ {
+ 	struct pci_cap_saved_state *save_state;
+@@ -849,6 +883,12 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ 		pcie_config_aspm_dev(parent, upstream);
+ 
+ 	link->aspm_enabled = state;
++
++	/* Update latest ASPM configuration in saved context */
++	pci_save_aspm_state(link->downstream);
++	pci_save_aspm_l1ss_state(link->downstream);
++	pci_save_aspm_state(parent);
++	pci_save_aspm_l1ss_state(parent);
+ }
+ 
+ static void pcie_config_aspm_path(struct pcie_link_state *link)
+-- 
+2.17.1
 
-That too is wrong.
-
-That is NOT what the platform devices and drivers are for at all, make
-them some other type of device please, which is why the aux bus was
-created.
-
-> Also, UML already supports out-of-process PCI, and there is ongoing work
-> in QEMU to add support for out-of-process PCI emulation.  So using PCI
-> will allow this to work on different kinds of virtual environments
-> without having to invent a new method specifically for platform devices.
-
-I don't see how PCI is relevant here, sorry.
-
-> > > The auxiliary bus cannot be used since it naturally does
-> > > not support platform devices.
-> > 
-> > The aux bus can support any type of bus (it's there to be used as you
-> > want, it's just that people are currently using it for PCI devices right
-> > now).
-> 
-> I assume we're talking about drivers/base/auxiliary.c?  The kernel doc
-> says:
-> 
->  * A key requirement for utilizing the auxiliary bus is that there is no
->  * dependency on a physical bus, device, register accesses or regmap support.
->  * These individual devices split from the core cannot live on the platform bus
->  * as they are not physical devices that are controlled by DT/ACPI.
-> 
-> But this case the sub-devices do need standard register access with
-> readl()/writel() and _are_ controlled by devicetree.
-
-Ok, let's make a new bus for them then.  As obviously they are not
-platform devices if they live on the PCI bus.
-
-> > > A hard coded list of sub-devices cannot be used since arbitrary
-> > > platform devices with arbitrary devicetree properties need to be
-> > > supported.
-> > 
-> > Then make a new bus type and again, do not abuse platform devices.
-> 
-> How can existing platform drivers be re-used if you invent a new bus
-> type and don't create platform devices?
-
-The same way we reuse lots of drivers for devices on different busses
-today.
-
-> > > I could move this driver to drivers/bus/ and pitch it as a
-> > > "PCI<->platform bridge for testing in virtual environments", if that
-> > > makes more sense.
-> > 
-> > Again, nope, a platform device is NOT ever a child of a PCI device.
-> > That's just not how PCI works at all.
-> > 
-> > Would you do the attempt to do this for USB?  (hint, no.)  So why is PCI
-> > somehow special here?
-> 
-> PCI is special because it allows exposing an MMIO region to the host and
-> allowing the host to access it like any other I/O memory.  USB doesn't
-> allow that.
-
-So you are saying that just because a bus type exports MMIO regions, it
-should be allowed to be a platform device?  Sorry, but make that a new
-bus type as obviously it is something else.  Maybe these are all just
-real PCI devices (or sub devices), so treat them like that please.
-
-thanks,
-
-greg k-h
