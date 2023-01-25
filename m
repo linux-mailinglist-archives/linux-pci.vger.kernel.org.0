@@ -2,176 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A35A667B606
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 16:34:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1BD0067B807
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 18:09:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234540AbjAYPe0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 10:34:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56980 "EHLO
+        id S234565AbjAYRJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 12:09:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230089AbjAYPeZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 10:34:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 455BB37F2B;
-        Wed, 25 Jan 2023 07:34:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id EB032B80990;
-        Wed, 25 Jan 2023 15:34:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94015C433D2;
-        Wed, 25 Jan 2023 15:34:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674660854;
-        bh=umc2arEjS5hASEcWst4KSnUtu/WD905vibgkc+vPU2I=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eGtIwwpb7rjyJJ8nmi+ZOS1pAP8gwDM/eO9eEbZRrqvlgkZRbtfMj/qWUZwkgw3cO
-         y8B+UN+LukJ6aYame2EW6gtDttog6i/PdwyndifRaV8TDW3wP1TE7oo7tpKtJ+/JN4
-         9vZLtf+MpZOVcZP5b8ayXRXAT30NqncFgTRBRMnbM+EL8nichpMOpzRDX7vIkRnrBj
-         VNl2wNjUbmh1EIVUNski7G3YCIC+sfkMILoxRkdxVsvOtZwFmub9RXBbC+6XMT/B2L
-         Gmis3ns+lwGR2AhjTBhU2Crt7FPl4ihL6Wf8W8NZLkfkll4CtSnF+/8i7JVboz2/rZ
-         HTL05raT5ELBA==
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5063029246dso100776407b3.6;
-        Wed, 25 Jan 2023 07:34:14 -0800 (PST)
-X-Gm-Message-State: AFqh2kqjlha/fF+qjQKPucpCijtJY8aqmIisX7pu1lMLNTRNs+Mq2SRi
-        RzrNeffzmvqkWIdtixbizEWCQm08NCAPlPNrhw==
-X-Google-Smtp-Source: AMrXdXv2RU4fY0q9umUdMoP1XW5HdAjtg9b0UXKHlF2lwCX+hP0b4xrin/HR6b/G1kb467LpcYn26pq1mYdJSwHadok=
-X-Received: by 2002:a81:a50f:0:b0:4ed:9349:97d3 with SMTP id
- u15-20020a81a50f000000b004ed934997d3mr3935669ywg.357.1674660853564; Wed, 25
- Jan 2023 07:34:13 -0800 (PST)
+        with ESMTP id S234903AbjAYRJV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 12:09:21 -0500
+X-Greylist: delayed 270 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Jan 2023 09:08:59 PST
+Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:400:100::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D7145AB5D
+        for <linux-pci@vger.kernel.org>; Wed, 25 Jan 2023 09:08:58 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1674666260; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Ozy43R5N4iHgaTJJCtnErFSh+5tKBrEwdju/s0SA8W0qTJs4T8304kFHfma3qVPrga
+    g3lsB4I5P2+46UfoqGK2STnMqzyntqWZVe8QBJtq9OAxWQ1GhwC4+2uhnB7zB+Lci6Q2
+    s50JRpxwkpevidOk6TcC4unNazaTbxef2GAyD0CCiaFXcNCIPc6ZiQqx5fKS7VEaaj0F
+    mjoUk7T25WfHKUISG/FjJOCO9t5PT5j5kfvesCnHjn9SBgHyQzXyvqc8wzOsXVicnREV
+    0z3ZKYAiTsgDFKdURcWQRZKRnL/QI392jemRf5s3OiG+acLvCLueYlFJXptq4Tz1ZZuU
+    MDEg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
+    b=QgrjCUsvB48gJOEOgHy5fLQ5MJeswizTOM1zZVMPgPBDwQF0K0a1k/VcObHFUgeaor
+    77NNneYvQcNDMBBMaQr9XuAVvPI7pwMJTTYnu4Dn3wJo4M2YpcYZjP4YQ3GC+pRdQN4P
+    dMG4XXtNw0nOKZ1P+2MbtFyWGfj6iohwmQVmpQjJrcIF4e0viWATfa70XSQ9anfBMcEw
+    4HZ7/W6GJcQ0StRcGdvYNfqwYJCOw6qChdA5Xbn140/+W8B3x6xZ8VJuaICKi604g54+
+    4d3rSTeImqqd01pBuXtd9HbRzt/paSqKPZ5h8Zm+LaozqcSGsVSfVq6Gh2HUmoj4TyFJ
+    Ur+A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo00
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
+    s=strato-dkim-0002; d=aepfle.de;
+    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
+    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
+    b=ninPPoKNj6kZcUCr5uN64VDF9fHhUH6tTGVw2LlH9z2FJ0T+KbFShEr+DiL8TLL1bA
+    idLLvhOQDA+8afXr+KQmQ9hIpip0hGvpQggo8gmGNFyMOOgskiL/EliL5GtOEWfNs3qo
+    RqH91Lk7wJcGo6vjJolk2RVPMeR57fI9MuyeMccjO5/jt33zSejzRnbhQDWfPxjHN7cB
+    F5MLFEPAj2AGM4Tt0dFuYHnks7wcfq2rZgUiAS8SlmwWU50F6cYAltVi5taOxkNUseGN
+    rbGIs5G/HFPD8yN7kA3eR8Qpmytk6DSD4f6e8xc7KSDseDTnjGquhlSCC499qmEYRNoP
+    Bsvg==
+X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OuD5rXVisR4U0KIPE/saK9bfzyVdurcrIu9Z6SKY+a6gtBCfg=="
+Received: from sender
+    by smtp.strato.de (RZmta 49.2.2 AUTH)
+    with ESMTPSA id m23e47z0PH4K8E3
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Wed, 25 Jan 2023 18:04:20 +0100 (CET)
+Date:   Wed, 25 Jan 2023 18:04:11 +0100
+From:   Olaf Hering <olaf@aepfle.de>
+To:     linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     linux-pci@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
+Subject: unlocked access to struct irq_data->chip_data in pci_hyperv
+Message-ID: <20230125180411.4742f159.olaf@aepfle.de>
+X-Mailer: Claws Mail 20220819T065813.516423bc hat ein Softwareproblem, kann man nichts machen.
 MIME-Version: 1.0
-References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
- <Y86op9oh5ldrZQyG@google.com> <Y862WTT03/JxXUG8@kroah.com>
- <Y9EBSmOoE5+83jS5@axis.com> <Y9EgrKT3hDyx+ULy@kroah.com> <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
- <Y9FEJAah8y0aY1L2@kroah.com>
-In-Reply-To: <Y9FEJAah8y0aY1L2@kroah.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 25 Jan 2023 09:34:01 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL02_z8ePyAObbe219iYcCyPKGURYvT3_yuG5B4qxXSeQ@mail.gmail.com>
-Message-ID: <CAL_JsqL02_z8ePyAObbe219iYcCyPKGURYvT3_yuG5B4qxXSeQ@mail.gmail.com>
-Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Lee Jones <lee@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; boundary="Sig_/OC_Wmt2rWUMlPreEezo4f_B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 9:00 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jan 25, 2023 at 08:54:21AM -0600, Rob Herring wrote:
-> > On Wed, Jan 25, 2023 at 6:29 AM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Wed, Jan 25, 2023 at 11:15:38AM +0100, Vincent Whitchurch wrote:
-> > > > On Mon, Jan 23, 2023 at 05:31:21PM +0100, Greg Kroah-Hartman wrote:
-> > > > > On Mon, Jan 23, 2023 at 03:32:55PM +0000, Lee Jones wrote:
-> > > > > > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
-> > > > > >
-> > > > > > > Add a PCI driver which registers all child nodes specified in the
-> > > > > > > devicetree.  It will allow platform devices to be used on virtual
-> > > > > > > systems which already support PCI and devicetree, such as UML with
-> > > > > > > virt-pci.
-> > > > > > >
-> > > > > > > The driver has no id_table by default; user space needs to provide one
-> > > > > > > using the new_id mechanism in sysfs.
-> > > > > >
-> > > > > > This feels wrong for several reasons.
-> > > > > >
-> > > > > > Firstly, I think Greg (Cc:ed) will have something to say about this.
-> > > > >
-> > > > > Yes, this isn't ok.  Please write a real driver for the hardware under
-> > > > > control here, and that would NOT be a MFD driver (hint, if you want to
-> > > > > split up a PCI device into different drivers, use the aux bus code, that
-> > > > > is what it is there for.)
-> > > >
-> > > > I hope it's clear from my other replies in this thread that the entire
-> > > > purpose of this driver is to allow arbitrary platform devices to be used
-> > > > via a PCI device in virtual environments like User Mode Linux in order
-> > > > to test existing platform drivers using mocked hardware.
-> > >
-> > > That still feels wrong, why is PCI involved here at all?
-> > >
-> > > Don't abuse platform devices like this please, mock up a platform device
-> > > framework instead if you want to test them that way, don't think that
-> > > adding a platform device "below" a PCI device is somehow allowed at all.
-> >
-> > My question as well. However, that's only for Vincent's usecase. The
-> > other ones I'm aware of are definitely non-discoverable MMIO devices
-> > behind a PCI device.
-> >
-> > It is perfectly valid in DT to have the same device either directly on
-> > an MMIO bus or behind some other MMIO capable bus. So what bus type
-> > should they all be?
->
-> If the mmio space is behind a PCI device, then why isn't that a special
-> bus type for that "pci-mmio" or something, right?  Otherwise what
-> happens when you yank out that PCI device?  Does that work today for
-> these platform devices?
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Well, yes, I'm sure there's lots of issues with hot-unplug and DT.
-That's pretty much anything using DT, not just platform devices. Those
-will only get fixed when folks try to do that, but so far we've mostly
-prevented doing that. For example, we don't support a generic
-mechanism to add and remove DT overlays because most drivers aren't
-ready for their DT node to disappear.
+Hello,
 
-Is there some restriction that says platform_bus can't do hotplug? I
-thought everything is hotpluggable (in theory).
+there are several crash reports due to struct irq_data->chip_data being NUL=
+L.
 
-> > > > Given this "hardware", it's not clear what a "real driver" would do
-> > > > differently.
-> > >
-> > > Again, you can not have a platform device below a PCI device, that's not
-> > > what a platform device is for at all.
-> > >
-> > > > The auxiliary bus cannot be used since it naturally does
-> > > > not support platform devices.
-> > >
-> > > The aux bus can support any type of bus (it's there to be used as you
-> > > want, it's just that people are currently using it for PCI devices right
-> > > now).
-> > >
-> > > > A hard coded list of sub-devices cannot be used since arbitrary
-> > > > platform devices with arbitrary devicetree properties need to be
-> > > > supported.
-> > >
-> > > Then make a new bus type and again, do not abuse platform devices.
-> >
-> > How about of_platform_bus[1]?
->
-> Fair enough :)
->
-> > At this point, it would be easier to create a new bus type for
-> > whatever it is you think *should* be a platform device and move those
-> > to the new bus leaving platform_bus as the DT/ACPI devices bus.
->
-> platfom bus should be for DT/ACPI devices like that, but that's not what
-> a "hang a DT off a PCI device" should be, right?  Why is mmio space
-> somehow special here?
+I was under the impression all the "recent changes" to pci-hyperv.c
+would fix them. But apparently this specific issue is still there.
 
-Only because platform_bus is the bus type in the kernel that supports
-MMIO devices and that the DT code uses to instantiate them. The DT
-code doesn't care if those are at the root level or behind some other
-bus type.
+What does serialize read and write access to struct irq_data->chip_data?
+It seems hv_msi_free can run while other code paths still access at least
+->chip_data.
 
-> Perhaps we just add support for that to the aux
-> bus?
+The change below may reduce the window, but I'm not confident this would
+actually resolve the concurrency issues.
 
-Yes, we could add IOMEM resources, DT ID table and matching, etc., but
-we'd just end up back at of_platform_bus with a new name. Every driver
-doing both would have 2 driver structs and register calls. What do we
-gain from that?
 
-Rob
+Olaf
+
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -1760,8 +1760,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		    msi_desc->nvec_used > 1;
+=20
+ 	/* Reuse the previous allocation */
+-	if (data->chip_data && multi_msi) {
+-		int_desc =3D data->chip_data;
++	virt_rmb();
++	int_desc =3D READ_ONCE(data->chip_data);
++	if (int_desc && multi_msi) {
+ 		msg->address_hi =3D int_desc->address >> 32;
+ 		msg->address_lo =3D int_desc->address & 0xffffffff;
+ 		msg->data =3D int_desc->data;
+@@ -1778,8 +1779,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
+ struct msi_msg *msg)
+ 		goto return_null_message;
+=20
+ 	/* Free any previous message that might have already been composed. */
+-	if (data->chip_data && !multi_msi) {
+-		int_desc =3D data->chip_data;
++	virt_rmb();
++	int_desc =3D READ_ONCE(data->chip_data);
++	if (int_desc && !multi_msi) {
+ 		data->chip_data =3D NULL;
+ 		hv_int_desc_free(hpdev, int_desc);
+ 	}
+
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B
+Content-Type: application/pgp-signature
+Content-Description: Digitale Signatur von OpenPGP
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmPRYQsACgkQ86SN7mm1
+DoBJCQ/+NlH8vXC/YpxQ3IrQF9M1MNNdceL7s+qTwSfGu99p486VXeJ8deCehKY/
+QfvUaw3WaJ9a4JEIvxiNQ4rRiQ5QHH6Prv8LgK6ebBrV2WI5ZnOz40jrJL4Wt026
+sQZGQtsMfn7ZK4XCx/lM7eTfXmAjBhoPcSewDY+DATfIzPxsxiG3iI3GGGVy1S0/
+IVOnEZpM0a2bdhx4L3V47AaqQIQBerC4w7tu6Zij7tYsRree4KM4OthbDijwpDCp
+rdkKFO/aj9FB1AUdYrVg2nH5G9xoeDH1oOipgb9JX/33TFxkOgo9WMvfKpq/Rwg2
+gr1tuzVXnRBSYhnkuGUv012ZJBWqRot00xjBjURMkZyoAW4tAN8uCyz2b3s6Rb6Z
+4oNIETzyIoBPZFPD9h5HSvD8CClArqzxL+2gcYD5mQWRRhGwhb8ZXRdY20Um2EIi
+xRoSBP06J5AdpGa0mNs7nB22rM1fFWGjIndcD/zIRWQe1Uw32DYFpYPgA1m+CC6Y
+tzEmJtKPGfz10MWG8InE2rNENVEslQiNi9Or8v0+WVeK+9c27GHnvQ8xYLrY6RVR
+7Gs9j+xJGuXirw4PphIpAO2zz5lGS04PdMUOD5mKtqCKlB9t4f6bhqehfMvRdnUF
+YDMBcTC+e2V1qpTJRpqYV9cRTeSkW11WOjjaEwSl6/PYrtpSsjg=
+=zgqN
+-----END PGP SIGNATURE-----
+
+--Sig_/OC_Wmt2rWUMlPreEezo4f_B--
