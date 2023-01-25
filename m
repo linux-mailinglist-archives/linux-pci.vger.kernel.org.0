@@ -2,148 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C1B567B40D
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:16:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66E9867B4DF
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:39:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233235AbjAYOQ4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 09:16:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52868 "EHLO
+        id S235726AbjAYOjs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 09:39:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235708AbjAYOQh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:16:37 -0500
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E46C59269;
-        Wed, 25 Jan 2023 06:16:31 -0800 (PST)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 30PEFpX5078732;
-        Wed, 25 Jan 2023 08:15:51 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1674656151;
-        bh=jRRc/TwCn2Ab7SzgY7gDKwVopy46rdstAXyfHcFys4A=;
-        h=Date:Subject:To:CC:References:From:In-Reply-To;
-        b=vALcbRAguG9MxIGMrgaTsbC/nmS3Zl5vRKmpPO3OtwUXKdb1Nhjz88nyeS6A5rLvD
-         9jfOGnkOwgTpsKKr4V382r4WOFSc0YOsNN28iCbd6NMyWJBDCOFZq/p/aJVS9Xztl0
-         ENYcBdLWK/w2oMVUj0kMciAd6lF2IAtUMO7uGv24=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 30PEFpFh070481
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 25 Jan 2023 08:15:51 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 25
- Jan 2023 08:15:51 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Wed, 25 Jan 2023 08:15:51 -0600
-Received: from [10.250.234.92] (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 30PEFlUE084111;
-        Wed, 25 Jan 2023 08:15:48 -0600
-Message-ID: <a9e3fc94-cf0d-2cfd-640f-c81dfe35f05a@ti.com>
-Date:   Wed, 25 Jan 2023 19:45:46 +0530
+        with ESMTP id S235619AbjAYOjr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:39:47 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61CE3C642;
+        Wed, 25 Jan 2023 06:39:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8FF461520;
+        Wed, 25 Jan 2023 14:38:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCBEC433D2;
+        Wed, 25 Jan 2023 14:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1674657505;
+        bh=0pN6iUk0frIEY9jd5haQTHTxexp54lAmG4VMISAveTs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bszh+lRbTRrhEPHElC/vn3g0DHY+0OEb5+8Y4cW1RAwFlJ+xv55Y2sf/joav/FerR
+         GW+LYrzb/W6VwieJHov+E95G+R77WxMTqVVP2HU2ehwBsBP58XsSNlmEamrp025KSf
+         mdsQVM+RfHqiuuyyUVYXFGngBgWHxz+FR/B7SgW0=
+Date:   Wed, 25 Jan 2023 15:38:22 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Vinod Koul <vkoul@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        UNGLinuxDriver@microchip.com,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Siddharth Vadapalli <s-vadapalli@ti.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-phy@lists.infradead.org, linux-doc@vger.kernel.org,
+        netdev@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] usb: host: ohci-exynos: Convert to
+ devm_of_phy_optional_get()
+Message-ID: <Y9E+3pSA6/aANQpu@kroah.com>
+References: <cover.1674584626.git.geert+renesas@glider.be>
+ <3adc5dd1149a17ea7daf4463549feab886c6b145.1674584626.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [RESEND PATCH] PCI: cadence: Fix Gen2 Link Retraining process
-Content-Language: en-US
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>, <tjoseph@cadence.com>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <bhelgaas@google.com>, <nadeem@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>, <nm@ti.com>
-References: <20230102075656.260333-1-s-vadapalli@ti.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-In-Reply-To: <20230102075656.260333-1-s-vadapalli@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-5.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3adc5dd1149a17ea7daf4463549feab886c6b145.1674584626.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 02/01/23 1:26 pm, Siddharth Vadapalli wrote:
-> The Link Retraining process is initiated to account for the Gen2 defect in
-> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
-> is i2085, documented at:
-> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
+On Tue, Jan 24, 2023 at 07:37:28PM +0100, Geert Uytterhoeven wrote:
+> Use the new devm_of_phy_optional_get() helper instead of open-coding the
+> same operation.
 > 
-> The existing workaround implemented for the errata waits for the Data Link
-> initialization to complete and assumes that the link retraining process
-> at the Physical Layer has completed. However, it is possible that the
-> Physical Layer training might be ongoing as indicated by the
-> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+> As devm_of_phy_optional_get() returns NULL if either the PHY cannot be
+> found, or if support for the PHY framework is not enabled, it is no
+> longer needed to check for -ENODEV or -ENOSYS.
 > 
-> Fix the existing workaround, to ensure that the Physical Layer training
-> has also completed, in addition to the Data Link initialization.
+> This lets us drop several checks for IS_ERR(), as phy_power_{on,off}()
+> handle NULL parameters fine.
 > 
-> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> ---
->  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 940c7dd701d6..5b14f7ee3c79 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,6 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> +#define LINK_RETRAIN_TIMEOUT HZ
-> +
->  static u64 bar_max_size[] = {
->  	[RP_BAR0] = _ULL(128 * SZ_2G),
->  	[RP_BAR1] = SZ_2G,
-> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
->  	.write		= pci_generic_config_write,
->  };
->  
-> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
-> +{
-> +	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
-> +	unsigned long end_jiffies;
-> +	u16 lnk_stat;
-> +
-> +	/* Wait for link training to complete. Exit after timeout. */
-> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
-> +	do {
-> +		lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
-> +		if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
-> +			break;
-> +		usleep_range(0, 1000);
-> +	} while (time_before(jiffies, end_jiffies));
-> +
-> +	if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
-> +		return 0;
-> +
-> +	return -ETIMEDOUT;
-> +}
-> +
->  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
-> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
->  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
->  				    lnk_ctl);
->  
-> +		ret = cdns_pcie_host_training_complete(pcie);
-> +		if (ret)
-> +			return ret;
-> +
->  		ret = cdns_pcie_host_wait_for_link(pcie);
->  	}
->  	return ret;
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
