@@ -2,110 +2,89 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74BEF67AEBB
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 10:48:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5BB767AF72
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 11:15:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235174AbjAYJse (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 04:48:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35000 "EHLO
+        id S232306AbjAYKPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 05:15:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234138AbjAYJsd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 04:48:33 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B7E196B3;
-        Wed, 25 Jan 2023 01:47:59 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P1zWN5b9Dz683hj;
-        Wed, 25 Jan 2023 17:46:40 +0800 (CST)
-Received: from localhost (10.81.208.142) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 25 Jan
- 2023 09:47:23 +0000
-Date:   Wed, 25 Jan 2023 09:47:21 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Lukas Wunner <lukas@wunner.de>, <linux-pci@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        "Ben Widawsky" <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v2 10/10] PCI/DOE: Relax restrictions on request and
- response size
-Message-ID: <20230125094721.000061c1@Huawei.com>
-In-Reply-To: <20230124235155.GA1114594@bhelgaas>
-References: <20230124124315.00000a5c@Huawei.com>
-        <20230124235155.GA1114594@bhelgaas>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229778AbjAYKPm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 05:15:42 -0500
+Received: from smtp2.axis.com (smtp2.axis.com [195.60.68.18])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3225DF773;
+        Wed, 25 Jan 2023 02:15:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; q=dns/txt; s=axis-central1; t=1674641741;
+  x=1706177741;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=GlFVmobLzB8+d7JlS4oaIjn/VGWKDV7B/1AmomosFQQ=;
+  b=hWx0QgsiIGF9na8abYLhZXyG7/BW5wfhEELEtuRAMgwzf5llmIldwB+P
+   KuL099WRhCm0QL9ykzSLe3XDOH39C+lnkMP2813ekf454iF4BrEs5/NKw
+   1GDbGRFTfml5FJPrdATaDsytiZgpN71oZ+rl/E/bCcG3dVxjmOaA+6W+p
+   oQoypo79jPVDM6+5CXIzf37YwOjKF1rgZhGjkAyKz0mF0oSp2y2hojJls
+   Oj31LtdCXoK5fw1pj3735R/tjeJdwGgm0gFZJMjiZIgBQYNTnvkR6Ryln
+   CzYphq/AEzJfhHvZqcX+KVkkPVxDu5jHKOAXi+yuUgTEEVvzKPykiPuRF
+   w==;
+Date:   Wed, 25 Jan 2023 11:15:38 +0100
+From:   Vincent Whitchurch <vincent.whitchurch@axis.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Lee Jones <lee@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel <kernel@axis.com>, <robh@kernel.org>
+Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
+Message-ID: <Y9EBSmOoE5+83jS5@axis.com>
+References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
+ <Y86op9oh5ldrZQyG@google.com>
+ <Y862WTT03/JxXUG8@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.208.142]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Y862WTT03/JxXUG8@kroah.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 24 Jan 2023 17:51:55 -0600
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-
-> On Tue, Jan 24, 2023 at 12:43:15PM +0000, Jonathan Cameron wrote:
-> > On Mon, 23 Jan 2023 11:20:00 +0100
-> > Lukas Wunner <lukas@wunner.de> wrote:
-> >   
-> > > An upcoming user of DOE is CMA (Component Measurement and Authentication,
-> > > PCIe r6.0 sec 6.31).
-> > > 
-> > > It builds on SPDM (Security Protocol and Data Model):
-> > > https://www.dmtf.org/dsp/DSP0274
-> > > 
-> > > SPDM message sizes are not always a multiple of dwords.  To transport
-> > > them over DOE without using bounce buffers, allow sending requests and
-> > > receiving responses whose final dword is only partially populated.
-> > > 
-> > > Tested-by: Ira Weiny <ira.weiny@intel.com>
-> > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> > > Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>  
-> > Ah. This...
+On Mon, Jan 23, 2023 at 05:31:21PM +0100, Greg Kroah-Hartman wrote:
+> On Mon, Jan 23, 2023 at 03:32:55PM +0000, Lee Jones wrote:
+> > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
 > > 
-> > I can't immediately find the original discussion thread, but I'm fairly
-> > sure we had a version of the DOE code that did this (maybe we just
-> > discussed doing it and never had code...)
+> > > Add a PCI driver which registers all child nodes specified in the
+> > > devicetree.  It will allow platform devices to be used on virtual
+> > > systems which already support PCI and devicetree, such as UML with
+> > > virt-pci.
+> > > 
+> > > The driver has no id_table by default; user space needs to provide one
+> > > using the new_id mechanism in sysfs.
 > > 
-> > IIRC, at the time feedback was strongly in favour of making
-> > the handling of non dword payloads a problem for the caller (e.g. PCI/CMA)
-> > not the DOE core, mainly so that we could keep the layering simple.
-> > DOE part of PCI spec says DWORD multiples only, CMA has non dword
-> > entries.  
+> > This feels wrong for several reasons.
+> > 
+> > Firstly, I think Greg (Cc:ed) will have something to say about this.
 > 
-> I can't remember, but I might have been the voice in favor of making
-> it the caller's problem.  Your argument about dealing with it here
-> makes a lot of sense, and I'm OK with it, but I *would* like to add
-> some text to the commit log and comments in the code about what is
-> happening here.  Otherwise there's an unexplained disconnect between
-> the DWORD spec language and the byte-oriented code.
+> Yes, this isn't ok.  Please write a real driver for the hardware under
+> control here, and that would NOT be a MFD driver (hint, if you want to
+> split up a PCI device into different drivers, use the aux bus code, that
+> is what it is there for.)
 
-Absolutely agree. Calling out why we have a mismatch with the specification
-will avoid a bunch of head scratching in the future!
+I hope it's clear from my other replies in this thread that the entire
+purpose of this driver is to allow arbitrary platform devices to be used
+via a PCI device in virtual environments like User Mode Linux in order
+to test existing platform drivers using mocked hardware.
 
-> 
-> > Personally I'm fully in favour of making our lives easier and handling
-> > this at the DOE layer!  The CMA padding code is nasty as we have to deal
-> > with caching just the right bits of the payload for the running hashes.
-> > With it at this layer I'd imagine that code gets much simpler
-> > 
-> > Assuming resolution to Ira's question on endianness is resolved.
-> > Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>  
+Given this "hardware", it's not clear what a "real driver" would do
+differently.  The auxiliary bus cannot be used since it naturally does
+not support platform devices.  A hard coded list of sub-devices cannot
+be used since arbitrary platform devices with arbitrary devicetree
+properties need to be supported.
 
+I could move this driver to drivers/bus/ and pitch it as a
+"PCI<->platform bridge for testing in virtual environments", if that
+makes more sense.
