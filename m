@@ -2,264 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85EA767B4FC
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:41:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CA50B67B524
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 15:54:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235905AbjAYOlV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 09:41:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44426 "EHLO
+        id S235768AbjAYOyi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 09:54:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235945AbjAYOlP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:41:15 -0500
-Received: from mail-lf1-x12b.google.com (mail-lf1-x12b.google.com [IPv6:2a00:1450:4864:20::12b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2307C3597;
-        Wed, 25 Jan 2023 06:40:47 -0800 (PST)
-Received: by mail-lf1-x12b.google.com with SMTP id f34so29275459lfv.10;
-        Wed, 25 Jan 2023 06:40:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QELdzY3NIYjY7OwghVfrJTNG0cf8qKkTucoZEOCtl2E=;
-        b=c3zlEUO9WYifl0n0mN6SSlWRaXAVNGM3DUOIN5BZgmF9Rq7tXLfm9TAC2Lbc+StC+o
-         +h9hrfagVu4lfTJ1tawAncGERjvlmxuUzrJqDPKpmIlHE5RzHvr7UfieUftnPrLdfQwk
-         ZhD2PWrH0UV6xUmgpn1Qcxl0mEaghKywIDwf4LeQ+NkfXrCSPdD2noqN/8gJ4Gz0QbBq
-         kbdgXqxSBptvW4E4mtsD9BP6olb/731YzOzmJiSevg/9wuXSTtYyXwiADqvWnWn/Nub2
-         MJVLy+/oZFGe8RnUGR9VxctcfedMlw+NdgCpacVYyMBjD0l+2nc4YVDs8Gu5ndAmKAAl
-         0/qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QELdzY3NIYjY7OwghVfrJTNG0cf8qKkTucoZEOCtl2E=;
-        b=UjxUZbz0MwQR1Unu4ZQdIVtPkn1keYbVV3lKCfeDWgtSKrJeo4lSpWioLKAyLlUeiD
-         y/r/1vuKnPrHblgSV3mAgNHdHyMTDVHfdPba69CP8UreEnbJ76YkPfeAik+kWmXMEkHz
-         4WSQiuk3hGg0qFgqK4G6G2GUMpqIHxC+l/ow3JMe1K8DXqJ4KJJgHoUAPLCRJItyy1Wx
-         2e5LvfH8o3uT8wJwIhe0mxeogpKQSWGSMU/6H2GGCsU6TBpfzkuVg+iUCFO+V3I9R0WR
-         y4EtRETnUWro9pH2TGC6yjU3/xoueCflLtvlRgr5KrskHu9Nc27DZW3Ij7oczhAu8u6F
-         0pAQ==
-X-Gm-Message-State: AFqh2kpvUwvsI7uQhHTDjc7nEagc50SFEdVLPguQPg5DOtv8wscimrFb
-        p7RyLw0mSwLU6GpdvwIBD2U=
-X-Google-Smtp-Source: AMrXdXvFwvxwlCoo5ZWFsDiCHyOfQmG36pJybKKqX5u2m3URe5MhETEiO3uJa7MrRpD5z3vreu/Vrw==
-X-Received: by 2002:ac2:4834:0:b0:4d5:7b89:7b62 with SMTP id 20-20020ac24834000000b004d57b897b62mr6587177lft.40.1674657624222;
-        Wed, 25 Jan 2023 06:40:24 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id k18-20020ac24f12000000b004a764f9d653sm502594lfr.242.2023.01.25.06.40.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 06:40:23 -0800 (PST)
-Date:   Wed, 25 Jan 2023 17:40:19 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
-Message-ID: <20230125144019.sn7kliw3qlwgtwzs@mobilestation>
-References: <20230124144941.42zpgj2p53nvfz36@mobilestation>
- <20230124234744.GA1062727@bhelgaas>
+        with ESMTP id S235807AbjAYOyh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 09:54:37 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD6FC4ABDA;
+        Wed, 25 Jan 2023 06:54:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4513861507;
+        Wed, 25 Jan 2023 14:54:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C046C4339E;
+        Wed, 25 Jan 2023 14:54:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674658474;
+        bh=OfPsqjCdfFGmgTfZWF16Hureluoun8bR802TAkI8y0Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YpDWd2c/L3Fg7tEV/kyHX50qE4tOoMfiaX0Ql1NqzkeZqn0++BDMVCV/9Gg62QbJ0
+         qVX1PKCM3QXMo4Nfr9yNGvjAQsKmGoq2Q8gT8tl7JuaADcwHjh4VVszqKhGmrAf9Ce
+         9bk+MAhbg53vhg6MAQFFqd2oo6xagxjYszFdJxj5E0EGj83qELXSToc/O8Q9tcY+x7
+         h0BmX9vUIZLgE0EjX80u9IhmRv/S8kxMUa6fOVJFNSojqWGUHmscOKkdjG51Kwnn0X
+         GFDDkgF6f1rYmQHE5QHKOuTI5Y9khWNCWEhTsq38JC+tPBbVtNaxJvloTF03Ci7P6e
+         sVZtvclFz2E8w==
+Received: by mail-vk1-f182.google.com with SMTP id bs10so834735vkb.3;
+        Wed, 25 Jan 2023 06:54:34 -0800 (PST)
+X-Gm-Message-State: AFqh2kpyUBI9Sa0Hm3ETlUVBl+PxJZT9qdMuhk5wuvFuq79pp+hdmykg
+        ADpo6oT39SDz8NGriYNR3pWpAyUxQ4mHCHSrtA==
+X-Google-Smtp-Source: AMrXdXsGnF21V74TEUY0OqpSRYqnRbaeqnTLdr1tTSTaPicCis6dSTocq4eqS+YQxRC+ADr9ygRwEn3I7glaWEetrn4=
+X-Received: by 2002:a1f:a002:0:b0:3d5:d30f:81c2 with SMTP id
+ j2-20020a1fa002000000b003d5d30f81c2mr4144648vke.14.1674658473582; Wed, 25 Jan
+ 2023 06:54:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230124234744.GA1062727@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
+ <Y86op9oh5ldrZQyG@google.com> <Y862WTT03/JxXUG8@kroah.com>
+ <Y9EBSmOoE5+83jS5@axis.com> <Y9EgrKT3hDyx+ULy@kroah.com>
+In-Reply-To: <Y9EgrKT3hDyx+ULy@kroah.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 25 Jan 2023 08:54:21 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
+Message-ID: <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
+Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Lee Jones <lee@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kernel <kernel@axis.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 05:47:44PM -0600, Bjorn Helgaas wrote:
-> On Tue, Jan 24, 2023 at 05:49:41PM +0300, Serge Semin wrote:
-> > On Mon, Jan 23, 2023 at 10:43:39AM -0600, Bjorn Helgaas wrote:
-> > > On Sun, Jan 22, 2023 at 03:11:16AM +0300, Serge Semin wrote:
-> > > > On Fri, Jan 20, 2023 at 04:50:36PM -0600, Bjorn Helgaas wrote:
-> > > > > On Fri, Jan 13, 2023 at 08:14:06PM +0300, Serge Semin wrote:
-> > > > > > Since the DW PCIe RP/EP driver is about to be updated to register the DW
-> > > > > > eDMA-based DMA-engine the drivers build modes must be synchronized.
-> > > > > > Currently the DW PCIe RP/EP driver is always built as a builtin module.
-> > > > > > Meanwhile the DW eDMA driver can be built as a loadable module. Thus in
-> > > > > > the later case the kernel with DW PCIe controllers support will fail to be
-> > > > > > linked due to lacking the DW eDMA probe/remove symbols. At the same time
-> > > > > > forcibly selecting the DW eDMA driver from the DW PCIe RP/EP kconfig will
-> > > > > > effectively eliminate the tristate type of the former driver fixing it to
-> > > > > > just the builtin kernel module.
-> > > > > > 
-> > > > > > Seeing the DW eDMA engine isn't that often met built into the DW PCIe
-> > > > > > Root-ports and End-points let's convert the DW eDMA driver config to being
-> > > > > > more flexible instead of just forcibly selecting the DW eDMA kconfig. In
-> > > > > > order to do that first the DW eDMA PCIe driver config should be converted
-> > > > > > to being depended from the DW eDMA core config instead of selecting the
-> > > > > > one. Second the DW eDMA probe and remove symbols should be referenced only
-> > > > > > if they are reachable by the caller. Thus the user will be able to build
-> > > > > > the DW eDMA core driver with any type, meanwhile the dependent code will
-> > > > > > be either restricted to the same build type (e.g. DW eDMA PCIe driver if
-> > > > > > DW eDMA driver is built as a loadable module) or just won't be able to use
-> > > > > > the eDMA engine registration/de-registration functionality (e.g. DW PCIe
-> > > > > > RP/EP driver if DW eDMA driver is built as a loadable module).
-> > > > > 
-> > > > > I'm trying to write the merge commit log, and I understand the linking
-> > > > > issue, but I'm having a hard time figuring out what the user-visible
-> > > > > scenarios are here.
-> > > > > 
-> > > > > I assume there's something that works when CONFIG_PCIE_DW=y and
-> > > > > CONFIG_DW_EDMA_PCIE=y but does *not* work when CONFIG_PCIE_DW=y and
-> > > > > CONFIG_DW_EDMA_PCIE=m?
-> > > > 
-> > > > No. The DW eDMA code availability (in other words the CONFIG_DW_EDMA
-> > > > config value) determines whether the corresponding driver (DW PCIe
-> > > > RP/EP or DW eDMA PCI) is capable to perform the eDMA engine probe
-> > > > procedure. Additionally both drivers has the opposite dependency from
-> > > > the DW eDMA code.
-> > > > |                |     DW PCIe RP/EP    |     DW eDMA PCIe     |
-> > > > | CONFIG_DW_EDMA +----------------------+----------------------+
-> > > > |                | Probe eDMA | KConfig | Probe eDMA | Kconfig |
-> > > > +----------------+------------+---------+------------+---------+
-> > > > |        y       |     YES    |   y,n   |     YES    |  y,m,n  |
-> > > > |        m       |     NO     |   y,n   |     YES    |    m,n  |
-> > > > |        n       |     NO     |   y,n   |     NO     |      n  |
-> > > > +--------------------------------------------------------------+
-> > > > 
-> > > > Basically it means the DW PCIe RP/EP driver will be able to probe the
-> > > > DW eDMA engine only if the corresponding driver is built into the
-> > > > kernel. At the same time the DW PCIe RP/EP driver doesn't depend on
-> > > > the DW eDMA core module config state. The DW eDMA PCIe driver in
-> > > > opposite depends on the DW eDMA code config state, but will always be
-> > > > able to probe the DW eDMA engine as long as the corresponding code is
-> > > > loaded as either a part of the kernel or as a loadable module.
-> > > > 
-> > > > > If both scenarios worked the same, I would think the existing
-> > > > > dw_edma_pcie_probe() would be enough, and you wouldn't need to call
-> > > > > dw_pcie_edma_detect() from dw_pcie_host_init() and dw_pcie_ep_init().
-> > > > 
-> > > > No. These methods have been implemented for the absolutely different
-> > > > drivers.
-> > > > dw_edma_pcie_probe() is called for an end-point PCIe-device found on a
-> > > > PCIe-bus.
-> > > > dw_pcie_host_init()/dw_pcie_ep_init() and dw_pcie_edma_detect() are
-> > > > called for a platform-device representing a DW PCIe RP/EP controller.
-> > > > In other words dw_pcie_edma_detect() and dw_edma_pcie_probe() are in
-> > > > no means interchangeable.
-> > > 
-> > > The question is what the user-visible difference between
-> > > CONFIG_DW_EDMA_PCIE=y and CONFIG_DW_EDMA_PCIE=m is. 
-> > 
-> > There will be no difference between them after this commit is applied
-> > from the DW eDMA core driver point of view. CONFIG_DW_EDMA_PCIE now
-> > depends on the CONFIG_DW_EDMA config state (see it's surrounded by
-> > if/endif in the Kconfig file). Without this patch the
-> > CONFIG_DW_EDMA_PCIE config determines the CONFIG_DW_EDMA config state
-> > by forcibly selecting the one. Using the similar approach for the
-> > CONFIG_PCIE_DW driver I found less attractive because it would have
-> > effectively converted the CONFIG_DW_EDMA config tristate to boolean.
-> > 
-> > That's why instead I decided to convert the CONFIG_DW_EDMA config to
-> > being independent from any other config value. (See the table in the
-> > my previous email message.)
-> > 
-> > > If there were no
-> > > difference, dw_pcie_host_init() would not need to call
-> > > dw_pcie_edma_detect().
-> > 
-> > Even if CONFIG_DW_EDMA (not CONFIG_DW_EDMA_PCIE) is set to m or n I
-> > would have still recommended to call dw_pcie_edma_detect() because the
-> > method performs the DW eDMA engine auto-detection independently from the DW
-> > eDMA driver availability. As a result the system log will have a
-> > number of eDMA detected channels if the engine was really found. It's
-> > up to the system administrator to make sure that the eDMA driver is
-> > properly built/loaded then for the engine to be actually available in
-> > the kernel/system.
+On Wed, Jan 25, 2023 at 6:29 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, Jan 25, 2023 at 11:15:38AM +0100, Vincent Whitchurch wrote:
+> > On Mon, Jan 23, 2023 at 05:31:21PM +0100, Greg Kroah-Hartman wrote:
+> > > On Mon, Jan 23, 2023 at 03:32:55PM +0000, Lee Jones wrote:
+> > > > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
+> > > >
+> > > > > Add a PCI driver which registers all child nodes specified in the
+> > > > > devicetree.  It will allow platform devices to be used on virtual
+> > > > > systems which already support PCI and devicetree, such as UML with
+> > > > > virt-pci.
+> > > > >
+> > > > > The driver has no id_table by default; user space needs to provide one
+> > > > > using the new_id mechanism in sysfs.
+> > > >
+> > > > This feels wrong for several reasons.
+> > > >
+> > > > Firstly, I think Greg (Cc:ed) will have something to say about this.
+> > >
+> > > Yes, this isn't ok.  Please write a real driver for the hardware under
+> > > control here, and that would NOT be a MFD driver (hint, if you want to
+> > > split up a PCI device into different drivers, use the aux bus code, that
+> > > is what it is there for.)
 > >
-> > > Can you give me a one- or two-sentence merge commit comment that
-> > > explains why we want to merge this?  "Relax driver config settings"
-> > > doesn't tell us that.
-> > 
-> > "Convert the DW eDMA kconfig to being independently selected by the
-> > user in order to preserve the module build options flexibility and fix
-> > the "undefined reference to" error on DW PCIe driver build."
-> 
+> > I hope it's clear from my other replies in this thread that the entire
+> > purpose of this driver is to allow arbitrary platform devices to be used
+> > via a PCI device in virtual environments like User Mode Linux in order
+> > to test existing platform drivers using mocked hardware.
+>
+> That still feels wrong, why is PCI involved here at all?
+>
+> Don't abuse platform devices like this please, mock up a platform device
+> framework instead if you want to test them that way, don't think that
+> adding a platform device "below" a PCI device is somehow allowed at all.
 
-> In the commit log, I think "forcibly selecting the DW eDMA driver from
-> the DW PCIe RP/EP kconfig" actually refers to just the "DW eDMA PCIe"
-> driver" not the "DW PCIe RP/EP driver," right?
+My question as well. However, that's only for Vincent's usecase. The
+other ones I'm aware of are definitely non-discoverable MMIO devices
+behind a PCI device.
 
-Right.
+It is perfectly valid in DT to have the same device either directly on
+an MMIO bus or behind some other MMIO capable bus. So what bus type
+should they all be?
 
-> 
-> The undefined reference to dw_edma_probe() doesn't actually happen
-> unless we merge 27/27 without *this* patch, right? 
+> > Given this "hardware", it's not clear what a "real driver" would do
+> > differently.
+>
+> Again, you can not have a platform device below a PCI device, that's not
+> what a platform device is for at all.
+>
+> > The auxiliary bus cannot be used since it naturally does
+> > not support platform devices.
+>
+> The aux bus can support any type of bus (it's there to be used as you
+> want, it's just that people are currently using it for PCI devices right
+> now).
+>
+> > A hard coded list of sub-devices cannot be used since arbitrary
+> > platform devices with arbitrary devicetree properties need to be
+> > supported.
+>
+> Then make a new bus type and again, do not abuse platform devices.
 
-Right.
+How about of_platform_bus[1]?
 
-> If so, I wouldn't
-> call this a "fix" because nobody has ever seen the link failure.
-> 
-> OK.  I think this would be much simpler if it were split into two
-> patches:
-> 
->   1) Prepare dw_edma_probe() for builtin callers
-> 
->      When CONFIG_DW_EDMA=m, dw_edma_probe() is built as a module.
->      Previously edma.h declared it as extern, which meant that
->      builtin callers like dw_pcie_host_init() and dw_pcie_ep_init()
->      caused link errors.
-> 
->      Make it safe for builtin callers to call dw_edma_probe() by using
->      IS_REACHABLE() to define a stub when CONFIG_DW_EDMA=m.
-> 
->      Builtin callers will fail to detect and register eDMA devices
->      when CONFIG_DW_EDMA=m but will otherwise work as before.
-> 
->   2) Make DW_EDMA_PCIE depend on DW_EDMA
-> 
->      This seems like a good idea and is much nicer than "select
->      DW_EDMA", but I think it should be a separate patch since it
->      really only relates to dw-edma-pcie.c.  
+At this point, it would be easier to create a new bus type for
+whatever it is you think *should* be a platform device and move those
+to the new bus leaving platform_bus as the DT/ACPI devices bus.
 
-> I would use "depends on
->      DW_EDMA" instead of adding if/endif around DW_EDMA_PCIE.
+> > I could move this driver to drivers/bus/ and pitch it as a
+> > "PCI<->platform bridge for testing in virtual environments", if that
+> > makes more sense.
+>
+> Again, nope, a platform device is NOT ever a child of a PCI device.
+> That's just not how PCI works at all.
+>
+> Would you do the attempt to do this for USB?  (hint, no.)  So why is PCI
+> somehow special here?
 
-Could you explain why is the "depends on" operator more preferable
-than if/endif? In this case since we have a single core kconfig from
-which all the eDMA LLDD config(s) (except PCIE_DW for the reason
-previously described) will surely depend on, using if/endif would
-cause the possible new eDMA-capable LLDD(s) adding their kconfig
-entries within the if-endif clause without need to copy the same
-"depends on DW_EDMA" pattern over and over. That seems to look a bit
-more maintainable than the alternative you suggest. Do you think
-otherwise?
+Actually, yes. It is limited since USB cannot tunnel MMIO accesses
+(though I suppose USB4 PCIe tunneling can?), but we do have some
+platform drivers which don't do MMIO.
 
-> 
-> Am I still missing something?
+Suppose I have an FTDI chip with GPIOs on it and I want to do GPIO
+LEDs, keys, bitbanged I2C, etc. Those would use the leds-gpio,
+gpio-keys, i2c-gpio platform drivers.
 
-No, you aren't.
+Rob
 
-> What do you think? 
-
-What you described was the second option I had in mind for the update
-to look like, but after all I decided to take a shorter path and
-combine the modifications into a single patch. If you think that
-splitting it up would make the update looking simpler then I'll do as
-you suggest. But in that case Lorenzo will need to re-merge the
-updated patchset v10.
-
--Serge(y)
-
-> 
-> Bjorn
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eca3930163ba8884060ce9d9ff5ef0d9b7c7b00f
