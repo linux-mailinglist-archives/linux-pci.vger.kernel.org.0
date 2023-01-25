@@ -2,149 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BD0067B807
-	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 18:09:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7037267B7D1
+	for <lists+linux-pci@lfdr.de>; Wed, 25 Jan 2023 18:05:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234565AbjAYRJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 25 Jan 2023 12:09:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60334 "EHLO
+        id S230347AbjAYRFN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 25 Jan 2023 12:05:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234903AbjAYRJV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 12:09:21 -0500
-X-Greylist: delayed 270 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Jan 2023 09:08:59 PST
-Received: from mo6-p00-ob.smtp.rzone.de (mo6-p00-ob.smtp.rzone.de [IPv6:2a01:238:400:100::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D7145AB5D
-        for <linux-pci@vger.kernel.org>; Wed, 25 Jan 2023 09:08:58 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1674666260; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=Ozy43R5N4iHgaTJJCtnErFSh+5tKBrEwdju/s0SA8W0qTJs4T8304kFHfma3qVPrga
-    g3lsB4I5P2+46UfoqGK2STnMqzyntqWZVe8QBJtq9OAxWQ1GhwC4+2uhnB7zB+Lci6Q2
-    s50JRpxwkpevidOk6TcC4unNazaTbxef2GAyD0CCiaFXcNCIPc6ZiQqx5fKS7VEaaj0F
-    mjoUk7T25WfHKUISG/FjJOCO9t5PT5j5kfvesCnHjn9SBgHyQzXyvqc8wzOsXVicnREV
-    0z3ZKYAiTsgDFKdURcWQRZKRnL/QI392jemRf5s3OiG+acLvCLueYlFJXptq4Tz1ZZuU
-    MDEg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
-    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
-    b=QgrjCUsvB48gJOEOgHy5fLQ5MJeswizTOM1zZVMPgPBDwQF0K0a1k/VcObHFUgeaor
-    77NNneYvQcNDMBBMaQr9XuAVvPI7pwMJTTYnu4Dn3wJo4M2YpcYZjP4YQ3GC+pRdQN4P
-    dMG4XXtNw0nOKZ1P+2MbtFyWGfj6iohwmQVmpQjJrcIF4e0viWATfa70XSQ9anfBMcEw
-    4HZ7/W6GJcQ0StRcGdvYNfqwYJCOw6qChdA5Xbn140/+W8B3x6xZ8VJuaICKi604g54+
-    4d3rSTeImqqd01pBuXtd9HbRzt/paSqKPZ5h8Zm+LaozqcSGsVSfVq6Gh2HUmoj4TyFJ
-    Ur+A==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1674666260;
-    s=strato-dkim-0002; d=aepfle.de;
-    h=Message-ID:Subject:Cc:To:From:Date:Cc:Date:From:Subject:Sender;
-    bh=W+SqnGs9QjmIZ9DXCX93i+A0oA65I5Caxl3ahi9O3u0=;
-    b=ninPPoKNj6kZcUCr5uN64VDF9fHhUH6tTGVw2LlH9z2FJ0T+KbFShEr+DiL8TLL1bA
-    idLLvhOQDA+8afXr+KQmQ9hIpip0hGvpQggo8gmGNFyMOOgskiL/EliL5GtOEWfNs3qo
-    RqH91Lk7wJcGo6vjJolk2RVPMeR57fI9MuyeMccjO5/jt33zSejzRnbhQDWfPxjHN7cB
-    F5MLFEPAj2AGM4Tt0dFuYHnks7wcfq2rZgUiAS8SlmwWU50F6cYAltVi5taOxkNUseGN
-    rbGIs5G/HFPD8yN7kA3eR8Qpmytk6DSD4f6e8xc7KSDseDTnjGquhlSCC499qmEYRNoP
-    Bsvg==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QLpd5ylWvMDX3y/OuD5rXVisR4U0KIPE/saK9bfzyVdurcrIu9Z6SKY+a6gtBCfg=="
-Received: from sender
-    by smtp.strato.de (RZmta 49.2.2 AUTH)
-    with ESMTPSA id m23e47z0PH4K8E3
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Wed, 25 Jan 2023 18:04:20 +0100 (CET)
-Date:   Wed, 25 Jan 2023 18:04:11 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     linux-hyperv@vger.kernel.org,
-        Haiyang Zhang <haiyangz@microsoft.com>
-Cc:     linux-pci@vger.kernel.org, Dexuan Cui <decui@microsoft.com>
-Subject: unlocked access to struct irq_data->chip_data in pci_hyperv
-Message-ID: <20230125180411.4742f159.olaf@aepfle.de>
-X-Mailer: Claws Mail 20220819T065813.516423bc hat ein Softwareproblem, kann man nichts machen.
+        with ESMTP id S235688AbjAYRFN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 25 Jan 2023 12:05:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03B1183CC;
+        Wed, 25 Jan 2023 09:05:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AC48BB81B44;
+        Wed, 25 Jan 2023 17:05:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A186C433EF;
+        Wed, 25 Jan 2023 17:05:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674666309;
+        bh=KCgquHBBE3i32DY08dZlQY8oNliwvemLJmq1BLIltXY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rvk2iA8pOJhX6AySAr56h3sa54DxzdmfY9i5WuM501Wd1mNsKW2iOkzkfUk1HnGhQ
+         fcXZ1tXfgy1+iteHg1xoxwgQqYrngP6I8DFlYjGkYzXHPxcZWC6m5zhM7YF1UuiA0l
+         TziucBvFB70zD9yrad7zBhej/nswthz1AtU9xK8SPCq1Uu6aGA75iTMLyfqe3fbhfK
+         8PNp1OA66uRHyR6bSMlXwkFyoOWrqXroiCFm2aX/aXa2KX4msX+TNqpXUo0wBJ2ry5
+         2n8/KAzsbFFJuPzmTR/HanO1nPIulfnR4eiliFbC+M/GewjlXC92TsMjvY8X2+5aps
+         5yhA7ses57mjQ==
+Date:   Wed, 25 Jan 2023 11:05:06 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Daniel Scheller <d.scheller@gmx.net>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Berni <bernhard@turmann.eu>,
+        Salvatore Bonaccorso <carnil@debian.org>,
+        Sean V Kelley <sean.v.kelley@linux.intel.com>,
+        linux-media@vger.kernel.org
+Subject: Re: [bugzilla-daemon@bugzilla.kernel.org: [Bug 208507] New:
+ BISECTED: i2c timeout loading module ddbridge with commit
+ d2345d1231d80ecbea5fb764eb43123440861462]
+Message-ID: <20230125170506.GA1175690@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/OC_Wmt2rWUMlPreEezo4f_B";
- protocol="application/pgp-signature"; micalg=pgp-sha256
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200709191722.GA6054@bjorn-Precision-5520>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---Sig_/OC_Wmt2rWUMlPreEezo4f_B
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+[+cc Salvatore, Mauro, Daniel, linux-media]
 
-Hello,
+On Thu, Jul 09, 2020 at 02:17:22PM -0500, Bjorn Helgaas wrote:
+> Bisected to Debian commit d2345d1231d8, which is a backport of the
+> upstream commit b88bf6c3b6ff ("PCI: Add boot interrupt quirk mechanism
+> for Xeon chipsets").
+> 
+> Reporter confirmed that reverting the Debian backport from 4.19.132
+> fixes the problem.
+>
+> ----- Forwarded message from bugzilla-daemon@bugzilla.kernel.org -----
+> 
+> Date: Thu, 09 Jul 2020 15:01:11 +0000
+> From: bugzilla-daemon@bugzilla.kernel.org
+> To: bjorn@helgaas.com
+> Subject: [Bug 208507] New: BISECTED: i2c timeout loading module ddbridge with
+> 	commit d2345d1231d80ecbea5fb764eb43123440861462
+> Message-ID: <bug-208507-41252@https.bugzilla.kernel.org/>
+> 
+> https://bugzilla.kernel.org/show_bug.cgi?id=208507
+> 
+>             Bug ID: 208507
+>            Summary: BISECTED: i2c timeout loading module ddbridge with
+>                     commit d2345d1231d80ecbea5fb764eb43123440861462
+>            Product: Drivers
+>            Version: 2.5
+>     Kernel Version: 4.19.132
+>           Hardware: x86-64
+>                 OS: Linux
+>               Tree: Mainline
+>             Status: NEW
+>           Severity: normal
+>           Priority: P1
+>          Component: PCI
+>           Assignee: drivers_pci@kernel-bugs.osdl.org
+>           Reporter: bernhard@turmann.eu
+>         Regression: Yes
+> 
+> Created attachment 290179
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=290179&action=edit
+> dmesg on 4.19.132
+> 
+> OS: Debian 10.4 Buster
+> CPU: Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz
+> Hardware: Supermicro  Super Server
+> Mainboard: Supermicro X10SDV
+> DVB card: Digital Devices Cine S2 V7 Advanced DVB adapter
+> 
+> Issue:
+> =====
+> Loading kernel module ddbridge fails with i2c timeouts, see attached dmesg. The
+> dvb media adapter is unusable.
+> This happened after Linux kernel upgrade from 4.19.98-1+deb10u1 to
+> 4.19.118-2+deb10u1.
+> 
+> A git bisect based on the Debian kernel repo on branch buster identified as
+> first bad commit: [1fb0eb795661ab9e697c3a053b35aa4dc3b81165] Update to
+> 4.19.116.
+> 
+> Another git bisect based on upstream Linux kernel repo on branch v4.19.y
+> identified as first bad commit: [d2345d1231d80ecbea5fb764eb43123440861462] PCI:
+> Add boot interrupt quirk mechanism for Xeon chipsets.
+> 
+> Other affected Debian kernel version: 5.6.14+2~bpo10+1
+> I tested this version via buster-backports, because so far I was unable to
+> build my own kernel from 5.6.y or even 5.7.y.
+> 
+> Workaround:
+> ==========
+> Reverting the mentioned commit d2345d1231d80ecbea5fb764eb43123440861462 on top
+> of 4.19.132 is fixing the problem. Reverting the same commit on 4.19.118 or
+> 4.19.116 is also fixing the problem.
 
-there are several crash reports due to struct irq_data->chip_data being NUL=
-L.
+Sorry, I dropped the ball on this.
 
-I was under the impression all the "recent changes" to pci-hyperv.c
-would fix them. But apparently this specific issue is still there.
+Berni has verified that this problem still exists in v6.1.4, and has
+attached current dmesg logs and lspci output.  
 
-What does serialize read and write access to struct irq_data->chip_data?
-It seems hv_msi_free can run while other code paths still access at least
-->chip_data.
+Sean's comment (https://bugzilla.kernel.org/show_bug.cgi?id=208507#c18)
+suggests this is actually a ddbridge driver issue related to INTx
+emulation or MSI support.
 
-The change below may reduce the window, but I'm not confident this would
-actually resolve the concurrency issues.
+Berni confirmed that the i2c timeouts happen when
+CONFIG_DVB_DDBRIDGE_MSIENABLE is not enabled, and that enabling MSI
+via the "ddbridge.msi=1" module parameter avoids the i2c timeouts.
 
+The Kconfig help for DVB_DDBRIDGE_MSIENABLE:
 
-Olaf
+  Use PCI MSI (Message Signaled Interrupts) per default. Enabling this
+  might lead to I2C errors originating from the bridge in conjunction
+  with certain SATA controllers, requiring a reload of the ddbridge
+  module. MSI can still be disabled by passing msi=0 as option, as
+  this will just change the msi option default value.
 
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -1760,8 +1760,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
- struct msi_msg *msg)
- 		    msi_desc->nvec_used > 1;
-=20
- 	/* Reuse the previous allocation */
--	if (data->chip_data && multi_msi) {
--		int_desc =3D data->chip_data;
-+	virt_rmb();
-+	int_desc =3D READ_ONCE(data->chip_data);
-+	if (int_desc && multi_msi) {
- 		msg->address_hi =3D int_desc->address >> 32;
- 		msg->address_lo =3D int_desc->address & 0xffffffff;
- 		msg->data =3D int_desc->data;
-@@ -1778,8 +1779,9 @@ static void hv_compose_msi_msg(struct irq_data *data,=
- struct msi_msg *msg)
- 		goto return_null_message;
-=20
- 	/* Free any previous message that might have already been composed. */
--	if (data->chip_data && !multi_msi) {
--		int_desc =3D data->chip_data;
-+	virt_rmb();
-+	int_desc =3D READ_ONCE(data->chip_data);
-+	if (int_desc && !multi_msi) {
- 		data->chip_data =3D NULL;
- 		hv_int_desc_free(hpdev, int_desc);
- 	}
+suggests that there may be an i2c or SATA issue that could be fixed so
+ddbridge MSI could be always enabled.  But I don't know about that
+underlying issue.
 
---Sig_/OC_Wmt2rWUMlPreEezo4f_B
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
+Per MAINTAINERS, the ddbridge driver looks orphaned, so I cc'd the
+media folks and Daniel, who might know something about the MSI issues,
+based on adaf4df70521 ("media: ddbridge: Kconfig option to control the
+MSI modparam default").
 
------BEGIN PGP SIGNATURE-----
+Bjorn
 
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAmPRYQsACgkQ86SN7mm1
-DoBJCQ/+NlH8vXC/YpxQ3IrQF9M1MNNdceL7s+qTwSfGu99p486VXeJ8deCehKY/
-QfvUaw3WaJ9a4JEIvxiNQ4rRiQ5QHH6Prv8LgK6ebBrV2WI5ZnOz40jrJL4Wt026
-sQZGQtsMfn7ZK4XCx/lM7eTfXmAjBhoPcSewDY+DATfIzPxsxiG3iI3GGGVy1S0/
-IVOnEZpM0a2bdhx4L3V47AaqQIQBerC4w7tu6Zij7tYsRree4KM4OthbDijwpDCp
-rdkKFO/aj9FB1AUdYrVg2nH5G9xoeDH1oOipgb9JX/33TFxkOgo9WMvfKpq/Rwg2
-gr1tuzVXnRBSYhnkuGUv012ZJBWqRot00xjBjURMkZyoAW4tAN8uCyz2b3s6Rb6Z
-4oNIETzyIoBPZFPD9h5HSvD8CClArqzxL+2gcYD5mQWRRhGwhb8ZXRdY20Um2EIi
-xRoSBP06J5AdpGa0mNs7nB22rM1fFWGjIndcD/zIRWQe1Uw32DYFpYPgA1m+CC6Y
-tzEmJtKPGfz10MWG8InE2rNENVEslQiNi9Or8v0+WVeK+9c27GHnvQ8xYLrY6RVR
-7Gs9j+xJGuXirw4PphIpAO2zz5lGS04PdMUOD5mKtqCKlB9t4f6bhqehfMvRdnUF
-YDMBcTC+e2V1qpTJRpqYV9cRTeSkW11WOjjaEwSl6/PYrtpSsjg=
-=zgqN
------END PGP SIGNATURE-----
-
---Sig_/OC_Wmt2rWUMlPreEezo4f_B--
