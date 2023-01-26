@@ -2,120 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E27A867D6E5
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 21:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10BAE67D76A
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 22:10:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjAZU5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 15:57:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58608 "EHLO
+        id S232828AbjAZVKS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 16:10:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229730AbjAZU5Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 15:57:24 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F5D3433A
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 12:57:23 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id d10so1296089ilc.12
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 12:57:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8q92vU6FC2OBfigvvadZc6pP7ck9MsJPPUZntKKUy/A=;
-        b=DZqV6twI7VDtxWwtbB602B5SBi+EoZE3C2HyPq+uwbkahM3VPw1QtNWS7g9P5EEQQq
-         2P1Ij9Xwl4uzPzC/ZUT78vGXyyDU3nFU7OGsfm0KUkbBKPf2ZwK0Uv4fVQ8Mq40wiM8R
-         ejCk3AqWm/XyADqZsr5wood3OyIU729juzb+U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8q92vU6FC2OBfigvvadZc6pP7ck9MsJPPUZntKKUy/A=;
-        b=VZBMeS4KmuO1HYpeWn6QFR3ArdeSDBI/XAsRtA6ltTPaXg1PwgLoW0StroPeTdcVzo
-         D62r9OMhw13h4meCEjckXK7UzLS6sAzWYl//2PuBJqOfOHQjAnza2s2AaNOKXWH6ksiO
-         qWRFUxhaeJgb2mB6jH9MP8NPr6bakyfx4qs+0ZfV/FjjDtxtYL3GYHsndM7UxTckJWKe
-         OrWTBz026DA6VWBCJjAybIjiPYxaG6ygLezmNOM1HQ6Yigm1yKWVkqZft4i7I8YCnefa
-         KL+Vj+E35//YoxhPkcnVrNqn1/D32w0vs7iDVT0rk06fQ8AbHv0RJY3VXGaQzUdTXvcX
-         11Hg==
-X-Gm-Message-State: AO0yUKWvbf2nqRLxRLpiQM/qzm+XMp0cWKsIRxZnvwR5IFswvZ8Sx3ZI
-        7q+xDCXAxyjzpm9OuyTY3nLExw==
-X-Google-Smtp-Source: AK7set/aCj/6RUlMRa8YLjfXNAgQWi6CmMdvODO5LIRSwVpCey+4a2mR0eim95Ix+3SaJyy2MgIchA==
-X-Received: by 2002:a92:6810:0:b0:310:9adc:e1bb with SMTP id d16-20020a926810000000b003109adce1bbmr1421856ilc.0.1674766643095;
-        Thu, 26 Jan 2023 12:57:23 -0800 (PST)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id f9-20020a022409000000b0039e048ad8e7sm756643jaa.59.2023.01.26.12.57.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jan 2023 12:57:22 -0800 (PST)
-Message-ID: <7b3cbbd1-8c27-adf9-d2ed-c037f67bd697@linuxfoundation.org>
-Date:   Thu, 26 Jan 2023 13:57:21 -0700
+        with ESMTP id S232830AbjAZVKN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 16:10:13 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F5DB2B622;
+        Thu, 26 Jan 2023 13:10:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id A3984CE2383;
+        Thu, 26 Jan 2023 21:10:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC032C433D2;
+        Thu, 26 Jan 2023 21:10:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674767405;
+        bh=tkiSABT0UAWsdqybXkYF62lpD7oaHL03zSEHpnUw/fU=;
+        h=From:To:Cc:Subject:Date:From;
+        b=UVMWHP66VSWqHnxcspBeVcXEndXXWiZ6sTmIiOgygIpouWreE7a1pVXifdoI+og3C
+         A4OtBCxGauRtrS6DxIwN2Lhps1L/5IYcKncr45NPWNuHuQbXYVtbjDfE+Dvk+4iqwt
+         KUfclzlHpZ3Qrvz/Rpw/3l294xY2Eicf5iJA08snfX+IUMj+HveLXrJV8bIZpBigSt
+         4Tky8YmSm54pN9uAg5dO+DUbBf9kZNFB+J5Sc++CKA29YwQEDL77eW+wZJEprmockm
+         TkB3GBDZfAIjeCD3AaDX6n/j/XcsUsD5Tjbkp4MbP0StOVSIHds9eLEimF7o70AKww
+         ckltf65ZWneUw==
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH] MAINTAINERS: Move to shared PCI tree
+Date:   Thu, 26 Jan 2023 15:10:03 -0600
+Message-Id: <20230126211003.1310916-1-helgaas@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
- endpoint driver test
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics 
-        <aman1.gupta@samsung.com>
-Cc:     'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>,
-        shradha.t@samsung.com, pankaj.dubey@samsung.com, kishon@ti.com,
-        lpieralisi@kernel.org, kw@linux.com, shuah@kernel.org,
-        linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20230117195903.GA142672@bhelgaas>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20230117195903.GA142672@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/17/23 12:59, Bjorn Helgaas wrote:
-> On Tue, Dec 27, 2022 at 10:45:26AM +0530, Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics wrote:
->> ...
->> Thanks for review and suggestion. I understand that we would like to
->> reuse and preserve the history of tools/pci/pcietest.c. So we have
->> two approaches:
->>
->> 1: Using git mv command move existing code from tools/pci/ to
->> tools/testing/selftest/drivers/pci/ and then update the file to
->> convert to kselftest framework. I thought about this but after
->> movement, when we move it to kselftest format it is going to be huge
->> churn and we will be having modification in almost all lines.
->>
->> 2: Develop kselftest based driver in
->> tools/testing/selftest/drivers/pci/ and eventually delete existing
->> file from tools/pci/ folder providing justification in commit
->> message.
->>
->>  From my viewpoint, going with the second approach makes more sense
->> because if almost complete file is getting modified, and it will
->> make the review process complex and anyways there is not much code
->> reusability.
->>
->> Please let me know if you have any other thought
->> process or if I am missing anything to understand your approach.
-> 
-> I vote for the first approach, with "git mv" and subsequent conversion
-> (in separate patches, of course).  If git knows about the move,
-> "git log --follow" will be useful even though the conversion will be a
-> big patch.  Adding a new test with the connection to the old one only
-> in the commit log makes more work for people who dig through the
-> history in the future.
-> 
+From: Bjorn Helgaas <bhelgaas@google.com>
 
-Thanks Bjorn for explaining this in more detail that I did.
+Move PCI subsystem maintenance to a shared git tree to make it easier for
+maintainers to collaborate.  Update MAINTAINERS accordingly.  No change to
+patch submission and patchwork tracking.
 
-Please send revised patches following the first approach.
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+---
+ MAINTAINERS | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-thanks,
--- Shuah
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f61eb221415b..14c0b3e89c63 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16115,7 +16115,7 @@ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-pci/list/
+ B:	https://bugzilla.kernel.org
+ C:	irc://irc.oftc.net/linux-pci
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+ F:	Documentation/PCI/endpoint/*
+ F:	Documentation/misc-devices/pci-endpoint-test.rst
+ F:	drivers/misc/pci_endpoint_test.c
+@@ -16150,7 +16150,7 @@ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-pci/list/
+ B:	https://bugzilla.kernel.org
+ C:	irc://irc.oftc.net/linux-pci
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+ F:	Documentation/driver-api/pci/p2pdma.rst
+ F:	drivers/pci/p2pdma.c
+ F:	include/linux/pci-p2pdma.h
+@@ -16179,7 +16179,7 @@ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-pci/list/
+ B:	https://bugzilla.kernel.org
+ C:	irc://irc.oftc.net/linux-pci
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+ F:	Documentation/devicetree/bindings/pci/
+ F:	drivers/pci/controller/
+ F:	drivers/pci/pci-bridge-emul.c
+@@ -16192,7 +16192,7 @@ S:	Supported
+ Q:	https://patchwork.kernel.org/project/linux-pci/list/
+ B:	https://bugzilla.kernel.org
+ C:	irc://irc.oftc.net/linux-pci
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+ F:	Documentation/PCI/
+ F:	Documentation/devicetree/bindings/pci/
+ F:	arch/x86/kernel/early-quirks.c
+-- 
+2.25.1
 
