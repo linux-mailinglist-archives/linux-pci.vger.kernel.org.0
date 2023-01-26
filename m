@@ -2,108 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B9DF67C48B
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 07:47:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A39167C58C
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 09:11:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235664AbjAZGrn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 01:47:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39618 "EHLO
+        id S234493AbjAZILH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 03:11:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235490AbjAZGrn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 01:47:43 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 066EC4FC2B;
-        Wed, 25 Jan 2023 22:47:41 -0800 (PST)
+        with ESMTP id S231276AbjAZILH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 03:11:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7115677AB;
+        Thu, 26 Jan 2023 00:11:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 81B19CE213B;
-        Thu, 26 Jan 2023 06:47:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F1C9C433EF;
-        Thu, 26 Jan 2023 06:47:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51246616D6;
+        Thu, 26 Jan 2023 08:11:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B627AC433D2;
+        Thu, 26 Jan 2023 08:11:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674715657;
-        bh=U/Lr21J7uETR5Skm9OfM4ZqCMCq4HQhi2ibbyNKSkjc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kaafE+jQbTnGxuLXUHXU31+JU6kuVUhkafuGhIeymDGK5C16crV2eGVuoY1VBI4ev
-         KPXMicohRm+pjemlIz4i+WO77VOO7XFFBU8yyMQE7G0fj6tQPvcp1dlTVzHJpKkX7h
-         i8Fe1cqCd/WQGg7E7YkUXY3WVTl0e4A0ztIxoXlVJLT1DxErgEmeVt/bFSo1gQ0898
-         GLy0XgbgivS/a66BcqPhMUMLirkOPT9orb7DNcFd6SiGS4jNnselL5fwzvarMJ/YEF
-         6tomUg1qd1epL1GXphDTaPXYyb3criFtRwpdgig0ZxBk2O9VmFejG9ls1bzd7Yj9ME
-         tnKaStt8LsrQw==
-Date:   Thu, 26 Jan 2023 14:47:30 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Richard Zhu <hongxing.zhu@nxp.com>
-Cc:     l.stach@pengutronix.de, bhelgaas@google.com, robh+dt@kernel.org,
-        lorenzo.pieralisi@arm.com, kishon@ti.com, kw@linux.com,
-        frank.li@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        linux-imx@nxp.com
-Subject: Re: [PATCH v5 04/14] arm64: dts: Add i.MX8MM PCIe EP support
-Message-ID: <20230126064728.GQ20713@T480>
-References: <1673847684-31893-1-git-send-email-hongxing.zhu@nxp.com>
- <1673847684-31893-5-git-send-email-hongxing.zhu@nxp.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1673847684-31893-5-git-send-email-hongxing.zhu@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        s=k20201202; t=1674720664;
+        bh=7RFmWVvOCNPUgexHV5lN4KjzajuBanl+5PUPmWiJx24=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b3PgGFG0hp15kD6X7eejX9t2P5bTRYkYl38joZjSPLLVq/RZYHA6GRlVjmT8ar2Xp
+         4gFWDqOT5jmuyCurXR03n3fb9jFXxn2NRB4rYaIJIANaE3N2DMzuukJYv43Q9/WJ6M
+         9yN6hjKvTKKrC8A76v4qsa07nO/RxQptebVEhKygllC7VbTV0IWcXesRDNtTv3wbY0
+         5+j0Jvy13PAHAf1+uSXo8xCEJe0+/oB9ZhziJs7rEEyCQilgDQ82vlx5dS8ak20iyG
+         Nys9rZQIGY+3FTjcGoOZqMmxU302X+utyjowbNcYMN/4wnImZQPlqyTY698X3DwF/6
+         E1sekXv1J2IdA==
+Received: from ip-185-104-136-29.ptr.icomera.net ([185.104.136.29] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pKxLa-004kk0-8m;
+        Thu, 26 Jan 2023 08:11:02 +0000
+Date:   Thu, 26 Jan 2023 08:10:08 +0000
+Message-ID: <87a625emxr.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] genirq/msi: Fix fwnode leak
+In-Reply-To: <167468839713.2297784.1309086853550595503.stgit@omen>
+References: <167468839713.2297784.1309086853550595503.stgit@omen>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/27.1
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.104.136.29
+X-SA-Exim-Rcpt-To: alex.williamson@redhat.com, tglx@linutronix.de, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-3.8 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_SBL_CSS,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 01:41:14PM +0800, Richard Zhu wrote:
-> Add i.MX8MM PCIe EP support.
+On Wed, 25 Jan 2023 23:13:48 +0000,
+Alex Williamson <alex.williamson@redhat.com> wrote:
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm.dtsi | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
+> kmemleak is reporting pairs of leaked buffers when PCI devices are
+> unbound from their drivers.  One of these buffers contains the name of
+> the interrupt as generated for the msi_domain_template bundle in
+> msi_create_device_irq_domain().  This name is passed through
+> irq_domain_alloc_named_fwnode(), where an irqchip_rwid is allocated,
+> along with a separate allocation via kasprintf() for another copy of
+> the name.  These are the two leaked buffers.
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm.dtsi b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> index 4ee89fdcf59b..8124761f629c 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm.dtsi
-> @@ -1293,6 +1293,26 @@ pcie0: pcie@33800000 {
->  			status = "disabled";
->  		};
->  
-> +		pcie0_ep: pcie_ep@33800000 {
-
-Hyphen is more preferable than underscore in name node.
-
-I fixed it (and the other two patches) up, and applied all DTS patches.
-
-Shawn
-
-> +			compatible = "fsl,imx8mm-pcie-ep";
-> +			reg = <0x33800000 0x400000>,
-> +			      <0x18000000 0x8000000>;
-> +			reg-names = "regs", "addr_space";
-> +			num-lanes = <1>;
-> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "dma";
-> +			fsl,max-link-speed = <2>;
-> +			power-domains = <&pgc_pcie>;
-> +			resets = <&src IMX8MQ_RESET_PCIE_CTRL_APPS_EN>,
-> +				 <&src IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF>;
-> +			reset-names = "apps", "turnoff";
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pcie-phy";
-> +			num-ib-windows = <4>;
-> +			num-ob-windows = <4>;
-> +			status = "disabled";
-> +		};
-> +
->  		gpu_3d: gpu@38000000 {
->  			compatible = "vivante,gc";
->  			reg = <0x38000000 0x8000>;
-> -- 
-> 2.25.1
+> Resolve this by adding the missing call to irq_domain_free_fwnode() in
+> msi_remove_device_irq_domain().
 > 
+> Fixes: 27a6dea3ebaa ("genirq/msi: Provide msi_create/free_device_irq_domain()")
+> Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+
+Thomas has already queued this:
+
+commit ac8f29aef2f1695956ff6773b33f975290437f29 (tip/irq/urgent)
+Author: Jason Gunthorpe <jgg@ziepe.ca>
+Date:   Tue Jan 17 15:16:17 2023 -0400
+
+    genirq/msi: Free the fwnode created by msi_create_device_irq_domain()
+
+which I assume will make it into Linus' tree shortly.
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
