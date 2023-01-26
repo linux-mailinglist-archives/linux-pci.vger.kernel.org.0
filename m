@@ -2,189 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC29467D7A0
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 22:22:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97D2467D7DC
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 22:41:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232545AbjAZVWn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 16:22:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49970 "EHLO
+        id S230433AbjAZVlv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 16:41:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231627AbjAZVWm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 16:22:42 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F53301B9;
-        Thu, 26 Jan 2023 13:22:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674768161; x=1706304161;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=cCxPUgucea+LDKCkLYswdeqqJgXYQzc1yiOXRjJnzBI=;
-  b=MK0K9dvRso3eLH3EpSczFZTG1L+VqfF6rBP+gt8iZxen+vI+OvfxxoQB
-   M+i0ZnHMQAfIfJQwdau04enGkNgG5HhFVnOJ2ZHEYJHajccC/bhWsxz+H
-   F1YMyl29hNPw1ngQSe+cGV568EBHjpNJFYrIhmi4Stn64AF3AQ7Xhd1Q1
-   8lLXAEPJh7PcJQcl+VRuGS9S1S33sYs8RaMInr9/Pleaj4HGdRPDqBcQw
-   XV4v5xGLz2w3hRBPxG36LzpANKaazbi6tV3L+nRRjnq66QgGtBqUXRShi
-   oRzfaBk90ObaLaGlSqtX0xCP3ZFBqxCOtwZsr8L/Fza0fLJ0fzdzGpsgB
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="413172729"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="413172729"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 13:22:41 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10602"; a="726414793"
-X-IronPort-AV: E=Sophos;i="5.97,249,1669104000"; 
-   d="scan'208";a="726414793"
-Received: from jlholden-mobl.amr.corp.intel.com (HELO [10.212.216.202]) ([10.212.216.202])
-  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2023 13:22:40 -0800
-Message-ID: <8888528f-db70-1fef-71bb-8a3dd1f4380f@linux.intel.com>
-Date:   Thu, 26 Jan 2023 13:22:40 -0800
+        with ESMTP id S229510AbjAZVlu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 16:41:50 -0500
+X-Greylist: delayed 21416 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 26 Jan 2023 13:41:48 PST
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23FB42197B;
+        Thu, 26 Jan 2023 13:41:47 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 5F23930000CFD;
+        Thu, 26 Jan 2023 22:41:46 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 42A8D2B0CE5; Thu, 26 Jan 2023 22:41:46 +0100 (CET)
+Date:   Thu, 26 Jan 2023 22:41:46 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Samuel Ortiz <sameo@rivosinc.com>,
+        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        "Shishkin, Alexander" <alexander.shishkin@intel.com>,
+        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
+        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
+        "Kleen, Andi" <andi.kleen@intel.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jason Wang <jasowang@redhat.com>,
+        "Poimboe, Josh" <jpoimboe@redhat.com>,
+        "aarcange@redhat.com" <aarcange@redhat.com>,
+        Cfir Cohen <cfir@google.com>, Marc Orr <marcorr@google.com>,
+        "jbachmann@google.com" <jbachmann@google.com>,
+        "pgonda@google.com" <pgonda@google.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        James Morris <jmorris@namei.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "Lange, Jon" <jlange@microsoft.com>,
+        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: Linux guest kernel threat model for Confidential Computing
+Message-ID: <20230126214146.GA28774@wunner.de>
+References: <DM8PR11MB57505481B2FE79C3D56C9201E7CE9@DM8PR11MB5750.namprd11.prod.outlook.com>
+ <Y9EkCvAfNXnJ+ATo@kroah.com>
+ <Y9Ex3ZUIFxwOBg1n@work-vm>
+ <Y9E7PNmSTP5w2zuw@kroah.com>
+ <Y9FDZPV7qENtNNyk@work-vm>
+ <20230125215333.GA18160@wunner.de>
+ <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
+ <20230126154449.GB4188@wunner.de>
+ <20230126112058-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH V1] PCI/ASPM: Update saved buffers with latest ASPM
- configuration
-Content-Language: en-US
-To:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
-        rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-References: <20230125133830.20620-1-vidyas@nvidia.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230125133830.20620-1-vidyas@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230126112058-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On 1/25/23 5:38 AM, Vidya Sagar wrote:
-> Many PCIe device drivers save the configuration state of their respective
-> devices during probe and restore the same when their 'slot_reset' hook
-> is called through PCIe Error Recovery System.
-> If the system has a change in ASPM policy after the driver's probe is
-> called and before error event occurred, 'slot_reset' hook restores the
-> PCIe configuration state to what it was at the time of probe but not with
-> what it was just before the occurrence of the error event.
-> This effectively leads to a mismatch in the ASPM configuration between
-> the device and its upstream parent device.
-> This patch addresses that issue by updating the saved configuration state
-> of the device with the latest info whenever there is a change w.r.t ASPM
-> policy.
-
-Do we need two save/restore calls for ASPM function? Is it not possible
-to extend pci_save_aspm_l1ss_state() to meet your need?
-
+On Thu, Jan 26, 2023 at 11:25:21AM -0500, Michael S. Tsirkin wrote:
+> On Thu, Jan 26, 2023 at 04:44:49PM +0100, Lukas Wunner wrote:
+> > Obviously the host can DoS guest access to the device by modifying
+> > exchanged messages, but there are much simpler ways for it to
+> > do that, say, by clearing Bus Master Enable or Memory Space Enable
+> > bits in the Command Register.
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/pci.h       |  4 ++++
->  drivers/pci/pcie/aspm.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 9ed3b5550043..f4a91d4fe96d 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -566,12 +566,16 @@ bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  void pcie_aspm_init_link_state(struct pci_dev *pdev);
->  void pcie_aspm_exit_link_state(struct pci_dev *pdev);
->  void pcie_aspm_powersave_config_link(struct pci_dev *pdev);
-> +void pci_save_aspm_state(struct pci_dev *dev);
-> +void pci_restore_aspm_state(struct pci_dev *dev);
->  void pci_save_aspm_l1ss_state(struct pci_dev *dev);
->  void pci_restore_aspm_l1ss_state(struct pci_dev *dev);
->  #else
->  static inline void pcie_aspm_init_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_exit_link_state(struct pci_dev *pdev) { }
->  static inline void pcie_aspm_powersave_config_link(struct pci_dev *pdev) { }
-> +static inline void pci_save_aspm_state(struct pci_dev *dev) { }
-> +static inline void pci_restore_aspm_state(struct pci_dev *dev) { }
->  static inline void pci_save_aspm_l1ss_state(struct pci_dev *dev) { }
->  static inline void pci_restore_aspm_l1ss_state(struct pci_dev *dev) { }
->  #endif
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 53a1fa306e1e..f25e0440d36b 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -151,6 +151,7 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
->  						   PCI_EXP_LNKCTL_CLKREQ_EN,
->  						   val);
->  	link->clkpm_enabled = !!enable;
-> +	pci_save_aspm_state(child);
+> There's a single key per guest though, isn't it? Also used
+> for regular memory?
 
-Add some details about this change to the commit log. Currently, you have talked only
-about the ASPM policy change issue.
+The current design is to have a global keyring (per kernel, i.e. per
+guest).  A device presents a certificate chain and the first certificate
+in that chain needs to be signed by one of the certificates on the keyring.
 
->  }
->  
->  static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
-> @@ -757,6 +758,39 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
->  				PCI_L1SS_CTL1_L1SS_MASK, val);
->  }
->  
-> +void pci_save_aspm_state(struct pci_dev *dev)
-> +{
-> +	int i = 0;
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
-> +
-> +	if (!pci_is_pcie(dev))
-> +		return;
-> +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	i++;
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &cap[i++]);
-> +}
-> +
-> +void pci_restore_aspm_state(struct pci_dev *dev)
-> +{
-> +	int i = 0;
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
-> +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	i++;
-> +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
-> +}
-> +
+This is completely independent from the key used for memory encryption.
 
-Don't you need to add this restore call in pci_restore_state()?
+A device can have up to 8 certificate chains (called "slots" in the
+SPDM spec) and I've implemented it such that all slots are iterated
+and validation is considered to be successful as soon as a slot with
+a valid signature is found.
 
->  void pci_save_aspm_l1ss_state(struct pci_dev *dev)
->  {
->  	struct pci_cap_saved_state *save_state;
-> @@ -849,6 +883,12 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
->  		pcie_config_aspm_dev(parent, upstream);
->  
->  	link->aspm_enabled = state;
-> +
-> +	/* Update latest ASPM configuration in saved context */
-> +	pci_save_aspm_state(link->downstream);
-> +	pci_save_aspm_l1ss_state(link->downstream);
-> +	pci_save_aspm_state(parent);
-> +	pci_save_aspm_l1ss_state(parent);
->  }
->  
->  static void pcie_config_aspm_path(struct pcie_link_state *link)
+We can discuss having a per-device keyring if anyone thinks it makes
+sense.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+The PCISIG's idea seems to be that each vendor of PCIe cards publishes
+a trusted root certificate and users would then have to keep all those
+vendor certificates in their global keyring.  This follows from the
+last paragraph of PCIe r6.0.1 sec 6.31.3, which says "it is strongly
+recommended that authentication requesters [i.e. the kernel] confirm
+that the information provided in the Subject Alternative Name entry
+[of the device's leaf certificate] is signed by the vendor indicated
+by the Vendor ID."
+
+The astute reader will notice that for this to work, the Vendor ID
+must be included in the trusted root certificate in a machine-readable
+way.  Unfortunately the PCIe Base Spec fails to specify that.
+So I don't know how to associate a trusted root certificate with a
+Vendor ID.
+
+I'll report this and several other gaps I've found in the spec to the
+editor at the PCISIG so that they can be filled in a future revision.
+
+Thanks,
+
+Lukas
