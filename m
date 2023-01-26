@@ -2,101 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D801F67D3F9
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 19:20:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01D7667D54B
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 20:25:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjAZST7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 13:19:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39794 "EHLO
+        id S231774AbjAZTZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 14:25:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjAZST6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 13:19:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ABA96537D;
-        Thu, 26 Jan 2023 10:19:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230217AbjAZTZI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 14:25:08 -0500
+Received: from witt.link (witt.link [185.233.105.83])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF1659269;
+        Thu, 26 Jan 2023 11:25:06 -0800 (PST)
+Received: from [IPV6:2003:f3:70b:200:9f3c:8f1e:cf1d:dfa0] (p200300f3070b02009f3c8f1ecf1ddfa0.dip0.t-ipconnect.de [IPv6:2003:f3:70b:200:9f3c:8f1e:cf1d:dfa0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD4086192B;
-        Thu, 26 Jan 2023 18:19:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1940C433EF;
-        Thu, 26 Jan 2023 18:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674757196;
-        bh=Yhgs9+A5wKBzRaMRYNnqazTkLbHVQaZOCExLNcxL1Z8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=giu8wG7//Z59qJSKD1YBAEv0EXlZAK8nbm7JsHXvc72vFpdQKFS7VDbMFPSPxx7gq
-         fOteqb4ZulxWqI/5XGZVM3TTizIKH1IeU5pghMxWrp515nS9SZKzAnLoICv5aO9YfU
-         CnUakiJS+SgwLhg+M8k/o3CLx64HVURBiN2wsgROAajf0YIJr9uBuaOz20SkChcof3
-         +mxOSJ1v2bqPTeASWO0Fx2sRomrTNhrQKhM15SqVppJLGNcZegxCBgvlnJanY1PzFj
-         nJN9f16KTBhcA8AfAB+JlPPVOxzfotpx+rNj9Uh3aAvw9tb4hI3dQzr+QjVcX3Bcw5
-         /24S6rj1GgYXw==
-Date:   Thu, 26 Jan 2023 12:19:54 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        caihuoqing <caihuoqing@baidu.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 24/27] dmaengine: dw-edma: Relax driver config settings
-Message-ID: <20230126181954.GA1290077@bhelgaas>
+        by witt.link (Postfix) with ESMTPSA id 903952A07DC;
+        Thu, 26 Jan 2023 20:25:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
+        t=1674761101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=14N3gg20STPUyy7H9zgnew1pOkB/33/ZlyxJTAkEgLM=;
+        b=mCOzTsAM5fyB9HS5rnRbHrMCXroLIQ4vLvJpXRyt+Y1V/DQI5ifH20T9sv9N9FDzlbmU4D
+        /KJrtD2dFNWP6Rdy0qkMSgGQysIU++9VCrIN1BNFmx7ZlaMZwenGQ9CV0QLeidBnTiex+7
+        9Ic6TP4vCj/u+xx9M0L4wCJlPHNFmxWhtBBqVmgPV06RFrpR+eNbxPQMZ49UitSFC5+eyp
+        ZCUUAHRkNUFkZfDuuSzyk2J50hb6tEA3iaL7MgQN79xiLOaXTrVSFGm7ZxQlFqyiUAYgNv
+        P7JkLq55JBmOVcxt9nOP1yM0AJAe/yqSDvCiq/VLnNQ0wi7kZN1Qxiv0A/Bz6w==
+Message-ID: <0b3c035f-74be-ed64-8edb-c83106fd11ad@witt.link>
+Date:   Thu, 26 Jan 2023 20:24:23 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126163750.ae6z3pkyd3o32byn@mobilestation>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [Bug 216877] New: Regression in PCI powermanagement breaks resume
+ after suspend
+Content-Language: en-GB, de-DE
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20230104150246.GA1068896@bhelgaas>
+ <fa187ea6-eaba-92cd-b2bc-a62d25501826@witt.link>
+From:   Thomas Witt <thomas@witt.link>
+In-Reply-To: <fa187ea6-eaba-92cd-b2bc-a62d25501826@witt.link>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 07:37:50PM +0300, Serge Semin wrote:
-> On Wed, Jan 25, 2023 at 05:23:57PM -0600, Bjorn Helgaas wrote:
-
-> > It's a pretty trivial update, so I just did it myself.  The result is
-> > at https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/log/?h=pci/ctrl/dwc&id=ecadcaed4ef7
-> > 
-> > I split this patch and tweaked some commit messages for consistency
-> > (including the "DW eDMA PCIe driver" change above).  "git diff -b"
-> > with Lorenzo's current branch (95624672bb3e ("PCI: dwc: Add DW eDMA
-> > engine support")) is empty except for a minor comment change.  
+On 04/01/2023 16:37, Thomas Witt wrote:
+> On 04/01/2023 16:02, Bjorn Helgaas wrote:
+>> Thanks for testing it.  Maybe Vidya will have more ideas.  The patch
+>> below (based on v6.2-rc1) would revert 5e85eba6f50d and 4ff116d0d5fd.
+>> If 5e85eba6f50d is the culprit, it should fix the regression.  It
+>> would also potentially break L1 substates after resume, so we'd like
+>> to avoid reverting it if possible.
+>>
+>> But the "Unable to change power state from D3hot to D0, device
+>> inaccessible" symptom suggests that the device is still in D3, which
+>> would be more like a wakeup issue than an ASPM issue.
+>>
+>> Your bisect log said 3e347969a577 ("PCI/PM: Reduce D3hot delay with
+>> usleep_range()") was "good", but it would be worth double-checking,
+>> e.g., see if reverting it from v6.2-rc1 makes any difference.
+>>
+>> Bjorn
+>>
+>> commit 61de2691d549 ("Revert "PCI/ASPM: Refactor L1 PM Substates 
+>> Control Register programming"")
+>> parent 1b929c02afd3
+>> Author: Bjorn Helgaas <bhelgaas@google.com>
+>> Date:   Wed Jan 4 08:38:53 2023 -0600
+>>
+>>      Revert "PCI/ASPM: Refactor L1 PM Substates Control Register 
+>> programming"
 > 
-> Great! Thanks. Although I've already created v10 beforehand but didn't
-> submitted it yet waiting for your response. The split up patches look
-> exactly like yours.
+> With this patch on top of 6.2-rc1 suspend/resume works and my PCI 
+> devices come back online.
 > 
-> In addition to that since I was going to re-send v10 I also took into
-> account your comments regarding the patch:
-> [PATCH v9 19/27] dmaengine: dw-edma: Use non-atomic io-64 methods
-> Link: https://lore.kernel.org/linux-pci/20230113171409.30470-20-Sergey.Semin@baikalelectronics.ru/
-> I've dropped unneeded modification and unpinned another fixes patch
-> which turned out to be a part of those modifications. So if you
-> re-based your pci/ctrl/dwc branch with that patch replaced with the
-> patches attached to this email it would have been great. Otherwise
-> it's ok to merge the series as is.
-> 
-> Note in the attached "non-atomic io-64" patch I've already replaced
-> the commit log with the your short version.
 
-Awesome, thanks!  I folded those updates in and updated my branch.
+Hello Bjorn, hello Vidya,
 
-And merged the whole thing into the PCI "next" branch.
+do you have an Idea what went wrong in that commit to cause my PCI 
+devices to not return from D3?
 
-Thanks for all your work!
-
-Bjorn
+BR
+Thomas
