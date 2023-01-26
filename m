@@ -2,138 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38E1E67D088
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 16:44:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4078267D0A0
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 16:50:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231825AbjAZPoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 10:44:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
+        id S231993AbjAZPuC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 10:50:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231491AbjAZPoy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 10:44:54 -0500
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6708430C6;
-        Thu, 26 Jan 2023 07:44:53 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id C410030000D22;
-        Thu, 26 Jan 2023 16:44:49 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id A4E1D261AB3; Thu, 26 Jan 2023 16:44:49 +0100 (CET)
-Date:   Thu, 26 Jan 2023 16:44:49 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Samuel Ortiz <sameo@rivosinc.com>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+        with ESMTP id S232259AbjAZPuA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 10:50:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA5B24ABF8;
+        Thu, 26 Jan 2023 07:49:59 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3C141618B6;
+        Thu, 26 Jan 2023 15:49:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9D5C4339B;
+        Thu, 26 Jan 2023 15:49:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674748198;
+        bh=tz37H93KJoXT7koLr1H4HT5GaXKxGQjDxvtFWm7fYOY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jqXQMHePLVFSiJqj0BgbGZMSJfFzBNY1s6BwEQB8uiax+WOjHz0lV4186ZtQdvbU3
+         VlcXlHGw+7BSYxkQhOdJkzk5JGC3Sjei/OXUTgUyXuis2MgcgbNTcTFDhBGwtHsapv
+         BWjzD2QkPbh4tcAjQOAWHKvfEIc7v7GVmCAWqYo0dL1dMpif0lnkTtRgmiIgdyTYnv
+         HVwbngVuGhfvugMn/7DfKFiw47VQtQ6TJQaM9BwGmw6P3Q2Xitjm1qmI9trS1Atlk8
+         JJoBV0NzEojUnCR5P0ARoBsXnZYnZ7iK+BEISeiOB51RuC05DGjF6/mWBB0AUtiM01
+         iL+0jwwg2LTxg==
+Date:   Thu, 26 Jan 2023 09:49:56 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
+        wenrui.li@rock-chips.com, rick.wertenbroek@heig-vd.ch,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Shishkin, Alexander" <alexander.shishkin@intel.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Poimboe, Josh" <jpoimboe@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        Cfir Cohen <cfir@google.com>, Marc Orr <marcorr@google.com>,
-        "jbachmann@google.com" <jbachmann@google.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lange, Jon" <jlange@microsoft.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: Linux guest kernel threat model for Confidential Computing
-Message-ID: <20230126154449.GB4188@wunner.de>
-References: <DM8PR11MB57505481B2FE79C3D56C9201E7CE9@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Y9EkCvAfNXnJ+ATo@kroah.com>
- <Y9Ex3ZUIFxwOBg1n@work-vm>
- <Y9E7PNmSTP5w2zuw@kroah.com>
- <Y9FDZPV7qENtNNyk@work-vm>
- <20230125215333.GA18160@wunner.de>
- <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
+Subject: Re: [PATCH 0/8] PCI: rockchip: Fix PCIe endpoint controller driver
+Message-ID: <20230126154956.GA1278063@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAEEuhq9X0ppqTMp7fnZapbubf9k8xhH=u3gPva3hEpAdawK3w@mail.gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 10:24:32AM +0100, Samuel Ortiz wrote:
-> On Wed, Jan 25, 2023 at 11:03 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > CMA/SPDM (PCIe r6.0 sec 6.31) is in active development on this branch:
+On Thu, Jan 26, 2023 at 04:23:57PM +0100, Rick Wertenbroek wrote:
+> Le jeu. 26 janv. 2023 à 15:52, Bjorn Helgaas <helgaas@kernel.org> a écrit :
+> > Thanks very much for your work.
 > >
-> > https://github.com/l1k/linux/commits/doe
-> > 
-> > The device authentication service afforded here is generic.
-> > It is up to users and vendors to decide how to employ it,
-> > be it for "confidential computing" or something else.
+> > On Thu, Jan 26, 2023 at 02:50:40PM +0100, Rick Wertenbroek wrote:
+> > > This is a series of patches that fixes the PCIe endpoint controller driver
+> > > for the Rockchip RK3399 SoC. It is based on Linux kernel 6.0.19
+> > >
+> > > The original driver in mainline had issues and would not allow for the
+> > > RK3399 to operate in PCIe endpoint mode. This patch series fixes that so
+> > > that the PCIe core controller of the RK3399 SoC can now act as a PCIe
+> > > endpoint.
 > >
-> > Trusted root certificates to validate device certificates can be
-> > installed into a kernel keyring using the familiar keyctl(1) utility,
-> > but platform-specific roots of trust (such as a HSM) could be
-> > supported as well.
+> > So we merged cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip
+> > PCIe controller") when it actually didn't work?  Ouch.  Thanks for
+> > fixing it and testing it.
 > 
-> This may have been discussed at LPC, but are there any plans to also
-> support confidential computing flows where the host kernel is not part
-> of the TCB and would not be trusted for validating the device cert chain
-> nor for running the SPDM challenge?
+> It seems it wasn't fully tested, the code compiles and kernel module loads,
+> but further functionality didn't seem to have been tested
+> (e.g., lspci, and with the pcitest tool and pci_endpoit_test_driver).
 
-As long as a device is passed through to a guest, the guest owns
-that device.  It is the guest's prerogative and duty to perform
-CMA/SPDM authentication on its own behalf.  If the guest uses
-memory encryption via TDX or SEV, key material established through
-a Diffie-Hellman exchange between guest and device is invisible
-to the host.  Consequently using that key material for IDE encryption
-protects device accesses from the guest against snooping by the host.
+OK, I guess that happens sometimes.  Glad you're getting it into
+shape!
 
-SPDM authentication consists of a sequence of exchanges, the first
-being GET_VERSION.  When a responder (=device) receives a GET_VERSION
-request, it resets the connection and all internal state related to
-that connection.  (SPDM 1.2.1 margin no 185: "a Requester can issue
-a GET_VERSION to a Responder to reset a connection at any time";
-see also SPDM 1.1.0 margin no 161 for details.)
+> Does this mean I should refer to the commit cf590b078391
+> ("PCI: rockchip: Add EP driver for Rockchip PCIe controller") ?
+> Because it wasn't working in the first place ?
 
-Thus, even though the host may have authenticated the device,
-once it's passed through to a guest and the guest performs
-authentication again, SPDM state on the device is reset.
+Yes, I think so.
 
-I'll amend the patches so that the host refrains from performing
-reauthentication as long as a device is passed through.  The host
-has no business mutating SPDM state on the device once ownership
-has passed to the guest.
+> Thank you for all the pointers, I'll take them into account for the
+> next iteration. This is the first time I actually submitted a series of
+> patches to the LKML so it's all relatively new to me.
 
-The first few SPDM exchanges are transmitted in the clear,
-so the host can eavesdrop on the negotiated algorithms,
-exchanged certificates and nonces.  However the host cannot
-successfully modify the exchanged data due to the man in the middle
-protection afforded by SPDM:  The challenge/response hash is
-computed over the concatenation of the exchanged messages,
-so modification of the messages by a man in the middle leads
-to authentication failure.
+Welcome to Linux, and great start!
 
-Obviously the host can DoS guest access to the device by modifying
-exchanged messages, but there are much simpler ways for it to
-do that, say, by clearing Bus Master Enable or Memory Space Enable
-bits in the Command Register.  DoS attacks from the host against
-the guest cannot be part of the threat model at this point.
-
-Thanks,
-
-Lukas
+Bjorn
