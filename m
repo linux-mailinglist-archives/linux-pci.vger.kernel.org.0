@@ -2,96 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2386267CC35
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 14:32:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5066E67CCB3
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 14:52:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236782AbjAZNcS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 08:32:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42548 "EHLO
+        id S229767AbjAZNwd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 08:52:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236527AbjAZNcP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 08:32:15 -0500
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13A012714
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 05:32:14 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id l8so1124596wms.3
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 05:32:13 -0800 (PST)
+        with ESMTP id S229721AbjAZNwb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 08:52:31 -0500
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F44038B58;
+        Thu, 26 Jan 2023 05:52:25 -0800 (PST)
+Received: by mail-ed1-x536.google.com with SMTP id y11so1913421edd.6;
+        Thu, 26 Jan 2023 05:52:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=hvXTfjErGpMP8uOLDwmTjxkzwIedC4pHfuHn5jXJ8N0=;
-        b=qSz3i+Nk4N2o0AemsRlY4Y1kvJX0QWS/ebt8ampVtbMQJog/GsNN/nHJrdTqc08+KU
-         Uw2lbHFjidj8JTAOcNFi1TpWGyvIB+pj4YDsirHFqftcK7Dae7wFeYYlU3daBS5q6O4J
-         4LOaY6/1cfkafaEzTU8ZXBpFvW9eS1dW0XgjD1dZFFY0tcDI02D237KJn+JXjR6phgnh
-         jOpNbb5SMNwjBwce++SDxth6ZQ+0R2khbjAsXWoKdmHx2k0KD6+r1ky0KnN2BgK40Y4W
-         4UNeq43CoU9gkSfpUFHt4Hyhex0QXygxXvr/3bxMnNx5ZCbSXdiJroNNBuMpfgzNCUnU
-         TOgg==
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/utpGi9Sj4ZWSR6S5xWYZJs1OXgTpwnJji6XxOBsQHk=;
+        b=e1P+20j/6nhVWppBGex+gw+GwZFJt6OcOd7V2PJc0RKeAADWDnRBEWyhBNtEQE6EgQ
+         YyAMhXDnYKc3JwOwK3eQxdc/Ms9SdxecN+cJG+QJQk+KE0F49AEbaVUf+nHjCqDhedc4
+         VRPSv/cT5ohxhTy0CH6AtLzJTGRXgN3BBvlX622kAKyhZ9YyGt6jhfaeVNvBeXBJBwtM
+         iPXcgqq9KzeUfQcvWafFr2YYUX64C9JKMVLIAv7Mnutdp0LmEfcUItG03mE57T1yLJUX
+         vXZo82WXoyQ02MLS11uLz+AULhye+hb4Vfw/YrIA/MPVQ5DQyyaczb1c3xwTvvCfImbb
+         h4ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hvXTfjErGpMP8uOLDwmTjxkzwIedC4pHfuHn5jXJ8N0=;
-        b=BJ5quHRQ0clpg2IvA9h8a3fDOCqV0gxsjq0SDQAnsrO/LVyRBTlcj32dMNAxcrEUMU
-         zx7Do72QXwnx6YHPEMg2VymWXmnf5Gz4NhUUAKSviwKdgzqEeKh15gmKcadlNKl30lzt
-         Ul2Gvuk5p8KQtqtCmwF2QPB6BGu6TU5pG3zaqdutPI0osnOOIRpxYN1wdapwIgFttcW+
-         zsiQ3gLvWpMqNCmUbpZ19CvrMgIaMs5y9LyR1Fjs6XGqGMPoXKbHBjyMStXBw7ECf8u4
-         96K4IU+Zn6xKBEh9WIGDrQCLekcVHeCj6UiyKQ7K9IzeC3Wh0YPIvvkd4BHBoKSTxKAl
-         IPMA==
-X-Gm-Message-State: AFqh2krvVYqCvcoQhrh7Jc1hIGrmNg28ZpI01UXGYBs4kLygO4YD4nQ8
-        ARt9dsWYCH7FZDdvlbwQAnsnIw==
-X-Google-Smtp-Source: AMrXdXsvke9/I5SEmOUuX2fmA7FDEbfmJeFpKph8uM2MNd6/2VY4XfLs4JIZluGNUbgzvZmtCNlL8A==
-X-Received: by 2002:a1c:f310:0:b0:3db:15d9:1485 with SMTP id q16-20020a1cf310000000b003db15d91485mr29420414wmq.39.1674739932598;
-        Thu, 26 Jan 2023 05:32:12 -0800 (PST)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id n13-20020a05600c500d00b003db2b81660esm5006955wmr.21.2023.01.26.05.32.10
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/utpGi9Sj4ZWSR6S5xWYZJs1OXgTpwnJji6XxOBsQHk=;
+        b=y9aJZR1WVzZLE2pN0DaMlh0morWtqEiFU6DgYxO+3f13bAF7nexUr3Tnokrv7w1Z55
+         qw1rUFXh/U0UjJPSC24Id3qqHDLgTdKqdU6Ggt1T/A3IBFetVDEpDi/uHa1AuMKsxJ7h
+         tGSa/usXN+lspVfDIAUxO21+usTXXZ1bfYNA7xOevTdfK7jaoSpxs7LBr5CqjWQkzavj
+         OqGobPDNsGQeNDgeRNnCRU9UjAl1O/3APM1EaOCB546oqDNN0+vhr9FqpbsKd/dENRaD
+         JFo4m16eLogwnSzyylvxx+a4xCqPiHQk77jOCtpn7Xl3yRvI71dYbQ1GT+6BZpL5jMm5
+         LUvA==
+X-Gm-Message-State: AFqh2kouj2CGwN0xpKz6o5dg33iBFExwj+s43ajKHfKbi2A03KQ7Si9V
+        FQdj58XNBCNcVBNJs8V6v6M=
+X-Google-Smtp-Source: AMrXdXtFieJ03Uo5sU104yDj5AjQBhROWXTyTZVJMlAx8ealwxx/EzBpGCQxg79gSkOclJ89dKKxKQ==
+X-Received: by 2002:a05:6402:43ce:b0:461:2288:6808 with SMTP id p14-20020a05640243ce00b0046122886808mr39285650edc.21.1674741143906;
+        Thu, 26 Jan 2023 05:52:23 -0800 (PST)
+Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
+        by smtp.googlemail.com with ESMTPSA id t15-20020a508d4f000000b004a0e2fe619esm591611edt.39.2023.01.26.05.52.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 05:32:11 -0800 (PST)
-Date:   Thu, 26 Jan 2023 14:32:09 +0100
-From:   Samuel Ortiz <sameo@rivosinc.com>
-To:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>
-Cc:     Lukas Wunner <lukas@wunner.de>,
+        Thu, 26 Jan 2023 05:52:23 -0800 (PST)
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+To:     alberto.dassatti@heig-vd.ch
+Cc:     xxm@rock-chips.com, wenrui.li@rock-chips.com,
+        rick.wertenbroek@heig-vd.ch,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Shishkin, Alexander" <alexander.shishkin@intel.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Poimboe, Josh" <jpoimboe@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        Cfir Cohen <cfir@google.com>, Marc Orr <marcorr@google.com>,
-        "jbachmann@google.com" <jbachmann@google.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lange, Jon" <jlange@microsoft.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: Linux guest kernel threat model for Confidential Computing
-Message-ID: <Y9KA2RNHujabdV/D@vermeer>
-References: <DM8PR11MB57505481B2FE79C3D56C9201E7CE9@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Y9EkCvAfNXnJ+ATo@kroah.com>
- <Y9Ex3ZUIFxwOBg1n@work-vm>
- <Y9E7PNmSTP5w2zuw@kroah.com>
- <Y9FDZPV7qENtNNyk@work-vm>
- <20230125215333.GA18160@wunner.de>
- <Y9Jakvab14K61b2t@work-vm>
+Subject: [PATCH 0/8] PCI: rockchip: Fix PCIe endpoint controller driver
+Date:   Thu, 26 Jan 2023 14:50:40 +0100
+Message-Id: <20230126135049.708524-1-rick.wertenbroek@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y9Jakvab14K61b2t@work-vm>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -99,53 +83,130 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 10:48:50AM +0000, Dr. David Alan Gilbert wrote:
-> * Lukas Wunner (lukas@wunner.de) wrote:
-> > [cc += Jonathan Cameron, linux-pci]
-> > 
-> > On Wed, Jan 25, 2023 at 02:57:40PM +0000, Dr. David Alan Gilbert wrote:
-> > > Greg Kroah-Hartman (gregkh@linuxfoundation.org) wrote:
-> > > > Great, so why not have hardware attestation also for your devices you
-> > > > wish to talk to?  Why not use that as well?  Then you don't have to
-> > > > worry about anything in the guest.
-> > > 
-> > > There were some talks at Plumbers where PCIe is working on adding that;
-> > > it's not there yet though.  I think that's PCIe 'Integrity and Data
-> > > Encryption' (IDE - sigh), and PCIe 'Security Prtocol and Data Model' -
-> > > SPDM.   I don't know much of the detail of those, just that they're far
-> > > enough off that people aren't depending on them yet.
-> > 
-> > CMA/SPDM (PCIe r6.0 sec 6.31) is in active development on this branch:
-> >
-> > https://github.com/l1k/linux/commits/doe
-> 
-> Thanks for the pointer - I'll go and hunt down that spec.
-> 
-> > It will allow for authentication of PCIe devices.  Goal is to submit
-> > this quarter (Q1).  Afterwards we'll look into retrieving measurements
-> > via CMA/SPDM and bringing up IDE encryption.
-> > 
-> > It's a kernel-native implementation which uses the existing crypto and
-> > keys infrastructure and is wired into the appropriate places in the
-> > PCI core to authenticate devices on enumeration and reauthenticate
-> > when CMA/SPDM state is lost (after resume from D3cold, after a
-> > Secondary Bus Reset and after a DPC-induced Hot Reset).
-> > 
-> > The device authentication service afforded here is generic.
-> > It is up to users and vendors to decide how to employ it,
-> > be it for "confidential computing" or something else.
-> 
-> As Samuel asks about who is doing the challenge; but I guess there are
-> also things like what happens when the host controls intermediate
-> switches 
+This is a series of patches that fixes the PCIe endpoint controller driver
+for the Rockchip RK3399 SoC. It is based on Linux kernel 6.0.19
 
-You'd want to protect that through IDE selective streams.
+The original driver in mainline had issues and would not allow for the
+RK3399 to operate in PCIe endpoint mode. This patch series fixes that so
+that the PCIe core controller of the RK3399 SoC can now act as a PCIe
+endpoint.
 
-> and BAR access and when only VFs are passed to guests.
+This patch series has been tested on kernel 6.0.19 (and 5.19)
+on real hardware, a FriendlyElec NanoPC-T4 RK3399 based single computer
+board connected to a host computer through PCIe x1 and x4. The PCIe
+endpoint test function driver was loaded on the SoC and the PCIe endpoint
+test driver was loaded on the host computer. The following tests were
+executed through this setup :
 
-TDISP aims at addressing that afaiu. Once the VF (aka TDI) is locked,
-any changes to its BAR(s) or any PF MMIO that would affect the VF would
-get the VF back to unlocked (and let the guest reject it).
+* enumeration of the PCIe endpoint device (lspci)
+  lspci -vvv
+* validation of PCI header and capabilities
+  setpci and lspci -xxxx
+* device was recognized by host computer dans PCIe endpoint test driver
+  was loaded
+  lspci -v states "Kernel modules: pci_endpoint_test"
+* tested the BARs 0-5
+  sudo /sur/bin/pcitest -b 0
+  ...
+  sudo /usr/bin/pcitest -b 5
+* tested legacy interrupt through the test driver
+  sudo /usr/bin/pcitest -i 0
+  sudo /usr/bin/pcitest -l
+* tested MSI interrupt through the test driver
+  sudo /usr/bin/pcitest -i 1
+  sudo /usr/bin/pcitest -m 1
+* tested read/write to and from host through the test driver with checksum
+  sudo /usr/bin/pcitest -r -s 1024
+  sudo /usr/bin/pcitest -w -s 1024
+* tested read/write with DMA enabled (all read/write tests also did IRQ)
+  sudo /usr/bin/pcitest -r -d -s 8192
+  sudo /usr/bin/pcitest -w -d -s 8192
 
-Cheers,
-Samuel.
+Summary of changes :
+
+This patch series is composed of 8 patches that do the following :
+* Removed writes to unused registers in the PCIe core register space.
+  The registers that were written to is marked "unused" and read
+  only in the technical reference manual of the RK3399 SoC.
+* Fixed setup to the PCI Device ID (DID), this was written to a read
+  only register and therefore would not update the DID.
+* Fixed setup of the PCIe endpoint controller so that it would stop
+  sending Configuration Request Retry Status (CRS) messages to the
+  host once configured, without this the host would retry until
+  timeout and cancel the PCI configuration.
+* Added a poll with timeout to check the PHY PLL lock status, this
+  is the only patch that also applies to the root complex function
+  of the PCIe core controller, without this the kernel would
+  sometimes access registers in the PHY PLL clock domain when the PLLs
+  were not yet locked and the system would hang. This was hackily solved
+  in other non mainline patches (e.g., in armbian) with a "msleep()"
+  that was added after PHY PLL configuration but without realizing
+  why it was needed. A poll with timeout seems like a sane approach.
+* Added a dtsi entry for the PCIe endpoint controller. The new entry is
+  in "disabled" status by default, so unless it is explicitly enabled
+  it will not conflict with the PCIe root complex controller entry.
+  Developers that will enable it would know that the root complex function
+  then must be disabled, this can be done in the board level DTS.
+* Fixed the window translation between CPU space and PCI space.
+  Allows up to 32 memory windows, with (1MB) page allocation and mapping.
+* Fixed the legacy IRQ (INTx) generation of the PCIe core in
+  endpoint mode.
+* Fixed the generation of message signalled interrupts (MSI) of the
+  PCIe core in endpoint mode.
+
+Thank you in advance for reviewing these changes and hopefully
+getting this merged. Having a functional PCIe endpoint controller
+driver for the RK3399 would allow to develop further PCIe endpoint
+functions through the Linux PCIe endpoint framework using this SoC.
+
+I have tested and confirmed all basic functionality required for the
+endpoint with the test driver and tools. With the previous state of
+the driver the device would not even be enumerated by the host
+computer (mainly because of CRS messages being sent back to the root
+complex) and tests would not pass (driver would not even be loaded
+because DID was not set correctly) and then only the BAR test would
+pass. Now all tests pass as stated above.
+
+Best regards
+Rick
+
+Commands used on the SoC to launch the endpoint function (configfs) :
+
+modprobe -i pci-epf-test
+mkdir -p /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0
+echo 0xb500 > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/deviceid
+echo 0x104c > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/vendorid
+echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/msi_interrupts 
+ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0 \
+/sys/kernel/config/pci_ep/controllers/fd000000.pcie-ep/
+echo 1 > /sys/kernel/config/pci_ep/controllers/fd000000.pcie-ep/start
+
+Note: to enable the endpoint controller on the board the file :
+arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+Was edited to set the status of &pcie0 to "disabled" and &pcie0_ep
+to "okay". This is not submitted as a patch because most users
+will use the PCIe core controller in host (root complex) mode
+rather than endpoint mode.
+
+Rick Wertenbroek (8):
+  PCI: rockchip: Removed writes to unused registers
+  PCI: rockchip: Fixed setup of Device ID
+  PCI: rockchip: Fixed endpoint controller Configuration Request Retry
+    Status
+  PCI: rockchip: Added poll and timeout to wait for PHY PLLs to be
+    locked
+  PCI: rockchip: Added dtsi entry for PCIe endpoint controller
+  PCI: rockchip: Fixed window mapping and address translation for
+    endpoint
+  PCI: rockchip: Fixed legacy IRQ generation for endpoint
+  PCI: rockchip: Fixed MSI generation from PCIe endpoint core
+
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi  |  25 ++++
+ drivers/pci/controller/pcie-rockchip-ep.c | 149 +++++++++++-----------
+ drivers/pci/controller/pcie-rockchip.c    |  16 +++
+ drivers/pci/controller/pcie-rockchip.h    |  36 ++++--
+ 4 files changed, 137 insertions(+), 89 deletions(-)
+
+-- 
+2.25.1
+
