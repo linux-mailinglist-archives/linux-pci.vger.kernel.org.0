@@ -2,147 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E2E0167C947
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 11:58:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 81D4C67C95D
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 12:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233130AbjAZK6y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 05:58:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49852 "EHLO
+        id S236754AbjAZLDY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 06:03:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229674AbjAZK6y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 05:58:54 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3A4B771;
-        Thu, 26 Jan 2023 02:58:52 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P2czQ66XDz67bVM;
-        Thu, 26 Jan 2023 18:54:42 +0800 (CST)
-Received: from localhost (10.81.202.191) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 26 Jan
- 2023 10:58:48 +0000
-Date:   Thu, 26 Jan 2023 10:58:47 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Samuel Ortiz <sameo@rivosinc.com>
-CC:     Lukas Wunner <lukas@wunner.de>,
-        "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Shishkin, Alexander" <alexander.shishkin@intel.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Poimboe, Josh" <jpoimboe@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        "Cfir Cohen" <cfir@google.com>, Marc Orr <marcorr@google.com>,
-        "jbachmann@google.com" <jbachmann@google.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "James Morris" <jmorris@namei.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lange, Jon" <jlange@microsoft.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>
-Subject: Re: Linux guest kernel threat model for Confidential Computing
-Message-ID: <20230126105847.00001b97@Huawei.com>
-In-Reply-To: <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
-References: <DM8PR11MB57505481B2FE79C3D56C9201E7CE9@DM8PR11MB5750.namprd11.prod.outlook.com>
-        <Y9EkCvAfNXnJ+ATo@kroah.com>
-        <Y9Ex3ZUIFxwOBg1n@work-vm>
-        <Y9E7PNmSTP5w2zuw@kroah.com>
-        <Y9FDZPV7qENtNNyk@work-vm>
-        <20230125215333.GA18160@wunner.de>
-        <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S236849AbjAZLDW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 06:03:22 -0500
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCB31EFC9
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 03:03:19 -0800 (PST)
+Received: by mail-wr1-x433.google.com with SMTP id m14so913849wrg.13
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 03:03:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=u7vCrE7q/VPLeTXLg6KW/8CfPxh94AhXp/Mdu/doGko=;
+        b=Ocn7Y8wYq1w5CE2BQNmoD7/PgjoqMViaN5x/i/CG2nzNDplo2dw1NyjE6D8lOd20If
+         XDGwpwhkiGSUsqs/HZWFJ5/TFs2RLZZT9TVl5taOHEoRGbFevexTH1RI3spP1/LIU9xK
+         SNNjnEdyfGFKSylVbyWs3xZy+zZXoIPnOo/GO+WytDe45RUa2+L/+k3pzhqJquXo8/Ze
+         iQP1Ci72opixlb/HHh8UKVuTvsAyPU6qHEGGQWmsSRW0K9jlMwQyVoESvuTgwT3Acww6
+         NiSqVmKyy1d8zq2BnBXufJKDMvvXBtCVBYOm0E0dRT5z2RHucMuWl+7kpSbgTIIDNAx7
+         +eQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u7vCrE7q/VPLeTXLg6KW/8CfPxh94AhXp/Mdu/doGko=;
+        b=weXvu42U6KdltJ7UTfV4bA4Q8cmb+MKmfrKHntIzII/GttUfKtFdxBElKRJ61WEoUW
+         AVJOAnIRHzOFXBRNuOQzLYNA62l5487xiUQV0tULmvHPxTk+R2MQg+L8cyaiFTlfYatP
+         UMpw8qNICSITCrvKeR872EsCmrcaAZX/6pUSgFWkyK8HRstiKyxcVyYRGl/vfX3IVk5K
+         elgbmAhygbCuMOiHCzK6mxVmHHNKwUFM2+FXDY5huMMB2QHJrkZc/rGWiSYNNkeXp/ko
+         DyHG8V5bGb4CkHA2/Z24r1U690T5824dr27YrshEqEz2ikmxfWyT0W0hnH63ekvA8+7/
+         2bSA==
+X-Gm-Message-State: AFqh2krMwjXOit08yS7D1YOWvFGfQj9OFHj41Z/JkxcgK3d17jjn5lAs
+        bJGfOidNg7ci3aknCl3J1JjpRg==
+X-Google-Smtp-Source: AMrXdXvqpDZOxx5pX8SxZSPMgEW0upg3chd+5e2q4Gd1AURW4q3uxbcLqtlr0+GZqZJ25qGwXEd4yw==
+X-Received: by 2002:adf:edd1:0:b0:2bd:c6ce:7bfc with SMTP id v17-20020adfedd1000000b002bdc6ce7bfcmr32384945wro.42.1674730997639;
+        Thu, 26 Jan 2023 03:03:17 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id b14-20020adff90e000000b002be34f87a34sm1061340wrr.1.2023.01.26.03.03.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 03:03:17 -0800 (PST)
+Message-ID: <184f6a3a-63a5-7247-535c-ac7a1654528e@linaro.org>
+Date:   Thu, 26 Jan 2023 12:03:14 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH v5 01/12] dt-bindings: phy: Add QMP PCIe PHY comptible for
+ SM8550
+Content-Language: en-US
+To:     Abel Vesa <abel.vesa@linaro.org>, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-phy@lists.infradead.org
+References: <20230124124714.3087948-1-abel.vesa@linaro.org>
+ <20230124124714.3087948-2-abel.vesa@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230124124714.3087948-2-abel.vesa@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.81.202.191]
-X-ClientProxiedBy: lhrpeml100001.china.huawei.com (7.191.160.183) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 26 Jan 2023 10:24:32 +0100
-Samuel Ortiz <sameo@rivosinc.com> wrote:
-
-> Hi Lukas,
+On 24/01/2023 13:47, Abel Vesa wrote:
+> Document the QMP PCIe PHY compatible for SM8550.
 > 
-> On Wed, Jan 25, 2023 at 11:03 PM Lukas Wunner <lukas@wunner.de> wrote:
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
 > 
-> > [cc += Jonathan Cameron, linux-pci]
-> >
-> > On Wed, Jan 25, 2023 at 02:57:40PM +0000, Dr. David Alan Gilbert wrote:  
-> > > Greg Kroah-Hartman (gregkh@linuxfoundation.org) wrote:  
-> > > > Great, so why not have hardware attestation also for your devices you
-> > > > wish to talk to?  Why not use that as well?  Then you don't have to
-> > > > worry about anything in the guest.  
-> > >
-> > > There were some talks at Plumbers where PCIe is working on adding that;
-> > > it's not there yet though.  I think that's PCIe 'Integrity and Data
-> > > Encryption' (IDE - sigh), and PCIe 'Security Prtocol and Data Model' -
-> > > SPDM.   I don't know much of the detail of those, just that they're far
-> > > enough off that people aren't depending on them yet.  
-> >
-> > CMA/SPDM (PCIe r6.0 sec 6.31) is in active development on this branch:
-> >
-> > https://github.com/l1k/linux/commits/doe  
-> 
-> Nice, thanks a lot for that.
-> 
-> 
-> 
-> > The device authentication service afforded here is generic.
-> > It is up to users and vendors to decide how to employ it,
-> > be it for "confidential computing" or something else.
-> >
-> > Trusted root certificates to validate device certificates can be
-> > installed into a kernel keyring using the familiar keyctl(1) utility,
-> > but platform-specific roots of trust (such as a HSM) could be
-> > supported as well.
-> >  
-> 
-> This may have been discussed at LPC, but are there any plans to also
-> support confidential computing flows where the host kernel is not part
-> of the TCB and would not be trusted for validating the device cert chain
-> nor for running the SPDM challenge?
-
-There are lots of possible models for this. One simple option if the assigned
-VF supports it is a CMA instance per VF. That will let the guest
-do full attestation including measurement of whether the device is
-appropriately locked down so the hypervisor can't mess with
-configuration that affects the guest (without a reset anyway and that
-is guest visible). Whether anyone builds that option isn't yet clear
-though. If they do, Lukas' work should work there as well as for the
-host OS. (Note I'm not a security expert so may be missing something!)
-
-For extra fun, why should the device trust the host? Mutual authentication
-fun (there are usecases where that matters)
-
-There are way more complex options supported in PCIe TDISP (Tee Device
-security interface protocols). Anyone have an visibility of open solutions
-that make use of that? May be too new.
-
-Jonathan
+> This patchset relies on the following patchset:
 
 
-> 
-> Cheers,
-> Samuel.
-> 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
