@@ -2,97 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 01D7667D54B
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 20:25:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E27A867D6E5
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 21:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231774AbjAZTZJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 14:25:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33710 "EHLO
+        id S230252AbjAZU5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 15:57:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230217AbjAZTZI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 14:25:08 -0500
-Received: from witt.link (witt.link [185.233.105.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACF1659269;
-        Thu, 26 Jan 2023 11:25:06 -0800 (PST)
-Received: from [IPV6:2003:f3:70b:200:9f3c:8f1e:cf1d:dfa0] (p200300f3070b02009f3c8f1ecf1ddfa0.dip0.t-ipconnect.de [IPv6:2003:f3:70b:200:9f3c:8f1e:cf1d:dfa0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-256) server-digest SHA256)
-        (No client certificate requested)
-        by witt.link (Postfix) with ESMTPSA id 903952A07DC;
-        Thu, 26 Jan 2023 20:25:01 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=witt.link; s=dkim;
-        t=1674761101;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=14N3gg20STPUyy7H9zgnew1pOkB/33/ZlyxJTAkEgLM=;
-        b=mCOzTsAM5fyB9HS5rnRbHrMCXroLIQ4vLvJpXRyt+Y1V/DQI5ifH20T9sv9N9FDzlbmU4D
-        /KJrtD2dFNWP6Rdy0qkMSgGQysIU++9VCrIN1BNFmx7ZlaMZwenGQ9CV0QLeidBnTiex+7
-        9Ic6TP4vCj/u+xx9M0L4wCJlPHNFmxWhtBBqVmgPV06RFrpR+eNbxPQMZ49UitSFC5+eyp
-        ZCUUAHRkNUFkZfDuuSzyk2J50hb6tEA3iaL7MgQN79xiLOaXTrVSFGm7ZxQlFqyiUAYgNv
-        P7JkLq55JBmOVcxt9nOP1yM0AJAe/yqSDvCiq/VLnNQ0wi7kZN1Qxiv0A/Bz6w==
-Message-ID: <0b3c035f-74be-ed64-8edb-c83106fd11ad@witt.link>
-Date:   Thu, 26 Jan 2023 20:24:23 +0100
+        with ESMTP id S229730AbjAZU5Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 15:57:24 -0500
+Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6F5D3433A
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 12:57:23 -0800 (PST)
+Received: by mail-il1-x134.google.com with SMTP id d10so1296089ilc.12
+        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 12:57:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8q92vU6FC2OBfigvvadZc6pP7ck9MsJPPUZntKKUy/A=;
+        b=DZqV6twI7VDtxWwtbB602B5SBi+EoZE3C2HyPq+uwbkahM3VPw1QtNWS7g9P5EEQQq
+         2P1Ij9Xwl4uzPzC/ZUT78vGXyyDU3nFU7OGsfm0KUkbBKPf2ZwK0Uv4fVQ8Mq40wiM8R
+         ejCk3AqWm/XyADqZsr5wood3OyIU729juzb+U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8q92vU6FC2OBfigvvadZc6pP7ck9MsJPPUZntKKUy/A=;
+        b=VZBMeS4KmuO1HYpeWn6QFR3ArdeSDBI/XAsRtA6ltTPaXg1PwgLoW0StroPeTdcVzo
+         D62r9OMhw13h4meCEjckXK7UzLS6sAzWYl//2PuBJqOfOHQjAnza2s2AaNOKXWH6ksiO
+         qWRFUxhaeJgb2mB6jH9MP8NPr6bakyfx4qs+0ZfV/FjjDtxtYL3GYHsndM7UxTckJWKe
+         OrWTBz026DA6VWBCJjAybIjiPYxaG6ygLezmNOM1HQ6Yigm1yKWVkqZft4i7I8YCnefa
+         KL+Vj+E35//YoxhPkcnVrNqn1/D32w0vs7iDVT0rk06fQ8AbHv0RJY3VXGaQzUdTXvcX
+         11Hg==
+X-Gm-Message-State: AO0yUKWvbf2nqRLxRLpiQM/qzm+XMp0cWKsIRxZnvwR5IFswvZ8Sx3ZI
+        7q+xDCXAxyjzpm9OuyTY3nLExw==
+X-Google-Smtp-Source: AK7set/aCj/6RUlMRa8YLjfXNAgQWi6CmMdvODO5LIRSwVpCey+4a2mR0eim95Ix+3SaJyy2MgIchA==
+X-Received: by 2002:a92:6810:0:b0:310:9adc:e1bb with SMTP id d16-20020a926810000000b003109adce1bbmr1421856ilc.0.1674766643095;
+        Thu, 26 Jan 2023 12:57:23 -0800 (PST)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id f9-20020a022409000000b0039e048ad8e7sm756643jaa.59.2023.01.26.12.57.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 12:57:22 -0800 (PST)
+Message-ID: <7b3cbbd1-8c27-adf9-d2ed-c037f67bd697@linuxfoundation.org>
+Date:   Thu, 26 Jan 2023 13:57:21 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.0
-Subject: Re: [Bug 216877] New: Regression in PCI powermanagement breaks resume
- after suspend
-Content-Language: en-GB, de-DE
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20230104150246.GA1068896@bhelgaas>
- <fa187ea6-eaba-92cd-b2bc-a62d25501826@witt.link>
-From:   Thomas Witt <thomas@witt.link>
-In-Reply-To: <fa187ea6-eaba-92cd-b2bc-a62d25501826@witt.link>
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] selftests: pci: pci-selftest: add support for PCI
+ endpoint driver test
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics 
+        <aman1.gupta@samsung.com>
+Cc:     'Manivannan Sadhasivam' <manivannan.sadhasivam@linaro.org>,
+        shradha.t@samsung.com, pankaj.dubey@samsung.com, kishon@ti.com,
+        lpieralisi@kernel.org, kw@linux.com, shuah@kernel.org,
+        linux-pci@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        'Padmanabhan Rajanbabu' <p.rajanbabu@samsung.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20230117195903.GA142672@bhelgaas>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20230117195903.GA142672@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 04/01/2023 16:37, Thomas Witt wrote:
-> On 04/01/2023 16:02, Bjorn Helgaas wrote:
->> Thanks for testing it.  Maybe Vidya will have more ideas.  The patch
->> below (based on v6.2-rc1) would revert 5e85eba6f50d and 4ff116d0d5fd.
->> If 5e85eba6f50d is the culprit, it should fix the regression.  It
->> would also potentially break L1 substates after resume, so we'd like
->> to avoid reverting it if possible.
+On 1/17/23 12:59, Bjorn Helgaas wrote:
+> On Tue, Dec 27, 2022 at 10:45:26AM +0530, Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics wrote:
+>> ...
+>> Thanks for review and suggestion. I understand that we would like to
+>> reuse and preserve the history of tools/pci/pcietest.c. So we have
+>> two approaches:
 >>
->> But the "Unable to change power state from D3hot to D0, device
->> inaccessible" symptom suggests that the device is still in D3, which
->> would be more like a wakeup issue than an ASPM issue.
+>> 1: Using git mv command move existing code from tools/pci/ to
+>> tools/testing/selftest/drivers/pci/ and then update the file to
+>> convert to kselftest framework. I thought about this but after
+>> movement, when we move it to kselftest format it is going to be huge
+>> churn and we will be having modification in almost all lines.
 >>
->> Your bisect log said 3e347969a577 ("PCI/PM: Reduce D3hot delay with
->> usleep_range()") was "good", but it would be worth double-checking,
->> e.g., see if reverting it from v6.2-rc1 makes any difference.
+>> 2: Develop kselftest based driver in
+>> tools/testing/selftest/drivers/pci/ and eventually delete existing
+>> file from tools/pci/ folder providing justification in commit
+>> message.
 >>
->> Bjorn
+>>  From my viewpoint, going with the second approach makes more sense
+>> because if almost complete file is getting modified, and it will
+>> make the review process complex and anyways there is not much code
+>> reusability.
 >>
->> commit 61de2691d549 ("Revert "PCI/ASPM: Refactor L1 PM Substates 
->> Control Register programming"")
->> parent 1b929c02afd3
->> Author: Bjorn Helgaas <bhelgaas@google.com>
->> Date:   Wed Jan 4 08:38:53 2023 -0600
->>
->>      Revert "PCI/ASPM: Refactor L1 PM Substates Control Register 
->> programming"
+>> Please let me know if you have any other thought
+>> process or if I am missing anything to understand your approach.
 > 
-> With this patch on top of 6.2-rc1 suspend/resume works and my PCI 
-> devices come back online.
+> I vote for the first approach, with "git mv" and subsequent conversion
+> (in separate patches, of course).  If git knows about the move,
+> "git log --follow" will be useful even though the conversion will be a
+> big patch.  Adding a new test with the connection to the old one only
+> in the commit log makes more work for people who dig through the
+> history in the future.
 > 
 
-Hello Bjorn, hello Vidya,
+Thanks Bjorn for explaining this in more detail that I did.
 
-do you have an Idea what went wrong in that commit to cause my PCI 
-devices to not return from D3?
+Please send revised patches following the first approach.
 
-BR
-Thomas
+thanks,
+-- Shuah
+
