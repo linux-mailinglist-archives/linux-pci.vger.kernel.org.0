@@ -2,155 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 48C1867D229
-	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 17:54:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B44167D24F
+	for <lists+linux-pci@lfdr.de>; Thu, 26 Jan 2023 18:01:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbjAZQx7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 26 Jan 2023 11:53:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33666 "EHLO
+        id S229802AbjAZRBi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 26 Jan 2023 12:01:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjAZQx7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 11:53:59 -0500
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17593470BF
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 08:53:58 -0800 (PST)
-Received: by mail-qt1-x835.google.com with SMTP id j9so1764842qtv.4
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 08:53:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ixsystems.com; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LzJPe3EcmggiRO10VtpQvAAZOYxUCc3B6VhZOb/rnEw=;
-        b=K9TssC2tvO2bl8n5jggZPVlhfeYQA8WE8uf9tMmK56dMGQPG7N0fHRGvT6nLRRW0OR
-         cvECnIrifJy5t2grFtdHCWFWvgrk4YchKyMB4JSCq3pO5zlIWgEKa0Fcsgb/P24YUkCH
-         AKpYjVAVirzZFaUypwoVxeTrsUf5efj9VRfehK5FSm759KRZCmP+PCchYGUJXk8tT59E
-         N8Mk6fCm52vPaHtfswZfUL/DuKsSVtdeUt1SAwOaE7P1d+kOPv1Q7yDRLxKX2rPmYoj7
-         4q6ubtQzoLCD0uPVfPwyh0WsWdAds6p3bEJo7guqowOUuoxg5VFjhClE/eQGsQ2wDaI4
-         WhzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LzJPe3EcmggiRO10VtpQvAAZOYxUCc3B6VhZOb/rnEw=;
-        b=lm/sa8DISZWLwvG+jU3zyHf8x+0I0KDMtpXkXl8yeZoEl7Yeas0QzkSsGgQZRzZXhd
-         jZiZsdxgngbPM7F5WQZcqp3SVpxrhIW+OfpQsbXATwJGetDBQcRbuw/UJ/SFOzK1NvA8
-         +TcMmI3mrQkVvvHxqAPL1mN0CI1ze3pKhARvgEiw9gqHGVMrw8zKwhBdOiH37QiV/R56
-         DSwxgbrVhdjiKv62rpWBTDWfLfRpOwkLOgua9nzq9mhtQGRwlYhZHPjnDEewh9Bvn7u4
-         +zdutebG8FRDdeIPJM+FhntuzGYvqJwskVkUlQc+3BCYJYinEarCwRg2svtgG04BNMPp
-         C9Dg==
-X-Gm-Message-State: AO0yUKVi62KkyAWeSAtas+Wz+KDWbctSgNsIKLwRkoogTy3bhdRtSdes
-        vgr7KmoisheYbJcfDvMeUpz5AA==
-X-Google-Smtp-Source: AK7set9r/4Hyn4M9sc6jcdezlIBVvONhF3rWFQnGmP2n/9pOWDxYJ2xHS+Yylyek0nIDjSOCY08+KA==
-X-Received: by 2002:ac8:5c09:0:b0:3b6:377d:4330 with SMTP id i9-20020ac85c09000000b003b6377d4330mr12132504qti.29.1674752037055;
-        Thu, 26 Jan 2023 08:53:57 -0800 (PST)
-Received: from [10.230.45.5] ([38.32.73.2])
-        by smtp.gmail.com with ESMTPSA id i12-20020ac84f4c000000b003b63c9c59easm973869qtw.97.2023.01.26.08.53.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jan 2023 08:53:56 -0800 (PST)
-Message-ID: <7b4a981b-2ee8-0021-0c3a-984d6171f680@ixsystems.com>
-Date:   Thu, 26 Jan 2023 11:53:55 -0500
+        with ESMTP id S229482AbjAZRBh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 26 Jan 2023 12:01:37 -0500
+Received: from sp11.canonet.ne.jp (sp11.canonet.ne.jp [210.134.168.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6D216233DF;
+        Thu, 26 Jan 2023 09:01:36 -0800 (PST)
+Received: from csp11.canonet.ne.jp (unknown [172.21.160.131])
+        by sp11.canonet.ne.jp (Postfix) with ESMTP id AA1F21E0515;
+        Fri, 27 Jan 2023 02:01:35 +0900 (JST)
+Received: from echeck11.canonet.ne.jp ([172.21.160.121])
+        by csp1 with ESMTP
+        id L5d1pbKO44VyBL5d1pTNA7; Fri, 27 Jan 2023 02:01:35 +0900
+X-CNT-CMCheck-Reason: "undefined", "v=2.4 cv=bsjyuGWi c=1 sm=1 tr=0
+ ts=63d2b1ef cx=g_jp:t_eml p=jICtXCb1Bd4A:10 p=WKcvGfCz9DfGexK3dBCb:22
+ a=cYGYO7ts52rupuxT5MoNxg==:117 a=yr9NA9NbXb0B05yJHQEWeQ==:17
+ a=PlGk70OYzacA:10 a=kj9zAlcOel0A:10 a=RvmDmJFTN0MA:10 a=x7bEGLp0ZPQA:10
+ a=QA8zHFxAwLBQ4A9MkZgA:9 a=CjuIK1q_8ugA:10 a=0iaRBTTaEecA:10
+ a=xo5jKAKm-U-Zyk2_beg_:22"
+X-CNT-CMCheck-Score: 100.00
+Received: from echeck11.canonet.ne.jp (localhost [127.0.0.1])
+        by esets.canonet.ne.jp (Postfix) with ESMTP id 66E6D1C023D;
+        Fri, 27 Jan 2023 02:01:35 +0900 (JST)
+X-Virus-Scanner: This message was checked by ESET Mail Security
+        for Linux/BSD. For more information on ESET Mail Security,
+        please, visit our website: http://www.eset.com/.
+Received: from smtp11.canonet.ne.jp (unknown [172.21.160.101])
+        by echeck11.canonet.ne.jp (Postfix) with ESMTP id 0FF921C0261;
+        Fri, 27 Jan 2023 02:01:35 +0900 (JST)
+Received: from daime.co.jp (webmail.canonet.ne.jp [210.134.169.250])
+        by smtp11.canonet.ne.jp (Postfix) with ESMTPA id 524AF15F962;
+        Fri, 27 Jan 2023 02:01:34 +0900 (JST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; FreeBSD amd64; rv:91.0) Gecko/20100101
- Thunderbird/91.13.0
-Subject: Re: [PATCH v5 1/3] PCI: Align extra resources for hotplug bridges
- properly
-Content-Language: en-US
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org
-References: <20230112110000.59974-1-mika.westerberg@linux.intel.com>
- <20230112110000.59974-2-mika.westerberg@linux.intel.com>
-From:   Alexander Motin <mav@ixsystems.com>
-In-Reply-To: <20230112110000.59974-2-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Message-ID: <20230126170134.000040E0.0258@daime.co.jp>
+Date:   Fri, 27 Jan 2023 02:01:34 +0900
+From:   "Mrs Alice Walton" <daime@daime.co.jp>
+To:     <INQUIRY@daime.co.jp>
+Reply-To: <alicewaltton1@gmail.com>
+Subject: INQUIRY
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Priority: 3
+ORGANIZATION: Mrs Alice Walton
+X-MAILER: Active! mail
+X-EsetResult: clean, %VIRUSNAME%
+X-ESET-AS: R=OK;S=0;OP=CALC;TIME=1674752495;VERSION=7944;MC=1091061716;TRN=0;CRV=0;IPC=210.134.169.250;SP=4;SIPS=1;PI=5;F=0
+X-I-ESET-AS: RN=0;RNP=
+X-ESET-Antispam: OK
+X-Spam-Status: Yes, score=6.5 required=5.0 tests=BAYES_50,
+        FREEMAIL_FORGED_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        LOCALPART_IN_SUBJECT,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_HK_NAME_MR_MRS,UNRESOLVED_TEMPLATE,XPRIO_SHORT_SUBJ autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5002]
+        * -0.0 RCVD_IN_MSPIKE_H2 RBL: Average reputation (+2)
+        *      [210.134.168.88 listed in wl.mailspike.net]
+        *  1.1 LOCALPART_IN_SUBJECT Local part of To: address appears in
+        *      Subject
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [alicewaltton1[at]gmail.com]
+        *  1.3 UNRESOLVED_TEMPLATE Headers contain an unresolved template
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        *  0.0 T_HK_NAME_MR_MRS No description available.
+        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
+        *  1.0 XPRIO_SHORT_SUBJ Has X Priority header + short subject
+X-Spam-Level: ******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mika,
 
-Unfortunately my system was de-racked meanwhile, so it will take few 
-more days for me to test this.  So far I only successfully built it on 
-my 5.15.79 kernel.  Meanwhile some comments below:
+Greetings,
 
-On 12.01.2023 05:59, Mika Westerberg wrote:
-> After division the extra resource space per hotplug bridge may not be
-> aligned according to the window alignment so do that before passing it
-> down for further distribution.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->   drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
->   1 file changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index b4096598dbcb..34a74bc581b0 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1891,6 +1891,7 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->   	 * resource space between hotplug bridges.
->   	 */
->   	for_each_pci_bridge(dev, bus) {
-> +		struct resource *res;
->   		struct pci_bus *b;
->   
->   		b = dev->subordinate;
-> @@ -1902,16 +1903,28 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
->   		 * hotplug-capable downstream ports taking alignment into
->   		 * account.
->   		 */
-> -		io.end = io.start + io_per_hp - 1;
-> -		mmio.end = mmio.start + mmio_per_hp - 1;
-> -		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
-> +		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
-> +		align = pci_resource_alignment(dev, res);
-> +		io.end = align ? io.start + ALIGN_DOWN(io_per_hp, align) - 1
-> +			       : io.start + io_per_hp - 1;
+I trust you are well. I sent you an email yesterday, I just want to confirm if you received it.
+Please let me know as soon as possible,
 
-Not bug probably, but if we align x_per_b down for one bridge, we could 
-be able to increase it for other(s).
+Regard
+Mrs Alice Walton
 
-> +
-> +		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
-> +		align = pci_resource_alignment(dev, res);
-> +		mmio.end = align ? mmio.start + ALIGN_DOWN(mmio_per_hp, align) - 1
-> +				 : mmio.start + io_per_hp - 1;
 
-Here is a typo, it should be mmio_per_hp here   ^^^.
-
-> +
-> +		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
-> +		align = pci_resource_alignment(dev, res);
-> +		mmio_pref.end = align ? mmio_pref.start +
-> +					ALIGN_DOWN(mmio_pref_per_hp, align) - 1
-> +				      : mmio_pref.start + mmio_pref_per_hp;
->   
->   		pci_bus_distribute_available_resources(b, add_list, io, mmio,
->   						       mmio_pref);
->   
-> -		io.start += io_per_hp;
-> -		mmio.start += mmio_per_hp;
-> -		mmio_pref.start += mmio_pref_per_hp;
-> +		io.start += io.end + 1;
-> +		mmio.start += mmio.end + 1;
-> +		mmio_pref.start += mmio_pref.end + 1;
->   	}
->   }
->   
-
--- 
-Alexander Motin
