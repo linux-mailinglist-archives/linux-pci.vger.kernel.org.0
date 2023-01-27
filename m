@@ -2,118 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 508C867EC69
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 18:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F8B267EC7F
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 18:33:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233844AbjA0Ral (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Jan 2023 12:30:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53926 "EHLO
+        id S229889AbjA0RdA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Jan 2023 12:33:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233140AbjA0Rak (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 12:30:40 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F3BE4224;
-        Fri, 27 Jan 2023 09:30:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16F41B821A5;
-        Fri, 27 Jan 2023 17:30:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B906C433EF;
-        Fri, 27 Jan 2023 17:30:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674840636;
-        bh=yNZFiu9qy7zJ/EWkc4F3j8vLQAcYNj9Evf58Zwkbeqk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hELv7tqy2E2JcNBXCVZVUgeW8Vbk8OKW5dB4gWmFyjf4+zZHRL+qK/GypbQPELczq
-         anwBM9lrjhtm5uCVGLvcxaVUjMRMpIxU6IeqANqTmQTCNZKyL31ZxkhuSHN0yHOPBr
-         nwsAOmzd1RwFZ+0L/ePrQqmvbySpWVQrdS3ML5ysK6y+yjlJ0CfLU74glIgClebaDA
-         PtYjFFnq3APo7Zyut44Cfr/3OjUbLe4X/fIreJ/eceSr2zAzaH2HAydg38k2/82JWe
-         TB2j62wtqEWAn6suHGZhaQYwSsAlAgQYyJBkeA+Aj0aGaVletrQmv24df8F6rdgNcn
-         pE5SpoFj+zNDg==
-Date:   Fri, 27 Jan 2023 11:30:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lu Baolu <baolu.lu@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Matt Fagnani <matt.fagnani@bell.net>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Vasant Hegde <vasant.hegde@amd.com>,
-        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
-        iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
- pci_enable_pasid()
-Message-ID: <20230127173035.GA994835@bhelgaas>
+        with ESMTP id S235220AbjA0Rc7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 12:32:59 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDAB07BE67
+        for <linux-pci@vger.kernel.org>; Fri, 27 Jan 2023 09:32:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1674840731;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nV5PVEexFRTCEYgn3s3CxSGrrslwGO/8JvUDWaGn4vs=;
+        b=QLUWcDUpbOaMnZTg+LT+Qh+g1h7q344HpaJGTFpWoeyD++JtTbsR2ZCbm2R5DDE1ovKnEb
+        namXbacNHvEYD9GLqkjmEiCIUPleYNx3t4ZmhEDlq5biwsS5/jYhxJBQbiU8iOvDrlhOV5
+        9myOL/UYF+IvhMaYmEaC814tiUX+cXk=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-179-qyMdyq0-O5G_U-dTjToQ-Q-1; Fri, 27 Jan 2023 12:32:09 -0500
+X-MC-Unique: qyMdyq0-O5G_U-dTjToQ-Q-1
+Received: by mail-io1-f69.google.com with SMTP id b21-20020a5d8d95000000b006fa39fbb94eso3084738ioj.17
+        for <linux-pci@vger.kernel.org>; Fri, 27 Jan 2023 09:32:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:organization:references
+         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nV5PVEexFRTCEYgn3s3CxSGrrslwGO/8JvUDWaGn4vs=;
+        b=e7f16uY+dHYgJMCB3PRkWauHniL8iSoz4JkY+Nv/LkSiZbYOBybT0KI4apUiD6rqdy
+         3KMTfprfhYQZauKHbD/2hvbIyYytKtSbV8Rj0u0BifVIWv48QqHCn6RkstErhrGITFH+
+         PPSk9QrGi62lmAsTZw8rH0KvxV9R4RwUTsAX4AmPciKmTQ+wsNExSSKMz0XhLw7oxklz
+         k12383qQIiFWt4qcS2bM4zhbLX832TnwAffRNIXHnWMXf29aSh36RT7djPhwALEL0JkG
+         +091OtEP6LrcFDDb8xNhcJ0EOX3GZ6rCRBjSgmZFvwgvvrIT57mQAMMSJJU0e4qNOE/S
+         p7JQ==
+X-Gm-Message-State: AO0yUKWzAKOv0M/HasPwmw7E7G39/8W9/9d2Go/jXmXhJJzcP24NnAys
+        KjQtDmwTbBrqii+QYjojco41BYryNi/nCMoW1AZtHLnaP3qGzu/o9hVG6FCyzMoFtm7d+CG2d1q
+        NABhOiFJdxKObepp6ksx8
+X-Received: by 2002:a92:c54f:0:b0:310:af8b:aaa2 with SMTP id a15-20020a92c54f000000b00310af8baaa2mr6736921ilj.15.1674840729117;
+        Fri, 27 Jan 2023 09:32:09 -0800 (PST)
+X-Google-Smtp-Source: AK7set/wdRa6G/aQBqbaoXHP3HPpOxGpFgvsam+eJRxv1rG1uSYBts+PXV4F7K1rY6E8MFQq+MQHdA==
+X-Received: by 2002:a92:c54f:0:b0:310:af8b:aaa2 with SMTP id a15-20020a92c54f000000b00310af8baaa2mr6736905ilj.15.1674840728808;
+        Fri, 27 Jan 2023 09:32:08 -0800 (PST)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id p15-20020a92c60f000000b0031095196189sm1406006ilm.54.2023.01.27.09.32.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 27 Jan 2023 09:32:07 -0800 (PST)
+Date:   Fri, 27 Jan 2023 10:32:05 -0700
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-pci@vger.kernel.org, sglee97@dankook.ac.kr
+Subject: Re: [Bug 216970] New: When VM using vfio-pci driver to pci device
+ passthrough, host can access VM's pci device with libpciaccess library.
+Message-ID: <20230127103205.50795e59.alex.williamson@redhat.com>
+In-Reply-To: <20230127171502.GA1388740@bhelgaas>
+References: <bug-216970-41252@https.bugzilla.kernel.org/>
+        <20230127171502.GA1388740@bhelgaas>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230114073420.759989-1-baolu.lu@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 14, 2023 at 03:34:20PM +0800, Lu Baolu wrote:
-> The PCIe fabric routes Memory Requests based on the TLP address, ignoring
-> the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
-> Enable PASID only when ACS RR & UF enabled on upstream path") requires
-> some ACS features being supported on device's upstream path when enabling
-> PCI/PASID.
+On Fri, 27 Jan 2023 11:15:02 -0600
+Bjorn Helgaas <helgaas@kernel.org> wrote:
+
+> On Fri, Jan 27, 2023 at 09:02:25AM +0000, bugzilla-daemon@kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=216970
+> > 
+> >             Bug ID: 216970
+> >            Summary: When VM using vfio-pci driver to pci device
+> >                     passthrough, host can access VM's pci device with
+> >                     libpciaccess library.  
 > 
-> One alternative is ATS/PRI which lets the device resolve the PASID + addr
-> pair before a memory request is made into a routeable TLB address through
-> the translation agent.
-
-This sounds like "ATS/PRI" is a solution to a problem, but we haven't
-stated the problem yet.
-
-> Those resolved addresses are then cached on the
-> device instead of in the IOMMU TLB and the device always sets translated
-> bit for PASID. One example of those devices are AMD graphic devices that
-> always have ACS or ATS/PRI enabled together with PASID.
+> > Created attachment 303656  
+> >   --> https://bugzilla.kernel.org/attachment.cgi?id=303656&action=edit  
+> > Upload text data to vfio-pci passthrough GPU VRAM with using nvatools
+> > 
+> > 1) Release of Ubuntu
+> >   Host - Ubuntu 20.04.5 LTS / Release : 20.04
+> >   Guest - Ubuntu 18.04.6 LTS / Release : 18.04
+> > 
+> > 2) Kernel version
+> >   Host - 5.15.0-57-generic
+> >   Guest - 5.4.0-137-generic
+> > 
+> > 3) Version of the package
+> > libpciaccess0:
+> >   Installed: 0.16-0ubuntu1
+> >   Candidate: 0.16-0ubuntu1
+> > 
+> > libpciaccess-dev:
+> >   Installed: 0.16-0ubuntu1
+> >   Candidate: 0.16-0ubuntu1
+> > 
+> > 4) Expected to happen
+> > When the virtual machine is running, the Host could not access the virtual
+> > machine's pci passthrough device via libpciaccess.
+> > 
+> > 5) Happened instead
+> > When the virtual machine is running, the host can access the virtual machine's
+> > pci passthrough device via libpciaccess.
+> > 
+> > In this case, host can interrupt passthrough pci device, or access passthrough
+> > pci device memory to leak virtual machine data.
+> > 
+> > We checked this by creating a virtual machine using vfio-pci passthrough GPU in
+> > QEMU.
+> > 
+> > In addition, when running GPU applications such as CUDA in a virtual machine,
+> > we found that data inside passthrough GPU VRAM can be accessed from the host
+> > via libpciaccess(nvatools).
+> > 
+> > We proceeded as follows.
+> >  1. Create and run VMs with vfio-pci passthrough GPU.
+> > 
+> >  2. Upload text data from the host via nvatools to the VRAM on the passthrough
+> > GPU.
+> > 
+> >  3. The VM can see the text data in the GPU VRAM.  
 > 
-> This adds a flag parameter in the pci_enable_pasid() helper, with which
-> the device driver could opt-in the fact that device always sets the
-> translated bit for PASID.
-
-Nit: "Add a flag ..." and "Apply this opt-in ..." (below).
-
-> It also applies this opt-in for AMD graphic devices. Without this change,
-> kernel boots to black screen on a system with below AMD graphic device:
+> I'm not really familiar with libpciaccess or nvatools, but it looks
+> like they do both PCI config accesses and MMIO access to PCI BARs.
 > 
-> 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
->         [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
->         (prog-if 00 [VGA controller])
-> 	DeviceName: ATI EG BROADWAY
-> 	Subsystem: Hewlett-Packard Company Device 8332
+> I expect both types of access to work for the host, even for devices
+> passed through to a guest.  The VFIO folks can correct me if there's
+> some mechanism to prevent the host from accessing these devices.
 
-What is the underlying failure here?  "Black screen" is useful but we
-should say *why* that happens, e.g., transactions went the wrong place
-or whatever.
+Yes, this is expected.  The host would need privileged access in order
+to interfere or access assigned device data.  Sounds like this is
+looking more for confidential computing type protection, which like
+protecting VM memory from host access, requires specific technologies
+that are under development.  Thanks,
 
-> At present, it is a common practice to enable/disable PCI PASID in the
-> iommu drivers. Considering that the device driver knows more about the
-> specific device, we will follow up by moving pci_enable_pasid() into
-> the specific device drivers.
+Alex
 
-> @@ -353,12 +353,15 @@ void pci_pasid_init(struct pci_dev *pdev)
->   * pci_enable_pasid - Enable the PASID capability
->   * @pdev: PCI device structure
->   * @features: Features to enable
-> + * @flags: device-specific flags
-> + *   - PCI_PASID_XLATED_REQ_ONLY: The PCI device always use translated type
-> + *                                for all PASID memory requests.
-
-s/use/uses/
-
-I guess PCI_PASID_XLATED_REQ_ONLY is something only the driver knows,
-right?  We can't deduce from architected config space that the device
-will produce PASID prefixes for every Memory Request, can we?
-
-Bjorn
