@@ -2,46 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7BD3B67E38A
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 12:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 47A2267E6BD
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 14:30:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233772AbjA0Lfp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Jan 2023 06:35:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49368 "EHLO
+        id S233609AbjA0Nam (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Jan 2023 08:30:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233791AbjA0Lf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 06:35:29 -0500
-X-Greylist: delayed 230 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 27 Jan 2023 03:34:17 PST
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [IPv6:2a01:488:42:1000:50ed:8234::])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13985196B1
-        for <linux-pci@vger.kernel.org>; Fri, 27 Jan 2023 03:34:16 -0800 (PST)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pLMyW-00024h-SK; Fri, 27 Jan 2023 12:32:56 +0100
-Message-ID: <b1abd22f-ca6c-54f4-9fa8-29f31ca8a729@leemhuis.info>
-Date:   Fri, 27 Jan 2023 12:32:56 +0100
+        with ESMTP id S234018AbjA0Nal (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 08:30:41 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98D77A4AE;
+        Fri, 27 Jan 2023 05:30:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 63984B82114;
+        Fri, 27 Jan 2023 13:30:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC7AC4339B;
+        Fri, 27 Jan 2023 13:30:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674826236;
+        bh=hOO4tEkvmkNfnd/kUv2lz7JQJ8CUBZuogljG/l3nIcc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LQTl5p+qHOhPIdJ+NhcTwSON0xj9q9BDC71p6Pv2bTPFgaSSn3ZbsAF6PKtq+RkyG
+         3N38xTMK/R7o6Di97DNpk1aIxU7z9ZGnF8h23i8bVh6sY4EwiHgPFH+qNZYgCRfFMN
+         3EKvbxILcjip4hPAwtZ1jA4/v1A4UisVh/Ma+VItJ7WKxlR95QOeMco1O01aPAWH5C
+         h/I2/nXxGqsPugCtW3cmgH3INb+B6gTfxL3ZAdwdQ/Lh7+aeoXNNenAnHsChJ0oqkM
+         Ujn7pAAenGYQwwYNfGMQIkReJyZ+z43+kYbBzQtZ7pYHeWoMX29L31qEucNu4uzUfG
+         5RnU5qYwg/4Qw==
+Date:   Fri, 27 Jan 2023 07:30:34 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Kumar, M Chetan" <m.chetan.kumar@linux.intel.com>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        davem@davemloft.net, johannes@sipsolutions.net,
+        ryazanov.s.a@gmail.com, loic.poulain@linaro.org,
+        ilpo.jarvinen@linux.intel.com, ricardo.martinez@linux.intel.com,
+        chiranjeevi.rapolu@linux.intel.com, haijun.liu@mediatek.com,
+        edumazet@google.com, pabeni@redhat.com,
+        chandrashekar.devegowda@intel.com, linuxwwan@intel.com,
+        linuxwwan_5g@intel.com,
+        Madhusmita Sahu <madhusmita.sahu@intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 net-next 3/5] net: wwan: t7xx: PCIe reset rescan
+Message-ID: <20230127133034.GA1364550@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: Missing sriov_numvfs after removal of EfiMemoryMappedIO from E820
- map
-Content-Language: en-US, de-DE
-To:     Peifeng Qiu <linux@qiupf.dev>,
-        Linux regressions mailing list <regressions@lists.linux.dev>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org
-References: <CAPH51bc1ZoP2ukJJh8nfrNY1FCp1nk7AP0jGGCvoskq2XbmAoA@mail.gmail.com>
- <029045a9-5006-e663-571f-b67344fa3a50@leemhuis.info>
- <2f866122-6a56-dfc7-9add-5168a4e796b2@leemhuis.info>
- <CAPH51bdcXFCiHrFPnMYGznsrCTOHDB0fyujFy3y5e8PWWYnnbQ@mail.gmail.com>
-From:   "Linux kernel regression tracking (#update)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAPH51bdcXFCiHrFPnMYGznsrCTOHDB0fyujFy3y5e8PWWYnnbQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1674819257;a16cced9;
-X-HE-SMSGID: 1pLMyW-00024h-SK
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7f5be4cd-ae84-aa24-cf8f-8261c825fafd@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,62 +60,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[TLDR: This mail in primarily relevant for Linux kernel regression
-tracking. See link in footer if these mails annoy you.]
-
-On 16.01.23 11:14, Peifeng Qiu wrote:
-> On Mon, Jan 16, 2023 at 12:41 AM Linux kernel regression tracking
-> (Thorsten Leemhuis) <regressions@leemhuis.info> wrote:
->>
->> Forget to mention one small detail:
->>
->> On 15.01.23 15:21, Linux kernel regression tracking (Thorsten Leemhuis)
->> wrote:
->>> [CCing the regression list, as it should be in the loop for regressions:
->>> https://docs.kernel.org/admin-guide/reporting-regressions.html]
->>>
->>> Hi, this is your Linux kernel regression tracker.
->>>
->>> On 15.01.23 10:21, Peifeng Qiu wrote:
->>>>
->>>> I'm using a dual Xeon system with Intel e810 25G network card and make use
->>>> of SRIOV feature heavily. I have a script to setup the NIC the first step is
->>>> echo $VFS > /sys/class/net/$DEVNAME/device/sriov_numvfs
->>>>
->>>> After switching from v6.1 to v6.2-rc1 "sriov_numvfs" is no longer present. If I
->>>> switch back to v6.1 it's back. Command line parameters are the same so it's
->>>> most likely kernel changes. I did git bisect and found the culprit to be
->>>> 07eab0901ed(efi/x86: Remove EfiMemoryMappedIO from E820 map)
->>>
->>> This is not my area of expertise, but there is another report about an
->>> issue that was bisected to that particular commit:
->>>
->>> https://lore.kernel.org/lkml/ac2693d8-8ba3-72e0-5b66-b3ae008d539d@linux.intel.com/
->>>
->>> A fix for that one was posted here:
->>>
->>> https://lore.kernel.org/lkml/20230110180243.1590045-1-helgaas@kernel.org/
->>>
->>> You might want to look into the report and if it looks like a possible
->>> duplicate give the proposed fix a try.
->>
->> FWIW, that patch was recently mainlined and thus will be in 6.2-rc4 that
->> Linus will likely release in a few hours.
->>
->> Ciao, Thorsten
+On Fri, Jan 27, 2023 at 03:57:16PM +0530, Kumar, M Chetan wrote:
+> On 1/26/2023 8:55 PM, Bjorn Helgaas wrote:
+> > On Tue, Jan 24, 2023 at 08:45:43PM -0800, Jakub Kicinski wrote:
+> > > On Sat, 21 Jan 2023 19:03:23 +0530 m.chetan.kumar@linux.intel.com wrote:
+> > > > From: M Chetan Kumar <m.chetan.kumar@linux.intel.com>
+> > > > 
+> > > > PCI rescan module implements "rescan work queue".
+> > > > In firmware flashing or coredump collection procedure
+> > > > WWAN device is programmed to boot in fastboot mode and
+> > > > a work item is scheduled for removal & detection.
+> > > > 
+> > > > The WWAN device is reset using APCI call as part driver
+> > > > removal flow. Work queue rescans pci bus at fixed interval
+> > > > for device detection, later when device is detect work queue
+> > > > exits.
+> > 
+> > I'm not sure what's going on here.  Do we need to reset the device
+> > when the t7xx driver is loaded so the device will load new
+> > firmware when it comes out of reset?
 > 
-> I just tested the latest v6.2-rc4 and I can confirm that the issue is
-> fixed. Thanks!
+> Flow is, Reset the device to get into firmware download mode then
+> update the firmware and later reset it to go back to normal mode.
 
-In that case:
+Thanks, that makes sense, and I'm confident that t7xx is not the only
+driver that needs to do something like this, so we should be able to
+figure out a nice way to do it.
 
-#regzbot fix: fd3a8cff4d4a
-#regzbot ignore-activity
+> > > > +void t7xx_pci_dev_rescan(void)
+> > > > +{
+> > > > +	struct pci_bus *b = NULL;
+> > > > +
+> > > > +	pci_lock_rescan_remove();
+> > > > +	while ((b = pci_find_next_bus(b)))
+> > > > +		pci_rescan_bus(b);
+> > 
+> > No, this driver absolutely cannot rescan and assign unassigned
+> > resources for all the PCI buses in the system.
+> 
+> T7xx device falls off the bus due to ACPI reset.
+> Would you please suggest how we can bring device back on the bus
+> without such changes inside driver ?  Will pci_reset_function() help
+> in this regard ?
 
-[better late than never]
+"Falling off the bus" is not very precise language, but it usually
+means the device stops responding to PCI transactions like config,
+memory, or I/O accesses.
 
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-That page also explains what to do if mails like this annoy you.
+Any kind of reset, whether it's done via ACPI _RST or one of the
+mechanisms used by pci_reset_function(), causes a PCI device to stop
+responding temporarily.  When the device exits reset, it does some
+internal initialization and eventually becomes ready to respond to PCI
+transactions again.
+
+The PCI core doesn't do anything to the device to "bring it back on
+the bus" other than powering on the device or deasserting whatever
+signal initiated the reset in the first place.
+
+For example, if we do the reset via pci_reset_secondary_bus(), we set
+the Secondary Bus Reset (PCI_BRIDGE_CTL_BUS_RESET) bit in a bridge,
+which triggers a reset for devices below the bridge.  When we clear
+Secondary Bus Reset, those devices reinitialize themselves and start
+responding to PCI transactions.  pci_reset_secondary_bus() contains a
+ssleep(1) to give the device time for that initialization.
+
+The t7xx_pci_dev_rescan() loop calls pci_rescan_bus(), which does
+nothing to bring devices back on the bus.  It merely issues config
+reads to all the possible device addresses to see which respond.
+
+If t7xx_pci_dev_rescan() seems to bring the device back on the bus, it
+is probably simply because it takes time and gives the device time to
+finish its initialization.  It doesn't actually *do* anything to the
+device other than do a config read to it.
+
+I notice that t7xx_remove_rescan() would actually *remove* the
+pci_dev, and pci_rescan_bus() would create a new pci_dev if the t7xx
+device responds to a config read.  But this a real mess.  When you
+remove the device, the driver is detached from it, and we should no
+longer be running any driver code.
+
+If you can use pci_reset_function(), there's no need to remove and
+re-enumerate the device, so that should let you get rid of the whole
+t7xx_remove_rescan() workqueue.
+
+Bjorn
