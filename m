@@ -2,97 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D590C67DE63
-	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 08:18:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E5367DF68
+	for <lists+linux-pci@lfdr.de>; Fri, 27 Jan 2023 09:43:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232356AbjA0HR4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 27 Jan 2023 02:17:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40224 "EHLO
+        id S231603AbjA0Inc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 27 Jan 2023 03:43:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232087AbjA0HRz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 02:17:55 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ADBB113F8
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 23:17:53 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id q10so4106587wrm.4
-        for <linux-pci@vger.kernel.org>; Thu, 26 Jan 2023 23:17:53 -0800 (PST)
+        with ESMTP id S230510AbjA0Inb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 27 Jan 2023 03:43:31 -0500
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5CE05DC2A;
+        Fri, 27 Jan 2023 00:43:29 -0800 (PST)
+Received: from pps.filterd (m0246629.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30R0O5m3011550;
+        Fri, 27 Jan 2023 08:43:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2022-7-12;
+ bh=7pTcRQtK7wQfKcWQBjiVU5A2w2OjpKUOpA+2zuAcc/U=;
+ b=B564kZv9Neu+cH1XDSiX3AoVoE/j+V3T4/aqibPTKmgD9x+BF/oavlksigr3rLDDXkXY
+ FlRwn8BarX4DzjWWBacZYWP5SEGDXBHFmjy9/tIaduaAuq3WeoQEkcF3T9yOc2wI5BLD
+ Ckl8G1q2LmT3rwnxX0JSvg7akxq2ByJJFgAZYR98BOfYel95f7AtphOu8pxdOllr6AsM
+ YuJevQvwUSF0jqcAWzG1e49UTqEA0rWiQfDJpZoHX15SvBrUF1DpsH6F3CXlj5Kip7hD
+ EmxMIq0N0OxYtKb4HL6+U+GSpvkEvi1EV43FWSear+BoAfDvNmuvAAt67cZfm/I81Vg8 0A== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3n87xac783-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 08:43:02 +0000
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 30R8P3sV006181;
+        Fri, 27 Jan 2023 08:43:01 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3n86gft8qe-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Jan 2023 08:43:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Ooggko5/JUOyv+PAwR0c5lkFxGKacN7kn3fG3Lfy4d0TEne27fwJSvukzDdcfBnR7HVPHvcD42eqTt/NHmnN65E6S2fAQAVCe4ls9SLghxBiuhWtE/S7NHZl7bbFS0P/DcsnkAlRWr/tcj/XIEA5Z7phhXboebSBZpwx/26wnfEHWpZAZNkaCfFl/PG4z6i7NZLI1E+guFRdES+rCH+x8nRy9cqGxjMWoNR7Aci3Wuywnn+aIqpFwgkC63nS7zQD8QNyE3+eZlChH0oU5dzwcGhUzk5E7BFjt/nrsaNo/8gXYy8YBCuhWy//kzqm73XO3U8rU+Sh9Ud4sedepcfFNw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=7pTcRQtK7wQfKcWQBjiVU5A2w2OjpKUOpA+2zuAcc/U=;
+ b=VoYh7ALTOAURMyx/Qi/W+arKFnKcGfF+ifgSUuKq7jqC4jOaYR2K1bvgMolQ3kroHFLtdjU4yz4zJ/KCGNMN0BOddn8RK815wojTvw9NzMiX9fBx4fIjfJ/aKFnQt5VgeY0G+nJ38lUXbdN9UfRJ80pf4XKMWRCjtGpmk0ac6mtQMiMpO7RqnMmh3NN4y19/dR35ewldEyVKa6M843ttuuy3RCwUadzI/z1O8n5cIUzAc7J9aiolg4npyV8bzM6nxHVDpxmQAP9/r8drhzKXJioX+SqM/qEU9lRrIOmJ6uCVgMLgtCfQeUjJbZ36s45jKmuZUZFvmRDDTzl+u426vQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Zu8F0YryLt/OgLyDbyT+COsXBWZJ+zCIx+ZWtC5IKkg=;
-        b=WGY7E/PSjYEz982lSPv35cpucEGupEadtERlumDXtX8XKQL1ufwwK8jq1WeP0lRpj7
-         yvTrhd3+v8b/ZVucRajffMcKWHm1L1k7Dats/WD17n4S1Dxx6Bb8JLxFajnEfHcRHaU7
-         UPo/mJTsx7izz4mLpE95UWikJKc0ZFJijx1tfWVRJ/NrlFgoUEs2+qvEjq8HzgRc7tBA
-         Tcq9KWlx08MRHTkwySZvNQ5X37m497rbR/NuBNYm6xZOo3JQdwdouGLRKA4dCcVP/qgG
-         gBzOjNqThoUBnFSw0xHp0ddueyP9+5QEkONaBmxtJerDTpPI61wQnSLkXk7mZeE15jIW
-         SG+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Zu8F0YryLt/OgLyDbyT+COsXBWZJ+zCIx+ZWtC5IKkg=;
-        b=HMb6uTtCF17oO30G9oRE8hKfuQvsf8jaagvpxsajK4Nzjq5aB5qvg89ez1iYiFiRXs
-         9rwNKctQpsu7mOtrBw8kFB2vHbCmKMAuFS7nmBd0iG9n57eoQRcG9Ju+FiER/JlV0jWs
-         hy0dcvDbu4I3YamfgfyFzGmp4a2ZnIZJdZEOnjIxagB+oomWbIWVBKyj/mIioV0uvxGF
-         FNA53ca241GZ7HPk3TR8BCQQA16pK+OJGbu3fAhVwg42Nak/xhP/CKsJEL+tqkC0tDYY
-         mqNvt7XCQVQw2FBqLKt0knL+nMA+8SvH7P6NQcoeB3Keer+gYp8y8+b0YsJgIJfcNLED
-         v9/Q==
-X-Gm-Message-State: AO0yUKXeQ4R2VxEijdxthVYae7ij3XFPJrbjRIDr9RUfJ52TUXFWU7aV
-        OhZLg8gWeKTQYmalFeZmVBljFA==
-X-Google-Smtp-Source: AK7set+B3n3giZrrrzvhrZe5kohk1pMxsQkkUJJDZp8hEVRVSrL+hCD+foHS8sR4KeguBUH965OCDw==
-X-Received: by 2002:adf:f7cd:0:b0:2bf:d511:18a9 with SMTP id a13-20020adff7cd000000b002bfd51118a9mr858226wrq.29.1674803871740;
-        Thu, 26 Jan 2023 23:17:51 -0800 (PST)
-Received: from vermeer ([2a01:cb1d:81a9:dd00:b570:b34c:ffd4:c805])
-        by smtp.gmail.com with ESMTPSA id v13-20020a5d43cd000000b0027cb20605e3sm3272136wrr.105.2023.01.26.23.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Jan 2023 23:17:51 -0800 (PST)
-Date:   Fri, 27 Jan 2023 08:17:48 +0100
-From:   Samuel Ortiz <sameo@rivosinc.com>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     "Dr. David Alan Gilbert" <dgilbert@redhat.com>,
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=7pTcRQtK7wQfKcWQBjiVU5A2w2OjpKUOpA+2zuAcc/U=;
+ b=ZEMqkikOtzwawz4XOqv08855paZWBvskkI8APW6eTQTFJRkNZ8NgZxle3w6D10s0h3/TgvLYbDVh0E6W8aWwO+fxjbrFsEp4X4S4LpAu/nO4QLooGNxFwjNvDqXvufPRnRfNUsoKhqIQJ1Wet2jy296nWYT/D0ha1w6EUsrR9U8=
+Received: from PH0PR10MB4581.namprd10.prod.outlook.com (2603:10b6:510:42::16)
+ by MW4PR10MB5701.namprd10.prod.outlook.com (2603:10b6:303:18b::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.10; Fri, 27 Jan
+ 2023 08:42:58 +0000
+Received: from PH0PR10MB4581.namprd10.prod.outlook.com
+ ([fe80::54a1:30f9:c42e:d74f]) by PH0PR10MB4581.namprd10.prod.outlook.com
+ ([fe80::54a1:30f9:c42e:d74f%7]) with mapi id 15.20.6064.010; Fri, 27 Jan 2023
+ 08:42:58 +0000
+Message-ID: <871ab2c5-5f11-5ed8-9e2f-500e0cbcdb19@oracle.com>
+Date:   Fri, 27 Jan 2023 14:12:46 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 5/8] PCI: rockchip: Added dtsi entry for PCIe endpoint
+ controller
+Content-Language: en-US
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        alberto.dassatti@heig-vd.ch
+Cc:     xxm@rock-chips.com, wenrui.li@rock-chips.com,
+        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        "Shishkin, Alexander" <alexander.shishkin@intel.com>,
-        "Shutemov, Kirill" <kirill.shutemov@intel.com>,
-        "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@intel.com>,
-        "Kleen, Andi" <andi.kleen@intel.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Poimboe, Josh" <jpoimboe@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        Cfir Cohen <cfir@google.com>, Marc Orr <marcorr@google.com>,
-        "jbachmann@google.com" <jbachmann@google.com>,
-        "pgonda@google.com" <pgonda@google.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        James Morris <jmorris@namei.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "Lange, Jon" <jlange@microsoft.com>,
-        "linux-coco@lists.linux.dev" <linux-coco@lists.linux.dev>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-Subject: Re: Linux guest kernel threat model for Confidential Computing
-Message-ID: <Y9N6nP+Z67TnEaMa@vermeer>
-References: <DM8PR11MB57505481B2FE79C3D56C9201E7CE9@DM8PR11MB5750.namprd11.prod.outlook.com>
- <Y9EkCvAfNXnJ+ATo@kroah.com>
- <Y9Ex3ZUIFxwOBg1n@work-vm>
- <Y9E7PNmSTP5w2zuw@kroah.com>
- <Y9FDZPV7qENtNNyk@work-vm>
- <20230125215333.GA18160@wunner.de>
- <CAGXJix9-cXNW7EwJf0PVzj_Qmt5fmQvBX1KvXfRX5NAeEpnMvw@mail.gmail.com>
- <20230126154449.GB4188@wunner.de>
+References: <20230126135049.708524-1-rick.wertenbroek@gmail.com>
+ <20230126135049.708524-6-rick.wertenbroek@gmail.com>
+From:   ALOK TIWARI <alok.a.tiwari@oracle.com>
+Organization: Oracle Corporation
+In-Reply-To: <20230126135049.708524-6-rick.wertenbroek@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYXPR01CA0066.jpnprd01.prod.outlook.com
+ (2603:1096:403:a::36) To PH0PR10MB4581.namprd10.prod.outlook.com
+ (2603:10b6:510:42::16)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126154449.GB4188@wunner.de>
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR10MB4581:EE_|MW4PR10MB5701:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9594593c-2fce-4b33-382d-08db00427d9a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7me4YPbmmw6ooc8wGx9+5acPd4s5Xj6A/qBVSzrsiLYFboZUkwgq0lY+t5ItYB92v3hyKC5f0xrzHGscMXQt34/Ftiuq291qyMOTQX8wJZkCXxO7lXkv1FfgaVpaNTp3f5e4KxeivMYBHeofTfW+4mefjo+9Cp4lxD1V6gRMFRem8dBhkOL3M347fwCS2D3zCL1JMRtVhi4fCKdy74BslItumJtjRZl85nCWVnjZ2/WyzqU39Ne8mIeEusY51/tuCixVYEUc4KOlignM22eI/YvrKh3FI7lTywg/V5fgYEk5cYdQ//2r9OHXYe22UxgNk6fqqmxo8Tns6z/wwyv2RLkGAiUUxqyyP0r24GK1/iNPYXS7srMHe6P7n3nO2KwOQOGhGkyh7jLJNgGgMkmmZD71IBH/xao4JETCVnQR1Q0kSTEk1Se3dkEZ3ekTBvYZDlp/KcF14HfoKcUuQjDDBsiAYwCldU5cs1V1KT9YpQ/l3uH+GzadQc3tnDXEt7nzxHofVVLz7/r1NO7pg3HFtDx4yc5eVRxM1caCESNkqutK68cYUpdhh3Vh6+OcWIi8ibOYT+zOILBtwfJsNb4gkm/N88DN2C39CIspPDz8Wmfowc+MW3Gfy/jPREF83PAecE4QtZON3iptSNAWO2devdvq7868e9YWALjR9/ev9NzGndSc+BOp/zNhAVFpmOsXIwTIb+sgnH5kfVF3Lmeu9khjCLARw0XLp2O7YX7l9jM=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4581.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(346002)(396003)(376002)(136003)(366004)(451199018)(83380400001)(4326008)(8676002)(66476007)(66946007)(66556008)(41300700001)(31686004)(86362001)(2906002)(8936002)(2616005)(38100700002)(36916002)(316002)(7416002)(5660300002)(31696002)(478600001)(6486002)(186003)(6666004)(6512007)(54906003)(36756003)(6506007)(53546011)(26005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MGtJTjZDRWU4ZmkrZXNucHphTHk1Zkx5T0E5ZGdKV1NLVWxqVHViK29lWitm?=
+ =?utf-8?B?N2xNVDFYQll2bldicEx3VVRmWWR3ay92MGFwalFVbkN4WGttdnpTdERhWm5N?=
+ =?utf-8?B?ZFp3THNWWlpJWUk1aXJEUjdSd3hTc0VKRHNWMGVGaTkwSjU2Tkh0WUNRL1Zt?=
+ =?utf-8?B?V2RMNTRIMGNleVh3RXE1emZnZkM3UWtWMnRGTjVoQm9rRkVQN2w5UUJHajdE?=
+ =?utf-8?B?cWluYkVJamZWbkdQL2p2dGc5d2pTNHpXK3VjWHVBOFUrS1lVWTltTFVtSnFl?=
+ =?utf-8?B?ZklMNHR2UzFNUmxualZHUXBsWXpNK3d1YVczaEpDai9NejE0SGQ1dVFyWEhh?=
+ =?utf-8?B?Vk1BSjZERG5raDlOazVSTVpZdXdOQWtyN0dPaVJJUmxqNDdMS3BKUGpiVkZH?=
+ =?utf-8?B?bk9wSU4vT2xNTGRnZGQ3N1BSd00xTGptRHRqRDgra2REVVlBMFI2Z0J0bXBP?=
+ =?utf-8?B?OHBjNEI0TGw1b2s4bEFQQk0wRzRwa3JrY1hJb2Joc3ZVVTBjQm1xcWU1K0Ri?=
+ =?utf-8?B?TnEvS3B5ckNpKytHcU1OVU9mcUJEWFpJWC9hRHVTVmxJTlIxMnFGZXFvYVlJ?=
+ =?utf-8?B?aXVPZEV0ZkZJamttQzBlWjhIMmo4anBUU1EzanpaTDk3bDJva2JQOGZ3REIw?=
+ =?utf-8?B?N1AxU0pmSEJrekwybm5HN2xQeUROamhtOTVKR2MrSHRRcGZORFhJNXAxK3kx?=
+ =?utf-8?B?WUljWUx1RG1lV0Y5VC9pNEExbFY4K1hhUDV5dWs5K3kzVHFVc1UzYzZIS0ZG?=
+ =?utf-8?B?cUZPVWpjNWtJS2ROVmhOejNVRzBEeFJmQ0tkQVBpOFh1WWE4NWg0d1Nmd1k2?=
+ =?utf-8?B?U1VCRzRkcThweFRzVU9vOTJzN0hZemQ0UWd0OWY4dmR0aVZPaitGWHMyeC9V?=
+ =?utf-8?B?SnlrZW0wcVZnSjNVQUsrN1h3TGRLamw5WEFtb0hpYWkxWTFyczdTVm8wcXVx?=
+ =?utf-8?B?S1NyL0JLWUxXNnFic1RVVHE3RlQxdGc5QWt5M3Ara0RNMTgrT3kzVlpuU2Q1?=
+ =?utf-8?B?aG1XbUlvbXE0MzJsOVZTSkZvMlZvdHpVNHJBbmhVZXgxS29XNVVzbjZVNDRL?=
+ =?utf-8?B?czV1YVA1M0l1SEIrS0lRbldjYlhxalFqQiszeUhOOXpkRWh3UTVTL3NLd2g5?=
+ =?utf-8?B?UWljUElaa0VCWkxudlBGa2Z1ZWtBNkcvdHhMamZCTE9JSENVYm45cjJaSGFr?=
+ =?utf-8?B?c0hza1U4NWZkdWM1eGNUWVhqYVdjeVlCaDl3Q3FxcVZlLytsNkhjdTdGdjJx?=
+ =?utf-8?B?ZU85Q0ZSeDdlWUd0cEpRd281anpmdDU5dUdlQzVsYTFSMks4aU5Bdk56NnJt?=
+ =?utf-8?B?MS9zcVJvVEVZYWszcjFMVElraFYyK1IxZFFyeFBDWUVYSVNoT2diY3lYbDZQ?=
+ =?utf-8?B?bW9aRHZ1ay9TQk9QVVlzalBRSGhvc1k3b1g5L1IrMWFRQWYycHVvRzlvaEtX?=
+ =?utf-8?B?Y3h4TmV6TDdBUFVXZm1YeHNreTArelZsa0FSb3pqd2JKSW9tVDFmYzJ0eEdj?=
+ =?utf-8?B?OFZ4M3ZnL0FaRFZYWlkzb3FYTnlNTnVwbXhVV1hudXFzWkVJbjZVQW9QKzRa?=
+ =?utf-8?B?cTltclZEVUhvWTRFNHZtVFdSaktpaE4yaHBDeE4rTytpYk80N2cyNkptdDNB?=
+ =?utf-8?B?ZXZGZVBYQnlRQ1FqcWRzWmd4WFh0RVJURTdaVnNYRG1lak1CVm9pK3ZBNUdQ?=
+ =?utf-8?B?ZllqZGZxQmlVcW1Teno5SEg3UjhSeWt4S0N2Q1hRK3lrRlJTZm1xZlU1Smsz?=
+ =?utf-8?B?cjhYOFl4VXcyalhWQUlGMWo3dmswTXlpRnl4UHk5azVpUVIrZGtHRkVicVl3?=
+ =?utf-8?B?bnJUNXF4RmZaWiswL2lwd0dadUZKVjRmdFkxbUoweng4ZkJBbmt2bWQyd2tH?=
+ =?utf-8?B?cnNsZTB0VHN0RjFvUjVQYUhTM3JjK3Y3S3NubnAwTVozMVNWclUrOC9zY0Iy?=
+ =?utf-8?B?OFZzRjNUZUp0YVgzTit0UjQ4NGFuTFNqa3JFTjZCb0Y0ODE5TUVta3RpQ1JB?=
+ =?utf-8?B?MHZSTkI0Y2ZyZ2hSczFsT20wSW1Yd3hoMlNYeEtrSkdGcGpCc1Zhb1lnMEgv?=
+ =?utf-8?B?QkRhZUhCQ3ZYSExwT2Z2bi9PVmhNUDF4L01mVEQ1SDEwSzBQVW9Wa2dMK0s5?=
+ =?utf-8?B?S3FoaG81RFlnbFZZa2ZIK3p3WE0reGlzWDVaaVJqYjd3N0F0bUVhdmoyQWlW?=
+ =?utf-8?B?S3c9PQ==?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?utf-8?B?elVaV3F4YTJ2R1g5dzk0L2xpV1gxb214TG9OK2NKblpoSHI3SjN4WGJDTC9L?=
+ =?utf-8?B?enlMbWdPOU1RRUNxcWsyVk1QVThZanJGZXgzMnMydmZ6aVpzaDBUSlcrUS85?=
+ =?utf-8?B?bjBJcis5eXFuWENmVnRBWGhjNVUxM2ZLUnJQMTZQdXJ4RGlzU3BaVlFhOHho?=
+ =?utf-8?B?eW9TZmorYmM2VkU5RFU2RHdqdVoxVnFWZm1NL3dJUnp5ZGw2N1RRRnpPVzRo?=
+ =?utf-8?B?dDdlMzZ2OExud0V2VHQ0c2JzQnVuUWRaSjYrTmNiVndPa2ZlY2FLZE5aQTNn?=
+ =?utf-8?B?RkFJQnBlNzlsTEdJcWlWUU5ZODNVdmN3TnRjb1pVSUI0YThMK0NqN3E0MVJC?=
+ =?utf-8?B?ejFab3pHVU1rS1UxcmpSTHJ3bmlKUnppeXlRS1BkVDNUcERTWFF4YmY4aEl1?=
+ =?utf-8?B?Zjgra1dyZXczTXh4YmNMbDBldWJhb0ZCbzBuNCsvaUI4NE5ISng2eHVidkZG?=
+ =?utf-8?B?SlBWTnRiYXZoZlM1bzNjVXZZcm1FQ1RJQk1weW8wdEZOVlk3MXpPb3JjQnlE?=
+ =?utf-8?B?bWdsaVhXNi9PSHcvaXQyOThKUWJQSWZ1SitQM0FwRitCVTl5anpDU3VyNzVV?=
+ =?utf-8?B?SVdvTnRlUnMrY2k4L1BIdFpBUlMxejNpV2EyZHB6aW1iU3AwaE9ndktwRWtF?=
+ =?utf-8?B?cHZnQTVmcUo1SmY4b1FjSGhpbXpodW5DTHIxaElMTzIwM3JTRU11RXRQS2tw?=
+ =?utf-8?B?dWQ1SGFMdzlsVVRVYWVIUVhjd28yZ0gvUXRZd3l3UmJNeXcvMVExNy8yT1hG?=
+ =?utf-8?B?TXRJMHhDT0Nnb0lvT0poWnpPN0haR25rVmZoODJpQkJpK0dHa3U0OWtwcFpF?=
+ =?utf-8?B?bUwrclVoRmxJdXVaSVdyMGJoR2VEOUJRK3Z2UlYyOEdqd3lveWErYjJXWFFX?=
+ =?utf-8?B?RExObUM2U1BqS054QUxXTmRDWlFNaW94V05wWHE5U0FVRDN1MmJkek1kTS9N?=
+ =?utf-8?B?S25iU2JuL2xnTWJrcHU3TTBwN29zR0t4UFROWDZ5U3h3TTl0K3M5ZHk3aFRM?=
+ =?utf-8?B?dDRvZHJMdy9Hait5ck05Mk5HczlzT05ydUJ5djZHQXB4bUdwL2RRNWljcUNy?=
+ =?utf-8?B?c0N5eEpMWHhkMHdDSlNTaVVTMDd4Y242LzQwb3pjOFdyZTNWd25xMk1QNG1k?=
+ =?utf-8?B?eDJrN1kzS2lSdEV6eWsvTjFMdEUvSis2a1JlRXErZGFRV3pJdkJsVE1mQzhJ?=
+ =?utf-8?B?TVh4NjVXSkhDNjlVUFcyYXFRdEsrNHJVUHZpa2tMaVhWdkx6UjAxbzh0SHVY?=
+ =?utf-8?B?TC84NExwd0tSOHB5T3hOa1VxK2xQazlHUUttMGVmc0lyb1dqaGpZZFFhb1gv?=
+ =?utf-8?B?WlA5ZFczcFRHcDFWS0ZkdmFkYnA5S3NHMVZnaEV3eUI1SFJKaThvNW95azI4?=
+ =?utf-8?B?WXFqYUt5OWszdTYyNUFzSXozTkhNWlZaUE5DRUNkRW5ZRW16dk5DVU1QdjVT?=
+ =?utf-8?B?U2NsWTNjU3laVTNtQnFrZ1doSFJ5TlZQRWh3eDlsVlRGajJZVytnc2xDR0Zq?=
+ =?utf-8?B?L1U2U3B3eTN5Wm55M2ZTOFJ2Rk11cVFhMzFLclBJUm9VZEJIT3p6ajdubTVL?=
+ =?utf-8?Q?nlc1auvT26zfRf6YBZFQvSXIE=3D?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9594593c-2fce-4b33-382d-08db00427d9a
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4581.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Jan 2023 08:42:58.1125
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: KWzOiwHFbwVIZX8ivaU1Uk/w1j760ko0Ls0QVndnjFsGPximkhEWl4+NdjT89IG7M4gi+t+nKkw8N7KAdDheLACV3pA98U0WK96PL0l/TbI=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR10MB5701
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-27_04,2023-01-27_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 mlxlogscore=999 malwarescore=0 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2301270081
+X-Proofpoint-GUID: rZrlxRNkDu7oAaFT6eH9hIBVJaQ9xNYy
+X-Proofpoint-ORIG-GUID: rZrlxRNkDu7oAaFT6eH9hIBVJaQ9xNYy
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -100,90 +200,71 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 04:44:49PM +0100, Lukas Wunner wrote:
-> On Thu, Jan 26, 2023 at 10:24:32AM +0100, Samuel Ortiz wrote:
-> > On Wed, Jan 25, 2023 at 11:03 PM Lukas Wunner <lukas@wunner.de> wrote:
-> > > CMA/SPDM (PCIe r6.0 sec 6.31) is in active development on this branch:
-> > >
-> > > https://github.com/l1k/linux/commits/doe
-> > > 
-> > > The device authentication service afforded here is generic.
-> > > It is up to users and vendors to decide how to employ it,
-> > > be it for "confidential computing" or something else.
-> > >
-> > > Trusted root certificates to validate device certificates can be
-> > > installed into a kernel keyring using the familiar keyctl(1) utility,
-> > > but platform-specific roots of trust (such as a HSM) could be
-> > > supported as well.
-> > 
-> > This may have been discussed at LPC, but are there any plans to also
-> > support confidential computing flows where the host kernel is not part
-> > of the TCB and would not be trusted for validating the device cert chain
-> > nor for running the SPDM challenge?
-> 
-> As long as a device is passed through to a guest, the guest owns
-> that device.  
+   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm016-dc2.dtb
+../arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi:460.3-52: Warning 
+(pci_device_reg): /pcie@f8000000/pcie@0,0:reg: PCI reg address is not 
+configuration space
+   DTC arch/arm64/boot/dts/amlogic/meson-gxm-s912-libretech-pc.dtb
+../arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi:460.3-52: Warning 
+(pci_device_reg): /pcie@f8000000/pcie@0,0:reg: PCI reg address is not 
+configuration space
+   HDRINST usr/include/linux/aio_abi.h
+   HDRINST usr/include/linux/am437x-vpfe.h
+../arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi:460.3-52: Warning 
+(pci_device_reg): /pcie@f8000000/pcie@0,0:reg: PCI reg address is not 
+configuration space
+   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1751-xm017-dc3.dtb
 
-I agree. On a SRIOV setup, the host typically owns the PF and assigns
-VFs to the guests. Devices must be enlightened to guarantee that once
-one of their VFs/interfaces is passed to a trusted VM, it can no longer
-be modified by anything untrusted (e.g. the hypervisor).
 
-> It is the guest's prerogative and duty to perform
-> CMA/SPDM authentication on its own behalf.  If the guest uses
-> memory encryption via TDX or SEV, key material established through
-> a Diffie-Hellman exchange between guest and device is invisible
-> to the host.  Consequently using that key material for IDE encryption
-> protects device accesses from the guest against snooping by the host.
+Thanks,
 
-On confidential computing platforms where a security manager (e.g.
-Intel TDX module) manages the confidential guests, the IDE key
-management and stream settings would be handled by this manager. In
-other words, the SPDM requester would not be a Linux kernel.
-FWIW, Intel recently published an interesting description of TEE-IO
-enabling with TDX [1].
+Alok
 
-> SPDM authentication consists of a sequence of exchanges, the first
-> being GET_VERSION.  When a responder (=device) receives a GET_VERSION
-> request, it resets the connection and all internal state related to
-> that connection.  (SPDM 1.2.1 margin no 185: "a Requester can issue
-> a GET_VERSION to a Responder to reset a connection at any time";
-> see also SPDM 1.1.0 margin no 161 for details.)
-> 
-> Thus, even though the host may have authenticated the device,
-> once it's passed through to a guest and the guest performs
-> authentication again, SPDM state on the device is reset.
-> 
-> I'll amend the patches so that the host refrains from performing
-> reauthentication as long as a device is passed through.  The host
-> has no business mutating SPDM state on the device once ownership
-> has passed to the guest.
-> 
-> The first few SPDM exchanges are transmitted in the clear,
-> so the host can eavesdrop on the negotiated algorithms,
-> exchanged certificates and nonces.  However the host cannot
-> successfully modify the exchanged data due to the man in the middle
-> protection afforded by SPDM:  The challenge/response hash is
-> computed over the concatenation of the exchanged messages,
-> so modification of the messages by a man in the middle leads
-> to authentication failure.
-
-Right, I was not concerned by the challenge messages integrity but by
-trusting the host with verifying the response and validating the device
-cert chains.
-
-> Obviously the host can DoS guest access to the device by modifying
-> exchanged messages, but there are much simpler ways for it to
-> do that, say, by clearing Bus Master Enable or Memory Space Enable
-> bits in the Command Register.  DoS attacks from the host against
-> the guest cannot be part of the threat model at this point.
-
-Yes, the host can DoS the guest at anytime it wants and in multiple
-ways. It's definitely out of the confidential computing thread model at
-least.
-
-Cheers,
-Samuel.
-
-[1] https://cdrdv2-public.intel.com/742542/software-enabling-for-tdx-tee-io-fixed.pdf
-
+On 1/26/2023 7:20 PM, Rick Wertenbroek wrote:
+> Added missing PCIe endpoint controller entry in the device tree. This
+> entry is documented in :
+> Documentation/devicetree/bindings/pci/rockchip-pcie-ep.txt
+> The status is disabled by default, so it will not be loaded unless
+> explicitly chosen to.
+>
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> ---
+>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 25 ++++++++++++++++++++++++
+>   1 file changed, 25 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> index 9d5b0e8c9..5f7251118 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -265,6 +265,31 @@ pcie0_intc: interrupt-controller {
+>   		};
+>   	};
+>   
+> +	pcie0_ep: pcie-ep@f8000000 {
+> +		compatible = "rockchip,rk3399-pcie-ep";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		rockchip,max-outbound-regions = <32>;
+> +		clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
+> +			<&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
+> +		clock-names = "aclk", "aclk-perf",
+> +				"hclk", "pm";
+> +		max-functions = /bits/ 8 <8>;
+> +		num-lanes = <4>;
+> +		reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0xfa000000 0x0 0x2000000>;
+> +		reg-names = "apb-base", "mem-base";
+> +		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
+> +			<&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
+> +			<&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
+> +		reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
+> +				"pm", "pclk", "aclk";
+> +		phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
+> +		phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pcie_clkreqnb_cpm>;
+> +		status = "disabled";
+> +	};
+> +
+>   	gmac: ethernet@fe300000 {
+>   		compatible = "rockchip,rk3399-gmac";
+>   		reg = <0x0 0xfe300000 0x0 0x10000>;
