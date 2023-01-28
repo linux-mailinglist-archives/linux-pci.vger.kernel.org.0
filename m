@@ -2,73 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2663B67F89E
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 15:23:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E56B767F8AA
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 15:25:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234327AbjA1OXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Jan 2023 09:23:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
+        id S233188AbjA1OZn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Jan 2023 09:25:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231181AbjA1OXg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 09:23:36 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 659DF3A98
-        for <linux-pci@vger.kernel.org>; Sat, 28 Jan 2023 06:23:35 -0800 (PST)
+        with ESMTP id S231566AbjA1OZm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 09:25:42 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F34101BE8
+        for <linux-pci@vger.kernel.org>; Sat, 28 Jan 2023 06:25:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674915815; x=1706451815;
+  t=1674915942; x=1706451942;
   h=date:from:to:cc:subject:message-id:mime-version:
    content-transfer-encoding;
-  bh=kGvRIHYjzp/SI1EEvCQDA992RW1rYdBOtKdnv0USVRM=;
-  b=P79DcppFyXNMfVdGi/VCaxiqU4E6utsoLfp0xmxui02xvAydpD6osHRc
-   S1a4+qCdq4GmaQ8EP6ZyA8BGzF4idtWedFa9ywUBlLMuvheULQdwWY2XP
-   GKe1/s0caHJ7ZJbw4b0YzJAaP6uNs9Q1tcaaoG/BAxW1x5N0RjbZ2V48O
-   eLkbuiJA3D8CAjb5gvxbHA5tx2bRFsdV0XyRoVo9BNTtEFZZGrTsI+cp/
-   7DJeZVgXyYjpckA9NTs+Hi01HKNB3LMHDKrEujHf4NCFQEI/tFvVtet6e
-   GRYyPWaxEDtrWoIb7OWr2WfG/RSZox1ziQW3eYJO8YfLQvPgBY36sDudf
+  bh=14/CeXuo4x8ZC0s0gLoUFEzxm6718B13FFmfVWXhfDk=;
+  b=lFE4Hz2kw0ovToFdTb2q0gQ1PI40OM2L4yuisg/0skwcN4mnUcpOasdg
+   Bam4RnYeGLE3mUJCX18E15NiSibicmvfgHROMJ4ZlMfMRmBg2nVQWgZRm
+   V5MppUbrLCFv5g17gZzwZO+80sZjEr6v3Byn6w8HJgRhhZMW1dCiGGWag
+   qGpCMKZD2uPivGdda/STuAsY+YqT6aOs8mAbUzIePw+WWG0m5Ul9o/gQP
+   lK6z5beMtqfnHX+Au6RMNruc7q8jrp/ro5txjRR6vlts/os8N9WBr7mQf
+   ijlS0zfojehtAnVmyMO3bha5C9DXQJFLCE2hMVuwxFOlATZSz5b0vaBhF
    g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="328580032"
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="389672963"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="328580032"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 06:23:34 -0800
+   d="scan'208";a="389672963"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 06:25:41 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="663604479"
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="641038232"
 X-IronPort-AV: E=Sophos;i="5.97,254,1669104000"; 
-   d="scan'208";a="663604479"
+   d="scan'208";a="641038232"
 Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 28 Jan 2023 06:23:33 -0800
+  by orsmga006.jf.intel.com with ESMTP; 28 Jan 2023 06:25:39 -0800
 Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pLm7A-0000kz-2s;
-        Sat, 28 Jan 2023 14:23:32 +0000
-Date:   Sat, 28 Jan 2023 22:23:11 +0800
+        id 1pLm98-0000nB-1e;
+        Sat, 28 Jan 2023 14:25:34 +0000
+Date:   Sat, 28 Jan 2023 22:24:47 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [helgaas-pci:pci/ctrl/dwc] BUILD SUCCESS
- 8d939c1999830bcb8825b4859f6d0b6fcc4275f5
-Message-ID: <63d52fcf.+MEf0UW8ZjOK52en%lkp@intel.com>
+Subject: [helgaas-pci:pci/aer] BUILD SUCCESS
+ 6b985af556e5c50e89d00a79864423582bfd3c69
+Message-ID: <63d5302f.Paitbr4vFIU+fLxg%lkp@intel.com>
 User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/ctrl/dwc
-branch HEAD: 8d939c1999830bcb8825b4859f6d0b6fcc4275f5  PCI: dwc: Add Root Port and Endpoint controller eDMA engine support
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git pci/aer
+branch HEAD: 6b985af556e5c50e89d00a79864423582bfd3c69  PCI/AER: Remove redundant Device Control Error Reporting Enable
 
-elapsed time: 736m
+elapsed time: 738m
 
-configs tested: 82
+configs tested: 83
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -103,13 +102,13 @@ i386                 randconfig-a005-20230123
 i386                 randconfig-a002-20230123
 i386                 randconfig-a003-20230123
 i386                 randconfig-a001-20230123
-um                             i386_defconfig
-um                           x86_64_defconfig
 s390                                defconfig
 s390                             allmodconfig
 arc                                 defconfig
 alpha                               defconfig
 s390                             allyesconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
 m68k                             allyesconfig
 m68k                             allmodconfig
 arc                              allyesconfig
@@ -122,6 +121,7 @@ i386                          randconfig-a012
 i386                          randconfig-a014
 i386                          randconfig-a016
 i386                 randconfig-c001-20230123
+i386                          randconfig-c001
 riscv                    nommu_virt_defconfig
 riscv                          rv32_defconfig
 riscv                    nommu_k210_defconfig
