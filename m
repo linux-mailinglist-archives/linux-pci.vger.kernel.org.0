@@ -2,172 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B3BC67F6A5
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 10:19:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0C0AF67F74C
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 11:49:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232174AbjA1JTd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Jan 2023 04:19:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46510 "EHLO
+        id S234352AbjA1KtA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Jan 2023 05:49:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjA1JTc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 04:19:32 -0500
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 613D2199D3;
-        Sat, 28 Jan 2023 01:19:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1674897571; x=1706433571;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=JiB3hWFAHtJf+8GoAtoOh5k442MaipNvp4k7d5/JH9U=;
-  b=bxhZiHJBlGiWZLZl1qWVoUhMweXUziXczhnpm1eL0eOHXos1ByHVRoID
-   IaaaKiRJ2CDW2heSonLyKsib8rbiysdTlWKmSJfmMpsdUgd/Yy2v9PSD2
-   +I7GdbK35kkO4FnCKn1hWAr0Fod1+oecl3ZAF+llMZwUjfFBrLNwukofH
-   C+GmYXvPqFlsp3Mv7SFcR141/ahyHLgg7DKPj9m0fOzQUthMX9lZePOue
-   RJioq0+vX07DY2MlIvHktTXnRYQ6XelYU4xTnwZ5WSs1Y0OteadeU8d3E
-   UEx5W/78v/WB7Q1pVffbsXHZYAok8Zj49hMlghg3imCeELf67ej6VyAdB
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="391831894"
-X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="391831894"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jan 2023 01:19:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10603"; a="693985714"
-X-IronPort-AV: E=Sophos;i="5.97,253,1669104000"; 
-   d="scan'208";a="693985714"
-Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by orsmga008.jf.intel.com with ESMTP; 28 Jan 2023 01:19:25 -0800
-Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pLhMq-0000Y5-1H;
-        Sat, 28 Jan 2023 09:19:24 +0000
-Date:   Sat, 28 Jan 2023 17:19:08 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        alberto.dassatti@heig-vd.ch
-Cc:     oe-kbuild-all@lists.linux.dev, xxm@rock-chips.com,
-        wenrui.li@rock-chips.com, rick.wertenbroek@heig-vd.ch,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+        with ESMTP id S234320AbjA1Ksy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 05:48:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9837963E;
+        Sat, 28 Jan 2023 02:48:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C60C360B49;
+        Sat, 28 Jan 2023 10:48:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F057DC433D2;
+        Sat, 28 Jan 2023 10:48:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674902917;
+        bh=Y432cQgFP5F34pSdT8J5cN2U4/Abh03N/7/nnZFsfgA=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=ucQIwNrYn1j82n5kEO9WaLijY1byLMow61bm47krLw9/rm4ppKVrlbLz6phB9zNbS
+         qYY9lfErpOzRey8+JWhrlP2K20ge8aTXRGAB1RaAXSma5mb3gsVcM7JjsMlaYHRq6p
+         5Sc6Wb+I4Y9+t6nEP7exbyKAI00PmKAmlmdPi+RpRtLkxQxgwEsoweOc60InbgtjXH
+         FqvZ8MvQZkaZTFpjHfucUR24TwuTg8tFdRbslI7LaInKzs0Rwp3ur5+5MyfOIl4uaR
+         6DEA3qekp8dP3oIUZTw+yBhAfVg6biPer6tOhWjPLMuQk2/uOpgUZPcQmhGK5/Sihz
+         AcjSu+HZd6TdA==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        =?utf-8?q?J=C3=A9r=C3=B4me_Glisse?= <jglisse@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Len Brown <len.brown@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 7/8] PCI: rockchip: Fixed legacy IRQ generation for
- endpoint
-Message-ID: <202301281758.YRZrsGZ9-lkp@intel.com>
-References: <20230126135049.708524-8-rick.wertenbroek@gmail.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
+References: <20230127064005.1558-1-rdunlap@infradead.org>
+Subject: Re: (subset) [PATCH 00/35] Documentation: correct lots of spelling
+ errors (series 1)
+Message-Id: <167490289567.2145989.15703368734300500078.b4-ty@kernel.org>
+Date:   Sat, 28 Jan 2023 10:48:15 +0000
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126135049.708524-8-rick.wertenbroek@gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.0
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rick,
+On Thu, 26 Jan 2023 22:39:30 -0800, Randy Dunlap wrote:
+> Correct many spelling errors in Documentation/ as reported by codespell.
+> 
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
+> 
+> These patches are based on linux-next-20230125.
+> 
+> [...]
 
-Thank you for the patch! Perhaps something to improve:
+Applied to
 
-[auto build test WARNING on rockchip/for-next]
-[also build test WARNING on linus/master v6.2-rc5 next-20230127]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+   broonie/spi.git for-next
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Rick-Wertenbroek/PCI-rockchip-Removed-writes-to-unused-registers/20230128-155300
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git for-next
-patch link:    https://lore.kernel.org/r/20230126135049.708524-8-rick.wertenbroek%40gmail.com
-patch subject: [PATCH 7/8] PCI: rockchip: Fixed legacy IRQ generation for endpoint
-config: ia64-allyesconfig (https://download.01.org/0day-ci/archive/20230128/202301281758.YRZrsGZ9-lkp@intel.com/config)
-compiler: ia64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/53e861f3393ad4ebae5f2e133f4783b919036e19
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Rick-Wertenbroek/PCI-rockchip-Removed-writes-to-unused-registers/20230128-155300
-        git checkout 53e861f3393ad4ebae5f2e133f4783b919036e19
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=ia64 SHELL=/bin/bash drivers/pci/controller/
+Thanks!
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
+[27/35] Documentation: spi: correct spelling
+        commit: 0f6d2cee58f1ff2ebf66f0bceb113d79f66ecb07
 
-All warnings (new ones prefixed by >>):
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-   drivers/pci/controller/pcie-rockchip-ep.c: In function 'rockchip_pcie_ep_assert_intx':
->> drivers/pci/controller/pcie-rockchip-ep.c:334:12: warning: variable 'msg_code' set but not used [-Wunused-but-set-variable]
-     334 |         u8 msg_code;
-         |            ^~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:333:13: warning: unused variable 'status' [-Wunused-variable]
-     333 |         u32 status;
-         |             ^~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:332:13: warning: unused variable 'offset' [-Wunused-variable]
-     332 |         u32 offset;
-         |             ^~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c:331:13: warning: unused variable 'r' [-Wunused-variable]
-     331 |         u32 r = ep->max_regions - 1;
-         |             ^
-   drivers/pci/controller/pcie-rockchip-ep.c:330:31: warning: unused variable 'rockchip' [-Wunused-variable]
-     330 |         struct rockchip_pcie *rockchip = &ep->rockchip;
-         |                               ^~~~~~~~
-   drivers/pci/controller/pcie-rockchip-ep.c: In function 'rockchip_pcie_ep_probe':
-   drivers/pci/controller/pcie-rockchip-ep.c:538:13: warning: unused variable 'cfg' [-Wunused-variable]
-     538 |         u32 cfg;
-         |             ^~~
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-vim +/msg_code +334 drivers/pci/controller/pcie-rockchip-ep.c
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  326  
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  327  static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  328  					 u8 intx, bool is_asserted)
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  329  {
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  330  	struct rockchip_pcie *rockchip = &ep->rockchip;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  331  	u32 r = ep->max_regions - 1;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  332  	u32 offset;
-c577f4a5a08bb9 drivers/pci/controller/pcie-rockchip-ep.c Colin Ian King   2019-03-30  333  	u32 status;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09 @334  	u8 msg_code;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  335  
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  336  	intx &= 3;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  337  	if (is_asserted) {
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  338  		ep->irq_pending |= BIT(intx);
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  339  		msg_code = ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA + intx;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  340  	} else {
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  341  		ep->irq_pending &= ~BIT(intx);
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  342  		msg_code = ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA + intx;
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  343  	}
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  344  
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  345  	if (is_asserted) {
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  346  		rockchip_pcie_write(&ep->rockchip,
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  347  			PCIE_CLIENT_INT_IN_ASSERT | PCIE_CLIENT_INT_PEND_ST_PEND,
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  348  			PCIE_CLIENT_LEGACY_INT_CTRL);
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  349  	} else {
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  350  		rockchip_pcie_write(&ep->rockchip,
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  351  			PCIE_CLIENT_INT_IN_DEASSERT | PCIE_CLIENT_INT_PEND_ST_NORMAL,
-53e861f3393ad4 drivers/pci/controller/pcie-rockchip-ep.c Rick Wertenbroek 2023-01-26  352  			PCIE_CLIENT_LEGACY_INT_CTRL);
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  353  	}
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  354  }
-cf590b07839133 drivers/pci/host/pcie-rockchip-ep.c       Shawn Lin        2018-05-09  355  
+Thanks,
+Mark
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
