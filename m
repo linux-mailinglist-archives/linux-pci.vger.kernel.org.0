@@ -2,52 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE7E067FA30
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 19:26:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C956467FADD
+	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 21:30:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234124AbjA1S0b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Jan 2023 13:26:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53698 "EHLO
+        id S231236AbjA1UaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 28 Jan 2023 15:30:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231797AbjA1S02 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 13:26:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D602413A;
-        Sat, 28 Jan 2023 10:26:26 -0800 (PST)
+        with ESMTP id S233816AbjA1UaV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 15:30:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E9E1C305;
+        Sat, 28 Jan 2023 12:30:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7257960ADB;
-        Sat, 28 Jan 2023 18:26:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A77C4C433EF;
-        Sat, 28 Jan 2023 18:26:25 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F85DB80BEC;
+        Sat, 28 Jan 2023 20:30:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AA46EC4339C;
+        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674930385;
-        bh=+1HY1X03PRS4RFvuB5J2U+0mVkSoJsfyzQGpeXj1dI4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=l5AWetFxoXHNYwDitgPfVFSSivHWFsJdRCTSUVrqtfSOKiRgXnX3idLp2lSvPwif2
-         YViGIYGaoCpnKXnfcvhnvOFShSNAmjB9QeZBOkK92akvqqRc+AbF/6GiGDJwxvs/k4
-         PIozlEdoOXA+ap5owVMqLNJDg+TBTx/NE/ahBMBiyVqT7NsgBQNLOV7+PSmZEG5Qmk
-         PXLTDDSei3fPiiZPsdGlrkpsCH3CWCAmFXcA3G5qVaKtXshXPMRTcjxB5t148KwcDE
-         Jq/Ip86zHtYRPLujl/IPIwPtWIW7PCxZCGblIOP245jG4kwIzP8HfgXp6fD1KHnEVX
-         JLzAlVoA2EdIg==
-Date:   Sat, 28 Jan 2023 12:26:24 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        treding@nvidia.com, jonathanh@nvidia.com, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V1] PCI/ASPM: Update saved buffers with latest ASPM
- configuration
-Message-ID: <20230128182624.GA1412510@bhelgaas>
+        s=k20201202; t=1674937816;
+        bh=NyfyYmvHuYCep7B9YHaipGsiO9fFZKxd2hw/3QQJwqQ=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=LEOdKD+xVK+ChdUeMYF7EWUBmGq14I7a4s4JCxsX0Z2pbDfy98ZnOQg9LaM70RuVC
+         9xRu4+lF+DVHmBGVHpWV6C3DKQnB6htlyuiQ1J3mBpVE0Cta4vW2RE/BXmcJavx0so
+         NpT9ZM/k0gp3REittQZbOAE5Pu2nnNW4ZzWWewKaFAFD3E6WwCsC+zOFh5CoV4HfQe
+         lQLG294nW9w5VbGq5Yt6s9D6T/oia27mZXgUwJMw43HV8z7gJz+N1dbAJrJr5rDjld
+         W58/LuDYy+LQisFZsbodjJ+lGQoGjrCfyPfOcghY/B7T6gUkoFPJyIGFHljP3NeW1j
+         sFiy6/39HdTbA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 76D09E52504;
+        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230125133830.20620-1-vidyas@nvidia.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/35] Documentation: correct lots of spelling errors (series
+ 1)
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167493781647.31903.18128774325127042067.git-patchwork-notify@kernel.org>
+Date:   Sat, 28 Jan 2023 20:30:16 +0000
+References: <20230127064005.1558-1-rdunlap@infradead.org>
+In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org, linux@armlinux.org.uk,
+        axboe@kernel.dk, andrii@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, olteanv@gmail.com,
+        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
+        akinobu.mita@gmail.com, deller@gmx.de, rafael@kernel.org,
+        jikos@kernel.org, benjamin.tissoires@redhat.com,
+        srinivas.pandruvada@linux.intel.com, wsa@kernel.org,
+        dmitry.torokhov@gmail.com, rydberg@bitmath.org,
+        isdn@linux-pingi.de, pavel@ucw.cz, lee@kernel.org,
+        jpoimboe@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+        peterz@infradead.org, mingo@redhat.com, jglisse@redhat.com,
+        naoya.horiguchi@nec.com, linmiaohe@huawei.com, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        bhelgaas@google.com, lpieralisi@kernel.org, maz@kernel.org,
+        mpe@ellerman.id.au, len.brown@intel.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dhowells@redhat.com, jarkko@kernel.org,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
+        martin.petersen@oracle.com, bristot@kernel.org,
+        rostedt@goodmis.org, gregkh@linuxfoundation.org,
+        mhiramat@kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, zbr@ioremap.net, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, tglx@linutronix.de, bp@alien8.de,
+        chris@zankel.net, jcmvbkbc@gmail.com, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,142 +98,32 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 07:08:30PM +0530, Vidya Sagar wrote:
-> Many PCIe device drivers save the configuration state of their respective
-> devices during probe and restore the same when their 'slot_reset' hook
-> is called through PCIe Error Recovery System.
+Hello:
 
-This strategy of simply restoring config space after a reset is
-common, but I think it's only a 90% solution.
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-After reset, the device is basically in a "fresh poweron" state [1].
-At boot-time or for a hot-added device, we do a lot of setup when we
-enumerate the device, and assuming that:
-
-  - device reset, plus
-  - current state in the struct pci_dev, plus
-  - restoring config space
-
-gets all the device and kernel state to the same place is a pretty big
-assumption.
-
-That said, we're pretty invested in this strategy for now, and I think
-what you propose here is definitely an improvement.  Minor comments on
-the implementation below.
-
-Bjorn
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/PCI/pci-error-recovery.rst?id=v6.1#n277
-
-> If the system has a change in ASPM policy after the driver's probe is
-> called and before error event occurred, 'slot_reset' hook restores the
-> PCIe configuration state to what it was at the time of probe but not with
-> what it was just before the occurrence of the error event.
-> This effectively leads to a mismatch in the ASPM configuration between
-> the device and its upstream parent device.
-> This patch addresses that issue by updating the saved configuration state
-> of the device with the latest info whenever there is a change w.r.t ASPM
-> policy.
->
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
->  drivers/pci/pci.h       |  4 ++++
->  drivers/pci/pcie/aspm.c | 40 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 44 insertions(+)
-
-> +++ b/drivers/pci/pci.h
-> +void pci_save_aspm_state(struct pci_dev *dev);
-> +void pci_restore_aspm_state(struct pci_dev *dev);
-
-This patch only adds calls to these functions in aspm.c, so it doesn't
-look like we need declarations here or stubs below.
-
-> +static inline void pci_save_aspm_state(struct pci_dev *dev) { }
-> +static inline void pci_restore_aspm_state(struct pci_dev *dev) { }
-
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 53a1fa306e1e..f25e0440d36b 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -151,6 +151,7 @@ static void pcie_set_clkpm_nocheck(struct pcie_link_state *link, int enable)
->  						   PCI_EXP_LNKCTL_CLKREQ_EN,
->  						   val);
->  	link->clkpm_enabled = !!enable;
-> +	pci_save_aspm_state(child);
->  }
->  
->  static void pcie_set_clkpm(struct pcie_link_state *link, int enable)
-> @@ -757,6 +758,39 @@ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
->  				PCI_L1SS_CTL1_L1SS_MASK, val);
->  }
->  
-> +void pci_save_aspm_state(struct pci_dev *dev)
-
-I might be missing something because these look like they should be
-static.  But the declarations and these being non-static suggest that
-you might have something more in mind that isn't part of this patch?
-
-Move these save-state functions higher up if necessary to resolve the
-forward reference from pcie_set_clkpm_nocheck().
-
-> +{
-> +	int i = 0;
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
-> +
-> +	if (!pci_is_pcie(dev))
-> +		return;
-> +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	i++;
-
-"i" looks unnecessary, but I guess I see what you're doing --
-mirroring the structure of pci_save_pcie_state() to make sure we put
-LNKCTL in the correct element of cap[].
-
-> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &cap[i++]);
-> +}
-> +
-> +void pci_restore_aspm_state(struct pci_dev *dev)
-
-No callers for this?  And I don't see why you would *need* callers;
-this should be restored by pci_restore_pcie_state() already.  So this
-looks like it could be removed completely.
-
-> +{
-> +	int i = 0;
-> +	struct pci_cap_saved_state *save_state;
-> +	u16 *cap;
-> +
-> +	save_state = pci_find_saved_cap(dev, PCI_CAP_ID_EXP);
-> +	if (!save_state)
-> +		return;
-> +
-> +	cap = (u16 *)&save_state->cap.data[0];
-> +	i++;
-> +	pcie_capability_write_word(dev, PCI_EXP_LNKCTL, cap[i++]);
-> +}
-> +
->  void pci_save_aspm_l1ss_state(struct pci_dev *dev)
->  {
->  	struct pci_cap_saved_state *save_state;
-> @@ -849,6 +883,12 @@ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
->  		pcie_config_aspm_dev(parent, upstream);
->  
->  	link->aspm_enabled = state;
-> +
-> +	/* Update latest ASPM configuration in saved context */
-> +	pci_save_aspm_state(link->downstream);
-> +	pci_save_aspm_l1ss_state(link->downstream);
-> +	pci_save_aspm_state(parent);
-> +	pci_save_aspm_l1ss_state(parent);
->  }
->  
->  static void pcie_config_aspm_path(struct pcie_link_state *link)
-> -- 
-> 2.17.1
+On Thu, 26 Jan 2023 22:39:30 -0800 you wrote:
+> Correct many spelling errors in Documentation/ as reported by codespell.
 > 
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
+> 
+> These patches are based on linux-next-20230125.
+> 
+> [...]
+
+Here is the summary with links:
+  - [04/35] Documentation: bpf: correct spelling
+    https://git.kernel.org/bpf/bpf-next/c/1d3cab43f4c7
+  - [05/35] Documentation: core-api: correct spelling
+    (no matching commit)
+  - [13/35] Documentation: isdn: correct spelling
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
