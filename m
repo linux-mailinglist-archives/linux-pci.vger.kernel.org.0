@@ -2,128 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C956467FADD
-	for <lists+linux-pci@lfdr.de>; Sat, 28 Jan 2023 21:30:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 25CBE67FDAA
+	for <lists+linux-pci@lfdr.de>; Sun, 29 Jan 2023 09:42:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231236AbjA1UaZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 28 Jan 2023 15:30:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
+        id S230076AbjA2Iml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 29 Jan 2023 03:42:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233816AbjA1UaV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 28 Jan 2023 15:30:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E9E1C305;
-        Sat, 28 Jan 2023 12:30:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3F85DB80BEC;
-        Sat, 28 Jan 2023 20:30:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA46EC4339C;
-        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674937816;
-        bh=NyfyYmvHuYCep7B9YHaipGsiO9fFZKxd2hw/3QQJwqQ=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=LEOdKD+xVK+ChdUeMYF7EWUBmGq14I7a4s4JCxsX0Z2pbDfy98ZnOQg9LaM70RuVC
-         9xRu4+lF+DVHmBGVHpWV6C3DKQnB6htlyuiQ1J3mBpVE0Cta4vW2RE/BXmcJavx0so
-         NpT9ZM/k0gp3REittQZbOAE5Pu2nnNW4ZzWWewKaFAFD3E6WwCsC+zOFh5CoV4HfQe
-         lQLG294nW9w5VbGq5Yt6s9D6T/oia27mZXgUwJMw43HV8z7gJz+N1dbAJrJr5rDjld
-         W58/LuDYy+LQisFZsbodjJ+lGQoGjrCfyPfOcghY/B7T6gUkoFPJyIGFHljP3NeW1j
-         sFiy6/39HdTbA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 76D09E52504;
-        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S229519AbjA2Imk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 29 Jan 2023 03:42:40 -0500
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1171D51E;
+        Sun, 29 Jan 2023 00:42:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674981758; x=1706517758;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=yj31DtnhOPC3pgFppYWP6STDM0yAE4vERS7w0dRmqG8=;
+  b=eBUFmnyODJqMiiw8U5WUEWBfU/AuHl8IHY6xKvwpASTqnAMfcPkwpi+Y
+   sxhRd7P2qUYf2AE4P16NUjVS5O+Xf0kiyoRqYpThnaLQcK3H9gDh4YMGH
+   rzUJlgW+BlBOlZWps1rJWLRFnr6UKtrAD8A2syyFu/zb0meaAIlnJD7Ex
+   T7fRGAoYAXVixaOla3pIJ5IhzranAaPxgwvSkptmrAay39d0943KJSWRH
+   33bFpubflkpwu/ElOEK+1FsImu3cFeqtYnhcI2e2MUHs+v8uwH2BI/RNR
+   m5gDLc1rMey3AM/QJEBb91JwWrWv8vU8zSF4tPEioEROAWwedvdfUppMx
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="354690543"
+X-IronPort-AV: E=Sophos;i="5.97,256,1669104000"; 
+   d="scan'208";a="354690543"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2023 00:42:38 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10604"; a="613680311"
+X-IronPort-AV: E=Sophos;i="5.97,256,1669104000"; 
+   d="scan'208";a="613680311"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.254.214.247]) ([10.254.214.247])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jan 2023 00:42:34 -0800
+Message-ID: <647de371-fe11-15b4-5e11-8ca43a754180@linux.intel.com>
+Date:   Sun, 29 Jan 2023 16:42:32 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/35] Documentation: correct lots of spelling errors (series
- 1)
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167493781647.31903.18128774325127042067.git-patchwork-notify@kernel.org>
-Date:   Sat, 28 Jan 2023 20:30:16 +0000
-References: <20230127064005.1558-1-rdunlap@infradead.org>
-In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org, linux@armlinux.org.uk,
-        axboe@kernel.dk, andrii@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, olteanv@gmail.com,
-        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
-        akinobu.mita@gmail.com, deller@gmx.de, rafael@kernel.org,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        srinivas.pandruvada@linux.intel.com, wsa@kernel.org,
-        dmitry.torokhov@gmail.com, rydberg@bitmath.org,
-        isdn@linux-pingi.de, pavel@ucw.cz, lee@kernel.org,
-        jpoimboe@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-        peterz@infradead.org, mingo@redhat.com, jglisse@redhat.com,
-        naoya.horiguchi@nec.com, linmiaohe@huawei.com, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        bhelgaas@google.com, lpieralisi@kernel.org, maz@kernel.org,
-        mpe@ellerman.id.au, len.brown@intel.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dhowells@redhat.com, jarkko@kernel.org,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
-        martin.petersen@oracle.com, bristot@kernel.org,
-        rostedt@goodmis.org, gregkh@linuxfoundation.org,
-        mhiramat@kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, zbr@ioremap.net, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, tglx@linutronix.de, bp@alien8.de,
-        chris@zankel.net, jcmvbkbc@gmail.com, alsa-devel@alsa-project.org,
-        coresight@lists.linaro.org, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
-        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-mm@kvack.org,
-        openrisc@lists.librecores.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Cc:     baolu.lu@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Vasant Hegde <vasant.hegde@amd.com>,
+        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
+ pci_enable_pasid()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20230127173035.GA994835@bhelgaas>
+Content-Language: en-US
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230127173035.GA994835@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello:
+Hi Bjorn,
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Thanks for your review comments.
 
-On Thu, 26 Jan 2023 22:39:30 -0800 you wrote:
-> Correct many spelling errors in Documentation/ as reported by codespell.
+On 2023/1/28 1:30, Bjorn Helgaas wrote:
+> On Sat, Jan 14, 2023 at 03:34:20PM +0800, Lu Baolu wrote:
+>> The PCIe fabric routes Memory Requests based on the TLP address, ignoring
+>> the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
+>> Enable PASID only when ACS RR & UF enabled on upstream path") requires
+>> some ACS features being supported on device's upstream path when enabling
+>> PCI/PASID.
+>>
+>> One alternative is ATS/PRI which lets the device resolve the PASID + addr
+>> pair before a memory request is made into a routeable TLB address through
+>> the translation agent.
 > 
-> Maintainers of specific kernel subsystems are only Cc-ed on their
-> respective patches, not the entire series. [if all goes well]
+> This sounds like "ATS/PRI" is a solution to a problem, but we haven't
+> stated the problem yet.
 > 
-> These patches are based on linux-next-20230125.
+>> Those resolved addresses are then cached on the
+>> device instead of in the IOMMU TLB and the device always sets translated
+>> bit for PASID. One example of those devices are AMD graphic devices that
+>> always have ACS or ATS/PRI enabled together with PASID.
+>>
+>> This adds a flag parameter in the pci_enable_pasid() helper, with which
+>> the device driver could opt-in the fact that device always sets the
+>> translated bit for PASID.
 > 
-> [...]
+> Nit: "Add a flag ..." and "Apply this opt-in ..." (below).
+> 
+>> It also applies this opt-in for AMD graphic devices. Without this change,
+>> kernel boots to black screen on a system with below AMD graphic device:
+>>
+>> 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
+>>          [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
+>>          (prog-if 00 [VGA controller])
+>> 	DeviceName: ATI EG BROADWAY
+>> 	Subsystem: Hewlett-Packard Company Device 8332
+> 
+> What is the underlying failure here?  "Black screen" is useful but we
+> should say *why* that happens, e.g., transactions went the wrong place
+> or whatever.
 
-Here is the summary with links:
-  - [04/35] Documentation: bpf: correct spelling
-    https://git.kernel.org/bpf/bpf-next/c/1d3cab43f4c7
-  - [05/35] Documentation: core-api: correct spelling
-    (no matching commit)
-  - [13/35] Documentation: isdn: correct spelling
-    (no matching commit)
+All above make sense to me. I post my new commit message at the end of
+this reply.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+> 
+>> At present, it is a common practice to enable/disable PCI PASID in the
+>> iommu drivers. Considering that the device driver knows more about the
+>> specific device, we will follow up by moving pci_enable_pasid() into
+>> the specific device drivers.
+> 
+>> @@ -353,12 +353,15 @@ void pci_pasid_init(struct pci_dev *pdev)
+>>    * pci_enable_pasid - Enable the PASID capability
+>>    * @pdev: PCI device structure
+>>    * @features: Features to enable
+>> + * @flags: device-specific flags
+>> + *   - PCI_PASID_XLATED_REQ_ONLY: The PCI device always use translated type
+>> + *                                for all PASID memory requests.
+> 
+> s/use/uses/
 
+Yes.
 
+> 
+> I guess PCI_PASID_XLATED_REQ_ONLY is something only the driver knows,
+> right?  We can't deduce from architected config space that the device
+> will produce PASID prefixes for every Memory Request, can we?
+
+No, we can't. That's the reason why we need a flag here.
+
+[ Below is an updated commit message. Hope it can describe things
+   clearly.]
+
+PCI: Add translated request only flag for pci_enable_pasid()
+
+The PCIe fabric routes Memory Requests based on the TLP address, ignoring
+the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
+Enable PASID only when ACS RR & UF enabled on upstream path") requires
+some ACS features being supported on device's upstream path when enabling
+PCI/PASID.
+
+However, above change causes the Linux kernel boots to black screen on a
+system with below graphic device:
+
+00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
+         [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
+         (prog-if 00 [VGA controller])
+         DeviceName: ATI EG BROADWAY
+         Subsystem: Hewlett-Packard Company Device 8332
+
+The kernel trace looks like below:
+
+  Call Trace:
+   <TASK>
+   amd_iommu_attach_device+0x2e0/0x300
+   __iommu_attach_device+0x1b/0x90
+   iommu_attach_group+0x65/0xa0
+   amd_iommu_init_device+0x16b/0x250 [iommu_v2]
+   kfd_iommu_resume+0x4c/0x1a0 [amdgpu]
+   kgd2kfd_resume_iommu+0x12/0x30 [amdgpu]
+   kgd2kfd_device_init.cold+0x346/0x49a [amdgpu]
+   amdgpu_amdkfd_device_init+0x142/0x1d0 [amdgpu]
+   amdgpu_device_init.cold+0x19f5/0x1e21 [amdgpu]
+   ? _raw_spin_lock_irqsave+0x23/0x50
+   amdgpu_driver_load_kms+0x15/0x110 [amdgpu]
+   amdgpu_pci_probe+0x161/0x370 [amdgpu]
+   local_pci_probe+0x41/0x80
+   pci_device_probe+0xb3/0x220
+   really_probe+0xde/0x380
+   ? pm_runtime_barrier+0x50/0x90
+   __driver_probe_device+0x78/0x170
+   driver_probe_device+0x1f/0x90
+   __driver_attach+0xce/0x1c0
+   ? __pfx___driver_attach+0x10/0x10
+   bus_for_each_dev+0x73/0xa0
+   bus_add_driver+0x1ae/0x200
+   driver_register+0x89/0xe0
+   ? __pfx_init_module+0x10/0x10 [amdgpu]
+   do_one_initcall+0x59/0x230
+   do_init_module+0x4a/0x200
+   __do_sys_init_module+0x157/0x180
+   do_syscall_64+0x5b/0x80
+   ? handle_mm_fault+0xff/0x2f0
+   ? do_user_addr_fault+0x1ef/0x690
+   ? exc_page_fault+0x70/0x170
+   entry_SYSCALL_64_after_hwframe+0x72/0xdc
+
+The AMD iommu driver allocates a new domain (called v2 domain) for the
+amdgpu device and enables its PCI PASID/ATS/PRI before attaching the
+v2 domain to it. The failure of pci_enable_pasid() due to lack of ACS
+causes the domain attaching device to fail. The amdgpu device is unable
+to DMA normally, resulting in a black screen of the system.
+
+However, this device is special as it relies on ATS/PRI to resolve the
+PASID + addr pair before a memory request is made into a routeable TLB
+address through the translation agent. Those resolved addresses are then
+cached on the device instead of in the IOMMU TLB and the device always
+uses translated memory request for PASID.
+
+ACS is not necessary for the devices that always use translated memory
+request for PASID. But this is device specific and only device driver
+knows this. We can't deduce this from architected config space.
+
+Add a flag for pci_enable_pasid(), with which the device drivers could
+opt-in the fact that device always uses translated memory requests for
+PASID hence the ACS is not a necessity. Apply this opt-in for above AMD
+graphic device.
+
+At present, it is a common practice to enable/disable PCI PASID in the
+iommu drivers. Considering that the device driver knows more about the
+specific device, it's better to move pci_enable_pasid() into the specific
+device drivers.
+[-- end --]
+
+--
+Best regards,
+baolu
