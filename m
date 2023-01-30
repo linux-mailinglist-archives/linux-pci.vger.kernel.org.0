@@ -2,285 +2,384 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60FA6680DCB
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jan 2023 13:35:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CD19680E13
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jan 2023 13:53:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236890AbjA3MfX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Jan 2023 07:35:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34070 "EHLO
+        id S236899AbjA3Mxc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Jan 2023 07:53:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236284AbjA3MfW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 07:35:22 -0500
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 148E94211;
-        Mon, 30 Jan 2023 04:35:21 -0800 (PST)
-Received: from [2a02:8108:963f:de38:4bc7:2566:28bd:b73c]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1pMTNV-0004kO-85; Mon, 30 Jan 2023 13:35:17 +0100
-Message-ID: <c0c58ec0-3cb2-5385-eeac-6ca37b6b1509@leemhuis.info>
-Date:   Mon, 30 Jan 2023 13:35:16 +0100
+        with ESMTP id S230365AbjA3Mxb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 07:53:31 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23E2710E3
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jan 2023 04:53:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 744F6B8101B
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jan 2023 12:53:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB740C433D2;
+        Mon, 30 Jan 2023 12:53:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675083206;
+        bh=JQrgXuXXwFkHzdHdUgc8yy07YjGNtZzrnqlxPa6RdBA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=UuodaFprjjZArAEoXHhnRvhfkCtPbqpcQVBVKfy0/5dHb8rGgkuz/Xee0GZ1TTNxC
+         lbxIvuKpAPooIf7P+anSbupySyVRMu8lA30ZmvnfRFDuAoGesCNBVyxBdLM9MB80CP
+         dyPIZnTFSs8FCCeo2wTIXKlAuPGEkmGCb0QBaekJjiORrciUMPqCxKXrxBGNXKs07H
+         IhWxaAPsawFP1QPzrrS/nBriizyELyJai0YOhc9nRjSWu5dXbOf2IsUSM+RpiATJUc
+         rOh8UjWOidyyoKED0HODFV80zl98gtOajuZZS2FWpFq7+QvNNdKMrJoD9h6LaP/lYd
+         3dkB9ozzlHvHQ==
+Date:   Mon, 30 Jan 2023 06:53:24 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [Bug 216795] New: PCI resource allocation mismatch with BIOS
+Message-ID: <20230130125324.GA1661790@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
-Content-Language: en-US, de-DE
-To:     Huacai Chen <chenhuacai@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linux kernel regressions list <regressions@lists.linux.dev>
-References: <CAAhV-H59FLAFGD8oDZGjXWgL2ei_L=rYAaFWWp1skUT9nUPVYg@mail.gmail.com>
- <20230120153644.GA636025@bhelgaas>
- <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
-From:   Thorsten Leemhuis <regressions@leemhuis.info>
-In-Reply-To: <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1675082121;4ae6adba;
-X-HE-SMSGID: 1pMTNV-0004kO-85
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-216795-41252@https.bugzilla.kernel.org/>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.01.23 16:10, Huacai Chen wrote:
-> On Fri, Jan 20, 2023 at 11:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->> On Fri, Jan 20, 2023 at 09:31:43PM +0800, Huacai Chen wrote:
->>> On Thu, Jan 19, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>> On Thu, Jan 19, 2023 at 08:25:20PM +0800, Huacai Chen wrote:
->>>>> Ping?
->>>>
->>>> I suggested another possible way to do this that wasn't so much of a
->>>> special case.  Did you explore that at all?
->>>
->>> That is a little difficult for me, but what is worse is that the root
->>> cause doesn't come from gpu or console drivers, but from the root
->>> port. That means: even if we can workaround the gpu issue in another
->>> way, there are still problems on other devices. Besides the graphics
->>> card, the most frequent problematic device is the sata controller
->>> connected on LS7A chipset, there are incomplete I/O accesses after the
->>> root port disabled and also cause reboot failure.
->>
->> Yes, SATA sounds like another case where we want to use the device
->> after we call the driver's remove/shutdown method.  That's not
->> *worse*, it's just another case where we might have to mark devices
->> for special handling.
-> That needs too much effort because we need to modify nearly every pci
-> driver, and it exceeds my ability. :)
-
-Just wondering: what's the status here? This looks stalled.
-
-I'm asking, as the patches in this thread are supposed to fix this
-regression:
-https://bugzilla.kernel.org/show_bug.cgi?id=216884
-
-Or should we try to find a different fix/workaround because the proper
-solution discussed in this thread needs more time?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
-
->> If we remove/shutdown *any* Root Port, not just LS7A, I think the idea
->> of assuming downstream devices can continue to work as usual is a
->> little suspect.  They might continue to work by accident today, but it
->> doesn't seem like a robust design.
-> The existing design works for so many years, so it is mostly
-> reasonable. For the LS7A case, the root cause comes from the root
-> port, so a workaround on the root port seems somewhat reasonable.
+On Fri, Dec 09, 2022 at 11:03:06AM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=216795
 > 
-> Huacai
->>
->>>> I know there's no *existing* way to mark devices that we need to use
->>>> all the way through shutdown or reboot, but if it makes sense, there's
->>>> no reason we couldn't add one.  That has the potential of being more
->>>> generic, e.g., we could do it for all console devices, as opposed to
->>>> quirking a Root Port that just happens to be in the path to the
->>>> console.
->>>>
->>>>> On Sat, Jan 7, 2023 at 10:25 AM Huacai Chen <chenhuacai@gmail.com> wrote:
->>>>>> On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->>>>>>> On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
->>>>>>>> After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe
->>>>>>>> services during shutdown") we observe poweroff/reboot
->>>>>>>> failures on systems with LS7A chipset.
->>>>>>>>
->>>>>>>> We found that if we remove "pci_command &=
->>>>>>>> ~PCI_COMMAND_MASTER" in do_pci_disable_device(), it can
->>>>>>>> work well. The hardware engineer says that the root cause
->>>>>>>> is that CPU is still accessing PCIe devices while
->>>>>>>> poweroff/reboot, and if we disable the Bus Master Bit at
->>>>>>>> this time, the PCIe controller doesn't forward requests to
->>>>>>>> downstream devices, and also does not send TIMEOUT to CPU,
->>>>>>>> which causes CPU wait forever (hardware deadlock).
->>>>>>>>
->>>>>>>> To be clear, the sequence is like this:
->>>>>>>>
->>>>>>>>   - CPU issues MMIO read to device below Root Port
->>>>>>>>
->>>>>>>>   - LS7A Root Port fails to forward transaction to secondary bus
->>>>>>>>     because of LS7A Bus Master defect
->>>>>>>>
->>>>>>>>   - CPU hangs waiting for response to MMIO read
->>>>>>>>
->>>>>>>> Then how is userspace able to use a device after the
->>>>>>>> device is removed?
->>>>>>>>
->>>>>>>> To give more details, let's take the graphics driver (e.g.
->>>>>>>> amdgpu) as an example. The userspace programs call
->>>>>>>> printf() to display "shutting down xxx service" during
->>>>>>>> shutdown/reboot, or the kernel calls printk() to display
->>>>>>>> something during shutdown/reboot. These can happen at any
->>>>>>>> time, even after we call pcie_port_device_remove() to
->>>>>>>> disable the pcie port on the graphic card.
->>>>>>>>
->>>>>>>> The call stack is: printk() --> call_console_drivers() -->
->>>>>>>> con->write() --> vt_console_print() --> fbcon_putcs()
->>>>>>>>
->>>>>>>> This scenario happens because userspace programs (or the
->>>>>>>> kernel itself) don't know whether a device is 'usable',
->>>>>>>> they just use it, at any time.
->>>>>>>
->>>>>>> Thanks for this background.  So basically we want to call
->>>>>>> .remove() on a console device (or a bridge leading to it),
->>>>>>> but we expect it to keep working as usual afterwards?
->>>>>>>
->>>>>>> That seems a little weird.  Is that the design we want?
->>>>>>> Maybe we should have a way to mark devices so we don't
->>>>>>> remove them during shutdown or reboot?
->>>>>>
->>>>>> Sounds reasonable, but it seems no existing way can mark this.
->>>>>>
->>>>>> Huacai
->>>>>>>
->>>>>>>> This hardware behavior is a PCIe protocol violation (Bus Master should
->>>>>>>> not be involved in CPU MMIO transactions), and it will be fixed in new
->>>>>>>> revisions of hardware (add timeout mechanism for CPU read request,
->>>>>>>> whether or not Bus Master bit is cleared).
->>>>>>>>
->>>>>>>> On some x86 platforms, radeon/amdgpu devices can cause similar problems
->>>>>>>> [1][2]. Once before I wanted to make a single patch to solve "all of
->>>>>>>> these problems" together, but it seems unreasonable because maybe they
->>>>>>>> are not exactly the same problem. So, this patch add a new function
->>>>>>>> pcie_portdrv_shutdown(), a slight modified copy of pcie_portdrv_remove()
->>>>>>>> dedicated for the shutdown path, and then add a quirk just for LS7A to
->>>>>>>> avoid clearing Bus Master bit in pcie_portdrv_shutdown(). Leave other
->>>>>>>> platforms behave as before.
->>>>>>>>
->>>>>>>> [1] https://bugs.freedesktop.org/show_bug.cgi?id=97980
->>>>>>>> [2] https://bugs.freedesktop.org/show_bug.cgi?id=98638
->>>>>>>>
->>>>>>>> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
->>>>>>>> ---
->>>>>>>>  drivers/pci/controller/pci-loongson.c | 17 +++++++++++++++++
->>>>>>>>  drivers/pci/pcie/portdrv.c            | 21 +++++++++++++++++++--
->>>>>>>>  include/linux/pci.h                   |  1 +
->>>>>>>>  3 files changed, 37 insertions(+), 2 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
->>>>>>>> index 759ec211c17b..641308ba4126 100644
->>>>>>>> --- a/drivers/pci/controller/pci-loongson.c
->>>>>>>> +++ b/drivers/pci/controller/pci-loongson.c
->>>>>>>> @@ -93,6 +93,24 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>>>>>>  DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>>>>>>                       DEV_PCIE_PORT_2, loongson_mrrs_quirk);
->>>>>>>>
->>>>>>>> +static void loongson_bmaster_quirk(struct pci_dev *pdev)
->>>>>>>> +{
->>>>>>>> +     /*
->>>>>>>> +      * Some Loongson PCIe ports will cause CPU deadlock if there is
->>>>>>>> +      * MMIO access to a downstream device when the root port disable
->>>>>>>> +      * the Bus Master bit during poweroff/reboot.
->>>>>>>> +      */
->>>>>>>> +     struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
->>>>>>>> +
->>>>>>>> +     bridge->no_dis_bmaster = 1;
->>>>>>>> +}
->>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>>>>>> +                     DEV_PCIE_PORT_0, loongson_bmaster_quirk);
->>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>>>>>> +                     DEV_PCIE_PORT_1, loongson_bmaster_quirk);
->>>>>>>> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
->>>>>>>> +                     DEV_PCIE_PORT_2, loongson_bmaster_quirk);
->>>>>>>> +
->>>>>>>>  static void loongson_pci_pin_quirk(struct pci_dev *pdev)
->>>>>>>>  {
->>>>>>>>       pdev->pin = 1 + (PCI_FUNC(pdev->devfn) & 3);
->>>>>>>> diff --git a/drivers/pci/pcie/portdrv.c b/drivers/pci/pcie/portdrv.c
->>>>>>>> index 2cc2e60bcb39..96f45c444422 100644
->>>>>>>> --- a/drivers/pci/pcie/portdrv.c
->>>>>>>> +++ b/drivers/pci/pcie/portdrv.c
->>>>>>>> @@ -501,7 +501,6 @@ static void pcie_port_device_remove(struct pci_dev *dev)
->>>>>>>>  {
->>>>>>>>       device_for_each_child(&dev->dev, NULL, remove_iter);
->>>>>>>>       pci_free_irq_vectors(dev);
->>>>>>>> -     pci_disable_device(dev);
->>>>>>>>  }
->>>>>>>>
->>>>>>>>  /**
->>>>>>>> @@ -727,6 +726,24 @@ static void pcie_portdrv_remove(struct pci_dev *dev)
->>>>>>>>       }
->>>>>>>>
->>>>>>>>       pcie_port_device_remove(dev);
->>>>>>>> +
->>>>>>>> +     pci_disable_device(dev);
->>>>>>>> +}
->>>>>>>> +
->>>>>>>> +static void pcie_portdrv_shutdown(struct pci_dev *dev)
->>>>>>>> +{
->>>>>>>> +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
->>>>>>>> +
->>>>>>>> +     if (pci_bridge_d3_possible(dev)) {
->>>>>>>> +             pm_runtime_forbid(&dev->dev);
->>>>>>>> +             pm_runtime_get_noresume(&dev->dev);
->>>>>>>> +             pm_runtime_dont_use_autosuspend(&dev->dev);
->>>>>>>> +     }
->>>>>>>> +
->>>>>>>> +     pcie_port_device_remove(dev);
->>>>>>>> +
->>>>>>>> +     if (!bridge->no_dis_bmaster)
->>>>>>>> +             pci_disable_device(dev);
->>>>>>>>  }
->>>>>>>>
->>>>>>>>  static pci_ers_result_t pcie_portdrv_error_detected(struct pci_dev *dev,
->>>>>>>> @@ -777,7 +794,7 @@ static struct pci_driver pcie_portdriver = {
->>>>>>>>
->>>>>>>>       .probe          = pcie_portdrv_probe,
->>>>>>>>       .remove         = pcie_portdrv_remove,
->>>>>>>> -     .shutdown       = pcie_portdrv_remove,
->>>>>>>> +     .shutdown       = pcie_portdrv_shutdown,
->>>>>>>>
->>>>>>>>       .err_handler    = &pcie_portdrv_err_handler,
->>>>>>>>
->>>>>>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>>>>>>> index 3df2049ec4a8..a64dbcb89231 100644
->>>>>>>> --- a/include/linux/pci.h
->>>>>>>> +++ b/include/linux/pci.h
->>>>>>>> @@ -573,6 +573,7 @@ struct pci_host_bridge {
->>>>>>>>       unsigned int    ignore_reset_delay:1;   /* For entire hierarchy */
->>>>>>>>       unsigned int    no_ext_tags:1;          /* No Extended Tags */
->>>>>>>>       unsigned int    no_inc_mrrs:1;          /* No Increase MRRS */
->>>>>>>> +     unsigned int    no_dis_bmaster:1;       /* No Disable Bus Master */
->>>>>>>>       unsigned int    native_aer:1;           /* OS may use PCIe AER */
->>>>>>>>       unsigned int    native_pcie_hotplug:1;  /* OS may use PCIe hotplug */
->>>>>>>>       unsigned int    native_shpc_hotplug:1;  /* OS may use SHPC hotplug */
->>>>>>>> --
->>>>>>>> 2.31.1
->>>>>>>>
+>             Bug ID: 216795
+>            Summary: PCI resource allocation mismatch with BIOS
+>     Kernel Version: v6.1-rc8
+>           Reporter: mika.westerberg@linux.intel.com
+> 
+> Created attachment 303384
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=303384&action=edit
+> Dmesg from the system
+> 
+> The device in question is a GPU with an integrated PCIe switch connected
+> to a root port of a system:
+> 
+> 0000:50:02.0 Root Port
+>   0000:51:00.0 Switch Upstream Port
+>   0000:52:01.0 Switch Downstream Port
+>    0000:53:00.0 GPU Endpoint
+> 
+> The GPU has SRIOV capability and the BIOS allocates resources for these
+> (see the attached dumps). However, if parts of the topology is removed
+> through sysfs and then re-scanned the resource allocation fails and that
+> leaves the GPU without any resources assigned.
+> 
+> The real use-case is in data centers if the GPU hangs to reset it
+> through Secondary Bus Reset. This avoids rebooting the whole system. The
+> below steps are the minimal to get it reproduced in the current
+> Linux mainline (v6.1-rc8).
+> 
+> The expectation is that the rescan results similar resource allocation
+> than what was done by the BIOS. What happens though is that the Linux
+> resource allocation seems to allocate "bigger" windows that then does
+> not fit into the BIOS allocated resources above the Downststream Port.
+> 
+> Steps
+> -----
+> 1. Boot the system up
+> 2. Take lspci and iomem dumps
+> 
+> # lspci -vv > lspci.before
+> # cp /proc/iomem iomem.before
+> 
+> 3. Remove the Switch Downstream Port and the GPU Endpoint
+> 
+> # echo 1 > /sys/bus/pci/devices/0000:50:02.0/0000:51:00.0/0000:52:01.0/remove
+> 
+> 4. Rescan from the Switch Upstream Port
+> 
+> # echo 1 > /sys/bus/pci/devices/0000:50:02.0/0000:51:00.0/rescan
+> 
+> 5. Take the dumps
+> 
+> # lspci -vv > lspci.after
+> # cp /proc/iomem iomem.after
+> 
+> BIOS assigned resources (lspci.before)
+> --------------------------------------
+> 52:01.0 PCI bridge: Intel Corporation Device 4fa4 (prog-if 00 [Normal decode])
+>         ...
+>         Bus: primary=52, secondary=53, subordinate=54, sec-latency=0
+>         I/O behind bridge: [disabled]
+>         Memory behind bridge: bb800000-bb9fffff [size=2M]
+>         Prefetchable memory behind bridge: 0000201c00000000-0000205e1fffffff
+> [size=270848M]
+> 
+> 53:00.0 Display controller: Intel Corporation Device 56c0 (rev 08)
+>         ...
+>         Region 0: Memory at 205e1f000000 (64-bit, prefetchable) [size=16M]
+>         Region 2: Memory at 201c00000000 (64-bit, prefetchable) [size=16G]
+>         Expansion ROM at bb800000 [disabled] [size=2M]
+>         ...
+>         Capabilities: [320 v1] Single Root I/O Virtualization (SR-IOV)
+>                 IOVCap: Migration-, Interrupt Message Number: 000
+>                 IOVCtl: Enable- Migration- Interrupt- MSE- ARIHierarchy+
+>                 IOVSta: Migration-
+>                 Initial VFs: 31, Total VFs: 31, Number of VFs: 0, Function
+> Dependency Link: 00
+>                 VF offset: 1, stride: 1, Device ID: 56c0
+>                 Supported Page Size: 00000553, System Page Size: 00000001
+>                 Region 0: Memory at 0000205e00000000 (64-bit, prefetchable)
+>                 Region 2: Memory at 0000202000000000 (64-bit, prefetchable)
+>                 VF Migration: offset: 00000000, BIR: 0
+> 
+> Linux assigned resources (lspci.after)
+> --------------------------------------
+> 52:01.0 PCI bridge: Intel Corporation Device 4fa4 (prog-if 00 [Normal decode])
+>         ...
+>         Bus: primary=52, secondary=53, subordinate=54, sec-latency=0
+>         I/O behind bridge: [disabled]
+>         Memory behind bridge: bb800000-bb9fffff [size=2M]
+>         Prefetchable memory behind bridge: [disabled]
+> 
+> 53:00.0 Display controller: Intel Corporation Device 56c0 (rev 08)
+>         ...
+>         Region 0: Memory at <ignored> (64-bit, prefetchable)
+>         Region 2: Memory at <ignored> (64-bit, prefetchable)
+>         ...
+>         Capabilities: [320 v1] Single Root I/O Virtualization (SR-IOV)
+>                 IOVCap: Migration-, Interrupt Message Number: 000
+>                 IOVCtl: Enable- Migration- Interrupt- MSE- ARIHierarchy+
+>                 IOVSta: Migration-
+>                 Initial VFs: 31, Total VFs: 31, Number of VFs: 0, Function
+> Dependency Link: 00
+>                 VF offset: 1, stride: 1, Device ID: 56c0
+>                 Supported Page Size: 00000553, System Page Size: 00000001
+>                 Region 0: Memory at 0000205e00000000 (64-bit, prefetchable)
+>                 Region 2: Memory at 0000202000000000 (64-bit, prefetchable)
+>                 VF Migration: offset: 00000000, BIR: 0
+> 
+> Relevant lines in dmesg
+> -----------------------
+> [  131.882092] i915 0000:53:00.0: PME# disabled
+> [  131.882115] i915 0000:53:00.0: vgaarb: pci_notify
+> [  131.997587] pci 0000:53:00.0: vgaarb: pci_notify
+> [  131.997646] pcieport 0000:52:01.0: PME# disabled
+> [  131.997658] pcieport 0000:52:01.0: vgaarb: pci_notify
+> [  131.997675] pci 0000:52:01.0: vgaarb: pci_notify
+> [  131.997690] pci 0000:53:00.0: vgaarb: pci_notify
+> [  131.997788] pci 0000:53:00.0: vgaarb: pci_notify
+> [  131.997811] pci 0000:53:00.0: device released
+> [  131.997820] pci_bus 0000:53: busn_res: [bus 53-54] is released
+> [  131.997868] pci 0000:52:01.0: vgaarb: pci_notify
+> [  131.997953] pcieport 0000:51:00.0: saving config space at offset 0x0
+> (reading 0x4fa08086)
+> [  131.997960] pcieport 0000:51:00.0: saving config space at offset 0x4
+> (reading 0x110147)
+> [  131.997966] pcieport 0000:51:00.0: saving config space at offset 0x8
+> (reading 0x6040001)
+> [  131.997970] pcieport 0000:51:00.0: saving config space at offset 0xc
+> (reading 0x10008)
+> [  131.997975] pcieport 0000:51:00.0: saving config space at offset 0x10
+> (reading 0x2000000c)
+> [  131.997980] pcieport 0000:51:00.0: saving config space at offset 0x14
+> (reading 0x205e)
+> [  131.997985] pcieport 0000:51:00.0: saving config space at offset 0x18
+> (reading 0x545251)
+> [  131.997989] pcieport 0000:51:00.0: saving config space at offset 0x1c
+> (reading 0x1f1)
+> [  131.997993] pcieport 0000:51:00.0: saving config space at offset 0x20
+> (reading 0xbb90bb80)
+> [  131.997998] pcieport 0000:51:00.0: saving config space at offset 0x24
+> (reading 0x1ff10001)
+> [  131.998002] pcieport 0000:51:00.0: saving config space at offset 0x28
+> (reading 0x201c)
+> [  131.998007] pcieport 0000:51:00.0: saving config space at offset 0x2c
+> (reading 0x205e)
+> [  131.998011] pcieport 0000:51:00.0: saving config space at offset 0x30
+> (reading 0x0)
+> [  131.998015] pcieport 0000:51:00.0: saving config space at offset 0x34
+> (reading 0x40)
+> [  131.998020] pcieport 0000:51:00.0: saving config space at offset 0x38
+> (reading 0x0)
+> [  131.998024] pcieport 0000:51:00.0: saving config space at offset 0x3c
+> (reading 0x301ff)
+> [  131.998072] pcieport 0000:51:00.0: PME# enabled
+> [  131.998122] pci 0000:52:01.0: vgaarb: pci_notify
+> [  131.998140] pci 0000:52:01.0: device released
+> [  132.009340] pcieport 0000:50:02.0: saving config space at offset 0x0
+> (reading 0x347a8086)
+> [  132.009353] pcieport 0000:50:02.0: saving config space at offset 0x4
+> (reading 0x100547)
+> [  132.009359] pcieport 0000:50:02.0: saving config space at offset 0x8
+> (reading 0x6040004)
+> [  132.009363] pcieport 0000:50:02.0: saving config space at offset 0xc
+> (reading 0x10000)
+> [  132.009368] pcieport 0000:50:02.0: saving config space at offset 0x10
+> (reading 0x20800004)
+> [  132.009372] pcieport 0000:50:02.0: saving config space at offset 0x14
+> (reading 0x205e)
+> [  132.009377] pcieport 0000:50:02.0: saving config space at offset 0x18
+> (reading 0x545150)
+> [  132.009381] pcieport 0000:50:02.0: saving config space at offset 0x1c
+> (reading 0x200000f0)
+> [  132.009385] pcieport 0000:50:02.0: saving config space at offset 0x20
+> (reading 0xbb90bb80)
+> [  132.009390] pcieport 0000:50:02.0: saving config space at offset 0x24
+> (reading 0x20710001)
+> [  132.009394] pcieport 0000:50:02.0: saving config space at offset 0x28
+> (reading 0x201c)
+> [  132.009398] pcieport 0000:50:02.0: saving config space at offset 0x2c
+> (reading 0x205e)
+> [  132.009402] pcieport 0000:50:02.0: saving config space at offset 0x30
+> (reading 0x0)
+> [  132.009406] pcieport 0000:50:02.0: saving config space at offset 0x34
+> (reading 0x40)
+> [  132.009411] pcieport 0000:50:02.0: saving config space at offset 0x38
+> (reading 0x0)
+> [  132.009415] pcieport 0000:50:02.0: saving config space at offset 0x3c
+> (reading 0x201ff)
+> [  132.009453] pcieport 0000:50:02.0: PME# enabled
+> [  150.136581] pci_bus 0000:51: scanning bus
+> [  150.148686] pcieport 0000:50:02.0: restoring config space at offset 0x2c
+> (was 0x205e, writing 0x205e)
+> [  150.148700] pcieport 0000:50:02.0: restoring config space at offset 0x28
+> (was 0x201c, writing 0x201c)
+> [  150.148708] pcieport 0000:50:02.0: restoring config space at offset 0x24
+> (was 0x20710001, writing 0x20710001)
+> [  150.148783] pcieport 0000:50:02.0: PME# disabled
+> [  150.160911] pcieport 0000:51:00.0: restoring config space at offset 0x2c
+> (was 0x205e, writing 0x205e)
+> [  150.160925] pcieport 0000:51:00.0: restoring config space at offset 0x28
+> (was 0x201c, writing 0x201c)
+> [  150.160932] pcieport 0000:51:00.0: restoring config space at offset 0x24
+> (was 0x1ff10001, writing 0x1ff10001)
+> [  150.160967] pcieport 0000:51:00.0: PME# disabled
+> [  150.160976] pcieport 0000:51:00.0: scanning [bus 52-54] behind bridge, pass
+> 0
+> [  150.160988] pci_bus 0000:52: scanning bus
+> [  150.161024] pci 0000:52:01.0: [8086:4fa4] type 01 class 0x060400
+> [  150.161219] pci 0000:52:01.0: PME# supported from D0 D3hot D3cold
+> [  150.161228] pci 0000:52:01.0: PME# disabled
+> [  150.161372] pci 0000:52:01.0: vgaarb: pci_notify
+> [  150.161466] pci 0000:52:01.0: scanning [bus 53-54] behind bridge, pass 0
+> [  150.161536] pci_bus 0000:53: scanning bus
+> [  150.161565] pci 0000:53:00.0: [8086:56c0] type 00 class 0x038000
+> [  150.161597] pci 0000:53:00.0: reg 0x10: [mem 0x205e1f000000-0x205e1fffffff
+> 64bit pref]
+> [  150.161620] pci 0000:53:00.0: reg 0x18: [mem 0x201c00000000-0x201fffffffff
+> 64bit pref]
+> [  150.161656] pci 0000:53:00.0: reg 0x30: [mem 0xffe00000-0xffffffff pref]
+> [  150.161707] pci 0000:53:00.0: ASPM: overriding L1 acceptable latency from
+> 0x0 to 0x7
+> [  150.161787] pci 0000:53:00.0: PME# supported from D0 D3hot
+> [  150.161794] pci 0000:53:00.0: PME# disabled
+> [  150.161832] pci 0000:53:00.0: reg 0x344: [mem 0x205e00000000-0x205e00ffffff
+> 64bit pref]
+> [  150.161837] pci 0000:53:00.0: VF(n) BAR0 space: [mem
+> 0x205e00000000-0x205e1effffff 64bit pref] (contains BAR0 for 31 VFs)
+> [  150.161854] pci 0000:53:00.0: reg 0x34c: [mem 0x202000000000-0x2021ffffffff
+> 64bit pref]
+> [  150.161858] pci 0000:53:00.0: VF(n) BAR2 space: [mem
+> 0x202000000000-0x205dffffffff 64bit pref] (contains BAR2 for 31 VFs)
+> [  150.162112] pci 0000:53:00.0: vgaarb: pci_notify
+> [  150.162173] pci_bus 0000:53: fixups for bus
+> [  150.162177] pci 0000:52:01.0: PCI bridge to [bus 53-54]
+> [  150.162187] pci 0000:52:01.0:   bridge window [mem 0xbb800000-0xbb9fffff]
+> [  150.162198] pci 0000:52:01.0:   bridge window [mem
+> 0x201c00000000-0x205e1fffffff 64bit pref]
+> [  150.162202] pci_bus 0000:53: bus scan returning with max=53
+> [  150.162210] pci 0000:52:01.0: scanning [bus 53-54] behind bridge, pass 1
+> [  150.162219] pci_bus 0000:52: bus scan returning with max=54
+> [  150.162225] pcieport 0000:51:00.0: scanning [bus 52-54] behind bridge, pass
+> 1
+> [  150.162233] pci_bus 0000:51: bus scan returning with max=54
+> [  150.162240] pci 0000:52:01.0: bridge window [mem 0x200000000-0x45ffffffff
+> 64bit pref] to [bus 53-54] add_size 3e00000000 add_align 200000000
+> [  150.162259] pci 0000:52:01.0: BAR 15: no space for [mem size 0x8200000000
+> 64bit pref]
+> [  150.162265] pci 0000:52:01.0: BAR 15: failed to assign [mem size
+> 0x8200000000 64bit pref]
+> [  150.162270] pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> [  150.162278] pci 0000:52:01.0: BAR 15: no space for [mem size 0x4400000000
+> 64bit pref]
+> [  150.162282] pci 0000:52:01.0: BAR 15: failed to assign [mem size
+> 0x4400000000 64bit pref]
+> [  150.162286] pci 0000:52:01.0: BAR 14: assigned [mem 0xbb800000-0xbb9fffff]
+> [  150.162295] pci 0000:53:00.0: BAR 2: no space for [mem size 0x400000000
+> 64bit pref]
+> [  150.162299] pci 0000:53:00.0: BAR 2: failed to assign [mem size 0x400000000
+> 64bit pref]
+> [  150.162304] pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000
+> 64bit pref]
+> [  150.162308] pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000
+> 64bit pref]
+> [  150.162313] pci 0000:53:00.0: BAR 0: no space for [mem size 0x01000000 64bit
+> pref]
+> [  150.162316] pci 0000:53:00.0: BAR 0: failed to assign [mem size 0x01000000
+> 64bit pref]
+> [  150.162321] pci 0000:53:00.0: BAR 7: no space for [mem size 0x1f000000 64bit
+> pref]
+> [  150.162325] pci 0000:53:00.0: BAR 7: failed to assign [mem size 0x1f000000
+> 64bit pref]
+> [  150.162329] pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff
+> pref]
+> [  150.162336] pci 0000:53:00.0: BAR 2: no space for [mem size 0x400000000
+> 64bit pref]
+> [  150.162340] pci 0000:53:00.0: BAR 2: failed to assign [mem size 0x400000000
+> 64bit pref]
+> [  150.162345] pci 0000:53:00.0: BAR 0: no space for [mem size 0x01000000 64bit
+> pref]
+> [  150.162348] pci 0000:53:00.0: BAR 0: failed to assign [mem size 0x01000000
+> 64bit pref]
+> [  150.162352] pci 0000:53:00.0: BAR 6: assigned [mem 0xbb800000-0xbb9fffff
+> pref]
+> [  150.162357] pci 0000:53:00.0: BAR 9: no space for [mem size 0x3e00000000
+> 64bit pref]
+> [  150.162361] pci 0000:53:00.0: BAR 9: failed to assign [mem size 0x3e00000000
+> 64bit pref]
+> [  150.162365] pci 0000:53:00.0: BAR 7: no space for [mem size 0x1f000000 64bit
+> pref]
+> [  150.162369] pci 0000:53:00.0: BAR 7: failed to assign [mem size 0x1f000000
+> 64bit pref]
+> [  150.162374] pci 0000:52:01.0: PCI bridge to [bus 53-54]
+> [  150.162382] pci 0000:52:01.0:   bridge window [mem 0xbb800000-0xbb9fffff]
+> [  150.162418] pcieport 0000:52:01.0: vgaarb: pci_notify
+> [  150.162426] pcieport 0000:52:01.0: runtime IRQ mapping not provided by arch
+> [  150.162545] pcieport 0000:52:01.0: saving config space at offset 0x0
+> (reading 0x4fa48086)
+> [  150.162559] pcieport 0000:52:01.0: saving config space at offset 0x4
+> (reading 0x100143)
+> [  150.162565] pcieport 0000:52:01.0: saving config space at offset 0x8
+> (reading 0x6040000)
+> [  150.162570] pcieport 0000:52:01.0: saving config space at offset 0xc
+> (reading 0x10008)
+> [  150.162574] pcieport 0000:52:01.0: saving config space at offset 0x10
+> (reading 0x0)
+> [  150.162579] pcieport 0000:52:01.0: saving config space at offset 0x14
+> (reading 0x0)
+> [  150.162584] pcieport 0000:52:01.0: saving config space at offset 0x18
+> (reading 0x545352)
+> [  150.162589] pcieport 0000:52:01.0: saving config space at offset 0x1c
+> (reading 0x200000f0)
+> [  150.162594] pcieport 0000:52:01.0: saving config space at offset 0x20
+> (reading 0xbb90bb80)
+> [  150.162598] pcieport 0000:52:01.0: saving config space at offset 0x24
+> (reading 0x1fff1)
+> [  150.162603] pcieport 0000:52:01.0: saving config space at offset 0x28
+> (reading 0x0)
+> [  150.162607] pcieport 0000:52:01.0: saving config space at offset 0x2c
+> (reading 0x0)
+> [  150.162612] pcieport 0000:52:01.0: saving config space at offset 0x30
+> (reading 0x0)
+> [  150.162616] pcieport 0000:52:01.0: saving config space at offset 0x34
+> (reading 0x40)
+> [  150.162621] pcieport 0000:52:01.0: saving config space at offset 0x38
+> (reading 0x0)
+> [  150.162625] pcieport 0000:52:01.0: saving config space at offset 0x3c
+> (reading 0x300ff)
+> [  150.162766] pcieport 0000:52:01.0: vgaarb: pci_notify
+> [  150.162856] i915 0000:53:00.0: vgaarb: pci_notify
+> [  150.162868] i915 0000:53:00.0: runtime IRQ mapping not provided by arch
+> [  150.163121] i915 0000:53:00.0: vgaarb: pci_notify
