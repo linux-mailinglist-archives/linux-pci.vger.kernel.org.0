@@ -2,226 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 595B3681978
-	for <lists+linux-pci@lfdr.de>; Mon, 30 Jan 2023 19:39:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4960681990
+	for <lists+linux-pci@lfdr.de>; Mon, 30 Jan 2023 19:47:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238320AbjA3SjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Jan 2023 13:39:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45030 "EHLO
+        id S236796AbjA3Sri (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Jan 2023 13:47:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238322AbjA3SjA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 13:39:00 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8173A34C03;
-        Mon, 30 Jan 2023 10:38:13 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C710E6121E;
-        Mon, 30 Jan 2023 18:38:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E0AC433D2;
-        Mon, 30 Jan 2023 18:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675103892;
-        bh=PTMzmxQ4JcPyLK3GX6Ihg8/o4WwLIyzxGJcEQJC4KwY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=c5Qjg9ucC3+lotDRqBtfnRo2T2uE8zAtlCe6+mH97EjC0NYu+o0tMXQCA4XihyoKu
-         sFWZ08a7LEMCQcNZ8LLTyiFknVrP7U8fZeKbz5OmvrcN1S47SXrcfrocehYmzlhlxg
-         NNOpmhLtUaQlkCJzu0ZrAn9lH/sJisDRmk/EGC1xC7NoxGQlQBv+hiHMC4/A6TnC32
-         ucNo0yHgAN3JwVJgAaRE3vRPEAo1h+UUlypYrPl0UyyS+/d02lR4AB/HQbR8+ihF5d
-         uKt7ujmBrDFxUWJT52uWP1PjEg1fN/DMfliuLbrLUDdA/Fn35E1oOpix+QC/ev1+W4
-         UDrRr4ksEJgAQ==
-Date:   Mon, 30 Jan 2023 12:38:10 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S236250AbjA3Srg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 13:47:36 -0500
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2054.outbound.protection.outlook.com [40.107.212.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 419C81BADA;
+        Mon, 30 Jan 2023 10:47:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cDOnocyXEDKlbCUN7huIsxdvzAw3C4UJWKQipCRdVewLu7/yQMXEgRI4Semxap95Ns56jVZnGcgmSiFTEOs7G8plE5CdQ+hAiJreyTNmAWVoZ7nS+KpWJ2qx/jU2IYsAqFBZa86j6AoxvZNpfqrQArEhklwra8H5V2kmJQ10MbVqXn8F2/DuevGDa18pkddPLnx2Y9iS4OiXkujqJN7uXFokStYLRuSc7er85wjEt67Dea0PVd7/MAf8WrdULEOTYiq6O3byS4rUvJvGz9f4Mwutsq/TMxUBqEIbeVRZkDIBBlgn1A1/iff/c5X0G1TiHZgPUZvDB78JizbIPQLBZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=34bt4BXEqlLQ9SQJgqSdQHPm0+M6diyuNRajmuIsDFM=;
+ b=Wz6yM5ZeA794BhF3YOMEQLVDwpO8K1qXZ8E8g6OweS/J6fNfPewFgoPmD2H1M6oRJCi1tBbY6+Br/DfVWgda4NAt7jelRya2VfFoscZjI7y68gg1/YKlcPOLRMm7be5DWSJJPAqVW3Hcx6Oobfxq3BZ6A4IcQfqpi0KiF7ixPIJJvG85Q/GP3lCILyDNAEGQCggYmkYYI0A9XnOoO0kKILqk1+tTH3H18wYLOpcvSDUtNauk753LjQPbmJscmjylc0vMMkka2pOz0aDufOxMgtxAON9w13UBdCO6TYmf0QvKNr5J/+H0ZFMJRo9MSJGViiVOtOBIKmgmwbzOd3XqRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=34bt4BXEqlLQ9SQJgqSdQHPm0+M6diyuNRajmuIsDFM=;
+ b=AtiqmPabIMKjYkjrMMiGs3KY4JQ3RECe4yAClQ0V5br5vbQ4rsBycFL9Kj2nFVe0f8myLTDXTqeT4+dYg4yFvKe2Dg9ceoydiYRWPBA5Ni7li/xYMOqvOcBSiHnvN90uT7ChhoqfrbDp4EndBhkNDx5OANmDda4ihicqbI9uFR8h0Ofj2f/Dp5Gmn3vPhXelG+FYdyY2JRSIc/ysAxLipDE3cMlaEnhqkbtNn0iZJtzVHDjsmfZAk0JZJa91lEL6NiwCxnr86mwcdobROw/kATTy5skoqTQpORauL+4H2IMWOUI27xlPza7g4NP6HCMH/+EtbCoJJOMiFalKUt65QQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
+ by SJ0PR12MB5661.namprd12.prod.outlook.com (2603:10b6:a03:422::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.33; Mon, 30 Jan
+ 2023 18:47:33 +0000
+Received: from LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::3cb3:2fce:5c8f:82ee]) by LV2PR12MB5869.namprd12.prod.outlook.com
+ ([fe80::3cb3:2fce:5c8f:82ee%4]) with mapi id 15.20.6043.033; Mon, 30 Jan 2023
+ 18:47:32 +0000
+Date:   Mon, 30 Jan 2023 14:47:32 -0400
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Joerg Roedel <jroedel@suse.de>,
         Matt Fagnani <matt.fagnani@bell.net>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>,
         Kevin Tian <kevin.tian@intel.com>,
         Vasant Hegde <vasant.hegde@amd.com>,
         Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
         iommu@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
  pci_enable_pasid()
-Message-ID: <20230130183810.GA1692786@bhelgaas>
-MIME-Version: 1.0
+Message-ID: <Y9gQxCmzqq6WXZK4@nvidia.com>
+References: <647de371-fe11-15b4-5e11-8ca43a754180@linux.intel.com>
+ <20230130183810.GA1692786@bhelgaas>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <647de371-fe11-15b4-5e11-8ca43a754180@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230130183810.GA1692786@bhelgaas>
+X-ClientProxiedBy: BL1PR13CA0237.namprd13.prod.outlook.com
+ (2603:10b6:208:2bf::32) To LV2PR12MB5869.namprd12.prod.outlook.com
+ (2603:10b6:408:176::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SJ0PR12MB5661:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0fb9956a-be43-409f-9dfa-08db02f27263
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uSeT9OfJ+T7NrYNx+aOQZkVAyYPnbLnA1kcjrj30kvhQPzmbhwYnNT49egGzG++k5Hx0BwBU64HoVmGkrnE+n2FXVJ3SsaLgmaKcr6gXDFajmQ9itcVOwrzd1uqWXK+TUzYkRJGLCWFHj0eS0M4PgTf8IFV591R0aLNgv+Lvb5fZXIUFX7glZvhwhegk+ipk+ezzyA6LgLnWxzyXbcnVFa7iOK/aa6HsSzJEoJ/cLm7uLVbnITxlrknLxWg4BoHXe60JB2rG5EK5ERH1tuMvG2iN0eWwhegkUijdo8TVFu7gBcsHRPg3iuyBJyCgNxPrQ6h/emaV5Ji19n97YQZ9YzqeI+R5KXjXF4WcFTapSNM5HvIUYphuOAk8M98bJAogV3nIJKY1H9Kl0vU52sKRo4mGm3KHqkwHs5xO214tHR1X8XBuoukpUQCLA6ZO3Ag88u1k/X8JtWc2XOyrSB2wF1tTDGnfzKXjBgVRpFTMgCeiK2UIdPmbp7NBGpooNox9vbMIrDjSxZ1NHD4Riz2JLdF9kE7QUkvjPTKLBQYTegxs+3CS5+DeIcWLg6FOoOcDKG2FoH+i/N6Qoq4+z0/YrX0NNl5dEX8DTTaYkk3r3ub5zC06drefdz/hUx7PAsZZhgdnae46bctoVFTsyCfFnA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(396003)(366004)(39860400002)(346002)(136003)(451199018)(36756003)(6512007)(38100700002)(2616005)(186003)(26005)(5660300002)(2906002)(7416002)(4744005)(6486002)(478600001)(66946007)(8676002)(6916009)(86362001)(4326008)(66476007)(66556008)(54906003)(316002)(41300700001)(6506007)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?QBcVX8p7qKbaqbrtNJPGBZGyMiSv5e57RVCNEHGEQ3zob0MPWfaCLNlssMTS?=
+ =?us-ascii?Q?5W0v/Fao3fhUPi0jzKItjBvXqO53yol6KHLJLMpOLMiNkbeUhFO5kRjEPnyh?=
+ =?us-ascii?Q?i9zy2F+5x5tLf990tU0db8z292yj/AU3EeZk3oU1TDyqOFgS6zshijQ2Ek47?=
+ =?us-ascii?Q?YfLM4OhtZzTcAw1n27fG7dDdQXNUmsr0Yy/eSI1d2LQr1er5kklHGzS8YkJh?=
+ =?us-ascii?Q?jz77nAW5C0uBkEdOJBMk/aN0WDl8/pCvOS8V8e+BaWV9eNpiEF/Qnx2WxezR?=
+ =?us-ascii?Q?YAQzNtAE/9b9mPD0cvipG90cnxwXBbsKv8h7HpsILJ2EQAInSKnYjoRwyr3V?=
+ =?us-ascii?Q?36llEZA09GXcThMdp+DfmTiJfr2MsiiaDe1RwOeJtSNrs66KnQ06LatT2gev?=
+ =?us-ascii?Q?HRuskan7AJawTjOSb1k7cpJxlCs3QwCKRg+RKE544YX6QMzKQYA0WCxygsy3?=
+ =?us-ascii?Q?A+SmNEhYWg+kEO0rgPAorVN8gtWeW83fo5joAy+/z3itY26HGzhIWPcbXjgT?=
+ =?us-ascii?Q?Ti3eE7aKqSu+uWCWK97hvLCBtu2ZpxbAMQVq10ZBQ559242hmAngWA9hYhMf?=
+ =?us-ascii?Q?lwXzcwVkJfIvNj9/EwQZcgE+9UNFEGZ+7PjoYvozOFe+jy1IPQ3F8Ogu6b/Y?=
+ =?us-ascii?Q?2Pgx7+bSoaLP4FuytCuHBK9hc/Z2GXXgTZryNz6qt3nK2As7P5yz4eXbVRhC?=
+ =?us-ascii?Q?HSUNMh+RilJu2AUwBxUWguHr82NrWvduscX/zchSft5jmQhGmUQL8q4Y5ZH8?=
+ =?us-ascii?Q?Jc6j2ECP7blh0NhpqbK8gEafQ0fJVdHmv7kQt+q47GHLk8l5Qy34L5DKjzMM?=
+ =?us-ascii?Q?zK3rMjOL51iGVB1rcp6BTWDDE+DugmNezanZ7G7TDzzeVH9olBfACdbKlPrf?=
+ =?us-ascii?Q?6bxIjH+uAjt9O+DhVg4FgoZoez24R4oscJoC0H/acbyvn4F/fnITaTLlCN9q?=
+ =?us-ascii?Q?EnSsnoBALwQ9Iy8XXD24qRa1fabDW2AeBuNYidtnNHcwoV+Q1EfEe3BorC62?=
+ =?us-ascii?Q?l4HzaWbmKE2FcUEvDwt3FslQX5gh6asg1vPu6QwZcNk3DJ8pYqAXVwp5FFN/?=
+ =?us-ascii?Q?gsy31acduBw15oZe5HTGamqmydS85vBNNglGcmQR+TDYwTZtVoN+AebmEJER?=
+ =?us-ascii?Q?SHhQGWQne4QXuuBm61sZ9avuB4NnK7THMyv7iMDxxhVFlRoC0nLHTGhDYR34?=
+ =?us-ascii?Q?R/xd4FH8ejFLm6xN26tgUeAXqz4mR1VFP4OkrLFPD343YhEgMjD08N/A+klG?=
+ =?us-ascii?Q?/L2657zktLDka3gI4Tmt7vZjqu8N6lSVmgEkKgrDChf6TK539KF3lBr0KSK7?=
+ =?us-ascii?Q?a+jlz+rtvJN4i1k0TsOG1cAPORz/R9gd80RsOQL3VvJl8UQkUYiKedSudrEk?=
+ =?us-ascii?Q?6nQcLFzDrUzMge1lzvKeOPk8IapEU9rfZ3+KsmA5kwIlT3unp3BQ9mM9p9nC?=
+ =?us-ascii?Q?JQMLnpR/gbTbzd67crSsicnAqi0Q2djh/1btY7T2ICCoUerJsRJWQdeQEsLN?=
+ =?us-ascii?Q?WxPrMDqWkvC8YL+asUTg9hbUn0pNcz+kBtdxZ9g1Rmk8uivhYWycexppDnIt?=
+ =?us-ascii?Q?a2ovciB4SodE0uLCTgPer35ugiJm7RxgnyLEXy2T?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0fb9956a-be43-409f-9dfa-08db02f27263
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jan 2023 18:47:32.8466
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xmtbSgHk7Bb8Utpq8v9b6GzgFC5V+QwmYc76uDvjA+1Lji1YxJD0YDPodMmJHhBl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5661
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jan 29, 2023 at 04:42:32PM +0800, Baolu Lu wrote:
-> On 2023/1/28 1:30, Bjorn Helgaas wrote:
-> > On Sat, Jan 14, 2023 at 03:34:20PM +0800, Lu Baolu wrote:
-> > > The PCIe fabric routes Memory Requests based on the TLP address, ignoring
-> > > the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
-> > > Enable PASID only when ACS RR & UF enabled on upstream path") requires
-> > > some ACS features being supported on device's upstream path when enabling
-> > > PCI/PASID.
-> > > 
-> > > One alternative is ATS/PRI which lets the device resolve the PASID + addr
-> > > pair before a memory request is made into a routeable TLB address through
-> > > the translation agent.
-> > 
-> > This sounds like "ATS/PRI" is a solution to a problem, but we haven't
-> > stated the problem yet.
-> > 
-> > > Those resolved addresses are then cached on the
-> > > device instead of in the IOMMU TLB and the device always sets translated
-> > > bit for PASID. One example of those devices are AMD graphic devices that
-> > > always have ACS or ATS/PRI enabled together with PASID.
-> > > 
-> > > This adds a flag parameter in the pci_enable_pasid() helper, with which
-> > > the device driver could opt-in the fact that device always sets the
-> > > translated bit for PASID.
-> > >
-> > > It also applies this opt-in for AMD graphic devices. Without this change,
-> > > kernel boots to black screen on a system with below AMD graphic device:
-> > > 
-> > > 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
-> > >          [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
-> > >          (prog-if 00 [VGA controller])
-> > > 	DeviceName: ATI EG BROADWAY
-> > > 	Subsystem: Hewlett-Packard Company Device 8332
-> > 
-> > What is the underlying failure here?  "Black screen" is useful but we
-> > should say *why* that happens, e.g., transactions went the wrong place
-> > or whatever.
+On Mon, Jan 30, 2023 at 12:38:10PM -0600, Bjorn Helgaas wrote:
 
-> > I guess PCI_PASID_XLATED_REQ_ONLY is something only the driver knows,
-> > right?  We can't deduce from architected config space that the device
-> > will produce PASID prefixes for every Memory Request, can we?
+> Sorry, I'm still confused.  PCI_PASID_XLATED_REQ_ONLY is a
+> device-specific property, and you want to opt-in AMD graphics devices.
+> Where's the AMD graphics-specific change?  The current patch does
+> this:
 > 
-> No, we can't. That's the reason why we need a flag here.
-
-Sorry, I'm still confused.  PCI_PASID_XLATED_REQ_ONLY is a
-device-specific property, and you want to opt-in AMD graphics devices.
-Where's the AMD graphics-specific change?  The current patch does
-this:
-
-  pdev_pri_ats_enable
-    pci_enable_pasid(pdev, 0, PCI_PASID_XLATED_REQ_ONLY)
-
-which looks like it does it for *all* devices below an AMD IOMMU,
-without any device or driver input.
-
-PCIe r6.0, sec 6.20.1:
-
-  A Function is not permitted to generate Requests using Translated
-  Addresses and a PASID unless both PASID Enable and Translated
-  Requests with PASID Enable are Set.
-
-You want AMD graphics devices to do DMA with translated addresses and
-PASID, right?  pci_enable_pasid() sets PASID Enable
-(PCI_PASID_CTRL_ENABLE), but I don't see where "Translated Requests
-with PASID Enable" is set.  We don't even have a #define for it.
-
-I would think we should check "Translated Requests with PASID
-Supported" before setting "Translated Requests with PASID Enable",
-too?
-
-> PCI: Add translated request only flag for pci_enable_pasid()
+>   pdev_pri_ats_enable
+>     pci_enable_pasid(pdev, 0, PCI_PASID_XLATED_REQ_ONLY)
 > 
-> The PCIe fabric routes Memory Requests based on the TLP address, ignoring
-> the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
-> Enable PASID only when ACS RR & UF enabled on upstream path") requires
-> some ACS features being supported on device's upstream path when enabling
-> PCI/PASID.
-> 
-> However, above change causes the Linux kernel boots to black screen on a
-> system with below graphic device:
+> which looks like it does it for *all* devices below an AMD IOMMU,
+> without any device or driver input.
 
-We need a PCIe concept-level description of the issue first, i.e., in
-terms of DMA, PASID, ACS, etc.  Then we can mention the AMD GPU issue
-as an instance.
+AMD GPU has a private interface to AMD IOMMU to support PASID support
+that only it uses.
 
-> 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
->         [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
->         (prog-if 00 [VGA controller])
->         DeviceName: ATI EG BROADWAY
->         Subsystem: Hewlett-Packard Company Device 8332
-> 
-> The kernel trace looks like below:
-> 
->  Call Trace:
->   <TASK>
->   amd_iommu_attach_device+0x2e0/0x300
->   __iommu_attach_device+0x1b/0x90
->   iommu_attach_group+0x65/0xa0
->   amd_iommu_init_device+0x16b/0x250 [iommu_v2]
->   kfd_iommu_resume+0x4c/0x1a0 [amdgpu]
->   kgd2kfd_resume_iommu+0x12/0x30 [amdgpu]
->   kgd2kfd_device_init.cold+0x346/0x49a [amdgpu]
->   amdgpu_amdkfd_device_init+0x142/0x1d0 [amdgpu]
->   amdgpu_device_init.cold+0x19f5/0x1e21 [amdgpu]
->   ? _raw_spin_lock_irqsave+0x23/0x50
->   amdgpu_driver_load_kms+0x15/0x110 [amdgpu]
->   amdgpu_pci_probe+0x161/0x370 [amdgpu]
->   local_pci_probe+0x41/0x80
->   pci_device_probe+0xb3/0x220
->   really_probe+0xde/0x380
->   ? pm_runtime_barrier+0x50/0x90
->   __driver_probe_device+0x78/0x170
->   driver_probe_device+0x1f/0x90
->   __driver_attach+0xce/0x1c0
->   ? __pfx___driver_attach+0x10/0x10
->   bus_for_each_dev+0x73/0xa0
->   bus_add_driver+0x1ae/0x200
->   driver_register+0x89/0xe0
->   ? __pfx_init_module+0x10/0x10 [amdgpu]
->   do_one_initcall+0x59/0x230
->   do_init_module+0x4a/0x200
->   __do_sys_init_module+0x157/0x180
->   do_syscall_64+0x5b/0x80
->   ? handle_mm_fault+0xff/0x2f0
->   ? do_user_addr_fault+0x1ef/0x690
->   ? exc_page_fault+0x70/0x170
->   entry_SYSCALL_64_after_hwframe+0x72/0xdc
+When AMD's IOMMU driver is cleaned up to use the common PASID API this
+will have to be moved into the GPU driver.
 
-The stack trace doesn't seem like it shows a failure, so I'm not sure
-it's useful this time.  If it is, we can at least strip out the
-irrelevant pieces.
+But we are not there yet..
 
-> The AMD iommu driver allocates a new domain (called v2 domain) for the
-
-"v2 domain" needs to be something greppable -- an identifier,
-filename, etc.
-
-> amdgpu device and enables its PCI PASID/ATS/PRI before attaching the
-> v2 domain to it. The failure of pci_enable_pasid() due to lack of ACS
-> causes the domain attaching device to fail. The amdgpu device is unable
-> to DMA normally, resulting in a black screen of the system.
-> 
-> However, this device is special as it relies on ATS/PRI to resolve the
-> PASID + addr pair before a memory request is made into a routeable TLB
-> address through the translation agent. Those resolved addresses are then
-> cached on the device instead of in the IOMMU TLB and the device always
-> uses translated memory request for PASID.
-> 
-> ACS is not necessary for the devices that always use translated memory
-> request for PASID. But this is device specific and only device driver
-> knows this. We can't deduce this from architected config space.
-> 
-> Add a flag for pci_enable_pasid(), with which the device drivers could
-> opt-in the fact that device always uses translated memory requests for
-> PASID hence the ACS is not a necessity. Apply this opt-in for above AMD
-> graphic device.
-> 
-> At present, it is a common practice to enable/disable PCI PASID in the
-> iommu drivers. Considering that the device driver knows more about the
-> specific device, it's better to move pci_enable_pasid() into the specific
-> device drivers.
-> [-- end --]
-> 
-> --
-> Best regards,
-> baolu
+Jason
