@@ -2,54 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DB37682051
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 01:02:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B79568207A
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 01:16:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbjAaACH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 30 Jan 2023 19:02:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44440 "EHLO
+        id S229596AbjAaAQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 30 Jan 2023 19:16:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231516AbjAaABt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 19:01:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90B1730B25;
-        Mon, 30 Jan 2023 16:01:21 -0800 (PST)
+        with ESMTP id S229519AbjAaAQI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 30 Jan 2023 19:16:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BB5210D2
+        for <linux-pci@vger.kernel.org>; Mon, 30 Jan 2023 16:16:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AE21A6131F;
-        Tue, 31 Jan 2023 00:01:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC897C433EF;
-        Tue, 31 Jan 2023 00:01:19 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5A689B818BD
+        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 00:16:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC5E5C433EF;
+        Tue, 31 Jan 2023 00:16:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675123280;
-        bh=CHPwyXwrlUp2cym1Ex88j+UZaK/fPmtpJjBJE9f7Mbw=;
+        s=k20201202; t=1675124163;
+        bh=w3Cnt774xJ3P+XOedhRAKmsTJiNLq8Xu09PTYWuiWMs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=JSo144KCujPACvf6R1aEKxYHAELzz4gRiOGWstaDeRWwgS3o/NKn57oS/lY/XVGkh
-         t+ehzsjMmvi4nV/XLEB1mWcvaHNeTOpOLDFydaeQV2feL5dL7Vmp8Yx4C+ytHvVUV/
-         raCzEBaGKa81cbLO2ZATXBNQEAr95/HMiN1MzRL9JuxAcsuwzaEMsFGQrUR/SVD37e
-         cvS6gLnSr3UnDUiVd0L8X6kJdHDPdC7J4isxjJPi8RW8Hby9WuHsXy8tRi6I3O2r56
-         ZHp1ZNNVpeA2l61SBR/fLfngXOZy06MJyQCGCWmqjznr8qRhbKz42i4TMgRkFBbUmt
-         2CWjT6Q6REtQw==
-Date:   Mon, 30 Jan 2023 18:01:18 -0600
+        b=b3Jd2t7qcpvu8UxjtrhQzKmp9UfZat+tsh0xYtVRagpSMb1W+9lXWSZzKf/+jfLCf
+         zkF4cUPr36zayP9QCbhCFKWKqWhhiI4qQnu27hK5y+Xz873A5qJWu+mnXaeHmT/For
+         uXbU/UgK3MF98zZ9Xk2j4h3KFKnnDQFQ99lGdvo7FiLuzHPLosanuFJ30WcRDfuUgX
+         anW7eWq0hj/CFJQDzbDS0e826p2pUf9YlVLRlUipdVtlSgCoZt0Iiqp04kfKmJkMLL
+         701ADJxLYrzGRX894ZGk296K8RCVFaaf7PfAqH+b1FY6Bb96oRc+5399JEh6aLfICq
+         jQuE2tiCHK2dg==
+Date:   Mon, 30 Jan 2023 18:16:01 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
         Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
-Message-ID: <20230131000118.GA1322972@bhelgaas>
+        HougeLangley <hougelangley1987@gmail.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        WANG Xuerui <kernel@xen0n.name>
+Subject: Re: [PATCH V2 1/2] PCI: loongson: Improve the MRRS quirk for LS7A
+Message-ID: <20230131001601.GA1718721@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
+In-Reply-To: <20230106095143.3158998-2-chenhuacai@loongson.cn>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,104 +61,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Jan 21, 2023 at 11:10:09PM +0800, Huacai Chen wrote:
-> On Fri, Jan 20, 2023 at 11:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, Jan 20, 2023 at 09:31:43PM +0800, Huacai Chen wrote:
-> > > On Thu, Jan 19, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, Jan 19, 2023 at 08:25:20PM +0800, Huacai Chen wrote:
-> > > > > Ping?
-> > > >
-> > > > I suggested another possible way to do this that wasn't so much of a
-> > > > special case.  Did you explore that at all?
-> > >
-> > > That is a little difficult for me, but what is worse is that the root
-> > > cause doesn't come from gpu or console drivers, but from the root
-> > > port. That means: even if we can workaround the gpu issue in another
-> > > way, there are still problems on other devices. Besides the graphics
-> > > card, the most frequent problematic device is the sata controller
-> > > connected on LS7A chipset, there are incomplete I/O accesses after the
-> > > root port disabled and also cause reboot failure.
-> >
-> > Yes, SATA sounds like another case where we want to use the device
-> > after we call the driver's remove/shutdown method.  That's not
-> > *worse*, it's just another case where we might have to mark devices
-> > for special handling.
->
-> That needs too much effort because we need to modify nearly every pci
-> driver, and it exceeds my ability. :)
+On Fri, Jan 06, 2023 at 05:51:42PM +0800, Huacai Chen wrote:
+> In new revision of LS7A, some PCIe ports support larger value than 256,
+> but their maximum supported MRRS values are not detectable. Moreover,
+> the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+> will actually set a big value in its driver. So the only possible way
+> is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+> flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+> 
+> However, according to PCIe Spec, it is legal for an OS to program any
+> value for MRRS, and it is also legal for an endpoint to generate a Read
+> Request with any size up to its MRRS. As the hardware engineers say, the
+> root cause here is LS7A doesn't break up large read requests. In detail,
+> LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+> request with a size that's "too big" ("too big" means larger than the
+> PCIe ports can handle, which means 256 for some ports and 4096 for the
+> others, and of course this is a problem in the LS7A's hardware design).
 
-We would only modify drivers that need this special handling, so it's
-only console/graphics/disks/network/..., well, OK, I see your point,
-it probably *would* be nearly every driver!
+Can you take a look at
+https://bugzilla.kernel.org/show_bug.cgi?id=216884 ?
 
-> > If we remove/shutdown *any* Root Port, not just LS7A, I think the idea
-> > of assuming downstream devices can continue to work as usual is a
-> > little suspect.  They might continue to work by accident today, but it
-> > doesn't seem like a robust design.
->
-> The existing design works for so many years, so it is mostly
-> reasonable. For the LS7A case, the root cause comes from the root
-> port, so a workaround on the root port seems somewhat reasonable.
+That claims to be a regression between v6.1 and v6.2-rc2, and WANG
+Xuerui says this patch is the fix (though AFAICT the submitter has not
+verified this yet).  If so, we should reference that bug here and try
+to get this in v6.2.
 
-Yeah, I think you're right.  A few more notes below.
+See below.
 
-> > > > > On Sat, Jan 7, 2023 at 10:25 AM Huacai Chen <chenhuacai@gmail.com> wrote:
-> > > > > > On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
-> > > > > > > > After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe
-> > > > > > > > services during shutdown") we observe poweroff/reboot
-> > > > > > > > failures on systems with LS7A chipset.
-> > > > > > > >
-> > > > > > > > We found that if we remove "pci_command &=
-> > > > > > > > ~PCI_COMMAND_MASTER" in do_pci_disable_device(), it can
-> > > > > > > > work well. The hardware engineer says that the root cause
-> > > > > > > > is that CPU is still accessing PCIe devices while
-> > > > > > > > poweroff/reboot, and if we disable the Bus Master Bit at
-> > > > > > > > this time, the PCIe controller doesn't forward requests to
-> > > > > > > > downstream devices, and also does not send TIMEOUT to CPU,
-> > > > > > > > which causes CPU wait forever (hardware deadlock).
-> > > > > > > >
-> > > > > > > > To be clear, the sequence is like this:
-> > > > > > > >
-> > > > > > > >   - CPU issues MMIO read to device below Root Port
-> > > > > > > >
-> > > > > > > >   - LS7A Root Port fails to forward transaction to secondary bus
-> > > > > > > >     because of LS7A Bus Master defect
-> > > > > > > >
-> > > > > > > >   - CPU hangs waiting for response to MMIO read
-> ...
+> -		if (pci_match_id(bridge_devids, bridge)) {
+> -			if (pcie_get_readrq(dev) > 256) {
+> -				pci_info(dev, "limiting MRRS to 256\n");
+> -				pcie_set_readrq(dev, 256);
+> -			}
+> -			break;
+> -		}
 
-> > > > > > > > +
-> > > > > > > > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
-> > > > > > > > +{
-> > > > > > > > +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
-> > > > > > > > +
-> > > > > > > > +     if (pci_bridge_d3_possible(dev)) {
-> > > > > > > > +             pm_runtime_forbid(&dev->dev);
-> > > > > > > > +             pm_runtime_get_noresume(&dev->dev);
-> > > > > > > > +             pm_runtime_dont_use_autosuspend(&dev->dev);
-> > > > > > > > +     }
-> > > > > > > > +
-> > > > > > > > +     pcie_port_device_remove(dev);
-> > > > > > > > +
-> > > > > > > > +     if (!bridge->no_dis_bmaster)
-> > > > > > > > +             pci_disable_device(dev);
+> +	if (bridge->no_inc_mrrs) {
+> +		if (rq > pcie_get_readrq(dev))
+> +			return -EINVAL;
 
-I think there's an argument that pcie_portdrv_shutdown() doesn't
-actually need to clear bus mastering on *any* platform.
-
-For reboot and poweroff, we only use .shutdown(), and .shutdown() only
-needs to stop DMA and interrupts.  Clearing bus master enable stops
-MSI/MSI-X since that's a DMA, but doesn't do anything to stop INTx,
-which portdrv does use in some cases.
-
-But those .remove() methods *do* clear the interrupt enables for each
-service (PCI_ERR_ROOT_COMMAND, PCI_EXP_DPC_CTL, PCI_EXP_SLTCTL, and
-PCI_EXP_RTCTL), so all the interrupts should be disabled regardless of
-whether they are MSI/MSI-X or INTx, even without disabling bus
-mastering.
-
-So I would argue that omitting the pci_disable_device() here might be
-enough, and we wouldn't need the quirk at all.
+I think the message about limiting MRRS was useful and we should keep
+it.
 
 Bjorn
