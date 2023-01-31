@@ -2,166 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CB1D682CCC
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 13:43:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E32F5682D0E
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 13:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231504AbjAaMnK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 07:43:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53506 "EHLO
+        id S229608AbjAaM4m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 07:56:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjAaMnJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 07:43:09 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3D34A29173;
-        Tue, 31 Jan 2023 04:43:08 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 088342F4;
-        Tue, 31 Jan 2023 04:43:50 -0800 (PST)
-Received: from [10.57.88.157] (unknown [10.57.88.157])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D84443F71E;
-        Tue, 31 Jan 2023 04:43:05 -0800 (PST)
-Message-ID: <c014b074-6d7f-773b-533a-c0500e239ab8@arm.com>
-Date:   Tue, 31 Jan 2023 12:42:57 +0000
+        with ESMTP id S230315AbjAaM4U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 07:56:20 -0500
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 003B94B8B3;
+        Tue, 31 Jan 2023 04:56:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675169779; x=1706705779;
+  h=message-id:date:mime-version:cc:subject:to:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=I8q8o/ZI/4HN/pJZcZMoEMEToapOPQxN7jKgDXKYvQI=;
+  b=SOSkIK12lhHCJHWMnTTSNwlQBlO+tQTHDTmESjP6xvhSzQdUU4AjTGsj
+   l/kENCWCytaSYnNcBfVUdF9kz9NxR0FtFpbBf++IKBoj/Z8YQuewGvi5A
+   oLfSCW6InqVmxv7x9niWocvLA3eSpkYJZ9SxX/+muPaNVK2AVkuGl2e8N
+   pmEPdf8cPZPL629fDBM9HtiaywW/PuSgLvz47g2SqnSbhYmrBiVraj+b3
+   zacl+w1oeu81t4Yt3tv0aNLDuyfaacUb8besPp1znLHJChTrIQlDzLD+G
+   T8ItmMix1kjcnSTb9cLXgx6EAtO8LyUWqcISBdXZ/VFiMrh33MBMoLUWN
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="315791586"
+X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
+   d="scan'208";a="315791586"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 04:56:18 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10606"; a="614439953"
+X-IronPort-AV: E=Sophos;i="5.97,261,1669104000"; 
+   d="scan'208";a="614439953"
+Received: from blu2-mobl.ccr.corp.intel.com (HELO [10.249.172.41]) ([10.249.172.41])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 04:56:15 -0800
+Message-ID: <030e66e0-fb54-b77d-5094-4786684ba97d@linux.intel.com>
+Date:   Tue, 31 Jan 2023 20:56:13 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.6.1
-Subject: Re: [PATCH v6 0/2] PCI: dwc: Add support for 64-bit MSI target
- addresses
-Content-Language: en-GB
-To:     Evgenii Shatokhin <e.shatokhin@yadro.com>,
-        Will McVicker <willmcvicker@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     kernel-team@android.com, Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux@yadro.com
-References: <20220825235404.4132818-1-willmcvicker@google.com>
- <decae9e4-3446-2384-4fc5-4982b747ac03@yadro.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <decae9e4-3446-2384-4fc5-4982b747ac03@yadro.com>
+Cc:     baolu.lu@linux.intel.com, Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Vasant Hegde <vasant.hegde@amd.com>,
+        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
+ pci_enable_pasid()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20230130183810.GA1692786@bhelgaas>
+From:   Baolu Lu <baolu.lu@linux.intel.com>
+In-Reply-To: <20230130183810.GA1692786@bhelgaas>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023-01-31 12:29, Evgenii Shatokhin wrote:
-> Hi,
-> 
-> On 26.08.2022 02:54, Will McVicker wrote:
->> Hi All,
+On 2023/1/31 2:38, Bjorn Helgaas wrote:
+>> PCI: Add translated request only flag for pci_enable_pasid()
 >>
->> I've update patch 2/2 to address Robin's suggestions. This includes:
+>> The PCIe fabric routes Memory Requests based on the TLP address, ignoring
+>> the PASID. In order to ensure system integrity, commit 201007ef707a ("PCI:
+>> Enable PASID only when ACS RR & UF enabled on upstream path") requires
+>> some ACS features being supported on device's upstream path when enabling
+>> PCI/PASID.
 >>
->>   * Dropping the while-loop for retrying with a 64-bit mask in favor of
->>     retrying within the error if-statement.
->>   * Using an int for the DMA mask instead of a bool and ternary 
->> operation.
->>
->> Thanks again for the reviews and sorry for the extra revision today!
->> Hopefully this is the last one :) If not, I'd be fine to submit patch 1/2
->> without 2/2 to avoid resending patch 1/2 for future revisions of patch 
->> 2/2
->> (unless I don't need to do that anyway).
-> 
-> The first patch of the series made it into the mainline kernel, but, it 
-> seems, the second one ("PCI: dwc: Add support for 64-bit MSI target 
-> address") did not. As of 6.2-rc6, it is still missing.
-> 
-> Was it intentionally dropped because of some issues or, perhaps, just by 
-> accident? If it was by accident, could you please queue it for inclusion 
-> into mainline again?
+>> However, above change causes the Linux kernel boots to black screen on a
+>> system with below graphic device:
+> We need a PCIe concept-level description of the issue first, i.e., in
+> terms of DMA, PASID, ACS, etc.  Then we can mention the AMD GPU issue
+> as an instance.
 
-Yes, it was dropped due to the PCI_MSI_FLAGS_64BIT usage apparently 
-being incorrect, and some other open debate (which all happened on the 
-v5 thread):
+How about below description?
 
-https://lore.kernel.org/linux-pci/YzVTmy9MWh+AjshC@lpieralisi/
+PCIe endpoints can use ATS to request DMA remapping hardware to
+translate an IOVA to its mapped physical address. If the translation is
+missing or the permissions are insufficient, the PRI is used to trigger
+an I/O page fault. The IOMMU driver will fill the mapping with desired
+permissions and return the translated address to the device.
 
-The DMA mask issues have now been sorted out, so you, or Will, or anyone 
-else interested should be free to rework this on top of linux-next 
-(although at this point, more realistically on top of 6.3-rc1 in a few 
-weeks).
+The translated address is specified by the IOMMU driver. The IOMMU
+driver ensures that the address is a DMA buffer address instead of any
+P2P address in the PCI fabric. Therefore, any translated memory request
+will eventually be routed to IOMMU regardless of whether there is ACS
+control in the up-streaming path.
 
-Thanks,
-Robin.
+AMD GPU is one of those devices. Furthermore, it always uses translated
+memory requests for PASID.
 
-> Support for 64-bit MSI target addresses is needed for some of our SoCs. 
-> I ran into a situation when there was no available RAM in ZONE_DMA32 
-> during initialization of PCIe host. Hence, dmam_alloc_coherent() failed 
-> in dw_pcie_msi_host_init() and initialization failed with -ENOMEM:
 > 
-> [    0.374834] dw-pcie 4000000.pcie0: host bridge /soc/pcie0@4000000 
-> ranges:
-> [    0.375813] dw-pcie 4000000.pcie0:      MEM 
-> 0x0041000000..0x004fffffff -> 0x0041000000
-> [    0.376171] dw-pcie 4000000.pcie0:   IB MEM 
-> 0x0400000000..0x07ffffffff -> 0x0400000000
-> [    0.377914] dw-pcie 4000000.pcie0: Failed to alloc and map MSI data
-> [    0.378191] dw-pcie 4000000.pcie0: Failed to initialize host
-> [    0.378255] dw-pcie: probe of 4000000.pcie0 failed with error -12
+>> 00:01.0 VGA compatible controller: Advanced Micro Devices, Inc.
+>>          [AMD/ATI] Wani [Radeon R5/R6/R7 Graphics] (rev ca)
+>>          (prog-if 00 [VGA controller])
+>>          DeviceName: ATI EG BROADWAY
+>>          Subsystem: Hewlett-Packard Company Device 8332
+>>
+>> The kernel trace looks like below:
+>>
+>>   Call Trace:
+>>    <TASK>
+>>    amd_iommu_attach_device+0x2e0/0x300
+>>    __iommu_attach_device+0x1b/0x90
+>>    iommu_attach_group+0x65/0xa0
+>>    amd_iommu_init_device+0x16b/0x250 [iommu_v2]
+>>    kfd_iommu_resume+0x4c/0x1a0 [amdgpu]
+>>    kgd2kfd_resume_iommu+0x12/0x30 [amdgpu]
+>>    kgd2kfd_device_init.cold+0x346/0x49a [amdgpu]
+>>    amdgpu_amdkfd_device_init+0x142/0x1d0 [amdgpu]
+>>    amdgpu_device_init.cold+0x19f5/0x1e21 [amdgpu]
+>>    ? _raw_spin_lock_irqsave+0x23/0x50
+>>    amdgpu_driver_load_kms+0x15/0x110 [amdgpu]
+>>    amdgpu_pci_probe+0x161/0x370 [amdgpu]
+>>    local_pci_probe+0x41/0x80
+>>    pci_device_probe+0xb3/0x220
+>>    really_probe+0xde/0x380
+>>    ? pm_runtime_barrier+0x50/0x90
+>>    __driver_probe_device+0x78/0x170
+>>    driver_probe_device+0x1f/0x90
+>>    __driver_attach+0xce/0x1c0
+>>    ? __pfx___driver_attach+0x10/0x10
+>>    bus_for_each_dev+0x73/0xa0
+>>    bus_add_driver+0x1ae/0x200
+>>    driver_register+0x89/0xe0
+>>    ? __pfx_init_module+0x10/0x10 [amdgpu]
+>>    do_one_initcall+0x59/0x230
+>>    do_init_module+0x4a/0x200
+>>    __do_sys_init_module+0x157/0x180
+>>    do_syscall_64+0x5b/0x80
+>>    ? handle_mm_fault+0xff/0x2f0
+>>    ? do_user_addr_fault+0x1ef/0x690
+>>    ? exc_page_fault+0x70/0x170
+>>    entry_SYSCALL_64_after_hwframe+0x72/0xdc
+> The stack trace doesn't seem like it shows a failure, so I'm not sure
+> it's useful this time.  If it is, we can at least strip out the
+> irrelevant pieces.
+
+I will drop above from the commit message.
+
 > 
-> Mainline kernel 6.2-rc6 was used in that test.
+>> The AMD iommu driver allocates a new domain (called v2 domain) for the
+> "v2 domain" needs to be something greppable -- an identifier,
+> filename, etc.
 > 
-> The hardware supports 64-bit target addresses, so the patch "PCI: dwc: 
-> Add support for 64-bit MSI target address" should help with this 
-> particular failure.
-> 
-> 
->>
->> Thanks,
->> Will
->>
->> Will McVicker (2):
->>    PCI: dwc: Drop dependency on ZONE_DMA32
->>
->> v6:
->>   * Retrying DMA allocation with 64-bit mask within the error 
->> if-statement.
->>   * Use an int for the DMA mask instead of a bool and ternary operation.
->>
->> v5:
->>   * Updated patch 2/2 to first try with a 32-bit DMA mask. On failure,
->>     retry with a 64-bit mask if supported.
->>
->> v4:
->>   * Updated commit descriptions.
->>   * Renamed msi_64b -> msi_64bit.
->>   * Dropped msi_64bit ternary use.
->>   * Dropped export of dw_pcie_msi_capabilities.
->>
->> v3:
->>    * Switched to a managed DMA allocation.
->>    * Simplified the DMA allocation cleanup.
->>    * Dropped msi_page from struct dw_pcie_rp.
->>    * Allocating a u64 instead of a full page.
->>
->> v2:
->>    * Fixed build error caught by kernel test robot
->>    * Fixed error handling reported by Isaac Manjarres
->>   PCI: dwc: Add support for 64-bit MSI target address
->>
->>   .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++----------
->>   drivers/pci/controller/dwc/pcie-designware.c  |  8 ++++
->>   drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->>   3 files changed, 30 insertions(+), 23 deletions(-)
->>
->>
->> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-> 
-> Thank you in advance.
-> 
-> Regards,
-> Evgenii
-> 
-> 
-> 
+
+The code reads,
+
+2052         if (iommu_feature(iommu, FEATURE_GT) &&
+2053             iommu_feature(iommu, FEATURE_PPR)) {
+2054                 iommu->is_iommu_v2   = true;
+
+So, how about
+
+..The AMD GPU has a private interface to its own AMD IOMMU, which could
+be detected by the FEATURE_GT && FEATURE_PPR features. The AMD iommu
+driver allocates a special domain for the GPU device ..
+
+?
+
+Best regards,
+baolu
