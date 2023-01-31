@@ -2,56 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E19B3682BEB
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 12:54:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DA7DC682C1D
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 13:02:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231705AbjAaLyp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 06:54:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
+        id S229468AbjAaMCe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 07:02:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230032AbjAaLyo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 06:54:44 -0500
+        with ESMTP id S230078AbjAaMCd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 07:02:33 -0500
 Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0FEE061
-        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 03:54:43 -0800 (PST)
-Received: by mail-ej1-x632.google.com with SMTP id k4so35353773eje.1
-        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 03:54:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E24B23DA6;
+        Tue, 31 Jan 2023 04:02:32 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id k4so35415739eje.1;
+        Tue, 31 Jan 2023 04:02:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=fKg7XiD4UOn+1J/0DrqwoWOq8jkJXhH0v7qpHVG9Z1Y=;
-        b=moYKAEv+Ji3CNRn47vCXAm3WA7xBPtc4xctddV5pC4BgAxIPYC6plbzIlsazOnHg5w
-         EhGuHCjXpyhxR5Z1hbpfK+O3wmzhaGVd8KoX8DW4n8kbRm3G/kuVyQ0yEZ0w47EFqRD+
-         wt+ZtVXurzAjRt0IR5/7NrcHUAYkfodZqYM0MYvFCEoEf/rclfeDH+keNmztdXU56Z4L
-         4ggDFGtay3PcQVvaLAdkBtH5qYcsj9pSTIhuCi033qMLCrxFnSDSJET4SUzDoOdwqw24
-         Ev2Dapmb8AWWchRCoK2QqiRN6DI+T+B4UnlJui88V125RFnfOvuFXhK+/eVmWVxOSXCi
-         210g==
+        bh=zOE3n5tsny49BAFSOM6oUGpa40l5XLfmNc4uIHyRbK0=;
+        b=LqUk6plf71gaYP3cnCZB5zn66wJBzJgufctGOQ6DFYdxXd7VSn5ZZQgbKkaRwVFxAb
+         bF5AVIbVfgZoWYXPG0k3uS3uohmLho28fIkgD71XynCXxa4wBq9lUhkpeK0T0adCaZdA
+         WnBMwnHuxwAqEeakuJZRVm9+0yCk2P06W0h5UBkPgFLaHwzeq4kXNlKhE8ucm/b0ogv8
+         ab1h6RxAP7+sQ17vnrnBdZDWevqjuQWlnzwGJmtgqo86UZXPN0kaVWgJb4IX8ouqp+7w
+         F/SJFsrFw4QGZtMKOWpchgmkcAyD0NSG2nGH6pgGJAXJuecmPX4gpZCElIWup7oxX1VX
+         rtOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=fKg7XiD4UOn+1J/0DrqwoWOq8jkJXhH0v7qpHVG9Z1Y=;
-        b=YO6SYIwa5OtQg21Jsxsq44al0GX0AEoH8d8HhxsQRlQm+rpy5iVIKAeLKDt/vEy6Ee
-         epJscYHElcv7Ca6UPrve3FePPhCf6lUxtDAZH8Ma+mVDJx8cixCH2PgLCWaYNx23gZps
-         Rs2wGzsWfCidBxBb61FT2dPFVllEPN1KQjRQT4RsGBVzqJcPktsA4JXT7LSXOnNKyENl
-         LEYbx2fqPBlgFAXLCH9jvR9KxHE5jzZU4two2MFshVXyDqJjfvmVx/Ryw7V5cJWy1fTo
-         L7IS4CRpN8cu9KwPxJ4tj35F4CphLTP/+VXSOoHYe98K3OagRNkg7rEqSyhf1XFVmZ5G
-         yKAg==
-X-Gm-Message-State: AO0yUKVYJnfsvp2X4aiaP0gP2gAv6mjhW2IL/OPj0GMFEuuHfFfrU9b+
-        3mLTvn7E6qOh2Ca2QWCXVjX5ZsM8bDqdv29y4Bg=
-X-Google-Smtp-Source: AK7set//eDvGBPK2SkOIqWLPtE7DvngU8vTGcIuRXVF/o88uHXjYwIQ9HodSQJd3PRnXXAE6kJyE4tHqZ028WxlKACM=
-X-Received: by 2002:a17:906:944e:b0:887:ce5c:af67 with SMTP id
- z14-20020a170906944e00b00887ce5caf67mr2253314ejx.297.1675166082152; Tue, 31
- Jan 2023 03:54:42 -0800 (PST)
+        bh=zOE3n5tsny49BAFSOM6oUGpa40l5XLfmNc4uIHyRbK0=;
+        b=Y/MhdVrwXqcf1nOUflZxSeLNqkBSaYw3LIGYjzju0Ijc28EoMpbAZTcqoevOewSjz3
+         tcQiCiSOOE09pWFHt2lnItBa+pd7AnkvPRdpXhF6hJ58B0/hfORlYrUFeFr9vO+UfkkV
+         lzfxHxOi57rrMvf8qoIN2CamuSotwPAwZuBhVJPRPfATTzviayLNn7JOTGvHl+NnbC10
+         Q3ZbupMngvXCJ2KQTWd2RLR0cqGJfIsp6PihRCyo/BAhX67A6UWI7ekef1rZ8yfIFLDC
+         EqgPGmQsxbnyAXGRyqkL/bzpB1h9NuEGvTW7ai+F3FUBC8+0TSvdgZhLbS6UNUdAraWY
+         HgfA==
+X-Gm-Message-State: AFqh2konmX7ED3+XPXZAY+jKkhoVaKe1S45fVN9nWXNnk+2BhkoYRBOY
+        Nb9hZ/BxH0ZIwNNjhb9Zl9HnELOfwgorlZ9hNpw=
+X-Google-Smtp-Source: AMrXdXvIx+WBALpgzllpK+ENbefAAtcbcpLJHE5LT3dTy+HiOTLDYQlkjkEU/bp8dpnO01qSHD8v48brxWXg0Vd0YOM=
+X-Received: by 2002:a17:906:c206:b0:78d:b819:e0e7 with SMTP id
+ d6-20020a170906c20600b0078db819e0e7mr8345866ejz.83.1675166550658; Tue, 31 Jan
+ 2023 04:02:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20230106095143.3158998-2-chenhuacai@loongson.cn> <20230131001601.GA1718721@bhelgaas>
-In-Reply-To: <20230131001601.GA1718721@bhelgaas>
+References: <CAAhV-H4LDn4YmM6Cwse-yjEeooeyqQ4Gy0gPxN0WS=H6KmuSJw@mail.gmail.com>
+ <20230131000118.GA1322972@bhelgaas>
+In-Reply-To: <20230131000118.GA1322972@bhelgaas>
 From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Tue, 31 Jan 2023 19:54:31 +0800
-Message-ID: <CAAhV-H6L3V8M4igCWBH=PzuDcoH0KreWkfqHexQwB2v+2TSi=A@mail.gmail.com>
-Subject: Re: [PATCH V2 1/2] PCI: loongson: Improve the MRRS quirk for LS7A
+Date:   Tue, 31 Jan 2023 20:02:20 +0800
+Message-ID: <CAAhV-H5L=ikYPtoG8RxXo8ZMSk4vwhmfNdOoUA3js=iVQK+H9Q@mail.gmail.com>
+Subject: Re: [PATCH V2 2/2] PCI: Add quirk for LS7A to avoid reboot failure
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -61,10 +62,8 @@ Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
         Xuefeng Li <lixuefeng@loongson.cn>,
         Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        HougeLangley <hougelangley1987@gmail.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        WANG Xuerui <kernel@xen0n.name>
+        "Rafael J. Wysocki" <rafael@kernel.org>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -78,54 +77,110 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi, Bjorn,
 
-On Tue, Jan 31, 2023 at 8:16 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+On Tue, Jan 31, 2023 at 8:01 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> On Fri, Jan 06, 2023 at 05:51:42PM +0800, Huacai Chen wrote:
-> > In new revision of LS7A, some PCIe ports support larger value than 256,
-> > but their maximum supported MRRS values are not detectable. Moreover,
-> > the current loongson_mrrs_quirk() cannot avoid devices increasing its
-> > MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
-> > will actually set a big value in its driver. So the only possible way
-> > is configure MRRS of all devices in BIOS, and add a pci host bridge bit
-> > flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+> On Sat, Jan 21, 2023 at 11:10:09PM +0800, Huacai Chen wrote:
+> > On Fri, Jan 20, 2023 at 11:36 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > On Fri, Jan 20, 2023 at 09:31:43PM +0800, Huacai Chen wrote:
+> > > > On Thu, Jan 19, 2023 at 8:50 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Thu, Jan 19, 2023 at 08:25:20PM +0800, Huacai Chen wrote:
+> > > > > > Ping?
+> > > > >
+> > > > > I suggested another possible way to do this that wasn't so much of a
+> > > > > special case.  Did you explore that at all?
+> > > >
+> > > > That is a little difficult for me, but what is worse is that the root
+> > > > cause doesn't come from gpu or console drivers, but from the root
+> > > > port. That means: even if we can workaround the gpu issue in another
+> > > > way, there are still problems on other devices. Besides the graphics
+> > > > card, the most frequent problematic device is the sata controller
+> > > > connected on LS7A chipset, there are incomplete I/O accesses after the
+> > > > root port disabled and also cause reboot failure.
+> > >
+> > > Yes, SATA sounds like another case where we want to use the device
+> > > after we call the driver's remove/shutdown method.  That's not
+> > > *worse*, it's just another case where we might have to mark devices
+> > > for special handling.
 > >
-> > However, according to PCIe Spec, it is legal for an OS to program any
-> > value for MRRS, and it is also legal for an endpoint to generate a Read
-> > Request with any size up to its MRRS. As the hardware engineers say, the
-> > root cause here is LS7A doesn't break up large read requests. In detail,
-> > LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
-> > request with a size that's "too big" ("too big" means larger than the
-> > PCIe ports can handle, which means 256 for some ports and 4096 for the
-> > others, and of course this is a problem in the LS7A's hardware design).
+> > That needs too much effort because we need to modify nearly every pci
+> > driver, and it exceeds my ability. :)
 >
-> Can you take a look at
-> https://bugzilla.kernel.org/show_bug.cgi?id=216884 ?
+> We would only modify drivers that need this special handling, so it's
+> only console/graphics/disks/network/..., well, OK, I see your point,
+> it probably *would* be nearly every driver!
 >
-> That claims to be a regression between v6.1 and v6.2-rc2, and WANG
-> Xuerui says this patch is the fix (though AFAICT the submitter has not
-> verified this yet).  If so, we should reference that bug here and try
-> to get this in v6.2.
-Yes, this patch can fix that issue. But I don't think this is a
-regression, vanila 6.1 kernel also has this problem, maybe the
-reporter uses a patched 6.1 kernel.
+> > > If we remove/shutdown *any* Root Port, not just LS7A, I think the idea
+> > > of assuming downstream devices can continue to work as usual is a
+> > > little suspect.  They might continue to work by accident today, but it
+> > > doesn't seem like a robust design.
+> >
+> > The existing design works for so many years, so it is mostly
+> > reasonable. For the LS7A case, the root cause comes from the root
+> > port, so a workaround on the root port seems somewhat reasonable.
+>
+> Yeah, I think you're right.  A few more notes below.
+>
+> > > > > > On Sat, Jan 7, 2023 at 10:25 AM Huacai Chen <chenhuacai@gmail.com> wrote:
+> > > > > > > On Fri, Jan 6, 2023 at 11:38 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Fri, Jan 06, 2023 at 05:51:43PM +0800, Huacai Chen wrote:
+> > > > > > > > > After cc27b735ad3a7557 ("PCI/portdrv: Turn off PCIe
+> > > > > > > > > services during shutdown") we observe poweroff/reboot
+> > > > > > > > > failures on systems with LS7A chipset.
+> > > > > > > > >
+> > > > > > > > > We found that if we remove "pci_command &=
+> > > > > > > > > ~PCI_COMMAND_MASTER" in do_pci_disable_device(), it can
+> > > > > > > > > work well. The hardware engineer says that the root cause
+> > > > > > > > > is that CPU is still accessing PCIe devices while
+> > > > > > > > > poweroff/reboot, and if we disable the Bus Master Bit at
+> > > > > > > > > this time, the PCIe controller doesn't forward requests to
+> > > > > > > > > downstream devices, and also does not send TIMEOUT to CPU,
+> > > > > > > > > which causes CPU wait forever (hardware deadlock).
+> > > > > > > > >
+> > > > > > > > > To be clear, the sequence is like this:
+> > > > > > > > >
+> > > > > > > > >   - CPU issues MMIO read to device below Root Port
+> > > > > > > > >
+> > > > > > > > >   - LS7A Root Port fails to forward transaction to secondary bus
+> > > > > > > > >     because of LS7A Bus Master defect
+> > > > > > > > >
+> > > > > > > > >   - CPU hangs waiting for response to MMIO read
+> > ...
+>
+> > > > > > > > > +
+> > > > > > > > > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> > > > > > > > > +{
+> > > > > > > > > +     struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+> > > > > > > > > +
+> > > > > > > > > +     if (pci_bridge_d3_possible(dev)) {
+> > > > > > > > > +             pm_runtime_forbid(&dev->dev);
+> > > > > > > > > +             pm_runtime_get_noresume(&dev->dev);
+> > > > > > > > > +             pm_runtime_dont_use_autosuspend(&dev->dev);
+> > > > > > > > > +     }
+> > > > > > > > > +
+> > > > > > > > > +     pcie_port_device_remove(dev);
+> > > > > > > > > +
+> > > > > > > > > +     if (!bridge->no_dis_bmaster)
+> > > > > > > > > +             pci_disable_device(dev);
+>
+> I think there's an argument that pcie_portdrv_shutdown() doesn't
+> actually need to clear bus mastering on *any* platform.
+>
+> For reboot and poweroff, we only use .shutdown(), and .shutdown() only
+> needs to stop DMA and interrupts.  Clearing bus master enable stops
+> MSI/MSI-X since that's a DMA, but doesn't do anything to stop INTx,
+> which portdrv does use in some cases.
+>
+> But those .remove() methods *do* clear the interrupt enables for each
+> service (PCI_ERR_ROOT_COMMAND, PCI_EXP_DPC_CTL, PCI_EXP_SLTCTL, and
+> PCI_EXP_RTCTL), so all the interrupts should be disabled regardless of
+> whether they are MSI/MSI-X or INTx, even without disabling bus
+> mastering.
+>
+> So I would argue that omitting the pci_disable_device() here might be
+> enough, and we wouldn't need the quirk at all.
+Emm, this seems much simpler and cleaner, I will send a new version
+these days, thank you.
 
 Huacai
->
-> See below.
->
-> > -             if (pci_match_id(bridge_devids, bridge)) {
-> > -                     if (pcie_get_readrq(dev) > 256) {
-> > -                             pci_info(dev, "limiting MRRS to 256\n");
-> > -                             pcie_set_readrq(dev, 256);
-> > -                     }
-> > -                     break;
-> > -             }
->
-> > +     if (bridge->no_inc_mrrs) {
-> > +             if (rq > pcie_get_readrq(dev))
-> > +                     return -EINVAL;
->
-> I think the message about limiting MRRS was useful and we should keep
-> it.
 >
 > Bjorn
