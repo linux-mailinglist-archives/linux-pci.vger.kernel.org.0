@@ -2,131 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BC17682A96
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 11:31:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E19B3682BEB
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 12:54:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231180AbjAaKbq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 05:31:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56344 "EHLO
+        id S231705AbjAaLyp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 06:54:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjAaKbn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 05:31:43 -0500
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00ECA3EFD9
-        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 02:31:41 -0800 (PST)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed50:fd54:3eff:f16a:8c82])
-        by laurent.telenet-ops.be with bizsmtp
-        id FNXf2900b3oGUMV01NXf6P; Tue, 31 Jan 2023 11:31:40 +0100
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1pMnvB-007vjk-Pw;
-        Tue, 31 Jan 2023 11:31:39 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1pMnvP-000NWt-NJ;
-        Tue, 31 Jan 2023 11:31:39 +0100
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 resend] PCI: Fix dropping valid root bus resources with .end = zero
-Date:   Tue, 31 Jan 2023 11:31:36 +0100
-Message-Id: <ecea3ffade000556419683b2a89ab402823bf323.1675160811.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S230032AbjAaLyo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 06:54:44 -0500
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC0FEE061
+        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 03:54:43 -0800 (PST)
+Received: by mail-ej1-x632.google.com with SMTP id k4so35353773eje.1
+        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 03:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fKg7XiD4UOn+1J/0DrqwoWOq8jkJXhH0v7qpHVG9Z1Y=;
+        b=moYKAEv+Ji3CNRn47vCXAm3WA7xBPtc4xctddV5pC4BgAxIPYC6plbzIlsazOnHg5w
+         EhGuHCjXpyhxR5Z1hbpfK+O3wmzhaGVd8KoX8DW4n8kbRm3G/kuVyQ0yEZ0w47EFqRD+
+         wt+ZtVXurzAjRt0IR5/7NrcHUAYkfodZqYM0MYvFCEoEf/rclfeDH+keNmztdXU56Z4L
+         4ggDFGtay3PcQVvaLAdkBtH5qYcsj9pSTIhuCi033qMLCrxFnSDSJET4SUzDoOdwqw24
+         Ev2Dapmb8AWWchRCoK2QqiRN6DI+T+B4UnlJui88V125RFnfOvuFXhK+/eVmWVxOSXCi
+         210g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fKg7XiD4UOn+1J/0DrqwoWOq8jkJXhH0v7qpHVG9Z1Y=;
+        b=YO6SYIwa5OtQg21Jsxsq44al0GX0AEoH8d8HhxsQRlQm+rpy5iVIKAeLKDt/vEy6Ee
+         epJscYHElcv7Ca6UPrve3FePPhCf6lUxtDAZH8Ma+mVDJx8cixCH2PgLCWaYNx23gZps
+         Rs2wGzsWfCidBxBb61FT2dPFVllEPN1KQjRQT4RsGBVzqJcPktsA4JXT7LSXOnNKyENl
+         LEYbx2fqPBlgFAXLCH9jvR9KxHE5jzZU4two2MFshVXyDqJjfvmVx/Ryw7V5cJWy1fTo
+         L7IS4CRpN8cu9KwPxJ4tj35F4CphLTP/+VXSOoHYe98K3OagRNkg7rEqSyhf1XFVmZ5G
+         yKAg==
+X-Gm-Message-State: AO0yUKVYJnfsvp2X4aiaP0gP2gAv6mjhW2IL/OPj0GMFEuuHfFfrU9b+
+        3mLTvn7E6qOh2Ca2QWCXVjX5ZsM8bDqdv29y4Bg=
+X-Google-Smtp-Source: AK7set//eDvGBPK2SkOIqWLPtE7DvngU8vTGcIuRXVF/o88uHXjYwIQ9HodSQJd3PRnXXAE6kJyE4tHqZ028WxlKACM=
+X-Received: by 2002:a17:906:944e:b0:887:ce5c:af67 with SMTP id
+ z14-20020a170906944e00b00887ce5caf67mr2253314ejx.297.1675166082152; Tue, 31
+ Jan 2023 03:54:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <20230106095143.3158998-2-chenhuacai@loongson.cn> <20230131001601.GA1718721@bhelgaas>
+In-Reply-To: <20230131001601.GA1718721@bhelgaas>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Tue, 31 Jan 2023 19:54:31 +0800
+Message-ID: <CAAhV-H6L3V8M4igCWBH=PzuDcoH0KreWkfqHexQwB2v+2TSi=A@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] PCI: loongson: Improve the MRRS quirk for LS7A
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        HougeLangley <hougelangley1987@gmail.com>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        WANG Xuerui <kernel@xen0n.name>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On r8a7791/koelsch:
+Hi, Bjorn,
 
-    kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
-    # cat /sys/kernel/debug/kmemleak
-    unreferenced object 0xc3a34e00 (size 64):
-      comm "swapper/0", pid 1, jiffies 4294937460 (age 199.080s)
-      hex dump (first 32 bytes):
-	b4 5d 81 f0 b4 5d 81 f0 c0 b0 a2 c3 00 00 00 00  .]...]..........
-	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-      backtrace:
-	[<fe3aa979>] __kmalloc+0xf0/0x140
-	[<34bd6bc0>] resource_list_create_entry+0x18/0x38
-	[<767046bc>] pci_add_resource_offset+0x20/0x68
-	[<b3f3edf2>] devm_of_pci_get_host_bridge_resources.constprop.0+0xb0/0x390
+On Tue, Jan 31, 2023 at 8:16 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Jan 06, 2023 at 05:51:42PM +0800, Huacai Chen wrote:
+> > In new revision of LS7A, some PCIe ports support larger value than 256,
+> > but their maximum supported MRRS values are not detectable. Moreover,
+> > the current loongson_mrrs_quirk() cannot avoid devices increasing its
+> > MRRS after pci_enable_device(), and some devices (e.g. Realtek 8169)
+> > will actually set a big value in its driver. So the only possible way
+> > is configure MRRS of all devices in BIOS, and add a pci host bridge bit
+> > flag (i.e., no_inc_mrrs) to stop the increasing MRRS operations.
+> >
+> > However, according to PCIe Spec, it is legal for an OS to program any
+> > value for MRRS, and it is also legal for an endpoint to generate a Read
+> > Request with any size up to its MRRS. As the hardware engineers say, the
+> > root cause here is LS7A doesn't break up large read requests. In detail,
+> > LS7A PCIe port reports CA (Completer Abort) if it receives a Memory Read
+> > request with a size that's "too big" ("too big" means larger than the
+> > PCIe ports can handle, which means 256 for some ports and 4096 for the
+> > others, and of course this is a problem in the LS7A's hardware design).
+>
+> Can you take a look at
+> https://bugzilla.kernel.org/show_bug.cgi?id=216884 ?
+>
+> That claims to be a regression between v6.1 and v6.2-rc2, and WANG
+> Xuerui says this patch is the fix (though AFAICT the submitter has not
+> verified this yet).  If so, we should reference that bug here and try
+> to get this in v6.2.
+Yes, this patch can fix that issue. But I don't think this is a
+regression, vanila 6.1 kernel also has this problem, maybe the
+reporter uses a patched 6.1 kernel.
 
-When coalescing two resources for a contiguous aperture, the first
-resource is enlarged to cover the full contiguous range, while the
-second resource is marked invalid.  This invalidation is done by
-clearing the flags, start, and end members.
-
-When adding the initial resources to the bus later, invalid resources
-are skipped.  Unfortunately, the check for an invalid resource considers
-only the end member, causing false positives.
-
-E.g. on r8a7791/koelsch, root bus resource 0 ("bus 00") is skipped, and
-no longer registered with pci_bus_insert_busn_res() (causing the memory
-leak), nor printed:
-
-     pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
-     pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff -> 0x00ee080000
-     pci-rcar-gen2 ee090000.pci: PCI: revision 11
-     pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
-    -pci_bus 0000:00: root bus resource [bus 00]
-     pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
-
-Fix this by only skipping resources where all of the flags, start, and
-end members are zero.
-
-Fixes: 7c3855c423b17f6c ("PCI: Coalesce host bridge contiguous apertures")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
-Acked-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-Is there any side effect of not registering the root bus resource with
-pci_bus_insert_busn_res()?  This is the resource created by
-of_pci_parse_bus_range(), and thus affects any DT platforms using
-"bus-range = <0 0>".
-
-Perhaps checking for "!res->flags" would be sufficient?
-
-I assume this still causes memory leaks on systems where resources are
-coalesced, as the second resource of a contiguous aperture is no longer
-referenced? Perhaps instead of clearing the resource, it should be
-removed from the list (and freed? is it actually safe to do that?)?
-
-Apparently Johannes had identified the bug before, but didn't realize
-the full impact...
-https://lore.kernel.org/r/5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net/
-
-v2:
-  - Add Tested-by, Acked-by.
----
- drivers/pci/probe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 1779582fb5007cd1..5988584825482e9f 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -996,7 +996,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	resource_list_for_each_entry_safe(window, n, &resources) {
- 		offset = window->offset;
- 		res = window->res;
--		if (!res->end)
-+		if (!res->flags && !res->start && !res->end)
- 			continue;
- 
- 		list_move_tail(&window->node, &bridge->windows);
--- 
-2.34.1
-
+Huacai
+>
+> See below.
+>
+> > -             if (pci_match_id(bridge_devids, bridge)) {
+> > -                     if (pcie_get_readrq(dev) > 256) {
+> > -                             pci_info(dev, "limiting MRRS to 256\n");
+> > -                             pcie_set_readrq(dev, 256);
+> > -                     }
+> > -                     break;
+> > -             }
+>
+> > +     if (bridge->no_inc_mrrs) {
+> > +             if (rq > pcie_get_readrq(dev))
+> > +                     return -EINVAL;
+>
+> I think the message about limiting MRRS was useful and we should keep
+> it.
+>
+> Bjorn
