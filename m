@@ -2,57 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0DFE6830F6
-	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 16:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2660E683212
+	for <lists+linux-pci@lfdr.de>; Tue, 31 Jan 2023 17:01:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233082AbjAaPLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 10:11:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40720 "EHLO
+        id S229651AbjAaQBp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 11:01:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233743AbjAaPKo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 10:10:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C3F577E9;
-        Tue, 31 Jan 2023 07:08:49 -0800 (PST)
+        with ESMTP id S229716AbjAaQBo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 11:01:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 467954C6FF;
+        Tue, 31 Jan 2023 08:01:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 650E6B81D5D;
-        Tue, 31 Jan 2023 15:07:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEE29C4339C;
-        Tue, 31 Jan 2023 15:07:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1675177673;
-        bh=WkNjJuwqHkG7P5IgmPmjTqjsQls0TpMSY4OxdD8w9lo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lOCycWes0eem4ZagNblW0Z8ToP3gcG/+Va8SAn4gmymAb8tamJePNl3M5F1AY5K0V
-         MmXonwmQhdPUfhmcy2k77sXgVNplvF8oHEKl/XcRuOkU+f3erM4i34ZnRaPPgTenYX
-         Xxm7zXqoCbwB88bU2O9lYTMNROX9Lrx1pZv1h7XU=
-Date:   Tue, 31 Jan 2023 16:07:50 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Lee Jones <lee@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kernel <kernel@axis.com>
-Subject: Re: [PATCH] mfd: Add Simple PCI MFD driver
-Message-ID: <Y9kuxrL3XaCG+blk@kroah.com>
-References: <20230120-simple-mfd-pci-v1-1-c46b3d6601ef@axis.com>
- <Y86op9oh5ldrZQyG@google.com>
- <Y862WTT03/JxXUG8@kroah.com>
- <Y9EBSmOoE5+83jS5@axis.com>
- <Y9EgrKT3hDyx+ULy@kroah.com>
- <CAL_JsqLGworC4beavkWSk9Uf=qFUR1RtsKBezH2xvop83C15NQ@mail.gmail.com>
- <Y9FEJAah8y0aY1L2@kroah.com>
- <CAL_JsqL02_z8ePyAObbe219iYcCyPKGURYvT3_yuG5B4qxXSeQ@mail.gmail.com>
+        by ams.source.kernel.org (Postfix) with ESMTPS id D9C9DB81D75;
+        Tue, 31 Jan 2023 16:01:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51540C4339B;
+        Tue, 31 Jan 2023 16:01:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675180900;
+        bh=6gK0fb3VK/Ite743ljBFUUvav8hU9CW+/0QPiJy4N/g=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=eWs14gV7Yss0Y+5yBiEZOMmr/Gnoq3j+BMLFiCnS9fiB0sRN36SgqD5M1THI+WNqa
+         pcOJLJHpJNrtPONTVLP/QfE7dN+FWGI7BzdSwfTdBbtVBxGkTpZU7G7fGNG4hoI3qe
+         yfuN+qwO0MAn3jGwZbiNiY6M+wsA6QXe++MtyE2hb0eHDfNbw4MlaKYeiybmcByMXs
+         Si42G1gq4z6ha6q8AeoJ9xiVVltGs3seZiRP6e/fNRddZ9pvQAYGw/i3hQhuYZjdng
+         xplxOD6k3rrXoFsO9D5nRZ4hKLs2YFVQNw9uVu8PXVD5/EmwfM61Rd2HKd5ps7ZIQP
+         CDB7IIcu3Gp5Q==
+Date:   Tue, 31 Jan 2023 10:01:38 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 resend] PCI: Fix dropping valid root bus resources
+ with .end = zero
+Message-ID: <20230131160138.GA1768991@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqL02_z8ePyAObbe219iYcCyPKGURYvT3_yuG5B4qxXSeQ@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <ecea3ffade000556419683b2a89ab402823bf323.1675160811.git.geert+renesas@glider.be>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,120 +56,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 09:34:01AM -0600, Rob Herring wrote:
-> On Wed, Jan 25, 2023 at 9:00 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jan 25, 2023 at 08:54:21AM -0600, Rob Herring wrote:
-> > > On Wed, Jan 25, 2023 at 6:29 AM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Wed, Jan 25, 2023 at 11:15:38AM +0100, Vincent Whitchurch wrote:
-> > > > > On Mon, Jan 23, 2023 at 05:31:21PM +0100, Greg Kroah-Hartman wrote:
-> > > > > > On Mon, Jan 23, 2023 at 03:32:55PM +0000, Lee Jones wrote:
-> > > > > > > On Mon, 23 Jan 2023, Vincent Whitchurch wrote:
-> > > > > > >
-> > > > > > > > Add a PCI driver which registers all child nodes specified in the
-> > > > > > > > devicetree.  It will allow platform devices to be used on virtual
-> > > > > > > > systems which already support PCI and devicetree, such as UML with
-> > > > > > > > virt-pci.
-> > > > > > > >
-> > > > > > > > The driver has no id_table by default; user space needs to provide one
-> > > > > > > > using the new_id mechanism in sysfs.
-> > > > > > >
-> > > > > > > This feels wrong for several reasons.
-> > > > > > >
-> > > > > > > Firstly, I think Greg (Cc:ed) will have something to say about this.
-> > > > > >
-> > > > > > Yes, this isn't ok.  Please write a real driver for the hardware under
-> > > > > > control here, and that would NOT be a MFD driver (hint, if you want to
-> > > > > > split up a PCI device into different drivers, use the aux bus code, that
-> > > > > > is what it is there for.)
-> > > > >
-> > > > > I hope it's clear from my other replies in this thread that the entire
-> > > > > purpose of this driver is to allow arbitrary platform devices to be used
-> > > > > via a PCI device in virtual environments like User Mode Linux in order
-> > > > > to test existing platform drivers using mocked hardware.
-> > > >
-> > > > That still feels wrong, why is PCI involved here at all?
-> > > >
-> > > > Don't abuse platform devices like this please, mock up a platform device
-> > > > framework instead if you want to test them that way, don't think that
-> > > > adding a platform device "below" a PCI device is somehow allowed at all.
-> > >
-> > > My question as well. However, that's only for Vincent's usecase. The
-> > > other ones I'm aware of are definitely non-discoverable MMIO devices
-> > > behind a PCI device.
-> > >
-> > > It is perfectly valid in DT to have the same device either directly on
-> > > an MMIO bus or behind some other MMIO capable bus. So what bus type
-> > > should they all be?
-> >
-> > If the mmio space is behind a PCI device, then why isn't that a special
-> > bus type for that "pci-mmio" or something, right?  Otherwise what
-> > happens when you yank out that PCI device?  Does that work today for
-> > these platform devices?
+On Tue, Jan 31, 2023 at 11:31:36AM +0100, Geert Uytterhoeven wrote:
+> On r8a7791/koelsch:
 > 
-> Well, yes, I'm sure there's lots of issues with hot-unplug and DT.
-> That's pretty much anything using DT, not just platform devices. Those
-> will only get fixed when folks try to do that, but so far we've mostly
-> prevented doing that. For example, we don't support a generic
-> mechanism to add and remove DT overlays because most drivers aren't
-> ready for their DT node to disappear.
+>     kmemleak: 1 new suspected memory leaks (see /sys/kernel/debug/kmemleak)
+>     # cat /sys/kernel/debug/kmemleak
+>     unreferenced object 0xc3a34e00 (size 64):
+>       comm "swapper/0", pid 1, jiffies 4294937460 (age 199.080s)
+>       hex dump (first 32 bytes):
+> 	b4 5d 81 f0 b4 5d 81 f0 c0 b0 a2 c3 00 00 00 00  .]...]..........
+> 	00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>       backtrace:
+> 	[<fe3aa979>] __kmalloc+0xf0/0x140
+> 	[<34bd6bc0>] resource_list_create_entry+0x18/0x38
+> 	[<767046bc>] pci_add_resource_offset+0x20/0x68
+> 	[<b3f3edf2>] devm_of_pci_get_host_bridge_resources.constprop.0+0xb0/0x390
 > 
-> Is there some restriction that says platform_bus can't do hotplug? I
-> thought everything is hotpluggable (in theory).
-> 
-> > > > > Given this "hardware", it's not clear what a "real driver" would do
-> > > > > differently.
-> > > >
-> > > > Again, you can not have a platform device below a PCI device, that's not
-> > > > what a platform device is for at all.
-> > > >
-> > > > > The auxiliary bus cannot be used since it naturally does
-> > > > > not support platform devices.
-> > > >
-> > > > The aux bus can support any type of bus (it's there to be used as you
-> > > > want, it's just that people are currently using it for PCI devices right
-> > > > now).
-> > > >
-> > > > > A hard coded list of sub-devices cannot be used since arbitrary
-> > > > > platform devices with arbitrary devicetree properties need to be
-> > > > > supported.
-> > > >
-> > > > Then make a new bus type and again, do not abuse platform devices.
-> > >
-> > > How about of_platform_bus[1]?
-> >
-> > Fair enough :)
-> >
-> > > At this point, it would be easier to create a new bus type for
-> > > whatever it is you think *should* be a platform device and move those
-> > > to the new bus leaving platform_bus as the DT/ACPI devices bus.
-> >
-> > platfom bus should be for DT/ACPI devices like that, but that's not what
-> > a "hang a DT off a PCI device" should be, right?  Why is mmio space
-> > somehow special here?
-> 
-> Only because platform_bus is the bus type in the kernel that supports
-> MMIO devices and that the DT code uses to instantiate them. The DT
-> code doesn't care if those are at the root level or behind some other
-> bus type.
-> 
-> > Perhaps we just add support for that to the aux
-> > bus?
-> 
-> Yes, we could add IOMEM resources, DT ID table and matching, etc., but
-> we'd just end up back at of_platform_bus with a new name. Every driver
-> doing both would have 2 driver structs and register calls. What do we
-> gain from that?
+> When coalescing two resources for a contiguous aperture, the first
+> resource is enlarged to cover the full contiguous range, while the
+> second resource is marked invalid.  This invalidation is done by
+> clearing the flags, start, and end members.
 
-As you know, nothing :)
+Don't we enlarge the *second* resource and invalidate the *first* one?
+If we find that "next", i.e., the second one, starts immediately after 
+"res", we make "next" bigger by setting its start to a smaller
+address:
 
-Ok, I'll stop arguing now, maybe this is a valid use of a platform
-device, but it feels really wrong that such a thing could live below a
-PCI device that can be removed from the system at any point in time.
+  next_res->start = res->start;
+  res->flags = res->start = res->end = 0;
 
-thanks,
+> When adding the initial resources to the bus later, invalid resources
+> are skipped.  Unfortunately, the check for an invalid resource considers
+> only the end member, causing false positives.
+> 
+> E.g. on r8a7791/koelsch, root bus resource 0 ("bus 00") is skipped, and
+> no longer registered with pci_bus_insert_busn_res() (causing the memory
+> leak), nor printed:
+> 
+>      pci-rcar-gen2 ee090000.pci: host bridge /soc/pci@ee090000 ranges:
+>      pci-rcar-gen2 ee090000.pci:      MEM 0x00ee080000..0x00ee08ffff -> 0x00ee080000
+>      pci-rcar-gen2 ee090000.pci: PCI: revision 11
+>      pci-rcar-gen2 ee090000.pci: PCI host bridge to bus 0000:00
+>     -pci_bus 0000:00: root bus resource [bus 00]
+>      pci_bus 0000:00: root bus resource [mem 0xee080000-0xee08ffff]
+> 
+> Fix this by only skipping resources where all of the flags, start, and
+> end members are zero.
+> 
+> Fixes: 7c3855c423b17f6c ("PCI: Coalesce host bridge contiguous apertures")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Tested-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Acked-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> Is there any side effect of not registering the root bus resource with
+> pci_bus_insert_busn_res()?  This is the resource created by
+> of_pci_parse_bus_range(), and thus affects any DT platforms using
+> "bus-range = <0 0>".
+> 
+> Perhaps checking for "!res->flags" would be sufficient?
+>
+> I assume this still causes memory leaks on systems where resources are
+> coalesced, as the second resource of a contiguous aperture is no longer
+> referenced? Perhaps instead of clearing the resource, it should be
+> removed from the list (and freed? is it actually safe to do that?)?
 
-greg k-h
+It looks like these would normally be freed via
+__acpi_pci_root_release_info() (if the host bridge were hot-removed),
+so probably not a leak since the invalidated resource is still in the
+info->resources list and should be freed even though it's been
+invalidated.
+
+So I suspect it probably could be removed from the list and freed
+here, and maybe even in the first loop when we coalesce it, so we
+wouldn't have to check in the second loop.
+
+> Apparently Johannes had identified the bug before, but didn't realize
+> the full impact...
+> https://lore.kernel.org/r/5331e942ff28bb191d62bb403b03ceb7d750856c.camel@sipsolutions.net/
+> 
+> v2:
+>   - Add Tested-by, Acked-by.
+> ---
+>  drivers/pci/probe.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 1779582fb5007cd1..5988584825482e9f 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -996,7 +996,7 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
+>  	resource_list_for_each_entry_safe(window, n, &resources) {
+>  		offset = window->offset;
+>  		res = window->res;
+> -		if (!res->end)
+> +		if (!res->flags && !res->start && !res->end)
+>  			continue;
+>  
+>  		list_move_tail(&window->node, &bridge->windows);
+> -- 
+> 2.34.1
+> 
