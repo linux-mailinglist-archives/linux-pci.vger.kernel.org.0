@@ -2,85 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 60289685DA8
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 04:03:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5574685E14
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 04:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230104AbjBADDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 22:03:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
+        id S230054AbjBADmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 22:42:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230098AbjBADDW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 22:03:22 -0500
-Received: from smtp161.vfemail.net (smtp161.vfemail.net [146.59.185.161])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5176876B7
-        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 19:03:06 -0800 (PST)
-Received: (qmail 31459 invoked from network); 1 Feb 2023 03:03:04 +0000
-Received: from localhost (HELO nl101-3.vfemail.net) ()
-  by smtpout.vfemail.net with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 1 Feb 2023 03:03:04 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=openmail.cc; h=message-id
-        :date:mime-version:subject:to:cc:references:from:in-reply-to
-        :content-type:content-transfer-encoding; s=2018; bh=a0M/Z5vF5O+w
-        u1iGce08r1mIpiAiaO7guywRu/f9N7I=; b=GasDnwLarSzqBxVVo/vpZrX9sWbF
-        twAlRa48WAaAtDnQM/txXgKYfyvV2k2/+z6esolla8gFIo/t145wuFwYwLC3mfsw
-        3TyfGR4hvcqbUiRQFTWt7XGk6gSRYe2yQw15DjFhYgpsIxQnr0X0rFVRCjMtm8BU
-        15E6i32zXLcnqbI=
-Received: (qmail 27136 invoked from network); 1 Feb 2023 03:03:04 -0000
-Received: by simscan 1.4.0 ppid: 27093, pid: 27134, t: 0.3140s
-         scanners:none
-Received: from unknown (HELO bmwxMDEudmZlbWFpbC5uZXQ=) (ZXF1dUBvcGVubWFpbC5jYw==@MTkyLjE2OC4xLjE5Mg==)
-  by nl101.vfemail.net with ESMTPA; 1 Feb 2023 03:03:03 -0000
-Message-ID: <ab8ff515-19ec-fe3f-0237-c30275e9744d@openmail.cc>
-Date:   Wed, 1 Feb 2023 11:02:59 +0800
+        with ESMTP id S229500AbjBADmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 22:42:44 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B088534017
+        for <linux-pci@vger.kernel.org>; Tue, 31 Jan 2023 19:42:43 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 25AF4CE203D
+        for <linux-pci@vger.kernel.org>; Wed,  1 Feb 2023 03:42:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C8F4C433EF;
+        Wed,  1 Feb 2023 03:42:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675222960;
+        bh=5OoDBwcMsk1LOgtZ3RQTgi/v+8CiPb2TdgY0y/tCVjk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TCNaUuVo1DqV+CIHi9VuTIvNXGZIfbJa6IuWKTONbYe3pbrZUUZsZZ9pSnWppyWER
+         QademlRNHY3TZB5Ym22sExpk6LfZ2m4THWJJ4b/EdUsBuaE26L2HHLF40jrC6Kw7tJ
+         egksPjsmisQUJuCGYubcevr2DNhrsJQQVAIlqUeOEX5zLF9Ernp+9IlnwHGxmAZ59c
+         7Gq9/kTsP+xb9Neo3U5hMa4WrM4pggx8ndhUbYLZ3mXRx0QAvcbfDQ1cwXUCA+nKSS
+         BoHYq+xtspMGMmaA0GZ5OILkOa94eaKjw7T578uYiLc69iJlKdJh7+U1JenQvD+OTL
+         fI4bC4aw9652A==
+Date:   Tue, 31 Jan 2023 21:42:38 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Huacai Chen <chenhuacai@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V3 1/2] PCI: Omit pci_disable_device() in
+ pcie_port_device_remove()
+Message-ID: <20230201034238.GA1824609@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH 2/3] wifi: ath9k: stop loading incompatible DT cal data
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org,
-        linux-pci@vger.kernel.org, robh@kernel.org,
-        linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        Edward Chow <equu@openmail.cc>
-References: <20230117194614.GA135447@bhelgaas>
-Content-Language: en-US
-From:   Mad Horse <equu@openmail.cc>
-In-Reply-To: <20230117194614.GA135447@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230201023803.660469-2-chenhuacai@loongson.cn>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-在 2023/1/18 03:46, Bjorn Helgaas 写道:
-> On Tue, Jan 17, 2023 at 05:27:46PM +0800, Edward Chow wrote:
->> Loading calibration data from an OF device tree node not declared
->> compatible with the device (e.g. a PCI device with calibration data
->> from corresponding DT node gets replaced, so the newly installed
->> device become incompatible with the node) or driver may lead to fatal
->> result, e.g. kernel panic.
-> Please include a link to a bug report and include a few lines of the
-> oops or panic directly in the commit log so when users see this
-> problem, they can search for the text and possibly find this fix.
->
->> The driver should check whether the DT node corresponding to the
->> device compatible with it, and load calibration data only from
->> compatible node.
-> If you read this commit log carefully, it doesn't actually say what
-> this patch *does*.  It has some background and this assertion about
-> what drivers *should* do, but it doesn't say what this patch does.
->
-> Suggest structure like this (flesh out with the relevant DT property
-> names, etc):
->
->   For PCI ath9k devices, load calibration data only if there is a DT
->   node corresponding to the device with XXX ...
->
-> More details: https://chris.beams.io/posts/git-commit/
->
-Thanks for pointing it out. The commit log of the last two patch has been reworded with required content, and sent to the current thread earlier.
+On Wed, Feb 01, 2023 at 10:38:02AM +0800, Huacai Chen wrote:
+> This patch has a long story.
 
+Understatement of the year :)
+
+> @@ -501,7 +501,6 @@ static void pcie_port_device_remove(struct pci_dev *dev)
+>  {
+>  	device_for_each_child(&dev->dev, NULL, remove_iter);
+>  	pci_free_irq_vectors(dev);
+> -	pci_disable_device(dev);
+
+Interesting.  What I had in mind was keeping the original
+pcie_port_device_remove() unchanged, adding the new
+pcie_portdrv_shutdown(), and omitting pci_disable_device() just from 
+pcie_portdrv_shutdown().
+
+I haven't thought about the implications of omitting
+pci_disable_device() from the .remove() method
+(pcie_port_device_remove()).
+
+Just pointing this out quickly before going to bed in case you have a
+chance to think about what's the best strategy :)
+
+Bjorn
