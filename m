@@ -2,47 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 111C1686A7B
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 16:38:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C3A8686C4B
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 17:59:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231285AbjBAPh6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Feb 2023 10:37:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
+        id S231527AbjBAQ66 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Feb 2023 11:58:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjBAPh5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Feb 2023 10:37:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D45A658A;
-        Wed,  1 Feb 2023 07:37:55 -0800 (PST)
+        with ESMTP id S230432AbjBAQ66 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Feb 2023 11:58:58 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98EAF76A3;
+        Wed,  1 Feb 2023 08:58:56 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A86D5B821BC;
-        Wed,  1 Feb 2023 15:37:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DC20C4339C;
-        Wed,  1 Feb 2023 15:37:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 483C1B821D4;
+        Wed,  1 Feb 2023 16:58:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D7CC433EF;
+        Wed,  1 Feb 2023 16:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675265872;
-        bh=0E8HbaF3vpnqBpfKGyxNNXEgUgOZzOGGOEERqBeFrCw=;
+        s=k20201202; t=1675270734;
+        bh=9Cau6PyVE2GtVxFGlwOHuWzyHir/3fJpWhTQRdW+NkI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qxFUDIoS1SzTcq9P0wA0T66wxmQVLmBAPSjRdjRDikhFGW6VRhqokwLNLKfIfPydp
-         LfcTHOy9cFMnmKTZB7LN5nEQqf0Lgu8yLPRv7RHWkRxxwvI2T92cL4MPSi5ce8C2Cw
-         YFcVD9vITDHV4IbQnm+vu86Lf9Td5HYcFXDN8ExYyXw+zBSB3D6RyKfm0SBHGtPEPb
-         XM2c/t2QGOLfNEULiA39ErYXexTsaPWDl6BELIKkHhlq0bmyXidD94vq6YFkU5kOjc
-         +sTKoHQ3KtfMGsMuQo1iyUGpv48KgHJEDVBReClHobsT5E5+aVdLLCLWnDI0iGvF8y
-         JHGukMK3cvK3Q==
-Date:   Wed, 1 Feb 2023 09:37:50 -0600
+        b=ipvF/xaMGsJj1RPkbilfTBacfCIfc+CnK8ILbhc7Rzg0XOfdyBC0z9uLdGlLdaRMg
+         lANpe4Ci0BO9cv/Wo3kqTttJUkQvb0L7266E6398ztRx0NBbw1CYRA+1VPn32Pl1Ng
+         Zd6H2FDYHAcFx1Uh1FJARqDqD9XTG001++RAWsRWmt9RIL6gCsJ96aovqsR6xmc24a
+         SDel2H0tkqxQzwgMpt+QvNNDRs64Z2IZv2AVtzDMxUO32boZAzU2msep7wcbN4UorQ
+         7+EvjNSNGRSmxqRaC8AkMr7wjP8MqLseRGZ6vORyEkoDvr/xHE6KRJ/XF+RF5inE2A
+         7dhJIj7SSsBVw==
+Date:   Wed, 1 Feb 2023 10:58:52 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mengyuan Lou <mengyuanlou@net-swift.com>
-Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI: Add ACS quirk for Wangxun NICs
-Message-ID: <20230201153750.GA1864705@bhelgaas>
+To:     Baolu Lu <baolu.lu@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Joerg Roedel <jroedel@suse.de>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Vasant Hegde <vasant.hegde@amd.com>,
+        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
+        iommu@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
+ pci_enable_pasid()
+Message-ID: <20230201165852.GA1775862@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230201104703.82511-1-mengyuanlou@net-swift.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <8cb478bf-db44-0a8f-8521-771529ca0706@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -50,86 +59,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 06:47:03PM +0800, Mengyuan Lou wrote:
-> The Wangxun 1G/10G NICs may be multi-function devices. They do
-> not advertise ACS capability.
-> Add an ACS quirk for these devices so the functions can be in
-> independent IOMMU groups.
+On Tue, Jan 31, 2023 at 08:25:05PM +0800, Baolu Lu wrote:
+> On 2023/1/31 2:38, Bjorn Helgaas wrote:
+> > PCIe r6.0, sec 6.20.1:
+> > 
+> >    A Function is not permitted to generate Requests using Translated
+> >    Addresses and a PASID unless both PASID Enable and Translated
+> >    Requests with PASID Enable are Set.
+> > 
+> > You want AMD graphics devices to do DMA with translated addresses and
+> > PASID, right?  pci_enable_pasid() sets PASID Enable
+> > (PCI_PASID_CTRL_ENABLE), but I don't see where "Translated Requests
+> > with PASID Enable" is set.  We don't even have a #define for it.
+> > 
+> > I would think we should check "Translated Requests with PASID
+> > Supported" before setting "Translated Requests with PASID Enable",
+> > too?
+> 
+> This seems to be an ECN for PCIe 5.x:
+> 
+> https://members.pcisig.com/wg/PCI-SIG/document/14929
+> 
+> What I read from this ECN is that,
+> 
+> With this ECN, translated memory requests for PASIDs are not allowed to
+> carry a PASID prefix if "Translated Requests with PASID Enabled" is not
+> set. It does not mean whether the device can generate translated memory
+> requests for PASID, but whether the memory request can carry a PASID
+> prefix.
 
-Thanks for the patch!
+My assumption that "you want AMD graphics devices to do DMA with
+translated addresses and PASID" was wrong.
 
-The commit log and the code comment do not explicitly say that the
-hardware implementation blocks transactions between functions.
+Per Jason [1], it sounds like the AMD GPU generates Translation
+Requests (sec 10.2.2) with a PASID.  The GPU will cache the translated
+address from the Translation Completion in its local ATC, and will do
+DMA (MemRd/Wr) with that translated address but *without* PASID
+prefixes.
 
-Can you clarify this by verifying (a) you have direct knowledge that
-the hardware *does* block those transactions, and (b) that the
-following text is accurate:
-
-  The Wangxun 1G/10G NICs may be multi-function devices. They do not
-  advertise an ACS capability, but the hardware implementation always
-  blocks peer-to-peer transactions between the functions.
-
-  Add an ACS quirk for these devices so the functions can be in
-  independent IOMMU groups.
-
-> + * Wangxun 10G/1G nics have no ACS capability.
-> + * But the implementation could block peer-to-peer transactions between them
-> + * and provide ACS-like functionality.
-
-Also, if the following comment is accurate, please incorporate it:
-
-  Wangxun 10G/1G NICs have no ACS capability, but on multi-function
-  devices, the hardware does block peer-to-peer transactions between
-  the functions and provides ACS-like functionality.
-
-"Implementation *could* block peer-to-peer transactions" doesn't say
-whether it actually *does*.
-
-If this all makes sense, please repost the patch with updated text.  I
-don't want to update it myself because I don't know anything about the
-NICs and I don't want to make assumptions.
+That makes sense because (PASID, IOVA) maps to a translated address,
+e.g., a a CPU physical address, and the GPU can DMA to that address
+directly without needing the PASID.
 
 Bjorn
 
-> + */
-> +static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
-> +{
-> +	switch (dev->device) {
-> +	case 0x0100 ... 0x010F:
-> +	case 0x1001:
-> +	case 0x2001:
-> +		return pci_acs_ctrl_enabled(acs_flags,
-> +			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
-> +	}
-> +
-> +	return false;
-> +}
-> +
->  static const struct pci_dev_acs_enabled {
->  	u16 vendor;
->  	u16 device;
-> @@ -4980,6 +4998,8 @@ static const struct pci_dev_acs_enabled {
->  	{ PCI_VENDOR_ID_NXP, 0x8d9b, pci_quirk_nxp_rp_acs },
->  	/* Zhaoxin Root/Downstream Ports */
->  	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
-> +	/* Wangxun nics */
-> +	{ PCI_VENDOR_ID_WANGXUN, PCI_ANY_ID, pci_quirk_wangxun_nic_acs },
->  	{ 0 }
->  };
->  
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index b362d90eb9b0..bc8f484cdcf3 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -3012,6 +3012,8 @@
->  #define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
->  #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
->  
-> +#define PCI_VENDOR_ID_WANGXUN		0x8088
-> +
->  #define PCI_VENDOR_ID_SCALEMP		0x8686
->  #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
->  
-> -- 
-> 2.39.1
-> 
+[1] https://lore.kernel.org/r/Y9nQK9P3HOxEeZ4U@nvidia.com
