@@ -2,45 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4EB3685D59
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 03:29:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4AC2F685D62
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Feb 2023 03:36:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229613AbjBAC3A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 31 Jan 2023 21:29:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53914 "EHLO
+        id S230013AbjBACgb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 31 Jan 2023 21:36:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231831AbjBAC25 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 21:28:57 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2444E3647B;
-        Tue, 31 Jan 2023 18:28:54 -0800 (PST)
+        with ESMTP id S229722AbjBACga (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 31 Jan 2023 21:36:30 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2084.outbound.protection.outlook.com [40.107.95.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E142B14EA9;
+        Tue, 31 Jan 2023 18:36:29 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WA8AK1R9rMB+lv4XsK5zohqEwcT+D00Gbe6pzMyqtACxhxUxD4bsL19z6WPqn64XA8zgxNn8P8n4cXSfLOTp1uBCVe+GKNnd5fpnHII1OSjVzxim7uTWrEWCGDd0GRlWKOZE/w+df7/xzXUOy5wZQ8ZbIuT/PSjzj0+heazXT8haoyJpFJD7vocAATWb/hkGAwvUkwbxIR5I1cztAfHa4ravL7ythGN/jZg9MPGAZmSnkS5QrjQxSQoSl2CCN37q6uH4mAiNhfmuljVGXXauLisHQmCkbsbYy/6Lbhwe790tjdJxTABcPlrdB1eE2j3nRS4EuII7LNNpZhlCowvEmg==
+ b=NcwAg3xNUBDi1YwTMnAl9inwDGqN1pZWtrFoI4wbcebvDRNH2D1TSgBRy8i8r/lwYsULRu9e2GbnoPr6ps8YIUtClh/ivNs4Vy2zqC2zyHmYKrFQB0rNu3jN/r8dqM8oBEyKup5YX2VgOZqDRGzA9m9L5Nkh+tLffG6TGwY8pf2fYa8xYamakQwRr2X0gvAXZoz8aC/fvyTSIl4ULHZ4mxfVymv2RCy2E0mkqfTNBs5gWqmVrFp6rvHqKndgl5i+bLToLxfASDVpm3ngDUgCXTJsYVYGI9LP4sG5OPQUAMiOM8fUa9Pp9wYJfDjsXjt641LJGg+PQVkr5L+akpclLQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tzJBqprqRvjZZAwX/65yb1Bkasgf+Cl9jvKml4bn3vk=;
- b=HqpSzS6rdxJRAA93a1cyqSEBdaLlU3blecUpNnGjvAbvcSSH8Nz97eL6dN/JPPEN9pT/g7SYskpP0wUJ3oCOuhYNU4RkSRe4dStz3k4MhMakW3ffzwjnMLSep8m15vfF3BOpSCmQ1o6kmtmiTGB7jEZUhKMH/3aoJnWt1quJdAKNZsq5aKhgRfUH9JH/5uOuAs3nm9oe4vVjfgKaiTVVuEKSncqrq710Vm1j7Bck5l2b2MdM2+ZAkasSfJpJ/CtkXWko4M/PWQPBPmeVTvx3CFTjz9W9XW8JVmMv6AcT+Nn9H+aX2Wwo3K1RIv0d9zSg50wsVuT0xjKxAVZ8psIeFg==
+ bh=GyRBbP0pvMcwe0sMKpeRRCK2bun6Qmlz+MOPJKA0Pg8=;
+ b=BLVF8RE67i0iXKJSdd4xLLLNcN4m53JiYQSd+nvJbKaJJQJZ3G+5+GrzxDNbn5m5jOlnJPgU+CxaalF9p/iiCDjkpdS9hcNNvVkCqIHNdiInm98gVfu95VhvIUkLsH32gsbrJMoYlYLzEYg0WyfiHhPNM3qxsV+lEWMeevcRWetPtx8clVXZV0fOphLaNvAfUyo1yDnQvTkjl2C4NCFoSHDTzoFzqrHbkkd4zDaXfp9Q0xofievLflfrMGKhFPXwCbLWiW3t80OupjZtfc9B6BM6AazggtCuSLuYY0svYThCD/e9HPjQ2zwo5DqSXaRWSmzeaWBEogfKjnTYxvXdDg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tzJBqprqRvjZZAwX/65yb1Bkasgf+Cl9jvKml4bn3vk=;
- b=km7anNgbssHtPOQ3Ka0bmBuhDC3+Y9vMseULWvOvOs7hybZbO5A9dKZJm7lYrJwwSXuKwq8f4lmULpcHwpX7pY0F0PUuDyWpFxVNlC6gf4RvLgPsf17DlhW0DLfbwK24MAoFFwHu5e0ah38pFyb/1j3PlanTnOFex3zDGYffM1Z0gxv29bjApgQE6IEFjS10dtlH5lhI9Ln9fHB7mlXeMeAKldYCGGdQu2mBadSsF/KXU+a5s6KMmcjqoLLs/JIp90pQ69KRbN00wlNlkPCk7JKzzwJmTTriuF9WO/W3eP6PXnFlOwyQBkiMVlZEG1WqGNU1HdxVXEhv5CK7kItqNw==
+ bh=GyRBbP0pvMcwe0sMKpeRRCK2bun6Qmlz+MOPJKA0Pg8=;
+ b=XcvJEGxcclDudpuf6GHqqFFs/KnMk781VZGjYQT77O7Lt3SYChV+/VcvldmMEEX6obDYJmJhoqu12I3YD2UIT1n2XQGgFJGcvsITz7NQXyRN09OWDcyjrtW2fIEdA97N0RafyQu8eeDpb7E8cg+qmZIyIyxitNIYslwnTM/H/Z1abuSY8re6ZHplexC9BE65kTrTv+Xaq4FYP7X+d0afcXlffLSFtajxvxFjNM9jQoJX6XEeRwuCzof3eSGFDPe6e/bgKN32UDwGBhZLE8qm1e9NrPm6mtpgflqukYmykjZKnALSveLBM5T/eaX//7CMxZA8jwANJKXh5pRzTTC13Q==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from LV2PR12MB5869.namprd12.prod.outlook.com (2603:10b6:408:176::16)
- by SJ0PR12MB7457.namprd12.prod.outlook.com (2603:10b6:a03:48d::16) with
+ by DM6PR12MB4548.namprd12.prod.outlook.com (2603:10b6:5:2a1::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.38; Wed, 1 Feb
- 2023 02:28:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Wed, 1 Feb
+ 2023 02:36:28 +0000
 Received: from LV2PR12MB5869.namprd12.prod.outlook.com
  ([fe80::3cb3:2fce:5c8f:82ee]) by LV2PR12MB5869.namprd12.prod.outlook.com
  ([fe80::3cb3:2fce:5c8f:82ee%4]) with mapi id 15.20.6043.038; Wed, 1 Feb 2023
- 02:28:52 +0000
-Date:   Tue, 31 Jan 2023 22:28:51 -0400
+ 02:36:28 +0000
+Date:   Tue, 31 Jan 2023 22:36:27 -0400
 From:   Jason Gunthorpe <jgg@nvidia.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
@@ -54,63 +54,63 @@ Cc:     Baolu Lu <baolu.lu@linux.intel.com>,
         iommu@lists.linux.dev, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
  pci_enable_pasid()
-Message-ID: <Y9nOY9lUZoans6sa@nvidia.com>
-References: <Y9gQxCmzqq6WXZK4@nvidia.com>
- <20230131235052.GA1811430@bhelgaas>
+Message-ID: <Y9nQK9P3HOxEeZ4U@nvidia.com>
+References: <030e66e0-fb54-b77d-5094-4786684ba97d@linux.intel.com>
+ <20230201001419.GA1776086@bhelgaas>
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230131235052.GA1811430@bhelgaas>
-X-ClientProxiedBy: BL1PR13CA0144.namprd13.prod.outlook.com
- (2603:10b6:208:2bb::29) To LV2PR12MB5869.namprd12.prod.outlook.com
+In-Reply-To: <20230201001419.GA1776086@bhelgaas>
+X-ClientProxiedBy: MN2PR22CA0030.namprd22.prod.outlook.com
+ (2603:10b6:208:238::35) To LV2PR12MB5869.namprd12.prod.outlook.com
  (2603:10b6:408:176::16)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|SJ0PR12MB7457:EE_
-X-MS-Office365-Filtering-Correlation-Id: 32443a73-38cd-4a2c-7aef-08db03fc0f2e
+X-MS-TrafficTypeDiagnostic: LV2PR12MB5869:EE_|DM6PR12MB4548:EE_
+X-MS-Office365-Filtering-Correlation-Id: 029bf56e-708a-4a27-8804-08db03fd1ed8
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NjmMJJE++Sqn7Jue5mYv9I5v/x7KpDjfZzLsqLDBpM6RWU4GGtSrCJBiylYdUTF/0YVigGLrFeUo52M/kyKbM43FVlMghCVa1zYre+VJXTxn/6heXFYrHhGhbtN0s7x4VPtt1O25I6CnPFoPnl7K8HvrPLz9c15UPGZxiY4XjxgTwwqfJr6WBOxjAOKqfdG+lTKBQ/BL9/FEQAvuJ6NZuC0G0Pf6l4fjw3Tnxsz6fTqaPnHTCYbXqu+U4lLP0NVisXKqSKavZHNmc8dwztYqZZ1++q6CQqeeZufVOs75zvDZMKqiw+jzEM6X48IkYtPFvST0SSTPL5IrklGZfLJnh1G3DdYao/Tn9SZXJ3obMkUfD1GiHh7ZIweWAoWn3h+qvXjC8naspZBHKU9fPWRxLuSBZhl6oRm4Jw16w9rv/eWZmqr3bD1BMpGrEsFsm9bpLaX6+MeXrAgp/kiwGLtelL2qQ7RQECG4DMsXJKF67Mq4GvDNc4oItBn5fM9NlMTj6gdMb5SQshe31q/Hi0sQkTNn9KLW1zzvifiNwUDe+dYxqB+dqdZ7hpTs49PQakQGY0+ywSMuq84poMapvHVxeDUyV6Tj0lCOaWhWmMlF2R2p2VKs7ImziW0N0NyHxAtfX1CYAqAdCIEhceGvIXF3Xg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(39860400002)(376002)(366004)(346002)(451199018)(186003)(6506007)(6512007)(26005)(86362001)(66946007)(2906002)(4326008)(66556008)(66476007)(41300700001)(54906003)(38100700002)(8936002)(6916009)(8676002)(83380400001)(36756003)(2616005)(7416002)(5660300002)(316002)(478600001)(6486002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: wMfde8sv45hUqDTK08aptWHjrGxwLOVDhZvYU+HIQFqZ+MGSxbesjD/9h7NiM+4HBvYLwjfEs/8IEYLxcRG5dJ/X6hnhV6sAJ2oDVhCurbKruW99izKRwdlUkoO4KKXv7hfAEMzf2cDQwlklAMGH+fnoU25FAGSTnZikuxrSdUcp7sWm4EQ2Sl+pQtArbRpchCsMDi9aVsBaK1ZCdrmc7gWujvl3+P/3ChC1ut85Lka5AD5FpwQAc8RSMJxfcK0UT281tBeaSAZafm6oyO+8qsqPXzReMhdxu4Q9YbdIbf75Dy1wYy/8vCGpqk3k6c7J3MJOTAOJaKTzXew8qj0JXbz/NGJPWAVMMAseeupM6VdOu+dl5jWqmkd8ZgVbsi2qDD4oetUyNq1LqV+MvbF5uiw2mAlTVctOfssStE9QJLaY0BzUy7s7Jxx26wBeVQs3HWyVSlOu4ZqXMtuH8wJ8S/kuFz2oOJax1kYLyfwwS4gOn7ZLYCUSd03iN87OQ2mf+VQP8pKQouWYX5tOW1OKQcRq0v71sw3yalMv50BdpjQfhzEy4y6QOYYdUlUD2aoq6q9MV+w3+gsP+R/CfZXx6RwBh0YKF4c/QxZsdvMuqhrvn1skyZwmC70yrPlduxzd
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(451199018)(66556008)(86362001)(38100700002)(54906003)(66476007)(36756003)(5660300002)(316002)(4326008)(6916009)(66946007)(8936002)(8676002)(2906002)(41300700001)(83380400001)(478600001)(6486002)(2616005)(7416002)(26005)(6512007)(186003)(6506007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?dLyjW2ym+aHpAaA9+1F0nRwOeCwrcDqOmk0QdNTs04/ANZgclqaQB+NKeX+K?=
- =?us-ascii?Q?KDVlvRLIrnu9Y2velLQ4dBkMD1fQnUpZvf3n/YQXDw4/9Tp56c6RnWRnmwFp?=
- =?us-ascii?Q?KQkdN1bQpGm72mVtIC+dEBIlVBlwHLUmbWBfH9IqoCTWEWYcJecvqXJ2kumq?=
- =?us-ascii?Q?J5VThb2BWpetvFr4aF6yzr8COMpQO/3X4Wi0aHkDTxIoiCCnq2Lg2z3TOW/e?=
- =?us-ascii?Q?xxsTaaBtRG4a3M+x1++sMsy9Si+89nUqP2z9JMQhYS8DieUyol3F33c4watL?=
- =?us-ascii?Q?jY9z06Xr/oh/i04x4Bc48NPc2EOpCkQ5A7zyOVeiP5QwyT95h8iTg5ylrlhm?=
- =?us-ascii?Q?xutQV5DY/nHDuZKvuKkzGobuYO23YV/tBqQ2KY+SFmDn3Bgg36P8QvTo87Hx?=
- =?us-ascii?Q?/M2JxxHXCuDGIRe3DFk9M5M7uDh/olrTh/mgY329n2oAzGhEGwV2Bg23MB6+?=
- =?us-ascii?Q?os/qR7Daglq8sZWGSXhFSMikkH73P3Y7k2qVp5Nw9C9f1jq29cFNoouqr3ep?=
- =?us-ascii?Q?XxXgLuepD39JL9gcWhEwpcR+EzZhf2PwCxhtyxKJ3V5u4utqrnHL7bdvEiML?=
- =?us-ascii?Q?xDN9K99ZYNQS4e5L/FcQxe4neW9CPJQ4t190AOUHyDrW9ZeFOg+oUu678VdG?=
- =?us-ascii?Q?Gh2RnQoo76bJ4bNVk3ScbsCmVFAr/959G9Tt0TbXqxctb30y+4o05lWRhtLu?=
- =?us-ascii?Q?EKDVXnqIvCMpqwOAx3VGA8HVvWyWsc/rsIPsw0u5nQM7KDOS06oRK2UDkTJ1?=
- =?us-ascii?Q?RzWpiMtXfhA8ssN0VMC0DyJp129C0+CVm7TG/U91CRLApa5KZsjDs6sI3XRA?=
- =?us-ascii?Q?xJ8bxqn9Y5LljzO9JmSXj/+L9aE/vLFbxu7UT6Dpl8z9cwO87IBa4zT9trsz?=
- =?us-ascii?Q?rDnfeVTQy/xctMkGMTT4r3Zd+CTJ5lG3+u8JsV1UKo9CngA6H0AUkA+VObhn?=
- =?us-ascii?Q?Ecf4hb4kNeltDEjxa0EGy/WtIypeeZ2NAm7rEqac5C2ZhS0rt6S5GKx6Zuno?=
- =?us-ascii?Q?k26VNpNttxoYyVNhJrNmHNa4KrohGnRUxylFtbH4XccH0Im6M7yDtzU/PXe1?=
- =?us-ascii?Q?kIjLIBpslGE47MfsZknLtdafDWw4/x/ZpaUFiJkkm/SneDj1OnzRyc0E8Xxz?=
- =?us-ascii?Q?POLDE4nJHDwgc7NykYTztV70G/DO8RCuN76jDOkdSFM4RmkIRX0286edkVA8?=
- =?us-ascii?Q?XfZ7plXKPpy9iJJzAQgaJBWWGvCcMdvkrU5TpZ9lZoMh4FmWXaepmeApv1OR?=
- =?us-ascii?Q?Dv9BQdiGOXf5RFUp4PxhNRnCyzlfekoJAYJJNgSoh0Q02gVKTZyyj+/7dUdb?=
- =?us-ascii?Q?x+9VuruwmfEK4oC+TXFaGlLnQo2BV/182YzvSM9sgWQA3jWNILHVuOqSdLPQ?=
- =?us-ascii?Q?I/7HiblfinQZaSNFWGaQifJoaRWF1oW9qrVfFUfKqFQ8ffZX8HnHleKLS3cL?=
- =?us-ascii?Q?hZauLPaMnpovwW/iRiDoywRBqyqgYkdJRQR7bzcm6rdWHGDgX2KSGj5J290q?=
- =?us-ascii?Q?IdQij4sWZqMIjAGKFWCnRtHCNg169WzDGOcPaB0XWG4W9m5sFEUTQ9tYHefE?=
- =?us-ascii?Q?MaKonINC6PN/40sChJZPfHeJZ+GYGPZsHHW7/cIi?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?RLMlnAYIi5+7CMYEXp8f2WbwBtceZTeWm5OtgjhOvc4GYPGAVTOh+cMkQsp9?=
+ =?us-ascii?Q?RFpdvZs90xwb7ll5nGfjCHh3je3EEUF6LJdR3SuKlPVbQ37IE1RKFCgU9V0y?=
+ =?us-ascii?Q?5doaQAqjX4oaxaRf75GUDizNd0eS3CAUEEEkcyc/pmECvbQXP5eIS5Byty9z?=
+ =?us-ascii?Q?dx40MZviU95xVJ+l6CjZnB7P6bKXCQIegW7RXdrRT6PZt9H8Fk8sinJrAAbK?=
+ =?us-ascii?Q?WmLF1N9BxiVY5n7J7/UpQ00IzdEWVC+28Il0IXHGvzgGTaL7G7WSORXDqQXB?=
+ =?us-ascii?Q?WNyC0fj+/FkuSoom9ueCNdNsHw4+B4piGD61eQxtCv9WPKNdbhCEA8xgyd4y?=
+ =?us-ascii?Q?t/fyHXcDwcQ7cZd6doP7Tb/8e74szqTTbB9F6S8ZDlhh4rcLMGqPGFYb2fOz?=
+ =?us-ascii?Q?Z2IoATjJIj6I+Dm+rZX2GjEn8IDMZwrWZrabo9jwyOYB1qM/cjOKJIcYSGy/?=
+ =?us-ascii?Q?LECpK++KEpKTVGFU7s0ILGjeJx3+MW5qYhkd2I9pBTagd26YpJnqR8FFTjcx?=
+ =?us-ascii?Q?QqUi3aFW/0iSHhTu2UJ0h2myAJEVvbmnKYueHNBNXlXQZ99sPtHjUwC+wzLp?=
+ =?us-ascii?Q?FpfemrEqm7KuxNws15+tEuGroMgjTNyJCK2OEwZkWYumWcPBXDOhxkwZwJuS?=
+ =?us-ascii?Q?r+62x3KTq+UuNrz6Hy7wAIPUCMAD8g7KpG8PmlEwu0T7FUoBHF0LleahuZoC?=
+ =?us-ascii?Q?rD3ZOlW0aHe9NJggdAcQBmqwSMtwSXLLE8jwj26ew7cgHmTNrPBqDAo7vl16?=
+ =?us-ascii?Q?qyRYLl74W3K8CyzqZ/FjBxH9wnJKMXH4ll8+sUFB66cmX7UOGAv05wqV4/mj?=
+ =?us-ascii?Q?H/1NRHbYUw9HmNuIkX3dASVG4xbMkTokj9YiHelbTZv6NCJbBcZdS+smp1U6?=
+ =?us-ascii?Q?KvjcEDf6zdfNWS8IUgdQg62gu06OaiEVW/CuCCn6pUpm/6JVc1wS2Ti6hekX?=
+ =?us-ascii?Q?WwsP1TcgLR7dfdbWExMC3OhRfG/8ZlgC+5ANbBOYsk4hRbZUuzshAUWumDhz?=
+ =?us-ascii?Q?VO2TSVL61JPpyHHpg+SOXGrRvNDGx8C8jCpEzPIPxF9R5M70oacrKGnzakOY?=
+ =?us-ascii?Q?0MX1ZeyTYoWg3A8FdDdvHpkLj2cOALJQAiFBCdjFVL956z9TgCy/W3PESAPN?=
+ =?us-ascii?Q?Iogloxhrgf34pwWQwoSQ+PPOXVbBdeY+7IKtZa1GX+f2TEb4OPpQ0R5N6GYb?=
+ =?us-ascii?Q?gDBABv6dfEu/kqSwF2d3EPZG6NbqIMN5852mFZ4iUoSA7K4vHBv/fwM8E6Bd?=
+ =?us-ascii?Q?Bkje8uG/aOCvcpDtRTqNfgKTc6RcZo1Jv3Bjokhn/RyEAtLJ5Oqc+wdqYKmR?=
+ =?us-ascii?Q?/DsOvQtCFclw/F3OCAdPAdMCoj+0c2MQbhy8spx68wGqg/R63mHOn1wq1wFg?=
+ =?us-ascii?Q?dMiyRnL5+6pLvAj/BeV86q/pl1VKYmV6Rw9jN6vHE3UhsxvdyzPmiWb58hlU?=
+ =?us-ascii?Q?imRQrTiDEiY631Q+di5m8tCRfM+43CBpeGZP7W8Xkfd0z5FpkHW7OH8bwusJ?=
+ =?us-ascii?Q?HVd2koadspJxia/eh+98b16MDxsq8cTpVZFrzJQrVLIfHuDsQnKOINwcYMbf?=
+ =?us-ascii?Q?R+XqmrDlf5GmA8Ejw5IRiNivBHhMkK4i3u15xciq?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32443a73-38cd-4a2c-7aef-08db03fc0f2e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 029bf56e-708a-4a27-8804-08db03fd1ed8
 X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2023 02:28:52.5184
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2023 02:36:28.3266
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: JTUj4DM+IbZTTveiyhB1pxnVqEt/b0oaEGAosj2VVksE3fDL4h9yFMx6vPTWkjGw
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB7457
+X-MS-Exchange-CrossTenant-UserPrincipalName: h/Ha38uTltMgaHfVNamAMcR8hUPUj9Ob+1WNEDnMZjzwSZB+9tfalFWiuD1G0vDQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4548
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -121,95 +121,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 05:50:52PM -0600, Bjorn Helgaas wrote:
-> On Mon, Jan 30, 2023 at 02:47:32PM -0400, Jason Gunthorpe wrote:
-> > On Mon, Jan 30, 2023 at 12:38:10PM -0600, Bjorn Helgaas wrote:
-> > 
-> > > Sorry, I'm still confused.  PCI_PASID_XLATED_REQ_ONLY is a
-> > > device-specific property, and you want to opt-in AMD graphics devices.
-> > > Where's the AMD graphics-specific change?  The current patch does
-> > > this:
-> > > 
-> > >   pdev_pri_ats_enable
-> > >     pci_enable_pasid(pdev, 0, PCI_PASID_XLATED_REQ_ONLY)
-> > > 
-> > > which looks like it does it for *all* devices below an AMD IOMMU,
-> > > without any device or driver input.
-> > 
-> > AMD GPU has a private interface to AMD IOMMU to support PASID support
-> > that only it uses.
+On Tue, Jan 31, 2023 at 06:14:19PM -0600, Bjorn Helgaas wrote:
+
+> > AMD GPU is one of those devices.
 > 
-> What is it that makes this a private interface? 
+> I guess you mean the AMD GPU has ATS, PRI, and PASID Capabilities?
+> And furthermore, that the GPU *always* uses Translated addresses with
+> PASID?
 
-The symbol names start with "amd"
+I'm not versed in the spec lingo, but the GPU issues MemRd/Wrs with
+the translated bit set and no PASID header - which is the correct form
+for an address that was translated by ATS.
 
-drivers/iommu/amd/init.c:EXPORT_SYMBOL(amd_iommu_snp_en);
-drivers/iommu/amd/init.c:EXPORT_SYMBOL(amd_iommu_v2_supported);
-drivers/iommu/amd/init.c:EXPORT_SYMBOL(amd_iommu_pc_get_max_banks);
-drivers/iommu/amd/init.c:EXPORT_SYMBOL(amd_iommu_pc_supported);
-drivers/iommu/amd/init.c:EXPORT_SYMBOL(amd_iommu_pc_get_max_counters);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_register_ga_log_notifier);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL_GPL(amd_iommu_is_attach_deferred);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_register_ppr_notifier);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_unregister_ppr_notifier);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_domain_direct_map);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_domain_enable_v2);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_flush_page);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_flush_tlb);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_domain_set_gcr3);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_domain_clear_gcr3);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_complete_ppr);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_device_info);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_activate_guest_mode);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_deactivate_guest_mode);
-drivers/iommu/amd/iommu.c:EXPORT_SYMBOL(amd_iommu_update_ga);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_bind_pasid);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_unbind_pasid);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_init_device);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_free_device);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_set_invalid_ppr_cb);
-drivers/iommu/amd/iommu_v2.c:EXPORT_SYMBOL(amd_iommu_set_invalidate_ctx_cb);
+To get to that it issues ATS requests, and only the ATS related
+requests will carry the PASID.
 
-A driver should not be using EXPORT_SYMBOL at all, this is all
-superseded by the core code that has now been created, but this 
-has not been cleaned up.
+ATS related requests always route to the root port, which is why it is
+functionally equivalent to ACS RR/UF in these cases.
 
-So the troublesome PASID bit is here:
+Translated requests always route where they are supposed to go, even
+with P2P and things.
 
-drivers/gpu/drm/amd/amdkfd/kfd_iommu.c: err = amd_iommu_bind_pasid(dev->adev->pdev, p->pasid, p->lead_thread);
-drivers/gpu/drm/amd/amdkfd/kfd_iommu.c:         err = amd_iommu_bind_pasid(kfd->adev->pdev, p->pasid,
+> And this applies even if there is no ACS or ACS doesn't support
+> PCI_ACS_RR and PCI_ACS_UF.
+> 
+> The black screen happens because ... ?
 
-And the logic AMD iommu uses to call pci_enable_pasid() is in the
-wrong place, it should be in drm/amd someplace not in the iommu
-drivers.
+AMD GPU driver bugs blow up if it cannot setup PASID.
 
-This is all more stuff to fix
+> I couldn't figure out the NULL pointer dereference.  I expected it to
+> be from a BUG() or similar in report_iommu_fault(), but I don't see
+> that.
 
-> But amd_iommu_domain_alloc() also leads to domain_enable_v2(), and
-> that's pretty generic, so it looks like we set PD_IOMMUV2_MASK
-> whenever the IOMMU supports it.
-
-Yes, it is all sort of messy still.
-
-AMD and ARM have a requirement that the RID page table format be in a
-certain way to be able to enable the PASID decoded in the iommu
-
-So the iommu drivers are trying to guess what page table format to use
-based on the PCI caps, and wrongly turning on PASID mode at the same
-time.
-
-> I guess I'm trying to convince myself that no harm in enabling PASID
-> for any device below an AMD v2 IOMMU.  But I don't think a device is
-> *required* to use translated addresses with PASID, and if it uses
-> untranslated addresses with PASID, don't we need ACS to avoid
-> misrouting?
-
-PASID enabling via config space doesn't actually do much - it is
-attaching a PASID at the iommu and attempting to operate the device
-with a PASID that is the key item.
-
-So right now, the only thing in the kernel which can do that is amdkfd
-because of the private interface. AMD says amdkfd HW always issues ATS
-with a PASID and never a MemRd/Wr, which is why it works at all.
-
+IIRC it is a buggy error unwind handling in the AMD GPU driver.
+ 
 Jason
