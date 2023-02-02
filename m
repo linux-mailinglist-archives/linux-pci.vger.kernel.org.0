@@ -2,142 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E7968788A
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 10:16:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69B7068792F
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 10:42:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229974AbjBBJQ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 04:16:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59248 "EHLO
+        id S232435AbjBBJmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 04:42:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229916AbjBBJQ0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 04:16:26 -0500
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94F210D3;
-        Thu,  2 Feb 2023 01:16:25 -0800 (PST)
-Received: by mail-pf1-x42a.google.com with SMTP id g9so724249pfo.5;
-        Thu, 02 Feb 2023 01:16:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=u7YQu/WO3eM+W94Axx2uArQXlfnP7ugStkR0HzuieuI=;
-        b=O9mxZuGxBQeDOutz5w00gArk1DwRjWPniGOOjKmeapgVBf/9Bfn4uxlnr814v6+j+p
-         v1v4BXcLWScRYfwbCeZ3tfmDN+/b8qmUe4wA0Y7/R5ULXEf49DXIq1pDlQpNGzS9QuLg
-         zOIQhbbvtgl0hswdDULZUvjzUWzJOMB53b52kbcwQMPlxvHEHH9nLr0wRrMOwNWYlOfK
-         WzoUGj+jFhIlWljQzSmMpM/Du3nAggktkt1AfyKntjeLi4DSv9D7jrrqqU88APGcSwRe
-         GgTjQUqk8O6vXW6b1Tl8uCb8ZqwtRm+NUhmaxo912MNiSlKGxUyHPCPEFfeRYYF8etBT
-         sPZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=u7YQu/WO3eM+W94Axx2uArQXlfnP7ugStkR0HzuieuI=;
-        b=GKkGXAkUrQAkoPoc0pQOrgMeySqx6kpweACtcuzok9WnKswM0s/BlUZD/pyCqeEZEu
-         quAXZQOJ2XR4nq6/CNNx1qShBFTBa6p3qOI3SmJlX10jnsRNwJ1NYWbj1lA913Cws5nj
-         Mbyp8q22o2ogTtCiZuH573rSez7nQEBG+JLJMuSbekKp4uHqlZ8O3gnSAWJ99CpDc476
-         Q03ppn1Xt6QsPcWENtzpf3SRYDRSSZS4n1IsY9nRn3YOvk/6VKHIxijwvvwqX/6t0xhj
-         1c8R1VzmV6d21uzLNlTcEhXXJXzRGORpXGm3U3U1V2BqyQIVGnd6cbhvyaq6VZYNcIRB
-         cZwg==
-X-Gm-Message-State: AO0yUKVpIkZxWmacP4ZpnCRueTMZip54sGNGhRrxBdtoplrj2IhmuA2m
-        puLlZeQBcrNfmlcFe9cQAfjTEP+c1RltwgOvLGk=
-X-Google-Smtp-Source: AK7set/491DAqjUqdii7EeQPEwXiEjaCYsfj/TOFzJKuhijlTWcyilh8ZJ37x0W4yleGdnWnKgo+L0LsWJ/Q7iM+Gh4=
-X-Received: by 2002:a62:cdcf:0:b0:58b:c6d6:d8fb with SMTP id
- o198-20020a62cdcf000000b0058bc6d6d8fbmr1230063pfg.15.1675329385132; Thu, 02
- Feb 2023 01:16:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20230113164449.906002-1-robimarko@gmail.com> <20230113164449.906002-8-robimarko@gmail.com>
+        with ESMTP id S232198AbjBBJmm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 04:42:42 -0500
+Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 795AE84B49;
+        Thu,  2 Feb 2023 01:42:37 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id CB8D05C01F4;
+        Thu,  2 Feb 2023 04:42:34 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 02 Feb 2023 04:42:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1675330954; x=1675417354; bh=k3VXs2ex6j
+        qQ7XWdM7kwaGWtc7xwL/VmLjlXlTq3OsQ=; b=AFcVJGTxLr6QCzpK4cTk+DK5Kz
+        AcbEoSSdOFHCGUcBDR3/Ks1VIOde7Wn3TjvyLGIqDG8jPlVCGVBY4KRZaO4lUWRq
+        ilm4GYQPmo6QkR11h/i/WXehdkSZWqhnyYXVLIm9v0TmtIyu2R84I7KJwc16bTZ5
+        BXG3HZjxMN4CQ4Xyg3ci/ySVtL4mJ//Y+c06w7Lm6ag7PyPV4wUh3e7Qn3N3dxFO
+        nriGNM9rXLBA1nSn26h5pzROV7W5G5b2vERarsONq7cEap7YQ4vH478uFbIdulO8
+        I5/dbah6ptKiBi3cyMqUEUAMjYCcKSFCE7dfEga+LkUviizfBWk3fm6HHFHA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm3; t=1675330954; x=1675417354; bh=k3VXs2ex6jqQ7XWdM7kwaGWtc7xw
+        L/VmLjlXlTq3OsQ=; b=ULHViyUnMuGqPA21eFcUIMNbkxJMB6Z+i9munubaO6rL
+        XFmHYCkhPXS6mkAJkZLiYPqMpOG8hUeWFmhhL0JYiXdb51SZzx+wm7xqWBpzLVBY
+        5fAxSFgyamcD2rbCS3OUOLy2EUjoklJlKNp1QgXsNOH8wIEHELcYSdQPunMFcXBp
+        wYDLpc7+eRAIbe93/cQf0gy7eMN0V0w8ZI6MGJIKC+zeMFQYUqqX1QWLeY+JBQbV
+        vTq4a6Qq8mDveWA71YBuRy0MEqZuIp0c8EBqilscSJxEX+VZjtE3tx2TZW2qFXYQ
+        1AoJqAbFBVinTjsx9DPxsX4Ik6hsNkstD7OR+hQW9Q==
+X-ME-Sender: <xms:ioXbY0-RoacTRTYutOfTC0LyQSfUKdxg45S2RsoFhlFJAh4L3v8hDw>
+    <xme:ioXbY8v0IUciI0JHHzUdRJD3UgEec0yhilYCHlip36Gn8QAvMNEalzLkpB7_xsU-s
+    WL90jqJMe6tbhDaWKY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudefkedgtdeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:ioXbY6D053doS3ayJQVMyDK-UZHLw_N6k3qri2dkszxRDkWP0hI1HQ>
+    <xmx:ioXbY0dU7vs-66bv52w-9GDv9lzPUdc31gtH6WGaTTgNPvw_E5_c_A>
+    <xmx:ioXbY5Nw6eMlXDkAJ0xOumHi8g-NnOR_ggSB3iznj7vLgnqYAp5FrA>
+    <xmx:ioXbY2csCBjivqo-tUc7tNRqM3WOh16ZMWZCe9s2WAU8y6P-NRqpQA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 2141BB6044F; Thu,  2 Feb 2023 04:42:34 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-107-g82c3c54364-fm-20230131.002-g82c3c543
+Mime-Version: 1.0
+Message-Id: <968c056c-74f9-4a8f-b662-51f60df93694@app.fastmail.com>
+In-Reply-To: <CAOX2RU5Y642gWMSaK6fJ2tz=9N2AO-1fFhL5=wfLeTWWkVjz7Q@mail.gmail.com>
+References: <20230113164449.906002-1-robimarko@gmail.com>
+ <20230113164449.906002-8-robimarko@gmail.com>
  <7c5dfa87-41df-4ba7-b0e4-72c8386402a8@app.fastmail.com>
-In-Reply-To: <7c5dfa87-41df-4ba7-b0e4-72c8386402a8@app.fastmail.com>
-From:   Robert Marko <robimarko@gmail.com>
-Date:   Thu, 2 Feb 2023 10:16:14 +0100
-Message-ID: <CAOX2RU5Y642gWMSaK6fJ2tz=9N2AO-1fFhL5=wfLeTWWkVjz7Q@mail.gmail.com>
-Subject: Re: [PATCH v2 8/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe node
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>, bhelgaas@google.com,
-        lpieralisi@kernel.org, Rob Herring <robh@kernel.org>,
+ <CAOX2RU5Y642gWMSaK6fJ2tz=9N2AO-1fFhL5=wfLeTWWkVjz7Q@mail.gmail.com>
+Date:   Thu, 02 Feb 2023 10:42:15 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Robert Marko" <robimarko@gmail.com>
+Cc:     "Andy Gross" <agross@kernel.org>,
+        "Bjorn Andersson" <andersson@kernel.org>,
+        "Konrad Dybcio" <konrad.dybcio@linaro.org>, bhelgaas@google.com,
+        lpieralisi@kernel.org, "Rob Herring" <robh@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         krzysztof.kozlowski+dt@linaro.org,
-        Manivannan Sadhasivam <mani@kernel.org>, svarbanov@mm-sol.com,
+        "Manivannan Sadhasivam" <mani@kernel.org>, svarbanov@mm-sol.com,
         shawn.guo@linaro.org, linux-arm-msm@vger.kernel.org,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Abel Vesa <abelvesa@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        linux-kernel@vger.kernel.org, "Abel Vesa" <abelvesa@kernel.org>,
+        "Jingoo Han" <jingoohan1@gmail.com>,
+        "Gustavo Pimentel" <gustavo.pimentel@synopsys.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 8/9] arm64: dts: qcom: ipq8074: fix Gen3 PCIe node
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, 30 Jan 2023 at 18:11, Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Feb 2, 2023, at 10:16, Robert Marko wrote:
+> On Mon, 30 Jan 2023 at 18:11, Arnd Bergmann <arnd@arndb.de> wrote:
+>> On Fri, Jan 13, 2023, at 17:44, Robert Marko wrote:
 >
-> On Fri, Jan 13, 2023, at 17:44, Robert Marko wrote:
-> > IPQ8074 comes in 2 silicon versions:
-> > * v1 with 2x Gen2 PCIe ports and QMP PHY-s
-> > * v2 with 1x Gen3 and 1x Gen2 PCIe ports and QMP PHY-s
-> >
-> > v2 is the final and production version that is actually supported by the
-> > kernel, however it looks like PCIe related nodes were added for the v1 SoC.
-> >
-> > Finish the PCIe fixup by using the correct compatible, adding missing ATU
-> > register space, declaring max-link-speed, use correct ranges, add missing
-> > clocks and resets.
-> >
-> > Fixes: 33057e1672fe ("ARM: dts: ipq8074: Add pcie nodes")
-> > Signed-off-by: Robert Marko <robimarko@gmail.com>
+> As pointed out in the commit description, the ranges property was copied
+> from the QCA-s downstream 5.4 kernel [1] as I dont have any documentation
+> on the SoC.
 >
-> I was reading through the pull request today and saw this patch
-> along with the Gen2 one:
->
->
-> > @@ -871,9 +873,9 @@ pcie0: pci@20000000 {
-> >                       phy-names = "pciephy";
-> >
-> >                       ranges = <0x81000000 0 0x20200000 0x20200000
-> > -                               0 0x100000   /* downstream I/O */
-> > +                               0 0x10000>, /* downstream I/O */
->
-> Fixing the length here seems fine, but the bus-side address
-> still looks wrong: 0x20200000 is way outside of the usual
-> port ranges from 0 to 0x10000 on the local bus.
->
-> > -                               0x82000000 0 0x20300000 0x20300000
-> > -                               0 0xd00000>; /* non-prefetchable memory */
-> > +                              <0x82000000 0 0x20220000 0x20220000
-> > +                               0 0xfde0000>; /* non-prefetchable memory */
->
-> I see the total size of the memory space is under 256MB. Are you
-> sure that there is no 64-bit BAR in addition to this?
->
-> I also see commit 7d1158c984d3 ("arm64: dts: qcom: sm8550: Add
-> PCIe PHYs and controllers nodes") introduce the same broken
-> I/O port range (oversized 1MB space wiht an identity map) for a
-> new SoC. This should probably be fixed as well, along with
-> reviewing the other ones.
->
-> Has the I/O space mapping on any of these actually been tested,
-> or just copied from one SoC to another? Very few devices actually
-> use I/O space, so it wouldn't be surprising if it never worked
-> in the first place.
+> I have runtime tested this on Xiaomi AX3600 which has a QCA9889 card on the
+> Gen3 PCIe port, and on Xiaomi AX9000 which has QCA9889 on Gen2 port
+> and QCN9074 on the Gen3 port and they are working fine.
 
-Hi Arnd,
-As pointed out in the commit description, the ranges property was copied
-from the QCA-s downstream 5.4 kernel [1] as I dont have any documentation
-on the SoC.
+Neither of those use I/O ports though, nor does any other sensible
+device that was made in the past decade.
 
-I have runtime tested this on Xiaomi AX3600 which has a QCA9889 card on the
-Gen3 PCIe port, and on Xiaomi AX9000 which has QCA9889 on Gen2 port
-and QCN9074 on the Gen3 port and they are working fine.
+The compatible string tells me that this is a designware pcie block,
+so I think driver actually sets up the mapping based on the ranges
+property in DT in dw_pcie_iatu_detect() and dw_pcie_iatu_setup(),
+rather than the mapping being determined by hardware or firmware
+in advance.
 
-[1] https://git.codelinaro.org/clo/qsdk/oss/kernel/linux-ipq-5.4/-/blob/NHSS.QSDK.12.3.r2/arch/arm64/boot/dts/qcom/ipq8074.dtsi#L834
+Not sure about the general policy we have for this case, maybe the
+pci controller or pci-dwc maintainers have an idea here. I would
+think it's better to either have no I/O ranges in DT or have
+sensible ones than ones that are clearly bogus, if the controller
+is able to set up the ranges.
 
-Regards,
-Robert
->
->        Arnd
+     Arnd
