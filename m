@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 065636876D1
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 08:56:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8CD786876D3
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 08:56:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232059AbjBBH4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 02:56:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50960 "EHLO
+        id S230094AbjBBH4P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 02:56:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjBBH4J (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 02:56:09 -0500
+        with ESMTP id S229972AbjBBH4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 02:56:14 -0500
 Received: from smtp161.vfemail.net (smtp161.vfemail.net [146.59.185.161])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBD279F32
-        for <linux-pci@vger.kernel.org>; Wed,  1 Feb 2023 23:56:08 -0800 (PST)
-Received: (qmail 28619 invoked from network); 2 Feb 2023 07:56:06 +0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BC027C709
+        for <linux-pci@vger.kernel.org>; Wed,  1 Feb 2023 23:56:13 -0800 (PST)
+Received: (qmail 28648 invoked from network); 2 Feb 2023 07:56:11 +0000
 Received: from localhost (HELO nl101-3.vfemail.net) ()
-  by smtpout.vfemail.net with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 2 Feb 2023 07:56:06 +0000
+  by smtpout.vfemail.net with ESMTPS (ECDHE-RSA-AES256-GCM-SHA384 encrypted); 2 Feb 2023 07:56:11 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=openmail.cc; h=from:to:cc
         :subject:date:message-id:in-reply-to:references:mime-version
-        :content-transfer-encoding; s=2018; bh=sKeY59QN/akZNkbUpqrT33k7Q
-        8PHn/p9w1ND4ntYpHI=; b=PTW1LnAjihB7I2VyeJ24YZ3xZOsA9FvC19B/rbQ85
-        im0rmXK3YTijdBSjSMElflLf59rIe4JqVVw52a2z3N79VxNYzxQJeHw3x0El7tng
-        wToLGX7XpCM+3OWYfz1+gnzqaBuiSaEvlx1aBr6y6nSi5K3FykLwWSGC16n4nBGr
-        Rg=
-Received: (qmail 14252 invoked from network); 2 Feb 2023 07:56:06 -0000
-Received: by simscan 1.4.0 ppid: 13438, pid: 14227, t: 0.9892s
+        :content-transfer-encoding; s=2018; bh=vkUokFEKUNrbGw2Y9QiZUTjdI
+        5XpPUPWkM46g3tjAUg=; b=jzxun3AS3h401SZB1QhFYTNKTWxZXucf8QCVPEWQv
+        tBgtwIhV5KPUTxlhml4SaAG2j1lFpoDmblZvlDYqJkdSRAX141IwwvLhAk0w9Il4
+        Te7KyiIpp3kV3EWU3xXrYfi5Gq7XjtN0MHXWrcFUo3t1O7meZFFztwYSVzP0ZtNH
+        pQ=
+Received: (qmail 14461 invoked from network); 2 Feb 2023 07:56:11 -0000
+Received: by simscan 1.4.0 ppid: 13438, pid: 14402, t: 0.9448s
          scanners:none
 Received: from unknown (HELO bmwxMDEudmZlbWFpbC5uZXQ=) (ZXF1dUBvcGVubWFpbC5jYw==@MTkyLjE2OC4xLjE5Mg==)
-  by nl101.vfemail.net with ESMTPA; 2 Feb 2023 07:56:05 -0000
+  by nl101.vfemail.net with ESMTPA; 2 Feb 2023 07:56:10 -0000
 From:   equu@openmail.cc
 To:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org
 Cc:     linux-pci@vger.kernel.org, robh@kernel.org,
         linux-wireless@vger.kernel.org, ath10k@lists.infradead.org,
-        equu@openmail.cc
-Subject: [PATCH v3 2/3] wifi: ath9k: stop loading incompatible DT cal data
-Date:   Thu,  2 Feb 2023 15:55:23 +0800
-Message-Id: <20230202075524.2911058-3-equu@openmail.cc>
+        equu@openmail.cc, kernel test robot <lkp@intel.com>
+Subject: [PATCH v3 3/3] wifi: ath10k: only load compatible DT cal data
+Date:   Thu,  2 Feb 2023 15:55:24 +0800
+Message-Id: <20230202075524.2911058-4-equu@openmail.cc>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230202075524.2911058-1-equu@openmail.cc>
 References: <ab8ff515-19ec-fe3f-0237-c30275e9744d@openmail.cc>
@@ -55,91 +55,103 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Edward Chow <equu@openmail.cc>
 
-As reported in https://github.com/openwrt/openwrt/pull/11345 , ath9k
-would load calibration data from a device tree node declared
-incompatible.
+ath10k might also be sensitive to the issue reported on
+https://github.com/openwrt/openwrt/pull/11345 , loading calibration
+data from a device tree node declared incompatible.
 
-Now, ath9k will first check whether the device tree node is compatible
+ath10k will first check whether the device tree node is compatible
 with it, using the functionality introduced with the first patch of
 this series, ("PCI: of: Match pci devices or drivers against OF DT
 nodes") and only proceed loading calibration data from compatible node.
 
 Signed-off-by: Edward Chow <equu@openmail.cc>
+Reported-by: kernel test robot <lkp@intel.com>
 ---
- drivers/net/wireless/ath/ath9k/ath9k.h |  1 +
- drivers/net/wireless/ath/ath9k/init.c  | 26 ++++++++++++++++++++++++++
- drivers/net/wireless/ath/ath9k/pci.c   |  2 +-
- 3 files changed, 28 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/core.c | 29 ++++++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/pci.c  |  2 +-
+ drivers/net/wireless/ath/ath10k/pci.h  |  2 ++
+ 3 files changed, 32 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath9k/ath9k.h b/drivers/net/wireless/ath/ath9k/ath9k.h
-index 2cc23605c9fc..4f6f0383a5f8 100644
---- a/drivers/net/wireless/ath/ath9k/ath9k.h
-+++ b/drivers/net/wireless/ath/ath9k/ath9k.h
-@@ -35,6 +35,7 @@ struct ath_node;
- struct ath_vif;
- 
- extern struct ieee80211_ops ath9k_ops;
-+extern struct pci_driver ath_pci_driver;
- extern int ath9k_modparam_nohwcrypt;
- extern int ath9k_led_blink;
- extern bool is_ath9k_unloaded;
-diff --git a/drivers/net/wireless/ath/ath9k/init.c b/drivers/net/wireless/ath/ath9k/init.c
-index 4f00400c7ffb..6c0296b4d366 100644
---- a/drivers/net/wireless/ath/ath9k/init.c
-+++ b/drivers/net/wireless/ath/ath9k/init.c
-@@ -22,6 +22,7 @@
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/of_net.h>
-+#include <linux/of_pci.h>
+diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
+index 5eb131ab916f..a1cf65679046 100644
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -13,6 +13,7 @@
+ #include <linux/ctype.h>
+ #include <linux/pm_qos.h>
  #include <linux/nvmem-consumer.h>
- #include <linux/relay.h>
- #include <linux/dmi.h>
-@@ -577,6 +578,31 @@ static int ath9k_nvmem_request_eeprom(struct ath_softc *sc)
++#include <linux/of_pci.h>
+ #include <asm/byteorder.h>
+ 
+ #include "core.h"
+@@ -26,6 +27,7 @@
+ #include "testmode.h"
+ #include "wmi-ops.h"
+ #include "coredump.h"
++#include "pci.h"
+ 
+ unsigned int ath10k_debug_mask;
+ EXPORT_SYMBOL(ath10k_debug_mask);
+@@ -1958,6 +1960,33 @@ static int ath10k_download_cal_nvmem(struct ath10k *ar, const char *cell_name)
  	size_t len;
- 	int err;
+ 	int ret;
  
 +	/* devm_nvmem_cell_get() will get a cell first from the OF
 +	 * DT node representing the given device with nvmem-cell-name
 +	 * "calibration", and from the global lookup table as a fallback,
-+	 * and an ath9k device could be either a pci one or a platform one.
++	 * and an ath10k device could be either a pci one or a platform one.
 +	 *
 +	 * If the OF DT node is not compatible with the real device, the
 +	 * calibration data got from the node should not be applied.
 +	 *
-+	 * dev_is_pci(sc->dev) && ( no OF node || caldata not from node
++	 * dev_is_pci(ar->dev) && ( no OF node || caldata not from node
 +	 * || not compatible ) -> do not use caldata .
 +	 *
-+	 * !dev_is_pci(sc->dev) -> always use caldata .
++	 * !dev_is_pci(ar->dev) -> always use caldata .
++	 *
++	 * The judgement for compatibility differs with ath9k for many
++	 * DT using "qcom,ath10k" as compatibility string.
 +	 */
-+	if (dev_is_pci(sc->dev) &&
-+	    (!sc->dev->of_node ||
-+	     !of_property_match_string(sc->dev->of_node,
++	if (dev_is_pci(ar->dev) &&
++	    (!ar->dev->of_node ||
++	     (of_property_match_string(ar->dev->of_node,
 +				       "nvmem-cell-names",
-+				       "calibration") ||
-+	     !of_pci_node_match_driver(sc->dev->of_node,
-+				       &ath_pci_driver)))
-+		/* follow the "just return 0;" convention as
-+		 * noted below.
-+		 */
-+		return 0;
++				       cell_name) < 0) ||
++	     !of_device_is_compatible(ar->dev->of_node,
++				      "qcom,ath10k") ||
++	     !of_pci_node_match_driver(ar->dev->of_node,
++				       &ath10k_pci_driver)))
++		return -ENOENT;
 +
- 	cell = devm_nvmem_cell_get(sc->dev, "calibration");
+ 	cell = devm_nvmem_cell_get(ar->dev, cell_name);
  	if (IS_ERR(cell)) {
- 		err = PTR_ERR(cell);
-diff --git a/drivers/net/wireless/ath/ath9k/pci.c b/drivers/net/wireless/ath/ath9k/pci.c
-index a074e23013c5..fcb19761e60d 100644
---- a/drivers/net/wireless/ath/ath9k/pci.c
-+++ b/drivers/net/wireless/ath/ath9k/pci.c
-@@ -1074,7 +1074,7 @@ static SIMPLE_DEV_PM_OPS(ath9k_pm_ops, ath_pci_suspend, ath_pci_resume);
+ 		ret = PTR_ERR(cell);
+diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+index 728d607289c3..5d9f6046f8cf 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.c
++++ b/drivers/net/wireless/ath/ath10k/pci.c
+@@ -3780,7 +3780,7 @@ static SIMPLE_DEV_PM_OPS(ath10k_pci_pm_ops,
+ 			 ath10k_pci_pm_suspend,
+ 			 ath10k_pci_pm_resume);
  
- MODULE_DEVICE_TABLE(pci, ath_pci_id_table);
+-static struct pci_driver ath10k_pci_driver = {
++struct pci_driver ath10k_pci_driver = {
+ 	.name = "ath10k_pci",
+ 	.id_table = ath10k_pci_id_table,
+ 	.probe = ath10k_pci_probe,
+diff --git a/drivers/net/wireless/ath/ath10k/pci.h b/drivers/net/wireless/ath/ath10k/pci.h
+index 480cd97ab739..de676797b736 100644
+--- a/drivers/net/wireless/ath/ath10k/pci.h
++++ b/drivers/net/wireless/ath/ath10k/pci.h
+@@ -209,6 +209,8 @@ static inline struct ath10k_pci *ath10k_pci_priv(struct ath10k *ar)
+ #define DIAG_ACCESS_CE_TIMEOUT_US 10000 /* 10 ms */
+ #define DIAG_ACCESS_CE_WAIT_US	50
  
--static struct pci_driver ath_pci_driver = {
-+struct pci_driver ath_pci_driver = {
- 	.name       = "ath9k",
- 	.id_table   = ath_pci_id_table,
- 	.probe      = ath_pci_probe,
++extern struct pci_driver ath10k_pci_driver;
++
+ void ath10k_pci_write32(struct ath10k *ar, u32 offset, u32 value);
+ void ath10k_pci_soc_write32(struct ath10k *ar, u32 addr, u32 val);
+ void ath10k_pci_reg_write32(struct ath10k *ar, u32 addr, u32 val);
 -- 
 2.39.1
 
