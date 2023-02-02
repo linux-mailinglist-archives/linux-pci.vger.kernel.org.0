@@ -2,101 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB033687A64
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 11:38:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A823687B71
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 12:03:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232014AbjBBKir (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 05:38:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38112 "EHLO
+        id S232449AbjBBLDX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 06:03:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232001AbjBBKir (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 05:38:47 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E60562279B
-        for <linux-pci@vger.kernel.org>; Thu,  2 Feb 2023 02:38:45 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id jh15so1380832plb.8
-        for <linux-pci@vger.kernel.org>; Thu, 02 Feb 2023 02:38:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dF0HiUsu4mW2e29lJBwC8i5KwR/+inl5fESFZO2VSzA=;
-        b=55h9pe0aCKrdPvt0QF2E95uOmwsJdhqe+dNk42AhcKiLn2+7Gt7EItqSo9wvjPWFIC
-         YJra0Nm1deoCC2kHBdv7Ug/Wt63zY8mkdz9pHtMM0L7AMC9UlvJWKblsnRuh/sm/PWBP
-         Sh3TlfwE72zBFIOMSWGgVHEMmg3bRwHnyiSb78qCtHkosfV9VsxQC+EM7SEWwyNa8zc3
-         9qd+YzwNUY4Y0X6ArhBh1aOq5sQNFNj0penTrmix9T7hocgQVLMVKDpn8/EiHCmuRIl3
-         vPHz0BxcxpvPOxbtmP7NKAu5uZEHgeMG8w/lbhCz26LJUw3EEKpLMPnGiM8Tn9jbIW7j
-         yGJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dF0HiUsu4mW2e29lJBwC8i5KwR/+inl5fESFZO2VSzA=;
-        b=XhOwHDVUuYeq8Zir7NvIJq0C1969uqJ0yH/o9X+1dxEwc1HsBNU3fZMLx47uZ9oLyO
-         J9apGP/4VkbVczhEPLALlFP99dBKn9ih+udCejzUjjSOtPKsdFwdm5ZbsoVbUxUA8Dmm
-         TdAcSQh3qDXDh9fwLCOaAOdeY0VYXTJoOdfahWLCZJNTUFz193YekKI9sReCXyr+4CdB
-         mPttkgTBbv4Iy9ohrYzpHfQLj0sUH396FdltD6lepLXMq6gbIzFqMY2eahOCqYD2cZ2V
-         8fkZa6J0J6pUP9kF2tlCqradKyq4n6tNDyo9Yzz41QjhM6EF0AfmxU63SuaSjILm5Loh
-         WsDg==
-X-Gm-Message-State: AO0yUKXcrPlBbQbQXGQIag6S3XuOa8lgJwXuGzWLeHcuS/XS19R/KEl1
-        K/S6c4ct6f19G+N3Oeyj3qlfNQ==
-X-Google-Smtp-Source: AK7set++uSAKtJhOxAtK9tHcjvV0tuO6IMF1d+/J/BkEsdn5Qo3dj8FKrorqXx5ri2I+oLPTb/98Ug==
-X-Received: by 2002:a17:902:c7d3:b0:194:892b:8654 with SMTP id r19-20020a170902c7d300b00194892b8654mr5254714pla.17.1675334325474;
-        Thu, 02 Feb 2023 02:38:45 -0800 (PST)
-Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id v9-20020a170902e8c900b001897e2fd65dsm1449114plg.9.2023.02.02.02.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Feb 2023 02:38:44 -0800 (PST)
-From:   Shunsuke Mie <mie@igel.co.jp>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shunsuke Mie <mie@igel.co.jp>, Jon Mason <jdmason@kudzu.us>,
-        Frank Li <Frank.Li@nxp.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ren Zhijie <renzhijie2@huawei.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: endpoint: Fix a Kconfig prompt of vNTB driver
-Date:   Thu,  2 Feb 2023 19:38:32 +0900
-Message-Id: <20230202103832.2038286-1-mie@igel.co.jp>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S232620AbjBBLCL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 06:02:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61B468AC1F;
+        Thu,  2 Feb 2023 03:02:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4533D61AEA;
+        Thu,  2 Feb 2023 11:02:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1B71C4339B;
+        Thu,  2 Feb 2023 11:02:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675335728;
+        bh=lzDIUBwozYSnkNAtq+CbXRRVFuVSaq6m9YLSNh7qQGc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MoJmx3pzVPOfdioUSvGq2DqDBcmghnKSAm4WKHhY1lPV58gO+92ShLq4EzyxcbnNY
+         Jf+OdjwR1imNuLA/e9WQH249Z9jr/lbBxU1znZGtQ7eSS2Y9btxdFV+kAh4d4GlKeB
+         vj6o8j9R8WO8WzQDBH4aXVZDRAJQW0w6i3Y8/P7oSvOjGqTAJxZZ3wSg8cbT5e699A
+         3zHWZKizXZA6Xsry1mnf7nzqiIkCuYCJnhDV30We5RpfeF6IUZrHZaQ2GwzGoDQiyG
+         QOF09Mhp1+jMIBZPrar5kffHQbUpUD8XFIBbO5klhiBXIOX2LQOr+eyPSKGHqvk6nQ
+         kVPlLKoHGwbLA==
+Date:   Thu, 2 Feb 2023 12:02:02 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Daire.McNamara@microchip.com
+Cc:     linux-riscv@lists.infradead.org, kw@linux.com,
+        Conor.Dooley@microchip.com, devicetree@vger.kernel.org,
+        paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, linux-pci@vger.kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        bhelgaas@google.com
+Subject: Re: [PATCH v3 00/11] PCI: microchip: Partition address translations
+Message-ID: <Y9uYKp24fHGkqI5Z@lpieralisi>
+References: <20230111125323.1911373-1-daire.mcnamara@microchip.com>
+ <d5a5ba3b01953c9db435f2371adee6e2b61d26dd.camel@microchip.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d5a5ba3b01953c9db435f2371adee6e2b61d26dd.camel@microchip.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-vNTB driver and NTB driver have same Kconfig prompt. Changed to make it
-distinguishable.
+On Tue, Jan 31, 2023 at 05:03:00PM +0000, Daire.McNamara@microchip.com wrote:
+> Hi all,
+> 
+> Just touching base here.  Can I take it that things are in-hand, and
+> this patchset is moving into the kernel or is there something I need to
+> do at my end?
 
-Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
+I will have a look shortly, sorry for the delay.
 
-Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
----
- drivers/pci/endpoint/functions/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Lorenzo
 
-diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-index 9fd560886871..8efb6a869e7c 100644
---- a/drivers/pci/endpoint/functions/Kconfig
-+++ b/drivers/pci/endpoint/functions/Kconfig
-@@ -27,7 +27,7 @@ config PCI_EPF_NTB
- 	  If in doubt, say "N" to disable Endpoint NTB driver.
- 
- config PCI_EPF_VNTB
--	tristate "PCI Endpoint NTB driver"
-+	tristate "PCI Endpoint Virtual NTB driver"
- 	depends on PCI_ENDPOINT
- 	depends on NTB
- 	select CONFIGFS_FS
--- 
-2.25.1
-
+> best regards
+> daire
+> 
+> On Wed, 2023-01-11 at 12:53 +0000, daire.mcnamara@microchip.com wrote:
+> > From: Daire McNamara <daire.mcnamara@microchip.com>
+> > 
+> > Changes since v2:
+> > - Replaced GENMASK(63,0) with GENMASK_ULL(63,0) to remove warning
+> > - Added patch to avoid warning on cast of argument to
+> > devm_add_action_or_reset()
+> > - Added patch to enable building driver as a module
+> > 
+> > Changes since v1:
+> > - Removed unused variables causing compile warnings
+> > - Removed incorrect Signed-off-by: tags
+> > - Capitalised msi and msi-x
+> > - Capitalised FIC and respelled busses to buses
+> > - Capitalised all comments
+> > - Renamed fabric inter connect to Fabric Interface Controller as per
+> > PolarFire SoC TRM
+> > 
+> > Microchip PolarFire SoC is a 64-bit device and has DDR starting at
+> > 0x80000000 and 0x1000000000. Its PCIe rootport is connected to the
+> > CPU
+> > Coreplex via an FPGA fabric. The AXI connections between the Coreplex
+> > and
+> > the fabric are 64-bit and the AXI connections between the fabric and
+> > the
+> > rootport are 32-bit.  For the CPU CorePlex to act as an AXI-Master to
+> > the
+> > PCIe devices and for the PCIe devices to act as bus masters to DDR at
+> > these
+> > base addresses, the fabric can be customised to add/remove offsets
+> > for bits
+> > 38-32 in each direction. These offsets, if present, vary with each
+> > customer's design.
+> > 
+> > To support this variety, the rootport driver must know how much
+> > address
+> > translation (both inbound and outbound) is performed by a particular
+> > customer design and how much address translation must be provided by
+> > the
+> > rootport.
+> > 
+> > This patchset contains a parent/child dma-ranges scheme suggested by
+> > Rob
+> > Herring. It creates an FPGA PCIe parent bus which wraps the PCIe
+> > rootport
+> > and implements a parsing scheme where the root port identifies what
+> > address
+> > translations are performed by the FPGA fabric parent bus, and what
+> > address translations must be done by the rootport itself.
+> > 
+> > See 
+> > https://lore.kernel.org/linux-pci/20220902142202.2437658-1-daire.mcnamara@microchip.com/
+> > for the relevant previous patch submission discussion.
+> > 
+> > It also re-partitions the probe() and init() functions as suggested
+> > by
+> > Bjorn Helgaas to make them more maintainable as the init() function
+> > had
+> > become too large.
+> > 
+> > It also contains some minor fixes and clean-ups that are pre-
+> > requisites:
+> > - to align register, offset, and mask names with the hardware
+> > documentation
+> >   and to have the register definitions appear in the same order as in
+> > the
+> >   hardware documentation;
+> > - to harvest the MSI information from the hardware configuration
+> > register
+> >   as these depend on the FPGA fabric design and can vary with
+> > different
+> >   customer designs;
+> > - to clean up interrupt initialisation to make it more maintainable;
+> > - to fix SEC and DED interrupt handling.
+> > 
+> > I expect Conor will take the dts patch via the soc tree once the PCIe
+> > parts
+> > of the series are accepted.
+> > 
+> > Conor Dooley (1):
+> >   riscv: dts: microchip: add parent ranges and dma-ranges for IKRD
+> >     v2022.09
+> > 
+> > Daire McNamara (10):
+> >   PCI: microchip: Correct the DED and SEC interrupt bit offsets
+> >   PCI: microchip: Remove cast warning for devm_add_action_or_reset()
+> > arg
+> >   PCI: microchip: enable building this driver as a module
+> >   PCI: microchip: Align register, offset, and mask names with hw docs
+> >   PCI: microchip: Enable event handlers to access bridge and ctrl
+> > ptrs
+> >   PCI: microchip: Clean up initialisation of interrupts
+> >   PCI: microchip: Gather MSI information from hardware config
+> > registers
+> >   PCI: microchip: Re-partition code between probe() and init()
+> >   PCI: microchip: Partition outbound address translation
+> >   PCI: microchip: Partition inbound address translation
+> > 
+> >  .../dts/microchip/mpfs-icicle-kit-fabric.dtsi |  62 +-
+> >  drivers/pci/controller/Kconfig                |   2 +-
+> >  drivers/pci/controller/pcie-microchip-host.c  | 688 +++++++++++++---
+> > --
+> >  3 files changed, 533 insertions(+), 219 deletions(-)
+> > 
+> > 
+> > base-commit: 3c1f24109dfc4fb1a3730ed237e50183c6bb26b3
