@@ -2,53 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD858687C55
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 12:32:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 770C5687C8D
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 12:45:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232294AbjBBLcH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 06:32:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56146 "EHLO
+        id S232007AbjBBLpm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 06:45:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232320AbjBBLbq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 06:31:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE808C419;
-        Thu,  2 Feb 2023 03:31:34 -0800 (PST)
+        with ESMTP id S230463AbjBBLpk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 06:45:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05A1E87165;
+        Thu,  2 Feb 2023 03:45:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ACE4061A9C;
-        Thu,  2 Feb 2023 11:31:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A597AC433D2;
-        Thu,  2 Feb 2023 11:31:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 94E35B82400;
+        Thu,  2 Feb 2023 11:45:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7CBC433D2;
+        Thu,  2 Feb 2023 11:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675337493;
-        bh=2I3495gzi5ZjYTnwhpWhEkrstd6SYuwb9leKZgNivb8=;
+        s=k20201202; t=1675338336;
+        bh=m87/DE9fpIUi8cZc8zFaS3+uraBQbfVmUU3Jv/n9q3s=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Bn7dtF3ptp/KAzwZVxcGN0xMi3eTjxk8n+yZv/Ml1xtx0gon7FZ1Q43zyuG/1YbRV
-         UVnechqkGMp+cfD4Rk5SfIjpFtI9TmAiqTkEEPaTRv+CoOQdhhk5oAjvexnNovLmeZ
-         Wrz1IBPGXzl4Qb5ccEiYAcCmptCAPFupkwUnPL+msZZEgyUhC9+BDdFvSGJmQ18vHI
-         XyxcslI/MdeO1zFRXeU3cTQ9nYpyeM23wEj4bMHcNBQQ1jAbXY21FPNFDey4Japfoy
-         KOkxqkTrT7UghoMYkbqdINwC4Cs5MaHY8yoNIU2bsi3m71Fwl8evsh9DAfBEUcjQtQ
-         MDag+qlKg/XnA==
-Date:   Thu, 2 Feb 2023 12:31:26 +0100
+        b=rPxSt+Dqpis7qHMsDQaD7dOjyTgkbczeo3rPxrPIgpnJn9uFmqhF7tU8uAoV0ErJg
+         /hWdiHl4mQ1Hky+a1k4ewQdPm6vyXE7Ogpq0YDrd49UGrQgRRTzcSsDzBH6LF3yeeN
+         81eNtVruaN7b5vmLqcUGmR4Xt2qcGAiyS6ALtyvUxmFlDnA/WQNosMdDwIzPpMUUvb
+         FjMFxKK6bgK2X8llRTBuT6AmMO1+fKi5WBxU4U0/j657SwwIqXp9z+tdJs91ZgQ31X
+         xSzynawvGJGgHspKSV+2C17zggK3ACwLpy+wYAHRkjs5I/btP1kaf+Z1TwnHKJ3Vgb
+         4TdTITgnhs+cA==
+Date:   Thu, 2 Feb 2023 12:45:30 +0100
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
 To:     daire.mcnamara@microchip.com
 Cc:     conor.dooley@microchip.com, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, paul.walmsley@sifive.com,
         palmer@dabbelt.com, aou@eecs.berkeley.edu, kw@linux.com,
         bhelgaas@google.com, linux-riscv@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v3 10/11] PCI: microchip: Partition inbound address
- translation
-Message-ID: <Y9ufDnZDA2plc2x6@lpieralisi>
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 07/11] PCI: microchip: Gather MSI information from
+ hardware config registers
+Message-ID: <Y9uiWscjKQpD7JvE@lpieralisi>
 References: <20230111125323.1911373-1-daire.mcnamara@microchip.com>
- <20230111125323.1911373-11-daire.mcnamara@microchip.com>
+ <20230111125323.1911373-8-daire.mcnamara@microchip.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230111125323.1911373-11-daire.mcnamara@microchip.com>
+In-Reply-To: <20230111125323.1911373-8-daire.mcnamara@microchip.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -58,282 +57,183 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+CC Robin]
-
-On Wed, Jan 11, 2023 at 12:53:22PM +0000, daire.mcnamara@microchip.com wrote:
+On Wed, Jan 11, 2023 at 12:53:19PM +0000, daire.mcnamara@microchip.com wrote:
 > From: Daire McNamara <daire.mcnamara@microchip.com>
 > 
-> On Microchip PolarFire SoC the PCIe Root Port is behind a set of Fabric
-> Interface Controller (FIC) buses that encapsulate buses like ABP/AHP,
-> AXI-S, and AXI-M. Depending on which FIC(s) the Root Port is wired
-> through to cpu space, the Root Port driver needs to take account of the
-> address translation done by a parent (e.g. fabric) node before setting
-> up its own inbound address translation tables from attached devices.
-> 
-> Parse the dma-range properties to determine how much address translation
-> to perform in the Root Port and how much is being provided by the
-> fabric.
+> The PCIe Root Complex on PolarFire SoC is configured at bitstream creation
+> time using Libero.  Key MSI-related parameters include the number of
+> MSIs (1/2/4/8/16/32) and the MSI address. In the device driver, extract
+> this information from hw registers at init time, and use it to configure
+> MSI system, including configuring MSI capability structure correctly in
+> configuration space.
 
-Same reasoning as per patch (9), it requires some review from DT/DMA
-maintainers.
+I don't understand whether this is backward compatible with all existing
+host controllers in the field. I assume MSI parameters can always been
+probed and that has been always the case for all controllers supported
+based on this design, please confirm before I proceed with the review.
 
+Thanks,
 Lorenzo
 
-> 
 > Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
 > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 > ---
->  drivers/pci/controller/pcie-microchip-host.c | 178 ++++++++++++++++++-
->  1 file changed, 172 insertions(+), 6 deletions(-)
+>  drivers/pci/controller/pcie-microchip-host.c | 73 +++++++++++---------
+>  1 file changed, 40 insertions(+), 33 deletions(-)
 > 
 > diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-> index f3dfcdf39c8a..2eb70fd01879 100644
+> index 751f0243deb4..9ff0fb04b953 100644
 > --- a/drivers/pci/controller/pcie-microchip-host.c
 > +++ b/drivers/pci/controller/pcie-microchip-host.c
-> @@ -22,6 +22,9 @@
->  /* Number of MSI IRQs */
->  #define MC_MAX_NUM_MSI_IRQS			32
+> @@ -20,8 +20,7 @@
+>  #include "../pci.h"
 >  
-> +#define MC_MAX_NUM_INBOUND_WINDOWS		8
-> +#define MC_ATT_MASK				GENMASK_ULL(63, 31)
-> +
+>  /* Number of MSI IRQs */
+> -#define MC_NUM_MSI_IRQS				32
+> -#define MC_NUM_MSI_IRQS_CODED			5
+> +#define MC_MAX_NUM_MSI_IRQS			32
+>  
 >  /* PCIe Bridge Phy and Controller Phy offsets */
 >  #define MC_PCIE1_BRIDGE_ADDR			0x00008000u
->  #define MC_PCIE1_CTRL_ADDR			0x0000a000u
-> @@ -86,10 +89,13 @@
+> @@ -31,6 +30,11 @@
+>  #define MC_PCIE_CTRL_ADDR			(MC_PCIE1_CTRL_ADDR)
+>  
+>  /* PCIe Bridge Phy Regs */
+> +#define PCIE_PCI_IRQ_DW0			0xa8
+> +#define  MSIX_CAP_MASK				BIT(31)
+> +#define  NUM_MSI_MSGS_MASK			GENMASK(6, 4)
+> +#define  NUM_MSI_MSGS_SHIFT			4
+> +
+>  #define IMASK_LOCAL				0x180
+>  #define  DMA_END_ENGINE_0_MASK			0x00000000u
+>  #define  DMA_END_ENGINE_0_SHIFT			0
+> @@ -79,7 +83,6 @@
+>  #define IMASK_HOST				0x188
+>  #define ISTATUS_HOST				0x18c
+>  #define IMSI_ADDR				0x190
+> -#define  MSI_ADDR				0x190
 >  #define ISTATUS_MSI				0x194
 >  
->  #define ATR_WINDOW_DESC_SIZE			32
-> -#define ATR_PCIE_ATR_SIZE			0x25
->  #define ATR_SIZE_SHIFT				1
->  #define ATR_IMPL_ENABLE				1
->  
-> +#define ATR_PCIE_WIN0_SRCADDR			0x80000000
-> +#define ATR_PCIE_ATR_SIZE			(512 * 1024 * 1024ul)
-> +#define ATR_PCIE_NUM_WINDOWS			8
-> +
 >  /* PCIe Master table init defines */
->  #define ATR0_PCIE_WIN0_SRCADDR_PARAM		0x600u
->  #define ATR0_PCIE_WIN0_SRC_ADDR			0x604u
-> @@ -278,6 +284,12 @@ struct mc_msi {
->  	DECLARE_BITMAP(used, MC_MAX_NUM_MSI_IRQS);
+> @@ -158,8 +161,6 @@
+>  
+>  /* PCIe Config space MSI capability structure */
+>  #define MC_MSI_CAP_CTRL_OFFSET			0xe0u
+> -#define  MC_MSI_MAX_Q_AVAIL			(MC_NUM_MSI_IRQS_CODED << 1)
+> -#define  MC_MSI_Q_SIZE				(MC_NUM_MSI_IRQS_CODED << 4)
+>  
+>  /* Events */
+>  #define EVENT_PCIE_L2_EXIT			0
+> @@ -259,7 +260,7 @@ struct mc_msi {
+>  	struct irq_domain *dev_domain;
+>  	u32 num_vectors;
+>  	u64 vector_phy;
+> -	DECLARE_BITMAP(used, MC_NUM_MSI_IRQS);
+> +	DECLARE_BITMAP(used, MC_MAX_NUM_MSI_IRQS);
 >  };
 >  
-> +struct inbound_windows {
-> +	u64 axi_addr;
-> +	u64 pci_addr;
-> +	u64 size;
-> +};
-> +
 >  struct mc_pcie {
->  	void __iomem *axi_base_addr;
->  	struct device *dev;
-> @@ -286,6 +298,8 @@ struct mc_pcie {
->  	raw_spinlock_t lock;
->  	struct mc_msi msi;
->  	u64 outbound_range_offset;
-> +	u32 num_inbound_windows;
-> +	struct inbound_windows inbound_windows[MC_MAX_NUM_INBOUND_WINDOWS];
->  };
+> @@ -382,25 +383,29 @@ static struct {
 >  
->  struct cause {
-> @@ -948,6 +962,43 @@ static int mc_pcie_init_irq_domains(struct mc_pcie *port)
->  	return mc_allocate_msi_domains(port);
->  }
+>  static char poss_clks[][5] = { "fic0", "fic1", "fic2", "fic3" };
 >  
-> +static int mc_pcie_setup_inbound_ranges(struct platform_device *pdev, struct mc_pcie *port)
-> +{
-> +	void __iomem *bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
-> +	phys_addr_t pcie_addr;
-> +	phys_addr_t axi_addr;
-> +	u32 atr_size;
-> +	u32 val;
-> +	int i;
-> +
-> +	for (i = 0; i < port->num_inbound_windows; i++) {
-> +		atr_size = ilog2(port->inbound_windows[i].size) - 1;
-> +		atr_size &= GENMASK(5, 0);
-> +
-> +		pcie_addr = port->inbound_windows[i].pci_addr;
-> +
-> +		val = lower_32_bits(pcie_addr) & GENMASK(31, 12);
-> +		val |= (atr_size << ATR_SIZE_SHIFT);
-> +		val |= ATR_IMPL_ENABLE;
-> +		writel(val, bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_SRCADDR_PARAM + (i * ATR_WINDOW_DESC_SIZE));
-> +		writel(upper_32_bits(pcie_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_SRC_ADDR + (i * ATR_WINDOW_DESC_SIZE));
-> +
-> +		axi_addr = port->inbound_windows[i].axi_addr;
-> +
-> +		writel(lower_32_bits(axi_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_ADDR_LSB + (i * ATR_WINDOW_DESC_SIZE));
-> +		writel(upper_32_bits(axi_addr), bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_ADDR_UDW + (i * ATR_WINDOW_DESC_SIZE));
-> +
-> +		writel(TRSL_ID_AXI4_MASTER_0, bridge_base_addr +
-> +		       ATR0_PCIE_WIN0_TRSL_PARAM + (i * ATR_WINDOW_DESC_SIZE));
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  				 phys_addr_t axi_addr, phys_addr_t pci_addr,
->  				 size_t size)
-> @@ -979,11 +1030,6 @@ static void mc_pcie_setup_window(void __iomem *bridge_base_addr, u32 index,
->  	val = upper_32_bits(pci_addr);
->  	writel(val, bridge_base_addr + (index * ATR_WINDOW_DESC_SIZE) +
->  	       ATR0_AXI4_SLV0_TRSL_ADDR_UDW);
-> -
-> -	val = readl(bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> -	val |= (ATR_PCIE_ATR_SIZE << ATR_SIZE_SHIFT);
-> -	writel(val, bridge_base_addr + ATR0_PCIE_WIN0_SRCADDR_PARAM);
-> -	writel(0, bridge_base_addr + ATR0_PCIE_WIN0_SRC_ADDR);
->  }
->  
->  static int mc_pcie_setup_windows(struct platform_device *pdev,
-> @@ -1163,6 +1209,116 @@ static int mc_check_for_parent_range_handling(struct platform_device *pdev, stru
->  	return 0;
->  }
->  
-> +static int mc_check_for_parent_dma_range_handling(struct platform_device *pdev,
-> +						  struct mc_pcie *port)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *dn = dev->of_node;
-> +	struct of_range_parser parser;
-> +	struct of_range range;
-> +	int num_parent_ranges = 0;
-> +	int num_ranges = 0;
-> +	struct inbound_windows ranges[MC_MAX_NUM_INBOUND_WINDOWS] = { 0 };
-> +	u64 start_axi = GENMASK_ULL(63, 0);
-> +	u64 end_axi = 0;
-> +	u64 start_pci = GENMASK_ULL(63, 0);
-> +	s64 size;
-> +	u64 window_size;
-> +	int i;
-> +
-> +	/* Find all dma-ranges */
-> +	if (of_pci_dma_range_parser_init(&parser, dn)) {
-> +		dev_err(dev, "missing dma-ranges property\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	for_each_of_range(&parser, &range) {
-> +		if (num_ranges > MC_MAX_NUM_INBOUND_WINDOWS) {
-> +			dev_err(dev, "too many inbound ranges; %d available tables\n",
-> +				MC_MAX_NUM_INBOUND_WINDOWS);
-> +			return -EINVAL;
-> +		}
-> +		ranges[num_ranges].axi_addr = range.cpu_addr;
-> +		ranges[num_ranges].pci_addr = range.pci_addr;
-> +		ranges[num_ranges].size = range.size;
-> +
-> +		num_ranges++;
-> +	}
-> +
-> +	/*
-> +	 * Check for one level up; will need to adjust address translation
-> +	 * tables for these
-> +	 */
-> +	dn = of_get_parent(dn);
-> +	if (dn) {
-> +		of_pci_dma_range_parser_init(&parser, dn);
-> +
-> +		for_each_of_range(&parser, &range) {
-> +			if (num_parent_ranges > MC_MAX_NUM_INBOUND_WINDOWS) {
-> +				dev_err(dev, "too many parent inbound ranges; %d available tables\n",
-> +					MC_MAX_NUM_INBOUND_WINDOWS);
-> +				return -EINVAL;
-> +			}
-> +			ranges[num_parent_ranges].axi_addr = range.pci_addr;
-> +			num_parent_ranges++;
-> +		}
-> +	}
-> +
-> +	if (num_parent_ranges) {
-> +		if (num_ranges != num_parent_ranges) {
-> +			dev_err(dev, "num parent inbound ranges must be 0 or match num inbound ranges\n");
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/* Merge ranges */
-> +	for (i = 0; i < num_ranges; i++) {
-> +		struct inbound_windows *range = &ranges[i];
-> +
-> +		if (range->axi_addr < start_axi) {
-> +			start_axi = range->axi_addr;
-> +			start_pci = range->pci_addr;
-> +		}
-> +
-> +		if (range->axi_addr + range->size > end_axi)
-> +			end_axi = range->axi_addr + range->size;
-> +	}
-> +
-> +	/* Move starts back as far as possible */
-> +	start_axi &= MC_ATT_MASK;
-> +	start_pci &= MC_ATT_MASK;
-> +
-> +	/* Adjust size to take account of that change */
-> +	size = end_axi - start_axi;
-> +
-> +	/* May need to adjust size up to the next largest power of 2 */
-> +	if (size < 1ull << ilog2(size))
-> +		size = 1ull << (ilog2(size) + 1);
-> +
-> +	window_size = 1ull << (ilog2(size) - 1);
-> +
-> +	/* Divide merged range into windows */
-> +	i = 0;
-> +	while (size > 0 && i < MC_MAX_NUM_INBOUND_WINDOWS) {
-> +		port->inbound_windows[i].axi_addr = start_axi;
-> +		port->inbound_windows[i].pci_addr = start_pci;
-> +		port->inbound_windows[i].size = window_size;
-> +
-> +		size -= window_size;
-> +		start_axi += window_size;
-> +		start_pci += window_size;
-> +		i++;
-> +		port->num_inbound_windows = i;
-> +	}
-> +
-> +	if (size < 0) {
-> +		dev_err(dev, "insufficient windows to map inbound ranges\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int mc_platform_init(struct pci_config_window *cfg)
+> -static void mc_pcie_enable_msi(struct mc_pcie *port, void __iomem *base)
+> +static void mc_pcie_fixup_ecam(struct mc_pcie *port, void __iomem *ecam)
 >  {
->  	struct device *dev = cfg->parent;
-> @@ -1180,6 +1336,11 @@ static int mc_platform_init(struct pci_config_window *cfg)
->  	if (ret)
->  		return ret;
->  
-> +	/* And similarly, check for inbound address translation */
-> +	ret = mc_check_for_parent_dma_range_handling(pdev, port);
-> +	if (ret)
-> +		return ret;
+>  	struct mc_msi *msi = &port->msi;
+> -	u32 cap_offset = MC_MSI_CAP_CTRL_OFFSET;
+> -	u16 msg_ctrl = readw_relaxed(base + cap_offset + PCI_MSI_FLAGS);
+> -
+> -	msg_ctrl |= PCI_MSI_FLAGS_ENABLE;
+> -	msg_ctrl &= ~PCI_MSI_FLAGS_QMASK;
+> -	msg_ctrl |= MC_MSI_MAX_Q_AVAIL;
+> -	msg_ctrl &= ~PCI_MSI_FLAGS_QSIZE;
+> -	msg_ctrl |= MC_MSI_Q_SIZE;
+> -	msg_ctrl |= PCI_MSI_FLAGS_64BIT;
+> -
+> -	writew_relaxed(msg_ctrl, base + cap_offset + PCI_MSI_FLAGS);
+> -
+> +	u16 reg;
+> +	u8 queue_size;
 > +
->  	/* Configure address translation table 0 for PCIe config space */
->  	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start - port->outbound_range_offset,
->  			     cfg->res.start - port->outbound_range_offset,
-> @@ -1193,6 +1354,11 @@ static int mc_platform_init(struct pci_config_window *cfg)
->  	if (ret)
->  		return ret;
->  
-> +	/* Configure inbound translation tables */
-> +	ret = mc_pcie_setup_inbound_ranges(pdev, port);
-> +	if (ret)
-> +		return ret;
+> +	/* Fixup MSI enable flag */
+> +	reg = readw_relaxed(ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
+> +	reg |= PCI_MSI_FLAGS_ENABLE;
+> +	writew_relaxed(reg, ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
 > +
->  	/* Address translation is up; safe to enable interrupts */
->  	ret = mc_init_interrupts(pdev, port);
->  	if (ret)
+> +	/* Fixup PCI MSI queue flags */
+> +	queue_size = reg & PCI_MSI_FLAGS_QMASK;
+> +	queue_size >>= 1;
+> +	reg &= ~PCI_MSI_FLAGS_QSIZE;
+> +	reg |= queue_size << 4;
+> +	writew_relaxed(reg, ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_FLAGS);
+> +
+> +	/* Fixup MSI addr fields */
+>  	writel_relaxed(lower_32_bits(msi->vector_phy),
+> -		       base + cap_offset + PCI_MSI_ADDRESS_LO);
+> +		       ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_ADDRESS_LO);
+>  	writel_relaxed(upper_32_bits(msi->vector_phy),
+> -		       base + cap_offset + PCI_MSI_ADDRESS_HI);
+> +		       ecam + MC_MSI_CAP_CTRL_OFFSET + PCI_MSI_ADDRESS_HI);
+>  }
+>  
+>  static void mc_handle_msi(struct irq_desc *desc)
+> @@ -473,10 +478,7 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  {
+>  	struct mc_pcie *port = domain->host_data;
+>  	struct mc_msi *msi = &port->msi;
+> -	void __iomem *bridge_base_addr =
+> -		port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+>  	unsigned long bit;
+> -	u32 val;
+>  
+>  	mutex_lock(&msi->lock);
+>  	bit = find_first_zero_bit(msi->used, msi->num_vectors);
+> @@ -490,11 +492,6 @@ static int mc_irq_msi_domain_alloc(struct irq_domain *domain, unsigned int virq,
+>  	irq_domain_set_info(domain, virq, bit, &mc_msi_bottom_irq_chip,
+>  			    domain->host_data, handle_edge_irq, NULL, NULL);
+>  
+> -	/* Enable MSI interrupts */
+> -	val = readl_relaxed(bridge_base_addr + IMASK_LOCAL);
+> -	val |= PM_MSI_INT_MSI_MASK;
+> -	writel_relaxed(val, bridge_base_addr + IMASK_LOCAL);
+> -
+>  	mutex_unlock(&msi->lock);
+>  
+>  	return 0;
+> @@ -1117,6 +1114,7 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  	struct mc_pcie *port;
+>  	void __iomem *bridge_base_addr;
+>  	int ret;
+> +	u32 val;
+>  
+>  	port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>  	if (!port)
+> @@ -1137,11 +1135,20 @@ static int mc_platform_init(struct pci_config_window *cfg)
+>  
+>  	bridge_base_addr = port->axi_base_addr + MC_PCIE_BRIDGE_ADDR;
+>  
+> -	port->msi.vector_phy = MSI_ADDR;
+> -	port->msi.num_vectors = MC_NUM_MSI_IRQS;
+> +	/* Allow enabling MSI by disabling MSI-X */
+> +	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
+> +	val &= ~MSIX_CAP_MASK;
+> +	writel(val, bridge_base_addr + PCIE_PCI_IRQ_DW0);
+> +
+> +	/* Pick num vectors from bitfile programmed onto FPGA fabric */
+> +	val = readl(bridge_base_addr + PCIE_PCI_IRQ_DW0);
+> +	val &= NUM_MSI_MSGS_MASK;
+> +	val >>= NUM_MSI_MSGS_SHIFT;
+> +
+> +	port->msi.num_vectors = 1 << val;
+>  
+> -	/* Hardware doesn't setup MSI by default */
+> -	mc_pcie_enable_msi(port, cfg->win);
+> +	/* Pick vector address from design */
+> +	port->msi.vector_phy = readl_relaxed(bridge_base_addr + IMSI_ADDR);
+>  
+>  	/* Configure Address Translation Table 0 for PCIe config space */
+>  	mc_pcie_setup_window(bridge_base_addr, 0, cfg->res.start & 0xffffffff,
 > -- 
 > 2.25.1
 > 
