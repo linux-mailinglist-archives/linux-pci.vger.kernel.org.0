@@ -2,54 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC8BE688818
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 21:12:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE88D688845
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 21:30:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232494AbjBBUM5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 15:12:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54648 "EHLO
+        id S229972AbjBBUap (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 15:30:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232676AbjBBUMz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 15:12:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D3580F9F;
-        Thu,  2 Feb 2023 12:12:54 -0800 (PST)
+        with ESMTP id S229881AbjBBUao (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 15:30:44 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B03C69520
+        for <linux-pci@vger.kernel.org>; Thu,  2 Feb 2023 12:30:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 50AEAB827D6;
-        Thu,  2 Feb 2023 20:12:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A003CC433EF;
-        Thu,  2 Feb 2023 20:12:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EA37861CC9
+        for <linux-pci@vger.kernel.org>; Thu,  2 Feb 2023 20:30:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3A0BC433EF;
+        Thu,  2 Feb 2023 20:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675368772;
-        bh=MQKMITOOkVxwlfpaG6ybSkQudYIrm/IEf9Xq09VMI4k=;
+        s=k20201202; t=1675369842;
+        bh=tJfnJGWI3fvJ8uh8PcBxxuQHrKbnBtCLtuVlDujdzdc=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ij6k1W+x/btHjzibEPP+mqaOcORyoeROaRTKdXR0bqowRVwYIzV0mZ8tt3Z2tfEYy
-         5j7kv3AtMz37z1ZRatjdsDESWXFI6G3dfvrYN4dFp5hwgMviQU9g0fxM34HB/mmddk
-         KcM/5lGPrDWiZ/8lx07wvvv833yy+88EC4dVLYdlPCVyjr1NXUJtiktYSFjHsSP0ud
-         UwNboaJUXukFznvNekv4QWnohI7QPvbTdwOtBvvljr/Ka09+FAJRJrcK65ZIhjiR7S
-         /BovMJY8UilkkZ591J9xncErp1HuUL25+d5nbX5eQi9s9pG9t3oTmtX9xSyn1L0z0s
-         p0Yb83XECJJVg==
-Date:   Thu, 2 Feb 2023 14:12:49 -0600
+        b=Cc9mkNZEk2iGEjJEuFKH4BKIg2i8l3KfVKIR0PX/KDJ3aKnpkOLQ287Gc/o0JwL67
+         BIFWnmksn2Dlfc7hvtXRPkBwI0Av2wuugHZRKurNk7bEy52LLBqlpPEx6aHbcSTVft
+         8RaJx6NHq6sEyqVrI361v2vgBI32v/wIRwdjIDih23d/5SUjpBX/+sfAsAn+owuQ7R
+         HZf9m5xaydHpRXmJBtKDiBgaymE4BgeLrWGglm3/p0NtGyiITwldwUNXT4JpQ8bfRc
+         kzXJ/tjl81uU3AFOT4oWMnIGqTkImE/jc+SGjSOA51x4dBrEKwzC92ZBWrwg1OeHFC
+         Y1N3KZv4ALRdg==
+Date:   Thu, 2 Feb 2023 14:30:40 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Matt Fagnani <matt.fagnani@bell.net>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Vasant Hegde <vasant.hegde@amd.com>,
-        Tony Zhu <tony.zhu@intel.com>, linux-pci@vger.kernel.org,
-        iommu@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/1] PCI: Add translated request only flag for
- pci_enable_pasid()
-Message-ID: <20230202201249.GA1963053@bhelgaas>
+To:     Huacai Chen <chenhuacai@gmail.com>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH V4 1/2] PCI: Omit pci_disable_device() in .shutdown()
+Message-ID: <20230202203040.GA1964750@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b75a5a94-a962-f88e-149e-7d23982a7ad2@linux.intel.com>
+In-Reply-To: <CAAhV-H5fgG5uV5Zy6BsmwPpuhuog_L11TjWr4A82nbAcmHSj2w@mail.gmail.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -59,40 +57,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Joerg, you may be able to answer this.  Patch under discussion is:
-https://lore.kernel.org/r/20230114073420.759989-1-baolu.lu@linux.intel.com]
+On Thu, Feb 02, 2023 at 09:27:03PM +0800, Huacai Chen wrote:
+> On Thu, Feb 2, 2023 at 2:17 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Wed, Feb 01, 2023 at 12:30:17PM +0800, Huacai Chen wrote:
 
-On Thu, Feb 02, 2023 at 11:08:25AM +0800, Baolu Lu wrote:
-> ...
+> > > +static void pcie_portdrv_shutdown(struct pci_dev *dev)
+> > > +{
+> > > +     if (pci_bridge_d3_possible(dev)) {
+> > > +             pm_runtime_forbid(&dev->dev);
+> > > +             pm_runtime_get_noresume(&dev->dev);
+> > > +             pm_runtime_dont_use_autosuspend(&dev->dev);
+> > > +     }
+> > > +
+> > > +     pcie_port_device_remove(dev);
+> >
+> > Thanks!  I guess you verified that this actually *does* call all the
+> > port service .remove() methods, right?  aer_remove(), dpc_remove(),
+> > etc?
+>
+> I have tested, but aer_probe(), dpc_probe() doesn't get called at
+> boot, so does aer_remove(), dpc_remove() when poweroff. I haven't got
+> the root cause but I will continue to investigate.
 
-> ACS is unnecessary for the devices that only use translated memory request
-> for PASID. All translated addresses are granted by the Linux kernel which
-> ensures that such addresses will never be in a P2P address, i.e., it's not
-> contained in any bridge aperture, will *always* be routed toward the RC.
-
-Re 201007ef707a ("PCI: Enable PASID only when ACS RR & UF enabled on
-upstream path"), does that commit actually *fix* anything?  I wonder
-whether we could revert it completely.
-
-The intent of 201007ef707a is to use ACS to prevent misrouting, which
-would happen if a TLP contained an address that *looked* like a PCI
-bus address, i.e., it was inside a host bridge aperture, but was
-*intended* to reach an IOMMU or main memory directly.
-
-201007ef707a only affects pci_enable_pasid(), so I think we already
-avoid this misrouting by restricting DMA address allocation for both
-non-IOMMU scenarios and non-PASID IOMMU scenarios.
-
-So what about PASID mappings, e.g., consider a mapping of (Requester
-ID, PASID, Untranslated Address) -> Translated Address?  If either the
-Untranslated Address or the Translated Address looks like a PCI bus
-address, a Memory Request or Translation Request could be misrouted.
-
-Does that actually happen?  I assume it does not happen for Translated
-Addresses because that's basically the non-IOMMU case, and we don't
-need ACS to prevent misrouting there.
-
-Do IOMMUs allocate (PASID, Untranslated Addresses) that look like PCI
-bus addresses?
+We'll only call aer_probe() and dpc_probe() if the port supports those
+services and the platform has granted us control of them.  I don't
+know if your platform does.  It may support PCIe native hotplug
+(pcie_hp_init()) or PME (pcie_pme_init()).
 
 Bjorn
