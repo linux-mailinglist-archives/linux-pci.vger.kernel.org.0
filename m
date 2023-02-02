@@ -2,137 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B5CFF688464
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 17:27:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D6F856885A3
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Feb 2023 18:42:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231245AbjBBQ1Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Feb 2023 11:27:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        id S232363AbjBBRmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Feb 2023 12:42:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230048AbjBBQ1Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 11:27:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 449BF7EC9;
-        Thu,  2 Feb 2023 08:27:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C759261BFD;
-        Thu,  2 Feb 2023 16:27:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3235DC433EF;
-        Thu,  2 Feb 2023 16:27:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675355242;
-        bh=KAID/43LV8fnWPbpvfRxUeuPiOSiX7Lxy8rNPtJIo2I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZnIvcsckYTW4sIz6Q6+EgYVa9goHm//DMFQiTHzw13FkmjOv0OwQjl0kCyFdeQL3I
-         NB0JG67O5JhQ7Rumm14F/+dDR8eyKuXyHm+L5Fb2ZnOTmUoNgqVOr2YaHHLatVlFXn
-         2FGWscU+HsFtrJtPKrvWHSukLSgu7v4GQPhtS35DM3wJEc2cKyeb513P8alnlZxvHE
-         Rb/aQ7r31izX1LiTw5XIpqTSWZMHZJK12ct9bOdsIObkjhgdbI3BJ3eL4wIqTRhDe6
-         nHbdsBv0aLtFKBap1U7fL4y3/y61dQ8o/57Vdm7dmzcVcDojlrks9gHZ7Fo9boaCD9
-         Vi5iV3tV19x/w==
-Date:   Thu, 2 Feb 2023 17:27:17 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, robh@kernel.org,
-        kw@linux.com, matthias.bgg@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: mt7621: Sleep a bit after power on the PCIs phy
- ports
-Message-ID: <Y9vkZb963iK1yPVL@lpieralisi>
-References: <20221231074041.264738-1-sergio.paracuellos@gmail.com>
- <CAMhs-H8sSvn5bfHde-RT0ejqpCujCWvgRFJLtbLXqPcnvGdgtQ@mail.gmail.com>
+        with ESMTP id S232358AbjBBRmE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Feb 2023 12:42:04 -0500
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2047.outbound.protection.outlook.com [40.107.21.47])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40495761DC;
+        Thu,  2 Feb 2023 09:42:02 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QJTMrJ/SVD1b9p6V5xhFp5VX4oEWn7NSkkn0Jrg5nI1T0t76tPaoOVE3X1jw/RdpLaUt780SKhSctWNkaPPr71Txc5YPSNd4+IOeM/cn2UvYuvmfKo5pZS9J5JFHyq8XafAC9S1eGtCTNdtMMsvAtdTrItjVG0qmxctjXXgxP0ykFBERx3vI9zBcHVvZOg4X/rkX7anuTwgM9sy7Yj11eOTBD5JQBVmRhl3PLYOZEuUSKmFy1bhYQt011SmH7jWFuPBvTyc2MMnYBPLrdGpKPgsS5AzKGfxtNlPHJ9HuSHjVYjSe1aEyX2VTS2h960l2SkOLDk84/WvCMzlNLj0JPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DbOo0Z8RFB0uCmQUjakg5s3cSkg3H47DokYbcoxyLDI=;
+ b=mu/azQ1e5I1M1WGEV/JdUG8RWmnzlNYHPWf93iY2jSIqvsZIyXTUUFsVPzF9mqW9erO56mmiK0HghR10z+449ILoPehBtPGM8BE2I4WwEDEJaB+7VHwhKH8RFn52SOelzI8PdodQ4GQxCF5Qe4CLeXKdKXZsAVeeTJ1xxSV37iK2pQ1euxF4NV+TyjP7IXRg1Mp6JdqmjTIfiA4jkqRZ6s6Jz/UOdnQ9Gd9xwcWyj9GVQlZcJAqzED5O9Ivx1w9ljeWYcxFLmyxbwtvMaGd3a1SfbgnouCrZDhwsfZqAGprkwseJ4Zy3yguutWYoawVTYnOa1hSybHKd5wrrED4o9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DbOo0Z8RFB0uCmQUjakg5s3cSkg3H47DokYbcoxyLDI=;
+ b=daXZdkO9tQNbUMHQxXBChnJloSieYN4R1qc0kgQBw509UUQ0K6AwI+UR50e8XsTpTy0TciZ4W5FF9eMDAJWTu3KZ33gnT/iNcttzpZJykLXzYMK7cA6OdOoQakK9yH0PdumAZqctEYjyg9MKLePDTU1ArDJ+w5OvcQGXn+ngJck=
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
+ by AM8PR04MB7314.eurprd04.prod.outlook.com (2603:10a6:20b:1df::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.28; Thu, 2 Feb
+ 2023 17:41:58 +0000
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::ca48:3816:f0b6:3fcd]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::ca48:3816:f0b6:3fcd%6]) with mapi id 15.20.6043.038; Thu, 2 Feb 2023
+ 17:41:58 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     Frank Li <frank.li@nxp.com>, "M.H. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [EXT] [PATCH v2 1/1] PCI: layerscape: Add EP mode support for
+ ls1028a
+Thread-Topic: [EXT] [PATCH v2 1/1] PCI: layerscape: Add EP mode support for
+ ls1028a
+Thread-Index: AQHZJrz7UNBwg0aD+0SFGvc7zfwgFa68DdDQ
+Date:   Thu, 2 Feb 2023 17:41:58 +0000
+Message-ID: <HE1PR0401MB2331C19D7474E6EAA4DC29C888D69@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <20230112193442.1513372-1-Frank.Li@nxp.com>
+In-Reply-To: <20230112193442.1513372-1-Frank.Li@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|AM8PR04MB7314:EE_
+x-ms-office365-filtering-correlation-id: ebcde99f-8b4e-4af2-5e32-08db0544c89a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BOq1JZITNdg6T2Z8Tjc5dDiLKE4bFGeP2/QSGdrAi3+DdQ+QYXkrR4ziLactcau0mQC89aQdbYM66xQHVJf34/WYYOorJKv7TSVd2fJIl2cxN6XtZ7fAWhjX6DsEb2Jb0wjcyAaG9EGeXcCws8/DSf8o8hpgHMOXmVRYHbCcbJQKj6p6H57PHEgocXn+w/Pe3WKv1P38geFMMCoEY9hLXVa28SSWVGRzeXDC9ZOUZo/RJWUzEDu48teUgZInZqtPwPibE8aiC0wP+uRXc9uokyoI8cvOExUPyRucI8z86IFudH5QVHqn8PqNCAq/hsOwaZvorA7UObaGfZg3aiJym0lngDSZHpGB3UqLG2deaw4/CdskwpFYpUTOnMVUq3u9pJ2nurLZlwHJwbOYFr9Pz1JN0B6VX9A0Ejh0tV7qtMuCgiXHK3Q9/KVV4iZiIJQuIVaY9r+Atof/2HIg8jQzDFMHRVQ4nC6Tm8kRcX2VSM+APcKNb5CLGNMCFspRccSzz07FYoLvdaccPNnLPJuDOTCGMwVfMTEu+uyhWObJrJ/Ed0VTcXycRs6QgM1AOgqO6wz14MbxUaRkrgfn4ZrOzFhP1IxHLvWuyKyB4GSQSmXX8BUSal7Gech4PJaqEhHpL/xJQcPK7TFXGg6qG5t/BXWZK19dMN+JAu4peZQEejMmAiQndU63WZCWAQSPb1L9mbiKCO6oE0uaxbwIXtmWcmOSKx4tH0ymaqb+qIEbv4wmXTz38q4dsLnJjCut2wzt
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(366004)(396003)(39860400002)(346002)(451199018)(45080400002)(33656002)(71200400001)(921005)(38070700005)(55016003)(86362001)(38100700002)(26005)(122000001)(186003)(9686003)(966005)(478600001)(55236004)(6506007)(110136005)(7696005)(316002)(66946007)(76116006)(66476007)(66556008)(41300700001)(52536014)(4326008)(44832011)(5660300002)(2906002)(8936002)(66446008)(64756008)(8676002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?jdG39mmqqBRbClVNiIxLH9P6mGKDTSfaOslcFzjC5LC/MtLMDOP6HT6+37?=
+ =?iso-8859-2?Q?7gO4veRV9GJ0t5JISaT8HYqJnX+Jvum/w0L345VRnOD4V0tSNbgHpgoXah?=
+ =?iso-8859-2?Q?OwUkNldQUUmCGN9dbomirctK36+rCz8o2oebL0Yl4cC4/i4f4VV9pgn7aC?=
+ =?iso-8859-2?Q?48MRDjIsFObuDQnGvxy5XOzeRy/IGS0zEuzUhf65Lp+L+dl3QdlWrKYiEC?=
+ =?iso-8859-2?Q?4w7XebXq1FJ9j2/USAtehp8pgqMfVxR9wfwaaZhS2nZTacaBd1cikjNcYE?=
+ =?iso-8859-2?Q?cvuUCDJCZm+OEvaLQ21Wa4vl5w0i90gIk+5hCfQlDCBm2+lqUKytnfG9t6?=
+ =?iso-8859-2?Q?rVEbKfz4rd0V1w3YyUF/rRn/zDU3/cjTckqTS81A11hP7a8fyMH16fcmTO?=
+ =?iso-8859-2?Q?gmXann5fX82tK2/FxoBO68jleJuudgfKKaatvqaBe1gp+4ZuTMMKnLYgxB?=
+ =?iso-8859-2?Q?HvM+wzupkrS+c6CCiuhHg93pC1+iAjWDlsZW41jjD9dGsas9iSRWe959RZ?=
+ =?iso-8859-2?Q?zwsl75h80je/0Xi27d1Xa6LQRxUUjXr9OzDF9yFFNxInSWeV9BZixWTiWq?=
+ =?iso-8859-2?Q?vrWOcUnO7ULiq54oLE5OIrex9rPWHsce8OsrPxSTIxm/VRcTSsWvMsoBqc?=
+ =?iso-8859-2?Q?9Pzhcznx+4O67C/zMONjMo7DLNuGwUiOlWghtNJb8h1LOATR7FjO42aBgS?=
+ =?iso-8859-2?Q?ot7kucFi2k6lDXSZ7TmfzV976xWjBUcgslnQ5HrvQbIWaD1mr/JFYM6gfA?=
+ =?iso-8859-2?Q?HfAtCoXlljKJwiuRjE1HSoZtbo13wKqgcLLkElwmElLOwZGiXVY4Z9wprx?=
+ =?iso-8859-2?Q?zPc4lDgKtKmDJMXW7kIGEQ9F5eetYcdN6DFo5IYhMnQg+RV0uqH89tHpPz?=
+ =?iso-8859-2?Q?wR82iPmAFxJ/D1IDjNFY5UhqfTt3BYj0Mwd+bm0wAkqdxK+HjAUZrkWx5A?=
+ =?iso-8859-2?Q?BDap78uG03doppPVhFT0nGxp3G31y4Q03DMWzJuIdH5pkG4Xbq9ex/SRQA?=
+ =?iso-8859-2?Q?Z+TQsKKvmQcgULZKRdFi27oXrvCOcuagrNTz94v8YjRJEoVdIOhfSwihcj?=
+ =?iso-8859-2?Q?SzNy50pSDLFuWQ87xJLhlVgdgHGErwoVAebeOcYH0b7bosTGI18tNW/Aws?=
+ =?iso-8859-2?Q?AoB3bOUWN6JFnYLL6sDdVkIcoIml77eT5xWmo0q09oQ0X9SxLmdZTdvsfa?=
+ =?iso-8859-2?Q?AXcO7AOhFoE0JLkzROFfxFb7eRm2EU65F5SUkNj+Y1ND1Qz83ObG4JTqur?=
+ =?iso-8859-2?Q?3gHhHIWAGRPzUSv1584rJKqfeq5irlkLk3OJ8PqjGnya0AuRtuC+vmBtJQ?=
+ =?iso-8859-2?Q?Qgh4bGfF920VfwLrjHjbdYy6hRBguyc9laMHQYLwX/B+kGi7QDfrbAbyBG?=
+ =?iso-8859-2?Q?vAcgl6M4MweYSgb5fcIaM1Jp9ddfa/xQBZqX9O6zpsr8WFhLrdxLjWWr7b?=
+ =?iso-8859-2?Q?J6kwmiKYzbfy22Rok/gqUOdQFTJ2087i2HJ/YMGrel+Zxi5Aq8OAuiGDik?=
+ =?iso-8859-2?Q?MU3nDG/BeMPO4EtlrGyESZCXVP4sg3rHKENluMjxA6E8zNmFI5fTziMCTb?=
+ =?iso-8859-2?Q?C/LDunSK8ihLts0L9V6pM0sgZjeghX+8N0wvZjeDjz8SlYKZJh6Mlb7Qql?=
+ =?iso-8859-2?Q?jDjstgIgRdGiA=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMhs-H8sSvn5bfHde-RT0ejqpCujCWvgRFJLtbLXqPcnvGdgtQ@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebcde99f-8b4e-4af2-5e32-08db0544c89a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 17:41:58.4219
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: e83VLb3gbMnt7Mx8IgovRi+2N7Mg0KodkVjqAfb3J91ev7LE1wF/bvwgHvVkcy6AUTAe9gqh5J0scoh2WINroQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB7314
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 09:55:20AM +0100, Sergio Paracuellos wrote:
-> Hi!
-> 
-> On Sat, Dec 31, 2022 at 8:40 AM Sergio Paracuellos
-> <sergio.paracuellos@gmail.com> wrote:
-> >
-> > Some devices like ZBT WE1326 and ZBT WF3526-P and some Netgear models need
-> > to sleep a bit after call to mt7621_pcie_init_port() driver function to get
-> > into reliable boots for both warm and hard resets. The needed time for these
-> > devices to always detect the ports seems to be from 75 to 100 milliseconds.
-> > There is no datasheet or something similar to really understand why this
-> > extra time is needed in these devices but not in most of the boards which
-> > use mt7621 SoC. This issue has been reported by openWRT community and the
-> > complete discussion is in [0]. The selected time of 100 milliseconds has
-> > been also tested in these devices ending up in an always working platform.
-> > Hence, properly add the extra 100 milliseconds msleep() function call to make
-> > also these devices work.
-> >
-> > [0]: https://github.com/openwrt/openwrt/pull/11220
-> >
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > ---
-> > Hi Bjorn / Lorenzo,
-> >
-> > As per Lorenzo comments in v1[0] here it is the patch with changes in commit
-> > message and introducing a new definition for this needed extra delay time.
-> > I wish you the best new year for you both.
-> >
-> > Changes in v2:
-> > - Add a new define 'INIT_PORTS_DELAY_MS' avoiding to reuse 'PERST_DELAY_MS'.
-> > - Rewrite commit message and add a link to openWRT discussion.
-> >
-> > Previous patch lore link:
-> > [0]: https://lore.kernel.org/lkml/20221209071703.2891714-1-sergio.paracuellos@gmail.com/T/
-> >
-> > Thanks,
-> >     Sergio Paracuellos
-> >
-> >  drivers/pci/controller/pcie-mt7621.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-> > index ee7aad09d627..63a5f4463a9f 100644
-> > --- a/drivers/pci/controller/pcie-mt7621.c
-> > +++ b/drivers/pci/controller/pcie-mt7621.c
-> > @@ -60,6 +60,7 @@
-> >  #define PCIE_PORT_LINKUP               BIT(0)
-> >  #define PCIE_PORT_CNT                  3
-> >
-> > +#define INIT_PORTS_DELAY_MS            100
-> >  #define PERST_DELAY_MS                 100
-> >
-> >  /**
-> > @@ -369,6 +370,7 @@ static int mt7621_pcie_init_ports(struct mt7621_pcie *pcie)
-> >                 }
-> >         }
-> >
-> > +       msleep(INIT_PORTS_DELAY_MS);
-> >         mt7621_pcie_reset_ep_deassert(pcie);
-> >
-> >         tmp = NULL;
-> > --
-> > 2.25.1
-> >
-> 
-> Gentle ping on this patch :-).
 
-I was about to merge it - there are a couple of things that I don't
-like.
+> Subject: [EXT] [PATCH v2 1/1] PCI: layerscape: Add EP mode support for
+> ls1028a
+>=20
+> Caution: EXT Email
+>=20
+> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+>=20
+> Add PCIe EP mode support for ls1028a.
+>=20
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp>
+> Acked-by:  Roy Zang <Roy.Zang@nxp.com>
+>=20
 
-First one is the comment, "Sleep a bit" does not mean anything. I'd
-rather say "delay port initialization" or something like that, be
-precise please.
+[Frank Li] ping
 
-More importantly, this is a fix but it is not clear from the commit
-log. Please report what's wrong in the commit log.
+> ---
+>=20
+> Added
+> Signed-off-by: Frank Li <Frank.Li@nxp>
+> Acked-by:  Roy Zang <Roy.Zang@nxp.com>
+>=20
+>=20
+> All other patches were already accepte by maintainer in
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
+k
+> ernel.org%2Flkml%2F20211112223457.10599-1-
+> leoyang.li%40nxp.com%2F&data=3D05%7C01%7Cfrank.li%40nxp.com%7C29d1
+> 5c05d59346e552be08daf4d573e5%7C686ea1d3bc2b4c6fa92cd99c5c301635%
+> 7C0%7C0%7C638091494850726163%7CUnknown%7CTWFpbGZsb3d8eyJWIjo
+> iMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C30
+> 00%7C%7C%7C&sdata=3D0wnHTyuX%2FyLAiioKNvlFbBM83nVyF%2FCdhqsEmV
+> f2sI4%3D&reserved=3D0
+>=20
+> But missed this one.
+>=20
+> Re-post.
+>=20
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index ad99707b3b99..ed5cfc9408d9 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -112,6 +112,7 @@ static const struct ls_pcie_ep_drvdata
+> lx2_ep_drvdata =3D {
+>  static const struct of_device_id ls_pcie_ep_of_match[] =3D {
+>         { .compatible =3D "fsl,ls1046a-pcie-ep", .data =3D &ls1_ep_drvdat=
+a },
+>         { .compatible =3D "fsl,ls1088a-pcie-ep", .data =3D &ls2_ep_drvdat=
+a },
+> +       { .compatible =3D "fsl,ls1028a-pcie-ep", .data =3D &ls1_ep_drvdat=
+a },
+>         { .compatible =3D "fsl,ls2088a-pcie-ep", .data =3D &ls2_ep_drvdat=
+a },
+>         { .compatible =3D "fsl,lx2160ar2-pcie-ep", .data =3D &lx2_ep_drvd=
+ata },
+>         { },
+> --
+> 2.34.1
 
-I will rework the commit log and merge it then (if you want to avoid
-another version just post an updated log here and I will merge it).
-
-Thanks,
-Lorenzo
