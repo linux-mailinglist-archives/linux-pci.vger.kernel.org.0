@@ -2,79 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A316A68945F
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 10:51:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C56A68946C
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 10:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232955AbjBCJuT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Feb 2023 04:50:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        id S231160AbjBCJy0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Feb 2023 04:54:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233221AbjBCJuR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 04:50:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2D532CC7F;
-        Fri,  3 Feb 2023 01:50:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7DAB0B82A28;
-        Fri,  3 Feb 2023 09:50:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24351C433EF;
-        Fri,  3 Feb 2023 09:50:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675417814;
-        bh=T/9LxE7WE8hNMmPu7X+WMeI+t2/HXTaNVNYlFa2pJSg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OGGnspMNgxmcjE2WsurdbifSi99UposcFBub8O8/rdgBeXjCbI81B6rmOb/oXjbty
-         6NtbZRgMk19wigVNXUrITCNbWKE86AmMosTcHnbRynNvvIIOt8pnTuwN4jA1omfemj
-         5Oilpis8mpcZQAr7UdVaxu99LMMgIikf4SXZWRmhwN5qvleNfEszRBQsmazsFNKbQ8
-         8KrRvbfvO1jYk2Fq22BgfIIvzOftfn8IGSZebAiF4JQurOIQSv8fLHLjDacwsJg+nD
-         2ZAx+LJKTWPwqHZQDqV6fHTN7/fq7r/MxGCaB7dSZPFWLf4Z0EdVJp0tRJ2fjzBxGk
-         3mET6IY9qEGAQ==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pNsiO-0000ur-IV; Fri, 03 Feb 2023 10:50:40 +0100
-Date:   Fri, 3 Feb 2023 10:50:40 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Abel Vesa <abel.vesa@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 11/12] arm64: dts: qcom: sm8550: Add PCIe PHYs and
- controllers nodes
-Message-ID: <Y9zY8L2OhRacl8Qf@hovoldconsulting.com>
-References: <20230203081807.2248625-1-abel.vesa@linaro.org>
- <20230203081807.2248625-12-abel.vesa@linaro.org>
+        with ESMTP id S229790AbjBCJyZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 04:54:25 -0500
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF12E70D56;
+        Fri,  3 Feb 2023 01:54:22 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id DF6DC300034F1;
+        Fri,  3 Feb 2023 10:54:18 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id C60BF2EE13E; Fri,  3 Feb 2023 10:54:18 +0100 (CET)
+Date:   Fri, 3 Feb 2023 10:54:18 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     "Li, Ming" <ming4.li@intel.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 04/10] cxl/pci: Use synchronous API for DOE
+Message-ID: <20230203095418.GA18459@wunner.de>
+References: <cover.1674468099.git.lukas@wunner.de>
+ <b5469cbb8a3e138a1c709ed3eaab02d7ca8e84b2.1674468099.git.lukas@wunner.de>
+ <63cf2bc3cf76_521a294a1@iweiny-mobl.notmuch>
+ <c9923e59-176c-2e52-9ebf-58bb25750083@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230203081807.2248625-12-abel.vesa@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <c9923e59-176c-2e52-9ebf-58bb25750083@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 10:18:06AM +0200, Abel Vesa wrote:
-> Add PCIe controllers and PHY nodes.
+On Fri, Feb 03, 2023 at 04:53:34PM +0800, Li, Ming wrote:
+> On 1/24/2023 8:52 AM, Ira Weiny wrote:
+> > Lukas Wunner wrote:
+> > >  static int cxl_cdat_get_length(struct device *dev,
+> > >  			       struct pci_doe_mb *cdat_doe,
+> > >  			       size_t *length)
+> > >  {
+> > > -	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
+> > > +	u32 request = CDAT_DOE_REQ(0);
+> > > +	u32 response[32];
+> > >  	int rc;
+> > >  
+> > > -	rc = pci_doe_submit_task(cdat_doe, &t.task);
+> > > +	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
+> > > +		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
+> > > +		     &request, sizeof(request),
+> > > +		     &response, sizeof(response));
+> > >  	if (rc < 0) {
+> > > -		dev_err(dev, "DOE submit failed: %d", rc);
+> > > +		dev_err(dev, "DOE failed: %d", rc);
+> > >  		return rc;
+> > >  	}
+> > > -	wait_for_completion(&t.c);
+> > > -	if (t.task.rv < sizeof(u32))
+> > > +	if (rc < sizeof(u32))
+> > >  		return -EIO;
+> > >  
 > 
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> Sorry, I didn't find the original patchset email, only can reply here.
+> Should this "if (rc < sizeof(u32))" be "if (rc < 2 * sizeof(u32))"?
+> Because below code used response[1] directly, that means we need unless
+> two u32 in response payload.
 
-Looks good to me know:
+Yes I spotted that as well, there's already a fixup on my
+development branch:
 
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+  https://github.com/l1k/linux/commits/doe
+
+It's in commit "cxl/pci: Handle truncated CDAT header" which is:
+
+  https://github.com/l1k/linux/commit/208f256b319b
+
+...but that URL may stop working as soon as I rebase the next time.
+
+Actually there's a lot more broken here, there are 3 other new fixup
+patches at the beginning of that development branch.
+
+Thanks,
+
+Lukas
