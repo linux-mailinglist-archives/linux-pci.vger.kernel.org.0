@@ -2,268 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 558D468A5E1
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 23:14:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D36B068A5EB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 23:16:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232866AbjBCWOD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Feb 2023 17:14:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36038 "EHLO
+        id S232959AbjBCWQW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Feb 2023 17:16:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232895AbjBCWNs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 17:13:48 -0500
-Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C10B7AFA7D;
-        Fri,  3 Feb 2023 14:12:21 -0800 (PST)
-Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id DF9E3E0EB1;
-        Sat,  4 Feb 2023 01:12:17 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:from:from:in-reply-to:message-id
-        :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=UecN3gVx+AwvaM0yiZg22mcB7rzyE945J+ETxloDUpA=; b=FDhv7RL84l6l
-        JTafohinWLUbCgJn3LHJJ7InFXeC8vY6nLDF53eEPC9kFTANOgAwLigh3z7HlrEn
-        89P9E1QjYoxMY4GOZkX0Odto3hEjW3YbnJl8+qsXL4sZzNrm7wkxtCn58yIEH21W
-        JI8DuOtWqn33tdfhzm89KSgDAVXIFhI=
-Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id ADB01E0E70;
-        Sat,  4 Feb 2023 01:12:17 +0300 (MSK)
-Received: from mobilestation (10.8.30.6) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Sat, 4 Feb 2023 01:12:17 +0300
-Date:   Sat, 4 Feb 2023 01:12:16 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Evgenii Shatokhin <e.shatokhin@yadro.com>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, <kernel-team@android.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <linux@yadro.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Will McVicker <willmcvicker@google.com>
-Subject: Re: [PATCH v6 0/2] PCI: dwc: Add support for 64-bit MSI target
- addresses
-Message-ID: <20230203221216.c2s6ahm52ug5jtqv@mobilestation>
-References: <20220825235404.4132818-1-willmcvicker@google.com>
- <decae9e4-3446-2384-4fc5-4982b747ac03@yadro.com>
- <c014b074-6d7f-773b-533a-c0500e239ab8@arm.com>
- <46ba97c9-85ff-eb47-0d05-79dc3960d7b4@yadro.com>
+        with ESMTP id S233379AbjBCWP5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 17:15:57 -0500
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com (mail-am7eur03on2065.outbound.protection.outlook.com [40.107.105.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289869030;
+        Fri,  3 Feb 2023 14:15:54 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XiWMTfPmLtZwULlfIgK2xRaTU7gTBjwi2Gr0kjHuYIicHKqaYQntKDlZk4gJ6dEeLZagg8EAyIiu2MrDwP6dphbME42ztpR3aLZIShSmb8n2VU1CFr8rMMS4n7OTj55whnYgowbRlMZlKF+o3tXJdK/fMljg46Hvtb+9ezkuV4IdDtm69Sx1hD1r3FJtVbG6uCjWtK876Syrrld0Bmv+fDUq8QELSKZs70Mco2padh+g42OSH8uL1aSAaFTQ6EDdBoOcE+r5nwY+5MSXc6hGBfSYguEaz+tVXLARuy1k3wdkWUUTxX/oqdI6Y/BNgWVFo8UzPTxk+4PQzrdRrwNv3w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pkwnQV31fbNCB0UKM+tpk7gowj+sB5R32IYL9tSxt1s=;
+ b=FPZJSlicCZ7k97CypCNX8QSZUUjsyr8CMYeSQyv3aM6V+h5HcSmVu0acHE0NVZTbXamOb/4DbPSqfKYLZfaavE7LOSFIYfR6PZroikUjnVeMtuIlwdEDuIQ5v4aXTIisZZv56Nhb+fkdudlxHz421t5cXSGaSCTsSYcgKMWHvLurDome/xHBX96sUs/8jr0u94NP1BT94sACFSLBjSV1x8i8OeG3/CVV4PG04J6+OAbeVmckCU3l9ffMp7QUPTZoYbEy69Cgx/RrzlCNdEOpQgx+dPMDPfDj14l1bArWsqFuB17p1zuj8o0TNuJ7HGUleKiRaX+t/mi36XJbPkJ7xA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pkwnQV31fbNCB0UKM+tpk7gowj+sB5R32IYL9tSxt1s=;
+ b=JanE8j+wUgXqIPNgfUbcaXwPXiUOJEVWb31c10Letb1ohQgm71YdZek/RTukCknOCLkfNwJxz78+iQ2vAZSqOgIZjnBYGvL6UeZT6qzlrgUUbgkQxnlrkPJq8Uh/fe2SWkPeWqqjYSrHgTuYmGUu5TBxRnXoLvaW3wQD16IQ+zU=
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
+ by PR3PR04MB7385.eurprd04.prod.outlook.com (2603:10a6:102:89::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.27; Fri, 3 Feb
+ 2023 22:15:51 +0000
+Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::ca48:3816:f0b6:3fcd]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
+ ([fe80::ca48:3816:f0b6:3fcd%6]) with mapi id 15.20.6043.038; Fri, 3 Feb 2023
+ 22:15:50 +0000
+From:   Frank Li <frank.li@nxp.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Shunsuke Mie <mie@igel.co.jp>
+CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Wang <jasowang@redhat.com>, Jon Mason <jdmason@kudzu.us>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        Takanari Hayama <taki@igel.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+Subject: RE: [EXT] Re: [RFC PATCH 4/4] PCI: endpoint: function: Add EP
+ function driver to provide virtio net device
+Thread-Topic: [EXT] Re: [RFC PATCH 4/4] PCI: endpoint: function: Add EP
+ function driver to provide virtio net device
+Thread-Index: AQHZN7liQTou1LlKIkegIEQy1N8nRq69xHgw
+Date:   Fri, 3 Feb 2023 22:15:50 +0000
+Message-ID: <HE1PR0401MB23313FC60955EADE8A00133088D79@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <20230203100418.2981144-1-mie@igel.co.jp>
+ <20230203100418.2981144-5-mie@igel.co.jp>
+ <20230203052114-mutt-send-email-mst@kernel.org>
+In-Reply-To: <20230203052114-mutt-send-email-mst@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|PR3PR04MB7385:EE_
+x-ms-office365-filtering-correlation-id: 89c3c316-d0a6-4820-432b-08db06343583
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: X0THi6SoHgnwGd7HcXm1MzB7aU9mgzwArTjvxv2476wFfQHJLehNpRn17NDrZkFZKB8dVmMVC9DElbcFfSGUw4D2W/UBknWaxgM4Nsa56Bn/tqICCrs1gaWKKXiXQYjl4c7zSnX3dqULsflswjKQ361s5mkTgIfYmudRIZjhqNs2iEDoXdIE/6e7p4gjKq+VgkAEfxrJQPzchzA+oT3ztGTzbd9bCEcdTCVBPczWA6T39+EqIfGyqxm9bOqHAaZ0dfPwYbGpl5kfkECxbZ7xuOX8gcDe6IxgF2uTxCoNGjUZdIakkYjiT06tQnTKLko3ZLjYl+9HBWok7nSLMV3E5a3fpL425rOZQnW6QRNSIwKX8JG849bNKEM1I3Vi6QpcjMmBjrgXDHQXFGieNsJxxddSpMib/b3q19NJRQXMqZ0eKf/003DNWvT7rqQr9Z0BfjJMADMfgnGdouyP7qG7baGW5H1W6LfSgPFv4QxeLf/i6MAS/yNDCiOwCpPQt2zrBkcZhRZ/Cyz72XgqjmAvr5Fp+Pja7bNnPXVNvzazwf0ZoDXhRWlnw1fnFOEyABGIzC6Z+U2Z0pAI7XQzxckP7093rhOA4wXGcVqi3h5olDye5EBYcSRKdFyCiyjD2SBVE4SGa3tQyqnEE4T3UJB7FaXCxTObrQM3V2M7aE5CO08iEH5q+AyayKSEublSK1HI1PBvae3U9Mb5eas2uJfchNDRHLqatEC61adK4sFRIa0=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(39860400002)(366004)(346002)(376002)(136003)(451199018)(110136005)(64756008)(66946007)(66476007)(66556008)(7696005)(66446008)(71200400001)(76116006)(38100700002)(86362001)(33656002)(38070700005)(8676002)(122000001)(83380400001)(966005)(6506007)(55236004)(9686003)(26005)(186003)(5660300002)(52536014)(316002)(8936002)(44832011)(54906003)(4326008)(41300700001)(2906002)(478600001)(55016003)(7416002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?+cvAjRxd3WVDFawH0Ffd+yizhHHGaM2R7nJeNT4nW4RxtbCjwFoNkwcD32?=
+ =?iso-8859-2?Q?1RIZ9ZQdqvUoxcZzrtlhxP+mtX048vpOyTGzxlsX+7RhNIf9qKTLC4sO/6?=
+ =?iso-8859-2?Q?NLJDcNbnYGadHFq5By4fS+cetcm1xifwsYPi+E2/Me4F8mIeyjO/prUHxZ?=
+ =?iso-8859-2?Q?EV4EUWlimg8Oo8/CiN6IUlbmbLfo1yyeZtY5wsNvryh6wqTs/5P2S7fdgO?=
+ =?iso-8859-2?Q?acouSXU4w9l2T0o/bKqp5MF6kIPhCA34/oot6mTh23zaIA4F/y/OX5BVMX?=
+ =?iso-8859-2?Q?ZnJcx5r68d3YQihvhIkIgcfB7xp75jdmXRNxx+bpR35nErjqUJ1s3UwJD6?=
+ =?iso-8859-2?Q?eclEPJpahaeuy/iN5yFgRffWCYO6wdzrAJz5fg4WhgcXzdN/0OXQyW0s68?=
+ =?iso-8859-2?Q?w5S4eTxpkNafSbwu7erB9kqphR9vZRs0hqBSkYRZ3gJV+WeoTxDma/zX9z?=
+ =?iso-8859-2?Q?ZuGefeKYrqOKaeG0xpURLQdVyNH8NdzVPqP4P2aTaUPAfajvuL71BJ/fwe?=
+ =?iso-8859-2?Q?/IADkze8KkQ6ZNfOXkzjvsNW7OzOXWQcLKmHqiqBWxIfu4Ze+YtLq6bO/v?=
+ =?iso-8859-2?Q?A+4ANiJWnotmB2pLvf9zQ9Qaz9Aka1R9iJxg/iy9O5C3a0K12I5+bfdt7P?=
+ =?iso-8859-2?Q?T0Qp/iM4Un9fUk2WufG5uRjHbn6cVQd+UEFMbrvvvDFUIsvnrngDfgIhQF?=
+ =?iso-8859-2?Q?BzCx/PILIZCgQAkBldtLhJFGzsRzIoeH7WotMkqqiMsLiEHeYLdeYinJR2?=
+ =?iso-8859-2?Q?+KlYWukzVyCZZUFHGNpCj1riUVCcp7BOaB7yAlLAz7ToaW3L4WlpxIsdiV?=
+ =?iso-8859-2?Q?gfTr3WafmEpon0TFE+3BI+T2mv6Sgh4Z2iS/3YhzB73eSXv+/R7fGtAS2y?=
+ =?iso-8859-2?Q?waP9OI7wI+oWp/jZWuCPhaKq0PG4Qlv6/wBaT6gANGyCEkAhVci/w4516Y?=
+ =?iso-8859-2?Q?Wh4K8d7Y2MnkrS+K65zTnkljor/DQTMlTNpdkGNZAbagKZirJyfrEMMu2p?=
+ =?iso-8859-2?Q?4R97pVXtlI1qCgR5sO4lG6GpGWc2tY4cWkpDRDY8L0TxZHie6l6pYG6/Wo?=
+ =?iso-8859-2?Q?9QJc8cBqma9qy6k+D7DOFSjK7sQDj32aU6h1ebPBE03olXyORnx6FuVvwm?=
+ =?iso-8859-2?Q?gRUMQfdqObpS7H8IvVJyzCtQTzUhgCone9O+Zf4qH2wBAanxL3zReC0Y5U?=
+ =?iso-8859-2?Q?gU+6mWBxqYRpq9EXrWN1S2KYyXEmmvg8Lt7cC4zgqaaJOoYkF8nGweJfoL?=
+ =?iso-8859-2?Q?dg251OGr7Y7QJnBSv8KC6GzmdVdjIG/AMXVn7A9FljY7W/dNev//34H8SY?=
+ =?iso-8859-2?Q?1sWp/cRCFsJ+2I/G8wOlhLULohJsQBJZUcQ5WtrFhbWk68jMLoECfCAEn3?=
+ =?iso-8859-2?Q?kfoylSR4dsqXsNw67YhLlBimXgGNSkmLT2YtNTIYWCLT1DLxAHeSNIf4yo?=
+ =?iso-8859-2?Q?NMy0wTt4AYUnL8sWBXL+fean1hswnZYCC96CahPMCxLLfdfDXUUnILrAMJ?=
+ =?iso-8859-2?Q?trHkR/LsfAzumKmkj4NckHRBFDZPlTQWCWgkXex1ZOeMSP+P5JM3hZwsC9?=
+ =?iso-8859-2?Q?BqvZEh4LKwZzPJDn8ZP0e521RzlaaphUamIFrLjqKKP0PrzdOQG5DaNJqG?=
+ =?iso-8859-2?Q?eTkHDm/9YzGO4=3D?=
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <46ba97c9-85ff-eb47-0d05-79dc3960d7b4@yadro.com>
-X-Originating-IP: [10.8.30.6]
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 89c3c316-d0a6-4820-432b-08db06343583
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Feb 2023 22:15:50.8293
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: vp5sW0cIJemHOCaH/ETMmXF3Nl5cl9SjH0OejWVJr4bGn62H2mHOGCpPAastHYw50gsI0iLE2N3JnEWMh+qt3w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7385
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Evgenii
+>=20
+> Caution: EXT Email
+>=20
+> On Fri, Feb 03, 2023 at 07:04:18PM +0900, Shunsuke Mie wrote:
+> > Add a new endpoint(EP) function driver to provide virtio-net device. Th=
+is
+> > function not only shows virtio-net device for PCIe host system, but als=
+o
+> > provides virtio-net device to EP side(local) system. Virtualy those net=
+work
+> > devices are connected, so we can use to communicate over IP like a simp=
+le
+> > NIC.
+> >
+> > Architecture overview is following:
+> >
+> > to Host       |                       to Endpoint
+> > network stack |                 network stack
+> >       |       |                       |
+> > +-----------+ |       +-----------+   +-----------+
+> > |virtio-net | |       |virtio-net |   |virtio-net |
+> > |driver     | |       |EP function|---|driver     |
+> > +-----------+ |       +-----------+   +-----------+
+> >       |       |             |
+> > +-----------+ | +-----------+
+> > |PCIeC      | | |PCIeC      |
+> > |Rootcomplex|-|-|Endpoint   |
+> > +-----------+ | +-----------+
+> >   Host side   |          Endpoint side
+> >
+> > This driver uses PCIe EP framework to show virtio-net (pci) device Host
+> > side, and generate virtual virtio-net device and register to EP side.
+> > A communication date
+>=20
+> data?
+>=20
+> > is diractly
+>=20
+> directly?
+>=20
+> > transported between virtqueue level
+> > with each other using PCIe embedded DMA controller.
+> >
+> > by a limitation of the hardware and Linux EP framework, this function
+> > follows a virtio legacy specification.
+>=20
+> what exactly is the limitation and why does it force legacy?
+>=20
+> > This function driver has beed tested on S4 Rcar (r8a779fa-spider) board=
+ but
+> > just use the PCIe EP framework and depends on the PCIe EDMA.
+> >
+> > Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> > Signed-off-by: Takanari Hayama <taki@igel.co.jp>
+> > ---
+> >  drivers/pci/endpoint/functions/Kconfig        |  12 +
+> >  drivers/pci/endpoint/functions/Makefile       |   1 +
+> >  .../pci/endpoint/functions/pci-epf-vnet-ep.c  | 343 ++++++++++
 
-On Wed, Feb 01, 2023 at 04:54:55PM +0300, Evgenii Shatokhin wrote:
-> On 31.01.2023 15:42, Robin Murphy wrote:
-> > 
-> > On 2023-01-31 12:29, Evgenii Shatokhin wrote:
-> > > Hi,
-> > > 
-> > > On 26.08.2022 02:54, Will McVicker wrote:
-> > > > Hi All,
-> > > > 
-> > > > I've update patch 2/2 to address Robin's suggestions. This includes:
-> > > > 
-> > > >   * Dropping the while-loop for retrying with a 64-bit mask in favor of
-> > > >     retrying within the error if-statement.
-> > > >   * Using an int for the DMA mask instead of a bool and ternary
-> > > > operation.
-> > > > 
-> > > > Thanks again for the reviews and sorry for the extra revision today!
-> > > > Hopefully this is the last one :) If not, I'd be fine to submit
-> > > > patch 1/2
-> > > > without 2/2 to avoid resending patch 1/2 for future revisions of patch
-> > > > 2/2
-> > > > (unless I don't need to do that anyway).
-> > > 
-> > > The first patch of the series made it into the mainline kernel, but, it
-> > > seems, the second one ("PCI: dwc: Add support for 64-bit MSI target
-> > > address") did not. As of 6.2-rc6, it is still missing.
-> > > 
-> > > Was it intentionally dropped because of some issues or, perhaps, just by
-> > > accident? If it was by accident, could you please queue it for inclusion
-> > > into mainline again?
-> > 
-> > Yes, it was dropped due to the PCI_MSI_FLAGS_64BIT usage apparently
-> > being incorrect, and some other open debate (which all happened on the
-> > v5 thread):
-> > 
-> > https://lore.kernel.org/linux-pci/YzVTmy9MWh+AjshC@lpieralisi/
-> 
+It is actually that not related vnet. Just virtio.=20
+I think pci-epf-virtio.c is better.=20
 
-> I see. If I understand it correctly, the problem was that
-> PCI_MSI_FLAGS_64BIT flag did not guarantee that 64-bit mask could be used
-> for that particular allocation. Right?
-> 
+> >  .../pci/endpoint/functions/pci-epf-vnet-rc.c  | 635 ++++++++++++++++++
 
-William was trying to utilize for only software cause. Setting
-PCI_MSI_FLAGS_64BIT didn't actually change the hardware behavior.
-He could have as well provided just a driver private capability
-flag. (see below for a more detailed problem description) 
+It is epf driver. rc is quite confused. =20
+Maybe you can combine pci-epf-vnet-ep.c and pci-epf-vnet-rc.c to one file.
 
-> > 
-> > The DMA mask issues have now been sorted out,
-> 
-> I suppose, you mean https://lore.kernel.org/all/20230113171409.30470-26-Sergey.Semin@baikalelectronics.ru/?
+> >  drivers/pci/endpoint/functions/pci-epf-vnet.c | 387 +++++++++++
 
-Well, the way the DMA-mask issue has been solved was a bit of the
-hacky. I wouldn't call it a fully proper solution. The problem with
-pointlessly allocating physical memory for the iMSI-RX engine (it
-doesn't perform any DMA) and artificially restricting the coherent-DMA
-mask is still there. The patch in the subject was a compromise in
-order to at least permit unrestricted streaming DMAs but limiting the
-coherent DMAs for the MSI setup to work properly for all peripheral
-devices.
+This file setup dma transfer according virtio-ring.
+How about pci-epf-virtio-dma.c ?
 
-> 
-> It still breaks our particular case when the SoC has no 32-bit-addressable
-> RAM. We'd set DMA masks to DMA_BIT_MASK(36) in the platform-specific driver
-> before calling dw_pcie_host_init(). However, dw_pcie_msi_host_init() resets
-> it to 32-bit, tries dmam_alloc_coherent() and fails.
+> > +
+> > +     epf_vnet_rc_set_config16(vnet, VIRTIO_PCI_ISR,
+> VIRTIO_PCI_ISR_QUEUE);
+> > +     /*
+> > +      * Initialize the queue notify and selector to outside of the app=
+ropriate
+> > +      * virtqueue index. It is used to detect change with polling. The=
+re is no
+> > +      * other ways to detect host side driver updateing those values
+> > +      */
 
-Yeah. That's another problem with the implemented approach. But are
-your sure the driver had worked even before this patch? AFAICS the
-driver allocated the MSI-targeted page from DMA32 zone before this
-modification. So the allocation must have failed on your platform too.
+I am try to use gic-its or other msi controller as doorbell.=20
+https://lore.kernel.org/imx/20221125192729.1722913-1-Frank.Li@nxp.com/T/#u
 
-> 
-> With 36-bit masks, the kernel seems to play well with the devices in our
-> case.
-> 
-> I saw your comment in https://lore.kernel.org/linux-pci/4dc31a63-00b1-f379-c5ac-7dc9425937f4@arm.com/
-> that drivers should always explicitly set their masks.
-> 
+but it may need update host side pci virtio driver.=20
 
-> Is it a really bad idea to check the current coherent mask's bits in
-> dw_pcie_msi_host_init() and if it is more than 32 - just issue a warning
-> rather than reset it to 32-bit unconditionally? That would help in our case.
-> Or, perhaps, there is a better workaround.
-
-The problem isn't in the value the mask is set to. The problem is
-two-leveled, but is mainly connected with the PCIe device detected on
-the PCIe bus. There are some of them which can't send MSI TLPs to the
-64-bit addresses. Since we can't predict whether such devices exist on
-the bus beforehand the LLDD probe is performed together with the
-MSI-engine initialization, the solution was to just restrict the MSIs
-base address to be allocated within the lowest 4GB. Moreover as I said
-above the iMSI-RX engine doesn't actually cause any DMA thus there is
-no need in any memory allocation. Instead reserving some PCIe-bus
-space/DWORD for MSIs would be enough. Alas the PCIe-subsystem doesn't
-provide a way to do so. That's why we have what you see in the driver:
-DMA mask restriction and coherent DMA memory allocation.
-
-If only we had a way to auto-detected the PCIe-bus space with no
-physical memory behind it and take out a DWORD from it to initialize
-the iMSI-RX engine we could have immediately got rid from the mask
-setting operation and the memory allocation. It would have solved your
-problem too.
-
--Serge(y)
-
-> 
-> Looking forward to your comments.
-
-
-
-> 
-> 
-> > so you, or Will, or anyone
-> > else interested should be free to rework this on top of linux-next
-> > (although at this point, more realistically on top of 6.3-rc1 in a few
-> > weeks).
-> > 
-> > Thanks,
-> > Robin.
-> > 
-> > > Support for 64-bit MSI target addresses is needed for some of our SoCs.
-> > > I ran into a situation when there was no available RAM in ZONE_DMA32
-> > > during initialization of PCIe host. Hence, dmam_alloc_coherent() failed
-> > > in dw_pcie_msi_host_init() and initialization failed with -ENOMEM:
-> > > 
-> > > [    0.374834] dw-pcie 4000000.pcie0: host bridge /soc/pcie0@4000000
-> > > ranges:
-> > > [    0.375813] dw-pcie 4000000.pcie0:      MEM
-> > > 0x0041000000..0x004fffffff -> 0x0041000000
-> > > [    0.376171] dw-pcie 4000000.pcie0:   IB MEM
-> > > 0x0400000000..0x07ffffffff -> 0x0400000000
-> > > [    0.377914] dw-pcie 4000000.pcie0: Failed to alloc and map MSI data
-> > > [    0.378191] dw-pcie 4000000.pcie0: Failed to initialize host
-> > > [    0.378255] dw-pcie: probe of 4000000.pcie0 failed with error -12
-> > > 
-> > > Mainline kernel 6.2-rc6 was used in that test.
-> > > 
-> > > The hardware supports 64-bit target addresses, so the patch "PCI: dwc:
-> > > Add support for 64-bit MSI target address" should help with this
-> > > particular failure.
-> > > 
-> > > 
-> > > > 
-> > > > Thanks,
-> > > > Will
-> > > > 
-> > > > Will McVicker (2):
-> > > >    PCI: dwc: Drop dependency on ZONE_DMA32
-> > > > 
-> > > > v6:
-> > > >   * Retrying DMA allocation with 64-bit mask within the error
-> > > > if-statement.
-> > > >   * Use an int for the DMA mask instead of a bool and ternary operation.
-> > > > 
-> > > > v5:
-> > > >   * Updated patch 2/2 to first try with a 32-bit DMA mask. On failure,
-> > > >     retry with a 64-bit mask if supported.
-> > > > 
-> > > > v4:
-> > > >   * Updated commit descriptions.
-> > > >   * Renamed msi_64b -> msi_64bit.
-> > > >   * Dropped msi_64bit ternary use.
-> > > >   * Dropped export of dw_pcie_msi_capabilities.
-> > > > 
-> > > > v3:
-> > > >    * Switched to a managed DMA allocation.
-> > > >    * Simplified the DMA allocation cleanup.
-> > > >    * Dropped msi_page from struct dw_pcie_rp.
-> > > >    * Allocating a u64 instead of a full page.
-> > > > 
-> > > > v2:
-> > > >    * Fixed build error caught by kernel test robot
-> > > >    * Fixed error handling reported by Isaac Manjarres
-> > > >   PCI: dwc: Add support for 64-bit MSI target address
-> > > > 
-> > > >   .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++----------
-> > > >   drivers/pci/controller/dwc/pcie-designware.c  |  8 ++++
-> > > >   drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
-> > > >   3 files changed, 30 insertions(+), 23 deletions(-)
-> > > > 
-> > > > 
-> > > > base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
-> > > 
-> > > Thank you in advance.
-> > > 
-> > > Regards,
-> > > Evgenii
-> > > 
-> > > 
-> > > 
-> > 
-> 
-> 
-> 
+> > +     epf_vnet_rc_set_config16(vnet, VIRTIO_PCI_QUEUE_NOTIFY,
+> default_qindex);
+> > +     epf_vnet_rc_set_config16(vnet, VIRTIO_PCI_QUEUE_SEL,
+> default_qindex);
+> > +     /* This pfn is also set to 0 for the polling as well */
+> > +     epf_vnet_rc_set_config16(vnet, VIRTIO_PCI_QUEUE_PFN, 0);
+> > +
+> --
+> > 2.25.1
 
