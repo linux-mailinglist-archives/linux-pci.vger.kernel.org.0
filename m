@@ -2,129 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AE58689471
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 10:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3ACD68947A
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 10:58:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232443AbjBCJ4I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Feb 2023 04:56:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46954 "EHLO
+        id S232790AbjBCJ5N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Feb 2023 04:57:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232066AbjBCJ4I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 04:56:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55AF627D58;
-        Fri,  3 Feb 2023 01:56:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F147DB82A29;
-        Fri,  3 Feb 2023 09:56:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999E2C433D2;
-        Fri,  3 Feb 2023 09:56:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675418164;
-        bh=yPF/H334aRuYt2PAUE0Uo8r9edAIWn91teehfMtnynI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ge/JZVwJ7decyTDjG4hMAZxaLwf3c2fgVwYslq5qanp+rAkgTbVFHcX6KKJICZVir
-         eDjq6nxlNpeJx2kOI9kGnwkxRq2F4CqTYgCikpHMTvBI2vEHDk36kYTvMJcxZb/kWU
-         srH4sd6m7G4yLc6fEVgZY+eRduHDqFPfFG3kQ37wU1mM7bbM4qDD3noZCOLSugC2w3
-         i1Yh5esCfzNVRSu9LvtDgqdUFGqmht0ZXBv6skq5hk46VE9I9Apx5fam8UNria8shJ
-         gUp31ZRD1+0I6b1QIwca9PiY1qwjiQT903FAB9yP0umBn+sCJ5YDtTLF+o3gJHl8TE
-         mXoIXnYQm4FjA==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pNso3-0000zZ-7v; Fri, 03 Feb 2023 10:56:31 +0100
-Date:   Fri, 3 Feb 2023 10:56:31 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Abel Vesa <abel.vesa@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>
-Subject: Re: [PATCH v7 12/12] arm64: dts: qcom: sm8550-mtp: Add PCIe PHYs and
- controllers nodes
-Message-ID: <Y9zaT0SA5yahuBoW@hovoldconsulting.com>
-References: <20230203081807.2248625-1-abel.vesa@linaro.org>
- <20230203081807.2248625-13-abel.vesa@linaro.org>
+        with ESMTP id S232576AbjBCJ5M (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 04:57:12 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A48470D6B;
+        Fri,  3 Feb 2023 01:57:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675418224; x=1706954224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dJ2q9PwEMW0SSkG+4Ta7q5xMk9OhifxLsOSev/dtMJg=;
+  b=WY+oE72gYyuMIc66EFC7gXTlXhxgutFG+tFgYP97QlJJEP9yes3U1tiV
+   jMWhJdam29y8+8PM8NOCLo2iWxwRDKGmH1Y1LWKrfO0jjFspFWKPYiQ8O
+   tCotDpR7iUcOJOIYn9Y7YrsJ3jS40AEslHaW5/8q2GN9nr6kGEFpD7zdb
+   rwQzV/iWfJp1y/aaX4WU3oPwthliQJ2bxUwV9D0aEJbOlPRxMqYL5y+Mp
+   Zw8kKKYQU2nqbpsWdgK+y6dbD7ukd60sD6llgrKrsCMjpFAEd4d0Bcn0Y
+   g67ipIC85prigzmiMxV2dKvM1Z7Qe4vK9e7rAFs/3/dZPxqV5NKkEZO9a
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10609"; a="329994207"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="329994207"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 01:56:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10609"; a="808324883"
+X-IronPort-AV: E=Sophos;i="5.97,270,1669104000"; 
+   d="scan'208";a="808324883"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Feb 2023 01:56:52 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pNsoN-0000ND-1v;
+        Fri, 03 Feb 2023 09:56:51 +0000
+Date:   Fri, 3 Feb 2023 17:56:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     equu@openmail.cc, lpieralisi@kernel.org, toke@toke.dk,
+        kvalo@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-pci@vger.kernel.org,
+        robh@kernel.org, linux-wireless@vger.kernel.org,
+        ath10k@lists.infradead.org, equu@openmail.cc
+Subject: Re: [PATCH v3 2/3] wifi: ath9k: stop loading incompatible DT cal data
+Message-ID: <202302031700.zxbfZuRh-lkp@intel.com>
+References: <20230202075524.2911058-3-equu@openmail.cc>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230203081807.2248625-13-abel.vesa@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230202075524.2911058-3-equu@openmail.cc>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 10:18:07AM +0200, Abel Vesa wrote:
-> Enable PCIe controllers and PHYs nodes on SM8550 MTP board.
-> 
-> Co-developed-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
-> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> ---
+Hi,
 
-> +&pcie_1_phy_aux_clk {
-> +	clock-frequency = <1000>;
-> +};
-> +
-> +&pcie0 {
-> +	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
-> +	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie0_default_state>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&pcie0_phy {
-> +	vdda-phy-supply = <&vreg_l1e_0p88>;
-> +	vdda-pll-supply = <&vreg_l3e_1p2>;
+Thank you for the patch! Yet something to improve:
 
-Super nit: add newline for consistency.
+[auto build test ERROR on helgaas-pci/next]
+[also build test ERROR on helgaas-pci/for-linus wireless-next/main wireless/main linus/master v6.2-rc6 next-20230203]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> +	status = "okay";
-> +};
-> +
-> +&pcie1 {
-> +	wake-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
-> +	perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
+url:    https://github.com/intel-lab-lkp/linux/commits/equu-openmail-cc/wifi-ath9k-stop-loading-incompatible-DT-cal-data/20230202-165536
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+patch link:    https://lore.kernel.org/r/20230202075524.2911058-3-equu%40openmail.cc
+patch subject: [PATCH v3 2/3] wifi: ath9k: stop loading incompatible DT cal data
+config: i386-randconfig-a005 (https://download.01.org/0day-ci/archive/20230203/202302031700.zxbfZuRh-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/b8656d7cf0ddf9edc732511d6d959c1b3a8b4ea8
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review equu-openmail-cc/wifi-ath9k-stop-loading-incompatible-DT-cal-data/20230202-165536
+        git checkout b8656d7cf0ddf9edc732511d6d959c1b3a8b4ea8
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=i386 olddefconfig
+        make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash drivers/net/wireless/ath/ath10k/ drivers/net/wireless/ath/ath9k/
 
-Neither controller needs the new enable gpio?
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
 
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie1_default_state>;
-> +
-> +	status = "okay";
-> +};
-> +
-> +&pcie1_phy {
-> +	vdda-phy-supply = <&vreg_l3c_0p91>;
-> +	vdda-pll-supply = <&vreg_l3e_1p2>;
-> +	vdda-qref-supply = <&vreg_l1e_0p88>;
-> +
-> +	status = "okay";
-> +};
-> +
->  &pm8550_gpios {
->  	sdc2_card_det_n: sdc2-card-det-state {
->  		pins = "gpio12";
+All error/warnings (new ones prefixed by >>):
 
-Johan
+   In file included from drivers/net/wireless/ath/ath9k/init.c:25:
+>> include/linux/of_pci.h:23:33: warning: 'struct pci_driver' declared inside parameter list will not be visible outside of this definition or declaration
+      23 |                          struct pci_driver *drv);
+         |                                 ^~~~~~~~~~
+   drivers/net/wireless/ath/ath9k/init.c: In function 'ath9k_nvmem_request_eeprom':
+>> drivers/net/wireless/ath/ath9k/init.c:594:13: error: implicit declaration of function 'dev_is_pci' [-Werror=implicit-function-declaration]
+     594 |         if (dev_is_pci(sc->dev) &&
+         |             ^~~~~~~~~~
+>> drivers/net/wireless/ath/ath9k/init.c:600:40: error: passing argument 2 of 'of_pci_node_match_driver' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     600 |                                        &ath_pci_driver)))
+         |                                        ^~~~~~~~~~~~~~~
+         |                                        |
+         |                                        struct pci_driver *
+   In file included from drivers/net/wireless/ath/ath9k/init.c:25:
+   include/linux/of_pci.h:23:45: note: expected 'struct pci_driver *' but argument is of type 'struct pci_driver *'
+      23 |                          struct pci_driver *drv);
+         |                          ~~~~~~~~~~~~~~~~~~~^~~
+   cc1: some warnings being treated as errors
+
+
+vim +/dev_is_pci +594 drivers/net/wireless/ath/ath9k/init.c
+
+   572	
+   573	static int ath9k_nvmem_request_eeprom(struct ath_softc *sc)
+   574	{
+   575		struct ath_hw *ah = sc->sc_ah;
+   576		struct nvmem_cell *cell;
+   577		void *buf;
+   578		size_t len;
+   579		int err;
+   580	
+   581		/* devm_nvmem_cell_get() will get a cell first from the OF
+   582		 * DT node representing the given device with nvmem-cell-name
+   583		 * "calibration", and from the global lookup table as a fallback,
+   584		 * and an ath9k device could be either a pci one or a platform one.
+   585		 *
+   586		 * If the OF DT node is not compatible with the real device, the
+   587		 * calibration data got from the node should not be applied.
+   588		 *
+   589		 * dev_is_pci(sc->dev) && ( no OF node || caldata not from node
+   590		 * || not compatible ) -> do not use caldata .
+   591		 *
+   592		 * !dev_is_pci(sc->dev) -> always use caldata .
+   593		 */
+ > 594		if (dev_is_pci(sc->dev) &&
+   595		    (!sc->dev->of_node ||
+   596		     !of_property_match_string(sc->dev->of_node,
+   597					       "nvmem-cell-names",
+   598					       "calibration") ||
+   599		     !of_pci_node_match_driver(sc->dev->of_node,
+ > 600					       &ath_pci_driver)))
+   601			/* follow the "just return 0;" convention as
+   602			 * noted below.
+   603			 */
+   604			return 0;
+   605	
+   606		cell = devm_nvmem_cell_get(sc->dev, "calibration");
+   607		if (IS_ERR(cell)) {
+   608			err = PTR_ERR(cell);
+   609	
+   610			/* nvmem cell might not be defined, or the nvmem
+   611			 * subsystem isn't included. In this case, follow
+   612			 * the established "just return 0;" convention of
+   613			 * ath9k_init_platform to say:
+   614			 * "All good. Nothing to see here. Please go on."
+   615			 */
+   616			if (err == -ENOENT || err == -EOPNOTSUPP)
+   617				return 0;
+   618	
+   619			return err;
+   620		}
+   621	
+   622		buf = nvmem_cell_read(cell, &len);
+   623		if (IS_ERR(buf))
+   624			return PTR_ERR(buf);
+   625	
+   626		/* run basic sanity checks on the returned nvram cell length.
+   627		 * That length has to be a multiple of a "u16" (i.e.: & 1).
+   628		 * Furthermore, it has to be more than "let's say" 512 bytes
+   629		 * but less than the maximum of AR9300_EEPROM_SIZE (16kb).
+   630		 */
+   631		if ((len & 1) == 1 || len < 512 || len >= AR9300_EEPROM_SIZE) {
+   632			kfree(buf);
+   633			return -EINVAL;
+   634		}
+   635	
+   636		/* devres manages the calibration values release on shutdown */
+   637		ah->nvmem_blob = (u16 *)devm_kmemdup(sc->dev, buf, len, GFP_KERNEL);
+   638		kfree(buf);
+   639		if (!ah->nvmem_blob)
+   640			return -ENOMEM;
+   641	
+   642		ah->nvmem_blob_len = len;
+   643		ah->ah_flags &= ~AH_USE_EEPROM;
+   644		ah->ah_flags |= AH_NO_EEP_SWAP;
+   645	
+   646		return 0;
+   647	}
+   648	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
