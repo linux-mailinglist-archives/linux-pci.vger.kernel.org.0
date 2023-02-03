@@ -2,59 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FD6B689EAC
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 16:58:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0511C689EE6
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 17:07:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232365AbjBCP6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Feb 2023 10:58:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60768 "EHLO
+        id S232611AbjBCQHm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Feb 2023 11:07:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232611AbjBCP6R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 10:58:17 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63EB49EDE;
-        Fri,  3 Feb 2023 07:58:15 -0800 (PST)
+        with ESMTP id S231168AbjBCQHl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 11:07:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 461549E9ED;
+        Fri,  3 Feb 2023 08:07:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 83D72CE3080;
-        Fri,  3 Feb 2023 15:58:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E62C433EF;
-        Fri,  3 Feb 2023 15:58:11 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B2E8B61F7F;
+        Fri,  3 Feb 2023 16:07:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C04FC433D2;
+        Fri,  3 Feb 2023 16:07:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675439891;
-        bh=B0v19TuDLbFo7ycDTisQ9anANbQoVZOY4n4uT0Gjyd8=;
+        s=k20201202; t=1675440459;
+        bh=zKmjPVFEtNDSBXoOI9UXflM0Sd030QsBid++FCTj9a8=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=kGQvmPLbYV8DDj4fVk/kdW7DucSZhFoIGuFykU16IX6b55kN1pxWl8JkxioL8U+DQ
-         BHw41Ao+LyIM78qgqYWUiYsbnVHImQ+VldDORga0k7P1qcZPesZX40T4RVTiAr9kSh
-         Rf0hlUk3znkq8tbDa6B0Yo1fkV6LnFTbHPNmJqFJ7h6wABoebtzfihiyn7zNdXLViQ
-         DDY3vO1zvS8E0GPatmdDN4SNcWrjl2X2w8Fa/c6mxOqdaz/lDFAI7itb8CIGIhrzwH
-         1kinCmOjL3rF2CIHRBLFA4JRdyxQhhRWbWeOlPjna+4bNNTfrnZGo55Bod+Bd9nPa8
-         1ZyG5xXKKS1ug==
-Received: by mail-vk1-f171.google.com with SMTP id s76so2772121vkb.9;
-        Fri, 03 Feb 2023 07:58:11 -0800 (PST)
-X-Gm-Message-State: AO0yUKUV5kFdJ9qXlUFsi9S9UUHAoUh0ngVGmqf2Iivi4SiCwBSjsfk4
-        f3pq2VoNE4dv4gSmo88unILFeoFO3TN45T6EwA==
-X-Google-Smtp-Source: AK7set/aXYETV7oOWFZoLHmTjN3D/bBV7EXM1cP6swru8v2XNM2wWlOKK9YHQNK90WRDw8drcqCI+iCc3mzIufRB9L0=
-X-Received: by 2002:a05:6122:419:b0:3e8:551c:46f with SMTP id
- e25-20020a056122041900b003e8551c046fmr1608155vkd.19.1675439890571; Fri, 03
- Feb 2023 07:58:10 -0800 (PST)
+        b=KCZFCV0l0H/S8DfZ12ZyuwUPpalMdOIG4AQnLd51yD76Q1ONGjslziezKEteefy5J
+         baLG7VSVB92tcZvq3dvulixb2uBE3HK1OKHEOeA9MeGq70fY/dhGdTQ4LI1PCeHtka
+         +qslJuriyAOi7B6Yxx0fDk9Ae27ItNvamV5bKoAIea26TgXdNFyhchbA0smWIgi0nE
+         Ac23dx2EQNy67fPe+LBz6KinbcJo38qORfKMPBvyFN1wFKKwd5biXzgVtTIbQ8pAag
+         ic03GSWR/aC8m3zE0g4cKFlAUlxjmnybkVfCtYPJPCpPK2S4V/aVy3hJmhBXEPFJZF
+         rAOUVt1zzqzoA==
+Received: by mail-vs1-f50.google.com with SMTP id j7so5813111vsl.11;
+        Fri, 03 Feb 2023 08:07:39 -0800 (PST)
+X-Gm-Message-State: AO0yUKW9lxaabhNRQh93JhZCR9UcWxeV9tUvdFKhBunsksPsQ89D9qc/
+        X37aYO56CaAhdcTp0yQSRwDAa9J2G69m6xPx1A==
+X-Google-Smtp-Source: AK7set+p/4oE02Qtrd3KwUPO2TJMoCv7VYc0zIaV/SZKSXWLDPZxq/rLmvpgU5zF2KcbzmAfoLSdEu2R7mH3ELmM7nc=
+X-Received: by 2002:a67:eb03:0:b0:3ea:c8c:48a5 with SMTP id
+ a3-20020a67eb03000000b003ea0c8c48a5mr1730235vso.53.1675440457975; Fri, 03 Feb
+ 2023 08:07:37 -0800 (PST)
 MIME-Version: 1.0
-References: <ab8ff515-19ec-fe3f-0237-c30275e9744d@openmail.cc>
- <20230203104822.361415-1-equu@openmail.cc> <20230203104822.361415-4-equu@openmail.cc>
-In-Reply-To: <20230203104822.361415-4-equu@openmail.cc>
+References: <20230111032830.20447-1-jian.yang@mediatek.com> <20230111032830.20447-3-jian.yang@mediatek.com>
+In-Reply-To: <20230111032830.20447-3-jian.yang@mediatek.com>
 From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 3 Feb 2023 09:57:59 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKq1Yv+svKMS3R=TmDui1VJEjinoPFoDAAgr8tBbV1aSQ@mail.gmail.com>
-Message-ID: <CAL_JsqKq1Yv+svKMS3R=TmDui1VJEjinoPFoDAAgr8tBbV1aSQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] wifi: ath10k: only load compatible DT cal data
-To:     equu@openmail.cc
-Cc:     lpieralisi@kernel.org, toke@toke.dk, kvalo@kernel.org,
-        linux-pci@vger.kernel.org, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, kernel test robot <lkp@intel.com>
+Date:   Fri, 3 Feb 2023 10:07:26 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+eAQ-M9a+9g7Kk3GC9WjE_4mZXXrsdm4PucOJ4p2QYVQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+eAQ-M9a+9g7Kk3GC9WjE_4mZXXrsdm4PucOJ4p2QYVQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: PCI: mediatek-gen3: Add support for
+ controlling power and reset
+To:     Jian Yang <jian.yang@mediatek.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Project_Global_Chrome_Upstream_Group@mediatek.com,
+        chuanjia.liu@mediatek.com, jieyy.yang@mediatek.com,
+        qizhong.cheng@mediatek.com, rex-bc.chen@mediatek.com,
+        david-yh.chiu@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -62,91 +72,60 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 3, 2023 at 4:48 AM <equu@openmail.cc> wrote:
+On Tue, Jan 10, 2023 at 9:28 PM Jian Yang <jian.yang@mediatek.com> wrote:
 >
-> From: Edward Chow <equu@openmail.cc>
+> From: "jian.yang" <jian.yang@mediatek.com>
 >
-> ath10k might also be sensitive to the issue reported on
-> https://github.com/openwrt/openwrt/pull/11345 , loading calibration
-> data from a device tree node declared incompatible.
+> Add new properties to support control power supplies and reset pin of
+> a downstream component.
 >
-> ath10k will first check whether the device tree node is compatible
-> with it, using the functionality introduced with the first patch of
-> this series, ("PCI: of: Match pci devices or drivers against OF DT
-> nodes") and only proceed loading calibration data from compatible node.
->
-> Signed-off-by: Edward Chow <equu@openmail.cc>
-> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: jian.yang <jian.yang@mediatek.com>
 > ---
->  drivers/net/wireless/ath/ath10k/core.c | 30 ++++++++++++++++++++++++++
->  drivers/net/wireless/ath/ath10k/pci.c  |  2 +-
->  drivers/net/wireless/ath/ath10k/pci.h  |  2 ++
->  3 files changed, 33 insertions(+), 1 deletion(-)
+>  .../bindings/pci/mediatek-pcie-gen3.yaml      | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 >
-> diff --git a/drivers/net/wireless/ath/ath10k/core.c b/drivers/net/wireless/ath/ath10k/core.c
-> index 5eb131ab916f..a776b06f49b5 100644
-> --- a/drivers/net/wireless/ath/ath10k/core.c
-> +++ b/drivers/net/wireless/ath/ath10k/core.c
-> @@ -13,6 +13,8 @@
->  #include <linux/ctype.h>
->  #include <linux/pm_qos.h>
->  #include <linux/nvmem-consumer.h>
-> +#include <linux/of_pci.h>
-> +#include <linux/pci.h>
->  #include <asm/byteorder.h>
+> diff --git a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> index 7e8c7a2a5f9b..46149cc63989 100644
+> --- a/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> +++ b/Documentation/devicetree/bindings/pci/mediatek-pcie-gen3.yaml
+> @@ -84,6 +84,29 @@ properties:
+>      items:
+>        enum: [ phy, mac ]
 >
->  #include "core.h"
-> @@ -26,6 +28,7 @@
->  #include "testmode.h"
->  #include "wmi-ops.h"
->  #include "coredump.h"
-> +#include "pci.h"
+> +  pcie1v8-supply:
+> +    description:
+> +      The regulator phandle that provides 1.8V power to downstream component.
+> +
+> +  pcie3v3-supply:
+> +    description:
+> +      The regulator phandle that provides 3.3V power to downstream component.
+> +
+> +  pcie12v-supply:
+> +    description:
+> +      The regulator phandle that provides 12V power to downstream component.
+
+While in some bindings we've allowed these in the host bridge node,
+that is a mistake. These should be in the root port node. You probably
+don't have one in DT, so add one.
+
+> +
+> +  dsc-reset-gpios:
+> +    description:
+> +      The reset GPIO of a downstream component.
+> +    maxItems: 1
+> +
+> +  dsc-reset-msleep:
+
+Doesn't the PCI spec define this time? We're talking about PERST#, right?
+
+> +    description:
+> +      The delay time between assertion and de-assertion of a downstream
+> +      component's reset GPIO.
+> +    maxItems: 1
+> +
+>    clocks:
+>      minItems: 4
+>      maxItems: 6
+> --
+> 2.18.0
 >
->  unsigned int ath10k_debug_mask;
->  EXPORT_SYMBOL(ath10k_debug_mask);
-> @@ -1958,6 +1961,33 @@ static int ath10k_download_cal_nvmem(struct ath10k *ar, const char *cell_name)
->         size_t len;
->         int ret;
->
-> +       /* devm_nvmem_cell_get() will get a cell first from the OF
-> +        * DT node representing the given device with nvmem-cell-name
-> +        * "calibration", and from the global lookup table as a fallback,
-> +        * and an ath10k device could be either a pci one or a platform one.
-> +        *
-> +        * If the OF DT node is not compatible with the real device, the
-> +        * calibration data got from the node should not be applied.
-> +        *
-> +        * dev_is_pci(ar->dev) && ( no OF node || caldata not from node
-> +        * || not compatible ) -> do not use caldata .
-> +        *
-> +        * !dev_is_pci(ar->dev) -> always use caldata .
-> +        *
-> +        * The judgement for compatibility differs with ath9k for many
-> +        * DT using "qcom,ath10k" as compatibility string.
-> +        */
-> +       if (dev_is_pci(ar->dev) &&
-> +           (!ar->dev->of_node ||
-> +            (of_property_match_string(ar->dev->of_node,
-> +                                      "nvmem-cell-names",
-> +                                      cell_name) < 0) ||
-> +            !of_device_is_compatible(ar->dev->of_node,
-> +                                     "qcom,ath10k") ||
-> +            !of_pci_node_match_driver(ar->dev->of_node,
-> +                                      &ath10k_pci_driver)))
-> +               return -ENOENT;
-
-I think this can be done a bit cleaner and like other drivers. I see 2 options.
-
-The first way is use VID/PID compatible strings and don't set the
-of_node pointer if there is a mismatch.
-
-If you must use "qcom,ath10k" (and 9k) only, then we should make
-of_device_get_match_data() work on PCI drivers. This should just
-require adding of_match_table ptr and it needs a data struct with a
-flag saying use cal data or not.
-
-Upon further thought, why can't you decide all this just on PCI
-VID/PID? The giant switch statement in ath10k_pci_probe() could all
-just be struct of driver_data from the PCI match table.
-
-Rob
