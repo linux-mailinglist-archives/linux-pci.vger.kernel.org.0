@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC7896896ED
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 11:36:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66A636896F2
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 11:37:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231593AbjBCKfs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Feb 2023 05:35:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57556 "EHLO
+        id S232461AbjBCKgW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Feb 2023 05:36:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232677AbjBCKfd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 05:35:33 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15EA0DBF2
-        for <linux-pci@vger.kernel.org>; Fri,  3 Feb 2023 02:35:32 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id q8so3503873wmo.5
-        for <linux-pci@vger.kernel.org>; Fri, 03 Feb 2023 02:35:32 -0800 (PST)
+        with ESMTP id S232671AbjBCKgU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 05:36:20 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F2721043E
+        for <linux-pci@vger.kernel.org>; Fri,  3 Feb 2023 02:36:08 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id o36so3523854wms.1
+        for <linux-pci@vger.kernel.org>; Fri, 03 Feb 2023 02:36:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8nK1fKLOt07t42zA/NX2wGsyiI7WBcYF7AOE3hneo4g=;
-        b=lGlrN2dLHCqbVaz9YwNXyYBxz/D4lgr1w3rTIjvH6mHtVSex/oYRqVJZSvja++c7dX
-         xV7x/9Jc6K4Kf2xqpfN+ic1eERM9X/cvt+VW6AmxHUN3Hqwec7sIAhgdWQWZzJN1Hhr3
-         tN0RenMHGUwpg+Q3tyWOeQZjZP+z6Yi6TsDUfiZLjaOdSk87MK/BheMPucGXmc8Hpn0z
-         My3v5YVkw3WFc4Rfmx3FQSCzuU9KqW427NArdeYqNIbRD3qp9fBE3rpkjbgn7hRlf0fl
-         Mwt7JC9YMg9/Ca3s8zVtCPscyNEkz8t4F0cgEioLLX4v/bZgqrKtkyNOaHlnWNo3pI91
-         dhBg==
+        bh=B/Alxt640yrbBa/XKQU7mj/9+hAa4yXrPlBn7QlwrTE=;
+        b=UjMbcFzGrptxieT8o0hY0a98JtOb5i2tKgzNSLNc00SCxbYt/RbwL2n0oavc/67Wki
+         NaDqSTrkPlpjAUzlZLYGxtrXVOxw6iFOedrlC1W4FZFBIvq4o7oylRzqr8t4mK3WPQxM
+         9+Yg5tkXnHqIf+wjjK6SaOWUmNujCKLWwDIVUMjokI/tm5QPr9eAvPeXN2L2fI0b4naC
+         7gCAhJhPJZ1BwLQpQOaIuxcOo8vqCzlkan0H79F6ESArv4JAq3c29OZmVvdTBC5ffow0
+         lVthbZ3HSGI+IinbBlShyBximjaEZKjmT8UdtMG+RclwdjK4K+f7vy2FdTvcO3gZ72Fa
+         rMYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8nK1fKLOt07t42zA/NX2wGsyiI7WBcYF7AOE3hneo4g=;
-        b=zwz4Oqr3lnaaWe7ESsIjDLu1wAbDmQRBduUs0SeSbXwGxwIUk6CXE3BQ0+RbOCog3Z
-         e6hool+cPMsUheaCAjSgsyR6UIz4cM2OanqCh+bGwmsvcNaYvLMkHx/9zA56Luue12RZ
-         GDb9qoK0uQ/XEAGCdwANX8cNAV5bwriwv4UOp5dSHbl8DG3XEGNYsLZAFzi5XOh7uwQe
-         /pxG6Ueent1ZdwyjOW98ESa8wuf7lszaIUOkzKbZe0PxkiYzOxBtcIjOLeKPbfLyG6V6
-         o65iQQSEyLTc/VkAIFZU+mllY1YC6nypSEtTo8ILtLgqZYMSE0TbSQdqcmmWRWwdoE/L
-         mdGw==
-X-Gm-Message-State: AO0yUKXpTRsTE3AJCqFPKDF8ldVrNjpv+TI6U7v5Rbg8SN3Logs5SemB
-        Vru8WXZhQF4PANc1EBLrWjP+TA==
-X-Google-Smtp-Source: AK7set9RC8S35h+qhPzKZvtF5wjsR0eplkWa2WNr9zYS986q703SswD03oXnA4dKIZPQBnvNp8f3og==
-X-Received: by 2002:a05:600c:cc3:b0:3dc:42d2:aeee with SMTP id fk3-20020a05600c0cc300b003dc42d2aeeemr9366732wmb.25.1675420530617;
-        Fri, 03 Feb 2023 02:35:30 -0800 (PST)
+        bh=B/Alxt640yrbBa/XKQU7mj/9+hAa4yXrPlBn7QlwrTE=;
+        b=14iOtddjC21BqQX8kAwhFZhlZYdGMPUCJxdKLZtCUeNOLdC6TFJ2zvgpRTAw4zYELu
+         +iuBx/AEqf7I26hTe0mb+wgriBR8dfQQ1tqPf5w3bQg5mdnRDLm1H0b4bmHfkKBTQGAF
+         VbMbqYDdqi/JiO5RrcV3NNSAzioJj7+8lwp6TCNA1xJC9toMXH1Lw5Eh+EGtxi24hA0y
+         jlXHuZouQHaoNJZsok/+vbLLnkmhpDhk4qDhh3ETfHpZaLQr7kr9uC38hSDu1Df1NczT
+         iEAeSvVn5oXbdpzaOg2ZMa1OFZ9F2Yjcderhnv6tP3BW8FP+1M512o7dSwti0Wn6evz6
+         JHzg==
+X-Gm-Message-State: AO0yUKVIcCdrjeMjpIWDs/qAvZcVhZHrtPQBh3+DbZKUVQvxVliWvsoq
+        6TKgzhusG3JMI9p9DswrKjBgEQ==
+X-Google-Smtp-Source: AK7set9DX2k6HQ89nim3kkE+cfA616Ab/IB497UNILR3ETsNFyXK6hLtrXWaLZGzH0PNLB6MmgDXeg==
+X-Received: by 2002:a05:600c:3542:b0:3df:ee00:d230 with SMTP id i2-20020a05600c354200b003dfee00d230mr125428wmq.11.1675420566970;
+        Fri, 03 Feb 2023 02:36:06 -0800 (PST)
 Received: from linaro.org ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id x33-20020a05600c18a100b003dd7edcc960sm2112414wmp.45.2023.02.03.02.35.29
+        by smtp.gmail.com with ESMTPSA id i21-20020a05600c355500b003dc4b4dea31sm2460668wmq.27.2023.02.03.02.36.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 02:35:30 -0800 (PST)
-Date:   Fri, 3 Feb 2023 12:35:28 +0200
+        Fri, 03 Feb 2023 02:36:06 -0800 (PST)
+Date:   Fri, 3 Feb 2023 12:36:05 +0200
 From:   Abel Vesa <abel.vesa@linaro.org>
 To:     Johan Hovold <johan@kernel.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -66,16 +66,17 @@ Cc:     Andy Gross <agross@kernel.org>,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v7 09/12] dt-bindings: PCI: qcom: Add SM8550 compatible
-Message-ID: <Y9zjcKkknDQWEvjH@linaro.org>
+        Neil Armstrong <neil.armstrong@linaro.org>
+Subject: Re: [PATCH v7 12/12] arm64: dts: qcom: sm8550-mtp: Add PCIe PHYs and
+ controllers nodes
+Message-ID: <Y9zjlSl8+Dqqc/5z@linaro.org>
 References: <20230203081807.2248625-1-abel.vesa@linaro.org>
- <20230203081807.2248625-10-abel.vesa@linaro.org>
- <Y9zb2X4w0WfIto9n@hovoldconsulting.com>
+ <20230203081807.2248625-13-abel.vesa@linaro.org>
+ <Y9zaT0SA5yahuBoW@hovoldconsulting.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y9zb2X4w0WfIto9n@hovoldconsulting.com>
+In-Reply-To: <Y9zaT0SA5yahuBoW@hovoldconsulting.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -85,80 +86,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 23-02-03 11:03:05, Johan Hovold wrote:
-> On Fri, Feb 03, 2023 at 10:18:04AM +0200, Abel Vesa wrote:
-> > Add the SM8550 platform to the binding.
+On 23-02-03 10:56:31, Johan Hovold wrote:
+> On Fri, Feb 03, 2023 at 10:18:07AM +0200, Abel Vesa wrote:
+> > Enable PCIe controllers and PHYs nodes on SM8550 MTP board.
 > > 
+> > Co-developed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
 > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > > ---
-> > 
-> > This patchset relies on the following patchset:
-> > https://lore.kernel.org/all/20230117224148.1914627-1-abel.vesa@linaro.org/
-> > 
-> > The v6 of this patch is:
-> > https://lore.kernel.org/all/20230202123902.3831491-10-abel.vesa@linaro.org/
-> > 
-> > Changes since v6:
-> >  * none
-> > 
-> > Changes since v5:
-> >  * added Krzysztof's R-b tag
-> > 
-> > Changes since v4:
-> >  * dropped _serdes infix from ln_shrd table name and from every ln_shrd
-> >    variable name
-> >  * added hyphen between "no CSR" in both places
-> >  * dropped has_ln_shrd_serdes_tbl
-> >  * reordered qmp_pcie_offsets_v6_20 by struct members
-> >  * added rollback for no-CSR reset in qmp_pcie_init fail path
-> >  * moved ln_shrd offset calculation after port_b
-> >  * dropped the minItems for interconnects
-> >  * made iommu related properties global
-> >  * renamed noc_aggr_4 back to noc_aggr
-> > 
-> > Changes since v3:
-> >  * renamed noc_aggr to noc_aggr_4, as found in the driver
-> > 
-> > Changes since v2:
-> >  * dropped the pipe from clock-names
-> >  * removed the pcie instance number from aggre clock-names comment
-> >  * renamed aggre clock-names to noc_aggr
-> >  * dropped the _pcie infix from cnoc_pcie_sf_axi
-> >  * renamed pcie_1_link_down_reset to simply link_down
-> >  * added enable-gpios back, since pcie1 node will use it
-> > 
-> > Changes since v1:
-> >  * Switched to single compatible for both PCIes (qcom,pcie-sm8550)
-> >  * dropped enable-gpios property
-> >  * dropped interconnects related properties, the power-domains
-> >  * properties
-> >    and resets related properties the sm8550 specific allOf:if:then
-> >  * dropped pipe_mux, phy_pipe and ref clocks from the sm8550 specific
-> >    allOf:if:then clock-names array and decreased the minItems and
-> >    maxItems for clocks property accordingly
-> >  * added "minItems: 1" to interconnects, since sm8550 pcie uses just one,
-> >    same for interconnect-names
->  
-> > +  enable-gpios:
-> > +    description: GPIO controlled connection to ENABLE# signal
-> > +    maxItems: 1
 > 
-> What is this gpio used for? Describing it as "ENABLE#" looks wrong as
-> AFAIK it's not part of the PCIe interface.
+> > +&pcie_1_phy_aux_clk {
+> > +	clock-frequency = <1000>;
+> > +};
+> > +
+> > +&pcie0 {
+> > +	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
+> > +	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
+> > +
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pcie0_default_state>;
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pcie0_phy {
+> > +	vdda-phy-supply = <&vreg_l1e_0p88>;
+> > +	vdda-pll-supply = <&vreg_l3e_1p2>;
+> 
+> Super nit: add newline for consistency.
+> 
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pcie1 {
+> > +	wake-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
+> > +	perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
+> 
+> Neither controller needs the new enable gpio?
 
-Oups, that should've been dropped here as well, as I did in the dts/dtsi
-patches.
+Nope, none of the controllers need it.
 
-> 
-> There's also no driver support being adding for this gpio as part of
-> this series and you don't use it for either controller on the MTP.
-> 
-> Are you relying on firmware to enable this one currently perhaps?
 > 
 > > +
-> >    perst-gpios:
-> >      description: GPIO controlled connection to PERST# signal
-> >      maxItems: 1
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&pcie1_default_state>;
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> > +&pcie1_phy {
+> > +	vdda-phy-supply = <&vreg_l3c_0p91>;
+> > +	vdda-pll-supply = <&vreg_l3e_1p2>;
+> > +	vdda-qref-supply = <&vreg_l1e_0p88>;
+> > +
+> > +	status = "okay";
+> > +};
+> > +
+> >  &pm8550_gpios {
+> >  	sdc2_card_det_n: sdc2-card-det-state {
+> >  		pins = "gpio12";
 > 
 > Johan
