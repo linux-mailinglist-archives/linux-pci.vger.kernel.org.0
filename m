@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E496894C0
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 11:05:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DEC06894B8
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Feb 2023 11:05:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233113AbjBCKFD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S233122AbjBCKFD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Fri, 3 Feb 2023 05:05:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55366 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233144AbjBCKEv (ORCPT
+        with ESMTP id S233145AbjBCKEv (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Feb 2023 05:04:51 -0500
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFBA320D16
-        for <linux-pci@vger.kernel.org>; Fri,  3 Feb 2023 02:04:31 -0800 (PST)
-Received: by mail-pf1-x430.google.com with SMTP id bd15so3180860pfb.8
-        for <linux-pci@vger.kernel.org>; Fri, 03 Feb 2023 02:04:31 -0800 (PST)
+Received: from mail-pf1-x42d.google.com (mail-pf1-x42d.google.com [IPv6:2607:f8b0:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 380CC46BF
+        for <linux-pci@vger.kernel.org>; Fri,  3 Feb 2023 02:04:35 -0800 (PST)
+Received: by mail-pf1-x42d.google.com with SMTP id g9so3169336pfk.13
+        for <linux-pci@vger.kernel.org>; Fri, 03 Feb 2023 02:04:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vqPOa6wQ7me1yaZ8gWql2+REBdfg2nWO86T9Pc9DfW4=;
-        b=JTIWKvUBIafMXOXAwc5zu2jHnnG/zaLppVGuVMB3fRUCLIHSZaQjW7WBErdSad8Nf2
-         Y7QmZCVReYCUEF5lS+pVLUizADK3zOavCz3cOrNBj8GLcxWP5cxEm7rJCn6ItoVliBi6
-         lcKWfrPNPeNRTj74y1vbst6LBm+f9aZWrah8AUR/P+C98SVcjoRQGpMNsPM7WSo7AmNy
-         JmM4wG4D2ADLxi3UDyVCMJcI13G/vJRDdQ1ijc4redm6X7jcVkB9FkFB7LgVLZFc/SKk
-         iCSyl+CF2tZi0IkwTHPTV1DfE4XvJAJXZg1yPsDgPSZ1T+W/Xq63z73Twbv6F37RKok/
-         wvWg==
+        bh=kvkPNyoI21L1O1ZXqnPivyYsybrN0iSYwKMSsS9iBxY=;
+        b=TqjFeV9NPabsrfxavmrb7rr4cepsXNVmar2XDnjWglQ4DpUZOEWO0vbof2f6/PWByH
+         TWPQ6ZPNP6HE8OHwVXgsN4cLeRU45MuHFl7+sXcxz/goXguLdPUp5EaQdczVZii0TnRU
+         56+g060uaBaRC/sQePmL3oY2BIg34qhXBIIWyRDe2ZJzg3OPQbZuMcuHyZJUj2ri7cf0
+         yuNBhzZootgd4cpgTrxv8MnVNn8cRif/DT/a2lN1/C7YIzMTvlQpeAyQHnRCn1WWpJru
+         oR0UGu6lSvrN2WUAygdOHInk27VqgNpQPc+kJQyzjoYfNXIN4ID5G5JP2aK3zvTaHo0A
+         1yeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vqPOa6wQ7me1yaZ8gWql2+REBdfg2nWO86T9Pc9DfW4=;
-        b=DGQjI70eZTwkXMicHL5u3f6Qe9ZzGk9hrF0eg3KJUQrG8+1lpSWPpUZyqKfMiQEiDd
-         QAT/fG/1NcY+ZKQgSWL1PmYGihmsKSPphMkY7OLF8wA78hlD9q2wQHFCqJ16okG9ztGU
-         tXpHcig7Ba2UGkqwe3QiP5qAAyzqyloRD4RPi6jeM4sxNYB2grg9kSF73M7xSzHB8sfH
-         0d5TulZv8Ob5luxMElDERIIj/QaDR6rkkbL1fdwLVOkRgA1qf+Ai04EJNA0IjMNPhCGb
-         qeHpdxADBTkbwZwfSDZlje/+CBOHU/XIyNfail1FHK+u4OrPG0cO3jal2p0DUPgbKPF6
-         7/3Q==
-X-Gm-Message-State: AO0yUKXbjQ2it8ecsAEpeiQWfGfPIFn/LyMixfIyHxXUw8YhqdLglJGx
-        sWGko/mwAT2zogsUzu6w+2imQA==
-X-Google-Smtp-Source: AK7set8Y4kcnE70IRY7UtJdoEwFc/ieWHA4OwVMuzDLqXN/hzEi8OHAQTbL4MZdtSXQdly1zS67Qcw==
-X-Received: by 2002:a05:6a00:2409:b0:593:5e76:b0 with SMTP id z9-20020a056a00240900b005935e7600b0mr9875294pfh.2.1675418671319;
-        Fri, 03 Feb 2023 02:04:31 -0800 (PST)
+        bh=kvkPNyoI21L1O1ZXqnPivyYsybrN0iSYwKMSsS9iBxY=;
+        b=VGok6ml+hj656gKmExEDfIW72NBb2wJRkfhYq6Fr8idfhMDz/5nR7mZ2mHu/DnO33u
+         i189F3BrAg6Mr6p1Sy+z7luMLAehJmF9z4JQFDX9KZEV5cftFPAoT3mSqQE+3QdT0iO1
+         PCfpl3nusXsHRrayZBL2v3tf75Ky8SVBWMVJZqMv96XOcveyAAu0caP5hZMFj8NVVOPF
+         6QiyV0TWd0sSuZsBdzn6k0MWme0mY1Kv32xKpJNOl5FjeuEmDs8IvI+8LjLMe8DO3rCE
+         4qwlZhHgI6EqzAH734utx+q+B8KGy8nOufSC8NZ6rnTHHLVXYC0dsGIRqZDI9v7wrjdK
+         njOg==
+X-Gm-Message-State: AO0yUKV0sUz5R8vYSh/kBsgv6fnO6buI2YX/gmQXiIW8XMOrAYLv3/sO
+        DY2P5+warVPfaAXFOlHhm7kGxQ==
+X-Google-Smtp-Source: AK7set+mf9v1p9GMNQBqGbUdP6b8/Tyam+p9edVCarZOEBqKLwxUJFvaDV8vt4ESUw73/JkS5RjeOw==
+X-Received: by 2002:a05:6a00:23d6:b0:593:d111:a071 with SMTP id g22-20020a056a0023d600b00593d111a071mr10889148pfc.9.1675418674729;
+        Fri, 03 Feb 2023 02:04:34 -0800 (PST)
 Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id d3-20020aa797a3000000b0058d8f23af26sm1278885pfq.157.2023.02.03.02.04.28
+        by smtp.gmail.com with ESMTPSA id d3-20020aa797a3000000b0058d8f23af26sm1278885pfq.157.2023.02.03.02.04.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Feb 2023 02:04:31 -0800 (PST)
+        Fri, 03 Feb 2023 02:04:34 -0800 (PST)
 From:   Shunsuke Mie <mie@igel.co.jp>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
 Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
@@ -63,9 +63,9 @@ Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Takanari Hayama <taki@igel.co.jp>,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         virtualization@lists.linux-foundation.org
-Subject: [RFC PATCH 1/4] virtio_pci: add a definition of queue flag in ISR
-Date:   Fri,  3 Feb 2023 19:04:15 +0900
-Message-Id: <20230203100418.2981144-2-mie@igel.co.jp>
+Subject: [RFC PATCH 2/4] virtio_ring: remove const from vring getter
+Date:   Fri,  3 Feb 2023 19:04:16 +0900
+Message-Id: <20230203100418.2981144-3-mie@igel.co.jp>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230203100418.2981144-1-mie@igel.co.jp>
 References: <20230203100418.2981144-1-mie@igel.co.jp>
@@ -80,28 +80,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Already it has beed defined a config changed flag of ISR, but not the queue
-flag. Add a macro for it.
+There are some method to manage the virto ring in Linux kernel. e.g. vhost
+and vringh. Remove const from the getter in order to control vring with
+other APIs, such as vringh.
 
 Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
 Signed-off-by: Takanari Hayama <taki@igel.co.jp>
 ---
- include/uapi/linux/virtio_pci.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/virtio/virtio_ring.c | 2 +-
+ include/linux/virtio.h       | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/uapi/linux/virtio_pci.h b/include/uapi/linux/virtio_pci.h
-index f703afc7ad31..fa82afd6171a 100644
---- a/include/uapi/linux/virtio_pci.h
-+++ b/include/uapi/linux/virtio_pci.h
-@@ -94,6 +94,8 @@
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 2e7689bb933b..aa0c455d402b 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -2857,7 +2857,7 @@ dma_addr_t virtqueue_get_used_addr(struct virtqueue *_vq)
+ EXPORT_SYMBOL_GPL(virtqueue_get_used_addr);
  
- #endif /* VIRTIO_PCI_NO_LEGACY */
+ /* Only available for split ring */
+-const struct vring *virtqueue_get_vring(struct virtqueue *vq)
++struct vring *virtqueue_get_vring(struct virtqueue *vq)
+ {
+ 	return &to_vvq(vq)->split.vring;
+ }
+diff --git a/include/linux/virtio.h b/include/linux/virtio.h
+index dcab9c7e8784..83530b7bc2e9 100644
+--- a/include/linux/virtio.h
++++ b/include/linux/virtio.h
+@@ -88,7 +88,7 @@ unsigned int virtqueue_get_vring_size(struct virtqueue *vq);
  
-+/* Ths bit of the ISR which indicates a queue entry update */
-+#define VIRTIO_PCI_ISR_QUEUE		0x1
- /* The bit of the ISR which indicates a device configuration change. */
- #define VIRTIO_PCI_ISR_CONFIG		0x2
- /* Vector value used to disable MSI for queue */
+ bool virtqueue_is_broken(struct virtqueue *vq);
+ 
+-const struct vring *virtqueue_get_vring(struct virtqueue *vq);
++struct vring *virtqueue_get_vring(struct virtqueue *vq);
+ dma_addr_t virtqueue_get_desc_addr(struct virtqueue *vq);
+ dma_addr_t virtqueue_get_avail_addr(struct virtqueue *vq);
+ dma_addr_t virtqueue_get_used_addr(struct virtqueue *vq);
 -- 
 2.25.1
 
