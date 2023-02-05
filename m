@@ -2,149 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 054BB68AF2E
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Feb 2023 11:03:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C76B68B0A2
+	for <lists+linux-pci@lfdr.de>; Sun,  5 Feb 2023 16:49:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjBEKC7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Feb 2023 05:02:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51730 "EHLO
+        id S229782AbjBEPtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 5 Feb 2023 10:49:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjBEKC5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Feb 2023 05:02:57 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360685B87
-        for <linux-pci@vger.kernel.org>; Sun,  5 Feb 2023 02:02:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675591331;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VrDv5M1D/Bnij+vafx4QbbnsdIPEMLEUcsFcsJyS3RE=;
-        b=FKJHY1zlQFRQgjACZubdbSz6yEsSECI1YAmRzif9WoMcN1IJz0cH4T2wbrk1cn8ecBtxZk
-        GoDsmZI98vsC9cyPtgv/Afb9VYxJ49QKmGjl3Pg+wX0J/AULjHUoCNy952kWxkI8UepPnA
-        Tb4T6TS1vVsjOF6wM8GPUlWdPRZJzSI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-586-2oOoCt1gNuWWYfJyMbRYPw-1; Sun, 05 Feb 2023 05:02:05 -0500
-X-MC-Unique: 2oOoCt1gNuWWYfJyMbRYPw-1
-Received: by mail-wm1-f72.google.com with SMTP id j37-20020a05600c1c2500b003deaf780ab6so5020484wms.4
-        for <linux-pci@vger.kernel.org>; Sun, 05 Feb 2023 02:02:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VrDv5M1D/Bnij+vafx4QbbnsdIPEMLEUcsFcsJyS3RE=;
-        b=CM5NSpmk65blxpQ94fOaS0oY5L2hh3jr76ejvbO3q8/OGokI86WbkAiXZAsGg5uf9+
-         y0pnNGDxoNZDmzI0OzX+1pFHUp67LSiA5v6541V0iluFhJf8x0hVf/wcl6LEAvLh8QmN
-         RRJY1UOQgPXTLi6eqD+T9Q1GjCEIl4Vlzn+hp9btPRLPXwcImi/bRvGBtW4TXw5PPYfl
-         ESm6x6RuBK6dpIL8TapWx8TuaRWCkb8TroCgmIpk141UmSGvY4IHI5VdZyaShlsC0+Nv
-         BooXVNp7i6mjapJ0e6bTHm6Sy7F2JVVCvUkUTdc6HXPB1SiWRq8BgsD0ePCBXrpVdDy8
-         oB+w==
-X-Gm-Message-State: AO0yUKXpYD1pyL3+6cOcHednyVjEBNXJ018mDWcJ9memTZ9eX9XELoWm
-        jTgkZmsHF28vC0u4COTKGMEPQhoB6JRS3vth569cvZ5ZSE8kuyxhiCa92p8IItUY77C6ZPeHTy5
-        HW8cvRH6AeZPpeeZUlIxT
-X-Received: by 2002:a05:600c:3b91:b0:3dc:545f:e9ce with SMTP id n17-20020a05600c3b9100b003dc545fe9cemr16747407wms.24.1675591324666;
-        Sun, 05 Feb 2023 02:02:04 -0800 (PST)
-X-Google-Smtp-Source: AK7set8YLVmOZelQcBfOFDQIwXIOlKP8w5Qv0I1NMGLe7/YwB6qM3lW7lMaCyN+hDLgREf6CkLg2yg==
-X-Received: by 2002:a05:600c:3b91:b0:3dc:545f:e9ce with SMTP id n17-20020a05600c3b9100b003dc545fe9cemr16747383wms.24.1675591324442;
-        Sun, 05 Feb 2023 02:02:04 -0800 (PST)
-Received: from redhat.com ([2.52.129.177])
-        by smtp.gmail.com with ESMTPSA id l20-20020a05600c089400b003dc41a9836esm7523257wmp.43.2023.02.05.02.02.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Feb 2023 02:02:03 -0800 (PST)
-Date:   Sun, 5 Feb 2023 05:01:59 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Wang <jasowang@redhat.com>, Frank Li <Frank.Li@nxp.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        Takanari Hayama <taki@igel.co.jp>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP function
-Message-ID: <20230205050122-mutt-send-email-mst@kernel.org>
-References: <20230203100418.2981144-1-mie@igel.co.jp>
+        with ESMTP id S229768AbjBEPtC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Feb 2023 10:49:02 -0500
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 556DE9038;
+        Sun,  5 Feb 2023 07:49:01 -0800 (PST)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 106B792009C; Sun,  5 Feb 2023 16:48:55 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 0478292009B;
+        Sun,  5 Feb 2023 15:48:54 +0000 (GMT)
+Date:   Sun, 5 Feb 2023 15:48:54 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>
+cc:     Alex Williamson <alex.williamson@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Stefan Roese <sr@denx.de>, Jim Wilson <wilson@tuliptree.org>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/7] pci: Work around ASMedia ASM2824 PCIe link training
+ failures
+Message-ID: <alpine.DEB.2.21.2302022022230.45310@angie.orcam.me.uk>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230203100418.2981144-1-mie@igel.co.jp>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,HDRS_LCASE,
+        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 07:04:14PM +0900, Shunsuke Mie wrote:
-> This patchset introduce a virtio-net EP device function. It provides a
-> new option to communiate between PCIe host and endpoint over IP.
-> Advantage of this option is that the driver fully uses a PCIe embedded DMA.
-> It is used to transport data between virtio ring directly each other. It
-> can be expected to better throughput.
-> 
-> To realize the function, this patchset has few changes and introduces a
-> new APIs to PCI EP framework related to virtio. Furthermore, it device
-> depends on the some patchtes that is discussing. Those depended patchset
-> are following:
-> - [PATCH 1/2] dmaengine: dw-edma: Fix to change for continuous transfer
-> link: https://lore.kernel.org/dmaengine/20221223022608.550697-1-mie@igel.co.jp/
-> - [RFC PATCH 0/3] Deal with alignment restriction on EP side
-> link: https://lore.kernel.org/linux-pci/20230113090350.1103494-1-mie@igel.co.jp/
-> - [RFC PATCH v2 0/7] Introduce a vringh accessor for IO memory
-> link: https://lore.kernel.org/virtualization/20230202090934.549556-1-mie@igel.co.jp/
-> 
-> About this patchset has 4 patches. The first of two patch is little changes
-> to virtio. The third patch add APIs to easily access virtio data structure
-> on PCIe Host side memory. The last one introduce a virtio-net EP device
-> function. Details are in commit respectively.
-> 
-> Currently those network devices are testd using ping only. I'll add a
-> result of performance evaluation using iperf and etc to the future version
-> of this patchset.
+Hi,
 
+ This is v6 of the change to work around a PCIe link training phenomenon 
+where a pair of devices both capable of operating at a link speed above 
+2.5GT/s seems unable to negotiate the link speed and continues training 
+indefinitely with the Link Training bit switching on and off repeatedly 
+and the data link layer never reaching the active state.
 
-All this feels like it'd need a virtio spec extension but I'm not 100%
-sure without spending much more time understanding this.
-what do you say?
+ Following Bjorn's suggestion from the previous iteration:
+<https://lore.kernel.org/lkml/20221109050418.GA529724@bhelgaas/> I have 
+moved the workaround into the PCI core.  I have kept the part specific to 
+ASMedia (to lift the speed restriction after a successful retrain) within, 
+although I find it a good candidate for a standalone quirk.  It seems to 
+me we'd have to add additional classes of fixups however to move this part 
+to drivers/pci/quirks.c, which I think would be an overkill.  So I've only 
+made it explicitly guarded by CONFIG_PCI_QUIRKS; I can see there's prior 
+art with this approach.
 
-> Shunsuke Mie (4):
->   virtio_pci: add a definition of queue flag in ISR
->   virtio_ring: remove const from vring getter
->   PCI: endpoint: Introduce virtio library for EP functions
->   PCI: endpoint: function: Add EP function driver to provide virtio net
->     device
-> 
->  drivers/pci/endpoint/Kconfig                  |   7 +
->  drivers/pci/endpoint/Makefile                 |   1 +
->  drivers/pci/endpoint/functions/Kconfig        |  12 +
->  drivers/pci/endpoint/functions/Makefile       |   1 +
->  .../pci/endpoint/functions/pci-epf-vnet-ep.c  | 343 ++++++++++
->  .../pci/endpoint/functions/pci-epf-vnet-rc.c  | 635 ++++++++++++++++++
->  drivers/pci/endpoint/functions/pci-epf-vnet.c | 387 +++++++++++
->  drivers/pci/endpoint/functions/pci-epf-vnet.h |  62 ++
->  drivers/pci/endpoint/pci-epf-virtio.c         | 113 ++++
->  drivers/virtio/virtio_ring.c                  |   2 +-
->  include/linux/pci-epf-virtio.h                |  25 +
->  include/linux/virtio.h                        |   2 +-
->  include/uapi/linux/virtio_pci.h               |   2 +
->  13 files changed, 1590 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-ep.c
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-rc.c
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.c
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.h
->  create mode 100644 drivers/pci/endpoint/pci-epf-virtio.c
->  create mode 100644 include/linux/pci-epf-virtio.h
-> 
-> -- 
-> 2.25.1
+ In the course of the update I have realised that commit 6b2f1351af56 
+("PCI: Wait for device to become ready after secondary bus reset") makes 
+no sense and was about to figure out what to do here about it, but then 
+found Lukas's recent patch series addressing this issue (thanks, Lukas, 
+you made my life easier!), so I have rebased my patch set on top of 
+Lukas's:
+<https://lore.kernel.org/all/da77c92796b99ec568bd070cbe4725074a117038.1673769517.git.lukas@wunner.de/>.
 
+ This has resulted in mild ugliness in that `pcie_downstream_link_retrain' 
+may be called from `pci_bridge_wait_for_secondary_bus' twice, first time 
+via `pcie_wait_for_link_delay' and second time via `pci_dev_wait'.  This 
+second call to `pcie_downstream_link_retrain' will do nothing, because for 
+`link_active_reporting' devices `pcie_wait_for_link_delay' will have 
+ensured the link has gone up or the second call won't have been reached.
+
+ I have also decided to move the initialisation of `link_active_reporting' 
+earlier on, so as to have a single way to check for the feature.  This has 
+brought an extra patch and its 3 clean-up dependencies into the series.
+
+ This was originally observed in a configuration featuring a downstream 
+port of the ASMedia ASM2824 Gen 3 switch wired to the upstream port of the 
+Pericom PI7C9X2G304 Gen 2 switch.  However in the course of review I have 
+come to the conclusion that similarly to the earlier similar change to 
+U-Boot it is indeed expected to be safe to apply this workaround to any 
+downstream port that has failed link negotiation provided that:
+
+1. the port is capable of reporting the data link layer link active 
+   status (because unlike U-Boot we cannot busy-loop continuously polling 
+   the link training bit),
+
+and:
+
+2. we don't attempt to lift the 2.5GT/s speed restriction, imposed as the
+   basis of the workaround, for devices not explicitly known to continue 
+   working in that case.
+
+It is expected to be safe because the workaround is applied to a failed 
+link, that is one that does not (at the time this code is executed) work 
+anyway, so trying to bring it up cannot make the situation worse.
+
+ This has been verified with a SiFive HiFive unmatched board, with and 
+without CONFIG_PCI_QUIRKS enabled, booting with or without the workaround 
+activated in U-Boot, which covered both the link retraining part of the 
+quirk and the lifting of speed restriction already imposed by U-Boot.
+
+ I have also issued resets via sysfs to see how this change behaves.  For 
+the problematic link this required a hack to remove a `dev->subordinate' 
+check from `pci_parent_bus_reset', which in turn triggered the workaround 
+as expected and brought the link up (but otherwise clobbered downstream 
+devices as one would inevitably expect).
+
+ I have no way to verify these patches with power management or hot-plug 
+events, but owing to Lukas's effort they get into the same infrastructure, 
+so I expect the workaround to do its job as expected.  I note that there 
+is an extra call to `pcie_wait_for_link' from `pciehp_check_link_status', 
+but I expect it to work too.  For `link_active_reporting' devices it will 
+call `pcie_downstream_link_retrain' and for`!link_active_reporting' ones 
+we have no means to do anything anyway.
+
+ The 3 extra clean-ups were only compile-tested (with PowerPC and x86-64 
+configurations, as appropriate), because I have no suitable hardware 
+available.
+
+ Please see individual change descriptions for further details.
+
+ Let me know if this is going in the right direction.
+
+  Maciej
