@@ -2,163 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2CC9868BD2A
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 13:45:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2B7A68BF95
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 15:08:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229619AbjBFMpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 07:45:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
+        id S231512AbjBFOIN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 09:08:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjBFMpD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 07:45:03 -0500
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87CE5FD1;
-        Mon,  6 Feb 2023 04:45:02 -0800 (PST)
-Received: by mail-pj1-x1042.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso15047632pjj.1;
-        Mon, 06 Feb 2023 04:45:02 -0800 (PST)
+        with ESMTP id S231515AbjBFOHv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 09:07:51 -0500
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D252C2BED9
+        for <linux-pci@vger.kernel.org>; Mon,  6 Feb 2023 06:05:30 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so10855709wmb.2
+        for <linux-pci@vger.kernel.org>; Mon, 06 Feb 2023 06:05:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gM1T1LiTjFLuiGBuHxUovgMZMlzmJ0u3GsfkKmTxj0M=;
-        b=LEYtyfsEYNtKsHvFXQmMWDZ3DL1IGzocBn1YvmZHApBcNR9De+PKIGV+8WVH8YXL1W
-         0chffXrUj6aZhNixcKCPqqf0v5pVQxw1QsxWTIwbABujMZCkzEqeH2QEwl3TEN7N4G/S
-         0GnEZ9FytnMSdgw78CgRjBC2FLIpbtv3XACWjog8CWrL7b5Y72BzooQWiyjf2B4JKatu
-         OTYisgAA/UgfjhXpT2bpvSOnh47YBTpytt9p+i/IVua/JqYwISXZ/ZJ83R3VO3T8IEH0
-         hR0HcDM9tQDmL2hZvVVDL0DEpgJbP0nV5dHatlO35aBmn7EoG1Tqr9p4JyOgC272RUey
-         mQfQ==
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1sBDHSdASz4ecLzalMdlfELS8RCcYMZ2sk1AegZ7C4=;
+        b=gUDkn0Nk6osoDg6kBIqb4HgThjeRoU3B4yStY9UPgtkSB4y1icRX/nUz/3C0iAIpEm
+         MEDJnt9vnKjADTSJTi/kI8xh0D1PAvXE7gH5tvVQcf8lgVPHzvsc5HnaQOH1XCzK8HqA
+         iLF14vnXPg2R+rqK6qe3qmaCI98vVcpebABOShNnLKS3xsvXq448T7tqXjuyVVxuKx9g
+         yMS5bniysbumzLDbyVXjr/7YPXLCHBoUeOW+P4N/JovSFBu+zje1qoxWataFiEkxgOE+
+         ofZGWBbvJfP+qu1nMsNHPX/6rHYDCqnit3Br9d1aFXvJkdUEMDG8tGXoizjtkjstYorr
+         zWKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gM1T1LiTjFLuiGBuHxUovgMZMlzmJ0u3GsfkKmTxj0M=;
-        b=qoIVtZjF/4qD36I56nMDjAP1HBJlPagS1StnfQlJRsSiX+JuN9M2+xh6EW108DAZcS
-         CK8BymtjQYFajDYXT4yh2sJgAEGyMqVS5qKw57qy+rxL02ZQMLFGsjAoTr69rmGwqWuC
-         XbGdgz1E8z1pLgh0pf7iJLG/UywV9n5eQVPw+AACxh22/zFwiL+0lakVfY93JQzTOvqd
-         GX6G/MqKaznfuAp2D9VRlMP2JMtWqw9IZknDw82LIbLyat/nJBgMzSYb8au4QHDUPzbV
-         fb9n2XsCr4jLZN2kI8wcqt3dYERV2Z9tiFHUs0J4UjDmYrLPX5IL5sSA9DYNiPp4KvCm
-         LdmQ==
-X-Gm-Message-State: AO0yUKULxAWpP0u4eoALfDQNFn6Db0ouKfrRfQ1/9YfkC9S/UGl6auD6
-        BqyFaYQYwSdgqNbUk2XtOiLrHj5Gx43zWDAs+RY=
-X-Google-Smtp-Source: AK7set/U1nmg01crHXqmJueQELsf06ewfSOKn9103EC3Etsc9ROFlDdAWo5G3bi5fo0k8DJH+xKJs8TV08WXvwAs3KU=
-X-Received: by 2002:a17:90a:74c4:b0:22b:f34a:1f52 with SMTP id
- p4-20020a17090a74c400b0022bf34a1f52mr2922483pjl.76.1675687502165; Mon, 06 Feb
- 2023 04:45:02 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l1sBDHSdASz4ecLzalMdlfELS8RCcYMZ2sk1AegZ7C4=;
+        b=0my1/2DWh3HBmRctHkrAeffIfOwjVKCYxvYn61rhsPUpliWJN8DQ5apVNnTBdQ27OG
+         YYyJMKL0raeq0LWpwycKoFWILy2Rkt1OKuiG47eeGQ/h8cbs3JA8azv3xSuA3rJJoLIe
+         W7hV0Wy4y0cHez/5PHCRrgZvLrmptUXl8pvCHXbep0qEF+/Tvcev2O6rjJGKW4W4fVSV
+         FR7P8zPpFULwODxbK3JRmPg3Qp34qe0sazcnSx2w3hbVA22w8Jcdtgb/+mJ2yoFssNL1
+         nxwev8ZA2a2tiQAZDLZCXHOzHEKqSSfZ64aVWGz5OBpQU08J4q/LCgxmKKp0TO6IP90B
+         Js/Q==
+X-Gm-Message-State: AO0yUKUtRNYiKeiJb9WJhFGs7IQ5VYm26o9rZD2a01UJ65nT5Dy7HX0S
+        D8E4KSos7s9AVrCDqbS32TVZmg==
+X-Google-Smtp-Source: AK7set8CdDqbiahcj1npFpmbebayGsvVRXrv4P1LiTprnhax7cXuxebkMZ+iX0ubTVrxQMT9rjIupw==
+X-Received: by 2002:a05:600c:3849:b0:3d5:365b:773e with SMTP id s9-20020a05600c384900b003d5365b773emr20826426wmr.39.1675692304690;
+        Mon, 06 Feb 2023 06:05:04 -0800 (PST)
+Received: from linaro.org ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id q9-20020a1ce909000000b003dc34edacf8sm15917337wmc.31.2023.02.06.06.05.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Feb 2023 06:05:04 -0800 (PST)
+Date:   Mon, 6 Feb 2023 16:05:02 +0200
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v7 08/12] phy: qcom-qmp-pcie: Add support for SM8550 g3x2
+ and g4x2 PCIEs
+Message-ID: <Y+EJDofgt6I/abyp@linaro.org>
+References: <20230203081807.2248625-1-abel.vesa@linaro.org>
+ <20230203081807.2248625-9-abel.vesa@linaro.org>
+ <Y9zU2jBdSD72W28F@hovoldconsulting.com>
 MIME-Version: 1.0
-References: <20221222072603.1175248-1-korantwork@gmail.com>
- <3d1834d9-7905-1225-741a-f298dd5b8a8e@linux.dev> <Y6TSgGdCTvkwPiVg@kbusch-mbp.dhcp.thefacebook.com>
- <CAEm4hYUWf+Fx3FV7vNTc8+O9NSb0iQp75MTC6gra6XapXK=cxw@mail.gmail.com>
- <d14ac29d-027a-08a7-c5c8-848a6920d4a2@linux.dev> <CAEm4hYXncuvL-Gk1aEZExrvkbx=N1aiOQNeNjFdB4443EbKNBA@mail.gmail.com>
- <f05ee82a-4532-b12b-490f-904b946ff7b0@linux.dev> <CAEm4hYXk1RuKEw41VukH2iGTo_9GmZjUfrESWK5vFtpFA_O_4A@mail.gmail.com>
-In-Reply-To: <CAEm4hYXk1RuKEw41VukH2iGTo_9GmZjUfrESWK5vFtpFA_O_4A@mail.gmail.com>
-From:   Xinghui Li <korantwork@gmail.com>
-Date:   Mon, 6 Feb 2023 20:45:57 +0800
-Message-ID: <CAEm4hYWeZFrYxSvAcBJ8iw=t507vZMqfBwiQXFSJd2Hcyfw7fA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
-To:     Jonathan Derrick <jonathan.derrick@linux.dev>
-Cc:     Keith Busch <kbusch@kernel.org>, nirmal.patel@linux.intel.com,
-        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xinghui Li <korantli@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y9zU2jBdSD72W28F@hovoldconsulting.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Friendly ping~
+On 23-02-03 10:33:14, Johan Hovold wrote:
+> On Fri, Feb 03, 2023 at 10:18:03AM +0200, Abel Vesa wrote:
+> > Add the SM8550 both g4 and g3 configurations. In addition, there is a
+> > new "lane shared" table that needs to be configured for g4, along with
+> > the No-CSR list of resets.
+> 
+> Could you add a comment about the new nocsr reset and how it is used
+> here?
+>  
+> > Co-developed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> > ---
+> > 
+> > This patchset relies on the following patchset:
+> > https://lore.kernel.org/all/20230117224148.1914627-1-abel.vesa@linaro.org/
+> > 
+> > The v6 of this patch is:
+> > https://lore.kernel.org/all/20230202123902.3831491-9-abel.vesa@linaro.org/
+> > 
+> > Changes since v6:
+> >  * none
+> > 
+> > Changes since v5:
+> >  * renmaed the no-CSR reset to "phy_nocsr" as discussed off-list with
+> >    Bjorn and Johan
+> > 
+> > Changes since v4:
+> >  * dropped _serdes infix from ln_shrd table name and from every ln_shrd
+> >    variable name
+> >  * added hyphen between "no CSR" in both places
+> >  * dropped has_ln_shrd_serdes_tbl
+> >  * reordered qmp_pcie_offsets_v6_20 by struct members
+> >  * added rollback for no-CSR reset in qmp_pcie_init fail path
+> >  * moved ln_shrd offset calculation after port_b
+> > 
+> > Changes since v3:
+> >  * added Dmitry's R-b tag
+> > 
+> > Changes since v2:
+> >  * none
+> > 
+> > Changes since v1:
+> >  * split all the offsets into separate patches, like Vinod suggested
+> > 
+> > 
+> >  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 367 ++++++++++++++++++++++-
+> >  1 file changed, 365 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > index 907f3f236f05..ff6c0b526fde 100644
+> > --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > @@ -1506,6 +1506,234 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl[] =
+> >  	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
+> >  };
+> 
+[...]
+> 
+> >  
+> > @@ -2214,6 +2469,68 @@ static const struct qmp_phy_cfg sm8450_qmp_gen4x2_pciephy_cfg = {
+> >  	.phy_status		= PHYSTATUS_4_20,
+> >  };
+> >  
+> > +static const struct qmp_phy_cfg sm8550_qmp_gen3x2_pciephy_cfg = {
+> > +	.lanes = 2,
+> > +
+> > +	.offsets		= &qmp_pcie_offsets_v5,
+> 
+> Did you really intend to use the v5 offsets here? It seems you use v6.20
+> defines in the tables below. This may work but it looks a little strange
+> and does not match how we name and use these resources for the other
+> SoCs (e.g. reusing structures and defines from older IP revisions is
+> fine, but not necessarily the other way round).
 
-Xinghui Li <korantwork@gmail.com> =E4=BA=8E2023=E5=B9=B41=E6=9C=8810=E6=97=
-=A5=E5=91=A8=E4=BA=8C 20:28=E5=86=99=E9=81=93=EF=BC=9A
->
-> Jonathan Derrick <jonathan.derrick@linux.dev> =E4=BA=8E2023=E5=B9=B41=E6=
-=9C=8810=E6=97=A5=E5=91=A8=E4=BA=8C 05:00=E5=86=99=E9=81=93=EF=BC=9A
-> >
-> > As the bypass mode seems to affect performance greatly depending on the=
- specific configuration,
-> > it may make sense to use a moduleparam to control it
-> >
-> We found that each pcie port can mount four drives. If we only test 2
-> or 1 dirve of one pcie port,
-> the performance of the drive performance will be normal. Also, we
-> observed the interruptions in different modes.
-> bypass:
-> .....
-> 2022-12-28-11-39-14: 1224       181665   IR-PCI-MSI 201850948-edge      n=
-vme0q68
-> 2022-12-28-11-39-14: 1179       180115   IR-PCI-MSI 201850945-edge      n=
-vme0q65
-> 2022-12-28-11-39-14:  RES        26743   Rescheduling interrupts
-> 2022-12-28-11-39-17: irqtop - IRQ : 3029, TOTAL : 2100315228, CPU :
-> 192, ACTIVE CPU : 192
-> disable:
-> ......
-> 2022-12-28-12-05-56: 1714       169797   IR-PCI-MSI 14155850-edge      nv=
-me1q74
-> 2022-12-28-12-05-56: 1701       168753   IR-PCI-MSI 14155849-edge      nv=
-me1q73
-> 2022-12-28-12-05-56:  LOC       163697   Local timer interrupts
-> 2022-12-28-12-05-56:  TLB         5465   TLB shootdowns
-> 2022-12-28-12-06-00: irqtop - IRQ : 3029, TOTAL : 2179022106, CPU :
-> 192, ACTIVE CPU : 192
-> remapping:
-> 022-12-28-11-25-38:  283       325568   IR-PCI-MSI 24651790-edge      vmd=
-3
-> 2022-12-28-11-25-38:  140       267899   IR-PCI-MSI 13117447-edge      vm=
-d1
-> 2022-12-28-11-25-38:  183       265978   IR-PCI-MSI 13117490-edge      vm=
-d1
-> ......
-> 2022-12-28-11-25-42: irqtop - IRQ : 2109, TOTAL : 2377172002, CPU :
-> 192, ACTIVE CPU : 192
->
-> From the result it is not difficult to find, in remapping mode the
-> interruptions come from vmd.
-> While in other modes, interrupts come from nvme devices. Besides, we
-> found the port mounting
-> 4 dirves total interruptions is much fewer than the port mounting 2 or 1 =
-drive.
-> NVME 8 and 9 mount in one port, other port mount 4 dirves.
->
-> 2022-12-28-11-39-14: 2582       494635   IR-PCI-MSI 470810698-edge      n=
-vme9q74
-> 2022-12-28-11-39-14: 2579       489972   IR-PCI-MSI 470810697-edge      n=
-vme9q73
-> 2022-12-28-11-39-14: 2573       480024   IR-PCI-MSI 470810695-edge      n=
-vme9q71
-> 2022-12-28-11-39-14: 2544       312967   IR-PCI-MSI 470286401-edge      n=
-vme8q65
-> 2022-12-28-11-39-14: 2556       312229   IR-PCI-MSI 470286405-edge      n=
-vme8q69
-> 2022-12-28-11-39-14: 2547       310013   IR-PCI-MSI 470286402-edge      n=
-vme8q66
-> 2022-12-28-11-39-14: 2550       308993   IR-PCI-MSI 470286403-edge      n=
-vme8q67
-> 2022-12-28-11-39-14: 2559       308794   IR-PCI-MSI 470286406-edge      n=
-vme8q70
-> ......
-> 2022-12-28-11-39-14: 1296       185773   IR-PCI-MSI 202375243-edge      n=
-vme1q75
-> 2022-12-28-11-39-14: 1209       185646   IR-PCI-MSI 201850947-edge      n=
-vme0q67
-> 2022-12-28-11-39-14: 1831       184151   IR-PCI-MSI 203423828-edge      n=
-vme3q84
-> 2022-12-28-11-39-14: 1254       182313   IR-PCI-MSI 201850950-edge      n=
-vme0q70
-> 2022-12-28-11-39-14: 1224       181665   IR-PCI-MSI 201850948-edge      n=
-vme0q68
-> 2022-12-28-11-39-14: 1179       180115   IR-PCI-MSI 201850945-edge      n=
-vme0q65
-> > I'd vote for it being in VMD mode (non-bypass) by default.
-> I speculate that the vmd controller equalizes the interrupt load and
-> acts like a buffer,
-> which improves the performance of nvme. I am not sure about my
-> analysis. So, I'd like
-> to discuss it with the community.
+So here is what is happening here. The actual IP block version is 6 for
+the g3x2. The offsets of the tables are the same as on v5, but the
+actual offsets of some of the registers within those tables are
+entirely different. Now, if you compare the PCS PCIe offsets (v5 vs v6)
+you'll notice that all v6 registers currently added are the same as v5
+(both names and values). With that in mind, we still need to keep the v6
+offsets for the case when a new register, that might not be in v5, might
+be added later on. As for the table offsets, since they look the same we
+should probably not add a dedicated v6 one.
+> 
+> I assume this means that the gen3 PHY is really is really v5 and using
+> a subset of the v6.20 defines happens to works as they are in fact
+> identical with respect to that subset?
+> 
+> As you have dedicated gen3x2 tables, perhaps those should use the v5
+> defines?
+> 
+> And at least add a comment about this in the commit message.
+> 
+> > +
+> > +	.tbls = {
+> > +		.serdes		= sm8550_qmp_gen3x2_pcie_serdes_tbl,
+> > +		.serdes_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_serdes_tbl),
+> > +		.tx		= sm8550_qmp_gen3x2_pcie_tx_tbl,
+> > +		.tx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_tx_tbl),
+> > +		.rx		= sm8550_qmp_gen3x2_pcie_rx_tbl,
+> > +		.rx_num		= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_rx_tbl),
+> > +		.pcs		= sm8550_qmp_gen3x2_pcie_pcs_tbl,
+> > +		.pcs_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_tbl),
+> > +		.pcs_misc	= sm8550_qmp_gen3x2_pcie_pcs_misc_tbl,
+> > +		.pcs_misc_num	= ARRAY_SIZE(sm8550_qmp_gen3x2_pcie_pcs_misc_tbl),
+> > +	},
+> > +	.clk_list		= sc8280xp_pciephy_clk_l,
+> > +	.num_clks		= ARRAY_SIZE(sc8280xp_pciephy_clk_l),
+> > +	.reset_list		= sdm845_pciephy_reset_l,
+> > +	.num_resets		= ARRAY_SIZE(sdm845_pciephy_reset_l),
+> > +	.vreg_list		= qmp_phy_vreg_l,
+> > +	.num_vregs		= ARRAY_SIZE(qmp_phy_vreg_l),
+> > +	.regs			= pciephy_v5_regs_layout,
+> > +
+> > +	.pwrdn_ctrl		= SW_PWRDN | REFCLK_DRV_DSBL,
+> > +	.phy_status		= PHYSTATUS,
+> > +};
+> > +
+
+[...]
