@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64E9768C7F8
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 21:50:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52F8A68C7FA
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 21:50:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230317AbjBFUue (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 15:50:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48352 "EHLO
+        id S230359AbjBFUui (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 15:50:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230340AbjBFUud (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 15:50:33 -0500
+        with ESMTP id S230354AbjBFUui (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 15:50:38 -0500
 Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A1F20050;
-        Mon,  6 Feb 2023 12:50:32 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E473B2CC48;
+        Mon,  6 Feb 2023 12:50:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675716632; x=1707252632;
+  t=1675716637; x=1707252637;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=kIXOGWIlRzYzArn4iLknajFZdj1TLid0ppmpb6d89J4=;
-  b=PNvr+yo7RFbI0rT2jVpuhKRBR+JTIi0X3mMCy+dKv56WhS4vELf/Dpqk
-   r9RDS4SVGipTZuoxnkRG4Sxkeqn/WjBpTiGZdVK0M/d1xK6386wAlmtUz
-   yZm/nacjWHwY0o474Xu9xohMy+8j6T6Mp5/5z/+khSYcNgqvros2o0ZnA
-   cU342kmevUzg87iOjIQvs5dofDujh5aoAFF1U8BtQzFP2tVV2nC7jto/+
-   TnDUXiemSa8xfijuJngWKuE6GgP9DQgFHaARXjh+ZKEm1O6m0KVARhZh8
-   JV9eJJ0WuTDRYPbhcJYAzdfpDo6CxCYEnuAcsAEft/2MdYOcOQ1g0UAla
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="393911985"
+  bh=kG3UAx4/7B+P3TM5sA0oWhO+QJjyaL/AvJzU6IihwKo=;
+  b=nXwVBxMRlMyozmJ5R77NelmxAznLgmSCx5Y170Yb+0x+3qYDHMj3oAcz
+   WsnYxkDGhF2spyaamSnHzSyfMvevVLvfPjd7er2V+tya2TNynM4ECI9bo
+   v/haxor6R4Wn/OL96Aer9uHO2EzxJmLDiULbY7DMiXRRITlY/SOTJBbI5
+   wp2dwdhkdEbShlIptbNgdoipNb/06YQYYqyTqKanLNs4f3SOxTrM4/m1I
+   TUqGcaN9ihsaQGBZigRpLJN1bXfnN91TDB/3EIVFQw2t9dnAnQVGrz65H
+   DVr2RIRhkBEZC1byILCDDJyV0Yzh6GVxCCNQcoWPtwwTaN+zBhXxMFJf6
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="393912014"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="393911985"
+   d="scan'208";a="393912014"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:50:27 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="616559542"
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:50:36 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="616559659"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="616559542"
+   d="scan'208";a="616559659"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.111.195])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:50:26 -0800
-Subject: [PATCH 07/18] cxl: Add callback to parse the DSLBIS subtable from
- CDAT
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:50:35 -0800
+Subject: [PATCH 08/18] cxl: Add support for _DSM Function for retrieving QTG
+ ID
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, bhelgaas@google.com, robert.moore@intel.com
-Date:   Mon, 06 Feb 2023 13:50:23 -0700
-Message-ID: <167571662248.587790.4362747686454305108.stgit@djiang5-mobl3.local>
+Date:   Mon, 06 Feb 2023 13:50:33 -0700
+Message-ID: <167571663199.587790.13615282047168132392.stgit@djiang5-mobl3.local>
 In-Reply-To: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
 References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
 User-Agent: StGit/1.5
@@ -62,118 +62,162 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Provide a callback to parse the Device Scoped Latency and Bandwidth
-Information Structure (DSLBIS) in the CDAT structures. The DSLBIS
-contains the bandwidth and latency information that's tied to a DSMAS
-handle. The driver will retrieve the read and write latency and
-bandwidth associated with the DSMAS which is tied to a DPA range.
+CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
+
+Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
+an input of an ACPI package with 4 dwords (read latency, write latency,
+read bandwidth, write bandwidth). The call returns a package with 1 WORD
+that provides the max supported QTG ID and a package that may contain 0 or
+more WORDs as the recommended QTG IDs in the recommended order.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/core/cdat.c |   34 ++++++++++++++++++++++++++++++++++
- drivers/cxl/cxl.h       |    2 ++
- drivers/cxl/port.c      |    9 ++++++++-
- include/acpi/actbl1.h   |    5 +++++
- 4 files changed, 49 insertions(+), 1 deletion(-)
+ drivers/cxl/core/Makefile |    1 
+ drivers/cxl/core/acpi.c   |   99 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxl.h         |   15 +++++++
+ 3 files changed, 115 insertions(+)
+ create mode 100644 drivers/cxl/core/acpi.c
 
-diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
-index f9a64a0f1ee4..3c8f3956487e 100644
---- a/drivers/cxl/core/cdat.c
-+++ b/drivers/cxl/core/cdat.c
-@@ -121,3 +121,37 @@ int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg)
- 	return 0;
- }
- EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+index 438ce27faf77..11ccc2016ab7 100644
+--- a/drivers/cxl/core/Makefile
++++ b/drivers/cxl/core/Makefile
+@@ -11,4 +11,5 @@ cxl_core-y += mbox.o
+ cxl_core-y += pci.o
+ cxl_core-y += hdm.o
+ cxl_core-y += cdat.o
++cxl_core-y += acpi.o
+ cxl_core-$(CONFIG_CXL_REGION) += region.o
+diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+new file mode 100644
+index 000000000000..86dc6c9c1f24
+--- /dev/null
++++ b/drivers/cxl/core/acpi.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/acpi.h>
++#include <linux/pci.h>
++#include <asm/div64.h>
++#include "cxlpci.h"
++#include "cxl.h"
 +
-+int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg)
++const guid_t acpi_cxl_qtg_id_guid =
++	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
++		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
++
++/**
++ * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
++ * @handle: ACPI handle
++ * @input: bandwidth and latency data
++ *
++ * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
++ * the QTG IDs that falls within the performance data.
++ */
++struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
++						 struct qtg_dsm_input *input)
 +{
-+	struct cxl_port *port = (struct cxl_port *)arg;
-+	struct dsmas_entry *dent;
-+	struct acpi_cdat_dslbis *dslbis;
-+	u64 val;
++	struct qtg_dsm_output *output;
++	union acpi_object *out_obj, *out_buf, *pkg, in_buf, in_obj;
++	int len;
++	int rc;
 +
-+	if (header->type != ACPI_CDAT_TYPE_DSLBIS)
-+		return -EINVAL;
++	in_obj.type = ACPI_TYPE_PACKAGE;
++	in_obj.package.count = 1;
++	in_obj.package.elements = &in_buf;
++	in_buf.type = ACPI_TYPE_BUFFER;
++	in_buf.buffer.pointer = (u8 *)input;
++	in_buf.buffer.length = sizeof(u32) * 4;
 +
-+	dslbis = (struct acpi_cdat_dslbis *)((unsigned long)header + sizeof(*header));
-+	if ((dslbis->flags & ACPI_CEDT_DSLBIS_MEM_MASK) !=
-+	     ACPI_CEDT_DSLBIS_MEM_MEMORY)
-+		return 0;
++	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
++	if (!out_obj)
++		return ERR_PTR(-ENXIO);
 +
-+	if (dslbis->data_type > ACPI_HMAT_WRITE_BANDWIDTH)
-+		return -ENXIO;
-+
-+	/* Value calculation with base_unit, see ACPI Spec 6.5 5.2.28.4 */
-+	val = dslbis->entry[0] * dslbis->entry_base_unit;
-+
-+	mutex_lock(&port->cdat.dsmas_lock);
-+	list_for_each_entry(dent, &port->cdat.dsmas_list, list) {
-+		if (dslbis->handle == dent->handle) {
-+			dent->qos[dslbis->data_type] = val;
-+			break;
-+		}
++	if (out_obj->type != ACPI_TYPE_PACKAGE) {
++		rc = -ENXIO;
++		goto err;
 +	}
-+	mutex_unlock(&port->cdat.dsmas_lock);
 +
-+	return 0;
++	/*
++	 * CXL spec v3.0 9.17.3.1
++	 * There should be 2 elements in the package. 1 WORD for max QTG ID supported
++	 * by the platform, and the other a package of recommended QTGs
++	 */
++	if (out_obj->package.count != 2) {
++		rc = -ENXIO;
++		goto err;
++	}
++
++	pkg = &out_obj->package.elements[1];
++	if (pkg->type != ACPI_TYPE_PACKAGE) {
++		rc = -ENXIO;
++		goto err;
++	}
++
++	out_buf = &pkg->package.elements[0];
++	if (out_buf->type != ACPI_TYPE_BUFFER) {
++		rc = -ENXIO;
++		goto err;
++	}
++
++	len = out_buf->buffer.length;
++	output = kmalloc(len + sizeof(*output), GFP_KERNEL);
++	if (!output) {
++		rc = -ENOMEM;
++		goto err;
++	}
++
++	/* It's legal to have 0 QTG entries */
++	if (len == 0) {
++		output->nr = 0;
++		goto out;
++	}
++
++	/* Malformed package, not multiple of WORD size */
++	if (len % sizeof(u16)) {
++		rc = -ENXIO;
++		goto out;
++	}
++
++	output->nr = len / sizeof(u16);
++	memcpy(output->qtg_ids, out_buf->buffer.pointer, len);
++out:
++	ACPI_FREE(out_obj);
++	return output;
++
++err:
++	ACPI_FREE(out_obj);
++	return ERR_PTR(rc);
 +}
-+EXPORT_SYMBOL_NS_GPL(cxl_dslbis_parse_entry, CXL);
++EXPORT_SYMBOL_NS_GPL(cxl_acpi_evaluate_qtg_dsm, CXL);
 diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1e5e69f08480..849b22236f1d 100644
+index 849b22236f1d..e70df07f9b4b 100644
 --- a/drivers/cxl/cxl.h
 +++ b/drivers/cxl/cxl.h
-@@ -705,6 +705,7 @@ struct dsmas_entry {
- 	struct list_head list;
- 	struct range dpa_range;
- 	u16 handle;
-+	u64 qos[ACPI_HMAT_WRITE_BANDWIDTH + 1];
- };
- 
- typedef int (*cdat_tbl_entry_handler)(struct acpi_cdat_header *header, void *arg);
-@@ -716,6 +717,7 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
- 			    void *arg);
- 
+@@ -719,6 +719,21 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
  int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg);
-+int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg);
+ int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg);
  
++struct qtg_dsm_input {
++	u32 rd_lat;
++	u32 wr_lat;
++	u32 rd_bw;
++	u32 wr_bw;
++};
++
++struct qtg_dsm_output {
++	int nr;
++	u16 qtg_ids[];
++};
++
++struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
++						 struct qtg_dsm_input *input);
++
  /*
   * Unit test builds overrides this to __weak, find the 'strong' version
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index b1da73e99bab..8de311208b37 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -65,8 +65,15 @@ static int cxl_port_probe(struct device *dev)
- 			rc = cdat_table_parse_dsmas(port->cdat.table,
- 						    cxl_dsmas_parse_entry,
- 						    (void *)port);
--			if (rc < 0)
-+			if (rc > 0) {
-+				rc = cdat_table_parse_dslbis(port->cdat.table,
-+							     cxl_dslbis_parse_entry,
-+							     (void *)port);
-+				if (rc <= 0)
-+					dev_dbg(dev, "Failed to parse DSLBIS: %d\n", rc);
-+			} else {
- 				dev_dbg(dev, "Failed to parse DSMAS: %d\n", rc);
-+			}
- 		}
- 
- 		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
-diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-index e8297cefde09..ff6092e45196 100644
---- a/include/acpi/actbl1.h
-+++ b/include/acpi/actbl1.h
-@@ -369,6 +369,11 @@ struct acpi_cdat_dslbis {
- 	u16 reserved2;
- };
- 
-+/* Flags for subtable above */
-+
-+#define ACPI_CEDT_DSLBIS_MEM_MASK	GENMASK(3, 0)
-+#define ACPI_CEDT_DSLBIS_MEM_MEMORY	0
-+
- /* Subtable 2: Device Scoped Memory Side Cache Information Structure (DSMSCIS) */
- 
- struct acpi_cdat_dsmscis {
+  * of these symbols in tools/testing/cxl/.
 
 
