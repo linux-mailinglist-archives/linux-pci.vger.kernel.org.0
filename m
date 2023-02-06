@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57BD168C808
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 21:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3184268C809
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 21:51:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230253AbjBFUvs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 15:51:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49212 "EHLO
+        id S230403AbjBFUvv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 15:51:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjBFUvo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 15:51:44 -0500
+        with ESMTP id S230354AbjBFUvu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 15:51:50 -0500
 Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A59012DE73;
-        Mon,  6 Feb 2023 12:51:40 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E492B097;
+        Mon,  6 Feb 2023 12:51:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675716700; x=1707252700;
+  t=1675716709; x=1707252709;
   h=subject:from:to:cc:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=Hv/W896d+eaEclcVrbd282vgqnn+BAffzWLknUdDUJk=;
-  b=YRhREw5gro5NYQfRTwAN0jPlEe87bZooZdPMUWaMNFQDj6miAnWQDCq/
-   vTK/ZZJEtLYg2PNdKpCNGey2xdEMBHovlHKhcSVPubiahu9B/4SXbWXne
-   UPPoGejBlG5Vo1wQ1I5OR1fQMGoRua2cIBbIGQRUTt2af/BkOmKNOmPBb
-   TV/UUhlbPR3oH5GbQWCCrgK3IkatSULPaV/8TyPWbAoFXQwhROpLeEqHi
-   GDG6sbhcoeDpwuGx+8zMu3F6YidF0I+u7WetpUTbfT98p6+3tH5dBzJrk
-   Rpq+sFOmQLe3k/UH9+5jAst6JedyUvRokMWVkWU7lnCpu2oQdPhLT+qny
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="327946615"
+  bh=ANJK4WgXvZBb1RvzfDrGlJT/1Xf1pViUoSVpIMURtjI=;
+  b=UFFYySA1LWF+9VBYxRHlZFKTA3MveMNcoufbCJvzRZcCekQUtFeIESsb
+   S1yo7yBWVADFLTCFsTx749F9A8aCZSNYa0EFzJ8WVMNwHBW3rXnHvb3d6
+   55scEKV4a4/VzxHsHIyium4w+Gcbf080f2zi/xBYWI9Q7826jBXeoOEKq
+   uRqykxNH2mtPi9PERlIi7TkMy/6uU3fGh3CbDkB56n5UBBIpmOuQpJ7gY
+   UpfUd6oQBSPRoeZfFfaTv/i0NrotkjnzSCHqTiK8u69/KyMchMmI9Q6OP
+   198pnKk1dL4mQ4txGjntmF1ehuWH7iOpQY1qKH0pOQIvmHN90bY3rEoTH
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="327946637"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="327946615"
+   d="scan'208";a="327946637"
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:51:40 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="790552345"
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:51:49 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="790552372"
 X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="790552345"
+   d="scan'208";a="790552372"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.111.195])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:51:39 -0800
-Subject: [PATCH 15/18] cxl: Move identify and partition query from pci probe
- to port probe
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:51:48 -0800
+Subject: [PATCH 16/18] cxl: Move reading of CDAT data from device to after
+ media is ready
 From:   Dave Jiang <dave.jiang@intel.com>
 To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org
 Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
         vishal.l.verma@intel.com, alison.schofield@intel.com,
         rafael@kernel.org, bhelgaas@google.com, robert.moore@intel.com
-Date:   Mon, 06 Feb 2023 13:51:37 -0700
-Message-ID: <167571669593.587790.12939497495344674151.stgit@djiang5-mobl3.local>
+Date:   Mon, 06 Feb 2023 13:51:46 -0700
+Message-ID: <167571670516.587790.14112456054041985666.stgit@djiang5-mobl3.local>
 In-Reply-To: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
 References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
 User-Agent: StGit/1.5
@@ -62,53 +62,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Move the enumeration of device capacity to cxl_port_probe() from
-cxl_pci_probe(). The size and capacity information should be read
-after cxl_await_media_ready() so the data is valid.
+The CDAT data is only valid after the hardware signals the media is ready.
+Move the reading to after cxl_await_media_ready() has succeeded.
 
 Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 ---
- drivers/cxl/pci.c  |    8 --------
- drivers/cxl/port.c |    8 ++++++++
- 2 files changed, 8 insertions(+), 8 deletions(-)
+ drivers/cxl/port.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
-index 258004f34281..e35ed250214e 100644
---- a/drivers/cxl/pci.c
-+++ b/drivers/cxl/pci.c
-@@ -484,14 +484,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (rc)
- 		return rc;
- 
--	rc = cxl_dev_state_identify(cxlds);
--	if (rc)
--		return rc;
--
--	rc = cxl_mem_create_range_info(cxlds);
--	if (rc)
--		return rc;
--
- 	cxlmd = devm_cxl_add_memdev(cxlds);
- 	if (IS_ERR(cxlmd))
- 		return PTR_ERR(cxlmd);
 diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 03380c18fc52..b7a4a1be2945 100644
+index b7a4a1be2945..6b2ad22487f5 100644
 --- a/drivers/cxl/port.c
 +++ b/drivers/cxl/port.c
-@@ -127,6 +127,14 @@ static int cxl_port_probe(struct device *dev)
- 			if (rc)
- 				dev_dbg(dev, "Failed to do QoS calculations\n");
- 		}
-+
-+		rc = cxl_dev_state_identify(cxlds);
-+		if (rc)
-+			return rc;
-+
-+		rc = cxl_mem_create_range_info(cxlds);
-+		if (rc)
-+			return rc;
- 	}
+@@ -91,9 +91,6 @@ static int cxl_port_probe(struct device *dev)
+ 		struct cxl_memdev *cxlmd = to_cxl_memdev(port->uport);
+ 		struct cxl_dev_state *cxlds = cxlmd->cxlds;
  
- 	rc = devm_cxl_enumerate_decoders(cxlhdm);
+-		/* Cache the data early to ensure is_visible() works */
+-		read_cdat_data(port);
+-
+ 		get_device(&cxlmd->dev);
+ 		rc = devm_add_action_or_reset(dev, schedule_detach, cxlmd);
+ 		if (rc)
+@@ -109,6 +106,8 @@ static int cxl_port_probe(struct device *dev)
+ 			return rc;
+ 		}
+ 
++		/* Cache the data early to ensure is_visible() works */
++		read_cdat_data(port);
+ 		if (port->cdat.table) {
+ 			rc = cdat_table_parse_dsmas(port->cdat.table,
+ 						    cxl_dsmas_parse_entry,
 
 
