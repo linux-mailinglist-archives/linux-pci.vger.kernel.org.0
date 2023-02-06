@@ -2,164 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2222C68C80E
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 21:52:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2748968C895
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 22:26:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230415AbjBFUwL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 15:52:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49564 "EHLO
+        id S230034AbjBFV01 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 16:26:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230354AbjBFUwL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 15:52:11 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B363A2E825;
-        Mon,  6 Feb 2023 12:52:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675716727; x=1707252727;
-  h=subject:from:to:cc:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=fbw0gfA3CV6zl+8Xhzyb5C6vwjJRzvTIToKyZi8GRJ8=;
-  b=kPz8dQLcYlw1nLTMALh8ePtTx/1k9pYQ3GZSNh4zU9fd/95cuSRjMNYO
-   F4mgIOOTc4BoA2v8AMcFZjZzBWkh+3onjKYSy28Jdn6ftFmarJ+z53h+0
-   fgqMX3sixbhRlmn6MawqwADRBboF2vC/dBOuhwb6oMjqF+1USKGNq0jZA
-   yG6GzLCEAQ06qqPyAAK6q9EurOtHt4mpGfmxkv4atsUzfnFTKNjyf9Ph9
-   lvLhmsih2Q+hyhmZz6JbrpG+jMwLvOrMoXtvmyn++L1Zn0ryiZjKGpbZE
-   Te4AQszL5Y4RKqvc7M8xCOPcrouQtGgJrFAURGgBb5Ez+QFpHshhS1HmB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="329328291"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="329328291"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:52:07 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10613"; a="809264138"
-X-IronPort-AV: E=Sophos;i="5.97,276,1669104000"; 
-   d="scan'208";a="809264138"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO djiang5-mobl3.local) ([10.212.111.195])
-  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2023 12:52:07 -0800
-Subject: [PATCH 18/18] cxl: Export sysfs attributes for device QTG IDs
-From:   Dave Jiang <dave.jiang@intel.com>
-To:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Cc:     dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, bhelgaas@google.com, robert.moore@intel.com
-Date:   Mon, 06 Feb 2023 13:52:05 -0700
-Message-ID: <167571672370.587790.13206197631776290440.stgit@djiang5-mobl3.local>
-In-Reply-To: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
-References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
-User-Agent: StGit/1.5
+        with ESMTP id S229884AbjBFV01 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 16:26:27 -0500
+Received: from mail-wr1-x42d.google.com (mail-wr1-x42d.google.com [IPv6:2a00:1450:4864:20::42d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF0CBCDFB
+        for <linux-pci@vger.kernel.org>; Mon,  6 Feb 2023 13:26:24 -0800 (PST)
+Received: by mail-wr1-x42d.google.com with SMTP id g6so3762588wrv.1
+        for <linux-pci@vger.kernel.org>; Mon, 06 Feb 2023 13:26:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pXfjugPVwiiZL4YZi+/2x2YG+1ce/SaQsZb0dADm9n4=;
+        b=nZuNJknrREMRZtgrKcJs1rhNy10GsHm4Fl/LnU3lfiG+BKEuaVtySkmuvlJtsZvN36
+         Hy1DBDi6CZ4MZP0SZffv5AaE2/MnvQOHv9qsOIkOfcUbfSTWPEBe5dU1TPV/nQa8VGx7
+         x36sHfgJ9kcG8jzAfKeodYOMI+O4ywI+sfm3ojEKuX0SgKp2zjud6CCYChAz0gh9dAIC
+         zw00ahSN4TaSM/8hl6KJAkKWucYU6dNTMwcFXmJWY+bPITjAPQ3pQravyJXfNwzlf/Nm
+         wlzAvdpSzcUPpd8lATW/oasc11JRlrB/vVsS1Yf7dkdJZDHH4wJVo57WKa6uaxQ2PyEj
+         Y7mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pXfjugPVwiiZL4YZi+/2x2YG+1ce/SaQsZb0dADm9n4=;
+        b=Zqqg4X+ZsGBuxWOfjvL2EKUtZvTNZ7/A7zTwz6jaho/8SY/4AlMY7mDFiUG0RoS7S/
+         excfGU3MDqk+KGNu5emB/F6Yv2dI4HQQIxrPRv/yr6XcjzocEpXhXuGH5/AUnGBHW/5T
+         PjMfKV+gIvHt8ST2S8fVq7KV1ow7iQ9eJt98idrUMKeFVWrCs9pAey9OBRwvsh0k1Urc
+         xI1qekGOwU4yjEYRRWbLXa2lM45CAkVCAffkzYzHgeUeVXgfOweGmuzrPBcz79LLOAKe
+         KkEMWRPBjUbVDDHzFf8TgCfHFIkHI+ab/CpsMQ+nzVve7hPl5AbnGAfhDHgN6X4gglH0
+         GWLA==
+X-Gm-Message-State: AO0yUKW8oXn57NmnKr/bvhtfj+RMRGffE7nm07BjoAoG/MyebMTRm7qq
+        1NfBxBLEJnRPjd6/A1iwepDV8Q==
+X-Google-Smtp-Source: AK7set8JsDj9i24v8I3bpSCZSnTJnytHnJGs1kE7mep2Eh3n0OWxurExwxy0uWSzzGewFaO2IQ5PLw==
+X-Received: by 2002:a5d:6684:0:b0:2bd:e8c2:c9bc with SMTP id l4-20020a5d6684000000b002bde8c2c9bcmr294655wru.42.1675718783464;
+        Mon, 06 Feb 2023 13:26:23 -0800 (PST)
+Received: from hackbox.lan ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id j11-20020a5d604b000000b002b57bae7174sm9783341wrt.5.2023.02.06.13.26.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Feb 2023 13:26:22 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 00/11] sm8550: Add PCIe HC and PHY support
+Date:   Mon,  6 Feb 2023 23:26:08 +0200
+Message-Id: <20230206212619.3218741-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Export qtg_id sysfs attributes for the respective ram and pmem DPA range of
-a CXL device. The QTG ID should show up as
-/sys/bus/cxl/devices/memX/pmem/qtg_id for pmem or as
-/sys/bus/cxl/devices/memX/ram/qtg_id for ram.
+For changelogs please look at each patch individually.
 
-Signed-off-by: Dave Jiang <dave.jiang@intel.com>
----
- Documentation/ABI/testing/sysfs-bus-cxl |   15 +++++++++++++++
- drivers/cxl/core/memdev.c               |   26 ++++++++++++++++++++++++++
- 2 files changed, 41 insertions(+)
+This time, this version has an actual fix for the already merged PCIe
+devicetree nodes, to get them in line with the SC8280XP bindings.
 
-diff --git a/Documentation/ABI/testing/sysfs-bus-cxl b/Documentation/ABI/testing/sysfs-bus-cxl
-index 0932c2f6fbf4..8133a13e118d 100644
---- a/Documentation/ABI/testing/sysfs-bus-cxl
-+++ b/Documentation/ABI/testing/sysfs-bus-cxl
-@@ -27,6 +27,14 @@ Description:
- 		identically named field in the Identify Memory Device Output
- 		Payload in the CXL-2.0 specification.
- 
-+What:		/sys/bus/cxl/devices/memX/ram/qtg_id
-+Date:		January, 2023
-+KernelVersion:	v6.3
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Shows calculated QoS Throttling Group ID for the
-+		"Volatile Only Capacity" DPA range.
-+
- 
- What:		/sys/bus/cxl/devices/memX/pmem/size
- Date:		December, 2020
-@@ -37,6 +45,13 @@ Description:
- 		identically named field in the Identify Memory Device Output
- 		Payload in the CXL-2.0 specification.
- 
-+What:		/sys/bus/cxl/devices/memX/pmem/qtg_id
-+Date:		January, 2023
-+KernelVersion:	v6.3
-+Contact:	linux-cxl@vger.kernel.org
-+Description:
-+		(RO) Shows calculated QoS Throttling Group ID for the
-+		"Persistent Only Capacity" DPA range.
- 
- What:		/sys/bus/cxl/devices/memX/serial
- Date:		January, 2022
-diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
-index a74a93310d26..06f9ac929ef4 100644
---- a/drivers/cxl/core/memdev.c
-+++ b/drivers/cxl/core/memdev.c
-@@ -76,6 +76,18 @@ static ssize_t ram_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_ram_size =
- 	__ATTR(size, 0444, ram_size_show, NULL);
- 
-+static ssize_t ram_qtg_id_show(struct device *dev, struct device_attribute *attr,
-+			       char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+	return sysfs_emit(buf, "%d\n", cxlds->ram_qtg_id);
-+}
-+
-+static struct device_attribute dev_attr_ram_qtg_id =
-+	__ATTR(qtg_id, 0444, ram_qtg_id_show, NULL);
-+
- static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
-@@ -89,6 +101,18 @@ static ssize_t pmem_size_show(struct device *dev, struct device_attribute *attr,
- static struct device_attribute dev_attr_pmem_size =
- 	__ATTR(size, 0444, pmem_size_show, NULL);
- 
-+static ssize_t pmem_qtg_id_show(struct device *dev, struct device_attribute *attr,
-+				char *buf)
-+{
-+	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
-+	struct cxl_dev_state *cxlds = cxlmd->cxlds;
-+
-+	return sysfs_emit(buf, "%d\n", cxlds->pmem_qtg_id);
-+}
-+
-+static struct device_attribute dev_attr_pmem_qtg_id =
-+	__ATTR(qtg_id, 0444, pmem_qtg_id_show, NULL);
-+
- static ssize_t serial_show(struct device *dev, struct device_attribute *attr,
- 			   char *buf)
- {
-@@ -117,11 +141,13 @@ static struct attribute *cxl_memdev_attributes[] = {
- 
- static struct attribute *cxl_memdev_pmem_attributes[] = {
- 	&dev_attr_pmem_size.attr,
-+	&dev_attr_pmem_qtg_id.attr,
- 	NULL,
- };
- 
- static struct attribute *cxl_memdev_ram_attributes[] = {
- 	&dev_attr_ram_size.attr,
-+	&dev_attr_ram_qtg_id.attr,
- 	NULL,
- };
- 
+Abel Vesa (11):
+  dt-bindings: phy: Add QMP PCIe PHY comptible for SM8550
+  phy: qcom-qmp: pcs: Add v6 register offsets
+  phy: qcom-qmp: pcs: Add v6.20 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-txrx: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-lane-shared: Add v6 register offsets
+  phy: qcom-qmp-pcie: Add support for SM8550 g3x2 and g4x2 PCIEs
+  dt-bindings: PCI: qcom: Add SM8550 compatible
+  PCI: qcom: Add SM8550 PCIe support
+  arm64: dts: qcom: sm8550: Fix PCIe PHYs and controllers nodes
 
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  40 ++
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  30 +-
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts       |  10 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi          |  52 +--
+ drivers/pci/controller/dwc/pcie-qcom.c        |  25 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 346 +++++++++++++++++-
+ .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h   |  15 +
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h    |  23 ++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h    |  16 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h |  18 +
+ .../phy-qcom-qmp-qserdes-ln-shrd-v6.h         |  32 ++
+ .../phy-qcom-qmp-qserdes-txrx-v6_20.h         |  45 +++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |   6 +
+ 13 files changed, 611 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
+
+-- 
+2.34.1
 
