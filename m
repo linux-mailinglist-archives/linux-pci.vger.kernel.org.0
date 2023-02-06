@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3460868C9AF
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 23:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9DC68C9B9
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 23:43:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbjBFWkG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 17:40:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        id S229566AbjBFWnm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 17:43:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjBFWkC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 17:40:02 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C27D22FCF2;
-        Mon,  6 Feb 2023 14:40:01 -0800 (PST)
+        with ESMTP id S229536AbjBFWnl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 17:43:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E0C1A0;
+        Mon,  6 Feb 2023 14:43:40 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 74292B8163C;
-        Mon,  6 Feb 2023 22:40:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7C4C4339C;
-        Mon,  6 Feb 2023 22:39:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C38161052;
+        Mon,  6 Feb 2023 22:43:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7066C433D2;
+        Mon,  6 Feb 2023 22:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675723199;
-        bh=9iz/w8OdItqhWxQdKOH1Ytz58emPE+PUWmHFZOibTSc=;
+        s=k20201202; t=1675723419;
+        bh=LcWE6lqyUx1tYRkadazTCvdsU9i6nzatE7AvkG7OvbA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=b9T3I81Txdmyxr5E2HUpcPbXDH6MblYxC0TIJBgmNa4vrEqq474a9+nDKO05HogqG
-         5VOLWuKOBXucq/V2iLzdd+UvDXAs1qaxcG5g5/K5UZA4I0LjU0VrZeNeJyMcvE/qAf
-         iuxKBLlEqcyCGjKDx6GrsXkqVCvSZ1Jfam+eNxK36nGUsUphcV71xb8j8ejIevtwVP
-         HPMnXfnhGtBpNsQ18Om+Ial+b0QbW7zAK/iJnhXUvL8mawz6IQfvh1kTe3Q0fNByh0
-         SBHNbTTrbFitJWOs4zIZI8J3yhl94C6NiqCL7VZNFAHDISTY3tchBA+4xvN3Dyw3Ut
-         Jjnh5cm9jdCGw==
-Date:   Mon, 6 Feb 2023 16:39:57 -0600
+        b=mlpMXJm3wRMm5Koi6JzJMibFX3jucmzuN07kJ+G7q1mAb6gcv6rD+JVPGOeg5Mezs
+         uQjLxyStL3ZnRI1FeOKqepOUN9S0X3Q+bTaGmbDUjzpPX7FGbae8o8DQqbVjf+oHP6
+         26M1+esJr8/94E5oFmctoZoA1CxxxUn6mx5EUvtgZLmbU3+zUhGsqrfzStOu53zReb
+         aldlSGuS7+CIcp1wmo17JqtVKnU4SRxWy7ED3a9MqzRMbr7xQN8eJMq6ZCld0JOBlZ
+         VdR5rvQJ3GIqbSIE7Z2oF07T2sggATFvM/YJM2PofCRbHwYjt2FjuE2o6iQ7CoH9/s
+         fSvESnAROVnRg==
+Date:   Mon, 6 Feb 2023 16:43:38 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Dave Jiang <dave.jiang@intel.com>
 Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
@@ -39,13 +39,13 @@ Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
         robert.moore@intel.com
-Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
- CXL device
-Message-ID: <20230206223957.GA2248946@bhelgaas>
+Subject: Re: [PATCH 11/18] PCI: Export pcie_get_width() using the code from
+ sysfs PCI link width show function
+Message-ID: <20230206224338.GA2256550@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <167571666898.587790.4824622451425607591.stgit@djiang5-mobl3.local>
+In-Reply-To: <167571666013.587790.16270669112177554916.stgit@djiang5-mobl3.local>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -55,140 +55,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
-> The latency is calculated by dividing the FLIT size over the bandwidth. Add
-> support to retrieve the FLIT size for the CXL device and calculate the
-> latency of the downstream link.
+On Mon, Feb 06, 2023 at 01:51:01PM -0700, Dave Jiang wrote:
+> Move the logic in current_link_width_show() to a common function and export
+> that functiuon as pcie_get_width() to allow other drivers to to retrieve
+> the current negotiated link width.
 
-s/FLIT/flit/ to match spec usage.
+s/a common function and export that functiuon and export that functiuon as//
 
-Most of this looks like PCIe, not necessarily CXL-specific.
-
-I guess you only care about the latency of a single link, not the
-entire path?
+I don't see the module caller of this, so not clear on why it needs to
+be exported.
 
 > Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 > ---
->  drivers/cxl/core/pci.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/cxl/cxlpci.h   |   14 ++++++++++
->  2 files changed, 81 insertions(+)
+>  drivers/pci/pci-sysfs.c |    9 +--------
+>  drivers/pci/pci.c       |   20 ++++++++++++++++++++
+>  include/linux/pci.h     |    1 +
+>  3 files changed, 22 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index a24dac36bedd..54ac6f8825ff 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -633,3 +633,70 @@ void read_cdat_data(struct cxl_port *port)
->  	}
->  }
->  EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
-> +
-> +static int pcie_speed_to_mbps(enum pci_bus_speed speed)
-> +{
-> +	switch (speed) {
-> +	case PCIE_SPEED_2_5GT:
-> +		return 2500;
-> +	case PCIE_SPEED_5_0GT:
-> +		return 5000;
-> +	case PCIE_SPEED_8_0GT:
-> +		return 8000;
-> +	case PCIE_SPEED_16_0GT:
-> +		return 16000;
-> +	case PCIE_SPEED_32_0GT:
-> +		return 32000;
-> +	case PCIE_SPEED_64_0GT:
-> +		return 64000;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int cxl_pci_mbits_to_mbytes(struct pci_dev *pdev)
-> +{
-> +	int mbits;
-> +
-> +	mbits = pcie_speed_to_mbps(pcie_get_speed(pdev));
-> +	if (mbits < 0)
-> +		return mbits;
-> +
-> +	return mbits >> 3;
-> +}
-> +
-> +static int cxl_get_flit_size(struct pci_dev *pdev)
-> +{
-> +	if (cxl_pci_flit_256(pdev))
-> +		return 256;
-> +
-> +	return 66;
-
-I don't know about the 66-byte flit format, maybe this part is
-CXL-specific?
-
-> + * cxl_pci_get_latency - calculate the link latency for the PCIe link
-> + * @pdev - PCI device
-> + *
-> + * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
-> + * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
-> + * LinkProgationLatency is negligible, so 0 will be used
-> + * RetimerLatency is assumed to be neglibible and 0 will be used
-
-s/neglibible/negligible/
-
-> + * FlitLatency = FlitSize / LinkBandwidth
-> + * FlitSize is defined by spec. CXL v3.0 4.2.1.
-> + * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
-> + * The FlitLatency is converted to pico-seconds.
-
-I guess this means cxl_pci_get_latency() actually *returns* a value in
-picoseconds?
-
-There are a couple instances of this written as "pico-seconds", but
-most are "picoseconds".
-
-> +long cxl_pci_get_latency(struct pci_dev *pdev)
-> +{
-> +	long bw, flit_size;
-> +
-> +	bw = cxl_pci_mbits_to_mbytes(pdev);
-> +	if (bw < 0)
-> +		return bw;
-> +
-> +	flit_size = cxl_get_flit_size(pdev);
-> +	return flit_size * 1000000L / bw;
-> +}
-> +EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
-> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
-> index 920909791bb9..d64a3e0458ab 100644
-> --- a/drivers/cxl/cxlpci.h
-> +++ b/drivers/cxl/cxlpci.h
-> @@ -62,8 +62,22 @@ enum cxl_regloc_type {
->  	CXL_REGLOC_RBI_TYPES
->  };
+> diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> index 0217bb5ca8fa..139096c39380 100644
+> --- a/drivers/pci/pci-sysfs.c
+> +++ b/drivers/pci/pci-sysfs.c
+> @@ -215,15 +215,8 @@ static ssize_t current_link_width_show(struct device *dev,
+>  				       struct device_attribute *attr, char *buf)
+>  {
+>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+> -	u16 linkstat;
+> -	int err;
 >  
-> +/*
-> + * CXL v3.0 6.2.3 Table 6-4
-
-The copy I have refers to *Revision 3.0, Version 1.0*, i.e.,
-"Revision" is the major level and "Version" is the minor.  So I would
-cite this as "CXL r3.0", not "CXL v3.0".  I suppose the same for CXL
-Memory Device above, but I don't have that spec.
-
-> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
-> + * mode, otherwise it's 68B flits mode.
+> -	err = pcie_capability_read_word(pci_dev, PCI_EXP_LNKSTA, &linkstat);
+> -	if (err)
+> -		return -EINVAL;
+> -
+> -	return sysfs_emit(buf, "%u\n",
+> -		(linkstat & PCI_EXP_LNKSTA_NLW) >> PCI_EXP_LNKSTA_NLW_SHIFT);
+> +	return sysfs_emit(buf, "%u\n", pcie_get_width(pci_dev));
+>  }
+>  static DEVICE_ATTR_RO(current_link_width);
+>  
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d0131b5623b1..0858fa2f1c2d 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -6235,6 +6235,26 @@ enum pci_bus_speed pcie_get_speed(struct pci_dev *dev)
+>  }
+>  EXPORT_SYMBOL(pcie_get_speed);
+>  
+> +/**
+> + * pcie_get_width - query for the PCI device's current link width
+> + * @dev: PCI device to query
+> + *
+> + * Query the PCI device current negoiated width.
 > + */
-> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
-> +{
-> +	u32 lnksta2;
 > +
-> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
-> +	return lnksta2 & BIT(10);
-
-Add a #define for the bit.
-
-AFAICT, the PCIe spec defines this bit, and it only indicates the link
-is or will be operating in Flit Mode; it doesn't actually say anything
-about how large the flits are.  I suppose that's because PCIe only
-talks about 256B flits, not 66B ones?
-
-Bjorn
+> +enum pcie_link_width pcie_get_width(struct pci_dev *dev)
+> +{
+> +	u16 linkstat;
+> +	int err;
+> +
+> +	err = pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &linkstat);
+> +	if (err)
+> +		return PCIE_LNK_WIDTH_UNKNOWN;
+> +
+> +	return FIELD_GET(PCI_EXP_LNKSTA_NLW, linkstat);
+> +}
+> +EXPORT_SYMBOL(pcie_get_width);
+> +
+>  /**
+>   * pcie_bandwidth_capable - calculate a PCI device's link bandwidth capability
+>   * @dev: PCI device
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 6a065986ff8f..21eca09a98e2 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -305,6 +305,7 @@ enum pci_bus_speed {
+>  
+>  enum pci_bus_speed pcie_get_speed(struct pci_dev *dev);
+>  enum pci_bus_speed pcie_get_speed_cap(struct pci_dev *dev);
+> +enum pcie_link_width pcie_get_width(struct pci_dev *dev);
+>  enum pcie_link_width pcie_get_width_cap(struct pci_dev *dev);
+>  
+>  struct pci_vpd {
+> 
+> 
