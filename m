@@ -2,297 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 957EA68BB7C
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 12:28:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC9868BD2A
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Feb 2023 13:45:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjBFL1z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Feb 2023 06:27:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
+        id S229619AbjBFMpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Feb 2023 07:45:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbjBFL1u (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 06:27:50 -0500
-Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89503C643;
-        Mon,  6 Feb 2023 03:27:44 -0800 (PST)
-Received: from mta-01.yadro.com (localhost.localdomain [127.0.0.1])
-        by mta-01.yadro.com (Proxmox) with ESMTP id 72925341DA6;
-        Mon,  6 Feb 2023 14:27:42 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :from:from:in-reply-to:message-id:mime-version:references
-        :reply-to:subject:subject:to:to; s=mta-01; bh=BeO7USyN2i08XzGSFB
-        uEgqnyOPsIll67svfaIGEnjpE=; b=Q/VkDlbesPls3BKSwkapXHClHL4mz0zQj7
-        2fGqe/BB03R98PYHygUchV6IV7g3ZctXBE7ggqTZY0vskaIIZ+VYHzQ7PLAhJ6++
-        9uSHJ2CFeiuVgKRWRZJ6NjfJ2Uo3qXtJZ62FS3gKZOKEG9enLSoFxFok0qiw82BX
-        gMVKFrhik=
-Received: from T-EXCH-08.corp.yadro.com (unknown [172.17.10.14])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mta-01.yadro.com (Proxmox) with ESMTPS id 6637F341A69;
-        Mon,  6 Feb 2023 14:27:42 +0300 (MSK)
-Received: from [10.199.16.60] (10.199.16.60) by T-EXCH-08.corp.yadro.com
- (172.17.11.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1118.9; Mon, 6 Feb 2023
- 14:27:41 +0300
-Message-ID: <66b01fd7-7466-5d76-c384-0758ceadee8e@yadro.com>
-Date:   Mon, 6 Feb 2023 14:27:41 +0300
+        with ESMTP id S229557AbjBFMpD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Feb 2023 07:45:03 -0500
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87CE5FD1;
+        Mon,  6 Feb 2023 04:45:02 -0800 (PST)
+Received: by mail-pj1-x1042.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso15047632pjj.1;
+        Mon, 06 Feb 2023 04:45:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gM1T1LiTjFLuiGBuHxUovgMZMlzmJ0u3GsfkKmTxj0M=;
+        b=LEYtyfsEYNtKsHvFXQmMWDZ3DL1IGzocBn1YvmZHApBcNR9De+PKIGV+8WVH8YXL1W
+         0chffXrUj6aZhNixcKCPqqf0v5pVQxw1QsxWTIwbABujMZCkzEqeH2QEwl3TEN7N4G/S
+         0GnEZ9FytnMSdgw78CgRjBC2FLIpbtv3XACWjog8CWrL7b5Y72BzooQWiyjf2B4JKatu
+         OTYisgAA/UgfjhXpT2bpvSOnh47YBTpytt9p+i/IVua/JqYwISXZ/ZJ83R3VO3T8IEH0
+         hR0HcDM9tQDmL2hZvVVDL0DEpgJbP0nV5dHatlO35aBmn7EoG1Tqr9p4JyOgC272RUey
+         mQfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gM1T1LiTjFLuiGBuHxUovgMZMlzmJ0u3GsfkKmTxj0M=;
+        b=qoIVtZjF/4qD36I56nMDjAP1HBJlPagS1StnfQlJRsSiX+JuN9M2+xh6EW108DAZcS
+         CK8BymtjQYFajDYXT4yh2sJgAEGyMqVS5qKw57qy+rxL02ZQMLFGsjAoTr69rmGwqWuC
+         XbGdgz1E8z1pLgh0pf7iJLG/UywV9n5eQVPw+AACxh22/zFwiL+0lakVfY93JQzTOvqd
+         GX6G/MqKaznfuAp2D9VRlMP2JMtWqw9IZknDw82LIbLyat/nJBgMzSYb8au4QHDUPzbV
+         fb9n2XsCr4jLZN2kI8wcqt3dYERV2Z9tiFHUs0J4UjDmYrLPX5IL5sSA9DYNiPp4KvCm
+         LdmQ==
+X-Gm-Message-State: AO0yUKULxAWpP0u4eoALfDQNFn6Db0ouKfrRfQ1/9YfkC9S/UGl6auD6
+        BqyFaYQYwSdgqNbUk2XtOiLrHj5Gx43zWDAs+RY=
+X-Google-Smtp-Source: AK7set/U1nmg01crHXqmJueQELsf06ewfSOKn9103EC3Etsc9ROFlDdAWo5G3bi5fo0k8DJH+xKJs8TV08WXvwAs3KU=
+X-Received: by 2002:a17:90a:74c4:b0:22b:f34a:1f52 with SMTP id
+ p4-20020a17090a74c400b0022bf34a1f52mr2922483pjl.76.1675687502165; Mon, 06 Feb
+ 2023 04:45:02 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH v6 0/2] PCI: dwc: Add support for 64-bit MSI target
- addresses
-Content-Language: en-US
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-CC:     Serge Semin <fancer.lancer@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>, <kernel-team@android.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, <linux@yadro.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Will McVicker <willmcvicker@google.com>
-References: <20220825235404.4132818-1-willmcvicker@google.com>
- <decae9e4-3446-2384-4fc5-4982b747ac03@yadro.com>
- <c014b074-6d7f-773b-533a-c0500e239ab8@arm.com>
- <46ba97c9-85ff-eb47-0d05-79dc3960d7b4@yadro.com>
- <20230203221216.c2s6ahm52ug5jtqv@mobilestation>
-From:   Evgenii Shatokhin <e.shatokhin@yadro.com>
-In-Reply-To: <20230203221216.c2s6ahm52ug5jtqv@mobilestation>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.199.16.60]
-X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
- T-EXCH-08.corp.yadro.com (172.17.11.58)
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20221222072603.1175248-1-korantwork@gmail.com>
+ <3d1834d9-7905-1225-741a-f298dd5b8a8e@linux.dev> <Y6TSgGdCTvkwPiVg@kbusch-mbp.dhcp.thefacebook.com>
+ <CAEm4hYUWf+Fx3FV7vNTc8+O9NSb0iQp75MTC6gra6XapXK=cxw@mail.gmail.com>
+ <d14ac29d-027a-08a7-c5c8-848a6920d4a2@linux.dev> <CAEm4hYXncuvL-Gk1aEZExrvkbx=N1aiOQNeNjFdB4443EbKNBA@mail.gmail.com>
+ <f05ee82a-4532-b12b-490f-904b946ff7b0@linux.dev> <CAEm4hYXk1RuKEw41VukH2iGTo_9GmZjUfrESWK5vFtpFA_O_4A@mail.gmail.com>
+In-Reply-To: <CAEm4hYXk1RuKEw41VukH2iGTo_9GmZjUfrESWK5vFtpFA_O_4A@mail.gmail.com>
+From:   Xinghui Li <korantwork@gmail.com>
+Date:   Mon, 6 Feb 2023 20:45:57 +0800
+Message-ID: <CAEm4hYWeZFrYxSvAcBJ8iw=t507vZMqfBwiQXFSJd2Hcyfw7fA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
+To:     Jonathan Derrick <jonathan.derrick@linux.dev>
+Cc:     Keith Busch <kbusch@kernel.org>, nirmal.patel@linux.intel.com,
+        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xinghui Li <korantli@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sergey,
+Friendly ping~
 
-First of all, thank you for the detailed explanation. It is clearer now 
-what is going on and why it is that way.
-
-On 04.02.2023 01:12, Serge Semin wrote:
-> Hi Evgenii
-> 
-> On Wed, Feb 01, 2023 at 04:54:55PM +0300, Evgenii Shatokhin wrote:
->> On 31.01.2023 15:42, Robin Murphy wrote:
->>>
->>> On 2023-01-31 12:29, Evgenii Shatokhin wrote:
->>>> Hi,
->>>>
->>>> On 26.08.2022 02:54, Will McVicker wrote:
->>>>> Hi All,
->>>>>
->>>>> I've update patch 2/2 to address Robin's suggestions. This includes:
->>>>>
->>>>>    * Dropping the while-loop for retrying with a 64-bit mask in favor of
->>>>>      retrying within the error if-statement.
->>>>>    * Using an int for the DMA mask instead of a bool and ternary
->>>>> operation.
->>>>>
->>>>> Thanks again for the reviews and sorry for the extra revision today!
->>>>> Hopefully this is the last one :) If not, I'd be fine to submit
->>>>> patch 1/2
->>>>> without 2/2 to avoid resending patch 1/2 for future revisions of patch
->>>>> 2/2
->>>>> (unless I don't need to do that anyway).
->>>>
->>>> The first patch of the series made it into the mainline kernel, but, it
->>>> seems, the second one ("PCI: dwc: Add support for 64-bit MSI target
->>>> address") did not. As of 6.2-rc6, it is still missing.
->>>>
->>>> Was it intentionally dropped because of some issues or, perhaps, just by
->>>> accident? If it was by accident, could you please queue it for inclusion
->>>> into mainline again?
->>>
->>> Yes, it was dropped due to the PCI_MSI_FLAGS_64BIT usage apparently
->>> being incorrect, and some other open debate (which all happened on the
->>> v5 thread):
->>>
->>> https://lore.kernel.org/linux-pci/YzVTmy9MWh+AjshC@lpieralisi/
->>
-> 
->> I see. If I understand it correctly, the problem was that
->> PCI_MSI_FLAGS_64BIT flag did not guarantee that 64-bit mask could be used
->> for that particular allocation. Right?
->>
-> 
-> William was trying to utilize for only software cause. Setting
-> PCI_MSI_FLAGS_64BIT didn't actually change the hardware behavior.
-> He could have as well provided just a driver private capability
-> flag. (see below for a more detailed problem description)
-> 
->>>
->>> The DMA mask issues have now been sorted out,
->>
->> I suppose, you mean https://lore.kernel.org/all/20230113171409.30470-26-Sergey.Semin@baikalelectronics.ru/?
-> 
-> Well, the way the DMA-mask issue has been solved was a bit of the
-> hacky. I wouldn't call it a fully proper solution. The problem with
-> pointlessly allocating physical memory for the iMSI-RX engine (it
-> doesn't perform any DMA) and artificially restricting the coherent-DMA
-> mask is still there. The patch in the subject was a compromise in
-> order to at least permit unrestricted streaming DMAs but limiting the
-> coherent DMAs for the MSI setup to work properly for all peripheral
-> devices.
-> 
->>
->> It still breaks our particular case when the SoC has no 32-bit-addressable
->> RAM. We'd set DMA masks to DMA_BIT_MASK(36) in the platform-specific driver
->> before calling dw_pcie_host_init(). However, dw_pcie_msi_host_init() resets
->> it to 32-bit, tries dmam_alloc_coherent() and fails.
-> 
-> Yeah. That's another problem with the implemented approach. But are
-> your sure the driver had worked even before this patch? AFAICS the
-> driver allocated the MSI-targeted page from DMA32 zone before this
-> modification. So the allocation must have failed on your platform too.
-
-You are right. I did not notice earlier that the kernel based on 
-6.0-stable we used before did actually contain our SoC-specific 
-workaround for this. Without that custom patch, initialization of PCIe 
-host does not work. So, yes, the problem was present earlier too.
-
-> 
->>
->> With 36-bit masks, the kernel seems to play well with the devices in our
->> case.
->>
->> I saw your comment in https://lore.kernel.org/linux-pci/4dc31a63-00b1-f379-c5ac-7dc9425937f4@arm.com/
->> that drivers should always explicitly set their masks.
->>
-> 
->> Is it a really bad idea to check the current coherent mask's bits in
->> dw_pcie_msi_host_init() and if it is more than 32 - just issue a warning
->> rather than reset it to 32-bit unconditionally? That would help in our case.
->> Or, perhaps, there is a better workaround.
-> 
-> The problem isn't in the value the mask is set to. The problem is
-> two-leveled, but is mainly connected with the PCIe device detected on
-> the PCIe bus. There are some of them which can't send MSI TLPs to the
-> 64-bit addresses. Since we can't predict whether such devices exist on
-> the bus beforehand the LLDD probe is performed together with the
-> MSI-engine initialization, the solution was to just restrict the MSIs
-> base address to be allocated within the lowest 4GB. Moreover as I said
-> above the iMSI-RX engine doesn't actually cause any DMA thus there is
-> no need in any memory allocation. Instead reserving some PCIe-bus
-> space/DWORD for MSIs would be enough. Alas the PCIe-subsystem doesn't
-> provide a way to do so. That's why we have what you see in the driver:
-> DMA mask restriction and coherent DMA memory allocation.
-
-So, if I understand you correctly, what is needed here is a small area 
-of PCIe address space accessible to any of the connected PCIe devices. 
-As the kernel does not know in advance, which restrictions the devices 
-have, it tries to allocate 32-bit-addressable memory, suitable for DMA. 
-This way, it would be OK for any attached PCIe device. Right?
-
-> 
-> If only we had a way to auto-detected the PCIe-bus space with no
-> physical memory behind it and take out a DWORD from it to initialize
-> the iMSI-RX engine we could have immediately got rid from the mask
-> setting operation and the memory allocation. It would have solved your
-> problem too.
-
-Yes, it would solve our issue too. I do not know, however, if a generic 
-solution is possible here, but I am no expert in PCIe.
-
-For now, we are probably better off with SoC-specific patches, when we 
-know which PCIe devices can possibly be used and what their restrictions 
-are.
-
-> 
-> -Serge(y)
-> 
->>
->> Looking forward to your comments.
-> 
-> 
-> 
->>
->>
->>> so you, or Will, or anyone
->>> else interested should be free to rework this on top of linux-next
->>> (although at this point, more realistically on top of 6.3-rc1 in a few
->>> weeks).
->>>
->>> Thanks,
->>> Robin.
->>>
->>>> Support for 64-bit MSI target addresses is needed for some of our SoCs.
->>>> I ran into a situation when there was no available RAM in ZONE_DMA32
->>>> during initialization of PCIe host. Hence, dmam_alloc_coherent() failed
->>>> in dw_pcie_msi_host_init() and initialization failed with -ENOMEM:
->>>>
->>>> [    0.374834] dw-pcie 4000000.pcie0: host bridge /soc/pcie0@4000000
->>>> ranges:
->>>> [    0.375813] dw-pcie 4000000.pcie0:      MEM
->>>> 0x0041000000..0x004fffffff -> 0x0041000000
->>>> [    0.376171] dw-pcie 4000000.pcie0:   IB MEM
->>>> 0x0400000000..0x07ffffffff -> 0x0400000000
->>>> [    0.377914] dw-pcie 4000000.pcie0: Failed to alloc and map MSI data
->>>> [    0.378191] dw-pcie 4000000.pcie0: Failed to initialize host
->>>> [    0.378255] dw-pcie: probe of 4000000.pcie0 failed with error -12
->>>>
->>>> Mainline kernel 6.2-rc6 was used in that test.
->>>>
->>>> The hardware supports 64-bit target addresses, so the patch "PCI: dwc:
->>>> Add support for 64-bit MSI target address" should help with this
->>>> particular failure.
->>>>
->>>>
->>>>>
->>>>> Thanks,
->>>>> Will
->>>>>
->>>>> Will McVicker (2):
->>>>>     PCI: dwc: Drop dependency on ZONE_DMA32
->>>>>
->>>>> v6:
->>>>>    * Retrying DMA allocation with 64-bit mask within the error
->>>>> if-statement.
->>>>>    * Use an int for the DMA mask instead of a bool and ternary operation.
->>>>>
->>>>> v5:
->>>>>    * Updated patch 2/2 to first try with a 32-bit DMA mask. On failure,
->>>>>      retry with a 64-bit mask if supported.
->>>>>
->>>>> v4:
->>>>>    * Updated commit descriptions.
->>>>>    * Renamed msi_64b -> msi_64bit.
->>>>>    * Dropped msi_64bit ternary use.
->>>>>    * Dropped export of dw_pcie_msi_capabilities.
->>>>>
->>>>> v3:
->>>>>     * Switched to a managed DMA allocation.
->>>>>     * Simplified the DMA allocation cleanup.
->>>>>     * Dropped msi_page from struct dw_pcie_rp.
->>>>>     * Allocating a u64 instead of a full page.
->>>>>
->>>>> v2:
->>>>>     * Fixed build error caught by kernel test robot
->>>>>     * Fixed error handling reported by Isaac Manjarres
->>>>>    PCI: dwc: Add support for 64-bit MSI target address
->>>>>
->>>>>    .../pci/controller/dwc/pcie-designware-host.c | 43 +++++++++----------
->>>>>    drivers/pci/controller/dwc/pcie-designware.c  |  8 ++++
->>>>>    drivers/pci/controller/dwc/pcie-designware.h  |  2 +-
->>>>>    3 files changed, 30 insertions(+), 23 deletions(-)
->>>>>
->>>>>
->>>>> base-commit: 568035b01cfb107af8d2e4bd2fb9aea22cf5b868
->>>>
->>>> Thank you in advance.
-
-Regards,
-Evgenii
-
-
+Xinghui Li <korantwork@gmail.com> =E4=BA=8E2023=E5=B9=B41=E6=9C=8810=E6=97=
+=A5=E5=91=A8=E4=BA=8C 20:28=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Jonathan Derrick <jonathan.derrick@linux.dev> =E4=BA=8E2023=E5=B9=B41=E6=
+=9C=8810=E6=97=A5=E5=91=A8=E4=BA=8C 05:00=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > As the bypass mode seems to affect performance greatly depending on the=
+ specific configuration,
+> > it may make sense to use a moduleparam to control it
+> >
+> We found that each pcie port can mount four drives. If we only test 2
+> or 1 dirve of one pcie port,
+> the performance of the drive performance will be normal. Also, we
+> observed the interruptions in different modes.
+> bypass:
+> .....
+> 2022-12-28-11-39-14: 1224       181665   IR-PCI-MSI 201850948-edge      n=
+vme0q68
+> 2022-12-28-11-39-14: 1179       180115   IR-PCI-MSI 201850945-edge      n=
+vme0q65
+> 2022-12-28-11-39-14:  RES        26743   Rescheduling interrupts
+> 2022-12-28-11-39-17: irqtop - IRQ : 3029, TOTAL : 2100315228, CPU :
+> 192, ACTIVE CPU : 192
+> disable:
+> ......
+> 2022-12-28-12-05-56: 1714       169797   IR-PCI-MSI 14155850-edge      nv=
+me1q74
+> 2022-12-28-12-05-56: 1701       168753   IR-PCI-MSI 14155849-edge      nv=
+me1q73
+> 2022-12-28-12-05-56:  LOC       163697   Local timer interrupts
+> 2022-12-28-12-05-56:  TLB         5465   TLB shootdowns
+> 2022-12-28-12-06-00: irqtop - IRQ : 3029, TOTAL : 2179022106, CPU :
+> 192, ACTIVE CPU : 192
+> remapping:
+> 022-12-28-11-25-38:  283       325568   IR-PCI-MSI 24651790-edge      vmd=
+3
+> 2022-12-28-11-25-38:  140       267899   IR-PCI-MSI 13117447-edge      vm=
+d1
+> 2022-12-28-11-25-38:  183       265978   IR-PCI-MSI 13117490-edge      vm=
+d1
+> ......
+> 2022-12-28-11-25-42: irqtop - IRQ : 2109, TOTAL : 2377172002, CPU :
+> 192, ACTIVE CPU : 192
+>
+> From the result it is not difficult to find, in remapping mode the
+> interruptions come from vmd.
+> While in other modes, interrupts come from nvme devices. Besides, we
+> found the port mounting
+> 4 dirves total interruptions is much fewer than the port mounting 2 or 1 =
+drive.
+> NVME 8 and 9 mount in one port, other port mount 4 dirves.
+>
+> 2022-12-28-11-39-14: 2582       494635   IR-PCI-MSI 470810698-edge      n=
+vme9q74
+> 2022-12-28-11-39-14: 2579       489972   IR-PCI-MSI 470810697-edge      n=
+vme9q73
+> 2022-12-28-11-39-14: 2573       480024   IR-PCI-MSI 470810695-edge      n=
+vme9q71
+> 2022-12-28-11-39-14: 2544       312967   IR-PCI-MSI 470286401-edge      n=
+vme8q65
+> 2022-12-28-11-39-14: 2556       312229   IR-PCI-MSI 470286405-edge      n=
+vme8q69
+> 2022-12-28-11-39-14: 2547       310013   IR-PCI-MSI 470286402-edge      n=
+vme8q66
+> 2022-12-28-11-39-14: 2550       308993   IR-PCI-MSI 470286403-edge      n=
+vme8q67
+> 2022-12-28-11-39-14: 2559       308794   IR-PCI-MSI 470286406-edge      n=
+vme8q70
+> ......
+> 2022-12-28-11-39-14: 1296       185773   IR-PCI-MSI 202375243-edge      n=
+vme1q75
+> 2022-12-28-11-39-14: 1209       185646   IR-PCI-MSI 201850947-edge      n=
+vme0q67
+> 2022-12-28-11-39-14: 1831       184151   IR-PCI-MSI 203423828-edge      n=
+vme3q84
+> 2022-12-28-11-39-14: 1254       182313   IR-PCI-MSI 201850950-edge      n=
+vme0q70
+> 2022-12-28-11-39-14: 1224       181665   IR-PCI-MSI 201850948-edge      n=
+vme0q68
+> 2022-12-28-11-39-14: 1179       180115   IR-PCI-MSI 201850945-edge      n=
+vme0q65
+> > I'd vote for it being in VMD mode (non-bypass) by default.
+> I speculate that the vmd controller equalizes the interrupt load and
+> acts like a buffer,
+> which improves the performance of nvme. I am not sure about my
+> analysis. So, I'd like
+> to discuss it with the community.
