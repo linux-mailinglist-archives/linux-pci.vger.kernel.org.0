@@ -2,63 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF14868E228
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 21:51:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 98BA168E255
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 21:55:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229490AbjBGUvV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 15:51:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40748 "EHLO
+        id S229462AbjBGUz4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 15:55:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjBGUvU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 15:51:20 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB5D3E09B;
-        Tue,  7 Feb 2023 12:51:18 -0800 (PST)
+        with ESMTP id S229698AbjBGUzg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 15:55:36 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 314A33FF02;
+        Tue,  7 Feb 2023 12:55:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675803078; x=1707339078;
+  t=1675803329; x=1707339329;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=ToyNyrwixtOUDg+eEMoqUNCxsjNhmyVleCWCGzItYuE=;
-  b=bCpirNkOMfvauRRHwGt3h+f9RRE9Y4baCGmIi1d65SaUqPyHNkEJn7cT
-   b/StdWnYd+qw6wZo+nC7coePPKEb8tVG1RtWMNX9s7G+vEPXaxvWDJU7x
-   vYVjnxsvOPj7dRDrCFY5tSHcaSZB9sqYxlv+eCvCpj+6pAbjeDfd1gA/v
-   uJESwCV+gQaw+uZS2TXYG0SIKG2I4uej/b/zgbZd09LPhStLcQK2Yrq2q
-   WV/Qe6+i5g7vIuJBhzaJseuQPXZlWY4GCsZ4n+BUMgD7tcpVZuYwby1fM
-   8ECZJkimbv/gZg6Z5Se23Z5xtZDEb1jqYVAitPzxRYbzLfcRqKCDpYT2B
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="415846707"
+  bh=9LCQzmZTAtaj9CMhaomd7z8lVhJMhmY4Ef5JEkFY/XI=;
+  b=HRgAAjrN1NWim8KdP5C+vdaLwLk12Uu97SJtzXunQKKxsHizY0XWYkUp
+   crDn7MyH3moiXQLPi4tYkt0rnNG5jr+of3h61Rdc82YOMZRiaJOxtpGLK
+   Yv430SVkXX7eV3txodo7LobzvGb7/lXma7xrY/W1bWe1wCfwGQ/0qWmsO
+   jZip8hC9d7cFuG/VQQE0DK4+bf375GBozmvBqwWy29pqFr+abpYvV8kRf
+   5dcviqAfpc9Y+Tgi/Xhw8TZs8KBqSj3uKC4SAs83qySt4yHTYnQvrnBKU
+   gRpj/SkxsgJ2aOJaPyo1isiPdtiZtSIVJHbeKVQ8QEzDDJZ7cp4SrHvzT
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="309273020"
 X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
-   d="scan'208";a="415846707"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:51:18 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="912470733"
+   d="scan'208";a="309273020"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:55:28 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="995872374"
 X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
-   d="scan'208";a="912470733"
+   d="scan'208";a="995872374"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.98.37]) ([10.212.98.37])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:51:17 -0800
-Message-ID: <19f777db-fdc4-3f6e-ced5-d7bc43f6a340@intel.com>
-Date:   Tue, 7 Feb 2023 13:51:17 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:55:28 -0800
+Message-ID: <805a5d2f-dd3a-54f0-197b-9bb7b021f52b@intel.com>
+Date:   Tue, 7 Feb 2023 13:55:27 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
- CXL device
+Subject: Re: [PATCH 16/18] cxl: Move reading of CDAT data from device to after
+ media is ready
 Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
 Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
         robert.moore@intel.com
-References: <20230206223957.GA2248946@bhelgaas>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571670516.587790.14112456054041985666.stgit@djiang5-mobl3.local>
+ <20230206221738.GB21823@wunner.de>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230206223957.GA2248946@bhelgaas>
+In-Reply-To: <20230206221738.GB21823@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,171 +70,42 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
-> On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
->> The latency is calculated by dividing the FLIT size over the bandwidth. Add
->> support to retrieve the FLIT size for the CXL device and calculate the
->> latency of the downstream link.
-> 
-> s/FLIT/flit/ to match spec usage.
-
-ok will fix.
-
-> 
-> Most of this looks like PCIe, not necessarily CXL-specific.
-> 
-> I guess you only care about the latency of a single link, not the
-> entire path?
-
-I am adding each of the link individually together in the next patch. 
-Are you suggesting a similar function like pcie_bandwidth_available() 
-but for latency for the entire path?
-> 
->> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
->> ---
->>   drivers/cxl/core/pci.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++
->>   drivers/cxl/cxlpci.h   |   14 ++++++++++
->>   2 files changed, 81 insertions(+)
->>
->> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
->> index a24dac36bedd..54ac6f8825ff 100644
->> --- a/drivers/cxl/core/pci.c
->> +++ b/drivers/cxl/core/pci.c
->> @@ -633,3 +633,70 @@ void read_cdat_data(struct cxl_port *port)
->>   	}
->>   }
->>   EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
->> +
->> +static int pcie_speed_to_mbps(enum pci_bus_speed speed)
->> +{
->> +	switch (speed) {
->> +	case PCIE_SPEED_2_5GT:
->> +		return 2500;
->> +	case PCIE_SPEED_5_0GT:
->> +		return 5000;
->> +	case PCIE_SPEED_8_0GT:
->> +		return 8000;
->> +	case PCIE_SPEED_16_0GT:
->> +		return 16000;
->> +	case PCIE_SPEED_32_0GT:
->> +		return 32000;
->> +	case PCIE_SPEED_64_0GT:
->> +		return 64000;
->> +	default:
->> +		break;
->> +	}
->> +
->> +	return -EINVAL;
->> +}
->> +
->> +static int cxl_pci_mbits_to_mbytes(struct pci_dev *pdev)
->> +{
->> +	int mbits;
->> +
->> +	mbits = pcie_speed_to_mbps(pcie_get_speed(pdev));
->> +	if (mbits < 0)
->> +		return mbits;
->> +
->> +	return mbits >> 3;
->> +}
->> +
->> +static int cxl_get_flit_size(struct pci_dev *pdev)
->> +{
->> +	if (cxl_pci_flit_256(pdev))
->> +		return 256;
->> +
->> +	return 66;
-> 
-> I don't know about the 66-byte flit format, maybe this part is
-> CXL-specific?
-
-68-byte flit format. Looks like this is a typo from me.
-
-> 
->> + * cxl_pci_get_latency - calculate the link latency for the PCIe link
->> + * @pdev - PCI device
->> + *
->> + * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
->> + * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
->> + * LinkProgationLatency is negligible, so 0 will be used
->> + * RetimerLatency is assumed to be neglibible and 0 will be used
-> 
-> s/neglibible/negligible/
-
-thank you will fix.
-> 
->> + * FlitLatency = FlitSize / LinkBandwidth
->> + * FlitSize is defined by spec. CXL v3.0 4.2.1.
->> + * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
->> + * The FlitLatency is converted to pico-seconds.
-> 
-> I guess this means cxl_pci_get_latency() actually *returns* a value in
-> picoseconds?
-
-yes
-
-> 
-> There are a couple instances of this written as "pico-seconds", but
-> most are "picoseconds".
-
-ok will fix.
-
-> 
->> +long cxl_pci_get_latency(struct pci_dev *pdev)
->> +{
->> +	long bw, flit_size;
->> +
->> +	bw = cxl_pci_mbits_to_mbytes(pdev);
->> +	if (bw < 0)
->> +		return bw;
->> +
->> +	flit_size = cxl_get_flit_size(pdev);
->> +	return flit_size * 1000000L / bw;
->> +}
->> +EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
->> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
->> index 920909791bb9..d64a3e0458ab 100644
->> --- a/drivers/cxl/cxlpci.h
->> +++ b/drivers/cxl/cxlpci.h
->> @@ -62,8 +62,22 @@ enum cxl_regloc_type {
->>   	CXL_REGLOC_RBI_TYPES
->>   };
+On 2/6/23 3:17 PM, Lukas Wunner wrote:
+> On Mon, Feb 06, 2023 at 01:51:46PM -0700, Dave Jiang wrote:
+>> --- a/drivers/cxl/port.c
+>> +++ b/drivers/cxl/port.c
+>> @@ -109,6 +106,8 @@ static int cxl_port_probe(struct device *dev)
+>>   			return rc;
+>>   		}
 >>   
->> +/*
->> + * CXL v3.0 6.2.3 Table 6-4
+>> +		/* Cache the data early to ensure is_visible() works */
+>> +		read_cdat_data(port);
+>>   		if (port->cdat.table) {
+>>   			rc = cdat_table_parse_dsmas(port->cdat.table,
+>>   						    cxl_dsmas_parse_entry,
 > 
-> The copy I have refers to *Revision 3.0, Version 1.0*, i.e.,
-> "Revision" is the major level and "Version" is the minor.  So I would
-> cite this as "CXL r3.0", not "CXL v3.0".  I suppose the same for CXL
-> Memory Device above, but I don't have that spec.
+> Which branch is this patch based on?  I'm not seeing a function
+> called cdat_table_parse_dsmas() in cxl/next.
 
-Ok will fix.
-
-> 
->> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
->> + * mode, otherwise it's 68B flits mode.
->> + */
->> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
->> +{
->> +	u32 lnksta2;
->> +
->> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
->> +	return lnksta2 & BIT(10);
-> 
-> Add a #define for the bit.
-
-ok will add.
+v6.2-rc7. See commit 4/18. That's where it's introduced. I adapted it 
+from ACPI entries parsing code.
 
 > 
-> AFAICT, the PCIe spec defines this bit, and it only indicates the link
-> is or will be operating in Flit Mode; it doesn't actually say anything
-> about how large the flits are.  I suppose that's because PCIe only
-> talks about 256B flits, not 66B ones?
+> cxl_cdat_read_table() could be amended with a switch/case ladder
+> which compares entry->type to acpi_cdat_type values and stores
+> a pointer to an entry of interest e.g. in port->cdat->dsmas.
+> Then you can use that pointer directly to find the dsmas in the
+> CDAT and parse it.
 
-Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows 
-that when PCIe Flit Mode is set, then CXL is in 256B flits mode, 
-otherwise, it is 68B flits. So an assumption is made here regarding the 
-flit side based on the table.
-
+Yes, but we may have more than 1 DSMAS right? Plus having to parse the 
+DSLBIS entries as well, may be better to just have a common parsing 
+routine to deal with all that.
 > 
-> Bjorn
+> Note however that cxl_cdat_read_table() is refactored heavily by
+> my DOE rework series (will submit v3 later this week):
+> 
+> https://github.com/l1k/linux/commits/doe
+> 
+> Thanks,
+> 
+> Lukas
