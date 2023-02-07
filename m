@@ -2,126 +2,237 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AE0968E223
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 21:49:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF14868E228
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 21:51:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229515AbjBGUtq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 15:49:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40512 "EHLO
+        id S229490AbjBGUvV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 15:51:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40748 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjBGUtp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 15:49:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E45E8CDD2;
-        Tue,  7 Feb 2023 12:49:43 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D2E761169;
-        Tue,  7 Feb 2023 20:49:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E85C433EF;
-        Tue,  7 Feb 2023 20:49:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675802982;
-        bh=T6G70bbso9b+ZXRdkYRuUprPT0mR17BdhO9Oo4NPLlw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=QfenOZLM1lQGUd2TtlyIE+6SUKQxz0evl+ZPL60PjGMEysXFd2gdg6P9IX7j4WoHO
-         Vc0q7G+C273g9I0c00ItmI2lzY3YJhHI+Tk6HIt3LyKZB8mdjc/IMGLY+FSZeHg+/N
-         xq9ECITt5plvO9IuT/QvncTZigK0vVgxW+i8ipHOqPsbWMHugLuFAGkaHTpPMtZpRk
-         RDb+6i8kftCTQskCTuGdil2yDqjexbRqiyQnHPcuREZssVt7c1HdC2Sr3QxJMaez4c
-         jkh/BdKzYWFqo5KfoyFunZiQkGF0Ccq9Ew9piTK183ALTzGYL2qJHPT+pZhEFda7HZ
-         sO80RK3FHClRA==
-Date:   Tue, 7 Feb 2023 14:49:40 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ping-Ke Shih <pkshih@realtek.com>
-Cc:     Kalle Valo <kvalo@kernel.org>, Chia-Yuan Li <leo.li@realtek.com>,
-        Chin-Yen Lee <timlee@realtek.com>,
-        Po-Hao Huang <phhuang@realtek.com>,
-        linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 4/5] wifi: rtw89: pci: enable CLK_REQ, ASPM, L1 and
- L1ss for 8852c
-Message-ID: <20230207204940.GA2373732@bhelgaas>
+        with ESMTP id S229441AbjBGUvU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 15:51:20 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EB5D3E09B;
+        Tue,  7 Feb 2023 12:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675803078; x=1707339078;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=ToyNyrwixtOUDg+eEMoqUNCxsjNhmyVleCWCGzItYuE=;
+  b=bCpirNkOMfvauRRHwGt3h+f9RRE9Y4baCGmIi1d65SaUqPyHNkEJn7cT
+   b/StdWnYd+qw6wZo+nC7coePPKEb8tVG1RtWMNX9s7G+vEPXaxvWDJU7x
+   vYVjnxsvOPj7dRDrCFY5tSHcaSZB9sqYxlv+eCvCpj+6pAbjeDfd1gA/v
+   uJESwCV+gQaw+uZS2TXYG0SIKG2I4uej/b/zgbZd09LPhStLcQK2Yrq2q
+   WV/Qe6+i5g7vIuJBhzaJseuQPXZlWY4GCsZ4n+BUMgD7tcpVZuYwby1fM
+   8ECZJkimbv/gZg6Z5Se23Z5xtZDEb1jqYVAitPzxRYbzLfcRqKCDpYT2B
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="415846707"
+X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
+   d="scan'208";a="415846707"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:51:18 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="912470733"
+X-IronPort-AV: E=Sophos;i="5.97,279,1669104000"; 
+   d="scan'208";a="912470733"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.98.37]) ([10.212.98.37])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 12:51:17 -0800
+Message-ID: <19f777db-fdc4-3f6e-ced5-d7bc43f6a340@intel.com>
+Date:   Tue, 7 Feb 2023 13:51:17 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220819064811.37700-5-pkshih@realtek.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
+ CXL device
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+References: <20230206223957.GA2248946@bhelgaas>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230206223957.GA2248946@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Aug 19, 2022 at 02:48:10PM +0800, Ping-Ke Shih wrote:
-> From: Chin-Yen Lee <timlee@realtek.com>
+
+
+On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
+> On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
+>> The latency is calculated by dividing the FLIT size over the bandwidth. Add
+>> support to retrieve the FLIT size for the CXL device and calculate the
+>> latency of the downstream link.
 > 
-> 8852CE controls CLKREQ, ASPM L1, L1ss via wifi registers
-> instead, so change them accordingly.
+> s/FLIT/flit/ to match spec usage.
 
-> ...
->  static void rtw89_pci_l1ss_set(struct rtw89_dev *rtwdev, bool enable)
->  {
-> +	enum rtw89_core_chip_id chip_id = rtwdev->chip->chip_id;
->  	int ret;
->  
-> -	if (enable)
-> -		ret = rtw89_pci_config_byte_set(rtwdev, RTW89_PCIE_TIMER_CTRL,
-> -						RTW89_PCIE_BIT_L1SUB);
-> -	else
-> -		ret = rtw89_pci_config_byte_clr(rtwdev, RTW89_PCIE_TIMER_CTRL,
-> -						RTW89_PCIE_BIT_L1SUB);
-> -	if (ret)
-> -		rtw89_err(rtwdev, "failed to %s L1SS, ret=%d",
-> -			  enable ? "set" : "unset", ret);
-> +	if (chip_id == RTL8852A || chip_id == RTL8852B) {
-> +		if (enable)
-> +			ret = rtw89_pci_config_byte_set(rtwdev,
-> +							RTW89_PCIE_TIMER_CTRL,
-> +							RTW89_PCIE_BIT_L1SUB);
-> +		else
-> +			ret = rtw89_pci_config_byte_clr(rtwdev,
-> +							RTW89_PCIE_TIMER_CTRL,
-> +							RTW89_PCIE_BIT_L1SUB);
-> +		if (ret)
-> +			rtw89_err(rtwdev, "failed to %s L1SS, ret=%d",
-> +				  enable ? "set" : "unset", ret);
-> +	} else if (chip_id == RTL8852C) {
-> +		ret = rtw89_pci_config_byte_clr(rtwdev, RTW89_PCIE_L1SS_STS_V1,
-> +						RTW89_PCIE_BIT_ASPM_L11 |
-> +						RTW89_PCIE_BIT_PCI_L11);
-> +		if (ret)
-> +			rtw89_warn(rtwdev, "failed to unset ASPM L1.1, ret=%d", ret);
-> +		if (enable)
-> +			rtw89_write32_clr(rtwdev, R_AX_PCIE_MIX_CFG_V1,
-> +					  B_AX_L1SUB_DISABLE);
-> +		else
-> +			rtw89_write32_set(rtwdev, R_AX_PCIE_MIX_CFG_V1,
-> +					  B_AX_L1SUB_DISABLE);
-> +	}
->  }
+ok will fix.
 
-We get here via this path:
+> 
+> Most of this looks like PCIe, not necessarily CXL-specific.
+> 
+> I guess you only care about the latency of a single link, not the
+> entire path?
 
-  rtw89_pci_probe
-    rtw89_pci_l1ss_cfg
-      pci_read_config_dword(pdev, l1ss_cap_ptr + PCI_L1SS_CTL1, &l1ss_ctrl);
-      if (l1ss_ctrl & PCI_L1SS_CTL1_L1SS_MASK)
-	rtw89_pci_l1ss_set(rtwdev, true);
+I am adding each of the link individually together in the next patch. 
+Are you suggesting a similar function like pcie_bandwidth_available() 
+but for latency for the entire path?
+> 
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>> ---
+>>   drivers/cxl/core/pci.c |   67 ++++++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/cxl/cxlpci.h   |   14 ++++++++++
+>>   2 files changed, 81 insertions(+)
+>>
+>> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+>> index a24dac36bedd..54ac6f8825ff 100644
+>> --- a/drivers/cxl/core/pci.c
+>> +++ b/drivers/cxl/core/pci.c
+>> @@ -633,3 +633,70 @@ void read_cdat_data(struct cxl_port *port)
+>>   	}
+>>   }
+>>   EXPORT_SYMBOL_NS_GPL(read_cdat_data, CXL);
+>> +
+>> +static int pcie_speed_to_mbps(enum pci_bus_speed speed)
+>> +{
+>> +	switch (speed) {
+>> +	case PCIE_SPEED_2_5GT:
+>> +		return 2500;
+>> +	case PCIE_SPEED_5_0GT:
+>> +		return 5000;
+>> +	case PCIE_SPEED_8_0GT:
+>> +		return 8000;
+>> +	case PCIE_SPEED_16_0GT:
+>> +		return 16000;
+>> +	case PCIE_SPEED_32_0GT:
+>> +		return 32000;
+>> +	case PCIE_SPEED_64_0GT:
+>> +		return 64000;
+>> +	default:
+>> +		break;
+>> +	}
+>> +
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static int cxl_pci_mbits_to_mbytes(struct pci_dev *pdev)
+>> +{
+>> +	int mbits;
+>> +
+>> +	mbits = pcie_speed_to_mbps(pcie_get_speed(pdev));
+>> +	if (mbits < 0)
+>> +		return mbits;
+>> +
+>> +	return mbits >> 3;
+>> +}
+>> +
+>> +static int cxl_get_flit_size(struct pci_dev *pdev)
+>> +{
+>> +	if (cxl_pci_flit_256(pdev))
+>> +		return 256;
+>> +
+>> +	return 66;
+> 
+> I don't know about the 66-byte flit format, maybe this part is
+> CXL-specific?
 
-This looks like it might be a problem because L1SS configuration is
-owned by the PCI core, not by the device driver.  The PCI core
-provides sysfs user interfaces that can enable and disable L1SS at
-run-time without notification to the driver (see [1]).
+68-byte flit format. Looks like this is a typo from me.
 
-The user may enable or disable L1SS using those sysfs interfaces, and
-this code in the rtw89 driver will not be called.
+> 
+>> + * cxl_pci_get_latency - calculate the link latency for the PCIe link
+>> + * @pdev - PCI device
+>> + *
+>> + * CXL Memory Device SW Guide v1.0 2.11.4 Link latency calculation
+>> + * Link latency = LinkPropagationLatency + FlitLatency + RetimerLatency
+>> + * LinkProgationLatency is negligible, so 0 will be used
+>> + * RetimerLatency is assumed to be neglibible and 0 will be used
+> 
+> s/neglibible/negligible/
 
-Bjorn
+thank you will fix.
+> 
+>> + * FlitLatency = FlitSize / LinkBandwidth
+>> + * FlitSize is defined by spec. CXL v3.0 4.2.1.
+>> + * 68B flit is used up to 32GT/s. >32GT/s, 256B flit size is used.
+>> + * The FlitLatency is converted to pico-seconds.
+> 
+> I guess this means cxl_pci_get_latency() actually *returns* a value in
+> picoseconds?
 
-P.S. rtw89_pci_l1ss_set() is only called from rtw89_pci_l1ss_cfg()
-which always supplies "enable == true", so it looks like that
-parameter is not needed.
+yes
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-bus-pci?id=v6.1#n410
+> 
+> There are a couple instances of this written as "pico-seconds", but
+> most are "picoseconds".
+
+ok will fix.
+
+> 
+>> +long cxl_pci_get_latency(struct pci_dev *pdev)
+>> +{
+>> +	long bw, flit_size;
+>> +
+>> +	bw = cxl_pci_mbits_to_mbytes(pdev);
+>> +	if (bw < 0)
+>> +		return bw;
+>> +
+>> +	flit_size = cxl_get_flit_size(pdev);
+>> +	return flit_size * 1000000L / bw;
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_pci_get_latency, CXL);
+>> diff --git a/drivers/cxl/cxlpci.h b/drivers/cxl/cxlpci.h
+>> index 920909791bb9..d64a3e0458ab 100644
+>> --- a/drivers/cxl/cxlpci.h
+>> +++ b/drivers/cxl/cxlpci.h
+>> @@ -62,8 +62,22 @@ enum cxl_regloc_type {
+>>   	CXL_REGLOC_RBI_TYPES
+>>   };
+>>   
+>> +/*
+>> + * CXL v3.0 6.2.3 Table 6-4
+> 
+> The copy I have refers to *Revision 3.0, Version 1.0*, i.e.,
+> "Revision" is the major level and "Version" is the minor.  So I would
+> cite this as "CXL r3.0", not "CXL v3.0".  I suppose the same for CXL
+> Memory Device above, but I don't have that spec.
+
+Ok will fix.
+
+> 
+>> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+>> + * mode, otherwise it's 68B flits mode.
+>> + */
+>> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+>> +{
+>> +	u32 lnksta2;
+>> +
+>> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+>> +	return lnksta2 & BIT(10);
+> 
+> Add a #define for the bit.
+
+ok will add.
+
+> 
+> AFAICT, the PCIe spec defines this bit, and it only indicates the link
+> is or will be operating in Flit Mode; it doesn't actually say anything
+> about how large the flits are.  I suppose that's because PCIe only
+> talks about 256B flits, not 66B ones?
+
+Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows 
+that when PCIe Flit Mode is set, then CXL is in 256B flits mode, 
+otherwise, it is 68B flits. So an assumption is made here regarding the 
+flit side based on the table.
+
+> 
+> Bjorn
