@@ -2,130 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB42D68D6FE
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 13:41:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A329868DA6C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 15:20:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbjBGMlf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 07:41:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33978 "EHLO
+        id S232392AbjBGOUT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 09:20:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjBGMle (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 07:41:34 -0500
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82C85EFB2;
-        Tue,  7 Feb 2023 04:41:33 -0800 (PST)
-Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 014511EC0589;
-        Tue,  7 Feb 2023 13:41:32 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1675773692;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=+krXHkOwaQ2CA6MBr//FoiRxxZ4nkc4bLu0Pn6fd5JQ=;
-        b=VzbT+beWx6gdcXo8RwgQy7OJCkExOCPf3pCJZ44jIA0nMadh93X6k2+oKL32X6ZrtoBNsJ
-        QwT3xSdG6H4wfEqL4g6Ft6qDG5GfZst4KuuFau2C8/I5O4xGjnpj5xFGzGevrr0Rt8PlPH
-        wRbcGTMmXZuj/u24y0qZCB/3MkezfZk=
-Date:   Tue, 7 Feb 2023 13:41:27 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Message-ID: <Y+JG9+zdSwZlz6FU@zn.tnic>
-References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
- <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
- <Y8r2TjW/R3jymmqT@zn.tnic>
- <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y9FC7Dpzr5Uge/Mi@zn.tnic>
- <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+        with ESMTP id S232304AbjBGOUR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 09:20:17 -0500
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C117392AA;
+        Tue,  7 Feb 2023 06:20:10 -0800 (PST)
+Received: by mail-ej1-f53.google.com with SMTP id m1so1021331ejx.7;
+        Tue, 07 Feb 2023 06:20:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IvnqVj7q+a5osJEmog2V+AtjIDObMd5GeBfEqLFzts8=;
+        b=u6So000PNI22YEcrRr/ThcArY8SmPJ74mSGtVBX6l1QjtKuydsj6j4czL1l/Ku6udW
+         Y8Fl08yQoQfE8oy9U4Q+bR1s82hhH5I382r1SUa49dkrF02WTIPaemynb7C2KcHlJsiY
+         dOHVYsLrX3up71nNIPrJDTqZBC7i3ZA9MXMZ30YICWCrXJmpgMpDehxuenvwVfbZgA8h
+         dpP2Xk/yhoxYsu/jGu9nUi8DyPSI+dpqwUtFSc/lYBcfLBEG2z1U0XmqX9ZnXKQLDL+j
+         aWsFQbSj+90WNi6q5tiK5HIZ1faAFx1NiN0gozK6Qqdfvkhpt2ZVQpnURVXioWJR43Ae
+         3Xmg==
+X-Gm-Message-State: AO0yUKUJapRl86ZgnC0c12e4qdi3+6IhOHwmFZlilqtTL/nYIpP6AKqQ
+        mPsdQYT/5hwfBZL2AwmJXyxBFRl5k+GMTVDOL0g=
+X-Google-Smtp-Source: AK7set/Mbm0aCB1c31qI6RJS4QVnyQvNE+EXCzo6+78pQdWrpHVTJGE0489RkL4fRrn0VemSUpi5AQxIYcQMdoCTA6M=
+X-Received: by 2002:a17:906:ce2e:b0:87f:575a:9b67 with SMTP id
+ sd14-20020a170906ce2e00b0087f575a9b67mr937430ejb.274.1675779608674; Tue, 07
+ Feb 2023 06:20:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571657859.587790.12435839081602248140.stgit@djiang5-mobl3.local>
+In-Reply-To: <167571657859.587790.12435839081602248140.stgit@djiang5-mobl3.local>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 7 Feb 2023 15:19:57 +0100
+Message-ID: <CAJZ5v0hO-FthRSRD5LPL1Onz7DaRG8zBo=GBDBR+k1_upYHVBQ@mail.gmail.com>
+Subject: Re: [PATCH 02/18] ACPICA: Export acpi_ut_verify_cdat_checksum()
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 02, 2023 at 05:49:44AM +0000, Michael Kelley (LINUX) wrote:
-> I could do:
-> 1.  CC_ATTR_PARAVISOR_SPLIT_ADDRESS_SPACE, which is similar to
->     what I had for v1 & v2.   At the time, somebody commented that
->     this might be a bit too general.
-> 2.  Keep CC_ATTR_ACCESS_IOAPIC_ENCRYPTED and add
->     CC_ATTR_ACCESS_TPM_ENCRYPTED, which would decouple them
-> 3.  CC_ATTR_ACCESS_IOAPIC_AND_TPM_ENCRYPTED, which is very
->     narrow and specific.
-> 
-> I have weak preference for #1 above, but I could go with any of them.
-> What's your preference?
+On Mon, Feb 6, 2023 at 9:49 PM Dave Jiang <dave.jiang@intel.com> wrote:
+>
+> Export the CDAT checksum verify function so CXL driver can use it to verify
+> CDAT coming from the CXL devices.
+>
+> Given that this function isn't actually being used by ACPI internals,
+> removing the define check of APCI_CHECKSUM_ABORT so the function would
+> return failure on checksum fail since the driver will need to know.
 
-Either 1. but a shorter name or something which works with the TDX side
-too.
+If you want to make ACPICA changes, please first submit a pull request
+to the upstream ACPICA project on GitHub.
 
-Or are there no similar TDX solutions planned where the guest runs
-unmodified and under a paravisor?
+Having done that, please resubmit the corresponding Linux patch with a
+Link tag pointing to the upstream PR.
 
-> For v6 of the patch series, I've coded devm_ioremap_resource_enc() to call
-> __devm_ioremap(), which then calls ioremap_encrypted().  I've updated the
-> TPM driver to use cc_platform_has() with whatever attribute name we agree
-> on to decide between devm_ioremap_resource_enc() and
-> devm_ioremap_resource().
-> 
-> If this approach is OK with the TPM driver maintainers, I'm good with it.
-> More robust handling of a mix of encrypted and decrypted devices can get
-> sorted out later.
+Thanks!
 
-Makes sense to me...
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> ---
+>  drivers/acpi/acpica/utcksum.c |    4 +---
+>  include/linux/acpi.h          |    7 +++++++
+>  2 files changed, 8 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/acpi/acpica/utcksum.c b/drivers/acpi/acpica/utcksum.c
+> index c166e4c05ab6..c0f98c8f9a0b 100644
+> --- a/drivers/acpi/acpica/utcksum.c
+> +++ b/drivers/acpi/acpica/utcksum.c
+> @@ -102,15 +102,13 @@ acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length)
+>                                    "should be 0x%2.2X",
+>                                    acpi_gbl_CDAT, cdat_table->checksum,
+>                                    checksum));
+> -
+> -#if (ACPI_CHECKSUM_ABORT)
+>                 return (AE_BAD_CHECKSUM);
+> -#endif
+>         }
+>
+>         cdat_table->checksum = checksum;
+>         return (AE_OK);
+>  }
+> +EXPORT_SYMBOL_GPL(acpi_ut_verify_cdat_checksum);
+>
+>  /*******************************************************************************
+>   *
+> diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+> index 5e6a876e17ba..09b44afef7df 100644
+> --- a/include/linux/acpi.h
+> +++ b/include/linux/acpi.h
+> @@ -1504,9 +1504,16 @@ static inline void acpi_init_ffh(void) { }
+>  #ifdef CONFIG_ACPI
+>  extern void acpi_device_notify(struct device *dev);
+>  extern void acpi_device_notify_remove(struct device *dev);
+> +extern acpi_status
+> +acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length);
+>  #else
+>  static inline void acpi_device_notify(struct device *dev) { }
+>  static inline void acpi_device_notify_remove(struct device *dev) { }
+> +static inline acpi_status
+> +acpi_ut_verify_cdat_checksum(struct acpi_table_cdat *cdat_table, u32 length)
+> +{
+> +       return (AE_NOT_CONFIGURED);
+> +}
+>  #endif
+>
+>  #endif /*_LINUX_ACPI_H*/
+>
+>
