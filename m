@@ -2,67 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CFD5968DD7F
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 17:02:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 017BB68DDD1
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 17:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229991AbjBGQCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 11:02:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58124 "EHLO
+        id S232801AbjBGQUr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 11:20:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjBGQCF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 11:02:05 -0500
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2068.outbound.protection.outlook.com [40.107.6.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18FD87ED8;
-        Tue,  7 Feb 2023 08:02:04 -0800 (PST)
+        with ESMTP id S232742AbjBGQUg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 11:20:36 -0500
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on2059.outbound.protection.outlook.com [40.107.13.59])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F5943D911;
+        Tue,  7 Feb 2023 08:20:25 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WclhgZNy5g9yH7fT1H8dNP/txQxfH25FLx10I/plOF+6FaC3pmWbKMa8Uit8ZoK7jjYVMPCC8CJesWfBjd9mKsxWV/tNpVKP2xpWbHF1R3c01WTwo+Gmz8Ig4Ty5d19oEdETN3Pixn7O4UwWEcSsnKkxzggxa46yRmZW4FHd+oopnDJhPZB1WUKzliR2oTZRbiS40FyLprf4t2ml64pvjBQE0AagxKExCQZZcArRldzbj2yM1oyvz4zqEP2FHUEDcAVv7CN3ol9sTY1j9aC1ml0TfYBMTD2R81RQOLmnwbV3V7FR2/HLltbnpKJhoHqM5+cMDh8VqgvSTDVWp+v2zQ==
+ b=MVGgj6RYQS2lAhC7KCQHNpYBQtmOnxGC9XsPhW5yaMRpUJYz8cqY2D8zoS+HKJitbgoFRMuheE+sWdrq6TXLccJZ3vbq3P1QPTkirOuZg3EAy4lVbZIzyqWX1Rvbbhk9OILzzNzClCcRqmuv9M6scHFpjVnaLoo1F5j5n2BdESYXbsP0xcDi6XJPZaSeoSJtn5Ph7FRKtxjYzuN+GAYxT4xYGlJFEcFjv9/Hiy6rnRRevO6Rs/AkFGOS0+06sqrNCsjlemQTrEX8aqwHTjz376E1iAXDQUBUKBLfkAMR8u9PYG/NKUgJpETUS1zr+YJspTw2xMJQGRION3dYDcQKUQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=trT7AQ4Yo7vjDhhkx3QMLqILs5SqkIMo53Zb0bJ+9dU=;
- b=kTVhQOXEFY/hLbAJJ38/vDI+QyR7WucHgfVH5coQKha4LERMRfynpXoxuzU80kMAxv7Vg6CgrpHoal3J5stSDzBRbof5jl8MQ/Mbc1vCGfnoQt7Vo+udRIu9PR0rZ/X54TJcz09yr8+rySW0EFvedqrzDRanuJuS3TEF87ms7DQribDAzh6OSpqu6hDcj1Fe+SWdMcKkw6roAxvJljcmKxQvmGbvSuN9rckKvnCoCxrxl+4KuWzvt9qF5oHPYakv60o+3IQIgM3lxl4NNpVPxw7hmsV47f0fDHn25YgPKzhmqGnn5zgeHiyPVh4umirD5r0D7FrUSqNi1154ROa9aw==
+ bh=orupMnO4e3dQNzw+ROPL/AGdNXjGfyRbC+Cz/ahpqys=;
+ b=j+pPEU2tAOuVfZ7wYOewhUcfBW8PdhWQ0EEBzeBqcx/hVmEQNAesniilMZdX9oQ3pqbLAeZcIUAS6U1ZejUaOuU2vBC8+eKZ3gwY92EXrYj7x9xYtMlvtcL+wz/lALoJQJzWjpPsp7XqAyDsfcnD9zdvmO8LzgrHjm4atTQLUtHgS2HEUMNl7clh4fH+HHILCs1rHsGMeB5RJO8MgfC/HysV5N6SDTbcxz//rekS4/5qhIJUqpPSBIlqQSY6WjGJmJaJabiFZVpJNo9HSlrMTAtoSTSu+H1BlFI9o3HDfJjLXfgtBQSZn9AEAIoCx8mjOqBptCIpCjblvwvmj2X1UA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=trT7AQ4Yo7vjDhhkx3QMLqILs5SqkIMo53Zb0bJ+9dU=;
- b=TzesTbmEEzGGFDbqEl8X00qgNIZe/9ETerPEpI/IXLmsDqHhK6UR8pZ8elwdEzZoj6WBvb2I441KOepVfVSH0zOJU/mJygLC9lxRPmutSHxJg9dxdCS68HiZlsntV6+xBRXx48Vd2zewI96ByVE8q2c1lZLk4JxhmSgYwgDKJAU=
+ bh=orupMnO4e3dQNzw+ROPL/AGdNXjGfyRbC+Cz/ahpqys=;
+ b=msusOyQdXKadvDrciBfqHyam0Y+1sSnUgSttIN9JeBWnl7Z8/eVR7oyLNm+OuZVldutdYPr91DtgpiWDLjIT5neUyb/QoGpiA2HkxMDvLr3jTqZ0TPNehOeqzDjHgyLqUq5RDKkO2wEu5zx8ZT612UbhNSGuCZvtDgMNz7F02k4=
 Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
- by AS8PR04MB8641.eurprd04.prod.outlook.com (2603:10a6:20b:428::23) with
+ by VI1PR04MB6783.eurprd04.prod.outlook.com (2603:10a6:803:130::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.34; Tue, 7 Feb
- 2023 16:02:01 +0000
+ 2023 16:20:21 +0000
 Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
  ([fe80::ca48:3816:f0b6:3fcd]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
  ([fe80::ca48:3816:f0b6:3fcd%6]) with mapi id 15.20.6064.034; Tue, 7 Feb 2023
- 16:02:01 +0000
+ 16:20:21 +0000
 From:   Frank Li <frank.li@nxp.com>
-To:     Shunsuke Mie <mie@igel.co.jp>
-CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+To:     ALOK TIWARI <alok.a.tiwari@oracle.com>,
+        "M.H. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jon Mason <jdmason@kudzu.us>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        Takanari Hayama <taki@igel.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: RE: [EXT] [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP
- function
-Thread-Topic: [EXT] [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP
- function
-Thread-Index: AQHZN7bpBm+5RmnRNEW5Iyx9WPW3za69bfSAgAXgoQCAAFlCIA==
-Date:   Tue, 7 Feb 2023 16:02:01 +0000
-Message-ID: <HE1PR0401MB2331A8D5C791C34D9C39A62688DB9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-References: <20230203100418.2981144-1-mie@igel.co.jp>
- <HE1PR0401MB2331EAFF5684D60EC565433688D79@HE1PR0401MB2331.eurprd04.prod.outlook.com>
- <CANXvt5qjDDEK0NB=BWh00-HGU-p+sC=8TyP-oPdccnZxKxZt9w@mail.gmail.com>
-In-Reply-To: <CANXvt5qjDDEK0NB=BWh00-HGU-p+sC=8TyP-oPdccnZxKxZt9w@mail.gmail.com>
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+CC:     "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [External] : RE: [EXT] [PATCH v2 1/1] PCI: layerscape: Add EP
+ mode support for ls1028a
+Thread-Topic: [External] : RE: [EXT] [PATCH v2 1/1] PCI: layerscape: Add EP
+ mode support for ls1028a
+Thread-Index: AQHZJrz7UNBwg0aD+0SFGvc7zfwgFa68DdDQgADCWgCABwHIYA==
+Date:   Tue, 7 Feb 2023 16:20:21 +0000
+Message-ID: <HE1PR0401MB2331634B29ED9EDAB032B73888DB9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+References: <20230112193442.1513372-1-Frank.Li@nxp.com>
+ <HE1PR0401MB2331C19D7474E6EAA4DC29C888D69@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+ <199a5aff-fee8-71d3-bfcb-c0492667de1b@oracle.com>
+In-Reply-To: <199a5aff-fee8-71d3-bfcb-c0492667de1b@oracle.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -70,56 +71,56 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|AS8PR04MB8641:EE_
-x-ms-office365-filtering-correlation-id: 2239fe51-85ec-45ef-2bb3-08db0924a61a
+x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|VI1PR04MB6783:EE_
+x-ms-office365-filtering-correlation-id: 339ffb26-b8b8-4505-ca5c-08db092735f4
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ov3R+njDm1Otj3EXXWb2dSjI9D1inVPghcEyhBXLIVVxDpjWmF3qX9i3z/nGgDVAPHJkPju2BQx40xrvXppzVChGvfQCA8/nBveSJmCb2/b2y3+lFFxW3Kfcs8KZPu8Ev5fo6LaIIR5XQmxMU5xmzMA+j3KNtiZt3jZKQulRWEkCFbb49CzPoUX8xZV8+X6KCJWEJ6M1LCvDg7ZJMwvrRs83I1KATHTN3I7e2GwvKwBXMNPvx3cq1eNtR9rZBT3QJkXg84UoMHPm1rrWraTmliUB1s55rEp0Ux8drON0/+oJX3/SMfR1qHjwnwmb5Kzm0nqXmU6t9QZBrOKs/Krm0tn7sk9ESWs1vwv0jS75FWsvukM9tQflrcxdHiOytzDsjZZt+ydapkjdHH1mdgJCId1MXaHRuz8HtbFJz6YISKkjA+IUbwYeoWt2NDlm2c5OMOa6MbK9TLpF4TnsnlfTaFPncOgXiW7xKI1gEyreiOqqYIdy2oPLJCTTPw3XRyw0ior2hl+PpAy0oJ/nbeIXU0w6Mk3jFxcd3qh58JJPWvq9ds+OnmR5MgtXvKzWoxdSVPwnslQJfWnKynhNBs7gZLIHCMHcA/aoUgt8BG0qBfgqHm5nf8DcZWBjRZU1cJu6X8OAv2YNbH9m5XXqybqLcVtKtmJjxVEVmzlI4euN0gh9WUTsRtE2hiXw/nyns6mZcR19gTI2xS0QgGDr7avHURIaocTz0P69lub9Yi7MjiizJlGB9nCxZuFKN1yh0PuSadbRNGXnRAQXZ6fSB06fCA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(376002)(39860400002)(346002)(366004)(396003)(451199018)(66899018)(4326008)(41300700001)(6916009)(38100700002)(66476007)(66556008)(66446008)(76116006)(64756008)(66946007)(52536014)(54906003)(8676002)(8936002)(33656002)(38070700005)(86362001)(122000001)(186003)(55236004)(9686003)(6506007)(966005)(26005)(316002)(45080400002)(7416002)(44832011)(55016003)(5660300002)(2906002)(478600001)(71200400001)(7696005)(83380400001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: ZFvtCkxIvDPnIGwlTETa/cBHoSWk5UteZBEa/Am2aDfT0OK5AaGEQH4p6XonIycbqTSxzOhBBb9PkGjaJWt1sfetC8p5cjAXlmQhdvZMCHbiYj30q2kSa/KsE++EyGk3Aw+c0nHTzF0XNm3DqkmY/JfKo5lOVBqXbLLDmPz2tFDQqOaP6OsWFIe5mtJBnGa1Nz6XTU5WLFzKyHtwwMucsoh3304uFyPl/Ojd/NWmOf88Nd0L+tpiQQuorkNsiSotNiHV4UGApqqdGs2EgQjv9DyhKAxE84h3EQiQgvRZYL6U1Qb1XB+Pffz67KxdiBcOzXzKoUe6BNJXJnTaUSN3yQpgkkfSORoqmEDSIk3ClSjrV0l936Z7TWXBXxFPUkic+HGUFYClS4H6448h32qZFdmOBYS9AEWju0VkEjU4AdZgLjFgvPTuyUU6YZ6bGjTXE27n34DJpwG8QbQkiObZN7FyAFOQXowDzG2cf80x+aZSg8WBZcYJ4hQIx8OBiOeJjUN9MJdezaUWl8HNaN9STwjFQqwOdU1mcNshw795q4Swzj8Xi8VMtsw0ifnBfk1XZkyisRxi468dkr8+GthZ4N1w0y/G5HoEIkj8JeqHdEbes8HQ285/w2BxQKt+XCVhMK+wK0N6pwuYHnS1ZGgNw8VmT6/gzjxJagbEUZY4xQ/tDI+UstpMKW/IWDE+SIOfyZLdfiMUkHKV2zkS3J5ZBTG7RGlIKMd7N7uJl1nNcA4=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199018)(33656002)(921005)(7696005)(38070700005)(71200400001)(110136005)(55236004)(7416002)(4326008)(6506007)(8676002)(478600001)(66946007)(44832011)(2906002)(66556008)(66476007)(52536014)(8936002)(316002)(64756008)(66446008)(76116006)(5660300002)(26005)(122000001)(38100700002)(86362001)(41300700001)(186003)(55016003)(9686003)(4744005);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?Ic4Pdi6TsWinAC2pq+e08wFTPSkbUwbQlFgQXh4Ocz/i9a2VIHwpBD0ILe?=
- =?iso-8859-2?Q?0331OA6eJRry/n/xOipfTnAFL+e3Ys7m5Uo2ls9u+R3SynPbKkUbCDHbMa?=
- =?iso-8859-2?Q?G8zWITIGi8a5SvPQxaXbNnsOthChjnMJAjNoRWE1AwlyrOVa8pLHZcEajj?=
- =?iso-8859-2?Q?/1C2A6OjbMtSNSJJnoiOh8UJZ3UFCSSEbS7WcahPDG9UpM7lybxQ/UfVXL?=
- =?iso-8859-2?Q?xHOIBp5kVstvX/gX79jE6c2rAAgF45PEb98kMa57ix6PBh17fYeTTLBhvF?=
- =?iso-8859-2?Q?xe2anp4S221uehQbES9N44UPzg4hiGjJ8d/U+4l8fBITrHQSBQu54+FHV2?=
- =?iso-8859-2?Q?9dqYuhJhDE/8mvZWHYwIwtZFzR2iH4lOiGns4IPstgff9i8HC4FRVugaS3?=
- =?iso-8859-2?Q?cRmKHZ6i05zhCMj15HEOuN9hACR3eJ3JNG84j4bZKpyxJKDqnw7Ni0bay9?=
- =?iso-8859-2?Q?t10W510vuwvSNmqL5i3ti8jdLOS1yjQ+RMmZLgVh7oPB/3aWc8CwX+CRaY?=
- =?iso-8859-2?Q?nZBtGHpiCc/Ukgc4RPOlO/uTnd+xC2cGg1Ny0y8FPvX1uoO48JTY6jc23H?=
- =?iso-8859-2?Q?w5QPlwWY8LclZgdShQe0UDEiOovyakrbMa6bAJ39Zdzd80gh42jA+9Up8F?=
- =?iso-8859-2?Q?qMoErcn+gEkv/AkyhMEoRH3wj8KftL/V+fktHmyRvBwnwDpq40gASaFsoW?=
- =?iso-8859-2?Q?qh6WTM9Te4DMCJHLTcJm5iQLudhEtvOY/lOPx79EfvWusgg7LDyLUALY/V?=
- =?iso-8859-2?Q?a4kiKOycHn+WoQTDEHLXJKLRGiSlGR7/ZewCuGCqoz7wU6nBIuqUP5hfsX?=
- =?iso-8859-2?Q?VBcibco8sJutW7DGQ213EWbp05OrgPO3XstbwwrXTHOk6WPN96AjaNIsOu?=
- =?iso-8859-2?Q?HPXiHUFkFtJecSO4E0xFWgoEb8BdEy+Hp7KWJKe1iBUOCjni7pzSspydSC?=
- =?iso-8859-2?Q?tG+TmH7KLXERZiADWCoGn701ZHHZPdi+DTaRHt5iOG1OrHey9JC/+qvEwJ?=
- =?iso-8859-2?Q?Hqyl7dfxkeA8Gi6PQ3n52wqWz+y94ZcFLS0Xu8p1zWr92fGPkHmotgVwPT?=
- =?iso-8859-2?Q?LmBLuVgKzGm1vkrtz/66pJbfEeQahOA1xoo+T3LCvajhEimP+hZ0UXZ+LQ?=
- =?iso-8859-2?Q?ale74HtlwleSquQj4MCCKSM5xHoRu0/zVU5vSvOkMesuP8YJ4zNSd4yfOG?=
- =?iso-8859-2?Q?CdDau7/iwSNRc1lEBtaxEcF8xwhREX/ei1ykyY87y0d3wjv37Ze0vV+24e?=
- =?iso-8859-2?Q?YBsx8JyySueona7x2wXUmvJ50vnplVtJwAV3buvpFsLBOmis2ARaWnUxGY?=
- =?iso-8859-2?Q?uQahZfZaRfDvCYctzslkaQYe5nv+0kNOpTC8KrqoCbjKPTkP7tTjK3dNhm?=
- =?iso-8859-2?Q?KVM4Qi9V/Jf76i+9N0FdNHxiwyfOJxVhR4fvnr9SWrfv4Bg1TdoV1G1ztA?=
- =?iso-8859-2?Q?taVZJuGD9W76nVMTnB3mD14cmS2i+zxslQKHNgc3kcQ7zIQGweXZzMFH8v?=
- =?iso-8859-2?Q?51j0m4x3ytIF5LmEznKAexdzY4VCtNxCVgsm5Nfi/BhfuRmcJRU9I/gwW+?=
- =?iso-8859-2?Q?j50IBoOtHTuE0b93HPwjddWpJ/iisPMqiZlml9CUrHqKy64sQDxU1vAfgc?=
- =?iso-8859-2?Q?9TalzzKgEKfRQ=3D?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?adaHA11svl3Lpee9TkGUFPa4cLXx2WEMpNoZf2XU9OWokOvlKPAws1AGnb?=
+ =?iso-8859-2?Q?eBevwOyAOVUuiNjnubPz+lGrDkeP/qwBv8KQ/1hUGRAz9RFSkUH8ArZlW+?=
+ =?iso-8859-2?Q?jbww+IjKowJBpXOXf03RJT9AnQ9qW1SIfzYNdYv/ixZXJ13pQeGI/q2KJc?=
+ =?iso-8859-2?Q?fcJy3oxe5+wrpIs93BSLZkRyooxnl3MGjKuGNWwCMkNNy9JeDRM5bB/0K4?=
+ =?iso-8859-2?Q?AKsdiSjopuGtYrKy42yPg9dFYrK8CpToigCo+dCeIjeRBU70P8YETwkx7b?=
+ =?iso-8859-2?Q?wK/xBDxWji+P8ZR1PHOoOr/mP3oBOj11MU/+WQuHWkqLZfX4/2vRokmxoF?=
+ =?iso-8859-2?Q?7SZHzHybnGFy9WP7ui4P2Limzh0/uJ/OcFPrnXXSnaYG9KOYw1W/OC85hD?=
+ =?iso-8859-2?Q?tT3C084Yn1/UsH4LHClh2jV8dzk5eNMRupjBJlm2hBgBaR46uk9hKfWODN?=
+ =?iso-8859-2?Q?4MLnTSn35MTKJ29hf2H5xS8QwYJiLBObz2lMqwMqTo8RI+wkQYsBZGTKZW?=
+ =?iso-8859-2?Q?z3iYoHtJi1Zq1L6VIc3PX4mTK+yoQufeQJM6aL1WAkg8fEkK/nUHoVIBCA?=
+ =?iso-8859-2?Q?LGqH01VUOOcc3n+KYTeL+Ex979v3wDCKCrgXHsuSrKt8Mo21jwLjMHMicI?=
+ =?iso-8859-2?Q?oqC6IHLL429OY6U07xs8hmEEyr+mBRhMEB5KkYN21jxmk/4pcyVsYsgGqY?=
+ =?iso-8859-2?Q?sllUtlkidFb2is5yxTRODypYVHc1EK9ou2iMilX2Alb6J0C6h6U9v6QeY1?=
+ =?iso-8859-2?Q?SeUdBIvPfzdCTMfIMXhswwB2Ui7w1JwLwgMcKtTYvUYJcsTXqokOkAv1/5?=
+ =?iso-8859-2?Q?1BsA4xTya/qv37wTW78zZk4xsI8Gw8LH+KBtg4HqQHE0Bb/adX3WGgRx9T?=
+ =?iso-8859-2?Q?b4GsaU5MPBYPpDQS0UtzA40DQIXZWG2kuweUBiw7h/P0T55YbO4Y/kyv99?=
+ =?iso-8859-2?Q?YEvybaon44slY+bVupbfdAknXisl07RFxE/rhqRgCIPBhLtM1JklyfCnOJ?=
+ =?iso-8859-2?Q?Bw8GtP8l9WyjHUzBVRhWrWln3e5JUbcuxSO6b9ZzMAemIIR4LQkl70PQ4z?=
+ =?iso-8859-2?Q?oStdXm8e2+OGyROAJidPAdSjC1/+tg4p0L0ld7a+nZ1aDZ6iXf06VKim8v?=
+ =?iso-8859-2?Q?NWvbGCydR6sCzdcuv16ThAAFW5ayFGO35Sm+QyrzRuaS4oC5FNlUZdOjAH?=
+ =?iso-8859-2?Q?8mjyzh6UYgWL9nc9DHk9px+PRZnRb7DPJJ7Yf4Wfu2oLJL80yAxzG94Wbd?=
+ =?iso-8859-2?Q?0pjbz+BIV5MVTMvtSLN/g4SGnh33auaFxAQMZ5xsfPU2kk16MgsfePTDOL?=
+ =?iso-8859-2?Q?2+A0EaKXLoTepECHifvgVjZqfXFA0T2h92ef7lRjx0Kp4KuMVmglERYHmY?=
+ =?iso-8859-2?Q?5ECrt1TNQl9Bo2MZVhfX11fSSIgHII7iiTeTe7udp4UZDBt5hEw6DlBz97?=
+ =?iso-8859-2?Q?Dubo8tIPfJDc+HUp0xC4AKdChc534Y/M3dI0M20nLISETTePW5CsN99r7r?=
+ =?iso-8859-2?Q?dnHuDIQ9nFOg3ICt+Mm7IzjgHq8JnlZWnn5YaGx/eGrB9fDhgO71vtaIhY?=
+ =?iso-8859-2?Q?A73RDBZ/jJYtmLdv51n9xWEilSn0X8WuY5zUWSlzh2DIjxl99HjkcBoezi?=
+ =?iso-8859-2?Q?K8PkXNe+kosAk=3D?=
 Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2239fe51-85ec-45ef-2bb3-08db0924a61a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2023 16:02:01.2794
+X-MS-Exchange-CrossTenant-Network-Message-Id: 339ffb26-b8b8-4505-ca5c-08db092735f4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2023 16:20:21.6198
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EM6+Rwe4KLXbBcATIKo4ldxDVn4IHvaHky4Tx4s6HEWMKrT8LpT/f8/cJ+Yk63D+A1MLEG74X0L1wN1k6UmEZg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8641
+X-MS-Exchange-CrossTenant-userprincipalname: 7dirSyz5sKUtTRPdc/gKFgGbpXapI8NppXiGGbgeYJHbLxy9HLFABgBuggoEbAK5iO4oagblBMrMNpF63GJwlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6783
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
@@ -130,172 +131,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-> We project extending this module to support RDMA. The plan is based on
-> virtio-rdma[1].
-> It extends the virtio-net and we are plan to implement the proposed
-> spec based on this patch.
-> [1] virtio-rdma
-> - proposal:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-k
-> ernel.org%2Fall%2F20220511095900.343-1-
-> xieyongji%40bytedance.com%2FT%2F&data=3D05%7C01%7Cfrank.li%40nxp.co
-> m%7C0ef2bd62eda945c413be08db08f62ba3%7C686ea1d3bc2b4c6fa92cd99c5
-> c301635%7C0%7C0%7C638113625610341574%7CUnknown%7CTWFpbGZsb3d
-> 8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%
-> 3D%7C3000%7C%7C%7C&sdata=3DHyhpRTG8MNx%2BtfmWn6x3srmdBjHcZAo
-> 2qbxL9USph9o%3D&reserved=3D0
-> - presentation on kvm forum:
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fyout
-> u.be%2FQrhv6hC_YK4&data=3D05%7C01%7Cfrank.li%40nxp.com%7C0ef2bd62
-> eda945c413be08db08f62ba3%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> 7C0%7C638113625610341574%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4
-> wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7
-> C%7C%7C&sdata=3DucOsGR1letTjxf0gKN6uls5y951CXaIspZtLGnASEC8%3D&res
-> erved=3D0
+> Subject: Re: [External] : RE: [EXT] [PATCH v2 1/1] PCI: layerscape: Add E=
+P
+> mode support for ls1028a
 >=20
+> Caution: EXT Email
+>=20
+>          { .compatible =3D "fsl,ls1046a-pcie-ep", .data =3D &ls1_ep_drvda=
+ta },
+> +       { .compatible =3D "fsl,ls1028a-pcie-ep", .data =3D &ls1_ep_drvdat=
+a },
+>         { .compatible =3D "fsl,ls1088a-pcie-ep", .data =3D &ls2_ep_drvdat=
+a },
+>=20
+> can it be like this for better readability. ?
 
-Sorry for our outlook client always change link.  This previous discussion.=
-=20
-https://lore.kernel.org/imx/d098a631-9930-26d3-48f3-8f95386c8e50@ti.com/T/#=
-t
-
-Look like Endpoint maintainer Kishon like endpoint side work as vhost.
-Previous  Haotian Wang submit similar patches, which just not use eDMA, jus=
-t use memcpy.
-But overall idea is the same.=20
-
-I think your and haotian's method is more reasonable for PCI-RC EP connecti=
-on.
-
-Kishon is not active recently.   Maybe need Lorenzo Pieralisi and Bjorn hel=
-gass's comments
-for overall directions.=20
+It is just chip name and follow name conversion, which already upstreamed a=
+nd documented.=20
+Why do you think it not is good readability?=20
 
 Frank Li=20
 
-> Please feel free to comment and suggest.
-> > Frank Li
-> >
-> > >
-> > > To realize the function, this patchset has few changes and introduces=
- a
-> > > new APIs to PCI EP framework related to virtio. Furthermore, it devic=
-e
-> > > depends on the some patchtes that is discussing. Those depended
-> patchset
-> > > are following:
-> > > - [PATCH 1/2] dmaengine: dw-edma: Fix to change for continuous
-> transfer
-> > > link:
-> > >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-k
-> %2F&data=3D05%7C01%7Cfrank.li%40nxp.com%7C0ef2bd62eda945c413be08db
-> 08f62ba3%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6381136256
-> 10341574%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
-> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3Dd
-> VZMaheX3eR1xA2wQtecmT857h2%2BFtUbhDSHXwgvsEY%3D&reserved=3D0
-> > > ernel.org%2Fdmaengine%2F20221223022608.550697-1-
-> > >
-> mie%40igel.co.jp%2F&data=3D05%7C01%7CFrank.Li%40nxp.com%7Cac57a62d4
-> > > 10b458a5ba408db05ce0a4e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> > >
-> 7C0%7C638110154722945380%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4
-> > >
-> wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7
-> > >
-> C%7C%7C&sdata=3DtIn0MHzEvrdxaC4KKTvTRvYXBzQ6MyrFa2GXpa3ePv0%3D&
-> > > reserved=3D0
-> > > - [RFC PATCH 0/3] Deal with alignment restriction on EP side
-> > > link:
-> > >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-k
-> %2F&data=3D05%7C01%7Cfrank.li%40nxp.com%7C0ef2bd62eda945c413be08db
-> 08f62ba3%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6381136256
-> 10341574%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
-> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3Dd
-> VZMaheX3eR1xA2wQtecmT857h2%2BFtUbhDSHXwgvsEY%3D&reserved=3D0
-> > > ernel.org%2Flinux-pci%2F20230113090350.1103494-1-
-> > >
-> mie%40igel.co.jp%2F&data=3D05%7C01%7CFrank.Li%40nxp.com%7Cac57a62d4
-> > > 10b458a5ba408db05ce0a4e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> > >
-> 7C0%7C638110154722945380%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4
-> > >
-> wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7
-> > >
-> C%7C%7C&sdata=3DRLpnDiLwfqQd5QMXdiQyPVCkfOj8q2AyVeZOwWHvlsM%3
-> > > D&reserved=3D0
-> > > - [RFC PATCH v2 0/7] Introduce a vringh accessor for IO memory
-> > > link:
-> > >
-> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
-k
-> %2F&data=3D05%7C01%7Cfrank.li%40nxp.com%7C0ef2bd62eda945c413be08db
-> 08f62ba3%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6381136256
-> 10341574%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoi
-> V2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=3Dd
-> VZMaheX3eR1xA2wQtecmT857h2%2BFtUbhDSHXwgvsEY%3D&reserved=3D0
-> > > ernel.org%2Fvirtualization%2F20230202090934.549556-1-
-> > >
-> mie%40igel.co.jp%2F&data=3D05%7C01%7CFrank.Li%40nxp.com%7Cac57a62d4
-> > > 10b458a5ba408db05ce0a4e%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%
-> > >
-> 7C0%7C638110154722945380%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4
-> > >
-> wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7
-> > >
-> C%7C%7C&sdata=3D6jgY76BMSbvamb%2Fl3Urjt4Gcizeqon%2BZE5nPssc2kDA%
-> > > 3D&reserved=3D0
-> > >
-> > > About this patchset has 4 patches. The first of two patch is little c=
-hanges
-> > > to virtio. The third patch add APIs to easily access virtio data stru=
-cture
-> > > on PCIe Host side memory. The last one introduce a virtio-net EP devi=
-ce
-> > > function. Details are in commit respectively.
-> > >
-> > > Currently those network devices are testd using ping only. I'll add a
-> > > result of performance evaluation using iperf and etc to the future ve=
-rsion
-> > > of this patchset.
-> > >
-> > > Shunsuke Mie (4):
-> > >   virtio_pci: add a definition of queue flag in ISR
-> > >   virtio_ring: remove const from vring getter
-> > >   PCI: endpoint: Introduce virtio library for EP functions
-> > >   PCI: endpoint: function: Add EP function driver to provide virtio n=
-et
-> > >     device
-> > >
-> > >  drivers/pci/endpoint/Kconfig                  |   7 +
-> > >  drivers/pci/endpoint/Makefile                 |   1 +
-> > >  drivers/pci/endpoint/functions/Kconfig        |  12 +
-> > >  drivers/pci/endpoint/functions/Makefile       |   1 +
-> > >  .../pci/endpoint/functions/pci-epf-vnet-ep.c  | 343 ++++++++++
-> > >  .../pci/endpoint/functions/pci-epf-vnet-rc.c  | 635
-> ++++++++++++++++++
-> > >  drivers/pci/endpoint/functions/pci-epf-vnet.c | 387 +++++++++++
-> > >  drivers/pci/endpoint/functions/pci-epf-vnet.h |  62 ++
-> > >  drivers/pci/endpoint/pci-epf-virtio.c         | 113 ++++
-> > >  drivers/virtio/virtio_ring.c                  |   2 +-
-> > >  include/linux/pci-epf-virtio.h                |  25 +
-> > >  include/linux/virtio.h                        |   2 +-
-> > >  include/uapi/linux/virtio_pci.h               |   2 +
-> > >  13 files changed, 1590 insertions(+), 2 deletions(-)
-> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-ep.c
-> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-rc.c
-> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.c
-> > >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.h
-> > >  create mode 100644 drivers/pci/endpoint/pci-epf-virtio.c
-> > >  create mode 100644 include/linux/pci-epf-virtio.h
-> > >
-> > > --
-> > > 2.25.1
-> >
-> Best,
-> Shunsuke
+>=20
+> Thanks,
+> Alok
+>=20
+
