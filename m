@@ -2,120 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9032868E166
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 20:46:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70C4768E16E
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 20:48:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbjBGTp4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 14:45:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
+        id S231923AbjBGTsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 14:48:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjBGTpz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 14:45:55 -0500
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2088.outbound.protection.outlook.com [40.107.21.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA493BD8A;
-        Tue,  7 Feb 2023 11:45:53 -0800 (PST)
+        with ESMTP id S229640AbjBGTsL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 14:48:11 -0500
+Received: from BN6PR00CU002-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11021021.outbound.protection.outlook.com [52.101.57.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4DEA22016;
+        Tue,  7 Feb 2023 11:48:09 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OAdJyuvAERh6F+gPSk4wbgi5ksCcVkBc2OmDehDI3sKVX1u1OODAB+7ValQLGceGo0VhJn0MTBOhIFDs215pXJ48kPiyD/XPNj1eaSHUlqqhDk9GO1jbnpcD4zpIHJpPSqYXEVJdn2vW93H/niGXLJAIEmO3WO1jZVwdD+Cmgw9KWU/2a+2e4obAirVq2idlU1KKeM3K/+XRBGjgjAkZFXZJMlyGNJZCjuVC+ZvczlZP5GEzPzKS61wy0+5VAxM4J7Zo383OqRqWw65Ql6nSfIbt0OWwnDAFMGWU9td1zkCsPXNrCBQQ6SXAUvqAqc3MYvakQFlRsTYHSKzkFDy9Ug==
+ b=dR8VhauMsEf8hH33fJl4SMSudjzBEZ6j8e5+NTwalmjb0BNasvTa949mH9UvowAq67PL0R4wfH2uzyGAnFNdVh/jAyH67/KXlqhvTF+SM+tFSqbmDjtUmxY7eqQFQ19gwIrc8z0AwItouiVXVJrIOZjXURjudQOsnUBKTrllx59CGchCYyy/+qOmlqe5Sxxhr03n1sbvtJTrj9FLQ9OcIYyXAZuBPPCEtFYdYb5UwQEnk1L7S34MhP2CdqutvIYHq2tu7L0Md69NTr04f269pazczYihTHFQT3aMiOx53noVyNh0y3QHkNYCxVC44Eye7rIMEacfVETZsw54xag63w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qOA1C9qzBWIVM+eKFmW23eB/BzDI1Hn9aQVl2ZGRKuI=;
- b=kr2J/YoVOVjfAZousRH6fprV8BkCNdydMZMeHodPuisnT08NPzBGQ79SCgosU08LHVQDh+VVP5Ys9PPC3OdJYsJjvbBRSRD3hLq5SE/5/jDKufvwh+qq6EjNwfWGsCM+2s/1rNDPU1nCmh47hkFxFOCkwXfxeOt8N0dOWdef+Nd4oyArUqSG9YHnmWY74ARsWwC5oNdzArT5Lcyj8itKEBCeeHzMD5h447+xBLPizEEVdXam97zvT7YMzCwoofkhFLZYenkmbB2C9hHqnUIajOhk7P04bf7siyaI0XD0kLaAobMKgOGPCmqB/zOACOmsFuVJ7e/V4DyTY/AY4DjQ7w==
+ bh=trHQTW68aFqGFKPycJercF34RXNMX7lCzs1j04/gGT4=;
+ b=EUUKDDTPjK0FvYOwQQ0OBjxd4vXjqSt1ODVSjVoKTJ42PlgHz0dgxbzhDc1N5mPYFw/cJ3NK98c0v3BTXMvWePezNcPc8pJFVgNLiTiMjczYA8LmiwwSz339GIj4aD6nVHwfgkx0WWCmx+KGlPgVE3SbvpZ92j7ruRTSkKDLHusoN2yx35ssybktQzFW8x0YxprowdrMWLtnlyARacozf8Fx11I5v8c/UoI/dIxpe+rttXi6wdy/EujHSIykg3WATSFlhk610X3CVVt3gv49oExNT2B4E5hhLKvxL7LjIWRIgpe6Upjv5BQKFY5+oB0ys+D8E770oiTMkQymuZhwUA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qOA1C9qzBWIVM+eKFmW23eB/BzDI1Hn9aQVl2ZGRKuI=;
- b=bNVg1PCIJk6/Vyhm5S1EpmaGHjkvRwT/VRBsm9HQhEiX1PpDxky4K29ySfoBgjn2Pza3OT0AxNQRAx7/jfEh84Ql7VITlHvdAJEkX2VnTH1bXnM/9bXq4j+QSoeAjHC3u/9PEDQx5R7fIFNV4dV1fJd9J0TpQOKbN9P3awbAZvQ=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
- by VI1PR04MB6925.eurprd04.prod.outlook.com (2603:10a6:803:135::11) with
+ bh=trHQTW68aFqGFKPycJercF34RXNMX7lCzs1j04/gGT4=;
+ b=IJWT8vPCtLVsGf1QQMlws3HN+JwFmxquXlyWDo6odvwi6/yLXEtee3zxp4Qq7cblhYSQrVZe+DHOAoO8gJome6iYmBAYNKXOdF8C1HQgZ6LcUU8ZfG8O9oT2GksMHbQJxap0/4mcKBxreXE0oTCprveWIRzm/YazgWU5KrVutMA=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by DS7PR21MB3340.namprd21.prod.outlook.com (2603:10b6:8:7f::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6064.36; Tue, 7 Feb
- 2023 19:45:51 +0000
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::ca48:3816:f0b6:3fcd]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::ca48:3816:f0b6:3fcd%6]) with mapi id 15.20.6064.034; Tue, 7 Feb 2023
- 19:45:50 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     mie@igel.co.jp, imx@lists.linux.dev
-Cc:     Frank.Li@nxp.com, bhelgaas@google.com, jasowang@redhat.com,
-        jdmason@kudzu.us, kishon@kernel.org, kw@linux.com,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lpieralisi@kernel.org, mani@kernel.org, mst@redhat.com,
-        renzhijie2@huawei.com, taki@igel.co.jp,
-        virtualization@lists.linux-foundation.org
-Subject: PCIe RC\EP virtio rdma solution discussion.
-Date:   Tue,  7 Feb 2023 14:45:27 -0500
-Message-Id: <20230207194527.4071169-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SJ0PR03CA0022.namprd03.prod.outlook.com
- (2603:10b6:a03:33a::27) To HE1PR0401MB2331.eurprd04.prod.outlook.com
- (2603:10a6:3:24::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.1; Tue, 7 Feb
+ 2023 19:48:07 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::55a1:c339:a0fb:6bbf]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::55a1:c339:a0fb:6bbf%8]) with mapi id 15.20.6111.002; Tue, 7 Feb 2023
+ 19:48:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: RE: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Thread-Topic: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Thread-Index: AQHZJs7d1RPl+inmE0Kn2DbFJZ3EJa6nyiwAgAAUafCAB237AIAL8mwQgAhWY4CAAGgMUIAACvuAgAACa5A=
+Date:   Tue, 7 Feb 2023 19:48:06 +0000
+Message-ID: <BYAPR21MB1688608129815E4F90B9CAA3D7DB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+ <Y8r2TjW/R3jymmqT@zn.tnic>
+ <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y9FC7Dpzr5Uge/Mi@zn.tnic>
+ <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+JG9+zdSwZlz6FU@zn.tnic>
+ <BYAPR21MB1688A80B91CC4957D938191ED7DB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+KndbrS1/1i0IFd@zn.tnic>
+In-Reply-To: <Y+KndbrS1/1i0IFd@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=28683558-a762-444d-ade7-bb3e7b108450;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-07T19:41:48Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS7PR21MB3340:EE_
+x-ms-office365-filtering-correlation-id: 8f75a37d-7287-4f45-add6-08db09443bb7
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: WoFmhY8FCTC66rX3mpaI51n4OvPdN4jLg18lUvaSMrcy27rwNGvwTvor1ofzZpB1Z0Judxe4Ba/nyY6w1d1eizOlV73tmhC+8SiXI0rASJj6p03t1asItdcYS25G3b7a1bSho4P6NZDE6VDnAqia7duGOAUiLkZyVhDYEfyK5EWAN3RbwrqKhtsq5k6+PWmoSmmH3BnrgxWn3a0H6rqio1TsHGVpwPIDOvT6aSr0GHZptYXZkTGwpIWmm2s/Q8stdmwgLx872nlO/+Fo6TryWvOGHKMe7uUVVPnXec+Y4ULQ7UFBVmmwzdyzvxuniNsGE/CN5BWQwCtFu7Fv0BWSWTchQlHwGbP8MCiDbvNGEBXDkAxv9QXhWopuk7K46wVkEqwnabW51mo49sggicmP1i7aFW+p/ry5nFw+zu8UEg823xHY1N9ZFU/QN2APMOBNsxuQlbs0eqA06QLhJJm3UyIHozeRntci+31i2NT06kDOH1MAW7/nD4ohdPxn8BYb1sJXja4efSMuGDns0mSZzOm4GbzlNpE8PBKsal2tkcaf3NKhRVaEqAh6uUw0zSfsHskKCP8L2G70Y37QQHiRoTaBGQlBshM+SA6LU9+7PVmjGMpwkp5/+lNmLQmSIdCbV0+yetGZtw8g1YXrSam/Nfn9SF3cssMGyjyq9AfMRB8wL63nM55M46FsWb7+Bw61lwGbYN/pXeJwc6/N0gDnTbPX5tT0y3djY1X7t/kG08LrdFJGVAbNq9DyFWDj/SOJ
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(451199018)(66556008)(71200400001)(38070700005)(86362001)(64756008)(8676002)(6916009)(66946007)(66446008)(66476007)(38100700002)(82950400001)(4326008)(10290500003)(33656002)(41300700001)(76116006)(82960400001)(122000001)(316002)(54906003)(7406005)(8936002)(55016003)(4744005)(7416002)(5660300002)(52536014)(9686003)(26005)(7696005)(186003)(6506007)(2906002)(478600001)(8990500004)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Kwy3YVmQFDkyzzrxuOxWnrYpNaJ1weKGZttfuA+LglXOkcLAyDNt3agrJrRt?=
+ =?us-ascii?Q?aHXxJtp1kGSHlRcMHm5JRvo6J0R8SrZQQHBf/da1aNe+ahkdgwLCQQYdrS05?=
+ =?us-ascii?Q?il+qi/bNZoVz8lcO3Olji0MiNVdRPUt+zypTU+gwC/a/11rsmXFmu/qSsdsH?=
+ =?us-ascii?Q?PQ/hdaDIvBznE5WHbqMofq5WULidzs1jtp/SweDH0LmB+dR+Zl5RfKBk8Zxm?=
+ =?us-ascii?Q?eETDjPJhRYwPMl6gO3KoYE0UR1yTW/XNuY5oy8QeD9sh7Y2Cl/2GXW1LXZ+i?=
+ =?us-ascii?Q?+GskgsyZnSYyO8JKdPzunKKpeIQyrieA0e7HyGczlo3uFDn6U8IaqcnNmUVo?=
+ =?us-ascii?Q?zGKwrh9kDwOkoX12NmePT1rSp2IKeOzXvvOP1GWgyGTj9czQEPvT60S3OLhd?=
+ =?us-ascii?Q?QAT311Uc1lSwcMWfChIAqiRgWKcoDg0IlTi5X/yNWE+9f/FQakOCnIDee7s+?=
+ =?us-ascii?Q?JkNRW6nL3Gn8RZnb5eBuDmd9bh5EEQJaArF2mxZ/U2DKV7lttNgfllk3WL4B?=
+ =?us-ascii?Q?IRVhLwT90sNczVoQL95VFMhYeXfH6moAr+wFLPGoPQGUVweKtTr1FatLKi2h?=
+ =?us-ascii?Q?wvbhZ9R4bi5YjvuCrKVkPxqb9dv6Yz1jpDyR903nIkNcFGuKw0f8R6Ka2Sfj?=
+ =?us-ascii?Q?N56M/XcT6w8P/5E4XtQpjoJ7t/z8NAHjkncCXHDYZyY523rYH465h6xwXmxC?=
+ =?us-ascii?Q?e9iEKwvmt2ALE1dLUPCGsmAR6ZIkzVFfB7UDqaLZV0DJdzwC/5x9uEetn186?=
+ =?us-ascii?Q?F630umPDcGTL/1mCVUPI7qgDrL200+26YWpA/sJ6gcKEWdeFD2mmeIYXzrff?=
+ =?us-ascii?Q?omx8giaPsWp/iige6jsUEw+0boNETGE6EJeSetNRuyNhbeTitQtIy88+h7eN?=
+ =?us-ascii?Q?9q3it60eyj+TYYS4PyxVk23XfgsS60BlQ877u8liIiEUfMZr3ffyP4DXvv6d?=
+ =?us-ascii?Q?DINGoUn4K0aUP9JFcsQsNBn75H1DXPMxA5OM5mIyS9vxjgdnnupRi258yPHp?=
+ =?us-ascii?Q?OFa5iPxlk6ZC8Y32i7Er+LEdQcti1ockFi1Zk/nvMnKh4zLsOXX0dgpYq1wZ?=
+ =?us-ascii?Q?C7zfygIZR+xn4igcJjxPHILjwpuYK8X8KGu/FLpQ2i9jsCldYRh+m9CKZ1qy?=
+ =?us-ascii?Q?JtpDyAi3YsdIx0Tru1nukSyYwFh27AWLchMla/BJHWVEUfZ9JFLVtogamdvZ?=
+ =?us-ascii?Q?NMMybsl+RD+L9J6IkFxZrnE4zQBHgDz09uZj7GyEVexmgbzwpjb/t3ZBbawQ?=
+ =?us-ascii?Q?KtNEexxbYj+lO+PJLmHRLrNtt82n8gKEGI4OB3laxnoycRLmQVC5YY1nMF4Q?=
+ =?us-ascii?Q?f5tgJQnRkdLqdeogAuFSSA0/Hk4iNKc1KsbAugW0OitICEoTLOqoLkqR00hE?=
+ =?us-ascii?Q?zWvU0YI/KhPGeibVdnjDjug+VvvjFd0jqM4WV4O9KqvWfUHrVN4KbLVzCJpC?=
+ =?us-ascii?Q?vkGSxuonvOFEq2JSKcxXhxS25YuIzQGRRsh18gdqgtd41lHsdpm5TWzsvqsi?=
+ =?us-ascii?Q?783Y+1O9OkBQs9DhYxIZfJD2g6u31eOnsdV9AGxDYiC1HqowjCbjOEWkFiwy?=
+ =?us-ascii?Q?wFWh5Dr8WMuVwk1sRF3gpm7OYU5u21tJQgfY3IGt+Y3sko0z165wUW1dXUo3?=
+ =?us-ascii?Q?mg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HE1PR0401MB2331:EE_|VI1PR04MB6925:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3875e180-6c14-4e55-5362-08db0943ea88
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xeevlhRFxpIwmE1A6Vqc6v3LbNoG3MPL2Sxkusn0O+aIFJ6UQC8tk8XGVeS3LA3dT8ahmoPigWvmf6x5gzTvrGSDDDlz/ov3HtMdQFZPC7TViWqyOSXfLP+nXxUptygE/L+PEG4+PFwcUmWtMsYM1tfRKLjQRX4xparEvwS9/w83SI/wmrzmcGZ7SrMyLR7cJO3KvCK7WWV8YEODUd+XMEXGy85Al0EzSSCvYAuZWPuOc4QLDBmvdiM2uNp5xW2mnaC6l4PW0IQhvrt2IhIu1nTQaSg5sdUfKO0ADBIXRybj+mDyY9W9xcE63e3VkgIJd0NOQoN7Ev4l1y1A06Ra7FIAN40bWojH0hprGkATUCC6NI2lp8PsbwCcz03PVGpFlr+O+yy1KW0bVzU+pTtFMxAbwHH6oPMffffXfkgfcx3M9zCZ4/dsd5Cw9bTIy5LZaBCsr3gNZM31v7Dr00K4fWsOf6hmfdUt3+KK+6B9E2wB9QNMAEAZvbnVTJ6wjzgufM+Zo0m/SjzVQfE0HTgHqBlb4IOoIDmQRBJEnHALQVzQCg8uVPjZtUd5UirEVt6Mdwfiz7V5C0R3+MKv3Aw/qlz39gHmkqQ6EVDOwyxwBhp1nMve2AJjMcm+aKZ50FCIMJOuUQCu2Yo3+ofRA9Wz2QBk5uBfoBGR2bNspYBT/iE9d5fjm0ulDjppLl2gWDj5wUDne6h3/LlFBlunv1L97JzZ2zOmooZi/VDFj5Bm6hROTRGkbHWdWJd1/Z1pwJ97HL0wtmZsBw2hAtmBcz9+oA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(451199018)(478600001)(83380400001)(966005)(6666004)(6486002)(52116002)(6512007)(2616005)(26005)(1076003)(186003)(6506007)(36756003)(86362001)(66556008)(38350700002)(8936002)(66946007)(5660300002)(66476007)(41300700001)(38100700002)(2906002)(7416002)(316002)(8676002)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?SmFxalZFSjYwenJNK0ZDQUhBWlBvb2tReGxnMHkzbkVibmo5emI0bWJTS05a?=
- =?utf-8?B?N0xmc2twMEpBOHRBOWI4UVlON0Fua2NQVTZ6dHNNRnVOTUJVRGtSVXdGejJv?=
- =?utf-8?B?OUFhRUtWOGhJZnJYMTlOSzdYVFdMTFF0RGtyU1dnbXFmMTMvdTMwbmY2dVpL?=
- =?utf-8?B?YlM5dVNZMkFRS3NYT1RTNlZ5WlJBVE9RVSsrQ2k1YUJqSkRrZ2lNMlNxaWR3?=
- =?utf-8?B?MTd0UnhLZzQxb0hvUHFaVW9XQXpjZHhnUEhuM2hTT2JJTDEwY2JZMmR1dW5u?=
- =?utf-8?B?MTJKUm5QSXo1Kzlyb0RuS0x3dlh5OEdQREdPYVFqQUtWL25lYzQ2cjdxMXMw?=
- =?utf-8?B?WWhGWEZud3dRSkFXeFE3VDNYY1VjOGRZV1I5a2w2dTFzNjlnZk40eUZNRWtm?=
- =?utf-8?B?SW5CM1BkRGxuMUplSzZHYVllcE1icHROWmFoMWdleW5SSjJWbjYxZHJRUGl6?=
- =?utf-8?B?SmlQb1FobXIrcnh2LzlsUmhqNDRBeGp6SHhsWWljYU9TS29nL0hxRGpydzcy?=
- =?utf-8?B?OTJXclcwZ3V6MHlIRTAvQU5LSFdWUHNHdUtudHVuSXp2cE1GVWE4TFpiTFJT?=
- =?utf-8?B?eTJPeExpTVNoVmN4UmsyelhUaElkQkJzUkFwaUp3S0ZuZjcwUUc0bGE2S3Fl?=
- =?utf-8?B?bElmRE9zVE9XMmF4RXgxcGEvR0RTMXkrd2JpbTNqb1lxc3hnQXVMZkthVytk?=
- =?utf-8?B?U1FOa0Q5OWQ2S1ZYdyszdEFXNDhnV2UzanNxN2RXOE1mdEtFWnlHNnVkbW56?=
- =?utf-8?B?NkNEUTdDUkZDeWVRRDFHSjg0Z2pxSjZBWGNUc21vQkYxdnpHeGRhbC92Q1Bl?=
- =?utf-8?B?a2xwWnlkNjJMcHM2a3ZVOUxPS0lUcTBTVjltZVBlNVB6UHVkOWwxWS8wRFQz?=
- =?utf-8?B?cytNK2FiNWFVWWhSRDY3MlRiMytTR3AyZVFSYjF1eTQxQWFwU1RMS25MeVh3?=
- =?utf-8?B?Mk8vYko4eThNSmlpamdlNVhCT0FmdHBpRWwwcEdhRkdma1gwa1FKbGJBdGFh?=
- =?utf-8?B?RTMvcCt3N1VWSVZhSzY4emkwYi9yYkx5ZWtyY0YyVzNCMTMwUncxbnZyT3Zv?=
- =?utf-8?B?Sk1vN3ZPNEN6YmtmS1d3UlU2YmpKY3N2ZHhXaUEyZnZSdnBTMHJqOEpHMHNy?=
- =?utf-8?B?RUFMUW5EOXZ6aEl6Y0RGeGEyanZIVHdRaFJoRFgvSEF5MTg4VWJYdTNtYWls?=
- =?utf-8?B?Skx4bnNvcHJJNURjcnZhZ3FDMEZYdmQ5YkhGdmt3V241VTFrK0pEbFdqWnB5?=
- =?utf-8?B?L3hqV1JuTFkxWWE1aVRtRTV5Y01LNytmSWxyTkhXRE40dUw0RzQrK3cySWU2?=
- =?utf-8?B?bDZ4VGJxU2dqYkxRdytOYlV1OXdGTnR6MDVSWHBQa01RVjUvTVpQOGFUWGxp?=
- =?utf-8?B?ZU1QZnFHMGhJK2tnMUF0bUYzWVpCaldRVzNSM0J2ZTh2SlZJektBelZ3VzFW?=
- =?utf-8?B?MVNwMUl0c2trb1djMXAzMmVpMlZCTEhLbVh3ekl3WmYxT3lpR1MzMjUxTHJl?=
- =?utf-8?B?U0NEM3JyNnQzRnpsSFd6U2JzUTBCbXlUMWRvK2dVSVV5aVJ6SHFyR0YrT3ZQ?=
- =?utf-8?B?S2ZjbURZalJNak16WW9VYXBnWXRuV3ZCQnFzSHhHcmIrdkdmTkxyZ3N6ZEJQ?=
- =?utf-8?B?amt1N1hBSW1CYjJGbGMrYWdqdlRJMEQ1eXBTUytCWXpYSkNERVI5ekxRVzc5?=
- =?utf-8?B?U1NzTmEvNmNtVnl4Y2ExWFJZK1ZJNlZWNmJuWDhyVmtZeEtRRFNhcllRZExm?=
- =?utf-8?B?K1pIaDAxdSthSkw1WGxabVFOa2dBanFiUDA0ZW5IalNwUmU3YjhObytkRWJQ?=
- =?utf-8?B?Wmt4TE00cW5LUEZGdFdMZmJScXhkc3UvWlpobmhWV3paWXlnbWVQNlIvUDZB?=
- =?utf-8?B?S0RhVmRBWlNKSnFvd3ZOSGloNnJBS1BDNDhMTzdlTFhyVEtHT1FnK21iU0dx?=
- =?utf-8?B?eG1xRXdhRzhXcWxGZ0w0TXZ3cFNydGdwYnJEQ2pmZm8waXRrb0lqcGlXVy8w?=
- =?utf-8?B?VytIU3JmbHhZSU1lRnk1UWVWM3BqMFJqNUdKaFZMMTBKTkpBZVFGdWRRTFgw?=
- =?utf-8?B?dDFaSUZidHl3WUVuTCt3RTFVTk5BaUJleXdFZ2ZKZG5YSGpmSWtzMmJNTnlO?=
- =?utf-8?Q?1PfgN3f8ELSCZnaMnuZlmmCHL?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3875e180-6c14-4e55-5362-08db0943ea88
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
+X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2023 19:45:50.7349
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8f75a37d-7287-4f45-add6-08db09443bb7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2023 19:48:06.7220
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +gtZ0yATXITAdeaVoMZLbKsoGoOOJi4RrMVZUlv2f9qPAGBm6sClOrej7JyrEsj3bP+T23crFI8D1LiC3ZlvZQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6925
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: l5/YH+Mnf/3uJxDockhbTPCV9bMYJ+tBnb/F4SBlc+QiQw7nXW16lp4Qq4mtinisQGbGXGZUn+7Mxp/v4EYrmf8Fwj0JYv4A+RT4XlV17gY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3340
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -123,89 +163,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Frank Li <Frank.li@nxp.com>
+From: Borislav Petkov <bp@alien8.de> Sent: Tuesday, February 7, 2023 11:33 =
+AM
+>=20
+> On Tue, Feb 07, 2023 at 07:01:25PM +0000, Michael Kelley (LINUX) wrote:
+> > Unless there are objections, I'll go with CC_ATTR_PARAVISOR_DEVICES,
+>=20
+> What does "DEVICES" mean in this context?
+>=20
+> You need to think about !virt people too who are already confused by the
+> word "paravisor". :-)
+>=20
 
-Recently more and more people are interested in PCI RC and EP connection,
-especially network usage cases. I upstreamed a vntb solution last year. 
-But the transfer speed is not good enough. I initialized a discussion 
-at https://lore.kernel.org/imx/d098a631-9930-26d3-48f3-8f95386c8e50@ti.com/T/#t
- 
-  ┌─────────────────────────────────┐   ┌──────────────┐
-  │                                 │   │              │
-  │                                 │   │              │
-  │   VirtQueue             RX      │   │  VirtQueue   │
-  │     TX                 ┌──┐     │   │    TX        │
-  │  ┌─────────┐           │  │     │   │ ┌─────────┐  │
-  │  │ SRC LEN ├─────┐  ┌──┤  │◄────┼───┼─┤ SRC LEN │  │
-  │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
-  │  │         │     │  │  │  │     │   │ │         │  │
-  │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
-  │  │         │     │  │  │  │     │   │ │         │  │
-  │  └─────────┘     │  │  └──┘     │   │ └─────────┘  │
-  │                  │  │           │   │              │
-  │     RX       ┌───┼──┘   TX      │   │    RX        │
-  │  ┌─────────┐ │   │     ┌──┐     │   │ ┌─────────┐  │
-  │  │         │◄┘   └────►│  ├─────┼───┼─┤         │  │
-  │  ├─────────┤           │  │     │   │ ├─────────┤  │
-  │  │         │           │  │     │   │ │         │  │
-  │  ├─────────┤           │  │     │   │ ├─────────┤  │
-  │  │         │           │  │     │   │ │         │  │
-  │  └─────────┘           │  │     │   │ └─────────┘  │
-  │   virtio_net           └──┘     │   │ virtio_net   │
-  │  Virtual PCI BUS   EDMA Queue   │   │              │
-  ├─────────────────────────────────┤   │              │
-  │  PCI EP Controller with eDMA    │   │  PCI Host    │
-  └─────────────────────────────────┘   └──────────────┘
+Maybe I misunderstood your previous comment about "Either 1".   We can
+avoid "PARAVISOR" entirely by going with two attributes:
 
-Basic idea is
-	1.	Both EP and host probe virtio_net driver
-	2.	There are two queues,  one is the EP side(EQ),  the other is the Host side. 
-	3.	EP side epf driver map Host side’s queue into EP’s space. Called HQ.
-	4.	One working thread 
-	5.	pick one TX from EQ and RX from HQ, combine and generate EDMA requests, 
-and put into the DMA TX queue.
-	6.	Pick one RX from EQ and TX from HQ, combine and generate EDMA requests,
-and put into the DMA RX queue. 
-	7.	EDMA done irq will mark related item in EP and HQ finished.
+CC_ATTR_ACCESS_IOAPIC_ENCRYPTED
+CC_ATTR_ACCESS_TPM_ENCRYPTED
 
-The whole transfer is zero copied and uses a DMA queue.
+These are much more specific, and relatively short, and having two allows
+decoupling the handling of the IO-APIC and TPM.  Combining into the single
 
-The Shunsuke Mie implemented the above idea. 
- https://lore.kernel.org/linux-pci/CANXvt5q_qgLuAfF7dxxrqUirT_Ld4B=POCq8JcB9uPRvCGDiKg@mail.gmail.com/T/#t
+CC_ATTR_ACCESS_IOAPIC_AND_TPM_ENCRYPTED
 
+also works but is longer.
 
-Similar solution posted at 2019, except use memcpy from/to PCI EP map windows. 
-Using DMA should be simpler because EDMA can access the whole HOST\EP side memory space. 
-https://lore.kernel.org/linux-pci/9f8e596f-b601-7f97-a98a-111763f966d1@ti.com/T/
+Capturing the full meaning in the string names is probably impossible.
+Referring to the comment for the definition will be required for a full
+understanding.
 
-Solution 1 (Based on shunsuke):
-
-Both EP and Host side use virtio.
-Using EDMA to simplify data transfer and improve transfer speed.
-RDMA implement based on RoCE
-- proposal: https://lore.kernel.org/all/20220511095900.343-1-xieyongji@bytedance.com/T/
-- presentation on kvm forum: https://youtu.be/Qrhv6hC_YK4
-
-Solution 2(2020, Kishon)
-
-Previous https://lore.kernel.org/linux-pci/20200702082143.25259-1-kishon@ti.com/
-EP side use vhost, RC side use virtio.
-I don’t think anyone works on this thread now.
-If using eDMA, it needs both sides to have a transfer queue. 
-I don't know how to easily implement it on the vhost side. 
-
-Solution 3(I am working on)
-
-Implement infiniband rdma driver at both EP and RC side. 
-EP side build EDMA hardware queue based on EP/RC side’s send and receive
-queue and when eDMA finished, write status to complete queue for both EP/RC 
-side. Use ipoib implement network transfer.
-
-
-The whole upstream effort is quite huge for these. I don’t want to waste
-time and efforts because direction is wrong. 
-
-I think Solution 1 is an easy path.
+Michael
 
 
 
