@@ -2,158 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B8D468D3E8
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 11:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E89FF68D401
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Feb 2023 11:24:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231429AbjBGKRf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 05:17:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47214 "EHLO
+        id S230193AbjBGKYt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Feb 2023 05:24:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbjBGKR1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 05:17:27 -0500
-Received: from mail-vk1-xa2c.google.com (mail-vk1-xa2c.google.com [IPv6:2607:f8b0:4864:20::a2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77F4323138
-        for <linux-pci@vger.kernel.org>; Tue,  7 Feb 2023 02:17:26 -0800 (PST)
-Received: by mail-vk1-xa2c.google.com with SMTP id 9so397550vkq.9
-        for <linux-pci@vger.kernel.org>; Tue, 07 Feb 2023 02:17:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bPrtilAJKVUhxbrBamxio2CjQmx+CrJRcxuPGVzs45k=;
-        b=pssdcCwvP27quF2aTGuKZzmApPpisR2l632+QyiiP68had1rAPT5eRROk7FWjFJeMc
-         uwMDwWP4rUj9cZ5XQGiLH0gYdVNev8DBDLvN4qdw6blaN2MJoI7V/e2A+Xho2jMqxPdf
-         akpeQAPksniPJOz59KARWsf0U92ZvolJ44lrRt1/taSFAnlqNgyiAQhk7J2d2/a4fwTj
-         B4teXgtKIZjLSGwjeEuHWJZTzgxjiZfGi1v1elusTIGFRZnRXGLplEkIYR7J5ALqll8d
-         zXe5kS88lmBHMR3AK58Q3l1IRHFghxIHavMnNoP8+T/yyVzLbvAq3uLqISme4aFMwfas
-         KwOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bPrtilAJKVUhxbrBamxio2CjQmx+CrJRcxuPGVzs45k=;
-        b=nRCUpGKAE7HcRLcwIU0lpBFQ7Wjl63P1JbPBPzxg4bkQhhn5l8WH4zHb8IdCMGB/om
-         sZrfL5x97cGnMkVCDBr7ZOzWfY5TDladZUKH3m5gXceyV1XvjICQ+a0XhOTyH9p4EIWY
-         xD4i34WnA33zRFM0Z55JzW38pX0vpkuNVEYHz0VwErTMtlsmgjCIu3oucsfiH6NapjjB
-         nWX682WIvN8P+y+bgNTpR7SEq5yg4nJlQjePAcRUlSUm/Sdm0rGkv8+Ow4oJuBZIKcxy
-         evbmwuOzKKZzbUo7c9rWMUqDGcsboSmeHxgGhfKSe55Rsh5AWBDyK6wZ3HEWEDastjtA
-         iLYg==
-X-Gm-Message-State: AO0yUKVWswCXazR1RfFrbykMtgilRYRYwwTIhYFXrCK+dgcKw+P+L+H7
-        s1fWcySdB8/aSxWiyHhlyKZjYBNYQKcoLAMmQNxXEw==
-X-Google-Smtp-Source: AK7set+9OKX9NitD6L8UNyZEvBjr/8igyirMEC8nb/njn0S4M5nhl04teC5aADC0Ic8fO43SlijMven9RIQ74gvPu1A=
-X-Received: by 2002:a05:6122:5ab:b0:3ea:135:e0bd with SMTP id
- w11-20020a05612205ab00b003ea0135e0bdmr350219vko.21.1675765045579; Tue, 07 Feb
- 2023 02:17:25 -0800 (PST)
+        with ESMTP id S230447AbjBGKYs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 05:24:48 -0500
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F5D14E91;
+        Tue,  7 Feb 2023 02:24:44 -0800 (PST)
+X-QQ-mid: bizesmtp74t1675765469t046cmuq
+Received: from localhost.localdomain ( [183.129.236.74])
+        by bizesmtp.qq.com (ESMTP) with 
+        id ; Tue, 07 Feb 2023 18:24:21 +0800 (CST)
+X-QQ-SSF: 01400000000000N0O000000A0000000
+X-QQ-FEAT: DEYZVVH8UvaUhz20yiyS4xvpoiESqoIfRbgYmzjo2Y9lp5bl4IkPZ6C+2Q58B
+        /4iromrIq872i8Mh9oT1hXH78xj7f59LDrZpCosDQbVAv2ZJTs1rIr8zn9WyGs+09cB5hKC
+        qyE0V6f1fZZohydD0gdR+K0s0i3nKCm3Y2afM0+V8SQY/+BqtZC+xWh2fsrBMKG30OIJyGh
+        qyLUl/pKIPoC6XV99ILXhqnQTKFu+BGQdWOZnH1kTWlsme5jyl2l+fM4gDIGy64VXsgQJNt
+        4mN2gdumtik6Dqd5k6oiR7nk+eZhTTs4D/uQQA4mTvnAnV9KS3c/eB/O47T396OJqRsurU2
+        5ITEhF7RywlkQtmCSZlFW/82bKAQJh4BIIGFjdxNwigs1nP3x3OUQnNPJ+LZ6N9ByY/S9xF
+        tzHEYWb1Szz/MJGuYy/InQ==
+X-QQ-GoodBg: 2
+From:   Mengyuan Lou <mengyuanlou@net-swift.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, helgaas@kernel.org,
+        Mengyuan Lou <mengyuanlou@net-swift.com>
+Subject: [PATCH] PCI: Add ACS quirk for Wangxun NICs
+Date:   Tue,  7 Feb 2023 18:24:19 +0800
+Message-Id: <20230207102419.44326-1-mengyuanlou@net-swift.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-References: <20230203100418.2981144-1-mie@igel.co.jp> <20230205050122-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20230205050122-mutt-send-email-mst@kernel.org>
-From:   Shunsuke Mie <mie@igel.co.jp>
-Date:   Tue, 7 Feb 2023 19:17:14 +0900
-Message-ID: <CANXvt5q_qgLuAfF7dxxrqUirT_Ld4B=POCq8JcB9uPRvCGDiKg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP function
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jason Wang <jasowang@redhat.com>, Frank Li <Frank.Li@nxp.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        Takanari Hayama <taki@igel.co.jp>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:net-swift.com:qybglogicsvr:qybglogicsvr1
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-2023=E5=B9=B42=E6=9C=885=E6=97=A5(=E6=97=A5) 19:02 Michael S. Tsirkin <mst@=
-redhat.com>:
->
-> On Fri, Feb 03, 2023 at 07:04:14PM +0900, Shunsuke Mie wrote:
-> > This patchset introduce a virtio-net EP device function. It provides a
-> > new option to communiate between PCIe host and endpoint over IP.
-> > Advantage of this option is that the driver fully uses a PCIe embedded =
-DMA.
-> > It is used to transport data between virtio ring directly each other. I=
-t
-> > can be expected to better throughput.
-> >
-> > To realize the function, this patchset has few changes and introduces a
-> > new APIs to PCI EP framework related to virtio. Furthermore, it device
-> > depends on the some patchtes that is discussing. Those depended patchse=
-t
-> > are following:
-> > - [PATCH 1/2] dmaengine: dw-edma: Fix to change for continuous transfer
-> > link: https://lore.kernel.org/dmaengine/20221223022608.550697-1-mie@ige=
-l.co.jp/
-> > - [RFC PATCH 0/3] Deal with alignment restriction on EP side
-> > link: https://lore.kernel.org/linux-pci/20230113090350.1103494-1-mie@ig=
-el.co.jp/
-> > - [RFC PATCH v2 0/7] Introduce a vringh accessor for IO memory
-> > link: https://lore.kernel.org/virtualization/20230202090934.549556-1-mi=
-e@igel.co.jp/
-> >
-> > About this patchset has 4 patches. The first of two patch is little cha=
-nges
-> > to virtio. The third patch add APIs to easily access virtio data struct=
-ure
-> > on PCIe Host side memory. The last one introduce a virtio-net EP device
-> > function. Details are in commit respectively.
-> >
-> > Currently those network devices are testd using ping only. I'll add a
-> > result of performance evaluation using iperf and etc to the future vers=
-ion
-> > of this patchset.
->
->
-> All this feels like it'd need a virtio spec extension but I'm not 100%
-> sure without spending much more time understanding this.
-> what do you say?
-This patch shows the virtio-net device as pcie device. Could you tell
-me what part
-of the spec are you concerned about?
+Wangxun has verified there is no peer-to-peer between functions for the
+below selection of SFxxx, RP1000 and RP2000 NICS.
+They may be multi-function device, but the hardware does not advertise
+ACS capability.
 
-> > Shunsuke Mie (4):
-> >   virtio_pci: add a definition of queue flag in ISR
-> >   virtio_ring: remove const from vring getter
-> >   PCI: endpoint: Introduce virtio library for EP functions
-> >   PCI: endpoint: function: Add EP function driver to provide virtio net
-> >     device
-> >
-> >  drivers/pci/endpoint/Kconfig                  |   7 +
-> >  drivers/pci/endpoint/Makefile                 |   1 +
-> >  drivers/pci/endpoint/functions/Kconfig        |  12 +
-> >  drivers/pci/endpoint/functions/Makefile       |   1 +
-> >  .../pci/endpoint/functions/pci-epf-vnet-ep.c  | 343 ++++++++++
-> >  .../pci/endpoint/functions/pci-epf-vnet-rc.c  | 635 ++++++++++++++++++
-> >  drivers/pci/endpoint/functions/pci-epf-vnet.c | 387 +++++++++++
-> >  drivers/pci/endpoint/functions/pci-epf-vnet.h |  62 ++
-> >  drivers/pci/endpoint/pci-epf-virtio.c         | 113 ++++
-> >  drivers/virtio/virtio_ring.c                  |   2 +-
-> >  include/linux/pci-epf-virtio.h                |  25 +
-> >  include/linux/virtio.h                        |   2 +-
-> >  include/uapi/linux/virtio_pci.h               |   2 +
-> >  13 files changed, 1590 insertions(+), 2 deletions(-)
-> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-ep.c
-> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet-rc.c
-> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.c
-> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vnet.h
-> >  create mode 100644 drivers/pci/endpoint/pci-epf-virtio.c
-> >  create mode 100644 include/linux/pci-epf-virtio.h
-> >
-> > --
-> > 2.25.1
->
+Add an ACS quirk for these devices so the functions can be in
+independent IOMMU groups.
 
-Best,
-Shunsuke
+Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
+---
+ drivers/pci/quirks.c    | 22 ++++++++++++++++++++++
+ include/linux/pci_ids.h |  2 ++
+ 2 files changed, 24 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 285acc4aaccc..13290048beda 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -4835,6 +4835,26 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
+ 		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+ }
+ 
++/*
++ * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
++ * devices, peer-to-peer transactions are not be used between the functions.
++ * So add an ACS quirk for below devices to isolate functions.
++ * SFxxx 1G NICs(em).
++ * RP1000/RP2000 10G NICs(sp).
++ */
++static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
++{
++	switch (dev->device) {
++	case 0x0100 ... 0x010F:
++	case 0x1001:
++	case 0x2001:
++		return pci_acs_ctrl_enabled(acs_flags,
++			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
++	}
++
++	return false;
++}
++
+ static const struct pci_dev_acs_enabled {
+ 	u16 vendor;
+ 	u16 device;
+@@ -4980,6 +5000,8 @@ static const struct pci_dev_acs_enabled {
+ 	{ PCI_VENDOR_ID_NXP, 0x8d9b, pci_quirk_nxp_rp_acs },
+ 	/* Zhaoxin Root/Downstream Ports */
+ 	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
++	/* Wangxun nics */
++	{ PCI_VENDOR_ID_WANGXUN, PCI_ANY_ID, pci_quirk_wangxun_nic_acs },
+ 	{ 0 }
+ };
+ 
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index b362d90eb9b0..bc8f484cdcf3 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3012,6 +3012,8 @@
+ #define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
+ #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
+ 
++#define PCI_VENDOR_ID_WANGXUN		0x8088
++
+ #define PCI_VENDOR_ID_SCALEMP		0x8686
+ #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
+ 
+-- 
+2.39.1
+
