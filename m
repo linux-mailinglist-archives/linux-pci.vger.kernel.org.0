@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F65868EE11
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 12:37:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A141D68EE15
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 12:38:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbjBHLhU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 06:37:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34188 "EHLO
+        id S231222AbjBHLiJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 06:38:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjBHLhS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 06:37:18 -0500
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B7945F52;
-        Wed,  8 Feb 2023 03:37:16 -0800 (PST)
-Received: by mail-ed1-x52f.google.com with SMTP id v13so19961593eda.11;
-        Wed, 08 Feb 2023 03:37:16 -0800 (PST)
+        with ESMTP id S230171AbjBHLiI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 06:38:08 -0500
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C4845BCC;
+        Wed,  8 Feb 2023 03:38:07 -0800 (PST)
+Received: by mail-ej1-x635.google.com with SMTP id u22so5880495ejj.10;
+        Wed, 08 Feb 2023 03:38:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H7rM1HpK4gZIplaubBndxjo7qgPO1F4IIRGIk/8punk=;
-        b=Qgk6huMhPW+u3iA6hX9Fne2XJf9OwWr9U2AliXVPCE6Vk9KEumI8ypmQ+gybTgo5Wx
-         JGIx45TTZEZDTS39/hdZUVnm2olOdftM60t7OCcZF/wDWgK+neqqlJGTuxRJgLYtkqDJ
-         USZVYg/nGfUhjmd1qEaHfRlhavhWb4un7kQOJMIQELRvvGwuR1RRogembEcylDEi0owO
-         fhHkLOI/sIMNOO2N7v4aH0+3xKZfBB2O6iHN9xDa3n+CD9SPka4Tb7fdlkPZXQqlwv1e
-         s80rUl/heKD8sDsV6yhNEDUbRPYzy4E0PgPMR7jEuZgbysGcz89Uzqrr9qxHBKDFfzZW
-         ecBw==
+        bh=ci8JTMReAjFCcT3SLQC5hr52c0hQKJY/NV1yhOMx0uY=;
+        b=J6O6AOjwv+pmFs0XpFc/Co4+WJWT3sLJgcMISQAw/FGJ9l0rkz/FyHLEU2RAjwEwGQ
+         b2wdbD7ysoanIonxJ+8JUDIHzAPNnI9CaI7KOkt3mDeuKcOpfRW8bZEpDEWNvsERSLUK
+         p8WoCJMAaV57/5/IrqcvIreu29rxy80vFNpKAYfZzEtZ/OduHXSiClLxtgECdk/6HWP8
+         SPbGcUYbNOP1N79TwJjj4yDlKwmtZlRGkTXL5KCmzTUIBjLXBCLCekZVBmvan7QBumCw
+         UjIRNoA0TyeFWA/TFN1Bp1dyEVmKLnyEnRHw8F8vdguqv3sQBLekDp6OehjIPmJzQn/h
+         kTFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=user-agent:in-reply-to:content-disposition:mime-version:references
          :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H7rM1HpK4gZIplaubBndxjo7qgPO1F4IIRGIk/8punk=;
-        b=R+iVj0j4wbv0l0mDSB/PQ/mUYpnEcAV+TsvxDwnh/PZGscGNg/cSIVWNEfcnntPe59
-         EixN7SEn7loie5ks1pl1xagFFehjvLlJOF5Y0zv05E+wLzGTc7DS1WnKtbUdbYBoyKiQ
-         ioS3pbsbXqoNggd+8bGG9WQU7aHTqTYSL/JR78dFv6riVNXpJu3YpQ9YZGgoOVdYCgdB
-         xW14SC4ycW/X8qXjldEX6l9ntG/ecgafSoXmos4hIIlxc6HaYFjlgaGSlmBFEjmv0lJ2
-         JcOtqt0dTUcri9+o4DeBpf6gQXOERmdZIcEuwHENkuWBXOv27OKe49y4/1/UWo6zpl/s
-         N6lQ==
-X-Gm-Message-State: AO0yUKXMmqWR+ocoYAZsA5Mc2QzHUqZ6kaLSLmXX32qqyWbl9yT7GoYu
-        2qQd4W157TrhDWTnFcQ6I3w=
-X-Google-Smtp-Source: AK7set9kHhg8iyB0DxRAXAEc44CXnaCMcnULvNey9nytql+VC0AoWkQpPxcOBWGi47a19twA1l932g==
-X-Received: by 2002:a50:ccd4:0:b0:4aa:9f59:b6a9 with SMTP id b20-20020a50ccd4000000b004aa9f59b6a9mr7063169edj.12.1675856234949;
-        Wed, 08 Feb 2023 03:37:14 -0800 (PST)
+        bh=ci8JTMReAjFCcT3SLQC5hr52c0hQKJY/NV1yhOMx0uY=;
+        b=EsCyE/CAbEWjNJqudyhZbkY9Lzb2IsKmXPWVpX4nsSMTVORvJzhIkHfnDYuW8ZO6+v
+         CRi+/3kklN69PKTPnUipL+9sSINW52rk+SZ7KDcIpK41wx/NqSceo3Lbt9XDvLBbtYGe
+         oasBfl762dBi5As3mRnJ66aCo2BY+lbzO033+4LPx5Ne5z830Y+0AQsEFB+V8+VZKo1+
+         sHrA3hWmd9KmY0uQLYNLAHt86CULDbKFctn+a5BtgeCkSEUIT4WfPDM/wC4UMzzxPFvi
+         GQGx66x2cKD3umAvEB3ABD0coGOsvdO8n/UgoP5rU7LuhSuAhym8tK8WRHPEpree+xs8
+         gK7A==
+X-Gm-Message-State: AO0yUKUGZTwsRI3WEzsCu0DTAX2PShQuiGgHB3EUOykK4QKt4nalCyEg
+        T55YdPsTO1RhAPm20AQ7foU=
+X-Google-Smtp-Source: AK7set/2DuGVCbWmyUhoiKZ7djYyr51e9CYLQws4bUQYBy6Nr0m0bw6bOssSy2xKA3/A3Qb/cK9m2A==
+X-Received: by 2002:a17:907:75f2:b0:7c1:5248:4f3a with SMTP id jz18-20020a17090775f200b007c152484f3amr7629392ejc.56.1675856285666;
+        Wed, 08 Feb 2023 03:38:05 -0800 (PST)
 Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id t1-20020a056402020100b004615f7495e0sm7789645edv.8.2023.02.08.03.37.13
+        by smtp.gmail.com with ESMTPSA id uz12-20020a170907118c00b0084cb4d37b8csm8257469ejb.141.2023.02.08.03.38.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 03:37:14 -0800 (PST)
-Date:   Wed, 8 Feb 2023 12:37:12 +0100
+        Wed, 08 Feb 2023 03:38:05 -0800 (PST)
+Date:   Wed, 8 Feb 2023 12:38:03 +0100
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
 Cc:     bhelgaas@google.com, petlozup@nvidia.com,
@@ -61,16 +61,15 @@ Cc:     bhelgaas@google.com, petlozup@nvidia.com,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         vidyas@nvidia.com
-Subject: Re: [RFC,v14 4/5] arm64: tegra: Add PCIe port node with PCIe WAKE#
- for C1 controller
-Message-ID: <Y+OJaGY6mcxM0JOF@orome>
+Subject: Re: [RFC,v14 5/5] soc/tegra: pmc: Add Tegra234 PCIe wake event
+Message-ID: <Y+OJmwo9rnM8Pf7C@orome>
 References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
- <20230208111645.3863534-5-mmaddireddy@nvidia.com>
+ <20230208111645.3863534-6-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="JZEp7O0NQU6aBHB0"
+        protocol="application/pgp-signature"; boundary="dnbnZrtOx6z+VY5P"
 Content-Disposition: inline
-In-Reply-To: <20230208111645.3863534-5-mmaddireddy@nvidia.com>
+In-Reply-To: <20230208111645.3863534-6-mmaddireddy@nvidia.com>
 User-Agent: Mutt/2.2.9 (2022-11-12)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
@@ -83,14 +82,13 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
---JZEp7O0NQU6aBHB0
+--dnbnZrtOx6z+VY5P
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 08, 2023 at 04:46:44PM +0530, Manikanta Maddireddy wrote:
-> Add PCIe port node under the PCIe controller-1 device tree node to support
-> PCIe WAKE# interrupt for WiFi.
+On Wed, Feb 08, 2023 at 04:46:45PM +0530, Manikanta Maddireddy wrote:
+> Enable PCIe wake event for the Tegra234 SoC.
 >=20
 > Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 > ---
@@ -98,54 +96,43 @@ On Wed, Feb 08, 2023 at 04:46:44PM +0530, Manikanta Maddireddy wrote:
 > Changes in v14:
 > New patch in the series to support PCIe WAKE# in NVIDIA Jetson AGX Orin.
 >=20
->  .../dts/nvidia/tegra234-p3737-0000+p3701-0000.dts     | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>  drivers/soc/tegra/pmc.c | 1 +
+>  1 file changed, 1 insertion(+)
 >=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dt=
-s b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> index 8a9747855d6b..9c89be263141 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> @@ -2147,6 +2147,17 @@ pcie@14100000 {
+> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
+> index cf4cfbf9f7c5..139ee853c32b 100644
+> --- a/drivers/soc/tegra/pmc.c
+> +++ b/drivers/soc/tegra/pmc.c
+> @@ -4225,6 +4225,7 @@ static const char * const tegra234_reset_sources[] =
+=3D {
+>  };
 > =20
->  			phys =3D <&p2u_hsio_3>;
->  			phy-names =3D "p2u-0";
-> +
-> +			pci@0,0 {
-> +				reg =3D <0x0000 0 0 0 0>;
-> +				#address-cells =3D <3>;
-> +				#size-cells =3D <2>;
-> +				ranges;
-> +
-> +				interrupt-parent =3D <&gpio>;
-> +				interrupts =3D <TEGRA234_MAIN_GPIO(L, 2) IRQ_TYPE_LEVEL_LOW>;
-> +				interrupt-names =3D "wakeup";
-> +			};
+>  static const struct tegra_wake_event tegra234_wake_events[] =3D {
+> +	TEGRA_WAKE_GPIO("pcie", 1, 0, TEGRA234_MAIN_GPIO(L, 2)),
 
-Don't we need to wire this to the PMC interrupt controller and the wake
-event corresponding to the L2 GPIO? Otherwise none of the wake logic in
-PMC will get invoked.
+What about wake events for other PCIe controllers? Do we need/want to
+distinguish by name for those?
 
 Thierry
 
---JZEp7O0NQU6aBHB0
+--dnbnZrtOx6z+VY5P
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPjiWgACgkQ3SOs138+
-s6G+yw//Vzt4WBBLRqLINDOG56vSGm0UH36xsFvInTordR1zQsj3/gkwz89sToTs
-mVIfJuJBtRwhl0YhSwiWV/jsV2g7gYZ1L+p2ssnguhcltzcdzbp/OInT/PWsUblS
-IKQEWwb+/dLzh9Md7aQYXeSv7pJSwp0rnnBxLS7lF6oaVGC7bffKYn+aAFsCPZgm
-uewFDk6xIVyOkQzokYV4OYQxH2W3mC8SW8Q5moAgRhSqKTMwRJdme6WNCZrwcAVI
-ketseSQHLQ2ryKFgVeI6Htn3ubySw+9rdnFOKadkj57PA/BAekpfLn0LCkPP1Hb5
-rKQJJJsavePW8BNaFNt7+BUrspSwa0CV9kXeZGKcFuXPAjJQwkHxFqGIPDOV15jA
-XnjkOmhW3yT0zp5buq4VEEaJc7qIbVtnCthUXWs32uJ3ovKpQh98cZm+HG1AHLVV
-jD0DlNq+njNQfKyXpgU80uWeH5i7VYype281ILyhDDH4LUMnZlHb8Hx4dvLQagXw
-7zkTvFkgC8goTLGFWneL9djvnZDsemOgJ5rv812BrakhMr6bBxnzLCVzicf1O7Ti
-pOfMlRkZZr6rtLtXk0apXbJ/F6pdTKyOSrnZCtSnKARFwJ1cBFyQijHqH4dOtFOp
-aJuc3sEmDh8d2FfRFM7nMvRar4DYShijDRW0FP7twJyTPIx9g64=
-=+nx7
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPjiZsACgkQ3SOs138+
+s6FTQQ//bp+B9n3mYGVuvDzX9NWcWCHqc2XpUYQR18NCUHsooWsDWcMThpRyIuTE
+WPb0w2m6Su1pSl00uBf/be6yRX5kf/VFpxwRvQNBEx7pYtKVKHfVBHobRFMrODd2
+baY2qAKGEFKGM0bKjnYLP46NsNGCthYv8xE5iuMKORZt6Vl6oWJ4ijNF62xiPRya
+VfCIBQ30rHdgYZv6Zewg7u1g8mSsDnGi7tXj4PmXoX9BBtLCuA0J5a4oFEMOSrNL
+lfw+cyKNFj4jBLFvzA9rshYCNs1W52FTUPGB+Voz3OsKv9oaaQl0GVhSH6w/32gD
+GoYIPYymI60cKh2Epy5fz6xtM4DOTZ7a6AEuy5DSilKv4Fgc19ZCJskAe/4LkZKG
+BDpCEbCB2ZUkw7xVO+2l14KO2rGnbofvLnbozoGwQOO3LBKr2sQ9YDfc8VQP5nVq
+fzKXMYGN+8i375PkifKpK3QjoKBfFVCAvlHQG/nT298i+IAWdo3MieLfqhWnmmYW
+rmydUuIi0ZWsAJd6FF0G8s8biuo87NQQa4xOu78GBZCz2NQPYuE6YWupnyl07Hpv
+AQj9EwsdKh9WXKyOQoL/zCWkHh3D74MUPyfZKcFV3aH6ij95bnsOysu5P5/u/6Cc
+Xmu/QjgFo3oxMaPNzWdNMwR5iN0okECXxwzvRf7eTrK7KNOUEHU=
+=LtGa
 -----END PGP SIGNATURE-----
 
---JZEp7O0NQU6aBHB0--
+--dnbnZrtOx6z+VY5P--
