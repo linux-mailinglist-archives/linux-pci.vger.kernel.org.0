@@ -2,284 +2,164 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7186568F670
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:01:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99A1168F74A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:43:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231935AbjBHSB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 13:01:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38456 "EHLO
+        id S229582AbjBHSnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 13:43:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231820AbjBHSBQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:01:16 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830D85357A
-        for <linux-pci@vger.kernel.org>; Wed,  8 Feb 2023 10:01:05 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id f23-20020a05600c491700b003dff4480a17so2763627wmp.1
-        for <linux-pci@vger.kernel.org>; Wed, 08 Feb 2023 10:01:05 -0800 (PST)
+        with ESMTP id S229740AbjBHSnv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:43:51 -0500
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2094.outbound.protection.outlook.com [40.107.237.94])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CC944B6;
+        Wed,  8 Feb 2023 10:43:49 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DiqXVm8GoUOxJK8yz6Cm3CrGmOfbmcHmc2bSH3PihfVF2HllkLSRrcMvnsqg3KTNjSXT86BmcJb0iWYi8bVWp/eYyG2+MHPrEGDk3tyL/69ufPIfGX9zKkHMRC2oyqiamn7r7SwLAX4tVdRzuibXrM/NhBwWplla0xKRAAJtNsBPpcRh2kd6kANDCCn90yJ4VqdF8McCQxhhGmwzlH74yiCf0eVC0S/wHdOd4ySLugKkGERzUrrdbDqhSST9uMKYHTIidMXg2oflKcH6wb+Eg0PLn3Jgoe/d5kvoIPuKufMJhTiQXj9Q5sQIKY6ceKd3PkXDboPlI48AmdebrhdLPw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PduJKKTXFIsfNhRg08c2oah3aHxiHm73GdqFmMecpjY=;
+ b=EsupisavtW831g2i/PtjV7dY98k5JlWr9opwrdEsV0aZLJJmPh7ZXCBihKd8l1ttJQMQlByiVgzP2qBVza46g6trWVN6eVyFOKT8cXsVMzhniAzvKMjTIsNw5RboarYuziExFaIAs8M5t96oqujJjtx0E/pwk+bRQbJagx2h0MYgaCC2+TFikDBbhfS63dLzRjiqs3IfnLj+g/X7EtI8vM1YoD4jTWG+4Oh82GUAS7LNpy0DuOZa1iM7Qf+fxz0Lv/aq2cmyomiEEOX8gr1cFtD4BNUrs1mXqAbsRpxz5tVD28tTa5Agh2cthX35HIi72cFzDV17pnuN5qnJMexdZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S84pLTPJCH/uwIFX1Bqrss8Ya9/sRzww29xePAXKGDg=;
-        b=OWbsgK5wAowu7HB3nMQtoFtJcIRiloGKze/s9KZYtplpDskAKGHGIZ2cLBUOlFTldN
-         F1q0UQqdLKfrg8g+y6t+karc07rgUjCFjcm1NiowH0px6NBw+lDeyFJWxei/JUQbN2L8
-         ZAV298fCUmv9guqNe48PsxxYst11g09THitgj7bD6jDpM8B3HcBkEArsGMBjLUcbUYSA
-         oBd+RfOwVAMOtT1rm/GnczfT69J9qVQ0CHIr1aoCrQRzZceH+A9K7H+TxFySZD3m3jVd
-         NU3MiK7ePlYGgHDhMFAK0ncEzPbm1uEAq/Wo27nelnIyWV86vxdwGK4YbcbPCG7PJCC0
-         QuGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S84pLTPJCH/uwIFX1Bqrss8Ya9/sRzww29xePAXKGDg=;
-        b=fG4BDwHeEl/FGvHyfcWFml4BvaxdXyV5QiiOb64URqwv/55IlUHZv10fmyb3nVaUmx
-         f63ShFOH5mvnYPhxlUK7TDMDvbm3xn0NfhouOW6MVel+2EqnAzgd+Nh5G7gGIAuxi9xm
-         kUQsiHc0F7d5q4wEqYpyGmzenA+bJkiJVgZXAPNci/Gnh+bEcHD2eIOj8N8tuXMDVCgl
-         3KHrzyl/TZa5SvM9JRqrVbIwdG/BvG5zBesGT28eLnW2vUfkbC/1M5oYQU5lNXh5iQfl
-         MrIfypLusEH/mp43gsjYqHWn8F8kaJ9OhDq8cun5plKtKX9k7gx831CxB23gMc6VQ/1y
-         OWUw==
-X-Gm-Message-State: AO0yUKV8d2z0rPRwK1cw6JDe0uEK2uS+aKx0d+3SxzJaze6zS49y4TCb
-        u3RQXqgkZYTZcbFgQCMoTQ/8cA==
-X-Google-Smtp-Source: AK7set8LIAnojVY6PUG1aP0PYXhEbr07tUn+/CwvVQC7jyf60qhmICJLIeoZPPkmfA3vmuPOkOX5AA==
-X-Received: by 2002:a05:600c:1606:b0:3e0:39:ec9d with SMTP id m6-20020a05600c160600b003e00039ec9dmr7552229wmn.23.1675879265169;
-        Wed, 08 Feb 2023 10:01:05 -0800 (PST)
-Received: from hackbox.lan ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id k20-20020a05600c169400b003dc54eef495sm2370286wmn.24.2023.02.08.10.01.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 10:01:04 -0800 (PST)
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 11/11] arm64: dts: qcom: sm8550: Fix PCIe PHYs and controllers nodes
-Date:   Wed,  8 Feb 2023 20:00:20 +0200
-Message-Id: <20230208180020.2761766-12-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230208180020.2761766-1-abel.vesa@linaro.org>
-References: <20230208180020.2761766-1-abel.vesa@linaro.org>
-MIME-Version: 1.0
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PduJKKTXFIsfNhRg08c2oah3aHxiHm73GdqFmMecpjY=;
+ b=ptaOipxrZaMw9TXTiG7+7wEMWUw5cvCrszmpAVXQG9D6wdYVma6TOOhfZY5yvTZ1qLolLqCuU4vlfajrPQNLrmRIHcgRYA3jvLEWvOQ8ZtWxUV0nhl7f+Q2lRlZwFCxrsiDMz4Wn4LAQ2EkfGbHasSdUJY1otOg60nM13rlWUPY=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
+ BYAPR01MB5176.prod.exchangelabs.com (2603:10b6:a03:76::20) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6064.34; Wed, 8 Feb 2023 18:43:41 +0000
+Received: from DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::6b5b:1242:818c:e70d]) by DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::6b5b:1242:818c:e70d%3]) with mapi id 15.20.6086.017; Wed, 8 Feb 2023
+ 18:43:40 +0000
+From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com
+Cc:     jean-philippe@linaro.org, darren@os.amperecomputing.com,
+        scott@os.amperecomputing.com, gankulkarni@os.amperecomputing.com
+Subject: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not enabled on PF
+Date:   Wed,  8 Feb 2023 10:43:21 -0800
+Message-Id: <20230208184321.867666-1-gankulkarni@os.amperecomputing.com>
+X-Mailer: git-send-email 2.38.1
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-ClientProxiedBy: SN4PR0501CA0036.namprd05.prod.outlook.com
+ (2603:10b6:803:40::49) To DM8PR01MB6824.prod.exchangelabs.com
+ (2603:10b6:8:23::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|BYAPR01MB5176:EE_
+X-MS-Office365-Filtering-Correlation-Id: ef94d597-c804-4cae-101d-08db0a0465a2
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: J+hTav5A1mx27QRXvAteRdZ/zFI5HQIG32Kn7VtbL9tWa7NXb+cH8fQ+BPNkJ2d8hYYiMz8no3CisrMhBZX+AT1pGywN8Z5MvnvJMWyU5OPFtLGu8Vxzu4p6Ws2MvFjJQrFcWoOxVXbO+K0bZqzcMdg0m/h4YrooGalBDEyVkZ24HhpRj4tXvN5dG5Pwwp70tDZkVAUvrliWZDW2vwnkY5BbCYQZhBXx94Ab1BOf0u12LIPJmHMlgk0z1cuWZPjh3c0fvGRvDjKy4lbCLZpCUw6r145nEk4NANJuR1Ujk6hGvc9At7HT1UQvMCjt0JHVL1gljwI7tOgRB8+UuGswioFsiSoVfb75h3DRaWiN6Gcu2D/rdDtkx1itg+9MvtBu3/imzH+ZbCEOIZzCEdFeeJye44IYwuasdbZQhsxXSJZBXYAysDFuBRJxPUusI5oW3yocnYE6tINiQq5GNkwsv7uwBEaOZgF9djxR35NwUYTS5BlDlaTJ4X9kmycSxrEAWUoF0+a+++XrF69Do2c/Od8TRoTdQ9uMXh9pWtPidHUQeCp8L5jrsDe1TWPEdBs42Usuw47ooUIk6rbGCyE65W/y4zK3EXAAMZSYtpgZCd5hQMywTKC+DgX0nyIo3XCtE0MerG173FJXH0gAMjc8Iu6/8SaIUQMKeChMCnndblybpS7DvnSU6gGpRYFQ6tmA1cQEK3LdM/bBWM6oloOqow==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(396003)(366004)(39850400004)(346002)(376002)(451199018)(8936002)(4326008)(38100700002)(478600001)(38350700002)(6486002)(6512007)(2616005)(186003)(26005)(52116002)(6666004)(107886003)(6506007)(1076003)(41300700001)(5660300002)(316002)(8676002)(86362001)(66946007)(66556008)(66476007)(83380400001)(2906002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D+5FJUp9Gva8CD3G0rJ/rtJBvd/Gvim6t2RZjMZtsrvO8uh95uiTumllv6Z3?=
+ =?us-ascii?Q?CPxHhTWp7u1d4fleLvBqcPT/rCzAiaorEZ7cItc81f1IPEQd/xytb1TcTjGK?=
+ =?us-ascii?Q?4sYCV2DWTU9rTj9Y/ddv3D/heWqoXuJU39QqwmL3fFpCTYNM1IPkoemzmWab?=
+ =?us-ascii?Q?HtMyd2ADW4s7sMpGFWUThpHMwSxlq9SU8oKzifH7l1aJjrbl321wnawZVQsy?=
+ =?us-ascii?Q?KCBRuEHq5tLdZCn52SWBirBhbeFgLd+pZRk+IyrSAyw8iOSJh6/f0dThKtGZ?=
+ =?us-ascii?Q?BXK1azkdOe/bhOGZaO+PKXQX787qliqMEFOq4ntRdbbNKlQal8K2GWI0/qjZ?=
+ =?us-ascii?Q?x0MzTi2hyhmkxJgLU/GHRb5gNohmqQMphqNK426Mwf5tQQAwT97otQnS+FMY?=
+ =?us-ascii?Q?C78PzCMoeuDEhJzgLAdFOuZp004sxS3EjMjMNDMwhHxsKZit3MTrGfSHbHtp?=
+ =?us-ascii?Q?lDQafwqWsNVfHsZvVGSlQr4i13OC79e4/9fqrgzk1+utD/2hiLzOf8x0tbhp?=
+ =?us-ascii?Q?LsVvXGDrqGfbP9f+im1Nbq2wRY7ztxGHuunf9qWZd3g2UL/TNkJxnOjHBtq0?=
+ =?us-ascii?Q?c8HXWr1/xfBtB/ziiXIdzhx4PPU0iBMWGOmvchtbWO+xJY+JWUsGFWsJZvDr?=
+ =?us-ascii?Q?ZW00lCGIce4+EpM+kT7/wjJpt0FUQ48YbgPGqdUBR7+RRxXn14ACTxTL856a?=
+ =?us-ascii?Q?qek2hpEBG4rGywlkD4JGdQ7hO2OIzkukoORluRhktUTyRJfv+oxJuBPk6hkr?=
+ =?us-ascii?Q?s3caqyMsomAgrP78sH0jgjXOZCPfWvII74fKmgtB9eJoak2RHhJeidB6kcue?=
+ =?us-ascii?Q?y0Tokc4WF+PmIc8omxu99PID6JEwj+edqFRtq1ZDLgQ1qH65Bj+lXbV+BGgR?=
+ =?us-ascii?Q?8iRw4JVNU1JcnW9RGLGU339X7zFjSMBANCNAl5Q8NXpqbsWO3Qraf2Tdz6Vo?=
+ =?us-ascii?Q?/7v+K5esU1bqsgJsjVXfmyY1fJaYiv1kOicuFhYNHOQnyZ9S17RAQLgkDJxq?=
+ =?us-ascii?Q?rtyqJA6DDOY/iAZ28jKh3S8f8rCX2ip2UTTIlPYD+Xogp3+Pp8FEdYJmIJbB?=
+ =?us-ascii?Q?7mXA1SeHs/rri75L3PeJKZHK4mMq23brDHQK5ypTTSv+Jkh9UJPy5dkhBI3b?=
+ =?us-ascii?Q?28BBztYf79Ai9OXBZy1X2Pfa9RehLAOdF/tyyrVZlXUSISaASO6RuZ4e8SGn?=
+ =?us-ascii?Q?9EjIadG2rvKJYjiB1WyyPoFvOj14H5bmllWdktysaVG459PFxsDk/jSQjEAW?=
+ =?us-ascii?Q?qhDPeFZk5IILpATwGQIpqfvEsfJopU953OeFE4Mtucn+agl22em8DGCgOdKs?=
+ =?us-ascii?Q?9/OzsLPlEyrS7xXTCvYlDNMsqQuK4zUdOo+XMOnjRNqSQCCxfQaR/K9FN13M?=
+ =?us-ascii?Q?DtCjJtbz7Sm9efanIFNyRFQQz5sobyWZGG4H6rCVuctXDtsTMrQpsNLSX2kV?=
+ =?us-ascii?Q?F5yTrpbR2v+6NR799MkFCQNnTCL6pABn+lW7PCIPR1TZehGT9R3i/ElhQ7oB?=
+ =?us-ascii?Q?HEhLxr7ajLWS8EkL3MzCpcakn8qyboBI2KPsG05w52Dkk7/T9yffRQwgpUMA?=
+ =?us-ascii?Q?BVq9tQOgMttQ80M5WsDqiMM4oYkpU7cmAWSsjriK3nUMxcEd3kAU5Wsw7ZDx?=
+ =?us-ascii?Q?UhKBeL+sun3sFjUKHcGk1qk=3D?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ef94d597-c804-4cae-101d-08db0a0465a2
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 18:43:40.7462
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fznqysSwWkWUguFZ9vEb3wCu43X2us7bw/pTyTuAIcGvkYnNYN0ol5qzKtNXibBu7NPZbdvXo2oVfnqIhKB2q8LQL4yJRjTOP+EkO07KHNuHzFbeepVWC1QOdmzk3sU8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5176
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-First, move the pinctrl related propeties out from SoC dtsi and into the
-board dts and add blank lines before status properties in the PHY nodes
-to be consistent with the rest of the nodes. Then drop the pipe clock
-from the controller nodes. Rename the aggre0 and aggre1 clocks to more
-generic noc_aggr, and then the cnoc_pcie_sf_axi to cnoc_sf_axi. Add the
-cpu-pcie interconnects to both controller nodes. Rename the pcie1 second
-reset to link_down and drop the unnecessary enable-gpios. Switch the aux
-clock to GCC_PCIE_1_PHY_AUX_CLK for the pcie1 PHY and drop the aux_phy
-from clock-names. Also rename the nocsr reset to phy_nocsr. With this
-changes we are now in line with the SC8280XP bindings.
+As per PCIe specification(section 10.5), If a VF implements an
+ATS capability, its associated PF must implement an ATS capability.
+The ATS Capabilities in VFs and their associated PFs are permitted to
+be enabled independently.
+Also, it states that the Smallest Translation Unit (STU) for VFs must be
+hardwired to Zero and the associated PF's value applies to VFs STU.
 
-Fixes: 98a4dc3a78fa ("arm64: dts: qcom: sm8550: Add PCIe PHYs and controllers nodes")
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
+The current code allows to enable ATS on VFs only if it is already
+enabled on associated PF, which is not necessary as per the specification.
+
+It is only required to have valid STU programmed on PF to enable
+ATS on VFs. Adding code to write the first VFs STU to a PF's STU
+when PFs ATS is not enabled.
+
+Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
 ---
+ drivers/pci/ats.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-The v8 of this patch is:
-https://lore.kernel.org/all/20230206212619.3218741-12-abel.vesa@linaro.org/
-
-Changes since v8:
- * added Johan's R-b tag
-
- arch/arm64/boot/dts/qcom/sm8550-mtp.dts | 10 +++++
- arch/arm64/boot/dts/qcom/sm8550.dtsi    | 52 +++++++++----------------
- 2 files changed, 28 insertions(+), 34 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-index 725d3bc3ee72..56aab7cafcbc 100644
---- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
-@@ -414,18 +414,27 @@ &pcie_1_phy_aux_clk {
- &pcie0 {
- 	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
- 	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index f9cc2e10b676..a97ec67201d1 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -67,13 +67,20 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+ 	if (ps < PCI_ATS_MIN_STU)
+ 		return -EINVAL;
+ 
+-	/*
+-	 * Note that enabling ATS on a VF fails unless it's already enabled
+-	 * with the same STU on the PF.
+-	 */
+ 	ctrl = PCI_ATS_CTRL_ENABLE;
+ 	if (dev->is_virtfn) {
+ 		pdev = pci_physfn(dev);
 +
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie0_default_state>;
++		if (!pdev->ats_enabled &&
++				(pdev->ats_stu < PCI_ATS_MIN_STU)) {
++			u16 ctrl2;
 +
- 	status = "okay";
- };
- 
- &pcie0_phy {
- 	vdda-phy-supply = <&vreg_l1e_0p88>;
- 	vdda-pll-supply = <&vreg_l3e_1p2>;
++			/* Associated PF's STU value applies to VFs. */
++			pdev->ats_stu = ps;
++			ctrl2 = PCI_ATS_CTRL_STU(pdev->ats_stu - PCI_ATS_MIN_STU);
++			pci_write_config_word(pdev, pdev->ats_cap + PCI_ATS_CTRL, ctrl2);
++		}
 +
- 	status = "okay";
- };
- 
- &pcie1 {
- 	wake-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
- 	perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pcie1_default_state>;
-+
- 	status = "okay";
- };
- 
-@@ -433,6 +442,7 @@ &pcie1_phy {
- 	vdda-phy-supply = <&vreg_l3c_0p91>;
- 	vdda-pll-supply = <&vreg_l3e_1p2>;
- 	vdda-qref-supply = <&vreg_l1e_0p88>;
-+
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-index 6ff135191ee0..bba1123ea374 100644
---- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
-@@ -1672,25 +1672,24 @@ pcie0: pci@1c00000 {
- 					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
- 					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 
--			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
--				 <&gcc GCC_PCIE_0_AUX_CLK>,
-+			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
- 				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
- 				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
- 				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
- 				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
- 				 <&gcc GCC_DDRSS_PCIE_SF_QTB_CLK>,
- 				 <&gcc GCC_AGGRE_NOC_PCIE_AXI_CLK>;
--			clock-names = "pipe",
--				      "aux",
-+			clock-names = "aux",
- 				      "cfg",
- 				      "bus_master",
- 				      "bus_slave",
- 				      "slave_q2a",
- 				      "ddrss_sf_tbu",
--				      "aggre0";
-+				      "noc_aggr";
- 
--			interconnect-names = "pcie-mem";
--			interconnects = <&pcie_noc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>;
-+			interconnects = <&pcie_noc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
-+					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_0 0>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
- 
- 			iommus = <&apps_smmu 0x1400 0x7f>;
- 			iommu-map = <0x0   &apps_smmu 0x1400 0x1>,
-@@ -1704,12 +1703,6 @@ pcie0: pci@1c00000 {
- 			phys = <&pcie0_phy>;
- 			phy-names = "pciephy";
- 
--			perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
--			wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
--
--			pinctrl-names = "default";
--			pinctrl-0 = <&pcie0_default_state>;
--
- 			status = "disabled";
- 		};
- 
-@@ -1771,8 +1764,7 @@ pcie1: pci@1c08000 {
- 					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
- 					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
- 
--			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
--				 <&gcc GCC_PCIE_1_AUX_CLK>,
-+			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
- 				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
- 				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
- 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
-@@ -1780,21 +1772,21 @@ pcie1: pci@1c08000 {
- 				 <&gcc GCC_DDRSS_PCIE_SF_QTB_CLK>,
- 				 <&gcc GCC_AGGRE_NOC_PCIE_AXI_CLK>,
- 				 <&gcc GCC_CNOC_PCIE_SF_AXI_CLK>;
--			clock-names = "pipe",
--				      "aux",
-+			clock-names = "aux",
- 				      "cfg",
- 				      "bus_master",
- 				      "bus_slave",
- 				      "slave_q2a",
- 				      "ddrss_sf_tbu",
--				      "aggre1",
--				      "cnoc_pcie_sf_axi";
-+				      "noc_aggr",
-+				      "cnoc_sf_axi";
- 
- 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
- 			assigned-clock-rates = <19200000>;
- 
--			interconnect-names = "pcie-mem";
--			interconnects = <&pcie_noc MASTER_PCIE_1 0 &mc_virt SLAVE_EBI1 0>;
-+			interconnects = <&pcie_noc MASTER_PCIE_1 0 &mc_virt SLAVE_EBI1 0>,
-+					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_1 0>;
-+			interconnect-names = "pcie-mem", "cpu-pcie";
- 
- 			iommus = <&apps_smmu 0x1480 0x7f>;
- 			iommu-map = <0x0   &apps_smmu 0x1480 0x1>,
-@@ -1802,20 +1794,13 @@ pcie1: pci@1c08000 {
- 
- 			resets = <&gcc GCC_PCIE_1_BCR>,
- 				<&gcc GCC_PCIE_1_LINK_DOWN_BCR>;
--			reset-names = "pci",
--				"pcie_1_link_down_reset";
-+			reset-names = "pci", "link_down";
- 
- 			power-domains = <&gcc PCIE_1_GDSC>;
- 
- 			phys = <&pcie1_phy>;
- 			phy-names = "pciephy";
- 
--			perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
--			enable-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
--
--			pinctrl-names = "default";
--			pinctrl-0 = <&pcie1_default_state>;
--
- 			status = "disabled";
- 		};
- 
-@@ -1823,18 +1808,17 @@ pcie1_phy: phy@1c0e000 {
- 			compatible = "qcom,sm8550-qmp-gen4x2-pcie-phy";
- 			reg = <0x0 0x01c0e000 0x0 0x2000>;
- 
--			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
-+			clocks = <&gcc GCC_PCIE_1_PHY_AUX_CLK>,
- 				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
- 				 <&tcsr TCSR_PCIE_1_CLKREF_EN>,
- 				 <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>,
--				 <&gcc GCC_PCIE_1_PIPE_CLK>,
--				 <&gcc GCC_PCIE_1_PHY_AUX_CLK>;
-+				 <&gcc GCC_PCIE_1_PIPE_CLK>;
- 			clock-names = "aux", "cfg_ahb", "ref", "rchng",
--				      "pipe", "aux_phy";
-+				      "pipe";
- 
- 			resets = <&gcc GCC_PCIE_1_PHY_BCR>,
- 				 <&gcc GCC_PCIE_1_NOCSR_COM_PHY_BCR>;
--			reset-names = "phy", "nocsr";
-+			reset-names = "phy", "phy_nocsr";
- 
- 			assigned-clocks = <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>;
- 			assigned-clock-rates = <100000000>;
+ 		if (pdev->ats_stu != ps)
+ 			return -EINVAL;
+ 	} else {
 -- 
-2.34.1
+2.39.1
 
