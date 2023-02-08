@@ -2,70 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6671868E658
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 04:00:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BE4268E7D7
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 06:46:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjBHDAO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Feb 2023 22:00:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32848 "EHLO
+        id S230080AbjBHFqO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 00:46:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229718AbjBHDAO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Feb 2023 22:00:14 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 884433D0A4;
-        Tue,  7 Feb 2023 19:00:11 -0800 (PST)
-Received: from loongson.cn (unknown [112.20.108.204])
-        by gateway (Coremail) with SMTP id _____8BxKuo6EONj1c8PAA--.31184S3;
-        Wed, 08 Feb 2023 11:00:10 +0800 (CST)
-Received: from [0.0.0.0] (unknown [112.20.108.204])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+U4EONj2pYsAA--.50954S3;
-        Wed, 08 Feb 2023 11:00:09 +0800 (CST)
-Message-ID: <0bb33ba8-00af-777b-fb97-a086b91865b0@loongson.cn>
-Date:   Wed, 8 Feb 2023 11:00:07 +0800
+        with ESMTP id S229805AbjBHFqN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 00:46:13 -0500
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA843CDEF
+        for <linux-pci@vger.kernel.org>; Tue,  7 Feb 2023 21:46:11 -0800 (PST)
+Received: by mail-pl1-x631.google.com with SMTP id be8so18113168plb.7
+        for <linux-pci@vger.kernel.org>; Tue, 07 Feb 2023 21:46:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gGlOEIPzV+FTI/GF62gic89emIZoIYryIf9WL0MuhjI=;
+        b=cQmLD187qGYvCE95MDfRyufr4leKm51MnluIeCu1mwvtokMHZKgE9e6RJ8OIsqQPMi
+         ewo6oAXyGxCRbEjKCgm4EeLHmc7c1UiRoK0i3HL4F1a36+75ZRjyF8O3SOmfmpJ7ytt0
+         dQg2rz8F2L7Ui9fsllAshRSkZVoeQVeI9aoXCVMh1Y1Q1Tvn2mv5tjOBLCXCS1Ny1+GA
+         MvaRH6AvLYEw4coHFQ991tFAM6de03LOhkoEkeZZQ6Hoh7iD4gLL0JjaVYDwD6eoWIfU
+         iplJ7Y7j89AMoh7SbAVtaUpa5WXzb2ilRqD6Ra8tHg7cjviJFyNZfbHaJff8klqkWaWv
+         nDeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gGlOEIPzV+FTI/GF62gic89emIZoIYryIf9WL0MuhjI=;
+        b=Z/VyDVMhl3NFmIAXDJx66gFHyiR1+H2zkAliKs5VZx08jTy1GoBolWPkVp6f7Eu5Qz
+         zPh7T7VusenWTu/MdkGiCJeinNvXioqI78LPBnvASSnP7lCLSmUMhtah53iErYUBiVSp
+         eIJ/Ky1zNx6y1qcRlLdFnydxmBZ4PqtEtlQXOmrevf11r8zYF2mOsCiHwebJMAtOH9/J
+         xUQH3mbHHhZvVbo/TbQSnCktc3LZMwO/txy3tSWUZC7Z/a9w4RTu72ZDAi5Nl+qfzyMG
+         x5Tk4b6X4hly1+BaBD7eYU8CMrpwcNLcECbrHQ95FUNWfAOL8Ir5Rt+GlS8Dg5zwnXAU
+         Vtig==
+X-Gm-Message-State: AO0yUKV11QuoaQCvNBtcU8/vpovYESNqXFsNyqoc0ofPaKANS12YT3W8
+        7ryfVT2fLKCfQvN4U0kDGfS+Gw==
+X-Google-Smtp-Source: AK7set94skn6M5M9CT0xtS0+tEYXm95sJCOLMhuwaiyK3S9cl/nNQN5VoK2Af4LK20Th3wzFVP00fw==
+X-Received: by 2002:a05:6a20:8403:b0:bb:b945:4865 with SMTP id c3-20020a056a20840300b000bbb9454865mr7962364pzd.8.1675835171325;
+        Tue, 07 Feb 2023 21:46:11 -0800 (PST)
+Received: from [10.16.128.218] (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id iz17-20020a170902ef9100b001898ee9f723sm5008429plb.2.2023.02.07.21.46.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Feb 2023 21:46:10 -0800 (PST)
+Message-ID: <b86a549a-5c8e-55dc-d6f4-edc5ca75ac05@igel.co.jp>
+Date:   Wed, 8 Feb 2023 14:46:06 +0900
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.2
-Subject: Re: [PATCH V6] PCI: loongson: Skip scanning disabled child devices
-To:     Liu Peibao <liupeibao@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.6.1
+Subject: Re: [EXT] Re: [RFC PATCH 4/4] PCI: endpoint: function: Add EP
+ function driver to provide virtio net device
+Content-Language: en-US
+To:     Frank Li <frank.li@nxp.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Yinbo Zhu <zhuyinbo@loongson.cn>,
-        wanghongliang <wanghongliang@loongson.cn>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        chenhuacai@kernel.org
-References: <20221117020935.32086-1-liupeibao@loongson.cn>
-From:   Binbin Zhou <zhoubinbin@loongson.cn>
-In-Reply-To: <20221117020935.32086-1-liupeibao@loongson.cn>
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jason Wang <jasowang@redhat.com>, Jon Mason <jdmason@kudzu.us>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        Takanari Hayama <taki@igel.co.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+References: <20230203100418.2981144-1-mie@igel.co.jp>
+ <20230203100418.2981144-5-mie@igel.co.jp>
+ <20230203052114-mutt-send-email-mst@kernel.org>
+ <HE1PR0401MB23313FC60955EADE8A00133088D79@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+ <CANXvt5qjgVKccRcsARSkDF+boVkVi7h=AMHC+iWyOfp4dJ-_tQ@mail.gmail.com>
+ <HE1PR0401MB2331D1335BFACBD23B7676EF88DB9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
+From:   Shunsuke Mie <mie@igel.co.jp>
+In-Reply-To: <HE1PR0401MB2331D1335BFACBD23B7676EF88DB9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Bxc+U4EONj2pYsAA--.50954S3
-X-CM-SenderInfo: p2kr3uplqex0o6or00hjvr0hdfq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7uF4fXrWUurWxWFWUAFyUGFg_yoW8ZF1kpF
-        Z8AayakrWrtF1IkanIv34UuF1S9w4kG397GFs7CrnF93ZxG34YgryxGFyYq3s0qr4kX3Wa
-        va4kKr1xCF4UJr7anT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bqkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
-        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r126r1DMcIj6I8E
-        87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7I2V7IY0V
-        AS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUAVWUtwCF04k20xvY0x0EwIxGrwCFx2IqxVCF
-        s4IE7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI
-        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41l
-        IxAIcVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-        AIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2
-        jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j5o7tUUUUU=
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -73,52 +91,29 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-在 2022/11/17 10:09, Liu Peibao 写道:
-> Add a mechanism to disable on chip PCI devices by DT. Typically, when there
-> are pins shareable between the platform device and the on chip PCI device,
-> if the PCI device is not preferred, add `status = "disabled"` property to
-> this PCI device DT node.
+On 2023/02/08 0:37, Frank Li wrote:
+>>> but it may need update host side pci virtio driver.
+>> Thanks, is it possible to use  MSI-X as well? The virtio spec
+>> indicates to use legacy irq or
+>> MSI-X only.
+> I supposed yes. It is depend MSI controller type in EP side.
+> But not like standard PCI MSI-X, it is platform MSI-X irq.
 >
-> For example, on LS2K1000, GMAC1 (on chip PCI device) and GPIO (platform
-> device, not PCI device) 14 share the same pin. If GMAC1 is not preferred,
-> add `status = "disabled"` property in GMAC1 DT node.
+> If use GIC-its, it should support MSI-X.
 >
-> Signed-off-by: Liu Peibao <liupeibao@loongson.cn>
-Tested-by: Binbin Zhou <zhoubinbin@loongson.cn>
-> ---
-> V5 -> V6: 1. rewrite the commit log to make things clear.
-> 	  2. replace "unavailable" as "disabled" in patch subject.
-> V4 -> V5: clear the issue we are facing in commit log.
-> V3 -> V4: 1. get rid of the masklist and search the status property
-> 	  directly.
->            2. check the status property only when accessing the vendor ID.
-> V2 -> V3: 1. use list_for_each_entry() for more clearly.
->            2. fix wrong use of sizeof().
-> V1 -> V2: use existing property "status" instead of adding new property.
+> Thomas Gleixner is working on pre-device msi irq domain.
+> https://lore.kernel.org/all/20221121135653.208611233@linutronix.de
 >
->   drivers/pci/controller/pci-loongson.c | 11 +++++++++++
->   1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-> index 05c50408f13b..efca0b3b5a29 100644
-> --- a/drivers/pci/controller/pci-loongson.c
-> +++ b/drivers/pci/controller/pci-loongson.c
-> @@ -194,6 +194,17 @@ static void __iomem *pci_loongson_map_bus(struct pci_bus *bus,
->   			return NULL;
->   	}
->   
-> +#ifdef CONFIG_OF
-> +	/* Don't access disabled devices. */
-> +	if (pci_is_root_bus(bus) && where == PCI_VENDOR_ID) {
-> +		struct device_node *dn;
-> +
-> +		dn = of_pci_find_child_device(bus->dev.of_node, devfn);
-> +		if (dn && !of_device_is_available(dn))
-> +			return NULL;
-> +	}
-> +#endif
-> +
->   	/* CFG0 can only access standard space */
->   	if (where < PCI_CFG_SPACE_SIZE && priv->cfg0_base)
->   		return cfg0_map(priv, bus, devfn, where);
+> I hope Thomas can finish their work soon.
+> so I can continue my patch upstream work.
+> https://lore.kernel.org/imx/87wn7evql7.ffs@tglx/T/#u
+
+Thank for sharing this those information. I'll see the details to embed.
+
+>> Best,
+>> Shunsuke.
+
+Best,
+
+Shunsuke.
 
