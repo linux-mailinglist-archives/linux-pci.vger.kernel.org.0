@@ -2,121 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4BE368F46A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 18:25:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B1D668F646
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:00:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231391AbjBHRZY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 12:25:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
+        id S231511AbjBHSAu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 13:00:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232159AbjBHRZJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 12:25:09 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65E54FAF0;
-        Wed,  8 Feb 2023 09:24:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675877088; x=1707413088;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=P9o81TrnMYv/0lzBvAqefabI0OL+xE9TlzWfKBiybMI=;
-  b=Rqoxssfqe405Erkh8i2XjZ8jqj6+AHd7NhXvcw+qIDqt4LPjWwrdepeR
-   CYszjOVruAxVaZ9LMFSWGJ9+AM0AhFQybfmfBMWcY5/te1N7xYQVXJ7cP
-   LoKrMFX8sG6aOa2VAuPNJVMtYl7nVE17I8FadH8pTHVFsEfGWVJfwaJgR
-   t6S3q657Z+BrqT70aPcvSqGWf4qUff8u4/dkQgYoYguW7Ua8+LfnKjRHk
-   o9AQneRrUWc3nd+1EAHiymm3AUaqrccYWPksLHvZnmd6fLWLniV8f/nIY
-   g9vWgNflNzkP33FEsgAdo5YzRczTLiQX80C8pik5JhFggd8IsiyEesB2l
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="309515344"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="309515344"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 09:23:48 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="699726611"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="699726611"
-Received: from tbacklun-mobl.amr.corp.intel.com (HELO [10.209.14.225]) ([10.209.14.225])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 09:23:47 -0800
-Message-ID: <4216dea6-d899-aecb-2207-caa2ae7db0e3@intel.com>
-Date:   Wed, 8 Feb 2023 09:23:46 -0800
+        with ESMTP id S229630AbjBHSAt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:00:49 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EF1A45BD8
+        for <linux-pci@vger.kernel.org>; Wed,  8 Feb 2023 10:00:48 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id z13so6441880wmp.2
+        for <linux-pci@vger.kernel.org>; Wed, 08 Feb 2023 10:00:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JM97LRzJuNIDSLoCISaLbKYkgeCT4D6L+oW9RVZ90Yk=;
+        b=AhK6w+HaNN9UcUU9RClSrVf/MNf3cBzGVk1j/L/hIllRp/hGqKN2c785P5ZvV2M4HF
+         glhT2PFlq/5knVylSOKQZH02xFnxnxj1nGCMgEKP0ld90BWvS/qhKK1V7TsVXGrrpkW4
+         LRYIBOdPOeDA7TnL5z2imhnxyQHUiVpP+bb92NHbEbrxZUK1E9KW1lcdLsf6bsNZoyHX
+         5Te/MV+LWIpLnGro18mO90JkeZJ6JQxE1KDQnU2iHbjWnAqy1MxSvCBXnkDvaGCIFVB9
+         EogvRjNOUJWsobUduJ7b6CUAYll0c6EDP0HyZbLva0R1Sb/bcUbrVdcuoc+iHuOWtz65
+         tNBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JM97LRzJuNIDSLoCISaLbKYkgeCT4D6L+oW9RVZ90Yk=;
+        b=mjDGQIPbwcL59IJtW2sNdTChgurI7e6Yl1M/IXthEZ1dpIOPk6LTIeii7GHNzJ4YSY
+         FS9bnowVC3NFwomHxCkVYWv7S/uXjtAsqhsS3QuvtRYHpmGWe3lU85ueM/XbH7Iy8+Hd
+         Bcnn4PKfMzrf2UkAvHNOouP+pR0zgvv9CXoGibds2cnrrbKk+0fqbb12+ZDMlRJfwyHi
+         nLjZ4UbwZNBqT3HBXWmNcHSuVJscTjvO9eop6crrMGEDNeqdlQMHBDO1hHxIbJ6QrDZn
+         I+Jj5gKlbkB8z0RkCSCcgN997U/18h9O8DhNzVHSEQ8gawOHHQ9bRDvCeU8jcC7yExbb
+         KEPw==
+X-Gm-Message-State: AO0yUKUklFcDAFVQJlRZc7pft9SRhzfq3B5mFrPterhlKeHsg5NOO0wj
+        ROQnE+qZejLP+90X1GvkIxaAdA==
+X-Google-Smtp-Source: AK7set8Y152Z3sTAFY7YTLliHoMt3ktxih4kVHF3bHkaEDdbrPJEuvTVoUiiwlapKRteWSDw4GPGCA==
+X-Received: by 2002:a05:600c:713:b0:3df:e4b4:de69 with SMTP id i19-20020a05600c071300b003dfe4b4de69mr7318950wmn.27.1675879246674;
+        Wed, 08 Feb 2023 10:00:46 -0800 (PST)
+Received: from hackbox.lan ([94.52.112.99])
+        by smtp.gmail.com with ESMTPSA id k20-20020a05600c169400b003dc54eef495sm2370286wmn.24.2023.02.08.10.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Feb 2023 10:00:45 -0800 (PST)
+From:   Abel Vesa <abel.vesa@linaro.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH v9 00/11] sm8550: Add PCIe HC and PHY support
+Date:   Wed,  8 Feb 2023 20:00:09 +0200
+Message-Id: <20230208180020.2761766-1-abel.vesa@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Content-Language: en-US
-To:     Borislav Petkov <bp@alien8.de>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "seanjc@google.com" <seanjc@google.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
- <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
- <Y8r2TjW/R3jymmqT@zn.tnic>
- <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y9FC7Dpzr5Uge/Mi@zn.tnic>
- <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+JG9+zdSwZlz6FU@zn.tnic>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <Y+JG9+zdSwZlz6FU@zn.tnic>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/7/23 04:41, Borislav Petkov wrote:
-> Or are there no similar TDX solutions planned where the guest runs
-> unmodified and under a paravisor?
+For changelogs please look at each patch individually.
 
-I actually don't think paravisors make *ANY* sense for Linux.  If you
-have to modify the guest, then just modify it to talk to the hypervisor
-directly.  This code is... modifying the guest.  What does putting a
-paravisor in the middle do for you?
+Abel Vesa (11):
+  dt-bindings: phy: Add QMP PCIe PHY comptible for SM8550
+  phy: qcom-qmp: pcs: Add v6 register offsets
+  phy: qcom-qmp: pcs: Add v6.20 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6 register offsets
+  phy: qcom-qmp: pcs-pcie: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-txrx: Add v6.20 register offsets
+  phy: qcom-qmp: qserdes-lane-shared: Add v6 register offsets
+  phy: qcom-qmp-pcie: Add support for SM8550 g3x2 and g4x2 PCIEs
+  dt-bindings: PCI: qcom: Add SM8550 compatible
+  PCI: qcom: Add SM8550 PCIe support
+  arm64: dts: qcom: sm8550: Fix PCIe PHYs and controllers nodes
 
-It might help with binary drivers, but we don't do upstream kernel work
-to make silly binary Linux drivers happy.
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  40 ++
+ .../phy/qcom,sc8280xp-qmp-pcie-phy.yaml       |  30 +-
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts       |  10 +
+ arch/arm64/boot/dts/qcom/sm8550.dtsi          |  52 +--
+ drivers/pci/controller/dwc/pcie-qcom.c        |  25 +-
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 346 +++++++++++++++++-
+ .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h   |  15 +
+ .../qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h    |  23 ++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h    |  16 +
+ drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h |  18 +
+ .../phy-qcom-qmp-qserdes-ln-shrd-v6.h         |  32 ++
+ .../phy-qcom-qmp-qserdes-txrx-v6_20.h         |  45 +++
+ drivers/phy/qualcomm/phy-qcom-qmp.h           |   6 +
+ 13 files changed, 611 insertions(+), 47 deletions(-)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-pcie-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-pcs-v6_20.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-ln-shrd-v6.h
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-qmp-qserdes-txrx-v6_20.h
 
-So, no, there's no similar TDX solutions planned, at least for Linux
-guests.  Unless I missed the memo.  Kirill?
+-- 
+2.34.1
+
