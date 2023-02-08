@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0234D68EEC5
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 13:19:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B41A68EECA
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 13:20:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbjBHMTg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 07:19:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57062 "EHLO
+        id S230429AbjBHMUu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 07:20:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230062AbjBHMTf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 07:19:35 -0500
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F281749574;
-        Wed,  8 Feb 2023 04:19:27 -0800 (PST)
+        with ESMTP id S229582AbjBHMUu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 07:20:50 -0500
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 468F64238;
+        Wed,  8 Feb 2023 04:20:48 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QPamrlrdhyZDHAxJ7gDoieHPpA7QYG84DVKTKAq3A2d0bzMQ22LbsgQmfREHu3n0tC93FTxvwxmiNHhBzNACu0SFZukoHzS+J2Lfy4ZJ6qfYo95fUFvOThXrcV327+/DjCwh+c2P3v/acsz7ETB+JxoN3rh9ZlA3dgsgJOJnoa7y557+EEFTgj1p6+CvxPvq4MQp7+RMTFtP0xJzazAhM7/NaX6sAtkdAofjFNO/LjeSn6iGI8g/vyomNQutGUNq4vcemEYZIk4NRRYCojQN/Mzm1Moaj73Gug1PpKknPSMYxp6CmdCTGqkrBguuhW7DAwyvE2eIUnyBfzz0G50yNQ==
+ b=c0vCmBL0lSaDKAMiqnxqOCLKP8yfDckHmoWA+yF/bEW8GwvbLWVfbrmNmO9G7CHlbnBTgMgQlVjQlGPyS3lgzbs9zaWWwUoMEKiIOFwG787Kme4qww1HOfylP8z3HKQVgx4+5zpWfQ/X/ovHD/xWayV8oXfsltLSxtQQUnvLCFqjH2wK9+RJvwT3Qm7Vf3wwI1767HSc3ECAXaY2sH2kAcBt7TvrecESd9C6yJx+B24Ot+1W8ftyLo2zi52Yn/IzTgUvUIIBB5zOoldDgz2ptZrX59oLdk8XxLU+4rulF4rhSTTv+6oZdRdaJnHgHsr9xY5oVrP8kbzlSCLxqUuYGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1wjy8Mf00EaOCYZaZzDaYkUTUGROKbzf8UjdC2c64XY=;
- b=XP7jiqZSadmSSDCwUntjBz3rxeBLPEa/6eUDh4Iytjo7cidQt9j0MxtNpUZaJWR1aoRv5SAUDdvYWsAmKVFmR/wOvim7RepyorucqMNH0OFV18eJDHlwEXJ02ORHT84WMdeKBKDLx94gwbaGSqAojgtW4ztOgYHXU0DgIE1N80VnMjutbWUxf2DlJWKqxfaWIMOfiGxZK9O0gVsDqTiKEtXGyNsE/ERFfUxz8Uq4Y+1uQ3OVPtyi5T7ZSEC3gFMUmtmY3CtsdI7IMN9g1t7W62hunACvhQh12G1UPxYmcsImXZV53BOTkHYuakMXB0y1aagXogmDvQeg8yRgC5/VpQ==
+ bh=8bYbtIvYaqykqIpwthNf8li0oA2XXEaMbObcNEA2eCI=;
+ b=QuWjdh4+UmHbpD7wMoLP7WCnW7iYKGqr7Lmf2cRU38KvAUYPVP/fFf7JeKxrYYHO4VBYLA/zGdAFIMKtq9wJZZ7ktF4KzzIPWMJavBhwENgQuKZzfVZusx65qQIkvRNYTP43TZBTgfg0MtRdFb96MnlrhyzqLNMJUadDpvq2nLx8lGEElguG7Y8ARXD/WxL2Tc6NvdpUgiZcTEBY/JTuGbuf4KTGpk+R4i3a12kHT8UjCzgMdElDb+XewK1iC7Jc6po14FaAgB5MqC52qY0x8BlET5Dad1OAYSQlM8bPCtiLTha3ERvQjc6xRr+YBcJfOV+3tVviVXdsjJXry+yavw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1wjy8Mf00EaOCYZaZzDaYkUTUGROKbzf8UjdC2c64XY=;
- b=lFMYSVzlzlslzzaDr16G4t9mXi+ame3PGkqc/DiaG9oC/HhuOTZkM/q+ItcyCcRhmOWaANxOgWwhf9hsimMZ/D8DFbBaeTjtcexe7tgtggR4eHAPL/JaxuT26/WroSWzRCQ2dvtWmuTUWW0BfwIZDqPCDKa3B7amGe0WjWKVXVBbIkoW8PuPmSSMNiWoaGHaw9CBBV8GiwvErjsUcGoU9hKgE6M7rQYmELqfiH3L5Zs8NHSXxwXrzm6EV0WwQv4F6pQZsHKUIKQp7RlwYqPf/WuJ75gqwnaon02jKyVKN7z5nY8Nt0Tm4dv/Tk6DPKYOqbgOiiBTHVHmJVGjmwFQvg==
+ bh=8bYbtIvYaqykqIpwthNf8li0oA2XXEaMbObcNEA2eCI=;
+ b=bI5m+IFvevhKjZ2iheKC8ECGVnN6e/U0r9ikwQlkwuHDVmdWQYJwAE0CbrGTnI5MpIjKowjNLe9DPhp84W5oGUWfHz5+lTWhCxs72j7Zgwwzd3uN0GqduhyuFMn7b7c+WAgOxTMcn/EO6Z/YY37nzmo1jA73Lq4wmkbMcsZFyNBZx43JT7MoEOjZxiWYM3BCz2j6kAbtvYKtzoerJ0LLe0W8TOHs63En4WsEXTo86BsuwTw88p9DZvQ+z92v5ot29li7GU6Oyl2p9vsmWkZGmYbmVd9LrcjotKmGlRlFZpq6fmQdQcN7UPFLL15MMHEjRs378X2L8BqH94Pxqv2aHA==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from DM6PR12MB3356.namprd12.prod.outlook.com (2603:10b6:5:38::11) by
  MN0PR12MB5764.namprd12.prod.outlook.com (2603:10b6:208:377::8) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6064.32; Wed, 8 Feb 2023 12:19:25 +0000
+ 15.20.6064.32; Wed, 8 Feb 2023 12:20:46 +0000
 Received: from DM6PR12MB3356.namprd12.prod.outlook.com
  ([fe80::2654:3212:6fa4:ec1d]) by DM6PR12MB3356.namprd12.prod.outlook.com
  ([fe80::2654:3212:6fa4:ec1d%6]) with mapi id 15.20.6043.028; Wed, 8 Feb 2023
- 12:19:25 +0000
-Message-ID: <da5b6b73-3243-d492-4b82-77411e4676d9@nvidia.com>
-Date:   Wed, 8 Feb 2023 17:49:09 +0530
+ 12:20:46 +0000
+Message-ID: <fdc729fb-2d66-93e0-9544-1a8c8d231b4f@nvidia.com>
+Date:   Wed, 8 Feb 2023 17:50:29 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.5.0
-Subject: Re: [RFC,v14 3/5] PCI / PM: Add support for the PCIe WAKE# signal for
- OF
+Subject: Re: [RFC,v14 2/5] of/irq: Adjust of_pci_irq parsing for multiple
+ interrupts
 Content-Language: en-US
 To:     Thierry Reding <thierry.reding@gmail.com>
 Cc:     bhelgaas@google.com, petlozup@nvidia.com,
@@ -57,72 +57,72 @@ Cc:     bhelgaas@google.com, petlozup@nvidia.com,
         linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
         vidyas@nvidia.com
 References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
- <20230208111645.3863534-4-mmaddireddy@nvidia.com> <Y+OMoKOfduwj2PYp@orome>
+ <20230208111645.3863534-3-mmaddireddy@nvidia.com> <Y+OLLMrHqMCrHxLB@orome>
 X-Nvconfidentiality: public
 From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-In-Reply-To: <Y+OMoKOfduwj2PYp@orome>
+In-Reply-To: <Y+OLLMrHqMCrHxLB@orome>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: MA0PR01CA0043.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a01:81::14) To DM6PR12MB3356.namprd12.prod.outlook.com
+X-ClientProxiedBy: MA1P287CA0007.INDP287.PROD.OUTLOOK.COM
+ (2603:1096:a00:35::24) To DM6PR12MB3356.namprd12.prod.outlook.com
  (2603:10b6:5:38::11)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM6PR12MB3356:EE_|MN0PR12MB5764:EE_
-X-MS-Office365-Filtering-Correlation-Id: 14fd1227-b8b9-4029-fc49-08db09ceb79e
+X-MS-Office365-Filtering-Correlation-Id: 520a0dda-f60c-446d-b4be-08db09cee7b3
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gVi1rpBipmYpp8DOwNOpj+vMCCSnfWnkda05Fm99bxNuMoVsv7sGF4fVg3jICH/eMQON28LRkBv7qpZKQgU0Flzb5AYD46ovPT+Sj2Z6D75cuVyhZYfbSacTNpa6WE+xF94FFYjUWOZp97dsFnIwfVPXvMdBHfxSnxk58mTrvvYGvK+VYysj0yLgYa3mLcLVYeCEuDbWTV/hKcpzyaJIIzmHwCWQ1BQKJVeQXt/EL1Dd3AFGu2f1Q6hVhTxvARYxYzIT+EF8VgMq8usLgpnOG5mz3IgbmNmMYwWJs2FnLCrmZokWWUBONYbrOar9tjpF5qwmqFYwhAq7/MEm8LKesIkWGefCoB1CoWSzmsUG1FykqG2Lyq08SfYlygoDDsgAcGkbYV2/CqV7Y+qgeADWgjWXWXACmiJOxYn8QNzFM5exQ1aquCnfvzUIZRJL5iq7zjta3R9enLmt/9PjeHyof80+nGJXlUya7cKcCz4q2RYTOFN9we3Joi9oZ4ULFzN1n94hoFmlOvppyDLocldOTdFYTMKJg5SMSShgwn2Jk8twKoKroAFv/bRcYNF/dQlnREiL0FJ8Wbbgwa+Wva3kqUE0QuhlSWL9KJ44uY2/0FYA0TOldTwMjvD7WfRCCH5nyim1xiO0HT3K0NAY1XvwvXyshWGcn3JJnonucePvWvYqWGjXwtv+9Gb+DeuJaGUVJ4+nynz+V4pJYGV0voOmxOZytVedWnLAzTRqQCzSklc=
+X-Microsoft-Antispam-Message-Info: lDg9Gp66oSDNxFoQH2WtK3jQLmvlRncdlMu6riu8BQlkzJ1BLAQoUSXm1tk8xnpOghudv9pDnO+XBnN0c+6jM+ctysUq5dY/cr3KWOHZ7na6G6rWmzwdf1daIfQ7nbzqixj9lgNOd/SqQiPTQop2kHY8V7QzvdLgZvTziVSIneETPg/lCu18qB9FvR2D4YEPv8xwC/CdtjAxpeQjkU7/dgvRLtN8U5wifVGqSuTlCGKKSuy+O5SCSYO7ObwoEWCBA7i2iVIsF0JjE2dWt9RRR0WJzo/bdcTnGUX8+ISvD3RjQnzcCw9r3czv2uLCUOOPsDKUX9FHqcrJlT2QyLTOEQ/qh2y6kAsJsLKCsq/fvKlFqIFMNkeVxSsxWS7jTZCgkhV85G63zpV6SZcqvDhJF/b07ji56J93HM719BZ9aCiQuuD+uePJa5PSvShwxWNJdhUXZl1ESkon3zFjn27JO9RxCz4ScAfqGKVAYcxBa+maxijgkDPO2upgC/nxPqL65QOKm3Cw2Z0sTDnLumvUoC1M7767hoL/3LttQj2T1dUaBxZ81hoZSQ0kl7qTI370vS/io2rbflJKdaW/YzMY8Na1MoDn2Hk4BU59yp3Z6lR7cK/uHIcUKyYCGNfELpQBHJPWh6Vj68a650Kny2dCvZ+uGuKIHOuKxMAfnCBIdEaU5xnAUJhXGjDrbii07YjSBJMGFbDTVUAl97kCQZ6915UEheSWOB/3AUHWUJfi6i8=
 X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3356.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(396003)(346002)(366004)(376002)(451199018)(5660300002)(7416002)(53546011)(6506007)(26005)(6512007)(186003)(38100700002)(6666004)(83380400001)(107886003)(2616005)(4326008)(8676002)(316002)(66476007)(66556008)(66946007)(31696002)(6916009)(86362001)(8936002)(36756003)(41300700001)(478600001)(6486002)(31686004)(2906002)(43740500002)(45980500001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U3FoVzJ2cmdUZHZ0V2h0MnRmNnpqVzZsdkMwZVVjQ3R1dUhXQlZwbmIxUGZy?=
- =?utf-8?B?cGE4a1JFeFg5WW5ISWlsQ2xDNTh2M3JyYkNNckw3KzdqdTdlOVNOallFdTlN?=
- =?utf-8?B?VDRxTENhUk9ZbGtFMHBBYlMySTdyODNxNDhNdDBCblVQbXo3d3BYTnpvS2oy?=
- =?utf-8?B?ZGZUSVUvK21CSk5keDhuWDZpZVZ6M3dKbktzcXh1clM0QXY1amszbGJvS0VU?=
- =?utf-8?B?alJPUi9PNWV6QjJ2RmdjZmxFUmtId1lDTHJCVXF0ZXNTdkRwdU9kWWUrbW9h?=
- =?utf-8?B?d2t6d0lBN2V5UHNOeExKTnZZejdvcWNZZmVXczYzLy9hYjdXODJFY0hYTG5w?=
- =?utf-8?B?cVY1NDJMQ1lCdnIyOWlIekI1KzhiUEttbUpsQ1BGMTcvaTNac0dEc0UyaTZV?=
- =?utf-8?B?Q244M0RWM1dCYkF0djBEenk5RU5MbTRmMkw0eHNHcWhySWVmbEc5L0EwV2o3?=
- =?utf-8?B?V1pzUjVhczlRNkwrRDJxcHhtWlA3U1RWWGh5T29qY2pTenBXNW1NTWlKZUFX?=
- =?utf-8?B?ZVpwVHpiNzRhcU82aHNIWXNRV1Y1azVUL2tHOVVNSnI2T2ZDZFVuaDdtQ3F1?=
- =?utf-8?B?MXVDZkxvc2NnRGkydiswVTNXMUFhUHpLK0N5NU5Ra0hkMU8vem5MV2J0R3Bi?=
- =?utf-8?B?MUNqN1c1NWR6a0pSV1BjQU5PcGtzTnNhbG0zaGlLTHYxQ1JtV1FqLzdCUCtB?=
- =?utf-8?B?dDcwN1hnOFBuRUc1OEF4ZGxrTS80dkJLLzBjT0JhYW1mTzBtOEM4cHF6VktT?=
- =?utf-8?B?QXFHWDlxc1doUktJTFpoeU9VZ1RCQkZENW9NUWs5cUR3eFlPOTRYb09BUkd2?=
- =?utf-8?B?b01wblErcXV2SW5WQmFSblh5U1MwNnIyYlFXUHZ6Ym9sVUdtcUZtY2x4OER2?=
- =?utf-8?B?SFY5Q1V0UzVya3JnL0l0UitVYzdzMXJRZjNTaHd4Y0UzbElFVDNtK1lWcWJm?=
- =?utf-8?B?a0F0T1FzQ1NvanZZZW14dUFYZHYzWllacEFQUFRvbkxjTTNqeFdzVkRJWUpq?=
- =?utf-8?B?eXBEWEZKOUhFbm1wVkd6SjFSeDd2RVJVZU9TVlREMmEzVWNQZlo5Vk9vMXZE?=
- =?utf-8?B?ZUt4UHIyb280b09nQjdWZ0pjV254Qk9NWjlBcE9pZFlHd28rU1JiVWdCVmJv?=
- =?utf-8?B?Q3Z0VmVtQkRoeTB0Q1UwenNSTlNvclVqbEdKbWVNMG1hT0w3TW9XSlFrcVhy?=
- =?utf-8?B?dVVna0FuSnBDUnZYb2w2QklLRTh1b2hnMjh2eCtQbjJzZXkxcGd4UWM4YVB0?=
- =?utf-8?B?b3U1SW9RS1EvaHc5MnB1R2dNQjZnT2dIcjU1TXc4Z0N5czJoWmN4MldoNHIx?=
- =?utf-8?B?dnhmc0Z0ZjFmRWZLRUl4cFRwcnNNTTNYVU9jSVdnOE9qa0o0VU5Hdm1uQzIw?=
- =?utf-8?B?anlaT1lud2MwbElTVnJyRHRYUjhHNWxSRTNmVDY5bkVFNjRmU2FmQ05ROU4z?=
- =?utf-8?B?cFgwMDd4WmRBZnVOSFduRHhrSW5FK051YUswZlN5SHVzYnZQeERtT2xMU01U?=
- =?utf-8?B?ZGlTK1dWQTdlU3pXMXNCMkwybXRxWXV1Zkd1QzZwNTFuT2VFTlZqYVFsODVP?=
- =?utf-8?B?YjNOOHVlL3ZjenpoWE1hWUZXRFNPREFEU0lxOWJObWQzdllEc1hFZVU3cUp4?=
- =?utf-8?B?eHNLZ1FJZWpZL1JlamxBSmppZFozd0tBNEVBaDY0eEt2N3NjUm1lejI4cWlJ?=
- =?utf-8?B?ZGNZYlJJUGxBMTVKRjRqTFlaaHJYeW1Ub0x2RmpabzR1RFZUaVVreUVUOFRa?=
- =?utf-8?B?Wm1ES3RLY0pLTzZudDVyd005YUhBRXRkTVlqS3UyRU42TkVxajQ3UStwQ3VM?=
- =?utf-8?B?MGpVU29QbHQ2b2pkSmZlN1BxUC9XRjhKdnpxZ1pOcXBqSHBxTnNVWStOY0FZ?=
- =?utf-8?B?WElEbTZqbHBkV2k4MENPejRMSy8vWjFGMTZ5VnRISHRHSzNBUW00UGtYdzl0?=
- =?utf-8?B?MWRJZ0w4M05aNnhyODRENU1iSDAxdSsvY3AzdEMvUWVwRnlINkdCdjBLcTlm?=
- =?utf-8?B?NkRzOUtIRmJHdEM4TXpESTQyWW1vL0JFbWtOdWY0a1ViY1hCcFNkZkMvem9K?=
- =?utf-8?B?T2I0VHc5S1pjWFc4Tzc0Y2c3VWxGbzdzTENkWDZmaVZiQllZRlY0ekhrOUw0?=
- =?utf-8?B?R2x3dy9CYnZzdUNDRVdUNjFiYWxaTS9tRVliakhKN2dmdFRobWUwc2wzdHo3?=
- =?utf-8?B?anc9PQ==?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Qml5Z0MrOWNuQnhXTXJVSXJzTFVkUnM5TFI3L1duNzM0M0k4Tm5uRXE0SWRl?=
+ =?utf-8?B?TmlFdlJqVzZla2NYQVBrdnR5c2E0SXRRTFlNTmFtTFZDN0JiZTFuOWJ0R0dD?=
+ =?utf-8?B?T3BzaVdyRUlYamhkY1NhRnNJOS93K3VneU1kUWJkQnRQU0d2R2VRYmZOejdO?=
+ =?utf-8?B?ZDZjQ2QvVGNjejlJNFA5QnVFeXBRL0pzVzBNWnI1MFZRd0R0TkI0SHhMSE0v?=
+ =?utf-8?B?VTgxejRyQkw4YnNPQ1IyNEVFdE5pZlpHZnZZWkdIRzZ5M2NLMzRUcUFrZXJI?=
+ =?utf-8?B?SDN4RTZ3bnVMN1RXQ3YrdGVDS3JJTHdySkRydnJJQzZQNzg1U1NPYXFrbjBa?=
+ =?utf-8?B?WjcybHFOUFNEVi9CclRTbEhTNVM4S0lBZU9Zc0tHbG1PV21HNGZTOUszRm9W?=
+ =?utf-8?B?eDZZZVRpSUxCQk5mKy9PSFBJUnNwSzBBV3lJdlNEV0sydk83bXh0VURXTmF0?=
+ =?utf-8?B?Zml3OTZ3anlteVlIdys3cll2ZUhkRkZFTXFnK0MxZ0pqVHlUazlxejdKVUwv?=
+ =?utf-8?B?K1lmQmw1dnRicklkWnhQVW5kblNOem5iWjdQTEg2RHFrRGRSeWhXWmVPUXlB?=
+ =?utf-8?B?djNucEdGQkROUXNQczI0QkE5MUYxTitCL0VkTzZOM2NCZW16ZXFqbGhVNmYy?=
+ =?utf-8?B?MU1pMXlCOXBCTjUvbTVhaDFoTjViR1FyTW9hbDhjQ2NyOXpxVGJ1bWZwQ2lj?=
+ =?utf-8?B?UDNTZFF4WEVyaW1hcVlqTStFaXV3NUVhNUdvZzMzakFJcDlFQklDa2IwRktw?=
+ =?utf-8?B?YkVNU2tzMWFLZitTUGpHbDFsTWNZK1pWWTJDcGU2MTd3Ykg0OVdjV0ZXdE03?=
+ =?utf-8?B?eS85blgxZHhEODVOYTJjYjZsZXFMcHdSa3JCVGpFS1FmVks1L3ZUTzZaZEt2?=
+ =?utf-8?B?SWZyWUF5aXVLMS9QaDhpd0Z3WUxWNEpFUDFVY1NtTlBkdzJNYW5lSnYzVnRR?=
+ =?utf-8?B?N1VVVUk2eXpNV0Q5THhEbFcvQ052ZzZsSnQ5QnVFdk5SUVFORTF2aXB5TFVB?=
+ =?utf-8?B?Z3c3eXQzVWNzZW1yenlXU21xZmYyRWkyKzQ4ZHlIU2JLaFhNNDBGUzIveUw2?=
+ =?utf-8?B?ZERVWE5CcWdmU2ZqUTBXWHVCRzE1Q0YrYVVDN0lsR29ZNXNKYTh6OFBXcFdj?=
+ =?utf-8?B?b28yTk8wU05KaVVSNUtzWkd3bGJPYkpManFFNXhjR2JaaWZXOVNFTWQ1Lysr?=
+ =?utf-8?B?MTRRbHp3V1NvZkhlVnFBUFBCbWVkRkUzemZzOHdwK1BOalh0S0FhZGdGc2FB?=
+ =?utf-8?B?dGNuTjZqSGt4ZjVuTG9vaHpaYW54aUZyZFBaUGRKUkNWUjQxSk5MRWNKQlVz?=
+ =?utf-8?B?YVBkdXlCZkZLVGpzRVNwN1Z3aUY3TlR5RVhpV0R1b1l5SWcxZFhHS09WdzdI?=
+ =?utf-8?B?VnN5Nm0vYWkrd3c4MlIwMHFSRkxVdUJrUFpmQldtUHhIUUdNN2UzUnBuejE4?=
+ =?utf-8?B?ZzRwa29ZYUJLVCs1S3U4QVVoNDdpcEdoRktJclEzQW0zQ2NFb21mY3BxOTRZ?=
+ =?utf-8?B?dEtCNllMNVZjY01vVHRHSU9SQm9oQm8zdStlemcxOFdQTUtUdGw4OXMzR2Ji?=
+ =?utf-8?B?bSttamF2UjA1ZVFrdkdtZmIzbHRCZ1p6ZS96YnhvaWF6dE1uaEx0Y2FXVERk?=
+ =?utf-8?B?ejRPZCtQT0N2cWlSN3puWnVXR3k0Uk53bXJpQTI3OFVFQzhhN0ZramtvbXBK?=
+ =?utf-8?B?bjk4WWRmTytHaGMxN1ZQUUczaTR0cTFuQldId2swaGZqSkk3WUZwajhod1lo?=
+ =?utf-8?B?UW9mejVwaENuc0J1ZTZXWlZwbnM1QkEzemJNblJCZ3k4WENRM242ZEl3dFFl?=
+ =?utf-8?B?ZXEvVjJ0RWNiTVFDUHlERlFQTjhTeG9TczE2c1VYN3lPM2JTVHo3eVNTYnN3?=
+ =?utf-8?B?ekdHQ3Fzb3pTOFdqd3Q3V1J0Mk9NVGY3N1hJbndINXFXdHR4QUova0V0TGxz?=
+ =?utf-8?B?RjlzV1ExcE92ZGZMeWlvMUxralpZbjhFdWk2VStTMmplRnMzT0NkR29raS9S?=
+ =?utf-8?B?Qml2ZWVhaTBWSnQ3Z0JFNjYvU09seXhDQzFGVnBKVk1wMjVZajdYRlZtWHNu?=
+ =?utf-8?B?cnVXaEVDNEVIbDNCOUlacGcweUJXTDJtM05sUjdrUlh0OGM1RTNhQ1ZIN3px?=
+ =?utf-8?B?UGVGWGRuTEFrVUZFTWNXRllPNHQ2YmhJaWFBTEVpTEZxaDdzTFBJMTk0YllL?=
+ =?utf-8?B?WHc9PQ==?=
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 14fd1227-b8b9-4029-fc49-08db09ceb79e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 520a0dda-f60c-446d-b4be-08db09cee7b3
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3356.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 12:19:25.5213
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 12:20:46.2033
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: VHGMd9chsZsKVv9JDscZGFVPj3J+EwvcaDzbI4jBFZxDGeskaIrZzJAAaRncbpB7UaWuMUoNMCV+4BuQAii2gw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: /9/T0p3fkwCkyVcM8p0ZMhMV49RzurCYJBpxtT2hgVyzGzt3ZW1DN8ZYSCCaadKvXx01tAgQqx42ZvAEnh/p6Q==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB5764
 X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
@@ -135,120 +135,58 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 2/8/2023 5:20 PM, Thierry Reding wrote:
-> On Wed, Feb 08, 2023 at 04:46:43PM +0530, Manikanta Maddireddy wrote:
+On 2/8/2023 5:14 PM, Thierry Reding wrote:
+> On Wed, Feb 08, 2023 at 04:46:42PM +0530, Manikanta Maddireddy wrote:
 >> From: Jeffy Chen <jeffy.chen@rock-chips.com>
 >>
->> Add of_pci_setup_wake_irq() to parse the PCIe WAKE# interrupt from the
->> device tree and set the wake irq. Add of_pci_teardown_wake_irq() to clear
->> the wake irq.
+>> Currently we are considering the first irq as the PCI interrupt pin,
+>> but a PCI device may have multiple interrupts(e.g. PCIe WAKE# pin).
 >>
->> Call of_pci_setup_wake_irq() in pci_device_probe() to setup PCIe WAKE#
->> interrupt during PCIe Endpoint enumeration.
->>
->> Enable or disable PCIe WAKE# interrupt in platform_pci_set_wakeup().
+>> Only parse the PCI interrupt pin when the irq is unnamed or named as
+>> "pci".
 >>
 >> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
 >> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 >> ---
 >>
 >> Changes in v14:
->> pci_platform_pm_ops structure is removed in latest kernel, so dropped
->> pci-of driver. Instead, enable wake in platform_pci_set_wakeup().
+>> Address Rob's comment on using of_property_match_string().
 >>
->> Changes in v13:
->> Fix compiler error reported by kbuild test robot <fengguang.wu@intel.com>
->>
->> Changes in v12:
->> Enable the wake irq in noirq stage to avoid possible irq storm.
->>
+>> Changes in v13: None
+>> Changes in v12: None
 >> Changes in v11:
->> Only support 1-per-device PCIe WAKE# pin as suggested.
+>> Address Brian's comments.
 >>
->> Changes in v10:
->> Use device_set_wakeup_capable() instead of device_set_wakeup_enable(),
->> since dedicated wakeirq will be lost in device_set_wakeup_enable(false).
+>> Changes in v10: None
+>> Changes in v9: None
+>> Changes in v8: None
+>> Changes in v7: None
+>> Changes in v6: None
+>> Changes in v5: None
+>> Changes in v3: None
+>> Changes in v2: None
 >>
->> Changes in v9:
->> Fix check error in .cleanup().
->> Move dedicated wakeirq setup to setup() callback and use
->> device_set_wakeup_enable() to enable/disable.
->>
->> Changes in v8:
->> Add pci-of.c and use platform_pm_ops to handle the PCIe WAKE# signal.
->>
->> Changes in v7:
->> Move PCIE_WAKE handling into pci core.
->>
->> Changes in v6:
->> Fix device_init_wake error handling, and add some comments.
->>
->> Changes in v5:
->> Rebase.
->>
->> Changes in v3:
->> Fix error handling.
->>
->> Changes in v2:
->> Use dev_pm_set_dedicated_wake_irq.
->>
->>   drivers/pci/of.c         | 49 ++++++++++++++++++++++++++++++++++++++++
->>   drivers/pci/pci-driver.c | 10 ++++++++
->>   drivers/pci/pci.c        |  7 ++++++
->>   drivers/pci/pci.h        |  8 +++++++
->>   4 files changed, 74 insertions(+)
+>>   drivers/pci/of.c | 14 +++++++++++---
+>>   1 file changed, 11 insertions(+), 3 deletions(-)
 >>
 >> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
->> index ff897c40ed71..1c348e63f175 100644
+>> index 196834ed44fe..ff897c40ed71 100644
 >> --- a/drivers/pci/of.c
 >> +++ b/drivers/pci/of.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/of_irq.h>
->>   #include <linux/of_address.h>
->>   #include <linux/of_pci.h>
->> +#include <linux/pm_wakeirq.h>
->>   #include "pci.h"
->>   
->>   #ifdef CONFIG_PCI
->> @@ -705,3 +706,51 @@ u32 of_pci_get_slot_power_limit(struct device_node *node,
->>   	return slot_power_limit_mw;
->>   }
->>   EXPORT_SYMBOL_GPL(of_pci_get_slot_power_limit);
->> +
->> +int of_pci_setup_wake_irq(struct pci_dev *pdev)
->> +{
->> +	struct pci_dev *ppdev;
-> Perhaps "parent" since that's what it is referring to? ppdev is a bit
-> vague.
-ppdev is already used in of_irq_parse_pci(), I think it mean parent pci_dev.
-I see that parent is mostly used for pci_bus parent. Let me know if it 
-is fine
-to leave it as ppdev or need to rename it.
+>> @@ -429,9 +429,17 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
+>>   	 */
+>>   	dn = pci_device_to_OF_node(pdev);
+>>   	if (dn) {
+>> -		rc = of_irq_parse_one(dn, 0, out_irq);
+>> -		if (!rc)
+>> -			return rc;
+>> +		int index = 0;
+> No need to initialize to 0 here since you're assigning to it immediately
+> below.
 >
->> +	struct device_node *dn;
->> +	int ret, irq;
->> +
->> +	/* Get the pci_dev of our parent. Hopefully it's a port. */
->> +	ppdev = pdev->bus->self;
->> +	/* Nope, it's a host bridge. */
->> +	if (!ppdev)
->> +		return 0;
->> +
->> +	dn = pci_device_to_OF_node(ppdev);
->> +	if (!dn)
->> +		return 0;
->> +
->> +	irq = of_irq_get_byname(dn, "wakeup");
->> +	if (irq == -EPROBE_DEFER) {
->> +		return irq;
->> +	} else if (irq < 0) {
->> +		/* Ignore other errors, since a missing wakeup is non-fatal. */
->> +		dev_info(&pdev->dev, "cannot get wakeup interrupt: %d\n", irq);
-> dev_dbg() maybe? As it is this would add an annoying info message for
-> basically every PCI controller on every DT-based board out there.
+> Otherwise, looks good, so with that initialization dropped, this is:
 >
-> Thierry
-Ack. I will wait for few days for other review this series before 
-sending new patch set.
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+Ack, I will take care of it next version.
 
 Manikanta
