@@ -2,153 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3949768F414
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 18:14:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E4BE368F46A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 18:25:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230353AbjBHROB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 12:14:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43678 "EHLO
+        id S231391AbjBHRZY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 12:25:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbjBHROA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 12:14:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5ED913D52;
-        Wed,  8 Feb 2023 09:13:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7D889B81F02;
-        Wed,  8 Feb 2023 17:13:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22341C433EF;
-        Wed,  8 Feb 2023 17:13:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675876437;
-        bh=uIn14lKQnE4MQMzWpMduYFj1ngI5uQm7hYWdO129A20=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RN8YOLUV8gEKc+AyiCT/ftGUAoXNDT0DJ5CuGmHCjLmYz6q2zJx9NqcKNV+F9Q6//
-         XYXRPH8Jf9yxUbCsJCrU0a570yg7EtEfoxiDm0ZwLcxEg4x+1J3Xz/P557zioileje
-         EcSmxfxsZHFuzgVVy5RNrvZe00FE7rK9MHWWi+x461gN1RHEzoCg6QUIBfaOE02h2H
-         ox4gMmAtd5YvB+9JxT6k9vd5Kmoaz7Obj9l4CoGZjF78CPFFwzSH265At2annbgD3u
-         HvaG0ZdKKB1rOxTlagS/AU3vHagQoCDRiaWRYPVjQ4rRJUSe71LnQlTcWQINaSc/+8
-         A/y+n8r+/cUJA==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan@kernel.org>)
-        id 1pPo1h-00068l-QX; Wed, 08 Feb 2023 18:14:33 +0100
-Date:   Wed, 8 Feb 2023 18:14:33 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Abel Vesa <abel.vesa@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "vkoul@kernel.org" <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Johan Hovold <johan+linaro@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 10/12] PCI: qcom: Add SM8550 PCIe support
-Message-ID: <Y+PYeRo8X8ugXyoi@hovoldconsulting.com>
-References: <20230203081807.2248625-1-abel.vesa@linaro.org>
- <20230203081807.2248625-11-abel.vesa@linaro.org>
- <Y9zYpE/GnxUqnIyq@hovoldconsulting.com>
- <Y+EYhe/xYSFpI1Yn@linaro.org>
- <Y+PQYxh4t/ytOe3+@hovoldconsulting.com>
- <Y+PXeYrBBL3QaznM@linaro.org>
- <Y+PXrFxobTf/+X+U@linaro.org>
+        with ESMTP id S232159AbjBHRZJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 12:25:09 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E65E54FAF0;
+        Wed,  8 Feb 2023 09:24:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675877088; x=1707413088;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=P9o81TrnMYv/0lzBvAqefabI0OL+xE9TlzWfKBiybMI=;
+  b=Rqoxssfqe405Erkh8i2XjZ8jqj6+AHd7NhXvcw+qIDqt4LPjWwrdepeR
+   CYszjOVruAxVaZ9LMFSWGJ9+AM0AhFQybfmfBMWcY5/te1N7xYQVXJ7cP
+   LoKrMFX8sG6aOa2VAuPNJVMtYl7nVE17I8FadH8pTHVFsEfGWVJfwaJgR
+   t6S3q657Z+BrqT70aPcvSqGWf4qUff8u4/dkQgYoYguW7Ua8+LfnKjRHk
+   o9AQneRrUWc3nd+1EAHiymm3AUaqrccYWPksLHvZnmd6fLWLniV8f/nIY
+   g9vWgNflNzkP33FEsgAdo5YzRczTLiQX80C8pik5JhFggd8IsiyEesB2l
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="309515344"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="309515344"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 09:23:48 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="699726611"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="699726611"
+Received: from tbacklun-mobl.amr.corp.intel.com (HELO [10.209.14.225]) ([10.209.14.225])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 09:23:47 -0800
+Message-ID: <4216dea6-d899-aecb-2207-caa2ae7db0e3@intel.com>
+Date:   Wed, 8 Feb 2023 09:23:46 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y+PXrFxobTf/+X+U@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Content-Language: en-US
+To:     Borislav Petkov <bp@alien8.de>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+References: <1673559753-94403-1-git-send-email-mikelley@microsoft.com>
+ <1673559753-94403-7-git-send-email-mikelley@microsoft.com>
+ <Y8r2TjW/R3jymmqT@zn.tnic>
+ <BYAPR21MB168897DBA98E91B72B4087E1D7CA9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y9FC7Dpzr5Uge/Mi@zn.tnic>
+ <BYAPR21MB16883BB6178DDEEA10FD1F1CD7D69@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+JG9+zdSwZlz6FU@zn.tnic>
+From:   Dave Hansen <dave.hansen@intel.com>
+In-Reply-To: <Y+JG9+zdSwZlz6FU@zn.tnic>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 07:11:08PM +0200, Abel Vesa wrote:
-> On 23-02-08 19:10:17, Abel Vesa wrote:
-> > On 23-02-08 17:40:03, Johan Hovold wrote:
-> > > On Mon, Feb 06, 2023 at 05:11:01PM +0200, Abel Vesa wrote:
-> > > > On 23-02-03 10:49:24, Johan Hovold wrote:
-> > > > > On Fri, Feb 03, 2023 at 10:18:05AM +0200, Abel Vesa wrote:
-> > > > > > Add compatible for both PCIe found on SM8550.
-> > > > > > Also add the cnoc_pcie_sf_axi clock needed by the SM8550.
-> > > > > 
-> > > > > nit: You're now also adding 'noc_aggr'
-> > > > > 
-> > > > > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-> > > > > > Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> > > > > > Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> > > > > > ---
-> > > 
-> > > > > > @@ -182,10 +182,10 @@ struct qcom_pcie_resources_2_3_3 {
-> > > > > >  
-> > > > > >  /* 6 clocks typically, 7 for sm8250 */
-> > > > > >  struct qcom_pcie_resources_2_7_0 {
-> > > > > > -	struct clk_bulk_data clks[12];
-> > > > > > +	struct clk_bulk_data clks[14];
-> > > > > >  	int num_clks;
-> > > > > >  	struct regulator_bulk_data supplies[2];
-> > > > > > -	struct reset_control *pci_reset;
-> > > > > > +	struct reset_control *rst;
-> > > > > 
-> > > > > Please name this one 'reset' or 'resets' (e.g. to avoid hard to parse
-> > > > > things like res->rst below).
-> > > > 
-> > > > Well, it would then be inconsitent with 2_3_3 and 2_9_0, which both use
-> > > > rst.
-> > > 
-> > > Yeah, I saw that. Fortunately these resources are completely
-> > > independent, but whatever.
-> > 
-> > Will do it in the next version then.
+On 2/7/23 04:41, Borislav Petkov wrote:
+> Or are there no similar TDX solutions planned where the guest runs
+> unmodified and under a paravisor?
 
-Or just leave it as is.
+I actually don't think paravisors make *ANY* sense for Linux.  If you
+have to modify the guest, then just modify it to talk to the hypervisor
+directly.  This code is... modifying the guest.  What does putting a
+paravisor in the middle do for you?
 
-> > > > > >  };
-> > > > > >  
-> > > > > >  struct qcom_pcie_resources_2_9_0 {
-> > > > > > @@ -1177,9 +1177,9 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
-> > > > > >  	unsigned int idx;
-> > > > > >  	int ret;
-> > > > > >  
-> > > > > > -	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
-> > > > > > -	if (IS_ERR(res->pci_reset))
-> > > > > > -		return PTR_ERR(res->pci_reset);
-> > > > > > +	res->rst = devm_reset_control_array_get_exclusive(dev);
-> > > > > > +	if (IS_ERR(res->rst))
-> > > > > > +		return PTR_ERR(res->rst);
-> > > > > 
-> > > > > So the reset array implementation apparently both asserts and deasserts
-> > > > > the resets in the order specified in DT (i.e. does not deassert in
-> > > > > reverse order).
-> > > > > 
-> > > > > Is that ok also for the new "pci" and "link_down" resets?
-> > > > 
-> > > > According to the HPG, yes, this is perfectly fine. It specifically says
-> > > > to assert the pcie reset and then continues saying to assert the
-> > > > link_down reset.
-> > > 
-> > > Ok, but that doesn't really say anything about whether it's ok to
-> > > *deassert* them in the same order, which was what I asked about.
-> > 
-> > Actually, what I wanted to say is that the HPG says something like this:
-> > 
-> > "assert pcie reset, then assert link_down"
-> > 
-> > and then at the end it literaly repeats the same phrase.
-> 
-> but uses deassert instead of assert ...
+It might help with binary drivers, but we don't do upstream kernel work
+to make silly binary Linux drivers happy.
 
-Ok, then it seems to match the implementation. Thanks for clarifying.
-
-Johan
+So, no, there's no similar TDX solutions planned, at least for Linux
+guests.  Unless I missed the memo.  Kirill?
