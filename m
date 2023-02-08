@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F187068F66F
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:01:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7186568F670
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:01:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231736AbjBHSBz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 13:01:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39350 "EHLO
+        id S231935AbjBHSB4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 13:01:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231937AbjBHSBP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:01:15 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C7B53E47
+        with ESMTP id S231820AbjBHSBQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:01:16 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 830D85357A
         for <linux-pci@vger.kernel.org>; Wed,  8 Feb 2023 10:01:05 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso2063052wmp.3
-        for <linux-pci@vger.kernel.org>; Wed, 08 Feb 2023 10:01:04 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id f23-20020a05600c491700b003dff4480a17so2763627wmp.1
+        for <linux-pci@vger.kernel.org>; Wed, 08 Feb 2023 10:01:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=kfazGtDZ+oWsIm7qBpuVQIZGbKe2YHctFcfaIzg4eRk=;
-        b=AJf/HmZy/DJeFA4L93I2LU6HDwOmEDG6kiy5/LjEvUITXTnJNFgGN510dLgv0yOQ6a
-         6Nhk57f4+iPOkpwmfOyJ5+hMwB4yq2AxaR2bere2CCN8vxedgjLmTJr+Uyau/LDNL5XU
-         gJMh9240y11YJBruz470E/PbMuouZR2geTc/Pc2wAa0VtlnB2Bt5FQNZXbOrSTNbBmbL
-         jQfkf6wSku71wz/6DdnaDBnXBB1Ej0963UgMOFM2/S08lq0p5n2ZRw3nseseT045vIOK
-         yxthCPkOlrs+OURRVGj54UJ/hpYIPF0glekgjDk6AFWIDqTuzWLJ9+oixMrY/Q42xZJ5
-         +goQ==
+        bh=S84pLTPJCH/uwIFX1Bqrss8Ya9/sRzww29xePAXKGDg=;
+        b=OWbsgK5wAowu7HB3nMQtoFtJcIRiloGKze/s9KZYtplpDskAKGHGIZ2cLBUOlFTldN
+         F1q0UQqdLKfrg8g+y6t+karc07rgUjCFjcm1NiowH0px6NBw+lDeyFJWxei/JUQbN2L8
+         ZAV298fCUmv9guqNe48PsxxYst11g09THitgj7bD6jDpM8B3HcBkEArsGMBjLUcbUYSA
+         oBd+RfOwVAMOtT1rm/GnczfT69J9qVQ0CHIr1aoCrQRzZceH+A9K7H+TxFySZD3m3jVd
+         NU3MiK7ePlYGgHDhMFAK0ncEzPbm1uEAq/Wo27nelnIyWV86vxdwGK4YbcbPCG7PJCC0
+         QuGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kfazGtDZ+oWsIm7qBpuVQIZGbKe2YHctFcfaIzg4eRk=;
-        b=2aSbiNiOzCiD+hgvgNk6ilCtcci8xFlxfAcB717FtFLptPgk5ubzlaranEKKw4b1tA
-         uugQulm22Y8LugZW/MPL7nzHRSNq8POIe/ccDGAtp8v7GgxCPHk2yO4RmXG6/7qoVrht
-         +2MdMnTMNUkhPf92pt8sqt9+n75c7En9DYffI0a6n5QpIYiQCR1EWTLvkIk8lXyAQAsJ
-         USwipZmULeO7sm5JB1mlJv4J+8buu5BvT8g/Us7iq/Wcf9rrO9k0ZPK7Lrwo9NA99cUg
-         TiMlzTHuoC/QiBuJaqwftEwZJ8mNk8ufJ1LvixNq8hvt6kmCgteEacZ3W+O7UORI5iQM
-         36ng==
-X-Gm-Message-State: AO0yUKVR65NSCr2rlxRCU+dZcqnHD8DNQCXWVStkWcasnyDq4gE2f2LD
-        ZSJC909QCsPFub5hRLwj2yc3dw==
-X-Google-Smtp-Source: AK7set/1bTixNC+cV1xPID2qM+owEopJQcdX/0CltAtE8FXx1nrVoY72RhtAlpazghcrh6DfMnrCTg==
-X-Received: by 2002:a05:600c:707:b0:3df:ea9a:21c9 with SMTP id i7-20020a05600c070700b003dfea9a21c9mr8135595wmn.27.1675879263589;
-        Wed, 08 Feb 2023 10:01:03 -0800 (PST)
+        bh=S84pLTPJCH/uwIFX1Bqrss8Ya9/sRzww29xePAXKGDg=;
+        b=fG4BDwHeEl/FGvHyfcWFml4BvaxdXyV5QiiOb64URqwv/55IlUHZv10fmyb3nVaUmx
+         f63ShFOH5mvnYPhxlUK7TDMDvbm3xn0NfhouOW6MVel+2EqnAzgd+Nh5G7gGIAuxi9xm
+         kUQsiHc0F7d5q4wEqYpyGmzenA+bJkiJVgZXAPNci/Gnh+bEcHD2eIOj8N8tuXMDVCgl
+         3KHrzyl/TZa5SvM9JRqrVbIwdG/BvG5zBesGT28eLnW2vUfkbC/1M5oYQU5lNXh5iQfl
+         MrIfypLusEH/mp43gsjYqHWn8F8kaJ9OhDq8cun5plKtKX9k7gx831CxB23gMc6VQ/1y
+         OWUw==
+X-Gm-Message-State: AO0yUKV8d2z0rPRwK1cw6JDe0uEK2uS+aKx0d+3SxzJaze6zS49y4TCb
+        u3RQXqgkZYTZcbFgQCMoTQ/8cA==
+X-Google-Smtp-Source: AK7set8LIAnojVY6PUG1aP0PYXhEbr07tUn+/CwvVQC7jyf60qhmICJLIeoZPPkmfA3vmuPOkOX5AA==
+X-Received: by 2002:a05:600c:1606:b0:3e0:39:ec9d with SMTP id m6-20020a05600c160600b003e00039ec9dmr7552229wmn.23.1675879265169;
+        Wed, 08 Feb 2023 10:01:05 -0800 (PST)
 Received: from hackbox.lan ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id k20-20020a05600c169400b003dc54eef495sm2370286wmn.24.2023.02.08.10.01.02
+        by smtp.gmail.com with ESMTPSA id k20-20020a05600c169400b003dc54eef495sm2370286wmn.24.2023.02.08.10.01.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 10:01:03 -0800 (PST)
+        Wed, 08 Feb 2023 10:01:04 -0800 (PST)
 From:   Abel Vesa <abel.vesa@linaro.org>
 To:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <andersson@kernel.org>,
@@ -65,9 +65,9 @@ To:     Andy Gross <agross@kernel.org>,
 Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: [PATCH v9 10/11] PCI: qcom: Add SM8550 PCIe support
-Date:   Wed,  8 Feb 2023 20:00:19 +0200
-Message-Id: <20230208180020.2761766-11-abel.vesa@linaro.org>
+Subject: [PATCH v9 11/11] arm64: dts: qcom: sm8550: Fix PCIe PHYs and controllers nodes
+Date:   Wed,  8 Feb 2023 20:00:20 +0200
+Message-Id: <20230208180020.2761766-12-abel.vesa@linaro.org>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230208180020.2761766-1-abel.vesa@linaro.org>
 References: <20230208180020.2761766-1-abel.vesa@linaro.org>
@@ -75,130 +75,211 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add compatible for both PCIe found on SM8550.
-Also add the noc_aggr and cnoc_sf_axi clocks needed by the SM8550.
+First, move the pinctrl related propeties out from SoC dtsi and into the
+board dts and add blank lines before status properties in the PHY nodes
+to be consistent with the rest of the nodes. Then drop the pipe clock
+from the controller nodes. Rename the aggre0 and aggre1 clocks to more
+generic noc_aggr, and then the cnoc_pcie_sf_axi to cnoc_sf_axi. Add the
+cpu-pcie interconnects to both controller nodes. Rename the pcie1 second
+reset to link_down and drop the unnecessary enable-gpios. Switch the aux
+clock to GCC_PCIE_1_PHY_AUX_CLK for the pcie1 PHY and drop the aux_phy
+from clock-names. Also rename the nocsr reset to phy_nocsr. With this
+changes we are now in line with the SC8280XP bindings.
 
+Fixes: 98a4dc3a78fa ("arm64: dts: qcom: sm8550: Add PCIe PHYs and controllers nodes")
 Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
 ---
 
 The v8 of this patch is:
-https://lore.kernel.org/all/20230206212619.3218741-11-abel.vesa@linaro.org/
+https://lore.kernel.org/all/20230206212619.3218741-12-abel.vesa@linaro.org/
 
 Changes since v8:
  * added Johan's R-b tag
 
-Changes since v7:
- * Mentioned the noc_aggr clock in the commit message as well, while
-   using the cnoc_sf_axi instead of cnoc_pcie_sf_axi
+ arch/arm64/boot/dts/qcom/sm8550-mtp.dts | 10 +++++
+ arch/arm64/boot/dts/qcom/sm8550.dtsi    | 52 +++++++++----------------
+ 2 files changed, 28 insertions(+), 34 deletions(-)
 
-Changes since v6:
- * none
-
-Changes since v5:
- * none
-
-Changes since v4:
- * added Mani's R-b tag
-
-Changes since v3:
- * renamed cnoc_pcie_sf_axi to cnoc_sf_axi
-
-Changes since v2:
- * none
-
-Changes since v1:
- * changed the subject line prefix for the patch to match the history,
-   like Bjorn Helgaas suggested.
- * added Konrad's R-b tag
-
- drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index a232b04af048..6a70c9c6f98d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -182,10 +182,10 @@ struct qcom_pcie_resources_2_3_3 {
- 
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
--	struct clk_bulk_data clks[12];
-+	struct clk_bulk_data clks[14];
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
--	struct reset_control *pci_reset;
-+	struct reset_control *rst;
+diff --git a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+index 725d3bc3ee72..56aab7cafcbc 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sm8550-mtp.dts
+@@ -414,18 +414,27 @@ &pcie_1_phy_aux_clk {
+ &pcie0 {
+ 	wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
+ 	perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie0_default_state>;
++
+ 	status = "okay";
  };
  
- struct qcom_pcie_resources_2_9_0 {
-@@ -1177,9 +1177,9 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	unsigned int idx;
- 	int ret;
- 
--	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
--	if (IS_ERR(res->pci_reset))
--		return PTR_ERR(res->pci_reset);
-+	res->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(res->rst))
-+		return PTR_ERR(res->rst);
- 
- 	res->supplies[0].supply = "vdda";
- 	res->supplies[1].supply = "vddpe-3v3";
-@@ -1205,9 +1205,11 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	res->clks[idx++].id = "ddrss_sf_tbu";
- 	res->clks[idx++].id = "aggre0";
- 	res->clks[idx++].id = "aggre1";
-+	res->clks[idx++].id = "noc_aggr";
- 	res->clks[idx++].id = "noc_aggr_4";
- 	res->clks[idx++].id = "noc_aggr_south_sf";
- 	res->clks[idx++].id = "cnoc_qx";
-+	res->clks[idx++].id = "cnoc_sf_axi";
- 
- 	num_opt_clks = idx - num_clks;
- 	res->num_clks = idx;
-@@ -1237,17 +1239,17 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	if (ret < 0)
- 		goto err_disable_regulators;
- 
--	ret = reset_control_assert(res->pci_reset);
--	if (ret < 0) {
--		dev_err(dev, "cannot assert pci reset\n");
-+	ret = reset_control_assert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset assert failed (%d)\n", ret);
- 		goto err_disable_clocks;
- 	}
- 
- 	usleep_range(1000, 1500);
- 
--	ret = reset_control_deassert(res->pci_reset);
--	if (ret < 0) {
--		dev_err(dev, "cannot deassert pci reset\n");
-+	ret = reset_control_deassert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset deassert failed (%d)\n", ret);
- 		goto err_disable_clocks;
- 	}
- 
-@@ -1841,6 +1843,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8350", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-+	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
- 	{ }
+ &pcie0_phy {
+ 	vdda-phy-supply = <&vreg_l1e_0p88>;
+ 	vdda-pll-supply = <&vreg_l3e_1p2>;
++
+ 	status = "okay";
  };
  
+ &pcie1 {
+ 	wake-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
+ 	perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
++
++	pinctrl-names = "default";
++	pinctrl-0 = <&pcie1_default_state>;
++
+ 	status = "okay";
+ };
+ 
+@@ -433,6 +442,7 @@ &pcie1_phy {
+ 	vdda-phy-supply = <&vreg_l3c_0p91>;
+ 	vdda-pll-supply = <&vreg_l3e_1p2>;
+ 	vdda-qref-supply = <&vreg_l1e_0p88>;
++
+ 	status = "okay";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/qcom/sm8550.dtsi b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+index 6ff135191ee0..bba1123ea374 100644
+--- a/arch/arm64/boot/dts/qcom/sm8550.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm8550.dtsi
+@@ -1672,25 +1672,24 @@ pcie0: pci@1c00000 {
+ 					<0 0 0 3 &intc 0 0 0 151 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+ 					<0 0 0 4 &intc 0 0 0 152 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+-			clocks = <&gcc GCC_PCIE_0_PIPE_CLK>,
+-				 <&gcc GCC_PCIE_0_AUX_CLK>,
++			clocks = <&gcc GCC_PCIE_0_AUX_CLK>,
+ 				 <&gcc GCC_PCIE_0_CFG_AHB_CLK>,
+ 				 <&gcc GCC_PCIE_0_MSTR_AXI_CLK>,
+ 				 <&gcc GCC_PCIE_0_SLV_AXI_CLK>,
+ 				 <&gcc GCC_PCIE_0_SLV_Q2A_AXI_CLK>,
+ 				 <&gcc GCC_DDRSS_PCIE_SF_QTB_CLK>,
+ 				 <&gcc GCC_AGGRE_NOC_PCIE_AXI_CLK>;
+-			clock-names = "pipe",
+-				      "aux",
++			clock-names = "aux",
+ 				      "cfg",
+ 				      "bus_master",
+ 				      "bus_slave",
+ 				      "slave_q2a",
+ 				      "ddrss_sf_tbu",
+-				      "aggre0";
++				      "noc_aggr";
+ 
+-			interconnect-names = "pcie-mem";
+-			interconnects = <&pcie_noc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>;
++			interconnects = <&pcie_noc MASTER_PCIE_0 0 &mc_virt SLAVE_EBI1 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_0 0>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
+ 
+ 			iommus = <&apps_smmu 0x1400 0x7f>;
+ 			iommu-map = <0x0   &apps_smmu 0x1400 0x1>,
+@@ -1704,12 +1703,6 @@ pcie0: pci@1c00000 {
+ 			phys = <&pcie0_phy>;
+ 			phy-names = "pciephy";
+ 
+-			perst-gpios = <&tlmm 94 GPIO_ACTIVE_LOW>;
+-			wake-gpios = <&tlmm 96 GPIO_ACTIVE_HIGH>;
+-
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pcie0_default_state>;
+-
+ 			status = "disabled";
+ 		};
+ 
+@@ -1771,8 +1764,7 @@ pcie1: pci@1c08000 {
+ 					<0 0 0 3 &intc 0 0 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+ 					<0 0 0 4 &intc 0 0 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+ 
+-			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+-				 <&gcc GCC_PCIE_1_AUX_CLK>,
++			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
+ 				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+ 				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+ 				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+@@ -1780,21 +1772,21 @@ pcie1: pci@1c08000 {
+ 				 <&gcc GCC_DDRSS_PCIE_SF_QTB_CLK>,
+ 				 <&gcc GCC_AGGRE_NOC_PCIE_AXI_CLK>,
+ 				 <&gcc GCC_CNOC_PCIE_SF_AXI_CLK>;
+-			clock-names = "pipe",
+-				      "aux",
++			clock-names = "aux",
+ 				      "cfg",
+ 				      "bus_master",
+ 				      "bus_slave",
+ 				      "slave_q2a",
+ 				      "ddrss_sf_tbu",
+-				      "aggre1",
+-				      "cnoc_pcie_sf_axi";
++				      "noc_aggr",
++				      "cnoc_sf_axi";
+ 
+ 			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
+ 			assigned-clock-rates = <19200000>;
+ 
+-			interconnect-names = "pcie-mem";
+-			interconnects = <&pcie_noc MASTER_PCIE_1 0 &mc_virt SLAVE_EBI1 0>;
++			interconnects = <&pcie_noc MASTER_PCIE_1 0 &mc_virt SLAVE_EBI1 0>,
++					<&gem_noc MASTER_APPSS_PROC 0 &cnoc_main SLAVE_PCIE_1 0>;
++			interconnect-names = "pcie-mem", "cpu-pcie";
+ 
+ 			iommus = <&apps_smmu 0x1480 0x7f>;
+ 			iommu-map = <0x0   &apps_smmu 0x1480 0x1>,
+@@ -1802,20 +1794,13 @@ pcie1: pci@1c08000 {
+ 
+ 			resets = <&gcc GCC_PCIE_1_BCR>,
+ 				<&gcc GCC_PCIE_1_LINK_DOWN_BCR>;
+-			reset-names = "pci",
+-				"pcie_1_link_down_reset";
++			reset-names = "pci", "link_down";
+ 
+ 			power-domains = <&gcc PCIE_1_GDSC>;
+ 
+ 			phys = <&pcie1_phy>;
+ 			phy-names = "pciephy";
+ 
+-			perst-gpios = <&tlmm 97 GPIO_ACTIVE_LOW>;
+-			enable-gpios = <&tlmm 99 GPIO_ACTIVE_HIGH>;
+-
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&pcie1_default_state>;
+-
+ 			status = "disabled";
+ 		};
+ 
+@@ -1823,18 +1808,17 @@ pcie1_phy: phy@1c0e000 {
+ 			compatible = "qcom,sm8550-qmp-gen4x2-pcie-phy";
+ 			reg = <0x0 0x01c0e000 0x0 0x2000>;
+ 
+-			clocks = <&gcc GCC_PCIE_1_AUX_CLK>,
++			clocks = <&gcc GCC_PCIE_1_PHY_AUX_CLK>,
+ 				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+ 				 <&tcsr TCSR_PCIE_1_CLKREF_EN>,
+ 				 <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>,
+-				 <&gcc GCC_PCIE_1_PIPE_CLK>,
+-				 <&gcc GCC_PCIE_1_PHY_AUX_CLK>;
++				 <&gcc GCC_PCIE_1_PIPE_CLK>;
+ 			clock-names = "aux", "cfg_ahb", "ref", "rchng",
+-				      "pipe", "aux_phy";
++				      "pipe";
+ 
+ 			resets = <&gcc GCC_PCIE_1_PHY_BCR>,
+ 				 <&gcc GCC_PCIE_1_NOCSR_COM_PHY_BCR>;
+-			reset-names = "phy", "nocsr";
++			reset-names = "phy", "phy_nocsr";
+ 
+ 			assigned-clocks = <&gcc GCC_PCIE_1_PHY_RCHNG_CLK>;
+ 			assigned-clock-rates = <100000000>;
 -- 
 2.34.1
 
