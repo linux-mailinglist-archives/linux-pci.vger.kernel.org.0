@@ -2,139 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 511B668EDC4
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 12:21:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F65868EE11
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 12:37:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231233AbjBHLTz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 06:19:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43848 "EHLO
+        id S230178AbjBHLhU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 06:37:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231418AbjBHLTI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 06:19:08 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2050.outbound.protection.outlook.com [40.107.92.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EFC3457FF;
-        Wed,  8 Feb 2023 03:18:20 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T/4A4ShrUpfegRBhEI9y8NCh1RMGotc2Fu7SaKemmc5kEuPuCSKEZLuzewB+/44I8dHnd5EVESD40LRtKGHNkIW0qXTE6ycEt33SYilkZ8JtOzBFQX7lhARh4THJQGaqjWL6B4AP+uC3PURlEmsgfnNmIs7C1cUQ5tgBZnJu3YWiCM9hhGUwWd4SSP1A32CDylDrGhyf3N9fTBZnqo3y4Zbgr06ACQiTdy6N0bvDA6YqRq7xhVOoRu+1j75MZovxMKi4RoyVFkMbvk2AzfvmwkUQztJpe4qhvs0n4GNf/b2iHZgT3XwdNpBE38fUzUJZku3PrEHSlghelEgyfilUbQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gFJuUx+vshbAtE3PcS6oKKtJhnpxHv7OrgQo9Xd4G4g=;
- b=mtiqXVBkKVQmPd+ZGUSzUYUBGpVKJ6xjpqoe9g7mI27Eiyw6TjEVnl7F0VnJhfxMWQK+Nuj4OUw9OkXuzqfwmltWb+Z+gnTwuQksnACpBq+nW/9Qo8/DKBpwloU0w2WHLbHRwKMVB1u3i05DmEGlzUv45ce2ptQ8Tzo/Sd/i6IAG+CPX24S6aTn8BVFAciEyU2mgiOp8aacK6FSHgGiPb/nMWT35XMKr7j+DIWaba18x1kXINpCz2SN00lnpHpH25fma0QsZFWkjI9vZmy6vHop2hfOP71UheW0hcEdxFbHaumRc2e8a0QFjdu4P7Y/13CI4gmd2G99mIGciOLzGkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gFJuUx+vshbAtE3PcS6oKKtJhnpxHv7OrgQo9Xd4G4g=;
- b=SH0Nd86d9XIN6V575zvsZFqQbq6tZBrxXSFMTS8dkGIvKGlP98htR2vh6lHSR6TJgKyE583O2BFK/2hYRrAu+5ukPYfWrFQhqofY8u+PH99tKhB3KIust4jKbkVku+ExflyYWY5C879SumbQNN/kp3VM688VNsMU60je9/l5XozrKBCvE0FeyuULWyBjqKIQzqlKXFJeUn64BUZ0fooVr+ODDciPt9MwgqTobyg2TTCcsXXgerdFznc2sG3JXS9yvr2EFi0v/ic2OBALibyu8o86zAxt0kqyk3GQGLZ403rOgyb3Mak1EncDXtfoiWZ0S5Gfgm+GXfd8x+Nnb9l90Q==
-Received: from BN7PR02CA0018.namprd02.prod.outlook.com (2603:10b6:408:20::31)
- by SJ2PR12MB7942.namprd12.prod.outlook.com (2603:10b6:a03:4d3::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Wed, 8 Feb
- 2023 11:17:56 +0000
-Received: from BN8NAM11FT068.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:20:cafe::65) by BN7PR02CA0018.outlook.office365.com
- (2603:10b6:408:20::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17 via Frontend
- Transport; Wed, 8 Feb 2023 11:17:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN8NAM11FT068.mail.protection.outlook.com (10.13.177.69) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6086.17 via Frontend Transport; Wed, 8 Feb 2023 11:17:56 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 8 Feb 2023
- 03:17:44 -0800
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 8 Feb 2023
- 03:17:44 -0800
-Received: from mmaddireddy-ubuntu.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Wed, 8 Feb 2023 03:17:37 -0800
-From:   Manikanta Maddireddy <mmaddireddy@nvidia.com>
-To:     <bhelgaas@google.com>, <thierry.reding@gmail.com>,
-        <petlozup@nvidia.com>, <rafael.j.wysocki@intel.com>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>,
-        <jeffy.chen@rock-chips.com>
-CC:     <krzysztof.kozlowski+dt@linaro.org>, <jonathanh@nvidia.com>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <gregkh@linuxfoundation.org>, <steven.price@arm.com>,
-        <kw@linux.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <vidyas@nvidia.com>, Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Subject: [RFC,v14 5/5] soc/tegra: pmc: Add Tegra234 PCIe wake event
-Date:   Wed, 8 Feb 2023 16:46:45 +0530
-Message-ID: <20230208111645.3863534-6-mmaddireddy@nvidia.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
+        with ESMTP id S229537AbjBHLhS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 06:37:18 -0500
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B7945F52;
+        Wed,  8 Feb 2023 03:37:16 -0800 (PST)
+Received: by mail-ed1-x52f.google.com with SMTP id v13so19961593eda.11;
+        Wed, 08 Feb 2023 03:37:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H7rM1HpK4gZIplaubBndxjo7qgPO1F4IIRGIk/8punk=;
+        b=Qgk6huMhPW+u3iA6hX9Fne2XJf9OwWr9U2AliXVPCE6Vk9KEumI8ypmQ+gybTgo5Wx
+         JGIx45TTZEZDTS39/hdZUVnm2olOdftM60t7OCcZF/wDWgK+neqqlJGTuxRJgLYtkqDJ
+         USZVYg/nGfUhjmd1qEaHfRlhavhWb4un7kQOJMIQELRvvGwuR1RRogembEcylDEi0owO
+         fhHkLOI/sIMNOO2N7v4aH0+3xKZfBB2O6iHN9xDa3n+CD9SPka4Tb7fdlkPZXQqlwv1e
+         s80rUl/heKD8sDsV6yhNEDUbRPYzy4E0PgPMR7jEuZgbysGcz89Uzqrr9qxHBKDFfzZW
+         ecBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=H7rM1HpK4gZIplaubBndxjo7qgPO1F4IIRGIk/8punk=;
+        b=R+iVj0j4wbv0l0mDSB/PQ/mUYpnEcAV+TsvxDwnh/PZGscGNg/cSIVWNEfcnntPe59
+         EixN7SEn7loie5ks1pl1xagFFehjvLlJOF5Y0zv05E+wLzGTc7DS1WnKtbUdbYBoyKiQ
+         ioS3pbsbXqoNggd+8bGG9WQU7aHTqTYSL/JR78dFv6riVNXpJu3YpQ9YZGgoOVdYCgdB
+         xW14SC4ycW/X8qXjldEX6l9ntG/ecgafSoXmos4hIIlxc6HaYFjlgaGSlmBFEjmv0lJ2
+         JcOtqt0dTUcri9+o4DeBpf6gQXOERmdZIcEuwHENkuWBXOv27OKe49y4/1/UWo6zpl/s
+         N6lQ==
+X-Gm-Message-State: AO0yUKXMmqWR+ocoYAZsA5Mc2QzHUqZ6kaLSLmXX32qqyWbl9yT7GoYu
+        2qQd4W157TrhDWTnFcQ6I3w=
+X-Google-Smtp-Source: AK7set9kHhg8iyB0DxRAXAEc44CXnaCMcnULvNey9nytql+VC0AoWkQpPxcOBWGi47a19twA1l932g==
+X-Received: by 2002:a50:ccd4:0:b0:4aa:9f59:b6a9 with SMTP id b20-20020a50ccd4000000b004aa9f59b6a9mr7063169edj.12.1675856234949;
+        Wed, 08 Feb 2023 03:37:14 -0800 (PST)
+Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id t1-20020a056402020100b004615f7495e0sm7789645edv.8.2023.02.08.03.37.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Feb 2023 03:37:14 -0800 (PST)
+Date:   Wed, 8 Feb 2023 12:37:12 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
+Cc:     bhelgaas@google.com, petlozup@nvidia.com,
+        rafael.j.wysocki@intel.com, lpieralisi@kernel.org, robh@kernel.org,
+        jeffy.chen@rock-chips.com, krzysztof.kozlowski+dt@linaro.org,
+        jonathanh@nvidia.com, dmitry.osipenko@collabora.com,
+        viresh.kumar@linaro.org, gregkh@linuxfoundation.org,
+        steven.price@arm.com, kw@linux.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        vidyas@nvidia.com
+Subject: Re: [RFC,v14 4/5] arm64: tegra: Add PCIe port node with PCIe WAKE#
+ for C1 controller
+Message-ID: <Y+OJaGY6mcxM0JOF@orome>
 References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
+ <20230208111645.3863534-5-mmaddireddy@nvidia.com>
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT068:EE_|SJ2PR12MB7942:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2a1fb2df-3a00-4386-98ea-08db09c620d4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FPklJNVKITaQVJc/91Oee5OnaVMnBY1AvrHmXGPF6xkfx/+J8Fa04t2qc8/AGmv/ktq1WnaVznLcWMDbvYqDXkSRwKnDTdwJkO+17Ye7w4jSAoRZO38kKvAVDeWGI8IiebO/FAw/xZWF1ttS64Y8ZBlLjRiZxLAlzV8Iphqsjj9Q5w13Fz6H+I4zqEkhtDyngEPvkTqLpQtQgOLT+46amz7lyvYwfn4fCdiGlO2dQJh5Z7jkx0Os6bnqITcnrqrCGWTie0wUgp+YxNTqiW3M+MrWAqZdvHW0Odby2rahGtmd59JEWkLyDV3cZKpNtkMnxGlRtGNBTyuTYLllEiMKpDaZX98KZZMDTcyRfgNFX5AzdaXjExeGDv8GY7U3vu1frVOJpk8RowelXckZfejvEkq4xHT9/UQXBLlWWQO+uNPAanc3EnVjcDeNTXEjBMggIbqOQAtpMIpgzjhnEutPlFQbPuxrR0F8KUW5JpUe9DvI5fiNpPAVYlcTSpfMDEJpketMO6bZCPc6QuQHZNZVqjiankneIkNxGOonXt8pGUHztvyzu95M06tcbU+3H8M073dRTvJRrtNAQVQmzIFUU6Z1oFOauL7up39A/VkwEFfYXdRkSvJcc+fwdLQWcNOoxUQV7/NA1K8+gkV1udDeZ3LnmGNIQdE7cXFFtmT16AARPTsdKx0ueKN7jVyZpyLIJ2T7NO4Kemk8N7+7BhL3GA==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(136003)(376002)(39860400002)(451199018)(36840700001)(40470700004)(46966006)(4326008)(70206006)(70586007)(8676002)(36860700001)(336012)(40460700003)(316002)(7636003)(110136005)(54906003)(86362001)(426003)(5660300002)(7416002)(478600001)(356005)(1076003)(26005)(186003)(36756003)(107886003)(6666004)(2906002)(47076005)(4744005)(8936002)(82310400005)(41300700001)(82740400003)(2616005)(7696005)(40480700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 11:17:56.0004
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a1fb2df-3a00-4386-98ea-08db09c620d4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT068.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ2PR12MB7942
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="JZEp7O0NQU6aBHB0"
+Content-Disposition: inline
+In-Reply-To: <20230208111645.3863534-5-mmaddireddy@nvidia.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Enable PCIe wake event for the Tegra234 SoC.
 
-Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
----
+--JZEp7O0NQU6aBHB0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changes in v14:
-New patch in the series to support PCIe WAKE# in NVIDIA Jetson AGX Orin.
+On Wed, Feb 08, 2023 at 04:46:44PM +0530, Manikanta Maddireddy wrote:
+> Add PCIe port node under the PCIe controller-1 device tree node to support
+> PCIe WAKE# interrupt for WiFi.
+>=20
+> Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> ---
+>=20
+> Changes in v14:
+> New patch in the series to support PCIe WAKE# in NVIDIA Jetson AGX Orin.
+>=20
+>  .../dts/nvidia/tegra234-p3737-0000+p3701-0000.dts     | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dt=
+s b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+> index 8a9747855d6b..9c89be263141 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+> +++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
+> @@ -2147,6 +2147,17 @@ pcie@14100000 {
+> =20
+>  			phys =3D <&p2u_hsio_3>;
+>  			phy-names =3D "p2u-0";
+> +
+> +			pci@0,0 {
+> +				reg =3D <0x0000 0 0 0 0>;
+> +				#address-cells =3D <3>;
+> +				#size-cells =3D <2>;
+> +				ranges;
+> +
+> +				interrupt-parent =3D <&gpio>;
+> +				interrupts =3D <TEGRA234_MAIN_GPIO(L, 2) IRQ_TYPE_LEVEL_LOW>;
+> +				interrupt-names =3D "wakeup";
+> +			};
 
- drivers/soc/tegra/pmc.c | 1 +
- 1 file changed, 1 insertion(+)
+Don't we need to wire this to the PMC interrupt controller and the wake
+event corresponding to the L2 GPIO? Otherwise none of the wake logic in
+PMC will get invoked.
 
-diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-index cf4cfbf9f7c5..139ee853c32b 100644
---- a/drivers/soc/tegra/pmc.c
-+++ b/drivers/soc/tegra/pmc.c
-@@ -4225,6 +4225,7 @@ static const char * const tegra234_reset_sources[] = {
- };
- 
- static const struct tegra_wake_event tegra234_wake_events[] = {
-+	TEGRA_WAKE_GPIO("pcie", 1, 0, TEGRA234_MAIN_GPIO(L, 2)),
- 	TEGRA_WAKE_GPIO("power", 29, 1, TEGRA234_AON_GPIO(EE, 4)),
- 	TEGRA_WAKE_IRQ("rtc", 73, 10),
- };
--- 
-2.25.1
+Thierry
 
+--JZEp7O0NQU6aBHB0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPjiWgACgkQ3SOs138+
+s6G+yw//Vzt4WBBLRqLINDOG56vSGm0UH36xsFvInTordR1zQsj3/gkwz89sToTs
+mVIfJuJBtRwhl0YhSwiWV/jsV2g7gYZ1L+p2ssnguhcltzcdzbp/OInT/PWsUblS
+IKQEWwb+/dLzh9Md7aQYXeSv7pJSwp0rnnBxLS7lF6oaVGC7bffKYn+aAFsCPZgm
+uewFDk6xIVyOkQzokYV4OYQxH2W3mC8SW8Q5moAgRhSqKTMwRJdme6WNCZrwcAVI
+ketseSQHLQ2ryKFgVeI6Htn3ubySw+9rdnFOKadkj57PA/BAekpfLn0LCkPP1Hb5
+rKQJJJsavePW8BNaFNt7+BUrspSwa0CV9kXeZGKcFuXPAjJQwkHxFqGIPDOV15jA
+XnjkOmhW3yT0zp5buq4VEEaJc7qIbVtnCthUXWs32uJ3ovKpQh98cZm+HG1AHLVV
+jD0DlNq+njNQfKyXpgU80uWeH5i7VYype281ILyhDDH4LUMnZlHb8Hx4dvLQagXw
+7zkTvFkgC8goTLGFWneL9djvnZDsemOgJ5rv812BrakhMr6bBxnzLCVzicf1O7Ti
+pOfMlRkZZr6rtLtXk0apXbJ/F6pdTKyOSrnZCtSnKARFwJ1cBFyQijHqH4dOtFOp
+aJuc3sEmDh8d2FfRFM7nMvRar4DYShijDRW0FP7twJyTPIx9g64=
+=+nx7
+-----END PGP SIGNATURE-----
+
+--JZEp7O0NQU6aBHB0--
