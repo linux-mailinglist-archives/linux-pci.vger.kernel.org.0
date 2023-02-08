@@ -2,164 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 99A1168F74A
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 19:43:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 451FC68FA0C
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 23:03:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229582AbjBHSnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 13:43:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
+        id S232248AbjBHWDu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 17:03:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229740AbjBHSnv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 13:43:51 -0500
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2094.outbound.protection.outlook.com [40.107.237.94])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2CC944B6;
-        Wed,  8 Feb 2023 10:43:49 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DiqXVm8GoUOxJK8yz6Cm3CrGmOfbmcHmc2bSH3PihfVF2HllkLSRrcMvnsqg3KTNjSXT86BmcJb0iWYi8bVWp/eYyG2+MHPrEGDk3tyL/69ufPIfGX9zKkHMRC2oyqiamn7r7SwLAX4tVdRzuibXrM/NhBwWplla0xKRAAJtNsBPpcRh2kd6kANDCCn90yJ4VqdF8McCQxhhGmwzlH74yiCf0eVC0S/wHdOd4ySLugKkGERzUrrdbDqhSST9uMKYHTIidMXg2oflKcH6wb+Eg0PLn3Jgoe/d5kvoIPuKufMJhTiQXj9Q5sQIKY6ceKd3PkXDboPlI48AmdebrhdLPw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=PduJKKTXFIsfNhRg08c2oah3aHxiHm73GdqFmMecpjY=;
- b=EsupisavtW831g2i/PtjV7dY98k5JlWr9opwrdEsV0aZLJJmPh7ZXCBihKd8l1ttJQMQlByiVgzP2qBVza46g6trWVN6eVyFOKT8cXsVMzhniAzvKMjTIsNw5RboarYuziExFaIAs8M5t96oqujJjtx0E/pwk+bRQbJagx2h0MYgaCC2+TFikDBbhfS63dLzRjiqs3IfnLj+g/X7EtI8vM1YoD4jTWG+4Oh82GUAS7LNpy0DuOZa1iM7Qf+fxz0Lv/aq2cmyomiEEOX8gr1cFtD4BNUrs1mXqAbsRpxz5tVD28tTa5Agh2cthX35HIi72cFzDV17pnuN5qnJMexdZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PduJKKTXFIsfNhRg08c2oah3aHxiHm73GdqFmMecpjY=;
- b=ptaOipxrZaMw9TXTiG7+7wEMWUw5cvCrszmpAVXQG9D6wdYVma6TOOhfZY5yvTZ1qLolLqCuU4vlfajrPQNLrmRIHcgRYA3jvLEWvOQ8ZtWxUV0nhl7f+Q2lRlZwFCxrsiDMz4Wn4LAQ2EkfGbHasSdUJY1otOg60nM13rlWUPY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
- BYAPR01MB5176.prod.exchangelabs.com (2603:10b6:a03:76::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6064.34; Wed, 8 Feb 2023 18:43:41 +0000
-Received: from DM8PR01MB6824.prod.exchangelabs.com
- ([fe80::6b5b:1242:818c:e70d]) by DM8PR01MB6824.prod.exchangelabs.com
- ([fe80::6b5b:1242:818c:e70d%3]) with mapi id 15.20.6086.017; Wed, 8 Feb 2023
- 18:43:40 +0000
-From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com
-Cc:     jean-philippe@linaro.org, darren@os.amperecomputing.com,
-        scott@os.amperecomputing.com, gankulkarni@os.amperecomputing.com
-Subject: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not enabled on PF
-Date:   Wed,  8 Feb 2023 10:43:21 -0800
-Message-Id: <20230208184321.867666-1-gankulkarni@os.amperecomputing.com>
-X-Mailer: git-send-email 2.38.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SN4PR0501CA0036.namprd05.prod.outlook.com
- (2603:10b6:803:40::49) To DM8PR01MB6824.prod.exchangelabs.com
- (2603:10b6:8:23::24)
+        with ESMTP id S232254AbjBHWDs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 17:03:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6286834015;
+        Wed,  8 Feb 2023 14:03:35 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F273C617E4;
+        Wed,  8 Feb 2023 22:03:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 331FAC43442;
+        Wed,  8 Feb 2023 22:03:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675893814;
+        bh=WxjfPuZxzq0Q204rr5rhM8R6eLnkbE/hw+T43rI0+O8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BcDPCWytzcirHPDmKRIHIGLoJTHcRmtRCedYt6VjkDhix/43eTd28d/C7PLQLOQtj
+         QaO6pEFnnCjFq9BZ8OhEX74rof1EIVGv/UJVGg4Vw0RS8M1YdDh6qpBmnpZtAiD/lS
+         zvhAaCw8Mh1xFfqSvIoaL/Qr+dPYeyxZp7FE/nzLgH6t6xgv+SrivnMAPJtLHuDJ8z
+         kitldEDv+bOdovEkNMeZBZHaMOUeLvhvfu1Ar7Ti7MKwzWbXdkYYYZXFfDkNpgG9KD
+         qV4rGDbeUW6UTE6zCIL2RwLg+SXfICvWIe9qMssys/3yrYo6cFGm1im4ZCRfolmboG
+         I6abIbcRlrBIA==
+Date:   Wed, 8 Feb 2023 16:03:32 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ping-Ke Shih <pkshih@realtek.com>
+Cc:     Kalle Valo <kvalo@kernel.org>, "Leo.Li" <leo.li@realtek.com>,
+        Timlee <timlee@realtek.com>, Bernie Huang <phhuang@realtek.com>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v2 4/5] wifi: rtw89: pci: enable CLK_REQ, ASPM, L1 and
+ L1ss for 8852c
+Message-ID: <20230208220332.GA2485260@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|BYAPR01MB5176:EE_
-X-MS-Office365-Filtering-Correlation-Id: ef94d597-c804-4cae-101d-08db0a0465a2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: J+hTav5A1mx27QRXvAteRdZ/zFI5HQIG32Kn7VtbL9tWa7NXb+cH8fQ+BPNkJ2d8hYYiMz8no3CisrMhBZX+AT1pGywN8Z5MvnvJMWyU5OPFtLGu8Vxzu4p6Ws2MvFjJQrFcWoOxVXbO+K0bZqzcMdg0m/h4YrooGalBDEyVkZ24HhpRj4tXvN5dG5Pwwp70tDZkVAUvrliWZDW2vwnkY5BbCYQZhBXx94Ab1BOf0u12LIPJmHMlgk0z1cuWZPjh3c0fvGRvDjKy4lbCLZpCUw6r145nEk4NANJuR1Ujk6hGvc9At7HT1UQvMCjt0JHVL1gljwI7tOgRB8+UuGswioFsiSoVfb75h3DRaWiN6Gcu2D/rdDtkx1itg+9MvtBu3/imzH+ZbCEOIZzCEdFeeJye44IYwuasdbZQhsxXSJZBXYAysDFuBRJxPUusI5oW3yocnYE6tINiQq5GNkwsv7uwBEaOZgF9djxR35NwUYTS5BlDlaTJ4X9kmycSxrEAWUoF0+a+++XrF69Do2c/Od8TRoTdQ9uMXh9pWtPidHUQeCp8L5jrsDe1TWPEdBs42Usuw47ooUIk6rbGCyE65W/y4zK3EXAAMZSYtpgZCd5hQMywTKC+DgX0nyIo3XCtE0MerG173FJXH0gAMjc8Iu6/8SaIUQMKeChMCnndblybpS7DvnSU6gGpRYFQ6tmA1cQEK3LdM/bBWM6oloOqow==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(396003)(366004)(39850400004)(346002)(376002)(451199018)(8936002)(4326008)(38100700002)(478600001)(38350700002)(6486002)(6512007)(2616005)(186003)(26005)(52116002)(6666004)(107886003)(6506007)(1076003)(41300700001)(5660300002)(316002)(8676002)(86362001)(66946007)(66556008)(66476007)(83380400001)(2906002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?D+5FJUp9Gva8CD3G0rJ/rtJBvd/Gvim6t2RZjMZtsrvO8uh95uiTumllv6Z3?=
- =?us-ascii?Q?CPxHhTWp7u1d4fleLvBqcPT/rCzAiaorEZ7cItc81f1IPEQd/xytb1TcTjGK?=
- =?us-ascii?Q?4sYCV2DWTU9rTj9Y/ddv3D/heWqoXuJU39QqwmL3fFpCTYNM1IPkoemzmWab?=
- =?us-ascii?Q?HtMyd2ADW4s7sMpGFWUThpHMwSxlq9SU8oKzifH7l1aJjrbl321wnawZVQsy?=
- =?us-ascii?Q?KCBRuEHq5tLdZCn52SWBirBhbeFgLd+pZRk+IyrSAyw8iOSJh6/f0dThKtGZ?=
- =?us-ascii?Q?BXK1azkdOe/bhOGZaO+PKXQX787qliqMEFOq4ntRdbbNKlQal8K2GWI0/qjZ?=
- =?us-ascii?Q?x0MzTi2hyhmkxJgLU/GHRb5gNohmqQMphqNK426Mwf5tQQAwT97otQnS+FMY?=
- =?us-ascii?Q?C78PzCMoeuDEhJzgLAdFOuZp004sxS3EjMjMNDMwhHxsKZit3MTrGfSHbHtp?=
- =?us-ascii?Q?lDQafwqWsNVfHsZvVGSlQr4i13OC79e4/9fqrgzk1+utD/2hiLzOf8x0tbhp?=
- =?us-ascii?Q?LsVvXGDrqGfbP9f+im1Nbq2wRY7ztxGHuunf9qWZd3g2UL/TNkJxnOjHBtq0?=
- =?us-ascii?Q?c8HXWr1/xfBtB/ziiXIdzhx4PPU0iBMWGOmvchtbWO+xJY+JWUsGFWsJZvDr?=
- =?us-ascii?Q?ZW00lCGIce4+EpM+kT7/wjJpt0FUQ48YbgPGqdUBR7+RRxXn14ACTxTL856a?=
- =?us-ascii?Q?qek2hpEBG4rGywlkD4JGdQ7hO2OIzkukoORluRhktUTyRJfv+oxJuBPk6hkr?=
- =?us-ascii?Q?s3caqyMsomAgrP78sH0jgjXOZCPfWvII74fKmgtB9eJoak2RHhJeidB6kcue?=
- =?us-ascii?Q?y0Tokc4WF+PmIc8omxu99PID6JEwj+edqFRtq1ZDLgQ1qH65Bj+lXbV+BGgR?=
- =?us-ascii?Q?8iRw4JVNU1JcnW9RGLGU339X7zFjSMBANCNAl5Q8NXpqbsWO3Qraf2Tdz6Vo?=
- =?us-ascii?Q?/7v+K5esU1bqsgJsjVXfmyY1fJaYiv1kOicuFhYNHOQnyZ9S17RAQLgkDJxq?=
- =?us-ascii?Q?rtyqJA6DDOY/iAZ28jKh3S8f8rCX2ip2UTTIlPYD+Xogp3+Pp8FEdYJmIJbB?=
- =?us-ascii?Q?7mXA1SeHs/rri75L3PeJKZHK4mMq23brDHQK5ypTTSv+Jkh9UJPy5dkhBI3b?=
- =?us-ascii?Q?28BBztYf79Ai9OXBZy1X2Pfa9RehLAOdF/tyyrVZlXUSISaASO6RuZ4e8SGn?=
- =?us-ascii?Q?9EjIadG2rvKJYjiB1WyyPoFvOj14H5bmllWdktysaVG459PFxsDk/jSQjEAW?=
- =?us-ascii?Q?qhDPeFZk5IILpATwGQIpqfvEsfJopU953OeFE4Mtucn+agl22em8DGCgOdKs?=
- =?us-ascii?Q?9/OzsLPlEyrS7xXTCvYlDNMsqQuK4zUdOo+XMOnjRNqSQCCxfQaR/K9FN13M?=
- =?us-ascii?Q?DtCjJtbz7Sm9efanIFNyRFQQz5sobyWZGG4H6rCVuctXDtsTMrQpsNLSX2kV?=
- =?us-ascii?Q?F5yTrpbR2v+6NR799MkFCQNnTCL6pABn+lW7PCIPR1TZehGT9R3i/ElhQ7oB?=
- =?us-ascii?Q?HEhLxr7ajLWS8EkL3MzCpcakn8qyboBI2KPsG05w52Dkk7/T9yffRQwgpUMA?=
- =?us-ascii?Q?BVq9tQOgMttQ80M5WsDqiMM4oYkpU7cmAWSsjriK3nUMxcEd3kAU5Wsw7ZDx?=
- =?us-ascii?Q?UhKBeL+sun3sFjUKHcGk1qk=3D?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ef94d597-c804-4cae-101d-08db0a0465a2
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Feb 2023 18:43:40.7462
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fznqysSwWkWUguFZ9vEb3wCu43X2us7bw/pTyTuAIcGvkYnNYN0ol5qzKtNXibBu7NPZbdvXo2oVfnqIhKB2q8LQL4yJRjTOP+EkO07KHNuHzFbeepVWC1QOdmzk3sU8
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB5176
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b658a7d2d259493c90a41871fafae359@realtek.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As per PCIe specification(section 10.5), If a VF implements an
-ATS capability, its associated PF must implement an ATS capability.
-The ATS Capabilities in VFs and their associated PFs are permitted to
-be enabled independently.
-Also, it states that the Smallest Translation Unit (STU) for VFs must be
-hardwired to Zero and the associated PF's value applies to VFs STU.
+On Wed, Feb 08, 2023 at 09:15:50AM +0000, Ping-Ke Shih wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > On Fri, Aug 19, 2022 at 02:48:10PM +0800, Ping-Ke Shih wrote:
+> > > From: Chin-Yen Lee <timlee@realtek.com>
+> > >
+> > > 8852CE controls CLKREQ, ASPM L1, L1ss via wifi registers
+> > > instead, so change them accordingly.
+> > ...
 
-The current code allows to enable ATS on VFs only if it is already
-enabled on associated PF, which is not necessary as per the specification.
+> > We get here via this path:
+> > 
+> >   rtw89_pci_probe
+> >     rtw89_pci_l1ss_cfg
+> >       pci_read_config_dword(pdev, l1ss_cap_ptr + PCI_L1SS_CTL1, &l1ss_ctrl);
+> >       if (l1ss_ctrl & PCI_L1SS_CTL1_L1SS_MASK)
+> > 	rtw89_pci_l1ss_set(rtwdev, true);
+> > 
+> > This looks like it might be a problem because L1SS configuration
+> > is owned by the PCI core, not by the device driver.  The PCI core
+> > provides sysfs user interfaces that can enable and disable L1SS at
+> > run-time without notification to the driver (see [1]).
+> > 
+> > The user may enable or disable L1SS using those sysfs interfaces,
+> > and this code in the rtw89 driver will not be called.
+> 
+> The chunk of code is to configure L1SS of chip specific setting
+> along with standard PCI capability, and normally the setting and
+> capability are consistent.  An exception is that PCI capability is
+> enabled but chip specific setting is disabled, when we want to use
+> module parameter to disable chip specific setting experimentally to
+> resolve interoperability problem on some platforms. 
 
-It is only required to have valid STU programmed on PF to enable
-ATS on VFs. Adding code to write the first VFs STU to a PF's STU
-when PFs ATS is not enabled.
+This is a significant usability problem.  An interoperability problem
+means the device doesn't work correctly for some users, and there's no
+obvious reason *why* it doesn't work, so they don't know how to fix
+it.
 
-Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
----
- drivers/pci/ats.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+Module parameters are not a solution because users don't know when
+they are needed or how to use them.  This leads to situations like
+[1,2,3], where users waste a lot of time flailing around to get the
+device to work, and the eventual "solution" is to replace it with
+something else:
 
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index f9cc2e10b676..a97ec67201d1 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -67,13 +67,20 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
- 	if (ps < PCI_ATS_MIN_STU)
- 		return -EINVAL;
- 
--	/*
--	 * Note that enabling ATS on a VF fails unless it's already enabled
--	 * with the same STU on the PF.
--	 */
- 	ctrl = PCI_ATS_CTRL_ENABLE;
- 	if (dev->is_virtfn) {
- 		pdev = pci_physfn(dev);
-+
-+		if (!pdev->ats_enabled &&
-+				(pdev->ats_stu < PCI_ATS_MIN_STU)) {
-+			u16 ctrl2;
-+
-+			/* Associated PF's STU value applies to VFs. */
-+			pdev->ats_stu = ps;
-+			ctrl2 = PCI_ATS_CTRL_STU(pdev->ats_stu - PCI_ATS_MIN_STU);
-+			pci_write_config_word(pdev, pdev->ats_cap + PCI_ATS_CTRL, ctrl2);
-+		}
-+
- 		if (pdev->ats_stu != ps)
- 			return -EINVAL;
- 	} else {
--- 
-2.39.1
+  After replacing the Realtek card with Intel AX200 I do not have the
+  described problem anymore.
 
+> We don't suggest the use case that L1SS of PCI capability is
+> disabled but chip specific setting is enabled, because hardware
+> could get abnormal occasionally. Also, it could also get unexpected
+> behavior suddenly if we change L1SS dynamically.
+> 
+> Summary:
+> 
+>    PCI capability      chip specific setting       comment
+>    --------------      ---------------------       -------
+>    enabled             enabled                     ok, currently support
+>    disabled            disabled                    ok, currently support
+>    enabled             disabled                    experimental case via module parameter
+>    disabled            enabled                     don't suggest
+
+I think the fact that you need chip-specific code here is a hardware
+defect in the rtw89 device.  The whole point of L1SS being in the PCIe
+spec is so generic software can configure it without having to know
+chip-specific details.
+
+> With above reasons, if users meet problem or unexpected result after
+> changing L1SS, we may tell them this hardware can't dynamically
+> configure L1SS via sysfs interfaces. 
+
+How can we make this better, so the device works and users never have
+to specify those module parameters?
+
+Would it help if we had a way to make a quirk that meant "never enable
+L1SS for this device"?  Obviously that's not ideal because we want the
+power savings of L1SS, but the power saving is only worthwhile if the
+device always *works*.
+
+Or maybe we could have a quirk that means "the PCI core will never
+change the L1SS configuration for this device"?  Would that help?
+
+Bjorn
+
+[1] https://github.com/lwfinger/rtw89/issues/41
+[2] https://bbs.archlinux.org/viewtopic.php?id=273515
+[3] https://bugs.launchpad.net/ubuntu/+source/linux-firmware/+bug/1971656
