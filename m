@@ -2,178 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC93968F2EF
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 17:14:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09CFE68F33B
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Feb 2023 17:35:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231140AbjBHQOK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Feb 2023 11:14:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
+        id S231389AbjBHQfO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Feb 2023 11:35:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230262AbjBHQOK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 11:14:10 -0500
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B30FB4A206;
-        Wed,  8 Feb 2023 08:14:08 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id gr7so52403096ejb.5;
-        Wed, 08 Feb 2023 08:14:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rYG5PD7dbKaNKYs/ubsHHBhPjaWtLkpK6btkRG/jkM0=;
-        b=DDMt3dOpyFyyVI2WTGlfQaz9N/WCY+1lI2SHnzeIfeSAiqqYzxl01kZpB5DNCcLseA
-         TisUEkz6tjW7a0g1spZmcZ/EX2/H+UYbf20Is589WqAa9jxVTNeeAVvsrRFHmpmE0v5p
-         R6S0BqRzHQTz9Uc1Q10rUSdDgT9hVJLoCXdWBzAdwibk2mrkWSzNeIwzKwKa/K90qt6n
-         /OTkIzTZigzwU2aTkFfUitHrsqlScuZ86RWaZNWuRHQXiicbDAGjWrAAThi7xMH/IDTN
-         Jud1flYcNi3gGuvnTrb9BvWkrD/EPmYFvPGMCxT+ktCjK9fWhNHVIdCIfDARDR7OON85
-         7RHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rYG5PD7dbKaNKYs/ubsHHBhPjaWtLkpK6btkRG/jkM0=;
-        b=pWhp686Qp2M4KcAtvN8nBRV+4xYxqps6/1FdWN+ooX+hwBaY2sg16msN8ayuXHjebW
-         m25cnDtS28zWqHcO3q5urnTM+5wbCvTHXINwn1I8LJ+sTWkCJoJSmMwg2LHOeT9TA8AS
-         ++c4y3VGjBknVJxamu7aW2G78ly+is5K4gPlWyLYETCFk5OpKmMgkhvC25jx/1rJZZto
-         3VlMszmJ4DBHZcZuf9VGVG7LDKcHqxBhKSzzdHDSV9Qj/M/yX16NStUWmiBp+2Yn4el4
-         C/alIWLxw1KCrsW5rKjONVV0pgzlkIzz6MPkOt1s/iPk0LdPP4bZmh1NDTkQxwsXF/PB
-         +Blg==
-X-Gm-Message-State: AO0yUKXVc7iqL9wc2w1WBiiIb+EKN2F2WgMI+6V1ECHZTlNiwSAZF81r
-        6nz9KNGEpD0cI9PYoJMmXhc=
-X-Google-Smtp-Source: AK7set+401vwRKb0yki0/knYX8QgRvAvUQe8tTdDwJhTuerst/mRXgHfimD/UV/0cGJBD4kB1q9diA==
-X-Received: by 2002:a17:906:ca0f:b0:8a6:93a4:c897 with SMTP id jt15-20020a170906ca0f00b008a693a4c897mr8841126ejb.33.1675872847254;
-        Wed, 08 Feb 2023 08:14:07 -0800 (PST)
-Received: from orome (p200300e41f201d00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f20:1d00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id b21-20020a170906195500b008779b5c7db6sm8448605eje.107.2023.02.08.08.14.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Feb 2023 08:14:06 -0800 (PST)
-Date:   Wed, 8 Feb 2023 17:14:04 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Cc:     bhelgaas@google.com, petlozup@nvidia.com,
-        rafael.j.wysocki@intel.com, lpieralisi@kernel.org, robh@kernel.org,
-        jeffy.chen@rock-chips.com, krzysztof.kozlowski+dt@linaro.org,
-        jonathanh@nvidia.com, dmitry.osipenko@collabora.com,
-        viresh.kumar@linaro.org, gregkh@linuxfoundation.org,
-        steven.price@arm.com, kw@linux.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        vidyas@nvidia.com
-Subject: Re: [RFC,v14 4/5] arm64: tegra: Add PCIe port node with PCIe WAKE#
- for C1 controller
-Message-ID: <Y+PKTNEAuPHBdwqX@orome>
-References: <20230208111645.3863534-1-mmaddireddy@nvidia.com>
- <20230208111645.3863534-5-mmaddireddy@nvidia.com>
- <Y+OJaGY6mcxM0JOF@orome>
- <1b24e9f5-539a-dd0f-6485-5dbf3757ef27@nvidia.com>
+        with ESMTP id S230331AbjBHQfN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Feb 2023 11:35:13 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DCDA47EFE;
+        Wed,  8 Feb 2023 08:35:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE574B81D42;
+        Wed,  8 Feb 2023 16:35:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DEA1C433D2;
+        Wed,  8 Feb 2023 16:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675874103;
+        bh=FXaPjW3ceCX1o65WyKM27JljalbZnb73IGkfHoLx/68=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qliT6IkiSi1hF7xhTXWkvU7HfK4mIU8Afeq6Yzp+vcamiVs0iXbnsKDtiMNQ5TqHr
+         VSfJ4t8eLGnUrqCkOR5gw7UJZkMmpDyIq03ftHiiB95twj+yaa7GmWKrDawq2DYxGm
+         NhOxI6EcZhKAGFKi03AEy3ahX7n04TTp6Ud2u81kJ0ZrdDIwk6Uan8fRC/KZwCMo+J
+         9+xzGdBUaCvktAcGiBI0pGRmmGrxMHprqKqOoi+Bv2sTlz5gbKMBGq489vsOOF/kEh
+         mB8i0hYjvYNzIyeIC6Hj0P09SFcnBjfHwu4Si3zCoOU8LlCKv6gnZ/DVRQ0XtAKLeo
+         v5Us3hk+xrqOQ==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pPnQ3-0005tJ-NM; Wed, 08 Feb 2023 17:35:39 +0100
+Date:   Wed, 8 Feb 2023 17:35:39 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Abel Vesa <abel.vesa@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "vkoul@kernel.org" <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Subject: Re: [PATCH v7 08/12] phy: qcom-qmp-pcie: Add support for SM8550 g3x2
+ and g4x2 PCIEs
+Message-ID: <Y+PPWymsIfYW9OHX@hovoldconsulting.com>
+References: <20230203081807.2248625-1-abel.vesa@linaro.org>
+ <20230203081807.2248625-9-abel.vesa@linaro.org>
+ <Y9zU2jBdSD72W28F@hovoldconsulting.com>
+ <Y+EJDofgt6I/abyp@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="/k1dyoR/zukO1rxq"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1b24e9f5-539a-dd0f-6485-5dbf3757ef27@nvidia.com>
-User-Agent: Mutt/2.2.9 (2022-11-12)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <Y+EJDofgt6I/abyp@linaro.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
---/k1dyoR/zukO1rxq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 08, 2023 at 05:43:35PM +0530, Manikanta Maddireddy wrote:
->=20
-> On 2/8/2023 5:07 PM, Thierry Reding wrote:
-> > On Wed, Feb 08, 2023 at 04:46:44PM +0530, Manikanta Maddireddy wrote:
-> > > Add PCIe port node under the PCIe controller-1 device tree node to su=
-pport
-> > > PCIe WAKE# interrupt for WiFi.
-> > >=20
-> > > Signed-off-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+On Mon, Feb 06, 2023 at 04:05:02PM +0200, Abel Vesa wrote:
+> On 23-02-03 10:33:14, Johan Hovold wrote:
+> > On Fri, Feb 03, 2023 at 10:18:03AM +0200, Abel Vesa wrote:
+> > > Add the SM8550 both g4 and g3 configurations. In addition, there is a
+> > > new "lane shared" table that needs to be configured for g4, along with
+> > > the No-CSR list of resets.
+> > 
+> > Could you add a comment about the new nocsr reset and how it is used
+> > here?
+> >  
+> > > Co-developed-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > > Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+> > > Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> > > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 > > > ---
-> > >=20
-> > > Changes in v14:
-> > > New patch in the series to support PCIe WAKE# in NVIDIA Jetson AGX Or=
-in.
-> > >=20
-> > >   .../dts/nvidia/tegra234-p3737-0000+p3701-0000.dts     | 11 ++++++++=
-+++
-> > >   1 file changed, 11 insertions(+)
-> > >=20
-> > > diff --git a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-000=
-0.dts b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> > > index 8a9747855d6b..9c89be263141 100644
-> > > --- a/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> > > +++ b/arch/arm64/boot/dts/nvidia/tegra234-p3737-0000+p3701-0000.dts
-> > > @@ -2147,6 +2147,17 @@ pcie@14100000 {
-> > >   			phys =3D <&p2u_hsio_3>;
-> > >   			phy-names =3D "p2u-0";
+> > > 
+> > > This patchset relies on the following patchset:
+> > > https://lore.kernel.org/all/20230117224148.1914627-1-abel.vesa@linaro.org/
+> > > 
+> > > The v6 of this patch is:
+> > > https://lore.kernel.org/all/20230202123902.3831491-9-abel.vesa@linaro.org/
+> > > 
+> > > Changes since v6:
+> > >  * none
+> > > 
+> > > Changes since v5:
+> > >  * renmaed the no-CSR reset to "phy_nocsr" as discussed off-list with
+> > >    Bjorn and Johan
+> > > 
+> > > Changes since v4:
+> > >  * dropped _serdes infix from ln_shrd table name and from every ln_shrd
+> > >    variable name
+> > >  * added hyphen between "no CSR" in both places
+> > >  * dropped has_ln_shrd_serdes_tbl
+> > >  * reordered qmp_pcie_offsets_v6_20 by struct members
+> > >  * added rollback for no-CSR reset in qmp_pcie_init fail path
+> > >  * moved ln_shrd offset calculation after port_b
+> > > 
+> > > Changes since v3:
+> > >  * added Dmitry's R-b tag
+> > > 
+> > > Changes since v2:
+> > >  * none
+> > > 
+> > > Changes since v1:
+> > >  * split all the offsets into separate patches, like Vinod suggested
+> > > 
+> > > 
+> > >  drivers/phy/qualcomm/phy-qcom-qmp-pcie.c | 367 ++++++++++++++++++++++-
+> > >  1 file changed, 365 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > index 907f3f236f05..ff6c0b526fde 100644
+> > > --- a/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > +++ b/drivers/phy/qualcomm/phy-qcom-qmp-pcie.c
+> > > @@ -1506,6 +1506,234 @@ static const struct qmp_phy_init_tbl sm8450_qmp_gen4x2_pcie_ep_pcs_misc_tbl[] =
+> > >  	QMP_PHY_INIT_CFG(QPHY_V5_20_PCS_PCIE_OSC_DTCT_MODE2_CONFIG5, 0x08),
+> > >  };
+> > 
+> [...]
+> > 
+> > >  
+> > > @@ -2214,6 +2469,68 @@ static const struct qmp_phy_cfg sm8450_qmp_gen4x2_pciephy_cfg = {
+> > >  	.phy_status		= PHYSTATUS_4_20,
+> > >  };
+> > >  
+> > > +static const struct qmp_phy_cfg sm8550_qmp_gen3x2_pciephy_cfg = {
+> > > +	.lanes = 2,
 > > > +
-> > > +			pci@0,0 {
-> > > +				reg =3D <0x0000 0 0 0 0>;
-> > > +				#address-cells =3D <3>;
-> > > +				#size-cells =3D <2>;
-> > > +				ranges;
-> > > +
-> > > +				interrupt-parent =3D <&gpio>;
-> > > +				interrupts =3D <TEGRA234_MAIN_GPIO(L, 2) IRQ_TYPE_LEVEL_LOW>;
-> > > +				interrupt-names =3D "wakeup";
-> > > +			};
-> > Don't we need to wire this to the PMC interrupt controller and the wake
-> > event corresponding to the L2 GPIO? Otherwise none of the wake logic in
-> > PMC will get invoked.
-> >=20
-> > Thierry
-> PCIe wake is gpio based not pmc, only wake support is provided by PMC
-> controller.
-> I verified this patch and able to wake up Tegra from suspend.
-> Petlozu, correct me if my understanding is wrong.
+> > > +	.offsets		= &qmp_pcie_offsets_v5,
+> > 
+> > Did you really intend to use the v5 offsets here? It seems you use v6.20
+> > defines in the tables below. This may work but it looks a little strange
+> > and does not match how we name and use these resources for the other
+> > SoCs (e.g. reusing structures and defines from older IP revisions is
+> > fine, but not necessarily the other way round).
+> 
+> So here is what is happening here. The actual IP block version is 6 for
+> the g3x2. The offsets of the tables are the same as on v5, but the
+> actual offsets of some of the registers within those tables are
+> entirely different. Now, if you compare the PCS PCIe offsets (v5 vs v6)
+> you'll notice that all v6 registers currently added are the same as v5
+> (both names and values). With that in mind, we still need to keep the v6
+> offsets for the case when a new register, that might not be in v5, might
+> be added later on. As for the table offsets, since they look the same we
+> should probably not add a dedicated v6 one.
 
-The way that this usually works is that you need to use something like
-this:
+Ok, makes sense.
 
-	interrupt-parent =3D <&pmc>;
-	interrupts =3D <1 IRQ_TYPE_LEVEL_LOW>;
-	interrupt-names =3D "wakeup";
-
-This will then cause the PMC's interrupt chip callbacks to setup all the
-wake-related interrupts and use the internal wake event tables to
-forward the GPIO/IRQ corresponding to the PMC wake event to the GPIO
-controller or GIC, respectively.
-
-If you use &gpio as the interrupt parent, none of the PMC logic will be
-invoked, so unless this is somehow set up correctly by default, the PMC
-wouldn't be able to wake up the system.
-
-Thierry
-
---/k1dyoR/zukO1rxq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmPjykwACgkQ3SOs138+
-s6HZGA//TdSXsFLTgVmkZ6PXU0yOasPm2tuDlJGey7FwCCVqzKyQ/dbdqrnfl/Vj
-JRcbXKKomD+oVLvRepvBSVk5HfDeL60Kf4N4iyectGJ+31UjRLMucnM/YMqgOoi2
-yQPfcd8B9rJ5l1R9nVlLlP8jfLGusaUixSvdC2TaqsNzJmmtPaCgD3UXcHEMMI00
-wrsVdK0TinpV7EqD93j9crNZkGoXl+8qjczoHeMLzf5XRac+ff6Js9120FJAfAbq
-y5BPEYRsIyDDVG/iYz55t8YoS2xR4Hc5gcPR/euxwFk6QrnN0CnuULhWO4Ihfa66
-h/NYwuBt477NY0Za/EbH/X1w3k7TzFUSxch1wkIhMirQYWrwDptcgg5T1C46sw0r
-LHi1F553vy7QIjprEKLzpT9iEyjfzqRsNvXttNONXZK3zA83CMGaatqSK8UYcOxx
-8i7t8E9ZKzOzattJ0X7hXrfGsRfE5hJP7HmQql91RPoOcHxFA2WWWKWYQoE3/Qp5
-qHl0tQQB8qtMmg//kzrxoC2s4557786dRjcATnkOt4NbrniHTdSDTWe+7WjFT+sU
-Mj7FVyIrnrbfj9qSngbZVmzwvaqysxPYfLWXZ/kBSdRiZ2WSWF7dQs32hVn0TsLK
-0i1WObI5YyF/sSl+uxbfXoPea5Pc61EelCRKdeQXzLtU+RYyMj0=
-=P8ai
------END PGP SIGNATURE-----
-
---/k1dyoR/zukO1rxq--
+Johan
