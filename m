@@ -2,74 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DA93690837
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Feb 2023 13:09:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E940C6909F3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Feb 2023 14:29:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229828AbjBIMJg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Feb 2023 07:09:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
+        id S229750AbjBIN3j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Feb 2023 08:29:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjBIMJX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Feb 2023 07:09:23 -0500
-Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163245A928;
-        Thu,  9 Feb 2023 04:04:06 -0800 (PST)
-Received: by mail-pg1-x542.google.com with SMTP id r18so1387082pgr.12;
-        Thu, 09 Feb 2023 04:04:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2iL2H66c8egeJxcAcNd53DVufU1j4gsJh0p9vWPKars=;
-        b=HYSrOHlOGHkCBBXo/FhVUHf4PNfH2Exl6Z6W8siW88APvdsy0cxj4dygVgp4Zyb6Dq
-         O1xnt9GpA8ATgCFBeNTRTw5k1ZYRZONlBo0nHzUB5vrPjDDa0ZSFugYFs6jcYZIdVSZs
-         P8uoxbRDQtjBraAyzqiz/b2ZS9T59i5c5oKxSGTCMgEt+ogkvVRC9XPqgCU1W/hsgsYZ
-         lW76hmgEMdXVdpqw6Dd9Ti8wNiVgS/rEoPXwYD9nhvtayiUBNHW16vf533LJlbjZTdSk
-         6joGlO8A3eFDuPCwM1BXmd0aex77OIDHxjUjD3kGmXfhw6Vcxar/FTtGf3MBnwPNcDMR
-         BecA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2iL2H66c8egeJxcAcNd53DVufU1j4gsJh0p9vWPKars=;
-        b=HAAy5t6frU176IYf6QUZubH+6VzQQJi51MfegxLfm6UdtqIOKVMyqE8UaIN7WhhoPu
-         tHkhQ9k29hAAFIvkNHVS+DoeYzkO53nAkSeBcwG763jVkqDZPeXYRV/GT8+NeObJS49u
-         y1sryTG+Ta6oPmGCTVQwgbp6noHHXW0cEeThOpN0KwKJgjtJGfLCWuRigBKobgxpeYML
-         gyG18M/ChBDVyGChRNj3SAOLiBdMxVFyMpNp8MudlTbO3VpGOVSHyW0vCB/f5MmYP1rP
-         iImDbMBs5qgNOR2KUqWky8lreQMcwWdvFWJF3u8OEopOFshUZRo5TUXI69u9HChZbmtW
-         6ZHQ==
-X-Gm-Message-State: AO0yUKVAvrtrVGSHIUuh4hWGweG3s/spoS/C4rpI8LUXESypU9s1nsMP
-        n6uQAxiSvhjggyCE69Eat4aY/rzezeEKkc8YKV8=
-X-Google-Smtp-Source: AK7set+5BFRT8raXxfWMimV2WpjqnoEHyVeYyY5HAmLqQ0HPH3rmaK6Yk3SELenr4S268UyMHdMXS0a6QNoea/S9LmA=
-X-Received: by 2002:aa7:95ae:0:b0:592:6238:a2a with SMTP id
- a14-20020aa795ae000000b0059262380a2amr2455825pfk.39.1675944245529; Thu, 09
- Feb 2023 04:04:05 -0800 (PST)
+        with ESMTP id S229828AbjBIN3i (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Feb 2023 08:29:38 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B69B059B58;
+        Thu,  9 Feb 2023 05:29:29 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PCHfm6NfDz6J659;
+        Thu,  9 Feb 2023 21:25:20 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Thu, 9 Feb
+ 2023 13:29:26 +0000
+Date:   Thu, 9 Feb 2023 13:29:25 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <rafael@kernel.org>,
+        <bhelgaas@google.com>, <robert.moore@intel.com>
+Subject: Re: [PATCH 06/18] cxl: Add callback to parse the DSMAS subtables
+ from CDAT
+Message-ID: <20230209132925.00006711@Huawei.com>
+In-Reply-To: <167571661375.587790.16681436923769338643.stgit@djiang5-mobl3.local>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+        <167571661375.587790.16681436923769338643.stgit@djiang5-mobl3.local>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20221222072603.1175248-1-korantwork@gmail.com>
- <3d1834d9-7905-1225-741a-f298dd5b8a8e@linux.dev> <Y6TSgGdCTvkwPiVg@kbusch-mbp.dhcp.thefacebook.com>
- <CAEm4hYUWf+Fx3FV7vNTc8+O9NSb0iQp75MTC6gra6XapXK=cxw@mail.gmail.com>
- <d14ac29d-027a-08a7-c5c8-848a6920d4a2@linux.dev> <CAEm4hYXncuvL-Gk1aEZExrvkbx=N1aiOQNeNjFdB4443EbKNBA@mail.gmail.com>
- <f05ee82a-4532-b12b-490f-904b946ff7b0@linux.dev> <CAEm4hYXk1RuKEw41VukH2iGTo_9GmZjUfrESWK5vFtpFA_O_4A@mail.gmail.com>
- <CAEm4hYWeZFrYxSvAcBJ8iw=t507vZMqfBwiQXFSJd2Hcyfw7fA@mail.gmail.com>
- <9e6cfda1-4309-d1bb-a0cf-404a7fe7d3aa@linux.intel.com> <Y+FG2EUpmsmCZqwh@kbusch-mbp.dhcp.thefacebook.com>
- <CAEm4hYWjaVCDFtCCyHrq5vOie4wV5LFn-UVZ5qQbpASxVGy1TA@mail.gmail.com> <c830a68e-014b-ddec-4bab-5db337fc378f@linux.intel.com>
-In-Reply-To: <c830a68e-014b-ddec-4bab-5db337fc378f@linux.intel.com>
-From:   Xinghui Li <korantwork@gmail.com>
-Date:   Thu, 9 Feb 2023 20:05:02 +0800
-Message-ID: <CAEm4hYU46nsN4jiRa0aoq2XTamgFj+OOWy=A+wXFeZFTey_8SA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
-To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     Keith Busch <kbusch@kernel.org>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
-        lpieralisi@kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xinghui Li <korantli@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -77,13 +53,146 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Patel, Nirmal <nirmal.patel@linux.intel.com> =E4=BA=8E2023=E5=B9=B42=E6=9C=
-=888=E6=97=A5=E5=91=A8=E4=B8=89 04:32=E5=86=99=E9=81=93=EF=BC=9A
->
-> Also newer CPUs have more MSIx (128) which means we can still have
-> better performance without bypass. It would be better if user have
-> can chose module parameter based on their requirements. Thanks.
->
-All right~I will reset the patch V2 with the online node version later.
+On Mon, 06 Feb 2023 13:50:15 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-Thanks
+> Provide a callback function to the CDAT parser in order to parse the Device
+> Scoped Memory Affinity Structure (DSMAS). Each DSMAS structure contains the
+> DPA range and its associated attributes in each entry. See the CDAT
+> specification for details.
+> 
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+Hi Dave,
+
+A few minor questions / comments inline,
+
+Jonathan
+
+> ---
+>  drivers/cxl/core/cdat.c |   25 +++++++++++++++++++++++++
+>  drivers/cxl/core/port.c |    2 ++
+>  drivers/cxl/cxl.h       |   11 +++++++++++
+>  drivers/cxl/port.c      |    8 ++++++++
+>  4 files changed, 46 insertions(+)
+> 
+> diff --git a/drivers/cxl/core/cdat.c b/drivers/cxl/core/cdat.c
+> index be09c8a690f5..f9a64a0f1ee4 100644
+> --- a/drivers/cxl/core/cdat.c
+> +++ b/drivers/cxl/core/cdat.c
+> @@ -96,3 +96,28 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler, void *a
+>  	return cdat_table_parse_entries(ACPI_CDAT_TYPE_DSLBIS, header, &proc, 0);
+>  }
+>  EXPORT_SYMBOL_NS_GPL(cdat_table_parse_dslbis, CXL);
+> +
+> +int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg)
+> +{
+> +	struct cxl_port *port = (struct cxl_port *)arg;
+> +	struct dsmas_entry *dent;
+> +	struct acpi_cdat_dsmas *dsmas;
+> +
+> +	if (header->type != ACPI_CDAT_TYPE_DSMAS)
+> +		return -EINVAL;
+> +
+> +	dent = devm_kzalloc(&port->dev, sizeof(*dent), GFP_KERNEL);
+> +	if (!dent)
+> +		return -ENOMEM;
+> +
+> +	dsmas = (struct acpi_cdat_dsmas *)((unsigned long)header + sizeof(*header));
+
+I'd prefer header + 1
+
+
+> +	dent->handle = dsmas->dsmad_handle;
+> +	dent->dpa_range.start = dsmas->dpa_base_address;
+> +	dent->dpa_range.end = dsmas->dpa_base_address + dsmas->dpa_length - 1;
+> +
+> +	mutex_lock(&port->cdat.dsmas_lock);
+> +	list_add_tail(&dent->list, &port->cdat.dsmas_list);
+> +	mutex_unlock(&port->cdat.dsmas_lock);
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_NS_GPL(cxl_dsmas_parse_entry, CXL);
+> diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
+> index fe78daf7e7c8..2b27319cfd42 100644
+> --- a/drivers/cxl/core/port.c
+> +++ b/drivers/cxl/core/port.c
+> @@ -660,6 +660,8 @@ static struct cxl_port *cxl_port_alloc(struct device *uport,
+>  	device_set_pm_not_required(dev);
+>  	dev->bus = &cxl_bus_type;
+>  	dev->type = &cxl_port_type;
+> +	INIT_LIST_HEAD(&port->cdat.dsmas_list);
+> +	mutex_init(&port->cdat.dsmas_lock);
+>  
+>  	return port;
+>  
+> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+> index 839a121c1997..1e5e69f08480 100644
+> --- a/drivers/cxl/cxl.h
+> +++ b/drivers/cxl/cxl.h
+> @@ -8,6 +8,7 @@
+>  #include <linux/bitfield.h>
+>  #include <linux/bitops.h>
+>  #include <linux/log2.h>
+> +#include <linux/list.h>
+>  #include <linux/io.h>
+>  #include <linux/acpi.h>
+>  
+> @@ -520,6 +521,8 @@ struct cxl_port {
+>  	struct cxl_cdat {
+>  		void *table;
+>  		size_t length;
+> +		struct list_head dsmas_list;
+> +		struct mutex dsmas_lock; /* lock for dsmas_list */
+
+I'm curious, what might race with the dsmas_list changing and hence what is lock for?
+
+>  	} cdat;
+>  	bool cdat_available;
+>  };
+> @@ -698,6 +701,12 @@ static inline struct cxl_pmem_region *to_cxl_pmem_region(struct device *dev)
+>  }
+>  #endif
+>  
+> +struct dsmas_entry {
+> +	struct list_head list;
+> +	struct range dpa_range;
+> +	u16 handle;
+
+handle is 1 byte in the spec. Why larger here?
+
+> +};
+> +
+>  typedef int (*cdat_tbl_entry_handler)(struct acpi_cdat_header *header, void *arg);
+>  
+>  u8 cdat_table_checksum(u8 *buffer, u32 length);
+> @@ -706,6 +715,8 @@ int cdat_table_parse_dsmas(void *table, cdat_tbl_entry_handler handler,
+>  int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
+>  			    void *arg);
+>  
+> +int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg);
+> +
+>  /*
+>   * Unit test builds overrides this to __weak, find the 'strong' version
+>   * of these symbols in tools/testing/cxl/.
+> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
+> index 5453771bf330..b1da73e99bab 100644
+> --- a/drivers/cxl/port.c
+> +++ b/drivers/cxl/port.c
+> @@ -61,6 +61,14 @@ static int cxl_port_probe(struct device *dev)
+>  		if (rc)
+>  			return rc;
+>  
+> +		if (port->cdat.table) {
+> +			rc = cdat_table_parse_dsmas(port->cdat.table,
+> +						    cxl_dsmas_parse_entry,
+> +						    (void *)port);
+> +			if (rc < 0)
+> +				dev_dbg(dev, "Failed to parse DSMAS: %d\n", rc);
+> +		}
+> +
+>  		rc = cxl_hdm_decode_init(cxlds, cxlhdm);
+>  		if (rc)
+>  			return rc;
+> 
+> 
+
