@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FDCC692019
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 14:49:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16BBC69201E
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 14:49:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232294AbjBJNtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 08:49:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36882 "EHLO
+        id S232311AbjBJNtX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 08:49:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232237AbjBJNtV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 08:49:21 -0500
+        with ESMTP id S232274AbjBJNtX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 08:49:23 -0500
 Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 549623644F;
-        Fri, 10 Feb 2023 05:49:20 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A3B4A37718;
+        Fri, 10 Feb 2023 05:49:21 -0800 (PST)
 X-IronPort-AV: E=Sophos;i="5.97,287,1669042800"; 
-   d="scan'208";a="152409435"
+   d="scan'208";a="152409438"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
   by relmlie6.idc.renesas.com with ESMTP; 10 Feb 2023 22:49:19 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 9981246C7F07;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id B4C0D46C7F09;
         Fri, 10 Feb 2023 22:49:19 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -28,72 +28,130 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     Sergey.Semin@baikalelectronics.ru, marek.vasut+renesas@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v9 0/8] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
-Date:   Fri, 10 Feb 2023 22:49:09 +0900
-Message-Id: <20230210134917.2909314-1-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v9 1/8] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+Date:   Fri, 10 Feb 2023 22:49:10 +0900
+Message-Id: <20230210134917.2909314-2-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230210134917.2909314-1-yoshihiro.shimoda.uh@renesas.com>
+References: <20230210134917.2909314-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.3 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
-To support them, modify PCIe DesignWare common codes.
+Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
+PCIe host module.
 
-Changes from v8:
-https://lore.kernel.org/all/20230131095543.1831875-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on next-20230210.
- - Missing dt-bindings patches accidentally.
-
-Changes from v7:
-https://lore.kernel.org/all/20221121124400.1282768-1-yoshihiro.shimoda.uh@renesas.com/
- - Based on next-20230131.
- - Update Copyright year of new files.
- - Add a new capability flag (DW_PCIE_CAP_EDMA_UNROLL) for finding eDMA on
-   R-Car S4-8.
- - Remove some PCIe configurations like L1 substates from pcie-rcar-gen4-host.c.
- - Change timing of reset_control for suitable this hardware initialization.
- - Add gpio reset handling for host mode.
- - Capitalize the first charactors on each printk message.
-
-Yoshihiro Shimoda (8):
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
-  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
-  PCI: Add PCI_EXP_LNKCAP_MLW macros
-  PCI: designware-ep: Expose dw_pcie_ep_exit() to module
-  PCI: dwc: Add support for triggering legacy IRQs
-  PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
-  PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
-  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
-
- .../bindings/pci/rcar-gen4-pci-ep.yaml        |  90 +++++++++
- .../bindings/pci/rcar-gen4-pci-host.yaml      |  90 +++++++++
- MAINTAINERS                                   |   1 +
- drivers/pci/controller/dwc/Kconfig            |  18 ++
- drivers/pci/controller/dwc/Makefile           |   4 +
- .../pci/controller/dwc/pcie-designware-ep.c   |  70 ++++++-
- .../pci/controller/dwc/pcie-designware-host.c |   3 +
- drivers/pci/controller/dwc/pcie-designware.c  |  33 +++-
- drivers/pci/controller/dwc/pcie-designware.h  |  19 +-
- .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 185 ++++++++++++++++++
- .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 165 ++++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 166 ++++++++++++++++
- drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  63 ++++++
- include/uapi/linux/pci_regs.h                 |   6 +
- 14 files changed, 894 insertions(+), 19 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 90 +++++++++++++++++++
+ 1 file changed, 90 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
- create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
 
+diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+new file mode 100644
+index 000000000000..1bd7612101d8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+@@ -0,0 +1,90 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++# Copyright (C) 2022 Renesas Electronics Corp.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-host.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Renesas R-Car Gen4 PCIe Host
++
++maintainers:
++  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
++
++allOf:
++  - $ref: snps,dw-pcie.yaml#
++
++properties:
++  compatible:
++    items:
++      - const: renesas,r8a779f0-pcie   # R-Car S4-8
++      - const: renesas,rcar-gen4-pcie  # R-Car Gen4
++
++  interrupts:
++    maxItems: 4
++
++  interrupt-names:
++    items:
++      - const: msi
++      - const: dma
++      - const: sft_ce
++      - const: app
++
++  clocks:
++    maxItems: 1
++
++  power-domains:
++    maxItems: 1
++
++  resets:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - clocks
++  - power-domains
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    #include <dt-bindings/power/r8a779f0-sysc.h>
++
++    soc {
++        #address-cells = <2>;
++        #size-cells = <2>;
++
++        pcie: pcie@e65d0000 {
++            compatible = "renesas,r8a779f0-pcie", "renesas,rcar-gen4-pcie";
++            reg = <0 0xe65d0000 0 0x3000>, <0 0xe65d3000 0 0x2000>,
++                  <0 0xe65d6200 0 0x0e00>, <0 0xfe000000 0 0x400000>;
++            reg-names = "dbi", "atu", "app", "config";
++            #address-cells = <3>;
++            #size-cells = <2>;
++            bus-range = <0x00 0xff>;
++            device_type = "pci";
++            ranges =  <0x81000000 0 0x00000000 0 0xfe000000 0 0x00010000
++                       0x82000000 0 0x30000000 0 0x30000000 0 0x10000000>;
++            dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x80000000>;
++            interrupts = <GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
++                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
++            interrupt-names = "msi", "dma", "sft_ce", "app";
++            #interrupt-cells = <1>;
++            interrupt-map-mask = <0 0 0 7>;
++            interrupt-map = <0 0 0 1 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 2 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 3 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH
++                             0 0 0 4 &gic GIC_SPI 416 IRQ_TYPE_LEVEL_HIGH>;
++            clocks = <&cpg CPG_MOD 624>;
++            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
++            resets = <&cpg 624>;
++            num-lanes = <2>;
++            snps,enable-cdm-check;
++            max-link-speed = <2>;
++        };
++    };
 -- 
 2.25.1
 
