@@ -2,210 +2,200 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 751626928E7
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 22:05:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C26596928F4
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 22:12:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233219AbjBJVFl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 16:05:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60712 "EHLO
+        id S233127AbjBJVMx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 16:12:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232764AbjBJVFk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 16:05:40 -0500
-Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [176.9.242.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 637FF6C7DC;
-        Fri, 10 Feb 2023 13:05:39 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id A461710333601;
-        Fri, 10 Feb 2023 22:05:37 +0100 (CET)
-Received: from localhost (unknown [89.246.108.87])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 571BA600CA83;
-        Fri, 10 Feb 2023 22:05:37 +0100 (CET)
-X-Mailbox-Line: From 49c5299afc660ac33fee9a116ea37df0de938432 Mon Sep 17 00:00:00 2001
-Message-Id: <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
-In-Reply-To: <cover.1676043318.git.lukas@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
-From:   Lukas Wunner <lukas@wunner.de>
-Date:   Fri, 10 Feb 2023 21:25:16 +0100
-Subject: [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S232764AbjBJVMw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 16:12:52 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 394401A951;
+        Fri, 10 Feb 2023 13:12:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676063571; x=1707599571;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=3m5ViBHSS+rf7NskbOCkXgBH0/Zr7NzADvFV9U8Lt2k=;
+  b=dyWtfnYxaz4QPDkXwjfHo+uJdM4AjKBrqStA5XrEn+czADpbGEE8bUaM
+   gMr7ASMg/rN+73gg3A7Zwwb8RxMSlIifHhssg3HsHLLu+8dWkNwMMd0Xf
+   VCR/Rqj9UcZdqeju0gDIVYkzE8Qr4+Ub1kK7Ey/N9Kae5i2cMQkBdJx15
+   815E3nqPnsTGMZ5SUJ4Nwyx/27k2JYg9C5Xbkpt+oh7tz3mNn1UaXSoDb
+   BeCgUswuAqE8HJwRt488nF7SLtgn4laJcQJQqFNcTtwoh7c1hMmuaG5j4
+   pg7u0auDKtNBjOU+8KJmmttQOVSIwwngrhHKW1W31w1tKj8A1vFXtSmhB
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="328219204"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="328219204"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 13:12:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="913675732"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="913675732"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Feb 2023 13:12:50 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Fri, 10 Feb 2023 13:12:49 -0800
+Received: from ORSEDG601.ED.cps.intel.com (10.7.248.6) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Fri, 10 Feb 2023 13:12:49 -0800
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (104.47.66.42) by
+ edgegateway.intel.com (134.134.137.102) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Fri, 10 Feb 2023 13:12:49 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=W5yLQxOnIvoqkVXIbfzRwd/5PyNgyD+52Q9Qn8owt/nsE063D9WeaKqzh1uZ3/5WIarYXGRj/TInsDpVvbNNKV+PUE5PJECrwNV1LZ1+KpM5G+U3fQVxi1TBcyQc2+77oW8ZgPUN1q1w4qOS/ptDAajRIf9cGbzFc7lu1I+Tmf2T0bpcANotTO3EtK9/rJkQQuuWryXlc3TdYZ79VZ82wNdSjSlIOQ0TobMrvEK0IdFibxcXxjn7phkXujEFJgnngRWhLad/SbMuJizzRLpY+Ez9CAYE1mh0iKvzY3cGNxCZ6Mcr2pPO3eu9PvbluyTKwMUSUlcIHKvI5VAJzq9GAg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XM+loM+sv0Vnsbopw2kVMGxKIhgRtFmX1DbGz1CssIg=;
+ b=G9nEc7mc0mAsFKdCiHmi+tpk96veFhSDWpYXOPXKKu4OMxc10Zcb6YrXuMwrB3IfvDouGyLvNdW+6cZVAPVYB+EFp5XMTtchHAhQUvwnp+8vjxykg4cSaBMiH/bo1V3UooubfNXfr1kQBD+j8ag0TiU+ViTfv6vlGy1vos168aY3GWqFFXnZXZmL7GFJGUD2sE7br5niZ03KMS62A/XXWBPBdkjEwzNOq4l+3gmmcRncY4maem3o7hIm5p7lshG05peNJOxxs0D7Z/GIcQHtScyhk6/PEk0kDR3NkbkgQO1qHszTSAEg9Ap9l2BTe/79uu45Zhg+Nu+v9+AahDUAKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY4PR11MB1862.namprd11.prod.outlook.com (2603:10b6:903:124::18)
+ by DS0PR11MB6397.namprd11.prod.outlook.com (2603:10b6:8:ca::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.17; Fri, 10 Feb
+ 2023 21:12:48 +0000
+Received: from CY4PR11MB1862.namprd11.prod.outlook.com
+ ([fe80::d651:ac39:526d:604f]) by CY4PR11MB1862.namprd11.prod.outlook.com
+ ([fe80::d651:ac39:526d:604f%12]) with mapi id 15.20.6086.021; Fri, 10 Feb
+ 2023 21:12:48 +0000
+Message-ID: <af294def-fff7-469c-b8c6-a245ba641c2c@intel.com>
+Date:   Fri, 10 Feb 2023 13:12:43 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.1
+Subject: Re: [PATCH] PCI: Fix build error when CONFIG_PCI_MSI disabled
+Content-Language: en-US
+To:     ALOK TIWARI <alok.a.tiwari@oracle.com>, <bhelgaas@google.com>,
+        <nathan@kernel.org>, <ndesaulniers@google.com>, <trix@redhat.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <llvm@lists.linux.dev>, <tglx@linutronix.de>,
+        <kevin.tian@intel.com>, <darwi@linutronix.de>
+References: <158e40e1cfcfc58ae30ecb2bbfaf86e5bba7a1ef.1675978686.git.reinette.chatre@intel.com>
+ <333dee5b-6710-998c-bf3f-2cb1d676a7da@oracle.com>
+From:   Reinette Chatre <reinette.chatre@intel.com>
+In-Reply-To: <333dee5b-6710-998c-bf3f-2cb1d676a7da@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: BY3PR04CA0001.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::6) To CY4PR11MB1862.namprd11.prod.outlook.com
+ (2603:10b6:903:124::18)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PR11MB1862:EE_|DS0PR11MB6397:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7f5618f7-035e-40ee-2a25-08db0bab8f6e
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: r6pjTZl6PXHQBQpbGQhd9dilsSeSlDF7QMTQoxQU/JHY60+kA92VdKx/4O/HLAdNmtrr0HofN96cMryqoTRKjagGC5VFh/2NALy1TXeg+ZTJkD93KSOmORZu+VVpCLmI4ckB2MVZk4NiifRnWgwgcXjsYRSP6P/gEgy7skpYbH+1j0uXo/v/UBtDYP1j4GgzvHgd1sgNATlOLqvivSnjrgs8nDAp8L2lJ2DxjCfQ+osP4sXrXOOj0/78GSwt3ORbYkk6to1J+IC1NyZ/J1AfiDcBN1l4mfQIuWmqR6+kvjht7zA9HA/KZIWRqRn4fE2lYMvfqOpADESB0gap9BNMm5/EDbbyMdTn7eXif+EAJyttPDQpyu1RKp6GxArEWcSHUkf0rnvqKzMqTsxJSnqkELMB+mLsQFoW7uBNh+yE5uRGdzVMWsH2rvyy12I5JBejNbn0kPnbJZ1i4tUQOUHlfO7FEVKpFZE1rGFP0IRsW5FMuXYBYY/pupMchknTNcPEsvh4RQsJUyaOvQyPMWgWqFCTBrpJhS/z012WcmIJklK4+3wMbDLuybW0PeO5I0JD85f8WthHCxxo9k6hXVSBWCBM5rorkjwXS2ErHZUmMujHEVxi3DtJorXmt/nkRzYjfZXWg3EOna7SPQipccOcr/td4n4VCMmAmdYWJxxqxTJ0RzWHFeU5Xa+uUD19OlxFdy+ogoA8OzpqhkyuCeLp0+JYigF2nQKiX7MMaxtshCw=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR11MB1862.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(366004)(136003)(39860400002)(346002)(376002)(451199018)(86362001)(31696002)(82960400001)(8676002)(36756003)(66946007)(41300700001)(66476007)(4326008)(66556008)(38100700002)(6486002)(6666004)(478600001)(6506007)(8936002)(53546011)(5660300002)(4744005)(44832011)(31686004)(2906002)(7416002)(6512007)(186003)(26005)(2616005)(316002)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aGZ5bGpvTk03UThnU1hPY0gzNitWQklWK0JucG52TmxLUTRjS2ZyMUphcVgz?=
+ =?utf-8?B?M1pLRFB3MzZ0Vzh1OFlSUDM1VHZBWUFMZHJRbVZKTmZGTWJRRzM0emNKRmVN?=
+ =?utf-8?B?N3B4bVU0M09TNUpzYVFkNGQ2cHIvR0xRN2pMS0FJTGJ1Y0pjeDNJTXR4cEpQ?=
+ =?utf-8?B?U2hGRXBqR09PUFJmdWJiRXNSRnprM0dkVzk0REdoVUplSU9SbWdFcG5OdTJa?=
+ =?utf-8?B?Q2NGZzNhV1o0dlU2cmlqU0k4MTBYU1p2ek5oQ3d4Mmtqd3UycllUMnl4aXh3?=
+ =?utf-8?B?WW1lTTZLVlBiYnpkL3RJNklqa1FyNWxuYStYTTZQeExtWHFkN0diOUNoZHhr?=
+ =?utf-8?B?WGhCWGIydHJDNW5ISUIrY3BuaWlDdXptd3BocWRRQjBKZUgzS0xlZ3ozQ1dp?=
+ =?utf-8?B?bXhiQ0tqWmhpbGEvYk0rQ0syVGtYSEdnVDNscHhSdWt0TFVTTVEwRGJ5WExC?=
+ =?utf-8?B?OHRQTzRqc0xpV3ZCWS8vMHNIRmJZbFU2SDBDUE40T0pVaEZDbWMzS0RDa0hn?=
+ =?utf-8?B?U2hhby90QTRieCswcWI4THJKZ1ZVanBSNzNGRkhhc3lJMjNGeXRHRUhNcDFr?=
+ =?utf-8?B?U09sWlpTRGprUkRzeFFxQ1hqUWhSZC96ditHeGtmS3J4bW1XWDFIRG02bUFn?=
+ =?utf-8?B?SHhqSVhMZnNUZmFtU3ExYVdQZVRkMTRaT0g0M3VPU011QkNQS2hkWVUzM25m?=
+ =?utf-8?B?RllkejFQcnNwZWVXcG9TZUtMbDNVMWRQTkFoUkNhK0p3dDFkMi9lWHM5ZmJp?=
+ =?utf-8?B?bXAvYUc5SmtYSG1iaElWY1czcHlrSFMxRHBmU0F2VXduQ3ZIa0JGcWNIanJ5?=
+ =?utf-8?B?TVhEUTk1NkkzRmZvOHNZY0htV2NObFFoMzd2Q3BqaHo2MTF5QUkwSjVXUmlh?=
+ =?utf-8?B?UzBjZkU5VVo3MTVCT1BVazlQM3U2YmdsbEtJa1d3bVBMcUVjNG4vMUp1K3VE?=
+ =?utf-8?B?elhmVGZnM2trMmJhSGtlSTF6eHJRaXFPYXNSZ05sc1Z5L3B5ZDJsaHVvbmpO?=
+ =?utf-8?B?a3E0cFRRd3A2alNYQzhOdkZGRTVTcGsyV05OblBJZU9Bd0lrSmc1THNMcFlE?=
+ =?utf-8?B?TlpKOEVNWTd6aFlmOTI3V3A2NUIzQ0FkaEFaanJQRUhwVXRsa2dRVW43TXVF?=
+ =?utf-8?B?ZDl0UmpKNUdodmRMZVdVekc3K2xJZVhOTml5UFVOS1o2U0NSRGx2MjQ1bzFx?=
+ =?utf-8?B?MDRsbHlJOHhzRFR1cVg0QXlQU3hQZ3dDYzhMd3NWa3NueklVS3N6d0x6cEdD?=
+ =?utf-8?B?ODIwRzZKN1E5eWJPTnBnYWRhTDhFWHY1RUhBdnZOekxTazg0bDZyclhGa3ZY?=
+ =?utf-8?B?RGpYbEI5RFB4WWJiWmVZcGM1QlhyOEhXN2h5MjdLcXE4S1E2dnMwQjhJVnVS?=
+ =?utf-8?B?ODJWcHVkZjhBcCtnOTNvc1BGeHU2YmlHL0VyQmhtdkNmL2ZCZVg1Z1FSSE1I?=
+ =?utf-8?B?Mm9DbWtOb0lEZkRIbklmNlNEV1E0WFhTT1BDNDF3NFF4OGFiODQ0QkdmM0FB?=
+ =?utf-8?B?SzlQWGJ3OGtmVW8reStkNVVadzZ1bTdsZEhWbnJ2WldIM1ZydEdiZjZHYkEz?=
+ =?utf-8?B?eW5tR0VoZGNERTBVbGp5ZmVxL094anV4RGNLdHMwalgwNDdGT1dXdi8rSEVQ?=
+ =?utf-8?B?L2hTSTI3cGJrdHFsMCtWL3NRZUZBZCtCZHh0VUFGYlYwZlc1ZHovR21FR1Nx?=
+ =?utf-8?B?N0NRQXNpL252dXhGdnEyVmlETGpCMVZQZmlQOHBqTWppcWlsT3UzUXRPckNj?=
+ =?utf-8?B?a1A4cmlJdWFtbUJoMUd5VVVJWHBiTCtEQStpbTZVSzJnTS9QelgyUG84clVn?=
+ =?utf-8?B?UTQwdE5UWmFwU01KdUFnMHcrMU1KRFV0eU1CRWpjRk9XMXR3dXVEbEU1d2Zp?=
+ =?utf-8?B?SnJYMXhDbU4xMXIvUENOWDZCQzcxZVNoQ2VzTTN6cjdyUGt1OUlka0dENkNw?=
+ =?utf-8?B?MHdsNVc4bTVBVnB4clF4a01DY2hvNndKV0kzbzd5aFJwMG5pYVIvTFlnYzJT?=
+ =?utf-8?B?dUdPWEd5R2FEYUQ5dnpUVGtkclJzQlFUZHJCZkI3d3IyQWo1QXBZZHhONUY5?=
+ =?utf-8?B?Z3V2VllhS08reEhVSENMQjFHSkh4aWNSdTNTVDl4R05ycDFhOUZYMjAzU2Y2?=
+ =?utf-8?B?S3ZlWlJhNTZ5bWJwSmNmRnVwRmdnYmYyUEduVUcxRGFLdHptdUJKU2FVUEw0?=
+ =?utf-8?B?Mmc9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f5618f7-035e-40ee-2a25-08db0bab8f6e
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR11MB1862.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2023 21:12:47.9387
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TlMKtUq1BQujH1ZunjCDqZXrJvR0y22Iw5TGS/aOz9CvUizPH7XtUcGhO/X5YiMMrYT0Gl9w8yUwWn1OS1Tf8w/3HI2L3p5E253a0WIk/vw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6397
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonathan notes that cxl_cdat_get_length() and cxl_cdat_read_table()
-allocate 32 dwords for the DOE response even though it may be smaller.
+Hi Alok,
 
-In the case of cxl_cdat_get_length(), only the second dword of the
-response is of interest (it contains the length).  So reduce the
-allocation to 2 dwords and let DOE discard the remainder.
+On 2/10/2023 12:45 PM, ALOK TIWARI wrote:
+> shall we need to define this function under -> #ifndef CONFIG_PCI_MSI
+> 
+> #ifndef CONFIG_PCI_MSI
+> 
+> +static inline struct msi_map
+> +pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+> +              const struct irq_affinity_desc *affdesc)
+> +{
+> +    struct msi_map map = { .index = -ENOSYS };
+> +
+> +    return map;
+> +}
+> +
+> +static inline void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map)
+> +{
+> +}
+> +#endif
 
-In the case of cxl_cdat_read_table(), a correctly sized allocation for
-the full CDAT already exists.  Let DOE write each table entry directly
-into that allocation.  There's a snag in that the table entry is
-preceded by a Table Access Response Header (1 dword).  Save the last
-dword of the previous table entry, let DOE overwrite it with the
-header of the next entry and restore it afterwards.
+No need. include/linux/pci.h already has those definitions.
 
-The resulting CDAT is preceded by 4 unavoidable useless bytes.  Increase
-the allocation size accordingly and skip these bytes when exposing CDAT
-in sysfs.
+include/linux/pci.h already has:
 
-The buffer overflow check in cxl_cdat_read_table() becomes unnecessary
-because the remaining bytes in the allocation are tracked in "length",
-which is passed to DOE and limits how many bytes it writes to the
-allocation.  Additionally, cxl_cdat_read_table() bails out if the DOE
-response is truncated due to insufficient space.
+#ifdef CONFIG_PCI_MSI
 
-Tested-by: Ira Weiny <ira.weiny@intel.com>
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
----
- Changes v2 -> v3:
- * Newly added patch in v3 on popular request (Jonathan)
+...
 
- drivers/cxl/core/pci.c | 34 ++++++++++++++++++----------------
- drivers/cxl/cxl.h      |  3 ++-
- drivers/cxl/port.c     |  2 +-
- 3 files changed, 21 insertions(+), 18 deletions(-)
+#else
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index 1b954783b516..70097cc75302 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -471,7 +471,7 @@ static int cxl_cdat_get_length(struct device *dev,
- 			       size_t *length)
- {
- 	__le32 request = CDAT_DOE_REQ(0);
--	__le32 response[32];
-+	__le32 response[2];
- 	int rc;
- 
- 	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
-@@ -495,28 +495,28 @@ static int cxl_cdat_read_table(struct device *dev,
- 			       struct pci_doe_mb *cdat_doe,
- 			       struct cxl_cdat *cdat)
- {
--	size_t length = cdat->length;
--	u32 *data = cdat->table;
-+	size_t length = cdat->length + sizeof(u32);
-+	__le32 *data = cdat->table;
- 	int entry_handle = 0;
-+	__le32 saved_dw = 0;
- 
- 	do {
- 		__le32 request = CDAT_DOE_REQ(entry_handle);
- 		struct cdat_entry_header *entry;
--		__le32 response[32];
- 		size_t entry_dw;
- 		int rc;
- 
- 		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
- 			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
- 			     &request, sizeof(request),
--			     &response, sizeof(response));
-+			     data, length);
- 		if (rc < 0) {
- 			dev_err(dev, "DOE failed: %d", rc);
- 			return rc;
- 		}
- 
- 		/* 1 DW Table Access Response Header + CDAT entry */
--		entry = (struct cdat_entry_header *)(response + 1);
-+		entry = (struct cdat_entry_header *)(data + 1);
- 		if ((entry_handle == 0 &&
- 		     rc != sizeof(u32) + sizeof(struct cdat_header)) ||
- 		    (entry_handle > 0 &&
-@@ -526,21 +526,22 @@ static int cxl_cdat_read_table(struct device *dev,
- 
- 		/* Get the CXL table access header entry handle */
- 		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
--					 le32_to_cpu(response[0]));
-+					 le32_to_cpu(data[0]));
- 		entry_dw = rc / sizeof(u32);
- 		/* Skip Header */
- 		entry_dw -= 1;
--		entry_dw = min(length / sizeof(u32), entry_dw);
--		/* Prevent length < 1 DW from causing a buffer overflow */
--		if (entry_dw) {
--			memcpy(data, entry, entry_dw * sizeof(u32));
--			length -= entry_dw * sizeof(u32);
--			data += entry_dw;
--		}
-+		/*
-+		 * Table Access Response Header overwrote the last DW of
-+		 * previous entry, so restore that DW
-+		 */
-+		*data = saved_dw;
-+		length -= entry_dw * sizeof(u32);
-+		data += entry_dw;
-+		saved_dw = *data;
- 	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
- 
- 	/* Length in CDAT header may exceed concatenation of CDAT entries */
--	cdat->length -= length;
-+	cdat->length -= length - sizeof(u32);
- 
- 	return 0;
- }
-@@ -576,7 +577,8 @@ void read_cdat_data(struct cxl_port *port)
- 		return;
- 	}
- 
--	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
-+	port->cdat.table = devm_kzalloc(dev, cdat_length + sizeof(u32),
-+					GFP_KERNEL);
- 	if (!port->cdat.table)
- 		return;
- 
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index 1b1cf459ac77..78f5cae5134c 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -494,7 +494,8 @@ struct cxl_pmem_region {
-  * @component_reg_phys: component register capability base address (optional)
-  * @dead: last ep has been removed, force port re-creation
-  * @depth: How deep this port is relative to the root. depth 0 is the root.
-- * @cdat: Cached CDAT data
-+ * @cdat: Cached CDAT data (@table is preceded by 4 null bytes, these are not
-+ *	  included in @length)
-  * @cdat_available: Should a CDAT attribute be available in sysfs
-  */
- struct cxl_port {
-diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-index 5453771bf330..0705343ac5ca 100644
---- a/drivers/cxl/port.c
-+++ b/drivers/cxl/port.c
-@@ -95,7 +95,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
- 		return 0;
- 
- 	return memory_read_from_buffer(buf, count, &offset,
--				       port->cdat.table,
-+				       port->cdat.table + sizeof(u32),
- 				       port->cdat.length);
- }
- 
--- 
-2.39.1
+... 
+/*  new function definitions will be inserted here */
+...
 
+#endif
+
+
+Reinette
