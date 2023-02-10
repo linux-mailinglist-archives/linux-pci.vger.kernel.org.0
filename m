@@ -2,177 +2,247 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AA9E692B9B
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Feb 2023 00:46:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0BF7692B9C
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Feb 2023 00:47:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbjBJXqu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 18:46:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56970 "EHLO
+        id S229958AbjBJXre (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 18:47:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230016AbjBJXqr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 18:46:47 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577BF125AC;
-        Fri, 10 Feb 2023 15:46:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676072801; x=1707608801;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=7FpgIac8FzbCShLFwaqYK1OwqN3FNoWhI2Ig6hNiFsE=;
-  b=kXORbJvgZXtkerQePY2YwWM1r0MjUcQme1Mlehm9id/n/dw63bG2cBha
-   Y9aKBtlimJUdNfXVtRWIXykBDuso9h2uYp4ixx1ATQ6iONHxnJIMxL9dk
-   dFFtTJwaWsRkcJ3Ko2ro2OwaM+nkJ28pqjsOIhPoVvfV+QAWnKWPxBKXy
-   +gsnmaYg/5cyN9yOLk03Wct7zt8l6/DUHhkTNFZjO/We7pKTW+gyz+Daf
-   LeEc6zG4CVMd/4PM69cv+ux5YIumhu/2O70R1tcbjgXHMSY4bb6wMo6yn
-   zoT+50qb+dr2C6QDeI5D4jUBqRHHjls7wuim363IIn7gTLYerOUNFeefS
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="318576355"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="318576355"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:46:16 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="700633859"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="700633859"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.213.190.133]) ([10.213.190.133])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:46:16 -0800
-Message-ID: <c5a3eb31-ebeb-2a8c-e504-4ea52e720844@intel.com>
-Date:   Fri, 10 Feb 2023 16:46:15 -0700
+        with ESMTP id S229944AbjBJXrd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 18:47:33 -0500
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52675FFF
+        for <linux-pci@vger.kernel.org>; Fri, 10 Feb 2023 15:47:32 -0800 (PST)
+Received: by mail-pj1-x1036.google.com with SMTP id m2-20020a17090a414200b00231173c006fso11022812pjg.5
+        for <linux-pci@vger.kernel.org>; Fri, 10 Feb 2023 15:47:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=yvOux52E5DbaWC84jPuO4nUHQ0TNZblI+i2jTa4EFtQ=;
+        b=ED8dYO9FNKMIjc/TCRz/NpirWuHWiTRnFNfdsQVxx2FJMVek+p15igeFFuXcpBXiOC
+         Y0a+I/8ktLsvo3N5MdhQG37xXQrx30WhEOaTl6+S07YfwDwd7bxXvNesnYzJp+eALuXo
+         KUm26Y7UUTPzjXC3YigSUPU2ZEFQyvhYKC6NLXmHB9dOWCDM+zVS8t88EyA/nvZ/QbDK
+         8FD2HHMAj8KT15+W5edNMPTzLH5+nKRXdDg4mgYOhHKejxL2iW0ecDLrjngpdxLYu4LP
+         J8W0zZa/WSCXNSOByPNry0lATSsomc5uTjI7VP4ZjipR1KOZBz1HUYtsgK0oewTB3pet
+         KGnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yvOux52E5DbaWC84jPuO4nUHQ0TNZblI+i2jTa4EFtQ=;
+        b=yq0c2B+syG1vBYIF/AHWQ7iPlLxvs7O7ew3bqImcRrN1MDqNFJRnMNHL20COTRQdoX
+         kYsP9X08iUYIXJVlxXdQRhnUEgoR97itif4Uc/XxIMHjxGZXPaYDyjPea+MbF3OAL8+l
+         jGrhnE8QCrXZvGSrAlCG3nlVepKwNZhkEYeR0cH2DpTJK3bI2R1SLRpRwMLxl1Wpn1kC
+         Z0OrqQkXZyTD1VYXqyf5kLu+2P3GA8aNXhKtX+ayzHPHFfOqYvH40QaVd7nNQ4lEKWmP
+         /4eEqn9ALGPsnNAcsZp/IApxjwzFL9eXLVDoc6rHKrxSZBzRrAmpPTuYVcN5s0qjd1PP
+         oZoA==
+X-Gm-Message-State: AO0yUKWlbCvER6rJP8fWqPrMHvoorpTba9Cc28SZsfVDkoHhB2s4wMnp
+        Eo7dmbFyRzMz9YQ9F1aZztFOJA==
+X-Google-Smtp-Source: AK7set9RitrimshGarArBisRdiVw5OT6p3mabnFwY8OKzVIC3UbTvCc/t/dpUCvTiH/5rQmO/QGGqQ==
+X-Received: by 2002:a17:902:ee89:b0:19a:5a9d:3c with SMTP id a9-20020a170902ee8900b0019a5a9d003cmr82270pld.16.1676072851861;
+        Fri, 10 Feb 2023 15:47:31 -0800 (PST)
+Received: from google.com (7.104.168.34.bc.googleusercontent.com. [34.168.104.7])
+        by smtp.gmail.com with ESMTPSA id 12-20020a170902c10c00b00189743ed3b6sm3885380pli.64.2023.02.10.15.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Feb 2023 15:47:31 -0800 (PST)
+Date:   Fri, 10 Feb 2023 23:47:27 +0000
+From:   Sean Christopherson <seanjc@google.com>
+To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <Y+bXjxUtSf71E5SS@google.com>
+References: <4216dea6-d899-aecb-2207-caa2ae7db0e3@intel.com>
+ <BYAPR21MB16886D92828BA2CA8D47FEA4D7D99@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+aP8rHr6H3LIf/c@google.com>
+ <Y+aVFxrE6a6b37XN@zn.tnic>
+ <BYAPR21MB16882083E84F20B906E2C847D7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <Y+aczIbbQm/ZNunZ@zn.tnic>
+ <cb80e102-4b78-1a03-9c32-6450311c0f55@intel.com>
+ <Y+auMQ88In7NEc30@google.com>
+ <Y+av0SVUHBLCVdWE@google.com>
+ <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH v6] cxl: add RAS status unmasking for CXL
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com, bhelgaas@google.com,
-        Jonathan.Cameron@Huawei.com
-References: <20230210225223.GA2706583@bhelgaas>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230210225223.GA2706583@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Feb 10, 2023, Michael Kelley (LINUX) wrote:
+> From: Sean Christopherson <seanjc@google.com> Sent: Friday, February 10, 2023 12:58 PM
+> > 
+> > On Fri, Feb 10, 2023, Sean Christopherson wrote:
+> > > On Fri, Feb 10, 2023, Dave Hansen wrote:
+> > > > On 2/10/23 11:36, Borislav Petkov wrote:
+> > > > >> One approach is to go with the individual device attributes for now.>> If the list
+> > does grow significantly, there will probably be patterns
+> > > > >> or groupings that we can't discern now.  We could restructure into
+> > > > >> larger buckets at that point based on those patterns/groupings.
+> > > > > There's a reason the word "platform" is in cc_platform_has(). Initially
+> > > > > we wanted to distinguish attributes of the different platforms. So even
+> > > > > if y'all don't like CC_ATTR_PARAVISOR, that is what distinguishes this
+> > > > > platform and it *is* one platform.
+> > > > >
+> > > > > So call it CC_ATTR_SEV_VTOM as it uses that technology or whatever. But
+> > > > > call it like the platform, not to mean "I need this functionality".
+> > > >
+> > > > I can live with that.  There's already a CC_ATTR_GUEST_SEV_SNP, so it
+> > > > would at least not be too much of a break from what we already have.
+> > >
+> > > I'm fine with CC_ATTR_SEV_VTOM, assuming the proposal is to have something like:
+> > >
+> > > 	static inline bool is_address_range_private(resource_size_t addr)
+> > > 	{
+> > > 		if (cc_platform_has(CC_ATTR_SEV_VTOM))
+> > > 			return is_address_below_vtom(addr);
+> > >
+> > > 		return false;
+> > > 	}
+> > >
+> > > i.e. not have SEV_VTOM mean "I/O APIC and vTPM are private".  Though I don't see
+> > > the point in making it SEV vTOM specific or using a flag.  Despite what any of us
+> > > think about TDX paravisors, it's completely doable within the confines of TDX to
+> > > have an emulated device reside in the private address space.  E.g. why not
+> > > something like this?
+> > >
+> > > 	static inline bool is_address_range_private(resource_size_t addr)
+> > > 	{
+> > > 		return addr < cc_platform_private_end;
+> > > 	}
+> > >
+> > > where SEV fills in "cc_platform_private_end" when vTOM is enabled, and TDX does
+> > > the same.  Or wrap cc_platform_private_end in a helper, etc.
+> > 
+> > Gah, forgot that the intent with TDX is to enumerate devices in their legacy
+> > address spaces.  So a TDX guest couldn't do this by default, but if/when Hyper-V
+> > or some other hypervisor moves I/O APIC, vTPM, etc... into the TCB, the common
+> > code would just work and only the hypervisor-specific paravirt code would need
+> > to change.
+> > 
+> > Probably need a more specific name than is_address_range_private() though, e.g.
+> > is_mmio_address_range_private()?
+> 
+> Maybe I'm not understanding what you are proposing, but in an SEV-SNP
+> VM using vTOM, devices like the IO-APIC and TPM live at their usual guest
+> physical addresses.
 
+Ah, so as the cover letter says, the intent really is to treat vTOM as an
+attribute bit.  Sorry, I got confused by Boris's comment:
 
-On 2/10/23 3:52 PM, Bjorn Helgaas wrote:
-> On Fri, Feb 10, 2023 at 10:04:03AM -0700, Dave Jiang wrote:
->> By default the CXL RAS mask registers bits are defaulted to 1's and
->> suppress all error reporting. If the kernel has negotiated ownership
->> of error handling for CXL then unmask the mask registers by writing 0s.
->>
->> PCI_EXP_AER_FLAGS moved to linux/pci.h header to expose to driver. It
->> allows exposure of system enabled PCI error flags for the driver to decide
->> which error bits to toggle. Bjorn suggested that the error enabling should
->> be controlled from the system policy rather than a driver level choice[1].
->>
->> CXL RAS CE and UE masks are checked against PCI_EXP_AER_FLAGS before
->> unmasking.
->>
->> [1]: https://lore.kernel.org/linux-cxl/20230210122952.00006999@Huawei.com/T/#me8c7f39d43029c64ccff5c950b78a2cee8e885af
-> 
->> +static int cxl_pci_ras_unmask(struct pci_dev *pdev)
->> +{
->> +	struct pci_host_bridge *host_bridge = pci_find_host_bridge(pdev->bus);
->> +	struct cxl_dev_state *cxlds = pci_get_drvdata(pdev);
->> +	void __iomem *addr;
->> +	u32 orig_val, val, mask;
->> +
->> +	if (!cxlds->regs.ras)
->> +		return -ENODEV;
->> +
->> +	/* BIOS has CXL error control */
->> +	if (!host_bridge->native_cxl_error)
->> +		return -EOPNOTSUPP;
->> +
->> +	if (PCI_EXP_AER_FLAGS & PCI_EXP_DEVCTL_URRE) {
-> 
-> 1) I don't really want to expose PCI_EXP_AER_FLAGS in linux/pci.h.
-> It's basically a convenience part of the AER implementation.
-> 
-> 2) I think your intent here is to configure the CXL RAS masking based
-> on what PCIe error reporting is enabled, but doing it by looking at
-> PCI_EXP_AER_FLAGS doesn't seem right.  This expression is a
-> compile-time constant that is always true, but we can't rely on
-> devices always being configured that way.
-> 
-> We call pci_aer_init() for every device during enumeration, but we
-> only write PCI_EXP_AER_FLAGS if pci_aer_available() and if
-> pcie_aer_is_native().  And there are a bunch of drivers that call
-> pci_disable_pcie_error_reporting(), which *clears* those flags.  I'm
-> not sure those drivers *should* be doing that, but they do today.
-> 
-> I'm not sure why this needs to be conditional at all, but if it does,
-> maybe you want to read PCI_EXP_DEVCTL and base it on that?
+  : What happens if the next silly HV guest scheme comes along and they do
+  : need more and different ones?
 
-Ok I'll read the PCI_EXP_DEVCTL. Looking to only unmask the relevant RAS 
-reporting if respective PCIe bits are enabled.
+Based on that comment, I assumed the proposal to use CC_ATTR_SEV_VTOM was intended
+to be a generic range-based thing, but it sounds like that's not the case. 
 
-> 
->> +		addr = cxlds->regs.ras + CXL_RAS_UNCORRECTABLE_MASK_OFFSET;
->> +		orig_val = readl(addr);
->> +
->> +		mask = CXL_RAS_UNCORRECTABLE_MASK_MASK;
-> 
-> Weird name ("_MASK_MASK"), but I assume there's a good reason ;)
+IMO, using CC_ATTR_SEV_VTOM to infer anything about the state of I/O APIC or vTPM
+is wrong.  vTOM as a platform feature effectively says "physical address bit X
+controls private vs. shared" (ignoring weird usage of vTOM).  vTOM does not mean
+I/O APIC and vTPM are private, that's very much a property of Hyper-V's current
+generation of vTOM-based VMs.
 
-Yes. It's the mask of the error mask register. Is that too much of a 
-mouthful? I can take out the second mask.
+Hardcoding this in the guest feels wrong.  Ideally, we would have a way to enumerate
+that a device is private/trusted, e.g. through ACPI.  I'm guessing we already
+missed the boat on that, so the next best thing is to do something like Michael
+originally proposed in this patch and shove the "which devices are private" logic
+into hypervisor-specific code, i.e. let Hyper-V figure out how to enumerate to its
+guests which devices are shared.
 
-> 
->> +		if (!cxl_pci_flit_256(pdev))
->> +			mask &= ~CXL_RAS_UNCORRECTABLE_MASK_F256B_MASK;
->> +		val = orig_val & ~mask;
->> +		writel(val, addr);
->> +		dev_dbg(&pdev->dev,
->> +			"Uncorrectable RAS Errors Mask: %#x -> %#x\n",
->> +			orig_val, val);
->> +	}
-> 
->>   	if (cxlds->regs.ras) {
->> -		pci_enable_pcie_error_reporting(pdev);
->> -		rc = devm_add_action_or_reset(&pdev->dev, disable_aer, pdev);
->> -		if (rc)
->> -			return rc;
->> +		rc = pci_enable_pcie_error_reporting(pdev);
-> 
-> I see you're just adding a check of return value here, but I'm not
-> sure you need to call pci_enable_pcie_error_reporting() in the first
-> place.  Isn't the call in the pci_aer_init() path enough?
+I agree with Boris' comment that a one-off "other encrypted range" is a hack, but
+that's just an API problem.  The kernel already has hypervisor specific hooks (and
+for SEV-ES even), why not expand that?  That way figuring out which devices are
+private is wholly contained in Hyper-V code, at least until there's a generic
+solution for enumerating private devices, though that seems unlikely to happen
+and will be a happy problem to solve if it does come about.
 
-I guess I'm confused by the kernel documentation:
-"
-pci_enable_pcie_error_reporting enables the device to send error
-messages to root port when an error is detected. Note that devices
-don't enable the error reporting by default, so device drivers need
-call this function to enable it.
-"
+diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
+index a868b76cd3d4..08f65ed439d9 100644
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2682,11 +2682,16 @@ static void io_apic_set_fixmap(enum fixed_addresses idx, phys_addr_t phys)
+ {
+        pgprot_t flags = FIXMAP_PAGE_NOCACHE;
+ 
+-       /*
+-        * Ensure fixmaps for IOAPIC MMIO respect memory encryption pgprot
+-        * bits, just like normal ioremap():
+-        */
+-       flags = pgprot_decrypted(flags);
++       if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
++               /*
++               * Ensure fixmaps for IOAPIC MMIO respect memory encryption pgprot
++               * bits, just like normal ioremap():
++               */
++               if (x86_platform.hyper.is_private_mmio(phys))
++                       flags = pgprot_encrypted(flags);
++               else
++                       flags = pgprot_decrypted(flags);
++       }
+ 
+        __set_fixmap(idx, phys, flags);
+ }
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 6453fbaedb08..0baec766b921 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -116,6 +116,9 @@ static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *des
+        if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+                return;
+ 
++       if (x86_platform.hyper.is_private_mmio(addr))
++               desc->flags |= IORES_MAP_ENCRYPTED;
++
+        if (!IS_ENABLED(CONFIG_EFI))
+                return;
+ 
 
-Seems to indicate that driver should always call this if it wants AER 
-reporting?
-
-> 
->> +++ b/include/uapi/linux/pci_regs.h
->> @@ -693,6 +693,7 @@
->>   #define  PCI_EXP_LNKCTL2_TX_MARGIN	0x0380 /* Transmit Margin */
->>   #define  PCI_EXP_LNKCTL2_HASD		0x0020 /* HW Autonomous Speed Disable */
->>   #define PCI_EXP_LNKSTA2		0x32	/* Link Status 2 */
->> +#define  PCI_EXP_LNKSTA2_FLIT		BIT(10) /* Flit Mode Status */
-> 
-> Please spell out the hex constant.  This is to match the style of the
-> surrounding code, and it also gives a hint about the size of the
-> register.
-
-Ok will fix
-> 
-> Bjorn
