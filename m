@@ -2,39 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 598596928C7
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 21:53:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EF766928CA
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 21:55:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233901AbjBJUxh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 15:53:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55056 "EHLO
+        id S233885AbjBJUzS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 15:55:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233897AbjBJUxf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 15:53:35 -0500
-Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ee9:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B52BF3AB0;
-        Fri, 10 Feb 2023 12:53:34 -0800 (PST)
+        with ESMTP id S233846AbjBJUzQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 15:55:16 -0500
+Received: from mailout1.hostsharing.net (mailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5fcc:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE32016331;
+        Fri, 10 Feb 2023 12:55:14 -0800 (PST)
 Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 23BDB10189E11;
-        Fri, 10 Feb 2023 21:53:33 +0100 (CET)
+        by mailout1.hostsharing.net (Postfix) with ESMTPS id 8E6CE1019263E;
+        Fri, 10 Feb 2023 21:55:13 +0100 (CET)
 Received: from localhost (unknown [89.246.108.87])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 00EE5600CA83;
-        Fri, 10 Feb 2023 21:53:32 +0100 (CET)
-X-Mailbox-Line: From ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7 Mon Sep 17 00:00:00 2001
-Message-Id: <ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7.1676043318.git.lukas@wunner.de>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 60A3B600CA83;
+        Fri, 10 Feb 2023 21:55:13 +0100 (CET)
+X-Mailbox-Line: From c3f9e24fffa318a045f89664fb9545099cb0d603 Mon Sep 17 00:00:00 2001
+Message-Id: <c3f9e24fffa318a045f89664fb9545099cb0d603.1676043318.git.lukas@wunner.de>
 In-Reply-To: <cover.1676043318.git.lukas@wunner.de>
 References: <cover.1676043318.git.lukas@wunner.de>
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Fri, 10 Feb 2023 21:25:11 +0100
-Subject: [PATCH v3 11/16] PCI/DOE: Allow mailbox creation without devres
- management
+Date:   Fri, 10 Feb 2023 21:25:12 +0100
+Subject: [PATCH v3 12/16] PCI/DOE: Create mailboxes on device enumeration
 To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
 Cc:     Gregory Price <gregory.price@memverge.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -54,214 +53,218 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-DOE mailbox creation is currently only possible through a devres-managed
-API.  The lifetime of mailboxes thus ends with driver unbinding.
+Currently a DOE instance cannot be shared by multiple drivers because
+each driver creates its own pci_doe_mb struct for a given DOE instance.
+For the same reason a DOE instance cannot be shared between the PCI core
+and a driver.
 
-An upcoming commit will create DOE mailboxes upon device enumeration by
-the PCI core.  Their lifetime shall not be limited by a driver.
+Overcome this limitation by creating mailboxes in the PCI core on device
+enumeration.
 
-Therefore rework pcim_doe_create_mb() into the non-devres-managed
-pci_doe_create_mb().  Add pci_doe_destroy_mb() for mailbox destruction
-on device removal.
+Provide a pci_find_doe_mailbox() API call to allow drivers to get a
+pci_doe_mb for a given (pci_dev, vendor, protocol) triple.  This API is
+modeled after pci_find_capability() and can later be amended with a
+pci_find_next_doe_mailbox() call to iterate over all mailboxes of a
+given pci_dev which support a specific protocol.
 
-Provide a devres-managed wrapper under the existing pcim_doe_create_mb()
-name.
+On removal, destroy the mailboxes in pci_destroy_dev(), after the driver
+is unbound.  This allows drivers to use DOE in their ->remove() hook.
 
-The error path of pcim_doe_create_mb() previously called xa_destroy() if
-alloc_ordered_workqueue() failed.  That's unnecessary because the xarray
-is still empty at that point.  It doesn't need to be destroyed until
-it's been populated by pci_doe_cache_protocols().  Arrange the error
-path of the new pci_doe_create_mb() accordingly.
-
-pci_doe_cancel_tasks() is no longer used as callback for
-devm_add_action(), so refactor it to accept a struct pci_doe_mb pointer
-instead of a generic void pointer.
+On surprise removal, cancel ongoing DOE exchanges and prevent new ones
+from being scheduled.  Thereby ensure that a hot-removed device doesn't
+needlessly wait for a running exchange to time out.
 
 Tested-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
  Changes v2 -> v3:
- * Call pci_doe_flush_mb() from pci_doe_destroy_mb() to simplify
-   error paths (Jonathan)
- * Explain in commit message why xa_destroy() is reordered in
-   error path of the new pci_doe_create_mb() (Jonathan)
+ * Don't cancel ongoing DOE exchanges in pci_stop_dev() so that
+   drivers may perform DOE in their ->remove() hooks
+ * Instead cancel ongoing DOE exchanges on surprise removal in
+   pci_dev_set_disconnected()
+ * Emit error message in pci_doe_init() if mailbox creation fails (Ira)
+ * Explain in commit message that pci_find_doe_mailbox() can later
+   be amended with pci_find_next_doe_mailbox() (Jonathan)
 
- drivers/pci/doe.c | 103 +++++++++++++++++++++++++++++-----------------
- 1 file changed, 66 insertions(+), 37 deletions(-)
+ drivers/pci/doe.c       | 73 +++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/pci.h       | 12 +++++++
+ drivers/pci/probe.c     |  1 +
+ drivers/pci/remove.c    |  1 +
+ include/linux/pci-doe.h |  2 ++
+ include/linux/pci.h     |  3 ++
+ 6 files changed, 92 insertions(+)
 
 diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 291cd7a46a39..2bc202b64b6a 100644
+index 2bc202b64b6a..bf32875d27da 100644
 --- a/drivers/pci/doe.c
 +++ b/drivers/pci/doe.c
-@@ -37,7 +37,7 @@
+@@ -20,6 +20,8 @@
+ #include <linux/pci-doe.h>
+ #include <linux/workqueue.h>
+ 
++#include "pci.h"
++
+ #define PCI_DOE_PROTOCOL_DISCOVERY 0
+ 
+ /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
+@@ -658,3 +660,74 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ 	return task.rv;
+ }
+ EXPORT_SYMBOL_GPL(pci_doe);
++
++/**
++ * pci_find_doe_mailbox() - Find Data Object Exchange mailbox
++ *
++ * @pdev: PCI device
++ * @vendor: Vendor ID
++ * @type: Data Object Type
++ *
++ * Find first DOE mailbox of a PCI device which supports the given protocol.
++ *
++ * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
++ */
++struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
++					u8 type)
++{
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb)
++		if (pci_doe_supports_prot(doe_mb, vendor, type))
++			return doe_mb;
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(pci_find_doe_mailbox);
++
++void pci_doe_init(struct pci_dev *pdev)
++{
++	struct pci_doe_mb *doe_mb;
++	u16 offset = 0;
++	int rc;
++
++	xa_init(&pdev->doe_mbs);
++
++	while ((offset = pci_find_next_ext_capability(pdev, offset,
++						      PCI_EXT_CAP_ID_DOE))) {
++		doe_mb = pci_doe_create_mb(pdev, offset);
++		if (IS_ERR(doe_mb)) {
++			pci_err(pdev, "[%x] failed to create mailbox: %ld\n",
++				offset, PTR_ERR(doe_mb));
++			continue;
++		}
++
++		rc = xa_insert(&pdev->doe_mbs, offset, doe_mb, GFP_KERNEL);
++		if (rc) {
++			pci_err(pdev, "[%x] failed to insert mailbox: %d\n",
++				offset, rc);
++			pci_doe_destroy_mb(doe_mb);
++		}
++	}
++}
++
++void pci_doe_destroy(struct pci_dev *pdev)
++{
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb)
++		pci_doe_destroy_mb(doe_mb);
++
++	xa_destroy(&pdev->doe_mbs);
++}
++
++void pci_doe_disconnected(struct pci_dev *pdev)
++{
++	struct pci_doe_mb *doe_mb;
++	unsigned long index;
++
++	xa_for_each(&pdev->doe_mbs, index, doe_mb)
++		pci_doe_cancel_tasks(doe_mb);
++}
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 8f5d4bd5b410..065ca9743ec1 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -318,6 +318,16 @@ struct pci_sriov {
+ 	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
+ };
+ 
++#ifdef CONFIG_PCI_DOE
++void pci_doe_init(struct pci_dev *pdev);
++void pci_doe_destroy(struct pci_dev *pdev);
++void pci_doe_disconnected(struct pci_dev *pdev);
++#else
++static inline void pci_doe_init(struct pci_dev *pdev) { }
++static inline void pci_doe_destroy(struct pci_dev *pdev) { }
++static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
++#endif
++
+ /**
+  * pci_dev_set_io_state - Set the new error state if possible.
   *
-  * This state is used to manage a single DOE mailbox capability.  All fields
-  * should be considered opaque to the consumers and the structure passed into
-- * the helpers below after being created by devm_pci_doe_create()
-+ * the helpers below after being created by pci_doe_create_mb().
-  *
-  * @pdev: PCI device this mailbox belongs to
-  * @cap_offset: Capability offset
-@@ -415,24 +415,8 @@ static int pci_doe_cache_protocols(struct pci_doe_mb *doe_mb)
+@@ -372,6 +382,8 @@ static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
+ 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
+ 	device_unlock(&dev->dev);
+ 
++	pci_doe_disconnected(dev);
++
  	return 0;
  }
  
--static void pci_doe_xa_destroy(void *mb)
-+static void pci_doe_cancel_tasks(struct pci_doe_mb *doe_mb)
- {
--	struct pci_doe_mb *doe_mb = mb;
--
--	xa_destroy(&doe_mb->prots);
--}
--
--static void pci_doe_destroy_workqueue(void *mb)
--{
--	struct pci_doe_mb *doe_mb = mb;
--
--	destroy_workqueue(doe_mb->work_queue);
--}
--
--static void pci_doe_cancel_tasks(void *mb)
--{
--	struct pci_doe_mb *doe_mb = mb;
--
- 	/* Stop all pending work items from starting */
- 	set_bit(PCI_DOE_FLAG_DEAD, &doe_mb->flags);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 1779582fb500..65e60ee50489 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -2476,6 +2476,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
+ 	pci_aer_init(dev);		/* Advanced Error Reporting */
+ 	pci_dpc_init(dev);		/* Downstream Port Containment */
+ 	pci_rcec_init(dev);		/* Root Complex Event Collector */
++	pci_doe_init(dev);		/* Data Object Exchange */
  
-@@ -442,7 +426,7 @@ static void pci_doe_cancel_tasks(void *mb)
- }
+ 	pcie_report_downtraining(dev);
+ 	pci_init_reset_methods(dev);
+diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
+index 0145aef1b930..f25acf50879f 100644
+--- a/drivers/pci/remove.c
++++ b/drivers/pci/remove.c
+@@ -39,6 +39,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
+ 	list_del(&dev->bus_list);
+ 	up_write(&pci_bus_sem);
  
- /**
-- * pcim_doe_create_mb() - Create a DOE mailbox object
-+ * pci_doe_create_mb() - Create a DOE mailbox object
-  *
-  * @pdev: PCI device to create the DOE mailbox for
-  * @cap_offset: Offset of the DOE mailbox
-@@ -453,24 +437,20 @@ static void pci_doe_cancel_tasks(void *mb)
-  * RETURNS: created mailbox object on success
-  *	    ERR_PTR(-errno) on failure
-  */
--struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
-+static struct pci_doe_mb *pci_doe_create_mb(struct pci_dev *pdev,
-+					    u16 cap_offset)
- {
- 	struct pci_doe_mb *doe_mb;
--	struct device *dev = &pdev->dev;
- 	int rc;
++	pci_doe_destroy(dev);
+ 	pcie_aspm_exit_link_state(dev);
+ 	pci_bridge_d3_update(dev);
+ 	pci_free_resources(dev);
+diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+index 7f16749c6aa3..d6192ee0ac07 100644
+--- a/include/linux/pci-doe.h
++++ b/include/linux/pci-doe.h
+@@ -29,6 +29,8 @@ struct pci_doe_mb;
  
--	doe_mb = devm_kzalloc(dev, sizeof(*doe_mb), GFP_KERNEL);
-+	doe_mb = kzalloc(sizeof(*doe_mb), GFP_KERNEL);
- 	if (!doe_mb)
- 		return ERR_PTR(-ENOMEM);
+ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
++struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
++					u8 type);
  
- 	doe_mb->pdev = pdev;
- 	doe_mb->cap_offset = cap_offset;
- 	init_waitqueue_head(&doe_mb->wq);
--
- 	xa_init(&doe_mb->prots);
--	rc = devm_add_action(dev, pci_doe_xa_destroy, doe_mb);
--	if (rc)
--		return ERR_PTR(rc);
- 
- 	doe_mb->work_queue = alloc_ordered_workqueue("%s %s DOE [%x]", 0,
- 						dev_driver_string(&pdev->dev),
-@@ -479,36 +459,85 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
- 	if (!doe_mb->work_queue) {
- 		pci_err(pdev, "[%x] failed to allocate work queue\n",
- 			doe_mb->cap_offset);
--		return ERR_PTR(-ENOMEM);
-+		rc = -ENOMEM;
-+		goto err_free;
- 	}
--	rc = devm_add_action_or_reset(dev, pci_doe_destroy_workqueue, doe_mb);
--	if (rc)
--		return ERR_PTR(rc);
- 
- 	/* Reset the mailbox by issuing an abort */
- 	rc = pci_doe_abort(doe_mb);
- 	if (rc) {
- 		pci_err(pdev, "[%x] failed to reset mailbox with abort command : %d\n",
- 			doe_mb->cap_offset, rc);
--		return ERR_PTR(rc);
-+		goto err_destroy_wq;
- 	}
- 
- 	/*
- 	 * The state machine and the mailbox should be in sync now;
--	 * Set up cancel tasks prior to using the mailbox to query protocols.
-+	 * Use the mailbox to query protocols.
- 	 */
--	rc = devm_add_action_or_reset(dev, pci_doe_cancel_tasks, doe_mb);
--	if (rc)
--		return ERR_PTR(rc);
--
- 	rc = pci_doe_cache_protocols(doe_mb);
- 	if (rc) {
- 		pci_err(pdev, "[%x] failed to cache protocols : %d\n",
- 			doe_mb->cap_offset, rc);
--		return ERR_PTR(rc);
-+		goto err_cancel;
- 	}
- 
- 	return doe_mb;
-+
-+err_cancel:
-+	pci_doe_cancel_tasks(doe_mb);
-+	xa_destroy(&doe_mb->prots);
-+err_destroy_wq:
-+	destroy_workqueue(doe_mb->work_queue);
-+err_free:
-+	kfree(doe_mb);
-+	return ERR_PTR(rc);
-+}
-+
-+/**
-+ * pci_doe_destroy_mb() - Destroy a DOE mailbox object
-+ *
-+ * @ptr: Pointer to DOE mailbox
-+ *
-+ * Destroy all internal data structures created for the DOE mailbox.
-+ */
-+static void pci_doe_destroy_mb(void *ptr)
-+{
-+	struct pci_doe_mb *doe_mb = ptr;
-+
-+	pci_doe_cancel_tasks(doe_mb);
-+	xa_destroy(&doe_mb->prots);
-+	destroy_workqueue(doe_mb->work_queue);
-+	kfree(doe_mb);
-+}
-+
-+/**
-+ * pcim_doe_create_mb() - Create a DOE mailbox object
-+ *
-+ * @pdev: PCI device to create the DOE mailbox for
-+ * @cap_offset: Offset of the DOE mailbox
-+ *
-+ * Create a single mailbox object to manage the mailbox protocol at the
-+ * cap_offset specified.  The mailbox will automatically be destroyed on
-+ * driver unbinding from @pdev.
-+ *
-+ * RETURNS: created mailbox object on success
-+ *	    ERR_PTR(-errno) on failure
-+ */
-+struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	int rc;
-+
-+	doe_mb = pci_doe_create_mb(pdev, cap_offset);
-+	if (IS_ERR(doe_mb))
-+		return doe_mb;
-+
-+	rc = devm_add_action_or_reset(&pdev->dev, pci_doe_destroy_mb, doe_mb);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	return doe_mb;
- }
- EXPORT_SYMBOL_GPL(pcim_doe_create_mb);
- 
+ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ 	    const void *request, size_t request_sz,
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 3c51cac3890b..b19c2965e384 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -511,6 +511,9 @@ struct pci_dev {
+ #endif
+ #ifdef CONFIG_PCI_P2PDMA
+ 	struct pci_p2pdma __rcu *p2pdma;
++#endif
++#ifdef CONFIG_PCI_DOE
++	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
+ #endif
+ 	u16		acs_cap;	/* ACS Capability offset */
+ 	phys_addr_t	rom;		/* Physical address if not from BAR */
 -- 
 2.39.1
 
