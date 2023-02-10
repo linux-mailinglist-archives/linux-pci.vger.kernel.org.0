@@ -2,65 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 455C5692A28
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 23:31:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95DD1692A32
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 23:33:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233522AbjBJWbc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 17:31:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57004 "EHLO
+        id S233034AbjBJWdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 17:33:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233731AbjBJWb2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 17:31:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CD3812A1;
-        Fri, 10 Feb 2023 14:31:27 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B408361E87;
-        Fri, 10 Feb 2023 22:31:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6A01C433D2;
-        Fri, 10 Feb 2023 22:31:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676068286;
-        bh=JfF0psb2oTqIC7oJVk49agjuAKhJosqKPyxHzKhfxSc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=cgMv9osOu1emmZgo9qtJajZwz8oVDKdh30ICd7EzxFHUJIlfy4FsCqbIOPzSNHHrV
-         LtS8Xlo4cEfqVIImrcZwn1lLJfOX4e/FgDZGQj/Gdgx1TvzdIiZITcxCZn6auj1ziy
-         8AkiUqCPGJo5YhT0vSIojxuraMPzFm7RW3FG8vL7TmNjoMH24pbwbCeEOhIrJOL9vx
-         9Nw5LmrhWdnPQ5bNgsmmPLkg/U17zFqTCVBbANs57k9ncTYaGv5SFDkTkSdWlCHJ5z
-         CE2PInYlMwEeOYTdSUAN9w7Tv7fWZv8e/90KiO2xn3o5tbxI8avjE/GO2tZgcbVjAq
-         DuhyIQ0daUrvw==
-Date:   Fri, 10 Feb 2023 16:31:24 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, Sergey.Semin@baikalelectronics.ru,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v9 6/8] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
-Message-ID: <20230210223124.GA2706221@bhelgaas>
+        with ESMTP id S232919AbjBJWdv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 17:33:51 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F1032122;
+        Fri, 10 Feb 2023 14:33:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676068427; x=1707604427;
+  h=from:date:subject:mime-version:content-transfer-encoding:
+   message-id:to:cc;
+  bh=pR1CO4fGX0zX/77VlHz6LJJtRsjIRqOd/EPNDg0FKN4=;
+  b=l5mxGiw9oGegyuKI84XDIQhPYM4cV1RRoXmaWwnsgF7nkr27ZYRqbmFf
+   rFQU/mPnY5NIFZfC8l/eNYowXlluZdGaeBZi9L+Z7oH7P/8fqS7+xAZvD
+   eJkYJqbt4IJdXKF0ZVzLW9yd45i6zubS/9xwDIelYwStipJ625Vb/UZqA
+   lHhtUsBml8mgNGKkTuaWIgMWktWtZr9MLB2w5NW8i1sJPboua8xDgrz5S
+   vF65fmt+D5ADdFs2oc+oKpMFKsHu517FTrFRzbwFR3Xq7D2kZcdJIx5SP
+   ZPRAl0lY4WOZzU23nODdOtQhONG371916q0O0heU9vNsHeZ4Ri8Tyce4c
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="416766936"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="416766936"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 14:33:46 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="700624145"
+X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
+   d="scan'208";a="700624145"
+Received: from iweiny-desk3.amr.corp.intel.com (HELO localhost) ([10.212.70.240])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 14:33:45 -0800
+From:   Ira Weiny <ira.weiny@intel.com>
+Date:   Fri, 10 Feb 2023 14:33:23 -0800
+Subject: [PATCH RFC] PCI/AER: Enable internal AER errors by default
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230210134917.2909314-7-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com>
+X-B4-Tracking: v=1; b=H4sIADPG5mMC/x2NQQrCQAwAv1JyNrC7BWm9Cj7Aq3hIs9EGlrVkq
+ RRK/27wOAPD7NDEVBpcuh1Mvtr0Ux3iqQOeqb4FNTtDCqkPKYzIW8GFFUkM45AznSMPqR/Bi4m
+ a4GRUefamrqW4XExeuv0XD7jfrvA8jh9tCYHMdwAAAA==
+To:     Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>
+Cc:     linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        Dave Jiang <dave.jiang@intel.com>, Stefan Roese <sr@denx.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ira Weiny <ira.weiny@intel.com>
+X-Mailer: b4 0.13-dev-ada30
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1676068425; l=3060;
+ i=ira.weiny@intel.com; s=20221222; h=from:subject:message-id;
+ bh=pR1CO4fGX0zX/77VlHz6LJJtRsjIRqOd/EPNDg0FKN4=;
+ b=3gNeuhIE1BaE04Aim9tnTthinw/4LA+7yLTjBnO8gGUzW2sdpOgvErYPebdih+13TlsLOCjpPZUv
+ zSJGeLxpB7zBCh1i+fLENggLlNM8qNAkifL9PSc8Gwe1eYSJ0PZQ
+X-Developer-Key: i=ira.weiny@intel.com; a=ed25519;
+ pk=brwqReAJklzu/xZ9FpSsMPSQ/qkSalbg6scP3w809Ec=
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 10:49:15PM +0900, Yoshihiro Shimoda wrote:
-> Add R-Car Gen4 PCIe Host support. This controller is based on
-> Synopsys DesignWare PCIe.
+The CXL driver expects internal error reporting to be enabled via
+pci_enable_pcie_error_reporting().  It is likely other drivers expect the same.
+Dave submitted a patch to enable the CXL side[1] but the PCI AER registers
+still mask errors.
 
-> +++ b/drivers/pci/controller/dwc/pcie-rcar-gen4.h
+PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
+Register (7.8.4.6) default to masking internal errors.  The
+Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
+as fatal.
 
-> +/* ASPM L1 PM Substates */
-> +#define L1PSCAP(x)		(0x01bc + (x))
+Enable internal errors to be reported via the standard
+pci_enable_pcie_error_reporting() call.  Ensure uncorrectable errors are set
+non-fatal to limit any impact to other drivers.
 
-Doesn't appear to be used; please remove it.
+[1] https://lore.kernel.org/all/167604864163.2392965.5102660329807283871.stgit@djiang5-mobl3.local/
+
+Cc: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: Stefan Roese <sr@denx.de>
+Cc: "Kuppuswamy Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+Cc: Oliver O'Halloran <oohall@gmail.com>
+Cc: linux-cxl@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+This is RFC to see if it is acceptable to be part of the standard
+pci_enable_pcie_error_reporting() call or perhaps a separate pci core
+call should be introduced.  It is anticipated that enabling this error
+reporting is what existing drivers are expecting.  The errors are marked
+non-fatal therefore it should not adversely affect existing devices.
+---
+ drivers/pci/pcie/aer.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 625f7b2cafe4..9d3ed3a5fc23 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -229,11 +229,28 @@ int pcie_aer_is_native(struct pci_dev *dev)
+ 
+ int pci_enable_pcie_error_reporting(struct pci_dev *dev)
+ {
++	int pos_cap_err;
++	u32 reg;
+ 	int rc;
+ 
+ 	if (!pcie_aer_is_native(dev))
+ 		return -EIO;
+ 
++	pos_cap_err = dev->aer_cap;
++
++	/* Unmask correctable and uncorrectable (non-fatal) internal errors */
++	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
++	reg &= ~PCI_ERR_COR_INTERNAL;
++	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
++
++	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
++	reg &= ~PCI_ERR_UNC_INTN;
++	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
++
++	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
++	reg &= ~PCI_ERR_UNC_INTN;
++	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
++
+ 	rc = pcie_capability_set_word(dev, PCI_EXP_DEVCTL, PCI_EXP_AER_FLAGS);
+ 	return pcibios_err_to_errno(rc);
+ }
+
+---
+base-commit: e5ab7f206ffc873160bd0f1a52cae17ab692a9d1
+change-id: 20230209-cxl-pci-aer-18dda61c8239
+
+Best regards,
+-- 
+Ira Weiny <ira.weiny@intel.com>
+
