@@ -2,124 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DB4DC691FCC
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 14:34:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4D370691FEC
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 14:40:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232022AbjBJNd6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 08:33:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
+        id S231335AbjBJNkM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 08:40:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231960AbjBJNd5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 08:33:57 -0500
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2098.outbound.protection.outlook.com [40.107.255.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9FE1F92C;
-        Fri, 10 Feb 2023 05:33:53 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Wc5CEMmwbaRETWqfefzpUVYm7bcKea+rewwqfotrUk6GEwL9KNxE4KxsuWsDgojT4SqpHV3OE1F/XFIy69m620AdSGh//dNw2kEUqEMQrEVPyYVRm4im3W7j8tMvrPyaT1F+DWyOHTQHSWO88g1PNNm+Qh0B6dqdGxCBgZlI6+c7otn+TXQWOCPtp+BnZDQxvW40A38au1d2Y9swTfTqhjj0P/jnsi/DSMS6MBovYUYi6SZE+l9F+9pp0dwSFkti7+XybozsBmhIROkeehic9LU7VBdfwjRhzJNEi24yeGMHwBdc9Ckvv+wiWcC0pjSCutQYVgE/370aDHhsTE55Dg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=A4/SfP98gXRjd6ra4ZCUhQ0MtwCpnfuKkxWXtTRT0N0=;
- b=fOcYk1hLdjvSvhGBWultaiIjnv82AGelCjR99YtLyEN3w5RhVQ7PuUffQN9tUf9oYu0AKnTk74CEC/8Wz/5XQLEJJLXDaXoKXJiKV3S6t7bUuCMwiQsLHn2qXRDPhN6JA2AHTGb9bTXIS9XjiEPw5Vnh3oSVGEwIIUKdSQYrCIIhUpR3MxSPrbdG0z2pGZi1MmNsk+ufmTy4Z8w0h4xL79ISuQiAOTnjAop+juoGYd9HaWjVE7bOWQzw+pUaN6uZbMUnVISOLsjx8Jvgv5yzbbYN9d9EX8CZjJ1JU3S6MxGXTxIzmrxRomivr7VMn7u9yWrFEYK+iUkkmLEGkWApYg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=A4/SfP98gXRjd6ra4ZCUhQ0MtwCpnfuKkxWXtTRT0N0=;
- b=Yp0AHOG5nnu8S2gX+PW8rWgaC7Gw0tRnQNnb+TdDvbF+SPzlyw1bc/LKkxeBToIjBWxM96cWVa95aIfbM6zXCEWGgT/xdm+BSjpzqeB/99TB8n5AmpWxJRm0saoBK8YTr85IxrposZXdXw4xQu6VtSSt/g1bGP0C9gw7xmId6Qk=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TYTPR01MB10920.jpnprd01.prod.outlook.com
- (2603:1096:400:39f::5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.19; Fri, 10 Feb
- 2023 13:33:51 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::5f2:5ff1:7301:3ff1]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::5f2:5ff1:7301:3ff1%4]) with mapi id 15.20.6086.019; Fri, 10 Feb 2023
- 13:33:51 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>
-CC:     "Sergey.Semin@baikalelectronics.ru" 
-        <Sergey.Semin@baikalelectronics.ru>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v8 0/6] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
-Thread-Topic: [PATCH v8 0/6] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
-Thread-Index: AQHZNVoyWX2OgSk9CUucrPIPgMQ3Ra7IPZYw
-Date:   Fri, 10 Feb 2023 13:33:50 +0000
-Message-ID: <TYBPR01MB53414B184A69E800288710A8D8DE9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20230131095543.1831875-1-yoshihiro.shimoda.uh@renesas.com>
-In-Reply-To: <20230131095543.1831875-1-yoshihiro.shimoda.uh@renesas.com>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYTPR01MB10920:EE_
-x-ms-office365-filtering-correlation-id: 0dde3d6f-e10c-4f9b-3f0f-08db0b6b724b
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RUvhh3x/XLCHMPjRcuRPp1LV7xN9Mws2566L6DpuYgusjPEwi8ump4UWvTJjqJ6t6ZzvSipV6qwngFbZO33Zj7hAOS/ENPdisse6fR6IRlg5FQY7qytSumF3qT5w1PXCHK7GgmStfQkqNiOanFpEjbH4EzBwSTDhRTCjwDJgWu6EjHn24+q57e+43hGcoXWVF71Ah1Osvltv0bpH15TqmQZPS+Enae8NhJyUf9ILq0tZ2LRcAXpn73zCZ0BUfWBYaAuBR8nBpE1+Je6V0gZ+jhhKjgAoBelSyJfkwSA4psTaLGW3wGCmlSXDFdrk+iacSZuqkhrf2Y/g1osLExkOedS2gy+lVfsV8CrNXlq84NU/OYDX5DUuMTg3xUIeOm9f+AHcm51tJM0LrSyFM+Juz3e85eeIzjVRA7e8JuLECUodjIMUIsWsYP/qp6En+CMmwYeWrviQf92WL3cOhYg7vX3YLiTuk10pjJxa96cQRDx9Li0rMOfH891+gMtzGVmZyAYrpIUDbLusvqkic9WJfajebg14ccXNQOhVXOAisxFfwz7gcPPEadDewVh2AFvvORLLN3du4DehlqWGcDJI/UrjmvDd/94vEjNxIAjNvBUvTT/T1O7OwEgO4cz5bQQjAab4KMG0XtZvTJXIxVGKp1kS/+8hEFQkr2U9wuojGOEZIG3rvViLL8E+YHXyn1L/mLJNwvyu+pxwlIg+Ot/Siw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(396003)(39860400002)(366004)(136003)(346002)(451199018)(38070700005)(38100700002)(83380400001)(7696005)(71200400001)(33656002)(6506007)(41300700001)(9686003)(478600001)(122000001)(76116006)(55016003)(52536014)(2906002)(186003)(26005)(8936002)(110136005)(4326008)(7416002)(86362001)(54906003)(64756008)(4744005)(316002)(66556008)(5660300002)(66446008)(66946007)(66476007)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?vAGoypR6jD+dqy2igOKFtYX2hHE1pMsGM/tlhn0hpGPN+96rCvpLjMtAoiHB?=
- =?us-ascii?Q?wBDMaEYafTKqv5FmHCS9SAcl/d+BQR81NmmZ+oUbqmj2GVrMBF8KzX/56rYH?=
- =?us-ascii?Q?jxVAi70CbLJ6GSDcGU45JAEqEoZjjd1X3n6LFqdaEXuF38dBJ8klqrOcYEEu?=
- =?us-ascii?Q?FXXnROqTEvgACQDvfPqMcGm9RleZUp5gFswe0S5Q03tDGAHhRvaxF+EVip0o?=
- =?us-ascii?Q?/EFur7nL8Z4OF/jPliNQJTYJif/JFt2+47u7plsFT+FLFA0I3+uP0IrZjLSt?=
- =?us-ascii?Q?KI09vRgZXuiqINNKG2neYCmsa5bXcou+ZWvRw/433VplcoseOAxIuSI1SGgr?=
- =?us-ascii?Q?elXJogUcQzzO/xajQpIwtdZS5oPHEEZYlZ3fcNSs/bji7zGiiC9Krc6hEooE?=
- =?us-ascii?Q?e3zc0tSJnT2vol51nKs1ZOwXSfr33owQk1ptwRYH+9OecfASwjOysf1UMg4T?=
- =?us-ascii?Q?SBgaCeO+/dq3/JBkkmF/uEX2hxV5P00d5FPF+BUg6BwZW3udGgFWjppX3GTN?=
- =?us-ascii?Q?dTTVQMXaUsw0HyzrULS1PSwro1/9QmIfdnDKz1SNwZL6lDKwXLzrYKUqfd6O?=
- =?us-ascii?Q?QOMzQFYZcXzJ8XNWrY3IDgoaZqVQmvSC0BETHl5n8Dtl7/B3sQnGvU1GREMz?=
- =?us-ascii?Q?Lgh4VnVFPPammv36Q9bxBNKDWWxeHq5OPEb4PQDm69ClLXMXR+fEbphZRA8v?=
- =?us-ascii?Q?Se7ryg1qx2KZoeoLeWgY8Mbu+4rK3Oip3ENriurftM0HoQQsFyTMxQizR/ta?=
- =?us-ascii?Q?zdP3RnwoMgqnNAIAzgnifqAdtUz5EhJbT5Ih8yQQOqRsBnyJKcC7HVWa3aWe?=
- =?us-ascii?Q?Z7VIsKc77VPN8kp5dMA8xa1ZXM014zcavUUjTfDs/mj2VZuKGb3mYFBAryXV?=
- =?us-ascii?Q?09dTBKLWq6GT7liEhmBfy0AstVhC/7BYgVRNGcGUOHnOgSXD/OKM3vsnG0dd?=
- =?us-ascii?Q?ADhp62qT8tdJl2Al7Spbi9kk/DW+83uuQ3FghmlL4SpSUc1sJdE3Q/Mn/KUx?=
- =?us-ascii?Q?nrrsJUFtyJ0LRZSdyuJF0iommNY24EV7vSL4Ce+01tLZPDf/R7zhxsJMcSNb?=
- =?us-ascii?Q?oE2g2aoMCHWdBqiDq5TWKAm8Mb/A44eYpBbDNZ81RRYcEyv+7lpwSFJh5HVt?=
- =?us-ascii?Q?6Ed1vvc/VWP5412Quoh6/LQ++yEvA723/Z49EtoknEsdnwYR8rxeWq9I9dm8?=
- =?us-ascii?Q?yq0SS59Nnle5boiBWX6qHv2EKRfiGwEfWyDB0cIHr7VD/f9K7lBD0gGKQS1j?=
- =?us-ascii?Q?lB4QPGCzW/W3j5tCLRNOUNtEhH99xjiJwcZ+oTqK7B8Kb8nP1QOaqw74KOXm?=
- =?us-ascii?Q?Vj8RArIfzZKiZmykudAkgk7pwisZTOPjlwORFmWRmYoZ/5B3f+mVgOG9twqh?=
- =?us-ascii?Q?rI+ueiJohM5vjhferLApMSiFMPhRb9j0U3m3GfhzvnE5Bez8TztRzAzWemnE?=
- =?us-ascii?Q?kCEwFzXn0OtqaioSN7ixAeTi83svOgztFdTUWm/nG5TeYT+OUhjpxXHyoJLg?=
- =?us-ascii?Q?pwCvDTfAmaasSVszeleX39RUSTjFCd2AgXHlHYS+1PRxzYDyeoJGA15Qtn3p?=
- =?us-ascii?Q?oEJuOypaMStFkoSfRR2AplxUIaHXthjNvGw+omtLUgX6+WJGD0Ff8uG25mGg?=
- =?us-ascii?Q?zQ=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S231500AbjBJNkL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 08:40:11 -0500
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E894920D0F;
+        Fri, 10 Feb 2023 05:40:08 -0800 (PST)
+Received: by mail-ua1-x92d.google.com with SMTP id 30so20729uab.8;
+        Fri, 10 Feb 2023 05:40:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=fzbyB3LiJ8c5CebrK9xhr+trI7e1xdJXNHnki05qVQA=;
+        b=j7jVPYffRwKk3x+KRfLVr0KZM+Eg65OllQB1VxPUtuJg2sH00c/t3LX0rMS4Ve6lJR
+         Czvx7zAyPNgmtPgoCnnOpQ0NjlmWP0FsvskL/gKOFVhwkQxozvlyav+a9eWqHZqX7qnt
+         +MbVqAJaEqXMcIVwcWhMHXzYZNpaLm3DbOYSF7GBgp3mnZbkoF2Zt+D6xyL/DTwMMjpr
+         h6Y+gnrmOyi0P/iFw2MYxW11KsuaGNAfmO651BgZBHUofk1DWUd/7Wi21mra1WCIhHrW
+         YgHXWP62PtPJ+BSNqozGFX/6tArjvZ/bOhFUsl7nfhDnlV9YNrY99/niJv6NBTw+DTQb
+         w/Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fzbyB3LiJ8c5CebrK9xhr+trI7e1xdJXNHnki05qVQA=;
+        b=cMlqHsEkpQzs3DMUQUozICcvN0wr7JxSxoH1rcUrQaMoPQ+v9/qzLYDG0gGCNTF5VC
+         Hk+HMUJ/Maxhbh06yIA4TGk4L9VtOoPUS6W/VaJX4jhUXSRycZaKRnS7jiHkqXvbemeG
+         VuBmuHDXVfkyzy4C6chQW5dkKNv0HJuyxDun3ZpZxci16paj9bSsEZeUguK18S883jGW
+         DpqwgmZOolUO68Q86bFw6lQE4sT3HjBnwbeKSQWNRu8JB/XotIiYQkbXkScQRot+Zycj
+         1cVyxET7lO4g9eyf0tz9IjIxiKKa314d0HHDwjnL0W+u9A5V1dRZStOhpJ6vacUp4fub
+         ObKg==
+X-Gm-Message-State: AO0yUKXi7kNqghzex0+SeruANMWivhHSxGVS3hJOGMGdafTOKjUHV7Oa
+        iYjH7/M/U2GidSqWY2ERFObikC9wZvC6yq0dS2S1kSBXF0DWBw==
+X-Google-Smtp-Source: AK7set/Tw09LMpYA+jNld7/Th5YCO4FEbukjL+QroqLMcndCO8mW/VNbSdcadzicpgxvlQyxucHHajuMJ2h4sPNFTvA=
+X-Received: by 2002:ab0:341a:0:b0:5f7:89e9:d714 with SMTP id
+ z26-20020ab0341a000000b005f789e9d714mr3212309uap.0.1676036407949; Fri, 10 Feb
+ 2023 05:40:07 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0dde3d6f-e10c-4f9b-3f0f-08db0b6b724b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2023 13:33:50.9684
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NLJpcu0Uj+HJp9J4bLD/6Q5b3SBv4Ewb4EbqjiSynwhkey37lOnKlAFiLI3Xw3iZUkoBlkj3ZeChb4cgmMd9BlAjNiDdH6cSB6Qcg7da5uiPQ1qNrtuE3rxu7Pw6xd1c
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYTPR01MB10920
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+References: <20230208234229.GA2496794@bhelgaas> <20230210001845.GA2630328@bhelgaas>
+ <CAKd_mfQyZ4fePBH4Rtg94g00mRoqUcmukWX1EgzwowNLzdhcSg@mail.gmail.com>
+In-Reply-To: <CAKd_mfQyZ4fePBH4Rtg94g00mRoqUcmukWX1EgzwowNLzdhcSg@mail.gmail.com>
+From:   Mark Enriquez <enriquezmark36@gmail.com>
+Date:   Fri, 10 Feb 2023 21:39:56 +0800
+Message-ID: <CAKd_mfSgzb5Zwb-_hjXMuiFfOw=ZoZn0GrC37=s8DraQTXVRhw@mail.gmail.com>
+Subject: Re: [PATCH V2] PCI/ASPM: Skip L1SS save/restore if not already enabled
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>, bhelgaas@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        rafael.j.wysocki@intel.com, kai.heng.feng@canonical.com,
+        tasev.stefanoska@skynet.be, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, treding@nvidia.com,
+        jonathanh@nvidia.com, kthota@nvidia.com, mmaddireddy@nvidia.com,
+        sagar.tv@gmail.com, Thomas Witt <kernel@witt.link>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -129,24 +74,183 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi,
 
-> From: Yoshihiro Shimoda, Sent: Tuesday, January 31, 2023 6:56 PM
->=20
-> Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
-> To support them, modify PCIe DesignWare common codes.
->=20
-<snip>
->=20
-> Yoshihiro Shimoda (6):
->   PCI: Add PCI_EXP_LNKCAP_MLW macros
->   PCI: designware-ep: Expose dw_pcie_ep_exit() to module
->   PCI: dwc: Add support for triggering legacy IRQs
->   PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
->   PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
->   MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+Resending this in plaintext mode.
+I apologize for the duplicate mail.
 
-I completely forgot to include dt-bindings patches on v8.
-So, I'll submit v9 patch soon.
+Sorry,
+Mark Francis
+----------------------
+Hello,
 
-Best regards,
-Yoshihiro Shimoda
+I tried the test patch with the "ASPM: can't restore L1SS while L1
+enabled" message on the v6.1 tag.
 
+I tried setting the ASPM policy to default rather than powersupersave.
+Tested twice.
+The result is I get to see the messages in the kernel log. The system
+resumed successfully in all tests.
+[  330.438136] ACPI: PM: Waking up from system sleep state S3
+[  330.445959] ACPI: EC: interrupt unblocked
+[  330.446174] pcieport 0000:00:1c.0: ASPM: can't restore L1SS while
+L1 enabled (0x0042)
+[  330.446177] pcieport 0000:00:1c.6: ASPM: can't restore L1SS while
+L1 enabled (0x0002)
+[  330.448354] r8169 0000:03:00.0: ASPM: can't restore L1SS while L1
+enabled (0x0142)
+[  330.448368] sdhci-pci 0000:04:00.0: ASPM: can't restore L1SS while
+L1 enabled (0x0102)
+[  330.448672] pcieport 0000:00:06.0: ASPM: can't restore L1SS while
+L1 enabled (0x0042)
+[  330.448965] nvme 0000:02:00.0: ASPM: can't restore L1SS while L1
+enabled (0x0042)
+[  330.449814] pcieport 0000:00:01.0: ASPM: can't restore L1SS while
+L1 enabled (0x0042)
+[  330.577111] pci 0000:01:00.0: ASPM: can't restore L1SS while L1
+enabled (0x0142)
+[  330.580820] ACPI: EC: event unblocked
+[  330.581066] sd 0:0:0:0: [sda] Starting disk
+
+I also noticed that these messages also pop out when activating a
+userspace powersave tool (i.e., tlp).
+(I was restoring my machine after the test, that is, re-enabling
+services like tlp.
+ Then, I accidentally knocked off the wall plug with my foot causing
+tlp to activate its battery profile)
+[ 4065.786154] pcieport 0000:00:1c.0: ASPM: can't restore L1SS while
+L1 enabled (0x0042)
+[ 4065.799553] r8169 0000:03:00.0: ASPM: can't restore L1SS while L1
+enabled (0x0142)
+[ 4065.969703] r8169 0000:03:00.0 enp3s0: Link is Down
+
+I really wish I could also try and speculate other solutions but I am
+ignorant with respect to the PCIe specifications.
+
+Nevertheless, Hope this helps.
+Let me know if I also need to test the case where the commits are reverted.
+
+Thanks,
+
+
+On Fri, Feb 10, 2023 at 9:35 PM Mark Enriquez <enriquezmark36@gmail.com> wrote:
+>
+> Hello,
+>
+> I tried the test patch with the "ASPM: can't restore L1SS while L1 enabled" message on the v6.1 tag.
+>
+> I tried setting the ASPM policy to default rather than powersupersave. Tested twice.
+> The result is I get to see the messages in the kernel log. The system resumed successfully in all tests.
+> [  330.438136] ACPI: PM: Waking up from system sleep state S3
+> [  330.445959] ACPI: EC: interrupt unblocked
+> [  330.446174] pcieport 0000:00:1c.0: ASPM: can't restore L1SS while L1 enabled (0x0042)
+> [  330.446177] pcieport 0000:00:1c.6: ASPM: can't restore L1SS while L1 enabled (0x0002)
+> [  330.448354] r8169 0000:03:00.0: ASPM: can't restore L1SS while L1 enabled (0x0142)
+> [  330.448368] sdhci-pci 0000:04:00.0: ASPM: can't restore L1SS while L1 enabled (0x0102)
+> [  330.448672] pcieport 0000:00:06.0: ASPM: can't restore L1SS while L1 enabled (0x0042)
+> [  330.448965] nvme 0000:02:00.0: ASPM: can't restore L1SS while L1 enabled (0x0042)
+> [  330.449814] pcieport 0000:00:01.0: ASPM: can't restore L1SS while L1 enabled (0x0042)
+> [  330.577111] pci 0000:01:00.0: ASPM: can't restore L1SS while L1 enabled (0x0142)
+> [  330.580820] ACPI: EC: event unblocked
+> [  330.581066] sd 0:0:0:0: [sda] Starting disk
+>
+> I also noticed that these messages also pop out when activating a userspace powersave tool (i.e., tlp).
+> (I was restoring my machine after the test, that is, re-enabling services like tlp.
+>  Then, I accidentally knocked off the wall plug with my foot causing tlp to activate its battery profile)
+> [ 4065.786154] pcieport 0000:00:1c.0: ASPM: can't restore L1SS while L1 enabled (0x0042)
+> [ 4065.799553] r8169 0000:03:00.0: ASPM: can't restore L1SS while L1 enabled (0x0142)
+> [ 4065.969703] r8169 0000:03:00.0 enp3s0: Link is Down
+>
+> I really wish I could also try and speculate other solutions but I am ignorant with respect to the PCIe specifications.
+>
+> Nevertheless, Hope this helps.
+> Let me know if I also need to test the case where the commits are reverted.
+>
+> Thanks,
+>
+> On Fri, Feb 10, 2023 at 8:18 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>
+>> [+cc Thomas]
+>>
+>> On Wed, Feb 08, 2023 at 05:42:29PM -0600, Bjorn Helgaas wrote:
+>> > On Fri, Jan 20, 2023 at 02:45:40PM +0530, Vidya Sagar wrote:
+>> > > Skip save and restore of ASPM L1 Sub-States specific registers if they
+>> > > are not already enabled in the system. This is to avoid issues observed
+>> > > on certain platforms during restoration process, particularly when
+>> > > restoring the L1SS registers contents.
+>> > >
+>> > > BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=216782
+>> > > Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> > > ---
+>> > > v2:
+>> > > * Address review comments from Kai-Heng Feng and Rafael
+>> > >
+>> > >  drivers/pci/pcie/aspm.c | 17 ++++++++++++++++-
+>> > >  include/linux/pci.h     |  1 +
+>> > >  2 files changed, 17 insertions(+), 1 deletion(-)
+>> > >
+>> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>> > > index 53a1fa306e1e..bd2a922081bd 100644
+>> > > --- a/drivers/pci/pcie/aspm.c
+>> > > +++ b/drivers/pci/pcie/aspm.c
+>> > > @@ -761,11 +761,23 @@ void pci_save_aspm_l1ss_state(struct pci_dev *dev)
+>> > >  {
+>> > >     struct pci_cap_saved_state *save_state;
+>> > >     u16 l1ss = dev->l1ss;
+>> > > -   u32 *cap;
+>> > > +   u32 *cap, val;
+>> > >
+>> > >     if (!l1ss)
+>> > >             return;
+>> > >
+>> > > +   /*
+>> > > +    * Skip save and restore of L1 Sub-States registers if they are not
+>> > > +    * already enabled in the system
+>> > > +    */
+>> > > +   pci_read_config_dword(dev, l1ss + PCI_L1SS_CTL1, &val);
+>> > > +   if (!(val & PCI_L1SS_CTL1_L1SS_MASK)) {
+>> > > +           dev->skip_l1ss_restore = true;
+>> > > +           return;
+>> > > +   }
+>> >
+>> > I think this fix is still problematic.  PCIe r6.0, sec 5.5.4, requires
+>> > that
+>> >
+>> >   If setting either or both of the enable bits for ASPM L1 PM
+>> >   Substates, both ports must be configured as described in this
+>> >   section while ASPM L1 is disabled.
+>> >
+>> > The current Linux code does not observe this because ASPM L1 is
+>> > enabled by PCI_EXP_LNKCTL (in the PCIe Capability Link Control
+>> > register), while ASPM L1 PM Substate configuration is in PCI_L1SS_CTL1
+>> > (in the L1 PM Substates Capability), and these two things are not
+>> > integrated:
+>> >
+>> >   pci_restore_state
+>> >     pci_restore_aspm_l1ss_state
+>> >       aspm_program_l1ss
+>> >         pci_write_config_dword(PCI_L1SS_CTL1, ctl1)         # L1SS restore
+>> >     pci_restore_pcie_state
+>> >       pcie_capability_write_word(PCI_EXP_LNKCTL, cap[i++])  # L1 restore
+>> >
+>> > So I suspect the problem is that we're writing PCI_L1SS_CTL1 while
+>> > ASPM L1 is enabled, and the device gets confused somehow.
+>> >
+>> > I think it would be better change this restore flow to follow that
+>> > spec requirement instead of skipping the save/restore like this.
+>>
+>> A revert of 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability
+>> for suspend/resume") has been in linux-next starting with Feb 6.
+>>
+>> I originally reverted 5e85eba6f50d ("PCI/ASPM: Refactor L1 PM
+>> Substates Control Register programming") because it broke
+>> suspend/resume differently [1].
+>>
+>> I had to revert 4ff116d0d5fd at the same time because 5e85eba6f50d
+>> added aspm_program_l1ss(), which was used by 4ff116d0d5fd.
+>>
+>> I don't think Tasev or Mark have directly tested reverting
+>> 4ff116d0d5fd to see if it resolves the problem *they* are seeing.  But
+>> that would be good to know so I can update the commit logs.
+>>
+>> Bjorn
+>>
+>> [1] https://bugzilla.kernel.org/show_bug.cgi?id=216877
