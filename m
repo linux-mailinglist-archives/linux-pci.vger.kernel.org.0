@@ -2,99 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C51C76929AC
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 22:57:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB2E06929C8
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 23:04:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233642AbjBJV5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 16:57:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41694 "EHLO
+        id S233729AbjBJWD7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 17:03:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233274AbjBJV5i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 16:57:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B947E024;
-        Fri, 10 Feb 2023 13:57:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 90DE261EAA;
-        Fri, 10 Feb 2023 21:57:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B80E7C433D2;
-        Fri, 10 Feb 2023 21:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676066257;
-        bh=sv6DygF5Kp2NuSObIl2kxR75XaKT//khl2CGKPjZ4g8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ldqV5946XHOlN3Nw7C2PC0Znj7xln9WNVyfar/V5HvhrvyXecNb2y2Tun/j3Ek6Fs
-         BTZuwoDSf/ERKd+QvkJKoRI53qLAxSXb0SiK09YPIuNKOhO/CgOQXLyFxb4DWTNPAg
-         DO0bbLi0sv88OWtsQDqrX+Azt/qMQUsC8AvJnpvmY45Mn+/DTyOf3JeP9DZu3R2ANt
-         QViiBng9kkPStW3eb9sMfCks8Wi95c0SKhGNiNJ5TcRgO/GaM90snjc9eDcpRTUEtl
-         v1aA2fESdgothuOh3/iprnCOMglEr/O5muQmucG6y5hOH4iBIi1EBbX5HhHkh280Ek
-         IXHxJYxc3xQ4A==
-Date:   Fri, 10 Feb 2023 15:57:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Thomas Witt <kernel@witt.link>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [GIT PULL] PCI fixes for v6.2
-Message-ID: <20230210215735.GA2700622@bhelgaas>
+        with ESMTP id S232968AbjBJWD6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 17:03:58 -0500
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EAC55ACF0;
+        Fri, 10 Feb 2023 14:03:57 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 8D1932808FA25;
+        Fri, 10 Feb 2023 23:03:53 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 75F1D571E6; Fri, 10 Feb 2023 23:03:53 +0100 (CET)
+Date:   Fri, 10 Feb 2023 23:03:53 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v2 06/10] PCI/DOE: Allow mailbox creation without devres
+ management
+Message-ID: <20230210220353.GC15326@wunner.de>
+References: <cover.1674468099.git.lukas@wunner.de>
+ <291131574c9e625195e9c34591abf5fa75cd1279.1674468099.git.lukas@wunner.de>
+ <20230124121543.00002600@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230124121543.00002600@Huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Note that we're moving PCI development to a shared git tree, so this
-pull request refers to the new tree.
+On Tue, Jan 24, 2023 at 12:15:43PM +0000, Jonathan Cameron wrote:
+> On Mon, 23 Jan 2023 11:16:00 +0100 Lukas Wunner <lukas@wunner.de> wrote:
+> > DOE mailbox creation is currently only possible through a devres-managed
+> > API.  The lifetime of mailboxes thus ends with driver unbinding.
+> > 
+> > An upcoming commit will create DOE mailboxes upon device enumeration by
+> > the PCI core.  Their lifetime shall not be limited by a driver.
+> > 
+> > Therefore rework pcim_doe_create_mb() into the non-devres-managed
+> > pci_doe_create_mb().  Add pci_doe_destroy_mb() for mailbox destruction
+> > on device removal.
+[...]
+> I'd like to understand why flushing in the tear down
+> can't always be done as that makes the code more complex.
 
-The reverts fix suspend/resume issues that appeared in v6.1.  They've
-been in linux-next since Feb 6, but I updated the commit logs today to
-add more details.
+After sending out v2, I realized I had made a mistake:
 
-The following changes since commit 1b929c02afd37871d5afb9d498426f83432e71c2:
+In v2, on device removal I canceled any ongoing DOE exchanges
+and declared the DOE mailbox dead before unbinding the driver
+from a device.  That's the right thing to do for surprise removal
+because you don't want to wait for an ongoing exchange to time out.
 
-  Linux 6.2-rc1 (2022-12-25 13:41:39 -0800)
+However we also have a code path for orderly device removal,
+either via sysfs or by pressing the Attention Button (if present).
+In that case, it should be legal for the driver to still perform
+DOE exchanges in its ->remove() hook.
 
-are available in the Git repository at:
+So in v3 I've changed the behavior to only cancel requests on
+surprise removal.  By doing so, I was able to always flush on
+mailbox destruction, as you've requested, and thereby simplify
+the error paths.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git tags/pci-v6.2-fixes-2
 
-for you to fetch changes up to ff209ecc376a2ea8dd106a1f594427a5d94b7dd3:
+> > +err_flush:
+> > +	pci_doe_flush_mb(doe_mb);
+> > +	xa_destroy(&doe_mb->prots);
+> 
+> Why the reorder wrt to the original devm managed cleanup?
+> I'd expect this to happen on any error path after the xa_init.
+> 
+> It doesn't matter in practice because there isn't anything to
+> do until after pci_doe_cache_protocols though.
 
-  Revert "PCI/ASPM: Refactor L1 PM Substates Control Register programming" (2023-02-10 15:30:24 -0600)
+Right, it's unnecessary to call xa_destroy() if
+alloc_ordered_workqueue() failed because the xarray is still empty
+at that point.  It doesn't need to be destroyed until it's been
+populated by pci_doe_cache_protocols().
 
-----------------------------------------------------------------
-- Move to a shared PCI git tree (Bjorn Helgaas)
+I've amended the commit message to explain that, but otherwise
+did not change the code in v3.  Let me know if you have any
+objections or feel strongly about moving xa_init().
 
-- Add Krzysztof Wilczyński as another PCI maintainer (Lorenzo Pieralisi)
+Thanks,
 
-- Revert a couple ASPM patches to fix suspend/resume regressions (Bjorn
-  Helgaas)
-
-----------------------------------------------------------------
-Bjorn Helgaas (3):
-      MAINTAINERS: Move to shared PCI tree
-      Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"
-      Revert "PCI/ASPM: Refactor L1 PM Substates Control Register programming"
-
-Lorenzo Pieralisi (1):
-      MAINTAINERS: Promote Krzysztof to PCI controller maintainer
-
- MAINTAINERS             |  12 +++---
- drivers/pci/pci.c       |   7 ----
- drivers/pci/pci.h       |   4 --
- drivers/pci/pcie/aspm.c | 109 +++++++++++++++---------------------------------
- 4 files changed, 39 insertions(+), 93 deletions(-)
+Lukas
