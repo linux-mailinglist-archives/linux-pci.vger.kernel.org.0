@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E4B16928A0
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 21:47:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AFB46928AA
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Feb 2023 21:49:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232810AbjBJUrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Feb 2023 15:47:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49238 "EHLO
+        id S233755AbjBJUty (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Feb 2023 15:49:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232339AbjBJUrO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 15:47:14 -0500
+        with ESMTP id S232979AbjBJUtv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Feb 2023 15:49:51 -0500
 Received: from mailout3.hostsharing.net (mailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f236:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E2C7DD31;
-        Fri, 10 Feb 2023 12:47:12 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B44F7E8EF;
+        Fri, 10 Feb 2023 12:49:50 -0800 (PST)
 Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout3.hostsharing.net (Postfix) with ESMTPS id 46B6710330AD1;
-        Fri, 10 Feb 2023 21:47:11 +0100 (CET)
+        by mailout3.hostsharing.net (Postfix) with ESMTPS id DF94610330AD1;
+        Fri, 10 Feb 2023 21:49:48 +0100 (CET)
 Received: from localhost (unknown [89.246.108.87])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id E6A7C600CA83;
-        Fri, 10 Feb 2023 21:47:10 +0100 (CET)
-X-Mailbox-Line: From 00c86bd08682a61a1f210b7fb08bbc59ee1a0fe4 Mon Sep 17 00:00:00 2001
-Message-Id: <00c86bd08682a61a1f210b7fb08bbc59ee1a0fe4.1676043318.git.lukas@wunner.de>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id 8C3ED600CA83;
+        Fri, 10 Feb 2023 21:49:48 +0100 (CET)
+X-Mailbox-Line: From 97aed81c22650f3c8bdb20a84d575bd985dc0c74 Mon Sep 17 00:00:00 2001
+Message-Id: <97aed81c22650f3c8bdb20a84d575bd985dc0c74.1676043318.git.lukas@wunner.de>
 In-Reply-To: <cover.1676043318.git.lukas@wunner.de>
 References: <cover.1676043318.git.lukas@wunner.de>
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Fri, 10 Feb 2023 21:25:08 +0100
-Subject: [PATCH v3 08/16] cxl/pci: Use synchronous API for DOE
+Date:   Fri, 10 Feb 2023 21:25:09 +0100
+Subject: [PATCH v3 09/16] PCI/DOE: Make asynchronous API private
 To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
 Cc:     Gregory Price <gregory.price@memverge.com>,
         Ira Weiny <ira.weiny@intel.com>,
@@ -53,128 +53,160 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A synchronous API for DOE has just been introduced.  Convert CXL CDAT
-retrieval over to it.
+A synchronous API for DOE has just been introduced.  CXL (the only
+in-tree DOE user so far) was converted to use it instead of the
+asynchronous API.
+
+Consequently, pci_doe_submit_task() as well as the pci_doe_task struct
+are only used internally, so make them private.
 
 Tested-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/cxl/core/pci.c | 66 ++++++++++++++----------------------------
- 1 file changed, 22 insertions(+), 44 deletions(-)
+ drivers/pci/doe.c       | 45 ++++++++++++++++++++++++++++++++++++--
+ include/linux/pci-doe.h | 48 -----------------------------------------
+ 2 files changed, 43 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-index c37c41d7acb6..09a9fa67d12a 100644
---- a/drivers/cxl/core/pci.c
-+++ b/drivers/cxl/core/pci.c
-@@ -487,51 +487,26 @@ static struct pci_doe_mb *find_cdat_doe(struct device *uport)
- 		    CXL_DOE_TABLE_ACCESS_TABLE_TYPE_CDATA) |		\
- 	 FIELD_PREP(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE, (entry_handle)))
+diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
+index d2edae8a32ac..afb53bc1b4aa 100644
+--- a/drivers/pci/doe.c
++++ b/drivers/pci/doe.c
+@@ -56,6 +56,47 @@ struct pci_doe_mb {
+ 	unsigned long flags;
+ };
  
--static void cxl_doe_task_complete(struct pci_doe_task *task)
--{
--	complete(task->private);
--}
--
--struct cdat_doe_task {
--	__le32 request_pl;
--	__le32 response_pl[32];
--	struct completion c;
--	struct pci_doe_task task;
++struct pci_doe_protocol {
++	u16 vid;
++	u8 type;
++};
++
++/**
++ * struct pci_doe_task - represents a single query/response
++ *
++ * @prot: DOE Protocol
++ * @request_pl: The request payload
++ * @request_pl_sz: Size of the request payload (bytes)
++ * @response_pl: The response payload
++ * @response_pl_sz: Size of the response payload (bytes)
++ * @rv: Return value.  Length of received response or error (bytes)
++ * @complete: Called when task is complete
++ * @private: Private data for the consumer
++ * @work: Used internally by the mailbox
++ * @doe_mb: Used internally by the mailbox
++ *
++ * The payload sizes and rv are specified in bytes with the following
++ * restrictions concerning the protocol.
++ *
++ *	1) The request_pl_sz must be a multiple of double words (4 bytes)
++ *	2) The response_pl_sz must be >= a single double word (4 bytes)
++ *	3) rv is returned as bytes but it will be a multiple of double words
++ */
++struct pci_doe_task {
++	struct pci_doe_protocol prot;
++	const __le32 *request_pl;
++	size_t request_pl_sz;
++	__le32 *response_pl;
++	size_t response_pl_sz;
++	int rv;
++	void (*complete)(struct pci_doe_task *task);
++	void *private;
++
++	/* initialized by pci_doe_submit_task() */
++	struct work_struct work;
++	struct pci_doe_mb *doe_mb;
++};
++
+ static int pci_doe_wait(struct pci_doe_mb *doe_mb, unsigned long timeout)
+ {
+ 	if (wait_event_timeout(doe_mb->wq,
+@@ -519,7 +560,8 @@ EXPORT_SYMBOL_GPL(pci_doe_supports_prot);
+  *
+  * RETURNS: 0 when task has been successfully queued, -ERRNO on error
+  */
+-int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
++static int pci_doe_submit_task(struct pci_doe_mb *doe_mb,
++			       struct pci_doe_task *task)
+ {
+ 	if (!pci_doe_supports_prot(doe_mb, task->prot.vid, task->prot.type))
+ 		return -EINVAL;
+@@ -540,7 +582,6 @@ int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task)
+ 	queue_work(doe_mb->work_queue, &task->work);
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(pci_doe_submit_task);
+ 
+ /**
+  * pci_doe() - Perform Data Object Exchange
+diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
+index 5dcd54f892e5..7f16749c6aa3 100644
+--- a/include/linux/pci-doe.h
++++ b/include/linux/pci-doe.h
+@@ -13,55 +13,8 @@
+ #ifndef LINUX_PCI_DOE_H
+ #define LINUX_PCI_DOE_H
+ 
+-struct pci_doe_protocol {
+-	u16 vid;
+-	u8 type;
 -};
 -
--#define DECLARE_CDAT_DOE_TASK(req, cdt)                       \
--struct cdat_doe_task cdt = {                                  \
--	.c = COMPLETION_INITIALIZER_ONSTACK(cdt.c),           \
--	.request_pl = req,				      \
--	.task = {                                             \
--		.prot.vid = PCI_DVSEC_VENDOR_ID_CXL,        \
--		.prot.type = CXL_DOE_PROTOCOL_TABLE_ACCESS, \
--		.request_pl = &cdt.request_pl,                \
--		.request_pl_sz = sizeof(cdt.request_pl),      \
--		.response_pl = cdt.response_pl,               \
--		.response_pl_sz = sizeof(cdt.response_pl),    \
--		.complete = cxl_doe_task_complete,            \
--		.private = &cdt.c,                            \
--	}                                                     \
--}
+ struct pci_doe_mb;
+ 
+-/**
+- * struct pci_doe_task - represents a single query/response
+- *
+- * @prot: DOE Protocol
+- * @request_pl: The request payload
+- * @request_pl_sz: Size of the request payload (bytes)
+- * @response_pl: The response payload
+- * @response_pl_sz: Size of the response payload (bytes)
+- * @rv: Return value.  Length of received response or error (bytes)
+- * @complete: Called when task is complete
+- * @private: Private data for the consumer
+- * @work: Used internally by the mailbox
+- * @doe_mb: Used internally by the mailbox
+- *
+- * Payloads are treated as opaque byte streams which are transmitted verbatim,
+- * without byte-swapping.  If payloads contain little-endian register values,
+- * the caller is responsible for conversion with cpu_to_le32() / le32_to_cpu().
+- *
+- * The payload sizes and rv are specified in bytes with the following
+- * restrictions concerning the protocol.
+- *
+- *	1) The request_pl_sz must be a multiple of double words (4 bytes)
+- *	2) The response_pl_sz must be >= a single double word (4 bytes)
+- *	3) rv is returned as bytes but it will be a multiple of double words
+- *
+- * NOTE there is no need for the caller to initialize work or doe_mb.
+- */
+-struct pci_doe_task {
+-	struct pci_doe_protocol prot;
+-	const __le32 *request_pl;
+-	size_t request_pl_sz;
+-	__le32 *response_pl;
+-	size_t response_pl_sz;
+-	int rv;
+-	void (*complete)(struct pci_doe_task *task);
+-	void *private;
 -
- static int cxl_cdat_get_length(struct device *dev,
- 			       struct pci_doe_mb *cdat_doe,
- 			       size_t *length)
- {
--	DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(0), t);
-+	__le32 request = CDAT_DOE_REQ(0);
-+	__le32 response[32];
- 	int rc;
+-	/* No need for the user to initialize these fields */
+-	struct work_struct work;
+-	struct pci_doe_mb *doe_mb;
+-};
+-
+ /**
+  * pci_doe_for_each_off - Iterate each DOE capability
+  * @pdev: struct pci_dev to iterate
+@@ -76,7 +29,6 @@ struct pci_doe_task {
  
--	rc = pci_doe_submit_task(cdat_doe, &t.task);
-+	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
-+		     CXL_DOE_PROTOCOL_TABLE_ACCESS,
-+		     &request, sizeof(request),
-+		     &response, sizeof(response));
- 	if (rc < 0) {
--		dev_err(dev, "DOE submit failed: %d", rc);
-+		dev_err(dev, "DOE failed: %d", rc);
- 		return rc;
- 	}
--	wait_for_completion(&t.c);
--	if (t.task.rv < 2 * sizeof(u32))
-+	if (rc < 2 * sizeof(u32))
- 		return -EIO;
+ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
+ bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
+-int pci_doe_submit_task(struct pci_doe_mb *doe_mb, struct pci_doe_task *task);
  
--	*length = le32_to_cpu(t.response_pl[1]);
-+	*length = le32_to_cpu(response[1]);
- 	dev_dbg(dev, "CDAT length %zu\n", *length);
- 
- 	return 0;
-@@ -546,31 +521,34 @@ static int cxl_cdat_read_table(struct device *dev,
- 	int entry_handle = 0;
- 
- 	do {
--		DECLARE_CDAT_DOE_TASK(CDAT_DOE_REQ(entry_handle), t);
-+		__le32 request = CDAT_DOE_REQ(entry_handle);
- 		struct cdat_entry_header *entry;
-+		__le32 response[32];
- 		size_t entry_dw;
- 		int rc;
- 
--		rc = pci_doe_submit_task(cdat_doe, &t.task);
-+		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
-+			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
-+			     &request, sizeof(request),
-+			     &response, sizeof(response));
- 		if (rc < 0) {
--			dev_err(dev, "DOE submit failed: %d", rc);
-+			dev_err(dev, "DOE failed: %d", rc);
- 			return rc;
- 		}
--		wait_for_completion(&t.c);
- 
- 		/* 1 DW Table Access Response Header + CDAT entry */
--		entry = (struct cdat_entry_header *)(t.response_pl + 1);
-+		entry = (struct cdat_entry_header *)(response + 1);
- 		if ((entry_handle == 0 &&
--		     t.task.rv != sizeof(u32) + sizeof(struct cdat_header)) ||
-+		     rc != sizeof(u32) + sizeof(struct cdat_header)) ||
- 		    (entry_handle > 0 &&
--		     (t.task.rv < sizeof(u32) + sizeof(struct cdat_entry_header) ||
--		      t.task.rv != sizeof(u32) + le16_to_cpu(entry->length))))
-+		     (rc < sizeof(u32) + sizeof(struct cdat_entry_header) ||
-+		      rc != sizeof(u32) + le16_to_cpu(entry->length))))
- 			return -EIO;
- 
- 		/* Get the CXL table access header entry handle */
- 		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
--					 le32_to_cpu(t.response_pl[0]));
--		entry_dw = t.task.rv / sizeof(u32);
-+					 le32_to_cpu(response[0]));
-+		entry_dw = rc / sizeof(u32);
- 		/* Skip Header */
- 		entry_dw -= 1;
- 		entry_dw = min(length / sizeof(u32), entry_dw);
+ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
+ 	    const void *request, size_t request_sz,
 -- 
 2.39.1
 
