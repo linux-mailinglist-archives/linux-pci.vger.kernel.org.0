@@ -2,49 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9629B692FC9
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Feb 2023 10:35:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 28402692FEF
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Feb 2023 11:18:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229793AbjBKJfA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Feb 2023 04:35:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34302 "EHLO
+        id S229643AbjBKKSh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Feb 2023 05:18:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjBKJe7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Feb 2023 04:34:59 -0500
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ADE534F76;
-        Sat, 11 Feb 2023 01:34:57 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        with ESMTP id S229448AbjBKKSh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Feb 2023 05:18:37 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED3D2BF25;
+        Sat, 11 Feb 2023 02:18:35 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id C87B93000D91A;
-        Sat, 11 Feb 2023 10:34:55 +0100 (CET)
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 2BEF4102EF788;
+        Sat, 11 Feb 2023 11:18:34 +0100 (CET)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id AA64825EDA6; Sat, 11 Feb 2023 10:34:55 +0100 (CET)
-Date:   Sat, 11 Feb 2023 10:34:55 +0100
+        id DD643239FF4; Sat, 11 Feb 2023 11:18:33 +0100 (CET)
+Date:   Sat, 11 Feb 2023 11:18:33 +0100
 From:   Lukas Wunner <lukas@wunner.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
-        linux-cxl@vger.kernel.org
-Subject: Re: [PATCH v3 02/16] cxl/pci: Handle truncated CDAT header
-Message-ID: <20230211093455.GA28981@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
- <7f7030bb14ad7c8e0e051319cf473ab3197da5be.1676043318.git.lukas@wunner.de>
- <63e6e3ef4d84e_1e4943294e6@dwillia2-xfh.jf.intel.com.notmuch>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
+        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+Subject: Re: [PATCH 04/18] cxl: Add common helpers for cdat parsing
+Message-ID: <20230211101833.GA12138@wunner.de>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571659666.587790.1381783105886436293.stgit@djiang5-mobl3.local>
+ <20230209115803.00002778@Huawei.com>
+ <3c69a080-de0c-3244-cc44-0a187230d203@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <63e6e3ef4d84e_1e4943294e6@dwillia2-xfh.jf.intel.com.notmuch>
+In-Reply-To: <3c69a080-de0c-3244-cc44-0a187230d203@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
@@ -55,43 +52,92 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 10, 2023 at 04:40:15PM -0800, Dan Williams wrote:
-> Lukas Wunner wrote:
-> > cxl_cdat_get_length() only checks whether the DOE response size is
-> > sufficient for the Table Access response header (1 dword), but not the
-> > succeeding CDAT header (1 dword length plus other fields).
-> > 
-> > It thus returns whatever uninitialized memory happens to be on the stack
-> > if a truncated DOE response with only 1 dword was received.  Fix it.
+On Thu, Feb 09, 2023 at 03:57:32PM -0700, Dave Jiang wrote:
+> On 2/9/23 4:58 AM, Jonathan Cameron wrote:
+> > On Mon, 06 Feb 2023 13:49:58 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
+> > > Add helper functions to parse the CDAT table and provide a callback to
+> > > parse the sub-table. Helpers are provided for DSMAS and DSLBIS sub-table
+> > > parsing. The code is patterned after the ACPI table parsing helpers.
 [...]
-> > --- a/drivers/cxl/core/pci.c
-> > +++ b/drivers/cxl/core/pci.c
-> > @@ -528,7 +528,7 @@ static int cxl_cdat_get_length(struct device *dev,
-> >  		return rc;
-> >  	}
-> >  	wait_for_completion(&t.c);
-> > -	if (t.task.rv < sizeof(u32))
-> > +	if (t.task.rv < 2 * sizeof(u32))
-> >  		return -EIO;
+> > Are these all worthwhile given the resulting function name is longer
+> > than accessing it directly.  If aim is to move the details of the
+> > struct cdat_subtable_entry away from being exposed at caller, then
+> > fair enough, but if that is the plan I'd expect to see something about
+> > that in the patch description.
+> > 
+> > Feels like some premature abstraction, but I don't feel particularly
+> > strongly about this.
 > 
-> Looks good, I wonder since this is standard for all data objects whether
-> the check should be pushed into the core?
+> I'll drop them. The code was adapted from ACPI table parsing code. But we
+> can simplify for our usages.
 
-No, "t.task.rv" contains the payload length in bytes of the response
-received via DOE.  It doesn't include the DOE header.
+Yes just iterating over the CDAT entries and directly calling the
+appropriate parser function for the entry seems more straightforward.
 
-I think it is legal to receive an empty response via DOE, so I cannot
-push a length check down into the core.
 
-In this case, the payload contains one dword for the Table Access Response
-header (CXL r3.0 sec 8.1.11.1), followed by 3 dwords for the CDAT header:
+> > Random musing follows...
+> > We could add a variable length element to that struct
+> > definition and the magic to associate that with the length parameter
+> > and get range protection if relevant hardening is turned on.
+> > 
+> > Structure definition comes (I think) from scripts in acpica so
+> > would need to push such changes into acpica and I'm not sure
+> > they will be keen even though it would be good for the kernel
+> > to have the protections.
+[...]
+> I see what you are saying. But I'm not sure how easily we can do this for
+> the CDAT table due to endieness. Is this what you had in mind?
+> 
+> From:
+> struct cdat_entry_header {
+> 	u8 type;
+> 	u8 reserved;
+> 	__le16 length;
+> } __packed;
+> 
+> To:
+> struct cdat_entry_header {
+> 	u8 type;
+> 	u8 reserved;
+> 	__le16 length;
+> 	DECLARE_BOUNDED_ARRAY(u8, body, le16_to_cpu(length));
+> } __packed;
 
-https://uefi.org/sites/default/files/resources/Coherent%20Device%20Attribute%20Table_1.01.pdf
+I think this is backwards.  I'd suggest creating a struct for each
+CDAT entry which includes the header.  The kernel switched to
+-std=gnu11 a while ago, so you should be able to use an unnamed field
+for the header:
 
-The CDAT header contains the length of the entire CDAT in the first
-dword, hence the above-quoted check only verifies that at least two
-dwords were received.  It's harmless if the remainder of the CDAT
-header is truncated.
+struct cdat_dsmas {
+	struct cdat_entry_header;
+	u8 dsmad_handle;
+	u8 flags;
+	u8 reserved[2];
+	__le64 dpa_base;
+	__le64 dpa_length;
+}
+
+Note that in my commit "cxl/pci: Handle truncated CDAT entries",
+I'm only verifying that the number of bytes received via DOE
+matches the length field in the cdat_entry_header.  I do not
+verify in cxl_cdat_read_table() whether that length is correct
+for the specific CDAT structure.  I think that's the job of
+the function parsing that particular structure type.
+
+In other words, at the top of your DSMAS parsing function,
+you need to check:
+
+	struct cdat_dsmas dsmas;
+
+	if (dsmas->length != sizeof(*dsmas)) {
+		dev_err(...);
+		return -EINVAL;
+	}
+
+
+Note how the check is simplified by the header being part of
+struct cdat_dsmas.  If the header wasn't part of struct cdat_dsmas,
+an addition would be needed here.
 
 Thanks,
 
