@@ -2,51 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74B0669394F
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Feb 2023 19:14:59 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB1E9693965
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Feb 2023 19:37:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjBLSO5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Feb 2023 13:14:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52194 "EHLO
+        id S229489AbjBLSh1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Feb 2023 13:37:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjBLSO4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Feb 2023 13:14:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA663EC78;
-        Sun, 12 Feb 2023 10:14:55 -0800 (PST)
+        with ESMTP id S229457AbjBLSh0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Feb 2023 13:37:26 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 125B21026F;
+        Sun, 12 Feb 2023 10:37:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E094B80CBF;
-        Sun, 12 Feb 2023 18:14:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C849C433EF;
-        Sun, 12 Feb 2023 18:14:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C1CE9B80D31;
+        Sun, 12 Feb 2023 18:37:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC042C433EF;
+        Sun, 12 Feb 2023 18:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676225692;
-        bh=g2hj6yVDD8uoblbDvFHhMRP5C7zplliupHqPWVTkdCE=;
+        s=k20201202; t=1676227042;
+        bh=lZKQIEO7UGeivhn0TxcsgdRpjPn0tConcYHrlR26cWo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F+9l5hbe3PASOutKXfe4W4Ebqp4xzZcnq+fyiLSwVRIioWl23shK+8cXMOfOZXuTV
-         1AiiFNqjDFraCecBM0PcnSMjJ131dR53QWsTN/CjbGfiPztUcMkuWw6k0Q4VzVKyiE
-         k8nDFVHz5g6Ffz+6w2Cers6gc6IVacZguUZ5fQEok9jQIqYmSG+t1vH0bck2Haid3J
-         CYKX+ARNUqRXAwnBD2Qvs1thfpDRscr4Cpm1vYYhTGShkR/tks25tg4ZOFr/dRSoyR
-         +8HL+K3Zyqfua+/IOq5z6D3MeALm6nZS0xmCUlo4QY/gJhKb1QNwWHlHJdiuGPxjwq
-         ybQvOI1JKxDKw==
-Date:   Sun, 12 Feb 2023 20:14:48 +0200
+        b=JMGMzKRRXBU+ePfdud7KxhsZKGxgA3FMJMpTsOl2bCpWU9WXIaszBciS/mAKBWzmt
+         pFk40VxZzRjpRKEDwB7JRf05dGe8/z5/QKxKI6t/6DShauKCSQ6i/uUH4nxWKrcWBi
+         inrFk4G1EAHmkx+AQ2CkyBRwr3RVhWChB2ggbkWJNRgsFRgvTOL+RKXkW+mPCRqHjQ
+         ATuke1lgxtUp9dE+3u0ySSJ6E7z12SBSNWiTfESMeYQ7uiv7i0v5QJPCXfqAyAyGzy
+         V2tQzd+WYXOY3G+XanuoZ8par1ufewgtcBo8qKmBOW2F/kPvF4f2pjfclUpvloNjuA
+         SdICanzCUxcdQ==
+Date:   Sun, 12 Feb 2023 20:37:17 +0200
 From:   Leon Romanovsky <leon@kernel.org>
-To:     Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, jean-philippe@linaro.org,
-        darren@os.amperecomputing.com, scott@os.amperecomputing.com
-Subject: Re: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not
- enabled on PF
-Message-ID: <Y+ksmNWJdWNkGAU9@unreal>
-References: <20230208184321.867666-1-gankulkarni@os.amperecomputing.com>
+To:     Nick Alcock <nick.alcock@oracle.com>
+Cc:     Conor Dooley <conor@kernel.org>, mcgrof@kernel.org,
+        linux-modules@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 8/8] kbuild, PCI: microchip: comment out MODULE_LICENSE
+ in non-modules
+Message-ID: <Y+kx3fb2Lzlg+u5+@unreal>
+References: <20230210164749.368998-1-nick.alcock@oracle.com>
+ <20230210164749.368998-9-nick.alcock@oracle.com>
+ <Y+aMh5e9bWaTphiZ@spud>
+ <871qmx1fv5.fsf@esperi.org.uk>
+ <Y+akw9VBjg9oZ7QV@spud>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230208184321.867666-1-gankulkarni@os.amperecomputing.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <Y+akw9VBjg9oZ7QV@spud>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -54,61 +58,21 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 08, 2023 at 10:43:21AM -0800, Ganapatrao Kulkarni wrote:
-> As per PCIe specification(section 10.5), If a VF implements an
-> ATS capability, its associated PF must implement an ATS capability.
-> The ATS Capabilities in VFs and their associated PFs are permitted to
-> be enabled independently.
-> Also, it states that the Smallest Translation Unit (STU) for VFs must be
-> hardwired to Zero and the associated PF's value applies to VFs STU.
-> 
-> The current code allows to enable ATS on VFs only if it is already
-> enabled on associated PF, which is not necessary as per the specification.
-> 
-> It is only required to have valid STU programmed on PF to enable
-> ATS on VFs. Adding code to write the first VFs STU to a PF's STU
-> when PFs ATS is not enabled.
+On Fri, Feb 10, 2023 at 08:10:43PM +0000, Conor Dooley wrote:
+> On Fri, Feb 10, 2023 at 07:26:38PM +0000, Nick Alcock wrote:
+> > On 10 Feb 2023, Conor Dooley said:
+> > > FYI $subject seems wrong, this is a PCI patch AFAICT.
 
-Can you please add here quotes from the spec and its version? I don't see
-anything like this in my version of PCIe specification.
+<...>
+
+> > kbuild is present in every patch in the series because this is a
+> > kbuild-driven change (the thing it disturbs is part of the build system,
+> > the construction of modules.builtin*). This seems to be common practice
+> > for kbuild-related treewide changes.
+> 
+> Okay, I'll take your word for it. It just looked/looks odd to me!
+
+It looks odd to me too. Please add SPDX tag in modules which don't have
+it already, instead of commenting code.
 
 Thanks
-
-> 
-> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-> ---
->  drivers/pci/ats.c | 15 +++++++++++----
->  1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index f9cc2e10b676..a97ec67201d1 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -67,13 +67,20 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
->  	if (ps < PCI_ATS_MIN_STU)
->  		return -EINVAL;
->  
-> -	/*
-> -	 * Note that enabling ATS on a VF fails unless it's already enabled
-> -	 * with the same STU on the PF.
-> -	 */
->  	ctrl = PCI_ATS_CTRL_ENABLE;
->  	if (dev->is_virtfn) {
->  		pdev = pci_physfn(dev);
-> +
-> +		if (!pdev->ats_enabled &&
-> +				(pdev->ats_stu < PCI_ATS_MIN_STU)) {
-> +			u16 ctrl2;
-> +
-> +			/* Associated PF's STU value applies to VFs. */
-> +			pdev->ats_stu = ps;
-> +			ctrl2 = PCI_ATS_CTRL_STU(pdev->ats_stu - PCI_ATS_MIN_STU);
-> +			pci_write_config_word(pdev, pdev->ats_cap + PCI_ATS_CTRL, ctrl2);
-> +		}
-> +
->  		if (pdev->ats_stu != ps)
->  			return -EINVAL;
->  	} else {
-> -- 
-> 2.39.1
-> 
