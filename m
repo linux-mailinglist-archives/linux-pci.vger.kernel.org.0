@@ -2,48 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 702E0695222
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 21:47:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB3B769527C
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 21:59:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbjBMUra (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Feb 2023 15:47:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41526 "EHLO
+        id S229868AbjBMU7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Feb 2023 15:59:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49594 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjBMUr3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 15:47:29 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A544E83FB
-        for <linux-pci@vger.kernel.org>; Mon, 13 Feb 2023 12:47:28 -0800 (PST)
+        with ESMTP id S229984AbjBMU7e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 15:59:34 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844FF3AB0;
+        Mon, 13 Feb 2023 12:59:33 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id CFF38CE1D28
-        for <linux-pci@vger.kernel.org>; Mon, 13 Feb 2023 20:47:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F1AC433EF;
-        Mon, 13 Feb 2023 20:47:23 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D23F4CE1D28;
+        Mon, 13 Feb 2023 20:59:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 474F6C4339E;
+        Mon, 13 Feb 2023 20:59:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676321244;
-        bh=CxKp7DdRpIHLjyKvK/8EagwtvA0dnNmDwSHqDGmAmwA=;
+        s=k20201202; t=1676321969;
+        bh=97GwXdgmJT1YSQKnlPR0dKRkb1n6yw9H6kKAtR7Zvck=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ijPd2PKP+TMC7+P+NjEuiTm/Xko37dYQGHOYIwUvdyrPqNZhHk0AFGgO6F2k0TM7o
-         ioS89gBKo368/y1po2aQidhAEu3/QR+vtaf+A+JE1lhaLfHyMzLx3k1c9A3xJoj+vM
-         blAl7XLQnM9AlGq5+IaTu5fXxrkRy8yPz+8PutJXFoWDUmadezKiVPz9qGJkcc2SkN
-         D6b2Jo10o/Xwo4Kv7VfztFUo/CGrugTgqtPpA4vftg7DPDgCt9d40wi6G+AnnZ4kzN
-         kobvP2nuT2FrNqfDlj3+ReUFIZoAc37dOeXfDBIguvw7AHPHALEBVzn2vpQVom3ZY5
-         e5ABk69JqVjag==
-Date:   Mon, 13 Feb 2023 14:47:22 -0600
+        b=dBtH4iD/rGftLfB+4Ugxh2h3cMKp2Fu7YvesX60QZz+GqO3y8jmSac3OesOb3DDho
+         dVBJTW012BvMmyb04Mhw5UpqXcXuMsXLoMdZocFTgbXClr3jYMywTJG36otcYlsV/E
+         1ZEEYIG0hx6YUu9Y9BVtmM9p04OQjZ/jo6Kgb4yFsFYIyq1k3e20tAIrhMAVGRwvBc
+         Cw0kDAZ6iCo+Ae+udNLzHNYH+2hq1vA2Kb9hFvQsFHxVQ8B5tDsFsT+ZdP+5aKmVWk
+         bu4E93TOwu3vrUz9fCkdXJ5CdySntwH3NJzlX1IVE0CmT/7gfGk3Q9noAe5MuwbrWe
+         KJCzv7ALApIBQ==
+Date:   Mon, 13 Feb 2023 14:59:27 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     regressions@lists.linux.dev
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: [REGRESSION] [Bug 216859] New: PCI bridge to bus boot hang at
- enumeration
-Message-ID: <20230213204722.GA2929794@bhelgaas>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Sergey.Semin@baikalelectronics.ru,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <20230213205927.GA2930625@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230201232750.GA1908996@bhelgaas>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20230213132411.65524-4-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,38 +59,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 01, 2023 at 05:27:50PM -0600, Bjorn Helgaas wrote:
-> On Thu, Jan 26, 2023 at 06:11:24AM -0600, Bjorn Helgaas wrote:
-> > [+cc folks from 145eed48de27 and framebuffer folks, regression list]
-> > 
-> > On Thu, Jan 12, 2023 at 02:08:19PM -0600, Bjorn Helgaas wrote:
-> > > On Wed, Dec 28, 2022 at 06:02:48AM -0600, Bjorn Helgaas wrote:
-> > > > On Wed, Dec 28, 2022 at 08:37:52AM +0000, bugzilla-daemon@kernel.org wrote:
-> > > > > https://bugzilla.kernel.org/show_bug.cgi?id=216859
-> > > > 
-> > > > >            Summary: PCI bridge to bus boot hang at enumeration
-> > > > >     Kernel Version: 6.1-rc1
-> > > > > ...
-> > > > 
-> > > > > With Kernel 6.1-rc1 the enumeration process stopped working for me,
-> > > > > see attachments.
-> > > > > 
-> > > > > The enumeration works fine with Kernel 6.0 and below.
-> > > > > 
-> > > > > Same problem still exists with v6.1. and v6.2.-rc1
-> > 
-> > This is a regression between v6.0 and v6.1-rc1.  Console output during
-> > boot freezes after nvidiafb deactivates the VGA console.
-> > 
-> > It was a lot of work for Zeno, but we finally isolated this console
-> > hang to 145eed48de27 ("fbdev: Remove conflicting devices on PCI bus").
-> > 
-> > The system actually does continue to boot and is accessible via ssh, 
-> > but the console appears hung, at least for output.  More details in
-> > the bugzilla starting at
-> > https://bugzilla.kernel.org/show_bug.cgi?id=216859#c47 .
+On Mon, Feb 13, 2023 at 09:24:08PM +0800, Cai Huoqing wrote:
+> From: Cai huoqing <cai.huoqing@linux.dev>
 > 
-> #regzbot introduced: 145eed48de27
-> #regzbot dup: https://lore.kernel.org/all/D41A3A42-2412-4722-9090-01565058E525@gmail.com/
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
 
-#regzbot fix: 04119ab1a49f ("nvidiafb: detect the hardware support before removing console.")
+Rewrap to fill 75 columns.  Also applies below.
+
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA,
+> so this patch add support for HDMA NATIVE mode.
+> 
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.
+> The same applies when you have multiple write channels.
+
+Wrap into a single paragraph or add a blank line if you want the last
+sentence to be a new paragraph.
+
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are alignmented to byte.
+
+s/alignmented/aligned/
+
+> +	u32 watermark_en;			/* 0x0030 */
+> +	u32	control1;			/* 0x0034 */
+> +	u32	func_num;			/* 0x0038 */
+> +	u32	qos;				/* 0x003c */
+> +	u32	reserved;			/* 0x0040..0x007c */
+> +	u32 ch_stat;				/* 0x0080 */
+
+Weird indentation of control1, func_num, etc.  Is that meaningful or a
+mistake?
+
+> +	union {
+> +		u64 reg;			/* 0x00a0..0x00a4 */
+> +		struct {
+> +			u32 lsb;		/* 0x00a0 */
+> +			u32 msb;		/* 0x00a4 */
+> +		};
+> +	} msi_abort;
+> +	u32	msi_msgdata;			/* 0x00a8 */
+
+Again here.
+
+Bjorn
