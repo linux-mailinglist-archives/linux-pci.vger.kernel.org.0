@@ -2,119 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7F58695407
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 23:44:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2DE0695413
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 23:51:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbjBMWoe convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Mon, 13 Feb 2023 17:44:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48422 "EHLO
+        id S229914AbjBMWvN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Feb 2023 17:51:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbjBMWod (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 17:44:33 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CD0620D07
-        for <linux-pci@vger.kernel.org>; Mon, 13 Feb 2023 14:44:21 -0800 (PST)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-91-bQdp4kpzOVOJNtCS0YM40g-1; Mon, 13 Feb 2023 22:44:17 +0000
-X-MC-Unique: bQdp4kpzOVOJNtCS0YM40g-1
-Received: from AcuMS.Aculab.com (10.202.163.4) by AcuMS.aculab.com
- (10.202.163.4) with Microsoft SMTP Server (TLS) id 15.0.1497.45; Mon, 13 Feb
- 2023 22:44:16 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.045; Mon, 13 Feb 2023 22:44:16 +0000
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Bjorn Helgaas' <helgaas@kernel.org>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@Huawei.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Stefan Roese <sr@denx.de>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH RFC] PCI/AER: Enable internal AER errors by default
-Thread-Topic: [PATCH RFC] PCI/AER: Enable internal AER errors by default
-Thread-Index: AQHZP/OWtZukbVOH0kqW0g36cswuDK7NdzVQ
-Date:   Mon, 13 Feb 2023 22:44:16 +0000
-Message-ID: <f5d13d0d67a34567a586a1171ba44b52@AcuMS.aculab.com>
-References: <20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com>
- <20230213213820.GA2935044@bhelgaas>
-In-Reply-To: <20230213213820.GA2935044@bhelgaas>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S229521AbjBMWvM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 17:51:12 -0500
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E57F20D13;
+        Mon, 13 Feb 2023 14:51:11 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id a8-20020a17090a6d8800b002336b48f653so12405555pjk.3;
+        Mon, 13 Feb 2023 14:51:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eaCOkjRgOPVSqSFnQnaCyCMQTSH93zOmQIZaCaVkP4g=;
+        b=GcTaHt6CbITzdjIsTDP58SFAceZEQeug1PnRbBuqFrAzaLw46SsIDXqByRxS0UnLc8
+         Ypu9Dyf+8K2dOENxe+u1tJyvkfp/IyQYBQzX3WAmzyz/1nL7PVplezZxb266ubyQaPKY
+         LhtHoowjPUcFpV1FP4xrQ5eLxmJIFuPWYyqUu4pOVY8zz6peyboVE/5R5O8MlVscjhXv
+         YoG5GYKFQo5wIxOLe/gdpNfdzYjhl4LDCy/a4qJQybf7JlApTgCykyAaO/MPiruqRlpk
+         fZnRVJkSotIGKHZC11FgmLt+nrC0xmKP3ObGL4ZhtNFI3SXfsSl7wMvGikW/akBVHEj9
+         mmeA==
+X-Gm-Message-State: AO0yUKUZZ47REY9qCZKebDk4DI8Vw1WIp515wStF91dn421O7q9wq3lq
+        aYYGDNqE18v1PPxXSMubJBSpVZyb5pc=
+X-Google-Smtp-Source: AK7set+s8kytI1QMBcYaNIA9/2K9gPfKG9pUdDrraXiaSFtiwmbe5YGDO0kTOaQvQaZMm/8LQ3SbMg==
+X-Received: by 2002:a17:902:f251:b0:19a:7e03:c4fd with SMTP id j17-20020a170902f25100b0019a7e03c4fdmr487210plc.0.1676328670882;
+        Mon, 13 Feb 2023 14:51:10 -0800 (PST)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with ESMTPSA id d23-20020a170902aa9700b00198f36a8941sm6800920plr.221.2023.02.13.14.51.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Feb 2023 14:51:10 -0800 (PST)
+Date:   Tue, 14 Feb 2023 07:51:07 +0900
+From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     kishon@kernel.org, lpieralisi@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        robh@kernel.org, vidyas@nvidia.com, vigneshr@ti.com
+Subject: Re: [PATCH v5 0/5] PCI: endpoint: Rework the EPC to EPF notification
+Message-ID: <Y+q+2zBWoyXd041n@rocinante>
+References: <20230124071158.5503-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,PDS_BAD_THREAD_QP_64,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230124071158.5503-1-manivannan.sadhasivam@linaro.org>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas
-> Sent: 13 February 2023 21:38
+Hello,
+
+> During the review of the patch that fixes DBI access in PCI EP, Rob
+> suggested [1] using a fixed interface for passing the events from EPC to
+> EPF instead of the in-kernel notifiers.
 > 
-> On Fri, Feb 10, 2023 at 02:33:23PM -0800, Ira Weiny wrote:
-> > The CXL driver expects internal error reporting to be enabled via
-> > pci_enable_pcie_error_reporting().  It is likely other drivers expect the same.
-> > Dave submitted a patch to enable the CXL side[1] but the PCI AER registers
-> > still mask errors.
-> >
-> > PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
-> > Register (7.8.4.6) default to masking internal errors.  The
-> > Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
-> > as fatal.
-> >
-> > Enable internal errors to be reported via the standard
-> > pci_enable_pcie_error_reporting() call.  Ensure uncorrectable errors are set
-> > non-fatal to limit any impact to other drivers.
+> This series introduces a simple callback based mechanism for passing the
+> events from EPC to EPF. This interface is chosen for satisfying the below
+> requirements:
 > 
-> Do you have any background on why the spec makes these errors masked
-> by default?  I'm sympathetic to wanting to learn about all the errors
-> we can, but I'm a little wary if the spec authors thought it was
-> important to mask these by default.
+> 1. The notification has to reach the EPF drivers without any additional
+> latency.
+> 2. The context of the caller (EPC) needs to be preserved while passing the
+> notifications.
+> 
+> With the existing notifier mechanism, the 1st case can be satisfied since
+> notifiers aren't adding any huge overhead. But the 2nd case is clearly not
+> satisfied, because the current atomic notifiers forces the EPF
+> notification context to be atomic even though the caller (EPC) may not be
+> in atomic context. In the notification function, the EPF drivers are
+> required to call several EPC APIs that might sleep and this triggers a
+> sleeping in atomic bug during runtime.
+> 
+> The above issue could be fixed by using a blocking notifier instead of
+> atomic, but that proposal was not accepted either [2].
+> 
+> So instead of working around the issues within the notifiers, let's get rid
+> of it and use the callback mechanism.
+> 
+> NOTE: DRA7xx and TEGRA194 drivers are only compile tested. Testing this series
+> on the real platforms is greatly appreciated.
+[...]
 
-I'd guess that it is for backwards compatibility with older hardware
-and/or software that that didn't support error notifications.
+Applied to pci/endpoint, thank you!
 
-Then there are the x86 systems that manage to take the AER
-error into some 'board management hardware' which finally
-interrupts the kernel with an NMI - and the obvious consequence.
-These systems are NEBS? 'qualified' for telecoms use, but take
-out a PCIe link and the system crashes.
+[01/05] PCI: dra7xx: Use threaded IRQ handler for "dra7xx-pcie-main" IRQ
+        https://git.kernel.org/pci/pci/c/da87d35a6e51
 
-It is pretty easy to generate a PCIe error.
-Any endpoint with two (or more) different sized BARs leaves
-a big chunk of PCIe address space that is forwarded by the upstream
-bridge but is not responded to.
-The requirement to put the MSI-X area in its own BAR pretty much
-ensures that such addresses exist.
+[02/05] PCI: tegra194: Move dw_pcie_ep_linkup() to threaded IRQ handler
+        https://git.kernel.org/pci/pci/c/c2cc5cdda46c
 
-(Never mind reprogramming the fpga that is terminating the link.)
+[03/05] PCI: endpoint: Use a separate lock for protecting epc->pci_epf list
+        https://git.kernel.org/pci/pci/c/d6dd5bafaabf
 
-	David
+[04/05] PCI: endpoint: Use callback mechanism for passing events from EPC to EPF
+        https://git.kernel.org/pci/pci/c/838125b07e77
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+[05/05] PCI: endpoint: Use link_up() callback in place of LINK_UP notifier
+        https://git.kernel.org/pci/pci/c/f5edd8715e2e
 
+	Krzysztof
