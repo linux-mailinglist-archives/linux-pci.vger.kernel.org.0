@@ -2,115 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26C69694F68
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 19:33:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27828694FA7
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Feb 2023 19:46:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjBMSdB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Feb 2023 13:33:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56068 "EHLO
+        id S229477AbjBMSqx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Feb 2023 13:46:53 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjBMSdA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 13:33:00 -0500
-Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62B013DE1;
-        Mon, 13 Feb 2023 10:32:58 -0800 (PST)
-Received: by mail-pj1-f43.google.com with SMTP id oa11-20020a17090b1bcb00b002341a2656e5so1581344pjb.1;
-        Mon, 13 Feb 2023 10:32:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FNk3UELDGb/VaGugwXVxHzDA5RNRGF2dh5FGqDHZODo=;
-        b=TTFnzO1dJz85kCeHttfYg/BxqDzpw1FA3a05wiVvlj6tP3hQhPtAPBxfAfeyjVKWlY
-         MpXgJt2deNy7HFhwEpc21IjjeFrL6LCgacGYloriA4ESSvIF7sxiPdJxEwqPi/vVFSD6
-         iPIVcca/Fr4gNWHB67Pm3ZYk28TSC71SXWhzvqHGNI+lBSeZISsyepoisjUd09yr/UKk
-         RtURFpdMey+UO85tr+3mp3BpUiXWN9OOrWSjj/gbEwZvf4/eEMOoTSBewUt2xfRasGg2
-         99nXlf3Dnfc9FMTYrnZhg6Ivuj6CHrQuRm4k98XFIdOxe5ilmVhSKJeLJcN7YiDzt08H
-         34Yg==
-X-Gm-Message-State: AO0yUKWI4nfBidMSSnPJz3qFlq4qGCMVRkzmm9MLfFVJRY0BvDaZegV/
-        nXJ74aA47kRal8IK2qs/aXg=
-X-Google-Smtp-Source: AK7set8bqfAEsgoBzYy8J6ejBneEGYS/nL6hiIntMGR8g21NqX+cFWzSDRIL7ZHXcO32eieVSJk5Sg==
-X-Received: by 2002:a17:902:c942:b0:19a:aea3:8a92 with SMTP id i2-20020a170902c94200b0019aaea38a92mr1709128pla.16.1676313178378;
-        Mon, 13 Feb 2023 10:32:58 -0800 (PST)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with ESMTPSA id h13-20020a170902f7cd00b0019a87514e00sm4527517plw.177.2023.02.13.10.32.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Feb 2023 10:32:57 -0800 (PST)
-Date:   Tue, 14 Feb 2023 03:32:54 +0900
-From:   Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     linux-pci@vger.kernel.org, kishon@kernel.org,
-        lpieralisi@kernel.org, bhelgaas@google.com,
-        linux-kernel@vger.kernel.org, robh@kernel.org, vidyas@nvidia.com,
-        vigneshr@ti.com
-Subject: Re: [PATCH v5 0/5] PCI: endpoint: Rework the EPC to EPF notification
-Message-ID: <Y+qCVuGdlCeUR2Ro@rocinante>
-References: <20230124071158.5503-1-manivannan.sadhasivam@linaro.org>
- <20230124071602.GB4947@thinkpad>
- <20230213065718.GA4375@thinkpad>
+        with ESMTP id S229436AbjBMSqw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Feb 2023 13:46:52 -0500
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9C2D1C58F;
+        Mon, 13 Feb 2023 10:46:51 -0800 (PST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1676314010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DG/YHFOjMURtXqdamtgmYShJo+wF2f98tUavHFx54+c=;
+        b=O2BG4BKLutfEOdkyUTXeYw9wJNERnS+DwHWEQEOGTCgt54RBsR1H+N+U4+SAh3N07LKDDP
+        0/OXGBy2CcCNMLy15dJjQ46emmIMQbFnGQ7B/dZsC7+Q8F0tBNlUPy46Xsx3cPN4JI3rOy
+        OT4VGS0sNMRNa+o3qfNncFQNBWT39HhO/tcTFSQ+vKlbT9qnYtEmCfl6o4UbBS+R4L6t7V
+        kDJb+g9iez8pDhZzYOMmeiFKV3RztFzaGicVWtks/Z9SgRF9y7EnoEJ5zVFqy3G6haE+ZK
+        EXbo/7QvxNgQZSS8E/G6ait4Git6RxkrfkbfCJQ0Wze1iKvt/6JlDfDFWs9RNQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1676314010;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DG/YHFOjMURtXqdamtgmYShJo+wF2f98tUavHFx54+c=;
+        b=YRZdTJTE5M3Ly5D0xBpCAZbhLWPeV5OESOrwz+F9b9Lt+Wpu0n7mZS1is6fyii6VyBho2p
+        IenI9nGKgik+LcCA==
+To:     ALOK TIWARI <alok.a.tiwari@oracle.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        bhelgaas@google.com, nathan@kernel.org, ndesaulniers@google.com,
+        trix@redhat.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, kevin.tian@intel.com, darwi@linutronix.de
+Subject: Re: [External] : Re: [PATCH] PCI: Fix build error when
+ CONFIG_PCI_MSI disabled
+In-Reply-To: <5945f254-0581-093b-168d-8cf2c0a34eab@oracle.com>
+References: <158e40e1cfcfc58ae30ecb2bbfaf86e5bba7a1ef.1675978686.git.reinette.chatre@intel.com>
+ <333dee5b-6710-998c-bf3f-2cb1d676a7da@oracle.com>
+ <af294def-fff7-469c-b8c6-a245ba641c2c@intel.com>
+ <5945f254-0581-093b-168d-8cf2c0a34eab@oracle.com>
+Date:   Mon, 13 Feb 2023 19:46:49 +0100
+Message-ID: <87cz6dtnc6.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230213065718.GA4375@thinkpad>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
+Alok!
 
-> > > During the review of the patch that fixes DBI access in PCI EP, Rob
-> > > suggested [1] using a fixed interface for passing the events from EPC to
-> > > EPF instead of the in-kernel notifiers.
-> > > 
-> > > This series introduces a simple callback based mechanism for passing the
-> > > events from EPC to EPF. This interface is chosen for satisfying the below
-> > > requirements:
-> > > 
-> > > 1. The notification has to reach the EPF drivers without any additional
-> > > latency.
-> > > 2. The context of the caller (EPC) needs to be preserved while passing the
-> > > notifications.
-> > > 
-> > > With the existing notifier mechanism, the 1st case can be satisfied since
-> > > notifiers aren't adding any huge overhead. But the 2nd case is clearly not
-> > > satisfied, because the current atomic notifiers forces the EPF
-> > > notification context to be atomic even though the caller (EPC) may not be
-> > > in atomic context. In the notification function, the EPF drivers are
-> > > required to call several EPC APIs that might sleep and this triggers a
-> > > sleeping in atomic bug during runtime.
-> > > 
-> > > The above issue could be fixed by using a blocking notifier instead of
-> > > atomic, but that proposal was not accepted either [2].
-> > > 
-> > > So instead of working around the issues within the notifiers, let's get rid
-> > > of it and use the callback mechanism.
-> > > 
-> > > NOTE: DRA7xx and TEGRA194 drivers are only compile tested. Testing this series
-> > > on the real platforms is greatly appreciated.
-> > > 
-> > 
-> > Lorenzo, all patches in this series got review tags. Can you please merge now?
-> > 
-> 
-> Krzysztof, any update on this series?
+On Sat, Feb 11 2023 at 10:35, ALOK TIWARI wrote:
 
-Sorry for the late reply.  I just realised that my question from a few days
-ago has yet to make it to the mailing list. Again, I apologise for keeping
-you waiting.
+Please do not top-post and trim your replies.
 
+  https://people.kernel.org/tglx/notes-about-netiquette
 
-Nevertheless, I was asking whether there would be any "Fixes:" tags to add
-and if we should let the stable maintainers know since this fixes an issue
-that might be worth back-porting to older kernels.
+> if, new function going to part of #else case . that is absolutely fine.
+> but that is not present in given PATCH.
 
+Care to apply the patch and look where the stub functions are placed
+instead of making uninformed claims?
 
-Let me know.  Otherwise, everything looks good!  Thank you a lot!
- 
-	Krzysztof
+Thanks,
+
+        tglx
