@@ -2,168 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 544E0696BEE
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 18:43:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2515E696DA3
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 20:15:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232790AbjBNRnR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 12:43:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46350 "EHLO
+        id S229840AbjBNTPU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 14:15:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232720AbjBNRnQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 12:43:16 -0500
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2040.outbound.protection.outlook.com [40.107.22.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEB0AD30;
-        Tue, 14 Feb 2023 09:43:14 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nCBuE0FMFxp/e8qriTGTbnF0L90LxgZyvpxQVaXjo7FfAmqE3wARKay/gvvtfvyX+Lq1hnuKQ5hJ5648IGUt/osTxPXY7d5D0Sla4yZQwk2G20Vvfxf19gvaBuLjIeLPRRG8iw/+ZIbc3tP5mzjGIwtLJSGUDZ4bCN9GtLFWfApZvCXhq/DtsBu/uaoHpm0+6D3IBhdXDoHRDFEZK+qc3dGK17hOFbTLk693qcm8PFYJ9Ds/4V2M1W6XWfm4T0/jrIKawMcIaAWhUpS+AaNMZTZg78TEn01zeak+PBk9cRmpdQCHXiOuzY63MnNPJFRo2xlSUKHVge5hj/3Nzv1t4w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=g/Dv6CgFO/XpAZYvaf/OFsITuDAdIfG9hGnVeU/q4/I=;
- b=W2p6bBsW+TgJi3ppmGaOD0u2MSf6r4SIzNTwHj6CT9RJqHERrAIBinzDLZf3tZTbUY+s9/NrU/lKGquJ/SfRgSPMmR5eFPAitczWOa0HAYd953TzKIOKWSbIhn/ueWP6echVR5spV29Z88gv4x2X0C2aDCoIwUSwotn0VjnZm7nxRMs4f0bE+Z8UasKG2l3Fd5MtEqTVwxH8NF+wC9hlQF26u9Fq2RWf87gTS0bS8n0Bhtz1ztUpOQ9wUs+O9ao1nrUfnqP0i65GUhFWs4Gh8rQVJB9L/QEGHGqxPRpKHnX+klQAqW1ZDzznC+TDp/xS0H6O/dDAY6c849LL6jpjgQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=seco.com; dmarc=pass action=none header.from=seco.com;
- dkim=pass header.d=seco.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seco.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=g/Dv6CgFO/XpAZYvaf/OFsITuDAdIfG9hGnVeU/q4/I=;
- b=ezST3nS73aBDejjE02wNml8KwU8zfmHdBT6knLWh86dd9ZfSHp6AgiUKAoiY7x/jD7uwe08NySTEfBtRS9xDRClpIs7DCH10Ev98m7dSED2AhKKkwookxxFvpz9ktq8m7mCmYFnEYjUaIkSN/QgtoGaukFpq3i9SBKQ85cASOVIeb00RaBhNXMjzJrwcptmVkUfwFWInMfQajj1ng4dYt7ubBhEbxneqd8quEoNum9nKCjXBbENW1XKWthSBiqkwC5BXT2YxYIW/W9UPZrayvdpHvg3hzYIE/W6yZlEvEiqqvjrp9xy5WWlJdYPS9VnXrQDQGr19TEdN73cWOW3FbQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=seco.com;
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com (2603:10a6:10:3dd::13)
- by AM7PR03MB6452.eurprd03.prod.outlook.com (2603:10a6:20b:1c2::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
- 2023 17:43:11 +0000
-Received: from DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::6b03:ac16:24b5:9166]) by DB9PR03MB8847.eurprd03.prod.outlook.com
- ([fe80::6b03:ac16:24b5:9166%2]) with mapi id 15.20.6086.024; Tue, 14 Feb 2023
- 17:43:11 +0000
-Message-ID: <45d1fdae-f6c0-ab19-f6a2-2499ead9289a@seco.com>
-Date:   Tue, 14 Feb 2023 12:43:07 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.0
-Subject: Re: [PATCH 1/1] PCI: layerscape: Set 64-bit DMA mask
-Content-Language: en-US
-To:     Frank Li <Frank.Li@nxp.com>, Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     imx@lists.linux.dev
-References: <20230112193621.1513505-1-Frank.Li@nxp.com>
-From:   Sean Anderson <sean.anderson@seco.com>
-In-Reply-To: <20230112193621.1513505-1-Frank.Li@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BLAPR03CA0165.namprd03.prod.outlook.com
- (2603:10b6:208:32f::9) To DB9PR03MB8847.eurprd03.prod.outlook.com
- (2603:10a6:10:3dd::13)
+        with ESMTP id S230162AbjBNTPT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 14:15:19 -0500
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D929A25E2B;
+        Tue, 14 Feb 2023 11:15:18 -0800 (PST)
+Received: by mail-oi1-f170.google.com with SMTP id s17so13800985ois.10;
+        Tue, 14 Feb 2023 11:15:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n7E1DSdu/LjiowmOkJlnBDIhObd6gc/Np+y6yfsuUDM=;
+        b=XyDmGvworGqksLcRUTudP9jtCO64oyA9QLk/+ukbj+cOcIzle0xv1g6feBk/vIsBNA
+         Rgpk8a1X0QqCTaFTtPws8yTi86U/4uNyu+Z4hB0QGv6BrnT9OSTdzGYM2q1dLlEcO6Ll
+         xlLGuMAM0AARWOe2/Q/yogsAmsdvRYI7tZXg+cu0VOpwCprnUD9mAGetoeV9esf/3a7f
+         RpBbUl/jfxaEVgtZycc10wEyt20rZsLpNeFvN7wXpAhTn3DMJxZ2pqpATbusbASnwq+N
+         2QzR6DTQjhyFYyx21fkdfn9aAOZmiTig9mE4UoviPZpV4GoDiqQAabMXtyMtqvbgad5s
+         uIbg==
+X-Gm-Message-State: AO0yUKWiMbCEdkgbOueVvZ85em0JYhfGM6PRI/J07IijhfXHJRfYfmeN
+        K4OFO4D66U2sPMtNgzDV5g==
+X-Google-Smtp-Source: AK7set/s+ZMpe9dhdBmBZP5DzD386ZNtV5w8oBNaH00NPOjMkEe1Rab3IGnhmsWphHoipV10bWxlOg==
+X-Received: by 2002:a05:6808:a8b:b0:364:5b57:363d with SMTP id q11-20020a0568080a8b00b003645b57363dmr1460638oij.59.1676402118080;
+        Tue, 14 Feb 2023 11:15:18 -0800 (PST)
+Received: from robh_at_kernel.org (c-67-162-147-231.hsd1.co.comcast.net. [67.162.147.231])
+        by smtp.gmail.com with ESMTPSA id p125-20020acad883000000b003436fa2c23bsm6529285oig.7.2023.02.14.11.15.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Feb 2023 11:15:17 -0800 (PST)
+Received: (nullmailer pid 23333 invoked by uid 1000);
+        Tue, 14 Feb 2023 19:15:16 -0000
+Date:   Tue, 14 Feb 2023 13:15:16 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Shradha Todi <shradha.t@samsung.com>
+Cc:     lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+        krzysztof.kozlowski+dt@linaro.org, alim.akhtar@samsung.com,
+        jingoohan1@gmail.com, Sergey.Semin@baikalelectronics.ru,
+        lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com, tglx@linutronix.de,
+        m.szyprowski@samsung.com, jh80.chung@samsung.co,
+        pankaj.dubey@samsung.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/16] dt-bindings: PCI: Rename the term elbi to appl
+Message-ID: <20230214191516.GA17421-robh@kernel.org>
+References: <20230214121333.1837-1-shradha.t@samsung.com>
+ <CGME20230214121424epcas5p38e74b52a2d94a32b82a093c7e0a12499@epcas5p3.samsung.com>
+ <20230214121333.1837-6-shradha.t@samsung.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DB9PR03MB8847:EE_|AM7PR03MB6452:EE_
-X-MS-Office365-Filtering-Correlation-Id: fee584f1-e6a1-4ce0-c4c7-08db0eb2f11a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: xsQ2fpMJfajAwUXMA/0vVbft7crNpEvfaYRgF5kQPe9eNSyoTmwg1A4y2bgO1ixwj0liGVZqecaI9eDraBuho9dzKW3VLpN1eRfHls2tknIm65EVQbOSH8I7mzWHBeZYOIcYbQlDxWZW22FWshdtv4V5lVy2/6IlJJcYLq9fOJ/us9MbT2pQkkYJDOEf6/CTg440hggNmTdiOnUVNtYv160IPTXt//pgyth8PcR3/mxSDHZd7GLW5LJtXmLIX8iAqvVNfqw/iI/OIyJTrLPHw0qFLRkJmxOWnfBDxneXw01GqYA57izsSuOfRIcsWIIrI+ZRutcUm9ufhZ1ZlcYcDdNmyHp3Zqz5A7ufS95w+IDU1QaHHZ3GZ3cLumGQrX+NxTYcm5o4JBPTqOtGBivqG0ZLMcdFsUWYwgf0/3bslxDx4V4dIdBS9+EgiUhJWFSt/NFdBbMo9rMMzUvVS/Opu1RdBx3OH6ssS0OAvbf8KPaHA7Y5yjFdPxbsB/McRiK1kvn9MfhuTMNljq2hSFuWmiD1wadWxdtndOS82IQ1XlLwv+MGbjfzfJM8soKzKmJnBx4sqc/1HTnijuhH60/GSPDR8x6hs0MH0PljY565rpG24EKOj4IGQVM28vmoWJJOT1TDur4CzB9CXzOCF/4rS8b1jTFnAGxOOPkU2FavDBnv3EhPXV4RnB0wVD4pXjfW45bn1IqNGFXLmLYD6qEIKMGqVi+9Pa+w/Ic4M/OubArkQsXVQWl4SByAPU4ebCmgzNKUr9eu08W495DHGnk2PKdjez/cjvN08DQB3TefdlU=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB9PR03MB8847.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39840400004)(346002)(136003)(396003)(376002)(366004)(451199018)(478600001)(53546011)(7416002)(8676002)(44832011)(66946007)(66476007)(66556008)(8936002)(2906002)(38100700002)(38350700002)(31696002)(4326008)(31686004)(52116002)(6486002)(316002)(5660300002)(41300700001)(86362001)(26005)(110136005)(186003)(6666004)(6512007)(6506007)(36756003)(2616005)(921005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?S1M2R0FVWnQvdkxNWm1kbEIxRU9IMGxRWFpuK21lUU5hMzZaeTROVjBFZXJr?=
- =?utf-8?B?QzBuSVNkTS8zNUJHdmJrS29Rdm5MRmhRQURKM1pzeCtDZEF3dTVJUm0vUlo2?=
- =?utf-8?B?dzFwOExzS25HcnFFODZZMGVPQWJudHJmcmIvcWlyODQzWDFmV1MrM2VSZ0Mw?=
- =?utf-8?B?OTdpMTAybXZ1QXlwb29IRkNqYTdYWmhMVXkrdGJQdmw0b3RSRmZFblJPSG9r?=
- =?utf-8?B?N09kRmRENlBPSkZPS280ZFkyMVpDVHJCSCtMclVKWk5iRXV4d2ZPOGRFTGZV?=
- =?utf-8?B?VDRMeTJodzFmRTA1TGRxZVhZeDVjRitPN2c3NzlWdUhjVDhJbXh6VUR0dGJJ?=
- =?utf-8?B?OC9iSEl3M0lnUGlxWG1ocnUvWXNrTzlQY0RkclBLaEZ1M1d2Tk16OUU2WG5s?=
- =?utf-8?B?TUdtV3RHa2wxSy9SVzdXZU9HTjBaSkt3YUwzNFI3elhIZWdHV1ZWVDBjZUtp?=
- =?utf-8?B?Zk9iUkdHYUUzZ2xmUi93d05zVmZFSEZBd0lzcGRtWW9OYVV6aWxSOXpUaFM0?=
- =?utf-8?B?bGpTWm1kNXh0b0x4L0kxdzgxREhSc01wZVphblQvY0FiSVBaQW1UYk5uS0Vv?=
- =?utf-8?B?SVBGaUlYb05zeit3VjY4OTIyNzRTVWdwZ04yNkdFZkgrMGZneWNRQ2FVSzBK?=
- =?utf-8?B?YXcrZVhuZ2NiSHgyVzBmZEEvNnV4aVVLTU5Fa2NoVHkxMGxiZFhCbGFYMHlI?=
- =?utf-8?B?TFExbXZROGJvNWZYeEU5b3I2SHo4dElJWDVuUnRFc1JnZm96cXdtRDdWTEEx?=
- =?utf-8?B?aUhHTFNNVG1STVc5WHBNcjhMMlZUS2NPQjNWd2FnRWhCd2NjRlFYNnFRQ01a?=
- =?utf-8?B?VFNUT1R6WlNieXI3SFhQcjgyelhPUStVaUUzTlZYOGw1azVBOCtxanNNV05G?=
- =?utf-8?B?VVBOdHNnY21CdnQxOVdxY204Y2pxSldwVWRJVDdkQjJHWTMzV0g4L3hFQ2E1?=
- =?utf-8?B?RzYrUjViYjl3UnlMcWM5YW9MODJ4ZnFDd0FwRFhwbXNKcFJaTEQyeC9idDZV?=
- =?utf-8?B?bFFNZUVmYjVSWXhYdTlaZTR4OHorbStuQkdydDJSRjdRdlBFV3FhQjJ6eUNC?=
- =?utf-8?B?MFB1akMzSmVqNU1yWExOaWpGZDlqR01SNHJ3TFFpc2RrRysxR2k3bVRlNzAy?=
- =?utf-8?B?OHlMN3N2S000THQzZ3dnek1SNmdMMVMyVXFkVzVzdStWVHBPOGRIcmIzSlE3?=
- =?utf-8?B?ZnhNa2xiMUtiaGxtNDRYemFiSGRtS3dOaklNSzZIL3EySzB6L3ZmbXdlS1c4?=
- =?utf-8?B?QVQ3WGxOcEtBY3NLaWJ6QkE4YWNrS0cwcDEyVzVvVnV5MHcrdUExano5QUJV?=
- =?utf-8?B?YVVHU094aERHcHB5bUd5Um9uYmtEYVZxTmZmSnBZU0w2b09xMFl4YjhQUlU4?=
- =?utf-8?B?N1J2V3lRd0lSTjJCRjlJTlEyS2FUa3VTVWREc2hHUTBQZjE4elhQZjVXVVVS?=
- =?utf-8?B?dGtodU5XVzllOXdXSjAyUkhXa1QrR1hBQUNqWFpiMzVleHpqUmVTVU5RWC9p?=
- =?utf-8?B?YVdUWkozNHdSMDlWRUh4Vzg3S1JvcUVWV0xKeWFkZ0FRb2pyOWFGOUprUTRz?=
- =?utf-8?B?SWVWRkFIeVk4bmU2YU1oTHdSV1BtRHdGVXdnVXpBZnZmbWtTd3kvNEpaZGd4?=
- =?utf-8?B?alJpdkVZaEppNzJKM0JBSTYzbU1ZdDN5M1MrdFo2K2J0ajhLSFVFeERoM1F3?=
- =?utf-8?B?SWtpWnBiTFpxbjE3NTJDdGlWYlZYamVlOWVjRDBYZmFveC9uL2QwcFpJL2lC?=
- =?utf-8?B?TUZwT3VuQTFpZlNpRGVFT0E4RGs1OGtRNnJDdjhPMytTamtDRUV4eEI4UUNQ?=
- =?utf-8?B?cTRXd1N3V3RsVndjNTZ0Z0JXVVM1dFhrdVhTWC9qYmswZnJndDR6NUs0WU43?=
- =?utf-8?B?MEhLMUFFejVyUnNZSUFCZG1QejlpS2xlenJPNWZadFJYUmVBZW1ya243c1A2?=
- =?utf-8?B?bnV6c0lVWDBHZHByWDI1NTJoeGxjUk16TVJQdkdiRGdkVWhPbjg1NVNjK1NB?=
- =?utf-8?B?dG4wS1RSUWk3bWR5VDJmTHA0ZHpoQ3ZTaDQwazZxY2FoMDh1OFRVeEFvM2Qw?=
- =?utf-8?B?VE5LNjNISkdybjIzY1BJVFh1V0dWY1Z1UjdRdU52N05SRHlUWFQza2swczlC?=
- =?utf-8?B?eXE2Rlo4R2pXaUUxeUppYWNoNkg4ekVDZTVFRXRTVVluVXpIR0ptWmx1UFo4?=
- =?utf-8?B?Wmc9PQ==?=
-X-OriginatorOrg: seco.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fee584f1-e6a1-4ce0-c4c7-08db0eb2f11a
-X-MS-Exchange-CrossTenant-AuthSource: DB9PR03MB8847.eurprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2023 17:43:11.6493
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bebe97c3-6438-442e-ade3-ff17aa50e733
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: S6z6e/i4BGBrJmY9iUgLVN+ANkChG6H/vdIWmmlf72xlx8c8kSYRJmpMi07SvBgfNa1TEQfyxVR8F1vCpuZGww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR03MB6452
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230214121333.1837-6-shradha.t@samsung.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 1/12/23 14:36, Frank Li wrote:
-> From: Guanhua Gao <guanhua.gao@nxp.com>
+On Tue, Feb 14, 2023 at 05:43:22PM +0530, Shradha Todi wrote:
+> DT uses the name elbi in reg-names for application logic
+> registers which is a wrong nomenclature. This patch fixes
+> the same.
 > 
-> Set DMA mask and coherent DMA mask to enable 64-bit addressing.
-> 
-> Signed-off-by: Guanhua Gao <guanhua.gao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  drivers/pci/controller/dwc/pci-layerscape-ep.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index 1b884854c18e..c19e7ec58b05 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -261,6 +261,10 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	pcie->max_width = (dw_pcie_readw_dbi(pci, PCIE_LINK_CAP) >>
->  			  MAX_LINK_W_SHIFT) & MAX_LINK_W_MASK;
->  
-> +	/* set 64-bit DMA mask and coherent DMA mask */
-> +	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(64)))
-> +		dev_warn(dev, "Failed to set 64-bit DMA mask.\n");
+> This commit shouldn't be applied without changes
+> "arm64: dts: Rename the term elbi to appl" and
+> "PCI: samsung: Rename the term elbi to appl"
 
-Isn't this mandatory? Why not dev_err_probe and return the error?
+Which is your clue that this is an ABI break. You're stuck with the old 
+name unless the ABI break is fine for all Samsung platforms using this.
 
---Sean
-
->  	platform_set_drvdata(pdev, pcie);
->  
->  	ret = dw_pcie_ep_init(&pci->ep);
-
+Rob
