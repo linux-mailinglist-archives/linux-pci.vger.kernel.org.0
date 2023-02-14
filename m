@@ -2,62 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C383696E99
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 21:36:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22AE5696EDB
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 22:07:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjBNUgx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 15:36:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43652 "EHLO
+        id S229483AbjBNVH1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 16:07:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjBNUgw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 15:36:52 -0500
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 600B32B2AD;
-        Tue, 14 Feb 2023 12:36:50 -0800 (PST)
+        with ESMTP id S229454AbjBNVH1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 16:07:27 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE1C109;
+        Tue, 14 Feb 2023 13:07:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676407010; x=1707943010;
+  t=1676408846; x=1707944846;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=SOL//QdfdM3s9jWC+7EBtWWvXmH7+sm77OJamWGyv5k=;
-  b=PGxwAhDt7r8oFQ1FC1KNpanfAF/ruPa0VfyiZFIsKTuiTgxbaTj2c+qb
-   b6bfbg6WcXkOlUBNlQgMjK8KngSHvBLcj85vX+zY0eXNWyc4oK0LpyZZ7
-   yEk5ttr6ycUyyj5UeSNRpeO1RkMkDXYGh+Yu0UhnmvQc0MYoyLPEnUgOT
-   vKnnzjMZq9KqZKOsl+f98bwrU5AUT30FQ3+oQKsagqe4cIJ+ve4KiR+AX
-   LXFbCfED3/bGFYWKo6COOEFo7vjTX5mCBCOxhqykIM+eiBCpSKj6h8+OU
-   Dw9J5YUXQkIsVzppyNKG1xkOCU0wigvSjVW6cA9JhVaUgIVjvan7qV8cI
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="328976623"
+  bh=DI7QBI/Lrj4CQ7ivZqEmoZunx3C/N0ThnTv8GuZEz3I=;
+  b=kXcL+DafX3Mxi1dDR4GRQmJ1u/U7lWfkcKVZAgs1n4N0OLNWhr0T0fx5
+   5hC7EI+zIsp3shApto8p6CkPUdMdYBTnCvjZ4cmlSHtsvE9nb/JWx3VOn
+   LZhyImmnH2OYByip432i4NQhhqgwm5koSgSqUXL42zXrBWERRv9ML5Jt0
+   U1h8hpgBxehJpJSnR6ZUN9NlwaWp4Iuhh0yC29CScuJEH6x6LSYKY/Ds3
+   208xlUWoI0dPJUK0ZJ0ntoQfn2og2122/Vq7u7zNMXiAp7G7Pais8/mLX
+   g9//pPDoSQNTa+kJ1axiHCz4xqOSvHfFi/UeWQF5JdhBK/rR6slvQRIq4
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="331266296"
 X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="328976623"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 12:36:50 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="758127518"
+   d="scan'208";a="331266296"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 13:07:25 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="669350710"
 X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="758127518"
+   d="scan'208";a="669350710"
 Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.93.192]) ([10.212.93.192])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 12:36:49 -0800
-Message-ID: <7d9321ff-e118-884f-d873-91c141faddfc@intel.com>
-Date:   Tue, 14 Feb 2023 13:36:48 -0700
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 13:07:24 -0800
+Message-ID: <507beca0-70b1-f8f7-bbce-2ea2957999c0@intel.com>
+Date:   Tue, 14 Feb 2023 14:07:23 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 04/18] cxl: Add common helpers for cdat parsing
+Subject: Re: [PATCH 08/18] cxl: Add support for _DSM Function for retrieving
+ QTG ID
 Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>,
-        linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
         ira.weiny@intel.com, vishal.l.verma@intel.com,
         alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
         robert.moore@intel.com
 References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
- <167571659666.587790.1381783105886436293.stgit@djiang5-mobl3.local>
- <20230209115803.00002778@Huawei.com>
- <3c69a080-de0c-3244-cc44-0a187230d203@intel.com>
- <20230211101833.GA12138@wunner.de>
+ <167571663199.587790.13615282047168132392.stgit@djiang5-mobl3.local>
+ <20230209140217.00002d22@Huawei.com>
 From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230211101833.GA12138@wunner.de>
+In-Reply-To: <20230209140217.00002d22@Huawei.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -72,103 +70,207 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2/11/23 3:18 AM, Lukas Wunner wrote:
-> On Thu, Feb 09, 2023 at 03:57:32PM -0700, Dave Jiang wrote:
->> On 2/9/23 4:58 AM, Jonathan Cameron wrote:
->>> On Mon, 06 Feb 2023 13:49:58 -0700 Dave Jiang <dave.jiang@intel.com> wrote:
->>>> Add helper functions to parse the CDAT table and provide a callback to
->>>> parse the sub-table. Helpers are provided for DSMAS and DSLBIS sub-table
->>>> parsing. The code is patterned after the ACPI table parsing helpers.
-> [...]
->>> Are these all worthwhile given the resulting function name is longer
->>> than accessing it directly.  If aim is to move the details of the
->>> struct cdat_subtable_entry away from being exposed at caller, then
->>> fair enough, but if that is the plan I'd expect to see something about
->>> that in the patch description.
->>>
->>> Feels like some premature abstraction, but I don't feel particularly
->>> strongly about this.
+On 2/9/23 7:02 AM, Jonathan Cameron wrote:
+> On Mon, 06 Feb 2023 13:50:33 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> CXL spec v3.0 9.17.3 CXL Root Device Specific Methods (_DSM)
 >>
->> I'll drop them. The code was adapted from ACPI table parsing code. But we
->> can simplify for our usages.
-> 
-> Yes just iterating over the CDAT entries and directly calling the
-> appropriate parser function for the entry seems more straightforward.
-> 
-> 
->>> Random musing follows...
->>> We could add a variable length element to that struct
->>> definition and the magic to associate that with the length parameter
->>> and get range protection if relevant hardening is turned on.
->>>
->>> Structure definition comes (I think) from scripts in acpica so
->>> would need to push such changes into acpica and I'm not sure
->>> they will be keen even though it would be good for the kernel
->>> to have the protections.
-> [...]
->> I see what you are saying. But I'm not sure how easily we can do this for
->> the CDAT table due to endieness. Is this what you had in mind?
+>> Add support to retrieve QTG ID via ACPI _DSM call. The _DSM call requires
+>> an input of an ACPI package with 4 dwords (read latency, write latency,
+>> read bandwidth, write bandwidth). The call returns a package with 1 WORD
+>> that provides the max supported QTG ID and a package that may contain 0 or
+>> more WORDs as the recommended QTG IDs in the recommended order.
 >>
->> From:
->> struct cdat_entry_header {
->> 	u8 type;
->> 	u8 reserved;
->> 	__le16 length;
->> } __packed;
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> A few minor bits inline.
+> 
+> Jonathan
+> 
+>> ---
+>>   drivers/cxl/core/Makefile |    1
+>>   drivers/cxl/core/acpi.c   |   99 +++++++++++++++++++++++++++++++++++++++++++++
+>>   drivers/cxl/cxl.h         |   15 +++++++
+>>   3 files changed, 115 insertions(+)
+>>   create mode 100644 drivers/cxl/core/acpi.c
 >>
->> To:
->> struct cdat_entry_header {
->> 	u8 type;
->> 	u8 reserved;
->> 	__le16 length;
->> 	DECLARE_BOUNDED_ARRAY(u8, body, le16_to_cpu(length));
->> } __packed;
+>> diff --git a/drivers/cxl/core/Makefile b/drivers/cxl/core/Makefile
+>> index 438ce27faf77..11ccc2016ab7 100644
+>> --- a/drivers/cxl/core/Makefile
+>> +++ b/drivers/cxl/core/Makefile
+>> @@ -11,4 +11,5 @@ cxl_core-y += mbox.o
+>>   cxl_core-y += pci.o
+>>   cxl_core-y += hdm.o
+>>   cxl_core-y += cdat.o
+>> +cxl_core-y += acpi.o
+>>   cxl_core-$(CONFIG_CXL_REGION) += region.o
+>> diff --git a/drivers/cxl/core/acpi.c b/drivers/cxl/core/acpi.c
+>> new file mode 100644
+>> index 000000000000..86dc6c9c1f24
+>> --- /dev/null
+>> +++ b/drivers/cxl/core/acpi.c
+>> @@ -0,0 +1,99 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/* Copyright(c) 2022 Intel Corporation. All rights reserved. */
+>> +#include <linux/module.h>
+>> +#include <linux/device.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/acpi.h>
+>> +#include <linux/pci.h>
+>> +#include <asm/div64.h>
+>> +#include "cxlpci.h"
+>> +#include "cxl.h"
+>> +
+>> +const guid_t acpi_cxl_qtg_id_guid =
+>> +	GUID_INIT(0xF365F9A6, 0xA7DE, 0x4071,
+>> +		  0xA6, 0x6A, 0xB4, 0x0C, 0x0B, 0x4F, 0x8E, 0x52);
+>> +
+>> +/**
+>> + * cxl_acpi_evaluate_qtg_dsm - Retrieve QTG ids via ACPI _DSM
+>> + * @handle: ACPI handle
+>> + * @input: bandwidth and latency data
+>> + *
+>> + * Issue QTG _DSM with accompanied bandwidth and latency data in order to get
+>> + * the QTG IDs that falls within the performance data.
+>> + */
+>> +struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
+>> +						 struct qtg_dsm_input *input)
+>> +{
+>> +	struct qtg_dsm_output *output;
+>> +	union acpi_object *out_obj, *out_buf, *pkg, in_buf, in_obj;
 > 
-> I think this is backwards.  I'd suggest creating a struct for each
-> CDAT entry which includes the header.  The kernel switched to
-> -std=gnu11 a while ago, so you should be able to use an unnamed field
-> for the header:
-> 
-> struct cdat_dsmas {
-> 	struct cdat_entry_header;
-> 	u8 dsmad_handle;
-> 	u8 flags;
-> 	u8 reserved[2];
-> 	__le64 dpa_base;
-> 	__le64 dpa_length;
-> }
+> Reorder to reverse Xmas tree perhaps.
 
-In file included from drivers/cxl/pci.c:14:
-drivers/cxl/cxlpci.h:109:33: warning: declaration does not declare anything
-   109 |         struct cdat_entry_header;
-       |                                 ^
+Ok
+> 
+>> +	int len;
+>> +	int rc;
+> Might as well put those on one line.
 
-Does not seem to be happy about the unamed field.
+Ok
 
+> 
+>> +
+>> +	in_obj.type = ACPI_TYPE_PACKAGE;
+>> +	in_obj.package.count = 1;
+>> +	in_obj.package.elements = &in_buf;
+>> +	in_buf.type = ACPI_TYPE_BUFFER;
+>> +	in_buf.buffer.pointer = (u8 *)input;
+>> +	in_buf.buffer.length = sizeof(u32) * 4;
+> c99 style is nicer to read.
+
+Ok
 
 > 
-> Note that in my commit "cxl/pci: Handle truncated CDAT entries",
-> I'm only verifying that the number of bytes received via DOE
-> matches the length field in the cdat_entry_header.  I do not
-> verify in cxl_cdat_read_table() whether that length is correct
-> for the specific CDAT structure.  I think that's the job of
-> the function parsing that particular structure type.
+> 	union acpi_object in_obj = {
+> 		.type =
 > 
-> In other words, at the top of your DSMAS parsing function,
-> you need to check:
-> 
-> 	struct cdat_dsmas dsmas;
-> 
-> 	if (dsmas->length != sizeof(*dsmas)) {
-> 		dev_err(...);
-> 		return -EINVAL;
 > 	}
+>> +
+>> +	out_obj = acpi_evaluate_dsm(handle, &acpi_cxl_qtg_id_guid, 1, 1, &in_obj);
+>> +	if (!out_obj)
+>> +		return ERR_PTR(-ENXIO);
+>> +
+>> +	if (out_obj->type != ACPI_TYPE_PACKAGE) {
+>> +		rc = -ENXIO;
+>> +		goto err;
+>> +	}
+>> +
+>> +	/*
+>> +	 * CXL spec v3.0 9.17.3.1
+>> +	 * There should be 2 elements in the package. 1 WORD for max QTG ID supported
+>> +	 * by the platform, and the other a package of recommended QTGs
+>> +	 */
+>> +	if (out_obj->package.count != 2) {
 > 
+> This stuff is usually designed to be extensible - tends to be explicitly allowed in
+> stuff in the ACPI spec (not mentioned AFAICT in the CXL spec).  So I'd be tempted to allow
+>> 2 just don't read them.
+
+Will remove check.
+
 > 
-> Note how the check is simplified by the header being part of
-> struct cdat_dsmas.  If the header wasn't part of struct cdat_dsmas,
-> an addition would be needed here.
+> 	if (out_obj->package.count < 2) {
+>> +		rc = -ENXIO;
+>> +		goto err;
+>> +	}
+>> +
+>> +	pkg = &out_obj->package.elements[1];
+>> +	if (pkg->type != ACPI_TYPE_PACKAGE) {
+>> +		rc = -ENXIO;
+>> +		goto err;
+>> +	}
+>> +
+>> +	out_buf = &pkg->package.elements[0];
+>> +	if (out_buf->type != ACPI_TYPE_BUFFER) {
+>> +		rc = -ENXIO;
+>> +		goto err;
+>> +	}
+>> +
+>> +	len = out_buf->buffer.length;
+>> +	output = kmalloc(len + sizeof(*output), GFP_KERNEL);
+>> +	if (!output) {
+>> +		rc = -ENOMEM;
+>> +		goto err;
+>> +	}
+>> +
+>> +	/* It's legal to have 0 QTG entries */
+>> +	if (len == 0) {
+>> +		output->nr = 0;
+>> +		goto out;
+>> +	}
+>> +
+>> +	/* Malformed package, not multiple of WORD size */
+>> +	if (len % sizeof(u16)) {
+>> +		rc = -ENXIO;
+>> +		goto out;
+>> +	}
+>> +
+>> +	output->nr = len / sizeof(u16);
+>> +	memcpy(output->qtg_ids, out_buf->buffer.pointer, len);
 > 
-> Thanks,
+> Worth checking them against Max Support QTG ID as provided in the
+> outer package?  Obviously if they are greater than that there is
+> a bug, but meh.
+
+Ok will add check and warn.
+
 > 
-> Lukas
+>> +out:
+>> +	ACPI_FREE(out_obj);
+>> +	return output;
+>> +
+>> +err:
+>> +	ACPI_FREE(out_obj);
+>> +	return ERR_PTR(rc);
+>> +}
+>> +EXPORT_SYMBOL_NS_GPL(cxl_acpi_evaluate_qtg_dsm, CXL);
+>> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
+>> index 849b22236f1d..e70df07f9b4b 100644
+>> --- a/drivers/cxl/cxl.h
+>> +++ b/drivers/cxl/cxl.h
+>> @@ -719,6 +719,21 @@ int cdat_table_parse_dslbis(void *table, cdat_tbl_entry_handler handler,
+>>   int cxl_dsmas_parse_entry(struct acpi_cdat_header *header, void *arg);
+>>   int cxl_dslbis_parse_entry(struct acpi_cdat_header *header, void *arg);
+>>   
+>> +struct qtg_dsm_input {
+>> +	u32 rd_lat;
+>> +	u32 wr_lat;
+>> +	u32 rd_bw;
+>> +	u32 wr_bw;
+>> +};
+>> +
+>> +struct qtg_dsm_output {
+>> +	int nr;
+>> +	u16 qtg_ids[];
+>> +};
+>> +
+>> +struct qtg_dsm_output *cxl_acpi_evaluate_qtg_dsm(acpi_handle handle,
+>> +						 struct qtg_dsm_input *input);
+>> +
+>>   /*
+>>    * Unit test builds overrides this to __weak, find the 'strong' version
+>>    * of these symbols in tools/testing/cxl/.
+>>
+>>
+> 
