@@ -2,50 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6428A696431
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 14:06:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B862696469
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 14:18:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232588AbjBNNGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 08:06:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48224 "EHLO
+        id S229496AbjBNNR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 08:17:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232569AbjBNNF5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 08:05:57 -0500
+        with ESMTP id S231561AbjBNNR6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 08:17:58 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB8C23C77;
-        Tue, 14 Feb 2023 05:05:55 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGLtl0n54z6J7g6;
-        Tue, 14 Feb 2023 21:01:19 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C95244B6;
+        Tue, 14 Feb 2023 05:17:57 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGMCy2GFpz6J9nV;
+        Tue, 14 Feb 2023 21:16:14 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Tue, 14 Feb
- 2023 13:05:53 +0000
-Date:   Tue, 14 Feb 2023 13:05:52 +0000
+ 2023 13:17:54 +0000
+Date:   Tue, 14 Feb 2023 13:17:53 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        "Gregory Price" <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        "Dan Williams" <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
-Message-ID: <20230214130552.000030ea@Huawei.com>
-In-Reply-To: <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
-        <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
+CC:     Dave Jiang <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+        <dan.j.williams@intel.com>, <ira.weiny@intel.com>,
+        <vishal.l.verma@intel.com>, <alison.schofield@intel.com>,
+        <rafael@kernel.org>, <bhelgaas@google.com>,
+        <robert.moore@intel.com>
+Subject: Re: [PATCH 04/18] cxl: Add common helpers for cdat parsing
+Message-ID: <20230214131753.000041c8@Huawei.com>
+In-Reply-To: <20230211101833.GA12138@wunner.de>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+        <167571659666.587790.1381783105886436293.stgit@djiang5-mobl3.local>
+        <20230209115803.00002778@Huawei.com>
+        <3c69a080-de0c-3244-cc44-0a187230d203@intel.com>
+        <20230211101833.GA12138@wunner.de>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
 Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500001.china.huawei.com (7.191.163.213) To
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
  lhrpeml500005.china.huawei.com (7.191.163.240)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
@@ -57,169 +56,105 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 10 Feb 2023 21:25:16 +0100
+On Sat, 11 Feb 2023 11:18:33 +0100
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> Jonathan notes that cxl_cdat_get_length() and cxl_cdat_read_table()
-> allocate 32 dwords for the DOE response even though it may be smaller.
+> On Thu, Feb 09, 2023 at 03:57:32PM -0700, Dave Jiang wrote:
+> > On 2/9/23 4:58 AM, Jonathan Cameron wrote:  
+> > > On Mon, 06 Feb 2023 13:49:58 -0700 Dave Jiang <dave.jiang@intel.com> wrote:  
+> > > > Add helper functions to parse the CDAT table and provide a callback to
+> > > > parse the sub-table. Helpers are provided for DSMAS and DSLBIS sub-table
+> > > > parsing. The code is patterned after the ACPI table parsing helpers.  
+> [...]
+> > > Are these all worthwhile given the resulting function name is longer
+> > > than accessing it directly.  If aim is to move the details of the
+> > > struct cdat_subtable_entry away from being exposed at caller, then
+> > > fair enough, but if that is the plan I'd expect to see something about
+> > > that in the patch description.
+> > > 
+> > > Feels like some premature abstraction, but I don't feel particularly
+> > > strongly about this.  
+> > 
+> > I'll drop them. The code was adapted from ACPI table parsing code. But we
+> > can simplify for our usages.  
 > 
-> In the case of cxl_cdat_get_length(), only the second dword of the
-> response is of interest (it contains the length).  So reduce the
-> allocation to 2 dwords and let DOE discard the remainder.
+> Yes just iterating over the CDAT entries and directly calling the
+> appropriate parser function for the entry seems more straightforward.
 > 
-> In the case of cxl_cdat_read_table(), a correctly sized allocation for
-> the full CDAT already exists.  Let DOE write each table entry directly
-> into that allocation.  There's a snag in that the table entry is
-> preceded by a Table Access Response Header (1 dword).  Save the last
-> dword of the previous table entry, let DOE overwrite it with the
-> header of the next entry and restore it afterwards.
+> 
+> > > Random musing follows...
+> > > We could add a variable length element to that struct
+> > > definition and the magic to associate that with the length parameter
+> > > and get range protection if relevant hardening is turned on.
+> > > 
+> > > Structure definition comes (I think) from scripts in acpica so
+> > > would need to push such changes into acpica and I'm not sure
+> > > they will be keen even though it would be good for the kernel
+> > > to have the protections.  
+> [...]
+> > I see what you are saying. But I'm not sure how easily we can do this for
+> > the CDAT table due to endieness. Is this what you had in mind?
+> > 
+> > From:
+> > struct cdat_entry_header {
+> > 	u8 type;
+> > 	u8 reserved;
+> > 	__le16 length;
+> > } __packed;
+> > 
+> > To:
+> > struct cdat_entry_header {
+> > 	u8 type;
+> > 	u8 reserved;
+> > 	__le16 length;
+> > 	DECLARE_BOUNDED_ARRAY(u8, body, le16_to_cpu(length));
+> > } __packed;  
+> 
+> I think this is backwards.  I'd suggest creating a struct for each
+> CDAT entry which includes the header.  The kernel switched to
+> -std=gnu11 a while ago, so you should be able to use an unnamed field
+> for the header:
+> 
+> struct cdat_dsmas {
+> 	struct cdat_entry_header;
+> 	u8 dsmad_handle;
+> 	u8 flags;
+> 	u8 reserved[2];
+> 	__le64 dpa_base;
+> 	__le64 dpa_length;
+> }
 
-Marginally nasty, but looks like it works to me and avoid excessive allocations.
+This is indeed better given we always know the type before accessing.
+
+The above trick might be useful for any code that treats it as
+generic entries though a straight forwards check might be easier
+and is already present in Lukas' latest code.
 
 > 
-> The resulting CDAT is preceded by 4 unavoidable useless bytes.  Increase
-> the allocation size accordingly and skip these bytes when exposing CDAT
-> in sysfs.
+> Note that in my commit "cxl/pci: Handle truncated CDAT entries",
+> I'm only verifying that the number of bytes received via DOE
+> matches the length field in the cdat_entry_header.  I do not
+> verify in cxl_cdat_read_table() whether that length is correct
+> for the specific CDAT structure.  I think that's the job of
+> the function parsing that particular structure type.
 > 
-> The buffer overflow check in cxl_cdat_read_table() becomes unnecessary
-> because the remaining bytes in the allocation are tracked in "length",
-> which is passed to DOE and limits how many bytes it writes to the
-> allocation.  Additionally, cxl_cdat_read_table() bails out if the DOE
-> response is truncated due to insufficient space.
+> In other words, at the top of your DSMAS parsing function,
+> you need to check:
 > 
-> Tested-by: Ira Weiny <ira.weiny@intel.com>
-> Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> Cc: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Follow up comment on earlier one inline.
-
-> ---
->  Changes v2 -> v3:
->  * Newly added patch in v3 on popular request (Jonathan)
+> 	struct cdat_dsmas dsmas;
 > 
->  drivers/cxl/core/pci.c | 34 ++++++++++++++++++----------------
->  drivers/cxl/cxl.h      |  3 ++-
->  drivers/cxl/port.c     |  2 +-
->  3 files changed, 21 insertions(+), 18 deletions(-)
+> 	if (dsmas->length != sizeof(*dsmas)) {
+> 		dev_err(...);
+> 		return -EINVAL;
+> 	}
 > 
-> diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
-> index 1b954783b516..70097cc75302 100644
-> --- a/drivers/cxl/core/pci.c
-> +++ b/drivers/cxl/core/pci.c
-> @@ -471,7 +471,7 @@ static int cxl_cdat_get_length(struct device *dev,
->  			       size_t *length)
->  {
->  	__le32 request = CDAT_DOE_REQ(0);
-> -	__le32 response[32];
-> +	__le32 response[2];
->  	int rc;
->  
->  	rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
-> @@ -495,28 +495,28 @@ static int cxl_cdat_read_table(struct device *dev,
->  			       struct pci_doe_mb *cdat_doe,
->  			       struct cxl_cdat *cdat)
->  {
-> -	size_t length = cdat->length;
-> -	u32 *data = cdat->table;
-> +	size_t length = cdat->length + sizeof(u32);
-> +	__le32 *data = cdat->table;
-
-Ah. Makes my earlier comment on this type irrelevant.
-
->  	int entry_handle = 0;
-> +	__le32 saved_dw = 0;
->  
->  	do {
->  		__le32 request = CDAT_DOE_REQ(entry_handle);
->  		struct cdat_entry_header *entry;
-> -		__le32 response[32];
->  		size_t entry_dw;
->  		int rc;
->  
->  		rc = pci_doe(cdat_doe, PCI_DVSEC_VENDOR_ID_CXL,
->  			     CXL_DOE_PROTOCOL_TABLE_ACCESS,
->  			     &request, sizeof(request),
-> -			     &response, sizeof(response));
-> +			     data, length);
->  		if (rc < 0) {
->  			dev_err(dev, "DOE failed: %d", rc);
->  			return rc;
->  		}
->  
->  		/* 1 DW Table Access Response Header + CDAT entry */
-> -		entry = (struct cdat_entry_header *)(response + 1);
-> +		entry = (struct cdat_entry_header *)(data + 1);
->  		if ((entry_handle == 0 &&
->  		     rc != sizeof(u32) + sizeof(struct cdat_header)) ||
->  		    (entry_handle > 0 &&
-> @@ -526,21 +526,22 @@ static int cxl_cdat_read_table(struct device *dev,
->  
->  		/* Get the CXL table access header entry handle */
->  		entry_handle = FIELD_GET(CXL_DOE_TABLE_ACCESS_ENTRY_HANDLE,
-> -					 le32_to_cpu(response[0]));
-> +					 le32_to_cpu(data[0]));
->  		entry_dw = rc / sizeof(u32);
->  		/* Skip Header */
->  		entry_dw -= 1;
-> -		entry_dw = min(length / sizeof(u32), entry_dw);
-> -		/* Prevent length < 1 DW from causing a buffer overflow */
-> -		if (entry_dw) {
-> -			memcpy(data, entry, entry_dw * sizeof(u32));
-> -			length -= entry_dw * sizeof(u32);
-> -			data += entry_dw;
-> -		}
-> +		/*
-> +		 * Table Access Response Header overwrote the last DW of
-> +		 * previous entry, so restore that DW
-> +		 */
-> +		*data = saved_dw;
-> +		length -= entry_dw * sizeof(u32);
-> +		data += entry_dw;
-> +		saved_dw = *data;
->  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
->  
->  	/* Length in CDAT header may exceed concatenation of CDAT entries */
-> -	cdat->length -= length;
-> +	cdat->length -= length - sizeof(u32);
->  
->  	return 0;
->  }
-> @@ -576,7 +577,8 @@ void read_cdat_data(struct cxl_port *port)
->  		return;
->  	}
->  
-> -	port->cdat.table = devm_kzalloc(dev, cdat_length, GFP_KERNEL);
-> +	port->cdat.table = devm_kzalloc(dev, cdat_length + sizeof(u32),
-> +					GFP_KERNEL);
->  	if (!port->cdat.table)
->  		return;
->  
-> diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-> index 1b1cf459ac77..78f5cae5134c 100644
-> --- a/drivers/cxl/cxl.h
-> +++ b/drivers/cxl/cxl.h
-> @@ -494,7 +494,8 @@ struct cxl_pmem_region {
->   * @component_reg_phys: component register capability base address (optional)
->   * @dead: last ep has been removed, force port re-creation
->   * @depth: How deep this port is relative to the root. depth 0 is the root.
-> - * @cdat: Cached CDAT data
-> + * @cdat: Cached CDAT data (@table is preceded by 4 null bytes, these are not
-> + *	  included in @length)
->   * @cdat_available: Should a CDAT attribute be available in sysfs
->   */
->  struct cxl_port {
-> diff --git a/drivers/cxl/port.c b/drivers/cxl/port.c
-> index 5453771bf330..0705343ac5ca 100644
-> --- a/drivers/cxl/port.c
-> +++ b/drivers/cxl/port.c
-> @@ -95,7 +95,7 @@ static ssize_t CDAT_read(struct file *filp, struct kobject *kobj,
->  		return 0;
->  
->  	return memory_read_from_buffer(buf, count, &offset,
-> -				       port->cdat.table,
-> +				       port->cdat.table + sizeof(u32),
->  				       port->cdat.length);
->  }
->  
+> 
+> Note how the check is simplified by the header being part of
+> struct cdat_dsmas.  If the header wasn't part of struct cdat_dsmas,
+> an addition would be needed here.
+> 
+> Thanks,
+> 
+> Lukas
+> 
 
