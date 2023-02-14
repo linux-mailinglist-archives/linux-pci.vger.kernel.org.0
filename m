@@ -2,26 +2,26 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD09696287
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 12:36:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E9EC6962B1
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 12:52:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231447AbjBNLgT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 06:36:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
+        id S229808AbjBNLwC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 06:52:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229681AbjBNLgS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 06:36:18 -0500
+        with ESMTP id S229795AbjBNLwB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 06:52:01 -0500
 Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4EA021280;
-        Tue, 14 Feb 2023 03:36:17 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGJyg4xcVz6J9gG;
-        Tue, 14 Feb 2023 19:34:35 +0800 (CST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 950612365E;
+        Tue, 14 Feb 2023 03:52:00 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGKJp012Gz689lY;
+        Tue, 14 Feb 2023 19:50:17 +0800 (CST)
 Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
  (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Tue, 14 Feb
- 2023 11:36:15 +0000
-Date:   Tue, 14 Feb 2023 11:36:14 +0000
+ 2023 11:51:57 +0000
+Date:   Tue, 14 Feb 2023 11:51:56 +0000
 From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 To:     Lukas Wunner <lukas@wunner.de>
 CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
@@ -34,11 +34,12 @@ CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
         "Li, Ming" <ming4.li@intel.com>, "Hillf Danton" <hdanton@sina.com>,
         Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
         <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 10/16] PCI/DOE: Deduplicate mailbox flushing
-Message-ID: <20230214113614.00006ec9@Huawei.com>
-In-Reply-To: <7b5cf1e007ba1638ff2512f221e8a7fd72ed8245.1676043318.git.lukas@wunner.de>
+Subject: Re: [PATCH v3 11/16] PCI/DOE: Allow mailbox creation without devres
+ management
+Message-ID: <20230214115156.00002e04@Huawei.com>
+In-Reply-To: <ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7.1676043318.git.lukas@wunner.de>
 References: <cover.1676043318.git.lukas@wunner.de>
-        <7b5cf1e007ba1638ff2512f221e8a7fd72ed8245.1676043318.git.lukas@wunner.de>
+        <ad46bbc593d4b7f1c9c5cbafbb51d89533edd4a7.1676043318.git.lukas@wunner.de>
 Organization: Huawei Technologies Research and Development (UK) Ltd.
 X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
@@ -57,65 +58,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 10 Feb 2023 21:25:10 +0100
+On Fri, 10 Feb 2023 21:25:11 +0100
 Lukas Wunner <lukas@wunner.de> wrote:
 
-> When a DOE mailbox is torn down, its workqueue is flushed once in
-> pci_doe_flush_mb() through a call to flush_workqueue() and subsequently
-> flushed once more in pci_doe_destroy_workqueue() through a call to
-> destroy_workqueue().
+> DOE mailbox creation is currently only possible through a devres-managed
+> API.  The lifetime of mailboxes thus ends with driver unbinding.
 > 
-> Deduplicate by dropping flush_workqueue() from pci_doe_flush_mb().
+> An upcoming commit will create DOE mailboxes upon device enumeration by
+> the PCI core.  Their lifetime shall not be limited by a driver.
 > 
-> Rename pci_doe_flush_mb() to pci_doe_cancel_tasks() to more aptly
-> describe what it now does.
+> Therefore rework pcim_doe_create_mb() into the non-devres-managed
+> pci_doe_create_mb().  Add pci_doe_destroy_mb() for mailbox destruction
+> on device removal.
+> 
+> Provide a devres-managed wrapper under the existing pcim_doe_create_mb()
+> name.
+> 
+> The error path of pcim_doe_create_mb() previously called xa_destroy() if
+> alloc_ordered_workqueue() failed.  That's unnecessary because the xarray
+> is still empty at that point.  It doesn't need to be destroyed until
+> it's been populated by pci_doe_cache_protocols().  Arrange the error
+> path of the new pci_doe_create_mb() accordingly.
+> 
+> pci_doe_cancel_tasks() is no longer used as callback for
+> devm_add_action(), so refactor it to accept a struct pci_doe_mb pointer
+> instead of a generic void pointer.
 > 
 > Tested-by: Ira Weiny <ira.weiny@intel.com>
 > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-LGTM
 
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-> ---
->  Changes v2 -> v3:
->  * Newly added patch in v3
-> 
->  drivers/pci/doe.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-> index afb53bc1b4aa..291cd7a46a39 100644
-> --- a/drivers/pci/doe.c
-> +++ b/drivers/pci/doe.c
-> @@ -429,7 +429,7 @@ static void pci_doe_destroy_workqueue(void *mb)
->  	destroy_workqueue(doe_mb->work_queue);
->  }
->  
-> -static void pci_doe_flush_mb(void *mb)
-> +static void pci_doe_cancel_tasks(void *mb)
->  {
->  	struct pci_doe_mb *doe_mb = mb;
->  
-> @@ -439,9 +439,6 @@ static void pci_doe_flush_mb(void *mb)
->  	/* Cancel an in progress work item, if necessary */
->  	set_bit(PCI_DOE_FLAG_CANCEL, &doe_mb->flags);
->  	wake_up(&doe_mb->wq);
-> -
-> -	/* Flush all work items */
-> -	flush_workqueue(doe_mb->work_queue);
->  }
->  
->  /**
-> @@ -498,9 +495,9 @@ struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset)
->  
->  	/*
->  	 * The state machine and the mailbox should be in sync now;
-> -	 * Set up mailbox flush prior to using the mailbox to query protocols.
-> +	 * Set up cancel tasks prior to using the mailbox to query protocols.
->  	 */
-> -	rc = devm_add_action_or_reset(dev, pci_doe_flush_mb, doe_mb);
-> +	rc = devm_add_action_or_reset(dev, pci_doe_cancel_tasks, doe_mb);
->  	if (rc)
->  		return ERR_PTR(rc);
->  
 
