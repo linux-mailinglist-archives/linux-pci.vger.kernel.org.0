@@ -2,154 +2,229 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6747696BDB
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 18:39:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D06CC696BD5
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 18:37:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231905AbjBNRjq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 12:39:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42650 "EHLO
+        id S231714AbjBNRh2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 12:37:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229526AbjBNRjp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 12:39:45 -0500
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on0627.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0d::627])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29AE1222E9;
-        Tue, 14 Feb 2023 09:39:44 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oa+A2AUeq5Qc7CE7BX9VqvHFRsaRgK7SJ4lUvMS8GvrC9FaX2x2kYILXb2fFUK+xgwRql6zVj9KHrw6Jyhsqvz+/GKL+h8Gm/jNyi8EQNIPk6fewZd4r79m5oRbzVNVuJiAfMdkOgFRTBXZuKduYUpLumGayP9Ouabn//lL0dxAUE4PMO5jEiisHw2CE5c7RQON2f6AiwjvpvTdQtAN6xcraGfYNQpiOY68OZSfoQRzjBuNOd1g6xqk6/e9VDMCde+KfNcz9U3QcuOzJWBA2bWEXcLKIycgAzXQkgMhQhJvdkbgLwufKch4Um8vZLes8o8meyzRi7x8VcY7VQcWd1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/L1QfcTGw20zRX3LGfijYOmqsx2VAQsW/41Hsia4mfk=;
- b=GjEI1VH3XJPtFCCQbvjbDYZGGLDFdcCOhJ/Gt1IvsxOac+j/uJwvWlX5mNwivbdiXP6ivKoGBgqwHOeu0Toy9tgzt3iq7/dkIuWeLgE7ZE/NORLHfndue159vWEpxfj6QsxL6s/1RQpiu/54QzXp8ZUNNUS7MMYNC8I9qYQgmWPwjl3osQqGO9lOf9yA9RF7b0iC5s6mRrG48wrxjY42td9NH2Q+kUP0iwHhmfMj2cloE6XizpJjuStvC554YaVrxt8/x5HDSV2gTEAhZ7H5qYBHBKsum/cmy2wKWFTA6QdZ1dw1xDkY9P9H7931glU8Zxe353HCC7aNVUoPzucBlg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/L1QfcTGw20zRX3LGfijYOmqsx2VAQsW/41Hsia4mfk=;
- b=UBHqc2BP2djNKzTj0sQUUHTJkgA0gaqGHWJpd34YLjWCxXlagrzM5FwjF1V7as6gtqB5diHfsuRipvmkd6Cu5SxQF5pUkhLZbeFphPwHpCaDOSDME5HBsRhtGYuuv+oDQ4pMj/UJh6ZiKE31HxnVO0pOIn2Hpe4/2lw1RbjTxZk=
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com (2603:10a6:3:24::22)
- by PR3PR04MB7306.eurprd04.prod.outlook.com (2603:10a6:102:81::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Tue, 14 Feb
- 2023 17:33:59 +0000
-Received: from HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::ca48:3816:f0b6:3fcd]) by HE1PR0401MB2331.eurprd04.prod.outlook.com
- ([fe80::ca48:3816:f0b6:3fcd%6]) with mapi id 15.20.6086.023; Tue, 14 Feb 2023
- 17:33:59 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     "M.H. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-CC:     "imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: RE: [PATCH 1/1] PCI: layerscape: Add the workaround for A-010305
-Thread-Topic: [PATCH 1/1] PCI: layerscape: Add the workaround for A-010305
-Thread-Index: AQHZJr5WwkFDleZU9E2wO25hi20GTK68DjRggBLZEQA=
-Date:   Tue, 14 Feb 2023 17:33:59 +0000
-Message-ID: <HE1PR0401MB2331FFC2DB890713521DC46788A29@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-References: <20230112194433.1514149-1-Frank.Li@nxp.com>
- <HE1PR0401MB233120D46B7AA9F23AFD51C688D69@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-In-Reply-To: <HE1PR0401MB233120D46B7AA9F23AFD51C688D69@HE1PR0401MB2331.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: HE1PR0401MB2331:EE_|PR3PR04MB7306:EE_
-x-ms-office365-filtering-correlation-id: cc67f61f-93c3-42e9-d092-08db0eb1a7f3
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KrrNVT3GNIGqiJPqZQqOSKEj2ymB846dhek5GLmfVgrx8BLdHT5ehOjDhaeqO/EIVUUPxeTcbf/Rl9DM726LU4bvs5AuxqJaEm9VL1qM8ork4j1a7W3vAl4ViilTBXiMMevpGj6dZ45iib1GCieZsTMZLiDxMbLFHOZ5dnMqcM93XshfHvY0r1j4hUIu8eI801ijS1+8WkZUeSklSrcYKXrJkV8QR2+ZC7/j0oDXt+tGXwWmjvY83Ow62PsspNyFRlpWZ2f1dipBPgT2HRZDdC12AXrgJMKxcOf0W8IaG1DBzEnmnDIDIl2muUwi6ldfMiH8aXJCMDqLMMt2I85UkoLTi5q3YSyljyANXptNpfriwBQZSVudILS8J+oHaZWoxW6otsIxC6TJww78Efj9LG88ckfqdCBGnyuTMdDit+hnt3qO2J8tJjT6TKniQdOKkpOKrHIEyV9bAac09cV5Mg+QgsmrYGYFs4bm8uftdjwLcTljDqXvH3KkamUDCEfJYpuZHNPuFIchzRNAkby4dhYXCrLyrh8rzHTPe4MYFqA4Oocpw35leXY6nzqaaCguQNteTB9FKGxq9N/yUDay4WEGe3GHGuQqOXavB32pvL+V0Qb6OglSfV3uUNB+TfmGpHGBtAdXfmA5FS+fNdss+yG7XSYwKRv6b1U37GYXV9dSmp8fBiI//+POF7pbYHCE/1HWQrHH1J3pCOiRU6uHzeGDWPoo2pJncYwE1VgZ8Hk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0401MB2331.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39860400002)(396003)(136003)(366004)(376002)(451199018)(5660300002)(52536014)(86362001)(8936002)(41300700001)(44832011)(38070700005)(33656002)(2906002)(4744005)(83380400001)(38100700002)(921005)(122000001)(7696005)(66946007)(71200400001)(478600001)(66556008)(26005)(8676002)(55016003)(4326008)(186003)(316002)(64756008)(66446008)(76116006)(66476007)(110136005)(55236004)(6506007)(9686003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?voMd3CFV1/181WvvwyUSetu55OUys61RNDGcVDGkjsHq4b3h0ZdR04/fXb?=
- =?iso-8859-2?Q?CbNPdwJKv0/U1SOrcvW87u4tm+w6R+fmCJkIOQvJ1Xj/dJfLHzmm+zkTs8?=
- =?iso-8859-2?Q?yZxQtBxTB8bzb6EtLBXYaNbE50VDvRVIkazCT8ho0RKlrVFvL/96tUNuz9?=
- =?iso-8859-2?Q?4MS1im4a5paDF1VUkQ5R3zzLkK7Co6cwepV0yyTtCcRpElVnfTwUIAM8GR?=
- =?iso-8859-2?Q?gnDMtMDy9D4HGVBBAGwe0j23l+Tu68h4FBWOacJhMDHaSPnOAqTdnYubzE?=
- =?iso-8859-2?Q?jgdxut6In52gonh484GG9/A78d3MSPfluO7ST8nq/JAgs6t2uBxC/Lslgm?=
- =?iso-8859-2?Q?i+YaWiiLOkBxxFJ4l577WdE9yXtOoXjC1HhPM6hs9tigUr4CqH8jLAPWNY?=
- =?iso-8859-2?Q?WHEuL0cL3FlGTppH21pLGg5sxJYLlvB0js41y1D9Qf5fgt8pyAAZOUwaJ+?=
- =?iso-8859-2?Q?nIchxOG/s4zNIi9K97NhKUsziUmFTAZJZAq+xPr/rw7J/ibNDx7rXSydTV?=
- =?iso-8859-2?Q?1g5hxpV/Oy/1G5Gw2y0ezjeP61LVhOqh+Gh74n1pjOUXQ5m+rM4KYUNNiW?=
- =?iso-8859-2?Q?coMPr6c/ZvvuBDoQ5Rbm8Eo4XwRCC4ZPSmmTgDtI+CpT6pGfXevYtqCg7q?=
- =?iso-8859-2?Q?I6eOU1o9TMyK9KYLmH0ayepyJfedmVmkyGTxD2By3oikuCRQBXtUliUp+d?=
- =?iso-8859-2?Q?PAT8F5uAeZ92QPKYGV1C3SMt1zhRlCR5oEPYzyWlUuUuXOR1SMBhAY1y/7?=
- =?iso-8859-2?Q?GECccOOOf1vmLCXzyEQVlABdt+2bzz5tA+YnOsgSFVvm1FbRlmypk+ME8a?=
- =?iso-8859-2?Q?/6RkUaQLi2LO9zz9eQsMg1pkvQ3byGjHVKV0ztn48lD3ZUG+j8RqClVYWC?=
- =?iso-8859-2?Q?ge6tecHkf8TMa4usTNWDzX6lCyTWm1DzC4fREcpraBD+31BusYXJ+1gHzQ?=
- =?iso-8859-2?Q?4I6KFTbHmufaZyKjmsKywvQfIExgPH3A24fwdDTKYNcHy4+bWca5rk2A3Y?=
- =?iso-8859-2?Q?2vMRU138ZNEP/vYAYXNkg+AOQUVTfW3lec9q8llXlyffWXB10gB5k19V7z?=
- =?iso-8859-2?Q?TOh6CK62GIGXTXo/pdIyF5OZnpAYXZo24a7KgT5awL3IC/eKNGnj2v8tgf?=
- =?iso-8859-2?Q?I42y5MAPpS6OFSmsWOBv8Vfsw1/JS35lj7f+EWtunhNZsI3d2mau8zPI8H?=
- =?iso-8859-2?Q?3dr6CnpcaMnSBrxMifPlqF/7xyIsh4hUEKteOPUi8yPweK0E+xTyUnsCN5?=
- =?iso-8859-2?Q?jR21cOm52h91TeuTz2btrccMZauT2UphTV6GH/gaSVT3MVQYOquZ653szo?=
- =?iso-8859-2?Q?SIo07IeTTjoufwjpx0O50MlKYhnT2EV2nZAXm70ihUV6q73F0COShoUDVe?=
- =?iso-8859-2?Q?V2IfmazLXO0hEjpEJe1sW8eaUrZnM4vhgqj8G7dLVkm1pWFIWaaEAhi63C?=
- =?iso-8859-2?Q?PxdBLM8krvNXnN7dMlWx3qXbpaqTI+5vKWYRE5kO2iq0f7q4LyqAXdlCGO?=
- =?iso-8859-2?Q?GdcxcsGWe7znRXzW5pbE9rucJXivDJfVteXcMo6hGI1GFr9VrVxeoWi9sU?=
- =?iso-8859-2?Q?N9MM1lVzBz9/P4Z7dOJztGlqmnlNmu6A+pOoh+KefMdLMR6lHBnUJ0P/eB?=
- =?iso-8859-2?Q?KNsDe+BPsGh64=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229526AbjBNRh2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 12:37:28 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D89C5
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 09:37:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676396246; x=1707932246;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9tRS7qUz5baIgujub6urgBDxfr1dFs8D7ambK0yp+V4=;
+  b=UeTdfnWRem0DUWOrKg0nbR0VrUOvyJGTrH+8uCPYgzyMoBIdjjR4xxXP
+   PEXR5Gcqr8Ma1g9JQ/2IDFjMzvGox7hxzEWA+u9VErJh/t5BFRkR16R4g
+   OIZN2+KgS1x4nAm6bv2XqPu5m4Yh70UKqobcbM4oa2sS7YW+EEz8h6rky
+   a2UfXZU7Aym2hLiNTVR41fhLu4HiAsE5HJn9UGl+gQbgJa5WaVU5E4gbk
+   9SwCnyCMU4aenG448D1klLFJLnzsueUNhD/aoxx48nsNS1fq9MPnLd/R1
+   vMYxe4Lk9ROGpEe0juHwmLijaWSZDGvZrHMB9Aj1sblOu4mnV3rNeU9Xt
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="329843446"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="329843446"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:37:05 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="998156982"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="998156982"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.93.192]) ([10.212.93.192])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:37:02 -0800
+Message-ID: <17f976ba-060e-8ff4-fa9c-bf06e69aa87a@intel.com>
+Date:   Tue, 14 Feb 2023 10:37:01 -0700
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: HE1PR0401MB2331.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc67f61f-93c3-42e9-d092-08db0eb1a7f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Feb 2023 17:33:59.2362
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hP0vWfqz7g9vQ+tldH2VwwxaUdCwJkotwxeWQIaa90wx7k5TXNwts3I3fIeX57InyybTSSR0OTnmRkk13bhoDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR3PR04MB7306
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,SPF_HELO_PASS,
-        T_SPF_PERMERROR autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH] PCI/AER: Remove deprecated documentation for
+ pcie_enable_pcie_error_reporting()
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        bhelgaas@google.com, lukas@wunner.de, Stefan Roese <sr@denx.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20230214172831.GA3046378@bhelgaas>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230214172831.GA3046378@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> -----Original Message-----
-> From: Frank Li
-> Subject: RE: [PATCH 1/1] PCI: layerscape: Add the workaround for A-010305
->=20
-> > Subject: [PATCH 1/1] PCI: layerscape: Add the workaround for A-010305
-> >
-> > From: Xiaowei Bao <xiaowei.bao@nxp.com>
-> >
-> > When a link down or hot reset event occurs, the PCI Express EP
-> > controller's Link Capabilities Register should retain the values of
-> > the Maximum Link Width and Supported Link Speed configured by RCW.
-> >
-> > Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> > ---
->=20
-> Ping
 
-Friendly ping.=20
 
->=20
->
-> >  static struct platform_driver ls_pcie_ep_driver =3D {
-> > --
-> > 2.34.1
+On 2/14/23 10:28 AM, Bjorn Helgaas wrote:
+> [+cc Stefan, Sathy, Jonathan]
+> 
+> On Tue, Feb 14, 2023 at 09:48:55AM -0700, Dave Jiang wrote:
+>> With commit [1] upstream that enables AER reporting by default for all PCIe
+>> devices, the documentation for pcie_enable_pcie_error_reporting() is no
+>> longer necessary. Remove references to the helper function.
+>>
+>> [1]: commit f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native")
+>>
+>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+> 
+> Thanks!  I'll attach my work-in-progress patch from yesterday for your
+> comments.  I think we can go even a little further because I don't
+> think we need to encourage drivers to configure AER registers (if they
+> do, they almost certainly don't pay attention to ownership via _OSC),
+> and if they don't use pci_enable_pcie_error_reporting(), they
+> shouldn't use pci_disable_pcie_error_reporting() either.
+> 
+>> ---
+>>   Documentation/PCI/pcieaer-howto.rst |   18 ------------------
+>>   1 file changed, 18 deletions(-)
+>>
+>> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+>> index 0b36b9ebfa4b..a82802795a06 100644
+>> --- a/Documentation/PCI/pcieaer-howto.rst
+>> +++ b/Documentation/PCI/pcieaer-howto.rst
+>> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include any device specific
+>>   errors because device specific errors will still get sent directly to
+>>   the device driver.
+>>   
+>> -Configure the AER capability structure
+>> ---------------------------------------
+>> -
+>> -AER aware drivers of PCI Express component need change the device
+>> -control registers to enable AER. They also could change AER registers,
+>> -including mask and severity registers. Helper function
+>> -pci_enable_pcie_error_reporting could be used to enable AER. See
+>> -section 3.3.
+>> -
+>>   Provide callbacks
+>>   -----------------
+>>   
+>> @@ -214,15 +205,6 @@ to mmio_enabled.
+>>   
+>>   helper functions
+>>   ----------------
+>> -::
+>> -
+>> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>> -
+>> -pci_enable_pcie_error_reporting enables the device to send error
+>> -messages to root port when an error is detected. Note that devices
+>> -don't enable the error reporting by default, so device drivers need
+>> -call this function to enable it.
+>> -
+>>   ::
+>>   
+>>     int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+> 
+> 
+> commit d7b36abe72db ("Remove AER Capability configuration")
+> Author: Bjorn Helgaas <bhelgaas@google.com>
+> Date:   Mon Feb 13 11:53:42 2023 -0600
+> 
+>      Remove AER Capability configuration
 
+The changes LGTM.
+Reviewed-by: Dave Jiang <dave.jiang@intel.com>
+
+> 
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index 0b36b9ebfa4b..c98a229ea9f5 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -96,8 +96,8 @@ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+>   Developer Guide
+>   ===============
+>   
+> -To enable AER aware support requires a software driver to configure
+> -the AER capability structure within its device and to provide callbacks.
+> +To enable AER aware support requires a software driver to provide
+> +callbacks.
+>   
+>   To support AER better, developers need understand how AER does work
+>   firstly.
+> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include any device specific
+>   errors because device specific errors will still get sent directly to
+>   the device driver.
+>   
+> -Configure the AER capability structure
+> ---------------------------------------
+> -
+> -AER aware drivers of PCI Express component need change the device
+> -control registers to enable AER. They also could change AER registers,
+> -including mask and severity registers. Helper function
+> -pci_enable_pcie_error_reporting could be used to enable AER. See
+> -section 3.3.
+> -
+>   Provide callbacks
+>   -----------------
+>   
+> @@ -212,31 +203,6 @@ to reset the link. If error_detected returns PCI_ERS_RESULT_CAN_RECOVER
+>   and reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling goes
+>   to mmio_enabled.
+>   
+> -helper functions
+> -----------------
+> -::
+> -
+> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+> -
+> -pci_enable_pcie_error_reporting enables the device to send error
+> -messages to root port when an error is detected. Note that devices
+> -don't enable the error reporting by default, so device drivers need
+> -call this function to enable it.
+> -
+> -::
+> -
+> -  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+> -
+> -pci_disable_pcie_error_reporting disables the device to send error
+> -messages to root port when an error is detected.
+> -
+> -::
+> -
+> -  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);`
+> -
+> -pci_aer_clear_nonfatal_status clears non-fatal errors in the uncorrectable
+> -error status register.
+> -
+>   Frequent Asked Questions
+>   ------------------------
+>   
+> @@ -257,24 +223,6 @@ A:
+>     Fatal error recovery will fail if the errors are reported by the
+>     upstream ports who are attached by the service driver.
+>   
+> -Q:
+> -  How does this infrastructure deal with driver that is not PCI
+> -  Express aware?
+> -
+> -A:
+> -  This infrastructure calls the error callback functions of the
+> -  driver when an error happens. But if the driver is not aware of
+> -  PCI Express, the device might not report its own errors to root
+> -  port.
+> -
+> -Q:
+> -  What modifications will that driver need to make it compatible
+> -  with the PCI Express AER Root driver?
+> -
+> -A:
+> -  It could call the helper functions to enable AER in devices and
+> -  cleanup uncorrectable status register. Pls. refer to section 3.3.
+> -
+>   
+>   Software error injection
+>   ========================
