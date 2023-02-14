@@ -2,113 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E9C266968ED
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 17:13:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C89B86969F1
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 17:42:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232014AbjBNQNG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 11:13:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54924 "EHLO
+        id S232123AbjBNQmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 11:42:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232064AbjBNQM5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 11:12:57 -0500
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5085B252BD;
-        Tue, 14 Feb 2023 08:12:39 -0800 (PST)
-Received: by mail-io1-f47.google.com with SMTP id j17so6019950ioa.9;
-        Tue, 14 Feb 2023 08:12:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sxGQh4DHINPPQJzpA71hCGf9LwnTAZIRU/+oLDvRlgk=;
-        b=dt3mx2Sm3ApPzYir4aK/MFBwDom804+1Bl/LJ9sPw+Q9KrYbxhdgjBp30DlwdzGutd
-         VpYfoZp2oYlxAY/BwWDtngQAe4ucBzWul1hYnuTZXd2mNnFDscFP/1saGzbbzSHeYaoJ
-         LIs61IZFMR6lPTBHxyI52LSs7KF/ZlrxgzOtgdV08XmfSe46pn/eX6UIBvjBUrj06OnW
-         5AU+YGbxfuUwbjyqCvlZf9BwXVRq7q8uRCI5SuF9UwjAmmD+ufYKGkZ/9Z5huvilJPy+
-         tXwAho7E9a+/AQWX2lwaLXYj53rtnEaTRTlXWUMqcqqButtBEmETkbDi4rn1xazu6B1q
-         jCsQ==
-X-Gm-Message-State: AO0yUKVyRQl7vFcwg+I3f8cADR+Vj97TmQ+bDfetxn6ypPT7eGgS/roK
-        fWQeDvmeiXk1uHBSAtoNCA==
-X-Google-Smtp-Source: AK7set8d05seqW+6Lpm2vtV7rgeGYkDNnRLFja2NokWcAe/KeKg1s2d/S8b8G5y3trFBOSommRRYsQ==
-X-Received: by 2002:a5e:c30a:0:b0:71a:1b72:5afc with SMTP id a10-20020a5ec30a000000b0071a1b725afcmr2256087iok.19.1676391158375;
-        Tue, 14 Feb 2023 08:12:38 -0800 (PST)
-Received: from robh_at_kernel.org (c-73-14-99-67.hsd1.co.comcast.net. [73.14.99.67])
-        by smtp.gmail.com with ESMTPSA id t66-20020a6bc345000000b00704878474c7sm5289961iof.53.2023.02.14.08.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Feb 2023 08:12:37 -0800 (PST)
-Received: (nullmailer pid 76712 invoked by uid 1000);
-        Tue, 14 Feb 2023 16:12:34 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        with ESMTP id S231710AbjBNQmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 11:42:44 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4CC71BC6;
+        Tue, 14 Feb 2023 08:42:26 -0800 (PST)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E0fCB3012982;
+        Tue, 14 Feb 2023 16:42:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=PZNsfcpSNgi6XSftsTxLifara0hUhG2V7agojxm3mJQ=;
+ b=ZKb9LGMaqRV346KkqqLVXGQg/28E5ckR8GT1DL7gNeD36sGnImmIpLVJ7aTdsVIVp2QP
+ raN/0Qh3lCi9Y+hsmo2VcB2zvDwVdNLRRvNX7/ymtE+WiCAs3PXo1tT6kHz76GJET6y4
+ k6UPx7qgt/NVAvtM4Du3zvzgdiJQpgA1rAFPl2TJ2m8dGlWJhOgCuon+6wQupIVVzla+
+ MZWnnRw/f84n4zcMqgdxrNDjT+tjQPNEpt+l7S7uFSdkbkLiduTO+CIgKvk5qDewU9OK
+ NVHvxoZIg67o9wLrgvJk4VWDSHk2HyijkjXPeVqVkykGGx5U5JhJIYiKJpfIJoktT+gJ cg== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqyygt3tu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Feb 2023 16:42:08 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31EGg7tf002753
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Feb 2023 16:42:07 GMT
+Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.36; Tue, 14 Feb 2023 08:42:00 -0800
+From:   Devi Priya <quic_devipriy@quicinc.com>
+To:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <mani@kernel.org>, <p.zabel@pengutronix.de>,
+        <svarbanov@mm-sol.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>
+CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>
+Subject: [PATCH 0/7] Add PCIe support for IPQ9574
+Date:   Tue, 14 Feb 2023 22:11:28 +0530
+Message-ID: <20230214164135.17039-1-quic_devipriy@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Shradha Todi <shradha.t@samsung.com>
-Cc:     alim.akhtar@samsung.com, Sergey.Semin@baikalelectronics.ru,
-        pankaj.dubey@samsung.com, jh80.chung@samsung.co,
-        krzysztof.kozlowski+dt@linaro.org, devicetree@vger.kernel.org,
-        lukas.bulwahn@gmail.com, hongxing.zhu@nxp.com, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        m.szyprowski@samsung.com, linux-kernel@vger.kernel.org,
-        lpieralisi@kernel.org, tglx@linutronix.de,
-        linux-samsung-soc@vger.kernel.org, kw@linux.com,
-        jingoohan1@gmail.com
-In-Reply-To: <20230214121333.1837-6-shradha.t@samsung.com>
-References: <20230214121333.1837-1-shradha.t@samsung.com>
- <CGME20230214121424epcas5p38e74b52a2d94a32b82a093c7e0a12499@epcas5p3.samsung.com>
- <20230214121333.1837-6-shradha.t@samsung.com>
-Message-Id: <167638944926.3699.15638999253407034271.robh@kernel.org>
-Subject: Re: [PATCH 05/16] dt-bindings: PCI: Rename the term elbi to appl
-Date:   Tue, 14 Feb 2023 10:12:34 -0600
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: QOfNvi5NJaTEc2br4e0KXsGlWhFeT3i8
+X-Proofpoint-GUID: QOfNvi5NJaTEc2br4e0KXsGlWhFeT3i8
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-14_11,2023-02-14_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=789 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
+ clxscore=1011 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302140142
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
+are found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane
+Gen3 host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
 
-On Tue, 14 Feb 2023 17:43:22 +0530, Shradha Todi wrote:
-> DT uses the name elbi in reg-names for application logic
-> registers which is a wrong nomenclature. This patch fixes
-> the same.
-> 
-> This commit shouldn't be applied without changes
-> "arm64: dts: Rename the term elbi to appl" and
-> "PCI: samsung: Rename the term elbi to appl"
-> 
-> Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> ---
->  Documentation/devicetree/bindings/pci/samsung,pcie.yaml | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+This series adds support for enabling the same
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+DTS patch is based on the crashdump series
+https://lore.kernel.org/linux-arm-kernel/20230214051414.10740-1-quic_poovendh@quicinc.com/
 
-yamllint warnings/errors:
+Devi Priya (7):
+  dt-bindings: PCI: qcom: Add IPQ9574 specific compatible
+  PCI: qcom: Add IPQ9574 PCIe support
+  dt-bindings: phy: qcom,qmp-pcie: Add ipq9574 compatible
+  phy: qcom-qmp-pcie: Add support for IPQ9574 platform
+  dt-bindings: clock: Add PCIe pipe clock definitions
+  clk: qcom: gcc-ipq9574: Add PCIe related clocks
+  arm64: dts: qcom: ipq9574: Add PCIe PHYs and controller nodes
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/samsung,pcie.example.dtb: pcie@15700000: reg-names:1: 'appl' was expected
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/samsung,pcie.yaml
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |  72 ++-
+ .../phy/qcom,ipq8074-qmp-pcie-phy.yaml        |  28 +
+ arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts  |  28 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi         | 477 +++++++++++++++++-
+ drivers/clk/qcom/gcc-ipq9574.c                |  76 +++
+ drivers/pci/controller/dwc/pcie-qcom.c        | 119 +++++
+ drivers/phy/qualcomm/phy-qcom-qmp-pcie.c      | 309 ++++++++++++
+ .../phy/qualcomm/phy-qcom-qmp-pcs-pcie-v5.h   |  26 +-
+ .../phy/qualcomm/phy-qcom-qmp-qserdes-pll.h   |   3 +
+ include/dt-bindings/clock/qcom,ipq9574-gcc.h  | 276 +++++-----
+ 10 files changed, 1264 insertions(+), 150 deletions(-)
 
-doc reference errors (make refcheckdocs):
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230214121333.1837-6-shradha.t@samsung.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+base-commit: 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb
+-- 
+2.17.1
 
