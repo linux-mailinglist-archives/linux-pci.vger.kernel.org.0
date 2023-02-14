@@ -2,191 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5C5E6970A9
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 23:22:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C247D6970AC
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 23:24:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjBNWWw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 17:22:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40180 "EHLO
+        id S229721AbjBNWYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 17:24:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjBNWWv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 17:22:51 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71993AA6;
-        Tue, 14 Feb 2023 14:22:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676413369; x=1707949369;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0FUUQxURrA4LLaSGllUrJRqGQsLgzkyGBa3lM4ln+Hk=;
-  b=XyVXx8hitMD/GUpNJjFYNkjyYqQK7SRym9/KcyCRgW1X/PCtgq8AyV0O
-   Z8mrDQLES5zcnp52RXmKl3euhxfn8Y16Pq5MAfdnOwHilSDjrC6PsZKC0
-   KDh67k4EI9Ob1+tWuQk8Abl9cnvkxT3ZEwhFOOMwyfi4VtnoBsPWisDBf
-   6co5MK/k49p2cwifkZqWqpdng3hCKDbywnr5f4a0nHPd5D5B7H+iBkGFC
-   RW01IEGjS61TIdZ3T/BFfWYnyRvqJBGmx8b3uFU1lL0VOnL5BoLhiNgAQ
-   pZR6wWa86G8DWcBcTP0gYitrwfxgf6ijzYuEuVlaI/59Y2vvgi2o/4cky
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="311651837"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="311651837"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 14:22:45 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="843336629"
-X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
-   d="scan'208";a="843336629"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.93.192]) ([10.212.93.192])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 14:22:42 -0800
-Message-ID: <47b05595-141b-3e1a-6674-0c395088d988@intel.com>
-Date:   Tue, 14 Feb 2023 15:22:42 -0700
+        with ESMTP id S229627AbjBNWYH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 17:24:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48F2CA35;
+        Tue, 14 Feb 2023 14:24:02 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F8756193B;
+        Tue, 14 Feb 2023 22:24:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BEFBC433D2;
+        Tue, 14 Feb 2023 22:24:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676413441;
+        bh=r6CdMG3yJAhW1VAs+mJFgRbcKZm1i4B1alhutZnLipE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nVW9Uwk6Zixetm2lwJDWjXN5tCq7VgaEhjKOthktCW35jAPkOZqx2B93Y8rC9DEYK
+         gWP+hQXKkskd5GcK/CQjw6Z3wZ7FTCb6ZPY9Vd7++wew6sBsLsDOngIf8JGaprtB9W
+         gMjY+JQ2FECEqyxuNQzPbhVL9aih0ZOzj+t2dawi3FLYMd9biPbgDjZ0tmaYL01ZFT
+         /S+7Lpk8mPVNJpx/RGPx09ZSQc//gIZTGpwZP872MXklQlSSWadIVgkM5N4KcAa+1h
+         w+RlV7y90L41b5lJcrTo+JxdQtRdF29MzA/cixp4rwsBG0l4PSmd40Dnwt/nlWafba
+         DBHKl9cIXV/Iw==
+Date:   Tue, 14 Feb 2023 16:24:00 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Reinette Chatre <reinette.chatre@intel.com>
+Cc:     bhelgaas@google.com, nathan@kernel.org, ndesaulniers@google.com,
+        trix@redhat.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev,
+        tglx@linutronix.de, kevin.tian@intel.com, darwi@linutronix.de
+Subject: Re: [PATCH] PCI: Fix build error when CONFIG_PCI_MSI disabled
+Message-ID: <20230214222400.GA3089902@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.6.0
-Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
- CXL device
-Content-Language: en-US
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-cxl@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com,
-        vishal.l.verma@intel.com, alison.schofield@intel.com,
-        rafael@kernel.org, bhelgaas@google.com, robert.moore@intel.com
-References: <20230208221559.GA2489627@bhelgaas>
- <158ba672-09f1-a202-4fb6-7168496b95c4@intel.com>
- <20230209151040.00006d93@Huawei.com>
-From:   Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20230209151040.00006d93@Huawei.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <158e40e1cfcfc58ae30ecb2bbfaf86e5bba7a1ef.1675978686.git.reinette.chatre@intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Feb 09, 2023 at 01:49:00PM -0800, Reinette Chatre wrote:
+> pci_msix_alloc_irq_at() and pci_msix_free_irq() are not
+> declared when CONFIG_PCI_MSI is disabled.
+> 
+> Users of these two calls do not yet exist but when users
+> do appear (shown below is an attempt to use the new API
+> in vfio-pci) the following errors will be encountered when
+> compiling with CONFIG_PCI_MSI disabled:
+> drivers/vfio/pci/vfio_pci_intrs.c:461:4: error: implicit declaration of\
+>         function 'pci_msix_free_irq' is invalid in C99\
+>         [-Werror,-Wimplicit-function-declaration]
+>                            pci_msix_free_irq(pdev, msix_map);
+>                            ^
+>    drivers/vfio/pci/vfio_pci_intrs.c:461:4: note: did you mean 'pci_ims_free_irq'?
+>    include/linux/pci.h:2516:6: note: 'pci_ims_free_irq' declared here
+>    void pci_ims_free_irq(struct pci_dev *pdev, struct msi_map map);
+>         ^
+> drivers/vfio/pci/vfio_pci_intrs.c:511:15: error: implicit declaration of\
+>         function 'pci_msix_alloc_irq_at' is invalid in C99\
+>         [-Werror,-Wimplicit-function-declaration]
+>                    msix_map = pci_msix_alloc_irq_at(pdev, vector, NULL);
+>                                       ^
+>    drivers/vfio/pci/vfio_pci_intrs.c:511:15: note: did you mean 'pci_ims_alloc_irq'?
+>    include/linux/pci.h:2514:16: note: 'pci_ims_alloc_irq' declared here
+>    struct msi_map pci_ims_alloc_irq(struct pci_dev *pdev,\
+>                                     union msi_instance_cookie *icookie,
+> 
+> Provide definitions for pci_msix_alloc_irq_at() and pci_msix_free_irq() in
+> preparation for users that need to compile when CONFIG_PCI_MSI is
+> disabled.
 
+I think this should have a "Fixes:" tag to connect it with the commit
+that added pci_msix_alloc_irq_at() and pci_msix_free_irq().
 
-On 2/9/23 8:10 AM, Jonathan Cameron wrote:
-> On Wed, 8 Feb 2023 16:56:30 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
->> On 2/8/23 3:15 PM, Bjorn Helgaas wrote:
->>> On Tue, Feb 07, 2023 at 01:51:17PM -0700, Dave Jiang wrote:
->>>>
->>>>
->>>> On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
->>>>> On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
->>>>>> The latency is calculated by dividing the FLIT size over the
->>>>>> bandwidth. Add support to retrieve the FLIT size for the CXL
->>>>>> device and calculate the latency of the downstream link.
->>>    
->>>>> I guess you only care about the latency of a single link, not the
->>>>> entire path?
->>>>
->>>> I am adding each of the link individually together in the next
->>>> patch. Are you suggesting a similar function like
->>>> pcie_bandwidth_available() but for latency for the entire path?
->>>
->>> Only a clarifying question.
->>>    
->>>>>> +static int cxl_get_flit_size(struct pci_dev *pdev)
->>>>>> +{
->>>>>> +	if (cxl_pci_flit_256(pdev))
->>>>>> +		return 256;
->>>>>> +
->>>>>> +	return 66;
->>>>>
->>>>> I don't know about the 66-byte flit format, maybe this part is
->>>>> CXL-specific?
->>>>
->>>> 68-byte flit format. Looks like this is a typo from me.
->>>
->>> This part must be CXL-specific, since I don't think PCIe mentions
->>> 68-byte flits.
->>>    
->>>>>> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
->>>>>> + * mode, otherwise it's 68B flits mode.
->>>>>> + */
->>>>>> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
->>>>>> +{
->>>>>> +	u32 lnksta2;
->>>>>> +
->>>>>> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
->>>>>> +	return lnksta2 & BIT(10);
->>>>>
->>>>> Add a #define for the bit.
->>>>
->>>> ok will add.
->>>>   
->>>>>
->>>>> AFAICT, the PCIe spec defines this bit, and it only indicates the link
->>>>> is or will be operating in Flit Mode; it doesn't actually say anything
->>>>> about how large the flits are.  I suppose that's because PCIe only
->>>>> talks about 256B flits, not 66B ones?
->>>>
->>>> Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows that
->>>> when PCIe Flit Mode is set, then CXL is in 256B flits mode, otherwise, it is
->>>> 68B flits. So an assumption is made here regarding the flit side based on
->>>> the table.
->>>
->>> So reading PCI_EXP_LNKSTA2 and extracting the Flit Mode bit is
->>> PCIe-generic, but the interpretation of "PCIe Flit Mode not enabled
->>> means 68-byte flits" is CXL-specific?
->>>
->>> This sounds wrong, but I don't know quite how.  How would the PCI core
->>> manage links where Flit Mode being cleared really means Flit Mode is
->>> *enabled* but with a different size?  Seems like something could go
->>> wrong there.
->>
->> Looking at the PCIe base spec and the CXL spec, that seemed to be the
->> only way that implies the flit size for a CXL device as far as I can
->> tell. I've yet to find a good way to make that determination. Dan?
-> 
-> So a given CXL port has either trained up in:
-> * normal PCI (in which case all the normal PCI stuff applies) and we'll
->    fail some of the other checks in the CXL driver never get hear here
->    - I 'think' the driver will load for the PCI device to enable things
->    like firmware upgrade, but we won't register the CXL Port devices
->    that ultimately call this stuff.
->    It's perfectly possible to have a driver that will cope with this
->    but it's pretty meaningless for a lot of cxl type 3 driver.
-> * 68 byte flit (which was CXL precursor to PCI going flit based)
->    Can be queried via CXL DVSEC Flex Bus Port Status CXL r3.0 8.2.1.3.3
-> * 256 byte flits (may or may not be compatible with PCIe ones as there
->    are some optional latency optimizations)
-> 
-> So if the 68 byte flit is enabled the 256 byte one should never be and
-> CXL description is overriding the old PCIe
-> 
-> Hence I think we should have the additional check on the flex bus
-> dvsec even though it should be consistent with your assumption above.
+Looks like 34026364df8e ("PCI/MSI: Provide post-enable dynamic
+allocation interfaces for MSI-X").
 
-So I'm trying to understand the CXL DVSEC Port status "68B flit and VH 
-Enabled bit". If this bit is set, it means we are in 68B flit mode and 
-VH mode? Do we just ignore RCH/RCD calculations since it doesn't support 
-hotplug? Does this bit get cleared for 256B flit mode? It's not clear to 
-me.
+Thomas merged 34026364df8e, so it would be best if he took the fixup
+as well.
 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+> ---
 > 
-> Hmm. That does raise a question of how we take the latency optimized
-> flits into account or indeed some of the other latency impacting things
-> that may or may not be running - IDE in it's various modes for example.
+> checkpatch.pl warns about the usage of -ENOSYS but it does appear
+> to be the custom.
 > 
-> For latency optimized we can query relevant bit in the flex bus port status.
-> IDE info will be somewhere I guess though no idea if there is a way to
-> know the latency impacts.
-
-Should we deal with latency optimized flits and IDE in a later step?
-
+>  include/linux/pci.h | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> Jonathan
-> 
->>
->>
->>>
->>> Bjorn
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index adffd65e84b4..448482d1c4fe 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1621,6 +1621,19 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+>  					      flags, NULL);
+>  }
+>  
+> +static inline struct msi_map
+> +pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+> +		      const struct irq_affinity_desc *affdesc)
+> +{
+> +	struct msi_map map = { .index = -ENOSYS };
+> +
+> +	return map;
+> +}
+> +
+> +static inline void pci_msix_free_irq(struct pci_dev *pdev, struct msi_map map)
+> +{
+> +}
+> +
+>  static inline void pci_free_irq_vectors(struct pci_dev *dev)
+>  {
+>  }
+> -- 
+> 2.34.1
 > 
