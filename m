@@ -2,50 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA017696B4F
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 18:21:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 91753696B85
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 18:28:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231877AbjBNRVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 12:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49096 "EHLO
+        id S233197AbjBNR2z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 12:28:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232902AbjBNRVW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 12:21:22 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC09B2364A;
-        Tue, 14 Feb 2023 09:20:58 -0800 (PST)
+        with ESMTP id S232990AbjBNR2t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 12:28:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F9CC2C656
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 09:28:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id C9558CE1FCF;
-        Tue, 14 Feb 2023 17:20:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8ECADC433D2;
-        Tue, 14 Feb 2023 17:20:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 80543617CE
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 17:28:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA01CC433D2;
+        Tue, 14 Feb 2023 17:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676395254;
-        bh=2rnYZIWvntoiAMAXipAB60LfQP8MvT54/ijVfPKhiMM=;
+        s=k20201202; t=1676395712;
+        bh=rS6Frpxsdzt30xsGDz5wEFS6DhZa3opphrBlmeXJdBE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=osxFZtRQZ3e8WBFLbfRcZ9lBiJBPcOv9KF5UEjxutLEmzld+H06GEuv+aULQRfHga
-         TSdCu37hj2ix401iIq1mbxClKqMqgN3j+HiIuQLOsD3M5GAONsDwp2ByXsCw7FfG/d
-         UbobfT5bpz63ReUqHkkPnlsGH6HNmINPzhSgOC7v3WQowYcn7HGwkyK/CHDhp6A/Vs
-         USdkzsbI8ykxkB3gTeAKpjs+WYRT4kokkZlVZqAIOnN04fzZRYYwzduPtnkeUXhefW
-         GvpKX1mlt9q3HRuBrZ9+UICcLTIAx+gylljc8KZ7VSMpcZ5VMq1RuGjsK/xhrKTDy9
-         1tprqIGQ5LDQA==
-Date:   Tue, 14 Feb 2023 11:20:53 -0600
+        b=BaNOg4jN+Urt1Artq3y9/G4YvsSjpRjC7Dv5yctqCgpgdeNeb9i3dUvSbq+Hj8rJw
+         72e3ZF45BDc9ziPviK3g+tMuBmFCF0/RyvLuT0uH0N94bqTIqlT+pbUt6gmq85plXr
+         ezQihiVwTutGgaUcRhwybeXMGbHUdbl5ISfx7y4v7EXVXG9+q0Y0kIgFwnJEnhiC0j
+         hRSSwB4r45ZhXYCRRDWeTBwuqwBk2n3qVc9muUxzsn9lL4sVB6mz1dQA4WU3zZF3h0
+         RUV8c9HZ7R0ub4xF/OXO3a5qQzrBOoYxftEMPiTw9WNXNe5Sg04rphRE55hXkG8GaN
+         ZZOAzTzEkvoWQ==
+Date:   Tue, 14 Feb 2023 11:28:31 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nick Alcock <nick.alcock@oracle.com>
-Cc:     mcgrof@kernel.org, linux-modules@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/8] kbuild, PCI: generic,versatile: comment out
- MODULE_LICENSE in non-modules
-Message-ID: <20230214172053.GA3044917@bhelgaas>
+To:     Dave Jiang <dave.jiang@intel.com>
+Cc:     linux-pci@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        bhelgaas@google.com, lukas@wunner.de, Stefan Roese <sr@denx.de>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH] PCI/AER: Remove deprecated documentation for
+ pcie_enable_pcie_error_reporting()
+Message-ID: <20230214172831.GA3046378@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <873578xnir.fsf@esperi.org.uk>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <167639333373.777843.2141436875951823865.stgit@djiang5-mobl3.local>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,45 +55,158 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 14, 2023 at 03:41:32PM +0000, Nick Alcock wrote:
-> On 13 Feb 2023, Bjorn Helgaas spake thusly:
-> > On Fri, Feb 10, 2023 at 04:47:42PM +0000, Nick Alcock wrote:
+[+cc Stefan, Sathy, Jonathan]
 
-> >   - Please follow the subject line convention for each file.  They're
-> >     mostly there after dropping "kbuild", but do capitalize the
-> >     sentence that follows the prefix.  The prefix should always be
-> >     "PCI/<driver-tag>: "
+On Tue, Feb 14, 2023 at 09:48:55AM -0700, Dave Jiang wrote:
+> With commit [1] upstream that enables AER reporting by default for all PCIe
+> devices, the documentation for pcie_enable_pcie_error_reporting() is no
+> longer necessary. Remove references to the helper function.
+> 
+> [1]: commit f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is native")
+> 
+> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
 
-I misspoke about "PCI/<driver-tag>".  I use "PCI/<feature>" for things
-like MSI, AER, ASPM, etc.  "PCI: <driver-tag>" is the usual pattern
-for things specific to a driver, and it sounds like this is what
-you've already done:
+Thanks!  I'll attach my work-in-progress patch from yesterday for your
+comments.  I think we can go even a little further because I don't
+think we need to encourage drivers to configure AER registers (if they
+do, they almost certainly don't pay attention to ownership via _OSC),
+and if they don't use pci_enable_pcie_error_reporting(), they
+shouldn't use pci_disable_pcie_error_reporting() either.
 
-  $ git log --oneline drivers/pci/controller/pci-versatile.c
-  6086987bdeb5 PCI: versatile: Remove redundant variable retval
-  b64aa11eb2dd PCI: Set bridge map_irq and swizzle_irq to default functions
-  669cbc708122 PCI: Move DT resource setup into devm_pci_alloc_host_bridge()
-  d3bb94d06aae PCI: Drop unnecessary zeroing of bridge fields
-  6a589900d050 PCI: Set default bridge parent device
-  79cbde56f98b PCI: versatile: Drop flag PCI_ENABLE_PROC_DOMAINS
-  3cf0eead9fb8 PCI: controller: Convert to devm_platform_ioremap_resource()
-  a4b21b858b56 PCI: versatile: Use pci_host_probe() to register host
-  331f63457165 PCI: of: Add inbound resource parsing to helpers
-  2999dea8e94a PCI: versatile: Remove usage of PHYS_OFFSET
-  f9f4fdaa3509 PCI: versatile: Use pci_parse_request_of_pci_ranges()
-  0018b265adf7 PCI: versatile: Fix I/O space page leak
+> ---
+>  Documentation/PCI/pcieaer-howto.rst |   18 ------------------
+>  1 file changed, 18 deletions(-)
+> 
+> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+> index 0b36b9ebfa4b..a82802795a06 100644
+> --- a/Documentation/PCI/pcieaer-howto.rst
+> +++ b/Documentation/PCI/pcieaer-howto.rst
+> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include any device specific
+>  errors because device specific errors will still get sent directly to
+>  the device driver.
+>  
+> -Configure the AER capability structure
+> ---------------------------------------
+> -
+> -AER aware drivers of PCI Express component need change the device
+> -control registers to enable AER. They also could change AER registers,
+> -including mask and severity registers. Helper function
+> -pci_enable_pcie_error_reporting could be used to enable AER. See
+> -section 3.3.
+> -
+>  Provide callbacks
+>  -----------------
+>  
+> @@ -214,15 +205,6 @@ to mmio_enabled.
+>  
+>  helper functions
+>  ----------------
+> -::
+> -
+> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+> -
+> -pci_enable_pcie_error_reporting enables the device to send error
+> -messages to root port when an error is detected. Note that devices
+> -don't enable the error reporting by default, so device drivers need
+> -call this function to enable it.
+> -
+>  ::
+>  
+>    int pci_disable_pcie_error_reporting(struct pci_dev *dev);
 
-> ... If the rules for generating prefixes vary by subsystem this means
-> I'll have to fight through God knows how many annoyed maintainers to get
-> this incredibly trivial change in.)
 
-I think your script generally does the right thing, and it's already
-far more than most folks do, so thank you for that!
+commit d7b36abe72db ("Remove AER Capability configuration")
+Author: Bjorn Helgaas <bhelgaas@google.com>
+Date:   Mon Feb 13 11:53:42 2023 -0600
 
-I normally do that sort of minimal fixup silently when applying
-because there's no point in reposting when it's faster to make those
-trivial edits myself.  In this case, removing MODULE_LICENSE instead
-of commenting it out is just a little more than I like to do when
-keeping your signed-off-by.
+    Remove AER Capability configuration
 
-Bjorn
+diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+index 0b36b9ebfa4b..c98a229ea9f5 100644
+--- a/Documentation/PCI/pcieaer-howto.rst
++++ b/Documentation/PCI/pcieaer-howto.rst
+@@ -96,8 +96,8 @@ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+ Developer Guide
+ ===============
+ 
+-To enable AER aware support requires a software driver to configure
+-the AER capability structure within its device and to provide callbacks.
++To enable AER aware support requires a software driver to provide
++callbacks.
+ 
+ To support AER better, developers need understand how AER does work
+ firstly.
+@@ -135,15 +135,6 @@ hierarchy and links. These errors do not include any device specific
+ errors because device specific errors will still get sent directly to
+ the device driver.
+ 
+-Configure the AER capability structure
+---------------------------------------
+-
+-AER aware drivers of PCI Express component need change the device
+-control registers to enable AER. They also could change AER registers,
+-including mask and severity registers. Helper function
+-pci_enable_pcie_error_reporting could be used to enable AER. See
+-section 3.3.
+-
+ Provide callbacks
+ -----------------
+ 
+@@ -212,31 +203,6 @@ to reset the link. If error_detected returns PCI_ERS_RESULT_CAN_RECOVER
+ and reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling goes
+ to mmio_enabled.
+ 
+-helper functions
+-----------------
+-::
+-
+-  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+-
+-pci_enable_pcie_error_reporting enables the device to send error
+-messages to root port when an error is detected. Note that devices
+-don't enable the error reporting by default, so device drivers need
+-call this function to enable it.
+-
+-::
+-
+-  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+-
+-pci_disable_pcie_error_reporting disables the device to send error
+-messages to root port when an error is detected.
+-
+-::
+-
+-  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);`
+-
+-pci_aer_clear_nonfatal_status clears non-fatal errors in the uncorrectable
+-error status register.
+-
+ Frequent Asked Questions
+ ------------------------
+ 
+@@ -257,24 +223,6 @@ A:
+   Fatal error recovery will fail if the errors are reported by the
+   upstream ports who are attached by the service driver.
+ 
+-Q:
+-  How does this infrastructure deal with driver that is not PCI
+-  Express aware?
+-
+-A:
+-  This infrastructure calls the error callback functions of the
+-  driver when an error happens. But if the driver is not aware of
+-  PCI Express, the device might not report its own errors to root
+-  port.
+-
+-Q:
+-  What modifications will that driver need to make it compatible
+-  with the PCI Express AER Root driver?
+-
+-A:
+-  It could call the helper functions to enable AER in devices and
+-  cleanup uncorrectable status register. Pls. refer to section 3.3.
+-
+ 
+ Software error injection
+ ========================
