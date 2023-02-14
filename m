@@ -2,211 +2,191 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BF4B46970A1
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 23:20:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5C5E6970A9
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Feb 2023 23:22:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbjBNWUb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 17:20:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38908 "EHLO
+        id S229640AbjBNWWw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 17:22:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjBNWUa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 17:20:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 999ED213C;
-        Tue, 14 Feb 2023 14:20:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 41958B81F4B;
-        Tue, 14 Feb 2023 22:20:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C97E4C433D2;
-        Tue, 14 Feb 2023 22:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676413227;
-        bh=4qh6KKDiA9YehbMq8jIe0pJ2avRcazFqJ/GS5WKquhk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DFvE2Q/fbAn2NXd+uMUoDGXtGmIXolFnmQ/SWod/OgHGevcdzSdXoNcSIBt+4nLcc
-         gN/oPMqDk2ujvbZWitvrLxm6s5OKzqccg4AYfs0APkuutZaf2D2nUEDhv8OGieCh0q
-         0zg3AWva7jpsJ/gzUktMrke1EiBRTf5L4j8o1SiD0yAoUzfSS9cweH7IWXZarLxhM2
-         AdXGPNb9SwTd7TNSkchh9gfVXy8ibqgG7C+h7SpsdYlttSzOtfVB2LGeFkvGrKJ/CT
-         Tw+X5OY+4QXXCsSyQva/iIGx7Bs2uxgNIqr2X6XXu4uxPUlnbLQ1b6N44uFrm+j8WP
-         YxMloF1Pxz/oA==
-Date:   Tue, 14 Feb 2023 16:20:25 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Yang Su <yang.su@linux.alibaba.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        alex.williamson@redhat.com, matthew@wil.cx,
-        jbarnes@virtuousgeek.org, greg@kroah.com, patchwork-bot@kernel.org,
-        andrew.murray@arm.com, lorenzo.pieralisi@arm.com, robh@kernel.org,
-        kw@linux.com, linux-kernel@vger.kernel.org,
-        Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 1/1] PCI: Tune secondary bus reset time for PCIe
-Message-ID: <20230214222025.GA3089181@bhelgaas>
+        with ESMTP id S229461AbjBNWWv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 17:22:51 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E71993AA6;
+        Tue, 14 Feb 2023 14:22:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676413369; x=1707949369;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=0FUUQxURrA4LLaSGllUrJRqGQsLgzkyGBa3lM4ln+Hk=;
+  b=XyVXx8hitMD/GUpNJjFYNkjyYqQK7SRym9/KcyCRgW1X/PCtgq8AyV0O
+   Z8mrDQLES5zcnp52RXmKl3euhxfn8Y16Pq5MAfdnOwHilSDjrC6PsZKC0
+   KDh67k4EI9Ob1+tWuQk8Abl9cnvkxT3ZEwhFOOMwyfi4VtnoBsPWisDBf
+   6co5MK/k49p2cwifkZqWqpdng3hCKDbywnr5f4a0nHPd5D5B7H+iBkGFC
+   RW01IEGjS61TIdZ3T/BFfWYnyRvqJBGmx8b3uFU1lL0VOnL5BoLhiNgAQ
+   pZR6wWa86G8DWcBcTP0gYitrwfxgf6ijzYuEuVlaI/59Y2vvgi2o/4cky
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="311651837"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="311651837"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 14:22:45 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="843336629"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="843336629"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.93.192]) ([10.212.93.192])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 14:22:42 -0800
+Message-ID: <47b05595-141b-3e1a-6674-0c395088d988@intel.com>
+Date:   Tue, 14 Feb 2023 15:22:42 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87b08879-4f1a-e91d-861a-0a1af4ad46fc@linux.alibaba.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 12/18] cxl: Add helpers to calculate pci latency for the
+ CXL device
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-cxl@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        dan.j.williams@intel.com, ira.weiny@intel.com,
+        vishal.l.verma@intel.com, alison.schofield@intel.com,
+        rafael@kernel.org, bhelgaas@google.com, robert.moore@intel.com
+References: <20230208221559.GA2489627@bhelgaas>
+ <158ba672-09f1-a202-4fb6-7168496b95c4@intel.com>
+ <20230209151040.00006d93@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230209151040.00006d93@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jan 13, 2023 at 11:58:06AM +0800, Yang Su wrote:
-> Sorry to interrupt, this email is reformat as plaint text, I want to test
-> this email
-> 
-> whether can send linux-kernel@vger.kernel.org .
-> 
-> 
-> Hi Bjorn,
-> 
-> I think my patch is different from Lucas, because I use pcie_wait_for_link
-> not
-> 
-> pci_bridge_wait_for_secondary_bus, my patch is similar to the process logic
-> 
-> in pci_bridge_wait_for_secondary_bus which also call pcie_wait_for_link.
-> 
-> 
-> pcie_wait_for_link wait fixed 100ms and then wait the data link is ready,
-> but
-> 
-> pci_bridge_wait_for_secondary_bus call pcie_wait_for_link wait time depends
-> 
-> on the devices max waiting time in bus, the calculate max time having a bug
-> 
-> as below,
-> 
-> 
-> In pci_bridge_wait_for_secondary_bus, pci_bus_max_d3cold_delay will take
-> count of wrong time delay,
-> 
-> such as NVIDIA GPU T4 is not pci bridge, so the subordinate is none,
-> pci_bus_max_d3cold_delay
-> 
-> set the min_delay is 100, max_delay is 0, here is the bug, after
-> list_for_each_entry() in pci_bus_max_d3cold_delay,
-> 
-> the min_delay will be 0, the max_delay also 0, the pci_bus_max_d3cold_delay
-> return is surely 0.
-> 
-> 
-> Last, I request Ravi Kishore Koppuravuri to test my patch to see Intel Ponte
-> Vecchio HPC GPU
-> 
-> whether can work, I think my patch will wait enough time to be ready after
-> secondary bus reset.
-> 
-> 
-> I have tested NVIDIA GPU T4 and NVIDIA GPU A100 which my patch is ok, but I
-> think there is need
-> 
-> more test to validate my patch. But the fact is I do not have enough device
-> to validate. If Ravi Kishore Koppuravuri
-> 
-> can help me test, the patch test will be more enough, and I would be
-> grateful for test. Thank you very much!
 
-This will need to be updated to apply on top of Lukas' patches since
-they change the same area.  You could rebase on top of:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=53b54ad074de
 
-It also will need a concise description of what this fixes and why we
-want it.  I see that it changes the time we wait after a secondary bus
-reset, but I have to read the patch itself to figure out what's going
-on.
+On 2/9/23 8:10 AM, Jonathan Cameron wrote:
+> On Wed, 8 Feb 2023 16:56:30 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
+> 
+>> On 2/8/23 3:15 PM, Bjorn Helgaas wrote:
+>>> On Tue, Feb 07, 2023 at 01:51:17PM -0700, Dave Jiang wrote:
+>>>>
+>>>>
+>>>> On 2/6/23 3:39 PM, Bjorn Helgaas wrote:
+>>>>> On Mon, Feb 06, 2023 at 01:51:10PM -0700, Dave Jiang wrote:
+>>>>>> The latency is calculated by dividing the FLIT size over the
+>>>>>> bandwidth. Add support to retrieve the FLIT size for the CXL
+>>>>>> device and calculate the latency of the downstream link.
+>>>    
+>>>>> I guess you only care about the latency of a single link, not the
+>>>>> entire path?
+>>>>
+>>>> I am adding each of the link individually together in the next
+>>>> patch. Are you suggesting a similar function like
+>>>> pcie_bandwidth_available() but for latency for the entire path?
+>>>
+>>> Only a clarifying question.
+>>>    
+>>>>>> +static int cxl_get_flit_size(struct pci_dev *pdev)
+>>>>>> +{
+>>>>>> +	if (cxl_pci_flit_256(pdev))
+>>>>>> +		return 256;
+>>>>>> +
+>>>>>> +	return 66;
+>>>>>
+>>>>> I don't know about the 66-byte flit format, maybe this part is
+>>>>> CXL-specific?
+>>>>
+>>>> 68-byte flit format. Looks like this is a typo from me.
+>>>
+>>> This part must be CXL-specific, since I don't think PCIe mentions
+>>> 68-byte flits.
+>>>    
+>>>>>> + * The table indicates that if PCIe Flit Mode is set, then CXL is in 256B flits
+>>>>>> + * mode, otherwise it's 68B flits mode.
+>>>>>> + */
+>>>>>> +static inline bool cxl_pci_flit_256(struct pci_dev *pdev)
+>>>>>> +{
+>>>>>> +	u32 lnksta2;
+>>>>>> +
+>>>>>> +	pcie_capability_read_dword(pdev, PCI_EXP_LNKSTA2, &lnksta2);
+>>>>>> +	return lnksta2 & BIT(10);
+>>>>>
+>>>>> Add a #define for the bit.
+>>>>
+>>>> ok will add.
+>>>>   
+>>>>>
+>>>>> AFAICT, the PCIe spec defines this bit, and it only indicates the link
+>>>>> is or will be operating in Flit Mode; it doesn't actually say anything
+>>>>> about how large the flits are.  I suppose that's because PCIe only
+>>>>> talks about 256B flits, not 66B ones?
+>>>>
+>>>> Looking at CXL v1.0 rev3.0 6.2.3 "256B Flit Mode", table 6-4, it shows that
+>>>> when PCIe Flit Mode is set, then CXL is in 256B flits mode, otherwise, it is
+>>>> 68B flits. So an assumption is made here regarding the flit side based on
+>>>> the table.
+>>>
+>>> So reading PCI_EXP_LNKSTA2 and extracting the Flit Mode bit is
+>>> PCIe-generic, but the interpretation of "PCIe Flit Mode not enabled
+>>> means 68-byte flits" is CXL-specific?
+>>>
+>>> This sounds wrong, but I don't know quite how.  How would the PCI core
+>>> manage links where Flit Mode being cleared really means Flit Mode is
+>>> *enabled* but with a different size?  Seems like something could go
+>>> wrong there.
+>>
+>> Looking at the PCIe base spec and the CXL spec, that seemed to be the
+>> only way that implies the flit size for a CXL device as far as I can
+>> tell. I've yet to find a good way to make that determination. Dan?
+> 
+> So a given CXL port has either trained up in:
+> * normal PCI (in which case all the normal PCI stuff applies) and we'll
+>    fail some of the other checks in the CXL driver never get hear here
+>    - I 'think' the driver will load for the PCI device to enable things
+>    like firmware upgrade, but we won't register the CXL Port devices
+>    that ultimately call this stuff.
+>    It's perfectly possible to have a driver that will cope with this
+>    but it's pretty meaningless for a lot of cxl type 3 driver.
+> * 68 byte flit (which was CXL precursor to PCI going flit based)
+>    Can be queried via CXL DVSEC Flex Bus Port Status CXL r3.0 8.2.1.3.3
+> * 256 byte flits (may or may not be compatible with PCIe ones as there
+>    are some optional latency optimizations)
+> 
+> So if the 68 byte flit is enabled the 256 byte one should never be and
+> CXL description is overriding the old PCIe
+> 
+> Hence I think we should have the additional check on the flex bus
+> dvsec even though it should be consistent with your assumption above.
 
-> On 2023/1/13 06:48, Bjorn Helgaas wrote:
-> > [+cc Lukas, Mika]
-> > 
-> > Hi Yang Su,
-> > 
-> > Thank you for your patch!
-> > 
-> > On Sun, Jan 01, 2023 at 05:22:33PM +0800, Yang Su wrote:
-> > > On PCI Express, there will be cases where the new code sleeps far less
-> > > than the 1s being replaced by this patch. This should be okay, because
-> > > PCI Express Base Specification Revision 5.0 Version 1.0 (May 22, 2019)
-> > > in Section 6.6.1 "Conventional Reset" only notes 100ms as the minimum
-> > > waiting time. After this time, the OS is permitted to issue
-> > > Configuration Requests, but it is possible that the device responds
-> > > with Configuration Request Retry Status (CRS) Completions, rather than
-> > > Successful Completion. Returning CRS can go on for up to 1 second after
-> > > a Conventional Reset (such as SBR) before the OS can consider the device
-> > > broken. This additional wait is handled by pci_dev_wait. Besides,
-> > > this patch also cover PCI and PCI-X after device reset waiting Tpvrh 1000ms.
-> > > 
-> > > Currently, the only callchain that lands in the function modified by
-> > > this patch which invokes one out of two versions of pcibios_reset_secondary_bus
-> > > that both end with a call to pci_reset_secondary_bus.
-> > > 
-> > > Afterwards, pci_reset_secondary_bus always invokes pci_dev_wait
-> > > which wait for the device to return a non-CRS completion.
-> > > 
-> > > Signed-off-by: Yang Su <yang.su@linux.alibaba.com>
-> > > ---
-> > >   drivers/pci/pci.c | 36 +++++++++++++++++++++++++++++++++---
-> > >   1 file changed, 33 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > index fba95486caaf..8e4899755718 100644
-> > > --- a/drivers/pci/pci.c
-> > > +++ b/drivers/pci/pci.c
-> > > @@ -5063,10 +5063,40 @@ void pci_reset_secondary_bus(struct pci_dev *dev)
-> > >   	 * Trhfa for conventional PCI is 2^25 clock cycles.
-> > >   	 * Assuming a minimum 33MHz clock this results in a 1s
-> > >   	 * delay before we can consider subordinate devices to
-> > > -	 * be re-initialized.  PCIe has some ways to shorten this,
-> > > -	 * but we don't make use of them yet.
-> > > +	 * be re-initialized.
-> > > +	 *
-> > > +	 * For conventional PCI needing 1s delay after bus reset.
-> > > +	 * Using pci_is_pcie to judge the bus is pci or pcie.
-> > > +	 * If the bus is pci, sleeping 1s to wait device is ready.
-> > > +	 *
-> > > +	 * And if the bus is pcie, PCI Express Base Specification Revision 2.0
-> > > +	 * (December 20, 2006) in Section 6.6.1 "Conventional Reset" only notes
-> > > +	 * 100ms as the minimum waiting time, the same as the newer PCIe spec
-> > > +	 * PCI Express Base Specification Revision 3.0 Version 1.a (December 7, 2015)
-> > > +	 * and PCI Express Base Specification Revision 5.0 Version 1.0 (May 22, 2019).
-> > > +	 * With a Downstream Port that supports Link speeds greater than 5.0 GT/s,
-> > > +	 * software must wait a minimum of 100 ms after Link training completes before
-> > > +	 * sending a Configuration Request to the device immediately below that Port.
-> > > +	 * After this time, the OS is permitted to issue Configuration Requests,
-> > > +	 * but it is possible that the device responds with Configuration Request
-> > > +	 * Retry Status (CRS) Completions, rather than Successful Completion.
-> > > +	 * Returning CRS can go on for up to 1 second after a Conventional Reset
-> > > +	 * (such as SBR) before the OS can consider the device. This additional
-> > > +	 * wait is handled by pci_dev_wait.
-> > > +	 *
-> > > +	 * Currently, the only callchain that lands in the function modified by
-> > > +	 * this patch starts at pci_bridge_secondary_bus_reset which invokes
-> > > +	 * one out of two versions of pcibios_reset_secondary_bus that both end
-> > > +	 * with a call to pci_reset_secondary_bus.
-> > > +	 * Afterwards, pci_bridge_secondary_bus_reset always invokes pci_dev_wait.
-> > >   	 */
-> > > -	ssleep(1);
-> > > +	if (pci_is_pcie(dev))
-> > > +		if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT)
-> > > +			msleep(100);
-> > > +		else
-> > > +			pcie_wait_for_link(dev, true);
-> > > +	else
-> > > +		ssleep(1);
-> > This code is also updated by Lukas' patch at
-> > https://lore.kernel.org/r/bd6ac49d60c1ca6fe5c27c2fa54b78d70a8ba07b.1672511017.git.lukas@wunner.de,
-> > which is pretty much ready to go.
-> > 
-> > Can you take a look at that series and see whether it solves the same
-> > problem you're solving here?  And if not, can you provide feedback on
-> > what would still be needed?
-> > 
-> > If you do need something on top of Lukas' series, please CC him if you
-> > post a revised patch.
-> > 
-> > Bjorn
+So I'm trying to understand the CXL DVSEC Port status "68B flit and VH 
+Enabled bit". If this bit is set, it means we are in 68B flit mode and 
+VH mode? Do we just ignore RCH/RCD calculations since it doesn't support 
+hotplug? Does this bit get cleared for 256B flit mode? It's not clear to 
+me.
+
+> 
+> Hmm. That does raise a question of how we take the latency optimized
+> flits into account or indeed some of the other latency impacting things
+> that may or may not be running - IDE in it's various modes for example.
+> 
+> For latency optimized we can query relevant bit in the flex bus port status.
+> IDE info will be somewhere I guess though no idea if there is a way to
+> know the latency impacts.
+
+Should we deal with latency optimized flits and IDE in a later step?
+
+> 
+> Jonathan
+> 
+>>
+>>
+>>>
+>>> Bjorn
+> 
