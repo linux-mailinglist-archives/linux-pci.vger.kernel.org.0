@@ -2,74 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C97656974D1
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 04:22:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66E816974D2
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 04:22:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232845AbjBODWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 22:22:13 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49964 "EHLO
+        id S229483AbjBODWP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 22:22:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232665AbjBODWK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 22:22:10 -0500
+        with ESMTP id S232349AbjBODWM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 22:22:12 -0500
 Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B51532E7C
-        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:22:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8967532E42
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:22:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1676431325; x=1707967325;
+  t=1676431327; x=1707967327;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=IwvAJLtuxZiowQVqD/EJeUOtDRGFm5IRLsmzFadJxXc=;
-  b=hxN/XFkkjUdN9ibhLSEXlXDExjij+sY525/u5Ifffuna6Lc3UPytWuZV
-   QVCrbb/XOWdlgiTFBEa+JHZPkIy7QLzlxmGdjHfbTFCf2pVdMHpTrNtmQ
-   GT/SzfRRObU9wvRm+d0/NmDQxXfdOGf4GKPgnK3SNQg1ioAgK/Qqy4xsS
-   gQiSbrDGBnGXGfYekYKKgefDXfTMn+AREcn/X/lVYaeIVC0FP1IL/j83z
-   C5tBafpet4lqmvJo+2tlAb0jf8J/e5qFzu3isxU/uEaBvmlQd5X4Jrien
-   MwQj9PfsVGOMP03XXp/Wok9OgP1Ao0lqbT+vHA92Trs2+B3NV2VF0tv8f
-   Q==;
+  bh=ulTFomFNmfH7tQJKLFImDfoeozX3ww0CC3AYjVDn1+4=;
+  b=Cdfmnq1OovEguTNXHCggk0EIIr4f2JuA8V5tUFtLDNxxJGj3llAukt6k
+   nvzMaFY+LJwN5qa9LDEuyvz4J3XXsD16PHz5Rny+IfrXUVn7ppvQKjFa8
+   F0atAic21R1pZK7slCl67QL3xcAnmMq7u8C6e9QeCm4TkejLuaHTPebwf
+   HisvZyOmEWIaZ+l5hgwF/ay7SIiul4uNdCDsiMXK+CRf+8AtG873gwRrV
+   NRzq84ufroFEroxD5toA0pmglwdXEttFCzvcn/oM4YC/n8RokFDsqq2I8
+   N9nUQm6uyJVjODNkyxLBwuGYmoCRBgx78zxQ84rOcPF8mnhRmWYCP4Dzd
+   A==;
 X-IronPort-AV: E=Sophos;i="5.97,298,1669046400"; 
-   d="scan'208";a="223351451"
+   d="scan'208";a="223351453"
 Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 11:22:05 +0800
-IronPort-SDR: 3QjOGe3gPBu+pWzRcUDQ8rUcd9ZFWZF17KCJettod0ZPP9AWjBYTlZs7Tvk/UWvo86T1jSE1EE
- vC7HQWbUw9ytQ+D+tBucATs6vtUsb75NPe93Fw6PaMtTOTF+ezZ3nXZ6jeNpDTfT1QHzHgIhDN
- L/B7Jh7NbV+k1uIEUlEHN5yfRSRDCyy9wuIASI70+ob1xTE6YJcTQ9N+Oy1Yto73xuVitnMNZr
- tgjl7HOQlHFe1GJdzfZM1CVCwGbeRLPaZ9fRw/1+JU7VQeX9ztjd+GHX+avF5T6glguK37oA8i
- 1Ss=
+  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 11:22:07 +0800
+IronPort-SDR: rQvR8wLJ501OpIjjPoPi3GBcQn2G5bTyz8e5uanfM/s6K1JnoLHIR0J+JRRx5dha9z/96gTlX1
+ zquFlR/jFciIpv+w3xpZ8iYbjQyMjAUx6H7oHCwyQZi1TlFCH8YwVrqshjvo7EP7nDsPcsXVpI
+ bk6LTS+k1DwU/CXD2nIQZ8QvCpuILU0es0CHZFZGLpxOgsGskjVltznRt2dW/NwpZQvF5HIOWM
+ ALoaroAn3ZERKN5N2YBnTE67NG+e9I9fFi3+WPza6Utewf8MUs3AxfxTDJ7cjdOzYORPDWXhHP
+ AIc=
 Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 18:33:28 -0800
-IronPort-SDR: pADATaYUvJcNB7EjjREKNQ+b5eA1+nqSHMeqQVXFkk6bH4eGXhudtS5/ZnxsyMhq5GPBLwOE/M
- Do5lLSh1trLsNd8o3sslRVYbYzVi2DGKHuel9x12cg7bl55H1R2PVoN5svIHSPJfswbf6vbKml
- 24GAipVhHtCDU92076/FeDrNJiaOfyboM6GXnXthRGNmw18nkfo27nyzGIw8HB/tlmkTwUYk+5
- kZ7Obf6jXUKB87kyKpZHHlMFSI/Yt9W16yBjnzE3ffbuowqRrIyy3sohRxieFKNlNatrX9n2F8
- P8E=
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 18:33:30 -0800
+IronPort-SDR: 1gmvSo6NWwlSkEyFom0AyIekEa9H7YqGtCFT0y/a/ZdFXq8jgf9HNcwASACcO3uETSgitHlWH5
+ bVZXDkKKK9+C7hDnJfs3xrqPj+tiU7Ucq8rMj+AMNs0+3v2N0QrTnxStIRlfylNu8TEVDaMW3e
+ cmWR4OiSnXPRIdXIiibAvwbwqg8wLQNAT8JSizjfDIoqO5V61t0QFcyeVAnKDSv9xHrn+5tl3O
+ Byv4liJry9Tuj89f1V/l+YIGQWGeJdwuPz5c7L22JM6J3QTJEvTbYqQltSG3jRWu2H24BrbFtA
+ sGU=
 WDCIronportException: Internal
 Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 19:22:04 -0800
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 19:22:06 -0800
 Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGjzx0MyKz1RwvT
-        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:22:05 -0800 (PST)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGjzy6fy6z1RwvL
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:22:06 -0800 (PST)
 Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
         reason="pass (just generated, assumed good)"
         header.d=opensource.wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
         opensource.wdc.com; h=content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1676431324; x=1679023325; bh=IwvAJLtuxZiowQVqD/
-        EJeUOtDRGFm5IRLsmzFadJxXc=; b=KG0q7RbmpTbdE3/vfAEdJexcgemlT4UkHR
-        s7sZ40Iv3B5U/FAtLimd89Eya+2nShFmFgP27GocxorySRclLtasX/zqhy7gaZ+9
-        dz83kzNkniRSBALgg4ym/7sEFcjutBk8B7x5rNViHPq7wwtkV0CwUaa7VPDqfMfd
-        B1VPd5MC7U+Bw0PyhQaTPV1/59Dd0S8VgRhEFK/Aasis5yrv2FG95MJ3j2O/3Gp7
-        j31QjhFXWvpz+MT5klkUDJHpyrOroG29J6hQkqo6IcizTYlMMGbI4twohX6iIhlI
-        Yh5DQe0S6zRRYdpA80GJFOBAy+CGiuzYOWYJ1BR3fLP66xdPmUdQ==
+        :from; s=dkim; t=1676431326; x=1679023327; bh=ulTFomFNmfH7tQJKLF
+        ImDfoeozX3ww0CC3AYjVDn1+4=; b=A/0PfAo8CK3cfZlSb7FH0F4kz9iBlhqBFJ
+        Zj6Zks1e4p3u5yCm/x8LKX5G63oZRTcZFY88f1HG0/Yr16Ptjks70q/S3HyBwX3s
+        k0AE9zGqO8WpeDe0ABR5ENvRSlifLzRIi+ZTJT4reLnr6lX8ytDUDfX8NfNpz2FB
+        2fk0CEQ1SEi8SV/lpMeebv02XgD8fYd7zYfWYwalofzsWdmHP36JdeHRq6Zm7169
+        tkY76ICMHEZWqB5EK4IbeGgkv2NW7KCGBPC4gb8Srx8YzVVoxgL7Q9o26rtaH4CG
+        yIsGtEVhHP2q1glalsHraevGTOVmp35k4zMZ1TmBDoXfcTeyyU+A==
 X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
 Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
         by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id c3DuPnfgDrY5 for <linux-pci@vger.kernel.org>;
-        Tue, 14 Feb 2023 19:22:04 -0800 (PST)
+        with ESMTP id 28OaNLOOrVMC for <linux-pci@vger.kernel.org>;
+        Tue, 14 Feb 2023 19:22:06 -0800 (PST)
 Received: from fedora.flets-east.jp (unknown [10.225.163.119])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGjzt3c2Gz1RvTp;
-        Tue, 14 Feb 2023 19:22:02 -0800 (PST)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGjzw3Mysz1RvLy;
+        Tue, 14 Feb 2023 19:22:04 -0800 (PST)
 From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
@@ -79,9 +79,9 @@ Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 03/12] pci: epf-test: Fix DMA transfer completion detection
-Date:   Wed, 15 Feb 2023 12:21:46 +0900
-Message-Id: <20230215032155.74993-4-damien.lemoal@opensource.wdc.com>
+Subject: [PATCH 04/12] pci: epf-test: Use driver registers as volatile
+Date:   Wed, 15 Feb 2023 12:21:47 +0900
+Message-Id: <20230215032155.74993-5-damien.lemoal@opensource.wdc.com>
 X-Mailer: git-send-email 2.39.1
 In-Reply-To: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
 References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
@@ -96,123 +96,83 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-pci_epf_test_data_transfer() and pci_epf_test_dma_callback() are not
-handling DMA transfer completion correctly, leading to completion
-notifications to the RC side that are too early. This problem can be
-detected when the RC side is running an IOMMU with messages such as:
+The pci-epf-test driver uses struct pci_epf_test_reg directly from the
+test register bar memory to execute tests cases sent by the RC side.
+Make sure to declare pci_epf_test_reg use as volatile to ensure that
+modifications to the fields of that structure make it to memory to be
+seen by the RC side on completion.
 
-pci-endpoint-test 0000:0b:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
-domain=3D0x001c address=3D0xfff00000 flags=3D0x0000]
-
-When running the pcitest.sh tests: the address used for a previous
-test transfer generates the above error while the next test transfer is
-running.
-
-Fix this by testing the dma transfer status in
-pci_epf_test_dma_callback() and notifying the completion only when the
-transfer status is DMA_COMPLETE or DMA_ERROR. Furthermore, in
-pci_epf_test_data_transfer(), be paranoid and check again the transfer
-status and always call dmaengine_terminate_sync() before returning.
-
-While at it, also modify the channel tx submit call to use
-dmaengine_submit() instead of the hard coded call to the tx_submit()
-operation.
+Also initialize the test register bar to 0 when it is allocated.
 
 Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 42 +++++++++++++------
- 1 file changed, 30 insertions(+), 12 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/=
 endpoint/functions/pci-epf-test.c
-index 55283d2379a6..030769893efb 100644
+index 030769893efb..df3074667bbc 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -54,6 +54,9 @@ struct pci_epf_test {
- 	struct delayed_work	cmd_handler;
- 	struct dma_chan		*dma_chan_tx;
- 	struct dma_chan		*dma_chan_rx;
-+	struct dma_chan		*transfer_chan;
-+	dma_cookie_t		transfer_cookie;
-+	enum dma_status		transfer_status;
- 	struct completion	transfer_complete;
- 	bool			dma_supported;
- 	bool			dma_private;
-@@ -85,8 +88,14 @@ static size_t bar_size[] =3D { 512, 512, 1024, 16384, =
-131072, 1048576 };
- static void pci_epf_test_dma_callback(void *param)
- {
- 	struct pci_epf_test *epf_test =3D param;
--
--	complete(&epf_test->transfer_complete);
-+	struct dma_tx_state state;
-+
-+	epf_test->transfer_status =3D
-+		dmaengine_tx_status(epf_test->transfer_chan,
-+				    epf_test->transfer_cookie, &state);
-+	if (epf_test->transfer_status =3D=3D DMA_COMPLETE ||
-+	    epf_test->transfer_status =3D=3D DMA_ERROR)
-+		complete(&epf_test->transfer_complete);
- }
-=20
- /**
-@@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_=
-test *epf_test,
- 	struct dma_async_tx_descriptor *tx;
- 	struct dma_slave_config sconf =3D {};
+@@ -340,7 +340,7 @@ static int pci_epf_test_copy(struct pci_epf_test *epf=
+_test)
  	struct device *dev =3D &epf->dev;
--	dma_cookie_t cookie;
- 	int ret;
+ 	struct pci_epc *epc =3D epf->epc;
+ 	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
+-	struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
++	volatile struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
 =20
- 	if (IS_ERR_OR_NULL(chan)) {
-@@ -151,26 +159,36 @@ static int pci_epf_test_data_transfer(struct pci_ep=
-f_test *epf_test,
- 		return -EIO;
+ 	src_addr =3D pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
+ 	if (!src_addr) {
+@@ -441,7 +441,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf=
+_test)
+ 	struct pci_epc *epc =3D epf->epc;
+ 	struct device *dma_dev =3D epf->epc->dev.parent;
+ 	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
+-	struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
++	volatile struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
+=20
+ 	src_addr =3D pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+ 	if (!src_addr) {
+@@ -530,7 +530,7 @@ static int pci_epf_test_write(struct pci_epf_test *ep=
+f_test)
+ 	struct pci_epc *epc =3D epf->epc;
+ 	struct device *dma_dev =3D epf->epc->dev.parent;
+ 	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
+-	struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
++	volatile struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
+=20
+ 	dst_addr =3D pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
+ 	if (!dst_addr) {
+@@ -619,7 +619,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_tes=
+t *epf_test, u8 irq_type,
+ 	struct device *dev =3D &epf->dev;
+ 	struct pci_epc *epc =3D epf->epc;
+ 	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
+-	struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
++	volatile struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
+=20
+ 	reg->status |=3D STATUS_IRQ_RAISED;
+=20
+@@ -653,7 +653,7 @@ static void pci_epf_test_cmd_handler(struct work_stru=
+ct *work)
+ 	struct device *dev =3D &epf->dev;
+ 	struct pci_epc *epc =3D epf->epc;
+ 	enum pci_barno test_reg_bar =3D epf_test->test_reg_bar;
+-	struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
++	volatile struct pci_epf_test_reg *reg =3D epf_test->reg[test_reg_bar];
+=20
+ 	command =3D reg->command;
+ 	if (!command)
+@@ -911,6 +911,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *e=
+pf)
+ 		dev_err(dev, "Failed to allocated register space\n");
+ 		return -ENOMEM;
  	}
++	memset(base, 0, test_reg_size);
+ 	epf_test->reg[test_reg_bar] =3D base;
 =20
-+	reinit_completion(&epf_test->transfer_complete);
-+	epf_test->transfer_chan =3D chan;
- 	tx->callback =3D pci_epf_test_dma_callback;
- 	tx->callback_param =3D epf_test;
--	cookie =3D tx->tx_submit(tx);
--	reinit_completion(&epf_test->transfer_complete);
-+	epf_test->transfer_cookie =3D dmaengine_submit(tx);
-=20
--	ret =3D dma_submit_error(cookie);
-+	ret =3D dma_submit_error(epf_test->transfer_cookie);
- 	if (ret) {
--		dev_err(dev, "Failed to do DMA tx_submit %d\n", cookie);
--		return -EIO;
-+		dev_err(dev, "Failed to do DMA tx_submit %d\n", ret);
-+		goto terminate;
- 	}
-=20
- 	dma_async_issue_pending(chan);
- 	ret =3D wait_for_completion_interruptible(&epf_test->transfer_complete)=
-;
- 	if (ret < 0) {
--		dmaengine_terminate_sync(chan);
--		dev_err(dev, "DMA wait_for_completion_timeout\n");
--		return -ETIMEDOUT;
-+		dev_err(dev, "DMA wait_for_completion interrupted\n");
-+		goto terminate;
- 	}
-=20
--	return 0;
-+	if (epf_test->transfer_status =3D=3D DMA_ERROR) {
-+		dev_err(dev, "DMA transfer failed\n");
-+		ret =3D -EIO;
-+	}
-+
-+	WARN_ON(epf_test->transfer_status !=3D DMA_COMPLETE);
-+
-+terminate:
-+	dmaengine_terminate_sync(chan);
-+
-+	return ret;
- }
-=20
- struct epf_dma_filter {
+ 	for (bar =3D 0; bar < PCI_STD_NUM_BARS; bar +=3D add) {
 --=20
 2.39.1
 
