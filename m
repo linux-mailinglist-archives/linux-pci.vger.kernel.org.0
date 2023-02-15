@@ -2,146 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DFD3697B9E
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 13:18:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFF12697CF6
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 14:17:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234041AbjBOMSy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 07:18:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        id S234152AbjBONRO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 08:17:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233964AbjBOMSx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 07:18:53 -0500
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6440166D5
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 04:18:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1676463531; x=1707999531;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=hDzsCh2M3dfHg3kkmzHOTCsgsb4/1233PYaayStoNA4=;
-  b=IRXDF2zqpcE4r2YWlE8YjDQCizwSRE3ic/3xasMsqU7PbTxyMWH+LL+G
-   b7Qu2HT24/3PEtjOxD9xVl/1mRHgK/TnbwLFLFQt4C93urnfLb5x2O/Q6
-   gwY4//PGBI1sNtshQCs+02h/MRhzJljUYklQA0grzBKqqWAdg3R1gfFBH
-   JeH9jTE9ePZp4FhViGxgzAOL2IBGxiNoU2nHsQ8Jm794R2XGVU2jPsfBT
-   Hyd/CqB4Ve5ZegCMCw7y6UOZOXGmMrn/EyGyALRDUupAakSXyHdk6Qs0z
-   hcmJwhETUUhZoJvHkelGxLXOesNbS1VUhUr/KkGgMZ7/swtyTvA3tmt27
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.97,299,1669046400"; 
-   d="scan'208";a="327664929"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 20:18:51 +0800
-IronPort-SDR: efAaq8Pd+6pmKEnvwgO6trotwXEC4iez6Lj3TONe+1t/NB6Z095bPGhaSq9EtpVgCYRVDYyK0m
- X5gYGZYBAxB0z31FLul0h3wPgFW6Oo8YXPN6g+xRlut+iJXgUc612vMdZvEGwQBD3Vs675tuLP
- uMStl1k/VCrggm8fkl24507hGnCeCV7dRP86zixqIEqzBc1WdXyH38sSose0Z+OMFTO8WgxIsM
- 38q+P5doDSvl9GeXHxG6PaPilLqjNQkG4WGT+thykjUqmAEokeT0dUf0G386S8eCwDOpB8ahFL
- EQQ=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 03:30:13 -0800
-IronPort-SDR: Bd6UK+FrlMcLy2ssJ1Wnv89x3ZdvzLAc9faDSyxH8ww7/pxP7HbWsDLCGgNCBiJGPsjd1bOhZG
- cor0G8hOh41G+4WwRaGngIWvEOZyTeLdLO8iHwBblqGkg3uVI52gmiB74AQmVUMn9y7igVExzT
- ouR+n40bxUqzgZLW54uzJ9SlbIn3RJUCgb0apJsdy1UYWzybQG4YFSgXDK14/lVy/TpnU3xOQR
- HAs64cU5W66T/M5JG5lpmFqrN5yPWOPyS9L7ND9qRLW6mlT1APQVYtn2b1y+jGja2Ho7XYwlVU
- JYo=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 04:18:52 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGxvH150Vz1RwtC
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 04:18:51 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1676463530; x=1679055531; bh=hDzsCh2M3dfHg3kkmzHOTCsgsb4/1233PYa
-        ayStoNA4=; b=bfU5xoTdMbb5MgAmTDVOMW1xo26+lsdwjwQJxG/dc1d5Lz47PQi
-        V8r9oT+IfVXvUlIxrgt6P5tNUj9o1WgK7R3Xh5YW5q2dBZI0qVf0yL2E8IoxIheA
-        wHGaISgk9fqU9dgLPGbEEWO1F+AhssgxYY5lJLPOelOjNfZGSkVeab6fZz76IrEH
-        0vKjbjuUZjQ8X1XVDipSgWOmLrIe0XVfkHdN3i1Q47uHT1dZCcwe5SkmfThai0QP
-        bZs9J17PmwnFIg8q8QFl8LdIagV0T18nh7f40dogZWzerRGl9+pAPSWF2boVIsHR
-        wCayBcLBqHgfv1J1iTXjBErzpHWGKU+bLtQ==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id zFR7FOiIumJ2 for <linux-pci@vger.kernel.org>;
-        Wed, 15 Feb 2023 04:18:50 -0800 (PST)
-Received: from [10.225.163.116] (unknown [10.225.163.116])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGxvF0vlzz1RvLy;
-        Wed, 15 Feb 2023 04:18:48 -0800 (PST)
-Message-ID: <077adda6-ef9f-5c31-c041-97342317f1d2@opensource.wdc.com>
-Date:   Wed, 15 Feb 2023 21:18:48 +0900
+        with ESMTP id S231476AbjBONRN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 08:17:13 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F340C2528C;
+        Wed, 15 Feb 2023 05:17:09 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PGz8X2tFFz6J9rm;
+        Wed, 15 Feb 2023 21:15:24 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Wed, 15 Feb
+ 2023 13:17:07 +0000
+Date:   Wed, 15 Feb 2023 13:17:06 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Dave Jiang <dave.jiang@intel.com>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-acpi@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
+        <alison.schofield@intel.com>, <rafael@kernel.org>,
+        <bhelgaas@google.com>, <robert.moore@intel.com>
+Subject: Re: [PATCH 13/18] cxl: Add latency and bandwidth calculations for
+ the CXL path
+Message-ID: <20230215131706.0000592d@Huawei.com>
+In-Reply-To: <8b2bbf7b-fe3f-c80b-163b-8247e0c47821@intel.com>
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+        <167571667794.587790.14172786993094257614.stgit@djiang5-mobl3.local>
+        <20230209152417.00007f47@Huawei.com>
+        <8b2bbf7b-fe3f-c80b-163b-8247e0c47821@intel.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 07/12] pci: epf-test: Add debug and error messages
-Content-Language: en-US
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-8-damien.lemoal@opensource.wdc.com>
- <Y+zDUmwj8+ibp3r0@kroah.com>
- <e71ad0dc-2250-7ffc-6d96-745e2da40694@opensource.wdc.com>
- <Y+zJqp9cXelKro6t@kroah.com>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <Y+zJqp9cXelKro6t@kroah.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/15/23 21:01, Greg Kroah-Hartman wrote:
-> On Wed, Feb 15, 2023 at 08:45:50PM +0900, Damien Le Moal wrote:
->> On 2/15/23 20:34, Greg Kroah-Hartman wrote:
->>> On Wed, Feb 15, 2023 at 12:21:50PM +0900, Damien Le Moal wrote:
->>>> Make the pci-epf-test driver more verbose with dynamic debug messages
->>>> using dev_dbg(). Also add some dev_err() error messages to help
->>>> troubleshoot issues.
->>>>
->>>> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
->>>> ---
->>>>  drivers/pci/endpoint/functions/pci-epf-test.c | 69 +++++++++++++++----
->>>>  1 file changed, 56 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> index f630393e8208..9b791f4a7ffb 100644
->>>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
->>>> @@ -330,6 +330,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test, bool use_dma)
->>>>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->>>>  	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->>>
->>> note, volatile is almost always wrong, please fix that up.
->>
->> OK. Will think of something else.
-> 
-> If this is io memory, use the proper accessors to access it.  If it is
-> not io memory, then why is it marked volatile at all?
+On Tue, 14 Feb 2023 16:03:27 -0700
+Dave Jiang <dave.jiang@intel.com> wrote:
 
-This is a PCI bar memory. So I can simply copy the structure locally with
-memcpy_fromio() and memcpy_toio().
+> On 2/9/23 8:24 AM, Jonathan Cameron wrote:
+> > On Mon, 06 Feb 2023 13:51:19 -0700
+> > Dave Jiang <dave.jiang@intel.com> wrote:
+> >   
+> >> CXL Memory Device SW Guide rev1.0 2.11.2 provides instruction on how to
+> >> caluclate latency and bandwidth for CXL memory device. Calculate minimum  
+> > 
+> > Spell check your descriptions (I often forget to do this as well!
+> > )  
+> >> bandwidth and total latency for the path from the CXL device to the root
+> >> port. The calculates values are stored in the cached DSMAS entries attached
+> >> to the cxl_port of the CXL device.
+> >>
+> >> For example for a device that is directly attached to a host bus:
+> >> Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
+> >> 		Latency
+> >> Min Bandwidth = Link Bandwidth between Host Bus and CXL device
+> >>
+> >> For a device that has a switch in between host bus and CXL device:
+> >> Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
+> >> 		Switch (CDAT) Latency + Switch to HB Link Latency  
+> > 
+> > For QTG purposes, are we also supposed to take into account HB to
+> > system interconnect type latency (or maybe nearest CPU?).
+> > That is likely to be non trivial.  
+> 
+> Dan brought this ECN [1] to my attention. We can add this if we can find 
+> a BIOS that implements the ECN. Or should we code a place holder for it 
+> until this is available?
+> 
+> https://lore.kernel.org/linux-cxl/e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com/
+
+I've had Generic Ports on my list to add to QEMU for a while but not been
+high enough priority to either do it myself, or make it someone else's problem.
+I suspect the biggest barrier in QEMU is going to be the interface to add
+these to the NUMA description.
+
+It's easy enough to hand build and inject a SRAT /SLIT/HMAT tables with
+these in (that's how we developed the Generic Initiator support in Linux before
+any BIOS support).  
+
+So I'd like to see it soon, but I'm not hugely bothered if that element
+follows this patch set. However, we are potentially going to see different
+decisions made when that detail is added so it 'might' count as ABI
+breakage if it's not there from the start. I think we are fine as probably
+no BIOS' yet though.
 
 > 
-> thanks,
+> >   
+> >> Min Bandwidth = min(dev to switch bandwidth, switch to HB bandwidth)
+> >> Signed-off-by: Dave Jiang <dave.jiang@intel.com>  
+> > 
+> > Stray sign off.
+> >   
+> >>
+> >> The internal latency for a switch can be retrieved from the CDAT of the
+> >> switch PCI device. However, since there's no easy way to retrieve that
+> >> right now on Linux, a guesstimated constant is used per switch to simplify
+> >> the driver code.  
+> > 
+> > I'd like to see that gap closed asap. I think it is fairly obvious how to do
+> > it, so shouldn't be too hard, just needs a dance to get the DOE for a switch
+> > port using Lukas' updated handling of DOE mailboxes.  
 > 
-> greg k-h
+> Talked to Lukas and this may not be difficult with his latest changes. I 
+> can take a look. Do we support switch CDAT in QEMU yet?
 
--- 
-Damien Le Moal
-Western Digital Research
+I started typing no, then thought I'd just check.  Seems I did write support
+for CDAT on switches (and then completely forgot about it ;)
+It's upstream and everything!
+https://elixir.bootlin.com/qemu/latest/source/hw/pci-bridge/cxl_upstream.c#L194
 
