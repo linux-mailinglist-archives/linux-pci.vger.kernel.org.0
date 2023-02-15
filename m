@@ -2,121 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 952B06974BF
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 04:18:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 467946974CF
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 04:22:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231966AbjBODSm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 22:18:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47462 "EHLO
+        id S232673AbjBODWM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 22:22:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjBODSl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 22:18:41 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 989E0241D6;
-        Tue, 14 Feb 2023 19:18:40 -0800 (PST)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31F1n8de022336;
-        Wed, 15 Feb 2023 03:18:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=QQZXePndB0lAR9S6w3Ec7/K5ucqSD6ZFFKzDBN8FhwI=;
- b=KPzk68EGAKfLfKwPdJ/X8VLy6tXidZfSXfQdkPk7lapugrtU8cxhEKs16WJAPMkXNBKu
- ipdXITFtBgK0k64+ecdm682ZyUAAkSpf5+pkLb4olOLmUiBf33gfRvM+LWWOc64hNPH/
- uWSVbAW6rTcIgryGRQWmEOYAX1kmQQ9rO4MehvXq/X3uaT1W8kHQ6/ww0yv7CPe8ZYd8
- eTXuNIBbjar//TT8mebvr79St0LTC9+iZ7+jY6SFoBvMcN/qBXU5T0WDida2Q8SMIcb0
- zGNwtl6lLORvs0K+uaHvxN+SdUo4pGIvPXdJI501+tLwVRS92Bf5WrVQ/xRPs5XS6pZj Zw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqyyguhab-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Feb 2023 03:18:17 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31F3IHi8001607
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Feb 2023 03:18:17 GMT
-Received: from [10.50.15.255] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
- 2023 19:18:09 -0800
-Message-ID: <9fc73f31-71c7-f69c-ace1-2ddc9967ef36@quicinc.com>
-Date:   Wed, 15 Feb 2023 08:48:01 +0530
+        with ESMTP id S232533AbjBODWE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 22:22:04 -0500
+Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D729A2B2B3
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:22:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1676431320; x=1707967320;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Cuzwe97KOzTpVmRGj+7xhqsr0Czkiev78SIUaXonxK8=;
+  b=qCBzx1FVncPyJLArujiInTrc9PR81su+GujJwjYRkJ2ACEjo9Tqnb1zF
+   U0ZZkrYYE7IVCQeW4vFBimne8YQIlSL5vVb1MLFvGLIz3Lu69/5uqPCOY
+   r19op0fBbYduE6Cqfe3V4Q3uYknz1xGFlE8quS6/gkpfuTOfe8jDqiNcO
+   AjtXoXbA9j2WLOXk5UspW6ZpD+yn8qlltc3dNul90Z6ujrcIPf8WQzL/T
+   K/WG7i2X84ThU7fdv51A3e4K7a6bLZgVs+k9HO6pnNVdNVylgiPPr88ES
+   09nXIqC5Qt9Gw9fJdZrKMiMNlENGc7GnEFRh3xKdaEeA33/sjJxmGpLTj
+   w==;
+X-IronPort-AV: E=Sophos;i="5.97,298,1669046400"; 
+   d="scan'208";a="223351446"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 11:21:59 +0800
+IronPort-SDR: 1nDIamqzzOssAXj75aNwzyQ+0dNH0LLnljiGwjpeYEhPXrgYjYedx7+7UzLPGBFCVFN1ohPp0W
+ aJMsNjqRVfLT4s1MlRz4rl2yron6GWKLUCmc8/04WPHoE2Qs501U796Hn0eMeLkQWFWUbFM6d4
+ HKj55w6pS5Hm7ejqGbLIjbi3fKWVBBTtTehjhhun6bHF9TwGkQPJjNu1bE9IOUxbcqHJPiITka
+ Xiz5kQzIqqoUmQfMwqD9SOUstRgDhhLnygtsEilVYPCfnZkiROuWnM45kOPCB4/pe5bJeo0qOJ
+ 0uM=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 18:33:22 -0800
+IronPort-SDR: RSWWgfThcYkgfuJ7W5QTUd0on4AraDj17EF81EAL4cbo6t9H+lzVTcVGoxAMDkzVYfyi0s6Dh0
+ WPR7Pzvfw70grCxkC11pQT7QRQPzqCLojOrJxER1fUp7nx+ljg8zmeAQurdEMB0fcoSHOtLSzE
+ C74AHPZAQdyIk8K4gT+0RopDj8q7or5Zt0HaAWHfcxTy3XHa1R3ttngW+NSkm14hlVyxolNnSq
+ xZ1iwovah0WHbpQ4Q/KTH9C39TQtDbqkYMekKsOsxxRRqlX9QOtovApvBySQVYXHOZZEx6cEdk
+ /wg=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 19:21:58 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGjzq28Zvz1Rwtl
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 19:21:59 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:mime-version
+        :x-mailer:message-id:date:subject:to:from; s=dkim; t=1676431318;
+         x=1679023319; bh=Cuzwe97KOzTpVmRGj+7xhqsr0Czkiev78SIUaXonxK8=; b=
+        Bwg3mxY+IAlC7fzEg4S1FnEfzZJlW9JuvKfCoDB4+En9s+3S73lPEIjCizOTDTUQ
+        TojNtTQ1RQZTHgkPbqJd9c2LvbgxvsvdyoMcpjFlKQlK502DI+kiz1m+IfAUpqbG
+        ZjvZXt618EwcDQ5ROUUSXWUOJiJ7mH6FxZhZqnVvrlnFF/JghSQE+w/6mqa8uEQ4
+        MV0tetWDL/ZzNEis2NKQzolz1VQf0rxSAQzsqeGYcdW3zW5icQlHTkLp7zzEfXsY
+        txjVRlw/WFC30mhgEaCCY+VLysjJUYdyj45xshpAKBXNfEPPl6wcIsGouc+bXphh
+        wHQS914SlnNNqKIs/AhFOA==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id IY99bBDRQ59L for <linux-pci@vger.kernel.org>;
+        Tue, 14 Feb 2023 19:21:58 -0800 (PST)
+Received: from fedora.flets-east.jp (unknown [10.225.163.119])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGjzn08bMz1RvLy;
+        Tue, 14 Feb 2023 19:21:56 -0800 (PST)
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 00/12] PCI endpoint fixes and improvements
+Date:   Wed, 15 Feb 2023 12:21:43 +0900
+Message-Id: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 5/7] dt-bindings: clock: Add PCIe pipe clock definitions
-To:     Stephen Boyd <sboyd@kernel.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <bhelgaas@google.com>,
-        <devicetree@vger.kernel.org>, <kishon@kernel.org>,
-        <konrad.dybcio@linaro.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <kw@linux.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <lpieralisi@kernel.org>, <mani@kernel.org>,
-        <mturquette@baylibre.com>, <p.zabel@pengutronix.de>,
-        <robh@kernel.org>, <svarbanov@mm-sol.com>, <vkoul@kernel.org>
-CC:     <quic_srichara@quicinc.com>, <quic_gokulsri@quicinc.com>,
-        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>
-References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
- <20230214164135.17039-6-quic_devipriy@quicinc.com>
- <f439f476121a5624b5243b0b340bd9a4.sboyd@kernel.org>
-Content-Language: en-US
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <f439f476121a5624b5243b0b340bd9a4.sboyd@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: MSlr6nO5gYxTqeSQJsj7-XOScK86BMTD
-X-Proofpoint-GUID: MSlr6nO5gYxTqeSQJsj7-XOScK86BMTD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_17,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302150028
-X-Spam-Status: No, score=-3.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for taking time to review the patch!
+This series fixes several issues with the PCI endpoint code and endpoint
+test drivers (host side and EP side).
 
-On 2/15/2023 8:00 AM, Stephen Boyd wrote:
-> Quoting Devi Priya (2023-02-14 08:41:33)
->> Add PCIe clock definitions for IPQ9574 SoC
->>
->> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->> ---
->>   include/dt-bindings/clock/qcom,ipq9574-gcc.h | 276 ++++++++++---------
->>   1 file changed, 140 insertions(+), 136 deletions(-)
->>
->> diff --git a/include/dt-bindings/clock/qcom,ipq9574-gcc.h b/include/dt-bindings/clock/qcom,ipq9574-gcc.h
->> index feedfdd5e00a..c89e96d568c6 100644
->> --- a/include/dt-bindings/clock/qcom,ipq9574-gcc.h
->> +++ b/include/dt-bindings/clock/qcom,ipq9574-gcc.h
->> @@ -74,140 +74,144 @@
->>   #define GCC_PCIE3_AXI_S_BRIDGE_CLK                     65
->>   #define GCC_PCIE3_AXI_S_CLK                            66
->>   #define PCIE0_PIPE_CLK_SRC                             67
->> -#define PCIE1_PIPE_CLK_SRC                             68
-> 
-> Just add the new define at the end. This number and define is ABI
-> forever and shouldn't change.
-Sure, will update
-> 
->> -#define PCIE2_PIPE_CLK_SRC                             69
->> -#define PCIE3_PIPE_CLK_SRC                             70
-Best Regards,
-Devi Priya
+The first 2 patches address an issue with the use of configfs to create
+an endpoint driver type attributes group, preventing a potential crash
+if the user creates the driver attribute group directory multiple times.
+
+The following patches are fixes and improvements for the endpoint test
+drivers, EP side and host side.
+
+This is all tested using a Pine Rockpro64 board, with the rockchip ep
+driver fixed using Rick Wertenbroek <rick.wertenbroek@gmail.com>
+patches [1], plus some additional fixes from me.
+
+[1] https://lore.kernel.org/linux-pci/20230214140858.1133292-1-rick.werte=
+nbroek@gmail.com/
+
+Damien Le Moal (12):
+  pci: endpoint: Automatically create a function type attributes group
+  pci: endpoint: do not export pci_epf_type_add_cfs()
+  pci: epf-test: Fix DMA transfer completion detection
+  pci: epf-test: Use driver registers as volatile
+  pci: epf-test: Simplify dma support checks
+  pci: epf-test: Simplify transfers result print
+  pci: epf-test: Add debug and error messages
+  misc: pci_endpoint_test: Free IRQs before removing the device
+  misc: pci_endpoint_test: Do not write status in IRQ handler
+  misc: pci_endpoint_test: Re-init completion for every test
+  misc: pci_endpoint_test: Simplify pci_endpoint_test_msi_irq()
+  misc: pci_endpoint_test: Add debug and error messages
+
+ drivers/misc/pci_endpoint_test.c              |  51 +++--
+ drivers/pci/endpoint/functions/pci-epf-test.c | 207 +++++++++++-------
+ drivers/pci/endpoint/pci-ep-cfs.c             |  44 ++--
+ drivers/pci/endpoint/pci-epf-core.c           |  12 +-
+ drivers/pci/endpoint/pci-epf.h                |  14 ++
+ include/linux/pci-epf.h                       |   2 -
+ 6 files changed, 197 insertions(+), 133 deletions(-)
+ create mode 100644 drivers/pci/endpoint/pci-epf.h
+
+--=20
+2.39.1
+
