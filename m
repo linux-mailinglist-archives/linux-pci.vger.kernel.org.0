@@ -2,191 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EA6369727D
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 01:09:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA3986972FB
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 02:01:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231481AbjBOAJH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Feb 2023 19:09:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50886 "EHLO
+        id S229721AbjBOBBP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Feb 2023 20:01:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230022AbjBOAJG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 19:09:06 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81E12301A9;
-        Tue, 14 Feb 2023 16:08:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676419739; x=1707955739;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=KG+G8kT5KNH7fYZFaN0Rz+45V8REuKC8ggYjGTRnNSI=;
-  b=dVWWjInIwSJidr2M6FBCwQulojr9VKNnyfp19G9R/d17aLkoevhZQ4cA
-   sUueGEP71HhEUBXTcRsqbGotmqek763khAqqch47/sQXq/6MpnJWrHwMU
-   nSgleSByN6DqJRX5dnaheFFro9aPgf/EkEgrVkjCpMO1WjHRuGSg9o1aT
-   bLcAwEOOu6vsQAvl1SJk4Fl6Xk7L1+mAAPOjnca87NFAJ9W0DF41TygEl
-   /TVg8exFS+O5deb7tljE2KhO+UHz1iLpQJWQWtHASMCMIMswrBWVKL7nT
-   NwR0/tEOu54kLH8R29oM8Gv2EOUhTpbNzNYhW+tRtvfLPuxd/Bldt3fsX
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="329933493"
-X-IronPort-AV: E=Sophos;i="5.97,298,1669104000"; 
-   d="scan'208";a="329933493"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 16:08:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="758192682"
-X-IronPort-AV: E=Sophos;i="5.97,298,1669104000"; 
-   d="scan'208";a="758192682"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Feb 2023 16:08:59 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Tue, 14 Feb 2023 16:08:58 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Tue, 14 Feb 2023 16:08:58 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.102)
- by edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Tue, 14 Feb 2023 16:08:58 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=l2if6SWq3/2CwQsvT5fCrhFBN0rst0myyuJ4hLHrOSVwZTtol3mh+i3tKJAB3uUlzvMDGJ+tQ5Zin3js57rPTBI6LYFhZr96yyDSmqCqLxTvDHeQwY0AZ6OdrC6jJm3xaKYxEVOILT5XaVNmKTDkiczWDzxUOj72hdqq94eRRHbI9RqVd4nip7JZlh6/1kb27H795F9QCj2/pJr7p9kIlDarVCqfF2aineFpJQ0nGMn6Zi18gfmWPe27UdwNoBpDHizpg3+7TnsQmwWDjFxyPs/b2RT/HTXg9u1h+05lT1V5h+uNYw+iUCDXIsLEYHiIhmzY8iAqkWpfsUkSvH+AFA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gVXzK7y63GkrPcRgVDhK4UBNXRMg0g0mU0KjASFhZRo=;
- b=BJt8sjfvkL2FaFM9UFGYQBtPU2mf8Allkl12WsOgdGa3DeklQqH0o963uO+oT3KHFXMkDQf2yGoNLv72s39vwCcJoip1kZ/EE9WztmuYPmCA2STkhyLJVrDsNMxXA1ltPF2eCjHXzHvXVGYWAOVzIvdprrZdzudPHzLlNDuPouS/j8d8OVBVEQzQ0UM0yCDnIUyjU2mokDogUTc5+zsdpStAmhFdtuDgxR6Qrw8/0iyRKeuXOvK0RGA2rvnRMHo3Co4GJuZPiN9foEMttSdgsuw0xBjYnCDkWzrlPqdQ512QQPg6gP8of0ftNPDUGnX3ziKs7fM28ggccjzSCP5I3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by BY1PR11MB8080.namprd11.prod.outlook.com (2603:10b6:a03:528::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Wed, 15 Feb
- 2023 00:08:55 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6851:3db2:1166:dda6]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::6851:3db2:1166:dda6%8]) with mapi id 15.20.6086.024; Wed, 15 Feb 2023
- 00:08:49 +0000
-Date:   Tue, 14 Feb 2023 16:08:43 -0800
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Ira Weiny <ira.weiny@intel.com>
-CC:     Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>, Stefan Roese <sr@denx.de>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Subject: Re: [PATCH RFC] PCI/AER: Enable internal AER errors by default
-Message-ID: <63ec228bc5466_185fd22947@iweiny-mobl.notmuch>
-References: <20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com>
- <20230213213820.GA2935044@bhelgaas>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230213213820.GA2935044@bhelgaas>
-X-ClientProxiedBy: MW4PR04CA0276.namprd04.prod.outlook.com
- (2603:10b6:303:89::11) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        with ESMTP id S229927AbjBOBBM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Feb 2023 20:01:12 -0500
+Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BD1166FB
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 17:01:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1676422870; x=1707958870;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=XOcFePDBSO8jCjv36R6D31rgCgrBpc9VWxAmEMfwpY4=;
+  b=UdRTnYCFeP1yoHSaqm3j1wh2krPmHZQunEeDuIjwP1vGeE5srUGpE0PU
+   HXg/SshDybweRRqM6Pi9eFCux5OeK/logtIEKLdfSgUal2RrI+LoHmcHi
+   X4uJdotL+Uz2A9EeuO7ahQ5PF/i+jVGD9kjd7iR5Vm1AS7BVT1pbZuXK/
+   NErzMXeH6OgW2eofKi5vLV4kjyLuaonHMuNsrnFexgowSb9gWSehtNseG
+   6medtw+r1dTLR1BA/EDgRB9OUdqs33F7Kyhs66djllk7FC8oPSyApMqKE
+   TdKUFQl65ecSxAbKnoLkMxHDPmrzhn1TS1SKr0fcu8I6F8XgpULrP/NFM
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.97,298,1669046400"; 
+   d="scan'208";a="327619714"
+Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 09:01:09 +0800
+IronPort-SDR: k5S+Bbfz1fRypTe34t6dfKy97JQWXqrA5kPE5O0qsSHeeoxTsxCQyL2P6tLR5gt9QYmm8IHs17
+ NjPGEH9gAPnDdfFKDVMp0lih0U56UUlhXfCunHZ2TkhMTar7S6R6WkFJ8nohruiyUn9sGd7nKh
+ m4+9C0iSharE2JCZMgiya8fjMsGl5nm5kObYjfYHiiX2EHxhAp8nM02nVfwR3Js/tmwc/3C3Qy
+ 5iwJf1xz4XNAPYRek4hBpSK+uApnHYs4WJpMu8/qsawcLSVXsCn8CwxieRMM5qPHZ+mBNQfFvL
+ qnM=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 16:12:32 -0800
+IronPort-SDR: jFNTTyM8bVz1MC0aqM49R8sW8EKxom/sdRAPLIiP4nLIDaJ0btQeVQ+40HBIELVkmSs5/2h8s9
+ amsF4Q5R9Hu1l3dt+JEvDlHl0yYRqgNayiF2cVOoTw9rQIbAJIgmPm1KanxeGZftJAchW0BTUD
+ MwI0YAAjPZpI69haOW0kZ8OvT/vT8ehVAae14G4Tai097A8PmyEqz+8Z7tqs2ffteDdN18nfA5
+ mn2Ftckym5dxdfqJCRo37alZNhYOyNUnG/drVA28qtIoYJ32tNWsnEnMTk2JAnh+xgHIcmKZj5
+ v2c=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Feb 2023 17:01:10 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGfsK1Zs4z1RvTp
+        for <linux-pci@vger.kernel.org>; Tue, 14 Feb 2023 17:01:09 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1676422868; x=1679014869; bh=XOcFePDBSO8jCjv36R6D31rgCgrBpc9VWxA
+        mEMfwpY4=; b=CWyGVs8vvV8V9TroMGTaXUrq6Dk5LKKI05WQCVteluiqIHuQR3/
+        KipJSou78EOtFXvraqsQfwe3sXXpfCfDnlzWxEKHgGxMSo7a+uHIRToYKdNN6OZP
+        mgkERlXieonQr5tNTcfwecodSCCjr5yV/KxlbEjzc6Gg+09u6eR1fyZjZcs+mmOb
+        IJUiceCuMikYRvouEdxoKNS7q/a30gK1wj51E8y8NIQaN94u2CYOx12zLJJQDMFv
+        dEO/CdCQnKqXn28iAA7Y0MYiGtjNSeOgBDL8raHjVMxkmK0NGL0ypF7IgoBKzzpY
+        JrSQWeqzyoPkBxSkCaWwrx1pFFDRSOuwhnA==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id bpVDer2lNVfi for <linux-pci@vger.kernel.org>;
+        Tue, 14 Feb 2023 17:01:08 -0800 (PST)
+Received: from [10.225.163.116] (unknown [10.225.163.116])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGfsD4tpXz1RvLy;
+        Tue, 14 Feb 2023 17:01:04 -0800 (PST)
+Message-ID: <adfcf9a9-8607-9778-1c83-de0092c70e0b@opensource.wdc.com>
+Date:   Wed, 15 Feb 2023 10:01:03 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|BY1PR11MB8080:EE_
-X-MS-Office365-Filtering-Correlation-Id: 22f9e7d5-91ab-4e8c-f005-08db0ee8cffe
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 2pM1OLl8vtTyjC1i4YwnGePguJaEbqKANlel7NdWSs0U6z5HgbSPD/ycVqAKpAPcfGLkae3FdI9n6iLi6lbsm8nJ9HiaFp9lp57b+cwszC12QnTS3MveGYUeGLCJIdndpku2SWMmQYoNl2ISWq/3yV7bRs0XwVEvgMzZ3F7X55Zqhbw4zVoeWl5uMLOO7waAA1C4kiX2HCmO1iNOv4jb3TTfdBVKqHCyPiUfeU93iqDt1VXX0N1pJXjbBXtlA5QsPgTD76d9I8k7sR9w9CY+xQHpZMyDRvtGdpwOOg87FC/1UBnnnl0iD9c8GlXwmEBwaJRr1J09HhvWpsFmNE+DuicrIKoOQ7X15Tn5ymm39RreOmKnkw63zPjXPNN86DHyYjkv37xFqOcAF0vLY2HTLJF9lT1qRzfqeAm1vYj5M+J8OPC7F4/lgr82RPKMkiKI4th+FoAzfKR/N34GZ1GDCKdQlh8BWv6USK+w55GiTfF/HxyEIFXbKFnzq//aPnEmnO1fi7mGCPNOdFQ4Ikcs4YCjJZkqqlapnfbAktaAmLLhz5UkEjwPn9IATiyIoL+RVfeP5MFvHQmuCUJP4TczOUKIw0IobbbKVWW5gajrPtvGwrltzv92lp1BolyH/0pC6nQb6CfgmITpqaHnuHy3mA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(136003)(39860400002)(376002)(366004)(346002)(451199018)(316002)(110136005)(83380400001)(82960400001)(86362001)(38100700002)(186003)(26005)(54906003)(6512007)(6506007)(9686003)(6666004)(6486002)(478600001)(2906002)(41300700001)(44832011)(7416002)(5660300002)(8936002)(66476007)(4326008)(8676002)(66556008)(66946007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?3nczTZ5sc+eICwqdw7KexJ9wgoasQai3UPQ2hFZG066MDd4IqgqB3oMyAfG9?=
- =?us-ascii?Q?76CGgpgx4A8h2ShDbHURQ3ZY5ClTN+IqzNTv+zgT5fh1qFqAKx20R6DMjjG+?=
- =?us-ascii?Q?OnMOH5nrwJjQj1mSqhR+/UGXnCkDAYgWuQxj1oY5igV3ybSGyicyLJ4E4zhS?=
- =?us-ascii?Q?ZgZ+Gl3BWrqU2G1F11CrHbqa7TVhcjC56w/FPAYktGBmu/ystJ0I17zQIpgZ?=
- =?us-ascii?Q?B2lcrxU8+r8Y6tpuoaN6qHyade3EiymSu7fnkjprsCNYT9U+qJqNZMlTVInx?=
- =?us-ascii?Q?bEY7GzeUjtCS/wVPhVvcfOMqilFjdyuZubGdlJLpddyZoGP33raUSo4Sgqd+?=
- =?us-ascii?Q?cg8ZsrRaFHLXrZ8cPW+FksSRKv2x35I1tO61dzASNVW6Ltj/50T30TSPWSrl?=
- =?us-ascii?Q?G6WTmr3bJjpeQ+nfKyE6L4Q+iYS4rlMAr+exE1eR8wiOEKOpQCDRn3u76+PL?=
- =?us-ascii?Q?x8EgYWghN21t+pU4XbaCoKoba1rDAWzShA8BbRsswnyC67T73FRmZiiaYAaS?=
- =?us-ascii?Q?Sk/XciyL5c8Kf7rnIhRlLdFFu7tLd60olIML9XxEDPBfgZdRn1ojRDJTrey+?=
- =?us-ascii?Q?b2tl/B9ItiK/LFn9Iurq+Wa2T2sL0ZIL6hfgPC3loI6KCrHwCaSS5pF1KMAL?=
- =?us-ascii?Q?RzWibI5FkYmNRAWTMEWVoe3vpqkaRTEH1NFQ6M1dJI0JiPO5McXLvl/rmHRL?=
- =?us-ascii?Q?Wzu3M/PUGpqfD7OpyUMo+mluWOmbTwYVA89loOlvADqJOCx8RA1wwoILF1QD?=
- =?us-ascii?Q?7T5LBfHFC7ol1hQEV2aW+bE7eJVpAmL9LYGAznjq6Jh957BGc63/m9HeK8Ut?=
- =?us-ascii?Q?YEox6UC3H7HQxhMzuwU/oJnEZGDby28L+uc9RpWIjf7kMIczA3PitrY3AzmF?=
- =?us-ascii?Q?h0+S1QGHXA8JXU84HXR5zp0qL+4bgoCZF14X0iWJjdFB8KWAR5bwrS6XRc+f?=
- =?us-ascii?Q?MZmpke062yh7qvu44YwD2pyeUhNQiZmhD5GlifO9+iFMZvJBdV2HRXeGc7q+?=
- =?us-ascii?Q?4MKHLZml7gNCTfa0emsgN9yeSum+30LY3GM7+3jfYTN1xOtlUEVR3o3Ss63M?=
- =?us-ascii?Q?f0C9vznU8P0VqJxH0qORx9sbr5VD2OpGj3RxQhJJpfxW+6qKEUkeSZ8G9bLm?=
- =?us-ascii?Q?Pyq6Cpx3X5cOnI2CH6rezwg7Ex7k6Kr1uFvU2K7Ez/fJqfz6w+APJJNpQ1d2?=
- =?us-ascii?Q?HiePVmAaAEu6S1kRJvMVqO9LKq3nGBgsFFN5MBjB3GR0hVltQWySB6O+/fwr?=
- =?us-ascii?Q?s46ZQH88H3ZG2TATlFmzc5TmnUyFioUwxWrTEuDnxErfYAP/hbZ1XG+L8oh6?=
- =?us-ascii?Q?UVOKe+7UOyDX/1/Uxd4UNshSrtWTaW4Zh7lnSDolN7XLlxLwWUGxBPbrbhTN?=
- =?us-ascii?Q?YZpQ6rSLCKCGzOMfHbZbkUfbvZkioJtngrGTZVAsh8LZ/5g0EFHzcvTgnVvR?=
- =?us-ascii?Q?eEpa7jy3HfOV5sRGjQaH9qQsD42iJ0JwycXcbCUTqtZZxjoq4JNeAwHrctaG?=
- =?us-ascii?Q?eHu/iB/0qz0c+gsWwDuQzuNHX2U9qsm0tcGqv3Ti9Xk1S9NLzs6r7tmNk65V?=
- =?us-ascii?Q?ikLwAp57XKGE/itDk0aTRbwaywUMkmiEIBXE5mBR?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22f9e7d5-91ab-4e8c-f005-08db0ee8cffe
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Feb 2023 00:08:49.0349
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Rs44lGDIO/lQ+MLjPez9vOeQ/QVXJuHKnGgAGLPufhSzyosVjo+ygY1aOHUvY5bMMgiyZ9Btz9JjpepvTKI1gQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR11MB8080
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v2 4/9] PCI: rockchip: Add poll and timeout to wait for
+ PHY PLLs to be locked
+Content-Language: en-US
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        alberto.dassatti@heig-vd.ch
+Cc:     xxm@rock-chips.com, rick.wertenbroek@heig-vd.ch,
+        stable@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
+ <20230214140858.1133292-5-rick.wertenbroek@gmail.com>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <20230214140858.1133292-5-rick.wertenbroek@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas wrote:
-> On Fri, Feb 10, 2023 at 02:33:23PM -0800, Ira Weiny wrote:
-> > The CXL driver expects internal error reporting to be enabled via
-> > pci_enable_pcie_error_reporting().  It is likely other drivers expect the same.
-> > Dave submitted a patch to enable the CXL side[1] but the PCI AER registers
-> > still mask errors.
-> > 
-> > PCIe v6.0 Uncorrectable Mask Register (7.8.4.3) and Correctable Mask
-> > Register (7.8.4.6) default to masking internal errors.  The
-> > Uncorrectable Error Severity Register (7.8.4.4) defaults internal errors
-> > as fatal.
-> > 
-> > Enable internal errors to be reported via the standard
-> > pci_enable_pcie_error_reporting() call.  Ensure uncorrectable errors are set
-> > non-fatal to limit any impact to other drivers.
+On 2/14/23 23:08, Rick Wertenbroek wrote:
+> The RK3399 PCIe controller should wait until the PHY PLLs are locked.
+> Add poll and timeout to wait for PHY PLLs to be locked. If they cannot
+> be locked generate error message and jump to error handler. Accessing
+> registers in the PHY clock domain when PLLs are not locked causes hang
+> The PHY PLLs status is checked through a side channel register.
+> This is documented in the TRM section 17.5.8.1 "PCIe Initialization
+> Sequence".
 > 
-> Do you have any background on why the spec makes these errors masked
-> by default?  I'm sympathetic to wanting to learn about all the errors
-> we can, but I'm a little wary if the spec authors thought it was
-> important to mask these by default.
+> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+
+A couple of nits below. Otherwise:
+
+Reviewed-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Tested-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+
+> ---
+>  drivers/pci/controller/pcie-rockchip.c | 16 ++++++++++++++++
+>  drivers/pci/controller/pcie-rockchip.h |  2 ++
+>  2 files changed, 18 insertions(+)
 > 
+> diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
+> index 990a00e08..5f2e2dd5d 100644
+> --- a/drivers/pci/controller/pcie-rockchip.c
+> +++ b/drivers/pci/controller/pcie-rockchip.c
 
-I don't have any idea of the history.
+[...]
 
-To me 'internal errors' is a pretty wide net and was likely a catch all
-that the authors felt was mostly unneeded.
+> +	err = readx_poll_timeout(rockchip_pcie_read_addr, PCIE_CLIENT_SIDE_BAND_STATUS,
 
-CXL is different because it further divides the errors.
+Nit: long line. Split it after the first comma.
 
-I've enlisted some help internal to Intel to hopefully find some answers.
-But in the event no one knows it would be safe to to with my alternate
-suggestion and add a new PCIe call to enable this specifically for the
-drivers who need it.
+> +		regs, !(regs & PCIE_CLIENT_PHY_ST), RK_PHY_PLL_LOCK_SLEEP_US,
+> +		RK_PHY_PLL_LOCK_TIMEOUT_US);
+> +
 
-Ira
+Nit: no need for this blank line.
+
+> +	if (err) {
+> +		dev_err(dev, "PHY PLLs could not lock, %d\n", err);
+> +		goto err_power_off_phy;
+> +	}
+> +
+
+-- 
+Damien Le Moal
+Western Digital Research
+
