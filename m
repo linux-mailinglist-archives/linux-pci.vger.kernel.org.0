@@ -2,130 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 565B6697F9E
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 16:39:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A84D369810B
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 17:39:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbjBOPjT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 10:39:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57408 "EHLO
+        id S229516AbjBOQjD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 11:39:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229888AbjBOPjQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 10:39:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDC593754B;
-        Wed, 15 Feb 2023 07:39:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 64EFF61CA1;
-        Wed, 15 Feb 2023 15:39:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96E44C4339B;
-        Wed, 15 Feb 2023 15:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676475554;
-        bh=KAqVQM9UCH1nsN4dVqO6EI2zHup8vWAXhFqadtkfxJM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=RaKm6Vd89p1r/UPhvnoxGM8/yaSzsjglgOBhaKDjkb66pV8QyxW8L6p+iTAWHw5fr
-         ow8VrkUQ47yCIqPBTU12Y1e5i6FQqvtasc3nI4nTwipHy5QQbmYPKq03feQ7lj4lxB
-         4QvQP7lmtYdMV0LqxnrmYKW366R92hVLF2jIVfEPtf9kxNDIL2kuPkGfGAeNKJhSNf
-         4mXkTP0lpilWn114gDuj2C6vCcgr+i1x6jYnf/mpp5g7Cpy2lNTa75PV15gDik493s
-         EuhBBIu98FjsuRQjkJIexThiNjQJYAiaNHezaExE++u+q49OIi+57CU1rQ5jj4Q5ii
-         nBJHKKqXH+3UA==
-Date:   Wed, 15 Feb 2023 09:39:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Baolu Lu <baolu.lu@linux.intel.com>
-Cc:     Felix Kuehling <felix.kuehling@amd.com>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        "Hegde, Vasant" <Vasant.Hegde@amd.com>,
-        Matt Fagnani <matt.fagnani@bell.net>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Joerg Roedel <jroedel@suse.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Pan, Xinhui" <Xinhui.Pan@amd.com>, amd-gfx@lists.freedesktop.org
-Subject: Re: [regression, =?iso-8859-1?Q?bisected?=
- =?iso-8859-1?Q?=2C_pci=2Fiommu=5D_Bug=A0216865_-_Black_screen_when_amdgp?=
- =?iso-8859-1?Q?u?= started during 6.2-rc1 boot with AMD IOMMU enabled
-Message-ID: <20230215153913.GA3189407@bhelgaas>
+        with ESMTP id S229674AbjBOQjC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 11:39:02 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9D03432B;
+        Wed, 15 Feb 2023 08:38:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676479135; x=1708015135;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=SA6yZ1GuWbNnqcPK4T064NP2+l9OXsQyEUrjHXqnI2Y=;
+  b=QkBPVo1l4eFDIis4xhnGYEzybT9Jxs+beJvW2zOSdFfspbgU/9JmUo3b
+   BeaqZUb4ffdubmU9ooTXm+AcPfndzT4mQpe01UtUhV+NZgm5nXQqd10yv
+   mKw6UG2LuEPAF/EcSCbCnKgn8SoHFxWNJwY72R9FSwzGKTOJAzqZKjI9P
+   yzXDix42CPymBA5daEX/N8iCh79jxRraS7/NKm2hOrHI5EIaL0QqJrbck
+   xfoCT3jyuioCYwrAofPXKmaxkJoRJcJ+jgclnC9ZxrVn88SV+oqEKMWZF
+   N+fHwEJ3hoGSdjcPUVsW3dSlJCTWYZpJx9Db0nAzl40A5VwlJGJdGRSSo
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="311838684"
+X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
+   d="scan'208";a="311838684"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 08:38:54 -0800
+X-IronPort-AV: E=McAfee;i="6500,9779,10622"; a="812525207"
+X-IronPort-AV: E=Sophos;i="5.97,300,1669104000"; 
+   d="scan'208";a="812525207"
+Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.212.39.121]) ([10.212.39.121])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Feb 2023 08:38:54 -0800
+Message-ID: <6c15f65d-d007-ff7e-55c7-a1c120ac1c62@intel.com>
+Date:   Wed, 15 Feb 2023 09:38:53 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7bbc0f65-e1c6-f388-29a8-390b8c9c92c8@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.6.0
+Subject: Re: [PATCH 13/18] cxl: Add latency and bandwidth calculations for the
+ CXL path
+Content-Language: en-US
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     linux-cxl@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, dan.j.williams@intel.com,
+        ira.weiny@intel.com, vishal.l.verma@intel.com,
+        alison.schofield@intel.com, rafael@kernel.org, bhelgaas@google.com,
+        robert.moore@intel.com
+References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
+ <167571667794.587790.14172786993094257614.stgit@djiang5-mobl3.local>
+ <20230209152417.00007f47@Huawei.com>
+ <8b2bbf7b-fe3f-c80b-163b-8247e0c47821@intel.com>
+ <20230215131706.0000592d@Huawei.com>
+From:   Dave Jiang <dave.jiang@intel.com>
+In-Reply-To: <20230215131706.0000592d@Huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Christian, Xinhui, amd-gfx]
 
-On Fri, Jan 06, 2023 at 01:48:11PM +0800, Baolu Lu wrote:
-> On 1/5/23 11:27 PM, Felix Kuehling wrote:
-> > Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
-> > > > -----Original Message-----
-> > > > From: Hegde, Vasant <Vasant.Hegde@amd.com>
-> > > > On 1/5/2023 4:07 PM, Baolu Lu wrote:
-> > > > > On 2023/1/5 18:27, Vasant Hegde wrote:
-> > > > > > On 1/5/2023 6:39 AM, Matt Fagnani wrote:
-> > > > > > > I built 6.2-rc2 with the patch applied. The same black
-> > > > > > > screen problem happened with 6.2-rc2 with the patch. I
-> > > > > > > tried to use early kdump with 6.2-rc2 with the patch
-> > > > > > > twice by panicking the kernel with sysrq+alt+c after the
-> > > > > > > black screen happened. The system rebooted after about
-> > > > > > > 10-20 seconds both times, but no kdump and dmesg files
-> > > > > > > were saved in /var/crash. I'm attaching the lspci -vvv
-> > > > > > > output as requested. ...
 
-> > > > > > Looking into lspci output, it doesn't list ACS feature
-> > > > > > for Graphics card. So with your fix it didn't enable PASID
-> > > > > > and hence it failed to boot. ...
-
-> > > > > So do you mind telling why does the PASID need to be enabled
-> > > > > for the graphic device? Or in another word, what does the
-> > > > > graphic driver use the PASID for? ...
-
-> > > The GPU driver uses the pasid for shared virtual memory between
-> > > the CPU and GPU.  I.e., so that the user apps can use the same
-> > > virtual address space on the GPU and the CPU.  It also uses
-> > > pasid to take advantage of recoverable device page faults using
-> > > PRS. ...
-
-> > Agreed. This applies to GPU computing on some older AMD APUs that
-> > take advantage of memory coherence and IOMMUv2 address translation
-> > to create a shared virtual address space between the CPU and GPU.
-> > In this case it seems to be a Carrizo APU. It is also true for
-> > Raven APUs. ...
-
-> Thanks for the explanation.
+On 2/15/23 6:17 AM, Jonathan Cameron wrote:
+> On Tue, 14 Feb 2023 16:03:27 -0700
+> Dave Jiang <dave.jiang@intel.com> wrote:
 > 
-> This is actually the problem that commit 201007ef707a was trying to
-> fix.  The PCIe fabric routes Memory Requests based on the TLP
-> address, ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with
-> PASID that should go upstream to the IOMMU may instead be routed as
-> a P2P Request if its address falls in a bridge window.
+>> On 2/9/23 8:24 AM, Jonathan Cameron wrote:
+>>> On Mon, 06 Feb 2023 13:51:19 -0700
+>>> Dave Jiang <dave.jiang@intel.com> wrote:
+>>>    
+>>>> CXL Memory Device SW Guide rev1.0 2.11.2 provides instruction on how to
+>>>> caluclate latency and bandwidth for CXL memory device. Calculate minimum
+>>>
+>>> Spell check your descriptions (I often forget to do this as well!
+>>> )
+>>>> bandwidth and total latency for the path from the CXL device to the root
+>>>> port. The calculates values are stored in the cached DSMAS entries attached
+>>>> to the cxl_port of the CXL device.
+>>>>
+>>>> For example for a device that is directly attached to a host bus:
+>>>> Total Latency = Device Latency (from CDAT) + Dev to Host Bus (HB) Link
+>>>> 		Latency
+>>>> Min Bandwidth = Link Bandwidth between Host Bus and CXL device
+>>>>
+>>>> For a device that has a switch in between host bus and CXL device:
+>>>> Total Latency = Device (CDAT) Latency + Dev to Switch Link Latency +
+>>>> 		Switch (CDAT) Latency + Switch to HB Link Latency
+>>>
+>>> For QTG purposes, are we also supposed to take into account HB to
+>>> system interconnect type latency (or maybe nearest CPU?).
+>>> That is likely to be non trivial.
+>>
+>> Dan brought this ECN [1] to my attention. We can add this if we can find
+>> a BIOS that implements the ECN. Or should we code a place holder for it
+>> until this is available?
+>>
+>> https://lore.kernel.org/linux-cxl/e1a52da9aec90766da5de51b1b839fd95d63a5af.camel@intel.com/
 > 
-> In SVA case, the IOMMU shares the address space of a user
-> application.  The user application side has no knowledge about the
-> PCI bridge window.  It is entirely possible that the device is
-> programed with a P2P address and results in a disaster.
-
-Is this stalled?  We explored the idea of changing the PCI core so
-that for devices that use ATS/PRI, we could enable PASID without
-checking for ACS [1], but IIUC we ultimately concluded that it was
-based on a misunderstanding of how ATS Translation Requests are routed
-and that an AMD driver change would be required [2].
-
-So it seems like we still have this regression, and we're running out
-of time before v6.2.
-
-[1] https://lore.kernel.org/all/20230114073420.759989-1-baolu.lu@linux.intel.com/
-[2] https://lore.kernel.org/all/Y91X9MeCOsa67CC6@nvidia.com/
+> I've had Generic Ports on my list to add to QEMU for a while but not been
+> high enough priority to either do it myself, or make it someone else's problem.
+> I suspect the biggest barrier in QEMU is going to be the interface to add
+> these to the NUMA description.
+> 
+> It's easy enough to hand build and inject a SRAT /SLIT/HMAT tables with
+> these in (that's how we developed the Generic Initiator support in Linux before
+> any BIOS support).
+> 
+> So I'd like to see it soon, but I'm not hugely bothered if that element
+> follows this patch set. However, we are potentially going to see different
+> decisions made when that detail is added so it 'might' count as ABI
+> breakage if it's not there from the start. I think we are fine as probably
+> no BIOS' yet though.
+> 
+>>
+>>>    
+>>>> Min Bandwidth = min(dev to switch bandwidth, switch to HB bandwidth)
+>>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>>
+>>> Stray sign off.
+>>>    
+>>>>
+>>>> The internal latency for a switch can be retrieved from the CDAT of the
+>>>> switch PCI device. However, since there's no easy way to retrieve that
+>>>> right now on Linux, a guesstimated constant is used per switch to simplify
+>>>> the driver code.
+>>>
+>>> I'd like to see that gap closed asap. I think it is fairly obvious how to do
+>>> it, so shouldn't be too hard, just needs a dance to get the DOE for a switch
+>>> port using Lukas' updated handling of DOE mailboxes.
+>>
+>> Talked to Lukas and this may not be difficult with his latest changes. I
+>> can take a look. Do we support switch CDAT in QEMU yet?
+> 
+> I started typing no, then thought I'd just check.  Seems I did write support
+> for CDAT on switches (and then completely forgot about it ;)
+> It's upstream and everything!
+> https://elixir.bootlin.com/qemu/latest/source/hw/pci-bridge/cxl_upstream.c#L194
+> 
+Awesome! I'll go poke around a bit. Also it's very helpful to see the 
+creation code. Helped me realize that I need to support parsing of 
+SSLBIS sub-table for switches. Thanks!
