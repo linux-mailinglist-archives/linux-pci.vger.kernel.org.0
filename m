@@ -2,139 +2,225 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1B9E697DDC
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 14:52:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D1DC697DF3
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 15:02:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjBONvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 08:51:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39560 "EHLO
+        id S229551AbjBOOCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 09:02:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229790AbjBONvQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 08:51:16 -0500
-Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E02222B083
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 05:50:45 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1D26D5C0179;
-        Wed, 15 Feb 2023 08:50:40 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Wed, 15 Feb 2023 08:50:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1676469040; x=1676555440; bh=55M0LOKamm
-        aIqjTX10c7MKzxqCX1wkKOCsf80qHeDVA=; b=uHS5SCcvksxfcxIu4cLL/xkbjL
-        W76bCjolSWy+SqMJaeWQdhj5z1ISviJmp9R6tshoa+sG259kzUPiwFBBO4bKoTKm
-        6K0IIVXahuxUtDqQGV1DjXeEZkh4JtI+42brOILafeDHS6Mc0VfMhlpVwjsNcVeG
-        O4ZVpNIM58XwwSjjwJPC/AryLYBNE1BadNn8fo5agk214t53wHolWFy6sU6esAGp
-        od82cBUKq631457ue3vxg5pUzChUYKWv0f3zNB2qFI7sBVipdR+bYg0lf0ZruVGM
-        tCc2xbaWyeYuIhpU+TwUidxzTklvbGJDHy4ggJBl79S74y9kINACvi9g014Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1676469040; x=1676555440; bh=55M0LOKammaIqjTX10c7MKzxqCX1
-        wkKOCsf80qHeDVA=; b=jNZg6+ngRfgzyA4rV64qf783vFKb2Gu6uzl7je79X1sO
-        RExjxrncN+6xzdboOeoLbdiZuuDL0JmNLLApFM+YeCt3eg4L9owzZQcsnUHSGxR3
-        s5XL2T/7dqxR8XPxf/Z05cadQcqPDegtHy89tbXvOte2L7/nHoXq6ZeP3uj1i04F
-        +hDjiIVsTH8L3sC7iS4cf+gL7EAsSDO9rJm4lJd5kyj5CBSv35rYS4LF9x7lDc9M
-        x3WCaSvZLtxF7X9bm8G2KdbnvtsdLg2ZlknVVSeDRh6WASjI2WrqipSSY0cE62Qi
-        HPcg+isxYxo3+gQzRfBYN8LOU17B6ZVh3wwaIqtDgg==
-X-ME-Sender: <xms:L-PsY8QDkBD1JY75Z6mhmr_oivYiZDaTKBpw9EooMzzy5FqwGZcebA>
-    <xme:L-PsY5zOWSmQ9xBPqwtdMXQMaDcwT_sDJrH0Hnd4iulHoo3Izz6cK1YHQ51fiG67Z
-    IBPwm1LUHpdi7VdZNw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeihedgheduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:L-PsY514DQK-EKFhEQLS92kMkgeGmBeQqQcZmyW7N4-yTYb5Z9-d2w>
-    <xmx:L-PsYwDVuJVp3nwfN_g-sMNx0OuiXCIFzQfE9S0j52OH7hq7t4iiTg>
-    <xmx:L-PsY1h1VGdz_-S1UqkXHzgReiMPU4P6Y9qCD_GOADF7tRNf-Pyhaw>
-    <xmx:MOPsYwXi1TQztyjZ9wc_vBaMtnYQ8qK7XJeu2U9ptTTEED0iSE8KyQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 8E978B60086; Wed, 15 Feb 2023 08:50:39 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-156-g081acc5ed5-fm-20230206.001-g081acc5e
-Mime-Version: 1.0
-Message-Id: <c49df2f9-9848-45aa-9d64-9e4e9841440f@app.fastmail.com>
-In-Reply-To: <Y+zdD8G0NJIdiClo@kroah.com>
-References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-8-damien.lemoal@opensource.wdc.com>
- <Y+zDUmwj8+ibp3r0@kroah.com>
- <e71ad0dc-2250-7ffc-6d96-745e2da40694@opensource.wdc.com>
- <Y+zJqp9cXelKro6t@kroah.com>
- <077adda6-ef9f-5c31-c041-97342317f1d2@opensource.wdc.com>
- <Y+zdD8G0NJIdiClo@kroah.com>
-Date:   Wed, 15 Feb 2023 14:49:52 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Damien Le Moal" <damien.lemoal@opensource.wdc.com>
-Cc:     "Bjorn Helgaas" <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        "Rick Wertenbroek" <rick.wertenbroek@gmail.com>,
-        "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        "Manivannan Sadhasivam" <mani@kernel.org>,
-        "Kishon Vijay Abraham I" <kishon@kernel.org>
-Subject: Re: [PATCH 07/12] pci: epf-test: Add debug and error messages
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229436AbjBOOCT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 09:02:19 -0500
+Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:101:465::107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE966311C4
+        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 06:02:17 -0800 (PST)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4PH0BV5W0jz9sQL;
+        Wed, 15 Feb 2023 15:02:10 +0100 (CET)
+Message-ID: <a4f879fd-8818-5dd2-92c9-cd435e17af99@denx.de>
+Date:   Wed, 15 Feb 2023 15:02:08 +0100
+MIME-Version: 1.0
+Subject: Re: [PATCH] PCI/AER: Remove deprecated documentation for
+ pcie_enable_pcie_error_reporting()
+Content-Language: en-US
+To:     Dave Jiang <dave.jiang@intel.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
+        bhelgaas@google.com, lukas@wunner.de,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+References: <20230214172831.GA3046378@bhelgaas>
+ <17f976ba-060e-8ff4-fa9c-bf06e69aa87a@intel.com>
+From:   Stefan Roese <sr@denx.de>
+In-Reply-To: <17f976ba-060e-8ff4-fa9c-bf06e69aa87a@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 4PH0BV5W0jz9sQL
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_NEUTRAL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 15, 2023, at 14:24, Greg Kroah-Hartman wrote:
-> On Wed, Feb 15, 2023 at 09:18:48PM +0900, Damien Le Moal wrote:
->> On 2/15/23 21:01, Greg Kroah-Hartman wrote:
->> >>>> @@ -330,6 +330,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test, bool use_dma)
->> >>>>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->> >>>>  	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->> >>>
->> >>> note, volatile is almost always wrong, please fix that up.
->> >>
->> >> OK. Will think of something else.
->> > 
->> > If this is io memory, use the proper accessors to access it.  If it is
->> > not io memory, then why is it marked volatile at all?
->> 
->> This is a PCI bar memory. So I can simply copy the structure locally with
->> memcpy_fromio() and memcpy_toio().
->
-> Great, please do so instead of trying to access it directly like this,
-> which will break on some platforms.
+On 2/14/23 18:37, Dave Jiang wrote:
+> 
+> 
+> On 2/14/23 10:28 AM, Bjorn Helgaas wrote:
+>> [+cc Stefan, Sathy, Jonathan]
+>>
+>> On Tue, Feb 14, 2023 at 09:48:55AM -0700, Dave Jiang wrote:
+>>> With commit [1] upstream that enables AER reporting by default for 
+>>> all PCIe
+>>> devices, the documentation for pcie_enable_pcie_error_reporting() is no
+>>> longer necessary. Remove references to the helper function.
+>>>
+>>> [1]: commit f26e58bf6f54 ("PCI/AER: Enable error reporting when AER 
+>>> is native")
+>>>
+>>> Suggested-by: Dan Williams <dan.j.williams@intel.com>
+>>> Signed-off-by: Dave Jiang <dave.jiang@intel.com>
+>>
+>> Thanks!  I'll attach my work-in-progress patch from yesterday for your
+>> comments.  I think we can go even a little further because I don't
+>> think we need to encourage drivers to configure AER registers (if they
+>> do, they almost certainly don't pay attention to ownership via _OSC),
+>> and if they don't use pci_enable_pcie_error_reporting(), they
+>> shouldn't use pci_disable_pcie_error_reporting() either.
+>>
+>>> ---
+>>>   Documentation/PCI/pcieaer-howto.rst |   18 ------------------
+>>>   1 file changed, 18 deletions(-)
+>>>
+>>> diff --git a/Documentation/PCI/pcieaer-howto.rst 
+>>> b/Documentation/PCI/pcieaer-howto.rst
+>>> index 0b36b9ebfa4b..a82802795a06 100644
+>>> --- a/Documentation/PCI/pcieaer-howto.rst
+>>> +++ b/Documentation/PCI/pcieaer-howto.rst
+>>> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include 
+>>> any device specific
+>>>   errors because device specific errors will still get sent directly to
+>>>   the device driver.
+>>> -Configure the AER capability structure
+>>> ---------------------------------------
+>>> -
+>>> -AER aware drivers of PCI Express component need change the device
+>>> -control registers to enable AER. They also could change AER registers,
+>>> -including mask and severity registers. Helper function
+>>> -pci_enable_pcie_error_reporting could be used to enable AER. See
+>>> -section 3.3.
+>>> -
+>>>   Provide callbacks
+>>>   -----------------
+>>> @@ -214,15 +205,6 @@ to mmio_enabled.
+>>>   helper functions
+>>>   ----------------
+>>> -::
+>>> -
+>>> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>>> -
+>>> -pci_enable_pcie_error_reporting enables the device to send error
+>>> -messages to root port when an error is detected. Note that devices
+>>> -don't enable the error reporting by default, so device drivers need
+>>> -call this function to enable it.
+>>> -
+>>>   ::
+>>>     int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+>>
+>>
+>> commit d7b36abe72db ("Remove AER Capability configuration")
+>> Author: Bjorn Helgaas <bhelgaas@google.com>
+>> Date:   Mon Feb 13 11:53:42 2023 -0600
+>>
+>>      Remove AER Capability configuration
+> 
+> The changes LGTM.
+> Reviewed-by: Dave Jiang <dave.jiang@intel.com>
 
-I think the reverse is true here: looking at where the pointer comes
-from, 'reg' is actually the result of dma_alloc_coherent() in the
-memory of the local (endpoint) machine, though it appears as a BAR on
-the remote (host) side and gets mapped with ioremap() there.
+Reviewed-by: Stefan Roese <sr@denx.de>
 
-This means that the host must use readl/write/memcpy_fromio/memcpy_toio
-to access the buffer, matching the __iomem token there, while the
-endpoint side not use those. On some machines, readl/write take
-arguments that are not compatible with normal pointers, and will
-do something completely different there.
+Thanks,
+Stefan
 
-A volatile access is not the worst option here, though this conflicts
-with the '__packed' annotation in the structure definition that
-may require bytewise access on architectures without unaligned
-access.
+> 
+>>
+>> diff --git a/Documentation/PCI/pcieaer-howto.rst 
+>> b/Documentation/PCI/pcieaer-howto.rst
+>> index 0b36b9ebfa4b..c98a229ea9f5 100644
+>> --- a/Documentation/PCI/pcieaer-howto.rst
+>> +++ b/Documentation/PCI/pcieaer-howto.rst
+>> @@ -96,8 +96,8 @@ 
+>> Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+>>   Developer Guide
+>>   ===============
+>> -To enable AER aware support requires a software driver to configure
+>> -the AER capability structure within its device and to provide callbacks.
+>> +To enable AER aware support requires a software driver to provide
+>> +callbacks.
+>>   To support AER better, developers need understand how AER does work
+>>   firstly.
+>> @@ -135,15 +135,6 @@ hierarchy and links. These errors do not include 
+>> any device specific
+>>   errors because device specific errors will still get sent directly to
+>>   the device driver.
+>> -Configure the AER capability structure
+>> ---------------------------------------
+>> -
+>> -AER aware drivers of PCI Express component need change the device
+>> -control registers to enable AER. They also could change AER registers,
+>> -including mask and severity registers. Helper function
+>> -pci_enable_pcie_error_reporting could be used to enable AER. See
+>> -section 3.3.
+>> -
+>>   Provide callbacks
+>>   -----------------
+>> @@ -212,31 +203,6 @@ to reset the link. If error_detected returns 
+>> PCI_ERS_RESULT_CAN_RECOVER
+>>   and reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling 
+>> goes
+>>   to mmio_enabled.
+>> -helper functions
+>> -----------------
+>> -::
+>> -
+>> -  int pci_enable_pcie_error_reporting(struct pci_dev *dev);
+>> -
+>> -pci_enable_pcie_error_reporting enables the device to send error
+>> -messages to root port when an error is detected. Note that devices
+>> -don't enable the error reporting by default, so device drivers need
+>> -call this function to enable it.
+>> -
+>> -::
+>> -
+>> -  int pci_disable_pcie_error_reporting(struct pci_dev *dev);
+>> -
+>> -pci_disable_pcie_error_reporting disables the device to send error
+>> -messages to root port when an error is detected.
+>> -
+>> -::
+>> -
+>> -  int pci_aer_clear_nonfatal_status(struct pci_dev *dev);`
+>> -
+>> -pci_aer_clear_nonfatal_status clears non-fatal errors in the 
+>> uncorrectable
+>> -error status register.
+>> -
+>>   Frequent Asked Questions
+>>   ------------------------
+>> @@ -257,24 +223,6 @@ A:
+>>     Fatal error recovery will fail if the errors are reported by the
+>>     upstream ports who are attached by the service driver.
+>> -Q:
+>> -  How does this infrastructure deal with driver that is not PCI
+>> -  Express aware?
+>> -
+>> -A:
+>> -  This infrastructure calls the error callback functions of the
+>> -  driver when an error happens. But if the driver is not aware of
+>> -  PCI Express, the device might not report its own errors to root
+>> -  port.
+>> -
+>> -Q:
+>> -  What modifications will that driver need to make it compatible
+>> -  with the PCI Express AER Root driver?
+>> -
+>> -A:
+>> -  It could call the helper functions to enable AER in devices and
+>> -  cleanup uncorrectable status register. Pls. refer to section 3.3.
+>> -
+>>   Software error injection
+>>   ========================
 
-I would drop the __packed in the definition, possibly annotating
-only the 64-bit src_addr and dst_addr members as __packed to ensure
-the layout is unchanged but the structure as a whole is 32-bit
-aligned, and then use READ_ONCE()/WRITE_ONCE() to atomically
-access each member in the coherent buffer.
+Viele Grüße,
+Stefan Roese
 
-If ordering between the accesses is required, you can add
-dma_rmb() and dma_wmb() barriers.
-
-     Arnd
+-- 
+DENX Software Engineering GmbH,      Managing Director: Erika Unter
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
