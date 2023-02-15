@@ -2,155 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 68D91697812
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 09:24:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9521569789A
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 10:04:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233100AbjBOIYB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 03:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
+        id S233452AbjBOJEr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 04:04:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230489AbjBOIYB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 03:24:01 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0A2427D5D;
-        Wed, 15 Feb 2023 00:23:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 66E9AB81F11;
-        Wed, 15 Feb 2023 08:23:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E802C433D2;
-        Wed, 15 Feb 2023 08:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676449437;
-        bh=8Lv+5x5vaq2UOptL53EzNlofhZ6WDJ1xNJrmCC+n8iA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o38quSWrL0kU02mKh3TGqIC3sURp9dZjhwlIbnnBaOGcDQDzfsrw3z1Xk0skTF3Br
-         2fLFIl6BnmMj6dyVlqZ7bYYRYp+Q1IKja0RdwkpkATjt+KNRgSdLip8LBWVxjm5hxX
-         fd5bRDeVIBxRXQtIh3qMwT+l5001mdgpZuJCg1Iq/NT1ID/os2dW7NwZLVvjiii1XL
-         kfpb0Y4CGT6auZy2Yc9ARVSX7GdCE5lE+1ARrpk3YsSMIXJwUmHnXRXg6NDko8b0d2
-         NSTI9bGQJnGPE0o/DKIMGDwkbDqeVZmRMFcCgZVdTcUujQAfCMwQoIuv6/VWkMP3Vm
-         Dg5dADlGkGbmg==
-Date:   Wed, 15 Feb 2023 13:53:43 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     mie@igel.co.jp, imx@lists.linux.dev, bhelgaas@google.com,
-        jasowang@redhat.com, jdmason@kudzu.us, kishon@kernel.org,
-        kw@linux.com, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lpieralisi@kernel.org, mani@kernel.org,
-        mst@redhat.com, renzhijie2@huawei.com, taki@igel.co.jp,
-        virtualization@lists.linux-foundation.org
-Subject: Re: PCIe RC\EP virtio rdma solution discussion.
-Message-ID: <20230215082343.GA6224@thinkpad>
-References: <20230207194527.4071169-1-Frank.Li@nxp.com>
+        with ESMTP id S229970AbjBOJEn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 04:04:43 -0500
+Received: from mail-oa1-x2a.google.com (mail-oa1-x2a.google.com [IPv6:2001:4860:4864:20::2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D40C29E33;
+        Wed, 15 Feb 2023 01:04:37 -0800 (PST)
+Received: by mail-oa1-x2a.google.com with SMTP id 586e51a60fabf-16e55be7c76so795435fac.6;
+        Wed, 15 Feb 2023 01:04:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=uwa6xK/yGoAax/0OsXHRKw57tyZBvF5xhqokekA1410=;
+        b=GDNghYFolCi/Hr9GJz4CtFq5HIGPlsnHond8PtR6gzV+AKOQI0c5ta1t8Ys+Vo1+1+
+         LqR0SIWfHg+uDEfxg3zJoWLWm+ItSFe3B/rEqWrQZlX8B9RIJfiCtFlsbhgzY8FgqvEi
+         alHGClndUJRnWimlqeV7L6aFizOTLqkXT5HyOUbMaVK7Vy//g4Mmwg5Q36vb4NCDj/co
+         B07mudnoacRsfm9fjD1ljLv2fMgc/j3hXmfPcMJScf97NTnxM8z5LIiQoFWpSKwojuo0
+         OCM9Zu/SqB1cpmsXSsKi9j4VQqxFPXnlpkqwRp99noQIh0KsEt4vaXVB2SobFL1Q8SNP
+         cGXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uwa6xK/yGoAax/0OsXHRKw57tyZBvF5xhqokekA1410=;
+        b=blKySwFw6HkUnwsrrvpWWvy+6hUENJFSnvWStbdUZkGUpCDTmmDpmoDFTefQoBexfW
+         ctC+MtiEkgsxA6OXchl0FfyFzflU3f7JLncOf+/fe9SzxUNFoLgsfEsZ57+bxiwVXZz0
+         m/6CoyWOxf/QXXZW1uUORFo0paSR+8XWRejQyCfPVktIil6c8MZWbZn13Y4YyQNkfN/D
+         A0koeeqTV6BOor4njU1sAKpXU9dlELEhxZe13dwk4EcpfOI7WMYFpR7qTNks114upkNS
+         Bq7eyJdTODOT6ehbYkrgvjV34p9J7hy20NIqwHsOq0ByIUbc0mDProaxDdtRl8WUCW+3
+         bozg==
+X-Gm-Message-State: AO0yUKVRhdfqaWf6y9yBwFNgld+TxJRlLKgITtigmPtkXfO6fbfZFZLO
+        0Ifi0i8/i+sEuaaS3ysIUpgA+Mm+juw/vI5wMpY=
+X-Google-Smtp-Source: AK7set8M3FNYNbgcQtYa5GBece8pIU/sBsIHK/rNnMAtR/NLp0PkALLbNqbe2utTTajf92iToM7B0At0xEH85Sc6K/0=
+X-Received: by 2002:a05:6870:10d7:b0:163:9dc0:78f1 with SMTP id
+ 23-20020a05687010d700b001639dc078f1mr206361oar.265.1676451876492; Wed, 15 Feb
+ 2023 01:04:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230207194527.4071169-1-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
+ <20230214140858.1133292-2-rick.wertenbroek@gmail.com> <2ebd33e2-46ef-356d-ff4c-81b74950d02f@opensource.wdc.com>
+In-Reply-To: <2ebd33e2-46ef-356d-ff4c-81b74950d02f@opensource.wdc.com>
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date:   Wed, 15 Feb 2023 10:04:00 +0100
+Message-ID: <CAAEEuhr273bKFBWiTVyTjhHhxjuTK=TVd+5K2B07WfWMD+N7mA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PCI: rockchip: Remove writes to unused registers
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
+        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 07, 2023 at 02:45:27PM -0500, Frank Li wrote:
-> From: Frank Li <Frank.li@nxp.com>
-> 
-> Recently more and more people are interested in PCI RC and EP connection,
-> especially network usage cases. I upstreamed a vntb solution last year. 
-> But the transfer speed is not good enough. I initialized a discussion 
-> at https://lore.kernel.org/imx/d098a631-9930-26d3-48f3-8f95386c8e50@ti.com/T/#t
->  
->   ┌─────────────────────────────────┐   ┌──────────────┐
->   │                                 │   │              │
->   │                                 │   │              │
->   │   VirtQueue             RX      │   │  VirtQueue   │
->   │     TX                 ┌──┐     │   │    TX        │
->   │  ┌─────────┐           │  │     │   │ ┌─────────┐  │
->   │  │ SRC LEN ├─────┐  ┌──┤  │◄────┼───┼─┤ SRC LEN │  │
->   │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
->   │  │         │     │  │  │  │     │   │ │         │  │
->   │  ├─────────┤     │  │  │  │     │   │ ├─────────┤  │
->   │  │         │     │  │  │  │     │   │ │         │  │
->   │  └─────────┘     │  │  └──┘     │   │ └─────────┘  │
->   │                  │  │           │   │              │
->   │     RX       ┌───┼──┘   TX      │   │    RX        │
->   │  ┌─────────┐ │   │     ┌──┐     │   │ ┌─────────┐  │
->   │  │         │◄┘   └────►│  ├─────┼───┼─┤         │  │
->   │  ├─────────┤           │  │     │   │ ├─────────┤  │
->   │  │         │           │  │     │   │ │         │  │
->   │  ├─────────┤           │  │     │   │ ├─────────┤  │
->   │  │         │           │  │     │   │ │         │  │
->   │  └─────────┘           │  │     │   │ └─────────┘  │
->   │   virtio_net           └──┘     │   │ virtio_net   │
->   │  Virtual PCI BUS   EDMA Queue   │   │              │
->   ├─────────────────────────────────┤   │              │
->   │  PCI EP Controller with eDMA    │   │  PCI Host    │
->   └─────────────────────────────────┘   └──────────────┘
-> 
-> Basic idea is
-> 	1.	Both EP and host probe virtio_net driver
-> 	2.	There are two queues,  one is the EP side(EQ),  the other is the Host side. 
-> 	3.	EP side epf driver map Host side’s queue into EP’s space. Called HQ.
-> 	4.	One working thread 
-> 	5.	pick one TX from EQ and RX from HQ, combine and generate EDMA requests, 
-> and put into the DMA TX queue.
-> 	6.	Pick one RX from EQ and TX from HQ, combine and generate EDMA requests,
-> and put into the DMA RX queue. 
-> 	7.	EDMA done irq will mark related item in EP and HQ finished.
-> 
-> The whole transfer is zero copied and uses a DMA queue.
-> 
-> The Shunsuke Mie implemented the above idea. 
->  https://lore.kernel.org/linux-pci/CANXvt5q_qgLuAfF7dxxrqUirT_Ld4B=POCq8JcB9uPRvCGDiKg@mail.gmail.com/T/#t
-> 
-> 
-> Similar solution posted at 2019, except use memcpy from/to PCI EP map windows. 
-> Using DMA should be simpler because EDMA can access the whole HOST\EP side memory space. 
-> https://lore.kernel.org/linux-pci/9f8e596f-b601-7f97-a98a-111763f966d1@ti.com/T/
-> 
-> Solution 1 (Based on shunsuke):
-> 
-> Both EP and Host side use virtio.
-> Using EDMA to simplify data transfer and improve transfer speed.
-> RDMA implement based on RoCE
-> - proposal: https://lore.kernel.org/all/20220511095900.343-1-xieyongji@bytedance.com/T/
-> - presentation on kvm forum: https://youtu.be/Qrhv6hC_YK4
-> 
-> Solution 2(2020, Kishon)
-> 
-> Previous https://lore.kernel.org/linux-pci/20200702082143.25259-1-kishon@ti.com/
-> EP side use vhost, RC side use virtio.
-> I don’t think anyone works on this thread now.
-> If using eDMA, it needs both sides to have a transfer queue. 
-> I don't know how to easily implement it on the vhost side. 
-> 
-> Solution 3(I am working on)
-> 
-> Implement infiniband rdma driver at both EP and RC side. 
-> EP side build EDMA hardware queue based on EP/RC side’s send and receive
-> queue and when eDMA finished, write status to complete queue for both EP/RC 
-> side. Use ipoib implement network transfer.
-> 
-> 
-> The whole upstream effort is quite huge for these. I don’t want to waste
-> time and efforts because direction is wrong. 
-> 
-> I think Solution 1 is an easy path.
-> 
+On Wed, Feb 15, 2023 at 12:56 AM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> I checked the TRM and indeed these registers are listed as unused.
+> However, with this patch, nothing work for me using a Pine rockpro64
+> board. Keeping this patch, your series (modulo some other fixes, more
+> emails coming) is making things work !
 
-I didn't had time to look into Shunsuke's series, but from the initial look
-of the proposed solutions, option 1 seems to be the best for me.
+Hello, Thank you for testing the driver and commenting, I'll incorporate your
+suggestions in the next version of this series.
 
-Thanks,
-Mani
+This patch alone does not make the driver work. Without the fixes to the
+address windows and translation found in [PATCH v2 6/9] ("PCI: rockchip:
+Fix window mapping and address translation for endpoint") transfers will not
+work. However, as you said, with the patch series, the driver works.
+Good to see that you have the driver working on the rockpro64 which is a
+very similar but different board than the one I used (FriendlyElec NanoPC-T4).
 
-> 
-> 
+> So I think the bug is with the TRM, not the code. THinking logically about
+> htis, it makes sense: this is programming the address translation unit to
+> translate mmio & dma between host PCI address and local CPU space address.
+> If we never set the PU address, how can that unit possibly ever translate
+> anything ?
 
--- 
-மணிவண்ணன் சதாசிவம்
+No, the bug is not in the TRM:
+The RK3399 PCIe endpoint core has the physical address space of 64MB
+@ 0xF800'0000 to access the PCIe address space (TRM 17.5.4).
+This space is split into 33 windows, one of 32MBytes and 32 of 1MByte.
+Read-write accesses by the CPU to that region will be translated. Each
+window has a mapping that is configured through the ATR Configuration
+Register Address Map (TRM 17.6.8) and the registers addr0 and addr1
+will dictate the translation between the window (a physical CPU addr)
+into a PCI space address (with this the unit can translate). The other
+registers are for the PCIe header descriptor.
+The translation process is documented in TRM 17.5.5.1.1
+The core will translate all read-write accesses to the windows that fall
+in the 64MB space @ 0xF800'0000 and generate the PCIe addresses
+and headers according to the values in the registers in the ATR
+Configuration Register Address Map (@ 0xFDC0'0000).
+
+Translation does indeed take place and works
+but requires the changes in [PATCH v2 6/9] ("PCI: rockchip:
+Fix window mapping and address translation for endpoint")
+because it was broken from the start...
+
+The two writes that were removed are to unused (read-only) registers.
+The writes don't do anything, manually writing and reading back these
+addresses will always lead to 0 (they are read-only). So they are removed.
