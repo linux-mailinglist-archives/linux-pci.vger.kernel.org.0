@@ -2,280 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9ECB697961
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 11:00:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E91AB6979D4
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 11:28:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229625AbjBOJ7g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 04:59:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59890 "EHLO
+        id S233961AbjBOK2m (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 05:28:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233108AbjBOJ7H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 04:59:07 -0500
-Received: from esa6.hgst.iphmx.com (esa6.hgst.iphmx.com [216.71.154.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9573E367D2
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 01:59:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1676455145; x=1707991145;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=WTkXI4W+MKwwJycy7cbo2GbIsg58uAfo8wCSpFIsYak=;
-  b=UF+/FMQMsurdzfQiniX6ug6A2JRH6FgxHOOap2yiLCblh65n5iR+MLpV
-   CzprTqlthCRwEftV1diK/iga0PnqMST8ZHWI0Uzd6vGWWwxQjRT54Jt9k
-   U17NpVjEkvykIMjwjDS+I7EjEk9aXZu6SE0OMhEWfPgn0VuVNYzI0zpss
-   p3bwJ6vZZcdB0nmuMI+3uCiZ7bs+JHBlU9KboGWBNIxhCaC3XLTIUStro
-   UUaZ6WHJCZiJ+ewfccE9pbVRupTIJdRVlzVKJH/zhxDPCNzsOrmwlFGKL
-   8T8ZLq+d91EixtQaXGRIsOj72bfeRj9IVSDcVQwYLKuGHw3Y82cMHEpmV
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.97,299,1669046400"; 
-   d="scan'208";a="223377104"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Feb 2023 17:59:01 +0800
-IronPort-SDR: OrQZemqyrw04Wt9C9I9aZpGvAhH/lrUP40yMAcP42v/OZ/CLPa/2KP/HOFP84iYHPwXfne1vey
- 0UukmEeoxwe4zkr4KsKdjJ6W+rRd6IGyKKFWQF7LXW0AOLLJvvgNFztNN7AeH8U/TJcRpKf71i
- gekkYgZ9mX9P4NQGVAbvzIEjYIW0J2MNbeGT/AYHROA1AqaQ9Jl9B+YT1UYF+hxGcIDBD8rMG1
- tIPZYMGkWB5LcDz0UE9TZEQNKt3faZPbjlYLT6KF0lI+HmPwktEL8IHa4RkdqzxWFn9qCJOrOh
- 6Hs=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 01:10:24 -0800
-IronPort-SDR: tOIKrYeC6fk7IAUk2VfenqiFfNI8CmUVmNm4S39B1zhTJQ+41De6lxldvc+pDX1aLrrVI4l5WT
- sGvNvMTkLJAaEGPjVUfWVKi+jn3Md0bhpek0eT89C8Qw1KZqm6N8l1/AHDOHoPUdx2UwNnJwgi
- +PVQ6dpEmA17Dsc4Y6o53K+lntYBNHVCYd7/2KmI7bT4XBzyGZjbQC9Ba/8dvxi1ecUvSpNC0l
- kiZVekPoLqkG1An8YGLPyvBC+GAmbVLywqaeiw5w48IAytpZNTyDx6bif/5s58NF5NIj93kCBU
- 1dw=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 01:59:03 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PGtnx2122z1RvTp
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 01:59:01 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1676455138; x=1679047139; bh=WTkXI4W+MKwwJycy7cbo2GbIsg58uAfo8wC
-        SpFIsYak=; b=PJZxYfrKRw5XUinlQGXvfZTe3KKu/Pb7k6M6mo9VoygA9BCRL8P
-        CmYgtrhmCbWSof5IaNZ8DvwAJRu850zMvm4dueIboWgQIeIVQqo+u+ewop3IsAy5
-        ploWhU9Bc7LMDxcr81yCVuMSwVHJKNUGX0ZrbH74PLD3zRKzL+zI8kRNdsMIQrTu
-        URdww+2DEp8ij+FlBh1R5nBEFaHBSznzLxr2nemsrLThWaXNzR+qhR6QREVJzz7g
-        wl+oNtf2qJxgu97EvdrdKMkB0cC+XIFkBVkqvPbysEQci44SFwkFZF2lY7JImr/x
-        vAQQmj3UVM2hyFEXoW1Bj06/3zk+hzfbIqA==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id i0GL9mok7ENI for <linux-pci@vger.kernel.org>;
-        Wed, 15 Feb 2023 01:58:58 -0800 (PST)
-Received: from [10.225.163.116] (unknown [10.225.163.116])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PGtnq2Qlbz1RvLy;
-        Wed, 15 Feb 2023 01:58:55 -0800 (PST)
-Message-ID: <559bdd8c-9cc8-d7ae-a937-ffee9cfbb8a6@opensource.wdc.com>
-Date:   Wed, 15 Feb 2023 18:58:54 +0900
+        with ESMTP id S229829AbjBOK2l (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 05:28:41 -0500
+Received: from mail-oi1-x22a.google.com (mail-oi1-x22a.google.com [IPv6:2607:f8b0:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E16E1366A3;
+        Wed, 15 Feb 2023 02:28:40 -0800 (PST)
+Received: by mail-oi1-x22a.google.com with SMTP id bh15so15370565oib.4;
+        Wed, 15 Feb 2023 02:28:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6yB8OFTfKD97aA5eOyH0KqfD+FWu2DzdqnSZBMyYeG0=;
+        b=jb760RmY2mhZp9FN8h0OdqgTxR3SOPTWq/yiTljm6AokXf9of5Gzv2bZsDnFB23SQH
+         E7USeo8jaYplkVWJOUaLwEPAR9Ccu0/8A9wKEn/E03VxuuUjod2y4rMkrGqhOPz28sm7
+         kKtAi0E5Da+z/RKtyYLW+/4MVWi9o5SChsWjkf692ZGyLOFZEXmSL7qZtTXJrOTYbA+6
+         Z0UwlZWYVQP8KbvPipWLrXrFNxzPIs9/ELq0n0JEYbvZCZC/Bb/7NsMGrJr1tLYYjyGR
+         dG4t//fwr+t3G451kZLqYVDupbCSADFd2k+PvX6Uk2L5Jjn3lzuOmIHJCPYnGLSWUC5D
+         a/GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6yB8OFTfKD97aA5eOyH0KqfD+FWu2DzdqnSZBMyYeG0=;
+        b=U3jTDUI33WcE6ZEM+2KXfcOZXIlAjgUMZcUPzEZbQ/R/JwkJrXQXg5Sf3aepeF1AaI
+         BUQf9H2L9pZiBwhApFPgzGRxPCcqwhV+TqU2Mf+NMopP1dS/bhAEOc0ZKfQkz9Pg0bp1
+         x/AVdBWQN1oahfC99YPjGpYAYZPxrp6V4Lid7DdYgr284Nlp7Dor/foufolZlbleiFat
+         +tgTvf9Og9WaxJViOLRthW/SVLHK4tdQO31Qd7XUwkyFzaprOKv6M6/ruJnEG6Jigc7I
+         xw69FTmXf1TpENIWzIOJ6M76xhI7FkN03OMY/FJ/JHfHqdiBqahlRfd4TYcddxcZt9V0
+         pz9A==
+X-Gm-Message-State: AO0yUKWmXGCHrzstZ7s6CzgaTyqLyr7Wk+cQUz4KP6rNtiZOkQKQIF+u
+        8jYvDc9Ha17C4I2lpupUiKYO6Dm+EYsmipEbmD0=
+X-Google-Smtp-Source: AK7set8o82EF1RLdVxbKXwpb+W7OYj03kXyJab+ucP4FZwnFuHDzcmNItuleSEY+TdxxhHbCBhAnK/CkOwkljsDsIn8=
+X-Received: by 2002:a54:4508:0:b0:37d:8b23:1d1b with SMTP id
+ l8-20020a544508000000b0037d8b231d1bmr167210oil.110.1676456920180; Wed, 15 Feb
+ 2023 02:28:40 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v2 1/9] PCI: rockchip: Remove writes to unused registers
-Content-Language: en-US
-To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
+References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com> <7b8a8d38-feef-d2af-f23f-6b2b46f78110@opensource.wdc.com>
+In-Reply-To: <7b8a8d38-feef-d2af-f23f-6b2b46f78110@opensource.wdc.com>
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date:   Wed, 15 Feb 2023 11:28:03 +0100
+Message-ID: <CAAEEuhrzysR-xfx7X-gVqUdi17R1YiWxyBM+0asQxtyZ9PQozg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] PCI: rockchip: Fix RK3399 PCIe endpoint controller driver
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
         rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Jani Nikula <jani.nikula@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
- <20230214140858.1133292-2-rick.wertenbroek@gmail.com>
- <2ebd33e2-46ef-356d-ff4c-81b74950d02f@opensource.wdc.com>
- <CAAEEuhr273bKFBWiTVyTjhHhxjuTK=TVd+5K2B07WfWMD+N7mA@mail.gmail.com>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <CAAEEuhr273bKFBWiTVyTjhHhxjuTK=TVd+5K2B07WfWMD+N7mA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/15/23 18:04, Rick Wertenbroek wrote:
-> On Wed, Feb 15, 2023 at 12:56 AM Damien Le Moal
-> <damien.lemoal@opensource.wdc.com> wrote:
->>
->> I checked the TRM and indeed these registers are listed as unused.
->> However, with this patch, nothing work for me using a Pine rockpro64
->> board. Keeping this patch, your series (modulo some other fixes, more
->> emails coming) is making things work !
-> 
-> Hello, Thank you for testing the driver and commenting, I'll incorporate your
-> suggestions in the next version of this series.
-> 
-> This patch alone does not make the driver work. Without the fixes to the
-> address windows and translation found in [PATCH v2 6/9] ("PCI: rockchip:
-> Fix window mapping and address translation for endpoint") transfers will not
-> work. However, as you said, with the patch series, the driver works.
-> Good to see that you have the driver working on the rockpro64 which is a
-> very similar but different board than the one I used (FriendlyElec NanoPC-T4).
-> 
->> So I think the bug is with the TRM, not the code. THinking logically about
->> htis, it makes sense: this is programming the address translation unit to
->> translate mmio & dma between host PCI address and local CPU space address.
->> If we never set the PU address, how can that unit possibly ever translate
->> anything ?
-> 
-> No, the bug is not in the TRM:
-> The RK3399 PCIe endpoint core has the physical address space of 64MB
-> @ 0xF800'0000 to access the PCIe address space (TRM 17.5.4).
-> This space is split into 33 windows, one of 32MBytes and 32 of 1MByte.
-> Read-write accesses by the CPU to that region will be translated. Each
-> window has a mapping that is configured through the ATR Configuration
-> Register Address Map (TRM 17.6.8) and the registers addr0 and addr1
-> will dictate the translation between the window (a physical CPU addr)
-> into a PCI space address (with this the unit can translate). The other
-> registers are for the PCIe header descriptor.
-> The translation process is documented in TRM 17.5.5.1.1
-> The core will translate all read-write accesses to the windows that fall
-> in the 64MB space @ 0xF800'0000 and generate the PCIe addresses
-> and headers according to the values in the registers in the ATR
-> Configuration Register Address Map (@ 0xFDC0'0000).
-> 
-> Translation does indeed take place and works
-> but requires the changes in [PATCH v2 6/9] ("PCI: rockchip:
-> Fix window mapping and address translation for endpoint")
-> because it was broken from the start...
-> 
-> The two writes that were removed are to unused (read-only) registers.
-> The writes don't do anything, manually writing and reading back these
-> addresses will always lead to 0 (they are read-only). So they are removed.
+On Wed, Feb 15, 2023 at 2:51 AM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> Note about that: with your series applied, nothing was working for me on
+> my pine Rockpro64 board (AMD Ryzen host). I got weird/unstable behavior
+> and the host IOMMU screaming about IO page faults due to the endpoint
+> doing weird pci accesses. Running the host with IOMMU on really helps in
+> debugging this stuff :)
 
-OK. Tested again and it is working-ish...
+Thank you for testing, I have also tested with a Ryzen host, I have IOMMU
+enabled as well.
 
-./pcitest.sh
-## Loading pci_endpoint_test
-## BAR tests
-BAR0:		OKAY
-BAR1:		OKAY
-BAR2:		OKAY
-BAR3:		OKAY
-BAR4:		OKAY
-BAR5:		OKAY
+>
+> With the few fixes to your series I commented about, things started to
+> work better, but still very unstable. More debugging and I found out that
+> the pci-epf-test drivers, both host and endpoint sides, have nasty
+> problems that lead to reporting failures when things are actually working,
+> or outright dummy things being done that trigger errors (e.g. bad DMA
+> synchronization triggers IOMMU page faults reports). I have a dozen fix
+> patches for these drivers. Will clean them up and post ASAP.
+>
+> With the test drivers fixed + the fixes to your series, I have the
+> pci_test.sh tests passing 100% of the time, repeatedly (in a loop). All solid.
+>
 
-## Legacy interrupt tests
-SET IRQ TYPE TO LEGACY:		OKAY
-LEGACY IRQ:	OKAY
+Good to hear that it now works, I'll try them as well.
 
-## MSI interrupt tests
-SET IRQ TYPE TO MSI:		OKAY
-MSI1:		OKAY
-MSI2:		OKAY
-MSI3:		OKAY
-MSI4:		OKAY
-MSI5:		OKAY
-MSI6:		OKAY
-MSI7:		OKAY
-MSI8:		OKAY
-MSI9:		OKAY
-MSI10:		OKAY
-MSI11:		OKAY
-MSI12:		OKAY
-MSI13:		OKAY
-MSI14:		OKAY
-MSI15:		OKAY
-MSI16:		OKAY
+> However, I am still seeing issues with my ongoing work with a NVMe
+> endpoint driver function: I see everything working when the host BIOS
+> pokes at the NVMe "drive" it sees (all good, that is normal), but once
+> Linux nvme driver probe kicks in, IRQs are essentially dead: the nvme
+> driver does not see anything strange and allocates IRQs (1 first, which
+> ends up being INTX, then multiple MSI one for each completion queue), but
+> on the endpoint side, attempting to raise MSI or INTX IRQs result in error
+> as the rockchip-ep driver sees both INTX and MSI as disabled. No clue what
+> is going on. I suspect that a pci reset may have happened and corrupted
+> the core configuration. However, the EPC/EPF infrastructure does not
+> catch/process PCI resets as far as I can tell. That may be the issue.
+> I do not see this issue with the epf test driver, because I suspect the
+> host BIOS not knowing anything about that device, it does not touch it.
+> This all may depend on the host & BIOS. Not sure. Need to try with
+> different hosts. Just FYI :)
+>
 
-## Read Tests (DMA)
-READ (      1 bytes):		OKAY
-READ (   1024 bytes):		OKAY
-READ (   1025 bytes):		OKAY
-READ (   4096 bytes):		OKAY
-READ ( 131072 bytes):		OKAY
-READ (1024000 bytes):		OKAY
-READ (1024001 bytes):		OKAY
-READ (1048576 bytes):		OKAY
+Interesting that you are working on this, I started to patch the RK3399 PCIe
+endpoint controller driver for a similar project, I want to run our NVMe
+firmware in a Linux PCIe endpoint function.
 
-## Write Tests (DMA)
-WRITE (      1 bytes):		OKAY
-WRITE (   1024 bytes):		OKAY
-WRITE (   1025 bytes):		OKAY
-WRITE (   4096 bytes):		OKAY
-WRITE ( 131072 bytes):		OKAY
-WRITE (1024000 bytes):		OKAY
-
-Then stops here doing the 1024001 B case. The host waits for a completion that
-does not come. On the EP side, I see:
-
-[   94.307215] pci_epf_test pci_epf_test.0: READ src addr 0xffd00000, 1024001 B
-[   94.307960] pci_epc fd000000.pcie-ep: Map region 1 phys addr 0xfa100000 to
-pci addr 0xffd00000, 1024001 B
-[   94.308924] rockchip-pcie-ep fd000000.pcie-ep: Set atu: region 1, cpu addr
-0xfa100000, pci addr 0xffd00000, 1024001 B
-[  132.309645] dma-pl330 ff6e0000.dma-controller: Reset Channel-2
-CS-20000e FTC-40000
-
-                                                  ^^^^^^^^^^^^^^^
-The DMA engine does not like something at all. Back to where I was when I tried
-your series initially, which is why I tried removing patch 1 to see what happens...
-
-[  132.370479] pci_epf_test pci_epf_test.0: READ => Size: 1024001 B, DMA: YES,
-Time: 38.059623935 s, Rate: 26 KB/s
-[  132.372152] pci_epc fd000000.pcie-ep: Unmap region 1
-[  132.372780] pci_epf_test pci_epf_test.0: RAISE MSI IRQ 1
-[  132.373312] rockchip-pcie-ep fd000000.pcie-ep: Send MSI IRQ 1
-[  132.373844] rockchip-pcie-ep fd000000.pcie-ep: MSI disabled
-[  132.374388] pci_epf_test pci_epf_test.0: Raise IRQ failed -22
-
-And it looks like the PCI core crashed or something because MSI does not work
-anymore as well (note that this is wheat I see with my nvme epf driver too, but
-I do not have that DMA channel reset message...)
-
-If I run the tests without DMA (mmio only), everything seems fine:
-
-## Read Tests (No DMA)
-READ (      1 bytes):		OKAY
-READ (   1024 bytes):		OKAY
-READ (   1025 bytes):		OKAY
-READ (1024000 bytes):		OKAY
-READ (1024001 bytes):		OKAY
-
-## Write Tests (No DMA)
-WRITE (      1 bytes):		OKAY
-WRITE (   1024 bytes):		OKAY
-WRITE (   1025 bytes):		OKAY
-WRITE (1024000 bytes):		OKAY
-WRITE (1024001 bytes):		OKAY
-
-## Copy Tests (No DMA)
-COPY (      1 bytes):		OKAY
-COPY (   1024 bytes):		OKAY
-COPY (   1025 bytes):		OKAY
-COPY (1024000 bytes):		OKAY
-COPY (1024001 bytes):		OKAY
-
-So it looks like translation is working with your patch, but that the driver is
-still missing something for DMA to work correctly...
-
-Will keep digging.
-
-Note that this is all tested with the patch series fixing pci-epf-test and
-pci_endpoint_test drivers that I posted earlier today. As mentioned, my host is
-an AMD Ryzen PC.
-
--- 
-Damien Le Moal
-Western Digital Research
-
+For the IRQs there are two things that come to mind:
+1) The host driver could actually disable them and work in polling mode,
+I have seen that with different versions of the Linux kernel NVMe driver
+sometimes it would choose to use polling instead of IRQs for the queues.
+So maybe it's just the
+2) The RK3399 PCIe endpoint controller is said to be able only to generate
+one type of interrupt at a given time. "It is capable of generating MSI or
+Legacy interrupt if the PCIe is configured as EP. Notes that one PCIe
+component can't generate both types of interrupts. It is either one or the
+other." (see TRM 17.5.9 Interrupt Support).
+I don't know exactly what the TRM means the the controller cannot
+use both interrupts at the same time, but this might be a path to explore
