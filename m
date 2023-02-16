@@ -2,184 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F2BC36993D8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 13:05:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BF42969945E
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 13:32:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjBPMF2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 07:05:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49512 "EHLO
+        id S229922AbjBPMcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 07:32:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjBPMF1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 07:05:27 -0500
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42DE959C7;
-        Thu, 16 Feb 2023 04:05:26 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31G8FroQ020165;
-        Thu, 16 Feb 2023 12:05:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : references : date : in-reply-to : message-id : content-type :
- mime-version; s=corp-2022-7-12;
- bh=95e8rDq+apX9FrXY/4KW89soKvYzCbX49K3apwoddkg=;
- b=lyldH37McxvFJWWxr8w5wZG9PMs7bd6R/thEQBL5pdr7tMwbJnCG3YHUj1SbN46Fy9kq
- o89B7e7fy1kOaG3Ym4szFIlLzJwm3upOugzY6jA1SEWCl4x5mwiuLfD5bqWFUUPwI7l8
- CM8FWLVZWiHm7+zC7aucy8sr6Z0KjHJLTvWoL9PAuMsNKcfXZyew9sjs6VOUi6JPvnLV
- wIP6V1ITW98CgVI689NFR68gU1OYTOUSAKhd46RBpqdbtIpBYe4nwgyk6I0af3i5XH8P
- 0OiVt7cTtxhx/eqw6jQ9S+I/KWb86mIYR0zXhGcau+lrrduEdGi8aVTn1y4Wyn+elu+s Rw== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np2mtjxxw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Feb 2023 12:05:16 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31GAcEhs013504;
-        Thu, 16 Feb 2023 12:05:16 GMT
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2103.outbound.protection.outlook.com [104.47.70.103])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f87vw5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Feb 2023 12:05:15 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cHW0DgWtK9ER1vPHRnMeKFMm3z7Kgz342IrmhM71iWPQul7hlhi+IDZjgZp/UuH7qR63GQjk8kFiQ/fD+6Br/24wbiSj1x4CjaMasvgI/vr9KaWT9itd/SqdxIoULykfZA+Hn/tDVqrQLSrSngrCfW+kWcE4u7Cr+pUx37JEY5TfIfmeUEYQvTt4CcvZy1czOxosobWWVMWYU98tGZkse9e4G8lYeFqRADNHkywCfatpbC11HEYNmMGmh97wc4FYA52X/k3PX65aZG0G6o0s4DinU6iBPHNDn4AopIfbFdJ/tiRLBl/+h+Gs1hbjm52kEEr2dI98LENw1JWz+pnZfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=95e8rDq+apX9FrXY/4KW89soKvYzCbX49K3apwoddkg=;
- b=hvOhyNIkiZ634qIYTxpkMFwJd6qWqDLO64IGchVKbhMPMF0fhdIpAeJi6x7/dX6pHi6oid4APz0j+puGAWI/41Q6c3cpbndRI0zKJanVxmhzagDHqavuPUeAEtSOYf5KDB88XnvxlOyRVpatk7S24yb99W26xSyZFP5MHZJRS3ELigsc+/ISzRL7dpnKJYeW3boOEOIQtbpxUHzA7YChG27D4c30PiOWFBvisTMqe1MfwjEKhzjAfsxBw0VII5fRubCyeLl5d9ITnXtStDIf/cZ72ZEYHNZsYoSWwQ3W7Qw8I1lxqwcRqDCPVEB3UIGAIlAGMW5fZr8GPuzqw3Oqmg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=95e8rDq+apX9FrXY/4KW89soKvYzCbX49K3apwoddkg=;
- b=o3zP9HAG/xkJptu/K520qU6tnTAdrySmhWX+P+saAuPPi1IMyD7FOjcOeNfXDJeDwij1cD4BOcTLM6CTEts4mNDhkD4rR2XZwY1OYDHK377n8R0jRxaMkLHIuE7MHXzHyeGu4GYOjFN+f2vMnHiBHf5B+jLCxZvOAqEcIg+MyJI=
-Received: from DS0PR10MB6798.namprd10.prod.outlook.com (2603:10b6:8:13c::20)
- by SJ0PR10MB4765.namprd10.prod.outlook.com (2603:10b6:a03:2af::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.10; Thu, 16 Feb
- 2023 12:05:13 +0000
-Received: from DS0PR10MB6798.namprd10.prod.outlook.com
- ([fe80::d0f7:e4fd:bd4:b760]) by DS0PR10MB6798.namprd10.prod.outlook.com
- ([fe80::d0f7:e4fd:bd4:b760%3]) with mapi id 15.20.6134.006; Thu, 16 Feb 2023
- 12:05:13 +0000
-From:   Nick Alcock <nick.alcock@oracle.com>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>, Conor Dooley <conor@kernel.org>,
-        mcgrof@kernel.org, linux-modules@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 8/8] kbuild, PCI: microchip: comment out MODULE_LICENSE
- in non-modules
-References: <20230210164749.368998-1-nick.alcock@oracle.com>
-        <20230210164749.368998-9-nick.alcock@oracle.com>
-        <Y+aMh5e9bWaTphiZ@spud> <871qmx1fv5.fsf@esperi.org.uk>
-        <Y+akw9VBjg9oZ7QV@spud> <Y+kx3fb2Lzlg+u5+@unreal>
-        <87ilg5mq0r.fsf@meer.lwn.net> <Y+qOS9fx9B3Y3gd6@unreal>
-Emacs:  because idle RAM is the Devil's playground.
-Date:   Thu, 16 Feb 2023 12:05:07 +0000
-In-Reply-To: <Y+qOS9fx9B3Y3gd6@unreal> (Leon Romanovsky's message of "Mon, 13
-        Feb 2023 21:23:55 +0200")
-Message-ID: <87y1oxvmrw.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.1.91 (gnu/linux)
-Content-Type: text/plain
-X-ClientProxiedBy: LO2P265CA0247.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:8a::19) To DS0PR10MB6798.namprd10.prod.outlook.com
- (2603:10b6:8:13c::20)
+        with ESMTP id S229615AbjBPMcB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 07:32:01 -0500
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 168762B0AC
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 04:31:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1676550719; x=1708086719;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=O0fi9c49pBfzIOYVk6FDk045dK83O9VygPz9dKMMLsk=;
+  b=Ctms545HRwD4QzMpV47UffmVUw4TgguW8WZr8oJwlpgBz6S9qE8CyhXy
+   ehxA7kp4Kvku1dbFCvbE9OWswSvc6vuFrlCrKtmT8FAxsdgg5S9rzID6X
+   L5iaxSrKwMa/jMetxMZnwbA6zISW1UhGzsu4Uupbfp0sSfphsgiM0f+er
+   jblUlqetcbXmkpJiWdxW8IcDdM3lpfUZ9pRY9aPkfdx9RPxVod3PDSWnC
+   V+KuACfozZVm5Ezc1/h1ML1bY8Q9FoXO32NBee3bBdqbNfKvBO1e9bTdJ
+   4vyylZXqMZI17tz8Gg3K0uO8UyaY4+lP/zSa/BMCfiB5Iytiqpnf51VZ+
+   A==;
+X-IronPort-AV: E=Sophos;i="5.97,302,1669046400"; 
+   d="scan'208";a="335427759"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 16 Feb 2023 20:31:58 +0800
+IronPort-SDR: jC0t2JaMet2OP2h3QWnAjLW8JeMvIk4ftRUoiuTbb/xV3DuW3EXauM2GV1OLB3EbBV3E+AcB4z
+ Cym7vORjLXVxXNHwoIhW4chCbVy4OCLedGmnKPzU5iHp/j1Wio891IQ3Lc/h3/hrXR4bdyUBQq
+ j1Efp8+g210fibnpQGmmcpu9fClE7YnuqN5bwpgyjPFcUhZFwnKsR8tSkAPlY1DOwHN9SaKJ5d
+ oQQiCKrHkEi/c9p9z8vIlPdXPrUaJP6/TwsVEC03AN/A5WeXpBJZ3EOC4xOUk3d6wHyLV14N2/
+ i/k=
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2023 03:49:03 -0800
+IronPort-SDR: g+p/KYptEuh+4UPraJ6Ic7oCiLz6XAdnQaRR5RwDXt6selZQQfeIx2i5YPmsvxtwMHbS/QWhKO
+ /7QXstuIOx6bNsEsAWiZqwFChXBcTBNWPmYHq0+d/FQYci5Zqu9HW2o5LAEIaB2sHv45n+my39
+ oJW8sGp+x6+IjlREZc1/iXaTQeKwE3pXmj3+CWodEWNLPU5xGxZ7Kfl+o9oBG49tn/g6stNOR7
+ V/oab5DD8A2UGIWAqsC8nAoMFwaE6DrH35iMLr3CG2eXJEko/VkzJqXUcmOk6aguxU+CXb9rwX
+ WiU=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2023 04:31:59 -0800
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PHZ7y2WJKz1Rwrq
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 04:31:58 -0800 (PST)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1676550717; x=1679142718; bh=O0fi9c49pBfzIOYVk6FDk045dK83O9VygPz
+        9dKMMLsk=; b=BJoDVEM2Tnrg035KQdRcpsTnknDvXmvigFNihtyHZiTUSjfcqZ+
+        E80/yoyNj6nKtfFH9yT0Lbe1Zfmu1AIbHGnpi9OzPJjllVHBsbFOaqxJbHS5r7d9
+        J01W9ZYHS/KCuefXS1T/y6pzvfXsaJdjdeHjmbYRPkzr/vtp9bLPwx2Sx+J2tZ0R
+        M+q7P2jE0MF7j3aOqJSCrvJI8R5GdSV60ByYqAcDuANUiXoxE5+MTkocgcRFdmj2
+        AtkF5dFc/wnpMFWeqw2InxdA4/7GHS+OpcYjk9Df0mzY0RtaMx2rOBG9iH23dQcP
+        EPd8WNhOIGg3zjVVPzdz3zwcrj8KT2eCltg==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8-vEMX8pJZ6U for <linux-pci@vger.kernel.org>;
+        Thu, 16 Feb 2023 04:31:57 -0800 (PST)
+Received: from [10.225.163.121] (unknown [10.225.163.121])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PHZ7v6P9Mz1RvLy;
+        Thu, 16 Feb 2023 04:31:55 -0800 (PST)
+Message-ID: <aa724af7-aa66-753b-1c00-4a5678afcb3a@opensource.wdc.com>
+Date:   Thu, 16 Feb 2023 21:31:54 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB6798:EE_|SJ0PR10MB4765:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8e58d848-e170-4299-a7d1-08db10160f50
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n12z/xszz+lQYu/vWQlAnpqftZfAvOdPbwLuMuMKWGs+zCmkyy9lJXBvTP9EYg0rHjMLSE+EymZTyJoHd29qUURH/2VovENpiXwEDrAO/vWiA7ZZuUcJ4ZRlAIVa+Km75VZncCcrUQNQIYUPmUgGEHDb3wNEI+4FfWU5TNP8l/h4GyL+4tFsITqhE6gtn7SHvIYaRd8qhuCjxnZ1FLJ5UWpzN+AzeUNV7WCapM4t3Ec9NDB3UYII9szFyuYDvbyaMMYD9+WIIDOX19pnFj3QQ0EVY6ZXiJwVsH0LkfQKeRyj8m+JlhmVzwwUQ2MuyoQbfLJS9kbHaI3q5us4GV5+p7SUmdmUjXvs3XqgJMuACZsW0ugB9qlqIjXcX6poezrvS6qd9e1KlYtEv0OyDRHCEnamlEj1ZZsjv+u9CUNK2eXcEqvMJ9bcbN9I9sSVr6TSMc8eQLeXlbyMrplK4D7m+/PRksDkx8q8+ILXsEzRBaR5hePW4FF16ozD7PfK12QqZrI9ELNUxqrMyrkEAQEDlP87Axx2gNGavWNnLg3MfAz/LmwIoab8RbjK8sR4c6MAO0Yi2uXbXQT2sYN6llc4edecZjAqe5DKiX2ljLuSvMw2Bm7RKCFrqvsmkLwkZMa3IB+BYkZx4ESTD39Djjyv9g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6798.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(366004)(376002)(39860400002)(346002)(136003)(396003)(451199018)(66946007)(66476007)(66556008)(6916009)(6506007)(9686003)(6666004)(186003)(4326008)(6512007)(8676002)(38100700002)(2906002)(86362001)(54906003)(6486002)(316002)(41300700001)(44832011)(36756003)(8936002)(478600001)(4744005)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?V6uadGOw0/PjYP5sLaumiCjeXKhZr0hmIIL9TyMOztopcAIyg4P/7RwYZ8W6?=
- =?us-ascii?Q?7ET2hm5YbFajVoQ+Lkc3Wgpk36bBRhojTMh4TWFRT2CZkC+fU9ci5naSgOuL?=
- =?us-ascii?Q?ctPq53ji1f+TJpgTZS4f2BVlObY1e0QQQcXk90Y68mzgMNKB054Ejy3tOwbU?=
- =?us-ascii?Q?scP2/MKQWyVmq+Qlc/HmjIbDRIvXJnLGWEGZ4BeToBCO1FIYsaef+oMIJHjP?=
- =?us-ascii?Q?E1N3PGwacjURekm9vhMaIrT4ih5qldBjrILFzCvczLwTBoqveN1ffU2lhEY/?=
- =?us-ascii?Q?qKB8TCFWulG4O7kFJJDYDzvorsJTZckOCG8TmkXn0VH7v1UurRv0fojkHClg?=
- =?us-ascii?Q?nZ66Dj1yKMOs+cVLOMv4YJ3BQyRM13RcLMRLmEyZiO8duVVRJbAaHTfeMay9?=
- =?us-ascii?Q?noLNOkY3ahwg+ATDesWktg/WkZr6HcCHMVDhCwfN+9pNntOXPvLYrKsNcOrF?=
- =?us-ascii?Q?FVHFU+nhFFxxc2iCouIAnFcxKqqAFJ6TC43oDZCA+1jQfE+Uv+ErZw+fvbIN?=
- =?us-ascii?Q?CFj+auZx1c5Kyk3KludbghCm7BP+im85ZjmoQSjndYnxpH5grhYSrEEjY5zg?=
- =?us-ascii?Q?nnaFq8x2cjMwRqXyQWCGAlRxTEethJZ2AFiAXismR2lPnHoDiUDRXPIl2MUE?=
- =?us-ascii?Q?y/VUphczdrr8yr3+7WkfxatwEvWAnMx3gXN5E3aAnbK+8fa1SVtcLHSZKmh4?=
- =?us-ascii?Q?X+dZ4rd0f5b9VPUsN0xnvGIQfnXGDBuJkjKKNnT8wXmtsC2cx6O9n/a2pKtq?=
- =?us-ascii?Q?MJLP96iQO3gTOBMHf8rZvCQxVTJoXtzh1ZwZB4PUMFln6pHyVtdxl8tNGRfn?=
- =?us-ascii?Q?qm4bNNIk1BxQsOCIKIh0WVsHSh5TGEzDNWejhosbu25jMp6tFE0ch3m0/jUh?=
- =?us-ascii?Q?CAkLvyABCeLj0FuZGm5/IUafthKcJEJPS/0AAAlmXb4E293t4/tRi/bRo7ad?=
- =?us-ascii?Q?naDm499p1KwrFmWK+Kf9lJ97pNYH9D8YLEcWLZvmY4JZQummIAqBu5vzsymL?=
- =?us-ascii?Q?wXkjU1vMVXWgza1VJecmC4v5/6d9uGVqB5dK12gJkHNIS8ppeqzbioR91Vr7?=
- =?us-ascii?Q?Ui5e9O7+XbSGLrTsK0BQ6T32Vq1kA50xWr8hEhYDxJm+UNmyQncq+dEMVmvo?=
- =?us-ascii?Q?RNTBvB/NcoaTOJ2CzO04th/XZR01ScJry+3zvpNjnxVu0hhukAms2nS11Qjk?=
- =?us-ascii?Q?thQmoL1xhTp253ugXoPogmzkqC0EHVQBy5o0ldjW6MMwW45Lxw36afqhgmSn?=
- =?us-ascii?Q?526V8y80lVQWlEXK6ZsaQ+Eq4A7zWKjJjmvzel2NY50vUAo3rPZ7v6UYQyU5?=
- =?us-ascii?Q?Ai/J+EVv1Y/skMyUerSroIKzXMAjXK0EfeM3xwpvY9ct7Mls1qxR/EM8L2wu?=
- =?us-ascii?Q?m+whDKIwUcEUriJ61hfDqT5+E7peo6jaNthACw69w4c/XWuiQKmtt3cAIkNl?=
- =?us-ascii?Q?GnMuwBSsAsLydJUMsz+JMhtZaGG/lcgO1PGImfex5qP4qI6N9jFFuvhuJfI6?=
- =?us-ascii?Q?syWxEjD4D/OU3R2vtxffX1wY6So/tqV1xM1vILgHMo8rfMVFpr+eSyhpv/GI?=
- =?us-ascii?Q?wr6pxEI518fJ5UVryt8eTfvs+5kbb90IbHvkOojK2tmvv/gSTWMwleHRkB4J?=
- =?us-ascii?Q?Aw=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: cr/BgzTChz3OkRThozLxM5F1s3AYcX8RHO4hBKVlIYIRRn78IxTRwINPTyI5j5r+Qv2dnt3gp/eYmRCpbvnvmI99XUM8CWmFNzJc4XgkNvsP5ZXl6GXKV86fRmrZCbnxx+0ooZn+L5hZIA48YO/FnrvN1YiL+ww1jGdpXRr46OQoHnkbgFWPpBteaMg1OlmeoNaWpqK7Ii4X7wCPXUuLZV4Uo9fxXd3O08mdnyv1taMvphW5zK1uzUKJBNlOjvi6+GwrxpCXmFUcoQZ5rz1OY4clFQHtiDxejnB+7lLCYTSXr5jno6b9suWNL1LuZdWzPQr2ilYtG+LGbz6hwRDYN9U1cgvNM/Z4FYHuLoWnx+X1s/+xsFUSFzhoCl+HyLThEc4/YGcHP11pjhWT63zMFPnfJ4KR2Rk1gO8cnHt0h8i4I6Nn2qUlY0PB8Y0VbznuiGPbKTAyrWlcac9A9IlCflZyi87f90WQQz3Xhg/Am2IQp9w3OCbqx5d5yg0w9p6sUYVOqL0sKmUBEht3m5WIcse/aiCZfdfQleooUR/gIGrOM3ukUu2HB6I64AlkDlPH6A2ncmw+a8TyArtQouiRrVIOLRa4nhB5iSax9ZZrGz36FbXJM+cfIekGEfcaDyzC9nrgYa7flEgwYnQephBNoZalkqIID6Xf7e7yBNnyXsPD7HSm+xEj2swrbFFscARzXGd9BA/2nfhKtFoVibt9Bdbr8+QjE7/Qjv9tgJPLSNyVnbLrXCQSwbE2zRkm1yDyQOmIgLlQEJO20f9sAQ2lWU4s62/p8DbIMVgH+ueECPcRMVHZDioAW3VTg7ou4tRNORzd0347yunW9TAM/ae/AUQ536jt6IBv2ayRXv0bIw2f6aGmIq1e07IYUwh13sgt
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e58d848-e170-4299-a7d1-08db10160f50
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6798.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2023 12:05:13.7046
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SYd/+3JMd7l2ccsyuR6wIUjKKpMPFDrgmYG2aNxa8l+IffaAeIdkRUu3nASqoLUif66oPlWfCcgbty1v0Pq0tg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB4765
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-16_09,2023-02-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0
- phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=766 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302160103
-X-Proofpoint-GUID: YFsmeqTav1Wji5eiD1CweEGubXCk5JKx
-X-Proofpoint-ORIG-GUID: YFsmeqTav1Wji5eiD1CweEGubXCk5JKx
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH 01/12] pci: endpoint: Automatically create a function type
+ attributes group
+Content-Language: en-US
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
+ <20230215032155.74993-2-damien.lemoal@opensource.wdc.com>
+ <20230216100438.GC2420@thinkpad>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <20230216100438.GC2420@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13 Feb 2023, Leon Romanovsky told this:
+On 2/16/23 19:04, Manivannan Sadhasivam wrote:
+> On Wed, Feb 15, 2023 at 12:21:44PM +0900, Damien Le Moal wrote:
+>> A PCI endpoint function driver can define function specific attributes
+>> using the add_cfs() endpoint driver operation. However, this attributes
+>> group is not created automatically when the function is created and
+>> rather relies on the user creating a directory within the endpoint
+>> function configfs directory to initialize the attributes.
+>>
+> 
+> This is not accurate. An endpoint function will only be created when a
+> directory is created under /sys/kernel/debug/pci_ep/functions/<func_name>/
+> 
+> Here, func_name is just a debugfs group created during EPF registration and
+> doesn't represent a function unless a subdirectory is created.
+> 
+>> While working, this approach is dangerous as nothing prevents the user
+>> from creating multiple directories with differenti (wrong) names that
+>> all will contain the same attributes.
+>>
+>> Fix this by modifying pci_epf_cfs_work() to execute the new function
+>> pci_ep_cfs_add_type_group() which itself calls pci_epf_type_add_cfs() to
+>> obtain the function specific attribute group from the function driver.
+>> If the function driver defines an attribute group,
+>> pci_ep_cfs_add_type_group() then proceeds to register this group using
+>> configfs_register_group(), thus automatically exposing the configfs
+>> attributes to the user.
+>>
+>> With this change, there is no need for the user to create/delete
+>> directories in the endpoint function configfs directory. The
+>> pci_epf_type_group_ops group operations are thus removed.
+>>
+> 
+> No. You are just automating the creation of sub-directories specific to
+> functions such as NTB. Users still need to create a directory to create an
+> actual endpoint function.
+> 
+> The commit message sounds like it is automating the whole endpoint function
+> creation which it is not doing.
 
-> On Mon, Feb 13, 2023 at 10:30:44AM -0700, Jonathan Corbet wrote:
->> Wouldn't it be better to let this work proceed while making a note
->> of the files still needing SPDX tags?
+OK. I was not clear in the wording. It is not the function directory that this
+is automating. It is not about:
 
-Since I have this list anyway, I might as well emit it, even if I
-believe the general consensus is now to not add SPDXes but leave that up
-to individual maintainers (phew).
+/sys/kernel/configfs/pci_ep/functions/<func_name>/
 
-The files (otherwise touched in the full series) that don't have SPDX tags:
+It is about automating the creation of the sub-directory under that that
+represent the attribute group that the function defines. So it is about:
 
-drivers/bus/arm-cci.c
-drivers/bus/imx-weim.c
-drivers/bus/simple-pm-bus.c
-drivers/gpu/drm/drm_mipi_dsi.c
-drivers/irqchip/irq-mvebu-pic.c
-drivers/reset/reset-axs10x.c
-drivers/reset/reset-hsdk.c
-drivers/soc/sunxi/sunxi_sram.c
-drivers/video/console/vgacon.c
-drivers/video/fbdev/asiliantfb.c
-drivers/video/fbdev/gbefb.c
-drivers/video/fbdev/imsttfb.c
-drivers/xen/xenbus/xenbus_probe.c
-lib/glob.c
+/sys/kernel/configfs/pci_ep/functions/<func_name>/<whatever-function-specific>
+
+That directory is *not* created automatically, the user must create it, but
+worse than that, can do it multiple times with really bad results when
+everything is tore down (I got an oops due to bad reference counts).
+
+This patch fixes that, not the function directory creation itself.
+
+> 
+> Thanks,
+> Mani
+> 
+>> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+>> ---
+>>  drivers/pci/endpoint/pci-ep-cfs.c | 41 ++++++++++++++-----------------
+>>  1 file changed, 19 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+>> index d4850bdd837f..1fb31f07199f 100644
+>> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+>> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+>> @@ -23,6 +23,7 @@ struct pci_epf_group {
+>>  	struct config_group group;
+>>  	struct config_group primary_epc_group;
+>>  	struct config_group secondary_epc_group;
+>> +	struct config_group *type_group;
+>>  	struct delayed_work cfs_work;
+>>  	struct pci_epf *epf;
+>>  	int index;
+>> @@ -502,34 +503,28 @@ static struct configfs_item_operations pci_epf_ops = {
+>>  	.release		= pci_epf_release,
+>>  };
+>>  
+>> -static struct config_group *pci_epf_type_make(struct config_group *group,
+>> -					      const char *name)
+>> -{
+>> -	struct pci_epf_group *epf_group = to_pci_epf_group(&group->cg_item);
+>> -	struct config_group *epf_type_group;
+>> -
+>> -	epf_type_group = pci_epf_type_add_cfs(epf_group->epf, group);
+>> -	return epf_type_group;
+>> -}
+>> -
+>> -static void pci_epf_type_drop(struct config_group *group,
+>> -			      struct config_item *item)
+>> -{
+>> -	config_item_put(item);
+>> -}
+>> -
+>> -static struct configfs_group_operations pci_epf_type_group_ops = {
+>> -	.make_group     = &pci_epf_type_make,
+>> -	.drop_item      = &pci_epf_type_drop,
+>> -};
+>> -
+>>  static const struct config_item_type pci_epf_type = {
+>> -	.ct_group_ops	= &pci_epf_type_group_ops,
+>>  	.ct_item_ops	= &pci_epf_ops,
+>>  	.ct_attrs	= pci_epf_attrs,
+>>  	.ct_owner	= THIS_MODULE,
+>>  };
+>>  
+>> +static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
+>> +{
+>> +	struct config_group *group;
+>> +
+>> +	group = pci_epf_type_add_cfs(epf_group->epf, &epf_group->group);
+>> +	if (!group)
+>> +		return;
+>> +
+>> +	if (IS_ERR(group)) {
+>> +		pr_err("failed to create epf type specific attributes\n");
+>> +		return;
+>> +	}
+>> +
+>> +	configfs_register_group(&epf_group->group, group);
+>> +}
+>> +
+>>  static void pci_epf_cfs_work(struct work_struct *work)
+>>  {
+>>  	struct pci_epf_group *epf_group;
+>> @@ -547,6 +542,8 @@ static void pci_epf_cfs_work(struct work_struct *work)
+>>  		pr_err("failed to create 'secondary' EPC interface\n");
+>>  		return;
+>>  	}
+>> +
+>> +	pci_ep_cfs_add_type_group(epf_group);
+>>  }
+>>  
+>>  static struct config_group *pci_epf_make(struct config_group *group,
+>> -- 
+>> 2.39.1
+>>
+> 
 
 -- 
-NULL && (void)
+Damien Le Moal
+Western Digital Research
+
