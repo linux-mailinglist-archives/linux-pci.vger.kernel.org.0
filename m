@@ -2,210 +2,180 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A98EE699603
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 14:42:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18FE26997EB
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 15:53:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229628AbjBPNmY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 08:42:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
+        id S229687AbjBPOx1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 09:53:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229653AbjBPNmX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 08:42:23 -0500
-Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C65A55291;
-        Thu, 16 Feb 2023 05:42:01 -0800 (PST)
-Received: by mail-lj1-x232.google.com with SMTP id s8so1989749ljp.2;
-        Thu, 16 Feb 2023 05:42:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8ZYjJggXOXL46dSil1ea0yixaiqpsLjMvxrmPaE0WG0=;
-        b=oKTFXsstpnYaCaBevgN8Lj1oymM/nUslVw1Nw1lQuomTN4jqn4lowPuakc7+zPjmMp
-         gE1cYP5ZdDzNKmKmIq4yZ93xQg/3mbY1sIVgzbSOhhI5+EDTOPyycnChCyeTRIFfal+J
-         +I+a6/l1YkjPCxlR/TGIbLO3+qRJmnRi/SolFzeM8CDDklqRx1ymPGrQOyh3arXQg2lD
-         cs75LTnR2e+vBlt4lrAOgtcvjJikDiq/utimAKGXbuqzgZc+SCZWQZbNDtJ1Qg6/Blqd
-         GirM4+l25D4GHg+jYIjh6eFp2YKntDrC9IVFbEeV7feSbFAqMm/EDht7yOKLlXpP/l+D
-         tmLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8ZYjJggXOXL46dSil1ea0yixaiqpsLjMvxrmPaE0WG0=;
-        b=XiNZ8cppHM1aQfAOMB+sA0SthYapGgc3DRNqHYZYbbH1wS8wKMWxFfYoQ0ABzbnq41
-         /uXLNPqSxH3bS/PZZnabfKthTkQ+2oPPEYjRbDeRco4TJ6yUEruh/Tyc01G2AS/q6Dy7
-         md6LAP0ivlKvm/GQhmqi66EtsOehFn5JhYwcZIG+5u7SiINwA3DF8HX1XGB4sEdgaYlK
-         50LeU3lTSaXOQvJq2q27snl7sfqVIsG73xCy730v1wD1AJweVKF7V/scVG4N1zWZxUFx
-         gXMTA4WlQ3o5NrMLuOkn88OzE8AoJ/FNAOf/QOhZXmTgw2QucpzanNfKguysix84O3d/
-         0wAQ==
-X-Gm-Message-State: AO0yUKXckvJQ5n59ZGlYYPApGlI/Q2VHAT915GRfnTzbRe/J043/Wn/T
-        HX5lCw4N0poI8bEDjC6tjP4=
-X-Google-Smtp-Source: AK7set8Za8XwYW7+bDk0HqpPPwan/LM87m2COo8k54tL9H4vaOF2w1WtsouEynf8foe7MZ+9SE31Fw==
-X-Received: by 2002:a2e:550:0:b0:294:6d2d:c18c with SMTP id 77-20020a2e0550000000b002946d2dc18cmr231543ljf.36.1676554919729;
-        Thu, 16 Feb 2023 05:41:59 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id l14-20020a2e868e000000b0029328acc669sm205131lji.75.2023.02.16.05.41.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 05:41:59 -0800 (PST)
-Date:   Thu, 16 Feb 2023 16:41:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Sergey.Semin@baikalelectronics.ru,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S230268AbjBPOxZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 09:53:25 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2087.outbound.protection.outlook.com [40.107.93.87])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E4E4D61D;
+        Thu, 16 Feb 2023 06:53:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SYCKc1F76u5dX6X9wFtkE01Rymn/FAPrFBWLNEZDeSzu/Q/WEeCFEohqBEZvaSekcMcVXBXhSIalIc1sbSy/ctp7bG0panUNcI5HNtz4LtjfAPqFVo0SQhktGKuQs4hSUwsOfaTP8hfwjGt2aUPxuhBX/je16bPkAQkQHPBR5lVUOAIssnYAcq3jSKCDuYhIk7qDWoa7tCwIisn2HDEfxV/kyV2afxBltClUFP7EcmpRooxisu4S8L1csyHvCd2dVOpZEcCt7vMhSvgBKpiZFgnnaKNit6tF1blXhPANE1gSP0fIjVIJN7edsU4iEscxfWN3qs+dlU+coBp+n2TU/w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=rh7K+VNW5Wg+PsO6pS775WKQ/wiQNmO69p3WKdmESH0=;
+ b=SifaAPpGTThEKdtbvOw85ZzaFeWB/qqRKbLO3UK6NTqa2sGgKes4guhzRya6eMPx4REl7adytE1uxmnb8teBdZ3UHTYLdJKMoC8C9ei2CuoN4kSNh7F7WM/K9CkXXWsU2X6Qd+v+5B0JLDlO6j4yXZl9Sz4qdtdm0SxGBITjiRPV47QvZCw4VdGvUPP1/PwMWjn3RQxDgm51XODChOBZJonTj5kKMA3gmxvRNXHneQ3l2J9JTM8AvTqGjrUOBzXXBql+1DQMqN+zZrn+jzTL/hQkvBvhSlMAoVUq7MFWJ0ANvWBCD9WljF15+evPyhxJWxPZ+UYsipbKulPf4tgwkA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rh7K+VNW5Wg+PsO6pS775WKQ/wiQNmO69p3WKdmESH0=;
+ b=yuBAHivgVOwSPwQpxQnizr+ZdqjZV4KOMPUDh/Ok+muU06ukdBDjjgrELiiiqDMHsoMQEfixTGUe7nScxyc7K5LH9REVA9cUb6PTEoTSlpDjDpI2mEOxH/y/2T7Y5+BIxlYMLvxviGENeBVcIH3d7CSQ7UQCUgEd2WVsLR1LF3E=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com (2603:10b6:408:118::14)
+ by PH7PR12MB5709.namprd12.prod.outlook.com (2603:10b6:510:1e0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.24; Thu, 16 Feb
+ 2023 14:53:19 +0000
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::e6ea:9231:6d39:93da]) by BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::e6ea:9231:6d39:93da%4]) with mapi id 15.20.6111.013; Thu, 16 Feb 2023
+ 14:53:19 +0000
+Message-ID: <bbb6bd0f-b508-f8b6-1342-c394c18995ac@amd.com>
+Date:   Thu, 16 Feb 2023 09:53:14 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
+Content-Language: en-US
+To:     Jason Gunthorpe <jgg@nvidia.com>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Baolu Lu <baolu.lu@linux.intel.com>,
+        "Huang, Shimmer" <Shimmer.Huang@amd.com>,
+        "Liu, Aaron" <Aaron.Liu@amd.com>, Joerg Roedel <jroedel@suse.de>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "Hegde, Vasant" <Vasant.Hegde@amd.com>,
+        amd-gfx@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] dmaengine: dw-edma: Rename dw_edma_core_ops
- structure to dw_edma_plat_ops
-Message-ID: <20230216134156.enjanyzwfhamve6q@mobilestation>
-References: <20230213132411.65524-1-cai.huoqing@linux.dev>
- <20230213132411.65524-2-cai.huoqing@linux.dev>
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20230215153913.GA3189407@bhelgaas>
+ <e3b866eb-830c-9037-39c7-978714aaf4d2@amd.com> <Y+18UuVTKIshk8EF@nvidia.com>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+In-Reply-To: <Y+18UuVTKIshk8EF@nvidia.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT4PR01CA0211.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b01:ad::14) To BN9PR12MB5115.namprd12.prod.outlook.com
+ (2603:10b6:408:118::14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230213132411.65524-2-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5115:EE_|PH7PR12MB5709:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0439d102-35c8-4e34-31bb-08db102d8aa7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: vagm968RlaaSIa1fx9UMmsrc0YNbTwejJpDEA5cOIywZtwlPUjXaPoQ9N8iPh1Ow3Pr9PicH9grjMltFjTGrbLcUtchixDRDlCJV1Fmp7KyM99Zm1tJNQN5BPB3D5Me2KzJnDEX3HpGXf+NPAi9kKDMFL2aZkvSRkVlzP8pSKd7gTZLXD9WiiaLobWvnUtgOdy9k7dniIjpKr1r86t2k0j2J9dvLUF93GajzPrgQ10fWtsF41vz+rpJ8eR7+OpsZWzGf1z849ZbGHgKADAwRoW13ioRCFKx1b4pyAKJdetXSUhVeyR1fU7nLNbdJk7IoEqBVBr6QTbxPZYV/XnmTghhjwLO2jZjYAF5F2CJ/v644p/FGWz5gIWsmbSFk8utRE2oWOUV1d0BwWT+OXhkcxDM3ytn31LVrRVXQLEYe+UwyBmeODk3wfqxJ+wOzXVUfrAbe6syKTzlbivLs0LwVdUBnvJEOx7KhW1SsniPJPyKx+9i6Dv6FVOtB1qmlcCgS8gPkvCAJUpXsefmW5HwsR8p0yryJJtPwkRNlZHqhsRgEhMwoWXzoHWAZagQgAqzu/bx5Yr+EOa+ye9DhBa9hd7Qlj6+a+sOEi6vk6JRcv4Ec/4gVtGqgKoyX+yi5hKHZt2T3LMQiQZ1WsNhjKeiwIN7yRUP/T0a1+vCkPPfzm+ILRMqcDdGh7gkBwz3Oxv32v0pMf4KjEN75a8UE8wV23UHDpK8dAHdG0hbXybK3dcI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5115.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(366004)(376002)(39860400002)(396003)(346002)(451199018)(186003)(4326008)(6512007)(26005)(36756003)(5660300002)(478600001)(7416002)(38100700002)(8936002)(6486002)(6666004)(54906003)(110136005)(6506007)(31696002)(86362001)(2616005)(31686004)(2906002)(6636002)(41300700001)(66476007)(316002)(66556008)(44832011)(66946007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WUU2N2pMd0dMOUlFc204M055ZlpOdXlUamxMS1B5V21kL0p1djhvdUZTVHFt?=
+ =?utf-8?B?U2pZa2o3NmxEK2p5ZEh2RVFtYzFyZE9OcWhqbzRpMVBkdHRrZE82UzFpcnRG?=
+ =?utf-8?B?UGZWQmpxeXJSRG9TVzhxc0x4S0RhUVNsSmVvTkhFekt3RVpRK0U0N3hQNmpm?=
+ =?utf-8?B?U2lzdnpzNDM2N0ZUZkpEUnE0V2Vpd05jZnF1QjJkMDVvM2xFUmU0eFptRDQ3?=
+ =?utf-8?B?U2FxNVJ5Rllia1dZMFhhSXZueDNwNldnNzkvcEMyYmxrNTdMM0prSXVTSU9s?=
+ =?utf-8?B?cXdoekdUYmU1QldzOHNZOUU1OTNScEU4WFFReGlMSkdBMVc0ZE1nTis1Um9Q?=
+ =?utf-8?B?cmdsK3l0NDd3ZEJFaFMybDBESFAzbm9Xb3pIbWxVRWZicXlybGVPRW5tQk1I?=
+ =?utf-8?B?cFUzZFRtVEVpRTROZ2loeDlEdUlIVjk3UUc1cTkyL1BKMkhVUHZOWkZEWkxU?=
+ =?utf-8?B?ekZ0SHkrY1lKbnNXcGpNVHlsN25tY1NnUDY4Um80L3FDMTBxbGlrVzFoYStB?=
+ =?utf-8?B?bFZ3dzg1UG0xNFlMdzdJRW92R0ZDdUZ6RjdPZktWbG5FeGVpVDRESEY3dXh3?=
+ =?utf-8?B?YW9rZTQ5Z1dXWlFiU2NiYkQrMVNBWHRIMHFNK296Y0FQcnZQMHFjQXFMOEdK?=
+ =?utf-8?B?dEhjTDdPK1dteGVUcFpTSlM2alhxcW1HTG4vODhqWE5MSUEycUNMUlkrYkpH?=
+ =?utf-8?B?eVkwUFFQWmppd0F3SUNWcXU5a3RhOEY4OVpMcXhLNklQbVlWS0FuV2kxZE5G?=
+ =?utf-8?B?T05Wb2RTbElBSGhCaVIxc0dHY3h6aUZGaGh0bWRaWEdVbXVteEh5ajQ0TXBi?=
+ =?utf-8?B?cEpxOGcyRWc0ekY4Tkh5cVJTbE5IRWFkclhWT1VLaDlFbXJ0L2FUT0NqZm1T?=
+ =?utf-8?B?MVRab0lCT2h0ckpSd20yRXhYWEVmQ1hJY0ZKcm5RNVVrMkNnQ3JNNExNRlRD?=
+ =?utf-8?B?OTFHSGxyTzA0NTBuT3A0ZmVJa2R1YVVmQ2VqdzR0TkdWeFIrMUpQVTBjdWpE?=
+ =?utf-8?B?blBMYzZMNnd5SUJlYzQ4d0U5UnIrdXlmTDNYUGZOZnJRVDkyM0t2dFV6cU9B?=
+ =?utf-8?B?T3JwQldtdG9GQWIycWo1ZkcvUmVhRWdkaTM1M2p5NlhvNkdkbUVhNHVncWVY?=
+ =?utf-8?B?RDdxaTYxQnl4NGMvZjZPM1Z0OG1uN2NlYnp0enh2N01yblJ2d1R6TlVhUGs4?=
+ =?utf-8?B?eXlzVkk5djlNczN5RG9qMEFHa1lnRWh3UHQ2S1VrNkx2NG8wYWg1czNNWVVX?=
+ =?utf-8?B?RFRkSVE4NkhicWJSaEVrb01QK3BTRU1DSWdTOU16ak9TcHdveUUrek9Sc3ZF?=
+ =?utf-8?B?bzU3S1ZIb0ZKN0hRVisyZkd0cnhQUmZ5MzNVS3pNUTg0dFY2VytMTEV4aHhq?=
+ =?utf-8?B?VC93QXhMMm5BdDhEWCthWVY2Snc3eE90Wk5QUXRqTjduOS9IelYvRTZQZVlz?=
+ =?utf-8?B?eFcxZjZuOC81NUlGZno1Q2h2K2ZvQzNNZXlPOEhIWFVPR3hSSUNGOGRKckN5?=
+ =?utf-8?B?Q0F4bmt5dlJiZkZWYzkweGsvdHpQL0ZHY3JDNE1qVkhtK245UStiSE5mL0k1?=
+ =?utf-8?B?QkN6M2NXanA1Qk1UM1cyNi9BWUQ4OXhnWk80c1FDc3JpZnhZUEQ3cUROVUl5?=
+ =?utf-8?B?bC8wYldHdy8vc1lQc21YMlJDbnVlOGcrOFc4ejJLNFRYRDRkZ3JGMW9vR3pJ?=
+ =?utf-8?B?T2JsN0xGNzlWTTVPQ2xKYWRnVnhkUHk2UGNqT2lsZVloZEQ5T1hwMURFVzRT?=
+ =?utf-8?B?VWtpQTdPMDUxcFVNTnRsSFRnVDdEZ2MzaFRRYWJydms5V1hRTk9XQmszRXVQ?=
+ =?utf-8?B?eFpMeHVUSXg2bm0yV3BDRVZ4L0UvRGhGclNPVDhWNG5PaituclFhdUpLVUpM?=
+ =?utf-8?B?bXhXZDloMHQrVDBQZExnWkZZTmtIUDlteTRybi9uWXo5UWZCNkg3TVNoQXQz?=
+ =?utf-8?B?Qy83WnZ0amo5RUJ6cmh4NWtrTW9hdXdQd2d2M2JNczA1VXRwUkRQZEdoK3A0?=
+ =?utf-8?B?cEF3MDRLQ3puWjQvazdPdHdTaTRZTUEydlhEZ1haY1NvSFozUVl5WVY4N1I1?=
+ =?utf-8?B?MG0xOWZQMmtQeGNFVXd3NHFwVG1sNnpKY056eFliNlVTazFPZlJwT2lvby9E?=
+ =?utf-8?Q?0HWagvxn5wr2z8Mo4rpIhWgkD?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0439d102-35c8-4e34-31bb-08db102d8aa7
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5115.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2023 14:53:19.1030
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: h3phsGvha+fhxF/p7LIY0vRJq7yCJ9eoUAbYwEtaS432pmee5mBDMhXi7VDNPvIZ21sHNFQTJKwTu1vWtu+inQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5709
+X-Spam-Status: No, score=-1.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 13, 2023 at 09:24:06PM +0800, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
-> 
-> Rename dw_edma_core_ops structure to dw_edma_plat_ops, the ops is platform
-> specific operations: the DMA device environment configs like IRQs,
-> address translation, etc.
-> 
+[+Suravee]
 
-> The dw_edma_pcie_plat_ops name was supposed to refer to the platform which
+Am 2023-02-15 um 19:44 schrieb Jason Gunthorpe:
+> On Wed, Feb 15, 2023 at 07:35:45PM -0500, Felix Kuehling wrote:
+>> If I understand this correctly, the HW or the BIOS is doing something wrong
+>> about reporting ACS. I don't know what the GPU driver can do other than add
+>> some quirk to stop using AMD IOMMUv2 on this HW/BIOS.
+> How about this:
+>
+> diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
+> index 864e4ffb6aa94e..cc027ce9a6e86f 100644
+> --- a/drivers/iommu/amd/iommu_v2.c
+> +++ b/drivers/iommu/amd/iommu_v2.c
+> @@ -732,6 +732,7 @@ EXPORT_SYMBOL(amd_iommu_unbind_pasid);
+>   
+>   int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
+>   {
+> +	struct iommu_dev_data *dev_data = dev_iommu_priv_get(&pdev->dev);
+>   	struct device_state *dev_state;
+>   	struct iommu_group *group;
+>   	unsigned long flags;
+> @@ -740,6 +741,9 @@ int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
+>   
+>   	might_sleep();
+>   
+> +	if (!dev_data->ats.enabled)
+> +		return -EINVAL;
+> +
+>   	/*
+>   	 * When memory encryption is active the device is likely not in a
+>   	 * direct-mapped domain. Forbid using IOMMUv2 functionality for now.
 
-s/dw_edma_pcie_plat_ops/dw_edma_plat_ops
-* The main goal is to update the structure name.
+Hi Suravee,
 
-> the DW eDMA engine is embedded to, like PCIe end-point (accessible via
-> the PCIe bus) or a PCIe root port (directly accessible by CPU).
-> Needless to say that for them the IRQ-vector and PCI-addresses are
-> differently determined. The suggested name has a connection with the
-> kernel platform device only as a private case of the eDMA/hDMA embedded
-> into the DW PCI Root ports, though basically it was supposed to refer to
-> any platform in which the DMA hardware lives.
-> 
-> Anyway the renaming was necessary to distinguish two types of
-> the implementation callbacks:
-> 1. DW eDMA/hDMA IP-core specific operations: device-specific CSR
-> setups in one or another aspect of the DMA-engine initialization.
-> 2. DW eDMA/hDMA platform specific operations: the DMA device
-> environment configs like IRQs, address translation, etc.
-> 
+What to you think about this proposed change?
 
-> dw_edma_pcie_core_ops is supposed to be used for the case 1, and
-> dw_edma_pcie_plat_ops - for the case 2.
+Regards,
+   Felix
 
-ditto
-
-> 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-> ---
->  drivers/dma/dw-edma/dw-edma-pcie.c           | 4 ++--
->  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
->  include/linux/dma/edma.h                     | 7 ++++---
->  3 files changed, 7 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
-> index 2b40f2b44f5e..1c6043751dc9 100644
-> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
-> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
-> @@ -109,7 +109,7 @@ static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
->  	return region.start;
->  }
->  
-> -static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
-> +static const struct dw_edma_plat_ops dw_edma_pcie_plat_ops = {
->  	.irq_vector = dw_edma_pcie_irq_vector,
->  	.pci_address = dw_edma_pcie_address,
->  };
-> @@ -225,7 +225,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
->  
->  	chip->mf = vsec_data.mf;
->  	chip->nr_irqs = nr_irqs;
-> -	chip->ops = &dw_edma_pcie_core_ops;
-> +	chip->ops = &dw_edma_pcie_plat_ops;
->  
->  	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
->  	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 53a16b8b6ac2..44e90b71d429 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -828,7 +828,7 @@ static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
->  	return platform_get_irq_byname_optional(pdev, name);
->  }
->  
-> -static struct dw_edma_core_ops dw_pcie_edma_ops = {
-> +static struct dw_edma_plat_ops dw_pcie_edma_ops = {
->  	.irq_vector = dw_pcie_edma_irq_vector,
->  };
->  
-> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
-> index d2638d9259dc..b2f3dd5e7e1a 100644
-> --- a/include/linux/dma/edma.h
-> +++ b/include/linux/dma/edma.h
-> @@ -40,7 +40,7 @@ struct dw_edma_region {
->   *			iATU windows. That will be done by the controller
->   *			automatically.
->   */
-> -struct dw_edma_core_ops {
-> +struct dw_edma_plat_ops {
->  	int (*irq_vector)(struct device *dev, unsigned int nr);
->  	u64 (*pci_address)(struct device *dev, phys_addr_t cpu_addr);
->  };
-> @@ -48,7 +48,8 @@ struct dw_edma_core_ops {
->  enum dw_edma_map_format {
->  	EDMA_MF_EDMA_LEGACY = 0x0,
->  	EDMA_MF_EDMA_UNROLL = 0x1,
-> -	EDMA_MF_HDMA_COMPAT = 0x5
-> +	EDMA_MF_HDMA_COMPAT = 0x5,
-
-> +	EDMA_MF_HDMA_NATIVE = 0x7
-                                 ^
-Please add a comma here ---------+
-
-Thus if there is a new entry is added to the enum list in future the
-update will consist of a single-line change. It's a common practice in
-kernel to terminate the last entry in enums or struct initializers if
-there is a possibility to add new entries to the list afterwards.
-
->  };
->  
->  /**
-> @@ -80,7 +81,7 @@ enum dw_edma_chip_flags {
->  struct dw_edma_chip {
->  	struct device		*dev;
->  	int			nr_irqs;
-
-> -	const struct dw_edma_core_ops   *ops;
-> +	const struct dw_edma_plat_ops   *ops;
-                                     \ /
-                                      ^
-These are just three white-spaces ----+
-Please replace them with either a tab or with a single space.
-
--Serge(y)
-
->  	u32			flags;
->  
->  	void __iomem		*reg_base;
-> -- 
-> 2.34.1
-> 
