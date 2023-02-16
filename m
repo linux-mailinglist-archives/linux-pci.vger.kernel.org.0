@@ -2,99 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E25C769913B
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:30:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B316991DA
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:40:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229993AbjBPKaX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 05:30:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36864 "EHLO
+        id S230238AbjBPKkc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 05:40:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbjBPKaW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:30:22 -0500
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C3FB46D47
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:30:06 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id d40so2098091eda.8
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:30:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=trMy19lCfoNQKMYhTv+urc84CG0y8L9modeItMkODVw=;
-        b=Mv8q6XBJEV3iD/szEGMfFVC45l6lbFtsFxQmNKoFSQsOLucCqN9WzaOlpGx5dyuTRh
-         Rx7N0AfF1nCubrdjTYIKfn8ygSA63Bie+E49HgVYrMVAcfd9Xl94ltPW/+p1RF33MVKK
-         YnTLvV+y6ogWtctt4qk4tQRscpRXtgMyp2FwhlWqtBRC0w2wEkFYBEdd0ZtiHHrf5Nc1
-         3NCJQNb2SXbeqMisY+SbUN8yWn+whlhJIysz8rb7MnkdtXKzf36ry5ndLhZBNSZKVnq7
-         xepfCLyzHpxvmBk6PITESzTxtOz1ITo34HUUlgpuefwN37dVY1JzXrOJi1bc0d5NEhbh
-         NCpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=trMy19lCfoNQKMYhTv+urc84CG0y8L9modeItMkODVw=;
-        b=N6PLFe80H6duKoayMleSInfTRAGgW7/Di7TVti9imgIL+ORKnrqxNKYCFr6ZP24mtq
-         u21vGy4QamSDPa+62AWWA3ciXj48P7ZbFfLtzUy0yS5tmnfZnGrz0m34djSNoK11fE6l
-         tUljMle2qBah2eJgRkn9VABwyn3FXfOwmSSjFQRBR+Eus4GCYA+viX28oh/jrb/VDfd8
-         axwGXXANGyGdOn8NR7zeSio6dQ5dliRyrEyvVSF7jHbFqvFd8G1533Y+Ge6Ah0WktvjZ
-         CB8THMj+d6RcWKYE9mfUS0k+Ptfju5GTlK8yjpEt0MfHzzvdntyOIYs4B6kqcLlWaEVv
-         QIEA==
-X-Gm-Message-State: AO0yUKV+aholqJCylNieuQOw3jCaWhodKO6Gy0EOgPEZ70k0bYkTATsZ
-        9obtVTgBpvMC2PVEVKZNJtWKzg==
-X-Google-Smtp-Source: AK7set+e6/QJL3lGLViNLI1RrrQJkAnhpGCZU/48DSywTKjOFl3uP6B32GFpz+Yqmal9PtkGNSwEkw==
-X-Received: by 2002:aa7:da88:0:b0:4aa:f910:c21c with SMTP id q8-20020aa7da88000000b004aaf910c21cmr4671262eds.3.1676543404709;
-        Thu, 16 Feb 2023 02:30:04 -0800 (PST)
-Received: from [192.168.1.109] ([178.197.216.144])
-        by smtp.gmail.com with ESMTPSA id v9-20020a509549000000b004acc6cbc451sm643303eda.36.2023.02.16.02.30.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 02:30:04 -0800 (PST)
-Message-ID: <a1d93b17-ccd5-fc90-1450-b0b900e00916@linaro.org>
-Date:   Thu, 16 Feb 2023 11:30:01 +0100
+        with ESMTP id S230198AbjBPKkb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:40:31 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1AC4C6F8
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:40:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DEF9961F69
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 10:39:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FDB4C433D2;
+        Thu, 16 Feb 2023 10:39:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676543961;
+        bh=K0fO68U4DWgFRKJOgoDkkujS0azyEvtD9aEbUF1PKvo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RPfz5uU3R7GZvoS8/xgh8OyaK9ghWMnGQfw6AsPkW2ILcIs2eHJ29K8HZ6aKiWXO2
+         dl4GVwwdybdfmeQcAFyb353CaGcMUwKlyaXR/daUZBKqtbE6Kh9bLOolumMfZIDaxb
+         YpG+ExUofNOquZzlyNFhx0VPSZJjP7+C9ufhGkpuCyJ6XsZnYHVy4cVkaYoXNypCew
+         z6ICct71FHDEl4tOGXADs9eyi0rK9DM5Lz34/iTtZacnX0n6UQvDOBITZmvVe82okk
+         0JkF+EQ9/whPpkp2LKV0Hjs8H4kAX3x5Ep4cph6lRfEzw6JCRseUEO1qAD2OZu9P6A
+         pBmBa4QTWATtw==
+Date:   Thu, 16 Feb 2023 16:09:08 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 06/12] pci: epf-test: Simplify transfers result print
+Message-ID: <20230216103908.GH2420@thinkpad>
+References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
+ <20230215032155.74993-7-damien.lemoal@opensource.wdc.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH 3/7] dt-bindings: phy: qcom,qmp-pcie: Add ipq9574
- compatible
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, mani@kernel.org, p.zabel@pengutronix.de,
-        svarbanov@mm-sol.com, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-clk@vger.kernel.org
-Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com
-References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
- <20230214164135.17039-4-quic_devipriy@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230214164135.17039-4-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230215032155.74993-7-damien.lemoal@opensource.wdc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 14/02/2023 17:41, Devi Priya wrote:
-> Add the compatible for the PCIe QMP PHYs found on IPQ9574
+On Wed, Feb 15, 2023 at 12:21:49PM +0900, Damien Le Moal wrote:
+> In pci_epf_test_print_rate(), instead of open coding a reduction loop to
+> allow for a disivision by a 32-bits ns value, simply use div64_u64() to
+> calculate the rate. To match the printed unit of KB/s, this calculation
+> divides the rate by 1000 instead of 1024 (that would be KiB/s unit).
 > 
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> The format of the results printed by pci_epf_test_print_rate() is also
+> changed to be more compact without the double new line. dev_info() is
+> used instead of pr_info().
+> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+
+Thanks,
+Mani
+
 > ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 42 ++++++++-----------
+>  1 file changed, 17 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index e07868c99531..f630393e8208 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -297,34 +297,23 @@ static void pci_epf_test_clean_dma_chan(struct pci_epf_test *epf_test)
+>  	return;
+>  }
+>  
+> -static void pci_epf_test_print_rate(const char *ops, u64 size,
+> +static void pci_epf_test_print_rate(struct pci_epf_test *epf_test,
+> +				    const char *op, u64 size,
+>  				    struct timespec64 *start,
+>  				    struct timespec64 *end, bool dma)
+>  {
+> -	struct timespec64 ts;
+> -	u64 rate, ns;
+> -
+> -	ts = timespec64_sub(*end, *start);
+> -
+> -	/* convert both size (stored in 'rate') and time in terms of 'ns' */
+> -	ns = timespec64_to_ns(&ts);
+> -	rate = size * NSEC_PER_SEC;
+> -
+> -	/* Divide both size (stored in 'rate') and ns by a common factor */
+> -	while (ns > UINT_MAX) {
+> -		rate >>= 1;
+> -		ns >>= 1;
+> -	}
+> -
+> -	if (!ns)
+> -		return;
+> +	struct timespec64 ts = timespec64_sub(*end, *start);
+> +	u64 rate = 0, ns;
+>  
+>  	/* calculate the rate */
+> -	do_div(rate, (uint32_t)ns);
+> +	ns = timespec64_to_ns(&ts);
+> +	if (ns)
+> +		rate = div64_u64(size * NSEC_PER_SEC, ns * 1000);
+>  
+> -	pr_info("\n%s => Size: %llu bytes\t DMA: %s\t Time: %llu.%09u seconds\t"
+> -		"Rate: %llu KB/s\n", ops, size, dma ? "YES" : "NO",
+> -		(u64)ts.tv_sec, (u32)ts.tv_nsec, rate / 1024);
+> +	dev_info(&epf_test->epf->dev,
+> +		 "%s => Size: %llu B, DMA: %s, Time: %llu.%09u s, Rate: %llu KB/s\n",
+> +		 op, size, dma ? "YES" : "NO",
+> +		 (u64)ts.tv_sec, (u32)ts.tv_nsec, rate);
+>  }
+>  
+>  static int pci_epf_test_copy(struct pci_epf_test *epf_test, bool use_dma)
+> @@ -400,7 +389,8 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test, bool use_dma)
+>  		kfree(buf);
+>  	}
+>  	ktime_get_ts64(&end);
+> -	pci_epf_test_print_rate("COPY", reg->size, &start, &end, use_dma);
+> +	pci_epf_test_print_rate(epf_test, "COPY", reg->size, &start, &end,
+> +				use_dma);
+>  
+>  err_map_addr:
+>  	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, dst_phys_addr);
+> @@ -481,7 +471,8 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test, bool use_dma)
+>  		ktime_get_ts64(&end);
+>  	}
+>  
+> -	pci_epf_test_print_rate("READ", reg->size, &start, &end, use_dma);
+> +	pci_epf_test_print_rate(epf_test, "READ", reg->size, &start, &end,
+> +				use_dma);
+>  
+>  	crc32 = crc32_le(~0, buf, reg->size);
+>  	if (crc32 != reg->checksum)
+> @@ -567,7 +558,8 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test, bool use_dma)
+>  		ktime_get_ts64(&end);
+>  	}
+>  
+> -	pci_epf_test_print_rate("WRITE", reg->size, &start, &end, use_dma);
+> +	pci_epf_test_print_rate(epf_test, "WRITE", reg->size, &start, &end,
+> +				use_dma);
+>  
+>  	/*
+>  	 * wait 1ms inorder for the write to complete. Without this delay L3
+> -- 
+> 2.39.1
+> 
 
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-Best regards,
-Krzysztof
-
+-- 
+மணிவண்ணன் சதாசிவம்
