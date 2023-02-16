@@ -2,57 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F19E8699217
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:47:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7233269921F
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:48:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229788AbjBPKrI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 05:47:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35514 "EHLO
+        id S230135AbjBPKsG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 05:48:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbjBPKrB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:47:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2DC254576
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:46:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3877661F73
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 10:46:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36AC5C433EF;
-        Thu, 16 Feb 2023 10:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676544375;
-        bh=66GXk2DBnieQriFjBtU732YSsPPxCQq9KT8Y5ZCUYoE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JDfSOHuD1gQl2Cv5Q5q7AWq3XLdjx3cnlE97fVI4+gtzmKhXfGXlPuhe2aLVDXlY2
-         DAbTidnaY433auyh7F+Ruhu4dA3I7v3j9dCO/Kxy7dOgbgdPHNeirEuY8D6YpsKsYz
-         3x07xK1I7ChDGOweZOpH5v/p5VmID5v6zWkiZx/Q2677jypvkJWMvWBLuUoUi41bXq
-         x30ooa9zP1GweCr6pKs4IIVOqRNjWC6oWZohIwHPnyFCYYsiO3hb/PjwOhSfq2Gd5U
-         JHn00I1QeRGxIVQiwKGSwNZECQ/rHeVCjAwXGVtjqcBHy4RxRrZbMt0apmp12tQpMI
-         bmYAH4OE4gH5g==
-Date:   Thu, 16 Feb 2023 16:16:02 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 08/12] misc: pci_endpoint_test: Free IRQs before removing
- the device
-Message-ID: <20230216104602.GI2420@thinkpad>
-References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-9-damien.lemoal@opensource.wdc.com>
+        with ESMTP id S230188AbjBPKsE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:48:04 -0500
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A396E4C6FC
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:47:35 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id m20-20020a05600c3b1400b003e1e754657aso3836658wms.2
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:47:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L6cGhYejmXP7gqB3bw2vF3QoztsjWluwjTHj/jf8Uws=;
+        b=PBc6KKJKbZ3iyuRUtK8YCSuz2fE2U0nOOKv4gwc5JAzo9KnzG6+tEIuW22y+Z2h7wp
+         O2E9TmpoatjIsTIlnJq61rp4zXDmvAcTsgK40YWkbtzumnoCEzzAzc6/85UxzuTb9x/9
+         /BfBOKANovWTBtZXk9OilYAVJ5aGUpoiBn4GM7jtLATZkeOSKi8q37Afn+W2Gyr+rhDf
+         y++AW6LIt+arLfjfljiaK00eotTkGNULJn8dHQ7I6HLU/oIntHYrJdn0FRiaIWrofx2E
+         7PQ627vGNKgpxZMxvVqNSn6IqfSqo/aKk65aLUZQvNmXTyeKELrBoN/tGX913VtXIGwC
+         mD2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L6cGhYejmXP7gqB3bw2vF3QoztsjWluwjTHj/jf8Uws=;
+        b=JzY516axaet20Yud+MXdsbE/8c4urWr+anCgj9mEu6sYoMMpvyKu6FByp+ss54ccIS
+         SWm+xDhrIxb64crQTPlubQVxCjVfbYEsEJELDIbvr5wpMTgQk5PROPmqN1pHG/+MHtys
+         pv7VijmN/f8qhpOsKAJGWEe8+xcecD3GrffVHJvjRGr5Xv3jWe/IWZrTi4ltSE7pOlUv
+         ea3/2bHEkrgxTQ10Jm5P9vwsTrPwCJlKmUmciMudHh4ltuIMO9S9ZrRfgAzSPUOKzxpH
+         Ks+3EMypFGOM0GE8KioEf57qsqTgrIwftonL/xWwWK+z246AweOY0EjF6yMjswmtxn3L
+         lZDA==
+X-Gm-Message-State: AO0yUKVGoReeJqdw832S+fDfcHS73A7w68xRd8zUr3tuskctmMVVosYB
+        zq9hZFNPO5Qv//2cVujjvfrpPg==
+X-Google-Smtp-Source: AK7set9j+Y/T2zdL7L9ZbqX0E7DPcvdQDA5CDDfLv72oFuHrrUchsK7J4Kv1ONGwlSnoCQ0pPMI9nQ==
+X-Received: by 2002:a05:600c:1819:b0:3e0:10d:f1c with SMTP id n25-20020a05600c181900b003e0010d0f1cmr4459563wmp.37.1676544450857;
+        Thu, 16 Feb 2023 02:47:30 -0800 (PST)
+Received: from myrica (054592b0.skybroadband.com. [5.69.146.176])
+        by smtp.gmail.com with ESMTPSA id i11-20020a05600c290b00b003e215973a96sm977173wmd.16.2023.02.16.02.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Feb 2023 02:47:30 -0800 (PST)
+Date:   Thu, 16 Feb 2023 10:47:29 +0000
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Leon Romanovsky <leon@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, darren@os.amperecomputing.com,
+        scott@os.amperecomputing.com, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not
+ enabled on PF
+Message-ID: <Y+4JwV843tZWGxih@myrica>
+References: <Y+ksmNWJdWNkGAU9@unreal>
+ <20230215205726.GA3213227@bhelgaas>
+ <Y+3al/a3HPrvfNgh@unreal>
+ <Y+3fa/3HC1vsLRXa@unreal>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230215032155.74993-9-damien.lemoal@opensource.wdc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <Y+3fa/3HC1vsLRXa@unreal>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,57 +79,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 12:21:51PM +0900, Damien Le Moal wrote:
-> In pci_endpoint_test_remove(), freeing the IRQs after removing the
-> device creates a small race window for IRQs to be received with the test
-> device memory already released, causing the IRQ handler to access
-> invalid memory, resulting in an oops.
-> 
-> Free the device IRQs before removing the device to avoid this issue.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+On Thu, Feb 16, 2023 at 09:46:51AM +0200, Leon Romanovsky wrote:
+> On Thu, Feb 16, 2023 at 09:26:15AM +0200, Leon Romanovsky wrote:
+> > On Wed, Feb 15, 2023 at 02:57:26PM -0600, Bjorn Helgaas wrote:
+> > > [+cc Will, Robin, Joerg for arm-smmu-v3 page size question]
+> > > 
+> > > On Sun, Feb 12, 2023 at 08:14:48PM +0200, Leon Romanovsky wrote:
+> > > > On Wed, Feb 08, 2023 at 10:43:21AM -0800, Ganapatrao Kulkarni wrote:
+> > > > > As per PCIe specification(section 10.5), If a VF implements an
+> > > > > ATS capability, its associated PF must implement an ATS capability.
+> > > > > The ATS Capabilities in VFs and their associated PFs are permitted to
+> > > > > be enabled independently.
+> > > > > Also, it states that the Smallest Translation Unit (STU) for VFs must be
+> > > > > hardwired to Zero and the associated PF's value applies to VFs STU.
+> > > > > 
+> > > > > The current code allows to enable ATS on VFs only if it is already
+> > > > > enabled on associated PF, which is not necessary as per the specification.
+> > > > > 
+> > > > > It is only required to have valid STU programmed on PF to enable
+> > > > > ATS on VFs. Adding code to write the first VFs STU to a PF's STU
+> > > > > when PFs ATS is not enabled.
+> > > >
+> > > > Can you please add here quotes from the spec and its version? I don't see
+> > > > anything like this in my version of PCIe specification.
 
-This looks like a bug. So there should be Fixes tag and stable list has to be
-CCed for backporting.
+In PCIe r6.0, 10.5.1 ATS Extended Capability:
 
-With that,
+"The ATS Capabilities in VFs and their associated PFs are permitted to be
+enabled independently."
 
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+> For VFs, this field must be hardwired to Zero. The associated PF's value applies.
+> Default value is 0 0000b"
+
+And this sentence indicates that the PF's STU should be configured
+appropriately in order to use ATS in the VF.
+
+So a driver is permitted to enable the VF ATS capability without enabling
+the PF ATS cap, though the STU value of the PF cap still applies. But the
+first sentence is weak ("permitted" instead of "required"), so as Joerg
+said, some device implementations may still require to enable the PF cap
+in order to enable the VF cap.
+
+Maybe we could have a list of vendor:device IDs which allow enabling the
+VF cap independently?
 
 Thanks,
-Mani
-
-> ---
->  drivers/misc/pci_endpoint_test.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 11530b4ec389..e27d471cc847 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -937,6 +937,9 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
->  	if (id < 0)
->  		return;
->  
-> +	pci_endpoint_test_release_irq(test);
-> +	pci_endpoint_test_free_irq_vectors(test);
-> +
->  	misc_deregister(&test->miscdev);
->  	kfree(misc_device->name);
->  	kfree(test->name);
-> @@ -946,9 +949,6 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
->  			pci_iounmap(pdev, test->bar[bar]);
->  	}
->  
-> -	pci_endpoint_test_release_irq(test);
-> -	pci_endpoint_test_free_irq_vectors(test);
-> -
->  	pci_release_regions(pdev);
->  	pci_disable_device(pdev);
->  }
-> -- 
-> 2.39.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Jean
