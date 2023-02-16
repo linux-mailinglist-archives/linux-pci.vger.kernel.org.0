@@ -2,107 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 844C1698E01
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 08:47:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 879BA698E3D
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 09:03:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229717AbjBPHrA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 02:47:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        id S229537AbjBPIDs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 03:03:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229756AbjBPHq5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 02:46:57 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED473D0B5;
-        Wed, 15 Feb 2023 23:46:57 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A986561E9B;
-        Thu, 16 Feb 2023 07:46:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A972C433D2;
-        Thu, 16 Feb 2023 07:46:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676533616;
-        bh=+zie8DFIW086ciac+xBLGHQtfLEE2mebhKoZUUc3aGc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LCOQ4+MXazvsQMFJRVy+maqrEGE9X6jkTr2pA/aWhfbBmvuVtfsnS2mZn+y03mgfM
-         chhfleytQW5kGJUu0M+RD+ezD2Pl//aC7VHybrtlkc3bq8+R1CZdcvslCF6lINsSSE
-         5tKPI4e2KFHb8VA0ZrWKxIufRC+JWnTG3In9/PKY9vCpAy/Fj7X4+XVhmilJN3ecPm
-         9g1VYNTv6z/VJJJo3Y34Vq5l/8kEtOMltYSwtRCQliclIsOqH9FdSUZq5BPN3SMIAe
-         9LYyGQmnMYgQvmYcohC4a+10hz+Sdqh0s8aR0z2ccQGmT4gRKyATnSOJYrZvIlZwXG
-         Wl2AYv14epu2A==
-Date:   Thu, 16 Feb 2023 09:46:51 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, jean-philippe@linaro.org,
-        darren@os.amperecomputing.com, scott@os.amperecomputing.com,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-Subject: Re: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not
- enabled on PF
-Message-ID: <Y+3fa/3HC1vsLRXa@unreal>
-References: <Y+ksmNWJdWNkGAU9@unreal>
- <20230215205726.GA3213227@bhelgaas>
- <Y+3al/a3HPrvfNgh@unreal>
+        with ESMTP id S229685AbjBPIDr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 03:03:47 -0500
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E9621E1ED;
+        Thu, 16 Feb 2023 00:03:45 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id AF8BB280137D4;
+        Thu, 16 Feb 2023 09:03:43 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 61EE12703E; Thu, 16 Feb 2023 09:03:43 +0100 (CET)
+Date:   Thu, 16 Feb 2023 09:03:43 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3 16/16] cxl/pci: Rightsize CDAT response allocation
+Message-ID: <20230216080343.GA23125@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <49c5299afc660ac33fee9a116ea37df0de938432.1676043318.git.lukas@wunner.de>
+ <63ed7f50ed22b_19cbb72946d@iweiny-mobl.notmuch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y+3al/a3HPrvfNgh@unreal>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <63ed7f50ed22b_19cbb72946d@iweiny-mobl.notmuch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 16, 2023 at 09:26:15AM +0200, Leon Romanovsky wrote:
-> On Wed, Feb 15, 2023 at 02:57:26PM -0600, Bjorn Helgaas wrote:
-> > [+cc Will, Robin, Joerg for arm-smmu-v3 page size question]
+On Wed, Feb 15, 2023 at 04:56:48PM -0800, Ira Weiny wrote:
+> Lukas Wunner wrote:
+> > Jonathan notes that cxl_cdat_get_length() and cxl_cdat_read_table()
+> > allocate 32 dwords for the DOE response even though it may be smaller.
 > > 
-> > On Sun, Feb 12, 2023 at 08:14:48PM +0200, Leon Romanovsky wrote:
-> > > On Wed, Feb 08, 2023 at 10:43:21AM -0800, Ganapatrao Kulkarni wrote:
-> > > > As per PCIe specification(section 10.5), If a VF implements an
-> > > > ATS capability, its associated PF must implement an ATS capability.
-> > > > The ATS Capabilities in VFs and their associated PFs are permitted to
-> > > > be enabled independently.
-> > > > Also, it states that the Smallest Translation Unit (STU) for VFs must be
-> > > > hardwired to Zero and the associated PF's value applies to VFs STU.
-> > > > 
-> > > > The current code allows to enable ATS on VFs only if it is already
-> > > > enabled on associated PF, which is not necessary as per the specification.
-> > > > 
-> > > > It is only required to have valid STU programmed on PF to enable
-> > > > ATS on VFs. Adding code to write the first VFs STU to a PF's STU
-> > > > when PFs ATS is not enabled.
-> > >
-> > > Can you please add here quotes from the spec and its version? I don't see
-> > > anything like this in my version of PCIe specification.
+> > In the case of cxl_cdat_get_length(), only the second dword of the
+> > response is of interest (it contains the length).  So reduce the
+> > allocation to 2 dwords and let DOE discard the remainder.
 > > 
-> > See PCIe r6.0, sec 10.5.1.
+> > In the case of cxl_cdat_read_table(), a correctly sized allocation for
+> > the full CDAT already exists.  Let DOE write each table entry directly
+> > into that allocation.  There's a snag in that the table entry is
+> > preceded by a Table Access Response Header (1 dword).
 > 
-> Awesome, I have old versions.
+> Where is this 'Table Access Response Header' defined?
 
-OK, where should I read about this sentence?
+CXL r3.0 table 8-14 (sec 8.1.11.1, page 399).
 
-"It is only required to have valid STU programmed on PF to enable
- ATS on VFs. Adding code to write the first VFs STU to a PF's STU
- when PFs ATS is not enabled."
+I'll amend the commit message with a reference to the spec.
 
-From spec:
-"Smallest Translation Unit (STU) - This value indicates to the Function the minimum number of
-4096-byte blocks that is indicated in a Translation Completions or Invalidate Requests. This is a power of
-2 multiplier and the number of blocks is 2STU. A value of 0 0000b indicates one block and a value of
-1 1111b indicates 231 blocks (or 8 TB total)
+Thanks,
 
-For VFs, this field must be hardwired to Zero. The associated PF's value applies.
-Default value is 0 0000b"
-
-And enable bit doesn't have any sentence about STU.
-
-Thanks
+Lukas
