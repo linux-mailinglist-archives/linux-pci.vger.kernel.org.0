@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 666CE6990D9
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:15:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D6E86990F1
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:18:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjBPKPm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 05:15:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
+        id S229871AbjBPKS0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 05:18:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjBPKPm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:15:42 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D80CAD3A
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:15:41 -0800 (PST)
+        with ESMTP id S229861AbjBPKSZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:18:25 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3721DD4
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:18:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B96EF61F35
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 10:15:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA413C433EF;
-        Thu, 16 Feb 2023 10:15:36 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6D93BCE2A1D
+        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 10:18:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E432AC433D2;
+        Thu, 16 Feb 2023 10:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676542540;
-        bh=XKur9k4LKnQWUvdvydbwY+yqyxw0LYwQFSHrjcbPxQ8=;
+        s=k20201202; t=1676542700;
+        bh=jJsBJFVetVNkM6/VLL0/ONPYAbrD03h/fttW3zkE6GI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bEr+P3JkMgt581zeGl9Hli3xMafG6McSJIqbDv+cC7OwNSAz4AM86t76fhAYBkHey
-         DKJeuYNKT6tAlLpNq10hiyMBFHF0eqRVJcBtjQmiCYPRrGE/MLOS5vf8+d7MUNg7w5
-         K45W90uakoIYySbGwQCCIYPgAW0kGz9t2bLgB0WDQu8VNfkoCsa+DUOEvtyNysKsoD
-         VY5nMcWNZIYfgRbi72WfMuNLzEYjjJO33+q+qFQIRq2TRWK/osaNAE/wt7ggciymJL
-         yehbmII6H5Q70dTGXCNNUK1vgtWYEyQdSH6WUr89o5dTCO4Ku79wsIxnNG7XE3lIws
-         GcKikEHXX8j4g==
-Date:   Thu, 16 Feb 2023 15:45:26 +0530
+        b=e6oDX/JqnHIBLTKpQmaq6uTru74Qt+wGy+JkTH91ro6eay83DsrZt7pvLPR/VMmbS
+         dnXpUBYu+C3BOwf/7yFP0TVp1N6bKe70zXNOpYKutGW3/ZPIqnTWsPLpGpsWYYqcN+
+         WLkhNy63wpi9HxRqpU1bdK5lllaq9qJjXUw+7HHMIPcmaPYLpNC+R+4+ugJ0FHAkDl
+         EKEEGWx27V0Jbvf5ScrC0yF4dBR0rephskjePw9JwUubXzN2UHA4+6DhKZD1w8W+aO
+         l2reSskJCh+erg31kbAa1ttgsTZZTQ5AuaL0xA7unc0ir3mdeX1pKpqGIYU0bkrKHz
+         3zxM6PmmnF/Qg==
+Date:   Thu, 16 Feb 2023 15:48:06 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -41,17 +41,18 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 02/12] pci: endpoint: do not export pci_epf_type_add_cfs()
-Message-ID: <20230216101526.GD2420@thinkpad>
+Subject: Re: [PATCH 03/12] pci: epf-test: Fix DMA transfer completion
+ detection
+Message-ID: <20230216101806.GE2420@thinkpad>
 References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-3-damien.lemoal@opensource.wdc.com>
+ <20230215032155.74993-4-damien.lemoal@opensource.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230215032155.74993-3-damien.lemoal@opensource.wdc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20230215032155.74993-4-damien.lemoal@opensource.wdc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,125 +60,126 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 12:21:45PM +0900, Damien Le Moal wrote:
-> pci_epf_type_add_cfs() is called only from pci_ep_cfs_add_type_group()
-> in drivers/pci/endpoint/pci-ep-cfs.c, so there is no need to export it
-> and function drivers should not call this function directly.
+On Wed, Feb 15, 2023 at 12:21:46PM +0900, Damien Le Moal wrote:
+> pci_epf_test_data_transfer() and pci_epf_test_dma_callback() are not
+> handling DMA transfer completion correctly, leading to completion
+> notifications to the RC side that are too early. This problem can be
+> detected when the RC side is running an IOMMU with messages such as:
+> 
+> pci-endpoint-test 0000:0b:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+> domain=0x001c address=0xfff00000 flags=0x0000]
+> 
+> When running the pcitest.sh tests: the address used for a previous
+> test transfer generates the above error while the next test transfer is
+> running.
+> 
+> Fix this by testing the dma transfer status in
+> pci_epf_test_dma_callback() and notifying the completion only when the
+> transfer status is DMA_COMPLETE or DMA_ERROR. Furthermore, in
+> pci_epf_test_data_transfer(), be paranoid and check again the transfer
+> status and always call dmaengine_terminate_sync() before returning.
+> 
+> While at it, also modify the channel tx submit call to use
+> dmaengine_submit() instead of the hard coded call to the tx_submit()
+> operation.
 > 
 
-Where is the pci_ep_cfs_add_type_group() function defined?
-
-> Remove the export for this function and move its declaration to the
-> internal header file drivers/pci/endpoint/pci-epf.h.
-> 
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->  drivers/pci/endpoint/pci-ep-cfs.c   |  3 ++-
->  drivers/pci/endpoint/pci-epf-core.c | 12 +++++-------
->  drivers/pci/endpoint/pci-epf.h      | 14 ++++++++++++++
->  include/linux/pci-epf.h             |  2 --
->  4 files changed, 21 insertions(+), 10 deletions(-)
->  create mode 100644 drivers/pci/endpoint/pci-epf.h
-> 
-> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> index 1fb31f07199f..62b3b9e306fa 100644
-> --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -11,9 +11,10 @@
->  #include <linux/slab.h>
->  
->  #include <linux/pci-epc.h>
-> -#include <linux/pci-epf.h>
->  #include <linux/pci-ep-cfs.h>
->  
-> +#include "pci-epf.h"
-> +
->  static DEFINE_IDR(functions_idr);
->  static DEFINE_MUTEX(functions_mutex);
->  static struct config_group *functions_group;
-> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
-> index 9ed556936f48..db121a58a586 100644
-> --- a/drivers/pci/endpoint/pci-epf-core.c
-> +++ b/drivers/pci/endpoint/pci-epf-core.c
-> @@ -12,24 +12,23 @@
->  #include <linux/module.h>
->  
->  #include <linux/pci-epc.h>
-> -#include <linux/pci-epf.h>
->  #include <linux/pci-ep-cfs.h>
->  
-> +#include "pci-epf.h"
-> +
->  static DEFINE_MUTEX(pci_epf_mutex);
->  
->  static struct bus_type pci_epf_bus_type;
->  static const struct device_type pci_epf_type;
->  
->  /**
-> - * pci_epf_type_add_cfs() - Help function drivers to expose function specific
-> - *                          attributes in configfs
-> + * pci_epf_type_add_cfs() - Get a function driver specific attribute group.
->   * @epf: the EPF device that has to be configured using configfs
->   * @group: the parent configfs group (corresponding to entries in
->   *         pci_epf_device_id)
->   *
-> - * Invoke to expose function specific attributes in configfs. If the function
-> - * driver does not have anything to expose (attributes configured by user),
-> - * return NULL.
-> + * Called from pci_ep_cfs_add_type_group() when the function is created.
-> + * If the function driver does not have anything to expose, return NULL.
->   */
->  struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
->  					  struct config_group *group)
-> @@ -50,7 +49,6 @@ struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
->  
->  	return epf_type_group;
->  }
-> -EXPORT_SYMBOL_GPL(pci_epf_type_add_cfs);
->  
->  /**
->   * pci_epf_unbind() - Notify the function driver that the binding between the
-> diff --git a/drivers/pci/endpoint/pci-epf.h b/drivers/pci/endpoint/pci-epf.h
-> new file mode 100644
-> index 000000000000..b2f351afd623
-> --- /dev/null
-> +++ b/drivers/pci/endpoint/pci-epf.h
-
-When there is already a pci-epf.h header available, creating one more even
-under different location will create ambiguity. Please rename it as internal.h
-or something relevant.
+This patch is doing 3 different things. So you need to split them into separate
+patches.
 
 Thanks,
 Mani
 
-> @@ -0,0 +1,14 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * PCI Endpoint *Function* (EPF) internal header file
-> + */
+> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 42 +++++++++++++------
+>  1 file changed, 30 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 55283d2379a6..030769893efb 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -54,6 +54,9 @@ struct pci_epf_test {
+>  	struct delayed_work	cmd_handler;
+>  	struct dma_chan		*dma_chan_tx;
+>  	struct dma_chan		*dma_chan_rx;
+> +	struct dma_chan		*transfer_chan;
+> +	dma_cookie_t		transfer_cookie;
+> +	enum dma_status		transfer_status;
+>  	struct completion	transfer_complete;
+>  	bool			dma_supported;
+>  	bool			dma_private;
+> @@ -85,8 +88,14 @@ static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
+>  static void pci_epf_test_dma_callback(void *param)
+>  {
+>  	struct pci_epf_test *epf_test = param;
+> -
+> -	complete(&epf_test->transfer_complete);
+> +	struct dma_tx_state state;
 > +
-> +#ifndef PCI_EPF_H
-> +#define PCI_EPF_H
+> +	epf_test->transfer_status =
+> +		dmaengine_tx_status(epf_test->transfer_chan,
+> +				    epf_test->transfer_cookie, &state);
+> +	if (epf_test->transfer_status == DMA_COMPLETE ||
+> +	    epf_test->transfer_status == DMA_ERROR)
+> +		complete(&epf_test->transfer_complete);
+>  }
+>  
+>  /**
+> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>  	struct dma_async_tx_descriptor *tx;
+>  	struct dma_slave_config sconf = {};
+>  	struct device *dev = &epf->dev;
+> -	dma_cookie_t cookie;
+>  	int ret;
+>  
+>  	if (IS_ERR_OR_NULL(chan)) {
+> @@ -151,26 +159,36 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>  		return -EIO;
+>  	}
+>  
+> +	reinit_completion(&epf_test->transfer_complete);
+> +	epf_test->transfer_chan = chan;
+>  	tx->callback = pci_epf_test_dma_callback;
+>  	tx->callback_param = epf_test;
+> -	cookie = tx->tx_submit(tx);
+> -	reinit_completion(&epf_test->transfer_complete);
+> +	epf_test->transfer_cookie = dmaengine_submit(tx);
+>  
+> -	ret = dma_submit_error(cookie);
+> +	ret = dma_submit_error(epf_test->transfer_cookie);
+>  	if (ret) {
+> -		dev_err(dev, "Failed to do DMA tx_submit %d\n", cookie);
+> -		return -EIO;
+> +		dev_err(dev, "Failed to do DMA tx_submit %d\n", ret);
+> +		goto terminate;
+>  	}
+>  
+>  	dma_async_issue_pending(chan);
+>  	ret = wait_for_completion_interruptible(&epf_test->transfer_complete);
+>  	if (ret < 0) {
+> -		dmaengine_terminate_sync(chan);
+> -		dev_err(dev, "DMA wait_for_completion_timeout\n");
+> -		return -ETIMEDOUT;
+> +		dev_err(dev, "DMA wait_for_completion interrupted\n");
+> +		goto terminate;
+>  	}
+>  
+> -	return 0;
+> +	if (epf_test->transfer_status == DMA_ERROR) {
+> +		dev_err(dev, "DMA transfer failed\n");
+> +		ret = -EIO;
+> +	}
 > +
-> +#include <linux/pci-epf.h>
+> +	WARN_ON(epf_test->transfer_status != DMA_COMPLETE);
 > +
-> +struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
-> +					  struct config_group *group);
+> +terminate:
+> +	dmaengine_terminate_sync(chan);
 > +
-> +#endif /* PCI_EPF_H */
-> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
-> index 009a07147c61..b89cd8515073 100644
-> --- a/include/linux/pci-epf.h
-> +++ b/include/linux/pci-epf.h
-> @@ -209,8 +209,6 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
->  			enum pci_epc_interface_type type);
->  int pci_epf_bind(struct pci_epf *epf);
->  void pci_epf_unbind(struct pci_epf *epf);
-> -struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
-> -					  struct config_group *group);
->  int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
->  void pci_epf_remove_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
->  #endif /* __LINUX_PCI_EPF_H */
+> +	return ret;
+>  }
+>  
+>  struct epf_dma_filter {
 > -- 
 > 2.39.1
 > 
