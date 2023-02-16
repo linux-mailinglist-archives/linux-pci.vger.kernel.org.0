@@ -2,145 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 636C8699114
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:23:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DDF269911D
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 11:26:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjBPKX4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Feb 2023 05:23:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60784 "EHLO
+        id S229633AbjBPK0V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Feb 2023 05:26:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbjBPKX4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:23:56 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E9610A9F
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 02:23:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 15043B826AB
-        for <linux-pci@vger.kernel.org>; Thu, 16 Feb 2023 10:23:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F33C4339C;
-        Thu, 16 Feb 2023 10:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676543030;
-        bh=AHT6gjVy7FhjggQ0enVys6MXDIxbGM2QE+3M2Y66h2w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xu9SmNv0rgN3H92txePQAiBnA5rcvALAndXf96DlgplDFdVIvu7Fzh5cCdZWyKgmw
-         pmcuJdy2SLq+A0e20mGqFqoWHkYAIFgidE301CKXobqe5V8XOUD+NxPS/sYA8JvcBU
-         8lxujkw7h900kdDBRVBLnkTYcurVXY0erLXe6T4HYgZQT7/l89pe6QtqLgLO64ydny
-         vOTLUkJOk+/EiloInfDKPIS+LB8gF710NaWGIMLz8KedsQpgke38TegXa/tcehEHj5
-         HGoINqAGcYjGf2e+6grRqXIZDRU3iD1Es6RkeJtWUXfdsGQ8gLBiFXT99aMhMB6p99
-         cqBywxw3SLxMQ==
-Date:   Thu, 16 Feb 2023 15:53:38 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 04/12] pci: epf-test: Use driver registers as volatile
-Message-ID: <20230216102338.GF2420@thinkpad>
-References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-5-damien.lemoal@opensource.wdc.com>
+        with ESMTP id S229461AbjBPK0U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Feb 2023 05:26:20 -0500
+X-Greylist: delayed 81436 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 16 Feb 2023 02:26:18 PST
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94AAC10A9F;
+        Thu, 16 Feb 2023 02:26:18 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D17D03000A0BD;
+        Thu, 16 Feb 2023 11:26:16 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BBEFD290CC; Thu, 16 Feb 2023 11:26:16 +0100 (CET)
+Date:   Thu, 16 Feb 2023 11:26:16 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3 04/16] cxl/pci: Handle excessive CDAT length
+Message-ID: <20230216102616.GA13347@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <4834ceab1c3e00d3ec957e6c8beb13ddaa9877a2.1676043318.git.lukas@wunner.de>
+ <20230214113311.00000825@Huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230215032155.74993-5-damien.lemoal@opensource.wdc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230214113311.00000825@Huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 12:21:47PM +0900, Damien Le Moal wrote:
-> The pci-epf-test driver uses struct pci_epf_test_reg directly from the
-> test register bar memory to execute tests cases sent by the RC side.
-> Make sure to declare pci_epf_test_reg use as volatile to ensure that
-> modifications to the fields of that structure make it to memory to be
-> seen by the RC side on completion.
-> 
-> Also initialize the test register bar to 0 when it is allocated.
-> 
+On Tue, Feb 14, 2023 at 11:33:11AM +0000, Jonathan Cameron wrote:
+> On Fri, 10 Feb 2023 21:25:04 +0100 Lukas Wunner <lukas@wunner.de> wrote:
+> > If the length in the CDAT header is larger than the concatenation of the
+> > header and all table entries, then the CDAT exposed to user space
+> > contains trailing null bytes.
+> > 
+> > Not every consumer may be able to handle that.  Per Postel's robustness
+> > principle, "be liberal in what you accept" and silently reduce the
+> > cached length to avoid exposing those null bytes.
+[...]
+> Fair enough. I'd argue that we are papering over broken hardware if
+> we hit these conditions, so given we aren't aware of any (I hope)
+> not sure this is stable material.  Argument in favor of stable being
+> that if we do get broken hardware we don't want an ABI change when
+> we paper over the garbage... hmm.
 
-Again, please split this into a separate commit.
-
-Rest LGTM!
+Type 0 is assigned for DSMAS structures.  So user space might believe
+there's an additional DSMAS in the CDAT.  It *could* detect that the
+length is bogus (it is 0 but should be 24), but what if it doesn't
+check that?  It seems way too dangerous to leave this loophole open,
+hence the stable designation.
 
 Thanks,
-Mani
 
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 030769893efb..df3074667bbc 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -340,7 +340,7 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test)
->  	struct device *dev = &epf->dev;
->  	struct pci_epc *epc = epf->epc;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	src_addr = pci_epc_mem_alloc_addr(epc, &src_phys_addr, reg->size);
->  	if (!src_addr) {
-> @@ -441,7 +441,7 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test)
->  	struct pci_epc *epc = epf->epc;
->  	struct device *dma_dev = epf->epc->dev.parent;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	src_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
->  	if (!src_addr) {
-> @@ -530,7 +530,7 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test)
->  	struct pci_epc *epc = epf->epc;
->  	struct device *dma_dev = epf->epc->dev.parent;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	dst_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, reg->size);
->  	if (!dst_addr) {
-> @@ -619,7 +619,7 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test, u8 irq_type,
->  	struct device *dev = &epf->dev;
->  	struct pci_epc *epc = epf->epc;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	reg->status |= STATUS_IRQ_RAISED;
->  
-> @@ -653,7 +653,7 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  	struct device *dev = &epf->dev;
->  	struct pci_epc *epc = epf->epc;
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
-> -	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
-> +	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
->  	command = reg->command;
->  	if (!command)
-> @@ -911,6 +911,7 @@ static int pci_epf_test_alloc_space(struct pci_epf *epf)
->  		dev_err(dev, "Failed to allocated register space\n");
->  		return -ENOMEM;
->  	}
-> +	memset(base, 0, test_reg_size);
->  	epf_test->reg[test_reg_bar] = base;
->  
->  	for (bar = 0; bar < PCI_STD_NUM_BARS; bar += add) {
-> -- 
-> 2.39.1
-> 
+Lukas
 
--- 
-மணிவண்ணன் சதாசிவம்
+> > --- a/drivers/cxl/core/pci.c
+> > +++ b/drivers/cxl/core/pci.c
+> > @@ -582,6 +582,9 @@ static int cxl_cdat_read_table(struct device *dev,
+> >  		}
+> >  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
+> >  
+> > +	/* Length in CDAT header may exceed concatenation of CDAT entries */
+> > +	cdat->length -= length;
+> > +
+> >  	return 0;
+> >  }
+> >  
