@@ -2,178 +2,219 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6E6569881F
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Feb 2023 23:56:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58A5E698952
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Feb 2023 01:35:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjBOW4H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Feb 2023 17:56:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51920 "EHLO
+        id S229538AbjBPAfy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Feb 2023 19:35:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjBOW4G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 17:56:06 -0500
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A3C332E4E
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 14:56:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1676501761; x=1708037761;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KF1wqmd9OiEM2NX23C6uB3mKF2sPSB06Bv3pX90M9tI=;
-  b=XPJmT91lLDHJWd4E4d/FJGIZedfSACQnK0VMMMy62iqVNCLHxJjt4EaN
-   UT+KgIJOQpKBOgvpfvKDiH+8rLgByfVcuyJg71rL0H0TUAzMVQXAIG9yx
-   h2VsLHzGOJyPX9A8ESyUvNNcyiI1XSchr+mAteuCJXUXRRvgenPSr4xCy
-   caO5eTnUTtVU+JeGfYdbsZ8jiNrSvTcvSanVjGlcXk0bYX/3IYLi7T/3I
-   TDuwnBHkuV9vyAh0TYl9wjT1TggBXrkznt9A4R901yVZyKxkamsbxvcDV
-   juHSzHrom/2mDyqFNYaAPjrG3TjbFjNqxyNPAogPRgV2eFg8PMpkU3wE7
-   g==;
-X-IronPort-AV: E=Sophos;i="5.97,300,1669046400"; 
-   d="scan'208";a="327705522"
-Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Feb 2023 06:55:58 +0800
-IronPort-SDR: v6+c1YnFDaFjE+cHvYbd3Hj6xupQeQG3TgK1q5ISL+3hHywhpZsFQ2TdgAJCuvtYXEvYdL7scB
- IHZ1OfTW/CsZ4yxSnNuBf1dExQqNkKd214Twvj4rUkS54SurbdZChitVq4wrCV6fFgx6aGeeam
- 30+b00DGfY14Oi2CDFzVfJSBwrW9O6FIZiGAZzIIXbXdUGMUnwFBeMnHqd7meggi1SuHkmX0We
- 6xthF3y+GEvuow3i/lDYwEDRcHau+B/OjErMSc0qjlDYakSDQ6P+6G6seHDSVFiLIlhG5RPCwe
- d04=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 14:07:20 -0800
-IronPort-SDR: t2/gXw3fGgNb7LmfC21lbFkqBZXYEnML7M5dxv/Qr70W1GKsg5eyw5Ue/7Cbgg7YMnamPnMU5b
- +ag65KQkIWcrQ5WrOJHutG8E+AuOAQqaG8ifhLYTmZoHfZUcnTKunB2Tvjh/k8hOeR6f2iv6Wm
- yPUE4n1S4W2haMyeQU2pZk4lq1+unW7l7cnB/JBP0T00fh33Z0zOdy9KWr0c9k2xPg7PEZD/ms
- eLClndX6zg2LPV5Y0iTiT4s2u1kcqtusdCFNhK3t8brMqI97BCPAwkekmnlbLVL771L4yrxlAA
- 1Eo=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Feb 2023 14:56:00 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PHD2Q51Cvz1Rwt8
-        for <linux-pci@vger.kernel.org>; Wed, 15 Feb 2023 14:55:58 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:content-language:references:to
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1676501757; x=1679093758; bh=KF1wqmd9OiEM2NX23C6uB3mKF2sPSB06Bv3
-        pX90M9tI=; b=V9ujQSIdnRndPGVlpYofrS1wENmCG9L+UhiffpHwKi8EkfhEX2/
-        HN1d5DN/xZYFv5xg8gXZklFwHmdTwOyKZ/5YS8PgeFNXkYMVT14npVweC3xE1WWE
-        VH6YgvNzyDpTw5ztKS8TmJ9Skww32SquZF3quD+8mR5Vv4trEb0uoKN2L+hU8idp
-        iMoTEQeCH5+H6+OUUs+ZZwpLVqK393T8gVrZDwgFngWdrql231lmxJXuY+EkqiD+
-        8Wb6wVYtMqoCQDAlYhs2ZXsSMb12Sy/ew7Mn8UA1Alb1woia9ESp4sxthCDsMlLX
-        kGq/Vkyke8ZAYAlpHEMxVNIjBHn3nIZ81jA==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 8NlzfmrVazBv for <linux-pci@vger.kernel.org>;
-        Wed, 15 Feb 2023 14:55:57 -0800 (PST)
-Received: from [10.225.163.121] (unknown [10.225.163.121])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PHD2N2Mzfz1RvLy;
-        Wed, 15 Feb 2023 14:55:56 -0800 (PST)
-Message-ID: <4801c7c0-4a35-14a3-ee62-d88f43ade8bd@opensource.wdc.com>
-Date:   Thu, 16 Feb 2023 07:55:54 +0900
-MIME-Version: 1.0
+        with ESMTP id S229462AbjBPAfx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Feb 2023 19:35:53 -0500
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2056.outbound.protection.outlook.com [40.107.212.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02DA42DCF;
+        Wed, 15 Feb 2023 16:35:51 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=F4E1uowMANCLuaCPHKddMXG6aJE37YlCYBawMBXyYVNg9Fnde6LJ7dbEEQRs43f6HgecY9HnJsM7vt0Er1hX2tI15ki8XzeAKvlONrO8kPGQum5yfNyxFqD14I3h6Dm2txDUP6Z37m2di8LvFutv3DZA/VJ/NnTok+Bd1jFxgtljk/RevgcvrkiS4MbJYx+l1B3kGVpGTGLgwUIqreHeYnUUJwkC5ue+DDMwXP0Es4MMwFJJPHK+ZVbqNt7YpFyT4tcndd4aPcZD6fjdPpThSJwB2ybJXcMJehywlpteQzuWvyHDQvvdUIweK19/G1E131wtYhFGA1oTy20I7hIGCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Cq/cu+FQ1UcGAnTuLdWwawSf/qUVCWrNpoYN55apkn0=;
+ b=ayzPzAQIaj8IwRQBegA/9CLORUUDVSvmG1UrnEJTln928PjvN+Au4Sog4kPiCfu9qrCUocLYmeeD/TgXQCJmkSrz1RS1mbd8rroQ/SjgbFnVhC+84muccdXTe4BTC5ACKQfTVlqPk/lBbZZp3Dl/pfA3Z2IGmFvvN71mSDLXaBjdET4bWHmXpa2/OplOgw7iq6R9WKyoRmzLGihY9ndqymttxjDfockN5bmNM+JyWEWP3M8bC3vqnkobnsjKTbuyQ16tv0qUqV5d41KRWCNrhMYwHWXs4yRuyoZh5qlrEAfuhARQ1o/eFI6UBJ66wJ3nkYb7Kn6GPVoot880i4LU4Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Cq/cu+FQ1UcGAnTuLdWwawSf/qUVCWrNpoYN55apkn0=;
+ b=d3ZCoOl0MU/8ap+eZLdLolgYvFw+iwHXmZkZY3Z0vrDRMpshhU/T3Ec4SyBPgH0yU/ZCEV5SryYOftxnt5hG419WIYZgr9WIBdOoOJe+/gE1JvjEuNhVj4cui0sOhe0NfUL2esUNslc/x5hOcuFr6QN4M6lYpfKfj9omJomKcS4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com (2603:10b6:408:118::14)
+ by SJ0PR12MB8116.namprd12.prod.outlook.com (2603:10b6:a03:4ec::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.26; Thu, 16 Feb
+ 2023 00:35:48 +0000
+Received: from BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::e6ea:9231:6d39:93da]) by BN9PR12MB5115.namprd12.prod.outlook.com
+ ([fe80::e6ea:9231:6d39:93da%5]) with mapi id 15.20.6086.024; Thu, 16 Feb 2023
+ 00:35:48 +0000
+Message-ID: <e3b866eb-830c-9037-39c7-978714aaf4d2@amd.com>
+Date:   Wed, 15 Feb 2023 19:35:45 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.7.1
-Subject: Re: [PATCH 07/12] pci: epf-test: Add debug and error messages
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>
-References: <20230215032155.74993-1-damien.lemoal@opensource.wdc.com>
- <20230215032155.74993-8-damien.lemoal@opensource.wdc.com>
- <Y+zDUmwj8+ibp3r0@kroah.com>
- <e71ad0dc-2250-7ffc-6d96-745e2da40694@opensource.wdc.com>
- <Y+zJqp9cXelKro6t@kroah.com>
- <077adda6-ef9f-5c31-c041-97342317f1d2@opensource.wdc.com>
- <Y+zdD8G0NJIdiClo@kroah.com>
- <c49df2f9-9848-45aa-9d64-9e4e9841440f@app.fastmail.com>
+Subject: =?UTF-8?Q?Re=3a_=5bregression=2c_bisected=2c_pci/iommu=5d_Bug=c2=a0?=
+ =?UTF-8?Q?216865_-_Black_screen_when_amdgpu_started_during_6=2e2-rc1_boot_w?=
+ =?UTF-8?Q?ith_AMD_IOMMU_enabled?=
 Content-Language: en-US
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <c49df2f9-9848-45aa-9d64-9e4e9841440f@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Baolu Lu <baolu.lu@linux.intel.com>,
+        "Huang, Shimmer" <Shimmer.Huang@amd.com>,
+        "Liu, Aaron" <Aaron.Liu@amd.com>
+Cc:     Joerg Roedel <jroedel@suse.de>,
+        "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        "Pan, Xinhui" <Xinhui.Pan@amd.com>,
+        "Hegde, Vasant" <Vasant.Hegde@amd.com>,
+        amd-gfx@lists.freedesktop.org, LKML <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>,
+        Matt Fagnani <matt.fagnani@bell.net>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+References: <20230215153913.GA3189407@bhelgaas>
+From:   Felix Kuehling <felix.kuehling@amd.com>
+In-Reply-To: <20230215153913.GA3189407@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: YT4P288CA0030.CANP288.PROD.OUTLOOK.COM
+ (2603:10b6:b01:d3::12) To BN9PR12MB5115.namprd12.prod.outlook.com
+ (2603:10b6:408:118::14)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN9PR12MB5115:EE_|SJ0PR12MB8116:EE_
+X-MS-Office365-Filtering-Correlation-Id: 07abd02b-3d05-4a4e-25e3-08db0fb5bf67
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tViI/6Xr2IZ8f74e5PDJfXVySh3WzQs5sBlERZNiS8Sw/SeIVJQvtukiATxy6crLkmjWVd/2/T9o6hnjObkPR1+N2dFOdy+xlICoC70lO3e2Nd2r2G0CjEvMA4u2nH0XjLdcAJ2IpkPrxMnohyK2hMmVslzG5pobxb/aVGs3r8OZ98/ddzkHugH2yzddq+wr15e0utzpzYz1c4alJC9ZsmCbcR8zE3MVOriHbqIRQAt2RwfFADjBdpYC0XFfEL74lCXF8gm6g5So1gpNV7SHZrA2z+Zd7mZt3uRQVUBqRBoXNNi9dtMhSZnU00QT+6JLiaHqwjMwJEt5RsgqyjFU95FUjuwuh7SCf6yO3y3jE7s376DNu4sFUC4w5uW3adcdpY6940BWn3PV9udGlw2H+sh/T5pTvEBxX5JaXp9h48h8ZojpQE9M0ue+qV/HM9Ql4M6Zs40u+4XcdebL4+urC7jEOrbFkjEi7myHyW85iImdHae/Li0z5qxcFLy9AWEPL1vqT7/NFN7tJmg8fi2JuGMTu0/h77A6EnX3xqnquTcbzYtWaJsYANfxWDP1YdeSXphe2RAkOLKku0R231LaUXICy+WkEk6kt1on4+y0/oyPG45f7Gch01sSi3EkWMMQ3+Kf2gau8oC5q9gtUrtU5OF/nKX6HtVwM/J9Yh9Y1GKjKGH0LsmqqglSoUudIdMHZW+laQXvVmKDGMPyeKkLMeOh0oFE9P4R9NAyTeKyBTy4u3GNz2A4PWM5Lp2H/sLWVT9b7HZRQs4d4Lb6py6izg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN9PR12MB5115.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(366004)(39860400002)(136003)(376002)(346002)(451199018)(44832011)(7416002)(26005)(2906002)(186003)(5660300002)(8936002)(54906003)(53546011)(6636002)(6512007)(31686004)(6506007)(110136005)(38100700002)(31696002)(316002)(83380400001)(6666004)(86362001)(41300700001)(66476007)(66946007)(2616005)(478600001)(36756003)(66556008)(4326008)(6486002)(966005)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?VnI3TmoxM2xEMmRwN2U0dEFxV0FYS3p1czlxRTJmT1pMdDZtU0diaUNsMXAy?=
+ =?utf-8?B?Rk1ndVZFRmVodTdOc0ZjNjVqc1FPZUN5WitiNXM2UnRoYjZsOG9tbXpFUHRZ?=
+ =?utf-8?B?TEJBTjJGWWhxa3pCak5yYm1yZEMzK2RVM2plRFozUStQaUZ0cGtMVldWcFlB?=
+ =?utf-8?B?c09HeTFjQVRJV2wvUWh5RUFyMHEzcVg4MkpTNHN4RFhHMVpONW5CcVp0YXZk?=
+ =?utf-8?B?VzNtYjJCU3JxTDgzMjByUnFSTGtmWEJLOTRUZGZMaWlIZDJ2d1dLNS82NTln?=
+ =?utf-8?B?dzhUQmJuaTN0TmxtRzdOamxtU0gvRkQ3dkR2RDdyWnpZOVQ3bFhLL3gvcUcx?=
+ =?utf-8?B?SHY4WktSSUJWaHBEMmRBR04wZmdmVEI2dS9ZZlUxMStGb1B3M0NYZHBaR1Az?=
+ =?utf-8?B?WnczT1VnVkpzSHJzcWxudkFuWVFsaEErT3BTMWNHbjhhS1U0a0J2cUxFcVJN?=
+ =?utf-8?B?Y29UWFptVWw1MHJBbWhDWWdZK0xFbkF3WlNnaU5iM1RWUjhqcVA5WEdaSmp0?=
+ =?utf-8?B?S3NzdENyZ0laNHV2dDY0ekZDdTIxSHljNlArS2RNSXVvQytaS1ZYTElOdjNZ?=
+ =?utf-8?B?R1Z6QkhpUTlRWXVjd0UrU3E1RTNKQU1OYm1YR25TcUg3NlcrbDNxaWFvLzlG?=
+ =?utf-8?B?K05TZzBnbGRhWHJocjIwdXRtVlcwUnM1cjRmNzNvMUpBRXFUQ3Vza0RwTk1Z?=
+ =?utf-8?B?eTQvSVZaRDY5RWRyQ0N1ZTg4WlZUTCtFTzliRS9jQ1poemUrZTM0bVZYTkRF?=
+ =?utf-8?B?Y0cyZGFoR1BtREVzeFFJRTl6YnJ5VG9nNEQra0NrdW5ZRzVQK2c2WWFOdk92?=
+ =?utf-8?B?UjRIUDlPaFVvby9LN0YyRzlUU0lScUJJRVQrY1AxeXB0YzdvNWEwNDJ1UnpS?=
+ =?utf-8?B?VkFSVG9LQkwzNGJZZnNkMGJqclB4YVlYSFllelVTdy9hYlRyWEZxYklBaGtX?=
+ =?utf-8?B?NWF1S1QrTUdpTDJZaXVSa1k0U1Z5RHNWY09yYjcwcTUzeU9HeVpFNlA3cTBa?=
+ =?utf-8?B?dUVMV0cweFFucGNXK0h3UExRaDJGbnRxZThXSDh2dGtlVnpBVGpVTk1qKzNE?=
+ =?utf-8?B?bXB1ank4VEhmRVE0OEZVbGh5NnVYYTVnMFVHMGw0MHN2ODFzb051cWgvMXh6?=
+ =?utf-8?B?RVAyQ0NJdVBpZHhsME1rQkxjSzBBQ1lPVGt6VzdpRVJaYnc2Qk9zT2YwWTdL?=
+ =?utf-8?B?NkJZaFNSZGR5UFRIdHB3Y05OWWMrdm9lYjVGVitVMUJSWGo3Nm1yTTMrYnpv?=
+ =?utf-8?B?K0NUUGVNbDJSYmJNMG1ONWpFakRraGs2SkMyandZbG04QzdIeTdod25vZmpS?=
+ =?utf-8?B?NE9GN2l5emNQbDB3SUdPSGZBbzVCUTJ4R1FBRElyay9ZUnhNak1Tc3BTaHkz?=
+ =?utf-8?B?blZQbHlQbnlaTk41RmlGcC9aOUtidmFlK1Qwa3NURTNDQUtjQTgwS3FUeVpS?=
+ =?utf-8?B?SU1XREY4RUFHenNmdHEwRjcrcGhkNDdES1MzS1BxZWtXRklXcWlqckdXRjNB?=
+ =?utf-8?B?VGlWL0d6WGQ2SXBSbUZJTVpPbk9nWDVvangxYkdvVWJVYWlaVW0rUWI1UVkr?=
+ =?utf-8?B?Y0M2eHJZamVhblJES2pCNEFhVUh3ZndhY3RTTnZ3L2Nyb0NyNmdFellFUHZB?=
+ =?utf-8?B?b2g0SDBTajJrZDQ4cWRiVEpTWUtNTldZeW1nSzFrOXFsUWVLMkIwNjZsYmdo?=
+ =?utf-8?B?eTR5T0kyUUlwQjFuY1hneURDeWxvbE1Wdjh1RFh3eWpsTThoTUdCRUY1L0Va?=
+ =?utf-8?B?a2dqeHlnZ2xTeHpoY2NFVTZqR3M0WUx6Vm9SQ1JvOVBuYmhGLzZDVXVYNHZz?=
+ =?utf-8?B?eE41YzRmdVdXWFhLWEl4MDVtMjVqVnRwQThwTzVOb0t0bmNEaVAxNFpSOC9q?=
+ =?utf-8?B?VFo1aXJHTlVubDFSc3RrWHBOcHdvdjMvMlFNR1ZWNVc4bWpYVUR2am9Fbm90?=
+ =?utf-8?B?VCtVMC8vWHhvQmdDOFc2Y2lraVhDQ3ZWRjV3R1lkbDZMazdxMHhaU3owM3F3?=
+ =?utf-8?B?ak9odENUM0ZSN01URXVqUWtSR241dUJKVDY4N0RhcGdycGhKSTJ5UUNlcWJh?=
+ =?utf-8?B?OW5JNzEzR1NNUW1Gbk90SnRLS2IyeXVqTmUrS2RPVEZVdGowZXhlTEUzNWdp?=
+ =?utf-8?Q?MJgLaaGjW4wgaKn50CGavqUhy?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 07abd02b-3d05-4a4e-25e3-08db0fb5bf67
+X-MS-Exchange-CrossTenant-AuthSource: BN9PR12MB5115.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Feb 2023 00:35:47.9962
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MM+QyW6UzRVjoFFzFQG2jlyjm00EiYeko/Eg03hrGWXU00z/SeKjHt229iyUGH8BJoCC8S64pRokNn5IeYQ3xg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB8116
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/15/23 22:49, Arnd Bergmann wrote:
-> On Wed, Feb 15, 2023, at 14:24, Greg Kroah-Hartman wrote:
->> On Wed, Feb 15, 2023 at 09:18:48PM +0900, Damien Le Moal wrote:
->>> On 2/15/23 21:01, Greg Kroah-Hartman wrote:
->>>>>>> @@ -330,6 +330,10 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test, bool use_dma)
->>>>>>>  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->>>>>>>  	volatile struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->>>>>>
->>>>>> note, volatile is almost always wrong, please fix that up.
->>>>>
->>>>> OK. Will think of something else.
->>>>
->>>> If this is io memory, use the proper accessors to access it.  If it is
->>>> not io memory, then why is it marked volatile at all?
->>>
->>> This is a PCI bar memory. So I can simply copy the structure locally with
->>> memcpy_fromio() and memcpy_toio().
+[+Shimmer, Aaron]
+
+Am 2023-02-15 um 10:39 schrieb Bjorn Helgaas:
+> [+cc Christian, Xinhui, amd-gfx]
+>
+> On Fri, Jan 06, 2023 at 01:48:11PM +0800, Baolu Lu wrote:
+>> On 1/5/23 11:27 PM, Felix Kuehling wrote:
+>>> Am 2023-01-05 um 09:46 schrieb Deucher, Alexander:
+>>>>> -----Original Message-----
+>>>>> From: Hegde, Vasant <Vasant.Hegde@amd.com>
+>>>>> On 1/5/2023 4:07 PM, Baolu Lu wrote:
+>>>>>> On 2023/1/5 18:27, Vasant Hegde wrote:
+>>>>>>> On 1/5/2023 6:39 AM, Matt Fagnani wrote:
+>>>>>>>> I built 6.2-rc2 with the patch applied. The same black
+>>>>>>>> screen problem happened with 6.2-rc2 with the patch. I
+>>>>>>>> tried to use early kdump with 6.2-rc2 with the patch
+>>>>>>>> twice by panicking the kernel with sysrq+alt+c after the
+>>>>>>>> black screen happened. The system rebooted after about
+>>>>>>>> 10-20 seconds both times, but no kdump and dmesg files
+>>>>>>>> were saved in /var/crash. I'm attaching the lspci -vvv
+>>>>>>>> output as requested. ...
+>>>>>>> Looking into lspci output, it doesn't list ACS feature
+>>>>>>> for Graphics card. So with your fix it didn't enable PASID
+>>>>>>> and hence it failed to boot. ...
+>>>>>> So do you mind telling why does the PASID need to be enabled
+>>>>>> for the graphic device? Or in another word, what does the
+>>>>>> graphic driver use the PASID for? ...
+>>>> The GPU driver uses the pasid for shared virtual memory between
+>>>> the CPU and GPU.  I.e., so that the user apps can use the same
+>>>> virtual address space on the GPU and the CPU.  It also uses
+>>>> pasid to take advantage of recoverable device page faults using
+>>>> PRS. ...
+>>> Agreed. This applies to GPU computing on some older AMD APUs that
+>>> take advantage of memory coherence and IOMMUv2 address translation
+>>> to create a shared virtual address space between the CPU and GPU.
+>>> In this case it seems to be a Carrizo APU. It is also true for
+>>> Raven APUs. ...
+>> Thanks for the explanation.
 >>
->> Great, please do so instead of trying to access it directly like this,
->> which will break on some platforms.
-> 
-> I think the reverse is true here: looking at where the pointer comes
-> from, 'reg' is actually the result of dma_alloc_coherent() in the
-> memory of the local (endpoint) machine, though it appears as a BAR on
-> the remote (host) side and gets mapped with ioremap() there.
-> 
-> This means that the host must use readl/write/memcpy_fromio/memcpy_toio
-> to access the buffer, matching the __iomem token there, while the
-> endpoint side not use those. On some machines, readl/write take
-> arguments that are not compatible with normal pointers, and will
-> do something completely different there.
-> 
-> A volatile access is not the worst option here, though this conflicts
-> with the '__packed' annotation in the structure definition that
-> may require bytewise access on architectures without unaligned
-> access.
-> 
-> I would drop the __packed in the definition, possibly annotating
-> only the 64-bit src_addr and dst_addr members as __packed to ensure
-> the layout is unchanged but the structure as a whole is 32-bit
-> aligned, and then use READ_ONCE()/WRITE_ONCE() to atomically
-> access each member in the coherent buffer.
+>> This is actually the problem that commit 201007ef707a was trying to
+>> fix.  The PCIe fabric routes Memory Requests based on the TLP
+>> address, ignoring any PASID (PCIe r6.0, sec 2.2.10.4), so a TLP with
+>> PASID that should go upstream to the IOMMU may instead be routed as
+>> a P2P Request if its address falls in a bridge window.
+>>
+>> In SVA case, the IOMMU shares the address space of a user
+>> application.  The user application side has no knowledge about the
+>> PCI bridge window.  It is entirely possible that the device is
+>> programed with a P2P address and results in a disaster.
+> Is this stalled?  We explored the idea of changing the PCI core so
+> that for devices that use ATS/PRI, we could enable PASID without
+> checking for ACS [1], but IIUC we ultimately concluded that it was
+> based on a misunderstanding of how ATS Translation Requests are routed
+> and that an AMD driver change would be required [2].
+>
+> So it seems like we still have this regression, and we're running out
+> of time before v6.2.
+>
+> [1] https://lore.kernel.org/all/20230114073420.759989-1-baolu.lu@linux.intel.com/
+> [2] https://lore.kernel.org/all/Y91X9MeCOsa67CC6@nvidia.com/
 
-I guess that would work too. But given that there are accesses to individual
-members all over the place, I think it would be easier to get a local copy of
-the reg structure in pci_epf_test_cmd_handler() and pass a pointer of that local
-copy to the pci_epf_test_xxx() functions. The only READ_ONCE() needed would be
-to test the command field on entry to pci_epf_test_cmd_handler() to be sure that
-we have a valid command.
+If I understand this correctly, the HW or the BIOS is doing something 
+wrong about reporting ACS. I don't know what the GPU driver can do other 
+than add some quirk to stop using AMD IOMMUv2 on this HW/BIOS.
 
-The host side always sets the reg command field last, which I think kind of
-assumes an ordered update on the EP side (all other fields set before the
-command field). That does seem a bit fragile to me as my understanding is that
-PCI does not necessarily guarantees ordering of IO TLPs. But I may be wrong here.
+It looks like the problem is triggered when the driver calls 
+amd_iommu_init_device. That's when the first WARNs happen, soon followed 
+by a kernel oops in report_iommu_fault. The driver doesn't know anything 
+is wrong because amd_iommu_init_device seems to return "success". And 
+the oops is not in the GPU driver either.
 
-> If ordering between the accesses is required, you can add
-> dma_rmb() and dma_wmb() barriers.
+I guess this could also be handled more gracefully in the IOMMU driver 
+(i.e. fail gracefully in amd_iommu_init_device and let the caller know 
+that something is wrong, don't oops in report_iommu_fault).
 
-Which I guess is the one thing we need after testing the reg command field in
-pci_epf_test_cmd_handler() and before making the local copy, to avoid problems
-with ordering of the reg fields writes from the host.
+Regards,
+   Felix
 
-Will use that in v2.
-
-
--- 
-Damien Le Moal
-Western Digital Research
 
