@@ -2,93 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4816369A866
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 10:40:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75D3769A8CB
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 11:02:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230160AbjBQJkV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 04:40:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34730 "EHLO
+        id S229821AbjBQKCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 05:02:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230125AbjBQJkP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 04:40:15 -0500
-Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6D68C53ECD;
-        Fri, 17 Feb 2023 01:40:14 -0800 (PST)
-Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id EC69DE0EAF;
-        Fri, 17 Feb 2023 12:40:13 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:from:from:in-reply-to:message-id
-        :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=qWhduFNraxXVSwHvFaj3lriL4UhJFHDZLswqJP/jCIc=; b=czm3WADQeMOY
-        ZCa5qUwx+vFK8AXIVke0MEMbKzy3GoWtOUKyQfFyzGsDYmJf54qsbpHZgY0yQSoF
-        EFPGLFczzcX3iKD8H2UytfJqqglyTQ4KpeXqZSBLG9EncxwoHn6en9Gbauao8aka
-        ibbs5/7h9d5tLrRqV47eFEF0DebcTRU=
-Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id DA1A0E0E6A;
-        Fri, 17 Feb 2023 12:40:13 +0300 (MSK)
-Received: from localhost (10.8.30.14) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Fri, 17 Feb 2023 12:40:13 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 11/11] MAINTAINERS: Add myself as the DW eDMA driver reviewer
-Date:   Fri, 17 Feb 2023 12:39:56 +0300
-Message-ID: <20230217093956.27126-12-Sergey.Semin@baikalelectronics.ru>
-X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
-References: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S229804AbjBQKB7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 05:01:59 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED216627D1;
+        Fri, 17 Feb 2023 02:01:57 -0800 (PST)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PJ6g04zMVz687Rd;
+        Fri, 17 Feb 2023 17:57:16 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 17 Feb
+ 2023 10:01:54 +0000
+Date:   Fri, 17 Feb 2023 10:01:56 +0000
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Lukas Wunner <lukas@wunner.de>
+CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Alison Schofield" <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
+        <linux-cxl@vger.kernel.org>
+Subject: Re: [PATCH v3 04/16] cxl/pci: Handle excessive CDAT length
+Message-ID: <20230217100156.000039b9@Huawei.com>
+In-Reply-To: <20230216102616.GA13347@wunner.de>
+References: <cover.1676043318.git.lukas@wunner.de>
+        <4834ceab1c3e00d3ec957e6c8beb13ddaa9877a2.1676043318.git.lukas@wunner.de>
+        <20230214113311.00000825@Huawei.com>
+        <20230216102616.GA13347@wunner.de>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.8.30.14]
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver maintainer has been inactive for almost two years now. It
-doesn't positively affect the new patches tests and reviews process. Since
-the DW eDMA engine has been embedded into the PCIe controllers in several
-our SoCs we will be interested in helping with the updates review.
+On Thu, 16 Feb 2023 11:26:16 +0100
+Lukas Wunner <lukas@wunner.de> wrote:
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+> On Tue, Feb 14, 2023 at 11:33:11AM +0000, Jonathan Cameron wrote:
+> > On Fri, 10 Feb 2023 21:25:04 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
+> > > If the length in the CDAT header is larger than the concatenation of the
+> > > header and all table entries, then the CDAT exposed to user space
+> > > contains trailing null bytes.
+> > > 
+> > > Not every consumer may be able to handle that.  Per Postel's robustness
+> > > principle, "be liberal in what you accept" and silently reduce the
+> > > cached length to avoid exposing those null bytes.  
+> [...]
+> > Fair enough. I'd argue that we are papering over broken hardware if
+> > we hit these conditions, so given we aren't aware of any (I hope)
+> > not sure this is stable material.  Argument in favor of stable being
+> > that if we do get broken hardware we don't want an ABI change when
+> > we paper over the garbage... hmm.  
+> 
+> Type 0 is assigned for DSMAS structures.  So user space might believe
+> there's an additional DSMAS in the CDAT.  It *could* detect that the
+> length is bogus (it is 0 but should be 24), but what if it doesn't
+> check that?  It seems way too dangerous to leave this loophole open,
+> hence the stable designation.
+Ok
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc3d6a55e19c..2e866f61d983 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5985,6 +5985,7 @@ F:	drivers/mtd/nand/raw/denali*
- 
- DESIGNWARE EDMA CORE IP DRIVER
- M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+R:	Serge Semin <fancer.lancer@gmail.com>
- L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	drivers/dma/dw-edma/
--- 
-2.39.0
-
+> 
+> Thanks,
+> 
+> Lukas
+> 
+> > > --- a/drivers/cxl/core/pci.c
+> > > +++ b/drivers/cxl/core/pci.c
+> > > @@ -582,6 +582,9 @@ static int cxl_cdat_read_table(struct device *dev,
+> > >  		}
+> > >  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
+> > >  
+> > > +	/* Length in CDAT header may exceed concatenation of CDAT entries */
+> > > +	cdat->length -= length;
+> > > +
+> > >  	return 0;
+> > >  }
+> > >    
 
