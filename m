@@ -2,52 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F90769AEE8
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 16:04:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1485069B024
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 17:04:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjBQPDw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 10:03:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34818 "EHLO
+        id S229715AbjBQQEC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 11:04:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbjBQPDs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 10:03:48 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1997570944;
-        Fri, 17 Feb 2023 07:03:19 -0800 (PST)
+        with ESMTP id S229563AbjBQQEC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 11:04:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE2B16D786
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 08:04:00 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FCE261D58;
-        Fri, 17 Feb 2023 15:02:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60583C433EF;
-        Fri, 17 Feb 2023 15:02:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7764461E5D
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 16:04:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5F52C433D2;
+        Fri, 17 Feb 2023 16:03:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676646164;
-        bh=j6dcEhmpBZz4rvKq3tdsoEKUS2cdD7vZ0LtoKMJz2Ys=;
+        s=k20201202; t=1676649839;
+        bh=eDkMcaAB9PDTD1nuerM8BEXMPI7ZxUXOoMWwzIEYxks=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=dJx1betl5qK2udc/Bk5Kt7TCsKffHyHDMt7EzRPbIN2lP3ptxZKoD1g2QbnTeDmWL
-         fh2eq7Cnskap94xQ1aa4bcXZBV2wsPMAyjr6bIy6w8m6iCT1OC0qPf24Q+tAJiHhaE
-         Q/bzRIiljZbKRAeJo3mpcXzoSwiV/W0QBHDB+Gu4MrT4/VIzWXgsisPL4JYoDuItur
-         qv8Glq5GPOYPxIztsMTU2Qiqqih4fUhgPNpjZd2Asd4PagPjEGwFML2KT9HSJL6OTn
-         mBDAClnmW0J2bnHSXW+cd8GLEGVE7Vn64CgfthGTf2yrMuQPXXNGsVI0Kw6LK7HRNm
-         0IN0NHiErLcNA==
-Date:   Fri, 17 Feb 2023 09:02:41 -0600
+        b=HusGSxu30G78zq7UWlhoh2nwCi4JomWDdv8JdhlzL83IsB06k9RsucnYaC+z6gJdt
+         Clkucr/Aa55OryeSxU948ttDiKgx5waBxWVOsqEhDf4hElGm+LrBqRrXoo4m9iVUGO
+         Q5ChaUp16GvbkTopQ+yGGMn2eLiSVW1zmbKEMpmriygkqG31o3QXq6OA3gXcgnp9bQ
+         JHCheClnOlduyTWLuxIDKioTcbo9o8b/QPwFKCiGHCBif4PHMVKY3nXFWJKP+hUlRv
+         har0MYTaLFqDa+XOn+XJ3SH/ub68B1+ielaKL8UogwccnyjyFRvZQ0OG56FZ9gTNU7
+         knJuDejU2TIkA==
+Date:   Fri, 17 Feb 2023 10:03:58 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nick Alcock <nick.alcock@oracle.com>
-Cc:     mcgrof@kernel.org, linux-modules@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH 02/24] kbuild, PCI: remove MODULE_LICENSE in non-modules
-Message-ID: <20230217150241.GA3400483@bhelgaas>
+To:     Anatoli Antonovitch <anatoli.antonovitch@amd.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Anatoli Antonovitch <a.antonovitch@gmail.com>,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Alexander.Deucher@amd.com, Christian.Koenig@amd.com
+Subject: Re: [PATCH] PCI/hotplug: Replaced down_write_nested with
+ hotplug_slot_rwsem if ctrl->depth > 0 when taking the ctrl->reset_lock.
+Message-ID: <20230217160358.GA3404296@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230217141059.392471-3-nick.alcock@oracle.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <1d474514-4d28-d41f-52cd-972ca7e3fc1d@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,46 +54,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 02:10:37PM +0000, Nick Alcock wrote:
-> Since commit 8b41fc4454e ("kbuild: create modules.builtin without
-> Makefile.modbuiltin or tristate.conf"), MODULE_LICENSE declarations
-> are used to identify modules. As a consequence, uses of the macro
-> in non-modules will cause modprobe to misidentify their containing
-> object file as a module when it is not (false positives), and modprobe
-> might succeed rather than failing with a suitable error message.
+On Mon, Feb 13, 2023 at 09:59:52AM -0500, Anatoli Antonovitch wrote:
+> Hi Lukas,
 > 
-> So remove it in the files in this commit, none of which can be built as
-> modules.
-> 
-> Signed-off-by: Nick Alcock <nick.alcock@oracle.com>
-> Suggested-by: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: Luis Chamberlain <mcgrof@kernel.org>
-> Cc: linux-modules@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: Hitomi Hasegawa <hasegawa-hitomi@fujitsu.com>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linux-acpi@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
+> Can we revisit the patches again to get a fix?
+> The issue still reproduce and visible in the kernel 6.2.0-rc8.
 
-I squashed this one into my pci/kbuild branch for v6.3, thanks!
+> On 2023-01-23 14:30, Anatoli Antonovitch wrote:
+> > I do not see a deadlock, when applying the following old patch:
+> > https://lore.kernel.org/linux-pci/908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas@wunner.de/
 
-> ---
->  drivers/pci/hotplug/acpiphp_core.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_core.c b/drivers/pci/hotplug/acpiphp_core.c
-> index 853e04ad272c..c02257f4b61c 100644
-> --- a/drivers/pci/hotplug/acpiphp_core.c
-> +++ b/drivers/pci/hotplug/acpiphp_core.c
-> @@ -45,7 +45,6 @@ static struct acpiphp_attention_info *attention_info;
->  
->  MODULE_AUTHOR(DRIVER_AUTHOR);
->  MODULE_DESCRIPTION(DRIVER_DESC);
-> -MODULE_LICENSE("GPL");
->  MODULE_PARM_DESC(disable, "disable acpiphp driver");
->  module_param_named(disable, acpiphp_disabled, bool, 0444);
->  
-> -- 
-> 2.39.1.268.g9de2f9a303
-> 
+This old patch would need to be updated and reposted.  There was a
+0-day bot issue and a question to be resolved.  Maybe this is all
+already resolved, but it needs to be posted and tested with a current
+kernel.
+
+> > after merge for the kernel 6.2.0-rc5, and applied the alternative patch:
+> > https://patchwork.kernel.org/project/linux-pci/patch/3dc88ea82bdc0e37d9000e413d5ebce481cbd629.1674205689.git.lukas@wunner.de/
+
+This one is on track to appear in v6.3-rc1:
+https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git/commit/?id=74ff8864cc84
+
+> > I have uploaded the merged patch and the system log for the upstream
+> > kernel.
+> > 
+> > Anatoli
+> > 
+> > 
+> > On 2023-01-21 02:21, Lukas Wunner wrote:
+> > > You're now getting a different deadlock. That one is addressed by this
+> > > old patch (it's already linked from the bugzilla):
+> > > 
+> > > https://lore.kernel.org/linux-pci/908047f7699d9de9ec2efd6b79aa752d73dab4b6.1595329748.git.lukas@wunner.de/
+> > > 
+> > > 
+> > > If you apply that patch plus the new one, do you still see a deadlock?
