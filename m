@@ -2,252 +2,391 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF8F269A691
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 09:07:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B63369A70F
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 09:36:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbjBQIHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 03:07:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43018 "EHLO
+        id S229507AbjBQIgE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 03:36:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229751AbjBQIHC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 03:07:02 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBE6193C4
-        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 00:07:00 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id h38so3911722lfv.7
-        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 00:07:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=H+odvZ5hvt+Jzr5sXx6Suo3jssqEz7ig18BCmlAR9A4=;
-        b=ctzmIg0YxKhxXFz49dM6yoTp/XdYI0IXEN7NSUjWOTq/QCovu/RZHVXvEeLuCe5ckF
-         cUhheg6678BJeI8qfgZLNGXqXAZJWYM+OtBd7ooS14dVZJWH1Wuf1Yec5BC16uSQyyma
-         4u7/xyBJpace+2oNtGYVV/77jXl6A26h3LYp1m2D6kHgUe/TdCEpq2hIj/+kZ04z8wEL
-         1+0iss9bexmm8VLvDhi0ucKkuZmFsg5xAlv15dgSoF783KCIiB5QWZVLD4vj+zmnfKKo
-         1hvAhRppFnAZpxLxucVAcXwQU6eNVrOjhJRnOq58S48F5ZnCngF+zdTrMv/MdzbsGzn8
-         3iGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H+odvZ5hvt+Jzr5sXx6Suo3jssqEz7ig18BCmlAR9A4=;
-        b=qK6Otqgq/pVh5YhmIHZclxEQ2S0TStXuxtdNZEiMtTR3rlpcP16xu6kJbZEdQj50NI
-         i5qa1ReChgPq1h4g0EvQYyB4hBbznoqZdMgFECh3zgQIdICVFjChOdecJK6u7X33v6V8
-         3N2oCjB4hBNTNl6cVbMenRDTg2XUNsHp3eUMjPx0x140+iE3I6X7/iapJoa+3NK/2z5D
-         iqa4kyISFeH3nOEwUAASLmIsvUsUD2CUZ065+TAAyyWpW4ng4jSEKcphO+v7tH02vhVz
-         t798H8jBpqs3MiI1Ruu9JW4h6k+7p9v/bNyzEm35ocuGSKX9I2nWWeyn1/5oynVuCxQJ
-         EKrg==
-X-Gm-Message-State: AO0yUKW5Fw7Qi7ACXwAoK5rioc9vueRv7ZnAAKHeys73sapgvrm0KOGS
-        gqppSHdS32dAFv7krSDbp1M=
-X-Google-Smtp-Source: AK7set8L21Fc6GVtolhQ/1cYsH/bxfxHuBHsEfC8HkP1sHs90YnmjPN/HIoc2wN+LVC6LrXf1WA9jA==
-X-Received: by 2002:a05:6512:6b:b0:4db:2ab7:43e6 with SMTP id i11-20020a056512006b00b004db2ab743e6mr209800lfo.44.1676621218871;
-        Fri, 17 Feb 2023 00:06:58 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id z10-20020ac2418a000000b004d19e442d53sm602945lfh.249.2023.02.17.00.06.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Feb 2023 00:06:57 -0800 (PST)
-Date:   Fri, 17 Feb 2023 11:06:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] PCI: dwc: Fix writing wrong value if
- snps,enable-cdm-check
-Message-ID: <20230217080656.2rhkfzf7ivhrbvub@mobilestation>
-References: <20230216092012.3256440-1-yoshihiro.shimoda.uh@renesas.com>
- <20230216175822.GA3321300@bhelgaas>
- <20230216204930.jvxt3ajny2eymbtn@mobilestation>
- <OSYPR01MB5334E428391F68F9CDA1374ED8A19@OSYPR01MB5334.jpnprd01.prod.outlook.com>
+        with ESMTP id S229436AbjBQIgD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 03:36:03 -0500
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20245F249;
+        Fri, 17 Feb 2023 00:36:01 -0800 (PST)
+Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31H6xegI024176;
+        Fri, 17 Feb 2023 08:35:46 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=4PACSUSfG9NYfpWMaj7IqSUQdLakVBd5jCYmDpLW54Y=;
+ b=j+kno/JLqj6U05Mc/nqD7MeovkuRi1KWUTsfeztqvmtRu251ZYfTrxZvGWjZqc1vdBdK
+ 3QZT1OsCD479eEzRUjoeavnnsnyOOX3WfIngOnqNgPmYSYSddBsMhdOqPo+8+itp1CZ9
+ 4Mwz+gXGPp8rLI6sBZQrr7wyI/F8A2H9nREkIwmlXj/OInrNdDgDDkE0WzR7lqmax4JE
+ ez/KjMyEkmzAq2L8OcHnzWsc676tVXxHeIL4elBFSYVsS6cARZtOIEYEF5DZdqKCzlf2
+ RyAtVlzveYoPh19ONoroXBUlXOGB/8rwlVnARHD5GHsx+ubleqB0w22tBCKYIDPIdW3k rw== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nse3d3s7b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Feb 2023 08:35:45 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31H8ZiHA032265
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 17 Feb 2023 08:35:44 GMT
+Received: from [10.216.47.237] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 17 Feb
+ 2023 00:35:36 -0800
+Message-ID: <288a7d8a-130d-5ad1-42ea-726db3b880ce@quicinc.com>
+Date:   Fri, 17 Feb 2023 14:05:23 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <OSYPR01MB5334E428391F68F9CDA1374ED8A19@OSYPR01MB5334.jpnprd01.prod.outlook.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH 7/7] arm64: dts: qcom: ipq9574: Add PCIe PHYs and
+ controller nodes
+Content-Language: en-US
+To:     Devi Priya <quic_devipriy@quicinc.com>, <agross@kernel.org>,
+        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
+        <vkoul@kernel.org>, <kishon@kernel.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <mani@kernel.org>, <p.zabel@pengutronix.de>,
+        <svarbanov@mm-sol.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>
+CC:     <quic_gokulsri@quicinc.com>, <quic_sjaganat@quicinc.com>,
+        <quic_kathirav@quicinc.com>, <quic_arajkuma@quicinc.com>,
+        <quic_anusha@quicinc.com>
+References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
+ <20230214164135.17039-8-quic_devipriy@quicinc.com>
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+In-Reply-To: <20230214164135.17039-8-quic_devipriy@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: RNHO2AL8UremHs_k-XSZHieOagXvcZR4
+X-Proofpoint-ORIG-GUID: RNHO2AL8UremHs_k-XSZHieOagXvcZR4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-17_04,2023-02-16_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ mlxscore=0 impostorscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ malwarescore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302170076
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Feb 17, 2023 at 12:46:03AM +0000, Yoshihiro Shimoda wrote:
-> Hi Bjorn, Serge,
+
+Hi Devi,
+
+On 2/14/2023 10:11 PM, Devi Priya wrote:
+> Add PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
+> found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane Gen3
+> host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
 > 
-> > From: Serge Semin, Sent: Friday, February 17, 2023 5:50 AM
-> > 
-> > On Thu, Feb 16, 2023 at 11:58:22AM -0600, Bjorn Helgaas wrote:
-> > > On Thu, Feb 16, 2023 at 06:20:12PM +0900, Yoshihiro Shimoda wrote:
-> > > > The "val" of PCIE_PORT_LINK_CONTROL will be reused on the
-> > > > "Set the number of lanes". But, if snps,enable-cdm-check" exists,
-> > > > the "val" will be set to PCIE_PL_CHK_REG_CONTROL_STATUS.
-> > > > Therefore, unexpected register value is possible to be used
-> > > > to PCIE_PORT_LINK_CONTROL register if snps,enable-cdm-check" exists.
-> > > > So, read PCIE_PORT_LINK_CONTROL register again to fix the issue.
-> > > >
-> > > > Fixes: ec7b952f453c ("PCI: dwc: Always enable CDM check if "snps,enable-cdm-check" exists")
-> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > > > ---
-> > > >  drivers/pci/controller/dwc/pcie-designware.c | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > index 6d5d619ab2e9..3bb9ca14fb9c 100644
-> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > @@ -824,6 +824,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
-> > > >  	}
-> > > >
-> > > >  	/* Set the number of lanes */
-> > > > +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-> > >
-> > > Definitely a bug, thanks for the fix and the Fixes: tag.
-> > >
-> > 
-> > > But I would like the whole function better if it could be structured
-> > > so we read PCIE_PORT_LINK_CONTROL once and wrote it once.  And the
-> > > same for PCIE_LINK_WIDTH_SPEED_CONTROL.
-> > >
-> > 
-> > I don't see a good looking solution for what you suggest. We'd need to
-> > use additional temporary vars and gotos to implement that.
-> > 
-> > > Maybe there's a reason PCIE_PL_CHK_REG_CONTROL_STATUS must be written
-> > > between the two PCIE_PORT_LINK_CONTROL writes or the two
-> > > PCIE_LINK_WIDTH_SPEED_CONTROL writes, I dunno.  If so, a comment there
-> > > about why that is would be helpful.
-> > 
-> > There were no sign of dependencies between the CDM-check enabling and
-> > the rest of the setting performed in the dw_pcie_setup() function.
-> > Originally the CDM-check was placed at the tail of the function:
-> > 07f123def73e ("PCI: dwc: Add support to enable CDM register check")
-> > with no comments why it was placed there exactly. Moreover I got the
-> > Rb-tag for my fix from Vidya Sagar, the original patch author. So he
-> > was ok with the suggested solution.
-> 
-> I think so.
-> 
-> And, I think the commit 07f123def73e and commit ec7b952f453c are not
-> related to PCIE_PORT_LINK_CONTROL. So, PCIE_PL_CHK_REG_CONTROL_STATUS
-> handling can be moved everywhere in the function, IIUC. So, I think
-> we can have a solution with two patches like below:
-> 1) Move PCIE_PL_CHK_REG_CONTROL_STATUS handling before reading
->    PCIE_PORT_LINK_CONTROL (as a bug fix patch).
-
-> 2) Refactor PCIE_PORT_LINK_CONTROL handling to avoid writing
->    the register twice (as a patch for next).
-
-IMO I would leave the procedure as is for now seeing you are going to
-move the rcar_gen4_pcie_set_max_link_width() code to the generic part
-of the driver in the framework of this patch:
-https://lore.kernel.org/linux-pci/20230210134917.2909314-7-yoshihiro.shimoda.uh@renesas.com/
-per Rob and my requests.
-
-Thus you'll be able to combine all the bus-width updates into a single
-method, like dw_pcie_link_set_max_link_width(). The function will look
-as coherent as possible meanwhile the dw_pcie_setup() method body will
-turn to be smaller and easier to comprehend. Alas that will imply
-updating the PCIE_PORT_LINK_CONTROL and PCIE_LINK_WIDTH_SPEED_CONTROL
-registers twice.
-
-@Bjorn, are you ok with that?
-
--Serge(y)
-
-> 
-> I made patches for it like below. But, what do you think?
-> --------------- for 1) ---------------
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -806,11 +806,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
->  	}
->  
-> -	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-> -	val &= ~PORT_LINK_FAST_LINK_MODE;
-> -	val |= PORT_LINK_DLL_LINK_EN;
-> -	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> -
->  	if (dw_pcie_cap_is(pci, CDM_CHECK)) {
->  		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
->  		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-> @@ -818,6 +813,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
->  	}
->  
-> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-> +	val &= ~PORT_LINK_FAST_LINK_MODE;
-> +	val |= PORT_LINK_DLL_LINK_EN;
-> +	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> +
->  	if (!pci->num_lanes) {
->  		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
->  		return;
+> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 > ---
-> --------------- for 2) ---------------
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -813,19 +813,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
->  	}
->  
-> +	/* Set the number of lanes */
->  	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
->  	val &= ~PORT_LINK_FAST_LINK_MODE;
->  	val |= PORT_LINK_DLL_LINK_EN;
-> -	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> -
-> -	if (!pci->num_lanes) {
-> -		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-> -		return;
-> -	}
-> -
-> -	/* Set the number of lanes */
-> -	val &= ~PORT_LINK_FAST_LINK_MODE;
-> -	val &= ~PORT_LINK_MODE_MASK;
-> +	/* Mask LINK_MODE if num_lanes is not zero */
-> +	if (pci->num_lanes)
-> +		val &= ~PORT_LINK_MODE_MASK;
->  	switch (pci->num_lanes) {
->  	case 1:
->  		val |= PORT_LINK_MODE_1_LANES;
-> @@ -840,10 +834,12 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		val |= PORT_LINK_MODE_8_LANES;
->  		break;
->  	default:
-> -		dev_err(pci->dev, "num-lanes %u: invalid value\n", pci->num_lanes);
-> -		return;
-> +		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
-> +		break;
->  	}
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-> +	if (!pci->num_lanes)
-> +		return;
->  
->  	/* Set link width speed control register */
->  	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
-> --------------------------------------------
+>   arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts |  28 ++
+>   arch/arm64/boot/dts/qcom/ipq9574.dtsi        | 477 ++++++++++++++++++-
+>   2 files changed, 499 insertions(+), 6 deletions(-)
 > 
-> Best regards,
-> Yoshihiro Shimoda
-> 
-> > -Serge(y)
-> > 
-> > >
-> > > >  	val &= ~PORT_LINK_FAST_LINK_MODE;
-> > > >  	val &= ~PORT_LINK_MODE_MASK;
-> > > >  	switch (pci->num_lanes) {
-> > > > --
-> > > > 2.25.1
-> > > >
-> > >
-> 
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+> index 2c8430197ec0..21b53f34ce84 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574-al02-c7.dts
+> @@ -8,6 +8,7 @@
+>   
+>   /dts-v1/;
+>   
+> +#include <dt-bindings/gpio/gpio.h>
+>   #include "ipq9574.dtsi"
+>   
+>   / {
+> @@ -29,6 +30,33 @@
+>   	status = "okay";
+>   };
+>   
+> +&pcie1_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie1_x1 {
+> +	perst-gpios = <&tlmm 26 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&pcie2_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie2_x2 {
+> +	perst-gpios = <&tlmm 29 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+> +&pcie3_phy {
+> +	status = "okay";
+> +};
+> +
+> +&pcie3_x2 {
+> +	perst-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
+> +	status = "okay";
+> +};
+> +
+>   &sdhc_1 {
+>   	pinctrl-0 = <&sdc_default_state>;
+>   	pinctrl-names = "default";
+> diff --git a/arch/arm64/boot/dts/qcom/ipq9574.dtsi b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> index 062f80798ebb..a32dbdeb5bed 100644
+> --- a/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/ipq9574.dtsi
+> @@ -6,8 +6,8 @@
+>    * Copyright (c) 2023, Qualcomm Innovation Center, Inc. All rights reserved.
+>    */
+>   
+> -#include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/clock/qcom,ipq9574-gcc.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/reset/qcom,ipq9574-gcc.h>
+>   
+>   / {
+> @@ -22,11 +22,41 @@
+>   			#clock-cells = <0>;
+>   		};
+>   
+> +		pcie30_phy0_pipe_clk: pcie30_phy0_pipe_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <250000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		pcie30_phy1_pipe_clk: pcie30_phy1_pipe_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <250000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		pcie30_phy2_pipe_clk: pcie30_phy2_pipe_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <250000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		pcie30_phy3_pipe_clk: pcie30_phy3_pipe_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <250000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+>   		sleep_clk: sleep-clk {
+>   			compatible = "fixed-clock";
+>   			#clock-cells = <0>;
+>   		};
+>   
+> +		usb3phy_0_cc_pipe_clk: usb3phy_0_cc_pipe_clk {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <125000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+
+   Why is the usb clock added here ?
+
+>   		xo_board_clk: xo-board-clk {
+>   			compatible = "fixed-clock";
+>   			#clock-cells = <0>;
+> @@ -121,6 +151,155 @@
+>   		#size-cells = <1>;
+>   		ranges = <0 0 0 0xffffffff>;
+>   
+> +		pcie0_phy: phy@84000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x1-pcie-phy";
+> +			reg = <0x00084000 0x1bc>; /* Serdes PLL */
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			clocks = <&gcc GCC_PCIE0_AUX_CLK>,
+> +				 <&gcc GCC_PCIE0_AHB_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE0_1LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE0_1LANE_S_CLK>;
+> +			clock-names = "aux", "cfg_ahb", "anoc_lane", "snoc_lane";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE0_AUX_CLK>;
+> +			assigned-clock-rates = <20000000>;
+> +
+> +			resets = <&gcc GCC_PCIE0_PHY_BCR>,
+> +				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			status = "disabled";
+> +
+> +			pcie0_lane: phy@84200 {
+> +				reg = <0x00084200 0x16c>, /* Serdes Tx */
+> +				      <0x00084400 0x200>, /* Serdes Rx */
+> +				      <0x00084800 0x1f0>, /* PCS: Lane0, COM, PCIE */
+> +				      <0x00084c00 0xf4>;  /* pcs_misc */
+> +				#phy-cells = <0>;
+> +
+> +				clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "gcc_pcie0_pipe_clk_src";
+> +				#clock-cells = <0>;
+> +			};
+> +		};
+> +
+> +		pcie2_phy: phy@8c000 {
+
+   Can the phy/pcie nodes labelled in order ?
+   Currently it 0/2/3/1 ?
+
+> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
+> +			reg = <0x0008c000 0x1bc>; /* Serdes PLL */
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			clocks = <&gcc GCC_PCIE2_AUX_CLK>,
+> +				 <&gcc GCC_PCIE2_AHB_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE2_2LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE2_2LANE_S_CLK>;
+> +			clock-names = "aux", "cfg_ahb", "anoc_lane", "snoc_lane";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE2_AUX_CLK>;
+> +			assigned-clock-rates = <20000000>;
+> +
+> +			resets = <&gcc GCC_PCIE2_PHY_BCR>,
+> +				 <&gcc GCC_PCIE2PHY_PHY_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			status = "disabled";
+> +
+> +			pcie2_lanes: phy@8c200 {
+> +				reg = <0x0008c200 0x16c>, /* Serdes Tx0 */
+> +				      <0x0008c400 0x200>, /* Serdes Rx0 */
+> +				      <0x0008d000 0x1f0>, /* PCS: Lane0, COM, PCIE */
+> +				      <0x0008c600 0x16c>, /* Serdes Tx1 */
+> +				      <0x0008c800 0x200>, /* Serdes Rx1 */
+> +				      <0x0008d400 0x0f8>; /* pcs_misc */
+> +
+> +				#phy-cells = <0>;
+> +
+> +				clocks = <&gcc GCC_PCIE2_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "gcc_pcie2_pipe_clk_src";
+> +				#clock-cells = <0>;
+> +			};
+> +		};
+> +
+> +		pcie3_phy: phy@f4000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x2-pcie-phy";
+> +			reg = <0x000f4000 0x1bc>; /* Serdes PLL */
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			clocks = <&gcc GCC_PCIE3_AUX_CLK>,
+> +				 <&gcc GCC_PCIE3_AHB_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE3_2LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE3_2LANE_S_CLK>;
+> +			clock-names = "aux", "cfg_ahb", "anoc_lane", "snoc_lane";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE3_AUX_CLK>;
+> +			assigned-clock-rates = <20000000>;
+> +
+> +			resets = <&gcc GCC_PCIE3_PHY_BCR>,
+> +				 <&gcc GCC_PCIE3PHY_PHY_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			status = "disabled";
+> +
+> +			pcie3_lanes: phy@f4200 {
+> +				reg = <0x000f4200 0x16c>, /* Serdes Tx0 */
+> +				      <0x000f4400 0x200>, /* Serdes Rx0 */
+> +				      <0x000f5000 0x1f0>, /* PCS: Lane0, COM, PCIE */
+> +				      <0x000f4600 0x16c>, /* Serdes Tx1 */
+> +				      <0x000f4800 0x200>, /* Serdes Rx1 */
+> +				      <0x000f5400 0x0f8>; /* pcs_misc */
+> +
+> +				#phy-cells = <0>;
+> +
+> +				clocks = <&gcc GCC_PCIE3_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "gcc_pcie3_pipe_clk_src";
+> +				#clock-cells = <0>;
+> +			};
+> +		};
+> +
+> +		pcie1_phy: phy@fc000 {
+> +			compatible = "qcom,ipq9574-qmp-gen3x1-pcie-phy";
+> +			reg = <0x000fc000 0x1bc>; /* Serdes PLL */
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			clocks = <&gcc GCC_PCIE1_AUX_CLK>,
+> +				 <&gcc GCC_PCIE1_AHB_CLK>,
+> +				 <&gcc GCC_ANOC_PCIE1_1LANE_M_CLK>,
+> +				 <&gcc GCC_SNOC_PCIE1_1LANE_S_CLK>;
+> +			clock-names = "aux", "cfg_ahb", "anoc_lane", "snoc_lane";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE1_AUX_CLK>;
+> +			assigned-clock-rates = <20000000>;
+> +
+> +			resets = <&gcc GCC_PCIE1_PHY_BCR>,
+> +				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
+> +			reset-names = "phy", "common";
+> +
+> +			status = "disabled";
+> +
+> +			pcie1_lane: phy@fc200 {
+> +				reg = <0x000fc200 0x16c>, /* Serdes Tx */
+> +				      <0x000fc400 0x200>, /* Serdes Rx */
+> +				      <0x000fc800 0x1f0>, /* PCS: Lane0, COM, PCIE */
+> +				      <0x000fcc00 0xf4>;  /* pcs_misc */
+> +				#phy-cells = <0>;
+> +
+> +				clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
+> +				clock-names = "pipe0";
+> +				clock-output-names = "gcc_pcie1_pipe_clk_src";
+> +				#clock-cells = <0>;
+> +			};
+> +		};
+> +
+>   		tlmm: pinctrl@1000000 {
+>   			compatible = "qcom,ipq9574-tlmm";
+>   			reg = <0x01000000 0x300000>;
+> @@ -145,11 +324,11 @@
+>   			clocks = <&xo_board_clk>,
+>   				 <&sleep_clk>,
+>   				 <&bias_pll_ubi_nc_clk>,
+> -				 <0>,
+> -				 <0>,
+> -				 <0>,
+> -				 <0>,
+> -				 <0>;
+> +				 <&pcie30_phy0_pipe_clk>,
+> +				 <&pcie30_phy1_pipe_clk>,
+> +				 <&pcie30_phy2_pipe_clk>,
+> +				 <&pcie30_phy3_pipe_clk>,
+> +				 <&usb3phy_0_cc_pipe_clk>;
+
+    Same , why usb3 clk is added here ?
+
+Regards,
+  Sricharan
+
