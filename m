@@ -2,102 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61E2E69A75F
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 09:48:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB42469A7D2
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 10:07:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229901AbjBQIsm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 03:48:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50060 "EHLO
+        id S229949AbjBQJHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 04:07:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjBQIsj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 03:48:39 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A641F604F0;
-        Fri, 17 Feb 2023 00:48:26 -0800 (PST)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31H63KTZ014637;
-        Fri, 17 Feb 2023 08:48:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=33eDyuvYJVBHbnCO5NSYD6X2R8vEOym0xz2B1IWSiNg=;
- b=OIzwO8AxZ1YEu1WVQkroLorCRDoyjaojbAzbQTYgUPPpqLFaxp4ghkZ9IX/VogWDw7qH
- yTKGdlOVi6ylU2qBDFvH7PeLyo+QW7Xc2ss0akTBlH5SVw6c8EhiuCLsDXSwfm+S5M7T
- f5ph1fTyguTQKzyO3leW+qksSnT8+1VJubAYzrHZdRTrPcQBBcTXwUWsVP2fcGqyBdbB
- 83qiq7ls4+U69wb4NijORuMQQCt3u2KHt3zRewnZE2DTzCYw0SK9tUqyzW+aaQsjDyzf
- vyPvIo1Vgh15nhK5x9zYP83dh8+VEs4fDveRVNHW7kPuSiycyVJNbfcDw1jkBEbfci6K bg== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nt10u0v06-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Feb 2023 08:48:16 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31H8mFVp000693
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Feb 2023 08:48:15 GMT
-Received: from [10.216.47.237] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 17 Feb
- 2023 00:48:06 -0800
-Message-ID: <a987fc17-3924-7ece-59e2-3fa1d000afc1@quicinc.com>
-Date:   Fri, 17 Feb 2023 14:18:03 +0530
+        with ESMTP id S229714AbjBQJHb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 04:07:31 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AE460FA3
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 01:06:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676624794;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=QYBgjTMjZdGOtt6bx76zu2DLo3upoWvpTnwIk+crChA=;
+        b=GSIE2yV0pSYAPwfnKhm+J/hbBW/g3y0mAAu3VtxXA3i13Bm0Bcjl99TO75hZfoAoc8embN
+        I1DUv8fM2SKM3+LqFub61pl7QSpdKq80Lzj4HpLQwFIxeYXELsZeHsvn3dKtYzOv2BLTNi
+        nVvHqQhVcvcDy89/s0fdVYp6AUl6Lr8=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-98-vV_e88flPx27QHTUgtxXfw-1; Fri, 17 Feb 2023 04:06:33 -0500
+X-MC-Unique: vV_e88flPx27QHTUgtxXfw-1
+Received: by mail-qt1-f200.google.com with SMTP id c19-20020ac853d3000000b003ba2a2c50f9so154936qtq.23
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 01:06:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QYBgjTMjZdGOtt6bx76zu2DLo3upoWvpTnwIk+crChA=;
+        b=auP1wsLEgHB6iS9qced53tk42q56xJ6fIo7e6cACJyCIN7tx0O2P1EWxHjm5TxIafs
+         Sv+gf5yjKYeAUqjyWzuAiAM5QSGL+AofN5nOMstFqgAegzTWMIXq9bcxPjPGPCtd5n1f
+         UahhyeOPm4N0C5RktVkS6bj/MDYUrlOuQMO8KGUTMtmjH4Hr0kkWUFyyJ42h6rUMeUPY
+         v+iATISBujGr8zIWowKdwkK3EoLr84A3QSD2bqqJi+kau/Ps4bBBJYPaL5/caSy4+ShD
+         6sWUvk3xRJIt1VtTWaIhfDlFbeN6p/dfpjjiQaMuRb1giKtJIx7xmsfBsd1aVMGKjx4d
+         NXBA==
+X-Gm-Message-State: AO0yUKXD0Jl42O79Qjh+oGBPtCWgU4Dm4fH5t6fIPdE5c2Fo9dBw+phq
+        2LHpiA8UN0ciBm4I6vXCbBydZ6kKywWsNPneZR3VqCkyCf8ZcYcqk4t2sad2rn/hlqFiGPfh/Ti
+        HB5V6gLNKEasdYhDAxnL+
+X-Received: by 2002:a05:6214:21a9:b0:56e:fef4:7ff1 with SMTP id t9-20020a05621421a900b0056efef47ff1mr6224982qvc.21.1676624792393;
+        Fri, 17 Feb 2023 01:06:32 -0800 (PST)
+X-Google-Smtp-Source: AK7set9dksCLRvkGtOCr4ORausUUH6GVWvsZbSk/a25QvYMl9pl4wePTorQHv5gsaTW5qe3V949j8g==
+X-Received: by 2002:a05:6214:21a9:b0:56e:fef4:7ff1 with SMTP id t9-20020a05621421a900b0056efef47ff1mr6224956qvc.21.1676624792049;
+        Fri, 17 Feb 2023 01:06:32 -0800 (PST)
+Received: from localhost.localdomain ([151.29.151.163])
+        by smtp.gmail.com with ESMTPSA id i65-20020a37b844000000b00705cef9b84asm2814791qkf.131.2023.02.17.01.06.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 01:06:31 -0800 (PST)
+Date:   Fri, 17 Feb 2023 10:06:27 +0100
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-rt-users@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Tommaso Cucinotta <tommaso.cucinotta@santannapisa.it>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@linaro.org>
+Subject: Re: [ANNOUNCE][CFP] Power Management and Scheduling in the Linux
+ Kernel V edition (OSPM-summit 2023)
+Message-ID: <Y+9Dk69B/PSMp3Lp@localhost.localdomain>
+References: <Y8lFkbJ6nluNdVYO@localhost.localdomain>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH 0/7] Add PCIe support for IPQ9574
-Content-Language: en-US
-To:     Devi Priya <quic_devipriy@quicinc.com>, <agross@kernel.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
-        <bhelgaas@google.com>, <krzysztof.kozlowski+dt@linaro.org>,
-        <vkoul@kernel.org>, <kishon@kernel.org>, <mturquette@baylibre.com>,
-        <sboyd@kernel.org>, <mani@kernel.org>, <p.zabel@pengutronix.de>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-phy@lists.infradead.org>, <linux-clk@vger.kernel.org>
-CC:     <quic_gokulsri@quicinc.com>, <quic_sjaganat@quicinc.com>,
-        <quic_kathirav@quicinc.com>, <quic_arajkuma@quicinc.com>,
-        <quic_anusha@quicinc.com>
-References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <20230214164135.17039-1-quic_devipriy@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: SkGcIu3rfLWbX5OreuJ1hWeFzovxmJIH
-X-Proofpoint-GUID: SkGcIu3rfLWbX5OreuJ1hWeFzovxmJIH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-17_04,2023-02-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 malwarescore=0 mlxscore=0 impostorscore=0
- adultscore=0 mlxlogscore=693 phishscore=0 suspectscore=0 clxscore=1015
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302170078
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Y8lFkbJ6nluNdVYO@localhost.localdomain>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi All,
 
-
-On 2/14/2023 10:11 PM, Devi Priya wrote:
-> PCIe0, PCIe1, PCIe2, PCIe3 (and corresponding PHY) devices
-> are found on IPQ9574 platform. The PCIe0 & PCIe1 are 1-lane
-> Gen3 host whereas PCIe2 & PCIe3 are 2-lane Gen3 host.
+On 19/01/23 14:28, Juri Lelli wrote:
+> Power Management and Scheduling in the Linux Kernel (OSPM-summit) V edition
 > 
-> This series adds support for enabling the same
+> April 17-19, 2023
+> Universita Politecnica delle Marche, Facolta di Economia
+> Ancona, Italy
 > 
+> ---
+> 
+> .:: FOCUS
+> 
+> After a couple of years break, OSPM is back! In a different venue.
+> 
+> The V edition of the Power Management and Scheduling in the Linux Kernel
+> (OSPM) summit aims at fostering discussions on power management and
+> (real-time) scheduling techniques. Summit will be held in Ancona (Italy)
+> on April 17-19, 2023.
 
+...
 
-<svarbanov@mm-sol.com>  --> This is bouncing, please remove it
+> .:: ATTENDING
+> 
+> Attending the OSPM-summit is free of charge, but registration to the
+> event is mandatory. The event can allow a maximum of 50 people (so, be
+> sure to register early!).
 
-Regards,
-  Sricharan
+Registrations are now open. Please use the link below to register. Don't
+hesitate to reply to me privately if you experience problems with
+the process.
+
+https://forms.gle/QbRhGS3HWXinKBZq7
+
+Also, website of the event is now online. Refer to that for logistic
+information.
+
+https://retis.sssup.it/ospm-summit/
+
+You can find below the list of accepted topics.
+
+https://docs.google.com/spreadsheets/d/10AJFQporrCPH9Gn6-MaRotdfO4Hm4LG6dVAoDrQdj5A/edit?usp=sharing
+
+For registered attendees, a draft schedule will be available in the next
+couple of weeks (tentatively :).
+
+Looking forward to meeting you in Ancona!
+
+Best,
+Juri
+
