@@ -2,161 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C6DF69A58B
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 07:17:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF8F269A691
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 09:07:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229705AbjBQGRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 01:17:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36142 "EHLO
+        id S229734AbjBQIHD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 03:07:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229666AbjBQGRB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 01:17:01 -0500
-Received: from BN6PR00CU002-vft-obe.outbound.protection.outlook.com (mail-eastus2azon11021027.outbound.protection.outlook.com [52.101.57.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D30F4AFE6;
-        Thu, 16 Feb 2023 22:17:00 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XDB+7fF12nIRE/RZU0hE6xu1kSQx0K5Sg7RNueMVFug2+dm8oX5iQ7JWtvKtTrnZo/g4Wox2O1q8GA9kODST+AU+2wWQ0qUsPjcELL1kvDSINjQx9N5S5UWwI1M9WkEigZK0L7UUBW3wbV9e669kaVSpNLrx9HWQ9vJ+tyUtJWqnkiDOvleB6w69KZLFqGUQoLiVUaer6KpM/cfAD42B2+c5TVqYuczOeFOvJhhu86RVqGTznebwCppI4p1evOLJYA+HE1jqYQKjmyJQQQGFTWuRT+lFZTEm7zkOKfSzHovDufy9JJzZs3CpMBIDNAVX3jrSHyz48N4uLa/u7wIbzw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FhXzVCNugP1tEBluz9qCyJI41Z1HUdzk52mytVUIt6o=;
- b=YAknVMBszEAyE6Gwcmr+EqA6WVM+KATMDYwbhPDgM76pd7Y2De69qXEX66ijgjEO9c1v9cK2AnXlprv1cfuM3NtB80DofdcOhXy2/qV19ddHoyxMF5IDckSFpK3OJ9yMONZy744QVCBbCz43zV8d71L/xc77ZzvhoCMmP3Gb3JiHYS9zklf92aH5ggX8vYHuHld9De0SaxGQ+0hbtRx6ieHMA3cxng3cLI6fJD4P0f7yyM29FYx0ucJiSS/1XxJk32FFThkZe7O1DfwsCO+yuYkv95Od4EiF++QUPMweB/uudJtPRqtYyEM0RzZ3FTG/5JMqUNRVDuE5KjNRtzbSAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FhXzVCNugP1tEBluz9qCyJI41Z1HUdzk52mytVUIt6o=;
- b=fT5iy2EfDnUuyKnlQygCVuTxgZmFD9LwP50dxN3AD+WB6R2oGhXBiqALEpCcBRw0IWU1l/sikeN3nr4i1WXXffJ9tJMJq9njKjB9+WD0D/8DMyjT2QzwS7lr6iO5T3A+SIJXSO6E450SVK+qzZX+K8WxS/mdpbEgBAn1gHyY4zE=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by SJ0PR21MB1869.namprd21.prod.outlook.com (2603:10b6:a03:2a2::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.6; Fri, 17 Feb
- 2023 06:16:56 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::629a:b75a:482e:2d4a]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::629a:b75a:482e:2d4a%7]) with mapi id 15.20.6134.012; Fri, 17 Feb 2023
- 06:16:56 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Sean Christopherson <seanjc@google.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
+        with ESMTP id S229751AbjBQIHC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 03:07:02 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBE6193C4
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 00:07:00 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id h38so3911722lfv.7
+        for <linux-pci@vger.kernel.org>; Fri, 17 Feb 2023 00:07:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=H+odvZ5hvt+Jzr5sXx6Suo3jssqEz7ig18BCmlAR9A4=;
+        b=ctzmIg0YxKhxXFz49dM6yoTp/XdYI0IXEN7NSUjWOTq/QCovu/RZHVXvEeLuCe5ckF
+         cUhheg6678BJeI8qfgZLNGXqXAZJWYM+OtBd7ooS14dVZJWH1Wuf1Yec5BC16uSQyyma
+         4u7/xyBJpace+2oNtGYVV/77jXl6A26h3LYp1m2D6kHgUe/TdCEpq2hIj/+kZ04z8wEL
+         1+0iss9bexmm8VLvDhi0ucKkuZmFsg5xAlv15dgSoF783KCIiB5QWZVLD4vj+zmnfKKo
+         1hvAhRppFnAZpxLxucVAcXwQU6eNVrOjhJRnOq58S48F5ZnCngF+zdTrMv/MdzbsGzn8
+         3iGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=H+odvZ5hvt+Jzr5sXx6Suo3jssqEz7ig18BCmlAR9A4=;
+        b=qK6Otqgq/pVh5YhmIHZclxEQ2S0TStXuxtdNZEiMtTR3rlpcP16xu6kJbZEdQj50NI
+         i5qa1ReChgPq1h4g0EvQYyB4hBbznoqZdMgFECh3zgQIdICVFjChOdecJK6u7X33v6V8
+         3N2oCjB4hBNTNl6cVbMenRDTg2XUNsHp3eUMjPx0x140+iE3I6X7/iapJoa+3NK/2z5D
+         iqa4kyISFeH3nOEwUAASLmIsvUsUD2CUZ065+TAAyyWpW4ng4jSEKcphO+v7tH02vhVz
+         t798H8jBpqs3MiI1Ruu9JW4h6k+7p9v/bNyzEm35ocuGSKX9I2nWWeyn1/5oynVuCxQJ
+         EKrg==
+X-Gm-Message-State: AO0yUKW5Fw7Qi7ACXwAoK5rioc9vueRv7ZnAAKHeys73sapgvrm0KOGS
+        gqppSHdS32dAFv7krSDbp1M=
+X-Google-Smtp-Source: AK7set8L21Fc6GVtolhQ/1cYsH/bxfxHuBHsEfC8HkP1sHs90YnmjPN/HIoc2wN+LVC6LrXf1WA9jA==
+X-Received: by 2002:a05:6512:6b:b0:4db:2ab7:43e6 with SMTP id i11-20020a056512006b00b004db2ab743e6mr209800lfo.44.1676621218871;
+        Fri, 17 Feb 2023 00:06:58 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id z10-20020ac2418a000000b004d19e442d53sm602945lfh.249.2023.02.17.00.06.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 00:06:57 -0800 (PST)
+Date:   Fri, 17 Feb 2023 11:06:56 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
         "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Subject: RE: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Thread-Topic: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Thread-Index: AQHZJs7d1RPl+inmE0Kn2DbFJZ3EJa6nyiwAgAAUafCAB237AIAL8mwQgAhWY4CAAeE2AIABk95AgAGmoACAAAYigIAAAicAgAAHCQCAAAYXAIAADqWAgAAB8ICAAAP2cIAAK2uAgAjCToCAACg1IIAAE3gAgAC0MPA=
-Date:   Fri, 17 Feb 2023 06:16:56 +0000
-Message-ID: <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <Y+aVFxrE6a6b37XN@zn.tnic>
- <BYAPR21MB16882083E84F20B906E2C847D7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+aczIbbQm/ZNunZ@zn.tnic> <cb80e102-4b78-1a03-9c32-6450311c0f55@intel.com>
- <Y+auMQ88In7NEc30@google.com> <Y+av0SVUHBLCVdWE@google.com>
- <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+bXjxUtSf71E5SS@google.com> <Y+4wiyepKU8IEr48@zn.tnic>
- <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+5immKTXCsjSysx@zn.tnic>
-In-Reply-To: <Y+5immKTXCsjSysx@zn.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6d81780f-893d-4a9a-bf7e-bcfaf137ed86;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-02-17T03:51:28Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|SJ0PR21MB1869:EE_
-x-ms-office365-filtering-correlation-id: 2bbad1d7-93a6-46fc-92b4-08db10ae9214
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nlyiDAm7HTfsVbRVHniWeUM2xs4mcBolUijuP5PAtnzCT8l2UDI6FF6BA5o7HRtNw2ycb9id1zd/L2rdb/pcgw1Ey2yCY6eJCA25NBK6NBwf74BNQ9+txpl05cISYHJQGF2M6y099A9AdeGDkJsydON+mzMEevdrmQEiA71QVD8LMhGqEM28xDfLifVuUYewLbM6rq1kYqHzFlBWY+faT3+7+TeOdMbBlP4G5jDDdtEtqDSKUE9FZCESUgSQ6wUh0s2Sp7tM2w4Jc8jpLvrhwOpymMXUAK0R3TdiMu3M5AK22QbD/7vuQlz51cp/mYzOjT5kYJ1OmWONME3y0uCFLjomrE5p4qo324jpW/MvboxuSCoDniqtTKfloOLvt09Rl0omPaOGysk2c00QIRVIra4c/1QiUEd+sgQyNtC+07yu0nvtM8kLKXlrAKI6lqGQKrXTznFHCeTavQLSsQFgmk2JUe/Hix5HSgeaSWgo3lrxNEtyrIZqAl5SHmbS11516RCF5raP0TpfB+elapjWwcKiwuPcFIfY0yNSUYRD6LPkWnhVWbLHTd26R8RBXbqmQbxeUuyWVCWnaFTY+C3wHUHF+1KDar3HxaxTI3yrJmN3tmDGkeWH5FUdMPilHDO51/QsELx33ZHEQJoDs/2gzK7e42hjzDLbSS+pk9LEOuq5z17gfm8Hys2LyVmHhcznd75dB1KDMRfgN17AWmdgMg8c5ZBxWfGNRtV4cGb0ZHOJi8KMHiFTaG/Qj+m3xagn
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(366004)(346002)(39860400002)(396003)(376002)(451199018)(9686003)(186003)(4326008)(7416002)(7406005)(10290500003)(7696005)(71200400001)(54906003)(316002)(478600001)(6506007)(76116006)(6916009)(66946007)(41300700001)(8676002)(66476007)(52536014)(2906002)(83380400001)(8936002)(66556008)(5660300002)(66446008)(38100700002)(64756008)(82960400001)(122000001)(82950400001)(86362001)(55016003)(8990500004)(33656002)(38070700005);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?Xzd7yxUMAJIOAfLJ+nrsueG+MioolMF9mYYpw5TEIS52uFbhtdEsuF8JbaIx?=
- =?us-ascii?Q?lPEPkSuKgwj50P8fVqOvZilJhdKM8lzqKKe1nunrVLJ1knmCNfn86J0NK2g9?=
- =?us-ascii?Q?jCph75bt5dSkHg6UvsSnJXs/NiAmCb16wKghFMCGHcOt3ZROVKeOgRYwUl2K?=
- =?us-ascii?Q?qeixY67N748kl+VvvaJNWB/eSINtrH8TtJp/nrmG54LnZL78exTjx3b9AQKl?=
- =?us-ascii?Q?VkQ+Z1gDJ/yYMft9n3o/lOlRSEhybyTvrfSzcokjnHUS803HaZodMefUnhMo?=
- =?us-ascii?Q?ElGZVKd33ixiQgvp9iT1fcEp083Qa4cICzfwwOLTWHPC/08XySotIXlwfbAX?=
- =?us-ascii?Q?v2H7OZyhVmVQ1efjGYPvJCWZ8HPjCAgi5wdz0h7jnIS5/F3E2dvbZlm8k3/i?=
- =?us-ascii?Q?swbbC7/q+sBon0rTwcqSS6b5lKglmsxsKW0kt3kfT8UvCHF402BjeYMGQpfV?=
- =?us-ascii?Q?rc4Yt12qVa9GiDdqWh7bxGazk5h5hNVArO11T2bv9ct17X6CAus1jM3t0g83?=
- =?us-ascii?Q?PpMTqvAbXNd5sjAkxP3KEE4TLW26PCrIhgH0PvOFqmYe2rBdI2PdvBnXG6T1?=
- =?us-ascii?Q?7uDFBSshdK8uCClU6h7bH+oB5YwX5CeHH4YteLPKhrTZN0MV9MOyk/1t+xt4?=
- =?us-ascii?Q?aWwW94T/KAsFqODxDDwoHpITtbhTgT9YlMKPqi5ciluNcJ/BaFYNroNAKYTq?=
- =?us-ascii?Q?c+Lk8z/4/7EBDKl6/y4UXOWL5SEet+mMq3Srznv+rC1wlFcLSQpea0hRm/cK?=
- =?us-ascii?Q?kj4qu7N3ZAit5x8Ad+CeI4uGQneyEisYP4DblN9k2ui1VOmTOXLXZB9iXbbW?=
- =?us-ascii?Q?ke0PzT4u+UJdkin81XdRMKBbYX1G3dVg2J9mAtkpspV9zU2eDTX62Iu1tKgD?=
- =?us-ascii?Q?Ka5Lye1fnEi8Is+tnKzxU8mTiImJsKIMj9tDSLcP8im1BgQyUr2coparYL7t?=
- =?us-ascii?Q?OUOzkwoBQ9+/pgr3NOVGd+QQFi6yLgFyi1apCP+2bm/aVfMtSmSsPr2kOk5k?=
- =?us-ascii?Q?KHgCH+ziN8bajpmdB7qSPU5FFKIoGDZ7G9xO80xb8lKlcC7CV/M3VXA2vPQF?=
- =?us-ascii?Q?7eQfm9HWW0NwR8cQMs7BZh+XtU8LtzXAQEHnXy+HdnipwAEPL355mggaOrpI?=
- =?us-ascii?Q?YslF3hhlWlsp/sl6SYgqbm39ARA9G4xKR9v7p+VoXN+Bhx3/s9DO57DHJMz8?=
- =?us-ascii?Q?TbFfwZ2N3GzzwcWKbBgGWMzefChDP08l5CPCmyfX4pAlk7ugFRKfyBPzuDXd?=
- =?us-ascii?Q?hAzUeDgRxW7qruB0AQd9Ph1lZDDKwq9Ft+3nUcTe+tgeZ6zpW0mUt8W6s0pn?=
- =?us-ascii?Q?iXxS+uBStT9iKpzrGT2M3sZfunQjCE/Kh2UjsF0i9tQU2ko1eYGe7ud/S4Of?=
- =?us-ascii?Q?Pr+3khMIHBNS7dKR+r8XiEa6/R7jnO7++1X+zvAddMQagmDsmuxyIkk63Cv4?=
- =?us-ascii?Q?CKcvRdvCpt2x05KWf1XvNqUn26vuEoSqDaBzACbUVEZiIGmjrFV97W7lVOLt?=
- =?us-ascii?Q?qwoQe5R1xb0cflWU8m8WIR30YBvEUVWzmBKM9CFia0tdsh3gJo4xaxROiOtJ?=
- =?us-ascii?Q?+lrccR6LsWlQfi1Q44RDcVKci/yXNoBNFgkGIfum3ntF7XH8c30SgGWhd3Xr?=
- =?us-ascii?Q?/Kim2kyYIgvJeMyR+yWVBKAYQQRf1SeWmLY27t4O7shYwSekyp+VNiICsHIg?=
- =?us-ascii?Q?IILuKA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: dwc: Fix writing wrong value if
+ snps,enable-cdm-check
+Message-ID: <20230217080656.2rhkfzf7ivhrbvub@mobilestation>
+References: <20230216092012.3256440-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230216175822.GA3321300@bhelgaas>
+ <20230216204930.jvxt3ajny2eymbtn@mobilestation>
+ <OSYPR01MB5334E428391F68F9CDA1374ED8A19@OSYPR01MB5334.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bbad1d7-93a6-46fc-92b4-08db10ae9214
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Feb 2023 06:16:56.3920
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ToIHBhYpP9Lh/pmByK7duo6cVZkOLv3a+u72k1zv8FeWAf5VJCTEEfLTCwW6qvcaCJpdAAuqKw6eQyu+zfnwAuOb/ivsdXyf8n5xAgnRJZA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR21MB1869
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSYPR01MB5334E428391F68F9CDA1374ED8A19@OSYPR01MB5334.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -164,50 +80,174 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Feb 17, 2023 at 12:46:03AM +0000, Yoshihiro Shimoda wrote:
+> Hi Bjorn, Serge,
+> 
+> > From: Serge Semin, Sent: Friday, February 17, 2023 5:50 AM
+> > 
+> > On Thu, Feb 16, 2023 at 11:58:22AM -0600, Bjorn Helgaas wrote:
+> > > On Thu, Feb 16, 2023 at 06:20:12PM +0900, Yoshihiro Shimoda wrote:
+> > > > The "val" of PCIE_PORT_LINK_CONTROL will be reused on the
+> > > > "Set the number of lanes". But, if snps,enable-cdm-check" exists,
+> > > > the "val" will be set to PCIE_PL_CHK_REG_CONTROL_STATUS.
+> > > > Therefore, unexpected register value is possible to be used
+> > > > to PCIE_PORT_LINK_CONTROL register if snps,enable-cdm-check" exists.
+> > > > So, read PCIE_PORT_LINK_CONTROL register again to fix the issue.
+> > > >
+> > > > Fixes: ec7b952f453c ("PCI: dwc: Always enable CDM check if "snps,enable-cdm-check" exists")
+> > > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > > > ---
+> > > >  drivers/pci/controller/dwc/pcie-designware.c | 1 +
+> > > >  1 file changed, 1 insertion(+)
+> > > >
+> > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > index 6d5d619ab2e9..3bb9ca14fb9c 100644
+> > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > @@ -824,6 +824,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
+> > > >  	}
+> > > >
+> > > >  	/* Set the number of lanes */
+> > > > +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+> > >
+> > > Definitely a bug, thanks for the fix and the Fixes: tag.
+> > >
+> > 
+> > > But I would like the whole function better if it could be structured
+> > > so we read PCIE_PORT_LINK_CONTROL once and wrote it once.  And the
+> > > same for PCIE_LINK_WIDTH_SPEED_CONTROL.
+> > >
+> > 
+> > I don't see a good looking solution for what you suggest. We'd need to
+> > use additional temporary vars and gotos to implement that.
+> > 
+> > > Maybe there's a reason PCIE_PL_CHK_REG_CONTROL_STATUS must be written
+> > > between the two PCIE_PORT_LINK_CONTROL writes or the two
+> > > PCIE_LINK_WIDTH_SPEED_CONTROL writes, I dunno.  If so, a comment there
+> > > about why that is would be helpful.
+> > 
+> > There were no sign of dependencies between the CDM-check enabling and
+> > the rest of the setting performed in the dw_pcie_setup() function.
+> > Originally the CDM-check was placed at the tail of the function:
+> > 07f123def73e ("PCI: dwc: Add support to enable CDM register check")
+> > with no comments why it was placed there exactly. Moreover I got the
+> > Rb-tag for my fix from Vidya Sagar, the original patch author. So he
+> > was ok with the suggested solution.
+> 
+> I think so.
+> 
+> And, I think the commit 07f123def73e and commit ec7b952f453c are not
+> related to PCIE_PORT_LINK_CONTROL. So, PCIE_PL_CHK_REG_CONTROL_STATUS
+> handling can be moved everywhere in the function, IIUC. So, I think
+> we can have a solution with two patches like below:
+> 1) Move PCIE_PL_CHK_REG_CONTROL_STATUS handling before reading
+>    PCIE_PORT_LINK_CONTROL (as a bug fix patch).
 
+> 2) Refactor PCIE_PORT_LINK_CONTROL handling to avoid writing
+>    the register twice (as a patch for next).
 
-From: Borislav Petkov <bp@alien8.de> Sent: Thursday, February 16, 2023 9:07=
- AM
->=20
-> ... here.
->=20
-> We need a single way to test for this guest type and stick with it.
->=20
-> I'd like for all guest types we support to be queried in a plain and
-> simple way.
->=20
-> Not:
->=20
-> * CC_ATTR_GUEST_MEM_ENCRYPT
->=20
-> * x86_platform.hyper.is_private_mmio(addr)
->=20
-> * CC_ATTR_PARAVISOR
->=20
-> to mean three different aspects of SEV-SNP guests using vTOM on Hyper-V.
->=20
-> This is going to be a major mess which we won't support.
->=20
+IMO I would leave the procedure as is for now seeing you are going to
+move the rcar_gen4_pcie_set_max_link_width() code to the generic part
+of the driver in the framework of this patch:
+https://lore.kernel.org/linux-pci/20230210134917.2909314-7-yoshihiro.shimoda.uh@renesas.com/
+per Rob and my requests.
 
-OK, I'm trying to figure out where to go next.  I've been following the pat=
-tern
-set by the SEV/SEV-ES/SEV-SNP and TDX platforms in the cc_platform_has()
-function.   Each platform returns "true" for multiple CC_ATTR_* values,
-and those CC_ATTR_* values are tested in multiple places throughout
-kernel code.  Some CC_ATTR_* values are shared by multiple platforms
-(like CC_ATTR_GUEST_MEM_ENCRYPT) and some are unique to a particular
-platform (like CC_ATTR_HOTPLUG_DISABLED).  For the CC_ATTR_* values
-that are shared, the logic of which platforms they apply to occurs once in
-cc_platform_has() rather than scattered and duplicated throughout the
-kernel, which makes sense.  Any given platform is not represented by a
-single CC_ATTR_* value, but by multiple ones.  Each CC_ATTR_* value=20
-essentially represents a chunk of kernel functionality that one or more
-platforms need, and the platform indicates its need by cc_platform_has()
-returning "true" for that value.
+Thus you'll be able to combine all the bus-width updates into a single
+method, like dw_pcie_link_set_max_link_width(). The function will look
+as coherent as possible meanwhile the dw_pcie_setup() method body will
+turn to be smaller and easier to comprehend. Alas that will imply
+updating the PCIE_PORT_LINK_CONTROL and PCIE_LINK_WIDTH_SPEED_CONTROL
+registers twice.
 
-So I've been trying to apply the same pattern to the SNP vTOM sub-case
-of SEV-SNP.   Is that consistent with your thinking, or is the whole
-cc_platform_has() approach problematic, including for the existing
-SEV flavors and for TDX?
+@Bjorn, are you ok with that?
 
-Michael
+-Serge(y)
+
+> 
+> I made patches for it like below. But, what do you think?
+> --------------- for 1) ---------------
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -806,11 +806,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>  	}
+>  
+> -	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+> -	val &= ~PORT_LINK_FAST_LINK_MODE;
+> -	val |= PORT_LINK_DLL_LINK_EN;
+> -	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> -
+>  	if (dw_pcie_cap_is(pci, CDM_CHECK)) {
+>  		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
+>  		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
+> @@ -818,6 +813,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+>  	}
+>  
+> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+> +	val &= ~PORT_LINK_FAST_LINK_MODE;
+> +	val |= PORT_LINK_DLL_LINK_EN;
+> +	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> +
+>  	if (!pci->num_lanes) {
+>  		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+>  		return;
+> ---
+> --------------- for 2) ---------------
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -813,19 +813,13 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+>  	}
+>  
+> +	/* Set the number of lanes */
+>  	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+>  	val &= ~PORT_LINK_FAST_LINK_MODE;
+>  	val |= PORT_LINK_DLL_LINK_EN;
+> -	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> -
+> -	if (!pci->num_lanes) {
+> -		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+> -		return;
+> -	}
+> -
+> -	/* Set the number of lanes */
+> -	val &= ~PORT_LINK_FAST_LINK_MODE;
+> -	val &= ~PORT_LINK_MODE_MASK;
+> +	/* Mask LINK_MODE if num_lanes is not zero */
+> +	if (pci->num_lanes)
+> +		val &= ~PORT_LINK_MODE_MASK;
+>  	switch (pci->num_lanes) {
+>  	case 1:
+>  		val |= PORT_LINK_MODE_1_LANES;
+> @@ -840,10 +834,12 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  		val |= PORT_LINK_MODE_8_LANES;
+>  		break;
+>  	default:
+> -		dev_err(pci->dev, "num-lanes %u: invalid value\n", pci->num_lanes);
+> -		return;
+> +		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
+> +		break;
+>  	}
+>  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> +	if (!pci->num_lanes)
+> +		return;
+>  
+>  	/* Set link width speed control register */
+>  	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> --------------------------------------------
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > -Serge(y)
+> > 
+> > >
+> > > >  	val &= ~PORT_LINK_FAST_LINK_MODE;
+> > > >  	val &= ~PORT_LINK_MODE_MASK;
+> > > >  	switch (pci->num_lanes) {
+> > > > --
+> > > > 2.25.1
+> > > >
+> > >
+> 
