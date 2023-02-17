@@ -2,56 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 75D3769A8CB
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 11:02:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E7A269A8F9
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Feb 2023 11:19:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjBQKCD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Feb 2023 05:02:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56612 "EHLO
+        id S229575AbjBQKTU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Feb 2023 05:19:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229804AbjBQKB7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 05:01:59 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED216627D1;
-        Fri, 17 Feb 2023 02:01:57 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PJ6g04zMVz687Rd;
-        Fri, 17 Feb 2023 17:57:16 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Fri, 17 Feb
- 2023 10:01:54 +0000
-Date:   Fri, 17 Feb 2023 10:01:56 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Lukas Wunner <lukas@wunner.de>
-CC:     Bjorn Helgaas <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Alison Schofield" <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 04/16] cxl/pci: Handle excessive CDAT length
-Message-ID: <20230217100156.000039b9@Huawei.com>
-In-Reply-To: <20230216102616.GA13347@wunner.de>
-References: <cover.1676043318.git.lukas@wunner.de>
-        <4834ceab1c3e00d3ec957e6c8beb13ddaa9877a2.1676043318.git.lukas@wunner.de>
-        <20230214113311.00000825@Huawei.com>
-        <20230216102616.GA13347@wunner.de>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229573AbjBQKTT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Feb 2023 05:19:19 -0500
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A417660A57;
+        Fri, 17 Feb 2023 02:19:18 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id g16so1123446lfv.4;
+        Fri, 17 Feb 2023 02:19:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vCndEDoUtknwHJxWtOqquHmn6BtbW8GdekGsNECVWdg=;
+        b=e+/CjwXji5eHjM7/meT9aSSjK0hOM9rnqj+8V8sDd5od3GlQSIZ/7z/7QktdAhdxjF
+         VI0Ll5TNsvoFnNSGE5lFMvRT/QVfrQ1aN9CXUY4H99sWK/VrjNfABIfEfhkc6/lJvzXE
+         jV+e6OtWkSTDLL4vh77hh747QwFMlkGN+Apx/FoYSwNkb6tB8GDPCaa5gm2UDHG8z/MD
+         1cI67UjAvjZk01XComsdqloJR8qFlENfINxuq7lBIp0X/wdAHTIIdoMd07g1i6SHj1Fu
+         N1qdM9VuoaPyK/5BHuiyBKZztRa0jtt+mgjQSEiW/NGRn71bWj/ELfZsQeojXW6nV4TR
+         /pgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vCndEDoUtknwHJxWtOqquHmn6BtbW8GdekGsNECVWdg=;
+        b=nc8KWvOJEY2Iypy7CN2YnGpiimXE+EXVsL3DU1MCqspi+3nTSr4ZlQ/+NtV7MD6J3B
+         ZrEyxZ62IXlYI+hjhmS+DJs5tUTGlSkQzPaS9GLQbdwJJz29BZiOd+JZyco3uq5LS6Mz
+         Y6JP3IdBn1lGLxRDJE1y539eHvH9/oafz/zDiNbPAza0CP/qIt/sjxiTxWHLl0HH9WOj
+         tAEIS7Bej2lM42pZvd++WLqYw0bcNPvckKBb/MU/qfS5X4v8zOmNhB5M9R8BNPv/R0Wd
+         WY6luLfv9/wmwUsfdwx5iy5OQP1nlk3f35F9VjfwwvM+JWY2qQoRI7NCrc2yCpw6CkS7
+         Dt9Q==
+X-Gm-Message-State: AO0yUKWa/yRwDSUHRfzsqRNO8kPKhtNgjwiH5IybAZYaaVHUExeV5huf
+        at8qHtgyR7HIqwL1Z19LGT4=
+X-Google-Smtp-Source: AK7set/KoPJ9iPu3vao4Dqv+7Ti4VzcdsvVWT9rrj+iUyGdqbOCgEq2dY6aOQQ9TccDkUjqrysyK/w==
+X-Received: by 2002:ac2:5544:0:b0:4d7:2e11:d075 with SMTP id l4-20020ac25544000000b004d72e11d075mr2655581lfk.45.1676629156788;
+        Fri, 17 Feb 2023 02:19:16 -0800 (PST)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id g21-20020ac25395000000b004dc4d26c324sm633413lfh.143.2023.02.17.02.19.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Feb 2023 02:19:16 -0800 (PST)
+Date:   Fri, 17 Feb 2023 13:19:13 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/11] PCI: dwc: Fix port link CSR improper init if CDM
+ check enabled
+Message-ID: <20230217101913.vomgrcwj7mv5apjq@mobilestation>
+References: <20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru>
+ <20230217093956.27126-2-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230217093956.27126-2-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,47 +87,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 16 Feb 2023 11:26:16 +0100
-Lukas Wunner <lukas@wunner.de> wrote:
+On Fri, Feb 17, 2023 at 12:39:46PM +0300, Serge Semin wrote:
+> If CDM_CHECK capability is set then the local variable 'val' will be
+> overwritten in the dw_pcie_setup() method in the PL_CHK register
+> initialization procedure. Thus further variable usage in the framework of
+> the PCIE_PORT_LINK_CONTROL register initialization must imply the variable
+> re-initialization. Alas it hasn't been taken into account in the
+> commit ec7b952f453c ("PCI: dwc: Always enable CDM check if
+> "snps,enable-cdm-check" exists"). Due to that the PCIE_PORT_LINK_CONTROL
+> register will be written with improper value in case if the CDM-check is
+> enabled. Let's fix this by re-initializing the 'val' variable with the
+> PCIE_PORT_LINK_CONTROL CSR content before link-mode initialization.
+> 
+> Fixes: ec7b952f453c ("PCI: dwc: Always enable CDM check if "snps,enable-cdm-check" exists")
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 
-> On Tue, Feb 14, 2023 at 11:33:11AM +0000, Jonathan Cameron wrote:
-> > On Fri, 10 Feb 2023 21:25:04 +0100 Lukas Wunner <lukas@wunner.de> wrote:  
-> > > If the length in the CDAT header is larger than the concatenation of the
-> > > header and all table entries, then the CDAT exposed to user space
-> > > contains trailing null bytes.
-> > > 
-> > > Not every consumer may be able to handle that.  Per Postel's robustness
-> > > principle, "be liberal in what you accept" and silently reduce the
-> > > cached length to avoid exposing those null bytes.  
-> [...]
-> > Fair enough. I'd argue that we are papering over broken hardware if
-> > we hit these conditions, so given we aren't aware of any (I hope)
-> > not sure this is stable material.  Argument in favor of stable being
-> > that if we do get broken hardware we don't want an ABI change when
-> > we paper over the garbage... hmm.  
-> 
-> Type 0 is assigned for DSMAS structures.  So user space might believe
-> there's an additional DSMAS in the CDAT.  It *could* detect that the
-> length is bogus (it is 0 but should be 24), but what if it doesn't
-> check that?  It seems way too dangerous to leave this loophole open,
-> hence the stable designation.
-Ok
+The same fix was submitted by Yoshihiro a bit earlier:
+https://lore.kernel.org/linux-pci/20230216092012.3256440-1-yoshihiro.shimoda.uh@renesas.com/
+I've preserved my version of the patch in the series to ease the merge
+procedure since the later patch in this patchset may cause conflicts.
 
-> 
-> Thanks,
-> 
-> Lukas
-> 
-> > > --- a/drivers/cxl/core/pci.c
-> > > +++ b/drivers/cxl/core/pci.c
-> > > @@ -582,6 +582,9 @@ static int cxl_cdat_read_table(struct device *dev,
-> > >  		}
-> > >  	} while (entry_handle != CXL_DOE_TABLE_ACCESS_LAST_ENTRY);
-> > >  
-> > > +	/* Length in CDAT header may exceed concatenation of CDAT entries */
-> > > +	cdat->length -= length;
-> > > +
-> > >  	return 0;
-> > >  }
-> > >    
+-Serge(y)
 
+> ---
+>  drivers/pci/controller/dwc/pcie-designware.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 6d5d619ab2e9..3bb9ca14fb9c 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -824,6 +824,7 @@ void dw_pcie_setup(struct dw_pcie *pci)
+>  	}
+>  
+>  	/* Set the number of lanes */
+> +	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
+>  	val &= ~PORT_LINK_FAST_LINK_MODE;
+>  	val &= ~PORT_LINK_MODE_MASK;
+>  	switch (pci->num_lanes) {
+> -- 
+> 2.39.0
+> 
+> 
