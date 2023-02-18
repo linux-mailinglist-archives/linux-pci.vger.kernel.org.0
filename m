@@ -2,30 +2,30 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEA9369BA3B
-	for <lists+linux-pci@lfdr.de>; Sat, 18 Feb 2023 14:23:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6BEF69BA3D
+	for <lists+linux-pci@lfdr.de>; Sat, 18 Feb 2023 14:23:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjBRNXF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 18 Feb 2023 08:23:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47686 "EHLO
+        id S229536AbjBRNXy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 18 Feb 2023 08:23:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjBRNXE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Feb 2023 08:23:04 -0500
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9A3193DD
-        for <linux-pci@vger.kernel.org>; Sat, 18 Feb 2023 05:22:43 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=yang.su@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VbvuUx7_1676726558;
-Received: from 30.27.118.154(mailfrom:yang.su@linux.alibaba.com fp:SMTPD_---0VbvuUx7_1676726558)
+        with ESMTP id S229489AbjBRNXy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 18 Feb 2023 08:23:54 -0500
+Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D1D918175
+        for <linux-pci@vger.kernel.org>; Sat, 18 Feb 2023 05:23:52 -0800 (PST)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046059;MF=yang.su@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0VbvzGtC_1676726627;
+Received: from 30.27.118.154(mailfrom:yang.su@linux.alibaba.com fp:SMTPD_---0VbvzGtC_1676726627)
           by smtp.aliyun-inc.com;
-          Sat, 18 Feb 2023 21:22:40 +0800
-Message-ID: <cc358ab3-0844-1341-7ae6-5af7110436f7@linux.alibaba.com>
-Date:   Sat, 18 Feb 2023 21:22:37 +0800
+          Sat, 18 Feb 2023 21:23:49 +0800
+Message-ID: <5d5ee171-18e5-f1b8-d08a-0d88f8eb3a3f@linux.alibaba.com>
+Date:   Sat, 18 Feb 2023 21:23:47 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.7.2
 From:   Yang Su <yang.su@linux.alibaba.com>
-Subject: Re: [PATCH v2 1/3] PCI/PM: Observe reset delay irrespective of
- bridge_d3
+Subject: Re: [PATCH v2 3/3] PCI/DPC: Await readiness of secondary bus after
+ reset
 To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
         linux-pci@vger.kernel.org
 Cc:     Keith Busch <kbusch@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
@@ -37,14 +37,14 @@ Cc:     Keith Busch <kbusch@kernel.org>, Ashok Raj <ashok.raj@intel.com>,
         Stanislav Spassov <stanspas@amazon.de>,
         shuo.tan@linux.alibaba.com
 References: <cover.1673769517.git.lukas@wunner.de>
- <eb37fa345285ec8bacabbf06b020b803f77bdd3d.1673769517.git.lukas@wunner.de>
-In-Reply-To: <eb37fa345285ec8bacabbf06b020b803f77bdd3d.1673769517.git.lukas@wunner.de>
+ <9f5ff00e1593d8d9a4b452398b98aa14d23fca11.1673769517.git.lukas@wunner.de>
+In-Reply-To: <9f5ff00e1593d8d9a4b452398b98aa14d23fca11.1673769517.git.lukas@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-10.2 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -53,177 +53,120 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Lucas,
 
-I figue out the reason of pci_bridge_secondary_bus_reset() why not work 
-for NVIDIA GPU T4
+I do not understand why pci_bridge_wait_for_secondary_bus() can fix 
+Intel's Ponte Vecchio HPC GPU
 
-which bind vfio passthrough hypervisor. I used the original func 
-pci_bridge_secondary_bus_reset()
+after a DPC-induced Hot Reset.
 
-not your patch, your patch remove bridge_d3 flag, the real reason is 
-bridge_d3 flag.
 
-> However, pci_bridge_wait_for_secondary_bus() bails out if the bridge_d3
-> flag is not set.  That flag indicates whether a bridge is allowed to
-> suspend to D3cold at *runtime*.
->
->   drivers/pci/pci.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index fba95486caaf..f43f3e84f634 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4964,7 +4964,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
->   	if (pci_dev_is_disconnected(dev))
->   		return;
->   
-> -	if (!pci_is_bridge(dev) || !dev->bridge_d3)
-> +	if (!pci_is_bridge(dev))
->   		return;
->   
->   	down_read(&pci_bus_sem);
+The func pci_bridge_wait_for_secondary_bus() also use 
+pcie_wait_for_link_delay() which time depends on
 
-When I test the original func pci_bridge_secondary_bus_reset() in 
-different machine node
+the max device delay time of one bus, for the GPU which bus only one 
+device, I think the time is 100ms as
 
-which all consist of the same type NVIDIA GPU T4, I found 
-pci_bridge_wait_for_secondary_bus()
+the input parater in pcie_wait_for_link_delay().
 
-bails out if the bridge_d3 flag is not set, but I still confused why 
-same gpu some machine node not set
 
-the bridge_d3 flag.
+pcie_wait_for_link() also wait fixed 100ms and then wait the device data 
+link is ready. So another wait time
 
-I find the linux kernel only two func will init bridge_d3 which is func 
-pci_pm_init() and pci_bridge_d3_update().
+is pci_dev_wait() in your patch? pci_dev_wait() to receive the CRS from 
+the device to check the device
 
-If you know, please give me some hint.
+whether is ready.
+
+
+Please help me understand which difference work.
+
 
 On 2023/1/15 16:20, Lukas Wunner wrote:
-> If a PCI bridge is suspended to D3cold upon entering system sleep,
-> resuming it entails a Fundamental Reset per PCIe r6.0 sec 5.8.
+> pci_bridge_wait_for_secondary_bus() is called after a Secondary Bus
+> Reset, but not after a DPC-induced Hot Reset.
 >
-> The delay prescribed after a Fundamental Reset in PCIe r6.0 sec 6.6.1
-> is sought to be observed by:
+> As a result, the delays prescribed by PCIe r6.0 sec 6.6.1 are not
+> observed and devices on the secondary bus may be accessed before
+> they're ready.
 >
->    pci_pm_resume_noirq()
->      pci_pm_bridge_power_up_actions()
->        pci_bridge_wait_for_secondary_bus()
+> One affected device is Intel's Ponte Vecchio HPC GPU.  It comprises a
+> PCIe switch whose upstream port is not immediately ready after reset.
+> Because its config space is restored too early, it remains in
+> D0uninitialized, its subordinate devices remain inaccessible and DPC
+> recovery fails with messages such as:
 >
-> However, pci_bridge_wait_for_secondary_bus() bails out if the bridge_d3
-> flag is not set.  That flag indicates whether a bridge is allowed to
-> suspend to D3cold at *runtime*.
+> i915 0000:8c:00.0: can't change power state from D3cold to D0 (config space inaccessible)
+> intel_vsec 0000:8e:00.1: can't change power state from D3cold to D0 (config space inaccessible)
+> pcieport 0000:89:02.0: AER: device recovery failed
 >
-> Hence *no* delay is observed on resume from system sleep if runtime
-> D3cold is forbidden.  That doesn't make any sense, so drop the bridge_d3
-> check from pci_bridge_wait_for_secondary_bus().
+> Fix it.
 >
-> The purpose of the bridge_d3 check was probably to avoid delays if a
-> bridge remained in D0 during suspend.  However the sole caller of
-> pci_bridge_wait_for_secondary_bus(), pci_pm_bridge_power_up_actions(),
-> is only invoked if the previous power state was D3cold.  Hence the
-> additional bridge_d3 check seems superfluous.
->
-> Fixes: ad9001f2f411 ("PCI/PM: Add missing link delays required by the PCIe spec")
 > Tested-by: Ravi Kishore Koppuravuri<ravi.kishore.koppuravuri@intel.com>
 > Signed-off-by: Lukas Wunner<lukas@wunner.de>
 > Reviewed-by: Mika Westerberg<mika.westerberg@linux.intel.com>
-> Reviewed-by: Kuppuswamy Sathyanarayanan<sathyanarayanan.kuppuswamy@linux.intel.com>
-> Cc:stable@vger.kernel.org  # v5.5+
+> Cc:stable@vger.kernel.org
 > ---
 > Changes v1 -> v2:
->   * Add Reviewed-by tags (Mika, Sathyanarayanan)
+>   * Move PCIE_RESET_READY_POLL_MS macro below the newly introduced
+>     PCI_RESET_WAIT from patch [2/3] and extend its code comment
+>   * Mention errors seen on Ponte Vecchio in commit message (Bjorn)
+>   * Avoid first person plural in commit message (Sathyanarayanan)
+>   * Add Reviewed-by tag (Mika)
 >
->   drivers/pci/pci.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index fba95486caaf..f43f3e84f634 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -4964,7 +4964,7 @@ void pci_bridge_wait_for_secondary_bus(struct pci_dev *dev)
->   	if (pci_dev_is_disconnected(dev))
->   		return;
->   
-> -	if (!pci_is_bridge(dev) || !dev->bridge_d3)
-> +	if (!pci_is_bridge(dev))
->   		return;
->   
->   	down_read(&pci_bus_sem);
-
-
-
-Below is reply for your another email about the device invoke secondary 
-bus reset.
-
-Yes, as your previous email describes the endpoint can not reset its 
-secondary bus.
-
-> Normally pci_bridge_secondary_bus_reset() should never be executed for
-> an endpoint device such as the Nvidia GPU T4.  It should only be executed
-> for one of the bridges above the GPU.  An endpoint cannot reset its
-> secondary bus, it doesn't have one.
-
-As previous email I give the pci topology for the NVIDIA GPU T4, here I 
-copy as below,
-
-you say that means:
-
-0000:17:00.0 = Root Port
-0000:18:00.0 = Switch Upstream Port of PLX 9797
-0000:19:04.0 = Switch Downstream Port of PLX 9797
-0000:19:08.0 = Switch Downstream Port of PLX 9797
-0000:4f:00.0 = Nvidia GPU T4
-
-I apply your debug patch, the pci_info print the device is 0000:19:08.0 
-which is the parent of
-
-the endpoint device 0000:4f:00.0.
-
-> pci_parent_bus_reset() invokes pci_bridge_secondary_bus_reset() on the
-> parent of the device to be reset.  In this case that's the Switch Downstream
-> Port 0000:19:08.0.  It finds the parent by following dev->bus->self.
->
-> Perhaps you can apply the small debug patch below.  It should print a message
-> when entering pci_bridge_secondary_bus_reset() and the message contains the
-> pci_name() of the device for which the function is executed.  If this is
-> not the Switch Downstream Port, you've found a bug.
->
-> Usually a better way of finding the parent device is to call
-> pci_upstream_bridge() instead of following dev->bus->self.  As you can
-> see in the definition of pci_upstream_bridge() in include/linux/pci.h,
-> this will find the parent of pci_phys_fn(dev).  So in virtualization
-> scenarios, the result may indeed be different from dev->bus->self,
-> but I still don't understand how.  You may want to try replacing
-> dev->bus->self with pci_upstream_bridge(dev) in pci_parent_bus_reset()
-> and see if that fixes the issue for you.
->
-> Thanks,
->
-> Lukas
->
-> -- >8 --
+>   drivers/pci/pci.c      | 3 ---
+>   drivers/pci/pci.h      | 6 ++++++
+>   drivers/pci/pcie/dpc.c | 4 ++--
+>   3 files changed, 8 insertions(+), 5 deletions(-)
 >
 > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 19fe0ef0e583..f383e5d29bb1 100644
+> index 509f6b5c9e14..d31c21ea9688 100644
 > --- a/drivers/pci/pci.c
 > +++ b/drivers/pci/pci.c
-> @@ -5073,6 +5073,9 @@ void __weak pcibios_reset_secondary_bus(struct pci_dev *dev)
+> @@ -167,9 +167,6 @@ static int __init pcie_port_pm_setup(char *str)
+>   }
+>   __setup("pcie_port_pm=", pcie_port_pm_setup);
+>   
+> -/* Time to wait after a reset for device to become responsive */
+> -#define PCIE_RESET_READY_POLL_MS 60000
+> -
+>   /**
+>    * pci_bus_max_busnr - returns maximum PCI bus number of given bus' children
+>    * @bus: pointer to PCI bus structure to search
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ce1fc3a90b3f..8f5d4bd5b410 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -70,6 +70,12 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
+>    * Reset (PCIe r6.0 sec 5.8).
 >    */
->   int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
->   {
-> +	pci_info(dev, "%s\n", __func__);
-> +	dump_stack();
-> +
->   	pcibios_reset_secondary_bus(dev);
+>   #define PCI_RESET_WAIT		1000	/* msec */
+> +/*
+> + * Devices may extend the 1 sec period through Request Retry Status completions
+> + * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
+> + * ought to be enough for any device to become responsive.
+> + */
+> +#define PCIE_RESET_READY_POLL_MS 60000	/* msec */
 >   
->   	return pci_bridge_wait_for_secondary_bus(dev, "bus reset",
-
+>   void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
+>   void pci_refresh_power_state(struct pci_dev *dev);
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index f5ffea17c7f8..a5d7c69b764e 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -170,8 +170,8 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+>   	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+>   			      PCI_EXP_DPC_STATUS_TRIGGER);
+>   
+> -	if (!pcie_wait_for_link(pdev, true)) {
+> -		pci_info(pdev, "Data Link Layer Link Active not set in 1000 msec\n");
+> +	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC",
+> +					      PCIE_RESET_READY_POLL_MS)) {
+>   		clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+>   		ret = PCI_ERS_RESULT_DISCONNECT;
+>   	} else {
 
 
 Thanks,
 
+
 Yang
-
-
 
