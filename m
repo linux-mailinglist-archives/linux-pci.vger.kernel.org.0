@@ -2,307 +2,161 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD0FC69D09C
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Feb 2023 16:26:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA4EC69D1E9
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Feb 2023 18:11:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbjBTP03 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Feb 2023 10:26:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53904 "EHLO
+        id S232014AbjBTRLo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Feb 2023 12:11:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230076AbjBTP01 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 10:26:27 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837A6206A5;
-        Mon, 20 Feb 2023 07:25:59 -0800 (PST)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31KDuHHh029277;
-        Mon, 20 Feb 2023 15:25:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=OQHfhbFp2rqrgd2ruKS+ejVr693oIrb4khbUXHUSsMg=;
- b=X3BasCXdN9+IxRcCBpqRZlnu3xiMRKgZypqWau/gAS304nUgTe4ih8mrNnh0q45LHbbb
- 2TwP7GUHt2TJKwwd1TVXP+eFm4tCYbAe88kW47ujuGcKHb7VR0n3al1ZXgMlGRrmCDdV
- PGLqBxqGIuZ4nsO9p1kr36JFfbtO1+14I4yJOHDvaShtzgzdYNvq1kNJj2UzNHtvYJT7
- SDSVKZfq1gv//VNP33cK0ACnaWOZSb5Ru+7kupQ68EiG7JPYboXWXyINahmn1XlTL+ly
- MkiHl0Uq6DaXT9eSa+9gVJzrzrmlXp050PAN8rlYwdQ29IVH5gKuZT8lv9xJKDKp6kIS Cw== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ntmcm5dmj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 15:25:26 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31KFPOmT001071
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 20 Feb 2023 15:25:24 GMT
-Received: from [10.216.11.20] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 20 Feb
- 2023 07:25:16 -0800
-Message-ID: <a95c132b-2caf-5be3-fcf5-15d92391d40b@quicinc.com>
-Date:   Mon, 20 Feb 2023 20:55:13 +0530
+        with ESMTP id S231331AbjBTRLn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 12:11:43 -0500
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99C4E20549;
+        Mon, 20 Feb 2023 09:11:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PwMBg7lbJaBvrGvhwA+E78qzUHxVlRrDHtFl3T5RvI8=; b=KEUwoP4TBZDHFcXyCjMQIIuwsW
+        XFvBIN+c+W0mmhqi07YYT/c8BKXGYzC2Tm9tkvNXCjH7ZUkXxUKds7R2duNTUY+B5EEbq/kN/QJac
+        CfJlrHJzrtA1NQQfIM8nD6MuTw0NQBX/Uwlr+mM7VHPvL662/VTm0rPzBtb6+siFIEWg47yTmNRXN
+        8uSMi3ChWRoiFBBaw/l5m3oIriLC1WB0XvSfs5FfD7kakdVa9R0MSBK9+eYOE13/yNYwb5uxA43FF
+        MEnwbwNxxIu0rsm9mRADKepJtFXmBkHZ+cngSCQkthi56ev+UGDpHVYPmkM2xtlhVHOFMU5N26W4G
+        cy7BYBUg==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51188)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1pU9hJ-0004oY-KE; Mon, 20 Feb 2023 17:11:29 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1pU9hD-0001Nd-7W; Mon, 20 Feb 2023 17:11:23 +0000
+Date:   Mon, 20 Feb 2023 17:11:23 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
+        Allen Hubbe <allenbh@gmail.com>
+Subject: [REGRESSION] Re: [patch V3 09/33] genirq/msi: Add range checking to
+ msi_insert_desc()
+Message-ID: <Y/Opu6ETe3ZzZ/8E@shell.armlinux.org.uk>
+References: <20221124230505.073418677@linutronix.de>
+ <20221124232325.798556374@linutronix.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH 2/7] PCI: qcom: Add IPQ9574 PCIe support
-Content-Language: en-US
-To:     Kathiravan T <quic_kathirav@quicinc.com>,
-        Sricharan Ramabadhran <quic_srichara@quicinc.com>,
-        <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
-        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
-        <mani@kernel.org>, <p.zabel@pengutronix.de>,
-        <svarbanov@mm-sol.com>, <linux-arm-msm@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-clk@vger.kernel.org>
-CC:     <quic_gokulsri@quicinc.com>, <quic_sjaganat@quicinc.com>,
-        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>
-References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
- <20230214164135.17039-3-quic_devipriy@quicinc.com>
- <6ea43d8d-7b9c-5a11-097f-906e10ac3627@quicinc.com>
- <c766648f-c3a5-b842-2164-c3f480dee129@quicinc.com>
- <184a38a0-f2de-dd63-a8af-f4784c61365a@quicinc.com>
-From:   Devi Priya <quic_devipriy@quicinc.com>
-In-Reply-To: <184a38a0-f2de-dd63-a8af-f4784c61365a@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: SGm6yOCcqlWTNSWstRhhHbdMM4MyZu7x
-X-Proofpoint-GUID: SGm6yOCcqlWTNSWstRhhHbdMM4MyZu7x
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-20_12,2023-02-20_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- phishscore=0 clxscore=1015 bulkscore=0 impostorscore=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=985 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302200141
-X-Spam-Status: No, score=-2.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221124232325.798556374@linutronix.de>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Nov 25, 2022 at 12:25:59AM +0100, Thomas Gleixner wrote:
+> Per device domains provide the real domain size to the core code. This
+> allows range checking on insertion of MSI descriptors and also paves the
+> way for dynamic index allocations which are required e.g. for IMS. This
+> avoids external mechanisms like bitmaps on the device side and just
+> utilizes the core internal MSI descriptor storxe for it.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
+Hi Thomas,
 
-On 2/20/2023 8:21 PM, Kathiravan T wrote:
-> 
-> On 2/20/2023 7:11 PM, Devi Priya wrote:
->> Hi Sri,
->> Thanks for taking time to review the patch!
->>
->> On 2/16/2023 5:08 PM, Sricharan Ramabadhran wrote:
->>> Hi Devi,
->>>
->>> On 2/14/2023 10:11 PM, Devi Priya wrote:
->>>> Adding PCIe support for IPQ9574 SoC
->>>>
->>>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
->>>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
->>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->>>> ---
->>>>   drivers/pci/controller/dwc/pcie-qcom.c | 119 
->>>> +++++++++++++++++++++++++
->>>>   1 file changed, 119 insertions(+)
->>>>
->>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c 
->>>> b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> index a232b04af048..57606c113d45 100644
->>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
->>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
->>>> @@ -193,6 +193,12 @@ struct qcom_pcie_resources_2_9_0 {
->>>>       struct reset_control *rst;
->>>>   };
->>>> +struct qcom_pcie_resources_1_27_0 {
->>>> +    struct clk_bulk_data *clks;
->>>> +    struct reset_control *rst;
->>>> +    int num_clks;
->>>> +};
->>>> +
->>>>   union qcom_pcie_resources {
->>>>       struct qcom_pcie_resources_1_0_0 v1_0_0;
->>>>       struct qcom_pcie_resources_2_1_0 v2_1_0;
->>>> @@ -201,6 +207,7 @@ union qcom_pcie_resources {
->>>>       struct qcom_pcie_resources_2_4_0 v2_4_0;
->>>>       struct qcom_pcie_resources_2_7_0 v2_7_0;
->>>>       struct qcom_pcie_resources_2_9_0 v2_9_0;
->>>> +    struct qcom_pcie_resources_1_27_0 v1_27_0;
->>>>   };
->>>>   struct qcom_pcie;
->>>> @@ -1409,6 +1416,104 @@ static int qcom_pcie_post_init_2_9_0(struct 
->>>> qcom_pcie *pcie)
->>>>       return 0;
->>>>   }
->>>> +static int qcom_pcie_get_resources_1_27_0(struct qcom_pcie *pcie)
->>>> +{
->>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
->>>> +    struct dw_pcie *pci = pcie->pci;
->>>> +    struct device *dev = pci->dev;
->>>> +
->>>> +    res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
->>>> +    if (res->clks < 0)
->>>> +        return res->num_clks;
->>>> +
->>>> +    res->rst = devm_reset_control_array_get_exclusive(dev);
->>>> +    if (IS_ERR(res->rst))
->>>> +        return PTR_ERR(res->rst);
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>> +static void qcom_pcie_deinit_1_27_0(struct qcom_pcie *pcie)
->>>> +{
->>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
->>>> +
->>>> +    clk_bulk_disable_unprepare(res->num_clks, res->clks);
->>>> +}
->>>> +
->>>> +static int qcom_pcie_init_1_27_0(struct qcom_pcie *pcie)
->>>> +{
->>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
->>>> +    struct device *dev = pcie->pci->dev;
->>>> +    int ret;
->>>> +
->>>> +    ret = reset_control_assert(res->rst);
->>>> +    if (ret) {
->>>> +        dev_err(dev, "reset assert failed (%d)\n", ret);
->>>> +        return ret;
->>>> +    }
->>>> +
->>>> +    /*
->>>> +     * Delay periods before and after reset deassert are working 
->>>> values
->>>> +     * from downstream Codeaurora kernel
->>>> +     */
->>>> +    usleep_range(2000, 2500);
->>>> +
->>>> +    ret = reset_control_deassert(res->rst);
->>>> +    if (ret) {
->>>> +        dev_err(dev, "reset deassert failed (%d)\n", ret);
->>>> +        return ret;
->>>> +    }
->>>> +
->>>> +    usleep_range(2000, 2500);
->>>> +
->>>> +    return clk_bulk_prepare_enable(res->num_clks, res->clks);
->>>> +}
->>>> +
->>>> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
->>>> +{
->>>> +    struct dw_pcie *pci = pcie->pci;
->>>> +    u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>>> +    u32 val;
->>>> +    int i;
->>>> +
->>>> +    writel(0x8000000, pcie->parf + 
->>>> PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
-> 
-> 
-> Devi,
-> 
-> 
-> Above statement also differs. You need to consider this also when you 
-> use the 2_9_0 ops.
-> 
-Sure, thanks kathir. Will take care of this as well
-> 
-Best Regards,
-Devi Priya
+This patch appears to cause a regression on Macchiatobin, delaying the
+boot by about ten seconds due to all the warnings the kernel now
+produces.
 
-> Thanks,
-> 
-> 
->>>> +
->>>> +    val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
->>>> +    val &= ~BIT(0);
->>>> +    writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
->>>> +
->>>> +    writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
->>>> +
->>>> +    writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
->>>> +    writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
->>>> +           pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
->>>> +    writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS |
->>>> +           GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
->>>> +           pci->dbi_base + GEN3_RELATED_OFF);
->>>> +
->>>> +    writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS |
->>>> +           SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
->>>> +           AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
->>>> +           pcie->parf + PCIE20_PARF_SYS_CTRL);
->>>> +
->>>> +    writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
->>>> +
->>>> +    dw_pcie_dbi_ro_wr_en(pci);
->>>> +    writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + 
->>>> PCI_EXP_SLTCAP);
->>>> +
->>>> +    val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
->>>> +    val &= ~PCI_EXP_LNKCAP_ASPMS;
->>>> +    writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
->>>> +
->>>> +    writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
->>>> +           PCI_EXP_DEVCTL2);
->>>> +
->>>> +    for (i = 0; i < 256; i++)
->>>> +        writel(0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + (4 
->>>> * i));
->>>> +
->>>> +    return 0;
->>>> +}
->>>> +
->>>>   static int qcom_pcie_link_up(struct dw_pcie *pci)
->>>>   {
->>>>       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->>>> @@ -1620,6 +1725,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
->>>>       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
->>>>   };
->>>> +/* Qcom IP rev.: 1.27.0 Synopsys IP rev.: 5.80a */
->>>> +static const struct qcom_pcie_ops ops_1_27_0 = {
->>>> +    .get_resources = qcom_pcie_get_resources_1_27_0,
->>>> +    .init = qcom_pcie_init_1_27_0,
->>>> +    .post_init = qcom_pcie_post_init_1_27_0,
->>>> +    .deinit = qcom_pcie_deinit_1_27_0,
->>>> +    .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
->>>> +};
->>>> +
->>>>   static const struct qcom_pcie_cfg cfg_1_0_0 = {
->>>>       .ops = &ops_1_0_0,
->>>>   };
->>>> @@ -1652,6 +1766,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
->>>>       .ops = &ops_2_9_0,
->>>>   };
->>>> +static const struct qcom_pcie_cfg cfg_1_27_0 = {
->>>> +    .ops = &ops_1_27_0,
->>>> +};
->>>> +
->>>>   static const struct dw_pcie_ops dw_pcie_ops = {
->>>>       .link_up = qcom_pcie_link_up,
->>>>       .start_link = qcom_pcie_start_link,
->>>> @@ -1829,6 +1947,7 @@ static const struct of_device_id 
->>>> qcom_pcie_match[] = {
->>>>       { .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
->>>>       { .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
->>>>       { .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
->>>> +    { .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
->>>
->>>    I do not see much difference between 2_9_0 and 1_27_0. Is this patch
->>>    really required. Can you check if it works with 2_9_0 itself ?
->> Yes right Sri, Only the clocks seem to differ between 2_9_0 and 1_27_0.
->> Will update 2_9_0 ops to get the clocks from the DT and use the same 
->> for ipq9574 in the next spin.
->>
->> Best Regards,
->> Devi Priya
->>>
->>> Regards,
->>>   Sricharan
+> @@ -136,11 +149,16 @@ static bool msi_desc_match(struct msi_de
+>  
+>  static bool msi_ctrl_valid(struct device *dev, struct msi_ctrl *ctrl)
+>  {
+> +	unsigned int hwsize;
+> +
+>  	if (WARN_ON_ONCE(ctrl->domid >= MSI_MAX_DEVICE_IRQDOMAINS ||
+> -			 !dev->msi.data->__domains[ctrl->domid].domain ||
+> -			 ctrl->first > ctrl->last ||
+> -			 ctrl->first > MSI_MAX_INDEX ||
+> -			 ctrl->last > MSI_MAX_INDEX))
+> +			 !dev->msi.data->__domains[ctrl->domid].domain))
+> +		return false;
+> +
+> +	hwsize = msi_domain_get_hwsize(dev, ctrl->domid);
+
+This calls msi_get_device_domain() without taking dev->msi.data->mutex,
+resulting in the lockdep_assert_held() firing for what seems to be every
+MSI created by the Armada 8040 ICU driver, which suggests something isn't
+taking the lock as you expect. Please can you take a look and propose a
+patch to fix this regression.
+
+Thanks.
+
+[    0.960451] WARNING: CPU: 2 PID: 1 at kernel/irq/msi.c:588 msi_get_device_domain+0x70/0xa0
+[    0.967454] Modules linked in:
+[    0.969216] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 6.2.0+ #1134
+[    0.974116] Hardware name: Marvell 8040 MACCHIATOBin Single-shot (DT)
+[    0.979276] pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[    0.984961] pc : msi_get_device_domain+0x70/0xa0
+[    0.988292] lr : msi_get_device_domain+0x6c/0xa0
+[    0.991623] sp : ffffffc080083460
+[    0.993643] x29: ffffffc080083460 x28: 0000000000000000 x27: ffffffc041dcb6c8
+[    0.999506] x26: ffffff8101f23810 x25: ffffffc080083668 x24: ffffff8101f23080
+[    1.005370] x23: 0000000000000012 x22: ffffff81003d1000 x21: ffffff81025dfd90
+[    1.011234] x20: ffffff8101f23810 x19: 0000000000000000 x18: 00000000fffffffd
+[    1.017097] x17: 00000000cc510454 x16: 0000000000000051 x15: 0000000000000002
+[    1.022960] x14: 00000000000389cb x13: 0000000000000001 x12: 0000000000000040
+[    1.028822] x11: ffffff8100400490 x10: ffffff8100400492 x9 : 0000000000000000
+[    1.034685] x8 : 0000000000000000 x7 : ffffff81001c8858 x6 : ffffffc0402ad718
+[    1.040547] x5 : 00000000ffffffff x4 : ffffff81003d4c80 x3 : 0000000000000000
+[    1.046410] x2 : ffffffc0fed09000 x1 : 0000000000000000 x0 : 0000000000000000
+[    1.052274] Call trace:
+[    1.053422]  msi_get_device_domain+0x70/0xa0
+[    1.056404]  msi_ctrl_valid+0x5c/0x94
+[    1.058775]  msi_domain_populate_irqs+0x64/0x1b0
+[    1.062106]  platform_msi_device_domain_alloc+0x20/0x30
+[    1.066048]  mvebu_icu_irq_domain_alloc+0xa0/0x1a0
+[    1.069555]  __irq_domain_alloc_irqs+0xf8/0x46c
+[    1.072799]  irq_create_fwspec_mapping+0x224/0x320
+[    1.076303]  irq_create_of_mapping+0x68/0x90
+[    1.079284]  of_irq_get+0x88/0xd0
+[    1.081308]  platform_get_irq_optional+0x20/0x114
+[    1.084725]  platform_get_irq+0x18/0x50
+[    1.087269]  dw8250_probe+0x60/0x6e0
+[    1.089552]  platform_probe+0x64/0xd0
+[    1.091923]  really_probe+0xb8/0x2d4
+[    1.094207]  __driver_probe_device+0x74/0xdc
+[    1.097190]  driver_probe_device+0xd0/0x160
+[    1.100085]  __driver_attach+0x94/0x1a0
+[    1.102631]  bus_for_each_dev+0x6c/0xc0
+[    1.105176]  driver_attach+0x20/0x30
+[    1.107460]  bus_add_driver+0x148/0x200
+[    1.110006]  driver_register+0x74/0x120
+[    1.112550]  __platform_driver_register+0x24/0x30
+[    1.115966]  dw8250_platform_driver_init+0x18/0x20
+[    1.119473]  do_one_initcall+0x70/0x370
+[    1.122018]  kernel_init_freeable+0x1d0/0x238
+[    1.125087]  kernel_init+0x20/0x120
+[    1.127283]  ret_from_fork+0x10/0x20
+[    1.129567] ---[ end trace 0000000000000000 ]---
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
