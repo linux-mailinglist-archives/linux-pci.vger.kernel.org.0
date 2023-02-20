@@ -2,223 +2,299 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AE15469CF0A
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Feb 2023 15:10:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F84F69CFBA
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Feb 2023 15:52:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231793AbjBTOKK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Feb 2023 09:10:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35280 "EHLO
+        id S232027AbjBTOwa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Feb 2023 09:52:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjBTOKI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 09:10:08 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2054.outbound.protection.outlook.com [40.107.94.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 648321E9EF;
-        Mon, 20 Feb 2023 06:09:28 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NvTGhxEKEXv6vwfIBdc5C7FQIeN2TXqpXrmzn8lbb7goyFQ5zIgyRPIgHG5P3Bb839lFu6lf+Drz2qdU1Ry+2YzyxY144qC3FwgWu7Bgfp9kxLXN1LvqxeAVIzA8uB+5TBcw9TSlg5Ycpl+Mp+IQ/jsKTuW/Ymp0Ni2xYh0RvYEgJDctXX1YKdgaTw9l6WHmDJGU/c54lM4+WFrBJpwYvD+Z0UGSVRvONEZTt3NVLDV0vnf9yrM69oMPhsZuPVo25bHLcaXJOYLU+t3KfW9O4mwKAXNnncGg/u1NdYy5a6p9Q6f5lKwfGdYLgNQQoDAUIShHHVBPLOqqFFXBPo6XmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zl/Zq3udnXoPPmPhp/uzEpbABsNB15gy+KqjcHFYdzA=;
- b=EWm9U1o79tyWz/YgutfkwXCnYZ0x6ZNQ5cD66UcRBaYQG4bRpciwwo9xKYEocUu21PUuISrOK99ykVXJi8CYCrVvwUiVjoIy6nTsPUZcfh+yIDKAY2OXou6+UKvcVsgTMbiUo+ZJRHrsAJmmeUnjz9b6AhzXSuj7yncphqB4JYulPCI9/YcGbzK/hja3MgSjzI+OQ65VkK4CiY0Sd/Ea6VzHVGgfdSqLewy9Kc+eMn8wmNlCNX9VsXwSgvZDshuTKv4OhjMJEPGlyE8PfKUH7GEDxN0tKYABIHh0p39XS6hq+Qb0AdECEbva7okp8r28dCxNbeXQSqCZo5tb54ABNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zl/Zq3udnXoPPmPhp/uzEpbABsNB15gy+KqjcHFYdzA=;
- b=TxGnZjBmyrsY1wtwmOyTGNoWYYolKTDzWzQZD/JwFRDDIxmRZC/6+fAq0u4Wd1dSENdLhGE89SOKZvZ3KdE6gK843WqLunNa1k8nrdTYE+fRjF+KobTN2zuCYiXjyNSfcffNE1YqzVbTvurJMzkZKZyb/BfM5OU4R1PCb70CcNKvxftspfJRRDOemxxcw1st6AvFzQEHZvhoMxU4yjVKQgx2rXGeNAjT/xhvS1fC+W6GEE0+RWMC6Iw3zEK3n2RLRfJw9Tj3fjNkoxfRnv8evMZ3TLrP4Frg1m0KZSWRj2U4rdJUtVOQr4ufP5emLDQtNyXF07MA38ONn50yPHjNaQ==
-Received: from MN2PR03CA0003.namprd03.prod.outlook.com (2603:10b6:208:23a::8)
- by CH0PR12MB5252.namprd12.prod.outlook.com (2603:10b6:610:d3::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.20; Mon, 20 Feb
- 2023 14:08:58 +0000
-Received: from BL02EPF0000C404.namprd05.prod.outlook.com
- (2603:10b6:208:23a:cafe::48) by MN2PR03CA0003.outlook.office365.com
- (2603:10b6:208:23a::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6111.20 via Frontend
- Transport; Mon, 20 Feb 2023 14:08:58 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BL02EPF0000C404.mail.protection.outlook.com (10.167.241.6) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6134.14 via Frontend Transport; Mon, 20 Feb 2023 14:08:57 +0000
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 20 Feb
- 2023 06:08:44 -0800
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail204.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 20 Feb
- 2023 06:08:43 -0800
-Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server id 15.2.986.36 via Frontend
- Transport; Mon, 20 Feb 2023 06:08:38 -0800
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v2 9/9] PCI: tegra194: add interconnect support in Tegra234
-Date:   Mon, 20 Feb 2023 19:35:59 +0530
-Message-ID: <20230220140559.28289-10-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230220140559.28289-1-sumitg@nvidia.com>
-References: <20230220140559.28289-1-sumitg@nvidia.com>
-X-NVConfidentiality: public
+        with ESMTP id S229671AbjBTOwa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 09:52:30 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FD521C5A4;
+        Mon, 20 Feb 2023 06:52:28 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31KDVO6m028002;
+        Mon, 20 Feb 2023 14:52:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=GxL44HibsOb/aqsssO8yBpFiepI9D0VQUTJB74dPhmA=;
+ b=clwle24F9z5zbcXfRhZdWDmEHAmwvCYZmZu57WAU+KcEY8YYFvVZ18xQB+OyxiZlb85/
+ bXMFRhJ3eyjXiCxn0bgcOTFrACBuNVgcwAPSC7qbuJAEK0UENQmxRJveVEtb40mjj9EQ
+ WdbnetxGGIdh6j/f3/+1zdufwW/7ZmNV/jCKh4J91QXxjH+HfB2KvQAR48M10f11bYSu
+ 7a2Ma1XRQKLW8xHpe9/DTxgjLIowPJXblvqV6nUeyohw3nhV4rcEcAs5gq/mxY7fP0YS
+ /4AH8cU7ug/FZ8ojM7DrT0aNCwSGHIWUZbjNLDbIdtqJwEGLY0tX4zMUNZbILLrH64kf uA== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ntm1vdncx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Feb 2023 14:52:08 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31KEq617023258
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 20 Feb 2023 14:52:06 GMT
+Received: from [10.50.13.218] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 20 Feb
+ 2023 06:51:56 -0800
+Message-ID: <184a38a0-f2de-dd63-a8af-f4784c61365a@quicinc.com>
+Date:   Mon, 20 Feb 2023 20:21:53 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0000C404:EE_|CH0PR12MB5252:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1aa3a2a0-6350-4c8f-557c-08db134c0268
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: IxAmTWWS0zyN63XqIqEJM5rtubWOPO/c2Yr6ONvnoNkfcBTOYHy2CeIw0HgK+MB2wAN3kFr8YcmXA86Hj1NklYBAxSnz+N2w/UsKXZ57LaDcxjs+Wdwy0Duse159fxOC2SSysBU79dJf8zwcgYagblQXLdo+2+6aKjOrtxj8xAm8JLQPEfNKkOdAKqXhz4N/0u1Lj5S+vciSetXYyFPnzBvE2qAfgg5sGxKiv+5+zZl0hW64qcJVT6kAz/0NIjzaal34bIODO4Uwfa5+xilzzOECGGwWKjgwM8GZzxXrvltvoYr7Cg/Z6h0uimH6uRru9BozK8Y8Bcs5trl1x05bGmSJZfUmWxVDnlB8H4cKEHtXsH60HScdUrpH0rnJiTQBWczSCWMclH8gfXdzbNEm0hki59e1xISzp42VnXNk+8R0KZlyvU082lrzgV9JL/2gOaYzLz3CqxC4GOgrsqSeuZtb/FkbfmwrF1OnK329FXC6/5ghkW/hpv6BOCleB/LwW+IY450gIad0Z+mpx25FAD5AMkXw+9C7o1JDixdDyCsj/pHvrYkfaikBYna/dkSEXN7ofZa0L7+AHWwPHgNuypBLkxuBp1xA5DhMBoRDMcvuKDrnC8kd4UdXgt1b5G6LKnwV0c/UusOHDziWgN1dEzhm0VK3C/BSaX7URmr2PzY8n0r4dzXPFyxqf/xt1M6eQjnfDX6hhYovlamjQ7iz8Q==
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(39860400002)(376002)(346002)(396003)(136003)(451199018)(46966006)(36840700001)(40470700004)(40480700001)(40460700003)(7696005)(8936002)(83380400001)(5660300002)(7416002)(47076005)(41300700001)(426003)(86362001)(6666004)(186003)(26005)(54906003)(1076003)(107886003)(70206006)(2906002)(4326008)(8676002)(70586007)(336012)(316002)(2616005)(478600001)(110136005)(356005)(36860700001)(36756003)(82310400005)(7636003)(82740400003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2023 14:08:57.9860
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa3a2a0-6350-4c8f-557c-08db134c0268
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0000C404.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5252
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.0
+Subject: Re: [PATCH 2/7] PCI: qcom: Add IPQ9574 PCIe support
+Content-Language: en-US
+To:     Devi Priya <quic_devipriy@quicinc.com>,
+        Sricharan Ramabadhran <quic_srichara@quicinc.com>,
+        <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <vkoul@kernel.org>,
+        <kishon@kernel.org>, <mturquette@baylibre.com>, <sboyd@kernel.org>,
+        <mani@kernel.org>, <p.zabel@pengutronix.de>,
+        <svarbanov@mm-sol.com>, <linux-arm-msm@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-clk@vger.kernel.org>
+CC:     <quic_gokulsri@quicinc.com>, <quic_sjaganat@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>
+References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
+ <20230214164135.17039-3-quic_devipriy@quicinc.com>
+ <6ea43d8d-7b9c-5a11-097f-906e10ac3627@quicinc.com>
+ <c766648f-c3a5-b842-2164-c3f480dee129@quicinc.com>
+From:   Kathiravan T <quic_kathirav@quicinc.com>
+In-Reply-To: <c766648f-c3a5-b842-2164-c3f480dee129@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dPgA47UCWpdMvfRaaHia2A8PgwjyOqZg
+X-Proofpoint-GUID: dPgA47UCWpdMvfRaaHia2A8PgwjyOqZg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-20_12,2023-02-20_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
+ bulkscore=0 malwarescore=0 mlxscore=0 lowpriorityscore=0 mlxlogscore=999
+ suspectscore=0 adultscore=0 impostorscore=0 priorityscore=1501 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302200136
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add support to request DRAM bandwidth with Memory Interconnect
-in Tegra234 SoC. The DRAM BW required for different modes depends
-on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
 
-Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- drivers/pci/controller/dwc/pcie-tegra194.c | 40 +++++++++++++++++-----
- 1 file changed, 32 insertions(+), 8 deletions(-)
+On 2/20/2023 7:11 PM, Devi Priya wrote:
+> Hi Sri,
+> Thanks for taking time to review the patch!
+>
+> On 2/16/2023 5:08 PM, Sricharan Ramabadhran wrote:
+>> Hi Devi,
+>>
+>> On 2/14/2023 10:11 PM, Devi Priya wrote:
+>>> Adding PCIe support for IPQ9574 SoC
+>>>
+>>> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
+>>> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
+>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-qcom.c | 119 
+>>> +++++++++++++++++++++++++
+>>>   1 file changed, 119 insertions(+)
+>>>
+>>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c 
+>>> b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> index a232b04af048..57606c113d45 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>>> @@ -193,6 +193,12 @@ struct qcom_pcie_resources_2_9_0 {
+>>>       struct reset_control *rst;
+>>>   };
+>>> +struct qcom_pcie_resources_1_27_0 {
+>>> +    struct clk_bulk_data *clks;
+>>> +    struct reset_control *rst;
+>>> +    int num_clks;
+>>> +};
+>>> +
+>>>   union qcom_pcie_resources {
+>>>       struct qcom_pcie_resources_1_0_0 v1_0_0;
+>>>       struct qcom_pcie_resources_2_1_0 v2_1_0;
+>>> @@ -201,6 +207,7 @@ union qcom_pcie_resources {
+>>>       struct qcom_pcie_resources_2_4_0 v2_4_0;
+>>>       struct qcom_pcie_resources_2_7_0 v2_7_0;
+>>>       struct qcom_pcie_resources_2_9_0 v2_9_0;
+>>> +    struct qcom_pcie_resources_1_27_0 v1_27_0;
+>>>   };
+>>>   struct qcom_pcie;
+>>> @@ -1409,6 +1416,104 @@ static int qcom_pcie_post_init_2_9_0(struct 
+>>> qcom_pcie *pcie)
+>>>       return 0;
+>>>   }
+>>> +static int qcom_pcie_get_resources_1_27_0(struct qcom_pcie *pcie)
+>>> +{
+>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
+>>> +    struct dw_pcie *pci = pcie->pci;
+>>> +    struct device *dev = pci->dev;
+>>> +
+>>> +    res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
+>>> +    if (res->clks < 0)
+>>> +        return res->num_clks;
+>>> +
+>>> +    res->rst = devm_reset_control_array_get_exclusive(dev);
+>>> +    if (IS_ERR(res->rst))
+>>> +        return PTR_ERR(res->rst);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static void qcom_pcie_deinit_1_27_0(struct qcom_pcie *pcie)
+>>> +{
+>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
+>>> +
+>>> +    clk_bulk_disable_unprepare(res->num_clks, res->clks);
+>>> +}
+>>> +
+>>> +static int qcom_pcie_init_1_27_0(struct qcom_pcie *pcie)
+>>> +{
+>>> +    struct qcom_pcie_resources_1_27_0 *res = &pcie->res.v1_27_0;
+>>> +    struct device *dev = pcie->pci->dev;
+>>> +    int ret;
+>>> +
+>>> +    ret = reset_control_assert(res->rst);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "reset assert failed (%d)\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    /*
+>>> +     * Delay periods before and after reset deassert are working 
+>>> values
+>>> +     * from downstream Codeaurora kernel
+>>> +     */
+>>> +    usleep_range(2000, 2500);
+>>> +
+>>> +    ret = reset_control_deassert(res->rst);
+>>> +    if (ret) {
+>>> +        dev_err(dev, "reset deassert failed (%d)\n", ret);
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    usleep_range(2000, 2500);
+>>> +
+>>> +    return clk_bulk_prepare_enable(res->num_clks, res->clks);
+>>> +}
+>>> +
+>>> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
+>>> +{
+>>> +    struct dw_pcie *pci = pcie->pci;
+>>> +    u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>> +    u32 val;
+>>> +    int i;
+>>> +
+>>> +    writel(0x8000000, pcie->parf + 
+>>> PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
 
-diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-index 09825b4a075e..d2513c9d3feb 100644
---- a/drivers/pci/controller/dwc/pcie-tegra194.c
-+++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-@@ -15,6 +15,7 @@
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
-+#include <linux/interconnect.h>
- #include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -287,6 +288,7 @@ struct tegra_pcie_dw {
- 	unsigned int pex_rst_irq;
- 	int ep_state;
- 	long link_status;
-+	struct icc_path *icc_path;
- };
- 
- static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
-@@ -309,6 +311,24 @@ struct tegra_pcie_soc {
- 	enum dw_pcie_device_mode mode;
- };
- 
-+static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
-+{
-+	struct dw_pcie *pci = &pcie->pci;
-+	u32 val, speed, width;
-+
-+	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-+
-+	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
-+	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
-+
-+	val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
-+
-+	if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
-+		dev_err(pcie->dev, "can't set bw[%u]\n", val);
-+
-+	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-+}
-+
- static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
- {
- 	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-@@ -452,14 +472,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
- 	struct tegra_pcie_dw *pcie = arg;
- 	struct dw_pcie_ep *ep = &pcie->pci.ep;
- 	struct dw_pcie *pci = &pcie->pci;
--	u32 val, speed;
-+	u32 val;
- 
- 	if (test_and_clear_bit(0, &pcie->link_status))
- 		dw_pcie_ep_linkup(ep);
- 
--	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
--		PCI_EXP_LNKSTA_CLS;
--	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-+	tegra_pcie_icc_set(pcie);
- 
- 	if (pcie->of_data->has_ltr_req_fix)
- 		return IRQ_HANDLED;
-@@ -945,9 +963,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
- 
- static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
- {
--	u32 val, offset, speed, tmp;
- 	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
- 	struct dw_pcie_rp *pp = &pci->pp;
-+	u32 val, offset, tmp;
- 	bool retry = true;
- 
- 	if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
-@@ -1018,9 +1036,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
- 		goto retry_link;
- 	}
- 
--	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
--		PCI_EXP_LNKSTA_CLS;
--	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-+	tegra_pcie_icc_set(pcie);
- 
- 	tegra_pcie_enable_interrupts(pp);
- 
-@@ -2224,6 +2240,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, pcie);
- 
-+	pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
-+	ret = PTR_ERR_OR_ZERO(pcie->icc_path);
-+	if (ret) {
-+		tegra_bpmp_put(pcie->bpmp);
-+		dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
-+		return ret;
-+	}
-+
- 	switch (pcie->of_data->mode) {
- 	case DW_PCIE_RC_TYPE:
- 		ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
--- 
-2.17.1
 
+Devi,
+
+
+Above statement also differs. You need to consider this also when you 
+use the 2_9_0 ops.
+
+
+Thanks,
+
+
+>>> +
+>>> +    val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+>>> +    val &= ~BIT(0);
+>>> +    writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+>>> +
+>>> +    writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+>>> +
+>>> +    writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+>>> +    writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+>>> +           pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+>>> +    writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS |
+>>> +           GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
+>>> +           pci->dbi_base + GEN3_RELATED_OFF);
+>>> +
+>>> +    writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS |
+>>> +           SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+>>> +           AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+>>> +           pcie->parf + PCIE20_PARF_SYS_CTRL);
+>>> +
+>>> +    writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
+>>> +
+>>> +    dw_pcie_dbi_ro_wr_en(pci);
+>>> +    writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + 
+>>> PCI_EXP_SLTCAP);
+>>> +
+>>> +    val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+>>> +    val &= ~PCI_EXP_LNKCAP_ASPMS;
+>>> +    writel(val, pci->dbi_base + offset + PCI_EXP_LNKCAP);
+>>> +
+>>> +    writel(PCI_EXP_DEVCTL2_COMP_TMOUT_DIS, pci->dbi_base + offset +
+>>> +           PCI_EXP_DEVCTL2);
+>>> +
+>>> +    for (i = 0; i < 256; i++)
+>>> +        writel(0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + (4 
+>>> * i));
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>>   static int qcom_pcie_link_up(struct dw_pcie *pci)
+>>>   {
+>>>       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+>>> @@ -1620,6 +1725,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
+>>>       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>>>   };
+>>> +/* Qcom IP rev.: 1.27.0 Synopsys IP rev.: 5.80a */
+>>> +static const struct qcom_pcie_ops ops_1_27_0 = {
+>>> +    .get_resources = qcom_pcie_get_resources_1_27_0,
+>>> +    .init = qcom_pcie_init_1_27_0,
+>>> +    .post_init = qcom_pcie_post_init_1_27_0,
+>>> +    .deinit = qcom_pcie_deinit_1_27_0,
+>>> +    .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
+>>> +};
+>>> +
+>>>   static const struct qcom_pcie_cfg cfg_1_0_0 = {
+>>>       .ops = &ops_1_0_0,
+>>>   };
+>>> @@ -1652,6 +1766,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
+>>>       .ops = &ops_2_9_0,
+>>>   };
+>>> +static const struct qcom_pcie_cfg cfg_1_27_0 = {
+>>> +    .ops = &ops_1_27_0,
+>>> +};
+>>> +
+>>>   static const struct dw_pcie_ops dw_pcie_ops = {
+>>>       .link_up = qcom_pcie_link_up,
+>>>       .start_link = qcom_pcie_start_link,
+>>> @@ -1829,6 +1947,7 @@ static const struct of_device_id 
+>>> qcom_pcie_match[] = {
+>>>       { .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
+>>>       { .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
+>>>       { .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
+>>> +    { .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
+>>
+>>    I do not see much difference between 2_9_0 and 1_27_0. Is this patch
+>>    really required. Can you check if it works with 2_9_0 itself ?
+> Yes right Sri, Only the clocks seem to differ between 2_9_0 and 1_27_0.
+> Will update 2_9_0 ops to get the clocks from the DT and use the same 
+> for ipq9574 in the next spin.
+>
+> Best Regards,
+> Devi Priya
+>>
+>> Regards,
+>>   Sricharan
