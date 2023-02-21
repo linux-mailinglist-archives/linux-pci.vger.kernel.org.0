@@ -2,152 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EBD69DE7B
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Feb 2023 12:09:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB53969E135
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Feb 2023 14:19:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234016AbjBULJP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Feb 2023 06:09:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
+        id S233423AbjBUNTl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Feb 2023 08:19:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233042AbjBULJK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Feb 2023 06:09:10 -0500
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 141BF234F2;
-        Tue, 21 Feb 2023 03:09:09 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id p26so2941872wmc.4;
-        Tue, 21 Feb 2023 03:09:08 -0800 (PST)
+        with ESMTP id S233430AbjBUNTk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Feb 2023 08:19:40 -0500
+Received: from mail-oi1-x231.google.com (mail-oi1-x231.google.com [IPv6:2607:f8b0:4864:20::231])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 115284690;
+        Tue, 21 Feb 2023 05:19:39 -0800 (PST)
+Received: by mail-oi1-x231.google.com with SMTP id t22so4351926oiw.12;
+        Tue, 21 Feb 2023 05:19:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=iThIJGodelQYw+cBMMU26iDdz39i/5SCqo2oCBZ5ynM=;
-        b=Farv/5km9wLXWnKi4MPy+TnsNvwdZej7gY+uIy3+ZSG0220g1pFf4qjsXqSMNgpagb
-         693ppglWV08C0tlDP9oFFdN/IjewDPieco4hCH5cSN5Yi7ZWNgAZH52WE1Yn2ik/7aGy
-         kg8baLXO5G6DTwGxohEIZGcAmc+tYQHGxWOcCzWVf9TtKLv+qts0e9S3NFylgo2zpMjb
-         ZXrVbgw95kd8glTIbByTV2d/w6x8VFRlh4QK8/c/wqbnrlwAR4C3+/9jyEi4IJfLXvR0
-         4hq5EX4sXCtHjz7crBq8IGOoH1SoQv/8y8pmCB349KYGdQ8UL/0c/fSSijBXXLLUqgIO
-         Fkkw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=3iMwe4PtMwH0nNT/jVRzm0LMyDYgd6+g6SaK53AI4ls=;
+        b=oUM+2G/80g+PFG9doQ2H+eCMdzTBZtKUsxidOPjENobZUj8rZtLr4YzuiMEZy/Fa7S
+         l+3QBAIokOo/tLcUARb6xk5Fq2L9j26rhaDjrP1F7XIxA4Q9xq1wYEOroV6BoiZ8i2OV
+         WE2z8J7DO3LMNVBAVkwS1vSi9iUv6wKyJ/OkUiK/zFhJQTqxfcJCykGFdF32aWdVQWxO
+         GzPy/VSVdAkDG3xo1Bro58FExnLEHPXdMi0/iUFuZWcnhFQP+Gi2D8VaLB941CkXRexp
+         KoG+VmKJxAjm+wsEqZjvHwbxt128nUC15A0ITh3fqhDgM5qYhXdOVyPbSx/lEsrUtpgR
+         kQAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iThIJGodelQYw+cBMMU26iDdz39i/5SCqo2oCBZ5ynM=;
-        b=3kfCwAtcJXE5hAOquNxCyDAYW9QyYYXPkSdwUU0B11+3tYorFj/E9gpFVWy7VEZ1Ca
-         gAs4nJ27bkZmxLHEzQIe45VZXNaDHOw/BPwuKh2sucpNvkhhEFQPgU5peJXcklr0begl
-         EmfCVdQwf9Vv5E+4iKOp/d03DldYI6aRyG2tWSp9tOQ7Gq4uzP0yPEjVrWPK2dTl61nH
-         77rQh177Pm1aH9ChvMJrIeIW41EWdvma1XkNsjH8Nh2/XVncG+w3QEqDeZJjOQBiNw1F
-         kdRAC6FiwyLRk3mZ2qNYDDsjA3+8sr/Ob92YLieiwEg70KfDltD5kSwNXS2XILnGnieg
-         1cHg==
-X-Gm-Message-State: AO0yUKULqMEVN1NdKvI3i7DbqrATcj69771/QpWbuNE780t4Nx1pZ4me
-        Dk465+9gIur60UDxnvISvQU=
-X-Google-Smtp-Source: AK7set+YeeGH9/Ccy4GOTtLCCd2PrCtSR0scMmbrtOZp78/SlpZN+1pX/O6x60gSGs/reDF/jRyKEg==
-X-Received: by 2002:a05:600c:a296:b0:3dc:5b79:2dbb with SMTP id hu22-20020a05600ca29600b003dc5b792dbbmr3405391wmb.25.1676977747327;
-        Tue, 21 Feb 2023 03:09:07 -0800 (PST)
-Received: from ?IPV6:2a01:c22:6e4d:5f00:c8b7:365d:f8a9:9c38? (dynamic-2a01-0c22-6e4d-5f00-c8b7-365d-f8a9-9c38.c22.pool.telefonica.de. [2a01:c22:6e4d:5f00:c8b7:365d:f8a9:9c38])
-        by smtp.googlemail.com with ESMTPSA id l37-20020a05600c1d2500b003db0ad636d1sm15900976wms.28.2023.02.21.03.09.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Feb 2023 03:09:06 -0800 (PST)
-Message-ID: <b2bae4bb-0dbe-be80-3849-f46395c05cd2@gmail.com>
-Date:   Tue, 21 Feb 2023 12:08:54 +0100
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3iMwe4PtMwH0nNT/jVRzm0LMyDYgd6+g6SaK53AI4ls=;
+        b=eME1y7Auv+TVMVd/KU671OBAvB8zWVTIvdW1BqSIoWbxhVcH6kiiGE0SEZgXZrFcpJ
+         PeOKVvMOHGaOj569TLd+QCwvFyLcpmIO/8Gcgx5joT7MzT9IwJmb1x7SgCBThnxSO1uW
+         X5Fb1sPbTuNz2E832CzBrjRL5pDftiu8mrmK0FpZrdAtN46HGbUTU1ayZpzbDWfP9wH3
+         VcSCMD65s77UU0T+xqRe4qZ1qEv33cAeckqDWKWW4nuXY5JIWRYfuY73lzpaT/7NY3Wc
+         97O69laDlCJYi3EsIZ7Gj0wbU+dvgZ3X5gLKqygm7awD3zNhJSiceuqLOWRR+UJDsfLV
+         olmQ==
+X-Gm-Message-State: AO0yUKWLZ8vOnPAmcUPU5EPt6H5aDI5n7oJHclVnRWwcSanalK0p69g2
+        rLDk45o0peyB3hdnGLpoky22m7ykHJTuU//gGQg=
+X-Google-Smtp-Source: AK7set8LP8CGoQD5zRZ3BNEveYYECJPdFB73CrdzuWQp87GptR8TVi6WAjM1n/DjaPb4CxU1SiKpfiQHdbWSf1bCbUc=
+X-Received: by 2002:a05:6808:1211:b0:383:b2c0:4e24 with SMTP id
+ a17-20020a056808121100b00383b2c04e24mr210340oil.110.1676985578247; Tue, 21
+ Feb 2023 05:19:38 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v8 RESEND 6/6] r8169: Disable ASPM while doing NAPI poll
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, nic_swsd@realtek.com,
-        bhelgaas@google.com
-Cc:     koba.ko@canonical.com, acelan.kao@canonical.com,
-        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
-        pabeni@redhat.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        vidyas@nvidia.com, rafael.j.wysocki@intel.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
+ <20230214140858.1133292-10-rick.wertenbroek@gmail.com> <ebbddcfa-99e5-efda-0eab-fbd61a33e2c3@opensource.wdc.com>
+ <CAAEEuhpDTmAvBZhC9RCueOvqbLb=AttV1KxJrOUBcjHQrpVXmA@mail.gmail.com> <38ae72c9-0f0b-1a94-d2e0-f4ea80e94705@opensource.wdc.com>
+In-Reply-To: <38ae72c9-0f0b-1a94-d2e0-f4ea80e94705@opensource.wdc.com>
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date:   Tue, 21 Feb 2023 14:19:01 +0100
+Message-ID: <CAAEEuhoQV1A8o_2jb1Qfq5d7dj9HpHL+mkDs8K4vs8v=-81zng@mail.gmail.com>
+Subject: Re: [PATCH v2 9/9] PCI: rockchip: Add parameter check for RK3399 PCIe
+ endpoint core set_msi()
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
+        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
-References: <20230221023849.1906728-1-kai.heng.feng@canonical.com>
- <20230221023849.1906728-7-kai.heng.feng@canonical.com>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-In-Reply-To: <20230221023849.1906728-7-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21.02.2023 03:38, Kai-Heng Feng wrote:
-> NAPI poll of Realtek NICs don't seem to perform well ASPM is enabled.
-> The vendor driver uses a mechanism called "dynamic ASPM" to toggle ASPM
-> based on the packet number in given time period.
-> 
-> Instead of implementing "dynamic ASPM", use a more straightforward way
-> by disabling ASPM during NAPI poll, as a similar approach was
-> implemented to solve slow performance on Realtek wireless NIC, see
-> commit 24f5e38a13b5 ("rtw88: Disable PCIe ASPM while doing NAPI poll on
-> 8821CE").
-> 
-> Since NAPI poll should be handled as fast as possible, also remove the
-> delay in rtl_hw_aspm_clkreq_enable() which was added by commit
-> 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor
-> driver").
-> 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v8:
->  - New patch.
-> 
->  drivers/net/ethernet/realtek/r8169_main.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
-> index 897f90b48bba6..4d4a802346ae3 100644
-> --- a/drivers/net/ethernet/realtek/r8169_main.c
-> +++ b/drivers/net/ethernet/realtek/r8169_main.c
-> @@ -2711,8 +2711,6 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
->  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) & ~ClkReqEn);
->  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) & ~ASPM_en);
->  	}
-> -
-> -	udelay(10);
->  }
->  
->  static void rtl_set_fifo_size(struct rtl8169_private *tp, u16 rx_stat,
-> @@ -4577,6 +4575,12 @@ static int rtl8169_poll(struct napi_struct *napi, int budget)
->  	struct net_device *dev = tp->dev;
->  	int work_done;
->  
-> +	if (tp->aspm_manageable) {
-> +		rtl_unlock_config_regs(tp);
+On Tue, Feb 21, 2023 at 11:55 AM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+>
+> On 2/21/23 19:47, Rick Wertenbroek wrote:
+> > On Wed, Feb 15, 2023 at 2:39 AM Damien Le Moal
+> > <damien.lemoal@opensource.wdc.com> wrote:
+> >>
+> >> On 2/14/23 23:08, Rick Wertenbroek wrote:
+> >>> The RK3399 PCIe endpoint core supports only a single PCIe physcial
+> >>> function (function number 0), therefore return -EINVAL if set_msi() is
+> >>> called with a function number greater than 0.
+> >>> The PCIe standard only allows the multi message capability (MMC) value
+> >>> to be up to 0x5 (32 messages), therefore return -EINVAL if set_msi() is
+> >>> called with a MMC value of over 0x5.
+> >>>
+> >>> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
+> >>> ---
+> >>>  drivers/pci/controller/pcie-rockchip-ep.c | 10 ++++++++++
+> >>>  1 file changed, 10 insertions(+)
+> >>>
+> >>> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> >>> index b7865a94e..80634b690 100644
+> >>> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> >>> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> >>> @@ -294,6 +294,16 @@ static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn,
+> >>>       struct rockchip_pcie *rockchip = &ep->rockchip;
+> >>>       u32 flags;
+> >>>
+> >>> +     if (fn) {
+> >>> +             dev_err(&epc->dev, "This endpoint controller only supports a single physical function\n");
+> >>> +             return -EINVAL;
+> >>> +     }
+> >>
+> >> Checking this here is late... Given that at most only one physical
+> >> function is supported, the check should be in rockchip_pcie_parse_ep_dt().
+> >> Something like:
+> >>
+> >>         err = of_property_read_u8(dev->of_node, "max-functions",
+> >>                                   &ep->epc->max_functions);
+> >>
+> >>         if (err < 0 || ep->epc->max_functions > 1)
+> >>
+> >>                 ep->epc->max_functions = 1;
+> >>
+> >
+> > Yes, this could be moved to the probe, thanks.
+> >
+> >> And all the macros with the (fn) argument could also be simplified
+> >> (argument fn removed) since fn will always be 0.
+> >
+> > These functions cannot be simplified because they have to follow the signature
+> > given by "pci_epc_ops" (include/linux/pci-epc.h). And this signature has the
+> > function number as a parameter. If we change the function signature we won't
+> > be able to assign these functions to the pc_epc_ops structure
+>
+> I was not suggesting to change the functions signature. I was suggesting
+> dropping the fn argument for the *macros*, e.g.
+>
+> ROCKCHIP_PCIE_EP_FUNC_BASE(fn) -> ROCKCHIP_PCIE_EP_FUNC_BASE
+>
+> since fn is always 0.
+>
+> That said, I am not entirely sure if the limit really is 1 function at most. The
+> TRM seems to be suggesting that up to 4 functions can be supported...
+>
+> [...]
+>
+> >> Another nice cleanup: define ROCKCHIP_PCIE_EP_MSI_CTRL_REG to include the
+> >> ROCKCHIP_PCIE_EP_FUNC_BASE(fn) addition so that we do not have to do it
+> >> here all the time.
+> >
+> > Yes, this could be an improvement but this is the way it is written
+> > everywhere in this
+> > driver, I chose to keep it so as to remain coherent with the rest of the driver.
+> > Cleaning this is not so important since this code will not be
+> > rewritten / changed so
+> > often. But I agree that it might be nicer. But, on the other side if
+> > at some point
+> > support for virtual functions would be added, the offsets would need
+> > to be computed
+> > based on the virtual function number and the code would be written
+> > like it is now,
+> > so I suggest keeping this the way it is for now.
+>
+> Yes, sure, this can be cleaned later.
+>
+> A more pressing problem is the lack of support for MSIX despite the fact that
+> the controller supports that *and* advertize it as a capability. That is what
+> was causing my problem with the Linux nvme driver and my prototype nvme epf
+> function driver: the host driver was seeing MSIX support (1 vector supported by
+> default), and so was allocating one MSIX for the device probe. But on the EP
+> end, it is MSI or INTX only... Working on adding that to solve this issue.
+>
 
-NAPI poll runs in softirq context (except for threaded NAPI).
-Therefore you should use a spinlock instead of a mutex.
+I have seen this too, the controller advertises the capability. However, the TRM
+(section 17.5.9) says that MSI-X is not supported (MSI / INTx only as you said).
+So the solution should be to modify the probe function of the endpoint
+controller
+so that the MSI-X capability would not be advertised, this should fix
+your problem.
 
-> +		rtl_hw_aspm_clkreq_enable(tp, false);
-> +		rtl_lock_config_regs(tp);
-> +	}
-> +
->  	rtl_tx(dev, tp, budget);
->  
->  	work_done = rtl_rx(dev, tp, budget);
-> @@ -4584,6 +4588,12 @@ static int rtl8169_poll(struct napi_struct *napi, int budget)
->  	if (work_done < budget && napi_complete_done(napi, work_done))
->  		rtl_irq_enable(tp);
->  
-> +	if (tp->aspm_manageable) {
-> +		rtl_unlock_config_regs(tp);
-> +		rtl_hw_aspm_clkreq_enable(tp, true);
-> +		rtl_lock_config_regs(tp);
+I wonder if one could still implement MSI-X because from the endpoint we would
+just need to implement it as a message (TLP) over PCIe (because the space for
+the vectors is allocated and written, so that part should be ok). I am
+not an expert
+on MSI-X, but the reason the endpoint cannot send them could be because MSI-X
+requires some fields in the PCIe header descriptor to be filled with values that
+cannot be set through the "desc0-3" registers of the RK3399 PCIe endpoint core.
 
-Why not moving lock/unlock into rtl_hw_aspm_clkreq_enable()?
+Anyways, the endpoint should not advertise the MSI-X capabilities when it cannot
+send such interrupts. Once this is fixed you should be able to have your NVMe
+function running.
 
-> +	}
-> +
->  	return work_done;
->  }
->  
+Regards.
+Rick
 
+
+> --
+> Damien Le Moal
+> Western Digital Research
+>
