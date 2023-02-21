@@ -2,97 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 363C869D444
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Feb 2023 20:44:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5C569D87E
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Feb 2023 03:33:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232169AbjBTToA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Feb 2023 14:44:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
+        id S232746AbjBUCds (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Feb 2023 21:33:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231921AbjBTTn7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 14:43:59 -0500
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B322CA10;
-        Mon, 20 Feb 2023 11:43:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-        Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-        bh=9HbrxqQTQpnPyk90Ibmi+L1eYlZ8P8y6XH2D3rbiNws=; b=UfFwuH6iH/M1sgUS3t+DNVm34J
-        hyEwZY+mOKUDtI34qcK4zuS9bReY+5FrBE4PLLAmm814GqdqowfY41TFnRqrrbVUc5RrDT85KHAcM
-        VM+FSvlsXppxYfq8qVwOLeTlxKqSOoKd6Fm20bWRMREnfV8VdMOsU4EVCfy35cme8usA=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1pUC4e-005XE4-Td; Mon, 20 Feb 2023 20:43:44 +0100
-Date:   Mon, 20 Feb 2023 20:43:44 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ashok Raj <ashok.raj@intel.com>, Jon Mason <jdmason@kudzu.us>,
-        Allen Hubbe <allenbh@gmail.com>
-Subject: Re: [REGRESSION] Re: [patch V3 09/33] genirq/msi: Add range checking
- to msi_insert_desc()
-Message-ID: <Y/PNcLACXSN2X/F/@lunn.ch>
-References: <20221124230505.073418677@linutronix.de>
- <20221124232325.798556374@linutronix.de>
- <Y/Opu6ETe3ZzZ/8E@shell.armlinux.org.uk>
- <86fsb0xkaa.wl-maz@kernel.org>
- <Y/PHN+0nETV3o1pQ@shell.armlinux.org.uk>
+        with ESMTP id S232613AbjBUCdp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 21:33:45 -0500
+Received: from smtp-relay-canonical-0.canonical.com (smtp-relay-canonical-0.canonical.com [185.125.188.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4413011EB7;
+        Mon, 20 Feb 2023 18:33:44 -0800 (PST)
+Received: from localhost.localdomain (unknown [10.101.196.174])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-0.canonical.com (Postfix) with ESMTPSA id 69D2E3F2FE;
+        Tue, 21 Feb 2023 02:33:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1676946823;
+        bh=bhjZxuXkm1MHeyPMkpuHBbBuF0eWs3dLUcdK/gbm22M=;
+        h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+         MIME-Version;
+        b=YjQUu37OAp54gmVSlP7VGLKSkWOe4FO1Su0AJpjcMvKoEUtDTZfGE+PQCb0LLfHsr
+         /t0VPD6CAwjGdb933ivrYfBPF1bj/Llyg8Iur8iLkQe+Ey3bTGabKz4Szr0WZ3DmhJ
+         45oCTewlyMBmgV9ZNdQKDFFp8bIT/4iJ7WGOCsLNC8vYoEUZfF7Iq60yS21nTsW+5S
+         R94/Yub7xZy9tIYWZrmMxLG2XD3+rF8Ns30y56cFzlBMMeLVb2ePkwxn32ksg7g17G
+         8H/qQwrm286j3uAQponaqPrTGg95QJcXOSsejGLXG+8FrFfE3ux9MsgBN7V0qJOI9H
+         ArXQefx+bXWZQ==
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     hkallweit1@gmail.com, nic_swsd@realtek.com, bhelgaas@google.com
+Cc:     koba.ko@canonical.com, acelan.kao@canonical.com,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 2/6] Revert "PCI/ASPM: Unexport pcie_aspm_support_enabled()"
+Date:   Tue, 21 Feb 2023 10:32:33 +0800
+Message-Id: <20230221023237.1905536-3-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230221023237.1905536-1-kai.heng.feng@canonical.com>
+References: <20230221023237.1905536-1-kai.heng.feng@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y/PHN+0nETV3o1pQ@shell.armlinux.org.uk>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 20, 2023 at 07:17:11PM +0000, Russell King (Oracle) wrote:
-> On Mon, Feb 20, 2023 at 06:29:33PM +0000, Marc Zyngier wrote:
-> > Lockdep also reports[1] a possible circular locking dependency between
-> > phy_attach_direct() and rtnetlink_rcv_msg(), which looks interesting.
-> > 
-> > [1] https://paste.debian.net/1271454/
-> 
-> Adding Andrew, but really this should be in a separate thread, since
-> this has nothing to do with MSI.
-> 
-> It looks like the open path takes the RTNL lock followed by the phydev
-> lock, whereas the PHY probe path takes the phydev lock, and then if
-> there's a SFP attached to the PHY, we end up taking the RTNL lock.
-> That's going to be utterly horrid to try and solve, and isn't going
-> to be quick to fix.
+This reverts commit ba13d4575da5e656a3cbc18583e0da5c5d865417.
 
-What are we actually trying to protect in phy_probe() when we take the
-lock and call phydev->drv->probe(phydev) ?
+This will be used by module once again.
 
-The main purpose of the lock is to protect members of phydev, such as
-link, speed, duplex, which can be inconsistent when the lock is not
-held. But the PHY is not attached to a MAC yet, so a MAC cannot be
-using it, and those members of phydev are not valid yet anyway.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v8:
+ - New patch.
 
-The lock also prevents parallel operation on the device by phylib, but
-i cannot think of how that could happen at this early stage in the
-life of the PHY.
+ drivers/pci/pcie/aspm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-So maybe we can move the mutex_lock() after the call to
-phydev->drv->probe()?
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 4b4184563a927..692d6953f0970 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -1372,3 +1372,4 @@ bool pcie_aspm_support_enabled(void)
+ {
+ 	return aspm_support_enabled;
+ }
++EXPORT_SYMBOL(pcie_aspm_support_enabled);
+-- 
+2.34.1
 
-	Andrew
