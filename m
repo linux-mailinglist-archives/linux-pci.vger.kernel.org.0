@@ -2,329 +2,264 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6280569D983
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Feb 2023 04:47:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 39EBC69DCA1
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Feb 2023 10:13:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233480AbjBUDry (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Feb 2023 22:47:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45304 "EHLO
+        id S233035AbjBUJNi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Feb 2023 04:13:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233469AbjBUDrx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Feb 2023 22:47:53 -0500
-Received: from out-20.mta1.migadu.com (out-20.mta1.migadu.com [IPv6:2001:41d0:203:375::14])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6100D24496
-        for <linux-pci@vger.kernel.org>; Mon, 20 Feb 2023 19:47:34 -0800 (PST)
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1676951252;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qcnWhBrWoKHZ/WK3Doar1XVXfDm6DLpodkC79EYNwPc=;
-        b=LfiIasr2iulBJ8rPirg9AAgtUD4J2A9JoL3g4wzxN5Q5qCb1N6W4h0OI020O1eZkJuRJW5
-        H6NgbBC6wGxHVxUNYGQNjqmM/aPMPCowEx6sxbzH8YaVPSYtln9b/8ljcZm/f1ptd4ooc0
-        k8TizojPGGWCNcpwwlIAVHKJUetbu6s=
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     fancer.lancer@gmail.com
-Cc:     Cai huoqing <cai.huoqing@linux.dev>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v4 4/4] dmaengine: dw-edma: Add HDMA DebugFS support
-Date:   Tue, 21 Feb 2023 11:46:55 +0800
-Message-Id: <20230221034656.14476-5-cai.huoqing@linux.dev>
-In-Reply-To: <20230221034656.14476-1-cai.huoqing@linux.dev>
-References: <20230221034656.14476-1-cai.huoqing@linux.dev>
-MIME-Version: 1.0
+        with ESMTP id S233512AbjBUJNh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Feb 2023 04:13:37 -0500
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2123.outbound.protection.outlook.com [40.107.223.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F559E07B;
+        Tue, 21 Feb 2023 01:13:35 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hS4ifLzk6WMxJIJhAYFJWDBYa9MxuNyivyTscMq7xztNbZ0KygaGDS/khDlIjnufD5vbPQljvnlbBSih2oSbkuNMmZbUSVUkFh+x31fBxu1Op6XDq10/6RPrmQ1MaI58Bguv05QvIKqxOATtf3c6TmB6Fr0o1LSfmGzoXTfAP6jETT4MH2ipQGzCVaq3m5qx8DjO82aJVT7RWgpNg97wPqCZuc+Wgx3XA8nh0yD+0rUTUD4OEVUoh7PMX+SQnVqcZ7isPsD1Ak8R0fBGzopUbHAo2CzB9DY6Z4bviruEUDF8qEWfQyZNP7rwnYbHMhS0wnKiUrLVmaC9T6YtYYqdSg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WMIL1vPstxkhcdx8Yye8JXmF2cYBceAvGGcWDdTGyvo=;
+ b=CNLzcuvgowv5SCgRkWFTb+Wyba//McNwGzQhKW/efPYZZkqaLBR3ebnI0hGTvmZHyEXS7X3Gy9VHDe1jAaQ9FXE7cNwpPz6M3HxS42Zo50zLmF2kyijrJZb+0UBAKb9d8HcNH7mgyDRvYe+bCEPcjMUb44sc1P2RtcyJXJsvcqna6nteQc24C/5bZf0GUcco1FEVJgjO1pURe9NGRZQGwf0oNvs1+ujg63VO+zdtCpaS3eQgj4aACSo7fxuRKrMdF56gh69dapfXIYXDuLHzQGgHAWAUNWlpjiEuwvCGjz5SNZEVLeK7q6eAl3HhSK8XYhNZKP9RNMwSzkF/kB4NGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WMIL1vPstxkhcdx8Yye8JXmF2cYBceAvGGcWDdTGyvo=;
+ b=eFANQ5ybRv5spMcPkxdoEqb7ECQE9gial+qBOKx+Qr/Ue5iRzfECDhJlfN849ITfudppfSQOAckHPPJNoNQ1U2c2r1ldQRszFzXzsURHR3oa722awbwyexpUqwXGDGLE6ig4L1peSzjS8LioyLIm0c9qhtdq0IPKtLIK6GUg8Nc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
+ SN4PR01MB7406.prod.exchangelabs.com (2603:10b6:806:1e9::7) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6111.21; Tue, 21 Feb 2023 09:13:31 +0000
+Received: from DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::fc8b:5e5e:a850:7f0a]) by DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::fc8b:5e5e:a850:7f0a%7]) with mapi id 15.20.6111.019; Tue, 21 Feb 2023
+ 09:13:31 +0000
+Message-ID: <2fe43de6-f356-f996-c2cb-22f66f2bf593@os.amperecomputing.com>
+Date:   Tue, 21 Feb 2023 14:43:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Subject: Re: [PATCH] PCI/ATS: Allow to enable ATS on VFs even if it is not
+ enabled on PF
+Content-Language: en-US
+From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, bhelgaas@google.com,
+        darren@os.amperecomputing.com, scott@os.amperecomputing.com,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+References: <Y+ksmNWJdWNkGAU9@unreal> <20230215205726.GA3213227@bhelgaas>
+ <Y+4PmJb2rBGMhS1y@myrica>
+ <3877b6fe-2b7e-3e0c-8b69-65e84c09cdd2@os.amperecomputing.com>
+In-Reply-To: <3877b6fe-2b7e-3e0c-8b69-65e84c09cdd2@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-ClientProxiedBy: CH0PR03CA0405.namprd03.prod.outlook.com
+ (2603:10b6:610:11b::15) To DM8PR01MB6824.prod.exchangelabs.com
+ (2603:10b6:8:23::24)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|SN4PR01MB7406:EE_
+X-MS-Office365-Filtering-Correlation-Id: f89125aa-681c-433d-b643-08db13ebe6cf
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: io7ogMTpMtN9sv3zG4K8O4igNaHpAFYwLmZ0n9KhL1c4dFB5NWXZuus93Jj8cOJEH23U2AdP+E1czWLpEuHD3nf/xm3JYN2pyx9RQNKJh1I198NIm1tUdnLZ9RlmshycRvcRIrCuHMQ54JUwmaK8IAK7PU8g6d/W1LGFSlCO0WZ2uSgp2Rf4lqgAOkQ4ePI9Pdon8Xpzcm6bKwnr8XHIjj/99gbp/e6yyAOzCmZrxw1SLbn4tWaiT9kXHQ128L5JMxF1B7yOg1AmouZDxrmrXjkNIa76YlvkewHV85wAsd9q/WFw7d9UHmJrpAaEtEUb1R+Zr/p+4mnEP3max4aPebaQvr63jlRxyI11Y5cWG76USfw76yBLMpNU7bIJ1Ebep+WLr/ratJbz6Y551RkizC2jc6nyrHUo+2KlOGHLhgeb0Rzpdr22GmcymonDsTGcyS0uKkpTYq3AJ73vs3BZ3+kz1YdwyU3xKaZ3pSxlvLM0KtDiYNlNVkJ76bBvU7wghn8YHHJ/IY8jWBta2jPjXd6EVS3D4mnaIiZGYpoyQL7JJ5f9Z9P8P/vZLSlCEPF2vo8Duxa4ITgy1mRjeVKk9Cr3B60zRZqqvzqFEjRWhZav5S1JjljU8ojNvuu2MSsivIzRt3Pcv2t3U593fjsEIzXrm72RdDbIjD5bLw+cy6GYCaW3/UfLm4JRnhocfOQBBOlp2c+CJWhb9dEx8Hz+bQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(366004)(396003)(136003)(376002)(39850400004)(451199018)(31686004)(38100700002)(2906002)(8936002)(7416002)(5660300002)(6512007)(26005)(54906003)(186003)(83380400001)(41300700001)(2616005)(66946007)(66556008)(66476007)(4326008)(8676002)(86362001)(6486002)(6506007)(478600001)(6666004)(31696002)(110136005)(316002)(53546011)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?dEYxemtHOXdhckp6RmEwQ0NPK3ZLWWxseG5oVDFOTGIyc2k3MEVpbURMYXVR?=
+ =?utf-8?B?UkhqOXFJd2IxYUxiQnRxNXFEYU9QeWtuMlZET1ErUXlRL3NEd1RvRC8xSHRO?=
+ =?utf-8?B?aEtGUnQwZkMxdlc1YXdZczVmeERoSGF5SlBBdmRyVXUyT1lFaVVUaDZPNUtG?=
+ =?utf-8?B?aWJvNFVJdUk3SHZJOUlWNEZrZURLV3lreElOM2QrMUlRbmF6TGRCMStmOUFv?=
+ =?utf-8?B?a0pXRmgzQmVmSHY4b2lZMkQySlNTRmIrNDBRTm10TDVBNHRCSk1mc2hVdlB5?=
+ =?utf-8?B?L1R2VHJITXBjVjhrV04zcENHdEY0ZWZONS9BN21hZy9UYzIwQVhEMlk0VGxr?=
+ =?utf-8?B?OUF6SjVLZG9OY2hVU3hsRHQrSlhNTk82cGlURFpVQTRMNDhXRVFKVUJUVHcw?=
+ =?utf-8?B?b0ZxeXorZldCN0IwQUl3SGwzQXZRc1M0T3RRZ2lWbmJOVU5TdXBGOWFVN0hM?=
+ =?utf-8?B?ZnNySnk1eVpNUklUQ1crSTdHcGFpNWF0UjRFQUxoNWN0TGpPZEVzN1FKN2tp?=
+ =?utf-8?B?VEVieW0yZWxVL045QUU1ME1xTXl3clZPakdGY1dvV3JWa2pZK3NpNlpyNkJX?=
+ =?utf-8?B?alN5c2NjamF4aWxhc2xKbzJjMnAzU3RkM3NCR2NkUGhiQ1ZJVlJkc01HR0hJ?=
+ =?utf-8?B?emJJNVNQaVFIallTN1k3aWVCaTZpU1Y3UWRkdFZHYmJTNE0rM0V6aXB2U1RJ?=
+ =?utf-8?B?QjdPbVhPNUkvTVI4VUNNd3NuNmZuR2RKa1k3REt2QThodEpEYzZkY2tlQjdv?=
+ =?utf-8?B?eHRtVTgvOWw0dWdRaFRmNWNlWE4rUGwzeXpvbUM4ejNBS1N0RG90S09hdWky?=
+ =?utf-8?B?VHdveWE5OWdhVUhzbzVLc3o2SzVaNytVT3FyTkhpWi9GUXFUYWpqaFVaL21X?=
+ =?utf-8?B?am1WbUgrY2h2TkNoUkNnelQ4bHErUU5Ca254THcvMHoxRWltcWdKbS9KTlFl?=
+ =?utf-8?B?MWpYY2FIOWUzcFVEaXFDZXo0eGtVZFQ2eDIvNVJLTUtvSllPVHlYb3JRNnhj?=
+ =?utf-8?B?c0IvK3NxRTh6YXBjVUVsdFp3VnZPemt6V2dpeHJnVEpPSkNXeTRLTG1DYTNq?=
+ =?utf-8?B?TmlUSmMyWS9mdDJwNER4WkFiWElhNHNRTDg5WEZLWTI1RGR5d3N2RldGa0Yz?=
+ =?utf-8?B?TE82UytRNU1sU3FRNU9VUWhoM1Fkc201Wm5VRXo5QlBzNVBBaDBKeVVUU3ZT?=
+ =?utf-8?B?OTE0bUtIaEVIRER6MXJaZE5SbkJIa0hkQkxMNXFqRXBVOC9yT3lsYnZDamcy?=
+ =?utf-8?B?RWJDeTk5WjY0SXlTaGpBeWdpcmFzOGlzeWpSYVgxaHJ5aC96bzlZWU1uZE16?=
+ =?utf-8?B?Yk9IS3gwVFFlVzBxWDlndERvcjBxbHNmMUlmT3BSTm4zeHVYM3R4S3dSaEtW?=
+ =?utf-8?B?a1hIYkFhNzd3TkNoUkg3TVVtQ3czc1QzMHg5bWZSL0owSWVaTk5Pa01Dem03?=
+ =?utf-8?B?clVkV1d1UFZGWlRocUNTeDB0bWxvTk40U1F2TnBXcjhuQk5CdkpudVdXTUJI?=
+ =?utf-8?B?UllqeTcwVGtsZVRiblZabGYrKzkyWG42K2NITlhJTFZ6ZjM1Ync1VU51MTY3?=
+ =?utf-8?B?am5ZYUx6cGNyK1VHRDhHVkxrOWFzam5ZM3ZyblVTZmtOVTROL3oxZVFBbmxq?=
+ =?utf-8?B?eG45MFM0RXpQK21DbHZIU2trMmowaHhVei9CWWh1YnZiR0NRVTZkTDRLVHdH?=
+ =?utf-8?B?OVdlY2lXZzRsNy9ubGZmdnJzZWpIMHkzQnoxWUtKRkIzbnF6NlZzcXhJazMy?=
+ =?utf-8?B?a09FK01vL2htTml3Y2Y5WWRCdnpXbzhRL1VWRXMxNGVyZlY1dXNLNmd0Wk9p?=
+ =?utf-8?B?czdUcHpEQS9PVTJkbzJrbkRtWlJPa09pd2dpRE9jRWdIVzMvelpFMEk3eVps?=
+ =?utf-8?B?eC93U1lvaGs2QzQvc2xRdmpyUHNPRWkrV1lQMExiZ1F2VEtCam9jVW5ZKzhV?=
+ =?utf-8?B?VkY4dFFwclFrUjRiVCthdnFvRVFHL0lhYnJMTU00cXVFTFNTWCs5djVidFRm?=
+ =?utf-8?B?OXZhTzVqSzd0Q2FBVHF0bFk1NUV2Q1g1eDdSWkEzaHZzdG9kTUlBUklYQ01I?=
+ =?utf-8?B?MGZEWGZyUHpnenUycmc5RlE1S3NBWTYwdHEyMWlyK0ZCbVUrOUV6T1lYU01k?=
+ =?utf-8?B?QWprd3ZLMUY5TTVNZi9weEdJWGs2NFQzRkx4WmgyY2paYTFpOVJJSWN1bGxj?=
+ =?utf-8?Q?gbCm8HwRggl/CGzz1wRgyYvDGW6430YjC6WwEmKOpOcK?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f89125aa-681c-433d-b643-08db13ebe6cf
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Feb 2023 09:13:31.5546
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: e3M3aiE5nbZWikScelPlUAzR6C3JG22W1jWpbfNTT5uDdvf4HaUscOOjEI3Ag+z8UbEX54xAvssn6x0LTzIu3mbV762oewPbig7hrwwMiwJArYPwQcbrZwjl7457+Yi0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR01MB7406
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Cai huoqing <cai.huoqing@linux.dev>
 
-Add HDMA DebugFS support to show register information
+Hi Bjorn,
 
-Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
----
-  v3->v4:
-    1.Add field watermark_en, func_num, qos, msi_watermark,etc.
-    2.Make variables reverse xmas tree order.
-    3.Declare const for 'struct dw_hdma_debugfs_entry'
+On 16-02-2023 05:06 pm, Ganapatrao Kulkarni wrote:
+> 
+> 
+> On 16-02-2023 04:42 pm, Jean-Philippe Brucker wrote:
+>> On Wed, Feb 15, 2023 at 02:57:26PM -0600, Bjorn Helgaas wrote:
+>>> [+cc Will, Robin, Joerg for arm-smmu-v3 page size question]
+>>>
+>>> On Sun, Feb 12, 2023 at 08:14:48PM +0200, Leon Romanovsky wrote:
+>>>> On Wed, Feb 08, 2023 at 10:43:21AM -0800, Ganapatrao Kulkarni wrote:
+>>>>> As per PCIe specification(section 10.5), If a VF implements an
+>>>>> ATS capability, its associated PF must implement an ATS capability.
+>>>>> The ATS Capabilities in VFs and their associated PFs are permitted to
+>>>>> be enabled independently.
+>>>>> Also, it states that the Smallest Translation Unit (STU) for VFs 
+>>>>> must be
+>>>>> hardwired to Zero and the associated PF's value applies to VFs STU.
+>>>>>
+>>>>> The current code allows to enable ATS on VFs only if it is already
+>>>>> enabled on associated PF, which is not necessary as per the 
+>>>>> specification.
+>>>>>
+>>>>> It is only required to have valid STU programmed on PF to enable
+>>>>> ATS on VFs. Adding code to write the first VFs STU to a PF's STU
+>>>>> when PFs ATS is not enabled.
+>>>>
+>>>> Can you please add here quotes from the spec and its version? I 
+>>>> don't see
+>>>> anything like this in my version of PCIe specification.
+>>>
+>>> See PCIe r6.0, sec 10.5.1.
+>>>
+>>>>> Signed-off-by: Ganapatrao Kulkarni 
+>>>>> <gankulkarni@os.amperecomputing.com>
+>>>>> ---
+>>>>>   drivers/pci/ats.c | 15 +++++++++++----
+>>>>>   1 file changed, 11 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+>>>>> index f9cc2e10b676..a97ec67201d1 100644
+>>>>> --- a/drivers/pci/ats.c
+>>>>> +++ b/drivers/pci/ats.c
+>>>>> @@ -67,13 +67,20 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+>>>>>       if (ps < PCI_ATS_MIN_STU)
+>>>>>           return -EINVAL;
+>>>>> -    /*
+>>>>> -     * Note that enabling ATS on a VF fails unless it's already 
+>>>>> enabled
+>>>>> -     * with the same STU on the PF.
+>>>>> -     */
+>>>>>       ctrl = PCI_ATS_CTRL_ENABLE;
+>>>>>       if (dev->is_virtfn) {
+>>>>>           pdev = pci_physfn(dev);
+>>>>> +
+>>>>> +        if (!pdev->ats_enabled &&
+>>>>> +                (pdev->ats_stu < PCI_ATS_MIN_STU)) {
+>>>>> +            u16 ctrl2;
+>>>>> +
+>>>>> +            /* Associated PF's STU value applies to VFs. */
+>>>>> +            pdev->ats_stu = ps;
+>>>>> +            ctrl2 = PCI_ATS_CTRL_STU(pdev->ats_stu - 
+>>>>> PCI_ATS_MIN_STU);
+>>>>> +            pci_write_config_word(pdev, pdev->ats_cap + 
+>>>>> PCI_ATS_CTRL, ctrl2);
+>>>>> +        }
+>>>
+>>> For reference, it is this way because of edc90fee916b ("PCI: Allocate
+>>> ATS struct during enumeration").  The rationale was that since the PF
+>>> STU applies to all VFs, we should require that the PF STU be
+>>> programmed before enabling ATS on any of the VFs.
+>>>
+>>> This patch relaxes that so the PF STU would be set either by (a)
+>>> enabling ATS on the PF or (b) enabling ATS on the first VF.
+>>>
+>>> This looks racy because theoretically drivers for VF A and VF B could
+>>> independently call pci_enable_ats() with different IOMMU page sizes,
+>>> and we don't know which will get there first.
+>>>
+>>> Most callers supply a compile-time constant (PAGE_SHIFT or
+>>> VTD_PAGE_SHIFT), so it won't matter.  arm_smmu_enable_ats() is
+>>> fancier, but I *assume* it would still supply the same IOMMU page size
+>>> for all VFs of a given PF.
+>>>
+>>> But it's still kind of ugly to call pci_enable_ats(dev_A) and have it
+>>> muck with the configuration of dev_B.  Maybe we should configure the
+>>> PF STU (without enabling ATS) at enumeration-time in pci_ats_init()?
+>>> Is there some way to get the IOMMU page size at that time?
+>>
+>> Not really, on Arm the supported page sizes are discovered when probing
+>> the SMMU registers, which may happen later than enumeration, during 
+>> module
+>> loading.
+>>
+>> What this patch is trying to solve is:
+>> * want the PF to bypass SMMU translation, and the VF to undergo SMMU
+>>    translation (in order to assign it to a VM)
+>> * SMMU forbids enabling ATS for a configuration that bypasses 
+>> translation.
+>>    So the PF ATS capability must be left disabled.
+>>
+>> For this situation I wonder if we could do: the SMMU driver, seeing that
+>> the PF is configured to bypass, calls a new function 
+>> "pci_configure_ats()"
+> 
+> IMO, This seems to be feasible solution for this situation, which 
+> addresses SMMU-ATS expectation in bypass and we could avoid PCI VFs 
+> race. pci_configure_ats() can be called to program/configure STU of a PF 
+> in smmu-bypass mode.
+> 
 
-  v3 link:
-  https://lore.kernel.org/lkml/20230213132411.65524-5-cai.huoqing@linux.dev/
+Can we add pci_configure_ats/pci_configure_ats_stu helper?
 
- drivers/dma/dw-edma/Makefile             |   3 +-
- drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
- drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 181 +++++++++++++++++++++++
- drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
- 4 files changed, 207 insertions(+), 1 deletion(-)
- create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
- create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+>> instead of pci_enable_ats(), which would only set the STU but leave the
+>> cap disabled. Then when setting up translation for the VF, the SMMU 
+>> driver
+>> calls pci_enable_ats() as usual, which sees the PF's STU set 
+>> appropriately
+>> and succeeds.
+>>
+>> Thanks,
+>> Jean
+> 
+> Thanks,
+> Ganapat
 
-diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-index b1c91ef2c63d..83ab58f87760 100644
---- a/drivers/dma/dw-edma/Makefile
-+++ b/drivers/dma/dw-edma/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- 
- obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
--dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-+dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-+				   dw-hdma-v0-debugfs.o
- dw-edma-objs			:= dw-edma-core.o	\
- 				   dw-edma-v0-core.o	\
- 				   dw-hdma-v0-core.o $(dw-edma-y)
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-index cadc80dc62b2..6850042dbbe0 100644
---- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-@@ -10,6 +10,7 @@
- #include "dw-edma-core.h"
- #include "dw-hdma-v0-core.h"
- #include "dw-hdma-v0-regs.h"
-+#include "dw-hdma-v0-debugfs.h"
- 
- enum dw_hdma_control {
- 	DW_HDMA_V0_CB					= BIT(0),
-@@ -282,6 +283,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
- /* HDMA debugfs callbacks */
- static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
- {
-+	dw_hdma_v0_debugfs_on(dw);
- }
- 
- static const struct dw_edma_core_ops dw_hdma_v0_core = {
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-new file mode 100644
-index 000000000000..3a6f70173a03
---- /dev/null
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-@@ -0,0 +1,181 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2023 Cai Huoqing
-+ * Synopsys DesignWare HDMA v0 debugfs
-+ *
-+ * Author: Cai Huoqing <cai.huoqing@linux.dev>
-+ */
-+
-+#include <linux/debugfs.h>
-+#include <linux/bitfield.h>
-+
-+#include "dw-hdma-v0-debugfs.h"
-+#include "dw-hdma-v0-regs.h"
-+#include "dw-edma-core.h"
-+
-+#define REGS_ADDR(dw, name)						       \
-+	({								       \
-+		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-+									       \
-+		(void __iomem *)&__regs->name;				       \
-+	})
-+
-+#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-+	({								       \
-+		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-+									       \
-+		if (_dir == EDMA_DIR_READ)				       \
-+			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-+		else							       \
-+			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-+									       \
-+		(void __iomem *)&__ch_regs->name;			       \
-+	})
-+
-+#define CTX_REGISTER(dw, name, dir, ch) \
-+	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
-+
-+#define REGISTER(dw, name) \
-+	{ dw, #name, REGS_ADDR(dw, name) }
-+
-+#define WRITE_STR				"write"
-+#define READ_STR				"read"
-+#define CHANNEL_STR				"channel"
-+#define REGISTERS_STR				"registers"
-+
-+struct dw_hdma_debugfs_entry {
-+	struct dw_edma				*dw;
-+	const char				*name;
-+	void __iomem				*reg;
-+	enum dw_edma_dir			dir;
-+	u16					ch;
-+};
-+
-+static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-+{
-+	void __iomem *reg = (void __force __iomem *)data;
-+	*val = readl(reg);
-+
-+	return 0;
-+}
-+DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-+
-+static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-+				       const struct dw_hdma_debugfs_entry ini[],
-+				       int nr_entries, struct dentry *dent)
-+{
-+	struct dw_hdma_debugfs_entry *entries;
-+	int i;
-+
-+	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-+			       GFP_KERNEL);
-+	for (i = 0; i < nr_entries; i++) {
-+		entries[i] = ini[i];
-+
-+		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-+					   &entries[i], &fops_x32);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-+				    u16 ch, struct dentry *dent)
-+{
-+	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-+		CTX_REGISTER(dw, ch_en, dir, ch),
-+		CTX_REGISTER(dw, doorbell, dir, ch),
-+		CTX_REGISTER(dw, prefetch, dir, ch),
-+		CTX_REGISTER(dw, handshake, dir, ch),
-+		CTX_REGISTER(dw, llp.lsb, dir, ch),
-+		CTX_REGISTER(dw, llp.msb, dir, ch),
-+		CTX_REGISTER(dw, cycle_sync, dir, ch),
-+		CTX_REGISTER(dw, transfer_size, dir, ch),
-+		CTX_REGISTER(dw, sar.lsb, dir, ch),
-+		CTX_REGISTER(dw, sar.msb, dir, ch),
-+		CTX_REGISTER(dw, dar.lsb, dir, ch),
-+		CTX_REGISTER(dw, dar.msb, dir, ch),
-+		CTX_REGISTER(dw, watermark_en, dir, ch),
-+		CTX_REGISTER(dw, control1, dir, ch),
-+		CTX_REGISTER(dw, func_num, dir, ch),
-+		CTX_REGISTER(dw, qos, dir, ch),
-+		CTX_REGISTER(dw, ch_stat, dir, ch),
-+		CTX_REGISTER(dw, int_stat, dir, ch),
-+		CTX_REGISTER(dw, int_setup, dir, ch),
-+		CTX_REGISTER(dw, int_clear, dir, ch),
-+		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-+		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-+		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-+	};
-+	int nr_entries = ARRAY_SIZE(debugfs_regs);
-+
-+	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-+}
-+
-+static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-+{
-+	struct dentry *regs_dent, *ch_dent;
-+	char name[16];
-+	int i;
-+
-+	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-+	if (!regs_dent)
-+		return;
-+
-+	for (i = 0; i < dw->wr_ch_cnt; i++) {
-+		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-+
-+		ch_dent = debugfs_create_dir(name, regs_dent);
-+		if (!ch_dent)
-+			return;
-+
-+		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-+{
-+	struct dentry *regs_dent, *ch_dent;
-+	char name[16];
-+	int i;
-+
-+	regs_dent = debugfs_create_dir(READ_STR, dent);
-+	if (!regs_dent)
-+		return;
-+
-+	for (i = 0; i < dw->rd_ch_cnt; i++) {
-+		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-+
-+		ch_dent = debugfs_create_dir(name, regs_dent);
-+		if (!ch_dent)
-+			return;
-+
-+		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-+	}
-+}
-+
-+static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-+{
-+	struct dentry *regs_dent;
-+
-+	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-+	if (!regs_dent)
-+		return;
-+
-+	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-+	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-+}
-+
-+void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-+{
-+	if (!debugfs_initialized())
-+		return;
-+
-+	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-+	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-+	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-+
-+	dw_hdma_debugfs_regs(dw);
-+}
-diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-new file mode 100644
-index 000000000000..e6842c83777d
---- /dev/null
-+++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-@@ -0,0 +1,22 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2023 Cai Huoqing
-+ * Synopsys DesignWare HDMA v0 debugfs
-+ *
-+ * Author: Cai Huoqing <cai.huoqing@linux.dev>
-+ */
-+
-+#ifndef _DW_HDMA_V0_DEBUG_FS_H
-+#define _DW_HDMA_V0_DEBUG_FS_H
-+
-+#include <linux/dma/edma.h>
-+
-+#ifdef CONFIG_DEBUG_FS
-+void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-+#else
-+static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-+{
-+}
-+#endif /* CONFIG_DEBUG_FS */
-+
-+#endif /* _DW_HDMA_V0_DEBUG_FS_H */
--- 
-2.34.1
-
+Thanks,
+Ganapat
