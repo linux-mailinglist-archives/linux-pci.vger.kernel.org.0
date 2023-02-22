@@ -2,157 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51AA369F897
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 17:04:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45B3669F8D7
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 17:17:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232091AbjBVQEz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Feb 2023 11:04:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55032 "EHLO
+        id S232723AbjBVQRE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Feb 2023 11:17:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230316AbjBVQEx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 11:04:53 -0500
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 671E92D15B
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 08:04:48 -0800 (PST)
-Received: by mail-lf1-x12f.google.com with SMTP id x24so10788657lfr.1
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 08:04:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BvtXsgYaNMgfCwPa3NcjCA/fALryuRunmE0yTYigCgo=;
-        b=qoW4bUeWwS3k/GeJaiLUn+XPhE41MVVyIyPtGkL2v5O83xBjix2Li2DkYmR1Ku3+V0
-         6pZ4CHdTYNIxyAV4MxYwmrCKG9yvLX2uPBgEmz/EEpWva9Gngw36j5MLkX50UAG/phaV
-         orIrc8mVF8QtEI7vBIROBOQwHU/l/0938GUTpX20WIXFLnhwl2ujow0uJkBomUFAEhT6
-         aqIWpsGuUQMRZlKET39VjpzeuREyMxAHynJFxpMPW0v1wLFqI2/+z+GpqNVZz230UXIU
-         8p3fyxSTQNKRsUniIGrRo2fm1meAtoCveeLqYAi1UGsKO8RZgbB/pUYO9AS9+jqN9npv
-         n3xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BvtXsgYaNMgfCwPa3NcjCA/fALryuRunmE0yTYigCgo=;
-        b=eZj6If0f/YBiU5BBqPYlnd9n7qU8QVkdpeGV7rfZK4JLX3zL8oNYPyIDPB/zfA0zbo
-         +a8wu8pMTGDBpwt3xkEBRs4NDoUOk0nPh3PCWfnphMWewR2HZ9+auBJcd4GPgvk9zM8u
-         Myz95tIH+IcS7ZdalxuOj3aFooV1fZq3VVafPNx3qk5pXMfis7dhPr8lMJh00uiryEo5
-         rov0zSEU0cgfbJe83Yu/wB5AsLRjYRUliRwOZVoit/FwahBFpQeWMy07uhHAB7eAhLky
-         Dd22REOSX5d0RkMv5fGTQadrP5f/9PX9VBbOjpOk5f7xCt//NZpE8elD7WLZqC8TQMUo
-         VXHg==
-X-Gm-Message-State: AO0yUKVjJuqp/5kSzHeQFCdRf8UAG/8bl/FT7lOdu8tMz68fjsS7/rSq
-        hLA1l0KAUnpTL/oq1dp/YHM5pw==
-X-Google-Smtp-Source: AK7set9PDpRvUR4ICYarWP/6Zlh9mGyGPgoNTdoaMGmA0Ed4tTtpS9C8shCpz0IFX+FNFdEYYwfy+w==
-X-Received: by 2002:a19:f609:0:b0:4b5:b06d:4300 with SMTP id x9-20020a19f609000000b004b5b06d4300mr2917956lfe.29.1677081886617;
-        Wed, 22 Feb 2023 08:04:46 -0800 (PST)
-Received: from [192.168.1.101] (abxi151.neoplus.adsl.tpnet.pl. [83.9.2.151])
-        by smtp.gmail.com with ESMTPSA id f14-20020ac251ae000000b004db3eff4b12sm2203398lfk.171.2023.02.22.08.04.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 22 Feb 2023 08:04:46 -0800 (PST)
-Message-ID: <ac05fec4-138c-2f1e-a953-8d498d3bb598@linaro.org>
-Date:   Wed, 22 Feb 2023 17:04:44 +0100
+        with ESMTP id S232195AbjBVQRE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 11:17:04 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4E563D92D;
+        Wed, 22 Feb 2023 08:16:41 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6BC30B815FE;
+        Wed, 22 Feb 2023 16:16:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56F13C4339B;
+        Wed, 22 Feb 2023 16:16:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677082599;
+        bh=oSY7Y9Zfx4h7Oesy7kW3oqZLMo+eNjfwJ8NKRdJV7P8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rgt10Cg3vw91PKKDI8NVq1IUBtcIwA4nFqncr6kVdagud6EGFgXr8SREpdFYxKwXW
+         QvSy9okHFWIIj4P3TnGT1Kqlm8mE+pXi53LYDimtAIfq1ctqXwDumvS339Dg9MSrFj
+         Gg0CYteekRxFGmVux453qmLav9Ccwpr8dxJbnpRTYijjToVcozliL01mZPOokvlWue
+         VfriYexDmJILzCE0kxwq/Zo9VO3bvRfJgkdP0j5bkNRoGCW3N23FDWUhbwlySznhOx
+         Xlt46N3FreZ4eMBjP9TB13wLJFQ5BARH73eC/+bZOxHWpb54SbGrFSfaMBtKKcW792
+         K9N/nWVOl+05Q==
+Date:   Wed, 22 Feb 2023 21:46:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>, Frank Li <Frank.Li@nxp.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        caihuoqing <caihuoqing@baidu.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Subject: Re: [PATCH v9 23/27] dmaengine: dw-edma: Add mem-mapped LL-entries
+ support
+Message-ID: <Y/Y/48E/8lYFTo2D@matsya>
+References: <20230113171409.30470-24-Sergey.Semin@baikalelectronics.ru>
+ <20230221230054.GA3736402@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 08/11] ARM: dts: qcom: sdx55-t55: Enable PCIe RC support
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        andersson@kernel.org, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org
-Cc:     bhelgaas@google.com, kishon@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org
-References: <20230222153251.254492-1-manivannan.sadhasivam@linaro.org>
- <20230222153251.254492-9-manivannan.sadhasivam@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230222153251.254492-9-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230221230054.GA3736402@bhelgaas>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 22.02.2023 16:32, Manivannan Sadhasivam wrote:
-> Enable PCIe RC support on Thundercomm T55 board.
+On 21-02-23, 17:00, Bjorn Helgaas wrote:
+> On Fri, Jan 13, 2023 at 08:14:05PM +0300, Serge Semin wrote:
+> > Currently the DW eDMA driver only supports the linked lists memory
+> > allocated locally with respect to the remote eDMA engine setup. It means
+> > the linked lists will be accessible by the CPU via the MMIO space only. If
+> > eDMA is embedded into the DW PCIe Root Ports or local End-points (which
+> > support will be added in one of the following up commits) the linked lists
+> > are supposed to be allocated in the CPU memory. In that case the
+> > LL-entries can be directly accessed meanwhile the former case implies
+> > using the MMIO-accessors for that.
+> > 
+> > In order to have both cases supported by the driver the dw_edma_region
+> > descriptor should be fixed to contain the MMIO-backed and just
+> > memory-based virtual addresses. The linked lists initialization procedure
+> > will use one of them depending on the eDMA device nature. If the eDMA
+> > engine is embedded into the local DW PCIe RP/EP controllers then the list
+> > entries will be directly accessed by referencing the corresponding
+> > structure fields.  Otherwise the MMIO accessors usage will be preserved.
+> > 
+> > Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm/boot/dts/qcom-sdx55-t55.dts | 42 ++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
+> Hi Vinod, I just realized that I didn't solicit your ack for this
+> patch and the following one (which I ended up splitting into two), and
+> I hate to ask Linus to pull them without your OK.
 > 
-> diff --git a/arch/arm/boot/dts/qcom-sdx55-t55.dts b/arch/arm/boot/dts/qcom-sdx55-t55.dts
-> index 7ed8feb99afb..fb5b9264077c 100644
-> --- a/arch/arm/boot/dts/qcom-sdx55-t55.dts
-> +++ b/arch/arm/boot/dts/qcom-sdx55-t55.dts
-> @@ -242,6 +242,23 @@ &ipa {
->  	memory-region = <&ipa_fw_mem>;
->  };
->  
-> +&pcie_phy {
-> +	status = "okay";
-'status' should go last. Since you're introducing new nodes,
-changing the order in the existing ones would be appreciated.
+> Here are the current versions in the PCI tree:
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=b47364a83054
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=157ce95927c1
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=536e6529e975
+> 
+> If you ack them, I will update them to reflect that.
 
-> +
-> +	vdda-phy-supply = <&vreg_l1e_bb_1p2>;
-> +	vdda-pll-supply = <&vreg_l4e_bb_0p875>;
-> +};
-> +
-> +&pcie_rc {
-> +	status = "okay";
-> +
-> +	perst-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
-> +	wake-gpios = <&tlmm 53 GPIO_ACTIVE_HIGH>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pcie_default>;
-property-
-property-names
+Thanks for letting me know:
 
-Konrad
-> +};
-> +
->  &qpic_bam {
->  	status = "ok";
->  };
-> @@ -265,6 +282,31 @@ &remoteproc_mpss {
->  	memory-region = <&mpss_adsp_mem>;
->  };
->  
-> +&tlmm {
-> +	pcie_default: pcie-default-state {
-> +		clkreq-pins {
-> +			pins = "gpio56";
-> +			function = "pcie_clkreq";
-> +			drive-strength = <2>;
-> +			bias-pull-up;
-> +		};
-> +
-> +		perst-pins {
-> +			pins = "gpio57";
-> +			function = "gpio";
-> +			drive-strength = <2>;
-> +			bias-pull-down;
-> +		};
-> +
-> +		wake-pins {
-> +		       pins = "gpio53";
-> +		       function = "gpio";
-> +		       drive-strength = <2>;
-> +		       bias-pull-up;
-> +	       };
-> +	};
-> +};
-> +
->  &usb_hsphy {
->  	status = "okay";
->  	vdda-pll-supply = <&vreg_l4e_bb_0p875>;
+Acked-by: Vinod Koul <vkoul@kernel.org>
+
+-- 
+~Vinod
