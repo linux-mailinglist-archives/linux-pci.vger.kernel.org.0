@@ -2,114 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0261469F3BA
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 12:55:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 036C169F4FB
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 13:58:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbjBVLy7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Feb 2023 06:54:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42792 "EHLO
+        id S231920AbjBVM6q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Feb 2023 07:58:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231194AbjBVLyh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 06:54:37 -0500
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [IPv6:2001:4190:8020::34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D86B92822E
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 03:54:35 -0800 (PST)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id EFBE292009C; Wed, 22 Feb 2023 12:54:32 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id E88A892009B;
-        Wed, 22 Feb 2023 11:54:32 +0000 (GMT)
-Date:   Wed, 22 Feb 2023 11:54:32 +0000 (GMT)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Lukas Wunner <lukas@wunner.de>
-cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Stefan Roese <sr@denx.de>, Jim Wilson <wilson@tuliptree.org>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org,
-        Philipp Rosenberger <p.rosenberger@kunbus.com>
-Subject: Re: [PING][PATCH v6 0/7] pci: Work around ASMedia ASM2824 PCIe link
- training failures
-In-Reply-To: <20230219194619.GA25088@wunner.de>
-Message-ID: <alpine.DEB.2.21.2302220459100.48569@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2302022022230.45310@angie.orcam.me.uk> <alpine.DEB.2.21.2302191849230.25434@angie.orcam.me.uk> <20230219194619.GA25088@wunner.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S231558AbjBVM6p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 07:58:45 -0500
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631C33B3C1
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 04:58:39 -0800 (PST)
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 430D63F71C
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 12:58:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1677070715;
+        bh=iMk87gysA4eaHAIflp61kjRjI9XPCsP7SLQze3YejXk=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=C1jhWBMGF5pE/muRM0z1xm1k8EGu91Z46LGaRJq45irwnJwoBgfMYU0iVT5NKVAXO
+         Cz4YOLkHl9voEI5K6eiPG1WuUzhvGD883lGPGxzmLrQrFN5cAYLl2npd7Lqhx4Zj20
+         Ivmf9LwAi7WOenqQZke3T6imHwcJBlB49eGvYbzUufiQ1H6nmZH86d8mJlVDRxwryh
+         FWdSxCXGwAIYGoAS3UwuaeLAOtQhcEK5SZXsg9FDxEUT3JmBg9w3qyZcTYqQ79u/xW
+         rAeLFT/230xJwB+FUscnpqOhNweXLVvtbqo63oe/OPntCA/n3nKyAyAPD/QMfrSZQY
+         FT4pe7uVVy1JQ==
+Received: by mail-pg1-f200.google.com with SMTP id q15-20020a63d60f000000b00502e1c551aaso1449448pgg.21
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 04:58:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iMk87gysA4eaHAIflp61kjRjI9XPCsP7SLQze3YejXk=;
+        b=0TQGTKKi+EJoYVLcXpJSiAiauGYj9ViRejjqJ9CttfffPE6c7kJdnsXaM5llr+B021
+         JBlebgZKT/9QLyhSShLXeHyphN4aUYJEVcB9zs1fg33bNj0Svv3TbQ7jRbsuNqvdupcI
+         saHHRjuvDwfC2oVE36tD/GV3Bej72f/kA2e+pSm/jQ3PPPLUrct+oMOs4c7J/TlWIUzd
+         xBI91stN5AsY013k3HOhKRagE96tOqCN+xdAYmimuKeudDBdI3ycM+jmbdgO3SzePG+k
+         z2ytdnQaaWuxg6E28Rnx+ESxLciDqwusp9soLGMQJ35RDJWWEN3MWbR0e3A8LmgTgqT7
+         t4Sg==
+X-Gm-Message-State: AO0yUKXqKM40xm0FOaCY8cPLx/8X5MTUY68Ujuw2PMWPLVZs5kMFpfOJ
+        OTYc+d38IWbfjptYMybOzQDQr+tXU5vG3yom1eQ3Vv+65JafbjHQ0orEtetIDWlLnnYOWgg1Qhv
+        kzn5Ft6Z21Smqti8UB050s8A6HVGO1ljJI7PmpIjXWd0IaBdpDR8zXQ==
+X-Received: by 2002:a17:90b:1f87:b0:237:1892:2548 with SMTP id so7-20020a17090b1f8700b0023718922548mr1308262pjb.44.1677070712473;
+        Wed, 22 Feb 2023 04:58:32 -0800 (PST)
+X-Google-Smtp-Source: AK7set8t7GH+/5kt3d+6jt2bifRD+Qrs2oMsHfDIkP9dJPLZIOBlT5vzRFzw/4YigtGXfjFuxQ9kqWRbXfqAHuTtwBU=
+X-Received: by 2002:a17:90b:1f87:b0:237:1892:2548 with SMTP id
+ so7-20020a17090b1f8700b0023718922548mr1308255pjb.44.1677070712173; Wed, 22
+ Feb 2023 04:58:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230221023849.1906728-1-kai.heng.feng@canonical.com> <c21a3f74-871c-8726-f078-b4c2c3414ebd@gmail.com>
+In-Reply-To: <c21a3f74-871c-8726-f078-b4c2c3414ebd@gmail.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Wed, 22 Feb 2023 20:58:20 +0800
+Message-ID: <CAAd53p5k5BrdHz6oAuviymdYNRJ_NGxDs_TAe2M=0W6xj2o5KA@mail.gmail.com>
+Subject: Re: [PATCH v8 RESEND 0/6] r8169: Enable ASPM for recent 1.0/2.5Gbps
+ Realtek NICs
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     nic_swsd@realtek.com, bhelgaas@google.com, koba.ko@canonical.com,
+        acelan.kao@canonical.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
+        rafael.j.wysocki@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 19 Feb 2023, Lukas Wunner wrote:
+On Tue, Feb 21, 2023 at 7:09 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+>
+> On 21.02.2023 03:38, Kai-Heng Feng wrote:
+> > The series is to enable ASPM on more r8169 supported devices, if
+> > available.
+> >
+> > The latest Realtek vendor driver and its Windows driver implements a
+> > feature called "dynamic ASPM" which can improve performance on it's
+> > ethernet NICs.
+> >
+> > We have "dynamic ASPM" mechanism in Ubuntu 22.04 LTS kernel for quite a
+> > while, and AFAIK it hasn't introduced any regression so far.
+> >
+> > A very similar issue was observed on Realtek wireless NIC, and it was
+> > resolved by disabling ASPM during NAPI poll. So in v8, we use the same
+> > approach, which is more straightforward, instead of toggling ASPM based
+> > on packet count.
+> >
+> > v7:
+> > https://lore.kernel.org/netdev/20211016075442.650311-1-kai.heng.feng@canonical.com/
+> >
+> > v6:
+> > https://lore.kernel.org/netdev/20211007161552.272771-1-kai.heng.feng@canonical.com/
+> >
+> > v5:
+> > https://lore.kernel.org/netdev/20210916154417.664323-1-kai.heng.feng@canonical.com/
+> >
+> > v4:
+> > https://lore.kernel.org/netdev/20210827171452.217123-1-kai.heng.feng@canonical.com/
+> >
+> > v3:
+> > https://lore.kernel.org/netdev/20210819054542.608745-1-kai.heng.feng@canonical.com/
+> >
+> > v2:
+> > https://lore.kernel.org/netdev/20210812155341.817031-1-kai.heng.feng@canonical.com/
+> >
+> > v1:
+> > https://lore.kernel.org/netdev/20210803152823.515849-1-kai.heng.feng@canonical.com/
+> >
+> > Kai-Heng Feng (6):
+> >   r8169: Disable ASPM L1.1 on 8168h
+> >   Revert "PCI/ASPM: Unexport pcie_aspm_support_enabled()"
+> >   PCI/ASPM: Add pcie_aspm_capable() helper
+> >   r8169: Consider chip-specific ASPM can be enabled on more cases
+> >   r8169: Use mutex to guard config register locking
+> >   r8169: Disable ASPM while doing NAPI poll
+> >
+> >  drivers/net/ethernet/realtek/r8169_main.c | 48 ++++++++++++++++++-----
+> >  drivers/pci/pcie/aspm.c                   | 12 ++++++
+> >  include/linux/pci.h                       |  2 +
+> >  3 files changed, 53 insertions(+), 9 deletions(-)
+> >
+>
+> Note that net-next is closed during merge window.
+> Formal aspect: Your patches miss the net/net-next annotation.
 
-> > >  This is v6 of the change to work around a PCIe link training phenomenon 
-> > > where a pair of devices both capable of operating at a link speed above 
-> > > 2.5GT/s seems unable to negotiate the link speed and continues training 
-> > > indefinitely with the Link Training bit switching on and off repeatedly 
-> > > and the data link layer never reaching the active state.
-> > 
-> >  Ping for: 
-> > <https://lore.kernel.org/linux-pci/alpine.DEB.2.21.2302022022230.45310@angie.orcam.me.uk/>.
-> 
-> Philipp is witnessing similar issues with a Pericom PI7C9X2G404EL
-> switch below a Broadcom STB host controller:  On some rare occasions,
-> when booting the system the link trains correctly at 5 GT/s and the
-> switch is accessible without any issues.  But most of the time,
-> the switch is inaccessible on boot.  The Broadcom STB host controller
-> claims not to support Link Active Reporting, but in reality has a
-> link status indicator in a custom register.  It indicates that the
-> link is up, the link trains to 2.5 GT/s but the switch is inaccessible.
+Will do in next revision.
 
- Thank you for chiming in.
+> The title of the series may be an old one. Actually most ASPM
+> states are enabled, you add to disable ASPM temporarily.
 
- Note that the U-Boot variant of this workaround referred to by the link 
-in the change description does not rely on Link Active Reporting, but 
-busy-loops polling on Link Training status instead and verifies training 
-remains stable off long enough.  We can't do this in Linux of course, but 
-I guess a variant using link status reported in a vendor-specific register 
-could be made.
+Right.
+Most hardwares I have access to don't grant OS ASPM control, so
+tp->aspm_manageable is not enabled.
+Will make it more clearer.
 
-> The switch is the same as yours, only with 4 instead of 3 ports.
-> Perhaps the issue you're seeing isn't specific to the ASMedia switch,
-> but is due to an oddity of the Pericom switch, that happens to be
-> triggered by the Broadcom STB host controller as well?
-
- I have seen two reports from people claiming their devices to be absent 
-from `lspci' output, an Intel and a Realtek NIC respectively, when plugged 
-into a slot behing the ASMedia switch, while working just fine in another 
-system.  Neither replied to my request for further information, so it's 
-not clear to me if it's the same issue, but it may or may not be limited 
-to Pericom hardware.
-
- As I mentioned in previous iterations of the change there is an option 
-card available with the ASM2824 switch onboard and dual M.2 slots behind, 
-which could be used for experimenting.  Sold under the StarTech brand as 
-PEX8M2E2 and under the Ableconn brand as PEXM2-130.  And M.2 M-Key to PCIe 
-slot adapters are widely available.  I just can't be persuaded to buy such 
-an option card, especially as ASMedia have been unhelpful and ignored my 
-enquiry.
-
-> I've cooked up a modified version of patch 7 in your series which
-> performs the link retraining in the pci-brcmstb.c driver before
-> performing the first access to the switch.  Unfortunately it
-> didn't result in any kind of improvement.  Next step is to hook up
-> a Teledyne T28 analyzer to see what's going on.
-
- That would be most helpful, although given your lack of success with my
-workaround it might be a different issue here after all.
-
- Let me know if I could help anyhow.  I have a few of these Pericom-based 
-riser card adapters as spares, though I'm short on high-speed (5GT/s+) 
-PCIe slots to try them with.  Delock has claimed, back in Jul 2021, I'm 
-the only one to report them the device not to work.
-
-  Maciej
+Kai-Heng
