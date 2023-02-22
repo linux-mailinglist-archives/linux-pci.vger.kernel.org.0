@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 036C169F4FB
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 13:58:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 09C0269F508
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Feb 2023 14:01:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231920AbjBVM6q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Feb 2023 07:58:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52312 "EHLO
+        id S230310AbjBVNA6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Feb 2023 08:00:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231558AbjBVM6p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 07:58:45 -0500
+        with ESMTP id S231750AbjBVNA6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 08:00:58 -0500
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 631C33B3C1
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 04:58:39 -0800 (PST)
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E35E036FF0
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 05:00:56 -0800 (PST)
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 430D63F71C
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 12:58:34 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3BAEA3F718
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 13:00:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1677070715;
-        bh=iMk87gysA4eaHAIflp61kjRjI9XPCsP7SLQze3YejXk=;
+        s=20210705; t=1677070854;
+        bh=C4QlkJoMBe7Zb07BzaU2hfX0+/7r6YQ7RN1cp6tdTkI=;
         h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
          To:Cc:Content-Type;
-        b=C1jhWBMGF5pE/muRM0z1xm1k8EGu91Z46LGaRJq45irwnJwoBgfMYU0iVT5NKVAXO
-         Cz4YOLkHl9voEI5K6eiPG1WuUzhvGD883lGPGxzmLrQrFN5cAYLl2npd7Lqhx4Zj20
-         Ivmf9LwAi7WOenqQZke3T6imHwcJBlB49eGvYbzUufiQ1H6nmZH86d8mJlVDRxwryh
-         FWdSxCXGwAIYGoAS3UwuaeLAOtQhcEK5SZXsg9FDxEUT3JmBg9w3qyZcTYqQ79u/xW
-         rAeLFT/230xJwB+FUscnpqOhNweXLVvtbqo63oe/OPntCA/n3nKyAyAPD/QMfrSZQY
-         FT4pe7uVVy1JQ==
-Received: by mail-pg1-f200.google.com with SMTP id q15-20020a63d60f000000b00502e1c551aaso1449448pgg.21
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 04:58:34 -0800 (PST)
+        b=s6uSAu2aU+Xzhvglmu9mgqIf7NQ4XYc0tsxxQjdXUJCDa7GfIm/2f6vrCrkUa8kbd
+         aD+X07zV4zR5d38mdY47iBNKyzvjnGkcwnZBQZVOsCSeoV/rICO9zqxG5wTA2VufEX
+         iQQ9oNO0KsmimRc6bo4/10MwJmTIFXgedv720BdMMt8PFmJuN4/2oTK1uABqLqKN9h
+         xO7LsX6wimWY4FBZReHdtZGRG+xaS0lbY21vWQ6j0m4x0NX1ZKrFHMESNHKYUYS0fV
+         Dho9KBxZfBmx8ueHpkpWHDLAPBBLLpB/e/wxsyeqz8GzVK1Gr0xL13iV2yFecaFy+a
+         yOOlVdtE9MpGw==
+Received: by mail-pf1-f199.google.com with SMTP id i7-20020a626d07000000b005d29737db06so1689374pfc.15
+        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 05:00:54 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iMk87gysA4eaHAIflp61kjRjI9XPCsP7SLQze3YejXk=;
-        b=0TQGTKKi+EJoYVLcXpJSiAiauGYj9ViRejjqJ9CttfffPE6c7kJdnsXaM5llr+B021
-         JBlebgZKT/9QLyhSShLXeHyphN4aUYJEVcB9zs1fg33bNj0Svv3TbQ7jRbsuNqvdupcI
-         saHHRjuvDwfC2oVE36tD/GV3Bej72f/kA2e+pSm/jQ3PPPLUrct+oMOs4c7J/TlWIUzd
-         xBI91stN5AsY013k3HOhKRagE96tOqCN+xdAYmimuKeudDBdI3ycM+jmbdgO3SzePG+k
-         z2ytdnQaaWuxg6E28Rnx+ESxLciDqwusp9soLGMQJ35RDJWWEN3MWbR0e3A8LmgTgqT7
-         t4Sg==
-X-Gm-Message-State: AO0yUKXqKM40xm0FOaCY8cPLx/8X5MTUY68Ujuw2PMWPLVZs5kMFpfOJ
-        OTYc+d38IWbfjptYMybOzQDQr+tXU5vG3yom1eQ3Vv+65JafbjHQ0orEtetIDWlLnnYOWgg1Qhv
-        kzn5Ft6Z21Smqti8UB050s8A6HVGO1ljJI7PmpIjXWd0IaBdpDR8zXQ==
-X-Received: by 2002:a17:90b:1f87:b0:237:1892:2548 with SMTP id so7-20020a17090b1f8700b0023718922548mr1308262pjb.44.1677070712473;
-        Wed, 22 Feb 2023 04:58:32 -0800 (PST)
-X-Google-Smtp-Source: AK7set8t7GH+/5kt3d+6jt2bifRD+Qrs2oMsHfDIkP9dJPLZIOBlT5vzRFzw/4YigtGXfjFuxQ9kqWRbXfqAHuTtwBU=
+        bh=C4QlkJoMBe7Zb07BzaU2hfX0+/7r6YQ7RN1cp6tdTkI=;
+        b=ircoV/ZoJecVLm21rDvbIh7AzRz+cyHlalcRkrOW1oI4I/87INqvXpOatlgAtDg5P1
+         BHKPBnp1FXzkNqouZWvasAZXxMM7NT49M6HUIzG49/J6PPaZT9SBCUBDcML2IIOKe3K8
+         3LSgfFhSWOCei504cVxNYxd1jU9H/gYArlaHQUcRmxkF1BNhFPIYtjwWi8ZX3gLWm7j7
+         dQ0LATZI7lVBGoM6wBE/QaLIK4ZcV98FpJW4eX4TuOopBclovIMefOIpbiQ9nK9S1+jB
+         NVWO1+qJSTx+ql5xRWT0/W6oxMfo7y4sBML3CGZ7/GpOYA5Zl33nI4+FjsYroG6ZJTNl
+         OoiA==
+X-Gm-Message-State: AO0yUKVHiaKKhhpMwZ+8w8/XlGXdvNd5yq9ldqWnswcgzyAVrT7p3sat
+        3CoqbylzfkHcKlDbsU9yVl/nRAddZBDBnp3XFjpFaJmkYxvTAFaglHfl97ZV90kPCc5HL8G5FOH
+        OyfJ79fs0Q+YC7kdIHhCw3eRPzvQGtOYvdzDvPAFUzetkdGFyU/ChjQ==
+X-Received: by 2002:a17:90b:1f87:b0:237:1892:2548 with SMTP id so7-20020a17090b1f8700b0023718922548mr1309665pjb.44.1677070852631;
+        Wed, 22 Feb 2023 05:00:52 -0800 (PST)
+X-Google-Smtp-Source: AK7set+Hcu3PpBDVIEJrAMyn16xRp5IGRD9MfaoCbBE14JFRfyGRE20r++e6YnhsvorwYnP3mjsyR4szgSwPyCZs8Pg=
 X-Received: by 2002:a17:90b:1f87:b0:237:1892:2548 with SMTP id
- so7-20020a17090b1f8700b0023718922548mr1308255pjb.44.1677070712173; Wed, 22
- Feb 2023 04:58:32 -0800 (PST)
+ so7-20020a17090b1f8700b0023718922548mr1309649pjb.44.1677070852230; Wed, 22
+ Feb 2023 05:00:52 -0800 (PST)
 MIME-Version: 1.0
-References: <20230221023849.1906728-1-kai.heng.feng@canonical.com> <c21a3f74-871c-8726-f078-b4c2c3414ebd@gmail.com>
-In-Reply-To: <c21a3f74-871c-8726-f078-b4c2c3414ebd@gmail.com>
+References: <20230221023849.1906728-1-kai.heng.feng@canonical.com>
+ <20230221023849.1906728-2-kai.heng.feng@canonical.com> <86136114-a451-c485-ade2-cfa79d5124e1@gmail.com>
+In-Reply-To: <86136114-a451-c485-ade2-cfa79d5124e1@gmail.com>
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Wed, 22 Feb 2023 20:58:20 +0800
-Message-ID: <CAAd53p5k5BrdHz6oAuviymdYNRJ_NGxDs_TAe2M=0W6xj2o5KA@mail.gmail.com>
-Subject: Re: [PATCH v8 RESEND 0/6] r8169: Enable ASPM for recent 1.0/2.5Gbps
- Realtek NICs
+Date:   Wed, 22 Feb 2023 21:00:41 +0800
+Message-ID: <CAAd53p4L3eUWH183RJAfcQ1vDrwuMJ4pL--w9OgAJzg0ghnpwA@mail.gmail.com>
+Subject: Re: [PATCH v8 RESEND 1/6] r8169: Disable ASPM L1.1 on 8168h
 To:     Heiner Kallweit <hkallweit1@gmail.com>
 Cc:     nic_swsd@realtek.com, bhelgaas@google.com, koba.ko@canonical.com,
         acelan.kao@canonical.com, davem@davemloft.net, edumazet@google.com,
@@ -82,67 +82,55 @@ X-Mailing-List: linux-pci@vger.kernel.org
 On Tue, Feb 21, 2023 at 7:09 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
 >
 > On 21.02.2023 03:38, Kai-Heng Feng wrote:
-> > The series is to enable ASPM on more r8169 supported devices, if
-> > available.
+> > ASPM L1/L1.1 gets enabled based on [0], but ASPM L1.1 was actually
+> > disabled too [1].
 > >
-> > The latest Realtek vendor driver and its Windows driver implements a
-> > feature called "dynamic ASPM" which can improve performance on it's
-> > ethernet NICs.
+> > So also disable L1.1 for better compatibility.
 > >
-> > We have "dynamic ASPM" mechanism in Ubuntu 22.04 LTS kernel for quite a
-> > while, and AFAIK it hasn't introduced any regression so far.
+> > [0] https://bugs.launchpad.net/bugs/1942830
+> > [1] https://git.launchpad.net/~canonical-kernel/ubuntu/+source/linux-oem/+git/focal/commit/?id=c9b3736de48fd419d6699045d59a0dd1041da014
 > >
-> > A very similar issue was observed on Realtek wireless NIC, and it was
-> > resolved by disabling ASPM during NAPI poll. So in v8, we use the same
-> > approach, which is more straightforward, instead of toggling ASPM based
-> > on packet count.
-> >
-> > v7:
-> > https://lore.kernel.org/netdev/20211016075442.650311-1-kai.heng.feng@canonical.com/
-> >
-> > v6:
-> > https://lore.kernel.org/netdev/20211007161552.272771-1-kai.heng.feng@canonical.com/
-> >
-> > v5:
-> > https://lore.kernel.org/netdev/20210916154417.664323-1-kai.heng.feng@canonical.com/
-> >
-> > v4:
-> > https://lore.kernel.org/netdev/20210827171452.217123-1-kai.heng.feng@canonical.com/
-> >
-> > v3:
-> > https://lore.kernel.org/netdev/20210819054542.608745-1-kai.heng.feng@canonical.com/
-> >
-> > v2:
-> > https://lore.kernel.org/netdev/20210812155341.817031-1-kai.heng.feng@canonical.com/
-> >
-> > v1:
-> > https://lore.kernel.org/netdev/20210803152823.515849-1-kai.heng.feng@canonical.com/
-> >
-> > Kai-Heng Feng (6):
-> >   r8169: Disable ASPM L1.1 on 8168h
-> >   Revert "PCI/ASPM: Unexport pcie_aspm_support_enabled()"
-> >   PCI/ASPM: Add pcie_aspm_capable() helper
-> >   r8169: Consider chip-specific ASPM can be enabled on more cases
-> >   r8169: Use mutex to guard config register locking
-> >   r8169: Disable ASPM while doing NAPI poll
-> >
-> >  drivers/net/ethernet/realtek/r8169_main.c | 48 ++++++++++++++++++-----
-> >  drivers/pci/pcie/aspm.c                   | 12 ++++++
-> >  include/linux/pci.h                       |  2 +
-> >  3 files changed, 53 insertions(+), 9 deletions(-)
-> >
->
-> Note that net-next is closed during merge window.
-> Formal aspect: Your patches miss the net/net-next annotation.
+> These references are about problems with L1.2 (which is disabled
+> per default in mainline). They don't allow any statement about whether
+> L1.1 is problematic too (and under which circumstances).
+> At least on my system with RTL8168h there's no problem with L1.1
+> when running iperf.
 
-Will do in next revision.
-
-> The title of the series may be an old one. Actually most ASPM
-> states are enabled, you add to disable ASPM temporarily.
-
-Right.
-Most hardwares I have access to don't grant OS ASPM control, so
-tp->aspm_manageable is not enabled.
-Will make it more clearer.
+There are some systems have performance issue with L1.1 too.
+But since the series will disable chip-side ASPM during NAPI poll,
+maybe we can keep both L1.1 and L1.2 enabled?
 
 Kai-Heng
+
+>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> > v8:
+> >  - New patch.
+> >
+> >  drivers/net/ethernet/realtek/r8169_main.c | 6 +++---
+> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> >
+> >
+> > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> > index 45147a1016bec..1c949822661ae 100644
+> > --- a/drivers/net/ethernet/realtek/r8169_main.c
+> > +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> > @@ -5224,13 +5224,13 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+> >
+> >       /* Disable ASPM L1 as that cause random device stop working
+> >        * problems as well as full system hangs for some PCIe devices users.
+> > -      * Chips from RTL8168h partially have issues with L1.2, but seem
+> > -      * to work fine with L1 and L1.1.
+> > +      * Chips from RTL8168h partially have issues with L1.1 and L1.2, but
+> > +      * seem to work fine with L1.
+> >        */
+> >       if (rtl_aspm_is_safe(tp))
+> >               rc = 0;
+> >       else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
+> > -             rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);
+> > +             rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_1 | PCIE_LINK_STATE_L1_2);
+> >       else
+> >               rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+> >       tp->aspm_manageable = !rc;
+>
