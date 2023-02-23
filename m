@@ -2,163 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5BA5C6A0085
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 02:21:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E4116A0502
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 10:36:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232215AbjBWBVd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Feb 2023 20:21:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57312 "EHLO
+        id S233225AbjBWJgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Feb 2023 04:36:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229999AbjBWBVc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Feb 2023 20:21:32 -0500
-Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9148196B7
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 17:21:29 -0800 (PST)
-Received: by mail-pf1-x449.google.com with SMTP id w130-20020a628288000000b005d1f4325e2aso2651363pfd.18
-        for <linux-pci@vger.kernel.org>; Wed, 22 Feb 2023 17:21:29 -0800 (PST)
+        with ESMTP id S233424AbjBWJgj (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 04:36:39 -0500
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B119F515D7
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 01:36:15 -0800 (PST)
+Received: by mail-wr1-x435.google.com with SMTP id p8so10256909wrt.12
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 01:36:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Utax3e55p3N2FiK+44m4EPF0IspqZNOsObveiGZKnps=;
-        b=qEb0sRMMQP+D3NIM0EavDhPqQ4MvMH/BkwStlAQZrjsNxsvp5AK1UfYEygcyPWPwJL
-         aw+JkiEqI0Wk8zGQmrouiI1z4upjRMubH9ZbMcD4DfUtX9Kh6wziQif1uoq55HTC3OnT
-         FkqnuFlPOv90b4F9aF2KaT24ghCOlh+8WCOGn6hLcFk+lS1tpcpAs56CWVfDHEhq5Ah+
-         M5mzL9C5YTPTLkTiGKHI6Qe115kFoyX58YgaW0qYBkv6o9AziLvKdimHbPOGepgb44h4
-         mzvdFkwJ0UuukAL7MBFDuYqBQ7qmF7FQJtSZrsAyl+BiB9B4nmX4rvZmwl8TcRhOvWlG
-         zxDw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8+c3O+JKb+ygyDEtjXcAkTDQCL5lhMHIdEFdwOPkUzM=;
+        b=GJAvOM7vT6y+dpNnUBSXR8Ebltv2bQljUUOjeCVhH+BHrudJbK6t3LP+tnTTJyVur7
+         S/W8Iuh4ID/TlBggamOu7aFWsNu2AMd3kK5xLMgYsbr9G/hGMCNh4kAF0htl8p4FtDpc
+         kliFUM4kqlARQ+W5qLa649a6zqvToo665hF/E0ErCtfI1V1WSv4OnuuHaxvm/RvVF3BC
+         o4gk8RuiYnYyTs4yd0Z8n1BOs2onAiZBqpj3LT1HBFN1vIQOZARwLGmGLToZajHrkgPQ
+         B5Kl01grWp/Y1cWhljIkZMdMPpUuABL61kL/hYXukh5zJN6H7NQnzHQ20N8QpSykhAqT
+         L5ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Utax3e55p3N2FiK+44m4EPF0IspqZNOsObveiGZKnps=;
-        b=ZNrFR20u+fS2snvF9c8rHHv62/Y5+mXAVOQUSWbz56dg/G7MbLdgPs/vj4HIkXT8fL
-         J6NFzIsphARi/kWud56jAba2FeyIFFg1SEsIzSRGbuHvjFxrtUAod/xtakHPiI0Nau6w
-         WWjISrrynRZnTlu9CXW1euCNND3oM+NdqxdWnUoDY5RpDhzEPDQ2YvxEOKLjm35k8Zph
-         VBWPLCbERxpnENEI2xuiFQJgc71uaFIVRsAIuJSPaFl5LppCaaChYbtUJvPCFv0qMo+V
-         yHiJiYu6c5q4OZRPr0FE/Z/qncweodCeEVpWJSbTn1Q1KgJvnlIU/2Od/Xc2R/QETnJl
-         jaIQ==
-X-Gm-Message-State: AO0yUKWmvOTkhGuuSPXNz4KEGlp7PHaLiIsK3GNHIHN8KYgFDwjbuGhZ
-        v+XwyLrgd8iihmXgdrhS1zdeBtjFanE=
-X-Google-Smtp-Source: AK7set8uqJFTeifQRndK5OY7LsjNYEZihFhZGcRxMmqtrSL2SRl7UXNO3Bil4Wyqwogd1sRe6etbqkK7/G4=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a65:66c6:0:b0:4fc:1da2:5f95 with SMTP id
- c6-20020a6566c6000000b004fc1da25f95mr1307512pgw.7.1677115288904; Wed, 22 Feb
- 2023 17:21:28 -0800 (PST)
-Date:   Wed, 22 Feb 2023 17:21:27 -0800
-In-Reply-To: <Y/ammgkyo3QVon+A@zn.tnic>
-Mime-Version: 1.0
-References: <Y+bXjxUtSf71E5SS@google.com> <Y+4wiyepKU8IEr48@zn.tnic>
- <BYAPR21MB168853FD0676CCACF7C249B0D7A09@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+5immKTXCsjSysx@zn.tnic> <BYAPR21MB16880EC9C85EC9343F9AF178D7A19@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y++VSZNAX9Cstbqo@zn.tnic> <Y/aTmL5Y8DtOJu9w@google.com> <Y/aYQlQzRSEH5II/@zn.tnic>
- <Y/adN3GQJTdDPmS8@google.com> <Y/ammgkyo3QVon+A@zn.tnic>
-Message-ID: <Y/a/lzOwqMjOUaYZ@google.com>
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-From:   Sean Christopherson <seanjc@google.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8+c3O+JKb+ygyDEtjXcAkTDQCL5lhMHIdEFdwOPkUzM=;
+        b=rpc5Ct+bek1WG9VG4aseNw6lXddumkrT+dM5/Y/W7JJeKMqM/VxTfOeV5ipnEBTvF+
+         TVNx6XEjZuT1I8uR/KqwrJzNOJTqRpRUGT0A81lLELBHR1aKAxuuQ1jzM/cg+G06TSEN
+         io1KctuglHqPwjIRozzz/rit/tHR3jFkxitZJ9Hvg7/fNs/s4nBktECPqx+9cgXXsOYJ
+         3pX2YZ7RTdoiNMLHqmORMtghnXe5XNg/uVt636O6sEoNUyr1rWm9P7imxtAjtGlheKq9
+         TMjIu8PRN7i30XadhI7jlsqnxVin93Rp39OWN9GGwSq9pR3DTVfWNDNjqxlNU/oV7lxt
+         mBQw==
+X-Gm-Message-State: AO0yUKVcMI6hsBBc6t3MzQyKyiiiC3uLtAzuOHYFNnT15fA0WBgP+8jK
+        Mhi+veLdYSpdrYzWZhWvqk5vXg==
+X-Google-Smtp-Source: AK7set8QN3z8iyphsQHHkmevnZI5JlReWkBkgbZdtR+/J74U1LMkYhlHUOO2fryJAU1hiUfczkXfHA==
+X-Received: by 2002:a5d:6a04:0:b0:2c3:db98:3e87 with SMTP id m4-20020a5d6a04000000b002c3db983e87mr11353074wru.20.1677144965983;
+        Thu, 23 Feb 2023 01:36:05 -0800 (PST)
+Received: from [192.168.1.109] ([178.197.216.144])
+        by smtp.gmail.com with ESMTPSA id n10-20020a05600c500a00b003ea57808179sm1577581wmr.38.2023.02.23.01.36.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 23 Feb 2023 01:36:05 -0800 (PST)
+Message-ID: <4e2ea3e3-8a5d-0e9f-f16a-acedacc99b95@linaro.org>
+Date:   Thu, 23 Feb 2023 10:36:02 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 01/11] dt-bindings: PCI: qcom: Update maintainers entry
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        andersson@kernel.org, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org
+Cc:     konrad.dybcio@linaro.org, bhelgaas@google.com, kishon@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org
+References: <20230222153251.254492-1-manivannan.sadhasivam@linaro.org>
+ <20230222153251.254492-2-manivannan.sadhasivam@linaro.org>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230222153251.254492-2-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Feb 23, 2023, Borislav Petkov wrote:
-> On Wed, Feb 22, 2023 at 02:54:47PM -0800, Sean Christopherson wrote:
-> > Why?  I genuinely don't understand the motivation for bundling all of this stuff
-> > under a single "feature".
+On 22/02/2023 16:32, Manivannan Sadhasivam wrote:
+> Stan is no longer working with MMSOL and expressed his interest to not
+> continue maintaining Qcom PCIe driver. Since I took over the driver
+> maintainership, I'm stepping in to maintain the binding also.
 > 
-> It is called "sanity".
-> 
-> See here:
-> 
-> https://lore.kernel.org/r/Y%2B5immKTXCsjSysx@zn.tnic
-> 
-> We support SEV, SEV-ES, SEV-SNP, TDX, HyperV... guests and whatever's
-> coming down the pipe. And all that goes into arch/x86/ kernel proper
-> code.
-> 
-> The CC_ATTR stuff is clean-ish in the sense that we have separation by
-> confidential computing platform - AMD's and Intel's. Hyper-V comes along
-> and wants to define a different subset of that. And that's only the
-> SEV-SNP side - there's a TDX patchset too.
-> 
-> And then some other hypervisor will come along and say, but but, I wanna
-> have X and Y and a pink pony too.
-> 
-> Oh, and there's this other fun with MTRRs where each HV decides to do
-> whatever it wants.
 
-The MTRR mess isn't unique to coco guests, e.g. KVM explicitly "supports" VMMs
-hiding MTTRs from the guest by defaulting to WB if MTTRs aren't exposed to the
-guest.  Why on earth Hyper-V suddenly needs to enlighten the guest is beyond me,
-but whatever the reason, it's not unique to coco VMs.
 
-> So, we have a zoo brewing on the horizon already!
-> 
-> If there's no clean definition of what each guest is and requires and
-> that stuff isn't documented properly and if depending on which "feature"
-> I need to check, I need to call a different function or query
-> a different variable, then it won't go anywhere as far as guest support
-> goes.
-> 
-> The cc_platform_has() thing gives us a relatively clean way to abstract
-> all those differences away and keep the code sane-ish.
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-For features that are inherent to the platform, I agree, or at least I don't hate
-the interface.  But defining a platform to have specific devices runs counter to
-pretty much the entire x86 ecosystem.  At some point, there _will_ be more devices
-in private memory than just IO-APIC and TPM, and conversely there will be "platforms"
-that support a trusted TPM but not a trusted IO-APIC, and probably even vice versa.
+Best regards,
+Krzysztof
 
-All I'm advocating is that for determining whether or not a device should be mapped
-private vs. shared, provide an API so that the hypervisor-specific enlightened code
-can manage that insanity without polluting common code.  If we are ever fortunate
-enough to have common enumeration, e.g. through ACPI or something, the enlightened
-code can simply reroute to the common code.  This is a well established pattern for
-many paravirt features, I don't see why it wouldn't work here.
