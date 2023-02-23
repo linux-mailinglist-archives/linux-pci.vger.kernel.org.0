@@ -2,108 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0F89C6A0B68
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 15:00:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D204B6A0D43
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 16:45:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233979AbjBWOAq convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 23 Feb 2023 09:00:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41304 "EHLO
+        id S234091AbjBWPpX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Feb 2023 10:45:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233788AbjBWOAp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 09:00:45 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C883355C01;
-        Thu, 23 Feb 2023 06:00:41 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PMvgW6Ct9z6J6K5;
-        Thu, 23 Feb 2023 21:55:51 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.17; Thu, 23 Feb
- 2023 14:00:39 +0000
-Date:   Thu, 23 Feb 2023 14:00:38 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Brian van der Beek <bbeek@marvell.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-        Christophe Therene <ctherene@marvell.com>,
-        "Lukas@wunner.de" <Lukas@wunner.de>
-Subject: Re: Question on DOE requirements for CXL/CDAT and CMA/SPDM
-Message-ID: <20230223140038.0000534d@Huawei.com>
-In-Reply-To: <SJ0PR18MB496423534AC55973B92E3913B3AB9@SJ0PR18MB4964.namprd18.prod.outlook.com>
-References: <SJ0PR18MB496423534AC55973B92E3913B3AB9@SJ0PR18MB4964.namprd18.prod.outlook.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233883AbjBWPpW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 10:45:22 -0500
+Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294EC55C15
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 07:45:21 -0800 (PST)
+Received: by mail-wr1-x434.google.com with SMTP id j2so10844524wrh.9
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 07:45:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=WUtJHy11n8Y/rq9v+tVThHOQuEU8nOltQBq6+LKXmIk=;
+        b=V1VQBLeFVTmxch5HEcztI6KEJGkyu1+nRlw56ftIe1im+aJWKgbqYdAczH9MK4nC2m
+         VRJKqGb1sNoAUU8J+HpwV/DWY162iNiiLL77tJDM36JkfzuRBNGbVcIGcu41RN/JpyF7
+         b/qNt2HrhUeVDeuRZZkssDz7xlFAjQ197Ip9bQIKM/O+jnUetREpkeJlbtBRPt2Cz1LJ
+         lxb8nUSYSBGTb20p4Q0SjRsuITeloeoW3tHqnuL/AnB1guCJZ5shwQQeWDI5VQKyIHlF
+         GYaGjPJji34I4D5O5q8mWakY83vQYhaAFtWTJ8yJFnWWBZ4v4ULq0OoA8ipwMjzpn+28
+         Gokg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WUtJHy11n8Y/rq9v+tVThHOQuEU8nOltQBq6+LKXmIk=;
+        b=Hq4FGXEZ0gx8WxOayCjjGKbkf/1qYErwTIV03xT2DB7RqMM0SutBzPlQtv16HmYlt/
+         wyqkZT7isfQ2PfrEpicv1WTrFek7b3mrorcWphTU0VZOnYX2mXGTmS5I/TzHfsUcj/mS
+         LwXctQSwnh659pDko4iwJw6hecsKi+Qa7+7Fh0XqLucqc1d8F/p22Hr50AznkUlJBdAw
+         bLTAvCeJCQhWWji3NoHW2g2z03iMWq18tz+R+VEUp4X0afs6go729aFf6XeratYUA0O0
+         ocmOzuuY0OWcWOiPjgwhlVBFn417OEXeZQX4h6uFuzQdg7pMeiAjkUhLJCYK5Yn/3NO3
+         rFXg==
+X-Gm-Message-State: AO0yUKVGnabtmedNIf3NCUCplyrQxdc/oAXP8nC6esRWLl8p50zeKmnP
+        4L4QKcgFVrLDL43OZw2kTH4x/A==
+X-Google-Smtp-Source: AK7set+vIXFCFewCWF4qBdv5jm6siVTdfVVno5o1udTzlHH2yBZRGnoaUdEWRd1WBIcsio02GMoW9Q==
+X-Received: by 2002:a5d:4610:0:b0:2c5:561e:808e with SMTP id t16-20020a5d4610000000b002c5561e808emr13069275wrq.12.1677167119643;
+        Thu, 23 Feb 2023 07:45:19 -0800 (PST)
+Received: from myrica (054592b0.skybroadband.com. [5.69.146.176])
+        by smtp.gmail.com with ESMTPSA id t6-20020a5d4606000000b002c55306f6edsm13876488wrq.54.2023.02.23.07.45.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 23 Feb 2023 07:45:19 -0800 (PST)
+Date:   Thu, 23 Feb 2023 15:45:20 +0000
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, darren@os.amperecomputing.com,
+        scott@os.amperecomputing.com, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
+Subject: Re: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not
+ enabled on PF
+Message-ID: <Y/eKEMo1moXt3pPP@myrica>
+References: <Y+4PmJb2rBGMhS1y@myrica>
+ <20230221154624.GA3701506@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230221154624.GA3701506@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 23 Feb 2023 13:06:47 +0000
-Brian van der Beek <bbeek@marvell.com> wrote:
+On Tue, Feb 21, 2023 at 09:46:24AM -0600, Bjorn Helgaas wrote:
+> It's weird to me that the SMMU is between PCI and memory, but the
+> driver seems to insert itself in the middle after PCI enumeration.
+> And maybe even after some PCI device driver binding?
 
-> Hi all,
-> 
+No this shouldn't happen, because device drivers expect DMA to be
+operational in their probe() function, so at that point the IOMMU must be
+configured. The core and IOMMU subsystems enforce probe dependency between
+the SMMU and the PCI device, using links described by ACPI or device tree.
 
-Hi Bryan,
-
-> I posted the following question to the PCI-SIG protocol group:
-> 
-> The Base Specification Revision 6.0.1 paragraph 6.31.3 'CMA/SPDM Rules' includes the following statement:
-> 
-> The instance of DOE used for CMA/SPDM must support:
-> 
-> ·         the DOE Discovery data object protocol,
-> 
-> ·         if IDE is supported, the IDE_KM data object protocol using Secured CMA/SPDM (See § Section 6.31.4 ),
-> 
-> ·         and no other data object protocol(s).
-> 
-> Whereas the Compute Express Link (CXL) Revision 3.0 paragraph 8.1.11 'Table Access DOE' states:
-> 
-> A device may interrupt the host when CDAT content changes using the MSI associated with this DOE Capability instance. A device may share the instance of this DOE mailbox with other Data Objects.
-> 
-> For a CXL device that support both CMA/SPDM and CXL Table Access DOE (CDAT) data objects, is it mandatory to have a dedicate DOE instance for the CMA/SPMA protocol data objects? Or is it permitted for the CMA/SPDM and CXL protocols to share a single DOE instance?
-
-Whilst my reading of what is published would be that the CXL spec is saying about restrictions from
-the CDAT side of things (so if other protocols don't specify restrictions, they may share a DOE instance),
-ultimately to get an answer on that take it to the relevant folk in the CXL consortium.
-
-> 
-> PCI-SIG replied that the requirement of a dedicated DOE instance for CMA/SPDM was an intentional choice based on the idea that the software attached to the DOE instances would be different.  However, that thought model for how DOE would be used by software has evolved, and it may not be necessary for hardware to implement separate DOE instances.
-
-It's certainly possible, though from hardware side I'd be worried that some usecases might require that separation
-and you'd be building hardware where it wasn't possible to support it.
-
-> 
-> I am reaching out to you, as I am hoping you could provide some insight on the Linux CMA/SPDM implementation and whether it allows for a DOE instance to be shared with CXL/CDAT data objects.
-
-One for Lukas, though I suspect Linux will at most warn on this happening unless there is an implementation subtlety or
-security risk that means we should error out if this happens.
-
-Jonathan
-
-> 
-> Best Regards,
-> 
-> Brian van der Beek
-> Senior Principal Engineer
-> [cid:image001.jpg@01D94783.E04A16A0]<http://www.marvell.com/>
-> Marvell Netherlands B.V., Laan van Diepenvoorde 4, 5582 LA, Waalre | The Netherlands
-> Mobile: +31-6-4775191
-> 
-> www.marvell.com<http://www.marvell.com/>
-> 
-> 
-
+Thanks,
+Jean
