@@ -2,91 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D204B6A0D43
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 16:45:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B7CC6A0F12
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 19:06:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234091AbjBWPpX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Feb 2023 10:45:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57832 "EHLO
+        id S229553AbjBWSGH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Feb 2023 13:06:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233883AbjBWPpW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 10:45:22 -0500
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294EC55C15
-        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 07:45:21 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id j2so10844524wrh.9
-        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 07:45:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WUtJHy11n8Y/rq9v+tVThHOQuEU8nOltQBq6+LKXmIk=;
-        b=V1VQBLeFVTmxch5HEcztI6KEJGkyu1+nRlw56ftIe1im+aJWKgbqYdAczH9MK4nC2m
-         VRJKqGb1sNoAUU8J+HpwV/DWY162iNiiLL77tJDM36JkfzuRBNGbVcIGcu41RN/JpyF7
-         b/qNt2HrhUeVDeuRZZkssDz7xlFAjQ197Ip9bQIKM/O+jnUetREpkeJlbtBRPt2Cz1LJ
-         lxb8nUSYSBGTb20p4Q0SjRsuITeloeoW3tHqnuL/AnB1guCJZ5shwQQeWDI5VQKyIHlF
-         GYaGjPJji34I4D5O5q8mWakY83vQYhaAFtWTJ8yJFnWWBZ4v4ULq0OoA8ipwMjzpn+28
-         Gokg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WUtJHy11n8Y/rq9v+tVThHOQuEU8nOltQBq6+LKXmIk=;
-        b=Hq4FGXEZ0gx8WxOayCjjGKbkf/1qYErwTIV03xT2DB7RqMM0SutBzPlQtv16HmYlt/
-         wyqkZT7isfQ2PfrEpicv1WTrFek7b3mrorcWphTU0VZOnYX2mXGTmS5I/TzHfsUcj/mS
-         LwXctQSwnh659pDko4iwJw6hecsKi+Qa7+7Fh0XqLucqc1d8F/p22Hr50AznkUlJBdAw
-         bLTAvCeJCQhWWji3NoHW2g2z03iMWq18tz+R+VEUp4X0afs6go729aFf6XeratYUA0O0
-         ocmOzuuY0OWcWOiPjgwhlVBFn417OEXeZQX4h6uFuzQdg7pMeiAjkUhLJCYK5Yn/3NO3
-         rFXg==
-X-Gm-Message-State: AO0yUKVGnabtmedNIf3NCUCplyrQxdc/oAXP8nC6esRWLl8p50zeKmnP
-        4L4QKcgFVrLDL43OZw2kTH4x/A==
-X-Google-Smtp-Source: AK7set+vIXFCFewCWF4qBdv5jm6siVTdfVVno5o1udTzlHH2yBZRGnoaUdEWRd1WBIcsio02GMoW9Q==
-X-Received: by 2002:a5d:4610:0:b0:2c5:561e:808e with SMTP id t16-20020a5d4610000000b002c5561e808emr13069275wrq.12.1677167119643;
-        Thu, 23 Feb 2023 07:45:19 -0800 (PST)
-Received: from myrica (054592b0.skybroadband.com. [5.69.146.176])
-        by smtp.gmail.com with ESMTPSA id t6-20020a5d4606000000b002c55306f6edsm13876488wrq.54.2023.02.23.07.45.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Feb 2023 07:45:19 -0800 (PST)
-Date:   Thu, 23 Feb 2023 15:45:20 +0000
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, darren@os.amperecomputing.com,
-        scott@os.amperecomputing.com, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev
-Subject: Re: [PATCH] PCI/ATS:  Allow to enable ATS on VFs even if it is not
- enabled on PF
-Message-ID: <Y/eKEMo1moXt3pPP@myrica>
-References: <Y+4PmJb2rBGMhS1y@myrica>
- <20230221154624.GA3701506@bhelgaas>
+        with ESMTP id S229472AbjBWSGG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 13:06:06 -0500
+Received: from mx0b-0016f401.pphosted.com (mx0a-0016f401.pphosted.com [67.231.148.174])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBBD4FAA8;
+        Thu, 23 Feb 2023 10:06:05 -0800 (PST)
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31NHVA6G027360;
+        Thu, 23 Feb 2023 10:05:51 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=pfpt0220;
+ bh=cJtPNFCr0v5OLJisx3imEHbO/0vzHn18+sJHW6lT7c4=;
+ b=GnmvEx+F8PNvPJYX+Bzerv9J+NqwE8YUSw0ee1BNDIX0t9atYbCm2hvPkJtu7JZPGvN/
+ NMWmFxsSpr7Dc9Tr3qpvDL+CeYhx8jXqSZxU7qqG8B1BGZgdi5PFY6vuhwBxhkHOFpCv
+ KAptZzGhSn61EUDsSBSfrZnWuTE9rITytivsAXIqWPYQCuBpKW/t7brJXuM8O5w9SNZ1
+ mbChzsle+Z0MJNUTQz1rc4b2WoI0IZ1rq1tLpMjIkOfInNsGxKjeYsqty3pQ5drfo2Lw
+ 43244P2jrgmhQcg14FForwE5YjPjlEWxhX2dTYhKDWGi/UCg6AWtSAwVP6PybX9w4S2i Gw== 
+Received: from dc5-exch02.marvell.com ([199.233.59.182])
+        by mx0a-0016f401.pphosted.com (PPS) with ESMTPS id 3nwy5h2cuu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 23 Feb 2023 10:05:51 -0800
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 23 Feb
+ 2023 10:05:49 -0800
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.42 via Frontend
+ Transport; Thu, 23 Feb 2023 10:05:49 -0800
+Received: from jupiter073.il.marvell.com (unknown [10.5.116.85])
+        by maili.marvell.com (Postfix) with ESMTP id 2D5AD3F7092;
+        Thu, 23 Feb 2023 10:05:46 -0800 (PST)
+From:   Elad Nachman <enachman@marvell.com>
+To:     <thomas.petazzoni@bootlin.com>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Elad Nachman <enachman@marvell.com>
+Subject: [PATCH v3 0/7] PCI: dwc: Add support for Marvell AC5 SoC
+Date:   Thu, 23 Feb 2023 20:05:24 +0200
+Message-ID: <20230223180531.15148-1-enachman@marvell.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230221154624.GA3701506@bhelgaas>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain
+X-Proofpoint-GUID: _hXnW85fch48t-qUSZlTLyCx5p93Ha95
+X-Proofpoint-ORIG-GUID: _hXnW85fch48t-qUSZlTLyCx5p93Ha95
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-23_11,2023-02-23_01,2023-02-09_01
+X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 09:46:24AM -0600, Bjorn Helgaas wrote:
-> It's weird to me that the SMMU is between PCI and memory, but the
-> driver seems to insert itself in the middle after PCI enumeration.
-> And maybe even after some PCI device driver binding?
+From: Elad Nachman <enachman@marvell.com>
 
-No this shouldn't happen, because device drivers expect DMA to be
-operational in their probe() function, so at that point the IOMMU must be
-configured. The core and IOMMU subsystems enforce probe dependency between
-the SMMU and the PCI device, using links described by ACPI or device tree.
+Add support for AC5 SoC with MSI and in message emulated legacy mode.
+There are differences in the registers addresses, blocks, DDR location
+for coherent DMA allocation and additional implementation specific registers.
+In addition, support cases of older Designware IP (Armada 7020) which supports
+above 4GB PCIe physical memory window by use of device tree.
 
-Thanks,
-Jean
+v3:
+   1) Add dt bindings for DMA and region mask bits
+
+   2) Support AC5 Legacy PCIe interrupts
+
+   3) Introduce Configurable DMA mask
+
+   4) Introduce region limit from DT
+
+v2:
+   1) add patch with adding compatible string for dt-bindings description
+
+   2) fix W1 warnings which caused by unused leftover code
+
+   3) Use one xlate function to translate ac5 dbi access. Also add
+      mode description in comments about this translation.
+
+   4) Use correct name of Raz
+
+   5) Use matching data to pass the SoC specific params (type & ops)
+
+Elad Nachman (4):
+  dt-bindings: PCI: dwc: add DMA, region mask bits
+  PCI: dwc: support AC5 Legacy PCIe interrupts
+  PCI: dwc: Introduce Configurable DMA mask
+  PCI: dwc: Introduce region limit from DT
+
+Raz Adashi (1):
+  PCI: armada8k: Add AC5 SoC support
+
+Vadym Kochan (1):
+  dt-bindings: PCI: armada8k: Add compatible string for AC5 SoC
+
+Yuval Shaia (1):
+  PCI: armada8k: Add MSI support for AC5 SoC
+
+ .../devicetree/bindings/pci/pci-armada8k.txt  |   4 +-
+ .../bindings/pci/snps,dw-pcie-common.yaml     |  10 +
+ drivers/pci/controller/dwc/pcie-armada8k.c    | 184 +++++++++++++++---
+ .../pci/controller/dwc/pcie-designware-host.c |  23 ++-
+ drivers/pci/controller/dwc/pcie-designware.c  |  13 +-
+ 5 files changed, 197 insertions(+), 37 deletions(-)
+
+-- 
+2.17.1
+
