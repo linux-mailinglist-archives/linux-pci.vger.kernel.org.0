@@ -2,125 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD5A26A11F3
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Feb 2023 22:25:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BD4D6A1575
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Feb 2023 04:39:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjBWVZQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Feb 2023 16:25:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38452 "EHLO
+        id S229497AbjBXDjR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Feb 2023 22:39:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbjBWVZE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 16:25:04 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 346F64E5E7;
-        Thu, 23 Feb 2023 13:25:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677187503; x=1708723503;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=InpjG85eDJI/NoCWvGi6uqwUG/vQ6jnJDzFVyLxNEdY=;
-  b=Ux9xASPRx6wXH3yU4a8E5HSrKUqg4R769EhuuVYHMGFFm8OjECeelVJP
-   ZxnX/aER0SoBdBHGBfIh0Q6F1xN4ntG4oL4pU0KAQNeBvw86oy7k5yYSe
-   veRMS7JNmo/qV/pXb8gafBoSgIBHsRl6Bkj25/spn0xwkgY5Oh3t7cwnF
-   CSoK5xcwvD3u8kCFLJjtCWZQGt5zi7xrghBCPTWTfA3ANfnVdQ1bqT37+
-   5DdhbDxa7pmuKXc9wlHe2pXCeHQfsfZpCUwXMwJ2nw5oy3cYTd+Jqcm8P
-   zYaeu82IKaW4P0CNGKGwJmVy0RUzwh1Y6+j95gh4z8emstWT4H4gm/I9a
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="419563336"
-X-IronPort-AV: E=Sophos;i="5.97,322,1669104000"; 
-   d="scan'208";a="419563336"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2023 13:24:58 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10630"; a="918175991"
-X-IronPort-AV: E=Sophos;i="5.97,322,1669104000"; 
-   d="scan'208";a="918175991"
-Received: from bhouse-desk.amr.corp.intel.com (HELO [10.255.229.193]) ([10.255.229.193])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2023 13:24:46 -0800
-Message-ID: <98950604-b9ff-f021-0c79-021e09e1e291@intel.com>
-Date:   Thu, 23 Feb 2023 13:24:45 -0800
+        with ESMTP id S229379AbjBXDjQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Feb 2023 22:39:16 -0500
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1995414E8E
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 19:39:14 -0800 (PST)
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com [209.85.215.198])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 74F353F57F
+        for <linux-pci@vger.kernel.org>; Fri, 24 Feb 2023 03:39:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1677209953;
+        bh=LvpymLUbODHZ4Mo00qWLmVpjnxYdZJ0xxMFsKmLrd74=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=skfPlk9hGD9JACenRp6ojAbGRcl3CrzNjXydiIWpmAMkPcopObstHRuQdgDneaudw
+         TSEptR8ZVSUufRWYX1u3kkRZ/QOLodHhXwbHKm8b74ER7E6+xACGa0BSEvFXsmRiqC
+         Xn6X2l+HLeppRub8nfdbttgVfvQriUg80cgkqxYCPc61NjnutkfTvZmcqK1tyfaUrY
+         DPJYzO23FybcDF57Jt65ui/R4kDSONDfzXXHX+GRFIVQQb8vlOv9rMeChLvVKvoXC8
+         lVuVHMz6Cd7KmnlMI6mEpXmbHrTn0c41xiiLFXAVPmqTV+3q0y9dF94YRtlLGMZkgH
+         +j1/uybKZNW4Q==
+Received: by mail-pg1-f198.google.com with SMTP id 79-20020a630452000000b005030840e570so656445pge.9
+        for <linux-pci@vger.kernel.org>; Thu, 23 Feb 2023 19:39:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LvpymLUbODHZ4Mo00qWLmVpjnxYdZJ0xxMFsKmLrd74=;
+        b=1U3wig/QZU+ENfZgZZLsXkLFPrbiWZJ7aMm17C1tUg5ndzisVEFb3QDL70qFJwjj+3
+         iASEpKqc7JpFUZYJdoXYUcAyysDEoRibzgiEn+l8OvH5LUdrOISQ8wJ2vkpIVbOw1Vbs
+         2/3To12M6js55TWeYTrgmD1jLuufYYHxVyU/fCsgHaIHkzjQ9M32L3b32hZjAja+LSlC
+         jCADxHo7pTH9orRXLvAGydGgwx+UOs6prx0+myHt3zE5xo9EWUFowqHrOD+sgttGFH3N
+         mONOSPYmm0taneJG6C7Z426+/ScWvmguxiE8vACPUOSzQncxvQB0jDjFFn4RH0wVTn6b
+         IOZw==
+X-Gm-Message-State: AO0yUKXM1qkrcIMMoQdekPPtv42G94WkUfqHZmJTqjQ3D9h6r+m1ZrkB
+        tZyclz5mNa6qyXURY5gfz7i9v/vCeBYXw2sq2MobPXHJCiBEIrC+N3AP4lAuavQKhwtoRsAq0Z9
+        oNnnGNmfBNtN8ALHuMpTFWwZLWnDtJ2W4Eor0RnL2Occn08QmKP3MJQ==
+X-Received: by 2002:a17:902:c3cd:b0:19c:a3be:a4f3 with SMTP id j13-20020a170902c3cd00b0019ca3bea4f3mr1811093plj.4.1677209951572;
+        Thu, 23 Feb 2023 19:39:11 -0800 (PST)
+X-Google-Smtp-Source: AK7set9zi8Z6ymjynDbJ1bv4R019r6ipAEWDuZlP1cNc9u9M+NCmiZ7E0/bSyF0hgJAcuEy3QZN2T2SFFoSYNKs66fY=
+X-Received: by 2002:a17:902:c3cd:b0:19c:a3be:a4f3 with SMTP id
+ j13-20020a170902c3cd00b0019ca3bea4f3mr1811084plj.4.1677209951159; Thu, 23 Feb
+ 2023 19:39:11 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
- to map as encrypted
-Content-Language: en-US
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        Sean Christopherson <seanjc@google.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
-        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-        Tianyu Lan <Tianyu.Lan@microsoft.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "sathyanarayanan.kuppuswamy@linux.intel.com" 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        "ak@linux.intel.com" <ak@linux.intel.com>,
-        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
-        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
-        "jane.chu@oracle.com" <jane.chu@oracle.com>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
-References: <BYAPR21MB16882083E84F20B906E2C847D7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+aczIbbQm/ZNunZ@zn.tnic> <cb80e102-4b78-1a03-9c32-6450311c0f55@intel.com>
- <Y+auMQ88In7NEc30@google.com> <Y+av0SVUHBLCVdWE@google.com>
- <BYAPR21MB168864EF662ABC67B19654CCD7DE9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y+bXjxUtSf71E5SS@google.com>
- <e15a1d20-5014-d704-d747-01069b5f4c88@intel.com>
- <e517d9dd-c1a2-92f6-6b4b-c77d9ea47546@intel.com>
- <BYAPR21MB168836495869ABB4E3D61D61D7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
- <Y/fVoc4C5BNI+i7l@google.com>
- <BYAPR21MB1688452212CF8E1B97D8826DD7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <BYAPR21MB1688452212CF8E1B97D8826DD7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230221023849.1906728-1-kai.heng.feng@canonical.com>
+ <20230221023849.1906728-7-kai.heng.feng@canonical.com> <b2bae4bb-0dbe-be80-3849-f46395c05cd2@gmail.com>
+ <CAAd53p79Of-ZPBFGtBZCSnST+oTT5AwGkRo_Z57Gm9XDOBmi_A@mail.gmail.com>
+In-Reply-To: <CAAd53p79Of-ZPBFGtBZCSnST+oTT5AwGkRo_Z57Gm9XDOBmi_A@mail.gmail.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 24 Feb 2023 11:38:59 +0800
+Message-ID: <CAAd53p5NdHgC8syFqKUZkfZ4-Z7VcYANbLDPCZ4DexacR+nZEA@mail.gmail.com>
+Subject: Re: [PATCH v8 RESEND 6/6] r8169: Disable ASPM while doing NAPI poll
+To:     Heiner Kallweit <hkallweit1@gmail.com>
+Cc:     nic_swsd@realtek.com, bhelgaas@google.com, koba.ko@canonical.com,
+        acelan.kao@canonical.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
+        rafael.j.wysocki@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/23/23 13:15, Michael Kelley (LINUX) wrote:
-> Or statically set a default stub function for is_private_mmio() that returns "false".
-> Then there's no need to check for NULL, and only platforms that want to use it
-> have to code anything.  Several other entries in x86_platform have such defaults.
+On Wed, Feb 22, 2023 at 9:03 PM Kai-Heng Feng
+<kai.heng.feng@canonical.com> wrote:
+>
+> On Tue, Feb 21, 2023 at 7:09 PM Heiner Kallweit <hkallweit1@gmail.com> wrote:
+> >
+> > On 21.02.2023 03:38, Kai-Heng Feng wrote:
+> > > NAPI poll of Realtek NICs don't seem to perform well ASPM is enabled.
+> > > The vendor driver uses a mechanism called "dynamic ASPM" to toggle ASPM
+> > > based on the packet number in given time period.
+> > >
+> > > Instead of implementing "dynamic ASPM", use a more straightforward way
+> > > by disabling ASPM during NAPI poll, as a similar approach was
+> > > implemented to solve slow performance on Realtek wireless NIC, see
+> > > commit 24f5e38a13b5 ("rtw88: Disable PCIe ASPM while doing NAPI poll on
+> > > 8821CE").
+> > >
+> > > Since NAPI poll should be handled as fast as possible, also remove the
+> > > delay in rtl_hw_aspm_clkreq_enable() which was added by commit
+> > > 94235460f9ea ("r8169: Align ASPM/CLKREQ setting function with vendor
+> > > driver").
+> > >
+> > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > > ---
+> > > v8:
+> > >  - New patch.
+> > >
+> > >  drivers/net/ethernet/realtek/r8169_main.c | 14 ++++++++++++--
+> > >  1 file changed, 12 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> > > index 897f90b48bba6..4d4a802346ae3 100644
+> > > --- a/drivers/net/ethernet/realtek/r8169_main.c
+> > > +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> > > @@ -2711,8 +2711,6 @@ static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+> > >               RTL_W8(tp, Config2, RTL_R8(tp, Config2) & ~ClkReqEn);
+> > >               RTL_W8(tp, Config5, RTL_R8(tp, Config5) & ~ASPM_en);
+> > >       }
+> > > -
+> > > -     udelay(10);
+> > >  }
+> > >
+> > >  static void rtl_set_fifo_size(struct rtl8169_private *tp, u16 rx_stat,
+> > > @@ -4577,6 +4575,12 @@ static int rtl8169_poll(struct napi_struct *napi, int budget)
+> > >       struct net_device *dev = tp->dev;
+> > >       int work_done;
+> > >
+> > > +     if (tp->aspm_manageable) {
+> > > +             rtl_unlock_config_regs(tp);
+> >
+> > NAPI poll runs in softirq context (except for threaded NAPI).
+> > Therefore you should use a spinlock instead of a mutex.
+>
+> You are right. Will change it in next revision.
+>
+> >
+> > > +             rtl_hw_aspm_clkreq_enable(tp, false);
+> > > +             rtl_lock_config_regs(tp);
+> > > +     }
+> > > +
+> > >       rtl_tx(dev, tp, budget);
+> > >
+> > >       work_done = rtl_rx(dev, tp, budget);
+> > > @@ -4584,6 +4588,12 @@ static int rtl8169_poll(struct napi_struct *napi, int budget)
+> > >       if (work_done < budget && napi_complete_done(napi, work_done))
+> > >               rtl_irq_enable(tp);
+> > >
+> > > +     if (tp->aspm_manageable) {
+> > > +             rtl_unlock_config_regs(tp);
+> > > +             rtl_hw_aspm_clkreq_enable(tp, true);
+> > > +             rtl_lock_config_regs(tp);
+> >
+> > Why not moving lock/unlock into rtl_hw_aspm_clkreq_enable()?
+>
+> Because where it gets called at other places don't need the lock.
+> But yes this will make it easier to read, will do in next revision.
 
-Yeah, that's what I was thinking too, like 'x86_op_int_noop':
+We can't do that because it creates deadlock:
+rtl_hw_start()
+  rtl_unlock_config_regs()
+  rtl_hw_start_8168()
+  rtl_hw_config()
+    rtl_hw_start_8168h_1()
+      rtl_hw_aspm_clkreq_enable()
 
-> struct x86_platform_ops x86_platform __ro_after_init = {
->         .calibrate_cpu                  = native_calibrate_cpu_early,
->         .calibrate_tsc                  = native_calibrate_tsc,
-...
->         .hyper.pin_vcpu                 = x86_op_int_noop,
+Kai-Heng
 
-It's kinda silly to do an indirect call to a two-instruction function,
-but this is a pretty slow path.
+>
+> Kai-Heng
+>
+> >
+> > > +     }
+> > > +
+> > >       return work_done;
+> > >  }
+> > >
+> >
