@@ -2,74 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4796C6A2B1F
-	for <lists+linux-pci@lfdr.de>; Sat, 25 Feb 2023 18:33:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 523576A2B51
+	for <lists+linux-pci@lfdr.de>; Sat, 25 Feb 2023 19:37:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229693AbjBYRdH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 25 Feb 2023 12:33:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58610 "EHLO
+        id S229595AbjBYSh0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 25 Feb 2023 13:37:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229762AbjBYRdD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Feb 2023 12:33:03 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD67426AD;
-        Sat, 25 Feb 2023 09:33:02 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D08260B55;
-        Sat, 25 Feb 2023 17:33:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A532DC433EF;
-        Sat, 25 Feb 2023 17:33:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677346381;
-        bh=6NZHfqzfAo19cNKksjq+o/SCM1i/OjyrFCDF9l0TwoA=;
-        h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-        b=WctzGEymlJyadp8JqsSHP/WF4T9ifp7V2Ncs+kUXh8+9kmhDwylIIg7wMyiowEQug
-         4+rCFJx4oiOJOeci1LKGaaQRgCzs/gJEnNS9y4p3J7BBZkyQYIhiyzhumGI70AVetP
-         dkx1VKZn7poFipoONQRx5nPN5eVJw6K20TWVhUDQvBrYrV0eYkTd1p5Fz6hKJklz/t
-         c8tQY1PpFB/aeNxNoXFPDJkgW7hYNvz6HnH2UC1PMHXqw3g4eb2iI5ydwYG123FLic
-         sAtnhT7YB1W9/7BFeEUKPSBsQV9n4Zfpf5YnWJGREp38Xe+SpAZH1oCZs2xY3keUH6
-         vdLeo5E3dufZQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 93D3FE68D26;
-        Sat, 25 Feb 2023 17:33:01 +0000 (UTC)
-Subject: Re: [GIT PULL] Compute Express Link (CXL) for 6.3
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <63f5a4e2277b1_c94229453@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.3
-X-PR-Tracked-Commit-Id: e686c32590f40bffc45f105c04c836ffad3e531a
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 7c3dc440b1f5c75f45e24430f913e561dc82a419
-Message-Id: <167734638160.8970.6794755420865287571.pr-tracker-bot@kernel.org>
-Date:   Sat, 25 Feb 2023 17:33:01 +0000
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     torvalds@linux-foundation.org, linux-cxl@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229569AbjBYSh0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 25 Feb 2023 13:37:26 -0500
+X-Greylist: delayed 560 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 25 Feb 2023 10:37:24 PST
+Received: from smtp-outbound9.duck.com (smtp-outbound9.duck.com [20.67.221.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E07313D79
+        for <linux-pci@vger.kernel.org>; Sat, 25 Feb 2023 10:37:24 -0800 (PST)
+MIME-Version: 1.0
+Subject: ASMedia ASM1812 PCIe switch causes system to freeze hard
+Content-Type: text/plain;
+        charset=US-ASCII;
+        format=flowed
+Content-Transfer-Encoding: 7bit
+To:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Received: by smtp-inbound1.duck.com; Sat, 25 Feb 2023 13:37:23 -0500
+Message-ID: <9B577F97-4E03-4D1D-B6F2-909897F938CC.1@smtp-inbound1.duck.com>
+Date:   Sat, 25 Feb 2023 13:37:23 -0500
+From:   fk1xdcio@duck.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=duck.com; h=From:
+ Date: Message-ID: To: Content-Transfer-Encoding: Content-Type: Subject:
+ MIME-Version; q=dns/txt; s=postal-KpyQVw; t=1677350243;
+ bh=/J/JjXmSFS2ucJEFuNJ+A9usjiCA/sWH8eerPUSleMs=;
+ b=BhXRYwaHQFIQwM8TvZPcm61Cc/U+/uHaIIL2FfgeqXthGqNZAFFZsbk0+zoVd3lU62uuYLvir
+ CqKpUDee9jx8xX1QBVSChLPdNxrylUJbBgh6l+ZdDCQ2HqXc8rycKusR9KUc9KBkqaWnBz74xTT
+ T5GqdrhgreyGuL6UStqsZE8=
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pull request you sent on Tue, 21 Feb 2023 21:15:14 -0800:
+I'm testing a generic 4-port PCIe x4 2.5Gbps Ethernet NIC. It uses an 
+ASM1812 for the PCI packet switch to four RTL8125BG network controllers.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-for-6.3
+The more load I put on the NIC the faster the system freezes. For 
+example if I activate four 2.5Gbps fully saturated network connections 
+then the system hard freezes almost immediately. When the system freezes 
+it seems completely dead. SysRq doesn't work, serial consoles are dead, 
+etc. so I haven't been able to get much debugging information. I have 
+tested on various different physical systems, Xeon E5, Xeon E3, i7, and 
+they all behave the same so it doesn't seem like a system hardware 
+issue.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/7c3dc440b1f5c75f45e24430f913e561dc82a419
+Disabling IOMMU makes it run for a little longer before crashing.
 
-Thank you!
+The tiny bit of error information I have been able to get under various 
+conditions (eg. disabling ASPM, forcing D0, etc):
+   Test #1:
+   pcieport 0000:04:02.0: Unable to change power state from D3hot to D0, 
+device inaccessible
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+   Test #2:
+   pcieport 0000:04:02.0: can't change power state from D3cold to D0 
+(config space inaccessible)
+   pcieport 0000:03:00.0: Wakeup disabled by ACPI
+   pcieport 0000:04:02.0: PME# disabled
+
+   Test #3:
+   enp7s0: cmd = 0xff, should be 0x07 \x0a.
+   enp7s0: pci link is down \x0a.
+
+At times there are several of those errors printed for the different PCI 
+devices of the NIC before the system locks up.
+
+Setting "pci=nommconf" on the kernel command line is the only thing that 
+seems to fix the issue but performance is degraded when using 
+bidirectional transfers. 2.5Gbps TX but only 1.5Gbps RX compared to 
+MMCONFIG enabled which gets full 2.5Gbps bidirectional.
+
+So it seems the MMCONFIG works sometimes but eventually something 
+happens and it becomes inaccessible at which point the system freezes. 
+Is there a way to keep MMCONFIG enabled for other devices but not this 
+ASM1812 device? Or better, is there a way to debug and fix MMCONFIG for 
+the device?
