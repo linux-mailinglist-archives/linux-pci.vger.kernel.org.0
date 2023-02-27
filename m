@@ -2,112 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 910906A4CA0
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 22:00:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 17C8E6A4CB9
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 22:05:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229727AbjB0VAJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 16:00:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39308 "EHLO
+        id S229894AbjB0VFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 16:05:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjB0VAI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 16:00:08 -0500
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA0623C61;
-        Mon, 27 Feb 2023 13:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yxNQq6iAQdNqxHxg6xpTtkOHUc+Bubub8MOHjovJQps=; b=qyVfgukQMEl2DxmqtcwlmlPvAS
-        zB0a5j0IaU+dxaa+FZ/IrkDC1aspPRZqLBVqU/IRHkrXqonSnmBFUMTmdh2tcYPrQSuypIAHnm0b1
-        5nq6HJBj0bHs+FMmFAGL7rFgfDSjnVnNau1zD4uX6PoNp/gn/PZqO9OJ+Q+t9IOSEgdIzGVjlnExq
-        ivSxHAYdsaCHjb7xSXNSR5lKVZta2YosZU6uAKuG9E5SaeJyLyY0zgYZqWg4R35ZetWFvFy6ffs/f
-        fxJv1XsiUiYUHph/6lWq07apbkvD7+RNGehLp3qdjHr8/OXCMR2nnTUD4VA1sa5QNJq1aXf7S0Q6j
-        qzusSVVg==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:39650)
-        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1pWkbF-0003hx-So; Mon, 27 Feb 2023 20:59:57 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1pWkbD-0001zh-G7; Mon, 27 Feb 2023 20:59:55 +0000
-Date:   Mon, 27 Feb 2023 20:59:55 +0000
-From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Larry Finger <Larry.Finger@lwfinger.net>,
-        Arnd Bergmann <arnd@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Olof Johansson <olof@lixom.net>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
+        with ESMTP id S229862AbjB0VFU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 16:05:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B711428208
+        for <linux-pci@vger.kernel.org>; Mon, 27 Feb 2023 13:05:14 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 47C3BB80DBD
+        for <linux-pci@vger.kernel.org>; Mon, 27 Feb 2023 21:05:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04E79C4339B;
+        Mon, 27 Feb 2023 21:05:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677531911;
+        bh=wM7CKQVbmGuH345EmkznKBI9Vbtt2sSUgczg9Ty7nXs=;
+        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
+        b=jOPmsQJ92zMVF6JYFsoNUtFmfqH1qn9yNHrBFNCHK1WfW7u5eh/4Dt9Wuis7K36N0
+         zrL+jhWh1yWTKKzwbuI8LAi0DKDAghFiaLH5lvECf285Web9rihBnkQ8C3DESaEWK0
+         /j7dTBTpjCyFT8vHLXWUy9qwvesNEnhkTG5aQlFxMcvzvM6AKOkT0GNU1MFopQ68Gj
+         htVUyVIN5jq24tsH7EHUCjm7Wqg+o4VRa+39BcSkQqAtkTiNRkF1yHoI7FytKL3qRN
+         /mnyrfziJh7++JU+FiEifPiPb2v4w4HMEJbpJnpyNS69v66VYxTCeW/J/rBk/0TyWV
+         6UaSXElMaBwCA==
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailauth.nyi.internal (Postfix) with ESMTP id D2E5827C0054;
+        Mon, 27 Feb 2023 16:05:09 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 27 Feb 2023 16:05:09 -0500
+X-ME-Sender: <xms:BBv9Yyq_yU45rwjslj9ZPw3LnS_Yd3JCkKAXSvmFzr69CFR2sOj88A>
+    <xme:BBv9Ywo9VLxxtN8HDdkLGcOtVPWMG59yBVPaDlDViIdcBzPiuWwE2xiNKgG-bC3C8
+    14R5VUgpEdn9d0GJO4>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeltddgudegtdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugeskhgvrhhnvghlrdhorhhgqeenucggtf
+    frrghtthgvrhhnpedvveeigfetudegveeiledvgfevuedvgfetgeefieeijeejffeggeeh
+    udegtdevheenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhroh
+    hmpegrrhhnugdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidquddvkeehudej
+    tddvgedqvdekjedttddvieegqdgrrhhnugeppehkvghrnhgvlhdrohhrghesrghrnhgusg
+    druggv
+X-ME-Proxy: <xmx:BBv9Y3NRTcfPS0EYvfk5Q21Jb-QcLDWCcZQkB9uda8GiiBfkXPK7Qg>
+    <xmx:BBv9Yx5sAGjH5WS5nTp0Ao8kgK1098XeOqkPFFLTZ5Ul3ATxZpcFJw>
+    <xmx:BBv9Yx7BPJU4ThUSrb8hCmt20IPwURbUGqPfv2ohP3vz_7e7CjhkNQ>
+    <xmx:BRv9Y_7DCKSXNgCtRbgu-759t33EYkEgxuDAtp_duzO0SmzYx8s2_w>
+Feedback-ID: i36794607:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 7653FB60086; Mon, 27 Feb 2023 16:05:08 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-183-gbf7d00f500-fm-20230220.001-gbf7d00f5
+Mime-Version: 1.0
+Message-Id: <3e94a109-66cc-4774-8317-3ae249e34c54@app.fastmail.com>
+In-Reply-To: <Y/0PbJzvrzpvLbcW@shell.armlinux.org.uk>
+References: <20230227133457.431729-1-arnd@kernel.org>
+ <Y/0PbJzvrzpvLbcW@shell.armlinux.org.uk>
+Date:   Mon, 27 Feb 2023 22:04:07 +0100
+From:   "Arnd Bergmann" <arnd@kernel.org>
+To:     "Russell King" <linux@armlinux.org.uk>
+Cc:     "Dominik Brodowski" <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, "Arnd Bergmann" <arnd@arndb.de>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Hartley Sweeten" <hsweeten@visionengravers.com>,
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Kevin Cernekee" <cernekee@gmail.com>,
+        "Lukas Wunner" <lukas@wunner.de>,
+        "Manuel Lauss" <manuel.lauss@gmail.com>,
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "Olof Johansson" <olof@lixom.net>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>,
+        "YOKOTA Hiroshi" <yokota@netlab.is.tsukuba.ac.jp>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
 Subject: Re: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
-Message-ID: <Y/0Zy0nUmorvrp1u@shell.armlinux.org.uk>
-References: <20230227133457.431729-1-arnd@kernel.org>
- <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
- <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 27, 2023 at 09:38:54PM +0100, Arnd Bergmann wrote:
-> On Mon, Feb 27, 2023, at 21:23, Larry Finger wrote:
-> > On 2/27/23 07:34, Arnd Bergmann wrote:
-> 
-> >
-> > Your patch set also breaks my PowerBook G4. The output of 'lspci -nn | grep 
-> > Network' shows the following before your patch is applied:
-> >
-> > 0001:10:12.0 Network controller [0280]: Broadcom Inc. and subsidiaries BCM4306 
-> > 802.11b/g Wireless LAN Controller [14e4:4320] (rev 03)
-> > 0001:11:00.0 Network controller [0280]: Broadcom Inc. and subsidiaries BCM4318 
-> > [AirForce One 54g] 802.11g Wireless LAN Controller [14e4:4318] (rev 02)
-> >
-> > The first of these is broken and built into the laptop. The second is plugged 
-> > into a PCMCIA slot, and uses yenta-socket as a driver.
-> >
-> > When your patches are applied, the second entry vanishes.
-> >
-> > Yes, this hardware is ancient, but I would prefer having this wifi interface 
-> > work. I can provide any output you need.
-> 
-> Is this the Cardbus or the PCMCIA version of the BCM4306 device? As far
-> as I understand this particular chip can be wired up either way inside
-> of the card, and the PowerBook G4 supports both types of devices.
-> 
-> If it's the PCMCIA version, then dropping support for it was the idea
-> of the patch series that we can debate, but if it was the Cardbus version
-> that broke, then this was likely a bug I introduced by accident.
+On Mon, Feb 27, 2023, at 21:15, Russell King (Oracle) wrote:
+> On Mon, Feb 27, 2023 at 02:34:51PM +0100, Arnd Bergmann wrote:
+>> I don't expect this to be a problem normal laptop support, as the last
+>> PC models that predate Cardbus support (e.g. 1997 ThinkPad 380ED) are
+>> all limited to i586MMX CPUs and 80MB of RAM. This is barely enough to
+>> boot Tiny Core Linux but not a regular distro.
+>
+> Am I understanding that the argument you're putting forward here is
+> "cardbus started in year X, so from year X we can ignore 16-bit
+> PCMCIA support" ?
 
-If it shows up as a PCI device, it will be cardbus, not 16-bit ISA.
+Right, but I'm asking this as a question, hence the
+'RFC' in the subject.
 
-PCMCIA cards don't show up in lspci.
+> Given that PCMCIA support has been present in x86 hardware at least
+> up to 2010, I don't see how that is any basis for making a decision
+> about 16-bit PCMCIA support.
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+I assume you mean machines with Cardbus slots that can use
+16-bit PCMCIA slots, rather than laptops with only PCMCIA here,
+right?
+
+> Isn't the relevant factor here whether 16-bit PCMCIA cards are still
+> in use on hardware that can run a modern distro? (And yes, x86
+> machines that have 16-bit PCMCIA can still run Debian Stable today.)
+
+There are three combinations that are supported at the moment:
+
+1. Machines with only 16-bit PCMCIA support, all very old,
+   which rely on these slots for basic functionality.
+2. Machines that support Cardbus slots that are actually
+   used to connect 16-bit cards.
+3. Machines that have a Cardbus slot and can just use 32-bit
+   cards for whatever they need.
+
+Dominik originally raised the question whether we could
+kill off all PCMCIA support already given its age, which
+would either break all three of the above or at least
+the first two if Yenta-socket is kept as a PCI hotplug
+driver.
+
+I wanted to make sure that we keep both case 1) for
+sa1100/omap1/pxa and case 3) for x86, while case 2) seems
+much less important because there are presumably fewer
+users than 3), and they have an upgrade path that only
+involves replacing one cheap card instead of trashing the
+whole machine.
+
+   Arnd
+
