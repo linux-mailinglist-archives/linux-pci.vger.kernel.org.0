@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 898066A4286
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 14:22:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A7826A4289
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 14:22:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbjB0NW2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 08:22:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34662 "EHLO
+        id S230048AbjB0NWb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 08:22:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230040AbjB0NWZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 08:22:25 -0500
+        with ESMTP id S230051AbjB0NWa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 08:22:30 -0500
 Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2094.outbound.protection.outlook.com [40.107.93.94])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE40E2054B;
-        Mon, 27 Feb 2023 05:22:11 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0962C1DB85;
+        Mon, 27 Feb 2023 05:22:25 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cf0Fwhi57cWm+d6ApZeqqqX1Jn1y56PziNjQ658Nf/2GyXulTrhFLbssTlbiUlSzKAmp6Y/lLbE6E0n2Xo/gRwij56uSk3lIIFrWKuY6LoPrnBKhaq/3gfZ5AnWOoGDHVn/1t/AfedaR/isly+eng0UltN4Ogq4A2UnCME9kFgJndFxrOb+Fyle09uXqNIbaq7rl9/8vJ/iD1ZqbXoES+TZfHw/67IND2NQZ6He2E0XBSi0dsNY7phcd7KUdA2eiy78b6jNpXGA1Sd7w/xDec2gp6JHweFkqG5VJXHYpINOpaaY3wXxL2ssqfWqwv8nFzm9AG6TQ9XqAuDExDBhEag==
+ b=Of/38FpxvJudbDV+xnBelDTY/5eYUo9z985lmPk7Eqr4bMRMmROCyIhMOWT8APsiJ3D8DBzzDtemguN2Vj5AmbR94/V7THJxpRHiVq8qH2mvunNXVv+zkj+0gX4FN32ouEO2Ezf/93q6ebvSlNKGmDw7Y3j8fmDSZ1HY149MGZL7TX2Ll6eNAvuQHmIBqI8kwBE7XyMUGayUQPj964tphjO76DPtn0W20/YOOdd/lD7KfNF00NMUK4VpL3kTXX29dpLR6zQxjUAyKDUI2rc/RuwRHL7NsjFaD1pDmoCRuOIDI4kRL9pdgrVBARNFX6JMBLlcX+yNrytDy4NvdMY2oQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hEHzOK+0dYpV0ltEgeBv9S5VqpSxJaAI5Jzyun9Aabw=;
- b=nsyXl5ziNVsF+Ub4A9QlMQCbCq9BvZhEydBfwFwPwX1EAsINnmclCLTGuoEqCHZ532cot/u5YsU5oun9ofjC64raVNbn7rym2r5cRShV1aL/Vb0+NIWxIQ0T0rvpl7xLhXuQqNh1HmQyMdPFzSEFR9jFRcPipgoxHAmwKIjjtvZKdRK7uOzuDgLUWuC55FUsnCYUBoUO56qqLxaksU92WsgWY+JnACHIpECy3BMDOrwlGkDpZ0vXrqjTNfmMT2IwUVjRR45W7jRg9EAfbrI0Np0cDxi1lYtjh2PuINurhjedwwTWaA7gldZEueVYxnDofjaFotpsiikoeK0hQsuIbg==
+ bh=CQ2KRr9Ghve1sjeFkGepMy25F0bIUg6LHFHFozopTew=;
+ b=lIib8MG3zGtv1KwbBdefuVxJ2XDExJFXezDj118AFde7tlhNsG8/nK6UoeQUWTH3Pq7QSl2K7QfUci4pItMkOiDRjedxqyhISiPzGuW4vNKVKEiTG7ej67bzTCjd7c2sD4BXv/crlCtdsn0Q8Xs8T7yeZNEyHVaMYI/wBTJW/mWAIi3+DdLmTBo4/KE0YiZhLBhqLZi5N922kkUL0kb66ghWpgaCpm+jazarREBBpQtAjYipjSXl/rAJswiMxhLr7XyO+EqdN1I4XK4rRfw8toA9uEcOToZhC8wmNh90FX24ZcgnplqPBGbctqtj+qoVNLTEkzL4aYZUHNiJnY62wQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
  header.from=os.amperecomputing.com; dkim=pass
@@ -28,18 +28,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=os.amperecomputing.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hEHzOK+0dYpV0ltEgeBv9S5VqpSxJaAI5Jzyun9Aabw=;
- b=IqhQjMKsBFePAwitmyshNDtya9E5pkMx9HZoYGEmYViFXnZOUiKf93o/K45bD3FAxjRtTLF4VjmhDW70Fv6jpdVGvq1c+3CiyZ2e/OfCbdIxO1pyq9LXkOpBk8Th+qa25Xd+4nzwKCPnIIiRYcq4FP7pt1Fh7b6p3WCmrDj/Uuo=
+ bh=CQ2KRr9Ghve1sjeFkGepMy25F0bIUg6LHFHFozopTew=;
+ b=k7RL8aPLyv9cC/sSviSxfGhYqf8C3D09hzQyAsFgpwUVEcQgMseBUMgJuZrMRRprzdBeHItYiZXk67eLEjGDUfAAy34rJqDNVBXYzBmktrJmrfQ2ZHwCvfRk54SlTP+UOGcQvFX3spNX94l5QsKD8TVrK7nbtvVHS4P2s6a+lc0=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
 Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
  MWHPR01MB2719.prod.exchangelabs.com (2603:10b6:300:f8::21) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6134.29; Mon, 27 Feb 2023 13:22:09 +0000
+ 15.20.6134.29; Mon, 27 Feb 2023 13:22:10 +0000
 Received: from DM8PR01MB6824.prod.exchangelabs.com
  ([fe80::fc8b:5e5e:a850:7f0a]) by DM8PR01MB6824.prod.exchangelabs.com
  ([fe80::fc8b:5e5e:a850:7f0a%6]) with mapi id 15.20.6134.029; Mon, 27 Feb 2023
- 13:22:09 +0000
+ 13:22:10 +0000
 From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
 To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
@@ -47,10 +47,12 @@ To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         will@kernel.org
 Cc:     jean-philippe@linaro.org, darren@os.amperecomputing.com,
         scott@os.amperecomputing.com, gankulkarni@os.amperecomputing.com
-Subject: [PATCH 0/2] Add support to enable ATS on VFs independently.
-Date:   Mon, 27 Feb 2023 05:21:49 -0800
-Message-Id: <20230227132151.1907480-1-gankulkarni@os.amperecomputing.com>
+Subject: [PATCH 1/2] PCI/ATS: Add a helper function to configure ATS STU of a PF.
+Date:   Mon, 27 Feb 2023 05:21:50 -0800
+Message-Id: <20230227132151.1907480-2-gankulkarni@os.amperecomputing.com>
 X-Mailer: git-send-email 2.38.1
+In-Reply-To: <20230227132151.1907480-1-gankulkarni@os.amperecomputing.com>
+References: <20230227132151.1907480-1-gankulkarni@os.amperecomputing.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: CH2PR05CA0013.namprd05.prod.outlook.com (2603:10b6:610::26)
@@ -58,51 +60,51 @@ X-ClientProxiedBy: CH2PR05CA0013.namprd05.prod.outlook.com (2603:10b6:610::26)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|MWHPR01MB2719:EE_
-X-MS-Office365-Filtering-Correlation-Id: b1be4bbd-a2d4-4748-b392-08db18c5a0d6
+X-MS-Office365-Filtering-Correlation-Id: 66b2b6d8-83ac-4931-0ec3-08db18c5a18c
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: er4aGU0PqCGl6XUX4dp6vcKwDqDVsIJQ8pw3Vr4lNB+7N4f4YXjCEFeon7mOW+65IeSNDT0JLFGrVrcdt7Fy8v+rhVZ8xN/w6+sBT54zWI5EjPnNQfEafdO7AW9EhCWhFa8LURVxriHRaYVHEQ/FD6h1UfQ+CC97Bt8vKjOxw5IB8rbRz63kKVXUZ7Qel6YGOacAgJTK/KyA7bWp0VpCr37ugnRMtlMeI0+W2wMGhW2bzfcYE70nRO737ypkkT9n9Uv0PuvCP+hrjtoi4c0jhO36blK0JXzFCIjoAYvbJuJbxCvPuHHFQKTH0zEzl2LsgEoipg+uRJsLJhLEtN0mUERs+rVUelHdKjfZ0ZgbOsmVX9+lyR21rIUaMGeNCyoQcgI8xaa0ZHGldRBFHa74COfPzxC9wtaih8J7PALRamNaw0+tPsitKrihKvmGOxoHObsm9ISP67cZ4QYOMcnVev9hSL4I5iqfTWisdEQ+6TxFMPoIPuanEjjfWZEnDb4ddHt3URfFyQUBPnILVnEzpHclAQsZd4xizhLS+J9pPeiRCO4Hsub+ErNBx7ZcftlXdMaG2PHKcvqZtiIy9WBJ4+EywvrSg9Zq/pq3RcTeGwmvBdJe2TMuD44ZbdRjztiMtsfg5tk83Nylk5KdtZKncVaNt3CMsoyF2r62QhkXNAJM/WkHSoRwnT9/ErkSpzjm
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39850400004)(376002)(366004)(346002)(136003)(396003)(451199018)(8936002)(2906002)(5660300002)(4744005)(41300700001)(66946007)(66556008)(66476007)(4326008)(8676002)(316002)(966005)(478600001)(6486002)(52116002)(6666004)(107886003)(26005)(6512007)(186003)(1076003)(6506007)(2616005)(86362001)(83380400001)(38350700002)(38100700002);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: 3T3QlPI94M+YGeJBZGOLjybR3CZtM+TmDEHcoCc0HuWfYxd7No9sQRnqYTcUkxS+HOoMtWOXnvV/50KMtynaouqgz1oVm4OwExltBd7EeCBMez7j7W8I574RL0EYwm0xGoZspBcJDO5rSVUmK8CvmUWfCyK48ZUKnc4M+CQ9bTQ17egIZJF1xH8TDI1aKnGfarFQAJSuFUOvbfJZgGYhh1vgOaszHunqUfusdHm1P839j5vZIEqP51I2af/6ca8ee0XW6lVzwi8dqCl3th+KW+Tn1rXjTVNXbfMbBmm+1nW/tGz2c1i8N2zT/rIkv4o2QID9sBCgHglzrbskcO0s3KTKmMYFDEMkAv9TlNUMYszLmPFB0sS8Xu45nGnmJ/1JNaW3rqsK6ClrDRn4ZAGIQZZaN4sOzShNxUXXJz9EiSeeOsGJ0Nag8ER4gh1HqklTCYm8ulO0l6W4zMl7gEgdDlXhn5ce7vgDbVBKX2xdYtciNnwvp151VR0unNVKBQWUjtw8ZGqeXk7rTENJlijVUTipXgq07S0deRffYr4E3l/g7dHrdNHj5o4eMGRfLb3AaoyUCh2oer1zfd/qKfvw36jeKp7YU/CXjOJjuUFLlSHRWwXjPZFU9QNUnfUT8C95gQQwHDQy2AJ82TBx8AhiFoLhR2FhfV1l4Gk5YVRlOa67IGKo3xjVtM433SpZFcwublgZe4UhAK6t0mAosVCUeA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(39850400004)(376002)(366004)(346002)(136003)(396003)(451199018)(8936002)(2906002)(5660300002)(41300700001)(66946007)(66556008)(66476007)(4326008)(8676002)(316002)(478600001)(6486002)(52116002)(6666004)(107886003)(26005)(6512007)(186003)(1076003)(6506007)(2616005)(86362001)(83380400001)(38350700002)(38100700002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?lj7RxcjC/qptuwKdOJXcQXYoYhd4W1pCi19OVgb9/2zCn6/M8G9Cxsr0wTyD?=
- =?us-ascii?Q?tbSCITME12lm5g1MBpkKNcNoK81FCpYDlYBoCpl4KbIbwqfkbH7AzrOYq/hg?=
- =?us-ascii?Q?Dzeb542nLw1mvGLDctxZNXaGHpKilreAr3cxCBNPNQqyYra5oayCkDxgXw96?=
- =?us-ascii?Q?KSPlYdqijqEVLRifsY0/DaOtWzxU2BGkm6pJv7wN7oASTShnq59YrWhWnNTH?=
- =?us-ascii?Q?LPrKuRvO5W4IA0Xl1OZDFDcflQBjfkJMPyzI0s3Obx5cMIvNd68dA4D9Z5Ep?=
- =?us-ascii?Q?MApSSq9+ducWYnWQW4kr22F1aLPvfyFHbUSuk1KUZ2Rx2T9Mpo//lu2h5e2g?=
- =?us-ascii?Q?l9TFkwv6YYzRTi/OhQZF0Qi+42PlXZwyAncAhn2DFPTjakjcy53CSaR39CsE?=
- =?us-ascii?Q?6eTj3qp/uXI7YKtq3RFfl8FV2vb8M8UQiNRI0eZrFQP8ilRm3OPRqQDizZxE?=
- =?us-ascii?Q?PzUUTQg9mplDdQPgSvDTO4VhzgjD/Zs08QcX6sPJ0E16DAVNUS5+Yq8zKiS5?=
- =?us-ascii?Q?lpJXNVtcoSIJyGDasLekNUFtR0QFsu83USp3bKoYqO58AC9TGer2vh0TSHSd?=
- =?us-ascii?Q?KcrsQ6M+BCAX5zvXCjn21JrzMbCqpZ0Hq8oaERCi7E1jzoAWNrUe9IxUaha8?=
- =?us-ascii?Q?7V9oXMsQTVzGXa+Qw5Nhx/pqBUUo7yhC0scpkKMlSh2ejmggiQA10tWdUNGO?=
- =?us-ascii?Q?yrPIwf93HNbZCpCcN40T8IBA9cd3HukkWaawOPJ2IDFvrzraMfqnx011iB+x?=
- =?us-ascii?Q?VW8BA6lLxSTeNBMDgMLjC+V7i3rJR1f2r8eVLn1ULmI/tHVJEyjcg+8Gkb2k?=
- =?us-ascii?Q?sH2NavmtkIZZVFWuM6z54R78Mbs5Vb+hNdAkjrEyCrDj35jnwkip3vygodqw?=
- =?us-ascii?Q?0qL6bh3T89t7TcTwBftiiGhYP+xTKRQsV9l7l+g1MIsmd/ayvrGkJMawNezj?=
- =?us-ascii?Q?rb3Xij6C5Mieo6OV5dwY1hov3H2QrigwO4AiyUeaQ2GGgBi+Be9feWLj+7iW?=
- =?us-ascii?Q?NrZs6PlkTrui++Qo5UB2YZKumkrT4YkLoV43pJFba+QhYycFAmnIJ5KpA6Np?=
- =?us-ascii?Q?PKKKv/0rGlePtiCbBIAv+tPq18ltbXMspTfFAGkjtY54Xs0L97IoebjTzilD?=
- =?us-ascii?Q?K8Cm2Lkq4WQT0kNgWE59vpeWuWp6Z3mPaerzHNe4KrVqHH6Wh+upXZUnjP3F?=
- =?us-ascii?Q?atjRW3+Np6eLcXQVWqrmt7WaQedCwBk6v21Siffz/6Z2y31Dx0Yr4oFpOy12?=
- =?us-ascii?Q?TVXUCQ7McgxthN4gZ+JmAPrQ6dnc8LXPKwN3fp3i5bPoiRwkLlZSAA1BViQI?=
- =?us-ascii?Q?hrHOBIZw0dEAPBYMdQl1CKFuxWT+Iey1X5ZSmSEgVhw5EjM+dXQP81LVtIIm?=
- =?us-ascii?Q?6i5swAOteGNp7zF2u7rBV5kWg8lZyBTaVN5ZaKjunl0C74wpaDZekJB3/yUe?=
- =?us-ascii?Q?gUl0qn28r6AiicGCQ7C/++DCjaA4rxjcHsseS+SPh958ljf69MWoJJFV3WwI?=
- =?us-ascii?Q?pGkogHFWb6/9SN+wRHFrgkr17VgRU7bjr8yGIHfK6eouiSnheHthz7v7LGjj?=
- =?us-ascii?Q?myruoLRD44VvgQgOOg7MUxRSjwfuzU0e6jduOdHdRyuNoJpvF+Rg/j69DuZc?=
- =?us-ascii?Q?AzBOie8DOdz+p1xD2YHPSdw=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?A9/fO0bkSHhbdc0wxkgEGC5gVKHSxm6WCSBlZ4pq1WVmMS2XacF0sa/MjtST?=
+ =?us-ascii?Q?lLwBiXLu0ffBN84xrqPlncOtP40Pk0nwSd6AV0fz49uZGnnSLgm6nNPrTGO0?=
+ =?us-ascii?Q?ztrf8c7vzCF4ji2jZPBuu299yznhLnLsSWi3dHiawuvkyZZiegaKNE994Ugi?=
+ =?us-ascii?Q?aJlug1wOESPgeERjItldsTV8S48bHQLECfagcUwr5vGVbzq2AleTcxkFoAfa?=
+ =?us-ascii?Q?3qSdRaquJcu1252f8fskeN2hFXED1R1PwLw/FktADuTyk38cmtlUpJ50n3Eh?=
+ =?us-ascii?Q?/OsQyahdDUqhjwy8trFqECWvgjHDzITdJngICBl9192cbp7nh4ofTBufRkfz?=
+ =?us-ascii?Q?emhaXViERQ8qJ+f5fd30jUfJ7d8FS1E081V81tjm6RA2L+PSrj0optwIViUi?=
+ =?us-ascii?Q?qjFzQ2q1cMGeSnuyi79LKWXwLHc2ALOQy9rWSJSWUsGImw/MnvYIR9xXCL4m?=
+ =?us-ascii?Q?b1mhL6Ng12qho5hZttZaP0H4CXBsG+RWouJMpAgvCJOs4l2NS1IuaRWDj/XW?=
+ =?us-ascii?Q?HvZsYZcTJlMmDucgpFHCt/ge+brY3zq6iw1aIdt7WkBKFJ4LugM+R7qbbO5E?=
+ =?us-ascii?Q?vtjY5hQQr8zLLO6cPOI2iSEdzZmrAILskAXMuSxMIGFHfE2B6jev2r0UTXZt?=
+ =?us-ascii?Q?BYy1QuLbMZ70YDyz2HZUdm9F1Ea9y7lmfCYg0W1wnlMEBJAHwQ0wb9W+Fy6M?=
+ =?us-ascii?Q?oVnMlDtXEs0hmHQxh4E6OKHFYQSCemI7OA6y4ULfLeCL4LSASrmwYiBiSUL2?=
+ =?us-ascii?Q?bj5hu0p7KgP2WHN+vZOLRJ8J2lADjEw40lj4K2JEgqMKfZ9MK1ddECD+YC0x?=
+ =?us-ascii?Q?CuL+wrszVVsJLu7njZ+3YacUy2GyQ+Njmvg5A+1VZHxmMB+PY+VSTFt7gEVo?=
+ =?us-ascii?Q?RBNS0oeNkm8+ii2uVUX5aFbiSlm/h3TonIa988AG6iqvDEVuzkXnMpqHCoJs?=
+ =?us-ascii?Q?hWbDsR+FCJmufNtmVwGYtKo+WU367iW/B5JnvfpvHdN5ymVuLjacfcT239Qu?=
+ =?us-ascii?Q?Py4x9Zhug6ztQyGJ5Ytf5DcI0rA0h5MO3yeJwYJEMj3G5wT7iC8X3BUGgYTc?=
+ =?us-ascii?Q?EKepUt9Jjxt3ifd1qEPO54fy2DKnJSaowHWEZ9BBlxCTYYThQ84Z524Eeb0o?=
+ =?us-ascii?Q?dB549qAn4ULrZoS0twKeh9DRjJbFdYxRYx84ahD6AMqaXakd9mdbTYQMPEF1?=
+ =?us-ascii?Q?G3ongCjCrMEl2I8KKOJU/O2phplwjHD+u7YDCjT5Ri/rNNCklOECtUrK1yLM?=
+ =?us-ascii?Q?d4U0zXvFCMErKrkepNUMIWiTaTnMuoGYw2cheGHflB8cnTC/sDn1x062S3OR?=
+ =?us-ascii?Q?rAsruy6sFjOyueJoD/uzRTT3V1wDu6mRp5clvN0oyW2KrI+ri035eRLN8dx2?=
+ =?us-ascii?Q?v+ZcSGI5HeiXnYGE4vNh+9Tw73g9YEBepDpqQ0QQ90N+EOKzrwTVZ/zJspy6?=
+ =?us-ascii?Q?ndasAv0Z0d0cIZkisY30mRzHSvdnKF0a36FyYtcmKM47f4cgEFYdfyUjNjpm?=
+ =?us-ascii?Q?IKEZjRUVsT3myBQ+t3HsIESZnqhNPlPm+JKNE0K6vS4yhufue7CmfnRZM6k/?=
+ =?us-ascii?Q?HY1jcne3EHMdGS1ZRvqy4IFNYfIyXNv7sFcA9OJIquhOKZXgNO80W6Llyyju?=
+ =?us-ascii?Q?botPAIHhgrFRqI6fDDEXd7k=3D?=
 X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b1be4bbd-a2d4-4748-b392-08db18c5a0d6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 66b2b6d8-83ac-4931-0ec3-08db18c5a18c
 X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2023 13:22:09.0525
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Feb 2023 13:22:10.2553
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Q6cXfBwqFawXe29bX34iQptQL1H2BGlhFWB3es7UcFonVq+tuuuXLcxMqu5HX2WtaMZX3TYy8O4NorBIMHpBJlLQGVq8bs+NszNubnZmO5s26wVJrOzVgHyW05/GXE1U
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2c9dg2mrrpPrdZrr3qBX3s7UPFKTMLgMYMDIwPnJaBjZKKI3jv9NJuMwKW1JlpeSPS54d88COSkV/F/HOAU86qVQ7guuxqLSARzBLKnBKYZdYToY8HC9Wgd+LF2xNiVY
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR01MB2719
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
@@ -113,27 +115,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As discussed in [1], adding a helper function to configure the STU of an
-ATS capability. Function pci_ats_stu_configure() can be called to program
-the STU while enumerating the PF, to support scenarios like PF is not
-enabled with ATS, whereas VFs can enable it.
+As per PCI specification (PCI Express Base Specification Revision
+6.0, Section 10.5) both PF and VFs of a PCI EP are permitted to be enabled
+independently for ATS capability, however the STU(Smallest Translation
+Unit) is shared between PF and VFs. For VFs, it is hardwired to Zero and
+the associated PF's value applies to VFs.
 
-In SMMU-V3 driver, calling pci_ats_stu_configure() to confgiure the STU
-while enumerating a PF in passthrough mode.
+In the current code, the STU is being configured while enabling the PF ATS.
+Hence, it is not able to enable ATS for VFs, if it is not enabled on the
+associated PF already.
 
+Adding a function pci_ats_stu_configure(), which can be called to
+configure the STU during PF enumeration.
+Latter enumerations of VFs can successfully enable ATS independently.
 
-[1] https://lore.kernel.org/linux-arm-kernel/20230221154624.GA3701506@bhelgaas/T/
+Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+---
+ drivers/pci/ats.c       | 32 ++++++++++++++++++++++++++++++--
+ include/linux/pci-ats.h |  1 +
+ 2 files changed, 31 insertions(+), 2 deletions(-)
 
-
-Ganapatrao Kulkarni (2):
-  PCI/ATS: Add a helper function to configure ATS STU of a PF.
-  iommu/arm-smmu-v3: Configure STU of a PF if ATS is not enabled.
-
- drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 25 +++++++++++++++-
- drivers/pci/ats.c                           | 32 +++++++++++++++++++--
- include/linux/pci-ats.h                     |  1 +
- 3 files changed, 55 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+index f9cc2e10b676..70e1982efdb4 100644
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -46,6 +46,34 @@ bool pci_ats_supported(struct pci_dev *dev)
+ }
+ EXPORT_SYMBOL_GPL(pci_ats_supported);
+ 
++/**
++ * pci_ats_stu_configure - Configure STU of a PF.
++ * @dev: the PCI device
++ * @ps: the IOMMU page shift
++ *
++ * Returns 0 on success, or negative on failure.
++ */
++int pci_ats_stu_configure(struct pci_dev *dev, int ps)
++{
++	u16 ctrl;
++
++	if (dev->ats_enabled || dev->is_virtfn)
++		return 0;
++
++	if (!pci_ats_supported(dev))
++		return -EINVAL;
++
++	if (ps < PCI_ATS_MIN_STU)
++		return -EINVAL;
++
++	dev->ats_stu = ps;
++	ctrl = PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
++	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(pci_ats_stu_configure);
++
+ /**
+  * pci_enable_ats - enable the ATS capability
+  * @dev: the PCI device
+@@ -68,8 +96,8 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
+ 		return -EINVAL;
+ 
+ 	/*
+-	 * Note that enabling ATS on a VF fails unless it's already enabled
+-	 * with the same STU on the PF.
++	 * Note that enabling ATS on a VF fails unless it's already
++	 * configured with the same STU on the PF.
+ 	 */
+ 	ctrl = PCI_ATS_CTRL_ENABLE;
+ 	if (dev->is_virtfn) {
+diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
+index df54cd5b15db..9b40eb555124 100644
+--- a/include/linux/pci-ats.h
++++ b/include/linux/pci-ats.h
+@@ -8,6 +8,7 @@
+ /* Address Translation Service */
+ bool pci_ats_supported(struct pci_dev *dev);
+ int pci_enable_ats(struct pci_dev *dev, int ps);
++int pci_ats_stu_configure(struct pci_dev *dev, int ps);
+ void pci_disable_ats(struct pci_dev *dev);
+ int pci_ats_queue_depth(struct pci_dev *dev);
+ int pci_ats_page_aligned(struct pci_dev *dev);
 -- 
 2.38.1
 
