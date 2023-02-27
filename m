@@ -2,111 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6BACF6A4CCC
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 22:09:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C81C6A4D34
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 22:30:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229761AbjB0VJP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 16:09:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        id S229973AbjB0Vaf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 16:30:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbjB0VJO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 16:09:14 -0500
-Received: from mail-ot1-x32b.google.com (mail-ot1-x32b.google.com [IPv6:2607:f8b0:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06C021ABE8;
-        Mon, 27 Feb 2023 13:09:14 -0800 (PST)
-Received: by mail-ot1-x32b.google.com with SMTP id t7-20020a9d7487000000b00693d565b852so4356699otk.5;
-        Mon, 27 Feb 2023 13:09:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=z9cnnYYpu8BDS9XfqEVOyxhljFJQa5MMvXQQwk5tjFo=;
-        b=iskc2DzDrf04kFnyzvj2BPhQn2X1NzA6nf4jsN570hhf+uPXbcNOusy7NuhP3cZ82f
-         msg09XYUdqm1sLCEE/C6XIFL9AWFU68fuL0b8rYVO1ZGpOmOhLKgPzkfwaqjf9Jp2ijA
-         0iLH4klrWGyvYsmxCH5hsbg83wqynDREmgMacPQDymAU3lvkZlBeiIjk8EfZfj27xNFe
-         vRrOUNgQ55cPBc3hZnRAzA2R2Bntl7GCcUL1lKA1OudhoprFH9hOCOCxZohku+bpzIqq
-         4Mm1YryJQzbLqayJsE3ScpcmX+H40RWIMY0rBXfs5q1ElOm/Z2IxHdf9ll09D7TxvxGp
-         FSPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=z9cnnYYpu8BDS9XfqEVOyxhljFJQa5MMvXQQwk5tjFo=;
-        b=tAK6u5/VbSO8jCk9IH2DDmR85AG2GjkumfrtFGE+Tu8kEwUNd3h/y++/xGzom1bmuR
-         jX/GSxgOfLmEBARne0lAd0ydJVa/8WhtsTaGKLuZPDJluc6b5Rzxi9kNwyeRHxJU/lrG
-         alk6xeYnGOczn8ZIYrg/eps/lRU9UWy1CSHjueKLjwy837zcAMYRw5L01x91PCWUH00m
-         bysSz+zeMxYPIuGjYcUSn5Ldee4Jqrc7ovbTIIMg4KJGPZYwe1O9SYJ4DTXMYWyxi+hB
-         ArrO6U1I4YsMr5sAh6/07hUDsFHqMqmRPYeLwG6heORH+bql6EndVfVG0QIQVU9IBJND
-         Tiog==
-X-Gm-Message-State: AO0yUKWF7OvHfrWPVhdldZSybqrQjPXNBc92oRxsSlyq8rQUECiEs0LK
-        6JR4R4RsfCxks0D9H7UHgcU=
-X-Google-Smtp-Source: AK7set/frfjoCGyDv00Ap3jhlqT84pkSMjxNpuW1vmRQrw6g4fOBFze3niUcHS4Xyc0uUKQNMdNRtw==
-X-Received: by 2002:a9d:12b7:0:b0:68b:ca45:786c with SMTP id g52-20020a9d12b7000000b0068bca45786cmr171980otg.22.1677532153319;
-        Mon, 27 Feb 2023 13:09:13 -0800 (PST)
-Received: from [192.168.1.135] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id k14-20020a056830150e00b00690e990e61asm3007429otp.14.2023.02.27.13.09.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 13:09:12 -0800 (PST)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <e9f8501f-ede0-4d38-6585-d3dc2469d3fe@lwfinger.net>
-Date:   Mon, 27 Feb 2023 15:09:11 -0600
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
+        with ESMTP id S229739AbjB0Vad (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 16:30:33 -0500
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BF2122A1F;
+        Mon, 27 Feb 2023 13:30:32 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id AE3785C0152;
+        Mon, 27 Feb 2023 16:30:29 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Mon, 27 Feb 2023 16:30:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to; s=fm3; t=1677533429; x=1677619829; bh=GtBIbUEIzI
+        /iUf6AU5qtHMu638shGX4SdoEqg7SfWT4=; b=Kc0MEy8xNRfWchZnTrYphtjku8
+        exVS95qfn7rjqJ0D2GvyD1IONxt1WEKqyuXVXwkGZ/BtS/YOCObQ+fdUPzntbD37
+        e30JndEqtwfv8VPluEcBNz3MAosXdSTBuh8KB+IdNKd3NrpNuF8gdDRwl8PzOPjb
+        rruwlA4y0z58o7O3e1hI1OhSru1yf5GFqW2475eR4m1kcqTWGi0+RTphtBTYvki+
+        NYgoH4YH0nIcC1lzIOw+V/GG2ah7iYFoWCmRQTWa8Etj1jXgKUsxEFfKGU8detsG
+        IkoXop1dnLBlNOK/V61m3vY8Ia4qrXLmBIhwaSNk0fkXcHMP91xWBMR5GYlg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
+        :mime-version:references:reply-to:sender:subject:subject:to:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; t=1677533429; x=1677619829; bh=GtBIbUEIzI/iUf6AU5qtHMu638sh
+        GX4SdoEqg7SfWT4=; b=JlcpH0Oge+scYqG/VvsdPzZdfNBeGdfCRLr9/y0551Yg
+        YDzC8COlR/rVwNihuhSpwiGSTrM1ix1lbBFHBE8D60eLde3b/ULHe7JsakgD8b5S
+        G+/4Qnuo2lyimfDzKRyXmf4Oak06MrJmRohv8b/hTiIYGPISCl4GJ4OoVqdqvS8B
+        hoHkOpsBiQTDYkj6D5xO9YWRebmeCLJBdkuCiboYSKpf7cjg4888K5W47722EeCu
+        ebKA/31BUWTQ0vlFHMzIExppXMiqzopwmVfA332ughh/QKw/dtSgllCFycdxUFOO
+        jr9s/aa/bnikBtwCzSAKLOZ5Aa1c+6OIjYdA2RCfyw==
+X-ME-Sender: <xms:9SD9Y3ssTzJNau3SkHyi9pRJtsfxfFjnv0VraZs2NK-VGBNvnp01Yw>
+    <xme:9SD9Y4eOBoGKqs9pQNSeGoAPIsvWzqc5LA4WY8yP5nPdziPIuCWmgf65ZcVhSNhWp
+    _-Bg5kNt0JFKuUsElM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeltddgudegiecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
+    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
+    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
+    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    grrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:9SD9Y6xRrEHbSUznwqBNIvEiOl6ydCmwOHeJoTs9vkIPEv4Kvmr08A>
+    <xmx:9SD9Y2O6Mn8xIwkS4L9m1-ueg6EbKFyinGtZ3omTEjjbVvGxh6aByQ>
+    <xmx:9SD9Y38SlqWXXtBekSsScYu4IEjewB43gb2TgTdqKXd9zaQuKdHxVA>
+    <xmx:9SD9YyerfjbYaH5FmDPEc-hCwbV1fwxUpHF0kw7KNI601RQXmuE7KQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 43FC9B60086; Mon, 27 Feb 2023 16:30:29 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-183-gbf7d00f500-fm-20230220.001-gbf7d00f5
+Mime-Version: 1.0
+Message-Id: <7085019b-4fad-4d8d-89c0-1dd33fb27bb7@app.fastmail.com>
+In-Reply-To: <e9f8501f-ede0-4d38-6585-d3dc2469d3fe@lwfinger.net>
+References: <20230227133457.431729-1-arnd@kernel.org>
+ <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
+ <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
+ <e9f8501f-ede0-4d38-6585-d3dc2469d3fe@lwfinger.net>
+Date:   Mon, 27 Feb 2023 22:30:08 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Larry Finger" <Larry.Finger@lwfinger.net>,
+        "Arnd Bergmann" <arnd@kernel.org>,
+        "Dominik Brodowski" <linux@dominikbrodowski.net>,
         linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Olof Johansson <olof@lixom.net>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        "Hartley Sweeten" <hsweeten@visionengravers.com>,
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        "Jakub Kicinski" <kuba@kernel.org>,
+        "Kevin Cernekee" <cernekee@gmail.com>,
+        "Lukas Wunner" <lukas@wunner.de>,
+        "Manuel Lauss" <manuel.lauss@gmail.com>,
+        "Oliver Hartkopp" <socketcan@hartkopp.net>,
+        "Olof Johansson" <olof@lixom.net>,
+        "Robert Jarzmik" <robert.jarzmik@free.fr>,
+        "YOKOTA Hiroshi" <yokota@netlab.is.tsukuba.ac.jp>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-References: <20230227133457.431729-1-arnd@kernel.org>
- <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
- <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Subject: Re: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/27/23 14:38, Arnd Bergmann wrote:
-> Is this the Cardbus or the PCMCIA version of the BCM4306 device? As far
-> as I understand this particular chip can be wired up either way inside
-> of the card, and the PowerBook G4 supports both types of devices.
-> 
-> If it's the PCMCIA version, then dropping support for it was the idea
-> of the patch series that we can debate, but if it was the Cardbus version
-> that broke, then this was likely a bug I introduced by accident.
+On Mon, Feb 27, 2023, at 22:09, Larry Finger wrote:
+> On 2/27/23 14:38, Arnd Bergmann wrote:
+>> Is this the Cardbus or the PCMCIA version of the BCM4306 device? As far
+>> as I understand this particular chip can be wired up either way inside
+>> of the card, and the PowerBook G4 supports both types of devices.
+>> 
+>> If it's the PCMCIA version, then dropping support for it was the idea
+>> of the patch series that we can debate, but if it was the Cardbus version
+>> that broke, then this was likely a bug I introduced by accident.
+>
+> The BCM4306 is internal, and wired directly to the PCI bus. My understanding is 
+> that the BCM4318 is a cardbus device. It definitely shows up in an lspci scan.
 
-Arnd,
+Ah right, I got confused because I had googled for BCM4306 for too long
+trying to find out whether that might be used in combination with the
+BCM63xx SoC support that patch 1 removed.
 
-The BCM4306 is internal, and wired directly to the PCI bus. My understanding is 
-that the BCM4318 is a cardbus device. It definitely shows up in an lspci scan.
+BCM4318 should definitely keep working after my series. My best guess
+is that the problem is that I introduced an unnecessary dependency
+between CONFIG_CARDBUS and CONFIG_PCI_HOTPLUG, so you'd need to
+either undo the dependency or enable both in the local config.
 
-Larry
+If it's not that, then it's a bug in my changes that needs to be
+fixed before they can be considered for integration. As long as
+we are still debating whether the series makes sense at all,
+I'm not worried about this.
 
+      Arnd
