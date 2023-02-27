@@ -2,130 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 355626A4C64
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 21:39:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D1C96A4C84
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 21:55:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229990AbjB0Uj1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 15:39:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53870 "EHLO
+        id S229726AbjB0UzW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 15:55:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjB0Uj0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 15:39:26 -0500
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4A6C241DD;
-        Mon, 27 Feb 2023 12:39:20 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id E63645C012F;
-        Mon, 27 Feb 2023 15:39:19 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 27 Feb 2023 15:39:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm3; t=1677530359; x=1677616759; bh=S1e3ePYKPA
-        RVzg5R0A+d2tPWsFwcVvoNQZq9oGxMJlk=; b=AM0evC64PkAurLIav8Kvp5pRWz
-        rrJUXArt/YaCrSSTBXPkOap91I1/GoSj9jD5tLmokjU+dAK2AAKGghYSKg2L898x
-        5NV4W92OvLTmEI62WFINDwBjhGiFwIrVcg/fEOFO7ZTQbIGG9H2K6/zOiEFad4Mu
-        vrSSyOtZX5rSqqFHvWSvJR0cGOJ7zym/dvH1MRXVAba4xcUIaZnqoKp9vsS1MzI5
-        a1BVImUD1rwnFf5m7UiXSePDfToc9Y/MxOTPYGKAFxv6WpEgdJEo5YiYuZXczPgv
-        RM1sLOqIjT/9vPNPcvVb+DN6gjVz2As+gT3blIsj/+tg2V/p5rUIoABkcjEg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm1; t=1677530359; x=1677616759; bh=S1e3ePYKPARVzg5R0A+d2tPWsFwc
-        VvoNQZq9oGxMJlk=; b=RCWu7QtK9uPN/g1Pss5r3EAsnZLvd9r9wXX0v8xYZiMV
-        lj5mDFj1gR69ANKaBudSuQ1upTyEYtmZOanh1bwBTtwcNhw+d97WS0qjNZxDFs0i
-        BB1rbtGi6JjV/ontuqVRpo0H8zNk5MBq4NSv0T3JhHo9LA6U80RNFBu1bcYyjlwT
-        WTS59/kNS8pkhIPazPaE5ynoWNFo34Dy/jrPOzzmVqoRK+QLolJziYbTowLJKkhR
-        SlydfJR7i2UufWwf+8apkjxqj0HzZc5isyI9P9Ud9FHfecJ8mAa4vmf4sSLaquMY
-        pUNzklG9MbRFPiYowvwcu4q7hSXn6waFs+SQR1BuOQ==
-X-ME-Sender: <xms:9xT9Y5oIUNzx0xP9NUq-9ER4s7qWMn-oyleahK4fJ5sXY_k9-RYBdw>
-    <xme:9xT9Y7ohvHc1zphjIfVI0OqEGTEHYoLswWPAOtqumQnj7EmkWvzLAGQSFq77GdfiV
-    0GSCYlyIJaSx4vlbDI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeltddgudefiecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeffheeugeetiefhgeethfejgfdtuefggeejleehjeeutefhfeeggefhkedt
-    keetffenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:9xT9Y2PQP1we4fnztxFZDGJ7oi0C8hxrVtFpGyQEWRyK8nhYF0_yVg>
-    <xmx:9xT9Y04YjNZnx1v967R6eTqh6uvjLEB8eZzupR317raNQ3b7GO1-aA>
-    <xmx:9xT9Y44xqH9MS-EREdaaa4DCmQPj3HO_ES_YIQfKn2UHcCyxbCCpDw>
-    <xmx:9xT9Y-7rwHi_mMxi8Xq_-Vt-0PIIyO3hZwzEkgq54JOYzY6Csy0AsA>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 887CEB60086; Mon, 27 Feb 2023 15:39:19 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-183-gbf7d00f500-fm-20230220.001-gbf7d00f5
-Mime-Version: 1.0
-Message-Id: <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
-In-Reply-To: <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
-References: <20230227133457.431729-1-arnd@kernel.org>
- <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
-Date:   Mon, 27 Feb 2023 21:38:54 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Larry Finger" <Larry.Finger@lwfinger.net>,
-        "Arnd Bergmann" <arnd@kernel.org>,
-        "Dominik Brodowski" <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org
-Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Florian Fainelli" <f.fainelli@gmail.com>,
-        "Hartley Sweeten" <hsweeten@visionengravers.com>,
-        "Ian Abbott" <abbotti@mev.co.uk>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        "Kevin Cernekee" <cernekee@gmail.com>,
-        "Lukas Wunner" <lukas@wunner.de>,
-        "Manuel Lauss" <manuel.lauss@gmail.com>,
-        "Oliver Hartkopp" <socketcan@hartkopp.net>,
-        "Olof Johansson" <olof@lixom.net>,
-        "Robert Jarzmik" <robert.jarzmik@free.fr>,
-        "YOKOTA Hiroshi" <yokota@netlab.is.tsukuba.ac.jp>,
+        with ESMTP id S229740AbjB0UzV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 15:55:21 -0500
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D431325970
+        for <linux-pci@vger.kernel.org>; Mon, 27 Feb 2023 12:55:19 -0800 (PST)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1pWkWN-00025C-11; Mon, 27 Feb 2023 21:54:55 +0100
+Received: from pengutronix.de (unknown [IPv6:2a03:f580:87bc:d400:1c98:86b6:77e8:2586])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        (Authenticated sender: mkl-all@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 7E90A183DF4;
+        Mon, 27 Feb 2023 20:54:48 +0000 (UTC)
+Date:   Mon, 27 Feb 2023 21:54:46 +0100
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Hartley Sweeten <hsweeten@visionengravers.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Kevin Cernekee <cernekee@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Manuel Lauss <manuel.lauss@gmail.com>,
+        Olof Johansson <olof@lixom.net>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
         bcm-kernel-feedback-list@broadcom.com,
         linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
         linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
 Subject: Re: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Message-ID: <20230227205446.udsl5tbnzzo4dhi4@pengutronix.de>
+References: <20230227133457.431729-1-arnd@kernel.org>
+ <1daa9f1f-6a68-273f-0866-72a4496cd0db@hartkopp.net>
+ <c5ea695e-8693-4033-9941-c582f1c6f6be@app.fastmail.com>
+ <c5f1e652-b7e7-ff79-11e3-8c5c91011b83@hartkopp.net>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="mqdy46osj5uoiol2"
+Content-Disposition: inline
+In-Reply-To: <c5f1e652-b7e7-ff79-11e3-8c5c91011b83@hartkopp.net>
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Feb 27, 2023, at 21:23, Larry Finger wrote:
-> On 2/27/23 07:34, Arnd Bergmann wrote:
 
->
-> Your patch set also breaks my PowerBook G4. The output of 'lspci -nn | grep 
-> Network' shows the following before your patch is applied:
->
-> 0001:10:12.0 Network controller [0280]: Broadcom Inc. and subsidiaries BCM4306 
-> 802.11b/g Wireless LAN Controller [14e4:4320] (rev 03)
-> 0001:11:00.0 Network controller [0280]: Broadcom Inc. and subsidiaries BCM4318 
-> [AirForce One 54g] 802.11g Wireless LAN Controller [14e4:4318] (rev 02)
->
-> The first of these is broken and built into the laptop. The second is plugged 
-> into a PCMCIA slot, and uses yenta-socket as a driver.
->
-> When your patches are applied, the second entry vanishes.
->
-> Yes, this hardware is ancient, but I would prefer having this wifi interface 
-> work. I can provide any output you need.
+--mqdy46osj5uoiol2
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is this the Cardbus or the PCMCIA version of the BCM4306 device? As far
-as I understand this particular chip can be wired up either way inside
-of the card, and the PowerBook G4 supports both types of devices.
+On 27.02.2023 21:32:40, Oliver Hartkopp wrote:
+> On 27.02.23 20:53, Arnd Bergmann wrote:
+> > On Mon, Feb 27, 2023, at 20:07, Oliver Hartkopp wrote:
+>=20
+> > > I assume these CAN bus PCMCIA interfaces won't work after your patch
+> > > set, right?
+> >=20
+> > Correct, the patch series in its current form breaks this since
+> > your laptop is cardbus compatible. The options I can see are:
+> >=20
+> > - abandon my series and keep everything unchanged, possibly removing
+> >    some of the pcmcia drivers that Dominik identified as candidates
+> >=20
+> > - decide on a future timeline for when you are comfortable with
+> >    discontinuing this setup and require any CAN users with cardbus
+> >    laptops to move to USB or cardbus CAN adapters, apply the series
+> >    then
+> >=20
+> > - duplicate the yenta_socket driver to have two variants of that,
+> >    require the user to choose between the cardbus and the pcmcia
+> >    variant depending on what card is going to be used.
+> >=20
+> > Can you give more background on who is using the EMS PCMCIA card?
+> > I.e. are there reasons to use this device on modern kernels with
+> > machines that could also support the USB, expresscard or cardbus
+> > variants, or are you likely the only one doing this for the
+> > purpose of maintaining the driver?
+>=20
+> Haha, good point.
+>=20
+> In fact the EMS PCMCIA, the PEAK PCMCIA (PCAN PC Card) and the supported
+> Softing PCMCIA cards are nearly 20 year old designs and they are all
+> discontinued for some time now. Today you can easily get a high performan=
+ce
+> Classical CAN USB adapter with an excellent OSS firmware for ~13 EUR.
+>=20
+> The only other laptop CAN "Cards" I'm aware of are PCIe "ExpressCard" 34/=
+54
+> from PEAK System which use the PCI subsystem.
+>=20
+> Maybe you are right and we should simply drop the support for those old
+> PCMCIA drivers which will still be supported for the LTS 6.1 lifetime the=
+n.
+>=20
+> @Marc Kleine-Budde: What do you think about removing these three drivers?
 
-If it's the PCMCIA version, then dropping support for it was the idea
-of the patch series that we can debate, but if it was the Cardbus version
-that broke, then this was likely a bug I introduced by accident.
+I don't have any of these cards, nor any $CUSTOMER who's using it.
 
-      Arnd
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
+
+--mqdy46osj5uoiol2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmP9GJQACgkQvlAcSiqK
+BOim1Af9HhMjxavoReN1OLf67lmnwdcKJx0jkNEBErIZDw9Y8aQ41jDfSxFVuWqf
+3lDwrMpqnDa/fsh8BN1nxWOpf8uDeNrFl8J6gWeXDL91MthD+FZaOMGPiHmpkvYa
+w7+i2RzYHMLvwcA+reEz/k79GL794WiUXOCF46YRkveH/1YvDdlrg+wbQWWKMmSj
+7PCcGwXtLHhJMhqjo4RbKAyALQpcGuT4M/iMRW+bYulFz3metZUGi+xElA54WAvh
+TdG4OpRH1vHbUKUcpc6vAaemJM1tC89ZkPio0rbOHzM/8Y5JRMeJm+wXWAiMJqGS
+8JiNXemUDlN3ImForuqgYT1+Jbohqw==
+=bdCc
+-----END PGP SIGNATURE-----
+
+--mqdy46osj5uoiol2--
