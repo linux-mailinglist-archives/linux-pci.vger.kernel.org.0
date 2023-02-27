@@ -2,61 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD4FC6A3B67
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 07:56:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B5506A3C09
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 09:12:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229891AbjB0G44 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 01:56:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54934 "EHLO
+        id S229888AbjB0IM1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 03:12:27 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjB0G4z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 01:56:55 -0500
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8373414EA8;
-        Sun, 26 Feb 2023 22:56:51 -0800 (PST)
-Received: by mail-pj1-x1043.google.com with SMTP id gi3-20020a17090b110300b0023762f642dcso5191566pjb.4;
-        Sun, 26 Feb 2023 22:56:51 -0800 (PST)
+        with ESMTP id S229471AbjB0IM0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 03:12:26 -0500
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED4CB19F2A
+        for <linux-pci@vger.kernel.org>; Mon, 27 Feb 2023 00:12:25 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id y10so2977050pfi.8
+        for <linux-pci@vger.kernel.org>; Mon, 27 Feb 2023 00:12:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=yFne0so2RLlbAsf94ASsGCwVWQNiBU45K9xYyay0Ac4=;
-        b=QJvMuh5vTpiOwjkcodrulfr0g+ZGfpwYmtLMVXUBqogkNdsuV2Scmatq2u+2ySdye1
-         DMTgp5OmwISYHTi83e3lZFdVUCCNerPHkS+TM5DYZ4UQST0ykHhGnzTx4dF7wnBGmhCO
-         9jaZjW/31TOZrbc0658LelrBxUfoWkCnN9tnxWR9Hq+zoHeqe3Q+cq+d4b7R8jvXnml5
-         ZCjcTEINwx5P2TfdBdBRVzxBk+RWtCDXu2VOX0lswuPn846xxpsjHzuQB6qHrP28j1/N
-         LM/lMTlb6y9uLlxgkJdunOgcrVU06J8Jj3JDU8OG9WS+bn+g3CbW8JIwmh+DepLXoFZ6
-         LHuQ==
+        bh=AaJLUnQgW3YvM+831rK4y5nTUdoF7eZcnDJFmGI//oE=;
+        b=Ngpm7nT9CLlDP9rE42QTdn2hVBMBSwbKJ/5U4B9su4IO7cFkAk3pwyqqwO1e9Vv/CF
+         Dd5Fpx3q4gZe+Aedx3imAbYnK2Ii08MrMK/1GH3d34ZqOwLKXkzKTQZVo4+tHZfoY4VO
+         WLJNLcB93TdiLrpJ2HQBolnxW6vquDdW63Ynz8QPRkFgWAGe/CfpOnOq3iG+ukf0e87T
+         A1tzjoc6QxBZx3FOq+BY25lWzYh02AUtwhIrW8KwZAvewdR5950AlkK2fIZzIyDsRzp1
+         3ncsvUaYGQhLNZ2p5WTZA9bHR/qKLhHqlyu/3e0uZYKlcJOjKEmxHEk3u3qCeadiF7kO
+         TRng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=yFne0so2RLlbAsf94ASsGCwVWQNiBU45K9xYyay0Ac4=;
-        b=PI+47512Aa5FT6cmSpG2e0rYe400pXIBrjJcFhmtJTyiCKieBqTarGkJRPYIorr3XR
-         eQPSYLtWWUl/wIu6k1sOZwTVITPLAyNgvYq50INW4tvJjTzTyFNnY8nL+Mqgj0jQBkrN
-         62JmzTN7y2H3Jv3NsYZ61pGAiyBHr6OmcdjaB9aa9v8iyUUlXRwCx6XJhg5v5DcOq+NF
-         VBGWxRqwnGVeNTmGnBXg6NeRgCIK51Ua4uGV26i8ic8ouHiV3qKYULA1xV9/P0LB10QE
-         PccvkIzB2Nn79z9BWnloevO3n7rx0PvI8GIsvs5xcSJ2iGSI+4UB09um2uuDtc8+SRpt
-         keKQ==
-X-Gm-Message-State: AO0yUKU19/Ps0j4ByYdxPUJiRIzDvKyVC5AtYNZL6WCL1Y/0E9jsF2Ro
-        PFWGIGdWVgwA2yxQ3Vae4dFckj3K9agh8YMPANg=
-X-Google-Smtp-Source: AK7set8wP28czRVvzxMxwDHPHLavc0JERLBBY+tVp8pznO7VxJq0w4C8BdHYj+AYalcOhLduh9vOyIH7aftpL+WVNFI=
-X-Received: by 2002:a17:90a:c296:b0:234:1fac:f291 with SMTP id
- f22-20020a17090ac29600b002341facf291mr4404939pjt.8.1677481010962; Sun, 26 Feb
- 2023 22:56:50 -0800 (PST)
+        bh=AaJLUnQgW3YvM+831rK4y5nTUdoF7eZcnDJFmGI//oE=;
+        b=s5T9xaFHdKyUg0e7YKZg90HkQVUptkSUQK5mUya/FIKygzcL8/d5h18vMPGVUj4dMc
+         HSCBAhCIt9GltUvVaka+3ej5TmzIFgUguN3fK+7eJ++fZAfHBmyeFiSKbI0Znqbd2g2k
+         q5adh+5sDZ9V54Sv9qm9xTut7pxNHXIctR9NbeDuYjexQXd/mcbdNI3zm6GuCr9yUGLt
+         llK0TWRbRurwYBluoWEPNgMoCHclAYbbsPKBrH0gwKzyJ5p/naufIOewqpiYr6H+fbbA
+         jmENLlpfVQZhU9u4IZ9WeUMkDINhcbIca96lkFlvFSR+Z5vBv3ZmIZfiyBCyPov+FfTe
+         GLeQ==
+X-Gm-Message-State: AO0yUKWB85nO/Rop90P8U4ioEukEQmFAJhEkW7Cx/tWEXaDfu8XnW8T2
+        Pl2JwC6eNqp71wnxmBOfoXfyV5f13VG2uW+aPxJpbmBOfS6Erw==
+X-Google-Smtp-Source: AK7set8EDBW9a4nZ/5oesxVYWIxejD62UIU84J6EB5Lf0Miu3NHHvMboaLuYQG0eqDXOAZPL+mw4UGRfkd4eBFDRw3Q=
+X-Received: by 2002:a63:9dc9:0:b0:503:2535:44c3 with SMTP id
+ i192-20020a639dc9000000b00503253544c3mr2128484pgd.4.1677485545278; Mon, 27
+ Feb 2023 00:12:25 -0800 (PST)
 MIME-Version: 1.0
-References: <20230227064800.340833-1-korantwork@gmail.com>
-In-Reply-To: <20230227064800.340833-1-korantwork@gmail.com>
-From:   Xinghui Li <korantwork@gmail.com>
-Date:   Mon, 27 Feb 2023 14:57:50 +0800
-Message-ID: <CAEm4hYU0tnq2epaCUAeq=vpsfAfX2Sr_Z7cJa_-fHsjhc2epUw@mail.gmail.com>
-Subject: Re: [PATCH] PCI:vmd: add the module param to adjust msi mode
-To:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
-        jonathan.derrick@linux.dev, lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xinghui Li <korantli@tencent.com>
+References: <8e7978f65c6606fb2d48483435c78bd3@cutk.com> <756173E3-354E-4AC4-89D7-9096B62E344C.1@smtp-inbound1.duck.com>
+In-Reply-To: <756173E3-354E-4AC4-89D7-9096B62E344C.1@smtp-inbound1.duck.com>
+From:   "Oliver O'Halloran" <oohall@gmail.com>
+Date:   Mon, 27 Feb 2023 19:12:14 +1100
+Message-ID: <CAOSf1CGoAVrzb7nrMgZ6tZP-Akx7DvGD5RBu9KjprP5r2DtQiA@mail.gmail.com>
+Subject: Re: ASMedia ASM1812 PCIe switch causes system to freeze hard
+To:     fk1xdcio@duck.com
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -69,102 +67,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-<korantwork@gmail.com> =E4=BA=8E2023=E5=B9=B42=E6=9C=8827=E6=97=A5=E5=91=A8=
-=E4=B8=80 14:48=E5=86=99=E9=81=93=EF=BC=9A
+On Sun, Feb 26, 2023 at 6:20=E2=80=AFAM <fk1xdcio@duck.com> wrote:
 >
-> From: Xinghui Li <korantli@tencent.com>
+> On 2023-02-25 13:28, Chris wrote:
+> > I'm testing a generic 4-port PCIe x4 2.5Gbps Ethernet NIC. It uses an
+> > ASM1812 for the PCI packet switch to four RTL8125BG network
+> > controllers.
 >
-> In the legacy, the vmd msi-mode can only be adjusted by configing
-> vmd_ids table.This patch adds another way to adjust msi mode by
-> adjusting module param, which allow users easier to adjust the vmd
-> according to the I/O scenario without rebuilding driver.There are two
-> params could be recognized: remapping, bypass.
->
-> Signed-off-by: Xinghui Li <korantli@tencent.com>
-> ---
->  drivers/pci/controller/vmd.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..6d3272f5598d 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -34,6 +34,18 @@
->  #define MB2_SHADOW_OFFSET      0x2000
->  #define MB2_SHADOW_SIZE                16
->
-> +/*
-> + * The VMD msi_mode module parameter provides the alternative way
-> + * to adjust msi_mode when load vmd.ko other than vmd_ids table.
-> + * There are two params could be recognized:
-> + *
-> + * 1-remapping
-> + * 2-bypass
-> + *
-> + */
-> +char *msi_mode =3D "default";
-> +module_param(msi_mode, charp, 0444);
-> +
->  enum vmd_features {
->         /*
->          * Device may contain registers which hint the physical location =
-of the
-> @@ -820,6 +832,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, uns=
-igned long features)
->                         return ret;
->
->                 vmd_set_msi_remapping(vmd, true);
-> +               dev_info(&vmd->dev->dev, "init vmd with remapping msi-x\n=
-");
->
->                 ret =3D vmd_create_irq_domain(vmd);
->                 if (ret)
-> @@ -832,6 +845,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, uns=
-igned long features)
->                 irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_V=
-MD_MSI);
->         } else {
->                 vmd_set_msi_remapping(vmd, false);
-> +               dev_info(&vmd->dev->dev, "init vmd with bypass msi-x\n");
->         }
->
->         pci_add_resource(&resources, &vmd->resources[0]);
-> @@ -898,6 +912,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, un=
-signed long features)
->         return 0;
->  }
->
-> +static void vmd_config_msi_mode_param(unsigned long *features)
-> +{
-> +       if (strcmp(msi_mode, "remapping") =3D=3D 0)
-> +               *features &=3D ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
-> +       else if (strcmp(msi_mode, "bypass") =3D=3D 0)
-> +               *features |=3D VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-> +}
-> +
->  static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id=
-)
->  {
->         unsigned long features =3D (unsigned long) id->driver_data;
-> @@ -927,6 +949,8 @@ static int vmd_probe(struct pci_dev *dev, const struc=
-t pci_device_id *id)
->         if (err < 0)
->                 goto out_release_instance;
->
-> +       vmd_config_msi_mode_param(&features);
-> +
->         vmd->cfgbar =3D pcim_iomap(dev, VMD_CFGBAR, 0);
->         if (!vmd->cfgbar) {
->                 err =3D -ENOMEM;
-> --
-> 2.34.1
->
+> Sorry, I forget my attachment with the PCI device information.
 
-Hi all:
-As we discussed in last patch (PCI: vmd: Do not disable MSI-X
-remapping in VMD 28C0 controller).
-I add the module param in vmd driver to adjust msi-x working mode. I
-try not to modify the default mode.
-And as for the `programmatic way`, I design to add the `automatic`
-parameter in the next patch, which needs
-more testing of different IO scenarios.
+Looks like your mail client is breaking threads.
+
+Anyway, the only thing of interest I can see in the log is that AER is
+reporting correctable errors on three of your four NICs:
+
+07:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125
+2.5GbE Controller (rev 05)
+Capabilities: [100 v2] Advanced Error Reporting
+CESta: RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+08:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125
+2.5GbE Controller (rev 05)
+Capabilities: [100 v2] Advanced Error Reporting
+CESta: RxErr+ BadTLP- BadDLLP+ Rollover- Timeout+ AdvNonFatalErr-
+09:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125
+2.5GbE Controller (rev 05)
+Capabilities: [100 v2] Advanced Error Reporting
+CESta: RxErr+ BadTLP- BadDLLP+ Rollover- Timeout+ AdvNonFatalErr-
+0a:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125
+2.5GbE Controller (rev 05)
+Capabilities: [100 v2] Advanced Error Reporting
+CESta: RxErr+ BadTLP- BadDLLP+ Rollover- Timeout+ AdvNonFatalErr-
+
+Bad Data Link Layer Packet errors suggest that specific card has
+signal integrity issues. Assuming that's true, more traffic to the NIC
+means more opportunities for uncorrectable errors which would explain
+the hard lockups. I'm not sure why setting pci=3Dnommconf seems to fix
+the problem, but my guess it's just masking the issue. The AER
+capability is in the extended config space which requires the memory
+mapped config space to access so disabling that probably just stops
+the kernel from noticing that errors are occuring. The network stack
+is pretty forgiving of errors since it can just drop packets which
+might also explain the lower throughput too.
