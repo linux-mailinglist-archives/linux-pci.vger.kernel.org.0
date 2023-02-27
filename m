@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 301306A3F62
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 11:20:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 863876A3F76
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Feb 2023 11:29:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjB0KU1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Feb 2023 05:20:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60864 "EHLO
+        id S229882AbjB0K3S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Feb 2023 05:29:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbjB0KUZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 05:20:25 -0500
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745B1F742;
-        Mon, 27 Feb 2023 02:20:20 -0800 (PST)
+        with ESMTP id S230142AbjB0K3R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Feb 2023 05:29:17 -0500
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97C6093E8;
+        Mon, 27 Feb 2023 02:29:14 -0800 (PST)
 Received: (Authenticated sender: clement.leger@bootlin.com)
-        by mail.gandi.net (Postfix) with ESMTPSA id 6786320013;
-        Mon, 27 Feb 2023 10:20:17 +0000 (UTC)
+        by mail.gandi.net (Postfix) with ESMTPSA id 85021FF811;
+        Mon, 27 Feb 2023 10:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1677493219;
+        t=1677493753;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=DfUXTiMiJzbkbOg3yszx6yBVT1O5G7pw4HlRcNmTVLI=;
-        b=DRscHsonCDQrIeK9cwiYDPgRinQi++gmxh2vg4Tmj1XbdEidA+8HSGVBu1jwOJuwJ+YotK
-        L9kUTk5u1pXtH5x7MQh4TRxqTVjf300XTySmZksvGHZaM0wd3t+aZIsJeHLexbLutJ54SI
-        SVc9X2JnQALDGhU8oh5qUzz8dvCCqOPzdmQHMLcxDmSXSzU+PG9yitpDq2eWiQb0OJ3blX
-        HRsqSMjAYoM7dBgFVK4Wi1A/LaG1NXgfbNIpXa4ZkXWX0Il4/9RlLD/KtKMx+tDmKEATx3
-        4YljjOysYvDB92mIaKxGnycOiyg35yxrBfNlsGbRlq5KNAn6ztzd3wK1nGuFeQ==
-Date:   Mon, 27 Feb 2023 11:22:55 +0100
+        bh=4vImSfKPrUKWkXa15i6OAv/IJbHNZFkDDY8XgxTTTWw=;
+        b=aLQZM558UAuRIvzvtqVrd2QyzkUyWYQzCSgdViPO/8v+C80xe45ucxJyFcrH/1j9BuOVNa
+        NI7H5snTJop2wbekce7Dd/NfLZSEbTucSmyt/i32qSsKRiv9yJbMGgJEC+8bhrYoxX7i5h
+        Z+fBViJIJoPWQVNo4MliOldoCYe0jmZfZNJrGPxcwfsA1FK1JZqRQ7vnYe+dggOKgWRemh
+        oSGCQAcw9HSTIA7iNVb3ILmRKxMe+BK5X6CWaOwK9srUDGWHfKy+CycVCmgv6f/4Qui5Uz
+        nX3ihtBbawLfMexm4RJecU8IqOHXYAjeq8wK/XNAonqrwc2DXp7HUqmWKsdFcw==
+Date:   Mon, 27 Feb 2023 11:31:50 +0100
 From:   =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
 To:     Frank Rowand <frowand.list@gmail.com>
 Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
@@ -38,30 +38,27 @@ Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
         sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
         stefano.stabellini@xilinx.com, trix@redhat.com
 Subject: Re: [PATCH V7 0/3] Generate device tree node for pci devices
-Message-ID: <20230227112255.410c1a71@fixe.home>
-In-Reply-To: <954cc40b-c484-5ba9-9039-eed3c1c722c3@gmail.com>
+Message-ID: <20230227113150.398dcfa7@fixe.home>
+In-Reply-To: <af2a6686-ea35-e5fc-7541-27e5d6ca9311@gmail.com>
 References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
-        <954cc40b-c484-5ba9-9039-eed3c1c722c3@gmail.com>
+        <af2a6686-ea35-e5fc-7541-27e5d6ca9311@gmail.com>
 Organization: Bootlin
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.36; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
+        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Le Sun, 26 Feb 2023 16:38:58 -0600,
+Le Mon, 27 Feb 2023 00:51:29 -0600,
 Frank Rowand <frowand.list@gmail.com> a =C3=A9crit :
 
-> Hi Cl=C3=A9ment, Hi Lizhi,
->=20
 > On 1/19/23 21:02, Lizhi Hou wrote:
 > > This patch series introduces OF overlay support for PCI devices which
 > > primarily addresses two use cases. First, it provides a data driven met=
@@ -75,69 +72,39 @@ hod
 > >=20
 > >   1) Xilinx Alveo Accelerator cards (FPGA based device)
 > >   2) Microchip LAN9662 Ethernet Controller
+> >=20
+> >      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-c=
+lement.leger@bootlin.com/
 > >  =20
 >=20
-> Digging back through some history:
 >=20
-> >      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-c=
-lement.leger@bootlin.com/ =20
+> > Normally, the PCI core discovers PCI devices and their BARs using the
+> > PCI enumeration process. However, the process does not provide a way to
+> > discover the hardware peripherals that are present in a PCI device, and
+> > which can be accessed through the PCI BARs. Also, the enumeration proce=
+ss =20
 >=20
-> (I am selectively pulling two fragments, see the above link for the
-> full email.)
+> I'm confused.  The PCI Configuration Header Registers should describe the
+> hardware on the PCI card.
 >=20
-> Includes the following:
->=20
->    A driver using this support was added and can be seen at [3]. This
->    driver embeds a builtin overlay and applies it to the live tree using
->    of_overlay_fdt_apply_to_node(). An interrupt driver is also included a=
-nd
->=20
-> and
->=20
->    This series was tested on a x86 kernel using CONFIG_OF under a virtual
->    machine using PCI passthrough.
->=20
->    Link: [1] https://lore.kernel.org/lkml/YhQHqDJvahgriDZK@lunn.ch/t/
->    Link: [2] https://lore.kernel.org/lkml/20220408174841.34458529@fixe.ho=
-me/T/
->    Link: [3] https://github.com/clementleger/linux/tree/lan966x/of_support
->=20
-> Following link 3 to see how the driver implemented the concept, I arrived
-> at a git tree, with the commit be42efa "mfd: lan966x: add pci driver",
-> and have been looking at the code there.
->=20
-> Cl=C3=A9ment, is this still the best example of a driver implementation t=
-hat
-> would use the framework proposed in the "[PATCH V7 0/3] Generate device
-> tree node for pci devices" patch series? And this is the driver for the
-> device listed as item 2 above "2) Microchip LAN9662 Ethernet Controller"?
+> Ignoring case 1 above _for the moment_ (FPGA devices are a world unto
+> themselves, so I would like to analyze that case separately), does the
+> second device, "Microchip LAN9662 Ethernet Controller" properly implement
+> the PCI Configuration Header Registers?  What additional information is
+> needed that is not provided in those registers?
 
 Hi Frank,
 
-The driver has slightly evolved to be based on Lizhi Patches and the
-interrupt driver was reworked to be a standard platform driver. I'll
-clean that up and push a new branch based on this work.
-
-This driver is indeed the driver for the LAN9662 Ethernet Controller
-which allows using the 2 SFPs ports and 2 RJ45 ports successfully (which
-involves multiple subsystem and drivers).
-
-While doing this work, I found multiple of_noderefcount issues which I
-fixed and that are currently being reviewed. I won't be surprised if
-there are other lying around in various part of the kernel. Just saying
-so you know there is actually effort to make that more robust.
+I guess Lizhi wanted to say that it does not provide a way to describe
+all the "platform" devices that are exposed by this PCI device. Which
+is of course the whole point of the work we are doing right now. But
+all the BARs are correctly described by the LAN9662 PCI card.
 
 Cl=C3=A9ment
 
 >=20
 > -Frank
 >=20
-> >=20
-> > Normally, the PCI core discovers PCI devices and their BARs using the
-> > PCI enumeration process. However, the process does not provide a way to
-> > discover the hardware peripherals that are present in a PCI device, and
-> > which can be accessed through the PCI BARs. Also, the enumeration proce=
-ss
 > > does not provide a way to associate MSI-X vectors of a PCI device with =
 the
 > > hardware peripherals that are present in the device. PCI device drivers
@@ -168,9 +135,210 @@ ot
 ild
 > > PCI endpoint may choose to have a device tree node created.
 > >=20
-> > This patch series is made up of three patches. =20
->=20
-> < snip >
+> > This patch series is made up of three patches.
+> >=20
+> > The first patch is adding OF interface to create or destroy OF node
+> > dynamically.
+> >=20
+> > The second patch introduces a kernel option, CONFIG_DYNAMIC_PCI_OF_NODE=
+X.
+> > When the option is turned on, the kernel will generate device tree nodes
+> > for all PCI bridges unconditionally. The patch also shows how to use the
+> > PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
+> > tree node for a device. Specifically, the patch generates a device tree
+> > node for Xilinx Alveo U50 PCIe accelerator device. The generated device
+> > tree nodes do not have any property.
+> >=20
+> > The third patch adds basic properties ('reg', 'compatible' and
+> > 'device_type') to the dynamically generated device tree nodes. More
+> > properties can be added in the future.
+> >=20
+> > Here is the example of device tree nodes generated within the ARM64 QEM=
+U.
+> > # lspci -t   =20
+> > -[0000:00]-+-00.0
+> >            +-01.0-[01]--
+> >            +-01.1-[02]----00.0
+> >            +-01.2-[03]----00.0
+> >            +-01.3-[04]----00.0
+> >            +-01.4-[05]----00.0
+> >            +-01.5-[06]--
+> >            +-01.6-[07]--
+> >            +-01.7-[08]--
+> >            +-02.0-[09-0b]----00.0-[0a-0b]----00.0-[0b]--+-00.0
+> >            |                                            \-00.1
+> >            +-02.1-[0c]--
+> >            \-03.0-[0d-0e]----00.0-[0e]----01.0
+> >=20
+> > # tree /sys/firmware/devicetree/base/pcie\@10000000
+> > /sys/firmware/devicetree/base/pcie@10000000
+> > |-- #address-cells
+> > |-- #interrupt-cells
+> > |-- #size-cells
+> > |-- bus-range
+> > |-- compatible
+> > |-- device_type
+> > |-- dma-coherent
+> > |-- interrupt-map
+> > |-- interrupt-map-mask
+> > |-- linux,pci-domain
+> > |-- msi-parent
+> > |-- name
+> > |-- pci@1,0
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,1
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,2
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,3
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,4
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,5
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,6
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@1,7
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@2,0
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- pci@0,0
+> > |   |   |-- #address-cells
+> > |   |   |-- #size-cells
+> > |   |   |-- compatible
+> > |   |   |-- device_type
+> > |   |   |-- pci@0,0
+> > |   |   |   |-- #address-cells
+> > |   |   |   |-- #size-cells
+> > |   |   |   |-- compatible
+> > |   |   |   |-- dev@0,0
+> > |   |   |   |   |-- compatible
+> > |   |   |   |   `-- reg
+> > |   |   |   |-- dev@0,1
+> > |   |   |   |   |-- compatible
+> > |   |   |   |   `-- reg
+> > |   |   |   |-- device_type
+> > |   |   |   |-- ranges
+> > |   |   |   `-- reg
+> > |   |   |-- ranges
+> > |   |   `-- reg
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@2,1
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- pci@3,0
+> > |   |-- #address-cells
+> > |   |-- #size-cells
+> > |   |-- compatible
+> > |   |-- device_type
+> > |   |-- pci@0,0
+> > |   |   |-- #address-cells
+> > |   |   |-- #size-cells
+> > |   |   |-- compatible
+> > |   |   |-- device_type
+> > |   |   |-- ranges
+> > |   |   `-- reg
+> > |   |-- ranges
+> > |   `-- reg
+> > |-- ranges
+> > `-- reg
+> >=20
+> > Changes since v6:
+> > - Removed single line wrapper functions
+> > - Added Signed-off-by Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.co=
+m>
+> >=20
+> > Changes since v5:
+> > - Fixed code review comments
+> > - Fixed incorrect 'ranges' and 'reg' properties and verified address
+> >   translation.
+> >=20
+> > Changes since RFC v4:
+> > - Fixed code review comments
+> >=20
+> > Changes since RFC v3:
+> > - Split the Xilinx Alveo U50 PCI quirk to a separate patch
+> > - Minor changes in commit description and code comment
+> >=20
+> > Changes since RFC v2:
+> > - Merged patch 3 with patch 2
+> > - Added OF interfaces of_changeset_add_prop_* and use them to create
+> >   properties.
+> > - Added '#address-cells', '#size-cells' and 'ranges' properties.
+> >=20
+> > Changes since RFC v1:
+> > - Added one patch to create basic properties.
+> > - To move DT related code out of PCI subsystem, replaced of_node_alloc()
+> >   with of_create_node()/of_destroy_node()
+> >=20
+> > Lizhi Hou (3):
+> >   of: dynamic: Add interfaces for creating device node dynamically
+> >   PCI: Create device tree node for selected devices
+> >   PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
+> >=20
+> >  drivers/of/dynamic.c        | 197 +++++++++++++++++++++++++++++++++
+> >  drivers/pci/Kconfig         |  12 ++
+> >  drivers/pci/Makefile        |   1 +
+> >  drivers/pci/bus.c           |   2 +
+> >  drivers/pci/msi/irqdomain.c |   6 +-
+> >  drivers/pci/of.c            |  71 ++++++++++++
+> >  drivers/pci/of_property.c   | 212 ++++++++++++++++++++++++++++++++++++
+> >  drivers/pci/pci-driver.c    |   3 +-
+> >  drivers/pci/pci.h           |  19 ++++
+> >  drivers/pci/quirks.c        |  11 ++
+> >  drivers/pci/remove.c        |   1 +
+> >  include/linux/of.h          |  24 ++++
+> >  12 files changed, 556 insertions(+), 3 deletions(-)
+> >  create mode 100644 drivers/pci/of_property.c
+> >  =20
 >=20
 
 
