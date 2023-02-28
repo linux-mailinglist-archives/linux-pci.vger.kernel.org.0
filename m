@@ -2,172 +2,177 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 116B56A5D22
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 17:30:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B01D6A5DB5
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 17:54:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229501AbjB1Qac (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Feb 2023 11:30:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52558 "EHLO
+        id S229515AbjB1Qyb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Feb 2023 11:54:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48044 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229713AbjB1Qac (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 11:30:32 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB484EC46;
-        Tue, 28 Feb 2023 08:30:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677601826; x=1709137826;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=dyojsfFIUKPS3PvJ1BbTCwtCmtNpDYEHb7YR/J13vUk=;
-  b=OwLI+VrDCL8o0K15172bWMqQtuNJP/+rTm2b603cwaE5sFZi2J5nM3WO
-   IDqO/3MPkkkaBzCrN/29PQAGrS6mF9xt7Cu+NpRfuk3rgQy/4lP3zx258
-   uH2rK0EoRmS3fT/5Ej1ZgOmq7AJwC5tKPBnW/sOedp2QtfTOky7up/du8
-   S2m3Q1q6B/ykq4U2Byfu9jkYGNLD1Dll3bD1bhuubmGwoKKM5D1fztQOy
-   BGxp5XafYGx9NV8WaDbt96aZrIBx9lUSXCHu5yDnq/Yc2omVFvv1yrsGA
-   55CcyMUk0O8tugHKNYC6ks6QmhhthCzbLbOXP62hyaxzgjTPb2IYamnNc
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="396751346"
-X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
-   d="scan'208";a="396751346"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 08:30:25 -0800
-X-IronPort-AV: E=McAfee;i="6500,9779,10635"; a="798107637"
-X-IronPort-AV: E=Sophos;i="5.98,222,1673942400"; 
-   d="scan'208";a="798107637"
-Received: from ticela-az-102.amr.corp.intel.com (HELO [10.209.55.154]) ([10.209.55.154])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Feb 2023 08:30:24 -0800
-Message-ID: <eefaf1bc-586b-aa0f-8899-fcce0460b733@linux.intel.com>
-Date:   Tue, 28 Feb 2023 08:30:24 -0800
+        with ESMTP id S229516AbjB1Qya (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 11:54:30 -0500
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8E6433669D
+        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 08:54:02 -0800 (PST)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id AC854E0EB4;
+        Tue, 28 Feb 2023 19:35:03 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-type:content-type:date
+        :from:from:in-reply-to:message-id:mime-version:references
+        :reply-to:subject:subject:to:to; s=post; bh=CuNkOupsAqXo74CzsFjX
+        z2B4PdfP8UnQM9Atgh14Tdc=; b=Pm5ly4gnRYRRSuGzuxynxW5677hdqTiDpDYl
+        gY7BT0wOUqg399GqVjmw3gYAr5UQxWAZ+ht65BYEyec5fOy1kFNWaGaH2D5fNW/b
+        TQXzLsiI1Kpd3m9DJrXyPPsuen0QblaiyBK2OWtfwBEkLU6iFrb1kpU3xPv/2yYy
+        C9PVhRw=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 90EB3E0E1D;
+        Tue, 28 Feb 2023 19:35:03 +0300 (MSK)
+Received: from mobilestation (10.8.30.22) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 28 Feb 2023 19:35:02 +0300
+Date:   Tue, 28 Feb 2023 19:35:01 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <helgaas@kernel.org>, Anton <smalltalk@swismail.com>
+CC:     Serge Semin <fancer.lancer@gmail.com>,
+        Simon Xue <xxm@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>, <smalltalk@swismail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        <linux-rockchip@lists.infradead.org>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [Bug 217100] New: Bifurcation between pcie3x1 & pcie3x2 doesn't
+ work in RK3568J.
+Message-ID: <20230228163420.e4tskh3bwposkxji@mobilestation>
+References: <bug-217100-41252@https.bugzilla.kernel.org/>
+ <20230228124427.GA114786@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.4.2
-Subject: Re: [PATCH v2 1/2] PCI/ATS: Add a helper function to configure ATS
- STU of a PF
-Content-Language: en-US
-To:     Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        joro@8bytes.org, bhelgaas@google.com, robin.murphy@arm.com,
-        will@kernel.org
-Cc:     jean-philippe@linaro.org, darren@os.amperecomputing.com,
-        scott@os.amperecomputing.com
-References: <20230228042137.1941024-1-gankulkarni@os.amperecomputing.com>
- <20230228042137.1941024-2-gankulkarni@os.amperecomputing.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230228042137.1941024-2-gankulkarni@os.amperecomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230228124427.GA114786@bhelgaas>
+X-Originating-IP: [10.8.30.22]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+* Cc += Linux ARM mailing list
 
+Hi Anton
 
-On 2/27/23 8:21 PM, Ganapatrao Kulkarni wrote:
-> As per PCI specification (PCI Express Base Specification Revision
-> 6.0, Section 10.5) both PF and VFs of a PCI EP are permitted to be enabled
-> independently for ATS capability, however the STU(Smallest Translation
-> Unit) is shared between PF and VFs. For VFs, it is hardwired to Zero and
-> the associated PF's value applies to VFs.
+On Tue, Feb 28, 2023 at 06:44:27AM -0600, Bjorn Helgaas wrote:
+> On Tue, Feb 28, 2023 at 08:53:50AM +0000, bugzilla-daemon@kernel.org wrote:
+> > https://bugzilla.kernel.org/show_bug.cgi?id=217100
+> > 
+> >            Summary: Bifurcation between pcie3x1 & pcie3x2 doesn't work in
+> >                     RK3568J.
+> > ...
 > 
-> In the current code, the STU is being configured while enabling the PF ATS.
-> Hence, it is not able to enable ATS for VFs, if it is not enabled on the
-> associated PF already.
-> 
-> Adding a function pci_ats_stu_configure(), which can be called to
-> configure the STU during PF enumeration.
-> Latter enumerations of VFs can successfully enable ATS independently.
-> 
-> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-> ---
->  drivers/pci/ats.c       | 33 +++++++++++++++++++++++++++++++--
->  include/linux/pci-ats.h |  3 +++
->  2 files changed, 34 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> index f9cc2e10b676..1611bfa1d5da 100644
-> --- a/drivers/pci/ats.c
-> +++ b/drivers/pci/ats.c
-> @@ -46,6 +46,35 @@ bool pci_ats_supported(struct pci_dev *dev)
->  }
->  EXPORT_SYMBOL_GPL(pci_ats_supported);
->  
-> +/**
-> + * pci_ats_stu_configure - Configure STU of a PF.
-> + * @dev: the PCI device
-> + * @ps: the IOMMU page shift
-> + *
-> + * Returns 0 on success, or negative on failure.
-> + */
-> +int pci_ats_stu_configure(struct pci_dev *dev, int ps)
-> +{
-> +	u16 ctrl;
-> +
-> +	if (dev->ats_enabled || dev->is_virtfn)
-> +		return 0;
+> > Hello.
+> > 
+> > First, I want to say that pcie3x1 crashes if started before pcie3x2 . Driver
+> > > pcie-designware.c 
+> > 
+> > in function 
+> > 
+> > > void dw_pcie_version_detect(struct dw_pcie *pci)
+> > 
+> > tries to read parameter from dbi register (PCIE_VERSION_NUMBER) and fails on
+> > it.
 
-Is PF allowed to re-configure STU if there are other active
-VF's which uses it?
+Could you give more details what crashes? Log/Stack-trace would be
+nice to see.
 
-> +
-> +	if (!pci_ats_supported(dev))
-> +		return -EINVAL;
-> +
-> +	if (ps < PCI_ATS_MIN_STU)
-> +		return -EINVAL;
-> +
-> +	dev->ats_stu = ps;
-> +	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, &ctrl);
-> +	ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
-> +	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(pci_ats_stu_configure);
-> +
->  /**
->   * pci_enable_ats - enable the ATS capability
->   * @dev: the PCI device
-> @@ -68,8 +97,8 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
->  		return -EINVAL;
->  
->  	/*
-> -	 * Note that enabling ATS on a VF fails unless it's already enabled
-> -	 * with the same STU on the PF.
-> +	 * Note that enabling ATS on a VF fails unless it's already
-> +	 * configured with the same STU on the PF.
->  	 */
->  	ctrl = PCI_ATS_CTRL_ENABLE;
->  	if (dev->is_virtfn) {
-> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
-> index df54cd5b15db..7d62a92aaf23 100644
-> --- a/include/linux/pci-ats.h
-> +++ b/include/linux/pci-ats.h
-> @@ -8,6 +8,7 @@
->  /* Address Translation Service */
->  bool pci_ats_supported(struct pci_dev *dev);
->  int pci_enable_ats(struct pci_dev *dev, int ps);
-> +int pci_ats_stu_configure(struct pci_dev *dev, int ps);
->  void pci_disable_ats(struct pci_dev *dev);
->  int pci_ats_queue_depth(struct pci_dev *dev);
->  int pci_ats_page_aligned(struct pci_dev *dev);
-> @@ -16,6 +17,8 @@ static inline bool pci_ats_supported(struct pci_dev *d)
->  { return false; }
->  static inline int pci_enable_ats(struct pci_dev *d, int ps)
->  { return -ENODEV; }
-> +static inline int pci_ats_stu_configure(struct pci_dev *d, int ps)
-> +{ return -ENODEV; }
->  static inline void pci_disable_ats(struct pci_dev *d) { }
->  static inline int pci_ats_queue_depth(struct pci_dev *d)
->  { return -ENODEV; }
+Do you know the DW PCIe IP-core version? Could you try to manually get the
+content of the PCIE_VERSION_NUMBER and PCIE_VERSION_TYPE registers after
+the system successfully boots up?
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+On the first glance what you see here might be caused by the DBI
+reference clock race condition/malfunction. The
+dw_pcie_version_detect() function doesn't do much. It just reads the
+IP-core version/type registers content. So if the reference clock
+isn't enabled by the time of the function call then the system bus may
+return an error, which could be caught by the system errors handler
+module, which driver can cause the kernel crash. Though the LLDD
+enables all the supplied clocks before calling dw_pcie_host_init(). So
+what you've discovered seems unexpected and most likely caused by some
+other place. Thereby here are several questions:
+
+1. Are you sure your DT-file has all the required reference clocks
+specified for all the Rockchip PCIe DT-nodes?
+
+2. Are you sure there were no updates in the platform-clock
+driver(s) which could cause a possible clock malfunction?
+
+3. Could you have a look whether the pcie3x1 and pcie3x2 reference/DBI
+clock sources are unrelated? That might give a clue to the problem
+solution and could confirm the race.
+
+4. Are you sure that the problem is in the dw_pcie_version_detect()
+function? Could you try to replace all the dw_pcie_readl_dbi() calls
+with the actual content of the PCIE_VERSION_NUMBER and PCIE_VERSION_TYPE
+registers and then have a look whether the crash still happens?
+
+Anyway Log/Stack-trace would give better understanding of the problem.
+
+> > So I changed sequence of declaration PCIE in rk3568.dtsi: first - pcie3x2 next
+> > pcie3x1. Now Linux first starts pcie3x2, then successfully starts pcie3x1.
+> > 
+> > But main problem is that bifurcation in phy driver 
+> > > phy-rockchip-snps-pcie3.c 
+> > 
+> > doesn't work. I tried add next lines in function
+
+It seems to me that this problem and the problem above might be weakly
+related. Let's dive deeper in the first problem. Then we can go
+towards the second problem if it will be actual by that time.
+
+> > 
+> > > static int rockchip_p3phy_probe(struct platform_device *pdev)
+> > 
+> > right after block check
+> > 
+> > > if (priv->num_lanes == -EINVAL) {
+> > > }
+> > 
+> > > priv->num_lanes = 2;
+> > > priv->lanes[0] = 1;
+> > > priv->lanes[1] = 2
+> > 
+> > And driver writes during Linux boot process that bifurcation is enabled, but
+> > 
+> > lspci
+> > 
+> > does't show second device.
+> > 
+> > Best regards,
+> > Anton.
+> 
+> Thanks much for your report, Anton.  People don't really pay attention
+> to the bugzilla, so I'm forwarding this to the mailing list and to
+> some folks who've worked on that driver in the past.
+> 
+
+> MAINTAINERS doesn't list an entry for pcie-dw-rockchip.c; I'm not sure
+> if that's an oversight or if nobody cares enough to actually maintain
+> it.
+
+Hi Bjorn
+
+It seems that the driver is currently supported by the Rockchip SoC maintainer:
+ARM/Rockchip SoC support
+F:      drivers/*/*/*rockchip*
+F:      drivers/*/*rockchip*
+So @Heiko might give a more experienced advice about the bug.
+
+-Serge(y)
+
+> 
+> Bjorn
+> 
+
