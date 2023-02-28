@@ -2,139 +2,124 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D80246A56F5
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 11:42:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 924376A588C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 12:50:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjB1Kma (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Feb 2023 05:42:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57372 "EHLO
+        id S231511AbjB1LuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Feb 2023 06:50:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229509AbjB1Km3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 05:42:29 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00C5225E33;
-        Tue, 28 Feb 2023 02:42:27 -0800 (PST)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4PQv5K4f7Tz67bbZ;
-        Tue, 28 Feb 2023 18:40:05 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Tue, 28 Feb
- 2023 10:42:24 +0000
-Date:   Tue, 28 Feb 2023 10:42:23 +0000
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Alexey Kardashevskiy <aik@amd.com>
-CC:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>,
-        Gregory Price <gregory.price@memverge.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
-        Ben Widawsky <bwidawsk@kernel.org>, <linuxarm@huawei.com>,
-        <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 12/16] PCI/DOE: Create mailboxes on device
- enumeration
-Message-ID: <20230228104223.000053c2@Huawei.com>
-In-Reply-To: <66ca8670-6bd2-a446-d393-3c327aa45ccc@amd.com>
-References: <cover.1676043318.git.lukas@wunner.de>
-        <c3f9e24fffa318a045f89664fb9545099cb0d603.1676043318.git.lukas@wunner.de>
-        <bc150b29-ee21-b033-7d05-dd28dd7a1af4@amd.com>
-        <20230228054353.GA32202@wunner.de>
-        <66ca8670-6bd2-a446-d393-3c327aa45ccc@amd.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
-MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231487AbjB1LuJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 06:50:09 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6229E1F481;
+        Tue, 28 Feb 2023 03:50:08 -0800 (PST)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31S6Vr8P024430;
+        Tue, 28 Feb 2023 11:49:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=RiKQxet1aV+aN1dp0TU54EAcebB+HyrH3HYWI54gMSk=;
+ b=My3zBjawpEp2W4HaP/3TCGFoH3c4bIEkmg6BgoNEtFQh5ecHJVL6qM//eawnKZsuTl9M
+ fsSDWAckTsxk2NHJsKOyTaLnF6cY2Q1kfYT399/P9pujmgzyjL9+qjU+dYlwmX2vdt0x
+ PrP0Oj1G0qtZtE/IyE5rt6ShFDWJCKUhCTVVJThbahZUE/nrCeqwFmnVpXBhLqSsNuLA
+ VqvidQm6nk7ZHsB2JNMmQU20gmCuKnS/lFr7kjPCfQu7y2zY35nho0ywlXEY06vWHT5V
+ SUZPgPfZmw+x4wewfhWC6O1z3/XGvVWtDtdhOsaMrtF4mUiV6fzcsL3PUj+OLSk4vPlv gg== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p1ccxgtb9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Feb 2023 11:49:25 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 31SBnEW4004703;
+        Tue, 28 Feb 2023 11:49:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3nybdkeaxb-1;
+        Tue, 28 Feb 2023 11:49:21 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31SBnLcE006237;
+        Tue, 28 Feb 2023 11:49:21 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-krichai-hyd.qualcomm.com [10.213.110.37])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 31SBnKX5006167;
+        Tue, 28 Feb 2023 11:49:21 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 4058933)
+        id F027547B9; Tue, 28 Feb 2023 17:19:19 +0530 (+0530)
+From:   Krishna chaitanya chundru <quic_krichai@quicinc.com>
+To:     helgaas@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        quic_vbadigan@quicinc.com, quic_hemantk@quicinc.com,
+        quic_nitegupt@quicinc.com, quic_skananth@quicinc.com,
+        quic_ramkri@quicinc.com, manivannan.sadhasivam@linaro.org,
+        swboyd@chromium.org, dmitry.baryshkov@linaro.org,
+        svarbanov@mm-sol.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@somainline.org, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        linux-phy@lists.infradead.org, vkoul@kernel.org, kishon@ti.com,
+        mturquette@baylibre.com, linux-clk@vger.kernel.org,
+        Krishna chaitanya chundru <quic_krichai@quicinc.com>,
+        stable@vger.kernel.org, Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Prasad Malisetty <pmaliset@codeaurora.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS)
+Subject: [PATCH V2] arm64: dts: qcom: sc7280: Mark PCIe controller as cache coherent
+Date:   Tue, 28 Feb 2023 17:19:12 +0530
+Message-Id: <1677584952-17496-1-git-send-email-quic_krichai@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: PJJOU_hZapybQxqINK46QQuT9oKQlc8V
+X-Proofpoint-ORIG-GUID: PJJOU_hZapybQxqINK46QQuT9oKQlc8V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-28_07,2023-02-28_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 phishscore=0 adultscore=0
+ clxscore=1011 mlxlogscore=656 bulkscore=0 impostorscore=0 suspectscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302280094
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 28 Feb 2023 18:24:41 +1100
-Alexey Kardashevskiy <aik@amd.com> wrote:
+If the controller is not marked as cache coherent, then kernel will
+try to ensure coherency during dma-ops and that may cause data corruption.
+So, mark the PCIe node as dma-coherent as the devices on PCIe bus are
+cache coherent.
 
-> On 28/2/23 16:43, Lukas Wunner wrote:
-> > On Tue, Feb 28, 2023 at 12:18:07PM +1100, Alexey Kardashevskiy wrote:  
-> >> On 11/2/23 07:25, Lukas Wunner wrote:  
-> >>> For the same reason a DOE instance cannot be shared between the PCI core
-> >>> and a driver.  
-> >>
-> >> And we want this sharing why? Any example will do. Thanks,  
-> > 
-> > The PCI core is going to perform CMA/SPDM authentication when a device
-> > gets enumerated (PCIe r6.0 sec 6.31).  That's the main motivation
-> > to lift DOE mailbox creation into the PCI core.  It's not mentioned
-> > here explicitly because I want the patch to stand on its own.
-> > CMA/SPDM support will be submitted separately.  
-> 
-> I was going the opposite direction with avoiding adding this into the 
-> PCI core as 1) the pci_dev struct is already 2K  and 2) it is a niche 
-> feature and  3) I wanted this CMA/SPDM session setup to be platform 
-> specific as on our platform the SPDM support requires some devices to be 
-> probed before we can any SPDM.
+Cc: stable@vger.kernel.org
+Fixes: 92e0ee9f83b3 ("arm64: dts: qcom: sc7280: Add PCIe and PHY related node")
+Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+---
 
-Is that happening over a DOE mailbox, or a different transport?
-If it's a different transport then that should be fine, though we'll need
-to have a slightly different security model and any part of early
-driver load will need to be carefully hardened against a "malicious" device
-if it is doing anything non trivial. If it's just "turning on the lights"
-then shouldn't be a problem.
+changes since v1:
+	- Updated the commit text.
+---
+---
+ arch/arm64/boot/dts/qcom/sc7280.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Will be interesting to see how niche DOE ends up.  My guess it it's worth
-a struct xarray, but we could take it out of line if that saves enough
-to bother.
+diff --git a/arch/arm64/boot/dts/qcom/sc7280.dtsi b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+index bdcb749..8f4ab6b 100644
+--- a/arch/arm64/boot/dts/qcom/sc7280.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7280.dtsi
+@@ -2131,6 +2131,8 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&pcie1_clkreq_n>;
+ 
++			dma-coherent;
++
+ 			iommus = <&apps_smmu 0x1c80 0x1>;
+ 
+ 			iommu-map = <0x0 &apps_smmu 0x1c80 0x1>,
+-- 
+2.7.4
 
-> 
-> 
-> > A driver that later on gets bound to the device should be allowed
-> > to talk to it via DOE as well, possibly even sharing the same DOE
-> > mailboxes used by the PCI core.
-> > 
-> > Patches for CMA/SPDM are under development on this branch:
-> > 
-> > https://github.com/l1k/linux/commits/doe  
-> 
-> yes, thanks! Lots of reading :)
-> 
-> 
-> >>> Currently a DOE instance cannot be shared by multiple drivers because
-> >>> each driver creates its own pci_doe_mb struct for a given DOE instance.  
-> >>
-> >> Sorry for my ignorance but why/how/when would a device have multiple drivers
-> >> bound? Or it only one driver at the time but we also want DOE MBs to survive
-> >> switching to another (different or newer) driver?  
-> > 
-> > Conceivably, a driver may have the need to talk to multiple devices
-> > via DOE, even ones it's not bound to.  (E.g. devices in its ancestry
-> > or children.)  
-> 
-> Ah ok. Well, a parent device could look for the DOE MB in a child using 
-> devres_find(), this requirement alone does not require moving things to 
-> the PCI core and potentially allows it to be a module which could be a 
-> better way as distros could have it always enabled but it would not 
-> waste any memory on my laptop when not loaded. Thanks,
-
-The DOE mailboxes have an "exciting" level of flexibility and discovering
-supported protocols requires use of the DOE itself. So we need a single
-entity to take control over concurrent access to each DOE instance.
-
-Given the mix of protocols, I'd expect some of them to be potentially accessed
-by a parent, and others to be accessed by driver attached to the child.
-
-Whether it needs to chat to it's parent isn't totally clear to me yet, as
-depends a bit on what entities end up getting created for management of
-encryption etc + what other usecases we see in medium term.
-
-Jonathan
