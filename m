@@ -2,84 +2,99 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 417B46A54B0
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 09:48:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3D756A552F
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 10:08:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230456AbjB1IsP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Feb 2023 03:48:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58268 "EHLO
+        id S229835AbjB1JI6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Feb 2023 04:08:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230478AbjB1Irq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 03:47:46 -0500
-X-Greylist: delayed 84 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 28 Feb 2023 00:46:57 PST
-Received: from mo4-p02-ob.smtp.rzone.de (mo4-p02-ob.smtp.rzone.de [85.215.255.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 208BAE384;
-        Tue, 28 Feb 2023 00:46:56 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1677573839; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=rOKZ7uBdwo9kpAIdNPYWTbYHefAzEZqlUWZRLguaN7uns1UccaGIoj3GplAnjp/74p
-    Pf62+PlxRaCbPyM+fFispC5cxJqVpdfKLQ7a43+LEQW4i9L+2p9uglhZ/XH4ckQA9Ks9
-    /ACVaupsE2+Hc0UlqFeABliH6yCJvjgnVmC2ZXnTIdB/hLCupxVDjmKIEeEjNqPOczuz
-    b2bwgl+x2ZRM1D30nBR07iF85BZOfcDaMQTgPcshtaweL/39hIhcAFjEl8E0CmDzscG/
-    we83p9ajoXHDKTgmQkODmTZ3Zo/vwsjr1qm1mKma8uiHpcdh7JcZ/LrUTQAsawVAxeBX
-    Sleg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1677573839;
-    s=strato-dkim-0002; d=strato.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=+UOfEgqD4oRECTcBuUsff3LMCbW6CRcg0WZi4nlmdjY=;
-    b=hVF4rS/JTgW6RdRiLEt9JLl84hg3WvsRe8OENPW0oVwovL5qYDzu16Pqds0ibMdFfY
-    OmKHIKhB28cKXl/lnYZtr5SzN7jWiIbqQdGAJlhBqxVqoIna15ipAHrFKOCtyy8TSNLa
-    22u5zRggv1xrQyXmBJ8BRK02EkoiDC/hdSyLqiFns1NEPNWAgVxFdw5x55iydt2c6VdF
-    PNDcPi8DJbX36xuVS9WIdnG8pYr0HuKhe1Rs6iaVYKN8xRTOp9+RYu+3NMrrdjX7fxHG
-    A8/v/aySHyMmEc8BE/w8v4LCC6sehSEXaknMaGmwHYGPuhQ81pBEKFsDTWWx6xW7dCQ7
-    kpuQ==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1677573839;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
-    bh=+UOfEgqD4oRECTcBuUsff3LMCbW6CRcg0WZi4nlmdjY=;
-    b=ZMvzHtkkoGoX5RBqQb3PCk8sE3XFgErKKNaK0Euk60E8jBJASOrSO3SwrO8icbpZ1q
-    Rn7KOTq3ui9U/EgvRDQsP5dwkFWp3QOY+RoAIQGdfQMpJ+A44qERdxGifM6Pd5o5yDVD
-    gaKj1jUMoIRsXgrCbpEzD7xmSKyM4ltAPbXHPAVtLRF0LxUDsHCLRwPykTM+Pn+2yQ5Y
-    l83Pp9IAu5LsyC9kQS0GXW0eUDXdtpdj5r7ngLuv2VQAHPKewBmVzeSJdYnfxtf7Cra5
-    qjjrfaijARwvVb1Uk2uXS8hWBoY68RfNANcD1hN5Km5jRNpl+Oe9MygRxNjEKOdx8Sit
-    pgWA==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1iTDUhfN4hi3qVZrW/J"
-Received: from iMac.fritz.box
-    by smtp.strato.de (RZmta 49.3.0 DYNA|AUTH)
-    with ESMTPSA id 326d57z1S8htRev
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-    Tue, 28 Feb 2023 09:43:55 +0100 (CET)
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-To:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S229773AbjB1JI5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 04:08:57 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE4F1AA;
+        Tue, 28 Feb 2023 01:08:56 -0800 (PST)
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31S8jQ7U021748;
+        Tue, 28 Feb 2023 09:08:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=MBGv+RkVm2JThfrORlWXiDQ4x2zWBVkczC0frWJIKkQ=;
+ b=FVnv2r47BcFsn/W1VhaoQobcXqCJ+i25Fxg21FGxR6Vfmky8FjDChBl+ZeFbqznW0e3H
+ oJc0nulwmEQz5N2Ja4D6aPPu4VICdiy4DwXXskepPmD0NEyQSN6BPpbLeXV/GlVng5gE
+ 9dnvZYT/UyThTmXufVeqwuol8ds5tNWQJ1TwG/nrWGTF6Ht1edPDd7uPoG0akARgMz4i
+ fciTNYZ6HwLpjzcRYRRYyxoDSOxRm1OSE5znBu1oM0Hv6ZoqZJNAN1KqQHtC+KJ4FSIf
+ 8ogNOt/OktMOBpFVDUfvpZw5txq12glgEabJYqZlmONRaNkGEt+tJDz0pAKneHRMhlK7 FA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p1ecs0mhf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Feb 2023 09:08:53 +0000
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31S8vBBa021113;
+        Tue, 28 Feb 2023 09:08:52 GMT
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p1ecs0mgg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Feb 2023 09:08:52 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31S0n45w027740;
+        Tue, 28 Feb 2023 09:08:50 GMT
+Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
+        by ppma06fra.de.ibm.com (PPS) with ESMTPS id 3nybdbj2k9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 28 Feb 2023 09:08:50 +0000
+Received: from smtpav02.fra02v.mail.ibm.com (smtpav02.fra02v.mail.ibm.com [10.20.54.101])
+        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31S98k9r32243998
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 28 Feb 2023 09:08:46 GMT
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 250492004B;
+        Tue, 28 Feb 2023 09:08:46 +0000 (GMT)
+Received: from smtpav02.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5660F20040;
+        Tue, 28 Feb 2023 09:08:45 +0000 (GMT)
+Received: from [9.171.11.239] (unknown [9.171.11.239])
+        by smtpav02.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 28 Feb 2023 09:08:45 +0000 (GMT)
+Message-ID: <5bf4ca0f643bcd59f5761cdd29403433046a9995.camel@linux.ibm.com>
+Subject: Re: [PATCH RESEND] PCI: s390: Fix use-after-free of PCI bus
+ resources with s390 per-function hotplug
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Gerd Bayer <gbayer@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Rob Herring <robh@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com,
-        "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH] PCI: imx6: install the fault handler only if we are really running on a compatible device
-Date:   Tue, 28 Feb 2023 09:43:54 +0100
-Message-Id: <aa1c18c70bea1d6f99c88027dc72c700e8c309a2.1677573834.git.hns@goldelico.com>
-X-Mailer: git-send-email 2.38.1
+        Pierre Morel <pmorel@linux.ibm.com>,
+        Matthew Rosato <mjrosato@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Date:   Tue, 28 Feb 2023 10:08:45 +0100
+In-Reply-To: <20230224041918.GB26067@wunner.de>
+References: <1793b3cd12921b7a3fa8b3ee7e20b7cf1df1eca1.camel@linux.ibm.com>
+         <20230223195345.GA3805039@bhelgaas> <20230224041918.GB26067@wunner.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="us-ascii"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=ham
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: slyU2UR1UvbJ0jrXrx0EFxjN54W8tzOA
+X-Proofpoint-ORIG-GUID: b-7OGtgecDGsvxQZly198Rh_Hivik3u3
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-28_05,2023-02-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 malwarescore=0
+ bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=800 priorityscore=1501
+ impostorscore=0 suspectscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2302280072
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,71 +102,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-commit bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
-added a fault hook to this driver in the probe function. So it was only
-installed if needed.
+On Fri, 2023-02-24 at 05:19 +0100, Lukas Wunner wrote:
+> On Thu, Feb 23, 2023 at 01:53:45PM -0600, Bjorn Helgaas wrote:
+> > Hmm.  Good question.  Off the top of my head, I can't explain the
+> > difference between pci_rescan_remove_lock and pci_bus_sem, so I'm
+> > confused, too.  I added Lukas in case he has a ready explanation.
+>=20
+> pci_bus_sem is a global lock which protects the "devices" list of all
+> pci_bus structs.
+>=20
+> We do have a bunch of places left where the "devices" list is accessed
+> without holding pci_bus_sem, though I've tried to slowly eliminate
+> them.
+>=20
+> pci_rescan_remove_lock is a global "big kernel lock" which serializes
+> any device addition and removal.
+>=20
+> pci_rescan_remove_lock is known to be far too course-grained and thus
+> deadlock-prone, particularly if hotplug ports are nested (as is the
+> case with Thunderbolt).  It needs to be split up into several smaller
+> locks which protect e.g. allocation of resources of a bus (bus numbers
+> or MMIO / IO space) and whatever else needs to be protected.  It's just
+> that nobody has gotten around to identify what exactly needs to be
+> protected, adding the new locks and removing pci_rescan_remove_lock.
+>=20
+> Thanks,
+>=20
+> Lukas
 
-commit bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
-moved it from probe to driver init which installs the hook unconditionally
-as soon as the driver is compiled into a kernel.
+Thanks for the insights. So from that description I think it might make
+sense to do this fix patch with the pci_rescan_remove_lock so it can be
+backported. Then we can take the opportunity to add a lock specific to
+the allocation/freeing of resources which would then replace at least
+this new directly and clearly resource related use of
+pci_rescan_remove_lock and potentially others we find.
+What do you think?
 
-When this driver is compiled as a module, the hook is not registered
-until after the driver has been matched with a .compatible and
-loaded.
-
-commit 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
-extended the fault handling code.
-
-commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
-added some protection for non-ARM architectures, but this does not
-protect non-i.MX ARM architectures.
-
-Since fault handlers can be triggered on any architecture for different
-reasons, there is no guarantee that they will be triggered only for the
-assumed situation, leading to improper error handling (i.MX6-specific
-imx6q_pcie_abort_handler) on foreign systems.
-
-I had seen strange L3 imprecise external abort messages several times on
-OMAP4 and OMAP5 devices and couldn't make sense of them until I realized
-they were related to this unused imx6q driver because I had
-CONFIG_PCI_IMX6=y.
-
-Note that CONFIG_PCI_IMX6=y is useful for kernel binaries that are designed
-to run on different ARM SoC and be differentiated only by device tree
-binaries. So turning off CONFIG_PCI_IMX6 is not a solution.
-
-Therefore we check the compatible in the init function before registering
-the fault handler.
-
-Fixes: bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
-Fixes: 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
-Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
-
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/pci/controller/dwc/pci-imx6.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 1dde5c579edc8..89774aa187ae8 100644
---- a/drivers/pci/controller/dwc/pci-imx6.c
-+++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -1402,6 +1402,15 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
- static int __init imx6_pcie_init(void)
- {
- #ifdef CONFIG_ARM
-+	const struct of_device_id *reboot_id;
-+	struct device_node *np;
-+
-+	np = of_find_matching_node_and_match(NULL, imx6_pcie_of_match,
-+					     &reboot_id);
-+	if (!np)
-+		return -ENODEV;
-+	of_node_put(np);
-+
- 	/*
- 	 * Since probe() can be deferred we need to make sure that
- 	 * hook_fault_code is not called after __init memory is freed
--- 
-2.38.1
-
+Thanks,
+Niklas
