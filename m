@@ -2,30 +2,31 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CD6226A62B5
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 23:45:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C08886A62E6
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Feb 2023 23:55:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjB1WpK convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 28 Feb 2023 17:45:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37960 "EHLO
+        id S229712AbjB1Wzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Feb 2023 17:55:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229568AbjB1WpJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 17:45:09 -0500
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B5AF30282
-        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 14:45:06 -0800 (PST)
+        with ESMTP id S229437AbjB1Wzm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 17:55:42 -0500
+Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E968536FE7
+        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 14:55:38 -0800 (PST)
 Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
  relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-71-ecQdmCC0MlGQuDzZDzZ6eg-1; Tue, 28 Feb 2023 22:45:02 +0000
-X-MC-Unique: ecQdmCC0MlGQuDzZDzZ6eg-1
+ uk-mta-260-VraOLvLhMQKDyz9L5f4zYg-1; Tue, 28 Feb 2023 22:55:35 +0000
+X-MC-Unique: VraOLvLhMQKDyz9L5f4zYg-1
 Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
  (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.47; Tue, 28 Feb
- 2023 22:45:00 +0000
+ 2023 22:55:27 +0000
 Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.047; Tue, 28 Feb 2023 22:45:00 +0000
+ id 15.00.1497.047; Tue, 28 Feb 2023 22:55:26 +0000
 From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Russell King' <linux@armlinux.org.uk>,
+To:     David Laight <David.Laight@ACULAB.COM>,
+        'Russell King' <linux@armlinux.org.uk>,
         Arnd Bergmann <arnd@kernel.org>
 CC:     Dominik Brodowski <linux@dominikbrodowski.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
@@ -52,12 +53,13 @@ CC:     Dominik Brodowski <linux@dominikbrodowski.net>,
         "netdev@vger.kernel.org" <netdev@vger.kernel.org>
 Subject: RE: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
 Thread-Topic: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
-Thread-Index: AQHZSuhWwIxyEez/qUesuC2XWPglYq7k9JKQ
-Date:   Tue, 28 Feb 2023 22:45:00 +0000
-Message-ID: <b75b24146c114e948bb2d325a8d27fda@AcuMS.aculab.com>
+Thread-Index: AQHZSuhWwIxyEez/qUesuC2XWPglYq7k9JKQgAAEaJA=
+Date:   Tue, 28 Feb 2023 22:55:26 +0000
+Message-ID: <e03e2ef805b94ee2a81a6ecb3adab6c3@AcuMS.aculab.com>
 References: <20230227133457.431729-1-arnd@kernel.org>
  <Y/0PbJzvrzpvLbcW@shell.armlinux.org.uk>
-In-Reply-To: <Y/0PbJzvrzpvLbcW@shell.armlinux.org.uk>
+ <b75b24146c114e948bb2d325a8d27fda@AcuMS.aculab.com>
+In-Reply-To: <b75b24146c114e948bb2d325a8d27fda@AcuMS.aculab.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
@@ -68,51 +70,26 @@ X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: aculab.com
 Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,PDS_BAD_THREAD_QP_64,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: base64
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Russell King
-> Sent: 27 February 2023 20:16
-> 
-> On Mon, Feb 27, 2023 at 02:34:51PM +0100, Arnd Bergmann wrote:
-> > I don't expect this to be a problem normal laptop support, as the last
-> > PC models that predate Cardbus support (e.g. 1997 ThinkPad 380ED) are
-> > all limited to i586MMX CPUs and 80MB of RAM. This is barely enough to
-> > boot Tiny Core Linux but not a regular distro.
-> 
-> Am I understanding that the argument you're putting forward here is
-> "cardbus started in year X, so from year X we can ignore 16-bit
-> PCMCIA support" ?
-> 
-> Given that PCMCIA support has been present in x86 hardware at least
-> up to 2010, I don't see how that is any basis for making a decision
-> about 16-bit PCMCIA support.
-> 
-> Isn't the relevant factor here whether 16-bit PCMCIA cards are still
-> in use on hardware that can run a modern distro? (And yes, x86
-> machines that have 16-bit PCMCIA can still run Debian Stable today.)
-
-Or, more specifically, are any people using 16-bit PCMCIA cards
-in cardbus-capable sockets with a current kernel.
-They might be using unusual cards that aren't available as
-cardbus - perhaps 56k modems (does anyone still use those?).
-
-I'm pretty sure I've used sparc systems that had slots that
-would take both pcmcia and cardbus cards.
-Would have been 20 years ago - but they were 64MHz PCI so wouldn't
-have been that slow (I can't remember which cpu it was).
-They ran Solaris, but weren't made by Sun.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+RnJvbTogRGF2aWQgTGFpZ2h0DQo+IFNlbnQ6IDI4IEZlYnJ1YXJ5IDIwMjMgMjI6NDUNCi4uLg0K
+PiBPciwgbW9yZSBzcGVjaWZpY2FsbHksIGFyZSBhbnkgcGVvcGxlIHVzaW5nIDE2LWJpdCBQQ01D
+SUEgY2FyZHMNCj4gaW4gY2FyZGJ1cy1jYXBhYmxlIHNvY2tldHMgd2l0aCBhIGN1cnJlbnQga2Vy
+bmVsLg0KPiBUaGV5IG1pZ2h0IGJlIHVzaW5nIHVudXN1YWwgY2FyZHMgdGhhdCBhcmVuJ3QgYXZh
+aWxhYmxlIGFzDQo+IGNhcmRidXMgLSBwZXJoYXBzIDU2ayBtb2RlbXMgKGRvZXMgYW55b25lIHN0
+aWxsIHVzZSB0aG9zZT8pLg0KDQpPciwgd2hhdCBJIG5vdyByZW1lbWJlciB3ZSB3ZXJlIGRvaW5n
+Og0KQ29weWluZyBpbWFnZXMgdG8gbGluZWFyIHBjbWNpYSBzcmFtIGNhcmRzIHRvIGFjY2VzcyBm
+cm9tDQphbiBlbWJlZGRlZCBzeXN0ZW0gdGhhdCBvbmx5IHN1cHBvcnRlZCBwY21jaWEuDQooV2hp
+Y2ggbWVhbnMgdGhlIHNwYXJjIHN5c3RlbXMgc3VwcG9ydGVkIGJvdGggY2FyZGJ1cyBhbmQgcGNt
+Y2lhLikNCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVzcyBMYWtlc2lkZSwgQnJhbWxl
+eSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEgMVBULCBVSw0KUmVnaXN0cmF0
+aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
