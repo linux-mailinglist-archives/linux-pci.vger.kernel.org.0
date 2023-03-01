@@ -2,116 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAABE6A6783
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 07:05:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29BC06A67A3
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 07:31:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229702AbjCAGFE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Mar 2023 01:05:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
+        id S229657AbjCAGb4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Mar 2023 01:31:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229686AbjCAGFD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 01:05:03 -0500
-Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340A637F00
-        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 22:05:02 -0800 (PST)
-Received: by mail-ot1-x32f.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso6985897ota.1
-        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 22:05:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7kVT/oItrmYbZ6vjI5pXv35SY2pScZG5pla4txXLGUY=;
-        b=PQl3CKAcs5i1UuCdr43Q0EBCuIOFz0kxigPphBJQy0Fc1oosErTNFQBOy0uFTzq7Mp
-         6we6/MWuXVzgzTDB2BvRXd3pTL+hDBecMULY0T7vrYcXWZ2D8CBllogx22dlZF+Wjg6A
-         AYh4Fe0vyRU/4l6aRAz5q+L2I6+UiAWEKLSyY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7kVT/oItrmYbZ6vjI5pXv35SY2pScZG5pla4txXLGUY=;
-        b=sA91Usq/NlqZ4RtuRUHv87S8ztGiXEBM0y0Y/PsgQxnrjctOaIiViBUPsjTmh1KYZ9
-         fzhiEtslxG0aOKsuJunId4K6rsKY/MA6QOvmyW1nQ/DgBtoUZAXEVXDka5EZMHHHKKkD
-         DMg6IymV5jknKLfmC9Vw0U82dHklqYGnHSqfstggRWN2WoTqrFswRgf7QqVpoJ7o9rZx
-         kFrPLFUj1wIqcjKUmtTyjwn2ulIuMtA+thHLWmCCNTOcKc8hd3vEk5I/9FHoDPMzNSIz
-         Hb7x1/AxRDNA7B3ZXgQS23qgLjF9R9g66cLUliouQCpfkcYzS1OjKk4S1z42YSAgbWbp
-         kH5g==
-X-Gm-Message-State: AO0yUKV6xXgdEwAHCfZS8mXiAwpyT6Aky/aqr8zqitLEi7U7hGPu+Fcm
-        x0sCje3R9eNthx2MbBOnYggYhQ==
-X-Google-Smtp-Source: AK7set8ZnCu/zmySz52YJsLN8IT9WjXKXUtbDOsW2C0cBroFnnvstBXnX4kQoVqUGCDznnm2HGc3DQ==
-X-Received: by 2002:a05:6830:4414:b0:68b:dfcc:bed with SMTP id q20-20020a056830441400b0068bdfcc0bedmr3489242otv.15.1677650701532;
-        Tue, 28 Feb 2023 22:05:01 -0800 (PST)
-Received: from grundler-glapstation.lan ([70.134.62.80])
-        by smtp.gmail.com with ESMTPSA id g21-20020a056830309500b0068bc48c61a5sm4599539ots.19.2023.02.28.22.05.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Feb 2023 22:05:01 -0800 (PST)
-From:   Grant Grundler <grundler@chromium.org>
-To:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "Oliver O \ 'Halloran" <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rajat Jain <rajatja@chromium.org>,
-        Grant Grundler <grundler@chromium.org>
-Subject: [PATCH] PCI/AER: correctable error message as KERN_INFO
-Date:   Tue, 28 Feb 2023 22:04:53 -0800
-Message-Id: <20230301060453.4031503-1-grundler@chromium.org>
-X-Mailer: git-send-email 2.39.2.722.g9855ee24e9-goog
+        with ESMTP id S229617AbjCAGbz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 01:31:55 -0500
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DFFC37557
+        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 22:31:54 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 33EED102E0EA3;
+        Wed,  1 Mar 2023 07:31:52 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 062FA10A68; Wed,  1 Mar 2023 07:31:52 +0100 (CET)
+Date:   Wed, 1 Mar 2023 07:31:51 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Yang Su <yang.su@linux.alibaba.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Sheng Bi <windy.bi.enflame@gmail.com>,
+        Stanislav Spassov <stanspas@amazon.de>,
+        shuo.tan@linux.alibaba.com
+Subject: Re: [PATCH v2 2/3] PCI: Unify delay handling for reset and resume
+Message-ID: <20230301063151.GA20326@wunner.de>
+References: <cover.1673769517.git.lukas@wunner.de>
+ <da77c92796b99ec568bd070cbe4725074a117038.1673769517.git.lukas@wunner.de>
+ <9aec1d26-60c2-e251-4e8d-ed15bdc0bc7d@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9aec1d26-60c2-e251-4e8d-ed15bdc0bc7d@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since correctable errors have been corrected (and counted), the dmesg output
-should not be reported as a warning, but rather as "informational".
+On Thu, Feb 23, 2023 at 07:01:21PM +0800, Yang Su wrote:
+> But in your patch the pci_bridge_wait_for_secondary_bus() we only check
+> the first subordinate device of the bridge whether ready via
+> pci_dev_wait().
+> 
+> Why not wait all the downstream devices become ready? As Sheng Bi
+> Introduce pci_bridge_secondary_bus_wait() to fix 6b2f1351af56
+> ("PCI: Wait for device to become ready after secondary bus reset"),
+> using list_for_each_entry.
+> 
+> https://lore.kernel.org/linux-pci/20220523171517.32407-1-windy.bi.enflame@gmail.com/
 
-Otherwise, using a certain well known vendor's PCIe parts in a USB4 docking
-station, the dmesg buffer can be spammed with correctable errors, 717 bytes
-per instance, potentially many MB per day.
+At least for PCIe it shouldn't matter as the other pci_devs below
+the bridge can only be additional functions of a multifunction
+device.  My expectation would be that if the first function
+is accessible, all the others are as well.
 
-Given the "WARN" priority, these messages have already confused the typical
-user that stumbles across them, support staff (triaging feedback reports),
-and more than a few linux kernel devs. Changing to INFO will hide these
-messages from most audiences.
+Checking for accessibility of all pci_devs introduces additional
+complexity and I think should only be done if there are actual
+real-world use cases that need it.
 
-Signed-off-by: Grant Grundler <grundler@chromium.org>
----
-This patch will likely conflict with:
-  https://lore.kernel.org/all/20230103165548.570377-1-rajat.khandelwal@linux.intel.com/
 
-which I'd also like to see upstream. Please let me know to resubmit mine if Rajat's patch lands first. Or feel free to fix up this one.
+> Last, I want to know if all the downstrem devices are ready, how can we
+> ensure pci bridge is ready?
+> 
+> From now version_2 series patch, there is lack checking of the pci bridge.
 
- drivers/pci/pcie/aer.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I don't quite follow.  The PCI bridge is the one whose secondary bus
+was reset, right?  The PCI bridge's accessibility is unaffected by it
+issuing a the Secondary Bus Reset.
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index f6c24ded134c..e4cf3ec40d66 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -692,7 +692,7 @@ static void __aer_print_error(struct pci_dev *dev,
- 
- 	if (info->severity == AER_CORRECTABLE) {
- 		strings = aer_correctable_error_string;
--		level = KERN_WARNING;
-+		level = KERN_INFO;
- 	} else {
- 		strings = aer_uncorrectable_error_string;
- 		level = KERN_ERR;
-@@ -724,7 +724,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
- 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
- 	agent = AER_GET_AGENT(info->severity, info->status);
- 
--	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
-+	level = (info->severity == AER_CORRECTABLE) ? KERN_INFO : KERN_ERR;
- 
- 	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
- 		   aer_error_severity_string[info->severity],
--- 
-2.39.2.722.g9855ee24e9-goog
+Thanks,
 
+Lukas
