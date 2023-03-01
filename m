@@ -2,121 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDA446A6496
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 02:14:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F41F6A6566
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 03:19:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjCABNz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Feb 2023 20:13:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34678 "EHLO
+        id S229504AbjCACTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Feb 2023 21:19:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjCABNy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 20:13:54 -0500
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFA915891;
-        Tue, 28 Feb 2023 17:13:51 -0800 (PST)
-Received: by mail-ot1-x330.google.com with SMTP id l13-20020a0568301d6d00b0068f24f576c5so6692179oti.11;
-        Tue, 28 Feb 2023 17:13:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=oEBx/PZMBNyHmgNExVPbEAPmWmNsn6Qj9xnMQGkJNno=;
-        b=Gkm2+ehKSgvZvheKoRDMw5PoCdLIZu5A+3rnf1+N7KTvzei/nU6PzzO0wVTgHMOFUP
-         YaeWiw2kTj5dkJSAa6gh/vdJHQY4O0cq3QfNdmIkenq6DDHJvK8SrIHS+JaclLZxXxhc
-         2omCLS5UldgkTAecp4m5Dvsl/pFAWxtVraBB3wiR7BWy3v42qr4eRXelWC8/XIGfRwxI
-         TiAsFg4m2uDN5ApBgTsWKo7V3rByleBGK78hVaUGUukIjfmN7IFrmq79VICrGzEWioIW
-         6LaObCp8NCeW3DjKhi9J3ZAtqfY7ADHgzVRyMpih++0VMvYmq25AN0w0RpHEc1wxmZOf
-         Mmuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :sender:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oEBx/PZMBNyHmgNExVPbEAPmWmNsn6Qj9xnMQGkJNno=;
-        b=LJTEhKvaocPnN6o5mptQsVtorwYGoWdwXo1Hj0DJATAQ4qad94Kfv0aEoFIaGreC4O
-         LGWneX3pqjCUgeXk3hdVMoEUJWxmGFKkclR9QcBRlVKn+lT2b+6GV+mm7QvgkTt/eanz
-         y/HWU28w5IwyYO2yfKx0Jzn/ZnGQfEZgjhg4dY6vmaUpz06vNZ0zST70nmSLOgK5Y65G
-         Hq9OoRwlRISYCcS+LqOc8nVlAZMsqaUTR9hs5eP1aVzgO05Apw8OlNNykUCkmZfH6f/C
-         eEnu566SrGMvGjInx7erZlJq7OsTmzSOmbH6Qzf8oYc4dEbagQNaa3TV2MAweVxy15Qt
-         5jUw==
-X-Gm-Message-State: AO0yUKVZVI1EWzNEjzGAvB/VgLJxDdidC+imqfjoBXmQxnjSFOmmvnUC
-        HGd7LCMq2aTNYTx5YxWY6fw=
-X-Google-Smtp-Source: AK7set9pAeCLIHmdY+B1zAQ/NF+5q3+1fPreB3j3JGWux5VMEZCbi/9KewRlamj7fIOsnXrdybD37g==
-X-Received: by 2002:a9d:19eb:0:b0:694:11c1:29f7 with SMTP id k98-20020a9d19eb000000b0069411c129f7mr2759141otk.19.1677633230469;
-        Tue, 28 Feb 2023 17:13:50 -0800 (PST)
-Received: from [192.168.1.119] ([216.130.59.33])
-        by smtp.gmail.com with ESMTPSA id z10-20020a0568301daa00b00693c4348e8asm4524817oti.42.2023.02.28.17.13.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Feb 2023 17:13:49 -0800 (PST)
-Sender: Larry Finger <larry.finger@gmail.com>
-Message-ID: <866973b7-1f54-21a3-79aa-992ed0594c1a@lwfinger.net>
-Date:   Tue, 28 Feb 2023 19:13:48 -0600
+        with ESMTP id S229445AbjCACTu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 21:19:50 -0500
+Received: from bee.birch.relay.mailchannels.net (bee.birch.relay.mailchannels.net [23.83.209.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4716EB445;
+        Tue, 28 Feb 2023 18:19:49 -0800 (PST)
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+        by relay.mailchannels.net (Postfix) with ESMTP id 8AB7F5C0FA6;
+        Wed,  1 Mar 2023 02:19:48 +0000 (UTC)
+Received: from pdx1-sub0-mail-a268.dreamhost.com (unknown [127.0.0.6])
+        (Authenticated sender: dreamhost)
+        by relay.mailchannels.net (Postfix) with ESMTPA id C556C5C19FE;
+        Wed,  1 Mar 2023 02:19:47 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1677637187; a=rsa-sha256;
+        cv=none;
+        b=ep1OJunmZTR1AoHfFoHckXjCPu7Uh6soWR1R0HpfzuvCbeXXcPa2Yl1GTivBlmdYn1dZfg
+        GqLsK/KDCNufPePe5NXTvof9kEJ38EuNvN9ZlTOrq9FMRXBjIIjwymqrwvcFtJhptflIuf
+        iwVxYokbAcF/U4TZpO5GlOdfU/CIzIHvXhBpeZtcuInSNth8LZNmPISxm3Mxv7DXrR93eQ
+        cpZYqbgrYkF7zyWs9jtr/fX4wWmRue7Y0IIQ/Yofa4IaOjKqST3yy6Qg18T1+xPAQvFWyV
+        oxxdBsR6EWb6mq2ttW54mecLsVYtplBtBbKITSwRsGS4IjBvT5jWskMBafxuZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+        s=arc-2022; t=1677637187;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references:dkim-signature;
+        bh=pBKVJ6yr5/sZu5kZRecYQTY7LbmCiGdwOZ6fa5VFReY=;
+        b=iiDFEsfI85pLlxDl6VVGSj13W/ACJwJA6g4r/O1I7xTRETxJjHLkqc24wt05AAygfIXn0Z
+        uDbk48FpwUNLMM6+4WwP70Cv00S5ZyXLTb2suvXKRzBLUrP7Aaw7933UD11xHGb0oRgcp+
+        GQcJ+eO1gHs0ogtpSOQkoBjlBpyoxpQ/QQ8LHPyRpzEW/CDG0Vj+VgZeX7SA1wzhOcSvcd
+        8c8OWDKr19whJnK8fcJL/MKyLGggaSJVDEFtb+rE3vz/72HB2lIScvEjkmpiqYzuSl4k7E
+        5nLzs+/u0HROBgRrNdtaF5YNsp9sfsBtQSM57M42WYL7eYNbqep3Y7j9j7KaMg==
+ARC-Authentication-Results: i=1;
+        rspamd-69778c65cd-9csnf;
+        auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Spot-Juvenile: 7efca3c96cec1d27_1677637188358_555531155
+X-MC-Loop-Signature: 1677637188358:3277154009
+X-MC-Ingress-Time: 1677637188358
+Received: from pdx1-sub0-mail-a268.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+        by 100.99.229.53 (trex/6.7.2);
+        Wed, 01 Mar 2023 02:19:48 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: dave@stgolabs.net)
+        by pdx1-sub0-mail-a268.dreamhost.com (Postfix) with ESMTPSA id 4PRHxZ4RQgz9v;
+        Tue, 28 Feb 2023 18:19:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+        s=dreamhost; t=1677637187;
+        bh=pBKVJ6yr5/sZu5kZRecYQTY7LbmCiGdwOZ6fa5VFReY=;
+        h=Date:From:To:Cc:Subject:Content-Type;
+        b=Ah0D6a4dhtjRnVTWjEVcgGYvFJxbliqO6ggVfDIhuWsqkwn576eVFBK0hAA5aZCyg
+         br0StoADIIoef8SqNZjdFwd4mmH7Gx9LGkcJAln8aq5iwTySUTRJglvCd2X3tqPBYZ
+         bn5jKpWpDCxBNfXJy9TNa135+AMirStXnbgPRrPP5dGB9+nZCNxgXV0j8e4qxhTSLV
+         wyKfU9M/KlDEpCFUw5ElilqUAkGAyHdTnjbAm+ieHAmAZ0ptpU05EexHMMyE32RggW
+         PA0ixQvuE/EPymXm5De5fB8zfylgg6eNyzuPwmATiYP9vhcW2rIDTdaLDj9Sa7cMOq
+         uouZO1z/ikQTg==
+Date:   Tue, 28 Feb 2023 17:51:05 -0800
+From:   Davidlohr Bueso <dave@stgolabs.net>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>, linuxarm@huawei.com,
+        linux-cxl@vger.kernel.org
+Subject: Re: [PATCH v3 06/16] PCI/DOE: Fix memory leak with
+ CONFIG_DEBUG_OBJECTS=y
+Message-ID: <20230301015105.jnw3xqrhqjj23sfa@offworld>
+References: <cover.1676043318.git.lukas@wunner.de>
+ <53bd8006bae1385905eec702c97f66695363c527.1676043318.git.lukas@wunner.de>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [RFC 0/6] pcmcia: separate 16-bit support from cardbus
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@arndb.de>, Arnd Bergmann <arnd@kernel.org>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Hartley Sweeten <hsweeten@visionengravers.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Kevin Cernekee <cernekee@gmail.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Manuel Lauss <manuel.lauss@gmail.com>,
-        Oliver Hartkopp <socketcan@hartkopp.net>,
-        Olof Johansson <olof@lixom.net>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-wireless@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-References: <20230227133457.431729-1-arnd@kernel.org>
- <3d8f28d7-78df-5276-612c-85b5262a987a@lwfinger.net>
- <c17bff4e-031e-4101-8564-51f6298b1c68@app.fastmail.com>
- <e9f8501f-ede0-4d38-6585-d3dc2469d3fe@lwfinger.net>
- <7085019b-4fad-4d8d-89c0-1dd33fb27bb7@app.fastmail.com>
- <18be9b45-e7c1-9f81-afeb-3e0d4cfe5f73@lwfinger.net>
- <31fee002-db3b-43d9-b8bc-5a869516c2d7@app.fastmail.com>
-From:   Larry Finger <Larry.Finger@lwfinger.net>
-In-Reply-To: <31fee002-db3b-43d9-b8bc-5a869516c2d7@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <53bd8006bae1385905eec702c97f66695363c527.1676043318.git.lukas@wunner.de>
+User-Agent: NeoMutt/20220429
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/28/23 02:37, Arnd Bergmann wrote:
-> My intention was to keep Cardbus support working with old defconfig files,
-> and I've not moved CONFIG_CARDBUS into a separate submenu between
-> CONFIG_PCI_HOTPLUG and CONFIG_PCI_CONTROLLER but left the driver in
-> drivers/pci/hotplug. I think that's the best compromise here, but maybe
-> the PCI maintainers have a better idea.
+On Fri, 10 Feb 2023, Lukas Wunner wrote:
 
-Arnd,
+>After a pci_doe_task completes, its work_struct needs to be destroyed
+>to avoid a memory leak with CONFIG_DEBUG_OBJECTS=y.
+>
+>Fixes: 9d24322e887b ("PCI/DOE: Add DOE mailbox support functions")
+>Tested-by: Ira Weiny <ira.weiny@intel.com>
+>Signed-off-by: Lukas Wunner <lukas@wunner.de>
+>Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+>Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>Cc: stable@vger.kernel.org # v6.0+
 
-I did a bit more investigation. My original .config had CONFIG_PCI_HOTPLUG not 
-defined, but did have CONFIG_CARDBUS and the various yenta modules turned on. 
-With your changes, the CONFIG_PCI_HOTPLUG overrode CARDBUS.
-
-I thought mine was a corner case, but now I am not sure. As stated above, the 
-Debian 12 factory configuration for ppc32 does not turn on PCI hotplug, but the 
-x86_64 configuration for openSUSE Tumbleweed does. The x86_64 configuration in 
-Fedora 37 does not contain CONFIG_PCI_HOTPLUG, but does have CARDBUS set.
-
-It seems that several distros may get the wrong result with this change,
-
-Larry
-
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
