@@ -2,83 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 00E896A71EA
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 18:17:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EAF306A7279
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 19:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229676AbjCARRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Mar 2023 12:17:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44750 "EHLO
+        id S230022AbjCASCC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Mar 2023 13:02:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229665AbjCARRT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 12:17:19 -0500
-Received: from mail.zytor.com (unknown [IPv6:2607:7c80:54:3::138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E235D3B0E0;
-        Wed,  1 Mar 2023 09:17:17 -0800 (PST)
-Received: from [127.0.0.1] ([73.223.221.228])
-        (authenticated bits=0)
-        by mail.zytor.com (8.17.1/8.17.1) with ESMTPSA id 321HGuBv1145373
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 1 Mar 2023 09:16:57 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 321HGuBv1145373
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2023020601; t=1677691018;
-        bh=5hNMK+tD8odHiA4uw42+cFXxmyDl1DpNIg8KWnkmi/U=;
-        h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-        b=trCFRYsdzMYc/K/gmsizn5jQdX3cbZ4Ww+6mVEZMHLW7d20BO9/r0pDrk8gCzsmCM
-         xWQUUvYUeGMXqNCOeXKefDHbI0c8nK0JRNLoFvbEIhpM9CUYCZdri1bPOn4EqZLp7u
-         yTexpznb1m5XGbycQiDUqJQJ6RRdbGw3Y8EkK33b9YAQQg7aABgnIUsfetcE6Bymv9
-         +jSrSEUea7tffR7JVNUuZj2G3Nc7LdKfVh3/Uhz15A920t7bN7KvFtSbbKTe8fZFk8
-         +pQYuQ6yFpQ9e+PYj2r7HjhuKTXpEIokVjqLfztOcwhHrq21CdmlBEEa+sm9IPdshu
-         w5Qng9njILPqA==
-Date:   Wed, 01 Mar 2023 09:16:54 -0800
-From:   "H. Peter Anvin" <hpa@zytor.com>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S230176AbjCASCB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 13:02:01 -0500
+X-Greylist: delayed 17219 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Mar 2023 10:01:59 PST
+Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4296836095;
+        Wed,  1 Mar 2023 10:01:59 -0800 (PST)
+Received: by angie.orcam.me.uk (Postfix, from userid 500)
+        id 5722E92009C; Wed,  1 Mar 2023 19:01:58 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+        by angie.orcam.me.uk (Postfix) with ESMTP id 5061F92009B;
+        Wed,  1 Mar 2023 18:01:58 +0000 (GMT)
+Date:   Wed, 1 Mar 2023 18:01:58 +0000 (GMT)
+From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
+To:     "H. Peter Anvin" <hpa@zytor.com>
+cc:     Bjorn Helgaas <bhelgaas@google.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>
-CC:     x86@kernel.org, linux-pci@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPING=5E3=5D=5BRESEND=5E3=5D=5BPAT?= =?US-ASCII?Q?CH_v3=5D_x86/PCI=3A_Add_support?= =?US-ASCII?Q?_for_the_Intel_82378ZB/82379AB_=28SIO/SIO=2EA=29_PIRQ_router?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <alpine.DEB.2.21.2303011311540.57556@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2301081956290.65308@angie.orcam.me.uk> <alpine.DEB.2.21.2303011311540.57556@angie.orcam.me.uk>
-Message-ID: <66DC3D77-91AC-4F1B-BE3E-892A9B9980BC@zytor.com>
+Subject: Re: [PING^3][RESEND^3][PATCH v3] x86/PCI: Add support for the Intel
+ 82378ZB/82379AB (SIO/SIO.A) PIRQ router
+In-Reply-To: <66DC3D77-91AC-4F1B-BE3E-892A9B9980BC@zytor.com>
+Message-ID: <alpine.DEB.2.21.2303011734260.59747@angie.orcam.me.uk>
+References: <alpine.DEB.2.21.2301081956290.65308@angie.orcam.me.uk> <alpine.DEB.2.21.2303011311540.57556@angie.orcam.me.uk> <66DC3D77-91AC-4F1B-BE3E-892A9B9980BC@zytor.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=US-ASCII
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On March 1, 2023 5:14:59 AM PST, "Maciej W=2E Rozycki" <macro@orcam=2Eme=2E=
-uk> wrote:
->On Sun, 8 Jan 2023, Maciej W=2E Rozycki wrote:
->
->> The Intel 82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO=2EA=
-)=20
->> ISA bridges implement PCI interrupt steering with a PIRQ router[1][2]=
-=20
->> that is exactly the same as that of the PIIX and ICH southbridges (or=
-=20
->> actually the other way round, given that the SIO ASIC was there first)=
-=2E
->
-> Ping for:
-><https://lore=2Ekernel=2Eorg/lkml/alpine=2EDEB=2E2=2E21=2E2301081956290=
-=2E65308@angie=2Eorcam=2Eme=2Euk/>=2E
->
-> I think the patch is fairly obvious=2E  Are there any outstanding concer=
-ns=20
->that prevent it from being applied?
->
->  Maciej
->
+On Wed, 1 Mar 2023, H. Peter Anvin wrote:
 
-Has this patch been actually tested on a real machine, or is it purely the=
-oretical?
+> >> The Intel 82378ZB System I/O (SIO) and 82379AB System I/O APIC (SIO.A) 
+> >> ISA bridges implement PCI interrupt steering with a PIRQ router[1][2] 
+> >> that is exactly the same as that of the PIIX and ICH southbridges (or 
+> >> actually the other way round, given that the SIO ASIC was there first).
+> >
+> > Ping for:
+> ><https://lore.kernel.org/lkml/alpine.DEB.2.21.2301081956290.65308@angie.orcam.me.uk/>.
+> >
+> > I think the patch is fairly obvious.  Are there any outstanding concerns 
+> >that prevent it from being applied?
+> 
+> Has this patch been actually tested on a real machine, or is it purely 
+> theoretical?
+
+ I have no way to verify it on real x86 hw, my only SIO southbridge is in 
+a DEC Alpha machine, so not relevant.
+
+ This is I believe the final Intel device we're missing PIRQ support for, 
+and this work was prompted by a user having issues with his network card, 
+which ultimately and with a lot of confusion around I was able to narrow 
+down to missing PIRQ support rather than any actual issue with hardware.  
+At least Nikolai was patient enough to go through all this and I was 
+vigilant enough to actually catch the ongoing discussion on netdev in the 
+flood.  See: <https://lore.kernel.org/netdev/60B24AC2.9050505@gmail.com/>.
+
+ I'd rather we did not frustrate someone else with something as trivial 
+again, but if you think it's not enough for justification to merge this 
+change, then I'll accept it.  I'd like such a decision to be explicitly 
+stated though rather than assumed by the loss of the patch in mailing list 
+noise (I know we're all overloaded with such stuff).
+
+ Thank your for your input.
+
+  Maciej
