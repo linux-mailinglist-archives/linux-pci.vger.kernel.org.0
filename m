@@ -2,26 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7DE06A7780
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Mar 2023 00:04:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EB4E6A7844
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Mar 2023 01:13:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbjCAXE2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 1 Mar 2023 18:04:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41488 "EHLO
+        id S229673AbjCBAN4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Mar 2023 19:13:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbjCAXE1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 18:04:27 -0500
-X-Greylist: delayed 71 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 01 Mar 2023 15:04:17 PST
+        with ESMTP id S229567AbjCBANz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 19:13:55 -0500
 Received: from smtpout1.mo528.mail-out.ovh.net (smtpout1.mo528.mail-out.ovh.net [46.105.34.251])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99AEB4BEAF;
-        Wed,  1 Mar 2023 15:04:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5486A1E2B8;
+        Wed,  1 Mar 2023 16:13:50 -0800 (PST)
 Received: from pro2.mail.ovh.net (unknown [10.109.156.120])
-        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id 694A92195F;
-        Wed,  1 Mar 2023 18:52:58 +0000 (UTC)
+        by mo528.mail-out.ovh.net (Postfix) with ESMTPS id BF7E021936;
+        Wed,  1 Mar 2023 18:53:00 +0000 (UTC)
 Received: from localhost.localdomain (88.161.25.233) by DAG1EX1.emp2.local
  (172.16.2.1) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21; Wed, 1 Mar
- 2023 19:52:57 +0100
+ 2023 19:52:59 +0100
 From:   Jean-Jacques Hiblot <jjhiblot@traphandler.com>
 To:     <saravanak@google.com>, <clement.leger@bootlin.com>,
         Geert Uytterhoeven <geert+renesas@glider.be>,
@@ -55,22 +54,24 @@ CC:     <linux-renesas-soc@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: [PATCH 0/3] of: irq: Fixes refcount issues with of_irq_parse_one()/of_irq_parse_raw()
-Date:   Wed, 1 Mar 2023 19:52:06 +0100
-Message-ID: <20230301185209.274134-1-jjhiblot@traphandler.com>
+Subject: [PATCH 3/3] of: irq: release the node after looking up for "interrupts-extended"
+Date:   Wed, 1 Mar 2023 19:52:09 +0100
+Message-ID: <20230301185209.274134-4-jjhiblot@traphandler.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230301185209.274134-1-jjhiblot@traphandler.com>
+References: <20230301185209.274134-1-jjhiblot@traphandler.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
 X-Originating-IP: [88.161.25.233]
 X-ClientProxiedBy: DAG3EX2.emp2.local (172.16.2.22) To DAG1EX1.emp2.local
  (172.16.2.1)
-X-Ovh-Tracer-Id: 11460535153186650492
+X-Ovh-Tracer-Id: 11460535155466975612
 X-VR-SPAMSTATE: OK
 X-VR-SPAMSCORE: -100
-X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrudelhedguddutdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgtghisehtkeertdertddtnecuhfhrohhmpeflvggrnhdqlfgrtghquhgvshcujfhisghlohhtuceojhhjhhhisghlohhtsehtrhgrphhhrghnughlvghrrdgtohhmqeenucggtffrrghtthgvrhhnpeejuefhkeelgffhlefhtefhgeektdevvdfgkeeltdehgeeujeeutdehkeeuhffftdenucfkphepuddvjedrtddrtddruddpkeekrdduiedurddvhedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehjjhhhihgslhhothesthhrrghphhgrnhgulhgvrhdrtghomheqpdhnsggprhgtphhtthhopedupdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhnmhesthhirdgtohhmpdhsshgrnhhtohhshheskhgvrhhnvghlrdhorhhgpdhmrghthhhirghsrdhnhihmrghnsehinhhtvghlrdgtohhmpdhgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdpthhhihgvrhhrhidrrhgvughinhhgsehgmhgrihhlrdgtohhmpdhjohhnrghthhgrnhhhsehnvhhiughirgdrtghomhdplhhinhhugidqrh
- gvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoiihlrggsshdrohhrghdplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhlihhnuhigqdgrtghtihhonhhssehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhsuhhngihisehlihhsthhsrdhlihhnuhigrdguvghvpdguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidquhhssgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpsghhvghlghgrrghssehgohhoghhlvgdrtghomhdpfhhrohifrghnugdrlhhishhtsehgmhgrihhlrdgtohhmpdhrohgshhdoughtsehkvghrnhgvlhdrohhrghdpshgrmhhuvghlsehshhholhhlrghnugdrohhrghdptghlvghmvghnthdrlhgvghgvrhessghoohhtlhhinhdrtghomhdpghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdpmhgrghhnuhhsrdgurghmmhesghhmrghilhdrtghomhdplhhinhhugiesrghrmhhlihhnuhigrdhorhh
- grdhukhdpmhhpvgesvghllhgvrhhmrghnrdhiugdrrghupdhnphhighhgihhnsehgmhgrihhlrdgtohhmpdgthhhrihhsthhophhhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdiirghjvggtheesghhmrghilhdrtghomhdplhhinhhugidqthgvghhrrgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdptghlrghuughiuhdrsggviihnvggrsehmihgtrhhotghhihhprdgtohhmpdhmrgiisehkvghrnhgvlhdrohhrghdprghfrggvrhgsvghrsehsuhhsvgdruggvpdhmrghniheskhgvrhhnvghlrdhorhhgpdhprghlmhgvrhesuggrsggsvghlthdrtghomhdpphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdifvghnshestghsihgvrdhorhhgpdhjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdpthhglhigsehlihhnuhhtrhhonhhigidruggvpdfovfetjfhoshhtpehmohehvdekpdhmohguvgepshhmthhpohhuth
+X-VR-SPAMCAUSE: gggruggvucftvghtrhhoucdtuddrgedvhedrudelhedguddutdcutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfqggfjpdevjffgvefmvefgnecuuegrihhlohhuthemucehtddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgtghisehtkeertdertddtnecuhfhrohhmpeflvggrnhdqlfgrtghquhgvshcujfhisghlohhtuceojhhjhhhisghlohhtsehtrhgrphhhrghnughlvghrrdgtohhmqeenucggtffrrghtthgvrhhnpeduteevleevvefggfdvueffffejhfehheeuiedtgedtjeeghfehueduudegfeefueenucfkphepuddvjedrtddrtddruddpkeekrdduiedurddvhedrvdeffeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeduvdejrddtrddtrddupdhmrghilhhfrhhomhepoehjjhhhihgslhhothesthhrrghphhgrnhgulhgvrhdrtghomheqpdhnsggprhgtphhtthhopedupdhrtghpthhtohepshgrrhgrvhgrnhgrkhesghhoohhglhgvrdgtohhmpdhnmhesthhirdgtohhmpdhsshgrnhhtohhshheskhgvrhhnvghlrdhorhhgpdhmrghthhhirghsrdhnhihmrghnsehinhhtvghlrdgtohhmpdhgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdpthhhihgvrhhrhidrrhgvughinhhgsehgmhgrihhlrdgtohhmpdhjohhnrghthhgrnhhhsehnvhhiughirgdrtghomhdplhhinhhugi
+ dqrhgvnhgvshgrshdqshhotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugihpphgtqdguvghvsehlihhsthhsrdhoiihlrggsshdrohhrghdplhhinhhugidqfihirhgvlhgvshhssehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhlihhnuhigqdgrtghtihhonhhssehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhlihhnuhigqdhsuhhngihisehlihhsthhsrdhlihhnuhigrdguvghvpdguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidqphgtihesvhhgvghrrdhkvghrnhgvlhdrohhrghdplhhinhhugidquhhssgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpsghhvghlghgrrghssehgohhoghhlvgdrtghomhdpfhhrohifrghnugdrlhhishhtsehgmhgrihhlrdgtohhmpdhrohgshhdoughtsehkvghrnhgvlhdrohhrghdpshgrmhhuvghlsehshhholhhlrghnugdrohhrghdptghlvghmvghnthdrlhgvghgvrhessghoohhtlhhinhdrtghomhdpghgvvghrthdorhgvnhgvshgrshesghhlihguvghrrdgsvgdpmhgrghhnuhhsrdgurghmmhesghhmrghilhdrtghomhdplhhinhhugiesrghrmhhlihhnuhigrdh
+ orhhgrdhukhdpmhhpvgesvghllhgvrhhmrghnrdhiugdrrghupdhnphhighhgihhnsehgmhgrihhlrdgtohhmpdgthhhrihhsthhophhhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdiirghjvggtheesghhmrghilhdrtghomhdplhhinhhugidqthgvghhrrgesvhhgvghrrdhkvghrnhgvlhdrohhrghdpuggrnhhivghlrdhlvgiitggrnhhosehlihhnrghrohdrohhrghdptghlrghuughiuhdrsggviihnvggrsehmihgtrhhotghhihhprdgtohhmpdhmrgiisehkvghrnhgvlhdrohhrghdprghfrggvrhgsvghrsehsuhhsvgdruggvpdhmrghniheskhgvrhhnvghlrdhorhhgpdhprghlmhgvrhesuggrsggsvghlthdrtghomhdpphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdifvghnshestghsihgvrdhorhhgpdhjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdpthhglhigsehlihhnuhhtrhhonhhigidruggvpdfovfetjfhoshhtpehmohehvdekpdhmohguvgepshhmthhpohhuth
 X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=ham
         autolearn_force=no version=3.4.6
@@ -80,42 +81,35 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This series attempts to fix refcounting issues related to of_irq_parse_one()
-and of_irq_parse_raw().
+When of_parse_phandle_with_args() succeeds, a get() is performed on
+out_irq->np. And another get() is performed in of_irq_parse_raw(),
+resulting in the refcount being incremented twice.
+Fixing this by calling put() after of_irq_parse_raw().
 
-The first issue is simply that most callers of of_irq_parse_one() and
-of_irq_parse_raw() don't call of_node_put() on the returned device node when
-they no longer need it.
+Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+---
+ drivers/of/irq.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-The second issue is a double get() happening in of_irq_parse_one() when
-parsing the "interrupts-extended" properties.
-
-WARNING: I tried to be careful when modifying the callers of
-of_irq_parse_one()/of_irq_parse_raw() but haven't test-build all the changes.
-
-
-Jean-Jacques Hiblot (3):
-  of: irq: make callers of of_irq_parse_raw() release the device node
-  of: irq: make callers of of_irq_parse_one() release the device node
-  of: irq: release the node after looking up for "interrupts-extended"
-
- .../mach-shmobile/regulator-quirk-rcar-gen2.c |  1 +
- arch/powerpc/platforms/fsl_uli1575.c          |  1 +
- arch/powerpc/sysdev/mpic_msi.c                |  1 +
- drivers/bcma/main.c                           |  5 +++-
- drivers/clocksource/timer-clint.c             |  1 +
- drivers/irqchip/irq-mchp-eic.c                |  1 +
- drivers/irqchip/irq-owl-sirq.c                |  1 +
- drivers/irqchip/irq-renesas-rzg2l.c           |  1 +
- drivers/irqchip/irq-sifive-plic.c             |  1 +
- drivers/irqchip/irq-sun6i-r.c                 |  2 ++
- drivers/of/irq.c                              | 30 ++++++++++++++-----
- drivers/of/unittest.c                         |  7 +++++
- drivers/pci/of.c                              |  6 +++-
- drivers/soc/ti/knav_qmss_queue.c              |  3 ++
- drivers/usb/host/xhci-tegra.c                 |  1 +
- 15 files changed, 53 insertions(+), 9 deletions(-)
-
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 95da943fcf075..244f240bc4ac4 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -349,8 +349,12 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
+ 	/* Try the new-style interrupts-extended first */
+ 	res = of_parse_phandle_with_args(device, "interrupts-extended",
+ 					"#interrupt-cells", index, out_irq);
+-	if (!res)
+-		return of_irq_parse_raw(addr, out_irq);
++	if (!res) {
++		p = out_irq->np;
++		res = of_irq_parse_raw(addr, out_irq);
++		of_node_put(p);
++		return res;
++	}
+ 
+ 	/* Look for the interrupt parent. */
+ 	p = of_irq_find_parent(device);
 -- 
 2.25.1
 
