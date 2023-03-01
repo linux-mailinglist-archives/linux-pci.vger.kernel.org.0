@@ -2,134 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D57596A66FC
-	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 05:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAABE6A6783
+	for <lists+linux-pci@lfdr.de>; Wed,  1 Mar 2023 07:05:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229606AbjCAEgq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Feb 2023 23:36:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53310 "EHLO
+        id S229702AbjCAGFE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 1 Mar 2023 01:05:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbjCAEgp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Feb 2023 23:36:45 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2013637B5E
-        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 20:36:44 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id l1so12103583pjt.2
-        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 20:36:44 -0800 (PST)
+        with ESMTP id S229686AbjCAGFD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 1 Mar 2023 01:05:03 -0500
+Received: from mail-ot1-x32f.google.com (mail-ot1-x32f.google.com [IPv6:2607:f8b0:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340A637F00
+        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 22:05:02 -0800 (PST)
+Received: by mail-ot1-x32f.google.com with SMTP id r23-20020a05683001d700b00690eb18529fso6985897ota.1
+        for <linux-pci@vger.kernel.org>; Tue, 28 Feb 2023 22:05:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1677645403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+W9hQB51GTypbp+uatvOUzvRwGcaPVnhPF9GgCO6eqI=;
-        b=AnRY7ccWRsYs3zRIdEKJLQBSCVf0fUPTLiAHT9XmcwNbQkcH9fMM4/cbAOQuVlZlKG
-         5AqVm6xK/UPy/vjoQUo6l8HjIJQNRytHJ/ERoq9zI+OHpZNddVPpuv1/KHCJXT5bzmmS
-         7udadIK8zer8L4x8agk+wvLESsQui9n5rxG2aDY7yV/AYyCElgO9m4C+6HAf/bWySF1G
-         P5kptiIyZqdyHejGSAA7BlNQd2BDohPXC8H/0BttdYLY06mboW2II8QO6v+LmftLNujP
-         ItXNxKHY9R9wrkkDuSY7R8NGlJfQFQTch97uCLcSVNjq8RUb/GJqKn4/U5sqjMNx8aCr
-         WNMA==
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=7kVT/oItrmYbZ6vjI5pXv35SY2pScZG5pla4txXLGUY=;
+        b=PQl3CKAcs5i1UuCdr43Q0EBCuIOFz0kxigPphBJQy0Fc1oosErTNFQBOy0uFTzq7Mp
+         6we6/MWuXVzgzTDB2BvRXd3pTL+hDBecMULY0T7vrYcXWZ2D8CBllogx22dlZF+Wjg6A
+         AYh4Fe0vyRU/4l6aRAz5q+L2I6+UiAWEKLSyY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677645403;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+W9hQB51GTypbp+uatvOUzvRwGcaPVnhPF9GgCO6eqI=;
-        b=yvXeS61LKfZKbwqyzip4hR1j4eyAJTzg4SuquDM4NQ+LNLocV3t+ByH2EZ2D9QRf7W
-         jUmlSdVtfvL1XAc1TK7nc2iHIOE2y39YrxH9zojLXfc8McyGdSpiYKU+GSThE8pRYIMd
-         0xhn1FZ5yyuCMJAdy+Eyss1xZbqMS3HV6uAmvIequxWcEmW4yZYI+LlGJL/buZTfk+bF
-         fo/VWLFIgO7jpahBIHAOloebjR3S9oOvS+yzA3pP+a0wTc4lgATVCO/NUUD3hg0bpuoA
-         jYjOgCqIvdYOC86Idiofr7+ToYYKI36A4/hGcdeOcFc27RvdkLQYeR5oHl8J7FdEhR4r
-         LyqQ==
-X-Gm-Message-State: AO0yUKXJ31dM5/LlnsrOSfproO3BHJi/3gUYMB1YXjZR1rMKv9Iid/zY
-        97SCQt2ors1hhTbUP2WywSQH2zGsAcYWe8D6nc2gtQ==
-X-Google-Smtp-Source: AK7set+oKzqEVt4NgiziRq+yuTqy6i2IUUU+8AQGvoAw0MZB2Cj+yYzNgM6sZUXMm5wNsHDayS9TZkMZimB5vB0Dn1s=
-X-Received: by 2002:a17:90b:368e:b0:233:d131:29be with SMTP id
- mj14-20020a17090b368e00b00233d13129bemr1967203pjb.9.1677645402446; Tue, 28
- Feb 2023 20:36:42 -0800 (PST)
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=7kVT/oItrmYbZ6vjI5pXv35SY2pScZG5pla4txXLGUY=;
+        b=sA91Usq/NlqZ4RtuRUHv87S8ztGiXEBM0y0Y/PsgQxnrjctOaIiViBUPsjTmh1KYZ9
+         fzhiEtslxG0aOKsuJunId4K6rsKY/MA6QOvmyW1nQ/DgBtoUZAXEVXDka5EZMHHHKKkD
+         DMg6IymV5jknKLfmC9Vw0U82dHklqYGnHSqfstggRWN2WoTqrFswRgf7QqVpoJ7o9rZx
+         kFrPLFUj1wIqcjKUmtTyjwn2ulIuMtA+thHLWmCCNTOcKc8hd3vEk5I/9FHoDPMzNSIz
+         Hb7x1/AxRDNA7B3ZXgQS23qgLjF9R9g66cLUliouQCpfkcYzS1OjKk4S1z42YSAgbWbp
+         kH5g==
+X-Gm-Message-State: AO0yUKV6xXgdEwAHCfZS8mXiAwpyT6Aky/aqr8zqitLEi7U7hGPu+Fcm
+        x0sCje3R9eNthx2MbBOnYggYhQ==
+X-Google-Smtp-Source: AK7set8ZnCu/zmySz52YJsLN8IT9WjXKXUtbDOsW2C0cBroFnnvstBXnX4kQoVqUGCDznnm2HGc3DQ==
+X-Received: by 2002:a05:6830:4414:b0:68b:dfcc:bed with SMTP id q20-20020a056830441400b0068bdfcc0bedmr3489242otv.15.1677650701532;
+        Tue, 28 Feb 2023 22:05:01 -0800 (PST)
+Received: from grundler-glapstation.lan ([70.134.62.80])
+        by smtp.gmail.com with ESMTPSA id g21-20020a056830309500b0068bc48c61a5sm4599539ots.19.2023.02.28.22.05.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Feb 2023 22:05:01 -0800 (PST)
+From:   Grant Grundler <grundler@chromium.org>
+To:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O \ 'Halloran" <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rajat Jain <rajatja@chromium.org>,
+        Grant Grundler <grundler@chromium.org>
+Subject: [PATCH] PCI/AER: correctable error message as KERN_INFO
+Date:   Tue, 28 Feb 2023 22:04:53 -0800
+Message-Id: <20230301060453.4031503-1-grundler@chromium.org>
+X-Mailer: git-send-email 2.39.2.722.g9855ee24e9-goog
 MIME-Version: 1.0
-References: <20230227201340.2087605-1-sdalvi@google.com> <CAPOBaE4U4rCJ+4CcSoj597LsP-0ESBhiKKHz00bk+SvNHrOzKQ@mail.gmail.com>
-In-Reply-To: <CAPOBaE4U4rCJ+4CcSoj597LsP-0ESBhiKKHz00bk+SvNHrOzKQ@mail.gmail.com>
-From:   Sajid Dalvi <sdalvi@google.com>
-Date:   Tue, 28 Feb 2023 22:36:31 -0600
-Message-ID: <CAEbtx1mhMqZjJeU0L99xpwY9W5caJmpv69aRZG+b-hLfstK-Ww@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: dwc: Wait for link up only if link is started
-To:     Han Jingoo <jingoohan1@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, kernel-team@android.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for your review Jingoo.
-Sajid
+Since correctable errors have been corrected (and counted), the dmesg output
+should not be reported as a warning, but rather as "informational".
 
-On Tue, Feb 28, 2023 at 4:04=E2=80=AFPM Han Jingoo <jingoohan1@gmail.com> w=
-rote:
->
-> On Mon, Feb 27, 2023, Sajid Dalvi <sdalvi@google.com> wrote:
-> >
-> > In dw_pcie_host_init() regardless of whether the link has been started
-> > or not, the code waits for the link to come up. Even in cases where
-> > start_link() is not defined the code ends up spinning in a loop for 1
-> > second. Since in some systems dw_pcie_host_init() gets called during
-> > probe, this one second loop for each pcie interface instance ends up
-> > extending the boot time.
-> >
-> > Call trace when start_link() is not defined:
-> > dw_pcie_wait_for_link << spins in a loop for 1 second
-> > dw_pcie_host_init
-> >
-> > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
->
-> (CC'ed Krzysztof Kozlowski)
->
-> Acked-by: Jingoo Han <jingoohan1@gmail.com>
->
-> It looks good to me. I also checked the previous thread.
-> I agree with Krzysztof's opinion that we should include
-> only hardware-related features into DT.
-> Thank you.
->
-> Best regards,
-> Jingoo Han
->
-> > ---
-> >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/driver=
-s/pci/controller/dwc/pcie-designware-host.c
-> > index 9952057c8819..9709f69f173e 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > @@ -489,10 +489,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> >                 ret =3D dw_pcie_start_link(pci);
-> >                 if (ret)
-> >                         goto err_remove_edma;
-> > -       }
-> >
-> > -       /* Ignore errors, the link may come up later */
-> > -       dw_pcie_wait_for_link(pci);
-> > +               /* Ignore errors, the link may come up later */
-> > +               dw_pcie_wait_for_link(pci);
-> > +       }
-> >
-> >         bridge->sysdata =3D pp;
-> >
-> > --
-> > 2.39.2.722.g9855ee24e9-goog
-> >
+Otherwise, using a certain well known vendor's PCIe parts in a USB4 docking
+station, the dmesg buffer can be spammed with correctable errors, 717 bytes
+per instance, potentially many MB per day.
+
+Given the "WARN" priority, these messages have already confused the typical
+user that stumbles across them, support staff (triaging feedback reports),
+and more than a few linux kernel devs. Changing to INFO will hide these
+messages from most audiences.
+
+Signed-off-by: Grant Grundler <grundler@chromium.org>
+---
+This patch will likely conflict with:
+  https://lore.kernel.org/all/20230103165548.570377-1-rajat.khandelwal@linux.intel.com/
+
+which I'd also like to see upstream. Please let me know to resubmit mine if Rajat's patch lands first. Or feel free to fix up this one.
+
+ drivers/pci/pcie/aer.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index f6c24ded134c..e4cf3ec40d66 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -692,7 +692,7 @@ static void __aer_print_error(struct pci_dev *dev,
+ 
+ 	if (info->severity == AER_CORRECTABLE) {
+ 		strings = aer_correctable_error_string;
+-		level = KERN_WARNING;
++		level = KERN_INFO;
+ 	} else {
+ 		strings = aer_uncorrectable_error_string;
+ 		level = KERN_ERR;
+@@ -724,7 +724,7 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
+ 	layer = AER_GET_LAYER_ERROR(info->severity, info->status);
+ 	agent = AER_GET_AGENT(info->severity, info->status);
+ 
+-	level = (info->severity == AER_CORRECTABLE) ? KERN_WARNING : KERN_ERR;
++	level = (info->severity == AER_CORRECTABLE) ? KERN_INFO : KERN_ERR;
+ 
+ 	pci_printk(level, dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
+ 		   aer_error_severity_string[info->severity],
+-- 
+2.39.2.722.g9855ee24e9-goog
+
