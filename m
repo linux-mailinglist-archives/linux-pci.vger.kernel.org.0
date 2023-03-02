@@ -2,75 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 04CF46A8AF1
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Mar 2023 22:04:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D09766A90E0
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 07:24:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229555AbjCBVE4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 2 Mar 2023 16:04:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58954 "EHLO
+        id S229636AbjCCGYN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 01:24:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229523AbjCBVEy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Mar 2023 16:04:54 -0500
-Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 159E714210;
-        Thu,  2 Mar 2023 13:04:53 -0800 (PST)
-Received: by mail-lf1-x12d.google.com with SMTP id g17so982289lfv.4;
-        Thu, 02 Mar 2023 13:04:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677791091;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gS1aC4OWyRu6SpGrWqYbSYZBwKwvoyr0C7Dc2Ig+DtE=;
-        b=ciy68zYbblqXtZCzbcdsaOq6tlhZCjTK7mK6I5dT+QABqd54mWZFHPa7Gq0G2995aT
-         Lx3mNKs5jdL+6gejydSvBvSreHoXkTF+4fsnsSQxU7CKHkkZCaZzWzx7CNO40buEapxl
-         hQTq+6anL4mXuFsjLkHBdLilcDSB34sXWxbzqBp4yTeHLbDqB4af/2p8LOJTVD5AjEKx
-         5m3CB7APEmuXJtbfmW/J/VUI4HRFSXtUUoqiDV1qJ36K6SbcIzDNl/YL+wHKR19ZogPJ
-         JOhpOkxtnBxsXWquySj8mFanuFYn7PLTnQNvqCxhj3eeSUOQzI/blBmhLsA5ikmCWPo3
-         wgLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677791091;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gS1aC4OWyRu6SpGrWqYbSYZBwKwvoyr0C7Dc2Ig+DtE=;
-        b=wUxMuL2tjapbyeNFQg+BYntkFJB+z+CnbfJG6junXP9ApjpO481W3pxjNM2bPb5Q4o
-         n3nGcdptDGLYPO/95zwz2nzVrCZm0z1MYsgrNuM8lw5WgfnM/gCrWmrMYNdl7bZppCrH
-         zLda4ps/56m+znNdFN/TnthGYKoKuTr9HQY7/ZtOi4EuZy3qjazYiCE+WPq3xVl8mrQT
-         Gfn1RSeehNIoi7evo3/zpWuftylmePpahCQFs1z361sTlX0yLQG36o2teaVDAeNh307S
-         ZeVf3imguFPL59ZQ8hBeNpwzZRr8OSE+sRnFkuogWnrvOvlCsox9AqZtevg5Go4Bubcm
-         IyCQ==
-X-Gm-Message-State: AO0yUKXdaoRYROeYrn48uy1apH6nMktmg64g2Yi2eddGrlz7Fd8NBuiA
-        KWUquRjvkXYCPj058SrRwSo=
-X-Google-Smtp-Source: AK7set9waHOr75BQF+Xh9hJ/6B0B6F1Totg3dY1RUtnEpkGhCM1HqwrSCDvnpy1gNLvKaipOVG4LQg==
-X-Received: by 2002:ac2:51c8:0:b0:4dd:9ddc:4461 with SMTP id u8-20020ac251c8000000b004dd9ddc4461mr3380426lfm.17.1677791091115;
-        Thu, 02 Mar 2023 13:04:51 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id d3-20020ac25ec3000000b004db9dbe09c6sm77915lfq.89.2023.03.02.13.04.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 13:04:50 -0800 (PST)
-Date:   Fri, 3 Mar 2023 00:04:47 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 4/4] dmaengine: dw-edma: Add HDMA DebugFS support
-Message-ID: <20230302210447.fyzqjknew5z4ncdg@mobilestation>
-References: <20230221034656.14476-1-cai.huoqing@linux.dev>
- <20230221034656.14476-5-cai.huoqing@linux.dev>
+        with ESMTP id S229592AbjCCGYM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 01:24:12 -0500
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B3FC13506
+        for <linux-pci@vger.kernel.org>; Thu,  2 Mar 2023 22:24:03 -0800 (PST)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230303062359epoutp045a9ae33b27ecfb98ec41f13db315ddf7~I1J7b0ulq2519825198epoutp04j
+        for <linux-pci@vger.kernel.org>; Fri,  3 Mar 2023 06:23:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230303062359epoutp045a9ae33b27ecfb98ec41f13db315ddf7~I1J7b0ulq2519825198epoutp04j
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1677824639;
+        bh=jzCG/BBhzHTQaPXueFKBBk54VwhXWae/BjbpzpIVH4A=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=STiyy++82ZJzZOwriwn6p+qrNkWcsAeZj1xN2dC8o0p5r7McnRw2xLopxtWj0dLCq
+         ZT1etZHS88xha4n1GzPOg6pkvhEDqbp/cVUrygAXySyR2lIEf6I/gwC+nPuGVqnDJ5
+         aOXhpdkIX90KLQ+55f/4dZVWoMU/k5sdis0YLC7w=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20230303062359epcas5p24229ec7ddaf67bdecc7360db844bc6a6~I1J6_Grkf1275812758epcas5p20;
+        Fri,  3 Mar 2023 06:23:59 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.180]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 4PSdGN5vs8z4x9QH; Fri,  3 Mar
+        2023 06:23:56 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        6D.16.06765.C7291046; Fri,  3 Mar 2023 15:23:56 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20230302124730epcas5p3e335772953face43b8918e3f3d156e7f~ImvftJh1W3272932729epcas5p3B;
+        Thu,  2 Mar 2023 12:47:30 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230302124730epsmtrp1773eabce41f0842bc62df6cfbdaf764c~Imvfr_vuQ2737627376epsmtrp1o;
+        Thu,  2 Mar 2023 12:47:30 +0000 (GMT)
+X-AuditID: b6c32a4b-46dfa70000011a6d-6a-6401927c8041
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        BC.C3.18071.2EA90046; Thu,  2 Mar 2023 21:47:30 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230302124726epsmtip18c7dc6ef6ef9d8a09a0aa4b663b1ba94~ImvcBc1Oc2915429154epsmtip1N;
+        Thu,  2 Mar 2023 12:47:26 +0000 (GMT)
+From:   "Shradha Todi" <shradha.t@samsung.com>
+To:     "'Rob Herring'" <robh@kernel.org>
+Cc:     <alim.akhtar@samsung.com>, <Sergey.Semin@baikalelectronics.ru>,
+        <pankaj.dubey@samsung.com>, <jh80.chung@samsung.co>,
+        <krzysztof.kozlowski+dt@linaro.org>, <devicetree@vger.kernel.org>,
+        <lukas.bulwahn@gmail.com>, <hongxing.zhu@nxp.com>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <m.szyprowski@samsung.com>,
+        <linux-kernel@vger.kernel.org>, <lpieralisi@kernel.org>,
+        <tglx@linutronix.de>, <linux-samsung-soc@vger.kernel.org>,
+        <kw@linux.com>, <jingoohan1@gmail.com>
+In-Reply-To: <167638944926.3699.15638999253407034271.robh@kernel.org>
+Subject: RE: [PATCH 05/16] dt-bindings: PCI: Rename the term elbi to appl
+Date:   Thu, 2 Mar 2023 18:17:14 +0530
+Message-ID: <139201d94d05$26da8290$748f87b0$@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230221034656.14476-5-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHB3D0FgV9/Br8Y35oSVRdB1anKHwG8wiHRAhWtsysBm4ANqa7q4hdA
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA01TfVCTdRzvt+fZnmGse2SWP2Z23KNoULyMl/mgLLlS7ilEV513ndLRE3sC
+        Ym/t2SqSq2VcEanzDecmEHiIMCWOsQgWkKBi4A27E8wMr6mDwBkCIsYB1sYDxX+f78vn+/l+
+        fr/7CpGQvwUSYa7GwOg1tIoQLEObzkdERBUcBsrY3qH1pKe8SUBW7c0hv73QyydtTWWAHJ/p
+        RcmaSStGHhi+hZCmfTN80nHnGp+86ioVkO7ySwLy+JV2Hlk4W4iShRe/Qsm6Czcx8uT3kxj5
+        T2szRs5axlCy0VGCpIipe45HGNViu4lRFQ4j5bB/LaAGrrUKqNHeXozy9ll4VGPVZ1TDaDOP
+        OmkaF1AHnHZAPXA8pwjelZecw9BKRh/GaLK0ylxNtpxIezPzlcxEWaw0SppEbiDCNLSakRNb
+        timiUnNVfotE2Ie0yuhPKWiWJWJeStZrjQYmLEfLGuQEo1OqdAm6aJZWs0ZNdrSGMWyUxsbG
+        Jfob38nLGbTe5+vanvl44M4JYAKl4mIQJIR4Avz5cQtWDJYJQ/AfAXTfdqJcMAGg80Ydnwum
+        ABwYaOctUo52jgi4QhuA7S3VPC4YBtDTcQoEugT4i9DbN4sE8Ao8HO61eebnIrgZhZc75tBA
+        IQjfCit8D/gBLMZfheazj+fJKL4WFo9OzZNFeBIcrHXzObwcdlu981wEfwFWV/oQbqUwOD1Y
+        zefEUqG1rAHhelbCi9P7kIAwxE8EwdrS8/5Vhf5gC7xeGcxxxfDuJSfGYQkcMX+5gLNhbePx
+        hfkqONVYtWB/MzzXV4oGxiB4BKx3xXDp1bCk5zseJ/sU3D/jXWgXwebyRbwGTs61ohwOheVd
+        V/kHAWFb4sy2xJltiQPb/2oVALWDUEbHqrMZNlEXr2E++u/Hs7RqB5g/gci0ZnDbMxbdCXhC
+        0AmgECFWiPaYnlCGiJR0/ieMXpupN6oYthMk+p/7ECJ5OkvrvyGNIVOakBSbIJPJEpLiZVJi
+        pWi9vDsrBM+mDUwew+gY/SKPJwySmHg9h9Jdcmr6041jDQV/JNO1D9WVfwln39e7RlIcr/UX
+        vbXKFa7AjL7prlOe5XB3geWLM7/Zt+6m+l+WVKzK0Frqj3mev/vTmUiS51XEjQQfcZkbrp8O
+        rkiXSN0T7Bs19ej2orizEUjPo/vWb7DB8PR62w7HB/tvsSb39rK5wme9v9cBn1jmyzhyz0yk
+        a/dYpGY0oiNv1xW7FSQLi1YX/6nY9F5Djexhv68bLbHoQow9O+NbNnTdOHc5P6Z72E2nHlS3
+        iU2bn2wuD920Rn5alB989G1JePzrxT+MjJcc5oX6yInBsrW/2J102lRpi/PXY8p1n+/Y2ZdS
+        IsGGYt5VZAwRKJtDSyMRPUv/C0O3zDeLBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPIsWRmVeSWpSXmKPExsWy7bCSnO6jWQwpBj1z1C0ezNvGZrGkKcNi
+        /pFzrBazts1ltPj4+xyLxYovM9kt+l48ZLZo6PnNarHp8TVWi8u75rBZnJ13nM1ixvl9TBYt
+        f1pYLFqOtrNYrD1yl91i0dYv7Bb/9+xgt/gz/QOLxeZNU5kdhD3ebPrO7rFz1l12jwWbSj02
+        repk87hzbQ+bx7tz59g9nlyZzuSxeUm9x8Z3O5g8FjV8ZPPo27KK0ePzJrkAnigum5TUnMyy
+        1CJ9uwSujEkX/7EVdItVHLp7l7WB8ZFQFyMnh4SAicSUQy/Zuhi5OIQEdjNKbFjSxgKRkJT4
+        fHEdE4QtLLHy33N2EFtI4BmjxJpeNxCbTUBH4smVP8wgtoiAqkTTrAdgvcwCi1kknixSghj6
+        iVGic+4/sEGcAq4SC15/ZgWxhQU8JfrX/GMEsVkEVCS63n0DG8QrYCnxdOVZVghbUOLkzCdQ
+        Q7Uleh+2MsLYyxa+ZoY4TkHi59NlrBBHuEnMnLuRGaJGXOLozx7mCYzCs5CMmoVk1Cwko2Yh
+        aVnAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4DWhp7mDcvuqD3iFGJg7GQ4wS
+        HMxKIrzVDQwpQrwpiZVVqUX58UWlOanFhxilOViUxHkvdJ2MFxJITyxJzU5NLUgtgskycXBK
+        NTAFBD8/sk3p7qMf8lc/Zm9yqf7XK/PiF+P0fkGviXYLmp8yMqf/YuYLOr1y2uygkI/rdY8/
+        cLidWf04al5xi8zOjpK7OU5aGYtmqKsduPrdTEROYbGmQ4jvhTP1EgZONqaMKserrrUH+zd1
+        GGtX24tuS7maonezJu6y8po5M0zeXfd/t3eD2ZQLPU22Kjb7i0R+Zd6bmu22JKn74MzXSqqx
+        R6c5tu35q+fj2tc0S081SuZEl8Z28RVPNiXti/zOVHdrd93fl6v5RbTOlErN917/Y/6qSQZn
+        H2uFnLdirlJfKCb5lv/zlZDQxmLne6VfHsTcv3nvWu9N4ci5/+wuzFibuLnrdVLmsscrsrud
+        ZuxTYinOSDTUYi4qTgQAIRSE1nIDAAA=
+X-CMS-MailID: 20230302124730epcas5p3e335772953face43b8918e3f3d156e7f
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230214121424epcas5p38e74b52a2d94a32b82a093c7e0a12499
+References: <20230214121333.1837-1-shradha.t@samsung.com>
+        <CGME20230214121424epcas5p38e74b52a2d94a32b82a093c7e0a12499@epcas5p3.samsung.com>
+        <20230214121333.1837-6-shradha.t@samsung.com>
+        <167638944926.3699.15638999253407034271.robh@kernel.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        PDS_BAD_THREAD_QP_64,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -78,308 +130,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 21, 2023 at 11:46:55AM +0800, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
-> 
-> Add HDMA DebugFS support to show register information
-> 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-> ---
->   v3->v4:
->     1.Add field watermark_en, func_num, qos, msi_watermark,etc.
->     2.Make variables reverse xmas tree order.
->     3.Declare const for 'struct dw_hdma_debugfs_entry'
-> 
->   v3 link:
->   https://lore.kernel.org/lkml/20230213132411.65524-5-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile             |   3 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 181 +++++++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
->  4 files changed, 207 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> 
-> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-> index b1c91ef2c63d..83ab58f87760 100644
-> --- a/drivers/dma/dw-edma/Makefile
-> +++ b/drivers/dma/dw-edma/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
-> -dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-> +dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-> +				   dw-hdma-v0-debugfs.o
->  dw-edma-objs			:= dw-edma-core.o	\
->  				   dw-edma-v0-core.o	\
->  				   dw-hdma-v0-core.o $(dw-edma-y)
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index cadc80dc62b2..6850042dbbe0 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -10,6 +10,7 @@
->  #include "dw-edma-core.h"
->  #include "dw-hdma-v0-core.h"
->  #include "dw-hdma-v0-regs.h"
-> +#include "dw-hdma-v0-debugfs.h"
->  
->  enum dw_hdma_control {
->  	DW_HDMA_V0_CB					= BIT(0),
-> @@ -282,6 +283,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  /* HDMA debugfs callbacks */
->  static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
->  {
-> +	dw_hdma_v0_debugfs_on(dw);
->  }
->  
->  static const struct dw_edma_core_ops dw_hdma_v0_core = {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> new file mode 100644
-> index 000000000000..3a6f70173a03
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> @@ -0,0 +1,181 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/bitfield.h>
-> +
-> +#include "dw-hdma-v0-debugfs.h"
-> +#include "dw-hdma-v0-regs.h"
-> +#include "dw-edma-core.h"
-> +
-> +#define REGS_ADDR(dw, name)						       \
-> +	({								       \
-> +		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-> +									       \
-> +		(void __iomem *)&__regs->name;				       \
-> +	})
-> +
-> +#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-> +	({								       \
-> +		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-> +									       \
-> +		if (_dir == EDMA_DIR_READ)				       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-> +		else							       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-> +									       \
-> +		(void __iomem *)&__ch_regs->name;			       \
-> +	})
-> +
-> +#define CTX_REGISTER(dw, name, dir, ch) \
-> +	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
-> +
-> +#define REGISTER(dw, name) \
-> +	{ dw, #name, REGS_ADDR(dw, name) }
-> +
-> +#define WRITE_STR				"write"
-> +#define READ_STR				"read"
-> +#define CHANNEL_STR				"channel"
-> +#define REGISTERS_STR				"registers"
-> +
-> +struct dw_hdma_debugfs_entry {
-> +	struct dw_edma				*dw;
-> +	const char				*name;
-> +	void __iomem				*reg;
-> +	enum dw_edma_dir			dir;
-> +	u16					ch;
-> +};
-> +
-> +static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-> +{
 
-> +	void __iomem *reg = (void __force __iomem *)data;
-> +	*val = readl(reg);
 
-A tiny nitpick. Please add newline between the lines above so the code
-would look a bit cleaner.
+> -----Original Message-----
+> From: Rob Herring =5Bmailto:robh=40kernel.org=5D
+> Sent: 14 February 2023 21:43
+> To: Shradha Todi <shradha.t=40samsung.com>
+> Cc: alim.akhtar=40samsung.com; Sergey.Semin=40baikalelectronics.ru;
+> pankaj.dubey=40samsung.com; jh80.chung=40samsung.co;
+> krzysztof.kozlowski+dt=40linaro.org; devicetree=40vger.kernel.org;
+> lukas.bulwahn=40gmail.com; hongxing.zhu=40nxp.com; bhelgaas=40google.com;
+> linux-pci=40vger.kernel.org; linux-arm-kernel=40lists.infradead.org;
+> m.szyprowski=40samsung.com; linux-kernel=40vger.kernel.org;
+> lpieralisi=40kernel.org; tglx=40linutronix.de; linux-samsung-
+> soc=40vger.kernel.org; kw=40linux.com; jingoohan1=40gmail.com
+> Subject: Re: =5BPATCH 05/16=5D dt-bindings: PCI: Rename the term elbi to =
+appl
+>=20
+>=20
+> On Tue, 14 Feb 2023 17:43:22 +0530, Shradha Todi wrote:
+> > DT uses the name elbi in reg-names for application logic registers
+> > which is a wrong nomenclature. This patch fixes the same.
+> >
+> > This commit shouldn't be applied without changes
+> > =22arm64: dts: Rename the term elbi to appl=22 and
+> > =22PCI: samsung: Rename the term elbi to appl=22
+> >
+> > Signed-off-by: Shradha Todi <shradha.t=40samsung.com>
+> > ---
+> >  Documentation/devicetree/bindings/pci/samsung,pcie.yaml =7C 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+>=20
+> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m
+> dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>=20
+> yamllint warnings/errors:
+>=20
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-
+> ci/linux/Documentation/devicetree/bindings/pci/samsung,pcie.example.dtb
+> : pcie=4015700000: reg-names:1: 'appl' was expected
+> 	From schema: /builds/robherring/dt-review-
+> ci/linux/Documentation/devicetree/bindings/pci/samsung,pcie.yaml
+>=20
+> doc reference errors (make refcheckdocs):
+>=20
+> See https://protect2.fireeye.com/v1/url?k=3Db0812da3-d10a3895-b080a6ec-
+> 74fe485fffe0-cf137b875436d997&q=3D1&e=3D09e1c000-01c6-48c4-8fff-
+> 94e474b2862c&u=3Dhttps%3A%2F%2Fpatchwork.ozlabs.org%2Fproject%2Fdev
+> icetree-bindings%2Fpatch%2F20230214121333.1837-6-
+> shradha.t%40samsung.com
+>=20
+> The base for the series is generally the latest rc1. A different dependen=
+cy
+> should be noted in *this* patch.
+>=20
+> If you already ran 'make dt_binding_check' and didn't see the above error=
+(s),
+> then make sure 'yamllint' is installed and dt-schema is up to
+> date:
+>=20
+> pip3 install dtschema --upgrade
+>=20
+> Please check and re-submit after running the above command yourself. Note
+> that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+> your schema. However, it must be unset to test all examples with your
+> schema.
 
-> +
-> +	return 0;
-> +}
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-> +
-> +static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-> +				       const struct dw_hdma_debugfs_entry ini[],
-> +				       int nr_entries, struct dentry *dent)
-> +{
-> +	struct dw_hdma_debugfs_entry *entries;
-> +	int i;
-> +
+Thanks for review. Sorry, I missed to update the example. Will take care in=
+ next patch set.
 
-> +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-> +			       GFP_KERNEL);
-
-Make sure devm_kcalloc() returns not-null.
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/dma/dw-edma/dw-edma-v0-debugfs.c?h=controller/dwc#n108
-otherwise you risk to catch the null-dereference.
-
-> +	for (i = 0; i < nr_entries; i++) {
-> +		entries[i] = ini[i];
-> +
-> +		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-> +					   &entries[i], &fops_x32);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-> +				    u16 ch, struct dentry *dent)
-> +{
-> +	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-> +		CTX_REGISTER(dw, ch_en, dir, ch),
-> +		CTX_REGISTER(dw, doorbell, dir, ch),
-> +		CTX_REGISTER(dw, prefetch, dir, ch),
-> +		CTX_REGISTER(dw, handshake, dir, ch),
-> +		CTX_REGISTER(dw, llp.lsb, dir, ch),
-> +		CTX_REGISTER(dw, llp.msb, dir, ch),
-> +		CTX_REGISTER(dw, cycle_sync, dir, ch),
-> +		CTX_REGISTER(dw, transfer_size, dir, ch),
-> +		CTX_REGISTER(dw, sar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, sar.msb, dir, ch),
-> +		CTX_REGISTER(dw, dar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, dar.msb, dir, ch),
-> +		CTX_REGISTER(dw, watermark_en, dir, ch),
-> +		CTX_REGISTER(dw, control1, dir, ch),
-> +		CTX_REGISTER(dw, func_num, dir, ch),
-> +		CTX_REGISTER(dw, qos, dir, ch),
-> +		CTX_REGISTER(dw, ch_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_setup, dir, ch),
-> +		CTX_REGISTER(dw, int_clear, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-> +	};
-> +	int nr_entries = ARRAY_SIZE(debugfs_regs);
-> +
-> +	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-
-> +	if (!regs_dent)
-> +		return;
-
-No need in this check. DebugFS is designed to silently skip the nodes
-creation if for some reason the parental dir couldn't be created:
-https://elixir.bootlin.com/linux/latest/source/fs/debugfs/inode.c#L422
-
-That's why the check was omitted in the eDMA part:
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/tree/drivers/dma/dw-edma/dw-edma-v0-debugfs.c?h=controller/dwc#n181
-
-> +
-> +	for (i = 0; i < dw->wr_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +		if (!ch_dent)
-> +			return;
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(READ_STR, dent);
-
-> +	if (!regs_dent)
-> +		return;
-
-ditto
-
-> +
-> +	for (i = 0; i < dw->rd_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +		if (!ch_dent)
-> +			return;
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-> +{
-> +	struct dentry *regs_dent;
-> +
-> +	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-
-> +	if (!regs_dent)
-> +		return;
-
-ditto
-
--Serge(y)
-
-> +
-> +	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-> +	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-> +}
-> +
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +	if (!debugfs_initialized())
-> +		return;
-> +
-> +	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-> +	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-> +	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-> +
-> +	dw_hdma_debugfs_regs(dw);
-> +}
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> new file mode 100644
-> index 000000000000..e6842c83777d
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#ifndef _DW_HDMA_V0_DEBUG_FS_H
-> +#define _DW_HDMA_V0_DEBUG_FS_H
-> +
-> +#include <linux/dma/edma.h>
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-> +#else
-> +static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +}
-> +#endif /* CONFIG_DEBUG_FS */
-> +
-> +#endif /* _DW_HDMA_V0_DEBUG_FS_H */
-> -- 
-> 2.34.1
-> 
