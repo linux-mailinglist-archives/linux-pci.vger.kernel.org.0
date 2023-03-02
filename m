@@ -2,55 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ABD536A90F4
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 07:25:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66F046A90FB
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 07:25:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229568AbjCCGZY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 01:25:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36002 "EHLO
+        id S229596AbjCCGZm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 01:25:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjCCGZV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 01:25:21 -0500
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D630041B42
-        for <linux-pci@vger.kernel.org>; Thu,  2 Mar 2023 22:24:48 -0800 (PST)
-Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230303062444epoutp023870c729ee3b281c4cf6be4dfe39cca4~I1Kk6GBMA2850128501epoutp02S
-        for <linux-pci@vger.kernel.org>; Fri,  3 Mar 2023 06:24:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230303062444epoutp023870c729ee3b281c4cf6be4dfe39cca4~I1Kk6GBMA2850128501epoutp02S
+        with ESMTP id S229714AbjCCGZh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 01:25:37 -0500
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40539515F1
+        for <linux-pci@vger.kernel.org>; Thu,  2 Mar 2023 22:25:03 -0800 (PST)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230303062452epoutp03caa46084102f7ebb4789f155cdd143d5~I1KsPjNsU1875718757epoutp03M
+        for <linux-pci@vger.kernel.org>; Fri,  3 Mar 2023 06:24:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230303062452epoutp03caa46084102f7ebb4789f155cdd143d5~I1KsPjNsU1875718757epoutp03M
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1677824684;
-        bh=zwauUbHDBFAKCXTwTd7djaLC438IrmVRoTR6ZHnZliY=;
+        s=mail20170921; t=1677824692;
+        bh=CppGbljzAF8PCfcULmrU15nn5y5aWs2ImPoXPZR7FrQ=;
         h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=jdRjUfKhyEnqzCRjUdhPSK0YUFozsW5THntCA4qHqaBXZEUyz4TFVLiMn+jRsQUaQ
-         vcPRaf/uWw/hyeISfw4CNDdKnDfhOV7r1IgyFp/QxMM95+sBMPDt+KrNhbbSk90Nvo
-         ImCIiKeGXmMugu/Vh+doYhBl6Dk7Hk2N/CL0XO1M=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
-        20230303062443epcas5p364289d18883d9fa523bc78ec1d16f65c~I1KkUsa470481004810epcas5p3P;
-        Fri,  3 Mar 2023 06:24:43 +0000 (GMT)
-Received: from epsmges5p2new.samsung.com (unknown [182.195.38.183]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4PSdHG1Ls6z4x9Q4; Fri,  3 Mar
-        2023 06:24:42 +0000 (GMT)
-Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        b=p+rOKJ2Fr7zMwxQwtYu1eBViAAHHbBo/JTMZyIxJ9bRZtgm89GUwnro5UUS7nz5ZK
+         rJPeVmizxDv/86+bfV4RfAMgjSzwoPtgwLGCTPDkW+sAKAELy/Oq3cD70SlMILxlKP
+         g0pEj/pfdl+6rV2hYMXT0BHXVsFTKLsSMcWfq78U=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+        20230303062451epcas5p2bee8b019ec6b081b5cedbab314ba0372~I1Krg8fu62226222262epcas5p2i;
+        Fri,  3 Mar 2023 06:24:51 +0000 (GMT)
+Received: from epsmges5p2new.samsung.com (unknown [182.195.38.180]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4PSdHP4H7Jz4x9Q8; Fri,  3 Mar
+        2023 06:24:49 +0000 (GMT)
+Received: from epcas5p4.samsung.com ( [182.195.41.42]) by
         epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.29.55678.AA291046; Fri,  3 Mar 2023 15:24:42 +0900 (KST)
+        8F.49.55678.1B291046; Fri,  3 Mar 2023 15:24:49 +0900 (KST)
 Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20230302125904epcas5p3cdb417fd006eab015a7068fe0ecd0a15~Im5mCuG_B1988819888epcas5p3D;
-        Thu,  2 Mar 2023 12:59:04 +0000 (GMT)
+        epcas5p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230302130747epcas5p1a21d741bde8891ed92205928a44deafe~InBMxCE4O2770327703epcas5p1b;
+        Thu,  2 Mar 2023 13:07:47 +0000 (GMT)
 Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
         epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20230302125904epsmtrp287ccf687d09550af19740e616e4538bb~Im5mBglt_0911209112epsmtrp2C;
-        Thu,  2 Mar 2023 12:59:04 +0000 (GMT)
-X-AuditID: b6c32a4a-909fc7000000d97e-de-640192aa83d4
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        20230302130747epsmtrp2dc038b179be8ae16abdad3cc0c9f0689~InBMv5dFv1472814728epsmtrp2H;
+        Thu,  2 Mar 2023 13:07:47 +0000 (GMT)
+X-AuditID: b6c32a4a-6a3ff7000000d97e-f9-640192b105a5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
         epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        55.A3.31821.89D90046; Thu,  2 Mar 2023 21:59:04 +0900 (KST)
-Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip2.samsung.com
+        2F.E3.31821.3AF90046; Thu,  2 Mar 2023 22:07:47 +0900 (KST)
+Received: from FDSFTE462 (unknown [107.122.81.248]) by epsmtip1.samsung.com
         (KnoxPortal) with ESMTPA id
-        20230302125901epsmtip2d8b2295cff14aefe6a843cb9e5cd09f5~Im5jU73321769817698epsmtip2W;
-        Thu,  2 Mar 2023 12:59:01 +0000 (GMT)
+        20230302130744epsmtip1e913a0b660ea6486d2db08299f7517b6~InBKB-EQo1248112481epsmtip1K;
+        Thu,  2 Mar 2023 13:07:44 +0000 (GMT)
 From:   "Shradha Todi" <shradha.t@samsung.com>
 To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
         <lpieralisi@kernel.org>, <kw@linux.com>, <robh@kernel.org>,
@@ -63,67 +63,68 @@ To:     "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>,
 Cc:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-samsung-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-In-Reply-To: <649a8d88-0504-5aa9-d167-d25d394f3f26@linaro.org>
-Subject: RE: [PATCH 04/16] PCI: samsung: Use clock bulk API to get clocks
-Date:   Thu, 2 Mar 2023 18:29:00 +0530
-Message-ID: <139701d94d06$c4867930$4d936b90$@samsung.com>
+In-Reply-To: <31e377b7-88bf-8737-0397-44ecca8cff54@linaro.org>
+Subject: RE: [PATCH 06/16] arm64: dts: exynos: Rename the term elbi to appl
+Date:   Thu, 2 Mar 2023 18:37:43 +0530
+Message-ID: <139801d94d07$fc0b9e70$f422db50$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQHB3D0FgV9/Br8Y35oSVRdB1anKHwGjiO0UA2HNtG4CchXewq7amWJQ
+Thread-Index: AQHB3D0FgV9/Br8Y35oSVRdB1anKHwKUdRoNAvmUMlgBNONUfq7gPa3w
 Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te1BUVRz27L1770JS1xXzQCHbrSicgF2C7RKPagLmIiUwzFjj2NBt9w7L
-        sC/2gZZTkeIwOrCBJI+Vp20UpCDLw21diHhkOAkZDJZiKGIpr+QRhaC0y4Xiv29+3/ed7/ed
-        M0eACJcwb0Ga2sDq1IySxNzR1i7/5wPqjgO5eKYNpW5UtGKU5ZCCquzu41Pm1nJAzSz1odRX
-        86U4ZbpzE6HaJlpwKit3iU9Zbw3xqQF7GUZdqriAUSX97TwqezkbpbJ7clDqTPd1nDrVMo9T
-        Kw4bTi0X30OpJusJ5FVPetL6N05/Y76O01VWI22tO4rRw0MOjJ7u68PpscFiHt1k+ZhunLbx
-        6FNZMxhtaq4D9Jx1R+LmvekRCpaRszoRq5Zp5Gnq1EgyPjnl9ZRQqVgSIAmjXiJFakbFRpLR
-        byQGxKYpnT1JUSajNDpHiYxeTwZFReg0RgMrUmj0hkiS1cqV2hBtoJ5R6Y3q1EA1a3hZIhYH
-        hzqF76YrfqmeRbQ9wgMz13ZnAdNjx4CbABIh0NFWjh8D7gIhcR7AyYFxzEUIiVkA8w8zHDEH
-        4P2S29i647uJRpQj7AA25JpwznEHwIUCvgtjxAtwbHAZcWFPworAzhzaZUCIegDHqvN4LsKN
-        iIKF1ZOoC28l4mDBT+2rZpR4Bn4+fnH1UA8iDB79cQnh8BbYWzq2qkcIX3huqgzhNhLBxds1
-        fC4sFloKPwWcZjvsWcxFXMGQ+NoNWh/8wOMM0bBo9iqfw1vh+IVmnMPecG66ba1mKqxtKlkL
-        UMKFJsua9xXYMVjmXELgDPCHDfYgbuwDT1ys53G5j8K8pbE1uQe0Vazjp+H8AwfKYS9Y8f0A
-        Px+Q5g3VzBuqmTdUMP+fVgXQOuDFavWqVFYfqg1Ws/v/e2+ZRmUFq79g5y4buHnjXmAn4AlA
-        J4AChPT0OJi1SS70kDPvf8DqNCk6o5LVd4JQ530XIN7bZBrnN1IbUiQhYeIQqVQaEvaiVEJu
-        93guslcmJFIZA5vOslpWt+7jCdy8s3hV01e/lct+E4T92rgnc99oQq3SbFP6dgbV1PEa3znY
-        nZzGT3hqKk002NEnVRXdZWqjYvZX7du1yfe0aWL0uOx8sONnXlLcyZPFtsmh8hHNtpi4y4/H
-        EGIyOLfVN1ze33JEkY2P7y28H+8fPJzYknH6Tc0/oLKXFfuZVy6fLX8Y0DXyh59lePTW237X
-        /JqSP6wBlXs+MSZt9lpY/OJuVUz0XMZrZ32TFPVXzimEO5r/Kg0Pt/z5iPuT7+WYfXyeXcl8
-        4nDNRypB+6WMmoaGLZ9FVbj/fiY+ksksfNiVYDceEV9BvszJ6y6a6jFIR+y1h+x+beLdxIRt
-        NmIxNi6/Y9Dx1kT/ARLVKxjJTkSnZ/4Fjv7DwY4EAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGvZ3pzEBAxxbkggJaDRqUKkbjNVFiTNThAWNcYtSITuwIKJSm
-        i4iiNFoXKmJdKQVcCdEqYAfBKpVEBAkuFUEJKETQulEgQFFEiEupJrx9Of9yzsOhMNEHPIhK
-        kKs5pZxNlBDeePkjSWiEMX+cbN7RE7NQ+8VyAhUcikeXqu1CZCrPB6hv2I6j6wM5JMr60oGh
-        B84yEmkzh4WI/9AkRI338wj0/GItgYwvKgVIN6LDka7mGI6KqttIdLVsgES/bVYSjWT34qiU
-        P48t82O6+EGSuWdqI5nLvIbhzRkE09pkI5geu51kHK+yBUxpQTpj6bEKmKvaPoLJumMGjIsP
-        WeOz2XuJjEtM2MMp50Zt945vvtKPKWpEe/vertaCrAl64EVBegF86LTgbhbRVgD1xWLPPBC6
-        XhYLPCyGN359JvXA+6/nE4BG/RngFgh6DnS8GsH0gKL86CoMHkt1ezCaB9BVWIR5Ak4Amx48
-        JtwBLzoKnr3SNbpNTEfD0/WVQjfj9Ax4rfMJ6WZfejHMeDaMeXgirMtxjPoxejY82XEEeDgU
-        3u3OwzzXTYVDHwtHe/zolbDg7Kl/ngBYM5SJGYDYNKbKNKbKNKbKNCZyGeBmEMgpVElxSapI
-        xXw5lyJVsUkqjTxOuiM5iQejfxAebgU2c6+0CggoUAUghUn8fPdrx8lEvjI2dR+nTN6m1CRy
-        qiowmcIlAb71+rptIjqOVXO7OU7BKf+rAsorSCvQfH1IpLXmHugSzY2JyKwkvWoV6d8aLEZR
-        z1Z/JuPgwVvvgxd1LxWy+w8MxJ4X18lTojfUB5XZbCnp/b9zgzpzwc5dMRfSbjgdj8/VDlyf
-        xQfOiN5YdNMUMmmmgW1pZpw/GkOn6+x9javU/l3rrOaEPOHCTb+ExTsWzqs5bt/saMiPyY+K
-        vK3esvMp3dzyRRNlCVFOXPu6rt0uxg5HVODSyuX+0W/KwoKzpccrdAvsW3xkyRtLpxkb2t+l
-        /ZiwaP1PfeeU+YtLKuJetBRJciz7rg26hhgoSK62lFxa9r1kfO8mV173cHNscNvP07i6Q2SY
-        /ii12qdwBYuHGQZXGcz9ElwVz0aGY0oV+we9G16cdgMAAA==
-X-CMS-MailID: 20230302125904epcas5p3cdb417fd006eab015a7068fe0ecd0a15
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TfUwTdxjH9+td71pn3fEmP8hcmnPZAgq0rpSDWN1A8Rxz4ozLNIt4oTfK
+        KG3Tl00wg44R2SqvY0TsBJQxETLLKMLKmyKIICpzKcrEkUFWFt6CIIQFgW2Uw43/Pr/n+T75
+        5vv88ggQzyXMX5CoMbJ6DaMmsQ1oQ0dAYFDt10ApaTO/TA2VNmBURYaKKrvZy6esDSWAmlns
+        RanLc+dwKnd0GKFaJ+pxypy9yKfsfzzkU86m8xh1r7QLo4p/vsajMpcyUSqzMwulrtwcxKny
+        +jmc+qfFgVNLZ6dRqs5ehLzpTU/a/8LpRusgTl+wm2h79VcY/dvDFoye6u3FaVffWR5dV5FO
+        1045eHS5eQajc69WA3rW/krsxmNJO1Uso2T1YlYTr1UmahIUZMzhuKi4ULlEGiQNp8JIsYZJ
+        ZhXknndig6IT1Ss5SfEnjNq0UoplDAYyZNdOvdZkZMUqrcGoIFmdUq2T6YINTLLBpEkI1rDG
+        CKlEsiN0RXgiSZVb2IjpbnifrL/8FDWD0x4WIBRAQgZ/yl/GLWCDwJNoBnD8QTbubngSTwG0
+        PtJxjVkAW2daeRYgWJ0oqffm6k0Afv/jPZR7jAI4X9PIc09jxHbo6ltC3OxN2BHYnkW7RQhh
+        A9B1MWdVJCR2wXGbGXOzFxEDn1icwM0o8SrsKplcZRERDqfNjjX2gLfPuVA3I8Q2eOniBMJl
+        EMOFkUt8ziwaZs908zmNL+xcyEbcxpCoFMLyu7/yuYE98FZ3/hp7wfGuqzjH/nB2qhXjOAFW
+        1RWvGajhfF0Fj+PdsK3vPOpeBUIEwJqmEK68BRb12Hic7yaYs+hak4ugo/Q5b4Vzyy0ox36w
+        9JaTnw9I67po1nXRrOsiWP93uwDQauDH6gzJCawhVLdDw37634fHa5PtYPUMAt92gOGh6eB2
+        wBOAdgAFCOktOmV+QekpUjIpqaxeG6c3qVlDOwhd2XcB4u8Tr125I40xTioLl8jkcrks/A25
+        lPQVva64He9JJDBGNolldaz++RxPIPQ380IUtubto6KRz3qqhpxZN4qHNAXBpyVVdwbE6ZGp
+        S++FVKYcmZ9+N/y4NOrRviOnrlwf66zwP/FlUVy20HKs5/e8iMqTOaaA94P7R1pyG3OSMIcy
+        NWO0YDKtLK8wY3KhjME6vn1WgD2O+ntBYUkviuyVdm1sbDMzabGvffDM9+imaSYyazT6uq37
+        TNiBjP1Coum7/rxr9w9s/WUvW7DvQURHdcWHgx5+22yHm8SPc7r1ubp8n2/Ggg5Jar740ytd
+        Lju4uWw5LPKjPROqlLH9Llf/ZmdtlOxOis3DNbLlOJEmrb976HPn/YGju2deao5ceMun9olK
+        eOagTtU3/OLHdHpM4YDzBxI1qBhpIKI3MP8CyGB2TY8EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEIsWRmVeSWpSXmKPExsWy7bCSnO7i+QwpBn0bhS0ezNvGZrGkKcNi
+        /pFzrBazts1ltPj4+xyLxYovM9kt+l48ZLbY+3oru0VDz29Wi02Pr7FaXN41h83i7LzjbBYz
+        zu9jsmj508Ji0XK0ncVi7ZG77BaLtn5ht/i/Zwe7xZ/pH1gsNm+ayuwg4vFm03d2j52z7rJ7
+        LNhU6rFpVSebx51re9g83p07x+7x5Mp0Jo/NS+o9Nr7bweSxqOEjm0ffllWMHp83yQXwRHHZ
+        pKTmZJalFunbJXBlnP2cUPBbuOJl/2n2BsYDAl2MHBwSAiYSc7eKdDFycQgJ7GCUeHf1BVMX
+        IydQXFLi88V1ULawxMp/z9khip4xShxesxMswSagI/Hkyh9mkEEiAoeYJdorQWqYBTYxSnxe
+        tpYZpEZI4DWjxMs7fCA2p4CdxKt1DWwgtrCAt8T7rsuMIDaLgIrE8blvwGxeAUuJDw07oGxB
+        iZMzn7CA2MwC2hK9D1sZYexlC18zQxynIPHz6TJWEFtEwE2i5+MJVogacYmjP3uYJzAKz0Iy
+        ahaSUbOQjJqFpGUBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgZKCltYNxz6oP
+        eocYmTgYDzFKcDArifBWNzCkCPGmJFZWpRblxxeV5qQWH2KU5mBREue90HUyXkggPbEkNTs1
+        tSC1CCbLxMEp1cBUbtrsMPlJnIMc18JZMsx1P+5q/dOPfzZbXvVG1UIlsWXGxgFu3yWvzrla
+        vlv6ufsEn2/3+EoYfh+z8lZXNDm/REc068ut0J6vXf+0dzz/qWbzJM1s7qZVVS5bLk3va62f
+        LOAsqFdxrWpdSs6u0Gnrtli+XxryP8hgYTBXtvp974l3F4vdVyk8ke7X8bu3PsHJ5fisk3c/
+        7LPnThfLNNPb5TZpVVjIsv0cmbJn+7oz7nRN2fL3+vbUKJ2AnTPtdXuUK/0mZy77Pld8WuF5
+        p7tejxLaxMoCFrGH5W8pn/+OsUsj7987AT/eo26pJRuOdeh9nmDY6NUyucUp5PmTmScvBmnV
+        yS8NzFBO/GhY+0iJpTgj0VCLuag4EQCdB/zpdQMAAA==
+X-CMS-MailID: 20230302130747epcas5p1a21d741bde8891ed92205928a44deafe
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
 X-Sendblock-Type: REQ_APPROVE
 CMS-TYPE: 105P
 DLP-Filter: Pass
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230214121420epcas5p3a4419059969adfb45b379f7e7741968c
+X-CMS-RootMailID: 20230214121428epcas5p3d91e877e62a78008d2b0d6066efea059
 References: <20230214121333.1837-1-shradha.t@samsung.com>
-        <CGME20230214121420epcas5p3a4419059969adfb45b379f7e7741968c@epcas5p3.samsung.com>
-        <20230214121333.1837-5-shradha.t@samsung.com>
-        <649a8d88-0504-5aa9-d167-d25d394f3f26@linaro.org>
+        <CGME20230214121428epcas5p3d91e877e62a78008d2b0d6066efea059@epcas5p3.samsung.com>
+        <20230214121333.1837-7-shradha.t@samsung.com>
+        <31e377b7-88bf-8737-0397-44ecca8cff54@linaro.org>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        PDS_BAD_THREAD_QP_64,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -133,70 +134,64 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 > -----Original Message-----
-> From: Krzysztof Kozlowski [mailto:krzysztof.kozlowski@linaro.org]
-> Sent: 16 February 2023 16:33
-> To: Shradha Todi <shradha.t@samsung.com>; lpieralisi@kernel.org;
-> kw@linux.com; robh@kernel.org; bhelgaas@google.com;
-> krzysztof.kozlowski+dt@linaro.org; alim.akhtar@samsung.com;
-> jingoohan1@gmail.com; Sergey.Semin@baikalelectronics.ru;
-> lukas.bulwahn@gmail.com; hongxing.zhu@nxp.com; tglx@linutronix.de;
-> m.szyprowski@samsung.com; jh80.chung@samsung.co;
-> pankaj.dubey@samsung.com
-> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH 04/16] PCI: samsung: Use clock bulk API to get clocks
-> 
+> From: Krzysztof Kozlowski =5Bmailto:krzysztof.kozlowski=40linaro.org=5D
+> Sent: 16 February 2023 16:34
+> To: Shradha Todi <shradha.t=40samsung.com>; lpieralisi=40kernel.org;
+> kw=40linux.com; robh=40kernel.org; bhelgaas=40google.com;
+> krzysztof.kozlowski+dt=40linaro.org; alim.akhtar=40samsung.com;
+> jingoohan1=40gmail.com; Sergey.Semin=40baikalelectronics.ru;
+> lukas.bulwahn=40gmail.com; hongxing.zhu=40nxp.com; tglx=40linutronix.de;
+> m.szyprowski=40samsung.com; jh80.chung=40samsung.co;
+> pankaj.dubey=40samsung.com
+> Cc: linux-pci=40vger.kernel.org; devicetree=40vger.kernel.org; linux-arm-
+> kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org; linux-
+> kernel=40vger.kernel.org
+> Subject: Re: =5BPATCH 06/16=5D arm64: dts: exynos: Rename the term elbi t=
+o appl
+>=20
 > On 14/02/2023 13:13, Shradha Todi wrote:
-> > Adopt to clock bulk API to handle clocks.
+> > DT uses the name elbi in reg-names for application logic registers
+> > which is a wrong nomenclature. This patch fixes the same.
 > >
-> > Signed-off-by: Shradha Todi <shradha.t@samsung.com>
-> > ---
-> >  drivers/pci/controller/dwc/pci-samsung.c | 46 ++++++------------------
-> >  1 file changed, 11 insertions(+), 35 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-samsung.c
-> b/drivers/pci/controller/dwc/pci-samsung.c
-> > index cfe384aee754..6c07d3f151be 100644
-> > --- a/drivers/pci/controller/dwc/pci-samsung.c
-> > +++ b/drivers/pci/controller/dwc/pci-samsung.c
-> > @@ -54,8 +54,8 @@
-> >  struct exynos_pcie {
-> >  	struct dw_pcie			pci;
-> >  	void __iomem			*elbi_base;
-> > -	struct clk			*clk;
-> > -	struct clk			*bus_clk;
-> > +	struct clk_bulk_data		*clks;
-> > +	int				clk_cnt;
-> >  	struct phy			*phy;
-> >  	struct regulator_bulk_data	supplies[2];
-> >  };
-> > @@ -65,30 +65,18 @@ static int exynos_pcie_init_clk_resources(struct
-> exynos_pcie *ep)
-> >  	struct device *dev = ep->pci.dev;
-> >  	int ret;
-> >
-> > -	ret = clk_prepare_enable(ep->clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot enable pcie rc clock");
-> > +	ret = devm_clk_bulk_get_all(dev, &ep->clks);
-> > +	if (ret < 0)
-> >  		return ret;
-> > -	}
-> >
-> > -	ret = clk_prepare_enable(ep->bus_clk);
-> > -	if (ret) {
-> > -		dev_err(dev, "cannot enable pcie bus clock");
-> > -		goto err_bus_clk;
-> > -	}
-> > +	ep->clk_cnt = ret;
-> 
-> I think this misses check if you got two clocks.
-> 
-> 
+> > This commit shouldn't be applied without changes
+> > =22dt-bindings: PCI: Rename the term elbi to appl=22 and
+> > =22PCI: samsung: Rename the term elbi to appl=22
+>=20
+> Dependencies and patch ordering goes after '---', because there is no poi=
+nt
+> to store it in git history.
+>=20
 
-Got it! Thanks for pointing out. Will add the check in the next version
+Understood will take care in next set of patches.
 
+> Anyway, that's an ABI break and Exynos5433 is quite stable, so without cl=
+ear
+> indication of fixed bug, we should not do this.
+>=20
+
+We have strong technical reason to do so.
+
+As per DWC PCIe UM, ELBI delivers an inbound register RD/WR received by the=
+ controller to external application registers when the controller
+is expected to generate the PCIe completion of this register RD/WR.
+In this driver register space which is currently marked as ELBI, is not use=
+d for this purpose (Not sure why original author has named this set of regi=
+sters as ELBI)
+So to keep this technically correct, it should be marked as application spe=
+cific wrapper register space.
+We used name as =22appl=22 taking reference from intel-gw-pcie.yaml's simil=
+ar register space named as =22app=22, whereas in nvidia,tegra194-pcie.yaml =
+it's named =22appl=22.=20
+
+So our argument is if a future Samsung manufactured SoC having DWC PCIe con=
+troller comes with support of real ELBI interface, we need to use the name =
+elbi.
+We know such SoC exists but they are not yet upstreamed.
+
+Ready to adopt the best possible suggested method to make this happen but I=
+ really think the name ELBI is misleading.
+
+>=20
 > Best regards,
 > Krzysztof
 
