@@ -2,136 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E9F86A7C13
-	for <lists+linux-pci@lfdr.de>; Thu,  2 Mar 2023 08:50:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A4906A7CD5
+	for <lists+linux-pci@lfdr.de>; Thu,  2 Mar 2023 09:36:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229607AbjCBHud convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 2 Mar 2023 02:50:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33706 "EHLO
+        id S229747AbjCBIgm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 2 Mar 2023 03:36:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjCBHuc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Mar 2023 02:50:32 -0500
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE95303DD;
-        Wed,  1 Mar 2023 23:50:18 -0800 (PST)
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-172afa7bee2so17227289fac.6;
-        Wed, 01 Mar 2023 23:50:18 -0800 (PST)
+        with ESMTP id S229751AbjCBIgk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 2 Mar 2023 03:36:40 -0500
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4123629E33
+        for <linux-pci@vger.kernel.org>; Thu,  2 Mar 2023 00:36:35 -0800 (PST)
+Received: by mail-pj1-x102d.google.com with SMTP id m20-20020a17090ab79400b00239d8e182efso2070560pjr.5
+        for <linux-pci@vger.kernel.org>; Thu, 02 Mar 2023 00:36:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lzrqYLYLaVpd0UyrhZ0yR0aqCz0cuXCviR24aa0kuPw=;
+        b=D43eGydreZR1VKVNvxdCLXaLMjZQGQzTS38Jo088r8l4Eepbu5JxDDCNecIGPi38Su
+         Je57YvFacOR6isjgT/KYGTV+qijaz6DVD9kcCtAbbfJORvRabkcBs28mgi/cbR9t24rr
+         RIz8+acB3dX6x8c03CjeFen3gCE3t4dHY20BH+LY3KybsYfa4XJ0lVTsDDKt2oSOf1sG
+         HSx5utpv50HwHOGOnPimcYmU1oo7gPSrkwHHvukr4cc34DxI3Umw+1bjFkSx7UKZJymE
+         jDHZ23+4P0UHnUZEthOHPNPHWh7bBsi71sZSBsI7MOqVgGz3yKIZoTloQV0i6X8MoFSn
+         BvjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=m9NdTpfDEMV32UTE9lZbQp6kQQhUJVdsU2kqbFsl+ZA=;
-        b=tsmDfvCtJ9Aqml+rjvoBdolA55BW0s8ZxrfanyNdpKTbzx1b/2Gsc8g4BBBxCwTmMS
-         88/CyZgPpGniroEjeZ1nCocMcTRvhWbvuWWh1vEsYYJyn+I4htZfeJ8+l6ak7IPwnrMN
-         OUzUoTrAj0Rzu9/0c9ZS+SbZ00patwiEPYFtlMNoPdK4VsyKmtxnPvo7FJhuGn9sLVat
-         y5udvpN/0cLELUluNjR8NoyxRdGchGRGSDg0Tbx3VDViXK3/qOBD/zHmbsWYtdqeuuN2
-         o4/GSVWrZy+/khK7H7Ui+NZd5fZqkVLkDkvbRCuo1egOZhmGpGi+4l5MeRkXLOHBQ8X+
-         vbFQ==
-X-Gm-Message-State: AO0yUKWYxhaabFvVMNGMkZvySXZPceWN1bCFyoRhm/wNQlwNP5eh/nGp
-        DPR1VKuKS2qDF61WvVyW440ORCh+1zV3kQ==
-X-Google-Smtp-Source: AK7set8c9joX8ey0qbKnqu7pgCE8rSUDqWoyXNHH1uUotJKnAAQXnNfkwOhnn6pSu88jbBpjT8w8EA==
-X-Received: by 2002:a05:6870:d202:b0:176:4a5b:10a6 with SMTP id g2-20020a056870d20200b001764a5b10a6mr655719oac.24.1677743418034;
-        Wed, 01 Mar 2023 23:50:18 -0800 (PST)
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
-        by smtp.gmail.com with ESMTPSA id eg41-20020a05687098a900b001724742cfcesm5170181oab.38.2023.03.01.23.50.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 01 Mar 2023 23:50:17 -0800 (PST)
-Received: by mail-oi1-f173.google.com with SMTP id q15so12854064oiw.11;
-        Wed, 01 Mar 2023 23:50:17 -0800 (PST)
-X-Received: by 2002:a81:ad1b:0:b0:52f:1c23:ef1 with SMTP id
- l27-20020a81ad1b000000b0052f1c230ef1mr5784211ywh.5.1677743396691; Wed, 01 Mar
- 2023 23:49:56 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lzrqYLYLaVpd0UyrhZ0yR0aqCz0cuXCviR24aa0kuPw=;
+        b=jYDgPfTP59NH7Duzh7CW9dCR2I0xnhpHrHE47prWjivyzNu+AdLUOoQAKmGTrPgHU3
+         fAOyiWGxvcnX3BFZ8BVoBlDYeDmPPFDMjAOWSxTjI99cf3WVqatN/xSdS4AAc3cPVwNU
+         1omYWJz0CMvlARCj3tfichrvVdlCXwBNNN1K6QcAoojZZnVCvUjB5RhMGNCjyNqzu8sN
+         QEP5I2Ue3wRuEX7vn31/EOpAyWuR9OS9PsLm2D+gyidfRw+5U04SzjXJ8SUxpa1PmpoQ
+         QlAo0mFyoSeWVdLvmiVdkoz2epiecylSMxyUd89ksPseYDXERc9PLylInCHd8YAqPm3G
+         yc1Q==
+X-Gm-Message-State: AO0yUKUEBsScgHSFoLzNsenu3IMlp7ZISl0RWqUuuLoDY9MKagd+dk/P
+        7BZLUPr8Wqn8MI3sE12f3eL2
+X-Google-Smtp-Source: AK7set+xaajcB0h5+hW2z33NsHRILEH9Ei8CBCfMkADOQc25cHl8/XAnaxyjni8gx1mPCvkbvVuKuw==
+X-Received: by 2002:a17:902:8603:b0:19e:711b:83c with SMTP id f3-20020a170902860300b0019e711b083cmr878146plo.39.1677746194689;
+        Thu, 02 Mar 2023 00:36:34 -0800 (PST)
+Received: from localhost.localdomain ([59.97.53.52])
+        by smtp.gmail.com with ESMTPSA id p7-20020a1709028a8700b00198ef93d556sm9791912plo.147.2023.03.02.00.36.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Mar 2023 00:36:34 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
+        mka@chromium.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/1] PCI: qcom: Add support for system suspend and resume
+Date:   Thu,  2 Mar 2023 14:06:24 +0530
+Message-Id: <20230302083625.188482-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230301185209.274134-1-jjhiblot@traphandler.com> <20230301185209.274134-3-jjhiblot@traphandler.com>
-In-Reply-To: <20230301185209.274134-3-jjhiblot@traphandler.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 2 Mar 2023 08:49:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVF337k+zyjpbzoDtWWDnYhM6eM3+As6UuZ7FCgASsMQg@mail.gmail.com>
-Message-ID: <CAMuHMdVF337k+zyjpbzoDtWWDnYhM6eM3+As6UuZ7FCgASsMQg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] of: irq: make callers of of_irq_parse_one() release
- the device node
-To:     Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Cc:     saravanak@google.com, clement.leger@bootlin.com,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        zajec5@gmail.com, Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Marc Zyngier <maz@kernel.org>, afaerber@suse.de,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Samuel Holland <samuel@sholland.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Nishanth Menon <nm@ti.com>, ssantosh@kernel.org,
-        mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-renesas-soc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-wireless@vger.kernel.org,
-        linux-actions@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-sunxi@lists.linux.dev, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jean-Jacques,
+Hello,
 
-Thanks for your patch!
+This series (a single patch) adds the system suspend and resume support
+to the Qualcomm PCIe RC controller.
 
-On Wed, Mar 1, 2023 at 7:53 PM Jean-Jacques Hiblot
-<jjhiblot@traphandler.com> wrote:
-> of_irq_parse_one() does a get() on the device node returned in out_irq->np.
-> Callers of of_irq_parse_one() must do a put() when they are done with it.
+Background
+==========
 
-What does "be done with it" really mean here?
+There were previous attempts [1][2] to add system suspend and resume
+support to this driver.
 
-> Signed-off-by: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+In previous versions, the controller was put into low power mode by turning
+OFF the resources even if there were active PCIe devices connected. Thanks
+to Qualcomm's internal power topology, the link did not enter L2/L3 state
+and the devices were still powered ON. But during very late end of suspend
+cycle, kernel tried to disable MSIs of the PCIe devices. This caused access
+violations as the resources needed to access the PCIe devices config space
+were turned OFF. Series [1] worked around this issue by not accessing the
+PCIe config space if the link was down in dw_msi_{un}mask_irq() functions.
+But that approach was not accepted.
 
-> --- a/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-> +++ b/arch/arm/mach-shmobile/regulator-quirk-rcar-gen2.c
-> @@ -184,6 +184,7 @@ static int __init rcar_gen2_regulator_quirk(void)
->                         kfree(quirk);
->                         continue;
->                 }
-> +               of_node_put(argsa->np);
+Then, series [2] implemented the suspend and resume operations using the
+syscore framework that disabled the resources at the end of the suspend
+cycle. But that approach also did not get much acceptance.
 
-The quirk object, which is a container of argsa, is still used below,
-and stored in a linked list.  I agree argsa->np is not dereferenced,
-but the pointer itself is still compared to other pointers.
-IIUIC, calling of_node_put() might cause the reference count to drop to
-zero, and the underlying struct node object to be deallocated.
-So when a future reference to the same DT node will be taken, a new
-struct node object will be allocated, and the pointer comparison below
-will fail?
+Proposal
+========
 
-Or am I missing something?
+So the proposal here is to just vote for minimal interconnect bandwidth and
+not turn OFF the resources if there are active PCIe devices connected to
+the controllers. This avoids the access violation issue during suspend and
+also saves some power due to the lower interconnect bandwidth used.
 
-Gr{oetje,eeting}s,
+Then if there are no active PCIe devices connected to the controller,
+the resources are turned OFF completely and brought back during resume.
+This also saves power if there are controllers in a system without any
+devices connected.
 
-                        Geert
+Testing
+=======
+
+This series has been tested on Lenovo Thinkpad X13s.
+
+Thanks,
+Mani
+
+[1] https://lore.kernel.org/linux-pci/1656055682-18817-1-git-send-email-quic_krichai@quicinc.com/
+[2] https://lore.kernel.org/linux-pci/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
+
+Changes in v2:
+
+* Used minimum icc vote to keep data path functional during suspend
+* Collected Ack
+
+Manivannan Sadhasivam (1):
+  PCI: qcom: Add support for system suspend and resume
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 53 ++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
