@@ -2,44 +2,45 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A2CD26AA320
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 22:56:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0CD6AA361
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 22:57:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233099AbjCCVz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 16:55:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46454 "EHLO
+        id S233335AbjCCV5r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 16:57:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233155AbjCCVyt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 16:54:49 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3566422A;
-        Fri,  3 Mar 2023 13:48:38 -0800 (PST)
+        with ESMTP id S231788AbjCCV4Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 16:56:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF0AF6BC20;
+        Fri,  3 Mar 2023 13:49:48 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 43BBC618F1;
-        Fri,  3 Mar 2023 21:47:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64AAC433A0;
-        Fri,  3 Mar 2023 21:47:43 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 73FD2B81A49;
+        Fri,  3 Mar 2023 21:47:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E768C433A0;
+        Fri,  3 Mar 2023 21:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677880064;
-        bh=sWH9pnSUmquNsVLwjLFLVbEqoRdmUGRV41D05zO8XdQ=;
+        s=k20201202; t=1677880075;
+        bh=v6tt9E3aHxxAdKeqDkuuE8e7wq6/1T8rWsMDE3MN5G0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BbhpsNUEO9qHn3rSypCvm72faD1Jy6anYITDTm6ZFPGGG/DoK9hOeuJBk23lgkh8D
-         3wlDyoHeCh1QWsQTW4kUIt+lpV/N/ZoHkeqxSUmvDNoXvf+LbxZBom8DrSwv2vTdEz
-         35Gfa/mzRXKgxN6WXUh40ZeiAXif1xv0sWtTtuNp54rNOEhPUzbKfxd6l0Ze8s+p+5
-         TKijAJlmLJ4+BJT1IUI9OTanKxh7eT5//UoQV1UzQoc5Nhlbhmj9WlpF9seUcpJdMx
-         u8yxWYCzsNelZLmc0LbwmY6STWennV6VS0oAzevgX02TZVeI7Kud/blmAx4Cqeuivw
-         OmETytAga8JAg==
+        b=JXlTjdr/xwjNul3ldFde7Tigm4tz9hqMIIewr+m2xP9/KOlpEZYP+n1eC1L/jaLbF
+         6GxaXyxVxyVpgAtvcfqH3idtqpuIohZ/gsAzGhDTsM7hCyR4XdJjW2plT4xNsJfnCM
+         sdmpREsem7k7bardCWsaBlOEsCc+26RbAkIxPkLcAsZER1Xw0DqWpWrTTZ8DYNXaNs
+         rmBt0Dff+3nnBLTtCmJhxaFfg6+tvfGY5svEDpAhK1rx6agQblPkcRiD81GbHLVmYZ
+         ge9HKm95P5UFO3tIsEdu8U5rkOefw5hoDdK3PinPXE0E+JPJjoiCWXIoWeBnRBD4rQ
+         sVj6u+2dyJCEQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alexander Motin <mav@ixsystems.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, lpieralisi@kernel.org,
-        kw@linux.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 17/30] PCI: loongson: Prevent LS7A MRRS increases
-Date:   Fri,  3 Mar 2023 16:47:02 -0500
-Message-Id: <20230303214715.1452256-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 23/30] PCI: Take other bus devices into account when distributing resources
+Date:   Fri,  3 Mar 2023 16:47:08 -0500
+Message-Id: <20230303214715.1452256-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230303214715.1452256-1-sashal@kernel.org>
 References: <20230303214715.1452256-1-sashal@kernel.org>
@@ -56,139 +57,279 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 8b3517f88ff2983f52698893519227c10aac90b2 ]
+[ Upstream commit 9db0b9b6a14249ef65a5f1e5e3b37762af96f425 ]
 
-Except for isochronous-configured devices, software may set
-Max_Read_Request_Size (MRRS) to any value up to 4096.  If a device issues a
-read request with size greater than the completer's Max_Payload_Size (MPS),
-the completer is required to break the response into multiple completions.
+A PCI bridge may reside on a bus with other devices as well. The resource
+distribution code does not take this into account and therefore it expands
+the bridge resource windows too much, not leaving space for the other
+devices (or functions of a multifunction device).  This leads to an issue
+that Jonathan reported when running QEMU with the following topology (QEMU
+parameters):
 
-Instead of correctly responding with multiple completions to a large read
-request, some LS7A Root Ports respond with a Completer Abort.  To prevent
-this, the MRRS must be limited to an implementation-specific value.
+  -device pcie-root-port,port=0,id=root_port13,chassis=0,slot=2  \
+  -device x3130-upstream,id=sw1,bus=root_port13,multifunction=on \
+  -device e1000,bus=root_port13,addr=0.1                         \
+  -device xio3130-downstream,id=fun1,bus=sw1,chassis=0,slot=3    \
+  -device e1000,bus=fun1
 
-The OS cannot detect that value, so rely on BIOS to configure MRRS before
-booting, and quirk the Root Ports so we never set an MRRS larger than that
-BIOS value for any downstream device.
+The first e1000 NIC here is another function in the switch upstream port.
+This leads to following errors:
 
-N.B. Hot-added devices are not configured by BIOS, and they power up with
-MRRS = 512 bytes, so these devices will be limited to 512 bytes.  If the
-LS7A limit is smaller, those hot-added devices may not work correctly, but
-per [1], hotplug is not supported with this chipset revision.
+  pci 0000:00:04.0: bridge window [mem 0x10200000-0x103fffff] to [bus 02-04]
+  pci 0000:02:00.0: bridge window [mem 0x10200000-0x103fffff] to [bus 03-04]
+  pci 0000:02:00.1: BAR 0: failed to assign [mem size 0x00020000]
+  e1000 0000:02:00.1: can't ioremap BAR 0: [??? 0x00000000 flags 0x0]
 
-[1] https://lore.kernel.org/r/073638a7-ae68-2847-ac3d-29e5e760d6af@loongson.cn
+Fix this by taking into account bridge windows, device BARs and SR-IOV PF
+BARs on the bus (PF BARs include space for VF BARS so only account PF
+BARs), including the ones belonging to bridges themselves if it has any.
 
-[bhelgaas: commit log]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216884
-Link: https://lore.kernel.org/r/20230201043018.778499-3-chenhuacai@loongson.cn
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Link: https://lore.kernel.org/linux-pci/20221014124553.0000696f@huawei.com/
+Link: https://lore.kernel.org/linux-pci/6053736d-1923-41e7-def9-7585ce1772d9@ixsystems.com/
+Link: https://lore.kernel.org/r/20230131092405.29121-3-mika.westerberg@linux.intel.com
+Reported-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Reported-by: Alexander Motin <mav@ixsystems.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-loongson.c | 44 +++++++++------------------
- drivers/pci/pci.c                     | 10 ++++++
- include/linux/pci.h                   |  1 +
- 3 files changed, 26 insertions(+), 29 deletions(-)
+ drivers/pci/setup-bus.c | 176 ++++++++++++++++++++++++----------------
+ 1 file changed, 106 insertions(+), 70 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 48169b1e38171..dc7b4e4293ced 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -60,37 +60,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, system_bus_quirk);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 4a6b698b5dd10..16d291e10627b 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -1878,12 +1878,67 @@ static void adjust_bridge_window(struct pci_dev *bridge, struct resource *res,
+ 		add_size = size - new_size;
+ 		pci_dbg(bridge, "bridge window %pR shrunken by %pa\n", res,
+ 			&add_size);
++	} else {
++		return;
+ 	}
  
--static void loongson_mrrs_quirk(struct pci_dev *dev)
-+static void loongson_mrrs_quirk(struct pci_dev *pdev)
- {
--	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
--	static const struct pci_device_id bridge_devids[] = {
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
--		{ 0, },
--	};
--
--	/* look for the matching bridge */
--	while (!pci_is_root_bus(bus)) {
--		bridge = bus->self;
--		bus = bus->parent;
--		/*
--		 * Some Loongson PCIe ports have a h/w limitation of
--		 * 256 bytes maximum read request size. They can't handle
--		 * anything larger than this. So force this limit on
--		 * any devices attached under these ports.
--		 */
--		if (pci_match_id(bridge_devids, bridge)) {
--			if (pcie_get_readrq(dev) > 256) {
--				pci_info(dev, "limiting MRRS to 256\n");
--				pcie_set_readrq(dev, 256);
--			}
--			break;
--		}
--	}
-+	/*
-+	 * Some Loongson PCIe ports have h/w limitations of maximum read
-+	 * request size. They can't handle anything larger than this. So
-+	 * force this limit on any devices attached under these ports.
-+	 */
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
-+
-+	bridge->no_inc_mrrs = 1;
+ 	res->end = res->start + new_size - 1;
+ 	remove_from_list(add_list, res);
  }
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
- static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
- 				unsigned int devfn, int where)
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 262577c81d307..3796114fb5a77 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5739,6 +5739,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
- 	int ret;
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -5757,6 +5758,15 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
-+	if (bridge->no_inc_mrrs) {
-+		int max_mrrs = pcie_get_readrq(dev);
++static void remove_dev_resource(struct resource *avail, struct pci_dev *dev,
++				struct resource *res)
++{
++	resource_size_t size, align, tmp;
 +
-+		if (rq > max_mrrs) {
-+			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
-+			return -EINVAL;
++	size = resource_size(res);
++	if (!size)
++		return;
++
++	align = pci_resource_alignment(dev, res);
++	align = align ? ALIGN(avail->start, align) - avail->start : 0;
++	tmp = align + size;
++	avail->start = min(avail->start + tmp, avail->end + 1);
++}
++
++static void remove_dev_resources(struct pci_dev *dev, struct resource *io,
++				 struct resource *mmio,
++				 struct resource *mmio_pref)
++{
++	int i;
++
++	for (i = 0; i < PCI_NUM_RESOURCES; i++) {
++		struct resource *res = &dev->resource[i];
++
++		if (resource_type(res) == IORESOURCE_IO) {
++			remove_dev_resource(io, dev, res);
++		} else if (resource_type(res) == IORESOURCE_MEM) {
++
++			/*
++			 * Make sure prefetchable memory is reduced from
++			 * the correct resource. Specifically we put 32-bit
++			 * prefetchable memory in non-prefetchable window
++			 * if there is an 64-bit pretchable window.
++			 *
++			 * See comments in __pci_bus_size_bridges() for
++			 * more information.
++			 */
++			if ((res->flags & IORESOURCE_PREFETCH) &&
++			    ((res->flags & IORESOURCE_MEM_64) ==
++			     (mmio_pref->flags & IORESOURCE_MEM_64)))
++				remove_dev_resource(mmio_pref, dev, res);
++			else
++				remove_dev_resource(mmio, dev, res);
 +		}
 +	}
++}
 +
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
++/*
++ * io, mmio and mmio_pref contain the total amount of bridge window space
++ * available. This includes the minimal space needed to cover all the
++ * existing devices on the bus and the possible extra space that can be
++ * shared with the bridges.
++ */
+ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 					    struct list_head *add_list,
+ 					    struct resource io,
+@@ -1893,7 +1948,7 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	unsigned int normal_bridges = 0, hotplug_bridges = 0;
+ 	struct resource *io_res, *mmio_res, *mmio_pref_res;
+ 	struct pci_dev *dev, *bridge = bus->self;
+-	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
++	resource_size_t io_per_b, mmio_per_b, mmio_pref_per_b, align;
  
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 692ce678c5f1c..4cc42ad2f6c52 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -539,6 +539,7 @@ struct pci_host_bridge {
- 	struct msi_controller *msi;
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-+	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
+ 	io_res = &bridge->resource[PCI_BRIDGE_IO_WINDOW];
+ 	mmio_res = &bridge->resource[PCI_BRIDGE_MEM_WINDOW];
+@@ -1937,100 +1992,81 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 			normal_bridges++;
+ 	}
+ 
+-	/*
+-	 * There is only one bridge on the bus so it gets all available
+-	 * resources which it can then distribute to the possible hotplug
+-	 * bridges below.
+-	 */
+-	if (hotplug_bridges + normal_bridges == 1) {
+-		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
+-		if (dev->subordinate)
+-			pci_bus_distribute_available_resources(dev->subordinate,
+-				add_list, io, mmio, mmio_pref);
+-		return;
+-	}
+-
+-	if (hotplug_bridges == 0)
++	if (!(hotplug_bridges + normal_bridges))
+ 		return;
+ 
+ 	/*
+-	 * Calculate the total amount of extra resource space we can
+-	 * pass to bridges below this one.  This is basically the
+-	 * extra space reduced by the minimal required space for the
+-	 * non-hotplug bridges.
++	 * Calculate the amount of space we can forward from "bus" to any
++	 * downstream buses, i.e., the space left over after assigning the
++	 * BARs and windows on "bus".
+ 	 */
+-	for_each_pci_bridge(dev, bus) {
+-		resource_size_t used_size;
+-		struct resource *res;
+-
+-		if (dev->is_hotplug_bridge)
+-			continue;
+-
+-		/*
+-		 * Reduce the available resource space by what the
+-		 * bridge and devices below it occupy.
+-		 */
+-		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+-		align = pci_resource_alignment(dev, res);
+-		align = align ? ALIGN(io.start, align) - io.start : 0;
+-		used_size = align + resource_size(res);
+-		if (!res->parent)
+-			io.start = min(io.start + used_size, io.end + 1);
+-
+-		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+-		align = pci_resource_alignment(dev, res);
+-		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
+-		used_size = align + resource_size(res);
+-		if (!res->parent)
+-			mmio.start = min(mmio.start + used_size, mmio.end + 1);
+-
+-		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+-		align = pci_resource_alignment(dev, res);
+-		align = align ? ALIGN(mmio_pref.start, align) -
+-			mmio_pref.start : 0;
+-		used_size = align + resource_size(res);
+-		if (!res->parent)
+-			mmio_pref.start = min(mmio_pref.start + used_size,
+-				mmio_pref.end + 1);
++	list_for_each_entry(dev, &bus->devices, bus_list) {
++		if (!dev->is_virtfn)
++			remove_dev_resources(dev, &io, &mmio, &mmio_pref);
+ 	}
+ 
+-	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
+-	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
+-	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
+-		hotplug_bridges);
+-
+ 	/*
+-	 * Go over devices on this bus and distribute the remaining
+-	 * resource space between hotplug bridges.
++	 * If there is at least one hotplug bridge on this bus it gets all
++	 * the extra resource space that was left after the reductions
++	 * above.
++	 *
++	 * If there are no hotplug bridges the extra resource space is
++	 * split between non-hotplug bridges. This is to allow possible
++	 * hotplug bridges below them to get the extra space as well.
+ 	 */
++	if (hotplug_bridges) {
++		io_per_b = div64_ul(resource_size(&io), hotplug_bridges);
++		mmio_per_b = div64_ul(resource_size(&mmio), hotplug_bridges);
++		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
++					   hotplug_bridges);
++	} else {
++		io_per_b = div64_ul(resource_size(&io), normal_bridges);
++		mmio_per_b = div64_ul(resource_size(&mmio), normal_bridges);
++		mmio_pref_per_b = div64_ul(resource_size(&mmio_pref),
++					   normal_bridges);
++	}
++
+ 	for_each_pci_bridge(dev, bus) {
+ 		struct resource *res;
+ 		struct pci_bus *b;
+ 
+ 		b = dev->subordinate;
+-		if (!b || !dev->is_hotplug_bridge)
++		if (!b)
+ 			continue;
++		if (hotplug_bridges && !dev->is_hotplug_bridge)
++			continue;
++
++		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+ 
+ 		/*
+-		 * Distribute available extra resources equally between
+-		 * hotplug-capable downstream ports taking alignment into
+-		 * account.
++		 * Make sure the split resource space is properly aligned
++		 * for bridge windows (align it down to avoid going above
++		 * what is available).
+ 		 */
+-		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+-		io.end = align ? io.start + ALIGN_DOWN(io_per_hp, align) - 1
+-			       : io.start + io_per_hp - 1;
++		io.end = align ? io.start + ALIGN_DOWN(io_per_b, align) - 1
++			       : io.start + io_per_b - 1;
++
++		/*
++		 * The x_per_b holds the extra resource space that can be
++		 * added for each bridge but there is the minimal already
++		 * reserved as well so adjust x.start down accordingly to
++		 * cover the whole space.
++		 */
++		io.start -= resource_size(res);
+ 
+ 		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+-		mmio.end = align ? mmio.start + ALIGN_DOWN(mmio_per_hp, align) - 1
+-				 : mmio.start + mmio_per_hp - 1;
++		mmio.end = align ? mmio.start + ALIGN_DOWN(mmio_per_b, align) - 1
++				 : mmio.start + mmio_per_b - 1;
++		mmio.start -= resource_size(res);
+ 
+ 		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
+ 		align = pci_resource_alignment(dev, res);
+ 		mmio_pref.end = align ? mmio_pref.start +
+-					ALIGN_DOWN(mmio_pref_per_hp, align) - 1
+-				      : mmio_pref.start + mmio_pref_per_hp - 1;
++					ALIGN_DOWN(mmio_pref_per_b, align) - 1
++				      : mmio_pref.start + mmio_pref_per_b - 1;
++		mmio_pref.start -= resource_size(res);
+ 
+ 		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+ 						       mmio_pref);
 -- 
 2.39.2
 
