@@ -2,357 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B0616A9EA6
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 19:27:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A6E256AA19A
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 22:41:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231655AbjCCS1p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 13:27:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50360 "EHLO
+        id S231991AbjCCVlh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 16:41:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbjCCS1p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 13:27:45 -0500
-Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F38E930B1C;
-        Fri,  3 Mar 2023 10:27:40 -0800 (PST)
-Received: by mail-lf1-x130.google.com with SMTP id s20so4719064lfb.11;
-        Fri, 03 Mar 2023 10:27:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677868059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mCx3juaUUrnRqZmgzU2kBUTMBbG/5SfMFxbwysSB4z0=;
-        b=P1fhX3cSqI+msIwxDwKvRqUfjXPQS5x0NYNZ7cOFfxp2eZfydQs8/DzJ462H+LID3/
-         197gGtEx7zx+RfBNXx/SSV9u4Wj2nLX1lSCcemh0JG3Hv3R03DxMEi7U9wf0amrvYHea
-         ObMO39MGR5mZgq6RAqidCxeTP6rQIr0MZHG6tKcYR4ZFtXI/jZaCPCVNjwuz1CX1eavk
-         HpQPZS4rkF8QNPIWujQMYML+zoJGPHZvJ18pImykUZOyAVT2uhKyHq87gAHRqt5rusN6
-         67zJea9wZ881wf+7ncRA4I4QpawuIaPmWuKBYCUaDCrpkQvvlSP3ImtYwnzJso0D+uK/
-         91Fg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677868059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mCx3juaUUrnRqZmgzU2kBUTMBbG/5SfMFxbwysSB4z0=;
-        b=BLls6fRby/3cufvuUZbpXA07sXR9hQBCtS1RH08jYsAx/t+oYvfj4tJEr6yfIaoxqz
-         yJb3uJ+c22rfPgSWT7kGtFPl1Z/PNDYe5Nchqk30EYfbUKcbbGbxkT8RM+oIG8Y4X0BH
-         GZ9APZj4qyme3wqsh885igoQZBTrPlHaJzgeYsFv1Oo/Kl0/9tI78Skgswf9dX/J5Abk
-         DSc0TQVL03wJxKzbbdsfIP7S1ygLQyKyj1UOQkCv70H5IKJjDnAtMgxY224i9zcEH2jX
-         +T+2xBkaX/SAAmBEOziIZMZtw+i1V9M5Qz1eAwUauMmI9iCPYnGIaG4/CAKXP1iJzB5d
-         BY1A==
-X-Gm-Message-State: AO0yUKXY64GeXK0XOqlvRuiB5GAZEkycBGzBpQdUfK9yNSc6Dbh1LSpU
-        gpYh46deBk5zYNbZ9SCWTjk=
-X-Google-Smtp-Source: AK7set/jKFFALgws7uT7CRHPd7uE9JRfH1/WIHw+qzXHVXEZSyyT0atyEzs+EBiqaJSJht68akgCgQ==
-X-Received: by 2002:ac2:4905:0:b0:4e7:dd1e:e521 with SMTP id n5-20020ac24905000000b004e7dd1ee521mr201367lfi.9.1677868059039;
-        Fri, 03 Mar 2023 10:27:39 -0800 (PST)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id f16-20020a19ae10000000b00497a61453a9sm480992lfc.243.2023.03.03.10.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Mar 2023 10:27:38 -0800 (PST)
-Date:   Fri, 3 Mar 2023 21:27:36 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S231970AbjCCVlf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 16:41:35 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13336637C7;
+        Fri,  3 Mar 2023 13:41:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B5AC7B818A4;
+        Fri,  3 Mar 2023 21:41:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21A5FC4339E;
+        Fri,  3 Mar 2023 21:41:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677879674;
+        bh=BR1ZsF7ohZ7DgIixMEok6HY/tjwrYcM1V7+I6aku2rM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WP0gv+Wb6TlEDR/mzPZF8FBsrRez8VdrjhXAEUUy9l3dLcl9bc2lGM3IyvC9Co4zj
+         Fxy3ZkjnmacVeTnsuLGItXbGac30CwfuyOiMLkSbBQE+plYuVyRP9+gOUQkiTsoJmJ
+         JDgWkYjiV399+eybg0obtzajep62q22S8b8EbivlwDl3CS/DwaBhUg/+yB1M5ZtmBE
+         0hrhwx5EgeJWRV5D1YvT6xX5kkc9Lw5ofbPLaHLhScoxFLwcLvwkiCPq4Y/plx++al
+         GvB2R07mf51WYwQR5NbkV4QF0uXZnRk12Kp4+myB5G2c5LsC223BBOl6ahOB3VFVWI
+         fYDyIZOCY6pVQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v5 4/4] dmaengine: dw-edma: Add HDMA DebugFS support
-Message-ID: <20230303182736.4south7cafnfujob@mobilestation>
-References: <20230303124642.5519-1-cai.huoqing@linux.dev>
- <20230303124642.5519-5-cai.huoqing@linux.dev>
+        Sasha Levin <sashal@kernel.org>, rafael@kernel.org,
+        robert.moore@intel.com, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, acpica-devel@lists.linuxfoundation.org
+Subject: [PATCH AUTOSEL 6.2 04/64] PCI/ACPI: Account for _S0W of the target bridge in acpi_pci_bridge_d3()
+Date:   Fri,  3 Mar 2023 16:40:06 -0500
+Message-Id: <20230303214106.1446460-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230303214106.1446460-1-sashal@kernel.org>
+References: <20230303214106.1446460-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230303124642.5519-5-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 03, 2023 at 08:46:34PM +0800, Cai Huoqing wrote:
-> From: Cai huoqing <cai.huoqing@linux.dev>
-> 
-> Add HDMA DebugFS support to show register information
-> 
-> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
-> ---
->   v4->v5:
->     1.Remove the check of *regs_dent *ch_dent.
-> 
->   v4 link:
->   https://lore.kernel.org/lkml/20230221034656.14476-5-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile             |   3 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c    |   2 +
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c | 175 +++++++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h |  22 +++
->  4 files changed, 201 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> 
-> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
-> index b1c91ef2c63d..83ab58f87760 100644
-> --- a/drivers/dma/dw-edma/Makefile
-> +++ b/drivers/dma/dw-edma/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
->  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
-> -dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
-> +dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o	\
-> +				   dw-hdma-v0-debugfs.o
->  dw-edma-objs			:= dw-edma-core.o	\
->  				   dw-edma-v0-core.o	\
->  				   dw-hdma-v0-core.o $(dw-edma-y)
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> index e14a3907241d..d7abdf154594 100644
-> --- a/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
-> @@ -10,6 +10,7 @@
->  #include "dw-edma-core.h"
->  #include "dw-hdma-v0-core.h"
->  #include "dw-hdma-v0-regs.h"
-> +#include "dw-hdma-v0-debugfs.h"
->  
->  enum dw_hdma_control {
->  	DW_HDMA_V0_CB					= BIT(0),
-> @@ -284,6 +285,7 @@ static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
->  /* HDMA debugfs callbacks */
->  static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
->  {
-> +	dw_hdma_v0_debugfs_on(dw);
->  }
->  
->  static const struct dw_edma_core_ops dw_hdma_v0_core = {
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> new file mode 100644
-> index 000000000000..9516a6c3af73
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> @@ -0,0 +1,175 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#include <linux/debugfs.h>
-> +#include <linux/bitfield.h>
-> +
-> +#include "dw-hdma-v0-debugfs.h"
-> +#include "dw-hdma-v0-regs.h"
-> +#include "dw-edma-core.h"
-> +
-> +#define REGS_ADDR(dw, name)						       \
-> +	({								       \
-> +		struct dw_hdma_v0_regs __iomem *__regs = (dw)->chip->reg_base; \
-> +									       \
-> +		(void __iomem *)&__regs->name;				       \
-> +	})
-> +
-> +#define REGS_CH_ADDR(dw, name, _dir, _ch)				       \
-> +	({								       \
-> +		struct dw_hdma_v0_ch_regs __iomem *__ch_regs;		       \
-> +									       \
-> +		if (_dir == EDMA_DIR_READ)				       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].rd);		       \
-> +		else							       \
-> +			__ch_regs = REGS_ADDR(dw, ch[_ch].wr);		       \
-> +									       \
-> +		(void __iomem *)&__ch_regs->name;			       \
-> +	})
-> +
-> +#define CTX_REGISTER(dw, name, dir, ch) \
-> +	{ dw, #name, REGS_CH_ADDR(dw, name, dir, ch), dir, ch }
-> +
-> +#define REGISTER(dw, name) \
-> +	{ dw, #name, REGS_ADDR(dw, name) }
-> +
-> +#define WRITE_STR				"write"
-> +#define READ_STR				"read"
-> +#define CHANNEL_STR				"channel"
-> +#define REGISTERS_STR				"registers"
-> +
-> +struct dw_hdma_debugfs_entry {
-> +	struct dw_edma				*dw;
-> +	const char				*name;
-> +	void __iomem				*reg;
-> +	enum dw_edma_dir			dir;
-> +	u16					ch;
-> +};
-> +
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-> +static int dw_hdma_debugfs_u32_get(void *data, u64 *val)
-> +{
-> +	void __iomem *reg = (void __force __iomem *)data;
-                      ^
-!!! ------------------+ Brr, did you test it out?
-                      v
-> +
-> +	*val = readl(reg);
+[ Upstream commit 8133844a8f2434be9576850c6978179d7cca5c81 ]
 
-I am sure you'll get a mess returned because the
-debugfs_create_file_unsafe() method is called with the pointer to the
-dw_hdma_debugfs_entry instance passed. 
+It is questionable to allow a PCI bridge to go into D3 if it has _S0W
+returning D2 or a shallower power state, so modify acpi_pci_bridge_d3(() to
+always take the return value of _S0W for the target bridge into account.
+That is, make it return 'false' if _S0W returns D2 or a shallower power
+state for the target bridge regardless of its ancestor Root Port
+properties.  Of course, this also causes 'false' to be returned if the Root
+Port itself is the target and its _S0W returns D2 or a shallower power
+state.
 
--Serge(y)
+However, still allow bridges without _S0W that are power-manageable via
+ACPI to enter D3 to retain the current code behavior in that case.
 
-> +
-> +	return 0;
-> +}
-> +DEFINE_DEBUGFS_ATTRIBUTE(fops_x32, dw_hdma_debugfs_u32_get, NULL, "0x%08llx\n");
-> +
-> +static void dw_hdma_debugfs_create_x32(struct dw_edma *dw,
-> +				       const struct dw_hdma_debugfs_entry ini[],
-> +				       int nr_entries, struct dentry *dent)
-> +{
-> +	struct dw_hdma_debugfs_entry *entries;
-> +	int i;
-> +
-> +	entries = devm_kcalloc(dw->chip->dev, nr_entries, sizeof(*entries),
-> +			       GFP_KERNEL);
-> +	if (!entries)
-> +		return;
-> +
-> +	for (i = 0; i < nr_entries; i++) {
-> +		entries[i] = ini[i];
-> +
-> +		debugfs_create_file_unsafe(entries[i].name, 0444, dent,
-> +					   &entries[i], &fops_x32);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_ch(struct dw_edma *dw, enum dw_edma_dir dir,
-> +				    u16 ch, struct dentry *dent)
-> +{
-> +	const struct dw_hdma_debugfs_entry debugfs_regs[] = {
-> +		CTX_REGISTER(dw, ch_en, dir, ch),
-> +		CTX_REGISTER(dw, doorbell, dir, ch),
-> +		CTX_REGISTER(dw, prefetch, dir, ch),
-> +		CTX_REGISTER(dw, handshake, dir, ch),
-> +		CTX_REGISTER(dw, llp.lsb, dir, ch),
-> +		CTX_REGISTER(dw, llp.msb, dir, ch),
-> +		CTX_REGISTER(dw, cycle_sync, dir, ch),
-> +		CTX_REGISTER(dw, transfer_size, dir, ch),
-> +		CTX_REGISTER(dw, sar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, sar.msb, dir, ch),
-> +		CTX_REGISTER(dw, dar.lsb, dir, ch),
-> +		CTX_REGISTER(dw, dar.msb, dir, ch),
-> +		CTX_REGISTER(dw, watermark_en, dir, ch),
-> +		CTX_REGISTER(dw, control1, dir, ch),
-> +		CTX_REGISTER(dw, func_num, dir, ch),
-> +		CTX_REGISTER(dw, qos, dir, ch),
-> +		CTX_REGISTER(dw, ch_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_stat, dir, ch),
-> +		CTX_REGISTER(dw, int_setup, dir, ch),
-> +		CTX_REGISTER(dw, int_clear, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_stop.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_watermark.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.lsb, dir, ch),
-> +		CTX_REGISTER(dw, msi_abort.msb, dir, ch),
-> +		CTX_REGISTER(dw, msi_msgdata, dir, ch),
-> +	};
-> +	int nr_entries = ARRAY_SIZE(debugfs_regs);
-> +
-> +	dw_hdma_debugfs_create_x32(dw, debugfs_regs, nr_entries, dent);
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_wr(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(WRITE_STR, dent);
-> +
-> +	for (i = 0; i < dw->wr_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_WRITE, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs_rd(struct dw_edma *dw, struct dentry *dent)
-> +{
-> +	struct dentry *regs_dent, *ch_dent;
-> +	char name[16];
-> +	int i;
-> +
-> +	regs_dent = debugfs_create_dir(READ_STR, dent);
-> +
-> +	for (i = 0; i < dw->rd_ch_cnt; i++) {
-> +		snprintf(name, sizeof(name), "%s:%d", CHANNEL_STR, i);
-> +
-> +		ch_dent = debugfs_create_dir(name, regs_dent);
-> +
-> +		dw_hdma_debugfs_regs_ch(dw, EDMA_DIR_READ, i, ch_dent);
-> +	}
-> +}
-> +
-> +static void dw_hdma_debugfs_regs(struct dw_edma *dw)
-> +{
-> +	struct dentry *regs_dent;
-> +
-> +	regs_dent = debugfs_create_dir(REGISTERS_STR, dw->dma.dbg_dev_root);
-> +
-> +	dw_hdma_debugfs_regs_wr(dw, regs_dent);
-> +	dw_hdma_debugfs_regs_rd(dw, regs_dent);
-> +}
-> +
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +	if (!debugfs_initialized())
-> +		return;
-> +
-> +	debugfs_create_u32("mf", 0444, dw->dma.dbg_dev_root, &dw->chip->mf);
-> +	debugfs_create_u16("wr_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->wr_ch_cnt);
-> +	debugfs_create_u16("rd_ch_cnt", 0444, dw->dma.dbg_dev_root, &dw->rd_ch_cnt);
-> +
-> +	dw_hdma_debugfs_regs(dw);
-> +}
-> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> new file mode 100644
-> index 000000000000..e6842c83777d
-> --- /dev/null
-> +++ b/drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> @@ -0,0 +1,22 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright (c) 2023 Cai Huoqing
-> + * Synopsys DesignWare HDMA v0 debugfs
-> + *
-> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
-> + */
-> +
-> +#ifndef _DW_HDMA_V0_DEBUG_FS_H
-> +#define _DW_HDMA_V0_DEBUG_FS_H
-> +
-> +#include <linux/dma/edma.h>
-> +
-> +#ifdef CONFIG_DEBUG_FS
-> +void dw_hdma_v0_debugfs_on(struct dw_edma *dw);
-> +#else
-> +static inline void dw_hdma_v0_debugfs_on(struct dw_edma *dw)
-> +{
-> +}
-> +#endif /* CONFIG_DEBUG_FS */
-> +
-> +#endif /* _DW_HDMA_V0_DEBUG_FS_H */
-> -- 
-> 2.34.1
-> 
+This fixes problems where a hotplug notification is missed because a bridge
+is in D3.  That means hot-added devices such as USB4 docks (and the devices
+they contain) and Thunderbolt 3 devices may not work.
+
+Link: https://lore.kernel.org/linux-pci/20221031223356.32570-1-mario.limonciello@amd.com/
+Link: https://lore.kernel.org/r/12155458.O9o76ZdvQC@kreacher
+Reported-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/acpi/device_pm.c | 19 +++++++++++++++++
+ drivers/pci/pci-acpi.c   | 45 +++++++++++++++++++++++++++-------------
+ include/acpi/acpi_bus.h  |  1 +
+ 3 files changed, 51 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 97450f4003cc9..f007116a84276 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -484,6 +484,25 @@ void acpi_dev_power_up_children_with_adr(struct acpi_device *adev)
+ 	acpi_dev_for_each_child(adev, acpi_power_up_if_adr_present, NULL);
+ }
+ 
++/**
++ * acpi_dev_power_state_for_wake - Deepest power state for wakeup signaling
++ * @adev: ACPI companion of the target device.
++ *
++ * Evaluate _S0W for @adev and return the value produced by it or return
++ * ACPI_STATE_UNKNOWN on errors (including _S0W not present).
++ */
++u8 acpi_dev_power_state_for_wake(struct acpi_device *adev)
++{
++	unsigned long long state;
++	acpi_status status;
++
++	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
++	if (ACPI_FAILURE(status))
++		return ACPI_STATE_UNKNOWN;
++
++	return state;
++}
++
+ #ifdef CONFIG_PM
+ static DEFINE_MUTEX(acpi_pm_notifier_lock);
+ static DEFINE_MUTEX(acpi_pm_notifier_install_lock);
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 068d6745bf98c..052a611081ecd 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -976,24 +976,41 @@ bool acpi_pci_power_manageable(struct pci_dev *dev)
+ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ {
+ 	struct pci_dev *rpdev;
+-	struct acpi_device *adev;
+-	acpi_status status;
+-	unsigned long long state;
++	struct acpi_device *adev, *rpadev;
+ 	const union acpi_object *obj;
+ 
+ 	if (acpi_pci_disabled || !dev->is_hotplug_bridge)
+ 		return false;
+ 
+-	/* Assume D3 support if the bridge is power-manageable by ACPI. */
+-	if (acpi_pci_power_manageable(dev))
+-		return true;
++	adev = ACPI_COMPANION(&dev->dev);
++	if (adev) {
++		/*
++		 * If the bridge has _S0W, whether or not it can go into D3
++		 * depends on what is returned by that object.  In particular,
++		 * if the power state returned by _S0W is D2 or shallower,
++		 * entering D3 should not be allowed.
++		 */
++		if (acpi_dev_power_state_for_wake(adev) <= ACPI_STATE_D2)
++			return false;
++
++		/*
++		 * Otherwise, assume that the bridge can enter D3 so long as it
++		 * is power-manageable via ACPI.
++		 */
++		if (acpi_device_power_manageable(adev))
++			return true;
++	}
+ 
+ 	rpdev = pcie_find_root_port(dev);
+ 	if (!rpdev)
+ 		return false;
+ 
+-	adev = ACPI_COMPANION(&rpdev->dev);
+-	if (!adev)
++	if (rpdev == dev)
++		rpadev = adev;
++	else
++		rpadev = ACPI_COMPANION(&rpdev->dev);
++
++	if (!rpadev)
+ 		return false;
+ 
+ 	/*
+@@ -1001,15 +1018,15 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	 * doesn't supply a wakeup GPE via _PRW, it cannot signal hotplug
+ 	 * events from low-power states including D3hot and D3cold.
+ 	 */
+-	if (!adev->wakeup.flags.valid)
++	if (!rpadev->wakeup.flags.valid)
+ 		return false;
+ 
+ 	/*
+-	 * If the Root Port cannot wake itself from D3hot or D3cold, we
+-	 * can't use D3.
++	 * In the bridge-below-a-Root-Port case, evaluate _S0W for the Root Port
++	 * to verify whether or not it can signal wakeup from D3.
+ 	 */
+-	status = acpi_evaluate_integer(adev->handle, "_S0W", NULL, &state);
+-	if (ACPI_SUCCESS(status) && state < ACPI_STATE_D3_HOT)
++	if (rpadev != adev &&
++	    acpi_dev_power_state_for_wake(rpadev) <= ACPI_STATE_D2)
+ 		return false;
+ 
+ 	/*
+@@ -1018,7 +1035,7 @@ bool acpi_pci_bridge_d3(struct pci_dev *dev)
+ 	 * bridges *below* that Root Port can also signal hotplug events
+ 	 * while in D3.
+ 	 */
+-	if (!acpi_dev_get_property(adev, "HotPlugSupportInD3",
++	if (!acpi_dev_get_property(rpadev, "HotPlugSupportInD3",
+ 				   ACPI_TYPE_INTEGER, &obj) &&
+ 	    obj->integer.value == 1)
+ 		return true;
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index e44be31115a67..0584e9f6e3397 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -534,6 +534,7 @@ int acpi_bus_update_power(acpi_handle handle, int *state_p);
+ int acpi_device_update_power(struct acpi_device *device, int *state_p);
+ bool acpi_bus_power_manageable(acpi_handle handle);
+ void acpi_dev_power_up_children_with_adr(struct acpi_device *adev);
++u8 acpi_dev_power_state_for_wake(struct acpi_device *adev);
+ int acpi_device_power_add_dependent(struct acpi_device *adev,
+ 				    struct device *dev);
+ void acpi_device_power_remove_dependent(struct acpi_device *adev,
+-- 
+2.39.2
+
