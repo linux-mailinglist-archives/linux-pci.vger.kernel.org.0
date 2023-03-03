@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 244276AA306
-	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 22:53:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A2CD26AA320
+	for <lists+linux-pci@lfdr.de>; Fri,  3 Mar 2023 22:56:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232492AbjCCVxb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 16:53:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37772 "EHLO
+        id S233099AbjCCVz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 16:55:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232989AbjCCVwE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 16:52:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 642EF6F492;
-        Fri,  3 Mar 2023 13:47:40 -0800 (PST)
+        with ESMTP id S233155AbjCCVyt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 16:54:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E3566422A;
+        Fri,  3 Mar 2023 13:48:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F57E6195E;
-        Fri,  3 Mar 2023 21:47:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE96CC4339C;
-        Fri,  3 Mar 2023 21:47:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 43BBC618F1;
+        Fri,  3 Mar 2023 21:47:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D64AAC433A0;
+        Fri,  3 Mar 2023 21:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677880030;
-        bh=UPgSQDiz37wmpeF/caGGh5H14TBtwqAIZKd89eNeUO8=;
+        s=k20201202; t=1677880064;
+        bh=sWH9pnSUmquNsVLwjLFLVbEqoRdmUGRV41D05zO8XdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCaCvouk+0HXpCSTg1jRavtUAjdp5uh1w3Mlv5lG78fpjJWkN8yWWbu1qXVa2tvX6
-         HxujwnR8V1SXbvXqoDaaciZaumElc0nOgBDYng8djv0c5jDkWopPFJFzps1VZL2L2b
-         6CtzKF47MBzEUY9NJeQyFgWD6MCwY87TMcD5Wn8gAc+TqPfnQl+9OpCczEMogBKoYj
-         VnzkAFn1wE2rcDHtG7zSjVTk9BRlq9pJDL1bJMoV0+jUDmaYMD1oto7KX5oR2QItfi
-         xfzY3jy6HJMXdT7oDt6ErFFv+eF4O0i8v2l1QIHXTo7qmP+hwNfB9hSPjICCAmWAHz
-         VrTg+z8qspNXA==
+        b=BbhpsNUEO9qHn3rSypCvm72faD1Jy6anYITDTm6ZFPGGG/DoK9hOeuJBk23lgkh8D
+         3wlDyoHeCh1QWsQTW4kUIt+lpV/N/ZoHkeqxSUmvDNoXvf+LbxZBom8DrSwv2vTdEz
+         35Gfa/mzRXKgxN6WXUh40ZeiAXif1xv0sWtTtuNp54rNOEhPUzbKfxd6l0Ze8s+p+5
+         TKijAJlmLJ4+BJT1IUI9OTanKxh7eT5//UoQV1UzQoc5Nhlbhmj9WlpF9seUcpJdMx
+         u8yxWYCzsNelZLmc0LbwmY6STWennV6VS0oAzevgX02TZVeI7Kud/blmAx4Cqeuivw
+         OmETytAga8JAg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mengyuan Lou <mengyuanlou@net-swift.com>,
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 47/50] PCI: Add ACS quirk for Wangxun NICs
-Date:   Fri,  3 Mar 2023 16:45:28 -0500
-Message-Id: <20230303214531.1450154-47-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, lpieralisi@kernel.org,
+        kw@linux.com, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.10 17/30] PCI: loongson: Prevent LS7A MRRS increases
+Date:   Fri,  3 Mar 2023 16:47:02 -0500
+Message-Id: <20230303214715.1452256-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230303214531.1450154-1-sashal@kernel.org>
-References: <20230303214531.1450154-1-sashal@kernel.org>
+In-Reply-To: <20230303214715.1452256-1-sashal@kernel.org>
+References: <20230303214715.1452256-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,79 +56,139 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Mengyuan Lou <mengyuanlou@net-swift.com>
+From: Huacai Chen <chenhuacai@loongson.cn>
 
-[ Upstream commit a2b9b123ccac913e9f9b80337d687a2fe786a634 ]
+[ Upstream commit 8b3517f88ff2983f52698893519227c10aac90b2 ]
 
-Wangxun has verified there is no peer-to-peer between functions for the
-below selection of SFxxx, RP1000 and RP2000 NICS.  They may be
-multi-function devices, but the hardware does not advertise ACS capability.
+Except for isochronous-configured devices, software may set
+Max_Read_Request_Size (MRRS) to any value up to 4096.  If a device issues a
+read request with size greater than the completer's Max_Payload_Size (MPS),
+the completer is required to break the response into multiple completions.
 
-Add an ACS quirk for these devices so the functions can be in independent
-IOMMU groups.
+Instead of correctly responding with multiple completions to a large read
+request, some LS7A Root Ports respond with a Completer Abort.  To prevent
+this, the MRRS must be limited to an implementation-specific value.
 
-Link: https://lore.kernel.org/r/20230207102419.44326-1-mengyuanlou@net-swift.com
-Signed-off-by: Mengyuan Lou <mengyuanlou@net-swift.com>
+The OS cannot detect that value, so rely on BIOS to configure MRRS before
+booting, and quirk the Root Ports so we never set an MRRS larger than that
+BIOS value for any downstream device.
+
+N.B. Hot-added devices are not configured by BIOS, and they power up with
+MRRS = 512 bytes, so these devices will be limited to 512 bytes.  If the
+LS7A limit is smaller, those hot-added devices may not work correctly, but
+per [1], hotplug is not supported with this chipset revision.
+
+[1] https://lore.kernel.org/r/073638a7-ae68-2847-ac3d-29e5e760d6af@loongson.cn
+
+[bhelgaas: commit log]
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216884
+Link: https://lore.kernel.org/r/20230201043018.778499-3-chenhuacai@loongson.cn
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/quirks.c    | 22 ++++++++++++++++++++++
- include/linux/pci_ids.h |  2 ++
- 2 files changed, 24 insertions(+)
+ drivers/pci/controller/pci-loongson.c | 44 +++++++++------------------
+ drivers/pci/pci.c                     | 10 ++++++
+ include/linux/pci.h                   |  1 +
+ 3 files changed, 26 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index a531064233f98..00d7d1738992c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -4823,6 +4823,26 @@ static int pci_quirk_brcm_acs(struct pci_dev *dev, u16 acs_flags)
- 		PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
- }
+diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
+index 48169b1e38171..dc7b4e4293ced 100644
+--- a/drivers/pci/controller/pci-loongson.c
++++ b/drivers/pci/controller/pci-loongson.c
+@@ -60,37 +60,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
+ 			DEV_LS7A_LPC, system_bus_quirk);
  
-+/*
-+ * Wangxun 10G/1G NICs have no ACS capability, and on multi-function
-+ * devices, peer-to-peer transactions are not be used between the functions.
-+ * So add an ACS quirk for below devices to isolate functions.
-+ * SFxxx 1G NICs(em).
-+ * RP1000/RP2000 10G NICs(sp).
-+ */
-+static int  pci_quirk_wangxun_nic_acs(struct pci_dev *dev, u16 acs_flags)
-+{
-+	switch (dev->device) {
-+	case 0x0100 ... 0x010F:
-+	case 0x1001:
-+	case 0x2001:
-+		return pci_acs_ctrl_enabled(acs_flags,
-+			PCI_ACS_SV | PCI_ACS_RR | PCI_ACS_CR | PCI_ACS_UF);
+-static void loongson_mrrs_quirk(struct pci_dev *dev)
++static void loongson_mrrs_quirk(struct pci_dev *pdev)
+ {
+-	struct pci_bus *bus = dev->bus;
+-	struct pci_dev *bridge;
+-	static const struct pci_device_id bridge_devids[] = {
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
+-		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
+-		{ 0, },
+-	};
+-
+-	/* look for the matching bridge */
+-	while (!pci_is_root_bus(bus)) {
+-		bridge = bus->self;
+-		bus = bus->parent;
+-		/*
+-		 * Some Loongson PCIe ports have a h/w limitation of
+-		 * 256 bytes maximum read request size. They can't handle
+-		 * anything larger than this. So force this limit on
+-		 * any devices attached under these ports.
+-		 */
+-		if (pci_match_id(bridge_devids, bridge)) {
+-			if (pcie_get_readrq(dev) > 256) {
+-				pci_info(dev, "limiting MRRS to 256\n");
+-				pcie_set_readrq(dev, 256);
+-			}
+-			break;
+-		}
+-	}
++	/*
++	 * Some Loongson PCIe ports have h/w limitations of maximum read
++	 * request size. They can't handle anything larger than this. So
++	 * force this limit on any devices attached under these ports.
++	 */
++	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
++
++	bridge->no_inc_mrrs = 1;
+ }
+-DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
++DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
++			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
+ 
+ static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
+ 				unsigned int devfn, int where)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 262577c81d307..3796114fb5a77 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -5739,6 +5739,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ {
+ 	u16 v;
+ 	int ret;
++	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
+ 
+ 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
+ 		return -EINVAL;
+@@ -5757,6 +5758,15 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
+ 
+ 	v = (ffs(rq) - 8) << 12;
+ 
++	if (bridge->no_inc_mrrs) {
++		int max_mrrs = pcie_get_readrq(dev);
++
++		if (rq > max_mrrs) {
++			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
++			return -EINVAL;
++		}
 +	}
 +
-+	return false;
-+}
-+
- static const struct pci_dev_acs_enabled {
- 	u16 vendor;
- 	u16 device;
-@@ -4968,6 +4988,8 @@ static const struct pci_dev_acs_enabled {
- 	{ PCI_VENDOR_ID_NXP, 0x8d9b, pci_quirk_nxp_rp_acs },
- 	/* Zhaoxin Root/Downstream Ports */
- 	{ PCI_VENDOR_ID_ZHAOXIN, PCI_ANY_ID, pci_quirk_zhaoxin_pcie_ports_acs },
-+	/* Wangxun nics */
-+	{ PCI_VENDOR_ID_WANGXUN, PCI_ANY_ID, pci_quirk_wangxun_nic_acs },
- 	{ 0 }
- };
+ 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
+ 						  PCI_EXP_DEVCTL_READRQ, v);
  
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 04f44a4694a2e..4853538bf1561 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3012,6 +3012,8 @@
- #define PCI_DEVICE_ID_INTEL_VMD_9A0B	0x9a0b
- #define PCI_DEVICE_ID_INTEL_S21152BB	0xb152
- 
-+#define PCI_VENDOR_ID_WANGXUN		0x8088
-+
- #define PCI_VENDOR_ID_SCALEMP		0x8686
- #define PCI_DEVICE_ID_SCALEMP_VSMP_CTL	0x1010
- 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 692ce678c5f1c..4cc42ad2f6c52 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -539,6 +539,7 @@ struct pci_host_bridge {
+ 	struct msi_controller *msi;
+ 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
+ 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
++	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
+ 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
+ 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
+ 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 -- 
 2.39.2
 
