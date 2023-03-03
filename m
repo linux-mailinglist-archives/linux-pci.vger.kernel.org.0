@@ -2,44 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EA8A86AA561
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Mar 2023 00:08:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73E056AA583
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Mar 2023 00:22:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231694AbjCCXI2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 18:08:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
+        id S229502AbjCCXWT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 3 Mar 2023 18:22:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbjCCXI1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 18:08:27 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 837DA83C8;
-        Fri,  3 Mar 2023 15:08:26 -0800 (PST)
+        with ESMTP id S229471AbjCCXWT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 18:22:19 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1CD465469;
+        Fri,  3 Mar 2023 15:22:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id BA607CE2297;
-        Fri,  3 Mar 2023 21:46:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F6A3C4339B;
-        Fri,  3 Mar 2023 21:46:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3BB8B61941;
+        Fri,  3 Mar 2023 21:46:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3569C4339E;
+        Fri,  3 Mar 2023 21:46:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677879974;
-        bh=GIaYMnxTt3xtUH9CSMkECHels4+Db6rNimjFnVdSyMY=;
+        s=k20201202; t=1677880014;
+        bh=EoYuMau1ceIpjX5tjDs5OAnfLOA35rNSG5SWqpHEXn4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VAny9cL3suiA2RdOdafLz6iduSqHMkbs7CMqIbIFvBtdfCp21apRfu4QQQBqeslp3
-         37BB82KYg0lmkFmDmq3/Nx3PC53UXbzQRG22npHF401O+KEqa84UvSIuVrQPqeEsS+
-         kwr+Q35mSkOcI6tM26GCucanQnXHaVWFGs/vqUk3Hdv2bpN6IFVgQvEebGwP+PYUmR
-         AXEGNI39SfWODSN5KmiD++pppDMW02LrbwLLBCCIVBstyn7rwKumtIE2qLeB2NNsCC
-         wRDYGdtTyWMMHtgc5iLuU6BbwnNvdhDGzNSZ6oKYnXBFpWc2WukSFZDfZBeaPtVAn6
-         tfDjefBOheGtg==
+        b=UGVXnYwRGHerx+JkvsaHlSiSgAli3IQY8tf/1LgqUmo8/w/K8h/nYA/vuUwdrMI0v
+         bl7ZNbKuZEDsunMW24UH+Ikzx/4PnZNaNoM9uJ8U3hAYUbohuU2gOpkWCCsATxYFgY
+         C2OXQJRiHyHMWbqMoL7L4GeGlfuH4GFnov5WYniU7o5iNpFukBnAD+FsYDTbvfHhV9
+         TUngDjkGKtr8twcyfQIeAwH1u8sWVhv/QvGz80oZcmHbuQZ4nlylFuECKwyXkmtEOl
+         omrSMP8yGojHuGZ6rWtfq5ati9wKpv4pSCEZBd6sm9ZIfUWxzsSe3FEsIGy9H53rfj
+         l8+5ZlYxuHuUg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>, lpieralisi@kernel.org,
-        kw@linux.com, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 20/50] PCI: loongson: Prevent LS7A MRRS increases
-Date:   Fri,  3 Mar 2023 16:45:01 -0500
-Message-Id: <20230303214531.1450154-20-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.15 37/50] PCI: Align extra resources for hotplug bridges properly
+Date:   Fri,  3 Mar 2023 16:45:18 -0500
+Message-Id: <20230303214531.1450154-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230303214531.1450154-1-sashal@kernel.org>
 References: <20230303214531.1450154-1-sashal@kernel.org>
@@ -47,8 +46,8 @@ MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,139 +55,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Huacai Chen <chenhuacai@loongson.cn>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 8b3517f88ff2983f52698893519227c10aac90b2 ]
+[ Upstream commit 08f0a15ee8adb4846b08ca5d5c175fbf0f652bc9 ]
 
-Except for isochronous-configured devices, software may set
-Max_Read_Request_Size (MRRS) to any value up to 4096.  If a device issues a
-read request with size greater than the completer's Max_Payload_Size (MPS),
-the completer is required to break the response into multiple completions.
+After division the extra resource space per hotplug bridge may not be
+aligned according to the window alignment, so align it before passing it
+down for further distribution.
 
-Instead of correctly responding with multiple completions to a large read
-request, some LS7A Root Ports respond with a Completer Abort.  To prevent
-this, the MRRS must be limited to an implementation-specific value.
-
-The OS cannot detect that value, so rely on BIOS to configure MRRS before
-booting, and quirk the Root Ports so we never set an MRRS larger than that
-BIOS value for any downstream device.
-
-N.B. Hot-added devices are not configured by BIOS, and they power up with
-MRRS = 512 bytes, so these devices will be limited to 512 bytes.  If the
-LS7A limit is smaller, those hot-added devices may not work correctly, but
-per [1], hotplug is not supported with this chipset revision.
-
-[1] https://lore.kernel.org/r/073638a7-ae68-2847-ac3d-29e5e760d6af@loongson.cn
-
-[bhelgaas: commit log]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=216884
-Link: https://lore.kernel.org/r/20230201043018.778499-3-chenhuacai@loongson.cn
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+Link: https://lore.kernel.org/r/20230131092405.29121-2-mika.westerberg@linux.intel.com
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/pci-loongson.c | 44 +++++++++------------------
- drivers/pci/pci.c                     | 10 ++++++
- include/linux/pci.h                   |  1 +
- 3 files changed, 26 insertions(+), 29 deletions(-)
+ drivers/pci/setup-bus.c | 25 +++++++++++++++++++------
+ 1 file changed, 19 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-loongson.c b/drivers/pci/controller/pci-loongson.c
-index 48169b1e38171..dc7b4e4293ced 100644
---- a/drivers/pci/controller/pci-loongson.c
-+++ b/drivers/pci/controller/pci-loongson.c
-@@ -60,37 +60,23 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
- 			DEV_LS7A_LPC, system_bus_quirk);
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 2ce636937c6ea..4a6b698b5dd10 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -2004,6 +2004,7 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 	 * resource space between hotplug bridges.
+ 	 */
+ 	for_each_pci_bridge(dev, bus) {
++		struct resource *res;
+ 		struct pci_bus *b;
  
--static void loongson_mrrs_quirk(struct pci_dev *dev)
-+static void loongson_mrrs_quirk(struct pci_dev *pdev)
- {
--	struct pci_bus *bus = dev->bus;
--	struct pci_dev *bridge;
--	static const struct pci_device_id bridge_devids[] = {
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_0) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_1) },
--		{ PCI_VDEVICE(LOONGSON, DEV_PCIE_PORT_2) },
--		{ 0, },
--	};
--
--	/* look for the matching bridge */
--	while (!pci_is_root_bus(bus)) {
--		bridge = bus->self;
--		bus = bus->parent;
--		/*
--		 * Some Loongson PCIe ports have a h/w limitation of
--		 * 256 bytes maximum read request size. They can't handle
--		 * anything larger than this. So force this limit on
--		 * any devices attached under these ports.
--		 */
--		if (pci_match_id(bridge_devids, bridge)) {
--			if (pcie_get_readrq(dev) > 256) {
--				pci_info(dev, "limiting MRRS to 256\n");
--				pcie_set_readrq(dev, 256);
--			}
--			break;
--		}
--	}
-+	/*
-+	 * Some Loongson PCIe ports have h/w limitations of maximum read
-+	 * request size. They can't handle anything larger than this. So
-+	 * force this limit on any devices attached under these ports.
-+	 */
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
+ 		b = dev->subordinate;
+@@ -2015,16 +2016,28 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
+ 		 * hotplug-capable downstream ports taking alignment into
+ 		 * account.
+ 		 */
+-		io.end = io.start + io_per_hp - 1;
+-		mmio.end = mmio.start + mmio_per_hp - 1;
+-		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
++		res = &dev->resource[PCI_BRIDGE_IO_WINDOW];
++		align = pci_resource_alignment(dev, res);
++		io.end = align ? io.start + ALIGN_DOWN(io_per_hp, align) - 1
++			       : io.start + io_per_hp - 1;
 +
-+	bridge->no_inc_mrrs = 1;
++		res = &dev->resource[PCI_BRIDGE_MEM_WINDOW];
++		align = pci_resource_alignment(dev, res);
++		mmio.end = align ? mmio.start + ALIGN_DOWN(mmio_per_hp, align) - 1
++				 : mmio.start + mmio_per_hp - 1;
++
++		res = &dev->resource[PCI_BRIDGE_PREF_MEM_WINDOW];
++		align = pci_resource_alignment(dev, res);
++		mmio_pref.end = align ? mmio_pref.start +
++					ALIGN_DOWN(mmio_pref_per_hp, align) - 1
++				      : mmio_pref.start + mmio_pref_per_hp - 1;
+ 
+ 		pci_bus_distribute_available_resources(b, add_list, io, mmio,
+ 						       mmio_pref);
+ 
+-		io.start += io_per_hp;
+-		mmio.start += mmio_per_hp;
+-		mmio_pref.start += mmio_pref_per_hp;
++		io.start += io.end + 1;
++		mmio.start += mmio.end + 1;
++		mmio_pref.start += mmio_pref.end + 1;
+ 	}
  }
--DECLARE_PCI_FIXUP_ENABLE(PCI_ANY_ID, PCI_ANY_ID, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_0, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_1, loongson_mrrs_quirk);
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_LOONGSON,
-+			DEV_PCIE_PORT_2, loongson_mrrs_quirk);
  
- static void __iomem *cfg1_map(struct loongson_pci *priv, int bus,
- 				unsigned int devfn, int where)
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index a0c6a9eeb7c6d..d0d27c3ead69a 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5970,6 +5970,7 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- {
- 	u16 v;
- 	int ret;
-+	struct pci_host_bridge *bridge = pci_find_host_bridge(dev->bus);
- 
- 	if (rq < 128 || rq > 4096 || !is_power_of_2(rq))
- 		return -EINVAL;
-@@ -5988,6 +5989,15 @@ int pcie_set_readrq(struct pci_dev *dev, int rq)
- 
- 	v = (ffs(rq) - 8) << 12;
- 
-+	if (bridge->no_inc_mrrs) {
-+		int max_mrrs = pcie_get_readrq(dev);
-+
-+		if (rq > max_mrrs) {
-+			pci_info(dev, "can't set Max_Read_Request_Size to %d; max is %d\n", rq, max_mrrs);
-+			return -EINVAL;
-+		}
-+	}
-+
- 	ret = pcie_capability_clear_and_set_word(dev, PCI_EXP_DEVCTL,
- 						  PCI_EXP_DEVCTL_READRQ, v);
- 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 9d6e75222868f..34dd24c991804 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -557,6 +557,7 @@ struct pci_host_bridge {
- 	void		*release_data;
- 	unsigned int	ignore_reset_delay:1;	/* For entire hierarchy */
- 	unsigned int	no_ext_tags:1;		/* No Extended Tags */
-+	unsigned int	no_inc_mrrs:1;		/* No Increase MRRS */
- 	unsigned int	native_aer:1;		/* OS may use PCIe AER */
- 	unsigned int	native_pcie_hotplug:1;	/* OS may use PCIe hotplug */
- 	unsigned int	native_shpc_hotplug:1;	/* OS may use SHPC hotplug */
 -- 
 2.39.2
 
