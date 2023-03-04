@@ -2,390 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DBAAD6AA5C1
-	for <lists+linux-pci@lfdr.de>; Sat,  4 Mar 2023 00:42:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9E2636AA878
+	for <lists+linux-pci@lfdr.de>; Sat,  4 Mar 2023 07:51:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjCCXm0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 3 Mar 2023 18:42:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
+        id S229447AbjCDGvo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 4 Mar 2023 01:51:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjCCXmZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 3 Mar 2023 18:42:25 -0500
-Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF30D6780A;
-        Fri,  3 Mar 2023 15:42:21 -0800 (PST)
-Received: by mail-qt1-x82e.google.com with SMTP id w23so4780939qtn.6;
-        Fri, 03 Mar 2023 15:42:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677886941;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QPsYvTP2kzrR4HGbSxvXwsR54JLEt6G4NhiweQE7Pcg=;
-        b=XLCrtvWHfH5eKn9xcFaYOK/WOkjAq4RCgFYsehJnFJNYlhCQzN744BLl9E/FAg9bR8
-         0sMWAd/YHSPDjtmCpu4v3MrHIuoF+VKllCeqTlHbDGDsL2Nj48V9dh0FJqZ4rzY5d1GW
-         xXCgit+Acakr6voK2VvCL567UX41GGCpE1kUxiGObxh4yfOIGM+Xsq0MS2lHM+FhBLe6
-         n+miLvTNqLQOQSkaqMYAq2qP+QoJ37XL6hVl1hj/tK9sjJJHOqOhndebiDaDYC/IFguc
-         +NxhWhXMIaTVs6MFi5KfikOI0RGgj9KFz4NZ/SprZ+a1QDfKkgBWfCERvFR3vqO8BFXm
-         bB6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677886941;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QPsYvTP2kzrR4HGbSxvXwsR54JLEt6G4NhiweQE7Pcg=;
-        b=p6dZ87dyN4H78drD+9noZBAMUZmd+HT74svHLpISlacbxeYnHqOG4DiiyBhzFs78jq
-         c15AhFpbI+hkf6CVC5w9XrljIFbd9ci3C6Y502TMioMXfOt9PPtgnF+O4hne1bHgOLFn
-         xPOoyJAFvRLbWuZEz4vPDz0kRBBSjbOZELxSeDwcTKGq/bquPn0th8yW9QbZKOzqRyQj
-         RIkQcn5iBuuXL7NdBJzdjCl3yVerH8+uHoJW3/Gj0ZJZQ4U0JBjVQRcDGQ2f9iURKipd
-         9IOuQHkeTcZ3w+S0nJSzO0e8XooK7HBSFn4QrYUfo8tyMHsc6nRL1DSeV/zwGTjPnFW8
-         HNyQ==
-X-Gm-Message-State: AO0yUKWlCQQ0+3GyA/xAC7HEdNR+9uCpsEqpD8CwmWsa/thH09hJXMHm
-        xdhhIh4riSxDvlray77s4QM=
-X-Google-Smtp-Source: AK7set+KUzZCGmm/sWCrpO6b1S39F57LVDY9xZSCINKBf2s3mf6VzeTQpw76rZQZPEDZF2qXLHT7Mw==
-X-Received: by 2002:a05:622a:4d4:b0:3bf:b614:bcba with SMTP id q20-20020a05622a04d400b003bfb614bcbamr6307742qtx.42.1677886940938;
-        Fri, 03 Mar 2023 15:42:20 -0800 (PST)
-Received: from ?IPV6:2600:1700:2442:6db0:99e6:eec3:1daa:f163? ([2600:1700:2442:6db0:99e6:eec3:1daa:f163])
-        by smtp.gmail.com with ESMTPSA id l6-20020ac84a86000000b003ba11bfe4fcsm2642446qtq.28.2023.03.03.15.42.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Mar 2023 15:42:20 -0800 (PST)
-Message-ID: <52b8f136-c73f-a97d-2bb6-48aff3755f98@gmail.com>
-Date:   Fri, 3 Mar 2023 17:42:19 -0600
+        with ESMTP id S229498AbjCDGvn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 4 Mar 2023 01:51:43 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98273B749;
+        Fri,  3 Mar 2023 22:51:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677912702; x=1709448702;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JGi8y72DqKWL+R1ytY0Z+Y7NhTUceMCbtC1BVCCR8g0=;
+  b=PuDrtH/Fo2emD1ImMbK2g6r+vEP6kGHY5fx2NHjdKIjbfTqVweqLnH5L
+   zffpYE0F0PX35d3lgc7pbaMSgMofuD2b08TAASrCezhBtAxTc0u6SHOm1
+   qJTapbqp2yNKUHyJcTcfiCb+6oKiA/sdckKvWioke8rOO4FMlEefpkf1B
+   eHyrLKA+NyBBJr+rqygek36pGNb3XFJW2bLaJAfewrh1zzB9d3L4ARUry
+   ELKS4JkQX9YdiiZegi3yyKX170lpzfuQ6+mWyWagxD2pqtMr4eYuPQFuo
+   f2w3G8fdBHwmuFLHYCG65LU1Npe+qp8mFoSsZn21F9QJ3uaI1nkuzidXA
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="332710341"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="332710341"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2023 22:51:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="764666624"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="764666624"
+Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Mar 2023 22:51:38 -0800
+Received: from kbuild by 776573491cc5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pYLk2-0001wG-0F;
+        Sat, 04 Mar 2023 06:51:38 +0000
+Date:   Sat, 4 Mar 2023 14:51:07 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>, fancer.lancer@gmail.com
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Cai huoqing <cai.huoqing@linux.dev>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <202303041444.2M7BzjRU-lkp@intel.com>
+References: <20230303124642.5519-4-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH V7 0/3] Generate device tree node for pci devices
-Content-Language: en-US
-To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
-Cc:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org, helgaas@kernel.org, max.zhen@amd.com,
-        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
-        stefano.stabellini@xilinx.com, trix@redhat.com
-References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
- <af2a6686-ea35-e5fc-7541-27e5d6ca9311@gmail.com>
- <20230227113150.398dcfa7@fixe.home>
-From:   Frank Rowand <frowand.list@gmail.com>
-In-Reply-To: <20230227113150.398dcfa7@fixe.home>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230303124642.5519-4-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2/27/23 04:31, Clément Léger wrote:
-> Le Mon, 27 Feb 2023 00:51:29 -0600,
-> Frank Rowand <frowand.list@gmail.com> a écrit :
-> 
->> On 1/19/23 21:02, Lizhi Hou wrote:
->>> This patch series introduces OF overlay support for PCI devices which
->>> primarily addresses two use cases. First, it provides a data driven method
->>> to describe hardware peripherals that are present in a PCI endpoint and
->>> hence can be accessed by the PCI host. Second, it allows reuse of a OF
->>> compatible driver -- often used in SoC platforms -- in a PCI host based
->>> system.
->>>
->>> There are 2 series devices rely on this patch:
->>>
->>>   1) Xilinx Alveo Accelerator cards (FPGA based device)
->>>   2) Microchip LAN9662 Ethernet Controller
->>>
->>>      Please see: https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
->>>   
->>
->>
->>> Normally, the PCI core discovers PCI devices and their BARs using the
->>> PCI enumeration process. However, the process does not provide a way to
->>> discover the hardware peripherals that are present in a PCI device, and
->>> which can be accessed through the PCI BARs. Also, the enumeration process  
->>
->> I'm confused.  The PCI Configuration Header Registers should describe the
->> hardware on the PCI card.
->>
->> Ignoring case 1 above _for the moment_ (FPGA devices are a world unto
->> themselves, so I would like to analyze that case separately), does the
->> second device, "Microchip LAN9662 Ethernet Controller" properly implement
->> the PCI Configuration Header Registers?  What additional information is
->> needed that is not provided in those registers?
-> 
-> Hi Frank,
-> 
-> I guess Lizhi wanted to say that it does not provide a way to describe
-> all the "platform" devices that are exposed by this PCI device. Which
-> is of course the whole point of the work we are doing right now. But
-> all the BARs are correctly described by the LAN9662 PCI card.
-> 
-> Clément
+Hi Cai,
 
-I remain confused.
+Thank you for the patch! Perhaps something to improve:
 
-[RFC 00/10] add support for fwnode in i2c mux system and sfp
-https://lore.kernel.org/lkml/YhQHqDJvahgriDZK@lunn.ch/t/
+[auto build test WARNING on pci/next]
+[also build test WARNING on linus/master next-20230303]
+[cannot apply to vkoul-dmaengine/next pci/for-linus v6.2]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-  references a PCIe driver:
-  [2] https://github.com/clementleger/linux/blob/fwnode_support/drivers/mfd/lan966x_pci_mfd.c
+url:    https://github.com/intel-lab-lkp/linux/commits/Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230303-204905
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20230303124642.5519-4-cai.huoqing%40linux.dev
+patch subject: [PATCH v5 3/4] dmaengine: dw-edma: Add support for native HDMA
+config: arm-randconfig-r016-20230303 (https://download.01.org/0day-ci/archive/20230304/202303041444.2M7BzjRU-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 67409911353323ca5edf2049ef0df54132fa1ca7)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install arm cross compiling tool for clang build
+        # apt-get install binutils-arm-linux-gnueabi
+        # https://github.com/intel-lab-lkp/linux/commit/061ed1e9b9bf70de12d7885880ee6302865a72d0
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Cai-Huoqing/dmaengine-dw-edma-Rename-dw_edma_core_ops-structure-to-dw_edma_plat_ops/20230303-204905
+        git checkout 061ed1e9b9bf70de12d7885880ee6302865a72d0
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash drivers/dma/
 
-So there is a PCIe driver that works.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303041444.2M7BzjRU-lkp@intel.com/
 
-However, the RFC patch series was proposing adding fwnode support to the driver.  My first
-surface reading (just part of that one email, not the entire series or the replies yet),
-notes:
+All warnings (new ones prefixed by >>):
 
-  ... However, when
-  plugged in a PCIe slot (on a x86), there is no device-tree support and
-  the peripherals that are present must be described in some other way.
+   In file included from drivers/dma/dw-edma/dw-hdma-v0-core.c:12:
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:71:4: warning: field msi_stop within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:65:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_stop;
+             ^
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:78:4: warning: field msi_watermark within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:72:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_watermark;
+             ^
+>> drivers/dma/dw-edma/dw-hdma-v0-regs.h:85:4: warning: field msi_abort within 'struct dw_hdma_v0_ch_regs' is less aligned than 'union (unnamed union at drivers/dma/dw-edma/dw-hdma-v0-regs.h:79:2)' and is usually due to 'struct dw_hdma_v0_ch_regs' being packed, which can lead to unaligned accesses [-Wunaligned-access]
+           } msi_abort;
+             ^
+   3 warnings generated.
 
-I am assuming that the peripherals are what you mentioned above as '"platform"
-devices'.  This is where my current confusion lies.  Are the "platform"
-devices accessed via the PCI bus or is there some other electrical connection
-between the host system and the PCIe card?
 
-If the "platform" devices are accessed via the PCI bus, then I would expect them
-to be described by PCI configuration header registers.  Are the PCI configuration
-registers to describe the "platform" devices not present?
+vim +71 drivers/dma/dw-edma/dw-hdma-v0-regs.h
 
-I'll read through the fwnode RFC thread to add to see what happened to the proposal.
+    26	
+    27	struct dw_hdma_v0_ch_regs {
+    28		u32 ch_en;				/* 0x0000 */
+    29		u32 doorbell;				/* 0x0004 */
+    30		u32 prefetch;				/* 0x0008 */
+    31		u32 handshake;				/* 0x000c */
+    32		union {
+    33			u64 reg;			/* 0x0010..0x0014 */
+    34			struct {
+    35				u32 lsb;		/* 0x0010 */
+    36				u32 msb;		/* 0x0014 */
+    37			};
+    38		} llp;
+    39		u32 cycle_sync;				/* 0x0018 */
+    40		u32 transfer_size;			/* 0x001c */
+    41		union {
+    42			u64 reg;			/* 0x0020..0x0024 */
+    43			struct {
+    44				u32 lsb;		/* 0x0020 */
+    45				u32 msb;		/* 0x0024 */
+    46			};
+    47		} sar;
+    48		union {
+    49			u64 reg;			/* 0x0028..0x002c */
+    50			struct {
+    51				u32 lsb;		/* 0x0028 */
+    52				u32 msb;		/* 0x002c */
+    53			};
+    54		} dar;
+    55	
+    56		u32 watermark_en;			/* 0x0030 */
+    57		u32 control1;				/* 0x0034 */
+    58		u32 func_num;				/* 0x0038 */
+    59		u32 qos;				/* 0x003c */
+    60		u32 reserved;				/* 0x0040..0x007c */
+    61		u32 ch_stat;				/* 0x0080 */
+    62		u32 int_stat;				/* 0x0084 */
+    63		u32 int_setup;				/* 0x0088 */
+    64		u32 int_clear;				/* 0x008c */
+    65		union {
+    66			u64 reg;			/* 0x0090..0x0094 */
+    67			struct {
+    68				u32 lsb;		/* 0x0090 */
+    69				u32 msb;		/* 0x0094 */
+    70			};
+  > 71		} msi_stop;
+    72		union {
+    73			u64 reg;			/* 0x0098..0x009c */
+    74			struct {
+    75				u32 lsb;		/* 0x0098 */
+    76				u32 msb;		/* 0x009c */
+    77			};
+  > 78		} msi_watermark;
+    79		union {
+    80			u64 reg;			/* 0x00a0..0x00a4 */
+    81			struct {
+    82				u32 lsb;		/* 0x00a0 */
+    83				u32 msb;		/* 0x00a4 */
+    84			};
+  > 85		} msi_abort;
+    86		u32 msi_msgdata;			/* 0x00a8 */
+    87	} __packed;
+    88	
 
--Frank
-
-> 
->>
->> -Frank
->>
->>> does not provide a way to associate MSI-X vectors of a PCI device with the
->>> hardware peripherals that are present in the device. PCI device drivers
->>> often use header files to describe the hardware peripherals and their
->>> resources as there is no standard data driven way to do so. This patch
->>> series proposes to use flattened device tree blob to describe the
->>> peripherals in a data driven way. Based on previous discussion, using
->>> device tree overlay is the best way to unflatten the blob and populate
->>> platform devices. To use device tree overlay, there are three obvious
->>> problems that need to be resolved.
->>>
->>> First, we need to create a base tree for non-DT system such as x86_64. A
->>> patch series has been submitted for this:
->>> https://lore.kernel.org/lkml/20220624034327.2542112-1-frowand.list@gmail.com/
->>> https://lore.kernel.org/lkml/20220216050056.311496-1-lizhi.hou@xilinx.com/
->>>
->>> Second, a device tree node corresponding to the PCI endpoint is required
->>> for overlaying the flattened device tree blob for that PCI endpoint.
->>> Because PCI is a self-discoverable bus, a device tree node is usually not
->>> created for PCI devices. This series adds support to generate a device
->>> tree node for a PCI device which advertises itself using PCI quirks
->>> infrastructure.
->>>
->>> Third, we need to generate device tree nodes for PCI bridges since a child
->>> PCI endpoint may choose to have a device tree node created.
->>>
->>> This patch series is made up of three patches.
->>>
->>> The first patch is adding OF interface to create or destroy OF node
->>> dynamically.
->>>
->>> The second patch introduces a kernel option, CONFIG_DYNAMIC_PCI_OF_NODEX.
->>> When the option is turned on, the kernel will generate device tree nodes
->>> for all PCI bridges unconditionally. The patch also shows how to use the
->>> PCI quirks infrastructure, DECLARE_PCI_FIXUP_FINAL to generate a device
->>> tree node for a device. Specifically, the patch generates a device tree
->>> node for Xilinx Alveo U50 PCIe accelerator device. The generated device
->>> tree nodes do not have any property.
->>>
->>> The third patch adds basic properties ('reg', 'compatible' and
->>> 'device_type') to the dynamically generated device tree nodes. More
->>> properties can be added in the future.
->>>
->>> Here is the example of device tree nodes generated within the ARM64 QEMU.
->>> # lspci -t    
->>> -[0000:00]-+-00.0
->>>            +-01.0-[01]--
->>>            +-01.1-[02]----00.0
->>>            +-01.2-[03]----00.0
->>>            +-01.3-[04]----00.0
->>>            +-01.4-[05]----00.0
->>>            +-01.5-[06]--
->>>            +-01.6-[07]--
->>>            +-01.7-[08]--
->>>            +-02.0-[09-0b]----00.0-[0a-0b]----00.0-[0b]--+-00.0
->>>            |                                            \-00.1
->>>            +-02.1-[0c]--
->>>            \-03.0-[0d-0e]----00.0-[0e]----01.0
->>>
->>> # tree /sys/firmware/devicetree/base/pcie\@10000000
->>> /sys/firmware/devicetree/base/pcie@10000000
->>> |-- #address-cells
->>> |-- #interrupt-cells
->>> |-- #size-cells
->>> |-- bus-range
->>> |-- compatible
->>> |-- device_type
->>> |-- dma-coherent
->>> |-- interrupt-map
->>> |-- interrupt-map-mask
->>> |-- linux,pci-domain
->>> |-- msi-parent
->>> |-- name
->>> |-- pci@1,0
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,1
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,2
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,3
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,4
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,5
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,6
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@1,7
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@2,0
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- pci@0,0
->>> |   |   |-- #address-cells
->>> |   |   |-- #size-cells
->>> |   |   |-- compatible
->>> |   |   |-- device_type
->>> |   |   |-- pci@0,0
->>> |   |   |   |-- #address-cells
->>> |   |   |   |-- #size-cells
->>> |   |   |   |-- compatible
->>> |   |   |   |-- dev@0,0
->>> |   |   |   |   |-- compatible
->>> |   |   |   |   `-- reg
->>> |   |   |   |-- dev@0,1
->>> |   |   |   |   |-- compatible
->>> |   |   |   |   `-- reg
->>> |   |   |   |-- device_type
->>> |   |   |   |-- ranges
->>> |   |   |   `-- reg
->>> |   |   |-- ranges
->>> |   |   `-- reg
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@2,1
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- pci@3,0
->>> |   |-- #address-cells
->>> |   |-- #size-cells
->>> |   |-- compatible
->>> |   |-- device_type
->>> |   |-- pci@0,0
->>> |   |   |-- #address-cells
->>> |   |   |-- #size-cells
->>> |   |   |-- compatible
->>> |   |   |-- device_type
->>> |   |   |-- ranges
->>> |   |   `-- reg
->>> |   |-- ranges
->>> |   `-- reg
->>> |-- ranges
->>> `-- reg
->>>
->>> Changes since v6:
->>> - Removed single line wrapper functions
->>> - Added Signed-off-by Clément Léger <clement.leger@bootlin.com>
->>>
->>> Changes since v5:
->>> - Fixed code review comments
->>> - Fixed incorrect 'ranges' and 'reg' properties and verified address
->>>   translation.
->>>
->>> Changes since RFC v4:
->>> - Fixed code review comments
->>>
->>> Changes since RFC v3:
->>> - Split the Xilinx Alveo U50 PCI quirk to a separate patch
->>> - Minor changes in commit description and code comment
->>>
->>> Changes since RFC v2:
->>> - Merged patch 3 with patch 2
->>> - Added OF interfaces of_changeset_add_prop_* and use them to create
->>>   properties.
->>> - Added '#address-cells', '#size-cells' and 'ranges' properties.
->>>
->>> Changes since RFC v1:
->>> - Added one patch to create basic properties.
->>> - To move DT related code out of PCI subsystem, replaced of_node_alloc()
->>>   with of_create_node()/of_destroy_node()
->>>
->>> Lizhi Hou (3):
->>>   of: dynamic: Add interfaces for creating device node dynamically
->>>   PCI: Create device tree node for selected devices
->>>   PCI: Add PCI quirks to generate device tree node for Xilinx Alveo U50
->>>
->>>  drivers/of/dynamic.c        | 197 +++++++++++++++++++++++++++++++++
->>>  drivers/pci/Kconfig         |  12 ++
->>>  drivers/pci/Makefile        |   1 +
->>>  drivers/pci/bus.c           |   2 +
->>>  drivers/pci/msi/irqdomain.c |   6 +-
->>>  drivers/pci/of.c            |  71 ++++++++++++
->>>  drivers/pci/of_property.c   | 212 ++++++++++++++++++++++++++++++++++++
->>>  drivers/pci/pci-driver.c    |   3 +-
->>>  drivers/pci/pci.h           |  19 ++++
->>>  drivers/pci/quirks.c        |  11 ++
->>>  drivers/pci/remove.c        |   1 +
->>>  include/linux/of.h          |  24 ++++
->>>  12 files changed, 556 insertions(+), 3 deletions(-)
->>>  create mode 100644 drivers/pci/of_property.c
->>>   
->>
-> 
-> 
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
