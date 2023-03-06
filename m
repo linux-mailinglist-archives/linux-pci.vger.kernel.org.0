@@ -2,134 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DF546AB6F9
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 08:24:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5C816AB6EF
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 08:23:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjCFHYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Mar 2023 02:24:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
+        id S229680AbjCFHXq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 02:23:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjCFHYv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 02:24:51 -0500
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD14B1EBC7
-        for <linux-pci@vger.kernel.org>; Sun,  5 Mar 2023 23:24:38 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BWSXUsbFyi4g6bTDYIgWsCUc1vF58QMdDpnqpKQxJYf9eVY/YhNWqRHUVOCy3tV0pFob4fEzHwKR3z9XeHkX2PgE+NrCHEK0wW0CJvVsFcUv5Ws2aFcqaMI/W++KR28aoq11RCsB2oo5n+bOunpXhnJKKPntdWvZh/sq0d4yzETEX7CnWk3fJNIu8Uet1gZVRirlVpqGs7amMfS03aTiWqmOos30UE9KSUplbYMAnyh+SWwCVJZa+axYjZfLCNOFtyIuC5MRxk7ysvD7DPoN47cG0Wr5nNPS6tw1Hd6T730BDmyAY7bQgIrbC8F6F4/SVsbsktNrFboBOaDZ0UBhlA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pIVJX3uUw+D89xVcclhKTn2js0Cwh1frq4toex6nUNE=;
- b=ABIBEQe5Hi0GN07hqJVIy1smDrJWmmVuBU5AMYxCrgXP1Y4dCd9xgccMLSYIFD8H3EkPZivkZUGpobyoR18iTuqXrcSaTgQmb859Xni/1gYpFz6YKD9T0o55eGJ+l7oB5ctf8p/YxMM/KEmeVOD+T7uZ5k+BbOjTdaC3jC1KaCkINw89xRLItwFoGUMr52P6rzBrP6/dOeWbN3DBzmFrDq3qqFM5ArOe1ng4okFHKn/I8N1GNNNx6wAjht11wNQ2AaCYhhO9bvK3gOFRIvwNBcuDyXIwrmhva3PqW5veu9wWiawzeV5pbYJR71lCoQ8wx+3lUKM9iq8mMgBgfJBMJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pIVJX3uUw+D89xVcclhKTn2js0Cwh1frq4toex6nUNE=;
- b=Una9Moh5i3oQnCGoPjxKvh+aFZv/Y2LE7mUzTiPdw0mSkf/wL0pdAb7xmLvHjNyXq4U0/awxvmuazFCIeIV6BciRYPJs+xsoKVY/GeTrIIKRmOdXhXR/+6AOs5q52p4il+5CFVAdvTWTm0OWioM2OUFVXnkj7JUCGl2jojtDffo=
-Received: from DM6PR04CA0024.namprd04.prod.outlook.com (2603:10b6:5:334::29)
- by MW3PR12MB4554.namprd12.prod.outlook.com (2603:10b6:303:55::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.23; Mon, 6 Mar
- 2023 07:24:36 +0000
-Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
- (2603:10b6:5:334:cafe::9d) by DM6PR04CA0024.outlook.office365.com
- (2603:10b6:5:334::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28 via Frontend
- Transport; Mon, 6 Mar 2023 07:24:36 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- DM6NAM11FT033.mail.protection.outlook.com (10.13.172.221) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6178.15 via Frontend Transport; Mon, 6 Mar 2023 07:24:36 +0000
-Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 6 Mar
- 2023 01:24:33 -0600
-From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
-CC:     <mario.limonciello@amd.com>, <thomas@glanzmann.de>,
-        Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Subject: [PATCH] PCI: Add quirk to clear MSI-X
-Date:   Mon, 6 Mar 2023 12:53:40 +0530
-Message-ID: <20230306072340.172306-1-Basavaraj.Natikar@amd.com>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229556AbjCFHXp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 02:23:45 -0500
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AFE33C2F
+        for <linux-pci@vger.kernel.org>; Sun,  5 Mar 2023 23:23:44 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id k10so10574294edk.13
+        for <linux-pci@vger.kernel.org>; Sun, 05 Mar 2023 23:23:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678087423;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G2N94/1Xhj9qXMqUlQwDJnZPD8HeYu62iaiv4axEi5M=;
+        b=wxZYj5ZluREcyXpkYMngM1M+FVNHyF9b2qDDwHZAksLIkbRU356L54OOkjfQZFAPNk
+         0G/aN8pgPsm9LOlxaiE8qxtz757GjFQfNj2/dSVVYJUDe0Y+HPfuf2Qhb6s9a4QRXLDQ
+         ghrLTBcQDzEtzSDDLluKpRF5ev2hZwtLXWyfBuIUqDPNSYxvl8CyH6PbrhqAWZ7X4DYD
+         VDQh+6er/C5SooPri/an9dMvrhzqV5xmyBPCNsH15TaMis0Se/duiV0CiSwyn+EHYNea
+         +mz7CECqPKE+uc2J4xlrY2o6GeROBloxbtEB7dihHVEvXGrC90ZSSK2F/amQrPAOXDBt
+         DkuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678087423;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2N94/1Xhj9qXMqUlQwDJnZPD8HeYu62iaiv4axEi5M=;
+        b=6S2EaSefLQ68sx+kBp8bcjw9vym4AHxNHtLRQsoo+Dd/O829cdnDOcvDS0oMUEbzqv
+         GWDLcDlrZuzKL2yR28AeY4n9JOaariM+E+V4ixAEJywOi2P3e7r8f+8NV2AObJklZyFq
+         HufVW8Bujo5pDQiWk0pW2QputsEpDbhOgyl+9H4vxIP0CUnO4s+yEE7BfnXIOf7CSy5u
+         vQVski3ABbCyimTY5+6ZzwSIK8+gr6B5UErQw2yepjUVhcBzzy4mcXbcopSXk7UXo7yP
+         /mtZ0zUyIZjMRRL48cPYzJz3Bu40/Z8AQWjoOT9aMuYrJfcc6sMPM6bNfIQj99Wm65eL
+         QNjA==
+X-Gm-Message-State: AO0yUKWG3fchH256Xxu1YrfhU2zgNZfBCD3yVoWiBfwVy4IcDPU+Vh5i
+        s/GWO2Uz24ByWBKhVpLYjdd6ag==
+X-Google-Smtp-Source: AK7set8u9Z0/pdGLcufZ8CgMc7Urz+3WCAmLQuZz/uD6xSsgdOEWVLy45Y3+FgvuqbK6E2TjNXBstQ==
+X-Received: by 2002:a17:906:edb3:b0:907:80e6:f8af with SMTP id sa19-20020a170906edb300b0090780e6f8afmr9663101ejb.67.1678087422823;
+        Sun, 05 Mar 2023 23:23:42 -0800 (PST)
+Received: from ?IPV6:2a02:810d:15c0:828:d85d:5a4b:9830:fcfe? ([2a02:810d:15c0:828:d85d:5a4b:9830:fcfe])
+        by smtp.gmail.com with ESMTPSA id e7-20020a170906c00700b008cff300cf47sm4138559ejz.72.2023.03.05.23.23.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 05 Mar 2023 23:23:42 -0800 (PST)
+Message-ID: <91061e39-024a-6a8a-9fa9-181bbf9d1dd2@linaro.org>
+Date:   Mon, 6 Mar 2023 08:23:41 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT033:EE_|MW3PR12MB4554:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4639b9da-63b3-4566-6189-08db1e13d6f8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WMIhOoQkzLWF4G0YDe2AOpQqw9M9rc49oF4XSIDRwiB0Q/mUB6Umehh3YczOe1uzHTTvWh4+Gpr2OKWc9Di+kXxOlT1iMadZBka/eFEqsXFI7EEqu55TG8xXG+ceHtByczrwhCT1r4pYRyBoV5ccBAd3HhE5H8CWK+v5XW0c1QHHlQFyuaSu6safiXZEf4FnJWDT2Ut0GEtEGImFYwshto5qsw6LDR2h7DQ9noSdZZimTa9Lro6kR1/pBVTSeE/LXMAQdgqYy4cqnURUOzf9M7hyeaHNAvVnk2rTbIshEKbMmaxJDurp9TugoE5KiOujMkZJdPxE/RIZeU6SfpJ6Ihgwtiqg28OPjtjkY1K22OA4fWVgQp6O6iPlJa/x+M7DAxqSHJbnzY0VjxIUm5KDf2UCOULg/1LTXC9nAv9rudLxKBWQB7mqWN2kCVYwEuiOcEclfVhDxpFrNUxkUOU/zuPXGWssbYipVZWAm7uVsYfHGvrOgBjKZ73xAcjvwumExzDbbp1Npfw2WcPDnk0omSm18JgRgzjIj8rJp7Rj7m/ZAE3DuiCvU1f9RpDuYWKRsKs5f45Lpyd2mHwiLfPWm7GnOsLzgMd29MCj5gsRT7M57NyOYcCjeCieE5cb1JKpS6Cur0fmAT2/blcHGY8hGcH2t3oxzF/I4MPi8SuoUctsIN73SLiPKX1mmPqF+EHWu2PPNeNhiNwjZRK+p40NKPZrlDbie6fWE5liUbX8/Uw=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(396003)(376002)(346002)(39860400002)(136003)(451199018)(40470700004)(46966006)(36840700001)(478600001)(36860700001)(47076005)(83380400001)(426003)(7696005)(82310400005)(6666004)(36756003)(316002)(356005)(110136005)(82740400003)(54906003)(2616005)(336012)(1076003)(16526019)(26005)(40460700003)(966005)(186003)(86362001)(81166007)(5660300002)(41300700001)(40480700001)(8936002)(2906002)(70206006)(70586007)(8676002)(4326008)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2023 07:24:36.2089
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4639b9da-63b3-4566-6189-08db1e13d6f8
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4554
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 1/6] dt-bindings: mfd: qcom,tcsr: Add compatible for sdx65
+Content-Language: en-US
+To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
+        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+        bhelgaas@google.com, manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <1678080302-29691-1-git-send-email-quic_rohiagar@quicinc.com>
+ <1678080302-29691-2-git-send-email-quic_rohiagar@quicinc.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <1678080302-29691-2-git-send-email-quic_rohiagar@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-One of the AMD USB controllers fails to maintain internal functional
-context when transitioning from D3 to D0, desynchronizing MSI-X bits.
-As a result, add a quirk to this controller to clear the MSI-X bits
-on suspend.
+On 06/03/2023 06:24, Rohit Agarwal wrote:
+> Add the qcom,sdx65-tcsr compatible.
+> 
+> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,tcsr.yaml | 1 +
 
-Note: This quirk works in all scenarios, regardless of whether the
-integrated GPU is disabled in the BIOS.
 
-Cc: Mario Limonciello <mario.limonciello@amd.com>
-Reported-by: Thomas Glanzmann <thomas@glanzmann.de>
-Link: https://lore.kernel.org/linux-usb/Y%2Fz9GdHjPyF2rNG3@glanzmann.de/T/#u
-Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
----
- drivers/pci/quirks.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44cab813bf95..ddf7100227d3 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -6023,3 +6023,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
- #endif
-+
-+static void quirk_clear_msix(struct pci_dev *dev)
-+{
-+	u16 ctrl;
-+
-+	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
-+	ctrl &= ~(PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE);
-+	pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, ctrl);
-+}
-+DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x15b8, quirk_clear_msix);
--- 
-2.25.1
+Best regards,
+Krzysztof
 
