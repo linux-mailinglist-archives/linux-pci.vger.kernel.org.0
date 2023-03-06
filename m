@@ -2,261 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D6A6AB676
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 07:41:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DF546AB6F9
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 08:24:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229545AbjCFGlZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Mar 2023 01:41:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52524 "EHLO
+        id S229618AbjCFHYw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 02:24:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjCFGlY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 01:41:24 -0500
-Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43EB61ABDE;
-        Sun,  5 Mar 2023 22:41:21 -0800 (PST)
-X-UUID: e33485aabbe911ed945fc101203acc17-20230306
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=a0B6/XL3DbH7On3ZlTeFQisMTApe4VM/2ap32sf9A48=;
-        b=NUDUWu1lc1s2nI1g+5OfwqnscJWIoOdD+UumJy49SPYBaUFrE/WVha1a2IVAl9JcQn6Wuprs+VBp1l9yHVGKHCUK0r6TmjeffYcGNet/D34sJUrOzKVXL6t/q1YOnz5IeHOPEJf5VkakDjKF2mx00bmtmXJhHMP0POJ9ECYOIZk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.20,REQID:b0baccf8-9cef-4984-b4b0-aa439717a90b,IP:0,U
-        RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-        ON:release,TS:70
-X-CID-INFO: VERSION:1.1.20,REQID:b0baccf8-9cef-4984-b4b0-aa439717a90b,IP:0,URL
-        :0,TC:0,Content:-25,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Spam_GS981B3D,ACTI
-        ON:quarantine,TS:70
-X-CID-META: VersionHash:25b5999,CLOUDID:fda0def4-ddba-41c3-91d9-10eeade8eac7,B
-        ulkID:2303061441156P9TF7UR,BulkQuantity:0,Recheck:0,SF:38|29|28|17|19|48,T
-        C:nil,Content:0,EDM:-3,IP:nil,URL:0,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0
-        ,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-UUID: e33485aabbe911ed945fc101203acc17-20230306
-Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
-        (envelope-from <jian.yang@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 2142228151; Mon, 06 Mar 2023 14:41:13 +0800
-Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Mon, 6 Mar 2023 14:41:11 +0800
-Received: from mhfsdcap04.gcn.mediatek.inc (10.17.3.154) by
- mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
- 15.2.1118.25 via Frontend Transport; Mon, 6 Mar 2023 14:41:11 +0800
-From:   Jian Yang <jian.yang@mediatek.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        "Rob Herring" <robh@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <linux-mediatek@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <Project_Global_Chrome_Upstream_Group@mediatek.com>,
-        <jian.yang@mediatek.com>, <chuanjia.liu@mediatek.com>,
-        <jieyy.yang@mediatek.com>, <qizhong.cheng@mediatek.com>
-Subject: [PATCH v2 2/2] PCI: mediatek-gen3: Add power and reset control feature for downstream component
-Date:   Mon, 6 Mar 2023 14:40:59 +0800
-Message-ID: <20230306064059.7239-3-jian.yang@mediatek.com>
+        with ESMTP id S229559AbjCFHYv (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 02:24:51 -0500
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD14B1EBC7
+        for <linux-pci@vger.kernel.org>; Sun,  5 Mar 2023 23:24:38 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BWSXUsbFyi4g6bTDYIgWsCUc1vF58QMdDpnqpKQxJYf9eVY/YhNWqRHUVOCy3tV0pFob4fEzHwKR3z9XeHkX2PgE+NrCHEK0wW0CJvVsFcUv5Ws2aFcqaMI/W++KR28aoq11RCsB2oo5n+bOunpXhnJKKPntdWvZh/sq0d4yzETEX7CnWk3fJNIu8Uet1gZVRirlVpqGs7amMfS03aTiWqmOos30UE9KSUplbYMAnyh+SWwCVJZa+axYjZfLCNOFtyIuC5MRxk7ysvD7DPoN47cG0Wr5nNPS6tw1Hd6T730BDmyAY7bQgIrbC8F6F4/SVsbsktNrFboBOaDZ0UBhlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pIVJX3uUw+D89xVcclhKTn2js0Cwh1frq4toex6nUNE=;
+ b=ABIBEQe5Hi0GN07hqJVIy1smDrJWmmVuBU5AMYxCrgXP1Y4dCd9xgccMLSYIFD8H3EkPZivkZUGpobyoR18iTuqXrcSaTgQmb859Xni/1gYpFz6YKD9T0o55eGJ+l7oB5ctf8p/YxMM/KEmeVOD+T7uZ5k+BbOjTdaC3jC1KaCkINw89xRLItwFoGUMr52P6rzBrP6/dOeWbN3DBzmFrDq3qqFM5ArOe1ng4okFHKn/I8N1GNNNx6wAjht11wNQ2AaCYhhO9bvK3gOFRIvwNBcuDyXIwrmhva3PqW5veu9wWiawzeV5pbYJR71lCoQ8wx+3lUKM9iq8mMgBgfJBMJQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pIVJX3uUw+D89xVcclhKTn2js0Cwh1frq4toex6nUNE=;
+ b=Una9Moh5i3oQnCGoPjxKvh+aFZv/Y2LE7mUzTiPdw0mSkf/wL0pdAb7xmLvHjNyXq4U0/awxvmuazFCIeIV6BciRYPJs+xsoKVY/GeTrIIKRmOdXhXR/+6AOs5q52p4il+5CFVAdvTWTm0OWioM2OUFVXnkj7JUCGl2jojtDffo=
+Received: from DM6PR04CA0024.namprd04.prod.outlook.com (2603:10b6:5:334::29)
+ by MW3PR12MB4554.namprd12.prod.outlook.com (2603:10b6:303:55::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.23; Mon, 6 Mar
+ 2023 07:24:36 +0000
+Received: from DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:334:cafe::9d) by DM6PR04CA0024.outlook.office365.com
+ (2603:10b6:5:334::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.28 via Frontend
+ Transport; Mon, 6 Mar 2023 07:24:36 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT033.mail.protection.outlook.com (10.13.172.221) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6178.15 via Frontend Transport; Mon, 6 Mar 2023 07:24:36 +0000
+Received: from jatayu.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Mon, 6 Mar
+ 2023 01:24:33 -0600
+From:   Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+To:     <bhelgaas@google.com>, <linux-pci@vger.kernel.org>
+CC:     <mario.limonciello@amd.com>, <thomas@glanzmann.de>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Subject: [PATCH] PCI: Add quirk to clear MSI-X
+Date:   Mon, 6 Mar 2023 12:53:40 +0530
+Message-ID: <20230306072340.172306-1-Basavaraj.Natikar@amd.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230306064059.7239-1-jian.yang@mediatek.com>
-References: <20230306064059.7239-1-jian.yang@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,RDNS_NONE,
-        SPF_HELO_PASS,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
-        autolearn_force=no version=3.4.6
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT033:EE_|MW3PR12MB4554:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4639b9da-63b3-4566-6189-08db1e13d6f8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WMIhOoQkzLWF4G0YDe2AOpQqw9M9rc49oF4XSIDRwiB0Q/mUB6Umehh3YczOe1uzHTTvWh4+Gpr2OKWc9Di+kXxOlT1iMadZBka/eFEqsXFI7EEqu55TG8xXG+ceHtByczrwhCT1r4pYRyBoV5ccBAd3HhE5H8CWK+v5XW0c1QHHlQFyuaSu6safiXZEf4FnJWDT2Ut0GEtEGImFYwshto5qsw6LDR2h7DQ9noSdZZimTa9Lro6kR1/pBVTSeE/LXMAQdgqYy4cqnURUOzf9M7hyeaHNAvVnk2rTbIshEKbMmaxJDurp9TugoE5KiOujMkZJdPxE/RIZeU6SfpJ6Ihgwtiqg28OPjtjkY1K22OA4fWVgQp6O6iPlJa/x+M7DAxqSHJbnzY0VjxIUm5KDf2UCOULg/1LTXC9nAv9rudLxKBWQB7mqWN2kCVYwEuiOcEclfVhDxpFrNUxkUOU/zuPXGWssbYipVZWAm7uVsYfHGvrOgBjKZ73xAcjvwumExzDbbp1Npfw2WcPDnk0omSm18JgRgzjIj8rJp7Rj7m/ZAE3DuiCvU1f9RpDuYWKRsKs5f45Lpyd2mHwiLfPWm7GnOsLzgMd29MCj5gsRT7M57NyOYcCjeCieE5cb1JKpS6Cur0fmAT2/blcHGY8hGcH2t3oxzF/I4MPi8SuoUctsIN73SLiPKX1mmPqF+EHWu2PPNeNhiNwjZRK+p40NKPZrlDbie6fWE5liUbX8/Uw=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(396003)(376002)(346002)(39860400002)(136003)(451199018)(40470700004)(46966006)(36840700001)(478600001)(36860700001)(47076005)(83380400001)(426003)(7696005)(82310400005)(6666004)(36756003)(316002)(356005)(110136005)(82740400003)(54906003)(2616005)(336012)(1076003)(16526019)(26005)(40460700003)(966005)(186003)(86362001)(81166007)(5660300002)(41300700001)(40480700001)(8936002)(2906002)(70206006)(70586007)(8676002)(4326008)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Mar 2023 07:24:36.2089
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4639b9da-63b3-4566-6189-08db1e13d6f8
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT033.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW3PR12MB4554
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: "jian.yang" <jian.yang@mediatek.com>
+One of the AMD USB controllers fails to maintain internal functional
+context when transitioning from D3 to D0, desynchronizing MSI-X bits.
+As a result, add a quirk to this controller to clear the MSI-X bits
+on suspend.
 
-Make MediaTek's controller driver capable of controlling power
-supplies and reset pin of a downstream component in power-on and
-power-off flow.
+Note: This quirk works in all scenarios, regardless of whether the
+integrated GPU is disabled in the BIOS.
 
-Some downstream components (e.g., a WIFI chip) may need an extra
-reset other than PERST# and their power supplies, depending on
-the requirements of platform, may need to controlled by their
-parent's driver. To meet the requirements described above, I add this
-feature to MediaTek's PCIe controller driver as a optional feature.
-
-Signed-off-by: jian.yang <jian.yang@mediatek.com>
+Cc: Mario Limonciello <mario.limonciello@amd.com>
+Reported-by: Thomas Glanzmann <thomas@glanzmann.de>
+Link: https://lore.kernel.org/linux-usb/Y%2Fz9GdHjPyF2rNG3@glanzmann.de/T/#u
+Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
 ---
- drivers/pci/controller/pcie-mediatek-gen3.c | 86 ++++++++++++++++++++-
- 1 file changed, 85 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-mediatek-gen3.c b/drivers/pci/controller/pcie-mediatek-gen3.c
-index b8612ce5f4d0..45e368b03ed2 100644
---- a/drivers/pci/controller/pcie-mediatek-gen3.c
-+++ b/drivers/pci/controller/pcie-mediatek-gen3.c
-@@ -8,6 +8,8 @@
- 
- #include <linux/clk.h>
- #include <linux/delay.h>
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/iopoll.h>
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
-@@ -15,11 +17,14 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/msi.h>
-+#include <linux/of_gpio.h>
- #include <linux/pci.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
- 
- #include "../pci.h"
-@@ -100,6 +105,13 @@
- #define PCIE_ATR_TLP_TYPE_MEM		PCIE_ATR_TLP_TYPE(0)
- #define PCIE_ATR_TLP_TYPE_IO		PCIE_ATR_TLP_TYPE(2)
- 
-+/* Downstream Component power supplies used by MediaTek PCIe */
-+static const char *const dsc_power_supplies[] = {
-+	"pcie1v8",
-+	"pcie3v3",
-+	"pcie12v",
-+};
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 44cab813bf95..ddf7100227d3 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -6023,3 +6023,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+ #endif
 +
- /**
-  * struct mtk_msi_set - MSI information for each set
-  * @base: IO mapped register base
-@@ -122,6 +134,9 @@ struct mtk_msi_set {
-  * @phy: PHY controller block
-  * @clks: PCIe clocks
-  * @num_clks: PCIe clocks count for this port
-+ * @supplies: Downstream Component power supplies
-+ * @num_supplies: Downstream Component power supplies count
-+ * @dsc_reset: The GPIO pin to reset Downstream component
-  * @irq: PCIe controller interrupt number
-  * @saved_irq_state: IRQ enable state saved at suspend time
-  * @irq_lock: lock protecting IRQ register access
-@@ -141,6 +156,9 @@ struct mtk_gen3_pcie {
- 	struct phy *phy;
- 	struct clk_bulk_data *clks;
- 	int num_clks;
-+	struct regulator_bulk_data *supplies;
-+	int num_supplies;
-+	struct gpio_desc *dsc_reset;
- 
- 	int irq;
- 	u32 saved_irq_state;
-@@ -763,7 +781,7 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
- 	struct device *dev = pcie->dev;
- 	struct platform_device *pdev = to_platform_device(dev);
- 	struct resource *regs;
--	int ret;
-+	int ret, i;
- 
- 	regs = platform_get_resource_byname(pdev, IORESOURCE_MEM, "pcie-mac");
- 	if (!regs)
-@@ -809,14 +827,72 @@ static int mtk_pcie_parse_port(struct mtk_gen3_pcie *pcie)
- 		return pcie->num_clks;
- 	}
- 
-+	pcie->num_supplies = ARRAY_SIZE(dsc_power_supplies);
-+	pcie->supplies = devm_kcalloc(dev, pcie->num_supplies,
-+				      sizeof(*pcie->supplies),
-+				      GFP_KERNEL);
-+	if (!pcie->supplies)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < pcie->num_supplies; i++)
-+		pcie->supplies[i].supply = dsc_power_supplies[i];
-+
-+	ret = devm_regulator_bulk_get(dev, pcie->num_supplies, pcie->supplies);
-+	if (ret)
-+		return ret;
-+
-+	pcie->dsc_reset = devm_gpiod_get_optional(dev, "dsc-reset",
-+						  GPIOD_OUT_LOW);
-+	if (IS_ERR(pcie->dsc_reset)) {
-+		ret = PTR_ERR(pcie->dsc_reset);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "failed to request DSC reset gpio\n");
-+
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-+static int mtk_pcie_dsc_power_up(struct mtk_gen3_pcie *pcie)
++static void quirk_clear_msix(struct pci_dev *dev)
 +{
-+	struct device *dev = pcie->dev;
-+	int ret;
++	u16 ctrl;
 +
-+	/* Assert Downstream Component reset */
-+	if (pcie->dsc_reset)
-+		gpiod_set_value_cansleep(pcie->dsc_reset, 1);
-+
-+	ret = regulator_bulk_enable(pcie->num_supplies, pcie->supplies);
-+	if (ret)
-+		dev_err(dev, "failed to enable DSC power supplies: %d\n", ret);
-+
-+	/* De-assert Downstream Component reset */
-+	if (pcie->dsc_reset)
-+		gpiod_set_value_cansleep(pcie->dsc_reset, 0);
-+
-+	return ret;
++	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
++	ctrl &= ~(PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE);
++	pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, ctrl);
 +}
-+
-+static void mtk_pcie_dsc_power_down(struct mtk_gen3_pcie *pcie)
-+{
-+	/* Assert Downstream Component reset */
-+	if (pcie->dsc_reset)
-+		gpiod_set_value_cansleep(pcie->dsc_reset, 1);
-+
-+	regulator_bulk_disable(pcie->num_supplies, pcie->supplies);
-+}
-+
- static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
- 	int err;
- 
-+	/* Downstream Component power up before RC */
-+	err = mtk_pcie_dsc_power_up(pcie);
-+	if (err)
-+		return err;
-+
- 	/* PHY power on and enable pipe clock */
- 	reset_control_deassert(pcie->phy_reset);
- 
-@@ -855,6 +931,7 @@ static int mtk_pcie_power_up(struct mtk_gen3_pcie *pcie)
- 	phy_exit(pcie->phy);
- err_phy_init:
- 	reset_control_assert(pcie->phy_reset);
-+	mtk_pcie_dsc_power_down(pcie);
- 
- 	return err;
- }
-@@ -870,6 +947,13 @@ static void mtk_pcie_power_down(struct mtk_gen3_pcie *pcie)
- 	phy_power_off(pcie->phy);
- 	phy_exit(pcie->phy);
- 	reset_control_assert(pcie->phy_reset);
-+
-+	/*
-+	 * Keep downstream component powered on if it might need to wake up the
-+	 * system in suspend state
-+	 */
-+	if (!pcie->dev->power.is_suspended || !device_wakeup_path(pcie->dev))
-+		mtk_pcie_dsc_power_down(pcie);
- }
- 
- static int mtk_pcie_setup(struct mtk_gen3_pcie *pcie)
++DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x15b8, quirk_clear_msix);
 -- 
-2.18.0
+2.25.1
 
