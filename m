@@ -2,100 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 842F16AB0CF
-	for <lists+linux-pci@lfdr.de>; Sun,  5 Mar 2023 15:04:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B65E16AB5FD
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 06:25:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbjCEOEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 5 Mar 2023 09:04:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59468 "EHLO
+        id S229742AbjCFFZY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 00:25:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbjCEOEB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 5 Mar 2023 09:04:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96EC166DA;
-        Sun,  5 Mar 2023 06:03:28 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 93A6160B38;
-        Sun,  5 Mar 2023 13:55:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 411A9C4339E;
-        Sun,  5 Mar 2023 13:55:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678024541;
-        bh=NuTpthAViYLX75DXcMpR+bp+WWg0hyyC4BceKqaMtZ4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Aa8tRE831gihJ5b5iRSbhv2QbntBY3mIa5A/dxmEPkJX8YWuf3R1mAfY12L/9zjRd
-         TDEb86vjrJdGSmSdF9WnfSqZZ3c9UctxnS39URnDZ/hAu3C0Gy75NM7JfZ7e7QqgTo
-         vXcvDc7ndIx+OLSDAOyUF/fNX/OlCQiOxLNeDAMOnlsvPty7TGY2fV5S9IecsWD/XV
-         LlsMaFkhUuVq6MfEXJmv+qzng5euH1MCraA7o6zolaHl5aB3FCAJXjm8SvNCbiubNl
-         TZHvszPW8DyDfOG4kNcH5nlVmpx7TLcNKKnTmGZCeSVYloaUh7N8ByktF/UPsTzQSg
-         e/VGUKtQzHhLg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alvaro Karsz <alvaro.karsz@solid-run.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/6] PCI: Avoid FLR for SolidRun SNET DPU rev 1
-Date:   Sun,  5 Mar 2023 08:55:25 -0500
-Message-Id: <20230305135525.1794277-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230305135525.1794277-1-sashal@kernel.org>
-References: <20230305135525.1794277-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229649AbjCFFZU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 00:25:20 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A11219697;
+        Sun,  5 Mar 2023 21:25:19 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3262mAhG027576;
+        Mon, 6 Mar 2023 05:25:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=q6dLQ1CXQqM7sPzswb4fRaqWx2y38l9H+H1gMlgvsdw=;
+ b=SpmDOCAgSwkomaB249qTdv7mLxazFaxnuiOOIlUn3ro6xTR7ICE7cY6USGL4haCvrxbx
+ a6a7mWNFeE0vdyJfAMDUZbIXhnAnJ8xfPKZv1o7v0tSkBOK8+VEjTGJh5+/EQOTZUo3a
+ NrgR5colucgNKR/ZkwTeGadjj1GclCV30jTuyJAV2GQBkwDZAD8i19RA2nbOMdn0vS/t
+ TRu9+uI2ZSNjXtywo47neR/gQmNo2m3FGwzNvCZpSjhkJMSEVa/nD9YvV4qQ4AiEN4kY
+ ILgxCUI/SUBlfvRstGfHQJUkSl3GhDmmvRH9RESckSv3bYz0420k3ubhmhQAw1cbvLZ9 lA== 
+Received: from apblrppmta01.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p417d3csd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Mar 2023 05:25:12 +0000
+Received: from pps.filterd (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 3265P5FL016074;
+        Mon, 6 Mar 2023 05:25:05 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTPS id 3p4fgk7399-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 06 Mar 2023 05:25:05 +0000
+Received: from APBLRPPMTA01.qualcomm.com (APBLRPPMTA01.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3265P5sD016057;
+        Mon, 6 Mar 2023 05:25:05 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA01.qualcomm.com (PPS) with ESMTP id 3265P4sd016053;
+        Mon, 06 Mar 2023 05:25:05 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 4B1214F8A; Mon,  6 Mar 2023 10:55:04 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mani@kernel.org,
+        lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH 0/6] Add PCIe EP support for SDX65
+Date:   Mon,  6 Mar 2023 10:54:56 +0530
+Message-Id: <1678080302-29691-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Kl3Er85BDcGWxfOWEGt43okGd7VlsAt2
+X-Proofpoint-ORIG-GUID: Kl3Er85BDcGWxfOWEGt43okGd7VlsAt2
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-05_12,2023-03-03_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 spamscore=0 malwarescore=0 bulkscore=0 mlxlogscore=595
+ phishscore=0 clxscore=1015 adultscore=0 priorityscore=1501 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303060044
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Alvaro Karsz <alvaro.karsz@solid-run.com>
+Hi,
 
-[ Upstream commit d089d69cc1f824936eeaa4fa172f8fa1a0949eaa ]
+This series adds the devicetree support for PCIe PHY and PCIe EP on SDX65.
+The PCIe EP is enabled on SDX65 MTP board.
 
-This patch fixes a FLR bug on the SNET DPU rev 1 by setting the
-PCI_DEV_FLAGS_NO_FLR_RESET flag.
+Thanks,
+Rohit.
 
-As there is a quirk to avoid FLR (quirk_no_flr), I added a new quirk
-to check the rev ID before calling to quirk_no_flr.
+Rohit Agarwal (6):
+  dt-bindings: mfd: qcom,tcsr: Add compatible for sdx65
+  dt-bindings: PCI: qcom: Add SDX65 SoC
+  ARM: dts: qcom: sdx65: Add support for PCIe PHY
+  ARM: dts: qcom: sdx65: Add support for PCIe EP
+  ARM: dts: qcom: sdx65-mtp: Enable PCIE0 PHY
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe EP
 
-Without this patch, a SNET DPU rev 1 may hang when FLR is applied.
+ .../devicetree/bindings/mfd/qcom,tcsr.yaml         |  1 +
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  2 +
+ arch/arm/boot/dts/qcom-sdx65-mtp.dts               | 53 +++++++++++++++
+ arch/arm/boot/dts/qcom-sdx65.dtsi                  | 76 ++++++++++++++++++++++
+ 4 files changed, 132 insertions(+)
 
-Signed-off-by: Alvaro Karsz <alvaro.karsz@solid-run.com>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Message-Id: <20230110165638.123745-3-alvaro.karsz@solid-run.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 0a116359b5c71..9a1b0c147983e 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5067,6 +5067,14 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_AMD, 0x149c, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1502, quirk_no_flr);
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x1503, quirk_no_flr);
- 
-+/* FLR may cause the SolidRun SNET DPU (rev 0x1) to hang */
-+static void quirk_no_flr_snet(struct pci_dev *dev)
-+{
-+	if (dev->revision == 0x1)
-+		quirk_no_flr(dev);
-+}
-+DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_SOLIDRUN, 0x1000, quirk_no_flr_snet);
-+
- static void quirk_no_ext_tags(struct pci_dev *pdev)
- {
- 	struct pci_host_bridge *bridge = pci_find_host_bridge(pdev->bus);
 -- 
-2.39.2
+2.7.4
 
