@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4985B6AC51F
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 16:33:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9EA8A6AC51A
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 16:33:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229915AbjCFPdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Mar 2023 10:33:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59036 "EHLO
+        id S229809AbjCFPdQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 10:33:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230126AbjCFPdL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 10:33:11 -0500
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F50528D11
-        for <linux-pci@vger.kernel.org>; Mon,  6 Mar 2023 07:32:41 -0800 (PST)
-Received: by mail-pj1-x102b.google.com with SMTP id x20-20020a17090a8a9400b00233ba727724so11105221pjn.1
-        for <linux-pci@vger.kernel.org>; Mon, 06 Mar 2023 07:32:41 -0800 (PST)
+        with ESMTP id S230132AbjCFPdN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 10:33:13 -0500
+Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEEC301B1
+        for <linux-pci@vger.kernel.org>; Mon,  6 Mar 2023 07:32:44 -0800 (PST)
+Received: by mail-pj1-x102c.google.com with SMTP id y2so10139591pjg.3
+        for <linux-pci@vger.kernel.org>; Mon, 06 Mar 2023 07:32:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678116760;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Mt4PnJhS2YRcl1V5hJsj3yA+GagqVnLSKo0OGCRHctc=;
-        b=CQnRbnfuwO2EE097d2GHPjRyr3PHyjthwep650jJ46Ud18aYxadBX7amPPsMMh38lb
-         L8/pVM5WWPsSyVMfFzEnSThuzKt6ineBxxCG8zVFCkCfXxxhztQ08n7VZXDPBtvjF60y
-         TYbhHBoG1v9tjhn82LymUPbXe5y0SBGZSiWQeh0ZiykIFizKwfbnJRXK2tWFqhBbd7Xs
-         ySBgIg0WjGema48SQ0VMYS1a2s/1K4jmtP2YgsGSL9P+tHCXvtxOga/Zfm+mV8HHn+q8
-         oCpqhQX6/cdYMvJEhMMwvHSAmWYT5iaEZt5sexDETg/WZC5ORwdM+o0NEuLGAiHrvYp6
-         bAMQ==
+        d=linaro.org; s=google; t=1678116764;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LgcUg9KBFxgyL7R+Ko0NRVJoBGhkBXsnNvmn89JO8A8=;
+        b=LAE6hdwk6qjIrdlw31IZ5aLM1J/i+3pxZBCsxn8iXV5J2Ck311XWmpurDVEu3l9Nad
+         w8tKkDed/aV3fCzm+k03Q2blxqBXJ220LXxZMrTAkO6DlSHCIQov+NmDWxvBD5UncZIN
+         B0/MUDrfO29eAt/SEfNyOQesOVFDMsoyxy1uB9adAX3TszyK8WQg3Hucz37WLSDqpJ3W
+         jBAuHfTe5+4SdJfGuMY92xLIdAay343AY//SH0iw8dSF3lzF93/VTBksGMEUmtW9srHR
+         3NJx6pAh3s5SXXkRLqtAiJef3tWjgx5pccuA17dnSOWUF3bC7inncARa1kiGS6GqN+xC
+         PorQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678116760;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Mt4PnJhS2YRcl1V5hJsj3yA+GagqVnLSKo0OGCRHctc=;
-        b=CvFU70b4GPvUkjbECQbUHxFySZVjmVB2kYBcYeqds5VMAnOyq7tLS7xTLN2mcFkPon
-         YkXhEloN5VonL/amvVB0k/9RfIn6NVQlJsxB3hArK9R9olVSrZkeR0XFgEeyDD1LqN6R
-         NXkjjNSmmRz1dh8F3/ZGnYlAViyLQrnUMRZ+nfnsBfj2EpUcZM0EEl2+zFP9xi0CJiu4
-         XcPEhLhJ/i3pnhufQsAMVs9b92zg+FCELFF1fbEdSJQdX50Cua0FMx8mvoxKlOD45mr1
-         LfsEN+rIn6Vq+IkGfjA8BRQnHA4UXVwX6gTxhOJ06mrYvhYdbbWtzSX7K0E1UG7JkANb
-         ykEg==
-X-Gm-Message-State: AO0yUKUnHekWKOLT671hMc9y5CyWzeG1I0UzfDLDlNnQ4R/sXKcNRZpU
-        1qGZw4zu1Ff60x4DqJO/oS9Q
-X-Google-Smtp-Source: AK7set+HjBdNIpsf8ef4VJSwEelL+jqIfP8yZmMfm7xzM1eTk7/8khH6kLRd036efOYER8cCvsN2DQ==
-X-Received: by 2002:a17:902:d4cc:b0:19b:dbf7:f9ca with SMTP id o12-20020a170902d4cc00b0019bdbf7f9camr15257570plg.0.1678116759945;
-        Mon, 06 Mar 2023 07:32:39 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678116764;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LgcUg9KBFxgyL7R+Ko0NRVJoBGhkBXsnNvmn89JO8A8=;
+        b=oCqYGvrk1q8Dl2JrG3Pfxc/70WPDGwR/bQpyyugOItp4ynRKUNHy8rNejNTs6rrDRC
+         ChmD2W8mnCk/3xu1PhC1+ja79VNbuitQUTJTOXHF/iFchok/GAVwv3v8/GKHYJhXNM7P
+         rY/ZHOI6hdmrfvhXsLEApxrQGewRIbqr3cnjlXROG4c50zBeFVrURDNySHWS7vEaQl/6
+         ddI/qVGUsNl/eUUfhBHxljJNKAI+0LRj7Kusdzidrozos3T1MRwKdTgBw0Gb8ZzPRcl0
+         emDPqSYBykxr7vqT04atZaQpReAVOUdDjz4yxdFzPcryObSzJ9XSot8S5x5kgfTdCksf
+         dkcg==
+X-Gm-Message-State: AO0yUKX5Cc7ZqCe1FOZyaGz26vqLEqoUp+bTXiLA5xe4u3U0+cvLfl43
+        kj/Qsy+7e2Qcrp9GD+Zvb7qk
+X-Google-Smtp-Source: AK7set99ER9AC12rc/lxOF+DwUqqyfAISTapAlB5x+iDddskhYSRhil1E3XPFwOVI0/iWWJPkLGe4w==
+X-Received: by 2002:a17:902:a5c3:b0:19d:1a99:88 with SMTP id t3-20020a170902a5c300b0019d1a990088mr9947064plq.20.1678116763734;
+        Mon, 06 Mar 2023 07:32:43 -0800 (PST)
 Received: from localhost.localdomain ([59.97.52.140])
-        by smtp.gmail.com with ESMTPSA id kl4-20020a170903074400b0019a7c890c61sm6837430plb.252.2023.03.06.07.32.36
+        by smtp.gmail.com with ESMTPSA id kl4-20020a170903074400b0019a7c890c61sm6837430plb.252.2023.03.06.07.32.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Mar 2023 07:32:39 -0800 (PST)
+        Mon, 06 Mar 2023 07:32:43 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
         krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
@@ -55,82 +56,456 @@ Cc:     konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, quic_srichara@quicinc.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 00/19] Qcom PCIe cleanups and improvements
-Date:   Mon,  6 Mar 2023 21:02:03 +0530
-Message-Id: <20230306153222.157667-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 01/19] PCI: qcom: Remove PCIE20_ prefix from register definitions
+Date:   Mon,  6 Mar 2023 21:02:04 +0530
+Message-Id: <20230306153222.157667-2-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230306153222.157667-1-manivannan.sadhasivam@linaro.org>
+References: <20230306153222.157667-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+The PCIE part is redundant and 20 doesn't represent anything across the
+SoCs supported now. So let's get rid of the prefix.
 
-This series brings in several code cleanups and improvements to the
-Qualcomm PCIe controller drivers (RC and EP). The cleanup part mostly
-cleans up the bitfield definitions and transitions to bulk APIs for clocks,
-and resets. The improvement part renames the "mmio" region to "mhi" as per
-Qualcomm's internal documentation EP driver and also adds the debugfs entry
-to track link transition count in RC driver.
+This involves adding the IP version suffix to one definition of
+PARF_SLV_ADDR_SPACE_SIZE that defines offset specific to that version.
+The other definition is generic for the rest of the versions.
 
-Testing
--------
+Also, the register PCIE20_LNK_CONTROL2_LINK_STATUS2 is not used anywhere,
+hence removed.
 
-I have tested this series on SDM845, SM8250 and SC8280XP based platforms.
-However, I'm counting on Qualcomm folks CCed to do testing on older IPQ/APQ
-platforms.
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 184 ++++++++++++-------------
+ 1 file changed, 91 insertions(+), 93 deletions(-)
 
-Merging Strategy
-----------------
-
-Binding and driver patches through PCI tree and DTS patches through Qcom
-tree.
-
-NOTE: For the sake of maintaining dependency, I've clubbed both cleanup and
-improvement patches in the same series. If any of the maintainers prefer to
-have them splitted, please let me know.
-
-Thanks,
-Mani
-
-
-Manivannan Sadhasivam (19):
-  PCI: qcom: Remove PCIE20_ prefix from register definitions
-  PCI: qcom: Sort and group registers and bitfield definitions
-  PCI: qcom: Use bitfield definitions for register fields
-  PCI: qcom: Add missing macros for register fields
-  PCI: qcom: Use lower case for hex
-  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.1.0
-  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 1.0.0
-  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 2.3.2
-  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 2.3.3
-  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.3.3
-  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.4.0
-  PCI: qcom: Use macros for defining total no. of clocks & supplies
-  dt-bindings: PCI: qcom-ep: Rename "mmio" region to "mhi"
-  PCI: qcom-ep: Rename "mmio" region to "mhi"
-  dt-bindings: PCI: qcom: Add "mhi" register region to supported SoCs
-  arm64: dts: qcom: sdm845: Add "mhi" region to the PCIe nodes
-  arm64: dts: qcom: sm8250: Add "mhi" region to the PCIe nodes
-  arm64: dts: qcom: sc8280xp: Add "mhi" region to the PCIe nodes
-  PCI: qcom: Expose link transition counts via debugfs
-
- .../devicetree/bindings/pci/qcom,pcie-ep.yaml |    6 +-
- .../devicetree/bindings/pci/qcom,pcie.yaml    |   12 +-
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi        |   15 +-
- arch/arm64/boot/dts/qcom/sdm845.dtsi          |    6 +-
- arch/arm64/boot/dts/qcom/sm8250.dtsi          |    9 +-
- drivers/pci/controller/dwc/pcie-qcom-ep.c     |   38 +-
- drivers/pci/controller/dwc/pcie-qcom.c        | 1009 ++++++-----------
- 7 files changed, 414 insertions(+), 681 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index a232b04af048..6930bc9ceeb5 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -33,7 +33,7 @@
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+ 
+-#define PCIE20_PARF_SYS_CTRL			0x00
++#define PARF_SYS_CTRL				0x00
+ #define MST_WAKEUP_EN				BIT(13)
+ #define SLV_WAKEUP_EN				BIT(12)
+ #define MSTR_ACLK_CGC_DIS			BIT(10)
+@@ -43,39 +43,39 @@
+ #define L23_CLK_RMV_DIS				BIT(2)
+ #define L1_CLK_RMV_DIS				BIT(1)
+ 
+-#define PCIE20_PARF_PM_CTRL			0x20
++#define PARF_PM_CTRL				0x20
+ #define REQ_NOT_ENTR_L1				BIT(5)
+ 
+-#define PCIE20_PARF_PHY_CTRL			0x40
++#define PARF_PHY_CTRL				0x40
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
+ 
+-#define PCIE20_PARF_PHY_REFCLK			0x4C
++#define PARF_PHY_REFCLK				0x4C
+ #define PHY_REFCLK_SSP_EN			BIT(16)
+ #define PHY_REFCLK_USE_PAD			BIT(12)
+ 
+-#define PCIE20_PARF_DBI_BASE_ADDR		0x168
+-#define PCIE20_PARF_SLV_ADDR_SPACE_SIZE		0x16C
+-#define PCIE20_PARF_MHI_CLOCK_RESET_CTRL	0x174
++#define PARF_DBI_BASE_ADDR			0x168
++#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16C /* Register offset specific to IP rev 2.3.3 */
++#define PARF_MHI_CLOCK_RESET_CTRL		0x174
+ #define AHB_CLK_EN				BIT(0)
+ #define MSTR_AXI_CLK_EN				BIT(1)
+ #define BYPASS					BIT(4)
+ 
+-#define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT	0x178
+-#define PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2	0x1A8
+-#define PCIE20_PARF_LTSSM			0x1B0
+-#define PCIE20_PARF_SID_OFFSET			0x234
+-#define PCIE20_PARF_BDF_TRANSLATE_CFG		0x24C
+-#define PCIE20_PARF_DEVICE_TYPE			0x1000
+-#define PCIE20_PARF_BDF_TO_SID_TABLE_N		0x2000
++#define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
++#define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1A8
++#define PARF_LTSSM				0x1B0
++#define PARF_SID_OFFSET				0x234
++#define PARF_BDF_TRANSLATE_CFG			0x24C
++#define PARF_DEVICE_TYPE			0x1000
++#define PARF_BDF_TO_SID_TABLE_N			0x2000
+ 
+-#define PCIE20_ELBI_SYS_CTRL			0x04
+-#define PCIE20_ELBI_SYS_CTRL_LT_ENABLE		BIT(0)
++#define ELBI_SYS_CTRL				0x04
++#define ELBI_SYS_CTRL_LT_ENABLE			BIT(0)
+ 
+-#define PCIE20_AXI_MSTR_RESP_COMP_CTRL0		0x818
++#define AXI_MSTR_RESP_COMP_CTRL0		0x818
+ #define CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K	0x4
+ #define CFG_REMOTE_RD_REQ_BRIDGE_SIZE_4K	0x5
+-#define PCIE20_AXI_MSTR_RESP_COMP_CTRL1		0x81c
++#define AXI_MSTR_RESP_COMP_CTRL1		0x81c
+ #define CFG_BRIDGE_SB_INIT			BIT(0)
+ 
+ #define PCIE_CAP_SLOT_POWER_LIMIT_VAL		FIELD_PREP(PCI_EXP_SLTCAP_SPLV, \
+@@ -93,30 +93,28 @@
+ 						PCIE_CAP_SLOT_POWER_LIMIT_VAL | \
+ 						PCIE_CAP_SLOT_POWER_LIMIT_SCALE)
+ 
+-#define PCIE20_PARF_Q2A_FLUSH			0x1AC
++#define PARF_Q2A_FLUSH				0x1AC
+ 
+-#define PCIE20_MISC_CONTROL_1_REG		0x8BC
++#define MISC_CONTROL_1_REG			0x8BC
+ #define DBI_RO_WR_EN				1
+ 
+ #define PERST_DELAY_US				1000
+ /* PARF registers */
+-#define PCIE20_PARF_PCS_DEEMPH			0x34
++#define PARF_PCS_DEEMPH				0x34
+ #define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
+ #define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
+ #define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
+ 
+-#define PCIE20_PARF_PCS_SWING			0x38
++#define PARF_PCS_SWING				0x38
+ #define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
+ #define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
+ 
+-#define PCIE20_PARF_CONFIG_BITS		0x50
++#define PARF_CONFIG_BITS			0x50
+ #define PHY_RX0_EQ(x)				((x) << 24)
+ 
+-#define PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE	0x358
++#define PARF_SLV_ADDR_SPACE_SIZE		0x358
+ #define SLV_ADDR_SPACE_SZ			0x10000000
+ 
+-#define PCIE20_LNK_CONTROL2_LINK_STATUS2	0xa0
+-
+ #define DEVICE_TYPE_RC				0x4
+ 
+ #define QCOM_PCIE_2_1_0_MAX_SUPPLY	3
+@@ -261,9 +259,9 @@ static void qcom_pcie_2_1_0_ltssm_enable(struct qcom_pcie *pcie)
+ 	u32 val;
+ 
+ 	/* enable link training */
+-	val = readl(pcie->elbi + PCIE20_ELBI_SYS_CTRL);
+-	val |= PCIE20_ELBI_SYS_CTRL_LT_ENABLE;
+-	writel(val, pcie->elbi + PCIE20_ELBI_SYS_CTRL);
++	val = readl(pcie->elbi + ELBI_SYS_CTRL);
++	val |= ELBI_SYS_CTRL_LT_ENABLE;
++	writel(val, pcie->elbi + ELBI_SYS_CTRL);
+ }
+ 
+ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+@@ -333,7 +331,7 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	reset_control_assert(res->ext_reset);
+ 	reset_control_assert(res->phy_reset);
+ 
+-	writel(1, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(1, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ }
+@@ -423,9 +421,9 @@ static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+ 	int ret;
+ 
+ 	/* enable PCIe clocks and resets */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+ 	if (ret)
+@@ -436,37 +434,37 @@ static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+ 		writel(PCS_DEEMPH_TX_DEEMPH_GEN1(24) |
+ 			       PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(24) |
+ 			       PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(34),
+-		       pcie->parf + PCIE20_PARF_PCS_DEEMPH);
++		       pcie->parf + PARF_PCS_DEEMPH);
+ 		writel(PCS_SWING_TX_SWING_FULL(120) |
+ 			       PCS_SWING_TX_SWING_LOW(120),
+-		       pcie->parf + PCIE20_PARF_PCS_SWING);
+-		writel(PHY_RX0_EQ(4), pcie->parf + PCIE20_PARF_CONFIG_BITS);
++		       pcie->parf + PARF_PCS_SWING);
++		writel(PHY_RX0_EQ(4), pcie->parf + PARF_CONFIG_BITS);
+ 	}
+ 
+ 	if (of_device_is_compatible(node, "qcom,pcie-ipq8064")) {
+ 		/* set TX termination offset */
+-		val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++		val = readl(pcie->parf + PARF_PHY_CTRL);
+ 		val &= ~PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK;
+ 		val |= PHY_CTRL_PHY_TX0_TERM_OFFSET(7);
+-		writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++		writel(val, pcie->parf + PARF_PHY_CTRL);
+ 	}
+ 
+ 	/* enable external reference clock */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_REFCLK);
++	val = readl(pcie->parf + PARF_PHY_REFCLK);
+ 	/* USE_PAD is required only for ipq806x */
+ 	if (!of_device_is_compatible(node, "qcom,pcie-apq8064"))
+ 		val &= ~PHY_REFCLK_USE_PAD;
+ 	val |= PHY_REFCLK_SSP_EN;
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_REFCLK);
++	writel(val, pcie->parf + PARF_PHY_REFCLK);
+ 
+ 	/* wait for clock acquisition */
+ 	usleep_range(1000, 1500);
+ 
+ 	/* Set the Max TLP size to 2K, instead of using default of 4K */
+ 	writel(CFG_REMOTE_RD_REQ_BRIDGE_SIZE_2K,
+-	       pci->dbi_base + PCIE20_AXI_MSTR_RESP_COMP_CTRL0);
++	       pci->dbi_base + AXI_MSTR_RESP_COMP_CTRL0);
+ 	writel(CFG_BRIDGE_SB_INIT,
+-	       pci->dbi_base + PCIE20_AXI_MSTR_RESP_COMP_CTRL1);
++	       pci->dbi_base + AXI_MSTR_RESP_COMP_CTRL1);
+ 
+ 	return 0;
+ }
+@@ -574,13 +572,13 @@ static int qcom_pcie_init_1_0_0(struct qcom_pcie *pcie)
+ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+ {
+ 	/* change DBI base address */
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		u32 val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 
+ 		val |= BIT(31);
+-		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 	}
+ 
+ 	return 0;
+@@ -591,9 +589,9 @@ static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+ 	u32 val;
+ 
+ 	/* enable link training */
+-	val = readl(pcie->parf + PCIE20_PARF_LTSSM);
++	val = readl(pcie->parf + PARF_LTSSM);
+ 	val |= BIT(8);
+-	writel(val, pcie->parf + PCIE20_PARF_LTSSM);
++	writel(val, pcie->parf + PARF_LTSSM);
+ }
+ 
+ static int qcom_pcie_get_resources_2_3_2(struct qcom_pcie *pcie)
+@@ -698,25 +696,25 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+ 	u32 val;
+ 
+ 	/* enable PCIe clocks and resets */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+-	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
++	val = readl(pcie->parf + PARF_SYS_CTRL);
+ 	val &= ~BIT(29);
+-	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
++	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 	val |= BIT(4);
+-	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 	val |= BIT(31);
+-	writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 
+ 	return 0;
+ }
+@@ -977,25 +975,25 @@ static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
+ 	u32 val;
+ 
+ 	/* enable PCIe clocks and resets */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+-	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
++	val = readl(pcie->parf + PARF_SYS_CTRL);
+ 	val &= ~BIT(29);
+-	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
++	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 	val |= BIT(4);
+-	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 	val |= BIT(31);
+-	writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT_V2);
++	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 
+ 	return 0;
+ }
+@@ -1140,22 +1138,22 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+ 	u32 val;
+ 
+ 	writel(SLV_ADDR_SPACE_SZ,
+-		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
++		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+ 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS
+ 		| SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+ 		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+-		pcie->parf + PCIE20_PARF_SYS_CTRL);
+-	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
++		pcie->parf + PARF_SYS_CTRL);
++	writel(0, pcie->parf + PARF_Q2A_FLUSH);
+ 
+ 	writel(PCI_COMMAND_MASTER, pci->dbi_base + PCI_COMMAND);
+-	writel(DBI_RO_WR_EN, pci->dbi_base + PCIE20_MISC_CONTROL_1_REG);
++	writel(DBI_RO_WR_EN, pci->dbi_base + MISC_CONTROL_1_REG);
+ 	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+ 
+ 	val = readl(pci->dbi_base + offset + PCI_EXP_LNKCAP);
+@@ -1255,34 +1253,34 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 	usleep_range(1000, 1500);
+ 
+ 	/* configure PCIe to RC mode */
+-	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
++	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+ 
+ 	/* enable PCIe clocks and resets */
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+-	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
++	val = readl(pcie->parf + PARF_SYS_CTRL);
+ 	val &= ~BIT(29);
+-	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
++	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 	val |= BIT(4);
+-	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+ 	/* Enable L1 and L1SS */
+-	val = readl(pcie->parf + PCIE20_PARF_PM_CTRL);
++	val = readl(pcie->parf + PARF_PM_CTRL);
+ 	val &= ~REQ_NOT_ENTR_L1;
+-	writel(val, pcie->parf + PCIE20_PARF_PM_CTRL);
++	writel(val, pcie->parf + PARF_PM_CTRL);
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+-		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 		val |= BIT(31);
+-		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
++		writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 	}
+ 
+ 	return 0;
+@@ -1371,17 +1369,17 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+ 	int i;
+ 
+ 	writel(SLV_ADDR_SPACE_SZ,
+-		pcie->parf + PCIE20_v3_PARF_SLV_ADDR_SPACE_SIZE);
++		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+ 
+-	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
++	val = readl(pcie->parf + PARF_PHY_CTRL);
+ 	val &= ~BIT(0);
+-	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
++	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+-	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
++	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+ 
+-	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
++	writel(DEVICE_TYPE_RC, pcie->parf + PARF_DEVICE_TYPE);
+ 	writel(BYPASS | MSTR_AXI_CLK_EN | AHB_CLK_EN,
+-		pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
++		pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 	writel(GEN3_RELATED_OFF_RXEQ_RGRDLESS_RXTS |
+ 		GEN3_RELATED_OFF_GEN3_ZRXDC_NONCOMPL,
+ 		pci->dbi_base + GEN3_RELATED_OFF);
+@@ -1389,9 +1387,9 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+ 	writel(MST_WAKEUP_EN | SLV_WAKEUP_EN | MSTR_ACLK_CGC_DIS |
+ 		SLV_ACLK_CGC_DIS | CORE_CLK_CGC_DIS |
+ 		AUX_PWR_DET | L23_CLK_RMV_DIS | L1_CLK_RMV_DIS,
+-		pcie->parf + PCIE20_PARF_SYS_CTRL);
++		pcie->parf + PARF_SYS_CTRL);
+ 
+-	writel(0, pcie->parf + PCIE20_PARF_Q2A_FLUSH);
++	writel(0, pcie->parf + PARF_Q2A_FLUSH);
+ 
+ 	dw_pcie_dbi_ro_wr_en(pci);
+ 	writel(PCIE_CAP_SLOT_VAL, pci->dbi_base + offset + PCI_EXP_SLTCAP);
+@@ -1404,7 +1402,7 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+ 			PCI_EXP_DEVCTL2);
+ 
+ 	for (i = 0; i < 256; i++)
+-		writel(0, pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N + (4 * i));
++		writel(0, pcie->parf + PARF_BDF_TO_SID_TABLE_N + (4 * i));
+ 
+ 	return 0;
+ }
+@@ -1426,7 +1424,7 @@ static int qcom_pcie_config_sid_sm8250(struct qcom_pcie *pcie)
+ 		u32 smmu_sid;
+ 		u32 smmu_sid_len;
+ 	} *map;
+-	void __iomem *bdf_to_sid_base = pcie->parf + PCIE20_PARF_BDF_TO_SID_TABLE_N;
++	void __iomem *bdf_to_sid_base = pcie->parf + PARF_BDF_TO_SID_TABLE_N;
+ 	struct device *dev = pcie->pci->dev;
+ 	u8 qcom_pcie_crc8_table[CRC8_TABLE_SIZE];
+ 	int i, nr_map, size = 0;
 -- 
 2.25.1
 
