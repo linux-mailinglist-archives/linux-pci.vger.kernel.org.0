@@ -2,91 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CBE96AB6F7
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 08:24:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DE306AB822
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 09:22:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229572AbjCFHYY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Mar 2023 02:24:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55466 "EHLO
+        id S229564AbjCFIWk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 03:22:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjCFHYY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 02:24:24 -0500
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4351EBE6
-        for <linux-pci@vger.kernel.org>; Sun,  5 Mar 2023 23:24:21 -0800 (PST)
-Received: by mail-ed1-x534.google.com with SMTP id i34so34451708eda.7
-        for <linux-pci@vger.kernel.org>; Sun, 05 Mar 2023 23:24:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678087460;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r3bQ4k2PvMngf9Eau2r8xaRdUgTYQ5lSW/kSlMDUom0=;
-        b=RVHBz1olKRHM9CecnH51ezfBz0TAbN2v/Y+Jbn0xMyymyU8EcXQDVoHuu1VBKISYbm
-         7C65P7hQabNIH7uKiPmfDiCP6zlK2FYb3RjYCjB5BXpPe84NwtcfUFicpWuqfo0o+gJL
-         nmn2NXx6UotZOVZct62/2gSu54kl5w1TiF2d9uHp+9w/iZN2A2Wgr6cHExQZT3cJ9yGZ
-         7SXoRX8i/MIrtAtTlGHBDU9fTXqoOusKBnlSIuRI4yh86/sD5RMpygJW5XCCr1TqdW0V
-         chQzeTapnwWBxdTg5kpeZOmkOojUysr0KpoA2QobV7GvKpekWJEiEsWTPXiSuWMO93CP
-         p3Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678087460;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r3bQ4k2PvMngf9Eau2r8xaRdUgTYQ5lSW/kSlMDUom0=;
-        b=eELTgCUhBrtjsCK2HR5LvRQTRlHF5/3XvHMMjLsV/edIo6EZBvs59AKyKRyYltITtD
-         HDKhSdFokqzqVs483jwrCZRYhgN7VM2cqlS/y5oBUKWhUXTKs9v26gZEWcQIgiRfj+QI
-         iTxykn/gclD4h+BUzfChmx5WtHw+4vMd6LMUUl7p525JPqu7YHf7nOdthBck0Wjp55cc
-         JvzqOEpNCEjJDbJtTDvR6/YXYl7mE/cv1uXEJ+fAY61cdORoSPOsI+t4YHaqLL+leslo
-         n8FomJdRSUE5+dOLnl5wpmYTJCymEIyKHEewEX6W6Gez9aK4HD5ZN1wsUwAbEjMA23od
-         Yvsw==
-X-Gm-Message-State: AO0yUKXK3Cnb8jgSzo/gzxHpcZ44mzViWsWusiyENdi3+n32ckhSxAxh
-        6nqwtkQXoA3xxDbf8AdW6n68VA==
-X-Google-Smtp-Source: AK7set+IhaidXT2y96C0YWRplmrJ2nTzw3MTMT3w0/n/D0HHJ2ViWvdT+gToydQTCuXU2iPTW4/CRQ==
-X-Received: by 2002:a17:906:fe41:b0:8f1:949f:37b5 with SMTP id wz1-20020a170906fe4100b008f1949f37b5mr12317038ejb.32.1678087459966;
-        Sun, 05 Mar 2023 23:24:19 -0800 (PST)
-Received: from ?IPV6:2a02:810d:15c0:828:d85d:5a4b:9830:fcfe? ([2a02:810d:15c0:828:d85d:5a4b:9830:fcfe])
-        by smtp.gmail.com with ESMTPSA id h9-20020a1709060f4900b008d2683e24c4sm4198751ejj.69.2023.03.05.23.24.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 05 Mar 2023 23:24:19 -0800 (PST)
-Message-ID: <eba45618-8e0f-6b7d-6ab9-329f481138b6@linaro.org>
-Date:   Mon, 6 Mar 2023 08:24:18 +0100
+        with ESMTP id S229570AbjCFIWk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 03:22:40 -0500
+X-Greylist: delayed 479 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 06 Mar 2023 00:22:37 PST
+Received: from infra.glanzmann.de (infra.glanzmann.de [IPv6:2a01:4f8:b0:3ffe::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE1121E5C2
+        for <linux-pci@vger.kernel.org>; Mon,  6 Mar 2023 00:22:37 -0800 (PST)
+Received: by infra.glanzmann.de (Postfix, from userid 1000)
+        id B9BA87A8007D; Mon,  6 Mar 2023 09:14:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glanzmann.de;
+        s=infra26101010; t=1678090475;
+        bh=osOdvfYRsj3TzBJmcCOYRXucd98axOnx53D0B1+7mS0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SHrLhdoI9DcEniayOkYv5XlKz3rItT3wd3LvlUtXNwDf+j2Yfhmz4wWjKpPwTtbyO
+         Blz58jF7O6n1uvybCn64mZtyL9go6frl5aywN+trtQBoWb5Aq3GqtgYI+GFk7TP8oi
+         1IBwj5Vp6w/Cvy1vYem+XRcm7UBgR8QXVf+3/RJZfC4Puq9eZ68p9K73da9B62irmv
+         KMSHuqJ8kaIfbjH9fEXrjEEEzuciQfR0ql0meQoASoGzgDiQsDmVBKVLxmwxynYTgP
+         r784VBOc+m+L7frUZrz43RkOmPDbLAKER+Ragok/Fnd7A1xJgHCLMxVJqPwSzHSl5D
+         qrgY5aAYBVXBBiIrwIhscKQMZyk9OJ52o2wSPH3aBZVd+8GH4Wj2iy6OPhIAGEA+yR
+         qepYv53BYYXgHUXkAT2GsFodPN6FVQHHpFPYjE0YFf3Xzwp+O4sWdCnf4DQ8ogchIs
+         I4L1yaSjYDeo3PbTpxRf+4OVY115DMsn2Gv3EHAOcLXAxHv7wfetSwa1gygxLA1mxY
+         jXrxjY9cMt9chH+mzJhNFLpopzEt747lpairiQy4OcK2uHcZP7tcKvcCzH1DMEeYd0
+         n6edxhCwJrWvJzpeSPEE4Gzh0bXVfkwxki4ElEMzHF4Gi5z91wElGeMGOPO35io9mJ
+         aWYAqkzVNoFN4pnWuzR5ED0w=
+Date:   Mon, 6 Mar 2023 09:14:35 +0100
+From:   Thomas Glanzmann <thomas@glanzmann.de>
+To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        mario.limonciello@amd.com, Yulia Glanzmann <yulia@glanzmann.de>
+Subject: Re: [PATCH] PCI: Add quirk to clear MSI-X
+Message-ID: <ZAWg60alY7D7g+em@glanzmann.de>
+References: <20230306072340.172306-1-Basavaraj.Natikar@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 2/6] dt-bindings: PCI: qcom: Add SDX65 SoC
-Content-Language: en-US
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <1678080302-29691-1-git-send-email-quic_rohiagar@quicinc.com>
- <1678080302-29691-3-git-send-email-quic_rohiagar@quicinc.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1678080302-29691-3-git-send-email-quic_rohiagar@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230306072340.172306-1-Basavaraj.Natikar@amd.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06/03/2023 06:24, Rohit Agarwal wrote:
-> Add PCIe EP compatible string for SDX65 SoC.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+Hello,
 
+* Basavaraj Natikar <Basavaraj.Natikar@amd.com> [2023-03-06 08:24]:
+> One of the AMD USB controllers fails to maintain internal functional
+> context when transitioning from D3 to D0, desynchronizing MSI-X bits.
+> As a result, add a quirk to this controller to clear the MSI-X bits
+> on suspend.
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Note: This quirk works in all scenarios, regardless of whether the
+> integrated GPU is disabled in the BIOS.
 
-Best regards,
-Krzysztof
+I tested the patch on top of v6.2.2 and USB hotplug works. Dmesg is here:
 
+https://pbot.rmdir.de/H1BcUKbZUQQJ7NB6UylFEQ
+
+> Cc: Mario Limonciello <mario.limonciello@amd.com>
+> Reported-by: Thomas Glanzmann <thomas@glanzmann.de>
+
+Tested-by: Thomas Glanzmann <thomas@glanzmann.de>
+
+> Link: https://lore.kernel.org/linux-usb/Y%2Fz9GdHjPyF2rNG3@glanzmann.de/T/#u
+> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
+> ---
+>  drivers/pci/quirks.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 44cab813bf95..ddf7100227d3 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -6023,3 +6023,13 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2d, dpc_log_size);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a2f, dpc_log_size);
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x9a31, dpc_log_size);
+>  #endif
+> +
+> +static void quirk_clear_msix(struct pci_dev *dev)
+> +{
+> +	u16 ctrl;
+> +
+> +	pci_read_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, &ctrl);
+> +	ctrl &= ~(PCI_MSIX_FLAGS_MASKALL | PCI_MSIX_FLAGS_ENABLE);
+> +	pci_write_config_word(dev, dev->msix_cap + PCI_MSIX_FLAGS, ctrl);
+> +}
+> +DECLARE_PCI_FIXUP_SUSPEND(PCI_VENDOR_ID_AMD, 0x15b8, quirk_clear_msix);
+
+Thank you for the patch.
+
+Cheers,
+        Thomas
