@@ -2,179 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 640926AC4A0
-	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 16:16:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4985B6AC51F
+	for <lists+linux-pci@lfdr.de>; Mon,  6 Mar 2023 16:33:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229579AbjCFPQq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 6 Mar 2023 10:16:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37660 "EHLO
+        id S229915AbjCFPdS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 6 Mar 2023 10:33:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCFPQp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 10:16:45 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64592332C;
-        Mon,  6 Mar 2023 07:16:44 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32653DG6019538;
-        Mon, 6 Mar 2023 15:16:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=1SJepisM0ksPR/1P3QZffUzMQIv7G/CW+A9HLGeMBs0=;
- b=eaQ/yd+/TBA6HT+rkgL2e6qkbqQ5fv8k2dA8hAUwZdUncCTl/ASxS2n8mNOH0aC7yMEU
- afe3Jrehd1E6j6oWZhTwViz14mVNit6yTTyBJTfxTArJRzR0v32Adx94hZZR3ENl55vg
- MaKfXxuZcaNj71hi0QyfCon9WQf0NgHqu0yaiRWlCNVv97gijWxn/LL4mEQn9cB0UTtO
- r1A4QPRHG3VAUbHRcUrlmXFpIB4Cyrq9JsBPidackZXWxfeYo/RphqbGDLngO0g+HEh5
- HWStQ8aTPXHElrAGrW0+Wxhhx2Rn92sEA9luU+z55CeBShI9rmkT6mesu3t1Ip++ZtVW zw== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p417jw2u1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 15:16:38 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 326FGb83027466
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 6 Mar 2023 15:16:37 GMT
-Received: from [10.216.34.19] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 6 Mar 2023
- 07:16:30 -0800
-Message-ID: <27536374-7e13-8a68-fd46-66e833175770@quicinc.com>
-Date:   Mon, 6 Mar 2023 20:46:25 +0530
+        with ESMTP id S230126AbjCFPdL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 6 Mar 2023 10:33:11 -0500
+Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F50528D11
+        for <linux-pci@vger.kernel.org>; Mon,  6 Mar 2023 07:32:41 -0800 (PST)
+Received: by mail-pj1-x102b.google.com with SMTP id x20-20020a17090a8a9400b00233ba727724so11105221pjn.1
+        for <linux-pci@vger.kernel.org>; Mon, 06 Mar 2023 07:32:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678116760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Mt4PnJhS2YRcl1V5hJsj3yA+GagqVnLSKo0OGCRHctc=;
+        b=CQnRbnfuwO2EE097d2GHPjRyr3PHyjthwep650jJ46Ud18aYxadBX7amPPsMMh38lb
+         L8/pVM5WWPsSyVMfFzEnSThuzKt6ineBxxCG8zVFCkCfXxxhztQ08n7VZXDPBtvjF60y
+         TYbhHBoG1v9tjhn82LymUPbXe5y0SBGZSiWQeh0ZiykIFizKwfbnJRXK2tWFqhBbd7Xs
+         ySBgIg0WjGema48SQ0VMYS1a2s/1K4jmtP2YgsGSL9P+tHCXvtxOga/Zfm+mV8HHn+q8
+         oCpqhQX6/cdYMvJEhMMwvHSAmWYT5iaEZt5sexDETg/WZC5ORwdM+o0NEuLGAiHrvYp6
+         bAMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678116760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Mt4PnJhS2YRcl1V5hJsj3yA+GagqVnLSKo0OGCRHctc=;
+        b=CvFU70b4GPvUkjbECQbUHxFySZVjmVB2kYBcYeqds5VMAnOyq7tLS7xTLN2mcFkPon
+         YkXhEloN5VonL/amvVB0k/9RfIn6NVQlJsxB3hArK9R9olVSrZkeR0XFgEeyDD1LqN6R
+         NXkjjNSmmRz1dh8F3/ZGnYlAViyLQrnUMRZ+nfnsBfj2EpUcZM0EEl2+zFP9xi0CJiu4
+         XcPEhLhJ/i3pnhufQsAMVs9b92zg+FCELFF1fbEdSJQdX50Cua0FMx8mvoxKlOD45mr1
+         LfsEN+rIn6Vq+IkGfjA8BRQnHA4UXVwX6gTxhOJ06mrYvhYdbbWtzSX7K0E1UG7JkANb
+         ykEg==
+X-Gm-Message-State: AO0yUKUnHekWKOLT671hMc9y5CyWzeG1I0UzfDLDlNnQ4R/sXKcNRZpU
+        1qGZw4zu1Ff60x4DqJO/oS9Q
+X-Google-Smtp-Source: AK7set+HjBdNIpsf8ef4VJSwEelL+jqIfP8yZmMfm7xzM1eTk7/8khH6kLRd036efOYER8cCvsN2DQ==
+X-Received: by 2002:a17:902:d4cc:b0:19b:dbf7:f9ca with SMTP id o12-20020a170902d4cc00b0019bdbf7f9camr15257570plg.0.1678116759945;
+        Mon, 06 Mar 2023 07:32:39 -0800 (PST)
+Received: from localhost.localdomain ([59.97.52.140])
+        by smtp.gmail.com with ESMTPSA id kl4-20020a170903074400b0019a7c890c61sm6837430plb.252.2023.03.06.07.32.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Mar 2023 07:32:39 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
+Cc:     konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, quic_srichara@quicinc.com,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 00/19] Qcom PCIe cleanups and improvements
+Date:   Mon,  6 Mar 2023 21:02:03 +0530
+Message-Id: <20230306153222.157667-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.6.0
-Subject: Re: [PATCH 6/6] ARM: dts: qcom: sdx65-mtp: Enable PCIe EP
-Content-Language: en-US
-To:     Konrad Dybcio <konrad.dybcio@linaro.org>, <agross@kernel.org>,
-        <andersson@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <mani@kernel.org>,
-        <lpieralisi@kernel.org>, <kw@linux.com>, <bhelgaas@google.com>,
-        <manivannan.sadhasivam@linaro.org>
-CC:     <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>
-References: <1678080302-29691-1-git-send-email-quic_rohiagar@quicinc.com>
- <1678080302-29691-7-git-send-email-quic_rohiagar@quicinc.com>
- <a24841f4-ad59-24dd-0110-814995d95655@linaro.org>
-From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
-In-Reply-To: <a24841f4-ad59-24dd-0110-814995d95655@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: p9jZ2mwPpEvdriWxuU9qqwpL3hvsQNh_
-X-Proofpoint-ORIG-GUID: p9jZ2mwPpEvdriWxuU9qqwpL3hvsQNh_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-06_08,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- clxscore=1015 adultscore=0 impostorscore=0 lowpriorityscore=0
- malwarescore=0 phishscore=0 suspectscore=0 priorityscore=1501 spamscore=0
- mlxlogscore=775 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303060135
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-On 3/6/2023 4:02 PM, Konrad Dybcio wrote:
->
-> On 6.03.2023 06:25, Rohit Agarwal wrote:
->> Enable PCIe Endpoint controller on the SDX65 MTP board based
->> on Qualcomm SDX65 platform.
->>
->> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
->> ---
->>   arch/arm/boot/dts/qcom-sdx65-mtp.dts | 46 ++++++++++++++++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/qcom-sdx65-mtp.dts b/arch/arm/boot/dts/qcom-sdx65-mtp.dts
->> index 86bb853..952de105 100644
->> --- a/arch/arm/boot/dts/qcom-sdx65-mtp.dts
->> +++ b/arch/arm/boot/dts/qcom-sdx65-mtp.dts
->> @@ -252,6 +252,14 @@
->>   	vdda-pll-supply = <&vreg_l4b_0p88>;
->>   };
->>   
->> +&pcie_ep {
->> +	status = "okay";
->> +
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&pcie_ep_clkreq_default &pcie_ep_perst_default
->> +			&pcie_ep_wake_default>;
-> status last
->
-> pinctrl-n goes before pinctrl-names
->> +};
->> +
->>   &qpic_bam {
->>   	status = "okay";
->>   };
->> @@ -276,6 +284,44 @@
->>   	memory-region = <&mpss_adsp_mem>;
->>   };
->>   
->> ++&tlmm {
->> +	pcie_ep_clkreq_default: pcie_ep_clkreq_default {
-> No underscores in node names, pinctrl children node names
-> must end in -state. Please check your patches against
-> "make dtbs_check"
->> +		mux {
->> +			pins = "gpio56";
->> +			function = "pcie_clkreq";
->> +		};
->> +		config {
->> +			pins = "gpio56";
->> +			drive-strength = <2>;
->> +			bias-disable;
->> +		};
-> mux {} / config {} is unnecessary. You can simply do:
->
-> {
->      pins = "gpio56";
->      function = "pcie_clkreq";
->      drive-strength = <2>;
->      bias-disable;
-> };
-Thanks for detailed explanation. Will rectify all in the next version.
+This series brings in several code cleanups and improvements to the
+Qualcomm PCIe controller drivers (RC and EP). The cleanup part mostly
+cleans up the bitfield definitions and transitions to bulk APIs for clocks,
+and resets. The improvement part renames the "mmio" region to "mhi" as per
+Qualcomm's internal documentation EP driver and also adds the debugfs entry
+to track link transition count in RC driver.
+
+Testing
+-------
+
+I have tested this series on SDM845, SM8250 and SC8280XP based platforms.
+However, I'm counting on Qualcomm folks CCed to do testing on older IPQ/APQ
+platforms.
+
+Merging Strategy
+----------------
+
+Binding and driver patches through PCI tree and DTS patches through Qcom
+tree.
+
+NOTE: For the sake of maintaining dependency, I've clubbed both cleanup and
+improvement patches in the same series. If any of the maintainers prefer to
+have them splitted, please let me know.
 
 Thanks,
-Rohit.
-> Konrad
->> +	};
->> +
->> +	pcie_ep_perst_default: pcie_ep_perst_default {
->> +		mux {
->> +			pins = "gpio57";
->> +			function = "gpio";
->> +		};
->> +		config {
->> +			pins = "gpio57";
->> +			drive-strength = <2>;
->> +			bias-pull-down;
->> +		};
->> +	};
->> +
->> +	pcie_ep_wake_default: pcie_ep_wake_default {
->> +		mux {
->> +			pins = "gpio53";
->> +			function = "gpio";
->> +		};
->> +		config {
->> +			pins = "gpio53";
->> +			drive-strength = <2>;
->> +			bias-disable;
->> +		};
->> +	};
->> +};
->> +
->>   &usb {
->>   	status = "okay";
->>   };
+Mani
+
+
+Manivannan Sadhasivam (19):
+  PCI: qcom: Remove PCIE20_ prefix from register definitions
+  PCI: qcom: Sort and group registers and bitfield definitions
+  PCI: qcom: Use bitfield definitions for register fields
+  PCI: qcom: Add missing macros for register fields
+  PCI: qcom: Use lower case for hex
+  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.1.0
+  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 1.0.0
+  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 2.3.2
+  PCI: qcom: Use bulk clock APIs for handling clocks for IP rev 2.3.3
+  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.3.3
+  PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.4.0
+  PCI: qcom: Use macros for defining total no. of clocks & supplies
+  dt-bindings: PCI: qcom-ep: Rename "mmio" region to "mhi"
+  PCI: qcom-ep: Rename "mmio" region to "mhi"
+  dt-bindings: PCI: qcom: Add "mhi" register region to supported SoCs
+  arm64: dts: qcom: sdm845: Add "mhi" region to the PCIe nodes
+  arm64: dts: qcom: sm8250: Add "mhi" region to the PCIe nodes
+  arm64: dts: qcom: sc8280xp: Add "mhi" region to the PCIe nodes
+  PCI: qcom: Expose link transition counts via debugfs
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml |    6 +-
+ .../devicetree/bindings/pci/qcom,pcie.yaml    |   12 +-
+ arch/arm64/boot/dts/qcom/sc8280xp.dtsi        |   15 +-
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |    6 +-
+ arch/arm64/boot/dts/qcom/sm8250.dtsi          |    9 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   38 +-
+ drivers/pci/controller/dwc/pcie-qcom.c        | 1009 ++++++-----------
+ 7 files changed, 414 insertions(+), 681 deletions(-)
+
+-- 
+2.25.1
+
