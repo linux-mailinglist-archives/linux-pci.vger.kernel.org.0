@@ -2,77 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B8A46AE3D8
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 16:05:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DB616AE442
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 16:17:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230170AbjCGPFQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Mar 2023 10:05:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46218 "EHLO
+        id S230458AbjCGPRm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Mar 2023 10:17:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230422AbjCGPEv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 10:04:51 -0500
-Received: from mail-yw1-x1133.google.com (mail-yw1-x1133.google.com [IPv6:2607:f8b0:4864:20::1133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6948984DD
-        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 06:57:04 -0800 (PST)
-Received: by mail-yw1-x1133.google.com with SMTP id 00721157ae682-536bf92b55cso248410787b3.12
-        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 06:57:04 -0800 (PST)
+        with ESMTP id S230401AbjCGPR1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 10:17:27 -0500
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1752574DD6
+        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 07:14:25 -0800 (PST)
+Received: by mail-pl1-x62e.google.com with SMTP id h8so14382299plf.10
+        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 07:14:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678201024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=D3Cr5iHChPhVIM0IBEr0zNr4m47UpuB7ZQNBapGvsMA=;
-        b=Sa7p7I6Iw0SkeAUDEM6Hi3s/b5m+Yr2N5xRDEwsu9mpEv9pSTSN3BYW/4q+YKYBaxS
-         EPS1oVhC5aRhsxC73yzTe6WL6SngTSkoIZdCYU1E6l6mqj4vRrKKNoL9Opvd5TUgJdu+
-         OaAn1wlB6oRoincbTu02uO5l0JC4uqGi5hHKkBQpbMzl4iwaddSdYxsMqiow9E2oMh7m
-         Iv4IUaT9JtE9MorpZXVsuACbNecZ0TXkVlIQtFS1nBElteItPxnTe42RY0RKngls/hXG
-         wgiakHo2+zhspHzUrS/hqXZ1yAZtYBn02MQn9ir0T5WLdP4qD/b4I+Co2KANzqrEkwsm
-         XGxg==
+        d=linaro.org; s=google; t=1678202064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LqmFNKWByCqJbPc1emmBvQnrjWKD9WeXgWA3mO4LgXA=;
+        b=eJNN+L1QyFr8/aPosDFOsZAZewkHLl9B0giInwtXhhcgSiq5wZDk+VeDfqsZIpAv8K
+         BYx3t8fWTA58WWqemhyuUJgncbMXdN8QB4MF9/SLP16gtoyiDWFYb9YU4kx8LL6vc+/E
+         IyxMMIRP8o+t1KEoSxtZaYAyiScQS1qgssHLjdSgGsg/jTen01mYNEUwhgT3gqYnzo1v
+         ixYpDgPj9Wy8BZHarDeOBJ63fxJC5yOUp0V/W90lofYoTPm/PweKzea4HMFjhKon8Xy8
+         JwkoqvzNLBWPzYfUNAOwnWTlKlHNqB5Sh44o/lIl5VwKcv380KcdF4mE/suryomXPLy7
+         2aZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678201024;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=D3Cr5iHChPhVIM0IBEr0zNr4m47UpuB7ZQNBapGvsMA=;
-        b=Ez1DsdqYDfcIVMCM+tcJl48aZ1zxSnm9+HK450IICUlMnIPaMZKhh0kXMK9Fr3j9KU
-         Rwgz/rdeltxLdA50a/3nmEZsPxl17ho/wlO0iC4xcsWnOXPpPtkXwtyUf7WbrFvxZ3hr
-         unhviL16tz3NbKg1PdSVW5PzWa/cSVsHQ/jz4C/NHlxsLJLS3jvDBkw2/KbVy31t3jEZ
-         +ChFDQYDOLd3I7cUI83IBdifBfjd8AZ34FKDkoA+Kh7rHByDPOdCxwK76+DOBzxzN87d
-         eMmfEMry7cvAMdxonWa1Qg3D86IUm6su4Pc8Jh0lU4KaLENF2LzDGX2OafTTWz8qetUF
-         tupA==
-X-Gm-Message-State: AO0yUKU22s1vPtYBjIAPGMd4THNUh+9PKpWiGbq4Djc5ktd9H/0/v0j/
-        rkS+64crbHy8mNy9As+G3BqqqN6XcmtlVcx9GOaXVQ==
-X-Google-Smtp-Source: AK7set/9HMCrF+azKo6YywINpZcVolMmW90oCUx+HqMoViVjHmvmFqQ4kHcS4RJgKU3KMXxpJW9El5ge0160PPUTuUw=
-X-Received: by 2002:a81:b71c:0:b0:536:7529:55b4 with SMTP id
- v28-20020a81b71c000000b00536752955b4mr9438563ywh.3.1678201023901; Tue, 07 Mar
- 2023 06:57:03 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678202064;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LqmFNKWByCqJbPc1emmBvQnrjWKD9WeXgWA3mO4LgXA=;
+        b=FJ/PDKNXAaECqz4PPbMf1QuMN7T1cBg9zQD+/6596Ly7iA8mIPhJ6eWX2k9rq8gMxS
+         +eaMSvkBpBpgWJpp5xgc55J8QMD0k/rxa4ea4Ozp5Osr7i2/JXGDKXX+xyDhlgBRO/vP
+         4Y9rIl5La8lly1K2p9cf2VUSL7WOnpLobtemSAdRb8dz7o+JPTGshQw+7lzNTyCy+bGA
+         QlIBagxafstm/0fXqMFeh1gv35c9vRBB4nj5QqxpimtJ7aD/Xf6JrURgziS6JxxafEje
+         YE2f8ZIx9jxr2sLy0cXhHx7zz9+N6e7y1jwm6T/y2j6hUpONo18vq3HuC463xAlcgRbV
+         v4aQ==
+X-Gm-Message-State: AO0yUKU4w8KQuf/cAGC5DCfJwSCepGgrN+7EcfmwhuoBAPO4ZvhgRP8E
+        kzVEnXx6WyC5maCGVPNVugyC
+X-Google-Smtp-Source: AK7set8urN+ikv9lro4xI0oiCwl+HYfqV8TWEl87tn/XKPw8aAruKXJje5F1qn06uQtTTYTSKqvmKg==
+X-Received: by 2002:a17:903:187:b0:19d:16fa:ba48 with SMTP id z7-20020a170903018700b0019d16faba48mr17970574plg.28.1678202064462;
+        Tue, 07 Mar 2023 07:14:24 -0800 (PST)
+Received: from localhost.localdomain ([59.97.52.140])
+        by smtp.gmail.com with ESMTPSA id t8-20020a17090340c800b0019c2cf12d15sm8549332pld.116.2023.03.07.07.14.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 07:14:23 -0800 (PST)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com
+Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 0/7] Add support for MHI Endpoint function driver
+Date:   Tue,  7 Mar 2023 20:44:09 +0530
+Message-Id: <20230307151416.176595-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
- <20230214164135.17039-2-quic_devipriy@quicinc.com> <20230224082332.GA5443@thinkpad>
- <bd153038-4427-1f11-1941-5f13fec01cf7@quicinc.com> <20230228063358.GA4839@thinkpad>
- <9BD62D8E-4E14-4269-B72D-C83EF4D43040@linaro.org> <20230303174036.GB6782@thinkpad>
- <30cf9717-dcca-e984-c506-c71b7f8e32cd@quicinc.com> <20230307125655.GC5599@thinkpad>
- <2afe8c7e-7e54-460f-7206-64a290beccfb@quicinc.com>
-In-Reply-To: <2afe8c7e-7e54-460f-7206-64a290beccfb@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Tue, 7 Mar 2023 16:56:53 +0200
-Message-ID: <CAA8EJpo-_PXhBnKWD-TWEqY8+uAEjbRsrhJ7XO1PTcYV-MHV9Q@mail.gmail.com>
-Subject: Re: [PATCH 1/7] dt-bindings: PCI: qcom: Add IPQ9574 specific compatible
-To:     Devi Priya <quic_devipriy@quicinc.com>
-Cc:     Manivannan Sadhasivam <mani@kernel.org>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        vkoul@kernel.org, kishon@kernel.org, mturquette@baylibre.com,
-        sboyd@kernel.org, p.zabel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-clk@vger.kernel.org,
-        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
@@ -83,149 +69,91 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 7 Mar 2023 at 16:40, Devi Priya <quic_devipriy@quicinc.com> wrote:
->
->
->
-> On 3/7/2023 6:26 PM, Manivannan Sadhasivam wrote:
-> > On Tue, Mar 07, 2023 at 03:15:08PM +0530, Devi Priya wrote:
-> >>
-> >>
-> >> On 3/3/2023 11:10 PM, Manivannan Sadhasivam wrote:
-> >>> On Fri, Mar 03, 2023 at 05:16:58PM +0200, Dmitry Baryshkov wrote:
-> >>>> 28 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2023 =D0=B3. 08:33:58 =
-GMT+02:00, Manivannan Sadhasivam <mani@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5=
-=D1=82:
-> >>>>> On Tue, Feb 28, 2023 at 10:56:53AM +0530, Devi Priya wrote:
-> >>>>>>
-> >>>>>>
-> >>>>>> On 2/24/2023 1:53 PM, Manivannan Sadhasivam wrote:
-> >>>>>>> On Tue, Feb 14, 2023 at 10:11:29PM +0530, Devi Priya wrote:
-> >>>>>>>> Document the compatible for IPQ9574
-> >>>>>>>>
-> >>>>>> Hi Mani, Thanks for taking time to review the patch.
-> >>>>>>>
-> >>>>>>> You didn't mention about the "msi-parent" property that is being =
-added
-> >>>>>>> by this patch
-> >>>>>> Sure, will update the commit message in the next spin
-> >>>>>>>
-> >>>>>>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> >>>>>>>> ---
-> >>>>>>>>     .../devicetree/bindings/pci/qcom,pcie.yaml    | 72 +++++++++=
-+++++++++-
-> >>>>>>>>     1 file changed, 70 insertions(+), 2 deletions(-)
-> >>>>>>>>
-> >>>>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yam=
-l b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >>>>>>>> index 872817d6d2bd..dabdf2684e2d 100644
-> >>>>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >>>>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> >>>>>>>> @@ -26,6 +26,7 @@ properties:
-> >>>>>>>>               - qcom,pcie-ipq8064-v2
-> >>>>>>>>               - qcom,pcie-ipq8074
-> >>>>>>>>               - qcom,pcie-ipq8074-gen3
-> >>>>>>>> +          - qcom,pcie-ipq9574
-> >>>>>>>>               - qcom,pcie-msm8996
-> >>>>>>>>               - qcom,pcie-qcs404
-> >>>>>>>>               - qcom,pcie-sa8540p
-> >>>>>>>> @@ -44,11 +45,11 @@ properties:
-> >>>>>>>>       reg:
-> >>>>>>>>         minItems: 4
-> >>>>>>>> -    maxItems: 5
-> >>>>>>>> +    maxItems: 6
-> >>>>>>>>       reg-names:
-> >>>>>>>>         minItems: 4
-> >>>>>>>> -    maxItems: 5
-> >>>>>>>> +    maxItems: 6
-> >>>>>>>>       interrupts:
-> >>>>>>>>         minItems: 1
-> >>>>>>>> @@ -105,6 +106,8 @@ properties:
-> >>>>>>>>         items:
-> >>>>>>>>           - const: pciephy
-> >>>>>>>> +  msi-parent: true
-> >>>>>>>> +
-> >>>>>>>>       power-domains:
-> >>>>>>>>         maxItems: 1
-> >>>>>>>> @@ -173,6 +176,27 @@ allOf:
-> >>>>>>>>                 - const: parf # Qualcomm specific registers
-> >>>>>>>>                 - const: config # PCIe configuration space
-> >>>>>>>> +  - if:
-> >>>>>>>> +      properties:
-> >>>>>>>> +        compatible:
-> >>>>>>>> +          contains:
-> >>>>>>>> +            enum:
-> >>>>>>>> +              - qcom,pcie-ipq9574
-> >>>>>>>> +    then:
-> >>>>>>>> +      properties:
-> >>>>>>>> +        reg:
-> >>>>>>>> +          minItems: 5
-> >>>>>>>> +          maxItems: 6
-> >>>>>>>> +        reg-names:
-> >>>>>>>> +          minItems: 5
-> >>>>>>>> +          items:
-> >>>>>>>> +            - const: dbi # DesignWare PCIe registers
-> >>>>>>>> +            - const: elbi # External local bus interface regist=
-ers
-> >>>>>>>> +            - const: atu # ATU address space
-> >>>>>>>> +            - const: parf # Qualcomm specific registers
-> >>>>>>>> +            - const: config # PCIe configuration space
-> >>>>>>>> +            - const: aggr_noc #PCIe aggr_noc
-> >>>>>>>
-> >>>>>>> Why do you need this region unlike other SoCs? Is the driver maki=
-ng use of it?
-> >>>>>> We have the aggr_noc region in ipq9574 to achieve higher throughpu=
-t & to
-> >>>>>> handle multiple PCIe instances. The driver uses it to rate adapt 1=
--lane PCIe
-> >>>>>> clocks. My bad, missed it. Will add the driver changes in V2.
-> >>>>>
-> >>>>> Hmm, this is something new. How can you achieve higher throughput w=
-ith this
-> >>>>> region? Can you explain more on how it is used?
-> >>>>
-> >>>> Based on the name of the region, it looks like it is an interconnect=
- region.
-> >>>>
-> >>>
-> >>> Well, we only have BCM based interconnects so far. That's why I was c=
-urious
-> >>> about this region and its purpose.
-> >> For connected PCIe slave devices that are running at frequency lesser
-> >> than the ANOC frequency (342MHz), the rate adapter of ANOC needs to be
-> >> configured
-> >>>
-> >>>> Devi, if this is the case, then you have to handle it through the in=
-terconnect driver, rather than poking directly into these registers.
-> >>>
-> >>> If that so, it doesn't need to be added in this series itself. I beli=
-eve that
-> >>> without aggr_noc region, the PCIe controller can still function prope=
-rly with
-> >>> reduced performance. But you can add the interconnect support later a=
-s a
-> >>> separate series.
-> >> Sure, okay. The ANOC runs at a fixed frequency of 342MHz and the
-> >> interconnect clocks are not scaled. The aggr_noc register is just a ma=
-gic
-> >> register for configuring it's rate adapter to ensure no wait cycles ar=
-e
-> >> inserted.
-> >>
-> >
-> > If the purpose of the aggr_noc region is to configure the interconnect =
-clock,
-> > then it should be modeled as an interconnect driver.
-> Can we use 'syscon' here, as we are not scaling the interconnect
-> frequency and this is just a single register write for setting
-> the rate adapter?
+Hello,
 
-It should be done outside of the PCIe driver.
-It is not "just a single register". It is also setting the anoc/snoc
-clocks for USB. And maybe something else, which we haven't seen at
-this moment. You are still setting up the NoC, even if the icc
-frequency is not scaled.
+This series adds support for Modem Host Interface (MHI) Endpoint function
+driver and few updates to the PCI endpoint core.
 
---=20
-With best wishes
-Dmitry
+MHI
+===
+
+MHI is the communication protocol used by the host machines to control and
+communicate with the Qualcomm modems/WLAN devices over any high speed physical
+bus like PCIe. In Linux kernel, MHI is modeled as a bus driver [1] and there
+are two instances of MHI used in a typical setup.
+
+1. MHI host - MHI implementation for the host machines like x86/ARM64.
+2. MHI Endpoint - MHI implementation for the endpoint devices like modems.
+
+MHI EPF
+=======
+
+The MHI Endpoint function driver (MHI EPF) is used on the MHI endpoint devices
+like modems. The MHI EPF driver sits in between the PCIe EP and MHI EP bus and
+carries out all of the PCIe related activities like BAR config, PCIe Event
+handling, MMIO read/write etc,... for the MHI EP bus.
+
+Below is the simple representation of the setup:
+
+
+                 +----------------------------------------------------+
+                 |                  Endpoint CPU                      |                   
+                 |                                                    |
++------------+   |   +------------+   +-----------+   +-----------+   |
+|            |   |   |            |   |           |   |           |   |
+|            |   |   |   MHI EP   |   |           |   |           |   | PCIe Bus
+|  Modem DSP +---+---+    Bus     +---+  MHI EPF  +---+  PCIe EP  +---+---------
+|            |   |   |            |   |           |   |           |   |
+|            |   |   |            |   |           |   |           |   |
++------------+   |   +------------+   +-----------+   +-----------+   |
+                 |                                                    |
+                 |                                                    |
+                 +----------------------------------------------------+
+
+The data packets will be read from the Modem DSP by the MHI stack and will be
+transmitted to the host machine over PCIe bus with the help of MHI EPF driver.
+
+Test setup
+==========
+
+This series has been tested on Snapdragon X55 modem a.k.a SDX55 connected to
+the ARM64 host machine.
+
+Thanks,
+Mani
+
+[1] https://www.kernel.org/doc/html/latest/mhi/mhi.html
+
+Changes in v2:
+
+* Rebased on top of v6.3-rc1
+* Switched to the new callback interface for passing events from EPC to EPF
+* Dropped one patch related to notifier
+
+Manivannan Sadhasivam (7):
+  PCI: endpoint: Pass EPF device ID to the probe function
+  PCI: endpoint: Warn and return if EPC is started/stopped multiple
+    times
+  PCI: endpoint: Add linkdown notifier support
+  PCI: endpoint: Add BME notifier support
+  PCI: qcom-ep: Add support for Link down notification
+  PCI: qcom-ep: Add support for BME notification
+  PCI: endpoint: Add PCI Endpoint function driver for MHI bus
+
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   2 +
+ drivers/pci/endpoint/functions/Kconfig        |  10 +
+ drivers/pci/endpoint/functions/Makefile       |   1 +
+ drivers/pci/endpoint/functions/pci-epf-mhi.c  | 454 ++++++++++++++++++
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |   3 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |   2 +-
+ drivers/pci/endpoint/pci-ep-cfs.c             |   3 +
+ drivers/pci/endpoint/pci-epc-core.c           |  52 ++
+ drivers/pci/endpoint/pci-epf-core.c           |   8 +-
+ include/linux/pci-epc.h                       |   2 +
+ include/linux/pci-epf.h                       |   8 +-
+ 11 files changed, 539 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
+
+-- 
+2.25.1
+
