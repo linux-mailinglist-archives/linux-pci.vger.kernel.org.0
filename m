@@ -2,76 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E02876AD926
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 09:21:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A87B6AD94F
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 09:36:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230178AbjCGIVS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Mar 2023 03:21:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57870 "EHLO
+        id S229470AbjCGIgG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Mar 2023 03:36:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230190AbjCGIUz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 03:20:55 -0500
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FF252F44
-        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 00:20:26 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id g3so49133513eda.1
-        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 00:20:26 -0800 (PST)
+        with ESMTP id S229549AbjCGIgF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 03:36:05 -0500
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82EDE4D2AF;
+        Tue,  7 Mar 2023 00:36:04 -0800 (PST)
+Received: by mail-pj1-x1042.google.com with SMTP id l1so12498070pjt.2;
+        Tue, 07 Mar 2023 00:36:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678177225;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4bBbMIO52bX8nLA3I9RO9BGA5L/h4IrDmKoZAMdQou0=;
-        b=SFXKtozJdDUk4x2ISKLmDv+b9wGwbGMJmaxKqfeHAbrs88w+D7J25EhyHoMd2xoCgt
-         SstTFgl1z2pVWnUDpIqBA3nvdMe2HfzlUk+o5fyByolJi12PBMTPOGLViEi3IC+wZ2J0
-         qnsXn8yJav3eGTmeH4EUKKJsC/EdV9XS82GoZsx8Ud+rxBLd9LNnl3hXFjEMs53IiIuC
-         ScpKZ47SapZcoZDwuS+iASA2u5o/7E/M6N7wxMgkhIQM2Kh7T4aJa6tFfXbjeTGgjPiw
-         LtseF2CI4Z5dIZoc78QIdD4cKteJi0zeIqkiFW+Sr4YeP3mIedS4VnBQV3peMCNh8Ely
-         g1qA==
+        d=gmail.com; s=20210112; t=1678178164;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dVV7L3qYLKYMexLWKRK/2c4/r4h3dFdM7tR8nzD9LW8=;
+        b=pNkFSovT8XQOKBhC6qK1O+NeD/Jtmwwpf5x5NnPKAMoSjn0US7tVs9ocrmvxgJEVhu
+         HYbW9VeL14bR4vd9qjdjmwG/MX6X/RR49sy+TCU4TN3UTvowxoKSHFSt0lisJ2pLEOr+
+         xZMU6obCtg744zSEKJ/gsAGiFzji+XX36wZJOjyB1NI0MygwrpM+xChFHF9gzRBQN3nl
+         JcWfWL9mAGNWjT7iLXJpcWy0Jc9MQbmR2EuunzLiwK7SSznbD+34W8hlpvu3A566TDZY
+         KVYlzorXRvCDekSG8OyVRNFQcpn4McK5IiXrLbByfH47/Rl1G9GdF3gFxZmCrEiYYCmX
+         B35A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678177225;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4bBbMIO52bX8nLA3I9RO9BGA5L/h4IrDmKoZAMdQou0=;
-        b=ImOO6hyP0iOjH9eOqQxcV+RKWAdvzb5MeKVfZV00RHdCwgYKa3/ZN3fSbRZbgbmdKI
-         YgARYEu8DZk0pP2smGk0Ay4AD1+X7PBVC+VQkp4QIzmTh/4UaJeEnktpW07JtnxGBalV
-         zZzeqDkgpUuN7mg1osWvdgQZFzNA5oxcqdNfLe0QKtreblmRNCrSHFgXcyyCQSdAfe8m
-         oWIY9EBwwGVyVY4tttHSlVtV+bguGhHKlv5LSPrT6/0hJMB4FQhN/KCCUkOvVvfHKcgh
-         3PcEo/Ytlv/kUcV1+e1kPPbHhN6yY097q+hjNrRiEC1Gt9tYOBDi9W+opsV3cZE6V9SW
-         N4Vg==
-X-Gm-Message-State: AO0yUKXp+liT8CNMqDH+4f7HVp9SPM52TmjeFHty+9heE3F5fIJpg7GR
-        nCDz4sFN+uwJ3GlGmM1imYuKgA==
-X-Google-Smtp-Source: AK7set+Lndiph5rP0jDSlwKu9kKCS0MqGFZPqqrr9CUWlCqqr/hZdRmLdppeqacwAvCmG+Fi2iW+dA==
-X-Received: by 2002:a17:907:6092:b0:872:6bd0:d2b with SMTP id ht18-20020a170907609200b008726bd00d2bmr16709606ejc.45.1678177224834;
-        Tue, 07 Mar 2023 00:20:24 -0800 (PST)
-Received: from ?IPV6:2a02:810d:15c0:828:5310:35c7:6f9e:2cd3? ([2a02:810d:15c0:828:5310:35c7:6f9e:2cd3])
-        by smtp.gmail.com with ESMTPSA id q8-20020a170906940800b008eb89a435c9sm5652005ejx.164.2023.03.07.00.20.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Mar 2023 00:20:24 -0800 (PST)
-Message-ID: <1587de60-244a-d97f-dea0-36fe8a5be2c2@linaro.org>
-Date:   Tue, 7 Mar 2023 09:20:23 +0100
+        d=1e100.net; s=20210112; t=1678178164;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dVV7L3qYLKYMexLWKRK/2c4/r4h3dFdM7tR8nzD9LW8=;
+        b=iY5FUwkT/zx1jXC0oxKIw8W+EhhAybCr947f3c0WplAfWr00VtmoVPDVvnhoxXxlf0
+         sylTUnb8wE4YGRm/1yk56TEXemf8dL64JtFhnrMm97koexPoGwHVjZf2x8zIxTjVbxSA
+         NAtNH4IEc5dWnDlq+txTKOJd71aB5JFAnNNlG0tHy3OlyM0SGu9jvvb+OECkJQThfSnE
+         +ox6sAZ4ZpC5fihPdJoZJrMe1JU9+OgXGmbHkdLTsoiOo/Q22im33E5xp4LDsbW0Iv1V
+         lbNef5BQtoi4rcr/wTrd5ROL1TAeNauFQzrTwNdoIp/KYyqzDPt5tmSwmDPtj+24IMGG
+         GpbA==
+X-Gm-Message-State: AO0yUKXXOZKp+QNhpCn8nH9N8ZLHbUP4WhSJ8pkah00SQEAizptwuCx9
+        +kv3Yorwy3WEf4jK0x/aLrk=
+X-Google-Smtp-Source: AK7set+Li7VjSseMkvHU1Tjn56/7Rw2YZ9NQuKIQGizRKj+yFyFGEJY3TY0tSt6LJZ/QtaTLG8OZZw==
+X-Received: by 2002:a05:6a20:9305:b0:cb:e98e:d1eb with SMTP id r5-20020a056a20930500b000cbe98ed1ebmr12664155pzh.29.1678178163927;
+        Tue, 07 Mar 2023 00:36:03 -0800 (PST)
+Received: from localhost.localdomain ([43.132.141.8])
+        by smtp.gmail.com with ESMTPSA id 19-20020a631253000000b004fb171df68fsm7209860pgs.7.2023.03.07.00.36.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 00:36:03 -0800 (PST)
+From:   korantwork@gmail.com
+To:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
+Subject: [PATCH v2] PCI:vmd: add the module param to adjust msi mode
+Date:   Tue,  7 Mar 2023 16:35:59 +0800
+Message-Id: <20230307083559.2379758-1-korantwork@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 16/19] arm64: dts: qcom: sdm845: Add "mhi" region to the
- PCIe nodes
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
-Cc:     konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, quic_srichara@quicinc.com
-References: <20230306153222.157667-1-manivannan.sadhasivam@linaro.org>
- <20230306153222.157667-17-manivannan.sadhasivam@linaro.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230306153222.157667-17-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,32 +69,86 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06/03/2023 16:32, Manivannan Sadhasivam wrote:
-> The "mhi" region contains the debug registers that could be used to monitor
-> the PCIe link transitions.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 479859bd8ab3..0104e77dd8d5 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2280,10 +2280,11 @@ opp-4 {
->  		pcie0: pci@1c00000 {
->  			compatible = "qcom,pcie-sdm845";
->  			reg = <0 0x01c00000 0 0x2000>,
-> +			      <0 0x01c07000 0 0x1000>,
->  			      <0 0x60000000 0 0xf1d>,
->  			      <0 0x60000f20 0 0xa8>,
->  			      <0 0x60100000 0 0x100000>;
-> -			reg-names = "parf", "dbi", "elbi", "config";
-> +			reg-names = "parf", "mhi", "dbi", "elbi", "config";
+From: Xinghui Li <korantli@tencent.com>
 
-Indexes are fixed, thus this breaks other users of DTS.
+In the legacy, the vmd msi-mode can only be adjusted by configing
+vmd_ids table.This patch adds another way to adjust msi mode by
+adjusting module param, which allow users easier to adjust the vmd
+according to the I/O scenario without rebuilding driver.There are two
+params could be recognized: on, off. The default param is "NULL",
+the goal is not to affect the existing settings of the device.
 
-Best regards,
-Krzysztof
+Signed-off-by: Xinghui Li <korantli@tencent.com>
+Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 990630ec57c6..8b42b2c1d949 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -34,6 +34,20 @@
+ #define MB2_SHADOW_OFFSET	0x2000
+ #define MB2_SHADOW_SIZE		16
+ 
++/*
++ * The VMD msi_remap module parameter provides the alternative way
++ * to adjust msi mode when loading vmd.ko other than vmd_ids table.
++ * There are two params could be recognized:
++ *
++ * 1-off
++ * 2-on
++ *
++ * The default param is "NULL", the goal is not to affect the existing
++ * settings of the device.
++ */
++char *msi_remap = "NULL";
++module_param(msi_remap, charp, 0444);
++
+ enum vmd_features {
+ 	/*
+ 	 * Device may contain registers which hint the physical location of the
+@@ -875,6 +889,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 			return ret;
+ 
+ 		vmd_set_msi_remapping(vmd, true);
++		dev_info(&vmd->dev->dev, "init vmd with remapping msi-x\n");
+ 
+ 		ret = vmd_create_irq_domain(vmd);
+ 		if (ret)
+@@ -887,6 +902,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+ 	} else {
+ 		vmd_set_msi_remapping(vmd, false);
++		dev_info(&vmd->dev->dev, "init vmd with bypass msi-x\n");
+ 	}
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+@@ -955,6 +971,14 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	return 0;
+ }
+ 
++static void vmd_config_msi_remap_param(unsigned long *features)
++{
++	if (strcmp(msi_remap, "on") == 0)
++		*features &= ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
++	else if (strcmp(msi_remap, "off") == 0)
++		*features |= VMD_FEAT_CAN_BYPASS_MSI_REMAP;
++}
++
+ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ {
+ 	unsigned long features = (unsigned long) id->driver_data;
+@@ -984,6 +1008,8 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (err < 0)
+ 		goto out_release_instance;
+ 
++	vmd_config_msi_remap_param(&features);
++
+ 	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
+ 	if (!vmd->cfgbar) {
+ 		err = -ENOMEM;
+-- 
+2.31.1
 
