@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B64A6AE448
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 16:17:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC9EC6AE44C
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 16:18:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjCGPRw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 7 Mar 2023 10:17:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32998 "EHLO
+        id S231194AbjCGPR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Mar 2023 10:17:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230488AbjCGPRa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 10:17:30 -0500
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1468674DF9
-        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 07:14:32 -0800 (PST)
-Received: by mail-pl1-x631.google.com with SMTP id a2so14431011plm.4
-        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 07:14:32 -0800 (PST)
+        with ESMTP id S230203AbjCGPRc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 10:17:32 -0500
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A40FD498A2
+        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 07:14:35 -0800 (PST)
+Received: by mail-pl1-x632.google.com with SMTP id i3so14410393plg.6
+        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 07:14:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678202071;
+        d=linaro.org; s=google; t=1678202075;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wvfvphEax9rDC9DBLoGwM3hS+dg6woN4JsLGnKLFC0E=;
-        b=dnD8dpvLQps1mmGsFHbmc5wqxPYOJR1C4dW+iS7wU3VI3KF8COlTX5UZqZ8ZRb+yg0
-         Qd2+HV0bNKXywkv9wJedtnX3537K/UxMvEZRU8M6WOQqSsfmabTeURTuiCyCQMHaOzM0
-         EcLzc/fvqN5lUxrSMeIP7Ux983eK7541XwBTAk2Cx0tDnF9SkpYbp235ZZG6A0e7hcd5
-         MzDFVIihEUdy2F97W33zUVIwNY0J+zahzQ2Cg3+gHoTlSrYxur3C6q1RHm9YLjr2XTBK
-         PzMXt8vZ+ACXtZXO0ggi++CPlPtiQcIDCfzl/g5Y91wWfpjFj8rFz2QPHFOs68A0qkAR
-         vUMw==
+        bh=5CebAT6G7pMdHj4gkjeeBHR/+GUK4hl9hBpqAKTE774=;
+        b=zyYTr4lb+xRvb6jYHLHpDUs5fW+RUV0GC00D8v+twpYwkjn5gauDWIpVnOqvXb1+t9
+         YSqY8aLuzKFNUEpRbJltV8ohRDcvTMBfDAvY5Irw4aXnMSiaOpLd4wZ1wA5ZXv5y9xQv
+         3l9xUKx2oVPoZSCrkCuYbh4uVM6gO0aQZbR4ral4uISQlZNAWXW04XzruEz2ZPnjAf37
+         MAiwPb0PaFC+R5/VRYnp7Cs2K4OovLuV2FKcWg6ZrsE5lTEFgGsSTmoKIDVraxoGUsBD
+         qMqDlEmBqQ6eK8Go/d3FvKvDKlJ/3rTekOhGUlysUiVYWZBDGh5mB/RGEOacK87GiPwd
+         L53w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678202071;
+        d=1e100.net; s=20210112; t=1678202075;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wvfvphEax9rDC9DBLoGwM3hS+dg6woN4JsLGnKLFC0E=;
-        b=M3py70aJDNEcUc9j5+3tkurnNPPXwl0ISeY+nUQXlzVp740KFPbbJRDWKTgFH+cgVC
-         8bszRTsKCYmNRYglHuyEYUGjagZCTgPGG00d0SS7hxuMdTTir8sX209iYZy4dmdeXGkv
-         3TEUOSfRJIwY5c8kt/gKJ2vd4IBuDSo1U0EswQL0J8y0fRbV32TGeUv4PA5kag4UDulu
-         sa1qzYsDEOtYpLPxc5lgqCjH9C8q/BHe7c4kpt7SPnY+CAL9/PbQ+ZtKk4pcJZxspw3n
-         WQlyJHillHeuOhxgAYqhRHRk1APB5juJKc/xzsp7Mrc0JUTNAKst2R2qoFaF5I65MoYs
-         NuSA==
-X-Gm-Message-State: AO0yUKWh0pZHf9JZ+jDJmKxA89BF8cha8UgD+viGEFC/ZtKB89w19Pzq
-        9IKBEIowafA6LSpChfNeC87R
-X-Google-Smtp-Source: AK7set/sLdrolS6AecmD6tHXDxRV1zlmbLFHu0nL+yR7wuazTgILajS6RvEZijHARHtWQksfpJyZ7A==
-X-Received: by 2002:a17:903:1205:b0:19e:f315:98c with SMTP id l5-20020a170903120500b0019ef315098cmr373395plh.57.1678202071604;
-        Tue, 07 Mar 2023 07:14:31 -0800 (PST)
+        bh=5CebAT6G7pMdHj4gkjeeBHR/+GUK4hl9hBpqAKTE774=;
+        b=aQEMJ3AqM4uN6HNedkTbUs/kGVnb2Po90oewKwMJo42+KT+yAcHKBZZ4sQMTLeCApK
+         sRGn7fljIagLGMqz5gWXcYgtSh4xJ5OXZCeq6rf092emQBu0O7lZXCOsSfh9+YmnwGTT
+         hVkCwBvDJSEXbKRpheZRw5lE/2VmEOvfjCjC6rB3IBhqWi0KM0FdbC5CR6xWJrxsaj2y
+         KDBJsdyIsv5JkZdgDZl4PN6WVcxcck82QF+gqa9VnML5cYrx6ipxlfFgK5zi3RJWkzcw
+         EA4nu6aJW4oB3rP94L3Z+KJkt/0wfA6yhi0emiHdYgBY42b5ItQzyEtumPlZLrRPj4nK
+         4YOQ==
+X-Gm-Message-State: AO0yUKXg+HUAb+JqrQsgcR8NKBbg4FatI7auT+EYHPPfb/YUG59gTpZR
+        iPlmDvcTbLWvnHhyBZSa9Ooj
+X-Google-Smtp-Source: AK7set+p1vx95qAgPg51L803GQxGN8jwO3hK3IEMNMKfv1ZcqtJXtlGjwoiCcnamHQRPSOC8sG3vOQ==
+X-Received: by 2002:a17:902:d583:b0:19e:8264:5623 with SMTP id k3-20020a170902d58300b0019e82645623mr15839218plh.64.1678202075318;
+        Tue, 07 Mar 2023 07:14:35 -0800 (PST)
 Received: from localhost.localdomain ([59.97.52.140])
-        by smtp.gmail.com with ESMTPSA id t8-20020a17090340c800b0019c2cf12d15sm8549332pld.116.2023.03.07.07.14.28
+        by smtp.gmail.com with ESMTPSA id t8-20020a17090340c800b0019c2cf12d15sm8549332pld.116.2023.03.07.07.14.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 07:14:31 -0800 (PST)
+        Tue, 07 Mar 2023 07:14:34 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     lpieralisi@kernel.org, kw@linux.com
 Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/7] PCI: endpoint: Warn and return if EPC is started/stopped multiple times
-Date:   Tue,  7 Mar 2023 20:44:11 +0530
-Message-Id: <20230307151416.176595-3-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 3/7] PCI: endpoint: Add linkdown notifier support
+Date:   Tue,  7 Mar 2023 20:44:12 +0530
+Message-Id: <20230307151416.176595-4-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230307151416.176595-1-manivannan.sadhasivam@linaro.org>
 References: <20230307151416.176595-1-manivannan.sadhasivam@linaro.org>
@@ -64,37 +64,90 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When the EPC is started or stopped multiple times from configfs, just emit
-a once time warning and return. There is no need to call the EPC start/stop
-functions in those cases.
+Add support to notify the EPF device about the linkdown event from the
+EPC device.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/pci-ep-cfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/endpoint/pci-epc-core.c | 26 ++++++++++++++++++++++++++
+ include/linux/pci-epc.h             |  1 +
+ include/linux/pci-epf.h             |  2 ++
+ 3 files changed, 29 insertions(+)
 
-diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-index 4b8ac0ac84d5..62c8e09c59f4 100644
---- a/drivers/pci/endpoint/pci-ep-cfs.c
-+++ b/drivers/pci/endpoint/pci-ep-cfs.c
-@@ -178,6 +178,9 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
- 	if (kstrtobool(page, &start) < 0)
- 		return -EINVAL;
+diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
+index 9440d9811eea..e3a6b5554c1c 100644
+--- a/drivers/pci/endpoint/pci-epc-core.c
++++ b/drivers/pci/endpoint/pci-epc-core.c
+@@ -706,6 +706,32 @@ void pci_epc_linkup(struct pci_epc *epc)
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_linkup);
  
-+	if (WARN_ON_ONCE(start == epc_group->start))
-+		return 0;
++/**
++ * pci_epc_linkdown() - Notify the EPF device that EPC device has dropped the
++ *			connection with the Root Complex.
++ * @epc: the EPC device which has dropped the link with the host
++ *
++ * Invoke to Notify the EPF device that the EPC device has dropped the
++ * connection with the Root Complex.
++ */
++void pci_epc_linkdown(struct pci_epc *epc)
++{
++	struct pci_epf *epf;
 +
- 	if (!start) {
- 		pci_epc_stop(epc);
- 		epc_group->start = 0;
++	if (!epc || IS_ERR(epc))
++		return;
++
++	mutex_lock(&epc->list_lock);
++	list_for_each_entry(epf, &epc->pci_epf, list) {
++		mutex_lock(&epf->lock);
++		if (epf->event_ops && epf->event_ops->link_down)
++			epf->event_ops->link_down(epf);
++		mutex_unlock(&epf->lock);
++	}
++	mutex_unlock(&epc->list_lock);
++}
++EXPORT_SYMBOL_GPL(pci_epc_linkdown);
++
+ /**
+  * pci_epc_init_notify() - Notify the EPF device that EPC device's core
+  *			   initialization is completed.
+diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
+index 301bb0e53707..63a6cc5e5282 100644
+--- a/include/linux/pci-epc.h
++++ b/include/linux/pci-epc.h
+@@ -203,6 +203,7 @@ void pci_epc_destroy(struct pci_epc *epc);
+ int pci_epc_add_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 		    enum pci_epc_interface_type type);
+ void pci_epc_linkup(struct pci_epc *epc);
++void pci_epc_linkdown(struct pci_epc *epc);
+ void pci_epc_init_notify(struct pci_epc *epc);
+ void pci_epc_remove_epf(struct pci_epc *epc, struct pci_epf *epf,
+ 			enum pci_epc_interface_type type);
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index bc613f0df7e3..f8e5a63d0c83 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -71,10 +71,12 @@ struct pci_epf_ops {
+  * struct pci_epf_event_ops - Callbacks for capturing the EPC events
+  * @core_init: Callback for the EPC initialization complete event
+  * @link_up: Callback for the EPC link up event
++ * @link_down: Callback for the EPC link down event
+  */
+ struct pci_epc_event_ops {
+ 	int (*core_init)(struct pci_epf *epf);
+ 	int (*link_up)(struct pci_epf *epf);
++	int (*link_down)(struct pci_epf *epf);
+ };
+ 
+ /**
 -- 
 2.25.1
 
