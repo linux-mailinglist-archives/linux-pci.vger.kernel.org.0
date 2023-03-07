@@ -2,226 +2,309 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACCDE6ADD2D
-	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 12:22:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F0056ADDBF
+	for <lists+linux-pci@lfdr.de>; Tue,  7 Mar 2023 12:42:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229892AbjCGLWv convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 7 Mar 2023 06:22:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47502 "EHLO
+        id S231168AbjCGLml (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 7 Mar 2023 06:42:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjCGLWt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 06:22:49 -0500
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 811B92137
-        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 03:22:46 -0800 (PST)
-Received: from pammob ([37.170.0.83]) by mail.gmx.net (mrgmx004
- [212.227.17.184]) with ESMTPSA (Nemesis) id 1MzyuS-1qTEah1JVG-00x5QE for
- <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 12:22:45 +0100
-Date:   Tue, 07 Mar 2023 12:22:44 +0100
-From:   rec <gael.seibert@gmx.fr>
-Subject: The MSI Driver Guide HOWTO
-To:     linux-pci@vger.kernel.org
+        with ESMTP id S230490AbjCGLlp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 7 Mar 2023 06:41:45 -0500
+Received: from mail-yw1-x1129.google.com (mail-yw1-x1129.google.com [IPv6:2607:f8b0:4864:20::1129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16FF17D0B8
+        for <linux-pci@vger.kernel.org>; Tue,  7 Mar 2023 03:39:18 -0800 (PST)
+Received: by mail-yw1-x1129.google.com with SMTP id 00721157ae682-536af432ee5so240477467b3.0
+        for <linux-pci@vger.kernel.org>; Tue, 07 Mar 2023 03:39:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678189150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=p2QEPXAzp21Sp6krYXcMnpxNWR2KzEzr6+4RDpVrUlI=;
+        b=MZdIoa/638A2Xrr3aud37732QkFaaI23u93mUrKyx6hNqR+dj0TaQC+E8tBxYlg39i
+         L/nH+SGtV7eGgg/PH796jVppU9Ei/QUJfz6q87mKD5GhxAxOoDPEgO/cZatjxymQzf37
+         42vkTmcghIT1E1yUCpWhoKqAccG+KBBVheQz0Zfzfky2xjIOWnWNtgdtNSm8xyvhMhkK
+         c81jL8WhZzIZytyFxESA5Rk4LOth1GYguzxCQNaJ84tL7NMeJWBTOJzoVEbunqIGtfH8
+         XFURYFjvPIvO1pEdUE6hlmMg6Ibn2XB+FlNLycbR4iPAMi/LBU+Sc2jGQvrVRa1Z5UvN
+         jewg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678189150;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p2QEPXAzp21Sp6krYXcMnpxNWR2KzEzr6+4RDpVrUlI=;
+        b=k6bPUqEVQ9M/qjqsHZEwRXWdYnWQbjdD0R9/UXEwGQBHkKZlFhXbnQ92aRHo4HJ0ZM
+         dHLtyfC31yVDYZwn2cWZCHvocQ83nhHj8Unf1fklvJ6XKXg+dXz+Z5qo7HmFlp8J+1Ex
+         Yun2WDwC5n4Yu5VgifUvR5TWNdUmeZaHrxWK27Yx4DeJ8Of3FJWFSTT6+a721gt6e1W6
+         +GqB3LG5T3IxxiCf3tLH6FlrZW1/nyh9MW9eXb+84ZaHI0k1+jduKgKBhSnHK12xEu11
+         hv5ziOIrbfUf82CHk3lvsgF3XV1W1ZX+BDvuDCVamdKwBps34wE/D0/IRF4njqGvwwAN
+         0JDQ==
+X-Gm-Message-State: AO0yUKUJe7rK8fYHNDf5Zj6idi++rBD8elGYRlvdJqQP3c4V4uzKuZ9l
+        ofVhT7tKPfAAQl5QcYWuaQQte7LFL+WwfMGeHgOChA==
+X-Google-Smtp-Source: AK7set+pIPRCkUCY1DQn3/UnCDXcMdFY3wcXRpn0sqH288ZQWy/jCdAUknswqsGd/FYMEDrTW7d8/OAqi9oBGUQj+6g=
+X-Received: by 2002:a81:b243:0:b0:52e:d380:ab14 with SMTP id
+ q64-20020a81b243000000b0052ed380ab14mr7473835ywh.3.1678189150311; Tue, 07 Mar
+ 2023 03:39:10 -0800 (PST)
 MIME-Version: 1.0
-X-Mailer: Balsa 2.6.4
-Message-Id: <3EXLGBDE.RHCGXKUL.PVZZRIJ5@4WBK2UU6.UECE5XTY.OLOBOVLW>
-Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-X-Provags-ID: V03:K1:rdpN/xN8xnVdIyWRSJJSPcex+TEjKZ2Kbs5N17ab1ztVNdfCua1
- 1LdlLHg2aZbY4zEwfocbkWxigPgDNlBLBFuDfT6B6bxLQ0NpJQYNBjtl/2/PlagVcgiM5IA
- b8JmFiteOi2a2NmESAwuo8Ge+Tj0CBen8gzKlvPA3i4u6wpGf5Cbexk9TiwJ2xw1Oxv9BTA
- nngp6S9um+gWLo0g7SJCw==
-UI-OutboundReport: notjunk:1;M01:P0:GVzm6cCszWo=;nbvfAPsmWN0PcM3YMFkY8e8/tLC
- cOzOh6DazI4c4UbtyYINhCpIJ83TsfU2sXMV8dqED/R+1ljEjiQZ7c69w1Aip11wRDthK/Vgw
- d7vrEJ+iFyWEhzXLhRKBeOiohRrbsdxw5u9tUrzsz2uiBZh/KwWovkETBYu8miRTF+Diby6vV
- urL2uBVfOl+FNl0CYyW2IiKQ7qRwq1e/QEh5RvE8iSRYtfBSha06ihRafLM5xclgSAYZrLQ2e
- NZrSgnl5brt2fWLCpE2TxuU4DRUrEhxlRnnGT/ehnkqD1xQBsQyLyWXw74OpmWnSyEDusKikS
- cE18NJD1hCX/hu7Zof9xcVPDX675pEuzscekEWyvhicqgUcsoW5sBHnmHV4N2IbTWb6Vt5mqx
- oBQzIhA9oSjueTMv95ynG5OfWffygd7z5mR8QV26cNCzgmLgZp0S5SUUU9vAyuZQUlmik3//B
- iXJbpRJLcH7yc2uW/lNQ4ai9jT5W/9fj+XcdbpqDNrpP1YWWOZD1MKBOiuLhXhJyGI6GpYAY9
- Sn/i8r6H661aJmxz0mNtTlXJXdspdMkoxR3oLWDWCYOpMtaTpO5owxgKb4Df++E37rIKM5Te/
- iQ8/vmjwlvwso5rlpLJHRmpSTGzIrT6kdG5BKTQv+RXTHMf/5fgMLmw+gxwGGufuoQowduqrn
- UVoeF2lFeIyeVjvzV79aVQsJmXhHbbpIYJxMq77ehKg//CjOAUaiDZnoFFsRX6fRo17GSAwaa
- Gs3rED1djO2A3S9wH4t80EI7+mwSH/97vskD3Q2MqtyzoVHD7tBZAAFQ88CwfmR96wmlJS2Kj
- rBqBlpQEQj9mgDyu3F/4iHbdBrMP2rlTrSwV1wRuSYFMi1RbuTX9490fniDVqTp1Kr/8+0pwD
- 7hqSKbDT6cS/fVW/T897fl0GK6ijGPML1eSqdS4UTKYzxNv0qBx9necAHzAW9LskQ+rkx2/CI
- AAr6LQ==
-X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230214164135.17039-1-quic_devipriy@quicinc.com>
+ <20230214164135.17039-2-quic_devipriy@quicinc.com> <20230224082332.GA5443@thinkpad>
+ <bd153038-4427-1f11-1941-5f13fec01cf7@quicinc.com> <20230228063358.GA4839@thinkpad>
+ <9BD62D8E-4E14-4269-B72D-C83EF4D43040@linaro.org> <20230303174036.GB6782@thinkpad>
+ <30cf9717-dcca-e984-c506-c71b7f8e32cd@quicinc.com>
+In-Reply-To: <30cf9717-dcca-e984-c506-c71b7f8e32cd@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date:   Tue, 7 Mar 2023 13:38:59 +0200
+Message-ID: <CAA8EJpohnJvFKMc5Ty4CQF65Gt1Kknqsf1B4mFZq4TvW7_dcnw@mail.gmail.com>
+Subject: Re: [PATCH 1/7] dt-bindings: PCI: qcom: Add IPQ9574 specific compatible
+To:     Devi Priya <quic_devipriy@quicinc.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>, agross@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        vkoul@kernel.org, kishon@kernel.org, mturquette@baylibre.com,
+        sboyd@kernel.org, p.zabel@pengutronix.de, svarbanov@mm-sol.com,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-phy@lists.infradead.org, linux-clk@vger.kernel.org,
+        quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, 7 Mar 2023 at 11:45, Devi Priya <quic_devipriy@quicinc.com> wrote:
+>
+>
+>
+> On 3/3/2023 11:10 PM, Manivannan Sadhasivam wrote:
+> > On Fri, Mar 03, 2023 at 05:16:58PM +0200, Dmitry Baryshkov wrote:
+> >> 28 =D1=84=D0=B5=D0=B2=D1=80=D0=B0=D0=BB=D1=8F 2023 =D0=B3. 08:33:58 GM=
+T+02:00, Manivannan Sadhasivam <mani@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5=
+=D1=82:
+> >>> On Tue, Feb 28, 2023 at 10:56:53AM +0530, Devi Priya wrote:
+> >>>>
+> >>>>
+> >>>> On 2/24/2023 1:53 PM, Manivannan Sadhasivam wrote:
+> >>>>> On Tue, Feb 14, 2023 at 10:11:29PM +0530, Devi Priya wrote:
+> >>>>>> Document the compatible for IPQ9574
+> >>>>>>
+> >>>> Hi Mani, Thanks for taking time to review the patch.
+> >>>>>
+> >>>>> You didn't mention about the "msi-parent" property that is being ad=
+ded
+> >>>>> by this patch
+> >>>> Sure, will update the commit message in the next spin
+> >>>>>
+> >>>>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+> >>>>>> ---
+> >>>>>>    .../devicetree/bindings/pci/qcom,pcie.yaml    | 72 ++++++++++++=
+++++++-
+> >>>>>>    1 file changed, 70 insertions(+), 2 deletions(-)
+> >>>>>>
+> >>>>>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml =
+b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> >>>>>> index 872817d6d2bd..dabdf2684e2d 100644
+> >>>>>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> >>>>>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> >>>>>> @@ -26,6 +26,7 @@ properties:
+> >>>>>>              - qcom,pcie-ipq8064-v2
+> >>>>>>              - qcom,pcie-ipq8074
+> >>>>>>              - qcom,pcie-ipq8074-gen3
+> >>>>>> +          - qcom,pcie-ipq9574
+> >>>>>>              - qcom,pcie-msm8996
+> >>>>>>              - qcom,pcie-qcs404
+> >>>>>>              - qcom,pcie-sa8540p
+> >>>>>> @@ -44,11 +45,11 @@ properties:
+> >>>>>>      reg:
+> >>>>>>        minItems: 4
+> >>>>>> -    maxItems: 5
+> >>>>>> +    maxItems: 6
+> >>>>>>      reg-names:
+> >>>>>>        minItems: 4
+> >>>>>> -    maxItems: 5
+> >>>>>> +    maxItems: 6
+> >>>>>>      interrupts:
+> >>>>>>        minItems: 1
+> >>>>>> @@ -105,6 +106,8 @@ properties:
+> >>>>>>        items:
+> >>>>>>          - const: pciephy
+> >>>>>> +  msi-parent: true
+> >>>>>> +
+> >>>>>>      power-domains:
+> >>>>>>        maxItems: 1
+> >>>>>> @@ -173,6 +176,27 @@ allOf:
+> >>>>>>                - const: parf # Qualcomm specific registers
+> >>>>>>                - const: config # PCIe configuration space
+> >>>>>> +  - if:
+> >>>>>> +      properties:
+> >>>>>> +        compatible:
+> >>>>>> +          contains:
+> >>>>>> +            enum:
+> >>>>>> +              - qcom,pcie-ipq9574
+> >>>>>> +    then:
+> >>>>>> +      properties:
+> >>>>>> +        reg:
+> >>>>>> +          minItems: 5
+> >>>>>> +          maxItems: 6
+> >>>>>> +        reg-names:
+> >>>>>> +          minItems: 5
+> >>>>>> +          items:
+> >>>>>> +            - const: dbi # DesignWare PCIe registers
+> >>>>>> +            - const: elbi # External local bus interface register=
+s
+> >>>>>> +            - const: atu # ATU address space
+> >>>>>> +            - const: parf # Qualcomm specific registers
+> >>>>>> +            - const: config # PCIe configuration space
+> >>>>>> +            - const: aggr_noc #PCIe aggr_noc
+> >>>>>
+> >>>>> Why do you need this region unlike other SoCs? Is the driver making=
+ use of it?
+> >>>> We have the aggr_noc region in ipq9574 to achieve higher throughput =
+& to
+> >>>> handle multiple PCIe instances. The driver uses it to rate adapt 1-l=
+ane PCIe
+> >>>> clocks. My bad, missed it. Will add the driver changes in V2.
+> >>>
+> >>> Hmm, this is something new. How can you achieve higher throughput wit=
+h this
+> >>> region? Can you explain more on how it is used?
+> >>
+> >> Based on the name of the region, it looks like it is an interconnect r=
+egion.
+> >>
+> >
+> > Well, we only have BCM based interconnects so far. That's why I was cur=
+ious
+> > about this region and its purpose.
+> For connected PCIe slave devices that are running at frequency lesser
+> than the ANOC frequency (342MHz), the rate adapter of ANOC needs to be
+> configured
+> >
+> >> Devi, if this is the case, then you have to handle it through the inte=
+rconnect driver, rather than poking directly into these registers.
+> >
+> > If that so, it doesn't need to be added in this series itself. I believ=
+e that
+> > without aggr_noc region, the PCIe controller can still function properl=
+y with
+> > reduced performance. But you can add the interconnect support later as =
+a
+> > separate series.
+> Sure, okay. The ANOC runs at a fixed frequency of 342MHz and the
+> interconnect clocks are not scaled. The aggr_noc register is just a
+> magic register for configuring it's rate adapter to ensure no wait
+> cycles are inserted.
 
-Hi,
+I have been hesitant at some point, but this looks more and more like
+a special kind of interconnect. Please consider moving all the NoC
+stuff into a separate driver implementing the ICC API.
 
-Like asked in :  
-https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#disabling-msis-globally
-
-
-00:00.0 Host bridge: Silicon Integrated Systems [SiS] 671MX
-     Subsystem: ASUSTeK Computer Inc. 671MX
-     Flags: bus master, medium devsel, latency 64
-00:01.0 PCI bridge: Silicon Integrated Systems [SiS] PCI-to-PCI bridge  
-(prog-if 00 [Normal decode])
-     Subsystem: Silicon Integrated Systems [SiS] PCI-to-PCI bridge
-     Flags: bus master, fast devsel, latency 0
-     Bus: primary=00, secondary=01, subordinate=01, sec-latency=0
-     I/O behind bridge: d000-dfff [size=4K] [16-bit]
-     Memory behind bridge: fa000000-fdefffff [size=63M] [32-bit]
-     Prefetchable memory behind bridge: d0000000-dfffffff [size=256M]  
-[32-bit]
-     Capabilities: <access denied>
-     Kernel driver in use: pcieport
-00:02.0 ISA bridge: Silicon Integrated Systems [SiS] SiS968 [MuTIOL  
-Media IO] (rev 01)
-     Flags: bus master, medium devsel, latency 0
-00:02.5 IDE interface: Silicon Integrated Systems [SiS] 5513 IDE  
-Controller (rev 01) (prog-if 80 [ISA Compatibility mode-only  
-controller, supports bus mastering])
-     Subsystem: ASUSTeK Computer Inc. 5513 IDE Controller
-     Flags: bus master, medium devsel, latency 128
-     I/O ports at 01f0 [size=8]
-     I/O ports at 03f4
-     I/O ports at 0170 [size=8]
-     I/O ports at 0374
-     I/O ports at fff0 [size=16]
-     Capabilities: <access denied>
-     Kernel driver in use: pata_sis
-     Kernel modules: pata_sis, ata_generic
-00:03.0 USB controller: Silicon Integrated Systems [SiS] USB 1.1  
-Controller (rev 0f) (prog-if 10 [OHCI])
-     Subsystem: ASUSTeK Computer Inc. USB 1.1 Controller
-     Flags: bus master, medium devsel, latency 64, IRQ 20
-     Memory at f9fff000 (32-bit, non-prefetchable) [size=4K]
-     Kernel driver in use: ohci-pci
-     Kernel modules: ohci_pci
-00:03.1 USB controller: Silicon Integrated Systems [SiS] USB 1.1  
-Controller (rev 0f) (prog-if 10 [OHCI])
-     Subsystem: ASUSTeK Computer Inc. USB 1.1 Controller
-     Flags: bus master, medium devsel, latency 64, IRQ 21
-     Memory at f9ffe000 (32-bit, non-prefetchable) [size=4K]
-     Kernel driver in use: ohci-pci
-     Kernel modules: ohci_pci
-00:03.3 USB controller: Silicon Integrated Systems [SiS] USB 2.0  
-Controller (prog-if 20 [EHCI])
-     Subsystem: ASUSTeK Computer Inc. USB 2.0 Controller
-     Flags: bus master, medium devsel, latency 64, IRQ 22
-     Memory at f9ffd000 (32-bit, non-prefetchable) [size=4K]
-     Capabilities: <access denied>
-     Kernel driver in use: ehci-pci
-     Kernel modules: ehci_pci
-00:04.0 Ethernet controller: Silicon Integrated Systems [SiS] 191  
-Gigabit Ethernet Adapter (rev 02)
-     Subsystem: ASUSTeK Computer Inc. 191 Gigabit Ethernet Adapter
-     Flags: bus master, medium devsel, latency 0, IRQ 19
-     Memory at f9ffcc00 (32-bit, non-prefetchable) [size=128]
-     I/O ports at cc00 [size=128]
-     Capabilities: <access denied>
-     Kernel driver in use: sis190
-     Kernel modules: sis190
-00:05.0 IDE interface: Silicon Integrated Systems [SiS] SATA Controller  
-/ IDE mode (rev 03) (prog-if 8f [PCI native mode controller, supports  
-both channels switched to ISA compatibility mode, supports bus  
-mastering])
-     Subsystem: ASUSTeK Computer Inc. SATA Controller / IDE mode
-     Flags: bus master, medium devsel, latency 64, IRQ 17
-     I/O ports at c800 [size=8]
-     I/O ports at c400 [size=4]
-     I/O ports at c000 [size=8]
-     I/O ports at bc00 [size=4]
-     I/O ports at b800 [size=16]
-     I/O ports at b400 [size=128]
-     Capabilities: <access denied>
-     Kernel driver in use: sata_sis
-     Kernel modules: sata_sis, ata_generic
-00:06.0 PCI bridge: Silicon Integrated Systems [SiS] PCI-to-PCI bridge  
-(prog-if 00 [Normal decode])
-     Subsystem: Silicon Integrated Systems [SiS] PCI-to-PCI bridge
-     Flags: bus master, fast devsel, latency 0
-     Bus: primary=00, secondary=02, subordinate=02, sec-latency=0
-     I/O behind bridge: [disabled] [32-bit]
-     Memory behind bridge: fdf00000-fdffffff [size=1M] [32-bit]
-     Prefetchable memory behind bridge: [disabled] [64-bit]
-     Capabilities: <access denied>
-     Kernel driver in use: pcieport
-00:07.0 PCI bridge: Silicon Integrated Systems [SiS] PCI-to-PCI bridge  
-(prog-if 00 [Normal decode])
-     Subsystem: Silicon Integrated Systems [SiS] PCI-to-PCI bridge
-     Flags: bus master, fast devsel, latency 0
-     Bus: primary=00, secondary=03, subordinate=06, sec-latency=0
-     I/O behind bridge: e000-efff [size=4K] [16-bit]
-     Memory behind bridge: fe000000-febfffff [size=12M] [32-bit]
-     Prefetchable memory behind bridge: f6000000-f8ffffff [size=48M]  
-[32-bit]
-     Capabilities: <access denied>
-     Kernel driver in use: pcieport
-00:0d.0 FireWire (IEEE 1394): Ricoh Co Ltd R5C832 IEEE 1394 Controller  
-(rev 05) (prog-if 10 [OHCI])
-     Subsystem: ASUSTeK Computer Inc. R5C832 IEEE 1394 Controller
-     Flags: bus master, medium devsel, latency 64, IRQ 16
-     Memory at f9ffc000 (32-bit, non-prefetchable) [size=2K]
-     Capabilities: <access denied>
-     Kernel driver in use: firewire_ohci
-     Kernel modules: firewire_ohci
-00:0d.1 SD Host controller: Ricoh Co Ltd R5C822 SD/SDIO/MMC/MS/MSPro  
-Host Adapter (rev 22)
-     Subsystem: ASUSTeK Computer Inc. R5C822 SD/SDIO/MMC/MS/MSPro Host  
-Adapter
-     Flags: bus master, medium devsel, latency 64, IRQ 17
-     Memory at f9ffc800 (32-bit, non-prefetchable) [size=256]
-     Capabilities: <access denied>
-     Kernel driver in use: sdhci-pci
-     Kernel modules: sdhci_pci
-00:0d.2 System peripheral: Ricoh Co Ltd R5C592 Memory Stick Bus Host  
-Adapter (rev 12)
-     Subsystem: ASUSTeK Computer Inc. R5C592 Memory Stick Bus Host  
-Adapter
-     Flags: bus master, medium devsel, latency 64, IRQ 17
-     Memory at f9ff7c00 (32-bit, non-prefetchable) [size=256]
-     Capabilities: <access denied>
-     Kernel driver in use: r592
-     Kernel modules: r592
-00:0d.3 System peripheral: Ricoh Co Ltd xD-Picture Card Controller (rev  
-12)
-     Subsystem: ASUSTeK Computer Inc. xD-Picture Card Controller
-     Flags: bus master, medium devsel, latency 64, IRQ 17
-     Memory at f9ff7800 (32-bit, non-prefetchable) [size=256]
-     Capabilities: <access denied>
-     Kernel driver in use: r852
-     Kernel modules: r852
-00:0f.0 Audio device: Silicon Integrated Systems [SiS] Azalia Audio  
-Controller
-     Subsystem: ASUSTeK Computer Inc. Azalia Audio Controller
-     Flags: bus master, medium devsel, latency 0, IRQ 18
-     Memory at f9ff0000 (32-bit, non-prefetchable) [size=16K]
-     Capabilities: <access denied>
-     Kernel driver in use: snd_hda_intel
-     Kernel modules: snd_hda_intel
-01:00.0 VGA compatible controller: NVIDIA Corporation G98M [GeForce  
-9300M GS] (rev a1) (prog-if 00 [VGA controller])
-     Subsystem: ASUSTeK Computer Inc. U6V laptop
-     Flags: bus master, fast devsel, latency 0, IRQ 16
-     Memory at fc000000 (32-bit, non-prefetchable) [size=16M]
-     Memory at d0000000 (64-bit, prefetchable) [size=256M]
-     Memory at fa000000 (64-bit, non-prefetchable) [size=32M]
-     I/O ports at dc00 [size=128]
-     Expansion ROM at 000c0000 [disabled] [size=128K]
-     Capabilities: <access denied>
-     Kernel driver in use: nouveau
-     Kernel modules: nouveau
-02:00.0 Network controller: Qualcomm Atheros AR928X Wireless Network  
-Adapter (PCI-Express) (rev 01)
-     Subsystem: AzureWave AW-NE771 802.11bgn Wireless Mini PCIe Card  
-[AR9281]
-     Flags: bus master, fast devsel, latency 0, IRQ 16
-     Memory at fdff0000 (64-bit, non-prefetchable) [size=64K]
-     Capabilities: <access denied>
-     Kernel driver in use: ath9k
-     Kernel modules: ath9k
+>
+> >
+> > Thanks,
+> > Mani
+> >
+> >>
+> >>
+> >>>
+> >>> Thanks,
+> >>> Mani
+> >>>
+> >>>>>
+> >>>>> Thanks,
+> >>>>> Mani
+> >>>>>
+> >>>>>> +
+> >>>>>>      - if:
+> >>>>>>          properties:
+> >>>>>>            compatible:
+> >>>>>> @@ -365,6 +389,39 @@ allOf:
+> >>>>>>                - const: ahb # AHB Reset
+> >>>>>>                - const: axi_m_sticky # AXI Master Sticky reset
+> >>>>>> +  - if:
+> >>>>>> +      properties:
+> >>>>>> +        compatible:
+> >>>>>> +          contains:
+> >>>>>> +            enum:
+> >>>>>> +              - qcom,pcie-ipq9574
+> >>>>>> +    then:
+> >>>>>> +      properties:
+> >>>>>> +        clocks:
+> >>>>>> +          minItems: 6
+> >>>>>> +          maxItems: 6
+> >>>>>> +        clock-names:
+> >>>>>> +          items:
+> >>>>>> +            - const: ahb  # AHB clock
+> >>>>>> +            - const: aux  # Auxiliary clock
+> >>>>>> +            - const: axi_m # AXI Master clock
+> >>>>>> +            - const: axi_s # AXI Slave clock
+> >>>>>> +            - const: axi_bridge # AXI bridge clock
+> >>>>>> +            - const: rchng
+> >>>>>> +        resets:
+> >>>>>> +          minItems: 8
+> >>>>>> +          maxItems: 8
+> >>>>>> +        reset-names:
+> >>>>>> +          items:
+> >>>>>> +            - const: pipe # PIPE reset
+> >>>>>> +            - const: sticky # Core Sticky reset
+> >>>>>> +            - const: axi_s_sticky # AXI Slave Sticky reset
+> >>>>>> +            - const: axi_s # AXI Slave reset
+> >>>>>> +            - const: axi_m_sticky # AXI Master Sticky reset
+> >>>>>> +            - const: axi_m # AXI Master reset
+> >>>>>> +            - const: aux # AUX Reset
+> >>>>>> +            - const: ahb # AHB Reset
+> >>>>>> +
+> >>>>>>      - if:
+> >>>>>>          properties:
+> >>>>>>            compatible:
+> >>>>>> @@ -681,6 +738,16 @@ allOf:
+> >>>>>>            - interconnects
+> >>>>>>            - interconnect-names
+> >>>>>> +  - if:
+> >>>>>> +      properties:
+> >>>>>> +        compatible:
+> >>>>>> +          contains:
+> >>>>>> +            enum:
+> >>>>>> +              - qcom,pcie-ipq9574
+> >>>>>> +    then:
+> >>>>>> +      required:
+> >>>>>> +        - msi-parent
+> >>>>>> +
+> >>>>>>      - if:
+> >>>>>>          not:
+> >>>>>>            properties:
+> >>>>>> @@ -693,6 +760,7 @@ allOf:
+> >>>>>>                    - qcom,pcie-ipq8064v2
+> >>>>>>                    - qcom,pcie-ipq8074
+> >>>>>>                    - qcom,pcie-ipq8074-gen3
+> >>>>>> +                - qcom,pcie-ipq9574
+> >>>>>>                    - qcom,pcie-qcs404
+> >>>>>>        then:
+> >>>>>>          required:
+> >>>>>> --
+> >>>>>> 2.17.1
+> >>>>>>
+> >>>>>
+> >>>> Thanks,
+> >>>> Devi Priya
+> >>>
+> >>
+> >
+> Thanks,
+> Devi Priya
 
 
-Thanks for all.
+
+--=20
+With best wishes
+Dmitry
