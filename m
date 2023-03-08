@@ -2,249 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 63BAE6B165B
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 00:15:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFE596B1668
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 00:17:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229659AbjCHXO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 18:14:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33930 "EHLO
+        id S229891AbjCHXRq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 18:17:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229947AbjCHXO5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 18:14:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1495D6A2F2;
-        Wed,  8 Mar 2023 15:14:54 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A55B2B81E28;
-        Wed,  8 Mar 2023 23:14:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AB20C433EF;
-        Wed,  8 Mar 2023 23:14:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678317291;
-        bh=1KLoFAeEl1GaBhk9AYCzh4g+rPEacFhX8QSp5gviMYk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qQmHJbwex4XtpPJqe3CwXuCTMWXtb1uDeVNOn6oahQRRaz7pw8Hd9kYrx+TMtlnMu
-         fYc/jbKTO6vtO3/rgcpTWRkV1rXVVc+ZtUmynAYLL/7m8/kVAhoTMQVN18PxYlU/we
-         8QrMwjeNJ8lGaVZ16D2kf5CR83HX1KbMal+43d6+kX4Pn2nR1GRMYIeKO/Eh4L6vmY
-         zdEVmdCF1BU4m3H/qpU5FstWKPBSOLYJwlazFB5Pyn+BBFxiwz0/F/dwY3qdC/OqUy
-         xRyTGS3G3hn1pd7kFkOpt5ZgdN9Q6QsAW3NO2LFCZkLehcDFaODDoGfDz/Zu6n8/0H
-         R5ACT2ywvc5Dw==
-Date:   Wed, 8 Mar 2023 17:14:49 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] PCI: s390: Fix use-after-free of PCI resources
- with per-function hotplug
-Message-ID: <20230308231449.GA1057317@bhelgaas>
+        with ESMTP id S229462AbjCHXRp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 18:17:45 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901836425F;
+        Wed,  8 Mar 2023 15:17:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678317464; x=1709853464;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=sug+GHVZucDNAK16IdE3wvx1ebCCm01/Zjw8vc4FhGk=;
+  b=YchA4QTcFIUdu4RfgaY19kSGMLrVHZFzlFBr08iEKmeIXFfNqDo87LBx
+   4OwZjZ0aPyJiIljMcvOKSO8AGD++KBFRrduJV6CV6EWa3O51GWwsDMW7z
+   btLTEZeW9ZE4OGfVqMHw1RgAYDkiFMXvRAfwDfyV7WvkqhxVpKjE0I4qd
+   tKxscDbceb9RPCbNPNLIBfTsj0zxssQB2dvHrVfp6TdqpUuwFblju7z+F
+   oau+sv8jYMTRFhBbvmHz8HyQAbaBcL3AeQst16h9r7vKRAE4UTcGadSrx
+   AMJF1Ec5t99hhhvzxNZVtT61JYSjc/XK6D4a3BHFP8JxzJOQBey6VqTYb
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="401132236"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="401132236"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 15:17:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="670511809"
+X-IronPort-AV: E=Sophos;i="5.98,244,1673942400"; 
+   d="scan'208";a="670511809"
+Received: from mcastane-mobl1.amr.corp.intel.com (HELO [10.212.187.9]) ([10.212.187.9])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Mar 2023 15:17:43 -0800
+Message-ID: <5fd1b1c2-c0b4-e93d-819b-61b2968fec6c@linux.intel.com>
+Date:   Wed, 8 Mar 2023 15:17:43 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230306151014.60913-2-schnelle@linux.ibm.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.4.2
+Subject: Re: [PATCH v1] PCI/EDR: Clear PCIe Device Status errors after EDR
+ error recovery
+Content-Language: en-US
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230215200532.3126937-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230215200532.3126937-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 04:10:11PM +0100, Niklas Schnelle wrote:
-> On s390 PCI functions may be hotplugged individually even when they
-> belong to a multi-function device. In particular on an SR-IOV device VFs
-> may be removed and later re-added.
-> 
-> In commit a50297cf8235 ("s390/pci: separate zbus creation from
-> scanning") it was missed however that struct pci_bus and struct
-> zpci_bus's resource list retained a reference to the PCI functions MMIO
-> resources even though those resources are released and freed on
-> hot-unplug. These stale resources may subsequently be claimed when the
-> PCI function re-appears resulting in use-after-free.
-> 
-> One idea of fixing this use-after-free in s390 specific code that was
-> investigated was to simply keep resources around from the moment a PCI
-> function first appeared until the whole virtual PCI bus created for
-> a multi-function device disappears. The problem with this however is
-> that due to the requirement of artificial MMIO addreesses (address
-> cookies) extra logic is then needed to keep the address cookies
-> compatible on re-plug. At the same time the MMIO resources semantically
-> belong to the PCI function so tying their lifecycle to the function
-> seems more logical.
-> 
-> Instead a simpler approach is to remove the resources of an individually
-> hot-unplugged PCI function from the PCI bus's resource list while
-> keeping the resources of other PCI functions on the PCI bus untouched.
-> 
-> This is done by introducing pci_bus_remove_resource() to remove an
-> individual resource. Similarly the resource also needs to be removed
-> from the struct zpci_bus's resource list. It turns out however, that
-> there is really no need to add the MMIO resources to the struct
-> zpci_bus's resource list at all and instead we can simply use the
-> zpci_bar_struct's resource pointer directly.
-> 
-> Fixes: a50297cf8235 ("s390/pci: separate zbus creation from scanning")
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Hi Bjorn,
 
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+Gentle ping!
 
-The meat of this is mostly in s390, so I think it makes more sense to
-merge via that tree.  But let me know if you'd rather that I take it.
+On 2/15/23 12:05 PM, Kuppuswamy Sathyanarayanan wrote:
+> Commit 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+> OS owns AER") adds support to clear error status in the Device Status
+> Register(DEVSTA) only if OS owns the AER support. But this change
+> breaks the requirement of the EDR feature which requires OS to cleanup
+> the error registers even if firmware owns the control of AER support.
+> 
+> More details about this requirement can be found in PCIe Firmware
+> specification v3.3, Table 4-6 Interpretation of the _OSC Control Field.
+> If the OS supports the Error Disconnect Recover (EDR) feature and
+> firmware sends the EDR event, then during the EDR recovery window, OS
+> is responsible for the device error recovery and holds the ownership of
+> the following error registers.
+> 
+> • Device Status Register
+> • Uncorrectable Error Status Register
+> • Correctable Error Status Register
+> • Root Error Status Register
+> • RP PIO Status Register
+> 
+> So call pcie_clear_device_status() in edr_handle_event() if the error
+> recovery is successful.
 
+Any comments on this patch?
+
+> 
+> Reported-by: Tsaur Erwin <erwin.tsaur@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
-> v1 -> v2:
-> - Remove return at the end of function returning void
+>  drivers/pci/pcie/edr.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->  arch/s390/pci/pci.c     | 16 ++++++++++------
->  arch/s390/pci/pci_bus.c | 12 +++++-------
->  arch/s390/pci/pci_bus.h |  3 +--
->  drivers/pci/bus.c       | 21 +++++++++++++++++++++
->  include/linux/pci.h     |  1 +
->  5 files changed, 38 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index ef38b1514c77..e16afacc8fd1 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -544,8 +544,7 @@ static struct resource *__alloc_res(struct zpci_dev *zdev, unsigned long start,
->  	return r;
->  }
->  
-> -int zpci_setup_bus_resources(struct zpci_dev *zdev,
-> -			     struct list_head *resources)
-> +int zpci_setup_bus_resources(struct zpci_dev *zdev)
->  {
->  	unsigned long addr, size, flags;
->  	struct resource *res;
-> @@ -581,7 +580,6 @@ int zpci_setup_bus_resources(struct zpci_dev *zdev,
->  			return -ENOMEM;
->  		}
->  		zdev->bars[i].res = res;
-> -		pci_add_resource(resources, res);
->  	}
->  	zdev->has_resources = 1;
->  
-> @@ -590,17 +588,23 @@ int zpci_setup_bus_resources(struct zpci_dev *zdev,
->  
->  static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
->  {
-> +	struct resource *res;
->  	int i;
->  
-> +	pci_lock_rescan_remove();
->  	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> -		if (!zdev->bars[i].size || !zdev->bars[i].res)
-> +		res = zdev->bars[i].res;
-> +		if (!res)
->  			continue;
->  
-> +		release_resource(res);
-> +		pci_bus_remove_resource(zdev->zbus->bus, res);
->  		zpci_free_iomap(zdev, zdev->bars[i].map_idx);
-> -		release_resource(zdev->bars[i].res);
-> -		kfree(zdev->bars[i].res);
-> +		zdev->bars[i].res = NULL;
-> +		kfree(res);
->  	}
->  	zdev->has_resources = 0;
-> +	pci_unlock_rescan_remove();
->  }
->  
->  int pcibios_device_add(struct pci_dev *pdev)
-> diff --git a/arch/s390/pci/pci_bus.c b/arch/s390/pci/pci_bus.c
-> index 6a8da1b742ae..a99926af2b69 100644
-> --- a/arch/s390/pci/pci_bus.c
-> +++ b/arch/s390/pci/pci_bus.c
-> @@ -41,9 +41,7 @@ static int zpci_nb_devices;
->   */
->  static int zpci_bus_prepare_device(struct zpci_dev *zdev)
->  {
-> -	struct resource_entry *window, *n;
-> -	struct resource *res;
-> -	int rc;
-> +	int rc, i;
->  
->  	if (!zdev_enabled(zdev)) {
->  		rc = zpci_enable_device(zdev);
-> @@ -57,10 +55,10 @@ static int zpci_bus_prepare_device(struct zpci_dev *zdev)
->  	}
->  
->  	if (!zdev->has_resources) {
-> -		zpci_setup_bus_resources(zdev, &zdev->zbus->resources);
-> -		resource_list_for_each_entry_safe(window, n, &zdev->zbus->resources) {
-> -			res = window->res;
-> -			pci_bus_add_resource(zdev->zbus->bus, res, 0);
-> +		zpci_setup_bus_resources(zdev);
-> +		for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> +			if (zdev->bars[i].res)
-> +				pci_bus_add_resource(zdev->zbus->bus, zdev->bars[i].res, 0);
->  		}
->  	}
->  
-> diff --git a/arch/s390/pci/pci_bus.h b/arch/s390/pci/pci_bus.h
-> index e96c9860e064..af9f0ac79a1b 100644
-> --- a/arch/s390/pci/pci_bus.h
-> +++ b/arch/s390/pci/pci_bus.h
-> @@ -30,8 +30,7 @@ static inline void zpci_zdev_get(struct zpci_dev *zdev)
->  
->  int zpci_alloc_domain(int domain);
->  void zpci_free_domain(int domain);
-> -int zpci_setup_bus_resources(struct zpci_dev *zdev,
-> -			     struct list_head *resources);
-> +int zpci_setup_bus_resources(struct zpci_dev *zdev);
->  
->  static inline struct zpci_dev *zdev_from_bus(struct pci_bus *bus,
->  					     unsigned int devfn)
-> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-> index 83ae838ceb5f..549c4bd5caec 100644
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -76,6 +76,27 @@ struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n)
->  }
->  EXPORT_SYMBOL_GPL(pci_bus_resource_n);
->  
-> +void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res)
-> +{
-> +	struct pci_bus_resource *bus_res, *tmp;
-> +	int i;
-> +
-> +	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
-> +		if (bus->resource[i] == res) {
-> +			bus->resource[i] = NULL;
-> +			return;
-> +		}
-> +	}
-> +
-> +	list_for_each_entry_safe(bus_res, tmp, &bus->resources, list) {
-> +		if (bus_res->res == res) {
-> +			list_del(&bus_res->list);
-> +			kfree(bus_res);
-> +			return;
-> +		}
-> +	}
-> +}
-> +
->  void pci_bus_remove_resources(struct pci_bus *bus)
->  {
->  	int i;
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index fafd8020c6d7..b50e5c79f7e3 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1438,6 +1438,7 @@ void pci_bus_add_resource(struct pci_bus *bus, struct resource *res,
->  			  unsigned int flags);
->  struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n);
->  void pci_bus_remove_resources(struct pci_bus *bus);
-> +void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res);
->  int devm_request_pci_bus_resources(struct device *dev,
->  				   struct list_head *resources);
->  
-> -- 
-> 2.37.2
-> 
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index a6b9b479b97a..33d7776ea748 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -193,6 +193,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	 */
+>  	if (estate == PCI_ERS_RESULT_RECOVERED) {
+>  		pci_dbg(edev, "DPC port successfully recovered\n");
+> +		pcie_clear_device_status(dev);
+>  		acpi_send_edr_status(pdev, edev, EDR_OST_SUCCESS);
+>  	} else {
+>  		pci_dbg(edev, "DPC port recovery failed\n");
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
