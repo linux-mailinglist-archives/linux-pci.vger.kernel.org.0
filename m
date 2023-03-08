@@ -2,143 +2,285 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1EDD6B0255
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 10:05:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E58B86B056A
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 12:07:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjCHJFI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 04:05:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52330 "EHLO
+        id S230142AbjCHLHM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 06:07:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230395AbjCHJEy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 04:04:54 -0500
-Received: from esa5.hgst.iphmx.com (esa5.hgst.iphmx.com [216.71.153.144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE6053585
-        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 01:04:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1678266282; x=1709802282;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=p+MxxNmS9DVwNUcLA55VvIMV4ImTHL2q/nFJco681WM=;
-  b=YK0pU2A8FFrLiv3jumXhrJ4eRRhtRNKci1tldnyBthpghNoUwDZE112o
-   KONWP03ifIkgKgCCir4omAqw1CBhiOf4bnSVod8bxxmsnwrKQzg61vy9s
-   d5xjUz37idp8nswGkv/Ug218T/55BeA598kvCLJV9iozjr6bT35EaSAP8
-   8aywpJCGhloH/ewrjZ9kO1OlMtz8CRWMKLRlx2qKwZomYWjz3qSoF1Spa
-   m37sEi5WngqMTW1p8BRetFXG6eKtiS1WWaa44HvL1MvAfNVTjRYU8M3rO
-   gi7eLUwra0xR7lnM3VqfS6LwBul4IZ7bCaMXBtdtEKDSjHTBLaSOEIs1A
-   w==;
-X-IronPort-AV: E=Sophos;i="5.98,243,1673884800"; 
-   d="scan'208";a="224880586"
-Received: from uls-op-cesaip02.wdc.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
-  by ob1.hgst.iphmx.com with ESMTP; 08 Mar 2023 17:03:46 +0800
-IronPort-SDR: ZgoFqAACgxbFgp8aLME0Qeh29UPNq+RSqnrQc57cuqLStV/xCIxuoJpd1y3ygu8DkEiYj88qVD
- 6FeKUpAayoPhrmeVji5VJ6iwJfpSX8HtBYn5Ym+uP1rQyCe2kImZpN3d98Na4gr9kKfsYxB6zw
- w+a+TvRtYZjsrNQnfhjpzrskZ2PWhc2NSvOopMIMpDamvoeTb6uaeUSAxzDf77jkNWjuEPTMT6
- 0FPb5Y9Q2tR7AoVsq8sHP3pfzpZARE6bgnst0CzR0WNZG3Z8nOiTCbQkmy9YQR5j5jxBR+6+9w
- P6s=
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Mar 2023 00:14:43 -0800
-IronPort-SDR: P+scogfpD+55Ot0WLx7z7xQgtDEihu+tZIo7I2CCuEQ+WXd1XrwEMkGDv25IHoy11MxgeO+dZ/
- xSlUKdBh5CoOplExCgbu95kumjxY1uDx3SRmLKVluqaxL/3bwEz5Kkc0Wpjntv+HNB/tsMsVXj
- 7Cbnmq7e3Sn7lZZu4gPsYIyKp1Th+oZebeoLDfUWac5Ra1nUS4U3SWJ9x4oDFRwfBw3YQjtBAP
- 6c8IVelKBsTwVasMMQHJR6tixujn1f1fn93+g8kEFMgOSdoucepPO93kElxwETiVnnQ0CODrXR
- 05c=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 08 Mar 2023 01:03:47 -0800
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PWmZV2Hkgz1Rwt8
-        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 01:03:46 -0800 (PST)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:mime-version
-        :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1678266225; x=1680858226; bh=p+MxxNmS9DVwNUcLA5
-        5VvIMV4ImTHL2q/nFJco681WM=; b=JmpBHP3mLqVQ1y/vDhExWvC7oXLkJfzuVj
-        4AICeGynPa222qAgRt0Pf5/XNwFBnOuWb+prS2csn26XWUl6dk04o3F4VjmuyB++
-        rr2SNVZPTSgR60NpYg3yBhrRyG/ZdLHWgMY0BIDp/5Dpqy/Li9j6GW5jl4wnzNRh
-        UjftQCszs6N3ja2EL1cTTFQzVpGnYDAQjtYYOGU/WtYafEyxZ0FurSLWQavD6v3f
-        OOtHC2f+PRmps/FHnOAS5xV7MflmPXg5vSlQShEQFedr3ZUv+Cnzrj3pgn1ofD+f
-        8pDRB0pBDNYnQvIKwAO0zJoB8AglTOjZfwzs/SOS7f5Adu0huTqQ==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id OPxXSL1arS2W for <linux-pci@vger.kernel.org>;
-        Wed,  8 Mar 2023 01:03:45 -0800 (PST)
-Received: from ephost.wdc.com (unknown [10.225.163.68])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PWmZS2q1tz1RvTr;
-        Wed,  8 Mar 2023 01:03:44 -0800 (PST)
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 16/16] misc: pci_endpoint_test: Simplify pci_endpoint_test_msi_irq()
-Date:   Wed,  8 Mar 2023 18:03:13 +0900
-Message-Id: <20230308090313.1653-17-damien.lemoal@opensource.wdc.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230308090313.1653-1-damien.lemoal@opensource.wdc.com>
-References: <20230308090313.1653-1-damien.lemoal@opensource.wdc.com>
+        with ESMTP id S230466AbjCHLGt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 06:06:49 -0500
+Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035491CAF6
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 03:06:45 -0800 (PST)
+Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20230308110642epoutp02d2e38918990a11a49a250f29a328c514~KbPMd2hM50510405104epoutp028
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 11:06:42 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20230308110642epoutp02d2e38918990a11a49a250f29a328c514~KbPMd2hM50510405104epoutp028
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1678273602;
+        bh=tjBJYPqeuw+zDOLOIcBCjONFSzyOoz7WDqmP+Wds6sE=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=mj/nfG3AcI+PVCd+vdSMzMamH+JoKR/Cj4cEgXAnf8cGhfNsrymlb5E/3kadrSfQA
+         Fe5Z32fEaZIu1bz6UBOn2CCfyvKfQeNDmASxBdzFLy9q5ZvPwg8ztwnkQjeu/oTwUy
+         lS/hlKznNz+BQhI028btPg/GE5w7aZL8wc4zV0vU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20230308110641epcas5p3ee30d9e0e13c5047fbc0356260b0b9b1~KbPL6dYTY0359103591epcas5p3N;
+        Wed,  8 Mar 2023 11:06:41 +0000 (GMT)
+Received: from epsmges5p1new.samsung.com (unknown [182.195.38.177]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4PWqJJ5m7Tz4x9Q2; Wed,  8 Mar
+        2023 11:06:40 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C5.A5.10528.04C68046; Wed,  8 Mar 2023 20:06:40 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+        20230308110619epcas5p2e91a10d1ea54d189a759cf8d26a0ac4c~KbO3XyJBf0411604116epcas5p2B;
+        Wed,  8 Mar 2023 11:06:19 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230308110619epsmtrp1d0012d65e72aac4507ee7f289ca8c362~KbO3XE1pD1619616196epsmtrp10;
+        Wed,  8 Mar 2023 11:06:19 +0000 (GMT)
+X-AuditID: b6c32a49-e75fa70000012920-f5-64086c40c470
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        1B.D5.31821.B2C68046; Wed,  8 Mar 2023 20:06:19 +0900 (KST)
+Received: from FDSFTE506 (unknown [107.122.82.24]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20230308110617epsmtip2219edf1fe8e5fc51fd3a1f84ec88cd9d~KbO1WsdQy1517115171epsmtip2z;
+        Wed,  8 Mar 2023 11:06:17 +0000 (GMT)
+From:   "Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics" 
+        <aman1.gupta@samsung.com>
+To:     "'Manivannan Sadhasivam'" <manivannan.sadhasivam@linaro.org>
+Cc:     "'Shuah Khan'" <skhan@linuxfoundation.org>,
+        <shradha.t@samsung.com>, <pankaj.dubey@samsung.com>,
+        <kishon@ti.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <shuah@kernel.org>, "'Bjorn Helgaas'" <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        "'Padmanabhan Rajanbabu'" <p.rajanbabu@samsung.com>
+In-Reply-To: <20230214061643.GA4981@thinkpad>
+Subject: RE: [PATCH] selftests: pci: pci-selftest: add support for PCI
+ endpoint driver test
+Date:   Wed, 8 Mar 2023 16:36:16 +0530
+Message-ID: <00a301d951ae$02c0cf10$08426d30$@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQFofYvwiqARWvL8UeiI8Zt/EpZYDAIhr9qdAalpc/cChsb4YwE9D0rUANGoP4wCy8h+hgG1SW5bAmNPN6yvWDLxwA==
+Content-Language: en-in
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLJsWRmVeSWpSXmKPExsWy7bCmpq5DDkeKQedxLYtXZ9ayWVx42sNm
+        0dDzm9Vi+p33bBZn5x1ns2j508Jicbelk9Xi6MZgi0Vbv7Bb9B6utZjych27xd7py1gdeDw2
+        repk87hzbQ+bx5Mr05k89s9dw+7Rt2UVo8fxG9uZPD5vkgtgj8q2yUhNTEktUkjNS85PycxL
+        t1XyDo53jjc1MzDUNbS0MFdSyEvMTbVVcvEJ0HXLzAG6U0mhLDGnFCgUkFhcrKRvZ1OUX1qS
+        qpCRX1xiq5RakJJTYFKgV5yYW1yal66Xl1piZWhgYGQKVJiQndHUepip4KJuxbPGLywNjPtU
+        uhg5OSQETCTmP5jI3MXIxSEksJtR4t6RmywQzidGiaUfe1ghnM+MEicvdLLDtBxYfpIRIrGL
+        UWLfj/VMEM5zoKrfT9lAqtgEIiR6Ou+BdYgIOEi0v/3EAmIzC1xjkrh3qRDE5hTQlTh6bCdY
+        XFggVmLZpz6wehYBFYn9t18xgti8ApYSC9/fZ4WwBSVOznwCNUdbYtnC18wQFylI/Hy6jBVi
+        V5bEwq6FrBA14hJHf/aAPSchcIRDYtGJdWwQDS4S2xdPgnpHWOLV8S1QtpTEy/42KDte4vzf
+        ZSwQdobE5b1PoWx7iQNX5gDZHEALNCXW79KHCMtKTD21jgliL59E7+8nTBBxXokd82BsVYnv
+        UzqgbpaWaHp9lnUCo9IsJK/NQvLaLCQvzELYtoCRZRWjZGpBcW56arFpgWFeajk8xpPzczcx
+        gtOxlucOxrsPPugdYmTiYDzEKMHBrCTC+12KI0WINyWxsiq1KD++qDQntfgQoykwvCcyS4km
+        5wMzQl5JvKGJpYGJmZmZiaWxmaGSOK+67clkIYH0xJLU7NTUgtQimD4mDk6pBqYFp37MzWBb
+        8X9O6bkfu76/UJ+c13f805tGyV7Pa3wskTF33rEmcM1wOaLDKFQiJsOY5Pvil6xazouvfk/m
+        sUQUaS5L5NJpzJe7Hm8TpmXUt6BlYceK/wdazJaYvbt9WqCs5Z65svfpWMF5cb9dZv2vfRhb
+        m7Rryenp7J+DGj3P9G6431CluUAqc7FdhtEJruVunzve2v1qv/Ni1Y/p7lG3GrUmFqRqKi8/
+        Z7Ag7EDC85DIhq7NEf2tq862R1lYf9Av3V1Vdj4+p93l/KS1Xfp/j16fk3Klw61gcxXz6kVt
+        67PtTXc45b0ydGPmb1iyz1j3yzEXy0CGxA7nimPf55/yf1Ih7BjEcOiKkKNQsBJLcUaioRZz
+        UXEiABJB5X5QBAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCIsWRmVeSWpSXmKPExsWy7bCSvK52DkeKwZ8+Q4tXZ9ayWVx42sNm
+        0dDzm9Vi+p33bBZn5x1ns2j508Jicbelk9Xi6MZgi0Vbv7Bb9B6utZjych27xd7py1gdeDw2
+        repk87hzbQ+bx5Mr05k89s9dw+7Rt2UVo8fxG9uZPD5vkgtgj+KySUnNySxLLdK3S+DK+Hjp
+        PlPBd52KTYs/szYw3lTuYuTkkBAwkTiw/CRjFyMXh5DADkaJli+XWSAS0hL3z05ig7CFJVb+
+        e84OUfSUUWJ3735WkASbQJjEoYkzGUFsEQEHifa3n8CamQUeMUks+VEF0XCBWaL7yCewIk4B
+        XYmjx3YCFXFwCAtESzydWg8SZhFQkdh/+xVYCa+ApcTC9/dZIWxBiZMzn0DN1JbofdjKCGMv
+        W/iaGeI4BYmfT5exQtyQJbGwayErRI24xNGfPcwTGIVnIRk1C8moWUhGzULSsoCRZRWjZGpB
+        cW56brFhgVFearlecWJucWleul5yfu4mRnBEamntYNyz6oPeIUYmDsZDjBIczEoivN+lOFKE
+        eFMSK6tSi/Lji0pzUosPMUpzsCiJ817oOhkvJJCeWJKanZpakFoEk2Xi4JRqYMqRYFujntzx
+        kmXX9Rox0ZVvmV6dX5/8+Y90Fg/HucSTV68oTQoVurkk/c2Oq+985DnSr6xKDWJ8dp5hn7Rt
+        oznji5UmAsuc2oKeaBtfUmo6/p2x4IDVh/4bO6efmD3l9keDqWbHm9+Zbo+cb/P8Dqfuh5Az
+        mubTco/te2Ypf+7DxLe1Wp3n4urTj+VFTL8jfPq+hkfVg1mib66tYHsT/6D5M/+LtT6trbNs
+        Sz4cPDY1U+zY6j8M9/K8uo6yKzSrx1z/Zqf6XPr/6Yt/zFde5Cm4UWG6st1SmvHz2yOyU+x/
+        mBamR3Murqq/YyUw6U/eTHb5PTzN92ZHXUv/7JVcNIv54ZLsba9lFijePfkkQJFViaU4I9FQ
+        i7moOBEA0iht0zcDAAA=
+X-CMS-MailID: 20230308110619epcas5p2e91a10d1ea54d189a759cf8d26a0ac4c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20221007053726epcas5p357c35abb79327fee6327bc6493e0178c
+References: <CGME20221007053726epcas5p357c35abb79327fee6327bc6493e0178c@epcas5p3.samsung.com>
+        <20221007053934.5188-1-aman1.gupta@samsung.com>
+        <641d1e50-a9d0-dc15-be76-07b8ace25dae@linuxfoundation.org>
+        <20221222174532.GA59500@thinkpad>
+        <b2a5db97-dc59-33ab-71cd-f591e0b1b34d@linuxfoundation.org>
+        <20221223150211.GC4587@thinkpad>
+        <7dcefe25-d31c-bc26-4910-e53bed6eb01c@linuxfoundation.org>
+        <003d01d919b2$3c7d54a0$b577fde0$@samsung.com>
+        <20230214061643.GA4981@thinkpad>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        PDS_BAD_THREAD_QP_64,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Simplify the code of pci_endpoint_test_msi_irq() by correctly using
-booleans: remove the msix comparison to false as that variable is
-already a boolean, and directly return the result of the comparison of
-the raised interrupt number.
 
-Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
----
- drivers/misc/pci_endpoint_test.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint=
-_test.c
-index afd2577261f8..ed4d0ef5e5c3 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -313,21 +313,17 @@ static bool pci_endpoint_test_msi_irq(struct pci_en=
-dpoint_test *test,
- 	struct pci_dev *pdev =3D test->pdev;
-=20
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_TYPE,
--				 msix =3D=3D false ? IRQ_TYPE_MSI :
--				 IRQ_TYPE_MSIX);
-+				 msix ? IRQ_TYPE_MSIX : IRQ_TYPE_MSI);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_IRQ_NUMBER, msi_num);
- 	pci_endpoint_test_writel(test, PCI_ENDPOINT_TEST_COMMAND,
--				 msix =3D=3D false ? COMMAND_RAISE_MSI_IRQ :
--				 COMMAND_RAISE_MSIX_IRQ);
-+				 msix ? COMMAND_RAISE_MSIX_IRQ :
-+				 COMMAND_RAISE_MSI_IRQ);
- 	val =3D wait_for_completion_timeout(&test->irq_raised,
- 					  msecs_to_jiffies(1000));
- 	if (!val)
- 		return false;
-=20
--	if (pci_irq_vector(pdev, msi_num - 1) =3D=3D test->last_irq)
--		return true;
--
--	return false;
-+	return pci_irq_vector(pdev, msi_num - 1) =3D=3D test->last_irq;
- }
-=20
- static int pci_endpoint_test_validate_xfer_params(struct device *dev,
---=20
-2.39.2
-
+> -----Original Message-----
+> From: 'Manivannan Sadhasivam'
+> =5Bmailto:manivannan.sadhasivam=40linaro.org=5D
+> Sent: 14 February 2023 11:47
+> To: Aman Gupta/FDS SW /SSIR/Engineer/Samsung Electronics
+> <aman1.gupta=40samsung.com>
+> Cc: 'Shuah Khan' <skhan=40linuxfoundation.org>; shradha.t=40samsung.com;
+> pankaj.dubey=40samsung.com; kishon=40ti.com; lpieralisi=40kernel.org;
+> kw=40linux.com; shuah=40kernel.org; 'Bjorn Helgaas' <helgaas=40kernel.org=
+>;
+> linux-pci=40vger.kernel.org; linux-kselftest=40vger.kernel.org; 'Padmanab=
+han
+> Rajanbabu' <p.rajanbabu=40samsung.com>
+> Subject: Re: =5BPATCH=5D selftests: pci: pci-selftest: add support for PC=
+I endpoint
+> driver test
+>=20
+> On Tue, Dec 27, 2022 at 10:45:26AM +0530, Aman Gupta/FDS SW
+> /SSIR/Engineer/Samsung Electronics wrote:
+> >
+> >
+> > > -----Original Message-----
+> > > From: Shuah Khan =5Bmailto:skhan=40linuxfoundation.org=5D
+> > > Sent: 23 December 2022 22:01
+> > > To: Manivannan Sadhasivam <manivannan.sadhasivam=40linaro.org>
+> > > Cc: Aman Gupta <aman1.gupta=40samsung.com>;
+> shradha.t=40samsung.com;
+> > > pankaj.dubey=40samsung.com; kishon=40ti.com; lpieralisi=40kernel.org;
+> > > kw=40linux.com; shuah=40kernel.org; Bjorn Helgaas <helgaas=40kernel.o=
+rg>;
+> > > linux-pci=40vger.kernel.org; linux-kselftest=40vger.kernel.org;
+> > > Padmanabhan Rajanbabu <p.rajanbabu=40samsung.com>; Shuah Khan
+> > > <skhan=40linuxfoundation.org>
+> > > Subject: Re: =5BPATCH=5D selftests: pci: pci-selftest: add support fo=
+r
+> > > PCI endpoint driver test
+> > >
+> > > On 12/23/22 08:02, Manivannan Sadhasivam wrote:
+> > > > On Thu, Dec 22, 2022 at 10:49:48AM -0700, Shuah Khan wrote:
+> > > >> On 12/22/22 10:45, Manivannan Sadhasivam wrote:
+> > > >>> On Thu, Dec 22, 2022 at 09:58:30AM -0700, Shuah Khan wrote:
+> > > >>>> On 10/6/22 23:39, Aman Gupta wrote:
+> > > >>>>> This patch enables the support to perform selftest on PCIe
+> > > >>>>> endpoint driver present in the system. The following tests are
+> > > >>>>> currently performed by the selftest utility
+> > > >>>>>
+> > > >>>>> 1. BAR Tests (BAR0 to BAR5)
+> > > >>>>> 2. MSI Interrupt Tests (MSI1 to MSI32) 3. Read Tests (For 1,
+> > > >>>>> 1024, 1025, 1024000, 1024001 Bytes) 4. Write Tests (For 1,
+> > > >>>>> 1024, 1025, 1024000, 1024001 Bytes) 5. Copy Tests (For 1,
+> > > >>>>> 1024, 1025, 1024000,
+> > > >>>>> 1024001 Bytes)
+> > > >>>>>
+> > > >>>>> Signed-off-by: Aman Gupta <aman1.gupta=40samsung.com>
+> > > >>>>> Signed-off-by: Padmanabhan Rajanbabu
+> > > <p.rajanbabu=40samsung.com>
+> > > >>>>
+> > > >>>> Adding Bjorn Helgaas to the thread.
+> > > >>>>
+> > > >>>> Adding pcit test under selftests is good. There is another
+> > > >>>> pcitest under tools/pci. I would like to see if the existing
+> > > >>>> code in tools/pci/pcitest.c can be leveraged.
+> > > >>>>
+> > > >>>> As part of this test work, also look into removing tools/pci so
+> > > >>>> we don't have to maintain duplicate code in two places.
+> > > >>>>
+> > > >>>
+> > > >>> It has been agreed in a thread with Greg =5B1=5D to =7Bre=7Dmove =
+the
+> > > >>> tests under tools/pci and utilize the kselftest.
+> > > >>>
+> > > >>
+> > > >> Inline with what I am suggesting. However, I don't see either
+> > > >> move or delete of tools/pci in the patch?
+> > > >>
+> > > >> The first patch could start with git mv of the existing files and
+> > > >> then make changes to preserver the history.
+> > > >>
+> > > >
+> > > > Right. This patch was posted independently of the series =5B1=5D th=
+at
+> > > > I submitted to fix the return values of IOCTL calls used in
+> > > > drivers/misc/pci_endpoint_test.c driver.
+> > > >
+> > > > Then in that series, it was decided to move the existing test to
+> > > > kselftest. So, I suggested Aman Gupta =5B2=5D to integrate my lates=
+t
+> > > > patches, add the kselftest patch on top, then remove the existing
+> > > > test
+> > > under tools/pci.
+> > > >
+> > > > The kselftest patch can also move the driver first and then make
+> > > > the change as you suggested. Either way it is fine by me.
+> > > >
+> > >
+> > > As I mentioned in my previous email, I prefer to see the move as the
+> > > first patch and then changes on top. This preserves the history and
+> cleaner.
+> > >
+> > > thanks,
+> > > -- Shuah
+> > >
+> >
+> > Hi Shuah,
+> >
+> > Thanks for review and suggestion. I understand that we would like to re=
+use
+> and preserve the history of tools/pci/pcietest.c. So we have two approach=
+es:
+> >
+> > 1: Using git mv command move existing code from tools/pci/ to
+> tools/testing/selftest/drivers/pci/ and then update the file to convert t=
+o
+> kselftest framework. I thought about this but after movement, when we
+> move it to kselftest format it is going to be huge churn and we will be h=
+aving
+> modification in almost all lines.
+> >
+> > 2: Develop kselftest based driver in tools/testing/selftest/drivers/pci=
+/ and
+> eventually delete existing file from tools/pci/ folder providing justific=
+ation in
+> commit message.
+> >
+> > From my viewpoint, going with the second approach makes more sense
+> because if almost complete file is getting modified, and it will make the
+> review process complex and anyways there is not much code reusability.
+> > Please let me know if you have any other thought process or if I am mis=
+sing
+> anything to understand your approach.
+> >
+>=20
+> As Bjorn and Shuah said, I presume you are working on option 1.
+>=20
+> Thanks,
+> Mani
+>=20
+Hi Mani,
+Yes I am working on it, soon I will post the patches.
+Thanks ,
+Aman Gupta
+> > Thanks,
+> > Aman Gupta
+> > >
+> >
+> >
+>=20
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D=20=E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D=0D=0A=0D=0A
