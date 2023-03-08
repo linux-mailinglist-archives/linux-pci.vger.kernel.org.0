@@ -2,236 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B8746B1350
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 21:43:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66EBB6B1358
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 21:50:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230172AbjCHUnh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 15:43:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44732 "EHLO
+        id S229614AbjCHUt7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 15:49:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230380AbjCHUnd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 15:43:33 -0500
-X-Greylist: delayed 154 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 08 Mar 2023 12:43:31 PST
-Received: from mo4-p00-ob.smtp.rzone.de (mo4-p00-ob.smtp.rzone.de [81.169.146.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 813FC61A91;
-        Wed,  8 Mar 2023 12:43:31 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1678308027; cv=none;
-    d=strato.com; s=strato-dkim-0002;
-    b=YgowSXrom5WwV7B45gWdMJRXFWlYKNpYf+Hy/KzgLFIN83eVySlMI1WMzD0zQGu2XS
-    +1o/oNejqlsU1JD1zEkCJs0ht6YvADqTJCkHXoLGyoZbECxaMkM+kY4gsic4GKFycuKM
-    aBktSirMTrQVPDqS/Xkat5IuzLdWCnLyGkD6LPNcX6oymDDcGcwePbdF0GJEGAAkt8YJ
-    4gDRMANCqdOgRWIonR8ZCR2e4T4ZUZ7hDTaFw9pOfAhtNBhqo71ozpsq8n8VWselQdbI
-    zpA3wpGiQRxiid1zV7TvqENswUJMyubTtOzVenf/oALNEVVKoAj8jei9SLbv6kPZGLlF
-    8YxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1678308027;
-    s=strato-dkim-0002; d=strato.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=kjAQuB16QsfMqN5tZgipL/ufr1uTGkxUDACx/ckEBHU=;
-    b=drSlIX9q6GXTEvegqdo4cu9SpYrD8ijArRv5d4tvZpt7PrvRoLXUOQS/EURRqHHOKA
-    Zg2vuldP6D3ZL7TGZiw/4LYV+Yeyhz+H9n36GurZTAoje46chC62olz+/iMMkTOz82EN
-    F6zo+100cS+FitSOhC0S5Tl0/r7GJj/1llUI+EczTHJK3bj+zB5M4cw0Kh64/fpLoZN5
-    gZelke8H/9a2V3r/hxz+jdcSiB06zEVSumcgOMsYn9hVfOg+nxwNDZ7Mk1yvXwb1LS9I
-    yj3YMYyRv4dqgb35SbrHbD71ZmQyTKBLFVGcB9AVd88TCeG14r+PBEJf5jyft204eMDb
-    5nkw==
-ARC-Authentication-Results: i=1; strato.com;
-    arc=none;
-    dkim=none
-X-RZG-CLASS-ID: mo00
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1678308027;
-    s=strato-dkim-0002; d=goldelico.com;
-    h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:Cc:Date:
-    From:Subject:Sender;
-    bh=kjAQuB16QsfMqN5tZgipL/ufr1uTGkxUDACx/ckEBHU=;
-    b=RNTDsmVOQXAgSvAhPChT7lUFOnt6QtBgu3hVN2POlkpmzKYBpcNwBKU3CJrbFrBzeW
-    P8l5vhFUPoJPL4MXc17+w2iA1OAXNEJNRYsEzp3LZli1BIPDe0tITEt69nY2GVLsc2nh
-    2/J88R9P0JR21pkpn3ePkyy1c7iLxVy6fooxrRwM+1eZmNuEAhul9cvRfmHS40zeXDBs
-    4KIMr3XksobJsayxkhGZ9ue3MxLLcx5rxgJeNiY0sPRqwfbeRI6zN0OYsZbREjYkWQf1
-    ce7KIFhIXWRHm/ZhjvyhsBU1S4dAMvjrxoUYWaldW1CIDQh28mT7LQK4nSVeSp94Vxq6
-    /M0g==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBp5hRw/qviAxtjc3ymhuD5oSzMYuxMPoGwe4b9Z+4n4bTnzkNPvoI="
-Received: from [IPv6:2001:9e8:a5f3:7900:ecb2:2fbf:174b:7809]
-    by smtp.strato.de (RZmta 49.3.0 AUTH)
-    with ESMTPSA id 2faf7dz28KeQY4y
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-    Wed, 8 Mar 2023 21:40:26 +0100 (CET)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.21\))
-Subject: Re: [PATCH] PCI: imx6: install the fault handler only if we are
- really running on a compatible device
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <20230308184922.GA1029723@bhelgaas>
-Date:   Wed, 8 Mar 2023 21:40:25 +0100
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C68A70F3-00C1-4F43-A7C4-8E0386410140@goldelico.com>
-References: <20230308184922.GA1029723@bhelgaas>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.21)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S230366AbjCHUts (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 15:49:48 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BA9E8537E
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 12:49:45 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEC296194E
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 20:49:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DCDAC433D2;
+        Wed,  8 Mar 2023 20:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678308584;
+        bh=BXCY59MwfGhke6W0vZwZYsrbAuV0LQ1wzQmlab4ZGv0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=BA7Y71B2jCQYqW0Wrd5osJUDj/F1e1GAfgJnXkUl+2jjVrmBxCtNyFrAzskj1xcFb
+         d6P9rpOQ/LxHXhl6k2anfUBsk4ft1e8BrLci2tRuNRayXZ9EaIXnjGZNkVv5MWawiz
+         wDqqluNqT2i7HWtoglrdB/8msduP0OmcSyhMytqXqQ3QwQpipzRE9GCnGEjrDnP1C7
+         yr10N+CH2u1NJ8mtexSO+AHrn+RaYichokVg26BUjW7EITG5bOrcV5F5uXsafefr5m
+         KPUIQterEYz4E8722wWEHDR7YMbibW28jSlQj2ij30MCQ42OyTor1xzME9jtQk16E1
+         KxEBFGDQKYg+Q==
+Date:   Wed, 8 Mar 2023 14:49:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     fk1xdcio@duck.com
+Cc:     linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Oliver O'Halloran <oohall@gmail.com>
+Subject: Re: ASMedia ASM1812 PCIe switch causes system to freeze hard
+Message-ID: <20230308204942.GA1032495@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9B577F97-4E03-4D1D-B6F2-909897F938CC.1@smtp-inbound1.duck.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Sat, Feb 25, 2023 at 01:37:23PM -0500, fk1xdcio@duck.com wrote:
+> I'm testing a generic 4-port PCIe x4 2.5Gbps Ethernet NIC. It uses an
+> ASM1812 for the PCI packet switch to four RTL8125BG network controllers.
+> 
+> The more load I put on the NIC the faster the system freezes. For example if
+> I activate four 2.5Gbps fully saturated network connections then the system
+> hard freezes almost immediately. When the system freezes it seems completely
+> dead. SysRq doesn't work, serial consoles are dead, etc. so I haven't been
+> able to get much debugging information. I have tested on various different
+> physical systems, Xeon E5, Xeon E3, i7, and they all behave the same so it
+> doesn't seem like a system hardware issue.
+> 
+> Disabling IOMMU makes it run for a little longer before crashing.
+> 
+> The tiny bit of error information I have been able to get under various
+> conditions (eg. disabling ASPM, forcing D0, etc):
+>   Test #1:
+>   pcieport 0000:04:02.0: Unable to change power state from D3hot to D0,
+> device inaccessible
+> 
+>   Test #2:
+>   pcieport 0000:04:02.0: can't change power state from D3cold to D0 (config
+> space inaccessible)
+>   pcieport 0000:03:00.0: Wakeup disabled by ACPI
+>   pcieport 0000:04:02.0: PME# disabled
+> 
+>   Test #3:
+>   enp7s0: cmd = 0xff, should be 0x07 \x0a.
+>   enp7s0: pci link is down \x0a.
+> 
+> At times there are several of those errors printed for the different PCI
+> devices of the NIC before the system locks up.
+> 
+> Setting "pci=nommconf" on the kernel command line is the only thing that
+> seems to fix the issue but performance is degraded when using bidirectional
+> transfers. 2.5Gbps TX but only 1.5Gbps RX compared to MMCONFIG enabled which
+> gets full 2.5Gbps bidirectional.
+> 
+> So it seems the MMCONFIG works sometimes but eventually something happens
+> and it becomes inaccessible at which point the system freezes. Is there a
+> way to keep MMCONFIG enabled for other devices but not this ASM1812 device?
+> Or better, is there a way to debug and fix MMCONFIG for the device?
 
-> Am 08.03.2023 um 19:49 schrieb Bjorn Helgaas <helgaas@kernel.org>:
->=20
-> On Tue, Feb 28, 2023 at 09:43:54AM +0100, H. Nikolaus Schaller wrote:
->> commit bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe =
-controller")
->> added a fault hook to this driver in the probe function. So it was =
-only
->> installed if needed.
->>=20
->> commit bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
->> moved it from probe to driver init which installs the hook =
-unconditionally
->> as soon as the driver is compiled into a kernel.
->>=20
->> When this driver is compiled as a module, the hook is not registered
->> until after the driver has been matched with a .compatible and
->> loaded.
->>=20
->> commit 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
->> extended the fault handling code.
->>=20
->> commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
->> added some protection for non-ARM architectures, but this does not
->> protect non-i.MX ARM architectures.
->=20
-> Are *all* these commits relevant?
+Thanks for the report!
 
-Yes, it was correct when introduced by commit bb38919ec56e for a goo =
-reason.
-And it was broken by bde4a5a00e76 an all attempts later made it worse.
+So IIUC, "pci=nommconf" avoids the system hang completely, but network
+performance is lower.  Do the NIC stats show packet drops that might
+explain the performance problem?
 
->  Question also applies to Fixes:
-> below.
+You mentioned later that you see AER errors caused by ASPM, and they
+go away if you disable power management (but the hard lockups still
+happen).  Is it "pcie_aspm=off" or "pcie_port_pm=off" or something
+else that makes this diffference?
 
-It fixes all between bde4a5a00e76 and HEAD. Well, one can argue that
-commit bde4a5a00e76 could be sufficient for Fixes:
+I like Oliver's point about "pci=nommconf" disabling access to
+extended config space (although I'm not 100% sure about this because I
+think arch/x86/pci/direct.c provides non-MMCONFIG accessors that can
+reach the extended space -- the "pci=nommconf" dmesg log might have a
+hint, and the lspci in that case would show for sure).
 
-I don't know if it is a problem because I have no overview over =
-side-effects.
+Prior to f26e58bf6f54 ("PCI/AER: Enable error reporting when AER is
+native") (which appeared in v6.0), error reporting was enabled by the
+AER driver.  The AER driver doesn't work on your system because the
+Root Ports don't support AER, so prior to v6.0, error reporting may
+not be enabled.
 
->=20
->> Since fault handlers can be triggered on any architecture for =
-different
->> reasons, there is no guarantee that they will be triggered only for =
-the
->> assumed situation, leading to improper error handling (i.MX6-specific
->> imx6q_pcie_abort_handler) on foreign systems.
->>=20
->> I had seen strange L3 imprecise external abort messages several times =
-on
->> OMAP4 and OMAP5 devices and couldn't make sense of them until I =
-realized
->> they were related to this unused imx6q driver because I had
->> CONFIG_PCI_IMX6=3Dy.
->=20
-> Apparently imx6q_pcie_abort_handler() assumes it is always called
-> because of a PCI abort?  If so, that sounds problematic.
+Starting with v6.0, error reporting should be enabled even if the Root
+Port doesn't support AER, as it is per the DevCtl bits below.  In
+v5.15, those DevCtl bits may not be set.  But you said v5.15 is also
+broken, so maybe this commit isn't related.
 
->=20
-> If non-PCI imprecise aborts happen on OMAP4 and OMAP5 where imx6q is
-> unused and imx6q_pcie_abort_handler() is not appropriate, I assume
-> similar non-PCI aborts can also happen on systems where imx6q *is*
-> used.
+I don't quite see the ASPM connection.  The r8169 driver apparently
+tries to disable ASPM [1], but it seems that Linux shouldn't be
+changing any ASPM configuration.  Your dmesg [2] contains:
 
-As far as I know the reasons why imprecise aborts occur may be SoC =
-specific.
+  acpi PNP0A08:00: FADT indicates ASPM is unsupported, using BIOS configuration   
+  r8169 0000:07:00.0: can't disable ASPM; OS doesn't have ASPM control
 
-So I have no experience with i.MX6 to judge this. My goal is to shield =
-other
-architectures from this fault handler may it be correct or wrong.
+And it looks like BIOS left ASPM disabled anyway.  From your lspci
+output [2]:
 
-> So imx6q_pcie_abort_handler() may be trying to fixup non-PCI aborts
-> when it shouldn't?
+  04:03.0 PCI bridge: ASMedia Technology Inc. ASM1812 6-Port PCIe x4
+    Bus: primary=04, secondary=07, subordinate=07
+      DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+      LnkCtl:	ASPM Disabled
+  07:00.0 Ethernet controller: Realtek Semiconductor Co., Ltd. RTL8125
+      DevCtl:	CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+      LnkCtl:	ASPM Disabled
 
-Yes, at least if it is triggered on OMAP4/OMAP5 by accessing =
-non-existing
-registers in some subsystems (e.g. through devmem2).
+Bjorn
 
->=20
->> Note that CONFIG_PCI_IMX6=3Dy is useful for kernel binaries that are =
-designed
->> to run on different ARM SoC and be differentiated only by device tree
->> binaries. So turning off CONFIG_PCI_IMX6 is not a solution.
->>=20
->> Therefore we check the compatible in the init function before =
-registering
->> the fault handler.
->>=20
->> Fixes: bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
->> Fixes: 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
->> Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
->>=20
->> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
->> ---
->> drivers/pci/controller/dwc/pci-imx6.c | 9 +++++++++
->> 1 file changed, 9 insertions(+)
->>=20
->> diff --git a/drivers/pci/controller/dwc/pci-imx6.c =
-b/drivers/pci/controller/dwc/pci-imx6.c
->> index 1dde5c579edc8..89774aa187ae8 100644
->> --- a/drivers/pci/controller/dwc/pci-imx6.c
->> +++ b/drivers/pci/controller/dwc/pci-imx6.c
->> @@ -1402,6 +1402,15 @@ =
-DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
->> static int __init imx6_pcie_init(void)
->> {
->> #ifdef CONFIG_ARM
->> +	const struct of_device_id *reboot_id;
->> +	struct device_node *np;
->> +
->> +	np =3D of_find_matching_node_and_match(NULL, imx6_pcie_of_match,
->> +					     &reboot_id);
->=20
-> Since you don't need reboot_id, I think you should use
-> of_find_matching_node() instead.
-
-Well, I used it for debugging, but for production code it has indeed no =
-benefit.
-
-of_find_matching_node it is just a static inline wrapper for
-of_find_matching_node_and_match with NULL parameter, but we can save one =
-stack position.
-
-I'll send a v2 soon.
-
->=20
->> +	if (!np)
->> +		return -ENODEV;
->> +	of_node_put(np);
->> +
->> 	/*
->> 	 * Since probe() can be deferred we need to make sure that
->> 	 * hook_fault_code is not called after __init memory is freed
->> --=20
->> 2.38.1
->>=20
-
-BR and thanks,
-Nikolaus
-
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/net/ethernet/realtek/r8169_main.c?id=v6.2#n5203
+[2] https://lore.kernel.org/all/AF9C0500-2909-4FF4-8E4E-3BAD8FD8AA14.1@smtp-inbound1.duck.com/
