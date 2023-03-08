@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D8BD16B00F1
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:25:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 310736B00FE
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:25:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229651AbjCHIZF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 03:25:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46664 "EHLO
+        id S229820AbjCHIZI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 03:25:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjCHIYr (ORCPT
+        with ESMTP id S230208AbjCHIYr (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 03:24:47 -0500
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A1B1041B54;
-        Wed,  8 Mar 2023 00:24:25 -0800 (PST)
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 65399B0BAC;
+        Wed,  8 Mar 2023 00:24:26 -0800 (PST)
 X-IronPort-AV: E=Sophos;i="5.98,243,1673881200"; 
-   d="scan'208";a="151900483"
+   d="scan'208";a="155237825"
 Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
-  by relmlie5.idc.renesas.com with ESMTP; 08 Mar 2023 17:24:24 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 08 Mar 2023 17:24:25 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir5.idc.renesas.com (Postfix) with ESMTP id C0A674010E0D;
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id DD43D4010E14;
         Wed,  8 Mar 2023 17:24:24 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
@@ -28,10 +28,11 @@ To:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
 Cc:     Sergey.Semin@baikalelectronics.ru, marek.vasut+renesas@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
         linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v10 01/12] PCI: dwc: Fix writing wrong value if snps,enable-cdm-check
-Date:   Wed,  8 Mar 2023 17:23:41 +0900
-Message-Id: <20230308082352.491561-2-yoshihiro.shimoda.uh@renesas.com>
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Frank Li <Frank.Li@nxp.com>
+Subject: [PATCH v10 02/12] PCI: endpoint: functions/pci-epf-test: Fix dma_chan direction
+Date:   Wed,  8 Mar 2023 17:23:42 +0900
+Message-Id: <20230308082352.491561-3-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230308082352.491561-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20230308082352.491561-1-yoshihiro.shimoda.uh@renesas.com>
@@ -45,48 +46,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The "val" of PCIE_PORT_LINK_CONTROL will be reused on the
-"Set the number of lanes". But, if snps,enable-cdm-check" exists,
-the "val" will be set to PCIE_PL_CHK_REG_CONTROL_STATUS.
-Therefore, unexpected register value is possible to be used
-to PCIE_PORT_LINK_CONTROL register if snps,enable-cdm-check" exists.
-So, change reading timing of PCIE_PORT_LINK_CONTROL register to fix
-the issue.
+In the pci_epf_test_init_dma_chan(), epf_test->dma_chan_rx
+is assigned from dma_request_channel() with DMA_DEV_TO_MEM as
+filter.dma_mask. However, in the pci_epf_test_data_transfer(),
+if the dir is DMA_DEV_TO_MEM, it should use epf->dma_chan_rx,
+but it used epf_test->dma_chan_tx. So, fix it. Otherwise,
+results of pcitest with enabled DMA will be "NOT OKAY" on eDMA
+environment.
 
-Fixes: ec7b952f453c ("PCI: dwc: Always enable CDM check if "snps,enable-cdm-check" exists")
+Fixes: 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 53a16b8b6ac2..8e33e6e59e68 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -1001,11 +1001,6 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
- 	}
- 
--	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
--	val &= ~PORT_LINK_FAST_LINK_MODE;
--	val |= PORT_LINK_DLL_LINK_EN;
--	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
--
- 	if (dw_pcie_cap_is(pci, CDM_CHECK)) {
- 		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
- 		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-@@ -1013,6 +1008,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
- 	}
- 
-+	val = dw_pcie_readl_dbi(pci, PCIE_PORT_LINK_CONTROL);
-+	val &= ~PORT_LINK_FAST_LINK_MODE;
-+	val |= PORT_LINK_DLL_LINK_EN;
-+	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
-+
- 	if (!pci->num_lanes) {
- 		dev_dbg(pci->dev, "Using h/w default number of lanes\n");
- 		return;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 0f9d2ec822ac..172e5ac0bd96 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -112,7 +112,7 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+ 				      size_t len, dma_addr_t dma_remote,
+ 				      enum dma_transfer_direction dir)
+ {
+-	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ?
++	struct dma_chan *chan = (dir == DMA_MEM_TO_DEV) ?
+ 				 epf_test->dma_chan_tx : epf_test->dma_chan_rx;
+ 	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
+ 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
 -- 
 2.25.1
 
