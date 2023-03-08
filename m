@@ -2,153 +2,173 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35FA66B1153
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 19:49:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 40BF06B116F
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 19:53:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229868AbjCHSt1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 13:49:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50984 "EHLO
+        id S229751AbjCHSxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 13:53:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229893AbjCHStZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 13:49:25 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D97B1B7D9F;
-        Wed,  8 Mar 2023 10:49:24 -0800 (PST)
+        with ESMTP id S229799AbjCHSxQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 13:53:16 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5DF5DECC;
+        Wed,  8 Mar 2023 10:53:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 749396190F;
-        Wed,  8 Mar 2023 18:49:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 999C3C433D2;
-        Wed,  8 Mar 2023 18:49:23 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 41FF5B81D92;
+        Wed,  8 Mar 2023 18:53:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9494C433EF;
+        Wed,  8 Mar 2023 18:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678301363;
-        bh=hjqn5JVWJwWwnk2YIxMMq8dT+5sWwomaupQDfPrK2R4=;
+        s=k20201202; t=1678301591;
+        bh=6u4ouGmDXPS3X05hD5mdCPbvxLPTCxxxqFjo2s4jTxE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tQRMEAoBGTJJH0VOZd7LunGNwgg1NH/ZDCaZvTDRvRUfhDaFu7SW1LAd5BC1tDzrJ
-         m/oCYcNn2ny4evrU2DK1pJqKxX25/pSp4+mcLVBFOmNv2QeUTlZkP6sTi52Xx/9ftU
-         DM9mPVuz6B7TAUNR+I0fv4Sl2bJYnAoxFw15MWli2IfwuIEO7V3O9rC0CGwJDqQpe1
-         LuzkQSfJjsKgq/098vkeFpOlORZPTldzi2A5sgDWOiV5rdm4uxeBvf1si56NcUk2gc
-         /FImIfHa2Ys5wCkXCrjcIqfINSM/oRPDnoAZRHLxeqKs6SLKESFeBqj3kC8sWSyXYD
-         fqx9WA9WLWv6w==
-Date:   Wed, 8 Mar 2023 12:49:22 -0600
+        b=nOWxDHcn4aOKzSEz3ERVVNCl1NyOYQI2fPgNCuTQljE659tecxzGLVtu1Si6a5jwe
+         FrBNz86n1pzVIa8LQMyP2SCqa6ts3wwcXUvVuUAUKng+P5xYd8zYVT77RVQkFOeLtC
+         0IabTmFgKprmxTJGQshe1WOhLeSNEyQpCgRqh5Gvy1oAkK1KRuap1iCm5ApwLiWvD0
+         /G4l8iQsu1EE6jTnIKGpdRFjV1kP2klDG/ZQ38ZhQ+P1ddzNSEK0bx5sTFVJqYSDso
+         xgIcENLIJUFxxHG01MB0zfzzj7/SnHe9deXZVaKVcN8skpMO4Tm88RVlZmoSuG1sgl
+         7DUweUpvweClw==
+Date:   Wed, 8 Mar 2023 12:53:10 -0600
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+To:     Shawn Guo <shawn.guo@linaro.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Rob Herring <robh@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com
-Subject: Re: [PATCH] PCI: imx6: install the fault handler only if we are
- really running on a compatible device
-Message-ID: <20230308184922.GA1029723@bhelgaas>
+        Maximilian Luz <luzmaximilian@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: PCI: Add quirk for platforms running Windows
+Message-ID: <20230308185310.GA1030878@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aa1c18c70bea1d6f99c88027dc72c700e8c309a2.1677573834.git.hns@goldelico.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230227021221.17980-1-shawn.guo@linaro.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 09:43:54AM +0100, H. Nikolaus Schaller wrote:
-> commit bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
-> added a fault hook to this driver in the probe function. So it was only
-> installed if needed.
+On Mon, Feb 27, 2023 at 10:12:21AM +0800, Shawn Guo wrote:
+> Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
+> host bridge windows") introduced a check to remove host bridge register
+> resources for all arm64 platforms, with the assumption that the PNP0A03
+> _CRS resources would always be host bridge registers and never as windows
+> on arm64.
 > 
-> commit bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
-> moved it from probe to driver init which installs the hook unconditionally
-> as soon as the driver is compiled into a kernel.
+> The assumption stands true until Qualcomm Snapdragon Windows laptops
+> emerge.  These laptops describe host bridge windows in PNP0A03 _CRS
+> resources instead.  For example, the Microsoft Surface Pro X has host
+> bridges defined as
 > 
-> When this driver is compiled as a module, the hook is not registered
-> until after the driver has been matched with a .compatible and
-> loaded.
+>     Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
+>     Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
 > 
-> commit 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
-> extended the fault handling code.
+>     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
+>     {
+>         Name (RBUF, ResourceTemplate ()
+>         {
+>             Memory32Fixed (ReadWrite,
+>                 0x60200000,         // Address Base
+>                 0x01DF0000,         // Address Length
+>                 )
+>             WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
+>                 0x0000,             // Granularity
+>                 0x0000,             // Range Minimum
+>                 0x0001,             // Range Maximum
+>                 0x0000,             // Translation Offset
+>                 0x0002,             // Length
+>                 ,, )
+>         })
+>         Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
+>     }
 > 
-> commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
-> added some protection for non-ARM architectures, but this does not
-> protect non-i.MX ARM architectures.
-
-Are *all* these commits relevant?  Question also applies to Fixes:
-below.
-
-> Since fault handlers can be triggered on any architecture for different
-> reasons, there is no guarantee that they will be triggered only for the
-> assumed situation, leading to improper error handling (i.MX6-specific
-> imx6q_pcie_abort_handler) on foreign systems.
+> The Memory32Fixed holds a host bridge window, but it's not properly
+> defined as a "producer" resource.  Consequently the resource gets
+> removed by kernel, and the BAR allocation fails later on:
 > 
-> I had seen strange L3 imprecise external abort messages several times on
-> OMAP4 and OMAP5 devices and couldn't make sense of them until I realized
-> they were related to this unused imx6q driver because I had
-> CONFIG_PCI_IMX6=y.
-
-Apparently imx6q_pcie_abort_handler() assumes it is always called
-because of a PCI abort?  If so, that sounds problematic.
-
-If non-PCI imprecise aborts happen on OMAP4 and OMAP5 where imx6q is
-unused and imx6q_pcie_abort_handler() is not appropriate, I assume
-similar non-PCI aborts can also happen on systems where imx6q *is*
-used.
-
-So imx6q_pcie_abort_handler() may be trying to fixup non-PCI aborts
-when it shouldn't?
-
-> Note that CONFIG_PCI_IMX6=y is useful for kernel binaries that are designed
-> to run on different ARM SoC and be differentiated only by device tree
-> binaries. So turning off CONFIG_PCI_IMX6 is not a solution.
+>     [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
+>     [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
+>     [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
+>     [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
 > 
-> Therefore we check the compatible in the init function before registering
-> the fault handler.
+> This eventually prevents the PCIe NVME drive from being accessible.
 > 
-> Fixes: bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
-> Fixes: 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
-> Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
+> Add a quirk for these platforms to avoid the resource being removed.
 > 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > ---
->  drivers/pci/controller/dwc/pci-imx6.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> We are running into the issue on more devices than just Surface Pro X
+> now, so trying to sort it out with a quirk as suggested by Lorenzo [1].
+
+One thing I don't like about this application of quirks is that the
+list of affected platforms is likely to grow, which is an ongoing
+burden for users and developers.
+
+Can we have a conversation with Qualcomm about how they *intend* this
+to work?  Linux is probably doing something wrong (interpreting
+something differently than Windows does), and if we could fix that, we
+have a better chance of future platforms working without quirks.
+
+> [1] https://lore.kernel.org/all/20210527093200.GA16444@lpieralisi/
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-> index 1dde5c579edc8..89774aa187ae8 100644
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1402,6 +1402,15 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
->  static int __init imx6_pcie_init(void)
+>  arch/arm64/kernel/pci.c | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+> index 2276689b5411..896dbd028b67 100644
+> --- a/arch/arm64/kernel/pci.c
+> +++ b/arch/arm64/kernel/pci.c
+> @@ -109,16 +109,42 @@ int pcibios_root_bridge_prepare(struct pci_host_bridge *bridge)
+>  	return 0;
+>  }
+>  
+> +#define QCOM_DSDT_QUIRK "Host bridge windows in PNP0A03 _CRS"
+> +
+> +static struct acpi_platform_list qcom_platlist[] = {
+> +	/* Thinkpad X13s */
+> +	{ "LENOVO", "SDM8280 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
+> +	/* Microsoft Surface Pro 9 (5G) and Windows Dev Kit 2023 */
+> +	{ "QCOMM ", "SDM8280 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
+> +	/* Microsoft Surface Pro X */
+> +	{ "QCOMM ", "SDM8180 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
+> +	{ }
+> +};
+> +
+>  static int pci_acpi_root_prepare_resources(struct acpi_pci_root_info *ci)
 >  {
->  #ifdef CONFIG_ARM
-> +	const struct of_device_id *reboot_id;
-> +	struct device_node *np;
+>  	struct resource_entry *entry, *tmp;
+>  	int status;
+> +	int idx;
+>  
+>  	status = acpi_pci_probe_root_resources(ci);
 > +
-> +	np = of_find_matching_node_and_match(NULL, imx6_pcie_of_match,
-> +					     &reboot_id);
-
-Since you don't need reboot_id, I think you should use
-of_find_matching_node() instead.
-
-> +	if (!np)
-> +		return -ENODEV;
-> +	of_node_put(np);
+> +	/*
+> +	 * Most arm64 platforms that do not run Windows describe host bridge
+> +	 * registers in PNP0A03 _CRS resources, but some like Qualcomm
+> +	 * Snapdragon Windows laptops describe host bridge windows in there.
+> +	 * We do not want to destroy the resources for these platforms.
+> +	 */
+> +	idx = acpi_match_platform_list(qcom_platlist);
+> +	if (idx >= 0)
+> +		goto done;
 > +
->  	/*
->  	 * Since probe() can be deferred we need to make sure that
->  	 * hook_fault_code is not called after __init memory is freed
+>  	resource_list_for_each_entry_safe(entry, tmp, &ci->resources) {
+>  		if (!(entry->res->flags & IORESOURCE_WINDOW))
+>  			resource_list_destroy_entry(entry);
+>  	}
+> +
+> +done:
+>  	return status;
+>  }
+>  
 > -- 
-> 2.38.1
+> 2.17.1
 > 
