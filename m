@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0C9076B010B
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:25:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C2176B011E
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:25:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230188AbjCHIZV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 03:25:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46896 "EHLO
+        id S230251AbjCHIZd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 03:25:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbjCHIY4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 03:24:56 -0500
-Received: from mail-pj1-x102c.google.com (mail-pj1-x102c.google.com [IPv6:2607:f8b0:4864:20::102c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AF1BE06D
-        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 00:24:41 -0800 (PST)
-Received: by mail-pj1-x102c.google.com with SMTP id qa18-20020a17090b4fd200b0023750b675f5so1502095pjb.3
-        for <linux-pci@vger.kernel.org>; Wed, 08 Mar 2023 00:24:41 -0800 (PST)
+        with ESMTP id S230335AbjCHIY6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 03:24:58 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D169A2A149
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 00:24:45 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id me6-20020a17090b17c600b0023816b0c7ceso1517698pjb.2
+        for <linux-pci@vger.kernel.org>; Wed, 08 Mar 2023 00:24:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678263881;
+        d=linaro.org; s=google; t=1678263885;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WT/YBVNsPknrBjyIkGUY9UiL+2Gj/Zemk+zRmMN7Jkk=;
-        b=IU1Ed86toqfeL/Oy5S9RLvgyjhKn4YpmAkbkjTUtlIYfyxwE6ss5nnj0A6aD5fihad
-         5YkLLWGCXIfYwDa6fLQxk3cHtvfit/giKXBtqIMZpOPlbTcWOVLPFxDj0xzeWoMasOma
-         iVMEvW21hIS6FfgzrVtxi2kRHuAiOtEGHFbxOmoj4ltE7uWTJ0m4kApJme7X5j0NPIkb
-         D/Rk+8qsklFZegDG8Os2SB3hNuI0zl2fERMn3Ja62fix/UnUKPeOZnopO4OUqfm/94/5
-         ewWodg5fB/p4yGvAfQoErsiv/UDPygj7R64RzhBJn5eRSKtuGp2tZLqcjUotGOPJxD9/
-         SGbA==
+        bh=BWGkUKxc1+RShsSquL6TSNv4d+3ZNQVwM0OHF82Nolc=;
+        b=nnv0TKxz1LQVhz72XMyVwhz2edQHF5C8K/gYRQygBo/yk+Dbv/xU+iD8tOrKpBybxo
+         Th40/nZ5t3RuUuVaBM6w9/X487xPXQIMTOKM9TbKVKor+Z0RVV2eYg8W8PhlRGiSX/kh
+         ddWdEZIFEpMwK++1pKPLAP1lGQcQYlhaYBvzvGWLWaFB70c6ZfKmR0GdchQKNjwHjGZc
+         iN+14smx3G6dHXcmkw1THuLbzgflDB5QFz+VmZr10YyKqLAPt7GpI7XLw4ybBEWFJWv7
+         Hrj4r6bBgz9hKSJUOWbkNDVSPO/ri5RP9664q/ztWxL4fVHCC9ZgzTxmkwpwyZYGN4gi
+         v6kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678263881;
+        d=1e100.net; s=20210112; t=1678263885;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WT/YBVNsPknrBjyIkGUY9UiL+2Gj/Zemk+zRmMN7Jkk=;
-        b=wn479R9wvrOaGMVE0dqCVeQ/OKRwnvk+n6ng6803mH5zCqtbPQzEToTB61yO8E6EfW
-         FXSbyfD51mjapLUEcGh+OcRdUk68msgqlqWTy+j3GXayKyPAT+NTfmnhTKKhew18xhIm
-         9ZpNv3GYxl+WmN0iqM9kGNf/nuKU9rsMDnaNyIGsvai0dXfq5r1wo0KMyXWlxTSQk30g
-         YEpeIP6UscERi3q+1berbrSoLRM8d8XgVOdb9cWDzGcN+nI/KNVJn8LxYYIJvoTOolKo
-         wa1Z5vUBLf0lherwq4H3UoUQsxj/5d6If1Ka4Ctyj44FOP8xGDelQxDQBxxxSHOp2aNh
-         gj9Q==
-X-Gm-Message-State: AO0yUKUUGMFZRUtkINYQuuDKwhkd3CYmv7A2co2X600chjrrf4Te72gz
-        P2opNjVCPkkcIrSwrVnV/rYr
-X-Google-Smtp-Source: AK7set/u3U2U32Lk//wFu6fAj0zNV+97AFPfKeYRbfUxhcrYTjxdj5ItKedSSAA8khsHfHl97oL8EA==
-X-Received: by 2002:a17:902:c948:b0:19c:dd49:9bf8 with SMTP id i8-20020a170902c94800b0019cdd499bf8mr21710306pla.28.1678263880800;
-        Wed, 08 Mar 2023 00:24:40 -0800 (PST)
+        bh=BWGkUKxc1+RShsSquL6TSNv4d+3ZNQVwM0OHF82Nolc=;
+        b=YZsuu2t9DaKHtTDC78PoYDGAUK2tMg2qjwaBLxxAqX7nz+OiCpMOJYfWdLAmIvNJqc
+         RqvbCUFT9+zinFgbkhz60MWDezy26yLUGiH1FM0jUnSK6hPCNkwbqRSutiYquI9mOd5n
+         yQ8byVH1LYfptK4NWs+JDTy+uBduIs5uIpU4lRhxCDCKzIvyLMGGdf0s0ufU/b05N6ew
+         wAj4YmZmx2wNXAYDwxVPRnb3IhKneW3/bgs/7fBjRi7GQN6Z2ttFUNIXqns68+69Ps5G
+         aZ5x97ZJNjzEmeYW07rd65IegCpNeaFX9sGcBlCi4+lqadhCQfx1Hl8lb0Akm9AP6tcv
+         3emA==
+X-Gm-Message-State: AO0yUKWi/E3xEGDHedUU0ZxJ+XmaiHm2DuYuG0Jxq4y2VnWDZNDyGgr1
+        1LxN93xDtnA5y5YY2dkX7j5v
+X-Google-Smtp-Source: AK7set9hgLNXRCzM9+1cjNcg3cIBVdT4wUvKBQU14zJyGNk2N5NXDyJJWVjP3UoIVTQYzfWFhPYFbA==
+X-Received: by 2002:a17:902:cec6:b0:19d:1bc8:488a with SMTP id d6-20020a170902cec600b0019d1bc8488amr22220855plg.29.1678263885323;
+        Wed, 08 Mar 2023 00:24:45 -0800 (PST)
 Received: from localhost.localdomain ([59.97.52.140])
-        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b0019aaab3f9d7sm9448086plg.113.2023.03.08.00.24.36
+        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b0019aaab3f9d7sm9448086plg.113.2023.03.08.00.24.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 00:24:40 -0800 (PST)
+        Wed, 08 Mar 2023 00:24:45 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     andersson@kernel.org, lpieralisi@kernel.org, robh@kernel.org,
         kw@linux.com, krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org
@@ -56,10 +56,11 @@ Cc:     konrad.dybcio@linaro.org, bhelgaas@google.com, kishon@kernel.org,
         linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 02/13] dt-bindings: PCI: qcom: Add iommu-map properties
-Date:   Wed,  8 Mar 2023 13:54:13 +0530
-Message-Id: <20230308082424.140224-3-manivannan.sadhasivam@linaro.org>
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCH v3 03/13] dt-bindings: PCI: qcom: Add SDX55 SoC
+Date:   Wed,  8 Mar 2023 13:54:14 +0530
+Message-Id: <20230308082424.140224-4-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230308082424.140224-1-manivannan.sadhasivam@linaro.org>
 References: <20230308082424.140224-1-manivannan.sadhasivam@linaro.org>
@@ -75,28 +76,67 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Most of the PCIe controllers require iommu support to function properly.
-So let's add the "iommu-map" property that specifies the SMMU SID of the
-PCIe devices to the binding.
+Add support for the PCIe controller on the Qcom SDX55 SoC to the binding.
 
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/pci/qcom,pcie.yaml    | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 92eb273581f6..55ee86facbc0 100644
+index 55ee86facbc0..35ef56553603 100644
 --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -70,6 +70,8 @@ properties:
+@@ -33,6 +33,7 @@ properties:
+           - qcom,pcie-sc8180x
+           - qcom,pcie-sc8280xp
+           - qcom,pcie-sdm845
++          - qcom,pcie-sdx55
+           - qcom,pcie-sm8150
+           - qcom,pcie-sm8250
+           - qcom,pcie-sm8350
+@@ -203,6 +204,7 @@ allOf:
+               - qcom,pcie-sc7280
+               - qcom,pcie-sc8180x
+               - qcom,pcie-sc8280xp
++              - qcom,pcie-sdx55
+               - qcom,pcie-sm8250
+               - qcom,pcie-sm8350
+               - qcom,pcie-sm8450-pcie0
+@@ -671,6 +673,32 @@ allOf:
+           items:
+             - const: pci # PCIe core reset
  
-   dma-coherent: true
- 
-+  iommu-map: true
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - qcom,pcie-sdx55
++    then:
++      properties:
++        clocks:
++          minItems: 7
++          maxItems: 7
++        clock-names:
++          items:
++            - const: pipe # PIPE clock
++            - const: aux # Auxiliary clock
++            - const: cfg # Configuration clock
++            - const: bus_master # Master AXI clock
++            - const: bus_slave # Slave AXI clock
++            - const: slave_q2a # Slave Q2A clock
++            - const: sleep # PCIe Sleep clock
++        resets:
++          maxItems: 1
++        reset-names:
++          items:
++            - const: pci # PCIe core reset
 +
-   interconnects:
-     maxItems: 2
- 
+   - if:
+       properties:
+         compatible:
 -- 
 2.25.1
 
