@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC456B0137
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:26:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 813616B0139
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 09:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230314AbjCHIZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 03:25:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39388 "EHLO
+        id S230326AbjCHIZ7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 03:25:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjCHIZG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 03:25:06 -0500
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE4EC4345A
-        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 00:25:03 -0800 (PST)
-Received: by mail-pl1-x62e.google.com with SMTP id i10so16940276plr.9
-        for <linux-pci@vger.kernel.org>; Wed, 08 Mar 2023 00:25:03 -0800 (PST)
+        with ESMTP id S229889AbjCHIZJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 03:25:09 -0500
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6E54A334F
+        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 00:25:07 -0800 (PST)
+Received: by mail-pj1-x1034.google.com with SMTP id me6-20020a17090b17c600b0023816b0c7ceso1518496pjb.2
+        for <linux-pci@vger.kernel.org>; Wed, 08 Mar 2023 00:25:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678263903;
+        d=linaro.org; s=google; t=1678263907;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FkX/JAqnQ5TtZN/6y4NG0baYlpvwEsEM/sqYpvaAueY=;
-        b=pYrW1o8qgI7rZ64QiXnQOKoVsn/OKOvGyNVVqyntAXjDVb8lA0bB7eR8VotlSINd83
-         M7I6HL8Z4zp8bbu2Y7ZHYD4YfPfIu1pdRby0kMBhT+27rOyADci1fAZP/vaMwuF7RsPV
-         3Qp3r/lWJWSZhb6ngMGgdbfaa8WvWawTzxkbBsKmlaeavGmvmgqgixgILaL0g3R6cPgF
-         p81yICU7FggoQ+hHRAADGKpuCxLCWiaqZGETaZc4YrkUngakBeKHtSlHfKoifQru1ZpD
-         cox+SciUU7Kn9I6Nv+W0o/HQTukFRC6QnU3FBhCk29XPkrunPL9YVMAwbnOC7u86UJQl
-         DR7A==
+        bh=Yjf3s2TyGH/y+9CG/Fm2q4b8eA0ln6/5386V6jiDwps=;
+        b=S4csL0AFz9Q8BpY56T295R/66sbYxsEYPViYEZxKxvR7pWoQSDV1UmUErdiwfN6B6b
+         DzGYFqkj5rFWvfYm3SP7+vP8vLKvObNofzzQX2iRRAm8CCxl/LwP26irLW8VabWJWLtP
+         alugDw4gcyy8XLZZFsBy+U+DVkDy3bT6nlzBe+ParDXCv3P7W5C4fOP3HijTiixC5aWN
+         XXXZrY+VhETVPLG0U5OQqsPaCHjFPmgfkRxTk/EHq5ZaLNwkjeXMP3C8BhKRb1aka9+7
+         rc7roPaDBeZ5RBtrncbkXWn6/kk3/+vPLGr6jBKzqBXHfvs/fwLr+0eAAdJFYRjIMd8c
+         1NEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678263903;
+        d=1e100.net; s=20210112; t=1678263907;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FkX/JAqnQ5TtZN/6y4NG0baYlpvwEsEM/sqYpvaAueY=;
-        b=6ikBCYpg1IWVCZFg+3HoIWD7wNTmsK40XDH861ZQPbEd+uQ1sOlF2Qbkc8Z4qOVros
-         Z1iuhdSGnIislidNBJn5tOks5Z1J92hiAbOoyZ0kuGdTq8+22koSNrI77dhPZ6R7NQH6
-         7jsaL398Ua4WYkh5VOkkMWH2H7EMZyOULe/VTqTwk6NkoI+3br2oehKjRzVaogI0kbXB
-         YJE8+BZIownkYV0DQAqjfmMmN1Ya0Jsw9I8D5clxyHV8kMs/KuVMaQxduXuzKCrrF1ah
-         LhICAqO4LWQWtehv7/FJq+Q2XqfWhXBDqizswlc7OFENUJYHmMldH/vBaBVywW5a3zbE
-         FtNw==
-X-Gm-Message-State: AO0yUKWNngDPEsD3S4K6L8GwTiIW41qjn2TS5fhGFI//PRZ/6DYJbjsm
-        AsSXqheSHSgzgZ5AEx6b2wmJ
-X-Google-Smtp-Source: AK7set/+aJn3FgEIK2RErx31+KblybDl4+7m3d2W7Zc9VFa5Gtfk+1R/lHYrHBUyy4tf+/AG+JcxKg==
-X-Received: by 2002:a17:903:11cf:b0:19e:6b50:e220 with SMTP id q15-20020a17090311cf00b0019e6b50e220mr7487131plh.53.1678263903123;
-        Wed, 08 Mar 2023 00:25:03 -0800 (PST)
+        bh=Yjf3s2TyGH/y+9CG/Fm2q4b8eA0ln6/5386V6jiDwps=;
+        b=emS8ictaTH1MnkCHMJmUiRSeQl5+1+bo5d0eVe54PBLGiw+HeHizGmffmr4beqQr0O
+         uqLVW5Q6vVySoXESFaRZyLb/sncKc1m36Su2mGhWp4mLMvBqMGG3YDtbzQWsrG0xCuaQ
+         FIUFMAzIMDwVXFceRlqMFnYJPU6HDF6X21cmw95soPZBRyEJN7/rIQwK/Glz1kFpVPmt
+         Vs4lhQdwLZzZ7yQ9bmuBRrh8SKNg78p55OmxcBtbQG1UdoN1dsgaAV/hTNbTrOPSjIil
+         j4/W2XaSFIw5e/2ff6jjmPVZ04fWpmnO/xuTcA6+dymGRiPflwh8U/C2vN8XV9YKSLIT
+         nKfA==
+X-Gm-Message-State: AO0yUKW/RLv84iKQfay4CYrZHb7oORuvlH3cq0ZzUaW+yFSABBfvSCVS
+        cGqgndtNbL6f449DnDh2zP7T
+X-Google-Smtp-Source: AK7set/x/Tt/Gaf7cyi7yIYio3Lv8+0KLkcs+FxHic0Ne0UGCi8t1RDH7aRoWDm/p5Xwxbhqgd+K9w==
+X-Received: by 2002:a17:902:c10a:b0:19e:7b09:bd4d with SMTP id 10-20020a170902c10a00b0019e7b09bd4dmr15605996pli.47.1678263907564;
+        Wed, 08 Mar 2023 00:25:07 -0800 (PST)
 Received: from localhost.localdomain ([59.97.52.140])
-        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b0019aaab3f9d7sm9448086plg.113.2023.03.08.00.24.59
+        by smtp.gmail.com with ESMTPSA id s10-20020a170902ea0a00b0019aaab3f9d7sm9448086plg.113.2023.03.08.00.25.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 00:25:02 -0800 (PST)
+        Wed, 08 Mar 2023 00:25:07 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     andersson@kernel.org, lpieralisi@kernel.org, robh@kernel.org,
         kw@linux.com, krzysztof.kozlowski+dt@linaro.org, vkoul@kernel.org
@@ -57,9 +57,9 @@ Cc:     konrad.dybcio@linaro.org, bhelgaas@google.com, kishon@kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v3 07/13] ARM: dts: qcom: sdx55: Add support for PCIe RC controller
-Date:   Wed,  8 Mar 2023 13:54:18 +0530
-Message-Id: <20230308082424.140224-8-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 08/13] ARM: dts: qcom: sdx55: List the property values vertically
+Date:   Wed,  8 Mar 2023 13:54:19 +0530
+Message-Id: <20230308082424.140224-9-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230308082424.140224-1-manivannan.sadhasivam@linaro.org>
 References: <20230308082424.140224-1-manivannan.sadhasivam@linaro.org>
@@ -75,107 +75,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The PCIe controller in SDX55 can act as the RC controller also. Let's
-add support for it.
+To align with the rest of the devicetree files and the relative properties,
+let's list the values of properties such as {reg/clock/interrupt}-names
+vertically.
 
+Suggested-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- arch/arm/boot/dts/qcom-sdx55.dtsi | 81 +++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
+ arch/arm/boot/dts/qcom-sdx55.dtsi | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
 diff --git a/arch/arm/boot/dts/qcom-sdx55.dtsi b/arch/arm/boot/dts/qcom-sdx55.dtsi
-index bd4edceaa1f4..9dabb94eafbc 100644
+index 9dabb94eafbc..286fa92da428 100644
 --- a/arch/arm/boot/dts/qcom-sdx55.dtsi
 +++ b/arch/arm/boot/dts/qcom-sdx55.dtsi
-@@ -304,6 +304,87 @@ qpic_nand: nand-controller@1b30000 {
- 			status = "disabled";
- 		};
- 
-+		pcie_rc: pcie@1c00000 {
-+			compatible = "qcom,pcie-sdx55";
-+			reg = <0x01c00000 0x3000>,
-+			      <0x40000000 0xf1d>,
-+			      <0x40000f20 0xc8>,
-+			      <0x40001000 0x1000>,
-+			      <0x40100000 0x100000>;
+@@ -393,7 +393,11 @@ pcie_ep: pcie-ep@1c00000 {
+ 			      <0x40001000 0x1000>,
+ 			      <0x40200000 0x100000>,
+ 			      <0x01c03000 0x3000>;
+-			reg-names = "parf", "dbi", "elbi", "atu", "addr_space",
 +			reg-names = "parf",
 +				    "dbi",
 +				    "elbi",
 +				    "atu",
-+				    "config";
-+			device_type = "pci";
-+			linux,pci-domain = <0>;
-+			bus-range = <0x00 0xff>;
-+			num-lanes = <1>;
-+
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+
-+			ranges = <0x01000000 0x0 0x00000000 0x40200000 0x0 0x100000>,
-+				 <0x02000000 0x0 0x40300000 0x40300000 0x0 0x3fd00000>;
-+
-+			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 122 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 123 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 124 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "msi",
-+					  "msi2",
-+					  "msi3",
-+					  "msi4",
-+					  "msi5",
-+					  "msi6",
-+					  "msi7",
-+					  "msi8";
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0x7>;
-+			interrupt-map = <0 0 0 1 &intc 0 0 0 141 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
-+					<0 0 0 2 &intc 0 0 0 142 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
-+					<0 0 0 3 &intc 0 0 0 143 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
-+					<0 0 0 4 &intc 0 0 0 144 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
-+
-+			clocks = <&gcc GCC_PCIE_PIPE_CLK>,
-+				 <&gcc GCC_PCIE_AUX_CLK>,
-+				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
-+				 <&gcc GCC_PCIE_MSTR_AXI_CLK>,
-+				 <&gcc GCC_PCIE_SLV_AXI_CLK>,
-+				 <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
-+				 <&gcc GCC_PCIE_SLEEP_CLK>;
-+			clock-names = "pipe",
-+				      "aux",
++				    "addr_space",
+ 				    "mmio";
+ 
+ 			qcom,perst-regs = <&tcsr 0xb258 0xb270>;
+@@ -405,12 +409,18 @@ pcie_ep: pcie-ep@1c00000 {
+ 				 <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
+ 				 <&gcc GCC_PCIE_SLEEP_CLK>,
+ 				 <&gcc GCC_PCIE_0_CLKREF_CLK>;
+-			clock-names = "aux", "cfg", "bus_master", "bus_slave",
+-				      "slave_q2a", "sleep", "ref";
++			clock-names = "aux",
 +				      "cfg",
 +				      "bus_master",
 +				      "bus_slave",
 +				      "slave_q2a",
-+				      "sleep";
-+
-+			assigned-clocks = <&gcc GCC_PCIE_AUX_CLK>;
-+			assigned-clock-rates = <19200000>;
-+
-+			iommu-map = <0x0   &apps_smmu 0x0200 0x1>,
-+				    <0x100 &apps_smmu 0x0201 0x1>,
-+				    <0x200 &apps_smmu 0x0202 0x1>,
-+				    <0x300 &apps_smmu 0x0203 0x1>,
-+				    <0x400 &apps_smmu 0x0204 0x1>;
-+
-+			resets = <&gcc GCC_PCIE_BCR>;
-+			reset-names = "pci";
-+
-+			power-domains = <&gcc PCIE_GDSC>;
-+
-+			phys = <&pcie_lane>;
-+			phy-names = "pciephy";
-+
-+			status = "disabled";
-+		};
-+
- 		pcie_ep: pcie-ep@1c00000 {
- 			compatible = "qcom,sdx55-pcie-ep";
- 			reg = <0x01c00000 0x3000>,
++				      "sleep",
++				      "ref";
+ 
+ 			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-names = "global", "doorbell";
++			interrupt-names = "global",
++					  "doorbell";
+ 			reset-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
+ 			wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
+ 			resets = <&gcc GCC_PCIE_BCR>;
+@@ -434,7 +444,10 @@ pcie_phy: phy@1c07000 {
+ 				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
+ 				 <&gcc GCC_PCIE_0_CLKREF_CLK>,
+ 				 <&gcc GCC_PCIE_RCHNG_PHY_CLK>;
+-			clock-names = "aux", "cfg_ahb", "ref", "refgen";
++			clock-names = "aux",
++				      "cfg_ahb",
++				      "ref",
++				      "refgen";
+ 
+ 			resets = <&gcc GCC_PCIE_PHY_BCR>;
+ 			reset-names = "phy";
 -- 
 2.25.1
 
