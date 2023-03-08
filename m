@@ -2,319 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 107AB6B08D5
-	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 14:29:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A07536B0980
+	for <lists+linux-pci@lfdr.de>; Wed,  8 Mar 2023 14:38:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231745AbjCHN32 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 8 Mar 2023 08:29:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60140 "EHLO
+        id S231206AbjCHNi4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 8 Mar 2023 08:38:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231743AbjCHN2w (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 08:28:52 -0500
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1FDEB0
-        for <linux-pci@vger.kernel.org>; Wed,  8 Mar 2023 05:27:40 -0800 (PST)
-Received: by mail-wm1-x331.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso1309473wmb.0
-        for <linux-pci@vger.kernel.org>; Wed, 08 Mar 2023 05:27:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678282059;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/pQr6KmTdUgnaHE8iXfJ0bvx2pGOLcHh3rodgiE7+Kk=;
-        b=mzuVYxo1IvHxz+PDOTRQzHmSEPVCuAzHaarvBZtqx/b6RCUBM03s+6D/bJbEtX8RBS
-         GMHxwXRXj/e0plcItRiNo9qtrBhVfEHJGhSoOoHI5kN0gEraILEBRCgyB7H1hZGUZVdp
-         H3NZCjYMJQ77q1rfZtnw/t0gUUBcOOujflGwAO7spKxh/fClm+dHtPDqgv3BdR5zA5nv
-         M/HUNRGrRB1f5/wSfpyY4r28hhB9gYo9Pxh+RErcf4TU7BpKekvITIFemlLtXuCEvVCP
-         N0esRn6MamONGC3XlZ1SrNMxFOudh0nCyeOOotz/Ldvd1p1onTIdia9aEot3QpCzOkDR
-         2XyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678282059;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/pQr6KmTdUgnaHE8iXfJ0bvx2pGOLcHh3rodgiE7+Kk=;
-        b=PCn3o7YQCftCleFfYdlk64sBrSPJGZu+XCVnzJEL4/iTlfTvc000OBP7wwC/8MJoH7
-         VGHsUdxIhwzMwJBrc7ZxIf0d5QTNemZ9fsA8ibbmytzMrprlMLzsMl1q3hLww5295jlH
-         Vljnpt7HJ26T4pHb/2DPfj8DnuUfewvoLA9lFH0yExzL41GIgBsSEt3jL9opMTdRyajK
-         XLQPHxfDN1NX0SzPoeNa2qE+a0EJFfMioST8IIbilcSs4jAG/9mwEHlPRdir/AWSFW2C
-         nfF7/rINUiYJvm2Tn5WtJiL2DLtNi1jGvXndUrk5Nr2e9V+1MwP5/CG/jeZrD3ZnUiDP
-         roYQ==
-X-Gm-Message-State: AO0yUKWZGEBsJJgVJ1prDaXvqYrni7zp6Y9WxQ4i0sjjriBvs4OINzYY
-        q6gtRRjEOmadNtZbRpYy3Iil+w==
-X-Google-Smtp-Source: AK7set8O6HXLMHit1wwemxOlJ3exl5Ep1+SM9Zo/jpqR0zkz4C2reJ9ENi0sLw+wBQacTe5+lH7WKA==
-X-Received: by 2002:a05:600c:3591:b0:3eb:3998:8c05 with SMTP id p17-20020a05600c359100b003eb39988c05mr13181442wmq.6.1678282059224;
-        Wed, 08 Mar 2023 05:27:39 -0800 (PST)
-Received: from arrakeen.starnux.net ([2a01:e0a:982:cbb0:8261:5fff:fe11:bdda])
-        by smtp.gmail.com with ESMTPSA id q14-20020a05600c46ce00b003daffc2ecdesm20631491wmo.13.2023.03.08.05.27.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 05:27:38 -0800 (PST)
-From:   Neil Armstrong <neil.armstrong@linaro.org>
-Date:   Wed, 08 Mar 2023 14:27:33 +0100
-Subject: [PATCH v4 5/5] dt-bindings: PCI: convert amlogic,meson-pcie.txt to
- dt-schema
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20221117-b4-amlogic-bindings-convert-v4-5-34e623dbf789@linaro.org>
-References: <20221117-b4-amlogic-bindings-convert-v4-0-34e623dbf789@linaro.org>
-In-Reply-To: <20221117-b4-amlogic-bindings-convert-v4-0-34e623dbf789@linaro.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-X-Mailer: b4 0.12.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S231193AbjCHNiO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 8 Mar 2023 08:38:14 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5F12BF38D;
+        Wed,  8 Mar 2023 05:36:29 -0800 (PST)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 328Cm8rq013590;
+        Wed, 8 Mar 2023 13:36:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=w0vsOsjk5O2np8Tu4l+4ogLxH7P0R+ba99o7h7cf8e8=;
+ b=aYqtprk/iHAKZZMVUkNcYiuF5LkQkja+yUy3YuJRLkWOjW7681qAFR+DVtHXOKr0Bn2N
+ CJLOr4/dLvNAMmY71fA19Lakp8yMiluHLAZmuy5u9o0lormeHmdiVSGku6KGYPF38U/9
+ 32AJhJYH9CvCbHOyr3CSPDxODJt77Rv7agIbpClaa3emY6RjrCZ+nYUmqNupA6cDvpWE
+ B489shze39AyZw/3N6kubLCpiQh3n/Ax3otW1u4AGCO19kVFYJhySGyt8CYHBHVm0zsm
+ wbyFh7Pk9+9u+ih0VraQjlakKOT7WSlE0H97G5L44n5lSVe+v6+kVkG0Ucj1D4icYtoU 7Q== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p6fga1rjs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Mar 2023 13:36:21 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 328DZgqt020580;
+        Wed, 8 Mar 2023 13:35:42 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3p4fftbxx8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Wed, 08 Mar 2023 13:35:42 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 328DZgbM020567;
+        Wed, 8 Mar 2023 13:35:42 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 328DZgWO020566;
+        Wed, 08 Mar 2023 13:35:42 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 745C14FB4; Wed,  8 Mar 2023 19:05:41 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        lee@kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, mani@kernel.org,
+        lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v3 0/5] Add PCIe EP support for SDX65
+Date:   Wed,  8 Mar 2023 19:05:27 +0530
+Message-Id: <1678282532-16635-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: filnOAoPk92BQj6Yabp5PPPXws0gHO9h
+X-Proofpoint-ORIG-GUID: filnOAoPk92BQj6Yabp5PPPXws0gHO9h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-08_08,2023-03-08_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ spamscore=0 mlxscore=0 clxscore=1015 mlxlogscore=678 impostorscore=0
+ bulkscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303080116
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Convert the Amlogic Meson AXG DWC PCIe SoC controller bindings to
-dt-schema.
+Hi,
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
----
- .../devicetree/bindings/pci/amlogic,axg-pcie.yaml  | 134 +++++++++++++++++++++
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 -----------
- 2 files changed, 134 insertions(+), 70 deletions(-)
+Changes in v3:
+ - Removing the applied patch.
+ - Addressing some of the compile time issues missed in v2.
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-new file mode 100644
-index 000000000000..a5bd90bc0712
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,axg-pcie.yaml
-@@ -0,0 +1,134 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/amlogic,axg-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Amlogic Meson AXG DWC PCIe SoC controller
-+
-+maintainers:
-+  - Neil Armstrong <neil.armstrong@linaro.org>
-+
-+description:
-+  Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+
-+allOf:
-+  - $ref: /schemas/pci/pci-bus.yaml#
-+  - $ref: /schemas/pci/snps,dw-pcie-common.yaml#
-+
-+# We need a select here so we don't match all nodes with 'snps,dw-pcie'
-+select:
-+  properties:
-+    compatible:
-+      enum:
-+        - amlogic,axg-pcie
-+        - amlogic,g12a-pcie
-+  required:
-+    - compatible
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+          - amlogic,axg-pcie
-+          - amlogic,g12a-pcie
-+      - const: snps,dw-pcie
-+
-+  reg:
-+    items:
-+      - description: External local bus interface registers
-+      - description: Meson designed configuration registers
-+      - description: PCIe configuration space
-+
-+  reg-names:
-+    items:
-+      - const: elbi
-+      - const: cfg
-+      - const: config
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: PCIe GEN 100M PLL clock
-+      - description: PCIe RC clock gate
-+      - description: PCIe PHY clock
-+
-+  clock-names:
-+    items:
-+      - const: pclk
-+      - const: port
-+      - const: general
-+
-+  phys:
-+    maxItems: 1
-+
-+  phy-names:
-+    const: pcie
-+
-+  resets:
-+    items:
-+      - description: Port Reset
-+      - description: Shared APB reset
-+
-+  reset-names:
-+    items:
-+      - const: port
-+      - const: apb
-+
-+  num-lanes:
-+    const: 1
-+
-+  power-domains:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+  - clock
-+  - clock-names
-+  - "#address-cells"
-+  - "#size-cells"
-+  - "#interrupt-cells"
-+  - interrupt-map
-+  - interrupt-map-mask
-+  - ranges
-+  - bus-range
-+  - device_type
-+  - num-lanes
-+  - phys
-+  - phy-names
-+  - resets
-+  - reset-names
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    pcie: pcie@f9800000 {
-+        compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+        reg = <0xf9800000 0x400000>, <0xff646000 0x2000>, <0xf9f00000 0x100000>;
-+        reg-names = "elbi", "cfg", "config";
-+        interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+        clocks = <&pclk>, <&clk_port>, <&clk_phy>;
-+        clock-names = "pclk", "port", "general";
-+        resets = <&reset_pcie_port>, <&reset_pcie_apb>;
-+        reset-names = "port", "apb";
-+        phys = <&pcie_phy>;
-+        phy-names = "pcie";
-+        #interrupt-cells = <1>;
-+        interrupt-map-mask = <0 0 0 0>;
-+        interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+        bus-range = <0x0 0xff>;
-+        #address-cells = <3>;
-+        #size-cells = <2>;
-+        device_type = "pci";
-+        num-lanes = <1>;
-+        ranges = <0x82000000 0 0 0xf9c00000 0 0x00300000>;
-+    };
-+...
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-deleted file mode 100644
-index c3a75ac6e59d..000000000000
---- a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-+++ /dev/null
-@@ -1,70 +0,0 @@
--Amlogic Meson AXG DWC PCIE SoC controller
--
--Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
--It shares common functions with the PCIe DesignWare core driver and
--inherits common properties defined in
--Documentation/devicetree/bindings/pci/snps,dw-pcie.yaml.
--
--Additional properties are described here:
--
--Required properties:
--- compatible:
--	should contain :
--	- "amlogic,axg-pcie" for AXG SoC Family
--	- "amlogic,g12a-pcie" for G12A SoC Family
--	to identify the core.
--- reg:
--	should contain the configuration address space.
--- reg-names: Must be
--	- "elbi"	External local bus interface registers
--	- "cfg"		Meson specific registers
--	- "config"	PCIe configuration space
--- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
--- clocks: Must contain an entry for each entry in clock-names.
--- clock-names: Must include the following entries:
--	- "pclk"       PCIe GEN 100M PLL clock
--	- "port"       PCIe_x(A or B) RC clock gate
--	- "general"    PCIe Phy clock
--- resets: phandle to the reset lines.
--- reset-names: must contain "port" and "apb"
--       - "port"        Port A or B reset
--       - "apb"         Share APB reset
--- phys: should contain a phandle to the PCIE phy
--- phy-names: must contain "pcie"
--
--- device_type:
--	should be "pci". As specified in snps,dw-pcie.yaml
--
--
--Example configuration:
--
--	pcie: pcie@f9800000 {
--			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
--			reg = <0x0 0xf9800000 0x0 0x400000
--					0x0 0xff646000 0x0 0x2000
--					0x0 0xf9f00000 0x0 0x100000>;
--			reg-names = "elbi", "cfg", "config";
--			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
--			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
--			#interrupt-cells = <1>;
--			interrupt-map-mask = <0 0 0 0>;
--			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
--			bus-range = <0x0 0xff>;
--			#address-cells = <3>;
--			#size-cells = <2>;
--			device_type = "pci";
--			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
--
--			clocks = <&clkc CLKID_USB
--					&clkc CLKID_PCIE_A
--					&clkc CLKID_PCIE_CML_EN0>;
--			clock-names = "general",
--					"pclk",
--					"port";
--			resets = <&reset RESET_PCIE_A>,
--				<&reset RESET_PCIE_APB>;
--			reset-names = "port",
--					"apb";
--			phys = <&pcie_phy>;
--			phy-names = "pcie";
--	};
+Changes in v2:
+ - Addressing comments from Konrad and Dmitry.
+ - Rebased on top of 6.3-rc1.
+
+This series adds the devicetree support for PCIe PHY and PCIe EP on SDX65.
+The PCIe EP is enabled on SDX65 MTP board.
+
+Thanks,
+Rohit.
+
+Rohit Agarwal (5):
+  dt-bindings: PCI: qcom: Add SDX65 SoC
+  ARM: dts: qcom: sdx65: Add support for PCIe PHY
+  ARM: dts: qcom: sdx65: Add support for PCIe EP
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe PHY
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe EP
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  2 +
+ arch/arm/boot/dts/qcom-sdx65-mtp.dts               | 47 ++++++++++-
+ arch/arm/boot/dts/qcom-sdx65.dtsi                  | 90 ++++++++++++++++++++++
+ 3 files changed, 136 insertions(+), 3 deletions(-)
 
 -- 
-2.34.1
+2.7.4
 
