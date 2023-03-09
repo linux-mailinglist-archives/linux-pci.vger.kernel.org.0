@@ -2,161 +2,231 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CEE226B269D
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 15:20:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BBAEA6B26A2
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 15:20:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230147AbjCIOT7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 09:19:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36300 "EHLO
+        id S231734AbjCIOUS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 09:20:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231742AbjCIOTz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 09:19:55 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DFE678CB3
-        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 06:19:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1678371544;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=A46Usveb628ihXLGsrPj6WsAbS9+1+0iaKdpYzar86s=;
-        b=OhwB1YDyuUCNsCQTb9esoKNKEyMdFj2HASwmIlCplTP/ZfM+eREGFfYuN+8Y3uCPyHZVdy
-        zxDVBOnjqH6vOerDhTzb+aW0NYZMFugUpStNj46PTUjlnvXPrB8JIRlrrgf0ihnBbMgpeN
-        7TnI3C3ScYGG9GPUII2ntvQ1iK5M0SM=
-Received: from mail-ua1-f70.google.com (mail-ua1-f70.google.com
- [209.85.222.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-531-N7TcLNq4MKyoaN7bcOwz4w-1; Thu, 09 Mar 2023 09:19:03 -0500
-X-MC-Unique: N7TcLNq4MKyoaN7bcOwz4w-1
-Received: by mail-ua1-f70.google.com with SMTP id h10-20020ab0618a000000b00709231fb317so789051uan.16
-        for <linux-pci@vger.kernel.org>; Thu, 09 Mar 2023 06:19:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678371542;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A46Usveb628ihXLGsrPj6WsAbS9+1+0iaKdpYzar86s=;
-        b=Sulm7exzQ9L2Zcu58KGPl4e1yvauPSyeHz8NKu2zo8d1G/IIZmOTVhc5xVW8conPDr
-         OlEbIxhbPpAHha1/pBra83iuhVCZOuk5S9S6e7OiRv/LWfl++oHeUFYelMyigmwZbk6i
-         0T3YfJQLQziHci+x6ffLmdVozLiueXuGMJCuTlh9L6vVTUTmq6daisoBe1eEkioD5dgb
-         AzFocqp/b3uLQu/vd6HP1ntSSEDY6WbwfF1vi6bfa7CAg8wAcojGtKUg1yW7a5685i6R
-         K3jK5SdTakoDyL6w7am+ECofjv23iH/t39PkDvEL0yV5Gbc+DHYHbTZSnNxFEHL0p6Ts
-         fGcw==
-X-Gm-Message-State: AO0yUKVUwJOOjFx9h1r17zeF7FcnGLkEqR/vmHEcJxRoKTtJ+hQEEQbf
-        K96C/eYVwcmujpuz2GMr7m0TToGLKtd2mhG4NxzjRVHPwVTsfDDGejHtZUq5gsPGc/lnx/uSgPY
-        atsX6inX5teqkBlisiaQuiVDKHidMFGegeUgo
-X-Received: by 2002:a67:e04d:0:b0:421:edef:20d3 with SMTP id n13-20020a67e04d000000b00421edef20d3mr6995854vsl.7.1678371542417;
-        Thu, 09 Mar 2023 06:19:02 -0800 (PST)
-X-Google-Smtp-Source: AK7set+GbGL371KUHWTmORXbHN7Tjs6YLLY5zKR/W6HgrEkQUazVrbBuPXLus+wPFvbQmfj/LAVNLJcgkQoUVm3BAxw=
-X-Received: by 2002:a67:e04d:0:b0:421:edef:20d3 with SMTP id
- n13-20020a67e04d000000b00421edef20d3mr6995836vsl.7.1678371542065; Thu, 09 Mar
- 2023 06:19:02 -0800 (PST)
+        with ESMTP id S231710AbjCIOUN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 09:20:13 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2088.outbound.protection.outlook.com [40.107.93.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59BC1C3611;
+        Thu,  9 Mar 2023 06:20:07 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RzwfqulSR6LQJyBkeXslQ4DS5+HthEKOP+IwN/pL3MC6McNj6EpVXzjDwzrgkC8uEuIvwEU8ZnW2u2w+TlXDuBHAj+nvdmP7aSDSJpgd2woVapMrl1epkb/kBZ/6c88iFbA4EqpC7GRXYgptIaOy71crnJhb0gauo1A6UtbxtQE5vN0onApO5NK/QSE3JUQ3XMxz5jU4N2svAq/li5QIf4ZUMqaZeNZ0BLuFM7iBPDxuiVw/V1G6HfyVMDIkx18+hhnV/6fGV+a05LKdKmLiuYVigYmO3mo1QCf6nt3TUU/8vLFqRxoGvzmKj6YHgk4HevL8oTF7osHgCaG6UZ41dQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mTJ1TmMBkmMeELwnKimg6YgQSTzCpa0bEpAiKq4G1qA=;
+ b=W1E3VqaC8x1/AKpc+hjxD3uCiA+gC0KhD/tXJ7R2+BxIuIh/rVaSvC2j+BAedrA8jWW0fwcsgMKU4/lCYwL2Dg16GbR2ypJRFjXHQFYF2cr5sA37irXVfvDiolQLEHY1GjaQof2Fng4W6VlTU7lIi4ZyJ9nzvxIhj1vJPpSYXr2Q9rc3go2KnlDbZilBqoN2cNFbhzCfcA9dfJXV18KNh1UR/Wo8mSy1lOx3NGJ+ccI2iayv4V4DYhhzqVUUzXXNVKq198Lzp2pef8/jrak3OIwNF01cYdXplI+b1e282J0TXrgQkD3jiTBOc7+t6fRIL/w0EJhRu2N7S1d3LSyR+w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mTJ1TmMBkmMeELwnKimg6YgQSTzCpa0bEpAiKq4G1qA=;
+ b=ciAcetUdXTqaUTOo8K2vx+xb9TkKDyRwnC0Piq7Dai2G2PvPm2AjGve3d1CHb/M8twVzCmB5rwWyBWD66s4CeAReLfR941xItehcOBPW7VT4K2Q4fSy6lvYHuzEehxYMII7S8TimC3cNahYlDc0SQZNA+4NuiZfPg/NqLrFZ8xI=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com (2603:10b6:5:398::12)
+ by SJ0PR12MB5503.namprd12.prod.outlook.com (2603:10b6:a03:37f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6156.29; Thu, 9 Mar
+ 2023 14:20:02 +0000
+Received: from DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::5b56:bf13:70be:ea60]) by DM4PR12MB5229.namprd12.prod.outlook.com
+ ([fe80::5b56:bf13:70be:ea60%4]) with mapi id 15.20.6178.017; Thu, 9 Mar 2023
+ 14:20:02 +0000
+Message-ID: <a4fc8686-f82d-370e-309f-d6d3fc0568e8@amd.com>
+Date:   Thu, 9 Mar 2023 08:19:58 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Content-Language: en-US
+To:     Borislav Petkov <bp@alien8.de>,
+        David Woodhouse <dwmw2@infradead.org>,
+        =?UTF-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+References: <Y/aTmL5Y8DtOJu9w@google.com> <Y/aYQlQzRSEH5II/@zn.tnic>
+ <Y/adN3GQJTdDPmS8@google.com> <Y/ammgkyo3QVon+A@zn.tnic>
+ <Y/a/lzOwqMjOUaYZ@google.com> <Y/dDvTMrCm4GFsvv@zn.tnic>
+ <BYAPR21MB1688F68888213E5395396DD9D7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <255249f2-47af-07b7-d9d9-9edfdd108348@intel.com>
+ <20230306215104.GEZAZgSPa4qBBu9lRd@fat_crate.local>
+ <a23a36ccb8e1ad05e12a4c4192cdd98267591556.camel@infradead.org>
+ <20230309115937.GAZAnKKRef99EwOu/S@fat_crate.local>
+From:   Tom Lendacky <thomas.lendacky@amd.com>
+In-Reply-To: <20230309115937.GAZAnKKRef99EwOu/S@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SA9PR13CA0017.namprd13.prod.outlook.com
+ (2603:10b6:806:21::22) To DM4PR12MB5229.namprd12.prod.outlook.com
+ (2603:10b6:5:398::12)
 MIME-Version: 1.0
-References: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
-In-Reply-To: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
-From:   Eric Curtin <ecurtin@redhat.com>
-Date:   Thu, 9 Mar 2023 14:18:45 +0000
-Message-ID: <CAOgh=FzWgjr+3YzF9u1k2ReKEgeoLykPc83RbGqDDXZ_PnGmnQ@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
-To:     Janne Grunau <j@jannau.net>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5229:EE_|SJ0PR12MB5503:EE_
+X-MS-Office365-Filtering-Correlation-Id: 58664c71-ba4e-4bb6-dd3e-08db20a95f3f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: id/F0342VzqulFp0e2M+RSd0T8VQIoOgdHqW9HScEs207JvgJwFjSj6HfMs9usJIYSuSzAooco6GFMmExMu6MMEcNMG1rsNQJ7TtVl9FYexhWginfmfXzwLJus2x408GcX4izO8B0poalJqalPlrJJXmshHuq5d9FMKN6poF3LautftH++mmFucmsx2JRZi2ckoCYhuS6XZzmpogkhL5iNtvVyKSNU2Vov42//vhcQnwqm8WC1ikpIR3fGpCxllAPsHwGoK5z2nfRHQgI1C7N3qtJ6UgJI1tRY04jhgFCAOrAx5lnw8ZALpXgw5E88/simqBq62e1XUayUIYQ1I4xLrxffcR5N+JcgECv+cZ31vmyr4xA/q1kkFiBPmFMJu9Rb2UgnJLyAeBcHnYM+fwBGMavGlNNQ7iTHf/8qmpPXPBaLU/c5LIkw+XwyjFDqWTBAiGnMs0hZJrY6Bunl8hQnMM9Ni72gnLxZYPApF8ytKE9noaSAY/YFoHj9+skuddp9DOpSoaToqnYq2znnyoq3UXP6Vsht0FEJq1znVwhUAxj6HaYi1EtndeEx2rW62x56jSVUFOYasX1Ph+TlccCJf+Vj4zzs9/H/gpbldCNKpEN1kngUkWaAAEIgAgq54PrnJaoMlqNbK5RHbDD6MDRMK0xfaaaMHC1dObCo91tHIE84IFniSLDoPo6QtUb1i7Y3JDZDvMEJSjzEO3Li4quqA3o6Q9hqmpOfBNtKTg6AI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5229.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(451199018)(31696002)(86362001)(66946007)(41300700001)(5660300002)(36756003)(66476007)(8676002)(8936002)(7406005)(7416002)(4326008)(38100700002)(66556008)(186003)(26005)(53546011)(2616005)(66574015)(478600001)(2906002)(966005)(316002)(54906003)(6506007)(6512007)(6666004)(110136005)(6486002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZVhJSlh5RHBhamVrRHM1SElUQlRzbFgxeE5hNXNIdFc3dC9Dd29naHpmeE80?=
+ =?utf-8?B?T0pHemY1ZzJWdThYWlNGb3ZycWh0VVNaSndjYTNxYXM5OHVlTjNFL09aWTZ2?=
+ =?utf-8?B?bFFpT1pSb2xTd1lPbWo0QWhBSCtOSnVuWVRUeVYrbyszM0thNnAyM1FKV2Fh?=
+ =?utf-8?B?MG5OTzIxSDNabk4vVWlhekNXVWVvd3BQdVhiaENDaThFZzN5SHlRWk8zNldx?=
+ =?utf-8?B?YkFPTURab2tjU2tHbTVzdjl3SllLNTZ6Q2U4VXhQKzZveEZ1eElpSmpNc1d2?=
+ =?utf-8?B?QXhZMTRZaitWL2hOaFkxWStoaURtRjRNQ3FjZTJ6dkZyZmdlbXprOXhPNFE4?=
+ =?utf-8?B?UjhYYnJEWXhUaUFWTkErMEwwb2dYMkZyS2tibTQ1VjQ1VkFFRmJUQzFzbWFv?=
+ =?utf-8?B?NkMwUzU2WUdtb3E4Sm8wYTdUcE1LekFTdVlGQ3RiVnVPZUwzTmUwSDVySzgw?=
+ =?utf-8?B?QlpsWisvWTZEYUF2cXZXdmJWRU1idDkvWitVc0tXNkwzcFdVNXN5OGZuRDVH?=
+ =?utf-8?B?TWtOMXc4SktCYXRxQmFJS2hiTkU3cGVzQWNRL3FEQVorVndqRUYrN1NBcUV0?=
+ =?utf-8?B?QXllOThTbENGc3ZSYmJDNkhLNmlWRU9qeEY4ZkZtN0kvQWdCVXJLbVhvTzgw?=
+ =?utf-8?B?TTVTU3ZzcjdSNVJpS3pkN0hyM09VejlaRU01WXNvbHZ4eTNRdGNWZDNBQXNj?=
+ =?utf-8?B?NmJZVHd4OHRFalN1N2FFWkkrRnhmeTN0TXVYRHVaZ1JxWXBuTnRSY0lOQXMy?=
+ =?utf-8?B?VlFNdEltR1d5MUljcU5OWUJ1QjFFa3NmbGJwQ2ozRkRyWTdBcForUGF6YmFF?=
+ =?utf-8?B?ZGp6c2FCTjNDYVJ4Z3paemJVM0cyNmRjK01CcGNBR0xRbVV2K3g4NU00bDhC?=
+ =?utf-8?B?SGdMSktYSUg1R2ZPRDY4YnNqVTBIL1UxVzc0eVE4dGIvY1dyOG1rL01YRzNM?=
+ =?utf-8?B?Z0lla3FxUnh0YkdKRDV4OVZIakNDMGs0ZzRDZzVtbjhoUFBYS2IwVk1PLzZ5?=
+ =?utf-8?B?b0ZEckw5VXRPYXd4T3JZT2dvRlN3WTgyL2llM20zZmxkcFRpOXNiR1liU1N0?=
+ =?utf-8?B?eG5xRmtIbFUxbHdtbnlFTDBwUmNzZU5VbHp3TzllMGcxK05sYnJLVDEzcyt6?=
+ =?utf-8?B?OUpiSGVXLzYyRngwcWtnUUhheWd4dVBNRDRMd3RvSk80WTlSc0JnS09GdlBv?=
+ =?utf-8?B?WDYzYit0N01iWnRiMkFVdVFJK2ZIU0I3Zngzdk8yUTBMZm5pUWdUckxWTUxH?=
+ =?utf-8?B?U0ZvMEYraFdnL08vYlFYRE1LVE5Uc2ZiRUM3UTk1SXRQa0wzaUtRQS9NdlA2?=
+ =?utf-8?B?Sks1VnZzd3d3bS9KTHpSck0vbFdDSjF3Rk9aUnNBQXdvVndsTzV1NGZUY1lK?=
+ =?utf-8?B?cjdqU3F4TjZGUUw3cDJ5QlhuYnV5SzhSeHdlMlJoY3hnU041MTFGV0VQd1Vz?=
+ =?utf-8?B?MVBNaTZ4RkxWeVFSMFhCOXIxK1hKd3M3UnEvaWZlSnhJbUtqZDY4djgzYUVW?=
+ =?utf-8?B?VlhxdVdrYTNEaEgrTXA0ejdaOU9GWjB0NkloVU0weEErb2ljN3JCd3FpbDJE?=
+ =?utf-8?B?MjdHTFprOVBiTjBXMnZjYTg0bXEwUFZKSWlrWE1sZnlwUWYzbGNvL0xvbVh5?=
+ =?utf-8?B?ak80L2J5b01VVnFPMXprYUhxTERaSW5HVTZUZ2pOTDZJemZVR2tXUTZmd2h2?=
+ =?utf-8?B?Z1lOQjhtTWV0UnkyREVzcWZUR3QxZkI5RHBoWVVNMG1SZk0wNzJzeHNZbnBs?=
+ =?utf-8?B?eC9pSWQvdlZHYWJpRVA4elhQMnNCY0JWYmhFQUNNaWlxbkZZQW00cWlieisr?=
+ =?utf-8?B?bXhlL2lOSEp5VXNlT3RVV3Vvd0llOCtHcTFyMG1NeTFFSmpaN09UUkF4VVhK?=
+ =?utf-8?B?a3VvSUkzQzF5ajZPT2JDU0VheE95Z3FVUDk1TktjL1BaZGZtNTFjZGNVYUpU?=
+ =?utf-8?B?TzJzSzJtL2RFbGtKQTl1K2x2aDg2SzNjMlRZWXN1MUtQNkl4OHdXRVhSYzBP?=
+ =?utf-8?B?UTlOYkNlUGNZRDBIQ2xMRjZtWU8yejlKbC9CRWZLR2JNYjQ1SExVMzZWYlI3?=
+ =?utf-8?B?eWJZT3BUeFd6cGNNZk5NRC9nWCtHdG0ycEtMU0FYZHNRUXlGNHlFdWdRUFJQ?=
+ =?utf-8?Q?+KlRC+6FGGhvI+rSB32JQIBzm?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 58664c71-ba4e-4bb6-dd3e-08db20a95f3f
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5229.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Mar 2023 14:20:02.4995
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nmvd3ZHvJj9MRvirekZbVNCThb4ZN1c0UkC2bJLL6ppds7Ks//xTEu1p+HUq1haDNd8fw+hNe7h2ChzZ+SueXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5503
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 9 Mar 2023 at 13:43, Janne Grunau <j@jannau.net> wrote:
->
-> Fixes following warning inside of_irq_parse_raw() called from the common
-> PCI device probe path.
->
->   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
->   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
->   ...
->   Call trace:
->    of_irq_parse_raw+0x5fc/0x724
->    of_irq_parse_and_map_pci+0x128/0x1d8
->    pci_assign_irq+0xc8/0x140
->    pci_device_probe+0x70/0x188
->    really_probe+0x178/0x418
->    __driver_probe_device+0x120/0x188
->    driver_probe_device+0x48/0x22c
->    __device_attach_driver+0x134/0x1d8
->    bus_for_each_drv+0x8c/0xd8
->    __device_attach+0xdc/0x1d0
->    device_attach+0x20/0x2c
->    pci_bus_add_device+0x5c/0xc0
->    pci_bus_add_devices+0x58/0x88
->    pci_host_probe+0x124/0x178
->    pci_host_common_probe+0x124/0x198 [pci_host_common]
->    apple_pcie_probe+0x108/0x16c [pcie_apple]
->    platform_probe+0xb4/0xdc
->
-> This became apparent after disabling unused PCIe ports in the Apple
-> silicon device trees instead of deleting them.
->
-> Use for_each_available_child_of_node instead of for_each_child_of_node
-> which takes the "status" property into account.
->
-> Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-> Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Janne Grunau <j@jannau.net>
+On 3/9/23 05:59, Borislav Petkov wrote:
+> First of all,
+> 
+> thanks for proactively pointing that out instead of simply using what's
+> there and we get to find out later, only by chance.
+> 
+> Much appreciated. :-)
+> 
+> On Thu, Mar 09, 2023 at 11:12:10AM +0000, David Woodhouse wrote:
+>>> Right, I think we're ok with the following basic rules:
+>>>
+>>> - pure arch/x86/ code should use the x86_platform function pointers to
+>>>    query hypervisor capabilities/peculiarities
+>>>
+>>> - cc_platform_has() should be used in generic/driver code as it
+>>>    abstracts away the underlying platform better. IOW, querying
+>>>    x86_platform.... in generic, platform-agnostic driver code looks weird to
+>>>    say the least
+>>>
+>>> The hope is that those two should be enough to support most guest types
+>>> and not let the zoo get too much out of hand...
+>>>
+>>> Thx.
+>>
+>> In
+>> https://lore.kernel.org/all/20230308171328.1562857-13-usama.arif@bytedance.com/
+>> I added an sev_es_active() helper for x86 code.
+>>
+>> Is that consistent with the vision here, or should I do something different?
+> 
+> So looking at sev_es_init_vc_handling() where we set that key, I'm
+> *thinking* that key can be removed now and the code should check
+> 
+>    cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT)
+> 
+> instead.
+> 
+> Because if some of the checks in that function below fail, the guest
+> will terminate anyway.
+> 
+> Jörg, Tom?
 
-Makes sense.
+I believe Joerg added that key for performance reasons, since it is used 
+on the exception path and can avoid all the calls to cc_platform_has(). I 
+think that key should stay.
 
-Reviewed-by: Eric Curtin <ecurtin@redhat.com>
+Maybe David can introduce an CC_ATTR_GUEST_SEV_ES attribute that returns 
+true if the guest is an ES or SNP guest. Or do we introduce a 
+CC_ATTR_PARALLEL_BOOT attribute that returns true for any SEV guest.
 
-Is mise le meas/Regards,
+Then the "if cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT) && !has_sev_es" 
+check in arch/x86/kernel/smpboot.c can be removed and the following check 
+can become if (x2apic_mode || cc_platform_has(CC_ATTR_PARALLEL_BOOT))
 
-Eric Curtin
+Not sure how that affects a TDX guest, though.
 
-> ---
-> Changes in v2:
-> - rewritten commit message with more details and corrections
-> - collected Marc's "Reviewed-by:"
-> - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
-> ---
->  drivers/pci/controller/pcie-apple.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 66f37e403a09..f8670a032f7a 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
->         cfg->priv = pcie;
->         INIT_LIST_HEAD(&pcie->ports);
->
-> -       for_each_child_of_node(dev->of_node, of_port) {
-> +       for_each_available_child_of_node(dev->of_node, of_port) {
->                 ret = apple_pcie_setup_port(pcie, of_port);
->                 if (ret) {
->                         dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
->
-> ---
-> base-commit: c9c3395d5e3dcc6daee66c6908354d47bf98cb0c
-> change-id: 20230307-apple_pcie_disabled_ports-0c17fb7a4738
->
-> Best regards,
-> --
-> Janne Grunau <j@jannau.net>
->
->
+Thanks,
+Tom
 
+> 
