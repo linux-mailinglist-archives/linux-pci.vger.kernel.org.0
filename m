@@ -2,228 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E32876B2373
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 12:52:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 95EF96B238F
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 13:00:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230130AbjCILv4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 06:51:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50164 "EHLO
+        id S231659AbjCIMAF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 07:00:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231649AbjCILvx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 06:51:53 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86BD0E6835;
-        Thu,  9 Mar 2023 03:51:51 -0800 (PST)
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3298QivW009122;
-        Thu, 9 Mar 2023 11:51:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=DNOlz2EYTj6weFcohqxG0NnpJE4xB0UXowa/63Q892w=;
- b=BWLzr8NZdvaEdimvictYzpPUd7ujpjmZBI3GgiDwXkZ6PhARNXOwN2t9iFHHcIcQIW5p
- DU6tkAarZ970FAtXfn3dDi6Bc/LIyl2vwusneKbeblFgCoEWKmGbjnUQ3T0gxx+o1ABf
- QYKx+33uALemidDt5054wxL9g2PrkVXzexnkZUTJV+UGrRfGYV3eoaWeIoZhpZ1YTWPE
- 7Fdky2qICPpO3DjxEmkXnJIlynienapTsp37qjwvR+aPf7AvYibAsz6z8qY9PXTzkrMU
- P4Vlt1afSETdnr+hfyqle+oHocZ0rSWe0he6Wb/4Lu1SkG5OVrB3TPYwYS1rKTYX3JgQ RA== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p74drhkxe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 11:51:46 +0000
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-        by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 329BpjFS014867
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 9 Mar 2023 11:51:45 GMT
-Received: from [10.201.3.182] (10.80.80.8) by nalasex01c.na.qualcomm.com
- (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 9 Mar 2023
- 03:51:41 -0800
-Message-ID: <73269ad0-5662-519c-f6c0-e5e2f918cd4e@quicinc.com>
-Date:   Thu, 9 Mar 2023 17:21:38 +0530
+        with ESMTP id S231451AbjCIL7r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 06:59:47 -0500
+Received: from mail.skyhub.de (mail.skyhub.de [5.9.137.197])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E822DDAB80;
+        Thu,  9 Mar 2023 03:59:45 -0800 (PST)
+Received: from zn.tnic (p5de8e9fe.dip0.t-ipconnect.de [93.232.233.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4E4001EC03CA;
+        Thu,  9 Mar 2023 12:59:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1678363184;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=90vFMcU1aj7MNl0YJWHq0D+SdgqMmwppIDssNkGHN0s=;
+        b=qiiJY7lCp+bHxVH6C28W+gwzLyykdT2M2oNSDZWtkL8aMO7DJ2N4sOH42a0CCM8tVyB+r9
+        FwX2ofvtwttj/UgIJETiFm7w1MLPzUyE1KS1uBIBuJw1QfPYSuP6AD5YlvEMj/M7TqnDal
+        MOJgdA8GVC26djw3lokZIYc9Pq/ibZE=
+Date:   Thu, 9 Mar 2023 12:59:37 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        =?utf-8?B?SsO2cmcgUsO2ZGVs?= <joro@8bytes.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        Sean Christopherson <seanjc@google.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: Re: [PATCH v5 06/14] x86/ioremap: Support hypervisor specified range
+ to map as encrypted
+Message-ID: <20230309115937.GAZAnKKRef99EwOu/S@fat_crate.local>
+References: <Y/aTmL5Y8DtOJu9w@google.com>
+ <Y/aYQlQzRSEH5II/@zn.tnic>
+ <Y/adN3GQJTdDPmS8@google.com>
+ <Y/ammgkyo3QVon+A@zn.tnic>
+ <Y/a/lzOwqMjOUaYZ@google.com>
+ <Y/dDvTMrCm4GFsvv@zn.tnic>
+ <BYAPR21MB1688F68888213E5395396DD9D7AB9@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <255249f2-47af-07b7-d9d9-9edfdd108348@intel.com>
+ <20230306215104.GEZAZgSPa4qBBu9lRd@fat_crate.local>
+ <a23a36ccb8e1ad05e12a4c4192cdd98267591556.camel@infradead.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v2 17/17] PCI: qcom: Expose link transition counts via
- debugfs
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <andersson@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <robh@kernel.org>
-CC:     <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20230309085102.120977-1-manivannan.sadhasivam@linaro.org>
- <20230309085102.120977-18-manivannan.sadhasivam@linaro.org>
-From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
-In-Reply-To: <20230309085102.120977-18-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: VrZ95vLubBXKCvrVPVzCJ29OTewhHoUI
-X-Proofpoint-ORIG-GUID: VrZ95vLubBXKCvrVPVzCJ29OTewhHoUI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-09_06,2023-03-08_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 priorityscore=1501 mlxscore=0 suspectscore=0
- clxscore=1011 adultscore=0 phishscore=0 spamscore=0 mlxlogscore=999
- bulkscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303090095
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a23a36ccb8e1ad05e12a4c4192cdd98267591556.camel@infradead.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+First of all,
 
+thanks for proactively pointing that out instead of simply using what's
+there and we get to find out later, only by chance.
 
-On 3/9/2023 2:21 PM, Manivannan Sadhasivam wrote:
-> Qualcomm PCIe controllers have debug registers in the MHI region that
-> count PCIe link transitions. Expose them over debugfs to userspace to
-> help debug the low power issues.
-> 
-> Note that even though the registers are prefixed as PARF_, they don't
-> live under the "parf" register region. The register naming is following
-> the Qualcomm's internal documentation as like other registers.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->   drivers/pci/controller/dwc/pcie-qcom.c | 59 ++++++++++++++++++++++++++
->   1 file changed, 59 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index e1180c84f0fa..6d9bde64c9e9 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -10,6 +10,7 @@
->   
->   #include <linux/clk.h>
->   #include <linux/crc8.h>
-> +#include <linux/debugfs.h>
->   #include <linux/delay.h>
->   #include <linux/gpio/consumer.h>
->   #include <linux/interconnect.h>
-> @@ -62,6 +63,13 @@
->   #define AXI_MSTR_RESP_COMP_CTRL1		0x81c
->   #define MISC_CONTROL_1_REG			0x8bc
->   
-> +/* MHI registers */
-> +#define PARF_DEBUG_CNT_PM_LINKST_IN_L2		0xc04
-> +#define PARF_DEBUG_CNT_PM_LINKST_IN_L1		0xc0c
-> +#define PARF_DEBUG_CNT_PM_LINKST_IN_L0S		0xc10
-> +#define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L1	0xc84
-> +#define PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L2	0xc88
-> +
->   /* PARF_SYS_CTRL register fields */
->   #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
->   #define MST_WAKEUP_EN				BIT(13)
-> @@ -229,11 +237,13 @@ struct qcom_pcie {
->   	struct dw_pcie *pci;
->   	void __iomem *parf;			/* DT parf */
->   	void __iomem *elbi;			/* DT elbi */
-> +	void __iomem *mhi;
->   	union qcom_pcie_resources res;
->   	struct phy *phy;
->   	struct gpio_desc *reset;
->   	struct icc_path *icc_mem;
->   	const struct qcom_pcie_cfg *cfg;
-> +	struct dentry *debugfs;
->   };
->   
->   #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> @@ -1385,6 +1395,37 @@ static void qcom_pcie_icc_update(struct qcom_pcie *pcie)
->   	}
->   }
->   
-> +static int qcom_pcie_link_transition_count(struct seq_file *s, void *data)
-> +{
-> +	struct qcom_pcie *pcie = (struct qcom_pcie *)
-> +				     dev_get_drvdata(s->private);
-> +
-> +	seq_printf(s, "L0s transition count: %u\n",
-> +		   readl_relaxed(pcie->mhi + PARF_DEBUG_CNT_PM_LINKST_IN_L0S));
-> +
-> +	seq_printf(s, "L1 transition count: %u\n",
-> +		   readl_relaxed(pcie->mhi + PARF_DEBUG_CNT_PM_LINKST_IN_L1));
-> +
-> +	seq_printf(s, "L1.1 transition count: %u\n",
-> +		   readl_relaxed(pcie->mhi + PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L1));
-> +
-> +	seq_printf(s, "L1.2 transition count: %u\n",
-> +		   readl_relaxed(pcie->mhi + PARF_DEBUG_CNT_AUX_CLK_IN_L1SUB_L2));
-> +
-> +	seq_printf(s, "L2 transition count: %u\n",
-> +		   readl_relaxed(pcie->mhi + PARF_DEBUG_CNT_PM_LINKST_IN_L2));
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_pcie_init_debugfs(struct qcom_pcie *pcie)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	debugfs_create_devm_seqfile(pci->dev, "link_transition_count", pcie->debugfs,
-> +				    qcom_pcie_link_transition_count);
-> +}
-> +
->   static int qcom_pcie_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -1392,6 +1433,7 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   	struct dw_pcie *pci;
->   	struct qcom_pcie *pcie;
->   	const struct qcom_pcie_cfg *pcie_cfg;
-> +	char *name;
->   	int ret;
->   
->   	pcie_cfg = of_device_get_match_data(dev);
-> @@ -1439,6 +1481,12 @@ static int qcom_pcie_probe(struct platform_device *pdev)
->   		goto err_pm_runtime_put;
->   	}
->   
-> +	pcie->mhi = devm_platform_ioremap_resource_byname(pdev, "mhi");
-> +	if (IS_ERR(pcie->mhi)) {
-> +		ret = PTR_ERR(pcie->mhi);
-> +		goto err_pm_runtime_put;
-> +	}
-> +
+Much appreciated. :-)
 
-  Tested this series on ipq4019-ap.dk07.1-c1 board and the above hunk
-  breaks enumeration because there is no 'mhi' region. All the debug bits
-  used in the transition_count function is inside the PARF_STTS register
-  at offset 0x24 inside the PARF region.
+On Thu, Mar 09, 2023 at 11:12:10AM +0000, David Woodhouse wrote:
+> > Right, I think we're ok with the following basic rules:
+> >
+> > - pure arch/x86/ code should use the x86_platform function pointers to
+> >   query hypervisor capabilities/peculiarities
+> >
+> > - cc_platform_has() should be used in generic/driver code as it
+> >   abstracts away the underlying platform better. IOW, querying
+> >   x86_platform.... in generic, platform-agnostic driver code looks weird to
+> >   say the least
+> >
+> > The hope is that those two should be enough to support most guest types
+> > and not let the zoo get too much out of hand...
+> >
+> > Thx.
+>
+> In
+> https://lore.kernel.org/all/20230308171328.1562857-13-usama.arif@bytedance.com/
+> I added an sev_es_active() helper for x86 code.
+>
+> Is that consistent with the vision here, or should I do something different?
 
-  Register: PCIE_0_PCIE20_PARF_PM_STTS | 0x80024
-  Offset:    0x24    Reset State:    0x00040000
+So looking at sev_es_init_vc_handling() where we set that key, I'm
+*thinking* that key can be removed now and the code should check
 
-Bits    Field Name
-31    LINK_REQ_RST_NOT
-30    XMLH_LINK_UP
-29    PM_DSTATE_0
-0x0: D0
-0x1: D3
-28    PHYSTATUS
-27:16    PM_DSTATE
-15:12    PM_PME_EN
-11    PHYCLK_REQ_N
-10    L1SS_CLKREQN_OE
-9    L1SS_CLKREQN_IN
-8    PM_LINKST_IN_L1SUB
-7    PM_LINKST_IN_L0S
-6    PM_LINKST_L2_EXIT
-5    PM_LINKST_IN_L2
-4    PM_LINKST_IN_L1
-3:0    PM_STATUS
+  cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT)
 
-Otherwise, with rest of the patches enumeration was fine.
-Tested with a pcie ethernet adapter.
+instead.
 
-Regards,
-  Sricharan
+Because if some of the checks in that function below fail, the guest
+will terminate anyway.
+
+Jörg, Tom?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
