@@ -2,146 +2,162 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36DC46B2B2C
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 17:50:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B2666B2B80
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 18:03:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230288AbjCIQuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 11:50:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
+        id S230171AbjCIRDY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 12:03:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60268 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231181AbjCIQt6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 11:49:58 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEC1FE0B9;
-        Thu,  9 Mar 2023 08:39:38 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A966261C4A;
-        Thu,  9 Mar 2023 16:39:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E9AC433D2;
-        Thu,  9 Mar 2023 16:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678379977;
-        bh=lPti0CqiJyrVN8p1peO9ayPP4zvhtBCZaW4gjRkGXz8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Hmd9ToL/4LqU26a4rwLzPqQpJBKFO8O+twt93NgBKvVPwnX+l0D9Ol3IV38M5Zao2
-         ufqkOsdfBfSub5n5DO0TnGDEYsaiszTiNoGQckU+9qAuwLty8/q+buZ1jR2fbFBv3L
-         WofwK2r/iDZKABvCQJzIRRT27sPnR1a4DG8esc4HeA3S185UFVUDcPgop47s+CGpbP
-         kipr2ysjLmeFPZ8i0xPt9RfS8OEnhIPOkelIFmJVlBzIKm+c6Jm8yp56gEZb7wbaCd
-         O4AIRxiBKLbGlH+9cxeilrw30RONRlR2TICcAaj4O9KoCbVqqZJtPPmOtLhV/cabi5
-         BCrXSROYicgGA==
-Date:   Thu, 9 Mar 2023 10:39:35 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Janne Grunau <j@jannau.net>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
+        with ESMTP id S230224AbjCIRCr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 12:02:47 -0500
+Received: from mo4-p01-ob.smtp.rzone.de (mo4-p01-ob.smtp.rzone.de [85.215.255.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27D5ADBB59;
+        Thu,  9 Mar 2023 08:57:04 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1678380992; cv=none;
+    d=strato.com; s=strato-dkim-0002;
+    b=Urcr1g8b7Xuzokx6dlPrgXfCTOjIv2+ITDDy5Gb41ZQG2ha1JQYcwRG93x2cQ8beAe
+    QH3JGZbR/lnlDob23t925D4Rvea75E4mFVzL7bgBOuK4NGWEw4Xg9FIYMK0AYIunBjF9
+    ZTQscOyw2YijPx1/OgOdVs9IK3OpFn1ZcGvHzfC/JIfeAjgnL+ro8KtqA3cX+VRLFYvQ
+    H29DoHtdywXd8u4dCb0uf50j5amaC9e3kIL2FGyWk0xQU1ikvS7K0d72FveLZb2I1bKI
+    t6CWNtLeIWFw6+rVxypHcTbsbIa7GpCFmIUN58cEkSLcOYH2AV9y6YvHrb0HwzQ3sA0p
+    +roQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; t=1678380992;
+    s=strato-dkim-0002; d=strato.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=wHpk4aIfXvwZ9L9eYQkKUD5TX9p8N/0ABhLYcRfGxXU=;
+    b=cJdK6kzAnjm/r4GZRpV17dOIhnnZa8tnA7cMenQAk4Is6xmwl8wsuDXSIi+3tbuXxz
+    mI8l39vc3+wKiShC8aX5uCJrtFGfniiNh8PiWN642TmK3ozMgh1Z7j9Qo4WJYuqzQTTz
+    zDbxKN650svUkkx0SSUQrsHlaz13adsRNZou4C3TZcGFju41K920jbeKjdDqKhPrxekB
+    wB6u2YBPjVLqnlt3oSwee3M30YhQ+QJE44POa+TcZIzJjoFazTqfSydhEYU+6yKT7TuK
+    tiTG7lE7KPYfl3420g7AdkGfPR985ZP8Q0Zo1ii2xu9Sm1rbto+0EtyWIRF8T4WgbHu9
+    SY0A==
+ARC-Authentication-Results: i=1; strato.com;
+    arc=none;
+    dkim=none
+X-RZG-CLASS-ID: mo01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1678380992;
+    s=strato-dkim-0002; d=goldelico.com;
+    h=Message-Id:Date:Subject:Cc:To:From:Cc:Date:From:Subject:Sender;
+    bh=wHpk4aIfXvwZ9L9eYQkKUD5TX9p8N/0ABhLYcRfGxXU=;
+    b=cw0tAsyD9VgZpZmtbT5TXzmlEK+/TtENmVTOWt47tbAsKCa6gCvlKGo7pyl15vXQQg
+    zxdTNQ//B+7fcDwHOc9UUONbY7jeZgu8mdfeqyoyJKM+/AYXCAICMJlD7ZpcO09EgPcL
+    RQp57FLqQGOTq+V5lv6yuZMbNluwwSaI7rEWFFC4nFg+q2+yxFCJgovpPL05iyZofOqS
+    Tv2h7F/ozx3bmvIsN/ekMIYIOfaPE/fFWDFD5mheZrfB1MW9SgMOkESC6xxcBxjOsoF+
+    Mtu8mUOgKg2GKzd8EqNHzB11+2xaEeMhyXiiLvB4JLhcdpXPSR3XNFRbOAdTf7yS74NF
+    MoJA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1iTDUhfN4hi3qVZrWzJ"
+Received: from iMac.fritz.box
+    by smtp.strato.de (RZmta 49.3.0 DYNA|AUTH)
+    with ESMTPSA id 2faf7dz29GuWbnB
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+    Thu, 9 Mar 2023 17:56:32 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     Richard Zhu <hongxing.zhu@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
-Message-ID: <20230309163935.GA1140101@bhelgaas>
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Rob Herring <robh@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com,
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] PCI: imx6: install the fault handler only if we are really running on a compatible device
+Date:   Thu,  9 Mar 2023 17:56:31 +0100
+Message-Id: <e1bcfc3078c82b53aa9b78077a89955abe4ea009.1678380991.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_PASS,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Daire, Conor for apple/microchip use of ECAM .init() method]
+commit bb38919ec56e ("PCI: imx6: Add support for i.MX6 PCIe controller")
+added a fault hook to this driver in the probe function. So it was only
+installed if needed.
 
-On Thu, Mar 09, 2023 at 02:36:24PM +0100, Janne Grunau wrote:
-> Fixes following warning inside of_irq_parse_raw() called from the common
-> PCI device probe path.
-> 
->   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
->   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
+commit bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
+moved it from probe to driver init which installs the hook unconditionally
+as soon as the driver is compiled into a kernel.
 
-Based on this commit log, I assume this patch only fixes the warning,
-and the system *works* just fine either way.  If that's the case, it's
-debatable whether it meets the stable kernel criteria, although the
-documented criteria are much stricter than what happens in practice.
+When this driver is compiled as a module, the hook is not registered
+until after the driver has been matched with a .compatible and
+loaded.
 
->   ...
->   Call trace:
->    of_irq_parse_raw+0x5fc/0x724
->    of_irq_parse_and_map_pci+0x128/0x1d8
->    pci_assign_irq+0xc8/0x140
->    pci_device_probe+0x70/0x188
->    really_probe+0x178/0x418
->    __driver_probe_device+0x120/0x188
->    driver_probe_device+0x48/0x22c
->    __device_attach_driver+0x134/0x1d8
->    bus_for_each_drv+0x8c/0xd8
->    __device_attach+0xdc/0x1d0
->    device_attach+0x20/0x2c
->    pci_bus_add_device+0x5c/0xc0
->    pci_bus_add_devices+0x58/0x88
->    pci_host_probe+0x124/0x178
->    pci_host_common_probe+0x124/0x198 [pci_host_common]
->    apple_pcie_probe+0x108/0x16c [pcie_apple]
->    platform_probe+0xb4/0xdc
-> 
-> This became apparent after disabling unused PCIe ports in the Apple
-> silicon device trees instead of deleting them.
-> 
-> Use for_each_available_child_of_node instead of for_each_child_of_node
-> which takes the "status" property into account.
-> 
-> Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-> Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
-> Changes in v2:
-> - rewritten commit message with more details and corrections
-> - collected Marc's "Reviewed-by:"
-> - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
-> ---
->  drivers/pci/controller/pcie-apple.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 66f37e403a09..f8670a032f7a 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
->  	cfg->priv = pcie;
->  	INIT_LIST_HEAD(&pcie->ports);
->  
-> -	for_each_child_of_node(dev->of_node, of_port) {
-> +	for_each_available_child_of_node(dev->of_node, of_port) {
->  		ret = apple_pcie_setup_port(pcie, of_port);
->  		if (ret) {
->  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+commit 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
+extended the fault handling code.
 
-Is this change still needed after 6fffbc7ae137 ("PCI: Honor firmware's
-device disabled status")?  This is a generic problem, and it would be
-a lot nicer if we had a generic solution.  But I assume it *is* still
-needed because Rob gave his Reviewed-by.
+commit 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
+added some protection for non-ARM architectures, but this does not
+protect non-i.MX ARM architectures.
 
-Not related to this patch, but this function looks funny to me.  Most
-pci_ecam_ops.init functions just set up ECAM-related things.
+Since fault handlers can be triggered on any architecture for different
+reasons, there is no guarantee that they will be triggered only for the
+assumed situation, leading to improper error handling (i.MX6-specific
+imx6q_pcie_abort_handler) on foreign systems.
 
-In addition to ECAM stuff, apple_pcie_init() and mc_platform_init()
-also initialize IRQs, clocks, and resets.
+I had seen strange L3 imprecise external abort messages several times on
+OMAP4 and OMAP5 devices and couldn't make sense of them until I realized
+they were related to this unused imx6q driver because I had
+CONFIG_PCI_IMX6=y.
 
-Maybe we shoehorn the IRQ, clock, reset setup into pci_ecam_ops.init
-because we lack a generic hook for doing those things, but it seems a
-little muddy conceptually.
+Note that CONFIG_PCI_IMX6=y is useful for kernel binaries that are designed
+to run on different ARM SoC and be differentiated only by device tree
+binaries. So turning off CONFIG_PCI_IMX6 is not a solution.
 
-Bjorn
+Therefore we check the compatible in the init function before registering
+the fault handler.
+
+Fixes: bde4a5a00e76 ("PCI: imx6: Allow probe deferral by reset GPIO")
+Fixes: 415b6185c541 ("PCI: imx6: Fix config read timeout handling")
+Fixes: 2d8ed461dbc9 ("PCI: imx6: Add support for i.MX8MQ")
+
+Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+---
+
+Notes:
+    Changes since v1:
+    
+    - replace of_find_matching_node_and_match() by of_find_matching_node()
+      (suggested by Bjorn Helgaas <helgaas@kernel.org>)
+    
+    - v1 was Reviewed-by: Richard Zhu <hongxing.zhu@nxp.com>
+
+ drivers/pci/controller/dwc/pci-imx6.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 55a0405b921d6..52906f999f2bb 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -1566,6 +1566,13 @@ DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_SYNOPSYS, 0xabcd,
+ static int __init imx6_pcie_init(void)
+ {
+ #ifdef CONFIG_ARM
++	struct device_node *np;
++
++	np = of_find_matching_node(NULL, imx6_pcie_of_match);
++	if (!np)
++		return -ENODEV;
++	of_node_put(np);
++
+ 	/*
+ 	 * Since probe() can be deferred we need to make sure that
+ 	 * hook_fault_code is not called after __init memory is freed
+-- 
+2.38.1
+
