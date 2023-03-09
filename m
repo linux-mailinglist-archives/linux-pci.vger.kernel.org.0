@@ -2,176 +2,130 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EE8D26B239B
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 13:01:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BB3F6B242E
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 13:30:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229885AbjCIMBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 07:01:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34380 "EHLO
+        id S229644AbjCIMay (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 07:30:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229799AbjCIMB0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 07:01:26 -0500
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75D292BDD
-        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 04:01:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678363284; x=1709899284;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=MJQz1nc/Ib7E/pB1/y3c8FgURZpMVEv7eGICzOKc5Ds=;
-  b=lujutl9HMYbrHuk6jgKJ6EeuG/hnAbziBMz7YIcRCZSM9/M+1XhM/G/I
-   OcFsUzCBmJIrv2JY59bJA4CqFPsoY6HayhglXgOGoAC4peDBeI8kCXZT+
-   SgQMgBKODprax1Myzi8UU2gkl1AinDnfAunT8lWJLckCviHktvnuEyic/
-   E8Ikfw8OjqWcH38Zf8bDKpQbzxjQPuyc2dRaC/18ajsOg2Gry2IiS/uSF
-   v2d08io9BkL4yFPiNVv4mns1OnRoQ9zeg42ISikkRDnroFELV19VdQfWk
-   7gIZWtZ52AP/DUzXPfDAeKDjn9Xpnnd0Y3ux7hWhQ8pOPIXeGV2/UH91Y
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="364067664"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="364067664"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Mar 2023 04:01:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10643"; a="741536682"
-X-IronPort-AV: E=Sophos;i="5.98,246,1673942400"; 
-   d="scan'208";a="741536682"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 09 Mar 2023 04:01:23 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1paExX-0002vP-0H;
-        Thu, 09 Mar 2023 12:01:23 +0000
-Date:   Thu, 09 Mar 2023 20:00:51 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:aer] BUILD SUCCESS e35b32eaec16fdc7285e6d3f94665b104e0aba60
-Message-ID: <6409ca73.5C4zHsjbXAtx4EAW%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229577AbjCIMax (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 07:30:53 -0500
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BA32EBD95;
+        Thu,  9 Mar 2023 04:30:53 -0800 (PST)
+Received: by mail-pf1-x444.google.com with SMTP id n5so1347055pfv.11;
+        Thu, 09 Mar 2023 04:30:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678365052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a/YKLwIekasb3iNzenKRi5ToiMiYuj1/8XmWnpw4kA4=;
+        b=oYtbh53Nws0V62q58a8/HBv3amztQeFSxuzfW4KVgxU+3Cf8bo3uEKN8XIBZaS7Nyr
+         b7WVl3PsuRNXGC/kReZAjfAZ0+YoQJgNTBmD2DG7FLiEc6MYscAcjA+c++ReodwcTv/V
+         uHlvZSPv9CTuPl/Q6BNnVGz7sjDspVzDl4LUYVpNUggHsDwLcIJ2uYeQrWN//ULgFIod
+         dSLoNekl2sgfzK7nm8ZCEsN/rqNm3/wiZmUpHfznelYKztyjAUpx1U1ISeWwrCh4lIu5
+         VD2uQVN8Txvjm0kwjsJqFsPbP5MJ2IDOqf/6rzU/I9NO+SgT6lO/pS0L5VtPlZTLlEXv
+         lhMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678365052;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=a/YKLwIekasb3iNzenKRi5ToiMiYuj1/8XmWnpw4kA4=;
+        b=1CMwpxO1Te2TajUFCvJzmJLSAd6otmgrytzpO//oGFp2wm7utNZVpkdVYaBIjSkwES
+         yxSlS6rTnx003LcqkBrRsO1Y6iu39om0yITMqT9+IoVHbmRfi+mtcRjkq/wIlN8O1W97
+         YeFXolfV3WBqLXcp+1TbKOQNv3PCaCyajv5n/80gnbsmuvLRp1lP9Bx0Nl5xvHNeqZ/4
+         NNmLGBv9nmedDkOEXtN8YFTgl3FDVNamtSvDYCmIefoygcH0aNVfLFquUOj2ctkb5JBQ
+         tzTf3yy6R9FZ/fwu5r71AFpZmQLLueg6dCk7TL0zhJiyInTlkG2zgAxz/L6Cw16HZxxG
+         XMPQ==
+X-Gm-Message-State: AO0yUKUHm6auSVyZFeQ0acLkcKO+MILzotugV1UzwOyWwBgK5EcrE02E
+        5RHZwmuyult9zFgtXwm6FOcVOuH//a/wCPNSZog=
+X-Google-Smtp-Source: AK7set+bF+2WjydfqS8damR0uvGIFYmRkD232bgysbuRPfNdJQHy+OaISq+L4QxLrt2G5FgSz0o7LR1V6CImsFcqjFo=
+X-Received: by 2002:a62:f807:0:b0:5a9:d579:6902 with SMTP id
+ d7-20020a62f807000000b005a9d5796902mr8993099pfh.0.1678365052477; Thu, 09 Mar
+ 2023 04:30:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230307083559.2379758-1-korantwork@gmail.com> <20230308225718.GA1054189@bhelgaas>
+In-Reply-To: <20230308225718.GA1054189@bhelgaas>
+From:   Xinghui Li <korantwork@gmail.com>
+Date:   Thu, 9 Mar 2023 20:31:55 +0800
+Message-ID: <CAEm4hYXeNR5by3ZX9V1y=ebOFcQ+JD1AgHGmFiJ3UE3xBJvRCw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI:vmd: add the module param to adjust msi mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aer
-branch HEAD: e35b32eaec16fdc7285e6d3f94665b104e0aba60  cper-arm: Remove unnecessary aer.h include
+Bjorn Helgaas <helgaas@kernel.org> =E4=BA=8E2023=E5=B9=B43=E6=9C=889=E6=97=
+=A5=E5=91=A8=E5=9B=9B 06:57=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Please adjust the subject line to match previous history, e.g.,
+>
+>   PCI: vmd: Add ... MSI ...
+>
+OK. I will fix it. Sorry for ignoring the subject format.
 
-elapsed time: 724m
+> > In the legacy, the vmd msi-mode can only be adjusted by configing
+> > vmd_ids table.This patch adds another way to adjust msi mode by
+> > adjusting module param, which allow users easier to adjust the vmd
+> > according to the I/O scenario without rebuilding driver.There are two
+> > params could be recognized: on, off. The default param is "NULL",
+> > the goal is not to affect the existing settings of the device.
+>
+> Please add a space after the period that ends each sentence.
+> Capitalize "MSI" to match usage in spec.
+>
+Sorry for the format issue. I neglected them. My bad~
 
-configs tested: 97
-configs skipped: 9
+> > Signed-off-by: Xinghui Li <korantli@tencent.com>
+> > Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+>
+> I didn't see a response from Nirmal on the mailing list with the
+> Reviewed-by.  I think it's better if Nirmal responds to the patch
+> directly on the mailing list with the Reviewed-by, and whoever applies
+> the patch can incorporate it.  Otherwise we have no visibility into
+> any interaction between you and Nirmal.
+>
+I pinged Nirmal to reply to this patch, It seems he forgot to cc the
+mail list in the previous version's discussion.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > +/*
+> > + * The VMD msi_remap module parameter provides the alternative way
+> > + * to adjust msi mode when loading vmd.ko other than vmd_ids table.
+> > + * There are two params could be recognized:
+> > + *
+> > + * 1-off
+> > + * 2-on
+>
+> It looks like your code matches either "on" or "off", not "1" or "2".
+>
+I will change the comment. It does mislead the reader. I mean the No.1
+param is "on" and the No.2 param is "off"
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc          buildonly-randconfig-r003-20230308   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r006-20230308   gcc  
-arc                  randconfig-r043-20230308   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r046-20230308   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r003-20230308   gcc  
-arm64                randconfig-r013-20230308   clang
-csky                                defconfig   gcc  
-hexagon              randconfig-r041-20230308   clang
-hexagon              randconfig-r045-20230308   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a001   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a003   gcc  
-i386                          randconfig-a004   clang
-i386                          randconfig-a005   gcc  
-i386                          randconfig-a006   clang
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r002-20230308   gcc  
-ia64                 randconfig-r033-20230308   gcc  
-ia64                 randconfig-r036-20230308   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r005-20230308   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r035-20230308   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r021-20230308   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r026-20230308   gcc  
-mips                 randconfig-r032-20230308   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r025-20230308   gcc  
-openrisc             randconfig-r004-20230308   gcc  
-openrisc             randconfig-r005-20230308   gcc  
-openrisc             randconfig-r011-20230308   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r012-20230308   clang
-riscv                randconfig-r031-20230308   gcc  
-riscv                randconfig-r034-20230308   gcc  
-riscv                randconfig-r042-20230308   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r022-20230308   clang
-s390                 randconfig-r024-20230308   clang
-s390                 randconfig-r044-20230308   clang
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r004-20230308   gcc  
-sparc                               defconfig   gcc  
-sparc64      buildonly-randconfig-r002-20230308   gcc  
-sparc64              randconfig-r023-20230308   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                               rhel-8.3   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> > + * The default param is "NULL", the goal is not to affect the existing
+> > + * settings of the device.
+> > + */
+> > +char *msi_remap =3D "NULL";
+>
+> Looks like this should be static?  And using "NULL" (as opposed to
+> something like the empty string "") suggests some intrinsic meaning of
+> "NULL", but I think there is no intrinsic meaning and the only point
+> is that "NULL" doesn't match either "on" or "off".
+>
+The "static" one is better, I will add it.
+Initial parameters with "NULL" just aim to mismatch "on" or "off". Do
+you prefer to init it without the default string?
