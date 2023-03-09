@@ -2,151 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 94FAD6B2B29
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 17:50:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36DC46B2B2C
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 17:50:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229876AbjCIQuK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 11:50:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32896 "EHLO
+        id S230288AbjCIQuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 11:50:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230409AbjCIQtv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 11:49:51 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 630DCFCBFB;
-        Thu,  9 Mar 2023 08:39:25 -0800 (PST)
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 329GWbFD029678;
-        Thu, 9 Mar 2023 16:39:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=WoKGktYRxUw42/yRhVznkwqsMWqSMkRMk0spzj7c6Vw=;
- b=eiK67enU1ipFAdh7cT4eEzcvvpQs6wKu0SN9Lmfd8ihTBwI1RMQIuKeE0ROTu6njtmy5
- aRhESm3zEd2LqKZRUgjwnDXvgdI33ofMBAPakDPOoWrNkxyajhgFL4qzWQcz5+pQfTS5
- b148PO8fJFhGuUMKlKPMlbGmfTP3nGEuWWK+FzCv0UHB7YPRcEYzHXNlCzyt3s4uz7D2
- h3PTo7EFSgiV4EEpfLoV4VEs9EAmD+r5LN/uwWoIBP/yK5mFQBw2fde7biVcA12NLOet
- 56lWBiOo12vIPBflrhB90lurgMg8JZfpzS03KUHmZ4U7+S4QeCFtfZQaj47Xh5Y09z8G Tw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6t3bym40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 16:39:21 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 329GZMjL005382;
-        Thu, 9 Mar 2023 16:39:20 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6t3bym3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 16:39:20 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3294LVgL020036;
-        Thu, 9 Mar 2023 16:39:19 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3p6ftvjngh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 16:39:18 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 329GdEMw59048436
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Mar 2023 16:39:14 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AEE562004B;
-        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 28A292004D;
-        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
-Received: from [9.171.26.163] (unknown [9.171.26.163])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Mar 2023 16:39:14 +0000 (GMT)
-Message-ID: <4c0696c0f02cf5da747a88a40d3f29ba597482ea.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 1/4] PCI: s390: Fix use-after-free of PCI resources
- with per-function hotplug
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Date:   Thu, 09 Mar 2023 17:39:13 +0100
-In-Reply-To: <20230308231449.GA1057317@bhelgaas>
-References: <20230308231449.GA1057317@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        with ESMTP id S231181AbjCIQt6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 11:49:58 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEEC1FE0B9;
+        Thu,  9 Mar 2023 08:39:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A966261C4A;
+        Thu,  9 Mar 2023 16:39:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1E9AC433D2;
+        Thu,  9 Mar 2023 16:39:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678379977;
+        bh=lPti0CqiJyrVN8p1peO9ayPP4zvhtBCZaW4gjRkGXz8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Hmd9ToL/4LqU26a4rwLzPqQpJBKFO8O+twt93NgBKvVPwnX+l0D9Ol3IV38M5Zao2
+         ufqkOsdfBfSub5n5DO0TnGDEYsaiszTiNoGQckU+9qAuwLty8/q+buZ1jR2fbFBv3L
+         WofwK2r/iDZKABvCQJzIRRT27sPnR1a4DG8esc4HeA3S185UFVUDcPgop47s+CGpbP
+         kipr2ysjLmeFPZ8i0xPt9RfS8OEnhIPOkelIFmJVlBzIKm+c6Jm8yp56gEZb7wbaCd
+         O4AIRxiBKLbGlH+9cxeilrw30RONRlR2TICcAaj4O9KoCbVqqZJtPPmOtLhV/cabi5
+         BCrXSROYicgGA==
+Date:   Thu, 9 Mar 2023 10:39:35 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Janne Grunau <j@jannau.net>
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
+        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
+Message-ID: <20230309163935.GA1140101@bhelgaas>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: mqf-Co36suubKcz5uAopTefjSOtTwt1k
-X-Proofpoint-ORIG-GUID: PHhJeJiTyC4c7s8uHMpqAjHTt4k_QlpM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-09_08,2023-03-09_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- malwarescore=0 bulkscore=0 mlxlogscore=453 spamscore=0 priorityscore=1501
- lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303090132
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2023-03-08 at 17:14 -0600, Bjorn Helgaas wrote:
-> On Mon, Mar 06, 2023 at 04:10:11PM +0100, Niklas Schnelle wrote:
-> > On s390 PCI functions may be hotplugged individually even when they
-> > belong to a multi-function device. In particular on an SR-IOV device VF=
-s
-> > may be removed and later re-added.
-> >=20
-> > In commit a50297cf8235 ("s390/pci: separate zbus creation from
-> > scanning") it was missed however that struct pci_bus and struct
-> > zpci_bus's resource list retained a reference to the PCI functions MMIO
-> > resources even though those resources are released and freed on
-> > hot-unplug. These stale resources may subsequently be claimed when the
-> > PCI function re-appears resulting in use-after-free.
-> >=20
-> > One idea of fixing this use-after-free in s390 specific code that was
-> > investigated was to simply keep resources around from the moment a PCI
-> > function first appeared until the whole virtual PCI bus created for
-> > a multi-function device disappears. The problem with this however is
-> > that due to the requirement of artificial MMIO addreesses (address
-> > cookies) extra logic is then needed to keep the address cookies
-> > compatible on re-plug. At the same time the MMIO resources semantically
-> > belong to the PCI function so tying their lifecycle to the function
-> > seems more logical.
-> >=20
-> > Instead a simpler approach is to remove the resources of an individuall=
-y
-> > hot-unplugged PCI function from the PCI bus's resource list while
-> > keeping the resources of other PCI functions on the PCI bus untouched.
-> >=20
-> > This is done by introducing pci_bus_remove_resource() to remove an
-> > individual resource. Similarly the resource also needs to be removed
-> > from the struct zpci_bus's resource list. It turns out however, that
-> > there is really no need to add the MMIO resources to the struct
-> > zpci_bus's resource list at all and instead we can simply use the
-> > zpci_bar_struct's resource pointer directly.
-> >=20
-> > Fixes: a50297cf8235 ("s390/pci: separate zbus creation from scanning")
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->=20
-> The meat of this is mostly in s390, so I think it makes more sense to
-> merge via that tree.  But let me know if you'd rather that I take it.
->=20
->=20
+[+cc Daire, Conor for apple/microchip use of ECAM .init() method]
 
-Thanks for taking a look and the valuable suggestions. I'll coordinate
-with Vasily to take this via the s390 tree. As for the locking I agree
-it is out of scope for this series. Meant more that the resource
-handling might be a good place to start splitting up the
-pci_rescan_remove_lock and that I might take a look at that if I find
-the time which of course we're all lacking.
+On Thu, Mar 09, 2023 at 02:36:24PM +0100, Janne Grunau wrote:
+> Fixes following warning inside of_irq_parse_raw() called from the common
+> PCI device probe path.
+> 
+>   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
+>   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
 
-Regards,
-Niklas
+Based on this commit log, I assume this patch only fixes the warning,
+and the system *works* just fine either way.  If that's the case, it's
+debatable whether it meets the stable kernel criteria, although the
+documented criteria are much stricter than what happens in practice.
+
+>   ...
+>   Call trace:
+>    of_irq_parse_raw+0x5fc/0x724
+>    of_irq_parse_and_map_pci+0x128/0x1d8
+>    pci_assign_irq+0xc8/0x140
+>    pci_device_probe+0x70/0x188
+>    really_probe+0x178/0x418
+>    __driver_probe_device+0x120/0x188
+>    driver_probe_device+0x48/0x22c
+>    __device_attach_driver+0x134/0x1d8
+>    bus_for_each_drv+0x8c/0xd8
+>    __device_attach+0xdc/0x1d0
+>    device_attach+0x20/0x2c
+>    pci_bus_add_device+0x5c/0xc0
+>    pci_bus_add_devices+0x58/0x88
+>    pci_host_probe+0x124/0x178
+>    pci_host_common_probe+0x124/0x198 [pci_host_common]
+>    apple_pcie_probe+0x108/0x16c [pcie_apple]
+>    platform_probe+0xb4/0xdc
+> 
+> This became apparent after disabling unused PCIe ports in the Apple
+> silicon device trees instead of deleting them.
+> 
+> Use for_each_available_child_of_node instead of for_each_child_of_node
+> which takes the "status" property into account.
+> 
+> Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
+> Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
+> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
+> Changes in v2:
+> - rewritten commit message with more details and corrections
+> - collected Marc's "Reviewed-by:"
+> - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
+> ---
+>  drivers/pci/controller/pcie-apple.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index 66f37e403a09..f8670a032f7a 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+>  	cfg->priv = pcie;
+>  	INIT_LIST_HEAD(&pcie->ports);
+>  
+> -	for_each_child_of_node(dev->of_node, of_port) {
+> +	for_each_available_child_of_node(dev->of_node, of_port) {
+>  		ret = apple_pcie_setup_port(pcie, of_port);
+>  		if (ret) {
+>  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+
+Is this change still needed after 6fffbc7ae137 ("PCI: Honor firmware's
+device disabled status")?  This is a generic problem, and it would be
+a lot nicer if we had a generic solution.  But I assume it *is* still
+needed because Rob gave his Reviewed-by.
+
+Not related to this patch, but this function looks funny to me.  Most
+pci_ecam_ops.init functions just set up ECAM-related things.
+
+In addition to ECAM stuff, apple_pcie_init() and mc_platform_init()
+also initialize IRQs, clocks, and resets.
+
+Maybe we shoehorn the IRQ, clock, reset setup into pci_ecam_ops.init
+because we lack a generic hook for doing those things, but it seems a
+little muddy conceptually.
+
+Bjorn
