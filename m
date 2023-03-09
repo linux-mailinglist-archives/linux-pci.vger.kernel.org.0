@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 441246B1EAD
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 09:51:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 929F16B1EB3
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 09:51:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230387AbjCIIvi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 03:51:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50986 "EHLO
+        id S229683AbjCIIvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 03:51:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbjCIIvg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 03:51:36 -0500
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97AC8D8874
-        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 00:51:28 -0800 (PST)
-Received: by mail-pl1-x634.google.com with SMTP id i5so1280182pla.2
-        for <linux-pci@vger.kernel.org>; Thu, 09 Mar 2023 00:51:28 -0800 (PST)
+        with ESMTP id S230386AbjCIIvi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 03:51:38 -0500
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7428CDD36F
+        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 00:51:32 -0800 (PST)
+Received: by mail-pg1-x52b.google.com with SMTP id bn17so590551pgb.10
+        for <linux-pci@vger.kernel.org>; Thu, 09 Mar 2023 00:51:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678351888;
+        d=linaro.org; s=google; t=1678351892;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3tT4IStfyTS7c0lPgVozml2BSLbP+qQslzAxoVdPoGM=;
-        b=iU7903JlmzBlp2BmGN+3jhJz3BVNyLMQJj5lIlGMAhFdARhYDAbCdtpAQvPSfzeIvo
-         miTfd19DZ5Bcz7dOBZKDAWmDerNTeX/rKzU3XIusqxEUkWQmZQZeM8XlyQYmhemI2NTI
-         oqa7Etm0N+KO3p9xbksrHHo8N93BwM4Qx3rLURuHMFwWUgRYznHLWyvrgKXBzWmHyRl0
-         EgbPcz0SBK/E5a5Hcfmd5a0CI+Z5NgX2bmJ41A/hE1Xzu/TNcPSHBWP8+GFyw1OHeJj7
-         MXSp6njLPwFYfZDp1h0XJ73uhR8iwFqQxAbr9aE5zBo8sRYfAeOr5jCRaB5Ajl9ROQFw
-         ekpQ==
+        bh=98/PwVeFNeIxQrm0IqUyAA3dXph0wAaYOEANDm444S8=;
+        b=cw9zoD6WIsBHIF18bRw3okh38hbi5gfOn6P/ZfluyDC2AZnjpZGPkSDeJ8sd4wmF1U
+         3MjoYLEnZml0jvkpuuiXmnhyfaC/wf5sw9ttgeHbR4V6xJnnY2Op/o/Cgsma29Zm4VV5
+         YWbFXSv3VZK0ULUcwWOHwjAzK8VPk0i9Y8tAejTrbazFnOHdy004nkb+my0Gb+sL1wWM
+         mRceacimv04rdr3hi24jmWTJFhfGkMckABRNiKyX3jVo+fcCSttyWNAb0QLwOSyBuFgg
+         +arK4pLxXUktwLOqm51GraLsBnG2YAmNfwkPhhBpFsOwP/YOzxlYMh8O5Uch5xKZPqXt
+         scRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678351888;
+        d=1e100.net; s=20210112; t=1678351892;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=3tT4IStfyTS7c0lPgVozml2BSLbP+qQslzAxoVdPoGM=;
-        b=QTMIldNY+Zf1jL33rIra2z9ogBLNosxAakh1jqSbnW4XWMosIoUTZM9EQ8nvuVKrjF
-         oUQS9NqspXxSUmM1Fll/93z4rVh36V+0z1lEP6WnP0iroiqBJdE88fJ800RhJmz6U12f
-         M8xFsShH3FapNrExPoN9E4eFTwYlcPfvsOHYwgoXB3dYt9+JBronhvxE5rPjrSz09dkX
-         +9FBYDDl7JcQei2FGg/SkA7NM69KMh/1W3zJHgdMpnPPDaMBPYATS1nQHZc2e8MOk28V
-         I8qrMQZfzvIZyRwUk04w/1+Y6OSw33SrdyB+chXRIDTcHAuEYdM5Dq7cGfmdrEkyEdnD
-         gGGA==
-X-Gm-Message-State: AO0yUKUWNrgRxE2B7RL9/baVYuGgUd6q8Ei8Yj3ZvG7sE4Z0QOs2oALg
-        aHx82F8UQTs4Zm7NXtLj+Bju
-X-Google-Smtp-Source: AK7set8mKlsyGlNy/0MkozUoptgR8oHYv6pYvoU1vXyZYVhpHo57kiSPNpYjNjORKjQeKOPGPgcwyg==
-X-Received: by 2002:a05:6a20:9150:b0:be:d389:7abf with SMTP id x16-20020a056a20915000b000bed3897abfmr23782750pzc.3.1678351887847;
-        Thu, 09 Mar 2023 00:51:27 -0800 (PST)
+        bh=98/PwVeFNeIxQrm0IqUyAA3dXph0wAaYOEANDm444S8=;
+        b=IXOExbb/BR5N3BiolLQZpOjoebjnwPZ+WG0vr2d9CEOmcm+aMXrYzmQ4DMsDeSLXph
+         10LAXOH2dOLGWZ0rpKGf5j3xUVbXAti5Xnl3YMAxOyBEsU//nt/VvEJI5mhC6zzJG+BH
+         /YmwgtKJXWlrB+VVjsziWvg8rG/DsBz8DLCyG+UMhRIpJa4Su6Q1RWcfnGzaDQFi+Yok
+         FozrHNomvBIdDs4pnHezy3Bhszzdei2NDeLwfNxoAhwgQ/NsPRY1xUXoXbgKYF4P/RW1
+         CXWHjZtDJQIw2vTvPEryo5l7XaDvz9fhKNgwp8TnSRkskOl2UhSKnzfR7CmLz0XLTtBC
+         RF1A==
+X-Gm-Message-State: AO0yUKXYS4wi+n/jCInS2msoV6CsdjtiQvTb8FEMTZJ6uI6qKN4oxEOw
+        n+NHV1btwdd9lkBrMIHmg9Cw
+X-Google-Smtp-Source: AK7set8KkBjdcVujinvYMJ5SJN1GMFWQr58S2qzZeUrr7sjqoYUXNZIHPXyRkP27DqlDhnSYqgLdkw==
+X-Received: by 2002:a62:38c3:0:b0:5d9:e505:3466 with SMTP id f186-20020a6238c3000000b005d9e5053466mr17114034pfa.23.1678351892049;
+        Thu, 09 Mar 2023 00:51:32 -0800 (PST)
 Received: from localhost.localdomain ([220.158.158.11])
-        by smtp.gmail.com with ESMTPSA id u4-20020aa78484000000b005809d382016sm10638604pfn.74.2023.03.09.00.51.22
+        by smtp.gmail.com with ESMTPSA id u4-20020aa78484000000b005809d382016sm10638604pfn.74.2023.03.09.00.51.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Mar 2023 00:51:27 -0800 (PST)
+        Thu, 09 Mar 2023 00:51:31 -0800 (PST)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
         krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
@@ -56,9 +56,9 @@ Cc:     konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, quic_srichara@quicinc.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 03/17] PCI: qcom: Use bitfield definitions for register fields
-Date:   Thu,  9 Mar 2023 14:20:48 +0530
-Message-Id: <20230309085102.120977-4-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 04/17] PCI: qcom: Add missing macros for register fields
+Date:   Thu,  9 Mar 2023 14:20:49 +0530
+Message-Id: <20230309085102.120977-5-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230309085102.120977-1-manivannan.sadhasivam@linaro.org>
 References: <20230309085102.120977-1-manivannan.sadhasivam@linaro.org>
@@ -66,58 +66,188 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-To maintain uniformity throughout the driver and also to make the code
-easier to read, let's make use of bitfield definitions for register fields.
+Some of the registers are changed using hardcoded bitfields without macros.
+This provides no information on what the register setting is about. So add
+the macros to those fields for making the code more understandable.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 42 +++++++++++++++-----------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 9223ca76640d..e9f4c70b719a 100644
+index e9f4c70b719a..926a531fda3a 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -76,24 +76,24 @@
- #define REQ_NOT_ENTR_L1				BIT(5)
+@@ -63,6 +63,7 @@
+ #define MISC_CONTROL_1_REG			0x8BC
  
- /* PARF_PCS_DEEMPH register fields */
--#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		((x) << 16)
--#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	((x) << 8)
--#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	((x) << 0)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN1(x)		FIELD_PREP(GENMASK(21, 16), x)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)	FIELD_PREP(GENMASK(13, 8), x)
-+#define PCS_DEEMPH_TX_DEEMPH_GEN2_6DB(x)	FIELD_PREP(GENMASK(5, 0), x)
- 
- /* PARF_PCS_SWING register fields */
--#define PCS_SWING_TX_SWING_FULL(x)		((x) << 8)
--#define PCS_SWING_TX_SWING_LOW(x)		((x) << 0)
-+#define PCS_SWING_TX_SWING_FULL(x)		FIELD_PREP(GENMASK(14, 8), x)
-+#define PCS_SWING_TX_SWING_LOW(x)		FIELD_PREP(GENMASK(6, 0), x)
- 
+ /* PARF_SYS_CTRL register fields */
++#define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
+ #define MST_WAKEUP_EN				BIT(13)
+ #define SLV_WAKEUP_EN				BIT(12)
+ #define MSTR_ACLK_CGC_DIS			BIT(10)
+@@ -87,6 +88,7 @@
  /* PARF_PHY_CTRL register fields */
  #define PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK	GENMASK(20, 16)
--#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		((x) << 16)
-+#define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		FIELD_PREP(PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK, x)
+ #define PHY_CTRL_PHY_TX0_TERM_OFFSET(x)		FIELD_PREP(PHY_CTRL_PHY_TX0_TERM_OFFSET_MASK, x)
++#define PHY_TEST_PWR_DOWN			BIT(0)
  
  /* PARF_PHY_REFCLK register fields */
  #define PHY_REFCLK_SSP_EN			BIT(16)
- #define PHY_REFCLK_USE_PAD			BIT(12)
+@@ -103,6 +105,12 @@
+ #define MSTR_AXI_CLK_EN				BIT(1)
+ #define BYPASS					BIT(4)
  
- /* PARF_CONFIG_BITS register fields */
--#define PHY_RX0_EQ(x)				((x) << 24)
-+#define PHY_RX0_EQ(x)				FIELD_PREP(GENMASK(26, 24), x)
++/* PARF_AXI_MSTR_WR_ADDR_HALT register fields */
++#define EN					BIT(31)
++
++/* PARF_LTSSM register fields */
++#define LTSSM_EN				BIT(8)
++
+ /* PARF_DEVICE_TYPE register fields */
+ #define DEVICE_TYPE_RC				0x4
  
- /* PARF_SLV_ADDR_SPACE_SIZE register value */
- #define SLV_ADDR_SPACE_SZ			0x10000000
+@@ -440,7 +448,7 @@ static int qcom_pcie_post_init_2_1_0(struct qcom_pcie *pcie)
+ 
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+@@ -595,7 +603,7 @@ static int qcom_pcie_post_init_1_0_0(struct qcom_pcie *pcie)
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		u32 val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 
+-		val |= BIT(31);
++		val |= EN;
+ 		writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 	}
+ 
+@@ -608,7 +616,7 @@ static void qcom_pcie_2_3_2_ltssm_enable(struct qcom_pcie *pcie)
+ 
+ 	/* enable link training */
+ 	val = readl(pcie->parf + PARF_LTSSM);
+-	val |= BIT(8);
++	val |= LTSSM_EN;
+ 	writel(val, pcie->parf + PARF_LTSSM);
+ }
+ 
+@@ -715,7 +723,7 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+ 
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+@@ -723,15 +731,15 @@ static int qcom_pcie_post_init_2_3_2(struct qcom_pcie *pcie)
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+ 	val = readl(pcie->parf + PARF_SYS_CTRL);
+-	val &= ~BIT(29);
++	val &= ~MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN;
+ 	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+ 	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+-	val |= BIT(4);
++	val |= BYPASS;
+ 	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+ 	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+-	val |= BIT(31);
++	val |= EN;
+ 	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 
+ 	return 0;
+@@ -994,7 +1002,7 @@ static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
+ 
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+@@ -1002,15 +1010,15 @@ static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+ 	val = readl(pcie->parf + PARF_SYS_CTRL);
+-	val &= ~BIT(29);
++	val &= ~MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN;
+ 	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+ 	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+-	val |= BIT(4);
++	val |= BYPASS;
+ 	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+ 	val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+-	val |= BIT(31);
++	val |= EN;
+ 	writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT_V2);
+ 
+ 	return 0;
+@@ -1159,7 +1167,7 @@ static int qcom_pcie_post_init_2_3_3(struct qcom_pcie *pcie)
+ 		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE_2_3_3);
+ 
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
+@@ -1275,7 +1283,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ 	/* enable PCIe clocks and resets */
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	/* change DBI base address */
+@@ -1283,11 +1291,11 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ 	/* MAC PHY_POWERDOWN MUX DISABLE  */
+ 	val = readl(pcie->parf + PARF_SYS_CTRL);
+-	val &= ~BIT(29);
++	val &= ~MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN;
+ 	writel(val, pcie->parf + PARF_SYS_CTRL);
+ 
+ 	val = readl(pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+-	val |= BIT(4);
++	val |= BYPASS;
+ 	writel(val, pcie->parf + PARF_MHI_CLOCK_RESET_CTRL);
+ 
+ 	/* Enable L1 and L1SS */
+@@ -1297,7 +1305,7 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+ 
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		val = readl(pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+-		val |= BIT(31);
++		val |= EN;
+ 		writel(val, pcie->parf + PARF_AXI_MSTR_WR_ADDR_HALT);
+ 	}
+ 
+@@ -1390,7 +1398,7 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
+ 		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
+ 
+ 	val = readl(pcie->parf + PARF_PHY_CTRL);
+-	val &= ~BIT(0);
++	val &= ~PHY_TEST_PWR_DOWN;
+ 	writel(val, pcie->parf + PARF_PHY_CTRL);
+ 
+ 	writel(0, pcie->parf + PARF_DBI_BASE_ADDR);
 -- 
 2.25.1
 
