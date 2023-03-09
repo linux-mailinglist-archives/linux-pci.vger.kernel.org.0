@@ -2,137 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 201D16B2CC3
-	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 19:18:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 839366B2CD9
+	for <lists+linux-pci@lfdr.de>; Thu,  9 Mar 2023 19:25:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229680AbjCISSk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 9 Mar 2023 13:18:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41694 "EHLO
+        id S230323AbjCISZY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 9 Mar 2023 13:25:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbjCISSj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 13:18:39 -0500
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEF9B6420C;
-        Thu,  9 Mar 2023 10:18:36 -0800 (PST)
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 329IA6Dw029697;
-        Thu, 9 Mar 2023 18:18:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=KK+OAocPYk3r1h9tMZ9MdvYVbSyFkyqOtafvkb9zUak=;
- b=XbjyoCsNgQOynfeC8bC07EPqNt27fNURfLMq/Rdpbdl7baBFZSxKUUCadwBb56Wjs8Dw
- NZeRvnYmikI5v5oEpaHc0WFNyqfa0cPbHv68f34+gwB4bFZfguQjtGwp8obwvPzc6q9M
- sn5vsthms4/68YuHwAYVoAbKXnnGnQ40RIxz3TkZcbTgKgSHDCXt8dIo8Z5G7auurrEb
- kaf8rYwuJ9P/VpL7dZhTSpN3uMwoIXwB/EYK0WH9gIV4IxjXy7QiHkPKEJS5YM3ofu+P
- Hpt2hCD7cJZ51k3ZHHr0GEZ4JjqAheKqAFXOkkgfd6iCmxfK7z2zaJpxOpSKbZ3VDA5k KA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6qyqvfgc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 18:18:35 +0000
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 329I0gGv012054;
-        Thu, 9 Mar 2023 18:18:35 GMT
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p6qyqvfg6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 18:18:35 +0000
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 329HkBQ3023629;
-        Thu, 9 Mar 2023 18:18:34 GMT
-Received: from smtprelay07.dal12v.mail.ibm.com ([9.208.130.99])
-        by ppma03dal.us.ibm.com (PPS) with ESMTPS id 3p6fnwna9w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 09 Mar 2023 18:18:34 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-        by smtprelay07.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 329IIXCE33227208
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Mar 2023 18:18:33 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F142C5805D;
-        Thu,  9 Mar 2023 18:18:32 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 141AE5805F;
-        Thu,  9 Mar 2023 18:18:32 +0000 (GMT)
-Received: from [9.160.169.251] (unknown [9.160.169.251])
-        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Mar 2023 18:18:31 +0000 (GMT)
-Message-ID: <01c18e2b-8ec0-46c6-ba95-997b9d9d4ed6@linux.ibm.com>
-Date:   Thu, 9 Mar 2023 13:18:31 -0500
+        with ESMTP id S229552AbjCISZW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 9 Mar 2023 13:25:22 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB30F6394
+        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 10:25:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E63F861CB8
+        for <linux-pci@vger.kernel.org>; Thu,  9 Mar 2023 18:25:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 215C5C4339B;
+        Thu,  9 Mar 2023 18:25:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678386316;
+        bh=z2uRZUd+MyMVOf7QsATaQkUcP0qAo1NHjpBJ7hGrFOI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=sqr0YuaMJVF+cmUpEygZ1rLxVm5Z56vRr8mn5z/LEgRPEl8oQ6IbFGsFqj60AUwZH
+         ejtxoe2pn1ZjNBXMatXST+l9Kz98SoqSHX31wmeCIDq9JAGxhgVVTrb96ZbtUGQoFF
+         n7D4CdcY9aKZM4J9Gfavtyu4GmKucCtReWXgq/FwJORJmkoeGf7YqiNl40Wv+RnM0F
+         KyYRfjuevmEzEQxPJkRET1KSvM82LpdX6IdLuLmkvSm+JwrD9LaO5HaQRB7PnRpX0E
+         R6xi+kXmpEiZwa44F7t45GZud9znYhnBZRH4Wr+7cRx568PB25KQyi68sn9pl5YrpM
+         OEIt6QGzhtZBQ==
+Date:   Thu, 9 Mar 2023 12:25:14 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Basavaraj Natikar <bnatikar@amd.com>
+Cc:     "Limonciello, Mario" <Mario.Limonciello@amd.com>,
+        "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "thomas@glanzmann.de" <thomas@glanzmann.de>
+Subject: Re: [PATCH] PCI: Add quirk to clear MSI-X
+Message-ID: <20230309182514.GA1152206@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 1/4] PCI: s390: Fix use-after-free of PCI resources
- with per-function hotplug
-Content-Language: en-US
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lukas Wunner <lukas@wunner.de>
-Cc:     Gerd Bayer <gbayer@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20230306151014.60913-1-schnelle@linux.ibm.com>
- <20230306151014.60913-2-schnelle@linux.ibm.com>
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-In-Reply-To: <20230306151014.60913-2-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 2JzMxtCeObLVpOvrbLmir_M9TRImWc6d
-X-Proofpoint-ORIG-GUID: qvPanSurlKKp9tK_NvLoDAZxIRBevMAF
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-09_09,2023-03-09_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 clxscore=1011 phishscore=0 suspectscore=0 mlxlogscore=797
- adultscore=0 spamscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303090145
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39644d3a-a57b-4843-b2a1-701992312e1f@amd.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/6/23 10:10 AM, Niklas Schnelle wrote:
-> On s390 PCI functions may be hotplugged individually even when they
-> belong to a multi-function device. In particular on an SR-IOV device VFs
-> may be removed and later re-added.
+On Thu, Mar 09, 2023 at 01:04:17PM +0530, Basavaraj Natikar wrote:
+> On 3/9/2023 4:34 AM, Limonciello, Mario wrote:
+> >> -----Original Message-----
+> >> From: Bjorn Helgaas <helgaas@kernel.org>
+> >> Sent: Wednesday, March 8, 2023 16:44
+> >> To: Natikar, Basavaraj <Basavaraj.Natikar@amd.com>
+> >> Cc: bhelgaas@google.com; linux-pci@vger.kernel.org; Limonciello, Mario
+> >> <Mario.Limonciello@amd.com>; thomas@glanzmann.de
+> >> Subject: Re: [PATCH] PCI: Add quirk to clear MSI-X
+> >>
+> >> Let's mention the vendor and device name in the subject to make the
+> >> log more useful.
 > 
-> In commit a50297cf8235 ("s390/pci: separate zbus creation from
-> scanning") it was missed however that struct pci_bus and struct
-> zpci_bus's resource list retained a reference to the PCI functions MMIO
-> resources even though those resources are released and freed on
-> hot-unplug. These stale resources may subsequently be claimed when the
-> PCI function re-appears resulting in use-after-free.
-> 
-> One idea of fixing this use-after-free in s390 specific code that was
-> investigated was to simply keep resources around from the moment a PCI
-> function first appeared until the whole virtual PCI bus created for
-> a multi-function device disappears. The problem with this however is
-> that due to the requirement of artificial MMIO addreesses (address
-> cookies) extra logic is then needed to keep the address cookies
-> compatible on re-plug. At the same time the MMIO resources semantically
-> belong to the PCI function so tying their lifecycle to the function
-> seems more logical.
-> 
-> Instead a simpler approach is to remove the resources of an individually
-> hot-unplugged PCI function from the PCI bus's resource list while
-> keeping the resources of other PCI functions on the PCI bus untouched.
-> 
-> This is done by introducing pci_bus_remove_resource() to remove an
-> individual resource. Similarly the resource also needs to be removed
-> from the struct zpci_bus's resource list. It turns out however, that
-> there is really no need to add the MMIO resources to the struct
-> zpci_bus's resource list at all and instead we can simply use the
-> zpci_bar_struct's resource pointer directly.
-> 
-> Fixes: a50297cf8235 ("s390/pci: separate zbus creation from scanning")
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> Sure will change subject as below.
+> Add quirk on AMD 0x15b8 device to clear MSI-X enable bit
 
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
+"0x15b8" is not really useful in a subject line.  Use a name
+meaningful to users, like something "lspci" reports (I don't see
+"1002:15b8" in https://pci-ids.ucw.cz/read/PC/1002; it would be nice
+to add it) or at least something like "USB controller".   You can look
+at the history of drivers/pci/quirks.c to see examples.
 
+> >> On Mon, Mar 06, 2023 at 12:53:40PM +0530, Basavaraj Natikar wrote:
+> >>> One of the AMD USB controllers fails to maintain internal functional
+> >>> context when transitioning from D3 to D0, desynchronizing MSI-X bits.
+> >>> As a result, add a quirk to this controller to clear the MSI-X bits
+> >>> on suspend.
+> > ...
+> > FYI - it's not a hardware defect, it's a BIOS defect.
 
+Commit log ("controller fails to maintain") suggested hardware defect
+to me; maybe could be clarified.  If it's a defect in the way BIOS
+initialized something, maybe the workaround could be a one-time thing
+instead of an every-resume quirk?
 
+> >> The quick clears the Function Mask bit, so the MSI-X vectors may be
+> >> *unmasked* depending on the state of each vectors Mask bit.  I assume
+> >> the potential unmasking is safe because you also clear the MSI-X
+> >> Enable bit, so the function can't use MSI-X at all.
+> 
+> Sure, will remove Function Mask bit only clear MSI-X enable bit is enough,
+> actually MSI-X enable bit doesn't change the internal hardware and there
+> will be no interrupts after resume hence below command timeout and eventually
+> error observed more logs below:
+>
+> [  418.572737] xhci_hcd 0000:03:00.0: xhci_hub_status_data: stopping usb5 port polling
+> *[ 423.724511] xhci_hcd 0000:03:00.0: Command timeout, USBSTS: 0x00000000****[ 423.724517] xhci_hcd 0000:03:00.0: Command timeout*
+> [  423.724519] xhci_hcd 0000:03:00.0: Abort command ring
+> [  425.740742] xhci_hcd 0000:03:00.0: No stop event for abort, ring start fail?
+> *[ 425.740771] xhci_hcd 0000:03:00.0: Error while assigning device slot ID****[ 425.740777] xhci_hcd 0000:03:00.0: Max number of devices this xHCI
+> host supports is 64*.
+> [  425.740782] usb usb5-port1: couldn't allocate usb_device
+> [  425.740794] xhci_hcd 0000:03:00.0: disable port 5-1, portsc: 0x6e1
+> [  425.740818] hub 5-0:1.0: hub_suspend
+> [  425.740826] usb usb5: bus auto-suspend, wakeup 1
+> [  425.740835] xhci_hcd 0000:03:00.0: xhci_hub_status_data: stopping usb5 port polling
+> [  425.740842] xhci_hcd 0000:03:00.0: xhci_suspend: stopping usb5 port polling.
+> [  425.756878] xhci_hcd 0000:03:00.0: // Setting command ring address to 0xffffe001
+> [  425.776898] xhci_hcd 0000:03:00.0: WARN: xHC save state timeout
+> [  425.776910] xhci_hcd 0000:03:00.0: PM: suspend_common(): xhci_pci_suspend+0x0/0x170 [xhci_pci] returns -110
+> [  425.776917] xhci_hcd 0000:03:00.0: hcd_pci_runtime_suspend: -110
+> [  425.776918] xhci_hcd 0000:03:00.0: can't suspend (hcd_pci_runtime_suspend returned -110)
+> 
+> will change function name accordingly quirk_clear_msix_en
+> and with only ctrl &= ~PCI_MSIX_FLAGS_ENABLE;
+> 
+> >> All state is lost in D3cold, so I guess this problem must occur during
+> >> a D3hot to D0 transition, right?  I assume this device sets
+> >> No_Soft_Reset, so the function is supposed to return to D0active with
+> >> all internal state intact.  But this device returns to D0active with
+> >> the MSI-X internal state corrupted?
+> >>
+> >> I assume this relies on pci_restore_state() to restore the MSI-X
+> >> state.  Seems like that might be enough to restore the internal state
+> >> even without this quirk, but I guess it must not be.
+> >
+> > The important part is the register value changing to make
+> > the internal hardware move.  Because it restores identically it doesn't change
+> > the internal hardware.
+> 
+> Yes correct, even though pci_restore_state restores all pci registers states
+> including MSI-X bits __pci_restore_msix_state after resume but internal AMD
+> controller's MSI_X enable bit is out of sync and AMD controller fails to maintain 
+> internal MSI-X enable bits.
+
+So the register value *change* is important, and you force a different
+value by writing something different at suspend-time so the value at
+restore-time will be different.  That's a little obscure since those
+points are far separated.
+
+Also it changes the behavior (masking MSI-X at suspend-time), which
+complicates the analysis since we have to verify that we don't need
+MSI-X after the quirk runs.  And the current quirk relies on the fact
+that PCI_MSIX_FLAGS_ENABLE is set, which again complicates the
+analysis (I guess if MSI-X is *not* enabled, you might not need the
+quirk at all?)
+
+Is there any way you could do the quirk at resume-time, e.g., if MSI-X
+is supposed to be enabled, first disable it and immediately re-enable
+it?
+
+> >>> Note: This quirk works in all scenarios, regardless of whether the
+> >>> integrated GPU is disabled in the BIOS.
+> >>
+> >> I don't know how the integrated GPU is related to this USB controller,
+> >> but I assume this fact is important somehow?
+> >
+> > This bug is due to a BIOS bug with the initialization.  We also posted in
+> > parallel a different workaround that fixes the initialization to match what
+> > the BIOS should have set via the GPU driver.  
+> >
+> > It should be going in for 6.3-rc2.
+> > https://gitlab.freedesktop.org/agd5f/linux/-/commit/07494a25fc8881e122c242a46b5c53e0e4403139
+
+That nbio_v7.2.c patch and this patch don't look anything alike.  It
+looks like the nbio_v7.2.c patch might run once?  Could *this* be done
+once at enumeration-time, too?
+
+Bjorn
