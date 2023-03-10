@@ -2,51 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E840F6B3C7D
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 11:41:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB4AB6B3CA0
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 11:45:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbjCJKlD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 05:41:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49600 "EHLO
+        id S229668AbjCJKpE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 05:45:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjCJKlB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 05:41:01 -0500
+        with ESMTP id S229830AbjCJKpD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 05:45:03 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 897C7E348C;
-        Fri, 10 Mar 2023 02:40:34 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E998F6002;
+        Fri, 10 Mar 2023 02:44:58 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1EF2861355;
-        Fri, 10 Mar 2023 10:40:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F6AAC433D2;
-        Fri, 10 Mar 2023 10:40:30 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 068E66136C;
+        Fri, 10 Mar 2023 10:44:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64D3FC4339C;
+        Fri, 10 Mar 2023 10:44:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678444832;
-        bh=DD48udtqkyZS6kvJb3EFINWyU+CCt8eEvkAUyiqzJhk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOf77dI3dzwnNLmdgJtbKJYLrBZUvib2G5Kj7AT73no62YMgBGRCxOh15stIhMCgW
-         Xn00l9zWCMxbiPXnwfsRsSv6XjILgm2AwEbkBmahSjVQIB87hNF7svEqZyTuAIpq+N
-         EEv3US+uFq/2GJdyp/4Z8j12S4C1jFNvQK5Lacap0i5hRFDPtRy18Tb4SZO/lAzaxu
-         u1xCLo+abO+J9+MkBq+rGvHbef4DDX5Wj02QikU8H8K9QvZDYXhYkAxpq8yFKLifFC
-         98NmfJlmRzzSEXgHqir+8KBg2idEKlzX5TI320y7jGkMoHXts/owYSHH39qwAEwQa3
-         WFXPPP5jMIHMA==
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Josh Triplett <josh@joshtriplett.org>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: kirin: select REGMAP and REGMAP_MMIO
-Date:   Fri, 10 Mar 2023 11:40:26 +0100
-Message-Id: <167844411812.1209684.12017386820985241641.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <04636141da1d6d592174eefb56760511468d035d.1668410580.git.josh@joshtriplett.org>
-References: <04636141da1d6d592174eefb56760511468d035d.1668410580.git.josh@joshtriplett.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1678445097;
+        bh=TPxM6KK9/OyA82h8iJjmd8WFZT103NQH+ETqZREhhgY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=D+j9smyxvtBK/Ms2aaaY40QVCvRcaB8b1yBg1H4n9IxI+4YZ+OundcY1FnH7GGKj9
+         1Y++jlWf55aSc0fGF+NGC5U/G62ZYKXcY1suUMO9Xl0QKzlrrhuxMzOx38PmLNnF+f
+         dmI8fERezRXUDAo9olrN9xjbRVuyZgvbIwn3qxFwlXmq6nA4ZnvulzrwMqu6yOeT0g
+         aBFTHdmP4lK2b1F3Uvmv75el+7byuqVbIdu+ROydahT4xaP5gZDqMVyDieAgNvPlSO
+         wb3YiZdhuJocqzHnLtUGu3ny+auNY5PrS/grMaumTePFWohmwFbhPuhIkJd1LjOqmg
+         b9c6nP1DTlLuw==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1paaF4-00GZyH-VJ;
+        Fri, 10 Mar 2023 10:44:55 +0000
+Date:   Fri, 10 Mar 2023 10:44:54 +0000
+Message-ID: <86wn3oyjfd.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lucas Tanure <lucas.tanure@collabora.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, Qu Wenruo <wqu@suse.com>,
+        Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kernel@collabora.com,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/7] irqchip/gic-v3: Add a DMA Non-Coherent flag
+In-Reply-To: <37adba14-1add-187c-01b5-5109be38018e@collabora.com>
+References: <20230310080518.78054-1-lucas.tanure@collabora.com>
+        <20230310080518.78054-2-lucas.tanure@collabora.com>
+        <a43dee4ef0e72c393dea6ce924347f81@kernel.org>
+        <37adba14-1add-187c-01b5-5109be38018e@collabora.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lucas.tanure@collabora.com, vkoul@kernel.org, kishon@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de, tglx@linutronix.de, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, wqu@suse.com, piotr.oniszczuk@gmail.com, pgwipeout@gmail.com, kever.yang@rock-chips.com, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kernel@collabora.com, robin.murphy@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
@@ -56,22 +82,29 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, 13 Nov 2022 23:23:26 -0800, Josh Triplett wrote:
-> pcie-kirin uses regmaps, and needs to pull them in; otherwise, with
-> CONFIG_PCIE_KIRIN=y and without CONFIG_REGMAP:
+On Fri, 10 Mar 2023 09:53:16 +0000,
+Lucas Tanure <lucas.tanure@collabora.com> wrote:
 > 
-> drivers/pci/controller/dwc/pcie-kirin.c:359:21: error: variable ‘pcie_kirin_regmap_conf’ has initializer but incomplete type
->   359 | static const struct regmap_config pcie_kirin_regmap_conf = {
-> 
-> Similarly, without CONFIG_REGMAP_MMIO, pcie-kirin produces a linker
-> failure looking for __devm_regmap_init_mmio_clk.
-> 
-> [...]
+> On 10-03-2023 08:56, Marc Zyngier wrote:
+> > On 2023-03-10 08:05, Lucas Tanure wrote:
+> >> The GIC600 integration in RK356x, used in rk3588, doesn't support
+> >> any of the shareability or cacheability attributes, and requires
+> >> both values to be set to 0b00 for all the ITS and Redistributor
+> >> tables.
+> >> 
+> >> This is loosely based on prior work from XiaoDong Huang and
+> >> Peter Geis fixing this issue specifically for Rockchip 356x.
+> > 
+> > No.
+> > 
+> > If we are going to do *anything* about this thing, it is by
+> > describing the actual topology.
+> What do you mean by describe the topology?
 
-Applied to controller/kirin, thanks!
+Exactly what it means. Describe which shareability domains the GIC is
+in w.r.t the whole SoC. Do it consistently over the whole SoC.
 
-[1/1] PCI: kirin: select REGMAP and REGMAP_MMIO
-      https://git.kernel.org/pci/pci/c/3a2776e8a0e1
+	M.
 
-Thanks,
-Lorenzo
+-- 
+Without deviation from the norm, progress is not possible.
