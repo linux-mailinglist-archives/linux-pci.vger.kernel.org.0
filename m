@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AED3F6B37FE
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 09:05:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22B476B3805
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 09:05:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230132AbjCJIFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 03:05:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49142 "EHLO
+        id S230187AbjCJIFt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 03:05:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjCJIFp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 03:05:45 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEB69B1B38;
-        Fri, 10 Mar 2023 00:05:44 -0800 (PST)
+        with ESMTP id S230111AbjCJIFq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 03:05:46 -0500
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0209CB1B3D;
+        Fri, 10 Mar 2023 00:05:45 -0800 (PST)
 Received: from cryzen.lan (cpc87451-finc19-2-0-cust61.4-2.cable.virginm.net [82.11.51.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: tanureal)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id E55AB6603064;
-        Fri, 10 Mar 2023 08:05:42 +0000 (GMT)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 65BC46603083;
+        Fri, 10 Mar 2023 08:05:43 +0000 (GMT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
         s=mail; t=1678435543;
-        bh=aXDW9FM3v6N1gp/G6svdu0Iv9rfB/0Z8Inu2S3xCf4E=;
+        bh=+ZX7vYLxaBazI08zF5lNguc40/rFNVo9sCm+2OiHagA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fh+3hbrZX63tbEgCu8QMhiNdvHIvJ5tdpSdE3dTMSQQ1IHv3G/OkOYp587KeXjw0H
-         Wte5VVGJez2NsEGK//ZaFmtSdyvqpRqlNGd7BxI2OxdywTkzTBcj2qWXu9Zc8hBS1t
-         FyczdNcZcgqYA4btHApUzWydm858U28q8YtAtjFDOVpP+MyWBBJRQ2i0NqHit/qcBX
-         VSzsvPi0sDRbrE9J3wtfLgV23V7UUqmjgl/pv5JkKll+vXESPsWGCTLuVCjr9ieAfb
-         VC2gm6t8YHh6OfxNeo0Ldu2Q55JyQ43MM23j7Cjmc0ZF8JdZLn183AXvtbY8sI+t2/
-         /QBgzL9dAMtFg==
+        b=Q6hA6R1SqYQZ8YdpMwHANgLV+I9hzt66+OemjAwE845VtxO74K9Po0yR/hVpmVMyu
+         f6TgbY9c6KP0RDpUg410/rYRZ+GOdjEpA2EQqx3gefaidQAsb1eD3Q8hE7Fq/+GFHm
+         OeTDg5c54bmdFCsPx3xsrqHpDCFrSkfOr5OWemVy2McvZwdhtmPWBQ8piV02l/QsAC
+         iFNLsZIStXoDWuJURmmWRetliS5IV2EvNx3bjf3rDAl2/nJQmI25U7/JeQXiifJAl6
+         LwysFb/wruv0JXp1RVe8oFJ8Mf/cLKf0XGbWgdgxdl55E79Vf6mV/vyR97+SmkeQKN
+         uG839CYQzQbTA==
 From:   Lucas Tanure <lucas.tanure@collabora.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Qu Wenruo <wqu@suse.com>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org,
         Lucas Tanure <lucas.tanure@collabora.com>, kernel@collabora.com
-Subject: [PATCH 2/7] PCI: rockchip-dwc: Add rk3588 compatible line
-Date:   Fri, 10 Mar 2023 08:05:13 +0000
-Message-Id: <20230310080518.78054-3-lucas.tanure@collabora.com>
+Subject: [PATCH 3/7] dt-bindings: phy: rockchip: Add rk3588 compatible line
+Date:   Fri, 10 Mar 2023 08:05:14 +0000
+Message-Id: <20230310080518.78054-4-lucas.tanure@collabora.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230310080518.78054-1-lucas.tanure@collabora.com>
 References: <20230310080518.78054-1-lucas.tanure@collabora.com>
@@ -68,25 +68,26 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-RK3588 can use the same PCIe driver as rk3568
+RK3568 Naneng Combo Phy driver can support RK3588 with the additional
+clocks and initial configuration, so add the compatible line.
 
 Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
 ---
- drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 +
+ .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml     | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-index c1e7653e508e..435b717e5bc6 100644
---- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-+++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
-@@ -354,6 +354,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+index 8d8698412de0..9ae514fa7533 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+@@ -13,6 +13,7 @@ properties:
+   compatible:
+     enum:
+       - rockchip,rk3568-naneng-combphy
++      - rockchip,rk3588-naneng-combphy
  
- static const struct of_device_id rockchip_pcie_of_match[] = {
- 	{ .compatible = "rockchip,rk3568-pcie", },
-+	{ .compatible = "rockchip,rk3588-pcie", },
- 	{},
- };
- 
+   reg:
+     maxItems: 1
 -- 
 2.39.2
 
