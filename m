@@ -2,65 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 645E16B543D
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 23:25:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E2E106B5495
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 23:38:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231395AbjCJWZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 17:25:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36722 "EHLO
+        id S230330AbjCJWiY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 17:38:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230246AbjCJWZo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 17:25:44 -0500
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DBAD1AC0
-        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:25:43 -0800 (PST)
-Received: by mail-lf1-x134.google.com with SMTP id g17so8574294lfv.4
-        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:25:42 -0800 (PST)
+        with ESMTP id S231150AbjCJWiT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 17:38:19 -0500
+Received: from mail-yb1-xb29.google.com (mail-yb1-xb29.google.com [IPv6:2607:f8b0:4864:20::b29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E14B6EBA0
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:38:16 -0800 (PST)
+Received: by mail-yb1-xb29.google.com with SMTP id y144so6791062yby.12
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:38:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678487141;
+        d=linaro.org; s=google; t=1678487896;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=NCfw/2KP8IPVEfHShweA7sW0Sw8UUtNsK0jcL5a1bU8=;
-        b=lKQiDKm+O9syt+UAWQT3Y9JxrSfThGC2wWx4gWdxvt9wdxm6D0PUlE+cIw9gGYBJtd
-         izHDmyCe8oMVhGzJkshJ00d34kNeBSXgnECnC1AjwSJsLBZlyUMXzVDT+PyMUHNfxllv
-         ucTwscLD8f6Sp2LIAQrH62XEeUXoAZi9j/Jzn4cQb+KZJ9z5icUwLICU1Z6lFcQDjQ+q
-         FfCOfXAEMbb5K+zyvnIioPQLiykn8ed2AlMF9BZJdcnq/6O9MEhqTlTLA2/6J4bFwXeL
-         jawwh5XO12+lwvp6gqWdiC6pMfGlZEyyAYJIk7UDZSAEoi6Q7csW3RhMVdqwmVGPuVip
-         OYcA==
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Wt3Nia7B2dzyTN8m1DPD7xnZtjPkirSlGfwTlnIzeY=;
+        b=OSWtxzZ09KnkwhrS5kJ+EcwMTFEfKV2BCGIakarjHWGhpKOj7AdjvyGxH69XymwRk3
+         jggJbRdTa9yeX+/vx/7ddAekCfYM8rQlO6w6VPFzy+bTvQCgfufK6lAYFvL85Riotq3Y
+         AcHkA9Z+1q2wxeWMI8eNW16WEYlUviSiA0723SPO1nLDFQdNkVgz5YlNri8vIqstUnfp
+         zMPhsD37N5PWpqxxniB6tN0Vo42lsCIVE+tOgEUAmM6JCzPOO94NB69GSEyFsvQwOyT+
+         /0/osvwBeTfxgTUtzd7c2mRg5qegCR/w5Mfx1ZdfFHp02hdNVW75q4BN2rLkuC6Lxluu
+         ZtUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678487141;
+        d=1e100.net; s=20210112; t=1678487896;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NCfw/2KP8IPVEfHShweA7sW0Sw8UUtNsK0jcL5a1bU8=;
-        b=k5QiLQvNgaPAzwoIKpgicH9NMzHdGP0Sm1XeGPy9NZeEBj07WaCmrCDG0d+3aAqNaS
-         A8jNRJTbEuhG+mbMhzU1F8HfXATAVBQiMCennwBk1R27n1nO04sp8fhghRUcjLVkIVuu
-         ZwhuTclWEmxjKJKTHIv7V00jsgP5Bjin/Ql7rC8WHccgH6wtBFS0ADmqkI+mRjELDfDc
-         A57sDjF3MjlRBP4xt8YiNggaxcmhV+8HydvTzBpGak4B99f22QwmEYlhUGHStmpF2+yi
-         SiuxuAhGVCWz3VKmuNVuSWc3ej8yMCSwcd5HsubTW9i4EziX0CDK21UIQFhn5h8OXhTt
-         TMow==
-X-Gm-Message-State: AO0yUKW4qEJ7qSdBtLJpsp+fx4CAKEga4Zm0niUgDvsRoGHkMN3loWxO
-        xYutrbK5AiWfyqAy/aONFUJ5TdMcsJJCffQAv1Vam2hzP9I=
-X-Google-Smtp-Source: AK7set/ukx5sQ36ele45d+870XprIjY6K4JvBCYFDzKS6BIq0+Se4/iefPuwC6eyIxY4WdrmutN8WXZn8QKxE48vpvE=
-X-Received: by 2002:ac2:5fa7:0:b0:4db:f4b:a552 with SMTP id
- s7-20020ac25fa7000000b004db0f4ba552mr8495823lfe.13.1678487140963; Fri, 10 Mar
- 2023 14:25:40 -0800 (PST)
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Wt3Nia7B2dzyTN8m1DPD7xnZtjPkirSlGfwTlnIzeY=;
+        b=wXYbRwcw2w3iRZgjonfeMv/h+6Oa0awfNSM+lHN2EGoeUoRovi+FSCltWBqz5JTwDV
+         UZx3MshiP6cnc1o/6NXvq+r+Zg+3BQ8eaiXrwTnqz1iZyDdF7S19WlJ35mEUNjN9HsBd
+         iHgahOm8/GOyiWqzwVwO9VOMDaMn64aoVzP73dF1j0vS3vrOtMHZtqjCnPregJcStTtC
+         Bw+ggeqSRU+3fJraY93i3yHFzBUlwBcsOoz7/8VQvIGAVvQV2H5xCMEXTPdEo5ROuJQ9
+         IwmcpTzaeHFd6LJ7bvbXu9AL6YRnYV3+hMCO5QzemLk0qLpWUPOrI0VRo9q7uyltgOpX
+         il5w==
+X-Gm-Message-State: AO0yUKWdRg9eCdwZnpee08bbvg1M2tXnwxlj8cqYywX/y7RfBv+kbmj+
+        X1GUzpUM4dY5FKCLO5/THypJWeJoYstDAbQY5Mpt1fhHl4Rx/kGuJGk=
+X-Google-Smtp-Source: AK7set8bSrxAvSIXD50argaqtJjUHzV9QGoSn2jp1Uxlri6KPaaW8uMmyLxShrOaXYPe03vRQhS5cOUbddu1AAztgRQ=
+X-Received: by 2002:a05:6902:4f4:b0:a06:5ef5:3a82 with SMTP id
+ w20-20020a05690204f400b00a065ef53a82mr13473653ybs.5.1678487895927; Fri, 10
+ Mar 2023 14:38:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20230310184102.GA1267642@bhelgaas> <JVFJQDZS.Q55VEGY3.FOVANOEZ@FBOHK6ZC.GEUI7GR4.PNS4DLI2>
-In-Reply-To: <JVFJQDZS.Q55VEGY3.FOVANOEZ@FBOHK6ZC.GEUI7GR4.PNS4DLI2>
-Reply-To: bjorn@helgaas.com
-From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
-Date:   Fri, 10 Mar 2023 16:25:29 -0600
-Message-ID: <CABhMZUXs7OM4FypEVM9BpuznVKsVdew5tu5sB+eLvK9d19oe7w@mail.gmail.com>
-Subject: Re: The MSI Driver Guide HOWTO
-To:     gael.seibert@gmx.fr
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+References: <20220928122539.15116-1-pali@kernel.org>
+In-Reply-To: <20220928122539.15116-1-pali@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Fri, 10 Mar 2023 23:38:04 +0100
+Message-ID: <CACRpkdZgFLsq2bCVwsv=BrgmcH7sjPmQb01DE7e2KtU9sAz+eA@mail.gmail.com>
+Subject: Re: [PATCH] PCI: ixp4xx: Use PCI_CONF1_ADDRESS() macro
+To:     =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,66 +71,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 3:32=E2=80=AFPM <gael.seibert@gmx.fr> wrote:
-> On 10/03/2023 19:41:02, Bjorn Helgaas wrote:
-> > On Fri, Mar 10, 2023 at 11:23:14AM +0100, gael.seibert@gmx.fr wrote:
-> > > On 09/03/2023 23:55:03, Bjorn Helgaas wrote:
-> > > > On Thu, Mar 09, 2023 at 10:57:51AM +0100, rec wrote:
-> > > > > On 09/03/2023 00:03:04, Bjorn Helgaas wrote:
-> > > > > > On Tue, Mar 07, 2023 at 12:22:44PM +0100, rec wrote:
-> > > > > > > Like asked in :
-> > https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#disabling-msi=
-s-globally
-> > > > >
-> > > > > > Thanks for the report!  I assume this means your system has
-> > problems
-> > > > > > with MSIs, and booting with "pci=3Dnomsi" makes it work better?
-> > > > >
-> > > > > You are welcome,
-> > > > > The system doesn't boot completely without the "pci=3Dnomsi"
-> > option.
-> > > >
-> > > > What exactly do you mean by "it doesn't boot completely"?  I
-> > compared
-> > > > the two dmesg logs, and I see that the "with MSI" log also has the
-> > > > "single" parameter, so it will only boot to single-user mode.
-> > >
-> > > It does it mean than either the boot stop or the system halt,
-> > power-off
-> > > before it can be possible to connect tty console or display manager.
-> >
-> > Wow.  I'm not sure what would cause a sudden halt or power-off like
-> > that.  Is there any indication on the console when this happens?  Can
-> > you try adding the following to your kernel boot parameters to see if
-> > you can catch anything via a photo or video (you may have to adjust
-> > the boot_delay to make things readable):
-> >
-> >   nosmp ignore_loglevel lpj=3Dlpj=3D7000000 boot_delay=3D100
+On Wed, Sep 28, 2022 at 2:25=E2=80=AFPM Pali Roh=C3=A1r <pali@kernel.org> w=
+rote:
+
+> Simplify pci-ixp4xx.c driver code and use new PCI_CONF1_ADDRESS() macro f=
+or
+> accessing PCI config space.
 >
-> It will be possible that is a fan problem with a cpu temperature.
-> (Probably)
-> I attach a video to the boot.
+> Signed-off-by: Pali Roh=C3=A1r <pali@kernel.org>
 
-Thanks for this.  I should have asked at the very beginning whether
-there are any older kernels that work correctly without "pci=3Dnomsi".
-If there is such an older kernel, we can try to figure out what change
-broke it.  Otherwise, I'm running out of ideas.
+This does not compile right off (on kernel v6.3-rc1), I had to add this:
 
-> > I'm curious about the Ricoh thing because I don't see an obvious MSI
-> > connection.  Can you collect the output of "sudo lspci -vv"?  The
-> > lspci output in your initial email wasn't collected as root, so it
-> > doesn't include information about Capabilities (including MSI).
->
-> Output of #lspci --vv attached
+diff --git a/drivers/pci/controller/pci-ixp4xx.c
+b/drivers/pci/controller/pci-ixp4xx.c
+index c83b5ae0b017..e44252db6085 100644
+--- a/drivers/pci/controller/pci-ixp4xx.c
++++ b/drivers/pci/controller/pci-ixp4xx.c
+@@ -26,6 +26,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/bits.h>
++#include "../pci.h"
 
-Thanks!  I was hoping something from lspci would connect with
-ricoh_mmc_fixup_rl5c476(), where we get the "proprietary Ricoh MMC
-controller" message, e.g., if that function looked at the MSI
-Capability or something.  But 00:0d has four functions and none of
-them has an MSI Capability.  And 00:0d.0 has nothing we know about at
-the offsets the function uses:
+ /* Register offsets */
+ #define IXP4XX_PCI_NP_AD               0x00
 
-  00:0d.0 FireWire (IEEE 1394): Ricoh Co Ltd R5C832
-    Capabilities: [dc] Power Management version 2
+After this it compiles, boots and mounts root on a PCI-USB-connected
+rootfs, so it seems to work fine!
+Tested-by: Linus Walleij <linus.walleij@linaro.org>
 
-Bjorn
+Yours,
+Linus Walleij
