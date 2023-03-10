@@ -2,102 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E4076B540F
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 23:15:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 645E16B543D
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 23:25:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbjCJWPu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 17:15:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45582 "EHLO
+        id S231395AbjCJWZp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 17:25:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231337AbjCJWPs (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 17:15:48 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA8E115DE5;
-        Fri, 10 Mar 2023 14:15:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AC28FB82400;
-        Fri, 10 Mar 2023 22:15:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 749CFC433EF;
-        Fri, 10 Mar 2023 22:15:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678486543;
-        bh=DBl3XYhVnPnvHREV6khsX0zced8HUvT1CffAKeLd3Ro=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OfS4jME/FTj7znUmYf295mHvCJSGHW15meDAWvWzrPF00ribhkkR54Qzq1xN8JWLo
-         4ifTzybHNa9ZODC6VxC42vmMGTVR8rpuWOM6tKK420xu8RHuuxnRruXC7YKzvCsgbR
-         u/3W/J52kt+Sw35gEY+GHE+yc90z2JKYQ8ziYt9KjcC+XD8bNVo3dAsYq1L9Dq9Z0P
-         F78mqifIRtEWY9l2xPq1eww1JPlj0DytsnzKq9XlcZ3XWB4shMaJ1Gp356DNbpjhAm
-         fT6kd6cAHwWNZ9v/mPpirze0bthx/rOXMwvra8reVtn+1Ve3YO1CPCN4cOH1gbnOxg
-         +A+CV4nR0FY6w==
-Date:   Fri, 10 Mar 2023 15:15:38 -0700
-From:   Keith Busch <kbusch@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Anatolij Gustschin <agust@denx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v4 1/4] PCI: Introduce pci_dev_for_each_resource()
-Message-ID: <ZAusCnLSXeEcpQs+@kbusch-mbp.dhcp.thefacebook.com>
-References: <20230310171416.23356-1-andriy.shevchenko@linux.intel.com>
- <20230310171416.23356-2-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230246AbjCJWZo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 17:25:44 -0500
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02DBAD1AC0
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:25:43 -0800 (PST)
+Received: by mail-lf1-x134.google.com with SMTP id g17so8574294lfv.4
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 14:25:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678487141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NCfw/2KP8IPVEfHShweA7sW0Sw8UUtNsK0jcL5a1bU8=;
+        b=lKQiDKm+O9syt+UAWQT3Y9JxrSfThGC2wWx4gWdxvt9wdxm6D0PUlE+cIw9gGYBJtd
+         izHDmyCe8oMVhGzJkshJ00d34kNeBSXgnECnC1AjwSJsLBZlyUMXzVDT+PyMUHNfxllv
+         ucTwscLD8f6Sp2LIAQrH62XEeUXoAZi9j/Jzn4cQb+KZJ9z5icUwLICU1Z6lFcQDjQ+q
+         FfCOfXAEMbb5K+zyvnIioPQLiykn8ed2AlMF9BZJdcnq/6O9MEhqTlTLA2/6J4bFwXeL
+         jawwh5XO12+lwvp6gqWdiC6pMfGlZEyyAYJIk7UDZSAEoi6Q7csW3RhMVdqwmVGPuVip
+         OYcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678487141;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=NCfw/2KP8IPVEfHShweA7sW0Sw8UUtNsK0jcL5a1bU8=;
+        b=k5QiLQvNgaPAzwoIKpgicH9NMzHdGP0Sm1XeGPy9NZeEBj07WaCmrCDG0d+3aAqNaS
+         A8jNRJTbEuhG+mbMhzU1F8HfXATAVBQiMCennwBk1R27n1nO04sp8fhghRUcjLVkIVuu
+         ZwhuTclWEmxjKJKTHIv7V00jsgP5Bjin/Ql7rC8WHccgH6wtBFS0ADmqkI+mRjELDfDc
+         A57sDjF3MjlRBP4xt8YiNggaxcmhV+8HydvTzBpGak4B99f22QwmEYlhUGHStmpF2+yi
+         SiuxuAhGVCWz3VKmuNVuSWc3ej8yMCSwcd5HsubTW9i4EziX0CDK21UIQFhn5h8OXhTt
+         TMow==
+X-Gm-Message-State: AO0yUKW4qEJ7qSdBtLJpsp+fx4CAKEga4Zm0niUgDvsRoGHkMN3loWxO
+        xYutrbK5AiWfyqAy/aONFUJ5TdMcsJJCffQAv1Vam2hzP9I=
+X-Google-Smtp-Source: AK7set/ukx5sQ36ele45d+870XprIjY6K4JvBCYFDzKS6BIq0+Se4/iefPuwC6eyIxY4WdrmutN8WXZn8QKxE48vpvE=
+X-Received: by 2002:ac2:5fa7:0:b0:4db:f4b:a552 with SMTP id
+ s7-20020ac25fa7000000b004db0f4ba552mr8495823lfe.13.1678487140963; Fri, 10 Mar
+ 2023 14:25:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310171416.23356-2-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+References: <20230310184102.GA1267642@bhelgaas> <JVFJQDZS.Q55VEGY3.FOVANOEZ@FBOHK6ZC.GEUI7GR4.PNS4DLI2>
+In-Reply-To: <JVFJQDZS.Q55VEGY3.FOVANOEZ@FBOHK6ZC.GEUI7GR4.PNS4DLI2>
+Reply-To: bjorn@helgaas.com
+From:   Bjorn Helgaas <bjorn.helgaas@gmail.com>
+Date:   Fri, 10 Mar 2023 16:25:29 -0600
+Message-ID: <CABhMZUXs7OM4FypEVM9BpuznVKsVdew5tu5sB+eLvK9d19oe7w@mail.gmail.com>
+Subject: Re: The MSI Driver Guide HOWTO
+To:     gael.seibert@gmx.fr
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 07:14:13PM +0200, Andy Shevchenko wrote:
-> +#define __pci_dev_for_each_resource(dev, res, __i, vartype)		\
-> +	for (vartype __i = 0;						\
-> +		res = &(dev)->resource[__i], __i < PCI_NUM_RESOURCES;	\
-> +		__i++)
+On Fri, Mar 10, 2023 at 3:32=E2=80=AFPM <gael.seibert@gmx.fr> wrote:
+> On 10/03/2023 19:41:02, Bjorn Helgaas wrote:
+> > On Fri, Mar 10, 2023 at 11:23:14AM +0100, gael.seibert@gmx.fr wrote:
+> > > On 09/03/2023 23:55:03, Bjorn Helgaas wrote:
+> > > > On Thu, Mar 09, 2023 at 10:57:51AM +0100, rec wrote:
+> > > > > On 09/03/2023 00:03:04, Bjorn Helgaas wrote:
+> > > > > > On Tue, Mar 07, 2023 at 12:22:44PM +0100, rec wrote:
+> > > > > > > Like asked in :
+> > https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#disabling-msi=
+s-globally
+> > > > >
+> > > > > > Thanks for the report!  I assume this means your system has
+> > problems
+> > > > > > with MSIs, and booting with "pci=3Dnomsi" makes it work better?
+> > > > >
+> > > > > You are welcome,
+> > > > > The system doesn't boot completely without the "pci=3Dnomsi"
+> > option.
+> > > >
+> > > > What exactly do you mean by "it doesn't boot completely"?  I
+> > compared
+> > > > the two dmesg logs, and I see that the "with MSI" log also has the
+> > > > "single" parameter, so it will only boot to single-user mode.
+> > >
+> > > It does it mean than either the boot stop or the system halt,
+> > power-off
+> > > before it can be possible to connect tty console or display manager.
+> >
+> > Wow.  I'm not sure what would cause a sudden halt or power-off like
+> > that.  Is there any indication on the console when this happens?  Can
+> > you try adding the following to your kernel boot parameters to see if
+> > you can catch anything via a photo or video (you may have to adjust
+> > the boot_delay to make things readable):
+> >
+> >   nosmp ignore_loglevel lpj=3Dlpj=3D7000000 boot_delay=3D100
+>
+> It will be possible that is a fan problem with a cpu temperature.
+> (Probably)
+> I attach a video to the boot.
 
-...
+Thanks for this.  I should have asked at the very beginning whether
+there are any older kernels that work correctly without "pci=3Dnomsi".
+If there is such an older kernel, we can try to figure out what change
+broke it.  Otherwise, I'm running out of ideas.
 
-> +#define pci_dev_for_each_resource_p(dev, res)				\
-> +	__pci_dev_for_each_resource(dev, res, i, unsigned int)
+> > I'm curious about the Ricoh thing because I don't see an obvious MSI
+> > connection.  Can you collect the output of "sudo lspci -vv"?  The
+> > lspci output in your initial email wasn't collected as root, so it
+> > doesn't include information about Capabilities (including MSI).
+>
+> Output of #lspci --vv attached
 
-It looks dangerous to have a macro declare a variable when starting a new
-scope. How do you know the name 'i' won't clash with something defined above?
+Thanks!  I was hoping something from lspci would connect with
+ricoh_mmc_fixup_rl5c476(), where we get the "proprietary Ricoh MMC
+controller" message, e.g., if that function looked at the MSI
+Capability or something.  But 00:0d has four functions and none of
+them has an MSI Capability.  And 00:0d.0 has nothing we know about at
+the offsets the function uses:
+
+  00:0d.0 FireWire (IEEE 1394): Ricoh Co Ltd R5C832
+    Capabilities: [dc] Power Management version 2
+
+Bjorn
