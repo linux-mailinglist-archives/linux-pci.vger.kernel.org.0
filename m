@@ -2,40 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9C0F6B3E9F
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 13:04:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01A5A6B3EDF
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 13:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229998AbjCJMEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 07:04:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52064 "EHLO
+        id S230381AbjCJMMe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 07:12:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229925AbjCJMEd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 07:04:33 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7CED9EA014;
-        Fri, 10 Mar 2023 04:04:31 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14FC8C14;
-        Fri, 10 Mar 2023 04:05:14 -0800 (PST)
-Received: from [10.57.90.67] (unknown [10.57.90.67])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 647FD3F5A1;
-        Fri, 10 Mar 2023 04:04:27 -0800 (PST)
-Message-ID: <3db23e11-5fac-f36e-c89e-93c4e8ac2d98@arm.com>
-Date:   Fri, 10 Mar 2023 12:04:21 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 1/7] irqchip/gic-v3: Add a DMA Non-Coherent flag
-Content-Language: en-GB
-To:     Peter Geis <pgwipeout@gmail.com>,
-        Lucas Tanure <lucas.tanure@collabora.com>
-Cc:     Vinod Koul <vkoul@kernel.org>,
+        with ESMTP id S230224AbjCJMMR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 07:12:17 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C678710D30A;
+        Fri, 10 Mar 2023 04:12:10 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 48AEF615FC;
+        Fri, 10 Mar 2023 12:12:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B3A0C433EF;
+        Fri, 10 Mar 2023 12:12:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678450329;
+        bh=hItrJf7TpARR0uRQm1kat5QlUl3PNC6I+EzAt6rsSmc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=tHcSC8lKKCF6N2INSuJbK8+JARi4J3IqwYT1KfUjkI4xDh830mu6Js3WIXuJh+Bdf
+         ydlEJSWRT3dXBBr8CjUPV9VV103MkDvIYBQrMb1KX0jlJCKflR4Zbz3RHmUc8I5Lt5
+         jeKWRhx70ny8uIoRBp9QZJHXzt8qF/EzC3Dc3hs8oDFb5yHZm7Gvtwp4akqqoAiXp2
+         W3vub0wSKphuRBACaaiSoua+YrRv/3gzY8YHwzS0VL/4QyI9v8hwGgvu89UDIivqnV
+         10XhkEmK0GBta1KMJk5xGtgfV+CXX8c/TYpW67TKnTaEOs5N/keV5xNvQ7P93MArT/
+         lSDx37qheztPg==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pabbT-00Gb0h-4w;
+        Fri, 10 Mar 2023 12:12:07 +0000
+Date:   Fri, 10 Mar 2023 12:12:01 +0000
+Message-ID: <86ttysyfe6.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Lucas Tanure <lucas.tanure@collabora.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof Wilczynski <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>, Qu Wenruo <wqu@suse.com>,
@@ -44,146 +56,82 @@ Cc:     Vinod Koul <vkoul@kernel.org>,
         linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kernel@collabora.com
+        linux-pci@vger.kernel.org, kernel@collabora.com,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 1/7] irqchip/gic-v3: Add a DMA Non-Coherent flag
+In-Reply-To: <CAMdYzYo5FW6NT8zj8+4meAV-HVve+rVYybibVHy4GONC_PJ-6Q@mail.gmail.com>
 References: <20230310080518.78054-1-lucas.tanure@collabora.com>
- <20230310080518.78054-2-lucas.tanure@collabora.com>
- <CAMdYzYpL7V6udw=T7ZChTFi0xOj1tb-5CVHb84u1pL4kj3eDZA@mail.gmail.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <CAMdYzYpL7V6udw=T7ZChTFi0xOj1tb-5CVHb84u1pL4kj3eDZA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=ham
-        autolearn_force=no version=3.4.6
+        <20230310080518.78054-2-lucas.tanure@collabora.com>
+        <CAMdYzYpL7V6udw=T7ZChTFi0xOj1tb-5CVHb84u1pL4kj3eDZA@mail.gmail.com>
+        <86v8j8yg3d.wl-maz@kernel.org>
+        <CAMdYzYo5FW6NT8zj8+4meAV-HVve+rVYybibVHy4GONC_PJ-6Q@mail.gmail.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: pgwipeout@gmail.com, lucas.tanure@collabora.com, vkoul@kernel.org, kishon@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, heiko@sntech.de, tglx@linutronix.de, lpieralisi@kernel.org, kw@linux.com, bhelgaas@google.com, wqu@suse.com, piotr.oniszczuk@gmail.com, kever.yang@rock-chips.com, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, kernel@collabora.com, robin.murphy@arm.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023-03-10 11:41, Peter Geis wrote:
-> On Fri, Mar 10, 2023 at 3:05 AM Lucas Tanure <lucas.tanure@collabora.com> wrote:
->>
->> The GIC600 integration in RK356x, used in rk3588, doesn't support
->> any of the shareability or cacheability attributes, and requires
->> both values to be set to 0b00 for all the ITS and Redistributor
->> tables.
->>
->> This is loosely based on prior work from XiaoDong Huang and
->> Peter Geis fixing this issue specifically for Rockchip 356x.
+On Fri, 10 Mar 2023 12:04:16 +0000,
+Peter Geis <pgwipeout@gmail.com> wrote:
+> 
+> On Fri, Mar 10, 2023 at 6:57 AM Marc Zyngier <maz@kernel.org> wrote:
+> >
+> > On Fri, 10 Mar 2023 11:41:46 +0000,
+> > Peter Geis <pgwipeout@gmail.com> wrote:
+> > >
+> > > On Fri, Mar 10, 2023 at 3:05 AM Lucas Tanure <lucas.tanure@collabora.com> wrote:
+> > > >
+> > > > The GIC600 integration in RK356x, used in rk3588, doesn't support
+> > > > any of the shareability or cacheability attributes, and requires
+> > > > both values to be set to 0b00 for all the ITS and Redistributor
+> > > > tables.
+> > > >
+> > > > This is loosely based on prior work from XiaoDong Huang and
+> > > > Peter Geis fixing this issue specifically for Rockchip 356x.
+> > >
+> > > Good Morning,
+> > >
+> > > Since the gic is using dma, would it be reasonable to have all memory
+> > > allocations be requested with the GFP_DMA flag? Otherwise this doesn't
+> > > fully solve the problem for rk356x, where only the lower 4GB range is
+> > > DMA capable, but this tends to get allocated in the upper 4GB on 8GB
+> > > boards.
+> >
+> > That's an erratum. Please treat as such.
 > 
 > Good Morning,
 > 
-> Since the gic is using dma, would it be reasonable to have all memory
-> allocations be requested with the GFP_DMA flag? Otherwise this doesn't
-> fully solve the problem for rk356x, where only the lower 4GB range is
-> DMA capable, but this tends to get allocated in the upper 4GB on 8GB
-> boards.
+> Yes, believe me I'm fully aware of how broken rk356x is. I'm asking an
+> educational question from a kernel standards point of view, absent the
+> rk356x issues. Would it be reasonable that since the gic uses dma
+> memory, allocations for the gic should be made with the GFP_DMA flag?
+> Or is that a misuse of the flag?
 
-Not really, because there's no fixed definition of what GFP_DMA actually 
-means, and it may mean nothing (same for GFP_DMA32, which may or may not 
-be meaningful depending on kernel config and platform topology). Drivers 
-should really use the DMA API allocation functions if they care about 
-what they get, which comes back round to the notion from years ago of 
-converting the ITS driver to a regular platform driver, so it can 
-benefit from regular DT concepts like "dma-ranges" automatically.
+As Robin points out in another part of the thread, the right fix would
+be to convert the ITS as a pure platform driver and handle the probing
+dependencies that this would generate. Then you can start making us of
+the DMA allocator and of the firmware description of what ranges are
+reachable from the GIC (although this isn't strictly the ITS, but
+also the redistributors).
 
-Thanks,
-Robin.
+We're in a better place for this now than we were a few years ago, but
+this is still a sizeable amount of work.
 
-> 
-> Very Respectfully,
-> Peter Geis
-> 
->>
->> Suggested-by: Robin Murphy <robin.murphy@arm.com>
->> Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
->> ---
->>   drivers/irqchip/irq-gic-v3-its.c | 22 ++++++++++++++++++++++
->>   1 file changed, 22 insertions(+)
->>
->> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->> index 973ede0197e3..1c334dfeb647 100644
->> --- a/drivers/irqchip/irq-gic-v3-its.c
->> +++ b/drivers/irqchip/irq-gic-v3-its.c
->> @@ -42,6 +42,7 @@
->>   #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING          (1ULL << 0)
->>   #define ITS_FLAGS_WORKAROUND_CAVIUM_22375      (1ULL << 1)
->>   #define ITS_FLAGS_WORKAROUND_CAVIUM_23144      (1ULL << 2)
->> +#define ITS_FLAGS_DMA_NON_COHERENT             (1ULL << 3)
->>
->>   #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING    (1 << 0)
->>   #define RDIST_FLAGS_RD_TABLES_PREALLOCATED     (1 << 1)
->> @@ -2359,6 +2360,13 @@ static int its_setup_baser(struct its_node *its, struct its_baser *baser,
->>          its_write_baser(its, baser, val);
->>          tmp = baser->val;
->>
->> +       if (its->flags & ITS_FLAGS_DMA_NON_COHERENT) {
->> +               if (tmp & GITS_BASER_SHAREABILITY_MASK)
->> +                       tmp &= ~GITS_BASER_SHAREABILITY_MASK;
->> +               else
->> +                       gic_flush_dcache_to_poc(base, PAGE_ORDER_TO_SIZE(order));
->> +       }
->> +
->>          if ((val ^ tmp) & GITS_BASER_SHAREABILITY_MASK) {
->>                  /*
->>                   * Shareability didn't stick. Just use
->> @@ -3055,6 +3063,7 @@ static u64 its_clear_vpend_valid(void __iomem *vlpi_base, u64 clr, u64 set)
->>
->>   static void its_cpu_init_lpis(void)
->>   {
->> +       struct its_node *its = list_first_entry(&its_nodes, struct its_node, entry);
->>          void __iomem *rbase = gic_data_rdist_rd_base();
->>          struct page *pend_page;
->>          phys_addr_t paddr;
->> @@ -3096,6 +3105,9 @@ static void its_cpu_init_lpis(void)
->>          gicr_write_propbaser(val, rbase + GICR_PROPBASER);
->>          tmp = gicr_read_propbaser(rbase + GICR_PROPBASER);
->>
->> +       if (its->flags & ITS_FLAGS_DMA_NON_COHERENT)
->> +               tmp &= ~GICR_PROPBASER_SHAREABILITY_MASK;
->> +
->>          if ((tmp ^ val) & GICR_PROPBASER_SHAREABILITY_MASK) {
->>                  if (!(tmp & GICR_PROPBASER_SHAREABILITY_MASK)) {
->>                          /*
->> @@ -3120,6 +3132,9 @@ static void its_cpu_init_lpis(void)
->>          gicr_write_pendbaser(val, rbase + GICR_PENDBASER);
->>          tmp = gicr_read_pendbaser(rbase + GICR_PENDBASER);
->>
->> +       if (its->flags & ITS_FLAGS_DMA_NON_COHERENT)
->> +               tmp &= ~GICR_PENDBASER_SHAREABILITY_MASK;
->> +
->>          if (!(tmp & GICR_PENDBASER_SHAREABILITY_MASK)) {
->>                  /*
->>                   * The HW reports non-shareable, we must remove the
->> @@ -5005,6 +5020,7 @@ static int __init its_compute_its_list_map(struct resource *res,
->>   static int __init its_probe_one(struct resource *res,
->>                                  struct fwnode_handle *handle, int numa_node)
->>   {
->> +       struct device_node *np = to_of_node(handle);
->>          struct its_node *its;
->>          void __iomem *its_base;
->>          u64 baser, tmp, typer;
->> @@ -5076,6 +5092,9 @@ static int __init its_probe_one(struct resource *res,
->>          its->get_msi_base = its_irq_get_msi_base;
->>          its->msi_domain_flags = IRQ_DOMAIN_FLAG_MSI_REMAP;
->>
->> +       if (np && !of_dma_is_coherent(np))
->> +               its->flags |= ITS_FLAGS_DMA_NON_COHERENT;
->> +
->>          its_enable_quirks(its);
->>
->>          err = its_alloc_tables(its);
->> @@ -5095,6 +5114,9 @@ static int __init its_probe_one(struct resource *res,
->>          gits_write_cbaser(baser, its->base + GITS_CBASER);
->>          tmp = gits_read_cbaser(its->base + GITS_CBASER);
->>
->> +       if (its->flags & ITS_FLAGS_DMA_NON_COHERENT)
->> +               tmp &= ~GITS_CBASER_SHAREABILITY_MASK;
->> +
->>          if ((tmp ^ baser) & GITS_CBASER_SHAREABILITY_MASK) {
->>                  if (!(tmp & GITS_CBASER_SHAREABILITY_MASK)) {
->>                          /*
->> --
->> 2.39.2
->>
+If someone is motivated enough, they can have a go at it.
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
