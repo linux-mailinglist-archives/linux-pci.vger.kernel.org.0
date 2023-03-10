@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D484C6B380F
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 09:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 52EED6B3808
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 09:05:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230171AbjCJIFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 03:05:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49196 "EHLO
+        id S230197AbjCJIFu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 03:05:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230181AbjCJIFs (ORCPT
+        with ESMTP id S230179AbjCJIFs (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 03:05:48 -0500
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3111B1B38;
-        Fri, 10 Mar 2023 00:05:46 -0800 (PST)
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C26C2DA1;
+        Fri, 10 Mar 2023 00:05:47 -0800 (PST)
 Received: from cryzen.lan (cpc87451-finc19-2-0-cust61.4-2.cable.virginm.net [82.11.51.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: tanureal)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id C3A0166030DE;
-        Fri, 10 Mar 2023 08:05:44 +0000 (GMT)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 3A2DE66030FB;
+        Fri, 10 Mar 2023 08:05:45 +0000 (GMT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
         s=mail; t=1678435545;
-        bh=MCl+JS4GYShkMG1kJrLBfxKIMkW5axgopzJ3+UFInTM=;
+        bh=LOi/siaqM76rHO4gX21yMZsTjTCPrx6+roVKTERlr6Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YlJoeCfaLeQ5K0EfrokN/aIYO4G5hpSxm4BIz3TP33eSay1Cn/x/QIwTiT8dxUhOz
-         zDCngdYFFxczyTS+17tmjlFndUmISr0m3pMs/k9vXXHx9hT3aBxQtNnL+xwW6W3FKz
-         GVUu3henJBgLw4F978mqt2RIp7phtozVWX2hQGYdstjpUzyqRBMjn99v7236dnAFnA
-         HAg4iIzP2AoSAm+tKzLbTkPhK+Nva15UmX2rN1wUw6oEFJ3rP43/VU13exOryyVJa0
-         bOYX2ggSSR0UQogIgB7m1W5vLAOsBBuJDnIKRZMlvxtUXhqTBwuaNU6HoJJg/+swwy
-         NMOzlvO0kIfeg==
+        b=FbW3Tac8MSWHsTylUudxehstgS7z+O257JcutLLEmD5INT4MH2QtgyZbVEy5pCt66
+         MRxJ+De2AlznRsy52qpwJqrjUknHC2dlA4FpYxbdIGKJnNLqa+yuyuNVeIcP8ufRh5
+         zxU9H/kEVM7X27C1cqXcbOzYUxxclLJ4jEr6Mf6VTQywRMyyXSXYFCWN394LhLVZQa
+         dmNii/CIGrhpYdRqQEBTyNV276lzeZxyA9pQOGh39KOsOis2SNWYZ1oYrgGgwZbZEb
+         nT9F6xjO8g+1c12jBOyusPtID0w8jWmu4CIpZWFdYx+oZqGk+TnjAmBVrqTeMsAcHh
+         DB6L0qSbs4i4g==
 From:   Lucas Tanure <lucas.tanure@collabora.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -51,9 +51,9 @@ Cc:     Qu Wenruo <wqu@suse.com>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org,
         Lucas Tanure <lucas.tanure@collabora.com>, kernel@collabora.com
-Subject: [PATCH 6/7] arm64: dts: rockchip: Add PCIE2.0x1 lane @fe190000 for RK3588s
-Date:   Fri, 10 Mar 2023 08:05:17 +0000
-Message-Id: <20230310080518.78054-7-lucas.tanure@collabora.com>
+Subject: [PATCH 7/7] arm64: dts: rockchip: RK3588s: Enable PCIE2.0x1 @fe190000
+Date:   Fri, 10 Mar 2023 08:05:18 +0000
+Message-Id: <20230310080518.78054-8-lucas.tanure@collabora.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230310080518.78054-1-lucas.tanure@collabora.com>
 References: <20230310080518.78054-1-lucas.tanure@collabora.com>
@@ -68,113 +68,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCIE2.0x1 lane @fe190000 phy node for RK3588s.
-This lane is used for network controller RTL8125 in ROCK 5B.
+Enable PCIE2.0x1 @fe190000 for RTL8125 network controller in
+Rock 5B board.
 
 This is based on prior work from XiaoDong Huang and
 Peter Geis fixing this issue specifically for Rockchip 356x.
 
 Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 78 +++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+ .../arm64/boot/dts/rockchip/rk3588-rock-5b.dts | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index 695aed05eba2..bb66a8252d1b 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/power/rk3588-power.h>
- #include <dt-bindings/reset/rockchip,rk3588-cru.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/phy/phy.h>
- 
- / {
- 	compatible = "rockchip,rk3588";
-@@ -878,6 +879,83 @@ cru: clock-controller@fd7c0000 {
- 		rockchip,grf = <&php_grf>;
- 		#clock-cells = <1>;
- 		#reset-cells = <1>;
-+
-+	};
-+
-+	pipe_phy0_grf: syscon@fd5bc000 {
-+		compatible = "rockchip,pipe-phy-grf", "syscon";
-+		reg = <0x0 0xfd5bc000 0x0 0x100>;
-+	};
-+
-+	combphy0_ps: phy@fee00000 {
-+		compatible = "rockchip,rk3588-naneng-combphy";
-+		reg = <0x0 0xfee00000 0x0 0x100>;
-+		#phy-cells = <1>;
-+		clocks = <&cru CLK_REF_PIPE_PHY0>, <&cru PCLK_PCIE_COMBO_PIPE_PHY0>,
-+			 <&cru PCLK_PHP_ROOT>;
-+		clock-names = "refclk", "apbclk", "phpclk";
-+		assigned-clocks = <&cru CLK_REF_PIPE_PHY0>;
-+		assigned-clock-rates = <100000000>;
-+		resets = <&cru SRST_P_PCIE2_PHY0>, <&cru SRST_REF_PIPE_PHY0>;
-+		reset-names = "combphy-apb", "combphy";
-+		rockchip,pipe-grf = <&php_grf>;
-+		rockchip,pipe-phy-grf = <&pipe_phy0_grf>;
-+		status = "disabled";
-+	};
-+
-+	pcie2x1l2: pcie@fe190000 {
-+		compatible = "rockchip,rk3588-pcie", "snps,dw-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x40 0x4f>;
-+		clocks = <&cru ACLK_PCIE_1L2_MSTR>, <&cru ACLK_PCIE_1L2_SLV>,
-+			 <&cru ACLK_PCIE_1L2_DBI>, <&cru PCLK_PCIE_1L2>,
-+			 <&cru CLK_PCIE_AUX4>, <&cru CLK_PCIE1L2_PIPE>;
-+		clock-names = "aclk_mst", "aclk_slv",
-+			      "aclk_dbi", "pclk",
-+			      "aux", "pipe";
-+		device_type = "pci";
-+		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie2x1l2_intc 0>,
-+				<0 0 0 2 &pcie2x1l2_intc 1>,
-+				<0 0 0 3 &pcie2x1l2_intc 2>,
-+				<0 0 0 4 &pcie2x1l2_intc 3>;
-+		linux,pci-domain = <4>;
-+		num-ib-windows = <8>;
-+		num-ob-windows = <8>;
-+		num-viewport = <4>;
-+		max-link-speed = <2>;
-+		msi-map = <0x4000 &its0 0x4000 0x1000>;
-+		num-lanes = <1>;
-+		phys = <&combphy0_ps PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy";
-+		power-domains = <&power RK3588_PD_PCIE>;
-+		ranges = <0x01000000 0x0 0xf4100000 0x0 0xf4100000 0x0 0x00100000>,
-+			 <0x02000000 0x0 0xf4200000 0x0 0xf4200000 0x0 0x00e00000>,
-+			 <0x03000000 0xa 0x00000000 0xa 0x00000000 0x0 0x40000000>;
-+		reg = <0xa 0x41000000 0x0 0x00400000>,
-+		      <0x0 0xfe190000 0x0 0x00010000>,
-+		      <0x0 0xf4000000 0x0 0x00100000>;
-+		reg-names = "dbi", "apb", "config";
-+		resets = <&cru SRST_PCIE4_POWER_UP>, <&cru SRST_P_PCIE4>;
-+		reset-names = "pcie", "periph";
-+		rockchip,pipe-grf = <&php_grf>;
-+		status = "disabled";
-+
-+		pcie2x1l2_intc: legacy-interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 250 IRQ_TYPE_EDGE_RISING 0>;
-+		};
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+index df8b135cf223..c4ae20ad2fd7 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
+@@ -36,6 +36,15 @@ vcc_1v1_nldo_s3: vcc-1v1-nldo-s3 {
+ 		regulator-max-microvolt = <1100000>;
+ 		vin-supply = <&vcc5v0_sys>;
  	};
++
++	vcc3v3_pcie2x1l2: vcc3v3-pcie2x1l2 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3_pcie2x1l2";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		startup-delay-us = <5000>;
++		vin-supply = <&vcc_3v3_s3>;
++	};
+ };
  
- 	i2c0: i2c@fd880000 {
+ &sdhci {
+@@ -70,3 +79,12 @@ &sdmmc {
+ 	status = "okay";
+ };
+ 
++&combphy0_ps {
++	status = "okay";
++};
++
++&pcie2x1l2 {
++	reset-gpios = <&gpio3 RK_PB0 GPIO_ACTIVE_HIGH>;
++	vpcie3v3-supply = <&vcc3v3_pcie2x1l2>;
++	status = "okay";
++};
 -- 
 2.39.2
 
