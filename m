@@ -2,149 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB166B554A
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 00:05:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFD116B5607
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 00:52:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231219AbjCJXFp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 18:05:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55854 "EHLO
+        id S231657AbjCJXwj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 18:52:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49492 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231343AbjCJXFo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 18:05:44 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97B02135955;
-        Fri, 10 Mar 2023 15:05:42 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 28BB561D49;
-        Fri, 10 Mar 2023 23:05:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FBFC433D2;
-        Fri, 10 Mar 2023 23:05:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678489541;
-        bh=qYf7XwsN3paZxawhDYAE5mQqUB8cGC47Gx+srOcNCLw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WxtsZXJnV6YIb9iZHhO/zmGSkmBWj4CDw+iRqijYdhHcVErkfqUtb0zJ35Lv0EZxU
-         i5VJfsuu/mZdzc0FeisJzSsw1XDqHrK338fvVZCdjiiOJ3rch9A1YfebAGs6JohYoH
-         qsm+MaSmdexvgI44G/3sKrINfU+1fRSE8ZO3OAB2ZAVTf9yv1KCAbeZ0KKOeshsa9e
-         2kjspx8opCNRL6ffRGDjvY1Ft086IYzztnFdqwfnTZMIgpzeA3aW1S9hmaDnOqwlDL
-         TwezQaKFX8So4kX5OIdGe5HpPffjGRqgdMrWuuNbF3mRR2DRhcqEbtmLK90jdd4rFJ
-         Aa64mApHwIt6g==
-Date:   Fri, 10 Mar 2023 17:05:39 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
+        with ESMTP id S231236AbjCJXwh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 18:52:37 -0500
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C4112C836
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 15:52:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1678492356; x=1710028356;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=DR2EtexloKiGOSgLt7StJRrSrcGcb2F35ZzV35zpzr8=;
+  b=TYMAhmvVjisWaNiIL4D1VvHilbQ0rz5iH2jiFKGhtrEt61qpsDY1BPJY
+   eLAy0Cig9pN55K9x5sv8EhLvcI0qO1g6aZ5REviMCKjRs8/qTtn+a/koT
+   GnhzLu7nX5D7msk2ePmDQjD4ZNUZwUjQzvX5Zd4yBhiPo+E42V4F/XYq9
+   /9OePJSZ8sr6M4kNal/Aplth7HH3AwASqEIjNAR1qHTISBv62kL7fhgvL
+   X+eps7D0h7mtZqVY+ve+vk/VgjaKt02FdlmkP1W/e8mVP/l4FGOyc4r+9
+   /Psp5g2ftACRGZ+mTxVh9orGqZBtsFcUxWEYnAOpOhDQWpicOQ54ZAPwr
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="339217419"
+X-IronPort-AV: E=Sophos;i="5.98,251,1673942400"; 
+   d="scan'208";a="339217419"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 15:52:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="746922382"
+X-IronPort-AV: E=Sophos;i="5.98,251,1673942400"; 
+   d="scan'208";a="746922382"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 10 Mar 2023 15:52:34 -0800
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pamXK-0004BZ-0z;
+        Fri, 10 Mar 2023 23:52:34 +0000
+Date:   Sat, 11 Mar 2023 07:51:47 +0800
+From:   kernel test robot <lkp@intel.com>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Shawn Guo <shawn.guo@linaro.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: PCI: Add quirk for platforms running Windows
-Message-ID: <20230310230539.GA1289856@bhelgaas>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/kirin] BUILD SUCCESS
+ 3a2776e8a0e156a61f5b59ae341d8fffc730b962
+Message-ID: <640bc293.4Qn9kSJA+/0Nx3T+%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZAswHyaYjeqjW/+A@lpieralisi>
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 02:26:55PM +0100, Lorenzo Pieralisi wrote:
-> On Wed, Mar 08, 2023 at 12:53:10PM -0600, Bjorn Helgaas wrote:
-> > On Mon, Feb 27, 2023 at 10:12:21AM +0800, Shawn Guo wrote:
-> > > Commit 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from
-> > > host bridge windows") introduced a check to remove host bridge register
-> > > resources for all arm64 platforms, with the assumption that the PNP0A03
-> > > _CRS resources would always be host bridge registers and never as windows
-> > > on arm64.
-> > > 
-> > > The assumption stands true until Qualcomm Snapdragon Windows laptops
-> > > emerge.  These laptops describe host bridge windows in PNP0A03 _CRS
-> > > resources instead.  For example, the Microsoft Surface Pro X has host
-> > > bridges defined as
-> > > 
-> > >     Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
-> > >     Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
-> > > 
-> > >     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
-> > >     {
-> > >         Name (RBUF, ResourceTemplate ()
-> > >         {
-> > >             Memory32Fixed (ReadWrite,
-> > >                 0x60200000,         // Address Base
-> > >                 0x01DF0000,         // Address Length
-> > >                 )
-> > >             WordBusNumber (ResourceProducer, MinFixed, MaxFixed, PosDecode,
-> > >                 0x0000,             // Granularity
-> > >                 0x0000,             // Range Minimum
-> > >                 0x0001,             // Range Maximum
-> > >                 0x0000,             // Translation Offset
-> > >                 0x0002,             // Length
-> > >                 ,, )
-> > >         })
-> > >         Return (RBUF) /* \_SB_.PCI0._CRS.RBUF */
-> > >     }
-> > > 
-> > > The Memory32Fixed holds a host bridge window, but it's not properly
-> > > defined as a "producer" resource.  Consequently the resource gets
-> > > removed by kernel, and the BAR allocation fails later on:
-> > > 
-> > >     [ 0.150731] pci 0002:00:00.0: BAR 14: no space for [mem size 0x00100000]
-> > >     [ 0.150744] pci 0002:00:00.0: BAR 14: failed to assign [mem size 0x00100000]
-> > >     [ 0.150758] pci 0002:01:00.0: BAR 0: no space for [mem size 0x00004000 64bit]
-> > >     [ 0.150769] pci 0002:01:00.0: BAR 0: failed to assign [mem size 0x00004000 64bit]
-> > > 
-> > > This eventually prevents the PCIe NVME drive from being accessible.
-> > > 
-> > > Add a quirk for these platforms to avoid the resource being removed.
-> > > 
-> > > Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-> > > ---
-> > > We are running into the issue on more devices than just Surface Pro X
-> > > now, so trying to sort it out with a quirk as suggested by Lorenzo [1].
-> > 
-> > One thing I don't like about this application of quirks is that the
-> > list of affected platforms is likely to grow, which is an ongoing
-> > burden for users and developers.
-> > 
-> > Can we have a conversation with Qualcomm about how they *intend* this
-> > to work?  Linux is probably doing something wrong (interpreting
-> > something differently than Windows does), and if we could fix that, we
-> > have a better chance of future platforms working without quirks.
-> 
-> Catch-22. What if some firmware would add host bridge MMIO register
-> space (marked as consumer) in the _CRS ? We would end up allocating
-> BAR regions in there, which is not right, so your commit:
-> 
-> 8fd4391ee717 ("arm64: PCI: Exclude ACPI "consumer" resources from host bridge windows")
-> 
-> is correct and if we revert it we would trigger regressions on some
-> arm64 platforms for the reason I mention above.
-> 
-> We can look for clarification at ACPI specs level but for firmware
-> that is out there I am not sure what options we have.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/kirin
+branch HEAD: 3a2776e8a0e156a61f5b59ae341d8fffc730b962  PCI: kirin: Select REGMAP_MMIO
 
-I don't remember why 8fd4391ee717 exists; I assume there was some
-platform that needed it.  I should have included that in the commit
-log; mea culpa.
+elapsed time: 730m
 
-In any event, I assume Windows works on both that platform and the
-ones mentioned in this quirk, and I assume Windows doesn't require
-platform-specific quirks for something like this.  I admit that's a
-lot of assuming, but if Windows can do it, Linux should be able to do
-it, too.
+configs tested: 99
+configs skipped: 8
 
-> > > +static struct acpi_platform_list qcom_platlist[] = {
-> > > +	/* Thinkpad X13s */
-> > > +	{ "LENOVO", "SDM8280 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
-> > > +	/* Microsoft Surface Pro 9 (5G) and Windows Dev Kit 2023 */
-> > > +	{ "QCOMM ", "SDM8280 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
-> > > +	/* Microsoft Surface Pro X */
-> > > +	{ "QCOMM ", "SDM8180 ", 0, ACPI_SIG_DSDT, all_versions, QCOM_DSDT_QUIRK },
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r004-20230310   gcc  
+alpha                randconfig-r024-20230310   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230310   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r002-20230310   gcc  
+arm                  randconfig-r046-20230310   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r001-20230310   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r026-20230310   gcc  
+hexagon              randconfig-r034-20230310   clang
+hexagon              randconfig-r041-20230310   clang
+hexagon              randconfig-r045-20230310   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                          randconfig-a001   gcc  
+i386                          randconfig-a002   clang
+i386                          randconfig-a003   gcc  
+i386                          randconfig-a004   clang
+i386                          randconfig-a005   gcc  
+i386                          randconfig-a006   clang
+i386                          randconfig-a011   clang
+i386                          randconfig-a012   gcc  
+i386                          randconfig-a013   clang
+i386                          randconfig-a014   gcc  
+i386                          randconfig-a015   clang
+i386                          randconfig-a016   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r002-20230310   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r016-20230310   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r036-20230310   gcc  
+microblaze           randconfig-r013-20230310   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2        buildonly-randconfig-r004-20230310   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r006-20230310   gcc  
+nios2                randconfig-r022-20230310   gcc  
+nios2                randconfig-r033-20230310   gcc  
+openrisc     buildonly-randconfig-r003-20230310   gcc  
+openrisc             randconfig-r025-20230310   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r003-20230310   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r015-20230310   gcc  
+powerpc              randconfig-r021-20230310   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r031-20230310   clang
+riscv                randconfig-r042-20230310   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r001-20230310   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r014-20230310   gcc  
+s390                 randconfig-r035-20230310   clang
+s390                 randconfig-r044-20230310   gcc  
+sh                               allmodconfig   gcc  
+sh                   randconfig-r011-20230310   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r005-20230310   gcc  
+sparc64              randconfig-r012-20230310   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                        randconfig-a001   clang
+x86_64                        randconfig-a002   gcc  
+x86_64                        randconfig-a003   clang
+x86_64                        randconfig-a004   gcc  
+x86_64                        randconfig-a005   clang
+x86_64                        randconfig-a006   gcc  
+x86_64                        randconfig-a011   gcc  
+x86_64                        randconfig-a012   clang
+x86_64                        randconfig-a013   gcc  
+x86_64                        randconfig-a014   clang
+x86_64                        randconfig-a015   gcc  
+x86_64                        randconfig-a016   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
