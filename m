@@ -2,107 +2,204 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFC3B6B5036
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 19:41:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 188406B5214
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 21:42:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229907AbjCJSlK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 13:41:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
+        id S231303AbjCJUmu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 15:42:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjCJSlI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 13:41:08 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DE811E6FB
-        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 10:41:07 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 971E4CE293C
-        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 18:41:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D248C433D2;
-        Fri, 10 Mar 2023 18:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678473663;
-        bh=7Q7nBdE+Gn4rGMRx5LTVH1SDIrlejqxGZZ647G6KSvI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TTfelb++JEI0ZSQbPp7MIDtkEmKCGbcrW6fUu4dIamMFshqP8pyTBcQbcZvIpJ7/E
-         b82aNfBTXNzGn2fvxsbNJWXfyziAKyu/M5JnWS2Nw3HigeuO1E2syHWiOdX9SnO8p2
-         9TZuUmo1SUMnmY/dYCPlB3v3OTAIEX9pH9GQlHyNN0ZSjsK5OCeu6XseZZVC+Z1Hrn
-         Yo3rCzIhGgaxezWk5bhTUa4BWLaeaquoM6CxtwuUCErs1Kcz9/ZBI9Qj5SScZIZnXU
-         fozpf227A9kKtJE64LUpwuOZ2inhD+XxIwYaEVo8OianRprQJHrf03I/npxmWPLMKl
-         99M5QcDcgmYmA==
-Date:   Fri, 10 Mar 2023 12:41:02 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     gael.seibert@gmx.fr
-Cc:     linux-pci@vger.kernel.org
-Subject: Re: The MSI Driver Guide HOWTO
-Message-ID: <20230310184102.GA1267642@bhelgaas>
+        with ESMTP id S229945AbjCJUmt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 15:42:49 -0500
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E23D135520;
+        Fri, 10 Mar 2023 12:42:47 -0800 (PST)
+Received: by mail-wm1-x332.google.com with SMTP id o5-20020a05600c510500b003ec0e4ec6deso890843wms.3;
+        Fri, 10 Mar 2023 12:42:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678480966;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Xtdqo2ZxphSElsKQbC7tvl0caLRLqCXXyE2IaE675+8=;
+        b=FTT4ONWceB/5GsdfPoOPF7cMWniFtzHvok1pdW4JldPu+5WJtcsRq3m7mcxfM5HY5H
+         h6agUt2CK7MYmBiLSjw/MBp5pFgjipGJM897tYNGwzOysVXrTXman290g9TOAUxnC7+H
+         ZORaN5MBBMQhD1FTJmYoyuO4oER3hT+dKOa+lDblrO29j7nm5ymJvRpDbHeLR7OwFEd9
+         Evc6ZmDTIXzUyK04Su3WZdkr83dn1LRrs3V5AEv+/R1JcDtyosTBPn6jc+D/GuImw9nQ
+         jHOCEnfrLO+4Un4zY+Km4yA3I7ZWAJYpxjU9pmN+J5YxOdPjSVvzZXXMrjYcQDXwKYar
+         RjZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678480966;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Xtdqo2ZxphSElsKQbC7tvl0caLRLqCXXyE2IaE675+8=;
+        b=MGyo549oZ2EOFc9cRbfKMisDdcDfYzHBrsHTETXMnlTq8y5mPE3Zg8mr1HZhtiK5sM
+         ZCB7lIN6eJu6PFkVRqefNlQZNOLgl1tc0Fm89NczkKxqd76b0f1zGPCnbClDpjVDsaQ/
+         k22b9qsQHbvlEL2eR/8FWWpAbNJ3yRvaLgOPIWq8J2kU895PEOKQK8Nv9AehKPD3qlTH
+         KMjXQDijoKusf8EFytmtihp6xZhReBfp4J+K6n134LgcxKty2KilPDoUP/JCljSUy2k9
+         ZXETmEZ/uRIqmEywwGXdEJPFEDp8sIJVRVQW6xEU29Gaji9Y10wMngYKvemCaArZ1AiY
+         mmfA==
+X-Gm-Message-State: AO0yUKW4nyC2Fz8mT2svUOqmrQY2c2Of+8VEBsiduBh5a5Sa2npZl8+1
+        TvZxAKMICyvSB4q7urOBSns=
+X-Google-Smtp-Source: AK7set9i/H7lcl1NiLITrPig13UwQIZ46O/VTbTxY7tSer8zWM3Q7SYO2ulKXHjtb5w01F+NRCNjAQ==
+X-Received: by 2002:a05:600c:3b13:b0:3eb:2e32:72b4 with SMTP id m19-20020a05600c3b1300b003eb2e3272b4mr3947184wms.15.1678480965890;
+        Fri, 10 Mar 2023 12:42:45 -0800 (PST)
+Received: from ?IPV6:2a01:c22:7669:bf00:58d7:455f:e597:a838? (dynamic-2a01-0c22-7669-bf00-58d7-455f-e597-a838.c22.pool.telefonica.de. [2a01:c22:7669:bf00:58d7:455f:e597:a838])
+        by smtp.googlemail.com with ESMTPSA id a7-20020a5d5707000000b002c54f4d0f71sm670939wrv.38.2023.03.10.12.42.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 10 Mar 2023 12:42:21 -0800 (PST)
+Message-ID: <eb2bee03-1b2c-384b-e9c1-5ddf2240c828@gmail.com>
+Date:   Fri, 10 Mar 2023 21:42:04 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN44ZY2G.XQXJA4JD.P37YMNSZ@LGXWN7Q2.OD5XUULU.2REDJUZ5>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH net-next v9 3/5] r8169: Consider chip-specific ASPM can be
+ enabled on more cases
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     nic_swsd@realtek.com, bhelgaas@google.com, koba.ko@canonical.com,
+        acelan.kao@canonical.com, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
+        rafael.j.wysocki@intel.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20230309201705.GA1165139@bhelgaas>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <20230309201705.GA1165139@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 11:23:14AM +0100, gael.seibert@gmx.fr wrote:
-> On 09/03/2023 23:55:03, Bjorn Helgaas wrote:
-> > On Thu, Mar 09, 2023 at 10:57:51AM +0100, rec wrote:
-> > > On 09/03/2023 00:03:04, Bjorn Helgaas wrote:
-> > > > On Tue, Mar 07, 2023 at 12:22:44PM +0100, rec wrote:
-> > > > > Like asked in : https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#disabling-msis-globally
-> > >
-> > > > Thanks for the report!  I assume this means your system has problems
-> > > > with MSIs, and booting with "pci=nomsi" makes it work better?
-> > >
-> > > You are welcome,
-> > > The system doesn't boot completely without the "pci=nomsi" option.
-> > 
-> > What exactly do you mean by "it doesn't boot completely"?  I compared
-> > the two dmesg logs, and I see that the "with MSI" log also has the
-> > "single" parameter, so it will only boot to single-user mode.
+On 09.03.2023 21:17, Bjorn Helgaas wrote:
+> On Sat, Feb 25, 2023 at 11:46:33AM +0800, Kai-Heng Feng wrote:
+>> To really enable ASPM on r8169 NICs, both standard PCIe ASPM and
+>> chip-specific ASPM have to be enabled at the same time.
+>>
+>> Before enabling ASPM at chip side, make sure the following conditions
+>> are met:
+>> 1) Use pcie_aspm_support_enabled() to check if ASPM is disabled by
+>>    kernel parameter.
+>> 2) Use pcie_aspm_capable() to see if the device is capable to perform
+>>    PCIe ASPM.
+>> 3) Check the return value of pci_disable_link_state(). If it's -EPERM,
+>>    it means BIOS doesn't grant ASPM control to OS, and device should use
+>>    the ASPM setting as is.
+>>
+>> Consider ASPM is manageable when those conditions are met.
+>>
+>> While at it, disable ASPM at chip-side for TX timeout reset, since
+>> pci_disable_link_state() doesn't have any effect when OS isn't granted
+>> with ASPM control.
 > 
-> It does it mean than either the boot stop or the system halt, power-off
-> before it can be possible to connect tty console or display manager.
+> 1) "While at it, ..." is always a hint that maybe this part could be
+> split to a separate patch.
+> 
+> 2) The mix of chip-specific and standard PCIe ASPM configuration is a
+> mess.  Does it *have* to be intermixed at run-time, or could all the
+> chip-specific stuff be done once, e.g., maybe chip-specific ASPM
+> enable could be done at probe-time, and then all subsequent ASPM
+> configuration could done via the standard PCIe registers?
+> 
+> I.e., does the chip work correctly if chip-specific ASPM is enabled,
+> but standard PCIe ASPM config is *disabled*?
+> 
+> The ASPM sysfs controls [1] assume that L0s, L1, L1.1, L1.2 can all be
+> controlled simply by using the standard PCIe registers.  If that's not
+> the case for r8169, things will break when people use the sysfs knobs.
+> 
+This series has been superseded meanwhile and what is being discussed
+here has become obsolete.
 
-Wow.  I'm not sure what would cause a sudden halt or power-off like
-that.  Is there any indication on the console when this happens?  Can
-you try adding the following to your kernel boot parameters to see if
-you can catch anything via a photo or video (you may have to adjust
-the boot_delay to make things readable):
+> Bjorn
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-bus-pci?id=v6.2#n420
+> 
+>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>> ---
+>> v9:
+>>  - No change.
+>>
+>> v8:
+>>  - Enable chip-side ASPM only when PCIe ASPM is already available.
+>>  - Wording.
+>>
+>> v7:
+>>  - No change.
+>>
+>> v6:
+>>  - Unconditionally enable chip-specific ASPM.
+>>
+>> v5:
+>>  - New patch.
+>>
+>>  drivers/net/ethernet/realtek/r8169_main.c | 22 ++++++++++++++++++----
+>>  1 file changed, 18 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+>> index 45147a1016bec..a857650c2e82b 100644
+>> --- a/drivers/net/ethernet/realtek/r8169_main.c
+>> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+>> @@ -2675,8 +2675,11 @@ static void rtl_disable_exit_l1(struct rtl8169_private *tp)
+>>  
+>>  static void rtl_hw_aspm_clkreq_enable(struct rtl8169_private *tp, bool enable)
+>>  {
+>> -	/* Don't enable ASPM in the chip if OS can't control ASPM */
+>> -	if (enable && tp->aspm_manageable) {
+>> +	/* Skip if PCIe ASPM isn't possible */
+>> +	if (!tp->aspm_manageable)
+>> +		return;
+>> +
+>> +	if (enable) {
+>>  		RTL_W8(tp, Config5, RTL_R8(tp, Config5) | ASPM_en);
+>>  		RTL_W8(tp, Config2, RTL_R8(tp, Config2) | ClkReqEn);
+>>  
+>> @@ -4545,8 +4548,13 @@ static void rtl_task(struct work_struct *work)
+>>  		/* ASPM compatibility issues are a typical reason for tx timeouts */
+>>  		ret = pci_disable_link_state(tp->pci_dev, PCIE_LINK_STATE_L1 |
+>>  							  PCIE_LINK_STATE_L0S);
+>> +
+>> +		/* OS may not be granted to control PCIe ASPM, prevent the driver from using it */
+>> +		tp->aspm_manageable = 0;
+>> +
+>>  		if (!ret)
+>>  			netdev_warn_once(tp->dev, "ASPM disabled on Tx timeout\n");
+>> +
+>>  		goto reset;
+>>  	}
+>>  
+>> @@ -5227,13 +5235,19 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>  	 * Chips from RTL8168h partially have issues with L1.2, but seem
+>>  	 * to work fine with L1 and L1.1.
+>>  	 */
+>> -	if (rtl_aspm_is_safe(tp))
+>> +	if (!pcie_aspm_support_enabled() || !pcie_aspm_capable(pdev))
+>> +		rc = -EINVAL;
+>> +	else if (rtl_aspm_is_safe(tp))
+>>  		rc = 0;
+>>  	else if (tp->mac_version >= RTL_GIGA_MAC_VER_46)
+>>  		rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1_2);
+>>  	else
+>>  		rc = pci_disable_link_state(pdev, PCIE_LINK_STATE_L1);
+>> -	tp->aspm_manageable = !rc;
+>> +
+>> +	/* -EPERM means BIOS doesn't grant OS ASPM control, ASPM should be use
+>> +	 * as is. Honor it.
+>> +	 */
+>> +	tp->aspm_manageable = (rc == -EPERM) ? 1 : !rc;
+>>  
+>>  	tp->dash_type = rtl_check_dash(tp);
+>>  
+>> -- 
+>> 2.34.1
+>>
 
-  nosmp ignore_loglevel lpj=lpj=7000000 boot_delay=100
-
-> Attach with this message the bootmsi log without the single option.
-
-Thanks for the log!  I don't see many interesting differences.
-
-  - Command line: BOOT_IMAGE=/boot/vmlinuz-6.1.0-5-amd64 root=UUID=ad672b5b-e68c-4aaf-8bde-113269cba2d8 ro
-  + Command line: BOOT_IMAGE=/boot/vmlinuz-6.1.0-5-amd64 root=UUID=ad672b5b-e68c-4aaf-8bde-113269cba2d8 ro pci=nomsi quiet
-  - acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
-  + acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments HPX-Type3]
-  - acpi PNP0A03:00: _OSC: OS now controls [PCIeHotplug AER PCIeCapability]
-  + acpi PNP0A03:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
-
-As expected when Linux is not using MSI.
-
-  + pci 0000:00:0d.0: proprietary Ricoh MMC controller disabled (via FireWire function)
-  + pci 0000:00:0d.0: MMC cards are now supported by standard SDHCI controller
-
-Peculiar.
-
-  - pcieport 0000:00:07.0: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl- IbPresDis- LLActRep-
-
-As expected when Linux is not using AER, pciehp, etc.
-
-I'm curious about the Ricoh thing because I don't see an obvious MSI
-connection.  Can you collect the output of "sudo lspci -vv"?  The
-lspci output in your initial email wasn't collected as root, so it
-doesn't include information about Capabilities (including MSI).
-
-Bjorn
