@@ -2,157 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F3CB6B4E41
-	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 18:14:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFC3B6B5036
+	for <lists+linux-pci@lfdr.de>; Fri, 10 Mar 2023 19:41:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbjCJROk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 12:14:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36884 "EHLO
+        id S229907AbjCJSlK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 10 Mar 2023 13:41:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbjCJROg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 12:14:36 -0500
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E755B433;
-        Fri, 10 Mar 2023 09:14:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678468454; x=1710004454;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=At9xdYTQNTpkoGAW78tZWvzRJ4xj1ehsEwPouDTGZjw=;
-  b=QwWp+pwDv1RWiI26KOBED6yl76ciM7XDOxbZiU62AjSjPVfd4jfRbawz
-   Fq8v+KRI0/R2NGzn6Lg3VCGJ7+0UyU1kUocLzktlr4ZZlCp243slwLUIb
-   SDxXN4GlRwyeq5qqK/eLVO2mm0VCL2JWtfbGf6KVebL5TtOWsDIW4qQEn
-   ZOzdK2uzYhO0IHfmkgWflmHjwej0C2+Ixfd9xY7f42CkJOe5F3XrvG5fR
-   ZpTAxcRQc/DZvD8ZCj064wa6uj1djT9s0yTfp8BE8JyxIED4uHYCAmq++
-   7SRx98cD3ddEfQKz5GbBxTX43jbYi8bUMxdhpDtZ89olxzpaJgmwCGGE/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="325132287"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="325132287"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 09:13:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="655250064"
-X-IronPort-AV: E=Sophos;i="5.98,250,1673942400"; 
-   d="scan'208";a="655250064"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 10 Mar 2023 09:13:37 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 867E0367; Fri, 10 Mar 2023 19:14:21 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Anatolij Gustschin <agust@denx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH v4 4/4] pcmcia: Convert to use pci_bus_for_each_resource_p()
-Date:   Fri, 10 Mar 2023 19:14:16 +0200
-Message-Id: <20230310171416.23356-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230310171416.23356-1-andriy.shevchenko@linux.intel.com>
-References: <20230310171416.23356-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S230155AbjCJSlI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 13:41:08 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49DE811E6FB
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 10:41:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 971E4CE293C
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 18:41:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D248C433D2;
+        Fri, 10 Mar 2023 18:41:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678473663;
+        bh=7Q7nBdE+Gn4rGMRx5LTVH1SDIrlejqxGZZ647G6KSvI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TTfelb++JEI0ZSQbPp7MIDtkEmKCGbcrW6fUu4dIamMFshqP8pyTBcQbcZvIpJ7/E
+         b82aNfBTXNzGn2fvxsbNJWXfyziAKyu/M5JnWS2Nw3HigeuO1E2syHWiOdX9SnO8p2
+         9TZuUmo1SUMnmY/dYCPlB3v3OTAIEX9pH9GQlHyNN0ZSjsK5OCeu6XseZZVC+Z1Hrn
+         Yo3rCzIhGgaxezWk5bhTUa4BWLaeaquoM6CxtwuUCErs1Kcz9/ZBI9Qj5SScZIZnXU
+         fozpf227A9kKtJE64LUpwuOZ2inhD+XxIwYaEVo8OianRprQJHrf03I/npxmWPLMKl
+         99M5QcDcgmYmA==
+Date:   Fri, 10 Mar 2023 12:41:02 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     gael.seibert@gmx.fr
+Cc:     linux-pci@vger.kernel.org
+Subject: Re: The MSI Driver Guide HOWTO
+Message-ID: <20230310184102.GA1267642@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <SN44ZY2G.XQXJA4JD.P37YMNSZ@LGXWN7Q2.OD5XUULU.2REDJUZ5>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pci_bus_for_each_resource_p() hides the iterator loop since
-it may be not used otherwise. With this, we may drop that iterator
-variable definition.
+On Fri, Mar 10, 2023 at 11:23:14AM +0100, gael.seibert@gmx.fr wrote:
+> On 09/03/2023 23:55:03, Bjorn Helgaas wrote:
+> > On Thu, Mar 09, 2023 at 10:57:51AM +0100, rec wrote:
+> > > On 09/03/2023 00:03:04, Bjorn Helgaas wrote:
+> > > > On Tue, Mar 07, 2023 at 12:22:44PM +0100, rec wrote:
+> > > > > Like asked in : https://www.kernel.org/doc/html/latest/PCI/msi-howto.html#disabling-msis-globally
+> > >
+> > > > Thanks for the report!  I assume this means your system has problems
+> > > > with MSIs, and booting with "pci=nomsi" makes it work better?
+> > >
+> > > You are welcome,
+> > > The system doesn't boot completely without the "pci=nomsi" option.
+> > 
+> > What exactly do you mean by "it doesn't boot completely"?  I compared
+> > the two dmesg logs, and I see that the "with MSI" log also has the
+> > "single" parameter, so it will only boot to single-user mode.
+> 
+> It does it mean than either the boot stop or the system halt, power-off
+> before it can be possible to connect tty console or display manager.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
----
- drivers/pcmcia/rsrc_nonstatic.c | 9 +++------
- drivers/pcmcia/yenta_socket.c   | 3 +--
- 2 files changed, 4 insertions(+), 8 deletions(-)
+Wow.  I'm not sure what would cause a sudden halt or power-off like
+that.  Is there any indication on the console when this happens?  Can
+you try adding the following to your kernel boot parameters to see if
+you can catch anything via a photo or video (you may have to adjust
+the boot_delay to make things readable):
 
-diff --git a/drivers/pcmcia/rsrc_nonstatic.c b/drivers/pcmcia/rsrc_nonstatic.c
-index ad1141fddb4c..9d92d4bb6239 100644
---- a/drivers/pcmcia/rsrc_nonstatic.c
-+++ b/drivers/pcmcia/rsrc_nonstatic.c
-@@ -934,7 +934,7 @@ static int adjust_io(struct pcmcia_socket *s, unsigned int action, unsigned long
- static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
- {
- 	struct resource *res;
--	int i, done = 0;
-+	int done = 0;
- 
- 	if (!s->cb_dev || !s->cb_dev->bus)
- 		return -ENODEV;
-@@ -960,12 +960,9 @@ static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
- 	 */
- 	if (s->cb_dev->bus->number == 0)
- 		return -EINVAL;
--
--	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
--		res = s->cb_dev->bus->resource[i];
--#else
--	pci_bus_for_each_resource(s->cb_dev->bus, res, i) {
- #endif
-+
-+	pci_bus_for_each_resource_p(s->cb_dev->bus, res) {
- 		if (!res)
- 			continue;
- 
-diff --git a/drivers/pcmcia/yenta_socket.c b/drivers/pcmcia/yenta_socket.c
-index 1365eaa20ff4..2e5bdf3db0ba 100644
---- a/drivers/pcmcia/yenta_socket.c
-+++ b/drivers/pcmcia/yenta_socket.c
-@@ -673,9 +673,8 @@ static int yenta_search_res(struct yenta_socket *socket, struct resource *res,
- 			    u32 min)
- {
- 	struct resource *root;
--	int i;
- 
--	pci_bus_for_each_resource(socket->dev->bus, root, i) {
-+	pci_bus_for_each_resource_p(socket->dev->bus, root) {
- 		if (!root)
- 			continue;
- 
--- 
-2.39.1
+  nosmp ignore_loglevel lpj=lpj=7000000 boot_delay=100
 
+> Attach with this message the bootmsi log without the single option.
+
+Thanks for the log!  I don't see many interesting differences.
+
+  - Command line: BOOT_IMAGE=/boot/vmlinuz-6.1.0-5-amd64 root=UUID=ad672b5b-e68c-4aaf-8bde-113269cba2d8 ro
+  + Command line: BOOT_IMAGE=/boot/vmlinuz-6.1.0-5-amd64 root=UUID=ad672b5b-e68c-4aaf-8bde-113269cba2d8 ro pci=nomsi quiet
+  - acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI HPX-Type3]
+  + acpi PNP0A03:00: _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments HPX-Type3]
+  - acpi PNP0A03:00: _OSC: OS now controls [PCIeHotplug AER PCIeCapability]
+  + acpi PNP0A03:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+
+As expected when Linux is not using MSI.
+
+  + pci 0000:00:0d.0: proprietary Ricoh MMC controller disabled (via FireWire function)
+  + pci 0000:00:0d.0: MMC cards are now supported by standard SDHCI controller
+
+Peculiar.
+
+  - pcieport 0000:00:07.0: pciehp: Slot #0 AttnBtn- PwrCtrl- MRL- AttnInd- PwrInd- HotPlug+ Surprise+ Interlock- NoCompl- IbPresDis- LLActRep-
+
+As expected when Linux is not using AER, pciehp, etc.
+
+I'm curious about the Ricoh thing because I don't see an obvious MSI
+connection.  Can you collect the output of "sudo lspci -vv"?  The
+lspci output in your initial email wasn't collected as root, so it
+doesn't include information about Capabilities (including MSI).
+
+Bjorn
