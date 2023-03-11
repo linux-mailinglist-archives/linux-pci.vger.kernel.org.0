@@ -2,115 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 541586B5975
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 09:22:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC1F56B5C43
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 14:35:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbjCKIW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Mar 2023 03:22:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45900 "EHLO
+        id S229655AbjCKNfC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Mar 2023 08:35:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjCKIWZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Mar 2023 03:22:25 -0500
-Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [83.223.78.240])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DA2A20D18
-        for <linux-pci@vger.kernel.org>; Sat, 11 Mar 2023 00:22:24 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 363DA280154BA;
-        Sat, 11 Mar 2023 09:22:20 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 21C383E457; Sat, 11 Mar 2023 09:22:20 +0100 (CET)
-Date:   Sat, 11 Mar 2023 09:22:20 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Tushar Dave <tdave@nvidia.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, linux-nvme@lists.infradead.org,
-        kbusch@kernel.org, linux-pci@vger.kernel.org
-Subject: Re: nvme-pci: Disabling device after reset failure: -5 occurs while
- AER recovery
-Message-ID: <20230311082220.GA3649@wunner.de>
+        with ESMTP id S229621AbjCKNfB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Mar 2023 08:35:01 -0500
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CC3224C9C;
+        Sat, 11 Mar 2023 05:34:59 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 97A4D5C0094;
+        Sat, 11 Mar 2023 08:34:57 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Sat, 11 Mar 2023 08:34:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=svenpeter.dev;
+         h=cc:cc:content-transfer-encoding:content-type:date:date:from
+        :from:in-reply-to:message-id:mime-version:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1678541697; x=1678628097; bh=2h
+        vieJeB5EfrLKwyYNa5R+FhNCK+/9JjDOLjM1Jf+jc=; b=jNbGj02MZz+gNFDRwa
+        3JFdV7276641BpyfI0YnEmEh1TEUCWUedMCL0ZfCAdlkdisCYYsb7L3Qu2hzQOeB
+        vaIwrlfoDe/MNrE10KO2cEmp5RWfaJNBSjtR09+VsD2jhgBCcSxyfeTCXkOqGD+e
+        3p3E44EOdVudfmtGe4j7nsYF/wIcMx1JxTGalkAuvoPbCOKFwhXcqppPc6630FM9
+        jF/Y/Q5qVpAoIPSStV1nWD183MtbfYWRmHMt3Zu+4hEcJCT8KtmX5kPp4I19F/YT
+        yaQdxQrHlm2xWwEd9mZqpClUvFvfT/4IweezBRtHX3hUB/dmOaCUF0ntrWtby9xF
+        B3nw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-transfer-encoding
+        :content-type:date:date:feedback-id:feedback-id:from:from
+        :in-reply-to:message-id:mime-version:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1678541697; x=1678628097; bh=2hvieJeB5EfrL
+        KwyYNa5R+FhNCK+/9JjDOLjM1Jf+jc=; b=j5m8CZ8WRBnzRbJI5gekVQxXj1Uk9
+        1F/3xRBWpNSO6/IKPyDo01AdD7y4hZk9fz1hHM4pxKmnZq8rpwHe11Wxz5kD1wPU
+        Bcu/+IFu39YHPWiqD9NkqukWzc8vdV7whWQbH4D+FZ/QOOp0ZlyiREUEGMgG6+xB
+        ABNVlgjrSrqP+wrVdv1ksFOMT9q4ATmJFqBB15ezsF+51HF/+wwr4kksjHMR7tzo
+        pLuzwKJNlUrjYWgU637wnrRtxGpMm0jengxg9X4tIYVoS78xJjptYFF+ywvwG6/t
+        awANKpoSt2fYMcU4OypWmF14eqHHBCRabnJkYF2nRWQF0zYN6AGaMznYw==
+X-ME-Sender: <xms:gYMMZOqsH3u7ODpbMIDAEECdJPvaMwE-SULqQdKcqPC-wQKIqGn-Ow>
+    <xme:gYMMZMr3hH1dyZhmj0D7Cn4ugTEtUULe3g5LbDjgrH7-cizIadnF0x9lGwnXO5ZFa
+    MeBN3Zawrs5VKSfLcs>
+X-ME-Received: <xmr:gYMMZDNV1XmwNHlIjRbm1X9jMBRhWf7sCtxx9BwMCDsiUX1zxc2IWGnSq4gVBw7U88ijL-uWl4SXL-SHmf4JYiWG_r7jtHEiqZLzk3AtS6GhyQrAUA4-b4dQzmODCg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddvtddgvdelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvvefufffkofgggfestdekredtredttdenucfhrhhomhepufhvvghnucfr
+    vghtvghruceoshhvvghnsehsvhgvnhhpvghtvghrrdguvghvqeenucggtffrrghtthgvrh
+    hnpeeludffieehueevtdffvedtueelleejuddugfettdevhfefffdvgffhjeehgfelleen
+    ucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehsvhgvnh
+    esshhvvghnphgvthgvrhdruggvvh
+X-ME-Proxy: <xmx:gYMMZN6ESJQE5LsFat-67GEvkiso29BATp1f3UOsZ1q7mUrFVQnZUA>
+    <xmx:gYMMZN7KK4e3m-4zTkOpRk00g3ijIEVw_0IMjn3W1la9kAlq5uyThg>
+    <xmx:gYMMZNhwd-8c9u8RHDRoY3jxqgzVH2GfYFiJGwLOD5taCbzgTdHVdg>
+    <xmx:gYMMZHvwn4zmABBadrwGZ1J3VpWWA9pbrX17YlSJa0ekiKgwatZ0Dg>
+Feedback-ID: i51094778:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 11 Mar 2023 08:34:55 -0500 (EST)
+From:   Sven Peter <sven@svenpeter.dev>
+To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     Sven Peter <sven@svenpeter.dev>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        asahi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: apple: Initialize pcie->nvecs before using it
+Date:   Sat, 11 Mar 2023 14:34:53 +0100
+Message-Id: <20230311133453.63246-1-sven@svenpeter.dev>
+X-Mailer: git-send-email 2.30.1 (Apple Git-130)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230309175321.GA1151233@bhelgaas>
- <843e2392-9ff0-2286-5f97-659831013c2e@nvidia.com>
- <20230310235306.GA1290793@bhelgaas>
- <4922cec7-ecc1-4971-75af-cdbaeaa6434f@nvidia.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,FAKE_REPLY_C,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 05:45:48PM -0800, Tushar Dave wrote:
-> On 3/10/2023 3:53 PM, Bjorn Helgaas wrote:
-> > In the log below, pciehp obviously is enabled; should I infer that in
-> > the log above, it is not?
-> 
-> pciehp is enabled all the time. In the log above and below.
-> I do not have answer yet why pciehp shows-up only in some tests (due to DPC
-> link down/up) and not in others like you noticed in both the logs.
+apple_pcie_setup_port computes ilog2(pcie->nvecs) to setup the number of
+MSIs available for each port. It is however called before apple_msi_init
+which actually initializes pcie->nvecs.
+Luckily, pcie->nvecs is part of kzalloc-ed structure and thus
+initialized as zero. ilog2(0) happens to be 0xffffffff which then just
+configures more MSIs in hardware than we actually have. This doesn't
+break anything because we never hand out those vectors.
+Let's swap the order of the two calls so that we use the correctly
+initialized value.
 
-Maybe some of the switch Downstream Ports are hotplug-capable and
-some are not?  (Check the Slot Implemented bit in the PCI Express
-Capabilities Register as well as the Hot-Plug Capable bit in the
-Slot Capabilities Register.)
+Fixes: 476c41ed4597 ("PCI: apple: Implement MSI support")
+Signed-off-by: Sven Peter <sven@svenpeter.dev>
+---
+ drivers/pci/controller/pcie-apple.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+index 66f37e403a09..8b7b084cf287 100644
+--- a/drivers/pci/controller/pcie-apple.c
++++ b/drivers/pci/controller/pcie-apple.c
+@@ -783,6 +783,10 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 	cfg->priv = pcie;
+ 	INIT_LIST_HEAD(&pcie->ports);
+ 
++	ret = apple_msi_init(pcie);
++	if (ret)
++		return ret;
++
+ 	for_each_child_of_node(dev->of_node, of_port) {
+ 		ret = apple_pcie_setup_port(pcie, of_port);
+ 		if (ret) {
+@@ -792,7 +796,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+ 		}
+ 	}
+ 
+-	return apple_msi_init(pcie);
++	return 0;
+ }
+ 
+ static int apple_pcie_probe(struct platform_device *pdev)
+-- 
+2.25.1
 
-> > Generally we've avoided handling a device reset as a remove/add event
-> > because upper layers can't deal well with that.  But in the log below
-> > it looks like pciehp *did* treat the DPC containment as a remove/add,
-> > which of course involves configuring the "new" device and its MPS
-> > settings.
-> 
-> yes and that puzzled me why? especially when"Link Down/Up ignored (recovered
-> by DPC)". Do we still have race somewhere, I am not sure.
-
-You're seeing the expected behavior.  pciehp ignores DLLSC events
-caused by DPC, but then double-checks that DPC recovery succeeded.
-If it didn't, it would be a bug not to bring down the slot.
-So pciehp does exactly that.  See this code snippet in
-pciehp_ignore_dpc_link_change():
-
-	/*
-	 * If the link is unexpectedly down after successful recovery,
-	 * the corresponding link change may have been ignored above.
-	 * Synthesize it to ensure that it is acted on.
-	 */
-	down_read_nested(&ctrl->reset_lock, ctrl->depth);
-	if (!pciehp_check_link_active(ctrl))
-		pciehp_request(ctrl, PCI_EXP_SLTSTA_DLLSC);
-	up_read(&ctrl->reset_lock);
-
-So on hotplug-capable ports, pciehp is able to mop up the mess created
-by fiddling with the MPS settings behind the kernel's back.
-
-We don't have that option on non-hotplug-capable ports.  If error
-recovery fails, we generally let the inaccessible devices remain
-in the system and user interaction is necessary to recover, either
-through a reboot or by manually removing and rescanning PCI devices
-via syfs after reinstating sane MPS settings.
-
-
->   - Switch and NVMe MPS are 512B
->   - NVMe config space saved (including MPS=512B)
->   - You change Switch MPS to 128B
->   - NVMe does DMA with payload > 128B
->   - Switch reports Malformed TLP because TLP is larger than its MPS
->   - Recovery resets NVMe, which sets MPS to the default of 128B
->   - nvme_slot_reset() restores NVMe config space (MPS is now 512B)
->   - Subsequent NVMe DMA with payload > 128B repeats cycle
-
-Forgive my ignorance, but if MPS is restored to 512B by nvme_slot_reset(),
-shouldn't the communication with the device just work again from that
-point on?
-
-Thanks,
-
-Lukas
