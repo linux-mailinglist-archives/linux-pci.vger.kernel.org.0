@@ -2,38 +2,38 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19B7C6B5D39
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 16:12:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A45356B5D3B
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 16:14:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230085AbjCKPMS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 11 Mar 2023 10:12:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40552 "EHLO
+        id S229437AbjCKPOD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Mar 2023 10:14:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjCKPMO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Mar 2023 10:12:14 -0500
+        with ESMTP id S229601AbjCKPOC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Mar 2023 10:14:02 -0500
 Received: from mailout2.hostsharing.net (mailout2.hostsharing.net [83.223.78.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 785878B30F;
-        Sat, 11 Mar 2023 07:12:13 -0800 (PST)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D49BDD34E;
+        Sat, 11 Mar 2023 07:14:00 -0800 (PST)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by mailout2.hostsharing.net (Postfix) with ESMTPS id 921D610189E10;
-        Sat, 11 Mar 2023 16:12:11 +0100 (CET)
+        by mailout2.hostsharing.net (Postfix) with ESMTPS id D399A10189CE0;
+        Sat, 11 Mar 2023 16:13:58 +0100 (CET)
 Received: from localhost (unknown [89.246.108.87])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by h08.hostsharing.net (Postfix) with ESMTPSA id 66EFB601663B;
-        Sat, 11 Mar 2023 16:12:11 +0100 (CET)
-X-Mailbox-Line: From 40a6f973f72ef283d79dd55e7e6fddc7481199af Mon Sep 17 00:00:00 2001
-Message-Id: <40a6f973f72ef283d79dd55e7e6fddc7481199af.1678543498.git.lukas@wunner.de>
+        by h08.hostsharing.net (Postfix) with ESMTPSA id A2CAE601663B;
+        Sat, 11 Mar 2023 16:13:58 +0100 (CET)
+X-Mailbox-Line: From becaf70e8faf9681d474200117d62d7eaac46cca Mon Sep 17 00:00:00 2001
+Message-Id: <becaf70e8faf9681d474200117d62d7eaac46cca.1678543498.git.lukas@wunner.de>
 In-Reply-To: <cover.1678543498.git.lukas@wunner.de>
 References: <cover.1678543498.git.lukas@wunner.de>
 From:   Lukas Wunner <lukas@wunner.de>
-Date:   Sat, 11 Mar 2023 15:40:12 +0100
-Subject: [PATCH v4 12/17] PCI/DOE: Create mailboxes on device enumeration
+Date:   Sat, 11 Mar 2023 15:40:13 +0100
+Subject: [PATCH v4 13/17] cxl/pci: Use CDAT DOE mailbox created by PCI core
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Dan Williams <dan.j.williams@intel.com>,
         linux-pci@vger.kernel.org, linux-cxl@vger.kernel.org
@@ -55,220 +55,165 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently a DOE instance cannot be shared by multiple drivers because
-each driver creates its own pci_doe_mb struct for a given DOE instance.
-For the same reason a DOE instance cannot be shared between the PCI core
-and a driver.
+The PCI core has just been amended to create a pci_doe_mb struct for
+every DOE instance on device enumeration.
 
-Moreover, finding out which protocols a DOE instance supports requires
-creating a pci_doe_mb for it.  If a device has multiple DOE instances,
-a driver looking for a specific protocol may need to create a pci_doe_mb
-for each of the device's DOE instances and then destroy those which
-do not support the desired protocol.  That's obviously an inefficient
-way to do things.
-
-Overcome these issues by creating mailboxes in the PCI core on device
-enumeration.
-
-Provide a pci_find_doe_mailbox() API call to allow drivers to get a
-pci_doe_mb for a given (pci_dev, vendor, protocol) triple.  This API is
-modeled after pci_find_capability() and can later be amended with a
-pci_find_next_doe_mailbox() call to iterate over all mailboxes of a
-given pci_dev which support a specific protocol.
-
-On removal, destroy the mailboxes in pci_destroy_dev(), after the driver
-is unbound.  This allows drivers to use DOE in their ->remove() hook.
-
-On surprise removal, cancel ongoing DOE exchanges and prevent new ones
-from being scheduled.  Thereby ensure that a hot-removed device doesn't
-needlessly wait for a running exchange to time out.
+Drop creation of a (duplicate) CDAT DOE mailbox on cxl probing in favor
+of the one already created by the PCI core.
 
 Tested-by: Ira Weiny <ira.weiny@intel.com>
 Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Reviewed-by: Ming Li <ming4.li@intel.com>
 Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- Changes v3 -> v4:
- * Amend commit message with additional justification for the commit
-   (Alexey)
+ drivers/cxl/core/pci.c | 27 +++++------------------
+ drivers/cxl/cxlmem.h   |  3 ---
+ drivers/cxl/pci.c      | 49 ------------------------------------------
+ 3 files changed, 5 insertions(+), 74 deletions(-)
 
- drivers/pci/doe.c       | 73 +++++++++++++++++++++++++++++++++++++++++
- drivers/pci/pci.h       | 11 +++++++
- drivers/pci/probe.c     |  1 +
- drivers/pci/remove.c    |  1 +
- include/linux/pci-doe.h |  2 ++
- include/linux/pci.h     |  3 ++
- 6 files changed, 91 insertions(+)
-
-diff --git a/drivers/pci/doe.c b/drivers/pci/doe.c
-index 7539e72db5cb..9c577f5b3878 100644
---- a/drivers/pci/doe.c
-+++ b/drivers/pci/doe.c
-@@ -20,6 +20,8 @@
- #include <linux/pci-doe.h>
- #include <linux/workqueue.h>
+diff --git a/drivers/cxl/core/pci.c b/drivers/cxl/core/pci.c
+index 8575eaadd522..c868f4a2f1de 100644
+--- a/drivers/cxl/core/pci.c
++++ b/drivers/cxl/core/pci.c
+@@ -441,27 +441,6 @@ EXPORT_SYMBOL_NS_GPL(cxl_hdm_decode_init, CXL);
+ #define CXL_DOE_TABLE_ACCESS_LAST_ENTRY		0xffff
+ #define CXL_DOE_PROTOCOL_TABLE_ACCESS 2
  
-+#include "pci.h"
-+
- #define PCI_DOE_PROTOCOL_DISCOVERY 0
+-static struct pci_doe_mb *find_cdat_doe(struct device *uport)
+-{
+-	struct cxl_memdev *cxlmd;
+-	struct cxl_dev_state *cxlds;
+-	unsigned long index;
+-	void *entry;
+-
+-	cxlmd = to_cxl_memdev(uport);
+-	cxlds = cxlmd->cxlds;
+-
+-	xa_for_each(&cxlds->doe_mbs, index, entry) {
+-		struct pci_doe_mb *cur = entry;
+-
+-		if (pci_doe_supports_prot(cur, PCI_DVSEC_VENDOR_ID_CXL,
+-					  CXL_DOE_PROTOCOL_TABLE_ACCESS))
+-			return cur;
+-	}
+-
+-	return NULL;
+-}
+-
+ #define CDAT_DOE_REQ(entry_handle) cpu_to_le32				\
+ 	(FIELD_PREP(CXL_DOE_TABLE_ACCESS_REQ_CODE,			\
+ 		    CXL_DOE_TABLE_ACCESS_REQ_CODE_READ) |		\
+@@ -559,10 +538,14 @@ void read_cdat_data(struct cxl_port *port)
+ 	struct pci_doe_mb *cdat_doe;
+ 	struct device *dev = &port->dev;
+ 	struct device *uport = port->uport;
++	struct cxl_memdev *cxlmd = to_cxl_memdev(uport);
++	struct cxl_dev_state *cxlds = cxlmd->cxlds;
++	struct pci_dev *pdev = to_pci_dev(cxlds->dev);
+ 	size_t cdat_length;
+ 	int rc;
  
- /* Timeout of 1 second from 6.30.2 Operation, PCI Spec r6.0 */
-@@ -658,3 +660,74 @@ int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
- 	return task.rv;
- }
- EXPORT_SYMBOL_GPL(pci_doe);
-+
-+/**
-+ * pci_find_doe_mailbox() - Find Data Object Exchange mailbox
-+ *
-+ * @pdev: PCI device
-+ * @vendor: Vendor ID
-+ * @type: Data Object Type
-+ *
-+ * Find first DOE mailbox of a PCI device which supports the given protocol.
-+ *
-+ * RETURNS: Pointer to the DOE mailbox or NULL if none was found.
-+ */
-+struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
-+					u8 type)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-+		if (pci_doe_supports_prot(doe_mb, vendor, type))
-+			return doe_mb;
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(pci_find_doe_mailbox);
-+
-+void pci_doe_init(struct pci_dev *pdev)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	u16 offset = 0;
-+	int rc;
-+
-+	xa_init(&pdev->doe_mbs);
-+
-+	while ((offset = pci_find_next_ext_capability(pdev, offset,
-+						      PCI_EXT_CAP_ID_DOE))) {
-+		doe_mb = pci_doe_create_mb(pdev, offset);
-+		if (IS_ERR(doe_mb)) {
-+			pci_err(pdev, "[%x] failed to create mailbox: %ld\n",
-+				offset, PTR_ERR(doe_mb));
-+			continue;
-+		}
-+
-+		rc = xa_insert(&pdev->doe_mbs, offset, doe_mb, GFP_KERNEL);
-+		if (rc) {
-+			pci_err(pdev, "[%x] failed to insert mailbox: %d\n",
-+				offset, rc);
-+			pci_doe_destroy_mb(doe_mb);
-+		}
-+	}
-+}
-+
-+void pci_doe_destroy(struct pci_dev *pdev)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-+		pci_doe_destroy_mb(doe_mb);
-+
-+	xa_destroy(&pdev->doe_mbs);
-+}
-+
-+void pci_doe_disconnected(struct pci_dev *pdev)
-+{
-+	struct pci_doe_mb *doe_mb;
-+	unsigned long index;
-+
-+	xa_for_each(&pdev->doe_mbs, index, doe_mb)
-+		pci_doe_cancel_tasks(doe_mb);
-+}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index d2c08670a20e..815a4d2a41da 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -318,6 +318,16 @@ struct pci_sriov {
- 	bool		drivers_autoprobe; /* Auto probing of VFs by driver */
- };
- 
-+#ifdef CONFIG_PCI_DOE
-+void pci_doe_init(struct pci_dev *pdev);
-+void pci_doe_destroy(struct pci_dev *pdev);
-+void pci_doe_disconnected(struct pci_dev *pdev);
-+#else
-+static inline void pci_doe_init(struct pci_dev *pdev) { }
-+static inline void pci_doe_destroy(struct pci_dev *pdev) { }
-+static inline void pci_doe_disconnected(struct pci_dev *pdev) { }
-+#endif
-+
- /**
-  * pci_dev_set_io_state - Set the new error state if possible.
+-	cdat_doe = find_cdat_doe(uport);
++	cdat_doe = pci_find_doe_mailbox(pdev, PCI_DVSEC_VENDOR_ID_CXL,
++					CXL_DOE_PROTOCOL_TABLE_ACCESS);
+ 	if (!cdat_doe) {
+ 		dev_dbg(dev, "No CDAT mailbox\n");
+ 		return;
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 090acebba4fa..001dabf0231b 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -249,7 +249,6 @@ struct cxl_event_state {
+  * @component_reg_phys: register base of component registers
+  * @info: Cached DVSEC information about the device.
+  * @serial: PCIe Device Serial Number
+- * @doe_mbs: PCI DOE mailbox array
+  * @event: event log driver state
+  * @mbox_send: @dev specific transport for transmitting mailbox commands
   *
-@@ -354,6 +364,7 @@ static inline bool pci_dev_set_io_state(struct pci_dev *dev,
- static inline int pci_dev_set_disconnected(struct pci_dev *dev, void *unused)
- {
- 	pci_dev_set_io_state(dev, pci_channel_io_perm_failure);
-+	pci_doe_disconnected(dev);
+@@ -287,8 +286,6 @@ struct cxl_dev_state {
+ 	resource_size_t component_reg_phys;
+ 	u64 serial;
  
- 	return 0;
+-	struct xarray doe_mbs;
+-
+ 	struct cxl_event_state event;
+ 
+ 	int (*mbox_send)(struct cxl_dev_state *cxlds, struct cxl_mbox_cmd *cmd);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 60b23624d167..ea38bd49b0cf 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -8,7 +8,6 @@
+ #include <linux/mutex.h>
+ #include <linux/list.h>
+ #include <linux/pci.h>
+-#include <linux/pci-doe.h>
+ #include <linux/aer.h>
+ #include <linux/io.h>
+ #include "cxlmem.h"
+@@ -357,52 +356,6 @@ static int cxl_setup_regs(struct pci_dev *pdev, enum cxl_regloc_type type,
+ 	return rc;
  }
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index a3f68b6ba6ac..02d2bf80eedb 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2479,6 +2479,7 @@ static void pci_init_capabilities(struct pci_dev *dev)
- 	pci_aer_init(dev);		/* Advanced Error Reporting */
- 	pci_dpc_init(dev);		/* Downstream Port Containment */
- 	pci_rcec_init(dev);		/* Root Complex Event Collector */
-+	pci_doe_init(dev);		/* Data Object Exchange */
  
- 	pcie_report_downtraining(dev);
- 	pci_init_reset_methods(dev);
-diff --git a/drivers/pci/remove.c b/drivers/pci/remove.c
-index 0145aef1b930..f25acf50879f 100644
---- a/drivers/pci/remove.c
-+++ b/drivers/pci/remove.c
-@@ -39,6 +39,7 @@ static void pci_destroy_dev(struct pci_dev *dev)
- 	list_del(&dev->bus_list);
- 	up_write(&pci_bus_sem);
+-static void cxl_pci_destroy_doe(void *mbs)
+-{
+-	xa_destroy(mbs);
+-}
+-
+-static void devm_cxl_pci_create_doe(struct cxl_dev_state *cxlds)
+-{
+-	struct device *dev = cxlds->dev;
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	u16 off = 0;
+-
+-	xa_init(&cxlds->doe_mbs);
+-	if (devm_add_action(&pdev->dev, cxl_pci_destroy_doe, &cxlds->doe_mbs)) {
+-		dev_err(dev, "Failed to create XArray for DOE's\n");
+-		return;
+-	}
+-
+-	/*
+-	 * Mailbox creation is best effort.  Higher layers must determine if
+-	 * the lack of a mailbox for their protocol is a device failure or not.
+-	 */
+-	pci_doe_for_each_off(pdev, off) {
+-		struct pci_doe_mb *doe_mb;
+-
+-		doe_mb = pcim_doe_create_mb(pdev, off);
+-		if (IS_ERR(doe_mb)) {
+-			dev_err(dev, "Failed to create MB object for MB @ %x\n",
+-				off);
+-			continue;
+-		}
+-
+-		if (!pci_request_config_region_exclusive(pdev, off,
+-							 PCI_DOE_CAP_SIZEOF,
+-							 dev_name(dev)))
+-			pci_err(pdev, "Failed to exclude DOE registers\n");
+-
+-		if (xa_insert(&cxlds->doe_mbs, off, doe_mb, GFP_KERNEL)) {
+-			dev_err(dev, "xa_insert failed to insert MB @ %x\n",
+-				off);
+-			continue;
+-		}
+-
+-		dev_dbg(dev, "Created DOE mailbox @%x\n", off);
+-	}
+-}
+-
+ /*
+  * Assume that any RCIEP that emits the CXL memory expander class code
+  * is an RCD
+@@ -750,8 +703,6 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
  
-+	pci_doe_destroy(dev);
- 	pcie_aspm_exit_link_state(dev);
- 	pci_bridge_d3_update(dev);
- 	pci_free_resources(dev);
-diff --git a/include/linux/pci-doe.h b/include/linux/pci-doe.h
-index 7f16749c6aa3..d6192ee0ac07 100644
---- a/include/linux/pci-doe.h
-+++ b/include/linux/pci-doe.h
-@@ -29,6 +29,8 @@ struct pci_doe_mb;
+ 	cxlds->component_reg_phys = map.resource;
  
- struct pci_doe_mb *pcim_doe_create_mb(struct pci_dev *pdev, u16 cap_offset);
- bool pci_doe_supports_prot(struct pci_doe_mb *doe_mb, u16 vid, u8 type);
-+struct pci_doe_mb *pci_find_doe_mailbox(struct pci_dev *pdev, u16 vendor,
-+					u8 type);
- 
- int pci_doe(struct pci_doe_mb *doe_mb, u16 vendor, u8 type,
- 	    const void *request, size_t request_sz,
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index fafd8020c6d7..ddccff4fe97e 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -511,6 +511,9 @@ struct pci_dev {
- #endif
- #ifdef CONFIG_PCI_P2PDMA
- 	struct pci_p2pdma __rcu *p2pdma;
-+#endif
-+#ifdef CONFIG_PCI_DOE
-+	struct xarray	doe_mbs;	/* Data Object Exchange mailboxes */
- #endif
- 	u16		acs_cap;	/* ACS Capability offset */
- 	phys_addr_t	rom;		/* Physical address if not from BAR */
+-	devm_cxl_pci_create_doe(cxlds);
+-
+ 	rc = cxl_map_component_regs(&pdev->dev, &cxlds->regs.component,
+ 				    &map, BIT(CXL_CM_CAP_CAP_ID_RAS));
+ 	if (rc)
 -- 
 2.39.1
 
