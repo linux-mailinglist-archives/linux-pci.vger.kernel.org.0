@@ -2,111 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 930BF6B5836
-	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 05:41:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DDEF46B58CC
+	for <lists+linux-pci@lfdr.de>; Sat, 11 Mar 2023 06:55:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjCKElq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 10 Mar 2023 23:41:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52372 "EHLO
+        id S229668AbjCKFzo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 11 Mar 2023 00:55:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229541AbjCKElp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 10 Mar 2023 23:41:45 -0500
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 357291A64F;
-        Fri, 10 Mar 2023 20:41:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678509704; x=1710045704;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=NSQSlE/+vXBkfkITnkBpbAE3poVuW/J///aE8MnPULY=;
-  b=WIMR0qXxN+xLKVcpj7Th8rYUtio7ZC2nA3oTxZe1lksCCpZJfX14wZq/
-   3CBVS/83VEb6S1AZhkQyYjcNBMTAwgeCov8GxLEhPIbjYaSGHoZGD8N5t
-   UYpiahwNqQtHw4yicEOZI7b9pNwZzfmSSc4PqNCTnoxOCw8bVyVVj8bzH
-   v0r205dSL/mPGFDu7JU0NhLy/fvXSHmVnLzKW0hx2/tjZ7nr1KbRoTUht
-   imACXFmIw/A7aqSoqT1517S9IQPQSincGBakfL0gdGR1TJYqPqptibcvM
-   Hd/yxAg3sXeNHwtThDWU8aU6k3JB5PsqeoZE1VFpaKOfoD1Mj0LIaLjwv
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="316522277"
-X-IronPort-AV: E=Sophos;i="5.98,251,1673942400"; 
-   d="scan'208";a="316522277"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 20:41:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10645"; a="680435839"
-X-IronPort-AV: E=Sophos;i="5.98,251,1673942400"; 
-   d="scan'208";a="680435839"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 10 Mar 2023 20:41:40 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1par35-0004Kb-2g;
-        Sat, 11 Mar 2023 04:41:39 +0000
-Date:   Sat, 11 Mar 2023 12:40:54 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org, lee@kernel.org,
-        robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        mani@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        bhelgaas@google.com, manivannan.sadhasivam@linaro.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>
-Subject: Re: [PATCH v2 3/6] ARM: dts: qcom: sdx65: Add support for PCIe PHY
-Message-ID: <202303111226.ITclm8Vw-lkp@intel.com>
-References: <1678277993-18836-4-git-send-email-quic_rohiagar@quicinc.com>
+        with ESMTP id S229478AbjCKFzn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 11 Mar 2023 00:55:43 -0500
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00AA2124E8D
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 21:55:38 -0800 (PST)
+Received: by mail-oi1-x242.google.com with SMTP id bp19so5906651oib.4
+        for <linux-pci@vger.kernel.org>; Fri, 10 Mar 2023 21:55:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1678514138;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JEkw1KmmzfmMdZjy2G/k2kJ9Rp06l3CUoffIihDDUro=;
+        b=o7Z8x9ucZHcPB7d2SzwabPiTEhPvjweRXEzZN1I+ZccUu+4Spz9Hsw60A/s6jgs6aU
+         9MFtk8NZnNi3u5XFMyrnzjHJga+AUG6cNq4+VMxnF3Y+LpwsIDXhF8NVDjKFunQuwKDA
+         HVfwqbzRQwgMSSknn9/X6Xd640xoryS/GF8QpfxMjQSKzEDlbfAEVJFvmMpDMQPnY0I8
+         Dy/u8Tydx9wZXxZGSxaQgvz+ZehMDKDLJ04DGwbm3Y9V4nH6WEOv0Z8wCpJpHg9Q6R9v
+         CjSPD+3xNUeT+lSIDK8abWnOcUlsstkGtvdEyYjLaLpL8KN+kyTJAQNjxQBULko2e9mn
+         KP+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678514138;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JEkw1KmmzfmMdZjy2G/k2kJ9Rp06l3CUoffIihDDUro=;
+        b=z2cnHQnd6+3bOoOT+u/xC1mHyqkMuvolI+yPAsmdnq1PzjOMxtOZlm9aQemlyAj2dh
+         ug5/GIbJrkbk5i2SJndDesMsON8DXitOrhHtCeKLYyxxWB+jVLX82TRfgwlprLIlCgbg
+         9Wq+2SoMrgcsViAihDWDZzTYgRUuR27B3DlSNqp5mcxwSnd3Yipzqzv2N83Go1a5Zgu5
+         ZGGu4bi5Jbz3TV+kL7a1ukw4oO3hfXCHSRD7XN9W7M3tV6BK+ZtbkAIixk7pea7/GM62
+         BJAdYiNk3WRx6oKFPwRwZcTJfWtTtOy9/F2Qqe7jQIdZWgwJy6XkCRtF6MJl6Osijilk
+         eQ6Q==
+X-Gm-Message-State: AO0yUKVSIZn6PjJa8z7V5ciryjWD3kC9D08qSgjCuT705UmZ1DZcFx+X
+        FPBeL/aS3EjDuUG5SpSqowuFyNSkGEqlpRrRzqU=
+X-Google-Smtp-Source: AK7set/VqXWuGh6fjJqetYy141NHQlg3So3qENZmsTRMdmXY11WvygESIEEHqPYhEE1jCl2I/wp7VeluD0rsYBq7+Cs=
+X-Received: by 2002:a05:6808:646:b0:384:8b1:215c with SMTP id
+ z6-20020a056808064600b0038408b1215cmr8586924oih.0.1678514138203; Fri, 10 Mar
+ 2023 21:55:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1678277993-18836-4-git-send-email-quic_rohiagar@quicinc.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Sender: mrsnicolemarois10@gmail.com
+Received: by 2002:a05:6358:9ac1:b0:104:2ec0:e81e with HTTP; Fri, 10 Mar 2023
+ 21:55:37 -0800 (PST)
+From:   AVA SMITH <avasmith1181@gmail.com>
+Date:   Sat, 11 Mar 2023 05:55:37 +0000
+X-Google-Sender-Auth: jBAYIsPh2o9DGqYqepGt925jYA4
+Message-ID: <CAPsswJKgifprbsb2n7j2ctBywdLrAUGqqfhSKc3dfQk9g2kbug@mail.gmail.com>
+Subject: Hello,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.9 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Rohit,
+Hello,
+My name is Dr Ava Smith,a medical doctor from United States.I have
+Dual citizenship which is English and French.I will share more details
+about me as soon as i get a response from you.
 
-Thank you for the patch! Yet something to improve:
-
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on lee-mfd/for-mfd-next lee-mfd/for-mfd-fixes pci/next pci/for-linus linus/master v6.3-rc1 next-20230310]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Rohit-Agarwal/dt-bindings-mfd-qcom-tcsr-Add-compatible-for-sdx65/20230308-202140
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/1678277993-18836-4-git-send-email-quic_rohiagar%40quicinc.com
-patch subject: [PATCH v2 3/6] ARM: dts: qcom: sdx65: Add support for PCIe PHY
-config: arm-allyesconfig (https://download.01.org/0day-ci/archive/20230311/202303111226.ITclm8Vw-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/ca67929d838c65d39536e65c284da94928f55786
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Rohit-Agarwal/dt-bindings-mfd-qcom-tcsr-Add-compatible-for-sdx65/20230308-202140
-        git checkout ca67929d838c65d39536e65c284da94928f55786
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm SHELL=/bin/bash
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303111226.ITclm8Vw-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> Error: arch/arm/boot/dts/qcom-sdx65.dtsi:306.6-7 syntax error
-   FATAL ERROR: Unable to parse input tree
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Thanks
+Ava
