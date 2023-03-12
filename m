@@ -2,113 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49FD76B658F
-	for <lists+linux-pci@lfdr.de>; Sun, 12 Mar 2023 12:36:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58FE46B6BDC
+	for <lists+linux-pci@lfdr.de>; Sun, 12 Mar 2023 22:48:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230071AbjCLLg3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 12 Mar 2023 07:36:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
+        id S231320AbjCLVsG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 12 Mar 2023 17:48:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjCLLg3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Mar 2023 07:36:29 -0400
-Received: from mail-ot1-x332.google.com (mail-ot1-x332.google.com [IPv6:2607:f8b0:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3500B3432C
-        for <linux-pci@vger.kernel.org>; Sun, 12 Mar 2023 04:35:56 -0700 (PDT)
-Received: by mail-ot1-x332.google.com with SMTP id q11-20020a056830440b00b00693c1a62101so5432166otv.0
-        for <linux-pci@vger.kernel.org>; Sun, 12 Mar 2023 04:35:55 -0700 (PDT)
+        with ESMTP id S230179AbjCLVsF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 12 Mar 2023 17:48:05 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD37876B7;
+        Sun, 12 Mar 2023 14:48:02 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id n2so13330969lfb.12;
+        Sun, 12 Mar 2023 14:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678620955;
-        h=to:subject:message-id:date:from:sender:reply-to:mime-version:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XjcDtI1pwVRGAPewN/AuluWv6QfCVbMYyve36OMm9hg=;
-        b=DZ8UYMYu2A2XNCP2bQxf5x8jGFANuCSbG53PLbpCzLLhHfYAjDjJOygzlkKDqeBQSL
-         ri+T67xJAD67wejY4f+/oQZHNCc7/xCmdRW1qkOm0kcSSxZ05i4mCzsFMiKQaaQDdF5w
-         E9wR8VscaC4E/rgpz7E3UaYkxJdUGr3hYWNYNPwFjfefTsKHDnCY26O4m3QoX01W3DaB
-         vZ6zVqJ2gjMhl4pYQH92/lr/jMmLdp9r8MkFaLSMrxztAHoFIptHyP2etDleFWbHV/FW
-         b3EAAZmhzGdWHUHzVpb1hjv0LXt0eGXzBhGRWunfUR+tpfp2mAWwj1EasyTmvEV4/uAq
-         B6hQ==
+        d=gmail.com; s=20210112; t=1678657681;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=y5y4jRO3tvVEIPg+bJu5nAZMjU2RPtX65wVjqo5C+Lo=;
+        b=CP8bFj64K+DtQdYb4okIlrNP0nzhMCGnx7StzsM2nNPS+oZhfuu67dbiticE7wTAjg
+         57HxjqwwuBEpc4J5GrpocXs2RtQNxmuBU3eyNgtWCxfb+S48E2eQTJ0Ep0AVQD2gtnyk
+         UaqHeB5G/1XI1XDU15tCEZMW8YJJwdq7i/nrqPQ0zG/EIBLUDTI6lu4HkyZ7TggACmaX
+         ppwVDHtHZHgD7j1ghf60Avj63gXZeDFebYnNXI9zavhqsf4P9rwZmP4Uwrqs/045jxOO
+         IGr/7RWav/r7kuNRj+yjIWrj+EmId2TGBExLfrxcHJE+2CGhiAa+6xvM/UADAKzNGHDp
+         HZsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678620955;
-        h=to:subject:message-id:date:from:sender:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XjcDtI1pwVRGAPewN/AuluWv6QfCVbMYyve36OMm9hg=;
-        b=MBNXtcx/J4nCNJ0EjIPx4Su3kxX0PoHaeUvyh/E2WAMGwYPQVV3aH62E+OrCVKVSrh
-         fboKCBcHUvHxTVaxC3Rw1pq6991wcYmppk8OxQHMsoAn5t3xvznsZw5mabInsOUqwSj4
-         ondGTbLzy37KjSdOXv23rmnDgMH6Bt0WfkSN3mN4dZ1KQYtlqoOuCJiIUDQJc0FHw+zD
-         /Ry3CsC2X5WqqDo+QBr+CrVQPPgiqoO9GYskvvP5or56w+B0NBxpUfu0zKIXl6Q1VVEA
-         P1HHSgdDDKiejdMQt66aiYaOLUNtoqsT9hkBY7oXTfQBShl3yELPf0tGzvZ6RqxJt1+x
-         RsDA==
-X-Gm-Message-State: AO0yUKWAsbuNsU2GO29IbJF8mn69gbHUPEIsEpgFJM3KiJ81N1qLPGjx
-        JTmN8FzxOUPL/x/BufwnbHGFz0jbHkSg4NXpn7g=
-X-Google-Smtp-Source: AK7set91gtUee3OP+0Fcx5HjxJkbSvih8i57U/TQLXUvmuRm97QnX5Z1OWr6uP/6Cqjabwfo9i5h/6OmwObkRMrWQWQ=
-X-Received: by 2002:a05:6830:6210:b0:690:eb8c:bae0 with SMTP id
- cd16-20020a056830621000b00690eb8cbae0mr10565257otb.6.1678620954820; Sun, 12
- Mar 2023 04:35:54 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1678657681;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=y5y4jRO3tvVEIPg+bJu5nAZMjU2RPtX65wVjqo5C+Lo=;
+        b=EJ6RiQVZxawfYCYjpu53IlWkpy1MofvZYMAmbu102C0j2Uq1cpOHVtg6fmEarM/rge
+         bguwOPqDka87lFDAs4AcVhXZlrzSnRZ/Wf10jlE/regCvDKSMmDXsEnnypoc/b0VhR7x
+         HoGe9NFndUckuZCvxvY+Ui+umxDtkccNb2A6ie7RU/RSKZgceGvRTzn3Chz38/v+Lr0V
+         79WUBlxVihqZruEjlLk0VJ6o+VzRl/eyekeZ6XVUP2BSzDXOwgg7HCJTvfVEgIGF0OIe
+         rDUaTrL5ppLPCS1wWwkiN881ApM8Q9ApLT1HWQx7PQvUvILAPSRY/r4pyuuFxNRkQAvN
+         tjnQ==
+X-Gm-Message-State: AO0yUKUJlKaya+Tav9DJPOiozSHENw4cBWgQnqR2hDW7um4G1mglm1y8
+        MkzM4Uhlk0Eeoddc/usvI5s=
+X-Google-Smtp-Source: AK7set8V8uz3tGUo7Fyp2Dbk0KDBJduMR7t8w0zfqzjPWhvVc973B2Sz5O5lhERxkbt2qLb5gxLaAA==
+X-Received: by 2002:a05:6512:38c6:b0:4db:387f:a3af with SMTP id p6-20020a05651238c600b004db387fa3afmr8165964lft.4.1678657680821;
+        Sun, 12 Mar 2023 14:48:00 -0700 (PDT)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id j6-20020a19f506000000b004d2199ea23dsm766039lfb.0.2023.03.12.14.47.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 12 Mar 2023 14:47:59 -0700 (PDT)
+Date:   Mon, 13 Mar 2023 00:47:57 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 1/5] dmaengine: dw-edma: Rename dw_edma_core_ops
+ structure to dw_edma_plat_ops
+Message-ID: <20230312214757.i2nzjgxfm3jvvrbb@mobilestation>
+References: <20230310032342.17395-1-cai.huoqing@linux.dev>
+ <20230310032342.17395-2-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Reply-To: eng.kelly103@gmail.com
-Sender: peterfuller301@gmail.com
-Received: by 2002:a05:6359:4b93:b0:f6:58a2:343a with HTTP; Sun, 12 Mar 2023
- 04:35:54 -0700 (PDT)
-From:   "Eng. Kelly Williams" <eng.kelly103@gmail.com>
-Date:   Sun, 12 Mar 2023 04:35:54 -0700
-X-Google-Sender-Auth: -ioJQZJCqGsjjqCveOdz9GmkL2M
-Message-ID: <CACzHKnfmjCO71FRb0-7Xmzg9ctL99taC5wz-JBksbM-dL1d21Q@mail.gmail.com>
-Subject: Hello Dear
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=7.0 required=5.0 tests=BAYES_99,BAYES_999,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,RISK_FREE,SPF_HELO_NONE,SPF_PASS,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2607:f8b0:4864:20:0:0:0:332 listed in]
-        [list.dnswl.org]
-        *  0.2 BAYES_999 BODY: Bayes spam probability is 99.9 to 100%
-        *      [score: 0.9997]
-        *  3.5 BAYES_99 BODY: Bayes spam probability is 99 to 100%
-        *      [score: 0.9997]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [peterfuller301[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [peterfuller301[at]gmail.com]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [eng.kelly103[at]gmail.com]
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  1.0 RISK_FREE No risk!
-        *  2.0 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-X-Spam-Level: ******
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310032342.17395-2-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello
+On Fri, Mar 10, 2023 at 11:23:34AM +0800, Cai Huoqing wrote:
+> From: Cai huoqing <cai.huoqing@linux.dev>
+> 
 
+> Rename dw_edma_core_ops structure to dw_edma_plat_ops, the ops is platform
+> specific operations: the DMA device environment configs like IRQs,
+> address translation, etc.
 
-My name is Eng. Kelly Williams I work with Texas oil and gas
-Association USA. I need your honest cooperation to partner with me to
-invest in your company or in any other viable business opportunity in
-your country under mutual interest benefits. Our partnership will be
-absolutely risk free, please I will also like to know the laws as it
-concerns foreign investors like me.
+Drop this
 
-I look forward to your cordial response
+> 
+> The dw_edma_core_ops structure contains a set of the operations:
+> device IRQ numbers getter, CPU/PCI address translation. Based on the
+> functions semantics the structure name "dw_edma_plat_ops" looks more
+> descriptive since indeed the operations are platform-specific. The
+> "dw_edma_core_ops" name shall be used for a structure with the IP-core
+> specific set of callbacks in order to abstract out DW eDMA and DW HDMA
+> setups. Such structure will be added in one of the next commit in the
+> framework of the set of changes adding the DW HDMA device support.
+> 
 
+> Anyway the renaming was necessary to distinguish two types of
+> the implementation callbacks:
+> 1. DW eDMA/hDMA IP-core specific operations: device-specific CSR
+> setups in one or another aspect of the DMA-engine initialization.
+> 2. DW eDMA/hDMA platform specific operations: the DMA device
+> environment configs like IRQs, address translation, etc.
+> 
+> dw_edma_core_ops is supposed to be used for the case 1, and
+> dw_edma_plat_ops - for the case 2.
 
+Drop this
 
-My Regards
-Eng. Kelly Williams
+Other than that looks good.
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+
+-Serge(y)
+
+> 
+> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
+> ---
+> v5->v6:
+>   1.Change the commit log to explain dw_edma_core_ops structure.
+>   2.Revert the instance dw_edma_pcie_plat_ops.
+> 
+> v5 link:
+> 	https://lore.kernel.org/lkml/20230303124642.5519-2-cai.huoqing@linux.dev/
+> 
+>  drivers/dma/dw-edma/dw-edma-pcie.c           | 4 ++--
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>  include/linux/dma/edma.h                     | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 2b40f2b44f5e..1c6043751dc9 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -109,7 +109,7 @@ static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
+>  	return region.start;
+>  }
+>  
+> -static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
+> +static const struct dw_edma_plat_ops dw_edma_pcie_plat_ops = {
+>  	.irq_vector = dw_edma_pcie_irq_vector,
+>  	.pci_address = dw_edma_pcie_address,
+>  };
+> @@ -225,7 +225,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  
+>  	chip->mf = vsec_data.mf;
+>  	chip->nr_irqs = nr_irqs;
+> -	chip->ops = &dw_edma_pcie_core_ops;
+> +	chip->ops = &dw_edma_pcie_plat_ops;
+>  
+>  	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+>  	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 53a16b8b6ac2..44e90b71d429 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -828,7 +828,7 @@ static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
+>  	return platform_get_irq_byname_optional(pdev, name);
+>  }
+>  
+> -static struct dw_edma_core_ops dw_pcie_edma_ops = {
+> +static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+>  	.irq_vector = dw_pcie_edma_irq_vector,
+>  };
+>  
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index d2638d9259dc..ed401c965a87 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -40,7 +40,7 @@ struct dw_edma_region {
+>   *			iATU windows. That will be done by the controller
+>   *			automatically.
+>   */
+> -struct dw_edma_core_ops {
+> +struct dw_edma_plat_ops {
+>  	int (*irq_vector)(struct device *dev, unsigned int nr);
+>  	u64 (*pci_address)(struct device *dev, phys_addr_t cpu_addr);
+>  };
+> @@ -80,7 +80,7 @@ enum dw_edma_chip_flags {
+>  struct dw_edma_chip {
+>  	struct device		*dev;
+>  	int			nr_irqs;
+> -	const struct dw_edma_core_ops   *ops;
+> +	const struct dw_edma_plat_ops	*ops;
+>  	u32			flags;
+>  
+>  	void __iomem		*reg_base;
+> -- 
+> 2.34.1
+> 
