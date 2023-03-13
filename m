@@ -2,52 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0152F6B81D9
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 20:48:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 119A36B81E9
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 20:55:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbjCMTsH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Mar 2023 15:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60830 "EHLO
+        id S229745AbjCMTzf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Mar 2023 15:55:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjCMTsG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 15:48:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15D79FF13;
-        Mon, 13 Mar 2023 12:48:05 -0700 (PDT)
+        with ESMTP id S229694AbjCMTze (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 15:55:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B7330B18;
+        Mon, 13 Mar 2023 12:55:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A3C6861485;
-        Mon, 13 Mar 2023 19:48:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0959C433D2;
-        Mon, 13 Mar 2023 19:48:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F3287614B7;
+        Mon, 13 Mar 2023 19:55:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C39BC433EF;
+        Mon, 13 Mar 2023 19:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678736884;
-        bh=G2Dygv9h1k+AsQjs6iEoGo+aHQ82JlNoZoMwg+tfTdg=;
+        s=k20201202; t=1678737332;
+        bh=O0BGX1z93oxxZhwU7kFkfssgOsCKZZ8CfrG7bcT9DII=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ThIzozSw+qA+WbXZ5ZEUZMLXLp74nrCv6P5181EvRezMgzJlos3qJmki256PPKMxX
-         WDnRBx6in5H551XdcqfD6ynszY6OtG2WFMEWbbwMsmvMi1Gm/yc8bBUgGnEkas2L2p
-         zrc/lJUXnvSvL1e1M1+dKoPP0q+tQFYIMmmpVjxUnSwx8HTclzh4A1OUlTKomPFyUw
-         SzoANoHq1Dk3hfGgs4VBKSvlL/WXqhgOJTOPw3Q1TSynu7u7Hxh+/Rr54MtO3sJadY
-         Vjl3zt8X7NI73YNsAths7QSOAenXLqB+nDzJT+Z8LlOQcDHDOud1vKclR4NSQqR/yn
-         daLi1fGQJCmJQ==
-Date:   Mon, 13 Mar 2023 14:48:02 -0500
+        b=SB06ZCBu09lo7ddQDwEVWWvfVkUbtU75JYTz8sFDUfNuk1mYeFdRftzE4nCH6FDIR
+         6AlA/0+XrvonYwsgFF3uI1b3h1AU8YDCIP/W1Y+B2vtj9qiKy8UJjDBLqWuvJC9FEV
+         w3QmUsW3l1LgnMBSRHblbNssHJ9T27hdoyQBQ2IwclUbqHBnRxR9ic6dNVmdqb27zZ
+         OUWngJ+kBIAXDR5DnkjH//LBuC17iy5ECTIubSJJhqm0E+i2MqI/QQTtsbP5wh/8Do
+         b2vS67rLaz7m6rl0cg6LXkN4704ccpSmMtLv3RGxVJkLEvGY8pIbsIyn1euVBXxO2u
+         cM5k2OmRgCnFQ==
+Date:   Mon, 13 Mar 2023 14:55:30 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Elad Nachman <enachman@marvell.com>
-Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
-        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
-        krzysztof.kozlowski+dt@linaro.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Subject: Re: [PATCH v4 8/8] PCI: dwc: Introduce region limit from DT
-Message-ID: <20230313194802.GA1531673@bhelgaas>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>, linux-pci@vger.kernel.org,
+        linux-cxl@vger.kernel.org,
+        Gregory Price <gregory.price@memverge.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Li, Ming" <ming4.li@intel.com>, Hillf Danton <hdanton@sina.com>,
+        Ben Widawsky <bwidawsk@kernel.org>,
+        Alexey Kardashevskiy <aik@amd.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, linuxarm@huawei.com
+Subject: Re: [PATCH v4 00/17] Collection of DOE material
+Message-ID: <20230313195530.GA1532686@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230313124016.17102-9-enachman@marvell.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <cover.1678543498.git.lukas@wunner.de>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,70 +61,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Serge, who has done most of the recent work in this file]
-
-On Mon, Mar 13, 2023 at 02:40:16PM +0200, Elad Nachman wrote:
-> From: Elad Nachman <enachman@marvell.com>
+On Sat, Mar 11, 2023 at 03:40:00PM +0100, Lukas Wunner wrote:
+> Collection of DOE material, v4:
 > 
-> Allow dts override of region limit for SOCs with older Synopsis
-> Designware PCIe IP but with greater than 32-bit address range support,
-> such as the Armada 7020/7040/8040 family of SOCs by Marvell,
-> when the DT file places the PCIe window above the 4GB region.
-> The Synopsis Designware PCIe IP in these SOCs is too old to specify the
-> highest memory location supported by the PCIe, but practically supports
-> such locations. Allow these locations to be specified in the DT file.
-> DT property is called num-regionmask , and can range between 33 and 64.
-
-s/Synopsis/Synopsys/ (several occurrences)
-
-s/Designware/DesignWare/ (several occurrences)
-
-Remove space before comma.
-
-> Signed-off-by: Elad Nachman <enachman@marvell.com>
-> ---
-> v4:
->    1) Fix blank lines removal / addition
+> Migrate to synchronous API, create mailboxes in PCI core instead of
+> in drivers, relax restrictions on request/response size.
 > 
->    2) Remove usage of variable with same name as dt binding property
+> This should probably go in via the cxl tree because Dave Jiang is
+> basing his cxl work for the next merge window on it.
 > 
->  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
+> The first 6 patches are fixes, so could be applied immediately.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 53a16b8b6ac2..9773c110c733 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -735,8 +735,10 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  {
->  	int max_region, ob, ib;
-> -	u32 val, min, dir;
-> +	u32 val, min, dir, ret;
->  	u64 max;
-> +	struct device *dev = pci->dev;
-> +	struct device_node *np = dev->of_node;
->  
->  	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
->  	if (val == 0xFFFFFFFF) {
-> @@ -781,7 +783,13 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  		dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT, 0xFFFFFFFF);
->  		max = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT);
->  	} else {
-> -		max = 0;
-> +		/* Allow dts override of region limit for older IP with above 32-bit support: */
+> Thanks!
+> 
+> 
+> Changes v3 -> v4:
+> 
+> * [PATCH v4 01/17] cxl/pci: Fix CDAT retrieval on big endian
+>   * In pci_doe_discovery(), add request_pl_le / response_pl_le variables
+>     to avoid typecasts in pci_doe_task initializer (Jonathan)
+>   * In cxl_cdat_read_table(), use __le32 instead of u32 for "*data"
+>     variable (Jonathan)
+>   * Use sizeof(__le32) instead of sizeof(u32) (Jonathan)
+> 
+> * [PATCH v4 03/17] cxl/pci: Handle truncated CDAT entries
+>   * Check for sizeof(*entry) instead of sizeof(struct cdat_entry_header)
+>     for clarity (Jonathan)
+> 
+> * [PATCH v4 12/17] PCI/DOE: Create mailboxes on device enumeration
+>   * Amend commit message with additional justification for the commit
+>     (Alexey)
+> 
+> * [PATCH v4 16/17] cxl/pci: cxl/pci: Simplify CDAT retrieval error path
+>   * Newly added patch in v4 on popular request (Jonathan, Dave)
+> 
+> * [PATCH v4 17/17] cxl/pci: Rightsize CDAT response allocation
+>   * Amend commit message with spec reference to the Table Access
+>     Response Header (Ira)
+>   * In cxl_cdat_get_length(), check for sizeof(response) instead of
+>     2 * sizeof(u32) for clarity
+> 
+> Link to v3:
+> 
+> https://lore.kernel.org/linux-pci/cover.1676043318.git.lukas@wunner.de/
+> 
+> 
+> Dave Jiang (1):
+>   cxl/pci: Simplify CDAT retrieval error path
+> 
+> Lukas Wunner (16):
+>   cxl/pci: Fix CDAT retrieval on big endian
+>   cxl/pci: Handle truncated CDAT header
+>   cxl/pci: Handle truncated CDAT entries
+>   cxl/pci: Handle excessive CDAT length
+>   PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
+>   PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y
+>   PCI/DOE: Provide synchronous API and use it internally
+>   cxl/pci: Use synchronous API for DOE
+>   PCI/DOE: Make asynchronous API private
+>   PCI/DOE: Deduplicate mailbox flushing
+>   PCI/DOE: Allow mailbox creation without devres management
+>   PCI/DOE: Create mailboxes on device enumeration
+>   cxl/pci: Use CDAT DOE mailbox created by PCI core
+>   PCI/DOE: Make mailbox creation API private
+>   PCI/DOE: Relax restrictions on request and response size
+>   cxl/pci: Rightsize CDAT response allocation
 
-Reflow comment to fit in 80 columns.
+Acked-by: Bjorn Helgaas <bhelgaas@google.com> for the PCI/DOE patches,
+and I assume these will all be merged via the cxl tree.
 
-> +		ret = of_property_read_u32(np, "num-regionmask", &val);
-> +		if (!ret && val > 32) {
-> +			max = GENMASK(val - 33, 0);
-> +			dev_info(pci->dev, "Overriding region limit to %u bits\n", val);
-> +		} else
-> +			max = 0;
->  	}
->  
->  	pci->num_ob_windows = ob;
+>  .clang-format           |   1 -
+>  drivers/cxl/core/pci.c  | 140 +++++++---------
+>  drivers/cxl/cxlmem.h    |   3 -
+>  drivers/cxl/cxlpci.h    |  14 ++
+>  drivers/cxl/pci.c       |  49 ------
+>  drivers/pci/doe.c       | 342 ++++++++++++++++++++++++++++++----------
+>  drivers/pci/pci.h       |  11 ++
+>  drivers/pci/probe.c     |   1 +
+>  drivers/pci/remove.c    |   1 +
+>  include/linux/pci-doe.h |  62 +-------
+>  include/linux/pci.h     |   3 +
+>  11 files changed, 350 insertions(+), 277 deletions(-)
+> 
 > -- 
-> 2.17.1
+> 2.39.1
 > 
