@@ -2,93 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D0CDF6B825D
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 21:09:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01AC26B832C
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 21:55:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjCMUJl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Mar 2023 16:09:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40318 "EHLO
+        id S229838AbjCMUzr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Mar 2023 16:55:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229787AbjCMUJe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 16:09:34 -0400
-Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3964487A2D;
-        Mon, 13 Mar 2023 13:09:05 -0700 (PDT)
-Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id B50B8E0EB2;
-        Mon, 13 Mar 2023 23:09:04 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:from:from:in-reply-to:message-id
-        :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=I88fhOV2wC+VAaHhdfMemGW3M/5XG81EN6ibSQeYAlY=; b=jx5DHsv3Lkdc
-        7HgeAPlkPUaISK2uiZVwnuMBqhmlIbtr6/yGZJhJgBFRE0umj9woxewf+19D10PD
-        0wjKrIlmSsxuyaIrnAxm02bpdr3giHKfW4YHO1U2oJ6y+pTi6xZmEch+A3tREtIa
-        NdmPUiDtwwylsvfufV76iCiLKIoTAqM=
-Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id A05C5E0E1C;
-        Mon, 13 Mar 2023 23:09:04 +0300 (MSK)
-Received: from localhost (10.8.30.10) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Mon, 13 Mar 2023 23:09:04 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v2 11/11] MAINTAINERS: Add myself as the DW eDMA driver reviewer
-Date:   Mon, 13 Mar 2023 23:08:15 +0300
-Message-ID: <20230313200816.30105-12-Sergey.Semin@baikalelectronics.ru>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru>
-References: <20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru>
+        with ESMTP id S229896AbjCMUzq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 16:55:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F2345291A;
+        Mon, 13 Mar 2023 13:55:37 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DADB3614C1;
+        Mon, 13 Mar 2023 20:55:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 202D2C433D2;
+        Mon, 13 Mar 2023 20:55:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678740936;
+        bh=3vo69kqpsWbF0m1n8ErPDXv1g5eY2fX8t772YXd/DNM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=bF8uQriiSYLD+R+NxI+GWf0Ar59Jj3+Yn04ewxKitGrLzWQB51Hhibeejx2+2KRvX
+         R4bLwncKkjD5aDy8PE078rWKDu7hpxHl95ECnj5Bxm9qzSC7sAcLhhFkSiWReAZnyS
+         ZmyVVvRtkRa7vgo+NYco25JFm3IlNyG3EbdVex6f3dyUPAnu7wqzvwn2oeu61Msa5S
+         kmeyA15CF1cfdyKGZWdi1OypfqSSJEqxeWyk9gdgtbAXcw/ZHk0p5IYDG1t9u104LR
+         JiTFaaEF1C1OpoaQ2aHdlnkCXDeifxhS1R3w6iz+uv1hyUBhxjP4JRd8N3YqIPyQnA
+         x4nCmFxIL7FOA==
+Date:   Mon, 13 Mar 2023 15:55:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: iproc: Use of_property_read_bool() for boolean
+ properties
+Message-ID: <20230313205534.GA1539457@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.8.30.10]
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310144720.1544531-1-robh@kernel.org>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver maintainer has been inactive for almost two years now. It
-doesn't positively affect the new patches tests and reviews process. Since
-the DW eDMA engine has been embedded into the PCIe controllers in several
-our SoCs we will be interested in helping with the updates review.
+On Fri, Mar 10, 2023 at 08:47:19AM -0600, Rob Herring wrote:
+> It is preferred to use typed property access functions (i.e.
+> of_property_read_<type> functions) rather than low-level
+> of_get_property/of_find_property functions for reading properties.
+> Convert reading boolean properties to to of_property_read_bool().
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51adcafa0f0c..fb7bada6cdd0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5862,6 +5862,7 @@ F:	drivers/mtd/nand/raw/denali*
- 
- DESIGNWARE EDMA CORE IP DRIVER
- M:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+R:	Serge Semin <fancer.lancer@gmail.com>
- L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	drivers/dma/dw-edma/
--- 
-2.39.2
-
-
+s/to to/to/
+Likely can be fixed up when applying.
