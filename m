@@ -2,64 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C22336B77E1
-	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 13:43:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A776A6B7A36
+	for <lists+linux-pci@lfdr.de>; Mon, 13 Mar 2023 15:19:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230316AbjCMMnS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 13 Mar 2023 08:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48294 "EHLO
+        id S230255AbjCMOTr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 13 Mar 2023 10:19:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230165AbjCMMm7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 08:42:59 -0400
-Received: from mx0b-0016f401.pphosted.com (mx0b-0016f401.pphosted.com [67.231.156.173])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB446A1EC;
-        Mon, 13 Mar 2023 05:42:27 -0700 (PDT)
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D6OxcQ020021;
-        Mon, 13 Mar 2023 05:42:19 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=pfpt0220; bh=+Twwfo+d1JCCV20Ow3YeKxKYdEAuXIvfbVrrAMuP3yA=;
- b=guNHMHlyOa/7znmSrleiZRsrgbsvOWq0cOkeJh0umWESO1IqHPan62SO5JZ2XmM97+OR
- 0x6v22rD/fNfDOMMmNu8eY4MEoVkv5QMJ48R5mtas/wLyJEK00ICbSKkk4SfNkGwwObE
- t+Jr4NCBKO74/1TmbvT6YJ549huXcJwVSoirSQEMW/uD6Koav30EsrjJNKaPRryRrtcV
- IjMIqETRoTzOKFrMmMwrKxf92OkN46wWc9Y07z2lqcisxdYJfp6YeOA53ZqFRUvKvw12
- S6EWaBxG1yt1/XXhrFcEiVP7LGAxUE0yjtu4J8nfCWGazwDpLsoyglXKuZlMOiHK6ojl pA== 
-Received: from dc5-exch01.marvell.com ([199.233.59.181])
-        by mx0b-0016f401.pphosted.com (PPS) with ESMTPS id 3p8t1t5gjs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 13 Mar 2023 05:42:19 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 13 Mar
- 2023 05:41:30 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server id 15.0.1497.42 via Frontend
- Transport; Mon, 13 Mar 2023 05:41:30 -0700
-Received: from jupiter073.il.marvell.com (unknown [10.5.116.85])
-        by maili.marvell.com (Postfix) with ESMTP id 07CCF5B6921;
-        Mon, 13 Mar 2023 05:41:26 -0700 (PDT)
-From:   Elad Nachman <enachman@marvell.com>
-To:     <thomas.petazzoni@bootlin.com>, <bhelgaas@google.com>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Elad Nachman <enachman@marvell.com>
-Subject: [PATCH v4 8/8] PCI: dwc: Introduce region limit from DT
-Date:   Mon, 13 Mar 2023 14:40:16 +0200
-Message-ID: <20230313124016.17102-9-enachman@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230313124016.17102-1-enachman@marvell.com>
-References: <20230313124016.17102-1-enachman@marvell.com>
+        with ESMTP id S230522AbjCMOTh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 13 Mar 2023 10:19:37 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2100.outbound.protection.outlook.com [40.107.92.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BC564EF5;
+        Mon, 13 Mar 2023 07:19:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ItbM7ZBOB3AjYBAndI4wbFUHGe6OQAT5Iq+bfT85roi1qhD7retdq+1vs+eg6j+4P9T8vbPylAkcofM4Ly2/3Kwr4dPowE/+NhwKMRci11IS7CutF/egE6pK+Wjul1j1bNR28kcqQ/YrOyFFDky4qsoTMsD6R8gETPW0BNVWe5ODHVzluVQvAOS/bjjcjpDoOpB+yT4ChAvwVGtvaJJNmooWIpBsFcujadMzeyo+eObPgQvdghEOSpBD6LAVqPEkz09AyKKRTg70aamggfAyTwW/elnpsopOJghRYsOb0KjVdO/3dRlLQnBeKrA94rNttnFyeDtX37YA7x58OgZN7g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=89CmER4+fCOuqivdyxHWlGVHRK5KSdrNTByf8p/MSVQ=;
+ b=eqSyz50desJYchii0k4VzqAhX4V7TnPPrQcxi8xM7DlZvhaWMiPt4okN5Rfs0JVgldvGPn2gvzM3I7EQ6gOQJ1GIPVoLzATvXSCb+pivzdgAVrZsmfkNSHgE7xhpO0lfxJV5amair4cc6x47Bfb8nAw2WO8yyNajdulTNnDu00/PDPxbURpVX2ZlsR0uF0y8XUu+7KQ+66gbJkZqfzncrJqgBUd25d5/KzfZSyvkTmbUHhHKLhc6c4iV28P1Dc9TxU8d+BoNLlnEJ8oxyC+MqFv9CxsPgtxzitej6eMB3ZTctZnUMS9IG7ZvaAmoHVyRlzArWLsbdDwcM71fiGucNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=89CmER4+fCOuqivdyxHWlGVHRK5KSdrNTByf8p/MSVQ=;
+ b=CiSMHV36hn0KKkxoAflKPJM7NE0cr0GeKq/z8AzV1VsA0Ho4U+tc+sQ2rA3sc3C/8VxXcj3EcuL8rOA24fIJySimzygMyQ1RM111MVNyyRKvPM25D9kkZXUOw/sKtHu6OyBM4brgSQUpSj/i4B0bFcAkj5wuVNbbrJXoKdhZaCQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
+Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
+ CO1PR01MB6568.prod.exchangelabs.com (2603:10b6:303:f9::19) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6178.24; Mon, 13 Mar 2023 14:19:29 +0000
+Received: from DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::fc8b:5e5e:a850:7f0a]) by DM8PR01MB6824.prod.exchangelabs.com
+ ([fe80::fc8b:5e5e:a850:7f0a%7]) with mapi id 15.20.6178.024; Mon, 13 Mar 2023
+ 14:19:29 +0000
+Message-ID: <2dc4db94-1d03-2080-aa6d-56a7327bde5f@os.amperecomputing.com>
+Date:   Mon, 13 Mar 2023 19:49:20 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 2/2] iommu/arm-smmu-v3: Configure STU of a PF if ATS is
+ not enabled.
+Content-Language: en-US
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+        joro@8bytes.org, bhelgaas@google.com, robin.murphy@arm.com,
+        will@kernel.org
+Cc:     jean-philippe@linaro.org,
+        sathyanarayanan.kuppuswamy@linux.intel.com,
+        darren@os.amperecomputing.com, scott@os.amperecomputing.com
+References: <20230228042137.1941024-1-gankulkarni@os.amperecomputing.com>
+ <20230228042137.1941024-3-gankulkarni@os.amperecomputing.com>
+From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+In-Reply-To: <20230228042137.1941024-3-gankulkarni@os.amperecomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CH2PR14CA0009.namprd14.prod.outlook.com
+ (2603:10b6:610:60::19) To DM8PR01MB6824.prod.exchangelabs.com
+ (2603:10b6:8:23::24)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-GUID: 9Xb2KkvInWYrasdOqz5A3CBQUIxGT5aI
-X-Proofpoint-ORIG-GUID: 9Xb2KkvInWYrasdOqz5A3CBQUIxGT5aI
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-13_05,2023-03-13_01,2023-02-09_01
-X-Spam-Status: No, score=-2.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE autolearn=ham
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|CO1PR01MB6568:EE_
+X-MS-Office365-Filtering-Correlation-Id: 06220686-d437-459e-9c94-08db23cdf51d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WgsQzKkBwz+P7aIhh0kQCSLsbAbycTdfzXgC5IE+vmfPv7OOQIC8Kejei65E6nTAKy3ZyqQf1b0cKutfaa6HP6A2dybYEnIcCMTmOdi/iThdwHiGJujuRJsVU+1ldWTBs1TypepO9F6oF57so36ANKRmUzYgC1dqfBz7ZaW8lTTf6Z2wSCpl0EAQlJ5spSWOCfUieJ/q6AIpuL8tDh+DO15RDWapafJpwMcM7rYuAWLwCRlZ6BheSJ2eJHWOWGZNNEAMWs3LrBWxJbEs/5ycDdYpMH4jczvboZGgoFwQ4crFHaZzXtfMGEdVtQYu2PRCxafhiKEg3vO1vlXgKMWJLo6WYAqCPQ9qdqE5xZ9I2xL3eLTXa6Lav65Wy4LnEMcjDqvdF2K7Q8vWO6JoVnZOk5tzZYxDiSerwD6Hw8We4PGw6pZEcZDqK6fwUcAbNLYmd5CHOGLLYHU/Y73PyheUpZhWMS+6YANBSjgvyg+m52csfmlofbF43x+O1HWioaBwJQ/spu7M4Y1Jam5eotyUiS258FvjKBTSv77bxs8tRhOl/4iHwmYjMGF8yLKoSOyIr5tQHh2E9wWXHAsx6FRTPquUOTWG/kqxB2cZqj9K9P7GYU10YSRImUP62gCCyYuq77JfSsfJcRtYVJi43El9287hpNoe2WpW+6caet0HFPIHNHVbch+9GczWGvvF+1X4Sicz89M/aTKgsDuBgC+uTg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(396003)(376002)(366004)(136003)(346002)(39850400004)(451199018)(86362001)(31696002)(38100700002)(4326008)(8676002)(66556008)(66476007)(66946007)(8936002)(41300700001)(478600001)(316002)(6506007)(7416002)(5660300002)(2906002)(2616005)(83380400001)(6486002)(186003)(107886003)(6666004)(6512007)(26005)(53546011)(31686004)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R1pBUS9TV0JNQjhPSFM1enl3RkFKcXZIUGVwV1JadnBuSnJMVFY0UWVGQUhE?=
+ =?utf-8?B?WlQ1UXpzN3REVUNOeXYyRDFRM2F5REpnQ2lKT1NQS0dobUV4eDJMRy9lTTdk?=
+ =?utf-8?B?N1dCZ2libmNneEhwZDJ5SHVuMlZxK3lPQkNwd3VIWGdYNk1DRFM4UlcyV0Y5?=
+ =?utf-8?B?WlNQeEwxbG56ZG1QdXRKNXI0RitkYk9OcFVMbjQwK0VITURLU2ZjZG50V2N1?=
+ =?utf-8?B?Wlo0WUFRai8wVWxHa1VNTVNpN0VwTHlvbENmZHp4OWV4cEwrQ3B6TUM4SFA2?=
+ =?utf-8?B?c3BzeTlpY0ZXN25mY3VEM2JEL0J3dTlLUmlOU2c1N1Nxc1lKTEc0NnRLTVBE?=
+ =?utf-8?B?RU94TnVkalZub2NhVWYzbU9PUi9JeUFpeDlSd3k3dXJNN0lTUGNLM200WGts?=
+ =?utf-8?B?eVo4eXo4ZEhyNWdtaTg5M01OMTV4T1JLNUJ2dGNXcDJkVmRMRHN5aDhUd3By?=
+ =?utf-8?B?MjhkcVdrMHFGMDNkQWFvUUJnalV4ZEtZNUxJZ0VpVytyRThPVGhOa2trVmtB?=
+ =?utf-8?B?RlArMXBUMC8zQjNFZmpTVWlLL05nNXR3MFJCODhFSVF3aXFGTVljcHhaNGxY?=
+ =?utf-8?B?SjVYVW82TXJjUEYxNnlLRVlIbWZsT2ZNUnVBa2ZSMW9wM2dadlIrWDBMdXdk?=
+ =?utf-8?B?b0ZkaHBhZUtjQloxNXo0SzQyV0Ntc0hoREppUnJJdVZSZTRMbTRYRitPVS9y?=
+ =?utf-8?B?OGdjL2RuWEhQWkhDUTQxT0RuNkw1ckZ1RUJNdVkxZXR6ZlpiSUVWOC9RdVVu?=
+ =?utf-8?B?ZkdzVkJ2QXlFa3BYbmlIWE50S00rMVVYZ2dGZm5BRzRlQ2M3R2xEMFplemdk?=
+ =?utf-8?B?emE3cFVNK3pyUHFwTktHZURBR3BoOGdqVEUwRFhCUEhKenRMeXJPZnhpWHk4?=
+ =?utf-8?B?QzlSUHB2cWd5aHhaMGVGQUx3a2NpVjFiaGtFNmQ0dGpTQlVLNmJXVTZJMlRB?=
+ =?utf-8?B?SnpYeHZKZjM1L1ZhbHJCaUtRWll6Q2NHTXhkNW9Gbkl6bXBjQy9XYjBwNHVt?=
+ =?utf-8?B?bnMwcUYzRjNKbmJWa2J1L2o3NWhyclNqbEh0VFBnai9TT05kQnhvZ2xxeUJU?=
+ =?utf-8?B?aTNITE1kb2RRcURRb2hWQnlzY3VpTHRrc2d4SzhrVHdVNHpJR1ZTUHF0NHQ4?=
+ =?utf-8?B?OEg4SzNrRFFZdU5OZ0IvNjRWTUkxV3FQRk05SlR4dlpBZTRRNmorSGF1bGFM?=
+ =?utf-8?B?aWlUQ3hTR3paUVU2eklFaXJZTFBDYUt6Nm4rMjF5UzV6NHdGdnZjTGkvMWRX?=
+ =?utf-8?B?aTh4Y0JGNVBkK1FTVlhmUjRoa05FZlJVNXF4anNwcmtKTGdzbmVuVWlWSWJD?=
+ =?utf-8?B?cnVUQUxWeWE4L0YwMGRhTnRsRXlXNTJhSTdBM3lpaHI5RXNCMmpDRUt0V3VU?=
+ =?utf-8?B?Z056N2JyYVJiWjZkTUtaVmc1QWJIa0hDeGNpWG00d3V4QVd3MWVtNlZjNjdw?=
+ =?utf-8?B?bStsMy9sdXpacFpOV0hFNXZpQ2xqWjFjZkc1ajNGQzVsQVBXZGc0TEJzS2hJ?=
+ =?utf-8?B?S29qUm1oa0FlV0JKMDBaZGtpL0N1UmEvQlFBczdybkgvNllMcXBxUGthQnI5?=
+ =?utf-8?B?bUtTMGZOQ1pjdWdTaW1BOFR5dFdvUzR5cWRuR0pYKzE1eXRkcGhmZkExWnJm?=
+ =?utf-8?B?cWtRMExmQ2xvNzB6TEJ4aWtLUG5Bdmd5akVFTUpGT2FrWE9WUUdEWWRyUTFJ?=
+ =?utf-8?B?a2dzbld5OENPb1k3eFMzT2REY2JoMUVKQkRlTithTWM1TXZSSVpaRjdtcW1h?=
+ =?utf-8?B?aTJXcFJnSTAvakVuRm4ybUxsQlNWbm44MGtYdUhwN0tYaXN0TVgxLzZnUzlY?=
+ =?utf-8?B?NzR6M1MxN2x2RFgrajE5MFpmVlpxQkNaUnNZdU4xRm9IZ2FkMUQ1cHkxNU4y?=
+ =?utf-8?B?aGl5ZzBhS0c5U0lJWmhYV2xjaDJldWszQW54L0dwRnAxcnp2RXMwL1lqcUkr?=
+ =?utf-8?B?MllST2IwUlZDcFBrWnpUaGtNK0tmbXZnS2EwRnp4blFyeEFMcStkb09DazIy?=
+ =?utf-8?B?M2hUcEViaHYzUEYzR2lRNFFMWDZZTlBBbmtwMjE2c2RkNHFoUnRlN2JkVksw?=
+ =?utf-8?B?L1k4eVRXWlRZU21HRUFpUmtXN3JiNS9ZM0NqMEZvMHR4UUR0cXNLN3FFeVZW?=
+ =?utf-8?B?RTgwekprSkwzWlVmNHBRUkZLYzhPSlJjemxyMVQ4QlBGOGRVdWxlelYzaW9j?=
+ =?utf-8?Q?hmBakvlpbywahwiQCSpEXW8KtfnNjTge/JJNDFmGZkg0?=
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 06220686-d437-459e-9c94-08db23cdf51d
+X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2023 14:19:29.6619
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fc+2EbS3+wy/IvibomYcGm7ej+nuKchnoFfx/PQZ23cbi+sRb//bXZcfBnqsGrcMHF9Q3N7eQfpRnd+/d3hNK4JE3eaqUwmxTpIuzfwi7up/CVKvQq0B6qH+FARzoF1a
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR01MB6568
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,58 +131,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Elad Nachman <enachman@marvell.com>
 
-Allow dts override of region limit for SOCs with older Synopsis
-Designware PCIe IP but with greater than 32-bit address range support,
-such as the Armada 7020/7040/8040 family of SOCs by Marvell,
-when the DT file places the PCIe window above the 4GB region.
-The Synopsis Designware PCIe IP in these SOCs is too old to specify the
-highest memory location supported by the PCIe, but practically supports
-such locations. Allow these locations to be specified in the DT file.
-DT property is called num-regionmask , and can range between 33 and 64.
+Hi Will, Robin,
 
-Signed-off-by: Elad Nachman <enachman@marvell.com>
----
-v4:
-   1) Fix blank lines removal / addition
+On 28-02-2023 09:51 am, Ganapatrao Kulkarni wrote:
+> When the host kernel is booted with iommu passthrough mode, PF and VFs
+> are enumerated with iommu/smmu domain set to bypass mode.
+> In bypass mode, ATS is not enabled on all VFs and associated PF.
+> When VFs are attached to a VM, the corresponding iommu domain is set to
+> SMMU translation mode and smmu-v3 driver try to enable the ATS and fails
+> due to invalid STU of a PF.
+> 
+> Adding a fix to configure STU of a PF while enumerating in passthrough
+> mode.
+> 
 
-   2) Remove usage of variable with same name as dt binding property
+Any comments on this patch/series?
 
- drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
+> ---
+>   drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 25 ++++++++++++++++++++-
+>   1 file changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> index f2425b0f0cd6..b218ef0bf001 100644
+> --- a/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c
+> @@ -2292,6 +2292,23 @@ static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+>   	return dev_is_pci(dev) && pci_ats_supported(to_pci_dev(dev));
+>   }
+>   
+> +static void arm_smmu_ats_stu_init(struct arm_smmu_master *master)
+> +{
+> +	size_t stu;
+> +	struct pci_dev *pdev;
+> +	struct arm_smmu_device *smmu = master->smmu;
+> +
+> +	if (master->ats_enabled)
+> +		return;
+> +
+> +	/* Smallest Translation Unit: log2 of the smallest supported granule */
+> +	stu = __ffs(smmu->pgsize_bitmap);
+> +	pdev = to_pci_dev(master->dev);
+> +
+> +	if (pci_ats_stu_configure(pdev, stu))
+> +		dev_err(master->dev, "Failed to configure ATS STU (%zu)\n", stu);
+> +}
+> +
+>   static void arm_smmu_enable_ats(struct arm_smmu_master *master)
+>   {
+>   	size_t stu;
+> @@ -2404,6 +2421,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   	struct arm_smmu_device *smmu;
+>   	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>   	struct arm_smmu_master *master;
+> +	bool ats_supported;
+>   
+>   	if (!fwspec)
+>   		return -ENOENT;
+> @@ -2446,9 +2464,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   	}
+>   
+>   	master->domain = smmu_domain;
+> +	ats_supported = arm_smmu_ats_supported(master);
+>   
+>   	if (smmu_domain->stage != ARM_SMMU_DOMAIN_BYPASS)
+> -		master->ats_enabled = arm_smmu_ats_supported(master);
+> +		master->ats_enabled = ats_supported;
+>   
+>   	arm_smmu_install_ste_for_dev(master);
+>   
+> @@ -2458,6 +2477,10 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   
+>   	arm_smmu_enable_ats(master);
+>   
+> +	/* Configure ATS STU of a PF in passthrough */
+> +	if (!master->ats_enabled && ats_supported)
+> +		arm_smmu_ats_stu_init(master);
+> +
+>   out_unlock:
+>   	mutex_unlock(&smmu_domain->init_mutex);
+>   	return ret;
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 53a16b8b6ac2..9773c110c733 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -735,8 +735,10 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
- void dw_pcie_iatu_detect(struct dw_pcie *pci)
- {
- 	int max_region, ob, ib;
--	u32 val, min, dir;
-+	u32 val, min, dir, ret;
- 	u64 max;
-+	struct device *dev = pci->dev;
-+	struct device_node *np = dev->of_node;
- 
- 	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
- 	if (val == 0xFFFFFFFF) {
-@@ -781,7 +783,13 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
- 		dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT, 0xFFFFFFFF);
- 		max = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT);
- 	} else {
--		max = 0;
-+		/* Allow dts override of region limit for older IP with above 32-bit support: */
-+		ret = of_property_read_u32(np, "num-regionmask", &val);
-+		if (!ret && val > 32) {
-+			max = GENMASK(val - 33, 0);
-+			dev_info(pci->dev, "Overriding region limit to %u bits\n", val);
-+		} else
-+			max = 0;
- 	}
- 
- 	pci->num_ob_windows = ob;
--- 
-2.17.1
-
+Thanks,
+Ganapat
