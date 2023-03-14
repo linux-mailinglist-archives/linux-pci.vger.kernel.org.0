@@ -2,271 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96CC36BA0C7
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 21:33:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 108986BA0FD
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 21:48:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230247AbjCNUc4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 16:32:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52860 "EHLO
+        id S229707AbjCNUsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 16:48:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230307AbjCNUcz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 16:32:55 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B7351F9B;
-        Tue, 14 Mar 2023 13:32:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 841B5B81B96;
-        Tue, 14 Mar 2023 20:32:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E78D6C433D2;
-        Tue, 14 Mar 2023 20:32:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678825971;
-        bh=AgqlCoM5/iuM3VeFQs/UEhZ2BRcdrerQfTSev8mvG6I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Gv5hrPOvUSFXMGHXrpf78yxXeD4DvycoRvNmUvoUJEt+Wgz82GzIDbmzngQ9U6lSh
-         5kSQkR5xHhrhD91FI3Kp5l7c/ggIsgbH9EUcDDnV6Ra6f/0ptuECuxdFzXCVcAph5+
-         JXj2vGyK/RX0Ew/9JJSn+rs6iBOMHSbZP/q0hFZAKXh0y6cgWV11sCvrXjKS7+wydf
-         I9iS/PX2wJWsSu9NMShkCDf5Hi1caJrkwV6sF3tavxHXVLEoZgLYUtDDVyhQxQ8qTh
-         QL2FU+URaGjF+p/bHVR/TJnP9IFLwDzknxZO0b7JxowCL5mpnn/GpEd24zf7mlXSpL
-         BmxUvzB1rWP+w==
-Date:   Tue, 14 Mar 2023 15:32:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Frank Li <Frank.Li@nxp.com>
-Cc:     Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        with ESMTP id S229516AbjCNUsp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 16:48:45 -0400
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 680D083DF;
+        Tue, 14 Mar 2023 13:48:41 -0700 (PDT)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 7CB48E0EAF;
+        Tue, 14 Mar 2023 23:48:40 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-type:content-type:date
+        :from:from:in-reply-to:message-id:mime-version:references
+        :reply-to:subject:subject:to:to; s=post; bh=mPD90DJPcPmP48GK0ojm
+        CB01uj25M2d6itepQTmW9pw=; b=imXs0fOT6I2kdFarLpn+5DLc6Sulgu0uKYBS
+        8+y7rgDItOEXt6tQKJiSJboGHfR9gyeASF9T1Qegc6dNa8y7mPGusLCGaaNpQq65
+        hcDY+cSmj8zMSpLOfeHsIfQgL0yszpuYlFBC2VdcTxZ40HfBHZm5kyaCiq93EHtE
+        6VhkXC8=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 55B53E0E1C;
+        Tue, 14 Mar 2023 23:48:40 +0300 (MSK)
+Received: from mobilestation (10.8.30.10) by mail (192.168.51.25) with
+ Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 14 Mar 2023 23:48:39 +0300
+Date:   Tue, 14 Mar 2023 23:48:38 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Elad Nachman <enachman@marvell.com>,
+        <thomas.petazzoni@bootlin.com>, <bhelgaas@google.com>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <linux-pci@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
-Subject: Re: [PATCH 1/1] PCI: layerscape: Add the workaround for A-010305
-Message-ID: <20230314203249.GA1673140@bhelgaas>
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 8/8] PCI: dwc: Introduce region limit from DT
+Message-ID: <20230314204838.buba4y2iyx3m6qnn@mobilestation>
+References: <20230313124016.17102-9-enachman@marvell.com>
+ <20230313194802.GA1531673@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20230112194433.1514149-1-Frank.Li@nxp.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230313194802.GA1531673@bhelgaas>
+X-Originating-IP: [10.8.30.10]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Jan 12, 2023 at 02:44:33PM -0500, Frank Li wrote:
-> From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Hi Bjorn
+
+On Mon, Mar 13, 2023 at 02:48:02PM -0500, Bjorn Helgaas wrote:
+> [+cc Serge, who has done most of the recent work in this file]
 > 
-> When a link down or hot reset event occurs, the PCI Express EP
-> controller's Link Capabilities Register should retain the values of
-> the Maximum Link Width and Supported Link Speed configured by RCW.
 
-Can you rework this to say what the patch does and why it's necessary?
+Thanks for sending copy to me. I'll have a look at the series on
+this week.
 
-Apparently it's a workaround for some issue in A-010305?  The subject
-line could also use more content.  What is A-010305?  What is the
-problem this works around?
+-Serge(y)
 
-I don't see a check for A-010305; do *all* devices handled by this
-driver have this problem?
-
-The PCIe Link Capabilities is supposed to be read-only; maybe this
-device loses the value on link down or hot reset?  And I guess the
-device interrupts on link up/down and reset, and you restore the value
-then?
-
-Link Capabilities contains several things other than Max Link Width
-and Max Link Speed.  But they don't need to be restored?
-
-What is RCW?
-
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Signed-off-by: Frank Li <Frank.Li@nxp.com>
-> ---
->  .../pci/controller/dwc/pci-layerscape-ep.c    | 112 +++++++++++++++++-
->  1 file changed, 111 insertions(+), 1 deletion(-)
+> On Mon, Mar 13, 2023 at 02:40:16PM +0200, Elad Nachman wrote:
+> > From: Elad Nachman <enachman@marvell.com>
+> > 
+> > Allow dts override of region limit for SOCs with older Synopsis
+> > Designware PCIe IP but with greater than 32-bit address range support,
+> > such as the Armada 7020/7040/8040 family of SOCs by Marvell,
+> > when the DT file places the PCIe window above the 4GB region.
+> > The Synopsis Designware PCIe IP in these SOCs is too old to specify the
+> > highest memory location supported by the PCIe, but practically supports
+> > such locations. Allow these locations to be specified in the DT file.
+> > DT property is called num-regionmask , and can range between 33 and 64.
 > 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> index ed5cfc9408d9..1b884854c18e 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> @@ -18,6 +18,22 @@
->  
->  #include "pcie-designware.h"
->  
-> +#define PCIE_LINK_CAP			0x7C	/* PCIe Link Capabilities*/
-
-Is this something you can find by searching the capability list
-instead of hard-coding the config space offset?
-
-> +#define MAX_LINK_SP_MASK		0x0F
-> +#define MAX_LINK_W_MASK			0x3F
-> +#define MAX_LINK_W_SHIFT		4
-
-These look like they should use PCI_EXP_LNKCAP_SLS and
-PCI_EXP_LNKCAP_MLW instead of defining new ones.
-
-> +/* PEX PFa PCIE pme and message interrupt registers*/
-> +#define PEX_PF0_PME_MES_DR             0xC0020
-> +#define PEX_PF0_PME_MES_DR_LUD         (1 << 7)
-> +#define PEX_PF0_PME_MES_DR_LDD         (1 << 9)
-> +#define PEX_PF0_PME_MES_DR_HRD         (1 << 10)
-> +
-> +#define PEX_PF0_PME_MES_IER            0xC0028
-> +#define PEX_PF0_PME_MES_IER_LUDIE      (1 << 7)
-> +#define PEX_PF0_PME_MES_IER_LDDIE      (1 << 9)
-> +#define PEX_PF0_PME_MES_IER_HRDIE      (1 << 10)
-> +
->  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
->  
->  struct ls_pcie_ep_drvdata {
-> @@ -30,8 +46,90 @@ struct ls_pcie_ep {
->  	struct dw_pcie			*pci;
->  	struct pci_epc_features		*ls_epc;
->  	const struct ls_pcie_ep_drvdata *drvdata;
-> +	u8				max_speed;
-> +	u8				max_width;
-> +	bool				big_endian;
-> +	int				irq;
->  };
->  
-> +static u32 ls_lut_readl(struct ls_pcie_ep *pcie, u32 offset)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (pcie->big_endian)
-> +		return ioread32be(pci->dbi_base + offset);
-> +	else
-> +		return ioread32(pci->dbi_base + offset);
-> +}
-> +
-> +static void ls_lut_writel(struct ls_pcie_ep *pcie, u32 offset,
-> +			  u32 value)
-> +{
-> +	struct dw_pcie *pci = pcie->pci;
-> +
-> +	if (pcie->big_endian)
-> +		iowrite32be(value, pci->dbi_base + offset);
-> +	else
-> +		iowrite32(value, pci->dbi_base + offset);
-> +}
-> +
-> +static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
-> +{
-> +	struct ls_pcie_ep *pcie = (struct ls_pcie_ep *)dev_id;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	u32 val;
-> +
-> +	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
-> +	if (!val)
-> +		return IRQ_NONE;
-> +
-> +	if (val & PEX_PF0_PME_MES_DR_LUD)
-> +		dev_info(pci->dev, "Detect the link up state !\n");
-> +	else if (val & PEX_PF0_PME_MES_DR_LDD)
-> +		dev_info(pci->dev, "Detect the link down state !\n");
-> +	else if (val & PEX_PF0_PME_MES_DR_HRD)
-> +		dev_info(pci->dev, "Detect the hot reset state !\n");
-
-No space before "!".  Seems possibly more verbose than necessary,
-since the endpoint may be reset as part of normal operation.
-
-> +	dw_pcie_dbi_ro_wr_en(pci);
-> +	dw_pcie_writew_dbi(pci, PCIE_LINK_CAP,
-> +			   (pcie->max_width << MAX_LINK_W_SHIFT) |
-
-Use FIELD_PREP() so you don't need a shift.
-
-> +			   pcie->max_speed);
-> +	dw_pcie_dbi_ro_wr_dis(pci);
-> +
-> +	ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int ls_pcie_ep_interrupt_init(struct ls_pcie_ep *pcie,
-> +				     struct platform_device *pdev)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	pcie->irq = platform_get_irq_byname(pdev, "pme");
-> +	if (pcie->irq < 0) {
-> +		dev_err(&pdev->dev, "Can't get 'pme' irq.\n");
-> +		return pcie->irq;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, pcie->irq,
-> +			       ls_pcie_ep_event_handler, IRQF_SHARED,
-> +			       pdev->name, pcie);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Can't register PCIe IRQ.\n");
-
-Use "IRQ" consistently (it was "irq" in the message above).  No period
-needed at end.
-
-> +		return ret;
-> +	}
-> +
-> +	/* Enable interrupts */
-> +	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_IER);
-> +	val |=  PEX_PF0_PME_MES_IER_LDDIE | PEX_PF0_PME_MES_IER_HRDIE |
-> +		PEX_PF0_PME_MES_IER_LUDIE;
-> +	ls_lut_writel(pcie, PEX_PF0_PME_MES_IER, val);
-> +
-> +	return 0;
-> +}
-> +
->  static const struct pci_epc_features*
->  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
->  {
-> @@ -125,6 +223,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  	struct ls_pcie_ep *pcie;
->  	struct pci_epc_features *ls_epc;
->  	struct resource *dbi_base;
-> +	int ret;
->  
->  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
->  	if (!pcie)
-> @@ -155,9 +254,20 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
->  
->  	pci->ep.ops = &ls_pcie_ep_ops;
->  
-> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-
-Somewhat surprising that 6c389328c985 ("dt-bindings: pci:
-layerscape-pci: Add a optional property big-endian") added this
-property a year ago, but it has been unused until now?
-
-> +	pcie->max_speed = dw_pcie_readw_dbi(pci, PCIE_LINK_CAP) &
-> +			  MAX_LINK_SP_MASK;
-> +	pcie->max_width = (dw_pcie_readw_dbi(pci, PCIE_LINK_CAP) >>
-> +			  MAX_LINK_W_SHIFT) & MAX_LINK_W_MASK;
-
-Use FIELD_GET() instead of shifting/masking.  Or save the whole
-register instead of extracting and reconstructing the value.
-
->  	platform_set_drvdata(pdev, pcie);
->  
-> -	return dw_pcie_ep_init(&pci->ep);
-> +	ret = dw_pcie_ep_init(&pci->ep);
-> +	if (ret)
-> +		return  ret;
-> +
-> +	return  ls_pcie_ep_interrupt_init(pcie, pdev);
->  }
->  
->  static struct platform_driver ls_pcie_ep_driver = {
-> -- 
-> 2.34.1
+> s/Synopsis/Synopsys/ (several occurrences)
 > 
+> s/Designware/DesignWare/ (several occurrences)
+> 
+> Remove space before comma.
+> 
+> > Signed-off-by: Elad Nachman <enachman@marvell.com>
+> > ---
+> > v4:
+> >    1) Fix blank lines removal / addition
+> > 
+> >    2) Remove usage of variable with same name as dt binding property
+> > 
+> >  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++--
+> >  1 file changed, 10 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> > index 53a16b8b6ac2..9773c110c733 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -735,8 +735,10 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
+> >  void dw_pcie_iatu_detect(struct dw_pcie *pci)
+> >  {
+> >  	int max_region, ob, ib;
+> > -	u32 val, min, dir;
+> > +	u32 val, min, dir, ret;
+> >  	u64 max;
+> > +	struct device *dev = pci->dev;
+> > +	struct device_node *np = dev->of_node;
+> >  
+> >  	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
+> >  	if (val == 0xFFFFFFFF) {
+> > @@ -781,7 +783,13 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
+> >  		dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT, 0xFFFFFFFF);
+> >  		max = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT);
+> >  	} else {
+> > -		max = 0;
+> > +		/* Allow dts override of region limit for older IP with above 32-bit support: */
+> 
+> Reflow comment to fit in 80 columns.
+> 
+> > +		ret = of_property_read_u32(np, "num-regionmask", &val);
+> > +		if (!ret && val > 32) {
+> > +			max = GENMASK(val - 33, 0);
+> > +			dev_info(pci->dev, "Overriding region limit to %u bits\n", val);
+> > +		} else
+> > +			max = 0;
+> >  	}
+> >  
+> >  	pci->num_ob_windows = ob;
+> > -- 
+> > 2.17.1
+> > 
+> 
+
