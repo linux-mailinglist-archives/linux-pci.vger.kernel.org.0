@@ -2,364 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70C636B9017
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 11:34:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75BEE6B90C1
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 11:56:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229929AbjCNKeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 06:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
+        id S230216AbjCNKz6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 06:55:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229934AbjCNKeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 06:34:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0203C0A;
-        Tue, 14 Mar 2023 03:33:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 53346616F7;
-        Tue, 14 Mar 2023 10:27:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1DEC433D2;
-        Tue, 14 Mar 2023 10:27:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678789673;
-        bh=mktWL3pBA6fgZw5itPxAboV+gR9yVVLoCoTcs7Hg/Ek=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LJWbHdIU9n1KmGpb0FJOLIdBjb7xhxPXlfqJyuSO+bO4M5UYR7TyHljtY5IoS2aC/
-         Wn8K5B4qHUbh4wjNKVN5GktwhaMRBL+Bghj/yU4j4n4tfkCru3VBpxHfObh/wYB6gt
-         C9pF+/OWGsW5P3Uom6emnc/PpgDcQ4Y6aL1jhpMX6pd2NTU/oHR1vKmq2CTIwbYCOZ
-         xkja03SD5OlHOdpMR7PW07sgBlnC3F8jiLVGg2N13eOmUNJKrq4xzcAd6OCDpqZaj5
-         JKfxCBStyFJqJMf0FFsCK/RVVewBLB8CF94ZSjie6+Ho2ooibqIBw90uBjKIfahw/W
-         +jCj//rNmtgKg==
-Date:   Tue, 14 Mar 2023 11:27:48 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in
- suspend and resume
-Message-ID: <ZBBMJFBXNcohep8u@lpieralisi>
-References: <AS8PR04MB86763F096229D90DCBF6C0D08CB99@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20230313174929.GA1509198@bhelgaas>
- <AS8PR04MB8676BF1BF21EDC92F0F1C1A38CBE9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+        with ESMTP id S230175AbjCNKzx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 06:55:53 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E031862DBE;
+        Tue, 14 Mar 2023 03:55:42 -0700 (PDT)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32EAT2v4031085;
+        Tue, 14 Mar 2023 10:55:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : from : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=nJS2jKbcJ/2ElXBtVzmGkizIIT+8G7YDrnuxJEZpQAY=;
+ b=cobZYJUCTarqRUeY081Txgejcrq23q8yDNw2O0e+V8qY5xTZ8RBRlwUN+OT6TUCIwum2
+ NYg/CTZoQvmeUV20Df/BJQ+NHVI99xGuZNLWqXmhfQWkHEvIrPnD+asbtHi0fZBWDdZG
+ kQ+RFKIAnLpWbOjI1fPedToPcdkMa7Ykl4hXGN2nVPz6WOk9Yxfpy+mWlV8+T9mbsA9j
+ dw5rwuvPChM/cadmFZstPchBi4ZC6vXivmnsaCkYiS+kYpRKcaMYixx9E7mam4bgyaXI
+ wH88cnWNKXm4Lw81zI7rVgmJ/ohHcD4NcWhMw/BPK2OvFUjQaao0TS839NppxkFbRNvt pA== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pa9gfj52t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Mar 2023 10:55:37 +0000
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+        by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32EAtaXh000425
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Mar 2023 10:55:36 GMT
+Received: from [10.201.3.182] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 14 Mar
+ 2023 03:55:32 -0700
+Message-ID: <a55f652c-aa78-1df5-1587-a12920d7a2f1@quicinc.com>
+Date:   Tue, 14 Mar 2023 16:25:29 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
+Subject: Re: [PATCH v3 19/19] PCI: qcom: Expose link transition counts via
+ debugfs for v2.4.0
+Content-Language: en-US
+From:   Sricharan Ramabadhran <quic_srichara@quicinc.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <andersson@kernel.org>, <lpieralisi@kernel.org>, <kw@linux.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <robh@kernel.org>
+CC:     <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20230310040816.22094-1-manivannan.sadhasivam@linaro.org>
+ <20230310040816.22094-20-manivannan.sadhasivam@linaro.org>
+ <e02980a9-34ca-9b9a-389a-01c599612140@quicinc.com>
+In-Reply-To: <e02980a9-34ca-9b9a-389a-01c599612140@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB8676BF1BF21EDC92F0F1C1A38CBE9@AS8PR04MB8676.eurprd04.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: NGXH0F5mqgDBTeSa0gxioVWxW8snokU4
+X-Proofpoint-ORIG-GUID: NGXH0F5mqgDBTeSa0gxioVWxW8snokU4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-14_04,2023-03-14_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
+ mlxlogscore=999 suspectscore=0 adultscore=0 clxscore=1015 phishscore=0
+ bulkscore=0 spamscore=0 impostorscore=0 priorityscore=1501
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303140093
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 03:24:28AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2023年3月14日 1:49
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>; l.stach@pengutronix.de;
-> > bhelgaas@google.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in
-> > suspend and resume
-> > 
-> > On Mon, Mar 13, 2023 at 02:50:31AM +0000, Hongxing Zhu wrote:
-> > > > -----Original Message-----
-> > > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > > Sent: 2023年3月11日 0:14
-> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > Cc: l.stach@pengutronix.de; bhelgaas@google.com;
-> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > linux-kernel@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx
-> > > > <linux-imx@nxp.com>
-> > > > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of
-> > > > RC in suspend and resume
-> > > >
-> > > > On Mon, Jan 09, 2023 at 02:08:06AM +0000, Hongxing Zhu wrote:
-> > > > > > -----Original Message-----
-> > > > > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > > > > Sent: 2022年12月30日 23:06
-> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
-> > > > > > bhelgaas@google.com
-> > > > > > Cc: linux-pci@vger.kernel.org;
-> > > > > > linux-arm-kernel@lists.infradead.org;
-> > > > > > linux-kernel@vger.kernel.org; kernel@pengutronix.de;
-> > > > > > dl-linux-imx <linux-imx@nxp.com>
-> > > > > > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control
-> > > > > > of RC in suspend and resume
-> > > > > >
-> > > > > > On Thu, Dec 08, 2022 at 02:05:34PM +0800, Richard Zhu wrote:
-> > > > > > > The MSI Enable bit controls delivery of MSI interrupts from
-> > > > > > > components below the Root Port. This bit might lost during the
-> > > > > > > suspend, should be re-stored during resume.
-> > > > > > >
-> > > > > > > Save the MSI control during suspend, and restore it in resume.
-> > > > > >
-> > > > > > I believe that what Lucas and Bjorn asked on v1 is still not answered.
-> > > > > >
-> > > > > > The root port is a PCI device, why do we need to save and
-> > > > > > restore the MSI cap on top of what PCI core already does ? The
-> > > > > > RP should be enumerated as a PCI device and therefore I expect
-> > > > > > the MSI cap to be saved/restored in the suspend/resume execution.
-> > > > > >
-> > > > > > I don't think there is anything iMX6 specific in this.
-> > > > > Hi Lorenzo:
-> > > > > Thanks for your comments.
-> > > > > Sorry to reply late, since I got a high fever in the past days.
-> > > > >
-> > > > > Based on i.MX6QP SABRESD board and XHCI PCIe2USB3.0 device, the
-> > > > > MSI cap  save/restore of PCI core is not executed(dev->msi_enabled
-> > > > > is
-> > > > > zero)  during my suspend/resume tests.
-> > > >
-> > > > I still do not understand. The register you are saving/restoring in
-> > > > the RC is not the root port Message control field in the root port
-> > > > MSI capability, it is a separate register that controls the root
-> > > > complex MSI forwarding, is that correct ?
-> > > >
-> > > > The root port MSI capability does not control the root complex
-> > > > forwarding of MSIs TLPs.
-> > > >
-> > > > So the bits you are saving and restoring IIUC should be MMIO space
-> > > > in the root complex, dressed as an MSI capability, that has nothing
-> > > > to do with the root port MSI capability.
-> > > >
-> > > > Is that correct ?
-> > >
-> > > It's not a separate register.
-> > >
-> > > The bit I manipulated is the MSI Enable bit of the Message Control
-> > > Register for MSI (Offset 02h) contained in the MSI-capability of Root
-> > > Complex.
-> > >
-> > > In addition, on i.MX6, the MSI Enable bit controls delivery of MSI
-> > > interrupts from components below the Root Port.
-> > >
-> > > So, set MSI Enable in imx6q-pcie to let the MSI from downstream
-> > > components works.
-> > 
-> > My confusion is about this "MSI Capability" found by
-> > "dw_pcie_find_capability(pci, PCI_CAP_ID_MSI)" in your patch.
-> > 
-> > The i.MX6 manual might refer to that as an "MSI Capability" but as far as I
-> > know, the PCIe base spec doesn't document a Root Complex MSI Capability.
-> > 
-> > I don't think it's the same as the one documented in PCIe r6.0, sec 7.7.2.  I
-> > think it's different because:
-> > 
-> >   (1) I *think* "pci" here refers to the RC, not to a Root Port.
-> > 
-> >   (2) The semantics are different.  The MSI-X Enable bit in 7.7.2 only
-> >   determines whether the Function itself is permitted to use MSI-X.
-> >   It has nothing to do with devices *below* a Root Port can use MSI-X.
-> >   It also has nothing to do with whether a Root Port can forward MSI
-> >   transactions from those downstream devices.
-> > 
-> > This part of my confusion could be easily resolved via a comment.
-> > 
-> > I do have a follow-on question, though: the patch seems to enable
-> > MSI-related functionality using a register in the DesignWare IP, not something
-> > in the i.MX6-specific IP.  If that's true, why don't other DesignWare-based
-> > drivers need something similar?
-> Hi Bjorn:
-> Thanks a lot for you reply.
-> This behavior is specific for i.MX PCIe.
 
-Which behaviour ? It can't be the root port MSI capability, that would
-be a HW bug (ie disabling root port MSIs would imply disabling MSIs for all
-downstream components).
 
-> i.MX PCIe designer use this MSI_EN bit to control the MSI trigger when
->  integrate Design Ware PCIe IP.
-
-Fair enough but that can't be the MSI Enable bit in the Root Port MSI
-capability "Message Control" field I am afraid.
-
-It is what Bjorn mentioned quite clearly, a root complex configuration
-register dressed as an MSI capability, the root complex is not a PCI
-device; either that or that's an HW bug.
-
-Lorenzo
-
-> So, the other DesignWare-base PCIe driver doesn't need this beahvior.
+On 3/14/2023 4:06 PM, Sricharan Ramabadhran wrote:
 > 
-> Best Regards
-> Richard Zhu
-> > 
-> > > > > It seems that some device might shutdown msi when do the suspend
-> > > > operations.
-> > > > > >
-> > > > > > Would you mind investigating it please ?
-> > > > > Sure, I did further investigation on i.MX6QP platform.
-> > > > > The MSI_EN bit of RC MSI capability would be cleared to zero, when
-> > > > >  PCIE_RESET(BIT29 of IOMUXC_GPR1) is toggled (assertion 1b'1,
-> > > > > then de-assertion 1b'0).
-> > > > >
-> > > > > Verification steps:
-> > > > > MSI_EN of RC is set to 1b'1 when system is boot up.
-> > > > >  ./memtool 1ffc050 1
-> > > > > 0x01FFC050:  01017005
-> > > > >
-> > > > > Toggle PCIe reset of i.MX6QP.
-> > > > > root@imx6qpdlsolox:~# ./memtool 20e0004=68691005 Writing 32-bit
-> > > > > value
-> > > > > 0x68691005 to address 0x020E0004 root@imx6qpdlsolox:~# ./memtool
-> > > > > 20e0004=48691005 Writing 32-bit value 0x48691005 to address
-> > > > 0x020E0004
-> > > > >
-> > > > > The MSI_EN bit of RC had been cleared to 1b'0.
-> > > > > ./memtool 1ffc050 1
-> > > > > 0x01FFC050:  01807005
-> > > > >
-> > > > > This is why I used to reply to Bjorn the MSI_EN of RC is cleared
-> > > > > when RESETs are toggled during the imx6_pcie_host_init() in
-> > > > >  imx6_pcie_resume_noirq() callback.
-> > > > >
-> > > > > Best Regards
-> > > > > Richard Zhu
-> > > > > >
-> > > > > > Lorenzo
-> > > > > >
-> > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > > > > > ---
-> > > > > > > Changes v1-->v2:
-> > > > > > > New create one save/restore function, used save the setting in
-> > > > > > > suspend and restore the configuration in resume.
-> > > > > > > v1
-> > > > > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2
-> > > > > > > F%2F
-> > > > > > >
-> > > >
-> > patc%2F&data=05%7C01%7Chongxing.zhu%40nxp.com%7C24971d8de9b54b
-> > > > 0b10
-> > > > > > >
-> > > >
-> > ad08db2182774d%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6
-> > > > 38140
-> > > > > > >
-> > > >
-> > 616456052078%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJ
-> > > > QIjoiV
-> > > > > > >
-> > > >
-> > 2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=vE
-> > > > tRxL
-> > > > > > > BVi5lYmpwTNZfafMms3263LZXodneLChjEaOM%3D&reserved=0
-> > > > > > >
-> > > > > >
-> > > >
-> > hwork.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F1667289595-12440-1-
-> > > > > > g
-> > > > > > i
-> > > > > > >
-> > > > > >
-> > > >
-> > t-send-email-hongxing.zhu%40nxp.com%2F&data=05%7C01%7Chongxing.zhu
-> > > > > > %40n
-> > > > > > >
-> > > > > >
-> > > >
-> > xp.com%7C3aeb1d128f854dad1a5608daea77706d%7C686ea1d3bc2b4c6fa9
-> > > > 2
-> > > > > > cd99c5c
-> > > > > > >
-> > > > > >
-> > > >
-> > 301635%7C0%7C0%7C638080095954881374%7CUnknown%7CTWFpbGZsb3
-> > > > > > d8eyJWIjoiMC
-> > > > > > >
-> > > > > >
-> > > >
-> > 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000
-> > > > %
-> > > > > > 7C%7C%
-> > > > > > >
-> > > > > >
-> > > >
-> > 7C&sdata=V8yVvvpTKGoR1UyQP5HD2IdlSjJdznBeD12bdI67dEI%3D&reserved
-> > > > =
-> > > > > > 0
-> > > > > > >
-> > > > > > > ---
-> > > > > > >  drivers/pci/controller/dwc/pci-imx6.c | 23
-> > > > > > > +++++++++++++++++++++++
-> > > > > > >  1 file changed, 23 insertions(+)
-> > > > > > >
-> > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > index 1dde5c579edc..aa3096890c3b 100644
-> > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > @@ -76,6 +76,7 @@ struct imx6_pcie {
-> > > > > > >  	struct clk		*pcie;
-> > > > > > >  	struct clk		*pcie_aux;
-> > > > > > >  	struct regmap		*iomuxc_gpr;
-> > > > > > > +	u16			msi_ctrl;
-> > > > > > >  	u32			controller_id;
-> > > > > > >  	struct reset_control	*pciephy_reset;
-> > > > > > >  	struct reset_control	*apps_reset;
-> > > > > > > @@ -1042,6 +1043,26 @@ static void imx6_pcie_pm_turnoff(struct
-> > > > > > imx6_pcie *imx6_pcie)
-> > > > > > >  	usleep_range(1000, 10000);
-> > > > > > >  }
-> > > > > > >
-> > > > > > > +static void imx6_pcie_msi_save_restore(struct imx6_pcie
-> > > > > > > +*imx6_pcie, bool save) {
-> > > > > > > +	u8 offset;
-> > > > > > > +	u16 val;
-> > > > > > > +	struct dw_pcie *pci = imx6_pcie->pci;
-> > > > > > > +
-> > > > > > > +	if (pci_msi_enabled()) {
-> > > > > > > +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
-> > > > > > > +		if (save) {
-> > > > > > > +			val = dw_pcie_readw_dbi(pci, offset +
-> > PCI_MSI_FLAGS);
-> > > > > > > +			imx6_pcie->msi_ctrl = val;
-> > > > > > > +		} else {
-> > > > > > > +			dw_pcie_dbi_ro_wr_en(pci);
-> > > > > > > +			val = imx6_pcie->msi_ctrl;
-> > > > > > > +			dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS,
-> > val);
-> > > > > > > +			dw_pcie_dbi_ro_wr_dis(pci);
-> > > > > > > +		}
-> > > > > > > +	}
-> > > > > > > +}
-> > > > > > > +
-> > > > > > >  static int imx6_pcie_suspend_noirq(struct device *dev)  {
-> > > > > > >  	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev); @@
-> > > > > > > -1050,6
-> > > > > > > +1071,7 @@ static int imx6_pcie_suspend_noirq(struct device
-> > > > > > > +*dev)
-> > > > > > >  	if (!(imx6_pcie->drvdata->flags &
-> > > > > > IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
-> > > > > > >  		return 0;
-> > > > > > >
-> > > > > > > +	imx6_pcie_msi_save_restore(imx6_pcie, true);
-> > > > > > >  	imx6_pcie_pm_turnoff(imx6_pcie);
-> > > > > > >  	imx6_pcie_stop_link(imx6_pcie->pci);
-> > > > > > >  	imx6_pcie_host_exit(pp);
-> > > > > > > @@ -1069,6 +1091,7 @@ static int imx6_pcie_resume_noirq(struct
-> > > > > > > device
-> > > > > > *dev)
-> > > > > > >  	ret = imx6_pcie_host_init(pp);
-> > > > > > >  	if (ret)
-> > > > > > >  		return ret;
-> > > > > > > +	imx6_pcie_msi_save_restore(imx6_pcie, false);
-> > > > > > >  	dw_pcie_setup_rc(pp);
-> > > > > > >
-> > > > > > >  	if (imx6_pcie->link_is_up)
-> > > > > > > --
-> > > > > > > 2.25.1
+> 
+> On 3/10/2023 9:38 AM, Manivannan Sadhasivam wrote:
+>> Qualcomm PCIe controllers of version v2.4.0 have debug registers in the
+>> PARF region that count PCIe link transitions. Expose them over debugfs to
+>> userspace to help debug the low power issues.
+>>
+>> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 33 ++++++++++++++++++++++++++
+>>   1 file changed, 33 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c 
+>> b/drivers/pci/controller/dwc/pcie-qcom.c
+>> index f99b7e7f3f73..0b41f007fa90 100644
+>> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+>> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+>> @@ -37,6 +37,7 @@
+>>   /* PARF registers */
+>>   #define PARF_SYS_CTRL                0x00
+>>   #define PARF_PM_CTRL                0x20
+>> +#define PARF_PM_STTS                0x24
+>>   #define PARF_PCS_DEEMPH                0x34
+>>   #define PARF_PCS_SWING                0x38
+>>   #define PARF_PHY_CTRL                0x40
+>> @@ -84,6 +85,12 @@
+>>   /* PARF_PM_CTRL register fields */
+>>   #define REQ_NOT_ENTR_L1                BIT(5)
+>> +/* PARF_PM_STTS register fields */
+>> +#define PM_LINKST_IN_L1SUB            BIT(8)
+>> +#define PM_LINKST_IN_L0S            BIT(7)
+>> +#define PM_LINKST_IN_L2                BIT(5)
+>> +#define PM_LINKST_IN_L1                BIT(4)
+>> +
+>>   /* PARF_PCS_DEEMPH register fields */
+>>   #define PCS_DEEMPH_TX_DEEMPH_GEN1(x)        FIELD_PREP(GENMASK(21, 
+>> 16), x)
+>>   #define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)    FIELD_PREP(GENMASK(13, 
+>> 8), x)
+>> @@ -737,6 +744,31 @@ static int qcom_pcie_post_init_2_4_0(struct 
+>> qcom_pcie *pcie)
+>>       return 0;
+>>   }
+>> +static int qcom_pcie_debugfs_func_2_4_0(struct seq_file *s, void *data)
+>> +{
+>> +    struct qcom_pcie *pcie = (struct qcom_pcie *) 
+>> dev_get_drvdata(s->private);
+>> +
+>> +    seq_printf(s, "L0s transition count: %u\n",
+>> +           readl_relaxed(pcie->parf + PM_LINKST_IN_L0S));
+>> +
+>> +    seq_printf(s, "L1 transition count: %u\n",
+>> +           readl_relaxed(pcie->parf + PM_LINKST_IN_L1));
+>> +
+>> +    seq_printf(s, "L1.1 transition count: %u\n",
+>> +           readl_relaxed(pcie->parf + PM_LINKST_IN_L1SUB));
+>> +
+>> +    seq_printf(s, "L2 transition count: %u\n",
+>> +           readl_relaxed(pcie->parf + PM_LINKST_IN_L2));
+>> +
+> 
+>   Using bitmask as register offset ? instead use PM_STTS and bitmask it ?
+
+  Also, since its 1 bit, all are status and not count.
+  Not sure, if you want it to limit this debug based on 'mhi' property
+  being populated ?
+
+Regards,
+  Sricharan
