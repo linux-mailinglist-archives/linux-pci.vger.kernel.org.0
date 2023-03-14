@@ -2,121 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0344B6B9170
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 12:19:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C6FF6B92BC
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 13:10:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231384AbjCNLTO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 07:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51172 "EHLO
+        id S231459AbjCNMKt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 08:10:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbjCNLS4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 07:18:56 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AB3B9
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:18:12 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id o12so60485144edb.9
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:18:12 -0700 (PDT)
+        with ESMTP id S231650AbjCNMKe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 08:10:34 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B36709FE4B
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 05:10:12 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id fd5so27206808edb.7
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 05:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678792686;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BTLw347ZTk76CB3YCjWqXtSW/kYt7O7yegt9D9Y6FXA=;
-        b=DfbXKcyFf2lJtqM9kxnIwQgXX5YHPtmETobmmHOm3Xih8xuS22CBz9vhum+UjfNGnT
-         AX/sKetrvq19eNac6gFFkYcUDW6YBAVFgQXHp0yZuDLZpSYPkIMzfI0FWzowlfHnt+Vg
-         37NzIbYf2dKi907JOSf7p5gsNRdYl9kzMZYTJfbO8Hhm9o3V41bI153d7ILKIqjA6vue
-         qJxEVrZnAfIBudOJryrUnv2DX36HSLb0kv7MZFCynatG/tp0k9WpQp0YWQv6HyLnadxU
-         DzejyEjiM9TQ/0IOkDw4drPhRZBZ+wH+gSAyM8Q7/yWZ1UYuvNE0o0xX07pvvqoFd1Cq
-         1DuA==
+        d=gmail.com; s=20210112; t=1678795769;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=q2EEneZC0un7s/NClNGezs4nrhx2sRUJrSNVdOLyXAg=;
+        b=MBhnhO2oMObRiC9DjeH375goeVlSq64vcM83V9uWDabVmEyluDJFceffgMITY9msFL
+         wk1+/DCLmERA4Vr6DakEqphigiXl3lwsqJjiknrIpXAHIRKlFZrDz1EQlE5zHN+iexNE
+         ZZVUHhxtMo69/4VeUkzaTWOxN5tiX5BhxlAsiv5Qk/iVwxMTlqJDdaIESASqIc4UM4Ta
+         JA84ixOzNH7BCnJUx1Ok36aKuqlfA0kDST1IqolfhZ7NbCJ5kVTMxWDLIQX0xm90LdTg
+         OnVJ7lbR5B+5fGlTh8LIhB25nBpjC/sQhPlZzPjFf8VIiB7P6voQ/Q2QpB961U5esv67
+         tWLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678792686;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BTLw347ZTk76CB3YCjWqXtSW/kYt7O7yegt9D9Y6FXA=;
-        b=ew993MWoOiv10pHZVCS5CYaRItAsFH/i93DqBdr6qXzxHL0Mp+6uBAJ0LjSxEApq2i
-         dGloDVCl5JpFrrJHujNDdik5pPa4z0YMkFInY2qX4SbnNpB/fyBkEI3jhGEMfxVYt9Hw
-         7OCANky0G6lP2ALTVXms2ol4BHASi5aPlViru/+gt9+HGf1I25N3S+uINm3a7nddDkjy
-         tAR0vaaCEBTZlgcHQy4B8i0PDgBJKjboO6aDlLGMUoWUmLZ8fVe8a9MuMyiaFWxEXHIP
-         qAPFIZywvKzL47lkwrCTmp+Hi+PRj24mwFoRREU7claLw+F+YEdRkJlsJdAWhA7nBfmW
-         ykoQ==
-X-Gm-Message-State: AO0yUKVBExb3zW4K4+oL5P28Bydth0U2dOPi5eig9mlf39uaZ/kEA9gM
-        mes62EwTb7Gci+odceq5AVO2ew==
-X-Google-Smtp-Source: AK7set9AeqSbWbMpQSeHyDHFZ0ow4SZlOYcmpT9uXkJZMQnegdxX9KuOMQUBc32BeUqDoZUsjzpCaQ==
-X-Received: by 2002:a17:907:a0e:b0:895:58be:957 with SMTP id bb14-20020a1709070a0e00b0089558be0957mr2625143ejc.2.1678792686070;
-        Tue, 14 Mar 2023 04:18:06 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:59be:4b3f:994b:e78c? ([2a02:810d:15c0:828:59be:4b3f:994b:e78c])
-        by smtp.gmail.com with ESMTPSA id xa13-20020a170907b9cd00b0091ec885e016sm1016273ejc.54.2023.03.14.04.18.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 04:18:05 -0700 (PDT)
-Message-ID: <4ca61aac-a901-1bfa-6cf4-8c2917621667@linaro.org>
-Date:   Tue, 14 Mar 2023 12:18:04 +0100
+        d=1e100.net; s=20210112; t=1678795769;
+        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q2EEneZC0un7s/NClNGezs4nrhx2sRUJrSNVdOLyXAg=;
+        b=bXcBSVxspqfhyCI5ohoNiWXcvUQTuKo4EeFH9vrXciQeAHXG50/P54DnQbWxUQj0TU
+         cl+I4AzCzcZesMRgMefME/7AZUCn65MFM8df/tbCyEqbljXRZMiTFGRPvq7NokWCO8aY
+         BU56cXGSIc6fd+Bip9U9LjHfKAIonILYK89DEvbkxouxsYIYdwVqXW2CB7KVjLzA6DR9
+         y9SyuqS+faSTtsn4irpTKtxq75rLmZmR+JgQyh1tfHqX/ZN9YkJDR5+PgzRVMm2Z6tuw
+         7oI+pQ2UBGpAf0gZkJBagIoWwsHqaxrLYA1WyngE9UhuxCae4t/QJeNBCwPTyFthpn2P
+         Kieg==
+X-Gm-Message-State: AO0yUKWNQpvRbzGOTCZ+hPaaoMludDINr74GlFgNe9OszyauiKJ5IHXC
+        2p88D0Awu1yEB7w6n7JS4d4XGGPpiTce4D8r2MI=
+X-Google-Smtp-Source: AK7set+TvUfQvC9PQRAIcDcwkZVRYR7Wudo9lPhQF/soLHJKYG10JiQn+EEZWafjix5cEDP7G6gsXsRDNrHfz4C/vxY=
+X-Received: by 2002:a50:ce01:0:b0:4fa:e5c1:d142 with SMTP id
+ y1-20020a50ce01000000b004fae5c1d142mr4379734edi.0.1678795769201; Tue, 14 Mar
+ 2023 05:09:29 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH 1/4] dt-bindings: PCI: dwc: Add rk3588 compatible line
-Content-Language: en-US
-To:     Lucas Tanure <lucas.tanure@collabora.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczynski <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Qu Wenruo <wqu@suse.com>,
-        Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, kernel@collabora.com
-References: <20230313153953.422375-1-lucas.tanure@collabora.com>
- <20230313153953.422375-2-lucas.tanure@collabora.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230313153953.422375-2-lucas.tanure@collabora.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Received: by 2002:a17:907:320c:b0:923:d867:fc1d with HTTP; Tue, 14 Mar 2023
+ 05:09:28 -0700 (PDT)
+Reply-To: molivi27@gmail.com
+From:   Johnson Williams <francisakoetse10@gmail.com>
+Date:   Tue, 14 Mar 2023 12:09:28 +0000
+Message-ID: <CA+cpFAz7Z=hr6PKdj5Ze8Wftq6ak5GDBUbN8gqqZ+VSL4vUvJQ@mail.gmail.com>
+Subject: PANKKIAUTOMAATTIKORTTI
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=2.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: **
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13/03/2023 16:39, Lucas Tanure wrote:
-> RK3588 uses the same driver as RK3568
+Onnittelut sinulle,
+Mit=C3=A4 kuuluu? Pisin aika. Olen iloinen voidessani kertoa teille
+onnistumisestani saada nuo perint=C3=B6varat siirretty=C3=A4 uuden kumppani=
+n
+yhteisty=C3=B6n=C3=A4 maastanne, t=C3=A4ll=C3=A4 hetkell=C3=A4 olen INTIAss=
+a
+investointiprojekteissa omalla osuudellani kokonaissummasta sill=C3=A4
+v=C3=A4lin, en unohda aiemmat yrityksesi ja yrityksesi auttaa minua
+siirt=C3=A4m=C3=A4=C3=A4n perint=C3=B6varat huolimatta siit=C3=A4, ett=C3=
+=A4 se ep=C3=A4onnistui
+jotenkin.
 
-Subject: drop line
-
-Commit msg: drop driver and focus on hardware. Missing full stop.
-
-> 
-> Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
-> ---
->  Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> index 2be72ae1169f..91aa9070ee31 100644
-> --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-> @@ -23,6 +23,7 @@ properties:
->    compatible:
->      items:
->        - const: rockchip,rk3568-pcie
-> +      - const: rockchip,rk3588-pcie
-
-According to your driver change, these are compatible, so maybe this
-should be expressed in the bindings?
-
-Best regards,
-Krzysztof
-
+Ota nyt yhteytt=C3=A4 sihteeriini LOME Togossa L=C3=A4nsi-Afrikassa, h=C3=
+=A4nen
+nimens=C3=A4 on MRS. OLIVIA MAXWELL s=C3=A4hk=C3=B6postiosoitteestaan
+(molivi27@gmail.com) pyyd=C3=A4 h=C3=A4nt=C3=A4 l=C3=A4hett=C3=A4m=C3=A4=C3=
+=A4n sinulle kokonaissumma
+(900 000,00 dollaria), jonka pidin korvauksellesi kaikista aiemmista
+yrityksist=C3=A4 ja yrityksist=C3=A4 auttaa minua kaupassa, joten ota rohke=
+asti
+yhteytt=C3=A4 sihteeri ja opastaa h=C3=A4nt=C3=A4 minne l=C3=A4hett=C3=A4=
+=C3=A4 sinulle
+pankkiautomaattikortti kokonaissummasta (900 000,00 dollaria).
+Olen t=C3=A4=C3=A4ll=C3=A4 eritt=C3=A4in kiireinen investointiprojektien ta=
+kia, joita
+minulla on meneill=C3=A4=C3=A4n uuden kumppanini kanssa, muista vihdoin, et=
+t=C3=A4
+olen v=C3=A4litt=C3=A4nyt puolestasi sihteerilleni ohjeet pankkiautomaattik=
+ortin
+vastaanottamiseksi.
+Parhain terveisin,
+herra Johnson Williams.
