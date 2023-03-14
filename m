@@ -2,202 +2,197 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 84FC46B985B
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 15:53:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EFA46B9860
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 15:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229818AbjCNOxu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 10:53:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53790 "EHLO
+        id S230410AbjCNO5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 10:57:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229957AbjCNOxt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 10:53:49 -0400
-Received: from mail-oo1-xc34.google.com (mail-oo1-xc34.google.com [IPv6:2607:f8b0:4864:20::c34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AA11EF96;
-        Tue, 14 Mar 2023 07:53:47 -0700 (PDT)
-Received: by mail-oo1-xc34.google.com with SMTP id x19-20020a4a3953000000b00525191358b6so2344353oog.12;
-        Tue, 14 Mar 2023 07:53:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678805626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4xB8YFLKwjGCy/SgLdu52hAdc8I/Bw00GcLZgZWTsU=;
-        b=e3tkB3wmBpYkJNnmxSWP5pw47gHfyMTpSf/OGbrp4iaYBllcNr3vj+it6hnwaOZR+O
-         nGR0NB+GH8IbCR5qUPsi2fU5ipan9a9OcZqskHwGE7ql37fFvP/LEtf/oR3PYDoSaX1Y
-         4kS0xwC5FvLJSRmGQjqqB1PReF3l3c5JgGsR+KH9dC1rfUcg3pXn75ZBXKtUUzXT00fn
-         FaAHo+WF5yDbhg/l6jyqdNmoTXsiQDcDK42P0POY9VH7jMYnG+BHDaUTzPwgSNxWtnYO
-         X9lXswWNMW0V46q+OthKbbm7PjqQJ5ukntmyX2SmXoHEkE+xEC7glv3BfdhYgcQuh/vY
-         lMIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678805626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=W4xB8YFLKwjGCy/SgLdu52hAdc8I/Bw00GcLZgZWTsU=;
-        b=QowuTqkDV8WKXWK+Y4Hg3ia8tc+ZGsVwqEssQELrDuoCAPtC7fawXixXSjk+C2Jcmo
-         W0FQnCxUMXhMc11QjjWFsTB2hpnpIEhWixaA561lCGSiFHo5KljsOS/UFKqy42oBNbAF
-         znl1ddTTiGX+V/TgbIIVFSECxVxxb9M6KbHmaFom1z9a7fTlC8FkfTdVCOBmXZ+8WsRf
-         nyNnHThMcRvi/fJPgBIsVaBZaub4GgYVgGQ8/btkHFwr+oZt+PNuPCyYzE8v6DRymvM4
-         c2FCJlaIEvIUPsTPVtl7tEXi++Zc6l5s20rWSbfpW9+yUOwIuLJoHLr4VULczQt1oZ/5
-         jjmA==
-X-Gm-Message-State: AO0yUKUn58lxIZBbt3IdZBmhHi7eoMEs1wqWHRSaqrhJ0aW0d7aBgGI8
-        emcHZblc5J6a+xmXXNHTtORCEkUv/AxMJTkeuAQ=
-X-Google-Smtp-Source: AK7set+Vbh8WigjwKyxtopSnp2Zi/JlEdRaNuOA7bBY6hnDUKltx7BMj0s8lTr2SsXRyzTQtBY9t4KEQVZs0Im/YJ8Q=
-X-Received: by 2002:a4a:ca0c:0:b0:525:45d5:9de9 with SMTP id
- w12-20020a4aca0c000000b0052545d59de9mr14137931ooq.0.1678805626127; Tue, 14
- Mar 2023 07:53:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
- <ecd09f27-b799-4741-2c5a-a2de99776c51@opensource.wdc.com> <CAAEEuhrk4cSC312UiAL3UwoDZ=urrdDcBThcNHd1dqnAuJTzAw@mail.gmail.com>
- <3c4ed614-f088-928f-2807-deaa5e4b668a@opensource.wdc.com>
-In-Reply-To: <3c4ed614-f088-928f-2807-deaa5e4b668a@opensource.wdc.com>
-From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date:   Tue, 14 Mar 2023 15:53:09 +0100
-Message-ID: <CAAEEuhqk0scWd3wFbVb9fSgHxPBKotpEPNi+YPG4GD9vLO94mw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PCI: rockchip: Fix RK3399 PCIe endpoint controller driver
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
-        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229863AbjCNO5X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 10:57:23 -0400
+Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 444A6A593C;
+        Tue, 14 Mar 2023 07:57:22 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id D021132006F5;
+        Tue, 14 Mar 2023 10:57:18 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Tue, 14 Mar 2023 10:57:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678805838; x=1678892238; bh=6z
+        ZSL/E7gVS5gjraObogwzybH+u1BTfv3OspZHFfaKg=; b=RNZ7F5EwUKDhH4HBmz
+        UelqlmaLHsd1/TaE0VGbUUbWVC15pfiy2nPv1+7ThLW5mTaD2Jl2f6skgawK/8Ba
+        ZjVG/UutNBPqFQ9DfWnkm9QpAV1OoI/OwgtVYIZyUln3B2iyV292nMws80mEbBiP
+        hRraei3acl2fgpdLMKUgIyfdNwzTHtJ3s9/igf/y6kK6FWNgfSD9Hj0dutd8zqZO
+        os8lWL8AXSMuqK/Lk9X7wlTzAANzPHMytQfNuHzfD3yaDwsW5FWTc8WTNRdEldlf
+        RL1fmG+CKZ4LTP8cR5vi+yRs7LvFkKNyjtQsivO/C6OiTfkXV6XIjbexIrF1YCLy
+        v61A==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1678805838; x=1678892238; bh=6zZSL/E7gVS5g
+        jraObogwzybH+u1BTfv3OspZHFfaKg=; b=Qk01aYskFyyWkYTrp9dXS04PR7r0H
+        1Jy/cvzYCIJzAqmm52a79pwwj32q+ADkGMI47UptOh5GkX0KEXbDMqVABuGfW8xU
+        Qw6IWE0X0InV0pZ46BBCrqdLr++7e2tiwKeyG904YhSKCdSgqi3chdNjmzbkwd1V
+        lu4hLQ/xST2SVlDSAsUo6oJAoG2ZaeirWfRetGHspq5+emHWoBPvLP6WFUazZstQ
+        MW4vxF+VWEj+mcJf2xHtDDF+v7lCjj8sbqcL4J4PnMG/PcGXgnl89/NumdZRLkmx
+        rrqhN2i2hxEKFWkjUjdFttfep4H5j+fWSy7q6FH4OI/CSmqJ8aapfMDCQ==
+X-ME-Sender: <xms:TIsQZBliAdgq_jXA_LMD9AW5ZE0Kft9twdb5nosdNulHATQjF-5_iQ>
+    <xme:TIsQZM1Wu5tCOxEzol4aUigHAwgw71QCb96lctdtG9njtmgc1VLi1KXDFf9AF89cM
+    B8quBVDa4OjnyYXcVU>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddviedgjedvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:TYsQZHp7HGEPiyc-Sl0QJ9ezUOt1nIdGBzikbewDA01V_ch_ZtLnIQ>
+    <xmx:TYsQZBmba9V3TT9jcXGy9ZgA85rM6WC8M6xtO-sCZe9NwXghqs8IQA>
+    <xmx:TYsQZP1DeXEtth5ugrf8vRnAwAPWzGX3ssjOF8hacj9bX0WvnhZstg>
+    <xmx:TosQZJMARat-h0WFyoloBvfL7bVnqH_Vv4zRmm2_hP5lf7DLaokuJQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E0509B60086; Tue, 14 Mar 2023 10:57:16 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
+Mime-Version: 1.0
+Message-Id: <9e89c4af-7682-4d30-93e7-703fde28180f@app.fastmail.com>
+In-Reply-To: <20230314121216.413434-35-schnelle@linux.ibm.com>
+References: <20230314121216.413434-1-schnelle@linux.ibm.com>
+ <20230314121216.413434-35-schnelle@linux.ibm.com>
+Date:   Tue, 14 Mar 2023 15:56:56 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Mathias Nyman" <mathias.nyman@intel.com>,
+        "Alan Stern" <stern@rowland.harvard.edu>
+Cc:     "Bjorn Helgaas" <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, "Arnd Bergmann" <arnd@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 34/38] usb: handle HAS_IOPORT dependencies
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
+        SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 9:10=E2=80=AFAM Damien Le Moal
-<damien.lemoal@opensource.wdc.com> wrote:
+On Tue, Mar 14, 2023, at 13:12, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to guard sections of code calling them
+> as alternative access methods with CONFIG_HAS_IOPORT checks. Similarly
+> drivers requiring these functions need to depend on HAS_IOPORT.
 >
-> On 3/14/23 16:57, Rick Wertenbroek wrote:
-> > On Tue, Mar 14, 2023 at 1:02=E2=80=AFAM Damien Le Moal
-> > <damien.lemoal@opensource.wdc.com> wrote:
-> >>
-> >> On 2/14/23 23:08, Rick Wertenbroek wrote:
-> >>> This is a series of patches that fixes the PCIe endpoint controller d=
-river
-> >>> for the Rockchip RK3399 SoC. The driver was introduced in
-> >>> cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe control=
-ler")
-> >>> The original driver had issues and would not allow for the RK3399 to
-> >>> operate in PCIe endpoint mode correctly. This patch series fixes that=
- so
-> >>> that the PCIe core controller of the RK3399 SoC can now act as a PCIe
-> >>> endpoint. This is v2 of the patch series and addresses the concerns t=
-hat
-> >>> were raised during the review of the first version.
-> >>
-> >> Rick,
-> >>
-> >> Are you going to send a rebased V3 soon ? I have a couple of additiona=
-l
-> >> patches to add on top of your series...
-> >>
-> >
-> > I'll try to send a V3 this week. The changes to V2 will be the issues
-> > raised and discussed on the V2 here in the mailing list with the additi=
-onal
-> > code for removing the unsupported MSI-X capability list (was discussed
-> > in the mailing list as well).
->
-> Thanks.
->
-> Additional patch needed to avoid problems with this controller is that
-> we need to set ".align =3D 256" in the features. Otherwise, things do not
-> work well. This is because the ATU drops the low 8-bits of the PCI
-> addresses. It is a one liner patch, so feel free to add it to your series=
-.
->
-> I also noticed random issues wich seem to be due to link-up timing... We
-> probably will need to implement a poll thread to detect and notify with
-> the linkup callback when we actually have the link established with the
-> host (see the dw-ep controller which does something similar).
->
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 
-Hello Damien,
-I also noticed random issues I suspect to be related to link status or powe=
-r
-state, in my case it sometimes happens that the BARs (0-6) in the config
-space get reset to 0. This is not due to the driver because the driver neve=
-r
-ever accesses these registers (@0xfd80'0010 to 0xfd80'0024 TRM
-17.6.4.1.5-17.6.4.1.10).
-I don't think the host rewrites them because lspci shows the BARs as
-"[virtual]" which means they have been assigned by host but have 0
-value in the endpoint device (when lspci rereads the PCI config header).
-See https://github.com/pciutils/pciutils/blob/master/lspci.c#L422
+I would suggest splitting this patch up into separate bits for the AMD
+quirks and the UHCI driver, possibly more if there are other parts
+unrelated to that.
 
-So I suspect the controller detects something related to link status or
-power state and internally (in hardware) resets those registers. It's not
-the kernel code, it never accesses these regs. The problem occurs
-very randomly, sometimes in a few seconds, sometimes I cannot see
-it for a whole day.
+> +#ifdef CONFIG_HAS_IOPORT
+>  /*
+>   * Make sure the controller is completely inactive, unable to
+>   * generate interrupts or do DMA.
 
-Is this similar to what you are experiencing ?
-Do you have any idea as to what could make these registers to be reset
-(I could not find anything in the TRM, also nothing in the driver seems to
-cause it).
+Maybe check for both HAS_IOPORT and USB_UHCI_HCD ?
 
->
-> From: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> Date: Thu, 9 Mar 2023 16:37:24 +0900
-> Subject: [PATCH] PCI: rockchip: Set address alignment for endpoint mode
->
-> The address translation unit of the rockchip EP controller does not use
-> the lower 8 bits of a PCIe-space address to map local memory. Thus we
-> must set the align feature field to 256 to let the user know about this
-> constraint.
->
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->  drivers/pci/controller/pcie-rockchip-ep.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c
-> b/drivers/pci/controller/pcie-rockchip-ep.c
-> index 12db9a9d92af..c6a23db84967 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -471,6 +471,7 @@ static const struct pci_epc_features
-> rockchip_pcie_epc_features =3D {
->         .linkup_notifier =3D false,
->         .msi_capable =3D true,
->         .msix_capable =3D false,
-> +       .align =3D 256,
->  };
->
->  static const struct pci_epc_features*
-> --
-> 2.39.2
->
->
-> --
-> Damien Le Moal
-> Western Digital Research
->
+>  static inline int io_type_enabled(struct pci_dev *pdev, unsigned int 
+> mask)
+>  {
+> @@ -725,6 +730,7 @@ static inline int io_type_enabled(struct pci_dev 
+> *pdev, unsigned int mask)
+> 
+>  static void quirk_usb_handoff_uhci(struct pci_dev *pdev)
+>  {
+> +#ifdef HAS_IOPORT
+>  	unsigned long base = 0;
+>  	int i;
+> 
+> @@ -739,6 +745,7 @@ static void quirk_usb_handoff_uhci(struct pci_dev *pdev)
+> 
+>  	if (base)
+>  		uhci_check_and_reset_hc(pdev, base);
+> +#endif
+>  }
 
-Do you want me to include this patch in the V3 series or will you
-submit another patch series for the changes you applied on the RK3399 PCIe
-endpoint controller ? I don't know if you prefer to build the V3
-together or if you
-prefer to submit another patch series on top of mine. Let me know.
+> diff --git a/drivers/usb/host/uhci-hcd.h b/drivers/usb/host/uhci-hcd.h
+> index 0688c3e5bfe2..c77705d03ed0 100644
+> --- a/drivers/usb/host/uhci-hcd.h
+> +++ b/drivers/usb/host/uhci-hcd.h
+> @@ -505,41 +505,49 @@ static inline bool uhci_is_aspeed(const struct 
+> uhci_hcd *uhci)
+>   * we use memory mapped registers.
+>   */
+> 
+> +#ifdef CONFIG_HAS_IOPORT
+> +#define UHCI_IN(x)	x
+> +#define UHCI_OUT(x)	x
+> +#else
+> +#define UHCI_IN(x)	0
+> +#define UHCI_OUT(x)
+> +#endif
+> +
+>  #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
+>  /* Support PCI only */
+>  static inline u32 uhci_readl(const struct uhci_hcd *uhci, int reg)
+>  {
+> -	return inl(uhci->io_addr + reg);
+> +	return UHCI_IN(inl(uhci->io_addr + reg));
+>  }
+> 
 
-Best regards.
-Rick
+This looks a bit ugly, though I can't think of a version I
+really like here though. Possibly merging this together with the
+generic version would result in something better, like
+
+#if defined(CONFIG_USB_UHCI_PCI) && defined(CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC)
+/* Support PCI and non-PCI host controllers */
+#define uhci_has_pci_registers(u)       ((u)->io_addr != 0)
+#elif defined(CONFIG_USB_UHCI_PCI)
+#define uhci_has_pci_registers(u)       1
+#else           
+/* Support non-PCI host controllers only */
+#define uhci_has_pci_registers(u)       0
+#endif 
+
+static inline u32 uhci_readl(const struct uhci_hcd *uhci, int reg)
+{
+#ifdef CONfIG_USB_UHCI_PCI
+        if (uhci_has_pci_registers(uhci))
+                return inl(uhci->io_addr + reg);
+        else
+#endif
+        if (uhci_is_aspeed(uhci))
+                return readl(uhci->regs + uhci_aspeed_reg(reg));
+        else
+#ifdef CONFIG_USB_UHCI_BIG_ENDIAN_MMIO
+        if (uhci_big_endian_mmio(uhci))
+                return readl_be(uhci->regs + reg);
+        else
+#endif
+        return readl(uhci->regs + reg);
+}
+
+Obviously still ugly, not sure if anyone can come up with a better
+version.
+
+      Arnd
