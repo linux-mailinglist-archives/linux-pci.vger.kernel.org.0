@@ -2,166 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C18A6BA151
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 22:17:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 278E36BA2BD
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 23:54:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjCNVRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 17:17:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
+        id S231237AbjCNWyZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 18:54:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjCNVRq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 17:17:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE4541B61;
-        Tue, 14 Mar 2023 14:17:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 31229B81BAC;
-        Tue, 14 Mar 2023 21:17:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB68C433EF;
-        Tue, 14 Mar 2023 21:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678828661;
-        bh=G/tHROBbLosRdwkD3HnQ+KDGL8ERnNBNYYwwcSBmlnM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SIsDlJr6vwCZajryxKgx8JpvtrEJ3UXGk6m7S4iYNAPT3uStMQs6xQJ08hqULgaJa
-         cII7DfIodlgNIeyHsfsGo052WFIOaONMsDsvsgxyCVtF2siZ99+Qa5OiF075tHtAvf
-         HA841pv9Z61DetA7tZCDRDwWCQjvS+tgYppJ3bw4jft0drYyQhhClJCMv6dnKFSDoD
-         64EjZ2yXK+oUZ35eIsF5JygpEkedPYZKWa+J3H0YDwY0t7thnLj7iMvUVnjcYXfeCM
-         2AhEdFlVKrcBflr2W1NQJfp1x/zBM2kqykXEoFbUOpOpkMrMOzrTTvDX2gP9bqZ/78
-         dF8AL6lMRmvlQ==
-Date:   Tue, 14 Mar 2023 16:17:39 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        joro@8bytes.org, bhelgaas@google.com, robin.murphy@arm.com,
-        will@kernel.org, jean-philippe@linaro.org,
-        darren@os.amperecomputing.com, scott@os.amperecomputing.com
-Subject: Re: [PATCH v2 1/2] PCI/ATS: Add a helper function to configure ATS
- STU of a PF
-Message-ID: <20230314211739.GA1679724@bhelgaas>
+        with ESMTP id S230004AbjCNWyY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 18:54:24 -0400
+Received: from esa3.hgst.iphmx.com (esa3.hgst.iphmx.com [216.71.153.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6AE538EA2
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 15:54:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1678834462; x=1710370462;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=4mWBwFLpOe+3Lg11FkokGIfBuGEGGfu3AKmmd26Q/z8=;
+  b=nID0T+oTUUFzJDkgi/76HGS2tUEI3jFVvJ2JFCFaeM3SFkkI7UpXf46/
+   P4TO4E7rkZ9Cet9WWWHU0QEBcwBG7Xw3ub1Td3lgbJ55SbLpMrhJa3rZk
+   wxGAgnt4eCEox+clyicB4mVUly1kXmcMHEZBIMafw3TlREPyVR7URMqGt
+   xjEO0HbU2douG2Eadz35GmF4vAOAT5sOeq1KMyzHpxPC9vsGSOchXTtdp
+   XbT/9qIbHJYz1KbCYGQ7SL+cruPSXFCzykHT4PXAJymx5L9R090seIiAo
+   xsIA41yq7gcP4ypPtCvkKmIkWpBL8oQqfEFL2vhPxyQ70R3JuH8KXiOdL
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.98,261,1673884800"; 
+   d="scan'208";a="230589588"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 15 Mar 2023 06:54:21 +0800
+IronPort-SDR: 8oj1/ZGwbpb6DZqVZEXHcjTrk0RvUotkf0TKhfLRSMneiC0HbRSWCtzHODxSmEkRbkBkryWvZf
+ UF6I+WKFVbDzmUgMhZtIahM1GFwe4OwY7iBMktP7QtXd4+J3Vgx3QUo5pTMAu7cahK4bjUOstr
+ 6C2goxNIgI+P7jY3q6WEFOPlI9WPaTOWhMBId7HMIdSBrJynZPint1nfsD3oWKJcZMX/k7OGJy
+ y+MWxCvXpMr9fa8s497GhEdDtfxSgDHQ0KyHFcFGrNfm6i3VE61I6Xqzgzzq9IJGAnJHJJA49l
+ aw8=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Mar 2023 15:05:07 -0700
+IronPort-SDR: aRS6H+B163A1HKS7dbncw/HO7zWflqaCzTfxe2ajzv+bZShMYbr3VCbCrEvJ0xXyQSuoSjUt+j
+ BpZh/8MZFz5v1m5Bfz+xR5R6eOFVY4OerlvhjA0iFMcvDY5O/oMBYJDZGkMZ4VyYqCrqhb6nj5
+ L249JijQ6rzGWu6fPLWmUs32mFtZiRQ0HeKKKstjs+76HAlGbNNuSZB/Xu4dFAh3LLch2quLhh
+ OnhyYQv2B4vyio+GmPLHPyU7+5Uo+995ctCczLLmh/7mcwwD65Eoj5Mj4ubi2XI2C0Eafq1Ave
+ tn8=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Mar 2023 15:54:21 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Pbpk41n1Lz1RtW1
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 15:54:20 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:references:to:content-language
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1678834458; x=1681426459; bh=4mWBwFLpOe+3Lg11FkokGIfBuGEGGfu3AKm
+        md26Q/z8=; b=L3dZG1sWWAikqJiWmwg5q3YwNB+cbQ4rqZ2QbvfzfRdZou7SOQr
+        78lip1o4qHhDVm7kyyner0SSRoqWjsYLH9H8cgGIn5HxkY0fNeF5q6bUFTSAgg/e
+        DPZL2Djv2bF9/ce4aFgHx8SmSBe0TKRUZB9OxwqgoCRBoPbxSSgMRDeY4pn1ERzd
+        sXGtkzEQQXn6SWVRFRVXszUI6m9kkE8LHyn5nsakjNJrSdp30gZhwOW3BXQSiCEP
+        kMmCQKFtfhvxidNbdVQdBS2wsBmdRiFhAvJWeU0f411vGq+h9zZb8TA/XTSEHcKL
+        7d3P0WxkB0lWqwQGWF9bdKC0o288HlyG3xw==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8yJ085IZeNuS for <linux-pci@vger.kernel.org>;
+        Tue, 14 Mar 2023 15:54:18 -0700 (PDT)
+Received: from [10.225.163.84] (unknown [10.225.163.84])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Pbpjz2ZH9z1RtVm;
+        Tue, 14 Mar 2023 15:54:15 -0700 (PDT)
+Message-ID: <8392a7de-666a-bce6-dc9f-b60d6dd93013@opensource.wdc.com>
+Date:   Wed, 15 Mar 2023 07:54:14 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <63619dd6-8e59-89f1-8e3a-766ed9501f1d@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 0/9] PCI: rockchip: Fix RK3399 PCIe endpoint controller
+ driver
+Content-Language: en-US
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
+        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
+ <ecd09f27-b799-4741-2c5a-a2de99776c51@opensource.wdc.com>
+ <CAAEEuhrk4cSC312UiAL3UwoDZ=urrdDcBThcNHd1dqnAuJTzAw@mail.gmail.com>
+ <3c4ed614-f088-928f-2807-deaa5e4b668a@opensource.wdc.com>
+ <CAAEEuhqk0scWd3wFbVb9fSgHxPBKotpEPNi+YPG4GD9vLO94mw@mail.gmail.com>
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <CAAEEuhqk0scWd3wFbVb9fSgHxPBKotpEPNi+YPG4GD9vLO94mw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 11:12:11AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 3/14/23 10:10 AM, Bjorn Helgaas wrote:
-> > On Tue, Mar 14, 2023 at 09:50:06AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> >> On 3/14/23 9:02 AM, Bjorn Helgaas wrote:
-> >>> On Tue, Mar 14, 2023 at 08:06:07PM +0530, Ganapatrao Kulkarni wrote:
-> >>>> On 14-03-2023 06:22 pm, Sathyanarayanan Kuppuswamy wrote:
-> >>>>> On 3/14/23 3:08 AM, Ganapatrao Kulkarni wrote:
-> >>>>>> On 14-03-2023 04:00 am, Sathyanarayanan Kuppuswamy wrote:
-> >>>>>>> On 3/13/23 2:12 PM, Bjorn Helgaas wrote:
-> >>>>>>>> On Mon, Feb 27, 2023 at 08:21:36PM -0800, Ganapatrao Kulkarni wrote:
-> >>>>>>>>> As per PCI specification (PCI Express Base Specification
-> >>>>>>>>> Revision 6.0, Section 10.5) both PF and VFs of a PCI EP
-> >>>>>>>>> are permitted to be enabled independently for ATS
-> >>>>>>>>> capability, however the STU(Smallest Translation Unit) is
-> >>>>>>>>> shared between PF and VFs. For VFs, it is hardwired to
-> >>>>>>>>> Zero and the associated PF's value applies to VFs.
-> >>>>>>>>>
-> >>>>>>>>> In the current code, the STU is being configured while
-> >>>>>>>>> enabling the PF ATS.  Hence, it is not able to enable ATS
-> >>>>>>>>> for VFs, if it is not enabled on the associated PF
-> >>>>>>>>> already.
-> >>>>>>>>>
-> >>>>>>>>> Adding a function pci_ats_stu_configure(), which can be
-> >>>>>>>>> called to configure the STU during PF enumeration.  Latter
-> >>>>>>>>> enumerations of VFs can successfully enable ATS
-> >>>>>>>>> independently.
-> >>>
-> >>>>>>>>> @@ -46,6 +46,35 @@ bool pci_ats_supported(struct pci_dev *dev)
-> >>>>>>>>>    }
-> >>>>>>>>>    EXPORT_SYMBOL_GPL(pci_ats_supported);
-> >>>>>>>>>    +/**
-> >>>>>>>>> + * pci_ats_stu_configure - Configure STU of a PF.
-> >>>>>>>>> + * @dev: the PCI device
-> >>>>>>>>> + * @ps: the IOMMU page shift
-> >>>>>>>>> + *
-> >>>>>>>>> + * Returns 0 on success, or negative on failure.
-> >>>>>>>>> + */
-> >>>>>>>>> +int pci_ats_stu_configure(struct pci_dev *dev, int ps)
-> >>>>>>>>> +{
-> >>>>>>>>> +    u16 ctrl;
-> >>>>>>>>> +
-> >>>>>>>>> +    if (dev->ats_enabled || dev->is_virtfn)
-> >>>>>>>>> +        return 0;
-> >>>>>>>>
-> >>>>>>>> I might return an error for the VF case on the assumption
-> >>>>>>>> that it's likely an error in the caller.  I guess one could
-> >>>>>>>> argue that it simplifies the caller if it doesn't have to
-> >>>>>>>> check for PF vs VF.  But the fact that STU is shared between
-> >>>>>>>> PF and VFs is an important part of understanding how ATS
-> >>>>>>>> works, so the caller should be aware of the distinction
-> >>>>>>>> anyway.
-> >>>>>>>
-> >>>>>>> I have already asked this question. But let me repeat it.
-> >>>>>>>
-> >>>>>>> We don't have any checks for the PF case here. That means you
-> >>>>>>> can re-configure the STU as many times as you want until ATS
-> >>>>>>> is enabled in PF. So, if there are active VFs which uses this
-> >>>>>>> STU, can PF re-configure the STU at will?
-> >>>>>>
-> >>>>>> IMO, Since STU is shared, programming it multiple times is not expected from callers code do it, however we can add below check to allow to program STU once from a PF.
-> >>>>>>
-> >>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-> >>>>>> index 1611bfa1d5da..f7bb01068e18 100644
-> >>>>>> --- a/drivers/pci/ats.c
-> >>>>>> +++ b/drivers/pci/ats.c
-> >>>>>> @@ -60,6 +60,10 @@ int pci_ats_stu_configure(struct pci_dev *dev, int ps)
-> >>>>>>          if (dev->ats_enabled || dev->is_virtfn)
-> >>>>>>                  return 0;
-> >>>>>>
-> >>>>>> +       /* Configured already */
-> >>>>>> +       if (dev->ats_stu)
-> >>>>>> +               return 0;
-> >>>>>
-> >>>>> Theoretically, you can re-configure STU as long as no one is using
-> >>>>> it. Instead of this check, is there a way to check whether there
-> >>>>> are active VMs which enables ATS?
-> >>>>
-> >>>> Yes I agree, there is no limitation on how many times you write STU
-> >>>> bits, but practically it is happening while PF is enumerated.
-> >>>>
-> >>>> The usage of function pci_ats_stu_configure is almost
-> >>>> similar(subset) to pci_enable_ats and only difference is one does
-> >>>> ATS enable + STU program and another does only STU program.
-> >>>
-> >>> What would you think of removing the STU update feature from
-> >>> pci_enable_ats() so it always fails if pci_ats_stu_configure() has not
-> >>> been called, even when called on the PF, e.g.,
-> >>>
-> >>>   if (ps != pci_physfn(dev)->ats_stu)
-> >>>     return -EINVAL;
-> >>
-> >> If we are removing the STU update from pci_enable_ats(), why
-> >> even allow passing "ps (page shift)" parameter? IMO, we can assume that
-> >> for STU reconfigure, users will call pci_ats_stu_configure().
-> > 
-> > The reason to pass "ps" would be to verify that the STU the caller
-> > plans to use matches the actual STU.
+On 3/14/23 23:53, Rick Wertenbroek wrote:
+> Hello Damien,
+> I also noticed random issues I suspect to be related to link status or power
+> state, in my case it sometimes happens that the BARs (0-6) in the config
+> space get reset to 0. This is not due to the driver because the driver never
+> ever accesses these registers (@0xfd80'0010 to 0xfd80'0024 TRM
+> 17.6.4.1.5-17.6.4.1.10).
+> I don't think the host rewrites them because lspci shows the BARs as
+> "[virtual]" which means they have been assigned by host but have 0
+> value in the endpoint device (when lspci rereads the PCI config header).
+> See https://github.com/pciutils/pciutils/blob/master/lspci.c#L422
 > 
-> Do we really need to verify it? My thinking is, by introducing
-> pci_ats_stu_configure() we are already trying to decouple the STU config
-> from pci_enable_ats(). So why again check for it when enabling ATS?
+> So I suspect the controller detects something related to link status or
+> power state and internally (in hardware) resets those registers. It's not
+> the kernel code, it never accesses these regs. The problem occurs
+> very randomly, sometimes in a few seconds, sometimes I cannot see
+> it for a whole day.
+> 
+> Is this similar to what you are experiencing ?
 
-Yeah, maybe we don't need to.  I was thinking that STU would be
-configured by the host, while the caller of pci_enable_ats() for a VF
-might be in a guest, but I guess that's not the case, right?
+Yes. I sometimes get NMIs after starting the function driver, when my function
+driver starts probing the bar registers after seeing the host changing one
+register. And the link also comes up with 4 lanes or 2 lanes, random.
 
-Bjorn
+> Do you have any idea as to what could make these registers to be reset
+> (I could not find anything in the TRM, also nothing in the driver seems to
+> cause it).
+
+My thinking is that since we do not have a linkup notifier, the function driver
+starts setting things up without the link established (e.g. when the host is
+still powered down). Once the host start booting and pic link is established,
+things may be reset in the hardware... That is the only thing I can think of.
+
+And yes, there are definitely something going on with the power states too I
+think: if I let things idle for a few minutes, everything stops working: no
+activity seen on the endpoint over the BARs. I tried enabling the sys and client
+interrupts to see if I can see power state changes, or if clearing the
+interrupts helps (they are masked by default), but no change. And booting the
+host with pci_aspm=off does not help either. Also tried to change all the
+capabilities related to link & power states to "off" (not supported), and no
+change either. So currently, I am out of ideas regarding that one.
+
+I am trying to make progress on my endpoint driver (nvme function) to be sure it
+is not a bug there that breaks things. I may still have something bad because
+when I enable the BIOS native NVMe driver on the host, either the host does not
+boot, or grub crashes with memory corruptions. Overall, not yet very stable and
+still trying to sort out the root cause of that.
+
+
+> Do you want me to include this patch in the V3 series or will you
+> submit another patch series for the changes you applied on the RK3399 PCIe
+> endpoint controller ? I don't know if you prefer to build the V3
+> together or if you
+> prefer to submit another patch series on top of mine. Let me know.
+
+If it is no trouble, please include it with your series. Will be easier to
+retest everything together :)
+
+-- 
+Damien Le Moal
+Western Digital Research
+
