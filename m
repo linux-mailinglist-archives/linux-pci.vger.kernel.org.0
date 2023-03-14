@@ -2,137 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 108986BA0FD
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 21:48:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5C18A6BA151
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 22:17:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229707AbjCNUsq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 16:48:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49494 "EHLO
+        id S229513AbjCNVRr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 17:17:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCNUsp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 16:48:45 -0400
-Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 680D083DF;
-        Tue, 14 Mar 2023 13:48:41 -0700 (PDT)
-Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 7CB48E0EAF;
-        Tue, 14 Mar 2023 23:48:40 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        baikalelectronics.ru; h=cc:cc:content-type:content-type:date
-        :from:from:in-reply-to:message-id:mime-version:references
-        :reply-to:subject:subject:to:to; s=post; bh=mPD90DJPcPmP48GK0ojm
-        CB01uj25M2d6itepQTmW9pw=; b=imXs0fOT6I2kdFarLpn+5DLc6Sulgu0uKYBS
-        8+y7rgDItOEXt6tQKJiSJboGHfR9gyeASF9T1Qegc6dNa8y7mPGusLCGaaNpQq65
-        hcDY+cSmj8zMSpLOfeHsIfQgL0yszpuYlFBC2VdcTxZ40HfBHZm5kyaCiq93EHtE
-        6VhkXC8=
-Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 55B53E0E1C;
-        Tue, 14 Mar 2023 23:48:40 +0300 (MSK)
-Received: from mobilestation (10.8.30.10) by mail (192.168.51.25) with
- Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 14 Mar 2023 23:48:39 +0300
-Date:   Tue, 14 Mar 2023 23:48:38 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Elad Nachman <enachman@marvell.com>,
-        <thomas.petazzoni@bootlin.com>, <bhelgaas@google.com>,
-        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 8/8] PCI: dwc: Introduce region limit from DT
-Message-ID: <20230314204838.buba4y2iyx3m6qnn@mobilestation>
-References: <20230313124016.17102-9-enachman@marvell.com>
- <20230313194802.GA1531673@bhelgaas>
+        with ESMTP id S229742AbjCNVRq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 17:17:46 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE4541B61;
+        Tue, 14 Mar 2023 14:17:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 31229B81BAC;
+        Tue, 14 Mar 2023 21:17:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEB68C433EF;
+        Tue, 14 Mar 2023 21:17:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678828661;
+        bh=G/tHROBbLosRdwkD3HnQ+KDGL8ERnNBNYYwwcSBmlnM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=SIsDlJr6vwCZajryxKgx8JpvtrEJ3UXGk6m7S4iYNAPT3uStMQs6xQJ08hqULgaJa
+         cII7DfIodlgNIeyHsfsGo052WFIOaONMsDsvsgxyCVtF2siZ99+Qa5OiF075tHtAvf
+         HA841pv9Z61DetA7tZCDRDwWCQjvS+tgYppJ3bw4jft0drYyQhhClJCMv6dnKFSDoD
+         64EjZ2yXK+oUZ35eIsF5JygpEkedPYZKWa+J3H0YDwY0t7thnLj7iMvUVnjcYXfeCM
+         2AhEdFlVKrcBflr2W1NQJfp1x/zBM2kqykXEoFbUOpOpkMrMOzrTTvDX2gP9bqZ/78
+         dF8AL6lMRmvlQ==
+Date:   Tue, 14 Mar 2023 16:17:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
+        joro@8bytes.org, bhelgaas@google.com, robin.murphy@arm.com,
+        will@kernel.org, jean-philippe@linaro.org,
+        darren@os.amperecomputing.com, scott@os.amperecomputing.com
+Subject: Re: [PATCH v2 1/2] PCI/ATS: Add a helper function to configure ATS
+ STU of a PF
+Message-ID: <20230314211739.GA1679724@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230313194802.GA1531673@bhelgaas>
-X-Originating-IP: [10.8.30.10]
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63619dd6-8e59-89f1-8e3a-766ed9501f1d@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn
-
-On Mon, Mar 13, 2023 at 02:48:02PM -0500, Bjorn Helgaas wrote:
-> [+cc Serge, who has done most of the recent work in this file]
-> 
-
-Thanks for sending copy to me. I'll have a look at the series on
-this week.
-
--Serge(y)
-
-> On Mon, Mar 13, 2023 at 02:40:16PM +0200, Elad Nachman wrote:
-> > From: Elad Nachman <enachman@marvell.com>
+On Tue, Mar 14, 2023 at 11:12:11AM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 3/14/23 10:10 AM, Bjorn Helgaas wrote:
+> > On Tue, Mar 14, 2023 at 09:50:06AM -0700, Sathyanarayanan Kuppuswamy wrote:
+> >> On 3/14/23 9:02 AM, Bjorn Helgaas wrote:
+> >>> On Tue, Mar 14, 2023 at 08:06:07PM +0530, Ganapatrao Kulkarni wrote:
+> >>>> On 14-03-2023 06:22 pm, Sathyanarayanan Kuppuswamy wrote:
+> >>>>> On 3/14/23 3:08 AM, Ganapatrao Kulkarni wrote:
+> >>>>>> On 14-03-2023 04:00 am, Sathyanarayanan Kuppuswamy wrote:
+> >>>>>>> On 3/13/23 2:12 PM, Bjorn Helgaas wrote:
+> >>>>>>>> On Mon, Feb 27, 2023 at 08:21:36PM -0800, Ganapatrao Kulkarni wrote:
+> >>>>>>>>> As per PCI specification (PCI Express Base Specification
+> >>>>>>>>> Revision 6.0, Section 10.5) both PF and VFs of a PCI EP
+> >>>>>>>>> are permitted to be enabled independently for ATS
+> >>>>>>>>> capability, however the STU(Smallest Translation Unit) is
+> >>>>>>>>> shared between PF and VFs. For VFs, it is hardwired to
+> >>>>>>>>> Zero and the associated PF's value applies to VFs.
+> >>>>>>>>>
+> >>>>>>>>> In the current code, the STU is being configured while
+> >>>>>>>>> enabling the PF ATS.  Hence, it is not able to enable ATS
+> >>>>>>>>> for VFs, if it is not enabled on the associated PF
+> >>>>>>>>> already.
+> >>>>>>>>>
+> >>>>>>>>> Adding a function pci_ats_stu_configure(), which can be
+> >>>>>>>>> called to configure the STU during PF enumeration.  Latter
+> >>>>>>>>> enumerations of VFs can successfully enable ATS
+> >>>>>>>>> independently.
+> >>>
+> >>>>>>>>> @@ -46,6 +46,35 @@ bool pci_ats_supported(struct pci_dev *dev)
+> >>>>>>>>>    }
+> >>>>>>>>>    EXPORT_SYMBOL_GPL(pci_ats_supported);
+> >>>>>>>>>    +/**
+> >>>>>>>>> + * pci_ats_stu_configure - Configure STU of a PF.
+> >>>>>>>>> + * @dev: the PCI device
+> >>>>>>>>> + * @ps: the IOMMU page shift
+> >>>>>>>>> + *
+> >>>>>>>>> + * Returns 0 on success, or negative on failure.
+> >>>>>>>>> + */
+> >>>>>>>>> +int pci_ats_stu_configure(struct pci_dev *dev, int ps)
+> >>>>>>>>> +{
+> >>>>>>>>> +    u16 ctrl;
+> >>>>>>>>> +
+> >>>>>>>>> +    if (dev->ats_enabled || dev->is_virtfn)
+> >>>>>>>>> +        return 0;
+> >>>>>>>>
+> >>>>>>>> I might return an error for the VF case on the assumption
+> >>>>>>>> that it's likely an error in the caller.  I guess one could
+> >>>>>>>> argue that it simplifies the caller if it doesn't have to
+> >>>>>>>> check for PF vs VF.  But the fact that STU is shared between
+> >>>>>>>> PF and VFs is an important part of understanding how ATS
+> >>>>>>>> works, so the caller should be aware of the distinction
+> >>>>>>>> anyway.
+> >>>>>>>
+> >>>>>>> I have already asked this question. But let me repeat it.
+> >>>>>>>
+> >>>>>>> We don't have any checks for the PF case here. That means you
+> >>>>>>> can re-configure the STU as many times as you want until ATS
+> >>>>>>> is enabled in PF. So, if there are active VFs which uses this
+> >>>>>>> STU, can PF re-configure the STU at will?
+> >>>>>>
+> >>>>>> IMO, Since STU is shared, programming it multiple times is not expected from callers code do it, however we can add below check to allow to program STU once from a PF.
+> >>>>>>
+> >>>>>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
+> >>>>>> index 1611bfa1d5da..f7bb01068e18 100644
+> >>>>>> --- a/drivers/pci/ats.c
+> >>>>>> +++ b/drivers/pci/ats.c
+> >>>>>> @@ -60,6 +60,10 @@ int pci_ats_stu_configure(struct pci_dev *dev, int ps)
+> >>>>>>          if (dev->ats_enabled || dev->is_virtfn)
+> >>>>>>                  return 0;
+> >>>>>>
+> >>>>>> +       /* Configured already */
+> >>>>>> +       if (dev->ats_stu)
+> >>>>>> +               return 0;
+> >>>>>
+> >>>>> Theoretically, you can re-configure STU as long as no one is using
+> >>>>> it. Instead of this check, is there a way to check whether there
+> >>>>> are active VMs which enables ATS?
+> >>>>
+> >>>> Yes I agree, there is no limitation on how many times you write STU
+> >>>> bits, but practically it is happening while PF is enumerated.
+> >>>>
+> >>>> The usage of function pci_ats_stu_configure is almost
+> >>>> similar(subset) to pci_enable_ats and only difference is one does
+> >>>> ATS enable + STU program and another does only STU program.
+> >>>
+> >>> What would you think of removing the STU update feature from
+> >>> pci_enable_ats() so it always fails if pci_ats_stu_configure() has not
+> >>> been called, even when called on the PF, e.g.,
+> >>>
+> >>>   if (ps != pci_physfn(dev)->ats_stu)
+> >>>     return -EINVAL;
+> >>
+> >> If we are removing the STU update from pci_enable_ats(), why
+> >> even allow passing "ps (page shift)" parameter? IMO, we can assume that
+> >> for STU reconfigure, users will call pci_ats_stu_configure().
 > > 
-> > Allow dts override of region limit for SOCs with older Synopsis
-> > Designware PCIe IP but with greater than 32-bit address range support,
-> > such as the Armada 7020/7040/8040 family of SOCs by Marvell,
-> > when the DT file places the PCIe window above the 4GB region.
-> > The Synopsis Designware PCIe IP in these SOCs is too old to specify the
-> > highest memory location supported by the PCIe, but practically supports
-> > such locations. Allow these locations to be specified in the DT file.
-> > DT property is called num-regionmask , and can range between 33 and 64.
+> > The reason to pass "ps" would be to verify that the STU the caller
+> > plans to use matches the actual STU.
 > 
-> s/Synopsis/Synopsys/ (several occurrences)
-> 
-> s/Designware/DesignWare/ (several occurrences)
-> 
-> Remove space before comma.
-> 
-> > Signed-off-by: Elad Nachman <enachman@marvell.com>
-> > ---
-> > v4:
-> >    1) Fix blank lines removal / addition
-> > 
-> >    2) Remove usage of variable with same name as dt binding property
-> > 
-> >  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++--
-> >  1 file changed, 10 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> > index 53a16b8b6ac2..9773c110c733 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > @@ -735,8 +735,10 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
-> >  void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> >  {
-> >  	int max_region, ob, ib;
-> > -	u32 val, min, dir;
-> > +	u32 val, min, dir, ret;
-> >  	u64 max;
-> > +	struct device *dev = pci->dev;
-> > +	struct device_node *np = dev->of_node;
-> >  
-> >  	val = dw_pcie_readl_dbi(pci, PCIE_ATU_VIEWPORT);
-> >  	if (val == 0xFFFFFFFF) {
-> > @@ -781,7 +783,13 @@ void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> >  		dw_pcie_writel_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT, 0xFFFFFFFF);
-> >  		max = dw_pcie_readl_atu(pci, dir, 0, PCIE_ATU_UPPER_LIMIT);
-> >  	} else {
-> > -		max = 0;
-> > +		/* Allow dts override of region limit for older IP with above 32-bit support: */
-> 
-> Reflow comment to fit in 80 columns.
-> 
-> > +		ret = of_property_read_u32(np, "num-regionmask", &val);
-> > +		if (!ret && val > 32) {
-> > +			max = GENMASK(val - 33, 0);
-> > +			dev_info(pci->dev, "Overriding region limit to %u bits\n", val);
-> > +		} else
-> > +			max = 0;
-> >  	}
-> >  
-> >  	pci->num_ob_windows = ob;
-> > -- 
-> > 2.17.1
-> > 
-> 
+> Do we really need to verify it? My thinking is, by introducing
+> pci_ats_stu_configure() we are already trying to decouple the STU config
+> from pci_enable_ats(). So why again check for it when enabling ATS?
 
+Yeah, maybe we don't need to.  I was thinking that STU would be
+configured by the host, while the caller of pci_enable_ats() for a VF
+might be in a guest, but I guess that's not the case, right?
+
+Bjorn
