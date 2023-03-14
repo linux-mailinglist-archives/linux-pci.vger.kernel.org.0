@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B18D6B96FF
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 14:57:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55F6B6B9700
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 14:57:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbjCNN5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S232611AbjCNN5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 14 Mar 2023 09:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47506 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232396AbjCNN46 (ORCPT
+        with ESMTP id S232576AbjCNN46 (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 09:56:58 -0400
 Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D672D7A8F;
-        Tue, 14 Mar 2023 06:56:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49982211D;
+        Tue, 14 Mar 2023 06:56:01 -0700 (PDT)
 Received: from cryzen.lan (cpc87451-finc19-2-0-cust61.4-2.cable.virginm.net [82.11.51.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: tanureal)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 2B8C16603089;
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 9EA83660308F;
         Tue, 14 Mar 2023 13:55:59 +0000 (GMT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
         s=mail; t=1678802159;
-        bh=6DQmp7EOc/vZBH7Agp0m4MGPepgjsuaiBjh47b5ACbc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=KFeu9bmgQCCt7vY17t9enfuXXo172EBdEpRc3cgQxMbZZM8OqdV7NsT2SzFUZWUul
-         40mttmj1eCPqRUDLqu5oENEtn5xJS/eWk7CtmtnqBdr5Uj8yQ2QVqOi03zTm4UbDcl
-         binjMFjerBQHYMUgxSkbzXRkUJnSx/yCsW2kFv3xj8dF9vugAAvqYoa8NMiLDrNHOG
-         +xHUCWR034ujStkdwDIrcYnGLrTM6K/nGdxlSgaOVUlbhQng9aINSkrO0rf37qbueE
-         XXjCHza1TJiIfzV7u1ZMcU9q2oGCRJ29YA/YlT07xW6LBiSU1OIB7O2X7cvbgrYk26
-         cnTTZ+XO8aGkQ==
+        bh=37ljbgJkpZPvb9TsF+DacOqstVGArWpTYRb2PXFGvQY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KmTWq49ZrHWRELwwEFA6LQdTmWRrBo4rWKwqLzLaH6VuhUwqqXp/7LHr3IJfoMi5u
+         2InmgkAPTh/0z8n8DHT7xIZAgGnfcLwItpM6MpRFB7DEsRY6sLxqNPwb6j/WS0Tty/
+         v4tPcfuvnQaIrf/omYEVP902qgTIvtSGk5FXEu4ofr1tkG9RfdoAG348pg40DieZxa
+         5CzkoHyLdvD5n458AOdMK+1yDgi+vrQdorxp9slEZ0jjFqTWPTdT94mJFZE10SDuHc
+         XgOY05ppehOLpx6N2WBbjSaW0LmD5HhZj8c7llTZkEmlhk9FcABkZWUkAkVbRdG9NO
+         XpKErX7e1g4pw==
 From:   Lucas Tanure <lucas.tanure@collabora.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -51,10 +51,12 @@ Cc:     Qu Wenruo <wqu@suse.com>,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org,
         Lucas Tanure <lucas.tanure@collabora.com>, kernel@collabora.com
-Subject: [PATCHv2 0/3] Add PCIe2 driver support for Rockchip
-Date:   Tue, 14 Mar 2023 13:55:52 +0000
-Message-Id: <20230314135555.44162-1-lucas.tanure@collabora.com>
+Subject: [PATCHv2 1/3] dt-bindings: PCI: dwc: Add rk3588 compatible
+Date:   Tue, 14 Mar 2023 13:55:53 +0000
+Message-Id: <20230314135555.44162-2-lucas.tanure@collabora.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230314135555.44162-1-lucas.tanure@collabora.com>
+References: <20230314135555.44162-1-lucas.tanure@collabora.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -66,33 +68,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I am assisting with PCIe and networking bring-up for Rock Pi 5B (RK3588).
-We sent this series a few days ago:
-https://lore.kernel.org/all/20230310080518.78054-1-lucas.tanure@collabora.com/
+PCIe for RK3588 is the same as RK3568.
 
-From that conversation we decided to send patches for Rockchip that don't
-require GIC/ITS implementation. We will send that in a separed series.
-Making easier for reviews and unblocking patches that don't require
-GIC/ITS implementation.
+Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
+---
+ Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-This is work based on prior work from XiaoDong Huang and
-Peter Geis fixing this issue specifically for Rockchip 356x.
-Plus comments of Robin Murphy about Non-Coherent properties.
-
-Since v1:
- - Don't add compatible string to PCIe driver, only to DT Bindings
- - Improve commit message for "Add rk3588 compatible"
-
-Lucas Tanure (3):
-  dt-bindings: PCI: dwc: Add rk3588 compatible
-  dt-bindings: phy: rockchip: Add rk3588 compatible
-  phy: rockchip: Add naneng combo phy support for RK3588
-
- .../bindings/pci/rockchip-dw-pcie.yaml        |   6 +-
- .../phy/phy-rockchip-naneng-combphy.yaml      |   1 +
- .../rockchip/phy-rockchip-naneng-combphy.c    | 184 ++++++++++++++++++
- 3 files changed, 190 insertions(+), 1 deletion(-)
-
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+index 2be72ae1169f..24c88942e59e 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
+@@ -21,8 +21,12 @@ allOf:
+ 
+ properties:
+   compatible:
+-    items:
++    oneOf:
+       - const: rockchip,rk3568-pcie
++      - items:
++          - enum:
++              - rockchip,rk3588-pcie
++          - const: rockchip,rk3568-pcie
+ 
+   reg:
+     items:
 -- 
 2.39.2
 
