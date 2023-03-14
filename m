@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55F6B6B9700
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 14:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 572D76B9705
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 14:57:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232611AbjCNN5Y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 09:57:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
+        id S232498AbjCNN52 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 09:57:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232576AbjCNN46 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 09:56:58 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49982211D;
+        with ESMTP id S232597AbjCNN47 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 09:56:59 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B0E5DEE1;
         Tue, 14 Mar 2023 06:56:01 -0700 (PDT)
 Received: from cryzen.lan (cpc87451-finc19-2-0-cust61.4-2.cable.virginm.net [82.11.51.62])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: tanureal)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 9EA83660308F;
-        Tue, 14 Mar 2023 13:55:59 +0000 (GMT)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0E79B6603090;
+        Tue, 14 Mar 2023 13:56:00 +0000 (GMT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1678802159;
-        bh=37ljbgJkpZPvb9TsF+DacOqstVGArWpTYRb2PXFGvQY=;
+        s=mail; t=1678802160;
+        bh=ZZahE9JSrPkzg/zm+yoNFoJeAVT05GCmvbz2DG+yJLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KmTWq49ZrHWRELwwEFA6LQdTmWRrBo4rWKwqLzLaH6VuhUwqqXp/7LHr3IJfoMi5u
-         2InmgkAPTh/0z8n8DHT7xIZAgGnfcLwItpM6MpRFB7DEsRY6sLxqNPwb6j/WS0Tty/
-         v4tPcfuvnQaIrf/omYEVP902qgTIvtSGk5FXEu4ofr1tkG9RfdoAG348pg40DieZxa
-         5CzkoHyLdvD5n458AOdMK+1yDgi+vrQdorxp9slEZ0jjFqTWPTdT94mJFZE10SDuHc
-         XgOY05ppehOLpx6N2WBbjSaW0LmD5HhZj8c7llTZkEmlhk9FcABkZWUkAkVbRdG9NO
-         XpKErX7e1g4pw==
+        b=NdLLqqV0r45R4BiDUuh1aO+O2+2TIvmpCVTh9TAQ3FWmD73sJghKtJMYT+DvfLySq
+         mX2PtFPSiBB8TnEkhgG8/unbLra/ywdkvsIaAri9WMWc3SxTTTerW4uzICsp2CnD9V
+         aZ97sXZ8eGxUYHLHRWQJMZTa7xhSFvJcJBdI6BObuIQAsJPFadPG7xYTWAbUKZZHvP
+         j34o672CQArcczJu8DyTQSJsaVTy6wYIeWi4zz0JXLcbDKg2us43UofnBFz+mLForN
+         RCf/vfoZSZ+PywHiwEyeZEwdgqZBJs+xxFH9JzSMsYl3kaNKox5dGbTtq20EduxciE
+         lnKS/9Th/j+nA==
 From:   Lucas Tanure <lucas.tanure@collabora.com>
 To:     Vinod Koul <vkoul@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -50,10 +50,12 @@ Cc:     Qu Wenruo <wqu@suse.com>,
         linux-arm-kernel@lists.infradead.org,
         linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org,
-        Lucas Tanure <lucas.tanure@collabora.com>, kernel@collabora.com
-Subject: [PATCHv2 1/3] dt-bindings: PCI: dwc: Add rk3588 compatible
-Date:   Tue, 14 Mar 2023 13:55:53 +0000
-Message-Id: <20230314135555.44162-2-lucas.tanure@collabora.com>
+        Lucas Tanure <lucas.tanure@collabora.com>,
+        kernel@collabora.com,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: [PATCHv2 2/3] dt-bindings: phy: rockchip: Add rk3588 compatible
+Date:   Tue, 14 Mar 2023 13:55:54 +0000
+Message-Id: <20230314135555.44162-3-lucas.tanure@collabora.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230314135555.44162-1-lucas.tanure@collabora.com>
 References: <20230314135555.44162-1-lucas.tanure@collabora.com>
@@ -68,31 +70,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-PCIe for RK3588 is the same as RK3568.
+RK3568 Naneng Combo Phy driver can support RK3588 with the additional
+clocks and initial configuration, so add the compatible line.
 
 Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml     | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 2be72ae1169f..24c88942e59e 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -21,8 +21,12 @@ allOf:
- 
- properties:
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+index 8d8698412de0..9ae514fa7533 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-naneng-combphy.yaml
+@@ -13,6 +13,7 @@ properties:
    compatible:
--    items:
-+    oneOf:
-       - const: rockchip,rk3568-pcie
-+      - items:
-+          - enum:
-+              - rockchip,rk3588-pcie
-+          - const: rockchip,rk3568-pcie
+     enum:
+       - rockchip,rk3568-naneng-combphy
++      - rockchip,rk3588-naneng-combphy
  
    reg:
-     items:
+     maxItems: 1
 -- 
 2.39.2
 
