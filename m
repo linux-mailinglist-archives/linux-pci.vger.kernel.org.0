@@ -2,164 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C3DCD6B90FF
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 12:05:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4ACBF6B9167
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 12:18:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbjCNLFc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 07:05:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57660 "EHLO
+        id S231284AbjCNLR5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 07:17:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229675AbjCNLFZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 07:05:25 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 993101B2E8
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:04:57 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso4534542pjb.0
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:04:57 -0700 (PDT)
+        with ESMTP id S229982AbjCNLRa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 07:17:30 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B68449F040
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:17:02 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id r11so8856336edd.5
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 04:17:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678791880;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HrDFtl79sc+ajUKajTjTeATx1JcjSGMMUnWf7PJyUO0=;
-        b=yV6/BTqocpnceFVorOrd5zj0tUxczCcgUobq91Kh/TkCPfsbK7cHC8KPzChb16znPq
-         cP75poFrb74w1b/Fgq6AzbXDWUOMX100ppolj9qoJ99PXpocrQujafwxsZAx2+6I26pK
-         99iUQw3yeNObpp9Mak7XiKRVhFW8yNQsIXe/67bStzMgw0viT0AZLaDmBwnPdnkbUbHF
-         75rCet2P3bJgouiLgH4JRlImeBYylRIVtscD1Y0ug1bd/3n1w66BIxsMTeYuBBWcV36H
-         2I+u3UpbSwWqifL9XN6LyQxhCx+F5ZmA4/tHQbd6onYLu7YJbUvrsrE8pQ98hCxxipvc
-         r6sg==
+        d=linaro.org; s=google; t=1678792621;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=VyMYTE8eRVWxXGxDN3qi6ovP5SN8DKhbGCFcirh8c68=;
+        b=gYVni5rS+U0D3XPXroPjMejaXjUCgJYQue+8nXmM0hbi6lhCI1VcxmbnKS+hiuTamt
+         RC2WeKXamlUyZ8HLt6b+G0enmZvwqk34qKNb2OswI1SlizapZY242VV4VpdgRK2zAfGm
+         Wr2hX1BB0yOy6KvMaF0CtOVuzxY4Pxpyn6Yi/IXic4Pfs27QQ29/aw/aXjdOlXJsS6XF
+         JR2T3I/DsYGTkVk5dy6Owqkm9qjkNtBoeJboMe3C6LDW2Q+//sYbFPpyxOlJ012bCxzT
+         86j+GjQy7rhOi7RAshikVzvFiXBYiXWy/rP0RFyb3t8vqfU+XR3xdCR0X3D0bfnDKuTu
+         +Gyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678791880;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20210112; t=1678792621;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HrDFtl79sc+ajUKajTjTeATx1JcjSGMMUnWf7PJyUO0=;
-        b=An7nSRJI649wUrWzbDv1dP2ziH4bm385IilRUeDXo9jTa/h6w5/MN9t6Rrj2ulCr3w
-         U0exxiEHPE6J/qkjzWVzP4+ZLSlR0DQ54z5RrMJmaUOuLt3OYs/lCDFJAoPzWwCxxVeD
-         PY+0geOW1b/5E3n13OcY/6v7QZMq6Rb764jrj5dXYW2cOobSPlQ98zA93cBE/QnifV/t
-         NmhgFy4Lcjwq5feAyxid/MxU8CHcsB7McjLLsJu0EJ3u9xd27E/Ik+BjFTDCTKuFHhra
-         6zi8TbaTRp7mX+CCHFzwAHtHQ5Es/sBbi0U+7IBMsThzIPpS2zBwOg0EF8pmR+NTOAaC
-         qCww==
-X-Gm-Message-State: AO0yUKW/DIlA/RFOzQl7o6E7aw4CSrpvnAZhuMwvqHALVQBXpkyZAm3U
-        pV7vbm+MH9pMzjXXq0cNLieg
-X-Google-Smtp-Source: AK7set9WQx7XvYGapBRqozDdlUR3HMi3qnSOpHxAgrYVyHhM337Di4Jp/csQM2i06d9CCjq4jGEd1Q==
-X-Received: by 2002:a17:902:e547:b0:1a0:5524:eb70 with SMTP id n7-20020a170902e54700b001a05524eb70mr4565516plf.39.1678791880088;
-        Tue, 14 Mar 2023 04:04:40 -0700 (PDT)
-Received: from thinkpad ([117.217.177.49])
-        by smtp.gmail.com with ESMTPSA id g3-20020a170902740300b0019a8530c063sm1488023pll.102.2023.03.14.04.04.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 04:04:39 -0700 (PDT)
-Date:   Tue, 14 Mar 2023 16:34:31 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Cc:     andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 19/19] PCI: qcom: Expose link transition counts via
- debugfs for v2.4.0
-Message-ID: <20230314110431.GA137001@thinkpad>
-References: <20230310040816.22094-1-manivannan.sadhasivam@linaro.org>
- <20230310040816.22094-20-manivannan.sadhasivam@linaro.org>
- <e02980a9-34ca-9b9a-389a-01c599612140@quicinc.com>
- <a55f652c-aa78-1df5-1587-a12920d7a2f1@quicinc.com>
+        bh=VyMYTE8eRVWxXGxDN3qi6ovP5SN8DKhbGCFcirh8c68=;
+        b=oX2d6YMaC3hAgAeq4gyORxcL+XidB6Avn/QjOhw36VWozQGC0D8k0Ja+Pynhe3+DcY
+         1L987ye90SlmwAekduIDK9jeE786t7wr++k+TEvh6OGdLvBMXn4PLebMHe1kYcBns+yW
+         9CMtI5gdat1NcdZZlS1x5BfFN9fIYYnKFOQHcGEsflG0JH9oXUQ2zAmoD66k63nH0wd3
+         9lkeEMNl1ERlDCwEHBZFRzwWeANu7y/iaUjChxLbgzhLKuiVR474iRZjEag1GNoLaAm6
+         xIlRMEKwhMQ+bfiWlZAaa8wRYnf8qjjwAeDB+A4lDXatMwd8mc5MIA+ui7au2+uZ2xGK
+         pCbw==
+X-Gm-Message-State: AO0yUKXuAJpfeKBdqpUldueDKIEXgvj4B/7cR1Tm16qTPBne5VcvJbWm
+        Xa9CZ9Ojoi1N44/32hXD1wqFuQ==
+X-Google-Smtp-Source: AK7set/G4w6NSTJvqWAmj5mHdKpnG7SBlJNvbb8K+gxbWYCEVR2R0MuarC2DZo6U0jwmmUYaFYUcug==
+X-Received: by 2002:a17:907:b9d4:b0:8b1:7eb4:6bea with SMTP id xa20-20020a170907b9d400b008b17eb46beamr2029236ejc.38.1678792620771;
+        Tue, 14 Mar 2023 04:17:00 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:59be:4b3f:994b:e78c? ([2a02:810d:15c0:828:59be:4b3f:994b:e78c])
+        by smtp.gmail.com with ESMTPSA id r9-20020a50c009000000b004c13fe8fabfsm855903edb.84.2023.03.14.04.16.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Mar 2023 04:16:56 -0700 (PDT)
+Message-ID: <d9f5a8da-575e-40b7-4871-b73374421245@linaro.org>
+Date:   Tue, 14 Mar 2023 12:16:54 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <a55f652c-aa78-1df5-1587-a12920d7a2f1@quicinc.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH 2/4] PCI: rockchip-dwc: Add rk3588 compatible line
+To:     Lucas Tanure <lucas.tanure@collabora.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczynski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Qu Wenruo <wqu@suse.com>,
+        Piotr Oniszczuk <piotr.oniszczuk@gmail.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, kernel@collabora.com
+References: <20230313153953.422375-1-lucas.tanure@collabora.com>
+ <20230313153953.422375-3-lucas.tanure@collabora.com>
+Content-Language: en-US
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230313153953.422375-3-lucas.tanure@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 04:25:29PM +0530, Sricharan Ramabadhran wrote:
+On 13/03/2023 16:39, Lucas Tanure wrote:
+> RK3588 can use the same PCIe driver as rk3568
 > 
+> Signed-off-by: Lucas Tanure <lucas.tanure@collabora.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-dw-rockchip.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> On 3/14/2023 4:06 PM, Sricharan Ramabadhran wrote:
-> > 
-> > 
-> > On 3/10/2023 9:38 AM, Manivannan Sadhasivam wrote:
-> > > Qualcomm PCIe controllers of version v2.4.0 have debug registers in the
-> > > PARF region that count PCIe link transitions. Expose them over debugfs to
-> > > userspace to help debug the low power issues.
-> > > 
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >   drivers/pci/controller/dwc/pcie-qcom.c | 33 ++++++++++++++++++++++++++
-> > >   1 file changed, 33 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index f99b7e7f3f73..0b41f007fa90 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -37,6 +37,7 @@
-> > >   /* PARF registers */
-> > >   #define PARF_SYS_CTRL                0x00
-> > >   #define PARF_PM_CTRL                0x20
-> > > +#define PARF_PM_STTS                0x24
-> > >   #define PARF_PCS_DEEMPH                0x34
-> > >   #define PARF_PCS_SWING                0x38
-> > >   #define PARF_PHY_CTRL                0x40
-> > > @@ -84,6 +85,12 @@
-> > >   /* PARF_PM_CTRL register fields */
-> > >   #define REQ_NOT_ENTR_L1                BIT(5)
-> > > +/* PARF_PM_STTS register fields */
-> > > +#define PM_LINKST_IN_L1SUB            BIT(8)
-> > > +#define PM_LINKST_IN_L0S            BIT(7)
-> > > +#define PM_LINKST_IN_L2                BIT(5)
-> > > +#define PM_LINKST_IN_L1                BIT(4)
-> > > +
-> > >   /* PARF_PCS_DEEMPH register fields */
-> > >   #define PCS_DEEMPH_TX_DEEMPH_GEN1(x)        FIELD_PREP(GENMASK(21,
-> > > 16), x)
-> > >   #define PCS_DEEMPH_TX_DEEMPH_GEN2_3_5DB(x)   
-> > > FIELD_PREP(GENMASK(13, 8), x)
-> > > @@ -737,6 +744,31 @@ static int qcom_pcie_post_init_2_4_0(struct
-> > > qcom_pcie *pcie)
-> > >       return 0;
-> > >   }
-> > > +static int qcom_pcie_debugfs_func_2_4_0(struct seq_file *s, void *data)
-> > > +{
-> > > +    struct qcom_pcie *pcie = (struct qcom_pcie *)
-> > > dev_get_drvdata(s->private);
-> > > +
-> > > +    seq_printf(s, "L0s transition count: %u\n",
-> > > +           readl_relaxed(pcie->parf + PM_LINKST_IN_L0S));
-> > > +
-> > > +    seq_printf(s, "L1 transition count: %u\n",
-> > > +           readl_relaxed(pcie->parf + PM_LINKST_IN_L1));
-> > > +
-> > > +    seq_printf(s, "L1.1 transition count: %u\n",
-> > > +           readl_relaxed(pcie->parf + PM_LINKST_IN_L1SUB));
-> > > +
-> > > +    seq_printf(s, "L2 transition count: %u\n",
-> > > +           readl_relaxed(pcie->parf + PM_LINKST_IN_L2));
-> > > +
-> > 
-> >   Using bitmask as register offset ? instead use PM_STTS and bitmask it ?
-> 
->  Also, since its 1 bit, all are status and not count.
->  Not sure, if you want it to limit this debug based on 'mhi' property
->  being populated ?
-> 
+> diff --git a/drivers/pci/controller/dwc/pcie-dw-rockchip.c b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> index c1e7653e508e..435b717e5bc6 100644
+> --- a/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> +++ b/drivers/pci/controller/dwc/pcie-dw-rockchip.c
+> @@ -354,6 +354,7 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
+>  
+>  static const struct of_device_id rockchip_pcie_of_match[] = {
+>  	{ .compatible = "rockchip,rk3568-pcie", },
+> +	{ .compatible = "rockchip,rk3588-pcie", },
 
-Err... Look like I blindly copied the debugfs function from 2.7.0 :/ Sry, since
-these are all just 1 bit, we cannot use it for getting the count. So I'll drop
-this patch in next revision.
+Why do you need new entry then?
 
-Thanks,
-Mani
+Best regards,
+Krzysztof
 
-> Regards,
->  Sricharan
-
--- 
-மணிவண்ணன் சதாசிவம்
