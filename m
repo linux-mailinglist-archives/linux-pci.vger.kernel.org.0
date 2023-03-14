@@ -2,294 +2,364 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10CF56B8F41
-	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 11:08:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70C636B9017
+	for <lists+linux-pci@lfdr.de>; Tue, 14 Mar 2023 11:34:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjCNKIh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 14 Mar 2023 06:08:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52870 "EHLO
+        id S229929AbjCNKeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 14 Mar 2023 06:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41884 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229548AbjCNKIg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 06:08:36 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2090.outbound.protection.outlook.com [40.107.93.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98B2317CF4;
-        Tue, 14 Mar 2023 03:08:31 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QxOfV7Dm7MAHtH1cZfRrmm0xGUDhlPi0S5sFmDpOt+MV5ho2xevKuAgqPPNKUnOet3difgOEmpIquoMwEn7tLy4zrizjRGA+PwmieyPNIRJawhyDx2lBCdfzcSjC0PYxtUnx8Mc/07q6CLPPgV8nnUV9hshSY1KqIHzoVf5K0XyxTJ7+iTVWdXIy+PjT8nH6sQLFLHGLhlL03QFyFO9EXCgA0ShciX1YULEbFgPP2F4TA/6GkAm9jswI2GTyjcALqT2OtJd3czoq7bLJEgYkL7a0pw7kvSASqF2x++DmXbrHFIaqTyXtd4F10sodNTJPsvqKry4U/WU9qK+m4qBogA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=QqQYcrInXiPnfQrNejEPOkl+j/vzUJ2Lj+IqlnuUt9E=;
- b=M87Hnuw6ulcHDX/Kv4Q4z5Teq6jcEJAjCjGXPYMOva5jgy+yRV0N2NXHmIuDv2eiaw5VbG5WhDj87vxPOkL/zY1WxEwjGxwKW5UmMtx9+qf9eBqWRQmChiziNox7M5aXXDG4yfdJSTwFdYmpAyp1Jz4f1dUTQC7vey2GGvwAewKrPbHd9Bdh1T9ttdZK1tkcF4jOCkgI06z3xYzvzwm+CCb5gq9tbCHvD0KV7FuC3tfeh1/z84jYgMlTpT6lizT9TXxmBDUS7Iu+eZzY/IR7IG/zXmSlBhcCDK25DI7L93ecHljnKUrCINx14vEvP4QtZn+f+IDUhw/B821Qeutkqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
- header.from=os.amperecomputing.com; dkim=pass
- header.d=os.amperecomputing.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QqQYcrInXiPnfQrNejEPOkl+j/vzUJ2Lj+IqlnuUt9E=;
- b=YmHTvlk5dmgY7cfd6TCEEnJhXc25WG6ABBe+/SicFPwpkLPIGQCwpPJnAzQnzrye0U2FXum6NQEQdaJdU5hlhm8t3/7QeYsxUCCImQEzoL1krZeOAgFYgBWjJfOQbjXG/Az1FJaZ5vc1Xj1ixUjeHrbDtZVoTm538nFh9p/AQlc=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=os.amperecomputing.com;
-Received: from DM8PR01MB6824.prod.exchangelabs.com (2603:10b6:8:23::24) by
- BY5PR01MB5924.prod.exchangelabs.com (2603:10b6:a03:1bc::32) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6178.26; Tue, 14 Mar 2023 10:08:25 +0000
-Received: from DM8PR01MB6824.prod.exchangelabs.com
- ([fe80::fc8b:5e5e:a850:7f0a]) by DM8PR01MB6824.prod.exchangelabs.com
- ([fe80::fc8b:5e5e:a850:7f0a%7]) with mapi id 15.20.6178.024; Tue, 14 Mar 2023
- 10:08:25 +0000
-Message-ID: <c7a68d5f-3b95-723f-f384-223fcbd6a877@os.amperecomputing.com>
-Date:   Tue, 14 Mar 2023 15:38:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 1/2] PCI/ATS: Add a helper function to configure ATS
- STU of a PF
-Content-Language: en-US
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, iommu@lists.linux.dev,
-        joro@8bytes.org, bhelgaas@google.com, robin.murphy@arm.com,
-        will@kernel.org, jean-philippe@linaro.org,
-        darren@os.amperecomputing.com, scott@os.amperecomputing.com
-References: <20230313211201.GA1540091@bhelgaas>
- <6339c50a-8dfe-f3a2-63d7-504abd4e62f0@linux.intel.com>
-From:   Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
-In-Reply-To: <6339c50a-8dfe-f3a2-63d7-504abd4e62f0@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: CH2PR07CA0024.namprd07.prod.outlook.com
- (2603:10b6:610:20::37) To DM8PR01MB6824.prod.exchangelabs.com
- (2603:10b6:8:23::24)
+        with ESMTP id S229934AbjCNKeI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 14 Mar 2023 06:34:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B0203C0A;
+        Tue, 14 Mar 2023 03:33:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 53346616F7;
+        Tue, 14 Mar 2023 10:27:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E1DEC433D2;
+        Tue, 14 Mar 2023 10:27:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678789673;
+        bh=mktWL3pBA6fgZw5itPxAboV+gR9yVVLoCoTcs7Hg/Ek=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=LJWbHdIU9n1KmGpb0FJOLIdBjb7xhxPXlfqJyuSO+bO4M5UYR7TyHljtY5IoS2aC/
+         Wn8K5B4qHUbh4wjNKVN5GktwhaMRBL+Bghj/yU4j4n4tfkCru3VBpxHfObh/wYB6gt
+         C9pF+/OWGsW5P3Uom6emnc/PpgDcQ4Y6aL1jhpMX6pd2NTU/oHR1vKmq2CTIwbYCOZ
+         xkja03SD5OlHOdpMR7PW07sgBlnC3F8jiLVGg2N13eOmUNJKrq4xzcAd6OCDpqZaj5
+         JKfxCBStyFJqJMf0FFsCK/RVVewBLB8CF94ZSjie6+Ho2ooibqIBw90uBjKIfahw/W
+         +jCj//rNmtgKg==
+Date:   Tue, 14 Mar 2023 11:27:48 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Hongxing Zhu <hongxing.zhu@nxp.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in
+ suspend and resume
+Message-ID: <ZBBMJFBXNcohep8u@lpieralisi>
+References: <AS8PR04MB86763F096229D90DCBF6C0D08CB99@AS8PR04MB8676.eurprd04.prod.outlook.com>
+ <20230313174929.GA1509198@bhelgaas>
+ <AS8PR04MB8676BF1BF21EDC92F0F1C1A38CBE9@AS8PR04MB8676.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM8PR01MB6824:EE_|BY5PR01MB5924:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5ea3c4dc-b420-413a-b60d-08db24740cce
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o9PKpTAz1BMcNSZ/yd0xSBTkwNdda7j9cvWD6Xgnnc6QyKipQuGt+o7hapzbKTekzyY5RNME6dfrvO3QyGwjILhSAXgGgge4UVzrvblRp/d3bcIlfNzEHF7HgsDCGM5R5hOUwnKeFoSQS6w9xOVCt0km9Fe/m7hWf7/NcYRAVMnoiIRRRBhd6ZJR4NYAT4nmNJp1uKyGISfxFcyhk/4xXFst/udauMu0xc9yalPi/OK8StXS0KdBOrIFGfbrEES84QqzzoVi75VihbsS78K2G4fA2iioly4CIHSTUyZTi6xFkIiQTBsMItExkAk4+KwgxXn/TIvNbAAGqbReSGkc/rKnyuGkhtkqRYfTOA5rbY5TSu62sfey8oApuR+vaBMIXrzAUUZzUazF0aij23HnxL/DJij+EZjgX8N/uct70QxXjHCHDGwFpZnIEWqlfgj5uNs9oprmjtIecHA9O6bwyyh9lkgd0pF6hmNPx0AKAjJyvdUCKH+PSjQJzf1/piCucHBguoc0vEEu2Jo90iisL9nbr9VPExd9kW7Matv9+1wi1YFDFALtUKdLnKlFKBj6lgFHEPWFlV2ny9pdOcRH/D2NebJEZ94NbYQixzEzMB/6MuTZ6zsf3etXYQDl1QUCOb1ahgBLP6dHOuD06XHnsBr+tOJQ/Y189MDzL3tPsB+ISXrlhMhTHQHh9wfCww/N
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM8PR01MB6824.prod.exchangelabs.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(366004)(136003)(39850400004)(346002)(396003)(451199018)(478600001)(83380400001)(41300700001)(4326008)(66476007)(66556008)(66946007)(316002)(110136005)(8936002)(6666004)(107886003)(2616005)(53546011)(6512007)(6506007)(26005)(31696002)(86362001)(31686004)(186003)(2906002)(5660300002)(8676002)(7416002)(6486002)(966005)(38100700002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NHpvSDVNcHVCa1FnSTNhUEVLYkF1T2h5RzRiSHhCcjR1VExxTFZDQ3VsQ0c2?=
- =?utf-8?B?UUFLMWZrR1p0ZC9DZnVBK0ZSd3prMzRidmc5YlFmWFZrTkExTFRXOFlLMWdm?=
- =?utf-8?B?NGpuM0RsZVZJZTJmajJRc3NsZmRKQnRBNS8yaHpva3h0Y3ovTlVINHorY0pY?=
- =?utf-8?B?NFc1SUNnWVg3c01KNlhjdmY1WDdscDRLaVM5bHphVW9NcXhCVWthbnpRTVhj?=
- =?utf-8?B?OGczN2c5RGlkQTdJYkdVK0o0WXFpT05udkF1N2JlYk1HT2JVK25ocy9uODdr?=
- =?utf-8?B?K095SC9qWVRlbXpMYkx0TFZpcFBMaEp6eitiTW5udktqRzIzaEpPOGRQdlpH?=
- =?utf-8?B?T0REWjhWL1VqUEwrZ1pNVHlHWHFlRkUxbHNBL0tpRk1UaDNhMjVXR21CVGlS?=
- =?utf-8?B?ZUh0SEJkU0tVeVJ3bzdDS0gybGI4a2ZnU1hXK29PMTczQmN3eFFzVWFNZXlk?=
- =?utf-8?B?NFV2cENRckJBaTd1T1RHSHVwVllqTG9rRWtzQ1BSNG15Zm9iMEJLMTZjd3BL?=
- =?utf-8?B?UUw4bDRTRU0wcWZXd2RKcXBESklZQWttU1VQVlNFRU1uU3Jsblk4U1FoRlox?=
- =?utf-8?B?RmNob0tlVnNIVDlxWTFrZmxDdlRNajlsL3Y4TTZUbDZ5T2M1VXJMbHl3Mk9i?=
- =?utf-8?B?M1RLcXJaSTBzYmkwWkR5a1FVN05rR1pxS1BGMnFVU2YwQk1acDI5ZzZPeURo?=
- =?utf-8?B?YVM2RnMweHp4alFWYTNQbU02ZitkcDVCTmtlOWtyakExSVIzWnNuM2kwWC9P?=
- =?utf-8?B?M1JSZXpRZXZ1cEtnMklMSk9XNlhUbUpPb3Q4NUJ4VTFUSGI1YmVnWFByY3B5?=
- =?utf-8?B?cENudVhGRk4rOE9EK0hLM0hvek10bmcrMHVTaTRZazdYUDhXRTdUejNrejlm?=
- =?utf-8?B?UmNvZzBRT3lvaWV4ckdSMFBadHRxczFoaHl0ZDV1ck9Ea3RZTGRqYzJleWVn?=
- =?utf-8?B?eWFvMDh6MEVIdWtqOEt2MG1OVUV5U3I4YkRmWVhUYi95d21wTlRGMnFHdmgr?=
- =?utf-8?B?d1dRTENiRkJhMGhoMS8zaW42MUJNUURZYm03Z1hmQzY2NzF3Y002RkxHM0dD?=
- =?utf-8?B?bXdFNlZ3Q093UzlyQXhOUnlJVlM2c2xXVWtJblBHYjZSTzhOU3ZnVmtrYTU1?=
- =?utf-8?B?aGx4Ui9GQ3lpV3ZuemJtRk9ydU5CTnlvd0k1WDYxa3h3endUTzZOblk0bVpo?=
- =?utf-8?B?N0R3ZmVTTjlLbEorRWpSTUNwTG9weUNhWStCRmUrRytoa0FCS2lPaDhOV1NK?=
- =?utf-8?B?blYrckMzQ1hESEh2aVJKVmlWUUdCVFpNdmF6YVU2VXQ4SzFyZHpPVVg1SlVv?=
- =?utf-8?B?WHdjemJmcFlyUm5mZGdFejcySHdhN29JRzR3Z2JTUVBnSC9ScDJDS3A0dGtE?=
- =?utf-8?B?MW92b0tXUWVvcUF1OVIwbDJpc05JUzFlRmxPY29qeVcycjBXRDBpY3pUYVdH?=
- =?utf-8?B?VFBUVG04YnBmV0gyaXlXTE4rRkpoTXJwOHNEalFDc2kwSnY4elNtTG00Z0NB?=
- =?utf-8?B?MWFOSTBISXQ4ZG96RzhRQkZRMTU4SGlnV2k5VUYzbFFFN2VxQkFXUHVNbmZk?=
- =?utf-8?B?ZVoyVEZUMEFrVE5ObXlsVGtwVm1rRUdPUWh0bENMcjU0UGpwaE43eUhiVnp6?=
- =?utf-8?B?NUZUN1pkUnZCanJieUJ5bjlqcmRmZ21WZWpQMmUwZkFDRExpL0ZIbWRabGxh?=
- =?utf-8?B?aFllYXRleUhqbXVxeHhOb3BnWE9QVzhaNjlXUGRrZkZXNDJrQXhmTXhOeFM3?=
- =?utf-8?B?bTYxM1AwVG1FV0lnMWY0Z0VQc3hiWTR6ZGtWRmtaeDNsb3BsS3lNMEd3T1lS?=
- =?utf-8?B?cUhnY2NDZUFaTzc1ck9TWkJzZ256MnlpejYxeThYMS81cTNWOGpQM2NmelVh?=
- =?utf-8?B?dGFwMHFEazdhV2ZQVzByRVd1ekpPYVYwNTFmVHFsTWM1R0ZhWTJybEgxdVky?=
- =?utf-8?B?OUJpL0Y2Sm9QR0lWL3g3eXFuL2craGliYnUxL3RhOVRsQ3N1R0J4b1BJOFJ4?=
- =?utf-8?B?YVpxbjE1UUNUU1N4MDJzZm9ZS1pBR1g5U1haditHK3JjdmJ3VHVUdE41OTd6?=
- =?utf-8?B?NC9nRXFvVTJ2alRONEc2N2NudzFLampRT0NicEVTMEV5Q1V4Q3dRSml3d1dN?=
- =?utf-8?B?M01YTldUTUZRZk02am5YUFdzZzBMWGs3ZWRhSkxhanZFUkpncmtEWjFqUXBh?=
- =?utf-8?Q?yxP51BfFQPFJUlartcPzudVLHEWazTzXCNddD7wOaAlW?=
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5ea3c4dc-b420-413a-b60d-08db24740cce
-X-MS-Exchange-CrossTenant-AuthSource: DM8PR01MB6824.prod.exchangelabs.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Mar 2023 10:08:25.4299
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4Huo/kAFudN9Xrzv8SJGxBemKaalQ7oRaRyE28eLQ/Oq3DQJ8IYs2kwJJWb4IVJ+JadxN8Xaw+bYzXAwjJU7CXgrqkCsm51h/KIxXeUdiw10rJ8jDnI4zkEVDvT4NZGz
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR01MB5924
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AS8PR04MB8676BF1BF21EDC92F0F1C1A38CBE9@AS8PR04MB8676.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Mar 14, 2023 at 03:24:28AM +0000, Hongxing Zhu wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: 2023年3月14日 1:49
+> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>; l.stach@pengutronix.de;
+> > bhelgaas@google.com; linux-pci@vger.kernel.org;
+> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
+> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
+> > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in
+> > suspend and resume
+> > 
+> > On Mon, Mar 13, 2023 at 02:50:31AM +0000, Hongxing Zhu wrote:
+> > > > -----Original Message-----
+> > > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > > Sent: 2023年3月11日 0:14
+> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
+> > > > Cc: l.stach@pengutronix.de; bhelgaas@google.com;
+> > > > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > > > linux-kernel@vger.kernel.org; kernel@pengutronix.de; dl-linux-imx
+> > > > <linux-imx@nxp.com>
+> > > > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of
+> > > > RC in suspend and resume
+> > > >
+> > > > On Mon, Jan 09, 2023 at 02:08:06AM +0000, Hongxing Zhu wrote:
+> > > > > > -----Original Message-----
+> > > > > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > > > > Sent: 2022年12月30日 23:06
+> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>; l.stach@pengutronix.de;
+> > > > > > bhelgaas@google.com
+> > > > > > Cc: linux-pci@vger.kernel.org;
+> > > > > > linux-arm-kernel@lists.infradead.org;
+> > > > > > linux-kernel@vger.kernel.org; kernel@pengutronix.de;
+> > > > > > dl-linux-imx <linux-imx@nxp.com>
+> > > > > > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control
+> > > > > > of RC in suspend and resume
+> > > > > >
+> > > > > > On Thu, Dec 08, 2022 at 02:05:34PM +0800, Richard Zhu wrote:
+> > > > > > > The MSI Enable bit controls delivery of MSI interrupts from
+> > > > > > > components below the Root Port. This bit might lost during the
+> > > > > > > suspend, should be re-stored during resume.
+> > > > > > >
+> > > > > > > Save the MSI control during suspend, and restore it in resume.
+> > > > > >
+> > > > > > I believe that what Lucas and Bjorn asked on v1 is still not answered.
+> > > > > >
+> > > > > > The root port is a PCI device, why do we need to save and
+> > > > > > restore the MSI cap on top of what PCI core already does ? The
+> > > > > > RP should be enumerated as a PCI device and therefore I expect
+> > > > > > the MSI cap to be saved/restored in the suspend/resume execution.
+> > > > > >
+> > > > > > I don't think there is anything iMX6 specific in this.
+> > > > > Hi Lorenzo:
+> > > > > Thanks for your comments.
+> > > > > Sorry to reply late, since I got a high fever in the past days.
+> > > > >
+> > > > > Based on i.MX6QP SABRESD board and XHCI PCIe2USB3.0 device, the
+> > > > > MSI cap  save/restore of PCI core is not executed(dev->msi_enabled
+> > > > > is
+> > > > > zero)  during my suspend/resume tests.
+> > > >
+> > > > I still do not understand. The register you are saving/restoring in
+> > > > the RC is not the root port Message control field in the root port
+> > > > MSI capability, it is a separate register that controls the root
+> > > > complex MSI forwarding, is that correct ?
+> > > >
+> > > > The root port MSI capability does not control the root complex
+> > > > forwarding of MSIs TLPs.
+> > > >
+> > > > So the bits you are saving and restoring IIUC should be MMIO space
+> > > > in the root complex, dressed as an MSI capability, that has nothing
+> > > > to do with the root port MSI capability.
+> > > >
+> > > > Is that correct ?
+> > >
+> > > It's not a separate register.
+> > >
+> > > The bit I manipulated is the MSI Enable bit of the Message Control
+> > > Register for MSI (Offset 02h) contained in the MSI-capability of Root
+> > > Complex.
+> > >
+> > > In addition, on i.MX6, the MSI Enable bit controls delivery of MSI
+> > > interrupts from components below the Root Port.
+> > >
+> > > So, set MSI Enable in imx6q-pcie to let the MSI from downstream
+> > > components works.
+> > 
+> > My confusion is about this "MSI Capability" found by
+> > "dw_pcie_find_capability(pci, PCI_CAP_ID_MSI)" in your patch.
+> > 
+> > The i.MX6 manual might refer to that as an "MSI Capability" but as far as I
+> > know, the PCIe base spec doesn't document a Root Complex MSI Capability.
+> > 
+> > I don't think it's the same as the one documented in PCIe r6.0, sec 7.7.2.  I
+> > think it's different because:
+> > 
+> >   (1) I *think* "pci" here refers to the RC, not to a Root Port.
+> > 
+> >   (2) The semantics are different.  The MSI-X Enable bit in 7.7.2 only
+> >   determines whether the Function itself is permitted to use MSI-X.
+> >   It has nothing to do with devices *below* a Root Port can use MSI-X.
+> >   It also has nothing to do with whether a Root Port can forward MSI
+> >   transactions from those downstream devices.
+> > 
+> > This part of my confusion could be easily resolved via a comment.
+> > 
+> > I do have a follow-on question, though: the patch seems to enable
+> > MSI-related functionality using a register in the DesignWare IP, not something
+> > in the i.MX6-specific IP.  If that's true, why don't other DesignWare-based
+> > drivers need something similar?
+> Hi Bjorn:
+> Thanks a lot for you reply.
+> This behavior is specific for i.MX PCIe.
 
+Which behaviour ? It can't be the root port MSI capability, that would
+be a HW bug (ie disabling root port MSIs would imply disabling MSIs for all
+downstream components).
 
-On 14-03-2023 04:00 am, Sathyanarayanan Kuppuswamy wrote:
-> Hi Kulkarni,
+> i.MX PCIe designer use this MSI_EN bit to control the MSI trigger when
+>  integrate Design Ware PCIe IP.
+
+Fair enough but that can't be the MSI Enable bit in the Root Port MSI
+capability "Message Control" field I am afraid.
+
+It is what Bjorn mentioned quite clearly, a root complex configuration
+register dressed as an MSI capability, the root complex is not a PCI
+device; either that or that's an HW bug.
+
+Lorenzo
+
+> So, the other DesignWare-base PCIe driver doesn't need this beahvior.
 > 
-> On 3/13/23 2:12 PM, Bjorn Helgaas wrote:
->> On Mon, Feb 27, 2023 at 08:21:36PM -0800, Ganapatrao Kulkarni wrote:
->>> As per PCI specification (PCI Express Base Specification Revision
->>> 6.0, Section 10.5) both PF and VFs of a PCI EP are permitted to be enabled
->>> independently for ATS capability, however the STU(Smallest Translation
->>> Unit) is shared between PF and VFs. For VFs, it is hardwired to Zero and
->>> the associated PF's value applies to VFs.
->>>
->>> In the current code, the STU is being configured while enabling the PF ATS.
->>> Hence, it is not able to enable ATS for VFs, if it is not enabled on the
->>> associated PF already.
->>>
->>> Adding a function pci_ats_stu_configure(), which can be called to
->>> configure the STU during PF enumeration.
->>> Latter enumerations of VFs can successfully enable ATS independently.
->>
->> s/STU(Smallest/STU (Smallest/ (add space before paren)
->> s/Adding a function pci_ats_stu_configure()/Add pci_ats_stu_configure()/
->> s/Latter/Subsequent/
->>
->> Add blank line between paragraphs (it looks like "Latter enumerations"
->> is intended to start a new paragraph).
->>
->>> Signed-off-by: Ganapatrao Kulkarni <gankulkarni@os.amperecomputing.com>
->>
->> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>
->> Given an ack for the IOMMU patch, I'd be happy to merge both (and I
->> can do the commit log tweaks); just let me know.
->>
->> One comment/question below.
->>
->>> ---
->>>   drivers/pci/ats.c       | 33 +++++++++++++++++++++++++++++++--
->>>   include/linux/pci-ats.h |  3 +++
->>>   2 files changed, 34 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
->>> index f9cc2e10b676..1611bfa1d5da 100644
->>> --- a/drivers/pci/ats.c
->>> +++ b/drivers/pci/ats.c
->>> @@ -46,6 +46,35 @@ bool pci_ats_supported(struct pci_dev *dev)
->>>   }
->>>   EXPORT_SYMBOL_GPL(pci_ats_supported);
->>>   
->>> +/**
->>> + * pci_ats_stu_configure - Configure STU of a PF.
->>> + * @dev: the PCI device
->>> + * @ps: the IOMMU page shift
->>> + *
->>> + * Returns 0 on success, or negative on failure.
->>> + */
->>> +int pci_ats_stu_configure(struct pci_dev *dev, int ps)
->>> +{
->>> +	u16 ctrl;
->>> +
->>> +	if (dev->ats_enabled || dev->is_virtfn)
->>> +		return 0;
->>
->> I might return an error for the VF case on the assumption that it's
->> likely an error in the caller.  I guess one could argue that it
->> simplifies the caller if it doesn't have to check for PF vs VF.  But
->> the fact that STU is shared between PF and VFs is an important part of
->> understanding how ATS works, so the caller should be aware of the
->> distinction anyway.
-> 
-> I have already asked this question. But let me repeat it.
-> 
-> We don't have any checks for the PF case here. That means you can re-configure
-> the STU as many times as you want until ATS is enabled in PF. So, if there are
-> active VFs which uses this STU, can PF re-configure the STU at will?
-> 
-
-IMO, Since STU is shared, programming it multiple times is not expected 
-from callers code do it, however we can add below check to allow to 
-program STU once from a PF.
-
-diff --git a/drivers/pci/ats.c b/drivers/pci/ats.c
-index 1611bfa1d5da..f7bb01068e18 100644
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -60,6 +60,10 @@ int pci_ats_stu_configure(struct pci_dev *dev, int ps)
-         if (dev->ats_enabled || dev->is_virtfn)
-                 return 0;
-
-+       /* Configured already */
-+       if (dev->ats_stu)
-+               return 0;
-+
-         if (!pci_ats_supported(dev))
-                 return -EINVAL;
->>
->>> +
->>> +	if (!pci_ats_supported(dev))
->>> +		return -EINVAL;
->>> +
->>> +	if (ps < PCI_ATS_MIN_STU)
->>> +		return -EINVAL;
->>> +
->>> +	dev->ats_stu = ps;
->>> +	pci_read_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, &ctrl);
->>> +	ctrl |= PCI_ATS_CTRL_STU(dev->ats_stu - PCI_ATS_MIN_STU);
->>> +	pci_write_config_word(dev, dev->ats_cap + PCI_ATS_CTRL, ctrl);
->>> +
->>> +	return 0;
->>> +}
->>> +EXPORT_SYMBOL_GPL(pci_ats_stu_configure);
->>> +
->>>   /**
->>>    * pci_enable_ats - enable the ATS capability
->>>    * @dev: the PCI device
->>> @@ -68,8 +97,8 @@ int pci_enable_ats(struct pci_dev *dev, int ps)
->>>   		return -EINVAL;
->>>   
->>>   	/*
->>> -	 * Note that enabling ATS on a VF fails unless it's already enabled
->>> -	 * with the same STU on the PF.
->>> +	 * Note that enabling ATS on a VF fails unless it's already
->>> +	 * configured with the same STU on the PF.
->>>   	 */
->>>   	ctrl = PCI_ATS_CTRL_ENABLE;
->>>   	if (dev->is_virtfn) {
->>> diff --git a/include/linux/pci-ats.h b/include/linux/pci-ats.h
->>> index df54cd5b15db..7d62a92aaf23 100644
->>> --- a/include/linux/pci-ats.h
->>> +++ b/include/linux/pci-ats.h
->>> @@ -8,6 +8,7 @@
->>>   /* Address Translation Service */
->>>   bool pci_ats_supported(struct pci_dev *dev);
->>>   int pci_enable_ats(struct pci_dev *dev, int ps);
->>> +int pci_ats_stu_configure(struct pci_dev *dev, int ps);
->>>   void pci_disable_ats(struct pci_dev *dev);
->>>   int pci_ats_queue_depth(struct pci_dev *dev);
->>>   int pci_ats_page_aligned(struct pci_dev *dev);
->>> @@ -16,6 +17,8 @@ static inline bool pci_ats_supported(struct pci_dev *d)
->>>   { return false; }
->>>   static inline int pci_enable_ats(struct pci_dev *d, int ps)
->>>   { return -ENODEV; }
->>> +static inline int pci_ats_stu_configure(struct pci_dev *d, int ps)
->>> +{ return -ENODEV; }
->>>   static inline void pci_disable_ats(struct pci_dev *d) { }
->>>   static inline int pci_ats_queue_depth(struct pci_dev *d)
->>>   { return -ENODEV; }
->>> -- 
->>> 2.38.1
->>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-
-Thanks,
-Ganapat
-
+> Best Regards
+> Richard Zhu
+> > 
+> > > > > It seems that some device might shutdown msi when do the suspend
+> > > > operations.
+> > > > > >
+> > > > > > Would you mind investigating it please ?
+> > > > > Sure, I did further investigation on i.MX6QP platform.
+> > > > > The MSI_EN bit of RC MSI capability would be cleared to zero, when
+> > > > >  PCIE_RESET(BIT29 of IOMUXC_GPR1) is toggled (assertion 1b'1,
+> > > > > then de-assertion 1b'0).
+> > > > >
+> > > > > Verification steps:
+> > > > > MSI_EN of RC is set to 1b'1 when system is boot up.
+> > > > >  ./memtool 1ffc050 1
+> > > > > 0x01FFC050:  01017005
+> > > > >
+> > > > > Toggle PCIe reset of i.MX6QP.
+> > > > > root@imx6qpdlsolox:~# ./memtool 20e0004=68691005 Writing 32-bit
+> > > > > value
+> > > > > 0x68691005 to address 0x020E0004 root@imx6qpdlsolox:~# ./memtool
+> > > > > 20e0004=48691005 Writing 32-bit value 0x48691005 to address
+> > > > 0x020E0004
+> > > > >
+> > > > > The MSI_EN bit of RC had been cleared to 1b'0.
+> > > > > ./memtool 1ffc050 1
+> > > > > 0x01FFC050:  01807005
+> > > > >
+> > > > > This is why I used to reply to Bjorn the MSI_EN of RC is cleared
+> > > > > when RESETs are toggled during the imx6_pcie_host_init() in
+> > > > >  imx6_pcie_resume_noirq() callback.
+> > > > >
+> > > > > Best Regards
+> > > > > Richard Zhu
+> > > > > >
+> > > > > > Lorenzo
+> > > > > >
+> > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
+> > > > > > > ---
+> > > > > > > Changes v1-->v2:
+> > > > > > > New create one save/restore function, used save the setting in
+> > > > > > > suspend and restore the configuration in resume.
+> > > > > > > v1
+> > > > > > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2
+> > > > > > > F%2F
+> > > > > > >
+> > > >
+> > patc%2F&data=05%7C01%7Chongxing.zhu%40nxp.com%7C24971d8de9b54b
+> > > > 0b10
+> > > > > > >
+> > > >
+> > ad08db2182774d%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C6
+> > > > 38140
+> > > > > > >
+> > > >
+> > 616456052078%7CUnknown%7CTWFpbGZsb3d8eyJWIjoiMC4wLjAwMDAiLCJ
+> > > > QIjoiV
+> > > > > > >
+> > > >
+> > 2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000%7C%7C%7C&sdata=vE
+> > > > tRxL
+> > > > > > > BVi5lYmpwTNZfafMms3263LZXodneLChjEaOM%3D&reserved=0
+> > > > > > >
+> > > > > >
+> > > >
+> > hwork.kernel.org%2Fproject%2Flinux-pci%2Fpatch%2F1667289595-12440-1-
+> > > > > > g
+> > > > > > i
+> > > > > > >
+> > > > > >
+> > > >
+> > t-send-email-hongxing.zhu%40nxp.com%2F&data=05%7C01%7Chongxing.zhu
+> > > > > > %40n
+> > > > > > >
+> > > > > >
+> > > >
+> > xp.com%7C3aeb1d128f854dad1a5608daea77706d%7C686ea1d3bc2b4c6fa9
+> > > > 2
+> > > > > > cd99c5c
+> > > > > > >
+> > > > > >
+> > > >
+> > 301635%7C0%7C0%7C638080095954881374%7CUnknown%7CTWFpbGZsb3
+> > > > > > d8eyJWIjoiMC
+> > > > > > >
+> > > > > >
+> > > >
+> > 4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3000
+> > > > %
+> > > > > > 7C%7C%
+> > > > > > >
+> > > > > >
+> > > >
+> > 7C&sdata=V8yVvvpTKGoR1UyQP5HD2IdlSjJdznBeD12bdI67dEI%3D&reserved
+> > > > =
+> > > > > > 0
+> > > > > > >
+> > > > > > > ---
+> > > > > > >  drivers/pci/controller/dwc/pci-imx6.c | 23
+> > > > > > > +++++++++++++++++++++++
+> > > > > > >  1 file changed, 23 insertions(+)
+> > > > > > >
+> > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > index 1dde5c579edc..aa3096890c3b 100644
+> > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> > > > > > > @@ -76,6 +76,7 @@ struct imx6_pcie {
+> > > > > > >  	struct clk		*pcie;
+> > > > > > >  	struct clk		*pcie_aux;
+> > > > > > >  	struct regmap		*iomuxc_gpr;
+> > > > > > > +	u16			msi_ctrl;
+> > > > > > >  	u32			controller_id;
+> > > > > > >  	struct reset_control	*pciephy_reset;
+> > > > > > >  	struct reset_control	*apps_reset;
+> > > > > > > @@ -1042,6 +1043,26 @@ static void imx6_pcie_pm_turnoff(struct
+> > > > > > imx6_pcie *imx6_pcie)
+> > > > > > >  	usleep_range(1000, 10000);
+> > > > > > >  }
+> > > > > > >
+> > > > > > > +static void imx6_pcie_msi_save_restore(struct imx6_pcie
+> > > > > > > +*imx6_pcie, bool save) {
+> > > > > > > +	u8 offset;
+> > > > > > > +	u16 val;
+> > > > > > > +	struct dw_pcie *pci = imx6_pcie->pci;
+> > > > > > > +
+> > > > > > > +	if (pci_msi_enabled()) {
+> > > > > > > +		offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
+> > > > > > > +		if (save) {
+> > > > > > > +			val = dw_pcie_readw_dbi(pci, offset +
+> > PCI_MSI_FLAGS);
+> > > > > > > +			imx6_pcie->msi_ctrl = val;
+> > > > > > > +		} else {
+> > > > > > > +			dw_pcie_dbi_ro_wr_en(pci);
+> > > > > > > +			val = imx6_pcie->msi_ctrl;
+> > > > > > > +			dw_pcie_writew_dbi(pci, offset + PCI_MSI_FLAGS,
+> > val);
+> > > > > > > +			dw_pcie_dbi_ro_wr_dis(pci);
+> > > > > > > +		}
+> > > > > > > +	}
+> > > > > > > +}
+> > > > > > > +
+> > > > > > >  static int imx6_pcie_suspend_noirq(struct device *dev)  {
+> > > > > > >  	struct imx6_pcie *imx6_pcie = dev_get_drvdata(dev); @@
+> > > > > > > -1050,6
+> > > > > > > +1071,7 @@ static int imx6_pcie_suspend_noirq(struct device
+> > > > > > > +*dev)
+> > > > > > >  	if (!(imx6_pcie->drvdata->flags &
+> > > > > > IMX6_PCIE_FLAG_SUPPORTS_SUSPEND))
+> > > > > > >  		return 0;
+> > > > > > >
+> > > > > > > +	imx6_pcie_msi_save_restore(imx6_pcie, true);
+> > > > > > >  	imx6_pcie_pm_turnoff(imx6_pcie);
+> > > > > > >  	imx6_pcie_stop_link(imx6_pcie->pci);
+> > > > > > >  	imx6_pcie_host_exit(pp);
+> > > > > > > @@ -1069,6 +1091,7 @@ static int imx6_pcie_resume_noirq(struct
+> > > > > > > device
+> > > > > > *dev)
+> > > > > > >  	ret = imx6_pcie_host_init(pp);
+> > > > > > >  	if (ret)
+> > > > > > >  		return ret;
+> > > > > > > +	imx6_pcie_msi_save_restore(imx6_pcie, false);
+> > > > > > >  	dw_pcie_setup_rc(pp);
+> > > > > > >
+> > > > > > >  	if (imx6_pcie->link_is_up)
+> > > > > > > --
+> > > > > > > 2.25.1
