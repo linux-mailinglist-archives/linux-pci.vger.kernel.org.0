@@ -2,134 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4731A6BAD86
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 11:21:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B582F6BADBA
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 11:34:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232473AbjCOKV1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 06:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34988 "EHLO
+        id S229602AbjCOKeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Mar 2023 06:34:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232464AbjCOKVE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 06:21:04 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F062385B1D;
-        Wed, 15 Mar 2023 03:20:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678875630; x=1710411630;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=AZu0G5MJgXhilc9n2aaLZyeOdNLiwJBTw+hEvyBlZ5c=;
-  b=T8kZEwVhIINEHEl+0mRmwwPrRzsXLF7FUm3SCX3oSTSTp5JL/gHm1uAs
-   8vpPE8rHK9FSRmlEo3AGDxskwrjRN3EHThEvUJBoij9xWOEXXKmFJkPN5
-   wzMN/QYlDYeeP1//cEiWaMeyBXJ6vqxjl9UtY5u1Q3LWNigiUps+LujNT
-   AnTBHR9PewSj+N57HdftyM5XJMDJOTP3bJ8G9NKjV/B9hLB8FwUb0Zf3k
-   PRAAfrAPOmnYFYRois5zQ/oBnBITYKpQuaIvbvlYNNEACgsGCWYPCJ3R0
-   LLVn36dm1ezKX9cHq2wI9j9Bz7UgHU5L5v9c/duuRLyZVQicp7Naa0mdI
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="400246109"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="400246109"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 03:19:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="672684150"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="672684150"
-Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
-  by orsmga007.jf.intel.com with SMTP; 15 Mar 2023 03:19:49 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Wed, 15 Mar 2023 12:19:48 +0200
-Date:   Wed, 15 Mar 2023 12:19:48 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-fbdev@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Helge Deller <deller@gmx.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Subject: Re: [PATCH v3 35/38] video: handle HAS_IOPORT dependencies
-Message-ID: <ZBGbxDWEhqr8hhgU@intel.com>
-References: <20230314121216.413434-1-schnelle@linux.ibm.com>
- <20230314121216.413434-36-schnelle@linux.ibm.com>
- <CAMuHMdW4f8GJ-kFDPg6Ao=g3ZAXq79u9nUZ_dW1LonHu+vxk8Q@mail.gmail.com>
+        with ESMTP id S231447AbjCOKeS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 06:34:18 -0400
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD5212848
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 03:34:17 -0700 (PDT)
+Received: by mail-lf1-x129.google.com with SMTP id bi9so1496272lfb.12
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 03:34:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678876455;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=JsuHq7iHHjQ3jFPF6GcwJ79KHomNFrn/dysoQR3stp8=;
+        b=cCCrRUTf/4k1jyVpsGhlVSQFLORfCnW6uE4NbqpvMwRA5WSmH9MCMDgjjCHQLIswh7
+         oC7a5yRlBkMzjqu4GWEZCpcqheULJVIjtXCE6hF3bjM9HCSI+WGGqcFhNMQfj4YMrnYh
+         Sf/EUM8lds7e3Oj1FwMH8ACQkzTMAbQLfhOMqkUjrRUeoSm1CYorA+Fh/e6zuoi5GQJD
+         DbE49RICJlafIr6YQwLT5ZD4bHLUoUacRKBXS2QuIxYvTR549134RvbSzcxs86jIv38E
+         aboy1AwgPvwNUjpqkrYNJI9aVd4Q9WabYkc06H9pGcckxqNnhDLirdOnMHddIMXRTo5P
+         oftg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678876455;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JsuHq7iHHjQ3jFPF6GcwJ79KHomNFrn/dysoQR3stp8=;
+        b=QfceoS7kfM9liTyfPuCUBEoSrpS2zKASQOY4yp1erKUp3GH26OAeLiHei+AKlBPl5F
+         OSthCQ50bDD0n9tXI61aXQcsKX1HDJKbZQrelULpB2Jqno7Gh9uUgzAvYmkT7jncocwg
+         r2e4jBonVa3RRBT7IC1qG4HTnI24bwcDTNwOz92bmlrZN95cUWYXkB7JFI5KwiURYkdT
+         0XLLOMgYchbbjr4GEnxlMIPucCzRbu82P/kRZwJfUnkRexjKFBtnpqB0hwrc/Io68Bym
+         9VvDKvyfrIH2G+4w1NpU3XaWMvKTTWrCDai6rmDQKE6u+UFPiU6H94Z9JpT+0jdOAvrg
+         //Zg==
+X-Gm-Message-State: AO0yUKXUQ8E9r0OnffgZlEIThQ1hLtIfW57zs/O77KZFzm4C6s+dElWf
+        u0bN4/15F1CJ1wgoDwnPcGyH7w==
+X-Google-Smtp-Source: AK7set9aJ8vwEfmUPA6lRi4x4EjzCJ144z/024M6zRlacXaZx3IU1b71ssHRZ3pqm32VFZv4EBL/5A==
+X-Received: by 2002:ac2:4191:0:b0:4e8:401a:3e2b with SMTP id z17-20020ac24191000000b004e8401a3e2bmr1691495lfh.5.1678876455433;
+        Wed, 15 Mar 2023 03:34:15 -0700 (PDT)
+Received: from [192.168.1.101] (abyj16.neoplus.adsl.tpnet.pl. [83.9.29.16])
+        by smtp.gmail.com with ESMTPSA id o19-20020ac24353000000b004dc4c5149cfsm769586lfl.134.2023.03.15.03.34.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Mar 2023 03:34:15 -0700 (PDT)
+Message-ID: <6425fcb2-2ce9-0986-ed28-64717dee240a@linaro.org>
+Date:   Wed, 15 Mar 2023 11:34:13 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdW4f8GJ-kFDPg6Ao=g3ZAXq79u9nUZ_dW1LonHu+vxk8Q@mail.gmail.com>
-X-Patchwork-Hint: comment
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v4 05/18] PCI: qcom: Use lower case for hex
+Content-Language: en-US
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
+        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_srichara@quicinc.com
+References: <20230315064255.15591-1-manivannan.sadhasivam@linaro.org>
+ <20230315064255.15591-6-manivannan.sadhasivam@linaro.org>
+From:   Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <20230315064255.15591-6-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_SORBS_HTTP,RCVD_IN_SORBS_SOCKS,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 09:16:50AM +0100, Geert Uytterhoeven wrote:
-> Hi Niklas,
-> 
-> On Tue, Mar 14, 2023 at 1:13 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
-> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them and guard inline code in headers.
-> >
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> 
-> Thanks for your patch!
-> 
-> > --- a/drivers/video/fbdev/Kconfig
-> > +++ b/drivers/video/fbdev/Kconfig
-> 
-> > @@ -1284,7 +1285,7 @@ config FB_ATY128_BACKLIGHT
-> >
-> >  config FB_ATY
-> >         tristate "ATI Mach64 display support" if PCI || ATARI
-> > -       depends on FB && !SPARC32
-> > +       depends on FB && HAS_IOPORT && !SPARC32
-> 
-> On Atari, this works without ATARI_ROM_ISA, hence it must not depend
-> on HAS_IOPORT.
-> The only call to inb() is inside a section protected by #ifdef
-> CONFIG_PCI. So:
 
-That piece of code is a nop anyway. We immediately overwrite
-clk_wr_offset with a hardcoded selection after the register reads.
-So if you nuke that nop code then no IOPORT dependency required
-at all.
 
+On 15.03.2023 07:42, Manivannan Sadhasivam wrote:
+> To maintain uniformity, let's use lower case for representing hexadecimal
+> numbers.
 > 
->     depends on FB && !SPARC32
->     depends on ATARI || HAS_IOPORT
-> 
-> >         select FB_CFB_FILLRECT
-> >         select FB_CFB_COPYAREA
-> >         select FB_CFB_IMAGEBLIT
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+To be fair, preprocessor defines are the only place where uppercase
+hex is widely used
 
--- 
-Ville Syrjälä
-Intel
+Konrad
+>  drivers/pci/controller/dwc/pcie-qcom.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 926a531fda3a..4179ac973147 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -39,17 +39,17 @@
+>  #define PARF_PCS_DEEMPH				0x34
+>  #define PARF_PCS_SWING				0x38
+>  #define PARF_PHY_CTRL				0x40
+> -#define PARF_PHY_REFCLK				0x4C
+> +#define PARF_PHY_REFCLK				0x4c
+>  #define PARF_CONFIG_BITS			0x50
+>  #define PARF_DBI_BASE_ADDR			0x168
+> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16C /* Register offset specific to IP ver 2.3.3 */
+> +#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
+>  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
+>  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
+> -#define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1A8
+> -#define PARF_Q2A_FLUSH				0x1AC
+> -#define PARF_LTSSM				0x1B0
+> +#define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
+> +#define PARF_Q2A_FLUSH				0x1ac
+> +#define PARF_LTSSM				0x1b0
+>  #define PARF_SID_OFFSET				0x234
+> -#define PARF_BDF_TRANSLATE_CFG			0x24C
+> +#define PARF_BDF_TRANSLATE_CFG			0x24c
+>  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
+>  #define PARF_DEVICE_TYPE			0x1000
+>  #define PARF_BDF_TO_SID_TABLE_N			0x2000
+> @@ -60,7 +60,7 @@
+>  /* DBI registers */
+>  #define AXI_MSTR_RESP_COMP_CTRL0		0x818
+>  #define AXI_MSTR_RESP_COMP_CTRL1		0x81c
+> -#define MISC_CONTROL_1_REG			0x8BC
+> +#define MISC_CONTROL_1_REG			0x8bc
+>  
+>  /* PARF_SYS_CTRL register fields */
+>  #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
