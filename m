@@ -2,131 +2,62 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2E096BAAF8
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 09:42:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CF3CE6BAB47
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 09:56:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231705AbjCOImV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 04:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43878 "EHLO
+        id S231414AbjCOI4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Mar 2023 04:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231544AbjCOImS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 04:42:18 -0400
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFA8E6BC33
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 01:42:15 -0700 (PDT)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-53d277c1834so353800467b3.10
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 01:42:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678869735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XTuGpc9zZDajgS9JdSbz5gYMdquT7uBEBxyEc8YStMs=;
-        b=X8dfDUdc1qERLh7GivTSF6wAoPsVAkvj2ArHJf+sy5lK6lCJ+gnt6wL8G/qq14xTSw
-         mjda5Rut3a1LWApmKqwfqQTT+tSBy26JXXW25TL9FtRcv9N6sx/LgxDS08V/QhsObugK
-         NPhFuy1fii5SXPjmXcWltoGvZ6O5zXLeT6G2mVMXU285VJC3/FnnB0qxQjSQBWCD73sb
-         /rvd5t2nXr/fON39K8yDlmtX/XXXNBJXURsvDMLp87WsLKuIFCJcj+zScVTEDm7QRkIs
-         JxXTDcIVqpp185Vi2Vqj2pWjdXkl22umV2cZKBxBJtkQkgT1Lrsv7TWOmyXJuVuz3FE+
-         3XKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678869735;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XTuGpc9zZDajgS9JdSbz5gYMdquT7uBEBxyEc8YStMs=;
-        b=AbnAXmCTVMODmKUftTQvWAFqrXuacEq9/H5DPgirUsPjP0QhVGT69aaST8t5DHZ0B/
-         LZ1/oZfukIR1SgYGR+aHi5xXHV0CC/nFxKf1xVQsmAtDs592iBoxVV2rbbB63K+sxvHR
-         7qNlEseEDt0EzIBnLGmR7MxIq6mc96K/WpRtwFQ6B/2TAZvFRKVv5uO9rIkrcSPSfXqm
-         Ok+liyQY4AswCmqaTvr3tHsW/v5yCaNX0FAQyQeputmfKg2EW5yP6i8tlNj7Sda4k26V
-         oz7qTtM6i06BYKSHQMluNEYvTH9KlmWqaP9to6cEjP6+VhpH6wATdmNBEz/8vdSFXSOX
-         SLEA==
-X-Gm-Message-State: AO0yUKVpuNfmylD3Wb8wTRM0rwvOxYUOqdAbZfb+AQokgTyKVhOiCGIt
-        R79HWee8D4gLC9djJxYwGiL6bRzOdQ3gwHiPMK1hSA==
-X-Google-Smtp-Source: AK7set+PctbN8J4oXDXLyGrk3edHfMzatYBNgyGgTDyeQWW1ATtsR/bDqC9DIp18hftEPIAszZ48FGEmsyi1yIHsDoc=
-X-Received: by 2002:a81:ad19:0:b0:541:a0ab:bd28 with SMTP id
- l25-20020a81ad19000000b00541a0abbd28mr6948301ywh.4.1678869734933; Wed, 15 Mar
- 2023 01:42:14 -0700 (PDT)
+        with ESMTP id S231393AbjCOI4G (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 04:56:06 -0400
+Received: from mail.corrib.pl (mail.corrib.pl [185.58.226.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B3F732CFE
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 01:56:05 -0700 (PDT)
+Received: by mail.corrib.pl (Postfix, from userid 1001)
+        id 3A9ABA38E2; Wed, 15 Mar 2023 08:55:51 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corrib.pl; s=mail;
+        t=1678870570; bh=X6IEpSISwJiYlJ3uA866lskXve3r+4o2hf4z7VM6m5o=;
+        h=Date:From:To:Subject:From;
+        b=v1LxOBvaKnfnIQruYXnmxn68BD5flLIoc3AVGkUa2iqHWDHXK8fWGqzjFiFYtAdwT
+         znXqTnct1cmCzsfaSx0imb+8oTnOQL1l4TGou3xZcxwVn4atenmo1HFMoo0Y/nEoy7
+         lmozBaamdH8WTZzLPnUSmOLddjiFwERfYl2WHYDSk22QWXUEDU5x+qczXf5RWx1oPL
+         O4MSHDAV5x+0TyfYuj5Z/938+bYHRgJ3Dqj/orRhqPfSxKxZ+Xk/ED/AfM5ckee0WG
+         wj5RRokk4mEy+iy7vfZYDhIBTneR2pc0WmsCVIyUtdb94GiZkCV+VXScUjiD5tI4lc
+         JT297YjjXFV3Q==
+Received: by mail.corrib.pl for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 08:55:32 GMT
+Message-ID: <20230315074501-0.1.62.ivq0.0.1k0mmuz5kk@corrib.pl>
+Date:   Wed, 15 Mar 2023 08:55:32 GMT
+From:   =?UTF-8?Q? "Szczepan_Kie=C5=82basa" ?= 
+        <szczepan.kielbasa@corrib.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: Faktoring
+X-Mailer: mail.corrib.pl
 MIME-Version: 1.0
-References: <20230314121216.413434-1-schnelle@linux.ibm.com> <20230314121216.413434-10-schnelle@linux.ibm.com>
-In-Reply-To: <20230314121216.413434-10-schnelle@linux.ibm.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 15 Mar 2023 09:42:03 +0100
-Message-ID: <CACRpkdbS1U8_qakdWV0YZq3bhr1NvFuL0Umv3QsXD0wYu7Hd9A@mail.gmail.com>
-Subject: Re: [PATCH v3 09/38] gpio: add HAS_IOPORT dependencies
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Niklas,
+Dzie=C5=84 dobry,
 
-thanks for your patch!
+rozwa=C5=BCali Pa=C5=84stwo wyb=C3=B3r finansowania, kt=C3=B3re spe=C5=82=
+ni potrzeby firmy, zapewniaj=C4=85c natychmiastowy dost=C4=99p do got=C3=B3=
+wki, bez zb=C4=99dnych przestoj=C3=B3w?=20
 
-On Tue, Mar 14, 2023 at 1:12=E2=80=AFPM Niklas Schnelle <schnelle@linux.ibm=
-.com> wrote:
->
-> In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
->
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/gpio/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 13be729710f2..5a874e67fc13 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -688,7 +688,7 @@ config GPIO_VISCONTI
->
->  config GPIO_VX855
->         tristate "VIA VX855/VX875 GPIO"
-> -       depends on (X86 || COMPILE_TEST) && PCI
-> +       depends on (X86 || COMPILE_TEST) && PCI && HAS_IOPORT
+Przygotowali=C5=9Bmy rozwi=C4=85zania faktoringowe dopasowane do Pa=C5=84=
+stwa bran=C5=BCy i wielko=C5=9Bci firmy, dzi=C4=99ki kt=C3=B3rym, nie mus=
+z=C4=85 Pa=C5=84stwo martwi=C4=87 si=C4=99 o niewyp=C5=82acalno=C5=9B=C4=87=
+ kontrahent=C3=B3w, poniewa=C5=BC transakcje s=C4=85 zabezpieczone i posi=
+adaj=C4=85 gwarancj=C4=99 sp=C5=82aty.=20
+Chc=C4=85 Pa=C5=84stwo przeanalizowa=C4=87 dost=C4=99pne opcje?
 
-But is this the right fix? Further down in the Kconfig we have:
 
-menu "Port-mapped I/O GPIO drivers"
-        depends on X86 # Unconditional I/O space access
-
-config GPIO_I8255
-        tristate
-        select GPIO_REGMAP
-
-(...)
-
-Isn't the right fix to:
-
-1) Move this Kconfig entry (VX855) down under the Port-mapped /O drivers,
-   and then:
-
-2) Make the whole submenu for port-mapped IO drivers depend on
-   X86 && HAS_IOPORT
-
-Yours,
-Linus Walleij
+Pozdrawiam
+Szczepan Kie=C5=82basa
