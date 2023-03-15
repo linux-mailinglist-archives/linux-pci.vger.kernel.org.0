@@ -2,131 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B582F6BADBA
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 11:34:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B19136BAF64
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 12:37:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229602AbjCOKeT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 06:34:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56318 "EHLO
+        id S231256AbjCOLhO convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Mar 2023 07:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231447AbjCOKeS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 06:34:18 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD5212848
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 03:34:17 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id bi9so1496272lfb.12
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 03:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678876455;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=JsuHq7iHHjQ3jFPF6GcwJ79KHomNFrn/dysoQR3stp8=;
-        b=cCCrRUTf/4k1jyVpsGhlVSQFLORfCnW6uE4NbqpvMwRA5WSmH9MCMDgjjCHQLIswh7
-         oC7a5yRlBkMzjqu4GWEZCpcqheULJVIjtXCE6hF3bjM9HCSI+WGGqcFhNMQfj4YMrnYh
-         Sf/EUM8lds7e3Oj1FwMH8ACQkzTMAbQLfhOMqkUjrRUeoSm1CYorA+Fh/e6zuoi5GQJD
-         DbE49RICJlafIr6YQwLT5ZD4bHLUoUacRKBXS2QuIxYvTR549134RvbSzcxs86jIv38E
-         aboy1AwgPvwNUjpqkrYNJI9aVd4Q9WabYkc06H9pGcckxqNnhDLirdOnMHddIMXRTo5P
-         oftg==
+        with ESMTP id S231743AbjCOLhF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 07:37:05 -0400
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F3AE9EFB;
+        Wed, 15 Mar 2023 04:36:56 -0700 (PDT)
+Received: by mail-qv1-f49.google.com with SMTP id op8so16015896qvb.11;
+        Wed, 15 Mar 2023 04:36:56 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678876455;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JsuHq7iHHjQ3jFPF6GcwJ79KHomNFrn/dysoQR3stp8=;
-        b=QfceoS7kfM9liTyfPuCUBEoSrpS2zKASQOY4yp1erKUp3GH26OAeLiHei+AKlBPl5F
-         OSthCQ50bDD0n9tXI61aXQcsKX1HDJKbZQrelULpB2Jqno7Gh9uUgzAvYmkT7jncocwg
-         r2e4jBonVa3RRBT7IC1qG4HTnI24bwcDTNwOz92bmlrZN95cUWYXkB7JFI5KwiURYkdT
-         0XLLOMgYchbbjr4GEnxlMIPucCzRbu82P/kRZwJfUnkRexjKFBtnpqB0hwrc/Io68Bym
-         9VvDKvyfrIH2G+4w1NpU3XaWMvKTTWrCDai6rmDQKE6u+UFPiU6H94Z9JpT+0jdOAvrg
-         //Zg==
-X-Gm-Message-State: AO0yUKXUQ8E9r0OnffgZlEIThQ1hLtIfW57zs/O77KZFzm4C6s+dElWf
-        u0bN4/15F1CJ1wgoDwnPcGyH7w==
-X-Google-Smtp-Source: AK7set9aJ8vwEfmUPA6lRi4x4EjzCJ144z/024M6zRlacXaZx3IU1b71ssHRZ3pqm32VFZv4EBL/5A==
-X-Received: by 2002:ac2:4191:0:b0:4e8:401a:3e2b with SMTP id z17-20020ac24191000000b004e8401a3e2bmr1691495lfh.5.1678876455433;
-        Wed, 15 Mar 2023 03:34:15 -0700 (PDT)
-Received: from [192.168.1.101] (abyj16.neoplus.adsl.tpnet.pl. [83.9.29.16])
-        by smtp.gmail.com with ESMTPSA id o19-20020ac24353000000b004dc4c5149cfsm769586lfl.134.2023.03.15.03.34.14
+        d=1e100.net; s=20210112; t=1678880215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6Dh9RfBVfufckGOxFsJtj6xeJ0iEcugscI3TEV8zxpY=;
+        b=GfCPc69Aur30v3YKuHqrCJJojWH4ELZ0fSJuQDr86C8opMJACIw2QxEbfIIzcBAvBl
+         lpV0VOPBFOFMAtGtvUSLAnJW1n76Xjb1PqCLBrwXOp9CjNLIXgf1MGwjPKUWEbgyzTH4
+         dYkKFxqXvCWgtB83nuumhKv8ZHrptT7R/usDJoIUHkACEXqFqA2ndxGVNI4BjSoENb9B
+         YeJbtM7O9A2wsSPWOKttKefgZOZRkBLqK1t9oKfddYwM2XJxtzNqvJF4KHkmMZWW9JMC
+         MYZ5Q3qu2h9CGCY1G87+A4/6PM8LJhXARfIXl6ShdDQs0+/+OFEOCV49TQXue03BY4+F
+         La5w==
+X-Gm-Message-State: AO0yUKV9tmk31kXvgcjn9G+pmkw44GMo+y5EYMgGS6yQIYE71FT6dD1m
+        1G99kXgBIOohbPzVvNgAzpdKGCoVYeOX/map
+X-Google-Smtp-Source: AK7set9aCTesaiE+jQUrhDZiju1MXoyoItoELO1KteTsES08mTYHc1wYeW0Plup7v0eWfbbJWCOF7w==
+X-Received: by 2002:a05:6214:224a:b0:56b:f061:c3c6 with SMTP id c10-20020a056214224a00b0056bf061c3c6mr26478482qvc.33.1678880215178;
+        Wed, 15 Mar 2023 04:36:55 -0700 (PDT)
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com. [209.85.128.182])
+        by smtp.gmail.com with ESMTPSA id t202-20020a3746d3000000b0074341cb30d0sm3539878qka.62.2023.03.15.04.36.54
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Mar 2023 03:34:15 -0700 (PDT)
-Message-ID: <6425fcb2-2ce9-0986-ed28-64717dee240a@linaro.org>
-Date:   Wed, 15 Mar 2023 11:34:13 +0100
+        Wed, 15 Mar 2023 04:36:54 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-544787916d9so34713087b3.13;
+        Wed, 15 Mar 2023 04:36:54 -0700 (PDT)
+X-Received: by 2002:a81:ac62:0:b0:544:8bc1:a179 with SMTP id
+ z34-20020a81ac62000000b005448bc1a179mr582287ywj.4.1678880213966; Wed, 15 Mar
+ 2023 04:36:53 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 05/18] PCI: qcom: Use lower case for hex
-Content-Language: en-US
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
-        krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_srichara@quicinc.com
-References: <20230315064255.15591-1-manivannan.sadhasivam@linaro.org>
- <20230315064255.15591-6-manivannan.sadhasivam@linaro.org>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20230315064255.15591-6-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_HTTP,RCVD_IN_SORBS_SOCKS,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+References: <20230314121216.413434-1-schnelle@linux.ibm.com>
+ <20230314121216.413434-3-schnelle@linux.ibm.com> <CAMuHMdVry2YViJ5oFgo9i+uStWbhy7mXKWdWvCX=qgAu1-_Y1w@mail.gmail.com>
+ <c7315ca2-3ebf-7f3b-da64-9a74a995b0ae@opensource.wdc.com>
+In-Reply-To: <c7315ca2-3ebf-7f3b-da64-9a74a995b0ae@opensource.wdc.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Mar 2023 12:36:42 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVajEYsw8HrKw0GwV+09gbtkhjVMuKZ6RSBvq6got=jAg@mail.gmail.com>
+Message-ID: <CAMuHMdVajEYsw8HrKw0GwV+09gbtkhjVMuKZ6RSBvq6got=jAg@mail.gmail.com>
+Subject: Re: [PATCH v3 02/38] ata: add HAS_IOPORT dependencies
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-ide@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Damien,
 
+On Wed, Mar 15, 2023 at 10:12 AM Damien Le Moal
+<damien.lemoal@opensource.wdc.com> wrote:
+> On 3/15/23 17:39, Geert Uytterhoeven wrote:
+> > On Tue, Mar 14, 2023 at 1:12 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+> >> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> >> not being declared. We thus need to add HAS_IOPORT as dependency for
+> >> those drivers using them.
+> >>
+> >> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> >> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> >
+> > Thanks for your patch!
+> >
+> >> --- a/drivers/ata/Kconfig
+> >> +++ b/drivers/ata/Kconfig
+> >> @@ -342,6 +342,7 @@ endif # HAS_DMA
+> >>
+> >>  config ATA_SFF
+> >>         bool "ATA SFF support (for legacy IDE and PATA)"
+> >> +       depends on HAS_IOPORT
+> >>         default y
+> >>         help
+> >>           This option adds support for ATA controllers with SFF
+> >
+> > ATA_SFF is a dependency for lots of (S)ATA drivers.
+> > (at least) The following don't use I/O port access:
+> >
+> >     CONFIG_SATA_RCAR (arm/arm64)
+> >     CONFIG_PATA_FALCON (m68k/atari and m68k/q40)
+> >     CONFIG_PATA_GAYLE (m68k/amiga)
+> >     CONFIG_PATA_BUDDHA (m68k/amiga)
+> >
+> > (at least) The following can use either MMIO or I/O port accesses:
+> >
+> >     CONFIG_PATA_PLATFORM (m68k/mac)
+>
+> But for these arch/platforms, would there be any reason to not have HAS_IOPORT ?
+> It is supported right now, so we should have HAS_IOPORT for them.
 
-On 15.03.2023 07:42, Manivannan Sadhasivam wrote:
-> To maintain uniformity, let's use lower case for representing hexadecimal
-> numbers.
-> 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
-To be fair, preprocessor defines are the only place where uppercase
-hex is widely used
+That's the point: on Amiga and Atari, HAS_IOPORT is optional, and
+not related to IDE support. On Mac, it is never present.
 
-Konrad
->  drivers/pci/controller/dwc/pcie-qcom.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 926a531fda3a..4179ac973147 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -39,17 +39,17 @@
->  #define PARF_PCS_DEEMPH				0x34
->  #define PARF_PCS_SWING				0x38
->  #define PARF_PHY_CTRL				0x40
-> -#define PARF_PHY_REFCLK				0x4C
-> +#define PARF_PHY_REFCLK				0x4c
->  #define PARF_CONFIG_BITS			0x50
->  #define PARF_DBI_BASE_ADDR			0x168
-> -#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16C /* Register offset specific to IP ver 2.3.3 */
-> +#define PARF_SLV_ADDR_SPACE_SIZE_2_3_3		0x16c /* Register offset specific to IP ver 2.3.3 */
->  #define PARF_MHI_CLOCK_RESET_CTRL		0x174
->  #define PARF_AXI_MSTR_WR_ADDR_HALT		0x178
-> -#define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1A8
-> -#define PARF_Q2A_FLUSH				0x1AC
-> -#define PARF_LTSSM				0x1B0
-> +#define PARF_AXI_MSTR_WR_ADDR_HALT_V2		0x1a8
-> +#define PARF_Q2A_FLUSH				0x1ac
-> +#define PARF_LTSSM				0x1b0
->  #define PARF_SID_OFFSET				0x234
-> -#define PARF_BDF_TRANSLATE_CFG			0x24C
-> +#define PARF_BDF_TRANSLATE_CFG			0x24c
->  #define PARF_SLV_ADDR_SPACE_SIZE		0x358
->  #define PARF_DEVICE_TYPE			0x1000
->  #define PARF_BDF_TO_SID_TABLE_N			0x2000
-> @@ -60,7 +60,7 @@
->  /* DBI registers */
->  #define AXI_MSTR_RESP_COMP_CTRL0		0x818
->  #define AXI_MSTR_RESP_COMP_CTRL1		0x81c
-> -#define MISC_CONTROL_1_REG			0x8BC
-> +#define MISC_CONTROL_1_REG			0x8bc
->  
->  /* PARF_SYS_CTRL register fields */
->  #define MAC_PHY_POWERDOWN_IN_P2_D_MUX_EN	BIT(29)
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
