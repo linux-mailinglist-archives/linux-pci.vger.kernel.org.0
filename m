@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 90A386BA828
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 07:44:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 31D046BA82E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 07:44:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231580AbjCOGod (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 02:44:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58828 "EHLO
+        id S231610AbjCOGoi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Mar 2023 02:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231417AbjCOGo2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 02:44:28 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D14072BF35
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 23:43:47 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id j13so2020525pjd.1
-        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 23:43:47 -0700 (PDT)
+        with ESMTP id S231470AbjCOGo3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 02:44:29 -0400
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5484334C07
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 23:43:52 -0700 (PDT)
+Received: by mail-pl1-x62d.google.com with SMTP id h8so18998509plf.10
+        for <linux-pci@vger.kernel.org>; Tue, 14 Mar 2023 23:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678862627;
+        d=linaro.org; s=google; t=1678862631;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KBoZXs7oWaG22XZASLiUsiWHjHyRIoI/eDEhjgIXc7Q=;
-        b=JFASvWIhHeDbBo+WCQzzqwSgjh7K6BSUVYNxE6SIJetiiutCr0065wuVFoFx9M5Ttf
-         V7cWeoix2msdqY9iWtHb1LcF1uH7cUQkWuICqTwC1Ko5uaZMDhgZlw4nUC/R88Er0Fyp
-         cEslWv2eWR5u6g/C3Gk11sEzMhGhqr2bhUaw7HQXoHLQxk4cIDql5vfoLnt6i6N0OdJm
-         yDBXH3Vsd80Y+gEbjd5MVZSus63KYyOm90XA2ga4vqpv8s/bAro9Ci8NAB7jJ6Elzs0y
-         dwmcFI9CVNNi+//rB/FkuFsAnA6gXnPgsArKLfBsR5lmDCgywyHagUX5FxmQK/4swDfR
-         xrBw==
+        bh=KfdqQH4sC3T3WUlStmaUXFOPF8SZ60hxKnyQr7AYExQ=;
+        b=MH6D/0kMHME6L2uOyjVrbZdpw2gmWdPo+aKN82pF3e/k2/DbBL1s0+8Bk0hxQePHxn
+         HzTveqImVu8eRda0Z7WADg5sg67FvoONnxXcVZnGdtE90GeDDEDwmUoKYMnpdZufR1RB
+         eNEzEi4/YcLZf7IL+2utlcnMvkTzfLwJ6UTWazjJxrJQjoMGnHt0mv/7+Kk8X51RCg53
+         PWms8QIKl9SC2JSloeC7sGa36YIXgx1SdyOqMQjYpLmlVGl1zL+vsYqeia/YvuBrh6vX
+         eREyUHx4t5JwmNQDFpkq+pFNyIeTGHO42qWBnH0bKy86FDOcbnX4E6l6I0WgTzChCGgr
+         PWnQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678862627;
+        d=1e100.net; s=20210112; t=1678862631;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KBoZXs7oWaG22XZASLiUsiWHjHyRIoI/eDEhjgIXc7Q=;
-        b=jNQagqM7UpoxdNDl7EJgYDMpsrRNPQzOskUnlUoyzCiRGlR7GJ53neDXbOL6I8QJgD
-         bYkdCT1fO/YDM5s4CCrNLvbo0rUW5ZxIXw7fOIBYrPcwAajRw140Y4ut/c+jyi7eHLIj
-         ix82MvPbNG90lmSjmAfvjdAp7A1L1TQlEle1zZY9KdqhBGU/rU84/8hrn+bpm65Qnq1n
-         FW4uXSQXBxx2hzLvZT+FypomhE7bAxWkUq8r1xVgYYaUM/Gqapb5IcV0Fda/9iJfS079
-         jpcDW+TFZS1RItSEM6Y1LYUAqA+7DXm3Q5DRDk3fk/YlfIYb68ypGUHGEVArcdnCCTCC
-         yAWQ==
-X-Gm-Message-State: AO0yUKVVwxd459lPx+GKu+UBKGWNcZ5rK3/kiOpXtwthnQvZtA638n6R
-        7x1no+R2oBMjaCknrlORGDfa
-X-Google-Smtp-Source: AK7set/6e6JCaM2aw8azs7vTQVD30WosM90fSOAg7fXNpFjqpSC2C5T/pNl6LRt3JoVYW3WjMJiGjQ==
-X-Received: by 2002:a17:90a:2c47:b0:23d:2532:ae34 with SMTP id p7-20020a17090a2c4700b0023d2532ae34mr6015982pjm.2.1678862627343;
-        Tue, 14 Mar 2023 23:43:47 -0700 (PDT)
+        bh=KfdqQH4sC3T3WUlStmaUXFOPF8SZ60hxKnyQr7AYExQ=;
+        b=d9yOJ8e+YJijxi5yccCtnChyEA7GaLROGLRYWoRBR6vgWD0YNQvPL1Tk1kA7IggJwV
+         oYyG0mjyaSlReOp0jAh/F0ydgazgQeDUPry9PFfhPOX47a88zbxPGbIbRE70ckQFSrkU
+         LdYOyHeeqtMBvBV+utAmMZl86cQIEaM+PFLEu0Dia6noK9N2oBXNidN/KLk5QFC1hKhX
+         T+1UjdiS0pJpDYeK7s464EOk5ONRMutjO5LCEEE3XCt47AlCe9/ms5GOq2Ve8R9P4x0B
+         oy/nKShLSOoneVixlhdDoJQvt/cMY2h16pzAoTdzXmS0I5l5B1XPMnmfi8ChkVzqYwxZ
+         kivw==
+X-Gm-Message-State: AO0yUKVS6g+6BnQi78uGUa7EL7dXzTorTa/9IHGga5DHWagQwIXsDU3/
+        xh584ybYLPdZV/FFFvupUGoy
+X-Google-Smtp-Source: AK7set/aR1G0P/+BxG8oqjHfYtRegpcG/Ul1lMCwkwJ45C6zLQSyVsIEvRd4oZgdAwl5yiDvBeuOew==
+X-Received: by 2002:a17:90b:38c3:b0:237:d44c:5861 with SMTP id nn3-20020a17090b38c300b00237d44c5861mr42100496pjb.12.1678862631632;
+        Tue, 14 Mar 2023 23:43:51 -0700 (PDT)
 Received: from localhost.localdomain ([117.217.182.35])
-        by smtp.gmail.com with ESMTPSA id u4-20020a17090a6a8400b002367325203fsm550747pjj.50.2023.03.14.23.43.43
+        by smtp.gmail.com with ESMTPSA id u4-20020a17090a6a8400b002367325203fsm550747pjj.50.2023.03.14.23.43.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Mar 2023 23:43:46 -0700 (PDT)
+        Tue, 14 Mar 2023 23:43:50 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     andersson@kernel.org, lpieralisi@kernel.org, kw@linux.com,
         krzysztof.kozlowski+dt@linaro.org, robh@kernel.org
@@ -56,9 +56,9 @@ Cc:     konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, quic_srichara@quicinc.com,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 10/18] PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.3.3
-Date:   Wed, 15 Mar 2023 12:12:47 +0530
-Message-Id: <20230315064255.15591-11-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 11/18] PCI: qcom: Use bulk reset APIs for handling resets for IP rev 2.4.0
+Date:   Wed, 15 Mar 2023 12:12:48 +0530
+Message-Id: <20230315064255.15591-12-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230315064255.15591-1-manivannan.sadhasivam@linaro.org>
 References: <20230315064255.15591-1-manivannan.sadhasivam@linaro.org>
@@ -78,106 +78,309 @@ All the resets are asserted and deasserted at the same time. So the bulk
 reset APIs can be used to handle them together. This simplifies the code
 a lot.
 
+It should be noted that there were delays in-between the reset asserts and
+deasserts. But going by the config used by other revisions, those delays
+are not really necessary. So a single delay after all asserts and one after
+deasserts is used.
+
+The total number of resets supported is 12 but only ipq4019 is using all of
+them.
+
+Tested-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 49 ++++++++++++--------------
- 1 file changed, 23 insertions(+), 26 deletions(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 238 ++++---------------------
+ 1 file changed, 30 insertions(+), 208 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 6b83e3627336..8c39fc554a89 100644
+index 8c39fc554a89..ed43e03b972f 100644
 --- a/drivers/pci/controller/dwc/pcie-qcom.c
 +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -170,9 +170,10 @@ struct qcom_pcie_resources_2_3_2 {
+@@ -176,22 +176,13 @@ struct qcom_pcie_resources_2_3_3 {
+ 	struct reset_control_bulk_data rst[QCOM_PCIE_2_3_3_MAX_RESETS];
  };
  
- #define QCOM_PCIE_2_3_3_MAX_CLOCKS		5
-+#define QCOM_PCIE_2_3_3_MAX_RESETS		7
- struct qcom_pcie_resources_2_3_3 {
- 	struct clk_bulk_data clks[QCOM_PCIE_2_3_3_MAX_CLOCKS];
--	struct reset_control *rst[7];
-+	struct reset_control_bulk_data rst[QCOM_PCIE_2_3_3_MAX_RESETS];
+-#define QCOM_PCIE_2_4_0_MAX_CLOCKS	4
++#define QCOM_PCIE_2_4_0_MAX_CLOCKS		4
++#define QCOM_PCIE_2_4_0_MAX_RESETS		12
+ struct qcom_pcie_resources_2_4_0 {
+ 	struct clk_bulk_data clks[QCOM_PCIE_2_4_0_MAX_CLOCKS];
+ 	int num_clks;
+-	struct reset_control *axi_m_reset;
+-	struct reset_control *axi_s_reset;
+-	struct reset_control *pipe_reset;
+-	struct reset_control *axi_m_vmid_reset;
+-	struct reset_control *axi_s_xpu_reset;
+-	struct reset_control *parf_reset;
+-	struct reset_control *phy_reset;
+-	struct reset_control *axi_m_sticky_reset;
+-	struct reset_control *pipe_sticky_reset;
+-	struct reset_control *pwr_reset;
+-	struct reset_control *ahb_reset;
+-	struct reset_control *phy_ahb_reset;
++	struct reset_control_bulk_data resets[QCOM_PCIE_2_4_0_MAX_RESETS];
++	int num_resets;
  };
  
- #define QCOM_PCIE_2_4_0_MAX_CLOCKS	4
-@@ -889,10 +890,6 @@ static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int i;
--	const char *rst_names[] = { "axi_m", "axi_s", "pipe",
--				    "axi_m_sticky", "sticky",
--				    "ahb", "sleep", };
- 	int ret;
- 
- 	res->clks[0].id = "iface";
-@@ -905,11 +902,17 @@ static int qcom_pcie_get_resources_2_3_3(struct qcom_pcie *pcie)
+ /* 6 clocks typically, 7 for sm8250 */
+@@ -626,65 +617,24 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
  	if (ret < 0)
  		return ret;
  
--	for (i = 0; i < ARRAY_SIZE(rst_names); i++) {
--		res->rst[i] = devm_reset_control_get(dev, rst_names[i]);
--		if (IS_ERR(res->rst[i]))
--			return PTR_ERR(res->rst[i]);
+-	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
+-	if (IS_ERR(res->axi_m_reset))
+-		return PTR_ERR(res->axi_m_reset);
+-
+-	res->axi_s_reset = devm_reset_control_get_exclusive(dev, "axi_s");
+-	if (IS_ERR(res->axi_s_reset))
+-		return PTR_ERR(res->axi_s_reset);
+-
+-	if (is_ipq) {
+-		/*
+-		 * These resources relates to the PHY or are secure clocks, but
+-		 * are controlled here for IPQ4019
+-		 */
+-		res->pipe_reset = devm_reset_control_get_exclusive(dev, "pipe");
+-		if (IS_ERR(res->pipe_reset))
+-			return PTR_ERR(res->pipe_reset);
+-
+-		res->axi_m_vmid_reset = devm_reset_control_get_exclusive(dev,
+-									 "axi_m_vmid");
+-		if (IS_ERR(res->axi_m_vmid_reset))
+-			return PTR_ERR(res->axi_m_vmid_reset);
+-
+-		res->axi_s_xpu_reset = devm_reset_control_get_exclusive(dev,
+-									"axi_s_xpu");
+-		if (IS_ERR(res->axi_s_xpu_reset))
+-			return PTR_ERR(res->axi_s_xpu_reset);
+-
+-		res->parf_reset = devm_reset_control_get_exclusive(dev, "parf");
+-		if (IS_ERR(res->parf_reset))
+-			return PTR_ERR(res->parf_reset);
+-
+-		res->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
+-		if (IS_ERR(res->phy_reset))
+-			return PTR_ERR(res->phy_reset);
 -	}
-+	res->rst[0].id = "axi_m";
-+	res->rst[1].id = "axi_s";
-+	res->rst[2].id = "pipe";
-+	res->rst[3].id = "axi_m_sticky";
-+	res->rst[4].id = "sticky";
-+	res->rst[5].id = "ahb";
-+	res->rst[6].id = "sleep";
+-
+-	res->axi_m_sticky_reset = devm_reset_control_get_exclusive(dev,
+-								   "axi_m_sticky");
+-	if (IS_ERR(res->axi_m_sticky_reset))
+-		return PTR_ERR(res->axi_m_sticky_reset);
+-
+-	res->pipe_sticky_reset = devm_reset_control_get_exclusive(dev,
+-								  "pipe_sticky");
+-	if (IS_ERR(res->pipe_sticky_reset))
+-		return PTR_ERR(res->pipe_sticky_reset);
+-
+-	res->pwr_reset = devm_reset_control_get_exclusive(dev, "pwr");
+-	if (IS_ERR(res->pwr_reset))
+-		return PTR_ERR(res->pwr_reset);
+-
+-	res->ahb_reset = devm_reset_control_get_exclusive(dev, "ahb");
+-	if (IS_ERR(res->ahb_reset))
+-		return PTR_ERR(res->ahb_reset);
++	res->resets[0].id = "axi_m";
++	res->resets[1].id = "axi_s";
++	res->resets[2].id = "axi_m_sticky";
++	res->resets[3].id = "pipe_sticky";
++	res->resets[4].id = "pwr";
++	res->resets[5].id = "ahb";
++	res->resets[6].id = "pipe";
++	res->resets[7].id = "axi_m_vmid";
++	res->resets[8].id = "axi_s_xpu";
++	res->resets[9].id = "parf";
++	res->resets[10].id = "phy";
++	res->resets[11].id = "phy_ahb";
 +
-+	ret = devm_reset_control_bulk_get_exclusive(dev, ARRAY_SIZE(res->rst), res->rst);
++	res->num_resets = is_ipq ? 12 : 6;
+ 
+-	if (is_ipq) {
+-		res->phy_ahb_reset = devm_reset_control_get_exclusive(dev, "phy_ahb");
+-		if (IS_ERR(res->phy_ahb_reset))
+-			return PTR_ERR(res->phy_ahb_reset);
+-	}
++	ret = devm_reset_control_bulk_get_exclusive(dev, res->num_resets, res->resets);
 +	if (ret < 0)
 +		return ret;
  
  	return 0;
  }
-@@ -926,25 +929,20 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_3_3 *res = &pcie->res.v2_3_3;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int i, ret;
-+	int ret;
+@@ -693,15 +643,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
  
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
--		ret = reset_control_assert(res->rst[i]);
--		if (ret) {
--			dev_err(dev, "reset #%d assert failed (%d)\n", i, ret);
--			return ret;
--		}
-+	ret = reset_control_bulk_assert(ARRAY_SIZE(res->rst), res->rst);
+-	reset_control_assert(res->axi_m_reset);
+-	reset_control_assert(res->axi_s_reset);
+-	reset_control_assert(res->pipe_reset);
+-	reset_control_assert(res->pipe_sticky_reset);
+-	reset_control_assert(res->phy_reset);
+-	reset_control_assert(res->phy_ahb_reset);
+-	reset_control_assert(res->axi_m_sticky_reset);
+-	reset_control_assert(res->pwr_reset);
+-	reset_control_assert(res->ahb_reset);
++	reset_control_bulk_assert(res->num_resets, res->resets);
+ 	clk_bulk_disable_unprepare(res->num_clks, res->clks);
+ }
+ 
+@@ -712,149 +654,29 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
+ 	struct device *dev = pci->dev;
+ 	int ret;
+ 
+-	ret = reset_control_assert(res->axi_m_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert axi master reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->axi_s_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert axi slave reset\n");
+-		return ret;
+-	}
+-
+-	usleep_range(10000, 12000);
+-
+-	ret = reset_control_assert(res->pipe_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert pipe reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->pipe_sticky_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert pipe sticky reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->phy_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert phy reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->phy_ahb_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert phy ahb reset\n");
++	ret = reset_control_bulk_assert(res->num_resets, res->resets);
 +	if (ret < 0) {
 +		dev_err(dev, "cannot assert resets\n");
-+		return ret;
+ 		return ret;
  	}
  
- 	usleep_range(2000, 2500);
+ 	usleep_range(10000, 12000);
  
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++) {
--		ret = reset_control_deassert(res->rst[i]);
--		if (ret) {
--			dev_err(dev, "reset #%d deassert failed (%d)\n", i,
--				ret);
--			return ret;
--		}
-+	ret = reset_control_bulk_deassert(ARRAY_SIZE(res->rst), res->rst);
+-	ret = reset_control_assert(res->axi_m_sticky_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert axi master sticky reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->pwr_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert power reset\n");
+-		return ret;
+-	}
+-
+-	ret = reset_control_assert(res->ahb_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot assert ahb reset\n");
++	ret = reset_control_bulk_deassert(res->num_resets, res->resets);
 +	if (ret < 0) {
 +		dev_err(dev, "cannot deassert resets\n");
-+		return ret;
+ 		return ret;
  	}
  
- 	/*
-@@ -966,8 +964,7 @@ static int qcom_pcie_init_2_3_3(struct qcom_pcie *pcie)
- 	 * Not checking for failure, will anyway return
- 	 * the original failure in 'ret'.
- 	 */
--	for (i = 0; i < ARRAY_SIZE(res->rst); i++)
--		reset_control_assert(res->rst[i]);
-+	reset_control_bulk_assert(ARRAY_SIZE(res->rst), res->rst);
+ 	usleep_range(10000, 12000);
  
- 	return ret;
+-	ret = reset_control_deassert(res->phy_ahb_reset);
++	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+ 	if (ret) {
+-		dev_err(dev, "cannot deassert phy ahb reset\n");
++		reset_control_bulk_assert(res->num_resets, res->resets);
+ 		return ret;
+ 	}
+ 
+-	ret = reset_control_deassert(res->phy_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert phy reset\n");
+-		goto err_rst_phy;
+-	}
+-
+-	ret = reset_control_deassert(res->pipe_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert pipe reset\n");
+-		goto err_rst_pipe;
+-	}
+-
+-	ret = reset_control_deassert(res->pipe_sticky_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert pipe sticky reset\n");
+-		goto err_rst_pipe_sticky;
+-	}
+-
+-	usleep_range(10000, 12000);
+-
+-	ret = reset_control_deassert(res->axi_m_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert axi master reset\n");
+-		goto err_rst_axi_m;
+-	}
+-
+-	ret = reset_control_deassert(res->axi_m_sticky_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert axi master sticky reset\n");
+-		goto err_rst_axi_m_sticky;
+-	}
+-
+-	ret = reset_control_deassert(res->axi_s_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert axi slave reset\n");
+-		goto err_rst_axi_s;
+-	}
+-
+-	ret = reset_control_deassert(res->pwr_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert power reset\n");
+-		goto err_rst_pwr;
+-	}
+-
+-	ret = reset_control_deassert(res->ahb_reset);
+-	if (ret) {
+-		dev_err(dev, "cannot deassert ahb reset\n");
+-		goto err_rst_ahb;
+-	}
+-
+-	usleep_range(10000, 12000);
+-
+-	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
+-	if (ret)
+-		goto err_clks;
+-
+ 	return 0;
+-
+-err_clks:
+-	reset_control_assert(res->ahb_reset);
+-err_rst_ahb:
+-	reset_control_assert(res->pwr_reset);
+-err_rst_pwr:
+-	reset_control_assert(res->axi_s_reset);
+-err_rst_axi_s:
+-	reset_control_assert(res->axi_m_sticky_reset);
+-err_rst_axi_m_sticky:
+-	reset_control_assert(res->axi_m_reset);
+-err_rst_axi_m:
+-	reset_control_assert(res->pipe_sticky_reset);
+-err_rst_pipe_sticky:
+-	reset_control_assert(res->pipe_reset);
+-err_rst_pipe:
+-	reset_control_assert(res->phy_reset);
+-err_rst_phy:
+-	reset_control_assert(res->phy_ahb_reset);
+-	return ret;
  }
+ 
+ static int qcom_pcie_post_init_2_4_0(struct qcom_pcie *pcie)
 -- 
 2.25.1
 
