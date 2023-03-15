@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 581166BB880
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 16:52:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E98276BB8A3
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 16:54:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232468AbjCOPwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 11:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44786 "EHLO
+        id S232670AbjCOPyI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Mar 2023 11:54:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232402AbjCOPwP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 11:52:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7999C7D088
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 08:51:35 -0700 (PDT)
+        with ESMTP id S232112AbjCOPxf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 11:53:35 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB74D1E2A2
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 08:53:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1C3ACB81E69
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 15:51:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C20ECC433D2;
-        Wed, 15 Mar 2023 15:51:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 98734B81E69
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 15:53:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ED4CC433EF;
+        Wed, 15 Mar 2023 15:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678895492;
-        bh=sAw2z6oGv1CXNQQ1aoXtd/uOFABAp92esZ2NH81zh+E=;
+        s=k20201202; t=1678895588;
+        bh=mlMUN7OdiSXVRyDWZKmjvVBVo7kur1ub1+cILjmYiJk=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i7FrBedrkqDMER1Re0xdz2mI8dO4qx2uqaAL15v2QnKXQDZM8IqF30revFL+18wE1
-         LdpxIwDFE1b3GGGrAyPncGBEFnijv07ad8nkVrve+GQgfIZ7dyZ7XXz+EmVfhie5yf
-         3ifl8BiqJR0beZjvX1SfFr2iB+8Y3NB6LjaldzGg88GmgTiu+AZMEnbsWppL5xSDIQ
-         pkmCY/ouwGuwPFwfLee6OVrXOZ/L3Ugfp9EwenUiZYUwbNHa0D4dxmX4miEGC0Hdvy
-         tX+LHQfVYZqv6148yF95vEbg6BvWzTtvoxvkv4XcaLniSiHB6cvrkvNKKnoZQ5YcFH
-         74tAe1fkjLw8w==
-Date:   Wed, 15 Mar 2023 21:21:19 +0530
+        b=EW4zsZdIbrgjR1bw7yaSFSJVXjAcW1nSmt8oH50MUv8iEgmebr+L1A7ZWov89byHQ
+         i9C5iIDBBKvXysnE3t/065ymht1txT2a/dfhQnDpq7X57tNRkid8EZM2RLFeY+uler
+         Xb/tHVlrGDHHBs1Q0rsIjlMZkokVmzlaKKICHfykrfd+Ha22jtF6e1qAEkJbm37WMc
+         ILeqzPkhqMGm/75ie3iZY8zW27Ur5nCluAkTr6D8NB6GX3czFA74L5T5TQkHbaSS6M
+         eUnoGeT44pQBtzv88z/mrtwU5mcgOo+aZc6JgxQJ9hNX/uJPfvWObFFiOnm9TQO1VA
+         HKrS+WYuoHF1g==
+Date:   Wed, 15 Mar 2023 21:22:57 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -41,18 +41,18 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 09/16] PCI: epf-test: Improve handling of command and
- status registers
-Message-ID: <20230315155119.GK98488@thinkpad>
+Subject: Re: [PATCH v2 10/16] PCI: epf-test: Cleanup
+ pci_epf_test_cmd_handler()
+Message-ID: <20230315155257.GL98488@thinkpad>
 References: <20230308090313.1653-1-damien.lemoal@opensource.wdc.com>
- <20230308090313.1653-10-damien.lemoal@opensource.wdc.com>
+ <20230308090313.1653-11-damien.lemoal@opensource.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230308090313.1653-10-damien.lemoal@opensource.wdc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <20230308090313.1653-11-damien.lemoal@opensource.wdc.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,77 +60,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 06:03:06PM +0900, Damien Le Moal wrote:
-> The pci-epf-test driver uses the test register bar memory directly
-> to get and execute a test registers set by the RC side and defined
-> using a struct pci_epf_test_reg. This direct use relies on a casts of
-> the register bar to get a pointer to a struct pci_epf_test_reg to
-> execute the test case and sending back the test result through the
-> status field of struct pci_epf_test_reg. In practice, the status field
-> is always updated before an interrupt is raised in
-> pci_epf_test_raise_irq(), to ensure that the RC side sees the updated
-> status when receiving the interrupts.
-> 
-> However, such cast-based direct access does not ensure that changes to
-> the status register make it to memory, and so visible to the host,
-> before an interrupt is raised, thus potentially resulting in the RC host
-> not seeing the correct status result for a test.
-> 
-> Avoid this potential problem by using READ_ONCE()/WRITE_ONCE() when
-> accessing the command and status fields of a pci_epf_test_reg structure.
-> This ensure that a test start (pci_epf_test_cmd_handler() function) and
-> completion (with the function pci_epf_test_raise_irq()) achive a correct
-> synchronization with the host side mmio register accesses.
+On Wed, Mar 08, 2023 at 06:03:07PM +0900, Damien Le Moal wrote:
+> Command codes are never combined together as flags into a single value.
+> Thus we can replace the series of "if" tests in
+> pci_epf_test_cmd_handler() with a cleaner switch-case statement.
+> This also allows checking that we got a valid command and print an error
+> message if we did not.
 > 
 > Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 13 +++++++++----
->  1 file changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index 43d623682850..e0cf8c2bf6db 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -615,9 +615,14 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
->  	struct pci_epf *epf = epf_test->epf;
->  	struct device *dev = &epf->dev;
->  	struct pci_epc *epc = epf->epc;
-> +	u32 status = reg->status | STATUS_IRQ_RAISED;
->  	int count;
->  
-> -	reg->status |= STATUS_IRQ_RAISED;
-> +	/*
-> +	 * Set the status before raising the IRQ to ensure that the host sees
-> +	 * the updated value when it gets the IRQ.
-> +	 */
-> +	WRITE_ONCE(reg->status, status);
 
-For MMIO, it is not sufficient to use WRITE_ONCE() and expect that the write
-has reached the memory (it could be stored in a write buffer). If you really
-care about synchronization, then you should do a read back of the variable.
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 
 Thanks,
 Mani
 
->  
->  	switch (reg->irq_type) {
->  	case IRQ_TYPE_LEGACY:
-> @@ -661,12 +666,12 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
->  	enum pci_barno test_reg_bar = epf_test->test_reg_bar;
->  	struct pci_epf_test_reg *reg = epf_test->reg[test_reg_bar];
->  
-> -	command = reg->command;
-> +	command = READ_ONCE(reg->command);
->  	if (!command)
+> ---
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 30 +++++++++----------
+>  1 file changed, 14 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index e0cf8c2bf6db..d1b5441391fb 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -678,41 +678,39 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
 >  		goto reset_handler;
+>  	}
 >  
-> -	reg->command = 0;
-> -	reg->status = 0;
-> +	WRITE_ONCE(reg->command, 0);
-> +	WRITE_ONCE(reg->status, 0);
+> -	if ((command & COMMAND_RAISE_LEGACY_IRQ) ||
+> -	    (command & COMMAND_RAISE_MSI_IRQ) ||
+> -	    (command & COMMAND_RAISE_MSIX_IRQ)) {
+> +	switch (command) {
+> +	case COMMAND_RAISE_LEGACY_IRQ:
+> +	case COMMAND_RAISE_MSI_IRQ:
+> +	case COMMAND_RAISE_MSIX_IRQ:
+>  		pci_epf_test_raise_irq(epf_test, reg);
+> -		goto reset_handler;
+> -	}
+> -
+> -	if (command & COMMAND_WRITE) {
+> +		break;
+> +	case COMMAND_WRITE:
+>  		ret = pci_epf_test_write(epf_test, reg);
+>  		if (ret)
+>  			reg->status |= STATUS_WRITE_FAIL;
+>  		else
+>  			reg->status |= STATUS_WRITE_SUCCESS;
+>  		pci_epf_test_raise_irq(epf_test, reg);
+> -		goto reset_handler;
+> -	}
+> -
+> -	if (command & COMMAND_READ) {
+> +		break;
+> +	case COMMAND_READ:
+>  		ret = pci_epf_test_read(epf_test, reg);
+>  		if (!ret)
+>  			reg->status |= STATUS_READ_SUCCESS;
+>  		else
+>  			reg->status |= STATUS_READ_FAIL;
+>  		pci_epf_test_raise_irq(epf_test, reg);
+> -		goto reset_handler;
+> -	}
+> -
+> -	if (command & COMMAND_COPY) {
+> +		break;
+> +	case COMMAND_COPY:
+>  		ret = pci_epf_test_copy(epf_test, reg);
+>  		if (!ret)
+>  			reg->status |= STATUS_COPY_SUCCESS;
+>  		else
+>  			reg->status |= STATUS_COPY_FAIL;
+>  		pci_epf_test_raise_irq(epf_test, reg);
+> -		goto reset_handler;
+> +		break;
+> +	default:
+> +		dev_err(dev, "Invalid command\n");
+> +		break;
+>  	}
 >  
->  	if (reg->irq_type > IRQ_TYPE_MSIX) {
->  		dev_err(dev, "Failed to detect IRQ type\n");
+>  reset_handler:
 > -- 
 > 2.39.2
 > 
