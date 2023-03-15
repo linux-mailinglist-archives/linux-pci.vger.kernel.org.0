@@ -2,127 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 656CE6BB64C
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 15:39:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A9E6BB6DE
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 16:02:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232042AbjCOOjO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 10:39:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41488 "EHLO
+        id S232841AbjCOPC5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 15 Mar 2023 11:02:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232493AbjCOOjK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 10:39:10 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0441EF80;
-        Wed, 15 Mar 2023 07:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678891149; x=1710427149;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=rbEtsZqcCxnAkv7v46t+kyfgD1hi/rzwe9N8/sucaPk=;
-  b=N4EwodQnOJ06yGSy9HYuPRSCGgRkxeH3eWr6vJ2EDdtgdddw1B4qFhp+
-   JFfBkcSUt9Nng/b/IyX5B120FHzRhmPxD1vLFkh0SfI1OXibrbduXgUKA
-   CFT6n2qIyVP+Z4dSbjot93coK6bnDHibRCvXZ7f+SvvTDlMYpKtyfZ98W
-   q1Djdcpjt8UwrVhAJq/ObcRMcZ8CcziA6E/+ffyNTDMsUwlRbysFl5bfx
-   ZmswvFkMyOKikeHaFeC8bzj1wgzUFSKF2XbJu0JmZFc6Bw0qvpRi+A9Kd
-   /gpwArFFpJDbHmH3JxzxAp4+FeBDRnqn/O8CG5uvVj2fnlqVUiRBnLU/c
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="339257806"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="339257806"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 07:39:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10649"; a="711937077"
-X-IronPort-AV: E=Sophos;i="5.98,262,1673942400"; 
-   d="scan'208";a="711937077"
-Received: from stevenpa-mobl2.amr.corp.intel.com (HELO [10.212.47.53]) ([10.212.47.53])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Mar 2023 07:39:08 -0700
-Message-ID: <49907fd5-3069-dc19-1388-590e08600037@linux.intel.com>
-Date:   Wed, 15 Mar 2023 07:39:03 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] PCI: vmd: guard device addition and removal
-To:     "You-Sheng Yang (vicamo)" <vicamo.yang@canonical.com>,
-        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        with ESMTP id S233112AbjCOPCf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 11:02:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 592F861A90
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 08:01:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF60B61DC3
+        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 15:01:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37BA8C433EF;
+        Wed, 15 Mar 2023 15:01:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678892501;
+        bh=aHtu9maYyyIHr/XoVlixWl3bm/KLMNKI7Af0m0Ap+IA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=U9td6Wp55OTxxyAfn8wn3vx/WRccnuGlVdQthFEf/Va+wOp5Ia8OVEU70r+hSbhRZ
+         hD2mg8L22O33ubruROC8W3dE/OaL196mLsFYTU2FbNk3LDgmQxcwK2U1I6c74hV81n
+         UF5YnfMZaoAMCNcA+teb45KdIhiDnEMMfTH5pRfo4laovgpE1N3KoaiyA8rBlLu7KK
+         rBOpCc/dnwAkpoDVBLZhcqaWb/l50sUSu/MOuy0zkgXIEAvDkkfAEL5hv3SOUJyIa0
+         cxWS2mwJbGyo2p0fyEnkaanuTr5KxzsSdcOmhuFlXib+i1Th9YAQaZ0JnWQN3/4PHJ
+         BObtrdteoI26Q==
+Date:   Wed, 15 Mar 2023 20:31:28 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Keith Busch <kbusch@kernel.org>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230313173733.1815277-1-vicamo.yang@canonical.com>
-Content-Language: en-US
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20230313173733.1815277-1-vicamo.yang@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 02/16] PCI: endpoint: Move pci_epf_type_add_cfs() code
+Message-ID: <20230315150128.GD98488@thinkpad>
+References: <20230308090313.1653-1-damien.lemoal@opensource.wdc.com>
+ <20230308090313.1653-3-damien.lemoal@opensource.wdc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230308090313.1653-3-damien.lemoal@opensource.wdc.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/13/2023 10:37 AM, You-Sheng Yang (vicamo) wrote:
-> VMD may fail to create sysfs entries while `pci_rescan_bus()` called in
-> some other drivers like t7xx wwan driver:
->
->   sysfs: cannot create duplicate filename '/devices/.../resource0'
->   Call Trace:
->    <TASK>
->    sysfs_warn_dup.cold+0x17/0x34
->    sysfs_add_bin_file_mode_ns+0xc0/0xf0
->    sysfs_create_bin_file+0x6d/0xb0
->    pci_create_attr+0x117/0x260
->    pci_create_resource_files+0x6b/0x150
->    pci_create_sysfs_dev_files+0x18/0x30
->    pci_bus_add_device+0x30/0x80
->    pci_bus_add_devices+0x31/0x80
->    pci_bus_add_devices+0x5b/0x80
->    vmd_enable_domain.constprop.0+0x6b7/0x880 [vmd]
->    vmd_probe+0x16d/0x193 [vmd]
->
-> Fixes: 185a383ada2e ("x86/PCI: Add driver for Intel Volume Management Device (VMD)")
-> Signed-off-by: You-Sheng Yang (vicamo) <vicamo.yang@canonical.com>
+On Wed, Mar 08, 2023 at 06:02:59PM +0900, Damien Le Moal wrote:
+> pci_epf_type_add_cfs() is called only from pci_ep_cfs_add_type_group()
+> in drivers/pci/endpoint/pci-ep-cfs.c, so there is no need to export this
+> function and we can move its code from pci-epf-core.c to pci-ep-cfs.c
+> as a static function.
+> 
+> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+
+Thanks,
+Mani
+
 > ---
->  drivers/pci/controller/vmd.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 769eedeb8802..f050991bd1e9 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -838,9 +838,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
->  	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+>  drivers/pci/endpoint/pci-ep-cfs.c   | 20 ++++++++++++++++++
+>  drivers/pci/endpoint/pci-epf-core.c | 32 -----------------------------
+>  include/linux/pci-epf.h             |  2 --
+>  3 files changed, 20 insertions(+), 34 deletions(-)
+> 
+> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> index b16fc6093c20..3a05e9b5a4e9 100644
+> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> @@ -509,6 +509,26 @@ static const struct config_item_type pci_epf_type = {
+>  	.ct_owner	= THIS_MODULE,
+>  };
 >  
-> +	pci_lock_rescan_remove();
+> +static struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+> +						 struct config_group *group)
+> +{
+> +	struct config_group *epf_type_group;
 > +
->  	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
->  				       &vmd_ops, sd, &resources);
->  	if (!vmd->bus) {
-> +		pci_unlock_rescan_remove();
+> +	if (!epf->driver) {
+> +		dev_err(&epf->dev, "epf device not bound to driver\n");
+> +		return NULL;
+> +	}
 > +
->  		pci_free_resource_list(&resources);
->  		vmd_remove_irq_domain(vmd);
->  		return -ENODEV;
-> @@ -893,6 +897,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+> +	if (!epf->driver->ops->add_cfs)
+> +		return NULL;
+> +
+> +	mutex_lock(&epf->lock);
+> +	epf_type_group = epf->driver->ops->add_cfs(epf, group);
+> +	mutex_unlock(&epf->lock);
+> +
+> +	return epf_type_group;
+> +}
+> +
+>  static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
+>  {
+>  	struct config_group *group;
+> diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+> index 2036e38be093..355a6f56fcea 100644
+> --- a/drivers/pci/endpoint/pci-epf-core.c
+> +++ b/drivers/pci/endpoint/pci-epf-core.c
+> @@ -20,38 +20,6 @@ static DEFINE_MUTEX(pci_epf_mutex);
+>  static struct bus_type pci_epf_bus_type;
+>  static const struct device_type pci_epf_type;
 >  
->  	vmd_acpi_end();
->  
-> +	pci_unlock_rescan_remove();
-> +
->  	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
->  			       "domain"), "Can't create symlink to domain\n");
->  	return 0;
+> -/**
+> - * pci_epf_type_add_cfs() - Help function drivers to expose function specific
+> - *                          attributes in configfs
+> - * @epf: the EPF device that has to be configured using configfs
+> - * @group: the parent configfs group (corresponding to entries in
+> - *         pci_epf_device_id)
+> - *
+> - * Invoke to expose function specific attributes in configfs. If the function
+> - * driver does not have anything to expose (attributes configured by user),
+> - * return NULL.
+> - */
+> -struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+> -					  struct config_group *group)
+> -{
+> -	struct config_group *epf_type_group;
+> -
+> -	if (!epf->driver) {
+> -		dev_err(&epf->dev, "epf device not bound to driver\n");
+> -		return NULL;
+> -	}
+> -
+> -	if (!epf->driver->ops->add_cfs)
+> -		return NULL;
+> -
+> -	mutex_lock(&epf->lock);
+> -	epf_type_group = epf->driver->ops->add_cfs(epf, group);
+> -	mutex_unlock(&epf->lock);
+> -
+> -	return epf_type_group;
+> -}
+> -EXPORT_SYMBOL_GPL(pci_epf_type_add_cfs);
+> -
+>  /**
+>   * pci_epf_unbind() - Notify the function driver that the binding between the
+>   *		      EPF device and EPC device has been lost
+> diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+> index a215dc8ce693..b8441db2fa52 100644
+> --- a/include/linux/pci-epf.h
+> +++ b/include/linux/pci-epf.h
+> @@ -214,8 +214,6 @@ void pci_epf_free_space(struct pci_epf *epf, void *addr, enum pci_barno bar,
+>  			enum pci_epc_interface_type type);
+>  int pci_epf_bind(struct pci_epf *epf);
+>  void pci_epf_unbind(struct pci_epf *epf);
+> -struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+> -					  struct config_group *group);
+>  int pci_epf_add_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
+>  void pci_epf_remove_vepf(struct pci_epf *epf_pf, struct pci_epf *epf_vf);
+>  #endif /* __LINUX_PCI_EPF_H */
+> -- 
+> 2.39.2
+> 
 
-Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
-
-Thanks
-
+-- 
+மணிவண்ணன் சதாசிவம்
