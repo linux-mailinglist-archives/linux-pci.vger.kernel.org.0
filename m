@@ -2,141 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CAEEE6BA8D6
-	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 08:16:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2696F6BAA8E
+	for <lists+linux-pci@lfdr.de>; Wed, 15 Mar 2023 09:17:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbjCOHQJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 15 Mar 2023 03:16:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50022 "EHLO
+        id S231329AbjCOIRG convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 15 Mar 2023 04:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229972AbjCOHQJ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 03:16:09 -0400
-Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF362333F
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 00:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1678864568; x=1710400568;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=gzn4utLc8E9+krBxKFICMItFLGvLZcLSUim2ZyjAkIc=;
-  b=fNz4fcUa0Bh35N57DRw7l4GEcoFhlzTXON2XxIaEJPcf7l5E17VNsBsi
-   IYERbyyJIye6oi5FeEVb8xSt14Pbyl+5vze0j1osL21DQhVTKeonm7OWg
-   Um0+eAbeYt0OCLNK4g8nd57clTrMV+nxXDAjgrHje0GDS8lhwMK8VvJrm
-   BsFyU/6a5TqnqJvFBvnyIHcb0yUn66HNUBptu2wwkPoSozeX7A09aNniP
-   D6KZCXquZLBPp020TlloAP9Ge2usVqIPW4vYQ+f+rqYjvFgv9cdL+CISz
-   viHXyn6fWahIP/iwT4SvjsDEGMwz1WmdAbkW7m21At62oIH3/TSCsHCr0
-   w==;
-X-IronPort-AV: E=Sophos;i="5.98,262,1673884800"; 
-   d="scan'208";a="330050563"
-Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 15 Mar 2023 15:16:02 +0800
-IronPort-SDR: LIiTTIBH9tXKxvcwGzN6ZBLly2FLzc6yjlaV6yRXpJEJvoqVZmoYqk8l+o8yo5kIeHQMaHh7oW
- izHWyEJv31BtnNkuDZPVKuddmn0qsJkkSKV32TJ9ddjZDKG33VRbUxdhyzwDd0NhNxyGBjUMT2
- N741k8OTu4lNcOg2Slel8kptRcgzLO4AZWSKEGwy2M6sd7xsQsGQeaf3KDj+nNteBBEGJZzHim
- Jltj30pdCCR5iigZMCBXXgdBEsDePa4cLbM5MOL5R49HtOpCvRrdp773170STCGP+Hv4vC4kPq
- Rz0=
-Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 14 Mar 2023 23:32:29 -0700
-IronPort-SDR: vKVhBMJw7jb1IXpSds6WssWw/OgpW+QrxjKxFQznNjT6pxeupmqL7eEJuqqOXj348qnjQhag7j
- HTPJjGf0wutv92vS4T0kQQ2z1WClv7UUVBZpiNG3LlmekuAQ3+wP5/Z2KOPltRFkOpNTPgVLtU
- m2C5viAC+OOjiTe6o1IWRpImy/P+n5P9qYEFx3unSoEoaeYhQW8AQQuYM/zExnas2ROsXe3yMg
- Niu9SHHSKRsOjSJohfxT1KLtuzTh4P0xT1fXWpG1ryBMBepKj1zIGy073zlgJQaY1xPAKUvzNW
- /6E=
-WDCIronportException: Internal
-Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 15 Mar 2023 00:16:04 -0700
-Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4Pc1ry1xVPz1RtW1
-        for <linux-pci@vger.kernel.org>; Wed, 15 Mar 2023 00:16:02 -0700 (PDT)
-Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)"
-        header.d=opensource.wdc.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
-        opensource.wdc.com; h=content-transfer-encoding:content-type
-        :in-reply-to:organization:from:references:to:content-language
-        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
-        1678864561; x=1681456562; bh=gzn4utLc8E9+krBxKFICMItFLGvLZcLSUim
-        2ZyjAkIc=; b=QcmorQfZXKnxA0EP7lHE6ez2ReFY9lPT4JMif04usI6gdah0wx0
-        vjPLeQsGOm7rbfUi5HB5svALBY5VWJJkskyIm0D8SDfyog00LnyDo6LIvaBdF+/u
-        nw+QcWIBu1sfkqAtZydHxTg80DmhPgDoxAf5m/TzXMgey4VBJ7Ef+m8cogq4hmvB
-        w8xwcrKWp7hG4x91n1SD5kzj0evVdg4TfLQwgH8+8e3TkBW4S4IdhrKBCqlg+D1F
-        y4g6c7QkY0h9fbJHVs9V53ydftmGFvQMHgvwAY3Al0s00S/nKtFWGhIgui0OwsSB
-        adBv0xdYIQ6zHwM7JXVrIPTKFiTLYjOyxEA==
-X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
-Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
-        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id PIBplZ6IFi_p for <linux-pci@vger.kernel.org>;
-        Wed, 15 Mar 2023 00:16:01 -0700 (PDT)
-Received: from [10.225.163.84] (unknown [10.225.163.84])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4Pc1rt5qrVz1RtVm;
-        Wed, 15 Mar 2023 00:15:58 -0700 (PDT)
-Message-ID: <d9cdb235-4cd6-5ff3-31c2-85e893e25794@opensource.wdc.com>
-Date:   Wed, 15 Mar 2023 16:15:57 +0900
+        with ESMTP id S230426AbjCOIRF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 15 Mar 2023 04:17:05 -0400
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F4246286B;
+        Wed, 15 Mar 2023 01:17:04 -0700 (PDT)
+Received: by mail-qv1-f42.google.com with SMTP id cu4so11638946qvb.3;
+        Wed, 15 Mar 2023 01:17:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678868223;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0V0QfuKISCsuOFNxrXLROjtKcqlhxKao9KY/kU4MtCE=;
+        b=Sz2J6d6/wEGEzzaDTff+nAWLIYyFRKYfvzBMi5TyGWkNvErIHDNFhNkBTEJOS7S3+o
+         AGAr0xzSnSub8k32+tj5pxKDcM62QTMmishiE1IgYCVSsf3Poe9hmPZfL5pfgGk6dONu
+         PKgfG24SKkt2Li5jMaZ2Y/+vtfPnQ2q7Jhd+vDm9sTfXdd2qG1YledC2m46s4beIYooz
+         xfTXL3Y6AVJk3xiIegDY4Spr49vs1ZWDEMwuY6ZFOJCHePYQi0c7n9h+w9pejrxrpBw1
+         aK4S7IN62dfieU5YJkAqoSjJCNywXbjx7jnWk79vrIeQljXAPXfp88pGFJB67LZytROx
+         Vtvw==
+X-Gm-Message-State: AO0yUKUwJUWYgTPUeqNREEnhvzTpbY+eawuxF8zXTElf2lEQYWvmoCDE
+        MczGPiaqzQDIkGy15MSoE/sfOXg1cPUoIL1B
+X-Google-Smtp-Source: AK7set9b4gjFSfD8vRQVIE3sF46b8E3Y1Dt5JH57Nq7usykqdSTmxhgmZA+ZsculXiDVGm+nk81CCg==
+X-Received: by 2002:a05:622a:1991:b0:3d5:500a:4808 with SMTP id u17-20020a05622a199100b003d5500a4808mr1335796qtc.37.1678868223056;
+        Wed, 15 Mar 2023 01:17:03 -0700 (PDT)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
+        by smtp.gmail.com with ESMTPSA id f2-20020ac86ec2000000b003a81eef14efsm3296268qtv.45.2023.03.15.01.17.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 15 Mar 2023 01:17:02 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5416b0ab0ecso223862507b3.6;
+        Wed, 15 Mar 2023 01:17:02 -0700 (PDT)
+X-Received: by 2002:a81:ae5e:0:b0:541:a17f:c779 with SMTP id
+ g30-20020a81ae5e000000b00541a17fc779mr6894792ywk.4.1678868221967; Wed, 15 Mar
+ 2023 01:17:01 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v3 02/38] ata: add HAS_IOPORT dependencies
-Content-Language: en-US
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+References: <20230314121216.413434-1-schnelle@linux.ibm.com> <20230314121216.413434-36-schnelle@linux.ibm.com>
+In-Reply-To: <20230314121216.413434-36-schnelle@linux.ibm.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 Mar 2023 09:16:50 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW4f8GJ-kFDPg6Ao=g3ZAXq79u9nUZ_dW1LonHu+vxk8Q@mail.gmail.com>
+Message-ID: <CAMuHMdW4f8GJ-kFDPg6Ao=g3ZAXq79u9nUZ_dW1LonHu+vxk8Q@mail.gmail.com>
+Subject: Re: [PATCH v3 35/38] video: handle HAS_IOPORT dependencies
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Helge Deller <deller@gmx.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         Alan Stern <stern@rowland.harvard.edu>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-ide@vger.kernel.org
-References: <20230314121216.413434-1-schnelle@linux.ibm.com>
- <20230314121216.413434-3-schnelle@linux.ibm.com>
-From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Organization: Western Digital Research
-In-Reply-To: <20230314121216.413434-3-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/14/23 21:11, Niklas Schnelle wrote:
+Hi Niklas,
+
+On Tue, Mar 14, 2023 at 1:13 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
 > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
 > not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
-> 
+> those drivers using them and guard inline code in headers.
+>
 > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
 > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/ata/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-> index b56fba76b43f..e5e67bdc2dff 100644
-> --- a/drivers/ata/Kconfig
-> +++ b/drivers/ata/Kconfig
-> @@ -342,6 +342,7 @@ endif # HAS_DMA
->  
->  config ATA_SFF
->  	bool "ATA SFF support (for legacy IDE and PATA)"
-> +	depends on HAS_IOPORT
->  	default y
->  	help
->  	  This option adds support for ATA controllers with SFF
 
-Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Thanks for your patch!
+
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+
+> @@ -1284,7 +1285,7 @@ config FB_ATY128_BACKLIGHT
+>
+>  config FB_ATY
+>         tristate "ATI Mach64 display support" if PCI || ATARI
+> -       depends on FB && !SPARC32
+> +       depends on FB && HAS_IOPORT && !SPARC32
+
+On Atari, this works without ATARI_ROM_ISA, hence it must not depend
+on HAS_IOPORT.
+The only call to inb() is inside a section protected by #ifdef
+CONFIG_PCI. So:
+
+    depends on FB && !SPARC32
+    depends on ATARI || HAS_IOPORT
+
+>         select FB_CFB_FILLRECT
+>         select FB_CFB_COPYAREA
+>         select FB_CFB_IMAGEBLIT
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Damien Le Moal
-Western Digital Research
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
