@@ -2,183 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 41CAE6BCAE8
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 10:32:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CACF6BCAF4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 10:33:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230084AbjCPJcl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 05:32:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54028 "EHLO
+        id S231161AbjCPJdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 05:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229621AbjCPJck (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 05:32:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B40EB53EF;
-        Thu, 16 Mar 2023 02:32:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S230211AbjCPJds (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 05:33:48 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EBCB856A;
+        Thu, 16 Mar 2023 02:33:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1678959224; x=1710495224;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=W7UnOpCRtVxMC1YLy/djxks54MjsNALCx508mBTqGOw=;
+  b=DILPNRapvG2FKeg9ER0vwn5qBsEblUv1tivo8U/aW6kNnZFoU1zc7UCq
+   OXys9CRUz2Lp0xZ8HDBE9Gbz3MsO2z6hv6A77+fCRPVFdzHee++8c5BEL
+   UzBDP2X/Ay0kb5JCqef4dZVXnSIDzHZmTtB0QNmBG/xIA5+tMxNJPWijN
+   D1dnLo3a3dNuAROUOziPm+EO9Ze+rnPwyt5Mwva1O6wLATL2pImjAx83G
+   kJhiG5QH87YEi5ZW5mR81/Ifr8usHJk4dBKZ9ZtenzHqhW2tXwrNIZdSF
+   W5Xwc2eJh/6bkA/Oe9U+YX/tiJeGShYGkd8U65opmPZ8ozJlm06ay00O8
+   g==;
+X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
+   d="scan'208";a="29731249"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 16 Mar 2023 10:33:41 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 16 Mar 2023 10:33:41 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 16 Mar 2023 10:33:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1678959221; x=1710495221;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=W7UnOpCRtVxMC1YLy/djxks54MjsNALCx508mBTqGOw=;
+  b=ZtxM30JDyKRelPUgwLqfTmiQPhezwMsE1kBIDg7fS9XYOaO/tClfAztH
+   I5/tQBvJnLRk+CzZfq4pqoOr0EH4ZPpTe60ByegqvFubVbdK8zLNCK2k/
+   QiqsBT4KCocCIYyCBjcq3nSbYOK4pyAh/gyWH5+xdjSRiG4qLg7IRcc19
+   VLDVxc4xe0vjqe0kIse3ZxMY46m3ba3tqHj0D+RaPEoxPB16e1k8pyFuK
+   IXDlpqZBSjL3DJVXLpkWth77qy8TnEoD740/e4KyPMWqe/jf4TbMvX51o
+   37pBoELM6Ct/xRIr1IQ03F3FRzZUyleoMV8BjaQqReKRe7e1abCqWSUxb
+   g==;
+X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
+   d="scan'208";a="29731247"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 16 Mar 2023 10:33:40 +0100
+Received: from steina-w.localnet (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3756F61F8B;
-        Thu, 16 Mar 2023 09:32:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBC3C4339C;
-        Thu, 16 Mar 2023 09:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678959158;
-        bh=X5j5wZaVfDApMQfPIqmbRrHxc4bWj4lj/kFlDhbE2KU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=JLM0SV1B8dlFj5dGNuPHJb2+axY7u/9jUVjXlIrFlcOHUpuujxhq82F5PtJ2nrn5j
-         v3W+bPv4EzNsMql3fwLrdh0eIxxEPXMn1Yp5dyBvldOJMzD/inMI2Pllf/a7Ln0hoP
-         PnTUrVnVwk3GoUTH6NPCgqcq/uGO0FuTSWrV6OeOoXsYCl9aYqMvnw9fuVB2uv57O8
-         1E35ewskN7Au9l3/lnx0GVocgWG7V3zkkqLC/5oIdzsj+pQKdYWCwKRbfbU/UW4lWR
-         F/a8JQUXRnlNdm8LRScBwS6ztBL+1EWArOpKCfRswrwOj59vV5tJeAFk9n2LWguecK
-         yXL+FkffnTj7g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pcjyO-000X1g-5g;
-        Thu, 16 Mar 2023 09:32:36 +0000
-Date:   Thu, 16 Mar 2023 09:32:35 +0000
-Message-ID: <86a60dxcr0.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Janne Grunau <j@jannau.net>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?UTF-8?B?V2lsY3p5?= =?UTF-8?B?xYRza2k=?= 
-        <kw@linux.com>, Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
-In-Reply-To: <20230309163935.GA1140101@bhelgaas>
-References: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
-        <20230309163935.GA1140101@bhelgaas>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: helgaas@kernel.org, j@jannau.net, alyssa@rosenzweig.io, lpieralisi@kernel.org, kw@linux.com, robh@kernel.org, bhelgaas@google.com, sven@svenpeter.dev, linux-pci@vger.kernel.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, daire.mcnamara@microchip.com, conor.dooley@microchip.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id C6F74280056;
+        Thu, 16 Mar 2023 10:33:40 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Oliver Neukum <oneukum@suse.com>
+Cc:     Korneliusz Osmenda <korneliuszo@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Guard pci_create_sysfs_dev_files with atomic value
+Date:   Thu, 16 Mar 2023 10:33:38 +0100
+Message-ID: <6131694.LvFx2qVVIh@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <106b5618-908f-becc-6eb3-75ef136a48e4@suse.com>
+References: <20230316091540.494366-1-alexander.stein@ew.tq-group.com> <106b5618-908f-becc-6eb3-75ef136a48e4@suse.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 09 Mar 2023 16:39:35 +0000,
-Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> [+cc Daire, Conor for apple/microchip use of ECAM .init() method]
-> 
-> On Thu, Mar 09, 2023 at 02:36:24PM +0100, Janne Grunau wrote:
-> > Fixes following warning inside of_irq_parse_raw() called from the common
-> > PCI device probe path.
-> > 
-> >   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
-> >   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
-> 
-> Based on this commit log, I assume this patch only fixes the warning,
-> and the system *works* just fine either way.  If that's the case, it's
-> debatable whether it meets the stable kernel criteria, although the
-> documented criteria are much stricter than what happens in practice.
-> 
-> >   ...
-> >   Call trace:
-> >    of_irq_parse_raw+0x5fc/0x724
-> >    of_irq_parse_and_map_pci+0x128/0x1d8
-> >    pci_assign_irq+0xc8/0x140
-> >    pci_device_probe+0x70/0x188
-> >    really_probe+0x178/0x418
-> >    __driver_probe_device+0x120/0x188
-> >    driver_probe_device+0x48/0x22c
-> >    __device_attach_driver+0x134/0x1d8
-> >    bus_for_each_drv+0x8c/0xd8
-> >    __device_attach+0xdc/0x1d0
-> >    device_attach+0x20/0x2c
-> >    pci_bus_add_device+0x5c/0xc0
-> >    pci_bus_add_devices+0x58/0x88
-> >    pci_host_probe+0x124/0x178
-> >    pci_host_common_probe+0x124/0x198 [pci_host_common]
-> >    apple_pcie_probe+0x108/0x16c [pcie_apple]
-> >    platform_probe+0xb4/0xdc
-> > 
-> > This became apparent after disabling unused PCIe ports in the Apple
-> > silicon device trees instead of deleting them.
-> > 
-> > Use for_each_available_child_of_node instead of for_each_child_of_node
-> > which takes the "status" property into account.
-> > 
-> > Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-> > Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-> > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> > Cc: stable@vger.kernel.org
-> > Reviewed-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Janne Grunau <j@jannau.net>
+Hi Oliver,
+
+Am Donnerstag, 16. M=E4rz 2023, 10:23:54 CET schrieb Oliver Neukum:
+> On 16.03.23 10:15, Alexander Stein wrote:
+> > From: Korneliusz Osmenda <korneliuszo@gmail.com>
+> >=20
+> > On Gateworks Ventana there is a number of PCI devices and:
+> >    - imx6_pcie_probe takes longer than start of late init
+> >    - pci_sysfs_init sets up flag sysfs_initialized
+> >    - pci_sysfs_init initializes already found devices
+> >    - imx6_pcie_probe tries to reinitialize device
+> >=20
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D215515
+> >=20
+> > Signed-off-by: Korneliusz Osmenda <korneliuszo@gmail.com>
+> > Signed-off-by: Alexander Stein <alexander.stein@ew.tq-group.com>
 > > ---
-> > Changes in v2:
-> > - rewritten commit message with more details and corrections
-> > - collected Marc's "Reviewed-by:"
-> > - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
-> > ---
-> >  drivers/pci/controller/pcie-apple.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> > index 66f37e403a09..f8670a032f7a 100644
-> > --- a/drivers/pci/controller/pcie-apple.c
-> > +++ b/drivers/pci/controller/pcie-apple.c
-> > @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
-> >  	cfg->priv = pcie;
-> >  	INIT_LIST_HEAD(&pcie->ports);
-> >  
-> > -	for_each_child_of_node(dev->of_node, of_port) {
-> > +	for_each_available_child_of_node(dev->of_node, of_port) {
-> >  		ret = apple_pcie_setup_port(pcie, of_port);
-> >  		if (ret) {
-> >  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
-> 
-> Is this change still needed after 6fffbc7ae137 ("PCI: Honor firmware's
-> device disabled status")?  This is a generic problem, and it would be
-> a lot nicer if we had a generic solution.  But I assume it *is* still
-> needed because Rob gave his Reviewed-by.
+> >=20
+> >   drivers/pci/pci-sysfs.c | 6 ++++++
+> >   include/linux/pci.h     | 2 ++
+> >   2 files changed, 8 insertions(+)
+> >=20
+> > diff --git a/drivers/pci/pci-sysfs.c b/drivers/pci/pci-sysfs.c
+> > index dd0d9d9bc509..998e44716b6f 100644
+> > --- a/drivers/pci/pci-sysfs.c
+> > +++ b/drivers/pci/pci-sysfs.c
+> > @@ -1497,6 +1497,9 @@ int __must_check pci_create_sysfs_dev_files(struct
+> > pci_dev *pdev)>=20
+> >   	if (!sysfs_initialized)
+> >   =09
+> >   		return -EACCES;
+> >=20
+> > +	if (atomic_cmpxchg(&pdev->sysfs_init_cnt, 0, 1) =3D=3D 1)
+> > +		return 0;		/* already added */
+> > +
+> >=20
+> >   	return pci_create_resource_files(pdev);
+>=20
+> This is very likely a bug. You are returning an error in the error
+> case. Yet the flag stays.
 
-I'm not sure this is addressing the same issue. The way I read it, the
-patch you mention here allows a PCI device to be disabled in firmware,
-even if it could otherwise be probed.
+Ah, you are right. This is something needed to address.
 
-What this patch does is to prevent root ports that exist in the HW but
-that have been disabled from being probed. Same concept, only at a
-different level.
+> And simply resetting it in the error case
+> would be a race. There is something fishy in that design.
 
-> Not related to this patch, but this function looks funny to me.  Most
-> pci_ecam_ops.init functions just set up ECAM-related things.
-> 
-> In addition to ECAM stuff, apple_pcie_init() and mc_platform_init()
-> also initialize IRQs, clocks, and resets.
+Admittedly=20
+I would like to get rid of these two pathes for creating sysfs files in the=
+=20
+first place, but I do not know the pci subsystem very well.
+IMHO for_each_pci_dev(pdev) in pci_sysfs_init is part of the problem as it=
+=20
+unconditionally iterates over the bus, without any locks, thus creating sys=
+fs=20
+files for each device added to the bus.
+Any ideas?
 
-And more. We also initialise the RID-to-SID mapping that control the
-view the downstream IOMMU has of the devices controlled by the root
-port.
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
 
-> Maybe we shoehorn the IRQ, clock, reset setup into pci_ecam_ops.init
-> because we lack a generic hook for doing those things, but it seems a
-> little muddy conceptually.
 
-Indeed. I used this callback as it was convenient ordering wise, but
-this is conceptually a platform init thing.  The current state of the
-ECAM setup doesn't allow any other callback that would suit the
-context.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
