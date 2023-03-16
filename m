@@ -2,158 +2,192 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 221DA6BCDE9
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 12:18:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20CA76BCE08
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 12:20:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjCPLS2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 07:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56112 "EHLO
+        id S229852AbjCPLT6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 07:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229785AbjCPLS1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 07:18:27 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2083.outbound.protection.outlook.com [40.107.21.83])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7683E8ABEF;
-        Thu, 16 Mar 2023 04:17:59 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Cc3s2AGOz6YreNznxz7Q4oDF/LjiL/I0fnk05FC5a++HiaMPn+yryhd3yPJe/aPVSbQX3AlxONgtbg55x4BgRVHdidCdRMTzQloMuRysWMNH2WZWugavzOuz650QvpghTAyFm2UhWiIa5So1mjwJDy7PwsGPuZbf//95C8FJjJTbBg/khur2q+hglmCPIm1U00WxKBUhA1+Qqtegreigs+Pmx/8nKyiFJkwWCLQ9f2sgKdiBigYxDZVHMKp8SS0bpv3KgVGRj4ibz+4m0itGjRFlpAJ4+16S5HBWrhRbBsPpMkC3KUJU9SRCa2CL21GCZ2z53LEBZnrnz3+ST8B18g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V5710GWVkVKVXZ3t/R0byw3HRDc8DEUmRjgNhb8qT14=;
- b=PIbeotNZCg253wV11su9zkswt3r239BR5D5fT3q/WXUKmt+q7l8xdijzowniv5PHVFdEDxOX4nxMK8mp0DoUqQP2JBWB3P/dfZPi7eToVKhAwzF0ViByG9l618YtGFipmd1UC47iHU/Bdl6sLpXZIkMUd7jITj3eYQ5eogN4kVT3Sr5wwCCGft9Qj2CA+XcDV7OC75Hq08JuBVrM7O/0kejcW+7Xf4dz6vzra3LHCT+n5NP99YFmpvIpzd8/Qfw69qw9VPTjd22s9KnlCj3f2I3utPzwYDhmmd3ncrNy8XQh192MwYAKymQBeNoo481/InGT5VYeIuXNLtSVeMR4yA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V5710GWVkVKVXZ3t/R0byw3HRDc8DEUmRjgNhb8qT14=;
- b=T+w/ZGKKspDGhEfIZdTdtBuW1/wl07Ukew19ifuRugdo1MttV0FxvoAekjRylXMWbKwP7CJeI8kWq/C6/LIJSoAyOTUi2oOSOZmfucjPmcS2E3/fePEKclGOLP1UXt9sZWAuRPoKCHlC2Y/RVxQw70ezebu680pA5fXXEfvCODCafux5E4BxXXvVbDngk7LkaTb9pTTy8ssM73BRJRdqU6fo9aziHU6jFw35coHzBPuJckf2Bc2rcvevjdti1nHAf7PIO2odFBz/J4Aj4UZHe/JG9ks5zKG5k9xDGLZavpato50In8Xy1W/PW1uGxpwTdBqS4GVKQSL9ib+nJ70RNw==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com (2603:10a6:800:126::9)
- by GVXPR04MB9973.eurprd04.prod.outlook.com (2603:10a6:150:112::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.30; Thu, 16 Mar
- 2023 11:17:34 +0000
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com ([fe80::2ea:4a86:9ab7])
- by VI1PR04MB7104.eurprd04.prod.outlook.com ([fe80::2ea:4a86:9ab7%3]) with
- mapi id 15.20.6178.031; Thu, 16 Mar 2023 11:17:34 +0000
-Message-ID: <612dfdd2-7de1-12a7-c47c-7569c3466224@suse.com>
-Date:   Thu, 16 Mar 2023 12:17:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v2 1/1] Guard pci_create_sysfs_dev_files with atomic value
-Content-Language: en-US
-To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        with ESMTP id S229629AbjCPLT6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 07:19:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B89D503;
+        Thu, 16 Mar 2023 04:19:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0E8ABB81FA7;
+        Thu, 16 Mar 2023 11:18:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3460C433D2;
+        Thu, 16 Mar 2023 11:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678965534;
+        bh=JarC/Lr5xGEmHxjDuOh254kaR60wlKpI3/R82UkKIkY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=sHza2oKk2ydXN4NMEL+WH03zZSjsr9n00J8DdZDfrCeL0lLaJ94uBKUsZ4ZWLvFml
+         sqUClx0WCDATpxFq9k0YnANvGtw+8pahG7nc5QaLaO+GhuMowPFBoC7wryEnL2eSDJ
+         x6V76rTuo6lg0yPNZlux5Rb7xlMKcVvRRWIxzZ+olWmpXNYDmT2Xw0zE9XScwkHT8z
+         gZsaNax3v09jckC/KY3BbP2Nt3d2uzsGlVCnk/IQLrvnliIqzoBpgJIXhJwQBihIS4
+         IXWcmyM4W8lLDLOjG0s2UqvzAXkAA47jphmR/41QptSnUaQAG1Zx40KmbJf2FFSwHA
+         +cHUzeqDqvu5g==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1pcldE-000YvR-Ci;
+        Thu, 16 Mar 2023 11:18:52 +0000
+Date:   Thu, 16 Mar 2023 11:18:52 +0000
+Message-ID: <868rfxx7tv.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Janne Grunau <j@jannau.net>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver Neukum <oneukum@suse.com>
-Cc:     Korneliusz Osmenda <korneliuszo@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230316091540.494366-1-alexander.stein@ew.tq-group.com>
- <106b5618-908f-becc-6eb3-75ef136a48e4@suse.com> <6131694.LvFx2qVVIh@steina-w>
-From:   Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <6131694.LvFx2qVVIh@steina-w>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR3P281CA0181.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::14) To VI1PR04MB7104.eurprd04.prod.outlook.com
- (2603:10a6:800:126::9)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB7104:EE_|GVXPR04MB9973:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2aa38ca8-4d21-4b5a-96b0-08db26100a9f
-X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AgcGWvUtCrK/FuNWioM9cgbPU+mYVOJg/HAgSHwQu7b+pHH5qz0oEqcQoHUM0eAqZ+pd6bSyMbcXrzxHdGdyltGyjTD2oFikPSnKy/jNyWLKczyOgunh5E6ONpe4IVETPHT3q4SjoQEecQdPupBpdbpSdetc0HpyAmc47WQJOYP6ftNvW1M7zavGJsVkwjwao1QBDjiuBayK+TfDKcvSu43EYsFLreUKfKnXuGrQipeWCrqT4KwsOTP9IXXrFYWPVtNJEQCNGJqYRF5BsaZ2l7Bw4E0WMN6mljU7AIhfrqiZc7Wvcobih9xmfZvU8FHpvsRFAB8QVHTCiVAf3z8ylmYYg2DhsqynqLDnmD/Tpw0sqLzD0nFEMDWJgUJYzPSGWYrl9nZU/48GqExrYUncL31EWLWTwXAcG8PdUVt132LXIPbcwrQ4/H2gpAO7OXeKRDHl1GbWk4yZce+M9B1RaEQ6wTo4xjtN7LCbUv+o6O/YQXRW7g1jvu6Foe9w+C/1E4q4RCW1JrF08CabDxPXR2ij4KIIXAmMUmgt5+vVkckGzS/cz3Onrwg/D+Nl9B5pKm+ItASNh83K2H/eq8EhSUgP1XbVbwvbVupllyMl7zTsvt5x7MSoA909XR3B6p6EXoboJhRSyKi678kcv5c5eqHvPGpT4rOp7vg6YtPIUvPkeTFn9YhswE6NgPWWPlMPKTeomCRQlvx6BuTOwTON0I87KeDsJ1MGKDxW65pt/BA=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7104.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(346002)(376002)(366004)(136003)(396003)(39860400002)(451199018)(31686004)(186003)(31696002)(2616005)(83380400001)(316002)(53546011)(6506007)(110136005)(478600001)(6486002)(6512007)(4326008)(2906002)(86362001)(36756003)(38100700002)(8936002)(5660300002)(4744005)(41300700001)(8676002)(66476007)(66556008)(66946007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bG92cFYxbjhGQ3VscEszcnVWdVBjalNrSFpQOUQycEtaMkMrSW5XRjBEemFu?=
- =?utf-8?B?cEJmQk5FTlF6dllYRDFVemZ3aXJPK2crcXhMTGJZTFdDTVl3d2V1cGFRUGlP?=
- =?utf-8?B?d1BzT0VxbjNNNHNISE1CWWVzaExkUVBxQmNQV3E4NklkMk1rRitFUkJKTnZ1?=
- =?utf-8?B?STZXQ1F0bm0vK0NwTjVqTVlPWFB0L2lmTTI4Y2RUTnVVdDZqL1lBK2tOdTFT?=
- =?utf-8?B?U0YyMkYzVVJ5TEw1cTNkNzR2M0tjMmttTkdDMGxSaUhhQ0FOS2lrcVE2a3Nl?=
- =?utf-8?B?a21UalFoZC9MVlF4emx6czl5NmFPcmNzWGdvaUNMSW5EK0J1YS93dEVKckxu?=
- =?utf-8?B?cnowd3MydDVQaUZvTkREMnNBMmFWTVVUZXU4WGM4VHNwbWkycEFXZjVnbzVH?=
- =?utf-8?B?UjJ4OG5LU1h2QzJpMHlVUkEzc0FuMVVxeElkeTVvZlNuVGlVWnNVVkdKamRt?=
- =?utf-8?B?aU16TTZ3aWxwVVkxT1NObW1WY0JIM2p0NzdkNWYzb3BSK0JmMnFCc2JINHk1?=
- =?utf-8?B?WVUwL2J0SmQ4VklWU3VWcjdNRWNzZkRUOFpPYm1NYzBrTHd5blRnL21iNk5S?=
- =?utf-8?B?RCtrTSs1MTEzazZET1VJVE5ZbmNwdkhRR242UVhFOEhMK3RuQkI4bDU4RnVt?=
- =?utf-8?B?ZWgrdmM2NVUrNVpQWnpOTldLYmovWG1CMEFSRFVnbGlycStUQytPem8zek5D?=
- =?utf-8?B?eDE3RjhFQzJmMzNZYnFjeExWWWpJTTlqQkR5cXByU3hNOVAzMU5WSzVaR0tP?=
- =?utf-8?B?dy9uNUU4TlZtYVg1Vlc4STVLVGpnZDV3WmZ3cXJkZUZxRHJqSDNSeWZKeHpP?=
- =?utf-8?B?VmptV0F3WDY1Q1hPMjVJY1g5SE1lbExMNVFCbnRNMGxxU2twcjVOaFpRQjY5?=
- =?utf-8?B?SXlnRmdYUkw5ck9LQnlUVlQ3K0pXSXdCRkhCK3dGc3Jhbk5lclRxRUVCWWhZ?=
- =?utf-8?B?UVZWWFZ4cXVOZlhQWnhEVlJqdm9HWDVaTFNhMzgzL21ZcmhyajM3dG9LQk5o?=
- =?utf-8?B?RnlQNkl5QnZOL29KbnV3MlA1aUp4SWg2VnpPQVc0anBLNlhodzhpTXhHK0VC?=
- =?utf-8?B?RXJjR1RpNTBkQ3lPb25oWkNaUXU2bEZCcXpsUVBqc1BSZzl2ZTd4aTNzbUJI?=
- =?utf-8?B?VHZjUXkvNS84SnU5TXFnOHhLNm1ONVk1L080K3MxNFZHODZoalpxOEhFSjZP?=
- =?utf-8?B?K2NscktQaGZvc3g1OG1oUHZWMURObG5ENFFIZUVjbEFla2c5NFFOUE1vS1Ns?=
- =?utf-8?B?TXJ4aERWWjVldlE3cVlQNGdiVnAvdjliZkorYWVVd3JNcG1pcWlXVmQwUnlN?=
- =?utf-8?B?RFM5TGpXQnk3dGp0K2tIbkZ6R2NOd2lSenZYVGtjd0orN01KUkxYN2M5aVdt?=
- =?utf-8?B?WmtBcWszK2VqdkFCNktxU29MVk1Jck9weWNtQWxCTzZiemJKaXJQMlhVWkk2?=
- =?utf-8?B?Qk9IbW5mZnBoUkxocGRQdkZuR1FqRXlqSjQvQUUvTkJKTEFZb2VUTGt3cUZx?=
- =?utf-8?B?MWR3dHMvZnUwTHdZeDhYK2drODNjME1CZVJtM1RBbDk0MlU4ZWhLUXpKTmVK?=
- =?utf-8?B?WjZvT01wY1MwbEdHejdWdE1tSlROYnpBVnVMYnJoTGI2ME4rOVBBRzhISFVB?=
- =?utf-8?B?bnk4MG9RRnZyM0tFKzhNcGJ3eDZGUHVHNGxGY0w1c3Q5OFZobVJBWEZYTjdq?=
- =?utf-8?B?cGRJanBTVFRWanR2eWdEaitveFNEdm05TWJQN1lVYzh2OVFpVEMvL21JbXFJ?=
- =?utf-8?B?bCtPNGxDbGZ4Y0Y0N3ovQjVqRzJPWFlWWEllM2xkeXN6bFZCRXJWT1RzeVQx?=
- =?utf-8?B?NWROL0FKN3NVTjJEQkttY2djY25EZ21tcXN4bU5mVFJGRjFkWVZyTGh3NE5R?=
- =?utf-8?B?aktpTWFaaDU2N3hBSk4xOU1TVVc0aVFTdlE1VjRnSDBtaEpvcnFPdjlOZE9w?=
- =?utf-8?B?Mm1CL0JNVGo1b1Y5OUtLNW9QUC9BNnFoS04ySzJUSk9PeEVRZGd1emxQUWlE?=
- =?utf-8?B?dnloME10MkZVL2ZIdFJlVGxsTEFPQXdFYVVsNDN6c0NPeEdROFZobjlmUGV6?=
- =?utf-8?B?b2ROdEZmZ2pYTEJwVkdwUGtFbW56QU5DeER4dW5iU1pKM3I4bjBJWlQ3cWk0?=
- =?utf-8?B?V2wzS3BEeGJaWCtSQVMrV0xhL0JBM1lFSFRvdkZGTjMzQWVmTUdJWm1PVWk5?=
- =?utf-8?Q?vmsYVrjMMCRPk1zKiZDBP0fnTEOs3rbcB0evkgd77tEz?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2aa38ca8-4d21-4b5a-96b0-08db26100a9f
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7104.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Mar 2023 11:17:34.4354
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: +6HzenMw5iK1m3hqU1c9p8p9csqfvgN2AhPFS3c6fQhT8ksjKR0ynP0m+1Tkg8X3mW6GnBfRgTP0DdzRw71hIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: GVXPR04MB9973
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
+        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
+        Daire McNamara <daire.mcnamara@microchip.com>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
+In-Reply-To: <ZBLzr1MZ2whtvusL@lpieralisi>
+References: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
+        <20230309163935.GA1140101@bhelgaas>
+        <86a60dxcr0.wl-maz@kernel.org>
+        <ZBLzr1MZ2whtvusL@lpieralisi>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, helgaas@kernel.org, j@jannau.net, alyssa@rosenzweig.io, kw@linux.com, robh@kernel.org, bhelgaas@google.com, sven@svenpeter.dev, linux-pci@vger.kernel.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, daire.mcnamara@microchip.com, conor.dooley@microchip.com, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 16.03.23 10:33, Alexander Stein wrote:
-> Hi Oliver,
-
-Hi,
-
+On Thu, 16 Mar 2023 10:47:11 +0000,
+Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
 > 
-> Admittedly
-> I would like to get rid of these two pathes for creating sysfs files in the
-> first place, but I do not know the pci subsystem very well.
-> IMHO for_each_pci_dev(pdev) in pci_sysfs_init is part of the problem as it
-> unconditionally iterates over the bus, without any locks, thus creating sysfs
-> files for each device added to the bus.
-> Any ideas?
+> On Thu, Mar 16, 2023 at 09:32:35AM +0000, Marc Zyngier wrote:
+> > On Thu, 09 Mar 2023 16:39:35 +0000,
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > 
+> > > [+cc Daire, Conor for apple/microchip use of ECAM .init() method]
+> > > 
+> > > On Thu, Mar 09, 2023 at 02:36:24PM +0100, Janne Grunau wrote:
+> > > > Fixes following warning inside of_irq_parse_raw() called from the common
+> > > > PCI device probe path.
+> > > > 
+> > > >   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
+> > > >   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
+> > > 
+> > > Based on this commit log, I assume this patch only fixes the warning,
+> > > and the system *works* just fine either way.  If that's the case, it's
+> > > debatable whether it meets the stable kernel criteria, although the
+> > > documented criteria are much stricter than what happens in practice.
+> > > 
+> > > >   ...
+> > > >   Call trace:
+> > > >    of_irq_parse_raw+0x5fc/0x724
+> > > >    of_irq_parse_and_map_pci+0x128/0x1d8
+> > > >    pci_assign_irq+0xc8/0x140
+> > > >    pci_device_probe+0x70/0x188
+> > > >    really_probe+0x178/0x418
+> > > >    __driver_probe_device+0x120/0x188
+> > > >    driver_probe_device+0x48/0x22c
+> > > >    __device_attach_driver+0x134/0x1d8
+> > > >    bus_for_each_drv+0x8c/0xd8
+> > > >    __device_attach+0xdc/0x1d0
+> > > >    device_attach+0x20/0x2c
+> > > >    pci_bus_add_device+0x5c/0xc0
+> > > >    pci_bus_add_devices+0x58/0x88
+> > > >    pci_host_probe+0x124/0x178
+> > > >    pci_host_common_probe+0x124/0x198 [pci_host_common]
+> > > >    apple_pcie_probe+0x108/0x16c [pcie_apple]
+> > > >    platform_probe+0xb4/0xdc
+> > > > 
+> > > > This became apparent after disabling unused PCIe ports in the Apple
+> > > > silicon device trees instead of deleting them.
+> > > > 
+> > > > Use for_each_available_child_of_node instead of for_each_child_of_node
+> > > > which takes the "status" property into account.
+> > > > 
+> > > > Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
+> > > > Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
+> > > > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> > > > Cc: stable@vger.kernel.org
+> > > > Reviewed-by: Marc Zyngier <maz@kernel.org>
+> > > > Signed-off-by: Janne Grunau <j@jannau.net>
+> > > > ---
+> > > > Changes in v2:
+> > > > - rewritten commit message with more details and corrections
+> > > > - collected Marc's "Reviewed-by:"
+> > > > - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
+> > > > ---
+> > > >  drivers/pci/controller/pcie-apple.c | 2 +-
+> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> > > > index 66f37e403a09..f8670a032f7a 100644
+> > > > --- a/drivers/pci/controller/pcie-apple.c
+> > > > +++ b/drivers/pci/controller/pcie-apple.c
+> > > > @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+> > > >  	cfg->priv = pcie;
+> > > >  	INIT_LIST_HEAD(&pcie->ports);
+> > > >  
+> > > > -	for_each_child_of_node(dev->of_node, of_port) {
+> > > > +	for_each_available_child_of_node(dev->of_node, of_port) {
+> > > >  		ret = apple_pcie_setup_port(pcie, of_port);
+> > > >  		if (ret) {
+> > > >  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+> > > 
+> > > Is this change still needed after 6fffbc7ae137 ("PCI: Honor firmware's
+> > > device disabled status")?  This is a generic problem, and it would be
+> > > a lot nicer if we had a generic solution.  But I assume it *is* still
+> > > needed because Rob gave his Reviewed-by.
+> > 
+> > I'm not sure this is addressing the same issue. The way I read it, the
+> > patch you mention here allows a PCI device to be disabled in firmware,
+> > even if it could otherwise be probed.
+> > 
+> > What this patch does is to prevent root ports that exist in the HW but
+> > that have been disabled from being probed. Same concept, only at a
+> > different level.
+> 
+> A root port is a PCI device though and that's what's causing the warning
+> AFAIK (? it is triggered on the root port PCI device pci_assign_irq()
+> call),
 
-First of all, this existing code is a mess.
+As usual, there are two sides to things. The root ports are also part
+of a platform device, and this what this patch uses.
 
-If I understand you have the issue that your driver adds a bridge
-in dw_pcie_host_init() and the generic code in pci_create_sysfs_dev_files()
-populates the directory before or while your driver does so and
-the devices are effectively discovered twice.
+> I am not sure the root port DT node is associated with the root
+> port PCI device correctly, which might explain why, even after
+> 6fffbc7ae137, the PCI enumeration code is adding the root port PCI
+> device to the PCI tree.
 
-It seems to me that you must not add a bridge before pci_create_sysfs_dev_files()
-has finished. Now you could add a wait_queue and a flag and wait for it to
-finish. But that is not very elegant. From which initcall is your driver
-probed?
+I didn't say that commit did not suppress the warning. I haven't
+tested it the first place because I really need all the PCIe ports I
+can get on the machines I have.
 
-	Regards
-		Oliver
+It just feels to me that they are tracking different things.
+
+> Is the dts available anywhere ? How are root ports described in it ?
+
+arch/arm64/boot/dts/apple/t8103.dtsi
+Documentation/devicetree/bindings/pci/apple,pcie.yaml
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
