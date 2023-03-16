@@ -2,81 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C7CB6BCFEB
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 13:53:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED016BD088
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 14:16:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjCPMx2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 08:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53834 "EHLO
+        id S229659AbjCPNQS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 09:16:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCPMx1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 08:53:27 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6A82234D7;
-        Thu, 16 Mar 2023 05:53:25 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id be16so1293195oib.0;
-        Thu, 16 Mar 2023 05:53:25 -0700 (PDT)
+        with ESMTP id S230007AbjCPNQR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 09:16:17 -0400
+Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B70149A5;
+        Thu, 16 Mar 2023 06:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678971205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ti3+/+O/mizRCYD6mJqQ9hW5peGLssPgu/LkZnsMASU=;
-        b=JqU31zkHGu3ptAj9SlVRIUKZOv+itjg1RCjjVUlbvP/Ckfz2yNmItTRqLDiHNUzFBe
-         U1K4kQwYZce/cY18NBc9DrOrnbzzTGlyCnMb/UbiYl3Y8MhtYMc4bF3lcsNLJdMJu3+q
-         epPfgeuV3fAexV+8mRMYrXcVOtVpyfjLiQB1lEFJlN2o9h0i/GjTzoEt7p/ZTkKCun39
-         hwXEj4UDbO2sBTbyF/An7M+xNP3Mbflve/fG/ARz41vvRnxcz1n0Uxk+BJ6zv9fkPhcE
-         4oxvsB6mmUoFxf+4SZfEs7Oto+afHRxvgRLTRikP+w6j4JmMwcJZVv3Ex1B83LVLweTW
-         50ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678971205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ti3+/+O/mizRCYD6mJqQ9hW5peGLssPgu/LkZnsMASU=;
-        b=oAvA2e53MX5uUjrFoUWQ6H/v+/jMW4L0V2XAQPQIxugAiyOBD6ghA/OAj9F+cyzZ+K
-         u7U6hSTGAoe88KXDCkAYri09kI1LzJwF/oaMj+9WCZkqAGc/PQ7pmgw5tISu0zfUtMi2
-         kl0PBR0wA/L3hshY0MHXu83m2poM/yZVUqFKbwQbEvgRt5+vNUnSj/8sWYMZwaMT240l
-         gBfum++fL62JaPGzY4IVqJWxA0fUZNM4YTNYSBZPWYWwSkQE2AvvnfrqxOnq3csx4kpw
-         Z2FDFZ+h+e+S6l+tQ4eBihe6bLUF9siFSujTWBuWjy5qNiBOHuTqehWVmYUZJGS5LTMP
-         Ytlg==
-X-Gm-Message-State: AO0yUKUMqrc4y8IWa+EmA6bOGzOCLEyA6JT8r7uU7Htiqt839SLXFzn8
-        aTEpEDVCXIp0e0J0XxhQfLJ5fguMagk021KGjtE=
-X-Google-Smtp-Source: AK7set9dWfwo7U4qmaHBStrTqQn7i/IJd9cr8lIzLT0RjtSxZKwFMzDm73eMdiD2f1s0u9V2YNi2R3uy/djkKyapVuo=
-X-Received: by 2002:a05:6808:29a:b0:386:9864:5064 with SMTP id
- z26-20020a056808029a00b0038698645064mr1739501oic.10.1678971205044; Thu, 16
- Mar 2023 05:53:25 -0700 (PDT)
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1678972576; x=1710508576;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rKsiC0p5s7wkO/ec8sI+NUgY3uyOfuDKEgeNXNBnm/4=;
+  b=k2ngVE9b4GU3Aib3GH7BYZwupD8HVD7dgg32EdmlAvdSRa7OD4OdpoXm
+   wODuKe+QBGwKta6QBp35L8EYAtfGWN1Qtahc+eUriLTFBE/J16WYaTuHl
+   BKaDbL2gFnyxAPtGTPLqOCniD/DSB9Tw75PE/lDiGy7/TJKMkZdlr0vFR
+   +Oi2rJjG+TQRNLQPZvmcYA1xd7Vp+XTF4jNefYWbzjP+vMNrRzREfFbuz
+   yBianjngfGi6BaBQa5O0EizPymdWUlEFSHPPaq1lHIdt+st6JBgm6z5NM
+   kbHeT+ZNMxtSkbskj0qax6IJwYNPGu6CQWnMRn+BjYx/G7XCtHKpR3Z3j
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
+   d="scan'208";a="29739450"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 16 Mar 2023 14:16:13 +0100
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Thu, 16 Mar 2023 14:16:13 +0100
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Thu, 16 Mar 2023 14:16:13 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1678972573; x=1710508573;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=rKsiC0p5s7wkO/ec8sI+NUgY3uyOfuDKEgeNXNBnm/4=;
+  b=gjC0ohccWH/yd8HTuq7WH+EBP/XSbJNX2mIO0x5L+4DrOUkxr2Qd9u+n
+   VhXRjHBEVzxoYzOLCclQubiJkafoDsJpsyYawj8bGutAmU83yn9ehaMfO
+   +lT34+6/gx3rqs0SqIOp5i9IUCY1jmywlg94/zgpSOlO5u+c14biMQuVI
+   VILaOfTY4ZiS23mb6C7itEkNxgKgQB1HA5eb3w76iAYtbqhFVuzn4hXA3
+   PWX0+K6Y8z7uIjdvNR+pkUZuN6+rlD9BVsD600ZIxuYaD4UZ3QTLfCiym
+   +NVAUBODunUx68ZRiejGqeOrtBKkWRk0c3LjFRiaxdyEp8MgMvg67JOLL
+   w==;
+X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
+   d="scan'208";a="29739449"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 16 Mar 2023 14:16:13 +0100
+Received: from steina-w.localnet (unknown [10.123.53.21])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 82B56280056;
+        Thu, 16 Mar 2023 14:16:13 +0100 (CET)
+From:   Alexander Stein <alexander.stein@ew.tq-group.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Oliver Neukum <oneukum@suse.com>,
+        Oliver Neukum <oneukum@suse.com>
+Cc:     Korneliusz Osmenda <korneliuszo@gmail.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] Guard pci_create_sysfs_dev_files with atomic value
+Date:   Thu, 16 Mar 2023 14:16:13 +0100
+Message-ID: <3607385.usQuhbGJ8B@steina-w>
+Organization: TQ-Systems GmbH
+In-Reply-To: <90e97b96-2918-294a-0e71-33a42f28d8a8@suse.com>
+References: <20230316091540.494366-1-alexander.stein@ew.tq-group.com> <4888964.44csPzL39Z@steina-w> <90e97b96-2918-294a-0e71-33a42f28d8a8@suse.com>
 MIME-Version: 1.0
-References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
- <ecd09f27-b799-4741-2c5a-a2de99776c51@opensource.wdc.com> <CAAEEuhrk4cSC312UiAL3UwoDZ=urrdDcBThcNHd1dqnAuJTzAw@mail.gmail.com>
- <3c4ed614-f088-928f-2807-deaa5e4b668a@opensource.wdc.com> <CAAEEuhqk0scWd3wFbVb9fSgHxPBKotpEPNi+YPG4GD9vLO94mw@mail.gmail.com>
- <8392a7de-666a-bce6-dc9f-b60d6dd93013@opensource.wdc.com> <1e8184e9-7e0b-2598-cc5a-e46d6c2f152a@opensource.wdc.com>
-In-Reply-To: <1e8184e9-7e0b-2598-cc5a-e46d6c2f152a@opensource.wdc.com>
-From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date:   Thu, 16 Mar 2023 13:52:49 +0100
-Message-ID: <CAAEEuhoB2LqL=B_BQ0X2T-E+Yt83kPUiv-R9dgU0O-f22ukcWg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] PCI: rockchip: Fix RK3399 PCIe endpoint controller driver
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
-        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+Content-Type: text/plain; charset="iso-8859-1"
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,146 +82,102 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 15, 2023 at 1:00=E2=80=AFAM Damien Le Moal
-<damien.lemoal@opensource.wdc.com> wrote:
->
-> On 3/15/23 07:54, Damien Le Moal wrote:
-> > On 3/14/23 23:53, Rick Wertenbroek wrote:
-> >> Hello Damien,
-> >> I also noticed random issues I suspect to be related to link status or=
- power
-> >> state, in my case it sometimes happens that the BARs (0-6) in the conf=
-ig
-> >> space get reset to 0. This is not due to the driver because the driver=
- never
-> >> ever accesses these registers (@0xfd80'0010 to 0xfd80'0024 TRM
-> >> 17.6.4.1.5-17.6.4.1.10).
-> >> I don't think the host rewrites them because lspci shows the BARs as
-> >> "[virtual]" which means they have been assigned by host but have 0
-> >> value in the endpoint device (when lspci rereads the PCI config header=
-).
-> >> See https://github.com/pciutils/pciutils/blob/master/lspci.c#L422
-> >>
-> >> So I suspect the controller detects something related to link status o=
-r
-> >> power state and internally (in hardware) resets those registers. It's =
-not
-> >> the kernel code, it never accesses these regs. The problem occurs
-> >> very randomly, sometimes in a few seconds, sometimes I cannot see
-> >> it for a whole day.
-> >>
-> >> Is this similar to what you are experiencing ?
-> >
-> > Yes. I sometimes get NMIs after starting the function driver, when my f=
-unction
-> > driver starts probing the bar registers after seeing the host changing =
-one
-> > register. And the link also comes up with 4 lanes or 2 lanes, random.
+Hi Oliver,
 
-Hello, I have never had it come up with only 2 lanes, I get 4 consistently.
-I have it connected through a M.2 to female PCIe 16x (4x electrically
-connected),
-then through a male-to-male PCIe 4x cable with TX/RX swap, then through a
-16x extender. All three cables are approx 25cm. It seems stable.
+Am Donnerstag, 16. M=E4rz 2023, 13:23:25 CET schrieb Oliver Neukum:
+> On 16.03.23 12:58, Alexander Stein wrote:
+> > Hi Oliver,
+> >=20
+> > Am Donnerstag, 16. M=E4rz 2023, 12:17:32 CET schrieb Oliver Neukum:
+> >> It seems to me that you must not add a bridge before
+> >> pci_create_sysfs_dev_files() has finished. Now you could add a wait_qu=
+eue
+> >> and a flag and wait for it to finish. But that is not very elegant.
+> >=20
+> > Do we need the pci_sysfs_init initcall at all? Or to put it in other
+> > words,
+> > what does this initcall solve?
+>=20
+> Fundamentally something has to discover the root bridge.
+> Secondly your system has to boot. The device right behind
+> the root bridge will already be up and running when the kernel
+> takes control. IMHO treating such devices differently from
+> other devices makes sense.
 
-> >
-> >> Do you have any idea as to what could make these registers to be reset
-> >> (I could not find anything in the TRM, also nothing in the driver seem=
-s to
-> >> cause it).
-> >
-> > My thinking is that since we do not have a linkup notifier, the functio=
-n driver
-> > starts setting things up without the link established (e.g. when the ho=
-st is
-> > still powered down). Once the host start booting and pic link is establ=
-ished,
-> > things may be reset in the hardware... That is the only thing I can thi=
-nk of.
+But isn't the root bridge discovered by the driver (pci-imx6 in this case) =
+for=20
+that? And the driver probe path eventually calls into the sysfs file creati=
+on.
+I compared the file creation to usb, as this is a discoverable bus as well.=
+=20
+There is no special initialization regarding sysfs.
 
-This might be worth investigating, I'll look into it, but it seems
-many of the EP
-drivers don't have a Linkup notifier,
-drivers/pci/controller/dwc/pci-dra7xx.c has
-one, but most of the other EP drivers don't have them, so it might not be
-absolutely required.
+> > See my different approach eliminating this race at all.
+>=20
+> Please elaborate
 
-> >
-> > And yes, there are definitely something going on with the power states =
-too I
-> > think: if I let things idle for a few minutes, everything stops working=
-: no
-> > activity seen on the endpoint over the BARs. I tried enabling the sys a=
-nd client
-> > interrupts to see if I can see power state changes, or if clearing the
-> > interrupts helps (they are masked by default), but no change. And booti=
-ng the
-> > host with pci_aspm=3Doff does not help either. Also tried to change all=
- the
-> > capabilities related to link & power states to "off" (not supported), a=
-nd no
-> > change either. So currently, I am out of ideas regarding that one.
-> >
-> > I am trying to make progress on my endpoint driver (nvme function) to b=
-e sure it
-> > is not a bug there that breaks things. I may still have something bad b=
-ecause
-> > when I enable the BIOS native NVMe driver on the host, either the host =
-does not
-> > boot, or grub crashes with memory corruptions. Overall, not yet very st=
-able and
-> > still trying to sort out the root cause of that.
+Currently the initcall pci_sysfs_init and the PCIe root bridge driver probe
+paths are competing for file creation.
+If, for some reason, the device enumeration for PCI bus during imx6_pcie_pr=
+obe=20
+is delayed after pci_sysfs_init initcall, this initcall essentially does=20
+nothing, no devices or busses to iterate. Which means the complete pcie sys=
+fs=20
+creation is done from bridge probe path. There is no reason to iterate over=
+=20
+discovered PCIe devices/busses separately.
 
-I am also working on an NVMe driver but I have our NVMe firmware running in
-userspace so our endpoint function driver only exposes the BARs as UIO
-mapped memory and has a simple interface to generate IRQs to host / initiat=
-e
-DMA transfers.
+I assume this issue is not that prominent, if at all, as other platforms va=
+ry=20
+in speed a lot. I was not able to reproduce on i.MX8MP which uses the same=
+=20
+PCIe bridge driver. Due to improved speed performance, I guess on this=20
+platform pci_sysfs_init finishes, without doing anything, before PCIe bridg=
+e=20
+is probed.
 
-So that driver does very little in itself and I still have problems
-with the BARs
-getting unmapped (reset to 0) randomly. I hope your patches for monitoring
-the IRQs will shed some light on this. I also observed the BARs getting res=
-et
-with the pcie ep test function driver, so I don't think it necessarily
-is the function
-that is to blame, rather the controller itself (also because none of
-the kernel code
-should / does access the BARs registers @0xfd80'0010).
+I might be missing something (ACPI systems, etc.), I do not know the detail=
+s=20
+within pci subsystem, but from my point of view this initcall is superfluou=
+s.
 
->
-> By the way, enabling the interrupts to see the error notifications, I do =
-see a
-> lot of retry timeout and other recoverable errors. So the issues I am see=
-ing
-> could be due to my PCI cable setup that is not ideal (bad signal, ground =
-loops,
-> ... ?). Not sure. I do not have a PCI analyzer handy :)
->
-> I attached the patches I used to enable the EP interrupts. Enabling debug=
- prints
-> will tell you what is going on. That may give you some hints on your setu=
-p ?
->
-> --
-> Damien Le Moal
-> Western Digital Research
+=46or the record the patch is at [1]
 
-Thank you for these patches. I will try them and see if they give me more i=
-nfo.
+[1] https://lore.kernel.org/linux-pci/20230316103036.1837869-1-alexander.st=
+ein@ew.tq-group.com/T/#u
 
-Also, I will delay the release of the v3 of my patch series because of
-these issues.
-The v3 only incorporates the changes discussed here in the mailing list so =
-your
-version should be up to date. If you want me to send you the series in
-its current
-state let me know.
+> >>  From which initcall is your driver probed?
+> >=20
+> > The callstack looks like this:
+> >> imx6_pcie_probe from platform_probe+0x5c/0xb8
+> >> platform_probe from call_driver_probe+0x24/0x118
+> >> call_driver_probe from really_probe+0xc4/0x31c
+> >> really_probe from __driver_probe_device+0x8c/0x120
+> >> __driver_probe_device from driver_probe_device+0x30/0xc0
+> >> driver_probe_device from __driver_attach_async_helper+0x50/0xd8
+> >> __driver_attach_async_helper from async_run_entry_fn+0x30/0x144
+> >> async_run_entry_fn from process_one_work+0x1c4/0x3d0
+> >> process_one_work from worker_thread+0x50/0x41c
+> >> worker_thread from kthread+0xec/0x104
+> >> kthread from ret_from_fork+0x14/0x2c
+> >=20
+> > So technically the device is not probed from within a initcall but a
+> > kthread. It is set to be probed asynchronous in imx6_pcie_driver.
+>=20
+> That may be the problem, respectively that system is incomplete
+> You are registering a PCI bridge. The PCI subsystem should be
+> done setting up when you run. That is just a simple dependency.
 
-But I will need some more debugging, I'll release the v3 when the driver is=
- more
-stable. I don't when, I don't have that much time on this project. Thanks f=
-or
-your understanding.
+Is there such an dependency in the first place? I can't see anything, even =
+the=20
+late_initcall to pci_resource_alignment_sysfs_init is a different matter.
 
-Rick
+Best regards,
+Alexander
+=2D-=20
+TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
+Amtsgericht M=FCnchen, HRB 105018
+Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
+http://www.tq-group.com/
+
+
