@@ -2,79 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CCCE46BD2DA
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 16:00:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 310696BD354
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 16:22:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230063AbjCPPAs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 11:00:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        id S231406AbjCPPWd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 11:22:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51512 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbjCPPAr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 11:00:47 -0400
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2011246AA;
-        Thu, 16 Mar 2023 08:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1678978845; x=1710514845;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yKOT8mwLMCfwJaJTixWaN8UYI2lDfCPX0HtfI2KLD2k=;
-  b=io49smxMVmgqLStc1+zjA5CfgItvlh8NzagZ2JTd9teHDwA28YCf9xJk
-   Ik+yDz2QW2fcrLHbTcaaP5fEyR+eky9jy7Us79nXHaxHDbBMWaAeA2f6o
-   +4mnJvAipaytc2a9tiMG5LwRWIZ5nLHyFj3gE/ypD81boW0lrf4C1KLtN
-   H/BjDPOn3Cd7l0BtMbkXUUw2NIju55f4tCaq+q/cLiZs0AVupiwSzjarn
-   r3MV/m8EFhLyrWMv0cobIjuJwneAX2jjrB6dW2Gs1CtVN8a6kYodqX6kp
-   PPLcLK9j52k8lCBynraw447/dDM+vMu+QWL/JxNNRuRfHsXjlXBSbopM1
-   A==;
-X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
-   d="scan'208";a="29743092"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 16 Mar 2023 16:00:43 +0100
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Thu, 16 Mar 2023 16:00:43 +0100
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Thu, 16 Mar 2023 16:00:43 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1678978843; x=1710514843;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=yKOT8mwLMCfwJaJTixWaN8UYI2lDfCPX0HtfI2KLD2k=;
-  b=dw22qRIcXdup0sK9+st+Utbqq9YEIRZK3gKwb2n+6SDfHZT4mH4ALWB2
-   LBgZJd2Q+t9nXQfRINNZn7x90q1kJgcPiHnEY96gTqd6yidD0IZpP3EOJ
-   NfyJD7Gwh7tEDtO1Kz02AKqOnCkBYw+KC9Jh7Rv2nOz+6t9oNKVOJGo6H
-   MvaK0X9H0Ye4mVTqKvDeyTN2pT7YbCs2O1S0LwzK975UZcyjuutQ1wJJk
-   1eTM0eQ5C4K1DvgHlNUBGBT2ILEBB7ccyloxrKrJXHOpcOjZeMvB94sH9
-   NQjNp2WSu/RBl93pSM3ZgOQ+ga9b0Wg3jAFViyf46/i20uyWC/ybMeuKv
-   w==;
-X-IronPort-AV: E=Sophos;i="5.98,265,1673910000"; 
-   d="scan'208";a="29743090"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 16 Mar 2023 16:00:42 +0100
-Received: from steina-w.localnet (unknown [10.123.53.21])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id CCEAE280056;
-        Thu, 16 Mar 2023 16:00:42 +0100 (CET)
-From:   Alexander Stein <alexander.stein@ew.tq-group.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Oliver Neukum <oneukum@suse.com>
-Cc:     Korneliusz Osmenda <korneliuszo@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/1] Guard pci_create_sysfs_dev_files with atomic value
-Date:   Thu, 16 Mar 2023 16:00:42 +0100
-Message-ID: <3554992.taCxCBeP46@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <ced8713f-69de-e48a-37eb-4f844e651b6b@suse.com>
-References: <20230316091540.494366-1-alexander.stein@ew.tq-group.com> <3607385.usQuhbGJ8B@steina-w> <ced8713f-69de-e48a-37eb-4f844e651b6b@suse.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        with ESMTP id S231417AbjCPPWa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 11:22:30 -0400
+Received: from out3-smtp.messagingengine.com (out3-smtp.messagingengine.com [66.111.4.27])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1299DFB68;
+        Thu, 16 Mar 2023 08:22:19 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id D7DEA5C0151;
+        Thu, 16 Mar 2023 11:22:18 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Thu, 16 Mar 2023 11:22:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm1; t=1678980138; x=1679066538; bh=Gu
+        9CGWBhuU9kfdDCy2f8ZEW/D76K6Q/Tbp9CvfberEs=; b=XQJYvEzxTMhu2lrbR9
+        NSUIJaM46GKfLcq/jwORrPj8Wygwv3+T5rcTzfUT8Eu8Ks5i61xHDE7ZZJk4qkbA
+        odKA07TScOtGGqs1DhOVjmg628ClLE2WvOe5WkHB1sE78oLmfxE+hpkEb/ibC+wj
+        ji2jH0MlXHFoIz+7eZsMz8Tp+ihON8wGY6wu772BW1Wi2lSPzrpg2DU/gXVPrPxA
+        r20PqoKytbvK6rJczlHXnz9LeZwF6DgLCP2b0nQNI1wALyKvgd7oxV+8TPJ8YIQO
+        4wDrHih1/jbV4PAZLrI+WNUEJiTIJN13w++RXMT4B5uRG2SToUv8ypcSlsKHdCWe
+        7L2Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; t=1678980138; x=1679066538; bh=Gu9CGWBhuU9kf
+        dDCy2f8ZEW/D76K6Q/Tbp9CvfberEs=; b=W7fBa07kX8DNIjvBS2eGvcFZfb9QT
+        AgQ0u3hS4z49wQVgOG2DYtx5bHjt6+ETxCXUx0jFcRFuXRHyKJRGIXOTYI3ZzPJI
+        LGvdnEjiSP5CsqbPEJZfQNnPxysJKoYUiFldBJebTr57RPrx9bijuPNIhqsjoP5M
+        a87ph59TJOB/Y0LSxDz1UtoOh34shb20a4eQIuo4uBIsfrPdCBQkj4oR2Dovp4Bv
+        tvxtl+uyRiel5aTaN57ZtyVR2C3vS4Jrm1N53IYqb3Ujf58MSZb0TnVosxv4yjPN
+        oKNgJ1diDTr2JkupgBhkSJTRitxE4r2i0YYSp77CjEJ+gswKxgSeiBC+Q==
+X-ME-Sender: <xms:KTQTZN5CcGBOrkSGSjmbV2W2L-D6ylziRckElPy35rIpTKRRL0oiRQ>
+    <xme:KTQTZK4Iflz6DrqRA68IzpXEPSUMsJgViqHa1XrqTEmYYvBzKWaddxncfYFUeYIq7
+    Vs7llqb0CLML0q804Y>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdeftddgjeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:KjQTZEdePnnd-bLyYdlOrG6oo24ABDT9lHKGS7Kmxi1Z__ii7CyVKw>
+    <xmx:KjQTZGJamWj9rcFX3RG3WE_JIcJ-XQj6Rs6fZ6hUbWPD2ua6n3OGRg>
+    <xmx:KjQTZBJMG9vi-Xb1NXz7SpwrlDhK6hlwbZDgXrN9OlBD-NGya1NnTg>
+    <xmx:KjQTZDg4paiw_2ieGp7OleYbMFuqq18rgEiTNMXgWkF594uAcp65bA>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id E1276B60083; Thu, 16 Mar 2023 11:22:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-221-gec32977366-fm-20230306.001-gec329773
+Mime-Version: 1.0
+Message-Id: <2f07c421-7f9c-4e53-8bd5-46be07bb5c89@app.fastmail.com>
+In-Reply-To: <9a1c49b0-2271-53c7-7f48-039f83d39e82@opensource.wdc.com>
+References: <20230314121216.413434-1-schnelle@linux.ibm.com>
+ <20230314121216.413434-3-schnelle@linux.ibm.com>
+ <CAMuHMdVry2YViJ5oFgo9i+uStWbhy7mXKWdWvCX=qgAu1-_Y1w@mail.gmail.com>
+ <c7315ca2-3ebf-7f3b-da64-9a74a995b0ae@opensource.wdc.com>
+ <CAMuHMdVajEYsw8HrKw0GwV+09gbtkhjVMuKZ6RSBvq6got=jAg@mail.gmail.com>
+ <9a1c49b0-2271-53c7-7f48-039f83d39e82@opensource.wdc.com>
+Date:   Thu, 16 Mar 2023 16:21:58 +0100
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Damien Le Moal" <damien.lemoal@opensource.wdc.com>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>
+Cc:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Alan Stern" <stern@rowland.harvard.edu>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, "Arnd Bergmann" <arnd@kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: Re: [PATCH v3 02/38] ata: add HAS_IOPORT dependencies
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -82,68 +100,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Oliver,
+On Thu, Mar 16, 2023, at 00:57, Damien Le Moal wrote:
+> On 2023/03/15 20:36, Geert Uytterhoeven wrote:
 
-Am Donnerstag, 16. M=E4rz 2023, 15:01:25 CET schrieb Oliver Neukum:
-> On 16.03.23 14:16, Alexander Stein wrote:
-> > But isn't the root bridge discovered by the driver (pci-imx6 in this ca=
-se)
-> > for that? And the driver probe path eventually calls into the sysfs file
-> > creation. I compared the file creation to usb, as this is a discoverable
-> > bus as well. There is no special initialization regarding sysfs.
->=20
-> If you discover a bus system you always have the option of creating of
-> virtual hotplug event for the root hub or host controller.
-> But for PCI that is a bad design choice. USB is different.
-
-I'm not sure if I can follow you here. Can you elaborate?
-
-> > If, for some reason, the device enumeration for PCI bus during
-> > imx6_pcie_probe is delayed after pci_sysfs_init initcall, this initcall
-> > essentially does nothing, no devices or busses to iterate. Which means
-> > the complete pcie sysfs
-> On your specific system. You cannot use that as a model for all systems.
-
-I am aware that my platform is not a role model for the others. But I've ye=
-t=20
-to get information what is actually different on other platforms.
-
-> > creation is done from bridge probe path. There is no reason to iterate
-> > over
-> > discovered PCIe devices/busses separately.
->=20
-> If there is no other PCI device, the loop is a nop. But otherwise it is
-> necessary.
-
-How is it necessary? How do these PCI devices get attaches to the pci_bus_t=
-ype=20
-bus without calling pci_bus_add_device?
-
-> >>> So technically the device is not probed from within a initcall but a
-> >>> kthread. It is set to be probed asynchronous in imx6_pcie_driver.
-> >>=20
-> >> That may be the problem, respectively that system is incomplete
-> >> You are registering a PCI bridge. The PCI subsystem should be
-> >> done setting up when you run. That is just a simple dependency.
-> >=20
-> > Is there such an dependency in the first place? I can't see anything, e=
-ven
-> > the late_initcall to pci_resource_alignment_sysfs_init is a different
-> > matter.
-> On your hardware, yes. In the kernel, no.
-> That is the very point. The kernel is missing a way to represent a
-> dependency.
-
-Okay, so which dependency is provided by pci_sysfs_init, which are required=
- by=20
-drivers then?
-
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+> Ah. OK. I see now. So indeed, applying the dependency on the entire ATA_SFF
+> group of drivers is very coarse.
 
 
+> Can you change this to apply the dependency per driver ?
+
+I think that will fail to build because of this function
+on architectures that drop their non-functional
+inb/outb helpers:
+
+int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev)
+{
+        unsigned long bmdma = pci_resource_start(pdev, 4);
+        u8 simplex;
+ 
+        if (bmdma == 0)
+                return -ENOENT;
+ 
+        simplex = inb(bmdma + 0x02); 
+        outb(simplex & 0x60, bmdma + 0x02);
+        simplex = inb(bmdma + 0x02);
+        if (simplex & 0x80)
+                return -EOPNOTSUPP;
+        return 0;
+}
+
+This is only called from five pata drivers (ali, amd,
+cmd64x, netcell, serverworks), so an easy workaround
+would be to make sure those depend on HAS_IOPORT
+and enclose the function definition in an #ifdef.
+
+        Arnd
