@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10D966BC65C
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 07:55:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B86D6BC6B4
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 08:14:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229665AbjCPGzS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 02:55:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44116 "EHLO
+        id S230116AbjCPHOM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 03:14:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229648AbjCPGzR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 02:55:17 -0400
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4F4D7F014;
-        Wed, 15 Mar 2023 23:55:15 -0700 (PDT)
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32G6sv5Z020892;
-        Thu, 16 Mar 2023 01:54:57 -0500
+        with ESMTP id S230098AbjCPHOJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 03:14:09 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDBE460AA;
+        Thu, 16 Mar 2023 00:13:44 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32G7Bwie017842;
+        Thu, 16 Mar 2023 02:11:58 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1678949697;
+        s=ti-com-17Q1; t=1678950718;
         bh=2Gpcf7N6et2DzkZGXjiuERa4sq1e3jWKbNIVNuiOBLo=;
         h=From:To:CC:Subject:Date;
-        b=F3Ju1ePJ6BH7dwUdKwFcKjoR51n9vKTLfNxH0E2oq+wlh4FOJmdl31rX6v2NqCvjt
-         qusdqyh3ffx3TaJqW41l0fds+QBDr/FIOsGnyvqN+pY3sgGc1SnEnUXpdKZBnqkqBM
-         o1SEeBOfNyHMSLKjUgTAhtCXRngtwZMoS8MqQR08=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32G6sveS026521
+        b=NMOWbELAHbEb5yZKOiJSQcOAGt8T8z6RxZpLjuRtnA6aYzoD8agXtjw1ldBjtZGWa
+         FgPEWOpro3nxyMxYTQ7UhoUybi69iKIpwpis+7szlFmyA6kXpnhyQLwI7xAXd2RJ8o
+         8TSJGlqSLLS2Zwr9KBlnp45DjM+HiLj+uZVzpYNk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32G7Bw4i057758
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 16 Mar 2023 01:54:57 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+        Thu, 16 Mar 2023 02:11:58 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 16
- Mar 2023 01:54:56 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2023 02:11:57 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Thu, 16 Mar 2023 01:54:56 -0500
+ Frontend Transport; Thu, 16 Mar 2023 02:11:58 -0500
 Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32G6st42056317;
-        Thu, 16 Mar 2023 01:54:56 -0500
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32G7Bv6A013499;
+        Thu, 16 Mar 2023 02:11:57 -0500
 From:   Achal Verma <a-verma1@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -53,8 +53,8 @@ CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Milind Parab <mparab@cadence.com>,
         <wojciech.jasko-EXT@continental-corporation.com>
 Subject: [PATCH v3] PCI: cadence: Clear the ARI Capability Next Function Number of the last function
-Date:   Thu, 16 Mar 2023 12:24:55 +0530
-Message-ID: <20230316065455.191785-1-a-verma1@ti.com>
+Date:   Thu, 16 Mar 2023 12:41:56 +0530
+Message-ID: <20230316071156.200888-1-a-verma1@ti.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
