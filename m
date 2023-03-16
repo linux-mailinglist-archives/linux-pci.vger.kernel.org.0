@@ -2,192 +2,87 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20CA76BCE08
-	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 12:20:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B07846BCE3A
+	for <lists+linux-pci@lfdr.de>; Thu, 16 Mar 2023 12:32:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjCPLT6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 07:19:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59288 "EHLO
+        id S229682AbjCPLcI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 16 Mar 2023 07:32:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjCPLT6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 07:19:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69B89D503;
-        Thu, 16 Mar 2023 04:19:29 -0700 (PDT)
+        with ESMTP id S230259AbjCPLbw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 07:31:52 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96559B861F;
+        Thu, 16 Mar 2023 04:31:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0E8ABB81FA7;
-        Thu, 16 Mar 2023 11:18:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3460C433D2;
-        Thu, 16 Mar 2023 11:18:54 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id CE6F5CE1C98;
+        Thu, 16 Mar 2023 11:31:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D4FC433EF;
+        Thu, 16 Mar 2023 11:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678965534;
-        bh=JarC/Lr5xGEmHxjDuOh254kaR60wlKpI3/R82UkKIkY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sHza2oKk2ydXN4NMEL+WH03zZSjsr9n00J8DdZDfrCeL0lLaJ94uBKUsZ4ZWLvFml
-         sqUClx0WCDATpxFq9k0YnANvGtw+8pahG7nc5QaLaO+GhuMowPFBoC7wryEnL2eSDJ
-         x6V76rTuo6lg0yPNZlux5Rb7xlMKcVvRRWIxzZ+olWmpXNYDmT2Xw0zE9XScwkHT8z
-         gZsaNax3v09jckC/KY3BbP2Nt3d2uzsGlVCnk/IQLrvnliIqzoBpgJIXhJwQBihIS4
-         IXWcmyM4W8lLDLOjG0s2UqvzAXkAA47jphmR/41QptSnUaQAG1Zx40KmbJf2FFSwHA
-         +cHUzeqDqvu5g==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1pcldE-000YvR-Ci;
-        Thu, 16 Mar 2023 11:18:52 +0000
-Date:   Thu, 16 Mar 2023 11:18:52 +0000
-Message-ID: <868rfxx7tv.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, Janne Grunau <j@jannau.net>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        s=k20201202; t=1678966293;
+        bh=NaAz8BM3yRRJI2dZd/Ku41AygvU2BVnVHs3S3JHtGAc=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=kUVTsx/BR9ZRIFbVRm2dx+LFxafLeEwwFV3Dti3q+kVDgvjbCnB638J2/+9ttAzaW
+         W22qMP6tHp4gDmOcEwNCRv9yyj9ZAFAwrlxCN7lm94cY71wpG9eae7m3eFmE9IGWA0
+         2I4DINE3s4lOIx/n7x53TAgbNyq/JCh/khrkPNQINBJ4Oenr8AXLyh+/MJ5Jj1B/vs
+         fnayTZgr3iR0zTj9n7QbC1uemBWps5nANdZKWK3h9qTbq4fii16ftJ3YukXsdK6AtB
+         F+ajeCzCxuLaLMTAW8i7QSw27LmhmW3jyTpXJUvCpiyxo+9UVVMH4/iAxR/wZneVod
+         hDCG5xVYyBh/w==
+Message-ID: <7bee3bba-d9e3-18fd-2aff-4316fe097741@kernel.org>
+Date:   Thu, 16 Mar 2023 12:31:10 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v10 1/5] dt-bindings: PCI: ti,j721e-pci-*: add checks for
+ num-lanes
+Content-Language: en-US
+To:     Achal Verma <a-verma1@ti.com>, Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: apple: Set only available ports up
-In-Reply-To: <ZBLzr1MZ2whtvusL@lpieralisi>
-References: <20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net>
-        <20230309163935.GA1140101@bhelgaas>
-        <86a60dxcr0.wl-maz@kernel.org>
-        <ZBLzr1MZ2whtvusL@lpieralisi>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: lpieralisi@kernel.org, helgaas@kernel.org, j@jannau.net, alyssa@rosenzweig.io, kw@linux.com, robh@kernel.org, bhelgaas@google.com, sven@svenpeter.dev, linux-pci@vger.kernel.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, daire.mcnamara@microchip.com, conor.dooley@microchip.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Milind Parab <mparab@cadence.com>,
+        wojciech.jasko-EXT@continental-corporation.com
+References: <20230316071238.200992-1-a-verma1@ti.com>
+ <20230316071238.200992-2-a-verma1@ti.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+In-Reply-To: <20230316071238.200992-2-a-verma1@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 16 Mar 2023 10:47:11 +0000,
-Lorenzo Pieralisi <lpieralisi@kernel.org> wrote:
+On 16/03/2023 08:12, Achal Verma wrote:
+> From: Matt Ranostay <mranostay@ti.com>
 > 
-> On Thu, Mar 16, 2023 at 09:32:35AM +0000, Marc Zyngier wrote:
-> > On Thu, 09 Mar 2023 16:39:35 +0000,
-> > Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > 
-> > > [+cc Daire, Conor for apple/microchip use of ECAM .init() method]
-> > > 
-> > > On Thu, Mar 09, 2023 at 02:36:24PM +0100, Janne Grunau wrote:
-> > > > Fixes following warning inside of_irq_parse_raw() called from the common
-> > > > PCI device probe path.
-> > > > 
-> > > >   /soc/pcie@690000000/pci@1,0 interrupt-map failed, using interrupt-controller
-> > > >   WARNING: CPU: 4 PID: 252 at drivers/of/irq.c:279 of_irq_parse_raw+0x5fc/0x724
-> > > 
-> > > Based on this commit log, I assume this patch only fixes the warning,
-> > > and the system *works* just fine either way.  If that's the case, it's
-> > > debatable whether it meets the stable kernel criteria, although the
-> > > documented criteria are much stricter than what happens in practice.
-> > > 
-> > > >   ...
-> > > >   Call trace:
-> > > >    of_irq_parse_raw+0x5fc/0x724
-> > > >    of_irq_parse_and_map_pci+0x128/0x1d8
-> > > >    pci_assign_irq+0xc8/0x140
-> > > >    pci_device_probe+0x70/0x188
-> > > >    really_probe+0x178/0x418
-> > > >    __driver_probe_device+0x120/0x188
-> > > >    driver_probe_device+0x48/0x22c
-> > > >    __device_attach_driver+0x134/0x1d8
-> > > >    bus_for_each_drv+0x8c/0xd8
-> > > >    __device_attach+0xdc/0x1d0
-> > > >    device_attach+0x20/0x2c
-> > > >    pci_bus_add_device+0x5c/0xc0
-> > > >    pci_bus_add_devices+0x58/0x88
-> > > >    pci_host_probe+0x124/0x178
-> > > >    pci_host_common_probe+0x124/0x198 [pci_host_common]
-> > > >    apple_pcie_probe+0x108/0x16c [pcie_apple]
-> > > >    platform_probe+0xb4/0xdc
-> > > > 
-> > > > This became apparent after disabling unused PCIe ports in the Apple
-> > > > silicon device trees instead of deleting them.
-> > > > 
-> > > > Use for_each_available_child_of_node instead of for_each_child_of_node
-> > > > which takes the "status" property into account.
-> > > > 
-> > > > Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-> > > > Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-> > > > Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> > > > Cc: stable@vger.kernel.org
-> > > > Reviewed-by: Marc Zyngier <maz@kernel.org>
-> > > > Signed-off-by: Janne Grunau <j@jannau.net>
-> > > > ---
-> > > > Changes in v2:
-> > > > - rewritten commit message with more details and corrections
-> > > > - collected Marc's "Reviewed-by:"
-> > > > - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
-> > > > ---
-> > > >  drivers/pci/controller/pcie-apple.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> > > > index 66f37e403a09..f8670a032f7a 100644
-> > > > --- a/drivers/pci/controller/pcie-apple.c
-> > > > +++ b/drivers/pci/controller/pcie-apple.c
-> > > > @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
-> > > >  	cfg->priv = pcie;
-> > > >  	INIT_LIST_HEAD(&pcie->ports);
-> > > >  
-> > > > -	for_each_child_of_node(dev->of_node, of_port) {
-> > > > +	for_each_available_child_of_node(dev->of_node, of_port) {
-> > > >  		ret = apple_pcie_setup_port(pcie, of_port);
-> > > >  		if (ret) {
-> > > >  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
-> > > 
-> > > Is this change still needed after 6fffbc7ae137 ("PCI: Honor firmware's
-> > > device disabled status")?  This is a generic problem, and it would be
-> > > a lot nicer if we had a generic solution.  But I assume it *is* still
-> > > needed because Rob gave his Reviewed-by.
-> > 
-> > I'm not sure this is addressing the same issue. The way I read it, the
-> > patch you mention here allows a PCI device to be disabled in firmware,
-> > even if it could otherwise be probed.
-> > 
-> > What this patch does is to prevent root ports that exist in the HW but
-> > that have been disabled from being probed. Same concept, only at a
-> > different level.
+> Add num-lanes schema checks based on compatible string on available lanes
+> for that platform.
 > 
-> A root port is a PCI device though and that's what's causing the warning
-> AFAIK (? it is triggered on the root port PCI device pci_assign_irq()
-> call),
+> Signed-off-by: Matt Ranostay <mranostay@ti.com>
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> ---
 
-As usual, there are two sides to things. The root ports are also part
-of a platform device, and this what this patch uses.
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC.  It might happen, that command when run on an older
+kernel, gives you outdated entries.  Therefore please be sure you base
+your patches on recent Linux kernel.
 
-> I am not sure the root port DT node is associated with the root
-> port PCI device correctly, which might explain why, even after
-> 6fffbc7ae137, the PCI enumeration code is adding the root port PCI
-> device to the PCI tree.
+Since you skipped important  DT list, there will be no checks executed
+here. It's a NAK unfortunately. :(
 
-I didn't say that commit did not suppress the warning. I haven't
-tested it the first place because I really need all the PCIe ports I
-can get on the machines I have.
+Best regards,
+Krzysztof
 
-It just feels to me that they are tracking different things.
-
-> Is the dts available anywhere ? How are root ports described in it ?
-
-arch/arm64/boot/dts/apple/t8103.dtsi
-Documentation/devicetree/bindings/pci/apple,pcie.yaml
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
