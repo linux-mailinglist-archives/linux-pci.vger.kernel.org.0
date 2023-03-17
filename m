@@ -2,67 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B0BDB6BEBAD
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 15:47:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 66B196BED81
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 16:58:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231256AbjCQOrP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Mar 2023 10:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50386 "EHLO
+        id S229938AbjCQP6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 11:58:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231265AbjCQOrN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 10:47:13 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2073.outbound.protection.outlook.com [40.107.8.73])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B9D422A1F;
-        Fri, 17 Mar 2023 07:47:12 -0700 (PDT)
+        with ESMTP id S230358AbjCQP6S (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 11:58:18 -0400
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2068.outbound.protection.outlook.com [40.107.22.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7EC3E0A6;
+        Fri, 17 Mar 2023 08:58:16 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BGZaIk0+vo/j/fewokFQUNSWdnt+VQCXhRKCUy8RQ10hv+2s7n/mqEPCrMm+FFPbgObjneqCNEvkvTcZmIs091GuTs5C4NKszW1+V6Z6EohIdLgjq/qLfjq62IQZL4eKZuPeTzDW9fIiy4aAJJQ2VUwskZ3WvcGBzOFgY+QkdItIcfhM+p+34FsR50PiudbktY3Nd1bhPWx/6Xhx6YrwTJyeds6BJP/GVYTsUASJwFCu272mdTFJt0ydolDfWhjE/I1TzkTBbyBTbYRCdY9/53bIe00UkJ+X82RkVbV2VOhtKOgXAelVS4pJytlrwaP0y/fSgaCKUsGE6gxjcTD/ew==
+ b=b+6lzEMikAVURkH7BCxIBkfbLcQ/dkoCf1QviQXLGZ59uyGobXWBJegJqg1Q1yVDH9n1kLlLspd8qbVJfrt7I0NYZdPi22Weo4NcRdkng6DkWmEY4h0hix3yGz/EUAlyKP9Bmy6KlBNt0ANNsyUNP3jqtfBVQzDM21h2qWmgfd7PHyI5IfQK6EDQYTmFca3VSI2bjBS2yu5juSkI+u9voPnnqk/Peiu08G9chbEU50ybgQQXnJiJ/i/MOIMiK3dCYkLlbQI6dDtuazKhR3jADLSvvrzTvHSFjDa8HbJSISS8mj3NRA8UWlszlbzPoeu66YxAdeq9qZHEEoZrCn+dpw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tAJyNsmED9B5fj7sMFgzFmnXHXNsJS1sfLeSudBgEI4=;
- b=PXIjNrPycDsNgYSFcbXBlOajl/H/JK3BzpNHfArQLQjV/F69/XcQfwjcGOej0mOWFs0/9lVZPf9gbQbSrOEDg78jRPeBz6pockjRbe4+ljxQ/hCforMKSATahyk0/4LpDKF2xSzOIsvM65xce54YxXY4jZRj2Nxq1dAkJynEmIHltfdcYxqRZsxkbTZncyNC1FCQLiElaH0AqZsNvGah5LS3flndhH+ApxUBZgs9h2pDdOhaGiLKp669E/p2RFsPZJedV47FI3Vt73JlVk85nKZuiUDSt8VbLDnRQBPRIP1QPcSnZgYNdPjGqpwSDZAiCT9qiTmf3l4pBlcxIj1YtQ==
+ bh=hGxGmGTmu+GYUuGqycgFd2V+IPyqxT6/I/kNf+g0i2s=;
+ b=lHytNmRMQ62Z31KaW9mSzY+K6IdG6ny7X04vCNf4QWn7EicCSugqeHYDVCvxRsJFs/DxfahJWXQMyR0DKnBJeqbXAS9pcKQdOmQ5ap/eDHWTL0gzVXk8Ifp1Fqapu18m84y7qPA4ZE4TQawDsG1Uqfh846vRgE0wg1/BRQ2rKscBONL+xHNXZakZwsOE1DereQLGCji//W5cGpKnlgn9LBob6Q7JDwpLaybTJYyMsgLj6ah3jeDhkRW0mrhfh6OF/+iToFZ7Xd8RmdZuP5faur3pxMOBMxArcC3U4yez7NPvoV2Agiamgbr/aodORyuf2Fc1io77TE+VRs21173FGA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
  header.d=nxp.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tAJyNsmED9B5fj7sMFgzFmnXHXNsJS1sfLeSudBgEI4=;
- b=JbdzSynEvNyfriIQQUKU0KwogTgSsMozue3bAwH+bwMm14MJWmrJBnusW6D82d7slYiaTUkkS2EWALLd31kBvpQM9IIWOmVuXRMV9opidXjavNY8TpK4vBoaAj7B/OuE4q43PS/ttRQZKAj3KioZk01ozSTrEaiR7dbvnnewHiI=
+ bh=hGxGmGTmu+GYUuGqycgFd2V+IPyqxT6/I/kNf+g0i2s=;
+ b=HUybq7LFi1q/gxJbFQ+ZaaziW66zulqCl1/vNHrmLWcf2b9uiAaqv2CFEdtyTYe9/RLH3zQLKbnIzxLz/d40+hQHzsGd6klYcnP6HZTtJ/oeoTftEElkDi4xTvRmUn1H1/i8GmSGqbh6fOLbrpd71H8zMZ5absEdJNPQlPHKglA=
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by DBBPR04MB7786.eurprd04.prod.outlook.com (2603:10a6:10:1e8::14) with
+ by AM9PR04MB7540.eurprd04.prod.outlook.com (2603:10a6:20b:283::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.35; Fri, 17 Mar
- 2023 14:47:08 +0000
+ 2023 15:58:13 +0000
 Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::fb2a:a683:b78e:b9b5]) by AM6PR04MB4838.eurprd04.prod.outlook.com
  ([fe80::fb2a:a683:b78e:b9b5%4]) with mapi id 15.20.6178.029; Fri, 17 Mar 2023
- 14:47:08 +0000
+ 15:58:13 +0000
 From:   Frank Li <frank.li@nxp.com>
-To:     Shunsuke Mie <mie@igel.co.jp>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-CC:     Vinod Koul <vkoul@kernel.org>,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     "M.H. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
         =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
- header file between endpoint driver
-Thread-Topic: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
- header file between endpoint driver
-Thread-Index: AQHZWMRAZpxSPgbE9kOzF/3xKVztPK7/DA2A
-Date:   Fri, 17 Mar 2023 14:47:08 +0000
-Message-ID: <AM6PR04MB4838D8F8AF23C61048BDFB9788BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
-References: <20230317113238.142970-1-mie@igel.co.jp>
- <20230317113238.142970-7-mie@igel.co.jp>
-In-Reply-To: <20230317113238.142970-7-mie@igel.co.jp>
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "imx@lists.linux.dev" <imx@lists.linux.dev>
+Subject: RE: [EXT] Re: [PATCH 1/1] PCI: layerscape: Add the workaround for
+ A-010305
+Thread-Topic: [EXT] Re: [PATCH 1/1] PCI: layerscape: Add the workaround for
+ A-010305
+Thread-Index: AQHZJr5WwkFDleZU9E2wO25hi20GTK77GsyAgARoY6A=
+Date:   Fri, 17 Mar 2023 15:58:13 +0000
+Message-ID: <AM6PR04MB4838BBCA8E49EE13C9545F4388BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
+References: <20230112194433.1514149-1-Frank.Li@nxp.com>
+ <20230314203249.GA1673140@bhelgaas>
+In-Reply-To: <20230314203249.GA1673140@bhelgaas>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -70,56 +70,56 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nxp.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM6PR04MB4838:EE_|DBBPR04MB7786:EE_
-x-ms-office365-filtering-correlation-id: f340fd95-2706-4690-fc44-08db26f67c18
+x-ms-traffictypediagnostic: AM6PR04MB4838:EE_|AM9PR04MB7540:EE_
+x-ms-office365-filtering-correlation-id: 7a136f06-49b2-4d4a-979a-08db27006a28
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: lJMlRsB+6haa7CTx0ZHF44J+yPe1AabWxL8IBq9s1fg1XAMvqt/9a57Ft6IrJmaQIbAr1puOO2PPMhzEevDjhodymm/TTECSHdrD/Iu+9eFAxASlP9k33Kk1AhOcqZEjtOPyxxCFDUY+4aoVVdl+aEhsGE8KebyfpFHagJOm4eWKvXVZipj/qkVjxaEh12YF5OtMD7L99/GFSs7OTHMqsRl7C8sETLsPFMceW5YtXs+j+qoZGHv0DLDaepvr5lvEMVFmyOrO3B7ygFR4Elzs0/B+qIVZE/VEQno1qEDcxbPvsJN8X3OCXuH07WOXcrEEw1dHo8cf5Bbt6Oh7U0c4HzN9g7hNv8vRt36X3a95Czpyt5z5mvz8REqwyzEjmwHZi5N3ecGscUbxJC6OuodxRsHj/BWNCqR2GwllAPcu21T0y/5ArXEjx0htZ3v/n9XuE9SgemcRhwXSt6h7oPy+P09Id6iEke7C7p8mzs+UAAYbwAAPQh7l3hUNJwGhhkDLGHneCxAO94rEMIJ8TMxvGgNgSYMOMqyuQnuJA8Lw52vgc1ky7LoBriH0JZvH1nxMe4RY4EE77alAJnnj5+6usg9tLSISYRmBLsqunjVk2sJSErECvgOJ1ap9reZ/m5BcP8rwSwVY1XlC/AmAAN8KpEHWkAhyG1kHSA67MftgEYdVxtnROUnU748PsR5YfN/4CjV0InlunObEJVAEH9amRw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(39860400002)(366004)(346002)(136003)(396003)(451199018)(5660300002)(9686003)(7416002)(8936002)(52536014)(38100700002)(186003)(44832011)(122000001)(38070700005)(6506007)(26005)(41300700001)(55236004)(86362001)(2906002)(66556008)(4326008)(478600001)(8676002)(64756008)(66946007)(66476007)(76116006)(66446008)(55016003)(316002)(110136005)(54906003)(7696005)(33656002)(83380400001)(71200400001);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: aEEtd0ZT3BLbFkP6BGIM7ECPRMyJ8Qg9p1HqXyBNltxmJ0Dy/2PtSxj5FzknHjH5vGymFmsn6kQfRkt0FC+U/+zuYUPOzI8qW5ucLdso4nHUnNyXZ1FqF0dVIE821pHmq0XAJImv9hlX2u/+kDDmjOzXTH3ImUUf834KoKY0OJbR/Zy7R+NXATkk3AUUbKGelag8/mUftyeiIytlro/xf4eoAnbH0qS5mJ76/2IB+awaJ0Oi0ww8Ri+CSeNnoZdlFevUNJpvMBjtgnoHzmLF1h0Zfj90xTT6YxecHvL8fkyQzmt3Jp2OmCWnLO5J1ouCDb2EMcagtlEQ+c+H+tc6bOdok4Kb5bcs4/ClKNLPdTS0uEc/hqIZAiFbD10kt/2OOkfXRu77a4Fu9vFv0MPg83B/7sR3NIcM13YyWn61jmQhz+1LzIeA3JJlHAogi5TgdurZ7vcfPVa5EwQwssNA3YsdUYt/DQ8OPQd4jOGQpJ2UgrpZm7nNQFDKTE8IvAr+qitTJG/Vjlsltk+X6OUIofq9Dzu4PMy4OauNnzsXmTzz06sFAM8ViH3bVhTuk9+Ta6kChR/TqjvwMuBxMlWrlTO8AgxyD7ZpZNhUBNxYlJb+Czmi3ng/mC56Yv5x75Fe0DeJhRbDi0iSGcpBKG7BhY7MjjVwvSaEPCAs5PclVLAkA02RlpVtMEVksB3BnWGM9IY6IKxwT2hGnrNlj59zn5BN7x8u4nx8m/idn4HzDxw=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(451199018)(66946007)(2906002)(122000001)(76116006)(9686003)(186003)(66476007)(66446008)(64756008)(66556008)(86362001)(38070700005)(478600001)(7696005)(71200400001)(41300700001)(33656002)(966005)(316002)(54906003)(55236004)(55016003)(38100700002)(6506007)(26005)(8936002)(4744005)(7416002)(5660300002)(6916009)(52536014)(8676002)(44832011)(4326008);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?EEZgENb/aATAfDkMr4Odv/nHkWfzTJtHLfmEWqVDIV4SfC5NeJLILUrMhu?=
- =?iso-8859-2?Q?BLzS4FW4Ps3x2SjYZ5P//+JlRwKbAiKxY7T57DbP8Ot1BYGwBn8mOA7KJw?=
- =?iso-8859-2?Q?0m7SuR+7ekw0g4KTqQRcHVy7dwU2rS7vsx+HaKxiv4M0hiD/ZRi7G+qb73?=
- =?iso-8859-2?Q?yJ14vmj2CdWElVHga0YYceUBuPPSTRhf0/u4mKgbQ3dSNLRr+esuk53EM/?=
- =?iso-8859-2?Q?TL/uK/ke96mVuwjoFHIrh7ncR3BdGRrZDzW0EwS5jd2zVoqktH8fsKhsg/?=
- =?iso-8859-2?Q?ylbgZm1JBG9p4UE9ZRAK7LiQCa6qdFg9f+6ZxgVECngtiMzmcyK46hfGET?=
- =?iso-8859-2?Q?5LphcdV5J400BfGvmaJjoAvC5Wc+lrSdl273IuulL/2xj1X8hj9oVMFv5k?=
- =?iso-8859-2?Q?3Ps6nyUcFXbkY8bRCurIvn8/7Wo7l9t7uaQRyTOvqU9NZQt/4/SzMkYnJy?=
- =?iso-8859-2?Q?cNiGMJ6UjCRfgUMlA618Nqz4CsTA0vH8+0t5F7ZlVrD2AWpeooFMDM5GRl?=
- =?iso-8859-2?Q?c1duCcjtbps9d5zfV5hhpuqRxxppdX7uGv4HL++zHE2WW7y4CRMFXzsJxy?=
- =?iso-8859-2?Q?c2K2O+933gEX2neZjwgsxZxXbFgaPliES7tH5NqjLTsfxyp/SrYEePTu0K?=
- =?iso-8859-2?Q?7cawTSLNOhe7YYw7YP8HgUJbwtBiz4uYkN4X4hEuxi15HJafOSrVUgCqOq?=
- =?iso-8859-2?Q?VRD5kPgqiRImf7xZkG24q36ywz2PzMX2U87UUUKHpa75kc1KKKcOdy4RFQ?=
- =?iso-8859-2?Q?7+QVXDQXTLGdf9kIwnBFZ1xV0aUyQr5jUdssKXFmHy263yMNq4DHwH5/tN?=
- =?iso-8859-2?Q?3f//n6Ualn1pKI0z3pltihuHra3Mz4QrwfSWQ2Wtv5qkXuUTm7m7b82UMf?=
- =?iso-8859-2?Q?B97CEs4kFeHkAn0pYLlAE3y5Ub/ZEfO2SCsSKWhjaGcD5THQZrdfAc5EZz?=
- =?iso-8859-2?Q?l8eGe7pPVjWkdFAnPczm6y8ZtiAm7hTi+BJnU2vUus2fbkuwGN9f8cab0s?=
- =?iso-8859-2?Q?Tr9Gs7YYuMf6qHjIqTEaAXxJ+jONccWILiMcBcPuV0jiymPekJCp3qJHfB?=
- =?iso-8859-2?Q?J1YA6AgHibwqsGZ44JHp08nge6KL86u66jvFclQK7MD/CCZssAIO4vgMxK?=
- =?iso-8859-2?Q?2XabNaGwV+5IIiDkogQkSLPnLcoqThji4hcuFek2+cjENkPG8ukJQOIIxq?=
- =?iso-8859-2?Q?zEX52bODNH/SpjqpB8UPxJNPAa6q9jkkSh+9n14Yb7HerNPn2SkaQ9vdhX?=
- =?iso-8859-2?Q?zqZp+aoIZJd2eOp0gL5ad1ULm0984QUdlBVAXpwMHygiFJd3e8b3N8aQ2v?=
- =?iso-8859-2?Q?YERlDcWYjXjlWyje4ouoRI+67R588Ay/RA5Bcp27xUfDZhBqBz5CDjFk0z?=
- =?iso-8859-2?Q?1E+cvVT16WCQ5kpQXlKBFk0mkWYcCkL4ay/9ZXvMqTnS61pT+WsdEuAb70?=
- =?iso-8859-2?Q?zh29OGBFZnyxCFyQ/e/K2WY0eQ/UxqoEv4w3FSYS8hfz6I3p5wACpk5fcs?=
- =?iso-8859-2?Q?J+7r/fB5ZskPmaC8qdYnhTHkj2820dioitb63wgMxzCkVBy/vmjEqDkNtW?=
- =?iso-8859-2?Q?9BWr9QOGpjhoILzwH4j5+1xG9458WsjmeWEoM4SHHzHjyNuatMMmhPRMNm?=
- =?iso-8859-2?Q?IldlSo8rGP0II=3D?=
+x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?Nxwgwk+9ArkF9L9F7s0aDfk4qrIjwVZLdhaMP1JEz8520T+urBM4Utbh8V?=
+ =?iso-8859-2?Q?UzOO69emyPR2njIQU+DboHV6SLTkz6zjTY5l+vap33eA/dkbLkRQonotbP?=
+ =?iso-8859-2?Q?hIVAQi5iZbumU6ysmnZOSG8tA2yuBGLm45aweouE3jo08oYAaS3hextusw?=
+ =?iso-8859-2?Q?kA65KxtbZ/60WfdJP7JYIoPXdZrKtsYPaJ+EWGSS5Ba5Czv3wQQGnQ4cPp?=
+ =?iso-8859-2?Q?YyD0u58DT/kyzV72qaPFPM3xIk7ozcttA3TJ5RlMOt02LwC8RaSOwIe1bJ?=
+ =?iso-8859-2?Q?D6MaMa4+NuM/DJS29iF9gp6qXSGrDxZ4ZxPE8bS1VbvGsYHDGNxTPAulvn?=
+ =?iso-8859-2?Q?qzuAlZ+havODWIZkAoqdxx3bv0Av0gF4EUbyMaDj/vjMyQhZYn3rGVci7s?=
+ =?iso-8859-2?Q?FMt/HRaSvNHszQEtAXvXJTss7j5E9o1OeRnQZ/1R/iG6RMhtdP+rOxjyc8?=
+ =?iso-8859-2?Q?DAJnMWgyQhkLyXP1Ofp4igsTWv6CesjSLvQ0PHZ/Xwj725mSyzCGuGGhM1?=
+ =?iso-8859-2?Q?/ZhGXvCFa69v5MaIIc/BkJccM2CSU/cmzwp3/s1KE4Nice0qwh6NdqJ/OB?=
+ =?iso-8859-2?Q?JS6ia+kR/WJU0z6UI87XPBgsWvOFy+NaAaGifTzNAx6E+UJwn0w4pn3pKs?=
+ =?iso-8859-2?Q?AQJy8SgbARb5UsumbqWtNSs6/obFjG2k1QKQ42IXZd32PBG1ku+MFQwpNx?=
+ =?iso-8859-2?Q?JUo/OsklLuAjb7i2OdhtRs32WmVwTLJXPZzYSD61b9FxrFQBpYkm2KvLJH?=
+ =?iso-8859-2?Q?AdDhKYerBvW1O2ufTLDCEys8FOZS6TAoGy4jZmtQKphjH18GHW8dfZVrcg?=
+ =?iso-8859-2?Q?VRmxcWWeoBe1LfDSFt0OuoEOdQ7UB6S+DGou3K0SDZbt4ZYdHKuOfSfMVl?=
+ =?iso-8859-2?Q?y4yRF6Yc7kGBFlwlwv+dvkfflrmkwlj55Vif3pX1CocyasnL/f5NF7uxgP?=
+ =?iso-8859-2?Q?DZ1cFNQv1yvt+fPbmZ3wnn4gMGVJtwlAIefrpNvKkutrYbUz3LjJbwpBmF?=
+ =?iso-8859-2?Q?Wm+2tkIddC5avfFxXyuSbrRVc4yTJHkHzveuZUY+mzeg36jZcf3liRJWy+?=
+ =?iso-8859-2?Q?cL7aCu5GnXdgYoZDPqeGT+vn+LhCdkxdYYYp2QqDt+9srZOU1sEVmBDNVG?=
+ =?iso-8859-2?Q?MdHmF+TKwF+1VMH4SGsmL1tO8MQLQUAJR2jqROfLnTxv3HazhaAP4iuY5I?=
+ =?iso-8859-2?Q?VnxDaQL7shKrA1rIywG0nceOvQlMIS2Fk4bM4Y68EtYjS+LtUMCcTqVxu1?=
+ =?iso-8859-2?Q?jB+ZIPiPfXkfWHZRfKwPCOYEkPA2Uxr/FfZo98IatSoiXMZ31TrNTBvgnp?=
+ =?iso-8859-2?Q?yCpE/1UnwBrFKzakQelZvFdDtXYbmSfBsFp4QBoMt2Iw+Os6RPd/XKUaSb?=
+ =?iso-8859-2?Q?YNYhwXdFXgNBoetRDoQ3SBl1TZFLngrjiDp+R63xEmB3OREYr1brk6yqz5?=
+ =?iso-8859-2?Q?xD7E2Cnu/6o9qDcRlyroUHe9NO6Vwfbxewc/FaucSmEJUzR89/Gh1Oua2J?=
+ =?iso-8859-2?Q?uKuI6TYqUnyT7Bmtvmrsq//7zac/LtdYZNdE819No3y4sZr+quX+ogWtP+?=
+ =?iso-8859-2?Q?zZmr7k9T2X9c6WlLRSwqBJ/5rGO/xpizu4SynhcoChYqzEtc0yzoTdnihr?=
+ =?iso-8859-2?Q?UnQWZn04bYhoSTnYQaOtGZEKaalp2jKxvQ?=
 Content-Type: text/plain; charset="iso-8859-2"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: nxp.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f340fd95-2706-4690-fc44-08db26f67c18
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2023 14:47:08.8723
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a136f06-49b2-4d4a-979a-08db27006a28
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2023 15:58:13.7273
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7vJop6dMfZaQ0UOXi2o9qxVWm/mrrBgWCs7fc1nnaxi+51hLjzOAncSOZb2tO6IOBUHo8tblUFYs2+7nVudQPA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7786
+X-MS-Exchange-CrossTenant-userprincipalname: 4sceIb6xYcu1BPGyAg1WH4HPAFTzobGl2UxHHJprNdYHg9kTXKqEogITo15zSqNfXvP++jxiQ6Z0Rh9LHdmo3Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7540
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
@@ -130,91 +130,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> pci@vger.kernel.org
-> Subject: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
-> header file between endpoint driver
+> >       pci->ep.ops =3D &ls_pcie_ep_ops;
+> >
+> > +     pcie->big_endian =3D of_property_read_bool(dev->of_node, "big-
+> endian");
 >=20
-> Caution: EXT Email
+> Somewhat surprising that 6c389328c985 ("dt-bindings: pci:
+> layerscape-pci: Add a optional property big-endian") added this
+> property a year ago, but it has been unused until now?
 >=20
-> Duplicated definitions between pci-epf-test and pci_endpoint_test are
-> already moved to a header file. Remove the common definitions and include
-> the header file. In addition, the separate register address writes were
-> combined into a single write.
->=20
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
->  drivers/misc/pci_endpoint_test.c | 42 +-------------------------------
->  1 file changed, 1 insertion(+), 41 deletions(-)
->=20
-> diff --git a/drivers/misc/pci_endpoint_test.c
-> b/drivers/misc/pci_endpoint_test.c
-> index 55733dee95ad..d4a42e9ab86a 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -22,52 +22,12 @@
->  #include <linux/pci_ids.h>
->=20
->  #include <linux/pci_regs.h>
-> +#include <linux/pci-epf-test.h>
 
-Pci-epf-test.h was only used by these two files.
+No, it also for pci host part. Zhiqiang send patch=20
+https://lore.kernel.org/lkml/20210407030948.3845-1-Zhiqiang.Hou@nxp.com/
 
-Actually, I think move  drivers/misc/pci_endpoint_test.c to under drivers/p=
-ci/endpoint/functions/
-And shared one private header is more reasonable.=20
-These two files should be stay together because tight coupling. =20
+Not sure why bind-doc accepted, but driver code patch have not accepted.=20
 
+The same case happen at https://lore.kernel.org/imx/20230209151050.233973-1=
+-Frank.Li@nxp.com/T/#t
 
->=20
->  #include <uapi/linux/pcitest.h>
->=20
->  #define DRV_MODULE_NAME                                "pci-endpoint-tes=
-t"
->=20
-> -#define IRQ_TYPE_UNDEFINED                     -1
-> -#define IRQ_TYPE_LEGACY                                0
-> -#define IRQ_TYPE_MSI                           1
-> -#define IRQ_TYPE_MSIX                          2
-> -
-> -#define PCI_ENDPOINT_TEST_MAGIC                        0x0
-> -
-> -#define PCI_ENDPOINT_TEST_COMMAND              0x4
-> -#define COMMAND_RAISE_LEGACY_IRQ               BIT(0)
-> -#define COMMAND_RAISE_MSI_IRQ                  BIT(1)
-> -#define COMMAND_RAISE_MSIX_IRQ                 BIT(2)
-> -#define COMMAND_READ                           BIT(3)
-> -#define COMMAND_WRITE                          BIT(4)
-> -#define COMMAND_COPY                           BIT(5)
-> -
-> -#define PCI_ENDPOINT_TEST_STATUS               0x8
-> -#define STATUS_READ_SUCCESS                    BIT(0)
-> -#define STATUS_READ_FAIL                       BIT(1)
-> -#define STATUS_WRITE_SUCCESS                   BIT(2)
-> -#define STATUS_WRITE_FAIL                      BIT(3)
-> -#define STATUS_COPY_SUCCESS                    BIT(4)
-> -#define STATUS_COPY_FAIL                       BIT(5)
-> -#define STATUS_IRQ_RAISED                      BIT(6)
-> -#define STATUS_SRC_ADDR_INVALID                        BIT(7)
-> -#define STATUS_DST_ADDR_INVALID                        BIT(8)
-> -
-> -#define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR       0x0c
-> -#define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR       0x10
-> -
-> -#define PCI_ENDPOINT_TEST_LOWER_DST_ADDR       0x14
-> -#define PCI_ENDPOINT_TEST_UPPER_DST_ADDR       0x18
-> -
-> -#define PCI_ENDPOINT_TEST_SIZE                 0x1c
-> -#define PCI_ENDPOINT_TEST_CHECKSUM             0x20
-> -
-> -#define PCI_ENDPOINT_TEST_IRQ_TYPE             0x24
-> -#define PCI_ENDPOINT_TEST_IRQ_NUMBER           0x28
-> -
-> -#define PCI_ENDPOINT_TEST_FLAGS                        0x2c
-> -#define FLAG_USE_DMA                           BIT(0)
-> -
->  #define PCI_DEVICE_ID_TI_AM654                 0xb00c
->  #define PCI_DEVICE_ID_TI_J7200                 0xb00f
->  #define PCI_DEVICE_ID_TI_AM64                  0xb010
-> --
-> 2.25.1
+I tried repost the missed part. But no any response over months.  The above=
+ one is just one line change.=20
 
+> > --
+> > 2.34.1
+> >
