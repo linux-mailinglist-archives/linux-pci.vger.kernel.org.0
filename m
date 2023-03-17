@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D75D76BE238
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 08:51:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0D306BE22C
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 08:51:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230401AbjCQHvx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Mar 2023 03:51:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58112 "EHLO
+        id S230326AbjCQHvn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 03:51:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjCQHvv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 03:51:51 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1881AC5AC9;
-        Fri, 17 Mar 2023 00:51:42 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32H7pQFE008664;
-        Fri, 17 Mar 2023 02:51:26 -0500
+        with ESMTP id S230330AbjCQHvk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 03:51:40 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4479D89F02;
+        Fri, 17 Mar 2023 00:51:38 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32H7pSws070609;
+        Fri, 17 Mar 2023 02:51:28 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1679039486;
-        bh=TISRczCqqClgTnuh9Jgbp4YdFIC7Href1UTZ0gVUQ5I=;
+        s=ti-com-17Q1; t=1679039488;
+        bh=/KtIEHYVe129q/U6+XWH0X7x8R+UBCCGDZvXUUhmAPA=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=jaMqWZ5qBPyQA9WMOOvu0DfCBAw1ihhRm9e/tljBb5g/8vuNYFWURmsPhVMfYzbSw
-         R9UB2teEoReDNpyQMuipQBJm+i3yYtPQdG8u6bXW3bFHPHv7m4RPj3KEfDlnEX692Q
-         ZCEais0bbVQtg39nWls9UKEqnMqEfOA8eL6Tnj8c=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32H7pQD7119567
+        b=bRh6eYmEit+mwxCp8cGHNODTp6uHcwi+AnHVvOYKKKr5XvzV3dCKRmn6tpqyhreBw
+         0lqKd8LbMyuBE8uxhslO8uZaFUpSJK+AUIbFLpmxems4Y0NhHhk3gLjx1w9XkYpu34
+         Lv9KN/YO0e/S3E9VBDfaXTHlKHn3oA7d0ssUzs40=
+Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32H7pSm1004747
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 17 Mar 2023 02:51:26 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 17 Mar 2023 02:51:28 -0500
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Fri, 17
- Mar 2023 02:51:26 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ Mar 2023 02:51:27 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Fri, 17 Mar 2023 02:51:26 -0500
-Received: from localhost (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32H7pP24113752;
-        Fri, 17 Mar 2023 02:51:26 -0500
+ Frontend Transport; Fri, 17 Mar 2023 02:51:27 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32H7pRHp100714;
+        Fri, 17 Mar 2023 02:51:27 -0500
 From:   Achal Verma <a-verma1@ti.com>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof Wilczy_ski <kw@linux.com>,
@@ -54,9 +54,9 @@ CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         Achal Verma <a-verma1@ti.com>
-Subject: [PATCH v11 3/5] PCI: j721e: Add PCIe 4x lane selection support
-Date:   Fri, 17 Mar 2023 13:21:18 +0530
-Message-ID: <20230317075120.506267-4-a-verma1@ti.com>
+Subject: [PATCH v11 4/5] dt-bindings: PCI: ti,j721e-pci-*: add j784s4-pci-* compatible strings
+Date:   Fri, 17 Mar 2023 13:21:19 +0530
+Message-ID: <20230317075120.506267-5-a-verma1@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230317075120.506267-1-a-verma1@ti.com>
 References: <20230317075120.506267-1-a-verma1@ti.com>
@@ -76,64 +76,77 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Matt Ranostay <mranostay@ti.com>
 
-Add support for setting of two-bit field that allows selection of 4x lane
-PCIe which was previously limited to only 2x lanes.
+Add definition for j784s4-pci-ep + j784s4-pci-host devices along with
+schema checks for num-lanes.
 
 Signed-off-by: Matt Ranostay <mranostay@ti.com>
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Signed-off-by: Achal Verma <a-verma1@ti.com>
 ---
- drivers/pci/controller/cadence/pci-j721e.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml     | 12 ++++++++++++
+ .../devicetree/bindings/pci/ti,j721e-pci-host.yaml   | 12 ++++++++++++
+ 2 files changed, 24 insertions(+)
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index f4dc2c5abedb..58dcac9021e4 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -42,7 +42,6 @@ enum link_status {
- };
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+index 32e0c70ed801..d2fbf1f7aa54 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-ep.yaml
+@@ -14,6 +14,7 @@ properties:
+   compatible:
+     oneOf:
+       - const: ti,j721e-pcie-ep
++      - const: ti,j784s4-pcie-ep
+       - description: PCIe EP controller in AM64
+         items:
+           - const: ti,am64-pcie-ep
+@@ -86,6 +87,17 @@ allOf:
+           minimum: 1
+           maximum: 2
  
- #define J721E_MODE_RC			BIT(7)
--#define LANE_COUNT_MASK			BIT(8)
- #define LANE_COUNT(n)			((n) << 8)
- 
- #define GENERATION_SEL_MASK		GENMASK(1, 0)
-@@ -52,6 +51,7 @@ struct j721e_pcie {
- 	struct clk		*refclk;
- 	u32			mode;
- 	u32			num_lanes;
-+	u32			max_lanes;
- 	void __iomem		*user_cfg_base;
- 	void __iomem		*intd_cfg_base;
- 	u32			linkdown_irq_regfield;
-@@ -205,11 +205,15 @@ static int j721e_pcie_set_lane_count(struct j721e_pcie *pcie,
- {
- 	struct device *dev = pcie->cdns_pcie->dev;
- 	u32 lanes = pcie->num_lanes;
-+	u32 mask = BIT(8);
- 	u32 val = 0;
- 	int ret;
- 
-+	if (pcie->max_lanes == 4)
-+		mask = GENMASK(9, 8);
++  - if:
++      properties:
++        compatible:
++          enum:
++            - ti,j784s4-pcie-ep
++    then:
++      properties:
++        num-lanes:
++          minimum: 1
++          maximum: 4
 +
- 	val = LANE_COUNT(lanes - 1);
--	ret = regmap_update_bits(syscon, offset, LANE_COUNT_MASK, val);
-+	ret = regmap_update_bits(syscon, offset, mask, val);
- 	if (ret)
- 		dev_err(dev, "failed to set link count\n");
+ required:
+   - compatible
+   - reg
+diff --git a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+index 2547088304e5..e41d6f403493 100644
+--- a/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
++++ b/Documentation/devicetree/bindings/pci/ti,j721e-pci-host.yaml
+@@ -14,6 +14,7 @@ properties:
+   compatible:
+     oneOf:
+       - const: ti,j721e-pcie-host
++      - const: ti,j784s4-pcie-host
+       - description: PCIe controller in AM64
+         items:
+           - const: ti,am64-pcie-host
+@@ -115,6 +116,17 @@ allOf:
+           minimum: 1
+           maximum: 2
  
-@@ -441,7 +445,9 @@ static int j721e_pcie_probe(struct platform_device *pdev)
- 		dev_warn(dev, "num-lanes property not provided or invalid, setting num-lanes to 1\n");
- 		num_lanes = 1;
- 	}
++  - if:
++      properties:
++        compatible:
++          enum:
++            - ti,j784s4-pcie-host
++    then:
++      properties:
++        num-lanes:
++          minimum: 1
++          maximum: 4
 +
- 	pcie->num_lanes = num_lanes;
-+	pcie->max_lanes = data->max_lanes;
- 
- 	if (dma_set_mask_and_coherent(dev, DMA_BIT_MASK(48)))
- 		return -EINVAL;
+ required:
+   - compatible
+   - reg
 -- 
 2.25.1
 
