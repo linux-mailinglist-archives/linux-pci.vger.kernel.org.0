@@ -2,158 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DC1676BF45D
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 22:37:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 130256BF4C1
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 22:57:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230469AbjCQVhA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Mar 2023 17:37:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52264 "EHLO
+        id S229679AbjCQV5Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 17:57:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230514AbjCQVg1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 17:36:27 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E3049898;
-        Fri, 17 Mar 2023 14:35:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679088941; x=1710624941;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=p8BFbONHc7WqCzZIsrm1QJI48QM17cOqjlYx5rUU83M=;
-  b=htGBf4VfbREFIEH2xqQuTjV+2AkmusrecI9SU2jXmxW2Q4FrMBFuxiQS
-   TfcsaCHdTjsm92LvigQJ2jQI3dQY/Ae5Ho1QyB39wLFJ+VIaAcUgG9t8i
-   K1ZADsmsCnVjZIEcsrBF32e6/FbVG270dR7Q7PQvvbGwJOe86mFFlYB48
-   NRkfx64mNudnpAH0Q71pT8gdIOlHUIJij9lwxaJO7IU9fQ/kG56XKn/qC
-   FZeQ5nPACLs7FM1LnP2A11O3EYqo+W2u2Asru40pn8d5fZRFnuWEISGr7
-   O5yToCIXT5koeR05AM8559tDOOwIWnBP+XzCcI04FlkArrbs3LBcYxqHm
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="403237078"
-X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
-   d="scan'208";a="403237078"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 14:31:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10652"; a="804244454"
-X-IronPort-AV: E=Sophos;i="5.98,268,1673942400"; 
-   d="scan'208";a="804244454"
-Received: from fcvilla-mobl1.amr.corp.intel.com (HELO [10.209.177.176]) ([10.209.177.176])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2023 14:31:50 -0700
-Message-ID: <44b1519b-f9e0-476a-ff47-8d21f004b3cd@linux.intel.com>
-Date:   Fri, 17 Mar 2023 14:31:49 -0700
+        with ESMTP id S231201AbjCQV5W (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 17:57:22 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD285298D5;
+        Fri, 17 Mar 2023 14:56:56 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2BB01B825C3;
+        Fri, 17 Mar 2023 21:56:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6DC6C433EF;
+        Fri, 17 Mar 2023 21:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679090211;
+        bh=RcXRkLZJ0QUiQo2PkgHUJgLw7K4eCtZTz+7xcLtd8gc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=LQ52gPcq7B7KpQewa8arpjOH/RHGDvWniPMgCTUt08BidUSzn57gVqCgbA/UJfQQw
+         2noMdjLPJVPIru50MD0BA+8HhW0eI9nnyoNGvJRs7DDOUwHgFjaRwjLzllptVfpR99
+         00CFMbcc4AWGYT4e6Gq9L5KRkscAryhZFb3yBBejqT1OvdxwTZ6cVBlXWJrOrY3VMc
+         KSTQVL+pLrh1jl1JzsXvmmmdHBKwQvJ/yTtcNznvtoZuRFm4CQ6gZZw9OUqVcHgrp/
+         PkoTjUF1DLvgg0dk2YqynfsQYOxQfWr69Env2PfEABv9VkP1IKYrMmwrSpzkq3b6x7
+         5h4SCeHq9s9Vg==
+Date:   Fri, 17 Mar 2023 16:56:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     lorenzo.pieralisi@arm.com, kw@linux.com, Zhiqiang.Hou@nxp.com,
+        bhelgaas@google.com, devicetree@vger.kernel.org,
+        gustavo.pimentel@synopsys.com, leoyang.li@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, minghuan.Lian@nxp.com,
+        mingkai.hu@nxp.com, robh+dt@kernel.org, roy.zang@nxp.com,
+        shawnguo@kernel.org
+Subject: Re: [PATCH 1/1] PCI: layerscape: Add power management support
+Message-ID: <20230317215650.GA1973940@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v3] PCI: vmd: Add the module param to adjust MSI mode
-Content-Language: en-US
-To:     korantwork@gmail.com, helgaas@kernel.org, kbusch@kernel.org,
-        jonathan.derrick@linux.dev, lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xinghui Li <korantli@tencent.com>
-References: <20230316122322.339316-1-korantwork@gmail.com>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <20230316122322.339316-1-korantwork@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230317200528.2481154-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/16/2023 5:23 AM, korantwork@gmail.com wrote:
-> From: Xinghui Li <korantli@tencent.com>
->
-> In the legacy, the vmd MSI mode can only be adjusted by configing
+On Fri, Mar 17, 2023 at 04:05:28PM -0400, Frank Li wrote:
+> From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> 
+> Add PME_Turn_Off/PME_TO_Ack handshake sequence, and finally
+> put the PCIe controller into D3 state after the L2/L3 ready
+> state transition process completion.
 
-configuring
+Can you please include a sentence or two about what this means for
+devices below the PCIe controller?  Is this guaranteed to be safe for
+them, i.e., can all PCIe devices tolerate PME_Turn_Off, etc., and
+resume correctly afterwards?
 
-> vmd_ids table. This patch adds another way to adjust MSI mode by
-> adjusting module param, which allow users easier to adjust the vmd
-> according to the I/O scenario without rebuilding driver. There are two
-> params could be recognized: on, off. The default param is NULL,
-> the goal is not to effect the existing settings of the device.
->
-> Signed-off-by: Xinghui Li <korantli@tencent.com>
-> ---
->  drivers/pci/controller/vmd.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 990630ec57c6..fb61181baa9e 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -34,6 +34,19 @@
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
->  
-> +/*
-> + * The VMD msi_remap module parameter provides the alternative way
-> + * to adjust MSI mode when loading vmd.ko other than vmd_ids table.
-> + * There are two params could be recognized:
-> + *
-> + * off: enable MSI bypass
+I suspect other drivers will copy this sort of pattern if it is safe
+and useful.
 
-What about this?
-off: disable MSI remapping
+>  struct ls_pcie {
+>  	struct dw_pcie *pci;
+> +	const struct ls_pcie_drvdata *drvdata;
+> +	void __iomem *pf_base;
+> +	void __iomem *lut_base;
+> +	bool big_endian;
+> +	bool ep_presence;
 
-> + * on: enable MSI remapping
-> + *
-> + */
-> +static char *msi_remap;
-> +module_param(msi_remap, charp, 0444);
-> +MODULE_PARM_DESC(msi_remap, "Whether to enable MSI remapping function");
-> +
->  enum vmd_features {
->  	/*
->  	 * Device may contain registers which hint the physical location of the
-> @@ -875,6 +888,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  			return ret;
->  
->  		vmd_set_msi_remapping(vmd, true);
-> +		dev_info(&vmd->dev->dev, "init vmd with remapping MSI\n");
->  
->  		ret = vmd_create_irq_domain(vmd);
->  		if (ret)
-> @@ -887,6 +901,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
->  	} else {
->  		vmd_set_msi_remapping(vmd, false);
-> +		dev_info(&vmd->dev->dev, "init vmd with bypass MSI\n");
->  	}
->  
->  	pci_add_resource(&resources, &vmd->resources[0]);
-> @@ -955,6 +970,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	return 0;
->  }
->  
-> +static void vmd_config_msi_remap_param(unsigned long *features)
+This means "any downstream device present", right?  Could be an
+Endpoint or could be a Switch Upstream Port?  I guess it's basically a
+cache of dw_pcie_link_up() at ls_pcie_host_init()-time.
+
+> +	bool pm_support;
+> +	struct regmap *scfg;
+> +	int index;
+>  };
+
+> +static void ls1021a_pcie_send_turnoff_msg(struct ls_pcie *pcie)
 > +{
-> +	if (msi_remap) {
-> +		if (strcmp(msi_remap, "on") == 0)
-> +			*features &= ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
-> +		else if (strcmp(msi_remap, "off") == 0)
-> +			*features |= VMD_FEAT_CAN_BYPASS_MSI_REMAP;
+> +	u32 val;
+> +
+> +	if (!pcie->scfg) {
+> +		dev_dbg(pcie->pci->dev, "SYSCFG is NULL\n");
+> +		return;
 > +	}
+> +
+> +	/* Send Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val |= PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
+> +
+> +	/*
+> +	 * Components with an upstream port must respond to
+> +	 * PME_Turn_Off with PME_TO_Ack but we can't check.
+> +	 *
+> +	 * The standard recommends a 1-10ms timeout after which to
+> +	 * proceed anyway as if acks were received.
+
+Spec citation please.
+
+> +	 */
+> +	mdelay(10);
+> +
+> +	/* Clear Turn_off message */
+> +	regmap_read(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), &val);
+> +	val &= ~PMXMTTURNOFF;
+> +	regmap_write(pcie->scfg, SCFG_PEXPMWRCR(pcie->index), val);
 > +}
+
+> +static bool ls_pcie_pm_check(struct ls_pcie *pcie)
+
+This is used as a boolean ("if (!ls_pcie_pm_check())") so it needs a
+better name.  "Check" doesn't give any hint about what a true or false
+return value means.  Something like "pm_supported" *would* give a
+hint because "if (!ls_pcie_pm_supported())" is a sensible question to
+ask.
+
+> +{
+> +	if (!pcie->ep_presence) {
+> +		dev_dbg(pcie->pci->dev, "Endpoint isn't present\n");
+> +		return false;
+> +	}
 > +
->  static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  {
->  	unsigned long features = (unsigned long) id->driver_data;
-> @@ -984,6 +1009,8 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	if (err < 0)
->  		goto out_release_instance;
->  
-> +	vmd_config_msi_remap_param(&features);
-> +
->  	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
->  	if (!vmd->cfgbar) {
->  		err = -ENOMEM;
+> +	if (!pcie->pm_support)
+> +		return false;
 
-Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+Why test the negative ("!pcie->pm_support") and then return false?
+How about:
 
-Thanks
+  if (pcie->pm_support)
+    return true;
 
+  return false;
+
+or even better, just:
+
+  return pcie->pm_support;
+
+> +	return true;
+> +}
