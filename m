@@ -2,82 +2,128 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A17D06BE7DC
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 12:19:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BAE76BE817
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 12:32:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjCQLTw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Mar 2023 07:19:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        id S229881AbjCQLcs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 07:32:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229488AbjCQLTv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 07:19:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D7D06A1DD;
-        Fri, 17 Mar 2023 04:19:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7149662274;
-        Fri, 17 Mar 2023 11:19:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1F67C433EF;
-        Fri, 17 Mar 2023 11:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679051974;
-        bh=TgGenglMBJsZz/UjVeph1z0OkJF0UrTBZQRCyEkEbdg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=XGAL9TIzOpKDjj8PZfSD95gW0GjJPdjr/uLBV4jxUr8hfVEManEGuWIpylfMBtTXp
-         7Q4/hEiABHwnfRg0VD8q+B+SxFG/+KCA2ohnL7an+sz2pEuWJg+8iZMiFRJBj5wQ0v
-         ns4O172/8qcFdygR4V2wkTrhZVnlG8r7QuEdTAShB1XYdvxLH6yQEMxYj3jn5TpGoi
-         krFiogBmdC1VVgTVa/woEoLQuP42ykActPXmojatxkFW+cm4SlFxli1AgngyxfEAHR
-         puIOsya/WNemTVEdKepft+JioP3qKgh0LC/c2/MsCso8w9tsyVaiMKJwe63YbLxVIs
-         Y89hyraNXBUiw==
-Received: from johan by xi.lan with local (Exim 4.94.2)
-        (envelope-from <johan+linaro@kernel.org>)
-        id 1pd88c-0002N4-44; Fri, 17 Mar 2023 12:20:46 +0100
-From:   Johan Hovold <johan+linaro@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>
-Cc:     Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] dt-bindings: PCI: Fix unit address of example root port
-Date:   Fri, 17 Mar 2023 12:20:19 +0100
-Message-Id: <20230317112019.9090-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229648AbjCQLcr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 07:32:47 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11DE442D5
+        for <linux-pci@vger.kernel.org>; Fri, 17 Mar 2023 04:32:45 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id fy10-20020a17090b020a00b0023b4bcf0727so4906574pjb.0
+        for <linux-pci@vger.kernel.org>; Fri, 17 Mar 2023 04:32:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1679052765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=de8XOkLa149BQ2L925B1UG2ePVsDMnMyaob4tHRpfnA=;
+        b=zRx+qECqCL+KBpmPW6IxWec6kaUi46CFGaPNEijpptYDaUZF4otdAOYGbrRvuaqdF/
+         4cZDdbxGKv04z/reTAWqC2R2Fu+y76cS5qGbJ+d/M+K8VqAQ6O01df17Ax7aJM67hlN0
+         UOrAr2Kawim3Nh0ZHUwMFXIPI7fu+T8IlYslpE4tl85vC7GvztX2+YTUfqtub1HVzh7d
+         z+6RCtqMrWVGlrJ5i0WFLuadU+g97mzDFDQKAHml7oqIemx6KFhTVnEOViX6yimTfgEM
+         ifCmaoQ0AV8KMDEP/xOhXGB/Qj7KA8aRsM9RRXoNFKgjrsJSC5fzMZO+0j2wPA2uMuHm
+         JtgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679052765;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=de8XOkLa149BQ2L925B1UG2ePVsDMnMyaob4tHRpfnA=;
+        b=sZBUApCV8EAzbIJLtUO3v/ZoxtLAuWmAG7Frsn8/uDRn9Fgri5qYlEa2dCs+gYVRqg
+         ton53bWEHIFiSlDIIksuhrqieNEYfR1rdm6+eWm4pQylHp1RSeR8m30Mqy4sMSo2NAjO
+         yMzTVMZ3ZNlotlzDv5EjMYCOhEBpmPOUumrCwbUYSpNkfJByVd6apKUJLOfvwkr7xSsE
+         88r7h1AgoW+tRjzEQMFSVex8eVNsETj+aZBv7S88WeLAWsNwKg20ClCp4zWou4c/srLG
+         9yOZCNFT/4x9tjup6ZjmFLmdCnUEIY7S0BIbr5NsE4FUFey9lRnNJsHoUAavoM3N1vOS
+         Vp9w==
+X-Gm-Message-State: AO0yUKU+KECteYdI6UWNNNxxVg+Kh+aIuRkykJ4FjlEY+jSS+B49d/Dv
+        vqWhqYZhmNA7CmfjdNOby7PWOA==
+X-Google-Smtp-Source: AK7set/qmRB3Cq2Ngf5a0+tELWz+JRQGDGER7Sp32pRtVVD93EZ5RnqfAwY57iOTxes/HoyJvmeK2Q==
+X-Received: by 2002:a17:90b:3ec5:b0:22c:6d7c:c521 with SMTP id rm5-20020a17090b3ec500b0022c6d7cc521mr7537439pjb.45.1679052765133;
+        Fri, 17 Mar 2023 04:32:45 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id e3-20020a17090a818300b00233aacab89esm1182904pjn.48.2023.03.17.04.32.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 17 Mar 2023 04:32:44 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Shunsuke Mie <mie@igel.co.jp>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: [RFC PATCH 00/11] Introduce a test for continuous transfer
+Date:   Fri, 17 Mar 2023 20:32:27 +0900
+Message-Id: <20230317113238.142970-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Fix the unit address of the example root port which is identical to the
-device number (i.e. 1).
+This patchset introduces testing through continuous transfer to the PCI
+endpoint tests. The purpose is to find bugs that may exist in the endpoint
+controller driver. This changes able to find bugs in the DW EDMA driver and
+this patchset includes the fix.
 
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- Documentation/devicetree/bindings/pci/pci.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This bug does not appear in the current tests because these synchronize to
+finish with every data transfer. However, the problem occurs with
+continuous DMA issuances. The continuous transfers are required to get high
+throughput and low latency. Therefore, the added tests will enable
+realistic transfer testing.
 
-diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-index 6a8f2874a24d..8b7c52436558 100644
---- a/Documentation/devicetree/bindings/pci/pci.txt
-+++ b/Documentation/devicetree/bindings/pci/pci.txt
-@@ -76,7 +76,7 @@ Example:
- pcie@10000000 {
- 	compatible = "pci-host-ecam-generic";
- 	...
--	pcie@0008 {
-+	pcie@1 {
- 		/* Root port 00:01.0 is external-facing */
- 		reg = <0x00000800 0 0 0 0>;
- 		external-facing;
+This patchset is divided into three parts:
+- Remove duplicated definitions and improve some code [1-6/11]
+- Add continuous transfer tests [7-9/11]
+- Fix for the DW EDMA driver bug [10,11/11]
+
+This patchset has beed tested on RCar Spidar that has dw pci edma chip.
+
+Shunsuke Mie (11):
+  misc: pci_endpoint_test: Aggregate irq_type checking
+  misc: pci_endpoint_test: Remove an unused variable
+  pci: endpoint: function/pci-epf-test: Unify a range of time
+    measurement
+  PCI: endpoint: functions/pci-epf-test: Move common difinitions to
+    header file
+  MAINTAINERS: Add a header file for pci-epf-test
+  misc: pci_endpoint_test: Use a common header file between endpoint
+    driver
+  PCI: endpoint: functions/pci-epf-test: Extend the test for continuous
+    transfers
+  misc: pci_endpoint_test: Support a test of continuous transfer
+  tools: PCI: Add 'C' option to support continuous transfer
+  dmaengine: dw-edma: Fix to change for continuous transfer
+  dmaengine: dw-edma: Fix to enable to issue dma request on DMA
+    processing
+
+ MAINTAINERS                                   |   1 +
+ drivers/dma/dw-edma/dw-edma-core.c            |  30 ++-
+ drivers/misc/pci_endpoint_test.c              | 132 ++++--------
+ drivers/pci/endpoint/functions/pci-epf-test.c | 199 ++++++++----------
+ include/linux/pci-epf-test.h                  |  67 ++++++
+ include/uapi/linux/pcitest.h                  |   1 +
+ tools/pci/pcitest.c                           |  13 +-
+ 7 files changed, 231 insertions(+), 212 deletions(-)
+ create mode 100644 include/linux/pci-epf-test.h
+
 -- 
-2.39.2
+2.25.1
 
