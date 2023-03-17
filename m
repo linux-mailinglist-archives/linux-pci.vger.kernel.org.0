@@ -2,72 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49A596BDCA5
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 00:05:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76CFF6BDFF9
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 05:08:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230203AbjCPXFS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 16 Mar 2023 19:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49506 "EHLO
+        id S229629AbjCQEIt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 00:08:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjCPXFQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 16 Mar 2023 19:05:16 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5EE5E63CA
-        for <linux-pci@vger.kernel.org>; Thu, 16 Mar 2023 16:05:14 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id z18so1880506pgj.13
-        for <linux-pci@vger.kernel.org>; Thu, 16 Mar 2023 16:05:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679007914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UX/KTPHcDdcu6dbgU5HB9yD5ykeUvMNlEFlUDYk+cCA=;
-        b=SF5xfB6kSG39cncDovV1pyUCNotzNarkCKr42WsrRqrv+9fidcfNcsYPs/E/nLYTPi
-         sgP/iHBm74AvHzfnMrAzzmUWvrn9SNnbrKYc5WBLnRJ8pwuz/PqVPl9lzDBLAVPAPU5A
-         Id8hV68bUKBptVKA3NUQfarZihMw+hUjU9uxVsun49Ne/HblwfQ+O1QNHpaX+KBVjxU/
-         r22m9lmL4OaosAsU5R6KT2QaddJbY9rG+XSNWbWml8bryeqMeZnwijl9K4jd0Ucws+qk
-         8Q1XJ3Gb+bsrtNOownn3Vxf3W0lbgbCggKodhNKtDgw7Y8Zu7e1tDbGpgJSIFTiUkDzC
-         Vunw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679007914;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UX/KTPHcDdcu6dbgU5HB9yD5ykeUvMNlEFlUDYk+cCA=;
-        b=hb37nz8Uvg/JsAgnBSeyrMhAIyDFqE1KGBTGjHH08ogO+u+ewGRWxgLcJ9rZihOlKT
-         0vBf44Q8Q2TCALNBZFYH/Si7Xtk1XR1qk87V/LMZRcXgp5oUpQCOwIBwoCSKMpUaeNEz
-         kFHHrKCAeuU+JhMajQvFYo0VH5bQWPcNVrcaB5wCTcOp6z8Iun3z3r9rMELu82oqs9lx
-         hgF5l96hoAkxAso35lri5ybGZz16kCpq6htnXYB3DgTZt9iALYw7mvuI/E3EbsUYs1to
-         W9rf1UkWWorXaPCY0u9DCE/lp33Q6ikpQreHOZapY3J0k6D/udsKH4H85ChFafB6L3YB
-         TRig==
-X-Gm-Message-State: AO0yUKV/GLETiyQS+Nv6LDOED/dYFskqE5/V6OaTihLvw7ObQWyN2QKc
-        +4yHKksH0mPEzmau0cL2mQG+LZfYzwIh5s7HJjPCWw==
-X-Google-Smtp-Source: AK7set9xMU7SWH6Z2EQZMeJm478KkEPP57LvIRya986B0PASt62FSyyKX2NMFas/FBsNA5R+wN1CExGxMYRivLbhMTs=
-X-Received: by 2002:aa7:88c4:0:b0:624:6e5:1a2a with SMTP id
- k4-20020aa788c4000000b0062406e51a2amr2437655pff.0.1679007913947; Thu, 16 Mar
- 2023 16:05:13 -0700 (PDT)
+        with ESMTP id S229523AbjCQEIs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 00:08:48 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518A22278E;
+        Thu, 16 Mar 2023 21:08:45 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32H48O5C025320;
+        Thu, 16 Mar 2023 23:08:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1679026104;
+        bh=hTnCLwzT7E/jUr8nrf+BIIZqCannDfxi+O/YjyW82n0=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=K+4+TSTYFK6JfARcyJI0kc9asINmKkFlRokxTmtHz46gP6HxXOzu2F5+bi2S0zXyW
+         8zroPzjIpexxesYzusJD5HnGBMULMadJwAYPMN1nAj3qPmgFxWJbNLozn/L/kp5cEO
+         UgjWe622xhb4eNQynJrhpQP1Q5lvq1Y98cQ6kCnU=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32H48O59007269
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 16 Mar 2023 23:08:24 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Thu, 16
+ Mar 2023 23:08:24 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Thu, 16 Mar 2023 23:08:23 -0500
+Received: from [172.24.145.182] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32H48K8T130014;
+        Thu, 16 Mar 2023 23:08:20 -0500
+Message-ID: <11b83885-ff64-df78-e14c-137fffb5f7ce@ti.com>
+Date:   Fri, 17 Mar 2023 09:38:19 +0530
 MIME-Version: 1.0
-References: <20230227201340.2087605-1-sdalvi@google.com> <CAPOBaE4U4rCJ+4CcSoj597LsP-0ESBhiKKHz00bk+SvNHrOzKQ@mail.gmail.com>
- <CAEbtx1mhMqZjJeU0L99xpwY9W5caJmpv69aRZG+b-hLfstK-Ww@mail.gmail.com>
-In-Reply-To: <CAEbtx1mhMqZjJeU0L99xpwY9W5caJmpv69aRZG+b-hLfstK-Ww@mail.gmail.com>
-From:   Sajid Dalvi <sdalvi@google.com>
-Date:   Thu, 16 Mar 2023 18:05:02 -0500
-Message-ID: <CAEbtx1kNMY5xH435=Rw0QoDebyRL=RYi+dfkqs4WRG7DS5f3dA@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: dwc: Wait for link up only if link is started
-To:     Han Jingoo <jingoohan1@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v3] PCI: cadence: Clear the ARI Capability Next Function
+ Number of the last function
+Content-Language: en-US
+To:     Achal Verma <a-verma1@ti.com>, Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>, kernel-team@android.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Milind Parab <mparab@cadence.com>,
+        <wojciech.jasko-EXT@continental-corporation.com>
+References: <20230316071156.200888-1-a-verma1@ti.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+In-Reply-To: <20230316071156.200888-1-a-verma1@ti.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=unavailable
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,72 +73,89 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 28, 2023 at 10:36=E2=80=AFPM Sajid Dalvi <sdalvi@google.com> wr=
-ote:
->
-> Thanks for your review Jingoo.
-> Sajid
->
-> On Tue, Feb 28, 2023 at 4:04=E2=80=AFPM Han Jingoo <jingoohan1@gmail.com>=
- wrote:
-> >
-> > On Mon, Feb 27, 2023, Sajid Dalvi <sdalvi@google.com> wrote:
-> > >
-> > > In dw_pcie_host_init() regardless of whether the link has been starte=
-d
-> > > or not, the code waits for the link to come up. Even in cases where
-> > > start_link() is not defined the code ends up spinning in a loop for 1
-> > > second. Since in some systems dw_pcie_host_init() gets called during
-> > > probe, this one second loop for each pcie interface instance ends up
-> > > extending the boot time.
-> > >
-> > > Call trace when start_link() is not defined:
-> > > dw_pcie_wait_for_link << spins in a loop for 1 second
-> > > dw_pcie_host_init
-> > >
-> > > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-> >
-> > (CC'ed Krzysztof Kozlowski)
-> >
-> > Acked-by: Jingoo Han <jingoohan1@gmail.com>
-> >
-> > It looks good to me. I also checked the previous thread.
-> > I agree with Krzysztof's opinion that we should include
-> > only hardware-related features into DT.
-> > Thank you.
-> >
-> > Best regards,
-> > Jingoo Han
-> >
-> > > ---
-> > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/driv=
-ers/pci/controller/dwc/pcie-designware-host.c
-> > > index 9952057c8819..9709f69f173e 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > @@ -489,10 +489,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> > >                 ret =3D dw_pcie_start_link(pci);
-> > >                 if (ret)
-> > >                         goto err_remove_edma;
-> > > -       }
-> > >
-> > > -       /* Ignore errors, the link may come up later */
-> > > -       dw_pcie_wait_for_link(pci);
-> > > +               /* Ignore errors, the link may come up later */
-> > > +               dw_pcie_wait_for_link(pci);
-> > > +       }
-> > >
-> > >         bridge->sysdata =3D pp;
-> > >
-> > > --
-> > > 2.39.2.722.g9855ee24e9-goog
-> > >
 
-@bhelgaas Can this be picked up in your tree:
- https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/
 
-Thanks
-Sajid
+On 16/03/23 12:41, Achal Verma wrote:
+> From: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
+> 
+> Next Function Number field in ARI Capability Register for last function
+> must be zero by default as per the PCIe specification, indicating there
+> is no next higher number function but that's not happening in our case,
+> so this patch clears the Next Function Number field for last function used.
+> 
+> Signed-off-by: Jasko-EXT Wojciech <wojciech.jasko-EXT@continental-corporation.com>
+> Signed-off-by: Achal Verma <a-verma1@ti.com>
+> ---
+> Changes from v1:
+> * Fix commments in the code.
+> 
+> Changes from v2:
+> * Rework the commit message.
+> 
+>  drivers/pci/controller/cadence/pcie-cadence-ep.c | 14 +++++++++++++-
+>  drivers/pci/controller/cadence/pcie-cadence.h    |  6 ++++++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> index b8b655d4047e..8742b2f594fd 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
+> @@ -565,7 +565,8 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>  	struct cdns_pcie *pcie = &ep->pcie;
+>  	struct device *dev = pcie->dev;
+>  	int max_epfs = sizeof(epc->function_num_map) * 8;
+> -	int ret, value, epf;
+> +	int ret, epf, last_fn;
+> +	u32 reg, value;
+>  
+>  	/*
+>  	 * BIT(0) is hardwired to 1, hence function 0 is always enabled
+> @@ -573,6 +574,17 @@ static int cdns_pcie_ep_start(struct pci_epc *epc)
+>  	 */
+>  	cdns_pcie_writel(pcie, CDNS_PCIE_LM_EP_FUNC_CFG, epc->function_num_map);
+>  
+> +	/*
+> +	 * Next function field in ARI_CAP_AND_CTR register for last function
+> +	 * should be 0.
+> +	 * Clearing Next Function Number field for the last function used.
+> +	 */
+> +	last_fn = find_last_bit(&epc->function_num_map, BITS_PER_LONG);
+> +	reg     = CDNS_PCIE_CORE_PF_I_ARI_CAP_AND_CTRL(last_fn);
+> +	value  = cdns_pcie_readl(pcie, reg);
+> +	value &= ~CDNS_PCIE_ARI_CAP_NFN_MASK;
+> +	cdns_pcie_writel(pcie, reg, value);
+> +
+>  	if (ep->quirk_disable_flr) {
+>  		for (epf = 0; epf < max_epfs; epf++) {
+>  			if (!(epc->function_num_map & BIT(epf)))
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 190786e47df9..68c4c7878111 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -130,6 +130,12 @@
+>  #define CDNS_PCIE_EP_FUNC_DEV_CAP_OFFSET	0xc0
+>  #define CDNS_PCIE_EP_FUNC_SRIOV_CAP_OFFSET	0x200
+>  
+> +/*
+> + * Endpoint PF Registers
+> + */
+> +#define CDNS_PCIE_CORE_PF_I_ARI_CAP_AND_CTRL(fn)	(0x144 + (fn) * 0x1000)
+> +#define CDNS_PCIE_ARI_CAP_NFN_MASK	GENMASK(15, 8)
+> +
+>  /*
+>   * Root Port Registers (PCI configuration space for the root port function)
+>   */
+
+
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+FYI, there seems to be a duplicate patch [1], you may want to clarify
+which one to look at
+
+
+[1] https://lore.kernel.org/all/20230316065455.191785-1-a-verma1@ti.com/
+
+-- 
+Regards
+Vignesh
