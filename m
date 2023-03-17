@@ -2,155 +2,71 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B196BED81
-	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 16:58:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DAD436BEE84
+	for <lists+linux-pci@lfdr.de>; Fri, 17 Mar 2023 17:38:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229938AbjCQP6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 17 Mar 2023 11:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50314 "EHLO
+        id S230205AbjCQQi3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 17 Mar 2023 12:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230358AbjCQP6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 11:58:18 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2068.outbound.protection.outlook.com [40.107.22.68])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA7EC3E0A6;
-        Fri, 17 Mar 2023 08:58:16 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b+6lzEMikAVURkH7BCxIBkfbLcQ/dkoCf1QviQXLGZ59uyGobXWBJegJqg1Q1yVDH9n1kLlLspd8qbVJfrt7I0NYZdPi22Weo4NcRdkng6DkWmEY4h0hix3yGz/EUAlyKP9Bmy6KlBNt0ANNsyUNP3jqtfBVQzDM21h2qWmgfd7PHyI5IfQK6EDQYTmFca3VSI2bjBS2yu5juSkI+u9voPnnqk/Peiu08G9chbEU50ybgQQXnJiJ/i/MOIMiK3dCYkLlbQI6dDtuazKhR3jADLSvvrzTvHSFjDa8HbJSISS8mj3NRA8UWlszlbzPoeu66YxAdeq9qZHEEoZrCn+dpw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hGxGmGTmu+GYUuGqycgFd2V+IPyqxT6/I/kNf+g0i2s=;
- b=lHytNmRMQ62Z31KaW9mSzY+K6IdG6ny7X04vCNf4QWn7EicCSugqeHYDVCvxRsJFs/DxfahJWXQMyR0DKnBJeqbXAS9pcKQdOmQ5ap/eDHWTL0gzVXk8Ifp1Fqapu18m84y7qPA4ZE4TQawDsG1Uqfh846vRgE0wg1/BRQ2rKscBONL+xHNXZakZwsOE1DereQLGCji//W5cGpKnlgn9LBob6Q7JDwpLaybTJYyMsgLj6ah3jeDhkRW0mrhfh6OF/+iToFZ7Xd8RmdZuP5faur3pxMOBMxArcC3U4yez7NPvoV2Agiamgbr/aodORyuf2Fc1io77TE+VRs21173FGA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=hGxGmGTmu+GYUuGqycgFd2V+IPyqxT6/I/kNf+g0i2s=;
- b=HUybq7LFi1q/gxJbFQ+ZaaziW66zulqCl1/vNHrmLWcf2b9uiAaqv2CFEdtyTYe9/RLH3zQLKbnIzxLz/d40+hQHzsGd6klYcnP6HZTtJ/oeoTftEElkDi4xTvRmUn1H1/i8GmSGqbh6fOLbrpd71H8zMZ5absEdJNPQlPHKglA=
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by AM9PR04MB7540.eurprd04.prod.outlook.com (2603:10a6:20b:283::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.35; Fri, 17 Mar
- 2023 15:58:13 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::fb2a:a683:b78e:b9b5]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::fb2a:a683:b78e:b9b5%4]) with mapi id 15.20.6178.029; Fri, 17 Mar 2023
- 15:58:13 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     "M.H. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linuxppc-dev@lists.ozlabs.org>,
-        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-pci@vger.kernel.org>,
-        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "imx@lists.linux.dev" <imx@lists.linux.dev>
-Subject: RE: [EXT] Re: [PATCH 1/1] PCI: layerscape: Add the workaround for
- A-010305
-Thread-Topic: [EXT] Re: [PATCH 1/1] PCI: layerscape: Add the workaround for
- A-010305
-Thread-Index: AQHZJr5WwkFDleZU9E2wO25hi20GTK77GsyAgARoY6A=
-Date:   Fri, 17 Mar 2023 15:58:13 +0000
-Message-ID: <AM6PR04MB4838BBCA8E49EE13C9545F4388BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
-References: <20230112194433.1514149-1-Frank.Li@nxp.com>
- <20230314203249.GA1673140@bhelgaas>
-In-Reply-To: <20230314203249.GA1673140@bhelgaas>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM6PR04MB4838:EE_|AM9PR04MB7540:EE_
-x-ms-office365-filtering-correlation-id: 7a136f06-49b2-4d4a-979a-08db27006a28
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aEEtd0ZT3BLbFkP6BGIM7ECPRMyJ8Qg9p1HqXyBNltxmJ0Dy/2PtSxj5FzknHjH5vGymFmsn6kQfRkt0FC+U/+zuYUPOzI8qW5ucLdso4nHUnNyXZ1FqF0dVIE821pHmq0XAJImv9hlX2u/+kDDmjOzXTH3ImUUf834KoKY0OJbR/Zy7R+NXATkk3AUUbKGelag8/mUftyeiIytlro/xf4eoAnbH0qS5mJ76/2IB+awaJ0Oi0ww8Ri+CSeNnoZdlFevUNJpvMBjtgnoHzmLF1h0Zfj90xTT6YxecHvL8fkyQzmt3Jp2OmCWnLO5J1ouCDb2EMcagtlEQ+c+H+tc6bOdok4Kb5bcs4/ClKNLPdTS0uEc/hqIZAiFbD10kt/2OOkfXRu77a4Fu9vFv0MPg83B/7sR3NIcM13YyWn61jmQhz+1LzIeA3JJlHAogi5TgdurZ7vcfPVa5EwQwssNA3YsdUYt/DQ8OPQd4jOGQpJ2UgrpZm7nNQFDKTE8IvAr+qitTJG/Vjlsltk+X6OUIofq9Dzu4PMy4OauNnzsXmTzz06sFAM8ViH3bVhTuk9+Ta6kChR/TqjvwMuBxMlWrlTO8AgxyD7ZpZNhUBNxYlJb+Czmi3ng/mC56Yv5x75Fe0DeJhRbDi0iSGcpBKG7BhY7MjjVwvSaEPCAs5PclVLAkA02RlpVtMEVksB3BnWGM9IY6IKxwT2hGnrNlj59zn5BN7x8u4nx8m/idn4HzDxw=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(451199018)(66946007)(2906002)(122000001)(76116006)(9686003)(186003)(66476007)(66446008)(64756008)(66556008)(86362001)(38070700005)(478600001)(7696005)(71200400001)(41300700001)(33656002)(966005)(316002)(54906003)(55236004)(55016003)(38100700002)(6506007)(26005)(8936002)(4744005)(7416002)(5660300002)(6916009)(52536014)(8676002)(44832011)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?Nxwgwk+9ArkF9L9F7s0aDfk4qrIjwVZLdhaMP1JEz8520T+urBM4Utbh8V?=
- =?iso-8859-2?Q?UzOO69emyPR2njIQU+DboHV6SLTkz6zjTY5l+vap33eA/dkbLkRQonotbP?=
- =?iso-8859-2?Q?hIVAQi5iZbumU6ysmnZOSG8tA2yuBGLm45aweouE3jo08oYAaS3hextusw?=
- =?iso-8859-2?Q?kA65KxtbZ/60WfdJP7JYIoPXdZrKtsYPaJ+EWGSS5Ba5Czv3wQQGnQ4cPp?=
- =?iso-8859-2?Q?YyD0u58DT/kyzV72qaPFPM3xIk7ozcttA3TJ5RlMOt02LwC8RaSOwIe1bJ?=
- =?iso-8859-2?Q?D6MaMa4+NuM/DJS29iF9gp6qXSGrDxZ4ZxPE8bS1VbvGsYHDGNxTPAulvn?=
- =?iso-8859-2?Q?qzuAlZ+havODWIZkAoqdxx3bv0Av0gF4EUbyMaDj/vjMyQhZYn3rGVci7s?=
- =?iso-8859-2?Q?FMt/HRaSvNHszQEtAXvXJTss7j5E9o1OeRnQZ/1R/iG6RMhtdP+rOxjyc8?=
- =?iso-8859-2?Q?DAJnMWgyQhkLyXP1Ofp4igsTWv6CesjSLvQ0PHZ/Xwj725mSyzCGuGGhM1?=
- =?iso-8859-2?Q?/ZhGXvCFa69v5MaIIc/BkJccM2CSU/cmzwp3/s1KE4Nice0qwh6NdqJ/OB?=
- =?iso-8859-2?Q?JS6ia+kR/WJU0z6UI87XPBgsWvOFy+NaAaGifTzNAx6E+UJwn0w4pn3pKs?=
- =?iso-8859-2?Q?AQJy8SgbARb5UsumbqWtNSs6/obFjG2k1QKQ42IXZd32PBG1ku+MFQwpNx?=
- =?iso-8859-2?Q?JUo/OsklLuAjb7i2OdhtRs32WmVwTLJXPZzYSD61b9FxrFQBpYkm2KvLJH?=
- =?iso-8859-2?Q?AdDhKYerBvW1O2ufTLDCEys8FOZS6TAoGy4jZmtQKphjH18GHW8dfZVrcg?=
- =?iso-8859-2?Q?VRmxcWWeoBe1LfDSFt0OuoEOdQ7UB6S+DGou3K0SDZbt4ZYdHKuOfSfMVl?=
- =?iso-8859-2?Q?y4yRF6Yc7kGBFlwlwv+dvkfflrmkwlj55Vif3pX1CocyasnL/f5NF7uxgP?=
- =?iso-8859-2?Q?DZ1cFNQv1yvt+fPbmZ3wnn4gMGVJtwlAIefrpNvKkutrYbUz3LjJbwpBmF?=
- =?iso-8859-2?Q?Wm+2tkIddC5avfFxXyuSbrRVc4yTJHkHzveuZUY+mzeg36jZcf3liRJWy+?=
- =?iso-8859-2?Q?cL7aCu5GnXdgYoZDPqeGT+vn+LhCdkxdYYYp2QqDt+9srZOU1sEVmBDNVG?=
- =?iso-8859-2?Q?MdHmF+TKwF+1VMH4SGsmL1tO8MQLQUAJR2jqROfLnTxv3HazhaAP4iuY5I?=
- =?iso-8859-2?Q?VnxDaQL7shKrA1rIywG0nceOvQlMIS2Fk4bM4Y68EtYjS+LtUMCcTqVxu1?=
- =?iso-8859-2?Q?jB+ZIPiPfXkfWHZRfKwPCOYEkPA2Uxr/FfZo98IatSoiXMZ31TrNTBvgnp?=
- =?iso-8859-2?Q?yCpE/1UnwBrFKzakQelZvFdDtXYbmSfBsFp4QBoMt2Iw+Os6RPd/XKUaSb?=
- =?iso-8859-2?Q?YNYhwXdFXgNBoetRDoQ3SBl1TZFLngrjiDp+R63xEmB3OREYr1brk6yqz5?=
- =?iso-8859-2?Q?xD7E2Cnu/6o9qDcRlyroUHe9NO6Vwfbxewc/FaucSmEJUzR89/Gh1Oua2J?=
- =?iso-8859-2?Q?uKuI6TYqUnyT7Bmtvmrsq//7zac/LtdYZNdE819No3y4sZr+quX+ogWtP+?=
- =?iso-8859-2?Q?zZmr7k9T2X9c6WlLRSwqBJ/5rGO/xpizu4SynhcoChYqzEtc0yzoTdnihr?=
- =?iso-8859-2?Q?UnQWZn04bYhoSTnYQaOtGZEKaalp2jKxvQ?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229758AbjCQQi0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 17 Mar 2023 12:38:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F217B6043F;
+        Fri, 17 Mar 2023 09:38:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C46160B85;
+        Fri, 17 Mar 2023 16:38:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B856C433EF;
+        Fri, 17 Mar 2023 16:38:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679071093;
+        bh=eqZUPeBX8BKdMjF5mwS63K8f+ED3apV6bCXS9iPYiZQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tT2m/l/VZVW04GVsyt5LF3puq+zDlTtYsG+nbi0sgboS9phZAzuwK5Yllo5HjlUqR
+         fhrXMmSmXFZYNcnaJ9CHstgvjuyg0MthA4ejRXCllBXCKmiTpjM+cSQHLujbWJovpQ
+         PBnyIBbyTBxLjFVs6RMb8j6r6/3pM0dyFpeUr0+ApoITg7IIoK4daOS5e8rAO9/dLI
+         WS1pf7eYAfw0549GJa5H6E0+/9qbgh1pGjV+2Y8ARZABdijlHq0qRcQSxJ4p4NiQ+m
+         IUotYlMrhTKglYPy1bvLfGF3ppVkNGdigDOlopoEDjwYtpUrdA1idBW6JNLH1bAQLW
+         YXuju28VYx8NQ==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     helgaas@kernel.org, Frank Li <Frank.Li@nxp.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        alok.a.tiwari@oracle.com, bhelgaas@google.com, frank.li@nxp.com,
+        imx@lists.linux.dev, kw@linux.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        minghuan.lian@nxp.com, mingkai.hu@nxp.com, robh@kernel.org,
+        roy.zang@nxp.com
+Subject: Re: [PATCH v3 1/1] PCI: layerscape: Add EP mode support for ls1028a
+Date:   Fri, 17 Mar 2023 17:38:05 +0100
+Message-Id: <167907106433.509815.4523416530064745117.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230209151050.233973-1-Frank.Li@nxp.com>
+References: <20230209151050.233973-1-Frank.Li@nxp.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7a136f06-49b2-4d4a-979a-08db27006a28
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Mar 2023 15:58:13.7273
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 4sceIb6xYcu1BPGyAg1WH4HPAFTzobGl2UxHHJprNdYHg9kTXKqEogITo15zSqNfXvP++jxiQ6Z0Rh9LHdmo3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB7540
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> >       pci->ep.ops =3D &ls_pcie_ep_ops;
-> >
-> > +     pcie->big_endian =3D of_property_read_bool(dev->of_node, "big-
-> endian");
->=20
-> Somewhat surprising that 6c389328c985 ("dt-bindings: pci:
-> layerscape-pci: Add a optional property big-endian") added this
-> property a year ago, but it has been unused until now?
->=20
+On Thu, 09 Feb 2023 10:10:50 -0500, Frank Li wrote:
+> Add PCIe EP mode support for ls1028a.
+> 
+> 
 
-No, it also for pci host part. Zhiqiang send patch=20
-https://lore.kernel.org/lkml/20210407030948.3845-1-Zhiqiang.Hou@nxp.com/
+Applied to controller/layerscape, thanks!
 
-Not sure why bind-doc accepted, but driver code patch have not accepted.=20
+[1/1] PCI: layerscape: Add EP mode support for ls1028a
+      https://git.kernel.org/pci/pci/c/be567c6cbc08
 
-The same case happen at https://lore.kernel.org/imx/20230209151050.233973-1=
--Frank.Li@nxp.com/T/#t
-
-I tried repost the missed part. But no any response over months.  The above=
- one is just one line change.=20
-
-> > --
-> > 2.34.1
-> >
+Thanks,
+Lorenzo
