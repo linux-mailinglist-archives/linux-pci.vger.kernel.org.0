@@ -2,60 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A8CE6C02A6
-	for <lists+linux-pci@lfdr.de>; Sun, 19 Mar 2023 16:19:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AC4606C02AD
+	for <lists+linux-pci@lfdr.de>; Sun, 19 Mar 2023 16:19:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230380AbjCSPTi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 19 Mar 2023 11:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53874 "EHLO
+        id S230377AbjCSPTu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 19 Mar 2023 11:19:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbjCSPTg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Mar 2023 11:19:36 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9F27A5F4
-        for <linux-pci@vger.kernel.org>; Sun, 19 Mar 2023 08:19:34 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id b20so4847397edd.1
-        for <linux-pci@vger.kernel.org>; Sun, 19 Mar 2023 08:19:34 -0700 (PDT)
+        with ESMTP id S230434AbjCSPTr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 19 Mar 2023 11:19:47 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFD0B1D928
+        for <linux-pci@vger.kernel.org>; Sun, 19 Mar 2023 08:19:45 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id z21so37835386edb.4
+        for <linux-pci@vger.kernel.org>; Sun, 19 Mar 2023 08:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679239173;
+        d=linaro.org; s=google; t=1679239184;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=DiXOBbFB11Ip0nTIkggAfEvbZiGBEphpMg7tUKwDv8Q=;
-        b=bAZDUQYki7wbeRanSmh1+yCFPmXSZwkqqGPdsRHdCVXC03JyOxd/Y/vKKL6tDt0jh9
-         peEJUFK2/gYsoZAmerpiPJwZKpvbNp/99WxXsC/f1NobG99PlsgQVFMQn1Qf3eoXh9+q
-         8bcuBj8FrRC3Fc4+nbMmcdPm3MrhPFmJnQ9MscLdwELrfACrj7LwL9K4mtLXZyHggZ14
-         VLeHDsdF7oBtL2M5sz9sOTMsxHS7vBr8KEaqpBKqu7zu7dACUr+RhwnYgTklcFLvC2dx
-         IVmL7pzPNLKUAbhjBrdREvYc5vm3GwNW9/oGnebln3gS2usBcuSWDAbvX+ehTgJexXXF
-         yVlQ==
+        bh=9Q6ClqIgVOHNCTBlkJq9gBU6UBpDkGzT/c4HHOyonXE=;
+        b=UhN7bYBnd/YU3Knem+rzukKTpmxlSYIQOOlkOCx6eTVtLQjaWVUshCXSA6fkmc7psv
+         ciOydeCX1OIHbpTjZ4tPu97FNdwh+EufTY3EZWgv7JD7JZ9bGbRnuoMxup14PhRHoX2Q
+         rDjpGg+YjZ8EoQZna6y8kOHGvLsOuO0khl6mUWgseQQcRcr3FuXr3+vl+bRd29yvYfMw
+         XEPhmBfOwlxecQZyLuXAw3NBkrT54RKD3+aigV+X9avwGKlmU/I1nejSOsH9Ocvn+FNj
+         GQrbV4mzOkknwJytCW4WfFaU7hYlv9O/yxADaP2OaZSRSBvIAk8xPtGf7RR9WsxMKr0H
+         d0xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679239173;
+        d=1e100.net; s=20210112; t=1679239184;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DiXOBbFB11Ip0nTIkggAfEvbZiGBEphpMg7tUKwDv8Q=;
-        b=TcwEjpKpYV+mYCkfy4QRL+KC+zXuBRcawzWtk6yeOhyQ0YGDJke7VQwIVt/vkoTmGG
-         NmtS65KJbPqDoulWhgUDcfWwl1nmM+TuoKHZKEt5mYJgGveGTKUM/b/hM7pDooXLWy8F
-         ehlwF6/3Bsum5nD1ld/CwYdy1hhoCibR25BAw6pDSOmORlWKV6p5Zhx7j2vNJH+sDFHY
-         2N1CMQU8a9Qpu/8PCu3GrAoADhbDDUvrKKxNiF+L7ftr2qeSxgu9Rx67dFUyS/rXsrKB
-         eQ1lmEq/9grtDc8ai3atI9WrO7vMhYH5wbuzZTsp8N9rGDxaTZbr91cQEdbZqJKMvNJV
-         TXlw==
-X-Gm-Message-State: AO0yUKXx+tgC6IXN1FYeDJ3M81z8mHYslGTiYuzLH/CdDgMtcsreVUdb
-        uAYHSb4ktVyWv8XYm8zy0ofT0g==
-X-Google-Smtp-Source: AK7set+6EyPI1D5fB1UGRkWHuzffRXBguOqPVwrOUmlBfKF0ISupIco1O4Z+5HC+N3PLJzPHc1Z8qw==
-X-Received: by 2002:a17:906:95ce:b0:8b2:8876:2a11 with SMTP id n14-20020a17090695ce00b008b288762a11mr5510823ejy.28.1679239173483;
-        Sun, 19 Mar 2023 08:19:33 -0700 (PDT)
+        bh=9Q6ClqIgVOHNCTBlkJq9gBU6UBpDkGzT/c4HHOyonXE=;
+        b=uSJUKQ5Hdy1ZEAQxDxYK8zVlGeX+0kj/VlKljSTRs9mXxdmCc/df+gBy3pNmYTv4oD
+         0PVOd5pUaoBGJpuoGlJJOri/Mk4gptsRQn0Gnowdrkk4uLFbe9GW42M6niI3CCnIfQMW
+         ynt4fQgRiXk770zuF1sk9wKO/JCMdps8Ip+gOLGAsHtSnKX75wu05xq5uJGLLtSrktlh
+         GLPl/dqPqsBKqS0a+0rlvN3DJsIiYztVuY78691FNKxgCm18fc08v1meboY24ELO0sUM
+         Hfo/77cp4BK5snBHGhPf/UC1YzTHApLFgViOIQ05UBCFLWYtXZ6Yf/28tQlP6PpYBGHr
+         KS/Q==
+X-Gm-Message-State: AO0yUKXw23WNgseCfMCUugg2+MZDMekITOUcUvGRHr+d1lqODVP/xhFw
+        J1x046on3J+L3OeJI562iETe/A==
+X-Google-Smtp-Source: AK7set/lweaMTIWXmtx9ReSmmvXJnZok55jpk05ti02JFR2ABXcYN5l8llKddo9aAPFTIRZhERW1qA==
+X-Received: by 2002:a17:906:4552:b0:884:3174:119d with SMTP id s18-20020a170906455200b008843174119dmr6227816ejq.14.1679239184152;
+        Sun, 19 Mar 2023 08:19:44 -0700 (PDT)
 Received: from ?IPV6:2a02:810d:15c0:828:5b5f:f22b:a0b:559d? ([2a02:810d:15c0:828:5b5f:f22b:a0b:559d])
-        by smtp.gmail.com with ESMTPSA id rv17-20020a17090710d100b00932fa67b48fsm2137433ejb.183.2023.03.19.08.19.32
+        by smtp.gmail.com with ESMTPSA id qh7-20020a170906eca700b0092bea699124sm3340424ejb.106.2023.03.19.08.19.42
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 19 Mar 2023 08:19:33 -0700 (PDT)
-Message-ID: <8782c1a1-6600-31b8-bd62-8ea5cb0ff081@linaro.org>
-Date:   Sun, 19 Mar 2023 16:19:31 +0100
+        Sun, 19 Mar 2023 08:19:43 -0700 (PDT)
+Message-ID: <5069856f-46c1-39ee-cae1-5bb941864bda@linaro.org>
+Date:   Sun, 19 Mar 2023 16:19:42 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [Patch v2 2/9] memory: tegra: add interconnect support for DRAM
- scaling in Tegra234
+Subject: Re: [Patch v2 3/9] memory: tegra: add mc clients for Tegra234
 Content-Language: en-US
 To:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
         dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
@@ -67,9 +66,9 @@ Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
         bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
         ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
 References: <20230220140559.28289-1-sumitg@nvidia.com>
- <20230220140559.28289-3-sumitg@nvidia.com>
+ <20230220140559.28289-4-sumitg@nvidia.com>
 From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230220140559.28289-3-sumitg@nvidia.com>
+In-Reply-To: <20230220140559.28289-4-sumitg@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -83,19 +82,15 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 20/02/2023 15:05, Sumit Gupta wrote:
-> Add Interconnect framework support to dynamically set the DRAM
-> bandwidth from different clients. Both the MC and EMC drivers are
-> added as ICC providers. The path for any request is:
->  MC-Client[1-n] -> MC -> EMC -> EMEM/DRAM
-> 
-> MC client's request for bandwidth will go to the MC driver which
-> passes the client request info like BPMP Client ID, Client type
-> and the Bandwidth to the BPMP-FW. The final DRAM freq to achieve
-> the requested bandwidth is set by the BPMP-FW based on the passed
-> parameters.
+> Add few Isochronous (ISO) and Non-ISO MC clients.
+> ISO clients have guaranteed bandwidth requirement.
+> PCIE clients added to the mc_clients table represent
+> each controller in Tegra234.
 > 
 > Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 > ---
+>  drivers/memory/tegra/tegra234.c | 420 ++++++++++++++++++++++++++++++++
+>  1 file changed, 420 insertions(+)
 
 
 Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
