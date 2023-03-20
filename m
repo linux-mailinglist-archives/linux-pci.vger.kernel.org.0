@@ -2,158 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53A136C119E
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 13:14:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB7E26C12F8
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 14:17:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231213AbjCTMOL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 08:14:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37956 "EHLO
+        id S231748AbjCTNRT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 09:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231236AbjCTMOI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 08:14:08 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5CA01FDA;
-        Mon, 20 Mar 2023 05:14:05 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id a11so1340287lji.6;
-        Mon, 20 Mar 2023 05:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679314444;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=t9LnjLbPanhFFeBnqt4/w6DoMU3P/cWwvDYe1wNCVYA=;
-        b=WoCxGdyRQUoaFeRCl2SxcsyXe8gXqBTSOAxx8j/EKrQ4iGU2PnPw7UjGmcFYMF5mNN
-         3EsbLQM8ZbWQaiNyXWTZZ+b7DHmk/EhfW3VeiqhpOCj1l8k4mYUS9LBEk/jFEwEPH03+
-         /8g075PpJceFOkTNij/58fUUZteuDVIrr2LFo2gschYPQb1T/YzT3hIQ1fOJRBMWfG7R
-         gzPxVsQJcRK/uZhFWZG3CGR6RD/bmauOPQgAByZ04Ha7FLpih16uEQST5/8SyxE/yd8o
-         J1/WY3tlOcE5yD9sZt0i7xmBTP0RQIElOkORYOKDI/EAUUQOv9dUXc80pIWCmeUOMms5
-         9qqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679314444;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t9LnjLbPanhFFeBnqt4/w6DoMU3P/cWwvDYe1wNCVYA=;
-        b=7f59ZEK0TJZMuh5RBQc659WDipw90K9YZHm03Ugb9hPpNFKwEfbrKoC64WMK7ATeiK
-         LZIISp891E9nPEMU5jZmGhG7s6QshGFlMNgEScTKpp2VNd99fqUdooh9AM0VnoE6oRWo
-         OwCd2dkIg+PoYwHfhnlXuZfjBdzVudfDfhNZIarpVtRTm/CKt5V3zHQ4cxeDISNsqafl
-         5sBsylAR6Eg3w4ZXintuBHiEc1luG5aR/KamoaNjKKb2qBJbAmEM0ASp/vNdZFEvyPFI
-         bK63t/l+Zpc9gyoDjvUBYPwwiEKECv8FrMkNjiVQH/VWYFLfaVCGXTtfA1O2kXp0QD+u
-         PfpA==
-X-Gm-Message-State: AO0yUKW8gAPi1k2uPDqr45E0jTrMMLd2wISYA71kv07cIJOUZgQHiJqO
-        97T64TZ5CCm6BFXL58YlxCQ=
-X-Google-Smtp-Source: AK7set/yWX5zDIOxdnEBzeOKx+t3YMNYMsGjravxokl7smUIBtcuptxPbjKE9nhED9ZxC5OoaFu/rQ==
-X-Received: by 2002:a2e:300e:0:b0:29e:5dc2:903a with SMTP id w14-20020a2e300e000000b0029e5dc2903amr684918ljw.23.1679314444011;
-        Mon, 20 Mar 2023 05:14:04 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id y21-20020a2e9d55000000b002989fc0a69csm1700190ljj.124.2023.03.20.05.14.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 05:14:03 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 15:14:01 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S231750AbjCTNRL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 09:17:11 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4706A19F17;
+        Mon, 20 Mar 2023 06:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679318220; x=1710854220;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=KxlXRVH7N+45zvim8tIjdmWaRb89rG1+XDN/qvGgUbg=;
+  b=UsqpqAhuJbdQTfkguPAG7jLqQP2xkzvlUhZxax2n/vPfv7U796DYxqJ2
+   nvkqJwWyWU9qL0tmOhnnLGypW27KJEybMRJ0jhIwmGVvH9P9wnHebiCx5
+   50y3jpv6ScGLdNZzTi4fAPx1iQAxVTMcJ3PPT62w3THUMSsREe5vZDQK9
+   kPjsyJuzhWCMQRtUyxSE5zH7uMg0ZKtkX6dsuTOD5NARQ0geMiEDnZqzN
+   oMoNBcLciWL5tFuqJOIzogXRolMPyDaFRpEq9hehGgfJjBeXknCxfR9+S
+   xk8M2f2HF/D88e13KshrGMfsQuyQrIPELYz0GbK+B8gWI20ySC2LwTqpS
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="424932297"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="424932297"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 06:16:08 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="674382652"
+X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
+   d="scan'208";a="674382652"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 20 Mar 2023 06:15:58 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id E4F3A4FF; Mon, 20 Mar 2023 15:16:43 +0200 (EET)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230320121401.zkcjbqmghzacpffh@mobilestation>
-References: <20230315012840.6986-1-cai.huoqing@linux.dev>
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: [PATCH v6 0/4] Add pci_dev_for_each_resource() helper and update users
+Date:   Mon, 20 Mar 2023 15:16:29 +0200
+Message-Id: <20230320131633.61680-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230315012840.6986-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Cai
+Provide two new helper macros to iterate over PCI device resources and
+convert users.
 
-On Wed, Mar 15, 2023 at 09:28:31AM +0800, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
+Looking at it, refactor existing pci_bus_for_each_resource() and convert
+users accordingly.
 
-It seems like we are getting towards the series finalization. I'll
-test it out on my HW after v8 is submitted. Meanwhile could you please
-clarify whether you have a real device with DW HDMA engine on board?
-You keep submitting the DW eDMA driver core update, but there is no
-glue-driver or low-level device driver patch for a real device which
-would set the EDMA_MF_HDMA_NATIVE mapping.
+Changelog v6:
+- dropped unused variable in PPC code (LKP)
 
--Serge(y)
+Changelog v5:
+- renamed loop variable to minimize the clash (Keith)
+- addressed smatch warning (Dan)
+- addressed 0-day bot findings (LKP)
 
-> 
-> Cai Huoqing (2):
->   dmaengine: dw-edma: Add support for native HDMA
->   dmaengine: dw-edma: Optimization in dw_edma_v0_core_handle_int
-> 
-> Cai huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add HDMA DebugFS support
-> 
-> v6->v7:
->   [1/5]
->   1.Update the commit log.
->   [2/5]
->   2.Revert dw_edma_core_handle_int back to dw-edma-core.h.
->   3.Fix code style.
->   [3/5]
->   4.Move the change of register file from patch[4/5] to patch[3/5].
->   5.Fix code style.
-> 
-> v6 link:
->   https://lore.kernel.org/lkml/20230310032342.17395-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
->  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  91 ++++--
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 277 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 176 ++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 130 +++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 785 insertions(+), 107 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
-> 
+Changelog v4:
+- rebased on top of v6.3-rc1
+- added tag (Krzysztof)
+
+Changelog v3:
+- rebased on top of v2 by Mika, see above
+- added tag to pcmcia patch (Dominik)
+
+Changelog v2:
+- refactor to have two macros
+- refactor existing pci_bus_for_each_resource() in the same way and
+  convert users
+
+Andy Shevchenko (3):
+  PCI: Split pci_bus_for_each_resource_p() out of
+    pci_bus_for_each_resource()
+  EISA: Convert to use pci_bus_for_each_resource_p()
+  pcmcia: Convert to use pci_bus_for_each_resource_p()
+
+Mika Westerberg (1):
+  PCI: Introduce pci_dev_for_each_resource()
+
+ .clang-format                             |  3 ++
+ arch/alpha/kernel/pci.c                   |  5 ++-
+ arch/arm/kernel/bios32.c                  | 16 +++++-----
+ arch/arm/mach-dove/pcie.c                 | 10 +++---
+ arch/arm/mach-mv78xx0/pcie.c              | 10 +++---
+ arch/arm/mach-orion5x/pci.c               | 10 +++---
+ arch/mips/pci/ops-bcm63xx.c               |  8 ++---
+ arch/mips/pci/pci-legacy.c                |  3 +-
+ arch/powerpc/kernel/pci-common.c          | 21 +++++++------
+ arch/powerpc/platforms/4xx/pci.c          |  8 ++---
+ arch/powerpc/platforms/52xx/mpc52xx_pci.c |  5 ++-
+ arch/powerpc/platforms/pseries/pci.c      | 16 +++++-----
+ arch/sh/drivers/pci/pcie-sh7786.c         | 10 +++---
+ arch/sparc/kernel/leon_pci.c              |  5 ++-
+ arch/sparc/kernel/pci.c                   | 10 +++---
+ arch/sparc/kernel/pcic.c                  |  5 ++-
+ drivers/eisa/pci_eisa.c                   |  4 +--
+ drivers/pci/bus.c                         |  7 ++---
+ drivers/pci/hotplug/shpchp_sysfs.c        |  8 ++---
+ drivers/pci/pci.c                         |  5 ++-
+ drivers/pci/probe.c                       |  2 +-
+ drivers/pci/remove.c                      |  5 ++-
+ drivers/pci/setup-bus.c                   | 37 +++++++++--------------
+ drivers/pci/setup-res.c                   |  4 +--
+ drivers/pci/vgaarb.c                      | 17 +++--------
+ drivers/pci/xen-pcifront.c                |  4 +--
+ drivers/pcmcia/rsrc_nonstatic.c           |  9 ++----
+ drivers/pcmcia/yenta_socket.c             |  3 +-
+ drivers/pnp/quirks.c                      | 29 ++++++------------
+ include/linux/pci.h                       | 29 ++++++++++++++----
+ 30 files changed, 142 insertions(+), 166 deletions(-)
+
+-- 
+2.39.2
+
