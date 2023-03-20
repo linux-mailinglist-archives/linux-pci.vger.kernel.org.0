@@ -2,124 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DDBB96C24F3
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 23:53:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD88F6C24F6
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 23:56:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229733AbjCTWxa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 18:53:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59084 "EHLO
+        id S229795AbjCTW4n (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 18:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjCTWx3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 18:53:29 -0400
-Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02on2049.outbound.protection.outlook.com [40.107.212.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01E0D3A8B
-        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 15:53:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WCgrgLqawEWOvW2qEyvwwN1h0xJn59fm+iPeldF55GoZFVEakksati5sM25trOaA7lYK+0n7Iu/MbYFhYlUr5Q+DKLpF80iDoWLooLbsG1Nd84JmI2cxcmJCQiAw/DG7TMxNbOGAAz6T9ShKPPi5VyJW22DRbDrowDoP+bMv8BkOts7gGsaSOHLVcfytXPvmvngHJsQpTjwkYt5u5ui4KZrdnM+yfcU0PKUt+OiP1a/nqTFaI3kboTJbvvq8fgPJuGNy31MnEef7SPkRumkuFARqfgMJnQOo7Dq2V0a6MfT+DWukZAjL6IBLdxEDiSTSoWBUTA8VEhF3fds62uctMA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=uZQ/G9QGFNSIcUW2HsyeN2+FhEjEfEjaHr/cwcI1BSg=;
- b=gts78we5d8dqIQWFQ7X6smeJ8AEdyO7tgDhBByvdSNs3l6AZQy0SmzOAYv1qQwix6JcjDHgbVsnD8iosUo+mOwWxZzolaRIs9Ixx/CfSPi/yOfJLTksOCAZ8a/vbbFICrsXEYufZUPcOh7rMEsiptAidqqVrCW62C9rleDGImfsbWRAOtUBVnp3y2S8hjJ8AH1l3j7IRvTcouTc0hi8oE4HX/7qrSUQqkpWl6jYBKOrryhWlMyrp430g1Koz5KqdJusCgMrA+2gNeI/eYKpjE1/VFA5ONDHlDsT2KPdekkq+unFqm7dsnO2Q0GB6gOVg90ewuEltCKvP9B9XYqbGBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uZQ/G9QGFNSIcUW2HsyeN2+FhEjEfEjaHr/cwcI1BSg=;
- b=4EimqfFsb5k+OlEO+I6lO+c6Idxy0GyFxxV7M2/f/GhzlkvOKVB15c1WFHvufmDLeY8AsLvF+HEbAv08B9QT30QDKwzH4vpsTgP5Qq8CLvamfnMfpXWXn2VizhNz3mT1tq21b7Uabhk5CpHJQ5SLEnx43PVQ6LCi/vNiVMAqIlo=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com (2603:10b6:208:3cb::10)
- by IA1PR12MB8264.namprd12.prod.outlook.com (2603:10b6:208:3f5::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Mon, 20 Mar
- 2023 22:53:24 +0000
-Received: from MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a4e:62dd:d463:5614]) by MN0PR12MB6101.namprd12.prod.outlook.com
- ([fe80::a4e:62dd:d463:5614%9]) with mapi id 15.20.6178.037; Mon, 20 Mar 2023
- 22:53:24 +0000
-Message-ID: <7bb0b977-be26-bf28-7bf1-b4e1b83f33c7@amd.com>
-Date:   Mon, 20 Mar 2023 17:52:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH] PCI: Add quirk to clear MSI-X
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Natikar, Basavaraj" <Basavaraj.Natikar@amd.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "thomas@glanzmann.de" <thomas@glanzmann.de>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-References: <20230320220802.GA2326747@bhelgaas>
-From:   Mario Limonciello <mario.limonciello@amd.com>
-In-Reply-To: <20230320220802.GA2326747@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SA0PR12CA0016.namprd12.prod.outlook.com
- (2603:10b6:806:6f::21) To MN0PR12MB6101.namprd12.prod.outlook.com
- (2603:10b6:208:3cb::10)
+        with ESMTP id S229453AbjCTW4m (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 18:56:42 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB15B2CFC0;
+        Mon, 20 Mar 2023 15:56:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679353001; x=1710889001;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=L8dkAazkP6gp+tUnia7Go6L7A/IteNz5613YzTAF6qw=;
+  b=UEoSwDu3QSQRhOrksgVNA3/fpU41OoPSJHXoe0aXAnmJg72jKYXvv72Z
+   1XPM+pXw5M22pRYj61LtZhbENbsrAlvRThVBYFOAlFCjq3YGZHToKhh8g
+   qM+/JzObvl5umAmROttJVk3cz8JXZLcSKKluVidA0uPbWql1MySHhc7b5
+   poCY+5V0TpjIfO1yCCDdI9jFAjrdnvQdGX8jZbkTFqb5U8Mja0VWqJxTg
+   lXEVKhKzhUuUi2yfGI7uIkLC8w5kiK7GV2f+efWEtShlrKePHWqSYmqlU
+   1TzKCZ1tAdoc3p7K3qz7uYE6BSvcQlPvzZRekKFLwL7fzhEZDyJlGBPrB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="322639145"
+X-IronPort-AV: E=Sophos;i="5.98,277,1673942400"; 
+   d="scan'208";a="322639145"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 15:56:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="745590000"
+X-IronPort-AV: E=Sophos;i="5.98,277,1673942400"; 
+   d="scan'208";a="745590000"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
+  by fmsmga008.fm.intel.com with SMTP; 20 Mar 2023 15:56:36 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 21 Mar 2023 00:56:35 +0200
+Date:   Tue, 21 Mar 2023 00:56:35 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
+        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH V10 4/4] PCI: vmd: Add quirk to configure PCIe ASPM and
+ LTR
+Message-ID: <ZBjko/ifunIwsK2v@intel.com>
+References: <20230120031522.2304439-1-david.e.box@linux.intel.com>
+ <20230120031522.2304439-5-david.e.box@linux.intel.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN0PR12MB6101:EE_|IA1PR12MB8264:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4878aef0-3db5-4ca9-95a8-08db2995e938
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: SpfNSD1Cb5o1LWh4vXIAsf3V0fiT4hi1T0yADZEza0UaPeGFYDU9TVOLxQJdRNX5DqM1HzUWNwBaBMEAvNQ7P837VUdpG0/6/U6jrr8P+6J0F3ptipl9Vb7r2WVIQHU0UfAHTNRPt8IKpHxLhw+ohKZSEFojVSaASeBEMn72LmsMzOyj0jCed6Bk0qQhPrlLiV6XSaEjUVr/cwX0afbObd7YG1mzgCuQdaz6yOKxt+lS6q9+BALYDe0BJQr35FKor7QwtWtl+g/KWzAz8r8ZqEXQOm7D1PQ7V1u5ebNMe76WqWRRPI3gAjdwdR4hPncjRSJb16moOR32drSV9+ezoo4b1Oko8uNqsbbyMwyJAsCSN/YkclslDU+WAtd/GxBNDJTXT8Hlq4ieyLUB8Ue9Vwy7yfhc0KOeKkb9ycGEM13NAmxIiltof8f4ohkdPytsc6NF0YPVQjzaEUxLQaMDwUvdYuxPmc00FN25En9dSmKa/nRtf0yb8cSCxyiAsd15NOMeZkNy8JNMm4BxXuJbMvqVDqARiIvXzLd3d+drU3e5V+tvSqXeu+yujwbA4h74b70pDlA46bxYJCnVQFMjdy6I/tR88IAf86jX19RJrSQdo3Z4SK/6EXl6Yr9DRO4aO0/xs87YDSwuarb5sO1yGVOXmtEV7TtKpgn20Zmu0lZM2aaRUcEmgvf3IFAUqFAwvJuccaJ9njWUkHbmefPHi/8gzhyL4puVbSXL4K/xX4c=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN0PR12MB6101.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(366004)(136003)(39860400002)(376002)(451199018)(31686004)(2616005)(478600001)(83380400001)(316002)(6486002)(6512007)(54906003)(186003)(6666004)(6506007)(38100700002)(86362001)(44832011)(2906002)(66946007)(5660300002)(6916009)(66556008)(8936002)(66476007)(4326008)(36756003)(31696002)(8676002)(41300700001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?bDAyc2YwQUxZM08xelRxdWRZWmFMYW4zS3pJcmNzQmt6cGdFTGtzaTF5VEVj?=
- =?utf-8?B?bWpnZUZPWHBseE9UeEt2YThDUGRGMmhXci9neGFqSmFaMTNNb2VGY2tVMWN6?=
- =?utf-8?B?cml5RE9Ccit3STBLT1BkcG5vT2tKMU82d0FId2NpQ2dKWCtiYW9jcDNuQ01T?=
- =?utf-8?B?Nk9ZL2d5TlR6bEVDaFkyUUp5eURjZ3lIcktodndjNHdIaHhucDBHemZnK2J3?=
- =?utf-8?B?S0lwN0JIU0hoOWdocG9wOGhCMk50M3hsalJtSml2M2VOOTBNVDVCYWVtb3Vh?=
- =?utf-8?B?M09nNkM5bC9IRFZuazFXSjg3ZXJHZVRJa1NGNFpzM2JVRzUvaVlHUDdnSVdG?=
- =?utf-8?B?eG5IbHB1TTF5dHBsRTh3cGF0Qkcva3FUbGJjV3I4VWdiS01FbHBtMDVIYlJm?=
- =?utf-8?B?VW9NYWliczZiRSt6RzFOdkw1cURkbDNaS1FXUlVSYmhGbGdrcm41Sm1WZmx5?=
- =?utf-8?B?YUZwQURBZUxQL0VlOTgyVWcvNlRvZFZ3ZlRxUWN4VEFLaUg4aFhBMnVBUGNN?=
- =?utf-8?B?R2IvRDB5eGc3cGd1OTcyNXBveURBM1JKWFlsUDFIbklrK1JpUC9BK1NtSWsx?=
- =?utf-8?B?Y2Z0ZU5Nb0grYkEzNTcyQjVSVWxUN0kxTXM0TkxwUXlWK05MZnZ6bEdMRXJX?=
- =?utf-8?B?SEdySFVjcit3dVpHM3A2Q3JRem1rMzRBUlM0N3NmUVdGUnlIbFE5RGUyaEky?=
- =?utf-8?B?cGY5VERSWmN4SEV5L2dGdEp5U2JScWJHVFdaRzNLczQvZGFlTUlZb0RoNWli?=
- =?utf-8?B?eUVQMU9mTk9OVHRFamNFZzI0S1J6U21ONDArZU4yejJvZG1YdXpqTU9sblBF?=
- =?utf-8?B?cnE2UGtOV0ZDWHhOZmFJV01ZR01menZNYWFXbnQyalYwTGFCeWR6Q3ZZOVBT?=
- =?utf-8?B?MlBIUGlISEp3ZUNqNmQ0TlUrYUxOcDNFQ3ZTZ3Fwa01rUW91V2t2Y0hkMjhE?=
- =?utf-8?B?MC9vTzZvVDlUS0kzaXdIL0FWVjFjZDlIN1ovMkZLS2JHM0pHZXFLdzV3ejNn?=
- =?utf-8?B?bXA4Zk8rWVhJRjlXUHpjNGFpWDlMaUVTYTRZUEwrOURDdUxodUhHMDlHaWFO?=
- =?utf-8?B?K0tJbmFsaWQ4MWd6cmsxRUJQTGNINVdzRFl3bFhrMTVYcFB6dDFIMXpaZ2pa?=
- =?utf-8?B?UVQyZ3l1US9KcEpQTWplYXVIQzE1dkp5ejFMa3V0dG9LMTZJZXU4d1dmU1B5?=
- =?utf-8?B?R0hzUERRUEkwempKUURmQ0RNaVRCcjVKOFlZdkYzVUE5QzZQK3J5QzRwa1Bl?=
- =?utf-8?B?cDJ1TnBTMU9KWWd3SGsrYVhQZWxlSTB4T2JuU0V2MDFsVlEvc1RCQUpiV01J?=
- =?utf-8?B?UHVEdVNXNlU2cHA2SkFmeWg2b2ZlZUlCdWMvTkFuYWlFeDlQQ3U5R2t1Wmpn?=
- =?utf-8?B?eS9WYngwdCtXd0xGd2daV0xJYmZUaE5tUFpKUG5PcjdUaHVZUFFVeU1wQVNP?=
- =?utf-8?B?b3NJVU9UVnR1YjYzQnU2MkszcVB5aHhOUVFqUzdIa1FsRldlVkNFUU5lVldp?=
- =?utf-8?B?dnJVZzRqV0lFUm5oT3I1b2prNGlQZ1dsT2RtWXRlWHM4SkNmZWtLVSthSnRi?=
- =?utf-8?B?dGZrMFczYlpOUE1PU0JiNGFnU0ljc2l0cEpnSFl1OGhUZllPaVBwTjhZRUcw?=
- =?utf-8?B?RkxKZ3lCSUp1NUZ3cVVCSnZHbTFvRkppQjBHYlE2VkUyMC9jNCtqRDJSOWVE?=
- =?utf-8?B?ZUIrNm13dEp1dkF5ZENCMi8rVTByK0V1TE1kWDhGdFpTanhJdE9CbWtiWVd1?=
- =?utf-8?B?NXFoS2xGMjgzYjVqL2ErY2hFUlZBVDNKRFlIbWhUSzlaaWpUQ0pRNFVvZmpw?=
- =?utf-8?B?WmVYWGFFQVBRc2dhKzh0amlGY0oxMnhicWo3UXVjM2NXTEJLN1ZOWTdpdjlS?=
- =?utf-8?B?N2YyUVhyUlY1Kzd6VFpISVJPcDJ3eE1Pc3IwQ3BMK1J5dXhHZFR2bzNNeXVP?=
- =?utf-8?B?b3VtZHJhcjVyaExOZmcrTEVhZ3AyMTBzM1hiNkM1VEtSTUkxYW1wcVY2ZGdP?=
- =?utf-8?B?SzJIZFR5ZjdSZzVla2VPcy82UU5HLzh4K3VWSlpmK1F5aGcvVjYyM2xrRjM5?=
- =?utf-8?B?RWU3M3dxbTlQWGY3QzdQU2ZxaFhPL21LSzZia0NWVy9EWm9CUDNibmxBS1FJ?=
- =?utf-8?B?Q25SNjJoOEhkcCtlcm0yNUdtRGxFam9lRlRSTlNYazdwbERQVlBLNGx1T2Nt?=
- =?utf-8?Q?qszROVxM3J6469cOtM9BBhQ2u3PsXVUo6/pEiinDxojE?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4878aef0-3db5-4ca9-95a8-08db2995e938
-X-MS-Exchange-CrossTenant-AuthSource: MN0PR12MB6101.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2023 22:53:24.4286
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SQlBNKVigfjN3urte9hasDG6oyuSfOx1wnSrqi7m8LyULUkLeC2AvTaCZXW8/t8bV+TkiMb+rzA7qobdOQ5EqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8264
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230120031522.2304439-5-david.e.box@linux.intel.com>
+X-Patchwork-Hint: comment
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -127,44 +67,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Jan 19, 2023 at 07:15:22PM -0800, David E. Box wrote:
+> +/*
+> + * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
+> + */
+> +static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+> +{
+> +	unsigned long features = *(unsigned long *)userdata;
+> +	u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
+> +	u32 ltr_reg;
+> +	int pos;
+> +
+> +	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
+> +		return 0;
+> +
+> +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
 
->> My point is that's only needed if the hardware wasn't initialized correctly.
->> If it's initialized properly then it behaves like you expect.
-> So is this something that BIOS must initialize, and then it's locked
-> so that by the time Linux shows up, this one-time initialization can
-> no longer be done?
->
-> If Linux *could* do this one-time initialization, and subsequent
-> D0/D3hot transitions worked per spec, that would be awesome because we
-> wouldn't have to worry about making sure we run the quirk at every
-> possible transition.
+Hi,
 
-It can be changed again at runtime.
+This is tripping lockdep on one our CI ADL machines.
 
-That's exactly what we did in amdgpu for the case that the user didn't 
-disable integrated GPU.
+https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_12814/bat-adlp-6/boot0.txt
 
-We did the init for the IP block during amdgpu's HW init phase.
+<4>[   13.815380] ============================================
+<4>[   13.815382] WARNING: possible recursive locking detected
+<4>[   13.815384] 6.3.0-rc1-CI_DRM_12814-g4753bbc2a817+ #1 Not tainted
+<4>[   13.815386] --------------------------------------------
+<4>[   13.815387] swapper/0/1 is trying to acquire lock:
+<4>[   13.815389] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at: pci_enable_link_state+0x69/0x1d0
+<4>[   13.815396] 
+                  but task is already holding lock:
+<4>[   13.815398] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x24/0x90
+<4>[   13.815403] 
+                  other info that might help us debug this:
+<4>[   13.815404]  Possible unsafe locking scenario:
 
-I see 3 ways to address this:
+<4>[   13.815406]        CPU0
+<4>[   13.815407]        ----
+<4>[   13.815408]   lock(pci_bus_sem);
+<4>[   13.815410]   lock(pci_bus_sem);
+<4>[   13.815411] 
+                   *** DEADLOCK ***
 
-1) As submitted or similar (on every D state transition work around the 
-issue).
-2) Mimic the Windows behavior in Linux by disabling MSI-X during D3 
-entry and re-enabling on D0.
-3) Look for a way to get to and program that register outside of amdgpu.
+<4>[   13.815413]  May be due to missing lock nesting notation
 
-There are merits to all those approaches, what do you think?
->>> Let's say somebody runs coreboot on this platform.  Does coreboot need
->>> this device-specific knowledge?
->> Yes; the exact same bug will happen with a coreboot implementation that had
->> the initialization done improperly.
-> My claim is that this means the device doesn't conform to the spec.
-> If we add a conforming PCI device that neither the OS nor the firmware
-> has ever seen before, standard generic functionality like power
-> management should just work.
->
-> Bjorn
+<4>[   13.815414] 2 locks held by swapper/0/1:
+<4>[   13.815416]  #0: ffff8881029511b8 (&dev->mutex){....}-{3:3}, at: __driver_attach+0xab/0x180
+<4>[   13.815422]  #1: ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at: pci_walk_bus+0x24/0x90
+<4>[   13.815426] 
+                  stack backtrace:
+<4>[   13.815428] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.3.0-rc1-CI_DRM_12814-g4753bbc2a817+ #1
+<4>[   13.815431] Hardware name: Intel Corporation Alder Lake Client Platform/AlderLake-P DDR4 RVP, BIOS ADLPFWI1.R00.3135.A00.2203251419 03/25/2022
+<4>[   13.815434] Call Trace:
+<4>[   13.815436]  <TASK>
+<4>[   13.815437]  dump_stack_lvl+0x64/0xb0
+<4>[   13.815443]  __lock_acquire+0x9b5/0x2550
+<4>[   13.815461]  lock_acquire+0xd7/0x330
+<4>[   13.815463]  ? pci_enable_link_state+0x69/0x1d0
+<4>[   13.815466]  down_read+0x3d/0x180
+<4>[   13.815480]  ? pci_enable_link_state+0x69/0x1d0
+<4>[   13.815482]  pci_enable_link_state+0x69/0x1d0
+<4>[   13.815485]  ? __pfx_vmd_pm_enable_quirk+0x10/0x10
+<4>[   13.815488]  vmd_pm_enable_quirk+0x49/0xb0
+<4>[   13.815490]  pci_walk_bus+0x6d/0x90
+<4>[   13.815492]  vmd_probe+0x75f/0x9d0
+<4>[   13.815495]  pci_device_probe+0x95/0x120
+<4>[   13.815498]  really_probe+0x164/0x3c0
+<4>[   13.815500]  ? __pfx___driver_attach+0x10/0x10
+<4>[   13.815503]  __driver_probe_device+0x73/0x170
+<4>[   13.815506]  driver_probe_device+0x19/0xa0
+<4>[   13.815508]  __driver_attach+0xb6/0x180
+<4>[   13.815511]  ? __pfx___driver_attach+0x10/0x10
+<4>[   13.815513]  bus_for_each_dev+0x77/0xd0
+<4>[   13.815516]  bus_add_driver+0x114/0x210
+<4>[   13.815518]  driver_register+0x5b/0x110
+<4>[   13.815520]  ? __pfx_vmd_drv_init+0x10/0x10
+<4>[   13.815523]  do_one_initcall+0x57/0x330
+<4>[   13.815527]  kernel_init_freeable+0x181/0x3a0
+<4>[   13.815529]  ? __pfx_kernel_init+0x10/0x10
+<4>[   13.815532]  kernel_init+0x15/0x120
+<4>[   13.815534]  ret_from_fork+0x29/0x50
+<4>[   13.815537]  </TASK>
 
-Yeah as it's configured here I agree with you.
-
+-- 
+Ville Syrjälä
+Intel
