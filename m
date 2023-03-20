@@ -2,165 +2,203 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 16B976C2001
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 19:36:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E9F246C209B
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 19:59:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231394AbjCTSgp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 14:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38370 "EHLO
+        id S231179AbjCTS65 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 14:58:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231520AbjCTSgL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 14:36:11 -0400
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2077.outbound.protection.outlook.com [40.107.220.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794543645E;
-        Mon, 20 Mar 2023 11:28:21 -0700 (PDT)
+        with ESMTP id S230103AbjCTS61 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 14:58:27 -0400
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021014.outbound.protection.outlook.com [52.101.62.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18BB21E5E4;
+        Mon, 20 Mar 2023 11:50:26 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NzcHhSw2AC7XlQFbRoLQ5pRPSOSS9kNcraKWLzOkbznLtyexSSd3DaX05Fo2muquLrpRqL2sOE2JdUJlGC4ue4m523dIzuplXVlLrgUqDDj9pUbYWoNwtSJ/K9M6d6+SMx5DBWLid3kN12vV76l/tgFdRYobhxaORpq3F20U3wd53f4vGCzG7CO583rtSbK8qhQUquxopIaRJZRx4gUhpJC50B00D4Fu7uP3g0ep1Ar+C7pRb5PeSl+W9G8k+ChzfH35LuI/Gr+sblaXAIO9/tVyrY9huhDWZ1RuLCqgMgVLTfHMeHALQLFEfEIIe2LQq9oJbpmYZyi0GwNyJsM9yg==
+ b=HuyADjDsFiRJiDS4e4Q6PHNScQVbSXmyuMgHH93VLSwgHB0EsOQElClbqq2KJwqi03XkPnSE/3zpoqGivSujFfxEKu0kMR43ejk+zjA3T+LB610FsEhtDc7pKDsmnVWMMTTmI4dQJOjTyNYgzpOYoqBCg3BVRXeq0DgiwHP6Umyu/yLaiLtXt7Txn+SfXG9EurRdNTw/1eDFqUf4/MNdPZ7ao9sjoo2CPb/TJRUhvgR6MEhcttEUUEiEBG/G0z/8x7BTsFadkofzUNT16AgnPrw/2RSJjGbPR1avpsruRUiLDK+wJ1mU+psUmUdN8XYs7hzaSl/JMsKYxMDoEszIfQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mFknPj1juTW4yd0nvS8kgtV28YxgIZKG3ZTe30gnatA=;
- b=Fx/jYw861a3R7WJw7IjuIphwq+I0mPbq916iSmzOREwrYVTOWNsC8vqc02wte5gMzBiTLWoNpooIsdyPxR4cmfUAUa8r8lSyYDi2sIqQQpEKnwn8Pn+uFRCF6p6E3Rf8+lsaVkvcIdWTKAkZZ1S/NDBxm79Wsl+E5FyueSKGI01jqp0ny41JvBmLeV8SESn/35GWBcDZukU6r1Z72wrrHgGgglDqIMrFYiF1bHdyA5H8uAU+OWh1tvMkESnDcYz8Kgmb+uy2+R4Q69fDT65Te1JpFkpQWS1QD2JardE8wHVJ7v3h0w24eO7DZYkBjVfDdTaSozUYcJ2jaQ+fK0nliw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ bh=1gZRTzVSlbHFnoNrGyrXo/+dPb70cMkkVwb5uYlUzZE=;
+ b=HcSKgVz4nFyzpkFYQiPbKri7HQc9Kpxe36iQX1kSVolUMXecBWV+0Uebi2/NAIgBmj2s/qaViXMrMogqiDOgju49WCy37dHCwu4u3o+R5sHqPNL0MR4oev/sGUw3BVqPz9syOFMsdz4LYlRKVD66x8dNfmF4hg3ZZT+wl8sebpUnqWzIK1OnrTTRs5ui8u/aL+cfO/tDEHonauTXKR9Ad/Pz8KFDLtTvWnVaULS4v+8+XeyMAYwGCu5pTw+iovnxN0yNWSxp8slvqiFnjXZzS8MiFM0DlgwtENduVsJJKecl13qnHy1nfz7Ixgq+4t7LEgqd6xOTChOgoahYr4mqzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mFknPj1juTW4yd0nvS8kgtV28YxgIZKG3ZTe30gnatA=;
- b=HwZyWxMScnuOA9LGZMiebr04sPtYeSrR7SGYrZvdxtbzT1hDfrXhyGV8IHphlWd2EtQR4XkcZ0hl+JNLlBWWIrg+givrnQ32iQaE1JqGiD2Ju6smQbHfRvc+p7FHaH8Sl4cmkO4i3Sn1mr9Hl2/vewb1BYLuv7dMI8Cl7DfzmzNMS1OVALMbVh4SDngEzkXLmeWgU8efi68dHzpAEgIMfOxNfzA52EwfQ35Lt3OLOjNbDyNz6TrGWEwpQT2do6odRxqfUBBF8xl+UYcxpNFItcnSu5w4yGHIUwtJFC13KRBek4kiCcsDBZDRLBeHEjODEBLLfMF0V3aslc+ExBvRrA==
-Received: from MW4PR04CA0059.namprd04.prod.outlook.com (2603:10b6:303:6a::34)
- by PH0PR12MB8125.namprd12.prod.outlook.com (2603:10b6:510:293::6) with
+ bh=1gZRTzVSlbHFnoNrGyrXo/+dPb70cMkkVwb5uYlUzZE=;
+ b=RRSytm8wdo0d6yCbhhwOZSNdXTuvl7W8NZeqjRloGqYVDVdiMY8NA5TzAO+G1UibRuNuHSJ27u08qcmn/hZujYk87GMQYNO8UPYf7QZ0NLWjzMz+GmhQHI+W5pC96dLKjz0WmPq+kRnCF99IbEFejV3f1Flc4KOj2uLTJtylDjo=
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
+ by CH3PR21MB4039.namprd21.prod.outlook.com (2603:10b6:610:1a9::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Mon, 20 Mar
- 2023 18:27:22 +0000
-Received: from CO1NAM11FT056.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:6a:cafe::db) by MW4PR04CA0059.outlook.office365.com
- (2603:10b6:303:6a::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37 via Frontend
- Transport; Mon, 20 Mar 2023 18:27:22 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CO1NAM11FT056.mail.protection.outlook.com (10.13.175.107) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6222.16 via Frontend Transport; Mon, 20 Mar 2023 18:27:21 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 20 Mar 2023
- 11:27:13 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Mon, 20 Mar 2023 11:27:12 -0700
-Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.986.5 via Frontend
- Transport; Mon, 20 Mar 2023 11:27:07 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v3 11/11] memory: tegra186-emc: fix interconnect registration race
-Date:   Mon, 20 Mar 2023 23:54:41 +0530
-Message-ID: <20230320182441.11904-12-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230320182441.11904-1-sumitg@nvidia.com>
-References: <20230320182441.11904-1-sumitg@nvidia.com>
-X-NVConfidentiality: public
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.5; Mon, 20 Mar
+ 2023 18:50:02 +0000
+Received: from BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::acd0:6aec:7be2:719c]) by BYAPR21MB1688.namprd21.prod.outlook.com
+ ([fe80::acd0:6aec:7be2:719c%7]) with mapi id 15.20.6254.002; Mon, 20 Mar 2023
+ 18:50:06 +0000
+From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: RE: [PATCH v6 06/13] x86/hyperv: Change vTOM handling to use standard
+ coco mechanisms
+Thread-Topic: [PATCH v6 06/13] x86/hyperv: Change vTOM handling to use
+ standard coco mechanisms
+Thread-Index: AQHZUjCyCpporLk3zkiXtyclH/4N+K8DmEQAgAAZtaCAAFnoAIAAAQEA
+Date:   Mon, 20 Mar 2023 18:50:05 +0000
+Message-ID: <BYAPR21MB1688DF161ACE142DEA721DA1D7809@BYAPR21MB1688.namprd21.prod.outlook.com>
+References: <1678329614-3482-1-git-send-email-mikelley@microsoft.com>
+ <1678329614-3482-7-git-send-email-mikelley@microsoft.com>
+ <20230320112258.GCZBhCEpNAIk0rUDnx@fat_crate.local>
+ <BYAPR21MB16880C855EDB5AD3AECA473DD7809@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <20230320181646.GAZBijDiAckZ9WOmhU@fat_crate.local>
+In-Reply-To: <20230320181646.GAZBijDiAckZ9WOmhU@fat_crate.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5e65d818-196c-4bce-b0b3-5392a10c9611;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-20T18:20:21Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|CH3PR21MB4039:EE_
+x-ms-office365-filtering-correlation-id: 395c34c6-72c9-4452-fd17-08db2973ec02
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aYAbpIe2ODiQsDmgEJv31e9FOAinnA3fWDMDrzVM0OrxShUNAv/kiUO3eFLjSDmu3ebALXG5+E+wxTC3ZLQWvxYBQ13LaSJUUw8ieIsTtd/7BzjhYa9soaNjBM/+ktM1ToZ4GTQwb05UiBjN9Vf39XEfkg3nRSkRmBkt+/ooM991FDPkeCFnbh3zYbYmOzLcIIruNgxTZ3iY38EWLCZnTC2d55SaRgUIfVi0FDw8rpVm8SMJ3IazqI5ca/IX9PDX08OhWmH+guXx5HwgEwxbJi0nJ25ThwKaKo0WXpo2f3p3b0i0QrygICZqyG1Ng9CkoscqE4vOrFa8/ifuMiD1ocYO9+OTYLQrCPC6iRqnVQVrCjHDsz1KyKXUt76XHVW+SZDovE/VpbWjP9av5tCMqokQXjBxfyJw3Z0d/TcksmjVOhZK5iOQpo8Mq86DJeeYA2+8CJV/LIfqc1mLA+3LrZTnK6AwWH2ZirXom/kH+7FWF4zsThj548R1bFotGFCr7JNyoP0Lg+Uf5kX4kB3hzfyctl30uZKTjX2dSX60CW40M4NYcntKDxEFKL5FH2l/lKbgqUoGnXnOipYz24i4zeymAi5YK1kG/D0jHh2x3mZ3hCTTT1j7yt58AEOEIEbeLF/FjDdibEkuHWG/qj2cCt5Cro2sUVbqYUeWl8Iag1bCKk4deiSoTCoeIi3zHw9MnM7BQJisYywg48ul9JfGvtX33hhLvcG/yq2r53xAa1/3b0nZ//RI4fXLu3WEvdTD
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(39860400002)(366004)(346002)(396003)(376002)(451199018)(33656002)(71200400001)(86362001)(38070700005)(38100700002)(82960400001)(82950400001)(7406005)(8936002)(52536014)(7416002)(5660300002)(122000001)(41300700001)(2906002)(8990500004)(4326008)(186003)(6506007)(66946007)(83380400001)(9686003)(26005)(316002)(55016003)(54906003)(10290500003)(66556008)(64756008)(8676002)(66446008)(6916009)(66476007)(478600001)(76116006)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?oyZqsZm6SYs4SKZk1uCBcv6ImwKRCSaQkkOuARabTbKNpku0lII3GWMiwhMZ?=
+ =?us-ascii?Q?TTb/XOrMS8vqxv+6KBx/r7XrmzKbULotkqTXV+qDKAKX0d0ZSJqxBlS3sOss?=
+ =?us-ascii?Q?ylOnDp+w799aYMOY5PSHePF0BRiGTkrN1Kvo2+9AXtToqj7tlBoDsUFBW2Xz?=
+ =?us-ascii?Q?KUodvVBYVghZmAyKKPytl5bgvIX0xURd1zqEUSELUDbOGLMBRVwm6AeFTVq5?=
+ =?us-ascii?Q?ZtGb/A38T0NeRHDeOO/XVnMhkCTDQwQwKrD9wAW4Kd6KZleKdJiogfQyCJ1l?=
+ =?us-ascii?Q?9+7voG74+emITNoupVRex6NdbMWX3RMX7oZRrHbrWcJRvKR/mfLOssF07xKm?=
+ =?us-ascii?Q?1eoZgjAIHyN9UWYnc1ENJfHD2cWVAHM8Ui4JgNBfV3LlzcUN8PM3bo4bYScq?=
+ =?us-ascii?Q?lKgVpOQkLhveR42G5adXlDUXy/rvDmolK3Y3WYfowbN2vLXXs58CeToTqY+Q?=
+ =?us-ascii?Q?kzXl9ciRU1aIHGAghjA4GBjZeI/nP+dC+qFoORKcEwk0izPIxWMwJKFvnnik?=
+ =?us-ascii?Q?A5aDb81+7Bd6jtyq5ANVzQPLJtjMeESKz6ighJQpV8GIbdocJNDkHt4W7qfV?=
+ =?us-ascii?Q?Q7EK9zlNw1Ryx0eVWNOON5LZn92dNnBEYzZFiq9tsCJuYL8Gcv8xq08YWgvf?=
+ =?us-ascii?Q?XmJr9qX7v3+h+6MY2MuHxh4fz0/AcGj1PxzRcABZS5enfJWFDITiUPePpYu3?=
+ =?us-ascii?Q?puiFuLFxrrGtKJR0o7mG+9od2cLA1B832qaqvlf2c4fivTM8VKJmUJ213ilk?=
+ =?us-ascii?Q?BzkPDHoE6GBTZRPzJmB46kCJSQvqoKme1a50FJ3NGjJzn6HnH853Rhn530R4?=
+ =?us-ascii?Q?rYANByypcWCZ1aHb67BenkkOFMqukMBRouuO40LmIq3wG0OibtcA9Pz0o7KI?=
+ =?us-ascii?Q?lA3dagAm3rNsQvY4xR4D+nbYgXJQVGt00WMgzXUAkDWJ5oMZK5blhte4pOwz?=
+ =?us-ascii?Q?ZZKJoBb6yxd8KfKFaoouVSj5qXJNOQYalF0tdm4ukhUj1tBGEBSeDCyo8fTI?=
+ =?us-ascii?Q?Ivyo7CkQE6IANVPW+CNSyYcNL0/I8rwRkry6mdKYxfOQz3cg7PoTwXA8/T36?=
+ =?us-ascii?Q?nogR/V1BGRlegT5Ek5j1b33+EuVQGtIdny26DSPBoFge8bYbNtKvG4D6Hq1V?=
+ =?us-ascii?Q?GxU/520SHLLFyEA4LJKt9cBq7lpI4B2Ofu3H44Gg1YzW0/GalgNw1jR3Xw4G?=
+ =?us-ascii?Q?24I0bpYRmCUUIvPJqn2NlMvQdYoKzNe2vKuZAmCN04Sz1xvXS5cFz594YEZm?=
+ =?us-ascii?Q?Us8DYKQCJ7H14x4b8YcFqPo5brP7G0m/jI6rkvlulz5+H72z+p8Cy/9w6o6z?=
+ =?us-ascii?Q?vzoR02bl74zvuUNvDyVNRthxnAB7wHCQBs6VEf+W7FC8r7KaZc/2nUKC6IJ1?=
+ =?us-ascii?Q?/LndEGkZw4BHL34IDdg0Nlcb5DTZbi1adkD0C9AOLI1liXkKOOiqQMwM1Z6g?=
+ =?us-ascii?Q?YPz9cH+y+qbYsLCbgVhfaCxTF7UtO3JD+trL6KBl5roqfC4atz0FRGbI7I/m?=
+ =?us-ascii?Q?Gyo1iE7dVB8ZXJP/1XszDpqDLq+fdTfZ2CfslPUx/3Uti6PV7Z6uSg38jHHy?=
+ =?us-ascii?Q?gCgVZBXM2BprV6XrG7l5+wnS4wqiyoNO95BUxx4+Gi2LwglJXuOMAa+9oj+z?=
+ =?us-ascii?Q?Iw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT056:EE_|PH0PR12MB8125:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6a67cb8c-72c5-40e4-4494-08db2970bf00
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: aNmrClQK7SYCKuVaxl43iEGAVzMwtJQJ40SWsRwk0AejLb9CXlJYZkyeiGxQdXHlcv1DGSj14ZNvWFa0EWeKmGT1Ev9pkSkBsCZ0niASgWU7zY4W1t3s4JB3IIJESzRMVsnNZsIws+ieq0UU0WlKgjLgtrUsfWg8jRQlJbkWWoxbtQkmp0BkDiCAyjgpOWpY3wALa+7rrJH/+9WE7OIjsx57dczG95Mt+P8t45mGgz4JHz0u1BsPNigZmwOMIxmEBP2wXZEKPv/VRl10Xvbm2ZN9b1ukALb00RfmkHZomj5PbmbtLFIA9EwIQB5OxAvTJFuBN0tGtO+ca8QmOn8DEeGjY4uN2vXQDOkxNuiGV8V4EJOUDz4rZMX0OHLlNbY3WMIPM+sxoLFpRCIOwVlKbADSP9InlIJgjSEJ16zjFn4VMiFMW0GkBfqXfMGZgHFGrK+WGRdsVmS60xpwwKMYjuIG+LUzcIqO+RRDY3a/2yBinR579I4nEhazids32lg9QC4l/83NWVLw3CgptF+EXAfD+2nLD6+rDsb1jXmcYcJUq5V+cT6RVOiMyZhVmomOLvmACoigImTyZR0YAWdt49kX0z4IlcpJKKu8OcdbmKGkEMtrDkXAUfM8JAHuvyCJEsBv7P6iPcVluWpcReL52B7rUGZeLr2Nv1EbvjrVtoxb+4MpxBm2bbKqiWGzsaBwzqqU+bgdSlEDXKlXffbB95ta9bHLbzYmBChdPyIcyankjxLw396pGdePDA4t7/pC
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(376002)(39860400002)(396003)(136003)(346002)(451199018)(40470700004)(36840700001)(46966006)(41300700001)(40480700001)(4326008)(8676002)(70586007)(70206006)(82740400003)(36756003)(7636003)(2906002)(36860700001)(40460700003)(8936002)(5660300002)(26005)(1076003)(7416002)(82310400005)(336012)(107886003)(6666004)(47076005)(7696005)(356005)(186003)(2616005)(426003)(86362001)(83380400001)(316002)(478600001)(110136005)(54906003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2023 18:27:21.9349
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 395c34c6-72c9-4452-fd17-08db2973ec02
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Mar 2023 18:50:06.0108
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6a67cb8c-72c5-40e4-4494-08db2970bf00
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT056.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8125
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: azWddMHBRnatfJGuUCMPdyOQHY9BO8u3OXFvmc6NRga/6hNZCIhH5fsdU7p1DWzcTCiksZg3vQLSQlMxuxXf0BOJWxzOCfegxRGHZrXm2B8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR21MB4039
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The current interconnect provider registration interface is inherently
-racy as nodes are not added until the after adding the provider. This
-can specifically cause racing DT lookups to fail.
+From: Borislav Petkov <bp@alien8.de> Sent: Monday, March 20, 2023 11:17 AM
+>=20
+> On Mon, Mar 20, 2023 at 01:30:54PM +0000, Michael Kelley (LINUX) wrote:
+> > In a vTOM VM, CPUID leaf 0x8000001f is filtered so it does *not* return
+> > Bit 1 (SEV) as set.  Consequently, sme_enable() does not read MSR_AMD64=
+_SEV
+> > and does not populate sev_status.
+>=20
+> So how much of the hardware side of vTOM are you actually using besides
+> the actual encryption?
 
-Switch to using the new API where the provider is not registered until
-after it has been fully initialised.
+vTOM mode in Linux is just turning on/off the vTOM bit in the PTE
+to create unencrypted or encrypted mappings, with encrypted being the
+default.  There's no other hardware dependency except CPUID leaf
+0x8000001f reporting that SEV is not enabled, and the GHCB protocol
+(if you want to call that "hardware") as mentioned below.
 
-Fixes: ("memory: tegra: add interconnect support for DRAM scaling in Tegra234")
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- drivers/memory/tegra/tegra186-emc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> Virtual TOM MSR (C001_0135)? Anything else?
+>=20
+> AFAICT, you're passing the vTOM value from CPUID from the hypervisor so
+> I'm guessing that happens underneath in the hypervisor?
 
-diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
-index 0d68a20fd376..a5a2bce01db4 100644
---- a/drivers/memory/tegra/tegra186-emc.c
-+++ b/drivers/memory/tegra/tegra186-emc.c
-@@ -207,15 +207,13 @@ static int tegra_emc_interconnect_init(struct tegra186_emc *emc)
- 	emc->provider.xlate = tegra_emc_of_icc_xlate;
- 	emc->provider.get_bw = tegra_emc_icc_get_init_bw;
- 
--	err = icc_provider_add(&emc->provider);
--	if (err)
--		goto err_msg;
-+	icc_provider_init(&emc->provider);
- 
- 	/* create External Memory Controller node */
- 	node = icc_node_create(TEGRA_ICC_EMC);
- 	if (IS_ERR(node)) {
- 		err = PTR_ERR(node);
--		goto del_provider;
-+		goto err_msg;
- 	}
- 
- 	node->name = "External Memory Controller";
-@@ -236,11 +234,13 @@ static int tegra_emc_interconnect_init(struct tegra186_emc *emc)
- 	node->name = "External Memory (DRAM)";
- 	icc_node_add(node, &emc->provider);
- 
-+	err = icc_provider_register(&emc->provider);
-+	if (err)
-+		goto remove_nodes;
-+
- 	return 0;
- remove_nodes:
- 	icc_nodes_remove(&emc->provider);
--del_provider:
--	icc_provider_del(&emc->provider);
- err_msg:
- 	dev_err(emc->dev, "failed to initialize ICC: %d\n", err);
- 
--- 
-2.17.1
+Correct.  Linux in vTOM mode is not reading MSR 0xC0010135.  The
+PTE bit position of the vTOM bit is coming from Hyper-V (or the paravisor)
+via a synthetic MSR.  Presumably Hyper-V or the paravisor is reading
+the vTOM MSR, but I haven't reviewed that code.
 
+>=20
+> I'd like to make sure there are no more "surprises" down the road...
+>=20
+
+The only other vTOM changes are for software protocols for communication
+between the guest and Hyper-V (or the paravisor).  Some hypercalls and
+synthetic MSR accesses need to bypass the paravisor and are handled
+with the GHCB protocol.  The Hyper-V and VMbus specific code in Linux
+handles those idiosyncrasies.  That code went into the 5.15 kernel and
+isn't modified by this patch set.
+
+The vTOM case is down to the bare minimum in the use of the hardware
+functionality, so it's unlikely anything else would turn up as being differ=
+ent.
+
+Michael
