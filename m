@@ -2,77 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B1E86C157F
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 15:50:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65A486C1B2B
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 17:20:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbjCTOuJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 10:50:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54132 "EHLO
+        id S229610AbjCTQUF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 12:20:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231947AbjCTOtc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 10:49:32 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15C127982
-        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 07:47:50 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id eg48so47619019edb.13
-        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 07:47:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1679323641;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QD7ylI6TVHUGdBJgMovYJYcYKC/vfqGxmwJNLbiL6ds=;
-        b=PkVWnB6X3c63HHvavZdeVbDn3Tx36qitT0fT6ic0Its1qN+eoMlxng6rqKjwWQDFyY
-         whXJcFWvxPa9cqiHXs2Kkgw3YrCnW03UTs96YcZpLxXHD3EgHAON0LddK5jOZAmlXcV7
-         S9TN/x2Y7cv1gHcJglVbmEyqWwlz2yXkcnC4r9WjqwFifBQedcDJYrO1AGJCARZfhjqX
-         PXXPU2e/kM7Srb3kfYIwp/us0ZjYp7bu3xKgggdzmKmV3S5jR6vkd+locDC4tnj3GWVH
-         +QD3N6tKee/XwzPoBx3DbsqIaq5j8jZqKJsewEm+i2QKDgyqR3WwCp6wH0ZURIYb7YbN
-         oEQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679323641;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QD7ylI6TVHUGdBJgMovYJYcYKC/vfqGxmwJNLbiL6ds=;
-        b=A3CEPbpplX6GdTgrn04o/fu7W18VWZXuFBepy/iRNDd+TT6PesPNDg+JeEgLhoDP5P
-         Q5Yw3XRzMjTMmkGoVfSVAVwpM8wkvKbxllgCaav7h9sK8MjxjcAuiyDI9P0c5bSAKL79
-         8lbK1N4B/uyu2n585/GmLsVkyOGylQ/akxahI6EDudcQ6vUOA0FyVhUxSw0VXZ385vcJ
-         kIyEgb9tD4JZ+k70jAcvFbgYn621Bcl9a9qhOgC24O1ROwHeifKQFNZU+bs0+5wVWheo
-         aB3gI3QHI/XehQwe6JZ/eeC+JkZ7jKLMQHhK7T0ZcOTyMToH8jzRXcskS40qL095Njxn
-         GvWQ==
-X-Gm-Message-State: AO0yUKXHNP7dZSO2V46GtGfqHD/CfQRvcBqhjuj0F3qirAV7wVKMG2sf
-        BL9pvsaxn21E1KrPWbJTcAGedA==
-X-Google-Smtp-Source: AK7set9AXmDHkrfGSpB3Wj9T0K1GNyabMNZ0AJIw+bnZjLcG3lQNkav0xtkhhLFt0gjqJA/tL7ycxw==
-X-Received: by 2002:a05:6402:7c3:b0:4fa:4b1c:5ea3 with SMTP id u3-20020a05640207c300b004fa4b1c5ea3mr12880116edy.23.1679323641641;
-        Mon, 20 Mar 2023 07:47:21 -0700 (PDT)
-Received: from localhost.localdomain ([94.52.112.99])
-        by smtp.gmail.com with ESMTPSA id x2-20020a50ba82000000b004fb30fc1dabsm4913172ede.96.2023.03.20.07.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 07:47:21 -0700 (PDT)
-From:   Abel Vesa <abel.vesa@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, Johan Hovold <johan+linaro@kernel.org>
-Subject: [RESEND PATCH v9 2/2] PCI: qcom: Add SM8550 PCIe support
-Date:   Mon, 20 Mar 2023 16:46:58 +0200
-Message-Id: <20230320144658.1794991-2-abel.vesa@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230320144658.1794991-1-abel.vesa@linaro.org>
-References: <20230320144658.1794991-1-abel.vesa@linaro.org>
+        with ESMTP id S232006AbjCTQTg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 12:19:36 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA1F540C1
+        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 09:11:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 4AF7FB80ED7
+        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 16:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E8EDC4339E;
+        Mon, 20 Mar 2023 16:11:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679328661;
+        bh=1P7wgkzEjsLcQs4tKsnVlNsjzslc9W/B/lWfRmbppXY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Z6zhb4TENagTZVHxpxHImIwArs1lFw0qsNno5rSLP4uTVjPbT01tQWYCSVYCP4/4V
+         v2VqW75LyD0PPSCEruHepKSgjq8MzpHHcZt8CQnddkat4hYa5jMquGnCiu8A+YeZYD
+         T3C9BfFRHxNZ1K8SUj22VIYOrM6yGTTUpAXlf+rpULhLTVK9f1hZ20ywxepA/SKQY7
+         hvarEkvatQEqCWpcmxiZnWckDx0k8aHm2zzbIGXMRCUYj2b5RO/+JbUsx4AZx/8Usy
+         19tLjhwbIIGojeulqYU6xhILUJHd3+PBhzr680wjvm/uGNj1NTGqqSR3fTPqS7uweq
+         +L0YspeEu6P6A==
+Date:   Mon, 20 Mar 2023 11:11:00 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>
+Cc:     linux-pci@vger.kernel.org, Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Jon Nettleton <jon@solid-run.com>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org
+Subject: Re: Samsung PM991 NVME does not work on LX2160A system (Solidrun
+ Honeycomb)
+Message-ID: <20230320161100.GA2292748@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a1a1d17b-94fd-b53d-0850-c8f27440f0bd@linaro.org>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,97 +58,201 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add compatible for both PCIe found on SM8550.
-Also add the noc_aggr and cnoc_sf_axi clocks needed by the SM8550.
+[+cc NVMe folks]
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-Reviewed-by: Johan Hovold <johan+linaro@kernel.org>
----
-
-This patch is a resend of the following:
-https://lore.kernel.org/all/20230208180020.2761766-11-abel.vesa@linaro.org/
-
-No changes since then.
-
- drivers/pci/controller/dwc/pcie-qcom.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index a232b04af048..6a70c9c6f98d 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -182,10 +182,10 @@ struct qcom_pcie_resources_2_3_3 {
- 
- /* 6 clocks typically, 7 for sm8250 */
- struct qcom_pcie_resources_2_7_0 {
--	struct clk_bulk_data clks[12];
-+	struct clk_bulk_data clks[14];
- 	int num_clks;
- 	struct regulator_bulk_data supplies[2];
--	struct reset_control *pci_reset;
-+	struct reset_control *rst;
- };
- 
- struct qcom_pcie_resources_2_9_0 {
-@@ -1177,9 +1177,9 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	unsigned int idx;
- 	int ret;
- 
--	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
--	if (IS_ERR(res->pci_reset))
--		return PTR_ERR(res->pci_reset);
-+	res->rst = devm_reset_control_array_get_exclusive(dev);
-+	if (IS_ERR(res->rst))
-+		return PTR_ERR(res->rst);
- 
- 	res->supplies[0].supply = "vdda";
- 	res->supplies[1].supply = "vddpe-3v3";
-@@ -1205,9 +1205,11 @@ static int qcom_pcie_get_resources_2_7_0(struct qcom_pcie *pcie)
- 	res->clks[idx++].id = "ddrss_sf_tbu";
- 	res->clks[idx++].id = "aggre0";
- 	res->clks[idx++].id = "aggre1";
-+	res->clks[idx++].id = "noc_aggr";
- 	res->clks[idx++].id = "noc_aggr_4";
- 	res->clks[idx++].id = "noc_aggr_south_sf";
- 	res->clks[idx++].id = "cnoc_qx";
-+	res->clks[idx++].id = "cnoc_sf_axi";
- 
- 	num_opt_clks = idx - num_clks;
- 	res->num_clks = idx;
-@@ -1237,17 +1239,17 @@ static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
- 	if (ret < 0)
- 		goto err_disable_regulators;
- 
--	ret = reset_control_assert(res->pci_reset);
--	if (ret < 0) {
--		dev_err(dev, "cannot assert pci reset\n");
-+	ret = reset_control_assert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset assert failed (%d)\n", ret);
- 		goto err_disable_clocks;
- 	}
- 
- 	usleep_range(1000, 1500);
- 
--	ret = reset_control_deassert(res->pci_reset);
--	if (ret < 0) {
--		dev_err(dev, "cannot deassert pci reset\n");
-+	ret = reset_control_deassert(res->rst);
-+	if (ret) {
-+		dev_err(dev, "reset deassert failed (%d)\n", ret);
- 		goto err_disable_clocks;
- 	}
- 
-@@ -1841,6 +1843,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-sm8350", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie0", .data = &cfg_1_9_0 },
- 	{ .compatible = "qcom,pcie-sm8450-pcie1", .data = &cfg_1_9_0 },
-+	{ .compatible = "qcom,pcie-sm8550", .data = &cfg_1_9_0 },
- 	{ }
- };
- 
--- 
-2.34.1
-
+On Mon, Mar 20, 2023 at 12:58:52PM +0100, Marcin Juszkiewicz wrote:
+> During last week I had to shuffle some of my NVME drives between
+> systems. One of those systems is Solidrun Honeycomb which uses
+> LX2160A SoC.
+> 
+> The problem is that I am unable to use Samsung PM991 NVME there.
+> It is 2242 card so probably also DRAMless. Kernel says:
+> 
+> nvme 0004:01:00.0: Adding to iommu group 4
+> nvme nvme0: pci function 0004:01:00.0
+> nvme nvme0: missing or invalid SUBNQN field.
+> nvme nvme0: 1/0/0 default/read/poll queues
+> nvme 0004:01:00.0: VPD access failed.  This is likely a firmware bug on this device.  Contact the card vendor for a firmware update
+> 
+> The SUBNQN part can be handled by adding quirk in nvme/core.c file
+> but that does not change situation. It also does not appear when
+> used in x86-64 system.
+> 
+> Card is visible but only as PCIe device, no NVME block devices.
+> 
+> lspci says:
+> 
+> 0004:01:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd NVMe SSD Controller 980 [144d:a809] (prog-if 02 [NVM Express])
+>         Subsystem: Samsung Electronics Co Ltd NVMe SSD Controller 980 [144d:a801]
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0
+>         Interrupt: pin A routed to IRQ 106
+>         NUMA node: 0
+>         IOMMU group: 1
+>         Region 0: Memory at a400000000 (64-bit, non-prefetchable) [size=16K]
+>         Expansion ROM at a040000000 [disabled] [size=128K]
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [50] MSI: Enable- Count=1/32 Maskable- 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>         Capabilities: [70] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 15.000W
+>                 DevCtl: CorrErr- NonFatalErr- FatalErr- UnsupReq-
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+ FLReset-
+>                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+>                 DevSta: CorrErr- NonFatalErr- FatalErr- UnsupReq- AuxPwr- TransPend-
+>                 LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L1 <64us
+>                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk-
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 8GT/s (ok), Width x4 (ok)
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR+
+>                          10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+>                          FRS+ TPHComp- ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR- OBFF Disabled,
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS+
+>                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance De-emphasis: -6dB
+>                 LnkSta2: Current De-emphasis Level: -6dB, EqualizationComplete+ EqualizationPhase1+
+>                          EqualizationPhase2+ EqualizationPhase3+ LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [b0] MSI-X: Enable+ Count=13 Masked-
+>                 Vector table: BAR=0 offset=00003000
+>                 PBA: BAR=0 offset=00002000
+>         Capabilities: [d0] Vital Product Data
+>                 Not readable
+>         Capabilities: [100 v2] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+>                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+>                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 00000000 00000000 00000000 00000000
+>         Capabilities: [148 v1] Device Serial Number 00-00-00-00-00-00-00-00
+>         Capabilities: [158 v1] Power Budgeting <?>
+>         Capabilities: [168 v1] Secondary PCI Express
+>                 LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+>                 LaneErrStat: 0
+>         Capabilities: [188 v1] Latency Tolerance Reporting
+>                 Max snoop latency: 0ns
+>                 Max no snoop latency: 0ns
+>         Capabilities: [190 v1] L1 PM Substates
+>                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+>                           PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+>                 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+>                            T_CommonMode=0us LTR1.2_Threshold=0ns
+>                 L1SubCtl2: T_PwrOn=10us
+>         Capabilities: [1a0 v1] Dynamic Power Allocation <?>
+>         Capabilities: [1d0 v1] Readiness Time Reporting <?>
+>         Capabilities: [1dc v1] Vendor Specific Information: ID=0002 Rev=3 Len=100 <?>
+>         Capabilities: [2dc v1] Vendor Specific Information: ID=0001 Rev=1 Len=038 <?>
+>         Capabilities: [314 v1] Precision Time Measurement
+>                 PTMCap: Requester:+ Responder:- Root:-
+>                 PTMClockGranularity: Unimplemented
+>                 PTMControl: Enabled:- RootSelected:-
+>                 PTMEffectiveGranularity: Unknown
+>         Capabilities: [320 v1] Vendor Specific Information: ID=0003 Rev=1 Len=054 <?>
+>         Kernel driver in use: nvme
+>         Kernel modules: nvme
+> 
+> 
+> I am able to use it without issues on my AMD Ryzen 3 3600 system:
+> 
+> pci 0000:23:00.0: [144d:a809] type 00 class 0x010802
+> pci 0000:23:00.0: reg 0x10: [mem 0xfc900000-0xfc903fff 64bit]
+> pci_bus 0000:23: resource 1 [mem 0xfc900000-0xfc9fffff]
+> pci 0000:23:00.0: Adding to iommu group 24
+> nvme nvme2: pci function 0000:23:00.0
+> nvme nvme2: Shutdown timeout set to 8 seconds
+> nvme nvme2: allocated 64 MiB host memory buffer.
+> nvme nvme2: 12/0/0 default/read/poll queues
+>  nvme2n1: p1 p2 p3 p4 p5
+> 
+> 
+> Here lspci does not mention VPD part at all:
+> 
+> 23:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd NVMe SSD Controller 980 [144d:a809] (prog-if 02 [NVM Express])
+>         Subsystem: Samsung Electronics Co Ltd Device [144d:a801]
+>         Control: I/O- Mem+ BusMaster+ SpecCycle- MemWINV- VGASnoop- ParErr- Stepping- SERR- FastB2B- DisINTx+
+>         Status: Cap+ 66MHz- UDF- FastB2B- ParErr- DEVSEL=fast >TAbort- <TAbort- <MAbort- >SERR- <PERR- INTx-
+>         Latency: 0, Cache Line Size: 64 bytes
+>         Interrupt: pin A routed to IRQ 39
+>         NUMA node: 0
+>         IOMMU group: 24
+>         Region 0: Memory at fc900000 (64-bit, non-prefetchable) [size=16K]
+>         Capabilities: [40] Power Management version 3
+>                 Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0-,D1-,D2-,D3hot-,D3cold-)
+>                 Status: D0 NoSoftRst+ PME-Enable- DSel=0 DScale=0 PME-
+>         Capabilities: [50] MSI: Enable- Count=1/32 Maskable- 64bit+
+>                 Address: 0000000000000000  Data: 0000
+>         Capabilities: [70] Express (v2) Endpoint, MSI 00
+>                 DevCap: MaxPayload 256 bytes, PhantFunc 0, Latency L0s unlimited, L1 unlimited
+>                         ExtTag- AttnBtn- AttnInd- PwrInd- RBE+ FLReset+ SlotPowerLimit 0W
+>                 DevCtl: CorrErr+ NonFatalErr+ FatalErr+ UnsupReq+
+>                         RlxdOrd+ ExtTag- PhantFunc- AuxPwr- NoSnoop+ FLReset-
+>                         MaxPayload 128 bytes, MaxReadReq 512 bytes
+>                 DevSta: CorrErr+ NonFatalErr- FatalErr- UnsupReq+ AuxPwr- TransPend-
+>                 LnkCap: Port #0, Speed 8GT/s, Width x4, ASPM L1, Exit Latency L1 <64us
+>                         ClockPM+ Surprise- LLActRep- BwNot- ASPMOptComp+
+>                 LnkCtl: ASPM Disabled; RCB 64 bytes, Disabled- CommClk+
+>                         ExtSynch- ClockPM- AutWidDis- BWInt- AutBWInt-
+>                 LnkSta: Speed 8GT/s, Width x4
+>                         TrErr- Train- SlotClk+ DLActive- BWMgmt- ABWMgmt-
+>                 DevCap2: Completion Timeout: Range ABCD, TimeoutDis+ NROPrPrP- LTR+
+>                          10BitTagComp- 10BitTagReq- OBFF Not Supported, ExtFmt- EETLPPrefix-
+>                          EmergencyPowerReduction Not Supported, EmergencyPowerReductionInit-
+>                          FRS- TPHComp- ExtTPHComp-
+>                          AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+>                 DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis- LTR+ 10BitTagReq- OBFF Disabled,
+>                          AtomicOpsCtl: ReqEn-
+>                 LnkCap2: Supported Link Speeds: 2.5-8GT/s, Crosslink- Retimer- 2Retimers- DRS-
+>                 LnkCtl2: Target Link Speed: 8GT/s, EnterCompliance- SpeedDis-
+>                          Transmit Margin: Normal Operating Range, EnterModifiedCompliance- ComplianceSOS-
+>                          Compliance Preset/De-emphasis: -6dB de-emphasis, 0dB preshoot
+>                 LnkSta2: Current De-emphasis Level: -3.5dB, EqualizationComplete+ EqualizationPhase1+
+>                          EqualizationPhase2+ EqualizationPhase3+ LinkEqualizationRequest-
+>                          Retimer- 2Retimers- CrosslinkRes: unsupported
+>         Capabilities: [b0] MSI-X: Enable+ Count=13 Masked-
+>                 Vector table: BAR=0 offset=00003000
+>                 PBA: BAR=0 offset=00002000
+>         Capabilities: [100 v2] Advanced Error Reporting
+>                 UESta:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UEMsk:  DLP- SDES- TLP- FCP- CmpltTO- CmpltAbrt- UnxCmplt- RxOF- MalfTLP- ECRC- UnsupReq- ACSViol-
+>                 UESvrt: DLP+ SDES+ TLP- FCP+ CmpltTO- CmpltAbrt- UnxCmplt- RxOF+ MalfTLP+ ECRC- UnsupReq- ACSViol-
+>                 CESta:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr-
+>                 CEMsk:  RxErr- BadTLP- BadDLLP- Rollover- Timeout- AdvNonFatalErr+
+>                 AERCap: First Error Pointer: 00, ECRCGenCap+ ECRCGenEn- ECRCChkCap+ ECRCChkEn-
+>                         MultHdrRecCap+ MultHdrRecEn- TLPPfxPres- HdrLogCap-
+>                 HeaderLog: 00000000 00000000 00000000 00000000
+>         Capabilities: [148 v1] Device Serial Number 00-00-00-00-00-00-00-00
+>         Capabilities: [158 v1] Power Budgeting <?>
+>         Capabilities: [168 v1] Secondary PCI Express
+>                 LnkCtl3: LnkEquIntrruptEn- PerformEqu-
+>                 LaneErrStat: 0
+>         Capabilities: [188 v1] Latency Tolerance Reporting
+>                 Max snoop latency: 1048576ns
+>                 Max no snoop latency: 1048576ns
+>         Capabilities: [190 v1] L1 PM Substates
+>                 L1SubCap: PCI-PM_L1.2+ PCI-PM_L1.1+ ASPM_L1.2+ ASPM_L1.1+ L1_PM_Substates+
+>                           PortCommonModeRestoreTime=10us PortTPowerOnTime=10us
+>                 L1SubCtl1: PCI-PM_L1.2- PCI-PM_L1.1- ASPM_L1.2- ASPM_L1.1-
+>                            T_CommonMode=0us LTR1.2_Threshold=32768ns
+>                 L1SubCtl2: T_PwrOn=10us
+>         Kernel driver in use: nvme
+>         Kernel modules: nvme
+> 
+> 
+> Any idea what can be wrong? Other than usual "it is fault of
+> used PCI Express implementation".
+> 
+> NOTE: Honeycomb does not expose root ports to the OS.
