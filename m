@@ -2,156 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 280FE6C12F6
-	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 14:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0AE4E6C132D
+	for <lists+linux-pci@lfdr.de>; Mon, 20 Mar 2023 14:23:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231735AbjCTNRS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 09:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41648 "EHLO
+        id S231414AbjCTNXb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 09:23:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231747AbjCTNRK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 09:17:10 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A56623A5B;
-        Mon, 20 Mar 2023 06:16:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679318218; x=1710854218;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=3Bu5KEQ7VbEZVFxJWJ3dCxTl63qFR3TMO6ewhBoLJ+8=;
-  b=YG/JG+F3Aqb1j82yUubccWeA3qgzUxGZQyifGITwbZX5BqMTBtFM7zIX
-   hka5uYgFVTCRwkzK5oZLXN4KcCwNf5LEJ41pOqdXwpovzql4HwDwHhTxD
-   HqaVa44Uc0vBZ+47FXk8LWjrW9dnECrD3zWp+6AYeJcx5zOBTqQcyh52P
-   6Sk2NIz9mEPlBRxKJxbZ0PJaP6DU660vLaHvZYHF1FA2mqxz7HrulG1/H
-   2y4hrTfynGVcIJUe0xKS4UBYgZ/jTPUdnwoSXTCT8ZaJ2Xk/fQdgvMali
-   gbsj8Avz8gR5NV4jKKanwfcjtf5cq/42r4PfAGIXo6EX/60q0i5s6n5Zz
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="424932250"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="424932250"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 06:16:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10654"; a="674382651"
-X-IronPort-AV: E=Sophos;i="5.98,274,1673942400"; 
-   d="scan'208";a="674382651"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 20 Mar 2023 06:15:58 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 2B4BE638; Mon, 20 Mar 2023 15:16:44 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali@kernel.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org
-Cc:     Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Anatolij Gustschin <agust@denx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: [PATCH v6 4/4] pcmcia: Convert to use pci_bus_for_each_resource_p()
-Date:   Mon, 20 Mar 2023 15:16:33 +0200
-Message-Id: <20230320131633.61680-5-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230320131633.61680-1-andriy.shevchenko@linux.intel.com>
-References: <20230320131633.61680-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231732AbjCTNXY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 09:23:24 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3A12700;
+        Mon, 20 Mar 2023 06:23:21 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id o6-20020a17090a9f8600b0023f32869993so12550762pjp.1;
+        Mon, 20 Mar 2023 06:23:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679318600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LwCDKhpVotUuQMaBr5jTrfbX68cNb9ff470+ysZxzzQ=;
+        b=DbPUt+EfMJ+gN+n6cCxeLDCHK554tVu7xveqEz1ELZYrSZU538T3sIDkOC2iEjLIj3
+         vxyOtqP1ORPBGGeWWY46uhEHukWiZdqTrcJYK4WmRBV+BqNwsat4pGHhP2lpFDF6X8qY
+         wBmIMBPiigRbDggFkUwax/ZeAKqVtNKlUN7cLHY58OLU9kqmdvMT70JBWt3eNt0b6chR
+         9o8ugYkJBCfDbaPcUQ4/rc0MjCMCgNjWj+2RYSMV4u2rVtzUGNU0GTJk1Nt6ypxmTN9A
+         HRbkkDGmm7Xir+AWDuEMejFwBSvZp0Vqijsia2SVlSi3FPDyy4xAD4239RbBglvz8Ds/
+         Ynow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679318600;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LwCDKhpVotUuQMaBr5jTrfbX68cNb9ff470+ysZxzzQ=;
+        b=LwVGFqdirmwgB2zMNLQM/y/VhtGJBVP/4pGZWQoVAaviilX7VJfoW26awcJz0jAYbI
+         10onTQgrZeImbOtG7b8oMMS3DV+ItLeeZVZdDNxTTxy1ksMjwKhYql9D/Fy4FbDRlnJ0
+         6mHOKb7ws0RmGnatenb/RqgvFOSBUxW4mpm9SBDb3uMlSuHy5gxnb5t3rZNRFh9dTn9H
+         glDmQSWQh2zWMXM+Xqw8HnBoxG00ZpFIpQmdvg3lixf4T5kMynrEOVlab9yELXiUeKLH
+         3F0uB5S8Remqrq/gBd7IEMG6NQwTQkoaIFsrJEI42Jp2Dmv1t++rYJt6RG8SaTsen+vx
+         MqWw==
+X-Gm-Message-State: AO0yUKUlh2MbdCFNRKwYeOidRzcYSHI2skSUeZvSinovnB7zW8GH9qXQ
+        xzqJd+tk5fbdBLc+fmEVhPk=
+X-Google-Smtp-Source: AK7set8aYmCTfdKijx/Xv5EdBgScVTAJQugwVEr8ZpKjCsLK3YBjTocbHsvANkrz6b03DDcBWUhaGQ==
+X-Received: by 2002:a17:90b:380d:b0:232:fa13:4453 with SMTP id mq13-20020a17090b380d00b00232fa134453mr19012364pjb.13.1679318600483;
+        Mon, 20 Mar 2023 06:23:20 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.141.4])
+        by smtp.gmail.com with ESMTPSA id a19-20020a17090aa51300b00233db0db3dfsm9824478pjq.7.2023.03.20.06.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Mar 2023 06:23:20 -0700 (PDT)
+From:   korantwork@gmail.com
+To:     helgaas@kernel.org, nirmal.patel@linux.intel.com,
+        kbusch@kernel.org, jonathan.derrick@linux.dev,
+        lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
+Subject: [PATCH v4] PCI: vmd: Add the module param to adjust MSI mode
+Date:   Mon, 20 Mar 2023 21:23:16 +0800
+Message-Id: <20230320132316.3126838-1-korantwork@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The pci_bus_for_each_resource_p() hides the iterator loop since
-it may be not used otherwise. With this, we may drop that iterator
-variable definition.
+From: Xinghui Li <korantli@tencent.com>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
-Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
+In the legacy, the vmd MSI mode can only be adjusted by configuring
+vmd_ids table. This patch adds another way to adjust MSI mode by
+adjusting module param, which allows users easier to adjust the vmd
+according to the I/O scenario without rebuilding driver. There are two
+params that could be recognized: on, off. The default param is NULL,
+the goal is not to effect the existing settings of the device.
+
+Signed-off-by: Xinghui Li <korantli@tencent.com>
+Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
 ---
- drivers/pcmcia/rsrc_nonstatic.c | 9 +++------
- drivers/pcmcia/yenta_socket.c   | 3 +--
- 2 files changed, 4 insertions(+), 8 deletions(-)
+ drivers/pci/controller/vmd.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/pcmcia/rsrc_nonstatic.c b/drivers/pcmcia/rsrc_nonstatic.c
-index ad1141fddb4c..9d92d4bb6239 100644
---- a/drivers/pcmcia/rsrc_nonstatic.c
-+++ b/drivers/pcmcia/rsrc_nonstatic.c
-@@ -934,7 +934,7 @@ static int adjust_io(struct pcmcia_socket *s, unsigned int action, unsigned long
- static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
- {
- 	struct resource *res;
--	int i, done = 0;
-+	int done = 0;
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 990630ec57c6..fb61181baa9e 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -34,6 +34,19 @@
+ #define MB2_SHADOW_OFFSET	0x2000
+ #define MB2_SHADOW_SIZE		16
  
- 	if (!s->cb_dev || !s->cb_dev->bus)
- 		return -ENODEV;
-@@ -960,12 +960,9 @@ static int nonstatic_autoadd_resources(struct pcmcia_socket *s)
- 	 */
- 	if (s->cb_dev->bus->number == 0)
- 		return -EINVAL;
--
--	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
--		res = s->cb_dev->bus->resource[i];
--#else
--	pci_bus_for_each_resource(s->cb_dev->bus, res, i) {
- #endif
++/*
++ * The VMD msi_remap module parameter provides the alternative way
++ * to adjust MSI mode when loading vmd.ko other than vmd_ids table.
++ * There are two params could be recognized:
++ *
++ * off: disable MSI remapping
++ * on:  enable MSI remapping
++ *
++ */
++static char *msi_remap;
++module_param(msi_remap, charp, 0444);
++MODULE_PARM_DESC(msi_remap, "Whether to enable MSI remapping function");
 +
-+	pci_bus_for_each_resource_p(s->cb_dev->bus, res) {
- 		if (!res)
- 			continue;
+ enum vmd_features {
+ 	/*
+ 	 * Device may contain registers which hint the physical location of the
+@@ -875,6 +888,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 			return ret;
  
-diff --git a/drivers/pcmcia/yenta_socket.c b/drivers/pcmcia/yenta_socket.c
-index 1365eaa20ff4..2e5bdf3db0ba 100644
---- a/drivers/pcmcia/yenta_socket.c
-+++ b/drivers/pcmcia/yenta_socket.c
-@@ -673,9 +673,8 @@ static int yenta_search_res(struct yenta_socket *socket, struct resource *res,
- 			    u32 min)
+ 		vmd_set_msi_remapping(vmd, true);
++		dev_info(&vmd->dev->dev, "init vmd with remapping MSI\n");
+ 
+ 		ret = vmd_create_irq_domain(vmd);
+ 		if (ret)
+@@ -887,6 +901,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
+ 	} else {
+ 		vmd_set_msi_remapping(vmd, false);
++		dev_info(&vmd->dev->dev, "init vmd with bypass MSI\n");
+ 	}
+ 
+ 	pci_add_resource(&resources, &vmd->resources[0]);
+@@ -955,6 +970,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+ 	return 0;
+ }
+ 
++static void vmd_config_msi_remap_param(unsigned long *features)
++{
++	if (msi_remap) {
++		if (strcmp(msi_remap, "on") == 0)
++			*features &= ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
++		else if (strcmp(msi_remap, "off") == 0)
++			*features |= VMD_FEAT_CAN_BYPASS_MSI_REMAP;
++	}
++}
++
+ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
  {
- 	struct resource *root;
--	int i;
+ 	unsigned long features = (unsigned long) id->driver_data;
+@@ -984,6 +1009,8 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	if (err < 0)
+ 		goto out_release_instance;
  
--	pci_bus_for_each_resource(socket->dev->bus, root, i) {
-+	pci_bus_for_each_resource_p(socket->dev->bus, root) {
- 		if (!root)
- 			continue;
- 
++	vmd_config_msi_remap_param(&features);
++
+ 	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
+ 	if (!vmd->cfgbar) {
+ 		err = -ENOMEM;
 -- 
-2.39.2
+2.31.1
 
