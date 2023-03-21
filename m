@@ -2,184 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E8B906C317A
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 13:21:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1749E6C31D4
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 13:38:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbjCUMVo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Mar 2023 08:21:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37676 "EHLO
+        id S229808AbjCUMid (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Mar 2023 08:38:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230281AbjCUMVn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 08:21:43 -0400
-Received: from out-57.mta1.migadu.com (out-57.mta1.migadu.com [IPv6:2001:41d0:203:375::39])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42F743BC5B
-        for <linux-pci@vger.kernel.org>; Tue, 21 Mar 2023 05:21:39 -0700 (PDT)
-Date:   Tue, 21 Mar 2023 20:21:33 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1679401296;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=xi9MruAkMuQYGbZmcpZDA5aQgOaeaz4Z4ph3C28IFIY=;
-        b=xGBOXlZncLvbDTu1dw7ccsIR6XIkqj1wQ2+JUrQDQkc9MjNzo/b5Jg13eFi3GmE1DCfqjZ
-        py7XhQj4MYdgevkSEMtQOvX1bgqe6rFMZ9vh1CJd0tGexmmcwQyrkJ5Ic0pA/7bsXFp+vU
-        pzPvYFch+6sBAGtWEiEf9Pd8t1SvGxo=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v7 0/5] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <ZBmhTch4d2CG4TtH@chq-MS-7D45>
-References: <20230315012840.6986-1-cai.huoqing@linux.dev>
- <20230320121401.zkcjbqmghzacpffh@mobilestation>
- <ZBkXEzoZZlIy18xB@chq-MS-7D45>
- <20230321083407.5gc432ttjhwbi2um@mobilestation>
+        with ESMTP id S229634AbjCUMic (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 08:38:32 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 443383A89;
+        Tue, 21 Mar 2023 05:38:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679402308; x=1710938308;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=grkzZTfxbepPQpIIZtj3sIRJT5IRKvQUYOcRRo5Vy/A=;
+  b=EHTEK93x5lrl8ILe3StWciCYbCagGOrCS4QYIoVYzEVZKgGocsyxPn5Y
+   JrAG84vEMI3Iilw7ZZZwYMYRmNd++f0LuZntEBgRhCFQZ/JFkAGlAwgAG
+   y8oyxXy4ozD7hxebg1ydvPzfWPC0AlfR8lqa5X19fHk6sde1gbrzOV4L0
+   GofRLSIdPOZTQyNTfbgXu9TxkfOjTc4+FVVxhSBBlrxI1c8ephdnJ3dPH
+   vSxky6PQefxapz2C6kKDdJ5juDCi9/PNCqi1Ys+gGxEgNwE4KwqtcWIke
+   6FRggIUIhnGWI4JX6B/PvtCOl92GMwpScsexUWIGrqihGxzTn+jt3GxEb
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="319316550"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="319316550"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 05:38:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="792066007"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="792066007"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
+  by fmsmga002.fm.intel.com with SMTP; 21 Mar 2023 05:38:21 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Tue, 21 Mar 2023 14:38:21 +0200
+Date:   Tue, 21 Mar 2023 14:38:20 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     "David E. Box" <david.e.box@linux.intel.com>
+Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
+        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
+        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
+        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
+Subject: Re: [PATCH V10 4/4] PCI: vmd: Add quirk to configure PCIe ASPM and
+ LTR
+Message-ID: <ZBmlPIU4FIBU7HU1@intel.com>
+References: <20230120031522.2304439-1-david.e.box@linux.intel.com>
+ <20230120031522.2304439-5-david.e.box@linux.intel.com>
+ <ZBjko/ifunIwsK2v@intel.com>
+ <8675a80b311443d3c3ed99e09832bd07355bfcc2.camel@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230321083407.5gc432ttjhwbi2um@mobilestation>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <8675a80b311443d3c3ed99e09832bd07355bfcc2.camel@linux.intel.com>
+X-Patchwork-Hint: comment
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 21 3æœˆ 23 11:34:07, Serge Semin wrote:
-> On Tue, Mar 21, 2023 at 10:31:47AM +0800, Cai Huoqing wrote:
-> > On 20 3æœˆ 23 15:14:01, Serge Semin wrote:
-> > > Hi Cai
-> > > 
-> > > On Wed, Mar 15, 2023 at 09:28:31AM +0800, Cai Huoqing wrote:
-> > > > Add support for HDMA NATIVE, as long the IP design has set
-> > > > the compatible register map parameter-HDMA_NATIVE,
-> > > > which allows compatibility for native HDMA register configuration.
-> > > > 
-> > > > The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> > > > And the native HDMA registers are different from eDMA,
-> > > > so this patch add support for HDMA NATIVE mode.
-> > > > 
-> > > > HDMA write and read channels operate independently to maximize
-> > > > the performance of the HDMA read and write data transfer over
-> > > > the link When you configure the HDMA with multiple read channels,
-> > > > then it uses a round robin (RR) arbitration scheme to select
-> > > > the next read channel to be serviced.The same applies when
-> > > > youhave multiple write channels.
-> > > > 
-> > > > The native HDMA driver also supports a maximum of 16 independent
-> > > > channels (8 write + 8 read), which can run simultaneously.
-> > > > Both SAR (Source Address Register) and DAR (Destination Address Register)
-> > > > are aligned to byte.
-> > > 
-> > > It seems like we are getting towards the series finalization. I'll
-> > > test it out on my HW after v8 is submitted. Meanwhile could you please
-> > > clarify whether you have a real device with DW HDMA engine on board?
-> > 
+On Mon, Mar 20, 2023 at 07:24:16PM -0700, David E. Box wrote:
+> Hi,
 > 
-> > Our hardware is an AI Accelerartor(PCIE Card).
-> > 
-> > The device pci.ids is 1d22:3864
-> > in https://github.com/pciutils/pciids/blob/master/pci.ids
-> > line 24737,
-> > 
-> > "1d22  Baidu Technology
-> >         3684  Kunlun AI Accelerator
-> >         3685  Kunlun2 AI Accelerator [VF]"
-> > 
-> > And our device driver is not ready to upstream(will cost serveral
-> > 
-> > months to port DRM etc.),
+> On Tue, 2023-03-21 at 00:56 +0200, Ville Syrjälä wrote:
+> > On Thu, Jan 19, 2023 at 07:15:22PM -0800, David E. Box wrote:
+> > > +/*
+> > > + * Enable ASPM and LTR settings on devices that aren't configured by BIOS.
+> > > + */
+> > > +static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
+> > > +{
+> > > +       unsigned long features = *(unsigned long *)userdata;
+> > > +       u16 ltr = VMD_BIOS_PM_QUIRK_LTR;
+> > > +       u32 ltr_reg;
+> > > +       int pos;
+> > > +
+> > > +       if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
+> > > +               return 0;
+> > > +
+> > > +       pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
 > 
-> Ok. Thanks for clarification. Could you please add me to the Cc-list of
-> the AI-accelerator patch when it's ready to be submitted for review. I am
-> not that familiar with the DRM-part, but would like to have a look at
-> the DMA-related code.
-Sure, I'll Cc you if I send the patches.
+> We call pci_enable_link_state from a callback that's run during pci_walk_bus()
+> which I see already acquires the semaphore. We've had this patch for well over a
+> year and I haven't seen this issue before. Is there a particular config needed
+> to reproduce it?
 
-By the way, Why use native hdma:
+Not sure what would affect it, beyond the normal PROVE_LOCKING=y.
 
-Our device v1 also use dw-edma. But we find that navtive HDMA work better
-
-in SRIOV on, channel CSR can be map to every VF instead of some global
-
-regiter must in PF. So v2 use native hdma.
-
-Thanks,
--Cai
+This is the .config our CI uses:
+https://gitlab.freedesktop.org/gfx-ci/i915-infra/-/blob/master/kconfig/debug
 
 > 
-> -Serge(y)
+> As far as a solution I think we can copy what __pci_disable_link_state() does
+> and add a bool argument so that we only do down/up on the semaphore when set to
+> true. Since we know we will in be the lock during the bus walk we can set it to
+> false.
+> 
+> David
 > 
 > > 
-> > but I have taken this DW eDMA core into our driver test.
+> > Hi,
 > > 
-> > Thanks
-> > Cai-
+> > This is tripping lockdep on one our CI ADL machines.
 > > 
-> > > You keep submitting the DW eDMA driver core update, but there is no
-> > > glue-driver or low-level device driver patch for a real device which
-> > > would set the EDMA_MF_HDMA_NATIVE mapping.
-> > > 
-> > > -Serge(y)
-> > > 
-> > > > 
-> > > > Cai Huoqing (2):
-> > > >   dmaengine: dw-edma: Add support for native HDMA
-> > > >   dmaengine: dw-edma: Optimization in dw_edma_v0_core_handle_int
-> > > > 
-> > > > Cai huoqing (3):
-> > > >   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
-> > > >     dw_edma_plat_ops
-> > > >   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
-> > > >     abstract controller operation
-> > > >   dmaengine: dw-edma: Add HDMA DebugFS support
-> > > > 
-> > > > v6->v7:
-> > > >   [1/5]
-> > > >   1.Update the commit log.
-> > > >   [2/5]
-> > > >   2.Revert dw_edma_core_handle_int back to dw-edma-core.h.
-> > > >   3.Fix code style.
-> > > >   [3/5]
-> > > >   4.Move the change of register file from patch[4/5] to patch[3/5].
-> > > >   5.Fix code style.
-> > > > 
-> > > > v6 link:
-> > > >   https://lore.kernel.org/lkml/20230310032342.17395-1-cai.huoqing@linux.dev/
-> > > > 
-> > > >  drivers/dma/dw-edma/Makefile                 |   8 +-
-> > > >  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
-> > > >  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
-> > > >  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.c        |  91 ++++--
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 277 +++++++++++++++++++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 176 ++++++++++++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 130 +++++++++
-> > > >  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
-> > > >  include/linux/dma/edma.h                     |   7 +-
-> > > >  13 files changed, 785 insertions(+), 107 deletions(-)
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> > > > 
-> > > > -- 
-> > > > 2.34.1
-> > > > 
+> > https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_12814/bat-adlp-6/boot0.txt
+> > 
+> > <4>[   13.815380] ============================================
+> > <4>[   13.815382] WARNING: possible recursive locking detected
+> > <4>[   13.815384] 6.3.0-rc1-CI_DRM_12814-g4753bbc2a817+ #1 Not tainted
+> > <4>[   13.815386] --------------------------------------------
+> > <4>[   13.815387] swapper/0/1 is trying to acquire lock:
+> > <4>[   13.815389] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at:
+> > pci_enable_link_state+0x69/0x1d0
+> > <4>[   13.815396] 
+> >                   but task is already holding lock:
+> > <4>[   13.815398] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at:
+> > pci_walk_bus+0x24/0x90
+> > <4>[   13.815403] 
+> >                   other info that might help us debug this:
+> > <4>[   13.815404]  Possible unsafe locking scenario:
+> > 
+> > <4>[   13.815406]        CPU0
+> > <4>[   13.815407]        ----
+> > <4>[   13.815408]   lock(pci_bus_sem);
+> > <4>[   13.815410]   lock(pci_bus_sem);
+> > <4>[   13.815411] 
+> >                    *** DEADLOCK ***
+> > 
+> > <4>[   13.815413]  May be due to missing lock nesting notation
+> > 
+> > <4>[   13.815414] 2 locks held by swapper/0/1:
+> > <4>[   13.815416]  #0: ffff8881029511b8 (&dev->mutex){....}-{3:3}, at:
+> > __driver_attach+0xab/0x180
+> > <4>[   13.815422]  #1: ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, at:
+> > pci_walk_bus+0x24/0x90
+> > <4>[   13.815426] 
+> >                   stack backtrace:
+> > <4>[   13.815428] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.3.0-rc1-
+> > CI_DRM_12814-g4753bbc2a817+ #1
+> > <4>[   13.815431] Hardware name: Intel Corporation Alder Lake Client
+> > Platform/AlderLake-P DDR4 RVP, BIOS ADLPFWI1.R00.3135.A00.2203251419
+> > 03/25/2022
+> > <4>[   13.815434] Call Trace:
+> > <4>[   13.815436]  <TASK>
+> > <4>[   13.815437]  dump_stack_lvl+0x64/0xb0
+> > <4>[   13.815443]  __lock_acquire+0x9b5/0x2550
+> > <4>[   13.815461]  lock_acquire+0xd7/0x330
+> > <4>[   13.815463]  ? pci_enable_link_state+0x69/0x1d0
+> > <4>[   13.815466]  down_read+0x3d/0x180
+> > <4>[   13.815480]  ? pci_enable_link_state+0x69/0x1d0
+> > <4>[   13.815482]  pci_enable_link_state+0x69/0x1d0
+> > <4>[   13.815485]  ? __pfx_vmd_pm_enable_quirk+0x10/0x10
+> > <4>[   13.815488]  vmd_pm_enable_quirk+0x49/0xb0
+> > <4>[   13.815490]  pci_walk_bus+0x6d/0x90
+> > <4>[   13.815492]  vmd_probe+0x75f/0x9d0
+> > <4>[   13.815495]  pci_device_probe+0x95/0x120
+> > <4>[   13.815498]  really_probe+0x164/0x3c0
+> > <4>[   13.815500]  ? __pfx___driver_attach+0x10/0x10
+> > <4>[   13.815503]  __driver_probe_device+0x73/0x170
+> > <4>[   13.815506]  driver_probe_device+0x19/0xa0
+> > <4>[   13.815508]  __driver_attach+0xb6/0x180
+> > <4>[   13.815511]  ? __pfx___driver_attach+0x10/0x10
+> > <4>[   13.815513]  bus_for_each_dev+0x77/0xd0
+> > <4>[   13.815516]  bus_add_driver+0x114/0x210
+> > <4>[   13.815518]  driver_register+0x5b/0x110
+> > <4>[   13.815520]  ? __pfx_vmd_drv_init+0x10/0x10
+> > <4>[   13.815523]  do_one_initcall+0x57/0x330
+> > <4>[   13.815527]  kernel_init_freeable+0x181/0x3a0
+> > <4>[   13.815529]  ? __pfx_kernel_init+0x10/0x10
+> > <4>[   13.815532]  kernel_init+0x15/0x120
+> > <4>[   13.815534]  ret_from_fork+0x29/0x50
+> > <4>[   13.815537]  </TASK>
+> > 
+
+-- 
+Ville Syrjälä
+Intel
