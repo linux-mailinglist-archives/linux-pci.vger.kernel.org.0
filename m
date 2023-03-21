@@ -2,207 +2,158 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CC0086C2811
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 03:24:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EF056C2839
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 03:32:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229847AbjCUCYW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 20 Mar 2023 22:24:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41796 "EHLO
+        id S229927AbjCUCcP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 20 Mar 2023 22:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229841AbjCUCYU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 22:24:20 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A582F28D31;
-        Mon, 20 Mar 2023 19:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679365458; x=1710901458;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=wGD34Lsi+DFpGzDmJKkZUVXu8aHEF26e1mtU6ODAncY=;
-  b=Y3+/WNquutHlBhr/+oBBhIMZ5JfKHjEMPynDiOInteyyDzzNV1BtPHTU
-   l84D7izXK6leVp7VCctER63VAvoMMhO5gVLmEbDbbYSw9u+isPuAwkfz0
-   G2Z+uMA65/3iqqxLUBw1JkEB9/Z0mAN8MnKJgh2z/4TVHQUGcR0mqcicb
-   MORb87z2Xq7y8IF7QtVo2ubkf4/epDfmeaS/D+QTVvyyN+2kzXmjzxRMf
-   aNXuS8gWCAbeoWAjU9e1pYWgHBTQRpNHsLJpwsMarSDaiE5hqjEgSjLhT
-   R70IQEzzdf+YBWeLcrreFF+x5nGAeAJvltq4MJ6FbGkpeSUtTfzUvRkOE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="401403700"
-X-IronPort-AV: E=Sophos;i="5.98,277,1673942400"; 
-   d="scan'208";a="401403700"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2023 19:24:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="711620196"
-X-IronPort-AV: E=Sophos;i="5.98,277,1673942400"; 
-   d="scan'208";a="711620196"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga008.jf.intel.com with ESMTP; 20 Mar 2023 19:24:17 -0700
-Received: from sarkarbi-mobl1.amr.corp.intel.com (unknown [10.251.19.209])
-        by linux.intel.com (Postfix) with ESMTP id 1BD5D580677;
-        Mon, 20 Mar 2023 19:24:17 -0700 (PDT)
-Message-ID: <8675a80b311443d3c3ed99e09832bd07355bfcc2.camel@linux.intel.com>
-Subject: Re: [PATCH V10 4/4] PCI: vmd: Add quirk to configure PCIe ASPM and
- LTR
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-Cc:     nirmal.patel@linux.intel.com, jonathan.derrick@linux.dev,
-        lorenzo.pieralisi@arm.com, hch@infradead.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, michael.a.bottini@intel.com,
-        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org
-Date:   Mon, 20 Mar 2023 19:24:16 -0700
-In-Reply-To: <ZBjko/ifunIwsK2v@intel.com>
-References: <20230120031522.2304439-1-david.e.box@linux.intel.com>
-         <20230120031522.2304439-5-david.e.box@linux.intel.com>
-         <ZBjko/ifunIwsK2v@intel.com>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        with ESMTP id S229896AbjCUCcO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 20 Mar 2023 22:32:14 -0400
+Received: from out-57.mta0.migadu.com (out-57.mta0.migadu.com [IPv6:2001:41d0:1004:224b::39])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61180399F2
+        for <linux-pci@vger.kernel.org>; Mon, 20 Mar 2023 19:31:54 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 10:31:47 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1679365911;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vH8g1u/isyRONRi7xFZiLBJKBxPjGqE0tRMeBX5v3EI=;
+        b=d6b8zRinkJjb6+k0mGh5XeaoO4+JSi5euPs8baVtYhIAP9YVFg+DpdDTjwYHNkeik6dVkF
+        41qzIBxUiQrY5CR/bnxZLMqg/WrvCijvnuHKUqflXWfOBHTy+qbtAWkxctIN5Zg7Xvvxzh
+        /tLc62XEko12D/AsqOtyHq4gZDJCp04=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v7 0/5] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <ZBkXEzoZZlIy18xB@chq-MS-7D45>
+References: <20230315012840.6986-1-cai.huoqing@linux.dev>
+ <20230320121401.zkcjbqmghzacpffh@mobilestation>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230320121401.zkcjbqmghzacpffh@mobilestation>
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On 20 3月 23 15:14:01, Serge Semin wrote:
+> Hi Cai
+> 
+> On Wed, Mar 15, 2023 at 09:28:31AM +0800, Cai Huoqing wrote:
+> > Add support for HDMA NATIVE, as long the IP design has set
+> > the compatible register map parameter-HDMA_NATIVE,
+> > which allows compatibility for native HDMA register configuration.
+> > 
+> > The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> > And the native HDMA registers are different from eDMA,
+> > so this patch add support for HDMA NATIVE mode.
+> > 
+> > HDMA write and read channels operate independently to maximize
+> > the performance of the HDMA read and write data transfer over
+> > the link When you configure the HDMA with multiple read channels,
+> > then it uses a round robin (RR) arbitration scheme to select
+> > the next read channel to be serviced.The same applies when
+> > youhave multiple write channels.
+> > 
+> > The native HDMA driver also supports a maximum of 16 independent
+> > channels (8 write + 8 read), which can run simultaneously.
+> > Both SAR (Source Address Register) and DAR (Destination Address Register)
+> > are aligned to byte.
+> 
+> It seems like we are getting towards the series finalization. I'll
+> test it out on my HW after v8 is submitted. Meanwhile could you please
+> clarify whether you have a real device with DW HDMA engine on board?
 
-On Tue, 2023-03-21 at 00:56 +0200, Ville Syrj=C3=A4l=C3=A4 wrote:
-> On Thu, Jan 19, 2023 at 07:15:22PM -0800, David E. Box wrote:
-> > +/*
-> > + * Enable ASPM and LTR settings on devices that aren't configured by B=
-IOS.
-> > + */
-> > +static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> > +{
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0unsigned long features =3D *=
-(unsigned long *)userdata;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u16 ltr =3D VMD_BIOS_PM_QUIR=
-K_LTR;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 ltr_reg;
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0int pos;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!(features & VMD_FEAT_BI=
-OS_PM_QUIRK))
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0return 0;
-> > +
-> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_enable_link_state(pdev, =
-PCIE_LINK_STATE_ALL);
+Our hardware is an AI Accelerartor(PCIE Card).
 
-We call pci_enable_link_state from a callback that's run during pci_walk_bu=
-s()
-which I see already acquires the semaphore. We've had this patch for well o=
-ver a
-year and I haven't seen this issue before. Is there a particular config nee=
-ded
-to reproduce it?
+The device pci.ids is 1d22:3864
+in https://github.com/pciutils/pciids/blob/master/pci.ids
+line 24737,
 
-As far as a solution I think we can copy what __pci_disable_link_state() do=
-es
-and add a bool argument so that we only do down/up on the semaphore when se=
-t to
-true. Since we know we will in be the lock during the bus walk we can set i=
-t to
-false.
+"1d22  Baidu Technology
+        3684  Kunlun AI Accelerator
+        3685  Kunlun2 AI Accelerator [VF]"
 
-David
+And our device driver is not ready to upstream(will cost serveral
 
->=20
-> Hi,
->=20
-> This is tripping lockdep on one our CI ADL machines.
->=20
-> https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_12814/bat-adlp-6/boot0.tx=
-t
->=20
-> <4>[=C2=A0=C2=A0 13.815380] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> <4>[=C2=A0=C2=A0 13.815382] WARNING: possible recursive locking detected
-> <4>[=C2=A0=C2=A0 13.815384] 6.3.0-rc1-CI_DRM_12814-g4753bbc2a817+ #1 Not =
-tainted
-> <4>[=C2=A0=C2=A0 13.815386] --------------------------------------------
-> <4>[=C2=A0=C2=A0 13.815387] swapper/0/1 is trying to acquire lock:
-> <4>[=C2=A0=C2=A0 13.815389] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, a=
-t:
-> pci_enable_link_state+0x69/0x1d0
-> <4>[=C2=A0=C2=A0 13.815396]=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 but task is already holding lock:
-> <4>[=C2=A0=C2=A0 13.815398] ffffffff827ab0b0 (pci_bus_sem){++++}-{3:3}, a=
-t:
-> pci_walk_bus+0x24/0x90
-> <4>[=C2=A0=C2=A0 13.815403]=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 other info that might help us debug this:
-> <4>[=C2=A0=C2=A0 13.815404]=C2=A0 Possible unsafe locking scenario:
->=20
-> <4>[=C2=A0=C2=A0 13.815406]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 CPU=
-0
-> <4>[=C2=A0=C2=A0 13.815407]=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ---=
--
-> <4>[=C2=A0=C2=A0 13.815408]=C2=A0=C2=A0 lock(pci_bus_sem);
-> <4>[=C2=A0=C2=A0 13.815410]=C2=A0=C2=A0 lock(pci_bus_sem);
-> <4>[=C2=A0=C2=A0 13.815411]=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 *** DEADLOCK ***
->=20
-> <4>[=C2=A0=C2=A0 13.815413]=C2=A0 May be due to missing lock nesting nota=
-tion
->=20
-> <4>[=C2=A0=C2=A0 13.815414] 2 locks held by swapper/0/1:
-> <4>[=C2=A0=C2=A0 13.815416]=C2=A0 #0: ffff8881029511b8 (&dev->mutex){....=
-}-{3:3}, at:
-> __driver_attach+0xab/0x180
-> <4>[=C2=A0=C2=A0 13.815422]=C2=A0 #1: ffffffff827ab0b0 (pci_bus_sem){++++=
-}-{3:3}, at:
-> pci_walk_bus+0x24/0x90
-> <4>[=C2=A0=C2=A0 13.815426]=20
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 stack backtrace:
-> <4>[=C2=A0=C2=A0 13.815428] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 6.3=
-.0-rc1-
-> CI_DRM_12814-g4753bbc2a817+ #1
-> <4>[=C2=A0=C2=A0 13.815431] Hardware name: Intel Corporation Alder Lake C=
-lient
-> Platform/AlderLake-P DDR4 RVP, BIOS ADLPFWI1.R00.3135.A00.2203251419
-> 03/25/2022
-> <4>[=C2=A0=C2=A0 13.815434] Call Trace:
-> <4>[=C2=A0=C2=A0 13.815436]=C2=A0 <TASK>
-> <4>[=C2=A0=C2=A0 13.815437]=C2=A0 dump_stack_lvl+0x64/0xb0
-> <4>[=C2=A0=C2=A0 13.815443]=C2=A0 __lock_acquire+0x9b5/0x2550
-> <4>[=C2=A0=C2=A0 13.815461]=C2=A0 lock_acquire+0xd7/0x330
-> <4>[=C2=A0=C2=A0 13.815463]=C2=A0 ? pci_enable_link_state+0x69/0x1d0
-> <4>[=C2=A0=C2=A0 13.815466]=C2=A0 down_read+0x3d/0x180
-> <4>[=C2=A0=C2=A0 13.815480]=C2=A0 ? pci_enable_link_state+0x69/0x1d0
-> <4>[=C2=A0=C2=A0 13.815482]=C2=A0 pci_enable_link_state+0x69/0x1d0
-> <4>[=C2=A0=C2=A0 13.815485]=C2=A0 ? __pfx_vmd_pm_enable_quirk+0x10/0x10
-> <4>[=C2=A0=C2=A0 13.815488]=C2=A0 vmd_pm_enable_quirk+0x49/0xb0
-> <4>[=C2=A0=C2=A0 13.815490]=C2=A0 pci_walk_bus+0x6d/0x90
-> <4>[=C2=A0=C2=A0 13.815492]=C2=A0 vmd_probe+0x75f/0x9d0
-> <4>[=C2=A0=C2=A0 13.815495]=C2=A0 pci_device_probe+0x95/0x120
-> <4>[=C2=A0=C2=A0 13.815498]=C2=A0 really_probe+0x164/0x3c0
-> <4>[=C2=A0=C2=A0 13.815500]=C2=A0 ? __pfx___driver_attach+0x10/0x10
-> <4>[=C2=A0=C2=A0 13.815503]=C2=A0 __driver_probe_device+0x73/0x170
-> <4>[=C2=A0=C2=A0 13.815506]=C2=A0 driver_probe_device+0x19/0xa0
-> <4>[=C2=A0=C2=A0 13.815508]=C2=A0 __driver_attach+0xb6/0x180
-> <4>[=C2=A0=C2=A0 13.815511]=C2=A0 ? __pfx___driver_attach+0x10/0x10
-> <4>[=C2=A0=C2=A0 13.815513]=C2=A0 bus_for_each_dev+0x77/0xd0
-> <4>[=C2=A0=C2=A0 13.815516]=C2=A0 bus_add_driver+0x114/0x210
-> <4>[=C2=A0=C2=A0 13.815518]=C2=A0 driver_register+0x5b/0x110
-> <4>[=C2=A0=C2=A0 13.815520]=C2=A0 ? __pfx_vmd_drv_init+0x10/0x10
-> <4>[=C2=A0=C2=A0 13.815523]=C2=A0 do_one_initcall+0x57/0x330
-> <4>[=C2=A0=C2=A0 13.815527]=C2=A0 kernel_init_freeable+0x181/0x3a0
-> <4>[=C2=A0=C2=A0 13.815529]=C2=A0 ? __pfx_kernel_init+0x10/0x10
-> <4>[=C2=A0=C2=A0 13.815532]=C2=A0 kernel_init+0x15/0x120
-> <4>[=C2=A0=C2=A0 13.815534]=C2=A0 ret_from_fork+0x29/0x50
-> <4>[=C2=A0=C2=A0 13.815537]=C2=A0 </TASK>
->=20
+months to port DRM etc.),
 
+but I have taken this DW eDMA core into our driver test.
+
+Thanks
+Cai-
+
+> You keep submitting the DW eDMA driver core update, but there is no
+> glue-driver or low-level device driver patch for a real device which
+> would set the EDMA_MF_HDMA_NATIVE mapping.
+> 
+> -Serge(y)
+> 
+> > 
+> > Cai Huoqing (2):
+> >   dmaengine: dw-edma: Add support for native HDMA
+> >   dmaengine: dw-edma: Optimization in dw_edma_v0_core_handle_int
+> > 
+> > Cai huoqing (3):
+> >   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+> >     dw_edma_plat_ops
+> >   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+> >     abstract controller operation
+> >   dmaengine: dw-edma: Add HDMA DebugFS support
+> > 
+> > v6->v7:
+> >   [1/5]
+> >   1.Update the commit log.
+> >   [2/5]
+> >   2.Revert dw_edma_core_handle_int back to dw-edma-core.h.
+> >   3.Fix code style.
+> >   [3/5]
+> >   4.Move the change of register file from patch[4/5] to patch[3/5].
+> >   5.Fix code style.
+> > 
+> > v6 link:
+> >   https://lore.kernel.org/lkml/20230310032342.17395-1-cai.huoqing@linux.dev/
+> > 
+> >  drivers/dma/dw-edma/Makefile                 |   8 +-
+> >  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
+> >  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
+> >  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+> >  drivers/dma/dw-edma/dw-edma-v0-core.c        |  91 ++++--
+> >  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 277 +++++++++++++++++++
+> >  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
+> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 176 ++++++++++++
+> >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+> >  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 130 +++++++++
+> >  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+> >  include/linux/dma/edma.h                     |   7 +-
+> >  13 files changed, 785 insertions(+), 107 deletions(-)
+> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+> >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> > 
+> > -- 
+> > 2.34.1
+> > 
