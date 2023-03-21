@@ -2,201 +2,182 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 54D256C309A
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 12:44:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D90326C30D5
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 12:50:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229917AbjCULoC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Mar 2023 07:44:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
+        id S229823AbjCULuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Mar 2023 07:50:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbjCULoB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 07:44:01 -0400
-Received: from mail-lj1-x22d.google.com (mail-lj1-x22d.google.com [IPv6:2a00:1450:4864:20::22d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DA0937B69;
-        Tue, 21 Mar 2023 04:44:00 -0700 (PDT)
-Received: by mail-lj1-x22d.google.com with SMTP id t14so15173070ljd.5;
-        Tue, 21 Mar 2023 04:44:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679399038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mDK2iODbrnq6YMBT3iaeyX6/L7OVDYUqM483wwscgWU=;
-        b=Gh11hzeSAUAKPJid7JAGxc/qccHUrZGHz9Sh4sKMqiadjoc7dBXZxPM8Y7gqqGEPHg
-         rmVTRNQHYA9hXwvde6wHeabche2Lvu37BxtdBOSCe55yRw7p6du7MI6uW6gwrGaAXFCA
-         wVvQwNriQE1QQFz+RRRWYpvUphQHTXJoKGGexD/1vPvIMlr81NAtx4Hf+QsOWQMErKFS
-         1REOqwCoBPuvzjGQCIbrmaoLkudx2kEbWpYXwnodDydAmhcVK7yQieDXoyRtwIRKw4Gl
-         98wAykqvBEK/3/+Wit/hq7jQXJZT8cvxcHo9N85Vph5UHlDEg6PC1mW78V488VteVcsQ
-         GW2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679399038;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mDK2iODbrnq6YMBT3iaeyX6/L7OVDYUqM483wwscgWU=;
-        b=ax3fjuIrNtLTde3pUpyurtfLnJ3FNAqRsusHixj9fgVT2wRhkC7Gw3/aK69S/Q9q7R
-         I/HYhNB4oC1WO1Z5zOvZrFhPbeBawpjpgaB/psOzjflBxLVOaypFFgCYR/AhsZJqusTH
-         +EtzonL/Igm0i2Vgouck9BZ//QJxl+YH5FB9gSJbFNVvaCKIBthGWFAyTPQRlrubPj6Y
-         NIdrm8Q78RMU5w2OgJzI51U1NU5B+qejiWSCZCwFL/48skQCtnuO862jv6adHpnHYwQg
-         O3EA79Q2DXNUCFjAnRnmaG/mdfYMqCoHpFzRX4dswqnFLK9NeccctQdIge51TQq51uSB
-         Nz0Q==
-X-Gm-Message-State: AO0yUKXgeVkEhiF6eZKjEG5iEqark+aV+Z0/32wDbLMNbr1OhovGumVo
-        Gt/jhbwtNkI0xJPEAzRbYUJK6ylWGz4=
-X-Google-Smtp-Source: AK7set/S73W2wIokE855gLh8TE6Yo6ajOelA7I3ecutWdGLYRd1DIcIExGunC4IfrGQOuafYVGtCbw==
-X-Received: by 2002:a2e:860c:0:b0:29f:7c5b:8795 with SMTP id a12-20020a2e860c000000b0029f7c5b8795mr497660lji.9.1679399038645;
-        Tue, 21 Mar 2023 04:43:58 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id y22-20020a2e3216000000b0029e84187ce2sm647143ljy.139.2023.03.21.04.43.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 04:43:58 -0700 (PDT)
-Date:   Tue, 21 Mar 2023 14:43:56 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, Sergey.Semin@baikalelectronics.ru,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v11 04/13] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
- Endpoint
-Message-ID: <20230321114356.qnecn2kcaoxldka5@mobilestation>
-References: <20230310123510.675685-1-yoshihiro.shimoda.uh@renesas.com>
- <20230310123510.675685-5-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S229710AbjCULug (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 07:50:36 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2043.outbound.protection.outlook.com [40.107.237.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B4AC1EBC5;
+        Tue, 21 Mar 2023 04:50:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I5zZRHjNUjfMsh8vT3j8x7sRsQvcP1OEdYVUCMFoRNrffQFIOzDD2uIT+e15smlS62+tnfREHhl/iYscCFo60SMITVaXNW3e8jWAb57Du0IeAdNeSXejoLE7i/nqBS8pFLii5j7r3FkXnUOwldw5x4pl2X4oFbd3oHi5tvW6XvAGeZMhD872SYOngZ3ZJ54Ls8Esy+QoblnHM8qnizq1c1efYcuqQWJfb+93rS2crLa10sDylP4nF1frjOG2PdZgrypRddUjWgTfXkXK7Sg3NreAc2NR7KMPAK1cmOd5rYeUKcNcv5LUcS7CBdOhhlZ5EuhwYVEF98ejH/2QBJJC6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=55vXSENPPS0zRrFzNLPdkwGQNwqYQQ3mo1+0gTSxpf4=;
+ b=ndLQbV3ISi1E/I+OX3oWoD3s0iUfx79Ajrjp+Y2Pd0GPOPj+R75wpx9mY6uWQgCGE5gb6VvlFBDQBxnuRp7UOvc4F6byq2yTrqJqRKxx9/+JQqYSx+AqVVmobn2VxSqCcIsGt7BEWNfUbFn1k7g4Oa6z3Q25vKWnHTx50r1WR6YW+9t66ZYz4wuJk6/dzLDHh+Zf3y+6VDB1wSi6lrxp+/yeCNEKG1fYn26iZitlBhYQkz0ra37M5TCh3CLR0V3WVI2JKpTGF02P57AOok+ZiNC+DxKPh2xmFlgpDF8uSR1ihB9h6a6SCVxtje03O8uxAhrkORfhGAvgnJb3KBpcsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=intel.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=55vXSENPPS0zRrFzNLPdkwGQNwqYQQ3mo1+0gTSxpf4=;
+ b=X9rAjNIegJdZAWPkDgDyfxfBpNAK31USDgZ37XhLQA+4tj7/xbz4J2BkT+0P/jfOfH0oUqYEz1R7SrhgKGWLydoryKG8KvhIIJuclzeSPESTpVLkSg8PZRNksqowRkTsqhj9lZvueufqeXJeqHxkuR7TvsyIL8YsWNvE8cAQ6hNQNhSTKB84Nk62695NqtktCtzMP726OfzjnLLewN7dAuqRiGzCKyrASCGV3tcMoe/+sbkB1tFVTKmVnOLYkvZVrS3L6vUwNzE0QwkQoBgtE4Lm8WJNvLFmwMrP9enfiBcqmBg0uBgbNvng9mhmSW/cfxMbNxHI/f98uj1YKqAYIg==
+Received: from MW4PR04CA0145.namprd04.prod.outlook.com (2603:10b6:303:84::30)
+ by MN2PR12MB4160.namprd12.prod.outlook.com (2603:10b6:208:19a::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
+ 2023 11:50:08 +0000
+Received: from CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:84:cafe::71) by MW4PR04CA0145.outlook.office365.com
+ (2603:10b6:303:84::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37 via Frontend
+ Transport; Tue, 21 Mar 2023 11:50:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1NAM11FT077.mail.protection.outlook.com (10.13.175.55) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6222.16 via Frontend Transport; Tue, 21 Mar 2023 11:50:07 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 21 Mar 2023
+ 04:49:59 -0700
+Received: from [10.41.21.79] (10.126.231.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Tue, 21 Mar
+ 2023 04:49:53 -0700
+Message-ID: <dcf8b1a9-d0e3-510f-8dc3-5ef9eebb0696@nvidia.com>
+Date:   Tue, 21 Mar 2023 17:19:49 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310123510.675685-5-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [Patch v3 07/11] cpufreq: tegra194: add OPP support and set
+ bandwidth
+Content-Language: en-US
+To:     kernel test robot <lkp@intel.com>, <treding@nvidia.com>,
+        <krzysztof.kozlowski@linaro.org>, <dmitry.osipenko@collabora.com>,
+        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
+        <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
+        <lpieralisi@kernel.org>
+CC:     <oe-kbuild-all@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
+        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
+        <ishah@nvidia.com>, <bbasu@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>
+References: <20230320182441.11904-8-sumitg@nvidia.com>
+ <202303211551.eBLRqnv0-lkp@intel.com>
+From:   Sumit Gupta <sumitg@nvidia.com>
+In-Reply-To: <202303211551.eBLRqnv0-lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.231.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT077:EE_|MN2PR12MB4160:EE_
+X-MS-Office365-Filtering-Correlation-Id: 78e70ece-dd8b-4060-b32b-08db2a026b1c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XT6G8TH/n9iX+XeNWNEh+uH+w7zRZF7OfqA/4sxnV6EWDiGaeVBwwZcO+nzjvze/yqQKzgONMnK1LER+B6+xmWtfQGIIrTRYy+SZtRD9vxRabSqN6a0WJXplRsAQcmcYxy4zs3YCvLjJTDVpKGWfeU/RJ+zDMWxjeuoWy6AUXQhsJazh+G/PRPw1a5AXFlrqe231OGEQ3QaFApEf2lqncyKlp4GI3KaFXH0t2BJpsXbEiJsoqlqJfaJqSgMqNASL21TT+3dNEpjLzQcnLTsqlmOBxZraPAfA20F7Q9vJLoxdAeplJoegBKX750unNg0aDG56VZRxO1+V3Mqplt0vQNvpkZ1yrIAx/1FYG6qiJeYl5Re6dKDRb9myEQSc/YAvFXW1oVSSnELyaTcPgZFfid4BI8EAf7M4cccutvshP05JL/ZtCXaJF7QNHCAC5YH32lfPEyKCwsXOQcGBrKYttpA4FTU3vZYDYTN1nrLKYDScPEiDHLegM5a5HUcLOVgI4SLD7fSgvTr+2q6g1tWT33aJ7qqWfROLwytpWmnF9JigxyVrM9QSTZ7gFAjMw9+EPjKDHyLi6NzkwHr8DUD5j7lFgz4MgUdY78m2fJeQZftPHTliIJ6chOF5qQVJWMUYrMX3T7cYbhDtDD6G27rlN24oJx5X4oFdaHadbECH+sDYD6EOiB3uHNGLuBl/NAVb8zz1T777zEAYEd8djEYDS0RXQSg/rPDNBNI3Am53dO0GDWqB9051P2MM98d99SuAnU4kwusFUDZcAV5NRxx+QtFKfbYK0KHSLnVVydo9TngGjI6aSw7YooaUgsUGoGYUOOQvEJdB/E3IQAzouM2smELJDtsoV8vuHTP8ymyjNyk=
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(376002)(136003)(346002)(39860400002)(396003)(451199018)(40470700004)(46966006)(36840700001)(82740400003)(7636003)(82310400005)(86362001)(40460700003)(31696002)(40480700001)(36756003)(356005)(70586007)(70206006)(8936002)(16526019)(107886003)(8676002)(4326008)(41300700001)(6666004)(53546011)(26005)(966005)(186003)(478600001)(31686004)(16576012)(110136005)(316002)(54906003)(83380400001)(2616005)(2906002)(7416002)(5660300002)(47076005)(426003)(36860700001)(336012)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2023 11:50:07.7307
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 78e70ece-dd8b-4060-b32b-08db2a026b1c
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT077.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4160
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 09:35:01PM +0900, Yoshihiro Shimoda wrote:
-> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-> PCIe endpoint module.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Looking good now. Thanks.
-Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
--Serge(y)
+On 21/03/23 13:06, kernel test robot wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> Hi Sumit,
+> 
+> Thank you for the patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on robh/for-next]
+> [also build test WARNING on krzk-mem-ctrl/for-next pci/next pci/for-linus]
+> [cannot apply to tegra/for-next rafael-pm/linux-next linus/master v6.3-rc3 next-20230321]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Sumit-Gupta/firmware-tegra-add-function-to-get-BPMP-data/20230321-024112
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> patch link:    https://lore.kernel.org/r/20230320182441.11904-8-sumitg%40nvidia.com
+> patch subject: [Patch v3 07/11] cpufreq: tegra194: add OPP support and set bandwidth
+> config: arm64-allyesconfig (https://download.01.org/0day-ci/archive/20230321/202303211551.eBLRqnv0-lkp@intel.com/config)
+> compiler: aarch64-linux-gcc (GCC) 12.1.0
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # https://github.com/intel-lab-lkp/linux/commit/fa31f117302fc7c15b5d9deeefb8c650554f503d
+>          git remote add linux-review https://github.com/intel-lab-lkp/linux
+>          git fetch --no-tags linux-review Sumit-Gupta/firmware-tegra-add-function-to-get-BPMP-data/20230321-024112
+>          git checkout fa31f117302fc7c15b5d9deeefb8c650554f503d
+>          # save the config file
+>          mkdir build_dir && cp config build_dir/.config
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm64 olddefconfig
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arm64 SHELL=/bin/bash drivers/cpufreq/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Link: https://lore.kernel.org/oe-kbuild-all/202303211551.eBLRqnv0-lkp@intel.com/
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>>> drivers/cpufreq/tegra194-cpufreq.c:397:5: warning: no previous prototype for 'tegra_cpufreq_init_cpufreq_table' [-Wmissing-prototypes]
+>       397 | int tegra_cpufreq_init_cpufreq_table(struct cpufreq_policy *policy,
+>           |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> 
 
-> ---
->  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 97 +++++++++++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> new file mode 100644
-> index 000000000000..12d779a4ce8d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> @@ -0,0 +1,97 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +# Copyright (C) 2022 Renesas Electronics Corp.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/rcar-gen4-pci-ep.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Renesas R-Car Gen4 PCIe Endpoint
-> +
-> +maintainers:
-> +  - Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> +
-> +allOf:
-> +  - $ref: snps,dw-pcie-ep.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - const: renesas,r8a779f0-pcie-ep   # R-Car S4-8
-> +      - const: renesas,rcar-gen4-pcie-ep  # R-Car Gen4
-> +
-> +  reg:
-> +    maxItems: 5
-> +
-> +  reg-names:
-> +    items:
-> +      - const: dbi
-> +      - const: atu
-> +      - const: dma
-> +      - const: app
-> +      - const: addr_space
-> +
-> +  interrupts:
-> +    maxItems: 3
-> +
-> +  interrupt-names:
-> +    items:
-> +      - const: dma
-> +      - const: sft_ce
-> +      - const: app
-> +
-> +  power-domains:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  max-functions:
-> +    maximum: 2
-> +
-> +  max-link-speed:
-> +    maximum: 4
-> +
-> +  num-lanes:
-> +    maximum: 4
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - interrupts
-> +  - resets
-> +  - power-domains
-> +  - clocks
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/r8a779f0-cpg-mssr.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/power/r8a779f0-sysc.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pcie0_ep: pcie-ep@e65d0000 {
-> +            compatible = "renesas,r8a779f0-pcie-ep", "renesas,rcar-gen4-pcie-ep";
-> +            reg = <0 0xe65d0000 0 0x3000>, <0 0xe65d3000 0 0x2000>,
-> +                  <0 0xe65d5000 0 0x1200>, <0 0xe65d6200 0 0x0e00>,
-> +                  <0 0xfe000000 0 0x400000>;
-> +            reg-names = "dbi", "atu", "dma", "app", "addr_space";
-> +            interrupts = <GIC_SPI 417 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 418 IRQ_TYPE_LEVEL_HIGH>,
-> +                         <GIC_SPI 422 IRQ_TYPE_LEVEL_HIGH>;
-> +            interrupt-names = "dma", "sft_ce", "app";
-> +            clocks = <&cpg CPG_MOD 624>;
-> +            power-domains = <&sysc R8A779F0_PD_ALWAYS_ON>;
-> +            resets = <&cpg 624>;
-> +            num-lanes = <2>;
-> +            max-link-speed = <2>;
-> +        };
-> +    };
-> -- 
-> 2.25.1
-> 
-> 
+Thank you for the report.
+
+Adding static to the function prototype fixes the warning.
+Can we please squash the below change (or) please let me know if i need 
+to re-send the patch.
+
+  +++ b/drivers/cpufreq/tegra194-cpufreq.c
+  @@ -394,7 +394,7 @@ static unsigned int tegra194_get_speed(u32 cpu)
+          return rate;
+   }
+
+  -int tegra_cpufreq_init_cpufreq_table(struct cpufreq_policy *policy,
+  +static int tegra_cpufreq_init_cpufreq_table(
+                             struct cpufreq_policy *policy,
+                             struct cpufreq_frequency_table *bpmp_lut,
+                             struct cpufreq_frequency_table **opp_table)
+
+Thank you,
+Sumit Gupta
