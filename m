@@ -2,152 +2,255 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3A82D6C2DA4
-	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 10:09:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15AF86C2E36
+	for <lists+linux-pci@lfdr.de>; Tue, 21 Mar 2023 10:49:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229715AbjCUJJy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 21 Mar 2023 05:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37170 "EHLO
+        id S229550AbjCUJt4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 21 Mar 2023 05:49:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjCUJJq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 05:09:46 -0400
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2087.outbound.protection.outlook.com [40.107.21.87])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F60513D74;
-        Tue, 21 Mar 2023 02:09:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BYcdsa/jnAAT3yMFgDQIlQ/Nj0vAcLbi7ZxSCWclzj2SKhWs4FGLXSBv06jHrYJVGLszoTD5ohg+boOM1HYAbFzPxN4MQREi5ATL3HP2prtDWFXb1r/bqvihUgyDKjw546NCASJnnE/F2f2KDUOlxEmdXO0vdb9HNrDFnq+35fHqkeKrDhm8RLwXHSgBh5keaVN9OXTcPNYrY1PwToCEIxwlWoIFxYz/gUYs8gnf15NITx6FTaUBOUBdwmGOms24D7tu7FsHsgk/hB56KAFsD4qJxbWn43umpsGx8pXSI0zbwt/xI7NxuMbCuDo1aaLMhchW0OeT92JZiw8kKVBNgA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aIM+RBIvcLhA7EBqG5yipVY+9LHzv8xl8etYkcVlvmg=;
- b=Y4Ap9maaFs3KatVvOh9FVWIQwC5d9yfVxjrM5RS7g4Aoqooa/EzpufyCWoer5YNCOFAU3eCQ6h0rXtZuB3O+V9dXy/sckSkcQhPBWovnMxG3kB+y2GJjxH0uccmRTs0T3Hll309ure1iakp8a0or3WKTTKwgtXzYOo8232VshjJ/q/q8sk7Ot37CSa9Wr4gtw6MuM6hYjcAJbUAL+5sqd70q0AdCcUy+NO3Ig4Hock01EqAqb/4mfUARBe3MQ0XAY2T/eNU86D97RyEk6/JT5gDJ8QyHN+u/utIu9AoWSy7S8zonOevRFrKrQRLtEMQs5myqO3n3VW67DkPnuqgsrQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aIM+RBIvcLhA7EBqG5yipVY+9LHzv8xl8etYkcVlvmg=;
- b=JSxTx0k70eAtlmoyB153Gvt2UzSAhnodN/51svhN1Og6D9wrwKO7xPuQydqG6vOyj1wIByS6JkZLTQUiHmE+qahsMugFm/IDnybqv3/QnXgB0o23W1FAP/oPzGOERgX9Ugrz2eqPlUMmFV/VzpfCzuYmp+0EJtQfOG4XR8NlZo25C/nV/BCQ8z5tyJk54N91YooFygp/Xubq0E1ZW16H+Soh8EofWCxy0hCdI32bNeiEiVb/4EmKkL+JVNvxAmYiB+0JrjPN9k7+wsiWXcktIHLTztt5mbJRCWPMA80xIAvEbwQz7jBrDrWDtwG/asQaniKBxGN+FXxF1FBQZRUW5A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com (2603:10a6:800:126::9)
- by AS8PR04MB7638.eurprd04.prod.outlook.com (2603:10a6:20b:291::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.37; Tue, 21 Mar
- 2023 09:09:26 +0000
-Received: from VI1PR04MB7104.eurprd04.prod.outlook.com ([fe80::2ea:4a86:9ab7])
- by VI1PR04MB7104.eurprd04.prod.outlook.com ([fe80::2ea:4a86:9ab7%4]) with
- mapi id 15.20.6178.037; Tue, 21 Mar 2023 09:09:25 +0000
-Message-ID: <a1cca367-52b6-a6b1-fb01-890cad39fd29@suse.com>
-Date:   Tue, 21 Mar 2023 10:09:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 1/1] Guard pci_create_sysfs_dev_files with atomic value
-To:     Oliver Neukum <oneukum@suse.com>,
-        Alexander Stein <alexander.stein@ew.tq-group.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Korneliusz Osmenda <korneliuszo@gmail.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230316091540.494366-1-alexander.stein@ew.tq-group.com>
- <4888964.44csPzL39Z@steina-w> <90e97b96-2918-294a-0e71-33a42f28d8a8@suse.com>
- <3607385.usQuhbGJ8B@steina-w> <ced8713f-69de-e48a-37eb-4f844e651b6b@suse.com>
-Content-Language: en-US
-From:   Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <ced8713f-69de-e48a-37eb-4f844e651b6b@suse.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR0P281CA0070.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:49::20) To VI1PR04MB7104.eurprd04.prod.outlook.com
- (2603:10a6:800:126::9)
+        with ESMTP id S230160AbjCUJty (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 21 Mar 2023 05:49:54 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1E3626862
+        for <linux-pci@vger.kernel.org>; Tue, 21 Mar 2023 02:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679392190; x=1710928190;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ZoOLQ7JDDepWYxAolcmkQtWT6zQyhyhy9r0AlJdLNAE=;
+  b=jPqlPw+TyTv/Jq4vzTfSIWWBWaT28dvAVXEmfR7tck5nUmycOU7kGQJ8
+   eQkkY9usmjMMeptpqcqL14w/wu16XWzo7sFVbFB88Jv5aMCt90VAQvd9S
+   yALDQAUWbhA/Rm8ihytZ6mk2XQ0Tr5y/ju0/5NdLta4xmLzBaKDWtlWm1
+   ja7+vGbNvqpR1Lxa/o0/UoOtX/42N4wWKxmHRBGzm76Z0liCHR76EMUeE
+   2U8k4qL0kLfmMlPtbmhXC/dU8SwSEulmRCm08J1VvR/duA9R/0AyG7ejb
+   UpPBRRxk7pfSVXpaMZfmrKsHzN7kP1w+HuB82dfqp1gW030KI/mi1D95r
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="319286073"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="319286073"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 02:49:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10655"; a="681430123"
+X-IronPort-AV: E=Sophos;i="5.98,278,1673942400"; 
+   d="scan'208";a="681430123"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 21 Mar 2023 02:49:45 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 56BD43DD; Tue, 21 Mar 2023 11:50:31 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH] PCI/PM: Wait longer after reset when active link reporting is supported
+Date:   Tue, 21 Mar 2023 11:50:31 +0200
+Message-Id: <20230321095031.65709-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: VI1PR04MB7104:EE_|AS8PR04MB7638:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5a1db02d-d5bd-43fc-b15f-08db29ebf7ba
-X-LD-Processed: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba,ExtFwd
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +GtiLNvIGmW0TV+j+zMxA72AH2JpCz3VKZ8qMCIgQjTFk3rIt+gbgh15Z0G3Vwd/8q+3JGdJWNnnFLGQbNOGdApSLYZXQihMfzrv1TvuSE+vTW7OFDoFCdsi6ogD3fW7Py3T34bZRpP8Gg5cbO5X7CV2zrPt1wjlsYkIN4Orvx7tXvSWKeXLrQs7X7p0sB56QhNxrVWBz+l6ZSwbENWOC0s+hvLaYkBxQD70OdE/LT0qnSI7RR3a5DrzrYIOk7iKTJsJGfoDw+d68BNjtr/VUaJ0964av16+5pxg2aq8EzYOyqNzED+UQYRT66Q44lsUngmXSNXn8vbyQ030WqSlMfh7U/V88OBrrvNwZzMjJ5Rrc8mtV/f0OfqkC9fAR6VURWtBKpbbuTyrk0PmrROMjMqijgQGYHgr2cGfu7KMnBwlVifNX3OP1eVpjKKIRzKCQ1oj1fX/S4RtcjD1McxROjVLaSwDDCl6NQzcw9U1FI1q9oWHhswOMQuDoU1p2ettiDNJsR7GiMwjFNrhALP1njdxahsxk2hZCZSW7SB7+UKW/ogEIvP/UMYP7qBZBo8svNU2EpbrJhSPIt6V/Fy09lTkYUMhUsI5+WXzNnpKt6pxnUZMlMLHry0QCsU8QGWdwZ2S2LFbXzyIlLnR8NHaE9Wb0JiUiXTs2vK4oI/GsCqFEb+uFRDS+5U6WTZMflMyrIT2IIFWPAo1KIR0BO+/GdMQCArxkwm45U/utqxPH6U=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR04MB7104.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(136003)(366004)(396003)(376002)(346002)(451199018)(2616005)(6486002)(4326008)(83380400001)(478600001)(6666004)(316002)(110136005)(66476007)(6512007)(66946007)(66556008)(8676002)(6506007)(186003)(31686004)(4744005)(8936002)(41300700001)(5660300002)(38100700002)(2906002)(36756003)(31696002)(86362001)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MERTb29XMDBVQlhGMlE3c1BjSFY5SVJLT0JRM1ZrMVFwcVRneCtKRG1PZE1I?=
- =?utf-8?B?M0NDaDk0VE9ad2p6YlVuelc0ZE1aY09iUHZtcDVsbVRWdE5tRHBUa1ZpeTFz?=
- =?utf-8?B?TjlBZjhSUUZQMWkxLzZIZjNPa1JyWlVXZ1JPalN6Mlk5c29IZXczQ1F1OG5y?=
- =?utf-8?B?SG5DNDBrVmZpeU8yWlQ1ZUJYTjYzcGtJNHE0Q3Q1ZHkxa3BmNHM4cUZtbkoz?=
- =?utf-8?B?VFI0Z2c4MVRsMWg0cjN5ZVdZNlM0ZkFzVkt2d2pqZTNPRGV5VEFSZlhFUVZW?=
- =?utf-8?B?ekJZa1NVQWhEbnlqMVR1RDM4SGt4aDkxcjk2MWpiUmlrYmpJNUd6ZkdxOWFy?=
- =?utf-8?B?STlrTDVxbWt5SnNyMmZBWWJ1d2FydkVKLzVDa3ZKLzNzUW14SWFjd1hTZXB0?=
- =?utf-8?B?cjBpZ3ZxU3pSeDlPM3NuZDdlZGpWUHd1SjJkWCtzUUlOSUNybmJxUngwWjFs?=
- =?utf-8?B?Z1U1ZWJmNDA4TitDbkVJcWY5OWd0cnFKbHR3QU56eVlwU3RwRmpES3RCMFpa?=
- =?utf-8?B?dlN1U1VUSFhHVlR6ajR3Yk94dk9OWEtpeVc1WDM2K3Z4ZzFhSmZhRGt6a2Na?=
- =?utf-8?B?QUtUQzhGdncxYmpzWFZoTm9rRWNobDY5Mi80bjVxQjY5cFV6Tmh2bGM5bTha?=
- =?utf-8?B?MjB5amx5L1JQaXRlMEc1Ymo1RDk5bVd4MzFVeTRhUmNiOTVSemN4Wkk2RWZQ?=
- =?utf-8?B?QWswcWs0ZUczY1gxUzR1aGVFYmw5WllMeTdlZHo5QjBURkprUVBrOWppcG1k?=
- =?utf-8?B?SENCdEc5SXZqekM3Wjg5RDRnZ2xYM3pZRFBtL3pITFgrVUt2L2xGUzFtOVZa?=
- =?utf-8?B?ME1QNU5vSUdQZ01wUFZxdUg4K2FFUHhWeTRpN0VPc05SK2NTcHloM2dZNFAx?=
- =?utf-8?B?NDZrTVdrQkNNc3BpNi9jOVNqWjdXSGw1aDNvRE9hWTVTK3ZLdGZPZTR5UXpV?=
- =?utf-8?B?Q1gvSjdrSlYrWGg0Q0FKZTRPVlloNjVZNzRSM0l4T3lmRTN4U0p2eHZLdGJy?=
- =?utf-8?B?eUNjKzZXWDlkcFBMa3dzMUpzYzBianNHcDd1N2pmdXFzSTJtSWdlbVFTMDgw?=
- =?utf-8?B?YzFtTis5MFN5L3BxV0VRSUVwUWxnSGpXZUZyT25TUDUzcUZ5OEUrall5WUEv?=
- =?utf-8?B?UWJEcTRRQk1YVGZ0bFhnWEJOWW8rdUlraDBSRGhDNFJSSzVWams1dWlmckF6?=
- =?utf-8?B?d1VHK25hY3FvY3ZhQ01sdk5mNXpMNzNSRUNRUHUxdFBWRUJRUHhiSkxwdk10?=
- =?utf-8?B?eXREZEhpZFZBSEl4ZC9saWZnYXNUZ2VscVdNQU1vamZnWklzM2Z3OUNtUHFp?=
- =?utf-8?B?RVJseW9JTkFLakI4NnV6Y0RxbkdiTzAvYXoyL2JzZDhzQmY4YTJiSFE2Q1Mz?=
- =?utf-8?B?QnVRRlB0NXBiaUZSMVg2aWFIYTFjZVRXWGp4enRDSWVCMGRIQ1o2dGhnZ3Mv?=
- =?utf-8?B?VDl3TkdJdW9SbkNUaTRvcGQ1SGpiOG4rcnZvSGdsYktKOFEwNW4wVmhxVzVq?=
- =?utf-8?B?YlVlOEEzMThKSEhYdkVaNGNIVDdIL3FUOTduekxZeWVUS0p1V201eTZDZ0RJ?=
- =?utf-8?B?VUNyMFM0L2JnejlLQXM0R29ncmJNVWt6cEdFSFBjbzNrdzk2RmhISlJUMlNL?=
- =?utf-8?B?L1ZLci93ekRPQ3VSekI4TGVxYXRhUWd6MGIvenUzNndhQWtrNnI3RUZhMVdN?=
- =?utf-8?B?NjVaQUhnVmxFSEFtS1lpUGt6Rm01dmJkdDRIKzQvMmxrT3Q4S1VVZ29LMTZS?=
- =?utf-8?B?RlplZ3YxdjhENmw2Y1hPMllCRDN3VUdCMTVTdVM4bVJmdURWcGxCMEFDckhG?=
- =?utf-8?B?NFNscEtsSnpsSFl6RDRiRkRoZzVkeS9Va3IvT25zQThKako1c0JONzFyU09U?=
- =?utf-8?B?TWpGeitYMWZFSXVlVUdFOXNXYjhpR2VCUmZ0T1hSbWRYenBFRmpsRkRLSlJq?=
- =?utf-8?B?ZFVXb0xseTBTVjRBZ0grWGpRWExtL01SdDVwTTBDMm0yVkJEejRycVBHblhP?=
- =?utf-8?B?VVp2QWJZVHJBbEZadXg0NVBGZCtoQzBvS0orN3lEVFp4ZUQ5dlNkRFp6TXQy?=
- =?utf-8?B?ZFppTUtBQy9HK3JCZklYNmFOYmdSNU5qdHEzWVpjL2xwN2lha1dya1VGZGcv?=
- =?utf-8?B?ajJZMmZDTGFJOVBhWVlQRVZWMHRVcCt4OFBOaXVPNGFyZHBFMU14SXVxRzVq?=
- =?utf-8?Q?ZR6O/6KYe98qefElNcftMkbiMoRR7PnIgrmBhscl0xLF?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5a1db02d-d5bd-43fc-b15f-08db29ebf7ba
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR04MB7104.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2023 09:09:25.6923
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7qAB6U7UgYBnAN06Og1hX+b2o9/tZdwVlDexfGRlWm3jsrxXpc+RQXqVCWy9D25HGjhm13ID4asG8eCydbK3uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7638
-X-Spam-Status: No, score=-0.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_VALIDITY_RPBL,SPF_HELO_PASS,SPF_PASS,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Am Donnerstag, 16. März 2023, 15:01:25 CET schrieb Oliver Neukum:
-> I'm not sure if I can follow you here. Can you elaborate?
+The PCIe spec prescribes that a device may take up to 1 second to
+recover from reset and this same delay is prescribed when coming out of
+D3cold (as that involves reset too). The device may extend this 1 second
+delay through Request Retry Status completions and we accommondate for
+that in Linux with 60 second cap, only in reset code path, not in resume
+code path.
 
-There are far better reasons to leave the setup of a PCI bus as the firmware
-has done it than to leave a USB as is.
+However, a device has surfaced, namely Intel Titan Ridge xHCI, which
+requires longer delay also in the resume code path. For this reason make
+the resume code path to use this same extended delay than with the reset
+path but only after the link has come up (active link reporting is
+supported) so that we do not wait longer time for devices that have
+become permanently innaccessible during system sleep, e.g because they
+have been removed.
 
+While there move the two constants from the pci.h header into pci.c as
+these are not used outside of that file anymore.
 
-> How is it necessary? How do these PCI devices get attaches to the pci_bus_type 
-> bus without calling pci_bus_add_device?
+Reported-by: Chris Chiu <chris.chiu@canonical.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=216728
+Cc: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/pci-driver.c |  2 +-
+ drivers/pci/pci.c        | 51 +++++++++++++++++++++++-----------------
+ drivers/pci/pci.h        | 16 +------------
+ drivers/pci/pcie/dpc.c   |  3 +--
+ 4 files changed, 33 insertions(+), 39 deletions(-)
 
-AFAICT they don't. But somebody has to call it.
+diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+index 57ddcc59af30..1a5ee65edb10 100644
+--- a/drivers/pci/pci-driver.c
++++ b/drivers/pci/pci-driver.c
+@@ -572,7 +572,7 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
+ 
+ static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
+ {
+-	pci_bridge_wait_for_secondary_bus(pci_dev, "resume", PCI_RESET_WAIT);
++	pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
+ 	/*
+ 	 * When powering on a bridge from D3cold, the whole hierarchy may be
+ 	 * powered on into D0uninitialized state, resume them to give them a
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 7a67611dc5f4..f4875e5b8b29 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -64,6 +64,19 @@ struct pci_pme_device {
+ 
+ #define PME_TIMEOUT 1000 /* How long between PME checks */
+ 
++/*
++ * Following exit from Conventional Reset, devices must be ready within 1 sec
++ * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
++ * Reset (PCIe r6.0 sec 5.8).
++ */
++#define PCI_RESET_WAIT			1000	/* msec */
++/*
++ * Devices may extend the 1 sec period through Request Retry Status completions
++ * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
++ * ought to be enough for any device to become responsive.
++ */
++#define PCIE_RESET_READY_POLL_MS	60000	/* msec */
++
+ static void pci_dev_d3_sleep(struct pci_dev *dev)
+ {
+ 	unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
+@@ -4939,7 +4952,6 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
+  * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
+  * @dev: PCI bridge
+  * @reset_type: reset type in human-readable form
+- * @timeout: maximum time to wait for devices on secondary bus (milliseconds)
+  *
+  * Handle necessary delays before access to the devices on the secondary
+  * side of the bridge are permitted after D3cold to D0 transition
+@@ -4952,8 +4964,7 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
+  * Return 0 on success or -ENOTTY if the first device on the secondary bus
+  * failed to become accessible.
+  */
+-int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
+-				      int timeout)
++int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+ {
+ 	struct pci_dev *child;
+ 	int delay;
+@@ -5004,13 +5015,11 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
+ 	 * speeds (gen3) we need to wait first for the data link layer to
+ 	 * become active.
+ 	 *
+-	 * However, 100 ms is the minimum and the PCIe spec says the
+-	 * software must allow at least 1s before it can determine that the
+-	 * device that did not respond is a broken device. There is
+-	 * evidence that 100 ms is not always enough, for example certain
+-	 * Titan Ridge xHCI controller does not always respond to
+-	 * configuration requests if we only wait for 100 ms (see
+-	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
++	 * However, 100 ms is the minimum and the PCIe spec says the software
++	 * must allow at least 1s before it can determine that the device that
++	 * did not respond is a broken device. Also device can take longer than
++	 * that to respond if it indicates so through Request Retry Status
++	 * completions.
+ 	 *
+ 	 * Therefore we wait for 100 ms and check for the device presence
+ 	 * until the timeout expires.
+@@ -5021,17 +5030,18 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
+ 	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
+ 		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
+ 		msleep(delay);
+-	} else {
+-		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
+-			delay);
+-		if (!pcie_wait_for_link_delay(dev, true, delay)) {
+-			/* Did not train, no need to wait any further */
+-			pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
+-			return -ENOTTY;
+-		}
++		return pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay);
++	}
++
++	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
++		delay);
++	if (!pcie_wait_for_link_delay(dev, true, delay)) {
++		/* Did not train, no need to wait any further */
++		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
++		return -ENOTTY;
+ 	}
+ 
+-	return pci_dev_wait(child, reset_type, timeout - delay);
++	return pci_dev_wait(child, reset_type, PCIE_RESET_READY_POLL_MS - delay);
+ }
+ 
+ void pci_reset_secondary_bus(struct pci_dev *dev)
+@@ -5068,8 +5078,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
+ {
+ 	pcibios_reset_secondary_bus(dev);
+ 
+-	return pci_bridge_wait_for_secondary_bus(dev, "bus reset",
+-						 PCIE_RESET_READY_POLL_MS);
++	return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
+ }
+ EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
+ 
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d2c08670a20e..f2d3aeab91f4 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -64,19 +64,6 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
+ #define PCI_PM_D3HOT_WAIT       10	/* msec */
+ #define PCI_PM_D3COLD_WAIT      100	/* msec */
+ 
+-/*
+- * Following exit from Conventional Reset, devices must be ready within 1 sec
+- * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
+- * Reset (PCIe r6.0 sec 5.8).
+- */
+-#define PCI_RESET_WAIT		1000	/* msec */
+-/*
+- * Devices may extend the 1 sec period through Request Retry Status completions
+- * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
+- * ought to be enough for any device to become responsive.
+- */
+-#define PCIE_RESET_READY_POLL_MS 60000	/* msec */
+-
+ void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
+ void pci_refresh_power_state(struct pci_dev *dev);
+ int pci_power_up(struct pci_dev *dev);
+@@ -100,8 +87,7 @@ void pci_msix_init(struct pci_dev *dev);
+ bool pci_bridge_d3_possible(struct pci_dev *dev);
+ void pci_bridge_d3_update(struct pci_dev *dev);
+ void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
+-int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
+-				      int timeout);
++int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
+ 
+ static inline void pci_wakeup_event(struct pci_dev *dev)
+ {
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a5d7c69b764e..3ceed8e3de41 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -170,8 +170,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
+ 			      PCI_EXP_DPC_STATUS_TRIGGER);
+ 
+-	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC",
+-					      PCIE_RESET_READY_POLL_MS)) {
++	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
+ 		clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
+ 		ret = PCI_ERS_RESULT_DISCONNECT;
+ 	} else {
+-- 
+2.39.2
 
-
-> Okay, so which dependency is provided by pci_sysfs_init, which are required by 
-> drivers then?
-
-It isn't. It is missing from the code. But it exists in reality. That is the point.
-You have a race condition between two probes. We cannot have that.
-Hence IMHO the dependency would be best expressed by waiting for pci_sysfs_init()
-to finish in the init sequence before you add any PCI bridges or devices to the system.
-
-	Regards
-		Oliver
