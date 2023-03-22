@@ -2,277 +2,249 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DB7C6C5954
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 23:16:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F4CE6C598F
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 23:47:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229642AbjCVWQ3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Mar 2023 18:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
+        id S229603AbjCVWq7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Mar 2023 18:46:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjCVWQ2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 18:16:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 423FB35B5
-        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 15:16:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BD6B5622FA
-        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 22:16:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE5AC433EF;
-        Wed, 22 Mar 2023 22:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679523386;
-        bh=7gCFeYmoIXixqhJZJhstsJoAme+PCgfNp90CviOm7BM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Rkpsxmt0kGhKXfztpxUYglpKQY//ay1kA9LnyR3n5YRxqb7r8XiUKrpyYD0wdmGxa
-         nV9xzfrgCz5tC9GKd1+y9QrnGysqvnOuncCL4oW0dcgetAi0/RtX4UDqk4JfUJZAxw
-         mHkmIYZ7O2LMKWfEPYx4Tyc2eZDmIn3CMv0So8ff3RdZ+7yVTUI1/MPjpHQvRG0ISJ
-         4p2d2MTgwLZTI7iI13TgEYhxqn88vrADHx9u73BYD4lyFT0bS9YeV60kVNGvYoWbhr
-         5cK4G929C/LpCZl3ei1Xfephm5YlCGRZdgPnqrbsIjG7xyAs1jYsST0O8+borG5mpe
-         lIFd4cDLT0mhw==
-Date:   Wed, 22 Mar 2023 17:16:24 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] PCI/PM: Wait longer after reset when active link
- reporting is supported
-Message-ID: <20230322221624.GA2497123@bhelgaas>
+        with ESMTP id S229497AbjCVWq6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 18:46:58 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C32AF2D;
+        Wed, 22 Mar 2023 15:46:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679525217; x=1711061217;
+  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=HDQsZ+Zd2OeoFbQT7/pK+vspHsprO3oIK582aYdmdL8=;
+  b=lsVkw+q7YSfnu1ao7bte5Hnc/pIPYh+nE6sDpgXA7k4jWj+IdQKUG29q
+   Ep8lMxHQvWuHJjZFQHE2TB0v3diLAMAiQyp+X+0/POfjImugHXspCOUar
+   i2gRep9aVb4WUwEi4dI1QNskA7Wf8ZaoNEbMQ9eU/djCVhrYRYmtm7C1A
+   J3brVQFGDqUxZKhKM+21r+ghqQ6/HSLF1Q5q9v0SVjg/89k0q4FDdhLfw
+   iXg0hXfVT4viRD6tN9tCYkfQBdNdjhrtzqZH/mi7VTbzCsnK8cvhrwQN1
+   oVCOxnw/C8SxTG1Lavf5Rl4iDPzXe+F64qDXx1GSpVxPu3AjNaRRt3Z0z
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="341706563"
+X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
+   d="scan'208";a="341706563"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 15:46:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="928002484"
+X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
+   d="scan'208";a="928002484"
+Received: from linux.intel.com ([10.54.29.200])
+  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2023 15:46:55 -0700
+Received: from anithaha-mobl1.amr.corp.intel.com (unknown [10.209.65.203])
+        by linux.intel.com (Postfix) with ESMTP id AB9AC580CD3;
+        Wed, 22 Mar 2023 15:46:55 -0700 (PDT)
+Message-ID: <ab9bf3032ed46fc0586e089edc5aac6e71b331d8.camel@linux.intel.com>
+Subject: Re: [Intel-gfx] [PATCH] PCI/ASPM: pci_enable_link_state: Add
+ argument to acquire bus lock
+From:   "David E. Box" <david.e.box@linux.intel.com>
+Reply-To: david.e.box@linux.intel.com
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     ville.syrjala@linux.intel.com, nirmal.patel@linux.intel.com,
+        jonathan.derrick@linux.dev, lorenzo.pieralisi@arm.com,
+        hch@infradead.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, michael.a.bottini@intel.com,
+        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Wed, 22 Mar 2023 15:46:55 -0700
+In-Reply-To: <20230322205702.GA2493123@bhelgaas>
+References: <20230322205702.GA2493123@bhelgaas>
+Organization: David E. Box
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.44.4-0ubuntu1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230321095031.65709-1-mika.westerberg@linux.intel.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 11:50:31AM +0200, Mika Westerberg wrote:
-> The PCIe spec prescribes that a device may take up to 1 second to
-> recover from reset and this same delay is prescribed when coming out of
-> D3cold (as that involves reset too). The device may extend this 1 second
-> delay through Request Retry Status completions and we accommondate for
-> that in Linux with 60 second cap, only in reset code path, not in resume
-> code path.
-> 
-> However, a device has surfaced, namely Intel Titan Ridge xHCI, which
-> requires longer delay also in the resume code path. For this reason make
-> the resume code path to use this same extended delay than with the reset
-> path but only after the link has come up (active link reporting is
-> supported) so that we do not wait longer time for devices that have
-> become permanently innaccessible during system sleep, e.g because they
-> have been removed.
-> 
-> While there move the two constants from the pci.h header into pci.c as
-> these are not used outside of that file anymore.
-> 
-> Reported-by: Chris Chiu <chris.chiu@canonical.com>
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216728
-> Cc: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Hi Bjorn,
 
-Lukas just added the "timeout" parameter with ac91e6980563 ("PCI:
-Unify delay handling for reset and resume"), so I'm going to look for
-his ack for this.
+On Wed, 2023-03-22 at 15:57 -0500, Bjorn Helgaas wrote:
+> On Wed, Mar 22, 2023 at 03:45:01PM -0500, Bjorn Helgaas wrote:
+> > Hi David,
+> >=20
+> > On Tue, Mar 21, 2023 at 04:38:49PM -0700, David E. Box wrote:
+> > > The VMD driver calls pci_enabled_link_state as a callback from
+> > > pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a loc=
+kdep
+> > > warning. Add an argument to pci_enable_link_state to set whether the =
+lock
+> > > should be acquired. In the VMD driver, set the argument to false sinc=
+e the
+> > > lock will already be obtained by pci_bus_walk.
+> > >=20
+> > > Reported-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+> > > Fixes: de82f60f9c86 ("PCI/ASPM: Add pci_enable_link_state()")
+> >=20
+> > This means "if your kernel includes de82f60f9c86, you probably want to
+> > backport this fix to it."=C2=A0 But that's not the case here.=C2=A0 Thi=
+s patch
+> > is not fixing an issue with de82f60f9c86, so I don't think there's a
+> > reason to include a "Fixes" line.
+>=20
+> Oops, sorry, forgot to engage brain before hitting "send".
+>=20
+> I think the "Fixes" line should reference f492edb40b54 ("PCI: vmd: Add
+> quirk to configure PCIe ASPM and LTR") instead, since that's where the
+> locking problem started.
+>=20
+> > This patch is adding functionality that is only needed by some other
+> > patch, and it should be part of a series that also includes the patch
+> > that uses it to make sure they go together.
 
-After ac91e6980563, we called pci_bridge_wait_for_secondary_bus() with
-timeouts of either:
+Yeah this should have been two patches.
 
-  60s for reset (pci_bridge_secondary_bus_reset() or
-      dpc_reset_link()), or
+>=20
+> And I see that the use *is* included in this patch.=C2=A0 But I don't
+> really like this pattern:
+>=20
+> =C2=A0 vmd_probe
+> =C2=A0=C2=A0=C2=A0 vmd_enable_domain
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vmd->bus =3D pci_create_root_bus(...);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_scan_child_bus(vmd->bus);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_walk_bus(vmd->bus, vmd_pm_enable_quirk=
+, &features);
+>=20
+> because pci_walk_bus() makes locking complicated (as this issue shows)
+> and it doesn't work for hot-added devices (I don't know if that's an
+> issue for VMD, but the pattern gets copied to places where it *is*).
+>=20
+> Normally vmd_pm_enable_quirk() would be done by making it an actual
+> DECLARE_PCI_FIXUP_HEADER() or DECLARE_PCI_FIXUP_FINAL(), so it would
+> be called automatically by the PCI core when a new device is
+> enumerated.=C2=A0 Would that work here?=C2=A0 If it would, I don't think =
+you'd
+> need to add the extra flag to pci_enable_link_state().
 
-   1s for resume (pci_pm_resume_noirq() or pci_pm_runtime_resume() via
-      pci_pm_bridge_power_up_actions())
+It should work. I'll test the change.
 
-If I'm reading this right, the main changes of this patch are:
+David
 
-  - For slow links (<= 5 GT/s), we sleep 100ms, then previously waited
-    up to 1s (resume) or 60s (reset) for the device to be ready.  Now
-    we will wait a max of 1s for both resume and reset.
+>=20
+> > > Link: https://lore.kernel.org/linux-pci/ZBjko%2FifunIwsK2v@intel.com/
+> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
+> > > ---
+> > > =C2=A0drivers/pci/controller/vmd.c | 2 +-
+> > > =C2=A0drivers/pci/pcie/aspm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +++++=
++---
+> > > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 | 5 +++--
+> > > =C2=A03 files changed, 10 insertions(+), 6 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vm=
+d.c
+> > > index 990630ec57c6..45aa35744eae 100644
+> > > --- a/drivers/pci/controller/vmd.c
+> > > +++ b/drivers/pci/controller/vmd.c
+> > > @@ -737,7 +737,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pd=
+ev,
+> > > void *userdata)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!(features & VMD_=
+FEAT_BIOS_PM_QUIRK))
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_enable_link_state(pdev=
+, PCIE_LINK_STATE_ALL);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_enable_link_state(pdev=
+, PCIE_LINK_STATE_ALL, false);
+> > > =C2=A0
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pos =3D pci_find_ext_=
+capability(pdev, PCI_EXT_CAP_ID_LTR);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!pos)
+> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > > index 66d7514ca111..5b5a600bb864 100644
+> > > --- a/drivers/pci/pcie/aspm.c
+> > > +++ b/drivers/pci/pcie/aspm.c
+> > > @@ -1147,8 +1147,9 @@ EXPORT_SYMBOL(pci_disable_link_state);
+> > > =C2=A0 *
+> > > =C2=A0 * @pdev: PCI device
+> > > =C2=A0 * @state: Mask of ASPM link states to enable
+> > > + * @sem: Boolean to acquire/release pci_bus_sem
+> > > =C2=A0 */
+> > > -int pci_enable_link_state(struct pci_dev *pdev, int state)
+> > > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
+> > > =C2=A0{
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pcie_link_stat=
+e *link =3D pcie_aspm_get_link(pdev);
+> > > =C2=A0
+> > > @@ -1165,7 +1166,8 @@ int pci_enable_link_state(struct pci_dev *pdev,=
+ int
+> > > state)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EPERM;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+> > > =C2=A0
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0down_read(&pci_bus_sem);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (sem)
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0down_read(&pci_bus_sem);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&aspm_lock=
+);
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0link->aspm_default =
+=3D 0;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (state & PCIE_LINK=
+_STATE_L0S)
+> > > @@ -1186,7 +1188,8 @@ int pci_enable_link_state(struct pci_dev *pdev,=
+ int
+> > > state)
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0link->clkpm_default =
+=3D (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pcie_set_clkpm(link, =
+policy_to_clkpm_state(link));
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&aspm_lo=
+ck);
+> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0up_read(&pci_bus_sem);
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (sem)
+> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0up_read(&pci_bus_sem);
+> > > =C2=A0
+> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
+> > > =C2=A0}
+> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > > index fafd8020c6d7..a6f9f24b39fd 100644
+> > > --- a/include/linux/pci.h
+> > > +++ b/include/linux/pci.h
+> > > @@ -1707,7 +1707,7 @@ extern bool pcie_ports_native;
+> > > =C2=A0#ifdef CONFIG_PCIEASPM
+> > > =C2=A0int pci_disable_link_state(struct pci_dev *pdev, int state);
+> > > =C2=A0int pci_disable_link_state_locked(struct pci_dev *pdev, int sta=
+te);
+> > > -int pci_enable_link_state(struct pci_dev *pdev, int state);
+> > > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)=
+;
+> > > =C2=A0void pcie_no_aspm(void);
+> > > =C2=A0bool pcie_aspm_support_enabled(void);
+> > > =C2=A0bool pcie_aspm_enabled(struct pci_dev *pdev);
+> > > @@ -1716,7 +1716,8 @@ static inline int pci_disable_link_state(struct
+> > > pci_dev *pdev, int state)
+> > > =C2=A0{ return 0; }
+> > > =C2=A0static inline int pci_disable_link_state_locked(struct pci_dev =
+*pdev, int
+> > > state)
+> > > =C2=A0{ return 0; }
+> > > -static inline int pci_enable_link_state(struct pci_dev *pdev, int st=
+ate)
+> > > +static inline int
+> > > +pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
+> > > =C2=A0{ return 0; }
+> > > =C2=A0static inline void pcie_no_aspm(void) { }
+> > > =C2=A0static inline bool pcie_aspm_support_enabled(void) { return fal=
+se; }
+> > > --=20
+> > > 2.34.1
+> > >=20
 
-  - For fast links (> 5 GT/s) we wait up to 100ms for the link to come
-    up and fail if it does not.  If the link did come up in 100ms, we
-    previously waited up to 1s (resume) or 60s (reset).  Now we will
-    wait up to 60s for both resume and reset.
-
-So this *reduces* the time we wait for slow links after reset, and
-*increases* the time for fast links after resume.  Right?
-
-> ---
->  drivers/pci/pci-driver.c |  2 +-
->  drivers/pci/pci.c        | 51 +++++++++++++++++++++++-----------------
->  drivers/pci/pci.h        | 16 +------------
->  drivers/pci/pcie/dpc.c   |  3 +--
->  4 files changed, 33 insertions(+), 39 deletions(-)
-> 
-> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-> index 57ddcc59af30..1a5ee65edb10 100644
-> --- a/drivers/pci/pci-driver.c
-> +++ b/drivers/pci/pci-driver.c
-> @@ -572,7 +572,7 @@ static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
->  
->  static void pci_pm_bridge_power_up_actions(struct pci_dev *pci_dev)
->  {
-> -	pci_bridge_wait_for_secondary_bus(pci_dev, "resume", PCI_RESET_WAIT);
-> +	pci_bridge_wait_for_secondary_bus(pci_dev, "resume");
->  	/*
->  	 * When powering on a bridge from D3cold, the whole hierarchy may be
->  	 * powered on into D0uninitialized state, resume them to give them a
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 7a67611dc5f4..f4875e5b8b29 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -64,6 +64,19 @@ struct pci_pme_device {
->  
->  #define PME_TIMEOUT 1000 /* How long between PME checks */
->  
-> +/*
-> + * Following exit from Conventional Reset, devices must be ready within 1 sec
-> + * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
-> + * Reset (PCIe r6.0 sec 5.8).
-> + */
-> +#define PCI_RESET_WAIT			1000	/* msec */
-> +/*
-> + * Devices may extend the 1 sec period through Request Retry Status completions
-> + * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
-> + * ought to be enough for any device to become responsive.
-> + */
-> +#define PCIE_RESET_READY_POLL_MS	60000	/* msec */
-> +
->  static void pci_dev_d3_sleep(struct pci_dev *dev)
->  {
->  	unsigned int delay_ms = max(dev->d3hot_delay, pci_pm_d3hot_delay);
-> @@ -4939,7 +4952,6 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->   * pci_bridge_wait_for_secondary_bus - Wait for secondary bus to be accessible
->   * @dev: PCI bridge
->   * @reset_type: reset type in human-readable form
-> - * @timeout: maximum time to wait for devices on secondary bus (milliseconds)
->   *
->   * Handle necessary delays before access to the devices on the secondary
->   * side of the bridge are permitted after D3cold to D0 transition
-> @@ -4952,8 +4964,7 @@ static int pci_bus_max_d3cold_delay(const struct pci_bus *bus)
->   * Return 0 on success or -ENOTTY if the first device on the secondary bus
->   * failed to become accessible.
->   */
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
-> -				      int timeout)
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  {
->  	struct pci_dev *child;
->  	int delay;
-> @@ -5004,13 +5015,11 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
->  	 * speeds (gen3) we need to wait first for the data link layer to
->  	 * become active.
->  	 *
-> -	 * However, 100 ms is the minimum and the PCIe spec says the
-> -	 * software must allow at least 1s before it can determine that the
-> -	 * device that did not respond is a broken device. There is
-> -	 * evidence that 100 ms is not always enough, for example certain
-> -	 * Titan Ridge xHCI controller does not always respond to
-> -	 * configuration requests if we only wait for 100 ms (see
-> -	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
-> +	 * However, 100 ms is the minimum and the PCIe spec says the software
-> +	 * must allow at least 1s before it can determine that the device that
-> +	 * did not respond is a broken device. Also device can take longer than
-> +	 * that to respond if it indicates so through Request Retry Status
-> +	 * completions.
->  	 *
->  	 * Therefore we wait for 100 ms and check for the device presence
->  	 * until the timeout expires.
-> @@ -5021,17 +5030,18 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
-> -	} else {
-> -		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> -			delay);
-> -		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> -			/* Did not train, no need to wait any further */
-> -			pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> -			return -ENOTTY;
-> -		}
-> +		return pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay);
-> +	}
-> +
-> +	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> +		delay);
-> +	if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> +		/* Did not train, no need to wait any further */
-> +		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +		return -ENOTTY;
->  	}
->  
-> -	return pci_dev_wait(child, reset_type, timeout - delay);
-> +	return pci_dev_wait(child, reset_type, PCIE_RESET_READY_POLL_MS - delay);
->  }
->  
->  void pci_reset_secondary_bus(struct pci_dev *dev)
-> @@ -5068,8 +5078,7 @@ int pci_bridge_secondary_bus_reset(struct pci_dev *dev)
->  {
->  	pcibios_reset_secondary_bus(dev);
->  
-> -	return pci_bridge_wait_for_secondary_bus(dev, "bus reset",
-> -						 PCIE_RESET_READY_POLL_MS);
-> +	return pci_bridge_wait_for_secondary_bus(dev, "bus reset");
->  }
->  EXPORT_SYMBOL_GPL(pci_bridge_secondary_bus_reset);
->  
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index d2c08670a20e..f2d3aeab91f4 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -64,19 +64,6 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
->  #define PCI_PM_D3HOT_WAIT       10	/* msec */
->  #define PCI_PM_D3COLD_WAIT      100	/* msec */
->  
-> -/*
-> - * Following exit from Conventional Reset, devices must be ready within 1 sec
-> - * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
-> - * Reset (PCIe r6.0 sec 5.8).
-> - */
-> -#define PCI_RESET_WAIT		1000	/* msec */
-> -/*
-> - * Devices may extend the 1 sec period through Request Retry Status completions
-> - * (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper limit, but 60 sec
-> - * ought to be enough for any device to become responsive.
-> - */
-> -#define PCIE_RESET_READY_POLL_MS 60000	/* msec */
-> -
->  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
->  void pci_refresh_power_state(struct pci_dev *dev);
->  int pci_power_up(struct pci_dev *dev);
-> @@ -100,8 +87,7 @@ void pci_msix_init(struct pci_dev *dev);
->  bool pci_bridge_d3_possible(struct pci_dev *dev);
->  void pci_bridge_d3_update(struct pci_dev *dev);
->  void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
-> -int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type,
-> -				      int timeout);
-> +int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
->  
->  static inline void pci_wakeup_event(struct pci_dev *dev)
->  {
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index a5d7c69b764e..3ceed8e3de41 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -170,8 +170,7 @@ pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
->  	pci_write_config_word(pdev, cap + PCI_EXP_DPC_STATUS,
->  			      PCI_EXP_DPC_STATUS_TRIGGER);
->  
-> -	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC",
-> -					      PCIE_RESET_READY_POLL_MS)) {
-> +	if (pci_bridge_wait_for_secondary_bus(pdev, "DPC")) {
->  		clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags);
->  		ret = PCI_ERS_RESULT_DISCONNECT;
->  	} else {
-> -- 
-> 2.39.2
-> 
