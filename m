@@ -2,73 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB0416C43B4
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 07:57:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E94E6C4403
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 08:25:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229684AbjCVG5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Mar 2023 02:57:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42840 "EHLO
+        id S229782AbjCVHZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Mar 2023 03:25:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbjCVG5H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 02:57:07 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7772515FE;
-        Tue, 21 Mar 2023 23:57:05 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id by8so16672097ljb.12;
-        Tue, 21 Mar 2023 23:57:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679468224;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=VctT1j+Lpa3hVedsW/Ad619Xdxc77II5IVNWJsRbhsE=;
-        b=CnJ+tP6Cx91ge+Wp3GCb7DTQgxhnIND7WMWiMJ/7o50PpNbaW76swff5BhJ1dWDR0C
-         V6y7lPldyqFFYQ1+VrBiXIWrtNx2DIq/EfuO4wIWocA7pl2Zcnl5IVhNCc1JT2FW9cVX
-         jhwaqWKDKYRkhMf0f1rUj7hG7h7LVsQ+PlEiq+n0Q/bu22JlWvCrE4nF6Z4mcAH/ziEG
-         Fxs02of++KK78xd+yafy22SQZOKDhLieBuK07GgIHsuJNvpI4NmW5VWo9TRPLv0YU097
-         e43H2PTSzNBz4kA33/fDSQ9bbC2YGaR4Glvyi0KFsFX01Ctpl0UWlDKckadZxJfPVaS7
-         FhqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679468224;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=VctT1j+Lpa3hVedsW/Ad619Xdxc77II5IVNWJsRbhsE=;
-        b=sAxP1G2Clj89RaWaTjp4GmFzkoCAlS6Mv7MB5Frgb1i8fGb22XxLuIqpO8Vqn0p+uw
-         yMbUvk9ts6xr1H3ImAC9HeJqPUFIemxzu9mLgnVeTOaozL32HUySeWNLuSAuKPwfIut+
-         eNeE4T71NyB4pWW5efvugfxR6xtEevax/YntJv1Nq+jGj2jJPPo+tdzTT5V4EFEGrpWl
-         PgVD6y6y/lQwy/YLIaqMRK/bcbSfyUh/EJUnN0sokn47/4OOuiGy2KbFVu/Y2jE4OWu8
-         NMMmwL5slqW4ux8JriK02ai0J+sUpTVTfm0li81oN+vlPP5Z+zIV613HMiIY9f7Pmrl+
-         c7xg==
-X-Gm-Message-State: AO0yUKVoww3KBznABHk8Q6IAQ/6T1oQCHv+XOF7B2JQ32x8k7/Btq8/y
-        I8gE3IYsd4IsaAIbxu2UrMo=
-X-Google-Smtp-Source: AK7set+HXLRoEjVux+KBqTYyfeeEPpWDaTZy89gDp9Z3fbarR/XWyoTVAgFKibigewNEP/2sNcYtfQ==
-X-Received: by 2002:a2e:9d15:0:b0:29e:4fa5:1708 with SMTP id t21-20020a2e9d15000000b0029e4fa51708mr1980232lji.3.1679468224015;
-        Tue, 21 Mar 2023 23:57:04 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id u14-20020a2e854e000000b00299ab2475ebsm2498810ljj.1.2023.03.21.23.57.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 23:57:03 -0700 (PDT)
-Date:   Wed, 22 Mar 2023 09:57:01 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, Sergey.Semin@baikalelectronics.ru,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v11 08/13] PCI: dwc: Add dw_pcie_num_lanes_setup()
-Message-ID: <20230322065701.po7owyzwisntalyz@mobilestation>
-References: <20230310123510.675685-1-yoshihiro.shimoda.uh@renesas.com>
- <20230310123510.675685-9-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S229629AbjCVHZu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 03:25:50 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BAD19122
+        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 00:25:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679469931; x=1711005931;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=7VmOamKZMrYxYB6pymC18pnvyxPSx9PGA1Fu7oDw1VU=;
+  b=XTp+/uLRS3eXHSqJRJY3c6GIm+LwBmSgdFwkHGJhCLJA/ewgiRea5EON
+   wymWK12AJLOH1OJtGoPdcdLOYlzI56wIXRYXBuKv2hbQa4vMKyN5L6CKn
+   Ui9VcjjKIhLYbm1BZ9VfjM8vW9FfM57/xAioo1UcOYsWiHkP0zXRLOouI
+   NzajjtD/V+yWRBJZuv0RIAOWusNkEGBaA4EBJlJhL+PsO1y+mFXnj5ISV
+   vB7DFE/tZ4LD4F/GJWPMjvkXREv/g1N6wkylFMOUqrJuFqcdVdyq+QKcg
+   gfmuJR0OTPrJWqo0EFiAjSwX9+0jlFjUMU1XA8jVwF00vdHh+pPQlnPuU
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="401715230"
+X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
+   d="scan'208";a="401715230"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 00:25:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="746200366"
+X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
+   d="scan'208";a="746200366"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Mar 2023 00:25:26 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pesqb-000D2o-1U;
+        Wed, 22 Mar 2023 07:25:25 +0000
+Date:   Wed, 22 Mar 2023 15:24:43 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ cdce67099117ece371582f706c6eff7d3a65326d
+Message-ID: <641aad3b.QGHvfEYSsKpuCxLe%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230310123510.675685-9-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,123 +63,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 09:35:05PM +0900, Yoshihiro Shimoda wrote:
-> Add dw_pcie_num_lanes_setup() to setup PCI_EXP_LNKCAP_MLW.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: cdce67099117ece371582f706c6eff7d3a65326d  PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled
 
-More details of why it's needed would be nice. For instance, in
-accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with the
-PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-field there is another one which needs to be update. It's
-LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at the
-very least the maximum link-width capability CSR won't expose the
-actual maximum capability.
+elapsed time: 731m
 
-[1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.60a, March 2015, p.1032
-[2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.70a, March 2016, p.1065
-[3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 4.90a, March 2016, p.1057
-...
-[X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
-    Version 5.40a, March 2019, p.1396
-[X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
-    Version 5.40a, March 2019, p.1266
+configs tested: 96
+configs skipped: 6
 
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 12 ++++++++++++
->  drivers/pci/controller/dwc/pcie-designware.h |  1 +
->  drivers/pci/controller/dwc/pcie-tegra194.c   |  5 +----
->  3 files changed, 14 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 89b8ec29da7f..47860da5738e 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -696,6 +696,18 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci)
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_upconfig_setup);
->  
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +void dw_pcie_num_lanes_setup(struct dw_pcie *pci, int num_lanes)
-> +{
-> +	u8 cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	u32 val;
-> +
-> +	val = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> +	val &= ~PCI_EXP_LNKCAP_MLW;
-> +	val |= num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT;
-> +	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, val);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_pcie_num_lanes_setup);
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r023-20230319   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r031-20230321   gcc  
+arc                  randconfig-r035-20230319   gcc  
+arc                  randconfig-r036-20230321   gcc  
+arc                  randconfig-r043-20230319   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r035-20230321   clang
+arm                  randconfig-r046-20230319   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r006-20230319   gcc  
+csky                 randconfig-r022-20230319   gcc  
+hexagon                             defconfig   clang
+hexagon              randconfig-r004-20230320   clang
+hexagon              randconfig-r041-20230319   clang
+hexagon              randconfig-r045-20230319   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230320   clang
+i386                 randconfig-a002-20230320   clang
+i386                 randconfig-a003-20230320   clang
+i386                 randconfig-a004-20230320   clang
+i386                 randconfig-a005-20230320   clang
+i386                 randconfig-a006-20230320   clang
+i386                          randconfig-a012   gcc  
+i386                          randconfig-a014   gcc  
+i386                          randconfig-a016   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r026-20230319   gcc  
+microblaze           randconfig-r014-20230319   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      bmips_stb_defconfig   clang
+nios2                               defconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r025-20230319   gcc  
+parisc               randconfig-r034-20230321   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                   microwatt_defconfig   clang
+powerpc                     mpc5200_defconfig   clang
+powerpc              randconfig-r002-20230319   gcc  
+powerpc              randconfig-r032-20230319   gcc  
+powerpc              randconfig-r034-20230319   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r005-20230319   gcc  
+riscv                randconfig-r042-20230319   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r033-20230321   gcc  
+s390                 randconfig-r044-20230319   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r011-20230319   gcc  
+sh                   randconfig-r031-20230319   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r012-20230319   gcc  
+sparc                randconfig-r021-20230319   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230320   clang
+x86_64               randconfig-a002-20230320   clang
+x86_64               randconfig-a003-20230320   clang
+x86_64               randconfig-a004-20230320   clang
+x86_64               randconfig-a005-20230320   clang
+x86_64               randconfig-a006-20230320   clang
+x86_64                        randconfig-a012   clang
+x86_64                        randconfig-a014   clang
+x86_64                        randconfig-a016   clang
+x86_64                        randconfig-k001   clang
+x86_64               randconfig-r006-20230320   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r033-20230319   gcc  
+xtensa               randconfig-r036-20230319   gcc  
 
-That's not what I meant. I meant to implement that functionality in
-the framework of dw_pcie_setup() function by moving all the
-link-width-related initializations into a dedicated static function
-dw_pcie_link_set_max_{link}_width() (thus the prototype would look
-like the dw_pcie_link_set_max_speed()) and _calling_ it from
-dw_pcie_setup() in place where the num-lanes initializations is
-performed if pci->num_lanes isn't zero. As I already mentioned in my
-comment above in accordance with the DW PCIe HW-manuals this should
-have been done for all DW PCIe IP-cores in the first place. I also
-checked the PCIE_CAP_MAX_LINK_WIDTH field access attribute. It turns
-out to be the same
-■ Wire: No access.
-■ Dbi: if (DBI_RO_WR_EN == 1) then R/W else R
-for all IP-cores which HW ref manuals I have at hands (v4.60a, v4.70a,
-v4.90a, v5.20a, v5.30a, v5.40a).
-
-* Note even though the dw_pcie_setup() method currently permits the
-* 1, 2, 4 and 8 lanes only, in fact the x16 setup is also possible
-* judging by the CX_NL DW PCIe IP-core synthesize parameter.
-
-It would also be more readable to place the dw_pcie_link_set_max_{link}_width()
-function below dw_pcie_link_set_max_speed() as per the calling order
-in the framework of dw_pcie_setup().
-
-By doing as I suggested above you not only would be able to implement
-a correct link-width setup procedure for all IP-cores but also could
-get rid of the PATCH #5 since you'll be moving the respective code
-anyway and get rid of the dw_pcie_num_lanes_setup() method invocation
-from your and Tegra glue-drivers.
-
--Serge(y)
-
-> +
->  static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  {
->  	u32 cap, ctrl2, link_speed;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 79713ce075cc..36f3e2c818fe 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -415,6 +415,7 @@ void dw_pcie_write_dbi(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
-> +void dw_pcie_num_lanes_setup(struct dw_pcie *pci, int num_lanes);
->  int dw_pcie_wait_for_link(struct dw_pcie *pci);
->  int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
->  			      u64 cpu_addr, u64 pci_addr, u64 size);
-> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
-> index 09825b4a075e..befe17d57e2a 100644
-> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
-> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
-> @@ -902,10 +902,7 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
->  	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
->  
->  	/* Configure Max lane width from DT */
-> -	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
-> -	val &= ~PCI_EXP_LNKCAP_MLW;
-> -	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
-> -	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
-> +	dw_pcie_num_lanes_setup(pci, pcie->num_lanes);
->  
->  	/* Clear Slot Clock Configuration bit if SRNS configuration */
->  	if (pcie->enable_srns) {
-> -- 
-> 2.25.1
-> 
-> 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
