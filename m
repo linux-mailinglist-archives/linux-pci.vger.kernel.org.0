@@ -2,176 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E94E6C4403
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 08:25:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E31B6C4733
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 11:05:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229782AbjCVHZv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Mar 2023 03:25:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54438 "EHLO
+        id S229595AbjCVKFi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Mar 2023 06:05:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjCVHZu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 03:25:50 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66BAD19122
-        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 00:25:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679469931; x=1711005931;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=7VmOamKZMrYxYB6pymC18pnvyxPSx9PGA1Fu7oDw1VU=;
-  b=XTp+/uLRS3eXHSqJRJY3c6GIm+LwBmSgdFwkHGJhCLJA/ewgiRea5EON
-   wymWK12AJLOH1OJtGoPdcdLOYlzI56wIXRYXBuKv2hbQa4vMKyN5L6CKn
-   Ui9VcjjKIhLYbm1BZ9VfjM8vW9FfM57/xAioo1UcOYsWiHkP0zXRLOouI
-   NzajjtD/V+yWRBJZuv0RIAOWusNkEGBaA4EBJlJhL+PsO1y+mFXnj5ISV
-   vB7DFE/tZ4LD4F/GJWPMjvkXREv/g1N6wkylFMOUqrJuFqcdVdyq+QKcg
-   gfmuJR0OTPrJWqo0EFiAjSwX9+0jlFjUMU1XA8jVwF00vdHh+pPQlnPuU
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="401715230"
-X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
-   d="scan'208";a="401715230"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 00:25:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="746200366"
-X-IronPort-AV: E=Sophos;i="5.98,281,1673942400"; 
-   d="scan'208";a="746200366"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 22 Mar 2023 00:25:26 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pesqb-000D2o-1U;
-        Wed, 22 Mar 2023 07:25:25 +0000
-Date:   Wed, 22 Mar 2023 15:24:43 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:for-linus] BUILD SUCCESS
- cdce67099117ece371582f706c6eff7d3a65326d
-Message-ID: <641aad3b.QGHvfEYSsKpuCxLe%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229668AbjCVKFh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 06:05:37 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E2C1A665
+        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 03:04:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679479495;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UlzXqLaiFJqutr/ifAilPZ+K+vBBAuY2KbY33ds/cHU=;
+        b=iO34GA1lZGh70vCmgTPRIlZuBBJJx1scg5uRwp7/3Ya+tvAT2HkIPJeBqU0nbNRBFiaEvk
+        2+ICYEvyB9FKYkbdqZL25UYF0ZDDXyEeIcR5nC1l3m86ZC86oZO1L/PFDeUMUBf0qYVVIC
+        tLk+Z3Jx4XFJGxY6TNYAxIs4qpd/IZc=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-256-VO0cEu7TO7OeS6b7SaIb0Q-1; Wed, 22 Mar 2023 06:04:52 -0400
+X-MC-Unique: VO0cEu7TO7OeS6b7SaIb0Q-1
+Received: by mail-qv1-f71.google.com with SMTP id g6-20020ad45426000000b005a33510e95aso9052271qvt.16
+        for <linux-pci@vger.kernel.org>; Wed, 22 Mar 2023 03:04:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679479492;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:reply-to:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=UlzXqLaiFJqutr/ifAilPZ+K+vBBAuY2KbY33ds/cHU=;
+        b=CryFikt61YH6wK/MLeQe+vFi6olxoRiEhwVM0cnyA6jtrkDaz42iMYFznozxyPOGYb
+         Oqx2muO8ngMjAx+LqqW6OGRzWfNvKlo9F7Z4nBpBplNloyMEOj/4Id2HKILcTe8TVIww
+         4zJ+28i/nlIeeH/TIAFy46Dw9A9f3Ox+lmgYmCp0pxGGPifKFhiWIWeVgiAzVvOVSkXM
+         xDVMu1Unx5e13SrRUSuP3WhyAnNmTrOkKkFNGYpP0VrKqdJnLIe8ki7W6SXRRGMn8liG
+         Pb80ITNJ6MFOv1DYVr2859w+3yGU561vwNYtzmNVBn9l7w7jRl8+ulJOSYaqPclzBwvh
+         i0zQ==
+X-Gm-Message-State: AO0yUKXINQePpwO0kmgitkA1ejTBfWjagTFa6548c4KTsaLHpTVBIIrl
+        Z8vuDWcnaLWqCESZwk6csOlPDwgQt0Srx4bwW87tdjZGbzkdPcig9NxZd3YMrRPH3dqzyP4Cura
+        mroROE4wc2q8rm2ZOjSSg
+X-Received: by 2002:ac8:4e83:0:b0:3bb:88e2:7625 with SMTP id 3-20020ac84e83000000b003bb88e27625mr4875204qtp.24.1679479492325;
+        Wed, 22 Mar 2023 03:04:52 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+MdvA2FH9NCy5hSRE5kdbgRKa8XU3K3oS6KEMykktU5okAu5JCYZ0efXr+GMZF3/gdAkmxJg==
+X-Received: by 2002:ac8:4e83:0:b0:3bb:88e2:7625 with SMTP id 3-20020ac84e83000000b003bb88e27625mr4875177qtp.24.1679479492048;
+        Wed, 22 Mar 2023 03:04:52 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:59e:9d80:527b:9dff:feef:3874? ([2a01:e0a:59e:9d80:527b:9dff:feef:3874])
+        by smtp.gmail.com with ESMTPSA id w8-20020a05620a148800b0073bb0ef3a8esm11009302qkj.21.2023.03.22.03.04.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 22 Mar 2023 03:04:51 -0700 (PDT)
+Message-ID: <1a227cc4-217b-01aa-ecee-9819160d9a44@redhat.com>
+Date:   Wed, 22 Mar 2023 11:04:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Reply-To: eric.auger@redhat.com
+Subject: Re: [RESEND PATCH] ACPI: VIOT: Initialize the correct IOMMU fwspec
+Content-Language: en-US
+To:     Jean-Philippe Brucker <jean-philippe@linaro.org>, rafael@kernel.org
+Cc:     lenb@kernel.org, linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
+        linux-pci@vger.kernel.org, helgaas@kernel.org
+References: <20230320180528.281755-1-jean-philippe@linaro.org>
+From:   Eric Auger <eric.auger@redhat.com>
+In-Reply-To: <20230320180528.281755-1-jean-philippe@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
-branch HEAD: cdce67099117ece371582f706c6eff7d3a65326d  PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled
+Hi Jean,
 
-elapsed time: 731m
+On 3/20/23 19:05, Jean-Philippe Brucker wrote:
+> When setting up DMA for a PCI device, we need to initialize its
+> iommu_fwspec with all possible alias RIDs (such as PCI bridges). To do
+> this we use pci_for_each_dma_alias() which calls
+> viot_pci_dev_iommu_init(). This function incorrectly initializes the
+> fwspec of the bridge instead of the device being configured. Fix it by
+> passing the original device as context to pci_for_each_dma_alias().
+>
+> Fixes: 3cf485540e7b ("ACPI: Add driver for the VIOT table")
+> Reported-by: Eric Auger <eric.auger@redhat.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-configs tested: 96
-configs skipped: 6
+Tested-by: Eric Auger <eric.auger@redhat.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+With this patch the pcie-to-pci bridge is assigned an iommu group.
+The iommu group topology is not yet correct (ie. end points downstream
+to the pcie-to-pci bridge are put in a separate iommu group) however
+this is not related to that patch and not supposed to be fixed here
+(https://lore.kernel.org/all/4fead092-1058-198a-b430-3dee0fffcd51@arm.com/)
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r023-20230319   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r031-20230321   gcc  
-arc                  randconfig-r035-20230319   gcc  
-arc                  randconfig-r036-20230321   gcc  
-arc                  randconfig-r043-20230319   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r035-20230321   clang
-arm                  randconfig-r046-20230319   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r006-20230319   gcc  
-csky                 randconfig-r022-20230319   gcc  
-hexagon                             defconfig   clang
-hexagon              randconfig-r004-20230320   clang
-hexagon              randconfig-r041-20230319   clang
-hexagon              randconfig-r045-20230319   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230320   clang
-i386                 randconfig-a002-20230320   clang
-i386                 randconfig-a003-20230320   clang
-i386                 randconfig-a004-20230320   clang
-i386                 randconfig-a005-20230320   clang
-i386                 randconfig-a006-20230320   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r026-20230319   gcc  
-microblaze           randconfig-r014-20230319   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                      bmips_stb_defconfig   clang
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r025-20230319   gcc  
-parisc               randconfig-r034-20230321   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                   microwatt_defconfig   clang
-powerpc                     mpc5200_defconfig   clang
-powerpc              randconfig-r002-20230319   gcc  
-powerpc              randconfig-r032-20230319   gcc  
-powerpc              randconfig-r034-20230319   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r005-20230319   gcc  
-riscv                randconfig-r042-20230319   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r033-20230321   gcc  
-s390                 randconfig-r044-20230319   clang
-sh                               allmodconfig   gcc  
-sh                   randconfig-r011-20230319   gcc  
-sh                   randconfig-r031-20230319   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r012-20230319   gcc  
-sparc                randconfig-r021-20230319   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230320   clang
-x86_64               randconfig-a002-20230320   clang
-x86_64               randconfig-a003-20230320   clang
-x86_64               randconfig-a004-20230320   clang
-x86_64               randconfig-a005-20230320   clang
-x86_64               randconfig-a006-20230320   clang
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-k001   clang
-x86_64               randconfig-r006-20230320   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r033-20230319   gcc  
-xtensa               randconfig-r036-20230319   gcc  
+Thanks
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Eric
+
+> ---
+> This fixes issue (1) reported here:
+> https://lore.kernel.org/all/Y8qzOKm6kvhGWG1T@myrica/
+>
+> resend: Added linux-pci list
+> ---
+>  drivers/acpi/viot.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/acpi/viot.c b/drivers/acpi/viot.c
+> index ed752cbbe636..c8025921c129 100644
+> --- a/drivers/acpi/viot.c
+> +++ b/drivers/acpi/viot.c
+> @@ -328,6 +328,7 @@ static int viot_pci_dev_iommu_init(struct pci_dev *pdev, u16 dev_id, void *data)
+>  {
+>  	u32 epid;
+>  	struct viot_endpoint *ep;
+> +	struct device *aliased_dev = data;
+>  	u32 domain_nr = pci_domain_nr(pdev->bus);
+>  
+>  	list_for_each_entry(ep, &viot_pci_ranges, list) {
+> @@ -338,7 +339,7 @@ static int viot_pci_dev_iommu_init(struct pci_dev *pdev, u16 dev_id, void *data)
+>  			epid = ((domain_nr - ep->segment_start) << 16) +
+>  				dev_id - ep->bdf_start + ep->endpoint_id;
+>  
+> -			return viot_dev_iommu_init(&pdev->dev, ep->viommu,
+> +			return viot_dev_iommu_init(aliased_dev, ep->viommu,
+>  						   epid);
+>  		}
+>  	}
+> @@ -372,7 +373,7 @@ int viot_iommu_configure(struct device *dev)
+>  {
+>  	if (dev_is_pci(dev))
+>  		return pci_for_each_dma_alias(to_pci_dev(dev),
+> -					      viot_pci_dev_iommu_init, NULL);
+> +					      viot_pci_dev_iommu_init, dev);
+>  	else if (dev_is_platform(dev))
+>  		return viot_mmio_dev_iommu_init(to_platform_device(dev));
+>  	return -ENODEV;
+
