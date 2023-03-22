@@ -2,249 +2,355 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4CE6C598F
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 23:47:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5874F6C5A33
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 00:19:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjCVWq7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Mar 2023 18:46:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40200 "EHLO
+        id S229752AbjCVXTS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Mar 2023 19:19:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjCVWq6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 18:46:58 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73C32AF2D;
-        Wed, 22 Mar 2023 15:46:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679525217; x=1711061217;
-  h=message-id:subject:from:reply-to:to:cc:date:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=HDQsZ+Zd2OeoFbQT7/pK+vspHsprO3oIK582aYdmdL8=;
-  b=lsVkw+q7YSfnu1ao7bte5Hnc/pIPYh+nE6sDpgXA7k4jWj+IdQKUG29q
-   Ep8lMxHQvWuHJjZFQHE2TB0v3diLAMAiQyp+X+0/POfjImugHXspCOUar
-   i2gRep9aVb4WUwEi4dI1QNskA7Wf8ZaoNEbMQ9eU/djCVhrYRYmtm7C1A
-   J3brVQFGDqUxZKhKM+21r+ghqQ6/HSLF1Q5q9v0SVjg/89k0q4FDdhLfw
-   iXg0hXfVT4viRD6tN9tCYkfQBdNdjhrtzqZH/mi7VTbzCsnK8cvhrwQN1
-   oVCOxnw/C8SxTG1Lavf5Rl4iDPzXe+F64qDXx1GSpVxPu3AjNaRRt3Z0z
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="341706563"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="341706563"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 15:46:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="928002484"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="928002484"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2023 15:46:55 -0700
-Received: from anithaha-mobl1.amr.corp.intel.com (unknown [10.209.65.203])
-        by linux.intel.com (Postfix) with ESMTP id AB9AC580CD3;
-        Wed, 22 Mar 2023 15:46:55 -0700 (PDT)
-Message-ID: <ab9bf3032ed46fc0586e089edc5aac6e71b331d8.camel@linux.intel.com>
-Subject: Re: [Intel-gfx] [PATCH] PCI/ASPM: pci_enable_link_state: Add
- argument to acquire bus lock
-From:   "David E. Box" <david.e.box@linux.intel.com>
-Reply-To: david.e.box@linux.intel.com
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     ville.syrjala@linux.intel.com, nirmal.patel@linux.intel.com,
-        jonathan.derrick@linux.dev, lorenzo.pieralisi@arm.com,
-        hch@infradead.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, michael.a.bottini@intel.com,
-        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Wed, 22 Mar 2023 15:46:55 -0700
-In-Reply-To: <20230322205702.GA2493123@bhelgaas>
-References: <20230322205702.GA2493123@bhelgaas>
-Organization: David E. Box
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu1 
+        with ESMTP id S229497AbjCVXTR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 19:19:17 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A520206BD;
+        Wed, 22 Mar 2023 16:19:16 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id k37so12550515lfv.0;
+        Wed, 22 Mar 2023 16:19:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679527154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=APl+axmsRH50WQibYsax2iHB5pWAr984deNQGhRudfQ=;
+        b=PSgk/Y2PGmdcK3sxX4qMafcpWu55JUJQcSn4tZYnTP6HPbG7JBtHNIL/LhoIH8B4pB
+         2h/d8+u0JHBk4WSSElNe8v+4B7GKQIqUHeCDE/11Wm7ttmkGUlN5eNh9g26rJRwZZAEU
+         z5TZ355LT2TM/Hjyf/Dps2kzyRA3EgeZX9Llv+N2Q7KGMboKspFdRZsn+b21xeeN6Uaq
+         LaZgdy8Dp+2kiRTkCZfiGdTQ9nu12t4T6rs0aLXOR6BENqb5IP3x8rve+FKDreyXymv4
+         OyClxW9LUcnusVXAPcsLs6CG0VTdZLMqVA04YTkv2qRVsncjTVZoq0ftvAY0sFodB+0d
+         1hJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679527154;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=APl+axmsRH50WQibYsax2iHB5pWAr984deNQGhRudfQ=;
+        b=y8wf9HQweS/DMrUiAG6nPYlZCDxI5fmNPjAYjp6E0CwcGDkV3P60W8+MGcnz8kj0Qc
+         fE2dbaMoCgtEuK/bloZacXUJj0/2gntYk8XTwv5G9JDFsU8dH9PLmpOR5SkTcquQWLIS
+         +XTB+oaAsptZ4b53jd/xLuVqe4UeNC4c2FIwfpzZgkFVC8q240a/n/v6Wc9+6tSOrnP5
+         gCgOkk0N0zf371YYxA+bU97KXYcotlGM9ftL8/5YF0ruoKX8sVTd14Et0prcr+pyQVhg
+         uq9knfjR1S91HFqOUXyxbZhqhhm6Sc/xRQrWYvPxIUdp7lxPRQUHDcJxQV/IDx138C0L
+         Sv6A==
+X-Gm-Message-State: AO0yUKWkbuCsTlwYBPa/GyG7ZjydYPK9ikKoQm8wTCCEo2IZLooU5ZU/
+        pUvdNerXrjzxgTQDE29l2fg=
+X-Google-Smtp-Source: AK7set+Z9LYEY+VcH6P1+mZsG+783Fb+6X0u1vDimsirUjqGB8QP00eW8fEaqqxEXvdoEFwQsRfvTA==
+X-Received: by 2002:ac2:44d9:0:b0:4dd:ad88:ba5c with SMTP id d25-20020ac244d9000000b004ddad88ba5cmr2476291lfm.4.1679527154369;
+        Wed, 22 Mar 2023 16:19:14 -0700 (PDT)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id u4-20020ac251c4000000b004db1a7e6decsm2719937lfm.205.2023.03.22.16.19.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Mar 2023 16:19:13 -0700 (PDT)
+Date:   Thu, 23 Mar 2023 02:19:11 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Elad Nachman <enachman@marvell.com>
+Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
+        lpieralisi@kernel.org, robh@kernel.org, kw@linux.com,
+        krzysztof.kozlowski+dt@linaro.org, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Raz Adashi <raza@marvell.com>
+Subject: Re: [PATCH v4 2/8] PCI: armada8k: Add AC5 SoC support
+Message-ID: <20230322231911.dplgi5d3warhc245@mobilestation>
+References: <20230313124016.17102-1-enachman@marvell.com>
+ <20230313124016.17102-3-enachman@marvell.com>
 MIME-Version: 1.0
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230313124016.17102-3-enachman@marvell.com>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On Mon, Mar 13, 2023 at 02:40:10PM +0200, Elad Nachman wrote:
+> From: Raz Adashi <raza@marvell.com>
+> 
+> pcie-armada8k driver is utilized to serve also AC5.
+> 
+> Driver assumes interrupt mask registers are located
+> in the same address inboth CPUs. This assumption is
+> incorrect - fix it for AC5.
+> 
+> Co-developed-by: Yuval Shaia <yshaia@marvell.com>
+> Signed-off-by: Yuval Shaia <yshaia@marvell.com>
+> Signed-off-by: Raz Adashi <raza@marvell.com>
+> Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
+> ---
+> v2:
+>    1) fix W1 warnings which caused by unused leftover code
+> 
+>    2) Use one xlate function to translate ac5 dbi access. Also add
+>       mode description in comments about this translation.
+> 
+>    3) Use correct name of Raz
+> 
+>    4) Use matching data to pass the SoC specific params (type & ops)
+> 
+>  drivers/pci/controller/dwc/pcie-armada8k.c | 145 +++++++++++++++++----
+>  1 file changed, 120 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-armada8k.c b/drivers/pci/controller/dwc/pcie-armada8k.c
+> index 5c999e15c357..b9fb1375dc58 100644
+> --- a/drivers/pci/controller/dwc/pcie-armada8k.c
+> +++ b/drivers/pci/controller/dwc/pcie-armada8k.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pci.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/platform_device.h>
+> @@ -26,15 +27,26 @@
+>  
+>  #define ARMADA8K_PCIE_MAX_LANES PCIE_LNK_X4
+>  
+> +enum armada8k_pcie_type {
+> +	ARMADA8K_PCIE_TYPE_A8K,
+> +	ARMADA8K_PCIE_TYPE_AC5
+> +};
 
-On Wed, 2023-03-22 at 15:57 -0500, Bjorn Helgaas wrote:
-> On Wed, Mar 22, 2023 at 03:45:01PM -0500, Bjorn Helgaas wrote:
-> > Hi David,
-> >=20
-> > On Tue, Mar 21, 2023 at 04:38:49PM -0700, David E. Box wrote:
-> > > The VMD driver calls pci_enabled_link_state as a callback from
-> > > pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a loc=
-kdep
-> > > warning. Add an argument to pci_enable_link_state to set whether the =
-lock
-> > > should be acquired. In the VMD driver, set the argument to false sinc=
-e the
-> > > lock will already be obtained by pci_bus_walk.
-> > >=20
-> > > Reported-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
-> > > Fixes: de82f60f9c86 ("PCI/ASPM: Add pci_enable_link_state()")
-> >=20
-> > This means "if your kernel includes de82f60f9c86, you probably want to
-> > backport this fix to it."=C2=A0 But that's not the case here.=C2=A0 Thi=
-s patch
-> > is not fixing an issue with de82f60f9c86, so I don't think there's a
-> > reason to include a "Fixes" line.
->=20
-> Oops, sorry, forgot to engage brain before hitting "send".
->=20
-> I think the "Fixes" line should reference f492edb40b54 ("PCI: vmd: Add
-> quirk to configure PCIe ASPM and LTR") instead, since that's where the
-> locking problem started.
->=20
-> > This patch is adding functionality that is only needed by some other
-> > patch, and it should be part of a series that also includes the patch
-> > that uses it to make sure they go together.
+AFAICS instead of if-else-based pattern you can just split up the
+implementation into the dedicated functions.
 
-Yeah this should have been two patches.
+> +
+>  struct armada8k_pcie {
+>  	struct dw_pcie *pci;
+>  	struct clk *clk;
+>  	struct clk *clk_reg;
+>  	struct phy *phy[ARMADA8K_PCIE_MAX_LANES];
+>  	unsigned int phy_count;
+> +	enum armada8k_pcie_type pcie_type;
+>  };
+>  
+> -#define PCIE_VENDOR_REGS_OFFSET		0x8000
+> +struct armada8k_pcie_of_data {
+> +	enum armada8k_pcie_type pcie_type;
+> +	const struct dw_pcie_ops *pcie_ops;
+> +};
+> +
+> +#define PCIE_VENDOR_REGS_OFFSET		0x8000	/* in ac5 is 0x10000 */
+>  
+>  #define PCIE_GLOBAL_CONTROL_REG		(PCIE_VENDOR_REGS_OFFSET + 0x0)
+>  #define PCIE_APP_LTSSM_EN		BIT(2)
+> @@ -48,10 +60,17 @@ struct armada8k_pcie {
+>  
+>  #define PCIE_GLOBAL_INT_CAUSE1_REG	(PCIE_VENDOR_REGS_OFFSET + 0x1C)
+>  #define PCIE_GLOBAL_INT_MASK1_REG	(PCIE_VENDOR_REGS_OFFSET + 0x20)
+> +#define PCIE_GLOBAL_INT_MASK2_REG	(PCIE_VENDOR_REGS_OFFSET + 0x28)
+>  #define PCIE_INT_A_ASSERT_MASK		BIT(9)
+>  #define PCIE_INT_B_ASSERT_MASK		BIT(10)
+>  #define PCIE_INT_C_ASSERT_MASK		BIT(11)
+>  #define PCIE_INT_D_ASSERT_MASK		BIT(12)
+> +#define PCIE_INT_A_ASSERT_MASK_AC5	BIT(12)
+> +#define PCIE_INT_B_ASSERT_MASK_AC5	BIT(13)
+> +#define PCIE_INT_C_ASSERT_MASK_AC5	BIT(14)
+> +#define PCIE_INT_D_ASSERT_MASK_AC5	BIT(15)
+> +
+> +#define PCIE_ATU_ACCESS_MASK_AC5	GENMASK(21, 20)
+>  
+>  #define PCIE_ARCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x50)
+>  #define PCIE_AWCACHE_TRC_REG		(PCIE_VENDOR_REGS_OFFSET + 0x54)
+> @@ -169,6 +188,7 @@ static int armada8k_pcie_host_init(struct dw_pcie_rp *pp)
+>  {
+>  	u32 reg;
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct armada8k_pcie *pcie = to_armada8k_pcie(pci);
+>  
+>  	if (!dw_pcie_link_up(pci)) {
+>  		/* Disable LTSSM state machine to enable configuration */
+> @@ -177,32 +197,41 @@ static int armada8k_pcie_host_init(struct dw_pcie_rp *pp)
+>  		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
+>  	}
+>  
+> -	/* Set the device to root complex mode */
+> -	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+> -	reg &= ~(PCIE_DEVICE_TYPE_MASK << PCIE_DEVICE_TYPE_SHIFT);
+> -	reg |= PCIE_DEVICE_TYPE_RC << PCIE_DEVICE_TYPE_SHIFT;
+> -	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
+> +	if (pcie->pcie_type == ARMADA8K_PCIE_TYPE_A8K) {
+> +		/* Set the device to root complex mode */
+> +		reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_CONTROL_REG);
+> +		reg &= ~(PCIE_DEVICE_TYPE_MASK << PCIE_DEVICE_TYPE_SHIFT);
+> +		reg |= PCIE_DEVICE_TYPE_RC << PCIE_DEVICE_TYPE_SHIFT;
+> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_CONTROL_REG, reg);
+>  
+> -	/* Set the PCIe master AxCache attributes */
+> -	dw_pcie_writel_dbi(pci, PCIE_ARCACHE_TRC_REG, ARCACHE_DEFAULT_VALUE);
+> -	dw_pcie_writel_dbi(pci, PCIE_AWCACHE_TRC_REG, AWCACHE_DEFAULT_VALUE);
+> +		/* Set the PCIe master AxCache attributes */
+> +		dw_pcie_writel_dbi(pci, PCIE_ARCACHE_TRC_REG, ARCACHE_DEFAULT_VALUE);
+> +		dw_pcie_writel_dbi(pci, PCIE_AWCACHE_TRC_REG, AWCACHE_DEFAULT_VALUE);
+>  
+> -	/* Set the PCIe master AxDomain attributes */
+> -	reg = dw_pcie_readl_dbi(pci, PCIE_ARUSER_REG);
+> -	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+> -	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+> -	dw_pcie_writel_dbi(pci, PCIE_ARUSER_REG, reg);
+> +		/* Set the PCIe master AxDomain attributes */
+> +		reg = dw_pcie_readl_dbi(pci, PCIE_ARUSER_REG);
+> +		reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+> +		reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+> +		dw_pcie_writel_dbi(pci, PCIE_ARUSER_REG, reg);
+>  
+> -	reg = dw_pcie_readl_dbi(pci, PCIE_AWUSER_REG);
+> -	reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+> -	reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+> -	dw_pcie_writel_dbi(pci, PCIE_AWUSER_REG, reg);
+> +		reg = dw_pcie_readl_dbi(pci, PCIE_AWUSER_REG);
+> +		reg &= ~(AX_USER_DOMAIN_MASK << AX_USER_DOMAIN_SHIFT);
+> +		reg |= DOMAIN_OUTER_SHAREABLE << AX_USER_DOMAIN_SHIFT;
+> +		dw_pcie_writel_dbi(pci, PCIE_AWUSER_REG, reg);
+> +	}
+>  
+>  	/* Enable INT A-D interrupts */
+> -	reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG);
+> -	reg |= PCIE_INT_A_ASSERT_MASK | PCIE_INT_B_ASSERT_MASK |
+> -	       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+> -	dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
+> +	if (pcie->pcie_type == ARMADA8K_PCIE_TYPE_AC5) {
+> +		reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG);
+> +		reg |= PCIE_INT_A_ASSERT_MASK_AC5 | PCIE_INT_B_ASSERT_MASK_AC5 |
+> +		       PCIE_INT_C_ASSERT_MASK_AC5 | PCIE_INT_D_ASSERT_MASK_AC5;
+> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK2_REG, reg);
+> +	} else {
+> +		reg = dw_pcie_readl_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG);
+> +		reg |= PCIE_INT_A_ASSERT_MASK | PCIE_INT_B_ASSERT_MASK |
+> +		       PCIE_INT_C_ASSERT_MASK | PCIE_INT_D_ASSERT_MASK;
+> +		dw_pcie_writel_dbi(pci, PCIE_GLOBAL_INT_MASK1_REG, reg);
+> +	}
+>  
+>  	return 0;
+>  }
+> @@ -258,9 +287,61 @@ static int armada8k_add_pcie_port(struct armada8k_pcie *pcie,
+>  	return 0;
+>  }
+>  
+> -static const struct dw_pcie_ops dw_pcie_ops = {
+> +static u32 ac5_xlate_dbi_reg(u32 reg)
+> +{
+> +	/* Handle AC5 ATU access */
+> +	if ((reg & ~0xfffff) == PCIE_ATU_ACCESS_MASK_AC5) {
+> +		reg &= 0xfffff;
+> +		/* ATU registers offset is 0xC00 + 0x200 * n,
+> +		 * from RFU registers.
+> +		 */
+> +		reg = 0xc000 | (0x200 * (reg >> 9)) | (reg & 0xff);
 
->=20
-> And I see that the use *is* included in this patch.=C2=A0 But I don't
-> really like this pattern:
->=20
-> =C2=A0 vmd_probe
-> =C2=A0=C2=A0=C2=A0 vmd_enable_domain
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vmd->bus =3D pci_create_root_bus(...);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_scan_child_bus(vmd->bus);
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pci_walk_bus(vmd->bus, vmd_pm_enable_quirk=
-, &features);
->=20
-> because pci_walk_bus() makes locking complicated (as this issue shows)
-> and it doesn't work for hot-added devices (I don't know if that's an
-> issue for VMD, but the pattern gets copied to places where it *is*).
->=20
-> Normally vmd_pm_enable_quirk() would be done by making it an actual
-> DECLARE_PCI_FIXUP_HEADER() or DECLARE_PCI_FIXUP_FINAL(), so it would
-> be called automatically by the PCI core when a new device is
-> enumerated.=C2=A0 Would that work here?=C2=A0 If it would, I don't think =
-you'd
-> need to add the extra flag to pci_enable_link_state().
+A custom ATU-base address can be specified instead of this
+brain-cracking hack.
 
-It should work. I'll test the change.
+> +	} else if ((reg & 0xfffff000) == PCIE_VENDOR_REGS_OFFSET) {
+> +		/* PCIe RFU registers in A8K are at offset 0x8000 from base
+> +		 * (0xf2600000) while in AC5 offset is 0x10000 from base
+> +		 * (0x800a0000) therefore need the addition of 0x8000.
+> +		 */
+> +		reg += PCIE_VENDOR_REGS_OFFSET;
+> +	}
 
-David
+app/ulbi reg-space could be defined instead.
 
->=20
-> > > Link: https://lore.kernel.org/linux-pci/ZBjko%2FifunIwsK2v@intel.com/
-> > > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > > ---
-> > > =C2=A0drivers/pci/controller/vmd.c | 2 +-
-> > > =C2=A0drivers/pci/pcie/aspm.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +++++=
-+---
-> > > =C2=A0include/linux/pci.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 | 5 +++--
-> > > =C2=A03 files changed, 10 insertions(+), 6 deletions(-)
-> > >=20
-> > > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vm=
-d.c
-> > > index 990630ec57c6..45aa35744eae 100644
-> > > --- a/drivers/pci/controller/vmd.c
-> > > +++ b/drivers/pci/controller/vmd.c
-> > > @@ -737,7 +737,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pd=
-ev,
-> > > void *userdata)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!(features & VMD_=
-FEAT_BIOS_PM_QUIRK))
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > > =C2=A0
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_enable_link_state(pdev=
-, PCIE_LINK_STATE_ALL);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pci_enable_link_state(pdev=
-, PCIE_LINK_STATE_ALL, false);
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pos =3D pci_find_ext_=
-capability(pdev, PCI_EXT_CAP_ID_LTR);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (!pos)
-> > > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > > index 66d7514ca111..5b5a600bb864 100644
-> > > --- a/drivers/pci/pcie/aspm.c
-> > > +++ b/drivers/pci/pcie/aspm.c
-> > > @@ -1147,8 +1147,9 @@ EXPORT_SYMBOL(pci_disable_link_state);
-> > > =C2=A0 *
-> > > =C2=A0 * @pdev: PCI device
-> > > =C2=A0 * @state: Mask of ASPM link states to enable
-> > > + * @sem: Boolean to acquire/release pci_bus_sem
-> > > =C2=A0 */
-> > > -int pci_enable_link_state(struct pci_dev *pdev, int state)
-> > > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
-> > > =C2=A0{
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0struct pcie_link_stat=
-e *link =3D pcie_aspm_get_link(pdev);
-> > > =C2=A0
-> > > @@ -1165,7 +1166,8 @@ int pci_enable_link_state(struct pci_dev *pdev,=
- int
-> > > state)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0return -EPERM;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
-> > > =C2=A0
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0down_read(&pci_bus_sem);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (sem)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0down_read(&pci_bus_sem);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_lock(&aspm_lock=
-);
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0link->aspm_default =
-=3D 0;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (state & PCIE_LINK=
-_STATE_L0S)
-> > > @@ -1186,7 +1188,8 @@ int pci_enable_link_state(struct pci_dev *pdev,=
- int
-> > > state)
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0link->clkpm_default =
-=3D (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pcie_set_clkpm(link, =
-policy_to_clkpm_state(link));
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0mutex_unlock(&aspm_lo=
-ck);
-> > > -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0up_read(&pci_bus_sem);
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (sem)
-> > > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0up_read(&pci_bus_sem);
-> > > =C2=A0
-> > > =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0return 0;
-> > > =C2=A0}
-> > > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > > index fafd8020c6d7..a6f9f24b39fd 100644
-> > > --- a/include/linux/pci.h
-> > > +++ b/include/linux/pci.h
-> > > @@ -1707,7 +1707,7 @@ extern bool pcie_ports_native;
-> > > =C2=A0#ifdef CONFIG_PCIEASPM
-> > > =C2=A0int pci_disable_link_state(struct pci_dev *pdev, int state);
-> > > =C2=A0int pci_disable_link_state_locked(struct pci_dev *pdev, int sta=
-te);
-> > > -int pci_enable_link_state(struct pci_dev *pdev, int state);
-> > > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)=
-;
-> > > =C2=A0void pcie_no_aspm(void);
-> > > =C2=A0bool pcie_aspm_support_enabled(void);
-> > > =C2=A0bool pcie_aspm_enabled(struct pci_dev *pdev);
-> > > @@ -1716,7 +1716,8 @@ static inline int pci_disable_link_state(struct
-> > > pci_dev *pdev, int state)
-> > > =C2=A0{ return 0; }
-> > > =C2=A0static inline int pci_disable_link_state_locked(struct pci_dev =
-*pdev, int
-> > > state)
-> > > =C2=A0{ return 0; }
-> > > -static inline int pci_enable_link_state(struct pci_dev *pdev, int st=
-ate)
-> > > +static inline int
-> > > +pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
-> > > =C2=A0{ return 0; }
-> > > =C2=A0static inline void pcie_no_aspm(void) { }
-> > > =C2=A0static inline bool pcie_aspm_support_enabled(void) { return fal=
-se; }
-> > > --=20
-> > > 2.34.1
-> > >=20
+-Serge(y)
 
+> +
+> +	return reg;
+> +}
+> +
+> +static u32 ac5_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+> +			     u32 reg, size_t size)
+> +{
+> +	u32 val;
+> +
+> +	dw_pcie_read(base + ac5_xlate_dbi_reg(reg), size, &val);
+> +	return val;
+> +}
+> +
+> +static void ac5_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
+> +			       u32 reg, size_t size, u32 val)
+> +{
+> +	dw_pcie_write(base + ac5_xlate_dbi_reg(reg), size, val);
+> +}
+> +
+> +static const struct dw_pcie_ops armada8k_dw_pcie_ops = {
+> +	.link_up = armada8k_pcie_link_up,
+> +	.start_link = armada8k_pcie_start_link,
+> +};
+> +
+> +static const struct dw_pcie_ops ac5_dw_pcie_ops = {
+>  	.link_up = armada8k_pcie_link_up,
+>  	.start_link = armada8k_pcie_start_link,
+> +	.read_dbi = ac5_pcie_read_dbi,
+> +	.write_dbi = ac5_pcie_write_dbi,
+> +};
+> +
+> +static const struct armada8k_pcie_of_data a8k_pcie_of_data = {
+> +	.pcie_type = ARMADA8K_PCIE_TYPE_A8K,
+> +	.pcie_ops = &armada8k_dw_pcie_ops,
+> +};
+> +
+> +static const struct armada8k_pcie_of_data ac5_pcie_of_data = {
+> +	.pcie_type = ARMADA8K_PCIE_TYPE_AC5,
+> +	.pcie_ops = &ac5_dw_pcie_ops,
+>  };
+>  
+>  static int armada8k_pcie_probe(struct platform_device *pdev)
+> @@ -268,9 +349,15 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  	struct dw_pcie *pci;
+>  	struct armada8k_pcie *pcie;
+>  	struct device *dev = &pdev->dev;
+> +	const struct armada8k_pcie_of_data *data;
+>  	struct resource *base;
+>  	int ret;
+>  
+> +	data = of_device_get_match_data(dev);
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>  	if (!pcie)
+>  		return -ENOMEM;
+> @@ -279,9 +366,10 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  	if (!pci)
+>  		return -ENOMEM;
+>  
+> +	pci->ops = data->pcie_ops;
+>  	pci->dev = dev;
+> -	pci->ops = &dw_pcie_ops;
+>  
+> +	pcie->pcie_type = data->pcie_type;
+>  	pcie->pci = pci;
+>  
+>  	pcie->clk = devm_clk_get(dev, NULL);
+> @@ -334,7 +422,14 @@ static int armada8k_pcie_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id armada8k_pcie_of_match[] = {
+> -	{ .compatible = "marvell,armada8k-pcie", },
+> +	{
+> +		.compatible = "marvell,armada8k-pcie",
+> +		.data = &a8k_pcie_of_data,
+> +	},
+> +	{
+> +		.compatible = "marvell,ac5-pcie",
+> +		.data = &ac5_pcie_of_data,
+> +	},
+>  	{},
+>  };
+>  
+> -- 
+> 2.17.1
+> 
+> 
