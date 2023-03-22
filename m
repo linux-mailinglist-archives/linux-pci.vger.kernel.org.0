@@ -2,54 +2,63 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 19DD66C583C
-	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 21:57:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F4866C58AD
+	for <lists+linux-pci@lfdr.de>; Wed, 22 Mar 2023 22:19:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230323AbjCVU5M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 22 Mar 2023 16:57:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55116 "EHLO
+        id S229666AbjCVVTj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 22 Mar 2023 17:19:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230226AbjCVU5L (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 16:57:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D4D41E9FD;
-        Wed, 22 Mar 2023 13:57:05 -0700 (PDT)
+        with ESMTP id S229713AbjCVVTi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 22 Mar 2023 17:19:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4054F222FB;
+        Wed, 22 Mar 2023 14:19:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B783622B4;
-        Wed, 22 Mar 2023 20:57:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA438C433EF;
-        Wed, 22 Mar 2023 20:57:04 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B13B62199;
+        Wed, 22 Mar 2023 21:19:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78B40C433D2;
+        Wed, 22 Mar 2023 21:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679518624;
-        bh=jId+0Y3hmLSu0ioRI2ENH6CbrYsoF1q/LR2HtwNEepw=;
+        s=k20201202; t=1679519971;
+        bh=5Lr4+LiAe/vyJjSpCgbGrH8T22xmcBxh9ZpVbFE0NpY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ncZw5hoXPrMfeDNOcbMJAmbs8A+5VexW7XWGaJf9Do2S1sXWO8n4d0EY3XTf8Wq/w
-         n5lezahI+vKIR4oJAIVKFZqKf2z2utaBKpUiFn9fGu3QKuqKAn/ZQcByoilKsQN5PE
-         ad9+9kxT84GfdGxwrsMM3f0oD2AsYC+3nLChgRJF7ev1Idgg66KkX5ocvfHZ4DF6vR
-         V6TSz1w2l23ylUwO8T4p6OXTa1YeBhvlHCNFKjHjaa/6ap9/PekA6vkneNe0Tl6FeT
-         gins/zJ/POtpraMuR8vURTWXW7RhRPkeMeRpsthRLSHEEHtdV5cQyj0IyV7oezdDpB
-         hu58AyZb8SgCg==
-Date:   Wed, 22 Mar 2023 15:57:02 -0500
+        b=RVMGpnosVaaSykQcODe1kChh1yrK8nue3a8krWRC30QZUjZY71F+ENcZPHEVuZnmq
+         lN9loILAp+HBq+s6F1+XfMVbJ09nZFa977xbfUisFB+BysYblpPWft48j1H0mUGqw/
+         fU4WxhzWOk2HoxCwD5zHi1PdhoKzKehY704Va0T56vbzJUZU36sXoY6L7Ieqxlvh+C
+         MB67XSbpm4k6pOu6nh6JgaMDfwDCWZMejl0L5/mAnHE2i3emSCW/+kLSKadOn1pCYn
+         htkhsd4pj3qa7G5Z0Y/3bSp+HaKcUcPhEvCALwbsh3tUJ1YFgRY+Ex0AxV8A5wv/4l
+         H2O/U1XCwVd/A==
+Date:   Wed, 22 Mar 2023 16:19:29 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "David E. Box" <david.e.box@linux.intel.com>
-Cc:     ville.syrjala@linux.intel.com, nirmal.patel@linux.intel.com,
-        jonathan.derrick@linux.dev, lorenzo.pieralisi@arm.com,
-        hch@infradead.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, michael.a.bottini@intel.com,
-        rafael@kernel.org, me@adhityamohan.in, linux-pci@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [Intel-gfx] [PATCH] PCI/ASPM: pci_enable_link_state: Add
- argument to acquire bus lock
-Message-ID: <20230322205702.GA2493123@bhelgaas>
+To:     Frank Li <frank.li@nxp.com>
+Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        Leo Li <leoyang.li@nxp.com>, dl-linux-imx <linux-imx@nxp.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "M.H. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Roy Zang <roy.zang@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "Z.Q. Hou" <zhiqiang.hou@nxp.com>
+Subject: Re: [EXT] Re: [PATCH v2 1/1] PCI: layerscape: Add power management
+ support
+Message-ID: <20230322211929.GA2493702@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230322204459.GA2492596@bhelgaas>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+In-Reply-To: <AM6PR04MB4838BC2054AA11A2C29189F788819@AM6PR04MB4838.eurprd04.prod.outlook.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,132 +66,84 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 03:45:01PM -0500, Bjorn Helgaas wrote:
-> Hi David,
+On Tue, Mar 21, 2023 at 09:39:44PM +0000, Frank Li wrote:
+> > -----Original Message-----
+> > From: Bjorn Helgaas <helgaas@kernel.org>
+> > Sent: Tuesday, March 21, 2023 3:59 PM
+> > To: Frank Li <frank.li@nxp.com>
+> > Cc: bhelgaas@google.com; Leo Li <leoyang.li@nxp.com>; dl-linux-imx <linux-
+> > imx@nxp.com>; devicetree@vger.kernel.org;
+> > gustavo.pimentel@synopsys.com; kw@linux.com; linux-arm-
+> > kernel@lists.infradead.org; linux-kernel@vger.kernel.org; linux-
+> > pci@vger.kernel.org; lorenzo.pieralisi@arm.com; M.H. Lian
+> > <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>;
+> > robh+dt@kernel.org; Roy Zang <roy.zang@nxp.com>;
+> > shawnguo@kernel.org; Z.Q. Hou <zhiqiang.hou@nxp.com>
+> > Subject: [EXT] Re: [PATCH v2 1/1] PCI: layerscape: Add power management
+> > support
+> > 
+> > Caution: EXT Email
+> > 
+> > On Tue, Mar 21, 2023 at 12:02:20PM -0400, Frank Li wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > Add PME_Turn_Off/PME_TO_Ack handshake sequence to PCIe devices,
+> > such as
+> > > NVME or wifi module, and finally put the PCIe controller into D3 state
+> > > after the L2/L3 ready state transition process completion.
+> > >
+> > > However, it's important to note that not all devices may be able to
+> > > tolerate the PME_Turn_Off command. In general, fixed PCIe devices
+> > > connected to Layerscape, such as NXP wifi devices, are able to handle
+> > > this command.
+> > 
+> > I know this paragraph is here because I asked whether all PCIe devices
+> > could tolerate PME_Turn_Off.  I don't know much about that level of
+> > the protocol, but it does look to me like PME_Turn_Off is required,
+> > e.g., PCIe r6.0, sec 5.3.3.2.1, 5.3.3.4.
+> > 
+> > So I'm not sure this paragraph adds anything useful.  If the spec
+> > requires it, this paragraph is like saying "it's important to note
+> > that some PCIe devices may not follow the spec," which is pointless.
+> > 
+> > This functionality results in any downstream devices being put in
+> > D3cold, right?  I think that *would* be worth mentioning.  There are a
+> > few cases where we try to avoid putting devices in D3cold, e.g.,
+> > no_d3cold, and I suspect this functionality would put them in D3cold
+> > regardless of no_d3cold.  Those are corner cases that you would
+> > probably never see on your platform, so a brief mention here is
+> > probably enough.
+> > 
+> > > +static void ls_pcie_set_dstate(struct ls_pcie *pcie, u32 dstate)
+> > > +{
+> > > +     struct dw_pcie *pci = pcie->pci;
+> > > +     u8 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_PM);
+> > > +     u32 val;
+> > > +
+> > > +     val = dw_pcie_readw_dbi(pci, offset + PCI_PM_CTRL);
+> > > +     val &= ~PCI_PM_CTRL_STATE_MASK;
+> > > +     val |= dstate;
+> > > +     dw_pcie_writew_dbi(pci, offset + PCI_PM_CTRL, val);
+> > 
+> > Is this a power management register for the *Root Port*, i.e., as
+> > defined by PCIe r6.0 sec 7.5.2?
+> > 
+> > Or is it a similar register for the *Root Complex* as a whole that is
+> > defined by a Layerscape or DesignWare spec and coincidentally uses the
+> > same Capability ID and control register layout as the PCIe one?
 > 
-> On Tue, Mar 21, 2023 at 04:38:49PM -0700, David E. Box wrote:
-> > The VMD driver calls pci_enabled_link_state as a callback from
-> > pci_bus_walk. Both will acquire the pci_bus_sem lock leading to a lockdep
-> > warning. Add an argument to pci_enable_link_state to set whether the lock
-> > should be acquired. In the VMD driver, set the argument to false since the
-> > lock will already be obtained by pci_bus_walk.
-> > 
-> > Reported-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-> > Fixes: de82f60f9c86 ("PCI/ASPM: Add pci_enable_link_state()")
-> 
-> This means "if your kernel includes de82f60f9c86, you probably want to
-> backport this fix to it."  But that's not the case here.  This patch
-> is not fixing an issue with de82f60f9c86, so I don't think there's a
-> reason to include a "Fixes" line.
+> I think it is root port. Does linux framework can do that for it
+> automatically?  Or need call pci_set_power_state here instead of
+> write register directly?
 
-Oops, sorry, forgot to engage brain before hitting "send".
+Well, maybe, the linux framework might already put Root Ports in D3 if
+the right conditions are satisfied.  I don't understand all of them,
+but you can start at pci_dev_check_d3cold() and look at its users and
+instrument things to see what actually happens.
 
-I think the "Fixes" line should reference f492edb40b54 ("PCI: vmd: Add
-quirk to configure PCIe ASPM and LTR") instead, since that's where the
-locking problem started.
+But it might be a problem if that has to be synchronized and done in
+the right order with respect to the RC things you do here, because I
+don't think there's a hook for the PCI core to call your driver to do
+the RC stuff.
 
-> This patch is adding functionality that is only needed by some other
-> patch, and it should be part of a series that also includes the patch
-> that uses it to make sure they go together.
-
-And I see that the use *is* included in this patch.  But I don't
-really like this pattern:
-
-  vmd_probe
-    vmd_enable_domain
-      vmd->bus = pci_create_root_bus(...);
-      pci_scan_child_bus(vmd->bus);
-      pci_walk_bus(vmd->bus, vmd_pm_enable_quirk, &features);
-
-because pci_walk_bus() makes locking complicated (as this issue shows)
-and it doesn't work for hot-added devices (I don't know if that's an
-issue for VMD, but the pattern gets copied to places where it *is*).
-
-Normally vmd_pm_enable_quirk() would be done by making it an actual
-DECLARE_PCI_FIXUP_HEADER() or DECLARE_PCI_FIXUP_FINAL(), so it would
-be called automatically by the PCI core when a new device is
-enumerated.  Would that work here?  If it would, I don't think you'd
-need to add the extra flag to pci_enable_link_state().
-
-> > Link: https://lore.kernel.org/linux-pci/ZBjko%2FifunIwsK2v@intel.com/
-> > Signed-off-by: David E. Box <david.e.box@linux.intel.com>
-> > ---
-> >  drivers/pci/controller/vmd.c | 2 +-
-> >  drivers/pci/pcie/aspm.c      | 9 ++++++---
-> >  include/linux/pci.h          | 5 +++--
-> >  3 files changed, 10 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> > index 990630ec57c6..45aa35744eae 100644
-> > --- a/drivers/pci/controller/vmd.c
-> > +++ b/drivers/pci/controller/vmd.c
-> > @@ -737,7 +737,7 @@ static int vmd_pm_enable_quirk(struct pci_dev *pdev, void *userdata)
-> >  	if (!(features & VMD_FEAT_BIOS_PM_QUIRK))
-> >  		return 0;
-> >  
-> > -	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL);
-> > +	pci_enable_link_state(pdev, PCIE_LINK_STATE_ALL, false);
-> >  
-> >  	pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_LTR);
-> >  	if (!pos)
-> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> > index 66d7514ca111..5b5a600bb864 100644
-> > --- a/drivers/pci/pcie/aspm.c
-> > +++ b/drivers/pci/pcie/aspm.c
-> > @@ -1147,8 +1147,9 @@ EXPORT_SYMBOL(pci_disable_link_state);
-> >   *
-> >   * @pdev: PCI device
-> >   * @state: Mask of ASPM link states to enable
-> > + * @sem: Boolean to acquire/release pci_bus_sem
-> >   */
-> > -int pci_enable_link_state(struct pci_dev *pdev, int state)
-> > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
-> >  {
-> >  	struct pcie_link_state *link = pcie_aspm_get_link(pdev);
-> >  
-> > @@ -1165,7 +1166,8 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
-> >  		return -EPERM;
-> >  	}
-> >  
-> > -	down_read(&pci_bus_sem);
-> > +	if (sem)
-> > +		down_read(&pci_bus_sem);
-> >  	mutex_lock(&aspm_lock);
-> >  	link->aspm_default = 0;
-> >  	if (state & PCIE_LINK_STATE_L0S)
-> > @@ -1186,7 +1188,8 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
-> >  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
-> >  	pcie_set_clkpm(link, policy_to_clkpm_state(link));
-> >  	mutex_unlock(&aspm_lock);
-> > -	up_read(&pci_bus_sem);
-> > +	if (sem)
-> > +		up_read(&pci_bus_sem);
-> >  
-> >  	return 0;
-> >  }
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index fafd8020c6d7..a6f9f24b39fd 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -1707,7 +1707,7 @@ extern bool pcie_ports_native;
-> >  #ifdef CONFIG_PCIEASPM
-> >  int pci_disable_link_state(struct pci_dev *pdev, int state);
-> >  int pci_disable_link_state_locked(struct pci_dev *pdev, int state);
-> > -int pci_enable_link_state(struct pci_dev *pdev, int state);
-> > +int pci_enable_link_state(struct pci_dev *pdev, int state, bool sem);
-> >  void pcie_no_aspm(void);
-> >  bool pcie_aspm_support_enabled(void);
-> >  bool pcie_aspm_enabled(struct pci_dev *pdev);
-> > @@ -1716,7 +1716,8 @@ static inline int pci_disable_link_state(struct pci_dev *pdev, int state)
-> >  { return 0; }
-> >  static inline int pci_disable_link_state_locked(struct pci_dev *pdev, int state)
-> >  { return 0; }
-> > -static inline int pci_enable_link_state(struct pci_dev *pdev, int state)
-> > +static inline int
-> > +pci_enable_link_state(struct pci_dev *pdev, int state, bool sem)
-> >  { return 0; }
-> >  static inline void pcie_no_aspm(void) { }
-> >  static inline bool pcie_aspm_support_enabled(void) { return false; }
-> > -- 
-> > 2.34.1
-> > 
+Bjorn
