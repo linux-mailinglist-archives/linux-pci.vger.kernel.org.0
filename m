@@ -2,157 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B506C6C5D
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 16:34:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EFA816C6CE8
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 17:06:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjCWPeN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Mar 2023 11:34:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33040 "EHLO
+        id S230369AbjCWQGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Mar 2023 12:06:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231851AbjCWPeI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 11:34:08 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567C78A5C;
-        Thu, 23 Mar 2023 08:34:02 -0700 (PDT)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32NF0lff005788;
-        Thu, 23 Mar 2023 15:33:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=BTtXcATo5dnx2ElslfMl2Fvz3YupFjhxz+ZfS4V4dto=;
- b=pwa7XL26/OLCfIOCLh2lqHVeIn0DgprwHFhc/KprJ3i9pm2eXMHEGdQCyooF+3lIbpuU
- gpdtuHwWQsPct7MvKIfRbGpcERO17yT3MKhfpfNdyyaHsryL2S9XvOFKioIrmAinB3cB
- De7dDv9Lk/69NiZd4gh0wuUKg+BojKPr5v8t3S/4amvoCGLtidU6R5YSowlUQRtYF/yb
- RwI9Du0G/hhrGkq1py93dmiQ8Q+MLFKL8606lqNuWqRWssUXPUb49+/g9TsGSJ6qkIUr
- NueP6Y9wfBPgDOEI5lAH20oKzZrja1OQ38vATuLcUovI69R2/CEfNRW+CabzhWyyiYTH Zg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pgkxv1j6c-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 15:33:43 +0000
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32NEZChx017863;
-        Thu, 23 Mar 2023 15:33:42 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3pgkxv1j5t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 15:33:42 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 32MNj4Zv019849;
-        Thu, 23 Mar 2023 15:33:40 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma02fra.de.ibm.com (PPS) with ESMTPS id 3pd4x6ecsj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 23 Mar 2023 15:33:40 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 32NFXcdI22741618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Mar 2023 15:33:38 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0DC9920049;
-        Thu, 23 Mar 2023 15:33:38 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D29E320043;
-        Thu, 23 Mar 2023 15:33:36 +0000 (GMT)
-Received: from [9.171.87.16] (unknown [9.171.87.16])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Mar 2023 15:33:36 +0000 (GMT)
-Message-ID: <f2e0e4d90f3008e40d81c50c8235b151ddc4705c.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 15/38] leds: add HAS_IOPORT dependencies
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Lee Jones <lee@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Pavel Machek <pavel@ucw.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        with ESMTP id S230302AbjCWQF7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 12:05:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6262BF03;
+        Thu, 23 Mar 2023 09:05:58 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1700762582;
+        Thu, 23 Mar 2023 16:05:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8F0C433D2;
+        Thu, 23 Mar 2023 16:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679587557;
+        bh=erq5KugyEyInp+1CXdRbEcUBGVhHqPMfmw0xk7LsNFE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=L0xXih9gDDEX0ABuzTzfOtjKtRBsimvi1+/TLswHlPpI2e3BPFW8PBg4ruainuAZP
+         P9YfO90YDzM8G1u4DtHoc3XGWG2xoBjRYfffHzwDQz3qISxnsoDXSOgBIodSY+E1oK
+         FgEXH/WMzwO5hXBg/eA8TwkFD4ajo+kk3BJBrFek++mVQ6gP6VBfj00XbHRHheRGSo
+         92uKYNuVnMliRoW5gS/WYBS9hO93mkApa4vvXWAR9nNZj5XX1ZlWdfGZ6FlspdQFY5
+         F2rD4ArgZPN9iJLvFVjg45+BV4GPSYp5FVQ9b672vsE0EQ3ERWxTNf+/C9YGaQd5zv
+         jXDf1PLw2lDoQ==
+Date:   Thu, 23 Mar 2023 11:05:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Janne Grunau <j@jannau.net>
+Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marc Zyngier <maz@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-leds@vger.kernel.org
-Date:   Thu, 23 Mar 2023 16:33:36 +0100
-In-Reply-To: <20230323145328.GM2673958@google.com>
-References: <20230314121216.413434-1-schnelle@linux.ibm.com>
-         <20230314121216.413434-16-schnelle@linux.ibm.com>
-         <20230316161442.GV9667@google.com>
-         <607a80040fc7e0c8c7474926088133be1e245127.camel@linux.ibm.com>
-         <20230323145328.GM2673958@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4 (3.46.4-1.fc37) 
+        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
+        asahi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] PCI: apple: Set only available ports up
+Message-ID: <20230323160555.GA2555502@bhelgaas>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: J98rJR5jh4RdW7XV1Je1935mhgWjf2_t
-X-Proofpoint-ORIG-GUID: ZmqKbStd77jEso64iNZCDwfxW9uSRC38
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-22_21,2023-03-23_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- mlxlogscore=927 adultscore=0 lowpriorityscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 priorityscore=1501 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303150002 definitions=main-2303230113
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230307-apple_pcie_disabled_ports-v3-1-0dfb908f5976@jannau.net>
+X-Spam-Status: No, score=-3.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2023-03-23 at 14:53 +0000, Lee Jones wrote:
-> On Thu, 23 Mar 2023, Niklas Schnelle wrote:
->=20
-> > On Thu, 2023-03-16 at 16:14 +0000, Lee Jones wrote:
-> > > On Tue, 14 Mar 2023, Niklas Schnelle wrote:
-> > >=20
-> > > > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and fr=
-iends
-> > > > not being declared. We thus need to add HAS_IOPORT as dependency fo=
-r
-> > > > those drivers using them.
-> > > >=20
-> > > > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > > > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > > > ---
-> > > >  drivers/leds/Kconfig | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >=20
-> > > Applied, thanks
-> >=20
-> > Sorry should have maybe been more clear, without patch 1 of this series
-> > this won't work as the HAS_IOPORT config option is new and will be
-> > missing otherwise. There's currently two options of merging this,
-> > either all at once or first only patch 1 and then the additional
-> > patches per subsystem until finally the last patch can remove
-> > inb()/outb() and friends when HAS_IOPORT is unset.
->=20
-> You only sent me this patch.
->=20
-> If there are in-set dependencies, you need to send everyone the whole
-> set so that we can organise a suitable merge strategy between us.
->=20
-> I'll revert the patch for now.
->=20
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Hi Janne, thanks for the patch!
 
-I know this isn't ideal and I'm sorry for the confusion, extra work and
-churn. As far as I know sadly it's not possible to Cc everyone for such
-treewide series because the recipient list will hit the limits
-supported by some systems and mails get dropped which sucks even more.
-Maybe this can be solved in the future though, Konstantin Ryabitsev
-actually reached out because I mentioned that I tried using b4 prep /
-b4 send but couldn't exactly because it only supports a global
-recipient list.
+On Thu, Mar 23, 2023 at 09:10:12AM +0100, Janne Grunau wrote:
+> The Apple SoC devicetrees used to delete unused PCIe ports.
 
-Thanks,
-Niklas
+Maybe "used to *omit* unused PCIe ports"?  I assume the DT previously
+did not mention PCIe ports at all, but now the ports are included but
+marked "disabled"?
+
+> Avoid to set
+> up disabled PCIe ports to keep the previous behaviour. MacOS initialized
+> also only ports with a known device.
+
+The patch is fine with me, but the commit log doesn't tell us why we
+want this patch in addition to 6fffbc7ae137 ("PCI: Honor firmware's
+device disabled status"), since your previous response [1] says
+6fffbc7ae137 already does all the above.
+
+I don't have any Apple specs, but from looking at the code, the
+additional benefits of this patch over 6fffbc7ae137 might be:
+
+  - We won't trip over DT issues, like "reset" or "reg" not being
+    defined.
+
+  - We won't allocate needless apple_pcie_port structs.
+
+  - We won't ioremap register space, assert PERST#, setup clocks and
+    IRQs.
+
+  - We won't sleep waiting for things to come up, potentially saving
+    150ms or more for each disabled port.
+
+  - Maybe there's some power savings; I can't tell.
+
+It's probably more detail than necessary to mention *all* of that, but
+the commit log should say *something* about why we want this in
+addition to 6fffbc7ae137.
+
+> Use for_each_available_child_of_node instead of for_each_child_of_node
+> which takes the "status" property into account.
+
+Would you mind adding "()" after the function names, too?  Just my own
+idiosyncrasy to help distinguish them from regular English text.
+
+Bjorn
+
+[1] https://lore.kernel.org/r/20230316212217.GI24656@jannau.net
+
+> Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
+> Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
+> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
+> Reviewed-by: Marc Zyngier <maz@kernel.org>
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> ---
+> Changes in v3:
+> - dropped Cc: stable
+> - rewritten commit message since the warning is fixed by 6fffbc7ae137 ("PCI: Honor firmware's
+> device disabled status")
+> - Link to v2: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net
+> 
+> Changes in v2:
+> - rewritten commit message with more details and corrections
+> - collected Marc's "Reviewed-by:"
+> - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
+> ---
+>  drivers/pci/controller/pcie-apple.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
+> index 66f37e403a09..f8670a032f7a 100644
+> --- a/drivers/pci/controller/pcie-apple.c
+> +++ b/drivers/pci/controller/pcie-apple.c
+> @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
+>  	cfg->priv = pcie;
+>  	INIT_LIST_HEAD(&pcie->ports);
+>  
+> -	for_each_child_of_node(dev->of_node, of_port) {
+> +	for_each_available_child_of_node(dev->of_node, of_port) {
+>  		ret = apple_pcie_setup_port(pcie, of_port);
+>  		if (ret) {
+>  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+> 
+> ---
+> base-commit: c9c3395d5e3dcc6daee66c6908354d47bf98cb0c
+> change-id: 20230307-apple_pcie_disabled_ports-0c17fb7a4738
+> 
+> Best regards,
+> -- 
+> Janne Grunau <j@jannau.net>
+> 
