@@ -2,77 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0086C6435
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 10:56:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 014596C6441
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 10:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231152AbjCWJ4t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Mar 2023 05:56:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50690 "EHLO
+        id S230366AbjCWJ71 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Mar 2023 05:59:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229734AbjCWJ4Z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 05:56:25 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 926EE3599;
-        Thu, 23 Mar 2023 02:55:36 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id w9so83972730edc.3;
-        Thu, 23 Mar 2023 02:55:36 -0700 (PDT)
+        with ESMTP id S229917AbjCWJ7D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 05:59:03 -0400
+Received: from mail-lj1-x236.google.com (mail-lj1-x236.google.com [IPv6:2a00:1450:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B997837545;
+        Thu, 23 Mar 2023 02:57:31 -0700 (PDT)
+Received: by mail-lj1-x236.google.com with SMTP id t14so21761424ljd.5;
+        Thu, 23 Mar 2023 02:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679565335;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PphF8K//KH/mvExR3XG/4qnql3FAdb+LvjCZLcvDGrk=;
-        b=WoaYs4cDl5W7Hl8gUWH/zV0hpbhNl+TFJDeRfKB/UPoKFF9wbFppTVopELseT2E3fB
-         p1+O+3B6Tzx1LI5j68FBLGijBifYwCrpHKMkc2blkdVRn+1hbZNcXDaX3he/8XuMfPZm
-         sPugHLGPdCilxoP2IMaEhstYiGKnjNnBEBHCmFerC+GdxsXkWciFXUaVC5mtf/Nh9NEv
-         J3aCs1lokSWZWrhfMeWjFAyVfYjMK9xMhlJcQ4T4tpcQgqAjUoiISWH//+1jLjpISiMN
-         nNRrlcS3bqqgWn4XUgpohK9Nv2C5FgTPrrmoZ38ELLt5y5ND3+Hp2LmGj2hp/3dvRmrr
-         S51g==
+        d=gmail.com; s=20210112; t=1679565450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zNohFcunEc2d201QuKdWbFwxCesMXGeY+v/Pe5nphlE=;
+        b=LfXtXxaTkz9wAJXiHh/WVIv0kneJglYiq0wB8xI6rxZJd8QkmMVN/sQYjAadiEtLga
+         zj+30nH0JM8WwhcmK8v/jrtIHjHE8TRTNKO4EOlN7cZxlUmra6vqh/9kNZ2gsISxR1in
+         yI68LXZ9Oejf3ycUE0fBfyc+L3RiCj96UJODQ4s1P4PguhXNbzLBlzTYQKbNwXtgbcKk
+         lJ+anis5c+0I8w4xlLQxE+kWgrVJE5M5TxnI6a3F1BG3rCl8mA+/N27Uts1bH+9zEdud
+         uWXoDKxu49Drt0J5S6EjbvXl5CR34bfYYkAQQQZBGJvb21DqJorxP/2Yh99UcivOGeFg
+         po8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679565335;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PphF8K//KH/mvExR3XG/4qnql3FAdb+LvjCZLcvDGrk=;
-        b=FNdKor28MYuT7I22xxq/nHFpCRnDlJJDesznnqGxVTcKRsdnlS2WbS5VyUphA0GtOZ
-         /sOTyqHahqD+M1cYF2IjjOa3Rakz/3BORkFjSp34I5Nnyfn8wDYF4w7UWRKJOlJdrhhN
-         HOnOUOz/vnzgt27hfw6jtHaKn48B8tJwZd02UV2SGaBSNLyQN/LGr22+U3L//PKD9ogW
-         ljY+5KZ+zku46LsTGAzlrfjSOTTcmzdFCcgleW0hnRe3xagkePx/TVi8qhzYOreMTpj6
-         kvsz0jNmFWoZN5v5BAg0V/KwFrnyKU2psjEPLQyiRWEZuaqeTJrU7VKv5pZoiTizzQ26
-         DvMQ==
-X-Gm-Message-State: AO0yUKV+cA8d4cZKGDQsgqOx6UA4THTtcuSG5kCkNYGOVueCi1nhZVNK
-        7/alXd3YNmyMtx7qlEbWe07oX1OZuek=
-X-Google-Smtp-Source: AK7set+SpQe/mPt/Uj8So7EKDhP/In9EL/bDpdZ8DnDAGNDOeKa9HsOCSo/mn+VjWloSWdcvds20LQ==
-X-Received: by 2002:a17:906:7f93:b0:932:290d:12e4 with SMTP id f19-20020a1709067f9300b00932290d12e4mr8906716ejr.25.1679565334896;
-        Thu, 23 Mar 2023 02:55:34 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id o7-20020a1709062e8700b00933356c681esm6898578eji.150.2023.03.23.02.55.34
+        d=1e100.net; s=20210112; t=1679565450;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zNohFcunEc2d201QuKdWbFwxCesMXGeY+v/Pe5nphlE=;
+        b=DDHysK8DgFIfl49CoCtmnpWG5PSeNKkjrExbSLyCFPkY5O46qYZMq8qGtq+Pvq0o9c
+         RPFx7wQ4ipays8m/D4sYc4bS/3Xhaa2QNyZNUe6x93q4/dCHadnJKMj1h9rsenxVFh3Z
+         uQGMaLYKHThwShQFqA9Qe2de77RczDrP2YmXgeCkwZ2kV9Z0aet5maOncUnfuKQDvJ4Y
+         GpDiBPzF1HQuIm9C/RxeOLkxujAGyVFhrBtbx0VEg/VDhW5dVdBcf4t3CipffuCCTcAm
+         LNAzId6V3XzRNLQLfL/oikPgQvT4Vx+YCAl8bCtZ4jEvHH0oSxLAELcOPOS3g0pzQDA4
+         AVxA==
+X-Gm-Message-State: AO0yUKXZ8fxj6MPQGm4bnqB6of7B5fRH7c0l10LJ93f/IiAgnbWXZZKK
+        5Me6i/ORJQQdtDvpLu7vblI=
+X-Google-Smtp-Source: AK7set+RK53Gvu//jgD9uy1R3wLtUy7zJYgX28GHhkUW9M9Ne0JZWm9JpuETCfD+nKcvi/9Bx4DapA==
+X-Received: by 2002:a2e:a815:0:b0:298:a8cf:e1e9 with SMTP id l21-20020a2ea815000000b00298a8cfe1e9mr1668412ljq.19.1679565449619;
+        Thu, 23 Mar 2023 02:57:29 -0700 (PDT)
+Received: from mobilestation ([95.79.133.202])
+        by smtp.gmail.com with ESMTPSA id w6-20020a2e9986000000b00290679ebac1sm2932242lji.9.2023.03.23.02.57.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Mar 2023 02:55:34 -0700 (PDT)
-Date:   Thu, 23 Mar 2023 10:55:32 +0100
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
-        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
-        ishah@nvidia.com, bbasu@nvidia.com
-Subject: Re: [Patch v3 10/11] memory: tegra: handle no BWMGR MRQ support in
- BPMP
-Message-ID: <ZBwiFEJ1bTMy6yTf@orome>
-References: <20230320182441.11904-1-sumitg@nvidia.com>
- <20230320182441.11904-11-sumitg@nvidia.com>
- <dd6257a9-1a12-23f9-e770-0809aaa7ed0e@linaro.org>
+        Thu, 23 Mar 2023 02:57:29 -0700 (PDT)
+Date:   Thu, 23 Mar 2023 12:57:27 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v8 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <20230323095727.hcqhposxkjy44xmr@mobilestation>
+References: <20230323034944.78357-1-cai.huoqing@linux.dev>
+ <20230323034944.78357-4-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jHN3+CG4rKdPqrN7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <dd6257a9-1a12-23f9-e770-0809aaa7ed0e@linaro.org>
-User-Agent: Mutt/2.2.9 (2022-11-12)
+In-Reply-To: <20230323034944.78357-4-cai.huoqing@linux.dev>
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
         DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
@@ -83,52 +78,565 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Mar 23, 2023 at 11:49:40AM +0800, Cai Huoqing wrote:
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
+> 
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA, so this patch
+> add support for HDMA NATIVE mode.
+> 
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.The same applies when you
+> have multiple write channels.
+> 
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are aligned to byte.
+> 
+> Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
+> ---
+> v7->v8:
+>   1.Get back the static methods: dw_hdma_v0_core_clear_done_int(),
+>     dw_hdma_v0_core_clear_abort_int() and dw_hdma_v0_core_status_int().
+> 
+> v7 link:
+>   https://lore.kernel.org/lkml/20230315012840.6986-4-cai.huoqing@linux.dev/
+> 
+>  drivers/dma/dw-edma/Makefile          |   5 +-
+>  drivers/dma/dw-edma/dw-edma-core.c    |   6 +-
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 294 ++++++++++++++++++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-core.h |  17 ++
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h | 130 ++++++++++++
+>  include/linux/dma/edma.h              |   3 +-
+>  6 files changed, 451 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> 
+> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
+> index 8d45c0d5689d..b1c91ef2c63d 100644
+> --- a/drivers/dma/dw-edma/Makefile
+> +++ b/drivers/dma/dw-edma/Makefile
+> @@ -2,6 +2,7 @@
+>  
+>  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
+>  dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
+> -dw-edma-objs			:= dw-edma-core.o \
+> -					dw-edma-v0-core.o $(dw-edma-y)
+> +dw-edma-objs			:= dw-edma-core.o	\
+> +				   dw-edma-v0-core.o	\
+> +				   dw-hdma-v0-core.o $(dw-edma-y)
+>  obj-$(CONFIG_DW_EDMA_PCIE)	+= dw-edma-pcie.o
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index f916f0d84bd6..61a6719d9d4e 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -18,6 +18,7 @@
+>  
+>  #include "dw-edma-core.h"
+>  #include "dw-edma-v0-core.h"
+> +#include "dw-hdma-v0-core.h"
+>  #include "../dmaengine.h"
+>  #include "../virt-dma.h"
+>  
+> @@ -917,7 +918,10 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  
+>  	dw->chip = chip;
+>  
+> -	dw_edma_v0_core_register(dw);
+> +	if (dw->chip->mf == EDMA_MF_HDMA_NATIVE)
+> +		dw_hdma_v0_core_register(dw);
+> +	else
+> +		dw_edma_v0_core_register(dw);
+>  
+>  	raw_spin_lock_init(&dw->lock);
+>  
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> new file mode 100644
+> index 000000000000..22b7b0410deb
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -0,0 +1,294 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 core
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +
+> +#include "dw-edma-core.h"
+> +#include "dw-hdma-v0-core.h"
+> +#include "dw-hdma-v0-regs.h"
+> +
+> +enum dw_hdma_control {
+> +	DW_HDMA_V0_CB					= BIT(0),
+> +	DW_HDMA_V0_TCB					= BIT(1),
+> +	DW_HDMA_V0_LLP					= BIT(2),
+> +	DW_HDMA_V0_LIE					= BIT(3),
+> +	DW_HDMA_V0_RIE					= BIT(4),
+> +	DW_HDMA_V0_CCS					= BIT(8),
+> +	DW_HDMA_V0_LLE					= BIT(9),
+> +};
+> +
+> +static inline struct dw_hdma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> +{
+> +	return dw->chip->reg_base;
+> +}
+> +
+> +static inline struct dw_hdma_v0_ch_regs __iomem *
+> +__dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+> +{
+> +	if (dir == EDMA_DIR_WRITE)
+> +		return &(__dw_regs(dw)->ch[ch].wr);
+> +	else
+> +		return &(__dw_regs(dw)->ch[ch].rd);
+> +}
+> +
+> +#define SET_CH_32(dw, dir, ch, name, value) \
+> +	writel(value, &(__dw_ch_regs(dw, dir, ch)->name))
+> +
+> +#define GET_CH_32(dw, dir, ch, name) \
+> +	readl(&(__dw_ch_regs(dw, dir, ch)->name))
+> +
+> +#define SET_BOTH_CH_32(dw, ch, name, value) \
+> +	do {					\
+> +		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_WRITE, ch)->name));	\
+> +		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_READ, ch)->name));	\
+> +	} while (0)
+> +
+> +/* HDMA management callbacks */
+> +static void dw_hdma_v0_core_off(struct dw_edma *dw)
+> +{
+> +	int id;
+> +
+> +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> +		SET_BOTH_CH_32(dw, id, int_setup,
+> +			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_BOTH_CH_32(dw, id, int_clear,
+> +			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_BOTH_CH_32(dw, id, ch_en, 0);
+> +	}
+> +}
+> +
+> +static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+> +{
+> +	u32 num_ch = 0;
+> +	int id;
+> +
+> +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> +		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+> +			num_ch++;
+> +	}
+> +
+> +	if (num_ch > HDMA_V0_MAX_NR_CH)
+> +		num_ch = HDMA_V0_MAX_NR_CH;
+> +
+> +	return (u16)num_ch;
+> +}
+> +
+> +static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +	u32 tmp;
+> +
+> +	tmp = FIELD_GET(HDMA_V0_CH_STATUS_MASK,
+> +			GET_CH_32(dw, chan->id, chan->dir, ch_stat));
+> +
+> +	if (tmp == 1)
+> +		return DMA_IN_PROGRESS;
+> +	else if (tmp == 3)
+> +		return DMA_COMPLETE;
+> +	else
+> +		return DMA_ERROR;
+> +}
+> +
+> +static void dw_hdma_v0_core_clear_done_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_STOP_INT_MASK);
+> +}
+> +
+> +static void dw_hdma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_ABORT_INT_MASK);
+> +}
+> +
+> +static u32 dw_hdma_v0_core_status_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	return GET_CH_32(dw, chan->dir, chan->id, int_stat);
+> +}
+> +
+> +static irqreturn_t
+> +dw_hdma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+> +			   dw_edma_handler_t done, dw_edma_handler_t abort)
+> +{
+> +	struct dw_edma *dw = dw_irq->dw;
+> +	unsigned long total, pos, val;
+> +	irqreturn_t ret = IRQ_NONE;
+> +	struct dw_edma_chan *chan;
+> +	unsigned long off, mask;
+> +
+> +	if (dir == EDMA_DIR_WRITE) {
+> +		total = dw->wr_ch_cnt;
+> +		off = 0;
+> +		mask = dw_irq->wr_mask;
+> +	} else {
+> +		total = dw->rd_ch_cnt;
+> +		off = dw->wr_ch_cnt;
+> +		mask = dw_irq->rd_mask;
+> +	}
+> +
+> +	for_each_set_bit(pos, &mask, total) {
+> +		chan = &dw->chan[pos + off];
+> +
+> +		val = dw_hdma_v0_core_status_int(chan);
+> +		if (FIELD_GET(HDMA_V0_STOP_INT_MASK, val)) {
+> +			dw_hdma_v0_core_clear_done_int(chan);
+> +			done(chan);
+> +
+> +			ret = IRQ_HANDLED;
+> +		}
+> +
+> +		if (FIELD_GET(HDMA_V0_ABORT_INT_MASK, val)) {
+> +			dw_hdma_v0_core_clear_abort_int(chan);
+> +			abort(chan);
+> +
+> +			ret = IRQ_HANDLED;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void dw_hdma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
+> +				     u32 control, u32 size, u64 sar, u64 dar)
+> +{
+> +	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
+> +
+> +	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		struct dw_hdma_v0_lli *lli = chunk->ll_region.vaddr.mem + ofs;
+> +
+> +		lli->control = control;
+> +		lli->transfer_size = size;
+> +		lli->sar.reg = sar;
+> +		lli->dar.reg = dar;
+> +	} else {
+> +		struct dw_hdma_v0_lli __iomem *lli = chunk->ll_region.vaddr.io + ofs;
+> +
+> +		writel(control, &lli->control);
+> +		writel(size, &lli->transfer_size);
+> +		writeq(sar, &lli->sar.reg);
+> +		writeq(dar, &lli->dar.reg);
+> +	}
+> +}
+> +
+> +static void dw_hdma_v0_write_ll_link(struct dw_edma_chunk *chunk,
+> +				     int i, u32 control, u64 pointer)
+> +{
+> +	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
+> +
+> +	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		struct dw_hdma_v0_llp *llp = chunk->ll_region.vaddr.mem + ofs;
+> +
+> +		llp->control = control;
+> +		llp->llp.reg = pointer;
+> +	} else {
+> +		struct dw_hdma_v0_llp __iomem *llp = chunk->ll_region.vaddr.io + ofs;
+> +
+> +		writel(control, &llp->control);
+> +		writeq(pointer, &llp->llp.reg);
+> +	}
+> +}
+> +
+> +static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> +{
+> +	struct dw_edma_burst *child;
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	u32 control = 0, i = 0;
+> +	int j;
+> +
+> +	if (chunk->cb)
+> +		control = DW_HDMA_V0_CB;
+> +
+> +	j = chunk->bursts_alloc;
+> +	list_for_each_entry(child, &chunk->burst->list, list) {
+> +		j--;
+> +		if (!j) {
+> +			control |= DW_HDMA_V0_LIE;
+> +			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> +				control |= DW_HDMA_V0_RIE;
+> +		}
+> +
+> +		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
+> +					 child->sar, child->dar);
+> +	}
+> +
+> +	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
+> +	if (!chunk->cb)
+> +		control |= DW_HDMA_V0_CB;
+> +
+> +	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
+> +}
+> +
+> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	struct dw_edma *dw = chan->dw;
+> +	u32 tmp;
+> +
+> +	dw_hdma_v0_core_write_chunk(chunk);
+> +
+> +	if (first) {
+> +		/* Enable engine */
+> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> +		/* Interrupt enable&unmask - done, abort */
+> +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+> +		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+> +		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_STOP_INT_EN;
+> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+> +		/* Channel control */
+> +		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
+> +		/* Linked list */
+> +		/* llp is not aligned on 64bit -> keep 32bit accesses */
+> +		SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> +			  lower_32_bits(chunk->ll_region.paddr));
+> +		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> +			  upper_32_bits(chunk->ll_region.paddr));
+> +	}
+> +	/* Set consumer cycle */
+> +	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> +		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+> +	/* Doorbell */
+> +	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+> +}
+> +
+> +static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	/* MSI done addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
+> +	/* MSI abort addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
+> +	/* config MSI data */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_msgdata, chan->msi.data);
+> +}
+> +
+> +/* HDMA debugfs callbacks */
+> +static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
+> +{
+> +}
+> +
+> +static const struct dw_edma_core_ops dw_hdma_v0_core = {
+> +	.off = dw_hdma_v0_core_off,
+> +	.ch_count = dw_hdma_v0_core_ch_count,
+> +	.ch_status = dw_hdma_v0_core_ch_status,
+> +	.handle_int = dw_hdma_v0_core_handle_int,
+> +	.start = dw_hdma_v0_core_start,
+> +	.ch_config = dw_hdma_v0_core_ch_config,
+> +	.debugfs_on = dw_hdma_v0_core_debugfs_on,
+> +};
+> +
+> +void dw_hdma_v0_core_register(struct dw_edma *dw)
+> +{
+> +	dw->core = &dw_hdma_v0_core;
+> +}
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.h b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+> new file mode 100644
+> index 000000000000..c373b4f0bd8a
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 core
+> + *
+> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
+> + */
+> +
+> +#ifndef _DW_HDMA_V0_CORE_H
+> +#define _DW_HDMA_V0_CORE_H
+> +
+> +#include <linux/dma/edma.h>
+> +
+> +/* HDMA core register */
+> +void dw_hdma_v0_core_register(struct dw_edma *dw);
+> +
+> +#endif /* _DW_HDMA_V0_CORE_H */
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> new file mode 100644
+> index 000000000000..cc0f80fc75ab
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> @@ -0,0 +1,130 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 reg
+> + *
+> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
+> + */
+> +
+> +#ifndef _DW_HDMA_V0_REGS_H
+> +#define _DW_HDMA_V0_REGS_H
+> +
+> +#include <linux/dmaengine.h>
+> +
+> +#define HDMA_V0_MAX_NR_CH			8
+> +#define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
+> +#define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
+> +#define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
+> +#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
+> +#define HDMA_V0_ABORT_INT_MASK			BIT(2)
+> +#define HDMA_V0_STOP_INT_MASK			BIT(0)
+> +#define HDMA_V0_LINKLIST_EN			BIT(0)
+> +#define HDMA_V0_CONSUMER_CYCLE_STAT		BIT(1)
+> +#define HDMA_V0_CONSUMER_CYCLE_BIT		BIT(0)
+> +#define HDMA_V0_DOORBELL_START			BIT(0)
+> +#define HDMA_V0_CH_STATUS_MASK			GENMASK(1, 0)
+> +
+> +struct dw_hdma_v0_ch_regs {
+> +	u32 ch_en;				/* 0x0000 */
+> +	u32 doorbell;				/* 0x0004 */
+> +	u32 prefetch;				/* 0x0008 */
+> +	u32 handshake;				/* 0x000c */
+> +	union {
+> +		u64 reg;			/* 0x0010..0x0014 */
+> +		struct {
+> +			u32 lsb;		/* 0x0010 */
+> +			u32 msb;		/* 0x0014 */
+> +		};
+> +	} llp;
+> +	u32 cycle_sync;				/* 0x0018 */
+> +	u32 transfer_size;			/* 0x001c */
+> +	union {
+> +		u64 reg;			/* 0x0020..0x0024 */
+> +		struct {
+> +			u32 lsb;		/* 0x0020 */
+> +			u32 msb;		/* 0x0024 */
+> +		};
+> +	} sar;
+> +	union {
+> +		u64 reg;			/* 0x0028..0x002c */
+> +		struct {
+> +			u32 lsb;		/* 0x0028 */
+> +			u32 msb;		/* 0x002c */
+> +		};
+> +	} dar;
 
---jHN3+CG4rKdPqrN7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> +
 
-On Wed, Mar 22, 2023 at 06:50:23PM +0100, Krzysztof Kozlowski wrote:
-> On 20/03/2023 19:24, Sumit Gupta wrote:
-> > If BPMP-FW doesn't support 'MRQ_BWMGR_INT', then the MC Client driver
-> > probe fails with 'EPROBE_DEFER' which it receives on calling the func
-> > 'devm_of_icc_get()'. Fix this by initializing the ICC even if the MRQ
-> > is missing and return 'EINVAL' from 'icc_set_bw()' instead of passing
-> > the request to BPMP-FW later when the BW request is made by client.
-> >=20
-> > Fixes: ("memory: tegra: add interconnect support for DRAM scaling in Te=
-gra234")
->=20
-> That's not correct tag.
->=20
-> Anyway, send fixes separately.
+Please drop the empty line. Other than that looks good.
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-I think this was a bit confusing. This fixes an issue that was
-introduced in a patch earlier in this series, so it's probably better to
-squash it into that patch rather than have a separate fix patch in the
-same series.
+-Serge(y)
 
-Thierry
-
---jHN3+CG4rKdPqrN7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQcIhQACgkQ3SOs138+
-s6GPPA//bkgG/9emg8XAzAiCCk14SYzw8PzesQOWogN/oL/DK9MK6TrmtLLHpZvm
-I8A3FSzAy0bHgtNmlvogMEog/QqVODAumS7zIUxFfuQxfU/ZFYBiphVULHvcyWNu
-/7/84LwUTURyUKPbZGlVzV+bMst1ShUnVjX/YLIMo2gt8knj/C3X12AZETLtW+i+
-raTIkwrync5K8TqbYSfQrtlRTQH7VwS2eKBt1U5zZOO9kKlhsQPexVZ2ovxrtoZG
-98nrddvhggkn6EGE8FNXxdzt2a5HgMqpbA8sGt+WfpevT6abCHOA7b2JMYYyvt5S
-8uSKGq7LFx2JA95RTwa7GaWeLiqvWPeoFeeEgFbBe8nLBxOowwYXjJA9ocjVlThI
-eIGDk47LHlesyXS2cyYsnEAa8/JuXNx6RV1QT6l139rtwIQlnq1q5xcHW5B9Xa6F
-Pn+5H6Ztr5/xU8OHlNdKUMTC0k5CpuvlapIkQ+ztdPZ0AArhjVSFXaL+rKAZsnj3
-S2CSN7r4guMWGUJ+eyoCzPujlMnF6+ZbAMNHGUYBDNYWX4Cy39r/3EUIfZP5kD8G
-/kQWWTbgf8LZD2V65bk+rcz7oCNbisO0Xv2WjYm7H6+sUK/dmEcM/qEAfqukElDP
-/s4n+oICxCOEu3Q4Ei38PDvUk9ayMpzFV5dlKutGDCJc8MH8G7o=
-=+/zC
------END PGP SIGNATURE-----
-
---jHN3+CG4rKdPqrN7--
+> +	u32 watermark_en;			/* 0x0030 */
+> +	u32 control1;				/* 0x0034 */
+> +	u32 func_num;				/* 0x0038 */
+> +	u32 qos;				/* 0x003c */
+> +	u32 padding_1[16];			/* 0x0040..0x007c */
+> +	u32 ch_stat;				/* 0x0080 */
+> +	u32 int_stat;				/* 0x0084 */
+> +	u32 int_setup;				/* 0x0088 */
+> +	u32 int_clear;				/* 0x008c */
+> +	union {
+> +		u64 reg;			/* 0x0090..0x0094 */
+> +		struct {
+> +			u32 lsb;		/* 0x0090 */
+> +			u32 msb;		/* 0x0094 */
+> +		};
+> +	} msi_stop;
+> +	union {
+> +		u64 reg;			/* 0x0098..0x009c */
+> +		struct {
+> +			u32 lsb;		/* 0x0098 */
+> +			u32 msb;		/* 0x009c */
+> +		};
+> +	} msi_watermark;
+> +	union {
+> +		u64 reg;			/* 0x00a0..0x00a4 */
+> +		struct {
+> +			u32 lsb;		/* 0x00a0 */
+> +			u32 msb;		/* 0x00a4 */
+> +		};
+> +	} msi_abort;
+> +	u32 msi_msgdata;			/* 0x00a8 */
+> +	u32 padding_2[21];			/* 0x00ac..0x00fc */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_ch {
+> +	struct dw_hdma_v0_ch_regs wr;		/* 0x0000 */
+> +	struct dw_hdma_v0_ch_regs rd;		/* 0x0100 */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_regs {
+> +	struct dw_hdma_v0_ch ch[HDMA_V0_MAX_NR_CH];	/* 0x0000..0x0fa8 */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_lli {
+> +	u32 control;
+> +	u32 transfer_size;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} sar;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} dar;
+> +} __packed;
+> +
+> +struct dw_hdma_v0_llp {
+> +	u32 control;
+> +	u32 reserved;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} llp;
+> +} __packed;
+> +
+> +#endif /* _DW_HDMA_V0_REGS_H */
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index ed401c965a87..3080747689f6 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -48,7 +48,8 @@ struct dw_edma_plat_ops {
+>  enum dw_edma_map_format {
+>  	EDMA_MF_EDMA_LEGACY = 0x0,
+>  	EDMA_MF_EDMA_UNROLL = 0x1,
+> -	EDMA_MF_HDMA_COMPAT = 0x5
+> +	EDMA_MF_HDMA_COMPAT = 0x5,
+> +	EDMA_MF_HDMA_NATIVE = 0x7,
+>  };
+>  
+>  /**
+> -- 
+> 2.34.1
+> 
