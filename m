@@ -2,105 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2DBA6C6154
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 09:10:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53C1B6C6185
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 09:21:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230355AbjCWIKV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Mar 2023 04:10:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33910 "EHLO
+        id S230409AbjCWIVb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Mar 2023 04:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47940 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231205AbjCWIKS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 04:10:18 -0400
-Received: from soltyk.jannau.net (soltyk.jannau.net [144.76.91.90])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C536210269;
-        Thu, 23 Mar 2023 01:10:15 -0700 (PDT)
-Received: from robin.home.jannau.net (p54accbe8.dip0.t-ipconnect.de [84.172.203.232])
-        by soltyk.jannau.net (Postfix) with ESMTPSA id 49A6626F9C9;
-        Thu, 23 Mar 2023 09:10:13 +0100 (CET)
-From:   Janne Grunau <j@jannau.net>
-Date:   Thu, 23 Mar 2023 09:10:12 +0100
-Subject: [PATCH v3] PCI: apple: Set only available ports up
+        with ESMTP id S231236AbjCWIV1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 04:21:27 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02465302B4;
+        Thu, 23 Mar 2023 01:21:26 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 351C56602040;
+        Thu, 23 Mar 2023 08:21:24 +0000 (GMT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1679559684;
+        bh=WkfVZaU1hGdCt/oKmuUQTlY29LYg/sO4ppTQfj1dwh0=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=KJiie0flpILVaELOJWrnaav8rz30ABohddv/omm6IPerUW4oWTlnIAx6u5wQKLIGR
+         F6ZXCudHAKIJEft1CZZiPHlurJHPs47Ut5Hip4+W5INECYTbn4MrN5pUNHfdUvMC8h
+         Mb7omBV14I8ICAiWhRJ+iszkO9yX36Q3wyOQg6oTD8rzN3cENODjdJFbyY/TYQN65V
+         3k2Kzq2BwJu5185svNkw6pczDqaANoAs8UQuWDixCTcUBNq52he6foe5Wkd++3yk35
+         w84koAGwMPnvVs9MExqphycz1iKr0Sm+z8TRFXSWXWqVmNNn2MY1aR1G9fxc2wie6B
+         pbQkx+8g597Fg==
+Message-ID: <aa682e7d-3a0c-b820-9978-3f9eb00fbfda@collabora.com>
+Date:   Thu, 23 Mar 2023 09:21:21 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH] PCI: mt7621: Use dev_err_probe()
+Content-Language: en-US
+To:     ye.xingchen@zte.com.cn, sergio.paracuellos@gmail.com
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, matthias.bgg@gmail.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+References: <202303231145121987818@zte.com.cn>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <202303231145121987818@zte.com.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20230307-apple_pcie_disabled_ports-v3-1-0dfb908f5976@jannau.net>
-X-B4-Tracking: v=1; b=H4sIAGMJHGQC/42OwW7DIAxAf6XiPFcxVCPdqf8xVZEBs3iqCAIWd
- ary7yO97dbjs+zn91CVi3BVH4eHKrxKlSV1MG8H5WdKXwwSOis9aDOYwQLlfOMpe+EpSCV34zD
- lpbQKg0cbnaWTNaPq944qgyuU/LwbqNIs8H7UgFMbETWEtq/lwlHuz4TPa+dZalvK77NoxX36y
- vMVAcEZzfGMkSKeL9+UEv0cEze1a1f9sqoXgjcuYAzajnT6p9q27Q96ytgbNQEAAA==
-To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-        Janne Grunau <j@jannau.net>
-X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2015; i=j@jannau.net;
- h=from:subject:message-id; bh=0umd/q2E/2yCKUdqoXB1gXPCtNUy4oDYSDsb9V1CGRY=;
- b=owGbwMvMwCG2UNrmdq9+ahrjabUkhhQZzpSnT66o/zmw6Ifa9ZfHKz4u4fTYbv+m+q2ohciM6
- OxAkV1ZHaUsDGIcDLJiiixJ2i87GFbXKMbUPgiDmcPKBDKEgYtTACbiVcnI8GG56Gymc/cSl54/
- c7zk/Y+pjsc27OIwzUmddXb/1gbjt82MDG3u1zdMlKroPHrnk9jxZ2L5RfdC94YpWO/NndBYzGu
- 0lQEA
-X-Developer-Key: i=j@jannau.net; a=openpgp;
- fpr=8B336A6BE4E5695E89B8532B81E806F586338419
-X-Spam-Status: No, score=1.5 required=5.0 tests=RCVD_IN_SORBS_WEB,
-        SPF_HELO_NONE,SPF_NONE autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: *
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The Apple SoC devicetrees used to delete unused PCIe ports. Avoid to set
-up disabled PCIe ports to keep the previous behaviour. MacOS initialized
-also only ports with a known device.
+Il 23/03/23 04:45, ye.xingchen@zte.com.cn ha scritto:
+> From: Ye Xingchen <ye.xingchen@zte.com.cn>
+> 
+> Replace the open-code with dev_err_probe() to simplify the code.
+> 
+> Signed-off-by: Ye Xingchen <ye.xingchen@zte.com.cn>
+> ---
+>   drivers/pci/controller/pcie-mt7621.c | 7 +++----
+>   1 file changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
+> index 63a5f4463a9f..964de0e8c6a0 100644
+> --- a/drivers/pci/controller/pcie-mt7621.c
+> +++ b/drivers/pci/controller/pcie-mt7621.c
+> @@ -220,10 +220,9 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
+>   	}
+> 
+>   	port->pcie_rst = of_reset_control_get_exclusive(node, NULL);
+> -	if (PTR_ERR(port->pcie_rst) == -EPROBE_DEFER) {
+> -		dev_err(dev, "failed to get pcie%d reset control\n", slot);
+> -		return PTR_ERR(port->pcie_rst);
+> -	}
+> +
+> +	return dev_err_probe(dev, PTR_ERR(port->pcie_rst),
+> +			     "failed to get pcie%d reset control\n", slot);
 
-Use for_each_available_child_of_node instead of for_each_child_of_node
-which takes the "status" property into account.
+That's breaking this function. You're unconditionally returning.
 
-Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Janne Grunau <j@jannau.net>
----
-Changes in v3:
-- dropped Cc: stable
-- rewritten commit message since the warning is fixed by 6fffbc7ae137 ("PCI: Honor firmware's
-device disabled status")
-- Link to v2: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net
+I think that this is fine as it is, but if you really want to use dev_err_probe()
+here, this could be...
 
-Changes in v2:
-- rewritten commit message with more details and corrections
-- collected Marc's "Reviewed-by:"
-- Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
----
- drivers/pci/controller/pcie-apple.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ret = dev_err_probe(dev, PTR_ERR(port->pcie_rst), "failed ...." ...);
+if (ret)
+	return ret;
 
-diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-index 66f37e403a09..f8670a032f7a 100644
---- a/drivers/pci/controller/pcie-apple.c
-+++ b/drivers/pci/controller/pcie-apple.c
-@@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
- 	cfg->priv = pcie;
- 	INIT_LIST_HEAD(&pcie->ports);
- 
--	for_each_child_of_node(dev->of_node, of_port) {
-+	for_each_available_child_of_node(dev->of_node, of_port) {
- 		ret = apple_pcie_setup_port(pcie, of_port);
- 		if (ret) {
- 			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+Regards,
+Angelo
 
----
-base-commit: c9c3395d5e3dcc6daee66c6908354d47bf98cb0c
-change-id: 20230307-apple_pcie_disabled_ports-0c17fb7a4738
+> 
+>   	snprintf(name, sizeof(name), "pcie-phy%d", slot);
+>   	port->phy = devm_of_phy_get(dev, node, name);
 
-Best regards,
--- 
-Janne Grunau <j@jannau.net>
 
