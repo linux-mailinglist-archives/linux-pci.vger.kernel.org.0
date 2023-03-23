@@ -2,149 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EFA816C6CE8
-	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 17:06:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A48916C6CF9
+	for <lists+linux-pci@lfdr.de>; Thu, 23 Mar 2023 17:09:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbjCWQGA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Mar 2023 12:06:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54880 "EHLO
+        id S231282AbjCWQJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Mar 2023 12:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230302AbjCWQF7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 12:05:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D6262BF03;
-        Thu, 23 Mar 2023 09:05:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1700762582;
-        Thu, 23 Mar 2023 16:05:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D8F0C433D2;
-        Thu, 23 Mar 2023 16:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679587557;
-        bh=erq5KugyEyInp+1CXdRbEcUBGVhHqPMfmw0xk7LsNFE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=L0xXih9gDDEX0ABuzTzfOtjKtRBsimvi1+/TLswHlPpI2e3BPFW8PBg4ruainuAZP
-         P9YfO90YDzM8G1u4DtHoc3XGWG2xoBjRYfffHzwDQz3qISxnsoDXSOgBIodSY+E1oK
-         FgEXH/WMzwO5hXBg/eA8TwkFD4ajo+kk3BJBrFek++mVQ6gP6VBfj00XbHRHheRGSo
-         92uKYNuVnMliRoW5gS/WYBS9hO93mkApa4vvXWAR9nNZj5XX1ZlWdfGZ6FlspdQFY5
-         F2rD4ArgZPN9iJLvFVjg45+BV4GPSYp5FVQ9b672vsE0EQ3ERWxTNf+/C9YGaQd5zv
-         jXDf1PLw2lDoQ==
-Date:   Thu, 23 Mar 2023 11:05:55 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Janne Grunau <j@jannau.net>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Marc Zyngier <maz@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S231209AbjCWQJf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 12:09:35 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB7BD32CCF;
+        Thu, 23 Mar 2023 09:09:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679587764; x=1711123764;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=oqSdem/sOUPFA6LJjb47XXFK2yU7aMg4ahHIKQNpGhA=;
+  b=A6OB1ziWY98bUcoTF0iMFohkk+yPuAVoixJURXM2iRc1n5pjzupm/E/p
+   k0zVXbCCNrcEPwZTLGRPzWvc4RlZcF9SAjz96Row8AiLOiXQutQhzmLwS
+   0PBUi3SFikayrPxcZcOphXi56DF4XorAemfY6D6XbWXrRpoFpCUFjX1jC
+   grnDup1fjR7ywFx4grnw5tdJnk9yLJDFXhxdoP4HvxaJiB4jZJZGqYu12
+   DDAPajZHXBt2d1xzj2LX3ivs4KrRaFtpEJ+/tGk3cfBCGIbv8rpmgf3wd
+   TJW64cC2mzWo5TDE+CyiemhfnIPmxt1zkz84+4/H896uZdpWVRPfrrXc+
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="323400518"
+X-IronPort-AV: E=Sophos;i="5.98,285,1673942400"; 
+   d="scan'208";a="323400518"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 09:08:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="714869188"
+X-IronPort-AV: E=Sophos;i="5.98,285,1673942400"; 
+   d="scan'208";a="714869188"
+Received: from stinkpipe.fi.intel.com (HELO stinkbox) ([10.237.72.70])
+  by orsmga001.jf.intel.com with SMTP; 23 Mar 2023 09:08:09 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 23 Mar 2023 18:08:08 +0200
+Date:   Thu, 23 Mar 2023 18:08:08 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-fbdev@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Helge Deller <deller@gmx.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Sven Peter <sven@svenpeter.dev>, linux-pci@vger.kernel.org,
-        asahi@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] PCI: apple: Set only available ports up
-Message-ID: <20230323160555.GA2555502@bhelgaas>
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Subject: Re: [PATCH v3 35/38] video: handle HAS_IOPORT dependencies
+Message-ID: <ZBx5aLo5h546BzBt@intel.com>
+References: <20230314121216.413434-1-schnelle@linux.ibm.com>
+ <20230314121216.413434-36-schnelle@linux.ibm.com>
+ <CAMuHMdW4f8GJ-kFDPg6Ao=g3ZAXq79u9nUZ_dW1LonHu+vxk8Q@mail.gmail.com>
+ <ZBGbxDWEhqr8hhgU@intel.com>
+ <917b95c9af1b80843b8a361d1b7fa337a25105e7.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230307-apple_pcie_disabled_ports-v3-1-0dfb908f5976@jannau.net>
-X-Spam-Status: No, score=-3.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <917b95c9af1b80843b8a361d1b7fa337a25105e7.camel@linux.ibm.com>
+X-Patchwork-Hint: comment
+X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Janne, thanks for the patch!
-
-On Thu, Mar 23, 2023 at 09:10:12AM +0100, Janne Grunau wrote:
-> The Apple SoC devicetrees used to delete unused PCIe ports.
-
-Maybe "used to *omit* unused PCIe ports"?  I assume the DT previously
-did not mention PCIe ports at all, but now the ports are included but
-marked "disabled"?
-
-> Avoid to set
-> up disabled PCIe ports to keep the previous behaviour. MacOS initialized
-> also only ports with a known device.
-
-The patch is fine with me, but the commit log doesn't tell us why we
-want this patch in addition to 6fffbc7ae137 ("PCI: Honor firmware's
-device disabled status"), since your previous response [1] says
-6fffbc7ae137 already does all the above.
-
-I don't have any Apple specs, but from looking at the code, the
-additional benefits of this patch over 6fffbc7ae137 might be:
-
-  - We won't trip over DT issues, like "reset" or "reg" not being
-    defined.
-
-  - We won't allocate needless apple_pcie_port structs.
-
-  - We won't ioremap register space, assert PERST#, setup clocks and
-    IRQs.
-
-  - We won't sleep waiting for things to come up, potentially saving
-    150ms or more for each disabled port.
-
-  - Maybe there's some power savings; I can't tell.
-
-It's probably more detail than necessary to mention *all* of that, but
-the commit log should say *something* about why we want this in
-addition to 6fffbc7ae137.
-
-> Use for_each_available_child_of_node instead of for_each_child_of_node
-> which takes the "status" property into account.
-
-Would you mind adding "()" after the function names, too?  Just my own
-idiosyncrasy to help distinguish them from regular English text.
-
-Bjorn
-
-[1] https://lore.kernel.org/r/20230316212217.GI24656@jannau.net
-
-> Link: https://lore.kernel.org/asahi/20230214-apple_dts_pcie_disable_unused-v1-0-5ea0d3ddcde3@jannau.net/
-> Link: https://lore.kernel.org/asahi/1ea2107a-bb86-8c22-0bbc-82c453ab08ce@linaro.org/
-> Fixes: 1e33888fbe44 ("PCI: apple: Add initial hardware bring-up")
-> Reviewed-by: Marc Zyngier <maz@kernel.org>
-> Signed-off-by: Janne Grunau <j@jannau.net>
-> ---
-> Changes in v3:
-> - dropped Cc: stable
-> - rewritten commit message since the warning is fixed by 6fffbc7ae137 ("PCI: Honor firmware's
-> device disabled status")
-> - Link to v2: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v2-1-c3bd1fd278a4@jannau.net
+On Thu, Mar 23, 2023 at 03:17:38PM +0100, Niklas Schnelle wrote:
+> On Wed, 2023-03-15 at 12:19 +0200, Ville Syrjälä wrote:
+> > On Wed, Mar 15, 2023 at 09:16:50AM +0100, Geert Uytterhoeven wrote:
+> > > Hi Niklas,
+> > > 
+> > > On Tue, Mar 14, 2023 at 1:13 PM Niklas Schnelle <schnelle@linux.ibm.com> wrote:
+> > > > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> > > > not being declared. We thus need to add HAS_IOPORT as dependency for
+> > > > those drivers using them and guard inline code in headers.
+> > > > 
+> > > > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> > > > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > > 
+> > > Thanks for your patch!
+> > > 
+> > > > --- a/drivers/video/fbdev/Kconfig
+> > > > +++ b/drivers/video/fbdev/Kconfig
+> > > 
+> > > > @@ -1284,7 +1285,7 @@ config FB_ATY128_BACKLIGHT
+> > > > 
+> > > >  config FB_ATY
+> > > >         tristate "ATI Mach64 display support" if PCI || ATARI
+> > > > -       depends on FB && !SPARC32
+> > > > +       depends on FB && HAS_IOPORT && !SPARC32
+> > > 
+> > > On Atari, this works without ATARI_ROM_ISA, hence it must not depend
+> > > on HAS_IOPORT.
+> > > The only call to inb() is inside a section protected by #ifdef
+> > > CONFIG_PCI. So:
+> > 
+> > That piece of code is a nop anyway. We immediately overwrite
+> > clk_wr_offset with a hardcoded selection after the register reads.
+> > So if you nuke that nop code then no IOPORT dependency required
+> > at all.
+> > 
 > 
-> Changes in v2:
-> - rewritten commit message with more details and corrections
-> - collected Marc's "Reviewed-by:"
-> - Link to v1: https://lore.kernel.org/r/20230307-apple_pcie_disabled_ports-v1-1-b32ef91faf19@jannau.net
-> ---
->  drivers/pci/controller/pcie-apple.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I agree this "looks" like a nop but are we sure the inb() doesn't have
+> side effects? 
+
+Yes. It's just trying to check which PLL dividers/etc. are currently
+used. In VGA mode it gets it from a the GENMO and in non-VGA mode from
+CLOCK_CNTL. And then it says "screw that" and just uses index 3 instead.
+
+Though I must say that mach64 GX seems to use that clk_wr_offset
+very differently so I'm not sure the PCI+GX combo is even working
+currently, assuming those even exist. I don't think I have anything
+older than a PCI mach64 VT myself.
+
+> (for reference drivers/video/fbdev/aty/aty/atyfb_base.c:
+> atyfb_setup_generc() towards the end)
 > 
-> diff --git a/drivers/pci/controller/pcie-apple.c b/drivers/pci/controller/pcie-apple.c
-> index 66f37e403a09..f8670a032f7a 100644
-> --- a/drivers/pci/controller/pcie-apple.c
-> +++ b/drivers/pci/controller/pcie-apple.c
-> @@ -783,7 +783,7 @@ static int apple_pcie_init(struct pci_config_window *cfg)
->  	cfg->priv = pcie;
->  	INIT_LIST_HEAD(&pcie->ports);
->  
-> -	for_each_child_of_node(dev->of_node, of_port) {
-> +	for_each_available_child_of_node(dev->of_node, of_port) {
->  		ret = apple_pcie_setup_port(pcie, of_port);
->  		if (ret) {
->  			dev_err(pcie->dev, "Port %pOF setup fail: %d\n", of_port, ret);
+> It does feel a bit out of scope for this series but if it's really a
+> nop nuking it surely is the cleaner solution.
 > 
-> ---
-> base-commit: c9c3395d5e3dcc6daee66c6908354d47bf98cb0c
-> change-id: 20230307-apple_pcie_disabled_ports-0c17fb7a4738
-> 
-> Best regards,
-> -- 
-> Janne Grunau <j@jannau.net>
-> 
+> Thanks,
+> Niklas
+
+-- 
+Ville Syrjälä
+Intel
