@@ -2,147 +2,108 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCD4E6C73FB
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 00:21:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EC6A6C7551
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 03:12:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229953AbjCWXUm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 23 Mar 2023 19:20:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50528 "EHLO
+        id S230259AbjCXCMK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 23 Mar 2023 22:12:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbjCWXUg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 19:20:36 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2103DAF19;
-        Thu, 23 Mar 2023 16:20:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679613635; x=1711149635;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=y45bgVg+V0AiOBLKUFL3LTB2z/199US4q7biR6L56Qc=;
-  b=JqDzaFT2H0lzv0mR5ORlPV25ZlTVvJ89H6xTog9TrLR9IiPkjJO4ukAE
-   OYqihz5fwop9ORGeQ5RkGtDQT0qvPmfIKsnkbwAFgNs1j542PlwQrKALn
-   zV4Dox4RyDKIxIgDvuVbNnpwDsWdXob7NxRlQOZglQRTmBTxShGt+snx7
-   1tLQkc6qEUDW3AFL/VBm3RpZBajzDJFOFSt8MxSejAtjXLHy9bHm05US1
-   mXORFMWywarZeHjETWavbUNTT0lNnu76VqOXFV6HdpoBJctoq+8FtMyI7
-   i0P6YZOozQ1fuf3kZhkszBEX3Sa7IcyYjY8E1M3jDHZtFtEDCzfTP27Ke
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="323515743"
-X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
-   d="scan'208";a="323515743"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2023 16:20:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10658"; a="928422329"
-X-IronPort-AV: E=Sophos;i="5.98,286,1673942400"; 
-   d="scan'208";a="928422329"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga006.fm.intel.com with ESMTP; 23 Mar 2023 16:20:33 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 23 Mar 2023 16:20:33 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21 via Frontend Transport; Thu, 23 Mar 2023 16:20:33 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.100)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.21; Thu, 23 Mar 2023 16:20:33 -0700
+        with ESMTP id S229734AbjCXCMJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 23 Mar 2023 22:12:09 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2069.outbound.protection.outlook.com [40.107.244.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FA1511666;
+        Thu, 23 Mar 2023 19:12:07 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DTGtF0XDC5rEs42XopVjd3pEFweBW1kgQ/GkXBWR4YuWXPwmbsNBlCARoJgXUoplmhJw9Abb9lgF3ldKwas6xeIbMQzRJCRm0/nKvYARA/9TwWvbdCHM2B1kSD4GcWLv69zc+3wq+w6+jNzQyQD9ASeLSuh+B4FpxbCDenEHpsuXbNpNJqz6eJOEmuCqZTlqe/wfGS+biDS67l7kYR3EcbN3C7iz8UH/Gp0lnLElE/16gKajSuwo5yT4hqObovLERvKbD5iJ1sPf528jvT4km8sX8Pj9X9kxebNQO1trl5DXF+8WcIw4BKz8PE5l5frdnNU6Vkvuaf1Q4bhIiU93IQ==
+ b=LZqzX7xP+B9zUSj2z7FLju9Z8KvUhN2giULvnFF6IhSoVeGwrA7k0M3WvW7hwxA2HkvlINVVcCmX1Kii1XmC+JuOlhirrhZbHRr0PCUEeN6Y3hdl2Piv4nv+zXRwWb9kjz7fvPdISe59OGhlIM78i6DFTTXH4SM308z8gswWqOcnXDPfeGptDQZXo3nK5KqLj3aWP9W5wkeQWbC2qtIrbX+NXWC5v6PV0hmoQyHJC+R7QzOybFyqPVS4hjpmqdaqyntcMUOT12ABkGSF1rWLW0slL3zGB4d68eHdDmPcTyEc/0DuwgkEUcV1jsFBtsFWjJkqNu2Y7jMAI5rqJX4j+A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VsK9QeWv1GtBmtBkrImSKuo+Tx5KRo5wB//sgNlwk50=;
- b=gJrZrTONVqG8sUyFgJCZNA/HQy1hoFd2/JCaj+M38Bm3jgzfm7gx419xVKLYrO39rjWXzyAAgdA0s3wiW0TU689srARFJjba7zQGIFMfap2vcKBxLStkRUaPO6rXSwP+4QQqUShrCy+nWmb4/wT3cZdabH2VD0cW037k2QZGljgRdq2EHNAs/XwuQCvPYaCigMVCtVL05XHWVXR1aziGndWOkXFACXX3cbA7Redo1LcrxrbGxg2Zt/ldOWw7po4wP0cGq0OgtreBh1CnyrbCgzqHoq4LE2MJsfY7lcMJP46HkJlRGDsAwRzGBgWtUkYmX3UhXH/eM8eBkDxs8+hP2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS0PR11MB6496.namprd11.prod.outlook.com (2603:10b6:8:c0::20) with
+ bh=upk9ZAYTUYBR9vxtcufMi4dLhP0z4n6+uILbC9r2aY4=;
+ b=oJIEhLghN9934wTe5w3snkJAk1gDNMBYQtdRf9mGX2Aqgy6+IFg8LrHRBKR3/bOIs3B1SRTSWMfLlpoLoQo1tSS3p8z6JSfZQPf60nY5bDgxrHcYZIHxF6NC0fUGjdLpCtrhkf0Y6+4SQYCYx60rdc/I3XhI1gY0Lh6Cmg85t6f2hqcJ1/PgF7M0N617w8GVsZkReI53qYVkW0vk5hN4ElWZr8YUnu9kh1YgMhC3Bhfe+kP5E81T+Q8hS3l0Y523Ca15dFdaDU19Fpmu6AlxU/Rr0XYCGQG0Yr2rXkti86KAOOxIi8v/Kp8Quk9f/clsrjqG6tRnsFqOtm6RPg4mwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=upk9ZAYTUYBR9vxtcufMi4dLhP0z4n6+uILbC9r2aY4=;
+ b=1xXO+81Lq4crcW05sxFDYFDbstRaqVGbKubammxjiNeCsdxE1rkXCzACw1JknzFm8JvM22wKj5k/DqX1l76KuY7FodcXC6Nzp/y9TYxep5d4hJ+cUYu/exWcsLZlNqMSmdV9n/TAxJ/rSopKRgPN7gDqXbx1+SWoCCi4RZ7+Mfk=
+Received: from BN1PR13CA0023.namprd13.prod.outlook.com (2603:10b6:408:e2::28)
+ by DS0PR12MB8480.namprd12.prod.outlook.com (2603:10b6:8:159::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38; Thu, 23 Mar
- 2023 23:20:30 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6178.038; Thu, 23 Mar 2023
- 23:20:29 +0000
-Date:   Thu, 23 Mar 2023 16:20:26 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>
-CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <ira.weiny@intel.com>, <vishal.l.verma@intel.com>,
-        <alison.schofield@intel.com>, <rafael@kernel.org>,
-        <bhelgaas@google.com>, <robert.moore@intel.com>
-Subject: Re: [PATCH 18/18] cxl: Export sysfs attributes for device QTG IDs
-Message-ID: <641cdebae1734_1d657a294f7@dwillia2-xfh.jf.intel.com.notmuch>
-References: <167571650007.587790.10040913293130712882.stgit@djiang5-mobl3.local>
- <167571672370.587790.13206197631776290440.stgit@djiang5-mobl3.local>
- <20230209154100.0000059d@Huawei.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20230209154100.0000059d@Huawei.com>
-X-ClientProxiedBy: BYAPR11CA0061.namprd11.prod.outlook.com
- (2603:10b6:a03:80::38) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.38; Fri, 24 Mar
+ 2023 02:12:05 +0000
+Received: from BN8NAM11FT095.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e2:cafe::d7) by BN1PR13CA0023.outlook.office365.com
+ (2603:10b6:408:e2::28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.7 via Frontend
+ Transport; Fri, 24 Mar 2023 02:12:04 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT095.mail.protection.outlook.com (10.13.176.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6222.22 via Frontend Transport; Fri, 24 Mar 2023 02:12:04 +0000
+Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 23 Mar
+ 2023 21:12:04 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB07.amd.com
+ (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Thu, 23 Mar
+ 2023 19:12:04 -0700
+Received: from [172.19.74.144] (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Thu, 23 Mar 2023 21:12:03 -0500
+Message-ID: <a13ba751-9350-47ee-1c4d-77bbfbb8ed72@amd.com>
+Date:   Thu, 23 Mar 2023 19:11:57 -0700
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH V7 1/3] of: dynamic: Add interfaces for creating device
+ node dynamically
+Content-Language: en-US
+To:     Rob Herring <robh@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <frowand.list@gmail.com>,
+        <helgaas@kernel.org>, <clement.leger@bootlin.com>,
+        <max.zhen@amd.com>, <sonal.santan@amd.com>, <larry.liu@amd.com>,
+        <brian.xu@amd.com>, <stefano.stabellini@xilinx.com>,
+        <trix@redhat.com>
+References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
+ <1674183732-5157-2-git-send-email-lizhi.hou@amd.com>
+ <CAL_Jsq+FM9P0n7BQZBY1AGJRtjAWw9F6h5DYmLkdPeXZaiYJwA@mail.gmail.com>
+From:   Lizhi Hou <lizhi.hou@amd.com>
+In-Reply-To: <CAL_Jsq+FM9P0n7BQZBY1AGJRtjAWw9F6h5DYmLkdPeXZaiYJwA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6496:EE_
-X-MS-Office365-Filtering-Correlation-Id: c09d1244-0634-4226-c774-08db2bf530e6
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT095:EE_|DS0PR12MB8480:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6ca8e76f-5d7f-492e-8b7e-08db2c0d29b6
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: F/RM/1cD5YVO4GlnWuGsUvpYOwW3b2jT53l1tzADwqABtp2TqHueK7kcvXeXm1EUj+HmXtXHIvlBDejMJC16+DbrXDBsZPnfWCaDfkyDobvK7eSnBNndG4OsfW+jxqx7hQEkh0Pxb9cxRSYtPcu/skCv+1zqCaWN3fdUWtvHWmC8ZNyz0MBq3m+cXBj7LTvxF5QQ+Lq6MlwsYOy1+JZiC3zv3fmazoe7mC1VykuGM0e5ehokXwh5ar+UR6FbQvPEnJJOvyWmuk32ItRxEJ6Ft6ud1jBCXx2NhZEntueiN/kBv1utUK9e5/u27cprFMkrX8q7Fv2g3hBnnztsci3WKAxILwSsyYvOQ94enmJVOdzm3+oHcxTYtdHwsnhD4AeXrtYnMsBF+AQVQ8p7dEszQhHncKCguGHt7CKtVkRKJ4bNkAQOhf5r8F56AqYTYofDQDNk3qt2HnDGCn5CRprOgvFGJjeO8VFDx4kR9/tWzoB6yaTk5IIkpzp6VQ12LrNlzMRWWA3Wd1Y4WiA8i2gijKBtDledRKplGGZx8niUhX+0qe4Hzd2nr3u6MpSZFzTSAVdLODzxTTJWmv4WDMaVRGMdsnl//Hhcs4ih3LC73gRUI8CzJmsYrYyDH0vWJBKsVPHqNYaL2auG4HB9fjSiHw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(39860400002)(346002)(366004)(136003)(376002)(396003)(451199018)(66556008)(8676002)(66476007)(66946007)(4326008)(110136005)(6636002)(41300700001)(5660300002)(82960400001)(8936002)(316002)(26005)(6512007)(6506007)(6666004)(107886003)(186003)(478600001)(9686003)(83380400001)(6486002)(86362001)(38100700002)(2906002)(66899018);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?sdtuoe33bX6R4BQmhL6KBAS4Lo55lOJIye+dQKkHN0iE03BYisq7KSCgETjp?=
- =?us-ascii?Q?7aBL5/6tlbscjaRTQ5YziOvHgrJ6yzp5ZwZ892bqaQrdnvUQJiNt+0SySwUq?=
- =?us-ascii?Q?2m+s3Z7sWbTcgtt0C+78Adl/CwOLx7eMg/LRp8BzUuGY/EKvimdPE/o+74rW?=
- =?us-ascii?Q?tqzoaXlTyz+xPnowm4xRj0hJVcCx0VAijZSCuKjWu4kNOsMRLCxx8qm0rHuz?=
- =?us-ascii?Q?Na3hYQBsRhgobMh+65O7BvXIBjgQ3qeayZCxQgHkfvVjcgJqBDtQVcQIHWsv?=
- =?us-ascii?Q?ujL4o7XBPArVwgvBanaEwkNvkAfwZmqUJYfdcVdWy221K9jtvbDSJzL//knF?=
- =?us-ascii?Q?z+gH9sPqvJmSCF3f8if9KrAwfsQMm8m0/Fw5/iRenAlkX0rxQqUPFAg+bhlT?=
- =?us-ascii?Q?I7jmwEACu9PWA8maQuZVjTTkr9888EWD8QDR+B+SLZsMyWsx9xORmg2+R+5+?=
- =?us-ascii?Q?xwyftM9ESsgwXR1tqRZveiblvj89gDoDhu/f9MLV4T+LdZDp4oEOD6mzY55J?=
- =?us-ascii?Q?yi7WQYssQgUoBrCzfHRyBgvcqsA19dgP9qMxrk0t0gUt17jzAnwNYR2N7m0C?=
- =?us-ascii?Q?qgAx+0Pl6UyXbJx/5+EpxLYIHlkiQZ7FLK52BFbt4xMf0Lq0CdJDgL4Zhqps?=
- =?us-ascii?Q?Vt2WFzgfuU5nFlzfoNtyvdknpORpH6FPeRYVkdzF1NSQC1SGzyzYs6UvSXYM?=
- =?us-ascii?Q?t7p4M6wyK89oOkXadgLjTsQHBVPbs2AJfoi4tnqStiYEXc9zWVmKLm2vwrW4?=
- =?us-ascii?Q?G6DNMjqTXIFST0uhRfh0t/4g94MS1Oq+jK0s41cZfPwJlkfnQ9Y9S33+ltOv?=
- =?us-ascii?Q?L61I+sliC58k3t9vIBau7Qap0P4SlvI6DxNs0pFF2jigruNLcVVFxTcoRtzB?=
- =?us-ascii?Q?n/gn2bgtqkvKuWdnBn38Bw4HfNcsx7DokIOXZMXZh0yLuR7DJsBZhiVZxWUQ?=
- =?us-ascii?Q?Jkxz+ccL+kZGpuTadihkvtk1EFlaqgn2q/INe0zq4cqSgxkvm8AZf4BxWaUS?=
- =?us-ascii?Q?iVoivdbA7mqypBTGu5vPAj+JuwINGd/iFQmGrOk3SonqFxEDQTNSlYVibupn?=
- =?us-ascii?Q?siSMFVLUL6GpX2yDflJAut3r1cBvz6X/RHyabDhGBKyOm/6WUtqouJxYMAti?=
- =?us-ascii?Q?K4LD6h7J/LPDpNo2AJZWVZtRNQNlZ8VLkrH1DhOi450ti4XJbSQSBFphB1Qy?=
- =?us-ascii?Q?f/P5bRYRMmvQp70jAgVoLKQLuMf/31+wop0ilNtTK12wmjrjV0A28r+95QU8?=
- =?us-ascii?Q?lbYbgEgkc+ENKAFVt+ohpFhfC2+2jpjIOMwbpWehjajhl7LpYO6+kRPGbdIo?=
- =?us-ascii?Q?bXJeXyPgung9iwv3SQwV9Du31DDS2PPDxbFm+/OfvTpTQjR4zh2+hliBdPVq?=
- =?us-ascii?Q?sih5YONT8S0WfIDRiEyHa/nGnsrNU29nJoGhoISW7vsEfC3GXcb3q0Si9C3f?=
- =?us-ascii?Q?lHGwi9H2Urg5N/y0ldIcP4zgo80JGqec2xkRZfRMCF7b/YxkrFzdWgzzIWCI?=
- =?us-ascii?Q?PULxKZXiTqcJn+ZGQYtiy8zPdNwizrA863ncO88gRhfxEdtlEqQV5bcP53Je?=
- =?us-ascii?Q?jxlbGRXIdkqzgC9e3NizrpVFI+l0ulWQQ1XiBHkPacxuLGxUdNJDBu8xDy5y?=
- =?us-ascii?Q?Rg=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c09d1244-0634-4226-c774-08db2bf530e6
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2023 23:20:29.3126
+X-Microsoft-Antispam-Message-Info: crOVI8uSO2FmxYeUckSMrC+KaHs+jOUdrfdxz0EMlvU/sRc8nCOZPxDer30W7n9MORGMqna38Hhg854FAVRFIiXB2eBUDMDB1ftGzeBwr43lIs/JBMGEurUi+2UMUN8jwvOy66GRlqWN4Dhw2s+0VF1s056f6Yp56OjgCiSLtTNAXloIA5iIwGDE5aKSrP5TuV1imDFQTjVH7bMmDijyyxdcsvkoPvcGS2MvKlYqrBr1JSW/ZY1zZVp/6xO/A5Gpun1PYBq8LfXVK9aD85rfrr6HbL7nHq6KJ+qAFs2UjVwSpbWX2hzNMvEmKXRwDdVAn8U8K3x7tfCa5+VKkEeiHB1xzs+kp/p2PwHUq29E803aRQIQ/zinbduqw4NkDrlLrqTTIRsebqpRBG9CzvXZJcbBeJrnHY9jqBtAOYx/n5X2nmVWx0+EZxzvnFUT0eu530stlaU//0+twm9kbfvfBSNmnDhltsXRsVga7eJfEYVaoNOBw9+3eLVY7Lt+iMf7tbRgtplW2DF4o2afx5etiaVXRxM4BgLnmNWnynze2Bjo8lx3Avck0+1cagXtJsodJLQ2XNwENlPhA0vByDhjd6XeLiPAf6P6PXM0H9ZSP0bojwJcmtQJqfnRyufLWrTVuJPoAajBjBAQ7Fx19mMdlU8zrS2/4ForCKBIO1Fcf5jUfTNoVxwrpN74j7NyGb/sFYOrS2ZSggWixyrhqoVFUQ4FfXTQKyv/9bFBwEY4X38PsF5uQx3KmppAL13ZhwoUbw4vPaFt2Dh4EPFWneTerg==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230025)(4636009)(346002)(136003)(396003)(39860400002)(376002)(451199018)(36840700001)(40470700004)(46966006)(31686004)(356005)(40480700001)(2906002)(40460700003)(86362001)(83380400001)(336012)(2616005)(186003)(66574015)(36756003)(31696002)(82310400005)(478600001)(54906003)(70586007)(36860700001)(4326008)(8676002)(6916009)(70206006)(47076005)(26005)(8936002)(16576012)(53546011)(316002)(426003)(6666004)(81166007)(44832011)(82740400003)(41300700001)(5660300002)(43740500002)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2023 02:12:04.8614
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ENVrx5SXb/SfxP2poHTJWAD3HCfzLCgViml4cOI35+o0oUDtZ07rTHef0w1sE84vjWFTyr4nobAlRJqXRZ3IW2Bwlo06cKcVC/yBusow8yI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6496
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6ca8e76f-5d7f-492e-8b7e-08db2c0d29b6
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT095.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8480
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -150,54 +111,168 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Jonathan Cameron wrote:
-> On Mon, 06 Feb 2023 13:52:05 -0700
-> Dave Jiang <dave.jiang@intel.com> wrote:
-> 
-> > Export qtg_id sysfs attributes for the respective ram and pmem DPA range of
-> > a CXL device. The QTG ID should show up as
-> > /sys/bus/cxl/devices/memX/pmem/qtg_id for pmem or as
-> > /sys/bus/cxl/devices/memX/ram/qtg_id for ram.
-> 
-> This doesn't extend to devices with say multiple DSMAS regions
-> for RAM with different access characteristics.  Think of a device
-> with HBM and DDR for example, or a mix of DDR4 and DDR5.
-> 
-> Once we are dealing with memory pools of significant size there
-> are very likely to be DPA regions with different characteristics.
-> 
-> So minimum I'd suggest is leave space for an ABI that might look like.
-> 
-> mem/range0_qtg_id
-> mem/range1_qtg_id
-> mem/range0_base
-> mem/range0_length
-> mem/range1_base
-> mem/range1_length
-> etc but with the flexibility to not present the rangeX_base/length stuff if there
-> is only one presented.  For now just present the range0_qtg_id
 
-I do agree that there should be some mechanism to dump this information,
-I am just not yet sure the should prioritize for the case where someone
-builds multiple performance classes per partition type. There would seem
-to be design pressure against that given you can not allocate regions
-out of DPA order otherwise capacity gets stranded.
+On 3/23/23 15:40, Rob Herring wrote:
+> On Thu, Jan 19, 2023 at 9:02 PM Lizhi Hou <lizhi.hou@amd.com> wrote:
+>> of_create_node() creates device node dynamically. The parent device node
+>> and full name are required for creating the node. It optionally creates
+>> an OF changeset and attaches the newly created node to the changeset. The
+>> device node pointer and the changeset pointer can be used to add
+>> properties to the device node and apply the node to the base tree.
+>>
+>> of_destroy_node() frees the device node created by of_create_node(). If
+>> an OF changeset was also created for this node, it will destroy the
+>> changeset before freeing the device node.
+>>
+>> Expand of_changeset APIs to handle specific types of properties.
+>>      of_changeset_add_prop_string()
+>>      of_changeset_add_prop_string_array()
+>>      of_changeset_add_prop_u32_array()
+>>
+>> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
+> Your Sob should be last because you sent this patch. The order of Sob
+> is roughly the order of possession of the patch.
+Got it.
+>
+>> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
+>> Signed-off-by: Max Zhen <max.zhen@amd.com>
+> So Sonal and Max modified this patch?
+They did not directly modify the code. And we discussed the design 
+together.  They also reviewed the patch before I sent it out. Please let 
+me know if other keyword should be used in this case.
+>
+>> Reviewed-by: Brian Xu <brian.xu@amd.com>
+>> Signed-off-by: Clément Léger <clement.leger@bootlin.com>
+> Why does this have Clément's Sob?
+I referenced Clément 's code and used one portion in my first patch 
+series. And I re-implemented it later to address the code review 
+comments/requests.
+>
+>> ---
+>>   drivers/of/dynamic.c | 197 +++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/of.h   |  24 ++++++
+>>   2 files changed, 221 insertions(+)
+>>
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index cd3821a6444f..4e211a1d039f 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -461,6 +461,71 @@ struct device_node *__of_node_dup(const struct device_node *np,
+>>          return NULL;
+>>   }
+>>
+>> +/**
+>> + * of_create_node - Dynamically create a device node
+> For consistency, I think this should be of_changeset_create_node().
+Sure.
+>
+>> + *
+>> + * @parent: Pointer to parent device node
+>> + * @full_name: Node full name
+>> + * @cset: Pointer to returning changeset
+>> + *
+>> + * Return: Pointer to the created device node or NULL in case of an error.
+>> + */
+>> +struct device_node *of_create_node(struct device_node *parent,
+>> +                                  const char *full_name,
+>> +                                  struct of_changeset **cset)
+>> +{
+>> +       struct of_changeset *ocs;
+>> +       struct device_node *np;
+>> +       int ret;
+>> +
+>> +       np = __of_node_dup(NULL, full_name);
+>> +       if (!np)
+>> +               return NULL;
+>> +       np->parent = parent;
+>> +
+>> +       if (!cset)
+>> +               return np;
+>> +
+>> +       ocs = kmalloc(sizeof(*ocs), GFP_KERNEL);
+>> +       if (!ocs) {
+>> +               of_node_put(np);
+>> +               return NULL;
+>> +       }
+>> +
+>> +       of_changeset_init(ocs);
+>> +       ret = of_changeset_attach_node(ocs, np);
+>> +       if (ret) {
+>> +               of_changeset_destroy(ocs);
+>> +               of_node_put(np);
+>> +               kfree(ocs);
+>> +               return NULL;
+>> +       }
+>> +
+>> +       np->data = ocs;
+>> +       *cset = ocs;
+>> +
+>> +       return np;
+>> +}
+>> +EXPORT_SYMBOL(of_create_node);
+>> +
+>> +/**
+>> + * of_destroy_node - Destroy a dynamically created device node
+>> + *
+>> + * @np: Pointer to dynamically created device node
+>> + *
+>> + */
+>> +void of_destroy_node(struct device_node *np)
+>> +{
+>> +       struct of_changeset *ocs;
+>> +
+>> +       if (np->data) {
+>> +               ocs = (struct of_changeset *)np->data;
+>> +               of_changeset_destroy(ocs);
+>> +       }
+>> +       of_node_put(np);
+> A sequence like this would be broken:
+>
+> np  = of_create_node()
+> of_node_get(np)
+> of_destroy_node(np)
+>
+> The put here won't free the node because it still has a ref, but we
+> just freed the changeset. For this to work correctly, we would need
+> the release function to handle np->data instead. However, all users of
+> data aren't a changeset.
+>
+> I'm failing to remember why we're storing the changeset in 'data', but
+> there doesn't seem to be a reason now so I think that can just be
+> dropped. Then if you want to free the node, you'd just do an
+> of_node_put(). (And maybe after the node is attached you do a put too,
+> because the attach does a get. Not completely sure.)
 
-So I am thinking something like a debugfs interface to dump all the
-ranges but otherwise leave memX/{ram,pmem,dcd[0-7]} with a single
-qtg-id each.
+The question is how to save changeset and free it later. I used global 
+link list to track the changeset been created.
 
-If it turns out later that devices really call for multiple qtg-ids
-per-partition as a first-class ABI then there's the option of something
-like:
+Storing the changeset in 'data' can avoid using the global link list.
 
-memX/ram/qtg_id
-memX/ram/qtg_id1
-memX/ram/qtg_id2
+To use of_node_put() to free both node and changeset, I think we can
 
-memX/ram/qtg_range/
-memX/ram/qtg1_range/
-memX/ram/qtg2_range/
+   1) add a new flag, then in of_node_release() we can know np->data is 
+changeset by checking the flag.
 
-...but I hope the primary use case for devices with multiple performance
-ranges is due to having 'pmem' or 'dcd' in addition to 'ram'.
+   2) When creating node, allocate extra memory for changeset and set 
+np->data to a global function of_free_dynamic_node().
+
+       In of_node_release(), check if np->data == of_free_dynamic_node, 
+call of_free_dynamic_node(np).
+
+       in of_free_dynamic_node(), free changeset by 
+of_changeset_destroy(np+1)
+
+Does this make sense to you? If yes, 1) or 2) sounds better?
+
+>
+> A unittest for all these functions would be helpful.
+
+Ok, I will create unittest for the new added functions.
+
+
+Thanks,
+
+Lizhi
+
+>
+> Rob
