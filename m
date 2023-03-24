@@ -2,73 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D73F6C792D
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 08:45:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BD976C7A9C
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 10:00:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231708AbjCXHpG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Mar 2023 03:45:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        id S231944AbjCXJAZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Mar 2023 05:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231603AbjCXHpF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 03:45:05 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D5FD26CCE;
-        Fri, 24 Mar 2023 00:45:00 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id q16so1063266lfe.10;
-        Fri, 24 Mar 2023 00:45:00 -0700 (PDT)
+        with ESMTP id S231984AbjCXJAW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 05:00:22 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D8E13A98
+        for <linux-pci@vger.kernel.org>; Fri, 24 Mar 2023 02:00:17 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id o40-20020a05600c512800b003eddedc47aeso2685116wms.3
+        for <linux-pci@vger.kernel.org>; Fri, 24 Mar 2023 02:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679643898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s+UV2/A47c89Jw8feRGPloqstRMGJ9kLamxjoxXavQI=;
-        b=CYHlI1+jBadeYcUBefEWaLptMti0Lg7GJOVdshb5STqx0W9f3T4YNMf3DQHzrQ0fqq
-         Big01GJiGCkpvLq5EMGJHrR8XYQyhJp0f3t49+iy3B7Jba6pI3T4KQnHqRtYL6KCQ/w1
-         ofsxpEDMaMRhANGymFw5KElZ5edQ6VPYhzTPg4h4mjI+mf4tHrMQFsgCSdirGZ/nbDpW
-         h6oe/BCDsC5XhZvLUUIHkU9l/GF8RV3D66D6SoQuHqMqvQKwBVRbVArJLz+4ELYh845G
-         RskVQ2OgngQRqd7U0vvJAm5XTDe886q415jG9UreOly5Dp8LnrS0Gc/lqMUbNtMHWWC/
-         20QQ==
+        d=linaro.org; s=google; t=1679648415;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=5xxjybCBQ7FBka5nE6E8+uHXCIz/6b/SCGTHJfPcbCM=;
+        b=a1FBd8hdYt0yM0X/QMw5JK93/6fmZkvcvOaCpGAhllGD9kZY3ocWprh/fBfy2T2rod
+         YkjH4UdxH2uedUuCvo+EkF57N3c7HVf3QBOceSd07Mza5R+OpESBolPUbeS2d8fEsBnh
+         OQSDXwfd2956PoRvrlESlWmo04/2c61Xl/bDa7ICS7G31P3ZvNNxX5D0+ZOcZrZ5tdVJ
+         2S9NsPv6/2vlegpFew239TZL4Ndvj2ZSLHjydzAhHLKc0SUYXBptCAACw1ytjJlvXLD2
+         ngcfW35TYBHM51xRfg++jvURD69Dmc0jU2GT+32k16t0vBRoghLroNVWI9Q6WKBRZRnc
+         Sc/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679643898;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=s+UV2/A47c89Jw8feRGPloqstRMGJ9kLamxjoxXavQI=;
-        b=qRPy8U0cAt73Ydwn6Ae/1KFsxy9zymw9MmD5FPoI2gSVrbT/e/6Hk7IO+TYP9CJ9Zb
-         VwgsDNC3HU033OQx5BeatpCL2bEPltbOgvJkuMYNAPJmXDY98Q/MfQZ5N4N1FYFV3l1H
-         s5WyZmB7ILmZUGOTIzwSMa57jlpiSruU9YJSejRXhUGMnlqoMNchgLwBd7p6vU7+rD68
-         hmX1U6s4X6G3+hbWBT8prhVITRnN//7WqT6m3NRkdaVaCYI1GTFoL7Pz4/1UWLj3Ux7Z
-         JkqH9t9IT6UWTjhDisZsfI8peKRXVdZT2tfY1lighaSX3ngIUyiNGZv51t4csxFN3isU
-         EjLg==
-X-Gm-Message-State: AAQBX9c7w0v9fj09ccn/d2YjltWUvu9MptLIjg4/UkLy/7Y99p6MU1QA
-        AeuY1+WiMi4i8a/QGOxACs4=
-X-Google-Smtp-Source: AKy350a98yvebhHpNeg2qVRYbw9cCcFtUHiTM8qakidih2d32psksP7cRfXauD6tixz6UppBoIdrYw==
-X-Received: by 2002:ac2:520c:0:b0:4ea:e7ca:6e21 with SMTP id a12-20020ac2520c000000b004eae7ca6e21mr519215lfl.6.1679643898392;
-        Fri, 24 Mar 2023 00:44:58 -0700 (PDT)
-Received: from mobilestation ([95.79.133.202])
-        by smtp.gmail.com with ESMTPSA id u15-20020ac243cf000000b004eaf2291dcdsm1235444lfl.102.2023.03.24.00.44.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Mar 2023 00:44:57 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 10:44:55 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v9 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <20230324074455.bosmaxwkbo7mlyvj@mobilestation>
-References: <20230324021420.73401-1-cai.huoqing@linux.dev>
+        d=1e100.net; s=20210112; t=1679648415;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5xxjybCBQ7FBka5nE6E8+uHXCIz/6b/SCGTHJfPcbCM=;
+        b=S24iPh1537+J5ugRBWCb9JChprlgWy622iPXkMEjlhvQmqBHYvL6qkYyhG4BWXoh7V
+         LDjU92TXrAa3ONuz7Brru/GHYCsBfJxBP2Rm/bAgFmeNQ7N2/7wNfhFS1kcCJo5q2N5l
+         1+IxoADrtksCjzrhC25/r589asUt2xEx/i1KukWCMzt7UGuHL1cqZAcgLeGasPF8bOEe
+         T4HkEM/aYW8Lb6P21EAjxV9tgMcxqfaDZH5aCecHi+NtbVKpmKv+AY8ov/2NWYfBRk+P
+         jJmVDZeQSIHjG0Xk4ocSh8muecAI3Y45oVJ7S3n+MBdYTOSDQVaL88EahKxJzeiIdMYS
+         1uBA==
+X-Gm-Message-State: AO0yUKU0NIGk3U6PNuwNlt7WhJaiXobBlNSKfhoA38IMaDOCnP6Q3l02
+        pmPxsTkOvet9e2LrFPSUcptmpQ==
+X-Google-Smtp-Source: AK7set/G+BrnIBHzdKAcJLIchyTJ1+8LJ+VqEzbQ4F0KmkhucSNebeQVHkqJ+K4tuv21EwA1IHVe7Q==
+X-Received: by 2002:a7b:c459:0:b0:3eb:a4e:a2b2 with SMTP id l25-20020a7bc459000000b003eb0a4ea2b2mr1815337wmi.4.1679648415689;
+        Fri, 24 Mar 2023 02:00:15 -0700 (PDT)
+Received: from [192.168.69.115] ([176.176.152.149])
+        by smtp.gmail.com with ESMTPSA id n20-20020a7bc5d4000000b003ee10fb56ebsm4302953wmk.9.2023.03.24.02.00.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 24 Mar 2023 02:00:15 -0700 (PDT)
+Message-ID: <78a9e002-ba18-c580-fe89-46f5653ea49d@linaro.org>
+Date:   Fri, 24 Mar 2023 10:00:10 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230324021420.73401-1-cai.huoqing@linux.dev>
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.9.0
+Subject: Re: [PATCH v7 3/6] PCI: Allow pci_bus_for_each_resource() to take
+ less arguments
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+References: <20230323173610.60442-1-andriy.shevchenko@linux.intel.com>
+ <20230323173610.60442-4-andriy.shevchenko@linux.intel.com>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <philmd@linaro.org>
+In-Reply-To: <20230323173610.60442-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,77 +111,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Vinod
+On 23/3/23 18:36, Andy Shevchenko wrote:
+> Refactor pci_bus_for_each_resource() in the same way as it's done in
+> pci_dev_for_each_resource() case. This will allow to hide iterator
+> inside the loop, where it's not used otherwise.
+> 
+> No functional changes intended.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Krzysztof Wilczyński <kw@linux.com>
+> ---
+>   drivers/pci/bus.c                  |  7 +++----
+>   drivers/pci/hotplug/shpchp_sysfs.c |  8 ++++----
+>   drivers/pci/pci.c                  |  3 +--
+>   drivers/pci/probe.c                |  2 +-
+>   drivers/pci/setup-bus.c            | 10 ++++------
+>   include/linux/pci.h                | 17 +++++++++++++----
+>   6 files changed, 26 insertions(+), 21 deletions(-)
 
-On Fri, Mar 24, 2023 at 10:14:14AM +0800, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
-> 
-> Cai Huoqing (1):
->   dmaengine: dw-edma: Add support for native HDMA
-> 
-> Cai huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add HDMA DebugFS support
-> 
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
+Nice.
 
-I finished the patchset review and testing. Could you have a look at
-the series. If you are ok with what it does please merge in.
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
--Serge(y)
-
-> 
-> v8->v9:
->   [3/4]
->   1.Drop an empty line.
->   [4/4]
->   2.Update commit log.
->   3.Remove unused macro
-> 
-> v8 link:
->   https://lore.kernel.org/lkml/20230323034944.78357-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
->  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 807 insertions(+), 91 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
-> 
