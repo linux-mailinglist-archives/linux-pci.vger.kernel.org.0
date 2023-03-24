@@ -2,247 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D88D6C81FD
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 16:59:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EED3B6C82F4
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 18:10:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231952AbjCXP7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Mar 2023 11:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53766 "EHLO
+        id S232034AbjCXRKg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Mar 2023 13:10:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbjCXP7Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 11:59:24 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E245D21949;
-        Fri, 24 Mar 2023 08:59:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60D73B82553;
-        Fri, 24 Mar 2023 15:59:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8C7FC433D2;
-        Fri, 24 Mar 2023 15:59:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679673560;
-        bh=xGwOQJYL9ATXTak64Tua1D7KgP2UjQI73su8vDafpLk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gMHOivHkEdT/D1yzlfAOMcRvKQH9e5BYp8+MRJTSKkLOiFYLAyyDHCSfVOn7VQ6TQ
-         x+2urpKwkGfLTyJJsGNe29Qgp5/FWs/QFeCsOqqv+zcncTuqoG3li8TsDBmXmCU1Vn
-         KdvP3O8KVFQym1+m1syW+yChuCD0nDgmUTty4aboSkcL2oehMUsOmmU0nGj0ElcU9f
-         zSO0Vv+P2NNa1SF18Nu0BIDxBtJV8W5297IbSI69/J/2vz4lC8DDwcQ739WIrDYnXY
-         lu7+Swgjn9b8N1jTnIGfrnHsQxSgeCGJqxHrETX5ZF2DU0TTviPViT000mxsq2XFNy
-         M6WqafZgh9JdQ==
-Date:   Fri, 24 Mar 2023 16:59:14 +0100
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Hongxing Zhu <hongxing.zhu@nxp.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        "l.stach@pengutronix.de" <l.stach@pengutronix.de>,
+        with ESMTP id S231992AbjCXRKe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 13:10:34 -0400
+Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021014.outbound.protection.outlook.com [52.101.57.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C0AA21966;
+        Fri, 24 Mar 2023 10:10:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B//V/pAoXrnB4n4DjqjWMI1vo4xD5cdBim+AaHQ7CdxPC42wHzOVDywxKCY7pH9DtIC6qhc0isM05Wot+almgi/h8+tPDKggnJ7Ts3GkpSZ8JItJiekoWTnRW/j9QByt190MPsqsd4sYnk0SDnCl5GmN3Tw5dUBaLQeldrIXC9Llz5Z63pu4CqPu39u9KxBxtINxlSUR4vxKLTsj6bBziv7UBJATn6oIvz/6vt17ufpmBSx481lUS1knQv9ccO5AaCvwL5xzKsil1HkM3/BmBXh6ww0ngSQcr4B4KMPLHuQD0KV7bncYNO5XAIz/w0X65AS6nxrEgeE1gluT6+9tpA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=uowLIybn2D8Vibiy/QHd14+sP470plt8QIxjJvG8onE=;
+ b=EWcDeDrfIE2D27q/ARVnk7Vd4M8UCwJI+wXeZwj9SSsfpFehLusdTbOLPtUyKv7aPfx/2WA1mZNHEBYlnW7qV6ctLesdgKSqpPJ+nF7YLHicUOTe7rFo8NV+iZzmvv9ZAqyuIpvNpYO3a0RT2gCzNo5lH1np6Mp2KBCTQRdHaHk67rB/iFNDJ83wmYFs03N1rLTGSW0gB24RotguOSbPJ64zrgljLmJxs8zvn869Dh1R6RKArl3YbXJHZK5LR03NH++actFajyrTG07Z4iJjlPhaPHAvgfxhZgWTI+r+xxlsIHbZuXhmtEDbhS1mZ6ZTsysrYi7m3AeyPelMD7jlCg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=uowLIybn2D8Vibiy/QHd14+sP470plt8QIxjJvG8onE=;
+ b=Us7ivAqHWOYzQ1Z+Q0gfNeE2QWFQt0k8IUBv4iAyc24VwpKazgWo7bu3+h0cMqpdlShbGQVVEIrbEo8KscrZriGS0h8lSKcmaPHsjzhfHbw641aE14WJkHutTBscCzqUkZFtHL1y0Ye5QEbLqBkJX2u4SG2yvNE2/SD8cZ1RJlk=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by DM6PR21MB1468.namprd21.prod.outlook.com (2603:10b6:5:25b::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.9; Fri, 24 Mar
+ 2023 17:10:26 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::2e52:d6aa:9a99:500a]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::2e52:d6aa:9a99:500a%5]) with mapi id 15.20.6254.011; Fri, 24 Mar 2023
+ 17:10:26 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+CC:     "hpa@zytor.com" <hpa@zytor.com>, KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        "arnd@arndb.de" <arnd@arndb.de>, "hch@lst.de" <hch@lst.de>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "thomas.lendacky@amd.com" <thomas.lendacky@amd.com>,
+        "brijesh.singh@amd.com" <brijesh.singh@amd.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "sathyanarayanan.kuppuswamy@linux.intel.com" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "ak@linux.intel.com" <ak@linux.intel.com>,
+        "isaku.yamahata@intel.com" <isaku.yamahata@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>,
+        "jane.chu@oracle.com" <jane.chu@oracle.com>,
+        "seanjc@google.com" <seanjc@google.com>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in
- suspend and resume
-Message-ID: <ZB3I0gpds8OH2+gx@lpieralisi>
-References: <AS8PR04MB8676EC48C27C8A0DF8B35B648CBD9@AS8PR04MB8676.eurprd04.prod.outlook.com>
- <20230317222436.GA1978818@bhelgaas>
- <AS8PR04MB86765E47FE7AAECC121838188C809@AS8PR04MB8676.eurprd04.prod.outlook.com>
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Subject: RE: [PATCH v6 06/13] x86/hyperv: Change vTOM handling to use standard
+ coco mechanisms
+Thread-Topic: [PATCH v6 06/13] x86/hyperv: Change vTOM handling to use
+ standard coco mechanisms
+Thread-Index: AQHZXmgw+OdhZXSmY06XlWsFUPOSLa8KKbWw
+Date:   Fri, 24 Mar 2023 17:10:26 +0000
+Message-ID: <SA1PR21MB1335023500AE3E7C8AE6F867BF849@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <1678329614-3482-1-git-send-email-mikelley@microsoft.com>
+ <1678329614-3482-7-git-send-email-mikelley@microsoft.com>
+ <20230320112258.GCZBhCEpNAIk0rUDnx@fat_crate.local>
+ <BYAPR21MB16880C855EDB5AD3AECA473DD7809@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <20230320181646.GAZBijDiAckZ9WOmhU@fat_crate.local>
+ <BYAPR21MB1688DF161ACE142DEA721DA1D7809@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <20230323134306.GEZBxXahNkFIx1vyzN@fat_crate.local>
+ <20230324154856.GDZB3GaHG/3L0Q1x47@fat_crate.local>
+In-Reply-To: <20230324154856.GDZB3GaHG/3L0Q1x47@fat_crate.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2bd99fea-2fe3-4f34-8b9b-fa2b2fc0f56e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-24T17:08:31Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|DM6PR21MB1468:EE_
+x-ms-office365-filtering-correlation-id: a6b59117-7b26-4b3b-d39c-08db2c8aa965
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: EculslW8KpiexXf8Yy7+hBJy2JaaNKCCMA/TxhkfHCDZEhA2H2psHCGjGjOgTdHuqK9RmTIWWABX/zq5xZOIO44y0y8Q64r7lbP0R4am9Bzk4UFKdWeDtEOgynQHfnslVU5LqtPWeyKYSlQEMPsSveRWuSuO2WF0f6t6qyCialfnJM1rEpP5zStlUvBRb62YZUrsO1HAR3uGS5vWuaJxCRm7WInJDok/v6JB2iDrPSj78/LSc0F+TMI/KSHxZaCcpbw8aZ1qhjwzWofN8RzZ0HYyw0JbkhArgmn7XP+qfQKl6uFXu2qn0lse5+pd/hVDImQFtMe1WZGzLxLjX+h6zwo0lFTYioDDAbxbjSmHrlwacEeH8pF7PIDWizPaPs+jRQO1aQaiPGs9MVeeoaBkxjwI91mVfSLt4GT1VxfWssDwZyQvRWDh5rjScIWVI3W5qYjEuC5DdzS6BNwlrW/bGpE4J+Lm2vomg2IKRGxWaOAp+mUfBjlV394DLqmbd0PAT7MgMPqsWEEvCaVmN3p4r04FUeyTsCAum2V3/y8bg1IXMhZi7aZL2L/O8TSS2ob6kDlc60wXf70Urz+TCC0IzWovVYN195ebXzZ7fXrUSZ6ISLCfqEH4Dj9aMQDuF5Pnrs83pCV/R3Hf0WRVqxr8tvRFQnPBqkfIpofO6vbd6fI=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(136003)(376002)(39860400002)(346002)(396003)(366004)(451199018)(4744005)(52536014)(8936002)(8990500004)(2906002)(86362001)(38070700005)(478600001)(33656002)(82950400001)(82960400001)(38100700002)(122000001)(41300700001)(10290500003)(7696005)(66946007)(6636002)(8676002)(54906003)(4326008)(66476007)(66556008)(76116006)(71200400001)(316002)(66446008)(64756008)(7406005)(5660300002)(7416002)(55016003)(110136005)(9686003)(6506007)(26005)(186003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?B2w3L3240UWCFERXv05KoCSk31zPaA+GSUHjw7j7BK6r3XJB9Xtu576GVTGP?=
+ =?us-ascii?Q?w+uH7IQTKCKQwMnULVi+rLowfB7fmHbAUtWIZ4w7jRUTGJtjtP/emMdZIDwe?=
+ =?us-ascii?Q?E67Z0XYN+BK/A+6DZnqC9+8VAPMp76w9fpbsdWrfislwzCvUeoZh22id68Zk?=
+ =?us-ascii?Q?/zId6lTvVBEHXguuG5kBD1AoHOpjSs9m+OWl/3uWmYLa+MzCuJsstCvxAD65?=
+ =?us-ascii?Q?9zX+7GVaFEJeufYAzpSrJjQmC7Q7JbiVzuRrSSC/To9Az7ZBCf6gC/TyVx3N?=
+ =?us-ascii?Q?LdSz2qZyXYJQwiV0FWkanEotLxjZzqy83GV8lUrV/S0Al/PV3PkBB+p8ZtC1?=
+ =?us-ascii?Q?tehquiDwoN3XPg5e4iGcwEJFIn66W+5BUXYrS26r4NQaZ0QQSewihq/R2Lpz?=
+ =?us-ascii?Q?kCtZvkYyCFuRBh5j1ty9PPjUOmXV/tVoKmJ2pVKaNocuzCsuqX5eEuUELnTC?=
+ =?us-ascii?Q?PM77H+Xq5ImAZl5J82vVvOh5AP7nh4HH0uzn6NGrGyGekzAtw6nmzzx7ldf7?=
+ =?us-ascii?Q?eGr8lfkil1NBuN0TXCi0dc4bYXnykvbLH37C15NEnluq4PDgSYVoVbdKVXi0?=
+ =?us-ascii?Q?rjSmeCXBk0fqhJxwSRkrlFymyMlLqjxolxKmBbHKoLSOTaAluMeA99ROyfwV?=
+ =?us-ascii?Q?f/8mrgC5KeLISQTTZyWLzCcwtSQKjNfGDma9X2eqTIrgk8mCzZOmrNRfGGnX?=
+ =?us-ascii?Q?hCHlP8HxDG134+ukNVS68/SdGF0gRYJ7DhTVai98UKcpfaV1LDUgfA8PhRNP?=
+ =?us-ascii?Q?x+Pg3C1F3L+mVm4Ckow+5/b5LYEHQ68fxWF4YVsThDVbhsBwona02DUkbdXx?=
+ =?us-ascii?Q?Lw/HAjNc6KqipQOY3mIqX/GDjBvghCKTh+aX3WPoR7qz127fBI9kK2C2D+3R?=
+ =?us-ascii?Q?TakH/TMqdEHxoQp2Nv9iVHOrRLyu6ouYkA+Juhggcew5aVquWNOiapjtj4Fa?=
+ =?us-ascii?Q?sb9Li3cZGoufelGegtvdmgURK2yiFz9576GjYm7r1zvktI+MV0Ge4Z2iVolU?=
+ =?us-ascii?Q?sroZFjSzQgD4jPdXTmsrFp948BvYgkMwIXzKLn2hTDlWL6CpOYOB5qNIJQ7p?=
+ =?us-ascii?Q?5HjuIypeaG/zS60BQUl2e599WsFVS6sPY51UjlAY3m44+PwnsxyU4wvTzuhf?=
+ =?us-ascii?Q?vWy6f0qtWyj+sbdgIiNKQcUDqPGjl5nB1UzH4FWLOz64QlHCgjL2VTzg2upk?=
+ =?us-ascii?Q?DdOnTAAD9M6j6BRoZXb4AmNRYGz2mZwDwsBHrtcjsRx6ChPzaXB0fLJOn5aV?=
+ =?us-ascii?Q?dJo9O0OPdFAMRTgpfn1EE7+oQsMALR8r/+3ibGk2mlePYxIyPXiQXYC6nuEK?=
+ =?us-ascii?Q?42PAp0UP5qjqUNRtiKKec9Oi02ffIytzIj69oj8fv7CqzTngiDJGr9NAFbdM?=
+ =?us-ascii?Q?RVA3h0UTWMy2hULkLHPMxxImHUeT1cih6ROfkT8D/X5DcRgIzHA2KlFpXr0d?=
+ =?us-ascii?Q?OPjmzuSGnbqLFLdiWvs6YHBC3acjJ/8UE8Mj3qrfMe6iJ8j9WqVI2+HgkosT?=
+ =?us-ascii?Q?ApyD18PhyjpFVhFRHm30JjRggCo+7kG8cvi7Ics6lmFI6MFX0oVE4FBIqMvO?=
+ =?us-ascii?Q?Rots6vCbeuAAOnwAhPsbF2yZCbMoXEwiLMrgNQA4?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AS8PR04MB86765E47FE7AAECC121838188C809@AS8PR04MB8676.eurprd04.prod.outlook.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a6b59117-7b26-4b3b-d39c-08db2c8aa965
+X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2023 17:10:26.1924
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Utks9mHhFnhXAFsHfTdgMEJM6dH1S4snBIlU9VeGhTcBGoHQa9pZTDDIUp8V5RlQaz5xWDPaqbTtHF5W/ZhkhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR21MB1468
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 07:02:35AM +0000, Hongxing Zhu wrote:
-> > -----Original Message-----
-> > From: Bjorn Helgaas <helgaas@kernel.org>
-> > Sent: 2023年3月18日 6:25
-> > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>; l.stach@pengutronix.de;
-> > bhelgaas@google.com; linux-pci@vger.kernel.org;
-> > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of RC in suspend
-> > and resume
-> > 
-> > On Fri, Mar 17, 2023 at 07:38:02AM +0000, Hongxing Zhu wrote:
-> > > > -----Original Message-----
-> > > > From: Lorenzo Pieralisi <lpieralisi@kernel.org>
-> > > > Sent: 2023年3月16日 16:11
-> > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > Cc: Bjorn Helgaas <helgaas@kernel.org>; l.stach@pengutronix.de;
-> > > > bhelgaas@google.com; linux-pci@vger.kernel.org;
-> > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
-> > > > kernel@pengutronix.de; dl-linux-imx <linux-imx@nxp.com>
-> > > > Subject: Re: [PATCH v2] PCI: imx6: Save and restore MSI control of
-> > > > RC in suspend and resume
-> > > >
-> > > > On Thu, Mar 16, 2023 at 07:37:41AM +0000, Hongxing Zhu wrote:
-> > > >
-> > > > [...]
-> > > >
-> > > > > > > > > It's not a separate register.
-> > > > > > > > >
-> > > > > > > > > The bit I manipulated is the MSI Enable bit of the Message
-> > > > > > > > > Control Register for MSI (Offset 02h) contained in the
-> > > > > > > > > MSI-capability of Root Complex.
-> > > > > > > > >
-> > > > > > > > > In addition, on i.MX6, the MSI Enable bit controls
-> > > > > > > > > delivery of MSI interrupts from components below the Root Port.
-> > > > > > > > >
-> > > > > > > > > So, set MSI Enable in imx6q-pcie to let the MSI from
-> > > > > > > > > downstream components works.
-> > > > > > > >
-> > > > > > > > My confusion is about this "MSI Capability" found by
-> > > > > > > > "dw_pcie_find_capability(pci, PCI_CAP_ID_MSI)" in your patch.
-> > > > > > > >
-> > > > > > > > The i.MX6 manual might refer to that as an "MSI Capability"
-> > > > > > > > but as far as I know, the PCIe base spec doesn't document a
-> > > > > > > > Root Complex MSI
-> > > > > > Capability.
-> > > > > > > >
-> > > > > > > > I don't think it's the same as the one documented in PCIe
-> > > > > > > > r6.0, sec 7.7.2.  I think it's different because:
-> > > > > > > >
-> > > > > > > >   (1) I *think* "pci" here refers to the RC, not to a Root Port.
-> > > > > > > >
-> > > > > > > >   (2) The semantics are different.  The MSI-X Enable bit in 7.7.2 only
-> > > > > > > >   determines whether the Function itself is permitted to use MSI-X.
-> > > > > > > >   It has nothing to do with devices *below* a Root Port can
-> > > > > > > > use
-> > > > MSI-X.
-> > > > > > > >   It also has nothing to do with whether a Root Port can forward MSI
-> > > > > > > >   transactions from those downstream devices.
-> > > > > > > >
-> > > > > > > > This part of my confusion could be easily resolved via a comment.
-> > > > > > > >
-> > > > > > > > I do have a follow-on question, though: the patch seems to
-> > > > > > > > enable MSI-related functionality using a register in the
-> > > > > > > > DesignWare IP, not something in the i.MX6-specific IP.  If
-> > > > > > > > that's true, why don't other DesignWare-based drivers need
-> > > > > > > > something
-> > > > similar?
-> > > > > > > Hi Bjorn:
-> > > > > > > Thanks a lot for you reply.
-> > > > > > > This behavior is specific for i.MX PCIe.
-> > > > > >
-> > > > > > Which behaviour ? It can't be the root port MSI capability, that
-> > > > > > would be a HW bug (ie disabling root port MSIs would imply
-> > > > > > disabling MSIs for all downstream components).
-> > > > > >
-> > > > >
-> > > > > i.MX PCIe designer use this MSI_EN bit to control the MSI trigger
-> > > > > when integrate  Design Ware PCIe IP.
-> > > > > Without the MSI_EN bit assertion (1b'1), the devices below this RC
-> > > > > can't trigger  the MSI successfully.
-> > > > > Yes, you're right. It should not be the root port MSI capability.
-> > > >
-> > > > The question is, it is or it is not the root port MSI capability ?
-> > > >
-> > > > If it is, that's a HW bug.
-> > > >
-> > > > If it is not there is nothing to do and this patch can be merged.
-> > > Hi Lorenzo:
-> > > Thanks for your reply.
-> > > I think it is not the root port MSI capability actually.
-> > > Refer to my understands, designer just use the msi_en bit to control
-> > > the  delivery of MSI interrupts from components below the Root Port.
-> > > >
-> > > > > > > i.MX PCIe designer use this MSI_EN bit to control the MSI
-> > > > > > > trigger when integrate Design Ware PCIe IP.
-> > > > > >
-> > > > > > Fair enough but that can't be the MSI Enable bit in the Root
-> > > > > > Port MSI capability "Message Control" field I am afraid.
-> > > > > >
-> > > > > > It is what Bjorn mentioned quite clearly, a root complex
-> > > > > > configuration register dressed as an MSI capability, the root
-> > > > > > complex is not a PCI device; either that or that's an HW bug.
-> > > > > Yes, it is. I agree with you. Had report this situation to the design team.
-> > > > > Hope to correct this bug in HW design if it's possible.
-> > > >
-> > > > I don't understand if it is a HW bug or not, see above. I think it
-> > > > is legitimate to have MMIO register space that *looks* like an MSI
-> > > > capability for the root complex to control delivery of MSI
-> > > > interrupts, as long as it is not the actual root port MSI
-> > > > capability, in the root port PCI config space in which case this would be a HW
-> > bug from what you are reporting.
-> > > I just provide the following suggestions.
-> > > - Root complex shouldn't have the MSI capability refer to the PCIe Spec
-> > >   7.7.1 chapter.
-> > > - Root port MSIs should not imply disabling MSIs for all downstream
-> > components.
-> > 
-> > I think this is all a lot of confusion, mostly on my part, sorry about that.
-> > 
-> > Root Complex configuration and behavior is not specified by the PCIe spec, so
-> > that's completely up to the i.MX designer.  It's fine for the Root Complex to have
-> > an MSI Capability, and it's fine for that capability to enable/disable the RC fielding
-> > of MSI MemWr transactions from downstream devices and triggering MSI
-> > interrupts.
-> > 
-> > It's also fine for the RC MSI Capability to be identified with a Capability ID of 0x5,
-> > although it is slightly confusing to use PCI_CAP_ID_MSI to find it.  It's also
-> > slightly confusing to use the PCI_MSI_FLAGS offset into the RC MSI Capability.
-> > 
-> > Using the PCI_CAP_ID_MSI, PCI_MSI_FLAGS, and PCI_MSI_FLAGS_ENABLE
-> > macros suggests to the reader that this RC MSI capability is the same as the the
-> > MSI Capability defined by PCIe r6.0, sec 7.7.1.  Obviously it is *not* the same,
-> > because we're talking about a *Root Complex* capability, while the sec 7.7.1
-> > capability can only appear on PCIe functions (Root Ports, Endpoints, Switch Ports,
-> > etc).
-> > 
-> > I suggest a comment to the effect that this is a Root Complex MSI Capability, not
-> > the MSI Capability defined by PCIe r6.0, sec 7.7.1.
-> > 
-> > Possibly even add new #defines in pci-imx6.c with different names, even though
-> > the values happen to be the same as the PCI_MSI_* #defines.  That would be a
-> > convenient place to put a comment about what they are.
-> Hi Bjorn:
-> Thanks a lot for your dispelling doubts.
-> How about to add the following comments in the new add function to clarify it?
-> 
-> --- a/drivers/pci/controller/dwc/pci-imx6.c
-> +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> @@ -1036,6 +1036,18 @@ static void pci_imx_set_msi_en(struct dw_pcie *pci)
->         u8 offset;
->         u16 val;
-> 
-> +       /*
-> +        * When i.MX DM PCIe controller is configured as RC mode, it has one
-> +        * MSI Capability Structure, although PCIe r6.0, sec 7.7.1 doesn't
-> +        * specify the MSI Capability Structures for Root Complex.
+> From: Borislav Petkov <bp@alien8.de>
+> Sent: Friday, March 24, 2023 8:49 AM
+> ...
+> With first six applied:
+>=20
+> arch/x86/coco/core.c:123:7: error: use of undeclared identifier 'sev_stat=
+us'
+>                 if (sev_status & MSR_AMD64_SNP_VTOM)
+>                     ^
 
-That's because a PCI root complex is not a PCI device (and this is not
-an MSI capability, which lives in PCI config space).
-
-I will reword it (and the commit log with it) and merge it in the coming
-weeks for v6.4
-
-Thanks,
-Lorenzo
-
-> +        *
-> +        * The MSI_EN bit of MSI control register contained in this MSI-CAP
-> +        * is used control the MSI delivery of MSI interrupts from components
-> +        * below the Root Port.
-> +        *
-> +        * Find it by PCI_CAP_ID_MSI here, and assert the MSI_EN bit to allow
-> +        * the MSI delivery below the Root Port, if the PCI MSI is enabled.
-> +        */
->         if (pci_msi_enabled()) {
->                 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_MSI);
->                 dw_pcie_dbi_ro_wr_en(pci);
-> Best Regards
-> Richard Zhu
-> > 
-> > Bjorn
+Your config doesn't define CONFIG_AMD_MEM_ENCRYPT:
+# CONFIG_AMD_MEM_ENCRYPT is not set
