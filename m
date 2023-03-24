@@ -2,64 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B9B86C7FA5
-	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 15:14:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 038416C8041
+	for <lists+linux-pci@lfdr.de>; Fri, 24 Mar 2023 15:48:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231539AbjCXOOl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 24 Mar 2023 10:14:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52196 "EHLO
+        id S232050AbjCXOs5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 24 Mar 2023 10:48:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230079AbjCXOOk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 10:14:40 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BFADE3A5;
-        Fri, 24 Mar 2023 07:14:37 -0700 (PDT)
+        with ESMTP id S232124AbjCXOsz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 24 Mar 2023 10:48:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEBF7170C;
+        Fri, 24 Mar 2023 07:48:32 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C4AF9B82468;
-        Fri, 24 Mar 2023 14:14:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6209BC433A1;
-        Fri, 24 Mar 2023 14:14:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C1C6262B4E;
+        Fri, 24 Mar 2023 14:48:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9C33C433A1;
+        Fri, 24 Mar 2023 14:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679667274;
-        bh=1LI/70a8Wdzks6bphAAWWIPjcQjTsKtdN1DkUgKWRyI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ijFDYpG/KmgbsY4vdmpD0gMdOmVDjHJbSSOCZWf2UoedbgA14V4lzmDCJusk/OSBS
-         i+UIAIrDliH36R7XxBg4b1aaHtEfoFxqYdCbf6vGPEx5CDBtCA3SKXKJwVD2p4Ew4x
-         Pa5BUUlEjKOg+lE9kljAXCMIv+RYJdtMmLFreE7dfzlH9IYH/CKkTB09BltAgiXbQX
-         yV1NxMXsvaQjziDncb8LJMLRNcn209UuO/BuNWX/SkIIYfmMP+Q9CgnH3/UrGzg5Pc
-         1l1qnuakm1XiQ6Y3Z05VaUgZrPQvwVNHyoxwJj5BMGQqfrY11JuL694Of7xOHGL82/
-         9uZGKLjOhe2Bw==
-Received: by mail-yb1-f173.google.com with SMTP id j7so2324958ybg.4;
-        Fri, 24 Mar 2023 07:14:34 -0700 (PDT)
-X-Gm-Message-State: AAQBX9cKsI5jFEa4A9G4b1o2X6YFc2oSnVMdBgfJGmNdtxfqwWLGOLIW
-        i7VfevEpptHqjaAXcv2HxNxGv6320j/5l3bE+w==
-X-Google-Smtp-Source: AKy350aU8U/xa35sgqgoBviTpehPqsQok15zfHRwXey3E4rFa90TzAVVGYDvgFYgAnWPoMyJRecbZNcnHpK5DszUhfo=
-X-Received: by 2002:a05:6902:1586:b0:b68:7b14:186b with SMTP id
- k6-20020a056902158600b00b687b14186bmr1090776ybu.1.1679667273310; Fri, 24 Mar
- 2023 07:14:33 -0700 (PDT)
+        s=k20201202; t=1679669304;
+        bh=uIDuJfqse5TrCvE+0X2CUu9fuJ7qZ+uiMca4t+ghwyk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NdkKTv/fUNBuums3xr8SjuRRw+Xn4h1rDo6/OUZr0RcNgIUSWjhSrP7NdYUhgaMgJ
+         CvjVy4C2T5DTtD7ZeG7ktMhxsHRTRLGH6ENIuSowuc0aTL4DZbSamGRCJxdCDMZsFo
+         W+sP2ef0yOQVzAOaDxZCOaQe1rPPfDjIzronhDE76/PbbTEU1PB7fWgr4S4xq5KOb1
+         a2BQhs5dqOUGQE8cCsmlSYmwH964Jrmf8U5jtD2qXIoAtG7W+bsbcGucrNRGEiglCw
+         4giFx/IQlGBPc2K8cWEulZ6bPgZdSCKSP3N/z2cVMejOlExF2LU67esn/tZIp2UT4F
+         ldXnMsEvMYSJA==
+Date:   Fri, 24 Mar 2023 15:48:09 +0100
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, robh@kernel.org, kw@linux.com,
+        bhelgaas@google.com, arnd@arndb.de, hch@lst.de,
+        m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v6 12/13] PCI: hv: Add hypercalls to read/write MMIO space
+Message-ID: <ZB24Kdu6WMGYH1L7@lpieralisi>
+References: <1678329614-3482-1-git-send-email-mikelley@microsoft.com>
+ <1678329614-3482-13-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
- <1674183732-5157-2-git-send-email-lizhi.hou@amd.com> <CAL_Jsq+FM9P0n7BQZBY1AGJRtjAWw9F6h5DYmLkdPeXZaiYJwA@mail.gmail.com>
- <a13ba751-9350-47ee-1c4d-77bbfbb8ed72@amd.com>
-In-Reply-To: <a13ba751-9350-47ee-1c4d-77bbfbb8ed72@amd.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 24 Mar 2023 09:14:22 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+5LtUcLTRnywdf7XB3HNtO6j2J=qykVeDN1MYZEEx1Cg@mail.gmail.com>
-Message-ID: <CAL_Jsq+5LtUcLTRnywdf7XB3HNtO6j2J=qykVeDN1MYZEEx1Cg@mail.gmail.com>
-Subject: Re: [PATCH V7 1/3] of: dynamic: Add interfaces for creating device
- node dynamically
-To:     Lizhi Hou <lizhi.hou@amd.com>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, frowand.list@gmail.com,
-        helgaas@kernel.org, clement.leger@bootlin.com, max.zhen@amd.com,
-        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
-        stefano.stabellini@xilinx.com, trix@redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1678329614-3482-13-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -67,180 +67,155 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 9:12=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> wrote=
-:
->
->
-> On 3/23/23 15:40, Rob Herring wrote:
-> > On Thu, Jan 19, 2023 at 9:02=E2=80=AFPM Lizhi Hou <lizhi.hou@amd.com> w=
-rote:
-> >> of_create_node() creates device node dynamically. The parent device no=
-de
-> >> and full name are required for creating the node. It optionally create=
-s
-> >> an OF changeset and attaches the newly created node to the changeset. =
-The
-> >> device node pointer and the changeset pointer can be used to add
-> >> properties to the device node and apply the node to the base tree.
-> >>
-> >> of_destroy_node() frees the device node created by of_create_node(). I=
-f
-> >> an OF changeset was also created for this node, it will destroy the
-> >> changeset before freeing the device node.
-> >>
-> >> Expand of_changeset APIs to handle specific types of properties.
-> >>      of_changeset_add_prop_string()
-> >>      of_changeset_add_prop_string_array()
-> >>      of_changeset_add_prop_u32_array()
-> >>
-> >> Signed-off-by: Lizhi Hou <lizhi.hou@amd.com>
-> > Your Sob should be last because you sent this patch. The order of Sob
-> > is roughly the order of possession of the patch.
-> Got it.
-> >
-> >> Signed-off-by: Sonal Santan <sonal.santan@amd.com>
-> >> Signed-off-by: Max Zhen <max.zhen@amd.com>
-> > So Sonal and Max modified this patch?
-> They did not directly modify the code. And we discussed the design
-> together.  They also reviewed the patch before I sent it out. Please let
-> me know if other keyword should be used in this case.
+On Wed, Mar 08, 2023 at 06:40:13PM -0800, Michael Kelley wrote:
+> To support PCI pass-thru devices in Confidential VMs, Hyper-V
+> has added hypercalls to read and write MMIO space. Add the
+> appropriate definitions to hyperv-tlfs.h and implement
+> functions to make the hypercalls.
+> 
+> Co-developed-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> ---
+>  arch/x86/include/asm/hyperv-tlfs.h  |  3 ++
+>  drivers/pci/controller/pci-hyperv.c | 64 +++++++++++++++++++++++++++++++++++++
+>  include/asm-generic/hyperv-tlfs.h   | 22 +++++++++++++
+>  3 files changed, 89 insertions(+)
 
-Reviewed-by or nothing. Some feel that only reviews on public lists
-should get that tag and internal, private reviews don't matter.
+Nit: I'd squash this in with the patch where the calls are used,
+don't think this patch is bisectable as it stands (maybe you
+split them for review purposes, apologies if so).
 
-> >
-> >> Reviewed-by: Brian Xu <brian.xu@amd.com>
-> >> Signed-off-by: Cl=C3=A9ment L=C3=A9ger <clement.leger@bootlin.com>
-> > Why does this have Cl=C3=A9ment's Sob?
-> I referenced Cl=C3=A9ment 's code and used one portion in my first patch
-> series. And I re-implemented it later to address the code review
-> comments/requests.
+Lorenzo
 
-Then it goes first or you can use the 'Co-developed-by' tag.
-
-> >
-> >> ---
-> >>   drivers/of/dynamic.c | 197 +++++++++++++++++++++++++++++++++++++++++=
-++
-> >>   include/linux/of.h   |  24 ++++++
-> >>   2 files changed, 221 insertions(+)
-> >>
-> >> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
-> >> index cd3821a6444f..4e211a1d039f 100644
-> >> --- a/drivers/of/dynamic.c
-> >> +++ b/drivers/of/dynamic.c
-> >> @@ -461,6 +461,71 @@ struct device_node *__of_node_dup(const struct de=
-vice_node *np,
-> >>          return NULL;
-> >>   }
-> >>
-> >> +/**
-> >> + * of_create_node - Dynamically create a device node
-> > For consistency, I think this should be of_changeset_create_node().
-> Sure.
-> >
-> >> + *
-> >> + * @parent: Pointer to parent device node
-> >> + * @full_name: Node full name
-> >> + * @cset: Pointer to returning changeset
-> >> + *
-> >> + * Return: Pointer to the created device node or NULL in case of an e=
-rror.
-> >> + */
-> >> +struct device_node *of_create_node(struct device_node *parent,
-> >> +                                  const char *full_name,
-> >> +                                  struct of_changeset **cset)
-> >> +{
-> >> +       struct of_changeset *ocs;
-> >> +       struct device_node *np;
-> >> +       int ret;
-> >> +
-> >> +       np =3D __of_node_dup(NULL, full_name);
-> >> +       if (!np)
-> >> +               return NULL;
-> >> +       np->parent =3D parent;
-> >> +
-> >> +       if (!cset)
-> >> +               return np;
-> >> +
-> >> +       ocs =3D kmalloc(sizeof(*ocs), GFP_KERNEL);
-> >> +       if (!ocs) {
-> >> +               of_node_put(np);
-> >> +               return NULL;
-> >> +       }
-> >> +
-> >> +       of_changeset_init(ocs);
-> >> +       ret =3D of_changeset_attach_node(ocs, np);
-> >> +       if (ret) {
-> >> +               of_changeset_destroy(ocs);
-> >> +               of_node_put(np);
-> >> +               kfree(ocs);
-> >> +               return NULL;
-> >> +       }
-> >> +
-> >> +       np->data =3D ocs;
-> >> +       *cset =3D ocs;
-> >> +
-> >> +       return np;
-> >> +}
-> >> +EXPORT_SYMBOL(of_create_node);
-> >> +
-> >> +/**
-> >> + * of_destroy_node - Destroy a dynamically created device node
-> >> + *
-> >> + * @np: Pointer to dynamically created device node
-> >> + *
-> >> + */
-> >> +void of_destroy_node(struct device_node *np)
-> >> +{
-> >> +       struct of_changeset *ocs;
-> >> +
-> >> +       if (np->data) {
-> >> +               ocs =3D (struct of_changeset *)np->data;
-> >> +               of_changeset_destroy(ocs);
-> >> +       }
-> >> +       of_node_put(np);
-> > A sequence like this would be broken:
-> >
-> > np  =3D of_create_node()
-> > of_node_get(np)
-> > of_destroy_node(np)
-> >
-> > The put here won't free the node because it still has a ref, but we
-> > just freed the changeset. For this to work correctly, we would need
-> > the release function to handle np->data instead. However, all users of
-> > data aren't a changeset.
-> >
-> > I'm failing to remember why we're storing the changeset in 'data', but
-> > there doesn't seem to be a reason now so I think that can just be
-> > dropped. Then if you want to free the node, you'd just do an
-> > of_node_put(). (And maybe after the node is attached you do a put too,
-> > because the attach does a get. Not completely sure.)
->
-> The question is how to save changeset and free it later. I used global
-> link list to track the changeset been created.
->
-> Storing the changeset in 'data' can avoid using the global link list.
->
-> To use of_node_put() to free both node and changeset, I think we can
->
->    1) add a new flag, then in of_node_release() we can know np->data is
-> changeset by checking the flag.
->
->    2) When creating node, allocate extra memory for changeset and set
-> np->data to a global function of_free_dynamic_node().
->
->        In of_node_release(), check if np->data =3D=3D of_free_dynamic_nod=
-e,
-> call of_free_dynamic_node(np).
->
->        in of_free_dynamic_node(), free changeset by
-> of_changeset_destroy(np+1)
->
-> Does this make sense to you? If yes, 1) or 2) sounds better?
-
-Neither works. Changesets and nodes are not 1:1 in general though they
-are in your use. So you can use the data ptr, but the caller has to
-decide that, not the DT core code.
-
-Rob
+> diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
+> index 0b73a80..b4fb75b 100644
+> --- a/arch/x86/include/asm/hyperv-tlfs.h
+> +++ b/arch/x86/include/asm/hyperv-tlfs.h
+> @@ -122,6 +122,9 @@
+>  /* Recommend using enlightened VMCS */
+>  #define HV_X64_ENLIGHTENED_VMCS_RECOMMENDED		BIT(14)
+>  
+> +/* Use hypercalls for MMIO config space access */
+> +#define HV_X64_USE_MMIO_HYPERCALLS			BIT(21)
+> +
+>  /*
+>   * CPU management features identification.
+>   * These are HYPERV_CPUID_CPU_MANAGEMENT_FEATURES.EAX bits.
+> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
+> index f33370b..d78a419 100644
+> --- a/drivers/pci/controller/pci-hyperv.c
+> +++ b/drivers/pci/controller/pci-hyperv.c
+> @@ -1041,6 +1041,70 @@ static int wslot_to_devfn(u32 wslot)
+>  	return PCI_DEVFN(slot_no.bits.dev, slot_no.bits.func);
+>  }
+>  
+> +static void hv_pci_read_mmio(struct device *dev, phys_addr_t gpa, int size, u32 *val)
+> +{
+> +	struct hv_mmio_read_input *in;
+> +	struct hv_mmio_read_output *out;
+> +	u64 ret;
+> +
+> +	/*
+> +	 * Must be called with interrupts disabled so it is safe
+> +	 * to use the per-cpu input argument page.  Use it for
+> +	 * both input and output.
+> +	 */
+> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	out = *this_cpu_ptr(hyperv_pcpu_input_arg) + sizeof(*in);
+> +	in->gpa = gpa;
+> +	in->size = size;
+> +
+> +	ret = hv_do_hypercall(HVCALL_MMIO_READ, in, out);
+> +	if (hv_result_success(ret)) {
+> +		switch (size) {
+> +		case 1:
+> +			*val = *(u8 *)(out->data);
+> +			break;
+> +		case 2:
+> +			*val = *(u16 *)(out->data);
+> +			break;
+> +		default:
+> +			*val = *(u32 *)(out->data);
+> +			break;
+> +		}
+> +	} else
+> +		dev_err(dev, "MMIO read hypercall error %llx addr %llx size %d\n",
+> +				ret, gpa, size);
+> +}
+> +
+> +static void hv_pci_write_mmio(struct device *dev, phys_addr_t gpa, int size, u32 val)
+> +{
+> +	struct hv_mmio_write_input *in;
+> +	u64 ret;
+> +
+> +	/*
+> +	 * Must be called with interrupts disabled so it is safe
+> +	 * to use the per-cpu input argument memory.
+> +	 */
+> +	in = *this_cpu_ptr(hyperv_pcpu_input_arg);
+> +	in->gpa = gpa;
+> +	in->size = size;
+> +	switch (size) {
+> +	case 1:
+> +		*(u8 *)(in->data) = val;
+> +		break;
+> +	case 2:
+> +		*(u16 *)(in->data) = val;
+> +		break;
+> +	default:
+> +		*(u32 *)(in->data) = val;
+> +		break;
+> +	}
+> +
+> +	ret = hv_do_hypercall(HVCALL_MMIO_WRITE, in, NULL);
+> +	if (!hv_result_success(ret))
+> +		dev_err(dev, "MMIO write hypercall error %llx addr %llx size %d\n",
+> +				ret, gpa, size);
+> +}
+> +
+>  /*
+>   * PCI Configuration Space for these root PCI buses is implemented as a pair
+>   * of pages in memory-mapped I/O space.  Writing to the first page chooses
+> diff --git a/include/asm-generic/hyperv-tlfs.h b/include/asm-generic/hyperv-tlfs.h
+> index b870983..ea406e9 100644
+> --- a/include/asm-generic/hyperv-tlfs.h
+> +++ b/include/asm-generic/hyperv-tlfs.h
+> @@ -168,6 +168,8 @@ struct ms_hyperv_tsc_page {
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_SPACE 0x00af
+>  #define HVCALL_FLUSH_GUEST_PHYSICAL_ADDRESS_LIST 0x00b0
+>  #define HVCALL_MODIFY_SPARSE_GPA_PAGE_HOST_VISIBILITY 0x00db
+> +#define HVCALL_MMIO_READ			0x0106
+> +#define HVCALL_MMIO_WRITE			0x0107
+>  
+>  /* Extended hypercalls */
+>  #define HV_EXT_CALL_QUERY_CAPABILITIES		0x8001
+> @@ -796,4 +798,24 @@ struct hv_memory_hint {
+>  	union hv_gpa_page_range ranges[];
+>  } __packed;
+>  
+> +/* Data structures for HVCALL_MMIO_READ and HVCALL_MMIO_WRITE */
+> +#define HV_HYPERCALL_MMIO_MAX_DATA_LENGTH 64
+> +
+> +struct hv_mmio_read_input {
+> +	u64 gpa;
+> +	u32 size;
+> +	u32 reserved;
+> +} __packed;
+> +
+> +struct hv_mmio_read_output {
+> +	u8 data[HV_HYPERCALL_MMIO_MAX_DATA_LENGTH];
+> +} __packed;
+> +
+> +struct hv_mmio_write_input {
+> +	u64 gpa;
+> +	u32 size;
+> +	u32 reserved;
+> +	u8 data[HV_HYPERCALL_MMIO_MAX_DATA_LENGTH];
+> +} __packed;
+> +
+>  #endif
+> -- 
+> 1.8.3.1
+> 
