@@ -2,90 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39EDA6CAB4A
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Mar 2023 19:02:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F30BD6CAD06
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Mar 2023 20:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232723AbjC0RCZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Mar 2023 13:02:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51678 "EHLO
+        id S229688AbjC0Sbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Mar 2023 14:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232766AbjC0RCH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Mar 2023 13:02:07 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C753F3A92;
-        Mon, 27 Mar 2023 10:01:55 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6D6142F4;
-        Mon, 27 Mar 2023 10:02:38 -0700 (PDT)
-Received: from [10.57.53.238] (unknown [10.57.53.238])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 932F03F6C4;
-        Mon, 27 Mar 2023 10:01:52 -0700 (PDT)
-Message-ID: <15102094-10d3-b160-59cc-d5b9b93ae1b3@arm.com>
-Date:   Mon, 27 Mar 2023 18:01:47 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 7/8] PCI: dwc: Introduce configurable DMA mask
-Content-Language: en-GB
-To:     Rob Herring <robh@kernel.org>, Elad Nachman <enachman@marvell.com>
-Cc:     thomas.petazzoni@bootlin.com, bhelgaas@google.com,
-        lpieralisi@kernel.org, kw@linux.com,
-        krzysztof.kozlowski+dt@linaro.org, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230313124016.17102-1-enachman@marvell.com>
- <20230313124016.17102-8-enachman@marvell.com>
- <20230317182323.GA2445959-robh@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-In-Reply-To: <20230317182323.GA2445959-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S229606AbjC0Sbq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Mar 2023 14:31:46 -0400
+X-Greylist: delayed 900 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 27 Mar 2023 11:31:45 PDT
+Received: from mx2.n90.eu (mx.n90.eu [65.21.251.117])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21E26271D;
+        Mon, 27 Mar 2023 11:31:45 -0700 (PDT)
+Received: by mx2.n90.eu (Postfix, from userid 182)
+        id 6277A1027DB45; Mon, 27 Mar 2023 18:06:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=n90.eu; s=default;
+        t=1679940370; bh=OGbOFJayhgRcXq5FMeS6bRDyUolQeucd8waNYOur4j4=;
+        h=References:From:To:Cc:Subject:Date:In-reply-to;
+        b=nPD85CB4IjQubR+FqhGXUYhBxV7bbwiHtN9kDpUsMfvJ5VKjUsWV88RDwd2C5oy4/
+         9tlJmIwPVi3rnu2uF27A0Xua2/i08lUSZ8Yll0MXwtsw+rld4069lz2IM8kPcwxggO
+         phjBZkPfcy0QaShZxkSowFm5huqTrA2RmJl4unv3BE9WpLw5cHrd/vU7l+6slZ5l9/
+         p7m9eSvV87wcasXYp44lZW2pwDpGg8ecJrJGUayyE9ySjUesRCJHONIfC7Dbqvhl94
+         Nfe8MHZJvedo8D6w1a4cBrMOGJeF/f9TiWznHy5d8o12ZS2UBdgtiZxheA/fa2BBpK
+         PygFgKG/87wsA==
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
+Received: from spica (unknown [172.20.188.202])
+        by mx2.n90.eu (Postfix) with ESMTP id CD5411025BB5A;
+        Mon, 27 Mar 2023 18:06:07 +0000 (UTC)
+References: <20230327143359.GA2834753@bhelgaas>
+ <ZCHB6hXbCOxiZw+n@kbusch-mbp.dhcp.thefacebook.com>
+User-agent: mu4e 1.8.14; emacs 30.0.50
+From:   Aleksander Trofimowicz <alex@n90.eu>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Lukas Wunner <lukas@wunner.de>, linux-pci@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [bugzilla-daemon@kernel.org: [Bug 217251] New: pciehp: nvme not
+ visible after re-insert to tbt port]
+Date:   Mon, 27 Mar 2023 17:43:18 +0000
+In-reply-to: <ZCHB6hXbCOxiZw+n@kbusch-mbp.dhcp.thefacebook.com>
+X-Mailer: boring 1.0
+Message-ID: <871qlank6o.fsf@n90.eu>
+MIME-Version: 1.0
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023-03-17 18:23, Rob Herring wrote:
-> +Robin
-> 
-> On Mon, Mar 13, 2023 at 02:40:15PM +0200, Elad Nachman wrote:
->> From: Elad Nachman <enachman@marvell.com>
+
+Keith Busch <kbusch@kernel.org> writes:
+
+> On Mon, Mar 27, 2023 at 09:33:59AM -0500, Bjorn Helgaas wrote:
+>> Forwarding to NVMe folks, lists for visibility.
 >>
->> Some devices, such as AC5 and AC5X have their physical DDR memory
->> start at address 0x2_0000_0000. In order to have the DMA coherent
->> allocation succeed later, a different DMA mask is required, as
->> defined in the DT file for such SOCs, using dma-ranges.
-> 
-> I'm afraid this is not right. 'dma-ranges' in the PCI host bridge node
-> applies to PCI devices (i.e. child node), not the host bridge itself.
-> It's 'dma-ranges' in the parent node of the host bridge that applies
-> here. The core code will set masks (ranges really now) based on bus
-> restrictions. The mask for the device should only be based on the
-> device's limits (i.e. the device is 32-bit only).
-> 
-> I think you will need whatever solution comes out of this thread[1].
+>> ----- Forwarded message from bugzilla-daemon@kernel.org -----
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217251
+>> ...
+>>
+>> Created attachment 304031
+>>   --> https://bugzilla.kernel.org/attachment.cgi?id=304031&action=edit
+>> the tracing of nvme_pci_enable() during re-insertion
+>>
+>> Hi,
+>>
+>> There is a JHL7540-based device that may host a NVMe device. After the first
+>> insertion a nvme drive is properly discovered and handled by the relevant
+>> modules. Once disconnected any further attempts are not successful. The device
+>> is visible on a PCI bus, but nvme_pci_enable() ends up calling
+>> pci_disable_device() every time; the runtime PM status of the device is
+>> "suspended", the power status of the 04:01.0 PCI bridge is D3. Preventing the
+>> device from being power managed ("on" -> /sys/devices/../power/control)
+>> combined with device removal and pci rescan changes nothing. A host reboot
+>> restores the initial state.
+>>
+>> I would appreciate any suggestions how to debug it further.
+>
+> Sounds the same as this report:
+>
+>   http://lists.infradead.org/pipermail/linux-nvme/2023-March/038259.html
+>
+> The driver is bailing on the device because we can't read it's status register
+> out of the remapped BAR. There's nothing we can do about that from the nvme
+> driver level. Memory mapped IO has to work in order to proceed.
+>
+Thanks. I can confirm it is the same problem:
 
-Right, "make the allocation succeed later" is entirely missing the point 
-of this code. The only reason we're doing that allocation at all is to 
-reserve a 32-bit bus address. If it fails, it means we can't reliably 
-support endpoints with only a 32-bit MSI capability. Using a bigger mask 
-in order to successfully reserve a >32-bit bus address basically 
-*guarantees* that you can't support endpoints with only a 32-bit MSI 
-capability.
+a) the platform is Intel Alderlake
+b) readl(dev->bar + NVME_REG_CSTS) in nvme_pci_enable() fails
+c) reading BAR0 via setpci gives 0x00000004
 
-Thanks Rob for digging up that thread; the original idea there should 
-still be fine, but the alternative suggestion from Serge at the end is 
-potentially even better for this situation where it's down to the SoC's 
-memory map rather than the kernel config. It just needs somebody with 
-sufficient motivation and resources to write and test a patch :)
-
-Robin.
-
-> 
-> Rob
-> 
-> [1] https://lore.kernel.org/all/c014b074-6d7f-773b-533a-c0500e239ab8@arm.com/
+--
+at
