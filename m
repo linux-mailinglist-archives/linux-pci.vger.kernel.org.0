@@ -2,162 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C09D6CA1C4
-	for <lists+linux-pci@lfdr.de>; Mon, 27 Mar 2023 12:54:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EEFA6CA61D
+	for <lists+linux-pci@lfdr.de>; Mon, 27 Mar 2023 15:38:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231737AbjC0KyX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 27 Mar 2023 06:54:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37312 "EHLO
+        id S232607AbjC0Nit (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 27 Mar 2023 09:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230020AbjC0KyW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Mar 2023 06:54:22 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A28EFE;
-        Mon, 27 Mar 2023 03:54:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 13DA7B80DA9;
-        Mon, 27 Mar 2023 10:54:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD1AC433EF;
-        Mon, 27 Mar 2023 10:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679914458;
-        bh=3m5S2P0Y01xv0mVXDkCZEoWn9ZtG8G6QGBhdIL/kX/g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g0qAhMBt7IVpjUMYgi2bPELCKNFe6lTVo6Tu0djOmqrs5Gb8lc9d45RdcQPrW+d3I
-         mcOwVZBm0DqeQ9BzA08EsW0WqX8+rL4keYE02uS1CxbI+tSexLy/x8RGEG3Y/dAUfV
-         PLv4XFvBywCazj2bDR3Qthy25CsZ3RTE0yTFZpUs80dh1mzNnK54vEhMByGsGxEUDX
-         kgOctzXvb5bEs6yOk7geAJY3qbYBoXaIKIw3PpxWjaUwSk9iQV2z4qI+VlW40lw019
-         8d0+Iri1oImxcx2rLfBOSiZj7nFHCoy4TgZQ6v86kr6h2gRrZV2qCAXg3tc8vVWKNT
-         rM3Cx+sXisqvw==
-Date:   Mon, 27 Mar 2023 16:24:03 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Rohit Agarwal <quic_rohiagar@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        lee@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, lpieralisi@kernel.org,
-        kw@linux.com, bhelgaas@google.com,
-        manivannan.sadhasivam@linaro.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] ARM: dts: qcom: sdx65: Add support for PCIe EP
-Message-ID: <20230327105403.GF16424@thinkpad>
-References: <1679036039-27157-1-git-send-email-quic_rohiagar@quicinc.com>
- <1679036039-27157-4-git-send-email-quic_rohiagar@quicinc.com>
+        with ESMTP id S229804AbjC0Nin (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 27 Mar 2023 09:38:43 -0400
+Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E139C559F
+        for <linux-pci@vger.kernel.org>; Mon, 27 Mar 2023 06:38:35 -0700 (PDT)
+Received: by mail-pj1-x102d.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso11872601pjb.0
+        for <linux-pci@vger.kernel.org>; Mon, 27 Mar 2023 06:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1679924315;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lc/YFwcJcimmTWUXpqZ6U83MS64mpkgpdY8muL+3Dfg=;
+        b=BukT4RFJHnwvZp0owfSl97elYBKmXKnjGtYiklPiHMjIU/kbrR2tWl7xDmw8JDJ1XI
+         rAR2RobLdf+rOT9bgXJGsgbzXuXFkP0basG4SqDpnsIIMDUHl2T7mTaj06rVLxGBdk8O
+         06o4JScTKFLdoszXIIStWcg9nDZ46VTo2lLGU/Aj7B9EcjYi56BdXbSB/0uuaEFzo42N
+         DpVxYFU+zaCWTK/pr2whswxEC+W/P4MZrr8EROCmRogSQNDpQ7eEhfxSSv8wkS1Orjal
+         nTQtduNwn24yvWri8BK2C0raxE8/qs/6OWttxVeJPngXQodfJqR5Zec1z+bWYZ5mrgol
+         EHPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679924315;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Lc/YFwcJcimmTWUXpqZ6U83MS64mpkgpdY8muL+3Dfg=;
+        b=SvXAtOXU70UWHr32PQ7vGstGmhu0a94yTJ5jK60RIDXMwo63JRmN6xdeoMYGaI1Fhf
+         x0uw9uHaHfC9GEC2FJtnmX7YNjxyOmhhA5yXDC8oaJB5QQ3yoDamMddWV811UDd0W5/G
+         9lGOsYPFT8QrKZKetVpb9tyOkn5o30LzjYsKbUzr82CUJbbspiePZHUyohLivswW9hgk
+         sxDfLS8Sd0eZd8ZRARBf5QLhZK0vC8XxQX4j8KVbsLFgjXF2O2oBUYEIPp7rex8LiExn
+         voroQw84cFXow9hRgBHRVXXgFS52P86K6tQsvQoQCeSNWsiQk8Q2CxQunbel1PoIluOD
+         EMKA==
+X-Gm-Message-State: AAQBX9cFDKBEcjuifBKkzwnicjCGSLhqQFlSrU6+RXa+mBS+eNpzNTA/
+        c/T7L+4x5iJXq5lbS6NJ3nzEtRGndtvGzTx4Rg==
+X-Google-Smtp-Source: AKy350a/NWYQb/+aD6pg34D4t6v1OAM7UejA1X3H4u64RKKwIXOYLlUnE9XULN/oqXSuLhAIQNk09Q==
+X-Received: by 2002:a17:902:e84f:b0:19c:be09:20d5 with SMTP id t15-20020a170902e84f00b0019cbe0920d5mr15914681plg.11.1679924315079;
+        Mon, 27 Mar 2023 06:38:35 -0700 (PDT)
+Received: from localhost.localdomain ([117.193.215.38])
+        by smtp.gmail.com with ESMTPSA id p6-20020a1709028a8600b00194c2f78581sm19187668plo.199.2023.03.27.06.38.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Mar 2023 06:38:34 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
+        mka@chromium.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/1] PCI: qcom: Add support for system suspend and resume
+Date:   Mon, 27 Mar 2023 19:08:23 +0530
+Message-Id: <20230327133824.29136-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1679036039-27157-4-git-send-email-quic_rohiagar@quicinc.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 12:23:57PM +0530, Rohit Agarwal wrote:
-> Add support for PCIe Endpoint controller on the
-> Qualcomm SDX65 platform.
-> 
-> Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
+Hello,
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+This series (a single patch) adds the system suspend and resume support
+to the Qualcomm PCIe RC controller.
+
+Background
+==========
+
+There were previous attempts [1][2] to add system suspend and resume
+support to this driver.
+
+In previous versions, the controller was put into low power mode by turning
+OFF the resources even if there were active PCIe devices connected. Thanks
+to Qualcomm's internal power topology, the link did not enter L2/L3 state
+and the devices were still powered ON. But during very late end of suspend
+cycle, kernel tried to disable MSIs of the PCIe devices. This caused access
+violations as the resources needed to access the PCIe devices config space
+were turned OFF. Series [1] worked around this issue by not accessing the
+PCIe config space if the link was down in dw_msi_{un}mask_irq() functions.
+But that approach was not accepted.
+
+Then, series [2] implemented the suspend and resume operations using the
+syscore framework that disabled the resources at the end of the suspend
+cycle. But that approach also did not get much acceptance.
+
+Proposal
+========
+
+So the proposal here is to just vote for minimal interconnect bandwidth and
+not turn OFF the resources if there are active PCIe devices connected to
+the controllers. This avoids the access violation issue during suspend and
+also saves some power due to the lower interconnect bandwidth used.
+
+Then if there are no active PCIe devices connected to the controller,
+the resources are turned OFF completely and brought back during resume.
+This also saves power if there are controllers in a system without any
+devices connected.
+
+Testing
+=======
+
+This series has been tested on Lenovo Thinkpad X13s.
 
 Thanks,
 Mani
 
-> ---
->  arch/arm/boot/dts/qcom-sdx65.dtsi | 56 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom-sdx65.dtsi
-> index 084daf8..a7d8ad9 100644
-> --- a/arch/arm/boot/dts/qcom-sdx65.dtsi
-> +++ b/arch/arm/boot/dts/qcom-sdx65.dtsi
-> @@ -11,6 +11,7 @@
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/power/qcom-rpmpd.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	#address-cells = <1>;
-> @@ -293,6 +294,56 @@
->  			status = "disabled";
->  		};
->  
-> +		pcie_ep: pcie-ep@1c00000 {
-> +			compatible = "qcom,sdx65-pcie-ep", "qcom,sdx55-pcie-ep";
-> +			reg = <0x01c00000 0x3000>,
-> +			      <0x40000000 0xf1d>,
-> +			      <0x40000f20 0xa8>,
-> +			      <0x40001000 0x1000>,
-> +			      <0x40200000 0x100000>,
-> +			      <0x01c03000 0x3000>;
-> +			reg-names = "parf",
-> +				    "dbi",
-> +				    "elbi",
-> +				    "atu",
-> +				    "addr_space",
-> +				    "mmio";
-> +
-> +			qcom,perst-regs = <&tcsr 0xb258 0xb270>;
-> +
-> +			clocks = <&gcc GCC_PCIE_AUX_CLK>,
-> +				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_MSTR_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_SLV_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
-> +				 <&gcc GCC_PCIE_SLEEP_CLK>,
-> +				 <&gcc GCC_PCIE_0_CLKREF_EN>;
-> +			clock-names = "aux",
-> +				      "cfg",
-> +				      "bus_master",
-> +				      "bus_slave",
-> +				      "slave_q2a",
-> +				      "sleep",
-> +				      "ref";
-> +
-> +			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "global", "doorbell";
-> +
-> +			resets = <&gcc GCC_PCIE_BCR>;
-> +			reset-names = "core";
-> +
-> +			power-domains = <&gcc PCIE_GDSC>;
-> +
-> +			phys = <&pcie_phy>;
-> +			phy-names = "pcie-phy";
-> +
-> +			max-link-speed = <3>;
-> +			num-lanes = <2>;
-> +
-> +			status = "disabled";
-> +		};
-> +
->  		pcie_phy: phy@1c06000 {
->  			compatible = "qcom,sdx65-qmp-gen4x2-pcie-phy";
->  			reg = <0x01c06000 0x2000>;
-> @@ -330,6 +381,11 @@
->  			#hwlock-cells = <1>;
->  		};
->  
-> +		tcsr: syscon@1fcb000 {
-> +			compatible = "qcom,sdx65-tcsr", "syscon";
-> +			reg = <0x01fc0000 0x1000>;
-> +		};
-> +
->  		remoteproc_mpss: remoteproc@4080000 {
->  			compatible = "qcom,sdx55-mpss-pas";
->  			reg = <0x04080000 0x4040>;
-> -- 
-> 2.7.4
-> 
+[1] https://lore.kernel.org/linux-pci/1656055682-18817-1-git-send-email-quic_krichai@quicinc.com/
+[2] https://lore.kernel.org/linux-pci/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
+
+Changes in v3:
+
+* Limited comments to 80 column
+* Added error handling in resume_noirq()
+
+Changes in v2:
+
+* Used minimum icc vote to keep data path functional during suspend
+* Collected Ack
+
+Manivannan Sadhasivam (1):
+  PCI: qcom: Add support for system suspend and resume
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 62 ++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.25.1
+
