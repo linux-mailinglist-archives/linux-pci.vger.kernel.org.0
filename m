@@ -2,56 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 843006CC91A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 19:21:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C71B6CC934
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 19:24:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231133AbjC1RVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 13:21:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33296 "EHLO
+        id S229614AbjC1RYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 13:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230421AbjC1RVK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 13:21:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E303BE192;
-        Tue, 28 Mar 2023 10:21:07 -0700 (PDT)
+        with ESMTP id S231136AbjC1RYu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 13:24:50 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E329B2D5B;
+        Tue, 28 Mar 2023 10:24:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FA45618CE;
-        Tue, 28 Mar 2023 17:21:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6738FC433EF;
-        Tue, 28 Mar 2023 17:21:06 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 87299B81D72;
+        Tue, 28 Mar 2023 17:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E803EC4339B;
+        Tue, 28 Mar 2023 17:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680024066;
-        bh=XG4Gv1uDdcHMJWold8r+MUkd4gUOdU/9HSIAESk1/iI=;
+        s=k20201202; t=1680024287;
+        bh=O8m+p0zD+XNFiA03Z+/yCzyznUzLzCLRpXdQTJ8dP+Q=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=kcCgVmfoCcOL/fkAXJQsz0LR/9b+X2wFGZS6g8nS9Cva1U101OE0U3EYyXbdkbqTy
-         aceP/+FEMtrdQPPfqvP04qtm8sFXLHSaf041pAalMFGJKoaaGgN8X+pOn+S8oI33Ye
-         tIOd6sKIwS0xLixDLCa1mNY9dJyX+ECsqXhzOWdH8m5AScZp6HCSXUJID+reaRG3Wz
-         Xv6Te2/TzBDwEPhxKQBKWns6Kx3J+HnN4AVGU1YcceA5efROf1luvolQTWIUtyl5IO
-         RMLsJC8X3gumbnI1bFdMRIw1+8QGPcoQSwj8r8cEwhoZVTVT+phzktL1gEY8PnExS5
-         mxpemz9CNneEQ==
-Date:   Tue, 28 Mar 2023 12:21:04 -0500
+        b=RldpunhtC07J9KzcN6AhpUCmYq+S2XB4JSuwhsGPYTfVDvDz0rkamEDIHzb53qlzY
+         UH0NCPk2pyMqQ7XhPU4+B6QRoHbW6qopkRssgz7ZXzG87ReBJtU2RPqyNeLwxJdRgB
+         AwvgMNJ91k3jHME+1zm+fxvIEyVp7a8YgMckCKuFvk+U/0KElQytwPOdNMnMU/2m9N
+         5Y0R6mjaZaipytIgrDIOlCuZGbmRAyjJh5Bhj4YoR/Ika5lg4OG5WLjyE5auzsbOud
+         Ji65Cp3/2Dh6FTnUBinyRs/35CvO8iUXoC0swemghz7ySQWSCq5p/pvu1qJuC2Bgdc
+         YM5GHRU5QMy7w==
+Date:   Tue, 28 Mar 2023 12:24:45 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     Terry Bowman <terry.bowman@amd.com>, alison.schofield@intel.com,
-        vishal.l.verma@intel.com, ira.weiny@intel.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, dave.jiang@intel.com,
-        Jonathan.Cameron@huawei.com, linux-cxl@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2 4/5] cxl/pci: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <20230328172104.GA2897826@bhelgaas>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [EXTERNAL] [PATCH 1/6] PCI: hv: fix a race condition bug in
+ hv_pci_query_relations()
+Message-ID: <20230328172445.GA2951931@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZCIPuPM+LZsOFIIZ@rric.localdomain>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+In-Reply-To: <SA1PR21MB133553326FBAD376DE9DB48ABF889@SA1PR21MB1335.namprd21.prod.outlook.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,109 +72,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci, more error handling folks; beginning of thread at
-https://lore.kernel.org/all/20230323213808.398039-1-terry.bowman@amd.com/]
-
-On Mon, Mar 27, 2023 at 11:51:39PM +0200, Robert Richter wrote:
-> On 24.03.23 17:36:56, Bjorn Helgaas wrote:
-
-> > > The CXL device driver is then responsible to
-> > > enable error reporting in the RCEC's AER cap
-> > 
-> > I don't know exactly what you mean by "error reporting in the RCEC's
-> > AER cap", but IIUC, for non-Root Port devices, generation of ERR_COR/
-> > ERR_NONFATAL/ERR_FATAL messages is controlled by the Device Control
-> > register and should already be enabled by pci_aer_init().
-> > 
-> > Maybe you mean setting AER mask/severity specifically for Internal
-> > Errors?  I'm hoping to get as much of AER management as we can in the
+On Tue, Mar 28, 2023 at 05:38:59AM +0000, Dexuan Cui wrote:
+> > From: Saurabh Singh Sengar <ssengar@microsoft.com>
+> > Sent: Monday, March 27, 2023 10:29 PM
+> > > ...
+> > > ---
 > 
-> Richt, this is implemented in patch #5 in function
-> rcec_enable_aer_ints().
-
-I think we should add a PCI core interface for this so we can enforce
-the AER ownership question (all the crud like pcie_aer_is_native()) in
-one place.
-
-> > PCI core and out of drivers, so maybe we need a new PCI interface to
-> > do that.
-> > 
-> > In any event, I assume this sort of configuration would be an
-> > enumeration-time thing, while *this* patch is a run-time thing, so
-> > maybe this information belongs with a different patch?
+> Please note this special line "---". 
+> Anything after the special line and before the line "diff --git" is discarded
+> automaticaly by 'git' and 'patch'. 
 > 
-> Do you mean once a Restricted CXL host (RCH) is detected, the internal
-> errors should be enabled in the device mask, all this done during
-> device enumeration? But wouldn't interrupts being enabled then before
-> the CXL device is ready?
-
-I'm not sure what you mean by "before the CXL device is ready."  What
-makes a CXL device ready, and how do we know when it is ready?
-
-pci_aer_init() turns on PCI_EXP_DEVCTL_CERE, PCI_EXP_DEVCTL_FERE, etc
-as soon as we enumerate the device, before any driver claims the
-device.  I'm wondering whether we can do this PCI_ERR_COR_INTERNAL and
-PCI_ERR_UNC_INTN fiddling around the same time?
-
-> > I haven't worked all the way through this, but I thought Sean Kelley's
-> > and Qiuxu Zhuo's work was along the same line and might cover this,
-> > e.g.,
+> > >  drivers/pci/controller/pci-hyperv.c | 13 +++++++++++++
+> > >  1 file changed, 13 insertions(+)
+> > >
+> > > @@ -3635,6 +3641,8 @@ static int hv_pci_probe(struct hv_device *hdev,
+> > >
+> > >  retry:
+> > >  	ret = hv_pci_query_relations(hdev);
+> > > +	printk("hv_pci_query_relations() exited\n");
 > > 
-> >   a175102b0a82 ("PCI/ERR: Recover from RCEC AER errors")
-> >   579086225502 ("PCI/ERR: Recover from RCiEP AER errors")
-> >   af113553d961 ("PCI/AER: Add pcie_walk_rcec() to RCEC AER handling")
-> > 
-> > But I guess maybe it's not quite the same case?
+> > Can we use pr_* or the appropriate KERN_<LEVEL> in all the printk(s).
 > 
-> Actually, we use this code to handle errors that are reported to the
-> RCEC and only implement here the CXL specifics. That is, checking if
-> the RCEC receives something from a CXL downstream port and forwarding
-> that to a CXL handler (this patch). The handler then checks the AER
-> err cap in the RCRB of all CXL downstream ports associated to the RCEC
-> (not visible in the PCI hierarchy), but discovered through the :00.0
-> RCiEP (patch #5).
+> This is not part of the real patch :-)
+> I just thought the debug code can help understand the issues
+> resolved by the patches.
+> I'll remove the debug code to avoid confusion if I need to post v2.
 
-There are two calls to pcie_walk_rcec():
+I guess that means you *will* post a v2, right?  Or do you expect
+somebody else to remove the debug code?  If you do keep any debug or
+other logging, use pci_info() (or dev_info()) whenever possible.
 
-  1) The existing one in find_source_device()
-  2) The one you add in handle_cxl_error()
-
-Does the call in handle_cxl_error() look at devices that the existing
-call in find_source_device() does not?  I'm trying to understand why
-we need both calls.
-
-> > > +static bool is_internal_error(struct aer_err_info *info)
-> > > +{
-> > > +	if (info->severity == AER_CORRECTABLE)
-> > > +		return info->status & PCI_ERR_COR_INTERNAL;
-> > > +
-> > > +	return info->status & PCI_ERR_UNC_INTN;
-> > > +}
-> > > +
-> > > +static void handle_cxl_error(struct pci_dev *dev, struct aer_err_info *info)
-> > > +{
-> > > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> > > +	    is_internal_error(info))
-> > 
-> > What's unique about Internal Errors?  I'm trying to figure out why you
-> > wouldn't do this for *all* CXL errors.
-> 
-> Per CXL specification downstream port errors are signaled using
-> internal errors. 
-
-Maybe a spec reference here to explain is_internal_error()?  Is the
-point of the check to *exclude* non-internal errors?  Or is basically
-documentation that there shouldn't ever *be* any non-internal errors?
-I guess the latter wouldn't make sense because at this point we don't
-know whether this is a CXL hierarchy.
-
-> All other errors would be device specific, we cannot
-> handle that in a generic CXL driver.
-
-I'm missing the point here.  We don't have any device-specific error
-handling in aer.c; it only connects the generic *reporting* mechanism
-(AER log registers and Root Port interrupts) to the drivers that do
-the device-specific things via err_handler hooks.  I assume we want a
-similar model for CXL.
+Also capitalize the subject line to match the others in the series.
 
 Bjorn
