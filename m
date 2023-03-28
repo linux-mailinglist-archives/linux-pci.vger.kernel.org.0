@@ -2,69 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 530D96CB789
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 08:56:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FC976CB7DC
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 09:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbjC1G4s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 02:56:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
+        id S229507AbjC1HVM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 03:21:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58548 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjC1G4r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 02:56:47 -0400
-Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 654501BDC
-        for <linux-pci@vger.kernel.org>; Mon, 27 Mar 2023 23:56:45 -0700 (PDT)
-Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-17aceccdcf6so11761918fac.9
-        for <linux-pci@vger.kernel.org>; Mon, 27 Mar 2023 23:56:45 -0700 (PDT)
+        with ESMTP id S229645AbjC1HVL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 03:21:11 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85C752D48
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 00:21:09 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id ew6so45621944edb.7
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 00:21:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679986604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Qh+JaNHAD8f25IDWuH+n7YY+r2NLLfs7rAFVNJ1skc=;
-        b=Qidgo4mSaU+b2DK5q/FKLTDkJfwDkk2IcMQNzwN3QUuSsb5OgwugUvJ+yZZK95L6l+
-         VohAxr2Yo7c2hkADUA8odadX6urSipoVf/rtU2HrkSl4u2HcDkBX475Y3jUIYIscPE9w
-         +PANhhHjY+Nv2C9UH5us8rJdurGjtzit2EIZCJwrwQjorDFQWHJTFXk5q9HDs+e0FnoC
-         9130mEwafXyg1Kj3LWIBUYy36ZCGh2FAgFj4CqJdS4BHshIIDMmVKhhipvfLkXJfPbi8
-         TwyLwetKM16Qf0JWbWZ5+lOdBMXVKMkrW3/bEHXX9uHt+aLsM4Lg8WcmS4NbtubzOykh
-         txMw==
+        d=linaro.org; s=google; t=1679988068;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=M4CYgrnxL/oD4LhNxCijRW1wSvmkQAAax1ssKQ5T4oE=;
+        b=TimBilBJ/4qlKuklhMtkkntEIp2MCOBC0BvhGaTAvMCWbYhcry589vp2bRc9T+zNVs
+         +LaQ2wTJ2rcFawHBLnEgFzXEtxzCEmuH7WuTlqvGH+GmLBnN1Zt/iGY+PhQvJZWyHX0/
+         pGyYghOr/wjgN7Qh9K9+QT6o92dNzoYVO+srLA8rufopIH2d9hmWgsbsMOYHKanCqxkN
+         Uv6qEQIvclCC6dRgY2wg/oT6O6ijp4mTnvPNqLJI6YClpV21jpJfeOxdpQ5yp/1LQkud
+         W9HkZwD0J2eWRv0gKn4oRf7hDjLz1iEyjBon/CWNvoyKYFmY3QVVaPuoj9d7oGEi9IyJ
+         E/Jw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679986604;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Qh+JaNHAD8f25IDWuH+n7YY+r2NLLfs7rAFVNJ1skc=;
-        b=kHMUbOCDg9pyN+z1AQPSlaGBDQmhFglFwTIIizRLGvd+A7TAFEdDDvZKGP3DzrE0aN
-         RdnpB43PVt1GhaCbyoMzHJZv84c6Ndy2nDPqipBjzqvDXn5K7jbzPgd1/2be94/eXs1P
-         3FoNG8KYnQ+bYuICoyIBqvplKG535q/lPaNLE3XACSDFhZy24ROpK1/6SepV0/+7QAlr
-         An+lVASyhBOkzyQyExp8hLuxf/ZEm/whPQmmP87N9yskb05TzrT1QYqXvIZcNOSp4dni
-         Kx+uueW0uF71zHPtwtUjrYaznqaz3shlc/XS+StU7VaYO1XbPaaeEHBHaAXpYR6rOci/
-         jSJw==
-X-Gm-Message-State: AAQBX9ekVrEBToqIosqVqZKiKxTnjIrCT6Oj6xmGWi3JxZ2aCRPyOhKL
-        rcP0+eY06zJ8HC3Zt3uSO64hCG+IaiSqLtgv0BU=
-X-Google-Smtp-Source: AKy350a2VlaWZDsRSGtZaKITotDYUirqBWjlbW6S1GJimGi/3ru2Tszfu4uiCU3utNmxCTTJWA9jnhshcmVTFJyvbm8=
-X-Received: by 2002:a05:6870:11d9:b0:17e:1aaf:eb9b with SMTP id
- 25-20020a05687011d900b0017e1aafeb9bmr4964072oav.10.1679986604599; Mon, 27 Mar
- 2023 23:56:44 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679988068;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=M4CYgrnxL/oD4LhNxCijRW1wSvmkQAAax1ssKQ5T4oE=;
+        b=RjtykSHnjo9GFf/ZKfhSygRCSrwbCgf006B8BT9RY4rzF4Yl6T6DMbb3f2kyfeHaCQ
+         AKpJ6SYpVOTpDgTMwPICfjy4s40rzgREvSiUEVWKMhYnlCoGC0kujl8SnB9F7/Aco4dh
+         E2cxpYuvDOV5sgRP9+6GvGH4A70w6+mlFS4uVwjUvb8kQ1P4ZthfEUvhR2TGrAByvheV
+         8BkiMwy3pGZEuNhLbh8QoK4YF0QeffIRUdNPVY9otnM9rFEVjZZLfV2DYmin51fco9i4
+         XtU3UASS/HF4u3QjIBYpGb+bQV6+FPRyvgJS6VkmSyASHXea0xNpyN2/xvMQrZUcYIrX
+         P8qA==
+X-Gm-Message-State: AAQBX9eSE2y9oaxVeQySgNB+C38CFHnB/Ie656uDBtzq0YzYLrgmmarL
+        pxR8Cm5Hx5efzCnjtQdVIURaDw==
+X-Google-Smtp-Source: AKy350boEBP6L5wV56dT/8UCE41l1icRJq861X7V/ttRVdVf35fbUR36SPMnrgi+Gjem8bJPYlbXCw==
+X-Received: by 2002:a17:906:641:b0:8b1:77bf:3bdd with SMTP id t1-20020a170906064100b008b177bf3bddmr15668254ejb.36.1679988067996;
+        Tue, 28 Mar 2023 00:21:07 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:9e92:dca6:241d:71b6? ([2a02:810d:15c0:828:9e92:dca6:241d:71b6])
+        by smtp.gmail.com with ESMTPSA id g17-20020a170906c19100b00921c608b737sm14912135ejz.126.2023.03.28.00.21.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Mar 2023 00:21:07 -0700 (PDT)
+Message-ID: <af455119-7178-bed8-4099-ee50c7b6134b@linaro.org>
+Date:   Tue, 28 Mar 2023 09:21:06 +0200
 MIME-Version: 1.0
-References: <20230325070226.511323-1-damien.lemoal@opensource.wdc.com> <20230325070226.511323-11-damien.lemoal@opensource.wdc.com>
-In-Reply-To: <20230325070226.511323-11-damien.lemoal@opensource.wdc.com>
-From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date:   Tue, 28 Mar 2023 08:56:08 +0200
-Message-ID: <CAAEEuhq_T9KGJoBcDNOC_+8ktAUr91xys0aRqQCXz3nN0W72Xg@mail.gmail.com>
-Subject: Re: [PATCH v3 10/16] PCI: epf-test: Cleanup pci_epf_test_cmd_handler()
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [Patch v4 02/10] arm64: tegra: add bpmp ref in tegra234-mc node
+Content-Language: en-US
+To:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
+        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
+        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
+        lpieralisi@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com, kw@linux.com,
+        bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
+        ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
+References: <20230327161426.32639-1-sumitg@nvidia.com>
+ <20230327161426.32639-3-sumitg@nvidia.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230327161426.32639-3-sumitg@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -73,89 +81,17 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, Mar 25, 2023 at 8:02=E2=80=AFAM Damien Le Moal
-<damien.lemoal@opensource.wdc.com> wrote:
->
-> Command codes are never combined together as flags into a single value.
-> Thus we can replace the series of "if" tests in
-> pci_epf_test_cmd_handler() with a cleaner switch-case statement.
-> This also allows checking that we got a valid command and print an error
-> message if we did not.
->
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->  drivers/pci/endpoint/functions/pci-epf-test.c | 30 +++++++++----------
->  1 file changed, 14 insertions(+), 16 deletions(-)
->
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/=
-endpoint/functions/pci-epf-test.c
-> index fa48e9b3c393..c2a14f828bdf 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -676,41 +676,39 @@ static void pci_epf_test_cmd_handler(struct work_st=
-ruct *work)
->                 goto reset_handler;
->         }
->
-> -       if ((command & COMMAND_RAISE_LEGACY_IRQ) ||
-> -           (command & COMMAND_RAISE_MSI_IRQ) ||
-> -           (command & COMMAND_RAISE_MSIX_IRQ)) {
-> +       switch (command) {
-> +       case COMMAND_RAISE_LEGACY_IRQ:
-> +       case COMMAND_RAISE_MSI_IRQ:
-> +       case COMMAND_RAISE_MSIX_IRQ:
->                 pci_epf_test_raise_irq(epf_test, reg);
-> -               goto reset_handler;
-> -       }
-> -
-> -       if (command & COMMAND_WRITE) {
-> +               break;
-> +       case COMMAND_WRITE:
->                 ret =3D pci_epf_test_write(epf_test, reg);
->                 if (ret)
->                         reg->status |=3D STATUS_WRITE_FAIL;
->                 else
->                         reg->status |=3D STATUS_WRITE_SUCCESS;
->                 pci_epf_test_raise_irq(epf_test, reg);
-> -               goto reset_handler;
-> -       }
+On 27/03/2023 18:14, Sumit Gupta wrote:
+> Add the "nvidia,bpmp" property within the "memory-controller" node
+> to reference BPMP node. This is needed by the MC driver to pass
+> the client info to the BPMP-FW when memory interconnect support is
+> available.
+> 
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 
-As a minor improvement on this cleanup I would suggest either switching
-the if / else condition above or the two below, the inverted logic makes it
-confusing. (one test case is if (ret) and the two others are if (!ret) with
-inverted results, all could share the same code (same logic)).
+DTS goes to the end of patchset. If you put it here to fix
+bisectability, then your patchset is already broken.
 
-> -
-> -       if (command & COMMAND_READ) {
-> +               break;
-> +       case COMMAND_READ:
->                 ret =3D pci_epf_test_read(epf_test, reg);
->                 if (!ret)
->                         reg->status |=3D STATUS_READ_SUCCESS;
->                 else
->                         reg->status |=3D STATUS_READ_FAIL;
->                 pci_epf_test_raise_irq(epf_test, reg);
-> -               goto reset_handler;
-> -       }
-> -
-> -       if (command & COMMAND_COPY) {
-> +               break;
-> +       case COMMAND_COPY:
->                 ret =3D pci_epf_test_copy(epf_test, reg);
->                 if (!ret)
->                         reg->status |=3D STATUS_COPY_SUCCESS;
->                 else
->                         reg->status |=3D STATUS_COPY_FAIL;
->                 pci_epf_test_raise_irq(epf_test, reg);
-> -               goto reset_handler;
-> +               break;
-> +       default:
-> +               dev_err(dev, "Invalid command\n");
-> +               break;
->         }
->
->  reset_handler:
-> --
-> 2.39.2
->
+Best regards,
+Krzysztof
+
