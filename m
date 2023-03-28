@@ -2,95 +2,82 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE8066CC956
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 19:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 897546CC95C
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 19:36:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229452AbjC1Rey (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 13:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44040 "EHLO
+        id S229637AbjC1Rg0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 13:36:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjC1Rex (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 13:34:53 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D645BCC32;
-        Tue, 28 Mar 2023 10:34:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6F96EB81088;
-        Tue, 28 Mar 2023 17:34:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3829C433EF;
-        Tue, 28 Mar 2023 17:34:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680024890;
-        bh=NpcKLBiXcnX+TXsKDkKuw4AU292PgDU3fhrS8tUmPeo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=P3/uhuIZHi9u4gsVH741PzbVjSrz30ouF2h3mkMwHzoyGsy0mJAhWh9qnPeEIDljF
-         BbpJm2eQTryGeLip03/gsoaxlvqz8dW8y1ZsRaDaMrNA1cu+7AImIsFacbUh1rVkXV
-         c0vFi1004jYmmABGW6YfkQbd6T+qLfnLqA5bwY+ESikuA2F7dZk1Rus3fOYVuoBBb8
-         ArbIDubXggRqJuphnI/VkqIyXvOnq9fy8By0w+h5O31H9EiCSlLEQd9kbtq7eE1B8M
-         XjBG23Jy1tkq2UoxQHLquk9CLnwNTNgNmSc4bfHUlCDlsy6UWBPomrx48Gj68Hz2Hp
-         qXuqMaOoyCc+w==
-Date:   Tue, 28 Mar 2023 12:34:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI/P2PDMA: Fix the comments on pci_p2pmem_find_many()
-Message-ID: <20230328173448.GA2952425@bhelgaas>
+        with ESMTP id S229766AbjC1RgZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 13:36:25 -0400
+Received: from ale.deltatee.com (ale.deltatee.com [204.191.154.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F391D510;
+        Tue, 28 Mar 2023 10:36:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=deltatee.com; s=20200525; h=Subject:In-Reply-To:From:References:Cc:To:
+        MIME-Version:Date:Message-ID:content-disposition;
+        bh=UPxRSwVrPyIK71gfH3NckS35CBxZJ2s/oLf4mXb2RAA=; b=ie8m3VB0GH0i7rRKeh5SoWWHoY
+        gXr145ASpB5e3vjTGrcJKofeJAJsZIOHhuKKzLG+v3uIHpzDNumVFtEd/0DtcZVUICPyeoh90MbMB
+        7E5bN/zB8c31XQelLwYTUgClEQj1+BvbUdpl+DmlLElYnNv5ngzacUW5z7M4nirVpTB58yWM5P6ij
+        mVuXFCeuJFjoyXFq0xlHPhpcWH+c4ddC8j4sUs5DUWZ5mux6Y70WuttuVMYzjkZqV2K84DTS4+1uS
+        pUIWDmY3lAeRlxcAf/LR/A257QEkHsQownrYWZ11xqxj+8C7OMZVDnH/F81vE/ep9ZgnmYAMQHxSs
+        ztKpvClw==;
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        (Exim 4.94.2)
+        (envelope-from <logang@deltatee.com>)
+        id 1phDF1-00BzJv-Px; Tue, 28 Mar 2023 11:36:16 -0600
+Message-ID: <5017f565-1047-6f0c-e578-e8ed9d31802f@deltatee.com>
+Date:   Tue, 28 Mar 2023 11:36:14 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230328110610.3824-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Content-Language: en-CA
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230328173448.GA2952425@bhelgaas>
+From:   Logan Gunthorpe <logang@deltatee.com>
+In-Reply-To: <20230328173448.GA2952425@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: helgaas@kernel.org, cai.huoqing@linux.dev, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
+Subject: Re: [PATCH v2] PCI/P2PDMA: Fix the comments on pci_p2pmem_find_many()
+X-SA-Exim-Version: 4.2.1 (built Sat, 13 Feb 2021 17:57:42 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 28, 2023 at 07:06:10PM +0800, Cai Huoqing wrote:
-> Remove pci_p2pmem_dma() reference,
-> because pci_p2pmem_dma() method is already removed.
 
-AFAICT, pci_p2pmem_dma() *never* existed.  I suppose it was a typo,
-and pci_p2pdma_distance_many() was intended?
 
-I'm happy to either merge this patch (with an updated commit log) to
-remove the comment text or merge a patch correct the comment text.
+On 2023-03-28 11:34, Bjorn Helgaas wrote:
+> On Tue, Mar 28, 2023 at 07:06:10PM +0800, Cai Huoqing wrote:
+>> Remove pci_p2pmem_dma() reference,
+>> because pci_p2pmem_dma() method is already removed.
+> 
+> AFAICT, pci_p2pmem_dma() *never* existed.  I suppose it was a typo,
+> and pci_p2pdma_distance_many() was intended?
+> 
+> I'm happy to either merge this patch (with an updated commit log) to
+> remove the comment text or merge a patch correct the comment text.
+> 
+> I just don't want to merge this with a commit log that says we removed
+> the pci_p2pmem_dma() method when it never actually existed.
 
-I just don't want to merge this with a commit log that says we removed
-the pci_p2pmem_dma() method when it never actually existed.
+Ah, yes that's fair. I thought pci_p2pmem_dma() was an odd function
+name. Good to confirm it never existed.
 
-> Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
-> ---
-> v1->v2:
->   1.remove pci_p2pmem_dma() reference directly instead of
->     using pci_p2pdma_map_segment().
-> 
-> v1 link:
->   https://lore.kernel.org/lkml/eea970cd-d781-9d4c-e020-9086505a4ba7@deltatee.com/
-> 
->  drivers/pci/p2pdma.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 9e8205572830..6cd98ffca198 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -746,8 +746,7 @@ EXPORT_SYMBOL_GPL(pci_has_p2pmem);
->  
->  /**
->   * pci_p2pmem_find_many - find a peer-to-peer DMA memory device compatible with
-> - *	the specified list of clients and shortest distance (as determined
-> - *	by pci_p2pmem_dma())
-> + *	the specified list of clients and shortest distance
->   * @clients: array of devices to check (NULL-terminated)
->   * @num_clients: number of client devices in the list
->   *
-> -- 
-> 2.34.1
-> 
+Thanks,
+
+Logan
