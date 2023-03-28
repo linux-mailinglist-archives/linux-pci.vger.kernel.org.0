@@ -2,203 +2,153 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 654666CBB1E
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 11:34:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 274AF6CBCB2
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 12:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232869AbjC1Jdt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 05:33:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34034 "EHLO
+        id S229801AbjC1KmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 06:42:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232314AbjC1Jd0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 05:33:26 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FEA0900D
-        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 02:31:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679995917; x=1711531917;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=FEYdYBDu0RDH9p1kUYkwVpm6wNUJugXfErNaEdlPzfc=;
-  b=f4CDtzO7PvKuWNps3Omh2S2eNYTuglSxTwe6hAZijgraSG5coiKjE0Ru
-   rwEPZWQT01UCQDko58wFVRYM1ij7AGHYB9YDHEDUW796caqxuqLV7+s4D
-   S4NSFX4M2UWyl+js+3I8jJENT+EzYuuzs2tWB+JXcPnCnLtW9CeobRiGu
-   1///oAd18MQj7W1R82rcLLY7ImI20+U0UQoUgDDi/Aw0IBsk5NT5PEGJv
-   JC8l3H/ZVgPcEluOPLliPhicQ21wJjhrCVkiG0+8eJShCtqwV1BnKbkDv
-   FOfJCc8CzDoLLLGCqIW3VU+YPn1CFmL2qQLFdHv/VGBgIG7k4D2oRA6rM
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="426783493"
-X-IronPort-AV: E=Sophos;i="5.98,297,1673942400"; 
-   d="scan'208";a="426783493"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 02:29:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="661111704"
-X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
-   d="scan'208";a="661111704"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 28 Mar 2023 02:29:25 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 4546479C; Tue, 28 Mar 2023 12:29:26 +0300 (EEST)
-Date:   Tue, 28 Mar 2023 12:29:26 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <helgaas@kernel.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Chris Chiu <chris.chiu@canonical.com>,
-        linux-pci@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>, shuo.tan@linux.alibaba.com
-Subject: Re: [PATCH] PCI/PM: Wait longer after reset when active link
- reporting is supported
-Message-ID: <20230328092926.GG33314@black.fi.intel.com>
-References: <20230321095031.65709-1-mika.westerberg@linux.intel.com>
- <20230322221624.GA2497123@bhelgaas>
- <20230326062207.GA14559@wunner.de>
- <20230327094250.GC33314@black.fi.intel.com>
- <bbd58049-1131-3aa2-b8f0-2a7a3a98bc55@linux.intel.com>
+        with ESMTP id S229631AbjC1KmF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 06:42:05 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60B806184;
+        Tue, 28 Mar 2023 03:42:04 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id r11so47705973edd.5;
+        Tue, 28 Mar 2023 03:42:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680000123;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ynr5Gc8TJTXozi1CcIVdlcGkAdeP7juyzEqKu/8mAM4=;
+        b=Z/O97aA9J13eQcteDS6l+Zx+PUiE41PX+ochkiIVu0R137xgDh58BTExIGr1MKeiPz
+         MQ1vDamf0bl1to0uFk0MzNXul/DJXgVqsZmHgHAesJfn9PxxpWr9yXs6m3g0mMFg1/z3
+         +wfxx18AsJOP6d7D+MuVy5+zKMIK8kAyQqCVXDHrV0f8PlBtxUh2mF5fWnh5LgA66bSi
+         dqR6DOzqtQDb8SvJ+BzW9VxzXLHdbpT3j9oe/VCTZqTPzXVAk3LaptM63lfdYDW48orj
+         Mg0TLhE+f5td+DRKI3voT+c171kSNpG9/lHbchrZBoO/ikMD13XmBQwYVaDqH7eZhAFX
+         1HcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680000123;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ynr5Gc8TJTXozi1CcIVdlcGkAdeP7juyzEqKu/8mAM4=;
+        b=Km/fFSaHumjYzCMQWNHsfv3FMRMnz7zIfc1cL+TMa1sw0//tLHwXqaDDt5JOdDCCSg
+         jtblpMLj83pYIqLxk5dKsTD+RMcYoQn9/Be2Z8omOlqCIOq1hVV42byndI8VlBaBhjSx
+         cy80fB85Tkf1WqUtWMbgCoEodadrLO/uteHrhAcREnjBNFRkuZvZpJS7essZKegxppaP
+         6rqtHIjcmcLn33AyAJ7Wk9/74xMUdJ4fBSzlOnh9RZC2D1zX2Ferl646a2+powN+KVT4
+         PoaCQpoUmxISl1/jSAv3pKOEMHHVSGBDt5Hjrd0TiuFaZSbJp7teYIMNHNMF6ro3MnEj
+         ddkA==
+X-Gm-Message-State: AAQBX9dQvlzEVohzfGaP9BQq0oceMFXivXZ2P6PpwY8uymVxPnqvkzvu
+        F+owb5qvlqWZoHInEqkvBa5ThBZTlsc=
+X-Google-Smtp-Source: AKy350bruWB9oU9V6zbqhojVKn2vtnkt+mYjtaIieKDNScKJHUzl51pxAzvw9zKCyDZRsjY0KzCEcw==
+X-Received: by 2002:a17:906:3a45:b0:932:8dc:5bf4 with SMTP id a5-20020a1709063a4500b0093208dc5bf4mr15898961ejf.61.1680000122687;
+        Tue, 28 Mar 2023 03:42:02 -0700 (PDT)
+Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id sd24-20020a170906ce3800b00931024e96c5sm15350868ejb.99.2023.03.28.03.42.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Mar 2023 03:42:02 -0700 (PDT)
+Date:   Tue, 28 Mar 2023 12:42:00 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     treding@nvidia.com, krzysztof.kozlowski@linaro.org,
+        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
+        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
+        lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
+        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
+        ishah@nvidia.com, bbasu@nvidia.com
+Subject: Re: [Patch v4 01/10] dt-bindings: memory: tegra: add bpmp ref in
+ tegra234-mc node
+Message-ID: <ZCLEeABPtzXqpZdY@orome>
+References: <20230327161426.32639-1-sumitg@nvidia.com>
+ <20230327161426.32639-2-sumitg@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wf4WgXMFCZE62Nbf"
 Content-Disposition: inline
-In-Reply-To: <bbd58049-1131-3aa2-b8f0-2a7a3a98bc55@linux.intel.com>
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230327161426.32639-2-sumitg@nvidia.com>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 27, 2023 at 08:08:21AM -0700, Sathyanarayanan Kuppuswamy wrote:
-> 
-> 
-> On 3/27/23 2:42 AM, Mika Westerberg wrote:
-> > Hi,
-> > 
-> > On Sun, Mar 26, 2023 at 08:22:07AM +0200, Lukas Wunner wrote:
-> >> [cc += Ashok, Sathya, Ravi Kishore, Sheng Bi, Stanislav, Yang Su, Shuo Tan]
-> >>
-> >> On Wed, Mar 22, 2023 at 05:16:24PM -0500, Bjorn Helgaas wrote:
-> >>> On Tue, Mar 21, 2023 at 11:50:31AM +0200, Mika Westerberg wrote:
-> >>>> The PCIe spec prescribes that a device may take up to 1 second to
-> >>>> recover from reset and this same delay is prescribed when coming out of
-> >>>> D3cold (as that involves reset too). The device may extend this 1 second
-> >>>> delay through Request Retry Status completions and we accommondate for
-> >>>> that in Linux with 60 second cap, only in reset code path, not in resume
-> >>>> code path.
-> >>>>
-> >>>> However, a device has surfaced, namely Intel Titan Ridge xHCI, which
-> >>>> requires longer delay also in the resume code path. For this reason make
-> >>>> the resume code path to use this same extended delay than with the reset
-> >>>> path but only after the link has come up (active link reporting is
-> >>>> supported) so that we do not wait longer time for devices that have
-> >>>> become permanently innaccessible during system sleep, e.g because they
-> >>>> have been removed.
-> >>>>
-> >>>> While there move the two constants from the pci.h header into pci.c as
-> >>>> these are not used outside of that file anymore.
-> >>>>
-> >>>> Reported-by: Chris Chiu <chris.chiu@canonical.com>
-> >>>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216728
-> >>>> Cc: Lukas Wunner <lukas@wunner.de>
-> >>>> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >>>
-> >>> Lukas just added the "timeout" parameter with ac91e6980563 ("PCI:
-> >>> Unify delay handling for reset and resume"), so I'm going to look for
-> >>> his ack for this.
-> >>
-> >> Acked-by: Lukas Wunner <lukas@wunner.de>
-> >>
-> >>
-> >>> After ac91e6980563, we called pci_bridge_wait_for_secondary_bus() with
-> >>> timeouts of either:
-> >>>
-> >>>   60s for reset (pci_bridge_secondary_bus_reset() or
-> >>>       dpc_reset_link()), or
-> >>>
-> >>>    1s for resume (pci_pm_resume_noirq() or pci_pm_runtime_resume() via
-> >>>       pci_pm_bridge_power_up_actions())
-> >>>
-> >>> If I'm reading this right, the main changes of this patch are:
-> >>>
-> >>>   - For slow links (<= 5 GT/s), we sleep 100ms, then previously waited
-> >>>     up to 1s (resume) or 60s (reset) for the device to be ready.  Now
-> >>>     we will wait a max of 1s for both resume and reset.
-> >>>
-> >>>   - For fast links (> 5 GT/s) we wait up to 100ms for the link to come
-> >>>     up and fail if it does not.  If the link did come up in 100ms, we
-> >>>     previously waited up to 1s (resume) or 60s (reset).  Now we will
-> >>>     wait up to 60s for both resume and reset.
-> >>>
-> >>> So this *reduces* the time we wait for slow links after reset, and
-> >>> *increases* the time for fast links after resume.  Right?
-> >>
-> >> Good point.  So now the wait duration hinges on the link speed
-> >> rather than reset versus resume.
-> >>
-> >> Before ac91e6980563 (which went into v6.3-rc1), the wait duration
-> >> after a Secondary Bus Reset and a DPC-induced Hot Reset was
-> >> essentially zero.  And the Ponte Vecchio cards which necessitated
-> >> ac91e6980563 are usually plugged into servers whose Root Ports
-> >> support link speeds > 5 GT/s.  So the risk of breaking anything
-> >> with this change seems small.
-> >>
-> >> The reason why Mika is waiting only 1 second in the <= 5 GT/s case
-> >> is that we don't check for the link to become active for these slower
-> >> link speeds.  That's because Link Active Reporting is only mandatory
-> >> if the port is hotplug-capable or supports link speeds > 5 GT/s.
-> >> Otherwise it's optional (PCIe r6.0.1 sec 7.5.3.6).
-> >>
-> >> It would be user-unfriendly to pause for 60 sec if the device does
-> >> not come back after reset or resume (e.g. because it was removed)
-> >> and the fact that the link is up is an indication that the device
-> >> is present, but may just need a little more time to respond to
-> >> Configuration Space Requests.
-> >>
-> >> We *could* afford the longer wait duration in the <= 5 GT/s case
-> >> as well by checking if Link Active Reporting is supported and further
-> >> checking if the link came up after the 100 ms delay prescribed by
-> >> PCIe r6.0 sec 6.6.1.  Should Link Active Reporting *not* be supported,
-> >> we'd have to retain the shorter wait duration limit of 1 sec.
-> >>
-> >> This optimization opportunity for the <= 5 GT/s case does not have
-> >> to be addressed in this patch.  It could be added later on if it
-> >> turns out that users do plug cards such as Ponte Vecchio into older
-> >> Gen1/Gen2 Downstream Ports.  (Unless Mika wants to perfect it right
-> >> now.)
-> >>
-> > 
-> > No problem doing that :) I guess you mean something like the diff below,
-> > so that we use active link reporting and the longer time also for any
-> > downstream port that supports supports it, regardless of the speed.
-> > 
-> > I can update the patch accordingly.
-> > 
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 36d4aaa8cea2..b507a26ffb9d 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -5027,7 +5027,8 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
-> >  	if (!pcie_downstream_port(dev))
-> >  		return 0;
-> >  
-> > -	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> > +	if (!dev->link_active_reporting &&
-> > +	    pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> 
-> Do we still need speed check? It looks like we can take this path
-> if link active reporting is not supported.
 
-Good question, the spec only talks about the speed here:
+--wf4WgXMFCZE62Nbf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  With a Downstream Port that does not support Link speeds greater than
-  5.0 GT/s, software must wait a minimum of 100 ms before sending a
-  Configuration Request to the device immediately below that Port.
+On Mon, Mar 27, 2023 at 09:44:17PM +0530, Sumit Gupta wrote:
+> For Tegra234, add the "nvidia,bpmp" property within the Memory
+> Controller (MC) node to reference BPMP node. This is needed in
+> the MC driver to pass the client info to the BPMP-FW when memory
+> interconnect support is available.
+>=20
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  .../bindings/memory-controllers/nvidia,tegra186-mc.yaml    | 7 +++++++
+>  1 file changed, 7 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,=
+tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvi=
+dia,tegra186-mc.yaml
+> index 935d63d181d9..398d27bb2373 100644
+> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra18=
+6-mc.yaml
+> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra18=
+6-mc.yaml
+> @@ -58,6 +58,10 @@ properties:
+>    "#interconnect-cells":
+>      const: 1
+> =20
+> +  nvidia,bpmp:
+> +    $ref: /schemas/types.yaml#/definitions/phandle
+> +    description: phandle of the node representing the BPMP
+> +
+>  patternProperties:
+>    "^external-memory-controller@[0-9a-f]+$":
+>      description:
+> @@ -220,6 +224,9 @@ allOf:
+>              - const: ch14
+>              - const: ch15
+> =20
+> +        nvidia,bpmp:
+> +          description: phandle of the node representing the BPMP
+> +
 
-but then again if the port supports active link reporting we will end up
-waiting more than the 100 ms above anyway so the minimum requirement
-should be met.
+Why do we need this one? There's already an nvidia,bpmp phandle defined
+in the patternProperties section for external memory controllers.
+
+Thierry
+
+--wf4WgXMFCZE62Nbf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQixHgACgkQ3SOs138+
+s6FPyhAAnZhwTSvoZp45DLHq9a51QzbNzm2ftllz08w6ApGhG4loPBoceTxA5SN/
+02806+yYIHfJNlu5G0x8x6U6W9rXg0/QLeTITWx0XbpU6FuiEashzDJD+Kg7eSpe
+4+yJSRjSYilYNatKfPiXpil1pvLXtmQ2YAPJ2SFFRiVYBcqvBUS6xXyOpXa6eJCr
+1hh9QqMTsnxTxx1D+FGKAZYT8M+E2kBowkQ/vIpAg1UMlXD3lWa2crfEJQq744R+
+K3rDfOkLaeVzFrN8XMUCTX5ZcTR1FHwqCpLFjaSY9qytJYyimEhyARb0jr43iVKF
+yRuNqLfDEUDyYvCxDjFCGYgQca1jRhGyzrWAXF9yfz5EuEBWoIIRooeru5VRscsB
+OD3I+iD5V8DNGwDnD94WQXgcTBSD8aGCPrCzIxGCAyOqBO1pSfGsu1LiMElBQ+aF
+2gs4gVUMvAOytfVpNZpJ4PpikMSsxLSu27XDJM+GCEL7pQwiW5oUHs1nSoIDUGt2
+K9CoJeVKKsikMz1LzzrAsL53rH8/blh7ozoHDXTUKH7xAZVtQzHd9yIRF5RINyOY
+8neVsEo7nTSn1naWJt5pHnWKgmcKkZI0CZnxLPII/x3v6LySyOHtF+oY0J0TqFdz
+LqZCsEaDfElewKibVzJM2jxrd5A2Rh3ybti7Me5xj5m13n8WzKI=
+=xsrS
+-----END PGP SIGNATURE-----
+
+--wf4WgXMFCZE62Nbf--
