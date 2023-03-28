@@ -2,111 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD1C6CBF73
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 14:42:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CA796CBF9A
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 14:47:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232709AbjC1Mmp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 08:42:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
+        id S232825AbjC1Mrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 08:47:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232494AbjC1Mmj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 08:42:39 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2088.outbound.protection.outlook.com [40.107.223.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E025283F6;
-        Tue, 28 Mar 2023 05:42:22 -0700 (PDT)
+        with ESMTP id S232428AbjC1Mrq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 08:47:46 -0400
+Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2130.outbound.protection.outlook.com [40.107.215.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C695AAD30;
+        Tue, 28 Mar 2023 05:47:26 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N7VvDVJa4KwRG/ZJDI4wWcfJgygOr/A8dG7Q/BM8SU0CSRmaMUMqSPjRZ56fXFeG+AWldmN3/SJnNnWS2NgL23Q4LpeFkUArE41+dzLr2xdj0ap0kGEk/XNUP6zOSAsmfDxWkjmfrNafc5b+BNuXQrDnIF6X5SID9AXOUlWHcIqbeFuhFhJiplm+NDtpKqxJnUkexrS9O9B1IeZb+VVOpaHfVT2so2xgjhTddQTLl1oDyxT7fKqpydV5okPknbpIQMTbTLUFrodATqN/LwDQfn2omuJ/aC3nUkv9ebizmdX+6mM3Sux9qqqxboXaRPVMcRiLZT9FscmhBeZjO/QK1w==
+ b=kkci1T1FNw/lxH+0JGEPOB49IZOTGal/hK95DN9zte5VRQaTziXNZscUtOSDtHfgCKQa8y+1r7GsLb5fU6h2SZyMNwFvlH3HHMGOCPffxw6+pDau2MlC761U6Cg5+wEhtvHiS/I/KdF1JTyvwRWHC5ujFYBFrSN1RL6i5SWytAyCkHsnLzhl45BuloZbKM3f1F/PUWFwNz4yvvlc3oOPR94QrGO6jRw72ZW6nR9bUDLFOePAOvOZkW1XIckbVwfPpeptzc45QdEurfdMc7KDoct7mIwA9JLUuFR5VI2BfiKmpPnCsSsPUg2XnO3q4WDED9TV1BCTKLJx2oVvDDWbGA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RCNWDk1jVtPNZxpVXdlzF4nocbA7v7f8PjQq1mHeOHA=;
- b=IdJkpbGwiUb9LxUaj6VtVbiPs1WN5G7TiJP3P9c7qP/4YZzNXwN0I6pHvIdbfEjUgRzfjWUfpqvzJM2PpyORjMNNqPNh0Igv/DzXmeTASqLAVZqzqzojPnLZQqpiR0Y5YFuP8bhV0GyrbZyJzSZVAbQgWAB2U5j2YXdRHEPTmqkbKZJw84H481hemYJyyBv2ZWxUZB6CqGf+tOQeAmQydhQjb1VVYaz23ioZMGPf3v4sxJ7Wbo54QCRpmiuTn4EiItBQoXu43WHabagw/Ylgdwc6PsA/phsUWbCfds3WYgM0XsprgLtahSuGGeM7rpNtVJAlReYfv0jkFDAWl61TVA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ bh=2///radriASgoMMVoBruNQdwW0R9yiuSvMrK8QDhYdY=;
+ b=QAhR4izeyPR/I+ocv5kgjH3gpfjqlTaWNHPaf5/qdLncs8yuQPK8T6tNjjIEcFNMWRlxKWdXasrrJR1/0Pv6E8g94wHU/ed4kzsrG0yUwSTm6by/EwA+GvbnGDgE28ITfSgH9L9rfsZFRNvRpjJC5oJfSjSvRXZfp3iGqJGIUsYIt0iT0/OtdcKuNSFCDjei8vXahDoraetQQBCZUfdSMUG4f9h+dsSRCWEM8yMWXHsS98RGLezo6MtWcuPRDZYcwrtDh7jnQzdQtp3J+Yz5Rqe0qaJafFcL8Mi4yO3Ze6KYlK7zLQBX9EbaeU4XtOlKxAbzuWO8RHxt/BknvtYTfA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RCNWDk1jVtPNZxpVXdlzF4nocbA7v7f8PjQq1mHeOHA=;
- b=mwkYexB6B/4TiHW7QFhWTQ51Xkaahay0UuZduCLUDsA+bhvLmCiOCQpPvX0GqJqam/U4mzplz6baCryG9A+D0qr7F4sB+uArxjNvtkU5uMYLJK3hJp2cjnwd9KDZQMBvrCg8DaCTXFOb8RZpoCZGt9rvX6X+p8HmfT9OGLBtZiBpuQWS3eYJGYUOEtlLL6fttxcifQeI0T2sbF7TCHaIlUzhM48AgrZGF9czcEYQy7MeykivxPyVrA71l9dgn3lZ60dzKmnFXOxHPo4mqNEm2OBvW4sVR9PgfbpHxOYhbvUMDx4e5dUJ9ElV8Iswf5rIb8938raezEnpB0vuOVt7BA==
-Received: from BN9PR03CA0045.namprd03.prod.outlook.com (2603:10b6:408:fb::20)
- by IA1PR12MB6019.namprd12.prod.outlook.com (2603:10b6:208:3d5::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.33; Tue, 28 Mar
- 2023 12:42:14 +0000
-Received: from BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:fb:cafe::8e) by BN9PR03CA0045.outlook.office365.com
- (2603:10b6:408:fb::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.43 via Frontend
- Transport; Tue, 28 Mar 2023 12:42:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN8NAM11FT059.mail.protection.outlook.com (10.13.177.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6222.22 via Frontend Transport; Tue, 28 Mar 2023 12:42:14 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 28 Mar 2023
- 05:42:04 -0700
-Received: from [10.41.21.79] (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Tue, 28 Mar
- 2023 05:41:58 -0700
-Message-ID: <db682990-573f-e827-7342-ca8cda0b4067@nvidia.com>
-Date:   Tue, 28 Mar 2023 18:11:56 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [Patch v4 02/10] arm64: tegra: add bpmp ref in tegra234-mc node
+ bh=2///radriASgoMMVoBruNQdwW0R9yiuSvMrK8QDhYdY=;
+ b=TCZ/K8Z8lrAwRvXN5ZdfacGR30LwUGvPgbA+qR5k852HvFkCYnlZ2H8NLB0PMzWnV/lNnRdoaZKJ+posKa4EpEyzDOIaM0x9Sh/dPjrvSKkzmEbGYN4O2b1nFFsGlZZcmIBMAaWbBElCCaQxY8w3Re6PkWlF280bRXmmwQWBZWw=
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM (2603:1096:4:fc::7) by
+ SEZP153MB0693.APCP153.PROD.OUTLOOK.COM (2603:1096:101:90::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6277.7; Tue, 28 Mar 2023 12:46:51 +0000
+Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9544:9f03:90e7:b2cb]) by SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9544:9f03:90e7:b2cb%5]) with mapi id 15.20.6277.006; Tue, 28 Mar 2023
+ 12:46:50 +0000
+From:   Wei Hu <weh@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: RE: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
+ kdump to fail occasionally"
+Thread-Topic: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
+ kdump to fail occasionally"
+Thread-Index: AQHZYTE02QJw3cJyrE2OQ7EX2SDB268Pu6LwgABofbA=
+Date:   Tue, 28 Mar 2023 12:46:49 +0000
+Message-ID: <SI2P153MB0441C7535564992D4972F786BB889@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
+References: <20230328045122.25850-1-decui@microsoft.com>
+ <20230328045122.25850-5-decui@microsoft.com>
+ <SA1PR21MB13356A77700580DF0C742856BF889@SA1PR21MB1335.namprd21.prod.outlook.com>
+In-Reply-To: <SA1PR21MB13356A77700580DF0C742856BF889@SA1PR21MB1335.namprd21.prod.outlook.com>
+Accept-Language: en-US
 Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <treding@nvidia.com>, <dmitry.osipenko@collabora.com>,
-        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
-        <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <20230327161426.32639-1-sumitg@nvidia.com>
- <20230327161426.32639-3-sumitg@nvidia.com>
- <af455119-7178-bed8-4099-ee50c7b6134b@linaro.org>
-From:   Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <af455119-7178-bed8-4099-ee50c7b6134b@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.230.37]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT059:EE_|IA1PR12MB6019:EE_
-X-MS-Office365-Filtering-Correlation-Id: 78d0f487-76db-435a-e95a-08db2f89db99
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1tAHrFmrmFxxzDEMAy9twXiDJtMp638uARarkaes7lglUE1xassMz+qOCUFtQ6J+kbAza8/XCmO/Fy7dSLLVXEDKnRWbYRJcNoauZYDY+QsPYF6kZy0ygbRTSg5wrOR79gACHygCYa7VKvXnxHdYLimmdBtWHpkg2grFiFPOQ1HG+2qpC8/FBQTFoKWitz6n6SQf1swK4/a35SKH7Y6HH0tdp92mB3GqiYU9HAqVqUmo0qIjRumtmfcDwkgvPebEhKVduzpDIn/xnT03Ir6Y51uc8/04AaHwgs0TNiVXSu0I12oypaF5G5eTT00lL+FB/WOKCONLcBIR/cy7TYB/jY+twxJHEu33SThE8Q1aVq+Dk7QCRJ8D9E8dyQhuEMYiWWsYYrrkiTsAGhLoWO2XkVXbVlQdY3ZdtjHc+IDJDZBTWml189S5uNw16dafLfDfB+zXQFmyM2La7E5aB3Y6jeU6eVdUsEFQHdP3fy74FlFvtk1Qq3YcuGBhJjMdKuNyDM4xrKyuVd4+uDrX/cC7u71U6XjNQddsGlhYfPbCSbkj8kXBMtw9zUtSn2x4yn5d8u7AXY1gC+vWQsZJV3ffKyKe3VnPsrI6NBM9yoYmoPlII6+PMvUVi20TB6na3oYl2WOZmZJ6/FSh1+NTWFyEQDjL6WRxaPOIJvLllPFyftpT4WxVL9g0tKu3g46IDfO2iwbPi5tscSSFygsDZnrtqtxNPhMELajw67aIcaUWtKyTp7Ne1MIvtLSWJizSaTT5VV3+c/c0JWPCG3bbJoVkwvkQPfyZS95dmJB+By7k2nrVup2A9qpISRD1qL4AfEvc
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(136003)(376002)(451199021)(46966006)(40470700004)(36840700001)(4326008)(40480700001)(41300700001)(36860700001)(40460700003)(70586007)(70206006)(16576012)(316002)(34020700004)(110136005)(478600001)(8676002)(54906003)(2906002)(53546011)(16526019)(186003)(7416002)(5660300002)(4744005)(2616005)(82310400005)(336012)(426003)(31696002)(31686004)(86362001)(47076005)(36756003)(82740400003)(107886003)(26005)(8936002)(7636003)(356005)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2023 12:42:14.2348
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6f6d75c5-e156-425e-9f36-09272bf9a5a0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-28T06:32:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SI2P153MB0441:EE_|SEZP153MB0693:EE_
+x-ms-office365-filtering-correlation-id: 64424f59-6b04-4aa8-68fc-08db2f8a7fd4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: uZe1jlk1EGg6wCMPv88HonYCT2NQkJvVpBkPEUO4QuezRNfag7PryMpV/0xE2/Lpn4B5KfRjf4A2m1CgLTZ3jjRS1ZaErEqebCW2bfKYPVZJPPa9ngEr46Ia31kJt7RHcvr62MEywQwvlG61P1l7AmboS0JCjPbuQbjNHyY907WlO+HiMAhHc5fKViuPfQ1Kg4hG7b9n2OGBS3jH2406W4CoUqwzGb/hDW9x5/jw5G3Jtdfd1kVLV46stROjhbuR+DKudHb1XorUKJMEbR/NQIQ/cSEZCxIp+3tlGrhjK4knJYJWbnVX08j9J4+EUB7unIO07cZj5d8YB+te/T0PO+MdlZfl42OpCjAxHdxC1Fj7P88/u3MZ+Ob/xe7L0aopm8KQ+tu59t81f9TVowFETNooXivkXQo4O/5QzC0CNpjxCrvwhE7mONmpN3H1Er/GEBFl/Zu2TGgafoZRC43bQFd7KYNfO4S60Ewxg5gGZfKllt64HbrPRVVccZLOTQL5EL4Vf3b30rGWyCjCnQfu5wdiUWhEp7ik5M4sAEL+8EQX4Hw31RmNejb5Nq7L96zuZFHtxyFIUCefTqQPDCUXzLfM2z5vxWTgSIVt08fRAqpxKKJR2ct2MI16f0ajn8e77nJGxh534OYQaH9NrC1QJynClgAQ9arwMfATI669V4+xAwf4RmCpfI8L6zZ8UMOv
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0441.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(451199021)(41300700001)(76116006)(64756008)(66446008)(66476007)(8676002)(66556008)(66946007)(4326008)(186003)(2906002)(8990500004)(7416002)(5660300002)(83380400001)(38100700002)(38070700005)(86362001)(82950400001)(82960400001)(921005)(122000001)(33656002)(55016003)(52536014)(8936002)(10290500003)(478600001)(54906003)(7696005)(71200400001)(53546011)(9686003)(6506007)(110136005)(316002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UbGhhXW0xbmjKXDWPbZ7c7/IN4iUkBXKamgpfTxmgHOwTiLqmRdHqJitxBRj?=
+ =?us-ascii?Q?HXgcF7BdYbBLONw05dHDdkVy12tyHBIHN6Oczt7bqYDWx4QAsKqzIx6c6ncJ?=
+ =?us-ascii?Q?+wfmXI+8P2LS6QfpxJtT3vey7m9COByqEL/tg/u/ztNFkweC5ZyRmcczjk8p?=
+ =?us-ascii?Q?HU+S9SoD4NKCamW/RepVR3e1H8ZSpuDa4IIRZmMqtfgvWpI5Rx0wB1BY386v?=
+ =?us-ascii?Q?v9AIoGEM+NuUJ5WZnIatHr4CZwq+30W1Zu3NqHvPrh7rViiGYPAq9EuzRbdB?=
+ =?us-ascii?Q?WKenQwXbnmGPDCxvfUZn6Fh7KG/DrWX9mf2KPjQgGiyHE/eWJON91yKacSjZ?=
+ =?us-ascii?Q?L/LcBxcX/NiAQxp7YHOq0522GTUpVhuyxdwEe59CrEKNbdAiSfmf4ZLw1c9U?=
+ =?us-ascii?Q?XU0QAcLIToM5ls90aM2MdZaw8DcGOAuwbLHs6JIGJuPGSVDOQcDIa2Vau2Qt?=
+ =?us-ascii?Q?RqK5EIZfL6Vi7kdJBsfN4QSssZvc/Ll2gK4Xt2aUZGTVJC/xwOqiS2BudDpg?=
+ =?us-ascii?Q?5APpah5STN3U+A7+4k5xgKaTH+zGfyvVRgocAMaWfeMBVDNdEGp9B3boVNPH?=
+ =?us-ascii?Q?zqBXFp2qpIpUiScJfEbUm6v3DIOybcyCbzmzdEvqkq4EHigijmL2x6nkMlne?=
+ =?us-ascii?Q?wuUBGRlx18f3KMAEhpik/rwS9EZsbLQ8B5htEX+HBGVR5wNGtAnvb//9lnww?=
+ =?us-ascii?Q?uQJFhK0NI2PWLt/JE+TjTKuz6+DzamBdQCMnw6WY6aUpmMm2afo0BtQoDrPM?=
+ =?us-ascii?Q?Ih02hP3pKzNczECvkcfzt/13fdmj0K9Zwd4/1Cbk6fxtwJjpQexPNhfs2zjW?=
+ =?us-ascii?Q?rTYbTvic3lAIGG48Yqv//QS9Dks1F5Hmq/hG3qIXLX01r75/2ve23IdMCclY?=
+ =?us-ascii?Q?eQpum3TxAEJhIaKs3BeNLQt0A3A8z6MiWV0642zb11PLgCUhaR+Fcb5366kX?=
+ =?us-ascii?Q?8NHj0hD2aNoM+5S4Q/KpJ2GkKgMFC5vpA945NWYUyxzQdkiyk4sfUB3MKFvk?=
+ =?us-ascii?Q?dnUoLBvfZssjVpYHYg8Ig2YaY821M9RM+Icbzdeaus1HmfGeghgU/OKpT1vK?=
+ =?us-ascii?Q?5wXLA2mHKQTLn0C4ZiuyAya191gtpoCPelpsFiUMe1g5FV44IBARVC2CE86+?=
+ =?us-ascii?Q?VVlrhtVKdD16jLprqcEpFzMgsOouZbNeWWz1UvX04j4BWsk9gZoQh/lmkHpM?=
+ =?us-ascii?Q?w7B+10b1mt3TOenjPIFvGmQG5ZkvYDG2I0vSPIk/cElUSg27KLN0RMsuzwqq?=
+ =?us-ascii?Q?IGfIP4X2ZOBGJUnqRgzpCrwt4FuHCKOMPxERRAz3oSuagtfH1g27Y801/sk1?=
+ =?us-ascii?Q?MYavE9Wv1IpdoBgLmmt4CvdB7vpKzRyKXKRm1ezz72nyU96eU0Ed4RvmyHZ5?=
+ =?us-ascii?Q?2p8lNeq/LlWC+Zf8o/jxl+l00FrYDFK8ShwsKncM4BRkuReJXZVCABD2h6AR?=
+ =?us-ascii?Q?g18T5LJhrVb8I/IFwwSSdqXKbQBWLvClNRMdU14TghDtIABHPr1GaLEEo4aT?=
+ =?us-ascii?Q?HY8RNBSyBOON2maVXFvLL+6afFEIZxzN+9qfXKVofOBQfKvlK4iHzLvrxT4o?=
+ =?us-ascii?Q?7jH0zZOOQyYkya7LD4DI68RSdZF89qDi8FdTn3/OGT6DhzjrR4UJNaHXZDLQ?=
+ =?us-ascii?Q?Xw=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-Network-Message-Id: 64424f59-6b04-4aa8-68fc-08db2f8a7fd4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2023 12:46:49.9080
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 78d0f487-76db-435a-e95a-08db2f89db99
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT059.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB6019
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: aF4IIZTqsSDal1mP/OAB7XR4GpYAS2X+ZBx4JiaG6o6Hs62EuGW1sZA5J2XfY9MSqEoOYGN6U/QiW2VZy3aHFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZP153MB0693
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -117,30 +141,176 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 28/03/23 12:51, Krzysztof Kozlowski wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 27/03/2023 18:14, Sumit Gupta wrote:
->> Add the "nvidia,bpmp" property within the "memory-controller" node
->> to reference BPMP node. This is needed by the MC driver to pass
->> the client info to the BPMP-FW when memory interconnect support is
->> available.
->>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> 
-> DTS goes to the end of patchset. If you put it here to fix
-> bisectability, then your patchset is already broken.
-> 
-> Best regards,
-> Krzysztof
-> 
+> -----Original Message-----
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Tuesday, March 28, 2023 2:33 PM
+> To: bhelgaas@google.com; davem@davemloft.net; edumazet@google.com;
+> Haiyang Zhang <haiyangz@microsoft.com>; Jake Oshins
+> <jakeo@microsoft.com>; kuba@kernel.org; kw@linux.com; KY Srinivasan
+> <kys@microsoft.com>; leon@kernel.org; linux-pci@vger.kernel.org;
+> lpieralisi@kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>;
+> pabeni@redhat.com; robh@kernel.org; saeedm@nvidia.com;
+> wei.liu@kernel.org; Long Li <longli@microsoft.com>; boqun.feng@gmail.com;
+> Wei Hu <weh@microsoft.com>
+> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
+> rdma@vger.kernel.org; netdev@vger.kernel.org
+> Subject: RE: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
+> kdump to fail occasionally"
+>=20
+> > From: Dexuan Cui <decui@microsoft.com>
+> > Sent: Monday, March 27, 2023 9:51 PM
+> > To: bhelgaas@google.com; davem@davemloft.net; Dexuan Cui
+> > <decui@microsoft.com>; edumazet@google.com; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Jake Oshins <jakeo@microsoft.com>;
+> > kuba@kernel.org; kw@linux.com; KY Srinivasan <kys@microsoft.com>;
+> > leon@kernel.org; linux-pci@vger.kernel.org; lpieralisi@kernel.org;
+> > Michael Kelley (LINUX) <mikelley@microsoft.com>; pabeni@redhat.com;
+> > robh@kernel.org; saeedm@nvidia.com; wei.liu@kernel.org; Long Li
+> > <longli@microsoft.com>; boqun.feng@gmail.com
+> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > linux-rdma@vger.kernel.org; netdev@vger.kernel.org
+> > Subject: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
+> > kdump to fail occasionally"
+> >
+> > This reverts commit d6af2ed29c7c1c311b96dac989dcb991e90ee195.
+> >
+> > The statement "the hv_pci_bus_exit() call releases structures of all
+> > its child devices" in commit d6af2ed29c7c is not true: in the path
+> > hv_pci_probe() -> hv_pci_enter_d0() -> hv_pci_bus_exit(hdev, true):
+> > the parameter "keep_devs" is true, so hv_pci_bus_exit() does *not*
+> > release the child "struct hv_pci_dev *hpdev" that is created earlier
+> > in
+> > pci_devices_present_work() -> new_pcichild_device().
+> >
+> > The commit d6af2ed29c7c was originally made in July 2020 for RHEL 7.7,
+> > where the old version of hv_pci_bus_exit() was used; when the commit
+> > was rebased and merged into the upstream, people didn't notice that
+> > it's not really necessary. The commit itself doesn't cause any issue,
+> > but it makes hv_pci_probe() more complicated. Revert it to facilitate
+> > some upcoming changes to hv_pci_probe().
+> >
+> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
+> > ---
+> >  drivers/pci/controller/pci-hyperv.c | 71
+> > ++++++++++++++---------------
+> >  1 file changed, 34 insertions(+), 37 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/pci-hyperv.c
+> > b/drivers/pci/controller/pci-hyperv.c
+> > index 46df6d093d68..48feab095a14 100644
+> > --- a/drivers/pci/controller/pci-hyperv.c
+> > +++ b/drivers/pci/controller/pci-hyperv.c
+> > @@ -3225,8 +3225,10 @@ static int hv_pci_enter_d0(struct hv_device
+> *hdev)
+> >  	struct pci_bus_d0_entry *d0_entry;
+> >  	struct hv_pci_compl comp_pkt;
+> >  	struct pci_packet *pkt;
+> > +	bool retry =3D true;
+> >  	int ret;
+> >
+> > +enter_d0_retry:
+> >  	/*
+> >  	 * Tell the host that the bus is ready to use, and moved into the
+> >  	 * powered-on state.  This includes telling the host which region @@
+> > -3253,6 +3255,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
+> >  	if (ret)
+> >  		goto exit;
+> >
+> > +	/*
+> > +	 * In certain case (Kdump) the pci device of interest was
+> > +	 * not cleanly shut down and resource is still held on host
+> > +	 * side, the host could return invalid device status.
+> > +	 * We need to explicitly request host to release the resource
+> > +	 * and try to enter D0 again.
+> > +	 */
+> > +	if (comp_pkt.completion_status < 0 && retry) {
+> > +		retry =3D false;
+> > +
+> > +		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> > +
+> > +		/*
+> > +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
+> > +		 * to free up resources of its child devices.
+> > +		 * In the kdump kernel we need to set the
+> > +		 * wslot_res_allocated to 255 so it scans all child
+> > +		 * devices to release resources allocated in the
+> > +		 * normal kernel before panic happened.
+> > +		 */
+> > +		hbus->wslot_res_allocated =3D 255;
+> > +
+> > +		ret =3D hv_pci_bus_exit(hdev, true);
+> > +
+> > +		if (ret =3D=3D 0) {
+> > +			kfree(pkt);
+> > +			goto enter_d0_retry;
+> > +		}
+> > +		dev_err(&hdev->device,
+> > +			"Retrying D0 failed with ret %d\n", ret);
+> > +	}
+> > +
+> >  	if (comp_pkt.completion_status < 0) {
+> >  		dev_err(&hdev->device,
+> >  			"PCI Pass-through VSP failed D0 Entry with
+> status %x\n", @@
+> > -3493,7 +3527,6 @@ static int hv_pci_probe(struct hv_device *hdev,
+> >  	struct hv_pcibus_device *hbus;
+> >  	u16 dom_req, dom;
+> >  	char *name;
+> > -	bool enter_d0_retry =3D true;
+> >  	int ret;
+> >
+> >  	/*
+> > @@ -3633,47 +3666,11 @@ static int hv_pci_probe(struct hv_device *hdev,
+> >  	if (ret)
+> >  		goto free_fwnode;
+> >
+> > -retry:
+> >  	ret =3D hv_pci_query_relations(hdev);
+> >  	if (ret)
+> >  		goto free_irq_domain;
+> >
+> >  	ret =3D hv_pci_enter_d0(hdev);
+> > -	/*
+> > -	 * In certain case (Kdump) the pci device of interest was
+> > -	 * not cleanly shut down and resource is still held on host
+> > -	 * side, the host could return invalid device status.
+> > -	 * We need to explicitly request host to release the resource
+> > -	 * and try to enter D0 again.
+> > -	 * Since the hv_pci_bus_exit() call releases structures
+> > -	 * of all its child devices, we need to start the retry from
+> > -	 * hv_pci_query_relations() call, requesting host to send
+> > -	 * the synchronous child device relations message before this
+> > -	 * information is needed in hv_send_resources_allocated()
+> > -	 * call later.
+> > -	 */
+> > -	if (ret =3D=3D -EPROTO && enter_d0_retry) {
+> > -		enter_d0_retry =3D false;
+> > -
+> > -		dev_err(&hdev->device, "Retrying D0 Entry\n");
+> > -
+> > -		/*
+> > -		 * Hv_pci_bus_exit() calls hv_send_resources_released()
+> > -		 * to free up resources of its child devices.
+> > -		 * In the kdump kernel we need to set the
+> > -		 * wslot_res_allocated to 255 so it scans all child
+> > -		 * devices to release resources allocated in the
+> > -		 * normal kernel before panic happened.
+> > -		 */
+> > -		hbus->wslot_res_allocated =3D 255;
+> > -		ret =3D hv_pci_bus_exit(hdev, true);
+> > -
+> > -		if (ret =3D=3D 0)
+> > -			goto retry;
+> > -
+> > -		dev_err(&hdev->device,
+> > -			"Retrying D0 failed with ret %d\n", ret);
+> > -	}
+> >  	if (ret)
+> >  		goto free_irq_domain;
+> >
+> > --
+> > 2.25.1
 
-Ok, will move the 'Patch 2 & 7' to the end of patch set (i.e. Patch 9 & 10)
-   [Patch v4 02/10] arm64: tegra: add bpmp ref in tegra234-mc node
-   [Patch v4 07/10] arm64: tegra: Add cpu OPP tables and interconnects 
-property
+Looks good to me. Thanks for fixing this.
 
-Thank you,
-Sumit Gupta
-
+Wei
