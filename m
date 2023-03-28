@@ -2,192 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4565E6CCC23
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 23:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77A376CCDCA
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 01:00:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229456AbjC1Vel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 17:34:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
+        id S229535AbjC1XAT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 19:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229729AbjC1Vel (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 17:34:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E9DB26BE;
-        Tue, 28 Mar 2023 14:34:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S229470AbjC1XAS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 19:00:18 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F3CB172B
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 15:59:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680044373;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=UOHvDkKx1/FNkj2vxenEwIYz8eWC9U9sbsJgP7N9Oik=;
+        b=JZ1fNvRQR99mRhxLi6tGeMUlyBkN1tDbWp4nl2Kj2Ugkv88za5KfoBMqnWaykEoxXSoREE
+        dijWyoG97KJBIjCBCAUO3kmaA6eBm8ZyJb5jCMBQsB+JWakLv63Kszz3OOkfltVs4Zne+Q
+        qRu+0hoV6i3kWoG+9hHTFT2+q3brK+o=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-128-b7YT1_x2PwGfPWv3jYOmJg-1; Tue, 28 Mar 2023 18:59:31 -0400
+X-MC-Unique: b7YT1_x2PwGfPWv3jYOmJg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABA8A6196F;
-        Tue, 28 Mar 2023 21:34:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D845BC433EF;
-        Tue, 28 Mar 2023 21:34:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680039279;
-        bh=vWyHCjF+BTgXOwgUXU3RyEwPO+Qw/pB93Lo/jd0y3nQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OmpcmwqPF24Q0fAer/sLX2UWm/3sHFKbjiLDyYHNGNT3rJSGB0WUFOpniAoge4EpT
-         +C7ImmqB/NTjY5E+T/RdYNdeOIw1Qq0z0F996CyECzxWcAlAZv8J1+QDaFNSt1vr3a
-         Nhavp8GgUA7EX/+rlhRtaKIY3L+cJk775ZJVfWdWbemTmM32w8wT3Fx7peBXr+49EF
-         ONZPtOUpZxjSOEtQ3oYx2q/RJUjgvqPZzojXRP2xuk90x/Rpeiu9YNpiOES2POs0JD
-         v5i1LQ8RfCtH7xCZMzYC/dnvpnPnF37mA+foeFtX4Sf3uh4mQWdtSqSTZYJsdC+1mp
-         283nDZ9AJwQcg==
-Date:   Tue, 28 Mar 2023 16:34:37 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     korantwork@gmail.com
-Cc:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
-        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xinghui Li <korantli@tencent.com>
-Subject: Re: [PATCH v4] PCI: vmd: Add the module param to adjust MSI mode
-Message-ID: <20230328213437.GA2963709@bhelgaas>
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3F85B801210;
+        Tue, 28 Mar 2023 22:59:31 +0000 (UTC)
+Received: from [172.30.41.16] (unknown [10.22.16.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CF05440C6E67;
+        Tue, 28 Mar 2023 22:59:30 +0000 (UTC)
+Subject: [RFC PATCH] PCI: Extend D3hot delay for NVIDIA HDA controllers
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     linux-pci@vger.kernel.org
+Cc:     abhsahu@nvidia.com, targupta@nvidia.com, zhguo@redhat.com,
+        alex.williamson@redhat.com
+Date:   Tue, 28 Mar 2023 16:59:30 -0600
+Message-ID: <168004421186.935858.12296629041962399467.stgit@omen>
+User-Agent: StGit/1.5.dev2+g9ce680a52bd9
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230320132316.3126838-1-korantwork@gmail.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 09:23:16PM +0800, korantwork@gmail.com wrote:
-> From: Xinghui Li <korantli@tencent.com>
-> 
-> In the legacy, the vmd MSI mode can only be adjusted by configuring
-> vmd_ids table. This patch adds another way to adjust MSI mode by
-> adjusting module param, which allows users easier to adjust the vmd
-> according to the I/O scenario without rebuilding driver. There are two
-> params that could be recognized: on, off. The default param is NULL,
-> the goal is not to effect the existing settings of the device.
+Assignment of NVIDIA Ampere-based GPUs have seen a regression since the
+below referenced commit, where the reduced D3hot transition delay appears
+to introduce a small window where a D3hot->D0 transition followed by a bus
+reset can wedge the device.  The entire device is subsequently unavailable,
+returning -1 on config space read and is unrecoverable without a host reset.
 
-"two params: on, off ... default param is NULL" doesn't read quite
-right because "NULL" is not a valid parameter value.
+This has been observed with RTX A2000 and A5000 GPU and audio functions
+assigned to a Windows VM, where shutdown of the VM places the devices in
+D3hot prior to vfio-pci performing a bus reset when userspace releases the
+devices.  The issue has roughly a 2-3% chance of occurring per shutdown.
 
-I think you could just omit that last sentence completely because it's
-obvious that if you don't specify the parameter, it doesn't affect
-anything and the existing behavior is unchanged (it's determined by
-whether VMD_FEAT_CAN_BYPASS_MSI_REMAP is specified in vmd_ids[]).
+Restoring the HDA controller d3hot_delay to the effective value before the
+below commit has been shown to resolve the issue.
 
-> Signed-off-by: Xinghui Li <korantli@tencent.com>
-> Reviewed-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+I'm looking for input from NVIDIA whether this issue is unique to
+Ampere-based HDA controllers or should be assumed to linger in both older
+and newer controllers as well.  Currently we've not been able to reproduce
+the issue other than on Ampere HDA controllers, however the implementation
+here includes all NVIDIA HDA controllers based on PCI vendor and device
+class.
 
-I think Lorenzo is out of the office this week, but I'm sure he'll
-take care of this when he returns.
+If we were to limit the quirk to Ampere HDA controllers, I think that would
+include:
 
-In the meantime, can you include a sample usage in the commit log so
-folks don't have to dig through the patch and figure out how to use
-the parameter?
+1aef	GA102 High Definition Audio Controller
+228b	GA104 High Definition Audio Controller
+228e	GA106 High Definition Audio Controller
 
-It would also be nice to include a hint about why a user would choose
-"on" or "off".  What is the performance effect?  What sort of I/O
-scenario would lead you to choose "on" vs "off"?
+Cc: Abhishek Sahu <abhsahu@nvidia.com>
+Cc: Tarun Gupta <targupta@nvidia.com>
+Fixes: 3e347969a577 ("PCI/PM: Reduce D3hot delay with usleep_range()")
+Reported-by: Zhiyi Guo <zhguo@redhat.com>
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+---
+ drivers/pci/quirks.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-ee81ee84f873 ("PCI: vmd: Disable MSI-X remapping when possible")
-suggests that MSI-X remapping (I assume the "msi_remap=on" case):
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 44cab813bf95..f4e2a88729fd 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1939,6 +1939,19 @@ static void quirk_radeon_pm(struct pci_dev *dev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x6741, quirk_radeon_pm);
+ 
++/*
++ * NVIDIA Ampere-based HDA controllers can wedge the whole device if a bus
++ * reset is performed too soon after transition to D0, extend d3hot_delay
++ * to previous effective default for all NVIDIA HDA controllers.
++ */
++static void quirk_nvidia_hda_pm(struct pci_dev *dev)
++{
++	quirk_d3hot_delay(dev, 20);
++}
++DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
++			      PCI_CLASS_MULTIMEDIA_HD_AUDIO, 8,
++			      quirk_nvidia_hda_pm);
++
+ /*
+  * Ryzen5/7 XHCI controllers fail upon resume from runtime suspend or s2idle.
+  * https://bugzilla.kernel.org/show_bug.cgi?id=205587
 
-  - Limits the number MSI-X vectors available to child devices to the
-    number of VMD MSI-X vectors.
 
-  - Reduces interrupt handling performance because child device
-    interrupts have to go through the VMD MSI-X domain interrupt
-    handler.
-
-So I assume "msi_remap=off" would remove that MSI-X vector limit and
-improve interrupt handling performance?
-
-But obviously there's more to consider because those are both good
-things and if we could do that all the time, we would.  So there must
-be cases where we *have* to remap.  ee81ee84f873 suggests that not all
-VMD devices support disabling remap.  There's also a hint that some
-virt configs require it.
-
-This patch doesn't enforce either of those things.  What happens if
-the user gets it wrong?
-
->  drivers/pci/controller/vmd.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-> index 990630ec57c6..fb61181baa9e 100644
-> --- a/drivers/pci/controller/vmd.c
-> +++ b/drivers/pci/controller/vmd.c
-> @@ -34,6 +34,19 @@
->  #define MB2_SHADOW_OFFSET	0x2000
->  #define MB2_SHADOW_SIZE		16
->  
-> +/*
-> + * The VMD msi_remap module parameter provides the alternative way
-> + * to adjust MSI mode when loading vmd.ko other than vmd_ids table.
-> + * There are two params could be recognized:
-> + *
-> + * off: disable MSI remapping
-> + * on:  enable MSI remapping
-> + *
-
-Spurious blank line.
-
-> + */
-> +static char *msi_remap;
-> +module_param(msi_remap, charp, 0444);
-> +MODULE_PARM_DESC(msi_remap, "Whether to enable MSI remapping function");
-
-ee81ee84f873 mentions MSI-X explicitly (which is different from MSI),
-so maybe use "MSI-X" here and in the messages below to avoid any
-confusion.
-
->  enum vmd_features {
->  	/*
->  	 * Device may contain registers which hint the physical location of the
-> @@ -875,6 +888,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  			return ret;
->  
->  		vmd_set_msi_remapping(vmd, true);
-> +		dev_info(&vmd->dev->dev, "init vmd with remapping MSI\n");
->  
->  		ret = vmd_create_irq_domain(vmd);
->  		if (ret)
-> @@ -887,6 +901,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
->  	} else {
->  		vmd_set_msi_remapping(vmd, false);
-> +		dev_info(&vmd->dev->dev, "init vmd with bypass MSI\n");
->  	}
->  
->  	pci_add_resource(&resources, &vmd->resources[0]);
-> @@ -955,6 +970,16 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
->  	return 0;
->  }
->  
-> +static void vmd_config_msi_remap_param(unsigned long *features)
-> +{
-> +	if (msi_remap) {
-> +		if (strcmp(msi_remap, "on") == 0)
-> +			*features &= ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
-> +		else if (strcmp(msi_remap, "off") == 0)
-> +			*features |= VMD_FEAT_CAN_BYPASS_MSI_REMAP;
-
-The usual strcmp() idiom is to test "!strcmp(...)" instead of
-"strcmp(...) == 0)".  No need for "()" around
-VMD_FEAT_CAN_BYPASS_MSI_REMAP.
-
-> +	}
-> +}
-> +
->  static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  {
->  	unsigned long features = (unsigned long) id->driver_data;
-> @@ -984,6 +1009,8 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
->  	if (err < 0)
->  		goto out_release_instance;
->  
-> +	vmd_config_msi_remap_param(&features);
-> +
->  	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
->  	if (!vmd->cfgbar) {
->  		err = -ENOMEM;
-> -- 
-> 2.31.1
-> 
