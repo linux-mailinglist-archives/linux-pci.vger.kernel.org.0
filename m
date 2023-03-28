@@ -2,132 +2,189 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 222566CBD70
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 13:24:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F07106CBF0E
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 14:31:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232644AbjC1LWv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 07:22:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34742 "EHLO
+        id S232385AbjC1MbA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 08:31:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232671AbjC1LWo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 07:22:44 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E4A172A
-        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 04:22:29 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id r11so48169001edd.5
-        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 04:22:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680002548;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dzwHQ2Duk/kqF5BJ0fG5L6Cu8NMF103H5aRIBgcczb4=;
-        b=htrzrsE7hmfkJgnGa64UdAmCTFbDjwVjX1/ZK7rzlfJ4rum1twPXjx2IcPP12VND9T
-         0DKpttfDZeCJAjZF9hf9sirzt1D7GiaNIvC2Ms0GGq/MedlyTFbot/1vxF4CxC0kFUot
-         lJYlci1bOkm1cjOAaW76KTfxGYDZpTUwaWI6CqiqlLyD64vI1f8N1ETCWOZvAh6jSSal
-         1PbzRamEOc4x30/OWIqrzOivLgt4Uzhb1hguorghfB6U/5sNzMn2YAbgBBqg+Tdtf4hr
-         dXV/1WfiU6mwe/scWd/TkMX5uL4+EeTzYs24kk9cDqFNzkUiCS1rn8BmpwTCA4wE1eLy
-         wDUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680002548;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dzwHQ2Duk/kqF5BJ0fG5L6Cu8NMF103H5aRIBgcczb4=;
-        b=H1y278B1y+QwrYxpMo3QGneIDBfX1IKPuEAac3/+FnNEYcs3WPr123PcS0tGiODcxr
-         RMkcGvd8HiihVvkP9TBNhs9xfBdBZR6vmjNGpINRlTh6+X+8ztCnJ4EOnR0TYHYidia0
-         Btc3gTEXb9l9BvBGTWpvos7OKFh8rrRsDtN3VdYXNiA9rX3CgCL6pFd/Ysp/Fs3smEtb
-         FifnmZbH61iVVMkXlfoGpaGix8gbDpqlpbTYN9gy7a1qj1giduhn2ZNHZyiPdHVSS78F
-         4faEH7cNoJY/uPnWs40ePd8YVpwoAals9LjyRa+1ZKIlGA8mdgwWuoGRE5eF8CHT9YaF
-         vs1Q==
-X-Gm-Message-State: AAQBX9f4c43lB/k3b0KD1ozCChT1wPYC8EqxFJ9vpLfccmnNqvgu5Gyy
-        j9N/Uz1dZJ/iecjvYrxfTv1Z+w==
-X-Google-Smtp-Source: AKy350aGvcc3WcYuz9u6zfbZBRO4GkfWN+fYq58at9mlFg8RR/uitQlgp2yla6cyxnFnFhXLJw2AWw==
-X-Received: by 2002:a17:907:86ac:b0:92b:eefb:b966 with SMTP id qa44-20020a17090786ac00b0092beefbb966mr21203353ejc.0.1680002548506;
-        Tue, 28 Mar 2023 04:22:28 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:9e92:dca6:241d:71b6? ([2a02:810d:15c0:828:9e92:dca6:241d:71b6])
-        by smtp.gmail.com with ESMTPSA id l22-20020a170906079600b009333288d0ffsm13778637ejc.194.2023.03.28.04.22.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Mar 2023 04:22:28 -0700 (PDT)
-Message-ID: <79d8044f-ce68-463e-66f7-8755e253bc99@linaro.org>
-Date:   Tue, 28 Mar 2023 13:22:26 +0200
+        with ESMTP id S229971AbjC1Ma7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 08:30:59 -0400
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12hn2229.outbound.protection.outlook.com [52.100.165.229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BEB93CE;
+        Tue, 28 Mar 2023 05:30:58 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Z1ME4TQKbIpSbwkWPZVQUC3+H1ytxNe3+apZ7PkIJkY1s2QjDnEPaGgwKXMNZ/WBaWMT+Gt+hD/z2Uwz5nlsfDAeswTwQSTX2mqWQRjfPbWZa8mBBGh5yex7yBuAqCJtiKjrOQZy1KZCqCFgznutXVaQzFU/qqBOcnSvPQK5/QV3j9aPVMV2YqnX4nNyPUEIxQFPSBjvthxjfrF9h21IAtgoNoHqhiCMlJG9CnsOg9nM4uJAccaZ9SxPuE3bimaFPAkPxlBsMSftFWRhSILM4kbKNINikI7LnT9LJkFcypc7ilhD2SrwXYsv8tcZJj8HK/seOSS0Bie0OiabkUoCaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=trYyPnFc9/lt/ky83OY9EH8qkN+Cstbnm/KPxWwQapo=;
+ b=Aeplxk7ed8QfZ6LdE9E1mitWtlNYqb0XfAKOGseGB67wyQDyc2KM9g5gFAX8Hww22AKgWApl1QHMp6CUK8AlewqENUYLXxgzReA9Gj746H91+q/OVAViLFK4dK4Y8Fkmuk1PTillCN4uNKBMpkFHh407qBReFyzRIC6ST9jopYj2TQ7U/1N0PCSMaDljagymlmc+R5qKbwpbUlkENH7ND4/IX+idbWmgRzFaxjBaNcLlsmGkHbJSxEQquch4vb6bSbTqTKkcJ+Yr0o0YDh0j4F9xiNYtXMJdG7+S4jIKt2TAZ01aeSyyYiyRH4dxk1Gcps3kn/nH/anFBDwiaxUTtQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=trYyPnFc9/lt/ky83OY9EH8qkN+Cstbnm/KPxWwQapo=;
+ b=rPsDJkBDAivnV1tvfMyulNcRoY4f49XVXj/h9i9wsXUr8MU9YGuf1Mz1yQoy57nGJpT29FZHjPr6pTvuk0d757ED9hK7l/Ekm9wLVK11TP4o8GfIRqLT9oMBsUDsKyMoP73l3jd8uNqeSGxmFv5TPk/6E3h33lxlSfD6WFF3MIXEG7smmq88JG3S1A5vRKbj5VvZWF/lc2dtS5a9cxDEwBlH06KYBX6NF2wfMNvDVOX33ejACO5oGfftxFMH74F+7toaW4Zxt7jlqMw589TV66omWwj0F1DvDIn+44rKKYZXZoMOVKoTSOJjpB9OiOp929d0Gz2Yf4yKncqDmmGh6w==
+Received: from BN9PR03CA0043.namprd03.prod.outlook.com (2603:10b6:408:fb::18)
+ by DS7PR12MB9043.namprd12.prod.outlook.com (2603:10b6:8:db::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6222.30; Tue, 28 Mar 2023 12:30:55 +0000
+Received: from BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:fb:cafe::7c) by BN9PR03CA0043.outlook.office365.com
+ (2603:10b6:408:fb::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.42 via Frontend
+ Transport; Tue, 28 Mar 2023 12:30:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BN8NAM11FT009.mail.protection.outlook.com (10.13.176.65) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6199.32 via Frontend Transport; Tue, 28 Mar 2023 12:30:55 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 28 Mar 2023
+ 05:30:41 -0700
+Received: from [10.41.21.79] (10.126.230.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Tue, 28 Mar
+ 2023 05:30:34 -0700
+Message-ID: <8139e102-677d-6850-b1c3-7a35e0e36904@nvidia.com>
+Date:   Tue, 28 Mar 2023 18:00:32 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [Patch v4 01/10] dt-bindings: memory: tegra: add bpmp ref in
- tegra234-mc node
+ Thunderbird/102.7.1
+Subject: Re: [Patch v4 03/10] memory: tegra: add interconnect support for DRAM
+ scaling in Tegra234
 Content-Language: en-US
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
-        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
-        ishah@nvidia.com, bbasu@nvidia.com
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC:     <treding@nvidia.com>, <dmitry.osipenko@collabora.com>,
+        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
+        <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
+        <lpieralisi@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
+        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
+        <ishah@nvidia.com>, <bbasu@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>
 References: <20230327161426.32639-1-sumitg@nvidia.com>
- <20230327161426.32639-2-sumitg@nvidia.com>
- <787f656a-223d-5eed-e311-9cc7a6c46452@linaro.org> <ZCLF6ZRH528pu/r3@orome>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <ZCLF6ZRH528pu/r3@orome>
-Content-Type: text/plain; charset=UTF-8
+ <20230327161426.32639-4-sumitg@nvidia.com>
+ <8b04a266-20eb-f1c1-278f-764b1b06b78b@linaro.org> <ZCLJ895gHPXQE+Lz@orome>
+From:   Sumit Gupta <sumitg@nvidia.com>
+In-Reply-To: <ZCLJ895gHPXQE+Lz@orome>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-Originating-IP: [10.126.230.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT009:EE_|DS7PR12MB9043:EE_
+X-MS-Office365-Filtering-Correlation-Id: c0016396-0b92-4598-330a-08db2f8846e8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: o7B11kIsEyN4zPD60xq2tZ7SYbmTXrPBC+kyqflqkHk1FMcTQAMxI6vRkvc8v5QdoXoaWx8yiiy1Du+2RJAw/x52S1Unv1ZxyufZNtox56h1N52xI4dPTzRXIcO4GjOGXEmN60wjBD4zMwKoJ9drmB5eTWRgwHkKt5ayVpwL1W7cCuO19In9+MYGY2zADyxUW51FwFm3z1OzAQWNDsHaL0D6lFv86ri8CLRCkbI7Uq8L/CBBlEyXa2j4hBzwyGZKrWwkw7dgz8Wbx2A8dyBuBuQzYz1SNpR8Y3lbZ8qRBng6HpXmwSxr+BGTw8P+9I/7W/fJKpljUm87r+fv0c7NmL1mr2G5TlfAhyJj9i302q/wUz57xWClWlHjK3F4gfswm5g4bGsU5+EITNVmRyX/w1iVX2fDWEBIVoj+Qr4oPWlSvFUeEAfjDVzLj3mXejV1eMa5zdpxZOpzgJ6ubbjVBmj1RBlDov6GPlJdPosJx00B/xqbr19k4Fm83D8Sj+2JyrofA5JFFALdC4uhFRh1Fdsb0QnHrYXcUx/WV3AyxND1vmCj2+lT14nhBAjs9finjOeG+OX6UJCc0OHbLjRyX1czdqYcLGZ5H0ABZve3RWbHGliY6JaqvvkVSAUZsVy75A7fBoujznAUUJQFNgCbgYshTTBnlWuLjEgKPT7vNvjD3EQDy0l8nzGhXYjmIhIGxD8aFLj676cyr4AZgBTJGXbgnzAnYVVddEe9mon+gPa+zsDKhzZAivCG3yo/XVzVSXnA6k/VPfyDSy7YQw/WCHNB3bYZEMHdg/rZqpwGSDwtEaFQhH3Iv6lYqiIGPBm/Es/6DxkCNoBVsgI/CJnLGPhuyOgoW128fhHQVU557OU=
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(396003)(136003)(39860400002)(5400799015)(451199021)(36840700001)(40470700004)(46966006)(356005)(7636003)(7416002)(8936002)(5660300002)(82310400005)(40480700001)(36756003)(53546011)(186003)(26005)(2616005)(16526019)(2906002)(107886003)(86362001)(31696002)(47076005)(36860700001)(83380400001)(426003)(336012)(34020700004)(82740400003)(40460700003)(4326008)(54906003)(70586007)(8676002)(41300700001)(70206006)(478600001)(110136005)(16576012)(316002)(31686004)(43740500002)(12100799027);DIR:OUT;SFP:1501;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Mar 2023 12:30:55.2706
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c0016396-0b92-4598-330a-08db2f8846e8
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT009.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB9043
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_PASS,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28/03/2023 12:48, Thierry Reding wrote:
-> On Tue, Mar 28, 2023 at 09:23:04AM +0200, Krzysztof Kozlowski wrote:
+
+
+On 28/03/23 16:35, Thierry Reding wrote:
+> On Tue, Mar 28, 2023 at 09:31:58AM +0200, Krzysztof Kozlowski wrote:
 >> On 27/03/2023 18:14, Sumit Gupta wrote:
->>> For Tegra234, add the "nvidia,bpmp" property within the Memory
->>> Controller (MC) node to reference BPMP node. This is needed in
->>> the MC driver to pass the client info to the BPMP-FW when memory
->>> interconnect support is available.
->>>
->>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->>> ---
->>>  .../bindings/memory-controllers/nvidia,tegra186-mc.yaml    | 7 +++++++
->>>  1 file changed, 7 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
->>> index 935d63d181d9..398d27bb2373 100644
->>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
->>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
->>> @@ -58,6 +58,10 @@ properties:
->>>    "#interconnect-cells":
->>>      const: 1
->>>  
->>> +  nvidia,bpmp:
->>> +    $ref: /schemas/types.yaml#/definitions/phandle
->>> +    description: phandle of the node representing the BPMP
+> [...]
+>>> diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
+> [...]
+>>> @@ -158,6 +260,9 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+>>>   	if (!emc)
+>>>   		return -ENOMEM;
+>>>   
+>>> +	platform_set_drvdata(pdev, emc);
+>>> +	emc->dev = &pdev->dev;
 >>
->> Why do you need this multiple times? Both in parent and all external-mc
->> children?
+>> This patch looks like stiched from two or more patches... emc->dev does
+>> not look like new member of emc, thus why do you set in exisitng
+>> function in this patch? Why it wasn't needed before?
 > 
-> We've had nvidia,bpmp in the external memory controller node since
-> basically the beginning because we've always needed it there. For newer
-> chips we now also need it for the memory controller.
+> This looks like it may be leftover from some development. These two
+> lines exist in this driver a few lines further down. Either one pair
+> should be removed. I don't see why this would need to be moved, so
+> probably the above additions can just be dropped.
 > 
-> Ideally I think we would only have this in the MC and have the EMC
-> driver reference it via the EMC's parent (i.e. MC), but that would break
-> backwards-compatibility. Reaching into the EMC's DT node from the MC was
-> another option that we discussed internally, but it didn't look right
-> given how this is also needed by the MC.
+> Thierry
 > 
-> One thing we could potentially do is deprecate the nvidia,bpmp phandle
-> in the EMC and only keep it as a fallback in the drivers in case the
-> parent MC doesn't find it's own in the DT.
+Yes, sorry i was left over. Will remove this.
+Thank you for catching.
 
-Yes, deprecation would answer to my question.
+>>>   	emc->bpmp = tegra_bpmp_get(&pdev->dev);
+>>>   	if (IS_ERR(emc->bpmp))
+>>>   		return dev_err_probe(&pdev->dev, PTR_ERR(emc->bpmp), "failed to get BPMP\n");
+>>> @@ -236,6 +341,25 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+>>>   	debugfs_create_file("max_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+>>>   			    emc, &tegra186_emc_debug_max_rate_fops);
+>>>   
+>>> +	mc = dev_get_drvdata(emc->dev->parent);
+>>> +	if (mc && mc->soc->icc_ops) {
+>>> +		/*
+>>> +		 * Initialize the ICC even if BPMP-FW doesn't support 'MRQ_BWMGR_INT'.
+>>> +		 * Use the flag 'mc->bwmgr_mrq_supported' within MC driver and return
+>>> +		 * EINVAL instead of passing the request to BPMP-FW later when the BW
+>>> +		 * request is made by client with 'icc_set_bw()' call.
+>>> +		 */
+>>> +		err = tegra_emc_interconnect_init(emc);
+>>> +		if (err)
+>>> +			goto put_bpmp;
+>>> +
+>>> +		if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT))
+>>> +			mc->bwmgr_mrq_supported = true;
+>>> +		else
+>>> +
+>>
+>> Drop blank line.
+>>
+Ok.
 
-Best regards,
-Krzysztof
+>>> +			dev_info(&pdev->dev, "MRQ_BWMGR_INT not present\n");
+>>
+>> And what user is supposed to do with this? Either make it descriptive or
+>> drop.
+> 
+> Agreed. I think we can just drop this. If the intention was to provide a
+> quick way for people to detect whether BWMGR is available or not, using
+> something from sysfs/debugfs would be preferable.
+> 
+> Thierry
 
+Sure, will drop this.
+
+Thank you,
+Sumit Gupta
