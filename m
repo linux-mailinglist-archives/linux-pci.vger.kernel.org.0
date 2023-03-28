@@ -2,137 +2,83 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CA796CBF9A
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 14:47:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3684F6CBFAD
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 14:49:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232825AbjC1Mrs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 08:47:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40494 "EHLO
+        id S233036AbjC1MtU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 08:49:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232428AbjC1Mrq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 08:47:46 -0400
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (mail-sgaapc01on2130.outbound.protection.outlook.com [40.107.215.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C695AAD30;
-        Tue, 28 Mar 2023 05:47:26 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kkci1T1FNw/lxH+0JGEPOB49IZOTGal/hK95DN9zte5VRQaTziXNZscUtOSDtHfgCKQa8y+1r7GsLb5fU6h2SZyMNwFvlH3HHMGOCPffxw6+pDau2MlC761U6Cg5+wEhtvHiS/I/KdF1JTyvwRWHC5ujFYBFrSN1RL6i5SWytAyCkHsnLzhl45BuloZbKM3f1F/PUWFwNz4yvvlc3oOPR94QrGO6jRw72ZW6nR9bUDLFOePAOvOZkW1XIckbVwfPpeptzc45QdEurfdMc7KDoct7mIwA9JLUuFR5VI2BfiKmpPnCsSsPUg2XnO3q4WDED9TV1BCTKLJx2oVvDDWbGA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2///radriASgoMMVoBruNQdwW0R9yiuSvMrK8QDhYdY=;
- b=QAhR4izeyPR/I+ocv5kgjH3gpfjqlTaWNHPaf5/qdLncs8yuQPK8T6tNjjIEcFNMWRlxKWdXasrrJR1/0Pv6E8g94wHU/ed4kzsrG0yUwSTm6by/EwA+GvbnGDgE28ITfSgH9L9rfsZFRNvRpjJC5oJfSjSvRXZfp3iGqJGIUsYIt0iT0/OtdcKuNSFCDjei8vXahDoraetQQBCZUfdSMUG4f9h+dsSRCWEM8yMWXHsS98RGLezo6MtWcuPRDZYcwrtDh7jnQzdQtp3J+Yz5Rqe0qaJafFcL8Mi4yO3Ze6KYlK7zLQBX9EbaeU4XtOlKxAbzuWO8RHxt/BknvtYTfA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2///radriASgoMMVoBruNQdwW0R9yiuSvMrK8QDhYdY=;
- b=TCZ/K8Z8lrAwRvXN5ZdfacGR30LwUGvPgbA+qR5k852HvFkCYnlZ2H8NLB0PMzWnV/lNnRdoaZKJ+posKa4EpEyzDOIaM0x9Sh/dPjrvSKkzmEbGYN4O2b1nFFsGlZZcmIBMAaWbBElCCaQxY8w3Re6PkWlF280bRXmmwQWBZWw=
-Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM (2603:1096:4:fc::7) by
- SEZP153MB0693.APCP153.PROD.OUTLOOK.COM (2603:1096:101:90::13) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6277.7; Tue, 28 Mar 2023 12:46:51 +0000
-Received: from SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
- ([fe80::9544:9f03:90e7:b2cb]) by SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
- ([fe80::9544:9f03:90e7:b2cb%5]) with mapi id 15.20.6277.006; Tue, 28 Mar 2023
- 12:46:50 +0000
-From:   Wei Hu <weh@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jake Oshins <jakeo@microsoft.com>,
-        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
- kdump to fail occasionally"
-Thread-Topic: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
- kdump to fail occasionally"
-Thread-Index: AQHZYTE02QJw3cJyrE2OQ7EX2SDB268Pu6LwgABofbA=
-Date:   Tue, 28 Mar 2023 12:46:49 +0000
-Message-ID: <SI2P153MB0441C7535564992D4972F786BB889@SI2P153MB0441.APCP153.PROD.OUTLOOK.COM>
-References: <20230328045122.25850-1-decui@microsoft.com>
- <20230328045122.25850-5-decui@microsoft.com>
- <SA1PR21MB13356A77700580DF0C742856BF889@SA1PR21MB1335.namprd21.prod.outlook.com>
-In-Reply-To: <SA1PR21MB13356A77700580DF0C742856BF889@SA1PR21MB1335.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=6f6d75c5-e156-425e-9f36-09272bf9a5a0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-28T06:32:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2P153MB0441:EE_|SEZP153MB0693:EE_
-x-ms-office365-filtering-correlation-id: 64424f59-6b04-4aa8-68fc-08db2f8a7fd4
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: uZe1jlk1EGg6wCMPv88HonYCT2NQkJvVpBkPEUO4QuezRNfag7PryMpV/0xE2/Lpn4B5KfRjf4A2m1CgLTZ3jjRS1ZaErEqebCW2bfKYPVZJPPa9ngEr46Ia31kJt7RHcvr62MEywQwvlG61P1l7AmboS0JCjPbuQbjNHyY907WlO+HiMAhHc5fKViuPfQ1Kg4hG7b9n2OGBS3jH2406W4CoUqwzGb/hDW9x5/jw5G3Jtdfd1kVLV46stROjhbuR+DKudHb1XorUKJMEbR/NQIQ/cSEZCxIp+3tlGrhjK4knJYJWbnVX08j9J4+EUB7unIO07cZj5d8YB+te/T0PO+MdlZfl42OpCjAxHdxC1Fj7P88/u3MZ+Ob/xe7L0aopm8KQ+tu59t81f9TVowFETNooXivkXQo4O/5QzC0CNpjxCrvwhE7mONmpN3H1Er/GEBFl/Zu2TGgafoZRC43bQFd7KYNfO4S60Ewxg5gGZfKllt64HbrPRVVccZLOTQL5EL4Vf3b30rGWyCjCnQfu5wdiUWhEp7ik5M4sAEL+8EQX4Hw31RmNejb5Nq7L96zuZFHtxyFIUCefTqQPDCUXzLfM2z5vxWTgSIVt08fRAqpxKKJR2ct2MI16f0ajn8e77nJGxh534OYQaH9NrC1QJynClgAQ9arwMfATI669V4+xAwf4RmCpfI8L6zZ8UMOv
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2P153MB0441.APCP153.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(39860400002)(366004)(396003)(451199021)(41300700001)(76116006)(64756008)(66446008)(66476007)(8676002)(66556008)(66946007)(4326008)(186003)(2906002)(8990500004)(7416002)(5660300002)(83380400001)(38100700002)(38070700005)(86362001)(82950400001)(82960400001)(921005)(122000001)(33656002)(55016003)(52536014)(8936002)(10290500003)(478600001)(54906003)(7696005)(71200400001)(53546011)(9686003)(6506007)(110136005)(316002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?UbGhhXW0xbmjKXDWPbZ7c7/IN4iUkBXKamgpfTxmgHOwTiLqmRdHqJitxBRj?=
- =?us-ascii?Q?HXgcF7BdYbBLONw05dHDdkVy12tyHBIHN6Oczt7bqYDWx4QAsKqzIx6c6ncJ?=
- =?us-ascii?Q?+wfmXI+8P2LS6QfpxJtT3vey7m9COByqEL/tg/u/ztNFkweC5ZyRmcczjk8p?=
- =?us-ascii?Q?HU+S9SoD4NKCamW/RepVR3e1H8ZSpuDa4IIRZmMqtfgvWpI5Rx0wB1BY386v?=
- =?us-ascii?Q?v9AIoGEM+NuUJ5WZnIatHr4CZwq+30W1Zu3NqHvPrh7rViiGYPAq9EuzRbdB?=
- =?us-ascii?Q?WKenQwXbnmGPDCxvfUZn6Fh7KG/DrWX9mf2KPjQgGiyHE/eWJON91yKacSjZ?=
- =?us-ascii?Q?L/LcBxcX/NiAQxp7YHOq0522GTUpVhuyxdwEe59CrEKNbdAiSfmf4ZLw1c9U?=
- =?us-ascii?Q?XU0QAcLIToM5ls90aM2MdZaw8DcGOAuwbLHs6JIGJuPGSVDOQcDIa2Vau2Qt?=
- =?us-ascii?Q?RqK5EIZfL6Vi7kdJBsfN4QSssZvc/Ll2gK4Xt2aUZGTVJC/xwOqiS2BudDpg?=
- =?us-ascii?Q?5APpah5STN3U+A7+4k5xgKaTH+zGfyvVRgocAMaWfeMBVDNdEGp9B3boVNPH?=
- =?us-ascii?Q?zqBXFp2qpIpUiScJfEbUm6v3DIOybcyCbzmzdEvqkq4EHigijmL2x6nkMlne?=
- =?us-ascii?Q?wuUBGRlx18f3KMAEhpik/rwS9EZsbLQ8B5htEX+HBGVR5wNGtAnvb//9lnww?=
- =?us-ascii?Q?uQJFhK0NI2PWLt/JE+TjTKuz6+DzamBdQCMnw6WY6aUpmMm2afo0BtQoDrPM?=
- =?us-ascii?Q?Ih02hP3pKzNczECvkcfzt/13fdmj0K9Zwd4/1Cbk6fxtwJjpQexPNhfs2zjW?=
- =?us-ascii?Q?rTYbTvic3lAIGG48Yqv//QS9Dks1F5Hmq/hG3qIXLX01r75/2ve23IdMCclY?=
- =?us-ascii?Q?eQpum3TxAEJhIaKs3BeNLQt0A3A8z6MiWV0642zb11PLgCUhaR+Fcb5366kX?=
- =?us-ascii?Q?8NHj0hD2aNoM+5S4Q/KpJ2GkKgMFC5vpA945NWYUyxzQdkiyk4sfUB3MKFvk?=
- =?us-ascii?Q?dnUoLBvfZssjVpYHYg8Ig2YaY821M9RM+Icbzdeaus1HmfGeghgU/OKpT1vK?=
- =?us-ascii?Q?5wXLA2mHKQTLn0C4ZiuyAya191gtpoCPelpsFiUMe1g5FV44IBARVC2CE86+?=
- =?us-ascii?Q?VVlrhtVKdD16jLprqcEpFzMgsOouZbNeWWz1UvX04j4BWsk9gZoQh/lmkHpM?=
- =?us-ascii?Q?w7B+10b1mt3TOenjPIFvGmQG5ZkvYDG2I0vSPIk/cElUSg27KLN0RMsuzwqq?=
- =?us-ascii?Q?IGfIP4X2ZOBGJUnqRgzpCrwt4FuHCKOMPxERRAz3oSuagtfH1g27Y801/sk1?=
- =?us-ascii?Q?MYavE9Wv1IpdoBgLmmt4CvdB7vpKzRyKXKRm1ezz72nyU96eU0Ed4RvmyHZ5?=
- =?us-ascii?Q?2p8lNeq/LlWC+Zf8o/jxl+l00FrYDFK8ShwsKncM4BRkuReJXZVCABD2h6AR?=
- =?us-ascii?Q?g18T5LJhrVb8I/IFwwSSdqXKbQBWLvClNRMdU14TghDtIABHPr1GaLEEo4aT?=
- =?us-ascii?Q?HY8RNBSyBOON2maVXFvLL+6afFEIZxzN+9qfXKVofOBQfKvlK4iHzLvrxT4o?=
- =?us-ascii?Q?7jH0zZOOQyYkya7LD4DI68RSdZF89qDi8FdTn3/OGT6DhzjrR4UJNaHXZDLQ?=
- =?us-ascii?Q?Xw=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S232957AbjC1MtE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 08:49:04 -0400
+Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92FAAD23;
+        Tue, 28 Mar 2023 05:48:18 -0700 (PDT)
+Received: by mail-ed1-x52f.google.com with SMTP id eh3so49146122edb.11;
+        Tue, 28 Mar 2023 05:48:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680007692;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E+j/KJFIrlst+m4MnKU1YhwoFJufXJ+qFFR8aaFj9yI=;
+        b=qDF0RIo7qEWFpLp1V7zg1nyS0Cz1f0niR5wf1JYgREvT++u/jTQXlrbrR3tekciQNy
+         J594QKzqJnW0RS4GCeEsrUgLCtE53jWSGrRuZOfoZUID0U/AyqIqhgRR2Dp6MMIyU2y+
+         u4peTJZIEOFU+iPGZXXljyqnwb/gIcehiAxSMTyenCmcivMGAlVGzH8hOqulA9TQ/Nho
+         0WUTcOReF5uOPFiB0Zl4HaBHwPn/DWfwn0dj1Wy4kx2nErInpbAEo947n8N7Sl9rKwb0
+         zONtFEQeZ6L8GfyOiSRJAVufq1WiZ1mpaGSeVBPSscMia53xEo4GP86qEzeoQShq+4SP
+         pSIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680007692;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E+j/KJFIrlst+m4MnKU1YhwoFJufXJ+qFFR8aaFj9yI=;
+        b=7m/GtTyOIEysY//Bylj4uAcmgOWbBquURaRYAakP332ZoCnJuuIwBnFiRDWa3H4mVw
+         H7IZurUScTdAkPXkXg6ESixin6sa+FWKZ5iI926wBATBYD7dJBtGD03TFcXsf3ELrNT6
+         GBeF1Qh1ZEzudC4fUrcRnAyaYdP72Uz4VjqSHb6Zom13Tl9feo/neaC5DDtNVSOTVrCd
+         WhADPBXWLS+Yczc7s+36yOVgq7Uvfw8Pczgh/KW6OUEj4dvOMEzJuyKQWzLSkS10lLwG
+         n6B/HhntL6O1w8wNyWru7OWwGCoLVsGPRu6vc/kMA26dUZfu5by0RLCnh5A70oDFbRik
+         MVyA==
+X-Gm-Message-State: AAQBX9dTevcxVVCdQ6OOwbv9JiSJK0rj++NGb2E0ZTE3YbTgHvDEajSV
+        Q2xiJjbpyC0eMgrEGvue38Q=
+X-Google-Smtp-Source: AKy350bsYP6Fqx2BMM9UnoL40J+1Zzy9EBO2zL7Vus0MWU2zi2OsOdKythsze4lbrbREF6yEcAMN9g==
+X-Received: by 2002:a17:906:3da:b0:933:2f77:ca78 with SMTP id c26-20020a17090603da00b009332f77ca78mr15915436eja.28.1680007691989;
+        Tue, 28 Mar 2023 05:48:11 -0700 (PDT)
+Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id l11-20020a1709066b8b00b00939faf4be97sm10258789ejr.215.2023.03.28.05.48.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Mar 2023 05:48:11 -0700 (PDT)
+Date:   Tue, 28 Mar 2023 14:48:09 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Sumit Gupta <sumitg@nvidia.com>
+Cc:     treding@nvidia.com, dmitry.osipenko@collabora.com,
+        viresh.kumar@linaro.org, rafael@kernel.org, jonathanh@nvidia.com,
+        robh+dt@kernel.org, lpieralisi@kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com, kw@linux.com,
+        bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
+        ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
+Subject: Re: [Patch v4 01/10] dt-bindings: memory: tegra: add bpmp ref in
+ tegra234-mc node
+Message-ID: <ZCLiCWRYbO98qwCn@orome>
+References: <20230327161426.32639-1-sumitg@nvidia.com>
+ <20230327161426.32639-2-sumitg@nvidia.com>
+ <787f656a-223d-5eed-e311-9cc7a6c46452@linaro.org>
+ <ZCLF6ZRH528pu/r3@orome>
+ <79d8044f-ce68-463e-66f7-8755e253bc99@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2P153MB0441.APCP153.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64424f59-6b04-4aa8-68fc-08db2f8a7fd4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2023 12:46:49.9080
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: aF4IIZTqsSDal1mP/OAB7XR4GpYAS2X+ZBx4JiaG6o6Hs62EuGW1sZA5J2XfY9MSqEoOYGN6U/QiW2VZy3aHFw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZP153MB0693
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="SOqUr+gSHmGMXo04"
+Content-Disposition: inline
+In-Reply-To: <79d8044f-ce68-463e-66f7-8755e253bc99@linaro.org>
+User-Agent: Mutt/2.2.9 (2022-11-12)
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -140,177 +86,85 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+--SOqUr+gSHmGMXo04
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Dexuan Cui <decui@microsoft.com>
-> Sent: Tuesday, March 28, 2023 2:33 PM
-> To: bhelgaas@google.com; davem@davemloft.net; edumazet@google.com;
-> Haiyang Zhang <haiyangz@microsoft.com>; Jake Oshins
-> <jakeo@microsoft.com>; kuba@kernel.org; kw@linux.com; KY Srinivasan
-> <kys@microsoft.com>; leon@kernel.org; linux-pci@vger.kernel.org;
-> lpieralisi@kernel.org; Michael Kelley (LINUX) <mikelley@microsoft.com>;
-> pabeni@redhat.com; robh@kernel.org; saeedm@nvidia.com;
-> wei.liu@kernel.org; Long Li <longli@microsoft.com>; boqun.feng@gmail.com;
-> Wei Hu <weh@microsoft.com>
-> Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; linux-
-> rdma@vger.kernel.org; netdev@vger.kernel.org
-> Subject: RE: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
-> kdump to fail occasionally"
+On Tue, Mar 28, 2023 at 01:22:26PM +0200, Krzysztof Kozlowski wrote:
+> On 28/03/2023 12:48, Thierry Reding wrote:
+> > On Tue, Mar 28, 2023 at 09:23:04AM +0200, Krzysztof Kozlowski wrote:
+> >> On 27/03/2023 18:14, Sumit Gupta wrote:
+> >>> For Tegra234, add the "nvidia,bpmp" property within the Memory
+> >>> Controller (MC) node to reference BPMP node. This is needed in
+> >>> the MC driver to pass the client info to the BPMP-FW when memory
+> >>> interconnect support is available.
+> >>>
+> >>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> >>> ---
+> >>>  .../bindings/memory-controllers/nvidia,tegra186-mc.yaml    | 7 +++++=
+++
+> >>>  1 file changed, 7 insertions(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvi=
+dia,tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers=
+/nvidia,tegra186-mc.yaml
+> >>> index 935d63d181d9..398d27bb2373 100644
+> >>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,teg=
+ra186-mc.yaml
+> >>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,teg=
+ra186-mc.yaml
+> >>> @@ -58,6 +58,10 @@ properties:
+> >>>    "#interconnect-cells":
+> >>>      const: 1
+> >>> =20
+> >>> +  nvidia,bpmp:
+> >>> +    $ref: /schemas/types.yaml#/definitions/phandle
+> >>> +    description: phandle of the node representing the BPMP
+> >>
+> >> Why do you need this multiple times? Both in parent and all external-mc
+> >> children?
+> >=20
+> > We've had nvidia,bpmp in the external memory controller node since
+> > basically the beginning because we've always needed it there. For newer
+> > chips we now also need it for the memory controller.
+> >=20
+> > Ideally I think we would only have this in the MC and have the EMC
+> > driver reference it via the EMC's parent (i.e. MC), but that would break
+> > backwards-compatibility. Reaching into the EMC's DT node from the MC was
+> > another option that we discussed internally, but it didn't look right
+> > given how this is also needed by the MC.
+> >=20
+> > One thing we could potentially do is deprecate the nvidia,bpmp phandle
+> > in the EMC and only keep it as a fallback in the drivers in case the
+> > parent MC doesn't find it's own in the DT.
 >=20
-> > From: Dexuan Cui <decui@microsoft.com>
-> > Sent: Monday, March 27, 2023 9:51 PM
-> > To: bhelgaas@google.com; davem@davemloft.net; Dexuan Cui
-> > <decui@microsoft.com>; edumazet@google.com; Haiyang Zhang
-> > <haiyangz@microsoft.com>; Jake Oshins <jakeo@microsoft.com>;
-> > kuba@kernel.org; kw@linux.com; KY Srinivasan <kys@microsoft.com>;
-> > leon@kernel.org; linux-pci@vger.kernel.org; lpieralisi@kernel.org;
-> > Michael Kelley (LINUX) <mikelley@microsoft.com>; pabeni@redhat.com;
-> > robh@kernel.org; saeedm@nvidia.com; wei.liu@kernel.org; Long Li
-> > <longli@microsoft.com>; boqun.feng@gmail.com
-> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > linux-rdma@vger.kernel.org; netdev@vger.kernel.org
-> > Subject: [PATCH 4/6] Revert "PCI: hv: Fix a timing issue which causes
-> > kdump to fail occasionally"
-> >
-> > This reverts commit d6af2ed29c7c1c311b96dac989dcb991e90ee195.
-> >
-> > The statement "the hv_pci_bus_exit() call releases structures of all
-> > its child devices" in commit d6af2ed29c7c is not true: in the path
-> > hv_pci_probe() -> hv_pci_enter_d0() -> hv_pci_bus_exit(hdev, true):
-> > the parameter "keep_devs" is true, so hv_pci_bus_exit() does *not*
-> > release the child "struct hv_pci_dev *hpdev" that is created earlier
-> > in
-> > pci_devices_present_work() -> new_pcichild_device().
-> >
-> > The commit d6af2ed29c7c was originally made in July 2020 for RHEL 7.7,
-> > where the old version of hv_pci_bus_exit() was used; when the commit
-> > was rebased and merged into the upstream, people didn't notice that
-> > it's not really necessary. The commit itself doesn't cause any issue,
-> > but it makes hv_pci_probe() more complicated. Revert it to facilitate
-> > some upcoming changes to hv_pci_probe().
-> >
-> > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > ---
-> >  drivers/pci/controller/pci-hyperv.c | 71
-> > ++++++++++++++---------------
-> >  1 file changed, 34 insertions(+), 37 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pci-hyperv.c
-> > b/drivers/pci/controller/pci-hyperv.c
-> > index 46df6d093d68..48feab095a14 100644
-> > --- a/drivers/pci/controller/pci-hyperv.c
-> > +++ b/drivers/pci/controller/pci-hyperv.c
-> > @@ -3225,8 +3225,10 @@ static int hv_pci_enter_d0(struct hv_device
-> *hdev)
-> >  	struct pci_bus_d0_entry *d0_entry;
-> >  	struct hv_pci_compl comp_pkt;
-> >  	struct pci_packet *pkt;
-> > +	bool retry =3D true;
-> >  	int ret;
-> >
-> > +enter_d0_retry:
-> >  	/*
-> >  	 * Tell the host that the bus is ready to use, and moved into the
-> >  	 * powered-on state.  This includes telling the host which region @@
-> > -3253,6 +3255,38 @@ static int hv_pci_enter_d0(struct hv_device *hdev)
-> >  	if (ret)
-> >  		goto exit;
-> >
-> > +	/*
-> > +	 * In certain case (Kdump) the pci device of interest was
-> > +	 * not cleanly shut down and resource is still held on host
-> > +	 * side, the host could return invalid device status.
-> > +	 * We need to explicitly request host to release the resource
-> > +	 * and try to enter D0 again.
-> > +	 */
-> > +	if (comp_pkt.completion_status < 0 && retry) {
-> > +		retry =3D false;
-> > +
-> > +		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> > +
-> > +		/*
-> > +		 * Hv_pci_bus_exit() calls hv_send_resource_released()
-> > +		 * to free up resources of its child devices.
-> > +		 * In the kdump kernel we need to set the
-> > +		 * wslot_res_allocated to 255 so it scans all child
-> > +		 * devices to release resources allocated in the
-> > +		 * normal kernel before panic happened.
-> > +		 */
-> > +		hbus->wslot_res_allocated =3D 255;
-> > +
-> > +		ret =3D hv_pci_bus_exit(hdev, true);
-> > +
-> > +		if (ret =3D=3D 0) {
-> > +			kfree(pkt);
-> > +			goto enter_d0_retry;
-> > +		}
-> > +		dev_err(&hdev->device,
-> > +			"Retrying D0 failed with ret %d\n", ret);
-> > +	}
-> > +
-> >  	if (comp_pkt.completion_status < 0) {
-> >  		dev_err(&hdev->device,
-> >  			"PCI Pass-through VSP failed D0 Entry with
-> status %x\n", @@
-> > -3493,7 +3527,6 @@ static int hv_pci_probe(struct hv_device *hdev,
-> >  	struct hv_pcibus_device *hbus;
-> >  	u16 dom_req, dom;
-> >  	char *name;
-> > -	bool enter_d0_retry =3D true;
-> >  	int ret;
-> >
-> >  	/*
-> > @@ -3633,47 +3666,11 @@ static int hv_pci_probe(struct hv_device *hdev,
-> >  	if (ret)
-> >  		goto free_fwnode;
-> >
-> > -retry:
-> >  	ret =3D hv_pci_query_relations(hdev);
-> >  	if (ret)
-> >  		goto free_irq_domain;
-> >
-> >  	ret =3D hv_pci_enter_d0(hdev);
-> > -	/*
-> > -	 * In certain case (Kdump) the pci device of interest was
-> > -	 * not cleanly shut down and resource is still held on host
-> > -	 * side, the host could return invalid device status.
-> > -	 * We need to explicitly request host to release the resource
-> > -	 * and try to enter D0 again.
-> > -	 * Since the hv_pci_bus_exit() call releases structures
-> > -	 * of all its child devices, we need to start the retry from
-> > -	 * hv_pci_query_relations() call, requesting host to send
-> > -	 * the synchronous child device relations message before this
-> > -	 * information is needed in hv_send_resources_allocated()
-> > -	 * call later.
-> > -	 */
-> > -	if (ret =3D=3D -EPROTO && enter_d0_retry) {
-> > -		enter_d0_retry =3D false;
-> > -
-> > -		dev_err(&hdev->device, "Retrying D0 Entry\n");
-> > -
-> > -		/*
-> > -		 * Hv_pci_bus_exit() calls hv_send_resources_released()
-> > -		 * to free up resources of its child devices.
-> > -		 * In the kdump kernel we need to set the
-> > -		 * wslot_res_allocated to 255 so it scans all child
-> > -		 * devices to release resources allocated in the
-> > -		 * normal kernel before panic happened.
-> > -		 */
-> > -		hbus->wslot_res_allocated =3D 255;
-> > -		ret =3D hv_pci_bus_exit(hdev, true);
-> > -
-> > -		if (ret =3D=3D 0)
-> > -			goto retry;
-> > -
-> > -		dev_err(&hdev->device,
-> > -			"Retrying D0 failed with ret %d\n", ret);
-> > -	}
-> >  	if (ret)
-> >  		goto free_irq_domain;
-> >
-> > --
-> > 2.25.1
+> Yes, deprecation would answer to my question.
 
-Looks good to me. Thanks for fixing this.
+Okay, great. Sumit, you can resolve this by adding a "deprecated: true"
+to the EMC's nvidia,bpmp property schema. In the driver we can then try
+to look at the MC's ->bpmp and if it exists reuse that. If it doesn't
+exist, we can keep the existing lookup as a fallback for device trees
+that haven't been updated yet.
 
-Wei
+--SOqUr+gSHmGMXo04
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQi4gkACgkQ3SOs138+
+s6G2ZxAAwuGkypHqrXA4QgRFLPxekiFsfb7hu4WNZB/Jrz4Lmvpay4dmkKjHSLA9
+cKJUd3WIGmWES3R9F8xKMFS75/novPJukcYSS9a4X3t3xxYlq7hLgNd9fOcbDkOX
+v2nxKJ616/Ay3Ili6JlD845nmvnBxd1MWkjsF/i6khyJ7k48x1mD5GIJT/J3CXE/
+ikuC7FqzWV2hllEJlqdGu0Y6xzo+84w3sf5BfIvWT4Wvi+LjqJvDfeA7l4nEh9h9
+xRjimc2eqsJ8YXF4Lpwcw30raeYvkBqd7N+dtAa5emU61hi8po1OH+VEmhB2qISw
+UdciYir/o51oDPboXtMguc3Ei13eYNOrYqjwbPXsewCaWF99jR5nQrNDB/It1Kq7
+KJ3P44Qv4x1RMMbWX+cSOtyH+kb9XXJZV1saTu/ns9U+3x54OMM+JGWKCi4ifbJh
+QQk2F0tqdGLmxuCtBL0+AowthUOoK13Zw3jAjsRS1F7suOcqV1kyyl+cmQmCu+sl
+keKQpdLGxlrPRN/mzsLGM3nNLFW0bRtiKO3SLZLp6G3IGE55Ec9qotGN20kUyQVy
+5C0hrICmnEXI4aHt4FCJkiOp55TS9xHO4Nf59oKXJICR8xMHmjQDFf27VaYXKTXR
+FrRHds32doXBh0bnV2S4+7m0/QCjPGQHoXXG/xsFkYnv5TPFOgg=
+=B8Lm
+-----END PGP SIGNATURE-----
+
+--SOqUr+gSHmGMXo04--
