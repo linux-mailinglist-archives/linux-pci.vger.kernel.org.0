@@ -2,59 +2,59 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8CD66CC0C3
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 15:29:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC73F6CC0CC
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 15:29:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbjC1N3H (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 09:29:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48818 "EHLO
+        id S232647AbjC1N3y (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 09:29:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229812AbjC1N3G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 09:29:06 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AC6CA273
-        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 06:29:04 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id s20so12569516ljp.1
-        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 06:29:04 -0700 (PDT)
+        with ESMTP id S233095AbjC1N3q (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 09:29:46 -0400
+Received: from mail-lf1-x133.google.com (mail-lf1-x133.google.com [IPv6:2a00:1450:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A62EBDF5
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 06:29:41 -0700 (PDT)
+Received: by mail-lf1-x133.google.com with SMTP id c9so5403440lfb.1
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 06:29:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680010142;
+        d=linaro.org; s=google; t=1680010179;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=AYY5Dr1Z1I9hb8CrXHC9U6DlzlFB2ypBISlRnxmPY3I=;
-        b=LSUtWT/AWGybRwLerH/91aATgi4rurZprloou1LoGbGck955eT2qPbsBESu3GGovM1
-         Ef82KFLSrfncXdZPa+HO0VHz6/FWeQDOYPZtXTBvOcftd29V/kbshbm89jeOhdgNv72z
-         tIBltFQthZyxbP6DnlXHUCQvj7zsXrtmWMZmNso1w1Vz49P7zG/ASg7HQ7r4ifogj/ws
-         eRl3o9x5JWVcUPqx5/Wt8dKS6a6guAPmnjP/QFyjmsxcN542w9RqBqdCOFTBbSRGNeMg
-         tJ/FR4tWEHOoOd6iME5heju7i64W4GuYfqI6w2KVY5O6997+lc7nztRn7DyHHjQcYCvg
-         3g2A==
+        bh=1WbYAhbTJCq9CpwMXXHWoOEY+JTfgn6zXdroTgNd+uI=;
+        b=riY9k7ACEoIZdlsXIAzsYHPCzH86Z6OwmYLjuVX3Hg5rObvWIduAguy+SzEEUwiwK+
+         bIzhFOtD/cv9k03LyLZBNFc/okm8XvA8Ay1MWaL65ubpIqqSznWnQWr8KhCThgRi/lHU
+         m7vyfIBmwbbnVNVLbwyZEi8UOSGC3U/HGPwVKqxTINS04zNvpsuH2S/dprENXyxWPnzg
+         u8V1+wZrq1AfMQl74mstjxE0EFFtkXTLMEiNLYLYOXOM9VzGmM/GJUjgOahev7L77Kn5
+         oTb8HA7ddm07TqbySYMkmlVlsLhZWDzvtT1BbGCm9uXm3roPF0t9V6fgaRfWp2WnDh3F
+         dRFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680010142;
+        d=1e100.net; s=20210112; t=1680010179;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AYY5Dr1Z1I9hb8CrXHC9U6DlzlFB2ypBISlRnxmPY3I=;
-        b=j12YlpY+U9km+8iwqXVKSapab6IZ9CTWlVVrzOTy8XLBdQroPGlM3REJvzT5LBPV7V
-         ISToh9eGy6IfGbfdPlLCwN37OPIjEOFGysqF5r4Ft2744LNpaTBMDMJoQMrWFwf4czHD
-         JR7+nm19I4f28wk54RTyrBhrE2n4hMOuCO2ynbamO6fHKeGqVJZ3RRLmYPiFmlfF2zf+
-         khpWe11dOdpr7GawaeuGFwBoysmo6UmFIm1w4nLXT8GZq1lmkOX4fIHQuqwRIwRfgQE5
-         Wm7Fy6xRFXA2EEfE6heNMiVQReMbSTP61WkB0htDQW6wz5vkpxk8dg7vm6EE6bpR7lXf
-         Cjxg==
-X-Gm-Message-State: AAQBX9dlsbFg0golGbWOz52JDMnmJCqv6ULzcSMh4f9tI2bKdE0EcQfC
-        dAm5YCPgulrGRebmzrrC1J6xew==
-X-Google-Smtp-Source: AKy350YAExXR6RZ2krFV7pgEcgdlDZBlWD13Eq4CYLuYxlMIcsU/t+DkcS1rzXhKdXibAB8k4462cA==
-X-Received: by 2002:a2e:9a8e:0:b0:2a0:7d07:edba with SMTP id p14-20020a2e9a8e000000b002a07d07edbamr5228469lji.43.1680010142574;
-        Tue, 28 Mar 2023 06:29:02 -0700 (PDT)
+        bh=1WbYAhbTJCq9CpwMXXHWoOEY+JTfgn6zXdroTgNd+uI=;
+        b=uSl+DSsp3LWvnM166HmebfjwjbS5pV8rmiupu6NfmBjCKxvCxXCThQHOOswh4rRir+
+         cgGjm0uUJY0yQj4KsB0h2o4rcg9W4SRISuNRxipgMMqYL2zWBb4STg32qhzoihtEoGV9
+         NYJUraXK+2G/q4NifNNEjIGpvJ0Kiw8tRUqyrW0EHKaRqVm855/LMvMgIlTwXlz77vWz
+         CMOUUQYHYod+YNsySeytjHqysen015OkbXjKmNbcF+7u75fAZg9rLw/WIZltmW00KRWd
+         FKRdfCIFeokoCJ8AEYq0dL8jBJFeaCLW6irpUGKgQ8hkApsl7fTsXUUjEkPXX5cpe8Nn
+         GIVA==
+X-Gm-Message-State: AAQBX9fPwAMxC5LWM/cb2CKy1Bb/F1+K0H3Y28OymFWa5C81qxBMIwCi
+        KoxNKztQzrA8p34tanpzUnobXw==
+X-Google-Smtp-Source: AKy350aI9Nosdzm7Da1+tRI3ckrPMOkF/SZUZmTk6ZU0G1m/sSinzGQCdwI8yBEQKu2hL/2VJBY2lQ==
+X-Received: by 2002:ac2:549a:0:b0:4de:ca63:b2d9 with SMTP id t26-20020ac2549a000000b004deca63b2d9mr4125954lfk.49.1680010179704;
+        Tue, 28 Mar 2023 06:29:39 -0700 (PDT)
 Received: from [192.168.1.101] (abxj225.neoplus.adsl.tpnet.pl. [83.9.3.225])
-        by smtp.gmail.com with ESMTPSA id n12-20020a2e904c000000b00299f0194108sm5049811ljg.31.2023.03.28.06.29.00
+        by smtp.gmail.com with ESMTPSA id f24-20020ac25338000000b004e8448de1c0sm5116024lfh.10.2023.03.28.06.29.38
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Mar 2023 06:29:02 -0700 (PDT)
-Message-ID: <76c5b46c-82d6-847c-aaca-7380d310d012@linaro.org>
-Date:   Tue, 28 Mar 2023 15:29:00 +0200
+        Tue, 28 Mar 2023 06:29:39 -0700 (PDT)
+Message-ID: <5beab308-a114-745b-fa28-84ca0495f539@linaro.org>
+Date:   Tue, 28 Mar 2023 15:29:38 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v4 2/5] ARM: dts: qcom: sdx65: Add support for PCIe PHY
+Subject: Re: [PATCH v4 3/5] ARM: dts: qcom: sdx65: Add support for PCIe EP
 Content-Language: en-US
 To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
         andersson@kernel.org, lee@kernel.org, robh+dt@kernel.org,
@@ -64,9 +64,9 @@ To:     Rohit Agarwal <quic_rohiagar@quicinc.com>, agross@kernel.org,
 Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 References: <1679036039-27157-1-git-send-email-quic_rohiagar@quicinc.com>
- <1679036039-27157-3-git-send-email-quic_rohiagar@quicinc.com>
+ <1679036039-27157-4-git-send-email-quic_rohiagar@quicinc.com>
 From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <1679036039-27157-3-git-send-email-quic_rohiagar@quicinc.com>
+In-Reply-To: <1679036039-27157-4-git-send-email-quic_rohiagar@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -82,56 +82,99 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 On 17.03.2023 07:53, Rohit Agarwal wrote:
-> Add devicetree support for PCIe PHY used in SDX65 platform. This PHY is
-> used by the PCIe EP controller.
+> Add support for PCIe Endpoint controller on the
+> Qualcomm SDX65 platform.
 > 
 > Signed-off-by: Rohit Agarwal <quic_rohiagar@quicinc.com>
 > ---
+>  arch/arm/boot/dts/qcom-sdx65.dtsi | 56 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom-sdx65.dtsi
+> index 084daf8..a7d8ad9 100644
+> --- a/arch/arm/boot/dts/qcom-sdx65.dtsi
+> +++ b/arch/arm/boot/dts/qcom-sdx65.dtsi
+> @@ -11,6 +11,7 @@
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/power/qcom-rpmpd.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+> +#include <dt-bindings/gpio/gpio.h>
+This should be sorted alphabetically
+
+Other than that:
+
 Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
->  arch/arm/boot/dts/qcom-sdx65.dtsi | 31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-sdx65.dtsi b/arch/arm/boot/dts/qcom-sdx65.dtsi
-> index 192f9f9..084daf8 100644
-> --- a/arch/arm/boot/dts/qcom-sdx65.dtsi
-> +++ b/arch/arm/boot/dts/qcom-sdx65.dtsi
-> @@ -293,6 +293,37 @@
+>  
+>  / {
+>  	#address-cells = <1>;
+> @@ -293,6 +294,56 @@
 >  			status = "disabled";
 >  		};
 >  
-> +		pcie_phy: phy@1c06000 {
-> +			compatible = "qcom,sdx65-qmp-gen4x2-pcie-phy";
-> +			reg = <0x01c06000 0x2000>;
+> +		pcie_ep: pcie-ep@1c00000 {
+> +			compatible = "qcom,sdx65-pcie-ep", "qcom,sdx55-pcie-ep";
+> +			reg = <0x01c00000 0x3000>,
+> +			      <0x40000000 0xf1d>,
+> +			      <0x40000f20 0xa8>,
+> +			      <0x40001000 0x1000>,
+> +			      <0x40200000 0x100000>,
+> +			      <0x01c03000 0x3000>;
+> +			reg-names = "parf",
+> +				    "dbi",
+> +				    "elbi",
+> +				    "atu",
+> +				    "addr_space",
+> +				    "mmio";
 > +
-> +			clocks = <&gcc GCC_PCIE_AUX_PHY_CLK_SRC>,
+> +			qcom,perst-regs = <&tcsr 0xb258 0xb270>;
+> +
+> +			clocks = <&gcc GCC_PCIE_AUX_CLK>,
 > +				 <&gcc GCC_PCIE_CFG_AHB_CLK>,
-> +				 <&gcc GCC_PCIE_0_CLKREF_EN>,
-> +				 <&gcc GCC_PCIE_RCHNG_PHY_CLK>,
-> +				 <&gcc GCC_PCIE_PIPE_CLK>;
+> +				 <&gcc GCC_PCIE_MSTR_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_SLV_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_SLV_Q2A_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_SLEEP_CLK>,
+> +				 <&gcc GCC_PCIE_0_CLKREF_EN>;
 > +			clock-names = "aux",
-> +				      "cfg_ahb",
-> +				      "ref",
-> +				      "rchng",
-> +				      "pipe";
+> +				      "cfg",
+> +				      "bus_master",
+> +				      "bus_slave",
+> +				      "slave_q2a",
+> +				      "sleep",
+> +				      "ref";
 > +
-> +			resets = <&gcc GCC_PCIE_PHY_BCR>;
-> +			reset-names = "phy";
+> +			interrupts = <GIC_SPI 140 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "global", "doorbell";
 > +
-> +			assigned-clocks = <&gcc GCC_PCIE_RCHNG_PHY_CLK>;
-> +			assigned-clock-rates = <100000000>;
+> +			resets = <&gcc GCC_PCIE_BCR>;
+> +			reset-names = "core";
 > +
 > +			power-domains = <&gcc PCIE_GDSC>;
 > +
-> +			#clock-cells = <0>;
-> +			clock-output-names = "pcie_pipe_clk";
+> +			phys = <&pcie_phy>;
+> +			phy-names = "pcie-phy";
 > +
-> +			#phy-cells = <0>;
+> +			max-link-speed = <3>;
+> +			num-lanes = <2>;
 > +
 > +			status = "disabled";
 > +		};
 > +
->  		tcsr_mutex: hwlock@1f40000 {
->  			compatible = "qcom,tcsr-mutex";
->  			reg = <0x01f40000 0x40000>;
+>  		pcie_phy: phy@1c06000 {
+>  			compatible = "qcom,sdx65-qmp-gen4x2-pcie-phy";
+>  			reg = <0x01c06000 0x2000>;
+> @@ -330,6 +381,11 @@
+>  			#hwlock-cells = <1>;
+>  		};
+>  
+> +		tcsr: syscon@1fcb000 {
+> +			compatible = "qcom,sdx65-tcsr", "syscon";
+> +			reg = <0x01fc0000 0x1000>;
+> +		};
+> +
+>  		remoteproc_mpss: remoteproc@4080000 {
+>  			compatible = "qcom,sdx55-mpss-pas";
+>  			reg = <0x04080000 0x4040>;
