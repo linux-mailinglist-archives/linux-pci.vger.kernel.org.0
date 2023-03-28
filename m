@@ -2,94 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B7EE6CB925
-	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 10:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 265906CBA85
+	for <lists+linux-pci@lfdr.de>; Tue, 28 Mar 2023 11:26:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230210AbjC1IQ1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 04:16:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35136 "EHLO
+        id S230014AbjC1J0r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 05:26:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbjC1IQ0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 04:16:26 -0400
-Received: from mail-oa1-x2b.google.com (mail-oa1-x2b.google.com [IPv6:2001:4860:4864:20::2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41DB5CE;
-        Tue, 28 Mar 2023 01:16:24 -0700 (PDT)
-Received: by mail-oa1-x2b.google.com with SMTP id 586e51a60fabf-17aceccdcf6so11909656fac.9;
-        Tue, 28 Mar 2023 01:16:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679991383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=87X9ZkFCz+nWjHFUU9neYnPepxiKhU+4s5IIENKefkE=;
-        b=XqRXTLIDH+d8jGkWT+UamzN9mK9cyMS+sVeejaEs9FzwUhBVu+ha5MVBx6FUBUR5ho
-         3+boQZBZnkYE6nuC8VKWyy8PEKObtEXRpzcZfmu699D1jpg8BBBjwljUvx7uLQymSeXT
-         L4J/t5cawjoUMpSpSn0NtwVzTjrLMsKc932Hoa4wvEc0GTyQiGKbiechZjYMTa6qjgIS
-         PHQ9jULwV20nqDPaO3PaZkXawiVm+N4IH3ZUvnCCVJdcMtdYmxGjw/1qeELSVmRMi3hg
-         EmL3GJPdT2fR6LnE1sAusVO0XX6LQt6kQwlRnTMacyIr0H+/YiXNIK8U7/lZ4UVjamXU
-         LmkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679991383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=87X9ZkFCz+nWjHFUU9neYnPepxiKhU+4s5IIENKefkE=;
-        b=uWUI5BqnZwFOKV4KulFl+yAdkV+uVhEnJzV4ZcQSxdM1F56pN+KTmd2CEmhtCd/kka
-         BB6TxsSreW+6IDU+WydSummUNZZk3vE7wkAdbghrSotcJPvlRT9Xb+sRBb3Uwesj3OY+
-         0FSGLgM5+U9RIrT2NkVUY7bC/raoX7e9zLN+oIotUbUbu9fd31QNYw+f5sxVX4Gg1t3i
-         SIbSTXiYmZGPZlTPLrC62nSFI9spUfOo8XubWyxov/BP1mPGAHaCDfkcr7NDhzZ6kV8x
-         LY/7B4kt0bNeZSyGR92Co7bYjRK6hX+TMw2h6PvwICIx2O0mNOceCu+yFrsKfLAWnmxO
-         aLOA==
-X-Gm-Message-State: AAQBX9dnttftFnxAFtcUXomjUboqPA7YKJ2rT0OSEhjXG9yqVJmVGUQq
-        opy2TA30v9COPa4G3h3Jsx8qqmrznbVcY4GdBfB2+kaG
-X-Google-Smtp-Source: AKy350agJJy6E4uLTGCdxNgAVH3OycAPy3Npuh1oYI5LummV384k4rQJ8pcuav3gMk0R90u5lCioT+RKEUls8oTmGgU=
-X-Received: by 2002:a05:6871:8a93:b0:17e:8a64:3dab with SMTP id
- tm19-20020a0568718a9300b0017e8a643dabmr4886341oab.0.1679991383532; Tue, 28
- Mar 2023 01:16:23 -0700 (PDT)
+        with ESMTP id S229975AbjC1J0r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 05:26:47 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 599FC5254
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 02:26:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679995606; x=1711531606;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Wxpr0lrBVHFn4kP8ssjA1G+iK64rwUmpuP+XcFiaqCc=;
+  b=Oyh9m3+nW9onXNw4VLWo2R2ngZN2FIChUZ29JV51hSby7+Mh9bbt7QJ4
+   c9VVV5/7KTWa7m1ci+FMaS1rzOksm0i5ml3gAedn28n39097pFyBE6Qma
+   ju+EC6ghfQgrtMaDGyDYwhy2xwgdQNR/MwXx9UkmjEZZkaHOB/UznOwIZ
+   Sy3nyphCtU9vqd4Y0fRACrJau+lud7dH7PmOgOZSpTkQ7myDDMrD3YTvA
+   7qkl2o6lewTblOf5VRA4y8YFNvVDJdsZTD0IeXN5HrqJqZKcpn+oosAmC
+   KPH0b7FnYYpew0fs6zkTMBprjH7FhGF5RKGsN3+AOikNO5O3ElyDszR0Y
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="320169446"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="320169446"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Mar 2023 02:26:46 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10662"; a="929793112"
+X-IronPort-AV: E=Sophos;i="5.98,296,1673942400"; 
+   d="scan'208";a="929793112"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga006.fm.intel.com with ESMTP; 28 Mar 2023 02:26:43 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id C02B479C; Tue, 28 Mar 2023 12:26:43 +0300 (EEST)
+Date:   Tue, 28 Mar 2023 12:26:43 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
+        Chris Chiu <chris.chiu@canonical.com>,
+        linux-pci@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Sheng Bi <windy.bi.enflame@gmail.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Stanislav Spassov <stanspas@amazon.de>,
+        Yang Su <yang.su@linux.alibaba.com>, shuo.tan@linux.alibaba.com
+Subject: Re: [PATCH] PCI/PM: Wait longer after reset when active link
+ reporting is supported
+Message-ID: <20230328092643.GF33314@black.fi.intel.com>
+References: <20230327094250.GC33314@black.fi.intel.com>
+ <20230327144050.GA2835405@bhelgaas>
 MIME-Version: 1.0
-References: <20230324073733.1596231-1-sergio.paracuellos@gmail.com> <167967244960.22956.2019560168018857203.b4-ty@kernel.org>
-In-Reply-To: <167967244960.22956.2019560168018857203.b4-ty@kernel.org>
-From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date:   Tue, 28 Mar 2023 10:16:11 +0200
-Message-ID: <CAMhs-H_MtWqQb_Vmi0=artXc3bRYZFzezjkiFu_Hb+Uo0KyXwA@mail.gmail.com>
-Subject: Re: [PATCH] PCI: mt7621: Use dev_info for PCIe no card plugged on
- port trace
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, robh@kernel.org,
-        matthias.bgg@gmail.com, kw@linux.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230327144050.GA2835405@bhelgaas>
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 4:41=E2=80=AFPM Lorenzo Pieralisi <lpieralisi@kerne=
-l.org> wrote:
->
-> On Fri, 24 Mar 2023 08:37:33 +0100, Sergio Paracuellos wrote:
-> > When there is no card plugged on PCIe port a trace that says the port w=
-ill
-> > be disabled appears. This is expected behaviour but currently is using
-> > 'dev_err' for doing that. Since this is not an error at all, change the
-> > trace to use 'dev_info' instead.
-> >
-> >
->
-> Applied to controller/mt7621, thanks!
->
-> [1/1] PCI: mt7621: Use dev_info for PCIe no card plugged on port trace
->       https://git.kernel.org/pci/pci/c/50233e105a03
->
-> Thanks,
-> Lorenzo
+On Mon, Mar 27, 2023 at 09:40:50AM -0500, Bjorn Helgaas wrote:
+> On Mon, Mar 27, 2023 at 12:42:50PM +0300, Mika Westerberg wrote:
+> > On Sun, Mar 26, 2023 at 08:22:07AM +0200, Lukas Wunner wrote:
+> > > On Wed, Mar 22, 2023 at 05:16:24PM -0500, Bjorn Helgaas wrote:
+> > > > On Tue, Mar 21, 2023 at 11:50:31AM +0200, Mika Westerberg wrote:
+> 
+> > > > After ac91e6980563, we called pci_bridge_wait_for_secondary_bus() with
+> > > > timeouts of either:
+> > > > 
+> > > >   60s for reset (pci_bridge_secondary_bus_reset() or
+> > > >       dpc_reset_link()), or
+> > > > 
+> > > >    1s for resume (pci_pm_resume_noirq() or pci_pm_runtime_resume() via
+> > > >       pci_pm_bridge_power_up_actions())
+> > > > 
+> > > > If I'm reading this right, the main changes of this patch are:
+> > > > 
+> > > >   - For slow links (<= 5 GT/s), we sleep 100ms, then previously waited
+> > > >     up to 1s (resume) or 60s (reset) for the device to be ready.  Now
+> > > >     we will wait a max of 1s for both resume and reset.
+> > > > 
+> > > >   - For fast links (> 5 GT/s) we wait up to 100ms for the link to come
+> > > >     up and fail if it does not.  If the link did come up in 100ms, we
+> > > >     previously waited up to 1s (resume) or 60s (reset).  Now we will
+> > > >     wait up to 60s for both resume and reset.
+> > > > 
+> > > > So this *reduces* the time we wait for slow links after reset, and
+> > > > *increases* the time for fast links after resume.  Right?
+> > > 
+> > > Good point.  So now the wait duration hinges on the link speed
+> > > rather than reset versus resume.
+> > > ...
+> 
+> > I can update the patch accordingly.
+> 
+> If you do an update, is it possible to split into two patches so one
+> increases the time for resume for fast links and the other decreases
+> the time for reset on slow links?  I'm thinking about potential debug
+> efforts where it might be easier to untangle things if they are
+> separate.
 
-Thanks, Lorenzo!
-
-Best regards,
-    Sergio Paracuellos
+Yes, sure.
