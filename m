@@ -2,260 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BF3B6CEE70
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:02:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B6AD6CEE95
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:05:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230349AbjC2QBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 12:01:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59598 "EHLO
+        id S230434AbjC2QEy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 12:04:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230350AbjC2QB3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:01:29 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C5E6E82;
-        Wed, 29 Mar 2023 09:00:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YwuOYPcqsF1jq+r3Pv4xcn3T6uQ9Vfp+TGeZG7SEHb/qIAXV8gpzMD3NwUHCmCuYa39nEdBwQ1jhbfFg8/bRTnZuwIRDX10cy15gkETOOaHw6K4q6l++glQSPK8mf91B1EB6N5MtSaZqJDBRfftyvYsIk6VvM3lgorhBcKNG/lsIKBgFnK9Vv48+ghFdOkoBWSRX4DMRco2rtYaBt+S02AFwzYD3JOzAcMA6UM8FyvgBElDVl2J6TPKjBRmQ3a4NlORBzpG/qa+UxnmuThEB8q/691RtMSzGXGkHUjlcMAoK0kwicmiI1zQUdjHfMcmdcB91toluHejDE2ClaGqZfQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6IzTMCj6XqJuPKvMAINOCQ6Dx1LWIB46PBhf6uZX1m4=;
- b=Z7d8xoTlzMivbiza1q8rQtStANmBErkzGAvpH7C7TS5JyvzPjM0tRb+GbgFhjMwU+Nl535SI4jm/Y7nOPJlKr4gi6YulB4E9o7BYYDS6g98NFAH5nyvPTmbS/JQAMlRUU2lh9X6slpROQu5ZdHomIDMPMUUPvTzAqq3Wc5wBZ2mcIdfJ/Un2iED5cQLQH9mS2gRy6eu05aDGRXppAIC1QZTnLjtEgdmvKO10Xo1FIkaFjdG8ALuv/MSIKt9bRk9YeuTm6GXC5nqU/YBs+KOIWOSNMAklvU/I4ExUIJ+JNQyTxSa5fMBJlaH+obCOQDloWM0CU7xGd3C/bJPYvnVbHQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6IzTMCj6XqJuPKvMAINOCQ6Dx1LWIB46PBhf6uZX1m4=;
- b=QRVF0USKCbfTCcsy/GwsU9OPp1H30yXsdMJ7g6r7DmAG3jTs3kWdcsq4U+gll/cuFuy+sgDA5Xe3K/H/DVAWmdtp+jVYyRPYFVhgzEtsVfeaZtUhtYHpbRvhU8qS1TDDRYcjrFFdL854b1UHxe3i0HGteKGUJpcLPTvbPBc/1co=
-Received: from BN8PR15CA0057.namprd15.prod.outlook.com (2603:10b6:408:80::34)
- by DM4PR12MB5054.namprd12.prod.outlook.com (2603:10b6:5:389::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.33; Wed, 29 Mar
- 2023 16:00:06 +0000
-Received: from BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:80:cafe::3c) by BN8PR15CA0057.outlook.office365.com
- (2603:10b6:408:80::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.20 via Frontend
- Transport; Wed, 29 Mar 2023 16:00:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BN8NAM11FT112.mail.protection.outlook.com (10.13.176.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6222.22 via Frontend Transport; Wed, 29 Mar 2023 16:00:05 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 29 Mar
- 2023 11:00:01 -0500
-Date:   Wed, 29 Mar 2023 17:59:58 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
-        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
-        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
-        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH v2 4/5] cxl/pci: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <ZCRgfoXxsx8jHVCu@rric.localdomain>
-References: <ZCIPuPM+LZsOFIIZ@rric.localdomain>
- <20230328172104.GA2897826@bhelgaas>
+        with ESMTP id S229799AbjC2QE0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:04:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A05FE7AB2;
+        Wed, 29 Mar 2023 09:03:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE95561D84;
+        Wed, 29 Mar 2023 16:01:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12245C4339C;
+        Wed, 29 Mar 2023 16:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680105706;
+        bh=qcGyMMCG8q3oX9EluJ05zNrLVr7y0RS2BMSTWFdWbQY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qxD6mvs25qUC0Aygv94Xhxqz08OMzsiT1hKKAi4XfIMhuqZ434Y4B/CbTB+wU80iJ
+         QXs6xzzaM1sqCficfrFMsDwIEJNpRu061PyhK2Qwq9lftS8gwzEfkC+qHW3i5n4zrt
+         MHBq9Bg1POuxqwoWjU5NPNfiHMWs06MJ8AKyaAJ2SJ42hR08gJ1Ik5vfwH9vP+N61N
+         uXY1ZAK43HMvx8VFsKaA3qYw1E3mCPRy86pBQPtzqR4PjnfsJFhCMj1eUsZd6PTUMm
+         bm8MwHk2ZBMLSY+ozhSDnPM6g6g+T+ZHO/kCR+ynJ7Y7Fg0/raqtSi6awVFwk1tamL
+         apfWbvqB5tVnQ==
+Date:   Wed, 29 Mar 2023 11:01:44 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ido Schimmel <idosch@nvidia.com>
+Cc:     Petr Machata <petrm@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Amit Cohen <amcohen@nvidia.com>, mlxsw@nvidia.com,
+        linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH net-next 6/6] mlxsw: pci: Add support for new reset flow
+Message-ID: <20230329160144.GA2967030@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230328172104.GA2897826@bhelgaas>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT112:EE_|DM4PR12MB5054:EE_
-X-MS-Office365-Filtering-Correlation-Id: c10b1d08-6390-4885-a989-08db306ea9fc
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 68/dFVhbT5Pv0chLN0UC68ndbXEQLNDXKQHYhawaqMeBp0h9za3aEZB4KTVwsz4bymBbnfpMV3PsYn6Xjv+jrFF5gGy53ZLHqYS59+wLjMLyq4KZlK7fGovY84yvUKzQa4BHs+8yyYHR7ZvtlwzSNo/V/64hY4T5Y3/UsB3q4ySdZ94KL6XcADe8mOw+Pk0v/UazBRq08IT2eK1QQqr7rLdzVhleGlzoLKsoty/eA5zi58+pKI/HXOoeWU0hl9YmjoEnGTU8OF8BMdq4dEMGW/dkLJCD+7j94I295Vwr31obCYByTUwe/UfpP5BJf4FWJqyda7N/BOrEmTlKTfnF61iFVR/ReV58o3sL1D5uMGsmQkpLNvC0VOhh5S/RAK1k/2oXlltYCzxaTDvzCXrvhb2BsBKvvERAnvo1dQA8kz3ezUpL3KhxU5lvWvZyNqmR+8A/C6B+IvBTRCuCJJNI8hh3CPUIDr3BT6v8a5ihaJ/hwZWYG0VsXT+i6T6eaYfD75g1oY1qa2HQlQdZ0STqm6HNRdEYlReO88pR+cnzrhTuunvUg1qXJYWpH3rtb2dPlmLjzwgTvz54cHF83Pkp8+h3II22eVpmZ+QvNv0FYsguXFCTbu/aqwPgfethDjuZ8BQzM+eJKBJlegJlChJnh24UlpNbGwBDh0X54DORc4xO0uMOW5wJUhCHWmfMX5Bh7l7K2QMidNvt15wFsacXBFoo3311EROSN5uSWn8LCe0=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(376002)(346002)(451199021)(36840700001)(40470700004)(46966006)(2906002)(7416002)(8936002)(336012)(5660300002)(426003)(47076005)(82310400005)(36860700001)(356005)(55016003)(40480700001)(7696005)(82740400003)(966005)(40460700003)(81166007)(41300700001)(6916009)(4326008)(8676002)(83380400001)(70206006)(186003)(16526019)(54906003)(316002)(70586007)(26005)(9686003)(53546011)(6666004)(478600001)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2023 16:00:05.9032
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c10b1d08-6390-4885-a989-08db306ea9fc
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5054
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <ZCBOdunTNYsufhcn@shredder>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 28.03.23 12:21:04, Bjorn Helgaas wrote:
-> [+cc linux-pci, more error handling folks; beginning of thread at
-> https://lore.kernel.org/all/20230323213808.398039-1-terry.bowman@amd.com/]
-> 
-> On Mon, Mar 27, 2023 at 11:51:39PM +0200, Robert Richter wrote:
-> > On 24.03.23 17:36:56, Bjorn Helgaas wrote:
-> 
-> > > > The CXL device driver is then responsible to
-> > > > enable error reporting in the RCEC's AER cap
+[+cc Alex, Lukas for link-disable reset thoughts, beginning of thread:
+https://lore.kernel.org/all/cover.1679502371.git.petrm@nvidia.com/]
+
+On Sun, Mar 26, 2023 at 04:53:58PM +0300, Ido Schimmel wrote:
+> On Thu, Mar 23, 2023 at 11:51:15AM -0500, Bjorn Helgaas wrote:
+> > On Wed, Mar 22, 2023 at 05:49:35PM +0100, Petr Machata wrote:
+> > > From: Amit Cohen <amcohen@nvidia.com>
 > > > 
-> > > I don't know exactly what you mean by "error reporting in the RCEC's
-> > > AER cap", but IIUC, for non-Root Port devices, generation of ERR_COR/
-> > > ERR_NONFATAL/ERR_FATAL messages is controlled by the Device Control
-> > > register and should already be enabled by pci_aer_init().
-> > > 
-> > > Maybe you mean setting AER mask/severity specifically for Internal
-> > > Errors?  I'm hoping to get as much of AER management as we can in the
+> > > The driver resets the device during probe and during a devlink reload.
+> > > The current reset method reloads the current firmware version or a pending
+> > > one, if one was previously flashed using devlink. However, the reset does
+> > > not take down the PCI link, preventing the PCI firmware from being
+> > > upgraded, unless the system is rebooted.
 > > 
-> > Richt, this is implemented in patch #5 in function
-> > rcec_enable_aer_ints().
-> 
-> I think we should add a PCI core interface for this so we can enforce
-> the AER ownership question (all the crud like pcie_aer_is_native()) in
-> one place.
-
-Do you mean, code around functions rcec_enable_aer_ints() should be
-moved to aer.c and the cxl handler then just assumes it is enabled
-already? That looks feasible.
-
-> 
-> > > PCI core and out of drivers, so maybe we need a new PCI interface to
-> > > do that.
-> > > 
-> > > In any event, I assume this sort of configuration would be an
-> > > enumeration-time thing, while *this* patch is a run-time thing, so
-> > > maybe this information belongs with a different patch?
+> > Just to make sure I understand this correctly, the above sounds like
+> > "firmware" includes two parts that have different rules for loading:
 > > 
-> > Do you mean once a Restricted CXL host (RCH) is detected, the internal
-> > errors should be enabled in the device mask, all this done during
-> > device enumeration? But wouldn't interrupts being enabled then before
-> > the CXL device is ready?
-> 
-> I'm not sure what you mean by "before the CXL device is ready."  What
-> makes a CXL device ready, and how do we know when it is ready?
-
-The cxl_pci driver must be bound to a device which then further
-creates a CXL mem dev. With that binding we can determine the
-connected CXL dports from the cxl endpoints (which are seen as PCIe
-endpoints) to inspect the CXL RAS caps (in the CXL component reg
-space) and the PCIe AER caps (in the RCRB of the dport).
-
-> 
-> pci_aer_init() turns on PCI_EXP_DEVCTL_CERE, PCI_EXP_DEVCTL_FERE, etc
-> as soon as we enumerate the device, before any driver claims the
-> device.  I'm wondering whether we can do this PCI_ERR_COR_INTERNAL and
-> PCI_ERR_UNC_INTN fiddling around the same time?
-
-Yes, if the CXL device is not yet bound, there is no handler attached
-and AER errors are only handled on a PCI level. Though, we need to
-make sure the status is cleared.
-
-> 
-> > > I haven't worked all the way through this, but I thought Sean Kelley's
-> > > and Qiuxu Zhuo's work was along the same line and might cover this,
-> > > e.g.,
-> > > 
-> > >   a175102b0a82 ("PCI/ERR: Recover from RCEC AER errors")
-> > >   579086225502 ("PCI/ERR: Recover from RCiEP AER errors")
-> > >   af113553d961 ("PCI/AER: Add pcie_walk_rcec() to RCEC AER handling")
-> > > 
-> > > But I guess maybe it's not quite the same case?
+> >   - Current reset method is completely mlxsw-specific and resets the
+> >     mlxsw core but not the PCIe interface; this loads only firmware
+> >     part A
 > > 
-> > Actually, we use this code to handle errors that are reported to the
-> > RCEC and only implement here the CXL specifics. That is, checking if
-> > the RCEC receives something from a CXL downstream port and forwarding
-> > that to a CXL handler (this patch). The handler then checks the AER
-> > err cap in the RCRB of all CXL downstream ports associated to the RCEC
-> > (not visible in the PCI hierarchy), but discovered through the :00.0
-> > RCiEP (patch #5).
+> >   - A PCIe reset resets both the mlxsw core and the PCIe interface;
+> >     this loads both firmware part A and part B
 > 
-> There are two calls to pcie_walk_rcec():
+> Yes. A few years ago I had to flash a new firmware in order to test a
+> fix in the PCIe firmware and the bug still reproduced after a devlink
+> reload. Only after a reboot the new PCIe firmware was loaded and the bug
+> was fixed. Bugs in PCIe firmware are not common, but we would like to
+> avoid the scenario where users must reboot the machine in order to load
+> the new firmware.
 > 
->   1) The existing one in find_source_device()
->   2) The one you add in handle_cxl_error()
-> 
-> Does the call in handle_cxl_error() look at devices that the existing
-> call in find_source_device() does not?  I'm trying to understand why
-> we need both calls.
-
-In case of a dport error, e_info will only contain the RCEC's id after
-running find_source_device(). Thus, only the RCEC's handler would be
-called. The portdrv is already bound to the device and currently
-doesn't have a handler attached.
-
-As described, due to cross dependencies between cxl and the portdrv,
-instead of implementing a handler in the portdrv, we decided to
-forward errors to the CXL endpoint driver and handle it there. So now,
-in handle_cxl_error(), we check if the error source is an RCEC
-attached to a CXL bus and we forward everything directly to the CXL
-endpoint handler. pcie_walk_rcec() is used for that.
-
-> 
-> > > > +static bool is_internal_error(struct aer_err_info *info)
-> > > > +{
-> > > > +	if (info->severity == AER_CORRECTABLE)
-> > > > +		return info->status & PCI_ERR_COR_INTERNAL;
-> > > > +
-> > > > +	return info->status & PCI_ERR_UNC_INTN;
-> > > > +}
-> > > > +
-> > > > +static void handle_cxl_error(struct pci_dev *dev, struct aer_err_info *info)
-> > > > +{
-> > > > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> > > > +	    is_internal_error(info))
-> > > 
-> > > What's unique about Internal Errors?  I'm trying to figure out why you
-> > > wouldn't do this for *all* CXL errors.
+> > > To solve this problem, a new reset command (6) was implemented in the
+> > > firmware. Unlike the current command (1), after issuing the new command
+> > > the device will not start the reset immediately, but only after the PCI
+> > > link was disabled. The driver is expected to wait for 500ms before
+> > > re-enabling the link to give the firmware enough time to start the reset.
 > > 
-> > Per CXL specification downstream port errors are signaled using
-> > internal errors. 
+> > I guess the idea here is that the mlxsw driver:
+> > 
+> >   - Tells the firmware we're going to reset
+> >     (MLXSW_REG_MRSR_COMMAND_RESET_AT_PCI_DISABLE)
+> > 
+> >   - Saves PCI config state
+> > 
+> >   - Disables the link (mlxsw_pci_link_toggle()), which causes a PCIe
+> >     hot reset
+> > 
+> >   - The firmware notices the link disable and starts its own internal
+> >     reset
+> > 
+> >   - The mlxsw driver waits 500ms
+> >     (MLXSW_PCI_TOGGLE_WAIT_BEFORE_EN_MSECS)
+> > 
+> >   - Enables link and waits for it to be active
+> >     (mlxsw_pci_link_active_check()
+> > 
+> >   - Waits for device to be ready again (mlxsw_pci_device_id_read())
 > 
-> Maybe a spec reference here to explain is_internal_error()?  Is the
-> point of the check to *exclude* non-internal errors?  Or is basically
-> documentation that there shouldn't ever *be* any non-internal errors?
-> I guess the latter wouldn't make sense because at this point we don't
-> know whether this is a CXL hierarchy.
-
-It is described in CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected
-Errors.
-
-We do not handle errors other than internal ones, this is what the
-check is for. In theory, an RCEC could also throw other kind of
-errors. But, as per spec, once internal error are received from the
-RCEC, the CXL dports need to be inspected.
-
+> Correct.
 > 
-> > All other errors would be device specific, we cannot
-> > handle that in a generic CXL driver.
+> > So the first question is why you don't simply use
+> > pci_reset_function(), since it is supposed to cause a reset and do all
+> > the necessary waiting for the device to be ready.  This is quite
+> > complicated to do correctly; in fact, we still discover issues there
+> > regularly.  There are many special cases in PCIe r6.0, sec 6.6.1, and
+> > it would be much better if we can avoid trying to handle them all in
+> > individual drivers.
 > 
-> I'm missing the point here.  We don't have any device-specific error
-> handling in aer.c; it only connects the generic *reporting* mechanism
-> (AER log registers and Root Port interrupts) to the drivers that do
-> the device-specific things via err_handler hooks.  I assume we want a
-> similar model for CXL.
+> I see that this function takes the device lock and I think (didn't try)
+> it will deadlock if we were to replace the current code with it since we
+> also perform a reset during probe where I believe the device lock is
+> already taken.
+> 
+> __pci_reset_function_locked() is another option, but it assumes the
+> device lock was already taken, which is correct during probe, but not
+> when reset is performed as part of devlink reload.
+> 
+> Let's put the locking issues aside and assume we can use
+> __pci_reset_function_locked(). I'm trying to figure out what it can
+> allow us to remove from the driver in favor of common PCI code. It
+> essentially invokes one of the supported reset methods. Looking at my
+> device, I see the following:
+> 
+>  # cat /sys/class/pci_bus/0000\:01/device/0000\:01\:00.0/reset_method 
+>  pm bus
+> 
+> So I assume it will invoke pci_pm_reset(). I'm not sure it can work for
+> us as our reset procedure requires us to disable the link on the
+> downstream port as a way of notifying the device that it should start
+> the reset procedure.
 
-With device specific I mean implementation defined and not described
-in a specification. The CXL handler is sort of generic as it is
-(solely) implementing the CXL spec. Hope that makes sense.
+Hmmm, pci_pm_reset() puts the device in D3hot, then back to D0.  Spec
+says that results in "undefined internal Function state," which
+doesn't even sound like a guaranteed reset, but it's what we have, and
+in any case, it does not disable the link.
 
-Thanks,
+> We might be able to use the "device_specific" method and add quirks in
+> "pci_dev_reset_methods". However, I'm not sure what would be the
+> benefit, as it basically means moving the code in
+> mlxsw_pci_link_toggle() to drivers/pci/quirks.c. Also, when the "probe"
+> argument is "true" we can't actually determine if this reset method is
+> supported or not, as we can't query that from the configuration space of
+> the device in the current implementation. It's queried using a command
+> interface that is specific to mlxsw and resides in the driver itself.
+> Not usable from drivers/pci/quirks.c.
 
--Robert
+Spec (PCIe r6.0, sec 6.6.1) says "Disabling a Link causes Downstream
+components to undergo a hot reset."  That seems like it *could* be a
+general-purpose method of doing a reset, and I don't know why the PCI
+core doesn't support it.  Added Alex and Lukas in case they know.
 
+But it sounds like there's some wrinkle with your device?  I suppose a
+link disable actually causes a reset, but that reset may not trigger
+the firmware reload you need?  If we had a generic "disable link"
+reset method, maybe a device quirk could disable it if necessary?
+
+> > Of course, pci_reset_function() does *not* include details like
+> > MLXSW_PCI_TOGGLE_WAIT_BEFORE_EN_MSECS.
+> > 
+> > I assume that flashing the firmware to the device followed by a power
+> > cycle (without ever doing MLXSW_REG_MRSR_COMMAND_RESET_AT_PCI_DISABLE)
+> > would load the new firmware everywhere.  Can we not do the same with a
+> > PCIe reset?
+> 
+> Yes, that's what we would like to achieve.
+> 
+> Thanks for the feedback!
