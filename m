@@ -2,186 +2,260 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AEEA6CEE6E
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:02:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BF3B6CEE70
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:02:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjC2QBp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 12:01:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59196 "EHLO
+        id S230349AbjC2QBo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 12:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59598 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231387AbjC2QB2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:01:28 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6661765AF;
+        with ESMTP id S230350AbjC2QB3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:01:29 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2071.outbound.protection.outlook.com [40.107.93.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C5E6E82;
         Wed, 29 Mar 2023 09:00:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CECAFB82381;
-        Wed, 29 Mar 2023 16:00:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EF53C4339E;
-        Wed, 29 Mar 2023 16:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680105600;
-        bh=rjQxDxCR/O6zKa08+oV1tEr6vgekeh2UeTJ+FndCkzw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Z7EDsclj0fBD8N3wk/EsFLwjrE3gVBO6o8hUfImuFxQIyMgY2RYBcR4tqr+oqRI37
-         Z4bI9n0TEYD9jff2WrBl/WAYj34egYCIylADWRTXSLpKvsGPaAUxeCKdCxH3eNTIIc
-         fjcvop67uQVEAZVFFFRVrSqa3hBvdNemQANFucTXUf1L09TWClec7Ys6QogTjFpiyp
-         giDAX5SQ7ChmFfsrparBg8hyzNUKKN6TPY9MasRGLp546ukXB47w5xBSXK2YYYgWs/
-         McMUiL0T/cuHvsGl4FuL+ezY6nKDw0AwHJeMtJD7W7C23FAt64aM65uoTMCl/g6iWB
-         mgHOfvJr2vXSw==
-Received: by mail-yb1-f178.google.com with SMTP id e65so19887236ybh.10;
-        Wed, 29 Mar 2023 09:00:00 -0700 (PDT)
-X-Gm-Message-State: AAQBX9e+qxs6Yu1J/WcMZyrg9QqaO5Zt9WM7R0GK/cKIWX9//B/ZKzUM
-        GgpKH7JvbG915W01D+XKEjxW8ztQd3vNo0HdUg==
-X-Google-Smtp-Source: AKy350bNMRrNnhD+9tcWZMsoKhxrrm0S91c7XAydl/YjKZVnxQbMwJ7oUt7Xe/yyPeIXq4nCu/SBUnBC2EOMFaWxRdk=
-X-Received: by 2002:a05:6902:1204:b0:b77:ae4b:1b27 with SMTP id
- s4-20020a056902120400b00b77ae4b1b27mr9713848ybu.8.1680105599372; Wed, 29 Mar
- 2023 08:59:59 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YwuOYPcqsF1jq+r3Pv4xcn3T6uQ9Vfp+TGeZG7SEHb/qIAXV8gpzMD3NwUHCmCuYa39nEdBwQ1jhbfFg8/bRTnZuwIRDX10cy15gkETOOaHw6K4q6l++glQSPK8mf91B1EB6N5MtSaZqJDBRfftyvYsIk6VvM3lgorhBcKNG/lsIKBgFnK9Vv48+ghFdOkoBWSRX4DMRco2rtYaBt+S02AFwzYD3JOzAcMA6UM8FyvgBElDVl2J6TPKjBRmQ3a4NlORBzpG/qa+UxnmuThEB8q/691RtMSzGXGkHUjlcMAoK0kwicmiI1zQUdjHfMcmdcB91toluHejDE2ClaGqZfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6IzTMCj6XqJuPKvMAINOCQ6Dx1LWIB46PBhf6uZX1m4=;
+ b=Z7d8xoTlzMivbiza1q8rQtStANmBErkzGAvpH7C7TS5JyvzPjM0tRb+GbgFhjMwU+Nl535SI4jm/Y7nOPJlKr4gi6YulB4E9o7BYYDS6g98NFAH5nyvPTmbS/JQAMlRUU2lh9X6slpROQu5ZdHomIDMPMUUPvTzAqq3Wc5wBZ2mcIdfJ/Un2iED5cQLQH9mS2gRy6eu05aDGRXppAIC1QZTnLjtEgdmvKO10Xo1FIkaFjdG8ALuv/MSIKt9bRk9YeuTm6GXC5nqU/YBs+KOIWOSNMAklvU/I4ExUIJ+JNQyTxSa5fMBJlaH+obCOQDloWM0CU7xGd3C/bJPYvnVbHQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=6IzTMCj6XqJuPKvMAINOCQ6Dx1LWIB46PBhf6uZX1m4=;
+ b=QRVF0USKCbfTCcsy/GwsU9OPp1H30yXsdMJ7g6r7DmAG3jTs3kWdcsq4U+gll/cuFuy+sgDA5Xe3K/H/DVAWmdtp+jVYyRPYFVhgzEtsVfeaZtUhtYHpbRvhU8qS1TDDRYcjrFFdL854b1UHxe3i0HGteKGUJpcLPTvbPBc/1co=
+Received: from BN8PR15CA0057.namprd15.prod.outlook.com (2603:10b6:408:80::34)
+ by DM4PR12MB5054.namprd12.prod.outlook.com (2603:10b6:5:389::24) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.33; Wed, 29 Mar
+ 2023 16:00:06 +0000
+Received: from BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:80:cafe::3c) by BN8PR15CA0057.outlook.office365.com
+ (2603:10b6:408:80::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.20 via Frontend
+ Transport; Wed, 29 Mar 2023 16:00:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT112.mail.protection.outlook.com (10.13.176.210) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6222.22 via Frontend Transport; Wed, 29 Mar 2023 16:00:05 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 29 Mar
+ 2023 11:00:01 -0500
+Date:   Wed, 29 Mar 2023 17:59:58 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     Terry Bowman <terry.bowman@amd.com>, <alison.schofield@intel.com>,
+        <vishal.l.verma@intel.com>, <ira.weiny@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <Jonathan.Cameron@huawei.com>,
+        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 4/5] cxl/pci: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <ZCRgfoXxsx8jHVCu@rric.localdomain>
+References: <ZCIPuPM+LZsOFIIZ@rric.localdomain>
+ <20230328172104.GA2897826@bhelgaas>
 MIME-Version: 1.0
-References: <20230329123835.2724518-1-robh@kernel.org> <ef81c9cf-afc6-a186-1984-073030be9b5d@linux.intel.com>
-In-Reply-To: <ef81c9cf-afc6-a186-1984-073030be9b5d@linux.intel.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 29 Mar 2023 10:59:47 -0500
-X-Gmail-Original-Message-ID: <CAL_JsqLLx4chuYDV8eZUTHqCLJ1AbAWg8Ow7w6k2h76FzqEOZw@mail.gmail.com>
-Message-ID: <CAL_JsqLLx4chuYDV8eZUTHqCLJ1AbAWg8Ow7w6k2h76FzqEOZw@mail.gmail.com>
-Subject: Re: [PATCH] PCI: Fix use-after-free in pci_bus_release_domain_nr()
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        Jon Hunter <jonathanh@nvidia.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20230328172104.GA2897826@bhelgaas>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT112:EE_|DM4PR12MB5054:EE_
+X-MS-Office365-Filtering-Correlation-Id: c10b1d08-6390-4885-a989-08db306ea9fc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 68/dFVhbT5Pv0chLN0UC68ndbXEQLNDXKQHYhawaqMeBp0h9za3aEZB4KTVwsz4bymBbnfpMV3PsYn6Xjv+jrFF5gGy53ZLHqYS59+wLjMLyq4KZlK7fGovY84yvUKzQa4BHs+8yyYHR7ZvtlwzSNo/V/64hY4T5Y3/UsB3q4ySdZ94KL6XcADe8mOw+Pk0v/UazBRq08IT2eK1QQqr7rLdzVhleGlzoLKsoty/eA5zi58+pKI/HXOoeWU0hl9YmjoEnGTU8OF8BMdq4dEMGW/dkLJCD+7j94I295Vwr31obCYByTUwe/UfpP5BJf4FWJqyda7N/BOrEmTlKTfnF61iFVR/ReV58o3sL1D5uMGsmQkpLNvC0VOhh5S/RAK1k/2oXlltYCzxaTDvzCXrvhb2BsBKvvERAnvo1dQA8kz3ezUpL3KhxU5lvWvZyNqmR+8A/C6B+IvBTRCuCJJNI8hh3CPUIDr3BT6v8a5ihaJ/hwZWYG0VsXT+i6T6eaYfD75g1oY1qa2HQlQdZ0STqm6HNRdEYlReO88pR+cnzrhTuunvUg1qXJYWpH3rtb2dPlmLjzwgTvz54cHF83Pkp8+h3II22eVpmZ+QvNv0FYsguXFCTbu/aqwPgfethDjuZ8BQzM+eJKBJlegJlChJnh24UlpNbGwBDh0X54DORc4xO0uMOW5wJUhCHWmfMX5Bh7l7K2QMidNvt15wFsacXBFoo3311EROSN5uSWn8LCe0=
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(376002)(346002)(451199021)(36840700001)(40470700004)(46966006)(2906002)(7416002)(8936002)(336012)(5660300002)(426003)(47076005)(82310400005)(36860700001)(356005)(55016003)(40480700001)(7696005)(82740400003)(966005)(40460700003)(81166007)(41300700001)(6916009)(4326008)(8676002)(83380400001)(70206006)(186003)(16526019)(54906003)(316002)(70586007)(26005)(9686003)(53546011)(6666004)(478600001)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2023 16:00:05.9032
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c10b1d08-6390-4885-a989-08db306ea9fc
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT112.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5054
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 10:13=E2=80=AFAM Sathyanarayanan Kuppuswamy
-<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->
->
->
-> On 3/29/23 5:38 AM, Rob Herring wrote:
-> > Commit c14f7ccc9f5d ("PCI: Assign PCI domain IDs by ida_alloc()")
-> > introduced a use-after-free bug in the bus removal cleanup. The issue
-> > was found with kfence:
-> >
-> > [   19.285870] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [   19.293351] BUG: KFENCE: use-after-free read in pci_bus_release_doma=
-in_nr+0x10/0x70
-> >
-> > [   19.302817] Use-after-free read at 0x000000007f3b80eb (in kfence-#11=
-5):
-> > [   19.309677]  pci_bus_release_domain_nr+0x10/0x70
-> > [   19.309691]  dw_pcie_host_deinit+0x28/0x78
-> > [   19.309702]  tegra_pcie_deinit_controller+0x1c/0x38 [pcie_tegra194]
-> > [   19.309734]  tegra_pcie_dw_probe+0x648/0xb28 [pcie_tegra194]
-> > [   19.309752]  platform_probe+0x90/0xd8
-> > [   19.309764]  really_probe+0xb8/0x298
-> > [   19.309777]  __driver_probe_device+0x78/0xd8
-> > [   19.309788]  driver_probe_device+0x38/0x120
-> > [   19.309799]  __device_attach_driver+0x94/0xe0
-> > [   19.309812]  bus_for_each_drv+0x70/0xc8
-> > [   19.309822]  __device_attach+0xfc/0x188
-> > [   19.309833]  device_initial_probe+0x10/0x18
-> > [   19.309844]  bus_probe_device+0x94/0xa0
-> > [   19.309854]  deferred_probe_work_func+0x80/0xb8
-> > [   19.309864]  process_one_work+0x1e0/0x348
-> > [   19.309882]  worker_thread+0x48/0x410
-> > [   19.309891]  kthread+0xf4/0x110
-> > [   19.309904]  ret_from_fork+0x10/0x20
-> >
-> > [   19.311457] kfence-#115: 0x00000000063a155a-0x00000000ba698da8, size=
-=3D1072, cache=3Dkmalloc-2k
-> >
-> > [   19.311469] allocated by task 96 on cpu 10 at 19.279323s:
-> > [   19.311562]  __kmem_cache_alloc_node+0x260/0x278
-> > [   19.311571]  kmalloc_trace+0x24/0x30
-> > [   19.311580]  pci_alloc_bus+0x24/0xa0
-> > [   19.311590]  pci_register_host_bridge+0x48/0x4b8
-> > [   19.311601]  pci_scan_root_bus_bridge+0xc0/0xe8
-> > [   19.311613]  pci_host_probe+0x18/0xc0
-> > [   19.311623]  dw_pcie_host_init+0x2c0/0x568
-> > [   19.311630]  tegra_pcie_dw_probe+0x610/0xb28 [pcie_tegra194]
-> > [   19.311647]  platform_probe+0x90/0xd8
-> > [   19.311653]  really_probe+0xb8/0x298
-> > [   19.311663]  __driver_probe_device+0x78/0xd8
-> > [   19.311672]  driver_probe_device+0x38/0x120
-> > [   19.311682]  __device_attach_driver+0x94/0xe0
-> > [   19.311694]  bus_for_each_drv+0x70/0xc8
-> > [   19.311702]  __device_attach+0xfc/0x188
-> > [   19.311713]  device_initial_probe+0x10/0x18
-> > [   19.311724]  bus_probe_device+0x94/0xa0
-> > [   19.311733]  deferred_probe_work_func+0x80/0xb8
-> > [   19.311743]  process_one_work+0x1e0/0x348
-> > [   19.311753]  worker_thread+0x48/0x410
-> > [   19.311763]  kthread+0xf4/0x110
-> > [   19.311771]  ret_from_fork+0x10/0x20
-> >
-> > [   19.311782] freed by task 96 on cpu 10 at 19.285833s:
-> > [   19.311799]  release_pcibus_dev+0x30/0x40
-> > [   19.311808]  device_release+0x30/0x90
-> > [   19.311814]  kobject_put+0xa8/0x120
-> > [   19.311832]  device_unregister+0x20/0x30
-> > [   19.311839]  pci_remove_bus+0x78/0x88
-> > [   19.311850]  pci_remove_root_bus+0x5c/0x98
-> > [   19.311860]  dw_pcie_host_deinit+0x28/0x78
-> > [   19.311866]  tegra_pcie_deinit_controller+0x1c/0x38 [pcie_tegra194]
-> > [   19.311883]  tegra_pcie_dw_probe+0x648/0xb28 [pcie_tegra194]
-> > [   19.311900]  platform_probe+0x90/0xd8
-> > [   19.311906]  really_probe+0xb8/0x298
-> > [   19.311916]  __driver_probe_device+0x78/0xd8
-> > [   19.311926]  driver_probe_device+0x38/0x120
-> > [   19.311936]  __device_attach_driver+0x94/0xe0
-> > [   19.311947]  bus_for_each_drv+0x70/0xc8
-> > [   19.311956]  __device_attach+0xfc/0x188
-> > [   19.311966]  device_initial_probe+0x10/0x18
-> > [   19.311976]  bus_probe_device+0x94/0xa0
-> > [   19.311985]  deferred_probe_work_func+0x80/0xb8
-> > [   19.311995]  process_one_work+0x1e0/0x348
-> > [   19.312005]  worker_thread+0x48/0x410
-> > [   19.312014]  kthread+0xf4/0x110
-> > [   19.312022]  ret_from_fork+0x10/0x20
-> >
-> > [   19.313579] CPU: 10 PID: 96 Comm: kworker/u24:2 Not tainted 6.2.0 #4
-> > [   19.320171] Hardware name:  /, BIOS 1.0-d7fb19b 08/10/2022
-> > [   19.325852] Workqueue: events_unbound deferred_probe_work_func
-> > [   19.331919] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >
-> > The stack trace is a bit misleading as dw_pcie_host_deinit() doesn't
-> > directly call pci_bus_release_domain_nr(). The issue turns out to be in
-> > pci_remove_root_bus() which first calls pci_remove_bus() which frees th=
-e
-> > struct pci_bus when its struct device is released. Then
-> > pci_bus_release_domain_nr() is called and accesses the freed
-> > struct pci_bus. Reordering these fixes the issue.
->
-> Since time log is not useful, remove it and just add stack trace.
+On 28.03.23 12:21:04, Bjorn Helgaas wrote:
+> [+cc linux-pci, more error handling folks; beginning of thread at
+> https://lore.kernel.org/all/20230323213808.398039-1-terry.bowman@amd.com/]
+> 
+> On Mon, Mar 27, 2023 at 11:51:39PM +0200, Robert Richter wrote:
+> > On 24.03.23 17:36:56, Bjorn Helgaas wrote:
+> 
+> > > > The CXL device driver is then responsible to
+> > > > enable error reporting in the RCEC's AER cap
+> > > 
+> > > I don't know exactly what you mean by "error reporting in the RCEC's
+> > > AER cap", but IIUC, for non-Root Port devices, generation of ERR_COR/
+> > > ERR_NONFATAL/ERR_FATAL messages is controlled by the Device Control
+> > > register and should already be enabled by pci_aer_init().
+> > > 
+> > > Maybe you mean setting AER mask/severity specifically for Internal
+> > > Errors?  I'm hoping to get as much of AER management as we can in the
+> > 
+> > Richt, this is implemented in patch #5 in function
+> > rcec_enable_aer_ints().
+> 
+> I think we should add a PCI core interface for this so we can enforce
+> the AER ownership question (all the crud like pcie_aer_is_native()) in
+> one place.
 
-Actually, it was useful. It told me that the use-after-free happened
-pretty much right after the free.
+Do you mean, code around functions rcec_enable_aer_ints() should be
+moved to aer.c and the cxl handler then just assumes it is enabled
+already? That looks feasible.
 
-Bjorn likes to edit commit messages so I'll leave it up to him to
-leave or change.
+> 
+> > > PCI core and out of drivers, so maybe we need a new PCI interface to
+> > > do that.
+> > > 
+> > > In any event, I assume this sort of configuration would be an
+> > > enumeration-time thing, while *this* patch is a run-time thing, so
+> > > maybe this information belongs with a different patch?
+> > 
+> > Do you mean once a Restricted CXL host (RCH) is detected, the internal
+> > errors should be enabled in the device mask, all this done during
+> > device enumeration? But wouldn't interrupts being enabled then before
+> > the CXL device is ready?
+> 
+> I'm not sure what you mean by "before the CXL device is ready."  What
+> makes a CXL device ready, and how do we know when it is ready?
 
-> Change looks good to me. But I am not sure whether pci_remove_bus()
-> directly frees struct pci_bus or just removes the bus resources?
+The cxl_pci driver must be bound to a device which then further
+creates a CXL mem dev. With that binding we can determine the
+connected CXL dports from the cxl endpoints (which are seen as PCIe
+endpoints) to inspect the CXL RAS caps (in the CXL component reg
+space) and the PCIe AER caps (in the RCRB of the dport).
 
-struct pci_bus embeds a struct device. The struct device is put which
-causes the free of the struct pci_bus. So indirect in that the
-refcounting triggers the free, but direct in that pci_remove_bus()
-causes it.
+> 
+> pci_aer_init() turns on PCI_EXP_DEVCTL_CERE, PCI_EXP_DEVCTL_FERE, etc
+> as soon as we enumerate the device, before any driver claims the
+> device.  I'm wondering whether we can do this PCI_ERR_COR_INTERNAL and
+> PCI_ERR_UNC_INTN fiddling around the same time?
 
-Rob
+Yes, if the CXL device is not yet bound, there is no handler attached
+and AER errors are only handled on a PCI level. Though, we need to
+make sure the status is cleared.
+
+> 
+> > > I haven't worked all the way through this, but I thought Sean Kelley's
+> > > and Qiuxu Zhuo's work was along the same line and might cover this,
+> > > e.g.,
+> > > 
+> > >   a175102b0a82 ("PCI/ERR: Recover from RCEC AER errors")
+> > >   579086225502 ("PCI/ERR: Recover from RCiEP AER errors")
+> > >   af113553d961 ("PCI/AER: Add pcie_walk_rcec() to RCEC AER handling")
+> > > 
+> > > But I guess maybe it's not quite the same case?
+> > 
+> > Actually, we use this code to handle errors that are reported to the
+> > RCEC and only implement here the CXL specifics. That is, checking if
+> > the RCEC receives something from a CXL downstream port and forwarding
+> > that to a CXL handler (this patch). The handler then checks the AER
+> > err cap in the RCRB of all CXL downstream ports associated to the RCEC
+> > (not visible in the PCI hierarchy), but discovered through the :00.0
+> > RCiEP (patch #5).
+> 
+> There are two calls to pcie_walk_rcec():
+> 
+>   1) The existing one in find_source_device()
+>   2) The one you add in handle_cxl_error()
+> 
+> Does the call in handle_cxl_error() look at devices that the existing
+> call in find_source_device() does not?  I'm trying to understand why
+> we need both calls.
+
+In case of a dport error, e_info will only contain the RCEC's id after
+running find_source_device(). Thus, only the RCEC's handler would be
+called. The portdrv is already bound to the device and currently
+doesn't have a handler attached.
+
+As described, due to cross dependencies between cxl and the portdrv,
+instead of implementing a handler in the portdrv, we decided to
+forward errors to the CXL endpoint driver and handle it there. So now,
+in handle_cxl_error(), we check if the error source is an RCEC
+attached to a CXL bus and we forward everything directly to the CXL
+endpoint handler. pcie_walk_rcec() is used for that.
+
+> 
+> > > > +static bool is_internal_error(struct aer_err_info *info)
+> > > > +{
+> > > > +	if (info->severity == AER_CORRECTABLE)
+> > > > +		return info->status & PCI_ERR_COR_INTERNAL;
+> > > > +
+> > > > +	return info->status & PCI_ERR_UNC_INTN;
+> > > > +}
+> > > > +
+> > > > +static void handle_cxl_error(struct pci_dev *dev, struct aer_err_info *info)
+> > > > +{
+> > > > +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> > > > +	    is_internal_error(info))
+> > > 
+> > > What's unique about Internal Errors?  I'm trying to figure out why you
+> > > wouldn't do this for *all* CXL errors.
+> > 
+> > Per CXL specification downstream port errors are signaled using
+> > internal errors. 
+> 
+> Maybe a spec reference here to explain is_internal_error()?  Is the
+> point of the check to *exclude* non-internal errors?  Or is basically
+> documentation that there shouldn't ever *be* any non-internal errors?
+> I guess the latter wouldn't make sense because at this point we don't
+> know whether this is a CXL hierarchy.
+
+It is described in CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected
+Errors.
+
+We do not handle errors other than internal ones, this is what the
+check is for. In theory, an RCEC could also throw other kind of
+errors. But, as per spec, once internal error are received from the
+RCEC, the CXL dports need to be inspected.
+
+> 
+> > All other errors would be device specific, we cannot
+> > handle that in a generic CXL driver.
+> 
+> I'm missing the point here.  We don't have any device-specific error
+> handling in aer.c; it only connects the generic *reporting* mechanism
+> (AER log registers and Root Port interrupts) to the drivers that do
+> the device-specific things via err_handler hooks.  I assume we want a
+> similar model for CXL.
+
+With device specific I mean implementation defined and not described
+in a specification. The CXL handler is sort of generic as it is
+(solely) implementing the CXL spec. Hope that makes sense.
+
+Thanks,
+
+-Robert
+
