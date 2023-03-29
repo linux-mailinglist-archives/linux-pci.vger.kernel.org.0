@@ -2,187 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A74D6CD9A4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 14:52:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C35F96CD9AC
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 14:53:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229997AbjC2MwQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 08:52:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33772 "EHLO
+        id S229853AbjC2MxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 08:53:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229853AbjC2MwP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 08:52:15 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22635F4;
-        Wed, 29 Mar 2023 05:52:08 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PmmbV20k2zKwQ9;
-        Wed, 29 Mar 2023 20:49:42 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 29 Mar 2023 20:52:05 +0800
-CC:     <yangyicong@hisilicon.com>, <mathieu.poirier@linaro.org>,
-        <suzuki.poulose@arm.com>, <corbet@lwn.net>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
-        <linuxarm@huawei.com>
-Subject: Re: [PATCH 2/4] hwtracing: hisi_ptt: Add support for dynamically
- updating the filter list
-To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-References: <20230315094316.26772-1-yangyicong@huawei.com>
- <20230315094316.26772-3-yangyicong@huawei.com>
- <20230328175153.00002938@Huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <d22fd364-bff3-0ece-ad53-1d6f910f9f52@huawei.com>
-Date:   Wed, 29 Mar 2023 20:52:05 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S229661AbjC2Mw7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 08:52:59 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57DA1BFF
+        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso18493755pjb.0
+        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680094360;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=BCg5KJ4aalw7URIKrf7Z4sofbQeaUPjVmaP5ALWxTDs=;
+        b=uc/smf75hOiBcv8M0SvwePw5cx0uJrFhFREYa3QnbjQweT+tT0N/lAZ6GjIDbUUz8J
+         Y6Hf6FsLe40uu+TRcuvMHjSVsPPZ947gwS388R3Gv5WkKiC3S3C7uIKDmzZ+hX/AIqLm
+         pa3g48gCxq75i9rpLp1XXAmPYLeZYpJdxgToPPAJ924VyB/hDRYyJXNeE8ZL25dCcnjD
+         73ijlxhBl2u6i8ebVY51ytUUGV6RRuKyEE5zoHhHZ/BGHLrSIqUBB/22cbD1fs0P9FRQ
+         lGMKOCy8K7ePN6jfnGCUTwJja+W4yys0pE9uNEkKC+FpXnPTd9giZZ+dveJejpnxZoZd
+         2pYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680094360;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BCg5KJ4aalw7URIKrf7Z4sofbQeaUPjVmaP5ALWxTDs=;
+        b=Wn3ZFWUi0bjp9iRXiXCyymVKjxGgrH/BCbJPWiLcoDlt0aR749AKlNdylrO3VoSOvJ
+         8bEsXY9r8tAdxaQosA6EuXg7f5aluWVLKc9XggbX3jjtrVP6rLJriUzxpPVdGejFB/cV
+         RlSYvy00GChPTNKCB1cID2lcEVDIqC41Xrf+RkTeGk3DZZCXd8LmwEu+ox/F+IaP5e8M
+         IRRvIQ+2EMs4P1HZmRd2Xl4XHreYJ4i7eNh4W+tQJcc6YRoIRKri2tiowUelgIXzxwbd
+         QHzJeouqt+AjEDfEF7r9O3Av3JAjjV83HzXUs6xgDg/pc/V4M+qW8U0brz27816uATW9
+         UXkg==
+X-Gm-Message-State: AAQBX9ef0uiTkLJGuQKvharAeVZjY2b3iMQL/FJ6WC/bGMvIUr0uIX8g
+        ODQp/C5WrS/NF6HDk9vnod58
+X-Google-Smtp-Source: AKy350bFB8wusqWw92UFGnEQW85Vvmw7xBP5dHUfXM0saPSOd8IKOX0TsqTF6VTQK3aYyjuLY89paA==
+X-Received: by 2002:a17:90b:1c08:b0:23d:44c6:745a with SMTP id oc8-20020a17090b1c0800b0023d44c6745amr21267829pjb.2.1680094360105;
+        Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
+Received: from thinkpad ([117.216.120.213])
+        by smtp.gmail.com with ESMTPSA id u13-20020a17090a450d00b0023fa2773aa5sm1355951pjg.26.2023.03.29.05.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Mar 2023 05:52:39 -0700 (PDT)
+Date:   Wed, 29 Mar 2023 18:22:32 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
+        mka@chromium.org, Dhruva Gole <d-gole@ti.com>
+Subject: Re: [PATCH v3 1/1] PCI: qcom: Add support for system suspend and
+ resume
+Message-ID: <20230329125232.GB5575@thinkpad>
+References: <20230327133824.29136-1-manivannan.sadhasivam@linaro.org>
+ <20230327133824.29136-2-manivannan.sadhasivam@linaro.org>
+ <ZCQLWzqKPrusMro+@hovoldconsulting.com>
 MIME-Version: 1.0
-In-Reply-To: <20230328175153.00002938@Huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-2.3 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZCQLWzqKPrusMro+@hovoldconsulting.com>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/3/29 0:51, Jonathan Cameron wrote:
-> On Wed, 15 Mar 2023 17:43:14 +0800
-> Yicong Yang <yangyicong@huawei.com> wrote:
+On Wed, Mar 29, 2023 at 11:56:43AM +0200, Johan Hovold wrote:
+> On Mon, Mar 27, 2023 at 07:08:24PM +0530, Manivannan Sadhasivam wrote:
+> > During the system suspend, vote for minimal interconnect bandwidth and
+> > also turn OFF the resources like clock and PHY if there are no active
+> > devices connected to the controller. For the controllers with active
+> > devices, the resources are kept ON as removing the resources will
+> > trigger access violation during the late end of suspend cycle as kernel
+> > tries to access the config space of PCIe devices to mask the MSIs.
+> > 
+> > Also, it is not desirable to put the link into L2/L3 state as that
+> > implies VDD supply will be removed and the devices may go into powerdown
+> > state. This will affect the lifetime of storage devices like NVMe.
+> > 
+> > And finally, during resume, turn ON the resources if the controller was
+> > truly suspended (resources OFF) and update the interconnect bandwidth
+> > based on PCIe Gen speed.
+> > 
+> > Suggested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
+> > Acked-by: Dhruva Gole <d-gole@ti.com>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-qcom.c | 62 ++++++++++++++++++++++++++
+> >  1 file changed, 62 insertions(+)
+> > 
+> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> > index a232b04af048..f33df536d9be 100644
+> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> > @@ -227,6 +227,7 @@ struct qcom_pcie {
+> >  	struct gpio_desc *reset;
+> >  	struct icc_path *icc_mem;
+> >  	const struct qcom_pcie_cfg *cfg;
+> > +	bool suspended;
+> >  };
+> >  
+> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
+> > @@ -1820,6 +1821,62 @@ static int qcom_pcie_probe(struct platform_device *pdev)
+> >  	return ret;
+> >  }
+> >  
+> > +static int qcom_pcie_suspend_noirq(struct device *dev)
+> > +{
+> > +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * Set minimum bandwidth required to keep data path functional during
+> > +	 * suspend.
+> > +	 */
+> > +	ret = icc_set_bw(pcie->icc_mem, 0, MBps_to_icc(250));
 > 
->> From: Yicong Yang <yangyicong@hisilicon.com>
->>
->> The PCIe devices supported by the PTT trace can be removed/rescanned by
->> hotplug or through sysfs.  Add support for dynamically updating the
->> available filter list by registering a PCI bus notifier block. Then user
->> can always get latest information about available tracing filters and
->> driver can block the invalid filters of which related devices no longer
->> exist in the system.
->>
->> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
->> ---
+> This isn't really the minimum bandwidth you're setting here.
 > 
-> Just a few trivial comments on this.
+> I think you said off list that you didn't see real impact reducing the
+> bandwidth, but have you tried requesting the real minimum which would be
+> kBps_to_icc(1)?
 > 
-> With those tidied up
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks for the comment, will fix in next version.
-
-> 
-> 
-> 
-> ...
-> 
->> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
->> index 0a10c7ec46ad..010cdbc3c172 100644
->> --- a/drivers/hwtracing/ptt/hisi_ptt.c
->> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-> 
->> +/*
->> + * A PCI bus notifier is used here for dynamically updating the filter
->> + * list.
->> + */
->> +static int hisi_ptt_notifier_call(struct notifier_block *nb, unsigned long action,
->> +				  void *data)
->> +{
->> +	struct hisi_ptt *hisi_ptt = container_of(nb, struct hisi_ptt, hisi_ptt_nb);
->> +	struct hisi_ptt_filter_update_info info;
->> +	struct device *dev = data;
->> +	struct pci_dev *pdev = to_pci_dev(dev);
-> 
-> This local variable doesn't add anything over
-> 
-> 	info.pdev = to_pci_dev(dev);
-> 
-
-ok, will drop it.
-
-> 
-> 
->> +
->> +	info.pdev = pdev;
->> +
->> +	switch (action) {
->> +	case BUS_NOTIFY_ADD_DEVICE:
->> +		info.is_add = true;
->> +		break;
->> +	case BUS_NOTIFY_DEL_DEVICE:
->> +		info.is_add = false;
->> +		break;
->> +	default:
->> +		return 0;
->> +	}
->> +
->> +	hisi_ptt_update_fifo_in(hisi_ptt, &info);
->> +
->> +	return 0;
->> +}
->> +
-> 
->> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
->> index 5beb1648c93a..b1ba638fe7ea 100644
->> --- a/drivers/hwtracing/ptt/hisi_ptt.h
->> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
->> @@ -11,12 +11,15 @@
-> 
->>  /**
->>   * struct hisi_ptt_pmu_buf - Descriptor of the AUX buffer of PTT trace
->>   * @length:   size of the AUX buffer
->> @@ -170,10 +188,15 @@ struct hisi_ptt_pmu_buf {
->>   * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
->>   * @port_filters: the filter list of root ports
->>   * @req_filters:  the filter list of requester ID
->> + * @filter_lock:  lock to protect the filters
->>   * @port_mask:    port mask of the managed root ports
->> + * @work:         delayed work for filter updating
->> + * @filter_update_lock: spinlock to protect the filter update fifo
->> + * @filter_update_fifo: fifo of the filters waiting to update the filter list
->>   */
->>  struct hisi_ptt {
->>  	struct hisi_ptt_trace_ctrl trace_ctrl;
->> +	struct notifier_block hisi_ptt_nb;
-> 
-> Docs update for this one?
+> Doing so works fine here with both the CRD and X13s and may result in
+> some further power savings.
 > 
 
-sorry for missing this. will fix.
+No, we shouldn't be setting random value as the bandwidth. Reason is, these
+values are computed by the bus team based on the requirement of the interconnect
+paths (clock, voltage etc...) with actual PCIe Gen speeds. I don't know about
+the potential implication even if it happens to work.
 
-Thanks,
-Yicong
+- Mani
 
->>  	struct hlist_node hotplug_node;
->>  	struct pmu hisi_ptt_pmu;
->>  	void __iomem *iobase;
->> @@ -192,7 +215,19 @@ struct hisi_ptt {
->>  	 */
->>  	struct list_head port_filters;
->>  	struct list_head req_filters;
->> +	struct mutex filter_lock;
->>  	u16 port_mask;
->> +
->> +	/*
->> +	 * We use a delayed work here to avoid indefinitely waiting for
->> +	 * the hisi_ptt->mutex which protecting the filter list. The
->> +	 * work will be delayed only if the mutex can not be held,
->> +	 * otherwise no delay will be applied.
->> +	 */
->> +	struct delayed_work work;
->> +	spinlock_t filter_update_lock;
->> +	DECLARE_KFIFO(filter_update_kfifo, struct hisi_ptt_filter_update_info,
->> +		      HISI_PTT_FILTER_UPDATE_FIFO_SIZE);
->>  };
->>  
->>  #define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+> > +	if (ret) {
+> > +		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
+> > +		return ret;
+> > +	}
 > 
-> .
-> 
+> Johan
+
+-- 
+மணிவண்ணன் சதாசிவம்
