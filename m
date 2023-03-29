@@ -2,156 +2,235 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C35F96CD9AC
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 14:53:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 481B06CD9B3
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 14:54:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjC2MxA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 08:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35420 "EHLO
+        id S229590AbjC2Mya (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 08:54:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229661AbjC2Mw7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 08:52:59 -0400
-Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B57DA1BFF
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
-Received: by mail-pj1-x1033.google.com with SMTP id gp15-20020a17090adf0f00b0023d1bbd9f9eso18493755pjb.0
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680094360;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BCg5KJ4aalw7URIKrf7Z4sofbQeaUPjVmaP5ALWxTDs=;
-        b=uc/smf75hOiBcv8M0SvwePw5cx0uJrFhFREYa3QnbjQweT+tT0N/lAZ6GjIDbUUz8J
-         Y6Hf6FsLe40uu+TRcuvMHjSVsPPZ947gwS388R3Gv5WkKiC3S3C7uIKDmzZ+hX/AIqLm
-         pa3g48gCxq75i9rpLp1XXAmPYLeZYpJdxgToPPAJ924VyB/hDRYyJXNeE8ZL25dCcnjD
-         73ijlxhBl2u6i8ebVY51ytUUGV6RRuKyEE5zoHhHZ/BGHLrSIqUBB/22cbD1fs0P9FRQ
-         lGMKOCy8K7ePN6jfnGCUTwJja+W4yys0pE9uNEkKC+FpXnPTd9giZZ+dveJejpnxZoZd
-         2pYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680094360;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BCg5KJ4aalw7URIKrf7Z4sofbQeaUPjVmaP5ALWxTDs=;
-        b=Wn3ZFWUi0bjp9iRXiXCyymVKjxGgrH/BCbJPWiLcoDlt0aR749AKlNdylrO3VoSOvJ
-         8bEsXY9r8tAdxaQosA6EuXg7f5aluWVLKc9XggbX3jjtrVP6rLJriUzxpPVdGejFB/cV
-         RlSYvy00GChPTNKCB1cID2lcEVDIqC41Xrf+RkTeGk3DZZCXd8LmwEu+ox/F+IaP5e8M
-         IRRvIQ+2EMs4P1HZmRd2Xl4XHreYJ4i7eNh4W+tQJcc6YRoIRKri2tiowUelgIXzxwbd
-         QHzJeouqt+AjEDfEF7r9O3Av3JAjjV83HzXUs6xgDg/pc/V4M+qW8U0brz27816uATW9
-         UXkg==
-X-Gm-Message-State: AAQBX9ef0uiTkLJGuQKvharAeVZjY2b3iMQL/FJ6WC/bGMvIUr0uIX8g
-        ODQp/C5WrS/NF6HDk9vnod58
-X-Google-Smtp-Source: AKy350bFB8wusqWw92UFGnEQW85Vvmw7xBP5dHUfXM0saPSOd8IKOX0TsqTF6VTQK3aYyjuLY89paA==
-X-Received: by 2002:a17:90b:1c08:b0:23d:44c6:745a with SMTP id oc8-20020a17090b1c0800b0023d44c6745amr21267829pjb.2.1680094360105;
-        Wed, 29 Mar 2023 05:52:40 -0700 (PDT)
-Received: from thinkpad ([117.216.120.213])
-        by smtp.gmail.com with ESMTPSA id u13-20020a17090a450d00b0023fa2773aa5sm1355951pjg.26.2023.03.29.05.52.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 05:52:39 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 18:22:32 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
-        mka@chromium.org, Dhruva Gole <d-gole@ti.com>
-Subject: Re: [PATCH v3 1/1] PCI: qcom: Add support for system suspend and
- resume
-Message-ID: <20230329125232.GB5575@thinkpad>
-References: <20230327133824.29136-1-manivannan.sadhasivam@linaro.org>
- <20230327133824.29136-2-manivannan.sadhasivam@linaro.org>
- <ZCQLWzqKPrusMro+@hovoldconsulting.com>
+        with ESMTP id S229436AbjC2My3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 08:54:29 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4A6BA;
+        Wed, 29 Mar 2023 05:54:28 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PmmfC0yY6zKwRQ;
+        Wed, 29 Mar 2023 20:52:03 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 29 Mar 2023 20:54:26 +0800
+CC:     <yangyicong@hisilicon.com>, <mathieu.poirier@linaro.org>,
+        <suzuki.poulose@arm.com>, <corbet@lwn.net>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH 3/4] hwtracing: hisi_ptt: Export available filters through
+ sysfs
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+References: <20230315094316.26772-1-yangyicong@huawei.com>
+ <20230315094316.26772-4-yangyicong@huawei.com>
+ <20230328180234.00003421@Huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <08d5c43f-664c-457f-69a1-c6747bb56637@huawei.com>
+Date:   Wed, 29 Mar 2023 20:54:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZCQLWzqKPrusMro+@hovoldconsulting.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230328180234.00003421@Huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.3 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 11:56:43AM +0200, Johan Hovold wrote:
-> On Mon, Mar 27, 2023 at 07:08:24PM +0530, Manivannan Sadhasivam wrote:
-> > During the system suspend, vote for minimal interconnect bandwidth and
-> > also turn OFF the resources like clock and PHY if there are no active
-> > devices connected to the controller. For the controllers with active
-> > devices, the resources are kept ON as removing the resources will
-> > trigger access violation during the late end of suspend cycle as kernel
-> > tries to access the config space of PCIe devices to mask the MSIs.
-> > 
-> > Also, it is not desirable to put the link into L2/L3 state as that
-> > implies VDD supply will be removed and the devices may go into powerdown
-> > state. This will affect the lifetime of storage devices like NVMe.
-> > 
-> > And finally, during resume, turn ON the resources if the controller was
-> > truly suspended (resources OFF) and update the interconnect bandwidth
-> > based on PCIe Gen speed.
-> > 
-> > Suggested-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> > Acked-by: Dhruva Gole <d-gole@ti.com>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/controller/dwc/pcie-qcom.c | 62 ++++++++++++++++++++++++++
-> >  1 file changed, 62 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > index a232b04af048..f33df536d9be 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > @@ -227,6 +227,7 @@ struct qcom_pcie {
-> >  	struct gpio_desc *reset;
-> >  	struct icc_path *icc_mem;
-> >  	const struct qcom_pcie_cfg *cfg;
-> > +	bool suspended;
-> >  };
-> >  
-> >  #define to_qcom_pcie(x)		dev_get_drvdata((x)->dev)
-> > @@ -1820,6 +1821,62 @@ static int qcom_pcie_probe(struct platform_device *pdev)
-> >  	return ret;
-> >  }
-> >  
-> > +static int qcom_pcie_suspend_noirq(struct device *dev)
-> > +{
-> > +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * Set minimum bandwidth required to keep data path functional during
-> > +	 * suspend.
-> > +	 */
-> > +	ret = icc_set_bw(pcie->icc_mem, 0, MBps_to_icc(250));
+On 2023/3/29 1:02, Jonathan Cameron wrote:
+> On Wed, 15 Mar 2023 17:43:15 +0800
+> Yicong Yang <yangyicong@huawei.com> wrote:
 > 
-> This isn't really the minimum bandwidth you're setting here.
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> The PTT can only filter the traced TLP headers by the Root Ports or the
+>> Requester ID of the Endpoint, which are located on the same core of the
+>> PTT device. The filter value used is derived from the BDF number of the
+>> supported Root Port or the Endpoint. It's not friendly enough for the
+>> users since it requires the user to be familiar enough with the platform
+>> and calculate the filter value manually.
+>>
+>> This patch export the available filters through sysfs. Each available
+>> filters is presented as an individual file with the name of the BDF
+>> number of the related PCIe device. The files are created under
+>> $(PTT PMU dir)/available_root_port_filters and
+>> $(PTT PMU dir)/available_requester_filters respectively. The filter
+>> value can be known by reading the related file.
+>>
+>> Then the users can easily know the available filters for trace and get
+>> the filter values without calculating.
+>>
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> I think you said off list that you didn't see real impact reducing the
-> bandwidth, but have you tried requesting the real minimum which would be
-> kBps_to_icc(1)?
+> Trivial comments only inline.
 > 
-> Doing so works fine here with both the CRD and X13s and may result in
-> some further power savings.
+> With those answered / tidied up.
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> 
+> 
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> index 010cdbc3c172..a5cd87edb813 100644
+>> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> 
+> 
+>>
+>> +
+>> +static int hisi_ptt_init_filter_attributes(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&hisi_ptt->filter_lock);
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list) {
+>> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+>> +		if (ret)
+>> +			goto err;
+>> +	}
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+>> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+>> +		if (ret)
+>> +			goto err;
+>> +	}
+>> +
+>> +	ret = devm_add_action_or_reset(&hisi_ptt->pdev->dev,
+>> +				       hisi_ptt_remove_all_filter_attributes,
+>> +				       hisi_ptt);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	hisi_ptt->sysfs_inited = true;
+> 
+> err:
+> 
+>> +	mutex_unlock(&hisi_ptt->filter_lock);
+> 
+> 	return ret;
+> 
+> No need for separate exit block when nothing to do but unlock.
 > 
 
-No, we shouldn't be setting random value as the bandwidth. Reason is, these
-values are computed by the bus team based on the requirement of the interconnect
-paths (clock, voltage etc...) with actual PCIe Gen speeds. I don't know about
-the potential implication even if it happens to work.
+ok. will refine here.
 
-- Mani
-
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to set interconnect bandwidth: %d\n", ret);
-> > +		return ret;
-> > +	}
+>> +	return 0;
+>> +err:
+>> +	mutex_unlock(&hisi_ptt->filter_lock);
+>> +	return ret;
+>> +}
+>> +
+>>  static void hisi_ptt_update_filters(struct work_struct *work)
+>>  {
+>>  	struct delayed_work *delayed_work = to_delayed_work(work);
+>> @@ -384,8 +517,28 @@ static void hisi_ptt_update_filters(struct work_struct *work)
+>>  				continue;
+>>  			}
+>>  
+>> +			filter->name = kstrdup(pci_name(info.pdev), GFP_KERNEL);
+>> +			if (!filter->name) {
+>> +				pci_err(hisi_ptt->pdev, "failed to add filter %s\n",
+>> +					pci_name(info.pdev));
+>> +				kfree(filter);
+>> +				continue;
+>> +			}
+>> +
+>>  			filter->devid = devid;
+>>  			filter->is_port = is_port;
+>> +
+>> +			/*
+>> +			 * If filters' sysfs entries hasn't been initialized, then
+>> +			 * we're still at probe stage and leave it to handled by
+>> +			 * others.
+>> +			 */
+>> +			if (hisi_ptt->sysfs_inited &&
 > 
-> Johan
+> Can we move this sysfs_inited check earlier? Seems silly to leave a simple check
+> like that so late.
+> 
 
--- 
-மணிவண்ணன் சதாசிவம்
+maybe move it into the hisi_ptt_create_filter_attr()? will have a check.
+for here we still need to update filter list even if the hisi_ptt's sysfs is not
+initialized yet.
+
+>> +			    hisi_ptt_create_filter_attr(hisi_ptt, filter)) {
+>> +				kfree(filter);
+>> +				continue;
+>> +			}
+>> +
+>>  			list_add_tail(&filter->list, target_list);
+>>  
+>>  			if (is_port)
+>> @@ -394,6 +547,11 @@ static void hisi_ptt_update_filters(struct work_struct *work)
+>>  			list_for_each_entry(filter, target_list, list)
+>>  				if (filter->devid == devid) {
+>>  					list_del(&filter->list);
+>> +
+>> +					if (hisi_ptt->sysfs_inited)
+>> +						hisi_ptt_remove_filter_attr(hisi_ptt, filter);
+>> +
+>> +					kfree(filter->name);
+>>  					kfree(filter);
+>>  					break;
+>>  				}
+>> @@ -486,10 +644,12 @@ static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+>>  	 * through the log. Other functions of PTT device are still available.
+>>  	 */
+>>  	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+>> -	if (!filter) {
+>> -		pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+>> -		return -ENOMEM;
+>> -	}
+>> +	if (!filter)
+>> +		goto err_mem;
+>> +
+>> +	filter->name = kstrdup(pci_name(pdev), GFP_KERNEL);
+>> +	if (!filter->name)
+>> +		goto err_name;
+>>  
+>>  	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
+>>  
+>> @@ -504,6 +664,11 @@ static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
+>>  	}
+>>  
+>>  	return 0;
+>> +err_name:
+>> +	kfree(filter);
+>> +err_mem:
+>> +	pci_err(hisi_ptt->pdev, "failed to add filter %s\n", pci_name(pdev));
+> 
+> I'd rather see a message for each of the error paths so we have some information on why.
+> Original message wasn't great for this obviously and perhaps given they are both allocation
+> errors it's not worth splitting them up.
+> 
+
+ok, will try to split it and make it more verbosely.
+
+Thanks,
+Yicong
+
+>> +	return -ENOMEM;
+>>  }
+> 
+> 
+> .
+> 
