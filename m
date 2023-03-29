@@ -2,53 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9AAC06CF343
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 21:40:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FB156CF428
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 22:13:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229588AbjC2TkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 15:40:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
+        id S229610AbjC2UNT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 16:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjC2Tjr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 15:39:47 -0400
-Received: from infra.glanzmann.de (infra.glanzmann.de [IPv6:2a01:4f8:b0:3ffe::5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B57B4ED4
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 12:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glanzmann.de;
-        s=infra26101010; t=1680118780;
-        bh=ZChw6dXNtrck3De5Td1PPB6x2isj/bMWUmfo3lNeqFE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hB23zdKmPXh67uei7X23zyZPacx1+5ArCoIz0tGK3swnx73KYgc89IAq7fT2UFbid
-         LvHt5d9ZQHaJBfQVzuwGWmxjtK7/uML1rIylWcaloDxSZM7ptaUoqf0UqFaJuNnyOG
-         gresasbgq+g6A7iUFQZfISDL6hDlpjdOVuDK7Y7RLaviu9Ss45K2PW3lK4+fO03h1X
-         v/3uI4rvfmvp0olNE/oiGrqekFDeVNS1MBDwF8JnKM68W0VHLEV+A09a++H+Ls24jO
-         zD/hbR2fERiTTwm8fkkohqA3RlKceW2Lns3noi8bBkmQe62QlsidGLdqr3QYH9Hj53
-         BMOurOTavFq/rwHmrGXV1KE5FbU/JTfZpMsNktbkkIIvNiaAfdeXibTjNFV+hatXZ3
-         8qftyBG0ji6vqHF6S3PkBVxzGSvZoqfaqFdE6dCtxi1yrd9sRFb5m3Xv746o6ld9f6
-         3R0vH4iD4t27kqBU1uLRG+0Up2RSo3dDRzrYiz3sS80ddMjEJ7FKU3eD+1Rhls6j6H
-         jEtDc5yWorCo+7m1g6Z/RuM/PO6O9RzZjGBpaXNmuY+dyrME6lCytIZsuftx/8EETl
-         P1s2CieZIafoXXlAo86LLX1lU37Pif49BnSGK3f7Z0xnDQJzTsaYyiyvk0CISmC7w1
-         ESHKhzM7aqaNhLjCFYJm4vB8=
-Received: by infra.glanzmann.de (Postfix, from userid 1000)
-        id B07F67A80055; Wed, 29 Mar 2023 21:39:40 +0200 (CEST)
-Date:   Wed, 29 Mar 2023 21:39:40 +0200
-From:   Thomas Glanzmann <thomas@glanzmann.de>
-To:     "Limonciello, Mario" <mario.limonciello@amd.com>
-Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>, bhelgaas@google.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
-        linux-pci@vger.kernel.org, "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Subject: Re: [PATCH] PCI: Add quirk to clear AMD strap_15B8 NO_SOFT_RESET
- dev2 f0
-Message-ID: <ZCST/Bagg2qhdAaJ@glanzmann.de>
-References: <20230329172859.699743-1-Basavaraj.Natikar@amd.com>
- <ae3218a7-52e6-cf96-2223-dac2e1f9d14a@amd.com>
+        with ESMTP id S229449AbjC2UNS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 16:13:18 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AD3430C7;
+        Wed, 29 Mar 2023 13:13:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680120798; x=1711656798;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Aiobm3lfAotQcDFd97i7I7T/TYFzraaI742gzeFKiKY=;
+  b=Rqa7lCIZ883QNssfP3BqGDkO9Ne5/pAcwP56+dtkSj8S9kC/vSUjMKHw
+   /V6OL58LMts/sWZrDvL4+0DfX1o58J0rX/Nc+4KyB8cg+dsdbGA7kpPMI
+   OD1SvgPPFYboHZQEdEuaYpMrDMP77F3RDDmS6v05ll0AJ29OFIDK454Nu
+   HhorGyeIkcjfwF2EkA4G9H6tdE6YDFmaGDCca/nWss2sHHGgsDh1p46w8
+   44ipZxp+8kTzKDbzQybv4Z31+Jygc2vTYBWad5RZ300nUjRBa3CgHgZyi
+   lXTNkgirjLAQr/Bs1ShVCL4xIcNcO1HGcj/z5lxe5Cc5OXQJm18x3G8WS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="368764859"
+X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
+   d="scan'208";a="368764859"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 13:13:17 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="753738039"
+X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
+   d="scan'208";a="753738039"
+Received: from rchatre-ws.ostc.intel.com ([10.54.69.144])
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 13:13:17 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     bhelgaas@google.com, nathan@kernel.org, ndesaulniers@google.com,
+        trix@redhat.com, tglx@linutronix.de
+Cc:     darwi@linutronix.de, kevin.tian@intel.com,
+        reinette.chatre@intel.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, llvm@lists.linux.dev
+Subject: [PATCH] PCI/MSI: Provide missing stub for pci_msix_can_alloc_dyn()
+Date:   Wed, 29 Mar 2023 13:13:11 -0700
+Message-Id: <310ecc4815dae4174031062f525245f0755c70e2.1680119924.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ae3218a7-52e6-cf96-2223-dac2e1f9d14a@amd.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -56,25 +60,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Mario,
+pci_msix_can_alloc_dyn() is not declared when CONFIG_PCI_MSI
+is disabled.
 
-* Limonciello, Mario <mario.limonciello@amd.com> [2023-03-29 20:56]:
-> Can you please test this on your side?
+There is no existing user of pci_msix_can_alloc_dyn() but
+work is in progress to change this. This work encounters
+the following error when CONFIG_PCI_MSI is disabled:
 
-> Explicitly test it with amdgpu blacklisted or iGPU disabled in BIOS setup so
-> that we can confirm that it is working and the amdgpu version of it isn't
-> being used.
+drivers/vfio/pci/vfio_pci_intrs.c:427:21: error: implicit declaration \
+	of function 'pci_msix_can_alloc_dyn' \
+	[-Werror=implicit-function-declaration]
 
-I tested the same on top of v6.2.8 with amdgpu blacklisted. It works
+Provide definition for pci_msix_can_alloc_dyn() in preparation
+for users that need to compile when CONFIG_PCI_MSI is disabled.
 
-Tested-by: Thomas Glanzmann <thomas@glanzmann.de>
+Fixes: 34026364df8e ("PCI/MSI: Provide post-enable dynamic allocation interfaces for MSI-X")
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/oe-kbuild-all/202303291000.PWFqGCxH-lkp@intel.com/
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+I missed this one in my previous fix. After this all the functions
+in pci.h's #ifdef CONFIG_PCI_MSI portion have stubs when
+CONFIG_PCI_MSI is disabled.
 
-Find here some additional information:
+ include/linux/pci.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-https://tg.st/u/dabb0ed77c14a8ec6e76d85f9f936977dca04c899d1773603c58350c9ce31768.txt
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index b50e5c79f7e3..a5dda515fcd1 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1624,6 +1624,8 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
+ 					      flags, NULL);
+ }
+ 
++static inline bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
++{ return false; }
+ static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
+ 						   const struct irq_affinity_desc *affdesc)
+ {
+-- 
+2.34.1
 
-I tested by replugging mouse and keyboard in opposite ports which did
-not work before.
-
-Cheers,
-        Thomas
