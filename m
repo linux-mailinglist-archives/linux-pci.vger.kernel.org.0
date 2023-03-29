@@ -2,56 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB6C6CF008
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 19:00:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B21FA6CF017
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 19:05:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230033AbjC2RAD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 13:00:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45300 "EHLO
+        id S229760AbjC2RFV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 13:05:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51346 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229495AbjC2RAC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 13:00:02 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B189619B5;
-        Wed, 29 Mar 2023 10:00:01 -0700 (PDT)
+        with ESMTP id S229638AbjC2RFU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 13:05:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 132221FC6;
+        Wed, 29 Mar 2023 10:05:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4DD82B820CA;
-        Wed, 29 Mar 2023 17:00:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D4DDC433EF;
-        Wed, 29 Mar 2023 16:59:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A291961D14;
+        Wed, 29 Mar 2023 17:05:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA0E3C433D2;
+        Wed, 29 Mar 2023 17:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680109198;
-        bh=VdnuvhIM2cRnRHD6OIlrF1vM7Xa/zS4dOr/IjqNNj7k=;
+        s=k20201202; t=1680109517;
+        bh=ItVnaZ8FUAX4pSnv5WsIqGPOgOFkxmneK6Rfun+mOtY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=WGmVkGJxklNiVx1FInWIqUPg+a4lgK5x2N65ZVa820iEqX8AIhS7d7atd8Myt23wC
-         X2Q0weysAdn2Lbmulawv6SRWEHTu7yONn0ZcgcOp0SRZAvuGDjweZcjPz2VcVse/aP
-         jSdZwBRk93rjHWyWyALcl5jVeV0FahOn/vPHKlBKTtwj0l20pXyoKcibpoI5VgSLyA
-         VNPS5MuyCqgBNAk6ydScLCI8EyYtX+zVGiP3U4/ztRdsOMB6bSo+QCZ91+LOpWuWL5
-         p8YVMnS4tdEHgrPfYrxOyaWfJVbveOrlrj4QubImSg1dOQP65Bu5IQyT3W8cZYj64h
-         X8PZMTiWVlYdg==
-Date:   Wed, 29 Mar 2023 11:59:57 -0500
+        b=c1+JvlWVoHxfTWRdSlzBTwUTIw3f3QETPbe52cty0rY36OZA8abs67W9qizwgOuWF
+         5IoLpxrEH5RzrH0UDNkXIvYL0rJJ4nqbwLZvs9c1FE3l7qMRwtdK86SA1QFzXFtSTG
+         TiLe9iNTx8he8OyIWwpiVH0BPml1o7ksCnTZEFwhbqAqexfmj4URDBKcfd1rt50Epl
+         J90k/f6t1FaOqo+dKSXZOo07HREotWF3WjX2NQwkQ9I56eUMT0OPt0An7JdL938eB5
+         qXP8UeRrkkx7lE2KOWw5Rd332/3xQoJHwsUJhSWQNUPRNPSFwBV1WjL0gd5gRgkDKh
+         LWmaY0kiJgrsA==
+Date:   Wed, 29 Mar 2023 12:05:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     treding@nvidia.com, krzysztof.kozlowski@linaro.org,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
-        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
-        ishah@nvidia.com, bbasu@nvidia.com
-Subject: Re: [Patch v4 10/10] PCI: tegra194: add interconnect support in
- Tegra234
-Message-ID: <20230329165957.GA3066317@bhelgaas>
+To:     Wu Zongyong <wuzongyong@linux.alibaba.com>
+Cc:     sdonthineni@nvidia.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wllenyj@linux.alibaba.com, wutu.xq2@linux.alibaba.com,
+        gerry@linux.alibaba.com
+Subject: Re: [RFC PATCH] PCI: avoid SBR for NVIDIA T4
+Message-ID: <20230329170515.GA3067097@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <8d0e4e2f-a131-ca19-e5ae-ef2349623b39@nvidia.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+In-Reply-To: <388bc353a5f88edb502ec04c0dc53ab62a526020.1680090885.git.wuzongyong@linux.alibaba.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,51 +53,51 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 02:44:34PM +0530, Sumit Gupta wrote:
-> On 28/03/23 23:23, Bjorn Helgaas wrote:
-> > > +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
-> > > +{
-> > > +     struct dw_pcie *pci = &pcie->pci;
-> > > +     u32 val, speed, width;
-> > > +
-> > > +     val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-> > > +
-> > > +     speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
-> > > +     width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
-> > > +
-> > > +     val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
-> > > +
-> > > +     if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
-> > > +             dev_err(pcie->dev, "can't set bw[%u]\n", val);
-> > > +
-> > > +     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-> > 
-> > Array bounds violation; PCI_EXP_LNKSTA_CLS is 0x000f, so possible
-> > speed (CLS) values are 0..0xf and "speed - 1" values are -1..0xe.
-> > 
-> > pcie_gen_freq[] is of size 4 (valid indices 0..3).
-> > 
-> > I see that you're just *moving* this code, but might as well fix it.
-> > 
-> Thank you for the review.
-> Will include the below change in the same patch. Please let me know if any
-> issue.
+On Wed, Mar 29, 2023 at 07:58:45PM +0800, Wu Zongyong wrote:
+> Secondary bus reset will fail if NVIDIA T4 card is direct attached to a
+> root port.
+
+Blank line between paragraphs.  Rewrap to fill 75 columns if it's a
+single paragraph.
+
+Is this only a problem when direct attached to a Root Port?  Why would
+that be?  If it's *not* related to being directly under a Root Port,
+don't mention that at all.
+
+> So avoid to do bus reset,  pci_parent_bus_reset() works nomarlly.
 > 
->  -       clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
->  +       if (speed && (speed <= ARRAY_SIZE(pcie_gen_freq)))
->  +               clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
->  +       else
->  +               clk_set_rate(pcie->core_clk, pcie_gen_freq[0]);
+> Maybe NVIDIA guys can do some detailed explanation abount the SBR
+> behaviour of GPUs.
 
-I didn't notice that speed is a u32, so -1 is not a possible value.
-Also, it's used earlier for PCIE_SPEED2MBS_ENC(), so you could do
-something like this:
+This is a follow-on to 4c207e7121fa ("PCI: Mark some NVIDIA GPUs to
+avoid bus reset"), so probably should have a Fixes: tag so it goes
+whereever that commit goes.
 
-  speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val) - 1;
-  if (speed >= ARRAY_SIZE(pcie_gen_freq))
-    speed = 0;
+Also copy the subject line from 4c207e7121fa, e.g.,
 
-  val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) /
-	BITS_PER_BYTE);
-  ...
-  clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+  PCI: Mark NVIDIA T4 GPUs to avoid bus reset
+
+Are there any problem reports or bugzilla issues you can include a URL
+to?
+
+> Signed-off-by: Wu Zongyong <wuzongyong@linux.alibaba.com>
+> ---
+>  drivers/pci/quirks.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 44cab813bf95..be86b93b9e38 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -3618,7 +3618,7 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
+>   */
+>  static void quirk_nvidia_no_bus_reset(struct pci_dev *dev)
+>  {
+> -	if ((dev->device & 0xffc0) == 0x2340)
+> +	if ((dev->device & 0xffc0) == 0x2340 || dev->device == 0x1eb8)
+>  		quirk_no_bus_reset(dev);
+>  }
+>  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
+> -- 
+> 2.34.3
+> 
