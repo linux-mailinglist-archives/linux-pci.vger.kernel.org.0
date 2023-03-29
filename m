@@ -2,122 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AC176CCECF
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 02:32:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6716C6CCF2E
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 03:02:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjC2AcO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 28 Mar 2023 20:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34870 "EHLO
+        id S229694AbjC2BCy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 28 Mar 2023 21:02:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjC2AcN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 20:32:13 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2130.outbound.protection.outlook.com [40.107.113.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5495187;
-        Tue, 28 Mar 2023 17:32:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=e9jo7n3p7iyjoLY8pUIlzSxEJwp1mLECcNmW2bbxvwVjFXg01TXotGXv1oK1tmPHsRNtDNlx3kADXosuWdAAyd/uOq0sV2KXcDU6G1hguh3ZCeCbyJoS6Zs5TZHp5L5/PIPZW2t2h4KLYHzakcdksHPFMpJKClGlgxQY+6btOWPwuUhvD2lg6lkov+txchQ3FAm5E8tb+Uba0qyrnhONR2h6+vZ6K/s1zP+rgdbifzw6OTzAIxys+PyzlVL8zkdeWDiiiKW94TvLS0Oq07/O244U0sRwSPvreO4RLsMEqoraoIAP1C3cq1mGHy9jFtYNpEF4wHDYhEv7sl+WVZlhUQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qKU/z5virGwwiWL9s+ZX/7/x/kigOlki6jRHBza9nmA=;
- b=Xg0f2jII3DVB1iy9HKjchfYOYMCeAxR+n0olWJ/Hg3VnkMAinm1pV28vQXlnyDoU1ZvnQPubPBmpI99uk+KJDFeGFtms+wEBxjiZWByxnM8aF63VJbnbseUyG7TLpM0qJFQrgOHENF6ASseU8YIFYCv2hzPceiH3Qn6s0As+rNZFZWCO19DXhDvhcVSxAfqKVCwWPoWlb7d3yBhzwhOumL/Yo21AUWnSw30stCZVYrEAkw3ObBeUruycGotrLY4GfV1lqYJb8+pCIi8d9tYK41pV5gNe9LrQRvUGl6CO8mYFKzQGQIVtZ76zMzgkVq+0Ub99Lkva2nosRL43B7D4yw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qKU/z5virGwwiWL9s+ZX/7/x/kigOlki6jRHBza9nmA=;
- b=R7Sy99VpeziD+vezCSjzqJMtv9GBArRR/zoXCyuaoVjJt4zK/1V2XbmoeZCqFPamIr5NlQH6ph9lgu1tzALXnjT1MHQBTk1s5xdGbD53JuxdbmiemZBQLeXI71MO3L5PQSgmDLqmXjeTS6gD8Y3IvHhltsirpVFjAkttONOmM68=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TYCPR01MB9520.jpnprd01.prod.outlook.com
- (2603:1096:400:190::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.34; Wed, 29 Mar
- 2023 00:32:09 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::ffc4:2acc:f9ca:1633]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::ffc4:2acc:f9ca:1633%8]) with mapi id 15.20.6222.034; Wed, 29 Mar 2023
- 00:32:09 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH] PCI: rcar-host: Remove unused static pcie_base and
- pcie_dev
-Thread-Topic: [PATCH] PCI: rcar-host: Remove unused static pcie_base and
- pcie_dev
-Thread-Index: AQHZYX6Q1aA4RJWrp0+wU6uATepxg68Q6G3A
-Date:   Wed, 29 Mar 2023 00:32:09 +0000
-Message-ID: <TYBPR01MB53411AAB513802B105ACB3DED8899@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <94b369447c38c478c52aef10e493b658a4f755ac.1680011974.git.geert+renesas@glider.be>
-In-Reply-To: <94b369447c38c478c52aef10e493b658a4f755ac.1680011974.git.geert+renesas@glider.be>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYCPR01MB9520:EE_
-x-ms-office365-filtering-correlation-id: d0e859dd-b244-48fa-e813-08db2fed0815
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ftnaLXrb1zG3lOZPA1gzFetFORV/PaKnp49I+QYv2H+NKJ/INc6lpCiMJbdv/zTaE7SxR2El7br+3Ckly/Aj20bxOsap9voRKqqB5abhhiTnOx/GAAtur4fkvHtsa5k/SM4io/HHlJnXZ3RyJgFR0485wmxd+WQDD59Pi8yJ5mJo4QymWEGB60jcz3hgEI+QPkN3aQssG10rDtyyB6At3Pr9MdQ61WV9sb2X5Kwi3GQtYS+KlZ1a7z5qR0T5owBCp1t+EcKowWriIKq87teAFhNrAetOkzKFdx7xZUw1LWh2DXRWslIUxIrhdlyuU6Hei48l+Z+AJpY8LjmxB9bEJR+gCnITn2s4Jk2z+yN22w88CcmA05wEyVuvhmfjT/1qrRad+1R7FBLBVsMHnsIt+4sC0zbAbmTlciVDGx9CI/wMp+noe0mMmfBRLT7u2DIqyFl5U/uyCx15AfllP789q30FZ/tQoQMcWSKYl0PZMoFxQCx/lec5YW8Tt0bcLscgNuwmgQpiDejVfbscLdwj7IjFq+n0UrB0B+N57+Mk01YxQxd0/ooityapqoWkkO9awaRUJ8ly2ejgLBkOo8l+e6cBfyZdN5+O+5IFh9LO1tYwg0imniYnY1hvKS/lIgB0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(451199021)(186003)(9686003)(6506007)(7696005)(71200400001)(478600001)(76116006)(54906003)(66946007)(110136005)(316002)(122000001)(52536014)(66476007)(64756008)(8676002)(4326008)(66446008)(66556008)(41300700001)(2906002)(8936002)(5660300002)(33656002)(38100700002)(4744005)(38070700005)(86362001)(55016003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?UsyDXssyjp70zU5AeS7USyJ2j7bkn5AiwknXkY/8sqDZjRGEdkTsncGJ7s?=
- =?iso-8859-2?Q?axkZlB3qKfOvCznVKwNxyiq7Aw4sKyoVC3e5nrm/SN/mkQKCMKhdE2WgdP?=
- =?iso-8859-2?Q?0vTi41eq4gwETKsaQgLthsWXmnzm/SA0uavaaj284uuTsBXhDg8iZjuFon?=
- =?iso-8859-2?Q?DCXAhClgAqNBqCsdaqLrR0Gl3rAqiOEncGMrt/2H/TDGLJWsR1Nvg5xPE/?=
- =?iso-8859-2?Q?+qFCjaKbzrVEM0ybkK8dLzi9utSYOoYQu7nVnzS5rLeZYt4aBdq5IqsCzm?=
- =?iso-8859-2?Q?XlITl8BYaiu0xXNAFF1ugON7LKLA1PT4tj5JOuG892Q9mS+P2iJC7v53OU?=
- =?iso-8859-2?Q?v5S/4ibspeRMj+jR+N9iMBdKRDDaYJCmmshb7tMK/dlsxMfbW2dbe+UhWo?=
- =?iso-8859-2?Q?5aJCgPn3e5TAg/fzkdSP2+m3xx3YAcmIHsog3dPnH00ubLajd4x2PISHmo?=
- =?iso-8859-2?Q?rGj/BVRS3yvoMRfgjIb5BX+zrqJNB0tfGdDR9aMkd3THu5UerwKrZBzobx?=
- =?iso-8859-2?Q?1BALMV24Qre7DYO+hgIyqxZMln0PDEMAjZ/C/Bvhs97SwbWNoQGeIAubVl?=
- =?iso-8859-2?Q?kqm8gAelE3jFKYANdrU74TKrBBrHH3e3rzuOBuzbwAIimFOp5r37U3bAv9?=
- =?iso-8859-2?Q?04UtBe3NBgcOH7WjCAOeOCozlJ03/oMqdIGr+1YulVyhE/WvHWYDM+Galo?=
- =?iso-8859-2?Q?N4WzXMc4nPnB5MFjfRD5AZXZadaHGea6AAICQzoBzvql9Z04ttABurEa2q?=
- =?iso-8859-2?Q?6LSS+x88w/wivMRQS9DHQhyymulRAofCrLV2PTIsjLQCRg8WfoRCPZPl9g?=
- =?iso-8859-2?Q?KTW+2ITlJDiUiIlljHAIfvJjiIqjAhAsaDSyDlVO+/XBRSHstv8I2OvDB9?=
- =?iso-8859-2?Q?ekLVFaLzQXfwLamYW4ab604hKAY+8yhys10VLd69fCwt/mnNA304aB43iU?=
- =?iso-8859-2?Q?RDpcis7584hJ5xgm5XwSrnkZNCAJws6nmIZHHjS7oxorhlLYTyLWQpBn/R?=
- =?iso-8859-2?Q?eIAOQBINhx1Ux7HWHD/HEWpLYKC2gNYvNliGSWKWmsKMsVh6uz6IlVG4/f?=
- =?iso-8859-2?Q?CuO0707SF81/7gO1m7kyXF8Ek8EaEJz0EoIakC5TmmHpMA5QaPZVBbSDSP?=
- =?iso-8859-2?Q?wVOjPDEsocp10Nlkd9XbBTLL+VmGGnPlUtk+DfWwYWL3OhqRYg47HlBLFb?=
- =?iso-8859-2?Q?+JIhpd8NroNz65DtfxJ6PScYUgZ6k+OZdzm/rGIwF7ANzn+1yMKD3AAWoc?=
- =?iso-8859-2?Q?5vbHDY7KZTDul8UeTlDhVLBLWG5kQeX/cKd077MD18Mv4+qKpTPdBSSiUM?=
- =?iso-8859-2?Q?ppNgr7FeLvDkeH1ma5Cbv6JGWHkJXX3w9x5VXhfhZBC0Jxry8a9nD5XpNc?=
- =?iso-8859-2?Q?HxnzrZavJqxTBSqX4HVwbk0gZQTMU+PwYMGrB4m2bqrp3k5dqj7zR62UZ9?=
- =?iso-8859-2?Q?5UW4meK0uanOPI4ISG0AJMYvQnK/LOjJPG85TfB6T1XDASgdIp3WcmypCL?=
- =?iso-8859-2?Q?jm4q2nKvYmXPyh1vxrxqMcSjuyDG58m22E0NNdFe+cpmgzHI8D6fcPRrC0?=
- =?iso-8859-2?Q?h3WuzaIOsE07RwOD8gYoe+35kx/HR1kRohA/W4qAigdRCRHmE+CbvObPyy?=
- =?iso-8859-2?Q?paHjftVaLWEPtwLRBC9823bNmQEMmtc+mdYz1FKuC83dboOd0bjZoSTMa4?=
- =?iso-8859-2?Q?1ixWz83ZUXnUiWlTUIaeU1tfWMbPs98mN6vlTweLuv07ulEIemhC1/PYc8?=
- =?iso-8859-2?Q?bpqw=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229690AbjC2BCx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 28 Mar 2023 21:02:53 -0400
+Received: from esa1.hgst.iphmx.com (esa1.hgst.iphmx.com [68.232.141.245])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C478126A0
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 18:02:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1680051769; x=1711587769;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=+9L2EipOGTMYyPShzUzxm3RNOvbMeofXYnqMKuQMHok=;
+  b=IytGS8wvRSH27oZOiHu/aSX170yFsD1+A/xVxDOOUa5UjuGidNJrZRAc
+   30TNipdoc1s31VnbIDy1gYzYHQm1+4PMGqwpO9pShTdzDqJSOI9Kf4MQA
+   gbLp9iDt03nhu5PHEAKhrKNf8huB2JHy6cYLQFBo9bv+WuumYpMTspTgu
+   fKwvfZg0lhNM4zPho+eJp2GmcskDHX2ouM01uUE/ytb/3RugJjki36D6p
+   G1zXm5vI+s5fYY4X0GgST6mgYyBv0CpBpx42DUclQX1pmwNJIhD+9H3Qa
+   6ETQB/aI+OQZA6izGivHDscQ08V7XjBJi1rKb0DamPdDBiNWrhXqb0wLa
+   A==;
+X-IronPort-AV: E=Sophos;i="5.98,299,1673884800"; 
+   d="scan'208";a="338813226"
+Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Mar 2023 09:02:48 +0800
+IronPort-SDR: TdcoXwNYUTsi9Xjq6DykNHSfRkVHf0xZFPY66su3v9/GX51io/G26TWc2vgZp6pwAoo5kk55R3
+ eXuXv1twwia3ZbAeXinCO+U6FL1pggy2Bw9JgBsum38kjj+GLct/Iy6sE5Kpw0DoKeCY6yCbtP
+ QyYkkbWy4hE6I/0xfah00+dognBpbcmtEN0q6/p+07vRFVf65Qx34i3j6exUpRQiINnEEIXZLo
+ UPOtK8L2oQjLsnkNFa8+giw19N1fFz3zqScdVuUFS1tLccLAnRpWZLl1ghhoJJlQwRwjfWBVN7
+ MwI=
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Mar 2023 17:18:58 -0700
+IronPort-SDR: AcPyBtHZqr5gDZWqvi9JBJtEU/EXIN0nKN45XHWkN3giq4gsniK63BxDy+keuU0ySVYxa7e1UD
+ QcMJ/DsBt4pyArjlo5mOdJ44feM7I7lCZ6DlAybZdw0evXURP8jXPBZoFDQY8LlERMt1QVStOZ
+ KvprDJmD54IncO4HDc3vN2pklmsN/Q1jQtP/Rt9Uhhqg1s+//46Lzm1Tx93vjuo+CeIusENds1
+ L9pLtpYAnld1k80rpzVT2J+yU0s0TQxREetM/Y764aVsX1C9lUXod1l0P+RZ9NIapn/fGjQ0AF
+ Rfg=
+WDCIronportException: Internal
+Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
+  by uls-op-cesaip02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 28 Mar 2023 18:02:49 -0700
+Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PmSvr20K6z1RtVv
+        for <linux-pci@vger.kernel.org>; Tue, 28 Mar 2023 18:02:48 -0700 (PDT)
+Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)"
+        header.d=opensource.wdc.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
+        opensource.wdc.com; h=content-transfer-encoding:content-type
+        :in-reply-to:organization:from:content-language:references:to
+        :subject:user-agent:mime-version:date:message-id; s=dkim; t=
+        1680051767; x=1682643768; bh=+9L2EipOGTMYyPShzUzxm3RNOvbMeofXYnq
+        MKuQMHok=; b=LPMSvau7sHmXF8yHbtsW3I1MyVh6ZzM9jrTURodQhAjPmuZrkec
+        PkT+f3d8UtO7nXLSHE8lnVOp5KrwPcw68q/z4xuENR/b+zD7yBAugY98f0seMH1i
+        wr9B4/Hds6dqD01bbUPwazob66KGQHHuOq3fdpn6b8dPrSCDlPqYOYxY6/hGdgrS
+        AMYgmr3jrzag0lJfqD7OdG2YgZrF8quFpusUZxzxqg1p0JERwswdGMc0rKV3g950
+        7cKKJV2ziTxPz+gOB+XnYR4WBGXEr6hGyaHNdLsFf02+D8Hsso1uWSFhkpbMUU1W
+        XTBfZI9W1DgRimoY177oUpROD2WRDPfkuFw==
+X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
+Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
+        by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 8heEBaEKl3Ce for <linux-pci@vger.kernel.org>;
+        Tue, 28 Mar 2023 18:02:47 -0700 (PDT)
+Received: from [10.225.163.116] (unknown [10.225.163.116])
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PmSvn6PVdz1RtVm;
+        Tue, 28 Mar 2023 18:02:45 -0700 (PDT)
+Message-ID: <d7b9086b-298a-03c4-2117-e4987c833469@opensource.wdc.com>
+Date:   Wed, 29 Mar 2023 10:02:44 +0900
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d0e859dd-b244-48fa-e813-08db2fed0815
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2023 00:32:09.2168
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 2CVqPJuZQscf6yI++nNo6eaU9g0zoJq+KSIc/CCvsLkNjOAv4UXUVGIIsia4JkSCPtwukXuvDCVWiJR3gpJ2FKJsqVipSmfev9hum/8hc+tOky7BfSnC2N4MebTb5FFh
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYCPR01MB9520
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v3 10/16] PCI: epf-test: Cleanup
+ pci_epf_test_cmd_handler()
+To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230325070226.511323-1-damien.lemoal@opensource.wdc.com>
+ <20230325070226.511323-11-damien.lemoal@opensource.wdc.com>
+ <CAAEEuhq_T9KGJoBcDNOC_+8ktAUr91xys0aRqQCXz3nN0W72Xg@mail.gmail.com>
+Content-Language: en-US
+From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
+Organization: Western Digital Research
+In-Reply-To: <CAAEEuhq_T9KGJoBcDNOC_+8ktAUr91xys0aRqQCXz3nN0W72Xg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -126,22 +105,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Geert-san,
-
-> From: Geert Uytterhoeven, Sent: Tuesday, March 28, 2023 11:03 PM
+On 3/28/23 15:56, Rick Wertenbroek wrote:
+> On Sat, Mar 25, 2023 at 8:02=E2=80=AFAM Damien Le Moal
+> <damien.lemoal@opensource.wdc.com> wrote:
+>>
+>> Command codes are never combined together as flags into a single value=
+.
+>> Thus we can replace the series of "if" tests in
+>> pci_epf_test_cmd_handler() with a cleaner switch-case statement.
+>> This also allows checking that we got a valid command and print an err=
+or
+>> message if we did not.
+>>
+>> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+>> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+>> ---
+>>  drivers/pci/endpoint/functions/pci-epf-test.c | 30 +++++++++---------=
+-
+>>  1 file changed, 14 insertions(+), 16 deletions(-)
+>>
+>> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/p=
+ci/endpoint/functions/pci-epf-test.c
+>> index fa48e9b3c393..c2a14f828bdf 100644
+>> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+>> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+>> @@ -676,41 +676,39 @@ static void pci_epf_test_cmd_handler(struct work=
+_struct *work)
+>>                 goto reset_handler;
+>>         }
+>>
+>> -       if ((command & COMMAND_RAISE_LEGACY_IRQ) ||
+>> -           (command & COMMAND_RAISE_MSI_IRQ) ||
+>> -           (command & COMMAND_RAISE_MSIX_IRQ)) {
+>> +       switch (command) {
+>> +       case COMMAND_RAISE_LEGACY_IRQ:
+>> +       case COMMAND_RAISE_MSI_IRQ:
+>> +       case COMMAND_RAISE_MSIX_IRQ:
+>>                 pci_epf_test_raise_irq(epf_test, reg);
+>> -               goto reset_handler;
+>> -       }
+>> -
+>> -       if (command & COMMAND_WRITE) {
+>> +               break;
+>> +       case COMMAND_WRITE:
+>>                 ret =3D pci_epf_test_write(epf_test, reg);
+>>                 if (ret)
+>>                         reg->status |=3D STATUS_WRITE_FAIL;
+>>                 else
+>>                         reg->status |=3D STATUS_WRITE_SUCCESS;
+>>                 pci_epf_test_raise_irq(epf_test, reg);
+>> -               goto reset_handler;
+>> -       }
 >=20
-> After the L1 link state transition exception handler rework, the static
-> copies of the remapped PCIe controller address and the PCIe device
-> pointer became unused.  Remove them.
+> As a minor improvement on this cleanup I would suggest either switching
+> the if / else condition above or the two below, the inverted logic make=
+s it
+> confusing. (one test case is if (ret) and the two others are if (!ret) =
+with
+> inverted results, all could share the same code (same logic)).
+
+Indeed, good idea. I will add one more patch to do that.
+
 >=20
-> Fixes: 6e36203bc14ce147 ("PCI: rcar: Use PCI_SET_ERROR_RESPONSE after rea=
-d which triggered an exception")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>> -
+>> -       if (command & COMMAND_READ) {
+>> +               break;
+>> +       case COMMAND_READ:
+>>                 ret =3D pci_epf_test_read(epf_test, reg);
+>>                 if (!ret)
+>>                         reg->status |=3D STATUS_READ_SUCCESS;
+>>                 else
+>>                         reg->status |=3D STATUS_READ_FAIL;
+>>                 pci_epf_test_raise_irq(epf_test, reg);
+>> -               goto reset_handler;
+>> -       }
+>> -
+>> -       if (command & COMMAND_COPY) {
+>> +               break;
+>> +       case COMMAND_COPY:
+>>                 ret =3D pci_epf_test_copy(epf_test, reg);
+>>                 if (!ret)
+>>                         reg->status |=3D STATUS_COPY_SUCCESS;
+>>                 else
+>>                         reg->status |=3D STATUS_COPY_FAIL;
+>>                 pci_epf_test_raise_irq(epf_test, reg);
+>> -               goto reset_handler;
+>> +               break;
+>> +       default:
+>> +               dev_err(dev, "Invalid command\n");
+>> +               break;
+>>         }
+>>
+>>  reset_handler:
+>> --
+>> 2.39.2
+>>
 
-Thank you for the patch!
-
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Best regards,
-Yoshihiro Shimoda
+--=20
+Damien Le Moal
+Western Digital Research
 
