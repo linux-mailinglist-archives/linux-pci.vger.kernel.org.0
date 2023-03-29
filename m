@@ -2,141 +2,262 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8065A6CEFB3
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:46:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 539116CEFD2
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 18:51:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjC2Qqm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 12:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54488 "EHLO
+        id S230302AbjC2QvR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 12:51:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229481AbjC2Qql (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:46:41 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2075.outbound.protection.outlook.com [40.107.8.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E18B32D55;
-        Wed, 29 Mar 2023 09:46:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Zi+PTXxEeWJDSivFlKwl1rGlSrpbOP0kNX0MC3hL8LpkfC8/kmCjkh9Y9T7l0yIbrM6l460M+jS5vhnFhu0DymnH45AUxl/LglXIEczX1VucLvCjn2aR4F1I0eQW2smOdOXatbYkGpLQi0ILduuawDtf2Kbp5nqBoDTCFFjWhntEcxj7K63/NOj2JWavqZXbh/210hhpjRjKdgo3wRt+Ktqpr3dP7XSUuvDFzw3wOzd0fD+axYuWYHpvimaSo5in5cyvkXEAxV/T0/gyA6fLMaJRKyRkbgl7cihqhVFHZH2T1JOkBBjSTk2iwmzyezZ4EDMRuvUMD0NDHLTYdOWGkg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mJ0HF02JpTI1eRc9vD569lbpgElWyA3vpRJd8BZaq9g=;
- b=ETjM8qNOTVx5VZg8iFD5A6/x0DY1uAV7N+30q1XSfykYZtF+cDXePxjKjEktIuE+zjVWa8PU23Im/jbKwllDHB2XuYEBKIfyl18MMnXazXQRFnGi8KDuK+jp+qe3dpV7WD6eVXPJ2yX1ZMXXi1pLEuItr6GDIVzBXb5mcck5wqdmw316YAUO4e7TtDXJql3j4Jo9HKAb7AXOF4BpyEp1F/PWfzM8kdXjSJk07XsQ1rmmRryCVRum29BMtfKdjBXDcUgv7mpmPv7kHhEj6quCITCvmrrN3ouD6ccVeCSSIikjhTD0b86UUYOY8hyTduJ0/21xP+pHEulX6x/0oaXDig==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mJ0HF02JpTI1eRc9vD569lbpgElWyA3vpRJd8BZaq9g=;
- b=nrpFk2lumgc9Yar6HA7r2JH1L7f4Ao3DfiaCM4W6PHy1gVOGBgl2tTfrRip/mo6ocqWqcyPL3WaNvOdhPscBEeqY1k/wU8uT8IbPe2908azyi98QYqDdWqKV1YfxExHVUl80MhFkgOXCiwvKCY9ySc7eb8trk80AHu0XiXVC67M=
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by PAXPR04MB9351.eurprd04.prod.outlook.com (2603:10a6:102:2b6::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.30; Wed, 29 Mar
- 2023 16:46:34 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::fb2a:a683:b78e:b9b5]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::fb2a:a683:b78e:b9b5%4]) with mapi id 15.20.6222.034; Wed, 29 Mar 2023
- 16:46:33 +0000
-From:   Frank Li <frank.li@nxp.com>
-To:     Shunsuke Mie <mie@igel.co.jp>
-CC:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?iso-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jon Mason <jdmason@kudzu.us>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        Takanari Hayama <taki@igel.co.jp>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>
-Subject: RE: [EXT] [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP
- function
-Thread-Topic: [EXT] [RFC PATCH 0/4] PCI: endpoint: Introduce a virtio-net EP
- function
-Thread-Index: AQHZN7bpBm+5RmnRNEW5Iyx9WPW3za69bfSAgAXgoQCAAFlCIIAKMSSAgERzOmA=
-Date:   Wed, 29 Mar 2023 16:46:33 +0000
-Message-ID: <AM6PR04MB483881DFA2C35F02011FE74D88899@AM6PR04MB4838.eurprd04.prod.outlook.com>
-References: <20230203100418.2981144-1-mie@igel.co.jp>
- <HE1PR0401MB2331EAFF5684D60EC565433688D79@HE1PR0401MB2331.eurprd04.prod.outlook.com>
- <CANXvt5qjDDEK0NB=BWh00-HGU-p+sC=8TyP-oPdccnZxKxZt9w@mail.gmail.com>
- <HE1PR0401MB2331A8D5C791C34D9C39A62688DB9@HE1PR0401MB2331.eurprd04.prod.outlook.com>
- <796eb893-f7e2-846c-e75f-9a5774089b8e@igel.co.jp>
-In-Reply-To: <796eb893-f7e2-846c-e75f-9a5774089b8e@igel.co.jp>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: AM6PR04MB4838:EE_|PAXPR04MB9351:EE_
-x-ms-office365-filtering-correlation-id: 2452a26c-4f26-45ab-089c-08db30752793
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: zLWvan4D3RtUGjttrj2cil6cTKS5T/rggKF3G8dL6ycIEhNCipVkYFsGzKPYJIoArBlQbw1Zmiu4OkbKakl4ILEXAtl8AR8dOy/n/iB9ejbwL2miRq/raRhqEuqP/uSJKGun+RzbyrkUxdTLdX1/Q+qUXYQvvVfUSDu0hxu+79IryXROoNAvYDmd2i9sOHtq/ifVbrzZkehNila0l2e2criiU4pYHfqYCR7jHSO7wQXX4JdHb9C5VWXZabAoUA3w+2DMe30XMgAlx2LGK9oW2P0I/IfAsf0aydLyRtvEGS29T9TpFkG9hghleg/XKKUcaT4THeQ7DjMpgW0yWf2DRbb3iY4c0G4mp97WCMKENvSER29crkUQdnPFHcNKFnJf30M0cfy+1ZIKcsUT9zP3hvql9T2TOf7ZTkjY9H+jjjLFg6Ja3gFXQNBy3uOTHi7/Q9uqlDMmMoU+QGu+em3aBN4VuCjmqwHdIy4zOkjNo8Kt1d+iFBEkVEMkdCCuob650EIbr7uaW7HBqrcgg2SyGZBoq0sn6NIwbvFGcfw1ugoDWvZGUVMizfZCl3S/RJRnmj9GJ7GSsjdS0Zls6payCjiWycIQ+VqDGVBqMhtUKOdX0aMGXJtSGPxzZfqKsJF1
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(136003)(346002)(376002)(366004)(451199021)(558084003)(86362001)(38070700005)(122000001)(5660300002)(55236004)(186003)(53546011)(83380400001)(33656002)(9686003)(26005)(6506007)(44832011)(7416002)(52536014)(8936002)(41300700001)(55016003)(71200400001)(76116006)(4326008)(7696005)(6916009)(66556008)(8676002)(2906002)(38100700002)(54906003)(66946007)(316002)(66446008)(66476007)(64756008)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?iso-8859-2?Q?JdhVldSVsA/h4GCnYCa1D3nc1R96TTMkK0MNgcbCFEZF+BCXBCtxTnj8Lo?=
- =?iso-8859-2?Q?qve1hNLpz9Ltzgn/n/RCBb+BmAqx46O55EHN5C+amWp+3qO8KK7GAOLznT?=
- =?iso-8859-2?Q?LEVrZm6glYcjIJnvk2fUJOEaMeF9pxOsbfoveYtIzLwUSwsiMBvSfdcJ/w?=
- =?iso-8859-2?Q?fsw0NnYiLi2e3zDdHjGuxVclK8Jr+9dsfHt6+Ilk8LVWbeF4fj3dFmp4Dn?=
- =?iso-8859-2?Q?7CX3Bp7sta2itTdjBLaROl74Ql1aEWvTvrTfEiIdgd8qV0RQgGrRmEWQ2J?=
- =?iso-8859-2?Q?CA/nbvahmlFWV1tpgTjHO370Qh6GYZ8gTzza7H4X7UtzkKAeSOZJYiXORm?=
- =?iso-8859-2?Q?NzIZiM6SnRC/GPElvsq6i9RJbwXRIyyuLHXosIJvM+SLAGlpjzw0ItvroA?=
- =?iso-8859-2?Q?KYvUbCVHjHnd1rzndB3PIWfiHDRNWT586ncmdnY61z4xAhtoPq3k+bHYsQ?=
- =?iso-8859-2?Q?1nBUd/VMhXxWkMa9Cb7oMr3EkkDeniit9QqsHBUmmNlnlmxTkBf/4RyY/W?=
- =?iso-8859-2?Q?JP5dV3TloCvjxnFk4RQr0uX8T3mkG66SHG2+mvBBdyXuWYTZXSghASpxk5?=
- =?iso-8859-2?Q?AcW+a/Gme5XEkbu0JCUh4OihMTuh+Dgu71OO4V8OXaHxE8b4+EKyzyPURF?=
- =?iso-8859-2?Q?QtHAH2U3dO7IW/PgvXKmlDMFEOm8y7qjhwix8UyILgWF9j6t6z3BuF4tQi?=
- =?iso-8859-2?Q?CRqGldLVzmpZyRAkzZJE70NrD1emETpy85iS1GvbZQy+mcmE6288dW4uXd?=
- =?iso-8859-2?Q?blnDJbusWcUCC9rWlhPoQ1/ybVMH16A/VHX69e96i5i9109BIAq8TWfGT5?=
- =?iso-8859-2?Q?mrmOcZnPODcjIq+HdW4FA4O2v8gnp8maJamlY2PDH8U/q34MXXRXlSss63?=
- =?iso-8859-2?Q?FwbViyIlNqDw5orhwPtZ7bpvWQ1mtstAqGN69G0W1gGWQqDWYCUQ6QBGtD?=
- =?iso-8859-2?Q?phl93AmRFjzg7tBAViQ2Z22z7HHLvDdl5ZOo+1TyEMPEy17R8CG8uY2st8?=
- =?iso-8859-2?Q?jUsEnjXMgiYwENasy+3KFG/Qw+k88bTgDcM8WjdSI7knQOWc2K2vgWRZJ2?=
- =?iso-8859-2?Q?5Q+j5/UOAZH/uBDpT5yRysln+SOUh/Oe74OM0kgUnWRoyXiaxdHrzvOH9k?=
- =?iso-8859-2?Q?g+1CukepH2SRPy0hpUICt6Tse1qTcJYuOGnz2XBFFDdpgDYelOGcq222md?=
- =?iso-8859-2?Q?hgi8+i+omcd9NRvQuH9hE1hNE/j8GOlOeSLqKVd6uGUXCTt5GBmS9AVyAJ?=
- =?iso-8859-2?Q?Q6iWd1tJ5OdWokY+U+LfTpaeUVcFtyHMB9Xo24THCcCtHET+XxMBKxranB?=
- =?iso-8859-2?Q?ns2DrSyic/7AknywXSfuHKyX4L50IxfmlTbfAXPqzjfAQ3hbl0X9+e3Wkp?=
- =?iso-8859-2?Q?yEtd6dMDj/o44y9NHuKHoempQ2vtTJ9XPUr5PfJ9uKag9jZ0XPiNPT3hPp?=
- =?iso-8859-2?Q?m9oSPvsM/3MP5+19I2d10zRHE1cdaKonZ/5PCKp1MIF1NEPrZGf2eP2SNU?=
- =?iso-8859-2?Q?wCck0TXO2lQkBXGlBZtmA7FPlVYPLsi9Ot/CkG6CpY4CZ5VvBnl/QXVPuE?=
- =?iso-8859-2?Q?slEbqLGoXlbkmKIWIBEAau4BVKqoB8qwoi9i0jejFsSEx2FJDSYkfIm6cg?=
- =?iso-8859-2?Q?qATc8v6cHMfhk=3D?=
-Content-Type: text/plain; charset="iso-8859-2"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229873AbjC2QvP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 12:51:15 -0400
+Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 201F76595;
+        Wed, 29 Mar 2023 09:50:59 -0700 (PDT)
+Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-17aaa51a911so16844268fac.5;
+        Wed, 29 Mar 2023 09:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680108658;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=PehrIGvL7yrC1nSpIWGfA0jHs68N9zhBNDrUAi9TH7E=;
+        b=RuloJ8452t5VMRd/Gc/4PkkNTbP9SMWjIkICi2rgimWyX3kvdpBE0cK1eOZnxAyBoW
+         15Y8zazVAarN2P9zKWg4KCl1v32n7kPlIiRVULo0ebnmj3t/20FpQSUAZKSbDcalLqR8
+         xbRn9ltbKcuFMzYhLoQJtu469cn79rBbXF7IPJHpi1Blvv9VVZq+E6TuFx3WCaum9Hx0
+         g/21YT2MazcIcKkp7Z6OIuOb41Ln0wBI1B8t7L5NjErhDTsPvYxLhnbU58M2jmT6ta3y
+         3RNAICG27/KiOIhbGU0UUykzaO4/v5T9ntklMJz/4rCPThusAgmOW3ASEPKSOiyholtj
+         sR/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680108658;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PehrIGvL7yrC1nSpIWGfA0jHs68N9zhBNDrUAi9TH7E=;
+        b=x06lwnKbuanXpiiO4rW2QZZQCx5dbWBIlMge8oirjrgIhcuIS9er0/asYOhJzinTNn
+         uHRfyDvPWsd7AnoxieY+gb0VjFfpVEr6KNX84OCrWwjDJ3SfJxp8f4v7Pdl5E8MBehYG
+         sRW3dPk3fmK23m2kv9BzvISh3HHSmfcfeF2COwEy/DqjhwX9tkHB3rvlZiBICBCVOuAN
+         WDEZx624LKacIjB7B9d9x4a2GXbbRIDU83FMrUc4+dJYhNluQXuMyTqbyQiApABAhTzC
+         0qPV4XtqYlV/uDOXuBK8V6+2oGDdY1LmJNO3ZsQPKiOhWHQ18RQS9TORhTiyqsSf2KIX
+         xZeQ==
+X-Gm-Message-State: AO0yUKW3X80sPUzfEiwWSzSnppu1TJ3oMpDrG4OFe5a+ZLJGNbEa9ctg
+        twR/xkTjoGU2ukioHFkiu1Q=
+X-Google-Smtp-Source: AKy350YsLi+p13RRSVPYDYULgRngZJZHfRMlUAGUaozsIfg1QWULbyMLp1TRGCv4Bv2Qm/c/NMJRHA==
+X-Received: by 2002:a05:6870:1d1:b0:17e:c403:a046 with SMTP id n17-20020a05687001d100b0017ec403a046mr11978937oad.12.1680108658258;
+        Wed, 29 Mar 2023 09:50:58 -0700 (PDT)
+Received: from ?IPV6:2600:1700:2442:6db0:d913:852b:d7c6:7253? ([2600:1700:2442:6db0:d913:852b:d7c6:7253])
+        by smtp.gmail.com with ESMTPSA id n12-20020a9d740c000000b006a0ae1c4263sm6437854otk.48.2023.03.29.09.50.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Mar 2023 09:50:57 -0700 (PDT)
+Message-ID: <fed57536-cd2c-bf9b-37bc-7a653685cbf2@gmail.com>
+Date:   Wed, 29 Mar 2023 11:50:56 -0500
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2452a26c-4f26-45ab-089c-08db30752793
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Mar 2023 16:46:33.6147
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uUKHH2uje2OPd2UronKofHczEVrA2uev1KXLj68jZsls9/CFF0ohRuQKnw7hLqv3lxfhSTA7Zp81ev18/VATsg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB9351
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH V7 0/3] Generate device tree node for pci devices
+Content-Language: en-US
+To:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>
+Cc:     Rob Herring <robh@kernel.org>, Lizhi Hou <lizhi.hou@amd.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, helgaas@kernel.org, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
+        stefano.stabellini@xilinx.com, trix@redhat.com,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Steen.Hegelund@microchip.com" <Steen.Hegelund@microchip.com>,
+        "Horatiu.Vultur@microchip.com" <Horatiu.Vultur@microchip.com>,
+        "Allan.Nielsen@microchip.com" <Allan.Nielsen@microchip.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
+ <af2a6686-ea35-e5fc-7541-27e5d6ca9311@gmail.com>
+ <20230227113150.398dcfa7@fixe.home>
+ <52b8f136-c73f-a97d-2bb6-48aff3755f98@gmail.com>
+ <f927790dc9839cd93902c0d2e5afe5e8@bootlin.com>
+ <1886b888-a0e8-b1ee-c48a-ddbc8b5b0c63@gmail.com>
+ <CAL_JsqL_ER32ys-yW_7-QKLjEmKK8StOeM5yvH2ChuvX++fe5Q@mail.gmail.com>
+ <9b4bb45a-f6e4-c95c-d27c-21c7fecb5505@gmail.com>
+ <20230309094507.62d7c35e@fixe.home>
+From:   Frank Rowand <frowand.list@gmail.com>
+In-Reply-To: <20230309094507.62d7c35e@fixe.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 3/9/23 02:45, Clément Léger wrote:
+> Le Wed, 8 Mar 2023 01:31:52 -0600,
+> Frank Rowand <frowand.list@gmail.com> a écrit :
+> 
+>> On 3/6/23 18:52, Rob Herring wrote:
+>>> On Mon, Mar 6, 2023 at 3:24 PM Frank Rowand <frowand.list@gmail.com> wrote:  
+>>>>  
+>>
+>> < snip >
+>>
+>> Hi Rob,
+>>
+>> I am in no position to comment intelligently on your comments until I
+>> understand the SoC on PCI card model I am asking to be described in
+>> this subthread.
+> 
+> Hi Frank,
+> 
+> Rather than answering all of the assumptions that were made in the upper
+> thread (that are probably doing a bit too much of inference), I will
+> re-explain that from scratch.
 
->=20
-> On 2023/02/08 1:02, Frank Li wrote:
+Thanks!  The below answers a lot of my questions.
+> 
+> Our usecase involves the lan966x SoCs. These SoCs are mainly targeting
+> networking application and offers multiple SFP and RGMII interfaces.
+> This Soc can be used in two exclusive modes (at least for the intended
+> usage):
+> 
+> SoC mode:
+>    The device runs Linux by itself, on ARM64 cores included in the
+>    SoC. This use-case of the lan966x is currently almost upstreamed,
+>    using a traditional Device Tree representation of the lan996x HW
+>    blocks [1] A number of drivers for the different IPs of the SoC have
+>    already been merged in upstream Linux (see
+>    arch/arm/boot/dts/lan966x.dtsi)
+> 
+> PCI mode:
+>   The lan966x SoC is configured as a PCIe endpoint (PCI card),
+>   connected to a separate platform that acts as the PCIe root complex.
+>   In this case, all the IO memories that are exposed by the devices
+>   embedded on this SoC are exposed through PCI BARs 0 & 1 and the ARM64
+>   cores of the SoC are not used. Since this is a PCIe card, it can be
+>   plugged on any platform, of any architecture supporting PCIe.
+> 
+> This work only focus on the *PCI mode* usage. In this mode, we have the
+> following prerequisites:
+> - Should work on all architectures (x86, ARM64, etc)
+> - Should be self-contained in the driver
 
-Did you have chance to improve this?=20
+> - Should be able to reuse all existing platform drivers
 
-Best regards
-Frank Li=20
+I've said before (in different words) that using an existing platform
+driver for hardware on a PCI card requires shims, which have been
+strongly rejected by the Linux kernel.
+
+> 
+> In PCI mode, the card runs a firmware (not that it matters at all by
+> the way) which configure the card in PCI mode at boot time. In this
+> mode, it exposes a single PCI physical function associated with
+> vendor/product 0x1055/0x9660. This is not a multi-function PCI device !
+> This means that all the IO memories (peripheral memories, device
+> memories, registers, whatever you call them) are accessible using
+> standard readl()/writel() on the BARs that have been remapped. For
+> instance (not accurate), in the BAR 0, we will have this kind of memory
+> map:
+> 
+>            BAR0
+>    0x0 ┌───────────┐
+>        │           │
+>        ├───────────┤
+>        │   Clock   │
+>        │ controller│
+>        ├───────────┤
+>        │           │
+>        ├───────────┤
+>        │   I2C     │
+>        │ controller│
+>        ├───────────┤
+>        │           │
+>        ├───────────┤
+>        │   MDIO    │
+>        │ Controller│
+>        ├───────────┤
+>        │           │
+>        ├───────────┤
+>        │  Switch   │
+>        │ Controller│
+>        ├───────────┤
+>        │           │
+>        │   ...     │
+>           
+> 
+> It also exposes either a single interrupt via the legacy interrupt
+> (which can then be demuxed by reading the SoC internal interrupt
+> controller registers), or multiple interrupts using MSI interrupts.
+> 
+> As stated before, all these peripherals are already supported in SoC
+> mode and thus, there are aleready existing platform drivers for each of
+> them. For more information about the devices that are exposed please
+> see link [1] which is the device-tree overlay used to describe the
+> lan9662 card.
+> 
+> In order to use the ethernet switch, we must configure everything that
+> lies around this ethernet controller, here are a few amongst all of
+> them:
+> - MDIO bus
+> - I2C controller for SFP modules access
+> - Clock controller
+> - Ethernet controller
+> - Syscon
+> 
+> Since all the platform drivers already exist for these devices, we
+> want to reuse them. Multiple solutions were thought of (fwnode, mfd,
+> ACPI, device-tree) and eventually ruled out for some of them and efforts
+> were made to try to tackle that (using fwnode [2], device-tree [3])
+> 
+
+> One way to do so is to use a device-tree overlay description that is
+> loaded dynamically on the PCI device OF node. This can be done using the
+> various device-tree series series that have been proposed (included
+> this one). On systems that do not provide a device-tree of_root, create
+> an empty of_root node (see [4]). Then during PCI enumeration, create
+> device-tree node matching the PCI tree that was enumerated (See [5]).
+> This is needed since the PCI card can be plugged on whatever port the
+> user wants and thus it can not be statically described using a fixed
+> "target-path" property in the overlay.
+
+I understand that this is a use case and a desire to implement a
+solution for the use case.  But this is a very non-standard model.
+The proposal exposes a bunch of hardware beyond the pci interface
+in a non-pci method.
+
+No, just no.  Respect the pci interface boundary and do not drag
+devicetree into an effort to pierce and straddle that boundary
+(by adding information about the card, beyond the PCI controller,
+into the system devicetree).  Information about dynamically
+discoverable hardware does not belong in the devicetree.
+
+-Frank
+
+> 
+> Finally, to glue everything together, we add a PCI driver for the
+> VID/PID of the PCI card (See [6]). This driver is responsible of adding
+> the "ranges" property in the device-tree PCI node to remap the child
+> nodes "reg" property to the PCI memory map. This is needed because the
+> PCI memory addresses differ between platform, enumeration order and so
+> on.Finally, the driver will load the device-tree overlay (See [1]) to
+> the PCI device-tree node. Eventually, a call to
+> of_platform_default_populate() will probe the nodes and platform
+> drivers.
+> 
+> I hope this will help you understanding what is going on here. In the
+> meantime, I'm also trying to obtain public documentation about the
+> lan966x SoC.
+> 
+> [1]
+> https://github.com/clementleger/linux/blob/bf9b4ef803d86c4ae59a4ca195a4152b0d5c3cea/drivers/mfd/lan966x_pci.dts
+> [2]
+> https://lore.kernel.org/netdev/YhPSkz8+BIcdb72R@smile.fi.intel.com/T/
+> [3]
+> https://lore.kernel.org/lkml/20220427094502.456111-1-clement.leger@bootlin.com/
+> [4]
+> https://lore.kernel.org/lkml/20230223213418.891942-1-frowand.list@gmail.com/
+> [5]
+> https://lore.kernel.org/lkml/1674183732-5157-1-git-send-email-lizhi.hou@amd.com/
+> [6]
+> https://github.com/clementleger/linux/blob/bf9b4ef803d86c4ae59a4ca195a4152b0d5c3cea/drivers/mfd/lan966x_pci_of.c
+> 
+
