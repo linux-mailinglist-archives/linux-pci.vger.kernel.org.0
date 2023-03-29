@@ -2,160 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6DC6CF2E0
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 21:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AAC06CF343
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 21:40:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230199AbjC2TRJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 15:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52250 "EHLO
+        id S229588AbjC2TkP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 15:40:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229687AbjC2TRI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 15:17:08 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 540BD40C8;
-        Wed, 29 Mar 2023 12:17:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1070DB8241C;
-        Wed, 29 Mar 2023 19:17:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DA6FC433D2;
-        Wed, 29 Mar 2023 19:17:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680117424;
-        bh=5C8dmAZ+o3akW5jgtH0MgmlKVAVR0yjs7CVlJLVZGA0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XD02prjcCNlDc1psSDEItfpAr5d/im6gMLuWbUoBdEVe65wXKDHChBPPLutfA2zty
-         a7FJ/72yAQqxOg+23JIwd8mW74dFmO1WVL/LOKKskmKny8yUXtPhMpZ8TJGJAElhQ/
-         NywFqWAVCZl7wG4yJa6jcuuExa/Au36abld/j7SA9VtUBQnmReYwRIAC3NXdADCWjJ
-         jTfb/3qHUguAjNFSHU3F3/xB4Wjw/1gStbokg5qUCes3/t5IJDbpNwNrPj1+VT0j2A
-         365sEyaHjsJk06o8qfICHZqAjKv6cdYM7SzjbasorVJUyGhmg+jBssqWO5p++o5QcG
-         Ly8feYkui7bKw==
-Date:   Wed, 29 Mar 2023 14:17:03 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     treding@nvidia.com, krzysztof.kozlowski@linaro.org,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
-        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
-        ishah@nvidia.com, bbasu@nvidia.com
-Subject: Re: [Patch v4 10/10] PCI: tegra194: add interconnect support in
- Tegra234
-Message-ID: <20230329191703.GA3076491@bhelgaas>
+        with ESMTP id S229886AbjC2Tjr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 15:39:47 -0400
+Received: from infra.glanzmann.de (infra.glanzmann.de [IPv6:2a01:4f8:b0:3ffe::5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B57B4ED4
+        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 12:39:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=glanzmann.de;
+        s=infra26101010; t=1680118780;
+        bh=ZChw6dXNtrck3De5Td1PPB6x2isj/bMWUmfo3lNeqFE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=hB23zdKmPXh67uei7X23zyZPacx1+5ArCoIz0tGK3swnx73KYgc89IAq7fT2UFbid
+         LvHt5d9ZQHaJBfQVzuwGWmxjtK7/uML1rIylWcaloDxSZM7ptaUoqf0UqFaJuNnyOG
+         gresasbgq+g6A7iUFQZfISDL6hDlpjdOVuDK7Y7RLaviu9Ss45K2PW3lK4+fO03h1X
+         v/3uI4rvfmvp0olNE/oiGrqekFDeVNS1MBDwF8JnKM68W0VHLEV+A09a++H+Ls24jO
+         zD/hbR2fERiTTwm8fkkohqA3RlKceW2Lns3noi8bBkmQe62QlsidGLdqr3QYH9Hj53
+         BMOurOTavFq/rwHmrGXV1KE5FbU/JTfZpMsNktbkkIIvNiaAfdeXibTjNFV+hatXZ3
+         8qftyBG0ji6vqHF6S3PkBVxzGSvZoqfaqFdE6dCtxi1yrd9sRFb5m3Xv746o6ld9f6
+         3R0vH4iD4t27kqBU1uLRG+0Up2RSo3dDRzrYiz3sS80ddMjEJ7FKU3eD+1Rhls6j6H
+         jEtDc5yWorCo+7m1g6Z/RuM/PO6O9RzZjGBpaXNmuY+dyrME6lCytIZsuftx/8EETl
+         P1s2CieZIafoXXlAo86LLX1lU37Pif49BnSGK3f7Z0xnDQJzTsaYyiyvk0CISmC7w1
+         ESHKhzM7aqaNhLjCFYJm4vB8=
+Received: by infra.glanzmann.de (Postfix, from userid 1000)
+        id B07F67A80055; Wed, 29 Mar 2023 21:39:40 +0200 (CEST)
+Date:   Wed, 29 Mar 2023 21:39:40 +0200
+From:   Thomas Glanzmann <thomas@glanzmann.de>
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>, bhelgaas@google.com,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, x86@kernel.org,
+        linux-pci@vger.kernel.org, "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Subject: Re: [PATCH] PCI: Add quirk to clear AMD strap_15B8 NO_SOFT_RESET
+ dev2 f0
+Message-ID: <ZCST/Bagg2qhdAaJ@glanzmann.de>
+References: <20230329172859.699743-1-Basavaraj.Natikar@amd.com>
+ <ae3218a7-52e6-cf96-2223-dac2e1f9d14a@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1d029226-9749-9211-2baa-7f9188641ce0@nvidia.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <ae3218a7-52e6-cf96-2223-dac2e1f9d14a@amd.com>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 11:28:40PM +0530, Sumit Gupta wrote:
-> On 29/03/23 22:29, Bjorn Helgaas wrote:
-> > On Wed, Mar 29, 2023 at 02:44:34PM +0530, Sumit Gupta wrote:
-> > > On 28/03/23 23:23, Bjorn Helgaas wrote:
-> > > > > +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
-> > > > > +{
-> > > > > +     struct dw_pcie *pci = &pcie->pci;
-> > > > > +     u32 val, speed, width;
-> > > > > +
-> > > > > +     val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
-> > > > > +
-> > > > > +     speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
-> > > > > +     width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
-> > > > > +
-> > > > > +     val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
-> > > > > +
-> > > > > +     if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
-> > > > > +             dev_err(pcie->dev, "can't set bw[%u]\n", val);
-> > > > > +
-> > > > > +     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-> > > > 
-> > > > Array bounds violation; PCI_EXP_LNKSTA_CLS is 0x000f, so possible
-> > > > speed (CLS) values are 0..0xf and "speed - 1" values are -1..0xe.
-> > > > 
-> > > > pcie_gen_freq[] is of size 4 (valid indices 0..3).
-> > > > 
-> > > > I see that you're just *moving* this code, but might as well fix it.
-> > > > 
-> > > Thank you for the review.
-> > > Will include the below change in the same patch. Please let me know if any
-> > > issue.
-> > > 
-> > >   -       clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-> > >   +       if (speed && (speed <= ARRAY_SIZE(pcie_gen_freq)))
-> > >   +               clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
-> > >   +       else
-> > >   +               clk_set_rate(pcie->core_clk, pcie_gen_freq[0]);
-> > 
-> > I didn't notice that speed is a u32, so -1 is not a possible value.
-> > Also, it's used earlier for PCIE_SPEED2MBS_ENC(), so you could do
-> > something like this:
-> > 
-> >    speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val) - 1;
-> >    if (speed >= ARRAY_SIZE(pcie_gen_freq))
-> >      speed = 0;
-> > 
-> >    val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) /
-> >          BITS_PER_BYTE);
-> >    ...
-> >    clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
-> 
-> I tried this change but PCIE_SPEED2MBS_ENC gives zero when speed value is
-> one. The speed value ranges from "1 to 4" and for value "1",
-> pcie_link_speed[speed] gives '0xff'.
+Hello Mario,
 
-Oh, my fault, sorry!  I thought both places indexed the same array,
-but the first is pcie_link_speed[] (where all the possible values
-(0..0xf) are valid indices) and the second is pcie_gen_freq[] (where
-only 0..3 are valid).
+* Limonciello, Mario <mario.limonciello@amd.com> [2023-03-29 20:56]:
+> Can you please test this on your side?
 
-> The below change works fine. Please share if its OK to add it in patch.
-> 
->   speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
->   if (!speed || speed >= ARRAY_SIZE(pcie_gen_freq))
->           speed = 1;
-> 
->   val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) /
-> BITS_PER_BYTE);
+> Explicitly test it with amdgpu blacklisted or iGPU disabled in BIOS setup so
+> that we can confirm that it is working and the amdgpu version of it isn't
+> being used.
 
-So I don't think you need to clamp "speed" for indexing
-pcie_link_speed[] at all.
+I tested the same on top of v6.2.8 with amdgpu blacklisted. It works
 
->   if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
->           dev_err(pcie->dev, "can't set bw[%u]\n", val);
-> 
->   clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
+Tested-by: Thomas Glanzmann <thomas@glanzmann.de>
 
-What if you added a 0th entry to pcie_gen_freq[] so you can index it
-directly with the PCI_EXP_LNKSTA_CLS value the same way as
-pcie_link_speed[]?  Then you wouldn't need the "- 1" and only have to
-worry about going off the end:
+Find here some additional information:
 
-  static const unsigned int pcie_gen_freq[] = {
-    GEN1_CORE_CLK_FREQ,	  /* PCI_EXP_LNKSTA_CLS == 0; undefined */
-    GEN1_CORE_CLK_FREQ,
-    GEN2_CORE_CLK_FREQ,
-    GEN3_CORE_CLK_FREQ,
-    GEN4_CORE_CLK_FREQ,
-  };
+https://tg.st/u/dabb0ed77c14a8ec6e76d85f9f936977dca04c899d1773603c58350c9ce31768.txt
 
-  speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
+I tested by replugging mouse and keyboard in opposite ports which did
+not work before.
 
-  val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) /
-        BITS_PER_BYTE);
-
-  if (speed >= ARRAY_SIZE(pcie_gen_freq))
-    speed = 0;
-  clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
-
-Bjorn
+Cheers,
+        Thomas
