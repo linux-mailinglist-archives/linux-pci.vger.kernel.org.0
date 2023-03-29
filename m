@@ -2,233 +2,210 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CDA36CF0C4
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 19:11:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 241566CF0C8
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 19:13:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231609AbjC2RLf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 13:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
+        id S231224AbjC2RNf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 13:13:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbjC2RLP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 13:11:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCD4F6A4D
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 10:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680109809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sm8uA8G582IjwCJO3aOm/Kk3OQ+yP/i24Xan1y7i8U8=;
-        b=KaqN2f4aVEW2kT2eu4hd12upMuQh+9Artv7XvScYssgwJF+TfCas2crFa7np8zIBU/6qFz
-        10WfniH9DQJz+FMwQ9FGJHQZqmBhN6EZXNzM/Lk/1s4PZ0JBLMT/53mrNc0H8l8DM60Lr6
-        MPpcDH+wAkwUW8RxJVMWBVbs0CedOCg=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-596-1xi3h9CAPmOO081fEaQ2Ag-1; Wed, 29 Mar 2023 13:10:06 -0400
-X-MC-Unique: 1xi3h9CAPmOO081fEaQ2Ag-1
-Received: by mail-il1-f198.google.com with SMTP id d6-20020a92d786000000b00316f1737173so10799389iln.16
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 10:10:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680109804;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Sm8uA8G582IjwCJO3aOm/Kk3OQ+yP/i24Xan1y7i8U8=;
-        b=njdYYXdMtb6ODnb0NCd/RIkmmvncqjoMBdl9H5+2x6HImWnKYHB+6ishPMxCEYI1HT
-         3HgLgT5i8Cpm/J9m4i2VmeW+vJm1iwCA6uAMkfPMuANcjCgEMLZk7M8aaiAgP4rZfHw9
-         GzMGv3Y31VM8FiJT8XhJg65/VXixKWnaZ6VJFfXLJH6Yl6R72SNf7AkUu78JJl4Sy6kS
-         Z9ochaZaa/CiUIA75anIckKAoevCbPR3QvDN1yXDZwl0mmSWuSyJcNxRElo72fBmyUS4
-         PypeKJYnm0G1mn1/PrKHhtnM76J3h8lWdSqdZIwaGnVGu3DrMXNDX7d6Cz1v0EZTQGmC
-         MgBg==
-X-Gm-Message-State: AAQBX9dFuFWVI7B3+KTqf+peEw7cq2qqNFDkT3uJGdQm0f736Zo3AYz2
-        bhnZH3lom/Hvz16AL3NJ3Fu6f3zdkeDPAq1wQVdH5qnnZWs6k+heDGgJZT/fHLUvVFGhk7W2BlQ
-        1kTP8IcafPp68vpLojP4n
-X-Received: by 2002:a5e:880c:0:b0:74d:1ccb:e5a5 with SMTP id l12-20020a5e880c000000b0074d1ccbe5a5mr2472544ioj.6.1680109803949;
-        Wed, 29 Mar 2023 10:10:03 -0700 (PDT)
-X-Google-Smtp-Source: AKy350aBf8PtoDf19Dap6GtipX8y7v1yqM3xfe+1J+j5ciRQDju/dl+9/wT+b9ln8HsMW6oQVwUxKA==
-X-Received: by 2002:a5e:880c:0:b0:74d:1ccb:e5a5 with SMTP id l12-20020a5e880c000000b0074d1ccbe5a5mr2472525ioj.6.1680109803603;
-        Wed, 29 Mar 2023 10:10:03 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id g4-20020a6be604000000b007592d781128sm4400887ioh.30.2023.03.29.10.10.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 10:10:03 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 11:10:01 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Amit Cohen <amcohen@nvidia.com>, mlxsw@nvidia.com,
-        linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH net-next 6/6] mlxsw: pci: Add support for new reset flow
-Message-ID: <20230329111001.44a8c8e0.alex.williamson@redhat.com>
-In-Reply-To: <20230329160144.GA2967030@bhelgaas>
-References: <ZCBOdunTNYsufhcn@shredder>
-        <20230329160144.GA2967030@bhelgaas>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
+        with ESMTP id S231133AbjC2RNd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 13:13:33 -0400
+Received: from NAM02-BN1-obe.outbound.protection.outlook.com (mail-bn1nam02hn2209.outbound.protection.outlook.com [52.100.160.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 466285FFA;
+        Wed, 29 Mar 2023 10:13:09 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SI427LIoXkdF50w9+397bD8lPsV+wIS/jmUC3I+Rxdv8tHA5XApHgKM9UYpLN9ooBcp8ZOR3agDw6yG5Trh5tRJQztxS4rCQtEmWbwC91cyu6RKpov2p8GcK1FUrN5UX3xZJF3qugIKhK1m5EBTSYiRd5FmTmVOC4IdJ3yS4cqB9FnS9SS4mNuyqv4J8Fi1KZFc5dP/gH1O6M4rl30oWK/hX3HZfLt59Lt3ZjsKAfRzsfYav0sTDV3MKlsk/nz/c839j3MsVqpY1CyHCPGKYyCcVejW3vxpsY6OjesVOchoOSHxgxMT7lMCixVbuhjqJ+nKKobrmEfw4orD7E+9ong==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HVc/axd8jBov+zhZyeS0qFLmnjAEPfPfh0j/OhBk8ww=;
+ b=WydSIme6DLV+mA1Iw+Jy0jaZDUJ8KMVZQXB/gAozQdGMeRMgdtTQya+UttRur21WF1Eht+j9+z/Pxaxn3dxiPUX1mpOxxymgz9m3TgXNl6tM7tgEKYad3wHLUYs4Y5vot0a+bRw62v/OyylU8gmFwqE+K3Y69Pjp4wF50JSVo/GdmVKwUzAcsK5qlD1WDTPQFPvFXQtoTpuxDQfy/6J3uJPEclBdbfJ30eZYBMo5PLgldsb6f/sofOtJByIqXg1So80zYyMZ4ypQfCxyCcAetfGYJOAO2MRIla63K3axcH0z64hXjQFX2Sq2kqVxHXS1SySYk5qVTJCs/UEX98QSsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=gmail.com smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HVc/axd8jBov+zhZyeS0qFLmnjAEPfPfh0j/OhBk8ww=;
+ b=q4mRBuqF/cMwHEaJMLR5Y//JP4ESL2JI0OmiNM2FLqjqq4surKLo7HtLGmYUVTYDHLJThOi7umlEJGFvfPeIdOogHhF8ekjKZ9rfKMhNdKkObV+95fqKCzNH9RvJEp3TwqhH4/FN4By13vPTYzHt4aUdIhFi/s7LT6wFuj7WXKY+7TpXUGo0YWb8AS9QmQ+BFn7cvrHpJjUUbkvq2K+t/yU2vV31qKwYfyp/gbS8V9bbhU+OI+Fra2coRPwXWwb+3l9t9d5YHerYLcFMGsFQtQk7vUbbhcCx4Q+uLic8ZL3gIOuJI7F5pxSv2eOIOwGIJ4bztiCKV/wRcPyRjecCew==
+Received: from BN9PR03CA0910.namprd03.prod.outlook.com (2603:10b6:408:107::15)
+ by DM4PR12MB7501.namprd12.prod.outlook.com (2603:10b6:8:113::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.30; Wed, 29 Mar
+ 2023 17:12:56 +0000
+Received: from BN8NAM11FT103.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:107:cafe::1f) by BN9PR03CA0910.outlook.office365.com
+ (2603:10b6:408:107::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.20 via Frontend
+ Transport; Wed, 29 Mar 2023 17:12:56 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BN8NAM11FT103.mail.protection.outlook.com (10.13.176.181) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6254.20 via Frontend Transport; Wed, 29 Mar 2023 17:12:55 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 29 Mar 2023
+ 10:12:44 -0700
+Received: from [10.41.21.79] (10.126.230.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Wed, 29 Mar
+ 2023 10:12:38 -0700
+Message-ID: <0b393600-3f08-c2e8-9b02-664c6a984de1@nvidia.com>
+Date:   Wed, 29 Mar 2023 22:42:36 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [Patch v4 01/10] dt-bindings: memory: tegra: add bpmp ref in
+ tegra234-mc node
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+CC:     <treding@nvidia.com>, <dmitry.osipenko@collabora.com>,
+        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
+        <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
+        <lpieralisi@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
+        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
+        <ishah@nvidia.com>, <bbasu@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>
+References: <20230327161426.32639-1-sumitg@nvidia.com>
+ <20230327161426.32639-2-sumitg@nvidia.com>
+ <787f656a-223d-5eed-e311-9cc7a6c46452@linaro.org> <ZCLF6ZRH528pu/r3@orome>
+ <79d8044f-ce68-463e-66f7-8755e253bc99@linaro.org> <ZCLiCWRYbO98qwCn@orome>
+Content-Language: en-US
+From:   Sumit Gupta <sumitg@nvidia.com>
+In-Reply-To: <ZCLiCWRYbO98qwCn@orome>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.230.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT103:EE_|DM4PR12MB7501:EE_
+X-MS-Office365-Filtering-Correlation-Id: b1c1edd0-0025-4b75-dc52-08db3078d6bc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: mzeDqYzOVqJAXIlp/dmlmxec+XDoIXYeFHPkIFVghvVw0Nim6sYEyVrUPlSrwFUHeTAVl7agXEnAZZXQcA0mye/fS5IJA8xRppU1DJfNKLWW5MU8XlelzVEL0WssG7TGY7Vsm5xeQMjTdGJAYqkdMZPgXdGBUO2yvxtuJCesFGSADktM0VGTUyyYpsqTEeoyACHuchuU2bLqnNUjoZFI+3YzL8uSFle4Pph3kvXiOZuh8dkF/thEH7uqBU0fDMhs31ToHLb68nP8iO4a+H0EyFKHjoGt83mLzaPNJSOXDiGMRgFuuG4pafpk73slpqh324ZXwLTPODWKCzobTg1jpZDdeiI0zTbGx9+AWym87rMVP0kY2WxegE7d97+B4Y5eSW6UwWROcJOvfgxbd4ykHOoD6XiW3ap2vboob2Ja+cvE/vteV6QgsO6fa/sUppnENWnxNfINNVw25630SyFH5cozDPOZKRcWlzCcW7i1MC4qwLvzf5tF5Gy6Vst2WpDY8+KMVIt0fy9EzyIMcU/KjLFsPzo3V5bsdspSr8xAykAKiTiU2mYw05FIl4kJpHZgfo6iSUCkb6YdFLvu9NlxxxxalvDsooj2tK+SZXjPdTjk/faQs25klyBwJUkv/eNWUdPjYaIOx5uRU3rbv3gNwVhwilvjwvjfy7GI+l1eZ47K4Ejk8wkkDAjk7dq4/qHZ4QlTh+ZXWNXkWkiC2Y68LBBAGIEibO5cqqM3xhS7Zd0NDvNkf/9yAGvUVCwWK8BjN36YUnLuP0KqMeq6uhXToxLaWNdlni1oLVpzZcZyDzQ1EWdUW+/RXTPBWZ4XDq0oh2pC64lHeAFHNY5dVnSjH/cKlY4uCL8ROxpRqtfEhaA=
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(136003)(346002)(376002)(451199021)(5400799015)(46966006)(40470700004)(36840700001)(86362001)(36756003)(31696002)(82310400005)(2906002)(66899021)(31686004)(40480700001)(40460700003)(478600001)(426003)(83380400001)(107886003)(336012)(26005)(2616005)(54906003)(47076005)(4326008)(110136005)(70206006)(34020700004)(36860700001)(70586007)(316002)(7416002)(41300700001)(8676002)(16576012)(16526019)(186003)(53546011)(356005)(5660300002)(82740400003)(8936002)(7636003)(43740500002)(12100799027);DIR:OUT;SFP:1501;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Mar 2023 17:12:55.6686
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1c1edd0-0025-4b75-dc52-08db3078d6bc
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT103.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7501
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 29 Mar 2023 11:01:44 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
 
-> [+cc Alex, Lukas for link-disable reset thoughts, beginning of thread:
-> https://lore.kernel.org/all/cover.1679502371.git.petrm@nvidia.com/]
-> 
-> On Sun, Mar 26, 2023 at 04:53:58PM +0300, Ido Schimmel wrote:
-> > On Thu, Mar 23, 2023 at 11:51:15AM -0500, Bjorn Helgaas wrote:  
-> > > On Wed, Mar 22, 2023 at 05:49:35PM +0100, Petr Machata wrote:  
-> > > > From: Amit Cohen <amcohen@nvidia.com>
-> > > > 
-> > > > The driver resets the device during probe and during a devlink reload.
-> > > > The current reset method reloads the current firmware version or a pending
-> > > > one, if one was previously flashed using devlink. However, the reset does
-> > > > not take down the PCI link, preventing the PCI firmware from being
-> > > > upgraded, unless the system is rebooted.  
-> > > 
-> > > Just to make sure I understand this correctly, the above sounds like
-> > > "firmware" includes two parts that have different rules for loading:
-> > > 
-> > >   - Current reset method is completely mlxsw-specific and resets the
-> > >     mlxsw core but not the PCIe interface; this loads only firmware
-> > >     part A
-> > > 
-> > >   - A PCIe reset resets both the mlxsw core and the PCIe interface;
-> > >     this loads both firmware part A and part B  
-> > 
-> > Yes. A few years ago I had to flash a new firmware in order to test a
-> > fix in the PCIe firmware and the bug still reproduced after a devlink
-> > reload. Only after a reboot the new PCIe firmware was loaded and the bug
-> > was fixed. Bugs in PCIe firmware are not common, but we would like to
-> > avoid the scenario where users must reboot the machine in order to load
-> > the new firmware.
-> >   
-> > > > To solve this problem, a new reset command (6) was implemented in the
-> > > > firmware. Unlike the current command (1), after issuing the new command
-> > > > the device will not start the reset immediately, but only after the PCI
-> > > > link was disabled. The driver is expected to wait for 500ms before
-> > > > re-enabling the link to give the firmware enough time to start the reset.  
-> > > 
-> > > I guess the idea here is that the mlxsw driver:
-> > > 
-> > >   - Tells the firmware we're going to reset
-> > >     (MLXSW_REG_MRSR_COMMAND_RESET_AT_PCI_DISABLE)
-> > > 
-> > >   - Saves PCI config state
-> > > 
-> > >   - Disables the link (mlxsw_pci_link_toggle()), which causes a PCIe
-> > >     hot reset
-> > > 
-> > >   - The firmware notices the link disable and starts its own internal
-> > >     reset
-> > > 
-> > >   - The mlxsw driver waits 500ms
-> > >     (MLXSW_PCI_TOGGLE_WAIT_BEFORE_EN_MSECS)
-> > > 
-> > >   - Enables link and waits for it to be active
-> > >     (mlxsw_pci_link_active_check()
-> > > 
-> > >   - Waits for device to be ready again (mlxsw_pci_device_id_read())  
-> > 
-> > Correct.
-> >   
-> > > So the first question is why you don't simply use
-> > > pci_reset_function(), since it is supposed to cause a reset and do all
-> > > the necessary waiting for the device to be ready.  This is quite
-> > > complicated to do correctly; in fact, we still discover issues there
-> > > regularly.  There are many special cases in PCIe r6.0, sec 6.6.1, and
-> > > it would be much better if we can avoid trying to handle them all in
-> > > individual drivers.  
-> > 
-> > I see that this function takes the device lock and I think (didn't try)
-> > it will deadlock if we were to replace the current code with it since we
-> > also perform a reset during probe where I believe the device lock is
-> > already taken.
-> > 
-> > __pci_reset_function_locked() is another option, but it assumes the
-> > device lock was already taken, which is correct during probe, but not
-> > when reset is performed as part of devlink reload.
-> > 
-> > Let's put the locking issues aside and assume we can use
-> > __pci_reset_function_locked(). I'm trying to figure out what it can
-> > allow us to remove from the driver in favor of common PCI code. It
-> > essentially invokes one of the supported reset methods. Looking at my
-> > device, I see the following:
-> > 
-> >  # cat /sys/class/pci_bus/0000\:01/device/0000\:01\:00.0/reset_method 
-> >  pm bus
-> > 
-> > So I assume it will invoke pci_pm_reset(). I'm not sure it can work for
-> > us as our reset procedure requires us to disable the link on the
-> > downstream port as a way of notifying the device that it should start
-> > the reset procedure.  
-> 
-> Hmmm, pci_pm_reset() puts the device in D3hot, then back to D0.  Spec
-> says that results in "undefined internal Function state," which
-> doesn't even sound like a guaranteed reset, but it's what we have, and
-> in any case, it does not disable the link.
-> 
-> > We might be able to use the "device_specific" method and add quirks in
-> > "pci_dev_reset_methods". However, I'm not sure what would be the
-> > benefit, as it basically means moving the code in
-> > mlxsw_pci_link_toggle() to drivers/pci/quirks.c. Also, when the "probe"
-> > argument is "true" we can't actually determine if this reset method is
-> > supported or not, as we can't query that from the configuration space of
-> > the device in the current implementation. It's queried using a command
-> > interface that is specific to mlxsw and resides in the driver itself.
-> > Not usable from drivers/pci/quirks.c.  
-> 
-> Spec (PCIe r6.0, sec 6.6.1) says "Disabling a Link causes Downstream
-> components to undergo a hot reset."  That seems like it *could* be a
-> general-purpose method of doing a reset, and I don't know why the PCI
-> core doesn't support it.  Added Alex and Lukas in case they know.
 
-I think we don't have it because it's unclear how it's actually
-different from a secondary bus reset from the bridge control register,
-which is what "bus" would do when selected for the example above.  Per
-the spec, both must cause a hot reset.  It seems this device needs a
-significantly longer delay though.
-
-Note that hot resets can be generated by a userspace driver with
-ownership of the device and will make use of the pci-core reset
-mechanisms.  Therefore if there is not a device specific reset, we'll
-use the standard delays and the device ought not to get itself wedged
-if the link becomes active at an unexpected point relative to a
-firmware update.  This might be a point in favor of a device specific
-reset solution in pci-core.  Thanks,
-
-Alex
- 
-> But it sounds like there's some wrinkle with your device?  I suppose a
-> link disable actually causes a reset, but that reset may not trigger
-> the firmware reload you need?  If we had a generic "disable link"
-> reset method, maybe a device quirk could disable it if necessary?
+On 28/03/23 18:18, Thierry Reding wrote:
+> On Tue, Mar 28, 2023 at 01:22:26PM +0200, Krzysztof Kozlowski wrote:
+>> On 28/03/2023 12:48, Thierry Reding wrote:
+>>> On Tue, Mar 28, 2023 at 09:23:04AM +0200, Krzysztof Kozlowski wrote:
+>>>> On 27/03/2023 18:14, Sumit Gupta wrote:
+>>>>> For Tegra234, add the "nvidia,bpmp" property within the Memory
+>>>>> Controller (MC) node to reference BPMP node. This is needed in
+>>>>> the MC driver to pass the client info to the BPMP-FW when memory
+>>>>> interconnect support is available.
+>>>>>
+>>>>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+>>>>> ---
+>>>>>   .../bindings/memory-controllers/nvidia,tegra186-mc.yaml    | 7 +++++++
+>>>>>   1 file changed, 7 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
+>>>>> index 935d63d181d9..398d27bb2373 100644
+>>>>> --- a/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
+>>>>> +++ b/Documentation/devicetree/bindings/memory-controllers/nvidia,tegra186-mc.yaml
+>>>>> @@ -58,6 +58,10 @@ properties:
+>>>>>     "#interconnect-cells":
+>>>>>       const: 1
+>>>>>   
+>>>>> +  nvidia,bpmp:
+>>>>> +    $ref: /schemas/types.yaml#/definitions/phandle
+>>>>> +    description: phandle of the node representing the BPMP
+>>>>
+>>>> Why do you need this multiple times? Both in parent and all external-mc
+>>>> children?
+>>>
+>>> We've had nvidia,bpmp in the external memory controller node since
+>>> basically the beginning because we've always needed it there. For newer
+>>> chips we now also need it for the memory controller.
+>>>
+>>> Ideally I think we would only have this in the MC and have the EMC
+>>> driver reference it via the EMC's parent (i.e. MC), but that would break
+>>> backwards-compatibility. Reaching into the EMC's DT node from the MC was
+>>> another option that we discussed internally, but it didn't look right
+>>> given how this is also needed by the MC.
+>>>
+>>> One thing we could potentially do is deprecate the nvidia,bpmp phandle
+>>> in the EMC and only keep it as a fallback in the drivers in case the
+>>> parent MC doesn't find it's own in the DT.
+>>
+>> Yes, deprecation would answer to my question.
 > 
-> > > Of course, pci_reset_function() does *not* include details like
-> > > MLXSW_PCI_TOGGLE_WAIT_BEFORE_EN_MSECS.
-> > > 
-> > > I assume that flashing the firmware to the device followed by a power
-> > > cycle (without ever doing MLXSW_REG_MRSR_COMMAND_RESET_AT_PCI_DISABLE)
-> > > would load the new firmware everywhere.  Can we not do the same with a
-> > > PCIe reset?  
-> > 
-> > Yes, that's what we would like to achieve.
-> > 
-> > Thanks for the feedback!  
-> 
+> Okay, great. Sumit, you can resolve this by adding a "deprecated: true"
+> to the EMC's nvidia,bpmp property schema. In the driver we can then try
+> to look at the MC's ->bpmp and if it exists reuse that. If it doesn't
+> exist, we can keep the existing lookup as a fallback for device trees
+> that haven't been updated yet.
 
+We can't use MC's->bpmp in the EMC driver's probe as it will be NULL. 
+This is because MC driver uses "arch_initcall" and gets probed earlier 
+than BPMP. We can do this in another way as below change. This way we 
+can use the existing "nvidia,bpmp" property from EMC node and don't need 
+to move it to the MC node. Please share if this change sounds OK.
+
+  +++ b/drivers/memory/tegra/tegra186-emc.c
+  @@ static int tegra186_emc_probe(struct platform_device *pdev)
+	
+  -          if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT))
+  +          if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT)) {
+                     mc->bwmgr_mrq_supported = true;
+  +                  mc->bpmp = emc->bpmp;
+  +          }
+     }
+
+     return 0;
+
+   put_bpmp:
+  -  tegra_bpmp_put(emc->bpmp);
+  +  if (IS_ERR_OR_NULL(mc->bpmp))
+  +          tegra_bpmp_put(emc->bpmp);
+     return err;
+   }
+
+   static int tegra186_emc_remove(struct platform_device *pdev)
+   {
+     struct tegra186_emc *emc = platform_get_drvdata(pdev);
+  +  struct tegra_mc *mc = dev_get_drvdata(emc->dev->parent);
+
+     debugfs_remove_recursive(emc->debugfs.root);
+  -  tegra_bpmp_put(emc->bpmp);
+  +  if (IS_ERR_OR_NULL(mc->bpmp))
+  +          tegra_bpmp_put(emc->bpmp);
+
+     return 0;
+   }
