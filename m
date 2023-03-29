@@ -2,147 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E45B96CDB60
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 16:02:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 623716CEC02
+	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 16:44:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229575AbjC2OCX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 10:02:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36730 "EHLO
+        id S230297AbjC2Ooi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 10:44:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230373AbjC2OCW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 10:02:22 -0400
-Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C654C1F
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 07:01:59 -0700 (PDT)
-Received: by mail-pj1-x1031.google.com with SMTP id om3-20020a17090b3a8300b0023efab0e3bfso18638177pjb.3
-        for <linux-pci@vger.kernel.org>; Wed, 29 Mar 2023 07:01:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680098519;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+t+rqepYDiPCeucRwMGif55QGbm9o8+zPctzSfAB80U=;
-        b=i86veqBnDoigJJiVx28C2dy2G9XN+6v4XIy8vWr19qwezqy4lmNfvb+M35MDPFXpe8
-         VsEXhCWWC5nFZKYf/n4mL+fXaPtb9lEc7RtQ6k4gra8g48qjyn+2ha7fa9FDXhCDN6hi
-         x3YdNPXWQRHms6ouL0kgVgslYOVsdr6fKKdnCsZG7NmiPhXAhFRXWRAhAcRJaOXaB5zv
-         QvuP7Av6kK8z6yYIEV70DY07BrglUWW+Ep11oOTS5+dvAYOqS4KXfc/pICdhDDN4g3L+
-         Kah4r38GUt6ptCnbFgMf3lDtM9s6pH5yR0HmPWxVkcDDPxjiU2eHpdyOYgo4yrN6OfxR
-         nr5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680098519;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+t+rqepYDiPCeucRwMGif55QGbm9o8+zPctzSfAB80U=;
-        b=IWlN3tZxZRYrlQvzWSOg7N6/t+NrIYfSuEe8CfrGsymRCARz1tStZWnjd7TsaNdT3q
-         ZsWq9zkZgiitiXmRd4UcxSd4ZjlexbgBGASM/BeRg5dYxfbsKeAJIkv1PRKl4jbMZ3KS
-         XAVgjDLAPgDpmUNXoczHsyp0X0bhVBT3lerqhvurYemBpe0Qy4qY/+Afyap8Sn6PITXO
-         kvfmqxfQqkTawFqr7aBfOsY7XsjNfGlNI7qG4KtiHJZPd486/Umq+jNdwo8OctLqNsRg
-         sA4CvEmpOiRD/7hcq2oQ587gvSf/WlF3qcfj5Mj09/1smMIqu/JMCbk00P7bmWaxlqiF
-         QSTQ==
-X-Gm-Message-State: AO0yUKUHvBIsnYZ59i45OJ+ij9DpxKR5DoV6R7P8Q+gDckaB396PsG1Q
-        t+XOsd6YU3hX/1/VPCuXCDnh
-X-Google-Smtp-Source: AK7set9wQikTSV1pgs3dy6STodYlwf25gv+l3pyiPdbF2QYVGcKDUJ3vgqvGI1rALG4VDgx9tbdNeA==
-X-Received: by 2002:a05:6a20:b29f:b0:cc:a8d7:ad7e with SMTP id ei31-20020a056a20b29f00b000cca8d7ad7emr15656875pzb.60.1680098518618;
-        Wed, 29 Mar 2023 07:01:58 -0700 (PDT)
-Received: from thinkpad ([117.216.120.213])
-        by smtp.gmail.com with ESMTPSA id 16-20020aa79250000000b005e4d8c6168csm23034693pfp.210.2023.03.29.07.01.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 07:01:58 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 19:31:50 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
-        mka@chromium.org, Dhruva Gole <d-gole@ti.com>
-Subject: Re: [PATCH v3 1/1] PCI: qcom: Add support for system suspend and
- resume
-Message-ID: <20230329140150.GE5575@thinkpad>
-References: <20230327133824.29136-1-manivannan.sadhasivam@linaro.org>
- <20230327133824.29136-2-manivannan.sadhasivam@linaro.org>
- <ZCQLWzqKPrusMro+@hovoldconsulting.com>
- <20230329125232.GB5575@thinkpad>
- <ZCQ69xyQ4mwTow1W@hovoldconsulting.com>
+        with ESMTP id S230315AbjC2OoW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 10:44:22 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049F061BA;
+        Wed, 29 Mar 2023 07:41:49 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 32TEfVuv023350;
+        Wed, 29 Mar 2023 09:41:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1680100891;
+        bh=2Il4jxvtfAKuNqlbBVyI4WnKDZ3OSApBhuRDUqtaCr8=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=qwSmbBkhXsR0ftZsk0O/+Zkge1zQJA/L2qwyPE+kjp8JJM+bYFlNO/RbMvEKr6TH/
+         QHA98mD/asSR80IyJv20D/QkePd9VrPd+XCs8udugfGwEXjnLIL8Sjzf1BLYxtyM1V
+         jUBWM04FhnMEqcZXtwYQtJrcWH60TatvK0pnNxU4=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 32TEfV1d105729
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 29 Mar 2023 09:41:31 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Wed, 29
+ Mar 2023 09:41:31 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Wed, 29 Mar 2023 09:41:31 -0500
+Received: from [10.249.133.214] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 32TEfPB2023296;
+        Wed, 29 Mar 2023 09:41:26 -0500
+Message-ID: <12c89cb8-8cea-df6a-7650-fa3059bf5a5b@ti.com>
+Date:   Wed, 29 Mar 2023 20:11:25 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZCQ69xyQ4mwTow1W@hovoldconsulting.com>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v2] PCI: cadence: Fix Gen2 Link Retraining process
+Content-Language: en-US
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>, <tjoseph@cadence.com>,
+        <lpieralisi@kernel.org>, <robh@kernel.org>, <kw@linux.com>,
+        <bhelgaas@google.com>, <nadeem@cadence.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <srk@ti.com>, <nm@ti.com>
+References: <20230315070800.1615527-1-s-vadapalli@ti.com>
+From:   "Raghavendra, Vignesh" <vigneshr@ti.com>
+In-Reply-To: <20230315070800.1615527-1-s-vadapalli@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 03:19:51PM +0200, Johan Hovold wrote:
-> On Wed, Mar 29, 2023 at 06:22:32PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Mar 29, 2023 at 11:56:43AM +0200, Johan Hovold wrote:
-> > > On Mon, Mar 27, 2023 at 07:08:24PM +0530, Manivannan Sadhasivam wrote:
->  
-> > > > +static int qcom_pcie_suspend_noirq(struct device *dev)
-> > > > +{
-> > > > +	struct qcom_pcie *pcie = dev_get_drvdata(dev);
-> > > > +	int ret;
-> > > > +
-> > > > +	/*
-> > > > +	 * Set minimum bandwidth required to keep data path functional during
-> > > > +	 * suspend.
-> > > > +	 */
-> > > > +	ret = icc_set_bw(pcie->icc_mem, 0, MBps_to_icc(250));
-> > > 
-> > > This isn't really the minimum bandwidth you're setting here.
-> > > 
-> > > I think you said off list that you didn't see real impact reducing the
-> > > bandwidth, but have you tried requesting the real minimum which would be
-> > > kBps_to_icc(1)?
-> > > 
-> > > Doing so works fine here with both the CRD and X13s and may result in
-> > > some further power savings.
-> > > 
-> > 
-> > No, we shouldn't be setting random value as the bandwidth. Reason is, these
-> > values are computed by the bus team based on the requirement of the interconnect
-> > paths (clock, voltage etc...) with actual PCIe Gen speeds. I don't know about
-> > the potential implication even if it happens to work.
+Hi Lorenzo, Bjorn,
+
+On 3/15/2023 12:38 PM, Siddharth Vadapalli wrote:
+> The Link Retraining process is initiated to account for the Gen2 defect in
+> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+> is i2085, documented at:
+> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
 > 
-> Why would you need PCIe gen1 speed during suspend?
+> The existing workaround implemented for the errata waits for the Data Link
+> initialization to complete and assumes that the link retraining process
+> at the Physical Layer has completed. However, it is possible that the
+> Physical Layer training might be ongoing as indicated by the
+> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+> 
+> Fix the existing workaround, to ensure that the Physical Layer training
+> has also completed, in addition to the Data Link initialization.
+> 
+> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> ---
+> Changes from v1:
+> 1. Collect Reviewed-by tag from Vignesh Raghavendra.
+> 2. Rebase on next-20230315.
+> 
+> v1:
+> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com
+> 
+>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
 
-That's what the suggestion I got from Qcom PCIe team. But I didn't compare the
-value you added during icc support patch with downstream. More below...
+Wondering do one of you be pulling this patch in? This patch was never
+picked for 6.3-rc1 merge cycle... Just want to make sure
+pcie-cadence*.c and pci-j721e.c patches have a path to reach pci tree.
 
-> These numbers are already somewhat random as, for example, the vendor
-> driver is requesting 500 kBps (800 peak) during runtime, while we are
-> now requesting five times that during suspend (the vendor driver gets a
-> away with 0).
-> 
 
-Hmm, then I should've asked you this question when you added icc support.
-I thought you inherited those values from downstream but apparently not.
-Even in downstream they are using different bw votes for different platforms.
-I will touch base with PCIe and ICC teams to find out the actual value that
-needs to be used.
 
-Regarding 0 icc vote, downstream puts all the devices in D3Cold (poweroff)
-state during suspend. So for them 0 icc vote will work but not for us as we need
-to keep the device and link intact.
+[...]
 
-- Mani
-
-> Sure, this indicates that the interconnect driver is broken and we
-> should indeed be using values that at least makes some sense (and
-> eventually fix the interconnect driver).
-> 
-> Just not sure that you need to request that much bandwidth during
-> suspend (e.g. for just a couple of register accesses).
-> 
-> Johan
-
--- 
-மணிவண்ணன் சதாசிவம்
+Regards
+Vignesh
