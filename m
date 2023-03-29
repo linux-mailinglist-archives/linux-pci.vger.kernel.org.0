@@ -2,119 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C296CF502
-	for <lists+linux-pci@lfdr.de>; Wed, 29 Mar 2023 23:08:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 189B56CF633
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 00:10:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229610AbjC2VIS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 17:08:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42148 "EHLO
+        id S229747AbjC2WKB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 18:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230201AbjC2VIL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 17:08:11 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378535FD4;
-        Wed, 29 Mar 2023 14:08:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680124086; x=1711660086;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=0WbHcAshlB1DzsXUrQf8jEaAyPq5dNotVV1y6M7Emps=;
-  b=QoEXuGB0sIt/SEO0hJbwdWm8tgKtSoVZR1ccMwPgxa27+fDVCIX2E7Kn
-   6Kh4OOW/DbpJt619+/WlUNq8chsjwYU4nwOa6DXjDgAwq9sRyDVLTuDt8
-   G4INFZcdl6N3Z3+sDtNbZTW8g5xFq9YVev8bJSfLqoq/WYw3DWPsGdO5g
-   KhoyXSl2QerAhEXnqYfyzpx485Sf0QdrYydkVAIQhHb00hMWosp0rQiyV
-   VEulLMzn08Bjgg4Dav9sabIf1edNKta4fP7Zv9iAIccOhWoYAB46gYawS
-   xZdj4XPAJVim7bgb2w3pt8bPWu+GMWRMddt2A9N24QeK7OvhRiyFXTSOV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="341017779"
-X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="341017779"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 14:08:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10664"; a="684441300"
-X-IronPort-AV: E=Sophos;i="5.98,301,1673942400"; 
-   d="scan'208";a="684441300"
-Received: from tinabao-mobl1.amr.corp.intel.com (HELO [10.209.80.72]) ([10.209.80.72])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Mar 2023 14:08:05 -0700
-Message-ID: <e7657d91-38a8-9ee6-43eb-985d6545a0d1@linux.intel.com>
-Date:   Wed, 29 Mar 2023 14:08:04 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH] PCI/MSI: Provide missing stub for
- pci_msix_can_alloc_dyn()
-Content-Language: en-US
-To:     Reinette Chatre <reinette.chatre@intel.com>, bhelgaas@google.com,
-        nathan@kernel.org, ndesaulniers@google.com, trix@redhat.com,
-        tglx@linutronix.de
-Cc:     darwi@linutronix.de, kevin.tian@intel.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-References: <310ecc4815dae4174031062f525245f0755c70e2.1680119924.git.reinette.chatre@intel.com>
-From:   Sathyanarayanan Kuppuswamy 
+        with ESMTP id S229531AbjC2WKB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 18:10:01 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C456059DA;
+        Wed, 29 Mar 2023 15:09:33 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0EBFCB820F8;
+        Wed, 29 Mar 2023 22:09:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834D0C4339B;
+        Wed, 29 Mar 2023 22:09:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680127769;
+        bh=Pkw+JnlC6QcBvC6P1F68Al5nhlo1P1BkPpRe/KS8NyE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=lBEMRaFdPEO3+9GcLR/ts2W9xwoGi9D+NUoBcP2zQ9THqzbAO0y+qB7+zmosEFz/7
+         4KVb49bU3JsXn1j0xcJLfIO6I5wVYdReixvd0qnwFmBH/gybNaJ9FW01WOSyfIGW/u
+         N1KuR6WIDDyknzMKhR3y88EzySa3JS8Iul0Wk64qkKyala8roZpPJUPLW3cC7rlzJo
+         TMh/Sywy+V22ayxXw+W6YWRSMrZhBeXW8aJQ6M1S8Pwr9/aFKwZO5qDHKKKhzj06Aq
+         IibXSyZp7xtQAizxozaZDcejnuy2YxBnbrDaB6my7Y6+OQlZxrbCuu0rQKkQRW8bxX
+         Qu1b52UGrUqcw==
+Date:   Wed, 29 Mar 2023 17:09:27 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <310ecc4815dae4174031062f525245f0755c70e2.1680119924.git.reinette.chatre@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] PCI/EDR: Clear PCIe Device Status errors after EDR
+ error recovery
+Message-ID: <20230329220927.GA3086137@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230315235449.1279209-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+[+cc Jonathan, author of 068c29a248b6]
 
-On 3/29/23 1:13 PM, Reinette Chatre wrote:
-> pci_msix_can_alloc_dyn() is not declared when CONFIG_PCI_MSI
-> is disabled.
+On Wed, Mar 15, 2023 at 04:54:49PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Commit 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+> OS owns AER") adds support to clear error status in the Device Status
+> Register(DEVSTA) only if OS owns the AER support. But this change
+> breaks the requirement of the EDR feature which requires OS to cleanup
+> the error registers even if firmware owns the control of AER support.
 > 
-> There is no existing user of pci_msix_can_alloc_dyn() but
-> work is in progress to change this. This work encounters
-> the following error when CONFIG_PCI_MSI is disabled:
+> More details about this requirement can be found in PCIe Firmware
+> specification v3.3, Table 4-6 Interpretation of the _OSC Control Field.
+> If the OS supports the Error Disconnect Recover (EDR) feature and
+> firmware sends the EDR event, then during the EDR recovery window, OS
+> is responsible for the device error recovery and holds the ownership of
+> the following error registers.
 > 
-> drivers/vfio/pci/vfio_pci_intrs.c:427:21: error: implicit declaration \
-> 	of function 'pci_msix_can_alloc_dyn' \
-> 	[-Werror=implicit-function-declaration]
+> • Device Status Register
+> • Uncorrectable Error Status Register
+> • Correctable Error Status Register
+> • Root Error Status Register
+> • RP PIO Status Register
 > 
-> Provide definition for pci_msix_can_alloc_dyn() in preparation
-> for users that need to compile when CONFIG_PCI_MSI is disabled.
-> 
-> Fixes: 34026364df8e ("PCI/MSI: Provide post-enable dynamic allocation interfaces for MSI-X")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/oe-kbuild-all/202303291000.PWFqGCxH-lkp@intel.com/
-> Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+> So call pcie_clear_device_status() in edr_handle_event() if the error
+> recovery is successful.
+
+IIUC, after ac1c8e35a326 ("PCI/DPC: Add Error Disconnect Recover (EDR)
+support") appeared in v5.7-rc1, DEVSTA was always cleared in this path:
+
+  edr_handle_event
+    pcie_do_recovery
+      pcie_clear_device_status
+
+After 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+OS owns AER") appeared in v5.9-rc1, we only clear DEVSTA if the OS
+owns the AER Capability:
+
+  edr_handle_event
+    pcie_do_recovery
+      if (pcie_aer_is_native(dev))      # <-- new test
+        pcie_clear_device_status
+
+So in the case where the OS does *not* own AER, and it receives an EDR
+notification, DEVSTA is not cleared when it should be.  Right?
+
+I assume we should have a Fixes: tag here, since this patch should be
+backported to every kernel that contains 068c29a248b6.  Possibly even
+a stable tag, although it's arguable whether it's "critical" per
+Documentation/process/stable-kernel-rules.rst.
+
+> Reported-by: Tsaur Erwin <erwin.tsaur@intel.com>
+
+I assume this report was internal, and there's no mailing list post or
+bugzilla issue URL we can include here?
+
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 > ---
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
-> I missed this one in my previous fix. After this all the functions
-> in pci.h's #ifdef CONFIG_PCI_MSI portion have stubs when
-> CONFIG_PCI_MSI is disabled.
 > 
->  include/linux/pci.h | 2 ++
->  1 file changed, 2 insertions(+)
+> Changes since v1:
+>  * Rebased on top of v6.3-rc1.
+>  * Fixed a typo in pcie_clear_device_status().
 > 
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index b50e5c79f7e3..a5dda515fcd1 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1624,6 +1624,8 @@ pci_alloc_irq_vectors(struct pci_dev *dev, unsigned int min_vecs,
->  					      flags, NULL);
->  }
->  
-> +static inline bool pci_msix_can_alloc_dyn(struct pci_dev *dev)
-> +{ return false; }
->  static inline struct msi_map pci_msix_alloc_irq_at(struct pci_dev *dev, unsigned int index,
->  						   const struct irq_affinity_desc *affdesc)
->  {
+>  drivers/pci/pcie/edr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index a6b9b479b97a..87734e4c3c20 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -193,6 +193,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	 */
+>  	if (estate == PCI_ERS_RESULT_RECOVERED) {
+>  		pci_dbg(edev, "DPC port successfully recovered\n");
+> +		pcie_clear_device_status(edev);
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+It's a little weird to work around a change inside pcie_do_recovery()
+by clearing it here, and that means we clear it twice in the AER
+native case, but I don't see any simpler way to do this, so this seems
+fine as the fix for the current issue.
+
+Question though: in the AER native case, pcie_do_recovery() calls
+both:
+
+  pcie_clear_device_status() and
+  pci_aer_clear_nonfatal_status()
+
+In this patch, you only call pcie_clear_device_status().  Do you care
+about pci_aer_clear_nonfatal_status(), too?
+
+The overall design for clearing status has gotten pretty complicated
+as we've added error handling methods (firmware-first, DPC, EDR), and
+there are so many different places and cases that it's hard to be sure
+we do them all correctly.
+
+I don't really know how to clean this up, so I'm just attaching my
+notes about the current state:
+
+  - AER native handling:
+
+    handle_error_source
+      if (info->severity == AER_CORRECTABLE)
+        clear PCI_ERR_COR_STATUS              <--
+        if (pcie_aer_is_native(dev))
+          pdrv->err_handler->cor_error_detected()
+          pcie_clear_device_status
+            clear PCI_EXP_DEVSTA              <--
+      else
+        pcie_do_recovery
+          pcie_clear_device_status
+            clear PCI_EXP_DEVSTA              <--
+          pci_aer_clear_nonfatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+
+  - Firmware-first handling: status is cleared by firmware before
+    event is reported to OS via HEST
+
+  - DPC native handling:
+
+    dpc_handler
+      dpc_process_error
+        if (rp_extensions)
+          dpc_process_rp_pio_error
+            clear PCI_EXP_DPC_RP_PIO_STATUS   <--
+        else if (...)
+          pci_aer_clear_nonfatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+          pci_aer_clear_fatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+      pcie_do_recovery
+        if (AER native)
+          pcie_clear_device_status
+            clear PCI_EXP_DEVSTA              <--
+          pci_aer_clear_nonfatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+
+  - EDR event handling:
+
+    edr_handle_event
+      dpc_process_error
+        if (rp_extensions)
+          dpc_process_rp_pio_error
+            clear PCI_EXP_DPC_RP_PIO_STATUS   <--
+        else if (...)
+          pci_aer_clear_nonfatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+          pci_aer_clear_fatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+      pci_aer_raw_clear_status
+        clear PCI_ERR_ROOT_STATUS             <--
+        clear PCI_ERR_COR_STATUS              <--
+        clear PCI_ERR_UNCOR_STATUS            <--
+      pcie_do_recovery
+        if (AER native)
+          pcie_clear_device_status
+            clear PCI_EXP_DEVSTA              <--
+          pci_aer_clear_nonfatal_status
+            clear PCI_ERR_UNCOR_STATUS        <--
+      if (PCI_ERS_RESULT_RECOVERED)
+        pcie_clear_device_status
+          clear PCI_EXP_DEVSTA                <--
+
+>  		acpi_send_edr_status(pdev, edev, EDR_OST_SUCCESS);
+>  	} else {
+>  		pci_dbg(edev, "DPC port recovery failed\n");
+> -- 
+> 2.34.1
+> 
