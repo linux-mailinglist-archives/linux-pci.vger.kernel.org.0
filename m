@@ -2,153 +2,178 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD22A6D0E14
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 20:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48CE96D0F56
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 21:50:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229734AbjC3Sus (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Mar 2023 14:50:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
+        id S231149AbjC3TuV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 15:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229798AbjC3Sur (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 14:50:47 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4466CDF5
-        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 11:50:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1680202203;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6UQrNZxjfu3FW/I6sK8C7BOJKbvCETQxYVwKUqa4gLk=;
-        b=DwQnv4bTJJN9t4L8QMofCOGi5WIdzofjE6DnSOP2NSeLlje2i7Hfqd55PQNCWtyxWRsRXT
-        P/6Ypj4bdlptSan8qUqhuziiGeqOfuT5pkJlgBTcR1bQaECj4bDdl2j5f1HpTNsRrsXXSp
-        C5QhWzR+clLohBEV59HQRZQyG5DXIEU=
-Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
- [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-333-0enHs1ADOSKK2mGqS816kQ-1; Thu, 30 Mar 2023 14:50:01 -0400
-X-MC-Unique: 0enHs1ADOSKK2mGqS816kQ-1
-Received: by mail-il1-f198.google.com with SMTP id o8-20020a056e0214c800b00325f0a48812so10427297ilk.13
-        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 11:50:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680202201;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6UQrNZxjfu3FW/I6sK8C7BOJKbvCETQxYVwKUqa4gLk=;
-        b=7NWGWBENNIDXlpBSVV3fsemtyLnXi5PBGXHBFtfV9lV+VpsbXijJ+pReEGedNtM9l7
-         PmqRbLd4MbG3WsX9Ox06F3YnmhMPiphcKK+fZOcI1dXHt1oKx6unJbEJju2OTXveqGvz
-         fZf5scEuoF6QqdIKsyotbJULq9nKbgLq1ezzC+8Ykx7RdFgSuUbEI+qx+ruRJg/J1yY7
-         8IGmUjo8TGz1WVXpx40/bZ/J4c6MdAkIP+uYnwhj0btYjKAB/CsTi76NXqftdQNwB48o
-         /QoOH7++pH5Czu4x6sOIMdNpHUjy+wlMctRbvfSk4Nk6vLPHPi5CNHq82k3sEUCXHmDm
-         RE1w==
-X-Gm-Message-State: AO0yUKWCzVdfu6atagVUDq77dgWss6ao6g9iwtfWWPrgTxRoy+zFb/qy
-        BbPNN4GaJ0bHbm+4avWWoLIktVqKSmNrANUbggJ0nruIBT8kDrtZXYCkTZRnRM0HKRS+TawVqiR
-        +4E4JcSGFUcfaNYtns0br
-X-Received: by 2002:a05:6602:228a:b0:71f:8124:de52 with SMTP id d10-20020a056602228a00b0071f8124de52mr19922012iod.9.1680202200961;
-        Thu, 30 Mar 2023 11:50:00 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+vN+F+C7td9wLCa+FeJA73rOKlyidR7N4iFHFTnKNmuaGWlPkmBzorrxlU0FHERL7D4mtk8Q==
-X-Received: by 2002:a05:6602:228a:b0:71f:8124:de52 with SMTP id d10-20020a056602228a00b0071f8124de52mr19921997iod.9.1680202200702;
-        Thu, 30 Mar 2023 11:50:00 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id k14-20020a02660e000000b003c4e65fd6dfsm78865jac.176.2023.03.30.11.49.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Mar 2023 11:49:59 -0700 (PDT)
-Date:   Thu, 30 Mar 2023 12:49:58 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Ido Schimmel <idosch@nvidia.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Petr Machata <petrm@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
-        Amit Cohen <amcohen@nvidia.com>, mlxsw@nvidia.com,
-        linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
-Subject: Re: [PATCH net-next 6/6] mlxsw: pci: Add support for new reset flow
-Message-ID: <20230330124958.15a34c3d.alex.williamson@redhat.com>
-In-Reply-To: <ZCVHtk/wqTAR4Ejd@shredder>
-References: <ZCBOdunTNYsufhcn@shredder>
-        <20230329160144.GA2967030@bhelgaas>
-        <20230329111001.44a8c8e0.alex.williamson@redhat.com>
-        <ZCVHtk/wqTAR4Ejd@shredder>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
+        with ESMTP id S230487AbjC3TuT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 15:50:19 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020020.outbound.protection.outlook.com [52.101.61.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8ACBFF19;
+        Thu, 30 Mar 2023 12:50:14 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zs5y+vh9DluRyItNDVtQEO6ETIxF782cOsB8F160/6/qC//P4IhcVfBQVt2JfwnVfD8r1MIM6QbXVSHM4Ippa93M3UoutFpBNAN53dyvLgDoQnDdVCf+K0WyLtyPSSDmF7yO1procjn6Ipsos9qluLr1mAzlge9aMFHswy1SC5mxFldt1pc2RDCcVL2KYWQJiosR+2igdO4Fnm/jec3GqhIUOD8OcIGOAY4a2tMtDYTQY9zskLvExJL2pADJtV97/ZCIVJljZxZ2jPog7WKo72Tkwo1dCG8CM5RY1d+5scrxqSlXSiPyRhpzdZ59sJIf9lf+jXHkqgt/la+81tX6xA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ba1gwbGWuDIVLHavsMOVm5dT0Cm9jxO6k4ZF4ODmuu4=;
+ b=AzpGTns34RuSY5LWW2oZuSYTzq2V/tp31nVV0+R98Hp4zdycKrd+QPbZER07su5iRkaCgR73MEW7WveVou4IWwCwvoupTx7Mus1ppU7zwS/Oj+aTDspiLiZnHRCkqRWn4ChDdn+Jt/ttPsHGapT9FS8TlARk+juFAinzdqRKwi+HlPWInI+bOct76oCHMDvs7xjWX74h49SeACuCkZyuJhxwhOPaMEDRIs6TPn6z+qC1omCP1OAW7EM0hPBPmWlemRCTM9cWUJNCPArTHlw0eqgFjVoRlBQ3mL2eAIinzWetKX4Xbbwu9l4AcjNkctOjEnrKgWdnLSbKzxPA40z48A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ba1gwbGWuDIVLHavsMOVm5dT0Cm9jxO6k4ZF4ODmuu4=;
+ b=EeD/NLeyNVSA2Z3fMxrBvEWPiMAUFyPslgHmnmpbnb5v9AlvRFwXHWyTumnxn81WsNcfErKt3xbx4A2MUTMUYm1TxZnx9rJCsxBQwnDnBrYjef+vWbjh+MdIR3gszc2pA6LgCvyglL+ESWfM6u3qVau/Ollpw/WXqayEB+YnEwU=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by MW6PR21MB4009.namprd21.prod.outlook.com (2603:10b6:303:23f::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.13; Thu, 30 Mar
+ 2023 19:50:11 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::2e52:d6aa:9a99:500a]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::2e52:d6aa:9a99:500a%5]) with mapi id 15.20.6277.013; Thu, 30 Mar 2023
+ 19:50:11 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
+        "quic_carlv@quicinc.com" <quic_carlv@quicinc.com>
+CC:     Boqun Feng <boqun.feng@gmail.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: RE: [PATCH v2] PCI: hv: Fix the definition of vector in
+ hv_compose_msi_msg()
+Thread-Topic: [PATCH v2] PCI: hv: Fix the definition of vector in
+ hv_compose_msi_msg()
+Thread-Index: AQHZYrMXe0Y6kEKNA0yWUzOcmG4VZq8SosvwgAAxFICAAOEPwA==
+Date:   Thu, 30 Mar 2023 19:50:11 +0000
+Message-ID: <SA1PR21MB13350093800BC2C387EE0648BF8E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20221027205256.17678-1-decui@microsoft.com>
+ <ZCTsPFb7dBj2IZmo@boqun-archlinux> <ZCT6JEK/yGpKHVLn@boqun-archlinux>
+ <SA1PR21MB13354973735A5E727F94A169BF8E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <ZCUk_9YQGSfedCOR@kroah.com>
+In-Reply-To: <ZCUk_9YQGSfedCOR@kroah.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f3524bc4-1623-418b-851b-3233f8c0186e;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-30T19:23:53Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|MW6PR21MB4009:EE_
+x-ms-office365-filtering-correlation-id: 99de66fd-8e4c-4c96-1906-08db3157f922
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: IwMY5zFvGDQ1BPE4++ZcOBMDB2EvS4fhTG/auVvnkNIP2AJiw0flQnk1Fsunw8CaBAUq2VrB93ZUZRWh3hrOUNxs5RctuDsgnZpTqoSgfsN3hcnDaooQ0PT/R3Lz9eoOBXcqQUO2MshuGDaQMK58MCkmXKGZUaFBwCynRGXqavQxCG2mAz6MLrvw4M5SzIPem/JI8six4gx29/pIQfYIhwSt2MKBLWyl7qa4ZTSFyGffrbgq/nFaNgbQUuI2OGW0mqaH2fYO8i3dD9Ya0m4oWZ9NsfBxht+esZeqFKFpsbUVvgkSSJIrrcRtySbo1f5S0fbL6X8ABkNq80H37O1zEkAlSLg0BdsJITNrjH7aRcJbJH35RUMUAhemIrsf2JeGipW92/oD06uAR0NWvo6rAv/N+RAZuZqn0EnPjF5hg4NRYA8lNkibm2uXpJKXrTMnMetsWG1RhtFO10z0DyoLGua0SUM/S0bKPR6xNFx5JGZEUY+q+OvXmRaJzuriDA3D3Z6VK/Ui7BRYtMpl0GCSHYCcER50nb8kQUAPjQs4Z8l7hafXvja0X5SO5ioE1wW1GncSaAHQTVj8YQ0pi+h5jM4VR+BAnx8CvwAljK4pPUzg5QT+l5zQdZ9BU17ADQb+3n4mumcuIN/ffPvCycbLlA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(346002)(366004)(376002)(136003)(451199021)(83380400001)(966005)(478600001)(786003)(10290500003)(71200400001)(7696005)(186003)(316002)(26005)(110136005)(6506007)(54906003)(2906002)(9686003)(8990500004)(5660300002)(7416002)(8936002)(122000001)(33656002)(38100700002)(4326008)(66556008)(82960400001)(64756008)(66446008)(66476007)(41300700001)(55016003)(8676002)(66946007)(76116006)(52536014)(86362001)(38070700005)(82950400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?TFPE9LqeY+Uaesoe1VkjT3G2khQ3g0bOI+9uz5uyWhjwd1nnjFw/ESJaEEi+?=
+ =?us-ascii?Q?VuLTGGLBnDBeR7Eyz1GOvwYZ7bUnRACrlXNCx941nrZWkObv7nhpRy83HSwR?=
+ =?us-ascii?Q?KiOYis9RWvMTABFETqnc55gHjOZQPg8ypARsolxYVi1AwDyJfZSPcFOfMtnK?=
+ =?us-ascii?Q?BX0k8pAWIbkPolEmI1mvV8YaWyyymajzfwp7f8wSaou5QYrs3qOKBoo0yB2J?=
+ =?us-ascii?Q?grpoEvYqtUyHYRyXPtVgfgIkb2Kd15nfxs3ZQNhL9ZWpedoFgkRbBchK0nWg?=
+ =?us-ascii?Q?m+h+n2E82FP1pdf6TLnli7i3FK9sDzSq6b/ggOjugmZGH5Ot0j+4Bfl+GP8t?=
+ =?us-ascii?Q?O7FHMONUrSh1HYF0Z0MDCXypIK5Nzcci/nR278mNMXzX1qSUd7b6UErlMjjf?=
+ =?us-ascii?Q?2hXkbaaLqizm5HkUYP4edMzh3cJW5C2bcsMgZilds0ORg/MzzO8dHU5QOWKt?=
+ =?us-ascii?Q?H2C8Egtbz3UBOzNwdoExEq/rEMxbSAhhs1/gZ+TcHeJYjdajNKvU8JPuIBNL?=
+ =?us-ascii?Q?I3qz5xfpnmlpddoKiXeWVOiMa/GnbbBVLoElWWt7+aZDeq5iAMZLxt9kT8+l?=
+ =?us-ascii?Q?ln0ITNxcckH+JmmMLFFjuvSXBpsdropqh7zlUnTxDt9FDgfLj1LMKdXwV62X?=
+ =?us-ascii?Q?bqUfJmUcVts+VNpqsCplXcyqidpEdaZYZFzmNlb4Mvp+KsDtHmfoGgroKiMP?=
+ =?us-ascii?Q?7SxJ+QVNT8p2sda8ovxjHuYt/GOK95VVgsvUiQriU3po6l42aUp6MjpUY1Dg?=
+ =?us-ascii?Q?tkIkZRubunrxln/cBCuUoirrudHN0ZrRTV/AJMFYnyGsacEOpmJj8hzkTD7F?=
+ =?us-ascii?Q?qyjFBeG5mERvGE7hveQcpShHMTwq6Y1+9TD+0pwKvZOHa9ROAQX+PsUEcY2A?=
+ =?us-ascii?Q?drp6iSc6fejU1uy3uv8UYNPYqVVUIJyk+LLHF/BJ+Fmq+z/8ZXLoszdKVEAn?=
+ =?us-ascii?Q?BCgSlW9OM9ZJ526BL+BLjddQZT54J7DbSjPDzv2urSAO/7pm4QCBCd5StRO5?=
+ =?us-ascii?Q?rUqayESjMEzMP4gmkaOyyO7f5EHKkjV6qh3rY09T0NOnqGogVlH4AQ6xaR3N?=
+ =?us-ascii?Q?MJCom6RLJQzkSVmkppdTHabOrr8pR1TbB4UdZBAI9OXXKSX4qHRj0gOt07px?=
+ =?us-ascii?Q?B0fzAuoR4QI7ol3UgC/q+2m2RKKDl7+wVQsuptFofXp/N/HjkX2ib17ti3ge?=
+ =?us-ascii?Q?bqibWu81uuqn5/gh8TYG31QlpHx5Q1Z4hkpdcND/k4E81l1bM1j+GoXbRBrn?=
+ =?us-ascii?Q?NaKtWpPsyVLgeWjmbaokAIXg39oV7upPdNY4wyUhixGk1Rpy1NdoioAohMX5?=
+ =?us-ascii?Q?FZtIkRZxTdfng86Wu7jg0p5oGzr0xY+kOLx3A1liutUNugBUEuW1AhcDZskS?=
+ =?us-ascii?Q?oIHAq01V46N3VJ4FI8yJGE/ch4SfnjjDRD7RSfJZnJxRuwCAyjwyPXwMRlCH?=
+ =?us-ascii?Q?7iiaKWIAqBvvNMRVm8WYuurAbX8t79rS9FwrpZGl9Ei6irozZ/YUIVLnIooW?=
+ =?us-ascii?Q?ihTLZZAlbR3GlyRB0IAynM/fwNesKn9qAl4rPpxmLBTm9ScRmdWxvIT1eiRf?=
+ =?us-ascii?Q?H/Vj8q/YuouMYZHTCpaL8ZZT/qUh5iLaVpW4P3OE?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99de66fd-8e4c-4c96-1906-08db3157f922
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2023 19:50:11.4550
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: HjjGaIlWsXyKBTC45gPIxFbfvZ1KQ13QUYCb3+oSuR9LOI9j5gzDijztXfhfvsxjCMMO+vB8I1AehOsDKDImLg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW6PR21MB4009
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 30 Mar 2023 11:26:30 +0300
-Ido Schimmel <idosch@nvidia.com> wrote:
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > ...
+> > e70af8d040d2 has a Fixes tag. Not sure why it's not automatically
+> backported.
+>=20
+> Because "Fixes:" is not the flag that we are sure to trigger off of.
+> Please read:
+> https://www.kernel.org/doc/html/latest/process/stable-kernel-rules.html
+> for how to do this properly.
 
-> On Wed, Mar 29, 2023 at 11:10:01AM -0600, Alex Williamson wrote:
-> > I think we don't have it because it's unclear how it's actually
-> > different from a secondary bus reset from the bridge control register,
-> > which is what "bus" would do when selected for the example above.  Per
-> > the spec, both must cause a hot reset.  It seems this device needs a
-> > significantly longer delay though.  
-> 
-> Assuming you are referring to the 2ms sleep in
-> pci_reset_secondary_bus(), then yes. In our case, after disabling the
-> link on the downstream port we need to wait for 500ms before enabling
-> it.
-> 
-> > Note that hot resets can be generated by a userspace driver with
-> > ownership of the device and will make use of the pci-core reset
-> > mechanisms.  Therefore if there is not a device specific reset, we'll
-> > use the standard delays and the device ought not to get itself wedged
-> > if the link becomes active at an unexpected point relative to a
-> > firmware update.  This might be a point in favor of a device specific
-> > reset solution in pci-core.  Thanks,  
-> 
-> I assume you referring to something like this:
-> 
-> # echo 1 > /sys/class/pci_bus/0000:03/device/0000:03:00.0/reset
-> 
-> Doesn't seem to have any effect (network ports remain up, at least).
-> Anyway, this device is completely managed by the kernel, not a user
-> space driver. I'm not aware of anyone using this method to reset the
-> device.
+Thanks, I just read this again to refresh my memory :-)
+I remember Sasha has an AI algorithm to pick up patches into the stable
+tree and a "Fixes" tag should be a strong indicator.=20
 
-The pci-sysfs reset attribute is only meant to reset the linked device,
-so if this is a single function device then it might be accessing bus
-reset, but it also might be using FLR or PM reset.  There's a
-reset_method attribute to determine and select.
+I tired to manually cherry-pick e70af8d040d2 to 5.15.y and got some
+merge conflicts. Probably that's why Sasha's script didn't automatically=20
+do the backport. @Carl, @Jeffrey, may I know if you have some cycles to
+help backport e70af8d040d2?
 
-In any case, if the device is unaffected, that suggests we're dealing
-with a device that doesn't comply with PCIe reset standards, which
-might suggests it needs a device specific reset or to flag broken reset
-methods regardless.
+> That being said, because some subsystem maintainers do NOT put cc:
+> stable in their patches, we do sometimes sweep the tree and try to pick
+> up things with only "Fixes:" but we don't always catch everything.
+>=20
+> So if you want to be sure a patch is applied, please always add a cc:
+> stable in the patch.
+>=20
+> greg k-h
 
-Note that QEMU is a vfio-pci userspace driver, so assigning the device
-to a VM, where kernel drivers in the guest are managing the device is a
-use case of userspace drivers which should have a functional reset
-mechanism to avoid data leakage between userspace sessions.
- 
-> If I understand Bjorn and you correctly, we have two options:
-> 
-> 1. Keep the current implementation inside the driver.
-> 
-> 2. Call __pci_reset_function_locked() from the driver and move the link
-> toggling to drivers/pci/quirks.c as a "device_specific" method.
-> 
-> Personally, I don't see any benefit in 2, but we can try to implement
-> it, see if it even works and then decide.
+Hi Greg, since you're here, I'd like to ask a question:
 
-The second option enables use cases like above, where the PCI-core can
-perform an effective reset of the device rather than embedding that
-into a specific driver.  Even if not intended as a primary use case,
-it's a more complete solution and avoids potentially unhappy users that
-assume such use cases are available.  Thanks,
+If I add the cc: stable line in a patch and use git-send-email to post
+the patch, git-send-email also posts the patch to the stable list -- is
+this acceptable? Sometimes a patch may have to undergo multiple
+revisions, meaning all the discussion emails go to the stable list
+unnecessarily, and I guess this is not good?
 
-Alex
+It looks like there is no git-send-email option to exclude an email.
 
+Thanks,
+Dexuan
