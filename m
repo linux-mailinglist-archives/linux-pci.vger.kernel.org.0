@@ -2,136 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 902946D09E1
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 17:39:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A8676D0A45
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 17:46:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233223AbjC3Pja (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Mar 2023 11:39:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46216 "EHLO
+        id S233240AbjC3PqZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 11:46:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233179AbjC3Pj1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 11:39:27 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BF1DC176;
-        Thu, 30 Mar 2023 08:39:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680190749; x=1711726749;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2y+Qd+RESrzEa/F9wmN52tzUziPss+ZxjSltCa9P/hk=;
-  b=XUaJ54oMztjo5zzZAkUUI/cSufWKwCGk+SyH47VZs38IDrlrmW3ZKHva
-   d8mrCiGnHwlU15WMqeXtQPbsHokH70DPzWNsrSSPjMZshuD2s7OZrmWk/
-   pyn1QvXDiS3PaLGXT1/WqAIbH8AUaq8X9WAEkH5+T6DjYthBwUq7uczGS
-   s9hd8Xfemsao9ZYhuJ+76SsdxN2A5eulLFlOpPxJuoQJGqrxqbIHzVuPb
-   n/LwNNKYiRkILgJC4y03jcTttlmIvNg2WLzqrDdoqsUU4VDdGuLaOZ5D5
-   EFf+sM5VEQhKstIf42nlzAagMYyu+km6IvzlCl+uFN3EXbo3iq202khQL
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="368984331"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="368984331"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2023 08:39:08 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10665"; a="678241953"
-X-IronPort-AV: E=Sophos;i="5.98,305,1673942400"; 
-   d="scan'208";a="678241953"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga007.jf.intel.com with ESMTP; 30 Mar 2023 08:38:56 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1phuMV-00AURJ-0P;
-        Thu, 30 Mar 2023 18:38:51 +0300
-Date:   Thu, 30 Mar 2023 18:38:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>,
-        Juergen Gross <jgross@suse.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Anatolij Gustschin <agust@denx.de>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
-Subject: Re: [PATCH v7 3/6] PCI: Allow pci_bus_for_each_resource() to take
- less arguments
-Message-ID: <ZCWtCpQBAM7oR6ra@smile.fi.intel.com>
-References: <20230323173610.60442-4-andriy.shevchenko@linux.intel.com>
- <202303302009.55848372-oliver.sang@intel.com>
+        with ESMTP id S232917AbjC3PqZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 11:46:25 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A28AD72A2;
+        Thu, 30 Mar 2023 08:45:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 0B51BB82623;
+        Thu, 30 Mar 2023 15:45:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D3A1C4339B;
+        Thu, 30 Mar 2023 15:45:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680191144;
+        bh=vBf3ZDCn9/BnGZpzaUPwfDKfdZZd0/B3ixt5lveXnIY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qgzeyIjHgH9m7RMjjkGalBu1lyxVSDC6TDWKe1ZH8JknzxkqriYOVBYJTeR8KadYP
+         SCcq5p9cZzu7DDfUeSWueuU9TToSDCRvHHTqx+B3Cyx3lgPzxOxmJqsiocKZwqqn+k
+         KB/vGWWnmVX0e9Bm2Kt+bb0MamWVPjsIQcgicmIqP3+kWgU5Y6dsdlP3DlFope8Nxa
+         2GqsCGflzY3lt2L1DvzyXtOpOknWGwYVAYbTF2V5q0RLfJ+f4d1Nlxbd7VCgvCCULF
+         bkiG32luPdIDOtuf4hNDi+C/gzwWloQlvLPSA+FLPaqKw4Y6vN/X9qtN06bBwOBgIn
+         5ebvwK23UkPOQ==
+Date:   Thu, 30 Mar 2023 10:45:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v2] PCI/EDR: Clear PCIe Device Status errors after EDR
+ error recovery
+Message-ID: <20230330154542.GA3147375@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <202303302009.55848372-oliver.sang@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <b6fd4af3-18f7-0a7e-96e7-4ca3c4ada279@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 09:24:21PM +0800, kernel test robot wrote:
-> 
-> Greeting,
-> 
-> FYI, we noticed various errors such like
->     "i40e: probe of 0000:3d:00.0 failed with error -12"
-> due to commit (built with gcc-11):
-> 
-> commit: d23d5938fd7ced817d6aa1ff86cd671ebbaebfc2 ("[PATCH v7 3/6] PCI: Allow pci_bus_for_each_resource() to take less arguments")
-> url: https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/kernel-h-Split-out-COUNT_ARGS-and-CONCATENATE/20230324-013857
-> base: https://git.kernel.org/cgit/linux/kernel/git/pci/pci.git next
-> patch link: https://lore.kernel.org/all/20230323173610.60442-4-andriy.shevchenko@linux.intel.com/
-> patch subject: [PATCH v7 3/6] PCI: Allow pci_bus_for_each_resource() to take less arguments
-> 
-> in testcase: boot
-> 
-> on test machine: 96 threads 2 sockets Intel(R) Xeon(R) Gold 6252 CPU @ 2.10GHz (Cascade Lake) with 512G memory
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> If you fix the issue, kindly add following tag
-> | Reported-by: kernel test robot <oliver.sang@intel.com>
-> | Link: https://lore.kernel.org/oe-lkp/202303302009.55848372-oliver.sang@intel.com
+On Wed, Mar 29, 2023 at 03:38:04PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 3/29/23 3:09 PM, Bjorn Helgaas wrote:
+> > On Wed, Mar 15, 2023 at 04:54:49PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> >> Commit 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+> >> OS owns AER") adds support to clear error status in the Device Status
+> >> Register(DEVSTA) only if OS owns the AER support. But this change
+> >> breaks the requirement of the EDR feature which requires OS to cleanup
+> >> the error registers even if firmware owns the control of AER support.
 
-Thanks, that is useful test!
+> > I assume we should have a Fixes: tag here, since this patch should be
+> > backported to every kernel that contains 068c29a248b6.  Possibly even
+> > a stable tag, although it's arguable whether it's "critical" per
+> > Documentation/process/stable-kernel-rules.rst.
+> 
+> Yes. But this error is only reproducible in the EDR use case. So I
+> am not sure whether it can be considered a critical fix. 
 
--- 
-With Best Regards,
-Andy Shevchenko
+I don't know how widespread EDR implementation is.  What is the
+user-visible issue without this fix?  "lspci" shows status bits set
+even after recovery?  Subsequent EDR notifications cause us to report
+errors that were previously reported and recovered?  Spurious EDR
+notifications because of status bits that should have been cleared?
+This kind of information would be useful in the commit log anyway.
 
+Since the risk is low (the change only affects EDR processing) and the
+the experience without this change might be poor (please clarify what
+that experience is), I think I would be inclined to mark it for
+stable.
 
+> > It's a little weird to work around a change inside pcie_do_recovery()
+> > by clearing it here, and that means we clear it twice in the AER
+> > native case, but I don't see any simpler way to do this, so this seems
+> > fine as the fix for the current issue.
+> 
+> In AER native case, edr_handle_event() will never be triggered. So it
+> won't be cleared twice.
+
+This sounds like a plausible assumption.  But is there actually spec
+language that says EDR notification is not allowed in the AER native
+case (when OS owns the AER Capability)?  I looked but didn't find
+anything.
+
+> Other way is to add a new parameter to pcie_do_recovery(..., edr) and use
+> it to conditionally call pcie_clear_device_status(). But I think current
+> way is less complex.
+
+I agree.
+
+> > Question though: in the AER native case, pcie_do_recovery() calls
+> > both:
+> > 
+> >   pcie_clear_device_status() and
+> >   pci_aer_clear_nonfatal_status()
+> > 
+> > In this patch, you only call pcie_clear_device_status().  Do you care
+> > about pci_aer_clear_nonfatal_status(), too?
+> 
+> Yes, we care about it. Since we call dpc_process_error() in EDR handler,
+> it will eventually clear error status via pci_aer_clear_nonfatal_status()
+> and pci_aer_clear_fatal_status() within dpc_process_error().
+
+dpc_process_error() calls pci_aer_clear_nonfatal_status() in *some*
+(but not all) cases.  I didn't try to work out whether those match the
+cases where pcie_do_recovery() called it before 068c29a248b6.  I guess
+we can assume it's equivalent for now.
+
+> > The overall design for clearing status has gotten pretty complicated
+> > as we've added error handling methods (firmware-first, DPC, EDR), and
+> > there are so many different places and cases that it's hard to be sure
+> > we do them all correctly.
+> > 
+> > I don't really know how to clean this up, so I'm just attaching my
+> > notes about the current state:
+> 
+> Good summary! I can see a lot of overlap in clearing
+> PCI_ERR_UNCOR_STATUS and PCI_EXP_DEVSTA.
+
+Actually I do have one idea: in the firmware-first case, firmware
+collects all the status information, clears it, and then passes the
+status on to the OS.  In this case we don't need to clear the status
+registers in handle_error_source(), pcie_do_recovery(), etc.
+
+So I think the OS *should* be able to do something similar by
+collecting the status information and clearing it first, before
+starting error handling.  This might let us collect the status
+clearing together in one place and also converge the firmware-first
+and native error handling paths.
+
+Obviously that would be a major future project.
+
+Bjorn
