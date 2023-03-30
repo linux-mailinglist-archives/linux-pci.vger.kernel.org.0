@@ -2,74 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3CE66CFF40
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 10:54:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 929916CFF41
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 10:54:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229820AbjC3Iyo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Mar 2023 04:54:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56208 "EHLO
+        id S229612AbjC3Iyx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 04:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230051AbjC3Iyh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 04:54:37 -0400
+        with ESMTP id S230165AbjC3Iyi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 04:54:38 -0400
 Received: from esa2.hgst.iphmx.com (esa2.hgst.iphmx.com [68.232.143.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF0E7EC1
-        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 01:54:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 975CD7683
+        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 01:54:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1680166468; x=1711702468;
+  t=1680166470; x=1711702470;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=c6fb/ATpu4bjomFurbyO/sIS4IvcEwK34bItru+sYXM=;
-  b=E4RM6BwlX8mZcc0AnzxdKpG98NoU+5H6VAGqIK3ju//s7D/BvHQI/Hzq
-   TYLreW4gj+0Bu7w/6RMatgVRjKmQcu3lYRq3QbY5OniXZKYst+PgKEiKE
-   58+oZSghWtBN6t5SycmJRbHOzI+AJ4mt8aWJl4QJ5qp68ilp/uNi8XrUo
-   IvPYVpr8/aoPYn3BdWGCJbBbb/kCScSTcP3A0Obyt8BeQ10QtXxewd46N
-   zh06uuDplUWU7Pyr7TjOlfdSAqTcNjMSco4FXhJGbWbGml8CPd+LTTPV9
-   XjRzGtfzWqbLHntXkFPJH6jKWL0ylIIp9tiH98/tH6Fr7N9EzI23bvZxa
-   g==;
+  bh=9hc8RCCLWTxRBYC9gxcz8ZAIDPbMiGNQupCTpkbGyu0=;
+  b=KVlkG3sC22/CDBmI9t3K1LVTCizMYmQUZIDUKsWhLZbTVIEVHsptGpmy
+   ht216MjYtu/5bqPM/6AfBWW0bWb1CSs8Muf/Y3ACQzYfis9F8x7YClZ9N
+   Ao/vL/QAg/8O/g9U3DCB9i7a+ZmYjeQ3jTrRVDt6eAlsrIarzuHQqmps1
+   8ptCtGUIx2yKT5lUFRswjqYJY/xqb2jZ6XcxF38QQ9xW2smPJOS0umW9+
+   j4BqaJ8Lq2F07dTWlSFmFhHhvYWemO62I4pvcDrLyFYQFN+0F6QJBbJJT
+   62wziVLX+c3uzJjKcpIuZPIFW5lK4Es3qO4Qq+0+5JALrjp0OBa+TsVSM
+   Q==;
 X-IronPort-AV: E=Sophos;i="5.98,303,1673884800"; 
-   d="scan'208";a="331310490"
+   d="scan'208";a="331310494"
 Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Mar 2023 16:54:26 +0800
-IronPort-SDR: tOy1UuApEzm9H0iFguCq6DrSJpdz6Dj1Pet47mfv66h6AzUHEXmqMpzyKvmIAYN/sGJgDqFjcF
- Z/Hxvmlwkoq6/u4re88W7j5vQAO/3a4IkazFTUhIUE7Uwtq+SRfF+M2Z3qwYOq7B0avljUQDUW
- TZxRabrTo4QvoFeUKu/oCQaA2NK45EwIDqvT9lke55TUf9K4z6AWK2sCs22eUaTNq1ljQJus+Y
- +z8jZhKWhd/f/hXwDD1RuQ/rQPi7aFZX+414o9/6UFYRfbawjZ0Ynygvp0I3h86tBS23FcmO1M
- PLo=
+  by ob1.hgst.iphmx.com with ESMTP; 30 Mar 2023 16:54:28 +0800
+IronPort-SDR: KO1byRHEdli5DY7Gzhzoj470motfKvqGj9ufgYyPZiww4Np7995qA8QOy5YWMyMx8SgF1yAJST
+ f60DQtpLCofAd08y3FU+uTGVAjQZAveOMVeGOlJnJfn32HX18DfiX0o+EVn0cdJaaNMV0is2i8
+ kbonqTuthRVNZ3TpRChBWDP+ydnxkXxRa6pGehXgJqo7VSOXP8MWJZXoS+9wYPyBh50UuCsj8p
+ UP56jjTLrGC8L9haICon5ehMYD9Iwb7Tr5Rm4U4uDu0UFUsH75+ta3VmOMbdxUG4CnUTZXb919
+ tmQ=
 Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 01:10:34 -0700
-IronPort-SDR: fYCcU+P9VOu1yQqp5AJEUWNkPEUcYw5vGiPUlWO5WLh1tVDKnsXXb+oBTPm0xXlL/D/GkkJ0qy
- 89D77UXNiEPnQZZWULcTpuWFm667ay9yLf+cvFRMYy/TIngDVa8E8XrMhXqAYCltCaL1cNtucn
- FF0BU8KdVPyBjvMFTaurf1st3uuFk6tGb+5B7/RLkgUke3OHPh9byJfZzkd5/i3FrT+PFO3mXX
- s61I9gcMvbp/xME0bkIyOKnwGVtNMVNDkAVr9Gc7bwx3JogGstgu+LxD9ZBIaRXPBu9wsmARWV
- trg=
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 01:10:36 -0700
+IronPort-SDR: UWr4IAs+gBzMmmQ6SqNCpcCywpWpbwyZOwbKvUJrSJ9LTLTISnugwkFCgr6g1/FFeay8x8to+x
+ oFnIc4O/TZHDd9OCPdcoz2oxRzem6bIQoXvUugV7Fzj5SzLNFzCq2Ah1nPdwKzAQ/Aq44Vb2jR
+ wye0+9QH+V3wlkK2Z49hlzALTo8l6xBenDzKTxLpIYfuFlI7pl8TK3/fbbM58UeZmiIJSD/UJT
+ Tx9GW6dBBJaG0PaqTICk93oE8D5UTuTQKZGS/RaSvPqDWtP2jwMQ47oyZdkl8OZm6YBnZgyRil
+ 9l4=
 WDCIronportException: Internal
 Received: from usg-ed-osssrv.wdc.com ([10.3.10.180])
-  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 01:54:26 -0700
+  by uls-op-cesaip01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 30 Mar 2023 01:54:28 -0700
 Received: from usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PnHKZ29n3z1RtVv
-        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 01:54:26 -0700 (PDT)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTP id 4PnHKc1DMHz1RtVy
+        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 01:54:28 -0700 (PDT)
 Authentication-Results: usg-ed-osssrv.wdc.com (amavisd-new); dkim=pass
         reason="pass (just generated, assumed good)"
         header.d=opensource.wdc.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=
         opensource.wdc.com; h=content-transfer-encoding:mime-version
         :references:in-reply-to:x-mailer:message-id:date:subject:to
-        :from; s=dkim; t=1680166465; x=1682758466; bh=c6fb/ATpu4bjomFurb
-        yO/sIS4IvcEwK34bItru+sYXM=; b=FxKJCv33s3R6Tdsr8jhJDzmD9BG77tPnQA
-        q9dwM2Zqz9B3NaEdGiZ0sFcEB6FNP7ua3VU3xUxgyr5BaJlk7qTefEz6dRsU+PZY
-        c9pz/N3Q/wFYwthCS5XTQxxrC/qicLJd3n6zE4bDaeQUz8oHiTXNlzewdc7xg/24
-        Hdo9SH6rk/4zJgSGLCMGBwWr0Y0YFzg1oMiiJZe9TzTHY1bGJI0oWKJOmaXqDoz7
-        7/l84D3Bg92dV/DYQhe+H/q0AGCKeFkdiPcLN7j1oG7ijMZZ/RAGfLsht+5VWQW6
-        y5coBlyNLFYFWyaVMfOpM1wddl/oQT+4+VfZDUP82kiDM66+GDIA==
+        :from; s=dkim; t=1680166467; x=1682758468; bh=9hc8RCCLWTxRBYC9gx
+        cz8ZAIDPbMiGNQupCTpkbGyu0=; b=It1nm9n07mW732LZlHkWDZ3RakaZhPJx9a
+        kcRg9v+5g1H1Xwqf30/HDRUvrgBALuHlCQuPFAYOANB4OeKdbo3FMnhcuaza5Ntk
+        JTkbh/CUsq1VD0hAJ7qfWP9C7w/geH55xr7saYthOp427w63sB7VwIFFvE5iXeHN
+        pKRQxtgSzOGR1QOUgV4vlZeCQXfQvaaA7/0OlOyoL+EsdFDHqbnyQfrMETzYNsj4
+        IyOlnWZi0/W3GIg1b+rmp06d7lGWWucNhsU7sPLlLPJ2PvLqz6A7lyDroZn0mwTv
+        r2p3Nl7XI5XJOjM9jywpBleVNIX6MkbNoEaNlCeIF9m9jX80Nuyg==
 X-Virus-Scanned: amavisd-new at usg-ed-osssrv.wdc.com
 Received: from usg-ed-osssrv.wdc.com ([127.0.0.1])
         by usg-ed-osssrv.wdc.com (usg-ed-osssrv.wdc.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id slpYdqnETC0m for <linux-pci@vger.kernel.org>;
-        Thu, 30 Mar 2023 01:54:25 -0700 (PDT)
+        with ESMTP id eugez6Q_F31N for <linux-pci@vger.kernel.org>;
+        Thu, 30 Mar 2023 01:54:27 -0700 (PDT)
 Received: from washi.fujisawa.hgst.com (washi.fujisawa.hgst.com [10.149.53.254])
-        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PnHKX1qPXz1RtVp;
-        Thu, 30 Mar 2023 01:54:24 -0700 (PDT)
+        by usg-ed-osssrv.wdc.com (Postfix) with ESMTPSA id 4PnHKZ1JjFz1RtVm;
+        Thu, 30 Mar 2023 01:54:25 -0700 (PDT)
 From:   Damien Le Moal <damien.lemoal@opensource.wdc.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
@@ -79,9 +79,9 @@ Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v4 14/17] misc: pci_endpoint_test: Free IRQs before removing the device
-Date:   Thu, 30 Mar 2023 17:53:54 +0900
-Message-Id: <20230330085357.2653599-15-damien.lemoal@opensource.wdc.com>
+Subject: [PATCH v4 15/17] misc: pci_endpoint_test: Re-init completion for every test
+Date:   Thu, 30 Mar 2023 17:53:55 +0900
+Message-Id: <20230330085357.2653599-16-damien.lemoal@opensource.wdc.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
 References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
@@ -96,48 +96,42 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In pci_endpoint_test_remove(), freeing the IRQs after removing the
-device creates a small race window for IRQs to be received with the test
-device memory already released, causing the IRQ handler to access
-invalid memory, resulting in an oops.
+The irq_raised completion used to detect the end of a test case is
+initialized when the test device is probed, but never reinitialized
+again before a test case. As a result, the irq_raised completion
+synchronization is effective only for the first ioctl test case
+executed. Any subsequent call to wait_for_completion() by another
+ioctl() call will immediately return, potentially too early, leading to
+false positive failures.
 
-Free the device IRQs before removing the device to avoid this issue.
+Fix this by reinitializing the irq_raised completion before starting a
+new ioctl() test command.
 
-Fixes: e03327122e2c ("pci_endpoint_test: Add 2 ioctl commands")
+Fixes: 2c156ac71c6b ("misc: Add host side PCI driver for PCI test functio=
+n device")
 Cc: stable@vger.kernel.org
 Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/misc/pci_endpoint_test.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/pci_endpoint_test.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint=
 _test.c
-index a7244de081ec..01235236e9bc 100644
+index 01235236e9bc..24efe3b88a1f 100644
 --- a/drivers/misc/pci_endpoint_test.c
 +++ b/drivers/misc/pci_endpoint_test.c
-@@ -938,6 +938,9 @@ static void pci_endpoint_test_remove(struct pci_dev *=
-pdev)
- 	if (id < 0)
- 		return;
+@@ -729,6 +729,10 @@ static long pci_endpoint_test_ioctl(struct file *fil=
+e, unsigned int cmd,
+ 	struct pci_dev *pdev =3D test->pdev;
 =20
-+	pci_endpoint_test_release_irq(test);
-+	pci_endpoint_test_free_irq_vectors(test);
+ 	mutex_lock(&test->mutex);
 +
- 	misc_deregister(&test->miscdev);
- 	kfree(misc_device->name);
- 	kfree(test->name);
-@@ -947,9 +950,6 @@ static void pci_endpoint_test_remove(struct pci_dev *=
-pdev)
- 			pci_iounmap(pdev, test->bar[bar]);
- 	}
-=20
--	pci_endpoint_test_release_irq(test);
--	pci_endpoint_test_free_irq_vectors(test);
--
- 	pci_release_regions(pdev);
- 	pci_disable_device(pdev);
- }
++	reinit_completion(&test->irq_raised);
++	test->last_irq =3D -ENODATA;
++
+ 	switch (cmd) {
+ 	case PCITEST_BAR:
+ 		bar =3D arg;
 --=20
 2.39.2
 
