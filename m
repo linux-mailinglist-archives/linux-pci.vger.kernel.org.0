@@ -2,181 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1C796CF985
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 05:23:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CD1A6CF9BA
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 05:53:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjC3DXv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 29 Mar 2023 23:23:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
+        id S229661AbjC3DxU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 29 Mar 2023 23:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjC3DXu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 23:23:50 -0400
-Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020024.outbound.protection.outlook.com [52.101.56.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C92D2703;
-        Wed, 29 Mar 2023 20:23:49 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TqbdsPmGmxFABTLRDZeaOpLeG1HV3AF0OfyAudpgVRdB/GElrn+Mp1d8HMIewVM9xPy5AjQ/3UfcrFfTT0ZEHaa80se7MlFpVXU77zPYTtJTR0wjFRtNCARnDyT37GElqmBeVl2DzKnAT3SgRBlMnBsV/BmReZcBZEOJi7syd75y6fAygdJrpUivycWtb74nGs7C2HpO6CZTXbJfQHI3/aLz2rrkU8312qokeqMtZ+9KyAFTxdo7m/3DYO7TSlEmpXsMWyK+ocd8V3UliWd1Clxz79WXHV+aONOwFfl09u6aW/3+CzpPbD8gEcwn/n0glDKLwaYR0dOEAgDyantF+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=UB1Lk2oE8E2h88KNW456AsQ5fPelmAq5Hdzj7sLIAUY=;
- b=HT4M11qdwZTAwOfrQjTG7jlYuuwk7LMXxW26GS8nW3XXMBS4ef9ABO5boGaD0xtFNW/yCwmH2ad1/mMT/oOPnP96pEpIuA4iz84JKcbgpe/lNVISCYyrkGVmdkcO+I9/FzV8HodmnpGOzB5kSascKUZ7JbRZ3lxXGf61RF6XDTVR3sHL/UKo87uk1tuytCLh8rhIixewU6NbbSdK0NXPUK0v5v4s1rodKhJvEGnSdxblv/uoYdTmZyTn7TngiAWZX4tqw9S4kJMSvdz6qNcKYmodIpsQ7f21/uKgpnFVhcQG7fRDoi3kSYBIUy3MNFSSm2FCESa8K5KJLFZfrNZJPw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UB1Lk2oE8E2h88KNW456AsQ5fPelmAq5Hdzj7sLIAUY=;
- b=U+0aGA7fu1oz9QQ97dmPoct/hbIYeeIxsAI9QztxzxZwXWKC8HRS7Caa3Ts+/6QFLRuMo88ayFcQN6aZfwVnS8+lleX8LUyBs3GznAiLgGTUdldgRHxODi/3oFcHus9+cq2gpud3tMUjyLs4HxBdQFt5AkYoaWJmWiVaPIPYbYU=
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
- by PH0PR21MB1896.namprd21.prod.outlook.com (2603:10b6:510:15::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.11; Thu, 30 Mar
- 2023 03:23:46 +0000
-Received: from SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::2e52:d6aa:9a99:500a]) by SA1PR21MB1335.namprd21.prod.outlook.com
- ([fe80::2e52:d6aa:9a99:500a%5]) with mapi id 15.20.6277.013; Thu, 30 Mar 2023
- 03:23:45 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Boqun Feng <boqun.feng@gmail.com>
-CC:     "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
-        "quic_carlv@quicinc.com" <quic_carlv@quicinc.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: RE: [PATCH v2] PCI: hv: Fix the definition of vector in
- hv_compose_msi_msg()
-Thread-Topic: [PATCH v2] PCI: hv: Fix the definition of vector in
- hv_compose_msi_msg()
-Thread-Index: AQHZYrMXe0Y6kEKNA0yWUzOcmG4VZq8Sosvw
-Date:   Thu, 30 Mar 2023 03:23:45 +0000
-Message-ID: <SA1PR21MB13354973735A5E727F94A169BF8E9@SA1PR21MB1335.namprd21.prod.outlook.com>
-References: <20221027205256.17678-1-decui@microsoft.com>
- <ZCTsPFb7dBj2IZmo@boqun-archlinux> <ZCT6JEK/yGpKHVLn@boqun-archlinux>
-In-Reply-To: <ZCT6JEK/yGpKHVLn@boqun-archlinux>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f0e2d82c-9be1-40d3-8693-5b81e75f3725;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-03-30T03:02:43Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|PH0PR21MB1896:EE_
-x-ms-office365-filtering-correlation-id: 3794a99e-a024-4dc1-863c-08db30ce2b7f
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /pRlqWRqxzFHfJPSoMzMXbP+4sMct/vjQy9sn6qaBd5TaqfmKTE8ppiKH8ZGWeMOYCPf7T0MHCR/Dh3ESmT0bHN+wSzzw1qRTG1VSnSOKYsly/55+Sh8FuFV1oNcqrJOpY2BZp3tbnAr+5zi2+cEULznSxkh7VYvNvkKScpQblQ0Q0+7qtab4xhVOmzat3/zoZeYT7PRI0RlxBQplvhbg6iTwKn1Qgacxm9Mt5d9xfG4Ihj86dqFpwXl0KC5e4Z51WVYaPXAakIbAxjHHwYSQGQhVpoYMqXjeGyb0/hMbvbrA4ansQbR202o9ARZgFam3G4QvKlHeVnzeeNqXG0XYVqMeO+g9PCD0Brd1QONv6oCUWOg6l6c7iP3vwJqrgoGPAP4vjF4N8o1NHxQLVb6GL9ZueQlEqg8J5CG0TOZjJHqTajYyy2elM36WtI2e4wbm7mH4zDDVcTsj22snZqkoll3I1nGIjV40TbjNEhx9XvVr9igHggq95WS4c2LuxU/tcvB0Zw9YRjag0zwlBKzfJPVgeq2pTlbPpI8HdCT+otAwzJp6CSO5GSm3iYAk3AY4cllN6lrs/ZH+9e5ZLjGTkpUGP856brpT8AF7n+mdWBn6v9GNLZ1brrCG5GVIEx9DZimQMIG/QbPHQP6V2oDyjW77yJGQYdQFuvA1CAjZgs=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(136003)(39860400002)(396003)(376002)(451199021)(316002)(786003)(54906003)(186003)(122000001)(38100700002)(55016003)(38070700005)(33656002)(82960400001)(82950400001)(478600001)(10290500003)(71200400001)(9686003)(7696005)(6506007)(7416002)(5660300002)(53546011)(8990500004)(2906002)(41300700001)(66476007)(66556008)(8676002)(64756008)(66446008)(66946007)(6916009)(4326008)(76116006)(8936002)(86362001)(52536014);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?81JEvRcxB36M5lm3arfXPADKyVUZ6EUa2euHlbD2EkdVrYGiHry/iFDie8AL?=
- =?us-ascii?Q?ujeR1oA/QKgCn/5M4HFl5W2AN27I0+CU+GD7a0zHous1jX8H5GSh+qbF+WZU?=
- =?us-ascii?Q?3GTyZ7++WGYhOHsNrdnBRy4LAQ2SiuHNFNzSvnnD7VVngY3vh2/xp1VS8m8P?=
- =?us-ascii?Q?Mn4fjhPYgHkdszfYYAscByNdR446yqI3aJWqiTyd5eXQCipUEIadsYzJslEd?=
- =?us-ascii?Q?3D/tqbIr42iDejgc0CWJLCXpJSlCUtRBZTUwIWKLgUrZz50X8YGRsPstqLwQ?=
- =?us-ascii?Q?chgNQ1FxMGMLEtHQ6grw5t0ACDFejTc04YIUkNmpwKR4gJIs09c0nOGGkOhq?=
- =?us-ascii?Q?K+wX863cXXXB1AYZY2HJaZjqJAoQHjsihbUju5BT2bngDr8og9uV5BQAfq/a?=
- =?us-ascii?Q?QkX6+rrBfOXgfqRO16nH62wDteJfiPDBsh183qi/KMNTpGrKcgRR+qWglz07?=
- =?us-ascii?Q?q2at+SNukWohrZsMnazh7WnvLLrCit4nwwAYRDzBZcgX/NFjV8D3XFrp4ZZt?=
- =?us-ascii?Q?8Hj0UAmXC00nagLAe50i4SQfRXeDFvWXIvZ26RBtUEG3MgeykHDfGFdhI9JE?=
- =?us-ascii?Q?gGEwTewgXXolIOyNS3MXjO5JvJlKyofJZ1CpD72GiL8GCVbSb5e06wDvAKJH?=
- =?us-ascii?Q?nUmLJFKvlxviIaKbvk5irDpt+64uXvpDzgC38b4aK7j8ZxHVTVBIHn41vX9A?=
- =?us-ascii?Q?IMNnWtfx2xRdPwrNzKvdp60KuJ87c20qedYEofe3IV8CefMGi8EAbxwz/9Y7?=
- =?us-ascii?Q?z3TBgEF1PEv9kV0H0csWD6+H2azHcvUdrKJmgpRFC9EDxxAzObvmSD+T05EB?=
- =?us-ascii?Q?9PQBXSWmzJwk0UOJpfBwMNm6aC31jtRu6BOiN2tgylZtlRG9tCcjQc/WQFkK?=
- =?us-ascii?Q?vdyEh5OK6M/gNP5vMoEdVKWbwGFvy8ZpCjHUB8TDqvgVSZhXv2nwyMRsYvER?=
- =?us-ascii?Q?cMsjODsWL3sndBFYRzq4GxNeAbPv/XnEjGgkoa8iXn61YSbQBBYMxbZBJMt0?=
- =?us-ascii?Q?iBqmyVLfhZC8tEwQvuRzIgrG/KmrGGEQHnEI3rOlFNreqps2pAfm6Cav8lrX?=
- =?us-ascii?Q?qnoa9fzhH5DltYO0lFeXYnD34HCJo1en9l0nJgqFPkGLZ7S43Sc3NKkarRAL?=
- =?us-ascii?Q?AzAJ8qitQZLcfqJaNDFk2/BHAGLaEVF+apyxADqEHW3/n9VxNgJWNTz1gQFH?=
- =?us-ascii?Q?k60TPSywSlpmy2WuDo5q75I3SOso3MhODv7YfO5/Kwaf88l7nlECz1a+hXde?=
- =?us-ascii?Q?DwvGRFIlk0Wlpslu1v7fqnNt8XCcuBhg6usx7meP7+7EZYD0BNeaeNIguHLX?=
- =?us-ascii?Q?wxn2fzeejegzFRto8dgNPkxe/8RTDR9EO/F6aOyrkETx22CnXcWHz+xl12PT?=
- =?us-ascii?Q?H2T5jvptx7pM+J6eXNVcDHzebpBNif9PK0A2rspDLU7c5RQxL9CGLIknlXk4?=
- =?us-ascii?Q?PdpDIPelUNU2CxC+DiZnRGoNoi6jUX7mL1yrt00TdjbStXlgo0sbY/1p0vEh?=
- =?us-ascii?Q?TB/JKkuuKmUYz/uavlL9OIrNTm0HTa/X4iGW+OBTpM0ybTAHFAwKbqKUFvlx?=
- =?us-ascii?Q?7Qy6yJMyhS/Pc3rRtyOhUZfS34LsxlA/xnIQvAGPQX/KpTOsKF0D6M/J4+Gc?=
- =?us-ascii?Q?Si5/WmMWzPxGHw0tkHB906kbutqtP24UMMyYeXG2aTY/?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229588AbjC3DxS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 29 Mar 2023 23:53:18 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B80B4C15;
+        Wed, 29 Mar 2023 20:53:17 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Pn8dT2LXCzKqdc;
+        Thu, 30 Mar 2023 11:52:45 +0800 (CST)
+Received: from [10.67.102.169] (10.67.102.169) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Thu, 30 Mar 2023 11:53:15 +0800
+CC:     <yangyicong@hisilicon.com>, <mathieu.poirier@linaro.org>,
+        <suzuki.poulose@arm.com>, <corbet@lwn.net>,
+        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
+        <linuxarm@huawei.com>
+Subject: Re: [PATCH 1/4] hwtracing: hisi_ptt: Make cpumask only present online
+ CPUs
+To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+References: <20230315094316.26772-1-yangyicong@huawei.com>
+ <20230315094316.26772-2-yangyicong@huawei.com>
+ <20230328172409.000021f5@Huawei.com>
+From:   Yicong Yang <yangyicong@huawei.com>
+Message-ID: <94e7d85a-d580-94c5-ae2c-fe6a77c21487@huawei.com>
+Date:   Thu, 30 Mar 2023 11:53:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.5.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3794a99e-a024-4dc1-863c-08db30ce2b7f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2023 03:23:45.3706
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7iXIiogQdzpBplkt9ApSrxr4k/sCWFLTXs3azqzlHMDBs2ClfjoobSuivONvUs6dxmPEkP2XLq8eb7mDMr7qww==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR21MB1896
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230328172409.000021f5@Huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.102.169]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-2.3 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-> From: Boqun Feng <boqun.feng@gmail.com>
-> Sent: Wednesday, March 29, 2023 7:56 PM
-> To: Dexuan Cui <decui@microsoft.com>
->  ...
-> On Wed, Mar 29, 2023 at 06:56:12PM -0700, Boqun Feng wrote:
-> > [Cc stable]
-> >
-> > On Thu, Oct 27, 2022 at 01:52:56PM -0700, Dexuan Cui wrote:
-> > > The local variable 'vector' must be u32 rather than u8: see the
-> > > struct hv_msi_desc3.
-> > >
-> > > 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
-> > > hv_msi_desc2 and hv_msi_desc3.
-> > >
-> >
-> > Dexuan, I think this patch should only be in 5.15, because...
-> >
->=20
-> Sorry, I meant:
->=20
-> "this patch should also be backported in 5.15"
->=20
-> Regards,
-> Boqun
->=20
-> > > Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
-> >
-> > ^^^ this commit is already in 5.15.y (commit id 92dcb50f7f09).
-> >
-> > Upstream id e70af8d040d2b7904dca93d942ba23fb722e21b1
-> > Cc: <stable@vger.kernel.org> # 5.15.x
+On 2023/3/29 0:24, Jonathan Cameron wrote:
+> On Wed, 15 Mar 2023 17:43:13 +0800
+> Yicong Yang <yangyicong@huawei.com> wrote:
+> 
+>> From: Yicong Yang <yangyicong@hisilicon.com>
+>>
+>> perf will try to start PTT trace on every CPU presented in cpumask sysfs
+>> attribute and it will fail to start on offline CPUs(see the comments in
+>> perf_event_open()). But the driver is using cpumask_of_node() to export
+>> the available cpumask which may include offline CPUs and may fail the
+>> perf unintendedly. Fix this by only export the online CPUs of the node.
+> 
+> There isn't clear documentation that I can find for cpumask_of_node()
+> and chasing through on arm64 (which is what we care about for this driver)
+> it's maintained via numa_add_cpu() numa_remove_cpu()
+> Those are called in arch/arm64/kernel/smp.c in locations that are closely coupled
+> with set_cpu_online(cpu, XXX);
+> https://elixir.bootlin.com/linux/v6.3-rc4/source/arch/arm64/kernel/smp.c#L246
+> https://elixir.bootlin.com/linux/v6.3-rc4/source/arch/arm64/kernel/smp.c#L303
+> 
+> Now there are races when the two might not be in sync but in this case
+> we are just exposing the result to userspace, so chances of a race
+> after this sysfs attribute has been read seems much higher to me and
+> I don't think we can do anything about that.
+> 
+> Is there another path that I'm missing where online and node masks are out
+> of sync?
+> 
 
-The faulty commit a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-M=
-SI")
-is in all the stable branches, even including 4.14.y, so yes, the commit
-e70af8d040d2 ("PCI: hv: Fix the definition of vector in hv_compose_msi_msg(=
-)")
-should be backported to all the stable branches as well, including
-v5.15.y, v5.10.y, v5.4.y, v4.19.y, v4.14.y.
+maybe no. This patch maybe incorrect and I need more investigation, so let's me
+drop it from the series. Tested and everything seems fine now.
 
-e70af8d040d2 has a Fixes tag. Not sure why it's not automatically backporte=
-d.
+I found this problem and referred to commit 064f0e9302af ("mm: only display online cpus of the numa node")
+which might be the same problem. But seems unnecessary that cpumask_of_node()
+already include online CPUs only.
 
+Thanks.
 
+> Jonathan
+> 
+> 
+>>
+>> Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
+>> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+> 
+>> ---
+>>  drivers/hwtracing/ptt/hisi_ptt.c | 13 +++++++++++--
+>>  1 file changed, 11 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+>> index 30f1525639b5..0a10c7ec46ad 100644
+>> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+>> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+>> @@ -487,9 +487,18 @@ static ssize_t cpumask_show(struct device *dev, struct device_attribute *attr,
+>>  			    char *buf)
+>>  {
+>>  	struct hisi_ptt *hisi_ptt = to_hisi_ptt(dev_get_drvdata(dev));
+>> -	const cpumask_t *cpumask = cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev));
+>> +	cpumask_var_t mask;
+>> +	ssize_t n;
+>>  
+>> -	return cpumap_print_to_pagebuf(true, buf, cpumask);
+>> +	if (!alloc_cpumask_var(&mask, GFP_KERNEL))
+>> +		return 0;
+>> +
+>> +	cpumask_and(mask, cpumask_of_node(dev_to_node(&hisi_ptt->pdev->dev)),
+>> +		    cpu_online_mask);
+>> +	n = cpumap_print_to_pagebuf(true, buf, mask);
+>> +	free_cpumask_var(mask);
+>> +
+>> +	return n;
+>>  }
+>>  static DEVICE_ATTR_RO(cpumask);
+>>  
+> 
+> .
+> 
