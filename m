@@ -2,54 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 994EF6D0CA7
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 19:22:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD22A6D0E14
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 20:50:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232350AbjC3RWf convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 30 Mar 2023 13:22:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53670 "EHLO
+        id S229734AbjC3Sus (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 14:50:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232324AbjC3RWc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 13:22:32 -0400
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70AB0E06A;
-        Thu, 30 Mar 2023 10:22:30 -0700 (PDT)
-Received: by mail-ed1-f45.google.com with SMTP id ew6so79315712edb.7;
-        Thu, 30 Mar 2023 10:22:30 -0700 (PDT)
+        with ESMTP id S229798AbjC3Sur (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 14:50:47 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4466CDF5
+        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 11:50:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680202203;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6UQrNZxjfu3FW/I6sK8C7BOJKbvCETQxYVwKUqa4gLk=;
+        b=DwQnv4bTJJN9t4L8QMofCOGi5WIdzofjE6DnSOP2NSeLlje2i7Hfqd55PQNCWtyxWRsRXT
+        P/6Ypj4bdlptSan8qUqhuziiGeqOfuT5pkJlgBTcR1bQaECj4bDdl2j5f1HpTNsRrsXXSp
+        C5QhWzR+clLohBEV59HQRZQyG5DXIEU=
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com
+ [209.85.166.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-333-0enHs1ADOSKK2mGqS816kQ-1; Thu, 30 Mar 2023 14:50:01 -0400
+X-MC-Unique: 0enHs1ADOSKK2mGqS816kQ-1
+Received: by mail-il1-f198.google.com with SMTP id o8-20020a056e0214c800b00325f0a48812so10427297ilk.13
+        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 11:50:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680196948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1680202201;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nVAn4wR6MEB1azuZNqppvLy3xIslL0OfTJA1ojOVPMs=;
-        b=6LpbL61VMiYMF4ttOaHt0LLFF0gKs591U4zPcsOztQReayV/pm1S7laRvapNeffI/6
-         eNbmaEvXuBKt1XmitCJ6uzQahH20marGB1hUPEBNwzRenYtwsoZVUYCQXZsedx3PlRFb
-         XKxMwrZ1MebRuxJbXmN0iTMWM/7ygZjSD10pE7KMC7zruVYawrivs3Isn2LolADNe1Cw
-         3n+VJIH9/QnXqXAM0+nAp66B3nGbILrH8DEwtmHHBUy7Yfs1tj37nqLLNBIrtHd2WHw7
-         5qCo/9G2n/qoX8Ponk5RwUc83uaLukYY+/K87vKuwYeIckSyqa1xjaUMfUDWsiMjObdx
-         iPmw==
-X-Gm-Message-State: AAQBX9dS35sp0BOeMGaaJfWTSUO+hE+DGwb/fCG+9JNsVWs8uiHYGd7z
-        qQo87p0yril/FcXtTdrGmS8aRqHu9uLmz0E8zgnbKizk
-X-Google-Smtp-Source: AKy350aWoTnfeNTO0Zh34lQQjCl79sTr1N4Q92wZJzRbUTZGgAbJgGc97/iIuq9rCgZAjBTQ33hmTNwCgef6g8VRQ7Y=
-X-Received: by 2002:a17:906:fe49:b0:8b1:3298:c587 with SMTP id
- wz9-20020a170906fe4900b008b13298c587mr13056544ejb.2.1680196948585; Thu, 30
- Mar 2023 10:22:28 -0700 (PDT)
+        bh=6UQrNZxjfu3FW/I6sK8C7BOJKbvCETQxYVwKUqa4gLk=;
+        b=7NWGWBENNIDXlpBSVV3fsemtyLnXi5PBGXHBFtfV9lV+VpsbXijJ+pReEGedNtM9l7
+         PmqRbLd4MbG3WsX9Ox06F3YnmhMPiphcKK+fZOcI1dXHt1oKx6unJbEJju2OTXveqGvz
+         fZf5scEuoF6QqdIKsyotbJULq9nKbgLq1ezzC+8Ykx7RdFgSuUbEI+qx+ruRJg/J1yY7
+         8IGmUjo8TGz1WVXpx40/bZ/J4c6MdAkIP+uYnwhj0btYjKAB/CsTi76NXqftdQNwB48o
+         /QoOH7++pH5Czu4x6sOIMdNpHUjy+wlMctRbvfSk4Nk6vLPHPi5CNHq82k3sEUCXHmDm
+         RE1w==
+X-Gm-Message-State: AO0yUKWCzVdfu6atagVUDq77dgWss6ao6g9iwtfWWPrgTxRoy+zFb/qy
+        BbPNN4GaJ0bHbm+4avWWoLIktVqKSmNrANUbggJ0nruIBT8kDrtZXYCkTZRnRM0HKRS+TawVqiR
+        +4E4JcSGFUcfaNYtns0br
+X-Received: by 2002:a05:6602:228a:b0:71f:8124:de52 with SMTP id d10-20020a056602228a00b0071f8124de52mr19922012iod.9.1680202200961;
+        Thu, 30 Mar 2023 11:50:00 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+vN+F+C7td9wLCa+FeJA73rOKlyidR7N4iFHFTnKNmuaGWlPkmBzorrxlU0FHERL7D4mtk8Q==
+X-Received: by 2002:a05:6602:228a:b0:71f:8124:de52 with SMTP id d10-20020a056602228a00b0071f8124de52mr19921997iod.9.1680202200702;
+        Thu, 30 Mar 2023 11:50:00 -0700 (PDT)
+Received: from redhat.com ([38.15.36.239])
+        by smtp.gmail.com with ESMTPSA id k14-20020a02660e000000b003c4e65fd6dfsm78865jac.176.2023.03.30.11.49.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 11:49:59 -0700 (PDT)
+Date:   Thu, 30 Mar 2023 12:49:58 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Ido Schimmel <idosch@nvidia.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Petr Machata <petrm@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Amit Cohen <amcohen@nvidia.com>, mlxsw@nvidia.com,
+        linux-pci@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
+Subject: Re: [PATCH net-next 6/6] mlxsw: pci: Add support for new reset flow
+Message-ID: <20230330124958.15a34c3d.alex.williamson@redhat.com>
+In-Reply-To: <ZCVHtk/wqTAR4Ejd@shredder>
+References: <ZCBOdunTNYsufhcn@shredder>
+        <20230329160144.GA2967030@bhelgaas>
+        <20230329111001.44a8c8e0.alex.williamson@redhat.com>
+        <ZCVHtk/wqTAR4Ejd@shredder>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20230320180528.281755-1-jean-philippe@linaro.org> <1a227cc4-217b-01aa-ecee-9819160d9a44@redhat.com>
-In-Reply-To: <1a227cc4-217b-01aa-ecee-9819160d9a44@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 30 Mar 2023 19:22:17 +0200
-Message-ID: <CAJZ5v0hv3B-J0EOUxuKXAatvnpo463OpYLTEAzar-FS7onp21g@mail.gmail.com>
-Subject: Re: [RESEND PATCH] ACPI: VIOT: Initialize the correct IOMMU fwspec
-To:     eric.auger@redhat.com,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>
-Cc:     lenb@kernel.org, linux-acpi@vger.kernel.org, iommu@lists.linux.dev,
-        linux-pci@vger.kernel.org, helgaas@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=0.5 required=5.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-        FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=no
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -57,23 +87,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 11:04 AM Eric Auger <eric.auger@redhat.com> wrote:
->
-> Hi Jean,
->
-> On 3/20/23 19:05, Jean-Philippe Brucker wrote:
-> > When setting up DMA for a PCI device, we need to initialize its
-> > iommu_fwspec with all possible alias RIDs (such as PCI bridges). To do
-> > this we use pci_for_each_dma_alias() which calls
-> > viot_pci_dev_iommu_init(). This function incorrectly initializes the
-> > fwspec of the bridge instead of the device being configured. Fix it by
-> > passing the original device as context to pci_for_each_dma_alias().
-> >
-> > Fixes: 3cf485540e7b ("ACPI: Add driver for the VIOT table")
-> > Reported-by: Eric Auger <eric.auger@redhat.com>
-> > Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
->
-> Tested-by: Eric Auger <eric.auger@redhat.com>
+On Thu, 30 Mar 2023 11:26:30 +0300
+Ido Schimmel <idosch@nvidia.com> wrote:
 
-Applied as 6.4 material, thanks!
+> On Wed, Mar 29, 2023 at 11:10:01AM -0600, Alex Williamson wrote:
+> > I think we don't have it because it's unclear how it's actually
+> > different from a secondary bus reset from the bridge control register,
+> > which is what "bus" would do when selected for the example above.  Per
+> > the spec, both must cause a hot reset.  It seems this device needs a
+> > significantly longer delay though.  
+> 
+> Assuming you are referring to the 2ms sleep in
+> pci_reset_secondary_bus(), then yes. In our case, after disabling the
+> link on the downstream port we need to wait for 500ms before enabling
+> it.
+> 
+> > Note that hot resets can be generated by a userspace driver with
+> > ownership of the device and will make use of the pci-core reset
+> > mechanisms.  Therefore if there is not a device specific reset, we'll
+> > use the standard delays and the device ought not to get itself wedged
+> > if the link becomes active at an unexpected point relative to a
+> > firmware update.  This might be a point in favor of a device specific
+> > reset solution in pci-core.  Thanks,  
+> 
+> I assume you referring to something like this:
+> 
+> # echo 1 > /sys/class/pci_bus/0000:03/device/0000:03:00.0/reset
+> 
+> Doesn't seem to have any effect (network ports remain up, at least).
+> Anyway, this device is completely managed by the kernel, not a user
+> space driver. I'm not aware of anyone using this method to reset the
+> device.
+
+The pci-sysfs reset attribute is only meant to reset the linked device,
+so if this is a single function device then it might be accessing bus
+reset, but it also might be using FLR or PM reset.  There's a
+reset_method attribute to determine and select.
+
+In any case, if the device is unaffected, that suggests we're dealing
+with a device that doesn't comply with PCIe reset standards, which
+might suggests it needs a device specific reset or to flag broken reset
+methods regardless.
+
+Note that QEMU is a vfio-pci userspace driver, so assigning the device
+to a VM, where kernel drivers in the guest are managing the device is a
+use case of userspace drivers which should have a functional reset
+mechanism to avoid data leakage between userspace sessions.
+ 
+> If I understand Bjorn and you correctly, we have two options:
+> 
+> 1. Keep the current implementation inside the driver.
+> 
+> 2. Call __pci_reset_function_locked() from the driver and move the link
+> toggling to drivers/pci/quirks.c as a "device_specific" method.
+> 
+> Personally, I don't see any benefit in 2, but we can try to implement
+> it, see if it even works and then decide.
+
+The second option enables use cases like above, where the PCI-core can
+perform an effective reset of the device rather than embedding that
+into a specific driver.  Even if not intended as a primary use case,
+it's a more complete solution and avoids potentially unhappy users that
+assume such use cases are available.  Thanks,
+
+Alex
+
