@@ -2,65 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2276D06D2
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 15:34:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC3F96D06DB
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 15:34:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232016AbjC3Ne2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Mar 2023 09:34:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42584 "EHLO
+        id S232043AbjC3Nel (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 09:34:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231542AbjC3Ne1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 09:34:27 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2082.outbound.protection.outlook.com [40.107.101.82])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5E549029;
-        Thu, 30 Mar 2023 06:34:07 -0700 (PDT)
+        with ESMTP id S232052AbjC3Nej (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 09:34:39 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2049.outbound.protection.outlook.com [40.107.243.49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D54D8AD20;
+        Thu, 30 Mar 2023 06:34:32 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XguiMLPE1RSZAEmSU7WvrYp3HV25NO9O2WjLj/Xc8r+HrPCYy520RkCkuvluejYYl6sWZ1g0WWC8uBcIgXhWeR3i/yHsi4Dc5IfiYvOkw46AU9Cz4wHIPnW+nKJmuFuJQt+geIWt2SqxL1YWglBx5b+D6Kxi3nSS/tzZzqm2tZC7ZvjDYjVRdlpbAi5ZIFsqD4J6s3vGj9dnx796uGzl2+T3HgTT1Po1cC/+8ErK4XJkBDtmpSSc1wnYncb3vFML27b2q5ZNloqRsZy/4TQnvFJjK0RJjS5JA4iJkQ3qIX468ofYYZDQQYk0fyVXtlaAL+G2ZrqohathqbkDI+WTXA==
+ b=LKEgY58GAhXHwbQ1xuhlNVt+O6X3eRHqknJYr/MGSmFUVcfRvfXJ35Tb1vtgCiX0bd0RvYYHODICsoKtAFF3oQm+Sh8ioY87g3YZtmSkKWt1HQczz+F2bkerngvtHE+7fXpeyYlieut4jthihfjBtDxzK0iVT6REqbhQ3DMmI2zkXXfjkqC6zFxuaHbuNExraG81KmToUjlJjiXS0uz5VL6/9n8pC59KIaHBg1KJZBGtO4miv0MGuJbshR8z6kegllq5mRkVbo+q/vl+OBicgMjm0m6hyZdVXPXE7d6EXB/gQpacPgFT2gh0gv5XVjQJVHI6/hjSNnaYveb5wJckJA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+/FPLSvJUMGH/Sainst3GJd9T28t69atGD6aYkesA8Y=;
- b=mENfeRTCoeQBjhSCvSLaZKslttG50g04o69YseHKCaZSvxDQ4ZZ1PCmH4gZJ6FNF1+25XVtDBxIe7AQHjaZNE70Rd7mrJ2ZipQVS6d9KFOwRkrUCFJywDu00VJXcW7T+u0jcIunxZfS4z0OflI8/W4gwsWFFi/QLjvlkRD/P9HpUqTYdUhGF7DrAbdhYwvxhcCz8EcrggqACI3xY+jHKme93zlBy97gnCsCQCoDxIkWl3iPAYv9iriAoGjGTZLB+01zS4OkH7sElPfqC+9yk4Mm9d8AmwC7BA8OyTNq6hl41X4aNfwVCCcDRCtZ6QCPzTQEhK5J7RdpppFU2xwIF9A==
+ bh=DWBnLuq31T5KavRmUhXxEwE8BUS4UT7sOeVtuGB5OyA=;
+ b=bNXR1xgE6CDzULOrMKpxWIHgTeZwJE35kRlzyFNOD5zehnNm9RbTOX3+HGdsiCvGTt8p3vksF0NlQyYzda2BHkkJ//ccD51byIydu/9vafT96mvLIal+R/id+24laIgq9PzIqegtCzDFeKuIVcA2in31S6x3rhMUq6LFB+wObgrWd7HmtZQ+WnXlcmzyQdmx5NmMPqdmwyPmAT+rPNzlLqzfyr/uOPfXJCImajUjFIQLbuD39uyu8y6KVfAFXk3h9ZxlyFiIj5hzNQEo33SAiNK5rc9NrT9dQ5sijjTcSDS7uAaLNvyntw3ApuEfVLfPQ/QDFI0q6b/z3vQoYDS3Xw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
+ 216.228.118.232) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
  dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+/FPLSvJUMGH/Sainst3GJd9T28t69atGD6aYkesA8Y=;
- b=KcXsRojDweao3IWBi5pN/Tt//1qWHvBJmkj8IMSeeuDDsHtMGFqRGvAKZFqArGOVX5oIeIyw90UIQwiABbxOlgRasV9jn/z+Nb5TRYtMyqKkLQzkY6eAtYjpr0kmM6RYnx7CKdDXuCT+Guug3HY9TYF0l7vfmbMtVhMH+7PSl9KAoh8thBsg2CQaBiqPJxdwXjkWf2JEpQ7CgF8F3Jhq9Ix454vkTM/v+DlDzyxBZpZO0TOM3Fy8eRdbqXFqswki7CHj5kbfA5tROBh3GyDqT6vSW2ayJor6CL1uCL2EeJjlquKkF9eczSgJybo/lqMbAwU6d5g1XM8oh0o2tnIO5Q==
-Received: from DM5PR07CA0111.namprd07.prod.outlook.com (2603:10b6:4:ae::40) by
- BN9PR12MB5194.namprd12.prod.outlook.com (2603:10b6:408:11b::19) with
+ bh=DWBnLuq31T5KavRmUhXxEwE8BUS4UT7sOeVtuGB5OyA=;
+ b=YxveAbIezpTyFl9PQxBjAYNtGzfyAc3RkySxpR/4uykNwrpxnm8SKYa9Xm963L+UZlhmkeRsMkJ7X6BJPUtpolFg2Uev+GreiFQdK6jhBh541gxcY7x+BA+YUUbscXG5nDnzvUuLFlTfl009T9Cg+/CzYxR2qV4y7o/cEEzHowiP1Jzf4pmo7znLI9AkHi1L2nT6R8uTbses9a5AS4tBCLRpYqYveBOXft++YNEak7znAm+Ms8clI5h7FMrK0rGZ/lgkyNeUzpWS2MXRx9OjXYXNlzgkvyzHL/V3ByykST6k4+6TAdtVWtvctbsNtVFt1c5KUoMbKYk9f+ohk67naQ==
+Received: from BL1PR13CA0148.namprd13.prod.outlook.com (2603:10b6:208:2bb::33)
+ by PH7PR12MB6537.namprd12.prod.outlook.com (2603:10b6:510:1f2::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6222.32; Thu, 30 Mar
- 2023 13:34:05 +0000
-Received: from DM6NAM11FT084.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:ae:cafe::b3) by DM5PR07CA0111.outlook.office365.com
- (2603:10b6:4:ae::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.22 via Frontend
- Transport; Thu, 30 Mar 2023 13:34:05 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ 2023 13:34:30 +0000
+Received: from BL02EPF000100D3.namprd05.prod.outlook.com
+ (2603:10b6:208:2bb:cafe::53) by BL1PR13CA0148.outlook.office365.com
+ (2603:10b6:208:2bb::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.13 via Frontend
+ Transport; Thu, 30 Mar 2023 13:34:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
 Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- DM6NAM11FT084.mail.protection.outlook.com (10.13.172.132) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6222.22 via Frontend Transport; Thu, 30 Mar 2023 13:34:05 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.232) by
+ BL02EPF000100D3.mail.protection.outlook.com (10.167.241.207) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6178.30 via Frontend Transport; Thu, 30 Mar 2023 13:34:30 +0000
+Received: from drhqmail203.nvidia.com (10.126.190.182) by mail.nvidia.com
+ (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 30 Mar 2023
- 06:34:02 -0700
+ 06:34:17 -0700
 Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ drhqmail203.nvidia.com (10.126.190.182) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Thu, 30 Mar 2023 06:34:02 -0700
+ 15.2.986.37; Thu, 30 Mar 2023 06:34:16 -0700
 Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
  (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Thu, 30 Mar 2023 06:33:56 -0700
+ Transport; Thu, 30 Mar 2023 06:34:10 -0700
 From:   Sumit Gupta <sumitg@nvidia.com>
 To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
         <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
@@ -72,32 +72,34 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
         <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
         <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v5 0/8] Tegra234 Memory interconnect support
-Date:   Thu, 30 Mar 2023 19:03:46 +0530
-Message-ID: <20230330133354.714-1-sumitg@nvidia.com>
+Subject: [Patch v5 1/8] memory: tegra: add interconnect support for DRAM scaling in Tegra234
+Date:   Thu, 30 Mar 2023 19:03:47 +0530
+Message-ID: <20230330133354.714-2-sumitg@nvidia.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230330133354.714-1-sumitg@nvidia.com>
+References: <20230330133354.714-1-sumitg@nvidia.com>
 X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT084:EE_|BN9PR12MB5194:EE_
-X-MS-Office365-Filtering-Correlation-Id: f6442c27-2a38-4865-f817-08db31236e9b
+X-MS-TrafficTypeDiagnostic: BL02EPF000100D3:EE_|PH7PR12MB6537:EE_
+X-MS-Office365-Filtering-Correlation-Id: e9e63931-bd69-4761-6fd3-08db31237d80
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: tdJkvq22N5js+HKXtl68ZdcTrcaZzer02h2xTPTBoPWdO1OvGSOm+C6W/ODoClSzbLE2EL71v84o5xEzSYdqUZoOp7wnlWWrwFNhfVqlGdFf5zNifqPkEVjKsus98DDaZEg7ubBf/wd36wiMpQ1AGCfw6YtrjVhAV42w+/BWTeyN0zj7lhc3niQog2nCZ/38tZ85nE0XwaEhDC+IHqNlo2L6PZrQrEuzpan5N+qWW6dCg5WYJ1i37orzi4KVNi8FiQBCOKr3XwHmv3zCSujXf/2J1wUwUVaFqv43AXO4alCfawFLSVMk0EIj4BnNg1p1bZkfVwQ97f8o84zHkmJywF73KcJXuPp5t+nt/xQq1M8Op/XHdI3phgnda+m4hqoqiOPhy6ySZlFB1vrbeDzshEGsvApj26iA9w7bPfv6uNKW7FWyFABtH+8CgBnUH3c97YWC+2Z+Im/DywVJKQFbCwKwWpa2fl2fOJ/9IdfvE2UXU2l8u/4oOFoViQWqTPArnw/PdmXP3A7wZXtXVM/QISN9m0LrRBFHpnFYperDjdm4p1TccENOOxJCBhf/hGpsihefymEvCN90yeeLyg2/8IY/6rgsklprj227rCx/s6OWKc9PvJGHMjJCtHa5GAE+oSeW+wILdTFIXQHEPtGaRUWY1NRjlWy0X1XJShTR3sHevj7kNhMZnagu4wH6yFvUjPVgfGdgEE50mJTawS6zZjZbchWOi+FOHny1ph7XG6WkkWMB6QZVBUMW8H54/kG624AvBeq+dW/VhlBivja3R5JjOIpgYKJuorcdQmewt01XeDkleXJfHyYDW+zkQicKVKUTip2m5f9ee6ynH9cQ/asAy4R1q00RjhoWZd98p8k=
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(396003)(136003)(346002)(39860400002)(451199021)(40470700004)(46966006)(36840700001)(6666004)(478600001)(107886003)(186003)(70586007)(26005)(34020700004)(70206006)(316002)(8676002)(336012)(4326008)(41300700001)(5660300002)(356005)(7416002)(82740400003)(8936002)(54906003)(1076003)(36860700001)(7636003)(7696005)(40460700003)(2616005)(83380400001)(426003)(47076005)(110136005)(966005)(2906002)(82310400005)(86362001)(36756003)(40480700001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: FOOaGq7i3xlWH2qKrum+EYGUj/OKeoM69WER/TnzvF+jqbSd+GjrG4DqsGN0EOmA74Jb9hrQE1v6u+kFQjpfERm8zpHvYHtZhDYjdzHXxbJW4tGl7b3nghP3iVuqqMgY72F9vqX5oevr7l482w4CZyZUzEdmaiAgKFix0ktD5xt60wGu9ecQt7Yemcfp7+E7fC7cacVozdEbE9nrVHoduJ4il8SVNOH4O9R3x4qwcwiEIYk4sNj2MWJX+egtadjxDd5dydeShUMvPgojHKiV41+SSmz5KjThaicW1W+HSeOIYSbZprdoWnmqK9vDCs96YvL/64N8yzEMbaj/fWpCF30uRz0KUgsTjtCS/c1xNB6an95TWBqFzwVB7sCq+oMmpAI1rrxCBCLcjx7zdcBepC1t1coUg4hV5F3DUeamwg4g0nh3wHceO0VyEtdlyu5i7OnU3d5zizObDUBo4EgeYyzyN5NmauxochKrgNEBGzuh6j1pc19Zci/J+SqWRUenW8ZtmwN+LwLgeYrJ8Cc3cNlRkxjR9XAsHJxxlUBEzOY/uNAB8T61XNmF7ZPIFHoaG5/lkT++mCxrZNNRUK2hmo1KLMdm2oPXUVT6BX5q9wo324in18iggJlB1gtN5COewAcWdUXffrUnJzZzLEa2V0yAcMdMuRWqRype3ycO1n58pEBMhBcE/FJncsp74lGG3seiEHXQgrvHoZ8/hOfn7WqVVNgRzwwV43Wn7FS3BJ02//BAGiRSn/mQQsHO6kEb
+X-Forefront-Antispam-Report: CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(136003)(396003)(376002)(451199021)(36840700001)(40470700004)(46966006)(2906002)(86362001)(40480700001)(36756003)(82310400005)(40460700003)(70586007)(6666004)(2616005)(107886003)(83380400001)(336012)(47076005)(426003)(54906003)(7636003)(478600001)(36860700001)(7696005)(8676002)(316002)(4326008)(82740400003)(70206006)(26005)(110136005)(8936002)(186003)(5660300002)(356005)(30864003)(7416002)(1076003)(41300700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 13:34:05.0982
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 13:34:30.0211
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f6442c27-2a38-4865-f817-08db31236e9b
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9e63931-bd69-4761-6fd3-08db31237d80
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT084.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF000100D3.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN9PR12MB5194
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB6537
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
@@ -108,113 +110,613 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi All,
+Add Interconnect framework support to dynamically set the DRAM
+bandwidth from different clients. Both the MC and EMC drivers are
+added as ICC providers. The path for any request is:
+ MC-Client[1-n] -> MC -> EMC -> EMEM/DRAM
 
-Thank you for the review. Have incorporated the changes suggested in v4.
-Requesting for ACK on the remaining patches if all fine.
+MC client's request for bandwidth will go to the MC driver which
+passes the client request info like BPMP Client ID, Client type
+and the Bandwidth to the BPMP-FW. The final DRAM freq to achieve
+the requested bandwidth is set by the BPMP-FW based on the passed
+parameters.
 
-The patches are divided into below groups:
-
-- Patch [7]  : Memory Interconnect support in PCI (MC client)
-  -- Need ACK.
-
-- Patch [3-6, 8]: Memory Interconnect support in CPUFREQ (MC client)
-  -- 'Patch 3, 4 & 5': have ACK from Krzysztof.
-  -- 'Patch 6 & 8': Need ACK.
-
-- Patch [1-2]: Memory Interconnect base support
-  -- 'Patch 2': has ACK from Krzysztof.
-  -- 'Patch 1': Need ACK.
-
-Both the MC client patches are dependent on the 'Patch [1-2]'.
-
-Thank you,
-Sumit Gupta
-============
-
-This patch series adds memory interconnect support for Tegra234 SoC.
-It is used to dynamically scale DRAM Frequency as per the bandwidth
-requests from different Memory Controller (MC) clients.
-MC Clients use ICC Framework's icc_set_bw() api to dynamically request
-for the DRAM bandwidth (BW). As per path, the request will be routed
-from MC to the EMC driver. MC driver passes the request info like the
-Client ID, type, and frequency request info to the BPMP-FW which will
-set the final DRAM freq considering all exisiting requests.
-
-MC and EMC are the ICC providers. Nodes in path for a request will be:
-     Client[1-n] -> MC -> EMC -> EMEM/DRAM
-
-The patch series also adds interconnect support in below clients:
-1) CPUFREQ driver for scaling bandwidth with CPU frequency. For that,
-   add per cluster OPP table which will be used in the CPUFREQ driver
-   by requesting the minimum BW respective to the given CPU frequency
-   in the OPP table of it's cluster.
-2) PCIE driver to request BW required for different modes.
-
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 ---
-v4[4] -> v5:
-- dropped 'patch 1 & 2' from v4 which added "nvidia,bpmp" in MC node.
-- save BPMP ref from EMC node into 'mc->bpmp' and use it in MC driver.
-- added check for array bounds violation in pci suggested by Bjorn.
-- moved DT patch having OPP table to the last 'Patch 8'.
-- did multiple small changes and cleanup suggested by Krzysztof in v4.
-
-v3[3] -> v4:
-- dropped 'patch 1' from v3 which returns 'struct tegra_bpmp *'.
-- added 'patch 1 & 2' to get bpmp ref using 'nvidia,bpmp' property.
-- dropped 'patch 10 & 11' from v3 and added those changes in 'patch 3'.
-- added static to prototype of 'tegra_cpufreq_init_cpufreq_table()' to
-  fix the warning reported by 'kernel test robot'.
-
-v2[2] -> v3:
-- in 'patch 7', set 'icc_dram_bw_scaling' to false if set_opp call failed
-  to avoid flooding of uart with 'Failed to set bw' messages.
-- added 'patch 10' to handle if the bpmp-fw is old and not support bwmgr mrq.
-- added 'patch 11' to fix interconnect registration in tegra186-emc.
-  ref patch link in linux next:
-  [https://lore.kernel.org/all/20230306075651.2449-21-johan+linaro@kernel.org/]
-
-v1[1] -> v2:
-- moved BW setting to tegra234_mc_icc_set() from EMC driver.
-- moved sw clients to the 'tegra_mc_clients' table.
-- point 'node->data' to the entry within 'tegra_mc_clients'.
-- removed 'struct tegra_icc_node' and get client info using 'node->data'.
-- changed error handling in and around tegra_emc_interconnect_init().
-- moved 'tegra-icc.h' from 'include/soc/tegra' to 'include/linux'.
-- added interconnect support to PCIE driver in 'Patch 9'.
-- merged 'Patch 9 & 10' from [1] to get num_channels and use.
-- merged 'Patch 2 & 3' from [1] to add ISO and NISO clients.
-- added 'Acked-by' of Krzysztof from 'Patch 05/10' of [1].
-- Removed 'Patch 7' from [1] as that is merged now.
-
-Sumit Gupta (8):
-  memory: tegra: add interconnect support for DRAM scaling in Tegra234
-  memory: tegra: add mc clients for Tegra234
-  memory: tegra: add software mc clients in Tegra234
-  dt-bindings: tegra: add icc ids for dummy MC clients
-  memory: tegra: make cpu cluster bw request a multiple of mc channels
-  cpufreq: tegra194: add OPP support and set bandwidth
-  PCI: tegra194: add interconnect support in Tegra234
-  arm64: tegra: Add cpu OPP tables and interconnects property
-
- arch/arm64/boot/dts/nvidia/tegra234.dtsi   | 276 ++++++++++
- drivers/cpufreq/tegra194-cpufreq.c         | 156 +++++-
- drivers/memory/tegra/mc.c                  |  24 +
- drivers/memory/tegra/mc.h                  |   1 +
- drivers/memory/tegra/tegra186-emc.c        | 130 +++++
- drivers/memory/tegra/tegra234.c            | 595 ++++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-tegra194.c |  44 +-
- include/dt-bindings/memory/tegra234-mc.h   |   5 +
- include/linux/tegra-icc.h                  |  65 +++
- include/soc/tegra/mc.h                     |   8 +
- 10 files changed, 1282 insertions(+), 22 deletions(-)
+ drivers/memory/tegra/mc.c           |   5 +
+ drivers/memory/tegra/tegra186-emc.c | 130 ++++++++++++++++++++++++++
+ drivers/memory/tegra/tegra234.c     | 138 +++++++++++++++++++++++++++-
+ include/linux/tegra-icc.h           |  65 +++++++++++++
+ include/soc/tegra/mc.h              |   7 ++
+ 5 files changed, 344 insertions(+), 1 deletion(-)
  create mode 100644 include/linux/tegra-icc.h
 
-[1] https://lore.kernel.org/lkml/20221220160240.27494-1-sumitg@nvidia.com/
-[2] https://lore.kernel.org/lkml/20230220140559.28289-1-sumitg@nvidia.com/
-[3] https://lore.kernel.org/lkml/20230320182441.11904-1-sumitg@nvidia.com/
-[4] https://lore.kernel.org/lkml/20230327161426.32639-1-sumitg@nvidia.com/
-
+diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
+index 9082b6c3763d..983455b1f98d 100644
+--- a/drivers/memory/tegra/mc.c
++++ b/drivers/memory/tegra/mc.c
+@@ -15,6 +15,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include <linux/sort.h>
++#include <linux/tegra-icc.h>
+ 
+ #include <soc/tegra/fuse.h>
+ 
+@@ -792,6 +793,8 @@ static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
+ 	mc->provider.data = &mc->provider;
+ 	mc->provider.set = mc->soc->icc_ops->set;
+ 	mc->provider.aggregate = mc->soc->icc_ops->aggregate;
++	mc->provider.get_bw = mc->soc->icc_ops->get_bw;
++	mc->provider.xlate = mc->soc->icc_ops->xlate;
+ 	mc->provider.xlate_extended = mc->soc->icc_ops->xlate_extended;
+ 
+ 	icc_provider_init(&mc->provider);
+@@ -824,6 +827,8 @@ static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
+ 		err = icc_link_create(node, TEGRA_ICC_MC);
+ 		if (err)
+ 			goto remove_nodes;
++
++		node->data = (struct tegra_mc_client *)&(mc->soc->clients[i]);
+ 	}
+ 
+ 	err = icc_provider_register(&mc->provider);
+diff --git a/drivers/memory/tegra/tegra186-emc.c b/drivers/memory/tegra/tegra186-emc.c
+index e935ad4e95b6..0aa6c049aa43 100644
+--- a/drivers/memory/tegra/tegra186-emc.c
++++ b/drivers/memory/tegra/tegra186-emc.c
+@@ -7,9 +7,11 @@
+ #include <linux/debugfs.h>
+ #include <linux/module.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/of_platform.h>
+ #include <linux/platform_device.h>
+ 
+ #include <soc/tegra/bpmp.h>
++#include "mc.h"
+ 
+ struct tegra186_emc_dvfs {
+ 	unsigned long latency;
+@@ -29,8 +31,15 @@ struct tegra186_emc {
+ 		unsigned long min_rate;
+ 		unsigned long max_rate;
+ 	} debugfs;
++
++	struct icc_provider provider;
+ };
+ 
++static inline struct tegra186_emc *to_tegra186_emc(struct icc_provider *provider)
++{
++	return container_of(provider, struct tegra186_emc, provider);
++}
++
+ /*
+  * debugfs interface
+  *
+@@ -146,8 +155,102 @@ DEFINE_DEBUGFS_ATTRIBUTE(tegra186_emc_debug_max_rate_fops,
+ 			  tegra186_emc_debug_max_rate_get,
+ 			  tegra186_emc_debug_max_rate_set, "%llu\n");
+ 
++/*
++ * tegra_emc_icc_set_bw() - Set BW api for EMC provider
++ * @src: ICC node for External Memory Controller (EMC)
++ * @dst: ICC node for External Memory (DRAM)
++ *
++ * Do nothing here as info to BPMP-FW is now passed in the BW set function
++ * of the MC driver. BPMP-FW sets the final Freq based on the passed values.
++ */
++static int tegra_emc_icc_set_bw(struct icc_node *src, struct icc_node *dst)
++{
++	return 0;
++}
++
++static struct icc_node *
++tegra_emc_of_icc_xlate(struct of_phandle_args *spec, void *data)
++{
++	struct icc_provider *provider = data;
++	struct icc_node *node;
++
++	/* External Memory is the only possible ICC route */
++	list_for_each_entry(node, &provider->nodes, node_list) {
++		if (node->id != TEGRA_ICC_EMEM)
++			continue;
++
++		return node;
++	}
++
++	return ERR_PTR(-EPROBE_DEFER);
++}
++
++static int tegra_emc_icc_get_init_bw(struct icc_node *node, u32 *avg, u32 *peak)
++{
++	*avg = 0;
++	*peak = 0;
++
++	return 0;
++}
++
++static int tegra_emc_interconnect_init(struct tegra186_emc *emc)
++{
++	struct tegra_mc *mc = dev_get_drvdata(emc->dev->parent);
++	const struct tegra_mc_soc *soc = mc->soc;
++	struct icc_node *node;
++	int err;
++
++	emc->provider.dev = emc->dev;
++	emc->provider.set = tegra_emc_icc_set_bw;
++	emc->provider.data = &emc->provider;
++	emc->provider.aggregate = soc->icc_ops->aggregate;
++	emc->provider.xlate = tegra_emc_of_icc_xlate;
++	emc->provider.get_bw = tegra_emc_icc_get_init_bw;
++
++	icc_provider_init(&emc->provider);
++
++	/* create External Memory Controller node */
++	node = icc_node_create(TEGRA_ICC_EMC);
++	if (IS_ERR(node)) {
++		err = PTR_ERR(node);
++		goto err_msg;
++	}
++
++	node->name = "External Memory Controller";
++	icc_node_add(node, &emc->provider);
++
++	/* link External Memory Controller to External Memory (DRAM) */
++	err = icc_link_create(node, TEGRA_ICC_EMEM);
++	if (err)
++		goto remove_nodes;
++
++	/* create External Memory node */
++	node = icc_node_create(TEGRA_ICC_EMEM);
++	if (IS_ERR(node)) {
++		err = PTR_ERR(node);
++		goto remove_nodes;
++	}
++
++	node->name = "External Memory (DRAM)";
++	icc_node_add(node, &emc->provider);
++
++	err = icc_provider_register(&emc->provider);
++	if (err)
++		goto remove_nodes;
++
++	return 0;
++
++remove_nodes:
++	icc_nodes_remove(&emc->provider);
++err_msg:
++	dev_err(emc->dev, "failed to initialize ICC: %d\n", err);
++
++	return err;
++}
++
+ static int tegra186_emc_probe(struct platform_device *pdev)
+ {
++	struct tegra_mc *mc = dev_get_drvdata(pdev->dev.parent);
+ 	struct mrq_emc_dvfs_latency_response response;
+ 	struct tegra_bpmp_message msg;
+ 	struct tegra186_emc *emc;
+@@ -236,6 +339,29 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 	debugfs_create_file("max_rate", S_IRUGO | S_IWUSR, emc->debugfs.root,
+ 			    emc, &tegra186_emc_debug_max_rate_fops);
+ 
++	if (mc && mc->soc->icc_ops) {
++		/*
++		 * Initialize the ICC even if BPMP-FW doesn't support 'MRQ_BWMGR_INT'.
++		 * Use the flag 'mc->bwmgr_mrq_supported' within MC driver and return
++		 * EINVAL instead of passing the request to BPMP-FW later when the BW
++		 * request is made by client with 'icc_set_bw()' call.
++		 */
++		err = tegra_emc_interconnect_init(emc);
++		if (err)
++			goto put_bpmp;
++
++		if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT)) {
++			mc->bwmgr_mrq_supported = true;
++
++			/*
++			 * MC driver probe can't get BPMP reference as it gets probed
++			 * earlier than BPMP. So, save the BPMP ref got from the EMC
++			 * DT node in the mc->bpmp and use it in MC's icc_set hook.
++			 */
++			mc->bpmp = emc->bpmp;
++		}
++	}
++
+ 	return 0;
+ 
+ put_bpmp:
+@@ -245,9 +371,12 @@ static int tegra186_emc_probe(struct platform_device *pdev)
+ 
+ static int tegra186_emc_remove(struct platform_device *pdev)
+ {
++	struct tegra_mc *mc = dev_get_drvdata(pdev->dev.parent);
+ 	struct tegra186_emc *emc = platform_get_drvdata(pdev);
+ 
+ 	debugfs_remove_recursive(emc->debugfs.root);
++
++	mc->bpmp = NULL;
+ 	tegra_bpmp_put(emc->bpmp);
+ 
+ 	return 0;
+@@ -272,6 +401,7 @@ static struct platform_driver tegra186_emc_driver = {
+ 		.name = "tegra186-emc",
+ 		.of_match_table = tegra186_emc_of_match,
+ 		.suppress_bind_attrs = true,
++		.sync_state = icc_sync_state,
+ 	},
+ 	.probe = tegra186_emc_probe,
+ 	.remove = tegra186_emc_remove,
+diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
+index 02dcc5748bba..56d911926d54 100644
+--- a/drivers/memory/tegra/tegra234.c
++++ b/drivers/memory/tegra/tegra234.c
+@@ -1,18 +1,23 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+ /*
+- * Copyright (C) 2021-2022, NVIDIA CORPORATION.  All rights reserved.
++ * Copyright (C) 2022-2023, NVIDIA CORPORATION.  All rights reserved.
+  */
+ 
+ #include <soc/tegra/mc.h>
+ 
+ #include <dt-bindings/memory/tegra234-mc.h>
++#include <linux/interconnect.h>
++#include <linux/tegra-icc.h>
+ 
++#include <soc/tegra/bpmp.h>
+ #include "mc.h"
+ 
+ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	{
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEARD,
+ 		.name = "mgbeard",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE,
+ 		.regs = {
+ 			.sid = {
+@@ -23,6 +28,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEBRD,
+ 		.name = "mgbebrd",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF1,
+ 		.regs = {
+ 			.sid = {
+@@ -33,6 +40,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBECRD,
+ 		.name = "mgbecrd",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF2,
+ 		.regs = {
+ 			.sid = {
+@@ -43,6 +52,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEDRD,
+ 		.name = "mgbedrd",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF3,
+ 		.regs = {
+ 			.sid = {
+@@ -52,6 +63,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 		},
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEAWR,
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.name = "mgbeawr",
+ 		.sid = TEGRA234_SID_MGBE,
+ 		.regs = {
+@@ -63,6 +76,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEBWR,
+ 		.name = "mgbebwr",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF1,
+ 		.regs = {
+ 			.sid = {
+@@ -73,6 +88,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBECWR,
+ 		.name = "mgbecwr",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF2,
+ 		.regs = {
+ 			.sid = {
+@@ -83,6 +100,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_SDMMCRAB,
+ 		.name = "sdmmcrab",
++		.bpmp_id = TEGRA_ICC_BPMP_SDMMC_4,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_SDMMC4,
+ 		.regs = {
+ 			.sid = {
+@@ -93,6 +112,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_MGBEDWR,
+ 		.name = "mgbedwr",
++		.bpmp_id = TEGRA_ICC_BPMP_EQOS,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_MGBE_VF3,
+ 		.regs = {
+ 			.sid = {
+@@ -103,6 +124,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_SDMMCWAB,
+ 		.name = "sdmmcwab",
++		.bpmp_id = TEGRA_ICC_BPMP_SDMMC_4,
++		.type = TEGRA_ICC_NISO,
+ 		.sid = TEGRA234_SID_SDMMC4,
+ 		.regs = {
+ 			.sid = {
+@@ -153,6 +176,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_APEDMAR,
+ 		.name = "apedmar",
++		.bpmp_id = TEGRA_ICC_BPMP_APEDMA,
++		.type = TEGRA_ICC_ISO_AUDIO,
+ 		.sid = TEGRA234_SID_APE,
+ 		.regs = {
+ 			.sid = {
+@@ -163,6 +188,8 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	}, {
+ 		.id = TEGRA234_MEMORY_CLIENT_APEDMAW,
+ 		.name = "apedmaw",
++		.bpmp_id = TEGRA_ICC_BPMP_APEDMA,
++		.type = TEGRA_ICC_ISO_AUDIO,
+ 		.sid = TEGRA234_SID_APE,
+ 		.regs = {
+ 			.sid = {
+@@ -333,6 +360,114 @@ static const struct tegra_mc_client tegra234_mc_clients[] = {
+ 	},
+ };
+ 
++/*
++ * tegra234_mc_icc_set() - Pass MC client info to the BPMP-FW
++ * @src: ICC node for Memory Controller's (MC) Client
++ * @dst: ICC node for Memory Controller (MC)
++ *
++ * Passing the current request info from the MC to the BPMP-FW where
++ * LA and PTSA registers are accessed and the final EMC freq is set
++ * based on client_id, type, latency and bandwidth.
++ * icc_set_bw() makes set_bw calls for both MC and EMC providers in
++ * sequence. Both the calls are protected by 'mutex_lock(&icc_lock)'.
++ * So, the data passed won't be updated by concurrent set calls from
++ * other clients.
++ */
++static int tegra234_mc_icc_set(struct icc_node *src, struct icc_node *dst)
++{
++	struct tegra_mc *mc = icc_provider_to_tegra_mc(dst->provider);
++	struct mrq_bwmgr_int_request bwmgr_req = { 0 };
++	struct mrq_bwmgr_int_response bwmgr_resp = { 0 };
++	const struct tegra_mc_client *pclient = src->data;
++	struct tegra_bpmp_message msg;
++	int ret;
++
++	/*
++	 * Same Src and Dst node will happen during boot from icc_node_add().
++	 * This can be used to pre-initialize and set bandwidth for all clients
++	 * before their drivers are loaded. We are skipping this case as for us,
++	 * the pre-initialization already happened in Bootloader(MB2) and BPMP-FW.
++	 */
++	if (src->id == dst->id)
++		return 0;
++
++	if (!mc->bwmgr_mrq_supported)
++		return -EINVAL;
++
++	if (!mc->bpmp) {
++		dev_err(mc->dev, "BPMP reference NULL\n");
++		return -ENOENT;
++	}
++
++	if (pclient->type == TEGRA_ICC_NISO)
++		bwmgr_req.bwmgr_calc_set_req.niso_bw = src->avg_bw;
++	else
++		bwmgr_req.bwmgr_calc_set_req.iso_bw = src->avg_bw;
++
++	bwmgr_req.bwmgr_calc_set_req.client_id = pclient->bpmp_id;
++
++	bwmgr_req.cmd = CMD_BWMGR_INT_CALC_AND_SET;
++	bwmgr_req.bwmgr_calc_set_req.mc_floor = src->peak_bw;
++	bwmgr_req.bwmgr_calc_set_req.floor_unit = BWMGR_INT_UNIT_KBPS;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.mrq = MRQ_BWMGR_INT;
++	msg.tx.data = &bwmgr_req;
++	msg.tx.size = sizeof(bwmgr_req);
++	msg.rx.data = &bwmgr_resp;
++	msg.rx.size = sizeof(bwmgr_resp);
++
++	ret = tegra_bpmp_transfer(mc->bpmp, &msg);
++	if (ret < 0) {
++		dev_err(mc->dev, "BPMP transfer failed: %d\n", ret);
++		goto error;
++	}
++	if (msg.rx.ret < 0) {
++		pr_err("failed to set bandwidth for %u: %d\n",
++		       bwmgr_req.bwmgr_calc_set_req.client_id, msg.rx.ret);
++		ret = -EINVAL;
++	}
++
++error:
++	return ret;
++}
++
++static struct icc_node*
++tegra234_mc_of_icc_xlate(struct of_phandle_args *spec, void *data)
++{
++	struct tegra_mc *mc = icc_provider_to_tegra_mc(data);
++	unsigned int cl_id = spec->args[0];
++	struct icc_node *node;
++
++	list_for_each_entry(node, &mc->provider.nodes, node_list) {
++		if (node->id != cl_id)
++			continue;
++
++		return node;
++	}
++
++	/*
++	 * If a client driver calls devm_of_icc_get() before the MC driver
++	 * is probed, then return EPROBE_DEFER to the client driver.
++	 */
++	return ERR_PTR(-EPROBE_DEFER);
++}
++
++static int tegra234_mc_icc_get_init_bw(struct icc_node *node, u32 *avg, u32 *peak)
++{
++	*avg = 0;
++	*peak = 0;
++
++	return 0;
++}
++
++static const struct tegra_mc_icc_ops tegra234_mc_icc_ops = {
++	.xlate = tegra234_mc_of_icc_xlate,
++	.aggregate = icc_std_aggregate,
++	.get_bw = tegra234_mc_icc_get_init_bw,
++	.set = tegra234_mc_icc_set,
++};
++
+ const struct tegra_mc_soc tegra234_mc_soc = {
+ 	.num_clients = ARRAY_SIZE(tegra234_mc_clients),
+ 	.clients = tegra234_mc_clients,
+@@ -345,6 +480,7 @@ const struct tegra_mc_soc tegra234_mc_soc = {
+ 		   MC_INT_SECURITY_VIOLATION | MC_INT_DECERR_EMEM,
+ 	.has_addr_hi_reg = true,
+ 	.ops = &tegra186_mc_ops,
++	.icc_ops = &tegra234_mc_icc_ops,
+ 	.ch_intmask = 0x0000ff00,
+ 	.global_intstatus_channel_shift = 8,
+ 	/*
+diff --git a/include/linux/tegra-icc.h b/include/linux/tegra-icc.h
+new file mode 100644
+index 000000000000..4b4d4bee290c
+--- /dev/null
++++ b/include/linux/tegra-icc.h
+@@ -0,0 +1,65 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Copyright (C) 2022-2023 NVIDIA CORPORATION.  All rights reserved.
++ */
++
++#ifndef LINUX_TEGRA_ICC_H
++#define LINUX_TEGRA_ICC_H
++
++enum tegra_icc_client_type {
++	TEGRA_ICC_NONE,
++	TEGRA_ICC_NISO,
++	TEGRA_ICC_ISO_DISPLAY,
++	TEGRA_ICC_ISO_VI,
++	TEGRA_ICC_ISO_AUDIO,
++	TEGRA_ICC_ISO_VIFAL,
++};
++
++/* ICC ID's for MC client's used in BPMP */
++#define TEGRA_ICC_BPMP_DEBUG		1
++#define TEGRA_ICC_BPMP_CPU_CLUSTER0	2
++#define TEGRA_ICC_BPMP_CPU_CLUSTER1	3
++#define TEGRA_ICC_BPMP_CPU_CLUSTER2	4
++#define TEGRA_ICC_BPMP_GPU		5
++#define TEGRA_ICC_BPMP_CACTMON		6
++#define TEGRA_ICC_BPMP_DISPLAY		7
++#define TEGRA_ICC_BPMP_VI		8
++#define TEGRA_ICC_BPMP_EQOS		9
++#define TEGRA_ICC_BPMP_PCIE_0		10
++#define TEGRA_ICC_BPMP_PCIE_1		11
++#define TEGRA_ICC_BPMP_PCIE_2		12
++#define TEGRA_ICC_BPMP_PCIE_3		13
++#define TEGRA_ICC_BPMP_PCIE_4		14
++#define TEGRA_ICC_BPMP_PCIE_5		15
++#define TEGRA_ICC_BPMP_PCIE_6		16
++#define TEGRA_ICC_BPMP_PCIE_7		17
++#define TEGRA_ICC_BPMP_PCIE_8		18
++#define TEGRA_ICC_BPMP_PCIE_9		19
++#define TEGRA_ICC_BPMP_PCIE_10		20
++#define TEGRA_ICC_BPMP_DLA_0		21
++#define TEGRA_ICC_BPMP_DLA_1		22
++#define TEGRA_ICC_BPMP_SDMMC_1		23
++#define TEGRA_ICC_BPMP_SDMMC_2		24
++#define TEGRA_ICC_BPMP_SDMMC_3		25
++#define TEGRA_ICC_BPMP_SDMMC_4		26
++#define TEGRA_ICC_BPMP_NVDEC		27
++#define TEGRA_ICC_BPMP_NVENC		28
++#define TEGRA_ICC_BPMP_NVJPG_0		29
++#define TEGRA_ICC_BPMP_NVJPG_1		30
++#define TEGRA_ICC_BPMP_OFAA		31
++#define TEGRA_ICC_BPMP_XUSB_HOST	32
++#define TEGRA_ICC_BPMP_XUSB_DEV		33
++#define TEGRA_ICC_BPMP_TSEC		34
++#define TEGRA_ICC_BPMP_VIC		35
++#define TEGRA_ICC_BPMP_APE		36
++#define TEGRA_ICC_BPMP_APEDMA		37
++#define TEGRA_ICC_BPMP_SE		38
++#define TEGRA_ICC_BPMP_ISP		39
++#define TEGRA_ICC_BPMP_HDA		40
++#define TEGRA_ICC_BPMP_VIFAL		41
++#define TEGRA_ICC_BPMP_VI2FAL		42
++#define TEGRA_ICC_BPMP_VI2		43
++#define TEGRA_ICC_BPMP_RCE		44
++#define TEGRA_ICC_BPMP_PVA		45
++
++#endif /* LINUX_TEGRA_ICC_H */
+diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
+index 51a2263e1bc5..900d88b26fae 100644
+--- a/include/soc/tegra/mc.h
++++ b/include/soc/tegra/mc.h
+@@ -13,6 +13,7 @@
+ #include <linux/irq.h>
+ #include <linux/reset-controller.h>
+ #include <linux/types.h>
++#include <linux/tegra-icc.h>
+ 
+ struct clk;
+ struct device;
+@@ -26,6 +27,8 @@ struct tegra_mc_timing {
+ 
+ struct tegra_mc_client {
+ 	unsigned int id;
++	unsigned int bpmp_id;
++	enum tegra_icc_client_type type;
+ 	const char *name;
+ 	/*
+ 	 * For Tegra210 and earlier, this is the SWGROUP ID used for IOVA translations in the
+@@ -166,8 +169,10 @@ struct tegra_mc_icc_ops {
+ 	int (*set)(struct icc_node *src, struct icc_node *dst);
+ 	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
+ 			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
++	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
+ 	struct icc_node_data *(*xlate_extended)(struct of_phandle_args *spec,
+ 						void *data);
++	int (*get_bw)(struct icc_node *node, u32 *avg, u32 *peak);
+ };
+ 
+ struct tegra_mc_ops {
+@@ -214,6 +219,7 @@ struct tegra_mc_soc {
+ };
+ 
+ struct tegra_mc {
++	struct tegra_bpmp *bpmp;
+ 	struct device *dev;
+ 	struct tegra_smmu *smmu;
+ 	struct gart_device *gart;
+@@ -229,6 +235,7 @@ struct tegra_mc {
+ 	struct tegra_mc_timing *timings;
+ 	unsigned int num_timings;
+ 
++	bool bwmgr_mrq_supported;
+ 	struct reset_controller_dev reset;
+ 
+ 	struct icc_provider provider;
 -- 
 2.17.1
 
