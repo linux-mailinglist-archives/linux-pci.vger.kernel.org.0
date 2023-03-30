@@ -2,499 +2,285 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A01986D0703
-	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 15:36:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A257B6D095B
+	for <lists+linux-pci@lfdr.de>; Thu, 30 Mar 2023 17:21:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232090AbjC3Ng0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 30 Mar 2023 09:36:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46140 "EHLO
+        id S232891AbjC3PVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 30 Mar 2023 11:21:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232081AbjC3NgZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 09:36:25 -0400
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2043.outbound.protection.outlook.com [40.107.100.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EC438A5B;
-        Thu, 30 Mar 2023 06:35:47 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XtTZP8Re2WuynsDln26R00dxsNqUR6MN5YetxmgWN6QgnlsuS6soZ36F6zduBq+lTV5nS4HGWRWFCZj1sK6AQidOv1Tp4G6InVEdycgUCyfmCXF2FFo8xzrspf+h2VjVJ1YxnRSoOIVF6VQGGJ8/a+f7k/a4VZ9WTP/zn6kvgE+ETiq2zee9XUz5xfgAVVSgKNf68n2wwsG3uY6drpUDWew8T60Ek+6k5aEpyuqwBhR47QUrOXu+7h3OSHxZLxqo6E+6sUuMYAM3jGC299i3d7xv+N3unm2oQTdTYvuk3Hdp4bECzhTJWxX7vvRb+TxqtIsGmUbX2NQdzXPxzvO70w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cxvKHL4caozilROvR5+TnU4HO09jiXCkfL3FawQRZXI=;
- b=Mma2mtoReElBvu3n2QCadTUgL+MEgfMmrh35ljU01NO0BmbZlsLFO5FFP8uay7CW3dcTPo1BXvTlxuGFUFcVWOjrAk/TM0pRGwtRPU9QdzmpOzZww4SnqPjr3JnAkBo0YzKxn0Q+OWnnTQovEnYq0zyi1N0aFeBhog7J3GtcNJkegmgG0uIxWKisu7OEF64IQbGXNt+mNOy6+y7XkIqj+e/iX1j4k4QCVydHgd5/J+IMRdRWEHFhblh1A5dpbP8KbisbTmqNZ3HmYfHrCoM3Rp6tPyIEBLBOJ4D4ENLsWDTNaI9Rpx9x6NMc0DJ8sctF8MyBaQTIup3uTuElPAExBA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cxvKHL4caozilROvR5+TnU4HO09jiXCkfL3FawQRZXI=;
- b=pch9ye6YZsNFWzJkhPXRGn5ZweBVIWb42NPOVZgvyh6KRqwc5lyBO6vDR0pFlz1boje4io6hQ6RQX+NR2KwCvNn7Z8Pd3XbUoXxUuGooEyx7qNE5/3UJIiafWOalvl7gPl2X9xSFRgrBhyY5Qhtuiq2RZDFVx9EFScHSQEErf7tGP63lJRAN5rR7C5gwt+AD8TlHCoRXfagEIHrJ7GVgrBNYuNwz0r5KsBBhIY9VHFRuFlt7bahtrZtAnSeSLBXZ+LOWrLiJ4B2A/t/Kcylrc4U0m1278zXC+sMeYUDJA0VJ3sGJ4upmXOmplwPhqkkSbkYOeb+VNV8a/6Ir+Iz6bQ==
-Received: from DM5PR07CA0097.namprd07.prod.outlook.com (2603:10b6:4:ae::26) by
- IA0PR12MB9047.namprd12.prod.outlook.com (2603:10b6:208:402::8) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6222.33; Thu, 30 Mar 2023 13:35:45 +0000
-Received: from DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
- (2603:10b6:4:ae:cafe::bf) by DM5PR07CA0097.outlook.office365.com
- (2603:10b6:4:ae::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.20 via Frontend
- Transport; Thu, 30 Mar 2023 13:35:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- DM6NAM11FT049.mail.protection.outlook.com (10.13.172.188) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6254.22 via Frontend Transport; Thu, 30 Mar 2023 13:35:45 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 30 Mar 2023
- 06:35:43 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.37; Thu, 30 Mar 2023 06:35:42 -0700
-Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Thu, 30 Mar 2023 06:35:37 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>, <helgaas@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v5 8/8] arm64: tegra: Add cpu OPP tables and interconnects property
-Date:   Thu, 30 Mar 2023 19:03:54 +0530
-Message-ID: <20230330133354.714-9-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230330133354.714-1-sumitg@nvidia.com>
-References: <20230330133354.714-1-sumitg@nvidia.com>
-X-NVConfidentiality: public
+        with ESMTP id S232877AbjC3PVr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 30 Mar 2023 11:21:47 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643132683;
+        Thu, 30 Mar 2023 08:20:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3C1F0B82808;
+        Thu, 30 Mar 2023 15:19:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECB8FC433D2;
+        Thu, 30 Mar 2023 15:19:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680189586;
+        bh=LbHVIvsYsKCKNmDEDCwVnwigvxAibQVlB7WTysFB6Kw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hEHI/uGoey/Gnwh0++c3Xv4dZYwqzhyX3dbUv4ySSa2w8PWuMod2usCB0UhM3cgmH
+         ye8vaUC5s0J2FmpKhTufFvV/FNFKAIj9MBrv3QfTyQF48btT8TvNw8WOUrJugFB0aA
+         0QabMJ62IYRrQOCJVSHiBCweDYkkQeNQSFiLVULY9hnCtpbkms8LCUJsqrYBht7h/x
+         ZrMH1CMDNOWyOX59O8YFone7/tFEvP9X5V/p90LF6A4tHcEMkhWYJ1Hrai0hqT9Swt
+         crkr1sVRr48MoByHGnG1Ggb34ncSH5hqcIVZebnu+G5iJalDRCMpV/nUrbSv5IYVb7
+         PPgYMjHdQ6EmA==
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-536af432ee5so361205237b3.0;
+        Thu, 30 Mar 2023 08:19:45 -0700 (PDT)
+X-Gm-Message-State: AAQBX9eDeqAkYoG8Z/hZn+W+I1d83m1pFK2k1vtmKNWVlDlXDQvfYIgp
+        pnIRoAa+QUuTJaxHc94BFmIeNYRDENhWn6cDjw==
+X-Google-Smtp-Source: AKy350ZUb+XdJHS2eNfADBB8Em95KxiFW/4Kk/FnJ4x/2GHOGVUtqa5nAz1gajZIh2PmZU/nM57s3ynjDrP/I5ABRUk=
+X-Received: by 2002:a81:4410:0:b0:545:a7d8:f278 with SMTP id
+ r16-20020a814410000000b00545a7d8f278mr11224036ywa.5.1680189584873; Thu, 30
+ Mar 2023 08:19:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6NAM11FT049:EE_|IA0PR12MB9047:EE_
-X-MS-Office365-Filtering-Correlation-Id: db18f6de-1f09-41af-5aa5-08db3123aa32
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: +KVwLpvyYb0mWJolel677Mn27/IbpLnLJMWhOvzaVd6IVw2FLfQNk9v116RfDgZs6TwZRzcym20erpqnC4dvOcczptFwYZ40uom3FJdVQNs0QyvKsthjwxmSKIxIpXuCxRmWuO7+GPgqBxkjefYpvWwyZtuaZHVzQW2oB9vPaJxK0K6Wgfbviu9xOjqG0eyXM0AWQecfPejrM68FVMPZw991RMh4M6rPQ0snIFkeVTnnISrNDMUK8gZ1jJHep6KuZJs9djoz/BOpfdoOxnPrDyTvaoMfsSUmXUT0R/A/jHhlEcs6WENnmKWYEPTsjQHXfq6OOKIRW3UxRDHKhVH6UG0FyBUEuCCnwUEzwEaOlmzjQjjirkulR3LOd4ESe9s3FxjFavkVcjrODg+EJ5Bjj7PIIVV/vTyN9MreOYu3JLG+Y87VSD6hHdOpkY16JJvNOPM+FTBd4vyS8DKH7E3/5VTX38pOJ7EJ5B4U6Ud3gm8Mjv9jP5nqcc4/c6EjyO02lc7Gr9A9qjq+atxqu2wlnZxX1KS2ZWxPRxvsTMnlsAzvwBlhukTtHuEhmL5uebSYUCjzW/RGo81VFQ22iPo9H6kd/Ofr94wo0/9XdASGl2Tl2dnYgxGOaLy93vPGUsuJKUsV4BmUrh307+Mkh4J+blTFrDSD2TvOIqHXcMfnUdCeqIchD5Mad6gk5JTYHUpLMsiUE03lUBxVKz/ARjaTctKDSycMNjNRRGFIvVfiZVlohLNcfbjah4xI1RBlxhB6uPtxVURvs1l3zuIr2RJ/0yVDkVKfO+5nOkLVJgrdOwc=
-X-Forefront-Antispam-Report: CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(376002)(346002)(39860400002)(451199021)(40470700004)(46966006)(36840700001)(40460700003)(7696005)(70206006)(36756003)(4326008)(8676002)(356005)(34020700004)(2906002)(41300700001)(36860700001)(5660300002)(40480700001)(86362001)(82740400003)(8936002)(70586007)(7636003)(7416002)(82310400005)(316002)(110136005)(1076003)(26005)(186003)(107886003)(6666004)(478600001)(83380400001)(2616005)(54906003)(47076005)(426003)(336012);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2023 13:35:45.0694
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: db18f6de-1f09-41af-5aa5-08db3123aa32
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT049.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR12MB9047
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+References: <1674183732-5157-1-git-send-email-lizhi.hou@amd.com>
+ <af2a6686-ea35-e5fc-7541-27e5d6ca9311@gmail.com> <20230227113150.398dcfa7@fixe.home>
+ <52b8f136-c73f-a97d-2bb6-48aff3755f98@gmail.com> <f927790dc9839cd93902c0d2e5afe5e8@bootlin.com>
+ <1886b888-a0e8-b1ee-c48a-ddbc8b5b0c63@gmail.com> <CAL_JsqL_ER32ys-yW_7-QKLjEmKK8StOeM5yvH2ChuvX++fe5Q@mail.gmail.com>
+ <9b4bb45a-f6e4-c95c-d27c-21c7fecb5505@gmail.com> <20230309094507.62d7c35e@fixe.home>
+ <fed57536-cd2c-bf9b-37bc-7a653685cbf2@gmail.com>
+In-Reply-To: <fed57536-cd2c-bf9b-37bc-7a653685cbf2@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Thu, 30 Mar 2023 10:19:32 -0500
+X-Gmail-Original-Message-ID: <CAL_JsqL+HLQVs-MoHYaVTnoNHE2DGnYZnUThp00r0vuZArwCsw@mail.gmail.com>
+Message-ID: <CAL_JsqL+HLQVs-MoHYaVTnoNHE2DGnYZnUThp00r0vuZArwCsw@mail.gmail.com>
+Subject: Re: [PATCH V7 0/3] Generate device tree node for pci devices
+To:     Frank Rowand <frowand.list@gmail.com>
+Cc:     =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <clement.leger@bootlin.com>,
+        Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        helgaas@kernel.org, max.zhen@amd.com, sonal.santan@amd.com,
+        larry.liu@amd.com, brian.xu@amd.com, stefano.stabellini@xilinx.com,
+        trix@redhat.com, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "Steen.Hegelund@microchip.com" <Steen.Hegelund@microchip.com>,
+        "Horatiu.Vultur@microchip.com" <Horatiu.Vultur@microchip.com>,
+        "Allan.Nielsen@microchip.com" <Allan.Nielsen@microchip.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add OPP table and interconnects property to scale DDR frequency with
-CPU frequency for better performance. Each operating point entry of
-the OPP table has CPU freq to per MC channel bandwidth mapping.
-One table is added for each cluster even though the table data is
-same because the bandwidth request is per cluster. This is done
-because OPP framework creates a single icc path and hence single
-bandwidth request if the table is marked as 'opp-shared' and shared
-among all clusters. For us, the OPP table data is same but the MC
-Client ID argument to interconnects property is different for each
-cluster. So, having per cluster table makes different icc path for
-each cluster and helps to make per cluster BW requests.
+On Wed, Mar 29, 2023 at 11:51=E2=80=AFAM Frank Rowand <frowand.list@gmail.c=
+om> wrote:
+>
+> On 3/9/23 02:45, Cl=C3=A9ment L=C3=A9ger wrote:
+> > Le Wed, 8 Mar 2023 01:31:52 -0600,
+> > Frank Rowand <frowand.list@gmail.com> a =C3=A9crit :
+> >
+> >> On 3/6/23 18:52, Rob Herring wrote:
+> >>> On Mon, Mar 6, 2023 at 3:24=E2=80=AFPM Frank Rowand <frowand.list@gma=
+il.com> wrote:
+> >>>>
+> >>
+> >> < snip >
+> >>
+> >> Hi Rob,
+> >>
+> >> I am in no position to comment intelligently on your comments until I
+> >> understand the SoC on PCI card model I am asking to be described in
+> >> this subthread.
+> >
+> > Hi Frank,
+> >
+> > Rather than answering all of the assumptions that were made in the uppe=
+r
+> > thread (that are probably doing a bit too much of inference), I will
+> > re-explain that from scratch.
+>
+> Thanks!  The below answers a lot of my questions.
+> >
+> > Our usecase involves the lan966x SoCs. These SoCs are mainly targeting
+> > networking application and offers multiple SFP and RGMII interfaces.
+> > This Soc can be used in two exclusive modes (at least for the intended
+> > usage):
+> >
+> > SoC mode:
+> >    The device runs Linux by itself, on ARM64 cores included in the
+> >    SoC. This use-case of the lan966x is currently almost upstreamed,
+> >    using a traditional Device Tree representation of the lan996x HW
+> >    blocks [1] A number of drivers for the different IPs of the SoC have
+> >    already been merged in upstream Linux (see
+> >    arch/arm/boot/dts/lan966x.dtsi)
+> >
+> > PCI mode:
+> >   The lan966x SoC is configured as a PCIe endpoint (PCI card),
+> >   connected to a separate platform that acts as the PCIe root complex.
+> >   In this case, all the IO memories that are exposed by the devices
+> >   embedded on this SoC are exposed through PCI BARs 0 & 1 and the ARM64
+> >   cores of the SoC are not used. Since this is a PCIe card, it can be
+> >   plugged on any platform, of any architecture supporting PCIe.
+> >
+> > This work only focus on the *PCI mode* usage. In this mode, we have the
+> > following prerequisites:
+> > - Should work on all architectures (x86, ARM64, etc)
+> > - Should be self-contained in the driver
+>
+> > - Should be able to reuse all existing platform drivers
+>
+> I've said before (in different words) that using an existing platform
+> driver for hardware on a PCI card requires shims, which have been
+> strongly rejected by the Linux kernel.
 
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 276 +++++++++++++++++++++++
- 1 file changed, 276 insertions(+)
+Do you have an example of what you are saying has been rejected
+because I have no clue what you are referring to?
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index 959d659dd5cd..d735ad2eb84f 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -3011,6 +3011,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3027,6 +3030,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3043,6 +3049,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3059,6 +3068,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3075,6 +3087,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3091,6 +3106,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3107,6 +3125,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3123,6 +3144,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3139,6 +3163,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3155,6 +3182,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3171,6 +3201,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3187,6 +3220,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3443,4 +3479,244 @@
- 		interrupt-parent = <&gic>;
- 		always-on;
- 	};
-+
-+	cl0_opp_tbl: opp-table-cluster0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl0_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl0_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl0_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl0_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl0_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl0_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl0_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
-+
-+	cl1_opp_tbl: opp-table-cluster1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl1_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl1_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl1_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl1_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl1_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl1_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl1_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
-+
-+	cl2_opp_tbl: opp-table-cluster2 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl2_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl2_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl2_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl2_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl2_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl2_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl2_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
- };
--- 
-2.17.1
+The kernel already has a way to divide up a PCI device into multiple
+non-PCI sub-drivers. It's auxiliary_bus. Is that not a "shim"? So why
+not use that? From the docs:
 
+ * A key requirement for utilizing the auxiliary bus is that there is no
+ * dependency on a physical bus, device, register accesses or regmap suppor=
+t.
+ * These individual devices split from the core cannot live on the platform=
+ bus
+ * as they are not physical devices that are controlled by DT/ACPI.  The sa=
+me
+ * argument applies for not using MFD in this scenario as MFD relies on
+ * individual function devices being physical devices.
+
+
+In the usecases here, they are physical devices because it's the same
+devices when Linux is running on the SoC.
+
+> >
+> > In PCI mode, the card runs a firmware (not that it matters at all by
+> > the way) which configure the card in PCI mode at boot time. In this
+> > mode, it exposes a single PCI physical function associated with
+> > vendor/product 0x1055/0x9660. This is not a multi-function PCI device !
+> > This means that all the IO memories (peripheral memories, device
+> > memories, registers, whatever you call them) are accessible using
+> > standard readl()/writel() on the BARs that have been remapped. For
+> > instance (not accurate), in the BAR 0, we will have this kind of memory
+> > map:
+> >
+> >            BAR0
+> >    0x0 =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90
+> >        =E2=94=82           =E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82   Clock   =E2=94=82
+> >        =E2=94=82 controller=E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82           =E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82   I2C     =E2=94=82
+> >        =E2=94=82 controller=E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82           =E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82   MDIO    =E2=94=82
+> >        =E2=94=82 Controller=E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82           =E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82  Switch   =E2=94=82
+> >        =E2=94=82 Controller=E2=94=82
+> >        =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
+=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4
+> >        =E2=94=82           =E2=94=82
+> >        =E2=94=82   ...     =E2=94=82
+> >
+> >
+> > It also exposes either a single interrupt via the legacy interrupt
+> > (which can then be demuxed by reading the SoC internal interrupt
+> > controller registers), or multiple interrupts using MSI interrupts.
+> >
+> > As stated before, all these peripherals are already supported in SoC
+> > mode and thus, there are aleready existing platform drivers for each of
+> > them. For more information about the devices that are exposed please
+> > see link [1] which is the device-tree overlay used to describe the
+> > lan9662 card.
+> >
+> > In order to use the ethernet switch, we must configure everything that
+> > lies around this ethernet controller, here are a few amongst all of
+> > them:
+> > - MDIO bus
+> > - I2C controller for SFP modules access
+> > - Clock controller
+> > - Ethernet controller
+> > - Syscon
+> >
+> > Since all the platform drivers already exist for these devices, we
+> > want to reuse them. Multiple solutions were thought of (fwnode, mfd,
+> > ACPI, device-tree) and eventually ruled out for some of them and effort=
+s
+> > were made to try to tackle that (using fwnode [2], device-tree [3])
+> >
+>
+> > One way to do so is to use a device-tree overlay description that is
+> > loaded dynamically on the PCI device OF node. This can be done using th=
+e
+> > various device-tree series series that have been proposed (included
+> > this one). On systems that do not provide a device-tree of_root, create
+> > an empty of_root node (see [4]). Then during PCI enumeration, create
+> > device-tree node matching the PCI tree that was enumerated (See [5]).
+> > This is needed since the PCI card can be plugged on whatever port the
+> > user wants and thus it can not be statically described using a fixed
+> > "target-path" property in the overlay.
+>
+> I understand that this is a use case and a desire to implement a
+> solution for the use case.  But this is a very non-standard model.
+> The proposal exposes a bunch of hardware beyond the pci interface
+> in a non-pci method.
+
+It is not the proposal that exposes a bunch of hardware. This device
+exposes a bunch of hardware. As you say, it is *beyond the PCI
+interface*, so it has zero to do with PCI.
+
+We already support non-discoverable h/w behind a PCI bus. It's called
+ISA. There's powerpc DT files in the tree with ISA devices.
+
+> No, just no.  Respect the pci interface boundary and do not drag
+> devicetree into an effort to pierce and straddle that boundary
+> (by adding information about the card, beyond the PCI controller,
+> into the system devicetree).  Information about dynamically
+> discoverable hardware does not belong in the devicetree.
+
+What is discoverable? Nothing more than a VID/PID.
+
+Your suggestion is simply use the VID/PID(s) and then the PCI driver
+for the card will have all the details that implies. There's a name
+for that: board files. Just like we had a single machine ID per board
+registered with RMK and the kernel had to contain all the
+configuration details for each machine ID. It's not just 1 card here.
+This is a chip and I imagine what's used or not used or how the
+downstream peripherals are configured all depend on the customer and
+their specific designs.
+
+If DT is not used here, then swnodes (DT bindings embedded in the
+kernel or platform_data 2.0) will be. It's exactly the same structure
+in the kernel. It's still going to be non-PCI drivers for all the sub
+devices. The change in the drivers will not be making them PCI
+drivers, but simply converting DT APIs to fwnode APIs which is
+pointless churn IMO.
+
+Finally, let's not forget the FPGA usecase. We already support DT
+overlays for FPGAs. The fact that the FPGA sits behind a PCI interface
+is pretty much irrelevant to the problem. There is simply no way the
+kernel is going to contain information about what's within the FPGA
+image. If not DT, how should we communicate the FPGA configuration to
+the kernel?
+
+Rob
