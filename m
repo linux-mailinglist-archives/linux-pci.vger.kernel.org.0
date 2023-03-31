@@ -2,198 +2,157 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E60CD6D1DF0
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 12:23:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1B7FB6D1F4F
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 13:40:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231327AbjCaKX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Mar 2023 06:23:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57750 "EHLO
+        id S230025AbjCaLki (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Mar 2023 07:40:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230385AbjCaKWt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 06:22:49 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A228172A
-        for <linux-pci@vger.kernel.org>; Fri, 31 Mar 2023 03:20:30 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=c4W4lC+cZv7uL8fBGdAongG+Nwo/u/Cq0n0uK514UEujUL9HQI/u1C/7jMd55WdjhJEv8latJMjVmIQpI57dtqeZsn77c8Okk4cablPyffpFLSw9TVwDo3HWzoMw9mn39pwf6DUTzfMMiV0n21omuGtcLIxMQP6BCGbaT/VTl6SZyqO7QtRwZ7RA7/Pqsm6KJ/AXH1tHqMe2LGIQahhR7+0oA//ul++lmssD5oby5A/Im3Ma5CyLCUBxFMIpAlowmTiGDlKdHoPYaQPebGEhcEjfZ5mSzx2pSLn/rYHQuDCYP6+cOszliRhXh9j7S+boOfBAMOpeNenAzNqX0V4qpA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=czXgjXp+xnkGkiceFBLPffv3POe9ORtc5Hr+OC2llDU=;
- b=AajKwj+M1ZJ02eCcwBD+Q/9ErXRVZQ1tlcCQyen2VWfknHO+kGLQdE0dGJ8ERi0lGcmiXsjS/dx/iZ1KXJhNCEKxjJUyx8b1rcdZ34tFK/MfcVBuRNhlNVlSQm5Hzmuy2lp+4Bq2LqC9xiXHS5YhWIohfpGYZXrBDMNfWPK79oAvH4aFUdWQmfZnruhUNyYW+T/u4CMCrRdufoiYkUXGpXUdSGToQ4oO48n1hXI6nXoiRPklTXRSBIrIW5f2VD4j9Jd7i0cOgZprYVICbxww+ecyrxDhVN4TH1iAyQgb39Z/TULrRWuxCgBlBYd4SA6As17YlqqmIL25I+B50AWvBw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=czXgjXp+xnkGkiceFBLPffv3POe9ORtc5Hr+OC2llDU=;
- b=TBLXyAK0qljLkBvMB2EEmJe2l+zd9mUuaNYZ+ZfqIOukihwRBLLCqQnXMcph5uG2S6fvnLuLFftwfa93rxTwM0x4jXgYIcNfw5ArCPanDOscuq1RBrbUvHV48vE1IbFWmwq8cdCpatxffqdrP542FSCLwYZHSy96nSFzijj8wd8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com (2603:10b6:208:396::19)
- by CY5PR12MB6573.namprd12.prod.outlook.com (2603:10b6:930:43::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.24; Fri, 31 Mar
- 2023 10:20:27 +0000
-Received: from BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::3f99:52bd:6b66:d22f]) by BL1PR12MB5827.namprd12.prod.outlook.com
- ([fe80::3f99:52bd:6b66:d22f%6]) with mapi id 15.20.6222.035; Fri, 31 Mar 2023
- 10:20:27 +0000
-Message-ID: <057a4d17-9faf-4920-7187-3e36667b1fbe@amd.com>
-Date:   Fri, 31 Mar 2023 15:50:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:96.0) Gecko/20100101
- Thunderbird/96.0
-Subject: Re: [PATCH v3 00/16] PCI endpoint fixes and improvements
-Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230325070226.511323-1-damien.lemoal@opensource.wdc.com>
-From:   Kishon Vijay Abraham I <Kishon.vijayabraham@amd.com>
-In-Reply-To: <20230325070226.511323-1-damien.lemoal@opensource.wdc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: PN3PR01CA0058.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:99::17) To BL1PR12MB5827.namprd12.prod.outlook.com
- (2603:10b6:208:396::19)
+        with ESMTP id S230193AbjCaLkf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 07:40:35 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AC8A191FB;
+        Fri, 31 Mar 2023 04:40:22 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id v6-20020a05600c470600b003f034269c96so3417538wmo.4;
+        Fri, 31 Mar 2023 04:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680262820;
+        h=mime-version:user-agent:message-id:date:subject:to:from:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DFpj03qdDMfbyM7+XZ1x+NUK4s93aePSD7Bo/WXr5U0=;
+        b=YBnjIHnh64eLbmE7oA24eR+VbM8xRR8GQ7de0OxwmFViM07spJQl/T3fMTbn/ZKxM2
+         ymHqvxfTHftMOK+9hl7UZQl5U+4Qcmfi7NMjlQyz9rQ8rl5tivyboK5yLvfi6veevB9W
+         xqCOxuX6TZmVoVcqgaG9x/kcAzteVh/9ECyRw+S0ll/vXh8Y6CSAWkqPD+q/AFdf3JAr
+         TS9chWDaa8U6wMZT0QnstjvZX7D64cndKnbElRj3Lb75gQi6va3TcX7/yUZy4CXPhFnu
+         70mV//VRCAGKlo4SWms9YSckapBFB1HTvfCcVp55ujfYSWl5+yPydNY2ogplctIf5A+X
+         M2Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680262820;
+        h=mime-version:user-agent:message-id:date:subject:to:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DFpj03qdDMfbyM7+XZ1x+NUK4s93aePSD7Bo/WXr5U0=;
+        b=xp1MZbMlepuYb6ZS8Ihn5f8/M/rtvWLK7JfPwkYi5/v374i54Lq3JhbFEgmddKDDwM
+         /adSnZ4Oow18W4CtEalmYh4Urx/dfcQxxmNUWIzHGkpWO6qpFG/lBtSPAk+26b2JoV80
+         +DyrmVmBI/ADpVRTsuvJqsGYQ4Ftj2dAWqjmatPD/eINjMP3bL69CbdWS9haBa9VSX8a
+         TiXGA/lV9ZxDcYGzHZHPUef3uFzQxBn3NhZ4uuRHYGzALWrMdqMgAxVrD5oh4RSqlyrx
+         QNQRiRn+DLETwOvuCeHkwvDNEH8JKfQ3Em8BrT1uUV0/l4rA8yl4+E1khkPdPpYIFPa7
+         n7Uw==
+X-Gm-Message-State: AO0yUKWuXrbbqtMajzYvyVrd8FQ5j/sWAWP8fQ+stD5opPCEGrSXI6C7
+        AlaORR1O3GLgkDDp6hb9dUK0sJQ4pPDaRw==
+X-Google-Smtp-Source: AK7set8bDb6+r3v4tyns18bK6BzcZCWbbumTW68hqJai8c01CT4OVwzyKlv+MXyA5H8hmWPPqmR4cA==
+X-Received: by 2002:a7b:cd0d:0:b0:3e2:589:2512 with SMTP id f13-20020a7bcd0d000000b003e205892512mr20301404wmj.21.1680262820454;
+        Fri, 31 Mar 2023 04:40:20 -0700 (PDT)
+Received: from imac ([88.97.103.74])
+        by smtp.gmail.com with ESMTPSA id g20-20020a05600c4ed400b003ee8a1bc220sm9861274wmq.1.2023.03.31.04.40.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Mar 2023 04:40:19 -0700 (PDT)
+From:   Donald Hunter <donald.hunter@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>
+Subject: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620 with igb
+Date:   Fri, 31 Mar 2023 12:40:11 +0100
+Message-ID: <m2fs9lgndw.fsf@gmail.com>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL1PR12MB5827:EE_|CY5PR12MB6573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 85de93ea-14bd-4f6b-f35e-08db31d18c1d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ci5HSwLGGmZJjmvLxWHgiDfT1LZfxpJjTBuz7hSXcHjchpCOXYIbIhp3dSjYtTt4YLLk33qr7VIj55ZHpEO61usgJcGVY75KF3A2efzX2AJKau7V4jmxSvu+ZomHbjhBpn/O9tuitIuJyFJ7CdtUsddEhYFNSbZp1o9p4Vj4RddU9gEe/zhBEjjuJruIhYbjxxLBQ8SDOP593DC4FD52a/z66VBf97v2xoVEjvl2W9i/eu81vlsfsmyQjHmJ+bAP/h90GNE5u3V3WYm0M1Y3EByry+bpuAdsK1kgzQuHd6U8hepZxs04IUrAo9VS4lgzV/iHP4Y0Mr5zYUjjt3q+KpzSr71c7EkpLEfNsMqDKgs/Vsx45v2/f+CiaWqDoBCRN3xVbgDNp8ybytY5D1S/Jkwp+AirQf66Yvru5XugDbBEbXaO3s3Zh+aon1Zo8cujstA66rotPRAVrifgjFJIBlXVGe/Kb8K1sOOGTHy0C42ISpILaVmgcAdPM5bsHii39TV/KDgJY1OaOUEU5WSMcPhZWlqRvLuU+XgXQ8S7eZZVJPghQQuPK1Cw8RuUatKNQ5cBFwpWzYT0Fto/lbS9o3jj4+U1uhQdQ01TkPjD/p+lrE0Uxm0JLHROdBTWHyPWIH2tD94rXBvLbuLT+dyThw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL1PR12MB5827.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(451199021)(36756003)(54906003)(110136005)(8676002)(4326008)(66556008)(66476007)(66946007)(316002)(966005)(6486002)(478600001)(8936002)(5660300002)(41300700001)(7416002)(2906002)(86362001)(31696002)(38100700002)(186003)(2616005)(6666004)(26005)(53546011)(6512007)(6506007)(83380400001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?b1NoUEpPMFhLVldvQUNOMzU0SWtZSE9mWVY4eXJLVzIxY2I4TGFXTjhFVzdx?=
- =?utf-8?B?dW5yL2Q1Y3BZRm52SHVodlNVTGhWdHEzYjZUd3FDN2xkcXBkd2xic1VPeTB6?=
- =?utf-8?B?ZkdaWVloY2lWNmc1L2hmTkZuT1VJd1JBWWRWUnFJWlZpNUhGTEplaG94SFNE?=
- =?utf-8?B?OGx4RTFqaFVaN2NhTFQ4R3dkc0xDeExtSjdIc0Q0T2IzUG1FV0ZDZVpKVkFS?=
- =?utf-8?B?ZjQvbUE2M29VSTJ1K2ppNGxtWkMwbFl0VzhTdUJnREtpY2s0QTJpbHJMZXNx?=
- =?utf-8?B?azdWcjdZeWhMYUhXcWxiWlMwWTNWT3JNL21KRTdVQ2FjSHZUenhVTkY4eGxk?=
- =?utf-8?B?b3hDUFZVL0h6ZUl4SlgrUHRyU3h3cmdWa1djb1pmazR0S0tVdHFGc0FXREgy?=
- =?utf-8?B?MytSMzJRdU10TDBXN2N3L05qcTNWQkRoOXdNRzVtMis3WXJ2NjI3Zy9LV01v?=
- =?utf-8?B?TnlZa1BKSlZnYmFYMk5EVGJ4cG14K09Kc05QNHFkYy9zeEFBMVFFa3FYQklu?=
- =?utf-8?B?OUF4QmRTSDEzK0ROV0lEYWppYTVvcU9GcXoycGg2TTgrTmNER3pLK0dUbVBS?=
- =?utf-8?B?UEZBMkpLZi9KSG9EYmxOUE1PQW5MbnJlQ0tVY0p5QWtiVVVjUFprTnBpVjJO?=
- =?utf-8?B?ZVd3WGZyOVlKbXBLbmhLOFpNYXljVTBWQTUwZElKcnlsbTJwOXMzdW1DK3Ux?=
- =?utf-8?B?QmxoUWVuL1ZtVjZSRHR0SWVLOWRoSkZaN1A1eHd0ODF2dm9OZ0NIaHZpT0hh?=
- =?utf-8?B?aHpKMnUzZUtlazhxc1NwdTcwSmtnRlpIRmU1YlA2dkVCUVQ4UmpXQnZnLzha?=
- =?utf-8?B?K3BNTlA1R2orTzY1TDdYeDdaczdHMzd0OXRHdE1XMXFEeldKOGhDMS8yY0tN?=
- =?utf-8?B?dFlnbnlGUXp5Sm5Vd0d0QnY1SGZNeVBrakVlN01PRS80NjcvUy81b0hFdksx?=
- =?utf-8?B?OVhBRFdWbUV1VjA0Zk9DVmlDTERMSkk1SXJndjQ0YktBMmp6VWZuRGlIK1Y0?=
- =?utf-8?B?anREZVMwVkV0OEZ1MEk1dmN5Q0c0UEtzOThmUFVZbHUyVWN5Nmc5Q01yeGxy?=
- =?utf-8?B?Sy9Pc3VlSko2SXNLNW5FQnJkNDg5OVVVWFdMK1cyaDF1L1UwSEV2UTFIbEFX?=
- =?utf-8?B?ZEc4M2lwcEQ2SHJjSDI0SjRsdUhDK092RkhYOW9GNUpqaGJ2ZnhxRlV5WWJ1?=
- =?utf-8?B?aVlmUUtYTnhOemVGZTZld2RIa3o1S3hDS1QyOHRCalErZUtDcUoxTmZrKzdu?=
- =?utf-8?B?RDBmS2s1K0tlendSTkVTTEtJTWdneVoyMFRQMjI3L25aVXJNNW5NNXl6bTF3?=
- =?utf-8?B?a2UxNzNack1aMWkvb3d2NEJWNjRqZ1BaeDVPbHhaNklWOEkxTE03OElVNTBT?=
- =?utf-8?B?b3FYZWlkaG0rUWo1YVhDVEY0dFRKSk5mMTdkdTFleE9hOUNNaVllZFYyM2t1?=
- =?utf-8?B?R1lRaTU2NDg3cm5KTHVhelBtRU56YWcwalpaN2R3R2s2Vkx3R1RWN0l3OE9m?=
- =?utf-8?B?QWRUa2JGcTdoNHpKRm5iLzVJbUMzMk03ejVLQTV1VFd5M3M1OCtKNFMyc0R5?=
- =?utf-8?B?UjVtVDhKYlB0aU92SGg2TEYrZExHeFBOUEJYWEdleFJBWS9sVTkvV3Bua0ha?=
- =?utf-8?B?YzFhbjdLSEc3Nmc0RDdhQmN1Sk5nWHNoZG5KMUlLUE4yOExUKy9HNDMrV1RQ?=
- =?utf-8?B?Tzd0amZtY1JmTDQ0QUdBWlZTeG9mRlRTanluUkRoQnFURE96YU9SZnJ3Kzcy?=
- =?utf-8?B?VWpESUtkUVQ3TUFpTmxpTmZzMy9ldlhzWFZBUGh3aG9yZ2xCNTNRMkNOUzZH?=
- =?utf-8?B?amVQSXY0MEt5NkI3SXN0UE55QmszSGtoZzlNdy9iYTEwVXdDME5qUWZ2TlpO?=
- =?utf-8?B?ekJvWVNQYlNTTmlXMUk4Qi8xenpiMVZjNnMwc0VSS0Q3M1FrRGdSNng4Z25D?=
- =?utf-8?B?RjZpbndQT3BkZVBMNGFJOEFLclJzeE1TMSt1My9Wb1FTVkRHQVFKeDN4S1B2?=
- =?utf-8?B?SEp6d3BTRVMzdCs2Z3V4QUw1RVJta3Z1a1pwbnovWFd4Q09QZDhPQVY1dTZI?=
- =?utf-8?B?a0VyYWExTUl0RnpNa3JyVFdHS0h3TFZDWVg0WU1wRXVvMlN2TjMrQVJyWjFn?=
- =?utf-8?Q?ULw2EeZAwDbr8M4tlVOl/1ixv?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 85de93ea-14bd-4f6b-f35e-08db31d18c1d
-X-MS-Exchange-CrossTenant-AuthSource: BL1PR12MB5827.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2023 10:20:27.3043
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: PpcnyH/U8sIoyHDfnfYkWInX3TddQOzUQwzUWGtoKIL0U95OMNMYfkxxG0d/8PMpE69nea2c9f2IYtPW1KDweA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6573
+Content-Type: text/plain
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+The 6.3-rc1 and later release candidates are hanging during boot on our
+Dell PowerEdge R620 servers with Intel I350 nics (igb).
 
+After bisecting from v6.2 to v6.3-rc1, I isolated the problem to:
 
-On 3/25/2023 12:32 PM, Damien Le Moal wrote:
-> This series fixes several issues with the PCI endpoint code and endpoint
-> test drivers (host side and EP side).
-> 
-> The first 2 patches address an issue with the use of configfs to create
-> an endpoint driver type attributes group, preventing a potential crash
-> if the user creates a directory multiple times for the driver type
-> attributes.
-> 
-> The following patches are fixes and improvements for the endpoint test
-> drivers, EP side and RP side.
-> 
-> This is all tested using a Pine Rockpro64 board, with the rockchip ep
-> driver fixed using Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> patches [1], plus some additional fixes from me.
+[6fffbc7ae1373e10b989afe23a9eeb9c49fe15c3] PCI: Honor firmware's device
+disabled status
 
-Thank you for improving the PCI endpoint code!
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 1779582fb500..b1d80c1d7a69 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1841,6 +1841,8 @@ int pci_setup_device(struct pci_dev *dev)
+ 
+        pci_set_of_node(dev);
+        pci_set_acpi_fwnode(dev);
++       if (dev->dev.fwnode && !fwnode_device_is_available(dev->dev.fwnode))
++               return -ENODEV;
+ 
+        pci_dev_assign_slot(dev);
+ 
 
-For the series:
-Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
-> 
-> [1] https://lore.kernel.org/linux-pci/20230214140858.1133292-1-rick.wertenbroek@gmail.com/
-> 
-> Changes from v2:
->   - Add updates of the ntb and vntb function driver documentation in
->     patch 1 to reflect the patch changes.
->   - Removed unnecessary WARN_ON() call in patch 4
->   - Added missing cc: stable tags
->   - Added review tags
-> 
-> Changes from v1:
->   - Improved patch 1 commit message
->   - Modified patch 2 to not have to add an internal header file
->   - Split former patch 3 into patch 3, 4 and 5
->   - Removed former patch 4 introducing volatile casts and replaced it
->     with patch 9
->   - Added patch 6, 7, 8 and 10
->   - Added Reviewed-by tags in patches not modified
-> 
-> Damien Le Moal (16):
->    PCI: endpoint: Automatically create a function specific attributes group
->    PCI: endpoint: Move pci_epf_type_add_cfs() code
->    PCI: epf-test: Fix DMA transfer completion initialization
->    PCI: epf-test: Fix DMA transfer completion detection
->    PCI: epf-test: Use dmaengine_submit() to initiate DMA transfer
->    PCI: epf-test: Simplify read/write/copy test functions
->    PCI: epf-test: Simply pci_epf_test_raise_irq()
->    PCI: epf-test: Simplify IRQ test commands execution
->    PCI: epf-test: Improve handling of command and status registers
->    PCI: epf-test: Cleanup pci_epf_test_cmd_handler()
->    PCI: epf-test: Simplify dma support checks
->    PCI: epf-test: Simplify transfers result print
->    misc: pci_endpoint_test: Free IRQs before removing the device
->    misc: pci_endpoint_test: Re-init completion for every test
->    misc: pci_endpoint_test: Do not write status in IRQ handler
->    misc: pci_endpoint_test: Simplify pci_endpoint_test_msi_irq()
-> 
->   Documentation/PCI/endpoint/pci-ntb-howto.rst  |  11 +-
->   Documentation/PCI/endpoint/pci-vntb-howto.rst |  13 +-
->   drivers/misc/pci_endpoint_test.c              |  25 +-
->   drivers/pci/endpoint/functions/pci-epf-test.c | 238 ++++++++----------
->   drivers/pci/endpoint/pci-ep-cfs.c             |  53 ++--
->   drivers/pci/endpoint/pci-epf-core.c           |  32 ---
->   include/linux/pci-epf.h                       |   2 -
->   7 files changed, 162 insertions(+), 212 deletions(-)
-> 
+I have verified that reverting 6fffbc7ae1373e10b989afe23a9eeb9c49fe15c3
+resolves the issue on v6.3-rc4.
+
+Here's the kernel log from v6.3.0-rc1:
+
+igb: Intel(R) Gigabit Ethernet Network Driver
+igb: Copyright (c) 2007-2014 Intel Corporation.
+igb 0000:07:00.0: can't derive routing for PCI INT D
+igb 0000:07:00.0: PCI INT D: no GSI
+igb 0000:07:00.0 0000:07:00.0 (uninitialized): PCIe link lost
+------------[ cut here ]------------
+igb: Failed to read reg 0x18!
+WARNING: CPU: 23 PID: 814 at drivers/net/ethernet/intel/igb/igb_main.c:745 igb_rd32+0x78/0x90 [igb]
+Modules linked in: igb(+) fjes(-) mei rapl intel_cstate mdio intel_uncore ipmi_si iTCO_wdt intel_pmc_bxt ipmi_devi>
+CPU: 23 PID: 814 Comm: systemd-udevd Not tainted 6.3.0-rc1 #1
+Hardware name: Dell Inc. PowerEdge R620/01W23F, BIOS 2.2.2 01/16/2014
+RIP: 0010:igb_rd32+0x78/0x90 [igb]
+Code: 48 c7 c6 f5 56 d3 c0 e8 96 51 f9 c8 48 8b bb 28 ff ff ff e8 3a 46 b6 c8 84 c0 74 c9 89 ee 48 c7 c7 18 64 d3 >
+RSP: 0018:ffffab6a07d37b10 EFLAGS: 00010286
+RAX: 000000000000001d RBX: ffff900385208f18 RCX: 0000000000000000
+RDX: 0000000000000002 RSI: ffffffff8a8ba498 RDI: 00000000ffffffff
+RBP: 0000000000000018 R08: 0000000000000000 R09: ffffab6a07d379b8
+R10: 0000000000000003 R11: ffffffff8b143de8 R12: ffff8ffc4518b0d0
+R13: ffff9003852089c0 R14: ffff900385208f18 R15: ffff900385208000
+FS:  00007faa81c07b40(0000) GS:ffff900b5fcc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007faa811c3594 CR3: 000000010c6c0001 CR4: 00000000001706e0
+Call Trace:
+ <TASK>
+ igb_get_invariants_82575+0x92/0xec0 [igb]
+ igb_probe+0x3bd/0x1510 [igb]
+ local_pci_probe+0x41/0x90
+ pci_device_probe+0xb3/0x220
+ really_probe+0x1a2/0x400
+ ? __pfx___driver_attach+0x10/0x10
+ __driver_probe_device+0x78/0x170
+ driver_probe_device+0x1f/0x90
+ __driver_attach+0xce/0x1c0
+ bus_for_each_dev+0x74/0xb0
+ bus_add_driver+0x112/0x210
+ driver_register+0x55/0x100
+ ? __pfx_init_module+0x10/0x10 [igb]
+ do_one_initcall+0x59/0x230
+ do_init_module+0x4a/0x210
+ __do_sys_finit_module+0x93/0xf0
+ do_syscall_64+0x5b/0x80
+ ? do_syscall_64+0x67/0x80
+ ? syscall_exit_to_user_mode_prepare+0x18e/0x1c0
+ ? syscall_exit_to_user_mode+0x17/0x40
+ ? do_syscall_64+0x67/0x80
+ ? syscall_exit_to_user_mode+0x17/0x40
+ ? do_syscall_64+0x67/0x80
+ ? __irq_exit_rcu+0x3d/0x140
+ ? common_interrupt+0x61/0xd0
+ entry_SYSCALL_64_after_hwframe+0x72/0xdc
+RIP: 0033:0x7faa81b0b27d
+Code: 5d c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c >
+RSP: 002b:00007fff03879908 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 00005594ac692a60 RCX: 00007faa81b0b27d
+RDX: 0000000000000000 RSI: 00007faa8224d43c RDI: 000000000000000e
+RBP: 00007faa8224d43c R08: 0000000000000000 R09: 00005594ac758fc0
+R10: 000000000000000e R11: 0000000000000246 R12: 0000000000020000
+R13: 00005594ac690480 R14: 0000000000000000 R15: 00005594ac693450
+ </TASK>
+ 
