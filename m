@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4049F6D16B7
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 07:22:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 74E6E6D16C4
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 07:26:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229458AbjCaFWi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Mar 2023 01:22:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54008 "EHLO
+        id S229448AbjCaFZ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Mar 2023 01:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjCaFWh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 01:22:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C29F77B
-        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 22:22:35 -0700 (PDT)
+        with ESMTP id S229437AbjCaFZ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 01:25:57 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41D2811144
+        for <linux-pci@vger.kernel.org>; Thu, 30 Mar 2023 22:25:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27C5462331
-        for <linux-pci@vger.kernel.org>; Fri, 31 Mar 2023 05:22:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC718C433EF;
-        Fri, 31 Mar 2023 05:22:30 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BEB0BB82AFE
+        for <linux-pci@vger.kernel.org>; Fri, 31 Mar 2023 05:25:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA39DC433D2;
+        Fri, 31 Mar 2023 05:25:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680240154;
-        bh=627wsYNegh6eQZnBpiwr3dLkA+ywQtZa0rC0yidBnOk=;
+        s=k20201202; t=1680240352;
+        bh=sfytSMuukLKT3jozMZiMDTNMU/HdTuHa5wegKCpj6zY=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qZeCU1GUkkikkekynScDF2vBXI3JzSe4VL07gfbJxGHUdW4+gHIq1QcGTXcXn3C3a
-         jBnpTXrE9rMntXsJWNjcDxIwwSAknHM1engc8MRhVbb6DCink91+zifsRfM76Naytr
-         5MG34mLlosX/LXdiSktJ476ZVrnALpgYJvffIm8SxpVBYMYX+rrb8RE27SrZBqXIyR
-         lly4CJ3Kuhdingoe+ZlxqFFOZTtmBcJSBbPCbceUF0VpLL2oKtopLc/kUnBH3ZFLxj
-         CVS3G5FRj6MgmS5hkP3P97wp36MllzZVgH8q5tU27WLmoFGIjplinaEeb+nCrTRui9
-         g401ACxT7hfMA==
-Date:   Fri, 31 Mar 2023 10:52:20 +0530
+        b=Bx5yifrs56WI9Yw06F+3qwklnuzRDK2VK6hQk7EiOEAo2CZ+yEKOs6yQRPFk+b9hX
+         X0ToK8ZZr46gfzpel3q4BltY8+g240p5KW5v2prg1zSDe5Zg/J75/6FEmI1BdPI8lo
+         0+PWi7TwCJfdSu6svlCsGDsKuqFd4svZc47iOTEC3SiVwAH3Qe6T1CH7i+ObHb6QsN
+         8w2XoWmgXZzYmRONXZV7u++Ae+xdik9HHejI35chEl5oFN8nxqWB99ep0o9Xx1pzxb
+         jtU2gxcCjO/X3Zd8fIwB8KBJ8IFGcEkmKqeg8CwPKhv/9KoAfovRwiu5gfui8shDTw
+         +NcpmWvdn0eKA==
+Date:   Fri, 31 Mar 2023 10:55:40 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
@@ -42,18 +42,18 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 01/17] PCI: endpoint: Automatically create a function
- specific attributes group
-Message-ID: <20230331052220.GA4973@thinkpad>
+Subject: Re: [PATCH v4 04/17] PCI: epf-test: Fix DMA transfer completion
+ detection
+Message-ID: <20230331052540.GB4973@thinkpad>
 References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
- <20230330085357.2653599-2-damien.lemoal@opensource.wdc.com>
+ <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230330085357.2653599-2-damien.lemoal@opensource.wdc.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+In-Reply-To: <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,62 +61,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 05:53:41PM +0900, Damien Le Moal wrote:
-> A PCI endpoint function driver can define function specific attributes
-> under its function configfs directory using the add_cfs() endpoint
-> driver operation. This is done by tighing up the mkdir operation for
-> the function configfs directory to a call to the add_cfs() operation.
-> However, there are no checks preventing the user from repeatedly
-> creating function specific attribute directories with different names,
-> resulting in the same endpoint specific attributes group being added
-> multiple times, which also result in an invalid reference counting for
-> the attribute groups. E.g., using the pci-epf-ntb function driver as an
-> example, the user creates the function as follows:
-
-[...]
-
-> Fix this by modifying pci_epf_cfs_work() to execute the new function
-> pci_ep_cfs_add_type_group() which itself calls pci_epf_type_add_cfs()
-> to obtain the function specific attribute group and the group name
-> (directory name) from the endpoint function driver. If the function
-> driver defines an attribute group, pci_ep_cfs_add_type_group() then
-> proceeds to register this group using configfs_register_group(), thus
-> automatically exposing the function type pecific onfigfs attributes to
-
-Still you haven't fixed this typo. But I don't expect you to respin unless there
-are other changes.
-
-> the user. E.g.:
+On Thu, Mar 30, 2023 at 05:53:44PM +0900, Damien Le Moal wrote:
+> pci_epf_test_data_transfer() and pci_epf_test_dma_callback() are not
+> handling DMA transfer completion correctly, leading to completion
+> notifications to the RC side that are too early. This problem can be
+> detected when the RC side is running an IOMMU with messages such as:
 > 
-> $ modprobe pci-epf-ntb
-> $ cd /sys/kernel/config/pci_ep/functions/pci_epf_ntb
-> $ mkdir func0
-> $ tree func0
-> func0/
-> |-- baseclass_code
-> |-- cache_line_size
-> |-- ...
-> |-- pci_epf_ntb.0
-> |   |-- db_count
-> |   |-- mw1
-> |   |-- mw2
-> |   |-- mw3
-> |   |-- mw4
-> |   |-- num_mws
-> |   `-- spad_count
-> |-- primary
-> |-- ...
-> `-- vendorid
+> pci-endpoint-test 0000:0b:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
+> domain=0x001c address=0xfff00000 flags=0x0000]
 > 
-> With this change, there is no need for the user to create or delete
-> directories in the endpoint function attributes directory. The
-> pci_epf_type_group_ops group operations are thus removed.
+> When running the pcitest.sh tests: the address used for a previous
+> test transfer generates the above error while the next test transfer is
+> running.
 > 
-> The documentation for the pci-epf-ntb and pci-epf-vntb function drivers
-> are updated to reflect this change, removing the explanations showing
-> the need to manually create the sub-directory for the function specific
-> attributes.
+> Fix this by testing the dma transfer status in
+> pci_epf_test_dma_callback() and notifying the completion only when the
+> transfer status is DMA_COMPLETE or DMA_ERROR. Furthermore, in
+> pci_epf_test_data_transfer(), be paranoid and check again the transfer
+> status and always call dmaengine_terminate_sync() before returning.
 > 
+> Fixes: 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
+> Cc: stable@vger.kernel.org
 > Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
 
 Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
@@ -124,136 +89,90 @@ Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 - Mani
 
 > ---
->  Documentation/PCI/endpoint/pci-ntb-howto.rst  | 11 ++---
->  Documentation/PCI/endpoint/pci-vntb-howto.rst | 13 +++---
->  drivers/pci/endpoint/pci-ep-cfs.c             | 41 +++++++++----------
->  3 files changed, 28 insertions(+), 37 deletions(-)
+>  drivers/pci/endpoint/functions/pci-epf-test.c | 38 +++++++++++++------
+>  1 file changed, 27 insertions(+), 11 deletions(-)
 > 
-> diff --git a/Documentation/PCI/endpoint/pci-ntb-howto.rst b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-> index 1884bf29caba..4261e7157ef1 100644
-> --- a/Documentation/PCI/endpoint/pci-ntb-howto.rst
-> +++ b/Documentation/PCI/endpoint/pci-ntb-howto.rst
-> @@ -88,13 +88,10 @@ commands can be used::
->  	# echo 0x104c > functions/pci_epf_ntb/func1/vendorid
->  	# echo 0xb00d > functions/pci_epf_ntb/func1/deviceid
->  
-> -In order to configure NTB specific attributes, a new sub-directory to func1
-> -should be created::
-> -
-> -	# mkdir functions/pci_epf_ntb/func1/pci_epf_ntb.0/
-> -
-> -The NTB function driver will populate this directory with various attributes
-> -that can be configured by the user::
-> +The PCI endpoint framework also automatically creates a sub-directory in the
-> +function attribute directory. This sub-directory has the same name as the name
-> +of the function device and is populated with the following NTB specific
-> +attributes that can be configured by the user::
->  
->  	# ls functions/pci_epf_ntb/func1/pci_epf_ntb.0/
->  	db_count    mw1         mw2         mw3         mw4         num_mws
-> diff --git a/Documentation/PCI/endpoint/pci-vntb-howto.rst b/Documentation/PCI/endpoint/pci-vntb-howto.rst
-> index 4ab8e4a26d4b..70d3bc90893f 100644
-> --- a/Documentation/PCI/endpoint/pci-vntb-howto.rst
-> +++ b/Documentation/PCI/endpoint/pci-vntb-howto.rst
-> @@ -84,13 +84,10 @@ commands can be used::
->  	# echo 0x1957 > functions/pci_epf_vntb/func1/vendorid
->  	# echo 0x0809 > functions/pci_epf_vntb/func1/deviceid
->  
-> -In order to configure NTB specific attributes, a new sub-directory to func1
-> -should be created::
-> -
-> -	# mkdir functions/pci_epf_vntb/func1/pci_epf_vntb.0/
-> -
-> -The NTB function driver will populate this directory with various attributes
-> -that can be configured by the user::
-> +The PCI endpoint framework also automatically creates a sub-directory in the
-> +function attribute directory. This sub-directory has the same name as the name
-> +of the function device and is populated with the following NTB specific
-> +attributes that can be configured by the user::
->  
->  	# ls functions/pci_epf_vntb/func1/pci_epf_vntb.0/
->  	db_count    mw1         mw2         mw3         mw4         num_mws
-> @@ -103,7 +100,7 @@ A sample configuration for NTB function is given below::
->  	# echo 1 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/num_mws
->  	# echo 0x100000 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/mw1
->  
-> -A sample configuration for virtual NTB driver for virutal PCI bus::
-> +A sample configuration for virtual NTB driver for virtual PCI bus::
->  
->  	# echo 0x1957 > functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_vid
->  	# echo 0x080A > functions/pci_epf_vntb/func1/pci_epf_vntb.0/vntb_pid
-> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> index 4b8ac0ac84d5..b16fc6093c20 100644
-> --- a/drivers/pci/endpoint/pci-ep-cfs.c
-> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -23,6 +23,7 @@ struct pci_epf_group {
->  	struct config_group group;
->  	struct config_group primary_epc_group;
->  	struct config_group secondary_epc_group;
-> +	struct config_group *type_group;
->  	struct delayed_work cfs_work;
->  	struct pci_epf *epf;
->  	int index;
-> @@ -502,34 +503,28 @@ static struct configfs_item_operations pci_epf_ops = {
->  	.release		= pci_epf_release,
->  };
->  
-> -static struct config_group *pci_epf_type_make(struct config_group *group,
-> -					      const char *name)
-> -{
-> -	struct pci_epf_group *epf_group = to_pci_epf_group(&group->cg_item);
-> -	struct config_group *epf_type_group;
-> -
-> -	epf_type_group = pci_epf_type_add_cfs(epf_group->epf, group);
-> -	return epf_type_group;
-> -}
-> -
-> -static void pci_epf_type_drop(struct config_group *group,
-> -			      struct config_item *item)
-> -{
-> -	config_item_put(item);
-> -}
-> -
-> -static struct configfs_group_operations pci_epf_type_group_ops = {
-> -	.make_group     = &pci_epf_type_make,
-> -	.drop_item      = &pci_epf_type_drop,
-> -};
-> -
->  static const struct config_item_type pci_epf_type = {
-> -	.ct_group_ops	= &pci_epf_type_group_ops,
->  	.ct_item_ops	= &pci_epf_ops,
->  	.ct_attrs	= pci_epf_attrs,
->  	.ct_owner	= THIS_MODULE,
->  };
->  
-> +static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
-> +{
-> +	struct config_group *group;
-> +
-> +	group = pci_epf_type_add_cfs(epf_group->epf, &epf_group->group);
-> +	if (!group)
-> +		return;
-> +
-> +	if (IS_ERR(group)) {
-> +		pr_err("failed to create epf type specific attributes\n");
-> +		return;
-> +	}
-> +
-> +	configfs_register_group(&epf_group->group, group);
-> +}
-> +
->  static void pci_epf_cfs_work(struct work_struct *work)
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index d65419735d2e..dbea6eb0dee7 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -54,6 +54,9 @@ struct pci_epf_test {
+>  	struct delayed_work	cmd_handler;
+>  	struct dma_chan		*dma_chan_tx;
+>  	struct dma_chan		*dma_chan_rx;
+> +	struct dma_chan		*transfer_chan;
+> +	dma_cookie_t		transfer_cookie;
+> +	enum dma_status		transfer_status;
+>  	struct completion	transfer_complete;
+>  	bool			dma_supported;
+>  	bool			dma_private;
+> @@ -85,8 +88,14 @@ static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
+>  static void pci_epf_test_dma_callback(void *param)
 >  {
->  	struct pci_epf_group *epf_group;
-> @@ -547,6 +542,8 @@ static void pci_epf_cfs_work(struct work_struct *work)
->  		pr_err("failed to create 'secondary' EPC interface\n");
->  		return;
->  	}
+>  	struct pci_epf_test *epf_test = param;
+> -
+> -	complete(&epf_test->transfer_complete);
+> +	struct dma_tx_state state;
 > +
-> +	pci_ep_cfs_add_type_group(epf_group);
+> +	epf_test->transfer_status =
+> +		dmaengine_tx_status(epf_test->transfer_chan,
+> +				    epf_test->transfer_cookie, &state);
+> +	if (epf_test->transfer_status == DMA_COMPLETE ||
+> +	    epf_test->transfer_status == DMA_ERROR)
+> +		complete(&epf_test->transfer_complete);
 >  }
 >  
->  static struct config_group *pci_epf_make(struct config_group *group,
+>  /**
+> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>  	struct dma_async_tx_descriptor *tx;
+>  	struct dma_slave_config sconf = {};
+>  	struct device *dev = &epf->dev;
+> -	dma_cookie_t cookie;
+>  	int ret;
+>  
+>  	if (IS_ERR_OR_NULL(chan)) {
+> @@ -152,25 +160,33 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>  	}
+>  
+>  	reinit_completion(&epf_test->transfer_complete);
+> +	epf_test->transfer_chan = chan;
+>  	tx->callback = pci_epf_test_dma_callback;
+>  	tx->callback_param = epf_test;
+> -	cookie = tx->tx_submit(tx);
+> +	epf_test->transfer_cookie = tx->tx_submit(tx);
+>  
+> -	ret = dma_submit_error(cookie);
+> +	ret = dma_submit_error(epf_test->transfer_cookie);
+>  	if (ret) {
+> -		dev_err(dev, "Failed to do DMA tx_submit %d\n", cookie);
+> -		return -EIO;
+> +		dev_err(dev, "Failed to do DMA tx_submit %d\n", ret);
+> +		goto terminate;
+>  	}
+>  
+>  	dma_async_issue_pending(chan);
+>  	ret = wait_for_completion_interruptible(&epf_test->transfer_complete);
+>  	if (ret < 0) {
+> -		dmaengine_terminate_sync(chan);
+> -		dev_err(dev, "DMA wait_for_completion_timeout\n");
+> -		return -ETIMEDOUT;
+> +		dev_err(dev, "DMA wait_for_completion interrupted\n");
+> +		goto terminate;
+>  	}
+>  
+> -	return 0;
+> +	if (epf_test->transfer_status == DMA_ERROR) {
+> +		dev_err(dev, "DMA transfer failed\n");
+> +		ret = -EIO;
+> +	}
+> +
+> +terminate:
+> +	dmaengine_terminate_sync(chan);
+> +
+> +	return ret;
+>  }
+>  
+>  struct epf_dma_filter {
 > -- 
 > 2.39.2
 > 
