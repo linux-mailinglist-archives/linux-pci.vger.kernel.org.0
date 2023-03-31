@@ -2,132 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0346D6D16D9
-	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 07:39:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 343916D1736
+	for <lists+linux-pci@lfdr.de>; Fri, 31 Mar 2023 08:18:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229912AbjCaFjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Mar 2023 01:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33446 "EHLO
+        id S230094AbjCaGSo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 31 Mar 2023 02:18:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjCaFjO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 01:39:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BB771165F;
-        Thu, 30 Mar 2023 22:39:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id C3E1DB82BBF;
-        Fri, 31 Mar 2023 05:39:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14755C433D2;
-        Fri, 31 Mar 2023 05:38:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680241144;
-        bh=RaxOmDnV17uzrPhgXJeKsuN/oSdrW0+Jw7YKYzsy6Kk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aO1fswx90sOS8FTXRoScvoQjtO+Bqvy/lmaGcRk0w93FRUwofux+6XSUSMBrU4KQF
-         OuCbLvSndWB37fWqyS+8j67J+Tz8i8sdBNXteTxaDG1FPeQKWx3yexDY98wDPS2odv
-         RwiAx3V0HONe45JRUWotEmnpjPFhndOAtFpQQiTlEhqJDQANIn0h1kgHcF+Cew6WHT
-         igokLN0v5tne8BS11Eus1dSwBsvgVBwyOwI5etu8fqKbRpZYc8ev09gFwTv1SbB7FL
-         kOlb7apU2B9kF/PjjtySsgCKJxpHOzp2gwI97Y9qy5g/Cg8nuSVRRbXIxF0fPm3mhP
-         Zs7InFKtu2tDA==
-Date:   Fri, 31 Mar 2023 11:08:50 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [RFC PATCH 00/11] Introduce a test for continuous transfer
-Message-ID: <20230331053850.GE4973@thinkpad>
-References: <20230317113238.142970-1-mie@igel.co.jp>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230317113238.142970-1-mie@igel.co.jp>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S229521AbjCaGSm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 02:18:42 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8E31FE7;
+        Thu, 30 Mar 2023 23:18:41 -0700 (PDT)
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32V4PXkh004442;
+        Fri, 31 Mar 2023 06:18:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=3zFoe+/ZG714jTMqvD6TMaQRtyoAtwec8AKt3TSFZKo=;
+ b=OP7NFloIO7XOX73v+xrvwrMMSXDqmwLSOJi6+zPgEQe881Nwl7sGj+IBnilJbsQG7ebY
+ mldU7pKubvK3bcvZSduKYLywZxbWW+3TwlHJuwJoTH+ie48hPDZaeL+Rf0rLid2P1mOn
+ Y15Hi3xdY0TICfaKWmaPSpl5qxD/0va1N1iV5m4YMB8vsLxFg7xaFcdgKva4Ala3F044
+ L+zHKdYkERaHBATA7HvxhNTSInKWmb3e1URkhEjTtRLL+LOwIbkbeLZi2EBd/gD9zYCg
+ xZTxuh3BN76MaTBMfKFf27qgolm5dXIQJb7ipGvaeh2+gS5oeSXJKA4cxlFQrd7cORjP ng== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pmq95debm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 31 Mar 2023 06:18:35 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 32V6IV6w013884;
+        Fri, 31 Mar 2023 06:18:31 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTPS id 3pht1knm21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Fri, 31 Mar 2023 06:18:31 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32V6IVhB013873;
+        Fri, 31 Mar 2023 06:18:31 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 32V6IVRN013870;
+        Fri, 31 Mar 2023 06:18:31 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id 8A2DC4EE8; Fri, 31 Mar 2023 11:48:30 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        mani@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
+        kw@linux.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v5 0/5] Add PCIe EP support for SDX65
+Date:   Fri, 31 Mar 2023 11:48:17 +0530
+Message-Id: <1680243502-23744-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: KUUgbUpRuyiNz1KUWhcFPXO_H6YYOVBF
+X-Proofpoint-ORIG-GUID: KUUgbUpRuyiNz1KUWhcFPXO_H6YYOVBF
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-31_02,2023-03-30_04,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 clxscore=1015
+ lowpriorityscore=0 mlxlogscore=715 adultscore=0 spamscore=0
+ impostorscore=0 phishscore=0 bulkscore=0 mlxscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303310050
+X-Spam-Status: No, score=0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 08:32:27PM +0900, Shunsuke Mie wrote:
-> This patchset introduces testing through continuous transfer to the PCI
-> endpoint tests. The purpose is to find bugs that may exist in the endpoint
-> controller driver. This changes able to find bugs in the DW EDMA driver and
-> this patchset includes the fix.
-> 
-> This bug does not appear in the current tests because these synchronize to
-> finish with every data transfer. However, the problem occurs with
-> continuous DMA issuances. The continuous transfers are required to get high
-> throughput and low latency. Therefore, the added tests will enable
-> realistic transfer testing.
-> 
-> This patchset is divided into three parts:
-> - Remove duplicated definitions and improve some code [1-6/11]
-> - Add continuous transfer tests [7-9/11]
-> - Fix for the DW EDMA driver bug [10,11/11]
-> 
-> This patchset has beed tested on RCar Spidar that has dw pci edma chip.
-> 
+Hi,
 
-If you want maintainers to review the patches separately, please remove the RFC
-tag. Unless you are looking for some overall feedback about the approach.
+Changes in v5:
+ - Addressed some minor comments from Konrad
+ - Rebased on top of 6.3-rc5.
 
-But we are in the process of migrating the existing test under tools to
-Kselftest framework [1]. Until then, we cannot accept patches improving the
-existing test code. So please respin the patches on top of the Kselftest patch
-once it got posted. It's already due for some time :/
+Changes in v4:
+ - Addressed comment from Dmitry to move the gpios to the board file.
 
-Also the subject should mention "PCI endpoint".
+Changes in v3:
+ - Removing the applied patch.
+ - Addressing some of the compile time issues missed in v2.
 
-- Mani
+Changes in v2:
+ - Addressing comments from Konrad and Dmitry.
+ - Rebased on top of 6.3-rc1.
 
-[1] https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
+This series adds the devicetree support for PCIe PHY and PCIe EP on SDX65.
+The PCIe EP is enabled on SDX65 MTP board.
 
-> Shunsuke Mie (11):
->   misc: pci_endpoint_test: Aggregate irq_type checking
->   misc: pci_endpoint_test: Remove an unused variable
->   pci: endpoint: function/pci-epf-test: Unify a range of time
->     measurement
->   PCI: endpoint: functions/pci-epf-test: Move common difinitions to
->     header file
->   MAINTAINERS: Add a header file for pci-epf-test
->   misc: pci_endpoint_test: Use a common header file between endpoint
->     driver
->   PCI: endpoint: functions/pci-epf-test: Extend the test for continuous
->     transfers
->   misc: pci_endpoint_test: Support a test of continuous transfer
->   tools: PCI: Add 'C' option to support continuous transfer
->   dmaengine: dw-edma: Fix to change for continuous transfer
->   dmaengine: dw-edma: Fix to enable to issue dma request on DMA
->     processing
-> 
->  MAINTAINERS                                   |   1 +
->  drivers/dma/dw-edma/dw-edma-core.c            |  30 ++-
->  drivers/misc/pci_endpoint_test.c              | 132 ++++--------
->  drivers/pci/endpoint/functions/pci-epf-test.c | 199 ++++++++----------
->  include/linux/pci-epf-test.h                  |  67 ++++++
->  include/uapi/linux/pcitest.h                  |   1 +
->  tools/pci/pcitest.c                           |  13 +-
->  7 files changed, 231 insertions(+), 212 deletions(-)
->  create mode 100644 include/linux/pci-epf-test.h
-> 
-> -- 
-> 2.25.1
-> 
+Thanks,
+Rohit.
+
+Rohit Agarwal (5):
+  dt-bindings: PCI: qcom: Add SDX65 SoC
+  ARM: dts: qcom: sdx65: Add support for PCIe PHY
+  ARM: dts: qcom: sdx65: Add support for PCIe EP
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe PHY
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe EP
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  2 +
+ arch/arm/boot/dts/qcom-sdx65-mtp.dts               | 51 ++++++++++++-
+ arch/arm/boot/dts/qcom-sdx65.dtsi                  | 87 ++++++++++++++++++++++
+ 3 files changed, 137 insertions(+), 3 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.7.4
+
