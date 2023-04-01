@@ -2,61 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C0216D2AE4
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Apr 2023 00:06:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EC51D6D302B
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Apr 2023 13:27:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233311AbjCaWGh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 31 Mar 2023 18:06:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36048 "EHLO
+        id S229568AbjDAL1c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Apr 2023 07:27:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37886 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233153AbjCaWGg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 31 Mar 2023 18:06:36 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4870120619;
-        Fri, 31 Mar 2023 15:06:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DE963B8326D;
-        Fri, 31 Mar 2023 22:06:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6514CC433EF;
-        Fri, 31 Mar 2023 22:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680300392;
-        bh=KDwb7fsPK92TjAEvcMkgy5oGXqF/5crJUrOmoCb1hGg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=DrkfUMZEdL6QXbLjIa3FesA4KT10pvoubz+MJ5JNG3zqmmKrqCJDxlsBQzbDKqbUI
-         ll0J9u3Cg1tN8yvtGpwXmLPNY+u1kwEmZ0Uxcg5v1pesVLcZpNEKIiqgTXhKqv2deg
-         pR+bhQ9FS5SM0ELO+JrghoDYwKfkwD9Ycd+TpcxKpOIWFNaxiaVhTR36YraLQdUZSX
-         SZkgWy4RtOjZ7AceevQirL7ZOq1nfCEQfg0pZzSbb/kazQiELMMoR1kS9FGQfhlw+O
-         Jp9ICZ59qZaju3KXgG7Pj4n3pFMoMONzyn+Az13HvYmacNh9/S++OPC+PK8TIsgYKT
-         FPHMaINrjhtaA==
-Date:   Fri, 31 Mar 2023 17:06:30 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ben Greear <greearb@candelatech.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bjorn@helgaas.com, LKML <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 5.4 182/389] PCI/portdrv: Dont disable AER reporting in
- get_port_device_capability()
-Message-ID: <20230331220630.GA3151299@bhelgaas>
+        with ESMTP id S229792AbjDAL11 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Apr 2023 07:27:27 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38D7425457;
+        Sat,  1 Apr 2023 04:27:02 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 331BQYQh094885;
+        Sat, 1 Apr 2023 06:26:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1680348394;
+        bh=W+MXFnEfkopbtJFIpkBc7tUZLZW+yMtB+YrUMRSQcG0=;
+        h=From:To:CC:Subject:Date;
+        b=mgRPcQv+q/e6yxTsEJg7RYwmg32/ILnRg+5mj3jFCuz+Y4FCiZymV5fJyfydZs+8v
+         qT8dBL3/NCFMZxcXMrx519S/AiAGFpEtynCaGmLFOW3YYq+7aBsQJVLB6i8XHwGoWZ
+         9lC1vYCY2ZUvT0woMZhY5mSbyUiMyzJiAS2QBNb4=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 331BQYdj120059
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 1 Apr 2023 06:26:34 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Sat, 1
+ Apr 2023 06:26:34 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
+ Frontend Transport; Sat, 1 Apr 2023 06:26:34 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 331BQXkn005537;
+        Sat, 1 Apr 2023 06:26:34 -0500
+From:   Achal Verma <a-verma1@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
+        Anindita Das <dasa@cadence.com>,
+        Yuan Zhao <yuanzhao@cadence.com>,
+        Milind Parab <mparab@cadence.com>
+CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Achal Verma <a-verma1@ti.com>
+Subject: [PATCH v12 0/5] PCI: add 4x lane support for pci-j721e controllers
+Date:   Sat, 1 Apr 2023 16:56:28 +0530
+Message-ID: <20230401112633.2406604-1-a-verma1@ti.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dfa04c4-e0cc-f265-5935-254f43db931b@candelatech.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,68 +71,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc iwlwifi folks]
+Adding of additional support to Cadence PCIe controller (i.e. pci-j721e.c)
+for up to 4x lanes, and reworking of driver to define maximum lanes per
+board configuration.
 
-Re: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
-get_port_device_capability()")
+Changes from v1:
+* Reworked 'PCI: j721e: Add PCIe 4x lane selection support' to not cause
+  regressions on 1-2x lane platforms
 
-On Wed, Mar 29, 2023 at 04:17:29PM -0700, Ben Greear wrote:
-> On 8/30/22 3:16 PM, Ben Greear wrote:
-> ...
+Changes from v2:
+* Correct dev_warn format string from %d to %u since lane count is a
+  unsigned integer
+* Update CC list
 
-> I notice this patch appears to be in 6.2.6 kernel, and my kernel logs are
-> full of spam and system is unstable.  Possibly the unstable part is related
-> to something else, but the log spam is definitely extreme.
-> 
-> These systems are fairly stable on 5.19-ish kernels without the patch in
-> question.
+Changes from v3:
+* Use the max_lanes setting per chip for the mask size required since
+  bootloader could have set num_lanes to a higher value that the
+  device tree which would leave in an undefined state
+* Reorder patches do the previous change to not break bisect
+* Remove line breaking for dev_warn to allow better grepping and since
+  no strict 80 columns anymore
 
-Hmmm, I was going to thank you for the report, but looking closer, I
-see that you reported this last August [1] and we *should* have
-pursued it with the iwlwifi folks or figured out what the PCI core is
-doing wrong, but I totally dropped the ball.  Sorry about that.
+Changes from v4:
+* Correct invalid settings for j7200 PCIe RC + EP
+* Add j784s4 configuration for selection of 4x lanes
 
-To make sure we're all on the same page, we're talking about
-8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
-get_port_device_capability()") [2],
-which is present in v6.0 and later [3] but not v5.19.16 [4].
+Changes from v5:
+* Dropped 'PCI: j721e: Add warnings on num-lanes misconfiguration' patch
+  from series
+* Reworded 'PCI: j721e: Add per platform maximum lane settings' commit
+  message
+* Added yaml documentation and schema checks for ti,j721e-pci-* lane
+  checking
 
-> Here is sample of the spam:
-> 
-> [ 1675.547023] pcieport 0000:03:02.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> [ 1675.556851] pcieport 0000:03:02.0:   device [10b5:8619] error status/mask=00100000/00000000
-> [ 1675.563904] pcieport 0000:03:02.0:    [20] UnsupReq               (First)
-> [ 1675.569398] pcieport 0000:03:02.0: AER:   TLP Header: 34000000 05001f10 00000000 88c888c8
-> [ 1675.576296] iwlwifi 0000:05:00.0: AER: can't recover (no error_detected callback)
+Changes from v6:
+* Fix wordwrapping in commit messages from ~65 columns to correct 75
+  columns
+* Re-ran get_maintainers.pl to add missing maintainers in CC
 
-The TLP header says this is an LTR message from 05:00.0.  Apparently
-the bridge above 05:00.0 is 03:02.0, which logged an Unsupported
-Request error for the message, probably because 03:02.0 doesn't have
-LTR enabled.
+Changes from v7:
+* Addressed review comments in ti,j721e-pci-ep.yaml and
+  ti,j721e-pci-host.yaml from v6
+* Added warn message if num-lanes property value is invalid.
+* Addressed build issue reported in
+  https://lore.kernel.org/all/202211260346.4JvNnDdc-lkp@intel.com/
 
-Can you collect the output of "sudo lspci -vv"?  Does this happen even
-before loading the iwlwifi driver?  I assume there are no hotplug
-events before this happens?
+Changes from v8:
+* Use "const: 1" in ti,j721e-pci-ep.yaml and ti,j721e-pci-host.yaml
+  when num-lanes min and max values are equal.
 
-The PCI core enables LTR during enumeration for every device for which
-LTR is supported and enabled along the entire path up to a Root Port.
-If it does that wrong, you might see errors even before loading
-iwlwifi.
+Changes from v9:
+* Rebase on next-20230315
 
-I see that iwlwifi *reads* PCI_EXP_DEVCTL2_LTR_EN in
-iwl_pcie_apm_config(), which should be safe.  I don't see any writes,
-but the iwlwifi experts should know more about this.  There are a
-couple paths that do this, which looks somehow related:
+Changes from v10:
+* Rebase on next-20230317
 
-  __iwl_mvm_mac_start
-    iwl_mvm_up
-      iwl_mvm_config_ltr
-        if (trans->ltr_enabled)
-          iwl_mvm_send_cmd_pdu(mvm, LTR_CONFIG, ...)
+Changes from v12:
+* Rebase on next-20230331
 
-Bjorn
+Matt Ranostay (5):
+  dt-bindings: PCI: ti,j721e-pci-*: add checks for num-lanes
+  PCI: j721e: Add per platform maximum lane settings
+  PCI: j721e: Add PCIe 4x lane selection support
+  dt-bindings: PCI: ti,j721e-pci-*: add j784s4-pci-* compatible strings
+  PCI: j721e: add j784s4 PCIe configuration
 
-[1] https://lore.kernel.org/all/47b775c5-57fa-5edf-b59e-8a9041ffbee7@candelatech.com/#t
-[2] https://git.kernel.org/linus/8795e182b02d
-[3] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/pcie/portdrv_core.c?id=v6.0#n223
-[4] https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/pci/pcie/portdrv_core.c?id=v5.19.16#n223
+ .../bindings/pci/ti,j721e-pci-ep.yaml         | 39 ++++++++++++++--
+ .../bindings/pci/ti,j721e-pci-host.yaml       | 39 ++++++++++++++--
+ drivers/pci/controller/cadence/pci-j721e.c    | 45 ++++++++++++++++---
+ 3 files changed, 112 insertions(+), 11 deletions(-)
+
+-- 
+2.25.1
+
