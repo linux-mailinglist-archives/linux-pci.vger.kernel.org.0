@@ -2,129 +2,86 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A13406D3027
-	for <lists+linux-pci@lfdr.de>; Sat,  1 Apr 2023 13:27:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A45CA6D30D9
+	for <lists+linux-pci@lfdr.de>; Sat,  1 Apr 2023 14:52:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229940AbjDAL13 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 1 Apr 2023 07:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
+        id S229441AbjDAMwj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 1 Apr 2023 08:52:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjDAL10 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Apr 2023 07:27:26 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 534BC20318;
-        Sat,  1 Apr 2023 04:27:01 -0700 (PDT)
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 331BQgZr042843;
-        Sat, 1 Apr 2023 06:26:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1680348402;
-        bh=GGrsVB2NuWgQ/IDsTg782FJLIK98IZjp/7pCe7Mspxs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=ghTddNQ8/8IEtQRtPv8gO5hu2x+JDdmuDwnSRM/h4BZyhD6gXrHQow5b65S51/gUe
-         mXv4rxWsyyGQWotu7uy/nguIOkKjqJipQy81Uz9+YTKgD3NWssNI+wZH4duq9Ecabl
-         EBU6zwWcDs/aOmxksYiC5pf91qcsK4IsylPYRi9A=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 331BQghu120102
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sat, 1 Apr 2023 06:26:42 -0500
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16; Sat, 1
- Apr 2023 06:26:41 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.16 via
- Frontend Transport; Sat, 1 Apr 2023 06:26:41 -0500
-Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 331BQfH0020881;
-        Sat, 1 Apr 2023 06:26:41 -0500
-From:   Achal Verma <a-verma1@ti.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Dhananjay Vilasrao Kangude <dkangude@cadence.com>,
-        Anindita Das <dasa@cadence.com>,
-        Yuan Zhao <yuanzhao@cadence.com>,
-        Milind Parab <mparab@cadence.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Achal Verma <a-verma1@ti.com>
-Subject: [PATCH v12 5/5] PCI: j721e: add j784s4 PCIe configuration
-Date:   Sat, 1 Apr 2023 16:56:33 +0530
-Message-ID: <20230401112633.2406604-6-a-verma1@ti.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230401112633.2406604-1-a-verma1@ti.com>
-References: <20230401112633.2406604-1-a-verma1@ti.com>
+        with ESMTP id S229379AbjDAMwi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 1 Apr 2023 08:52:38 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F8DC15F;
+        Sat,  1 Apr 2023 05:52:38 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id w4so23908871plg.9;
+        Sat, 01 Apr 2023 05:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680353557;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=VBis5QrLUANy/l4geKyouqDW7rHm0E9crfbtdXx3L1Y=;
+        b=nkQzqi7GYYsC6Wwi3wGZq83AwoKNq38MXY77cv2Iaz9hpR4s+yTBdK4bUkJ3cDzhJ+
+         uKc/JlwN3upRzErB+z6wywzu53qqzUE0OVTp0WTgfuImI7qaRb4Htd5KSVCrrVrp6PWj
+         iVYNBA91c8HWSjZre9NEDuSzQT2SwjubOIjkSvMnqo6KSpdpynwDEvTTasA6Rs8VTntr
+         u3A3V/28F6nbJ5FgdvyijCA0Di78sMlqkZ7ZGheDAAVB2acTpwC9LG208+/Ai5X7D6Z+
+         C7IaRjeDMoeHMKDMjn8VP0IfaBWGJHubsV4eHa996u0qZhGwkb57uuIwKGECqdKZd8gP
+         x7Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680353557;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VBis5QrLUANy/l4geKyouqDW7rHm0E9crfbtdXx3L1Y=;
+        b=LsBaX8+w+Ld65AUNT0GdWXeLB1IVVnMnEXjVkTAcpgUHDB0F6uivo0s6/6BU7w/iJd
+         l4Zk6Yi1vddoW9KLFQmW94mjcz53bqoSnOxN03TV2YUcsTl8cE1rzY1+C97eQMcgdPwS
+         kyCY0a6zoj5DuXCOAsBjp+ElTz5VRsgyPpfJ/vkTZ8pEEgQLtNImPce/B/wyHGrA95nH
+         1T9KiclEeWQOmcTgdQI32HiWdwqzCAgsYPuzcDABnvuRirOR7XlJfajw/SLelfDpfSiX
+         51QmFZGTr1sd0yy9gOSm8oqv+HBr4K1fCfZgL7S9oVJSK8vdnGXkLa9ZrKZhnYKxD1Mh
+         KwIw==
+X-Gm-Message-State: AAQBX9cJz4iYR3+89kaD7nU5wTxWAG9nqjnHrVWubZgRuyZXWsXi9oIm
+        Vkr4IYaiyI9PDceJk1PEtnvv9sJhuLp9FoKg1Sk=
+X-Google-Smtp-Source: AKy350aBQ5Viilm205H/7PeNtR7j7Q+xbUSlXoxw/09oXNtPLyPgTt3SEFFynepL2rYf3kMc4Lxso5YVyTNfuTumRC8=
+X-Received: by 2002:a17:903:228a:b0:1a2:1674:3902 with SMTP id
+ b10-20020a170903228a00b001a216743902mr11113845plh.10.1680353557086; Sat, 01
+ Apr 2023 05:52:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+References: <m2fs9lgndw.fsf@gmail.com> <20230331194249.GA3247600@bhelgaas>
+In-Reply-To: <20230331194249.GA3247600@bhelgaas>
+From:   Donald Hunter <donald.hunter@gmail.com>
+Date:   Sat, 1 Apr 2023 13:52:25 +0100
+Message-ID: <CAD4GDZwgOVn4dR2qiqrQWz-fw52aT9uyv22NCdo+hY4HJEgofQ@mail.gmail.com>
+Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
+ with igb
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Matt Ranostay <mranostay@ti.com>
+On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
+> because it apparently has an ACPI firmware node, and there's something
+> we don't expect about its status?
 
-Add PCIe configuration for j784s4 platform which has 4x lane support.
+Yes they are built-in, to my knowledge.
 
-Tested-by: Achal Verma <a-verma1@ti.com>
-Signed-off-by: Matt Ranostay <mranostay@ti.com>
-Reviewed-by: Roger Quadros <rogerq@kernel.org>
-Signed-off-by: Achal Verma <a-verma1@ti.com>
----
- drivers/pci/controller/cadence/pci-j721e.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> Hopefully Rob will look at this.  If I were looking, I would be
+> interested in acpidump to see what's in the DSDT.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 58dcac9021e4..cce7b391f931 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -330,6 +330,20 @@ static const struct j721e_pcie_data am64_pcie_ep_data = {
- 	.max_lanes = 1,
- };
- 
-+static const struct j721e_pcie_data j784s4_pcie_rc_data = {
-+	.mode = PCI_MODE_RC,
-+	.quirk_retrain_flag = true,
-+	.byte_access_allowed = false,
-+	.linkdown_irq_regfield = LINK_DOWN,
-+	.max_lanes = 4,
-+};
-+
-+static const struct j721e_pcie_data j784s4_pcie_ep_data = {
-+	.mode = PCI_MODE_EP,
-+	.linkdown_irq_regfield = LINK_DOWN,
-+	.max_lanes = 4,
-+};
-+
- static const struct of_device_id of_j721e_pcie_match[] = {
- 	{
- 		.compatible = "ti,j721e-pcie-host",
-@@ -355,6 +369,14 @@ static const struct of_device_id of_j721e_pcie_match[] = {
- 		.compatible = "ti,am64-pcie-ep",
- 		.data = &am64_pcie_ep_data,
- 	},
-+	{
-+		.compatible = "ti,j784s4-pcie-host",
-+		.data = &j784s4_pcie_rc_data,
-+	},
-+	{
-+		.compatible = "ti,j784s4-pcie-ep",
-+		.data = &j784s4_pcie_ep_data,
-+	},
- 	{},
- };
- 
--- 
-2.25.1
+I can get an acpidump. Is there a preferred way to share the files, or just
+an email attachment?
 
+> Bjorn
