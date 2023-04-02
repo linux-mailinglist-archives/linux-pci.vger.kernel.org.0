@@ -2,24 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20BF16D381C
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Apr 2023 15:32:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AE816D381A
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Apr 2023 15:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbjDBNcU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Apr 2023 09:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44156 "EHLO
+        id S229646AbjDBNbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Apr 2023 09:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDBNcT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Apr 2023 09:32:19 -0400
-Received: from mxout3.routing.net (mxout3.routing.net [IPv6:2a03:2900:1:a::8])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CB601B340;
-        Sun,  2 Apr 2023 06:32:18 -0700 (PDT)
-Received: from mxbox1.masterlogin.de (unknown [192.168.10.88])
-        by mxout3.routing.net (Postfix) with ESMTP id C4B5C61CDF;
-        Sun,  2 Apr 2023 13:13:23 +0000 (UTC)
+        with ESMTP id S229448AbjDBNbk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Apr 2023 09:31:40 -0400
+X-Greylist: delayed 601 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sun, 02 Apr 2023 06:31:38 PDT
+Received: from mxout2.routing.net (mxout2.routing.net [IPv6:2a03:2900:1:a::b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44B301B340;
+        Sun,  2 Apr 2023 06:31:38 -0700 (PDT)
+Received: from mxbox2.masterlogin.de (unknown [192.168.10.89])
+        by mxout2.routing.net (Postfix) with ESMTP id CEE775FBFE;
+        Sun,  2 Apr 2023 13:13:55 +0000 (UTC)
 Received: from frank-G5.. (fttx-pool-217.61.149.201.bambit.de [217.61.149.201])
-        by mxbox1.masterlogin.de (Postfix) with ESMTPSA id 8262B4092B;
-        Sun,  2 Apr 2023 13:12:01 +0000 (UTC)
+        by mxbox2.masterlogin.de (Postfix) with ESMTPSA id E3A711007F0;
+        Sun,  2 Apr 2023 13:13:54 +0000 (UTC)
 From:   Frank Wunderlich <linux@fw-web.de>
 To:     linux-mediatek@lists.infradead.org
 Cc:     Frank Wunderlich <frank-w@public-files.de>,
@@ -33,12 +34,12 @@ Cc:     Frank Wunderlich <frank-w@public-files.de>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org
 Subject: [PATCH] PCI: mediatek-gen3: handle PERST after reset
-Date:   Sun,  2 Apr 2023 15:11:19 +0200
-Message-Id: <20230402131119.98805-1-linux@fw-web.de>
+Date:   Sun,  2 Apr 2023 15:13:47 +0200
+Message-Id: <20230402131347.99268-1-linux@fw-web.de>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Mail-ID: 8b6dfb75-3da6-40a2-b803-4599ce6843ed
+X-Mail-ID: 0729ddf9-6bfe-4c25-9067-7616871ef223
 X-Spam-Status: No, score=0.0 required=5.0 tests=RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
         version=3.4.6
