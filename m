@@ -2,59 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4B0786D3875
-	for <lists+linux-pci@lfdr.de>; Sun,  2 Apr 2023 16:34:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1D826D38A3
+	for <lists+linux-pci@lfdr.de>; Sun,  2 Apr 2023 17:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbjDBOeb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 2 Apr 2023 10:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43528 "EHLO
+        id S229705AbjDBPCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 2 Apr 2023 11:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjDBOea (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Apr 2023 10:34:30 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56337DA;
-        Sun,  2 Apr 2023 07:34:12 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id z10so16010646pgr.8;
-        Sun, 02 Apr 2023 07:34:12 -0700 (PDT)
+        with ESMTP id S229646AbjDBPCT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 2 Apr 2023 11:02:19 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FA57A92;
+        Sun,  2 Apr 2023 08:02:18 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id l7so24926244pjg.5;
+        Sun, 02 Apr 2023 08:02:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680446052;
+        d=gmail.com; s=20210112; t=1680447738;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OoKAUsS1+OPv2yaj0HT7KaFR2MH6Yyn+hzIBLI7xgeI=;
-        b=ILEvwS91rgkWPiWhD7zih4rFjl7XNbDo2TWQbTQmLiSCIRjv76s9QPGoQlsN043vzN
-         yBk6Y2LTK6XhR/DZbwerQlmxtwoJMHabnz0iK2D/M5mc+CrRIQu5bw4kif3w/29NBgFB
-         pQo4K/fce8HBMfRPVNUOJ8p0MOYg+DuF2eam+iD9PbmBYo/qe0xqHdzKh8SbvXKXSIf3
-         g3YRkSHCV9F65Cyb3psaAYUq98SzfwGMlSbYu8O2YfHFBKJXzRCGbefzIfMm9pgNBnip
-         vE6MX1JqDKSopsTjGPu3sWDthzudvdLVTgr1w3M517g7uoeEM8mu1AUAhIUnOVdGwmh6
-         2c4g==
+        bh=0nHFl2mvT9SEziYPPu5VBnDl2VFGP+2KzbVNxuE05x4=;
+        b=EDk8Bawp/BWu0hZabk8SdfKWPv6Zavbl2B2bO2hSQdXkJzBNrcGhSkk8VAA0l/dlDG
+         LCCNUAjRhNxjRlUiAHh19RwJKlO2Z6XiieYuo536xiOnJi/6skOjW4JrbR6A+lxxMfd/
+         gr5cwsF1LntT9gRAeFseM1ombwQz1dqSbDZxTHbvPHENpDjsvXmJfcDwi1IzvWWPXSXA
+         wC0Bto6EoQqSiseaD9cPNhhUNOCBXBQOEGcfNsGZ/iwEcNFUyOIoHEMdqS6Rk6+FUSbo
+         zFfOfrrXS2GtdjUBjDqWQjyifLB6LQO/lZoyMWKJ8wOKuCBJN23iro0XX6P4igI5SeSE
+         DF/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680446052;
+        d=1e100.net; s=20210112; t=1680447738;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OoKAUsS1+OPv2yaj0HT7KaFR2MH6Yyn+hzIBLI7xgeI=;
-        b=jzW5sIvm2vNB3A9Rd/vaEp6coN+wIhTc93GamwME3zNz/lggV3nzP8T8ZMLdwxkeAe
-         4clsfraoEWG2smsnhvUfxLx8exL5mm+GrvrX6xOqyK1QfudTQpSq0pNekIws59A9zT1/
-         cs4d8MDn5lkDrPheJ/p7iiT5winbvmSUE7eFrpjr7y7b6S47ABuGrEM7kIrm7JWD98kK
-         4FDeRKjH4WBjl8QJZlLgcwJt5Q9Mlphg1WRv4UYeK+tWwL1CiH4+Pc/FyutbYiPy0bgr
-         DLN0zoATGcyTemwrz7rNqZ8oXe5jgKKFnjh53kku9/YjmHEJyPXY7Of2PYWiQVJlCyrG
-         33Xw==
-X-Gm-Message-State: AAQBX9cJ8bvIAWKYjHnQJVbDfIsy4U1oiCvbnzegZRqCJgB3ob5Gdq8y
-        7qPkiqsFjHYJ2jLR167oY5zO/i28UtCb9Qsx1zw=
-X-Google-Smtp-Source: AKy350YhREvdHCLaIM3E+GIkX8AqtxKuIacMDNv7RPZaGmpahRKm1+Oas+9LD694s7AeGD6aep3xqXszgN6JcVG8At4=
-X-Received: by 2002:a63:40c1:0:b0:4fd:5105:eb93 with SMTP id
- n184-20020a6340c1000000b004fd5105eb93mr8830444pga.3.1680446051785; Sun, 02
- Apr 2023 07:34:11 -0700 (PDT)
+        bh=0nHFl2mvT9SEziYPPu5VBnDl2VFGP+2KzbVNxuE05x4=;
+        b=U25zc683S4LlgW4+nyD9FgNADQnd+Iv5twNo9WfCAZdYJDeR5DGtH1PY9FvFkofd/D
+         SksHqfD94K/YGzenr931evEyeyto+nyymkLlJWxuWH8y+39EYA8ks22kMWPkWWW+s5Jq
+         F6WD7RHOcyISge9YkVmwXjFRX8WsR4tUHl/jMjxxElhOQ59h/DyNOm+iRaXkBeF9sHCX
+         QmNVv3H5sdW6+UUrDtOfDLH/PhK2t0vUem/qI/wckRI2QUlpeXAK6HPbqtBIwSuB9u9j
+         bK2ZLpWUGwbBFyPAgUbofOFzaXKQjOnBwTFQnqVuWnSEPXJbQihhNOA2zf3tqLs5IWh9
+         bm9g==
+X-Gm-Message-State: AAQBX9fPxdIVlc0pZxpmMtAotdyn4tt0MsRQjvJF1KZa0rGfmU4QjJEZ
+        mvQgGmpwNi07oSz1YI6gS6yT+Q+eoxsU4T6oIzweVQFvNpCVELEe
+X-Google-Smtp-Source: AKy350YsVaUkNEA209CmY0NkgezF/KhglKHV+8Qx6xeUQ3qP2orfWFQpYG4Kq8aQzHLEwsoXgK7sGYsZAu+ON/8MGeA=
+X-Received: by 2002:a17:902:868f:b0:1a0:51f6:a252 with SMTP id
+ g15-20020a170902868f00b001a051f6a252mr11425184plo.3.1680447738327; Sun, 02
+ Apr 2023 08:02:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230329163107.GA3061927@bhelgaas> <0603c75d-82d3-01d5-ffe7-b648c1f02f0e@linux.intel.com>
-In-Reply-To: <0603c75d-82d3-01d5-ffe7-b648c1f02f0e@linux.intel.com>
+References: <CAEm4hYW3zvte_kdWMFrv-pKVijQaL7KzbE12WHuO14s73ExUbQ@mail.gmail.com>
+ <20230329163107.GA3061927@bhelgaas>
+In-Reply-To: <20230329163107.GA3061927@bhelgaas>
 From:   Xinghui Li <korantwork@gmail.com>
-Date:   Sun, 2 Apr 2023 22:34:00 +0800
-Message-ID: <CAEm4hYXwGuuZiKb9psXPyau+zKq-w=VboJEuYbS0FbY-iT-EmA@mail.gmail.com>
+Date:   Sun, 2 Apr 2023 23:02:07 +0800
+Message-ID: <CAEm4hYXLNP6pcCj5Av35sRG6kCOF0H3+a7VfTtFfGduMgcXJhA@mail.gmail.com>
 Subject: Re: [PATCH v4] PCI: vmd: Add the module param to adjust MSI mode
-To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>, kbusch@kernel.org,
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
         jonathan.derrick@linux.dev, lpieralisi@kernel.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Xinghui Li <korantli@tencent.com>
@@ -70,24 +71,107 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 2:49=E2=80=AFPM Patel, Nirmal
-<nirmal.patel@linux.intel.com> wrote:
+On Thu, Mar 30, 2023 at 12:31=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org>=
+ wrote:
 >
-> How about adding a boolean flag by comparing user input for module
-> parameter msi_remap? and add the flag at
+> On Wed, Mar 29, 2023 at 04:57:08PM +0800, Xinghui Li wrote:
+> > On Wed, Mar 29, 2023 at 5:34=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > > It would also be nice to include a hint about why a user would choose
+> > > "on" or "off".  What is the performance effect?  What sort of I/O
+> > > scenario would lead you to choose "on" vs "off"?
+> > >
+> > Before this patch, I sent the patch named :
+> > PCI: vmd: Do not disable MSI-X remapping in VMD 28C0 controller
+> > (patchwork link:
+> > https://patchwork.kernel.org/project/linux-pci/patch/20221222072603.117=
+5248-1-korantwork@gmail.com/)
+> > We found the 4k rand read's iops could drop 50% if 4 NVMEs were
+> > mounted in one PCIE port with VMD MSI bypass.
+> > I suppose this is because the VMD Controller can aggregate interrupts.
+> > But those test result is so long that I didn't add them to this patch
+> > commit log.
+> > If you believe it is necessary, I will try to add some simple instructi=
+ons
 >
->     - if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) || msi_flag
->         || offset[0] || offset[1])
+> I don't think we need detailed performance numbers, but we need
+> something like:
 >
-> Correct if I am wrong, but in this way we can cover all the cases.
-> If user adds msi_remap=3Don, msi_flag=3Dtrue and enables remapping.
-> If user adds msi_remap=3Doff, msi_flag=3Dfalse and disables remapping.
-> If user doesn't add anything, msi_flag=3Dfalse and decision will be
-> made same as current implementation. This will cover guest OS case
-> as well.
+>   - "msi_remap=3Doff" improves interrupt handling performance by
+>     avoiding the VMD MSI-X domain interrupt handler
 >
-Sorry, I don't quite get your point. How is msi_flag assigned?
-Do you mean when msi_remap=3Dno, the msi_flag is assigned as true?
-And msi_remap=3Doff, the msi_flag is assigned as false?
+>   - But "msi_remap=3Don" is needed when ...?
+>
+In the patch I send in last email, We speculate that the VMD
+Controller aggregate interrupts,
+making the PCIe port less stressed and improving iops. In this
+case(lots of 4k random IO), if we enable the VMD MSI
+remapping, we found the interrupts from VMD Controller's MSI are less
+and the IOPS is much higher.
+> > > ee81ee84f873 ("PCI: vmd: Disable MSI-X remapping when possible")
+> > > suggests that MSI-X remapping (I assume the "msi_remap=3Don" case):
+> > >
+> > >   - Limits the number MSI-X vectors available to child devices to the
+> > >     number of VMD MSI-X vectors.
+> > >
+> > >   - Reduces interrupt handling performance because child device
+> > >     interrupts have to go through the VMD MSI-X domain interrupt
+> > >     handler.
+> > >
+> > > So I assume "msi_remap=3Doff" would remove that MSI-X vector limit an=
+d
+> > > improve interrupt handling performance?
+> > >
+> > > But obviously there's more to consider because those are both good
+> > > things and if we could do that all the time, we would.  So there must
+> > > be cases where we *have* to remap.  ee81ee84f873 suggests that not al=
+l
+> > > VMD devices support disabling remap.  There's also a hint that some
+> > > virt configs require it.
+> > >
+> > I used to just want to disable 28C0's VMD MSI bypass by default.
+> > But Nirmal suggested the current method by adjusting the param.
+> > Because he and other reviewers worry there are some other scenarios we
+> > didn't consider.
+> > Adding a method to adjust VMD'S MSI-X mode is better.
+>
+> This commit log doesn't outline any of those other scenarios, and it
+> doesn't say anything about when "msi_remap=3Don" or "msi_remap=3Doff"
+> would be necessary or desired, so I have no idea how users are
+> supposed to figure out whether or not to use this parameter.
+>
+I do miss this part.  I'm sorry I ignored the users outside the
+community or this discussion.
+I will add the necessary guidelines.
+> > > This patch doesn't enforce either of those things.  What happens if
+> > > the user gets it wrong?
+> >
+> > If I am wrong, please feel free to correct me at any time.
+> > I place the "vmd_config_msi_remap_param" that is VMD MSI-X's mode
+> > param configuring helper front
+> > "vmd_enable_domain". So, It will not change the logic disabling
+> > remapping from ee81ee84f873, such as
+> > "Currently MSI remapping must be enabled in guest passthrough mode".
+> > So, if the user config the wrong type, it will not work, and they can
+> > find it by dmesg.
+>
+> That's kind of a problem.  I'm not in favor of something failing and
+> the user having to debug it via dmesg.  That causes user frustration
+> and problem reports.
+What about adding a sysfs node for it in VMD PCI bus dir, which allows
+users to catch VMD's MSI current working mode?
+>
+> I don't know what "guest passthrough mode" is.  Can you detect that
+> automatically?
+I quote this from the commit ee81ee84f873's comment, it can be detected by =
+the
+logic like this:
+if (!(features & VMD_FEAT_CAN_BYPASS_MSI_REMAP) ||
+offset[0] || offset[1])
+I just want to answer your comment: "There's also a hint that some
+virt configs require it."
+This patch will not modify the logic of determining whether MSI
+remapping is enabled
+when running VMD in Guest.
 
 Thanks~
