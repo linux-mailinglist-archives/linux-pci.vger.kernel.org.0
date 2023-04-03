@@ -2,110 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88B216D3D24
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 08:11:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB26D6D3DE0
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 09:12:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231416AbjDCGLd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Apr 2023 02:11:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56814 "EHLO
+        id S229945AbjDCHMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Apr 2023 03:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229933AbjDCGLb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 02:11:31 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED37359C8;
-        Sun,  2 Apr 2023 23:11:29 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id r11so112711827edd.5;
-        Sun, 02 Apr 2023 23:11:29 -0700 (PDT)
+        with ESMTP id S229933AbjDCHMW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 03:12:22 -0400
+Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F1459D2;
+        Mon,  3 Apr 2023 00:12:21 -0700 (PDT)
+Received: by mail-oi1-x236.google.com with SMTP id w133so21004403oib.1;
+        Mon, 03 Apr 2023 00:12:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680502288;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=+PPixoHRDJ+Gnyytgct7eIf2W8PC3hRBuJOLjuDKdhY=;
-        b=iUB0JuzYzSTrZD/+G5G3iSZ+1srHcDapp+2yS8gUivSygEUOGHpj4cZmiOWxHvgQTy
-         iE+RPPaYIQ5Qi0ZZmd24zNSLYCD3sJsMCKGGJGByokv6zZ2zCyyW5xNTZ5zOplMQGJ0R
-         vgUFHkowl5yEBomYvwjill8yyhPtqe0AKiXgA57CND9aKt2qCFWEI7/f/0+r0pMXCYEM
-         nhsA71AVUwIGCI1HggH0vhhR099IYLKEehb+2/sLHOUErs2O5i5gF49rZge+iRglsVoC
-         t06dNmIb1MPArzL9pQYEGx9DCS+7iALBmKTPCavs4MrxLEwDUHFXfT6L8yLSh6o6H+DO
-         sTNQ==
+        d=gmail.com; s=20210112; t=1680505940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=i1SfDNd+VrFwNjaXfizqk9NcTy81e6CW019Ll/yqoek=;
+        b=I0SU7OovSTU8vdPUMuMFHukYDjMWTGVJNKgkDgIZUqr7l8Cs1IUs95+Aos8M2VjWuf
+         9xF2wgRZgbebJaItTe1zpLP0lNjz+K+1v3sZ/QesigYDZIBeJtvY2iAfIMgm2MJGyu0r
+         +vn2KEykuWroOtsIkqN2d/o0fH8vkNc/dwX5aXgp86Hbw2WySCfeUOxO5sZGgVB7dkzU
+         xS7g087xANtTyUhNiNYvKyM9WiyXvkWdInzKImt1f1JMQvwbnVVYb+CHtPvuTik4etwc
+         6SeqXzJkzzH8+2zREa3/P72jXQsKrFwmU8PH80Oraz/P77iNA1Idnf5d2rm8RsZf7X5m
+         422Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680502288;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+PPixoHRDJ+Gnyytgct7eIf2W8PC3hRBuJOLjuDKdhY=;
-        b=bBCb7xF1KpOYjlso8EBMVI40mQOgN1sNqymNF+o/pTd9p6b/uUIFrI5lQzy4W2IXjf
-         kGY7JfqPHufysnCt0ldWYP55h4zZh51S/5AAeiMoy6jw942y7LgA9a+y1dvwqg3wenE0
-         L2xO6Od6kfwrNrKfAPWGjhuIqX7qZiDADRtctneTxlWEZbP7cnmTPzeMHRPFL7jXo7UE
-         lk3gw8g9U+2kMZMkj4jogI0KCF75XGVZ8yVDbxA0dzsCAnW4St55XayFEcbHSkpXLStR
-         nPyCEsJ5HzT/nX4e8eCLqKlAvm//mnOCtMGfgQYZzPhc14IiJuGnHrFBxs3dglewWPJp
-         2/tw==
-X-Gm-Message-State: AAQBX9djJ70UKfSnTojEGZIcVK6rK0gv0DNLx9IT1/zJqB4bNSwakcQN
-        k7IbhpNK76Va45v4CJAmRCs=
-X-Google-Smtp-Source: AKy350bBekRezxNQa7MFP8TwmpOwouUosfhIi/lGMrCD5/RMtWc0098xCYnOuGzvNELlfMlv0AK2gA==
-X-Received: by 2002:a17:906:eca1:b0:920:254c:1e2d with SMTP id qh1-20020a170906eca100b00920254c1e2dmr36630296ejb.39.1680502288354;
-        Sun, 02 Apr 2023 23:11:28 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id q15-20020a17090676cf00b00947c0cecceasm3471757ejn.206.2023.04.02.23.11.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Apr 2023 23:11:28 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 09:09:01 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     oe-kbuild@lists.linux.dev, ye.xingchen@zte.com.cn, lkp@intel.com,
-        oe-kbuild-all@lists.linux.dev, lpieralisi@kernel.org, kw@linux.com,
+        d=1e100.net; s=20210112; t=1680505940;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i1SfDNd+VrFwNjaXfizqk9NcTy81e6CW019Ll/yqoek=;
+        b=tZQS0fsuPyNwd8MxYDMBjy+LYCYkHkPvnc6ziNhcOpzXtLlfr+zvEQLvWlJWk93xQt
+         JvShELOKlEb3/qeeXvja74J0vyvSHpHjkIiC49ZcQ+yCAKjoKTx5qIFC2bV79oUBpuQ1
+         2IZhQhbnw+2wbE9ugX3CGMlM6ejLodLa1EEr0okV5LdixtWRjnWBKHu5EDQZN069H4JY
+         QEhcDpVSnLqiaTNFHODESZNy4/6I2bYZTmlUDjpq4F002SIY6ptnCP04+HaYx/9z4o8T
+         KjvtE46TcOQq9v8hR9v2C/lUYLLPpzg2dLKWQFcTNqfH0SrUXKCNiRghAC9YlNLrwkcC
+         Tcbg==
+X-Gm-Message-State: AAQBX9ei6N6tHOGsy/PCQfRxp6LuK7OLCXsc7YWwmp9hdEfH3wkE397s
+        9JXIE+XubwNrDudf6aHukCSUS42d65/uPyyJwsg=
+X-Google-Smtp-Source: AKy350bEOx3+kI4bEFAmguRgGFpajFzMK1Xxy0w5PuU9zZohvNOMzY/4FC5QxTzdPtZiZxS5+G3G3MA6I0lkeSLVGUA=
+X-Received: by 2002:a05:6808:3c8:b0:389:6b0e:9d94 with SMTP id
+ o8-20020a05680803c800b003896b0e9d94mr4563991oie.0.1680505940475; Mon, 03 Apr
+ 2023 00:12:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <202303231145121987818@zte.com.cn> <CAMhs-H_-kQ0FGP3L1xJ=ec_xJ59a2OztMLLjEQmQfYFOEa4DfA@mail.gmail.com>
+ <2e4f27f0-a4ac-4523-8f90-695a62973bd0@kili.mountain>
+In-Reply-To: <2e4f27f0-a4ac-4523-8f90-695a62973bd0@kili.mountain>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 3 Apr 2023 09:12:08 +0200
+Message-ID: <CAMhs-H8beY3AO83NkTM2_YYdcsqtv7Em01zqSE6wtPNdex8Dpw@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mt7621: Use dev_err_probe()
+To:     Dan Carpenter <error27@gmail.com>
+Cc:     ye.xingchen@zte.com.cn, lpieralisi@kernel.org, kw@linux.com,
         robh@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
         angelogioacchino.delregno@collabora.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] PCI: mt7621: Use dev_err_probe()
-Message-ID: <4cfaa4eb-24ff-4129-b549-bd5a66352e9b@kili.mountain>
-References: <202303231145121987818@zte.com.cn>
- <22081108-565d-4608-97f7-6e40ca3df2b6@kili.mountain>
- <CAMhs-H9m=ZGREMo_upE3M48sQb-WpU3j2_b2xLyO2mDkezxC9g@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMhs-H9m=ZGREMo_upE3M48sQb-WpU3j2_b2xLyO2mDkezxC9g@mail.gmail.com>
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 03, 2023 at 07:05:56AM +0200, Sergio Paracuellos wrote:
-> On Mon, Apr 3, 2023 at 6:41 AM Dan Carpenter <error27@gmail.com> wrote:
-> >
+On Mon, Apr 3, 2023 at 6:50=E2=80=AFAM Dan Carpenter <error27@gmail.com> wr=
+ote:
+>
+> On Thu, Mar 23, 2023 at 07:23:26AM +0100, Sergio Paracuellos wrote:
 > > Hi,
 > >
-> > https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > On Thu, Mar 23, 2023 at 4:45=E2=80=AFAM <ye.xingchen@zte.com.cn> wrote:
+> > >
+> > > From: Ye Xingchen <ye.xingchen@zte.com.cn>
+> > >
+> > > Replace the open-code with dev_err_probe() to simplify the code.
+> > >
+> > > Signed-off-by: Ye Xingchen <ye.xingchen@zte.com.cn>
+> > > ---
+> > >  drivers/pci/controller/pcie-mt7621.c | 7 +++----
+> > >  1 file changed, 3 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/contr=
+oller/pcie-mt7621.c
+> > > index 63a5f4463a9f..964de0e8c6a0 100644
+> > > --- a/drivers/pci/controller/pcie-mt7621.c
+> > > +++ b/drivers/pci/controller/pcie-mt7621.c
+> > > @@ -220,10 +220,9 @@ static int mt7621_pcie_parse_port(struct mt7621_=
+pcie *pcie,
+> > >         }
+> > >
+> > >         port->pcie_rst =3D of_reset_control_get_exclusive(node, NULL)=
+;
+> > > -       if (PTR_ERR(port->pcie_rst) =3D=3D -EPROBE_DEFER) {
+>
+> So the theory here is that -EPROBE_DEFER is recoverable but other errors
+> are not so we just ignore them?  Error pointers will trigger a WARN() in
+> mt7621_control_assert/deassert().
+>
+>
+> > > --
+> > > 2.25.1
 > >
-> > url:    https://github.com/intel-lab-lkp/linux/commits/ye-xingchen-zte-com-cn/PCI-mt7621-Use-dev_err_probe/20230323-114623
-> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> > patch link:    https://lore.kernel.org/r/202303231145121987818%40zte.com.cn
-> 
-> So, I already replied to this proposed patch clearly saying that this
-> makes the rest of the code unreachable, so it is a clear NAK.
-> Why is this applied to the intel-lab-lkp tree? Just to be able to test
-> the changes?
-> 
+> > Also, this is not a probe(), so I don't see a point of using
+> > dev_err_probe() here.
+>
+> It's a weird thing to return -EPROBE_DEFER from something which is not
+> a probe function...  Someone told me I should write a Smatch check for
+> it but I never got around to doing that.
 
-These emails are automatically generated by kbuild-bot.  I don't know
-how kbuild-bot internals work.  I just review some of the Smatch related
-warnings and hit forward or ignore them.
+I don't remember clearly why this was returned in the first instance.
+I think I just took the idea from pcie-mediatek driver for arm64 SoCs
+platforms here:
 
-Normally, I don't look at the context outside of the email but to be
-honest, I was curious enough about this one that I looked it up on the
-list.  I knew it was NAKed but I set the email anyway hoping that maybe
-people would see the extra Smatch warning and be encouraged to run
-Smatch on their code in the future to avoid potential embarrassment.
+https://elixir.bootlin.com/linux/v6.3-rc5/source/drivers/pci/controller/pci=
+e-mediatek.c#L967
 
-regards,
-dan carpenter
-
-
+Thanks,
+    Sergio Paracuellos
+>
+> In this case, I guess the user is supposed to see the error message and
+> manually fix the probe order?  The dev_err_probe() will change the error
+> message into a debug message so the user will not see it and will not be
+> able to fix it.  So using dev_err_probe() will break things for the
+> user.
+>
+> regards,
+> dan carpenter
+>
