@@ -2,125 +2,248 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E33536D3C8E
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 06:50:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B95896D3CA4
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 07:06:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjDCEuz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Apr 2023 00:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45036 "EHLO
+        id S229498AbjDCFGL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Apr 2023 01:06:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbjDCEuy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 00:50:54 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A56B08A4A;
-        Sun,  2 Apr 2023 21:50:52 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id d11-20020a05600c3acb00b003ef6e6754c5so13494341wms.5;
-        Sun, 02 Apr 2023 21:50:52 -0700 (PDT)
+        with ESMTP id S229454AbjDCFGL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 01:06:11 -0400
+Received: from mail-oa1-x2e.google.com (mail-oa1-x2e.google.com [IPv6:2001:4860:4864:20::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC575FE7;
+        Sun,  2 Apr 2023 22:06:09 -0700 (PDT)
+Received: by mail-oa1-x2e.google.com with SMTP id 586e51a60fabf-17aaa51a911so29516429fac.5;
+        Sun, 02 Apr 2023 22:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680497451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KmuBUFzQUjaxZVU+S/+mOcmOc0AOV31J3v1NKMouK28=;
-        b=PGK/Fk4wYOsAWep6nEBI2HWHAGlmmQr9MHVl7DMSGeFoHAdU0dwbFTq9HO9wrXfLok
-         HUULIuqfTTkJpJfQJa6vhojoVJnzzaCnp4StcdPc0oH+djaJXj+OK6J5XNsc99gjLUDB
-         eAMV0TIIoDDkhm3s5ZrySlTZ8X9AxVFLLzPz8PGFe/Tv/yWdz9jnL+DTXafyU4kQnC8Q
-         a8H0PInP4F6/AEd52TJkWlq4JKhhsC8gYUv8m5N/Gyur+swg2s2RqdQlNLYXpfwkuDAF
-         d7CFcef+z3GNLRrW/TJtM+fGvyJ4HrFeN/vUFBAg7H0HIGagF+Bn6HaRlk7AhHNZcy7N
-         oSRg==
+        d=gmail.com; s=20210112; t=1680498369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TX/pPDCTZCz+AG0nfBsPg6tJiCJhJ51X8Wk4oxrCHIg=;
+        b=CMtL+I3C1ExYIZCjiqwv9rYd2NUb7Wn/BapXZ0gs5OfHUIem4aKiaKzoz7Ie0g12PO
+         4OggyvA5s3hwJ3KVMPmiUAxfCtHFlug7OR7PZcw7JopUz7zAHCiYctpknLkN2RaySGHl
+         DMAKL9rEBa4Z8tzlJsiMHFCjFQpTypF0xzgloG7I/TQL5ugKGTx/qZJgip6DTQjdywLe
+         USwn1agUrRgysnnvqsY6r35wI58cXjRmttiBP/Yg4FtoHVdFM70KMLyB4yPUSoAQ43k7
+         GGlNmMtkxEATPI4XPAhccbxSvJ5xJeKmvHUrJEe+8x/oZO2LmSTZEEPotoS+Y/5FRaVV
+         ISMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680497451;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KmuBUFzQUjaxZVU+S/+mOcmOc0AOV31J3v1NKMouK28=;
-        b=P80FC3G4bhuv9A5AC9/fcAXFMVJZsxfGbtwsHxe82aD6o0wYhtMHDBGtVx7EzlYQs6
-         9TBmmB8hMeRNuAFziJGDnPq3yh6BpgazuEyzaEaY/FpIAqRObXdzyx42DR1ux4OFtZkH
-         g8gW/UGC4UKJLfMdTv0Ng99P+qcqrkzO8aPfuvZtl4MlKLcXXj62KW+lR77EFkFi78wx
-         Pbwk+92lR4XEc/FIBXJW08x08AEQus8nkNf+RpeMBsblbNpI8FMy8gI1KQbZL4OzWhXv
-         ho/PcuWtWe9ycGzEC8vpvGucwewMAQiHA3O0q+rAwV/LWnosSD3lphy1FQ/rHw/wgUjV
-         0NHQ==
-X-Gm-Message-State: AO0yUKVTgMbD5Dr7Ml+/tAo7NQKZSq5ROGohYGH6YK9NxRqb7aiHyrFY
-        SkRilJZutXLmCWgIOGEzigE=
-X-Google-Smtp-Source: AK7set8ZQ9YczPJ94tVG7x+s4l8T7g2se9y9PUJGHUMtSjgLZlVwkUZj0mxGW1e7LgB+9x+f4k0jOg==
-X-Received: by 2002:a7b:ca4a:0:b0:3ed:d64f:ec30 with SMTP id m10-20020a7bca4a000000b003edd64fec30mr24501671wml.33.1680497450934;
-        Sun, 02 Apr 2023 21:50:50 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b003dd1bd0b915sm18158191wmq.22.2023.04.02.21.50.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 02 Apr 2023 21:50:50 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 07:50:45 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc:     ye.xingchen@zte.com.cn, lpieralisi@kernel.org, kw@linux.com,
+        d=1e100.net; s=20210112; t=1680498369;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TX/pPDCTZCz+AG0nfBsPg6tJiCJhJ51X8Wk4oxrCHIg=;
+        b=sYw/wNtbmSZX9Bahw9utoBZCPWqmoS8EZUYvuH3Xbdy5Sc6bh0Fqq1BZVy/NG/XIGv
+         a/atZNdYIILeWKClRlsGpgydcBsikWWIIBxTSETLHUoLP6xyOywQclxfDJ5pysB/5DYB
+         /8V5JR9VE1nqGDaYrB6XKDxfaXK4Mm+C4nLTp54lxwkNWklSZPrPIua6dAzYjJcIohqU
+         QOJNhdVcIb5rI1KQxkq3laQMxQ8UNLu2IQg/fFlCMufF6zyiIplO6FBWzPqsN1gbajs4
+         EPxyD3kdQ3iVkcJZr3aXt+NBXJVyJRM9/gZh0sd3u5i+7SVZOqi3531f6PSJf9ogtr2D
+         DdSA==
+X-Gm-Message-State: AAQBX9feIyxD/QQgW6FuAiZds4SuGpUonD25Z2Ob0NNi9rixtuyh/CDY
+        JaqJcOmwmUdWdQ9QwNLFKNe4xreYI0XDIfgzeyA=
+X-Google-Smtp-Source: AKy350aItUVPylW6imR32DS1QMVxsj8sMTSt/fb5O6UU2IfSZizAMCu6CU5azwG7yYv9CKyUuj1P/Eiefv56mLkW5fs=
+X-Received: by 2002:a05:687c:10b:b0:177:b393:4007 with SMTP id
+ ym11-20020a05687c010b00b00177b3934007mr11125983oab.0.1680498368771; Sun, 02
+ Apr 2023 22:06:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <202303231145121987818@zte.com.cn> <22081108-565d-4608-97f7-6e40ca3df2b6@kili.mountain>
+In-Reply-To: <22081108-565d-4608-97f7-6e40ca3df2b6@kili.mountain>
+From:   Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date:   Mon, 3 Apr 2023 07:05:56 +0200
+Message-ID: <CAMhs-H9m=ZGREMo_upE3M48sQb-WpU3j2_b2xLyO2mDkezxC9g@mail.gmail.com>
+Subject: Re: [PATCH] PCI: mt7621: Use dev_err_probe()
+To:     Dan Carpenter <error27@gmail.com>
+Cc:     oe-kbuild@lists.linux.dev, ye.xingchen@zte.com.cn, lkp@intel.com,
+        oe-kbuild-all@lists.linux.dev, lpieralisi@kernel.org, kw@linux.com,
         robh@kernel.org, bhelgaas@google.com, matthias.bgg@gmail.com,
         angelogioacchino.delregno@collabora.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] PCI: mt7621: Use dev_err_probe()
-Message-ID: <2e4f27f0-a4ac-4523-8f90-695a62973bd0@kili.mountain>
-References: <202303231145121987818@zte.com.cn>
- <CAMhs-H_-kQ0FGP3L1xJ=ec_xJ59a2OztMLLjEQmQfYFOEa4DfA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMhs-H_-kQ0FGP3L1xJ=ec_xJ59a2OztMLLjEQmQfYFOEa4DfA@mail.gmail.com>
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 07:23:26AM +0100, Sergio Paracuellos wrote:
+On Mon, Apr 3, 2023 at 6:41=E2=80=AFAM Dan Carpenter <error27@gmail.com> wr=
+ote:
+>
 > Hi,
-> 
-> On Thu, Mar 23, 2023 at 4:45 AM <ye.xingchen@zte.com.cn> wrote:
-> >
-> > From: Ye Xingchen <ye.xingchen@zte.com.cn>
-> >
-> > Replace the open-code with dev_err_probe() to simplify the code.
-> >
-> > Signed-off-by: Ye Xingchen <ye.xingchen@zte.com.cn>
-> > ---
-> >  drivers/pci/controller/pcie-mt7621.c | 7 +++----
-> >  1 file changed, 3 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/pcie-mt7621.c b/drivers/pci/controller/pcie-mt7621.c
-> > index 63a5f4463a9f..964de0e8c6a0 100644
-> > --- a/drivers/pci/controller/pcie-mt7621.c
-> > +++ b/drivers/pci/controller/pcie-mt7621.c
-> > @@ -220,10 +220,9 @@ static int mt7621_pcie_parse_port(struct mt7621_pcie *pcie,
-> >         }
-> >
-> >         port->pcie_rst = of_reset_control_get_exclusive(node, NULL);
-> > -       if (PTR_ERR(port->pcie_rst) == -EPROBE_DEFER) {
+>
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/ye-xingchen-zte-co=
+m-cn/PCI-mt7621-Use-dev_err_probe/20230323-114623
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+> patch link:    https://lore.kernel.org/r/202303231145121987818%40zte.com.=
+cn
 
-So the theory here is that -EPROBE_DEFER is recoverable but other errors
-are not so we just ignore them?  Error pointers will trigger a WARN() in
-mt7621_control_assert/deassert().
+So, I already replied to this proposed patch clearly saying that this
+makes the rest of the code unreachable, so it is a clear NAK.
+Why is this applied to the intel-lab-lkp tree? Just to be able to test
+the changes?
 
+Thanks,
+    Sergio Paracuellos
 
-> > --
-> > 2.25.1
-> 
-> Also, this is not a probe(), so I don't see a point of using
-> dev_err_probe() here.
-
-It's a weird thing to return -EPROBE_DEFER from something which is not
-a probe function...  Someone told me I should write a Smatch check for
-it but I never got around to doing that.
-
-In this case, I guess the user is supposed to see the error message and
-manually fix the probe order?  The dev_err_probe() will change the error
-message into a debug message so the user will not see it and will not be
-able to fix it.  So using dev_err_probe() will break things for the
-user.
-
-regards,
-dan carpenter
-
+> patch subject: [PATCH] PCI: mt7621: Use dev_err_probe()
+> config: s390-randconfig-m031-20230329 (https://download.01.org/0day-ci/ar=
+chive/20230401/202304010325.2OPFvIm3-lkp@intel.com/config)
+> compiler: s390-linux-gcc (GCC) 12.1.0
+>
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <error27@gmail.com>
+> | Link: https://lore.kernel.org/r/202304010325.2OPFvIm3-lkp@intel.com/
+>
+> smatch warnings:
+> drivers/pci/controller/pcie-mt7621.c:224 mt7621_pcie_parse_port() warn: p=
+assing zero to 'PTR_ERR'
+> drivers/pci/controller/pcie-mt7621.c:227 mt7621_pcie_parse_port() warn: i=
+gnoring unreachable code.
+>
+> vim +/PTR_ERR +224 drivers/pci/controller/pcie-mt7621.c
+>
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  198  static int mt7621_pcie_parse_port(struct mt7621_pcie *pci=
+e,
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  199                                 struct device_node *node,
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  200                                 int slot)
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  201  {
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  202       struct mt7621_pcie_port *port;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  203       struct device *dev =3D pcie->dev;
+> fab6710e4c51f4 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-04-13  204       struct platform_device *pdev =3D to_platform_device(=
+dev);
+> 61f9bde6ea578f drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2019-01-04  205       char name[10];
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  206       int err;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  207
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  208       port =3D devm_kzalloc(dev, sizeof(*port), GFP_KERNEL=
+);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  209       if (!port)
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  210               return -ENOMEM;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  211
+> 108b2f2a972454 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-11-23  212       port->base =3D devm_platform_ioremap_resource(pdev, =
+slot + 1);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  213       if (IS_ERR(port->base))
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  214               return PTR_ERR(port->base);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  215
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  216       port->clk =3D devm_get_clk_from_child(dev, node, NUL=
+L);
+> cc4e864a5ce4c1 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-05-05  217       if (IS_ERR(port->clk)) {
+> cc4e864a5ce4c1 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-05-05  218               dev_err(dev, "failed to get pcie%d clock\n",=
+ slot);
+> cc4e864a5ce4c1 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-05-05  219               return PTR_ERR(port->clk);
+> cc4e864a5ce4c1 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-05-05  220       }
+> cc4e864a5ce4c1 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-05-05  221
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  222       port->pcie_rst =3D of_reset_control_get_exclusive(no=
+de, NULL);
+> 9873bac812f262 drivers/pci/controller/pcie-mt7621.c    Ye Xingchen       =
+ 2023-03-23  223
+> 9873bac812f262 drivers/pci/controller/pcie-mt7621.c    Ye Xingchen       =
+ 2023-03-23 @224       return dev_err_probe(dev, PTR_ERR(port->pcie_rst),
+>                                                                          =
+                                                 ^^^^^^^^^^^^^^^^^^^^^^^
+>
+> 9873bac812f262 drivers/pci/controller/pcie-mt7621.c    Ye Xingchen       =
+ 2023-03-23  225                            "failed to get pcie%d reset con=
+trol\n", slot);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  226
+> 61f9bde6ea578f drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2019-01-04 @227       snprintf(name, sizeof(name), "pcie-phy%d", slot);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  228       port->phy =3D devm_of_phy_get(dev, node, name);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  229       if (IS_ERR(port->phy)) {
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  230               dev_err(dev, "failed to get pcie-phy%d\n", s=
+lot);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  231               err =3D PTR_ERR(port->phy);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  232               goto remove_reset;
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  233       }
+> 61f9bde6ea578f drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2019-01-04  234
+> b27e35f91c75cf drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-03-13  235       port->gpio_rst =3D devm_gpiod_get_index_optional(dev=
+, "reset", slot,
+> b27e35f91c75cf drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-03-13  236                                                      GPIOD=
+_OUT_LOW);
+> 825c6f470c62da drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-03-20  237       if (IS_ERR(port->gpio_rst)) {
+> 2bdd5238e756aa drivers/pci/controller/pcie-mt7621.c    Sergio Paracuellos=
+ 2021-09-22  238               dev_err(dev, "failed to get GPIO for PCIe%d\=
+n", slot);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  239               err =3D PTR_ERR(port->gpio_rst);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  240               goto remove_reset;
+> 825c6f470c62da drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-03-20  241       }
+> b27e35f91c75cf drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2020-03-13  242
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  243       port->slot =3D slot;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  244       port->pcie =3D pcie;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  245
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  246       INIT_LIST_HEAD(&port->list);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  247       list_add_tail(&port->list, &pcie->ports);
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  248
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  249       return 0;
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  250
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  251  remove_reset:
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  252       reset_control_put(port->pcie_rst);
+> 2d3d288f0eaf10 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2021-06-07  253       return err;
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  254  }
+> ad9c87e129d139 drivers/staging/mt7621-pci/pci-mt7621.c Sergio Paracuellos=
+ 2018-11-04  255
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests
+>
