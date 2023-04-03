@@ -2,112 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 336C56D4B6D
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 17:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FBA76D4C7A
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 17:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234055AbjDCPIU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Apr 2023 11:08:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
+        id S232661AbjDCPuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Apr 2023 11:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234194AbjDCPIK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 11:08:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDA64C35;
-        Mon,  3 Apr 2023 08:08:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ADF7561A55;
-        Mon,  3 Apr 2023 15:08:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A37C4339B;
-        Mon,  3 Apr 2023 15:07:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680534482;
-        bh=Zvq9Hzpetq9+ZiBrci0/SnW1z0Ndhco9dW2OQzO42bc=;
-        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-        b=LPSID/hW1iIiGUMdrfSA+O+e5b98RytK7Y34WEdMUQGE3B5wDApQjkEE5j5LWK8IX
-         iuYzO1CRQem0UBb0MQ+yHt7bysq+oQ0HzTXXWSGs9R2uWVdIVfs9zs//X59D67fOTN
-         kkR8fYsJ0VhLg6hSdwaJ5VI3mSZ2hcwWaB7MRGOqNVPFZmJO17v7EvZSXcaKhGrYJf
-         YOsayAmvzQSvVZqafUNir2ALY1AiobPKEfd52C9PVugNvVLiTefUzF8qh3pqLB9yVC
-         OJF12k5hKshsRfEzqU1EqfYrvbkZDZbVBqMlTzMVEA72PlpFMQICPWceC5MK6a/S41
-         X+dDKoQeE4sJg==
-From:   Mark Brown <broonie@kernel.org>
-To:     Bjorn Andersson <andersson@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Georgi Djakov <djakov@kernel.org>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <maz@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        linux-phy@lists.infradead.org,
-        Wesley Cheng <quic_wcheng@quicinc.com>,
-        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-In-Reply-To: <20230325122444.249507-1-vkoul@kernel.org>
-References: <20230325122444.249507-1-vkoul@kernel.org>
-Subject: Re: (subset) [PATCH v2 00/12] Introduce the SC8180x devices
-Message-Id: <168053447680.47740.2062036242012042206.b4-ty@kernel.org>
-Date:   Mon, 03 Apr 2023 16:07:56 +0100
+        with ESMTP id S232573AbjDCPuG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 11:50:06 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CED94171D
+        for <linux-pci@vger.kernel.org>; Mon,  3 Apr 2023 08:49:36 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id d13so27645777pjh.0
+        for <linux-pci@vger.kernel.org>; Mon, 03 Apr 2023 08:49:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680536969;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sjdpEr1kbdCek7+Xx4AMcpWMybctv63LfhzPtH0NYpI=;
+        b=Ffq+9Ao/yKeSVo9K+0CQxyz3aN64b8sLF8aki0lQyNqP3Rgvqt9paDWEKXq4gLoA8V
+         fMVGj5THzkvpBXY4DRwYufLgtmUtpDtU9iIha2pb3Wo3TmV+eIQiCgMVs4AW1F1cDJcK
+         D1pYHuFEnxhgSCTelEMYMQPBC3FGdEH1npol0woxbt/T9ry1dGMOb4/2h0zKbHTapFYE
+         2t8lFHKv7CUA6SqYfFMBKHwaKx3r84BAHtskBADkGyPBt5XWaJZ5uZs0c7kPT4tLyW9Z
+         5N6ezanrfYsWpNFrvPZjKFv8iGQWaZumMCnnChY7UNmbOkPqT6maiV5SMpldBD7U5gO0
+         UMHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680536969;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sjdpEr1kbdCek7+Xx4AMcpWMybctv63LfhzPtH0NYpI=;
+        b=AGMhJNehkKMKR226+nhXkOvCM3xyFWzlXFwmfJG+HRXv9rmVSRkdceyXjADLz79p0w
+         mHCQlPZtCNPInsJ4ZhjFDt6dXU1tZYDLwlTnqSTaCUN+gpcRK026xsTnB4jDjpG8qrDZ
+         omtiCvteRx2PrHwr4HSirw+TXJ755r9eJ5RJ6GeVq2rbBYZRBkLq0OtFs44m5I8ioJi7
+         rmImv1++an3XMSH4w0vXr/E+/JuyOVQ9pCfzHJ3Vwel32gJ0hdovXe9CzuxnsmZ93zSY
+         aTHEQWiba1s9wUJPTtbLRoHueJAcOIHOGHmKwcixnzddLy+qFIRBfg9bDmUt/9iKK+6v
+         tbxw==
+X-Gm-Message-State: AAQBX9c7M+8L1v52qyxMTfRpf5fxBzpqnznPM0dZI916cvO4G4XSv0Ry
+        SQL/q6xx1gCJnz242HOiPnAp
+X-Google-Smtp-Source: AKy350bLVLkvH5+SJ7RuR133hSaDHPSe+UDoAzkm/zI1o2vRWweDiIcYX69H5D4GqOcdySwY0DDySQ==
+X-Received: by 2002:a17:90b:1b48:b0:23d:2532:ae34 with SMTP id nv8-20020a17090b1b4800b0023d2532ae34mr18497287pjb.2.1680536968965;
+        Mon, 03 Apr 2023 08:49:28 -0700 (PDT)
+Received: from localhost.localdomain ([27.111.75.109])
+        by smtp.gmail.com with ESMTPSA id c10-20020a17090a020a00b0023af4eb597csm9621534pjc.52.2023.04.03.08.49.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 08:49:28 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org
+Cc:     andersson@kernel.org, konrad.dybcio@linaro.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        quic_krichai@quicinc.com, johan+linaro@kernel.org, steev@kali.org,
+        mka@chromium.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v4 0/1] PCI: qcom: Add support for system suspend and resume
+Date:   Mon,  3 Apr 2023 21:19:21 +0530
+Message-Id: <20230403154922.20704-1-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13-dev-00303
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, 25 Mar 2023 17:54:32 +0530, Vinod Koul wrote:
-> This introduces Qualcomm SC8180x SoC which features in Lenovo Flex 5G
-> laptop. This also adds support for Primus platform as well as Lenovo Flex 5G
-> laptop.
-> 
-> I would be great if submaintainers can ack the binding patch so that
-> everything can go thru qcom tree
-> 
-> [...]
+Hello,
 
-Applied to
+This series (a single patch) adds the system suspend and resume support
+to the Qualcomm PCIe RC controller.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
+Background
+==========
 
-Thanks!
+There were previous attempts [1][2] to add system suspend and resume
+support to this driver.
 
-[08/12] regulator: dt-bindings: qcom,rpmh: Add compatible for PMC8180
-        commit: fc4fef625decc80cf3a72e884a4e37288bfa0f9b
+In previous versions, the controller was put into low power mode by turning
+OFF the resources even if there were active PCIe devices connected. Thanks
+to Qualcomm's internal power topology, the link did not enter L2/L3 state
+and the devices were still powered ON. But during very late end of suspend
+cycle, kernel tried to disable MSIs of the PCIe devices. This caused access
+violations as the resources needed to access the PCIe devices config space
+were turned OFF. Series [1] worked around this issue by not accessing the
+PCIe config space if the link was down in dw_msi_{un}mask_irq() functions.
+But that approach was not accepted.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
+Then, series [2] implemented the suspend and resume operations using the
+syscore framework that disabled the resources at the end of the suspend
+cycle. But that approach also did not get much acceptance.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Proposal
+========
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+So the proposal here is to just vote for minimal interconnect bandwidth to
+keep the interconnect path active and not turn OFF the resources if there
+are active PCIe devices connected to the controllers. This avoids the
+access violation issue during suspend and also saves some power due to the
+lower interconnect bandwidth used.
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Then if there are no active PCIe devices connected to the controller,
+the resources are turned OFF completely and brought back during resume.
+This also saves power if there are controllers in a system without any
+devices connected.
+
+Testing
+=======
+
+This series has been tested on Lenovo Thinkpad X13s.
 
 Thanks,
-Mark
+Mani
+
+[1] https://lore.kernel.org/linux-pci/1656055682-18817-1-git-send-email-quic_krichai@quicinc.com/
+[2] https://lore.kernel.org/linux-pci/1663669347-29308-1-git-send-email-quic_krichai@quicinc.com/
+
+Changes in v4:
+
+* Used 1KiB interconnect bandwidth during suspend
+
+Changes in v3:
+
+* Limited comments to 80 column
+* Added error handling in resume_noirq()
+
+Changes in v2:
+
+* Used minimum icc vote to keep data path functional during suspend
+* Collected Ack
+
+Manivannan Sadhasivam (1):
+  PCI: qcom: Add support for system suspend and resume
+
+ drivers/pci/controller/dwc/pcie-qcom.c | 62 ++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
+
+-- 
+2.25.1
 
