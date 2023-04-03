@@ -2,66 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65FA16D4542
-	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 15:07:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 336C56D4B6D
+	for <lists+linux-pci@lfdr.de>; Mon,  3 Apr 2023 17:08:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232370AbjDCNHr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 3 Apr 2023 09:07:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32872 "EHLO
+        id S234055AbjDCPIU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 3 Apr 2023 11:08:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232201AbjDCNHm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 09:07:42 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619301C1D0;
-        Mon,  3 Apr 2023 06:07:41 -0700 (PDT)
+        with ESMTP id S234194AbjDCPIK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 3 Apr 2023 11:08:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BDA64C35;
+        Mon,  3 Apr 2023 08:08:03 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 16580B81A07;
-        Mon,  3 Apr 2023 13:07:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24B1FC4339B;
-        Mon,  3 Apr 2023 13:07:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1680527258;
-        bh=HyvmVdwLecMO/5pUko/0/tVvzcisFGvSd1666M2+4IE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q7nkhqhQZVhwhxxyFShS6DIWUj5uxvjgO4J2SWkzfBjgvXOn6Oz7P2n65rlSWXfWs
-         auIAcQ4KoXdq/8jmUs8vw5Ox94NIaIME2aejfKJYrI4a7aO8ERT1Iw9MVdjt7tqyvJ
-         cOqMMc4BXshX8D1CYwCSSHUeDnugPKpbPIuqimsY=
-Date:   Mon, 3 Apr 2023 15:07:36 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Boqun Feng <boqun.feng@gmail.com>,
-        "quic_jhugo@quicinc.com" <quic_jhugo@quicinc.com>,
-        "quic_carlv@quicinc.com" <quic_carlv@quicinc.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "sthemmin@microsoft.com" <sthemmin@microsoft.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH v2] PCI: hv: Fix the definition of vector in
- hv_compose_msi_msg()
-Message-ID: <2023040305-evaluator-come-fcb8@gregkh>
-References: <20221027205256.17678-1-decui@microsoft.com>
- <ZCTsPFb7dBj2IZmo@boqun-archlinux>
- <ZCT6JEK/yGpKHVLn@boqun-archlinux>
- <SA1PR21MB13354973735A5E727F94A169BF8E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADF7561A55;
+        Mon,  3 Apr 2023 15:08:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A37C4339B;
+        Mon,  3 Apr 2023 15:07:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680534482;
+        bh=Zvq9Hzpetq9+ZiBrci0/SnW1z0Ndhco9dW2OQzO42bc=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=LPSID/hW1iIiGUMdrfSA+O+e5b98RytK7Y34WEdMUQGE3B5wDApQjkEE5j5LWK8IX
+         iuYzO1CRQem0UBb0MQ+yHt7bysq+oQ0HzTXXWSGs9R2uWVdIVfs9zs//X59D67fOTN
+         kkR8fYsJ0VhLg6hSdwaJ5VI3mSZ2hcwWaB7MRGOqNVPFZmJO17v7EvZSXcaKhGrYJf
+         YOsayAmvzQSvVZqafUNir2ALY1AiobPKEfd52C9PVugNvVLiTefUzF8qh3pqLB9yVC
+         OJF12k5hKshsRfEzqU1EqfYrvbkZDZbVBqMlTzMVEA72PlpFMQICPWceC5MK6a/S41
+         X+dDKoQeE4sJg==
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <andersson@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Georgi Djakov <djakov@kernel.org>,
+        Vinod Koul <vkoul@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <maz@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        linux-phy@lists.infradead.org,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        linux-usb@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-scsi@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20230325122444.249507-1-vkoul@kernel.org>
+References: <20230325122444.249507-1-vkoul@kernel.org>
+Subject: Re: (subset) [PATCH v2 00/12] Introduce the SC8180x devices
+Message-Id: <168053447680.47740.2062036242012042206.b4-ty@kernel.org>
+Date:   Mon, 03 Apr 2023 16:07:56 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SA1PR21MB13354973735A5E727F94A169BF8E9@SA1PR21MB1335.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-00303
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,50 +73,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 30, 2023 at 03:23:45AM +0000, Dexuan Cui wrote:
-> > From: Boqun Feng <boqun.feng@gmail.com>
-> > Sent: Wednesday, March 29, 2023 7:56 PM
-> > To: Dexuan Cui <decui@microsoft.com>
-> >  ...
-> > On Wed, Mar 29, 2023 at 06:56:12PM -0700, Boqun Feng wrote:
-> > > [Cc stable]
-> > >
-> > > On Thu, Oct 27, 2022 at 01:52:56PM -0700, Dexuan Cui wrote:
-> > > > The local variable 'vector' must be u32 rather than u8: see the
-> > > > struct hv_msi_desc3.
-> > > >
-> > > > 'vector_count' should be u16 rather than u8: see struct hv_msi_desc,
-> > > > hv_msi_desc2 and hv_msi_desc3.
-> > > >
-> > >
-> > > Dexuan, I think this patch should only be in 5.15, because...
-> > >
-> > 
-> > Sorry, I meant:
-> > 
-> > "this patch should also be backported in 5.15"
-> > 
-> > Regards,
-> > Boqun
-> > 
-> > > > Fixes: a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
-> > >
-> > > ^^^ this commit is already in 5.15.y (commit id 92dcb50f7f09).
-> > >
-> > > Upstream id e70af8d040d2b7904dca93d942ba23fb722e21b1
-> > > Cc: <stable@vger.kernel.org> # 5.15.x
+On Sat, 25 Mar 2023 17:54:32 +0530, Vinod Koul wrote:
+> This introduces Qualcomm SC8180x SoC which features in Lenovo Flex 5G
+> laptop. This also adds support for Primus platform as well as Lenovo Flex 5G
+> laptop.
 > 
-> The faulty commit a2bad844a67b ("PCI: hv: Fix interrupt mapping for multi-MSI")
-> is in all the stable branches, even including 4.14.y, so yes, the commit
-> e70af8d040d2 ("PCI: hv: Fix the definition of vector in hv_compose_msi_msg()")
-> should be backported to all the stable branches as well, including
-> v5.15.y, v5.10.y, v5.4.y, v4.19.y, v4.14.y.
+> I would be great if submaintainers can ack the binding patch so that
+> everything can go thru qcom tree
 > 
-> e70af8d040d2 has a Fixes tag. Not sure why it's not automatically backported.
+> [...]
 
-Also, the most obvious reason, it does NOT apply there!  If this needs
-to go to 5.15.y and older, please send working backports of it.
+Applied to
 
-thanks,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-greg k-h
+Thanks!
+
+[08/12] regulator: dt-bindings: qcom,rpmh: Add compatible for PMC8180
+        commit: fc4fef625decc80cf3a72e884a4e37288bfa0f9b
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
