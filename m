@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D2DCD6D6DA9
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 22:11:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 678C86D6DAF
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 22:12:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235505AbjDDULv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 16:11:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57294 "EHLO
+        id S229608AbjDDUMN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 16:12:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229608AbjDDULu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 16:11:50 -0400
+        with ESMTP id S232851AbjDDUML (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 16:12:11 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC85B1FE8;
-        Tue,  4 Apr 2023 13:11:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BB91BE2;
+        Tue,  4 Apr 2023 13:12:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 664916381D;
-        Tue,  4 Apr 2023 20:11:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF5CC433D2;
-        Tue,  4 Apr 2023 20:11:44 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 338E1633EC;
+        Tue,  4 Apr 2023 20:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E94EC433D2;
+        Tue,  4 Apr 2023 20:12:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680639104;
-        bh=6ehy8G3pD6IYMdwCFbrMYKYPGv4TXuD5wVAph2mLKS0=;
+        s=k20201202; t=1680639125;
+        bh=3QRJlwqia2QDWk/e0n89D0bcrqXQfIZCY1IoEbSO2IE=;
         h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-        b=iuZEXUqZ9ZwxZvj7eZoUbOiQ+cu047t6Quefhy5dMvtSvhC4S3YsPk/e4pyh6c7+M
-         3aUtAv+50FpMovtZZrgulMWV2Yq1OK2iYyyzkoOrk7ROs/WfcJAuhFXko71PpAWv5q
-         bx0/FghLYgahH5Sq44vFjONX+Rg8HWcrWOmkKX4HFhiYJLzgjW0HKGzqwfJvuH5wnS
-         BEbPTPeUhyu7l+VUz96pQRRukOekbAGkDZxkPbpnOTEyhtsBqgVSIHV3EZuMG0YXk8
-         etzNmtUNHXDuWlcnwfHBRKmu/ZjISwbK4xM+LaIGdY9C77ZXQYnpqpuRK5KoX70kRe
-         ifU3lGCiLKm5A==
-Message-ID: <2f8d6e564d8f0b8ea90b5c1046152efa.sboyd@kernel.org>
+        b=n8Mq0qza7dwTNwPm0nIIDwj6E/Gjsoqi8BwFRJviM5zeek6Y544V4IUOncLBLsXrx
+         yir2J11YboyfJb8uLDWZGO5kaedpkYcrwMhu3QGTtA2EjbXaOlsPbyaj/f9PVQSopt
+         cp2a9lJEPwKES/zLJVVozX7jiK6tqNmM1lwsWGu1nJsKBcmfGxOiFEAaOcEk+Tg5dh
+         68rnzYotyjpbyrBOvLwtuaCaRNGuB8UKPsH9M1YyJYDsF2nMA/5jd+2H9soaCCym5W
+         NwyNMUdP/luC2md/JKNLcw6nbFRj8Cux20os2XRY6H+1QOQ998HSQ+xjNfBWKV1dCj
+         dmDNOdISwT8sA==
+Message-ID: <1d7dae8417d7978eccdc01d7f60107f8.sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20230404164828.8031-2-quic_devipriy@quicinc.com>
-References: <20230404164828.8031-1-quic_devipriy@quicinc.com> <20230404164828.8031-2-quic_devipriy@quicinc.com>
-Subject: Re: [PATCH V2 1/9] dt-bindings: clock: Add PCIe pipe clock definitions
+In-Reply-To: <20230404164828.8031-3-quic_devipriy@quicinc.com>
+References: <20230404164828.8031-1-quic_devipriy@quicinc.com> <20230404164828.8031-3-quic_devipriy@quicinc.com>
+Subject: Re: [PATCH V2 2/9] clk: qcom: gcc-ipq9574: Add PCIe pipe clocks
 From:   Stephen Boyd <sboyd@kernel.org>
 Cc:     quic_srichara@quicinc.com, quic_gokulsri@quicinc.com,
         quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
@@ -53,7 +53,7 @@ To:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
         linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
         lpieralisi@kernel.org, mani@kernel.org, mturquette@baylibre.com,
         p.zabel@pengutronix.de, robh@kernel.org, vkoul@kernel.org
-Date:   Tue, 04 Apr 2023 13:11:42 -0700
+Date:   Tue, 04 Apr 2023 13:12:03 -0700
 User-Agent: alot/0.10
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
@@ -64,8 +64,8 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Quoting Devi Priya (2023-04-04 09:48:20)
-> Add PCIe pipe clock definitions for IPQ9574 SoC
+Quoting Devi Priya (2023-04-04 09:48:21)
+> Add the PCIe pipe clocks needed for enabling PCIe in IPQ9574
 >=20
 > Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
 > Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
