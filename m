@@ -2,74 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A00716D5C4F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 11:47:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E074F6D5C7B
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 11:57:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233741AbjDDJr0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 05:47:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49260 "EHLO
+        id S233968AbjDDJ5e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 05:57:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234233AbjDDJrZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 05:47:25 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A4261BC0
-        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 02:47:23 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id o2so30759679plg.4
-        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 02:47:23 -0700 (PDT)
+        with ESMTP id S230335AbjDDJ5d (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 05:57:33 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F132268A
+        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 02:57:32 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so33391627pjz.1
+        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 02:57:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680601642;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680602252;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LD+Pbh+Dgje2hph4qd/zBGoIsHysnXkNvEoD/PBs05g=;
-        b=tJ+tf/k8rs5jkZTkqU8Qm39ujUfEOSFy83Qlzqj1RolcGzwNNjQNiX2/gNvgD7OFlE
-         Aj2xvHquVkFZ5egZZ9UjvrOcLq9NOT08vsSaOJ5fstTTD6WaAHLPLYFp6wPFKpJxi0ak
-         9KWjDrE9kZdSh0IxIAWBbiAVaFcvIkvIT124thg4wPzOp5qMYPtYp2HVeKw0NBZDBIZG
-         elsDH9lj9qLpy8j9YIbewgPfhZLBY6epzAQXYLbhRQWOmz2TRenFoQQSqs/3EnrHnPMb
-         yKa45ucmnS0Ps4jr1O9G3olURITBPqOUVmWCD61XwEI62rIcEWNVIftIxFqONHVr124e
-         LCNg==
+        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
+        b=DZcbyLkyTGTTuO+N7pa4ARwCTRNuL4ybs38LCUxl4HjBDH9eqjR2F0nnTnp1HWGEfc
+         PhRf8bwSKXhOdsUKHc9TxrsB5fNYFMJtf08rWMZhxTVbBRsp71RfQ4+6Ye1omj+dPl4/
+         SNS0NCBcfN3EOdGTJjny3/JDM2TZ/qHzsfDC3ASKsNYrR+VAZmbZd8gqmJ1D7hZUiYBj
+         y/NqILXWJo+WPf7Fv7k5SH72D5y39NCvUOIRvrbjST8TvSWka2VANi3vardpQuZQF+rc
+         BX132iwtB4VLe04nL1nzS6OdsrgWQ5BSA5vOt+Y0Dr1j0WT9LV2DWp1C6KtYOZqFczTL
+         6g4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680601642;
+        d=1e100.net; s=20210112; t=1680602252;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LD+Pbh+Dgje2hph4qd/zBGoIsHysnXkNvEoD/PBs05g=;
-        b=4HMT1go1y/y5malPoFg6WuSMSAy+wcT9rBKOEjaF3luCG01uwpK04u/MTb8WPqqWsb
-         M/7jjzPxgXtYQP7MCLQDY1EzBH02EPVQNkTG0WEENpdy9o0PQv/FaAfoCby89CHZNIi0
-         VJyTKGDjF8hQj3q6Qtdnn1OphPhwfCfIsYlmd1DWoJpku/YK5OWe8F+cjeKeV90jOi4B
-         K8261DHy/pJW6hp7wiOoBCfIiU9Nl556EBgXRaW8osFoJJnvikVt+VQCix4h2nqaO898
-         ln4H1DCT5nvj+uf7dIGUBB16Sy9FYbnGfuk0wYxaBo8ARO7H5k63MBdIzweiRmuGmJ0h
-         YAnQ==
-X-Gm-Message-State: AAQBX9c2Cm5U7x51MMOwVsEqmjIuRLkRmc5x7tZQ4ZOaGQAbro4FjXrC
-        i57wRXPD7EPD1SRDLMDa3dwrNm9o0gDVDW1vQ7g=
-X-Google-Smtp-Source: AKy350YfpCOKgHLTtKerPwp1BkMoaUCq06nXSId07lQ3Oo2YMB4EP3SyznKhTnKnt2xUTtefuPtfrw==
-X-Received: by 2002:a17:902:f311:b0:1a2:19c1:a974 with SMTP id c17-20020a170902f31100b001a219c1a974mr1429296ple.68.1680601642630;
-        Tue, 04 Apr 2023 02:47:22 -0700 (PDT)
+        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
+        b=CYzIs2rFIh9+aGQqmHEHi/pkXm9bGMUom2dhkczcY79tUzmpY+QDQx6ArnVdPaeql4
+         QWQrK67E0ep2RaepKdg6OYo92u0zU1Y41aWMGZ+ponDyq4LpeXwwUgdapb8EhYBUEE2j
+         6rmR6HWLvVtj0/ngdEXgjfMsHUVK0z5CAMpmUYgtXcRZVjJJyMipbSFg26O8pVi5OeCD
+         avyE8DTvxdRYWaogzy79b5bPfOBTe5Tty4ytc7H5XCFmy604v+RoXJVYY5mbyaYnJawt
+         TABGEHtEuOejJt7yL8VKCCPr7vEgsZ1E+sD1ymLrtERRwG+qLcIwCiuKS2Ez7MrH0CV4
+         4YNA==
+X-Gm-Message-State: AAQBX9dhi9sV0FhoDhAsM4xYfsYyEcqmZbpiAVoYH3D3gHL6dNkIEdrg
+        +QmPr4diurF8HAgsSqrfywAIVw==
+X-Google-Smtp-Source: AKy350YRiaOikp91648dDob3kng7cepINTfluG5WzInZqWo8yO2jZPLEMXzTjVgP71gtXNDkoKdSOg==
+X-Received: by 2002:a17:90b:3e89:b0:237:ae7c:15be with SMTP id rj9-20020a17090b3e8900b00237ae7c15bemr2086527pjb.30.1680602251950;
+        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
 Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id 125-20020a630383000000b0050927cb606asm7270401pgd.13.2023.04.04.02.47.19
+        by smtp.gmail.com with ESMTPSA id iy5-20020a170903130500b0019e81c8fd01sm8005079plb.249.2023.04.04.02.57.28
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 02:47:22 -0700 (PDT)
-Message-ID: <9a70d819-70d1-fb69-b053-a37ccfacf145@igel.co.jp>
-Date:   Tue, 4 Apr 2023 18:47:17 +0900
+        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
+Message-ID: <79357547-d32d-9916-074d-37354d4016c3@igel.co.jp>
+Date:   Tue, 4 Apr 2023 18:57:27 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH v4 04/17] PCI: epf-test: Fix DMA transfer completion
- detection
+Subject: Re: [RFC PATCH 00/11] Introduce a test for continuous transfer
 Content-Language: en-US
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+To:     Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
- <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
+        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20230317113238.142970-1-mie@igel.co.jp>
+ <20230331053850.GE4973@thinkpad>
 From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
+In-Reply-To: <20230331053850.GE4973@thinkpad>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -82,118 +85,74 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 2023/03/30 17:53, Damien Le Moal wrote:
-> pci_epf_test_data_transfer() and pci_epf_test_dma_callback() are not
-> handling DMA transfer completion correctly, leading to completion
-> notifications to the RC side that are too early. This problem can be
-> detected when the RC side is running an IOMMU with messages such as:
+On 2023/03/31 14:38, Manivannan Sadhasivam wrote:
+> On Fri, Mar 17, 2023 at 08:32:27PM +0900, Shunsuke Mie wrote:
+>> This patchset introduces testing through continuous transfer to the PCI
+>> endpoint tests. The purpose is to find bugs that may exist in the endpoint
+>> controller driver. This changes able to find bugs in the DW EDMA driver and
+>> this patchset includes the fix.
+>>
+>> This bug does not appear in the current tests because these synchronize to
+>> finish with every data transfer. However, the problem occurs with
+>> continuous DMA issuances. The continuous transfers are required to get high
+>> throughput and low latency. Therefore, the added tests will enable
+>> realistic transfer testing.
+>>
+>> This patchset is divided into three parts:
+>> - Remove duplicated definitions and improve some code [1-6/11]
+>> - Add continuous transfer tests [7-9/11]
+>> - Fix for the DW EDMA driver bug [10,11/11]
+>>
+>> This patchset has beed tested on RCar Spidar that has dw pci edma chip.
+>>
+> If you want maintainers to review the patches separately, please remove the RFC
+> tag. Unless you are looking for some overall feedback about the approach.
+Got it.
 >
-> pci-endpoint-test 0000:0b:00.0: AMD-Vi: Event logged [IO_PAGE_FAULT
-> domain=0x001c address=0xfff00000 flags=0x0000]
+> But we are in the process of migrating the existing test under tools to
+> Kselftest framework [1]. Until then, we cannot accept patches improving the
+> existing test code. So please respin the patches on top of the Kselftest patch
+> once it got posted. It's already due for some time :/
+I understood. I'll track the work of Kselftest migration.
 >
-> When running the pcitest.sh tests: the address used for a previous
-> test transfer generates the above error while the next test transfer is
-> running.
+> Also the subject should mention "PCI endpoint".
+Yes.
 >
-> Fix this by testing the dma transfer status in
-> pci_epf_test_dma_callback() and notifying the completion only when the
-> transfer status is DMA_COMPLETE or DMA_ERROR. Furthermore, in
-> pci_epf_test_data_transfer(), be paranoid and check again the transfer
-> status and always call dmaengine_terminate_sync() before returning.
+> - Mani
 >
-> Fixes: 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
-> ---
->   drivers/pci/endpoint/functions/pci-epf-test.c | 38 +++++++++++++------
->   1 file changed, 27 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-> index d65419735d2e..dbea6eb0dee7 100644
-> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
-> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-> @@ -54,6 +54,9 @@ struct pci_epf_test {
->   	struct delayed_work	cmd_handler;
->   	struct dma_chan		*dma_chan_tx;
->   	struct dma_chan		*dma_chan_rx;
-> +	struct dma_chan		*transfer_chan;
-> +	dma_cookie_t		transfer_cookie;
-> +	enum dma_status		transfer_status;
->   	struct completion	transfer_complete;
->   	bool			dma_supported;
->   	bool			dma_private;
-> @@ -85,8 +88,14 @@ static size_t bar_size[] = { 512, 512, 1024, 16384, 131072, 1048576 };
->   static void pci_epf_test_dma_callback(void *param)
->   {
->   	struct pci_epf_test *epf_test = param;
-> -
-> -	complete(&epf_test->transfer_complete);
-> +	struct dma_tx_state state;
-> +
-> +	epf_test->transfer_status =
-> +		dmaengine_tx_status(epf_test->transfer_chan,
-> +				    epf_test->transfer_cookie, &state);
-> +	if (epf_test->transfer_status == DMA_COMPLETE ||
-> +	    epf_test->transfer_status == DMA_ERROR)
-> +		complete(&epf_test->transfer_complete);
->   }
->   
->   /**
-> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->   	struct dma_async_tx_descriptor *tx;
->   	struct dma_slave_config sconf = {};
->   	struct device *dev = &epf->dev;
-> -	dma_cookie_t cookie;
->   	int ret;
->   
->   	if (IS_ERR_OR_NULL(chan)) {
-> @@ -152,25 +160,33 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->   	}
->   
->   	reinit_completion(&epf_test->transfer_complete);
-> +	epf_test->transfer_chan = chan;
->   	tx->callback = pci_epf_test_dma_callback;
->   	tx->callback_param = epf_test;
-> -	cookie = tx->tx_submit(tx);
-> +	epf_test->transfer_cookie = tx->tx_submit(tx);
-
-How about changing the code to use dmaengine_submit() API instead of 
-calling a raw function pointer?
-
->   
-> -	ret = dma_submit_error(cookie);
-> +	ret = dma_submit_error(epf_test->transfer_cookie);
->   	if (ret) {
-> -		dev_err(dev, "Failed to do DMA tx_submit %d\n", cookie);
-> -		return -EIO;
-> +		dev_err(dev, "Failed to do DMA tx_submit %d\n", ret);
-> +		goto terminate;
->   	}
->   
->   	dma_async_issue_pending(chan);
->   	ret = wait_for_completion_interruptible(&epf_test->transfer_complete);
->   	if (ret < 0) {
-> -		dmaengine_terminate_sync(chan);
-> -		dev_err(dev, "DMA wait_for_completion_timeout\n");
-> -		return -ETIMEDOUT;
-> +		dev_err(dev, "DMA wait_for_completion interrupted\n");
-> +		goto terminate;
->   	}
->   
-> -	return 0;
-> +	if (epf_test->transfer_status == DMA_ERROR) {
-> +		dev_err(dev, "DMA transfer failed\n");
-> +		ret = -EIO;
-> +	}
-> +
-> +terminate:
-> +	dmaengine_terminate_sync(chan);
-> +
-> +	return ret;
->   }
->   
->   struct epf_dma_filter {
-
+> [1] https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
+Thank you for your comments.
+>> Shunsuke Mie (11):
+>>    misc: pci_endpoint_test: Aggregate irq_type checking
+>>    misc: pci_endpoint_test: Remove an unused variable
+>>    pci: endpoint: function/pci-epf-test: Unify a range of time
+>>      measurement
+>>    PCI: endpoint: functions/pci-epf-test: Move common difinitions to
+>>      header file
+>>    MAINTAINERS: Add a header file for pci-epf-test
+>>    misc: pci_endpoint_test: Use a common header file between endpoint
+>>      driver
+>>    PCI: endpoint: functions/pci-epf-test: Extend the test for continuous
+>>      transfers
+>>    misc: pci_endpoint_test: Support a test of continuous transfer
+>>    tools: PCI: Add 'C' option to support continuous transfer
+>>    dmaengine: dw-edma: Fix to change for continuous transfer
+>>    dmaengine: dw-edma: Fix to enable to issue dma request on DMA
+>>      processing
+>>
+>>   MAINTAINERS                                   |   1 +
+>>   drivers/dma/dw-edma/dw-edma-core.c            |  30 ++-
+>>   drivers/misc/pci_endpoint_test.c              | 132 ++++--------
+>>   drivers/pci/endpoint/functions/pci-epf-test.c | 199 ++++++++----------
+>>   include/linux/pci-epf-test.h                  |  67 ++++++
+>>   include/uapi/linux/pcitest.h                  |   1 +
+>>   tools/pci/pcitest.c                           |  13 +-
+>>   7 files changed, 231 insertions(+), 212 deletions(-)
+>>   create mode 100644 include/linux/pci-epf-test.h
+>>
+>> -- 
+>> 2.25.1
+>>
 Best,
 
 Shunsuke.
