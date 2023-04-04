@@ -2,78 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D1C56D5ACD
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 10:25:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D1F06D5ACF
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 10:25:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234263AbjDDIZ0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 04:25:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60544 "EHLO
+        id S234226AbjDDIZb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 04:25:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234193AbjDDIZQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 04:25:16 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87DF19BC;
-        Tue,  4 Apr 2023 01:25:14 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id ek18so127306764edb.6;
-        Tue, 04 Apr 2023 01:25:14 -0700 (PDT)
+        with ESMTP id S234225AbjDDIZX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 04:25:23 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08DB1FF2;
+        Tue,  4 Apr 2023 01:25:18 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id er13so86279630edb.9;
+        Tue, 04 Apr 2023 01:25:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680596714;
+        d=gmail.com; s=20210112; t=1680596717;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Nz9Rt5llaKTGY8gvxSvQqyvro9YAn45RkiHqvQ+NW6Q=;
-        b=cbd6vhqGnL/IKhxwKvQkqeLqbxgMQAj6qIxQKYNB+hULyN6c9r2m3BZiAEH0i3l0mS
-         UIBzqoVgM2oMExcy8929mkZUYdxX0GvBAb+ufKauaXrxTAQ4Ofl/oQoNvlsXhP1QQqgE
-         QeSBHHPHlJGzH/BK1EHBLTxnMKNv87m/N4weGn8Pqikky93Sxg7jyJBegSKh34di5kUV
-         VVZpA5jB3kQ0lzZkU9KvVkUBA91haq7fQkFGzdEDE1L0/YjPDhr82XIuwjHkjJO90llh
-         JwFr309c0r1X/OBFCg9Qu43Gs17XJW8r24z68ktMlZ0UaCVyyEK6qbGfMh2hq94/zziL
-         asGA==
+        bh=RMaukyB75YQHIXMj12zxrY0cCVSP/TBv/PhCLD+5RBQ=;
+        b=WfHwPkzir63d7KSfSDng4E4DQe0mVebL7Hnd3QSOT3OZtucF6PaEwhDwBmP5MzY253
+         /f8Q+m7tEftciR3m4da1SBj1Rllb1BoANlMqNlptX5Nu1az6GkyBF+/LQ/brADGXyHuw
+         4X17KZy0ekOD5csvMDd6cxHG1psblj0snZooKP6BHbyvHW8PRqhexI4dVcUdRakrt1+c
+         0KJyG0e5ybAghf/+wpuqFncSwmlGBSTQOl49UO4+eR3t49AohqwBgDi1ofShW0JB58jr
+         l96RZWwm1MsqSNC/+1MIGAwQYTISJwHYwg8i4Ypbl2Ky1juiXJtZmIKkFw8ONQ1CDYV7
+         uIhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680596714;
+        d=1e100.net; s=20210112; t=1680596717;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Nz9Rt5llaKTGY8gvxSvQqyvro9YAn45RkiHqvQ+NW6Q=;
-        b=ChKvR3T+McQKCOA7dpZVZhxLylWHN2d9Q1kNT6d3XaiKgdrJ/RE6+2tcKkTb38omxT
-         v11d/bvzpaEeMfTpyNvwaZ+mE2EZNvJ+WHBchEScVy4fJb6gjIqMtTAti5k1H2pZQVjw
-         pVCd5cPsL4YOsHY0c2B4KNvbh2xW/mh6jPDJsvgvaCRttYqQYakNpXwWooFxSDYTRwhc
-         HplUk0rkSm9W+dCK47TuOkojBkjJ6I4I8QmL6P63eyRKw+lWyuq26v49FnQxrJYJjh8R
-         ZFhK6hG+obmP/4hy9l+De8zHUFevoz+IaQoB9atOojhNy++8xpOWDgwqlRTarkZdK78I
-         w0+Q==
-X-Gm-Message-State: AAQBX9cyqqubjRZ3eBce2UdOBQFUuPfjP1OBUztgAmjA4yqLVEEEpTR0
-        WaTh1E6vXtyViUBtf0aU2wY=
-X-Google-Smtp-Source: AKy350aXHXD8VID4zXf64e+YvsL7aQVBObI4XTPTF4eARYu187ArEiSIAleYEt+IuoWWbwj9nRBecQ==
-X-Received: by 2002:a17:907:3e1a:b0:93e:fa12:aa1a with SMTP id hp26-20020a1709073e1a00b0093efa12aa1amr1864794ejc.1.1680596714183;
-        Tue, 04 Apr 2023 01:25:14 -0700 (PDT)
+        bh=RMaukyB75YQHIXMj12zxrY0cCVSP/TBv/PhCLD+5RBQ=;
+        b=62ir+3rIDNsMlU6CHJxCuRaH7zRAB+aFRP7Xt9qpGTqXO+BUw8gCHPZ27ZcdnOYroO
+         yhk23X/8FuulbaWzAOzxcRvw3+CGns77FFPiNRfpIT3mZmQMMpOuKCjWztCrr+rhmXSG
+         CSi1mqsRJlDyD1QBCQy1yhIZCvNkWjs8rhdP9kKzgNHyxMDTnx3lf7Ji9kwQLEgcO282
+         l+yi1Z4/TnXO1nGKsFxcKGQO91zCcy8WufrtmiNFp/gtnp6Wak1cG9FWD4jMDCsPASvD
+         QjtLUd2OEm/t77hp4Qrq4YKuolZ/bt2fh25fePnLriHyHvlq9VL7ovF0derIoM33q6H+
+         ynjA==
+X-Gm-Message-State: AAQBX9eOYVotliKwS63Zdsg1jYejDfOJTnIKx1o94AoRAD8FmyvJpkK9
+        Mk7i1PYtcN4sslzEWFyo73s=
+X-Google-Smtp-Source: AKy350anx1HWqArG7QFrghO8oNLz5VzJ9tW2zUJtRfbo2K4CMDvfSb0W/R5+O0653Y0LDCHyLzN+/w==
+X-Received: by 2002:a05:6402:164b:b0:4aa:a280:55b5 with SMTP id s11-20020a056402164b00b004aaa28055b5mr1668600edx.20.1680596716958;
+        Tue, 04 Apr 2023 01:25:16 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id s5-20020a170906454500b008e54ac90de1sm5640652ejq.74.2023.04.04.01.25.13
+        by smtp.googlemail.com with ESMTPSA id s5-20020a170906454500b008e54ac90de1sm5640652ejq.74.2023.04.04.01.25.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 01:25:13 -0700 (PDT)
+        Tue, 04 Apr 2023 01:25:16 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
 Cc:     damien.lemoal@opensource.wdc.com, xxm@rock-chips.com,
         Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Johan Jonker <jbx6244@gmail.com>,
         Brian Norris <briannorris@chromium.org>,
-        Caleb Connolly <kc@postmarketos.org>,
         Corentin Labbe <clabbe@baylibre.com>,
+        Caleb Connolly <kc@postmarketos.org>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
         Judy Hsiao <judyhsiao@chromium.org>,
         Lin Huang <hl@rock-chips.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
         Hugh Cole-Baker <sigmaris@gmail.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 06/11] dt-bindings: PCI: Update the RK3399 example to a valid one
-Date:   Tue,  4 Apr 2023 10:24:19 +0200
-Message-Id: <20230404082426.3880812-7-rick.wertenbroek@gmail.com>
+Subject: [PATCH v3 07/11] PCI: rockchip: Fix legacy IRQ generation for RK3399 PCIe endpoint core
+Date:   Tue,  4 Apr 2023 10:24:20 +0200
+Message-Id: <20230404082426.3880812-8-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
 References: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
@@ -89,47 +89,109 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Update the example in the documentation a valid example.
-The default max-outbound-regions is 32 but the example showed 16.
-Address for mem-base was invalid. Added pinctrl.
+Fix legacy IRQ generation for RK3399 PCIe endpoint core according to
+the technical reference manual (TRM). Assert and deassert legacy
+interrupt (INTx) through the legacy interrupt control register
+("PCIE_CLIENT_LEGACY_INT_CTRL") instead of manually generating a PCIe
+message. The generation of the legacy interrupt was tested and validated
+with the PCIe endpoint test driver.
 
+Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+Cc: stable@vger.kernel.org
 Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- .../devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml  | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 45 ++++++-----------------
+ drivers/pci/controller/pcie-rockchip.h    |  6 ++-
+ 2 files changed, 16 insertions(+), 35 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
-index 88386a6d7011..0c67e96096eb 100644
---- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
-+++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
-@@ -47,14 +47,15 @@ examples:
+diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+index 4c84e403e155..7591a7be78e0 100644
+--- a/drivers/pci/controller/pcie-rockchip-ep.c
++++ b/drivers/pci/controller/pcie-rockchip-ep.c
+@@ -337,48 +337,25 @@ static int rockchip_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
+ }
  
-         pcie-ep@f8000000 {
-             compatible = "rockchip,rk3399-pcie-ep";
--            reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0x80000000 0x0 0x20000>;
--            reg-names = "apb-base", "mem-base";
-+            rockchip,max-outbound-regions = <32>;
-             clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-               <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-             clock-names = "aclk", "aclk-perf",
-                     "hclk", "pm";
-             max-functions = /bits/ 8 <8>;
-             num-lanes = <4>;
-+            reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0xfa000000 0x0 0x2000000>;
-+            reg-names = "apb-base", "mem-base";
-             resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-               <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE> ,
-               <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>, <&cru SRST_A_PCIE>;
-@@ -62,7 +63,8 @@ examples:
-                     "pm", "pclk", "aclk";
-             phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
-             phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
--            rockchip,max-outbound-regions = <16>;
-+            pinctrl-names = "default";
-+            pinctrl-0 = <&pcie_clkreqnb_cpm>;
-         };
-     };
- ...
+ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+-					 u8 intx, bool is_asserted)
++					 u8 intx, bool do_assert)
+ {
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+-	u32 r = ep->max_regions - 1;
+-	u32 offset;
+-	u32 status;
+-	u8 msg_code;
+-
+-	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
+-		     ep->irq_pci_fn != fn)) {
+-		rockchip_pcie_prog_ep_ob_atu(rockchip, fn, r,
+-					     AXI_WRAPPER_NOR_MSG,
+-					     ep->irq_phys_addr, 0, 0);
+-		ep->irq_pci_addr = ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR;
+-		ep->irq_pci_fn = fn;
+-	}
+ 
+ 	intx &= 3;
+-	if (is_asserted) {
++
++	if (do_assert) {
+ 		ep->irq_pending |= BIT(intx);
+-		msg_code = ROCKCHIP_PCIE_MSG_CODE_ASSERT_INTA + intx;
++		rockchip_pcie_write(rockchip,
++				    PCIE_CLIENT_INT_IN_ASSERT |
++				    PCIE_CLIENT_INT_PEND_ST_PEND,
++				    PCIE_CLIENT_LEGACY_INT_CTRL);
+ 	} else {
+ 		ep->irq_pending &= ~BIT(intx);
+-		msg_code = ROCKCHIP_PCIE_MSG_CODE_DEASSERT_INTA + intx;
++		rockchip_pcie_write(rockchip,
++				    PCIE_CLIENT_INT_IN_DEASSERT |
++				    PCIE_CLIENT_INT_PEND_ST_NORMAL,
++				    PCIE_CLIENT_LEGACY_INT_CTRL);
+ 	}
+-
+-	status = rockchip_pcie_read(rockchip,
+-				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
+-				    ROCKCHIP_PCIE_EP_CMD_STATUS);
+-	status &= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
+-
+-	if ((status != 0) ^ (ep->irq_pending != 0)) {
+-		status ^= ROCKCHIP_PCIE_EP_CMD_STATUS_IS;
+-		rockchip_pcie_write(rockchip, status,
+-				    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
+-				    ROCKCHIP_PCIE_EP_CMD_STATUS);
+-	}
+-
+-	offset =
+-	   ROCKCHIP_PCIE_MSG_ROUTING(ROCKCHIP_PCIE_MSG_ROUTING_LOCAL_INTX) |
+-	   ROCKCHIP_PCIE_MSG_CODE(msg_code) | ROCKCHIP_PCIE_MSG_NO_DATA;
+-	writel(0, ep->irq_cpu_addr + offset);
+ }
+ 
+ static int rockchip_pcie_ep_send_legacy_irq(struct rockchip_pcie_ep *ep, u8 fn,
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index f3a5ff1cf7f4..ffc68a3a5fee 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -38,6 +38,11 @@
+ #define   PCIE_CLIENT_MODE_EP            HIWORD_UPDATE(0x0040, 0)
+ #define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
+ #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
++#define PCIE_CLIENT_LEGACY_INT_CTRL	(PCIE_CLIENT_BASE + 0x0c)
++#define   PCIE_CLIENT_INT_IN_ASSERT		HIWORD_UPDATE_BIT(0x0002)
++#define   PCIE_CLIENT_INT_IN_DEASSERT		HIWORD_UPDATE(0x0002, 0)
++#define   PCIE_CLIENT_INT_PEND_ST_PEND		HIWORD_UPDATE_BIT(0x0001)
++#define   PCIE_CLIENT_INT_PEND_ST_NORMAL	HIWORD_UPDATE(0x0001, 0)
+ #define PCIE_CLIENT_SIDE_BAND_STATUS	(PCIE_CLIENT_BASE + 0x20)
+ #define   PCIE_CLIENT_PHY_ST			BIT(12)
+ #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
+@@ -227,7 +232,6 @@
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
+ #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
+-#define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
+ #define ROCKCHIP_PCIE_EP_FUNC_BASE(fn)	(((fn) << 12) & GENMASK(19, 12))
+ #define ROCKCHIP_PCIE_AT_IB_EP_FUNC_BAR_ADDR0(fn, bar) \
+ 	(PCIE_RC_RP_ATS_BASE + 0x0840 + (fn) * 0x0040 + (bar) * 0x0008)
 -- 
 2.25.1
 
