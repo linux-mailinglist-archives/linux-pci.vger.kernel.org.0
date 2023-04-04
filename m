@@ -2,92 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B7F1D6D69E3
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0FF3A6D69E8
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:10:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231348AbjDDRJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 13:09:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
+        id S235003AbjDDRJ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 13:09:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232447AbjDDRJg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:09:36 -0400
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946E0CF;
-        Tue,  4 Apr 2023 10:09:35 -0700 (PDT)
-Received: by mail-oi1-f177.google.com with SMTP id bj20so24721267oib.3;
-        Tue, 04 Apr 2023 10:09:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680628175;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6H1CnmaYD1ILwp+VcjbZQm8EbJhKwj2OJVE8FjdAMCw=;
-        b=JzQHB5DS/6nydDyXoBHoauN/7ZnzfHiZxyvHrdxFSDgxfFOtg7f35VVTI62ymdmO49
-         p/yPZlkSkRdO/3EugLNXubTa/2S7lI8HXf/FX1A+XPHlSWDsAoli0Eg8h1aClZxMJ7UD
-         jCUWLhgCya3hIM/lCx0gzTPL81zIYjiiFchyG6a1+9g1dtbmj/7rd9ktS56zhyRsPn4p
-         wUG0cJ0XA9K49llu1+af3k7vX59NHTRbUGYNbq32SKVMkgF9Kf7SwMDFqVqbioAl6fFk
-         HUqIvlFQMdbhGcLncb9aUjti55K2xOgehx04dtrKfvHTjUnfETpXX9/OV7lL+u6WSyxW
-         a0zA==
-X-Gm-Message-State: AAQBX9cx0MX4/cZr8f2m+uTb62gn2sessJjHUwuJ0ZfinrCzXt3YOjM5
-        rb92Pb5NQ91G4cAbwQh0WJXNjPptOg==
-X-Google-Smtp-Source: AKy350bzXz+KM07Z6ghxSIozeb5vXQ9jMix/XK+MQYxeeXeuQgAj8RDRawgpUHIYTNQcxAvMuDSwsg==
-X-Received: by 2002:a05:6808:68e:b0:389:14bd:8246 with SMTP id k14-20020a056808068e00b0038914bd8246mr76571oig.13.1680628174494;
-        Tue, 04 Apr 2023 10:09:34 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id i185-20020aca3bc2000000b003848dbe505fsm5382750oia.57.2023.04.04.10.09.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 10:09:33 -0700 (PDT)
-Received: (nullmailer pid 130248 invoked by uid 1000);
-        Tue, 04 Apr 2023 17:09:32 -0000
-Date:   Tue, 4 Apr 2023 12:09:32 -0500
-From:   Rob Herring <robh@kernel.org>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        with ESMTP id S235609AbjDDRJ5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:09:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEC4C7;
+        Tue,  4 Apr 2023 10:09:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 16B3B63773;
+        Tue,  4 Apr 2023 17:09:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF4AC433EF;
+        Tue,  4 Apr 2023 17:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680628194;
+        bh=IK2aCtlyClHSVX99J78ji0/3Kc8IkYOR0+e5e+EQq78=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mjj5gN61RWvx3kW5BWospMkZcjO4aXYE6MfG53S9AmWfQyUuUSxSUIv4JTuZQPVC6
+         EIHzT14n1+NADzeeF1IpjZoYiX69W9D9R/mJDsBeuw7C5mo108RL/VfOh0CyNf4p6v
+         5xqAGutCYR6U6D64ChpMiTbg36lDwMCHWuOG7tohRURPS/KpwaXDfoD0B2nKGgUu07
+         iME1EHpbAriJV0fbYU9lnEfWg3wTpaOIz/fU6xOqsvOyXC4tnkrSJT/chG3Wwf/9ll
+         anmzBdavCLnQNeq8zJOTBtNNOtp8ElVHpt0DojmIGL9GRJOsNeozAk/R0bhRtExqZ9
+         PhkiUtuRXoXEQ==
+Date:   Tue, 4 Apr 2023 12:09:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ben Greear <greearb@candelatech.com>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        bjorn@helgaas.com, LKML <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Srikanth Thokala <srikanth.thokala@intel.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: PCI: Drop unneeded quotes
-Message-ID: <20230404170932.GE49361-robh@kernel.org>
-References: <20230320233911.2920364-1-robh@kernel.org>
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Yao Hongbo <yaohongbo@linux.alibaba.com>,
+        Naveen Naidu <naveennaidu479@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
+        Gregory Greenman <gregory.greenman@intel.com>,
+        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH 5.4 182/389] PCI/portdrv: Dont disable AER reporting in
+ get_port_device_capability()
+Message-ID: <20230404170952.GA3559293@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230320233911.2920364-1-robh@kernel.org>
-X-Spam-Status: No, score=0.7 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <4ff1397e-1d78-bc59-f577-e69024c4c4f3@candelatech.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 20, 2023 at 06:39:11PM -0500, Rob Herring wrote:
-> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
-> checking for this can be enabled in yamllint.
+On Fri, Mar 31, 2023 at 03:31:40PM -0700, Ben Greear wrote:
+> On 3/31/23 15:06, Bjorn Helgaas wrote:
+> > [+cc iwlwifi folks]
+> > 
+> > Re: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
+> > get_port_device_capability()")
+> > 
+> > On Wed, Mar 29, 2023 at 04:17:29PM -0700, Ben Greear wrote:
+> > > On 8/30/22 3:16 PM, Ben Greear wrote:
+> > > ...
+> > 
+> > > I notice this patch appears to be in 6.2.6 kernel, and my kernel logs are
+> > > full of spam and system is unstable.  Possibly the unstable part is related
+> > > to something else, but the log spam is definitely extreme.
+> > > 
+> > > These systems are fairly stable on 5.19-ish kernels without the patch in
+> > > question.
+> > 
+> > Hmmm, I was going to thank you for the report, but looking closer, I
+> > see that you reported this last August [1] and we *should* have
+> > pursued it with the iwlwifi folks or figured out what the PCI core is
+> > doing wrong, but I totally dropped the ball.  Sorry about that.
+> > 
+> > To make sure we're all on the same page, we're talking about
+> > 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
+> > get_port_device_capability()") [2],
+> > which is present in v6.0 and later [3] but not v5.19.16 [4].
 > 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml        | 2 +-
->  .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 2 +-
->  Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml   | 8 ++++----
->  Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml | 8 ++++----
->  Documentation/devicetree/bindings/pci/cdns-pcie.yaml      | 4 ++--
->  .../devicetree/bindings/pci/intel,keembay-pcie-ep.yaml    | 4 ++--
->  .../devicetree/bindings/pci/intel,keembay-pcie.yaml       | 4 ++--
->  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml   | 2 +-
->  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 6 +++---
->  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml        | 6 +++---
->  .../bindings/reset/brcm,bcm7216-pcie-sata-rescal.yaml     | 4 ++--
->  11 files changed, 25 insertions(+), 25 deletions(-)
+> Yes, though I manually tried reverting that patch, and problem
+> persisted, so maybe some secondary patch still enables whatever
+> causes the issue.
+> 
+> Booting with pci=noaer 'fixes' the problem for me, that is what I am
+> running currently.
+> 
+> > > Here is sample of the spam:
+> > > 
+> > > [ 1675.547023] pcieport 0000:03:02.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
+> > > [ 1675.556851] pcieport 0000:03:02.0:   device [10b5:8619] error status/mask=00100000/00000000
+> > > [ 1675.563904] pcieport 0000:03:02.0:    [20] UnsupReq               (First)
+> > > [ 1675.569398] pcieport 0000:03:02.0: AER:   TLP Header: 34000000 05001f10 00000000 88c888c8
+> > > [ 1675.576296] iwlwifi 0000:05:00.0: AER: can't recover (no error_detected callback)
+> > 
+> > The TLP header says this is an LTR message from 05:00.0.  Apparently
+> > the bridge above 05:00.0 is 03:02.0, which logged an Unsupported
+> > Request error for the message, probably because 03:02.0 doesn't have
+> > LTR enabled.
 
-Applied, thanks.
+> Here is lspci, and please note that I am using a pcie -> 12x m.2
+> adapter board, which is not common in the world.  Possibly it is
+> causing some of the problems with the AER logic (though, it is
+> stable in 5.19 and lower.  And a similar system with 2 of these
+> adapter boards filled with 24 mtk7922 radios does not show the AER
+> warnings or instability problems so far.)
+> 
+> The lspci below is from a system with 12 ax210 radios, I have
+> another with 24, it shows similar problems.
+
+Interesting config.  Somebody is definitely doing something wrong.
+LTR is enabled at 00:1c.0 (which is fine), not supported and disabled
+at 02:00.0 and 03:02.0 (also fine), but *enabled* at 05:00.0, which is
+absolutely not fine because 03:02.0 won't know what to do with the LTR
+messages and would log the AER errors you're seeing.
+
+> 00:1c.0 PCI bridge: Intel Corporation 100 Series/C230 Series Chipset Family PCI Express Root Port #1 (rev f1) (prog-if 00 [Normal decode])
+> 	Bus: primary=00, secondary=02, subordinate=0f, sec-latency=0
+> 		DevCap2: Completion Timeout: Range ABC, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd+
+> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
+
+> 02:00.0 PCI bridge: PLX Technology, Inc. PEX 8619 16-lane, 16-Port PCI Express Gen 2 (5.0 GT/s) Switch with DMA (rev ba) (prog-if 00 [Normal decode])
+> 	Bus: primary=02, secondary=03, subordinate=0f, sec-latency=0
+
+> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported
+> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
+
+> 03:02.0 PCI bridge: PLX Technology, Inc. PEX 8619 16-lane, 16-Port PCI Express Gen 2 (5.0 GT/s) Switch with DMA (rev ba) (prog-if 00 [Normal decode])
+> 	Bus: primary=03, secondary=05, subordinate=05, sec-latency=0
+
+> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported ARIFwd+
+> 			 AtomicOpsCap: Routing-
+> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
+
+> 05:00.0 Network controller: Intel Corporation Device 2725 (rev 1a)
+> 		DevCap2: Completion Timeout: Range B, TimeoutDis+, LTR+, OBFF Via WAKE#
+> 			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
+> 		DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis-, LTR+, OBFF Disabled
+> 			 AtomicOpsCtl: ReqEn-
+
+For 02:00.0 and 03:02.0, pci_configure_ltr() should bail out as soon
+as it sees they don't support PCI_EXP_DEVCAP2_LTR, so they should
+never have dev->ltr_path set.  And pci_configure_ltr() should not set
+PCI_EXP_DEVCTL2_LTR_EN for 05:00.0 since bridge->ltr_path is not set
+for 03:02.0.
+
+Can you collect the dmesg log when booted with "pci=earlydump"?  I
+wonder if BIOS could be enabling LTR on 05:00.0.
+
+Bjorn
