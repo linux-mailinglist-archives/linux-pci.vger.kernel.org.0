@@ -2,107 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BCA066D5D7F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 12:30:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3A586D5E8A
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 13:05:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234069AbjDDKa1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 06:30:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42228 "EHLO
+        id S231190AbjDDLFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 07:05:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233699AbjDDKa0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 06:30:26 -0400
-Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A50351731
-        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 03:30:25 -0700 (PDT)
-Received: by mail-vs1-xe34.google.com with SMTP id i10so27968367vss.5
-        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 03:30:25 -0700 (PDT)
+        with ESMTP id S234714AbjDDLEc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 07:04:32 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DF5665B2;
+        Tue,  4 Apr 2023 04:02:19 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id lr16-20020a17090b4b9000b0023f187954acso33540296pjb.2;
+        Tue, 04 Apr 2023 04:02:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680604224;
+        d=gmail.com; s=20210112; t=1680606110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ib3Cz1MXE3cn0nTFcpYl1DYJE0Cyckteyn2THqatch8=;
-        b=DWiMxRUi04G9zSmuXtNTZytHjXXs+Ip2/1oPTCGyafYPdo8nv0FQe+mfC4fT5mcO4M
-         cyx5/dt4Sz3ThG2sz7bt5qIi2rupHm+3UTmndOIy7GUYCaMtQQm6Tdz1eH27k1+07kqC
-         XafFsFWYlLXSJXgIj4cSyK7zuacPl3xxLwmh0osBL+lPNSELohaQqta5QINJmb4fS98c
-         5yeG4ax9auteMyzC3Fa2UlmLtzNqwIAgXx6ziqznYIw+Q8ye+EDl9ZN0/r0+r27pcgpN
-         YDk4cyU9SIB31RIKcBWlE6DPXkWGze7D641GGMz6CCOBpcTFhlzdI36m/z69Cdcjt1Hr
-         dEjA==
+        bh=iLXYG9UIvfeWF+Q8/NtPlVhVUhnvAmqVeS4iKYz0Uz0=;
+        b=pz0HO8RZWzyNSUJ2QkwzWsTUwKeHQ55RS+lRq18OK3hROKy/duTTo2Oi55gEbRHlWZ
+         LeA8q8SYJ762pHWz1s8JKvo2UVKhpNcDNiUdtVCV0m/7BTvzV476wIZ/Fu0qFNzhfcqn
+         TvY12MFnOJRFLvy1gsbhy6Twb591LymsHKkfb1p7gb7WhEvUOqI0zELpRK21td7cJNNP
+         2Ktbemkvjdy8LyVK28EqY50DcqGz5bVUqc72iEyjHRW1gKtXSTIA8jC6HlqlXk7HN9Nl
+         S1c7edAdzs6VJRtxSEMTX2pbFNLWtReP/aKiWI7kR6HI6MozBvDQ1+dnnbjKBC7qqcs7
+         3Ysg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680604224;
+        d=1e100.net; s=20210112; t=1680606110;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ib3Cz1MXE3cn0nTFcpYl1DYJE0Cyckteyn2THqatch8=;
-        b=loSg1HB0Vamv30hYO07IG58PXW51xovrwGknVGPQlBd4injQcP8h2sxyB/hVwPYR/Q
-         E0drbRGYKOkYpg9YrWIVzTTxvEvHNkPNL4tf2U/j5lnX6UQBlMQK6qgjLf9aWYcjD8S9
-         oRYn8iky0VTFBurX74kjzscdRXBeiR+SrGrKH6K1o6E3Judqcc87nr3Wq3xMbacUeink
-         O+Ij9UTY27DifvqGOiY+OssF2FX3rMevHp+R6SysgHVGZQKn4V+q4XE9kmb4tPefXJ9d
-         zvEVDee0f4wmn6Lo9bnpplgoEg1mWAaFtpX37x5jvogUerk8Jrb0mbGMh/8iBIvNEo5l
-         JI3Q==
-X-Gm-Message-State: AAQBX9ce4yMFfU40R3G806fCHDbADUzv7NeCLFvelnhSl3F+BV/8sbM1
-        Gtpj+0dLiTNHFQc4octpdmFT4rkFO/zTSWwiUnwtNw==
-X-Google-Smtp-Source: AKy350bWYwOh202y5f32oW0VP+BE3vDu/6P0hBtsY5ib04k4DhK3YuwlOoocoACWE+mk1ya1FRAtMjOVg2SkSiRtTn0=
-X-Received: by 2002:a67:d286:0:b0:426:da10:2408 with SMTP id
- z6-20020a67d286000000b00426da102408mr1939052vsi.5.1680604224738; Tue, 04 Apr
- 2023 03:30:24 -0700 (PDT)
+        bh=iLXYG9UIvfeWF+Q8/NtPlVhVUhnvAmqVeS4iKYz0Uz0=;
+        b=XJcnAa93/eb7/VTQJ8JtyiXXPad1E4TQ8EadZmIfLbxjgktMkw1aVp5LGVV4lgoz5b
+         4SaU4Uh6oSYpag1Bny1+4ZHC3/UDajAo3PIzUIq7t0bTyYlqUSWuc25fV61r0WfyKTir
+         A9V2d+LGbkc9oZrQE0vbpWNKGSuzhjh+dwhAWeLq6FVJxODSbfnLldIBBH6Rnf7pdnVv
+         6KcU8VNoMorPSH65CLFWJZZYyHxr+6SxPmIcnr9t+BrQehp5boZHVR0JfQv/kj3pEnlC
+         GZoEDykBYoHa+XxmlSTTsqrTfKYz2Di98Djh4vbiyTA0mrxZAQrjQUQ1GOuo1OHuz+uf
+         hN0g==
+X-Gm-Message-State: AAQBX9fjaf/Gjrp82m+u6PtYc2+hKKn+ANJMD+ANEkLBc19/qNdHVq9m
+        kqgAeT+kZgCHaFbSiiBD69HVY774lkceX50hbl8=
+X-Google-Smtp-Source: AKy350aHxr3M+JgML644wS5Lz136pHJq5126aDOS+wBR0DZFjTtNeaBbyx5mm3eGDkvMk3XFrvyn/2mgzWXsWibaDTs=
+X-Received: by 2002:a17:902:76c3:b0:19f:3cc1:e3cc with SMTP id
+ j3-20020a17090276c300b0019f3cc1e3ccmr828639plt.3.1680606110250; Tue, 04 Apr
+ 2023 04:01:50 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
- <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
- <9a70d819-70d1-fb69-b053-a37ccfacf145@igel.co.jp> <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
-In-Reply-To: <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
-From:   Shunsuke Mie <mie@igel.co.jp>
-Date:   Tue, 4 Apr 2023 19:30:13 +0900
-Message-ID: <CANXvt5qJBY7v6HHCtDoa-qR3O6XYYrNABcRA2URtDODkmD7Xbg@mail.gmail.com>
-Subject: Re: [PATCH v4 04/17] PCI: epf-test: Fix DMA transfer completion detection
-To:     Damien Le Moal <dlemoal@fastmail.com>
-Cc:     Damien Le Moal <damien.lemoal@opensource.wdc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <CAEm4hYXLNP6pcCj5Av35sRG6kCOF0H3+a7VfTtFfGduMgcXJhA@mail.gmail.com>
+ <20230403224517.GA3472913@bhelgaas>
+In-Reply-To: <20230403224517.GA3472913@bhelgaas>
+From:   Xinghui Li <korantwork@gmail.com>
+Date:   Tue, 4 Apr 2023 19:02:59 +0800
+Message-ID: <CAEm4hYXNUdm_wdK580xsZBUWTycJFsEhjFJ+d57U_QYu6RFWxg@mail.gmail.com>
+Subject: Re: [PATCH v4] PCI: vmd: Add the module param to adjust MSI mode
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-2023=E5=B9=B44=E6=9C=884=E6=97=A5(=E7=81=AB) 19:17 Damien Le Moal <dlemoal@=
-fastmail.com>:
+On Tue, Apr 4, 2023 at 6:45=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
 >
-> On 4/4/23 18:47, Shunsuke Mie wrote:
-> >> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_e=
-pf_test *epf_test,
-> >>      struct dma_async_tx_descriptor *tx;
-> >>      struct dma_slave_config sconf =3D {};
-> >>      struct device *dev =3D &epf->dev;
-> >> -    dma_cookie_t cookie;
-> >>      int ret;
-> >>
-> >>      if (IS_ERR_OR_NULL(chan)) {
-> >> @@ -152,25 +160,33 @@ static int pci_epf_test_data_transfer(struct pci=
-_epf_test *epf_test,
-> >>      }
-> >>
-> >>      reinit_completion(&epf_test->transfer_complete);
-> >> +    epf_test->transfer_chan =3D chan;
-> >>      tx->callback =3D pci_epf_test_dma_callback;
-> >>      tx->callback_param =3D epf_test;
-> >> -    cookie =3D tx->tx_submit(tx);
-> >> +    epf_test->transfer_cookie =3D tx->tx_submit(tx);
+> > In the patch I send in last email, We speculate that the VMD
+> > Controller aggregate interrupts,
+> > making the PCIe port less stressed and improving iops. In this
+> > case(lots of 4k random IO), if we enable the VMD MSI
+> > remapping, we found the interrupts from VMD Controller's MSI are less
+> > and the IOPS is much higher.
+>
+> Great, that's useful information about why users would want to use
+> this parameter.
+>
+> Obviously the other half is to mention the reasons why they may not be
+> able to use it.  If "msi_remap=3Doff" were *always* safe and desirable,
+> we would just do that unconditionally and there would be no point in a
+> parameter.
+>
+> > > > I place the "vmd_config_msi_remap_param" that is VMD MSI-X's mode
+> > > > param configuring helper front
+> > > > "vmd_enable_domain". So, It will not change the logic disabling
+> > > > remapping from ee81ee84f873, such as
+> > > > "Currently MSI remapping must be enabled in guest passthrough mode"=
+.
+> > > > So, if the user config the wrong type, it will not work, and they c=
+an
+> > > > find it by dmesg.
+> > >
+> > > That's kind of a problem.  I'm not in favor of something failing and
+> > > the user having to debug it via dmesg.  That causes user frustration
+> > > and problem reports.
 > >
-> > How about changing the code to use dmaengine_submit() API instead of
-> > calling a raw function pointer?
+> > What about adding a sysfs node for it in VMD PCI bus dir, which allows
+> > users to catch VMD's MSI current working mode?
 >
-> This is done in patch 5 of the series.
-Sorry, I missed it.
+> No, a sysfs node is not the answer to this.  If we *can* avoid a
+> non-working situation, we should avoid it.  If users see a non-working
+> situation, they will rightly complain, and somebody will have to debug
+> it.  We don't want that.
+emm~
+I privately suppose: In the traditional way without module parameters,
+this problem also exists. If the user disables remapping in guest os, the V=
+MD
+driver will force it to remapping mode.
+What about I add the additional description in MODULE_PARM_DESC and comment=
+?
+As for some devices not support disable remapping,  What about changing
+the param to disabae_bypass=3D0/1?
+And make it clear in the description:
+this parameter will only affect the disabling of bypass mode on
+devices that support it.
 >
+> My point is that apparently guest passthrough mode is relevant and
+> maybe it should be part of the commit log about how this parameter
+> should be used.
+You are right~
+I will add some clarification on how to configure VMD MSI in the guest.
+>
+> Bjorn
