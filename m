@@ -2,152 +2,201 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E31876D659F
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 16:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1C95E6D687C
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 18:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230204AbjDDOmz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 10:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45914 "EHLO
+        id S235934AbjDDQLH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 12:11:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229473AbjDDOmy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 10:42:54 -0400
-Received: from mail-oi1-x22c.google.com (mail-oi1-x22c.google.com [IPv6:2607:f8b0:4864:20::22c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3142E51;
-        Tue,  4 Apr 2023 07:42:53 -0700 (PDT)
-Received: by mail-oi1-x22c.google.com with SMTP id r14so18689191oiw.12;
-        Tue, 04 Apr 2023 07:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680619373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=za5BO/JgKy56P0P/Z8yk+aMunnq2fdjXd9ztVhDZs+E=;
-        b=S/XoFNDUa4RahS6B4V+VsVOf16zucDqkJ+QMdZlpXWLfiNtquZ4Q7Ow7PAJ6f0xhVC
-         4gY05G4PwrVh94KhtkQh6wXmUzH7lDGaz2wZeVmQfSAdXhFKk5PRZtJH8a/qDrM0xHiZ
-         RNt7Q6WGzJeTbrh0YgdoKyzylFHC8EoIa4W7ekqvnKPqMV3NL6wHIFsCZWJRclQXE5lk
-         X/ePKsGsZk5gsbsCfzNFyFUc+WGObK+ai4mH33lR0+uovfqnynNeYXr7JlFTU6Ql65X5
-         FbksPoUTrbUNZI72nKeWMwkSRasU9R96IQ+hYwLh9A/ps96VGsYoafia+BCVeM5qEe/O
-         fdRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680619373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=za5BO/JgKy56P0P/Z8yk+aMunnq2fdjXd9ztVhDZs+E=;
-        b=ki7yA/P4ZGpvdZEK15Uw3Bsjk3y1LqJXeOR0wEeTsWcSTg+YSoMfFz7VI3sbU/bUOt
-         C+6KUWGqIB/lZcU8gLeSs0dPqL5BZiG7UBMB6cWP+NFOoflhBROkrTZ5soAc94ztV6wg
-         W5U1WXNyPKrZYnQSe75IxIbZFRiQGWKYfvd5X1ywVoAr0ZsiillzLcg668Op9iwtpwEF
-         pa+eUxKj6EQCAc+yYOSWI/0mjvxgGA50neUAppRifpShSaKqvjRrg5rN5+DaHXckTW+c
-         UhWoDpQA4NElg0glIO49eL/cssH8CM+HYIdIkxAOgcArHcAD7Sc1O0VPAYjxGUMTwoaB
-         slbA==
-X-Gm-Message-State: AAQBX9fcAzRjG5VQk8c/Lte0rxKKg/152rfXVAr4oecow3ioaLpuV0j+
-        PQlFlmxDW1HZzCzHw2tMgkGpixQYlBOVzkgrm3E=
-X-Google-Smtp-Source: AKy350Yif0VDmVk5S4ytwPYSwOTwWcOv3HAhfzuoUQ5lZDzYswoW99NaLv4P5VfBNlyPbniOeS7jNdmYF5wPxuFr1nA=
-X-Received: by 2002:a05:6808:6294:b0:389:72d5:f15f with SMTP id
- du20-20020a056808629400b0038972d5f15fmr1093634oib.10.1680619373128; Tue, 04
- Apr 2023 07:42:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
- <20230404082426.3880812-7-rick.wertenbroek@gmail.com> <d9afc07f-0346-1fe7-907c-261e4c6f92cd@linaro.org>
- <CAAEEuhrnp1QyP498V1wzyLv6KvfRCpNidF9NJpzg+kofWqrJtA@mail.gmail.com> <63d456fa-4db5-96fc-107e-060e59754096@linaro.org>
-In-Reply-To: <63d456fa-4db5-96fc-107e-060e59754096@linaro.org>
-From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Date:   Tue, 4 Apr 2023 16:42:17 +0200
-Message-ID: <CAAEEuhopfXnCBzAr2avNKuzZG+7ARisse9jd+ydwPCq1U56Sug@mail.gmail.com>
-Subject: Re: [PATCH v3 06/11] dt-bindings: PCI: Update the RK3399 example to a
- valid one
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc:     alberto.dassatti@heig-vd.ch, damien.lemoal@opensource.wdc.com,
-        xxm@rock-chips.com, Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S235913AbjDDQLF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 12:11:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B04A30F7;
+        Tue,  4 Apr 2023 09:11:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA155636AE;
+        Tue,  4 Apr 2023 16:11:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C854CC433D2;
+        Tue,  4 Apr 2023 16:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680624663;
+        bh=eKiqHkoBVo1AQRx10HafTawauui+/7aWix/7MTRPGrA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=nkcQpc5NRHDKcALdEO/kD1vJ7JRnALrRH75LPh2TDOMavdcMgvCuVznC7x8x+ecKt
+         1/q7prAN9eClvaAU3c0+dUWFvcRO66V04KGg+gYkb+YrMhjTw0ASpXENR+YKBHmeia
+         3Q5pvbnqrK/uCSEeFKclNxI3vwOX0dUud1/pCQiZ36qwD28S6odWh3QMAvbBbgMd/s
+         C/Qhj0iZpFO3X/jYT9y3J5qKvtPSjj/GrdFNEZo1J9pLwcjwlot2Tv6qfpoajNxUA+
+         o+rmP5HeMIpXk0J+ytkWwcX3yLOfhBvsgasfRd7/C7/NUehmnMEdxtOqmb8yLnHceu
+         ZoK1FHXZYisVQ==
+Date:   Tue, 4 Apr 2023 11:11:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Caleb Connolly <kc@postmarketos.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Judy Hsiao <judyhsiao@chromium.org>,
-        Lin Huang <hl@rock-chips.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
+ users
+Message-ID: <20230404161101.GA3554747@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230330162434.35055-1-andriy.shevchenko@linux.intel.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 4, 2023 at 3:29=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 04/04/2023 10:58, Rick Wertenbroek wrote:
-> > On Tue, Apr 4, 2023 at 10:45=E2=80=AFAM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 04/04/2023 10:24, Rick Wertenbroek wrote:
-> >>> Update the example in the documentation a valid example.
-> >>> The default max-outbound-regions is 32 but the example showed 16.
-> >>
-> >> This is not reason to be invalid. It is perfectly fine to change defau=
-lt
-> >> values to desired ones. What is not actually obvious is to change some
-> >> value to a default one, instead of removing it...
-> >
-> > Hello, the example value <0x0 0x80000000 0x0 0x20000>; is plain wrong
-> > and will crash the kernel. This is a value that point to an address tha=
-t falls
-> > in the DDR RAM region but depending on the amount of RAM on the
-> > board this address may not even exist (e.g., board with 2GB or less).
->
-> We talk about max-outbound-regions.
+On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
+> Provide two new helper macros to iterate over PCI device resources and
+> convert users.
+> 
+> Looking at it, refactor existing pci_bus_for_each_resource() and convert
+> users accordingly.
+> 
+> Note, the amount of lines grew due to the documentation update.
+> 
+> Changelog v8:
+> - fixed issue with pci_bus_for_each_resource() macro (LKP)
+> - due to above added a new patch to document how it works
+> - moved the last patch to be #2 (Philippe)
+> - added tags (Philippe)
+> 
+> Changelog v7:
+> - made both macros to share same name (Bjorn)
 
-Okay, sorry, I didn't get that, you are right, there is nothing wrong with =
-16.
-I'll remove that change and leave it be.
+I didn't actually request the same name for both; I would have had no
+idea how to even do that :)
 
->
-> >
-> > Also this address requires pointing to where the PCIe controller has th=
-e
-> > windows from AXI Physical space to PCIe space. This address is
-> > allocated when the SoC address map is created so it can only be that
-> > one unless rockchip refabs the SoC with another address map.
-> >
-> > The example never worked with the values given as reported by e.g.,
-> > https://stackoverflow.com/questions/73586703/device-tree-issues-with-ro=
-ckpro64-pcie-endpoint
-> > and here they set it to 0 (base of the DDR, which is a "valid" address
-> > as to it exists even on boards with less than 2GB) but it is still wron=
-g
-> > to do so.
->
-> Again, my comment was under max-outbound-regions, not under some other
-> pieces. Does this all apply?
->
-> Best regards,
-> Krzysztof
->
+v6 had:
 
-I'll remove the change to the max-outbound-regions, it is not needed.
-I'll place the registers as second parameter, both on the dtsi entry and he=
-re.
-I'll keep the change to the register value because it is necessary along
-with the added pinctrl.
+  pci_dev_for_each_resource_p(dev, res)
+  pci_dev_for_each_resource(dev, res, i)
 
-This will simplify the patch, avoid unnecessary changes, and make
-things clearer.
+and I suggested:
 
-Sorry for the misunderstanding.
-Regards,
-Rick
+  pci_dev_for_each_resource(dev, res)
+  pci_dev_for_each_resource_idx(dev, res, i)
+
+because that pattern is used elsewhere.  But you figured out how to do
+it, and having one name is even better, so thanks for that extra work!
+
+> - split out the pci_resource_n() conversion (Bjorn)
+> 
+> Changelog v6:
+> - dropped unused variable in PPC code (LKP)
+> 
+> Changelog v5:
+> - renamed loop variable to minimize the clash (Keith)
+> - addressed smatch warning (Dan)
+> - addressed 0-day bot findings (LKP)
+> 
+> Changelog v4:
+> - rebased on top of v6.3-rc1
+> - added tag (Krzysztof)
+> 
+> Changelog v3:
+> - rebased on top of v2 by Mika, see above
+> - added tag to pcmcia patch (Dominik)
+> 
+> Changelog v2:
+> - refactor to have two macros
+> - refactor existing pci_bus_for_each_resource() in the same way and
+>   convert users
+> 
+> Andy Shevchenko (6):
+>   kernel.h: Split out COUNT_ARGS() and CONCATENATE()
+>   PCI: Introduce pci_resource_n()
+>   PCI: Document pci_bus_for_each_resource() to avoid confusion
+>   PCI: Allow pci_bus_for_each_resource() to take less arguments
+>   EISA: Convert to use less arguments in pci_bus_for_each_resource()
+>   pcmcia: Convert to use less arguments in pci_bus_for_each_resource()
+> 
+> Mika Westerberg (1):
+>   PCI: Introduce pci_dev_for_each_resource()
+> 
+>  .clang-format                             |  1 +
+>  arch/alpha/kernel/pci.c                   |  5 +-
+>  arch/arm/kernel/bios32.c                  | 16 +++--
+>  arch/arm/mach-dove/pcie.c                 | 10 ++--
+>  arch/arm/mach-mv78xx0/pcie.c              | 10 ++--
+>  arch/arm/mach-orion5x/pci.c               | 10 ++--
+>  arch/mips/pci/ops-bcm63xx.c               |  8 +--
+>  arch/mips/pci/pci-legacy.c                |  3 +-
+>  arch/powerpc/kernel/pci-common.c          | 21 +++----
+>  arch/powerpc/platforms/4xx/pci.c          |  8 +--
+>  arch/powerpc/platforms/52xx/mpc52xx_pci.c |  5 +-
+>  arch/powerpc/platforms/pseries/pci.c      | 16 ++---
+>  arch/sh/drivers/pci/pcie-sh7786.c         | 10 ++--
+>  arch/sparc/kernel/leon_pci.c              |  5 +-
+>  arch/sparc/kernel/pci.c                   | 10 ++--
+>  arch/sparc/kernel/pcic.c                  |  5 +-
+>  drivers/eisa/pci_eisa.c                   |  4 +-
+>  drivers/pci/bus.c                         |  7 +--
+>  drivers/pci/hotplug/shpchp_sysfs.c        |  8 +--
+>  drivers/pci/pci.c                         |  3 +-
+>  drivers/pci/probe.c                       |  2 +-
+>  drivers/pci/remove.c                      |  5 +-
+>  drivers/pci/setup-bus.c                   | 37 +++++-------
+>  drivers/pci/setup-res.c                   |  4 +-
+>  drivers/pci/vgaarb.c                      | 17 ++----
+>  drivers/pci/xen-pcifront.c                |  4 +-
+>  drivers/pcmcia/rsrc_nonstatic.c           |  9 +--
+>  drivers/pcmcia/yenta_socket.c             |  3 +-
+>  drivers/pnp/quirks.c                      | 29 ++++-----
+>  include/linux/args.h                      | 13 ++++
+>  include/linux/kernel.h                    |  8 +--
+>  include/linux/pci.h                       | 72 +++++++++++++++++++----
+>  32 files changed, 190 insertions(+), 178 deletions(-)
+>  create mode 100644 include/linux/args.h
+
+Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
+
+I omitted
+
+  [1/7] kernel.h: Split out COUNT_ARGS() and CONCATENATE()"
+
+only because it's not essential to this series and has only a trivial
+one-line impact on include/linux/pci.h.
+
+Bjorn
