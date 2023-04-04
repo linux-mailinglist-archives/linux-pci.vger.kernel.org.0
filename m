@@ -2,88 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37AB86D69B3
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:00:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7F1D6D69E3
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232817AbjDDRAU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 13:00:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47638 "EHLO
+        id S231348AbjDDRJh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 13:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235713AbjDDRAR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:00:17 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 82602D1;
-        Tue,  4 Apr 2023 10:00:16 -0700 (PDT)
-Received: from [192.168.0.5] (unknown [71.212.161.12])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D7FD0210DD99;
-        Tue,  4 Apr 2023 10:00:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D7FD0210DD99
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680627616;
-        bh=eekB3bYoQqC3IJ2D872oRGGQeEcgPYH1G+tXq6FWN2A=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=YiOICRBkseLaRSK7TUNqQ3yPBKOdljXbZ7yV6NAxoxVfjIQCj+2tXmsKJfwu3IdVm
-         1t9Wrg4ZUWgjCSBOwaYFCgWNCg/8PIs+KLf6LzqKOEftMR1tXfA6Cmrz15ZiTYO+bQ
-         vtH5IFH06p9aMbbPlxhyxxeVNbTTLbPZ0LkBVVmI=
-Message-ID: <2543a6aa-adc0-b471-6281-38130b4d6a08@linux.microsoft.com>
-Date:   Tue, 4 Apr 2023 10:00:15 -0700
+        with ESMTP id S232447AbjDDRJg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:09:36 -0400
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 946E0CF;
+        Tue,  4 Apr 2023 10:09:35 -0700 (PDT)
+Received: by mail-oi1-f177.google.com with SMTP id bj20so24721267oib.3;
+        Tue, 04 Apr 2023 10:09:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680628175;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6H1CnmaYD1ILwp+VcjbZQm8EbJhKwj2OJVE8FjdAMCw=;
+        b=JzQHB5DS/6nydDyXoBHoauN/7ZnzfHiZxyvHrdxFSDgxfFOtg7f35VVTI62ymdmO49
+         p/yPZlkSkRdO/3EugLNXubTa/2S7lI8HXf/FX1A+XPHlSWDsAoli0Eg8h1aClZxMJ7UD
+         jCUWLhgCya3hIM/lCx0gzTPL81zIYjiiFchyG6a1+9g1dtbmj/7rd9ktS56zhyRsPn4p
+         wUG0cJ0XA9K49llu1+af3k7vX59NHTRbUGYNbq32SKVMkgF9Kf7SwMDFqVqbioAl6fFk
+         HUqIvlFQMdbhGcLncb9aUjti55K2xOgehx04dtrKfvHTjUnfETpXX9/OV7lL+u6WSyxW
+         a0zA==
+X-Gm-Message-State: AAQBX9cx0MX4/cZr8f2m+uTb62gn2sessJjHUwuJ0ZfinrCzXt3YOjM5
+        rb92Pb5NQ91G4cAbwQh0WJXNjPptOg==
+X-Google-Smtp-Source: AKy350bzXz+KM07Z6ghxSIozeb5vXQ9jMix/XK+MQYxeeXeuQgAj8RDRawgpUHIYTNQcxAvMuDSwsg==
+X-Received: by 2002:a05:6808:68e:b0:389:14bd:8246 with SMTP id k14-20020a056808068e00b0038914bd8246mr76571oig.13.1680628174494;
+        Tue, 04 Apr 2023 10:09:34 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i185-20020aca3bc2000000b003848dbe505fsm5382750oia.57.2023.04.04.10.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 10:09:33 -0700 (PDT)
+Received: (nullmailer pid 130248 invoked by uid 1000);
+        Tue, 04 Apr 2023 17:09:32 -0000
+Date:   Tue, 4 Apr 2023 12:09:32 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Srikanth Thokala <srikanth.thokala@intel.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: Drop unneeded quotes
+Message-ID: <20230404170932.GE49361-robh@kernel.org>
+References: <20230320233911.2920364-1-robh@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] PCI: hv: Use nested hypercall for retargeting interrupts
-Content-Language: en-US
-To:     Jinank Jain <jinankjain@linux.microsoft.com>,
-        jinankjain@microsoft.com, kys@microsoft.com,
-        haiyangz@microsoft.com, wei.liu@kernel.org, decui@microsoft.com,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com
-Cc:     linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230404113546.856813-1-jinankjain@linux.microsoft.com>
-From:   Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <20230404113546.856813-1-jinankjain@linux.microsoft.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-19.8 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_PASS,USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230320233911.2920364-1-robh@kernel.org>
+X-Spam-Status: No, score=0.7 required=5.0 tests=FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-
-On 4/4/2023 4:35 AM, Jinank Jain wrote:
-> In case of nested MSHV, retargeting interrupt hypercall should be sent
-> to L0 hypervisor instead of L1 hypervisor.
+On Mon, Mar 20, 2023 at 06:39:11PM -0500, Rob Herring wrote:
+> Cleanup bindings dropping unneeded quotes. Once all these are fixed,
+> checking for this can be enabled in yamllint.
 > 
-> Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 > ---
->  drivers/pci/controller/pci-hyperv.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index f33370b75628..2123f632ecf7 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -704,8 +704,14 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  		}
->  	}
->  
-> -	res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
-> -			      params, NULL);
-> +	if (hv_nested)
-> +		res = hv_do_nested_hypercall(HVCALL_RETARGET_INTERRUPT |
-> +					     (var_size << 17),
-> +					     params, NULL);
-> +	else
-> +		res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT |
-> +				      (var_size << 17),
-> +				      params, NULL);
->  
->  exit_unlock:
->  	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml        | 2 +-
+>  .../devicetree/bindings/pci/cdns,cdns-pcie-host.yaml      | 2 +-
+>  Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml   | 8 ++++----
+>  Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml | 8 ++++----
+>  Documentation/devicetree/bindings/pci/cdns-pcie.yaml      | 4 ++--
+>  .../devicetree/bindings/pci/intel,keembay-pcie-ep.yaml    | 4 ++--
+>  .../devicetree/bindings/pci/intel,keembay-pcie.yaml       | 4 ++--
+>  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml   | 2 +-
+>  .../devicetree/bindings/pci/ti,j721e-pci-ep.yaml          | 6 +++---
+>  .../devicetree/bindings/pci/ti,j721e-pci-host.yaml        | 6 +++---
+>  .../bindings/reset/brcm,bcm7216-pcie-sata-rescal.yaml     | 4 ++--
+>  11 files changed, 25 insertions(+), 25 deletions(-)
 
+Applied, thanks.
