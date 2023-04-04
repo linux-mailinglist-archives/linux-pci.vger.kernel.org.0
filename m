@@ -2,392 +2,273 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 761B36D5903
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 08:55:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69A536D5AB4
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 10:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233128AbjDDGz3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 02:55:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32996 "EHLO
+        id S234163AbjDDIZN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 04:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233263AbjDDGz2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 02:55:28 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D41A30EB;
-        Mon,  3 Apr 2023 23:55:15 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4PrJMn19z7znZ2Q;
-        Tue,  4 Apr 2023 14:51:49 +0800 (CST)
-Received: from [10.67.102.169] (10.67.102.169) by
- canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 4 Apr 2023 14:55:12 +0800
-CC:     <yangyicong@hisilicon.com>, <alexander.shishkin@linux.intel.com>,
-        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v2 2/4] hwtracing: hisi_ptt: Add support for dynamically
- updating the filter list
-To:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <jonathan.cameron@huawei.com>, <corbet@lwn.net>,
-        <linux-kernel@vger.kernel.org>, <linux-doc@vger.kernel.org>
-References: <20230331070310.5465-1-yangyicong@huawei.com>
- <20230331070310.5465-3-yangyicong@huawei.com>
-From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <25f3cf47-f3f3-a6c7-e650-6dded9927ac7@huawei.com>
-Date:   Tue, 4 Apr 2023 14:55:11 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.5.1
+        with ESMTP id S234162AbjDDIZB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 04:25:01 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AAF91BC6;
+        Tue,  4 Apr 2023 01:24:59 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id y4so127326819edo.2;
+        Tue, 04 Apr 2023 01:24:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1680596697;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=eeF5srxwQ9C1v5x4N6bKKxWAi3ytrmFz4z71pbR1EOE=;
+        b=ZtHhnbQMeXidZo6kE/lUCuv9d/uQGFZouIpDLaZlFIBWgY/9SIrQ99sPzz08eettHb
+         r64unsxj9tbUZtjUU6srrbxelM1ddnf3PTk1Gg/HwrMOaEbRxfIxgAeAakD8epwpPBAi
+         6m7jdvyXqQNbkEHJ9OX3F9ZSLNksnfot9rQEUjequXpe2bb/b8DGyefOiKPy1TQUcG+4
+         c9aIVST6/G5FWPgGTbUt/MTViCXYpYr3TRXIpmxGy2BCVVLt/mfgZyM57snKop/ShL7w
+         vZlhGgyg4potdRVv3NwJ9WOxotPWqSwrkiyJ+6YXX8/aQ+Yed+k8RfvO09ncNmLgxfbB
+         Y1dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680596697;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eeF5srxwQ9C1v5x4N6bKKxWAi3ytrmFz4z71pbR1EOE=;
+        b=hfAHTchl0l+j3hDd+Jqd735yLwj+UNkhLaLEq3p+ZEOqsEtUBNu1vaCDuRvaUutxYz
+         r4W+U0lEhNSpJLUOdY+wcbDD27WgKOKZc9S53yOGmMq/gNgK0q4xjqYQ0YAom5ChDyTN
+         3Vq6/7chTCLh1dWHTReY7zGdqyNCuenS4PSpwzS3y/kFVpTupsQDPy7wZfUx3bIpA2jt
+         8Jkhtjr08+c9ay5knDXPy0P0yWRk/gcg5dEdjx3XkVGff2DQEXXq4kpT02+BFATKNMQt
+         tQTamypLnqWoSHSGOGorzE2NEmtxU/r123oJXmsUyIpCHLiYrbqIVovME0tkVJCFfpw5
+         gltA==
+X-Gm-Message-State: AAQBX9d9V4g7G9LOXe/Ii4HDI9l43huoY0vt2sqRV/hEq3OM5hcFgtV9
+        5hu0Dgpm+Z030ZIdBUz0rdQ=
+X-Google-Smtp-Source: AKy350ZNwrc31zeES3BI4SFU7aL+7qPowkf6V8euAnhpYKHYurSNqbTIqM2DkRf/9wEygPA0H2MMdQ==
+X-Received: by 2002:a17:906:9f14:b0:939:c411:f784 with SMTP id fy20-20020a1709069f1400b00939c411f784mr1669081ejc.56.1680596697448;
+        Tue, 04 Apr 2023 01:24:57 -0700 (PDT)
+Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
+        by smtp.googlemail.com with ESMTPSA id s5-20020a170906454500b008e54ac90de1sm5640652ejq.74.2023.04.04.01.24.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 01:24:56 -0700 (PDT)
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+To:     alberto.dassatti@heig-vd.ch
+Cc:     damien.lemoal@opensource.wdc.com, xxm@rock-chips.com,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Caleb Connolly <kc@postmarketos.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Judy Hsiao <judyhsiao@chromium.org>,
+        Lin Huang <hl@rock-chips.com>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 00/11] PCI: rockchip: Fix RK3399 PCIe endpoint controller driver
+Date:   Tue,  4 Apr 2023 10:24:13 +0200
+Message-Id: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20230331070310.5465-3-yangyicong@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- canpemm500009.china.huawei.com (7.192.105.203)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-3.6 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/3/31 15:03, Yicong Yang wrote:
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> The PCIe devices supported by the PTT trace can be removed/rescanned by
-> hotplug or through sysfs.  Add support for dynamically updating the
-> available filter list by registering a PCI bus notifier block. Then user
-> can always get latest information about available tracing filters and
-> driver can block the invalid filters of which related devices no longer
-> exist in the system.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> ---
->  Documentation/trace/hisi-ptt.rst |   6 +-
->  drivers/hwtracing/ptt/hisi_ptt.c | 146 ++++++++++++++++++++++++++++++-
->  drivers/hwtracing/ptt/hisi_ptt.h |  36 ++++++++
->  3 files changed, 184 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
-> index 4f87d8e21065..3641aca4287a 100644
-> --- a/Documentation/trace/hisi-ptt.rst
-> +++ b/Documentation/trace/hisi-ptt.rst
-> @@ -153,9 +153,9 @@ Endpoint function can be specified in one trace. Specifying both Root Port
->  and function at the same time is not supported. Driver maintains a list of
->  available filters and will check the invalid inputs.
->  
-> -Currently the available filters are detected in driver's probe. If the supported
-> -devices are removed/added after probe, you may need to reload the driver to update
-> -the filters.
-> +The available filters will be dynamically updates, which means you will always
-> +get correct filter information when hotplug events happen, or when you manually
-> +remove/rescan the devices.
->  
->  2. Type
->  -------
-> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-> index bbbee8c2d7fd..b16bc18421cd 100644
-> --- a/drivers/hwtracing/ptt/hisi_ptt.c
-> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-> @@ -357,6 +357,9 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
->  static void hisi_ptt_del_free_filters(struct hisi_ptt *hisi_ptt,
->  				      struct hisi_ptt_filter_desc *filter)
->  {
-> +	if (filter->is_port)
-> +		hisi_ptt->port_mask &= ~hisi_ptt_get_filter_val(filter->devid, true);
-> +
->  	list_del(&filter->list);
->  	kfree(filter);
->  }
-> @@ -387,6 +390,108 @@ hisi_ptt_alloc_add_filters(struct hisi_ptt *hisi_ptt, struct pci_dev *pdev)
->  	return filter;
->  }
->  
-> +static void hisi_ptt_update_filters(struct work_struct *work)
-> +{
-> +	struct delayed_work *delayed_work = to_delayed_work(work);
-> +	struct hisi_ptt_filter_update_info info;
-> +	struct hisi_ptt_filter_desc *filter;
-> +	struct hisi_ptt *hisi_ptt;
-> +
-> +	hisi_ptt = container_of(delayed_work, struct hisi_ptt, work);
-> +
-> +	if (!mutex_trylock(&hisi_ptt->filter_lock)) {
-> +		schedule_delayed_work(&hisi_ptt->work, HISI_PTT_WORK_DELAY_MS);
-> +		return;
-> +	}
-> +
-> +	while (kfifo_get(&hisi_ptt->filter_update_kfifo, &info)) {
-> +		if (info.is_add) {
-> +			/*
-> +			 * Notify the users if failed to add this filter, others
-> +			 * still work and available. See the comments in
-> +			 * hisi_ptt_init_filters().
-> +			 */
-> +			filter = hisi_ptt_alloc_add_filters(hisi_ptt, info.pdev);
-> +			if (!filter)
-> +				continue;
-> +		} else {
-> +			bool is_port = pci_pcie_type(info.pdev) == PCI_EXP_TYPE_ROOT_PORT;
-> +			u16 devid = PCI_DEVID(info.pdev->bus->number, info.pdev->devfn);
-> +			struct hisi_ptt_filter_desc *tmp;
-> +			struct list_head *target_list;
-> +
-> +			target_list = is_port ? &hisi_ptt->port_filters :
-> +				      &hisi_ptt->req_filters;
-> +
-> +			list_for_each_entry_safe(filter, tmp, target_list, list)
-> +				if (filter->devid == devid) {
-> +					hisi_ptt_del_free_filters(hisi_ptt, filter);
-> +					break;
-> +				}
-> +		}
-> +	}
-> +
-> +	mutex_unlock(&hisi_ptt->filter_lock);
-> +}
-> +
-> +static void hisi_ptt_update_fifo_in(struct hisi_ptt *hisi_ptt,
-> +				    struct hisi_ptt_filter_update_info *info)
-> +{
-> +	struct pci_dev *root_port = pcie_find_root_port(info->pdev);
-> +	u32 port_devid;
-> +
-> +	if (!root_port)
-> +		return;
-> +
-> +	port_devid = PCI_DEVID(root_port->bus->number, root_port->devfn);
-> +	if (port_devid < hisi_ptt->lower_bdf ||
-> +	    port_devid > hisi_ptt->upper_bdf)
-> +		return;
-> +
-> +	/*
-> +	 * The FIFO size is 16 which is sufficient for almost all the cases,
-> +	 * since each PCIe core will have most 8 Root Ports (typically only
-> +	 * 1~4 Root Ports). On failure log the failed filter and let user
-> +	 * handle it.
-> +	 */
-> +	if (kfifo_in_spinlocked(&hisi_ptt->filter_update_kfifo, info, 1,
-> +				&hisi_ptt->filter_update_lock))
-> +		schedule_delayed_work(&hisi_ptt->work, 0);
-> +	else
-> +		pci_warn(hisi_ptt->pdev,
-> +			 "filter update fifo overflow for target %s\n",
-> +			 pci_name(info->pdev));
-> +}
-> +
-> +/*
-> + * A PCI bus notifier is used here for dynamically updating the filter
-> + * list.
-> + */
-> +static int hisi_ptt_notifier_call(struct notifier_block *nb, unsigned long action,
-> +				  void *data)
-> +{
-> +	struct hisi_ptt *hisi_ptt = container_of(nb, struct hisi_ptt, hisi_ptt_nb);
-> +	struct hisi_ptt_filter_update_info info;
-> +	struct device *dev = data;
-> +
-> +	info.pdev = to_pci_dev(dev);
+This is a series of patches that fixes the PCIe endpoint controller driver
+for the Rockchip RK3399 SoC. The driver was introduced in commit
+cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+The original driver had issues and would not allow for the RK3399 to
+operate in PCIe endpoint mode correctly. This patch series fixes that so
+that the PCIe core controller of the RK3399 SoC can now act as a PCIe
+endpoint. This is v3 of the patch series and addresses the concerns that
+were raised during the review of the V2.
 
-It's problematic here to directly store the *pdev, since we'll use this and dereference
-this pointer in a work thread. On device removal, it's possible that the pointer has been
-invalid before we use it later which will cause a NULL pointer dereference in the work
-thread.
+Thank you in advance for reviewing these changes and hopefully
+getting this merged. Having a functional PCIe endpoint controller
+driver for the RK3399 would allow to develop further PCIe endpoint
+functions through the Linux PCIe endpoint framework using this SoC.
 
-Will fix this problem by not using this pointer directly but store devid of the test device
-to update the filter list instead.
+Summary of changes to V2 :
 
-> +
-> +	switch (action) {
-> +	case BUS_NOTIFY_ADD_DEVICE:
-> +		info.is_add = true;
-> +		break;
-> +	case BUS_NOTIFY_DEL_DEVICE:
-> +		info.is_add = false;
-> +		break;
-> +	default:
-> +		return 0;
-> +	}
-> +
-> +	hisi_ptt_update_fifo_in(hisi_ptt, &info);
-> +
-> +	return 0;
-> +}
-> +
->  static int hisi_ptt_init_filters(struct pci_dev *pdev, void *data)
->  {
->  	struct pci_dev *root_port = pcie_find_root_port(pdev);
-> @@ -466,8 +571,13 @@ static int hisi_ptt_init_ctrls(struct hisi_ptt *hisi_ptt)
->  	int ret;
->  	u32 reg;
->  
-> +	INIT_DELAYED_WORK(&hisi_ptt->work, hisi_ptt_update_filters);
-> +	INIT_KFIFO(hisi_ptt->filter_update_kfifo);
-> +	spin_lock_init(&hisi_ptt->filter_update_lock);
-> +
->  	INIT_LIST_HEAD(&hisi_ptt->port_filters);
->  	INIT_LIST_HEAD(&hisi_ptt->req_filters);
-> +	mutex_init(&hisi_ptt->filter_lock);
->  
->  	ret = hisi_ptt_config_trace_buf(hisi_ptt);
->  	if (ret)
-> @@ -633,14 +743,19 @@ static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
->  	 * For Requester ID filters, walk the available filter list to see
->  	 * whether we have one matched.
->  	 */
-> +	mutex_lock(&hisi_ptt->filter_lock);
->  	if (!hisi_ptt->trace_ctrl.is_port) {
->  		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
-> -			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port))
-> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port)) {
-> +				mutex_unlock(&hisi_ptt->filter_lock);
->  				return 0;
-> +			}
->  		}
->  	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
-> +		mutex_unlock(&hisi_ptt->filter_lock);
->  		return 0;
->  	}
-> +	mutex_unlock(&hisi_ptt->filter_lock);
->  
->  	return -EINVAL;
->  }
-> @@ -916,6 +1031,31 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
->  					&hisi_ptt->hisi_ptt_pmu);
->  }
->  
-> +static void hisi_ptt_unregister_filter_update_notifier(void *data)
-> +{
-> +	struct hisi_ptt *hisi_ptt = data;
-> +
-> +	bus_unregister_notifier(&pci_bus_type, &hisi_ptt->hisi_ptt_nb);
-> +
-> +	/* Cancel any work that has been queued */
-> +	cancel_delayed_work_sync(&hisi_ptt->work);
-> +}
-> +
-> +/* Register the bus notifier for dynamically updating the filter list */
-> +static int hisi_ptt_register_filter_update_notifier(struct hisi_ptt *hisi_ptt)
-> +{
-> +	int ret;
-> +
-> +	hisi_ptt->hisi_ptt_nb.notifier_call = hisi_ptt_notifier_call;
-> +	ret = bus_register_notifier(&pci_bus_type, &hisi_ptt->hisi_ptt_nb);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_add_action_or_reset(&hisi_ptt->pdev->dev,
-> +					hisi_ptt_unregister_filter_update_notifier,
-> +					hisi_ptt);
-> +}
-> +
->  /*
->   * The DMA of PTT trace can only use direct mappings due to some
->   * hardware restriction. Check whether there is no IOMMU or the
-> @@ -987,6 +1127,10 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
->  		return ret;
->  	}
->  
-> +	ret = hisi_ptt_register_filter_update_notifier(hisi_ptt);
-> +	if (ret)
-> +		pci_warn(pdev, "failed to register filter update notifier, ret = %d", ret);
-> +
->  	ret = hisi_ptt_register_pmu(hisi_ptt);
->  	if (ret) {
->  		pci_err(pdev, "failed to register PMU device, ret = %d", ret);
-> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
-> index 5beb1648c93a..a389b943944c 100644
-> --- a/drivers/hwtracing/ptt/hisi_ptt.h
-> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
-> @@ -11,12 +11,15 @@
->  
->  #include <linux/bits.h>
->  #include <linux/cpumask.h>
-> +#include <linux/kfifo.h>
->  #include <linux/list.h>
->  #include <linux/mutex.h>
-> +#include <linux/notifier.h>
->  #include <linux/pci.h>
->  #include <linux/perf_event.h>
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
-> +#include <linux/workqueue.h>
->  
->  #define DRV_NAME "hisi_ptt"
->  
-> @@ -71,6 +74,11 @@
->  #define HISI_PTT_WAIT_TRACE_TIMEOUT_US	100UL
->  #define HISI_PTT_WAIT_POLL_INTERVAL_US	10UL
->  
-> +/* FIFO size for dynamically updating the PTT trace filter list. */
-> +#define HISI_PTT_FILTER_UPDATE_FIFO_SIZE	16
-> +/* Delay time for filter updating work */
-> +#define HISI_PTT_WORK_DELAY_MS			100UL
-> +
->  #define HISI_PCIE_CORE_PORT_ID(devfn)	((PCI_SLOT(devfn) & 0x7) << 1)
->  
->  /* Definition of the PMU configs */
-> @@ -143,6 +151,16 @@ struct hisi_ptt_filter_desc {
->  	u16 devid;
->  };
->  
-> +/**
-> + * struct hisi_ptt_filter_update_info - Information for PTT filter updating
-> + * @pdev:       the PCI device to update in the filter list
-> + * @is_add:     adding to the filter or not
-> + */
-> +struct hisi_ptt_filter_update_info {
-> +	struct pci_dev *pdev;
-> +	bool is_add;
-> +};
-> +
->  /**
->   * struct hisi_ptt_pmu_buf - Descriptor of the AUX buffer of PTT trace
->   * @length:   size of the AUX buffer
-> @@ -161,6 +179,7 @@ struct hisi_ptt_pmu_buf {
->   * struct hisi_ptt - Per PTT device data
->   * @trace_ctrl:   the control information of PTT trace
->   * @hotplug_node: node for register cpu hotplug event
-> + * @hisi_ptt_nb:  dynamic filter update notifier
->   * @hisi_ptt_pmu: the pum device of trace
->   * @iobase:       base IO address of the device
->   * @pdev:         pci_dev of this PTT device
-> @@ -170,10 +189,15 @@ struct hisi_ptt_pmu_buf {
->   * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
->   * @port_filters: the filter list of root ports
->   * @req_filters:  the filter list of requester ID
-> + * @filter_lock:  lock to protect the filters
->   * @port_mask:    port mask of the managed root ports
-> + * @work:         delayed work for filter updating
-> + * @filter_update_lock: spinlock to protect the filter update fifo
-> + * @filter_update_fifo: fifo of the filters waiting to update the filter list
->   */
->  struct hisi_ptt {
->  	struct hisi_ptt_trace_ctrl trace_ctrl;
-> +	struct notifier_block hisi_ptt_nb;
->  	struct hlist_node hotplug_node;
->  	struct pmu hisi_ptt_pmu;
->  	void __iomem *iobase;
-> @@ -192,7 +216,19 @@ struct hisi_ptt {
->  	 */
->  	struct list_head port_filters;
->  	struct list_head req_filters;
-> +	struct mutex filter_lock;
->  	u16 port_mask;
-> +
-> +	/*
-> +	 * We use a delayed work here to avoid indefinitely waiting for
-> +	 * the hisi_ptt->mutex which protecting the filter list. The
-> +	 * work will be delayed only if the mutex can not be held,
-> +	 * otherwise no delay will be applied.
-> +	 */
-> +	struct delayed_work work;
-> +	spinlock_t filter_update_lock;
-> +	DECLARE_KFIFO(filter_update_kfifo, struct hisi_ptt_filter_update_info,
-> +		      HISI_PTT_FILTER_UPDATE_FIFO_SIZE);
->  };
->  
->  #define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
-> 
+* Fix issue with memory mapping from PCIe space to physical space
+  There was a small mistake with the number of bits passed from the AXI
+  physical address to the PCIe space address.
+* Disable the advertisement of MSI-X capabilities by the endpoint
+  According to the technical reference manual the controller cannot
+  generate MSI-X, so the controller should not advertise this capability.
+* Add the alignment value to the endpoint attributes.
+* [minor] Clean code (line length, variable names, small refactorings).
+  As pointed out by reviews on the V2.
+* [minor] Fix error in variable name.
+* [minor] Remove a patch that introduced unnecessary late parameter checks.
+
+General problem statement and overview of the patch series :
+
+Problem: The Rockchip RK3399 PCIe endpoint controller driver introduced in
+commit cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe
+controller") did not work.
+
+Summary of problems with the driver :
+
+* Missing dtsi entry
+* Could not update Device ID (DID)
+* The endpoint could not be configured by a host computer because the
+  endpoint kept sending Configuration Request Retry Status (CRS) messages
+* The kernel would sometimes hang on probe due to access to registers in
+  a clock domain of which the PLLs were not locked
+* The memory window mapping and address translation mechanism had
+  conflicting mappings and did not follow the technical reference manual
+  as to how the address translation should be done
+* Legacy IRQs were not generated by the endpoint
+* Message Signaled interrupts (MSI) were not generated by the endpoint
+* MSI-X capabilities were advertised but the controller cannot generate
+  them according to the technical reference manual
+
+The problems have been addressed and validated through tests (see below).
+
+Summary of patches :
+
+This patch series is composed of 11 patches that do the following :
+* Remove writes to unused registers in the PCIe core register space.
+  The registers that were written to is marked "unused" and read
+  only in the technical reference manual of the RK3399 SoC.
+* Write PCI Device ID (DID) to correct register, the DID was written to
+  a read only register and therefore would not update the DID.
+* Assert PCI Configuration Enable bit after probe so that it would stop
+  sending Configuration Request Retry Status (CRS) messages to the
+  host once configured, without this the host would retry until
+  timeout and cancel the PCI configuration.
+* Add poll and timeout to wait for PHY PLLs to be locked, this
+  is the only patch that also applies to the root complex function
+  of the PCIe core controller, without this the kernel would
+  sometimes access registers in the PHY PLL clock domain when the PLLs
+  were not yet locked and the system would hang. This was hackily solved
+  in other non mainline patches (e.g., in armbian) with a "msleep()"
+  that was added after PHY PLL configuration but without realizing
+  why it was needed. A poll with timeout seems like a sane approach.
+* Add dtsi entry for RK3399 PCIe endpoint core. The new entry is
+  in "disabled" status by default, so unless it is explicitly enabled
+  it will not conflict with the PCIe root complex controller entry.
+  Developers that will enable it would know that the root complex function
+  then must be disabled, this can be done in the board level DTS.
+* Update the RK3399 example in the documentation to a valid one.
+* Fix legacy IRQ generation for RK3399 PCIe endpoint core, the legacy IRQs
+  were not sent by the device because their generation did not follow the
+  instructions in the technical reference manual. They now work.
+* Fix window mapping and address translation for endpoint. The window
+  mapping and address translation did not follow the technical reference
+  manual and a single memory region was used which resulted in conflicting
+  address translations for memory allocated in that region. The current
+  patch allows to allocate up to 32 memory windows with 1MB pages.
+* Use u32 variable to access 32-bit registers, u16 variables were used to
+  access and manipulate data of 32-bit registers, this would lead to
+  overflows e.g., when left shifting more than 16 bits.
+* Don't advertise MSI-X in PCIe capabilities because according to the TRM
+  the controller is not capable of generating them.
+* Set address alignment for the endpoint mode.
+
+Validation on real hardware:
+
+This patch series has been tested by me with kernels 6.0.19, 6.1.21,
+and 5.19 on real hardware, a FriendlyElec NanoPC-T4 RK3399 based single
+computer board connected to a host computer through PCIe x1 and x4. The
+driver was also tested by Damien Le Moal <damien.lemoal@opensource.wdc.com>
+on a Pine Rockpro64 board [1].
+
+[1] https://lore.kernel.org/linux-pci/20230330085357.2653599-1-damien.lemoal@opensource.wdc.com/
+
+The PCIe endpoint test function driver was loaded on the SoC and the PCIe
+endpoint test driver was loaded on the host computer. The following tests were
+executed through this setup :
+
+* enumeration of the PCIe endpoint device (lspci)
+  lspci -vvv
+* validation of PCI header and capabilities
+  setpci and lspci -xxxx
+* device was recognized by host computer dans PCIe endpoint test driver
+  was loaded
+  lspci -v states "Kernel modules: pci_endpoint_test"
+* tested the BARs 0-5
+  sudo /usr/bin/pcitest -b 0
+  ...
+  sudo /usr/bin/pcitest -b 5
+* tested legacy interrupt through the test driver
+  sudo /usr/bin/pcitest -i 0
+  sudo /usr/bin/pcitest -l
+* tested MSI interrupt through the test driver
+  sudo /usr/bin/pcitest -i 1
+  sudo /usr/bin/pcitest -m 1
+* tested read/write to and from host through the test driver with checksum
+  sudo /usr/bin/pcitest -r -s 1024
+  sudo /usr/bin/pcitest -w -s 1024
+* tested read/write with DMA enabled (all read/write tests also did IRQ)
+  sudo /usr/bin/pcitest -r -d -s 8192
+  sudo /usr/bin/pcitest -w -d -s 8192
+* tested larged transfers e.g., 100kB with and without DMA
+
+Commands used on the SoC to launch the endpoint function (configfs) :
+
+modprobe -i pci-epf-test
+mkdir -p /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0
+echo 0xb500 > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/deviceid
+echo 0x104c > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/vendorid
+echo 16 > /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0/msi_interrupts 
+ln -s /sys/kernel/config/pci_ep/functions/pci_epf_test/pci_epf_test.0 \
+/sys/kernel/config/pci_ep/controllers/fd000000.pcie-ep/
+echo 1 > /sys/kernel/config/pci_ep/controllers/fd000000.pcie-ep/start
+
+Note: to enable the endpoint controller on the board the file :
+arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+Was edited to set the status of &pcie0 to "disabled" and &pcie0_ep
+to "okay". This is not submitted as a patch because most users
+will use the PCIe core controller in host (root complex) mode
+rather than endpoint mode.
+
+I have tested and confirmed all functionality required for the
+endpoint with the test driver and tools. With the initial driver commit
+cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+the device would not even be enumerated by the host computer (mainly because
+of CRS messages being sent back to the root complex) and tests would not pass
+(driver would not even be loaded because DID was not set correctly)
+and then only the BAR test would pass. Now all tests pass as stated above.
+
+Best regards
+Rick
+
+Damien Le Moal (1):
+  PCI: rockchip: Set address alignment for endpoint mode
+
+Rick Wertenbroek (10):
+  PCI: rockchip: Remove writes to unused registers
+  PCI: rockchip: Write PCI Device ID to correct register
+  PCI: rockchip: Assert PCI Configuration Enable bit after probe
+  PCI: rockchip: Add poll and timeout to wait for PHY PLLs to be locked
+  arm64: dts: rockchip: Add dtsi entry for RK3399 PCIe endpoint core
+  dt-bindings: PCI: Update the RK3399 example to a valid one
+  PCI: rockchip: Fix legacy IRQ generation for RK3399 PCIe endpoint core
+  PCI: rockchip: Fix window mapping and address translation for endpoint
+  PCI: rockchip: Use u32 variable to access 32-bit registers
+  PCI: rockchip: Don't advertise MSI-X in PCIe capabilities
+
+ .../bindings/pci/rockchip,rk3399-pcie-ep.yaml |   8 +-
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi      |  27 +++
+ drivers/pci/controller/pcie-rockchip-ep.c     | 193 ++++++++----------
+ drivers/pci/controller/pcie-rockchip.c        |  17 ++
+ drivers/pci/controller/pcie-rockchip.h        |  44 ++--
+ 5 files changed, 162 insertions(+), 127 deletions(-)
+
+-- 
+2.25.1
+
