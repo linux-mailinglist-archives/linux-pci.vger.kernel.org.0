@@ -2,165 +2,122 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FF3A6D69E8
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AD946D6AD3
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 19:41:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235003AbjDDRJ6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 13:09:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58676 "EHLO
+        id S231620AbjDDRl5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 13:41:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235609AbjDDRJ5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:09:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEC4C7;
-        Tue,  4 Apr 2023 10:09:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 16B3B63773;
-        Tue,  4 Apr 2023 17:09:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CF4AC433EF;
-        Tue,  4 Apr 2023 17:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680628194;
-        bh=IK2aCtlyClHSVX99J78ji0/3Kc8IkYOR0+e5e+EQq78=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=mjj5gN61RWvx3kW5BWospMkZcjO4aXYE6MfG53S9AmWfQyUuUSxSUIv4JTuZQPVC6
-         EIHzT14n1+NADzeeF1IpjZoYiX69W9D9R/mJDsBeuw7C5mo108RL/VfOh0CyNf4p6v
-         5xqAGutCYR6U6D64ChpMiTbg36lDwMCHWuOG7tohRURPS/KpwaXDfoD0B2nKGgUu07
-         iME1EHpbAriJV0fbYU9lnEfWg3wTpaOIz/fU6xOqsvOyXC4tnkrSJT/chG3Wwf/9ll
-         anmzBdavCLnQNeq8zJOTBtNNOtp8ElVHpt0DojmIGL9GRJOsNeozAk/R0bhRtExqZ9
-         PhkiUtuRXoXEQ==
-Date:   Tue, 4 Apr 2023 12:09:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ben Greear <greearb@candelatech.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        bjorn@helgaas.com, LKML <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org, Stefan Roese <sr@denx.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Yao Hongbo <yaohongbo@linux.alibaba.com>,
-        Naveen Naidu <naveennaidu479@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org,
-        Gregory Greenman <gregory.greenman@intel.com>,
-        Kalle Valo <kvalo@kernel.org>, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 5.4 182/389] PCI/portdrv: Dont disable AER reporting in
- get_port_device_capability()
-Message-ID: <20230404170952.GA3559293@bhelgaas>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4ff1397e-1d78-bc59-f577-e69024c4c4f3@candelatech.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S231348AbjDDRl4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 13:41:56 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A884DAF
+        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 10:41:55 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id c67-20020a254e46000000b00b88f1fd158fso4714384ybb.17
+        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 10:41:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680630115;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=oPoPIuqgLuTvwyYpu86xIAI8ibbCU+bB6C79MUB9j+M=;
+        b=KgLZbKw3X6e6U8+nWN1rfvhJn9IeJcusdWGqGWkC/wl037qByxfXikUpJgxyjwLJRu
+         82cjYbSNmK/jZ+WnEj2icei2DTo69PcUpoWHAERCvk/MrL0juD0gzXgkWGSfCTC/Pg9T
+         coNrhoxfCCXtlRjcoAg9nJ2EgutzMaj9ULngAg21IMRKH6p61RV0iEB+yDvA5MZsHQKP
+         g9gGuDgCVkA1y5Mnd2aNR8f3jQohGldj6ekx4AVpvBs6MDNoGJvPjCTg1bjKZctHYjIN
+         4B0Av/xb0TiuWvIDxG1PftsIbSic3cNhI9vbIfVHHzEHU++TtIwKR1P4SFQ3EEYIyh+B
+         ssdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680630115;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=oPoPIuqgLuTvwyYpu86xIAI8ibbCU+bB6C79MUB9j+M=;
+        b=Rz9siU+OQGyUviRLEw9uYOmPRKbtpBaT3MeXfBdCyCatV5fzQsMC0GUfcF8zwT5upd
+         PLOHqXIyce3jH9s3y3xhFAileuz429cUjHGybAc5Sm5iQWEr82KDI3GmlheSPGUVewPG
+         +R79EuMVZAqN/MetokUIHz8hTOTJ8Bx0A0v8ZZ8kx9QoYcUUJIxs8HydiCpxSHhbOOzF
+         3eOissYDZlBb10YT9zRo99Z7Sf6/8C3b1HbhrtJD/BO1RIneNTRa9q/7yYe7SwVyYwzE
+         MAiPzKuSpYQPfkt7qsxyUk8OFoYVwKaWLXTvCAy+Yrn2RYPjhjTGJox24PQeCFybr8Sv
+         X5jQ==
+X-Gm-Message-State: AAQBX9eBnJ1fGCylp0rINEmZUfTXux4Ma+O18KRaZm9Wt+Yc6katfIlh
+        H9BBcLrFWB6aTzg8A7m/Z9nzTL7Y3JLLw84ZSw==
+X-Google-Smtp-Source: AKy350aebtC2Ba6s2QThXX/LN5u2aT1mEgmtjtPie5DIeXRT8bOOlSsBAeWAxCfuQbQ36MkSqtcXDNnczcG42uwKXw==
+X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
+ (user=ajayagarwal job=sendgmr) by 2002:a25:cb8d:0:b0:b72:fff0:2f7f with SMTP
+ id b135-20020a25cb8d000000b00b72fff02f7fmr81206ybg.4.1680630114943; Tue, 04
+ Apr 2023 10:41:54 -0700 (PDT)
+Date:   Tue,  4 Apr 2023 23:11:41 +0530
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
+Message-ID: <20230404174141.4091634-1-ajayagarwal@google.com>
+Subject: [PATCH] PCI: dwc: Allow platform driver to skip the wait for link
+From:   Ajay Agarwal <ajayagarwal@google.com>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        "=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, nikhilnd@google.com,
+        manugautam@google.com
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        Ajay Agarwal <ajayagarwal@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 03:31:40PM -0700, Ben Greear wrote:
-> On 3/31/23 15:06, Bjorn Helgaas wrote:
-> > [+cc iwlwifi folks]
-> > 
-> > Re: 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
-> > get_port_device_capability()")
-> > 
-> > On Wed, Mar 29, 2023 at 04:17:29PM -0700, Ben Greear wrote:
-> > > On 8/30/22 3:16 PM, Ben Greear wrote:
-> > > ...
-> > 
-> > > I notice this patch appears to be in 6.2.6 kernel, and my kernel logs are
-> > > full of spam and system is unstable.  Possibly the unstable part is related
-> > > to something else, but the log spam is definitely extreme.
-> > > 
-> > > These systems are fairly stable on 5.19-ish kernels without the patch in
-> > > question.
-> > 
-> > Hmmm, I was going to thank you for the report, but looking closer, I
-> > see that you reported this last August [1] and we *should* have
-> > pursued it with the iwlwifi folks or figured out what the PCI core is
-> > doing wrong, but I totally dropped the ball.  Sorry about that.
-> > 
-> > To make sure we're all on the same page, we're talking about
-> > 8795e182b02d ("PCI/portdrv: Don't disable AER reporting in
-> > get_port_device_capability()") [2],
-> > which is present in v6.0 and later [3] but not v5.19.16 [4].
-> 
-> Yes, though I manually tried reverting that patch, and problem
-> persisted, so maybe some secondary patch still enables whatever
-> causes the issue.
-> 
-> Booting with pci=noaer 'fixes' the problem for me, that is what I am
-> running currently.
-> 
-> > > Here is sample of the spam:
-> > > 
-> > > [ 1675.547023] pcieport 0000:03:02.0: PCIe Bus Error: severity=Uncorrected (Non-Fatal), type=Transaction Layer, (Requester ID)
-> > > [ 1675.556851] pcieport 0000:03:02.0:   device [10b5:8619] error status/mask=00100000/00000000
-> > > [ 1675.563904] pcieport 0000:03:02.0:    [20] UnsupReq               (First)
-> > > [ 1675.569398] pcieport 0000:03:02.0: AER:   TLP Header: 34000000 05001f10 00000000 88c888c8
-> > > [ 1675.576296] iwlwifi 0000:05:00.0: AER: can't recover (no error_detected callback)
-> > 
-> > The TLP header says this is an LTR message from 05:00.0.  Apparently
-> > the bridge above 05:00.0 is 03:02.0, which logged an Unsupported
-> > Request error for the message, probably because 03:02.0 doesn't have
-> > LTR enabled.
+Currently as a part of device probe, the driver waits for the
+link to come up for up to 1 second. If the link training is not
+enabled by default or as a part of host_init, then this wait for
+the link can be skipped to save the 1 second of wait time.
 
-> Here is lspci, and please note that I am using a pcie -> 12x m.2
-> adapter board, which is not common in the world.  Possibly it is
-> causing some of the problems with the AER logic (though, it is
-> stable in 5.19 and lower.  And a similar system with 2 of these
-> adapter boards filled with 24 mtk7922 radios does not show the AER
-> warnings or instability problems so far.)
-> 
-> The lspci below is from a system with 12 ax210 radios, I have
-> another with 24, it shows similar problems.
+Allow the platform driver to skip this wait for the link up by
+setting a flag `skip_wait_for_link`. This flag will be false by
+default, thereby preserving the legacy behavior for existing
+platform drivers.
 
-Interesting config.  Somebody is definitely doing something wrong.
-LTR is enabled at 00:1c.0 (which is fine), not supported and disabled
-at 02:00.0 and 03:02.0 (also fine), but *enabled* at 05:00.0, which is
-absolutely not fine because 03:02.0 won't know what to do with the LTR
-messages and would log the AER errors you're seeing.
+Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+---
+ drivers/pci/controller/dwc/pcie-designware-host.c | 9 +++++++--
+ drivers/pci/controller/dwc/pcie-designware.h      | 1 +
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-> 00:1c.0 PCI bridge: Intel Corporation 100 Series/C230 Series Chipset Family PCI Express Root Port #1 (rev f1) (prog-if 00 [Normal decode])
-> 	Bus: primary=00, secondary=02, subordinate=0f, sec-latency=0
-> 		DevCap2: Completion Timeout: Range ABC, TimeoutDis+, LTR+, OBFF Not Supported ARIFwd+
-> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR+, OBFF Disabled ARIFwd-
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 9952057c8819..3425eb17b467 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -491,8 +491,13 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+ 			goto err_remove_edma;
+ 	}
+ 
+-	/* Ignore errors, the link may come up later */
+-	dw_pcie_wait_for_link(pci);
++	/*
++	 * If the platform driver sets `skip_wait_for_link` because it knows the
++	 * link will not be up, do not wait for it. Save 1 sec of wait time.
++	 * Else, test for the link. Ignore errors, the link may come up later
++	 */
++	if (!pp->skip_wait_for_link)
++		dw_pcie_wait_for_link(pci);
+ 
+ 	bridge->sysdata = pp;
+ 
+diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+index 79713ce075cc..f8f6dad5c948 100644
+--- a/drivers/pci/controller/dwc/pcie-designware.h
++++ b/drivers/pci/controller/dwc/pcie-designware.h
+@@ -297,6 +297,7 @@ struct dw_pcie_host_ops {
+ struct dw_pcie_rp {
+ 	bool			has_msi_ctrl:1;
+ 	bool			cfg0_io_shared:1;
++	bool			skip_wait_for_link:1;
+ 	u64			cfg0_base;
+ 	void __iomem		*va_cfg0_base;
+ 	u32			cfg0_size;
+-- 
+2.40.0.348.gf938b09366-goog
 
-> 02:00.0 PCI bridge: PLX Technology, Inc. PEX 8619 16-lane, 16-Port PCI Express Gen 2 (5.0 GT/s) Switch with DMA (rev ba) (prog-if 00 [Normal decode])
-> 	Bus: primary=02, secondary=03, subordinate=0f, sec-latency=0
-
-> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported
-> 			 AtomicOpsCap: Routing- 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled
-
-> 03:02.0 PCI bridge: PLX Technology, Inc. PEX 8619 16-lane, 16-Port PCI Express Gen 2 (5.0 GT/s) Switch with DMA (rev ba) (prog-if 00 [Normal decode])
-> 	Bus: primary=03, secondary=05, subordinate=05, sec-latency=0
-
-> 		DevCap2: Completion Timeout: Not Supported, TimeoutDis-, LTR-, OBFF Not Supported ARIFwd+
-> 			 AtomicOpsCap: Routing-
-> 		DevCtl2: Completion Timeout: 50us to 50ms, TimeoutDis-, LTR-, OBFF Disabled ARIFwd-
-
-> 05:00.0 Network controller: Intel Corporation Device 2725 (rev 1a)
-> 		DevCap2: Completion Timeout: Range B, TimeoutDis+, LTR+, OBFF Via WAKE#
-> 			 AtomicOpsCap: 32bit- 64bit- 128bitCAS-
-> 		DevCtl2: Completion Timeout: 16ms to 55ms, TimeoutDis-, LTR+, OBFF Disabled
-> 			 AtomicOpsCtl: ReqEn-
-
-For 02:00.0 and 03:02.0, pci_configure_ltr() should bail out as soon
-as it sees they don't support PCI_EXP_DEVCAP2_LTR, so they should
-never have dev->ltr_path set.  And pci_configure_ltr() should not set
-PCI_EXP_DEVCTL2_LTR_EN for 05:00.0 since bridge->ltr_path is not set
-for 03:02.0.
-
-Can you collect the dmesg log when booted with "pci=earlydump"?  I
-wonder if BIOS could be enabling LTR on 05:00.0.
-
-Bjorn
