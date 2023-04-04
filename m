@@ -2,77 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E074F6D5C7B
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 11:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34F356D5CC2
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 12:12:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233968AbjDDJ5e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 05:57:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
+        id S234440AbjDDKMX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 06:12:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230335AbjDDJ5d (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 05:57:33 -0400
-Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F132268A
-        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 02:57:32 -0700 (PDT)
-Received: by mail-pj1-x1029.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so33391627pjz.1
-        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 02:57:32 -0700 (PDT)
+        with ESMTP id S234327AbjDDKMT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 06:12:19 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FCE130C1
+        for <linux-pci@vger.kernel.org>; Tue,  4 Apr 2023 03:12:00 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id ml21so8045115pjb.4
+        for <linux-pci@vger.kernel.org>; Tue, 04 Apr 2023 03:12:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680602252;
+        d=igel-co-jp.20210112.gappssmtp.com; s=20210112; t=1680603120;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
-        b=DZcbyLkyTGTTuO+N7pa4ARwCTRNuL4ybs38LCUxl4HjBDH9eqjR2F0nnTnp1HWGEfc
-         PhRf8bwSKXhOdsUKHc9TxrsB5fNYFMJtf08rWMZhxTVbBRsp71RfQ4+6Ye1omj+dPl4/
-         SNS0NCBcfN3EOdGTJjny3/JDM2TZ/qHzsfDC3ASKsNYrR+VAZmbZd8gqmJ1D7hZUiYBj
-         y/NqILXWJo+WPf7Fv7k5SH72D5y39NCvUOIRvrbjST8TvSWka2VANi3vardpQuZQF+rc
-         BX132iwtB4VLe04nL1nzS6OdsrgWQ5BSA5vOt+Y0Dr1j0WT9LV2DWp1C6KtYOZqFczTL
-         6g4A==
+        bh=H1nFAdUtaNleNvdd4R9u83gwyhhW/N23uXd1WaMTM4U=;
+        b=syseZK3DkzUTu4rg9+gE6qvvj6nkt4Um45ZGqGK1w3ujhwuOfepRvk0YR7dYLzxOU8
+         CdCi8QeP0v0n1rqRzRvN312AW5p6AV7xa9e5gggxbZh4wt8QHtOrnme2BluEspcFyv+o
+         rCCL8n3v/vW6kofNuIFITWRyEfc07xCBJhqVKFcew2eAZsntybVtOP5Kb59iMY6yzAzD
+         Hbc1GUwymQvu7br9rT8i/sb8WUYoEY17Wwc2lv2uu0LJDw5i5wJSQx4sG3+0Cd40wgP6
+         Pv1xHnF4QS7Rfs2dxcKgat/Xu9N6dY4i33A+5E55dLFS7ijmJx1xLzkfd/x4Uh0q4XGl
+         7qUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680602252;
+        d=1e100.net; s=20210112; t=1680603120;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8EeJ3Vg/hflzXly6UJfLnp/sYv8Ula1ty7RMpEhQjsE=;
-        b=CYzIs2rFIh9+aGQqmHEHi/pkXm9bGMUom2dhkczcY79tUzmpY+QDQx6ArnVdPaeql4
-         QWQrK67E0ep2RaepKdg6OYo92u0zU1Y41aWMGZ+ponDyq4LpeXwwUgdapb8EhYBUEE2j
-         6rmR6HWLvVtj0/ngdEXgjfMsHUVK0z5CAMpmUYgtXcRZVjJJyMipbSFg26O8pVi5OeCD
-         avyE8DTvxdRYWaogzy79b5bPfOBTe5Tty4ytc7H5XCFmy604v+RoXJVYY5mbyaYnJawt
-         TABGEHtEuOejJt7yL8VKCCPr7vEgsZ1E+sD1ymLrtERRwG+qLcIwCiuKS2Ez7MrH0CV4
-         4YNA==
-X-Gm-Message-State: AAQBX9dhi9sV0FhoDhAsM4xYfsYyEcqmZbpiAVoYH3D3gHL6dNkIEdrg
-        +QmPr4diurF8HAgsSqrfywAIVw==
-X-Google-Smtp-Source: AKy350YRiaOikp91648dDob3kng7cepINTfluG5WzInZqWo8yO2jZPLEMXzTjVgP71gtXNDkoKdSOg==
-X-Received: by 2002:a17:90b:3e89:b0:237:ae7c:15be with SMTP id rj9-20020a17090b3e8900b00237ae7c15bemr2086527pjb.30.1680602251950;
-        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
+        bh=H1nFAdUtaNleNvdd4R9u83gwyhhW/N23uXd1WaMTM4U=;
+        b=YHWHgKmiv61Ki0ue1OA61h5xb2oTNKh0cN4BbGYYP1C0o70HrHMqs9kyorAVOfIuDq
+         mGZyrejbbWPjcTVi3kfsRB83iH9J9SDgygwPoKQrAuLKiTyMkIUeOn0k3I9stX/ZkQ+E
+         Hi94TKuuLvc0I2MaMvn13BMTRm/2FihfuNcQCSK+youFav+Qjn9K4r0tBHU6rsQ5g9sm
+         U8QhQ+FN688/yqC2LBscf3Ouh5b1MsyVhCWQAF4M3w3HLJXcHjSW1vpcO4/UvUHvb39t
+         QkCbX1au4oAHZW9IWkWOqSqqTP8tvO6hnk6RtERRLTWRbBuYu3YTSoDrveXyRZswvsbR
+         lLKA==
+X-Gm-Message-State: AAQBX9edcGaY9sd0D8deBdPQNYn+0V9tbTZJI0xganC091+J0R62PDZ6
+        C2rapu+jChUiUwECvuIgV9Kybg==
+X-Google-Smtp-Source: AKy350Y+vvljfQnHEd/9uDjlC5EDRk7uFc/JYSTm09VsF7x/uh7AC1a4zTjCjeYUdCxWBgayofcOhw==
+X-Received: by 2002:a17:902:d193:b0:1a2:73d8:5a87 with SMTP id m19-20020a170902d19300b001a273d85a87mr1760672plb.5.1680603119682;
+        Tue, 04 Apr 2023 03:11:59 -0700 (PDT)
 Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id iy5-20020a170903130500b0019e81c8fd01sm8005079plb.249.2023.04.04.02.57.28
+        by smtp.gmail.com with ESMTPSA id az3-20020a170902a58300b001a281063ab4sm8014999plb.233.2023.04.04.03.11.56
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Apr 2023 02:57:31 -0700 (PDT)
-Message-ID: <79357547-d32d-9916-074d-37354d4016c3@igel.co.jp>
-Date:   Tue, 4 Apr 2023 18:57:27 +0900
+        Tue, 04 Apr 2023 03:11:59 -0700 (PDT)
+Message-ID: <2a4e0f94-4766-8db1-c648-e72b1f7924fa@igel.co.jp>
+Date:   Tue, 4 Apr 2023 19:11:55 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
  Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [RFC PATCH 00/11] Introduce a test for continuous transfer
+Subject: Re: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
+ header file between endpoint driver
 Content-Language: en-US
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
+To:     Frank Li <frank.li@nxp.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Frank Li <Frank.Li@nxp.com>, linux-kernel@vger.kernel.org,
-        dmaengine@vger.kernel.org, linux-pci@vger.kernel.org
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 References: <20230317113238.142970-1-mie@igel.co.jp>
- <20230331053850.GE4973@thinkpad>
+ <20230317113238.142970-7-mie@igel.co.jp>
+ <AM6PR04MB4838D8F8AF23C61048BDFB9788BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
 From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <20230331053850.GE4973@thinkpad>
+In-Reply-To: <AM6PR04MB4838D8F8AF23C61048BDFB9788BD9@AM6PR04MB4838.eurprd04.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-1.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
@@ -85,74 +89,102 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-On 2023/03/31 14:38, Manivannan Sadhasivam wrote:
-> On Fri, Mar 17, 2023 at 08:32:27PM +0900, Shunsuke Mie wrote:
->> This patchset introduces testing through continuous transfer to the PCI
->> endpoint tests. The purpose is to find bugs that may exist in the endpoint
->> controller driver. This changes able to find bugs in the DW EDMA driver and
->> this patchset includes the fix.
+On 2023/03/17 23:47, Frank Li wrote:
+>> pci@vger.kernel.org
+>> Subject: [EXT] [RFC PATCH 06/11] misc: pci_endpoint_test: Use a common
+>> header file between endpoint driver
 >>
->> This bug does not appear in the current tests because these synchronize to
->> finish with every data transfer. However, the problem occurs with
->> continuous DMA issuances. The continuous transfers are required to get high
->> throughput and low latency. Therefore, the added tests will enable
->> realistic transfer testing.
+>> Caution: EXT Email
 >>
->> This patchset is divided into three parts:
->> - Remove duplicated definitions and improve some code [1-6/11]
->> - Add continuous transfer tests [7-9/11]
->> - Fix for the DW EDMA driver bug [10,11/11]
+>> Duplicated definitions between pci-epf-test and pci_endpoint_test are
+>> already moved to a header file. Remove the common definitions and include
+>> the header file. In addition, the separate register address writes were
+>> combined into a single write.
 >>
->> This patchset has beed tested on RCar Spidar that has dw pci edma chip.
+>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+>> ---
+>>   drivers/misc/pci_endpoint_test.c | 42 +-------------------------------
+>>   1 file changed, 1 insertion(+), 41 deletions(-)
 >>
-> If you want maintainers to review the patches separately, please remove the RFC
-> tag. Unless you are looking for some overall feedback about the approach.
-Got it.
+>> diff --git a/drivers/misc/pci_endpoint_test.c
+>> b/drivers/misc/pci_endpoint_test.c
+>> index 55733dee95ad..d4a42e9ab86a 100644
+>> --- a/drivers/misc/pci_endpoint_test.c
+>> +++ b/drivers/misc/pci_endpoint_test.c
+>> @@ -22,52 +22,12 @@
+>>   #include <linux/pci_ids.h>
+>>
+>>   #include <linux/pci_regs.h>
+>> +#include <linux/pci-epf-test.h>
+> Pci-epf-test.h was only used by these two files.
 >
-> But we are in the process of migrating the existing test under tools to
-> Kselftest framework [1]. Until then, we cannot accept patches improving the
-> existing test code. So please respin the patches on top of the Kselftest patch
-> once it got posted. It's already due for some time :/
-I understood. I'll track the work of Kselftest migration.
+> Actually, I think move  drivers/misc/pci_endpoint_test.c to under drivers/pci/endpoint/functions/
+> And shared one private header is more reasonable.
+> These two files should be stay together because tight coupling.
+
+I agree that the shared header is not reasonable. However, it seems 
+difficult to move pci_endpoint_test.c
+
+because it is not an endpoint function driver. Furthermore, since 
+Kselftest adaption [1] is being worked
+
+on, I'd like to reconsider how we can apply the Kselftest patch.
+
+[1] 
+https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
+
 >
-> Also the subject should mention "PCI endpoint".
-Yes.
->
-> - Mani
->
-> [1] https://lore.kernel.org/all/20221007053934.5188-1-aman1.gupta@samsung.com/
-Thank you for your comments.
->> Shunsuke Mie (11):
->>    misc: pci_endpoint_test: Aggregate irq_type checking
->>    misc: pci_endpoint_test: Remove an unused variable
->>    pci: endpoint: function/pci-epf-test: Unify a range of time
->>      measurement
->>    PCI: endpoint: functions/pci-epf-test: Move common difinitions to
->>      header file
->>    MAINTAINERS: Add a header file for pci-epf-test
->>    misc: pci_endpoint_test: Use a common header file between endpoint
->>      driver
->>    PCI: endpoint: functions/pci-epf-test: Extend the test for continuous
->>      transfers
->>    misc: pci_endpoint_test: Support a test of continuous transfer
->>    tools: PCI: Add 'C' option to support continuous transfer
->>    dmaengine: dw-edma: Fix to change for continuous transfer
->>    dmaengine: dw-edma: Fix to enable to issue dma request on DMA
->>      processing
+>>   #include <uapi/linux/pcitest.h>
 >>
->>   MAINTAINERS                                   |   1 +
->>   drivers/dma/dw-edma/dw-edma-core.c            |  30 ++-
->>   drivers/misc/pci_endpoint_test.c              | 132 ++++--------
->>   drivers/pci/endpoint/functions/pci-epf-test.c | 199 ++++++++----------
->>   include/linux/pci-epf-test.h                  |  67 ++++++
->>   include/uapi/linux/pcitest.h                  |   1 +
->>   tools/pci/pcitest.c                           |  13 +-
->>   7 files changed, 231 insertions(+), 212 deletions(-)
->>   create mode 100644 include/linux/pci-epf-test.h
+>>   #define DRV_MODULE_NAME                                "pci-endpoint-test"
 >>
->> -- 
+>> -#define IRQ_TYPE_UNDEFINED                     -1
+>> -#define IRQ_TYPE_LEGACY                                0
+>> -#define IRQ_TYPE_MSI                           1
+>> -#define IRQ_TYPE_MSIX                          2
+>> -
+>> -#define PCI_ENDPOINT_TEST_MAGIC                        0x0
+>> -
+>> -#define PCI_ENDPOINT_TEST_COMMAND              0x4
+>> -#define COMMAND_RAISE_LEGACY_IRQ               BIT(0)
+>> -#define COMMAND_RAISE_MSI_IRQ                  BIT(1)
+>> -#define COMMAND_RAISE_MSIX_IRQ                 BIT(2)
+>> -#define COMMAND_READ                           BIT(3)
+>> -#define COMMAND_WRITE                          BIT(4)
+>> -#define COMMAND_COPY                           BIT(5)
+>> -
+>> -#define PCI_ENDPOINT_TEST_STATUS               0x8
+>> -#define STATUS_READ_SUCCESS                    BIT(0)
+>> -#define STATUS_READ_FAIL                       BIT(1)
+>> -#define STATUS_WRITE_SUCCESS                   BIT(2)
+>> -#define STATUS_WRITE_FAIL                      BIT(3)
+>> -#define STATUS_COPY_SUCCESS                    BIT(4)
+>> -#define STATUS_COPY_FAIL                       BIT(5)
+>> -#define STATUS_IRQ_RAISED                      BIT(6)
+>> -#define STATUS_SRC_ADDR_INVALID                        BIT(7)
+>> -#define STATUS_DST_ADDR_INVALID                        BIT(8)
+>> -
+>> -#define PCI_ENDPOINT_TEST_LOWER_SRC_ADDR       0x0c
+>> -#define PCI_ENDPOINT_TEST_UPPER_SRC_ADDR       0x10
+>> -
+>> -#define PCI_ENDPOINT_TEST_LOWER_DST_ADDR       0x14
+>> -#define PCI_ENDPOINT_TEST_UPPER_DST_ADDR       0x18
+>> -
+>> -#define PCI_ENDPOINT_TEST_SIZE                 0x1c
+>> -#define PCI_ENDPOINT_TEST_CHECKSUM             0x20
+>> -
+>> -#define PCI_ENDPOINT_TEST_IRQ_TYPE             0x24
+>> -#define PCI_ENDPOINT_TEST_IRQ_NUMBER           0x28
+>> -
+>> -#define PCI_ENDPOINT_TEST_FLAGS                        0x2c
+>> -#define FLAG_USE_DMA                           BIT(0)
+>> -
+>>   #define PCI_DEVICE_ID_TI_AM654                 0xb00c
+>>   #define PCI_DEVICE_ID_TI_J7200                 0xb00f
+>>   #define PCI_DEVICE_ID_TI_AM64                  0xb010
+>> --
 >> 2.25.1
->>
+
 Best,
 
 Shunsuke.
