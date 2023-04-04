@@ -2,58 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 213B86D5ADD
-	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 10:26:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 540746D5AE0
+	for <lists+linux-pci@lfdr.de>; Tue,  4 Apr 2023 10:26:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234159AbjDDI0K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 4 Apr 2023 04:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
+        id S233431AbjDDI02 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 4 Apr 2023 04:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233910AbjDDIZc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 04:25:32 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3D21BFB;
-        Tue,  4 Apr 2023 01:25:24 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id b20so127286987edd.1;
-        Tue, 04 Apr 2023 01:25:24 -0700 (PDT)
+        with ESMTP id S233319AbjDDI0F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 4 Apr 2023 04:26:05 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 420FB2D48;
+        Tue,  4 Apr 2023 01:25:27 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id r11so127296968edd.5;
+        Tue, 04 Apr 2023 01:25:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680596723;
+        d=gmail.com; s=20210112; t=1680596725;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YMOuHcpOtvN2Vos7+WkyUoQhNIDMZLfD7nUQJQoM+mI=;
-        b=pVppU3a0PdLWIHGdL7m0UT+/f7hfM4JMmYsvNGCD8CiAWXScwKhNZ0mkgeK7ol0Z+d
-         S5Xk81m0touXMg4xxXOYGgw1jCaKugWiT2PsAq6080EnSlTq9vMaYaGd/M64uFmQmvdN
-         5djw2i0/VywNrLXHAT6Uxo+BnOGzz4nfLoFTFMdFzAl1eJttd3+ZoKFJHpYUNWO9R1Xy
-         mcuPPdmwDlcJwREGFMD2zdV+MO8voIhuHtpb/SwnDSo/idg+wRwEH88RskTlxXrfnMH7
-         2dF3rwOaJgaEDnJEp/0b0rm+0c7g4As+ykfoDLVCiOJ3bdm+9TihLnRc4crqKRKYCjcR
-         KMlg==
+        bh=RBCeY3EEewEkw2R8YHGP/k/d6javu61/xUXZZ1FDqBk=;
+        b=g5Xt8tTMjwxsBK6M1kTxLf56jkTiuNnKB4EzsZmMcSvCUEqljqilwIL4OfQOd1KUbU
+         iUxh1LG8nlQFpxPX6XZpAOEfl5hV2XOkdRS14Vrt0UopN2cLxQjwr4QlAqy4ld2+B++b
+         3R1uSIPMttuv/TDS8qURUb2SQB8m01cFBSIKzSKhBriZtANaLs85G0iAPDRaxDPC/egw
+         g7ClanyCPoMIdryMwnteCmSRM5kzcUrknoGsLjlbAgrcPW8Zi3nraakM6RUg+K0EZJ0E
+         FYzfVaDp4qxqoYyBC958O7VRmfWgizjFUuPMtcmQduv+3PUKhXcjKUf7VJ53DfN9qvG1
+         zlZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680596723;
+        d=1e100.net; s=20210112; t=1680596725;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YMOuHcpOtvN2Vos7+WkyUoQhNIDMZLfD7nUQJQoM+mI=;
-        b=Ioe6/JdfGpzqHXyoDBWbVdIX6Y7ni94MX7dE8Szj8H1jBt4ZoUByTa4i/wNTh7p/jl
-         ufITjdJuOcC5JuLAz7ZnP8rd0X2QUXP1ug9YbOCgjOa6Nkb1bm1z3dCvEj/3C2oN91sY
-         uVpvCSOcY3Y9PBc48CDU+oa/R+A8EmTTOyKy+sjy3q5T19LzqTFs8e8+sqIu5AGqgyGF
-         RewjPsnOZNFhvMfsyEQSml9jr5082qT9QuZ6UpBKxXSX5THR2bCpnZMJAnTMf5DeBjht
-         MlJF19+LcXmmA8WQhz0XHTwotdYSSVPWibpxdZBue8IviAEjiUrBIjyeZWnTEI1xhlpX
-         yGNA==
-X-Gm-Message-State: AAQBX9cOtalLtoFY/W1RZHS+5tSIfhj/421Gzwk8RtQUc5G1ec3e76wE
-        PRM9VNkLzQWMl4e8ImFiLDU=
-X-Google-Smtp-Source: AKy350bshUiIZxT54qrvAjQMPVs6ektUN+zdeXnmDQ6O2Bysx+xuNgnRGmxA4V/c/HGT+dYVm6L8Vg==
-X-Received: by 2002:a17:907:119e:b0:933:be1:8f4f with SMTP id uz30-20020a170907119e00b009330be18f4fmr1529889ejb.9.1680596722695;
-        Tue, 04 Apr 2023 01:25:22 -0700 (PDT)
+        bh=RBCeY3EEewEkw2R8YHGP/k/d6javu61/xUXZZ1FDqBk=;
+        b=27+0gRPDNCGFW8Fluhr64e83QZBbDxJNpOvqrBYWahoEdbgn182MXp6fDDdTTIK9+Q
+         aMvnQ6HCX/K4rmTopib0HRN+dsJ516/3f38xZIJW7oFsP0mRGNDm9n5nOkTlA3RpSEdU
+         7/zT9FsALxgIJM/ihbHitmeRxcT6oL3J9/qr2rGnkcyZGLCEfb4jQ007mDxR42UHphpr
+         ahZfp7fzOW0nQOwAQProj04W8jZh+SEsMDnoDdEyJFiuFMWwDeTnNcAXp7pxqfRydD5f
+         OpbUZ+UKl7zYdEjqGpXh/U727eLBIiFVHa2AinPQwmklOl6FydWBMMBlnMQh562uayLt
+         ZLbg==
+X-Gm-Message-State: AAQBX9fkn7KZP+JmAueP1MfUze1K82q5FlPNr4rbE8g6KQqIvnrYX7dn
+        TG+rWx0o2gMK4OzYDt3IK7s=
+X-Google-Smtp-Source: AKy350bxaJLguuUheH5puu+Kr9GQsSw1qq9xXlbpIvIOx6rqDFa6FfO12WN1/o8lPtldO2qyVNSFZw==
+X-Received: by 2002:aa7:d448:0:b0:4fe:9bba:1d65 with SMTP id q8-20020aa7d448000000b004fe9bba1d65mr2033168edr.21.1680596725502;
+        Tue, 04 Apr 2023 01:25:25 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id s5-20020a170906454500b008e54ac90de1sm5640652ejq.74.2023.04.04.01.25.21
+        by smtp.googlemail.com with ESMTPSA id s5-20020a170906454500b008e54ac90de1sm5640652ejq.74.2023.04.04.01.25.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 01:25:22 -0700 (PDT)
+        Tue, 04 Apr 2023 01:25:25 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
 Cc:     damien.lemoal@opensource.wdc.com, xxm@rock-chips.com,
         Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
@@ -64,17 +64,16 @@ Cc:     damien.lemoal@opensource.wdc.com, xxm@rock-chips.com,
         Brian Norris <briannorris@chromium.org>,
         Caleb Connolly <kc@postmarketos.org>,
         Corentin Labbe <clabbe@baylibre.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Judy Hsiao <judyhsiao@chromium.org>,
-        Lin Huang <hl@rock-chips.com>,
         Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        Lin Huang <hl@rock-chips.com>,
+        Judy Hsiao <judyhsiao@chromium.org>,
         Hugh Cole-Baker <sigmaris@gmail.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 09/11] PCI: rockchip: Use u32 variable to access 32-bit registers
-Date:   Tue,  4 Apr 2023 10:24:22 +0200
-Message-Id: <20230404082426.3880812-10-rick.wertenbroek@gmail.com>
+Subject: [PATCH v3 10/11] PCI: rockchip: Don't advertise MSI-X in PCIe capabilities
+Date:   Tue,  4 Apr 2023 10:24:23 +0200
+Message-Id: <20230404082426.3880812-11-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
 References: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
@@ -90,72 +89,81 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Previously u16 variables were used to access 32-bit registers, this
-resulted in not all of the data being read from the registers. Also
-the left shift of more than 16-bits would result in moving data out
-of the variable. Use u32 variables to access 32-bit registers
+The RK3399 PCIe endpoint controller cannot generate MSI-X IRQs.
+This is documented in the RK3399 technical reference manual (TRM)
+section 17.5.9 "Interrupt Support".
 
-Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
-Cc: stable@vger.kernel.org
+MSI-X capability should therefore not be advertised. Remove the
+MSI-X capability by editing the capability linked-list. The
+previous entry is the MSI capability, therefore get the next
+entry from the MSI-X capability entry and set it as next entry
+for the MSI capability. This in effect removes MSI-X from the list.
+
+Linked list before : MSI cap -> MSI-X cap -> PCIe Device cap -> ...
+Linked list now : MSI cap -> PCIe Device cap -> ...
+
 Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 10 +++++-----
- drivers/pci/controller/pcie-rockchip.h    |  1 +
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 15 +++++++++++++++
+ drivers/pci/controller/pcie-rockchip.h    |  5 +++++
+ 2 files changed, 20 insertions(+)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index f366846ad77c..924b95bd736c 100644
+index 924b95bd736c..20c768287870 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -274,15 +274,15 @@ static int rockchip_pcie_ep_set_msi(struct pci_epc *epc, u8 fn, u8 vfn,
- {
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
--	u16 flags;
-+	u32 flags;
+@@ -510,6 +510,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
+ 	size_t max_regions;
+ 	struct pci_epc_mem_window *windows = NULL;
+ 	int err, i;
++	u32 cfg_msi, cfg_msix_cp;
  
- 	flags = rockchip_pcie_read(rockchip,
- 				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
- 				   ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
- 	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK;
- 	flags |=
--	   ((multi_msg_cap << 1) <<  ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET) |
--	   PCI_MSI_FLAGS_64BIT;
-+	   (multi_msg_cap << ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET) |
-+	   (PCI_MSI_FLAGS_64BIT << ROCKCHIP_PCIE_EP_MSI_FLAGS_OFFSET);
- 	flags &= ~ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP;
- 	rockchip_pcie_write(rockchip, flags,
- 			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-@@ -294,7 +294,7 @@ static int rockchip_pcie_ep_get_msi(struct pci_epc *epc, u8 fn, u8 vfn)
- {
- 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
--	u16 flags;
-+	u32 flags;
+ 	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+ 	if (!ep)
+@@ -584,6 +585,20 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
  
- 	flags = rockchip_pcie_read(rockchip,
- 				   ROCKCHIP_PCIE_EP_FUNC_BASE(fn) +
-@@ -355,7 +355,7 @@ static int rockchip_pcie_ep_send_msi_irq(struct rockchip_pcie_ep *ep, u8 fn,
- 					 u8 interrupt_num)
- {
- 	struct rockchip_pcie *rockchip = &ep->rockchip;
--	u16 flags, mme, data, data_mask;
-+	u32 flags, mme, data, data_mask;
- 	u8 msi_count;
- 	u64 pci_addr, pci_addr_mask = 0xff;
- 	u32 r;
+ 	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
+ 
++	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
++				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
++
++	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
++
++	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
++					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
++					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
++
++	cfg_msi |= cfg_msix_cp;
++
++	rockchip_pcie_write(rockchip, cfg_msi,
++			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
++
+ 	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE, PCIE_CLIENT_CONFIG);
+ 
+ 	return 0;
 diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 5797ba73bb6b..1558eae298ae 100644
+index 1558eae298ae..a21070ea7166 100644
 --- a/drivers/pci/controller/pcie-rockchip.h
 +++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -226,6 +226,7 @@
+@@ -226,6 +226,8 @@
  #define ROCKCHIP_PCIE_EP_CMD_STATUS			0x4
  #define   ROCKCHIP_PCIE_EP_CMD_STATUS_IS		BIT(19)
  #define ROCKCHIP_PCIE_EP_MSI_CTRL_REG			0x90
-+#define   ROCKCHIP_PCIE_EP_MSI_FLAGS_OFFSET		16
++#define   ROCKCHIP_PCIE_EP_MSI_CP1_OFFSET		8
++#define   ROCKCHIP_PCIE_EP_MSI_CP1_MASK			GENMASK(15, 8)
+ #define   ROCKCHIP_PCIE_EP_MSI_FLAGS_OFFSET		16
  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET		17
  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK		GENMASK(19, 17)
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_OFFSET		20
+@@ -233,6 +235,9 @@
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK		GENMASK(22, 20)
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
+ #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
++#define ROCKCHIP_PCIE_EP_MSIX_CAP_REG			0xb0
++#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_OFFSET		8
++#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK		GENMASK(15, 8)
+ #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
+ #define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
+ #define ROCKCHIP_PCIE_EP_FUNC_BASE(fn) \
 -- 
 2.25.1
 
