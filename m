@@ -2,150 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 372FE6D7892
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 11:39:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B0086D7A32
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 12:47:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237692AbjDEJj4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Apr 2023 05:39:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47148 "EHLO
+        id S237838AbjDEKrJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Apr 2023 06:47:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237451AbjDEJjq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 05:39:46 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 757381B4
-        for <linux-pci@vger.kernel.org>; Wed,  5 Apr 2023 02:39:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680687586; x=1712223586;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=MZti92UgQvOfEHHOLbp4DJwzHE8YhTwVdFRllH7Gy5A=;
-  b=dz1AwpR4mMD0+gxb01qjXLKs0k2yt3IU+0lAzYW3iXrnfDUcsB51N67g
-   CB303OD/y1gY8YgQt8USZnWJ72X8X0rnTGf4f/64nOi6gJezrZKVmj8Nu
-   WVNRZlGD2oCFODsxQFDF+Vy3RJIVB6xtCEgLgYc3aYDpQhZwPftUy8Y4J
-   Rte75YtnybK7ueKU/gZOZcxi+op5g9CVluGV6br3uXb6aNdzWSzIfsDYf
-   AB5Ueqh6k9LjA8l1xr6tpNvVgjbJU/NDnxnenPSCsJjYuSLiNPfHuBCAr
-   rO49Eba5Cp0fXVAsvkdr8dIk6f162oJFQmggAMNN+njOf5bp+sjLq8Tgw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="326444679"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="326444679"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 02:39:32 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="775982205"
-X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
-   d="scan'208";a="775982205"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Apr 2023 02:39:27 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9BAEA13A; Wed,  5 Apr 2023 12:39:29 +0300 (EEST)
-Date:   Wed, 5 Apr 2023 12:39:29 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI/PM: Decrease wait time for devices behind
- slow links
-Message-ID: <20230405093929.GR33314@black.fi.intel.com>
-References: <20230404052714.51315-3-mika.westerberg@linux.intel.com>
- <20230404213655.GA3568295@bhelgaas>
+        with ESMTP id S237740AbjDEKrI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 06:47:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2011249F9;
+        Wed,  5 Apr 2023 03:47:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AD08D63C57;
+        Wed,  5 Apr 2023 10:47:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C55A2C433EF;
+        Wed,  5 Apr 2023 10:46:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680691623;
+        bh=q4mbSRyaECqXZBaI2chRUC8g7fKSua/OlQr5LOzU8Lc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NYk7GArMLcHuZT6LglhcwfKswPjiUhvpykd6UfUcigFlmjTxk81cdWTM8meuG87OK
+         auDr+rMup6Gh3bPqxaK+PCnitUXnEcraBkw66jONfxwMxKRcJ0aR9cXwA0je2NqU2a
+         SuaAOx/GkY80DSvwBckR1cf/XsDftwTEfg7AN0H7peYfBa1gba7rbOJrs6tgMXDXKm
+         XQ8oLmDqeHfK/qTHu9W+FGatJMx9o8YWlmPrCEP5+hb9JJQI1gRSJ+nqGxZxfBVt+4
+         TebyxdRgWJ3of8pZKvTeVOoEeLzzAf8umVcViGN092/imnB2nDAMnXOUUYGrgP7fXR
+         olLMJGuWAKHZg==
+Date:   Wed, 5 Apr 2023 12:46:54 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     treding@nvidia.com, krzysztof.kozlowski@linaro.org,
+        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
+        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
+        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
+        ishah@nvidia.com, bbasu@nvidia.com
+Subject: Re: [Patch v5 7/8] PCI: tegra194: add interconnect support in
+ Tegra234
+Message-ID: <ZC1Rnrb0MObR5S42@lpieralisi>
+References: <20230330133354.714-1-sumitg@nvidia.com>
+ <20230330133354.714-8-sumitg@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230404213655.GA3568295@bhelgaas>
-X-Spam-Status: No, score=-0.1 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230330133354.714-8-sumitg@nvidia.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+You should still capitalize the subject.
 
-On Tue, Apr 04, 2023 at 04:36:55PM -0500, Bjorn Helgaas wrote:
-> Hi Mika,
-> 
-> I need some help because I have a hard time applying sec 6.6.1.
-> 
-> On Tue, Apr 04, 2023 at 08:27:14AM +0300, Mika Westerberg wrote:
-> > In order speed up reset and resume time of devices behind slow links,
-> > decrease the wait time to 1s. This should give enough time for them to
-> > respond.
-> 
-> Is there some spec language behind this?  In sec 6.6.1, I see that all
-> devices "must be able to receive a Configuration Request and return a
-> Successful Completion".
-> 
-> A preceding rule says devices with slow links must enter LTSSM Detect
-> within 20ms, but I don't see a direct connection from that to a
-> shorter wait time.
+"PCI: tegra194: Add interconnect.."
 
-I think this (PCIe 5.0 p. 553):
+On Thu, Mar 30, 2023 at 07:03:53PM +0530, Sumit Gupta wrote:
+> Add support to request DRAM bandwidth with Memory Interconnect
+> in Tegra234 SoC. The DRAM BW required for different modes depends
+> on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
+> 
+> Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
 
-"Following a Conventional Reset of a device, within 1.0 s the device
- must be able to receive a Configuration Request and return a Successful
- Completion if the Request is valid."
+You should add a Link to the relevant lore archive, I am
+pretty sure Bjorn chimed in too.
 
-> > While doing this, instead of looking at the speed we check if
-> > the port supports active link reporting.
-> 
-> Why check dev->link_active_reporting (i.e., PCI_EXP_LNKCAP_DLLLARC)
-> instead of the link speed described by the spec?
+This patch does too many things at once; more importantly it
+does *not* explain why we request memory bandwidth and why it
+is required and *safe* given that the current code works so far.
 
-This is what Sathyanarayanan suggested in the previous version comments.
+So:
 
-> DLLLARC is required for fast links, but it's not prohibited for slower
-> links and it's *required* for hotplug ports with slow links, so
-> dev->link_active_reporting is not completely determined by link speed.
-> 
-> IIUC, the current code basically has these cases:
-> 
->   1) All devices on secondary bus have zero D3cold delay:
->        return immediately; no delay at all
-> 
->   2) Non-PCIe bridge:
->        sleep 1000ms
->        sleep  100ms (typical, depends on downstream devices)
-> 
->   3) Speed <= 5 GT/s:
->        sleep 100ms (typical)
->        sleep up to 59.9s (typical) waiting for valid config read
-> 
->   4) Speed > 5 GT/s (DLLLARC required):
->        sleep 20ms
->        sleep up to 1000ms waiting for DLLLA
->        sleep 100ms (typical)
->        sleep up to 59.9s (typical) waiting for valid config read
-> 
-> This patch changes cases 3) and 4) to:
-> 
->   3) DLLLARC not supported:
->        sleep 100ms (typical)
->        sleep up to 1.0s (typical) waiting for valid config read
-> 
->   4) DLLLARC supported:
->        no change in wait times, ~60s total
-> 
-> And testing dev->link_active_reporting instead of speed means slow
-> hotplug ports (and possibly other slow ports that implement DLLLARC)
-> that previously were in case 3) will now be in case 4).
+patch 1: fix the array overflow issues with the current code
+patch 2: add memory bandwidth interconnect support
 
-Yes, and we do that because if the device gets unplugged while we were
-in susppend we don't want to wait for the total 60s for it to become
-ready. That's what the DLLLARC can tell us (for ports that support it).
-For the ports that do not we want to give the device some time but not
-to wait for that 60s so we wait for the 1s as the "minimum" requirement
-from the spec before it can be determined "broken".
+Thanks,
+Lorenzo
+
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 44 ++++++++++++++++++----
+>  1 file changed, 36 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 09825b4a075e..89d829a946ee 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> @@ -223,6 +224,7 @@
+>  #define EP_STATE_ENABLED	1
+>  
+>  static const unsigned int pcie_gen_freq[] = {
+> +	GEN1_CORE_CLK_FREQ,   /* PCI_EXP_LNKSTA_CLS == 0; undefined */
+>  	GEN1_CORE_CLK_FREQ,
+>  	GEN2_CORE_CLK_FREQ,
+>  	GEN3_CORE_CLK_FREQ,
+> @@ -287,6 +289,7 @@ struct tegra_pcie_dw {
+>  	unsigned int pex_rst_irq;
+>  	int ep_state;
+>  	long link_status;
+> +	struct icc_path *icc_path;
+>  };
+>  
+>  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+> @@ -309,6 +312,27 @@ struct tegra_pcie_soc {
+>  	enum dw_pcie_device_mode mode;
+>  };
+>  
+> +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
+> +{
+> +	struct dw_pcie *pci = &pcie->pci;
+> +	u32 val, speed, width;
+> +
+> +	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
+> +
+> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
+> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+> +
+> +	val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
+> +
+> +	if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
+> +		dev_err(pcie->dev, "can't set bw[%u]\n", val);
+> +
+> +	if (speed >= ARRAY_SIZE(pcie_gen_freq))
+> +		speed = 0;
+> +
+> +	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+> +}
+> +
+>  static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -452,14 +476,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>  	struct tegra_pcie_dw *pcie = arg;
+>  	struct dw_pcie_ep *ep = &pcie->pci.ep;
+>  	struct dw_pcie *pci = &pcie->pci;
+> -	u32 val, speed;
+> +	u32 val;
+>  
+>  	if (test_and_clear_bit(0, &pcie->link_status))
+>  		dw_pcie_ep_linkup(ep);
+>  
+> -	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+> -		PCI_EXP_LNKSTA_CLS;
+> -	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
+> +	tegra_pcie_icc_set(pcie);
+>  
+>  	if (pcie->of_data->has_ltr_req_fix)
+>  		return IRQ_HANDLED;
+> @@ -945,9 +967,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  
+>  static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>  {
+> -	u32 val, offset, speed, tmp;
+>  	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+>  	struct dw_pcie_rp *pp = &pci->pp;
+> +	u32 val, offset, tmp;
+>  	bool retry = true;
+>  
+>  	if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
+> @@ -1018,9 +1040,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>  		goto retry_link;
+>  	}
+>  
+> -	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+> -		PCI_EXP_LNKSTA_CLS;
+> -	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
+> +	tegra_pcie_icc_set(pcie);
+>  
+>  	tegra_pcie_enable_interrupts(pp);
+>  
+> @@ -2224,6 +2244,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
+> +	ret = PTR_ERR_OR_ZERO(pcie->icc_path);
+> +	if (ret) {
+> +		tegra_bpmp_put(pcie->bpmp);
+> +		dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
+> +		return ret;
+> +	}
+> +
+>  	switch (pcie->of_data->mode) {
+>  	case DW_PCIE_RC_TYPE:
+>  		ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
+> -- 
+> 2.17.1
+> 
