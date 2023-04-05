@@ -2,198 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 10B8B6D7BF3
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 13:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2E166D7BF8
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 13:51:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237096AbjDELur (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Apr 2023 07:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38486 "EHLO
+        id S237986AbjDELvL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Apr 2023 07:51:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237867AbjDELuq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 07:50:46 -0400
-Received: from new4-smtp.messagingengine.com (new4-smtp.messagingengine.com [66.111.4.230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0615619A1;
-        Wed,  5 Apr 2023 04:50:45 -0700 (PDT)
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 5A465582376;
-        Wed,  5 Apr 2023 07:50:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Wed, 05 Apr 2023 07:50:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fastmail.com; h=
-        cc:cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm2; t=
-        1680695444; x=1680699044; bh=zQlWYtVpffDPNaN/W+FRH19H3U4y1mSyepB
-        pvfmz0io=; b=d/BjLmvKaKa4k49dQJ7knYYlWBme4oeyYCFvJiyX8FkVQJSfw1x
-        UtB2sQGTIuDPrFhl6FsPMMHJ3a4XgWYuXkBKz3F2qCjYhdkFTFAIkezWsL7uaod/
-        0dWrJEc0yYslj37jUTgYwJMH4Il7hrybnQGCy1RvmWDLPk6miqzcvnn/QPRYdTRk
-        x40AFz85DPwrL6WbuUEgzqihP1x/JJdTrSMpWofjZ+HKBafHgGY/hbLDpM391+9I
-        86OFnuP8R27y3+3hvMbmZODhXbq2iQHasqUXnF7Un5xPNMC+48fNxVHhKtuCy/J1
-        Hm6uvuiuFQMLk2zKQiFhNHgZdfFNFMfD6qw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=i3db14652.fm2;
-         t=1680695444; x=1680699044; bh=zQlWYtVpffDPNaN/W+FRH19H3U4y1mSy
-        epBpvfmz0io=; b=frudSLj4wAS4pmeVPPIydjO4UAjlavwktxIjHlu7ZPBVQlBU
-        NV0VQOhLX4Jzl/Odpgg7nHDl4O9WplZErF+iZYpQVaJhJZIsKZoKxLB36ZdlUJqo
-        IxFq7zBwe3oVOM0azaIcLKuH6gM6mW0gqsq9n4VdgMn7xbtWnfhJ5CwPEvjOiuLh
-        rQBhcm/54xa+eIkFzRn38GA6Ira6KULIBvWKgIqsuIzgrqHgDel/Wtj56Js/Ovjt
-        w6LO3sMTCTQZUlxrUFhQTPWTO4F05jgS1mmoBB4nLt5jpjACaTqy+ZVxhuaPg/ox
-        VEmEMMyb1EIRkszHQbr+09Zn2XXk73YnxTXL0w==
-X-ME-Sender: <xms:k2AtZJ56YGZOfODcwsQdPbjl4c7sLJUgy0pvAoBJvSioQ0aIUu9fQA>
-    <xme:k2AtZG5F3Jq7I-T6q-qVBdyhjsobwFcnJsIi6vHkUHeLRM0SzLtotFXq_87Jqpko7
-    dOUEmr2POteDtXyORc>
-X-ME-Received: <xmr:k2AtZAe88jKOWMPkpGvkQEPaTEwn2mkZfo1tIls5eL_iVmXbf8m-FjINYQiINxB4yInMWcVHvt1Cgfpefbf54DC3MW6YQ2Dx>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvdejuddggeeiucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddtfeejnecuhfhrohhmpeffrghm
-    ihgvnhcunfgvucfoohgrlhcuoegulhgvmhhorghlsehfrghsthhmrghilhdrtghomheqne
-    cuggftrfgrthhtvghrnhepteefiefhieetgfevhfegfeehffetteduieetudfgleetvdff
-    udelveejfefhfeejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilh
-    hfrhhomhepughlvghmohgrlhesfhgrshhtmhgrihhlrdgtohhm
-X-ME-Proxy: <xmx:k2AtZCLFn3MsL7gvd8wLG3CuLJxW5n4nOynka_DFT-9dKDo-5HArGQ>
-    <xmx:k2AtZNI_vzkrEL29tDoOReEqqmQdlYAOjJ3ikWnYHgDRFgUWB8I6hA>
-    <xmx:k2AtZLx0Q9wrt2PaHPg5EvkLjtauj_XsM7xEVyFGCJ92O-OgjTnXoQ>
-    <xmx:lGAtZN47bdywGM6YzmvH9sB_j4rYKZqy6gKJDAtWyhTKORP9ky-uM1l0goA>
-Feedback-ID: i3db14652:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 5 Apr 2023 07:50:38 -0400 (EDT)
-Message-ID: <c14a2e98-1ca0-35c5-ae05-b44c1baafa7f@fastmail.com>
-Date:   Wed, 5 Apr 2023 20:50:37 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v3 10/11] PCI: rockchip: Don't advertise MSI-X in PCIe
- capabilities
-Content-Language: en-US
-To:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        alberto.dassatti@heig-vd.ch
-Cc:     damien.lemoal@opensource.wdc.com, xxm@rock-chips.com,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S237295AbjDELvK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 07:51:10 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B80654203;
+        Wed,  5 Apr 2023 04:51:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680695464; x=1712231464;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CNsMJe3NJRh194M0JTRSE7YPi2b+rJpnYVMeT8Rmlsg=;
+  b=Lu3tYDLRXv9qwqJIg+37k1wYWQG7yvee8VxkjgZeKlxj/+CA9vN1eNhh
+   4LAmNkIWIDNrb9vstLnoW6u3bSbou3j4Y7ZA4ZfkBREEtiBzmc05ikxVQ
+   aN0KDmrvCy55qbgK4yQjoNCmpLkZqvbT5WMZTbJQGnppVCFfsWEGs4kQP
+   hASFK/q4xHXz0yAPx3fgzPhGC0ojPUMy2HYQlLros+KWfTc6jqVacYLv5
+   ATWKoQvfF0xlB7TbwH1eEQZKX/WoG5DTEt0sINIe0ta7cYmzv3hF8hlAb
+   rgGA8B9BR6g0nU30KfnHGe7zaPAuISO0qOwGC1HzZEqtH66xNaE5H4X3Q
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="405207773"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="405207773"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 04:51:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="797887729"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="797887729"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Apr 2023 04:50:52 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pk1f5-00ColQ-2n;
+        Wed, 05 Apr 2023 14:50:47 +0300
+Date:   Wed, 5 Apr 2023 14:50:47 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org
+Cc:     Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Jonker <jbx6244@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Caleb Connolly <kc@postmarketos.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
-        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Lin Huang <hl@rock-chips.com>,
-        Judy Hsiao <judyhsiao@chromium.org>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
-        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-References: <20230404082426.3880812-1-rick.wertenbroek@gmail.com>
- <20230404082426.3880812-11-rick.wertenbroek@gmail.com>
-From:   Damien Le Moal <dlemoal@fastmail.com>
-In-Reply-To: <20230404082426.3880812-11-rick.wertenbroek@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.3 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v8 5/7] PCI: Allow pci_bus_for_each_resource() to take
+ less arguments
+Message-ID: <ZC1glzw4F9F8zCK+@smile.fi.intel.com>
+References: <20230330162434.35055-1-andriy.shevchenko@linux.intel.com>
+ <20230330162434.35055-6-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230330162434.35055-6-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/4/23 17:24, Rick Wertenbroek wrote:
-> The RK3399 PCIe endpoint controller cannot generate MSI-X IRQs.
-> This is documented in the RK3399 technical reference manual (TRM)
-> section 17.5.9 "Interrupt Support".
+On Thu, Mar 30, 2023 at 07:24:32PM +0300, Andy Shevchenko wrote:
+> Refactor pci_bus_for_each_resource() in the same way as it's done in
+> pci_dev_for_each_resource() case. This will allow to hide iterator
+> inside the loop, where it's not used otherwise.
 > 
-> MSI-X capability should therefore not be advertised. Remove the
-> MSI-X capability by editing the capability linked-list. The
-> previous entry is the MSI capability, therefore get the next
-> entry from the MSI-X capability entry and set it as next entry
-> for the MSI capability. This in effect removes MSI-X from the list.
-> 
-> Linked list before : MSI cap -> MSI-X cap -> PCIe Device cap -> ...
-> Linked list now : MSI cap -> PCIe Device cap -> ...
-> 
-> Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-> ---
->  drivers/pci/controller/pcie-rockchip-ep.c | 15 +++++++++++++++
->  drivers/pci/controller/pcie-rockchip.h    |  5 +++++
->  2 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-> index 924b95bd736c..20c768287870 100644
-> --- a/drivers/pci/controller/pcie-rockchip-ep.c
-> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-> @@ -510,6 +510,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
->  	size_t max_regions;
->  	struct pci_epc_mem_window *windows = NULL;
->  	int err, i;
-> +	u32 cfg_msi, cfg_msix_cp;
->  
->  	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
->  	if (!ep)
-> @@ -584,6 +585,20 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
->  
->  	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
->  
+> No functional changes intended.
 
-Nit: Adding a comment here about what this is doing and why would be nice. E.g.
-something like:
+Bjorn, this has wrong author in your tree:
 
-	/*
-	 * MSI-X is not supported but the controller still advertises by default
-	 * the MSI-X capability, which can lead to the RC-side attempting to use
-	 * MSI-X. Avoid this by skipping the MSI-X capability entry in the
-	 * chain of PCIe capabilities: get the next pointer from the
-	 * MSI-X entry and set that in the MSI capability entry. This way
-	 * the MSI-X entry is skipped (left out of the linked-list).
-	 */
+https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?h=resource&id=46dbad19a59e0dd8f1e7065e5281345797fbb365
 
-> +	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
-> +				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +
-> +	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
-> +
-> +	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
-> +					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
-> +					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
-> +
-> +	cfg_msi |= cfg_msix_cp;
-> +
-> +	rockchip_pcie_write(rockchip, cfg_msi,
-> +			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-> +
->  	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE, PCIE_CLIENT_CONFIG);
->  
->  	return 0;
-> diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-> index 1558eae298ae..a21070ea7166 100644
-> --- a/drivers/pci/controller/pcie-rockchip.h
-> +++ b/drivers/pci/controller/pcie-rockchip.h
-> @@ -226,6 +226,8 @@
->  #define ROCKCHIP_PCIE_EP_CMD_STATUS			0x4
->  #define   ROCKCHIP_PCIE_EP_CMD_STATUS_IS		BIT(19)
->  #define ROCKCHIP_PCIE_EP_MSI_CTRL_REG			0x90
-> +#define   ROCKCHIP_PCIE_EP_MSI_CP1_OFFSET		8
-> +#define   ROCKCHIP_PCIE_EP_MSI_CP1_MASK			GENMASK(15, 8)
->  #define   ROCKCHIP_PCIE_EP_MSI_FLAGS_OFFSET		16
->  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET		17
->  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK		GENMASK(19, 17)
-> @@ -233,6 +235,9 @@
->  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK		GENMASK(22, 20)
->  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
->  #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
-> +#define ROCKCHIP_PCIE_EP_MSIX_CAP_REG			0xb0
-> +#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_OFFSET		8
-> +#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK		GENMASK(15, 8)
->  #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
->  #define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
->  #define ROCKCHIP_PCIE_EP_FUNC_BASE(fn) \
+Or did I misinterpret something?
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
