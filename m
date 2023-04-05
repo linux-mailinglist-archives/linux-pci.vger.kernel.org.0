@@ -2,108 +2,206 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E6E5A6D760A
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 09:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AC736D76D7
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 10:28:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237219AbjDEH5X (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Apr 2023 03:57:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37600 "EHLO
+        id S237172AbjDEI2o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Apr 2023 04:28:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237196AbjDEH5K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 03:57:10 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDE24ED6
-        for <linux-pci@vger.kernel.org>; Wed,  5 Apr 2023 00:57:04 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-4fb2f8d7716so236136a12.2
-        for <linux-pci@vger.kernel.org>; Wed, 05 Apr 2023 00:57:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680681423;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q2eIUIgQam+Znm92t75ub3SSql/5kD/CSnGjaZOIeRE=;
-        b=ZFAmFQTn20XXB58Hm1LdXdWSQ5ZKxD4voHxxAhS1cKrInxf7DLRcTSbw0glAYuheNd
-         QsgC19PfAnkNACoih4X9yWq8Ua2f3Z5aqpAwmyG7K5XHuwPNdYpOLvr+4dizYlmkwqvh
-         8ippA6GSg6vwbKsguRd+gNlt6Q3d6qdPQH52wPe4yUNm7drYy8w79XnI6OkaMCxGYxXe
-         MDkio/NlgHAyk3tGfHbZ8+FvtwIbKJyHeY9Hl3c4m/UBMxdY642/4m0lMYD1+lZcL9DU
-         GTGlzj7aK8t/dfhFV0ZGCnZD6XTAnjOEHb+Mkw5/16dwcMVpicpYd4/+ImRJVe79/Ozv
-         w6jQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680681423;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q2eIUIgQam+Znm92t75ub3SSql/5kD/CSnGjaZOIeRE=;
-        b=CkCT8ki0A9qUduxlSdDsN71HaJGGgnfs7TeF5h1lInbS/fonS2JvNC1a364SQm6ll5
-         pavWr0s3bsc5kK804+mSBliTsvZOFv0Ff03b/fcMErl40qWHf4YZKPfBv8xfxZhfHd/J
-         4KAPlvCbE+GJ+slNiJkS1fpNrZCJeVvarSVU9WOm8EqPEtPwsFxoFSh1HmNFszSDGJyT
-         7SaVat/Xi6f3oFjdu8nKQUqWmnqg4xFRxowLjHACQ8kkyox3prQq+yZ1dKl1R3sfG2/T
-         8Irlenjmzf4vbmIAEMtypvkoIaWQdcQvZ63KT0sPprApCc91WeJPQJ3t/mdLRVbffd1E
-         oYew==
-X-Gm-Message-State: AAQBX9cHljZIAl74prt9hP3IRHKMyCm2T8zQ3uK30CdIsZJjQqeQI9am
-        chlmNPvjA4SoQqiCPMJwq8zuA/Tbpg2fXNNqBhE=
-X-Google-Smtp-Source: AKy350b+6mlAYsE5jCYer29QJ01MP1yshNVCPV/yu1iTNStkeOVxzQSr9n/dP8VlK7PnohYB4ysIDujVG47xryzVK58=
-X-Received: by 2002:a50:d781:0:b0:500:547b:4e1b with SMTP id
- w1-20020a50d781000000b00500547b4e1bmr691870edi.6.1680681423244; Wed, 05 Apr
- 2023 00:57:03 -0700 (PDT)
+        with ESMTP id S237165AbjDEI2o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 04:28:44 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 984281FF9;
+        Wed,  5 Apr 2023 01:28:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680683322; x=1712219322;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=wrn29fWEWUh9DQE7oDLC0JoUgdEFYGWX1tgF9OvmiyE=;
+  b=PXFb75YqxwFOJl+S6VpMXd/JGFHr4Tz7k73GqaeJPqSllwMdpOLI6lWN
+   lX8IOp/4JY/YEw9RmqGoH6SAL2LjzWz5SCKyV+/1Wo/0bo49d9eigFJ6p
+   Z8QXd7DaSuL4YCcS79tvX5JPBW70kZPyAiqQRkM4x9yVV+An+6R5ONSYn
+   s4xxyYgHxLc2pUpAhqWNW1pOAO/0+DBslbDrEMNv/sCeH0jwd2W84c+rx
+   VhsXyIrrdPQlUgoWbCTG8jxzZ6NwzlaoTt1Qav+Zcs0HsJLrKBUIeX2HQ
+   5E1n2iKl7rxH2Ap1NvhwZyZHhkpgkqWFUTER4izh2NK6Ipuv+lALr/z/g
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="344113403"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="344113403"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2023 01:28:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10670"; a="751192534"
+X-IronPort-AV: E=Sophos;i="5.98,319,1673942400"; 
+   d="scan'208";a="751192534"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Apr 2023 01:28:32 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pjyVH-00CkZe-2G;
+        Wed, 05 Apr 2023 11:28:27 +0300
+Date:   Wed, 5 Apr 2023 11:28:27 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
+ users
+Message-ID: <ZC0xK4YJrKga7akk@smile.fi.intel.com>
+References: <20230330162434.35055-1-andriy.shevchenko@linux.intel.com>
+ <20230404161101.GA3554747@bhelgaas>
 MIME-Version: 1.0
-Received: by 2002:a05:7208:2202:b0:65:e547:3943 with HTTP; Wed, 5 Apr 2023
- 00:57:02 -0700 (PDT)
-Reply-To: tamimbinhamadalthani00@gmail.com
-From:   Tamim Mohammed Taher <cisskhadidiatou890@gmail.com>
-Date:   Wed, 5 Apr 2023 00:57:02 -0700
-Message-ID: <CAAYY=dZe5ZjJ2b2KEkYbGOEnyScbFaaGqjvb6EmPHE7Lypp0cg@mail.gmail.com>
-Subject: RE:Saudi Arabia-Inquiry about your products.!!
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: Yes, score=5.9 required=5.0 tests=DEAR_SOMETHING,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,UNDISC_FREEM autolearn=no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230404161101.GA3554747@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
         autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:533 listed in]
-        [list.dnswl.org]
-        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
-        *      digit
-        *      [tamimbinhamadalthani00[at]gmail.com]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [cisskhadidiatou890[at]gmail.com]
-        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
-        *       in digit
-        *      [cisskhadidiatou890[at]gmail.com]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  1.7 DEAR_SOMETHING BODY: Contains 'Dear (something)'
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        *  2.9 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-X-Spam-Level: *****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear Sir/Madam,
+On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
+> On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
+> > Provide two new helper macros to iterate over PCI device resources and
+> > convert users.
+> > 
+> > Looking at it, refactor existing pci_bus_for_each_resource() and convert
+> > users accordingly.
+> > 
+> > Note, the amount of lines grew due to the documentation update.
+> > 
+> > Changelog v8:
+> > - fixed issue with pci_bus_for_each_resource() macro (LKP)
+> > - due to above added a new patch to document how it works
+> > - moved the last patch to be #2 (Philippe)
+> > - added tags (Philippe)
+> > 
+> > Changelog v7:
+> > - made both macros to share same name (Bjorn)
+> 
+> I didn't actually request the same name for both; I would have had no
+> idea how to even do that :)
+> 
+> v6 had:
+> 
+>   pci_dev_for_each_resource_p(dev, res)
+>   pci_dev_for_each_resource(dev, res, i)
+> 
+> and I suggested:
+> 
+>   pci_dev_for_each_resource(dev, res)
+>   pci_dev_for_each_resource_idx(dev, res, i)
+> 
+> because that pattern is used elsewhere.
+
+Ah, sorry I misinterpreted your suggestion (I thought that at the end of
+the day you wanted the macro to be less intrusive, so we change less code,
+that's why I interpreted it the way described in the Changelog).
+
+> But you figured out how to do
+> it, and having one name is even better, so thanks for that extra work!
+
+You are welcome!
+
+> > - split out the pci_resource_n() conversion (Bjorn)
+> > 
+> > Changelog v6:
+> > - dropped unused variable in PPC code (LKP)
+> > 
+> > Changelog v5:
+> > - renamed loop variable to minimize the clash (Keith)
+> > - addressed smatch warning (Dan)
+> > - addressed 0-day bot findings (LKP)
+> > 
+> > Changelog v4:
+> > - rebased on top of v6.3-rc1
+> > - added tag (Krzysztof)
+> > 
+> > Changelog v3:
+> > - rebased on top of v2 by Mika, see above
+> > - added tag to pcmcia patch (Dominik)
+> > 
+> > Changelog v2:
+> > - refactor to have two macros
+> > - refactor existing pci_bus_for_each_resource() in the same way and
+> >   convert users
+> > 
+> > Andy Shevchenko (6):
+> >   kernel.h: Split out COUNT_ARGS() and CONCATENATE()
+> >   PCI: Introduce pci_resource_n()
+> >   PCI: Document pci_bus_for_each_resource() to avoid confusion
+> >   PCI: Allow pci_bus_for_each_resource() to take less arguments
+> >   EISA: Convert to use less arguments in pci_bus_for_each_resource()
+> >   pcmcia: Convert to use less arguments in pci_bus_for_each_resource()
+
+...
+
+> Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
+
+Btw, can you actually drop patch 7, please?
+After I have updated the documentation I have realised that why the first
+chunk is invalid. It needs mode careful check and rework.
+
+> I omitted
+> 
+>   [1/7] kernel.h: Split out COUNT_ARGS() and CONCATENATE()"
+> 
+> only because it's not essential to this series and has only a trivial
+> one-line impact on include/linux/pci.h.
+
+I'm not sure I understood what exactly "essentiality" means to you, but
+I included that because it makes the split which can be used later by
+others and not including kernel.h in the header is the objective I want
+to achieve. Without this patch the achievement is going to be deferred.
+Yet, this, as you have noticed, allows to compile and use the macros in
+the rest of the patches.
+
+P.S. Thank you for the review and application of the rest!
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-Can you supply your products to  the government of (Saudi Arabia). We
-buy in larger quantity if your company can supply please reply with
-your products detail for more information.
-
-Looking forward to hearing from you.
-
-Thanks and Regards
-
- Mr.Tamim Mohammed Taher
-
-Email:tamimbinhamadalthani00@gmail.com
