@@ -2,139 +2,169 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 15A016D7CFD
-	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 14:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42B716D7D55
+	for <lists+linux-pci@lfdr.de>; Wed,  5 Apr 2023 15:05:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238076AbjDEMzO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Apr 2023 08:55:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60672 "EHLO
+        id S238148AbjDENFB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Apr 2023 09:05:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237957AbjDEMzI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 08:55:08 -0400
-Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F88659F2;
-        Wed,  5 Apr 2023 05:55:05 -0700 (PDT)
-Received: by mail-ed1-x529.google.com with SMTP id w9so140847337edc.3;
-        Wed, 05 Apr 2023 05:55:05 -0700 (PDT)
+        with ESMTP id S238233AbjDENE6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 09:04:58 -0400
+Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2121.outbound.protection.outlook.com [40.107.223.121])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E43144C20;
+        Wed,  5 Apr 2023 06:04:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EF/S0ki2713xI5sV0/IjfNwYVCGYurgIH4uU8q0vHuEjNU9qQU5sSEgej93e8X2z7DZljzwCz0ZhjD8FVljbLZQifvLMmVh6uKQ3zRzv2GMlX1JcLvHJ14V683XLVGNGmJfqOdlFcsARIga1z6MoU1GU1N/j/KzLCRtUmVPEIYWSie31sRQGqeuNj2bhqAhqBKCRd/YrDbY5vRf0ZAWr0MHXBKmdg9hxZX3yZckeMTAtulLPQSOn2g2p53cG1mqDSxoin+kg94Qi8az3QYNM7QaWkz7Tobbt38kr0y41QGueuwr3XdaeuT5IRKEtff3P35XQqTxI8MM9oAXcPuFSRQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=a7mC/0vE7jiatcosXUxderq2ig+lIDKlSHk9MCSpYs0=;
+ b=RegkJCfAwNz2ZjO2n/8u7/nIDDus4kagOfKaHU/NH8JJkqiIulaN79DZfdH8a2ThrgWlO2Qpal0PkVebs/sPRsl34QZ+ykwJb9wQ10IFaw6Lf+weoJsiyD9uDZp/cBHIYL3zfy5HW/7oSagGuw0vRTOSJFv34dX3DUoNf7dEOfuljyEfds66cGoDnRSacnmgphQNA5+SeuguVJxH6VxPaZXx6hgjSBJeHJODnC749oT8N5hiP1ILGCKN6PFz+9kIJnoC1KND/4UiIw35eFT9pw2VNfCXagYOWoZbcENP3EWx3TCH0h0IOudgqUkXQdvREjILX0KlqnTOlgcFfEdF+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680699303;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H4tYbZenNBkxV/FQRg+S7v7n3Mdw3SCk0TngrP6puJI=;
-        b=eCW2LWCImKLG5aOQZZGbDSM1LV6ho4g+la4QiFIZcs/lhY2Nl4o8Ir+NCvJKWHn6iV
-         43HL2brd+yUUviB1ugm1UlHsvqGeDSkEYfZnGS8+jtcH+x20iSLxr0bF1CVoEPBJYUhh
-         tAnEhj9J9E+qMd/lWJqVjo+pyB6/kADIHmoI8TVfJAhwqKQQjssspAdscYclQHOzxE52
-         84jrYYsaZsTmCgBDXzOGDWvsO+lQE+vh8SzwHruLsbSuLD/eGsCTdf3FyxINekwZwIyR
-         2mvP8dj70Q7NqwsK4VlVkax/Ajk8TPqMx4PfxEKukrRldiMBcoSdlxMljXGuEYwYUtwR
-         JlCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680699303;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H4tYbZenNBkxV/FQRg+S7v7n3Mdw3SCk0TngrP6puJI=;
-        b=sLvD+hbXF7LoMQODcPjyVgckqDb+jSUKzv8T4ALpKS7kNDfZ32V4/l0IgtYCW61CGC
-         QaxN1nj1coggIPz3anZsJzFNXb7wAD7kaEZpwjAIiGXFzBcg15sgg3lARqHbPKXeWinG
-         ossnLnBEBNrfuY0GebSRA+b+CfY2cXThMFJEh5F6aVsLlPiq7COGTi8/sY0hq+5Ypi/w
-         DKghhUGmk1/fdccxuk7IHlMR0ASQHM4C2xdiP4QiWnKrMUd9kQMMYf3uCL7rthilb6sV
-         p2VO7YTHyh5xuOzh2On9rWVrJbBs0Q11I2gH3sW49PVkpUkUE+tvZJF7GLmYyHdAJTbn
-         u1QA==
-X-Gm-Message-State: AAQBX9fLOJhQ0NAihTghZSmAv6ipkiB0MqRC6iGZLPZ7osrYzIYd8xPS
-        q0WnHMBIrULwM1JsUWwPcvY=
-X-Google-Smtp-Source: AKy350YS4PSOZvCF5BvFFMUjCIDyAM5G+I54ziVSBDSouJcPLsBCfOtfctRr24S/oA//wxQ89MZv1w==
-X-Received: by 2002:a17:906:c005:b0:947:55ce:1217 with SMTP id e5-20020a170906c00500b0094755ce1217mr2711864ejz.73.1680699303642;
-        Wed, 05 Apr 2023 05:55:03 -0700 (PDT)
-Received: from orome (p200300e41f1c0800f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f1c:800:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id a10-20020a1709065f8a00b00947c0df0fc4sm6871792eju.19.2023.04.05.05.55.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 05:55:03 -0700 (PDT)
-Date:   Wed, 5 Apr 2023 14:55:01 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Mikko Perttunen <cyndis@kapsi.fi>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        linux-pci@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: tegra194: Handle errors in BPMP response
-Message-ID: <ZC1vpXRoHb3H2alF@orome>
-References: <20230208142735.3218707-1-cyndis@kapsi.fi>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uk3AIlB7GyEsN23u"
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=a7mC/0vE7jiatcosXUxderq2ig+lIDKlSHk9MCSpYs0=;
+ b=u8GrSPV94MErMSfIa1Q5lZoeArIH0nFjbCCkY0MoIlBCxulnMWVCVQtfOucJvVAhtPJmPG9DeZ6ST/WBwaa0XHlGhQnJ4EU1eZ8g5eavL9JXtVl/XfqTZHTpiur+FEubRHBjkTV05Ut1oOL5AUIM5aAykUURU/yPgphYaLuJ7o4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by BY1PR13MB6189.namprd13.prod.outlook.com (2603:10b6:a03:523::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.30; Wed, 5 Apr
+ 2023 13:04:47 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::c506:5243:557e:82cb]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::c506:5243:557e:82cb%5]) with mapi id 15.20.6254.035; Wed, 5 Apr 2023
+ 13:04:47 +0000
+Date:   Wed, 5 Apr 2023 15:04:39 +0200
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Denis Plotnikov <den-plotnikov@yandex-team.ru>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        shshaikh@marvell.com, manishc@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH] qlcnic: check pci_reset_function result
+Message-ID: <ZC1x57v1JdUyK7aG@corigine.com>
+References: <20230331080605.42961-1-den-plotnikov@yandex-team.ru>
+ <ZCcd1c0jhKxk+FD+@corigine.com>
+ <b4852db1-61bd-410e-e89d-05d89cf14063@yandex-team.ru>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230208142735.3218707-1-cyndis@kapsi.fi>
-User-Agent: Mutt/2.2.10 (2023-03-25)
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+In-Reply-To: <b4852db1-61bd-410e-e89d-05d89cf14063@yandex-team.ru>
+X-ClientProxiedBy: AM9P193CA0019.EURP193.PROD.OUTLOOK.COM
+ (2603:10a6:20b:21e::24) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|BY1PR13MB6189:EE_
+X-MS-Office365-Filtering-Correlation-Id: dacdffa0-ee69-4489-ddb1-08db35d65508
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7rVx34VEvrZZeNh1A9TiBtr4OyRjeCauVzEKTZgarBlG1KkQyq2MD6DFeZPeGutBZ+ssrvMg+kUQAlzw7kJC8/4RRUbQ0+2GWnTHZhnsuE8ej+4ibGYqX5/EU3cXlQmrarl3CjT031IJ6Bq/vTu7TxBev2HUOM300SXQfw5tjDxVsS0+Dq83if/CnnEYyePckRA+bWjhyQD8J5/sJs19wkQKEO1qYAz79Jyj2k8GiyXCqDbou0+5exjEwVkzRum9+tbKj5wWpLw+meMVCkyFUhkD7uofoE/fSyhKlLgBmrydYK2qU7VB5zLoIO5a2ZJMsc0i6CMZVBf+ltw+mWOQDNmxNclcPM2tzSdT+Pgngf9NpIR8ssZ4mUgxJx6Fgq78j8iQpvVhNTkb9HUZqYy14u7RPBpGfPfe0ddDkDzcWNxGr8qrWf4MUYm+aPbkkb/I1VA9MOM/ThPXwUnBUFJJ62TcH/yLfdrBvTcrOvSV0C+4+NDZ+atggcHux4fSAY56bUuz8ZSMMQKbxlfWfSoIjgr6O+xqPBzc3ABWwxkzJkv+wysa92wcif26Dadlotg6iLU+49s1mP2q1NlBNNm6/1FZzePlS5k4VdIbHkFO1NU=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(136003)(366004)(396003)(39830400003)(376002)(451199021)(2616005)(83380400001)(478600001)(6666004)(6486002)(186003)(6512007)(6506007)(316002)(53546011)(2906002)(7416002)(44832011)(5660300002)(36756003)(38100700002)(66556008)(66476007)(4326008)(6916009)(86362001)(66946007)(41300700001)(8936002)(8676002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?1YRNznjZMTeknzq2yh6fyj+kovxBT38nM+zav5WS6JZJa41hihPLXWjRvBEd?=
+ =?us-ascii?Q?E6MNFQulaCVzGwuCbs/9wWAO2mWZtvHJJw3hZYuBg8sJsYUcyDDhkAj0oot7?=
+ =?us-ascii?Q?U5GvCszTVyPv+iQVb1r1ag8ZxBk7VHWkyECwO7PK1/M72xKkniWkn197Yvi1?=
+ =?us-ascii?Q?yFDRB5jgpD/SLOv8xrIwn1FfE9kzUhtU78PeE8ruEoLVL4yI1gePKQkTNA8U?=
+ =?us-ascii?Q?8gJvLV6Yikr6M8IitQ9xyAvp9NI5Ayh61uCEkJ0lk0SFIr9SyvhcTY0ZyUj8?=
+ =?us-ascii?Q?flPDsOI2I8jivaUN0Xj4YjiucXTnt7C5Zo+GvW9g9pf/PDRnJVMYT2oZckk8?=
+ =?us-ascii?Q?KznrgdXshegVVuBKcbEvVNzEA95+gB64BZWGqQBOWN/c9o0QO95Kpv/EgPdS?=
+ =?us-ascii?Q?1Xo1o+jddYClryopxl/OdfaJeIVCxfcGXWix9vEALw8tTAUue85Y2dyjeIsO?=
+ =?us-ascii?Q?LOP9afR+wpUN5OvkuKlblbf2sxucCM8aZfN34rwudaPEeS0QvEJ9SP1adYWr?=
+ =?us-ascii?Q?zx/kQbJvGIECDf+t4jNsf8Htw7IFGiRjcX3hebGCYca8ZtzLVh69XFTemvfn?=
+ =?us-ascii?Q?prHayLwZdbkKChod+C0ETN6hwOjOp0R/MrqUuZOCOOpqmt0uCqTaKM0rjiKZ?=
+ =?us-ascii?Q?bkp4OO1hznIcmEHAozjQRLq/ilo1KnejWelZ9HNzIg1REvjX9GrTnHVCBxzI?=
+ =?us-ascii?Q?fRrQRzCQSMAzAsVEW+l9f8+Z7QKgKeYIQ0KN7gdp6t9QuzFJyAb5CXpEZ1ZE?=
+ =?us-ascii?Q?Nrb4luLWEjuE3k6RSe53Ho1+UoIHJOFNvyuqK8vWoO204f6TTJ4TpwHJpr/j?=
+ =?us-ascii?Q?OS8qrZko+EDAQvjx9J2h3wV4ll4Jfn9ho26eBYRHIEUdcHKn1SAEi8yLR6SS?=
+ =?us-ascii?Q?058SMNx59K9bDz2Letgllb0Nhx5ET9VJnRDYul+X9RFeKqdlVdmIQ9O3xno0?=
+ =?us-ascii?Q?iSFn2cU+UqN0qxyERPpmmDVx1HJKpcEjwdp7AXMjlO9MCus2iBjaRw2+lnJr?=
+ =?us-ascii?Q?CUSgbJ8xLrb7v5rjN2KyuvPU2v6VBchTstSp2jVd4gQKc3hNwFi2HJ3QKEqR?=
+ =?us-ascii?Q?pmUVaMkBangP+QzTvrG4nl4WQqdcGeuGDQ/A5g+cwipiUWiszfB5eXZyemCC?=
+ =?us-ascii?Q?VnMjJikbpKEpQEqNEfh0IlVk6Mu4dAayHuMp1VYRbGGCFUG0oVTrRwoM+ynJ?=
+ =?us-ascii?Q?4M00maixC+lf0IyCHE5VSjI1MEJeIdAehGbcGzeSwyM8VnwjsGr8y+zZNUjc?=
+ =?us-ascii?Q?g8prRv7nWDeYIpAedy/NtD1gh2iUool6cJYWmV0E/QNwm2lqzDDAintiIF3Z?=
+ =?us-ascii?Q?T9GYdgda5/TvCChWcc0Sdt1zIHbG1/rain0W3bPkC48GXvsCD2ZV3lSUMLM3?=
+ =?us-ascii?Q?eZMJBWI155uvCsqCTXOyIcjly/00+j8lTvZfjG2iuZ1IWys69m8iFuo/i1MJ?=
+ =?us-ascii?Q?cWnBWmhWXgD0F8z9uNbXpFmJZWth9LK+8BcKElhnFxm4hwQVQD72x7Xk5NIn?=
+ =?us-ascii?Q?5SkZZF94uy/Gpha9R/Ft5TJ1g665NDKOXL6eD1tu+zsT9ro7lG+nOcRpLA+P?=
+ =?us-ascii?Q?n66UNfpib0Qrdr/ewoFBqgRXB7tw9hayXzvsrBMajAF/dvCWGz5VIhOfM8oh?=
+ =?us-ascii?Q?Y3sbn+ntksrVb/Out25RRSgvH4Mh9QxvR+EkSfcULnR06LaY+pa0Gikl+Vpg?=
+ =?us-ascii?Q?pS/3Pw=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: dacdffa0-ee69-4489-ddb1-08db35d65508
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2023 13:04:47.0966
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FNVylMJVNJzMMlRFvCWLQ39gVEy/b1y2wblPbleQJVMk0Fwc2/5+jXH30VV/+2GZFlBTcuNjPy5OG126WV5nzr91mzTWgMkKqZiRWyWPsgM=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY1PR13MB6189
+X-Spam-Status: No, score=-0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
++ Bjorn Helgaas and linux-pci, as this is about FLR
 
---uk3AIlB7GyEsN23u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 03, 2023 at 01:58:49PM +0300, Denis Plotnikov wrote:
+> 
+> On 31.03.2023 20:52, Simon Horman wrote:
+> > On Fri, Mar 31, 2023 at 11:06:05AM +0300, Denis Plotnikov wrote:
+> > > Static code analyzer complains to unchecked return value.
+> > > It seems that pci_reset_function return something meaningful
+> > > only if "reset_methods" is set.
+> > > Even if reset_methods isn't used check the return value to avoid
+> > > possible bugs leading to undefined behavior in the future.
+> > > 
+> > > Signed-off-by: Denis Plotnikov <den-plotnikov@yandex-team.ru>
+> > nit: The tree this patch is targeted at should be designated, probably
+> >       net-next, so the '[PATCH net-next]' in the subject.
+> > 
+> > > ---
+> > >   drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c | 4 +++-
+> > >   1 file changed, 3 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > index 87f76bac2e463..39ecfc1a1dbd0 100644
+> > > --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > @@ -628,7 +628,9 @@ int qlcnic_fw_create_ctx(struct qlcnic_adapter *dev)
+> > >   	int i, err, ring;
+> > >   	if (dev->flags & QLCNIC_NEED_FLR) {
+> > > -		pci_reset_function(dev->pdev);
+> > > +		err = pci_reset_function(dev->pdev);
+> > > +		if (err && err != -ENOTTY)
+> > Are you sure about the -ENOTTY part?
+> > 
+> > It seems odd to me that an FLR would be required but reset is not supported.
+> No, I'm not sure. My logic is: if the reset method isn't set than
+> pci_reset_function() returns -ENOTTY so treat that result as ok.
+> pci_reset_function may return something different than -ENOTTY only if
+> pci_reset_fn_methods[m].reset_fn is set.
 
-On Wed, Feb 08, 2023 at 04:27:35PM +0200, Mikko Perttunen wrote:
-> From: Mikko Perttunen <mperttunen@nvidia.com>
->=20
-> The return value from tegra_bpmp_transfer indicates the success or
-> failure of the IPC transaction with BPMP. If the transaction
-> succeeded, we also need to check the actual command's result code.
-> Add code to do this.
->=20
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->  drivers/pci/controller/dwc/pcie-tegra194.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
+I see your reasoning: -ENOTTY means nothing happened, and probably that is ok.
+I think my main question is if that can ever happen.
+If that is unknown, then I think this conservative approach makes sense.
 
-Lorenzo asked whether the error check could be incorporated into
-tegra_bpmp_transfer() in reply to an earlier version of this. It would
-be possible, but I think it has the downside of loosing some context.
-The end result would still be the same, but it would make it impossible
-for the caller to distinguish between a failure of tegra_bpmp_transfer()
-and a failure of the message transaction.
+Bjorn, do you happen to have any guidance here?
 
-For example the cpufreq driver checks for msg.rx.ret =3D=3D -BPMP_EINVAL and
-if that's returned will mark the given cluster as not available. This is
-special behavior that only makes sense within the context of cpufreq. It
-wouldn't be possible to make these decisions if tegra_bpmp_transfer()
-did some automated conversion and effectively rolled the message error
-into the function return error.
-
-So I think this will need to stay as-is to make sure we can handle these
-errors correctly.
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---uk3AIlB7GyEsN23u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmQtb6MACgkQ3SOs138+
-s6EQag//SeOpJ8NPsSwZEk/4IYWE/s7a21ssZ/jZ+ZPty3DnS2IqhT7rD0om8eBe
-X3s7zT5xt35Qwi2i4+aaTVkimdt+zdYM5oDapFX/dOiC5irW1PCpaScroTvbObYP
-N3dQ8wztuJagGolWvt1SyiuwXMt5wuIAYo/RcnlDg9iozvgo72KoEnEmfrMfEPcb
-pLwmFOAP5I6abuzeHDBtirw6AZvWcgcmnngFQN0ZEa6q7QmXw4qiuYBN6yZsIw/U
-H5ecgOqEOtZKO4nN/xsIRbnvXIXsTA4Y05jMlGR+1xEWKhUaJQ+z2RpbeUG8+U/h
-sAR2TxJVVUeyj7UNOayxFNf/oO98GZfQi/FycYPUJqr0h9IH3vAk4vh9QchiFHCb
-tOi1K6geT+doP1lkOFcQ3eizqu6T5ocFY0f2NFbakPXaFMkb3pJNYK7Wm6/F9O03
-slL82TZALrVbEwRuwdLclSqB0+rwp5mCiytwE19TVzQp7dIxQLjkTB9bX/vTbgkv
-r/7Mt/p5n8NmTWYIMYmHlzgeBF0EHDVeGB6znLbQ4ZSPBDN/mZWFLJ8XpE5Nlli1
-1h8t/M/W/IA0ZSW8gW2dcXXd678DAC+p2C3bcCA56zYh6Jqh/WPDM2StL5aBLZo5
-pG8lg2/rtzbnIqx5O33oqoUpcwArJtGiaYqox8r5lH10p9i+ZH4=
-=Hkx5
------END PGP SIGNATURE-----
-
---uk3AIlB7GyEsN23u--
+> > > +			return err;
+> > >   		dev->flags &= ~QLCNIC_NEED_FLR;
+> > >   	}
+> > > -- 
+> > > 2.25.1
+> > > 
