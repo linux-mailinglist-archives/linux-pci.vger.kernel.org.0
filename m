@@ -2,136 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C02E36D973A
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 14:46:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C08376D9806
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 15:21:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236102AbjDFMqu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 08:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43522 "EHLO
+        id S238472AbjDFNV5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 09:21:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237328AbjDFMqr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 08:46:47 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 836C383E4;
-        Thu,  6 Apr 2023 05:46:41 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id d17so39373944wrb.11;
-        Thu, 06 Apr 2023 05:46:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680785201; x=1683377201;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=luFyciF8uhbYkGPNgpgaiPkjDSnlXlNp/qOa6qT6FH8=;
-        b=nS5/rDNLtCzmL3//uFCtGvKctZZkKQgcK55vBT22aAEWLrCOaCGvl/dEggmaUE6AMe
-         2PtT/7Br51MXNCCcWURAAmaY+ys8sRgRcBL/zvr0DuF6medxqEQwZMecVebOhEET79+n
-         HvM7eiimozHOoSLId0L1OMsSRizTCMsAF/VZwz9q+wrWxCCfS2K8ky4cpdbFaGa7U+oQ
-         ecDEAfj79WcU9wHKgolrGUBaRUgOlSptGvOEcxq30kJw/3r5FMks0CL0VykongVUMqX1
-         VH/V+szpkYQYJ+nIQ8Tsm64wKvCw1Q7ZgBXUElbX3v6ggVZId3Nm0xgXBuEuhMsCUHps
-         dL1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680785201; x=1683377201;
-        h=references:in-reply-to:message-id:date:subject:cc:to:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=luFyciF8uhbYkGPNgpgaiPkjDSnlXlNp/qOa6qT6FH8=;
-        b=1YYHlCB/G9HVg726Vz5OUyPUKOu5DhKQBDtZkOKdftCTnT0QYApwOv0VBbO1nCuIgY
-         WvzC3G8pgZVvrB9GhOG6UqlVJgyo95+SuRndH5ays0GNNci35ct7aSA4JqRDHTXrGjzz
-         o+/YKbm+fm3Awrg2YT2Bz5cSJpoGgAjy5ufBAPFrpAOqqHA0ySVorPedPaNI7tduDnzD
-         ShqSeXNzCPbxhUuZAHxCBxxE8B8eeXw3eHAMb2AHacrq8LiDVAHz/pNNl0nagysFy6VQ
-         nDxPf/QTxO7XYqA/8uulLfMipbVr39kOZ+xy7fHpAX7QpjkytmplFiWKbkbyywRk7NNX
-         QMnA==
-X-Gm-Message-State: AAQBX9fR7t/q30hdizSrHkr+XGzz76HabRm2gr+VCoWO/glzffzRP0WR
-        RUgaHzQbhlxZ3iqgpoYbUQQ8UQMh6wo=
-X-Google-Smtp-Source: AKy350bnsSUNhwYqeZVXUY4bJ7tb9Vvj4Rr9mIVgnCCCrtQ22Njl76/191eVPYwO2V87SHnsj1zFJQ==
-X-Received: by 2002:a5d:6885:0:b0:2c5:5687:5ed5 with SMTP id h5-20020a5d6885000000b002c556875ed5mr7088743wru.18.1680785200854;
-        Thu, 06 Apr 2023 05:46:40 -0700 (PDT)
-Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id n10-20020adff08a000000b002c5534db60bsm1686714wro.71.2023.04.06.05.46.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Apr 2023 05:46:39 -0700 (PDT)
-From:   Jim Quinlan <jim2101024@gmail.com>
-To:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, jim2101024@gmail.com,
-        james.quinlan@broadcom.com
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
-        BCM2711/BCM2835 ARM ARCHITECTURE),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v1 3/3] PCI: brcmstb: Allow setting the completion timeout
-Date:   Thu,  6 Apr 2023 08:46:24 -0400
-Message-Id: <20230406124625.41325-4-jim2101024@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230406124625.41325-1-jim2101024@gmail.com>
-References: <20230406124625.41325-1-jim2101024@gmail.com>
-X-Spam-Status: No, score=0.1 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        with ESMTP id S238643AbjDFNVm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 09:21:42 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 542F8A252;
+        Thu,  6 Apr 2023 06:21:17 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 4C351225A2;
+        Thu,  6 Apr 2023 13:21:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1680787271; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nT2ku4RAULGJIC3ZzOGrjNWjJkKUkNG+rdOWiMCdy00=;
+        b=QKecW+43V+OTJusxKqkuy+gbqPajjv6Gbh07UbRtQs2jDAr7FBUmMhrsuKtDFFIOfznXPo
+        DjrO+X0GnR/b8Sp6f+oM3Vkqx2Tn5isCuCd4Q7HAroNITpCPUxO0QBZs+KbkEMOwNIpMA+
+        8zTgkwqsfmd3eujfFRSeSPKiiZhe2oo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1680787271;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nT2ku4RAULGJIC3ZzOGrjNWjJkKUkNG+rdOWiMCdy00=;
+        b=IXVjlaWSq8DHor8PcWyarkezbjBwqnGzbIXoDmPJCJ/ABMFzOWZekOHUQ/rWYeGWv6cjuQ
+        W+T9FsWNnq7IieBQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 1A532133E5;
+        Thu,  6 Apr 2023 13:21:11 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id YH5xBUfHLmSqBwAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Thu, 06 Apr 2023 13:21:11 +0000
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+To:     javierm@redhat.com, daniel.vetter@ffwll.ch,
+        patrik.r.jakobsson@gmail.com
+Cc:     dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Helge Deller <deller@gmx.de>, linux-fbdev@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v5 2/9] video/aperture: use generic code to figure out the vga default device
+Date:   Thu,  6 Apr 2023 15:21:02 +0200
+Message-Id: <20230406132109.32050-3-tzimmermann@suse.de>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <20230406132109.32050-1-tzimmermann@suse.de>
+References: <20230406132109.32050-1-tzimmermann@suse.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since the STB PCIe HW will cause a CPU abort on a completion timeout abort,
-we might as well extend the timeout limit.  Further, different devices and
-systems may requires a larger or smaller amount for L1SS exit.
+From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+Since vgaarb has been promoted to be a core piece of the pci subsystem
+we don't have to open code random guesses anymore, we actually know
+this in a platform agnostic way, and there's no need for an x86
+specific hack. See also commit 1d38fe6ee6a8 ("PCI/VGA: Move vgaarb to
+drivers/pci")
+
+This should not result in any functional change, and the non-x86
+multi-gpu pci systems are probably rare enough to not matter (I don't
+know of any tbh). But it's a nice cleanup, so let's do it.
+
+There's been a few questions on previous iterations on dri-devel and
+irc:
+
+- fb_is_primary_device() seems to be yet another implementation of
+  this theme, and at least on x86 it checks for both
+  vga_default_device OR rom shadowing. There shouldn't ever be a case
+  where rom shadowing gives any additional hints about the boot vga
+  device, but if there is then the default vga selection in vgaarb
+  should probably be fixed. And not special-case checks replicated all
+  over.
+
+- Thomas also brought up that on most !x86 systems
+  fb_is_primary_device() returns 0, except on sparc/parisc. But these
+  2 special cases are about platform specific devices and not pci, so
+  shouldn't have any interactions.
+
+- Furthermore fb_is_primary_device() is a bit a red herring since it's
+  only used to select the right fbdev driver for fbcon, and not for
+  the fw handover dance which the aperture helpers handle. At least
+  for x86 we might want to look into unifying them, but that's a
+  separate thing.
+
+v2: Extend commit message trying to summarize various discussions.
+
+v4:
+- make the test for the primary device easier to read (Javier)
+- fix commit message style (i.e., commit 1234 ("..."))
+- fix Daniel's S-o-b address
+
+v5:
+- add back an S-o-b tag with Daniel's Intel address
+
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Javier Martinez Canillas <javierm@redhat.com>
+Cc: Helge Deller <deller@gmx.de>
+Cc: linux-fbdev@vger.kernel.org
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-pci@vger.kernel.org
+Reviewed-by: Javier Martinez Canillas <javierm@redhat.com>
 ---
- drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/video/aperture.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
-index 129eee7bdbc1..92d78f4dfaae 100644
---- a/drivers/pci/controller/pcie-brcmstb.c
-+++ b/drivers/pci/controller/pcie-brcmstb.c
-@@ -1080,6 +1080,29 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
- 	writel(clkreq_set, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
- }
+diff --git a/drivers/video/aperture.c b/drivers/video/aperture.c
+index 41e77de1ea82..d0eccc4ed60b 100644
+--- a/drivers/video/aperture.c
++++ b/drivers/video/aperture.c
+@@ -328,9 +328,8 @@ int aperture_remove_conflicting_pci_devices(struct pci_dev *pdev, const char *na
+ 	resource_size_t base, size;
+ 	int bar, ret;
  
-+static void brcm_config_completion_timeout(struct brcm_pcie *pcie)
-+{
-+	/* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
-+	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
-+	u32 timeout, timeout_msec = 1000;
-+	u64 tmp64;
-+	int ret;
-+
-+	ret = of_property_read_u32(pcie->np, "brcm,completion-abort-msecs",
-+				   &timeout_msec);
-+
-+	if (ret && ret != -EINVAL)
-+		dev_err(pcie->dev, "bad 'brcm,completion-abort-msecs' prop\n");
-+
-+	/* Each unit in timeout register is 1/216,000,000 seconds */
-+	tmp64 = (u64)216000 * timeout_msec;
-+
-+	/* Clamp the requested value before writing it */
-+	timeout = tmp64 > 0xffffffff ? 0xffffffff : tmp64;
-+	timeout = timeout < 0xffff ? 0xffff : timeout;
-+	writel(timeout, pcie->base + REG_OFFSET);
-+}
-+
- static int brcm_pcie_start_link(struct brcm_pcie *pcie)
- {
- 	struct device *dev = pcie->dev;
-@@ -1110,6 +1133,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
- 		return -ENODEV;
- 	}
+-#ifdef CONFIG_X86
+-	primary = pdev->resource[PCI_ROM_RESOURCE].flags & IORESOURCE_ROM_SHADOW;
+-#endif
++	if (pdev == vga_default_device())
++		primary = true;
  
-+	brcm_config_completion_timeout(pcie);
- 	brcm_config_clkreq(pcie);
- 
- 	if (pcie->gen)
+ 	for (bar = 0; bar < PCI_STD_NUM_BARS; ++bar) {
+ 		if (!(pci_resource_flags(pdev, bar) & IORESOURCE_MEM))
 -- 
-2.17.1
+2.40.0
 
