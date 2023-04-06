@@ -2,117 +2,121 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C086F6DA0B4
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 21:10:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E41426DA1D2
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 21:46:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240106AbjDFTKA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 15:10:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38826 "EHLO
+        id S229560AbjDFTqd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 15:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240464AbjDFTJ5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 15:09:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A771BC1;
-        Thu,  6 Apr 2023 12:09:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F01364B62;
-        Thu,  6 Apr 2023 19:09:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 308F4C433D2;
-        Thu,  6 Apr 2023 19:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680808195;
-        bh=rtqkcb59ixCCeS2OlmeTgAhzrvTyCZZpGEB8R8r/rVE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bNEnr4aWDv/gAiOH3jT9VYhR2mgl5quTDbYFoX6dUu/GwA5ZebY6PYOdfw5w3UI5r
-         3jTPBfEdBc8ABAai+MCb4V4xIya9Hjbw+ACebmDsLrUTYrY7rUPtR3BakxJO3OB3v9
-         pl8DI8q7v5Hn/YhfgfBJjmtpBUNsTJ+lVR2R4EOERZ3ppp2xMUZYZKrH1jmp6Q/HY0
-         u1yFrTcGV7gVxTWa+1SqWoQQI8KoV3sm1Fu3ZqC+7PuROAqn5I+JGQTkrtdViD4UVG
-         3DBhUJxORVwPVkB7oYdUDsPNIZHNe3FO4HwSKoaVEr9++9q8XQCd/HijdCNvzuihTi
-         TwdPyK4yq3+JQ==
-Date:   Thu, 6 Apr 2023 14:09:53 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        with ESMTP id S229475AbjDFTqc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 15:46:32 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8383DFF;
+        Thu,  6 Apr 2023 12:46:31 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1680810390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77vIMcrU+91zXs0NeSN3g0pNEiGDOVtOUc7dZTKdVsY=;
+        b=FQUFheAv7NzNQ0S+NH40CLVmxxY2SyQ8b17hNqO4EljOKnPbQPPzFy+zlWku6aQ7wukro3
+        sXTMMq6pA/DsKx6zprDilpXlT7LMBUZbSp9c202Tnty3ht3QAvL5hvb+riQs+kW2ab1PXt
+        X9bbtjteFg7xp9qXttltkqh3ZWof+X8y6IH2WpEQGRRTUueH7In3sFpq94Tck6WYk5xLSj
+        7lvpDz/3SUGEdvE1th1d1IZE7fM3wBNggR+J4xML/MGd6wXa09dO7J+lXP09d+818lVcCz
+        t6w63L60Vs3KQcsGuLFRUCSp+FygjxcA+7sLJ1JBozZXOJkOKydRVirGGuhVgQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1680810390;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=77vIMcrU+91zXs0NeSN3g0pNEiGDOVtOUc7dZTKdVsY=;
+        b=1ulrUTHUxWarWSQQALjgGN5D7LRkd8/uB0t4itsuI+sUD3/BPHvL6ntoHsIUYsiiZYxxpX
+        wQnY1YacIFxFvnBg==
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        David Laight <David.Laight@ACULAB.COM>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/3] PCI: brcmstb: Clkreq# accomodations of downstream
- device
-Message-ID: <20230406190953.GA3723665@bhelgaas>
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        linux-pci@vger.kernel.org, regressions@lists.linux.dev
+Subject: Re: revert bab65e48cb064 PCI/MSI Sanitize MSI-X checks
+In-Reply-To: <20230406150742.GA3703273@bhelgaas>
+References: <20230406150742.GA3703273@bhelgaas>
+Date:   Thu, 06 Apr 2023 21:46:29 +0200
+Message-ID: <87edowrdyi.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230406124625.41325-3-jim2101024@gmail.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 06, 2023 at 08:46:23AM -0400, Jim Quinlan wrote:
-> The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, may be
-> set into three mutually exclusive modes:
-> 
->   (a) No clkreq# expected or required, refclk is always available.
->   (b) Clkreq# is expected to be driven by downstream device when needed.
->   (c) Bidirectional clkreq# for L1SS capable devices.
-> 
-> Previously, only (b) was supported by the driver, as almost all STB boards
-> operate in this mode.  But now there is interest in activating L1SS power
-> savings from STB customers, and also interest in accomodating mode (a) for
-> designs such as the RPi CM4 with IO board.
-> 
-> The HW can tell us when mode (a) mode is needed.  But there is no easy way
-> to tell if L1SS mode is needed.  Unfortunately, getting this wrong causes a
-> panic during boot time.  So we rely on the DT prop "brcm,enable-l1ss" to
-> tell us when mode (c) is desired.  This property has already been in
-> use by Raspian Linux, but this immplementation adds more details and
-> discerns between (a) and (b) automatically.
-> 
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+On Thu, Apr 06 2023 at 10:07, Bjorn Helgaas wrote:
+> On Thu, Apr 06, 2023 at 11:05:14AM +0000, David Laight wrote:
+> Thanks for the report!  bab65e48cb06 ("PCI/MSI: Sanitize MSI-X
+> checks") appeared in v6.2-rc1, so this is a recent regression and it
+> would be good to fix it for v6.3.
+>
+> bab65e48cb06 only touches drivers/pci/msi/msi.c, but since it didn't
+> go through the PCI tree, I'll let Thomas handle any revert (or better,
+> an improvement to pci_msix_validate_entries()) since he wrote and
+> applied the original.
 
-> +	 * We have "seen" clkreq# if it is asserted or has been in the past.
-> +	 * Note that the CLKREQ_IN_MASK is 1 if clkreq# is asserted.
+Right. The fix is trivial as the hardware size check in this validation
+function is pointless.
 
-"CLKREQ#" to match PCIe spec and comments below.
+The point is that for a range allocation with and entries array, _all_
+entries up to max_vec must be correct independent of the actual hardware
+size.
 
-> +	if (l1ss && IS_ENABLED(CONFIG_PCIEASPM)) {
-> +		/*
-> +		 * Note: This (l1ss) mode may not meet requirement for
-> +		 * Endpoints that require CLKREQ# assertion to clock active
-> +		 * within 400ns.
-> +		 */
-> +		clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
-> +		dev_info(pcie->dev, "bi-dir clkreq; l1ss-capable devs only\n");
-> +		dev_info(pcie->dev, "ASPM policy must be set to powersupersave\n");
+So the fix is simply removing the hardware size check from the
+validation function.
 
-Seems problematic since L1SS can be enabled/disabled at run-time:
+The hardware size checking happens afterwards anyway.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/ABI/testing/sysfs-bus-pci?id=v6.2#n420
+Thanks,
 
-The simplistic answer is to advertise L1SS support if and only if you
-can safely support it.
+        tglx
+---
+ drivers/pci/msi/msi.c |    9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-I don't know why this is an issue for this device but not others.  Is
-it because there's some problem in the way the board is designed?  Or
-(after skimming the bugzilla) maybe a problem with the plug-in cards?
-
-Bjorn
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -750,8 +750,7 @@ static int msix_capability_init(struct p
+ 	return ret;
+ }
+ 
+-static bool pci_msix_validate_entries(struct pci_dev *dev, struct msix_entry *entries,
+-				      int nvec, int hwsize)
++static bool pci_msix_validate_entries(struct pci_dev *dev, struct msix_entry *entries, int nvev)
+ {
+ 	bool nogap;
+ 	int i, j;
+@@ -762,10 +761,6 @@ static bool pci_msix_validate_entries(st
+ 	nogap = pci_msi_domain_supports(dev, MSI_FLAG_MSIX_CONTIGUOUS, DENY_LEGACY);
+ 
+ 	for (i = 0; i < nvec; i++) {
+-		/* Entry within hardware limit? */
+-		if (entries[i].entry >= hwsize)
+-			return false;
+-
+ 		/* Check for duplicate entries */
+ 		for (j = i + 1; j < nvec; j++) {
+ 			if (entries[i].entry == entries[j].entry)
+@@ -805,7 +800,7 @@ int __pci_enable_msix_range(struct pci_d
+ 	if (hwsize < 0)
+ 		return hwsize;
+ 
+-	if (!pci_msix_validate_entries(dev, entries, nvec, hwsize))
++	if (!pci_msix_validate_entries(dev, entries, nvec))
+ 		return -EINVAL;
+ 
+ 	if (hwsize < nvec) {
