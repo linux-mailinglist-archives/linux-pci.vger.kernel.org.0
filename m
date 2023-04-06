@@ -2,193 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF1BA6D9F53
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 19:55:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C990E6D9FB9
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 20:25:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230083AbjDFRzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 13:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48996 "EHLO
+        id S240118AbjDFSZD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 14:25:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239767AbjDFRzN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 13:55:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91D1C4C21
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 10:55:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E6A8962CA6
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 17:55:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D8FAC433EF;
-        Thu,  6 Apr 2023 17:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680803709;
-        bh=8IfTDqy5nRyByCgvM3xWMAwhi9+ufdLoBzqI1b/Ccro=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AVtarnXkco5cv//X/wASmjQeXEP4APE20b9TfbMoTj1ltA/5OX8C+zActZenZD+Ax
-         W0MR6IijoqvTj3VWmJEplv4U/TKG84RIrstL5oDU0mlC681KVowfp0MWYwWNzgTtMs
-         TSE0tDoLkQu1FcK7O3wCHe0nOwwwsEu/7ROvhbh55uA50cVm963LmioDRZeRvjlw32
-         YuGfSpB3yzZ1MEMcfqSjETLvlZQDWTwx7Sw/5FtfgY7UH7LZBLQvvoOvjigamKsoPS
-         VdRoJfaeD+0Tl4hOQRbk1nzW3aGHBV4o+AI/ztfq/4LU2IfSX7R8adLVDkwb51SP/K
-         rVb0QTGRNnCJg==
-Date:   Thu, 6 Apr 2023 12:55:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI/PM: Decrease wait time for devices behind
- slow links
-Message-ID: <20230406175507.GA3642351@bhelgaas>
+        with ESMTP id S239721AbjDFSZC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 14:25:02 -0400
+Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D075B83
+        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 11:24:59 -0700 (PDT)
+Received: by mail-ej1-x635.google.com with SMTP id lj25so3529428ejb.11
+        for <linux-pci@vger.kernel.org>; Thu, 06 Apr 2023 11:24:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1680805497;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6r4M3/20NCF90WldhYI6dBy2L6b19MPQ4oWqZe9uR0g=;
+        b=xyGvIncYsvAhAnmjZ5hqP918pCTK9mrLNRX9uoc78LE60hSA5ZqTusKtU6yIBNf0Os
+         n8Y5NH+7jPSViCl/GACJFqVwsXsH4hGZxJvKxLSvKSLj6mMiLuG41Cdmdg3TjXn5jt31
+         bmF0EOejvTL0QaUEUEqg4BlKwMo2RnmoZetVTNE0dMfDVtYVeSiwFr1RyX8wC2tIPclC
+         Uq/i34LsemyJo/uk/DEvluDNOqpPu/107PW87lCderC6KhWXV8jQJdEAlyGWCR5Vb9dB
+         NJFttea7l5m8wPZ2b+apoV/0TIgBY0M9pr/A/i/dITy8V0rooegFiQbQ/lxglBAdA174
+         FBZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680805497;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6r4M3/20NCF90WldhYI6dBy2L6b19MPQ4oWqZe9uR0g=;
+        b=k05HxgnPqbuomr8LDR30BIlKC0IPajlfjB6F8uUQOzRWHGT9zmgoLBp+g1LBXP4YYR
+         kO7VCduccabOxW2Bjdl1DPLGIoISlbVsIiE9YeR193AHKbSNasjAIJph9Rj0ihgMLz49
+         yTqPkDp3ABwN/9a3nBrTdVz5hbZC9yTDry/eVCjGeQApTJHKPVm5XvV6IyXqq/POV0u2
+         NGu7i/ice5jB7/DUYhF5n1TERw4O0LrchyRD51+HpdTyYZp/fkNEPWs/mMC8dIKsEa5Y
+         bxnbPwRAHQwpItN96FzFLZVd83ff8hWKykp8nz/Y7wDC0/u4YzUBvL1m0Cg/ICD43bSd
+         Hf3Q==
+X-Gm-Message-State: AAQBX9dueWzLxM/UJMupTDUCqxo3xaahbentQ6rNIwxO8VTsz8NF0By4
+        4ajF4D+Em3EUuJYGzBCTL0iajg==
+X-Google-Smtp-Source: AKy350YYtP7sG8RlXl6/kG7vInHbk81rKWcqMST+cC4JCnS+hlXlOAvk9bgDGOeYBYvYlBFhj6q7ug==
+X-Received: by 2002:a17:907:3f16:b0:8a5:8620:575 with SMTP id hq22-20020a1709073f1600b008a586200575mr9241478ejc.3.1680805497522;
+        Thu, 06 Apr 2023 11:24:57 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:49e6:bb8c:a05b:c4ed? ([2a02:810d:15c0:828:49e6:bb8c:a05b:c4ed])
+        by smtp.gmail.com with ESMTPSA id s27-20020a1709060c1b00b009475bd8f441sm1115544ejf.60.2023.04.06.11.24.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Apr 2023 11:24:57 -0700 (PDT)
+Message-ID: <38bc48bf-7d8c-8ddd-861f-3b7f3d2edce6@linaro.org>
+Date:   Thu, 6 Apr 2023 20:24:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405093929.GR33314@black.fi.intel.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 1/3] dt-binding: pci: add JH7110 PCIe dt-binding
+ documents.
+Content-Language: en-US
+To:     Minda Chen <minda.chen@starfivetech.com>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+        Conor Dooley <conor@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Huo <mason.huo@starfivetech.com>,
+        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
+        Kevin Xie <kevin.xie@starfivetech.com>
+References: <20230406111142.74410-1-minda.chen@starfivetech.com>
+ <20230406111142.74410-2-minda.chen@starfivetech.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230406111142.74410-2-minda.chen@starfivetech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 12:39:29PM +0300, Mika Westerberg wrote:
-> On Tue, Apr 04, 2023 at 04:36:55PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Apr 04, 2023 at 08:27:14AM +0300, Mika Westerberg wrote:
-> > > In order speed up reset and resume time of devices behind slow links,
-> > > decrease the wait time to 1s. This should give enough time for them to
-> > > respond.
-> > 
-> > Is there some spec language behind this?  In sec 6.6.1, I see that all
-> > devices "must be able to receive a Configuration Request and return a
-> > Successful Completion".
-> > 
-> > A preceding rule says devices with slow links must enter LTSSM Detect
-> > within 20ms, but I don't see a direct connection from that to a
-> > shorter wait time.
+On 06/04/2023 13:11, Minda Chen wrote:
+> Add PCIe controller driver dt-binding documents
+> for StarFive JH7110 SoC platform.
+
+Use subject prefixes matching the subsystem (which you can get for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching). Missing: 's'
+
+Subject: drop second/last, redundant "dt-binding documents". The
+"dt-bindings" prefix is already stating that these are bindings and
+documentation.
+
+Drop also full stop.
+
 > 
-> I think this (PCIe 5.0 p. 553):
+> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+> ---
+>  .../bindings/pci/starfive,jh7110-pcie.yaml    | 163 ++++++++++++++++++
+>  1 file changed, 163 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
 > 
-> "Following a Conventional Reset of a device, within 1.0 s the device
->  must be able to receive a Configuration Request and return a Successful
->  Completion if the Request is valid."
+> diff --git a/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml b/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+> new file mode 100644
+> index 000000000000..fa4829766195
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+> @@ -0,0 +1,163 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: StarFive JH7110 PCIe 2.0 host controller
+> +
+> +maintainers:
+> +  - Minda Chen <minda.chen@starfivetech.com>
+> +
+> +allOf:
+> +  - $ref: /schemas/pci/pci-bus.yaml#
+> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: starfive,jh7110-pcie
+> +
+> +  reg:
+> +    maxItems: 2
+> +
+> +  reg-names:
+> +    items:
+> +      - const: reg
+> +      - const: config
+> +
+> +  msi-parent: true
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 4
+> +
+> +  clock-names:
+> +    items:
+> +      - const: noc
+> +      - const: tl
+> +      - const: axi_mst0
+> +      - const: apb
+> +
+> +  resets:
+> +    items:
+> +      - description: AXI MST0 reset
+> +      - description: AXI SLAVE reset
+> +      - description: AXI SLAVE0 reset
+> +      - description: PCIE BRIDGE reset
+> +      - description: PCIE CORE reset
+> +      - description: PCIE APB reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: mst0
+> +      - const: slv0
+> +      - const: slv
+> +      - const: brg
+> +      - const: core
+> +      - const: apb
+> +
+> +  starfive,stg-syscon:
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +    items:
+> +      items:
+> +        - description: phandle to System Register Controller stg_syscon node.
+> +        - description: register0 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+> +        - description: register1 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+> +        - description: register2 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+> +        - description: register3 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+> +    description:
+> +      The phandle to System Register Controller syscon node and the offset
+> +      of STG_SYSCONSAIF__SYSCFG register for PCIe. Total 4 regsisters offset
+> +      for PCIe.
+> +
+> +  pwren-gpios:
+> +    description: Should specify the GPIO for controlling the PCI bus device power on.
 
-Right, I think this applies to all devices, regardless of link speed.
+What are these? Different than defined in gpio-consumer-common?
 
-> > > While doing this, instead of looking at the speed we check if
-> > > the port supports active link reporting.
-> > 
-> > Why check dev->link_active_reporting (i.e., PCI_EXP_LNKCAP_DLLLARC)
-> > instead of the link speed described by the spec?
-> 
-> This is what Sathyanarayanan suggested in the previous version comments.
-> 
-> > DLLLARC is required for fast links, but it's not prohibited for slower
-> > links and it's *required* for hotplug ports with slow links, so
-> > dev->link_active_reporting is not completely determined by link speed.
-> > 
-> > IIUC, the current code basically has these cases:
-> > 
-> >   1) All devices on secondary bus have zero D3cold delay:
-> >        return immediately; no delay at all
-> > 
-> >   2) Non-PCIe bridge:
-> >        sleep 1000ms
-> >        sleep  100ms (typical, depends on downstream devices)
-> > 
-> >   3) Speed <= 5 GT/s:
-> >        sleep 100ms (typical)
-> >        sleep up to 59.9s (typical) waiting for valid config read
-> > 
-> >   4) Speed > 5 GT/s (DLLLARC required):
-> >        sleep 20ms
-> >        sleep up to 1000ms waiting for DLLLA
-> >        sleep 100ms (typical)
-> >        sleep up to 59.9s (typical) waiting for valid config read
-> > 
-> > This patch changes cases 3) and 4) to:
-> > 
-> >   3) DLLLARC not supported:
-> >        sleep 100ms (typical)
-> >        sleep up to 1.0s (typical) waiting for valid config read
-> > 
-> >   4) DLLLARC supported:
-> >        no change in wait times, ~60s total
-> > 
-> > And testing dev->link_active_reporting instead of speed means slow
-> > hotplug ports (and possibly other slow ports that implement DLLLARC)
-> > that previously were in case 3) will now be in case 4).
-> 
-> Yes, and we do that because if the device gets unplugged while we were
-> in susppend we don't want to wait for the total 60s for it to become
-> ready. That's what the DLLLARC can tell us (for ports that support it).
-> For the ports that do not we want to give the device some time but not
-> to wait for that 60s so we wait for the 1s as the "minimum" requirement
-> from the spec before it can be determined "broken".
+> +    maxItems: 1
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  phys:
+> +    maxItems: 1
+> +
+> +  interrupt-controller:
+> +    type: object
+> +    properties:
+> +      '#address-cells':
+> +        const: 0
+> +
+> +      '#interrupt-cells':
+> +        const: 1
+> +
+> +      interrupt-controller: true
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#interrupt-cells'
+> +      - interrupt-controller
+> +
+> +    additionalProperties: false
+> +
+> +required:
+> +  - reg
+> +  - reg-names
+> +  - "#interrupt-cells"
 
-Ah, thanks, I think I see what you're doing here.
+Keep consistent quotes - either ' or "
 
-I think what makes this confusing is that there are several reasons
-for waiting, and they're mixed together and done at various places:
+Are you sure this is correct? You have interrupt controller as child node.
 
-  1) We want to avoid PCIe protocol errors, e.g., Completion Timeout,
-  and the spec specifies how long to wait before sending a config
-  request to a device below the port.
 
-  2) We want to wait for slow devices to finish internal
-  initialization even after it can respond to config requests, e.g.,
-  with Request Retry Status completions.  The spec doesn't say how
-  long to wait here, so we arbitrarily wait up to 60s.
+> +  - interrupts
+> +  - interrupt-map-mask
+> +  - interrupt-map
+> +  - clocks
+> +  - clock-names
+> +  - resets
+> +  - msi-controller
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    bus {
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +
+> +        pcie0: pcie@2B000000 {
 
-  3) We want to detect missing devices (possibly removed while
-  suspended) quickly, without waiting 60s.
+Lowercase hex. Everywhere.
 
-I think this might be easier to follow if we restructured a bit, maybe
-something like this:
+> +            compatible = "starfive,jh7110-pcie";
+> +            #address-cells = <3>;
+> +            #size-cells = <2>;
+> +            #interrupt-cells = <1>;
+> +            reg = <0x0 0x2B000000 0x0 0x1000000>,
+> +                  <0x9 0x40000000 0x0 0x10000000>;
 
-  bool wait_for_link_active(struct pci_dev *bridge)
-  {
-    /* I don't see a max time to Link Active in the spec (?) */
+reg (and reg-names and ranges) is always second property.
 
-    for (timeout = 1000; timeout > 0; timeout -= 10) {
-      pcie_capability_read_word(bridge, PCI_EXP_LNKSTA, &status);
-      if (status & PCI_EXP_LNKSTA_DLLLA)
-        return true;
-      msleep(10);
-    }
-    return false;
-  }
+> +            reg-names = "reg", "config";
+> +            device_type = "pci";
+> +            starfive,stg-syscon = <&stg_syscon 0xc0 0xc4 0x130 0x1b8>;
+> +            bus-range = <0x0 0xff>;
+> +            ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
+> +                     <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
+> +            interrupt-parent = <&plic>;
+> +            interrupts = <56>;
+> +            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+> +            interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
+> +                            <0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
+> +                            <0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
+> +                            <0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
 
-  pci_bridge_wait_for_secondary_bus(...)
-  {
-    ...
-    if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-      msleep(100);
-    } else {
-      link_active = wait_for_link_active(dev);
-      if (link_active)
-        msleep(100);
-    }
 
-    /* Everything above is delays mandated by PCIe r6.0 sec 6.6.1 */
+Best regards,
+Krzysztof
 
-    if (dev->link_active_reporting) {
-      pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-      if (!(status & PCI_EXP_LNKSTA_DLLLA))
-        /* all downstream devices are disconnected; maybe mark them? */
-        return;
-    }
-
-    /* Wait for non-RRS completion */
-    pci_dev_wait(child, PCIE_RESET_READY_POLL_MS);
-  }
