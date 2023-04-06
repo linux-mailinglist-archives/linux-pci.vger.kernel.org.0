@@ -2,136 +2,132 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BF5F6DA4AA
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 23:30:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16C16DA4B3
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 23:31:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjDFVaW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 17:30:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53938 "EHLO
+        id S229812AbjDFVbf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 17:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbjDFVaV (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 17:30:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B16161B0
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 14:30:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 20EA760FC8
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 21:30:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4334BC433EF;
-        Thu,  6 Apr 2023 21:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680816619;
-        bh=JAVSKJkY9Gt7kplbiePii++v1kVgdkRvJvn/R2o1pv4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=OZrzxJam4j6Ymwkh7lwAeBKS+MyWInebQ+ebrYlahcaAUJFIgHqa/x+KxrR6bhLNK
-         4QLfoSPB5fogBZA3EOnxw8UGaGeBblsyHesvEd2KKKYSNJ77Wlb+bClYxZbcEM6v1C
-         EsWTS2Na8LY/S+0oIFB2VZrDAMNCzji1XkZRcZYWuHanBpMKsMtHD7as3JPl8w4xms
-         j40Y5m3ckyThDeaHoWq3W7rLDsePj7ML/7vDS85uPvxff0o9mvGoXLJZuowOUIVwfB
-         AlTUMQRxfn+GyyMy88xt88GmXQAyg+UMAdorXJKBV23A+w27ay4aE6xcxqID8YO2r5
-         yH5m/NSXXekdA==
-Date:   Thu, 6 Apr 2023 16:30:17 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-Cc:     bhelgaas@google.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
-        x86@kernel.org, linux-pci@vger.kernel.org,
-        mario.limonciello@amd.com, thomas@glanzmann.de
-Subject: Re: [PATCH] PCI: Add quirk to clear AMD strap_15B8 NO_SOFT_RESET
- dev2 f0
-Message-ID: <20230406213017.GA3739450@bhelgaas>
+        with ESMTP id S233746AbjDFVbe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 17:31:34 -0400
+Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2443EA27D;
+        Thu,  6 Apr 2023 14:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=5lYMx1AJfwdjuXMvx33uKHvBVXBN3hKr68FwdEgC5KY=; b=C4Hkc9uodAPp0nt7zWvcGENzK9
+        yXg8OLttG/vkoj3n8yhB9v9cbmay7wCYj2BOcEc9rtc1SmDo4r4wXqnFtoKmj/doMwwGK3CEzabLv
+        cuSrpFieMIWOOmf3tm3/ffrfm5TvAeTyNS3HxZeuYIILTf4konjQnaA20ITp1m9Tm1ITQnyc3iv4v
+        5IFZbpHa1k4BHVtGAtAS2J6KuLY7RRxxuXng6zNHEptulc8alJhDvhwlIn3gXA3wpEoQwYUWTWrZP
+        jKDLU64zY9LmT1GJy1lzvNRgC+B/09qsF5Fk+WQ2sucaMYc6yI1oQxKTunr95PdmIT1fxkFgA4Qwi
+        etWzcG3w==;
+Received: from authenticated user
+        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <kibi@debian.org>)
+        id 1pkXCY-00CCYR-DM; Thu, 06 Apr 2023 21:31:27 +0000
+Date:   Thu, 6 Apr 2023 23:31:23 +0200
+From:   Cyril Brulebois <kibi@debian.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        Rob Herring <robh@kernel.org>, Hank Barta <hbarta@gmail.com>
+Subject: Re: [PATCH v1 0/3] PCI: brcmstb: Clkreq# accomodations of downstream
+ device
+Message-ID: <20230406213123.wcztrbmhdpukoby2@mraw.org>
+Organization: Debian
+References: <20230406124625.41325-1-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="huvxf4pce7occ4no"
 Content-Disposition: inline
-In-Reply-To: <20230329172859.699743-1-Basavaraj.Natikar@amd.com>
+In-Reply-To: <20230406124625.41325-1-jim2101024@gmail.com>
+X-Debian-User: kibi
 X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+        SPF_NONE,UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 10:58:59PM +0530, Basavaraj Natikar wrote:
-> The AMD [1022:15b8] USB controller loses some internal functional
-> MSI-X context when transitioning from D0 to D3hot. BIOS normally
-> traps D0->D3hot and D3hot->D0 transitions so it can save and restore
-> that internal context,
 
-> but some firmware in the field lacks due to
-> AMD_15B8_RCC_DEV2_EPF0_STRAP2 NO_SOFT_RESET bit is set.
+--huvxf4pce7occ4no
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This part doesn't have quite enough words in it.  Does the following
-sound right?
+Hi Jim,
 
-  ... but some firmware in the field can't do this because it fails to
-  clear the AMD_15B8_RCC_DEV2_EPF0_STRAP2 NO_SOFT_RESET bit.
+Jim Quinlan <jim2101024@gmail.com> (2023-04-06):
+> The current driver assumes the downstream devices can provide clkreq# for
+> ASPM.  These commits accomodate devices w/ or w/o clkreq# and also handle
+> L1SS-capable devices.
+>=20
+> The Raspian Linux folks have already been using a PCIe RC property
+> "brcm,enable-l1ss".  These commits use the same property, in a
+> backward-compatible manner, and the implementaion adds more detail and al=
+so
+> automatically identifies devices w/o a clkreq# signal, i.e. most devices
+> plugged into an RPi CM4 IO board.
+>=20
+> Jim Quinlan (3):
+>   dt-bindings: PCI: brcmstb: Add two optional props
+>   PCI: brcmstb: Clkreq# accomodations of downstream device
+>   PCI: brcmstb: Allow setting the completion timeout
+>=20
+>  .../bindings/pci/brcm,stb-pcie.yaml           | 12 +++
+>  drivers/pci/controller/pcie-brcmstb.c         | 93 +++++++++++++++++--
+>  2 files changed, 95 insertions(+), 10 deletions(-)
+>=20
+>=20
+> base-commit: 99ddf2254febae9eab7fb0bcc02c5322243f5c49
 
-If not, let me know and I can update it.
+I've just verified with the exact same hardware as in Bugzilla#217276
+that latest master (v6.3-rc5-137-gf2afccfefe7b) still gets a kernel
+panic at boot, which goes away once those 3 patches are applied. Do you
+need any extra information, log excerpt, or something like that?
 
-> Hence add quirk to clear AMD_15B8_RCC_DEV2_EPF0_STRAP2 NO_SOFT_RESET
-> bit before USB controller initialization during boot.
-> 
-> Reported-by: Thomas Glanzmann <thomas@glanzmann.de>
-> Link: https://lore.kernel.org/linux-usb/Y%2Fz9GdHjPyF2rNG3@glanzmann.de/T/#u
-> Signed-off-by: Basavaraj Natikar <Basavaraj.Natikar@amd.com>
-> Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Applied to for-linus for v6.3, thank you for all your work on this!
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
 
-I updated the subject to:
+--huvxf4pce7occ4no
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  x86/PCI: Add quirk for AMD XHCI controller that loses MSI-X state in D3hot
+-----BEGIN PGP SIGNATURE-----
 
-so it has a little bit of context.
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmQvOicACgkQ/5FK8MKz
+VSBVCw/+MGW7YQ5aLMIMlsR3WkQfONllYhPGqTdxSLKft0xScIntkoX19WwNK9sk
+VsMzs461n5ZQQbjJfN9GlKjkPBYOa24nTn0u6Sqa/tDEmBWzvoNSmXut7ak8Dh2t
+4ih/LWqRmqbWlu9zb2dNeJG4w0jWHyeYlKRsoLxAXViH2LpPdHXTq7aBci4rSV7g
+Ui6wTO2FMhv9LPehezB6lFi2HqT18zTQnsZqalFufang4esARaqCKVGGZ6ZQ5ugH
+fW0rI6Ept0CXH5nmFjzP696vGNNrps7HD7RzDFPzY/rOgjbDh6UuyntFW79qIRkY
+k/bV0vTlS0PNkHdKXc2w4eVgIDWDL2QsxsCckOIw4DDtzz/KMcaeIlD5ueuDt16t
+EA3otoIiOMkei/kWKJRb2Z0ow3dDdWW/5P/0JqZc1S6zPO+5KQuhwe1LBfGrnZbL
+KEGU4KBmV6WvkyL9ZDZHP37R3CnD9afe/w6AJWZqNiNKSde0VqPgzSY6cqMwRGPS
+FttoeN9VHMZjesviHdCH0mXiB2c75ihvcsX18eWXSbWHpE7KU6B8aH5ye1zhEw7r
+PdPTBd19gnOlSMYZEAG5q0dVkdsC0ja4mmwL73xAx0kYHHO1Qq5sM3IY3qhi+4T6
+OhYQlKu2FrD1qZkVnugXOIwyragOmlBrSbvHnWOMFcj/d8VK9K0=
+=pyNy
+-----END PGP SIGNATURE-----
 
-I also added a stable tag since I assume the same problem will occur
-on older kernels.  Let me know if that's not appropriate.
-
-Bjorn
-
-> ---
->  arch/x86/pci/fixup.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/arch/x86/pci/fixup.c b/arch/x86/pci/fixup.c
-> index 615a76d70019..bf5161dcf89e 100644
-> --- a/arch/x86/pci/fixup.c
-> +++ b/arch/x86/pci/fixup.c
-> @@ -7,6 +7,7 @@
->  #include <linux/dmi.h>
->  #include <linux/pci.h>
->  #include <linux/vgaarb.h>
-> +#include <asm/amd_nb.h>
->  #include <asm/hpet.h>
->  #include <asm/pci_x86.h>
->  
-> @@ -824,3 +825,23 @@ static void rs690_fix_64bit_dma(struct pci_dev *pdev)
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_ATI, 0x7910, rs690_fix_64bit_dma);
->  
->  #endif
-> +
-> +#ifdef CONFIG_AMD_NB
-> +
-> +#define AMD_15B8_RCC_DEV2_EPF0_STRAP2                                  0x10136008
-> +#define AMD_15B8_RCC_DEV2_EPF0_STRAP2_NO_SOFT_RESET_DEV2_F0_MASK       0x00000080L
-> +
-> +static void quirk_clear_strap_no_soft_reset_dev2_f0(struct pci_dev *dev)
-> +{
-> +	u32 data;
-> +
-> +	if (!amd_smn_read(0, AMD_15B8_RCC_DEV2_EPF0_STRAP2, &data)) {
-> +		data &= ~AMD_15B8_RCC_DEV2_EPF0_STRAP2_NO_SOFT_RESET_DEV2_F0_MASK;
-> +		if (amd_smn_write(0, AMD_15B8_RCC_DEV2_EPF0_STRAP2, data))
-> +			pci_err(dev, "Failed to write data 0x%x\n", data);
-> +	} else {
-> +		pci_err(dev, "Failed to read data\n");
-> +	}
-> +}
-> +DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x15b8, quirk_clear_strap_no_soft_reset_dev2_f0);
-> +#endif
-> -- 
-> 2.25.1
-> 
+--huvxf4pce7occ4no--
