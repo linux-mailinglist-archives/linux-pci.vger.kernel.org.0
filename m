@@ -2,376 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E4606D8BBE
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 02:22:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 66EDD6D8E17
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 05:50:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234707AbjDFAW0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 5 Apr 2023 20:22:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38152 "EHLO
+        id S234707AbjDFDuf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 5 Apr 2023 23:50:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234514AbjDFAWE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 20:22:04 -0400
-Received: from angie.orcam.me.uk (angie.orcam.me.uk [78.133.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5A8126A41;
-        Wed,  5 Apr 2023 17:21:34 -0700 (PDT)
-Received: by angie.orcam.me.uk (Postfix, from userid 500)
-        id BEF3392009D; Thu,  6 Apr 2023 02:21:31 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by angie.orcam.me.uk (Postfix) with ESMTP id B898E92009B;
-        Thu,  6 Apr 2023 01:21:31 +0100 (BST)
-Date:   Thu, 6 Apr 2023 01:21:31 +0100 (BST)
-From:   "Maciej W. Rozycki" <macro@orcam.me.uk>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>
-cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Stefan Roese <sr@denx.de>, Jim Wilson <wilson@tuliptree.org>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v8 7/7] PCI: Work around PCIe link training failures
-In-Reply-To: <alpine.DEB.2.21.2304060100160.13659@angie.orcam.me.uk>
-Message-ID: <alpine.DEB.2.21.2304060116380.13659@angie.orcam.me.uk>
-References: <alpine.DEB.2.21.2304060100160.13659@angie.orcam.me.uk>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        with ESMTP id S234351AbjDFDud (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 5 Apr 2023 23:50:33 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 876AB1989
+        for <linux-pci@vger.kernel.org>; Wed,  5 Apr 2023 20:50:32 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id w4so36356261plg.9
+        for <linux-pci@vger.kernel.org>; Wed, 05 Apr 2023 20:50:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680753032;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=6DFgxHVSoi7qhEpk5u+BdsarAdP4qAWg3XCiTncAEZ8=;
+        b=P2gR2qVRdK7Ckxs6pVpTZbDbdDHtA/td2Fwn67o7qF1KaamtjwPe+pFeFgGI4xfL1x
+         LMBRX64kKMNSVX48fVqhkkDQSkjv2zvQXa6zmIc2CIMt+JUzws+w/NOUwNmWcEw7XY6t
+         uiX6VPmuHTwl7QOGQZKCmmPbS4oxjY7x9uktKGg7GmSAaaZ8PG2uIt7TwqXt7WdAd9Yq
+         Oj8VB0P4MqCbLiZA2s/FrB9ywQUq4FrYUqsW91uI6AZXAiRehv+6Ln5E0Hl1eXwKUwrL
+         0z7I011Aw0HNBemvxn3IcSuKmNjHUNO4hfM5EiC112Ukru05dxUF6z/GZbmsXjzNg1YT
+         JSFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680753032;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6DFgxHVSoi7qhEpk5u+BdsarAdP4qAWg3XCiTncAEZ8=;
+        b=3hJ+dA9EEjWoK2R4GwkeJqmuskc6+gizFot9ZPJsmE3Eb1cqlMFf87MNc/a72wmWOC
+         wO/Awew8vbuJ9JfB2RXFhcrKvQKZg8IyFC7dLoHCNkZqOjmuuKmmbRymaaQ4Dmd0sbFD
+         3sY3Nf1QAQCDi99c6KyPaWdHccPavZhO5+s+GvTS5ahSSLtxO18ZB7PWcHC0Ubua4REZ
+         R8u0pZOUelGjOxqbRyz83u0CUcYjhSTT1TVrPZY6zAqIiZIlxg0P0ypnL0rK7fEAQoSQ
+         /cdh71KkO0x5wNMHTEAKAqlzA9lpiCYQgsbUO/EhZBdyRT8lhqQAvTTrZ4oIXOl+QJwT
+         yOKw==
+X-Gm-Message-State: AAQBX9cX3saHG+PGK3PLbXgc0frAyN3+0SEbvnJSEBN8xC68HHmsM4HS
+        smaBE+6oovfxk8u51cBMQfodSQ==
+X-Google-Smtp-Source: AKy350YfFfed8valzu4kVHfFuJe0ofxdRZFg4bBa9riHFH1xCIb/InFmM+bkl6j7Y73AIi6QZzDoHw==
+X-Received: by 2002:a17:902:d510:b0:1a1:b8ff:5552 with SMTP id b16-20020a170902d51000b001a1b8ff5552mr11075791plg.6.1680753031634;
+        Wed, 05 Apr 2023 20:50:31 -0700 (PDT)
+Received: from google.com (41.183.143.34.bc.googleusercontent.com. [34.143.183.41])
+        by smtp.gmail.com with ESMTPSA id d22-20020a170902b71600b0019cb6222698sm265444pls.266.2023.04.05.20.50.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Apr 2023 20:50:31 -0700 (PDT)
+Date:   Thu, 6 Apr 2023 09:20:21 +0530
+From:   Ajay Agarwal <ajayagarwal@google.com>
+To:     William McVicker <willmcvicker@google.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Sajid Dalvi <sdalvi@google.com>,
+        Han Jingoo <jingoohan1@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, kernel-team@android.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: [PATCH v2] PCI: dwc: Wait for link up only if link is started
+Message-ID: <ZC5Bfa2N0aWo0o0l@google.com>
+References: <ZC12lN9Cs0QlPhVh@lpieralisi>
+ <20230405182753.GA3626483@bhelgaas>
+ <ZC3Ev7qnUDdG0cFd@google.com>
+ <ZC3Kw4AYiMKY7nCR@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Spam-Status: No, score=0.0 required=5.0 tests=SPF_HELO_NONE,SPF_NONE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZC3Kw4AYiMKY7nCR@google.com>
+X-Spam-Status: No, score=-15.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,ENV_AND_HDR_SPF_MATCH,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL,
+        USER_IN_DEF_SPF_WL autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Attempt to handle cases such as with a downstream port of the ASMedia 
-ASM2824 PCIe switch where link training never completes and the link 
-continues switching between speeds indefinitely with the data link layer 
-never reaching the active state.
-
-It has been observed with a downstream port of the ASMedia ASM2824 Gen 3 
-switch wired to the upstream port of the Pericom PI7C9X2G304 Gen 2 
-switch, using a Delock Riser Card PCI Express x1 > 2 x PCIe x1 device, 
-P/N 41433, wired to a SiFive HiFive Unmatched board.  In this setup the 
-switches are supposed to negotiate the link speed of preferably 5.0GT/s, 
-falling back to 2.5GT/s.
-
-Instead the link continues oscillating between the two speeds, at the 
-rate of 34-35 times per second, with link training reported repeatedly 
-active ~84% of the time.  Forcibly limiting the target link speed to 
-2.5GT/s with the upstream ASM2824 device however makes the two switches 
-communicate correctly.  Removing the speed restriction afterwards makes 
-the two devices switch to 5.0GT/s then.
-
-Make use of these observations then and detect the inability to train 
-the link, by checking for the Data Link Layer Link Active status bit 
-being off while the Link Bandwidth Management Status indicating that 
-hardware has changed the link speed or width in an attempt to correct 
-unreliable link operation.
-
-Restrict the speed to 2.5GT/s then with the Target Link Speed field, 
-request a retrain and wait 200ms for the data link to go up.  If this 
-turns out successful, then lift the restriction, letting the devices 
-negotiate a higher speed.
-
-Also check for a 2.5GT/s speed restriction the firmware may have already 
-arranged and lift it too with ports of devices known to continue working 
-afterwards, currently the ASM2824 only, that already report their data 
-link being up.
-
-Signed-off-by: Maciej W. Rozycki <macro@orcam.me.uk>
-Link: https://lore.kernel.org/r/alpine.DEB.2.21.2203022037020.56670@angie.orcam.me.uk/
-Link: https://source.denx.de/u-boot/u-boot/-/commit/a398a51ccc68
----
-No changes from v7.
-
-Changes from v6:
-
-- Regenerate against 6.3-rc5.
-
-- Shorten the lore.kernel.org archive link in the change description.
-
-Changes from v5:
-
-- Move from a quirk into PCI core and call at device probing, hot-plug,
-  reset and resume.  Keep the ASMedia part under CONFIG_PCI_QUIRKS.
-
-- Rely on `dev->link_active_reporting' rather than re-retrieving the 
-  capability.
-
-Changes from v4:
-
-- Remove <linux/bug.h> inclusion no longer needed.
-
-- Make the quirk generic based on probing device features rather than 
-  specific to the ASM2824 part only; take the Retrain Link bit erratum 
-  into account.
-
-- Still lift the 2.5GT/s speed restriction with the ASM2824 only.
-
-- Increase retrain timeout from 200ms to 1s (PCIE_LINK_RETRAIN_TIMEOUT).
-
-- Remove retrain success notification.
-
-- Use PCIe helpers rather than generic PCI functions throughout.
-
-- Trim down and update the wording of the change description for the 
-  switch from an ASM2824-specific to a generic fixup.
-
-Changes from v3:
-
-- Remove the <linux/pci_ids.h> entry for the ASM2824.
-
-Changes from v2:
-
-- Regenerate for 5.17-rc2 for a merge conflict.
-
-- Replace BUG_ON for a missing PCI Express capability with WARN_ON and an
-  early return.
-
-Changes from v1:
-
-- Regenerate for a merge conflict.
----
- drivers/pci/pci.c   |  154 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- drivers/pci/pci.h   |    1 
- drivers/pci/probe.c |    2 
- 3 files changed, 152 insertions(+), 5 deletions(-)
-
-linux-pcie-asm2824-manual-retrain.diff
-Index: linux-macro/drivers/pci/pci.c
-===================================================================
---- linux-macro.orig/drivers/pci/pci.c
-+++ linux-macro/drivers/pci/pci.c
-@@ -859,6 +859,132 @@ int pci_wait_for_pending(struct pci_dev
- 	return 0;
- }
- 
-+/*
-+ * Retrain the link of a downstream PCIe port by hand if necessary.
-+ *
-+ * This is needed at least where a downstream port of the ASMedia ASM2824
-+ * Gen 3 switch is wired to the upstream port of the Pericom PI7C9X2G304
-+ * Gen 2 switch, and observed with the Delock Riser Card PCI Express x1 >
-+ * 2 x PCIe x1 device, P/N 41433, plugged into the SiFive HiFive Unmatched
-+ * board.
-+ *
-+ * In such a configuration the switches are supposed to negotiate the link
-+ * speed of preferably 5.0GT/s, falling back to 2.5GT/s.  However the link
-+ * continues switching between the two speeds indefinitely and the data
-+ * link layer never reaches the active state, with link training reported
-+ * repeatedly active ~84% of the time.  Forcing the target link speed to
-+ * 2.5GT/s with the upstream ASM2824 device makes the two switches talk to
-+ * each other correctly however.  And more interestingly retraining with a
-+ * higher target link speed afterwards lets the two successfully negotiate
-+ * 5.0GT/s.
-+ *
-+ * With the ASM2824 we can rely on the otherwise optional Data Link Layer
-+ * Link Active status bit and in the failed link training scenario it will
-+ * be off along with the Link Bandwidth Management Status indicating that
-+ * hardware has changed the link speed or width in an attempt to correct
-+ * unreliable link operation.  For a port that has been left unconnected
-+ * both bits will be clear.  So use this information to detect the problem
-+ * rather than polling the Link Training bit and watching out for flips or
-+ * at least the active status.
-+ *
-+ * Since the exact nature of the problem isn't known and in principle this
-+ * could trigger where an ASM2824 device is downstream rather upstream,
-+ * apply this erratum workaround to any downstream ports as long as they
-+ * support Link Active reporting and have the Link Control 2 register.
-+ * Restrict the speed to 2.5GT/s then with the Target Link Speed field,
-+ * request a retrain and wait 200ms for the data link to go up.
-+ *
-+ * If this turns out successful and we know by the Vendor:Device ID it is
-+ * safe to do so, then lift the restriction, letting the devices negotiate
-+ * a higher speed.  Also check for a similar 2.5GT/s speed restriction the
-+ * firmware may have already arranged and lift it with ports that already
-+ * report their data link being up.
-+ *
-+ * Return 0 if the link has been successfully retrained, otherwise -1.
-+ */
-+int pcie_downstream_link_retrain(struct pci_dev *dev)
-+{
-+	static const struct pci_device_id ids[] = {
-+		{ PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
-+		{}
-+	};
-+	u16 lnksta, lnkctl2;
-+
-+	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
-+	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
-+		return -1;
-+
-+	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
-+	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
-+	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
-+	    PCI_EXP_LNKSTA_LBMS) {
-+		unsigned long timeout;
-+		u16 lnkctl;
-+
-+		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
-+
-+		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
-+		lnkctl |= PCI_EXP_LNKCTL_RL;
-+		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
-+		lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
-+		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
-+		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
-+		/*
-+		 * Due to an erratum in some devices the Retrain Link bit
-+		 * needs to be cleared again manually to allow the link
-+		 * training to succeed.
-+		 */
-+		lnkctl &= ~PCI_EXP_LNKCTL_RL;
-+		if (dev->clear_retrain_link)
-+			pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
-+						   lnkctl);
-+
-+		timeout = jiffies + PCIE_LINK_RETRAIN_TIMEOUT;
-+		do {
-+			pcie_capability_read_word(dev, PCI_EXP_LNKSTA,
-+					     &lnksta);
-+			if (lnksta & PCI_EXP_LNKSTA_DLLLA)
-+				break;
-+			usleep_range(10000, 20000);
-+		} while (time_before(jiffies, timeout));
-+
-+		if (!(lnksta & PCI_EXP_LNKSTA_DLLLA)) {
-+			pci_info(dev, "retraining failed\n");
-+			return -1;
-+		}
-+	}
-+
-+	if (IS_ENABLED(CONFIG_PCI_QUIRKS) && (lnksta & PCI_EXP_LNKSTA_DLLLA) &&
-+	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
-+	    pci_match_id(ids, dev)) {
-+		u32 lnkcap;
-+		u16 lnkctl;
-+
-+		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
-+		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
-+		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
-+		lnkctl |= PCI_EXP_LNKCTL_RL;
-+		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
-+		lnkctl2 |= lnkcap & PCI_EXP_LNKCAP_SLS;
-+		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
-+		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
-+	}
-+
-+	return 0;
-+}
-+
-+/* Same as above, but called for a downstream device.  */
-+static int pcie_upstream_link_retrain(struct pci_dev *dev)
-+{
-+	struct pci_dev *bridge;
-+
-+	bridge = pci_upstream_bridge(dev);
-+	if (bridge)
-+		return pcie_downstream_link_retrain(bridge);
-+	else
-+		return -1;
-+}
-+
- static int pci_acs_enable;
- 
- /**
-@@ -1148,8 +1274,8 @@ void pci_resume_bus(struct pci_bus *bus)
- 
- static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
- {
-+	int retrain = 0;
- 	int delay = 1;
--	u32 id;
- 
- 	/*
- 	 * After reset, the device should not silently discard config
-@@ -1163,21 +1289,37 @@ static int pci_dev_wait(struct pci_dev *
- 	 * Command register instead of Vendor ID so we don't have to
- 	 * contend with the CRS SV value.
- 	 */
--	pci_read_config_dword(dev, PCI_COMMAND, &id);
--	while (PCI_POSSIBLE_ERROR(id)) {
-+	for (;;) {
-+		u32 id;
-+
-+		pci_read_config_dword(dev, PCI_COMMAND, &id);
-+		if (!PCI_POSSIBLE_ERROR(id)) {
-+			if (delay > PCI_RESET_WAIT)
-+				pci_info(dev, "ready %dms after %s\n",
-+					 delay - 1, reset_type);
-+			break;
-+		}
-+
- 		if (delay > timeout) {
- 			pci_warn(dev, "not ready %dms after %s; giving up\n",
- 				 delay - 1, reset_type);
- 			return -ENOTTY;
- 		}
- 
--		if (delay > PCI_RESET_WAIT)
-+		if (delay > PCI_RESET_WAIT) {
-+			if (!retrain) {
-+				retrain = 1;
-+				if (pcie_upstream_link_retrain(dev) == 0) {
-+					delay = 1;
-+					continue;
-+				}
-+			}
- 			pci_info(dev, "not ready %dms after %s; waiting\n",
- 				 delay - 1, reset_type);
-+		}
- 
- 		msleep(delay);
- 		delay *= 2;
--		pci_read_config_dword(dev, PCI_COMMAND, &id);
- 	}
- 
- 	if (delay > PCI_RESET_WAIT)
-@@ -4894,6 +5036,8 @@ static bool pcie_wait_for_link_delay(str
- 		msleep(10);
- 		timeout -= 10;
- 	}
-+	if (active && !ret)
-+		ret = pcie_downstream_link_retrain(pdev) == 0;
- 	if (active && ret)
- 		msleep(delay);
- 
-Index: linux-macro/drivers/pci/pci.h
-===================================================================
---- linux-macro.orig/drivers/pci/pci.h
-+++ linux-macro/drivers/pci/pci.h
-@@ -37,6 +37,7 @@ int pci_mmap_fits(struct pci_dev *pdev,
- 		  enum pci_mmap_api mmap_api);
- 
- bool pci_reset_supported(struct pci_dev *dev);
-+int pcie_downstream_link_retrain(struct pci_dev *dev);
- void pci_init_reset_methods(struct pci_dev *dev);
- int pci_bridge_secondary_bus_reset(struct pci_dev *dev);
- int pci_bus_error_reset(struct pci_dev *dev);
-Index: linux-macro/drivers/pci/probe.c
-===================================================================
---- linux-macro.orig/drivers/pci/probe.c
-+++ linux-macro/drivers/pci/probe.c
-@@ -2549,6 +2549,8 @@ void pci_device_add(struct pci_dev *dev,
- 	dma_set_max_seg_size(&dev->dev, 65536);
- 	dma_set_seg_boundary(&dev->dev, 0xffffffff);
- 
-+	pcie_downstream_link_retrain(dev);
-+
- 	/* Fix up broken headers */
- 	pci_fixup_device(pci_fixup_header, dev);
- 
+On Wed, Apr 05, 2023 at 12:23:47PM -0700, William McVicker wrote:
+> On 04/05/2023, William McVicker wrote:
+> > On 04/05/2023, Bjorn Helgaas wrote:
+> > > On Wed, Apr 05, 2023 at 03:24:36PM +0200, Lorenzo Pieralisi wrote:
+> > > > On Thu, Mar 16, 2023 at 06:05:02PM -0500, Sajid Dalvi wrote:
+> > > > > On Tue, Feb 28, 2023 at 10:36 PM Sajid Dalvi <sdalvi@google.com> wrote:
+> > > > > >
+> > > > > > Thanks for your review Jingoo.
+> > > > > > Sajid
+> > > > > >
+> > > > > > On Tue, Feb 28, 2023 at 4:04 PM Han Jingoo <jingoohan1@gmail.com> wrote:
+> > > > > > >
+> > > > > > > On Mon, Feb 27, 2023, Sajid Dalvi <sdalvi@google.com> wrote:
+> > > > > > > >
+> > > > > > > > In dw_pcie_host_init() regardless of whether the link has been started
+> > > > > > > > or not, the code waits for the link to come up. Even in cases where
+> > > > > > > > start_link() is not defined the code ends up spinning in a loop for 1
+> > > > > > > > second. Since in some systems dw_pcie_host_init() gets called during
+> > > > > > > > probe, this one second loop for each pcie interface instance ends up
+> > > > > > > > extending the boot time.
+> > > > > > > >
+> > > > > > > > Call trace when start_link() is not defined:
+> > > > > > > > dw_pcie_wait_for_link << spins in a loop for 1 second
+> > > > > > > > dw_pcie_host_init
+> > > > > > > >
+> > > > > > > > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
+> > > > > > >
+> > > > > > > (CC'ed Krzysztof Kozlowski)
+> > > > > > >
+> > > > > > > Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> > > > > > >
+> > > > > > > It looks good to me. I also checked the previous thread.
+> > > > > > > I agree with Krzysztof's opinion that we should include
+> > > > > > > only hardware-related features into DT.
+> > > > > > > Thank you.
+> > > > > > >
+> > > > > > > Best regards,
+> > > > > > > Jingoo Han
+> > > > > > >
+> > > > > > > > ---
+> > > > > > > >  drivers/pci/controller/dwc/pcie-designware-host.c | 6 +++---
+> > > > > > > >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > > > > >
+> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > index 9952057c8819..9709f69f173e 100644
+> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > @@ -489,10 +489,10 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> > > > > > > >                 ret = dw_pcie_start_link(pci);
+> > > > > > > >                 if (ret)
+> > > > > > > >                         goto err_remove_edma;
+> > > > > > > > -       }
+> > > > > > > >
+> > > > > > > > -       /* Ignore errors, the link may come up later */
+> > > > > > > > -       dw_pcie_wait_for_link(pci);
+> > > > > > > > +               /* Ignore errors, the link may come up later */
+> > > > > > > > +               dw_pcie_wait_for_link(pci);
+> > > > > > > > +       }
+> > > > > > > >
+> > > > > > > >         bridge->sysdata = pp;
+> > > > > > > >
+> > > > > > > > --
+> > > > > > > > 2.39.2.722.g9855ee24e9-goog
+> > > > > > > >
+> > > > > 
+> > > > > @bhelgaas Can this be picked up in your tree:
+> > > > >  https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/
+> > > > 
+> > > > This patch seems fine to me. The question I have though is why the
+> > > > *current* code is written the way it is. Perhaps it is just the way
+> > > > it is, I wonder whether this change can trigger a regression though.
+> > > 
+> > > The new code will look basically like this:
+> > > 
+> > >   if (!dw_pcie_link_up(pci)) {
+> > >     dw_pcie_start_link(pci);
+> > >     dw_pcie_wait_for_link(pci);
+> > >   }
+> > > 
+> > > If the link is already up by the time we get here, this change means
+> > > we won't get this message emitted by dw_pcie_wait_for_link():
+> > > 
+> > >   dev_info(pci->dev, "PCIe Gen.%u x%u link up\n", ...)
+> > > 
+> > > I don't know how important that is, but I bet somebody cares about it.
+> > > 
+> > > From the commit log, I expected the patch to do something based on
+> > > whether ->start_link() was defined, but there really isn't a direct
+> > > connection, so maybe the log could be refined.
+> > > 
+> > > Bjorn
+> > > 
+> > > -- 
+> > > To unsubscribe from this group and stop receiving emails from it, send an email to kernel-team+unsubscribe@android.com.
+> > > 
+> > 
+> > After taking a deeper dive into this patch, I found that [1] changes the
+> > original intent which was to skip the call to dw_pcie_wait_for_link()
+> > when pci->ops->start_link is NULL. I talked to Sajid offline and he
+> > agreed we should put back the start_link NULL check. The updated patch
+> > should look like this:
+> > 
+> >   if (!dw_pcie_link_up(pci) && pci->ops && pci->ops->start_link) {
+> >     ret = dw_pcie_start_link(pci);
+> >     if (ret)
+> >       goto err_free_msi;
+> >     dw_pcie_wait_for_link(pci);
+> >   }
+> > 
+> > 
+> > ...which will ensure that we don't call dw_pcie_wait_for_link() when
+> > pci->ops->start_link is NULL.
+> > 
+> > With regards to the log, I think there are 2 ways to solve this:
+> > 
+> > 1) We could also call dw_pcie_wait_for_link() in a new else if
+> >    dw_pcie_link_up() returns 1.
+> > 2) We could add this to the top of dw_pcie_wait_for_link() and leave the
+> >    code as is:
+> > 
+> >    if (!pci->ops || !pci->ops->start_link)
+> >      return 0;
+> > 
+> > I kind of like (2) since that solves both Sajid's original issue and
+> > will keep the original log.
+> > 
+> > [1] https://lore.kernel.org/all/20220624143428.8334-14-Sergey.Semin@baikalelectronics.ru/
+> > 
+> > Regards,
+> > Will
+> 
+> Below is what I'm thinking will do the job. I verified on a Pixel 6
+> (which doesn't have start_link() defined) that we don't have the 1
+> second wait from dw_pcie_wait_for_link() during probe.
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 8e33e6e59e68..1bf04324ad2d 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -648,13 +648,16 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+>  {
+>  	u32 offset, val;
+>  	int retries;
+> +	int link_up = dw_pcie_link_up(pci);
+>  
+> -	/* Check if the link is up or not */
+> -	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
+> -		if (dw_pcie_link_up(pci))
+> -			break;
+> +	if (!link_up && !(pci->ops && pci->ops->start_link))
+> +		return 0;
+There is a problem with this approach. A platform driver could enable
+link training internally, i.e., it does not have the start_link() pointer
+defined. Then it could call `dw_pcie_wait_for_link` to wait for the link
+to come up. (See pcie-intel-gw.c for an example of such a platform).
+Your logic will end up regressing this driver by exiting early.
+>  
+> +	/* Check if the link is up or not */
+> +	for (retries = 0; !link_up && retries < LINK_WAIT_MAX_RETRIES; retries++) {
+>  		usleep_range(LINK_WAIT_USLEEP_MIN, LINK_WAIT_USLEEP_MAX);
+> +
+> +		link_up = dw_pcie_link_up(pci);
+>  	}
+>  
+>  	if (retries >= LINK_WAIT_MAX_RETRIES) {
+> 
+The problem of the log is still not solved for a platform which could
+have the link up by default, i.e., it does not need to explicitly enable
+link training.
