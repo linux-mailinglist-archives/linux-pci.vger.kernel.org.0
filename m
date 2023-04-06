@@ -2,155 +2,144 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 294376DA056
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 20:52:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 411C96DA05A
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 20:53:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229941AbjDFSw3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 14:52:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47954 "EHLO
+        id S229882AbjDFSx0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 14:53:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239814AbjDFSw2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 14:52:28 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2B8D192
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 11:52:22 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-5047074939fso2253479a12.1
-        for <linux-pci@vger.kernel.org>; Thu, 06 Apr 2023 11:52:22 -0700 (PDT)
+        with ESMTP id S229806AbjDFSxZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 14:53:25 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A59D86A5;
+        Thu,  6 Apr 2023 11:53:24 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id a5so38978609qto.6;
+        Thu, 06 Apr 2023 11:53:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1680807141;
+        d=gmail.com; s=20210112; t=1680807203; x=1683399203;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=TrhLW1wbWunykZQuk7rWh+aLPzkfPdyrzg855Rv1CC0=;
-        b=OaKgd8Q3eIvAk3dfIAinRvzLlH3Y8HQCxJ2bDVYbCFX7+lVVoFg419mM/7U4yEoPhV
-         ZqrjC4RhHtwo8d9Gu2d/2noJeUE/4dpDoWCHozpas2GyzxtLPfVYyVDPqZqXBPLRBDvN
-         xCISl03ZkgYVy/gDl0tEyXS1EGq+7e9GCofDB43ARMRYwxQvX2qH+uvKtyr00ZbWr2Ln
-         Qet7xdSannl+UqtG2pVXEJf/bT2B6yQznjP1rFBsO+NVc3LfTwFp1KEosh3jGGmG56TV
-         U9Bh8WtP0ecw9+fan2B700lmQRQkCmP5ib4j+nIvlz27qEpuxiy+aPc5oBkTtwmD5viK
-         kK6w==
+        bh=Fkm1WIFQjf0PCje4i/w8NoBsWJO6GDFcmZxAmQoOl44=;
+        b=Hk/h42787AxVBPwrLukrVXWSP1EEwYZ86x+YO7gowFQsitDPKp4OEua9Zuw8kAd6yD
+         afvTz75pYSlKCpKUWGjbSbU2i+x1Adq/w8CT3r2sz1Om3L3i6/3ie8rB6AjJgizhnhPU
+         HP+tQp9otXm5oXhhrrR7xy+NvquFJ99RNOB9nOQTbwRMm2pE2ckrbkO3KKiKmF03V5hj
+         bnifesflc1ds0hnR8rHGoRhsd8cgrwcGIuE6qJAiJ8ddt+KrPZlOPjrNEpSb7E784PMI
+         e6Fu43GE0QVTOAwq/Yuks2S+Un57LPeEb28vEtp9u15Wa+V7GVUSO9TwoFkeBjExVbQI
+         hV7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680807141;
+        d=1e100.net; s=20210112; t=1680807203; x=1683399203;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TrhLW1wbWunykZQuk7rWh+aLPzkfPdyrzg855Rv1CC0=;
-        b=BOP4dfHIyTiLsSSqk/S4L3haJuh0gEQdjlpOgaAc36mgtkP3WPXn2z8ddaE6K/vMeH
-         kRwpDxcUnI18RiYbmUfgUUjaOhTR6oiI6obv/mAQlfnjQ4tXJzDSP8FDI8gJcVtebQxb
-         YdsNXrJ7HwzvB+I3DnsW2T2dJ3SifAAC6U+kMD80db30Jeuq+Fre2PE/BfW7ex1g/jv9
-         SpLdUkNZKaxhExXp7eHnVviCyTyuJW+97ENuoX6ZjLIvBJPbPr5URt6wOxY99qWXiU6B
-         DLMfZGn7nA7uoSzScCkDPqAm0CgxK3O1dSJvUsmuZwa0CzghgEzqPiZXy5OnScwoHeZ/
-         H+iA==
-X-Gm-Message-State: AAQBX9dAK0jwJw4vDlx5XDDP/Hvmj3xsn1ZUwbMvW5sIDmSX3Aui6BQN
-        TvZVlQfjtA+xiHYxQIl++YPenYlfPgXK51/X+l4=
-X-Google-Smtp-Source: AKy350ZJs5t1rE5waKeG80x624AGOma/729jSi4OiOCKS9N8/7OjFDtBqoml11ylguqjP21qCf0h4g==
-X-Received: by 2002:aa7:da88:0:b0:4ad:738b:6706 with SMTP id q8-20020aa7da88000000b004ad738b6706mr5919891eds.2.1680807141470;
-        Thu, 06 Apr 2023 11:52:21 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:49e6:bb8c:a05b:c4ed? ([2a02:810d:15c0:828:49e6:bb8c:a05b:c4ed])
-        by smtp.gmail.com with ESMTPSA id y30-20020a50ce1e000000b0050470829dbesm651614edi.63.2023.04.06.11.52.20
+        bh=Fkm1WIFQjf0PCje4i/w8NoBsWJO6GDFcmZxAmQoOl44=;
+        b=gsfjtdmjn6mAbbc5pKnmIF5hzb56yetM0Iz9eozKlDjVOm8fD3E6b6fZ0sp78HnUY6
+         daMjnrdVprt+HlYC2RY3NyVqpjdPzpn3B6EmOFuLMwgNvv3yA49G5Egsy9Dfxb6BrFmr
+         r+hi2TP4/GozPc7K57SodvzqYrY0PgOrnoVYLNVRZv+vZErFo96ZJGqxKuPuhTLPKkRZ
+         momuL4tE4cHwJsSs3R5+Qmnv0Rd9YUA3BLCHjSQjvh3/JgJtm0/jgNotuN2WtT9r73f+
+         Ip+FcAq9HtBW/tJ5htuR6fwk3Se4WviLniBRgT7lgDsFM2Se7tYzHbpM9fHqtKwt0wRi
+         eK9g==
+X-Gm-Message-State: AAQBX9cClAyA5sZDviUPPh9zjsXhhe9j8K6MK0ZkjU3sVn17zxcwS0Ad
+        FZJQ0YnLfVnDKNMEXkpNDCg=
+X-Google-Smtp-Source: AKy350Ygh+Zln0AyES3s+WW8OVnCmQVo50LSQ2mA1GXiXZIQpWrUZIfgBe1uOlV3Zzi7dprgaHTmyA==
+X-Received: by 2002:a05:622a:202:b0:3e3:8bbc:d152 with SMTP id b2-20020a05622a020200b003e38bbcd152mr11802926qtx.66.1680807203095;
+        Thu, 06 Apr 2023 11:53:23 -0700 (PDT)
+Received: from [10.67.48.245] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id w24-20020ac86b18000000b003e64490a35bsm609139qts.21.2023.04.06.11.53.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Apr 2023 11:52:21 -0700 (PDT)
-Message-ID: <fb78a687-9b01-de8b-b78a-9e62ddd3b9c0@linaro.org>
-Date:   Thu, 6 Apr 2023 20:52:19 +0200
+        Thu, 06 Apr 2023 11:53:22 -0700 (PDT)
+Message-ID: <9e98496b-73a0-78a5-e890-7d7e4be1f469@gmail.com>
+Date:   Thu, 6 Apr 2023 11:53:19 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v1 1/3] dt-binding: pci: add JH7110 PCIe dt-binding
- documents.
+Subject: Re: [PATCH v1 1/3] dt-bindings: PCI: brcmstb: Add two optional props
 Content-Language: en-US
-To:     Conor Dooley <conor@kernel.org>
-Cc:     Minda Chen <minda.chen@starfivetech.com>,
-        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Rob Herring <robh+dt@kernel.org>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>
-References: <20230406111142.74410-1-minda.chen@starfivetech.com>
- <20230406111142.74410-2-minda.chen@starfivetech.com>
- <38bc48bf-7d8c-8ddd-861f-3b7f3d2edce6@linaro.org>
- <20230406-revisit-patchy-a0063d964070@spud>
- <20230406-cinema-profile-1bfed00e4a5f@spud>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230406-cinema-profile-1bfed00e4a5f@spud>
-Content-Type: text/plain; charset=UTF-8
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230406124625.41325-1-jim2101024@gmail.com>
+ <20230406124625.41325-2-jim2101024@gmail.com>
+ <ebde318b-53be-6779-4f0c-a614c01a0b0a@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <ebde318b-53be-6779-4f0c-a614c01a0b0a@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06/04/2023 20:45, Conor Dooley wrote:
-> On Thu, Apr 06, 2023 at 07:35:09PM +0100, Conor Dooley wrote:
->> On Thu, Apr 06, 2023 at 08:24:55PM +0200, Krzysztof Kozlowski wrote:
->>> On 06/04/2023 13:11, Minda Chen wrote:
->>>> +
->>>> +  interrupt-controller:
->>>> +    type: object
->>>> +    properties:
->>>> +      '#address-cells':
->>>> +        const: 0
->>>> +
->>>> +      '#interrupt-cells':
->>>> +        const: 1
->>>> +
->>>> +      interrupt-controller: true
->>>> +
->>>> +    required:
->>>> +      - '#address-cells'
->>>> +      - '#interrupt-cells'
->>>> +      - interrupt-controller
->>>> +
->>>> +    additionalProperties: false
->>>> +
->>>> +required:
->>>> +  - reg
->>>> +  - reg-names
->>>> +  - "#interrupt-cells"
->>>
->>> Keep consistent quotes - either ' or "
->>>
->>> Are you sure this is correct? You have interrupt controller as child node.
+On 4/6/23 11:34, Krzysztof Kozlowski wrote:
+> On 06/04/2023 14:46, Jim Quinlan wrote:
+>> Regarding "brcm,enable-l1ss":
 >>
->> I know existing stuff in-tree is far from a guarantee that it'll be
->> right, but this does at least follow what we've got for PolarFire SoC:
->> Documentation/devicetree/bindings/pci/microchip,pcie-host.yaml
+>>    The Broadcom STB/CM PCIe HW -- which is also used by RPi SOCs -- requires
+>>    the driver probe to configure one of three clkreq# modes:
 >>
->> Both PLDA and both RISC-V w/ a PLIC as the interrupt controller, so in
->> similar waters.
->> This note existed in the original text form binding of the Microchip
->> PCI controller:
->> | +NOTE:
->> | +The core provides a single interrupt for both INTx/MSI messages. So,
->> | +create an interrupt controller node to support 'interrupt-map' DT
->> | +functionality.  The driver will create an IRQ domain for this map, decode
->> | +the four INTx interrupts in ISR and route them to this domain.
+>>    (a) clkreq# driven by the RC
+>>    (b) clkreq# driven by the EP for ASPM L0s, L1
+>>    (c) bidirectional clkreq#, as used for L1 Substates (L1SS).
 >>
->> Given the similarities, I figure the same requirement applies here too.
->> Minda?
+>>    The HW can tell the difference between (a) and (b), but does not know
+>>    when to configure (c).  Further, the HW will cause a CPU abort on boot if
+>>    guesses wrong regarding the need for (c).  So we introduce the boolean
+>>    "brcm,enable-l1ss" property to indicate that (c) is desired.  This
+>>    property is already present in the Raspian version of Linux, but the
+>>    driver implementaion that will follow adds more details and discerns
+>>    between (a) and (b).
+>>
+>> Regarding "brcm,completion-timeout-msecs"
+>>
+>>    Our HW will cause a CPU abort if the L1SS exit time is longer than the
+>>    completion abort timeout.  We've been asked to make this configurable, so
+>>    we are introducing "brcm,completion-abort-msecs".
+>>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+>> ---
+>>   .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
+>>   1 file changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>> index 7e15aae7d69e..ef4ccc05b258 100644
+>> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+>> @@ -64,6 +64,18 @@ properties:
+>>   
+>>     aspm-no-l0s: true
+>>   
+>> +  brcm,enable-l1ss:
+>> +    description: Indicates that the downstream device is L1SS
+>> +      capable and L1SS is desired, e.g. by setting
+>> +      CONFIG_PCIEASPM_POWER_SUPERSAVE=y.  Note that CLKREQ#
 > 
-> Further, if, as I currently suspect, there's a lot of commonality here,
-> should the binding as well as the driver be split into common pdla bits
-> and microchip/starfive specific ones?
-> 
-> Suppose that's more one for you Krzysztof.
+> How does CONFIG_PCIEASPM_POWER_SUPERSAVE apply to *BSD?
 
-Yeah, looks like only clocks and resets are different. At the end it
-depends how much code you would remove...
-
-Best regards,
-Krzysztof
+In other words, there should be no OS/Linux specific comments in a 
+Device Tree binding, which would be a friendlier and nicer way of 
+providing the same feedback.
+-- 
+Florian
 
