@@ -2,112 +2,118 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 45D976D96E1
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 14:14:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 281C86D9722
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 14:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbjDFMOV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 08:14:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
+        id S237510AbjDFMmS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 08:42:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229710AbjDFMOU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 08:14:20 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2041.outbound.protection.outlook.com [40.107.223.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFA481985;
-        Thu,  6 Apr 2023 05:14:18 -0700 (PDT)
+        with ESMTP id S230032AbjDFMmR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 08:42:17 -0400
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2107.outbound.protection.outlook.com [40.107.243.107])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FFC47A8F;
+        Thu,  6 Apr 2023 05:42:15 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ffhjl/JnaX/dtweEhSogyGDvFJUKIxSp/qJbUWN/waZ0uAoXc+jjHzfEzwf3swzy1++dQfwrjg/lX8CGt5vlancCmpnwzS2rPbt+KV4QaO27CeWP6K9MqVxQWJbx24P1wC4pPB2LAUZEISem3UuCwnJ6wg9DRVAf0g/IjkA3adkjHD/dbsl/4oYpKZcdb0FlWTjXTyjNYLqvrQhHae5+F6BQX++MLVJ/YYU/f6KINqVhnQnlEQpo3yty1bUSYvuLn3Cj8J/vuikbmDTQoxH7ll0nyofxtXasFOm8aC4RPf+Re42Y75ofvAG/fMe4rvXmoTm3WiZRw8TplivZ/xiiLQ==
+ b=oNtTkiDtqSyTQBU+ec93XYdJ8CCQ0LSjUkoW8iQ3qISKJYceZZJ2o5a/naVJIY9otKUBi2prJEdcevOZl0yjTg7BwyXTo1DHJVUFX3j/THrjRWBE0Z47c03K59RxeNQ6XD4E3WfIznyyR2BpkeH4AQQUnmGWoTJY8O2NrGlvdSxVGe71M7zm9Ribn7g4FdiK09L63rVhw5MOAFX84dI5U6TEJbRDhrWk9AjGgPTeJginCAprWuDie0Jwoxn9MBfVNMFo9cZ5tvYDb6xz5u1tvRd/JQuKcAqndAUGLr2NnyBD+pbqnOg2F16twG4JTDiBCTJgRPzrClb6npu9Udhsyw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qUCfkxBKDqDe9oYjj8GVGzzX5dXa0m4gxm0V8iZbKTM=;
- b=K+MRUH8u+9iCxJUee+h0tgQRZwNVGQqlWNb4KkInFwCuJKbU9NXUCWfNvDLhSasS/tTcHwkjwDooubL1QBL4ApkLqUERMJk5dnHABY5XJb2Nc5mIz4B9W0PCZbZglFb3hqcwMPyMVBAfmdy1q8yng/5+lUVicz+/kehdsXsIFTGwFVvgWFBqrr2PR3wXE8F++cRB0VV1M7rTo/QwXPef+w2rUgITtCW3lNog6T8dNFYoR2mAXjmP9qZyNtbPFK/LaSGJex2VzpNmCXrXEoWtH+RpcbwPJs5Cj+47FgAhBOt41aR3Ab4rRr5la92dDRXtVMZVthObRLKrj+PCg1R72A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+ bh=oW2ON1ierCIsM1FfiBE3VUMbqPZ6cWa8afrcPq8UNUw=;
+ b=hFEArNzUYXnCGm5Qh3TTZmVYYLShm+C20EmpKr/K8wugK6aPsc9WJ0OiZyHTmrbbFvhL+j6TG6G8qNroZTlrkeW/0n8VX3To+BR1I/nOQX55zNR1OPgXSAVIWuJmEeqXsYFsQNNT5nA2ivvdnJUBFf2evk5qY8MCARoHKfvD6DEqrqnZeYxpo0OPrngH+aqSuw7ZLwYmhLIp2nDINBl6qDCCC5kOK/2n0GmqanU5bviJVmpqffpFdSN3SViYTt9J3IYYLpLYJTQBSE7ZSh2b1oX4jUzV+EEoNBZxPeT+MeyGpJQVEDq+d/r9Y1hXCzNRySkpr5Hel3FV31CGNVgCRQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=corigine.com; dmarc=pass action=none header.from=corigine.com;
+ dkim=pass header.d=corigine.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=corigine.onmicrosoft.com; s=selector2-corigine-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qUCfkxBKDqDe9oYjj8GVGzzX5dXa0m4gxm0V8iZbKTM=;
- b=BxI07cjj9BpLYVdgRLhQlzaTzDzvBcpSrr0yogrE2/pRpNwP+DOnVJ47GN4wCOZHQeH/isIfe4kgzwK9G0ipF9iT0dK+c2BpsiVJZ8+EQgqRKb2EbhJcajJw485qaCDYz5jLtqSwDV9cU2nyZ3mGdySA0HNl9+/dUsvaAz3LmRCBS+Ak72p2dPrAbtku5d/cOcJnqusolFRu3CI5tcAchA4fYHdieZ25hnX/MVfgF6aiQThVq7kmZMgALm/Z/iaPxsZFymAX4B7DP0OTIcE9/Bo1MfIY0XKl3IMxF44DYooWm1OOhpe9YH2AvILNqfJS3wH12plETDmrAQCvZLAZOQ==
-Received: from MW4PR03CA0167.namprd03.prod.outlook.com (2603:10b6:303:8d::22)
- by DM4PR12MB5392.namprd12.prod.outlook.com (2603:10b6:5:39f::18) with
+ bh=oW2ON1ierCIsM1FfiBE3VUMbqPZ6cWa8afrcPq8UNUw=;
+ b=T+e0PpN3G9Pyo74oCesJwAEpsi08JyyEWgSFeWzTY/NXHGxFksVXk/iUZ1iImtWHcxxkZ8p8X3LCBKtbrf80Aap+De/xi8QTRdsQ7V49nrzVW1eK4GzUV5CEJcCGvJgVutlc5lPu3x8FZwHyfbFYYxDqwwrw/JVxs0Uxu5TQUTc=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=corigine.com;
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com (2603:10b6:510:78::6)
+ by PH0PR13MB5974.namprd13.prod.outlook.com (2603:10b6:510:16d::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35; Thu, 6 Apr
- 2023 12:14:16 +0000
-Received: from CO1NAM11FT014.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:8d:cafe::83) by MW4PR03CA0167.outlook.office365.com
- (2603:10b6:303:8d::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.22 via Frontend
- Transport; Thu, 6 Apr 2023 12:14:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT014.mail.protection.outlook.com (10.13.175.99) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6277.30 via Frontend Transport; Thu, 6 Apr 2023 12:14:16 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Thu, 6 Apr 2023
- 05:14:07 -0700
-Received: from [10.41.21.79] (10.126.231.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Thu, 6 Apr 2023
- 05:13:59 -0700
-Message-ID: <141f83be-e08b-9c0b-8939-554e3d5ed37d@nvidia.com>
-Date:   Thu, 6 Apr 2023 17:43:55 +0530
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.26; Thu, 6 Apr
+ 2023 12:42:12 +0000
+Received: from PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::c506:5243:557e:82cb]) by PH0PR13MB4842.namprd13.prod.outlook.com
+ ([fe80::c506:5243:557e:82cb%5]) with mapi id 15.20.6254.035; Thu, 6 Apr 2023
+ 12:42:12 +0000
+Date:   Thu, 6 Apr 2023 14:42:06 +0200
+From:   Simon Horman <simon.horman@corigine.com>
+To:     Denis Plotnikov <den-plotnikov@yandex-team.ru>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, shshaikh@marvell.com,
+        manishc@marvell.com, GR-Linux-NIC-Dev@marvell.com,
+        davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+        pabeni@redhat.com, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH] qlcnic: check pci_reset_function result
+Message-ID: <ZC6+Hv0mrnGlsMpk@corigine.com>
+References: <ZC1x57v1JdUyK7aG@corigine.com>
+ <20230405193708.GA3632282@bhelgaas>
+ <ZC5uyOt7mevNyS6f@corigine.com>
+ <32f18da1-eeb9-3cd6-398d-77f76596b7c3@yandex-team.ru>
+ <ZC6wakoBhc1kxFVk@corigine.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZC6wakoBhc1kxFVk@corigine.com>
+X-ClientProxiedBy: AM8P189CA0009.EURP189.PROD.OUTLOOK.COM
+ (2603:10a6:20b:218::14) To PH0PR13MB4842.namprd13.prod.outlook.com
+ (2603:10b6:510:78::6)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [Patch v5 7/8] PCI: tegra194: add interconnect support in
- Tegra234
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <helgaas@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
-        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
-        <ishah@nvidia.com>, <bbasu@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>
-References: <20230330133354.714-1-sumitg@nvidia.com>
- <20230330133354.714-8-sumitg@nvidia.com> <ZC1Rnrb0MObR5S42@lpieralisi>
-From:   Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <ZC1Rnrb0MObR5S42@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.231.37]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT014:EE_|DM4PR12MB5392:EE_
-X-MS-Office365-Filtering-Correlation-Id: b3547d38-da55-42b4-4228-08db36987101
+X-MS-TrafficTypeDiagnostic: PH0PR13MB4842:EE_|PH0PR13MB5974:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb12587a-7bf2-4789-693f-08db369c5828
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /Rf7JeL3M8lr6mZ2+30qZM+iLv0DglIjLNEI2nSxKxAVbnjnD49bJyA9+f6LcsI6EB5ZJzlnM3REVpCu8O27r1qhZ0/oGEnmiQlqcT3+uHIceAuuGFvL/AkUFBDNnCBT9BqN+nTe0y1oC9VUliOSWiBHe9Y1W66jmWmpYWN8vGKvGkaH5zZhk6IkrRLe599tCUUUcAqee+YJlNjYoAxkuTHobijSjSzUzgSEp30IqQJtHRxsmae4n/avOyLfv//Kud7kue2sPlTLrwmktF0qh8ktgwgqZG45RW6EkTWh6UYO6hFfqypOaeZxGN0x6tTUPQ/eruoYS0lthkRSyJFDNsA/lqxU8Ub/DMlHaE65EEL43JR3Kdlh2Q8bZYlUBCcqIlLIoqeeLbBlcJ2aIjRMuYvXlpQ0ijwbS0Ldf6x0qc28W5A4P96NMPGADrGBeksAUCF2t7pqR7NuBszS9rucBYnXKlWRVJIHz/fCLcZVzyXiQ0gR/+t/Gg3uU22CNqObR/BNlmsoG0LbVXkeDGCA/7i57ODVddfItbE9GnwrtNPqYY7LV5tZ/dPbmVhYeoViGqjJlbahOaEjDzM1EHkijKrCKobEiDG89LYYB8BeTOV3Hv8FX9YWm4z/ekJuO1souKIjfmUKC/Upb4wiZ/O7xC3fPAJMHB3qhfwftdozeGv8yitYbU5o+KZ9derqZEosgjkFF+lX1B5N46YQMJG3chA2k7mPVD9snd/nPJpsov9GRKXq/dxrLD+zvJwtN/+SqB3nR2lHpI4JyzM9sKFTdF5Bl5rvw5YVJ4txMl93LpE=
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(136003)(396003)(376002)(451199021)(46966006)(36840700001)(40470700004)(8936002)(41300700001)(316002)(54906003)(5660300002)(16576012)(2906002)(4326008)(186003)(70206006)(70586007)(6916009)(8676002)(478600001)(7416002)(31686004)(16526019)(31696002)(107886003)(6666004)(7636003)(40460700003)(26005)(83380400001)(356005)(2616005)(336012)(426003)(47076005)(36756003)(40480700001)(82310400005)(82740400003)(36860700001)(86362001)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2023 12:14:16.0331
+X-Microsoft-Antispam-Message-Info: DhBb22/PTk0bUmOFFxOOqEOHNyXbQHbds0U18PP5c+kD6WoSmOQtcTpKUJq3cuVoMdLmV8OIKE9vw7hC44+t4MwAKX1Mvi8xcvZZmqar4rRWBjlPbv46cxzLLdWIv8mX/G6rJ8pquthkppPdrPPKiRUecT7pammD8ip/1Wrn6ZmD2zH2gheiM/5xRoWO5OlmuGqiiKtiCaZiXuVrJJ0lgynxbj81YWDiV0V5KqtsjcLSDUeIpkeaY2JlnZgN2Lg4tL6m3lO4jgMwnnR35LYJl1v91EodA2mYpwGn9A3UAGARrICAHTftFV+S2X5UikPz6gCxKPM/wTr2xorsfq5IKgyqPwUm+9h594S1FAZAhPS/i31lQKaK3cVMcLLrj5ggX0rHBLxshoQivx+NbzolYyR+R0jjzGRU8cLBAuPI+M+qSFqloGF28gO4yu4tlI0+0RRlSd3KzxK+4Fon2JpJRT3fYyESU8BXUX511fWVCGecdrZKChvlh6w/tQ/41XQ2X9a8yIMVqdfSxShkIDyARnIBHxSfdHch+C41mVzhO2rcJ4SpG/8DZjpZIyRpbqSWOoAMNOqBQiAhvG5FphfJ8HyUyJeeCQi+v9xti1MZX9M=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR13MB4842.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(39840400004)(376002)(346002)(136003)(451199021)(41300700001)(4326008)(66946007)(6916009)(316002)(66476007)(66556008)(86362001)(8676002)(8936002)(44832011)(5660300002)(7416002)(2906002)(36756003)(186003)(53546011)(6506007)(6512007)(2616005)(83380400001)(38100700002)(6666004)(478600001)(54906003)(6486002)(67856001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?AJMkzzOIts0pu8nx76YGAoT8MYKTEJseZoFKyJQyyt4SwXIB2Sgdu0FHY5Ch?=
+ =?us-ascii?Q?TY5oUny4GC20WKA1/cWTnCg7KEcHeUqsdLg3LvKDqpEvT17AYxm0R06FWiyh?=
+ =?us-ascii?Q?SG3yc9w9EWtvVjp898S6q38CSnH38txQa+6LoXH8b+nWCDNvPLIe70ihtAQz?=
+ =?us-ascii?Q?KsK7FIIq4TcKLEIMlJdpjrU5DMFrJFUOfo1K9IZMAsPENMqhuRyhcVGeeThy?=
+ =?us-ascii?Q?/prI9R5F7Q7fgUZrZoiDqcm387dNQLCusAxYHvisQvINOdxn9Wn/+usebAf4?=
+ =?us-ascii?Q?tCUrb/pwnoDoTn+1eAomo+R9yFliSBBZrpPnb1u91avc1mTSDedPFKsxqm8S?=
+ =?us-ascii?Q?fvnwXmHstRJ7ObR6822PqqerBndMATtjTq2NaGaCa2FJA4OlGS0qoZ9H+WBo?=
+ =?us-ascii?Q?Z0I/AYgyU5+vco8MOTrBplKMo97Cgsmrk4LACKFeTudUwV6jSEtiZ713oRRP?=
+ =?us-ascii?Q?xVLi6KTZzlSAIiwX/tQzDqefmLQAaQ+1qFf3U5XRL2UjAUJdL/c8NwdXhdiD?=
+ =?us-ascii?Q?Fg7AVFaKDtOwUViHr6wu0nPuEeCXNoRwzQfDJiYHtx4tFJgbccNz/dfPJOt7?=
+ =?us-ascii?Q?+8vprlp4YQLLcN3RmGleNby9BXBLxajbRqu6XgWvrtIP7ertCTLi22FMKnN/?=
+ =?us-ascii?Q?nANTHX7ffeG0AOA5opa38R1geysdNYTDvq29TQ5XY3mQNpJJUZX+2ucywq4s?=
+ =?us-ascii?Q?ZA5bPODSSA1ZAjHqrtvIgrzCPtjq1pQj6wBAKaLq8u+gsmm8xi8WSnyNN6E7?=
+ =?us-ascii?Q?c0eMAb5eVkBRde6MRqr8AO/zUsS+kuAslgecaokabGDDZdaytGoZr4z8paSX?=
+ =?us-ascii?Q?GfCYpuVGEFMM3IfeaH8s0MBJ7GsxlBLDUDRBZrkxr8wtCAGcVD9entqXlvSR?=
+ =?us-ascii?Q?SPBhEGh/ifHd2gEmQ+TiKLml/e7EdIgZThttSYQdOMmzIwCoaMzo8e389nTU?=
+ =?us-ascii?Q?1lms1jqnUSAFeAupY2hqmck/EPkLa6acWB9BNX2nRZKpnf4Etpxb6zGBjpfj?=
+ =?us-ascii?Q?uUK6efDcIhWJRGwuhO2TqBg4sNlBW0Qtp83GGl78Lws7sCrmN1JFJyuIb3wb?=
+ =?us-ascii?Q?q0Oye73AXcrgD6iWhnbzmEk9hzdq/FhDINvhosaXa59PXWqsbkTzsiJjId5s?=
+ =?us-ascii?Q?LoDnjdI9KAlOTzox79bbyVw7EINN5qMSAGtaRQQKPc4ErywCV2Yq4b9xRIn9?=
+ =?us-ascii?Q?5tts4dRkMi9GoAfUCTaCIF4NyDnELJATTp1sVJucpf6YNpbAaGEt2gCkCvxO?=
+ =?us-ascii?Q?4zKOopdgWLofkY8+Rb/2TJ8nd2iO/LGm/JlOPgd2TbNJdXcFSrptg04vW5jB?=
+ =?us-ascii?Q?Gj1aJztO0Qoj4KF8MwUU0aZU5bcFOPXICXz8JJiuzAo7hyYI6W/FY3EYdNsq?=
+ =?us-ascii?Q?Qhx05aoSZm5a9lh39fYdkBR5shPR8KaCo+yn2JWFOCDwn6WFGcm4CSLmqknA?=
+ =?us-ascii?Q?wsNv8hqWui1+Wc417rAxqFtGnryXXmwAtazxFGxnzkx2aE3/nlvIoHSqna6A?=
+ =?us-ascii?Q?P7koQtoWq+Jsn/ganCtw+zPf1yUB+aecJ1wmvDMFSFektZBLXRVZxtd3ooH7?=
+ =?us-ascii?Q?93Ek6iE9v71LWDGEzGSfi2D6sjEQhgg1uTttNLmoxiWdCHKOzwrZq7ZnB8ER?=
+ =?us-ascii?Q?znBhvhrzIy2AzTXXxejb1EKUNwd9dajkjycEIGrwt9qfvRBspUrAk4K3YBvv?=
+ =?us-ascii?Q?XYkUXg=3D=3D?=
+X-OriginatorOrg: corigine.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb12587a-7bf2-4789-693f-08db369c5828
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR13MB4842.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2023 12:42:12.6438
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b3547d38-da55-42b4-4228-08db36987101
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT014.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5392
-X-Spam-Status: No, score=-1.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fe128f2c-073b-4c20-818e-7246a585940c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lDdN1XvU1rUrXjDlUMcuoXM5vmi8dpf9vrYh8CZKhlexsULCVvUmUeAEz0zAXaTNmlaeAfNTFyF67o4s3BiLie3ImKVAHPDgt2fHsCwKMNA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR13MB5974
+X-Spam-Status: No, score=-0.0 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -115,162 +121,113 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Apr 06, 2023 at 01:43:44PM +0200, Simon Horman wrote:
+> On Thu, Apr 06, 2023 at 12:23:49PM +0300, Denis Plotnikov wrote:
+> > 
+> > On 06.04.2023 10:03, Simon Horman wrote:
+> > > On Wed, Apr 05, 2023 at 02:37:08PM -0500, Bjorn Helgaas wrote:
+> > > > On Wed, Apr 05, 2023 at 03:04:39PM +0200, Simon Horman wrote:
+> > > > > On Mon, Apr 03, 2023 at 01:58:49PM +0300, Denis Plotnikov wrote:
+> > > > > > On 31.03.2023 20:52, Simon Horman wrote:
+> > > > > > > On Fri, Mar 31, 2023 at 11:06:05AM +0300, Denis Plotnikov wrote:
+> > > > > > > > Static code analyzer complains to unchecked return value.
+> > > > > > > > It seems that pci_reset_function return something meaningful
+> > > > > > > > only if "reset_methods" is set.
+> > > > > > > > Even if reset_methods isn't used check the return value to avoid
+> > > > > > > > possible bugs leading to undefined behavior in the future.
+> > > > > > > > 
+> > > > > > > > Signed-off-by: Denis Plotnikov <den-plotnikov@yandex-team.ru>
+> > > > > > > nit: The tree this patch is targeted at should be designated, probably
+> > > > > > >        net-next, so the '[PATCH net-next]' in the subject.
+> > > > > > > 
+> > > > > > > > ---
+> > > > > > > >    drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c | 4 +++-
+> > > > > > > >    1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > > > > > 
+> > > > > > > > diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > > > > > > index 87f76bac2e463..39ecfc1a1dbd0 100644
+> > > > > > > > --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > > > > > > +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
+> > > > > > > > @@ -628,7 +628,9 @@ int qlcnic_fw_create_ctx(struct qlcnic_adapter *dev)
+> > > > > > > >    	int i, err, ring;
+> > > > > > > >    	if (dev->flags & QLCNIC_NEED_FLR) {
+> > > > > > > > -		pci_reset_function(dev->pdev);
+> > > > > > > > +		err = pci_reset_function(dev->pdev);
+> > > > > > > > +		if (err && err != -ENOTTY)
+> > > > > > > Are you sure about the -ENOTTY part?
+> > > > > > > 
+> > > > > > > It seems odd to me that an FLR would be required but reset is not supported.
+> > > > > > No, I'm not sure. My logic is: if the reset method isn't set than
+> > > > > > pci_reset_function() returns -ENOTTY so treat that result as ok.
+> > > > > > pci_reset_function may return something different than -ENOTTY only if
+> > > > > > pci_reset_fn_methods[m].reset_fn is set.
+> > > > > I see your reasoning: -ENOTTY means nothing happened, and probably that is ok.
+> > > > > I think my main question is if that can ever happen.
+> > > > > If that is unknown, then I think this conservative approach makes sense.
+> > > > The commit log mentions "reset_methods", which I don't think is really
+> > > > relevant here because reset_methods is an internal implementation
+> > > > detail.  The point is that pci_reset_function() returns 0 if it was
+> > > > successful and a negative value if it failed.
+> > > > 
+> > > > If the driver thinks the device needs to be reset, ignoring any
+> > > > negative return value seems like a mistake because the device was not
+> > > > reset.
+> > > > 
+> > > > If the reset is required for a firmware update to take effect, maybe a
+> > > > diagnostic would be helpful if it fails, e.g., the other "Adapter
+> > > > initialization failed.  Please reboot" messages.
+> > > > 
+> > > > "QLCNIC_NEED_FLR" suggests that the driver expects an FLR (as opposed
+> > > > to other kinds of reset).  If the driver knows that all qlcnic devices
+> > > > support FLR, it could use pcie_flr() directly.
+> > > > 
+> > > > pci_reset_function() does have the possibility that the reset works on
+> > > > some devices but not all.  Secondary Bus Reset fails if there are
+> > > > other functions on the same bus, e.g., a multi-function device.  And
+> > > > there's some value in doing the reset the same way in all cases.
+> > > > 
+> > > > So I would suggest something like:
+> > > > 
+> > > >    if (dev->flags & QLCNIC_NEED_FLR) {
+> > > >      err = pcie_flr(dev->pdev);
+> > > >      if (err) {
+> > > >        dev_err(&pdev->dev, "Adapter reset failed (%d). Please reboot\n", err);
+> > > >        return err;
+> > > >      }
+> > > >      dev->flags &= ~QLCNIC_NEED_FLR;
+> > > >    }
+> > > > 
+> > > > Or, if there are qlcnic devices that don't support FLR:
+> > > > 
+> > > >    if (dev->flags & QLCNIC_NEED_FLR) {
+> > > >      err = pci_reset_function(dev->pdev);
+> > > >      if (err) {
+> > > >        dev_err(&pdev->dev, "Adapter reset failed (%d). Please reboot\n", err);
+> > > >        return err;
+> > > >      }
+> > > >      dev->flags &= ~QLCNIC_NEED_FLR;
+> > > >    }
+> > > Thanks Bjorn,
+> > > 
+> > > that is very helpful.
+> > > 
+> > > I think that in order to move to option #1 some information would be needed
+> > > from those familiar with the device(s). As it is a more invasive change -
+> > > pci_reset_function -> pcie_flr.
+> > > 
+> > > So my feeling is that, in lieu of such feedback, option #2 is a good
+> > > improvement on the current code.
+> > > 
+> > > OTOH, this driver is 'Supported' as opposed to 'Maintained'.
+> > > So perhaps we can just use our best judgement and go for option #1.
+> > 
+> > So, it looks like option #2 is the safest choice as we do reset only if FLR
+> > is needed (when pci_reset_function() makes sense)
+> > 
+> > If all agree with that I'll re-send the path
+> 
+> Yes. Maybe wait 24h, and if there is no further feedback go ahead with that
+> plan?
 
-
-> 
-> You should still capitalize the subject.
-> 
-> "PCI: tegra194: Add interconnect.."
-> 
-Sure.
-
-> On Thu, Mar 30, 2023 at 07:03:53PM +0530, Sumit Gupta wrote:
->> Add support to request DRAM bandwidth with Memory Interconnect
->> in Tegra234 SoC. The DRAM BW required for different modes depends
->> on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
->>
->> Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
-> 
-> You should add a Link to the relevant lore archive, I am
-> pretty sure Bjorn chimed in too.
-> 
-Sure.
-
-> This patch does too many things at once; more importantly it
-> does *not* explain why we request memory bandwidth and why it
-> is required and *safe* given that the current code works so far.
-> 
-> So:
-> 
-> patch 1: fix the array overflow issues with the current code
-> patch 2: add memory bandwidth interconnect support
-> 
-> Thanks,
-> Lorenzo
-> 
-Thank you for the review.
-I will split this patch into two and add the info as sugested in v6.
-
-Will spin a v6 soon if there is no further comment.
-
-Thanks,
-Sumit
-
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 44 ++++++++++++++++++----
->>   1 file changed, 36 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index 09825b4a075e..89d829a946ee 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/delay.h>
->>   #include <linux/gpio.h>
->>   #include <linux/gpio/consumer.h>
->> +#include <linux/interconnect.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/iopoll.h>
->>   #include <linux/kernel.h>
->> @@ -223,6 +224,7 @@
->>   #define EP_STATE_ENABLED     1
->>
->>   static const unsigned int pcie_gen_freq[] = {
->> +     GEN1_CORE_CLK_FREQ,   /* PCI_EXP_LNKSTA_CLS == 0; undefined */
->>        GEN1_CORE_CLK_FREQ,
->>        GEN2_CORE_CLK_FREQ,
->>        GEN3_CORE_CLK_FREQ,
->> @@ -287,6 +289,7 @@ struct tegra_pcie_dw {
->>        unsigned int pex_rst_irq;
->>        int ep_state;
->>        long link_status;
->> +     struct icc_path *icc_path;
->>   };
->>
->>   static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
->> @@ -309,6 +312,27 @@ struct tegra_pcie_soc {
->>        enum dw_pcie_device_mode mode;
->>   };
->>
->> +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
->> +{
->> +     struct dw_pcie *pci = &pcie->pci;
->> +     u32 val, speed, width;
->> +
->> +     val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
->> +
->> +     speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
->> +     width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
->> +
->> +     val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
->> +
->> +     if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
->> +             dev_err(pcie->dev, "can't set bw[%u]\n", val);
->> +
->> +     if (speed >= ARRAY_SIZE(pcie_gen_freq))
->> +             speed = 0;
->> +
->> +     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
->> +}
->> +
->>   static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
->>   {
->>        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> @@ -452,14 +476,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
->>        struct tegra_pcie_dw *pcie = arg;
->>        struct dw_pcie_ep *ep = &pcie->pci.ep;
->>        struct dw_pcie *pci = &pcie->pci;
->> -     u32 val, speed;
->> +     u32 val;
->>
->>        if (test_and_clear_bit(0, &pcie->link_status))
->>                dw_pcie_ep_linkup(ep);
->>
->> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
->> -             PCI_EXP_LNKSTA_CLS;
->> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
->> +     tegra_pcie_icc_set(pcie);
->>
->>        if (pcie->of_data->has_ltr_req_fix)
->>                return IRQ_HANDLED;
->> @@ -945,9 +967,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
->>
->>   static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
->>   {
->> -     u32 val, offset, speed, tmp;
->>        struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
->>        struct dw_pcie_rp *pp = &pci->pp;
->> +     u32 val, offset, tmp;
->>        bool retry = true;
->>
->>        if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
->> @@ -1018,9 +1040,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
->>                goto retry_link;
->>        }
->>
->> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
->> -             PCI_EXP_LNKSTA_CLS;
->> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
->> +     tegra_pcie_icc_set(pcie);
->>
->>        tegra_pcie_enable_interrupts(pp);
->>
->> @@ -2224,6 +2244,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->>
->>        platform_set_drvdata(pdev, pcie);
->>
->> +     pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
->> +     ret = PTR_ERR_OR_ZERO(pcie->icc_path);
->> +     if (ret) {
->> +             tegra_bpmp_put(pcie->bpmp);
->> +             dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
->> +             return ret;
->> +     }
->> +
->>        switch (pcie->of_data->mode) {
->>        case DW_PCIE_RC_TYPE:
->>                ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
->> --
->> 2.17.1
->>
+Perhaps a code comment, or the patch description could include
+some information about the reasoning above.
