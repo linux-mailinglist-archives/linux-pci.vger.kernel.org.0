@@ -2,27 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53A036D9C8C
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 17:39:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EDF5F6D9CE0
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 17:59:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238842AbjDFPj3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 11:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
+        id S239613AbjDFP7k (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 11:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjDFPj2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 11:39:28 -0400
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857631732;
-        Thu,  6 Apr 2023 08:39:26 -0700 (PDT)
+        with ESMTP id S239587AbjDFP7j (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 11:59:39 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 684BE93E5;
+        Thu,  6 Apr 2023 08:59:38 -0700 (PDT)
 Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1N9MYu-1qVVyt10GS-015JJz; Thu, 06 Apr 2023 17:39:03 +0200
-Message-ID: <d0bf241b-ead4-94b7-3f03-a26227f9eb58@i2se.com>
-Date:   Thu, 6 Apr 2023 17:39:02 +0200
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MqZE0-1qF5wU46Vs-00me6o; Thu, 06 Apr 2023 17:59:19 +0200
+Message-ID: <09926d3d-2f1f-d060-af0f-bbc5b02d3664@i2se.com>
+Date:   Thu, 6 Apr 2023 17:59:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v1 1/3] dt-bindings: PCI: brcmstb: Add two optional props
+Subject: Re: [PATCH v1 3/3] PCI: brcmstb: Allow setting the completion timeout
+Content-Language: en-US
 To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
@@ -34,36 +35,32 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-rpi-kernel@lists.infradead.org>,
         "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
         <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20230406124625.41325-1-jim2101024@gmail.com>
- <20230406124625.41325-2-jim2101024@gmail.com>
-Content-Language: en-US
+ <20230406124625.41325-4-jim2101024@gmail.com>
 From:   Stefan Wahren <stefan.wahren@i2se.com>
-In-Reply-To: <20230406124625.41325-2-jim2101024@gmail.com>
+In-Reply-To: <20230406124625.41325-4-jim2101024@gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:nknTnX5dlSCEMuTzZzTH1lzDx7myKdzZXx63p/ALhR5p/l1cSBy
- /WVL/VeWlNJRfuyPTv3z8OZICfKrmkG8l1dad5ttQkPqrRPTpFW+HjZL8FfkOz39Bx8e6cy
- vDV+pMAiGfNRtiH0hMZAfvPAbLsy5UAXhIAbE0EwJl3GqM7J5hdrBtwFv80E4+82mzLLblU
- mnBo88FTMBiQMQJibNy7Q==
-UI-OutboundReport: notjunk:1;M01:P0:1JPu3Fn+QcE=;R2rM/eZ8PosqU/E3uRLSGrLJ8xn
- tSj49CxxVi1/9bgT6bzPsMFvXzbtk/c3JjjZ4zbTou1QamVn/o6LKCFCZT7p+FQplf4XbnOrM
- 03IZourgA/SwhPEUg4y5658zCqcUNE//OCMFEiQsy0nYefH4LO6HMfQljXYwpoypaYaHuqV++
- T7azvAR1Ugr6zap3dH8O9zr7jnCazLDzZ14DKFrLzHQ91tiAqTwVp6T2Kc0MJ0nepSx4L7TpV
- b+3+LnvBEBq8fF2yYz+15ff6J7p+L/01HRxcEin1Olh4pLRUomWhxMsFnIUL8vN+JIUvnBJJ3
- pJtMph81OwHIxCantSeZTSds9PE/hjMbb2+QFvW4jTmmvjRmCtvZ/XWnoWtGUtQ45id/Q4r0l
- fqi2NRjuTBYmF+Fl9CmmrwIBZoTqVb7xEH/cgdrJvkDgKscNeMQ8std+OUy/g24bfJx7YnLBg
- NkgCcBMd2cjpI4/WLXCti9hDwxXmT9oQcfo1f/cKQiVCNCiw0ar0sQhoCPRXu8K6ymLMRPD9f
- lJz2qR3dV47nb+yHd+LfboaeADyuChHxTVpT4jA1w+3P/VbYPky894EKQfokJ6cNvIt4gh+cC
- Tr7qRA53J4IVD2lZbzS6yHuO3UTeD4tFCWntiemCZrY4FPj5yAEeTOcH1Eln8iLCvok5IhXR/
- BEwyrnuU2Cxs23GCCzeJ5GlpzGUBGf28MckPl2r/FQ==
+X-Provags-ID: V03:K1:7gXUYGdfhQIK9uebKjhJEUnRpA3eeSFswJBEbOwfcfGijEp9h2x
+ z1lakDXPhXuNg/wRcxexlOKzc5GolTKhAob87T6Gwg6Z/y21LCNnwAykUxJ0NoBgwthlDPE
+ itukKU4n2b14MtSC7Vrh+mCASBh7o0MNPq8SZaV8r5cBwMfpDiy6JEZAtDPbxjFoDq3eSbQ
+ RNq0UWUGiVkVyLijzXWCQ==
+UI-OutboundReport: notjunk:1;M01:P0:aMhb1Zdku4o=;m+dr8A/uTHOyFf6FH5bhby+2p8v
+ nkjmDfcvrOGb7aSnV8OrZG9ftY9fsGeYAjfB6wQEYo92ooHAKTZdfpsWn+lilPFZ4Wp/qZVBw
+ CcfmKpQ6r4i9MgbxKZdBpT161fU/U8dUDziXjtnxGRtEKvMaN4dmZls6+NgGJZ9lAS6eGwdA2
+ kzi+4Oo+EMk3+O9/D67rwKs3N91zTtdKygvLRBvp+/dgl6wgMhckD57QdjPeA8ocXiE2j1Zlx
+ nDAWJZxe7x/vbBs8kB/CsOj2ka1CAAhgwzYwFBs9VZEQ0IbLNt2Jk/Xh4RyfaS1WQB6/enjJc
+ rs5QkeptjwDRPOOYYURy8zGH6CfNoDEtkwJKcgu9fkvbdpbV3Yikw4iOObvJ1Vr7b4zU2tmn9
+ 3uRyVBMv5MR7LRFA+WTIp+YwfxqfMvipJ1dJtRX94j5LYgbopVKiSbSRn8HJvzHZK5+0lKjQL
+ /fL6JwPJNc8Qw6FIX5IDvYFxDUDWf1Biw+fHCrQaiXiN2pv0zfLcGTsf/zqmmTvQ7QR+9iYy2
+ R8GAlcniKzKib0BIwBaI93VsjJflj83hk+Hok3yn0JMi9Aw8zQo4CjS72oK+XJnjSB3jNWW3U
+ FgIv+APsnHCuoWDOEwIfLeVaWUENSuk0U2Fgu65fJ46J5Vz4eKM9SKOVoIhHcWRftG1KkGd2a
+ NsYwqnNorvWc7cAhF8hhCVXBRQdcL548Y1n4CqdtuA==
 X-Spam-Status: No, score=-2.2 required=5.0 tests=NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
@@ -76,67 +73,64 @@ X-Mailing-List: linux-pci@vger.kernel.org
 Hi Jim,
 
 Am 06.04.23 um 14:46 schrieb Jim Quinlan:
-> Regarding "brcm,enable-l1ss":
-> 
->    The Broadcom STB/CM PCIe HW -- which is also used by RPi SOCs -- requires
->    the driver probe to configure one of three clkreq# modes:
-> 
->    (a) clkreq# driven by the RC
->    (b) clkreq# driven by the EP for ASPM L0s, L1
->    (c) bidirectional clkreq#, as used for L1 Substates (L1SS).
-> 
->    The HW can tell the difference between (a) and (b), but does not know
->    when to configure (c).  Further, the HW will cause a CPU abort on boot if
->    guesses wrong regarding the need for (c).  So we introduce the boolean
->    "brcm,enable-l1ss" property to indicate that (c) is desired.  This
->    property is already present in the Raspian version of Linux, but the
->    driver implementaion that will follow adds more details and discerns
->    between (a) and (b).
-> 
-> Regarding "brcm,completion-timeout-msecs"
-> 
->    Our HW will cause a CPU abort if the L1SS exit time is longer than the
->    completion abort timeout.  We've been asked to make this configurable, so
->    we are introducing "brcm,completion-abort-msecs".
+> Since the STB PCIe HW will cause a CPU abort on a completion timeout abort,
+> we might as well extend the timeout limit.  Further, different devices and
+> systems may requires a larger or smaller amount for L1SS exit.
 > 
 > Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 > ---
->   .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
+>   drivers/pci/controller/pcie-brcmstb.c | 24 ++++++++++++++++++++++++
+>   1 file changed, 24 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> index 7e15aae7d69e..ef4ccc05b258 100644
-> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -64,6 +64,18 @@ properties:
+> diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+> index 129eee7bdbc1..92d78f4dfaae 100644
+> --- a/drivers/pci/controller/pcie-brcmstb.c
+> +++ b/drivers/pci/controller/pcie-brcmstb.c
+> @@ -1080,6 +1080,29 @@ static void brcm_config_clkreq(struct brcm_pcie *pcie)
+>   	writel(clkreq_set, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+>   }
 >   
->     aspm-no-l0s: true
->   
-> +  brcm,enable-l1ss:
-> +    description: Indicates that the downstream device is L1SS
-> +      capable and L1SS is desired, e.g. by setting
-> +      CONFIG_PCIEASPM_POWER_SUPERSAVE=y.  Note that CLKREQ#
-
-not sure about this, but maybe we should avoid references to Linux 
-kernel config parameter in a DT binding. Since the driver already gaves 
-warning in case the DT parameter is present, but kernel config doesn't 
-fit, this should be enough.
-
-> +      assertion to clock active must be within 400ns.
-> +    type: boolean
+> +static void brcm_config_completion_timeout(struct brcm_pcie *pcie)
+> +{
+> +	/* TIMEOUT register is two registers before RGR1_SW_INIT_1 */
+> +	const unsigned int REG_OFFSET = PCIE_RGR1_SW_INIT_1(pcie) - 8;
+> +	u32 timeout, timeout_msec = 1000;
+> +	u64 tmp64;
+> +	int ret;
 > +
-> +  brcm,completion-timeout-msecs:
-> +    description: Number of msecs before completion timeout
-> +      abort occurs.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +	ret = of_property_read_u32(pcie->np, "brcm,completion-abort-msecs",
+> +				   &timeout_msec);
+> +
+> +	if (ret && ret != -EINVAL)
+> +		dev_err(pcie->dev, "bad 'brcm,completion-abort-msecs' prop\n");
 
-According to the driver at least 0 is not allowed, maybe we should 
-define minimum and maximum here and let dtbs_check take care of invalid 
-values?
+i'm not sure about the error behavior. If we want to proceed with 
+defaults in such a case, i would make this a warning and mention the 
+used defaults.
+
+> +
+> +	/* Each unit in timeout register is 1/216,000,000 seconds */
+> +	tmp64 = (u64)216000 * timeout_msec;
+> +
+> +	/* Clamp the requested value before writing it */
+> +	timeout = tmp64 > 0xffffffff ? 0xffffffff : tmp64;
+> +	timeout = timeout < 0xffff ? 0xffff : timeout;
+
+Personally i'm not a huge fan of silently clamping wrong DT values.
 
 Best regards
 
+> +	writel(timeout, pcie->base + REG_OFFSET);
+> +}
 > +
->     brcm,scb-sizes:
->       description: u64 giving the 64bit PCIe memory
->         viewport size of a memory controller.  There may be up to
+>   static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>   {
+>   	struct device *dev = pcie->dev;
+> @@ -1110,6 +1133,7 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+>   		return -ENODEV;
+>   	}
+>   
+> +	brcm_config_completion_timeout(pcie);
+>   	brcm_config_clkreq(pcie);
+>   
+>   	if (pcie->gen)
