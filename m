@@ -2,150 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C85E6D9C7E
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 17:36:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A036D9C8C
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 17:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239779AbjDFPgp convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 6 Apr 2023 11:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
+        id S238842AbjDFPj3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 11:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239767AbjDFPgn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 11:36:43 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDE27EDC
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 08:36:41 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-29-UuMCYDyaOwWGz8MYzNkIwA-1; Thu, 06 Apr 2023 16:36:38 +0100
-X-MC-Unique: UuMCYDyaOwWGz8MYzNkIwA-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Thu, 6 Apr
- 2023 16:36:36 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Thu, 6 Apr 2023 16:36:36 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Bjorn Helgaas' <helgaas@kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "regressions@lists.linux.dev" <regressions@lists.linux.dev>
-Subject: RE: revert bab65e48cb064 PCI/MSI Sanitize MSI-X checks
-Thread-Topic: revert bab65e48cb064 PCI/MSI Sanitize MSI-X checks
-Thread-Index: AdlodgFkFYa3Wd45RlGJwWEgKJXFDwAGyW4AAALDCHA=
-Date:   Thu, 6 Apr 2023 15:36:36 +0000
-Message-ID: <be2acdf424b74d948c3ff45093dc6332@AcuMS.aculab.com>
-References: <caca6879210940428e0aa2a1496907ab@AcuMS.aculab.com>
- <20230406150742.GA3703273@bhelgaas>
-In-Reply-To: <20230406150742.GA3703273@bhelgaas>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        with ESMTP id S229617AbjDFPj2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 11:39:28 -0400
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857631732;
+        Thu,  6 Apr 2023 08:39:26 -0700 (PDT)
+Received: from [192.168.1.141] ([37.4.248.58]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N9MYu-1qVVyt10GS-015JJz; Thu, 06 Apr 2023 17:39:03 +0200
+Message-ID: <d0bf241b-ead4-94b7-3f03-a26227f9eb58@i2se.com>
+Date:   Thu, 6 Apr 2023 17:39:02 +0200
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v1 1/3] dt-bindings: PCI: brcmstb: Add two optional props
+To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230406124625.41325-1-jim2101024@gmail.com>
+ <20230406124625.41325-2-jim2101024@gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=0.0 required=5.0 tests=RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+In-Reply-To: <20230406124625.41325-2-jim2101024@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:nknTnX5dlSCEMuTzZzTH1lzDx7myKdzZXx63p/ALhR5p/l1cSBy
+ /WVL/VeWlNJRfuyPTv3z8OZICfKrmkG8l1dad5ttQkPqrRPTpFW+HjZL8FfkOz39Bx8e6cy
+ vDV+pMAiGfNRtiH0hMZAfvPAbLsy5UAXhIAbE0EwJl3GqM7J5hdrBtwFv80E4+82mzLLblU
+ mnBo88FTMBiQMQJibNy7Q==
+UI-OutboundReport: notjunk:1;M01:P0:1JPu3Fn+QcE=;R2rM/eZ8PosqU/E3uRLSGrLJ8xn
+ tSj49CxxVi1/9bgT6bzPsMFvXzbtk/c3JjjZ4zbTou1QamVn/o6LKCFCZT7p+FQplf4XbnOrM
+ 03IZourgA/SwhPEUg4y5658zCqcUNE//OCMFEiQsy0nYefH4LO6HMfQljXYwpoypaYaHuqV++
+ T7azvAR1Ugr6zap3dH8O9zr7jnCazLDzZ14DKFrLzHQ91tiAqTwVp6T2Kc0MJ0nepSx4L7TpV
+ b+3+LnvBEBq8fF2yYz+15ff6J7p+L/01HRxcEin1Olh4pLRUomWhxMsFnIUL8vN+JIUvnBJJ3
+ pJtMph81OwHIxCantSeZTSds9PE/hjMbb2+QFvW4jTmmvjRmCtvZ/XWnoWtGUtQ45id/Q4r0l
+ fqi2NRjuTBYmF+Fl9CmmrwIBZoTqVb7xEH/cgdrJvkDgKscNeMQ8std+OUy/g24bfJx7YnLBg
+ NkgCcBMd2cjpI4/WLXCti9hDwxXmT9oQcfo1f/cKQiVCNCiw0ar0sQhoCPRXu8K6ymLMRPD9f
+ lJz2qR3dV47nb+yHd+LfboaeADyuChHxTVpT4jA1w+3P/VbYPky894EKQfokJ6cNvIt4gh+cC
+ Tr7qRA53J4IVD2lZbzS6yHuO3UTeD4tFCWntiemCZrY4FPj5yAEeTOcH1Eln8iLCvok5IhXR/
+ BEwyrnuU2Cxs23GCCzeJ5GlpzGUBGf28MckPl2r/FQ==
+X-Spam-Status: No, score=-2.2 required=5.0 tests=NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas
-> Sent: 06 April 2023 16:08
+Hi Jim,
+
+Am 06.04.23 um 14:46 schrieb Jim Quinlan:
+> Regarding "brcm,enable-l1ss":
 > 
-> [+cc linux-pci, regressions]
+>    The Broadcom STB/CM PCIe HW -- which is also used by RPi SOCs -- requires
+>    the driver probe to configure one of three clkreq# modes:
 > 
-> On Thu, Apr 06, 2023 at 11:05:14AM +0000, David Laight wrote:
-> > The change in bab65e48cb064 breaks pci_enable_msix_range().
-> > The intent is to optimise the sanity checks, but it is
-> > somewhat overenthusiastic.
-> >
-> > The interface allows you to ask for a lot of vectors and
-> > returns the number that were allocated.
-> > However, after the change, you can't request a vector
-> > that is higher than the largest the hardware supports.
-> > Which makes that rather pointless.
-> >
-> > So code like:
-> > 	for (i = 0; i < 16; i++)
-> > 		msix_tbl[i].entry = i;
-> > 	nvec = pci_enable_msix_range(dev, msix_tbl, 1, 16);
-> > Now returns -22 if the hardware only supports 8 interrupts.
-> >
-> > Previously it returned 8.
-> >
-> > I can fix my driver, but I suspect that any code that relies
-> > on a smaller number of vectors being returned is now broken.
+>    (a) clkreq# driven by the RC
+>    (b) clkreq# driven by the EP for ASPM L0s, L1
+>    (c) bidirectional clkreq#, as used for L1 Substates (L1SS).
 > 
-> Thanks for the report!  bab65e48cb06 ("PCI/MSI: Sanitize MSI-X
-> checks") appeared in v6.2-rc1, so this is a recent regression and it
-> would be good to fix it for v6.3.
+>    The HW can tell the difference between (a) and (b), but does not know
+>    when to configure (c).  Further, the HW will cause a CPU abort on boot if
+>    guesses wrong regarding the need for (c).  So we introduce the boolean
+>    "brcm,enable-l1ss" property to indicate that (c) is desired.  This
+>    property is already present in the Raspian version of Linux, but the
+>    driver implementaion that will follow adds more details and discerns
+>    between (a) and (b).
+> 
+> Regarding "brcm,completion-timeout-msecs"
+> 
+>    Our HW will cause a CPU abort if the L1SS exit time is longer than the
+>    completion abort timeout.  We've been asked to make this configurable, so
+>    we are introducing "brcm,completion-abort-msecs".
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>   .../devicetree/bindings/pci/brcm,stb-pcie.yaml       | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> index 7e15aae7d69e..ef4ccc05b258 100644
+> --- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
+> @@ -64,6 +64,18 @@ properties:
+>   
+>     aspm-no-l0s: true
+>   
+> +  brcm,enable-l1ss:
+> +    description: Indicates that the downstream device is L1SS
+> +      capable and L1SS is desired, e.g. by setting
+> +      CONFIG_PCIEASPM_POWER_SUPERSAVE=y.  Note that CLKREQ#
 
-I do try to test every release at around rc3.
+not sure about this, but maybe we should avoid references to Linux 
+kernel config parameter in a DT binding. Since the driver already gaves 
+warning in case the DT parameter is present, but kernel config doesn't 
+fit, this should be enough.
 
-> bab65e48cb06 only touches drivers/pci/msi/msi.c, but since it didn't
-> go through the PCI tree, I'll let Thomas handle any revert (or better,
-> an improvement to pci_msix_validate_entries()) since he wrote and
-> applied the original.
+> +      assertion to clock active must be within 400ns.
+> +    type: boolean
+> +
+> +  brcm,completion-timeout-msecs:
+> +    description: Number of msecs before completion timeout
+> +      abort occurs.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
 
-Looking it:
+According to the driver at least 0 is not allowed, maybe we should 
+define minimum and maximum here and let dtbs_check take care of invalid 
+values?
 
-static bool pci_msix_validate_entries(struct pci_dev *dev, struct msix_entry *entries,
-				      int nvec, int hwsize)
-{
-	bool nogap;
-	int i, j;
+Best regards
 
-	if (!entries)
-		return true;
-
-	nogap = pci_msi_domain_supports(dev, MSI_FLAG_MSIX_CONTIGUOUS, DENY_LEGACY);
-
-	for (i = 0; i < nvec; i++) {
-		/* Entry within hardware limit? */
-		if (entries[i].entry >= hwsize)
-			return false;
-
-		/* Check for duplicate entries */
-		for (j = i + 1; j < nvec; j++) {
-			if (entries[i].entry == entries[j].entry)
-				return false;
-		}
-		/* Check for unsupported gaps */
-		if (nogap && entries[i].entry != i)
-			return false;
-	}
-	return true;
-}
-
-It probably needs to return an updated 'nvec'.
-The gap/duplicate check is also a bit horrid, why not:
-		if (nogap) {
-			if (entries[i].entry != i)
-				return false;
-			continue;
-		}
-
-		if (!i || entries[i].entry > entries[i - 1].entry)
-			continue;
-
-		horrid, expensive loop...
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+> +
+>     brcm,scb-sizes:
+>       description: u64 giving the 64bit PCIe memory
+>         viewport size of a memory controller.  There may be up to
