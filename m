@@ -2,164 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DF5C6D929C
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 11:26:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEF1F6D941C
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 12:31:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231484AbjDFJ0B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 05:26:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36302 "EHLO
+        id S236995AbjDFKbl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 06:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjDFJ0A (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 05:26:00 -0400
-X-Greylist: delayed 121 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 06 Apr 2023 02:25:59 PDT
-Received: from forwardcorp1b.mail.yandex.net (forwardcorp1b.mail.yandex.net [178.154.239.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A87C83A9E
-        for <linux-pci@vger.kernel.org>; Thu,  6 Apr 2023 02:25:59 -0700 (PDT)
-Received: from mail-nwsmtp-smtp-corp-main-34.sas.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-34.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:19a8:0:640:4e87:0])
-        by forwardcorp1b.mail.yandex.net (Yandex) with ESMTP id 68E5F602AF;
-        Thu,  6 Apr 2023 12:23:52 +0300 (MSK)
-Received: from [IPV6:2a02:6b8:b081:b504::1:9] (unknown [2a02:6b8:b081:b504::1:9])
-        by mail-nwsmtp-smtp-corp-main-34.sas.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id nNM3QE0OluQ0-KY8768Iu;
-        Thu, 06 Apr 2023 12:23:51 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1680773031; bh=KJfF7t9AjiWjMeD41d7nPe3pA8fTgHIR4sqnkzECg9o=;
-        h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
-        b=hidYdy4UwRZAkB2iKVLtbbjtOaWj6ZaRLd7fvMPdGGXjExlX282wW7wtZ5A5d/JTk
-         cbW2ioNuakg6AT/5/ZfIWdqE5jVg3yEtZ5ZDC9IdZ7a/MMzgwpaI+j3z69jErUgWgK
-         sPcU44l1fN/8hci82M7e/WL0ZkyRN553vzB/P4gk=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-34.sas.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-Message-ID: <32f18da1-eeb9-3cd6-398d-77f76596b7c3@yandex-team.ru>
-Date:   Thu, 6 Apr 2023 12:23:49 +0300
+        with ESMTP id S237167AbjDFKbc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 06:31:32 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8DBC1BC1;
+        Thu,  6 Apr 2023 03:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680777085; x=1712313085;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=3ceVcmjc6Ptm9PzaLBlyJdk3QXqcq40nfjFwb4WczVs=;
+  b=kOgwiJmMD8Ijg1BxIDiKzJGlnfh06c4u/a+t6pG62SWIfHGF43vwVcn1
+   l6kS+CWjI97tH1JSPZkOsacTF0JAUvep3W1ya7BUNjaWtSu7hvUBsFwJz
+   BlQ2tzA8zaxvzXb1oiwO6NBUu4WDqTE/TetiEy6DMDrGtz8beNGL74wJD
+   dCyJbcd2nE9qI2kCe1NPga9pgkYVvDi8lCXHSDtjgFmEp3jJFueV16xhT
+   SBGxffan6xHWIQQumEr51X4IvgROVSWHITRTO8w1ZsICins7XqX5z2WvK
+   xY5dytToTv+c5r1i6cuzWbUECnfKoYXigdPJ/pjWqzQorPBjnWriHCQw7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="341435058"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="341435058"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 03:31:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="719666156"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="719666156"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga001.jf.intel.com with ESMTP; 06 Apr 2023 03:31:12 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pkMtX-00DJOA-0t;
+        Thu, 06 Apr 2023 13:31:07 +0300
+Date:   Thu, 6 Apr 2023 13:31:07 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>,
+        Juergen Gross <jgross@suse.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-pci@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-acpi@vger.kernel.org,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Anatolij Gustschin <agust@denx.de>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>
+Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
+ users
+Message-ID: <ZC6fa1vJGOOI7t8a@smile.fi.intel.com>
+References: <ZC0xK4YJrKga7akk@smile.fi.intel.com>
+ <20230405201832.GA3638070@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH] qlcnic: check pci_reset_function result
-To:     Simon Horman <simon.horman@corigine.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        shshaikh@marvell.com, manishc@marvell.com,
-        GR-Linux-NIC-Dev@marvell.com, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-References: <ZC1x57v1JdUyK7aG@corigine.com>
- <20230405193708.GA3632282@bhelgaas> <ZC5uyOt7mevNyS6f@corigine.com>
-Content-Language: en-US
-From:   Denis Plotnikov <den-plotnikov@yandex-team.ru>
-In-Reply-To: <ZC5uyOt7mevNyS6f@corigine.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405201832.GA3638070@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-2.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 05, 2023 at 03:18:32PM -0500, Bjorn Helgaas wrote:
+> On Wed, Apr 05, 2023 at 11:28:27AM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
+> > > On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
 
-On 06.04.2023 10:03, Simon Horman wrote:
-> On Wed, Apr 05, 2023 at 02:37:08PM -0500, Bjorn Helgaas wrote:
->> On Wed, Apr 05, 2023 at 03:04:39PM +0200, Simon Horman wrote:
->>> On Mon, Apr 03, 2023 at 01:58:49PM +0300, Denis Plotnikov wrote:
->>>> On 31.03.2023 20:52, Simon Horman wrote:
->>>>> On Fri, Mar 31, 2023 at 11:06:05AM +0300, Denis Plotnikov wrote:
->>>>>> Static code analyzer complains to unchecked return value.
->>>>>> It seems that pci_reset_function return something meaningful
->>>>>> only if "reset_methods" is set.
->>>>>> Even if reset_methods isn't used check the return value to avoid
->>>>>> possible bugs leading to undefined behavior in the future.
->>>>>>
->>>>>> Signed-off-by: Denis Plotnikov <den-plotnikov@yandex-team.ru>
->>>>> nit: The tree this patch is targeted at should be designated, probably
->>>>>        net-next, so the '[PATCH net-next]' in the subject.
->>>>>
->>>>>> ---
->>>>>>    drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c | 4 +++-
->>>>>>    1 file changed, 3 insertions(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
->>>>>> index 87f76bac2e463..39ecfc1a1dbd0 100644
->>>>>> --- a/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
->>>>>> +++ b/drivers/net/ethernet/qlogic/qlcnic/qlcnic_ctx.c
->>>>>> @@ -628,7 +628,9 @@ int qlcnic_fw_create_ctx(struct qlcnic_adapter *dev)
->>>>>>    	int i, err, ring;
->>>>>>    	if (dev->flags & QLCNIC_NEED_FLR) {
->>>>>> -		pci_reset_function(dev->pdev);
->>>>>> +		err = pci_reset_function(dev->pdev);
->>>>>> +		if (err && err != -ENOTTY)
->>>>> Are you sure about the -ENOTTY part?
->>>>>
->>>>> It seems odd to me that an FLR would be required but reset is not supported.
->>>> No, I'm not sure. My logic is: if the reset method isn't set than
->>>> pci_reset_function() returns -ENOTTY so treat that result as ok.
->>>> pci_reset_function may return something different than -ENOTTY only if
->>>> pci_reset_fn_methods[m].reset_fn is set.
->>> I see your reasoning: -ENOTTY means nothing happened, and probably that is ok.
->>> I think my main question is if that can ever happen.
->>> If that is unknown, then I think this conservative approach makes sense.
->> The commit log mentions "reset_methods", which I don't think is really
->> relevant here because reset_methods is an internal implementation
->> detail.  The point is that pci_reset_function() returns 0 if it was
->> successful and a negative value if it failed.
->>
->> If the driver thinks the device needs to be reset, ignoring any
->> negative return value seems like a mistake because the device was not
->> reset.
->>
->> If the reset is required for a firmware update to take effect, maybe a
->> diagnostic would be helpful if it fails, e.g., the other "Adapter
->> initialization failed.  Please reboot" messages.
->>
->> "QLCNIC_NEED_FLR" suggests that the driver expects an FLR (as opposed
->> to other kinds of reset).  If the driver knows that all qlcnic devices
->> support FLR, it could use pcie_flr() directly.
->>
->> pci_reset_function() does have the possibility that the reset works on
->> some devices but not all.  Secondary Bus Reset fails if there are
->> other functions on the same bus, e.g., a multi-function device.  And
->> there's some value in doing the reset the same way in all cases.
->>
->> So I would suggest something like:
->>
->>    if (dev->flags & QLCNIC_NEED_FLR) {
->>      err = pcie_flr(dev->pdev);
->>      if (err) {
->>        dev_err(&pdev->dev, "Adapter reset failed (%d). Please reboot\n", err);
->>        return err;
->>      }
->>      dev->flags &= ~QLCNIC_NEED_FLR;
->>    }
->>
->> Or, if there are qlcnic devices that don't support FLR:
->>
->>    if (dev->flags & QLCNIC_NEED_FLR) {
->>      err = pci_reset_function(dev->pdev);
->>      if (err) {
->>        dev_err(&pdev->dev, "Adapter reset failed (%d). Please reboot\n", err);
->>        return err;
->>      }
->>      dev->flags &= ~QLCNIC_NEED_FLR;
->>    }
-> Thanks Bjorn,
->
-> that is very helpful.
->
-> I think that in order to move to option #1 some information would be needed
-> from those familiar with the device(s). As it is a more invasive change -
-> pci_reset_function -> pcie_flr.
->
-> So my feeling is that, in lieu of such feedback, option #2 is a good
-> improvement on the current code.
->
-> OTOH, this driver is 'Supported' as opposed to 'Maintained'.
-> So perhaps we can just use our best judgement and go for option #1.
+...
 
-So, it looks like option #2 is the safest choice as we do reset only if 
-FLR is needed (when pci_reset_function() makes sense)
+> > > I omitted
+> > > 
+> > >   [1/7] kernel.h: Split out COUNT_ARGS() and CONCATENATE()"
+> > > 
+> > > only because it's not essential to this series and has only a trivial
+> > > one-line impact on include/linux/pci.h.
+> > 
+> > I'm not sure I understood what exactly "essentiality" means to you, but
+> > I included that because it makes the split which can be used later by
+> > others and not including kernel.h in the header is the objective I want
+> > to achieve. Without this patch the achievement is going to be deferred.
+> > Yet, this, as you have noticed, allows to compile and use the macros in
+> > the rest of the patches.
+> 
+> I haven't followed the kernel.h splitting, and I try to avoid
+> incidental changes outside of the files I maintain, so I just wanted
+> to keep this series purely PCI and avoid any possible objections to a
+> new include file or discussion about how it should be done.
 
-If all agree with that I'll re-send the path
+Okay, fair enough :-) Thank you for elaboration, I will send the new version of
+patch 7 separately.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
