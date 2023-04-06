@@ -2,62 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 041B86DA437
-	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 22:59:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A79DB6DA46C
+	for <lists+linux-pci@lfdr.de>; Thu,  6 Apr 2023 23:08:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240537AbjDFU7F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 6 Apr 2023 16:59:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55892 "EHLO
+        id S237914AbjDFVIA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 6 Apr 2023 17:08:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240035AbjDFU6p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 16:58:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1EB486AC;
-        Thu,  6 Apr 2023 13:58:39 -0700 (PDT)
+        with ESMTP id S240181AbjDFVHo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 6 Apr 2023 17:07:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E12E07683;
+        Thu,  6 Apr 2023 14:07:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 50D2064BDA;
-        Thu,  6 Apr 2023 20:58:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAEBC4339C;
-        Thu,  6 Apr 2023 20:58:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B8C064CB6;
+        Thu,  6 Apr 2023 21:07:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A71EBC433D2;
+        Thu,  6 Apr 2023 21:07:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680814718;
-        bh=hPhh8oTx1kYLc913G4HIdxuV/0cdfFWp2HgdjSh+vKE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uExbzvaTeBK8FlkbTfXpl+myDNnYUfc3M+u9y5qwGUKWlFphYo/+osPoZLU/y+oMl
-         muWRLkrK2GuHVwNFIul5kMhjhgkkEoHmutbFJb1n5Ga/MgeVhFG4IpbrQcfXL4li7l
-         kRpeUyrWe2U1g9ehZ3RDwmSzdMy70t1MZCMXsuSufSJjtAY6VQdfSupVK06PkLLn+u
-         POzOU6xTsqPl1C0fARDoPfY8MproJ8TT6C4+mT0hH+2Nppwjm3RLqtJUaKGMXIQpoD
-         3LRmwrvFcLyJ5p9wdRwpfY34JaAu7c43C5E2vpJ1LU5kweXBPdCK6JRYGtZYzK3DCk
-         MDUccGPJH+FmQ==
-From:   Conor Dooley <conor@kernel.org>
-To:     linux-riscv@lists.infradead.org
-Cc:     conor@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-serial@vger.kernel.org
-Subject: [PATCH v1 4/4] serial: make SiFive serial drivers depend on ARCH_ symbols
-Date:   Thu,  6 Apr 2023 21:57:50 +0100
-Message-Id: <20230406-carnival-aspirate-fcf69a30078c@spud>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230406-undertake-stowing-50f45b90413a@spud>
-References: <20230406-undertake-stowing-50f45b90413a@spud>
+        s=k20201202; t=1680815243;
+        bh=8o09ePc36Ij55cMUJKfcEw4yEArsEF1zRPWn37E0t4U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=V7eOYvv+KF/5rTFMKF7zuUFsCyJcROELAP1MFStTnS9t8HPv0KJKl/flsDeMEH+zR
+         +l15xKbGdIJRY6up+rp6YMGN0LFavYC1t1D23c+LMAvc1Ts0uQZLOwiJPFoppsx/aR
+         /C/bHulCIOrlvS1Ogdt2WOeBFJOYKmJ4TXj6BBghZXQKI3xG2QfM8i6jm1BD5VM7vo
+         0VdbSltR2WEHpWUp6s3BjeWMLIUa7Xyq5bC5wo02w64u9DMQp0K1y5yACMu/bhPXY9
+         84LZfMmXWYUuRNdJcKICCTIYniFSkBrqETJIZHojDbsW0ylESUAaQnyGO3nfZGM+8i
+         wopze1cT975Ew==
+Date:   Thu, 6 Apr 2023 16:07:22 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/EDR: Clear PCIe Device Status errors after EDR
+ error recovery
+Message-ID: <20230406210722.GA3735581@bhelgaas>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1169; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=/uqEAT4mwA891sbEf4x2pVtUF/+D0Dq2ST7GwztNFHQ=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDCn6Rl5R2spbv9u90F5UuaaO5erlaZvmnu/cxvSQ9Wjqm wslG1cadpSyMIhxMMiKKbIk3u5rkVr/x2WHc89bmDmsTCBDGLg4BWAiB6sZGW4uq/Y16WEukDZk rKlvKHrFfXKHYWP422dLndbMbSgRmM7wV3K/9/yq1/9j5l+vnZulbCLz9NVmu7Mmq9/7K7892BT MxQwA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+In-Reply-To: <20230315235449.1279209-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -65,41 +54,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On Wed, Mar 15, 2023 at 04:54:49PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> Commit 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+> OS owns AER") adds support to clear error status in the Device Status
+> Register(DEVSTA) only if OS owns the AER support. But this change
+> breaks the requirement of the EDR feature which requires OS to cleanup
+> the error registers even if firmware owns the control of AER support.
+> 
+> More details about this requirement can be found in PCIe Firmware
+> specification v3.3, Table 4-6 Interpretation of the _OSC Control Field.
+> If the OS supports the Error Disconnect Recover (EDR) feature and
+> firmware sends the EDR event, then during the EDR recovery window, OS
+> is responsible for the device error recovery and holds the ownership of
+> the following error registers.
+> 
+> • Device Status Register
+> • Uncorrectable Error Status Register
+> • Correctable Error Status Register
+> • Root Error Status Register
+> • RP PIO Status Register
+> 
+> So call pcie_clear_device_status() in edr_handle_event() if the error
+> recovery is successful.
+> 
+> Reported-by: Tsaur Erwin <erwin.tsaur@intel.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> Changes since v1:
+>  * Rebased on top of v6.3-rc1.
+>  * Fixed a typo in pcie_clear_device_status().
+> 
+>  drivers/pci/pcie/edr.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> index a6b9b479b97a..87734e4c3c20 100644
+> --- a/drivers/pci/pcie/edr.c
+> +++ b/drivers/pci/pcie/edr.c
+> @@ -193,6 +193,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+>  	 */
+>  	if (estate == PCI_ERS_RESULT_RECOVERED) {
+>  		pci_dbg(edev, "DPC port successfully recovered\n");
+> +		pcie_clear_device_status(edev);
+>  		acpi_send_edr_status(pdev, edev, EDR_OST_SUCCESS);
 
-As part of converting RISC-V SOC_FOO symbols to ARCH_FOO to match the
-use of such symbols on other architectures, convert the SiFive serial
-driver Kconfig entries from the SOC_ symbols to ARCH_ instead.
+The implementation note in PCI Firmware r3.3, sec 4.6.12, shows the OS
+clearing error status *after* _OST is evaluated.
 
-Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
----
-I hope you like the message-id Greg ;)
----
- drivers/tty/serial/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On the other hand, the _OSC DPC control bit in table 4-6 says that if
+the OS does not have DPC control, it can only write the Device Status
+error bits between the EDR Notify and invoking _OST.
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 39a0078f54f6..398e5aac2e77 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -951,7 +951,7 @@ config SERIAL_OMAP_CONSOLE
- config SERIAL_SIFIVE
- 	tristate "SiFive UART support"
- 	depends on OF
--	default SOC_SIFIVE || SOC_CANAAN
-+	default ARCH_SIFIVE || ARCH_CANAAN
- 	select SERIAL_CORE
- 	help
- 	  Select this option if you are building a kernel for a device that
-@@ -961,7 +961,7 @@ config SERIAL_SIFIVE
- config SERIAL_SIFIVE_CONSOLE
- 	bool "Console on SiFive UART"
- 	depends on SERIAL_SIFIVE=y
--	default SOC_SIFIVE || SOC_CANAAN
-+	default ARCH_SIFIVE || ARCH_CANAAN
- 	select SERIAL_CORE_CONSOLE
- 	select SERIAL_EARLYCON
- 	help
--- 
-2.39.2
+Is one of those wrong, or am I missing something?
 
+Bjorn
