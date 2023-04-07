@@ -2,54 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EA716DB75B
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:47:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92B226DB75E
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:49:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjDGXr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 19:47:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
+        id S229513AbjDGXtv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 19:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjDGXr2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:47:28 -0400
-Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B30EF8B
-        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 16:47:27 -0700 (PDT)
-Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3e673b5f558so514041cf.1
-        for <linux-pci@vger.kernel.org>; Fri, 07 Apr 2023 16:47:27 -0700 (PDT)
+        with ESMTP id S229491AbjDGXtu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:49:50 -0400
+Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D618E1AF
+        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 16:49:49 -0700 (PDT)
+Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3e392e10cc4so697941cf.0
+        for <linux-pci@vger.kernel.org>; Fri, 07 Apr 2023 16:49:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680911247; x=1683503247;
+        d=chromium.org; s=google; t=1680911388; x=1683503388;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zXTrg0mDV7Q1ZzUvffjDPVloLufOXWmykfXvP65A/O0=;
-        b=f7kvXaQXsTi3P8WLYLsxHg6BjzOkv9BuXp18qU6yp12LEyg/bXd7Cq92+AZdbGbanD
-         OhwrOh+oN4kwnppYY+1FU3+ecy/X9DdgdZ5ydpiZVxiu/WoXtSqkeW2FWcg8w/XRTDqp
-         ndKPXDdNhqH+JFhO7I1LsIMxCoCcSBLEhtOQI=
+        bh=qqjTxx7icMTYukspTJWOyXAdc8KUgw2cKmRcRpT5B70=;
+        b=LfFAt7rJUt1pUj98t+F2Quk+iZHTggmA6ET02STj58xiL96wfom24Bhd5OmXVYsW9r
+         i99ls8sk7qvxcW0e1zkLKqFhmDpkZ0BboRA2FbvRREmlEw1c72OMdwWyBYdPznan12x3
+         evBfPx9CvCBr2kyG+W7G5UebTVPHerxyHia8g=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680911247; x=1683503247;
+        d=1e100.net; s=20210112; t=1680911388; x=1683503388;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zXTrg0mDV7Q1ZzUvffjDPVloLufOXWmykfXvP65A/O0=;
-        b=UPk9wJ0J358U31UMahW4KYVAAr3y4Delbv6asYjsR9qVwnPVpj8ZSgVPIfc+emAUpI
-         zL9lHGTiDl/BOmgE+EY+bdwjN1aPoypTmWQdbr0fknLYm3YFzOioy39fzn0Cx3ZqE8uY
-         NfuszWpAspqyzsT67Xp5amRth6qVGfh5HwGOlX9tkjvdTdhDYvNIEIixoE+moApBmSc5
-         ydHpcdRkuW/IRdNjsNPCECQARLGqn4VOl2S72AVoS1Mnzn4CRZ82b6qP1Egr3t1FFLgQ
-         +oypP5iJhIx0vpa9E6r95uKQO50DjWm/888bXe/zqS/zXC1ou9GeVzE5qNT8CsXpJ8Fe
-         8P9A==
-X-Gm-Message-State: AAQBX9eTQdAxxy+cp4CvUE8VGucUnkYv0WTNU8VTOL3Fxu1ENwdeIcCH
-        uN/iKxYZWiTJLFaeh5MXpewObdA2bVi3MAAL7dsbdw==
-X-Google-Smtp-Source: AKy350anL/S84pz5fQsDUIE/4hZz/d4BnMbaLsMWzeAb0ywkzGXmZGt34QieZAyEeqWjWiFbipyCD6eXWX0ziw214bg=
-X-Received: by 2002:a05:622a:15c7:b0:3de:8cbe:47af with SMTP id
- d7-20020a05622a15c700b003de8cbe47afmr57131qty.9.1680911246702; Fri, 07 Apr
- 2023 16:47:26 -0700 (PDT)
+        bh=qqjTxx7icMTYukspTJWOyXAdc8KUgw2cKmRcRpT5B70=;
+        b=NE0iPrsuYkqQMda1nBA+5X1dPBEKt5Vj3WzWrQnvw1Dts1KoAfGG7lj4NxGeqfnEW+
+         SNH5L/RxfCwwOdZWzvPA0XvPbJiuL7YMI7gae/Fp3+20rZljqjgIo1Yn6QdG9bzxlK1I
+         sHnCSARGEZUkdCZqYOB3aht7/9PnG4R7li150KP1mLE87NpljQYZ0H86TKthMd7EAnUb
+         /EGTmHcFBsS2p+Bg3SgblqFYMpf3tTqgpyvznPO4p7VreOp3izPB7OHA/1vmT4+t9tkn
+         vBw4IAfhmeIdOYgQ4ahOX5UPg4QCpbsRAVazKdBhlOWH8o+bseaTiUUqPoBYIdE1CMKo
+         xwrg==
+X-Gm-Message-State: AAQBX9fU8JEaBtsrlSM0fJg7/OdmGvTV+CzZ2R6XH2JZojfjtT/ezThd
+        Q5Kyw2WQdEvyQXxN2w2/jwShSt8Bzq2rjuWzN/gMC1wxOhph/QXqo21Arw==
+X-Google-Smtp-Source: AKy350YqUSXVlmbwDJr3UQsJTE8KS7rADBSmXy0bQ5nLTgrofx1yY7eU48cqTzdgtXifug4KW09JduqdhsqfhvTfN6I=
+X-Received: by 2002:ac8:5f93:0:b0:3bf:d313:77dd with SMTP id
+ j19-20020ac85f93000000b003bfd31377ddmr152060qta.14.1680911388085; Fri, 07 Apr
+ 2023 16:49:48 -0700 (PDT)
 MIME-Version: 1.0
 References: <CANEJEGvKRVGLYPmD3kujg6veq5KR7J+rAu6ni92wUz72KGtyBA@mail.gmail.com>
  <20230407194645.GA3814486@bhelgaas>
 In-Reply-To: <20230407194645.GA3814486@bhelgaas>
 From:   Grant Grundler <grundler@chromium.org>
-Date:   Fri, 7 Apr 2023 16:47:15 -0700
-Message-ID: <CANEJEGtZo-TSjYfoVbw5wdNbOdjwth=E51w8_MoFYyuo5+QrTw@mail.gmail.com>
+Date:   Fri, 7 Apr 2023 16:49:37 -0700
+Message-ID: <CANEJEGu6YMfPPbWsRCZ4tsLAo9mKUbijnd1VEKvbsk4Xe4VXhg@mail.gmail.com>
 Subject: Re: [PATCHv2 pci-next 2/2] PCI/AER: Rate limit the reporting of the
  correctable errors
 To:     Bjorn Helgaas <helgaas@kernel.org>
@@ -74,7 +74,6 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 [reposting in plain text mode]
-
 
 On Fri, Apr 7, 2023 at 12:46=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
 wrote:
@@ -131,6 +130,14 @@ e
 > that all the output would be atomic so it wouldn't get mixed with
 > other stuff, and it might encourage us to be a little less wordy in
 > the output.
+
++1 to all of those reasons. Especially reducing the number of lines output.
+
+I'm going to be out for the next week. If someone else (Rajat
+Kendalwal maybe?) wants to rework this to use one call location it
+should be fairly straight forward. If not, I'll tackle this when I'm
+back (in 2 weeks essentially).
+
 >
 > But I don't think we need output in a single step; we just need a
 > single instance of ratelimit_state (or one for CPER path and another
@@ -150,8 +157,15 @@ e
 >
 > I think it's nice that the struct ratelimit_state is explicit and
 > there's no danger of breaking it when adding another printk later.
->
+
+True. But a single call to a "well documented" API is my preference
+(assuming this is my choice).
+
 > It *could* be per pci_dev, too, but I suspect it's not worth spending
 > 40ish bytes per device for the ratelimit data.
->
-> Bjorn
+
+Good - I don't think we need to make this per device - I had assumed
+it was but also currently don't see a need for this.
+
+cheers,
+grant
