@@ -2,176 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A7C026DB0A1
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 18:33:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F7A46DB0D2
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 18:46:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjDGQde (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 12:33:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
+        id S229611AbjDGQqU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 12:46:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjDGQdd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 12:33:33 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020020.outbound.protection.outlook.com [52.101.61.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F68346B3;
-        Fri,  7 Apr 2023 09:33:24 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FKNtV0jn0JoCYkM/NcAbMvBWzxT42/eIFWJ+OZo7vwoovkamt/0IkBzJw4SNJdC0uZ0kxqsO1ylYP5LADvmJL7Z9kv8/PXm1v6D7uSJE1kJ6Eo+qlSz5fPElofN4bOjyifH2XqJAq2Mimiu9PKo03oEchSiDDLIYuckTHMCDP9XxHkMyTdxPxWnEifwSQlw6JOWlen1GYeDfpZc58UDS9I5CF1lT+5q40FMuQo+smoQYpjGJdiHpHn6ieqgFVusr+83MMyczzNG9KsSNPH02WIgIICnxQTwuERPTYdooItd8cD08YUKLmbPUl1H2nPZEJGdT/dzAyKLdfpVe/t16Xg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OaxRUfVwr0B4GhbaRw2ixKbe8Ce4kFEaMx/imqMjom8=;
- b=NNO0V6fOi7da6T7upSd5Xr8YgnVPL9QBqzfdKX4YMKI3utGdz42hsMacRBslTsISQvArPr/ONUwL0Yz9SbzNVoZIGqFJJaAhNxNBMS6pHaYwaTFVjXbBjJ2ak0s1HDD6AmXQVOtQzYKe2zMPXl1Q5I5r+5n7RavoGPSzUKVAlYWQjkWJcpKqY9ChCVbPopP44VIsajuAxRUsdQu+glxJFFd5S9Kkvn3bOCntQVCXw5v+Q6Wxs+S0RadS1JunKfAF01qKZ8bD5gOTLD4UQMDML+J1q4k6bmn0w2eWiudr1G/znXmVOOaXbYojcRTD6c6ZtVXVgU1KFdv4J1xxlmanYA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OaxRUfVwr0B4GhbaRw2ixKbe8Ce4kFEaMx/imqMjom8=;
- b=XHIOAAhlkBvTK404uoTm+9laqWTa8h5y23o2WlnI31tO9Gj7PFOZVJiprHJBGPDhJKae65yu+mZ7k+clsxLVI5pdjaOTViyRa+k3y45WmAseKEtcWyTuo/P1FFIfqs9+IFyaEgw0UdqONOEYnW2yvzKjZq8fj4jD10QIfOSpedY=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by BL1PR21MB3138.namprd21.prod.outlook.com (2603:10b6:208:396::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.16; Fri, 7 Apr
- 2023 16:33:21 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::acd0:6aec:7be2:719c]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::acd0:6aec:7be2:719c%7]) with mapi id 15.20.6298.018; Fri, 7 Apr 2023
- 16:33:21 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-To:     Dexuan Cui <decui@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "edumazet@google.com" <edumazet@google.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Jake Oshins <jakeo@microsoft.com>,
-        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "pabeni@redhat.com" <pabeni@redhat.com>,
-        "robh@kernel.org" <robh@kernel.org>,
-        "saeedm@nvidia.com" <saeedm@nvidia.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        Long Li <longli@microsoft.com>,
-        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
-        Saurabh Singh Sengar <ssengar@microsoft.com>,
-        "helgaas@kernel.org" <helgaas@kernel.org>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH v2 4/6] Revert "PCI: hv: Fix a timing issue which causes
- kdump to fail occasionally"
-Thread-Topic: [PATCH v2 4/6] Revert "PCI: hv: Fix a timing issue which causes
- kdump to fail occasionally"
-Thread-Index: AQHZZpopUQZ8ge3HAEe7nozotRXSl68gDtTw
-Date:   Fri, 7 Apr 2023 16:33:21 +0000
-Message-ID: <BYAPR21MB168827C0DBCB46B8159873CDD7969@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20230404020545.32359-1-decui@microsoft.com>
- <20230404020545.32359-5-decui@microsoft.com>
-In-Reply-To: <20230404020545.32359-5-decui@microsoft.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=0646763c-c920-4a7d-929b-d542dcfd3725;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-07T16:28:42Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|BL1PR21MB3138:EE_
-x-ms-office365-filtering-correlation-id: 8e2888a6-f3b4-40a3-f0f7-08db3785ccf2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KX7KniZCgV+vD49iSTmmlWgJ1dw1jCpj0qQqZsUIxqYv9nHTec63O8WaWbOQQ9jwyLek6VNvvOvE8uKUaOYTjd6QdiNIqpgH1kRVcIXQjFtQwq8nnY+oNKfOrYLK0umSccnl9p5kPTLI9JwgGU2rf6k7fx2S63OTuwhoLg0HAIBStPKtns3RG+FsayQ+yekYIbsJVkOW0ZpvEkZdO8eKNsA8Ke0scIoUoSZE4bpIWUuGkVmTpLOZlhdZUETPBRk5TgTQvktth57Ez6MozcWfs72nP5selSmy4hF9wIunafcIRUGEP4vFyFyMEk4CP+1uwpmamm+k1nF9OctK8lz7mue1WuVimakWm1aEI+OFA+fWdZBzyZD84HTL/iChw3dUJ08GkXfsEmZrME5ATO/KrTOQMS4TcjLWQix6Vl+uWvAaFZmhad6RmjwoWlVjdjBYeaVjwQD5zAIn4renEllLfQXIIdo8S1GMo1pxwcZdmy6ugsOqPJ52gmXK3q2bl18FjSqz+XVd55C+qHuS5z1Nl8ABvruFfcVNmbCav+UDel9BrQjj10XwFpZ0GMskCfRNcjGHhTpbJ1XqLfYIJ7stw7G9LnHuA0J0kCpmlru279MmBCwKtQ/QAaqUoQgz0lmGK6bQ4GBZdB/J8Mre1B+A7KOQ1zXsPTZqaN1D8rXvpGExftw5gMNTHtsMZ3H3ASS0
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(451199021)(55016003)(122000001)(66446008)(38100700002)(33656002)(38070700005)(2906002)(7416002)(5660300002)(52536014)(786003)(66946007)(8936002)(86362001)(8676002)(66556008)(41300700001)(921005)(82950400001)(64756008)(76116006)(66476007)(82960400001)(4326008)(83380400001)(110136005)(54906003)(26005)(9686003)(8990500004)(6506007)(316002)(71200400001)(10290500003)(7696005)(478600001)(186003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?9nj8Xji5801wmyc6GnsHHM7/k5tn/Y9PO9VvmMEP/emshvglZLWafuroLoa7?=
- =?us-ascii?Q?/dCAtmEX5fGgLp1ikiHBS9yyQS3h6Kyf9lrGvRw2OIGXFm5FsKkB2ck7g0Fd?=
- =?us-ascii?Q?YpYqymlRvytayx/FuqRmapdkrmHFeChN1jqs4rcs9ZgeduhkRxGyyJKjEKex?=
- =?us-ascii?Q?/2oEoeArLIhMN9EyellpfczYs5kGyhfEOibOgd2R2p8AAyrh6vIjSdoS+e0c?=
- =?us-ascii?Q?7IFt5x6R+bK6In7L+YLJuTJpXS0onOogsoJFjMeCm3oJOhCWh9XCC+KRD42v?=
- =?us-ascii?Q?z6Lp9BsUrQuATMosiuxxXeXCdDbnR33WAcOJoNYCVpMmQNVa2C7cKHGyDgJD?=
- =?us-ascii?Q?HQKlYPbE19jnXczX0qDKWB+NHd+kNc0H1VKPbTQ/VnBntVhcy29JpxdzG92o?=
- =?us-ascii?Q?FTNll+xF9NEQS1J1vkWLP403OAQLEIUemDHyaOxSV9f8jBeZo97hgKbo06b2?=
- =?us-ascii?Q?2UKEoS+7kb4VaCzGJE0EEPeFbVLsRUM7BPNaLPG/L/UyiDXVOf9Gxs0eQRwI?=
- =?us-ascii?Q?qZEkr8LvxaNjuFBSeGbzkZ28yX5HLGb832c7bSvAghoQ7oqywyZlFVVIwClm?=
- =?us-ascii?Q?1OGhlVv9AAcKnkB2rJwtVmoqkVm08/0AG9AA5UrGOZJE37ouuBYFyJWkBy4Z?=
- =?us-ascii?Q?thSGhgbQFbjAjhB0Z6O96Wbwh0ZptSMpTqE+TZsJ82OrGyoxgMUcFVxUea4g?=
- =?us-ascii?Q?YqvfWrIDOtwwn5+Up0YaW4tTvwzerZrn6hPn6rmiLqEZWCynzrwbmLMrOh2u?=
- =?us-ascii?Q?ad5Q2Pm/cKauZRLVngc0oizhdxDtlNYaaQYGhiCaREnJ+NJKcM7LZrf6vGDr?=
- =?us-ascii?Q?iXL9QBaJLR5CPm4FKWeKx6RMUF35h9Nd9Exa4G8pMtHyhRciQg5kriTOcmeL?=
- =?us-ascii?Q?x8FtlSmokSEynCCAnIWxSuzQDFAu8wOmTCjoBi8Pmv+HVgZ7DJUBgjfmcfg2?=
- =?us-ascii?Q?XnDOUzuhesF6l7s6QCtKCYgJZcLUuo/IrPf0DaiqOsGo2Nc3z2a6CwzHlUdS?=
- =?us-ascii?Q?WMMf0RJ40OL205USdDdM1oEllk2FQ1S18BpwtyHYN0ReF0jAyhRcFdJBKf5u?=
- =?us-ascii?Q?N88qAYyuKbOpYmqVTq4FZ6zyg7MmjrWmC6ZfxgCPDw4pmGzXvgXeF+Kh0Q/X?=
- =?us-ascii?Q?+WMqmBQh+VuCpRvnYWt+Uk6zUX+dyH2KM52xjfhyWWo5N8FZDJGVmGTmeogC?=
- =?us-ascii?Q?soYfZ4eeRHMc/TqfKTZsk05aaJf8VJNov695OBnWaDbxChxJ3vLUmjZK9N3R?=
- =?us-ascii?Q?Nn0UAhJkIMunaYeqfy5MEt42TmRStZBvkLBXfaCPeDhj94j3uusqIoKFXqFe?=
- =?us-ascii?Q?/PaTCypX8gfj4FnoXRdhgWgIM0j62WlYIs+M1pmsvTXuBIIEtymyCD/r8lmZ?=
- =?us-ascii?Q?HNlzSmC+u4y3lzaD5Qthyp5HstNNYRM69fgfZtv+4q4C+G+1czJIVDUrf77T?=
- =?us-ascii?Q?XDYFQmGObqaBxAiBIuyLPeHD3PDmFFMFJ6hwvKTKWDrkO6W0MBGUZkrJeUcS?=
- =?us-ascii?Q?UyCMn2ldBxFEc9x5ceTKZ6vrZUBiufATNLnRn1f4dHFpYONfH+rG4XwjCTk/?=
- =?us-ascii?Q?7pHCnBNs2QinM508rHad2qXQIEgBiPu7Tqpl7RoYiUfkur9hKlJUEB404TzY?=
- =?us-ascii?Q?dA=3D=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S229570AbjDGQqT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 12:46:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB9F76AA;
+        Fri,  7 Apr 2023 09:46:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF0F865055;
+        Fri,  7 Apr 2023 16:46:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2158C4339C;
+        Fri,  7 Apr 2023 16:46:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680885977;
+        bh=h+43W5Y7xKcIzevd8mxD8pi56Jm7fW0KJPju+M292eU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qCa/Agimw9L08qIP2+YiwM4kmhSEgwcz3TZoOMzj3pG+PC9JlNepjw4n/frvNJZA+
+         QH7wCDDzgmQxOExPgI8M67nI2Q3C/l+0tI/JXnKloeHrT6rjaTNr8sdRK8PjnDOHQ7
+         WXDCFC6SjZlP+Gnian3YPhst0I1OOl/UU8Dza6kUhiBHkUEPq6q8pqQzJQxrENwt6s
+         NGpkNy8axAI8NCqEU3EWYH/50RGCvzufL5d1P0fzXdkBRQb6XtjawMs/5JkBDNa/5z
+         hQO7aZKtBSgV3AExY+gs4UCj8wsI6OcARXDlozwF/odT8rHWkbl8TwDdto2T/nKOL7
+         XmADdQgJtQ7Aw==
+Date:   Fri, 7 Apr 2023 11:46:15 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     "Natu, Mahesh" <mahesh.natu@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] PCI/EDR: Clear PCIe Device Status errors after EDR
+ error recovery
+Message-ID: <20230407164615.GA3802863@bhelgaas>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e2888a6-f3b4-40a3-f0f7-08db3785ccf2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Apr 2023 16:33:21.1462
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cCNJRowe1oPyNpxH0ECvF7YexIf/OgNseZjW7Y6WYw4eNGFwMnU82Ef1lromVJZbnb9ZSkL/VEtqLPP3wDp8QcI3Xwcr5uNudIWQmwE6Fg8=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3138
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <18ccb5e6-0bc3-82ab-0c54-653ccd994c7b@linux.intel.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Monday, April 3, 2023 7:06 PM
->=20
-> This reverts commit d6af2ed29c7c1c311b96dac989dcb991e90ee195.
->=20
-> The statement "the hv_pci_bus_exit() call releases structures of all its
-> child devices" in commit d6af2ed29c7c is not true: in the path
-> hv_pci_probe() -> hv_pci_enter_d0() -> hv_pci_bus_exit(hdev, true): the
-> parameter "keep_devs" is true, so hv_pci_bus_exit() does *not* release th=
-e
-> child "struct hv_pci_dev *hpdev" that is created earlier in
-> pci_devices_present_work() -> new_pcichild_device().
->=20
-> The commit d6af2ed29c7c was originally made in July 2020 for RHEL 7.7,
-> where the old version of hv_pci_bus_exit() was used; when the commit was
-> rebased and merged into the upstream, people didn't notice that it's
-> not really necessary. The commit itself doesn't cause any issue, but it
-> makes hv_pci_probe() more complicated. Revert it to facilitate some
-> upcoming changes to hv_pci_probe().
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Acked-by: Wei Hu <weh@microsoft.com>
-> Cc: stable@vger.kernel.org
-> ---
->=20
-> v2:
->   No change to the patch body.
->   Added Wei Hu's Acked-by.
->   Added Cc:stable
->=20
->  drivers/pci/controller/pci-hyperv.c | 71 ++++++++++++++---------------
->  1 file changed, 34 insertions(+), 37 deletions(-)
->=20
+On Thu, Apr 06, 2023 at 10:31:20PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 4/6/23 3:21 PM, Bjorn Helgaas wrote:
+> > On Thu, Apr 06, 2023 at 02:52:02PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> >> On 4/6/23 2:07 PM, Bjorn Helgaas wrote:
+> >>> On Wed, Mar 15, 2023 at 04:54:49PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> >>>> Commit 068c29a248b6 ("PCI/ERR: Clear PCIe Device Status errors only if
+> >>>> OS owns AER") adds support to clear error status in the Device Status
+> >>>> Register(DEVSTA) only if OS owns the AER support. But this change
+> >>>> breaks the requirement of the EDR feature which requires OS to cleanup
+> >>>> the error registers even if firmware owns the control of AER support.
+> >>>>
+> >>>> More details about this requirement can be found in PCIe Firmware
+> >>>> specification v3.3, Table 4-6 Interpretation of the _OSC Control Field.
+> >>>> If the OS supports the Error Disconnect Recover (EDR) feature and
+> >>>> firmware sends the EDR event, then during the EDR recovery window, OS
+> >>>> is responsible for the device error recovery and holds the ownership of
+> >>>> the following error registers.
+> >>>>
+> >>>> • Device Status Register
+> >>>> • Uncorrectable Error Status Register
+> >>>> • Correctable Error Status Register
+> >>>> • Root Error Status Register
+> >>>> • RP PIO Status Register
+> >>>>
+> >>>> So call pcie_clear_device_status() in edr_handle_event() if the error
+> >>>> recovery is successful.
+> >>>>
+> >>>> Reported-by: Tsaur Erwin <erwin.tsaur@intel.com>
+> >>>> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> >>>> ---
+> >>>>
+> >>>> Changes since v1:
+> >>>>  * Rebased on top of v6.3-rc1.
+> >>>>  * Fixed a typo in pcie_clear_device_status().
+> >>>>
+> >>>>  drivers/pci/pcie/edr.c | 1 +
+> >>>>  1 file changed, 1 insertion(+)
+> >>>>
+> >>>> diff --git a/drivers/pci/pcie/edr.c b/drivers/pci/pcie/edr.c
+> >>>> index a6b9b479b97a..87734e4c3c20 100644
+> >>>> --- a/drivers/pci/pcie/edr.c
+> >>>> +++ b/drivers/pci/pcie/edr.c
+> >>>> @@ -193,6 +193,7 @@ static void edr_handle_event(acpi_handle handle, u32 event, void *data)
+> >>>>  	 */
+> >>>>  	if (estate == PCI_ERS_RESULT_RECOVERED) {
+> >>>>  		pci_dbg(edev, "DPC port successfully recovered\n");
+> >>>> +		pcie_clear_device_status(edev);
+> >>>>  		acpi_send_edr_status(pdev, edev, EDR_OST_SUCCESS);
+> >>>
+> >>> The implementation note in PCI Firmware r3.3, sec 4.6.12, shows the OS
+> >>> clearing error status *after* _OST is evaluated.
+> >>>
+> >>> On the other hand, the _OSC DPC control bit in table 4-6 says that if
+> >>> the OS does not have DPC control, it can only write the Device Status
+> >>> error bits between the EDR Notify and invoking _OST.
+> >>>
+> >>> Is one of those wrong, or am I missing something?
+> >>
+> >> Agree. It is conflicting info. IMO, the argument that the OS is allowed to
+> >> clear the error registers during the EDR windows makes more sense. If OS
+> >> is allowed to touch error registers owned by firmware after that window,
+> >> it would lead to race conditions.
+> >>
+> >> Mahesh, let us know your comments. Maybe we need to fix this in the firmware
+> >> specification.
+> > 
+> > My assumption was this sequence is something like this, where firmware
+> > *can't* collect error status from devices below the Downstream Port
+> > because DPC has been triggered and they are not accessible:
+> > 
+> >   - Hardware triggers DPC in a Downstream Port
+> >   - Firmware fields error interrupt
+> >   - Firmware captures Downstream Port error info (devices below are
+> >     not accessible because of DPC)
+> >   - Firmware sends EDR Notify to OS
+> >   - OS brings Downstream Port out of DPC
+> >   - OS collects error status from devices below Downstream Port
+> >   - OS evaluates _OST
+> >   - Firmware captures error status from devices below Downstream Port
+> > 
+> > But that doesn't explain why *firmware* could not clear the error
+> > status of those devices after it captures it.
+> > 
+> > I guess the flowchart *does* show firmware clearing the error status
+> > in the "do not continue recovery" path.
+> 
+> In this patch, we are clearing the port error status. So I think it is
+> fine to do it in EDR window. Agree?
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Ah, right, of course, thanks for pulling me back out of the weeds!
+Yes, I do agree.
+
+An EDR notification is issued on a bus device that is still present,
+i.e., a DPC port or parent, but child devices have been disconnected
+(ACPI v6.3, sec 5.6.6).
+
+So in edr_handle_event(), pdev is the bus device that receives the
+notification, edev is a bus device (possibly the same as pdev, or
+possibly a child, but one that is still present), and child devices of
+edev have been disconnected.
+
+Prior to 068c29a248b6, pcie_do_recovery(edev) always cleared DEVSTA
+for edev.  Afterwards it only clears DEVSTA if the OS owns AER.  This
+patch makes edr_handle_event() clear DEVSTA for edev (the Port
+device).
+
+I had been looking at the bottom blue OS "Clear error status, ..." box
+in the PCI Firmware implementation note, but that's the wrong one.
+This is actually the "Clear port error status, bring Port out of DPC,
+..." box higher up.  That's clearly before _OST and thus inside the
+window.
+
+That box *does* suggest clearing the port error status before bringing
+the port out of DPC, and we're doing it in the opposite order:
+
+  edr_handle_event(pdev)
+    edev = acpi_dpc_port_get(pdev)
+    # Both pdev and edev are present; pdev is same as edev or a
+    # parent of edev; children of edev are disconnected
+    dpc_process_error(edev)
+    pcie_do_recovery(edev, dpc_reset_link)
+      if (state == pci_channel_io_frozen)
+        dpc_reset_link                  # (reset_subordinates)
+          pci_write_config_word(PCI_EXP_DPC_STATUS_TRIGGER) # exit DPC
+      if (AER native)
+        pcie_clear_device_status(edev)
+          clear PCI_EXP_DEVSTA          # doesn't happen
+    if (PCI_ERS_RESULT_RECOVERED)
+      pcie_clear_device_status
+        clear PCI_EXP_DEVSTA            # added by this patch
+
+Does it matter?  I dunno, but I don't *think* so.  We really don't
+care about the value of PCI_EXP_DEVSTA anywhere except
+pci_wait_for_pending_transaction(), which isn't applicable here.  And
+I don't think the fact that it probably has an Error Detected bit set
+when exiting DPC is a problem.
+
+Bjorn
