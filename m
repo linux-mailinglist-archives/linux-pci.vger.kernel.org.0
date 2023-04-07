@@ -2,170 +2,148 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92B226DB75E
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:49:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A1B6DB766
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229513AbjDGXtv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 19:49:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43414 "EHLO
+        id S229463AbjDGX6e (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 19:58:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjDGXtu (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:49:50 -0400
-Received: from mail-qt1-x82a.google.com (mail-qt1-x82a.google.com [IPv6:2607:f8b0:4864:20::82a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D618E1AF
-        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 16:49:49 -0700 (PDT)
-Received: by mail-qt1-x82a.google.com with SMTP id d75a77b69052e-3e392e10cc4so697941cf.0
-        for <linux-pci@vger.kernel.org>; Fri, 07 Apr 2023 16:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680911388; x=1683503388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qqjTxx7icMTYukspTJWOyXAdc8KUgw2cKmRcRpT5B70=;
-        b=LfFAt7rJUt1pUj98t+F2Quk+iZHTggmA6ET02STj58xiL96wfom24Bhd5OmXVYsW9r
-         i99ls8sk7qvxcW0e1zkLKqFhmDpkZ0BboRA2FbvRREmlEw1c72OMdwWyBYdPznan12x3
-         evBfPx9CvCBr2kyG+W7G5UebTVPHerxyHia8g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680911388; x=1683503388;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qqjTxx7icMTYukspTJWOyXAdc8KUgw2cKmRcRpT5B70=;
-        b=NE0iPrsuYkqQMda1nBA+5X1dPBEKt5Vj3WzWrQnvw1Dts1KoAfGG7lj4NxGeqfnEW+
-         SNH5L/RxfCwwOdZWzvPA0XvPbJiuL7YMI7gae/Fp3+20rZljqjgIo1Yn6QdG9bzxlK1I
-         sHnCSARGEZUkdCZqYOB3aht7/9PnG4R7li150KP1mLE87NpljQYZ0H86TKthMd7EAnUb
-         /EGTmHcFBsS2p+Bg3SgblqFYMpf3tTqgpyvznPO4p7VreOp3izPB7OHA/1vmT4+t9tkn
-         vBw4IAfhmeIdOYgQ4ahOX5UPg4QCpbsRAVazKdBhlOWH8o+bseaTiUUqPoBYIdE1CMKo
-         xwrg==
-X-Gm-Message-State: AAQBX9fU8JEaBtsrlSM0fJg7/OdmGvTV+CzZ2R6XH2JZojfjtT/ezThd
-        Q5Kyw2WQdEvyQXxN2w2/jwShSt8Bzq2rjuWzN/gMC1wxOhph/QXqo21Arw==
-X-Google-Smtp-Source: AKy350YqUSXVlmbwDJr3UQsJTE8KS7rADBSmXy0bQ5nLTgrofx1yY7eU48cqTzdgtXifug4KW09JduqdhsqfhvTfN6I=
-X-Received: by 2002:ac8:5f93:0:b0:3bf:d313:77dd with SMTP id
- j19-20020ac85f93000000b003bfd31377ddmr152060qta.14.1680911388085; Fri, 07 Apr
- 2023 16:49:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANEJEGvKRVGLYPmD3kujg6veq5KR7J+rAu6ni92wUz72KGtyBA@mail.gmail.com>
- <20230407194645.GA3814486@bhelgaas>
-In-Reply-To: <20230407194645.GA3814486@bhelgaas>
-From:   Grant Grundler <grundler@chromium.org>
-Date:   Fri, 7 Apr 2023 16:49:37 -0700
-Message-ID: <CANEJEGu6YMfPPbWsRCZ4tsLAo9mKUbijnd1VEKvbsk4Xe4VXhg@mail.gmail.com>
-Subject: Re: [PATCHv2 pci-next 2/2] PCI/AER: Rate limit the reporting of the
- correctable errors
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Grant Grundler <grundler@chromium.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "Oliver O 'Halloran" <oohall@gmail.com>,
+        with ESMTP id S229455AbjDGX6e (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:58:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38405BB96;
+        Fri,  7 Apr 2023 16:58:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8A3364C8F;
+        Fri,  7 Apr 2023 23:58:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAC3AC433EF;
+        Fri,  7 Apr 2023 23:58:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680911911;
+        bh=rYZ2xlKwjcs//lx+4b1WY8Qxb6BZXFCn8T7hyocxDIM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=ORh6EGV9lgAIW8DnUhNuNEw3ch/WwPL3QlLV8/XlSsfDp/FfqsLwqsAfxxVaq4+Ga
+         SxQjoTYw3g7Q9AcrgScjO+Ir/kjZj/zvNoKFWuNHn3BTLx7PK3VNPLRrQSVWhEhICY
+         ffiATOMWjroNLfO+UOvQn4zLPdnTHG7HP/OfqyERfwf6AEOmRgTvYHo8HbkLT8f7Lv
+         Sz4oENR7rfEbEW307DffbTHSIRH6DvmH4tioAYewtLnWbRSWVmgF9aeCVDDVXJVnlq
+         n9dZt1mDqQA08RmPuzrgG7Teq+kZ88GzNUwNWIPlMvJ4GxwDzwDbOaNE738Sl8utJ7
+         EYDHMFvkAEcXw==
+Date:   Fri, 7 Apr 2023 18:58:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "You-Sheng Yang (vicamo)" <vicamo.yang@canonical.com>
+Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Rajat Jain <rajatja@chromium.org>,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL
-        autolearn=no autolearn_force=no version=3.4.6
+        Thomas Gleixner <tglx@linutronix.de>,
+        Keith Busch <kbusch@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Korneliusz Osmenda <korneliuszo@gmail.com>,
+        Alexander Stein <alexander.stein@ew.tq-group.com>
+Subject: Re: [PATCH] PCI: vmd: guard device addition and removal
+Message-ID: <20230407235829.GA3834716@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230313173733.1815277-1-vicamo.yang@canonical.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[reposting in plain text mode]
+[+cc Korneliusz, Alexander]
 
-On Fri, Apr 7, 2023 at 12:46=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Fri, Apr 07, 2023 at 11:53:27AM -0700, Grant Grundler wrote:
-> > On Thu, Apr 6, 2023 at 12:50=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > > On Fri, Mar 17, 2023 at 10:51:09AM -0700, Grant Grundler wrote:
-> > > > From: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
-> > > >
-> > > > There are many instances where correctable errors tend to inundate
-> > > > the message buffer. We observe such instances during thunderbolt PC=
-Ie
-> > > > tunneling.
-> > ...
->
-> > > >               if (info->severity =3D=3D AER_CORRECTABLE)
-> > > > -                     pci_info(dev, "   [%2d] %-22s%s\n", i, errmsg=
-,
-> > > > -                             info->first_error =3D=3D i ? " (First=
-)" : "");
-> > > > +                     pci_info_ratelimited(dev, "   [%2d] %-22s%s\n=
-", i, errmsg,
-> > > > +                                          info->first_error =3D=3D=
- i ? " (First)" : "");
-> > >
-> > > I don't think this is going to reliably work the way we want.  We hav=
-e
-> > > a bunch of pci_info_ratelimited() calls, and each caller has its own
-> > > ratelimit_state data.  Unless we call pci_info_ratelimited() exactly
-> > > the same number of times for each error, the ratelimit counters will
-> > > get out of sync and we'll end up printing fragments from error A mixe=
-d
-> > > with fragments from error B.
-> >
-> > Ok - what I'm reading between the lines here is the output should be
-> > emitted in one step, not multiple pci_info_ratelimited() calls. if the
-> > code built an output string (using sprintnf()), and then called
-> > pci_info_ratelimited() exactly once at the bottom, would that be
-> > sufficient?
-> >
-> > > I think we need to explicitly manage the ratelimiting ourselves,
-> > > similar to print_hmi_event_info() or print_extlog_rcd().  Then we can
-> > > have a *single* ratelimit_state, and we can check it once to determin=
-e
-> > > whether to log this correctable error.
-> >
-> > Is the rate limiting per call location or per device? From above, I
-> > understood rate limiting is "per call location".  If the code only
-> > has one call location, it should achieve the same goal, right?
->
-> Rate-limiting is per call location, so yes, if we only have one call
-> location, that would solve it.  It would also have the nice property
-> that all the output would be atomic so it wouldn't get mixed with
-> other stuff, and it might encourage us to be a little less wordy in
-> the output.
+On Tue, Mar 14, 2023 at 01:37:33AM +0800, You-Sheng Yang (vicamo) wrote:
+> VMD may fail to create sysfs entries while `pci_rescan_bus()` called in
+> some other drivers like t7xx wwan driver:
+> 
+>   sysfs: cannot create duplicate filename '/devices/.../resource0'
+>   Call Trace:
+>    <TASK>
+>    sysfs_warn_dup.cold+0x17/0x34
+>    sysfs_add_bin_file_mode_ns+0xc0/0xf0
+>    sysfs_create_bin_file+0x6d/0xb0
+>    pci_create_attr+0x117/0x260
+>    pci_create_resource_files+0x6b/0x150
+>    pci_create_sysfs_dev_files+0x18/0x30
+>    pci_bus_add_device+0x30/0x80
+>    pci_bus_add_devices+0x31/0x80
+>    pci_bus_add_devices+0x5b/0x80
+>    vmd_enable_domain.constprop.0+0x6b7/0x880 [vmd]
+>    vmd_probe+0x16d/0x193 [vmd]
 
-+1 to all of those reasons. Especially reducing the number of lines output.
+This is a long-standing issue, and I would *love* to nail it, but this
+doesn't feel like the right solution to me.  What's unique about vmd
+here?
 
-I'm going to be out for the next week. If someone else (Rajat
-Kendalwal maybe?) wants to rework this to use one call location it
-should be fairly straight forward. If not, I'll tackle this when I'm
-back (in 2 weeks essentially).
+I guess maybe it's similar to the situation Korneliusz and Alexander
+ran into at [1]?
 
->
-> But I don't think we need output in a single step; we just need a
-> single instance of ratelimit_state (or one for CPER path and another
-> for native AER path), and that can control all the output for a single
-> error.  E.g., print_hmi_event_info() looks like this:
->
->   static void print_hmi_event_info(...)
->   {
->     static DEFINE_RATELIMIT_STATE(rs, ...);
->
->     if (__ratelimit(&rs)) {
->       printk("%s%s Hypervisor Maintenance interrupt ...");
->       printk("%s Error detail: %s\n", ...);
->       printk("%s      HMER: %016llx\n", ...);
->     }
->   }
->
-> I think it's nice that the struct ratelimit_state is explicit and
-> there's no danger of breaking it when adding another printk later.
+And why is t7xx called out specifically here?  This is a pretty
+generic sysfs attribute issue and it doesn't *seem* like t7xx should
+be special in that respect.  Oooh, maybe it's the fact that there's a
+t7xx patch [2] coming that adds pci_rescan_bus() there?
 
-True. But a single call to a "well documented" API is my preference
-(assuming this is my choice).
+Krzysztof has converted a lot of the sysfs files to static attributes,
+e.g.,
 
-> It *could* be per pci_dev, too, but I suspect it's not worth spending
-> 40ish bytes per device for the ratelimit data.
+  506140f9c06b ("PCI/sysfs: Convert "index", "acpi_index", "label" to static attributes")
+  d93f8399053d ("PCI/sysfs: Convert "vpd" to static attribute")
+  f42c35ea3b13 ("PCI/sysfs: Convert "reset" to static attribute")
+  527139d738d7 ("PCI/sysfs: Convert "rom" to static attribute")
+  e1d3f3268b0e ("PCI/sysfs: Convert "config" to static attribute")
 
-Good - I don't think we need to make this per device - I had assumed
-it was but also currently don't see a need for this.
+I think that's the *best* approach since the sysfs infrastructure
+already prevents races here.  But these last few files are more
+difficult to convert, so we've been kind of stalled on them.
 
-cheers,
-grant
+Bjorn
+
+[1] https://lore.kernel.org/r/20230316091540.494366-1-alexander.stein@ew.tq-group.com
+[2] https://lore.kernel.org/linux-pci/20230124204543.550d88e3@kernel.org/
+
+> Fixes: 185a383ada2e ("x86/PCI: Add driver for Intel Volume Management Device (VMD)")
+> Signed-off-by: You-Sheng Yang (vicamo) <vicamo.yang@canonical.com>
+> ---
+>  drivers/pci/controller/vmd.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> index 769eedeb8802..f050991bd1e9 100644
+> --- a/drivers/pci/controller/vmd.c
+> +++ b/drivers/pci/controller/vmd.c
+> @@ -838,9 +838,13 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  	pci_add_resource_offset(&resources, &vmd->resources[1], offset[0]);
+>  	pci_add_resource_offset(&resources, &vmd->resources[2], offset[1]);
+>  
+> +	pci_lock_rescan_remove();
+> +
+>  	vmd->bus = pci_create_root_bus(&vmd->dev->dev, vmd->busn_start,
+>  				       &vmd_ops, sd, &resources);
+>  	if (!vmd->bus) {
+> +		pci_unlock_rescan_remove();
+> +
+>  		pci_free_resource_list(&resources);
+>  		vmd_remove_irq_domain(vmd);
+>  		return -ENODEV;
+> @@ -893,6 +897,8 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
+>  
+>  	vmd_acpi_end();
+>  
+> +	pci_unlock_rescan_remove();
+> +
+>  	WARN(sysfs_create_link(&vmd->dev->dev.kobj, &vmd->bus->dev.kobj,
+>  			       "domain"), "Can't create symlink to domain\n");
+>  	return 0;
+> -- 
+> 2.39.2
+> 
