@@ -2,173 +2,154 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C4D146DAB23
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 11:58:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 184C86DAB8B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 12:33:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232658AbjDGJ6S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 05:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
+        id S230359AbjDGKdp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 06:33:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjDGJ6R (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 05:58:17 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05F247ED8;
-        Fri,  7 Apr 2023 02:58:15 -0700 (PDT)
+        with ESMTP id S230316AbjDGKdo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 06:33:44 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FAF37DB3
+        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 03:33:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1680861496; x=1712397496;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=OMm49nZx3reFlxHU+RGccvmujRLFyp4/7YbOx3zlUNA=;
-  b=C5WeISoVVs+ht6KPdcOBieIh6LnFdpIxnpXS96nJ5Gu+P/unGxyd+caA
-   JCu9ERFSHnHwetrW4IKApZFRYgAf85gzRmISKlvRHKnjLA041M/BSDjUE
-   cDHEIq9Z7H9dI6yMpn9MJtuYCvdMwBDZiwhvjHkKu+r2se/QgFJCYgLdB
-   3diIRsCTCFtImSUVPnYLjVKvsmo8TRz4aEXdKQZGKGgyTM3Q4pbHBSHeR
-   1bTi3UfoBSrI1CTWWljROym0jga7r9E80tvgdfrSxhl3rjCSlLp1Gxq3P
-   i3NpNW5n51sAENDDerdR/45daO4zlcmy8yyGAGNqZADmdsOIvNh1qHE5P
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680863622; x=1712399622;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Wu6INT+ZYmwmHRNBdC33/YO17026NawlHy/+vWZCu/8=;
+  b=faUyEkvLJIRRfQcERSJk4Mh9wGxUXGKNlvtmyJm+68X39ddYmPdabG1U
+   y9vj3pObPYou28HAdBlqmDZNwEumHrZzoAVFz1HcAuyVvK+u9kcEN6Yam
+   z6lrJthI+P5qpaVMVYE/pZGgKJNFPBluHA+eMmtIJ6/Vjk+F0D/EeprHw
+   gW3f3sVJ8dS/QuMtcTdr4p3clEZBt4L7V5+mfH3McfYaBtwY+iouVF+5x
+   i4BBoC/zxgu8QM0WaW1xRrbLLnKAPdLRTN80Odlk+QznouSWSG/6q7Own
+   KBpO4gcRrF3JuRHCCuWJUgbn17tFHAHHdhO39BkRzz9U0LXBtcD1wV/mo
    Q==;
-X-IronPort-AV: E=Sophos;i="5.98,326,1673938800"; 
-   d="asc'?scan'208";a="145992168"
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Apr 2023 02:58:13 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 7 Apr 2023 02:58:13 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex02.mchp-main.com
- (10.10.85.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Fri, 7 Apr 2023 02:58:10 -0700
-Date:   Fri, 7 Apr 2023 10:57:55 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
-To:     Minda Chen <minda.chen@starfivetech.com>
-CC:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-        Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Mason Huo <mason.huo@starfivetech.com>,
-        Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        <daire.mcnamara@microchip.com>
-Subject: Re: [PATCH v1 0/3] Add JH7110 PCIe driver support
-Message-ID: <20230407-splatter-greyhound-edc706148337@wendy>
-References: <20230406111142.74410-1-minda.chen@starfivetech.com>
- <20230406-quench-unharmed-2c11b2617e9f@wendy>
- <20230406-coming-stuffed-26f89610959c@wendy>
- <d9dde509-8923-a930-4c82-4bc8bd78ed0d@starfivetech.com>
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="327037325"
+X-IronPort-AV: E=Sophos;i="5.98,326,1673942400"; 
+   d="scan'208";a="327037325"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Apr 2023 03:33:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10672"; a="752005967"
+X-IronPort-AV: E=Sophos;i="5.98,326,1673942400"; 
+   d="scan'208";a="752005967"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Apr 2023 03:33:40 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pkjPX-000SNW-1j;
+        Fri, 07 Apr 2023 10:33:39 +0000
+Date:   Fri, 07 Apr 2023 18:32:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:p2pdma] BUILD SUCCESS
+ 5376ced54ce310256e9cd67a3fcb613ac005a032
+Message-ID: <642ff15b.yvtk4y0Mxlkw0dPm%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Jlip8xfO52SkZiZp"
-Content-Disposition: inline
-In-Reply-To: <d9dde509-8923-a930-4c82-4bc8bd78ed0d@starfivetech.com>
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---Jlip8xfO52SkZiZp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git p2pdma
+branch HEAD: 5376ced54ce310256e9cd67a3fcb613ac005a032  PCI/P2PDMA: Fix pci_p2pmem_find_many() kernel-doc
 
-Hey Minda,
+elapsed time: 720m
 
-On Fri, Apr 07, 2023 at 10:32:51AM +0800, Minda Chen wrote:
-> On 2023/4/6 19:54, Conor Dooley wrote:
-> > On Thu, Apr 06, 2023 at 12:47:41PM +0100, Conor Dooley wrote:
-> >> On Thu, Apr 06, 2023 at 07:11:39PM +0800, Minda Chen wrote:
-> >> > This patchset adds PCIe driver for the StarFive JH7110 SoC.
-> >> > The patch has been tested on the VisionFive 2 board. The test
-> >> > devices include M.2 NVMe SSD and Realtek 8169 Ethernet adapter.
-> >>=20
-> >> I was talking with Daire last week about some changes he's working on
-> >> for the microchip driver, and we seemed to recall an off-list email
-> >> sent to Daire & Bjorn about extracting the common PLDA bits from the
-> >> pcie-microchip-host driver to be used with an (at that point)
-> >> unreleased SoC. Perhaps Bjorn has this in his mailbox somewhere still,
-> >> our corporate mail policy scrubs things from over a year ago & I could
-> >> not find it.
-> >>
-> >> I realised that that may actually have been StarFive, and the driver on
-> >> your GitHub [1] certainly felt very familiar to Daire (he said it was
-> >> very similar to his earlier revisions of his driver).
-> >>=20
-> >> I've not looked at a diff between this and the version you ship on
-> >> GitHub, but first a quick inspection it mostly just looks like you
-> >> did s/plda/sifive/ on the file.
-> >>=20
-> >> I'm obviously not a PCI maintainer, but if there are common bits betwe=
-en
-> >> the two drivers, extracting common bits seems like a good idea to me...
+configs tested: 75
+configs skipped: 6
 
-> Thanks. It is pleasure to using same common codes. Does common bits chang=
-es
-> will upstream soon?
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-I don't quite get what you mean. We've got some changes that are in
-progress here:
-https://lore.kernel.org/linux-pci/20230111125323.1911373-1-daire.mcnamara@m=
-icrochip.com/
-We've been quiet there for a while, but Daire's back looking into Robin's
-comments in there about the range parsing/window setup at the moment.
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r021-20230403   gcc  
+arc                  randconfig-r043-20230403   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r004-20230403   clang
+arm64                randconfig-r026-20230403   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r006-20230403   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a011-20230403   gcc  
+i386                 randconfig-a012-20230403   gcc  
+i386                 randconfig-a013-20230403   gcc  
+i386                 randconfig-a014-20230403   gcc  
+i386                 randconfig-a015-20230403   gcc  
+i386                 randconfig-a016-20230403   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r022-20230403   gcc  
+nios2                randconfig-r024-20230403   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r003-20230403   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r005-20230403   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230403   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r004-20230403   clang
+s390                 randconfig-r044-20230403   gcc  
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r001-20230403   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230403   clang
+x86_64               randconfig-a002-20230403   clang
+x86_64               randconfig-a003-20230403   clang
+x86_64               randconfig-a004-20230403   clang
+x86_64               randconfig-a005-20230403   clang
+x86_64               randconfig-a006-20230403   clang
+x86_64               randconfig-a011-20230403   gcc  
+x86_64               randconfig-a012-20230403   gcc  
+x86_64               randconfig-a013-20230403   gcc  
+x86_64               randconfig-a014-20230403   gcc  
+x86_64               randconfig-a015-20230403   gcc  
+x86_64               randconfig-a016-20230403   gcc  
+x86_64               randconfig-k001-20230403   gcc  
+x86_64                               rhel-8.3   gcc  
 
-I'm not sure if that's what you mean though, since you said "common
-bits" & Daire was doing that work in a world where there was no jh7110
-driver in the mix.
-Extracting common bits would be part of the process of adding a new
-driver, as I don't think there's any real reason to do so without
-another in-tree user.
-
-> And I see there are many difference between pcie-microchip-host and our c=
-odes.
-
-Right. I'd expect there to be a fair difference between our integrations
-of the IP, and therefore there'll be a bunch of non-shareable bits.
-
-You need the stg,syscon & phy bits, and the clock/reset handling is
-clearly different too.
-
-> >> https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/d=
-rivers/pci/controller/pcie-plda.c
-
-I had a bit of a read through this again today with Daire to check what
-the differences actually are and it *looked* like the main,
-non-implementation related, differences were the extra "event" domain
-that was created to simplify the driver & the bottom half interrupt
-handling.
-That all came out of the review process, so it's likely that some of the
-same requests would be made of you by the PCI maintainers anyway.
-
-As an aside, you should probably run checkpatch --strict on this
-submission, there's a rake of coding style "issues" in the new code
-you've added.
-
-Cheers,
-Conor.
-
---Jlip8xfO52SkZiZp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZC/pFwAKCRB4tDGHoIJi
-0vDrAQCzfjkmLgmto/G84NJvLmBRLa1PWCSIuMVxr3sAxUVWcQD9GoHqqTaYnFzv
-/J7frufpjB6/uXpEKzEcprsEZSWfPQc=
-=NyKG
------END PGP SIGNATURE-----
-
---Jlip8xfO52SkZiZp--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
