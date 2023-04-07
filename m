@@ -2,115 +2,156 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 537386DB71B
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:22:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EA716DB75B
+	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 01:47:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjDGXWZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 19:22:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
+        id S229737AbjDGXr3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 19:47:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjDGXWY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:22:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9752683C6;
-        Fri,  7 Apr 2023 16:22:23 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 318396544B;
-        Fri,  7 Apr 2023 23:22:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5915EC433D2;
-        Fri,  7 Apr 2023 23:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680909742;
-        bh=EcxiF2UXwEWR7VpQjbAAVUwoAR1kiJZYatKMeEE79sI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=THQlngYYhxla3VzVFIKXsOkEFrR5vrsA3ZE8Y1dvYZBKAa6gqziTZ56bSwQyyCdcI
-         EwFQWmyTFrUBFtHkrUp0Moi1TpSh1FYS7cSekX2DS9AQOttmeXM89Q6l41EzTjvBoS
-         CQ5GXSLpoX5btrpDd8jFvLFO9pD/TEZnnKChb5ot25wgw/831OH3fvvtk3KXXaFxJH
-         ASI07gaCPd05jorEzihVdwpZkshyb3KVRdddNUbhglHcsmwKAApDiyicH9/rFvFRt8
-         ESUMnzSzN5MvPdiR/y4ajNBbt12uzismyNJRoXfFcNcsS5ZEtZhXm/QnDnGKznLEx/
-         Ho5GvgHq9zYxg==
-Date:   Fri, 7 Apr 2023 18:22:20 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     LeoLiu-oc <LeoLiu-oc@zhaoxin.com>
-Cc:     rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-        tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com,
-        ying.huang@intel.com, rdunlap@infradead.org, bhelgaas@google.com,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@acpica.org,
-        CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com
-Subject: Re: [PATCH v2 3/5] ACPI/PCI: Add AER bits #defines for PCIe to
- PCI/PCI-X Bridge
-Message-ID: <20230407232220.GA3830804@bhelgaas>
+        with ESMTP id S229610AbjDGXr2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 19:47:28 -0400
+Received: from mail-qt1-x82f.google.com (mail-qt1-x82f.google.com [IPv6:2607:f8b0:4864:20::82f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8B30EF8B
+        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 16:47:27 -0700 (PDT)
+Received: by mail-qt1-x82f.google.com with SMTP id d75a77b69052e-3e673b5f558so514041cf.1
+        for <linux-pci@vger.kernel.org>; Fri, 07 Apr 2023 16:47:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1680911247; x=1683503247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zXTrg0mDV7Q1ZzUvffjDPVloLufOXWmykfXvP65A/O0=;
+        b=f7kvXaQXsTi3P8WLYLsxHg6BjzOkv9BuXp18qU6yp12LEyg/bXd7Cq92+AZdbGbanD
+         OhwrOh+oN4kwnppYY+1FU3+ecy/X9DdgdZ5ydpiZVxiu/WoXtSqkeW2FWcg8w/XRTDqp
+         ndKPXDdNhqH+JFhO7I1LsIMxCoCcSBLEhtOQI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680911247; x=1683503247;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zXTrg0mDV7Q1ZzUvffjDPVloLufOXWmykfXvP65A/O0=;
+        b=UPk9wJ0J358U31UMahW4KYVAAr3y4Delbv6asYjsR9qVwnPVpj8ZSgVPIfc+emAUpI
+         zL9lHGTiDl/BOmgE+EY+bdwjN1aPoypTmWQdbr0fknLYm3YFzOioy39fzn0Cx3ZqE8uY
+         NfuszWpAspqyzsT67Xp5amRth6qVGfh5HwGOlX9tkjvdTdhDYvNIEIixoE+moApBmSc5
+         ydHpcdRkuW/IRdNjsNPCECQARLGqn4VOl2S72AVoS1Mnzn4CRZ82b6qP1Egr3t1FFLgQ
+         +oypP5iJhIx0vpa9E6r95uKQO50DjWm/888bXe/zqS/zXC1ou9GeVzE5qNT8CsXpJ8Fe
+         8P9A==
+X-Gm-Message-State: AAQBX9eTQdAxxy+cp4CvUE8VGucUnkYv0WTNU8VTOL3Fxu1ENwdeIcCH
+        uN/iKxYZWiTJLFaeh5MXpewObdA2bVi3MAAL7dsbdw==
+X-Google-Smtp-Source: AKy350anL/S84pz5fQsDUIE/4hZz/d4BnMbaLsMWzeAb0ywkzGXmZGt34QieZAyEeqWjWiFbipyCD6eXWX0ziw214bg=
+X-Received: by 2002:a05:622a:15c7:b0:3de:8cbe:47af with SMTP id
+ d7-20020a05622a15c700b003de8cbe47afmr57131qty.9.1680911246702; Fri, 07 Apr
+ 2023 16:47:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221115031244.1667093-1-LeoLiu-oc@zhaoxin.com>
-X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
+References: <CANEJEGvKRVGLYPmD3kujg6veq5KR7J+rAu6ni92wUz72KGtyBA@mail.gmail.com>
+ <20230407194645.GA3814486@bhelgaas>
+In-Reply-To: <20230407194645.GA3814486@bhelgaas>
+From:   Grant Grundler <grundler@chromium.org>
+Date:   Fri, 7 Apr 2023 16:47:15 -0700
+Message-ID: <CANEJEGtZo-TSjYfoVbw5wdNbOdjwth=E51w8_MoFYyuo5+QrTw@mail.gmail.com>
+Subject: Re: [PATCHv2 pci-next 2/2] PCI/AER: Rate limit the reporting of the
+ correctable errors
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Grant Grundler <grundler@chromium.org>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O 'Halloran" <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Rajat Jain <rajatja@chromium.org>,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.4 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_SPF_WL
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Since this patch has nothing to do with ACPI, update subject line to:
+[reposting in plain text mode]
 
-  PCI: Add PCIe to PCI/PCI-X Bridge AER fields
 
-On Tue, Nov 15, 2022 at 11:12:44AM +0800, LeoLiu-oc wrote:
-> From: leoliu-oc <leoliu-oc@zhaoxin.com>
-> 
-> Define secondary uncorrectable error mask register, secondary
-> uncorrectable error severity register and secondary error capabilities and
-> control register bits in AER capability for PCIe to PCI/PCI-X Bridge.
-> Please refer to PCIe to PCI/PCI-X Bridge Specification, sec 5.2.3.2,
-> 5.2.3.3 and 5.2.3.4.
-
-Capitalize register names to match the spec usage.
-
-> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
-
-Assuming this goes along with a patch series that adds uses of these
-definitions:
-
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-
-> ---
->  include/uapi/linux/pci_regs.h | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index 57b8e2ffb1dd..37f3baa336d7 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -799,6 +799,11 @@
->  #define  PCI_ERR_ROOT_AER_IRQ		0xf8000000 /* Advanced Error Interrupt Message Number */
->  #define PCI_ERR_ROOT_ERR_SRC	0x34	/* Error Source Identification */
->  
-> +/* PCIe advanced error reporting extended capabilities for PCIe to PCI/PCI-X Bridge */
-> +#define PCI_ERR_UNCOR_MASK2		0x30	/* Secondary Uncorrectable Error Mask */
-> +#define PCI_ERR_UNCOR_SEVER2	0x34	/* Secondary Uncorrectable Error Severit */
-> +#define PCI_ERR_CAP2			0x38	/* Secondary Advanced Error Capabilities */
-
-Please squash these right up next to the other PCI_ERR_* definitions
-so it's obvious that they overlap PCI_ERR_ROOT_STATUS and
-PCI_ERR_ROOT_ERR_SRC (which is fine since one device can't have both),
-e.g.,
-
-  #define PCI_ERR_ROOT_STATUS     0x30
-  #define  PCI_ERR_ROOT_COR_RCV           0x00000001 /* ERR_COR Received */
-  ...
-  #define PCI_ERR_ROOT_ERR_SRC    0x34    /* Error Source Identification */
-  #define PCI_ERR_UNCOR_MASK2     0x30    /* PCIe to PCI/PCI-X bridge */
-  #define PCI_ERR_UNCOR_SEVER2    0x34    /* PCIe to PCI/PCI-X bridge */
-  #define PCI_ERR_CAP2            0x38    /* PCIe to PCI/PCI-X bridge */
-
->  /* Virtual Channel */
->  #define PCI_VC_PORT_CAP1	0x04
->  #define  PCI_VC_CAP1_EVCC	0x00000007	/* extended VC count */
-> -- 
-> 2.20.1
-> 
+On Fri, Apr 7, 2023 at 12:46=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Fri, Apr 07, 2023 at 11:53:27AM -0700, Grant Grundler wrote:
+> > On Thu, Apr 6, 2023 at 12:50=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > > On Fri, Mar 17, 2023 at 10:51:09AM -0700, Grant Grundler wrote:
+> > > > From: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+> > > >
+> > > > There are many instances where correctable errors tend to inundate
+> > > > the message buffer. We observe such instances during thunderbolt PC=
+Ie
+> > > > tunneling.
+> > ...
+>
+> > > >               if (info->severity =3D=3D AER_CORRECTABLE)
+> > > > -                     pci_info(dev, "   [%2d] %-22s%s\n", i, errmsg=
+,
+> > > > -                             info->first_error =3D=3D i ? " (First=
+)" : "");
+> > > > +                     pci_info_ratelimited(dev, "   [%2d] %-22s%s\n=
+", i, errmsg,
+> > > > +                                          info->first_error =3D=3D=
+ i ? " (First)" : "");
+> > >
+> > > I don't think this is going to reliably work the way we want.  We hav=
+e
+> > > a bunch of pci_info_ratelimited() calls, and each caller has its own
+> > > ratelimit_state data.  Unless we call pci_info_ratelimited() exactly
+> > > the same number of times for each error, the ratelimit counters will
+> > > get out of sync and we'll end up printing fragments from error A mixe=
+d
+> > > with fragments from error B.
+> >
+> > Ok - what I'm reading between the lines here is the output should be
+> > emitted in one step, not multiple pci_info_ratelimited() calls. if the
+> > code built an output string (using sprintnf()), and then called
+> > pci_info_ratelimited() exactly once at the bottom, would that be
+> > sufficient?
+> >
+> > > I think we need to explicitly manage the ratelimiting ourselves,
+> > > similar to print_hmi_event_info() or print_extlog_rcd().  Then we can
+> > > have a *single* ratelimit_state, and we can check it once to determin=
+e
+> > > whether to log this correctable error.
+> >
+> > Is the rate limiting per call location or per device? From above, I
+> > understood rate limiting is "per call location".  If the code only
+> > has one call location, it should achieve the same goal, right?
+>
+> Rate-limiting is per call location, so yes, if we only have one call
+> location, that would solve it.  It would also have the nice property
+> that all the output would be atomic so it wouldn't get mixed with
+> other stuff, and it might encourage us to be a little less wordy in
+> the output.
+>
+> But I don't think we need output in a single step; we just need a
+> single instance of ratelimit_state (or one for CPER path and another
+> for native AER path), and that can control all the output for a single
+> error.  E.g., print_hmi_event_info() looks like this:
+>
+>   static void print_hmi_event_info(...)
+>   {
+>     static DEFINE_RATELIMIT_STATE(rs, ...);
+>
+>     if (__ratelimit(&rs)) {
+>       printk("%s%s Hypervisor Maintenance interrupt ...");
+>       printk("%s Error detail: %s\n", ...);
+>       printk("%s      HMER: %016llx\n", ...);
+>     }
+>   }
+>
+> I think it's nice that the struct ratelimit_state is explicit and
+> there's no danger of breaking it when adding another printk later.
+>
+> It *could* be per pci_dev, too, but I suspect it's not worth spending
+> 40ish bytes per device for the ratelimit data.
+>
+> Bjorn
