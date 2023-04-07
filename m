@@ -2,52 +2,74 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E76726DB495
-	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 21:56:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F56C6DB57B
+	for <lists+linux-pci@lfdr.de>; Fri,  7 Apr 2023 22:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230409AbjDGT41 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 7 Apr 2023 15:56:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53424 "EHLO
+        id S229614AbjDGUyg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 7 Apr 2023 16:54:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230284AbjDGT40 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 15:56:26 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89FD6BBB8
-        for <linux-pci@vger.kernel.org>; Fri,  7 Apr 2023 12:56:00 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1680897342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1qMmFaekNr3q+zCcENmDC1SqlYs/nIRPB6KdQau9pfo=;
-        b=xQ4njX8AvzkqkU6hlZNmSsk3G1qO8lzKBxlxHkkWXMjrULAgDpVwOW6ZPl0xxnAcfW+9hg
-        eCM45wCPLXRLmgdS8Ig/3PcD/UpmiLp9rDsLgMByVIkwRVCArrEssLMZIufGcE+dAJnigk
-        AiGDsMdXFJztVRNCraJvK3655G9NS9e5LPA9AghGdK+ZaORfXZWBNeOGjFbREXBZ2s1StN
-        taa4NnZbQaSaf4He028InGAoptJicNmKCmHcrIOgzCygNZxK9ZXY2EemQMU4N0Q9WrQGQZ
-        flHih1LQmQ9gPvmKUSa8Gj/e9Xuyw0S/z/Ep7B6Za5tARHj7xWV5tiPgna3etg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1680897342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1qMmFaekNr3q+zCcENmDC1SqlYs/nIRPB6KdQau9pfo=;
-        b=/Wc7z28UBqar/sm1SOFuCsYVmRnr2f0jmw3iB3tc2CSbkP/oSRKQLA6DoSBG6yFarKZxAq
-        Y86+dH56ktl3MdDg==
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: PCIe cycle sequence when updating the msi-x table
-In-Reply-To: <b2d1bb86ea4642d2aa01ebd9d3d7a77e@AcuMS.aculab.com>
-References: <b2d1bb86ea4642d2aa01ebd9d3d7a77e@AcuMS.aculab.com>
-Date:   Fri, 07 Apr 2023 21:55:41 +0200
-Message-ID: <87edovtqki.ffs@tglx>
+        with ESMTP id S229454AbjDGUyf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 7 Apr 2023 16:54:35 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1850A6A6B;
+        Fri,  7 Apr 2023 13:54:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1680900841; i=deller@gmx.de;
+        bh=550F14P5Hzd4WFJcjAc0nSlwr1Mlxm9P3KdstqvYPGk=;
+        h=X-UI-Sender-Class:Date:To:Cc:References:From:Subject:In-Reply-To;
+        b=CE4AF4jF6VOWktxBzClZOl5vUQHiiEhYBJNUnsfHZqOHZbHNusYql0atRM4eUZ6nB
+         1eYWC/yHqKQQuFg+ylVvFxcFac5jrrau55TTzji74ytL+GFWS+FzyiK79fpUFbqMtW
+         b8rzXvsFD6+TVT2FqzQ2Dbs+WbF3dIckDyHca/j19tmPfJOUrTV8QLfmvhzX+rM+HA
+         aoqiUgGvGxFramOFJgeu3DJpMM1ymMDsYlclrU4CuloXCzA7iwQaa6POMfPp0VrfoN
+         lGfbp3UvOwWc9LGY784Dv8FWolPpRHI4Yq76ql4+R/dJpkpVFNS5NZq3u5BdtvNKzY
+         7J8zJk1bgVwmA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([94.134.149.92]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBDnI-1pfz0B0Qmc-00CeYv; Fri, 07
+ Apr 2023 22:54:01 +0200
+Message-ID: <85282243-33a6-a311-0b50-a7edfc4c4c6e@gmx.de>
+Date:   Fri, 7 Apr 2023 22:54:00 +0200
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Content-Language: en-US
+To:     Thomas Zimmermann <tzimmermann@suse.de>, javierm@redhat.com,
+        daniel.vetter@ffwll.ch, patrik.r.jakobsson@gmail.com
+Cc:     dri-devel@lists.freedesktop.org,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        linux-fbdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org
+References: <20230406132109.32050-1-tzimmermann@suse.de>
+ <20230406132109.32050-3-tzimmermann@suse.de>
+From:   Helge Deller <deller@gmx.de>
+Subject: Re: [PATCH v5 2/9] video/aperture: use generic code to figure out the
+ vga default device
+In-Reply-To: <20230406132109.32050-3-tzimmermann@suse.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:pl3kcAyEcut6Yyrp868xThy7FcYNZdvudStKiKyhyjuNbeEWiX9
+ 7LrauqZWeVyTIN4Kns/I+r90UluJeIPhF0kSYd6Puzo08poKBy2A+1nIawYFjZAmGzLjKMZ
+ 1xYr7rZ0ah7PFQj3eswWxcAKb7Qxb4C3r60B9yX6EigoI1tQyTLbjN6FfYZWgpM2SZL6v8d
+ 8MYx1uAv+agZxEvonxK6A==
+UI-OutboundReport: notjunk:1;M01:P0:gJLwJ3UW3r0=;oCNjJrVLRm1YHRaPyFBjKSiMuXA
+ g5mVkNsG+2vEaJL6xe1tpXDTRE6XZUmyo8onWTANFhDyPNKs5C2qHYTQ6HHjIUL5KCRMN9+D5
+ CxnRar81A34eAuyUABQt/6KT1yHoYoW5E3PBbk45PQW92t19ymIxBixTbmPHHhEe8nFFnCBxS
+ d0ojrRyUuZgJE8O6t4zPpCDtE+Kn9ER1ry3yyQVmG0WkU9egWap3A6fK1f0MhqiAwACz8hlay
+ EUYPxNu2DxRXdOwRO33TE/bIAU8YoFz/VB246dLuJA4lByxAEjXJQbnzLIvjofM7h8rgua767
+ 9K/eJ3d70AoOphqiL8IBcfS00IRF8G+Upej0jlNKCke7wj5RVR4PIe6gu3fIFJP7i/SJ+ecrl
+ v0saQLA+xkNS6m6UaRhg5t9H4aGILj/FGra16X3SvDfcG6cwswwZNkZ5jvhZEvjsJTAYmfbJ8
+ vh7cWV7M4S0x8Rha3yuHQ9XYCt4U1+J3O7a6NGqAWcVhm+3RGQssM2d9QZL63X6gZG8tyi/i2
+ E3jwj/sUVZHnUMVUbKl1zLfuF80A4a102ip80T7Nkdi0ggN1D/L2kmywc9rennQ32uKowahpH
+ 1w6pe8TmKkF4mcbqx2JWk1u6J/J9tTVLKjxfd1YkxR5XeXU2qCJv2V/QTzLhyfgdcu4BEWBNE
+ 4/S5wlav+9tm+GbMbNuo2hg//cFdfhinY6IkzS0upBtdpuzLeGbbP2QjfEky0C3Q1UUMzSDMI
+ 4BxIqJwxX+npEmJXrMjzqqYs2H1Y8JqMwsio8V2WTwE58v0/h9LaLJSKWqN0Esnn4f9qdOYkv
+ KImnPU+FljAtuKdhrUPhc/9Wz6Fn4TB/cZOIExUXyyNl7/kWcqKXm7fKhP6BH6SnvbDniBd/q
+ 9CDWq8o7uSLdIhXgDtXEM6gTUTWVbbrNG0AHsH6w657tw9do0v3mp5YGKSuRuHkFFsfmvfslE
+ HifTEQ==
+X-Spam-Status: No, score=-2.9 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
         autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -55,53 +77,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 07 2023 at 16:17, David Laight wrote:
-> The function that updates the MSI-X table currently reads:
+On 4/6/23 15:21, Thomas Zimmermann wrote:
+> From: Daniel Vetter <daniel.vetter@ffwll.ch>
 >
-> Now I'm not 100% sure about the cycle ordering rules.
-> I've not got the spec here, and I recall it isn't that easy to
-> understand.
-> I can't remember whether reads are allowed to overtake writes
-> (to different addresses).
-> I do remember that reading back the same address was needed to
-> flush the cpu store buffer on some space cpus.
-> So it might be that the final readl() won't actually flush
-> the write to the mask register.
-> (The same readback of 'the wrong' address also happens elsewhere.)
-
-It's guaranteed that all writes to a device have reached the device
-before a read from the same device which comes after the writes is
-issued. The write and read addresses do not matter.
-
-> But there is a bigger problem.
-> As the comment says writing the address/data while an entry is
-> unmasked must be avoided (because a mixture of the old and new
-> values could easily by used for the PCIe write cycle).
+> Since vgaarb has been promoted to be a core piece of the pci subsystem
+> we don't have to open code random guesses anymore, we actually know
+> this in a platform agnostic way, and there's no need for an x86
+> specific hack. See also commit 1d38fe6ee6a8 ("PCI/VGA: Move vgaarb to
+> drivers/pci")
 >
-> But it is also quite likely that that hardware checks the masked
-> bit before/after reading the address+data.
+> This should not result in any functional change, and the non-x86
+> multi-gpu pci systems are probably rare enough to not matter (I don't
+> know of any tbh). But it's a nice cleanup, so let's do it.
 >
-> So masking the interrupt immediately before the update and/or
-> unmasking immediately after could also cause issues.
+> There's been a few questions on previous iterations on dri-devel and
+> irc:
+>
+> - fb_is_primary_device() seems to be yet another implementation of
+>    this theme, and at least on x86 it checks for both
+>    vga_default_device OR rom shadowing. There shouldn't ever be a case
+>    where rom shadowing gives any additional hints about the boot vga
+>    device, but if there is then the default vga selection in vgaarb
+>    should probably be fixed. And not special-case checks replicated all
+>    over.
+>
+> - Thomas also brought up that on most !x86 systems
+>    fb_is_primary_device() returns 0, except on sparc/parisc. But these
+>    2 special cases are about platform specific devices and not pci, so
+>    shouldn't have any interactions.
 
-No it does not, because the writes are strictly ordered.
+Nearly all graphics cards on parisc machines are actually PCI cards,
+but the way we handle the handover to graphics mode with STIcore doesn't
+conflicts with your planned aperture changes.
+So no problem as far as I can see for parisc...
 
-So the devices gets:
-
-   1) write to control register with MASKBIT set
-   2) write to LOWER_ADDRESS
-   3) write to UPPER_ADDRESS
-   4) write to ENTRY_DATA
-   5) write to control register with MASKBIT cleared
-
-#1 disables the vector and the device is not allowed to use the msg data
-from the table entry until the mask bit is cleared again.
-
-If the device gets that wrong then that's a bug in the device and not a
-kernel problem.
-
-Thanks,
-
-        tglx
-
-
+Helge
