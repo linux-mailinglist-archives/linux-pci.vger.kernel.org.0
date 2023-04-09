@@ -2,251 +2,233 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D7B16DBD24
-	for <lists+linux-pci@lfdr.de>; Sat,  8 Apr 2023 23:12:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 436F26DBF0F
+	for <lists+linux-pci@lfdr.de>; Sun,  9 Apr 2023 09:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229475AbjDHVME (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 8 Apr 2023 17:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60980 "EHLO
+        id S229503AbjDIHbe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 9 Apr 2023 03:31:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjDHVMD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 8 Apr 2023 17:12:03 -0400
-Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-cusazon11020017.outbound.protection.outlook.com [52.101.61.17])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE2AE5594;
-        Sat,  8 Apr 2023 14:12:00 -0700 (PDT)
+        with ESMTP id S229436AbjDIHbd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 9 Apr 2023 03:31:33 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69D1059D7;
+        Sun,  9 Apr 2023 00:31:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681025492; x=1712561492;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=C5pHf26AUSGq09dsLzbMS/gQMMXeFBPy9bg3Oytto1Q=;
+  b=TdZ6IqM6JhFCdBT5qgBUO6VxFEFCzcyfxloxQcwOGC8uFmWluGMerBgG
+   9scLq+xLCCrAqJ3G+baqjLxkwxjvd4eLRCgbZdPNxRJOqXQv7HlITaL4n
+   vFpjAEe4UbZxVKK3RHPbO0makcg9ail4yJfNDWhPAWrzhN9iqVVo0yGb2
+   PRv5FyYURTNELXlGx8WOX1V0ic6TgNz8ytkjjhzT9LDonMS7q/cyz5vlR
+   6RK95U73gdjFxI2jxtvOJrP2XzriEmFIbWEe6QNh9xx1aKxEne6g4K9So
+   lvYmAUE650ldBNIoDxJqwzaPDcLeLBSUp4XPMYR4mehkphNH1NyQAySJk
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10674"; a="429487202"
+X-IronPort-AV: E=Sophos;i="5.98,330,1673942400"; 
+   d="scan'208";a="429487202"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2023 00:31:32 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10674"; a="777241183"
+X-IronPort-AV: E=Sophos;i="5.98,330,1673942400"; 
+   d="scan'208";a="777241183"
+Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
+  by FMSMGA003.fm.intel.com with ESMTP; 09 Apr 2023 00:31:11 -0700
+Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:31:10 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:31:10 -0700
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21 via Frontend Transport; Sun, 9 Apr 2023 00:31:10 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.57.42) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.21; Sun, 9 Apr 2023 00:31:09 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=chsBCLF1hxzDbsYTjGYkV/c9JYnmCqFiu5vdwdB1H/a+FOh/ad57/1Oue6WZAIBvoev+EBBk2u5Uxjpsie1qqPLEBXRwAEZfW1k52cd9i/Z5iNTP6ubjC57ERlsgol76kmuu0iWChFDQEGVBcyd9rWDSj+8VfzXqTD3wQOG/q2ZgtRaN6Rm6CnzdNjkFPHsEk/YurWiZEWLkInahczSsUlA8Ij1oI3Ajg97SKv1fg5zNjuqSllarUWiST/miGSedafrFzHMwzSoh3H7beGI+Pm1j+lG8hFmHA9Oo9tVP0iIDKght/xHdxM7S8je55xtk1orqfx6xY4wVM+dpVvj9TA==
+ b=noJzL0NutB++aOubWuRoh8LHwbXSWlW2tZnqZscEu9T/I5B7rTjaUoKnh7O25VudPLoHwSHWWyp+YE0MXe8y+b5o6mq/MyGUOywHAcRfRcBkTD63yiPAPdWycshwQLQVdFyy7T2FFnHa2YH60oITmuA8wzkJANoE8GvSyQcg64Rtq1miQ5k63dtFSuc3smXeIdtI2zHsV0btFsWGkmPoh0X557DNz74kGPDZu5EFkMZ+8+zFJ9YORaxGei/QzO3kH/2d51CwMPytTT5+3KXV/q4d3oZqRrZtsKPTwoyVT1GlN1EnzX1N0Lo5UpqMQn5Gp8sBiRh0B7CLD/EwNI5snA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4r2SHJi6mMmzTP+UWPvWxGd14NXj3TOxJ6bjjLApxxM=;
- b=Z6P6EwayQMxiungA+so2Jy89a33L+yzCBCgDbQwf+VrQY6sd9jQJJyM8XxKYoumIRsBvCoOz1SVfs4zK7mAut122N4jwwAwsY9w1MCbCIQ/lz+VYOcUYHUFtzHZip/moWh4Wvoh/06Xq1QekmpusU+xCrjfadsJ+QjLnEs2io4dh8ZJCBSvhRHM3tRCFvTbekMvPpQM/xi958V4a0n1DsQW/LCjH7Jdn5f1rZQauP0SwG+HTgi4xhDygRFDuKZy3emABzzMHmGV6TAo2jviXO37ilWIsV5zfnp2lC+ovdeXGWpMe5kzAvVtqq/j2FT6iPzu4y36kd/q4QXoMlMbr5w==
+ bh=WM3IXF7bQZ78wAQE3U7WfJo1MwNA8TAVYXdDfK39xM8=;
+ b=LXtCEtoPVRLrbOQXEe5U5vEZL6eyUjOXWMDDqTpSxlHtpj5jAHtJi5hHMFeYsVWloljSWR09vdesHc5jdrl/T3G23huBF5r7hDimFmlZfjCNh1dT7fQR2QwICdPjilo4XQcFWkkK5NCgnak8u0128tkmCG5of43tqQapVO7Q900Vd1CNj4Etbh1ii1yxwDwO/oizZkiLBcUhf0K0UGwb5hSYl39LdMjSRuzCQZDq440gGQ1WdqlQSG8fVxgvb5AWJ8D/QQDwjmdfWfZtMeho1Hrmt/9jB1YNmyIHGvExSuf/1pAXOx/z78P8AvsamAmiU7YACJa5zbsuEJYXDIHKcg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microsoft.com; dmarc=pass action=none
- header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4r2SHJi6mMmzTP+UWPvWxGd14NXj3TOxJ6bjjLApxxM=;
- b=iiOkaFrkykTOC/Bg3SXB6SFIRlJ+mG0xFWj7bPT1H6SEl+ZiFpEayHnQnPi1h6csCpayi0EfOieZx4wm7vOQypcn/Yhw8dYmM8w0/TizLXOgrp9+Yicka6DgoB1wgJMGLuDfOr8QSf5RuveFFDjfd8wKmWm3bm2H7PaOlGxoaaY=
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=microsoft.com;
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23) by MW4PR21MB1858.namprd21.prod.outlook.com
- (2603:10b6:303:73::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.1; Sat, 8 Apr
- 2023 21:11:57 +0000
-Received: from BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::97b2:25ca:c44:9b7]) by BL0PR2101MB1092.namprd21.prod.outlook.com
- ([fe80::97b2:25ca:c44:9b7%6]) with mapi id 15.20.6298.017; Sat, 8 Apr 2023
- 21:11:57 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
-        decui@microsoft.com, lpieralisi@kernel.org, kw@linux.com,
-        robh@kernel.org, bhelgaas@google.com, linux-hyperv@vger.kernel.org,
-        linux-pci@vger.kernel.org, mikelley@microsoft.com
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with hyperv_pcpu_input_arg
-Date:   Sat,  8 Apr 2023 14:11:12 -0700
-Message-Id: <20230408211112.15235-1-decui@microsoft.com>
-X-Mailer: git-send-email 2.17.1
-Content-Type: text/plain
-X-ClientProxiedBy: MW4PR03CA0043.namprd03.prod.outlook.com
- (2603:10b6:303:8e::18) To BL0PR2101MB1092.namprd21.prod.outlook.com
- (2603:10b6:207:30::23)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by DS0PR11MB6373.namprd11.prod.outlook.com (2603:10b6:8:cb::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.36; Sun, 9 Apr
+ 2023 07:31:07 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::ffa1:410b:20b3:6233%5]) with mapi id 15.20.6277.035; Sun, 9 Apr 2023
+ 07:31:07 +0000
+Date:   Sun, 9 Apr 2023 00:31:04 -0700
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     <torvalds@linux-foundation.org>
+CC:     <linux-cxl@vger.kernel.org>, <linux-pci@vger.kernel.org>
+Subject: [GIT PULL] Compute Express Link (CXL) Fixes for 6.3-rc6
+Message-ID: <643269b8b7cb2_93aa294d7@dwillia2-mobl3.amr.corp.intel.com.notmuch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: BY3PR04CA0025.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::30) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR2101MB1092:EE_|MW4PR21MB1858:EE_
-X-MS-Office365-Filtering-Correlation-Id: 8403d531-74cd-4887-c05d-08db3875e29e
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS0PR11MB6373:EE_
+X-MS-Office365-Filtering-Correlation-Id: ea794b1f-48e8-4729-9cbe-08db38cc61db
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5w3z4OmzyvUunPVSR69e1dx5tyjz9XuUEX8prgcNQghBufgqRIx90EFM3HtwLbJmX4AkBNYPOppjbku5ReOogbBihJcu8dpvD1hudfLUjBReoRzRyyZCVvQ3BDZELAyHOnvmgN3UMoneEJoEBhkhvKUYO4toylSFsb/A5fKI4GNzLOoArrfIuYs2DxVBhSDCjy4H22R2k8GWxXJEYRP4D+YpKb57iBQ/H3fyoDzwxunh4h4+iLFWgS0ORzPL7gyYHBspTuNODhmxrU33hc1lDJnOYlbsNFV8tfDb66ujXxF7SaiZN3DTm0RZLEQmpnDHQRQLuOGO+4PCwaLfci5xecffI2e7ng0C0A0Kg3YKyxTsz2dha4n1ob0+t3nBskDN3RQjMfurssgIvlp/Gb7KWI4dCNXt5LtxJxvgv8pd4+R4HDW6cjY+nnZGQorkV2nLc823zWbCd4YHZIw1O1DVDehlJmrFmzvELDyTIsTwmTBBAuMJnR8UVGZMqA7nvniCK7KkHMlwzK4Hb5JXKb73DvwyCEPF2iW9oyc5ZVN0saS/jrdJMUH+/T/JkDhvLVvzl9HSXu1D+719qL6URjU39MHvuC7U4k8aYJH7nFrpp3+DMmjRs5A0sdUAnWERmROpr0RgFsVzmD64sRcrkt/+1g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR2101MB1092.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(396003)(346002)(39860400002)(376002)(451199021)(10290500003)(478600001)(52116002)(6636002)(786003)(316002)(6512007)(6506007)(1076003)(186003)(6486002)(6666004)(2906002)(4326008)(66946007)(66556008)(66476007)(8676002)(41300700001)(8936002)(5660300002)(921005)(82960400001)(82950400001)(38100700002)(86362001)(36756003)(83380400001)(2616005);DIR:OUT;SFP:1102;
+X-Microsoft-Antispam-Message-Info: AoAJpE9UlVgqPGzvjM9GAWfted3mWlTsg8eGIGN85qr9OzUfRGMLGBbmGvLEftVAyWD5c0a+9+B9ROS0p+2WvoKgR+GcxzRGKNoB0LZMka8/xS1LQe3+cVIeoH44RWhFc3NiRTecJkOGG2TAv5hWI+Fd2FUWEKl80DVf4fz71AcmNlW6vVz2FFUeOj+4B8Ghys6ivcte73CFWkfPAM33+9ba1kx8qeMpCAfGFRY8dvtcCurs9DIluEMfNM5n6urtD7fp46avhl+wyQQjbm5jJIIxcDSGdNHHAlgHhSj134H8Fk1WyGcLWEEktOzVJJ+XcXSyrOgFaUT/irxVbCCViuhpr/4QnDtxBwkpCwSgt6T6oXU1U7XK/aAlC5P32HZTtgCmR8WQNvEX4BFXbk/xg1oOBBTog8EPy3EUiSLRX6n3E4IwNStlQT7SqP2fyzuvq5Q8mO2D6JWg2IGrgWsCpXNKITdE0ZY4tQzaMdaSYeQBdYKlfaf9YERw9WrBKHoZLOsmLLaLTTGSM4SrKXaClXf4450Dt5sUXs8nug+ZFkA=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(396003)(376002)(366004)(346002)(136003)(451199021)(86362001)(2906002)(6486002)(9686003)(6666004)(83380400001)(186003)(6512007)(6506007)(26005)(966005)(478600001)(66476007)(6916009)(4326008)(66556008)(66946007)(82960400001)(41300700001)(8936002)(8676002)(38100700002)(316002)(5660300002);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?mdCkX+eOpZesoRsSHWvZ/sLiF0p8tygQNeP/AW0QEXlHpsreTWEXwTBCr2QG?=
- =?us-ascii?Q?hTno0QCjxjT9r+BBvBaonUro4ug3oI9nm4sQ/MlO/vJi2CSsga8zGmeaYX8X?=
- =?us-ascii?Q?35Lz18S2s6BoGFxRD/AXQ7aXXPVp+SwXwoqkTSv04JsxpJvG1lPfsTUYXLQz?=
- =?us-ascii?Q?uiPm4sscTtWpPFODVYuiqu3LXaFNzjlSJbXKzkImAc1/Z0cYRBzRx382cnyg?=
- =?us-ascii?Q?2Kg1D/5f8X8MUCb4A8MDeFha4QzVc5HbTMLloHjU56n+Vm0csb43DHNFtMCO?=
- =?us-ascii?Q?Rhc7tUUVjp+tJT8KCwSDb8XX4KxXWgfqXC4bt2WEDRNPV/5enLvMB9o4fvno?=
- =?us-ascii?Q?ReiaiXrPrNXIcy1Lm8x4lHr8X8Q8Fz3AMRBC//GwxcAoOc/OXhiyZLnHlXdd?=
- =?us-ascii?Q?3Zn14NevBIF7WBcIkcRGxmfbc9i8EKFS+WbjGilQbKQNEXZMqs7BVyMX1/2C?=
- =?us-ascii?Q?37dKuVr/mSw+tPVyYHXR/837LJpO49HqZqD2cGJ5cPLWM/CGuXyS0P2evG5L?=
- =?us-ascii?Q?IDBSmFyfuGbSun+1Ll2ytMMY9JsB6dxi/awR1AjizJKLq2sdU2jhe8cnMkxN?=
- =?us-ascii?Q?aZIuvXuwi1KQgdoj4ju+BhVaiLObD/t3P29T2IBP3sjPJdo9fPztCRdcAxkD?=
- =?us-ascii?Q?mZW8K2cVQOzVVke5G8ZS2OgptAnEKHihIkBH7USyUAWM4Ouq6rq6ECJ9E7ej?=
- =?us-ascii?Q?qzoK21JaodcnnsXLLsEZPMIKo21yGW7ZFslBdN2b+biPPNUB6J22J5FB0xQu?=
- =?us-ascii?Q?dijhqoJ3RhO5wZ25d5LpaGEaQYzftYM/jeSoxtAwho9xj0/cvblPbxY4f+d5?=
- =?us-ascii?Q?TEbT2N0c6kTrDxtGoCNfnX6TCXFzO+4pm6ozNpafyligGsdPJzlL7uG9Ce/W?=
- =?us-ascii?Q?vm3+GphzYscfsrPiN/uBWSCNhG9WiKJrdHMb24PjPLoVgRmGsiyR+rnRCj5D?=
- =?us-ascii?Q?5NIClv+ZOnMAzO/HAcy5D9C2vrnVylce6h/y8YO4qKrA23HJiCx8mVghxYD2?=
- =?us-ascii?Q?5I5+Tbas2TENbsvjBUF6mF6eSYiCH5bm7e4a7ePyVMZHzbH7p9F+1AECvLZ8?=
- =?us-ascii?Q?SMf4M3Q7JQGUxq9NKUcUc/RXjLhAY3a2JnlkcOWvk5nkt8vlTtTHFvZw0G8I?=
- =?us-ascii?Q?vLHKvHJxkPCworr5O4vMdmXHsVMLUjXcq+boRfHTtOBJeTjrAiPZMknf3PjU?=
- =?us-ascii?Q?JPvxdN4BNm9P5Z/1OnwiDC3GsRL46bmvjk2nSgUavvnPd/7u2e1bDCFuOVSH?=
- =?us-ascii?Q?+ByJ1ilkMt44zMoesqL01BiChQ8uUD6/qex24kBeI2oDI98uOfaWcvcaoYDo?=
- =?us-ascii?Q?E+spDIscgz01TNdnMuxJeE3cmxWKLOniKhCyqTXW+EX418G1KdK7U4y8/deE?=
- =?us-ascii?Q?0MYKt3U8ROJopppMbMqC0NtwOFaOMCWfWm6y+2at4gNbYvhJRSpfV/U8LLho?=
- =?us-ascii?Q?gKkEAgCPNykLvMAORtHLPinsNrkHIV1VMIIUAfqFAUsGha9qnfToPhgjEtUN?=
- =?us-ascii?Q?F0fPKF04vI/RGhVpXibrgp0szQxqoOTITAmi8FKWNWh+qWMy8apAT4Dai3tH?=
- =?us-ascii?Q?ndNmwJAd3gONqdYXwKNv/oX72pWZqAvzUMK1bWFAoXlq7XmWbMTH3tlh7kOr?=
- =?us-ascii?Q?mAiD8yQlL0QxWMnZ6JGoW/VCqReWHeDnfF8+VMlTQn7q?=
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8403d531-74cd-4887-c05d-08db3875e29e
-X-MS-Exchange-CrossTenant-AuthSource: BL0PR2101MB1092.namprd21.prod.outlook.com
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?XlegKn4d+vP8NRdfYXZwyE24w6BIFfB5BRTaOHGI0/SKZPtHcwD/u4OUlvXV?=
+ =?us-ascii?Q?Ahh/sGMJ/F5dEQwgrvRUWy31cgWKo2kfzwW8KYIjCRbmhcuNK7C49MR+9Mzg?=
+ =?us-ascii?Q?JfptBvkX9cv3JpP9Ji7oiqxJoyup9rPUtumiq+lKwsX7qLMMEB2lL23ba5mo?=
+ =?us-ascii?Q?72Zceb4Qy4ixrJyzh2o+hqktQuiVNWa5g+Njgd4aGY3ZZ8W/ldynb8yXoU5v?=
+ =?us-ascii?Q?katLdc8TOIHz4aYjqX2ySHxjMsltF6Yc81HOKiOp1NiuVlUx6+Ef9vVNoiYj?=
+ =?us-ascii?Q?YqD3GGTIuKGJdxuUIuMD2mzjaEhoMXUZFzON/HC4BwUe60APmwOoDZRkMHG4?=
+ =?us-ascii?Q?sHr5opay9PJShDzaeS6X0iR9Mpv5f5+10V3OTbGaFD2MO5tAMe5n1vog+i9L?=
+ =?us-ascii?Q?WgpKdCB0IDmw9Zn/hKP+ZWJkrmLFPmfBuNTUS/NH6YJe39LOt/BWGPNDnSRy?=
+ =?us-ascii?Q?yvQXM4abDqqjMEtZG0EzspqMj2l05yWB5dJH7ShCm/G4FOKoHpeYypi4VwEH?=
+ =?us-ascii?Q?RLID9dZ1smJ5Ri0G2tQhlx9c2f2Bhj/c4riJePC63/gwm3Q5B7fkqkkQiU5O?=
+ =?us-ascii?Q?/01ql6GpXx0Xo5CKpgG95R1VOispsx6GVIB98gxpJeziSffTGS143uyp49sR?=
+ =?us-ascii?Q?OBNwrUGx+3RlhzGCjzNt7jXLBfNSQjlNFU/0MuvpeJyxdxQChZJOQLAXhvqI?=
+ =?us-ascii?Q?JFx8h1EIYYNKa1iSKPo8PiC2RLkZifRDHsj6zx7nKU9+a+NkyGqjQGwWJLe5?=
+ =?us-ascii?Q?7uFK23r1WU3MlI0OWfJIjKsUEFgbcQNy8bL5EOSdcFZbeJe5rAOZHWDKYPHi?=
+ =?us-ascii?Q?L62P3EHazIKKZTi7rlJZJ031j83HDfbPX1Ne3g8YzrZbxax/nkI+4pF/o1tE?=
+ =?us-ascii?Q?4Sne91AfbDjIaOtPvo1lOavVQhBOsVBjAzVgvGPsZELizGTeY1Sti9UlcBey?=
+ =?us-ascii?Q?tmMqDuTStX/Z/Hz75VdtMtAVHuVoRsWU1NX79wqrs107JbqW3KUK0b49dX8X?=
+ =?us-ascii?Q?iKwo9ZzvaaemM/N26Z933KcOFmE7Fa9dVKP54ZtD8BdmsHNqkIHPE4kqMV+8?=
+ =?us-ascii?Q?D/xBvYOqE9L5rTbD7e1KTmo7l0ker08UiGroiRLPhOARt4pxZqdwtX1SFbAW?=
+ =?us-ascii?Q?tPiTSLunCARQqzRqim0mtcn4Zu1NUUZrEYzzUsAYVhDuONab0VsbNHMnIgJt?=
+ =?us-ascii?Q?lwsqBh+nPl4IFcILozflOTKt0QiT2kI34AylT+zetaUBZtC600Z8qlpP6EG5?=
+ =?us-ascii?Q?iDZxu3ym/CNoSwr+6Evs1v6lrRJVwHlcFh/H6mBCCq469Qen3IQ3SOHjgXt5?=
+ =?us-ascii?Q?b3Km6VSWHvIM21mDI/cp5gR5OuLWMDRlcK+S44/h4vHFwqkowEyy5PpXGbii?=
+ =?us-ascii?Q?nk+KkbeMrhnPWXXzKejV0qvvH3fP/jadt6diHbj1eZRE2BPq/nbp7Du0d0eL?=
+ =?us-ascii?Q?kg/Wdexc0MQNUwb2d1hpmIdKGJ7JptjXGJm0ZTXU3zN4SLbuATEa6uTtEzSJ?=
+ =?us-ascii?Q?ohLWdsydZ96aV/5o10RT14xQqKqFyHUB7aZPRqzL0GbPe2F/RyPL/aXpmR1h?=
+ =?us-ascii?Q?+nk5pi8l/J7TQx5C+xDsY9qlISgksNCX+Qs+BGuP3BG0TUBTsGOVUv/hJ/os?=
+ =?us-ascii?Q?Fg=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: ea794b1f-48e8-4729-9cbe-08db38cc61db
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2023 21:11:56.9713
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Apr 2023 07:31:07.0956
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sOU6RC31KkfaUEn6U+GrY8NqDXGgOmrOihzOj0Fh/tibBlq5A+gvy1BXMZqNwSwbAeEuURw9RMex/0pOK/sWKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR21MB1858
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
-        version=3.4.6
+X-MS-Exchange-CrossTenant-UserPrincipalName: 60KHbTN/QT7Mdp11XkYQGkcHbieEMf+IdvzaxPF4hLlsoOZER4nfdO5PF6xCXV5sxlZ7Dj4zdKeGTc7Uuwa8FPm6fNtfX1LcO/oens8AcCA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB6373
+X-OriginatorOrg: intel.com
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-4 commits are involved here:
-A (2016): commit 0de8ce3ee8e3 ("PCI: hv: Allocate physically contiguous hypercall params buffer")
-B (2017): commit be66b6736591 ("PCI: hv: Use page allocation for hbus structure")
-C (2019): commit 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by the hbus buffer")
-D (2018): commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
+Hi Linus, please pull from:
 
-Patch D introduced the per-CPU hypercall input page "hyperv_pcpu_input_arg"
-in 2018. With patch D, we no longer need the per-Hyper-V-PCI-bus hypercall
-input page "hbus->retarget_msi_interrupt_params" that was added in patch A,
-and the issue addressed by patch B is no longer an issue, and we can also
-get rid of patch C.
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.3-rc6
 
-The change here is required for PCI device assignment to work for
-Confidential VMs (CVMs), because otherwise we would have to call
-set_memory_decrypted() for "hbus->retarget_msi_interrupt_params" before
-calling the hypercall HVCALL_RETARGET_INTERRUPT.
+...to receive several fixes for driver startup regressions that landed
+in v6.3-rc1 as well as some older bugs.
 
-Signed-off-by: Dexuan Cui <decui@microsoft.com>
+The regressions were due to a lack of testing with what the CXL
+specification calls Restricted CXL Host (RCH) topologies compared to the
+testing with Virtual Host (VH) CXL topologies. A VH topology is typical
+PCIe while RCH topologies map CXL endpoints as Root Complex Integrated
+endpoints. The impact is some driver crashes on startup.
+
+v6.3-rc1 also added compatibility for range registers (the mechanism
+that CXL 1.1 defined for mapping memory) to treat them like HDM decoders
+(the mechanism that CXL 2.0 defined for mapping Host-managed Device
+Memory). That work collided with the new region enumeration code that
+was tested with CXL 2.0 setups, and fails with crashes at startup.
+
+Lastly, the DOE (Data Object Exchange) implementation for retrieving an
+ACPI-like data table from CXL devices is being reworked for v6.4.
+Several fixes fell out of that work that are suitable for v6.3.
+
+All of this has been in linux-next for a while, and all reported issues
+[1] have been addressed.
+
+[1]: http://lore.kernel.org/r/20230405075704.33de8121@canb.auug.org.au
+
 ---
- drivers/pci/controller/pci-hyperv.c | 48 +++++------------------------
- 1 file changed, 7 insertions(+), 41 deletions(-)
 
-diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-index 337f3b4a04fc0..bc32662c6bb7f 100644
---- a/drivers/pci/controller/pci-hyperv.c
-+++ b/drivers/pci/controller/pci-hyperv.c
-@@ -508,20 +508,11 @@ struct hv_pcibus_device {
- 	struct msi_domain_info msi_info;
- 	struct irq_domain *irq_domain;
- 
--	spinlock_t retarget_msi_interrupt_lock;
--
- 	struct workqueue_struct *wq;
- 
- 	/* Highest slot of child device with resources allocated */
- 	int wslot_res_allocated;
- 	bool use_calls; /* Use hypercalls to access mmio cfg space */
--
--	/* hypercall arg, must not cross page boundary */
--	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
--
--	/*
--	 * Don't put anything here: retarget_msi_interrupt_params must be last
--	 */
- };
- 
- /*
-@@ -645,9 +636,9 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 	hbus = container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
- 	int_desc = data->chip_data;
- 
--	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
-+	local_irq_save(flags);
- 
--	params = &hbus->retarget_msi_interrupt_params;
-+	params = *this_cpu_ptr(hyperv_pcpu_input_arg);
- 	memset(params, 0, sizeof(*params));
- 	params->partition_id = HV_PARTITION_ID_SELF;
- 	params->int_entry.source = HV_INTERRUPT_SOURCE_MSI;
-@@ -680,7 +671,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 
- 		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
- 			res = 1;
--			goto exit_unlock;
-+			goto out;
- 		}
- 
- 		cpumask_and(tmp, dest, cpu_online_mask);
-@@ -689,7 +680,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 
- 		if (nr_bank <= 0) {
- 			res = 1;
--			goto exit_unlock;
-+			goto out;
- 		}
- 
- 		/*
-@@ -708,8 +699,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
- 	res = hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
- 			      params, NULL);
- 
--exit_unlock:
--	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
-+out:
-+	local_irq_restore(flags);
- 
- 	/*
- 	 * During hibernation, when a CPU is offlined, the kernel tries
-@@ -3598,35 +3589,11 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	bool enter_d0_retry = true;
- 	int ret;
- 
--	/*
--	 * hv_pcibus_device contains the hypercall arguments for retargeting in
--	 * hv_irq_unmask(). Those must not cross a page boundary.
--	 */
--	BUILD_BUG_ON(sizeof(*hbus) > HV_HYP_PAGE_SIZE);
--
- 	bridge = devm_pci_alloc_host_bridge(&hdev->device, 0);
- 	if (!bridge)
- 		return -ENOMEM;
- 
--	/*
--	 * With the recent 59bb47985c1d ("mm, sl[aou]b: guarantee natural
--	 * alignment for kmalloc(power-of-two)"), kzalloc() is able to allocate
--	 * a 4KB buffer that is guaranteed to be 4KB-aligned. Here the size and
--	 * alignment of hbus is important because hbus's field
--	 * retarget_msi_interrupt_params must not cross a 4KB page boundary.
--	 *
--	 * Here we prefer kzalloc to get_zeroed_page(), because a buffer
--	 * allocated by the latter is not tracked and scanned by kmemleak, and
--	 * hence kmemleak reports the pointer contained in the hbus buffer
--	 * (i.e. the hpdev struct, which is created in new_pcichild_device() and
--	 * is tracked by hbus->children) as memory leak (false positive).
--	 *
--	 * If the kernel doesn't have 59bb47985c1d, get_zeroed_page() *must* be
--	 * used to allocate the hbus buffer and we can avoid the kmemleak false
--	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
--	 * kmemleak to track and scan the hbus buffer.
--	 */
--	hbus = kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-+	hbus = kzalloc(sizeof(*hbus), GFP_KERNEL);
- 	if (!hbus)
- 		return -ENOMEM;
- 
-@@ -3683,7 +3650,6 @@ static int hv_pci_probe(struct hv_device *hdev,
- 	INIT_LIST_HEAD(&hbus->dr_list);
- 	spin_lock_init(&hbus->config_lock);
- 	spin_lock_init(&hbus->device_list_lock);
--	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
- 	hbus->wq = alloc_ordered_workqueue("hv_pci_%x", 0,
- 					   hbus->bridge->domain_nr);
- 	if (!hbus->wq) {
--- 
-2.25.1
+The following changes since commit e8d018dd0257f744ca50a729e3d042cf2ec9da65:
 
+  Linux 6.3-rc3 (2023-03-19 13:27:55 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl tags/cxl-fixes-6.3-rc6
+
+for you to fetch changes up to ca712e47054678c5ce93a0e0f686353ad5561195:
+
+  Merge branch 'for-6.3/cxl-doe-fixes' into for-6.3/cxl (2023-04-04 15:37:25 -0700)
+
+----------------------------------------------------------------
+cxl fixes for v6.3-rc6
+
+- Fix several issues with region enumeration in RCH topologies that can
+  trigger crashes on driver startup or shutdown.
+
+- Fix CXL DVSEC range register compatibility versus region enumeration
+  that leads to startup crashes
+
+- Fix CDAT endiannes handling
+
+- Fix multiple buffer handling boundary conditions
+
+- Fix Data Object Exchange (DOE) workqueue usage vs CONFIG_DEBUG_OBJECTS
+  warn splats
+
+----------------------------------------------------------------
+Dan Williams (8):
+      cxl/hdm: Fix double allocation of @cxlhdm
+      cxl/hdm: Skip emulation when driver manages mem_enable
+      cxl/port: Fix find_cxl_root() for RCDs and simplify it
+      cxl/region: Fix region setup/teardown for RCDs
+      cxl/region: Move coherence tracking into cxl_region_attach()
+      cxl/hdm: Limit emulation to the number of range registers
+      cxl/hdm: Extend DVSEC range register emulation for region enumeration
+      Merge branch 'for-6.3/cxl-doe-fixes' into for-6.3/cxl
+
+Lukas Wunner (6):
+      cxl/pci: Fix CDAT retrieval on big endian
+      cxl/pci: Handle truncated CDAT header
+      cxl/pci: Handle truncated CDAT entries
+      cxl/pci: Handle excessive CDAT length
+      PCI/DOE: Silence WARN splat with CONFIG_DEBUG_OBJECTS=y
+      PCI/DOE: Fix memory leak with CONFIG_DEBUG_OBJECTS=y
+
+ drivers/cxl/core/hdm.c    | 126 +++++++++++++++++++++++++---------------------
+ drivers/cxl/core/pci.c    |  38 ++++++++------
+ drivers/cxl/core/pmem.c   |   6 +--
+ drivers/cxl/core/port.c   |  38 +++-----------
+ drivers/cxl/core/region.c |  33 ++++++++++--
+ drivers/cxl/cxl.h         |   8 +--
+ drivers/cxl/cxlpci.h      |  14 ++++++
+ drivers/cxl/port.c        |   4 +-
+ drivers/pci/doe.c         |  30 ++++++-----
+ include/linux/pci-doe.h   |   8 ++-
+ 10 files changed, 175 insertions(+), 130 deletions(-)
