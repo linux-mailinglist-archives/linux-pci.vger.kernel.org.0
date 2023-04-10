@@ -2,100 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EB5F16DC3AF
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Apr 2023 08:50:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D9C6DC3C9
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Apr 2023 09:25:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbjDJGuZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Apr 2023 02:50:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54360 "EHLO
+        id S229641AbjDJHZX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Apr 2023 03:25:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229725AbjDJGuY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Apr 2023 02:50:24 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6416F359C
-        for <linux-pci@vger.kernel.org>; Sun,  9 Apr 2023 23:50:23 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1681109421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AxH5az8ZcZbr4cxtmxv7AYVV5tnKtAP05nuY2o53Ka4=;
-        b=PToI8+Bi6beJUUj+45b1LIgSKykfxy5NC5gq8I3F1FvpJVHMeJHQqCBrDy8hSM0WCbzqMc
-        u0ifWbnHj6SEYkiomp8Idxuuoww7jGC1V5H1ZSfXqunvLVidBN6qof5lOXGPuVvP5rnH8R
-        sQh0ky+7kRKgdo/aFLsPPKfsXGiwekkS/+922CqD7FNLsSNfLTv55zqfVxl+79LbS98fhv
-        9eRrZDpeRHLmFJPQHFEhSdj5B14EtwQSfJVN0DUESv1BLVrYZ2/RQYsPc8Vh/bVgEmv2lS
-        tlyg5v9UQp7BeH1rZmayMfG3AFlP3h6hNmPmr3iC0gceN2X/5rKWsfsjFJV9Zg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1681109421;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=AxH5az8ZcZbr4cxtmxv7AYVV5tnKtAP05nuY2o53Ka4=;
-        b=6BxUtbe46+UJjHY3XV2jRANpwC4khayD1ACl4fiFhaFY8KReN3qrf4sKBhEEuyufwgjlWa
-        TyaMg+wX+OsjogDQ==
-To:     David Laight <David.Laight@ACULAB.COM>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: RE: PCIe cycle sequence when updating the msi-x table
-In-Reply-To: <ed0017284c324cf68f05a20ac86b7b35@AcuMS.aculab.com>
-References: <b2d1bb86ea4642d2aa01ebd9d3d7a77e@AcuMS.aculab.com>
- <87edovtqki.ffs@tglx> <ed0017284c324cf68f05a20ac86b7b35@AcuMS.aculab.com>
-Date:   Mon, 10 Apr 2023 08:50:20 +0200
-Message-ID: <875ya4temr.ffs@tglx>
+        with ESMTP id S229551AbjDJHZW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Apr 2023 03:25:22 -0400
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8271B3AB3;
+        Mon, 10 Apr 2023 00:25:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681111521; x=1712647521;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=8FC/BfVa04LNe6x9xGRVjTagWe8e1Y6VfA8cIDMTxKo=;
+  b=F++Dpp7/Zs8HUOpIzsMl3t3d4sIbYKddVlYdC2DEoEZA2qkyrLoN5i0A
+   J3M0FwOM15e4HzyGmNMg0Z3cMpTjBBktwVWrsHLZydaw+IHv0bclACs/B
+   sZhvxJCMhcis7ukzibNHE6dmVv2WmVTPm3Yn7r8vXtnefiR5wTmHzjVWo
+   Qf01eKGioGKwftPMIx3d/0Vx02qgcRuqgVpj77crDPcmY1e6SHG7PVSqS
+   RiIKhm2adlUvcGxwnnaAtzfQR9p7LSotNvu+OIjvxWOPRrA2qbXZ/KKFQ
+   oOb71G/lf+GhoR25McxXnsWQlJcBU0F8FFs7+1u/khYSi4pE072tkpaYf
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="322937895"
+X-IronPort-AV: E=Sophos;i="5.98,333,1673942400"; 
+   d="scan'208";a="322937895"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Apr 2023 00:25:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10675"; a="799420882"
+X-IronPort-AV: E=Sophos;i="5.98,333,1673942400"; 
+   d="scan'208";a="799420882"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Apr 2023 00:25:17 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pllts-000VCr-1m;
+        Mon, 10 Apr 2023 07:25:16 +0000
+Date:   Mon, 10 Apr 2023 15:25:11 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Shuai Xue <xueshuai@linux.alibaba.com>, helgaas@kernel.org,
+        yangyicong@huawei.com, will@kernel.org, Jonathan.Cameron@huawei.com
+Cc:     oe-kbuild-all@lists.linux.dev,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        robin.murphy@arm.com, mark.rutland@arm.com,
+        baolin.wang@linux.alibaba.com, zhuo.song@linux.alibaba.com,
+        xueshuai@linux.alibaba.com
+Subject: Re: [PATCH v2 2/3] drivers/perf: add DesignWare PCIe PMU driver
+Message-ID: <202304101501.5weSAuW5-lkp@intel.com>
+References: <20230410031702.68355-3-xueshuai@linux.alibaba.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230410031702.68355-3-xueshuai@linux.alibaba.com>
+X-Spam-Status: No, score=-2.5 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_PASS,
+        SPF_NONE autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 07 2023 at 22:06, David Laight wrote:
-> From: Thomas Gleixner
->> Sent: 07 April 2023 20:56
->> So the devices gets:
->> 
->>    1) write to control register with MASKBIT set
->>    2) write to LOWER_ADDRESS
->>    3) write to UPPER_ADDRESS
->>    4) write to ENTRY_DATA
->>    5) write to control register with MASKBIT cleared
->> 
->> #1 disables the vector and the device is not allowed to use the msg data
->> from the table entry until the mask bit is cleared again.
->> 
->> If the device gets that wrong then that's a bug in the device and not a
->> kernel problem.
->
-> Maybe, but the kernel isn't making it easy for a device
-> state-engine that has to do four separate reads of an
-> internal 32-bit memory area.
-> Adding a short delay between #4 and #5 is likely to avoid
-> some very hard to debug issues if the hardware reads the
-> values 'mask last', if it reads them 'mask first' you need
-> a short delay between #1 and #2.
+Hi Shuai,
 
-Whatever order this reads does not matter. The point is:
+kernel test robot noticed the following build warnings:
 
-  "Mask Bit - When this bit is Set, the Function is prohibited from
-   sending a message using this MSI-X Table entry."
+[auto build test WARNING on soc/for-next]
+[also build test WARNING on linus/master v6.3-rc6 next-20230406]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-So you cannot make this read order dependent at all.
+url:    https://github.com/intel-lab-lkp/linux/commits/Shuai-Xue/drivers-perf-add-DesignWare-PCIe-PMU-driver/20230410-121727
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+patch link:    https://lore.kernel.org/r/20230410031702.68355-3-xueshuai%40linux.alibaba.com
+patch subject: [PATCH v2 2/3] drivers/perf: add DesignWare PCIe PMU driver
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20230410/202304101501.5weSAuW5-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/279673b15957e3ea9c14fded1e41a861a6d8b2d9
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Shuai-Xue/drivers-perf-add-DesignWare-PCIe-PMU-driver/20230410-121727
+        git checkout 279673b15957e3ea9c14fded1e41a861a6d8b2d9
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash
 
-> Anything fpga based is likely to be using a 32bit memory
-> block for the MSI-X data (possibly even 16bit).
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304101501.5weSAuW5-lkp@intel.com/
 
-It's trivial enough to latch the message on unmask into a shadow
-register set and let the state engine work from there.
+All warnings (new ones prefixed by >>):
 
-And no, we are not adding random delays to that code just because.
+>> drivers/perf/dwc_pcie_pmu.c:195:9: warning: no previous prototype for 'dwc_pcie_event_show' [-Wmissing-prototypes]
+     195 | ssize_t dwc_pcie_event_show(struct device *dev,
+         |         ^~~~~~~~~~~~~~~~~~~
 
-Thanks,
 
-        tglx
+vim +/dwc_pcie_event_show +195 drivers/perf/dwc_pcie_pmu.c
+
+   194	
+ > 195	ssize_t dwc_pcie_event_show(struct device *dev,
+   196					struct device_attribute *attr, char *page)
+   197	{
+   198		struct dwc_pcie_event_attr *eattr;
+   199	
+   200		eattr = container_of(attr, typeof(*eattr), attr);
+   201	
+   202		if (eattr->type == DWC_PCIE_LANE_EVENT)
+   203			return sprintf(page, "eventid=0x%lx, type=0x%lx, lane=0x%lx\n",
+   204				       (unsigned long)eattr->eventid,
+   205				       (unsigned long)eattr->type,
+   206				       (unsigned long)eattr->lane);
+   207		else
+   208			return sprintf(page, "eventid=0x%lx, type=0x%lx",
+   209				       (unsigned long)eattr->eventid,
+   210				       (unsigned long)eattr->type);
+   211	}
+   212	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
