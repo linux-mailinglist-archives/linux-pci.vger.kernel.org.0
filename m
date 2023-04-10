@@ -2,45 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0AAB26DC4B4
-	for <lists+linux-pci@lfdr.de>; Mon, 10 Apr 2023 10:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D25286DC4CF
+	for <lists+linux-pci@lfdr.de>; Mon, 10 Apr 2023 11:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjDJI6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 10 Apr 2023 04:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51336 "EHLO
+        id S229618AbjDJJFX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 10 Apr 2023 05:05:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229535AbjDJI6T (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Apr 2023 04:58:19 -0400
-Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F1AE1BDC;
-        Mon, 10 Apr 2023 01:58:18 -0700 (PDT)
+        with ESMTP id S229608AbjDJJFW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 10 Apr 2023 05:05:22 -0400
+Received: from ex01.ufhost.com (ex01.ufhost.com [61.152.239.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D2C730C3;
+        Mon, 10 Apr 2023 02:05:20 -0700 (PDT)
 Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
         (using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
         (Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
-        by fd01.gateway.ufhost.com (Postfix) with ESMTP id 029C124E2A5;
-        Mon, 10 Apr 2023 16:58:17 +0800 (CST)
+        by ex01.ufhost.com (Postfix) with ESMTP id 04B7C24E2A1;
+        Mon, 10 Apr 2023 17:05:19 +0800 (CST)
 Received: from EXMBX171.cuchost.com (172.16.6.91) by EXMBX166.cuchost.com
  (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 10 Apr
- 2023 16:58:16 +0800
+ 2023 17:05:18 +0800
 Received: from [192.168.125.108] (113.72.145.176) by EXMBX171.cuchost.com
  (172.16.6.91) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Mon, 10 Apr
- 2023 16:58:15 +0800
-Message-ID: <ac4b10d3-2a9f-b0a2-8004-38357266c861@starfivetech.com>
-Date:   Mon, 10 Apr 2023 16:58:15 +0800
+ 2023 17:05:17 +0800
+Message-ID: <430f1eb0-e348-8a4e-b501-16b8c3b2494f@starfivetech.com>
+Date:   Mon, 10 Apr 2023 17:05:17 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v1 0/3] Add JH7110 PCIe driver support
+Subject: Re: [PATCH v1 1/3] dt-binding: pci: add JH7110 PCIe dt-binding
+ documents.
 Content-Language: en-US
-To:     Conor Dooley <conor.dooley@microchip.com>
-CC:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Emil Renner Berthing <emil.renner.berthing@canonical.com>,
         Conor Dooley <conor@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
+        "Rob Herring" <robh+dt@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-riscv@lists.infradead.org>, <linux-pci@vger.kernel.org>,
         Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
@@ -48,24 +49,20 @@ CC:     Emil Renner Berthing <emil.renner.berthing@canonical.com>,
         Philipp Zabel <p.zabel@pengutronix.de>,
         Mason Huo <mason.huo@starfivetech.com>,
         Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-        Kevin Xie <kevin.xie@starfivetech.com>,
-        <daire.mcnamara@microchip.com>
+        Kevin Xie <kevin.xie@starfivetech.com>
 References: <20230406111142.74410-1-minda.chen@starfivetech.com>
- <20230406-quench-unharmed-2c11b2617e9f@wendy>
- <20230406-coming-stuffed-26f89610959c@wendy>
- <d9dde509-8923-a930-4c82-4bc8bd78ed0d@starfivetech.com>
- <20230407-splatter-greyhound-edc706148337@wendy>
+ <20230406111142.74410-2-minda.chen@starfivetech.com>
+ <38bc48bf-7d8c-8ddd-861f-3b7f3d2edce6@linaro.org>
 From:   Minda Chen <minda.chen@starfivetech.com>
-In-Reply-To: <20230407-splatter-greyhound-edc706148337@wendy>
+In-Reply-To: <38bc48bf-7d8c-8ddd-861f-3b7f3d2edce6@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [113.72.145.176]
-X-ClientProxiedBy: EXCAS062.cuchost.com (172.16.6.22) To EXMBX171.cuchost.com
+X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX171.cuchost.com
  (172.16.6.91)
 X-YovoleRuleAgent: yovoleflag
-X-Spam-Status: No, score=-3.2 required=5.0 tests=NICE_REPLY_A,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-3.2 required=5.0 tests=NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -74,78 +71,197 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 
 
-On 2023/4/7 17:57, Conor Dooley wrote:
-> Hey Minda,
+On 2023/4/7 2:24, Krzysztof Kozlowski wrote:
+> On 06/04/2023 13:11, Minda Chen wrote:
+>> Add PCIe controller driver dt-binding documents
+>> for StarFive JH7110 SoC platform.
 > 
-> On Fri, Apr 07, 2023 at 10:32:51AM +0800, Minda Chen wrote:
->> On 2023/4/6 19:54, Conor Dooley wrote:
->> > On Thu, Apr 06, 2023 at 12:47:41PM +0100, Conor Dooley wrote:
->> >> On Thu, Apr 06, 2023 at 07:11:39PM +0800, Minda Chen wrote:
->> >> > This patchset adds PCIe driver for the StarFive JH7110 SoC.
->> >> > The patch has been tested on the VisionFive 2 board. The test
->> >> > devices include M.2 NVMe SSD and Realtek 8169 Ethernet adapter.
->> >> 
->> >> I was talking with Daire last week about some changes he's working on
->> >> for the microchip driver, and we seemed to recall an off-list email
->> >> sent to Daire & Bjorn about extracting the common PLDA bits from the
->> >> pcie-microchip-host driver to be used with an (at that point)
->> >> unreleased SoC. Perhaps Bjorn has this in his mailbox somewhere still,
->> >> our corporate mail policy scrubs things from over a year ago & I could
->> >> not find it.
->> >>
->> >> I realised that that may actually have been StarFive, and the driver on
->> >> your GitHub [1] certainly felt very familiar to Daire (he said it was
->> >> very similar to his earlier revisions of his driver).
->> >> 
->> >> I've not looked at a diff between this and the version you ship on
->> >> GitHub, but first a quick inspection it mostly just looks like you
->> >> did s/plda/sifive/ on the file.
->> >> 
->> >> I'm obviously not a PCI maintainer, but if there are common bits between
->> >> the two drivers, extracting common bits seems like a good idea to me...
+> Use subject prefixes matching the subsystem (which you can get for
+> example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+> your patch is touching). Missing: 's'
 > 
->> Thanks. It is pleasure to using same common codes. Does common bits changes
->> will upstream soon?
+> Subject: drop second/last, redundant "dt-binding documents". The
+> "dt-bindings" prefix is already stating that these are bindings and
+> documentation.
 > 
-> I don't quite get what you mean. We've got some changes that are in
-> progress here:
-> https://lore.kernel.org/linux-pci/20230111125323.1911373-1-daire.mcnamara@microchip.com/
-> We've been quiet there for a while, but Daire's back looking into Robin's
-> comments in there about the range parsing/window setup at the moment.
+> Drop also full stop.
 > 
-> I'm not sure if that's what you mean though, since you said "common
-> bits" & Daire was doing that work in a world where there was no jh7110
-> driver in the mix.
-> Extracting common bits would be part of the process of adding a new
-> driver, as I don't think there's any real reason to do so without
-> another in-tree user.
+ok, thanks
+>> 
+>> Signed-off-by: Minda Chen <minda.chen@starfivetech.com>
+>> ---
+>>  .../bindings/pci/starfive,jh7110-pcie.yaml    | 163 ++++++++++++++++++
+>>  1 file changed, 163 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+>> 
+>> diff --git a/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml b/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+>> new file mode 100644
+>> index 000000000000..fa4829766195
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/starfive,jh7110-pcie.yaml
+>> @@ -0,0 +1,163 @@
+>> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/pci/starfive,jh7110-pcie.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: StarFive JH7110 PCIe 2.0 host controller
+>> +
+>> +maintainers:
+>> +  - Minda Chen <minda.chen@starfivetech.com>
+>> +
+>> +allOf:
+>> +  - $ref: /schemas/pci/pci-bus.yaml#
+>> +  - $ref: /schemas/interrupt-controller/msi-controller.yaml#
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: starfive,jh7110-pcie
+>> +
+>> +  reg:
+>> +    maxItems: 2
+>> +
+>> +  reg-names:
+>> +    items:
+>> +      - const: reg
+>> +      - const: config
+>> +
+>> +  msi-parent: true
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +
+>> +  clocks:
+>> +    maxItems: 4
+>> +
+>> +  clock-names:
+>> +    items:
+>> +      - const: noc
+>> +      - const: tl
+>> +      - const: axi_mst0
+>> +      - const: apb
+>> +
+>> +  resets:
+>> +    items:
+>> +      - description: AXI MST0 reset
+>> +      - description: AXI SLAVE reset
+>> +      - description: AXI SLAVE0 reset
+>> +      - description: PCIE BRIDGE reset
+>> +      - description: PCIE CORE reset
+>> +      - description: PCIE APB reset
+>> +
+>> +  reset-names:
+>> +    items:
+>> +      - const: mst0
+>> +      - const: slv0
+>> +      - const: slv
+>> +      - const: brg
+>> +      - const: core
+>> +      - const: apb
+>> +
+>> +  starfive,stg-syscon:
+>> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+>> +    items:
+>> +      items:
+>> +        - description: phandle to System Register Controller stg_syscon node.
+>> +        - description: register0 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+>> +        - description: register1 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+>> +        - description: register2 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+>> +        - description: register3 offset of STG_SYSCONSAIF__SYSCFG register for PCIe.
+>> +    description:
+>> +      The phandle to System Register Controller syscon node and the offset
+>> +      of STG_SYSCONSAIF__SYSCFG register for PCIe. Total 4 regsisters offset
+>> +      for PCIe.
+>> +
+>> +  pwren-gpios:
+>> +    description: Should specify the GPIO for controlling the PCI bus device power on.
 > 
-OK, I know extracting common bits is microchip new PCIe driver codes changed.
-Just ignore my previous comments.
-Maybe I will try to restructuring the driver code according to corporate e-mail which has been sent one year ago.
->> And I see there are many difference between pcie-microchip-host and our codes.
+> What are these? Different than defined in gpio-consumer-common?
 > 
-> Right. I'd expect there to be a fair difference between our integrations
-> of the IP, and therefore there'll be a bunch of non-shareable bits.
+power gpio board level configuration. It it not a requried property
+>> +    maxItems: 1
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +
+>> +  phys:
+>> +    maxItems: 1
+>> +
+>> +  interrupt-controller:
+>> +    type: object
+>> +    properties:
+>> +      '#address-cells':
+>> +        const: 0
+>> +
+>> +      '#interrupt-cells':
+>> +        const: 1
+>> +
+>> +      interrupt-controller: true
+>> +
+>> +    required:
+>> +      - '#address-cells'
+>> +      - '#interrupt-cells'
+>> +      - interrupt-controller
+>> +
+>> +    additionalProperties: false
+>> +
+>> +required:
+>> +  - reg
+>> +  - reg-names
+>> +  - "#interrupt-cells"
 > 
-> You need the stg,syscon & phy bits, and the clock/reset handling is
-> clearly different too.
+> Keep consistent quotes - either ' or "
 > 
->> >> https://github.com/starfive-tech/linux/blob/JH7110_VisionFive2_devel/drivers/pci/controller/pcie-plda.c
+> Are you sure this is correct? You have interrupt controller as child node.
 > 
-> I had a bit of a read through this again today with Daire to check what
-> the differences actually are and it *looked* like the main,
-> non-implementation related, differences were the extra "event" domain
-> that was created to simplify the driver & the bottom half interrupt
-> handling.
-> That all came out of the review process, so it's likely that some of the
-> same requests would be made of you by the PCI maintainers anyway.
 > 
-Thanks. I will check it and change my codes.
-> As an aside, you should probably run checkpatch --strict on this
-> submission, there's a rake of coding style "issues" in the new code
-> you've added.
+>> +  - interrupts
+>> +  - interrupt-map-mask
+>> +  - interrupt-map
+>> +  - clocks
+>> +  - clock-names
+>> +  - resets
+>> +  - msi-controller
+>> +
+>> +unevaluatedProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    bus {
+>> +        #address-cells = <2>;
+>> +        #size-cells = <2>;
+>> +
+>> +        pcie0: pcie@2B000000 {
 > 
-I do not run checkpatch with "--strict". I will run with it.
-> Cheers,
-> Conor.
+> Lowercase hex. Everywhere.
+> 
+ok
+>> +            compatible = "starfive,jh7110-pcie";
+>> +            #address-cells = <3>;
+>> +            #size-cells = <2>;
+>> +            #interrupt-cells = <1>;
+>> +            reg = <0x0 0x2B000000 0x0 0x1000000>,
+>> +                  <0x9 0x40000000 0x0 0x10000000>;
+> 
+> reg (and reg-names and ranges) is always second property.
+> 
+ok
+>> +            reg-names = "reg", "config";
+>> +            device_type = "pci";
+>> +            starfive,stg-syscon = <&stg_syscon 0xc0 0xc4 0x130 0x1b8>;
+>> +            bus-range = <0x0 0xff>;
+>> +            ranges = <0x82000000  0x0 0x30000000  0x0 0x30000000 0x0 0x08000000>,
+>> +                     <0xc3000000  0x9 0x00000000  0x9 0x00000000 0x0 0x40000000>;
+>> +            interrupt-parent = <&plic>;
+>> +            interrupts = <56>;
+>> +            interrupt-map-mask = <0x0 0x0 0x0 0x7>;
+>> +            interrupt-map = <0x0 0x0 0x0 0x1 &pcie_intc0 0x1>,
+>> +                            <0x0 0x0 0x0 0x2 &pcie_intc0 0x2>,
+>> +                            <0x0 0x0 0x0 0x3 &pcie_intc0 0x3>,
+>> +                            <0x0 0x0 0x0 0x4 &pcie_intc0 0x4>;
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
