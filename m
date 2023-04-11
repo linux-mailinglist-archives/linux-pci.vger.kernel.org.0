@@ -2,287 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E50D6DE27A
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 19:27:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB5E46DE283
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 19:31:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbjDKR1q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 13:27:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55550 "EHLO
+        id S229939AbjDKRb2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 13:31:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjDKR1p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 13:27:45 -0400
-Received: from BN6PR00CU002.outbound.protection.outlook.com (mail-eastus2azon11021025.outbound.protection.outlook.com [52.101.57.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5150A130;
-        Tue, 11 Apr 2023 10:27:44 -0700 (PDT)
+        with ESMTP id S229498AbjDKRbZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 13:31:25 -0400
+Received: from BN3PR00CU001.outbound.protection.outlook.com (mail-eastus2azon11020019.outbound.protection.outlook.com [52.101.56.19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7090B5BB5;
+        Tue, 11 Apr 2023 10:31:24 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MvN+zS4YgaHX/Ay1xntNUNNgC7idvtxvpvMJB9I+dGbnswxemHl4jCErlC3E4Z+Ot2pjKlUDVPv1nYECfKKaRro+1WrGmEkkRLSOIn8tBMLfPTpTsBtS39zXxeWwVGL1EjcrelU2ZbPBAk95+UFSMhTV9MXRexYvFAtKD/sw5BfMV+cNx6I7S51HKJJrPh8WkNiqp7rucxzTQN/CmhR90BV2X+Sasf5ELx3EhmaueU4DUEtN98JF/wo7v7omIpnuErvWHBWRe/QSkkRe/YYjL/xbUhm2VlvQDm/z2VOEcsSXHkWolbnMuGZiMdvd0Cr6NR766WUO0F5jA1jSOwrhFQ==
+ b=mOLujY7HIeYRD1wYkpNlFYPlNeOHjU6Q6fTUW8ux+vTd6PKgYPrgi0T6Il4PKdKUJfkPDDqTotQMsfwK7M7KB8x4Vm9/vjCNlui01nIo0CzF9m6YUrahJLEYs/j5e36eQZZkd2skDKFtsN2zydVdcbpRUfDQlaG+Fb7jJPnnwomqbUUnaNnGc7Ip7rKdgsb1hpjx5cwHMqbcFp3ck/+8ius7C68ZwHwjjlYKbfdW4Wbgr+TkrjMAToG+v2YlI6lMRk0PwlQ/CNSyXQek1/vEzAemjFjkDZoOoEVaFtCZ8M9Dx/zAfwwlPb5XuWAzjG7pYrUcllN/LtgmlN7o0EMykg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1/i4L5pDbqinp2WtnjFeOQ4TFGMdsrcp9AU/GVNZHz8=;
- b=VqLtrCoRG/AMRfQXpTYj2jHfz+58FepRcDlCNFuZGKmu45meHbLYQE052fUN4JrgdMW/9NdFLXMbAtFSlF+WasaJYaFqaplAZp5rsiLXQAJJpjSN6xD4gMPhYvxN5z35w8FDYjpyzQnKBRbibJTMDLkqABgOS4QGUSUeQqB0uL7hEqOeveQpy56n9uTMh2hnfE7e7FYsKZggEyNt7LySngEwEvFTVOO4eTJj792iB8C8ITBvtomtxfpos6ROlh0h6EYOeqwxhmoHRbWOwvliy3EAOiEHvgEPiPlMRjaA0HwZgpduFlmrAhMtRVihcRCfz8q4nnPq7wAigfUPVuQ6ww==
+ bh=srzIySN1kkvZcHqxyUMKsLLFBBMcduHViz5FvXaoD3Y=;
+ b=cnCUE+PU1u8HpA1eOMHJrp69gYCJ1z/A1y/7tAEzvNhWNbpwkP5YrCoCgMAD/rTUjjRmZb4XJBPoLovToasUh4Q8+KJ07+GoAhaEEedNaltwviq4JRCoFx2RtWc7/FktCskR++cdkd78XuGSnnk7frQ8RcX+Dw5TzuQYpBJmQnLkBKwFiXzvcELY7TltThlXob5WjsfUfZz9FtTBpYLDStcNc8MYfzTrLXKKDJXP16hgNRbztVhuY1hxq0kqIk+Ot18FBrezKBFVvhUNiZGSINQKjOj0hZnklLD6/Xofic4IkggB+8pNfQZ+jBRUqpj5vb1f4NzGiF2PwN+NviikQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=microsoft.com; dmarc=pass action=none
  header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1/i4L5pDbqinp2WtnjFeOQ4TFGMdsrcp9AU/GVNZHz8=;
- b=B8fFYhR9HYFGV5P1y3cPwPfNURAq1BsIfMk/I7JyMQu/58t3JlmXvlQbYP7Y2BBrThdWDzyQqY0HGa7iXoSkakZBOBhi3br6QaA15aBIhr5xKIkmeV+oLAcJzdeCZKHUxOZy0q2F1cfs1Q7Ee9TIx2rvKIqcA6F/asuYJBfEWcs=
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com (2603:10b6:a02:bf::26)
- by DS7PR21MB3774.namprd21.prod.outlook.com (2603:10b6:8:91::17) with
+ bh=srzIySN1kkvZcHqxyUMKsLLFBBMcduHViz5FvXaoD3Y=;
+ b=X2TAOTeHkctncW6nOF3VDstcDTU/fwBWC1kNOHdGVOlPu60B85VpmGPR35u55LPHvnXGC8RJ8zLCOf3VIHq9Nde/3wxobdB3IDHuUSgKO973lFKEukfRV/+5UAWF9QTXZiEv+95ivx/1YZHxQFcLNPwj9ZjEAGFWM87Uqvc9lnA=
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com (2603:10b6:510:1db::16)
+ by SN6PR2101MB1327.namprd21.prod.outlook.com (2603:10b6:805:107::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.3; Tue, 11 Apr
- 2023 17:27:41 +0000
-Received: from BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::acd0:6aec:7be2:719c]) by BYAPR21MB1688.namprd21.prod.outlook.com
- ([fe80::acd0:6aec:7be2:719c%7]) with mapi id 15.20.6319.003; Tue, 11 Apr 2023
- 17:27:41 +0000
-From:   "Michael Kelley (LINUX)" <mikelley@microsoft.com>
+ 2023 17:31:21 +0000
+Received: from PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::4d56:4d4b:3785:a1ca]) by PH7PR21MB3263.namprd21.prod.outlook.com
+ ([fe80::4d56:4d4b:3785:a1ca%4]) with mapi id 15.20.6319.003; Tue, 11 Apr 2023
+ 17:31:21 +0000
+From:   Long Li <longli@microsoft.com>
 To:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
         "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
- hyperv_pcpu_input_arg
-Thread-Topic: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
- hyperv_pcpu_input_arg
-Thread-Index: AQHZal7BSHLzKGubX0KU07XgAcb7368mYESQ
-Date:   Tue, 11 Apr 2023 17:27:41 +0000
-Message-ID: <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
-References: <20230408211112.15235-1-decui@microsoft.com>
-In-Reply-To: <20230408211112.15235-1-decui@microsoft.com>
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v2 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Topic: [PATCH v2 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Index: AQHZZposLyPmEnK8/0ezLJ7cpG8SzK8gCgaAgAAA2gCAAIiLAIAF1f/A
+Date:   Tue, 11 Apr 2023 17:31:21 +0000
+Message-ID: <PH7PR21MB326385AE4EBCB897DD4959DDCE9A9@PH7PR21MB3263.namprd21.prod.outlook.com>
+References: <20230404020545.32359-1-decui@microsoft.com>
+ <20230404020545.32359-7-decui@microsoft.com>
+ <BYAPR21MB168842E38534BD00CB1D27ABD7969@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <BYAPR21MB168864316A9E2523BD74F270D7969@BYAPR21MB1688.namprd21.prod.outlook.com>
+ <SA1PR21MB1335E6B2D4D01649712FBF96BF979@SA1PR21MB1335.namprd21.prod.outlook.com>
+In-Reply-To: <SA1PR21MB1335E6B2D4D01649712FBF96BF979@SA1PR21MB1335.namprd21.prod.outlook.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=c117e0dd-37cd-4017-a59c-87368fe01810;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-11T17:24:42Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4268d2ca-a28f-4b1b-ac19-612f0da0821a;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-04-07T16:10:36Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=microsoft.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: BYAPR21MB1688:EE_|DS7PR21MB3774:EE_
-x-ms-office365-filtering-correlation-id: 10ee0723-70f2-4b34-72d2-08db3ab20db6
+x-ms-traffictypediagnostic: PH7PR21MB3263:EE_|SN6PR2101MB1327:EE_
+x-ms-office365-filtering-correlation-id: 0f98c61b-338f-4e0e-f227-08db3ab290cc
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: pSptPpkJ/RGiNBiygfnQltr52vVjc+cen9u+5w5hkW0fOoHXNqMG9/B4MIiamUPbk1RNXuGwKN+U4DQaryePLVpBY657y9Fpl8kiMifX8ZFBJW3ei3fYOpQN091mJO5+rydxdtQf9/G+I2gj/xCsJxADORmSGxSZsK/yDFrroZ2u762yG444I8MOGRT2IMUqKy90aDr72w40c7qIhrN6JqtnGa1hCX8nglWjWX1iCexo78zmxeGxgOFatqroBncJbdbEe5BefOdA0fWDFEGdv68BgLlckOAR6iIGvjPVqRK6+onyy2yUxZmv3jTxUO4VmyRcqSPZ+nn0JPFDiDBCTYkVUJVxnKc6aS+//WaGMHEKOP0USuXazTk1F7v6fY7+CwOFXGUHCYXU4x/1kP3nTfMqrKT6QvtnJz2XrLuWMciTIJzv6BQffffGZ/x9ywAX9aerZaWI8MUcKiLbexy3qGkkoQ0QlrqterAZqfM63tRLSYZXfZFnLUD+mUsdqRpRon+ylZhc/xKBBt2H9F7hDQEtJVpTYigWR2Iu3fCzWeFfPDy7181QyMj0jGoMTrMQxsd74lcZ2UvNULnIymEBgt0R1YnoJFa85Iz84IRHCBJILmntI846m/1INkLIGhYMqllGjBBzQ8h7bq7PiLU8o8yFtTBUU2I/vQ6H9vkqzcOVbV81fLiVNH/KDJ3N4spe
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR21MB1688.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(451199021)(110136005)(8990500004)(478600001)(10290500003)(33656002)(82950400001)(82960400001)(38070700005)(52536014)(5660300002)(8676002)(8936002)(66446008)(64756008)(66556008)(4326008)(66476007)(66946007)(76116006)(41300700001)(316002)(786003)(921005)(122000001)(2906002)(38100700002)(55016003)(7696005)(26005)(6506007)(9686003)(83380400001)(186003)(86362001)(71200400001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: Ue+y3GlYW2j9vq6xGDEKkndHrp8dmoEnprnULBh48CRED5cVVkOIhuB4ozyKVj3hhdGo7VPuZIVqSkV/FqmaUSPwb6HYZtE/f9v/UoQ7rbpkRAwVxncN6w/d61iAC+pons/bJKNCteg/ZuJNSgid8QyMx4e96et6kdXV6Mo3M7YgGXoQKMMQzjE7KDaSP75NaHd9lhV1lkP9I959Jcbc2BewpkqvNfEodMHWXaADLX6G3gf01DPortVvTbFBmjpA4yBYqDvHQNPq771RW2g3xWTCKcMvXlN4mtCjg8ZycdRBul9hoefUxlf8OMYfpDf9qb8B9bvf7LodI8v7Qlul9w7DiZzEG2vuuMCNIwxYjOvEDnFxPljKCMC/xjhfDuaFM8zrO550FfCLBi447vOjM2fuatGHebUnUR0T6q2FKMrcKuxL3eKRkN+i0slvW8Xydi1Mh/9SvbtG/erMXMK+y7aTTp0xenE+XUFEOOG4iEPL5F7TUSA545wAIoxQG6HZMUJvv9JkdaRDQggjifORS4JXYDEN2yLn+S0tJBGMBtdP11dkUb53JmT9rBfiQVfSZuySC35s7kOmv9S3ryWrqqMsQPur65THX4tUIFz0nYy0C+eV0I30XIBcsyL/m0riy9tMLzbBgyMJhligPL1EdQRzH9tTRNJgmUabqIHfqOgMGHoVTJeeeB4f82yC5/JN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:cs;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR21MB3263.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(366004)(136003)(396003)(376002)(451199021)(8990500004)(2906002)(5660300002)(52536014)(7416002)(8936002)(41300700001)(64756008)(66446008)(66476007)(66556008)(33656002)(83380400001)(4326008)(8676002)(76116006)(66946007)(10290500003)(71200400001)(316002)(786003)(7696005)(478600001)(54906003)(110136005)(4744005)(921005)(186003)(38070700005)(38100700002)(55016003)(122000001)(86362001)(26005)(6506007)(9686003)(82950400001)(82960400001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?hPsCPQUA7oluBEzY53vy6iXWvNerIizDAjrAiQvk+fs+r/FeI8ehe34Do9Kj?=
- =?us-ascii?Q?G292KlXNkN/PFioRQeTqyueJ0GkzAbAh7gmQ7epkn/Xfp0TrDuFodttgAIxn?=
- =?us-ascii?Q?qmYClqzNph6bI+tIetjdXWA/lyJa9luCSKStu7W+WhEda2E3pa6AYq0gI9C9?=
- =?us-ascii?Q?XrzrSGlFp/113xPVvI++Wnm9zJo0GRGnBZGdWb7l48S0Bj1nANf859xclLJB?=
- =?us-ascii?Q?rziu+XbeacbMpBxmlMe42zqTSKILRDvGUW5DpRSaPOFKoflocwJ0KtbiRCQP?=
- =?us-ascii?Q?+hRe0w0wznurfcc7fFwuEl30NLPm4CErDehhh1Cv28ZfVPqsfC67xIe/FMWq?=
- =?us-ascii?Q?hJIJf7q3IvhxJsodZgVzVKyWcLoYHpgID77HDt/SZV/dFKRYzVs4MphpRjv0?=
- =?us-ascii?Q?yrTo5P/1XlYYFGw0BotsE6IQyH61Ss4qkLQ54cjqUpZiGqorwsQzuhkwK3Zb?=
- =?us-ascii?Q?nUqtowngkccbv5tlcZRdQyRhR4bQkAYK6iKQVoY0z5zh5hmG/HBTh2dIPVHg?=
- =?us-ascii?Q?TWLodTZ5GpNq5/E5jgd4gtxepzRQ9sxrTwepsF+6Dh+e+NgY1crfQqIWQeL0?=
- =?us-ascii?Q?mBU82IY6//3KKOULNnEBm/7iFhf05d0pRR1HlHgiuGrUr1UPrIFvv2ETPyT6?=
- =?us-ascii?Q?539hvpWKYEvDSKQUY+ImlFxc4ocMfiXpV7xETrlJ4t+j0+mnNYmJgyMJjukZ?=
- =?us-ascii?Q?8USD+pHVWVpwO+oaHSvRCT/7zpasOgyLF5bk5GIlWMvMNim3m+v30vN3Cjrh?=
- =?us-ascii?Q?1LUHyKTeZqlqt1xAvF46u9q1ZsoGaq6E0yJw1uSvA0udCdPjHe4RLCX7+eJ0?=
- =?us-ascii?Q?in38LMo/8EuJ0DtOEBsSNwzTMaqX9btAfCdaBM63Jv/fJyGJzfGMGW4JyIh3?=
- =?us-ascii?Q?Qfv+BOFPhZiQ2VbHGN83mTKOYU+e518nqM6zR7JLNnuLJTw58Kp2AAL875sB?=
- =?us-ascii?Q?iooZXUVTF7y/M0wlllJyVUIfYrU20aI+Z92ODY016oN061VBCUO2Y2TH++D0?=
- =?us-ascii?Q?EuAjsjtTAIQSHTOPauOSLheN4lae8BkJvqS+ZiS88q1nv43vk0Yvc9MkMbKj?=
- =?us-ascii?Q?GRKgJkUunYr3yqRIEPxbBPYxxEMedDr8jqNeEn0y//nyqeGoMwi0IxczX1cT?=
- =?us-ascii?Q?kkV64WIDEqdXo6HSjOjpFvuaz10f+OK1roi6Hzo0hwWl0gqllz6lbLdBUrId?=
- =?us-ascii?Q?Q962zkm1zXyk5bDQOeHfKYmijnoUnUZiFTvgLg05X63DvMUCCelb7xLMd2Po?=
- =?us-ascii?Q?QKCAXZqMuMHdZ9iD/FY8MXuseQnhcym0A1mrcn9qN8HnrBkWCO/U5ACNYaNC?=
- =?us-ascii?Q?f6toVMtS7eP8JDW6W4+8I4pEnMNB4JQtBk0jeIO9dAjbckeeiqF1SGhowIqE?=
- =?us-ascii?Q?R3Kcpcz/0zSFY0r7G+FvJHnWKtkkQ+owHqYVPZp4kI4LqaHV9klmvgOiwlag?=
- =?us-ascii?Q?4gd6MBuJf+YIZ8gbWl6ohGHwwKzIH2CO0xiEJtV380u9Jbyaj6+/165YudyE?=
- =?us-ascii?Q?Uck8ttu77/hRrRpogOIBxu0H4n2t9Ytl/9XoQa1cVts+6du1UNcEmaHG47cN?=
- =?us-ascii?Q?hWPecTQfDD7VCWuJuBxiZL4YmhJ6Qtrds83LWGuGRuV5B6aSYVIBGA/x+ONo?=
- =?us-ascii?Q?zA=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?U7axgaDQzR9WOI7CAHIe05VUK/q3yZzUtCmJfbQXQgfWq3che6DRiKrkj0k1?=
+ =?us-ascii?Q?u4yAuBjQax+NBOsm12KDk8ZUCs4AKGFHkqNLjjVPP/oRe8LBKTxaXl4Y1M8g?=
+ =?us-ascii?Q?TicqnUnoe5mUCsTNuz/YQCQ33P91+Acbx9LKQ/rFGjIhWNIgaD4SrmxqD5ik?=
+ =?us-ascii?Q?c3L3lr8tf2vqY0S/6l7wqc1T6NBi7XbufTJQg1dvI1SRw4AAlLebytkacI3U?=
+ =?us-ascii?Q?u29plfsjzmXEGJUjDswHxigOuIt83tDhuALYrwXsmS+Chp6xloFbFeQhS/cQ?=
+ =?us-ascii?Q?RhbtUv7lVDRXjvuItCLTX6YX5BZ9TiFncXOdTwiZ6W+PKU5jJ2yn5zS8kq0P?=
+ =?us-ascii?Q?dqUZzJPyutY2O7bbkUzL10h/sU5VO4i6W75IgQhFQsPiUfcDodW8RiII+pGG?=
+ =?us-ascii?Q?siAj8VQosGFF4lEFHhCYDDWrA/lCAb6cUi8zZqqzyTPR/O3cU3Pfb395GHQO?=
+ =?us-ascii?Q?RNjFbttmbBQ5Qm3d4NA8eEwDVCSt6Ia+2yxtRQ2f4z+kMekf+iuC6RYTvSs3?=
+ =?us-ascii?Q?o1WevULdcr2Yh+howIyv0W+WwKO4nKsVPSH0noVlsi1b23Bf4B68JIpycAJP?=
+ =?us-ascii?Q?Rr6pEFc15IESVU91OsLWMgI3fJhqUFqFuNEHO1PofivDOhRBcOcQ4wqVx4Yq?=
+ =?us-ascii?Q?cSdgwA3ygj4cuWR6Pf20Dpk06pjaxjoJPtgMvV48xlefFp5kVpfaMG+d1h8D?=
+ =?us-ascii?Q?+j9gBfZRQWvYV7gnav5cLIHjN/7ZuslNAWrGAZY4psUN+ARBUBfcpdkSN0xA?=
+ =?us-ascii?Q?ikElVAktNszF5iPsSSWExmJVIYF1uQGhg7aEQIz3kDnV88+BewEqWvxDuWTE?=
+ =?us-ascii?Q?VqPOYJMNL8i74TqzwCk8/muEScoSOEcDujSFvgTHlqVsCDqSdKpC68eVY+Um?=
+ =?us-ascii?Q?zvFJR5U5LLIItNNgXjw0iT6BZwwW5GAkZc0iy7g+hXTTlGqlQwrcjPup3Q/P?=
+ =?us-ascii?Q?qAAMDjf4seOhzudy2OsmUMIzTkI/dCJcRa+cMHbwAeK11MS7esxPirE6Qviy?=
+ =?us-ascii?Q?n2JyG0YTJlgW92O0EcFelZ6NnjJ3m7ZiQfRejOp4fmZ5kzMkquTFbViRshiW?=
+ =?us-ascii?Q?asVjeOp9vIeCbzY28kWKEdzjZFXosDgOjNMIyz9YFKLa05uipsDk0/2gzRnJ?=
+ =?us-ascii?Q?fvAI+hFVfTNCZFjPjEH9j0HlvVUszah+qBrKrx4HQoqYv6re1ENsEoqxNoIY?=
+ =?us-ascii?Q?p+4NjVo7uxJ8EUfPwR2omahXtKLWesvHi0TJFOm5a9AUeaZ6oR/GKeA2yYii?=
+ =?us-ascii?Q?BbiEdqvW1ydtT2p/2v94oQr5vorRmWyotPICfzVX+aNo/N+OSpqLgK7ulQVM?=
+ =?us-ascii?Q?t74LdWvWrEFy75QcZXZPPC580gIaCUj/yccIa3oW1M+yf8rlySonrhcIq4a+?=
+ =?us-ascii?Q?3lVAMytGpJAwgtuu5Dw1wZsMs/jLrSvg/Eu1/D3l9/dlnTmG7ogQM7i3yGUN?=
+ =?us-ascii?Q?RavuBHEFd7eosUI+yprSojpuSAW5BJ9OWUereS7imb9b0r2ocpBbAybJ0bMs?=
+ =?us-ascii?Q?uTHbqJfxYOqAICsr/w8vwof2NLCNlNac7skUSujdIZHVP37y75md5nAoOAT7?=
+ =?us-ascii?Q?w6Wl/D9Lmkf9+UHNxrA=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: microsoft.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR21MB1688.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 10ee0723-70f2-4b34-72d2-08db3ab20db6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2023 17:27:41.1589
+X-MS-Exchange-CrossTenant-AuthSource: PH7PR21MB3263.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0f98c61b-338f-4e0e-f227-08db3ab290cc
+X-MS-Exchange-CrossTenant-originalarrivaltime: 11 Apr 2023 17:31:21.0536
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: dHiBYWOdAL4DakKWuaP0z6hBKU3Z+xWryb5XsjkMSAHYpLlaee1QcavNEHNeVCIAJcD0T8v3mG9fZaj11FfIncsloU0KQOycpiKLtACnJnM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR21MB3774
+X-MS-Exchange-CrossTenant-userprincipalname: CUYwWOyFm+TuNO5stPYAFHHdS0OFt6TAjFSdO5JdZJtk54slnKhNqJSXfkSZGEYPY3C7RIJ+XfUCzkRQqeBZlA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1327
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, April 8, 2023 2:11 P=
-M
+> Subject: RE: [PATCH v2 6/6] PCI: hv: Use async probing to reduce boot tim=
+e
 >=20
-> 4 commits are involved here:
-> A (2016): commit 0de8ce3ee8e3 ("PCI: hv: Allocate physically contiguous h=
-ypercall
-> params buffer")
-> B (2017): commit be66b6736591 ("PCI: hv: Use page allocation for hbus str=
-ucture")
-> C (2019): commit 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive =
-caused by
-> the hbus buffer")
-> D (2018): commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
+> > From: Michael Kelley (LINUX) <mikelley@microsoft.com>
+> > Sent: Friday, April 7, 2023 9:15 AM
+> > ...
+> > > > Commit 414428c5da1c ("PCI: hv: Lock PCI bus on device eject")
+> > > > added
+> > > > pci_lock_rescan_remove() and pci_unlock_rescan_remove() in
+> > > > create_root_hv_pci_bus() and in hv_eject_device_work() to address
+> > > > the race between create_root_hv_pci_bus() and
+> > > > hv_eject_device_work(), but it turns that grubing the
+> pci_rescan_remove_lock mutex is not enough:
+> >
+> > There's some kind of spelling error or typo above.  Should "grubing"
+> > be "grabbing"?  Or did you intend something else?
+> >
+> > Michael
 >=20
-> Patch D introduced the per-CPU hypercall input page "hyperv_pcpu_input_ar=
-g"
-> in 2018. With patch D, we no longer need the per-Hyper-V-PCI-bus hypercal=
-l
-> input page "hbus->retarget_msi_interrupt_params" that was added in patch =
-A,
-> and the issue addressed by patch B is no longer an issue, and we can also
-> get rid of patch C.
->=20
-> The change here is required for PCI device assignment to work for
-> Confidential VMs (CVMs), because otherwise we would have to call
-> set_memory_decrypted() for "hbus->retarget_msi_interrupt_params" before
-> calling the hypercall HVCALL_RETARGET_INTERRUPT.
+> Sorry, it's a typo. The "grubing" should be "grabbing".
+> I suppose the PCI maintainers can help fix this. Let me know if v3 is nee=
+ded.
 
-Well, not all CVMs.  It's not required for SEV-SNP vTOM VMs on Hyper-V beca=
-use
-of the paravisor.  Is it more accurate to say "for Confidential VMs (CVMs) =
-running
-without a paravisor"?
+Other than the typo,
 
-Otherwise,
-
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-
->=20
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> ---
->  drivers/pci/controller/pci-hyperv.c | 48 +++++------------------------
->  1 file changed, 7 insertions(+), 41 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller=
-/pci-hyperv.c
-> index 337f3b4a04fc0..bc32662c6bb7f 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -508,20 +508,11 @@ struct hv_pcibus_device {
->  	struct msi_domain_info msi_info;
->  	struct irq_domain *irq_domain;
->=20
-> -	spinlock_t retarget_msi_interrupt_lock;
-> -
->  	struct workqueue_struct *wq;
->=20
->  	/* Highest slot of child device with resources allocated */
->  	int wslot_res_allocated;
->  	bool use_calls; /* Use hypercalls to access mmio cfg space */
-> -
-> -	/* hypercall arg, must not cross page boundary */
-> -	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
-> -
-> -	/*
-> -	 * Don't put anything here: retarget_msi_interrupt_params must be last
-> -	 */
->  };
->=20
->  /*
-> @@ -645,9 +636,9 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  	hbus =3D container_of(pbus->sysdata, struct hv_pcibus_device, sysdata);
->  	int_desc =3D data->chip_data;
->=20
-> -	spin_lock_irqsave(&hbus->retarget_msi_interrupt_lock, flags);
-> +	local_irq_save(flags);
->=20
-> -	params =3D &hbus->retarget_msi_interrupt_params;
-> +	params =3D *this_cpu_ptr(hyperv_pcpu_input_arg);
->  	memset(params, 0, sizeof(*params));
->  	params->partition_id =3D HV_PARTITION_ID_SELF;
->  	params->int_entry.source =3D HV_INTERRUPT_SOURCE_MSI;
-> @@ -680,7 +671,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->=20
->  		if (!alloc_cpumask_var(&tmp, GFP_ATOMIC)) {
->  			res =3D 1;
-> -			goto exit_unlock;
-> +			goto out;
->  		}
->=20
->  		cpumask_and(tmp, dest, cpu_online_mask);
-> @@ -689,7 +680,7 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->=20
->  		if (nr_bank <=3D 0) {
->  			res =3D 1;
-> -			goto exit_unlock;
-> +			goto out;
->  		}
->=20
->  		/*
-> @@ -708,8 +699,8 @@ static void hv_arch_irq_unmask(struct irq_data *data)
->  	res =3D hv_do_hypercall(HVCALL_RETARGET_INTERRUPT | (var_size << 17),
->  			      params, NULL);
->=20
-> -exit_unlock:
-> -	spin_unlock_irqrestore(&hbus->retarget_msi_interrupt_lock, flags);
-> +out:
-> +	local_irq_restore(flags);
->=20
->  	/*
->  	 * During hibernation, when a CPU is offlined, the kernel tries
-> @@ -3598,35 +3589,11 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	bool enter_d0_retry =3D true;
->  	int ret;
->=20
-> -	/*
-> -	 * hv_pcibus_device contains the hypercall arguments for retargeting in
-> -	 * hv_irq_unmask(). Those must not cross a page boundary.
-> -	 */
-> -	BUILD_BUG_ON(sizeof(*hbus) > HV_HYP_PAGE_SIZE);
-> -
->  	bridge =3D devm_pci_alloc_host_bridge(&hdev->device, 0);
->  	if (!bridge)
->  		return -ENOMEM;
->=20
-> -	/*
-> -	 * With the recent 59bb47985c1d ("mm, sl[aou]b: guarantee natural
-> -	 * alignment for kmalloc(power-of-two)"), kzalloc() is able to allocate
-> -	 * a 4KB buffer that is guaranteed to be 4KB-aligned. Here the size and
-> -	 * alignment of hbus is important because hbus's field
-> -	 * retarget_msi_interrupt_params must not cross a 4KB page boundary.
-> -	 *
-> -	 * Here we prefer kzalloc to get_zeroed_page(), because a buffer
-> -	 * allocated by the latter is not tracked and scanned by kmemleak, and
-> -	 * hence kmemleak reports the pointer contained in the hbus buffer
-> -	 * (i.e. the hpdev struct, which is created in new_pcichild_device() an=
-d
-> -	 * is tracked by hbus->children) as memory leak (false positive).
-> -	 *
-> -	 * If the kernel doesn't have 59bb47985c1d, get_zeroed_page() *must* be
-> -	 * used to allocate the hbus buffer and we can avoid the kmemleak false
-> -	 * positive by using kmemleak_alloc() and kmemleak_free() to ask
-> -	 * kmemleak to track and scan the hbus buffer.
-> -	 */
-> -	hbus =3D kzalloc(HV_HYP_PAGE_SIZE, GFP_KERNEL);
-> +	hbus =3D kzalloc(sizeof(*hbus), GFP_KERNEL);
->  	if (!hbus)
->  		return -ENOMEM;
->=20
-> @@ -3683,7 +3650,6 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	INIT_LIST_HEAD(&hbus->dr_list);
->  	spin_lock_init(&hbus->config_lock);
->  	spin_lock_init(&hbus->device_list_lock);
-> -	spin_lock_init(&hbus->retarget_msi_interrupt_lock);
->  	hbus->wq =3D alloc_ordered_workqueue("hv_pci_%x", 0,
->  					   hbus->bridge->domain_nr);
->  	if (!hbus->wq) {
-> --
-> 2.25.1
-
+Reviewed-by: Long Li <longli@microsoft.com>
