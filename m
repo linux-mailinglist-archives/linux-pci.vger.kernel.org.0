@@ -2,121 +2,91 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C3A6DD8F1
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 13:09:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 637AB6DD8FC
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 13:11:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbjDKLJz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 07:09:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43014 "EHLO
+        id S229667AbjDKLLD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 07:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbjDKLJv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 07:09:51 -0400
-Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3659F2709
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:09:49 -0700 (PDT)
-Received: by mail-pj1-x102e.google.com with SMTP id 90-20020a17090a0fe300b0023b4bcf0727so7500265pjz.0
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:09:49 -0700 (PDT)
+        with ESMTP id S229835AbjDKLLA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 07:11:00 -0400
+Received: from mail-yw1-x1149.google.com (mail-yw1-x1149.google.com [IPv6:2607:f8b0:4864:20::1149])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7CCF40E9
+        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:10:49 -0700 (PDT)
+Received: by mail-yw1-x1149.google.com with SMTP id 00721157ae682-54c1e4b7e63so131608387b3.20
+        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:10:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681211388;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=QOx5eZKogwJSLrh2Vav6fLlQsO7QYAE/SH8n+Ne0r9Q=;
-        b=ZH85dAPo498DS0h5EDuGUGvjqayZtif/6/t7/zxxZ0IvGbhMmY1B4KIHejL4eQfr4N
-         UqF2c/PpEWVond3GaUlyi/0G+AlGDpO+uMg5oMI7shOXMqKrp9myH6Y30+YvqqWTSqPz
-         vhsbH/DHLzvJ7No3+yFBPdXgC+pnfVOAertgUgxub1Scp2prnGR3T6rfYMJCqewVncHo
-         3u35NsmQGul91eAbDPD4+tEPMPdFTBE/R+dZSUgnN529LWyRqDFkcVlaS6ra4Zfuu+xQ
-         QQoWpGAT8Z5YdV8CKtJZnv3v+G1hGP0B3zXwXEECZPKlJJiXM1MfuywniQlTgqSF4gGe
-         rgBw==
+        d=google.com; s=20210112; t=1681211449;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=jUEkD81ojAds4Zbt5kdoDqBVeA2aOp3S2+5CR5jfNJs=;
+        b=p+2zffdHp5PHZRdjYspWcOwDR+ownuPLWIywCbi73ViYunTJESTWSWtELKUqMypLuS
+         v0xBmSXBDYs2sGnC0g9ron425zSN0rQpJpW0fbSkh6RiBRivmgrKhUr1A24O3licJYVH
+         KofbeygqZB+2Tesu91Cly0DQaisWAVuy4uTuEVWoxKQomXuFAB/EUjPDUvu5pcdvnd7m
+         tCv9f32nRL31dASflRNoEvaC+ax2VxAYyj6NeNaomLwkpg7thfItm731jydws/YRDMjf
+         fg9O7aiJk+kbA9FwvjWA8B9MlXdzdF8Qspbay2T/0D1nmmDJ3BUGPDp72HYpKoN+S1u/
+         uFmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681211388;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QOx5eZKogwJSLrh2Vav6fLlQsO7QYAE/SH8n+Ne0r9Q=;
-        b=u0wGyI7tmIvETSiljUg/lRK7r26EWPipXRYpEW1NcASl1dLO2FmRA89hyIUwLOXKML
-         4kPb34Y2uAmdd5pM7ntNQWBGSRFRhiwjRm2ClHQOVAL3BoF7ghT3OcADucyPuxNMsE43
-         yi4PEw+nWIrXtEc9LbkaP8VWnJ7L6z/h1/OpWGuKwbN4+lIG0B6lxZxV8FEGUtD6E7lo
-         ncPfQR7ABLQEkVEH3TzklVT03u1VHtZwc6mWmavMkzo43x8EC3FWmsC+XYNXqe0o4tmF
-         DZOeibgCmDM9D/xJz6U1ejei/J1eZV2MKMrV05Uzi+tzhGbVHTuJB2HcRnvNxg0FkH7H
-         740w==
-X-Gm-Message-State: AAQBX9dVnqByRxGoy2/Og5SasNBOeinYuqORrolz/TB8r5wxUS+YT62A
-        R84SApxw8YjMoimPAxUgVQls
-X-Google-Smtp-Source: AKy350bz2vrwhxHgbaDZ5T+Yl0U8D9+aim7xCaBJsGduLDqQeFi5s5ubuq+zk9Z/Bnk5Uf4H6zWcZg==
-X-Received: by 2002:a05:6a20:9387:b0:e8:ee27:8ade with SMTP id x7-20020a056a20938700b000e8ee278ademr14038242pzh.22.1681211388447;
-        Tue, 11 Apr 2023 04:09:48 -0700 (PDT)
-Received: from thinkpad ([117.216.120.128])
-        by smtp.gmail.com with ESMTPSA id b22-20020a63d316000000b0051b10da9949sm1951112pgg.66.2023.04.11.04.09.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 04:09:48 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 16:39:38 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 06/10] PCI: dwc: Drop empty line from
- dw_pcie_link_set_max_speed()
-Message-ID: <20230411110938.GH5333@thinkpad>
-References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
- <20230411033928.30397-7-Sergey.Semin@baikalelectronics.ru>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230411033928.30397-7-Sergey.Semin@baikalelectronics.ru>
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        d=1e100.net; s=20210112; t=1681211449;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jUEkD81ojAds4Zbt5kdoDqBVeA2aOp3S2+5CR5jfNJs=;
+        b=GpPUwO/5yqBUHmcNUr6szJ3odso++tU+hmf7s6/WfHkMLDs10/Kr2o3IajEFLRi97s
+         eSxOSZ/b+W9SbJKXk9m5UudcesgpT381Ms1xKVbDgAcnTnqpVcZoSF1tNnvTelPCvtK4
+         HtpEOGzONCrb7eBY18FnDzZjtQaE76TYHitjwnogDa5mMpeuCxl6aLqToF67QGyvdEgr
+         9OXHwzvh3Fya5HSPS2nZ6hIb6JQwX8Rxqa4Ovdw28Yy473bbPu3Y3FRE4gRw0G30Y4AT
+         1+MPvTDOyPkuvB75s2AvQnscfdPhzQ0v79zZ6VTSpjh6DMA+ZHICA8AnsWalKcKs1XwO
+         O7ew==
+X-Gm-Message-State: AAQBX9eyY0yhss5pVioBMOniSIkxLibKrXUUEl0br0rLhL2jgg0sAxU6
+        iH9Qm9ZtlpiJrK1+rA8qdd5kz4WBmXpae4kjDA==
+X-Google-Smtp-Source: AKy350a3RWg8sbpfeQVcp0OVXk75DpHLaRT9JRoK54rEF266D1pxlSpF2nOJ2UUCH8w4BhgTCVcFXnGbmuLg2Cuvyg==
+X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
+ (user=ajayagarwal job=sendgmr) by 2002:a25:cbd1:0:b0:b8c:473b:30df with SMTP
+ id b200-20020a25cbd1000000b00b8c473b30dfmr1283312ybg.2.1681211448970; Tue, 11
+ Apr 2023 04:10:48 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 16:40:31 +0530
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
+Message-ID: <20230411111034.1473044-1-ajayagarwal@google.com>
+Subject: [PATCH 0/3] ASPM: aspm_disable/default/support state handling fixes
+From:   Ajay Agarwal <ajayagarwal@google.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=-7.7 required=5.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 06:39:24AM +0300, Serge Semin wrote:
-> Well, just drop a redundant empty line from the tail of the denoted
-> function which by mistake was added in commit 39bc5006501c ("PCI: dwc:
-> Centralize link gen setting").
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+On going through the aspm driver, I found some potential bugs in
+the way the aspm_disable, aspm_default and aspm_support states
+are being handled by the driver.
 
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+I intend to fix these bugs.
 
-- Mani
+Ajay Agarwal (3):
+  PCI/ASPM: Disable ASPM_STATE_L1 only when class driver disables L1
+    ASPM
+  PCI/ASPM: Set ASPM_STATE_L1 when class driver enables L1ss
+  PCI/ASPM: Remove unnecessary ASPM_STATE_L1SS check
 
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index e55b7b387eb6..ede166645289 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -729,7 +729,6 @@ static void dw_pcie_link_set_max_speed(struct dw_pcie *pci, u32 link_gen)
->  
->  	cap &= ~((u32)PCI_EXP_LNKCAP_SLS);
->  	dw_pcie_writel_dbi(pci, offset + PCI_EXP_LNKCAP, cap | link_speed);
-> -
->  }
->  
->  void dw_pcie_iatu_detect(struct dw_pcie *pci)
-> -- 
-> 2.40.0
-> 
-> 
+ drivers/pci/pcie/aspm.c | 20 ++++++++------------
+ 1 file changed, 8 insertions(+), 12 deletions(-)
 
 -- 
-மணிவண்ணன் சதாசிவம்
+2.40.0.577.gac1e443424-goog
+
