@@ -2,115 +2,92 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AD6A6DDB42
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 14:54:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E9046DDC18
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 15:32:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229844AbjDKMxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 08:53:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45686 "EHLO
+        id S229638AbjDKNcK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 09:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229841AbjDKMxf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 08:53:35 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0A040C1;
-        Tue, 11 Apr 2023 05:53:34 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id eo6-20020a05600c82c600b003ee5157346cso5964415wmb.1;
-        Tue, 11 Apr 2023 05:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681217612;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=x9yZ+qnUfIedOP16sqw/n0wk0WAmpKQ2BM/zcb4X7c8=;
-        b=FEqA8zIiXQo1JgRyGbmoTOBWasmNdOU1p+Jfx1mKzePVIJFwbUh2gS+SovCjj/P4kl
-         s6cCpRy1rpNR2BAh4DuFEjOHp8djEDmwZcdRHT2Lflkyk4cyJy6XiTpV0tkaoXK5ff0a
-         36l9wP0yEWdbvCIo40oHD5T4wlvvE5PvOnjnGJ5e6NBQ4I5Pd6TX0BFAjmZApNZ9iBAi
-         cI0OU+VfjFdzAs4CPulzv8nH9I08XufU2Pzb28571Z5LZQlhdAkqODCDKgizenk+R8SI
-         4/G26CpbXtT+PKcKn5XvUHhSq4nu/2VtgavErMGMWGjWr9PeoZSMVaPsrqH2lMhsnIoc
-         pviQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681217612;
-        h=mime-version:user-agent:references:message-id:date:in-reply-to
-         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x9yZ+qnUfIedOP16sqw/n0wk0WAmpKQ2BM/zcb4X7c8=;
-        b=pue33kXH5fDJzzMw2Jt46BK80PM0UWrkxXBCoQPHymYR/VDDH+NCnCf9Vy/wFPpAVm
-         ordbqU/FD/2IVWGlZaUVqm5T4WkoLMPwHAunnnK25Twn9KP8YwVee2wZ6qUkk4cGz6SG
-         QFx8I+9TFH71lo59O0cZgfqmqsppcLgzru3qsgsHldmTAQuAaV4DtnABg0vqSRmnYLQz
-         Xh+AnaxkoGQP2mGn4l8empDz0LOACQZFTbMLJBfK7torTxluXWoyZEts9cxVuf/HRwOU
-         8wjrKDOyDrxOQBDoUAGQ9XG2D0yZeoFzkQvrjpgH22t3K+zwF7swPnSknuYBceFHdD1O
-         F0TQ==
-X-Gm-Message-State: AAQBX9fu3quuEBzkP695WRE1WKQQ73rmw784cS//Er2BsBqXFcbWpNv9
-        UGs0IE5b4ZEFLIr9ax3JA5Y=
-X-Google-Smtp-Source: AKy350a7/C5fkIWINCl0pxOpgu8uM2Qbd7glWkBEvzl1kM7rMBd1tJS81vJ1qW3TfQDn6oEnlllD8g==
-X-Received: by 2002:a7b:ce16:0:b0:3ee:2b04:e028 with SMTP id m22-20020a7bce16000000b003ee2b04e028mr9178810wmc.14.1681217612343;
-        Tue, 11 Apr 2023 05:53:32 -0700 (PDT)
-Received: from imac ([88.97.103.74])
-        by smtp.gmail.com with ESMTPSA id n23-20020a7bcbd7000000b003e20cf0408esm16924764wmi.40.2023.04.11.05.53.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 05:53:31 -0700 (PDT)
-From:   Donald Hunter <donald.hunter@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
- with igb
-In-Reply-To: <20230410213754.GA4064490@bhelgaas> (Bjorn Helgaas's message of
-        "Mon, 10 Apr 2023 16:37:54 -0500")
-Date:   Tue, 11 Apr 2023 13:53:09 +0100
-Message-ID: <m27cuih96y.fsf@gmail.com>
-References: <20230410213754.GA4064490@bhelgaas>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+        with ESMTP id S229469AbjDKNcK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 09:32:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A32135;
+        Tue, 11 Apr 2023 06:32:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C22961F74;
+        Tue, 11 Apr 2023 13:32:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 846CBC433EF;
+        Tue, 11 Apr 2023 13:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681219928;
+        bh=Qy/rBc6YUbkvkDPHSRKGpIkNfKxq2ZbKY7o9v2IVhz4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D45cB64+Za0ToL5Ty6Am/itkbcW3HQRXJuxy+3a2UIZh8IA+RVyANUvVZzdfU3sxk
+         w1o5jJP0YtTxBKVIcZrDWavfI4P6Gx6Mxx3f8PBprdGtCk5mU47eX+Z20F6jm4ByDt
+         jmB4CBIZv8Pj71Q8H0LDfwv/s2q9s3PifJ2OwzigyJt7DeZmpjprWGSv6K2zeJuvOd
+         OxdbvQw8KNYad/W9xVsg4iWGjdBRSc53djXYowfizz8MsQtpQCVdnOvEIQWdL3EbiM
+         duzW1qObQSdZzTTx0/J7ZN9hCTuE3Xcwox7poSubNQqggiUS5HdJEkCgOoojkh2e+h
+         YvYHaSG7dOJuw==
+Received: from johan by xi.lan with local (Exim 4.94.2)
+        (envelope-from <johan@kernel.org>)
+        id 1pmE6P-0003rd-DQ; Tue, 11 Apr 2023 15:32:06 +0200
+Date:   Tue, 11 Apr 2023 15:32:05 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: PCI: Fix unit address of example root port
+Message-ID: <ZDVhVYZ838ksVMYP@hovoldconsulting.com>
+References: <20230317112019.9090-1-johan+linaro@kernel.org>
+ <ZC1ZTHeRqtghwVBB@hovoldconsulting.com>
+ <CAL_JsqJrhQA4dbU=bGioonqs6c=mZiGErcT9v9BxiGrNhmY6-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAL_JsqJrhQA4dbU=bGioonqs6c=mZiGErcT9v9BxiGrNhmY6-w@mail.gmail.com>
+X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
+        SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+On Wed, Apr 05, 2023 at 08:38:29AM -0500, Rob Herring wrote:
+> On Wed, Apr 5, 2023 at 6:19 AM Johan Hovold <johan@kernel.org> wrote:
+> >
+> > On Fri, Mar 17, 2023 at 12:20:19PM +0100, Johan Hovold wrote:
+> > > Fix the unit address of the example root port which is identical to the
+> > > device number (i.e. 1).
+> > >
+> > > Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> > > ---
+> >
+> > This one hasn't showed up in linux-next yet. Could you pick it up for
+> > 6.4, Lorenzo?
+> 
+> On 2nd thought, I think it's time to just remove this file. The schema
+> is just missing some descriptions and 1 property (external-facing).
+> I've added all that here[1].
 
-> On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
->> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
->> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
->> > > >
->> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
->> > > > because it apparently has an ACPI firmware node, and there's something
->> > > > we don't expect about its status?
->> > >
->> > > Yes they are built-in, to my knowledge.
->> > >
->> > > > Hopefully Rob will look at this.  If I were looking, I would be
->> > > > interested in acpidump to see what's in the DSDT.
->> > >
->> > > I can get an acpidump. Is there a preferred way to share the files, or just
->> > > an email attachment?
->> >
->> > I think by default acpidump produces ASCII that can be directly
->> > included in email.  http://vger.kernel.org/majordomo-info.html says
->> > 100K is the limit for vger mailing lists.  Or you could open a report
->> > at https://bugzilla.kernel.org and attach it there, maybe along with a
->> > complete dmesg log and "sudo lspci -vv" output.
->> 
->> Apologies for the delay, I was unable to access the machine while travelling.
->> 
->> https://bugzilla.kernel.org/show_bug.cgi?id=217317
->
-> Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
-> with this in the kernel parameters:
->
->   dyndbg="file drivers/acpi/* +p"
->
-> and collect the entire dmesg log?
+Sounds good to me. Will you send a patch?
 
-Added to the bugzilla report.
+> I didn't add the example to the schema because the example here is
+> incomplete and won't validate.
 
-Thanks!
+Fair enough. Having a decent example in the tree would be helpful, but
+hopefully we can get the in-tree DT sources up to par at some point so
+that they can serve that purpose.
+
+Johan
+
+> [1] https://github.com/robherring/dt-schema/commit/8445eb010e61496681e2504faf400e9fbc5b1acf
