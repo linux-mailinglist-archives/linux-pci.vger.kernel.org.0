@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CF9876DE1AC
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 18:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C85E96DE1B0
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 18:59:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229652AbjDKQ7f (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 12:59:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41794 "EHLO
+        id S229680AbjDKQ7i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 12:59:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229649AbjDKQ7b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 12:59:31 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337071BC0;
-        Tue, 11 Apr 2023 09:59:28 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-63397c54c5aso1194882b3a.3;
-        Tue, 11 Apr 2023 09:59:28 -0700 (PDT)
+        with ESMTP id S229687AbjDKQ7f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 12:59:35 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A17D55AE;
+        Tue, 11 Apr 2023 09:59:31 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id c10-20020a17090abf0a00b0023d1bbd9f9eso11677744pjs.0;
+        Tue, 11 Apr 2023 09:59:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681232367; x=1683824367;
+        d=gmail.com; s=20221208; t=1681232370; x=1683824370;
         h=references:in-reply-to:message-id:date:subject:cc:to:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=QLWqkwPyAaDungSe3XNUQGsoacGsQAY/ebZXfHlHpHM=;
-        b=CxYeSnLq9uTKW6PNYtsC+srxJtyl2y98bsXC3HhdiZPMt0harzTTMRHdIeMmCY4pSv
-         1IITqNIl7SYKjY1VWZaoF0G7FXkulptaLcfy7KeV5njuReLK98DOlk6OjYWyDYh0+7ri
-         EN7wN+2LCrqvc78QddOeMMdVZ9QuVl5k4hSX398BtmgwvO4KHcbQsT9wNMJwaXyP2aa1
-         fQcupS7JVZoYQJYkgnWgVww88CayYagM10O4YhfJeiKICRznxIxPWcIJvKgV0AwwC12i
-         ifSkbf2YFR4p/yXb82xtVTlcbuEPyaUcZwPeZDuedNP01/qxSMyKOPu8Z7SptmSLL4T6
-         +yLA==
+        bh=Pz7RRU4Oi3qZv3Qdyqljld/j1CUJUkM+0FqeJPWLDVw=;
+        b=gcpL9u+yTli4Khhf+9R67jknSpYlyDm2uletw7svjMvqipcYdajonTjV7wtuj8jBKO
+         3Q+1OAEO+T6PF8QBkuc5Molr4qcEwBB+cI0/+vVxKh7hGNUCOkTknAsHlN5uy25WsOII
+         AhjmftM2otJoUmBnykkdgEU844d/f2Sk/YnC3pz4CZWiyVBmcA7WUKu7zl6RsMwm9Uc5
+         O9KSnxVBOVtHdgtbS0tCCnOy1cvLLV4zbk8iC++rri4yQJ9xGc9vDh3hhcG84OmEGhqc
+         iXKbr8xLe4vLEo2WATukcr1Ja4FVmIlq9++84Byh6piB/3Du1/X78dqbaGq64yPDEJ5/
+         PKcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681232367; x=1683824367;
+        d=1e100.net; s=20210112; t=1681232370; x=1683824370;
         h=references:in-reply-to:message-id:date:subject:cc:to:from
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QLWqkwPyAaDungSe3XNUQGsoacGsQAY/ebZXfHlHpHM=;
-        b=N6V31KMd8b8i2IU17r4onkQ1KKInrI1p3c9+VIeujgEk4vHySjUvJYlj+AYaR7Hoyd
-         jDx8evlm/+FJSiTG78+jbKXbYsW++74LQmKOlKZSgv7g2x/S8nq+vT3aqDsMgbLIgEBv
-         OTtDSdoVIkHQ82z3iv0FTm7SWBZIACU1AvT4a4aTUAVxJQtSB/X39jHATr+P7UZ7Lmfs
-         tVUSvNoxCwk/hMp/tsol+AXE/1b+5CRQHanpvpY5hcDwtFeb+J1ZI2PuodVL7ZY3SxSw
-         pl5QreYQEzUi4hJb8w0yrH6k5jfs0VmnmCui/GAD9aCmYWyw4oEH8i6vvfbIYowUFVbN
-         7OUQ==
-X-Gm-Message-State: AAQBX9dUtJxkWFCAYQhYB86rliFM4oq7S1eJp4WIbIRLCDlkaxu82gko
-        7AByRvPI7DUWS74eCctaOaAbC9mTlTQ=
-X-Google-Smtp-Source: AKy350Y1iWodMhWMKjTVKI+jACxjchJoEQj8AoSrxrW9+8KHznK4dlbBUoeYX+WelG/T8rVdmzN9Xw==
-X-Received: by 2002:a62:4e83:0:b0:5a8:8535:18b with SMTP id c125-20020a624e83000000b005a88535018bmr12127787pfb.11.1681232367455;
-        Tue, 11 Apr 2023 09:59:27 -0700 (PDT)
+        bh=Pz7RRU4Oi3qZv3Qdyqljld/j1CUJUkM+0FqeJPWLDVw=;
+        b=Oj1abWk7Sk9gnKNnRqQ4xIesXgE70tbTC4gWjLmgIH271X6bTgTTNipQtmgPLaNUOh
+         uc1VONddSPew4ujRExcirGl+2ZYmv7hOBhTBUmJ+q1mAJ1GCogWUZBGDnyn89QcolDyY
+         jIg8e+VhKya3oGlHRqKUbwVUa9MLKF5qC+cKv2SM7BOTQAOKjO5HcartEgyfO+3lkI+h
+         IbnOhE+VqR+fBBYrW89EYNY0TuN4b6uP/KUNReyPTIbWEO+RWZrIQ14RKfc6qisbJ0tP
+         Skch0BVpFRnden1k37kRTdbmjwFVKQsuRtCNeaoZbOoxiRDt3CGrGaZSCBl6lj/rIWbw
+         Yuhg==
+X-Gm-Message-State: AAQBX9dcT4ZiHZV/ipPG0GIIyiIMNqrONf4iYtruAYxNeL92siGknRKb
+        tJMbV+2/po+DOOHlj2r1bKFpa2o9q0A=
+X-Google-Smtp-Source: AKy350a/aXYFy5VtjtJkN4Wa3nk6Q34ae7qff6JsZNKrhRQtyfBBFfgLuDP1TCAdb29CXMJiL2akvw==
+X-Received: by 2002:a05:6a20:6d9a:b0:d9:3440:9a26 with SMTP id gl26-20020a056a206d9a00b000d934409a26mr14558006pzb.20.1681232370451;
+        Tue, 11 Apr 2023 09:59:30 -0700 (PDT)
 Received: from stbsrv-and-01.and.broadcom.net ([192.19.144.250])
-        by smtp.gmail.com with ESMTPSA id m6-20020aa79006000000b0063989aab89fsm3484519pfo.23.2023.04.11.09.59.24
+        by smtp.gmail.com with ESMTPSA id m6-20020aa79006000000b0063989aab89fsm3484519pfo.23.2023.04.11.09.59.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 09:59:27 -0700 (PDT)
+        Tue, 11 Apr 2023 09:59:30 -0700 (PDT)
 From:   Jim Quinlan <jim2101024@gmail.com>
 To:     linux-pci@vger.kernel.org,
         Nicolas Saenz Julienne <nsaenz@kernel.org>,
@@ -60,16 +60,14 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE),
         linux-rpi-kernel@lists.infradead.org (moderated list:BROADCOM
         BCM2711/BCM2835 ARM ARCHITECTURE),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/3] dt-bindings: PCI: brcmstb: Add two optional props
-Date:   Tue, 11 Apr 2023 12:59:16 -0400
-Message-Id: <20230411165919.23955-2-jim2101024@gmail.com>
+        linux-arm-kernel@lists.infradead.org (moderated list:BROADCOM
+        BCM2711/BCM2835 ARM ARCHITECTURE),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 2/3] PCI: brcmstb: CLKREQ# accomodations of downstream device
+Date:   Tue, 11 Apr 2023 12:59:17 -0400
+Message-Id: <20230411165919.23955-3-jim2101024@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230411165919.23955-1-jim2101024@gmail.com>
 References: <20230411165919.23955-1-jim2101024@gmail.com>
@@ -83,66 +81,156 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Regarding "brcm,enable-l1ss":
+The Broadcom STB/CM PCIe HW core, which is also used in RPi SOCs, must be
+deliberately set by the probe() into one of three mutually exclusive modes:
 
-  The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
-  requires the driver probe() to deliberately place the HW one of three
-  CLKREQ# modes:
+  (a) No CLKREQ# expected or required, refclk is always available.
+  (b) CLKREQ# is expected to be driven by downstream device when needed.
+  (c) Bidirectional CLKREQ# for L1SS capable devices.
 
-  (a) CLKREQ# driven by the RC unconditionally
-  (b) CLKREQ# driven by the EP for ASPM L0s, L1
-  (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+Previously, only (b) was supported by the driver, as almost all STB/CM
+boards operate in this mode.  But now there is interest in activating L1SS
+power savings from STB/CM customers, and also interest in accomodating mode
+(a) for designs such as the RPi CM4 with IO board.
 
-  The HW+driver can tell the difference between downstream devices that
-  need (a) and (b), but does not know when to configure (c).  Further, the
-  HW may cause a CPU abort on boot if guesses wrong regarding the need for
-  (c).  So we introduce the boolean "brcm,enable-l1ss" property to indicate
-  that (c) is desired.  Setting this property only makes sense when the
-  downstream device is L1SS-capable and the OS is configured to activate
-  this mode (e.g. policy==superpowersave).
+The HW+driver is able to tell us when mode (a) mode is needed.  But there
+is no easy way to tell if L1SS mode should be configured.  In certain
+situations, getting this wrong may cause a panic during boot time.  So we
+rely on the DT prop "brcm,enable-l1ss" to tell us when mode (c) is desired.
+Using this mode only makes sense when the downstream device is L1SS-capable
+and the OS has been configured to activate L1SS
+(e.g. policy==powersupersave).
 
-  This property is already present in the Raspian version of Linux, but the
-  upstream driver implementaion that will follow adds more details and
-  discerns between (a) and (b).
+This property has already been in use by Raspian Linux, but this
+immplementation adds more details and discerns between (a) and (b)
+automatically.
 
-Regarding "brcm,completion-timeout-us"
-
-  Our HW will cause a CPU abort if the L1SS exit time is longer than the
-  PCIe transaction completion abort timeout.  We've been asked to make this
-  configurable, so we are introducing "brcm,completion-timeout-us".
-
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=217276
 Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 ---
- .../devicetree/bindings/pci/brcm,stb-pcie.yaml   | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/pci/controller/pcie-brcmstb.c | 69 +++++++++++++++++++++++----
+ 1 file changed, 59 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-index 7e15aae7d69e..f7fc2f6561bb 100644
---- a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -64,6 +64,22 @@ properties:
+diff --git a/drivers/pci/controller/pcie-brcmstb.c b/drivers/pci/controller/pcie-brcmstb.c
+index edf283e2b5dd..56b96aa02221 100644
+--- a/drivers/pci/controller/pcie-brcmstb.c
++++ b/drivers/pci/controller/pcie-brcmstb.c
+@@ -48,10 +48,17 @@
+ #define PCIE_RC_CFG_PRIV1_LINK_CAPABILITY			0x04dc
+ #define  PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK	0xc00
  
-   aspm-no-l0s: true
++#define PCIE_RC_CFG_PRIV1_ROOT_CAP			0x4f8
++#define  PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK	0xf8
++
+ #define PCIE_RC_DL_MDIO_ADDR				0x1100
+ #define PCIE_RC_DL_MDIO_WR_DATA				0x1104
+ #define PCIE_RC_DL_MDIO_RD_DATA				0x1108
  
-+  brcm,enable-l1ss:
-+    description: Indicates that PCIe L1SS power savings
-+      are desired, the downstream device is L1SS-capable, and the
-+      OS has been configured to enable this mode.  Note that when
-+      in this mode, this particular HW may not meet the requirement
-+      that requires CLKREQ# assertion to clock active to be
-+      within 400ns.
-+    type: boolean
++#define PCIE_0_RC_PL_PHY_DBG_CLKREQ2_0			0x1e30
++#define  CLKREQ2_0_CLKREQ_IN_CNT_MASK			0x3f000000
++#define  CLKREQ2_0_CLKREQ_IN_MASK			0x40000000
 +
-+  brcm,completion-timeout-us:
-+    description: Number of microseconds before PCI transaction
-+      completion timeout abort is signalled.
-+    minimum: 16
-+    default: 1000000
-+    maximum: 19884107
+ #define PCIE_MISC_MISC_CTRL				0x4008
+ #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_64B_MODE_MASK	0x80
+ #define  PCIE_MISC_MISC_CTRL_PCIE_RCB_MPS_MODE_MASK	0x400
+@@ -121,9 +128,12 @@
+ 
+ #define PCIE_MISC_HARD_PCIE_HARD_DEBUG					0x4204
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK	0x2
++#define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK		0x200000
+ #define  PCIE_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x08000000
+ #define  PCIE_BMIPS_MISC_HARD_PCIE_HARD_DEBUG_SERDES_IDDQ_MASK		0x00800000
+-
++#define  PCIE_CLKREQ_MASK \
++	  (PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK | \
++	   PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK)
+ 
+ #define PCIE_INTR2_CPU_BASE		0x4300
+ #define PCIE_MSI_INTR2_BASE		0x4500
+@@ -1024,13 +1034,58 @@ static int brcm_pcie_setup(struct brcm_pcie *pcie)
+ 	return 0;
+ }
+ 
++static void brcm_config_clkreq(struct brcm_pcie *pcie)
++{
++	bool l1ss = of_property_read_bool(pcie->np, "brcm,enable-l1ss");
++	void __iomem *base = pcie->base;
++	u32 clkreq_set, tmp = readl(base + PCIE_0_RC_PL_PHY_DBG_CLKREQ2_0);
++	bool clkreq_in_seen;
 +
-   brcm,scb-sizes:
-     description: u64 giving the 64bit PCIe memory
-       viewport size of a memory controller.  There may be up to
++	/*
++	 * We have "seen" CLKREQ# if it is asserted or has been in the past.
++	 * Note that the CLKREQ_IN_MASK is 1 if CLKREQ# is asserted.
++	 */
++	clkreq_in_seen = !!(tmp & CLKREQ2_0_CLKREQ_IN_MASK) ||
++		!!FIELD_GET(CLKREQ2_0_CLKREQ_IN_CNT_MASK, tmp);
++
++	/* Start with safest setting where we provide refclk regardless */
++	clkreq_set = readl(pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG) &
++		~PCIE_CLKREQ_MASK;
++
++	if (l1ss && IS_ENABLED(CONFIG_PCIEASPM)) {
++		/*
++		 * Note: This (l1ss) mode may not meet requirement for
++		 * downstream devices that require CLKREQ# assertion to
++		 * clock active within 400ns.
++		 */
++		clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_L1SS_ENABLE_MASK;
++		dev_info(pcie->dev, "bi-dir CLKREQ# for l1ss-capable devs\n");
++		dev_info(pcie->dev, "ASPM policy should be set to \"powersupersave\"\n");
++	} else {
++		if (clkreq_in_seen && IS_ENABLED(CONFIG_PCIEASPM)) {
++			clkreq_set |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
++			dev_info(pcie->dev, "uni-dir CLKREQ# for ASPM\n");
++		} else {
++			dev_info(pcie->dev, "CLKREQ# ignored; no ASPM\n");
++			/* Might as well unadvertise ASPM */
++			tmp = readl(base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY) &
++				~PCIE_RC_CFG_PRIV1_LINK_CAPABILITY_ASPM_SUPPORT_MASK;
++			writel(tmp, base + PCIE_RC_CFG_PRIV1_LINK_CAPABILITY);
++		}
++		/* Setting the field to 2 unadvertises L1SS support */
++		tmp = readl(base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++		u32p_replace_bits(&tmp, 2, PCIE_RC_CFG_PRIV1_ROOT_CAP_L1SS_MODE_MASK);
++		writel(tmp, base + PCIE_RC_CFG_PRIV1_ROOT_CAP);
++	}
++	writel(clkreq_set, pcie->base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
++}
++
+ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ {
+ 	struct device *dev = pcie->dev;
+ 	void __iomem *base = pcie->base;
+ 	u16 nlw, cls, lnksta;
+ 	bool ssc_good = false;
+-	u32 tmp;
+ 	int ret, i;
+ 
+ 	/* Unassert the fundamental reset */
+@@ -1055,6 +1110,8 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		return -ENODEV;
+ 	}
+ 
++	brcm_config_clkreq(pcie);
++
+ 	if (pcie->gen)
+ 		brcm_pcie_set_gen(pcie, pcie->gen);
+ 
+@@ -1073,14 +1130,6 @@ static int brcm_pcie_start_link(struct brcm_pcie *pcie)
+ 		 pci_speed_string(pcie_link_speed[cls]), nlw,
+ 		 ssc_good ? "(SSC)" : "(!SSC)");
+ 
+-	/*
+-	 * Refclk from RC should be gated with CLKREQ# input when ASPM L0s,L1
+-	 * is enabled => setting the CLKREQ_DEBUG_ENABLE field to 1.
+-	 */
+-	tmp = readl(base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+-	tmp |= PCIE_MISC_HARD_PCIE_HARD_DEBUG_CLKREQ_DEBUG_ENABLE_MASK;
+-	writel(tmp, base + PCIE_MISC_HARD_PCIE_HARD_DEBUG);
+-
+ 	return 0;
+ }
+ 
 -- 
 2.17.1
 
