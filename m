@@ -2,102 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AC786DDA8E
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 14:15:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5AD6A6DDB42
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 14:54:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjDKMPn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 08:15:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35708 "EHLO
+        id S229844AbjDKMxj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 08:53:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229546AbjDKMPn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 08:15:43 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B37DD3C16
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 05:15:41 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id kh6so6054093plb.0
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 05:15:41 -0700 (PDT)
+        with ESMTP id S229841AbjDKMxf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 08:53:35 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F0A040C1;
+        Tue, 11 Apr 2023 05:53:34 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id eo6-20020a05600c82c600b003ee5157346cso5964415wmb.1;
+        Tue, 11 Apr 2023 05:53:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681215341;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jl6l4pmsVIKYsgnNA2+nACABPsEa8mbnnBa/Av4PeQM=;
-        b=xWYHxr5HtfgeiK3Om+VC8yvjGyC1aXQONqcDB4WqO5IRE24MbwxPoFa+tfmj9t0YDU
-         RrXLj21NztqOELflD7ho3wDonXE3pg6fE+vVOxpIR8hsLgRyb2oOi3Ag7G94Tie1511N
-         bCiBez8s9hpAbtKWsorpQgYxNZ4XQzALO03BNe4Md1gOe2bIioqYhvpcdZP2orFTf4F6
-         WcyJb0I95p7zNr3adPihAR9gwQ2hpntSpyfUfIBX/jvxPuiBB67oP1cWBCTdxuGpO/Wn
-         9nuws8n6EgTDePJFaP/DgL1wOLI1uGVeQVE5ACTtPusqeYCN1mz+JlppufZxzwiaG2Wt
-         wsAQ==
+        d=gmail.com; s=20210112; t=1681217612;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=x9yZ+qnUfIedOP16sqw/n0wk0WAmpKQ2BM/zcb4X7c8=;
+        b=FEqA8zIiXQo1JgRyGbmoTOBWasmNdOU1p+Jfx1mKzePVIJFwbUh2gS+SovCjj/P4kl
+         s6cCpRy1rpNR2BAh4DuFEjOHp8djEDmwZcdRHT2Lflkyk4cyJy6XiTpV0tkaoXK5ff0a
+         36l9wP0yEWdbvCIo40oHD5T4wlvvE5PvOnjnGJ5e6NBQ4I5Pd6TX0BFAjmZApNZ9iBAi
+         cI0OU+VfjFdzAs4CPulzv8nH9I08XufU2Pzb28571Z5LZQlhdAkqODCDKgizenk+R8SI
+         4/G26CpbXtT+PKcKn5XvUHhSq4nu/2VtgavErMGMWGjWr9PeoZSMVaPsrqH2lMhsnIoc
+         pviQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681215341;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jl6l4pmsVIKYsgnNA2+nACABPsEa8mbnnBa/Av4PeQM=;
-        b=Z4ality4FocHATUykFy93zgEPhctRHkZk7Qari+NV0dgG0AHSzWfAqslrejSm53mQb
-         Auw8bnwp37V7KnZn5PmvbacalfUTKU2Cs/P7qbAA/wJwIP1OSBZa3aKmxuXjm770WJxf
-         Veg4f5STjknlNTdb21/v7EVzesgEpdiF5w5Mb5avpO/j5L7GYtFaav9+xMWvSWPD7HkH
-         4iyjsflq75iIamQtNLsM0RNcfWtEAbrCK6rXIbAbscQBvnKIc+ClPUd1tTuJBDj2NV2y
-         AcbXWST7beJ9Mig9seZMsnifO2ZGa/NS2zOBjaQI0DxcjOtcedOH+Sd3NJqDy2pE6F/l
-         m8AQ==
-X-Gm-Message-State: AAQBX9eVGVS8GvZUWm9p/BmPViis5ienciSQguf9Ii7wr3Tm3NGaOCtH
-        0PomevDCpO/QmhhZo1MzVjxd
-X-Google-Smtp-Source: AKy350Y5ZPEcFroY7YBGQtp21m1/nnED3TktLrG5ktmD6zwCyz7sBUsShfHcjgTxcB3ZMyW2k0fhLA==
-X-Received: by 2002:a17:903:22c9:b0:1a6:3d6d:3157 with SMTP id y9-20020a17090322c900b001a63d6d3157mr8819044plg.62.1681215341176;
-        Tue, 11 Apr 2023 05:15:41 -0700 (PDT)
-Received: from localhost.localdomain ([117.216.120.128])
-        by smtp.gmail.com with ESMTPSA id g24-20020a170902fe1800b0019aa5e0aadesm7238309plj.110.2023.04.11.05.15.38
+        d=1e100.net; s=20210112; t=1681217612;
+        h=mime-version:user-agent:references:message-id:date:in-reply-to
+         :subject:cc:to:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=x9yZ+qnUfIedOP16sqw/n0wk0WAmpKQ2BM/zcb4X7c8=;
+        b=pue33kXH5fDJzzMw2Jt46BK80PM0UWrkxXBCoQPHymYR/VDDH+NCnCf9Vy/wFPpAVm
+         ordbqU/FD/2IVWGlZaUVqm5T4WkoLMPwHAunnnK25Twn9KP8YwVee2wZ6qUkk4cGz6SG
+         QFx8I+9TFH71lo59O0cZgfqmqsppcLgzru3qsgsHldmTAQuAaV4DtnABg0vqSRmnYLQz
+         Xh+AnaxkoGQP2mGn4l8empDz0LOACQZFTbMLJBfK7torTxluXWoyZEts9cxVuf/HRwOU
+         8wjrKDOyDrxOQBDoUAGQ9XG2D0yZeoFzkQvrjpgH22t3K+zwF7swPnSknuYBceFHdD1O
+         F0TQ==
+X-Gm-Message-State: AAQBX9fu3quuEBzkP695WRE1WKQQ73rmw784cS//Er2BsBqXFcbWpNv9
+        UGs0IE5b4ZEFLIr9ax3JA5Y=
+X-Google-Smtp-Source: AKy350a7/C5fkIWINCl0pxOpgu8uM2Qbd7glWkBEvzl1kM7rMBd1tJS81vJ1qW3TfQDn6oEnlllD8g==
+X-Received: by 2002:a7b:ce16:0:b0:3ee:2b04:e028 with SMTP id m22-20020a7bce16000000b003ee2b04e028mr9178810wmc.14.1681217612343;
+        Tue, 11 Apr 2023 05:53:32 -0700 (PDT)
+Received: from imac ([88.97.103.74])
+        by smtp.gmail.com with ESMTPSA id n23-20020a7bcbd7000000b003e20cf0408esm16924764wmi.40.2023.04.11.05.53.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Apr 2023 05:15:40 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     andersson@kernel.org, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org
-Cc:     bhelgaas@google.com, konrad.dybcio@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lpieralisi@kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] Revert "dt-bindings: PCI: qcom: Add iommu-map properties"
-Date:   Tue, 11 Apr 2023 17:45:33 +0530
-Message-Id: <20230411121533.22454-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        Tue, 11 Apr 2023 05:53:31 -0700 (PDT)
+From:   Donald Hunter <donald.hunter@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>
+Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
+ with igb
+In-Reply-To: <20230410213754.GA4064490@bhelgaas> (Bjorn Helgaas's message of
+        "Mon, 10 Apr 2023 16:37:54 -0500")
+Date:   Tue, 11 Apr 2023 13:53:09 +0100
+Message-ID: <m27cuih96y.fsf@gmail.com>
+References: <20230410213754.GA4064490@bhelgaas>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
-        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This reverts commit 6ebfa40b63ae65eac20834ef4f45355fc5ef6899.
+Bjorn Helgaas <helgaas@kernel.org> writes:
 
-"iommu-map" property is already documented in commit
-("dt-bindings: PCI: qcom: Add SM8550 compatible") along with the "iommus"
-property.
+> On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
+>> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
+>> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
+>> > > >
+>> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
+>> > > > because it apparently has an ACPI firmware node, and there's something
+>> > > > we don't expect about its status?
+>> > >
+>> > > Yes they are built-in, to my knowledge.
+>> > >
+>> > > > Hopefully Rob will look at this.  If I were looking, I would be
+>> > > > interested in acpidump to see what's in the DSDT.
+>> > >
+>> > > I can get an acpidump. Is there a preferred way to share the files, or just
+>> > > an email attachment?
+>> >
+>> > I think by default acpidump produces ASCII that can be directly
+>> > included in email.  http://vger.kernel.org/majordomo-info.html says
+>> > 100K is the limit for vger mailing lists.  Or you could open a report
+>> > at https://bugzilla.kernel.org and attach it there, maybe along with a
+>> > complete dmesg log and "sudo lspci -vv" output.
+>> 
+>> Apologies for the delay, I was unable to access the machine while travelling.
+>> 
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217317
+>
+> Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
+> with this in the kernel parameters:
+>
+>   dyndbg="file drivers/acpi/* +p"
+>
+> and collect the entire dmesg log?
 
-So let's revert the commit that just added "iommu-map" to avoid
-duplication.
+Added to the bugzilla report.
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 5d236bac99b6..a1318a4ecadf 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -78,8 +78,6 @@ properties:
- 
-   dma-coherent: true
- 
--  iommu-map: true
--
-   interconnects:
-     maxItems: 2
- 
--- 
-2.25.1
-
+Thanks!
