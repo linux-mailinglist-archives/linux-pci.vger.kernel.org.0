@@ -2,108 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D09C06DE5E8
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 22:42:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 527F16DE628
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 23:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbjDKUmz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 16:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47912 "EHLO
+        id S229682AbjDKVHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 17:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229939AbjDKUmq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 16:42:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA78E59F6
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 13:42:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4222C60E97
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 20:42:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 641C3C433AA;
-        Tue, 11 Apr 2023 20:42:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681245751;
-        bh=vwwmTawd+xCm04nj2E2NmX4T5M0jSbBzgS3F0E3K3JM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=EEsRgtjZCF4nfsfHKQtNZ2PZpHJ/ho1UrkOHBdG4mtERvePVSzqbXZDyOim4osGp+
-         SnP9g+ufEAQ9cjNmRAboW+kDuoTRoZYXUEItY0E2hoZMfgyZOjFRCsAm1HJJ5Ojmlt
-         ObNVW6NR7UR9UG1aiYK5v9mYFO/iYVyvQGpnnyVNDKoypP2yDB7LNnmsTz8rRnzXOZ
-         LV16bAGXZ+wa5wcvHELhkmNIeNmIZ3c0doiEEOnDoBBXgkJcfXxM47fC6dlVMrDQiW
-         FVKA7ryg6eFKT6L/E4wXCgOum8K4rMl1J8xalow4p9W4FQWxZ+rsYDrzaU6qlk+YqI
-         EERrhKFGIMDSg==
-Date:   Tue, 11 Apr 2023 15:42:29 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Vidya Sagar <vidyas@nvidia.com>
-Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
- during long idle
-Message-ID: <20230411204229.GA4168208@bhelgaas>
+        with ESMTP id S229648AbjDKVHf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 17:07:35 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 991A84482
+        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 14:07:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681247251; x=1712783251;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=L0YpiPfGZgI3gQUZ+5L6kYqGodIvHw6EHvQ0ghaVqm4=;
+  b=RLWoL+zKPt/zI+TLN5PKoV6kyNg7yFVTWJDHUS8BavTp7qwnmVwFH+A5
+   1zdja36gbeZ8NIpPuLbqkgJC7xL1nmCQe2UYKSGbgCE5eyShvvPIFDa2g
+   1M2r40304lN/xGtTaWSJcSIrYUIay3c9NiQ8XTWigzWMBfyXTedozc+bx
+   sanrBQ75/t8BFGYuxGMgG479cRVvaiVz3pFqFnTwtCpkMy0AKPgHvJV1v
+   IZKLQYknFESwwRzhrW+gGcrPouGQEn42pEfbWzpkhzYhK4uDQpV+AGplp
+   3ol8rf4WtlhFGTGgO7oOBLNn8xioRscMTT0KiO4v7P5wsG5oIQTABUP2b
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="346411393"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="346411393"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 14:07:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="691303955"
+X-IronPort-AV: E=Sophos;i="5.98,336,1673942400"; 
+   d="scan'208";a="691303955"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Apr 2023 14:07:27 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pmLD5-000Whl-2A;
+        Tue, 11 Apr 2023 21:07:27 +0000
+Date:   Wed, 12 Apr 2023 05:07:03 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-pci@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Johan Hovold <johan+linaro@kernel.org>
+Subject: [pci:controller/qcom 17/27]
+ drivers/pci/controller/dwc/pcie-qcom.c:247:1: error: type name requires a
+ specifier or qualifier
+Message-ID: <202304120557.LijMReu1-lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <bug-217321-41252@https.bugzilla.kernel.org/>
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,HEXHASH_WORD,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
-> https://bugzilla.kernel.org/show_bug.cgi?id=217321
-> ... 
->         Regression: No
-> 
-> [Symptom]
-> Intel cpu can't sleep deeper than pcˇ during long idle
-> ~~~
-> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
-> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
-> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
-> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
-> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
-> ~~~
-> [How to Reproduce]
-> 1. run turbostat to monitor
-> 2. leave machine idle
-> 3. turbostat show cpu only go into pc2~pc3.
-> 
-> [Misc]
-> The culprit are this 
-> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
-> suspend/resume”
-> 
-> if revert a7152be79b62, the issue is gone
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+head:   dc8d33452b3643f4b4c33fd4492aa7ae4e8e00d6
+commit: ca0e2aad27202b971def5a3dfeffb23d80ebe350 [17/27] PCI: qcom: Add support for system suspend and resume
+config: riscv-randconfig-r036-20230409 (https://download.01.org/0day-ci/archive/20230412/202304120557.LijMReu1-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project 2c57868e2e877f73c339796c3374ae660bb77f0d)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install riscv cross compiling tool for clang build
+        # apt-get install binutils-riscv64-linux-gnu
+        # https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/commit/?id=ca0e2aad27202b971def5a3dfeffb23d80ebe350
+        git remote add pci https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
+        git fetch --no-tags pci controller/qcom
+        git checkout ca0e2aad27202b971def5a3dfeffb23d80ebe350
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash drivers/pci/controller/dwc/
 
-Relevant commits:
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304120557.LijMReu1-lkp@intel.com/
 
-  4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
-  a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
+All errors (new ones prefixed by >>):
 
-4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
-Substates configuration was not preserved across suspend/resume, so
-the system *worked* after resume, but used more power than expected.
+>> drivers/pci/controller/dwc/pcie-qcom.c:247:1: error: type name requires a specifier or qualifier
+   +       bool suspended;
+   ^
+>> drivers/pci/controller/dwc/pcie-qcom.c:247:1: error: expected member name or ';' after declaration specifiers
+>> drivers/pci/controller/dwc/pcie-qcom.c:246:25: error: expected ';' at end of declaration list
+           struct dentry *debugfs;
+                                  ^
+                                  ;
+>> drivers/pci/controller/dwc/pcie-qcom.c:1574:9: error: no member named 'suspended' in 'struct qcom_pcie'
+                   pcie->suspended = true;
+                   ~~~~  ^
+   drivers/pci/controller/dwc/pcie-qcom.c:1585:12: error: no member named 'suspended' in 'struct qcom_pcie'
+           if (pcie->suspended) {
+               ~~~~  ^
+   drivers/pci/controller/dwc/pcie-qcom.c:1590:9: error: no member named 'suspended' in 'struct qcom_pcie'
+                   pcie->suspended = false;
+                   ~~~~  ^
+   6 errors generated.
 
-But 4ff116d0d5fd caused resume to fail completely on some systems, so
-a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
-Substates configuration is likely not preserved across suspend/resume.
-a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
-stable series starting with v6.1.12.
 
-KobaKo, you don't mention any suspend/resume in this bug report, but
-neither patch should make any difference unless suspend/resume is
-involved.  Does the platform sleep as expected *before* suspend, but
-fail to sleep after resume?
+vim +247 drivers/pci/controller/dwc/pcie-qcom.c
 
-Or maybe some individual device was suspended via runtime power
-management, and that device lost its L1 PM Substates config?  I don't
-know if there's a way to disable runtime PM easily.
+   235	
+   236	struct qcom_pcie {
+   237		struct dw_pcie *pci;
+   238		void __iomem *parf;			/* DT parf */
+   239		void __iomem *elbi;			/* DT elbi */
+   240		void __iomem *mhi;
+   241		union qcom_pcie_resources res;
+   242		struct phy *phy;
+   243		struct gpio_desc *reset;
+   244		struct icc_path *icc_mem;
+   245		const struct qcom_pcie_cfg *cfg;
+ > 246		struct dentry *debugfs;
+ > 247	+	bool suspended;
+   248	};
+   249	
 
-The lspci output attached to the bugzilla was not collected as root,
-so it lacks the ASPM-related information.  Can you do this again with
-"sudo lspci -vv"?
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
