@@ -2,47 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DF4866DE3EC
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 20:30:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E798E6DE416
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 20:42:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229508AbjDKSao (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 14:30:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51986 "EHLO
+        id S229508AbjDKSmb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 14:42:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjDKSao (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 14:30:44 -0400
+        with ESMTP id S229481AbjDKSma (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 14:42:30 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36348BD
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 11:30:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 442E8ED;
+        Tue, 11 Apr 2023 11:42:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C18EF62AC2
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 18:30:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01550C433EF;
-        Tue, 11 Apr 2023 18:30:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D206762AE1;
+        Tue, 11 Apr 2023 18:42:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1214C433EF;
+        Tue, 11 Apr 2023 18:42:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681237842;
-        bh=Wultu0ABFCZVt+YGR2wI5v6FvNLxpRLLqTxSQvtyvdQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Sm/mQjFxwC11nrM6L/e/7FHJVHYbWHrlR1PDcfekGzUamK666VicYx07ZkStGImNy
-         mtZ4cvpTG2Cq4sOwSilgAE3hfqaveR4YbpjywJvCSl/IJkfpHrPOeZWHAkI0c+lkw8
-         19oMb1xGsRWq3oiuqbWocMbmuh8exgV7Hp3730y87rEgiYDGqyt2AiW2Uk+/UR6YvP
-         +3Q6qS1lDHMAMmAqY1S8bLFsrPoOd+pYNV+jT87WqjUYxIAcPd9+LAeF9naYeY9oag
-         ZRUKvzCNOvto5l8BhVIW7bVG5tEXsoV6EC+CvC4u5PH/IQwYi03Qd2OUlyaFzR3tcQ
-         ls7POJX2ZMRYQ==
-Date:   Tue, 11 Apr 2023 13:30:40 -0500
+        s=k20201202; t=1681238549;
+        bh=JO2yqbVvUl+G5u1FQlq1qzpv9f0fp/hLz6Ixw1ixQeQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=b/DRcx6mLKP8q7GXpd+v9EOZX7sW44uOpdNrpFAPqN6AQ0tkhgRpm6DKSx8JU0gIC
+         CX05xqqtsgTiXLM04cF8Fa1vRLFeW29uJdxgXStcyCfvXMzyA8+P5Oj7lI6DRh9bxp
+         iY4aD9FwrL0lIwDJ8ySblVXZPIoRsnGRi28bmc5/Pelb2xXUfdQ/2tG6761nA/Y3HR
+         VzHt3K7QwRwM0xN1GZrHaJ8t2nDPXEqzbxsgYdTOkBvjfaOCOA5ZVGg7BZ8IoYiEqn
+         tba7Ub6WhXAPUBTGZwm+w+4C/tBk7vKPZ4Xi+b2csbmtu6cVMznCVwqK3/JmyE6k9a
+         r/cmqdLxISf6w==
+Date:   Tue, 11 Apr 2023 13:42:27 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rongguang Wei <clementwei90@163.com>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com, lukas@wunner.de,
-        Rongguang Wei <weirongguang@kylinos.cn>
-Subject: Re: [PATCH v1] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
- Presence Detect Changed event occurred
-Message-ID: <20230411183040.GA4166190@bhelgaas>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Basavaraj Natikar <Basavaraj.Natikar@amd.com>,
+        Thomas Glanzmann <thomas@glanzmann.de>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Arnd Bergmann <arnd@kernel.org>
+Subject: [GIT PULL] PCI fixes for v6.3
+Message-ID: <20230411184227.GA4167614@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230403054619.19163-1-clementwei90@163.com>
 X-Spam-Status: No, score=-5.2 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
         SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.6
@@ -52,80 +60,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 03, 2023 at 01:46:19PM +0800, Rongguang Wei wrote:
-> From: Rongguang Wei <weirongguang@kylinos.cn>
-> 
-> When a Presence Detect Changed event has occurred, the slot status
-> in either BLINKINGOFF_STATE or OFF_STATE, turn it off unconditionally.
-> But if the slot status is in BLINKINGON_STATE and the slot is currently
-> empty, the slot status was staying in BLINKINGON_STATE.
-> 
-> The message print like this:
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5) Powering on due to button press
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Button cancel
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Action canceled due to button press
-> 
-> It cause the next Attention Button Pressed event become Button cancel
-> and missing the Presence Detect Changed event with this button press
-> though this button presses event is occurred after 5s.
-> 
-> According to the Commit d331710ea78f ("PCI: pciehp: Become resilient
-> to missed events"), if the slot is currently occupied, turn it on and
-> if the slot is empty, it need to set in OFF_STATE rather than stay in
-> current status. So the slot which status in BLINKINGON_STATE is also
-> turn off unconditionally.
-> 
-> The message print like this after the patch:
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5) Powering on due to button press
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Card not present
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Already disabled
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5) Powering on due to button press
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Card not present
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Already disabled
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Card present
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Link Up
-> 
-> After that, the next Attention Button Pressed event would power on
-> the slot normally.
+The following changes since commit fe15c26ee26efa11741a7b632e9f23b01aca4cc6:
 
-Lukas, any comment?
+  Linux 6.3-rc1 (2023-03-05 14:52:03 -0800)
 
-> Fixes: d331710ea78f ("PCI: pciehp: Become resilient to missed events")
-> Signed-off-by: Rongguang Wei <weirongguang@kylinos.cn>
-> ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..86fc9342be68 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -232,6 +232,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	 */
->  	mutex_lock(&ctrl->state_lock);
->  	switch (ctrl->state) {
-> +	case BLINKINGON_STATE:
->  	case BLINKINGOFF_STATE:
->  		cancel_delayed_work(&ctrl->button_work);
->  		fallthrough;
-> @@ -261,9 +262,6 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	}
->  
->  	switch (ctrl->state) {
-> -	case BLINKINGON_STATE:
-> -		cancel_delayed_work(&ctrl->button_work);
-> -		fallthrough;
->  	case OFF_STATE:
->  		ctrl->state = POWERON_STATE;
->  		mutex_unlock(&ctrl->state_lock);
-> -- 
-> 2.25.1
-> 
-> 
-> No virus found
-> 		Checked by Hillstone Network AntiVirus
-> 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pci-v6.3-fixes-2
+
+for you to fetch changes up to 30ba2d09edb5ea857a1473ae3d820911347ada62:
+
+  PCI: Fix use-after-free in pci_bus_release_domain_nr() (2023-04-06 18:20:59 -0500)
+
+----------------------------------------------------------------
+- Provide pci_msix_can_alloc_dyn() stub when CONFIG_PCI_MSI unset to avoid
+  build errors (Reinette Chatre)
+
+- Quirk AMD XHCI controller that loses MSI-X state in D3hot to avoid broken
+  USB after hotplug or suspend/resume (Basavaraj Natikar)
+
+- Fix use-after-free in pci_bus_release_domain_nr() (Rob Herring)
+
+----------------------------------------------------------------
+Basavaraj Natikar (1):
+      x86/PCI: Add quirk for AMD XHCI controller that loses MSI-X state in D3hot
+
+Reinette Chatre (1):
+      PCI/MSI: Provide missing stub for pci_msix_can_alloc_dyn()
+
+Rob Herring (1):
+      PCI: Fix use-after-free in pci_bus_release_domain_nr()
+
+ arch/x86/pci/fixup.c | 21 +++++++++++++++++++++
+ drivers/pci/remove.c |  5 +++--
+ include/linux/pci.h  |  2 ++
+ 3 files changed, 26 insertions(+), 2 deletions(-)
