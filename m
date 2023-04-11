@@ -2,500 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 190316DD8C2
-	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 13:03:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A7EB6DD8BC
+	for <lists+linux-pci@lfdr.de>; Tue, 11 Apr 2023 13:03:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229866AbjDKLDi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 07:03:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57968 "EHLO
+        id S229922AbjDKLDe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 07:03:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229920AbjDKLDe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 07:03:34 -0400
-Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2048.outbound.protection.outlook.com [40.107.101.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8196240EA;
-        Tue, 11 Apr 2023 04:03:01 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VYhIVzIdA9JSMj+PnGDg8/5JVUPnFEqxe5wxg5v+7T+B2iziAd6bgrz6jJoaYZQAMrgiTD+NJNeSo3gzs/S6mBN4HjPP5je8BGSQIpBHA+eK1OhciCOBRsUnwQadnAf+P4LR6qU7wG5ZP08wIKPsvw1MEVDUb9Ved6QCs7uZP4fz0yE9uxlA3WhlfOjtDSM9c4s4q0CXOvnd7MDVtBPcr+eWp6nTA+LJGUP2JJjUtmiauBV6aZWHqtfcmlJo9HLh7RpZ4GAB0BUlzk5Xm2EoxF5Bx91ooTZZWHxLswneJpi7AHgtEQ5j/nWE+UTcb+3WaZYUCejO4UryJ1pUQhnxBg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=3nsMtliVfQ4xVQKkWlDg78TRz0LuP+gntsRIi9bqP48=;
- b=hndB6Q14ATdscIEfzOcP44y9XHCLq1ywan0/92p/YjCHnZlBm1+DuPe8oOsCscVRFcE1F2uicCAvYYXoaZYbj1znwaxWi2tbVDjKrSzAduGy0OodLc7SByaRwLACeIIjAb0uHIpQZWXGwdQUByvFE+tftykCiO6DksmmJlL526z1i3Cb82O1Y/QKeqTdcgXTmjiIZK1wQibSZeEtDRDjr9mXhFU2rbiIK3yHuVdSZopEWAcElM8XuFExwfCBYkaQHmeTgvkVjEMbEvp0Bze6jP9NP1P+SSj20wrSZ7/wCh97XU8cJr34QT86DhbvjFvxuCFWNktLy0cCELljT7vABw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=3nsMtliVfQ4xVQKkWlDg78TRz0LuP+gntsRIi9bqP48=;
- b=nfXsregxvgKLcPcDLRxuby20bdnzV0X3u9QFEYtBlKsrL8DHeENv/VsT+q0B906jXfwvplY0YweYQ0Bk/ME2hHAWlCHeTEwkRP8omE8haMUAimpFlABYG34BEfRMQzRAFCiyC+ELvCsRpytBBmi03OB96qKyy+yoBI1QNZ4ISViwUpUyJimppl/suOrxEN2SGgxDm2xMFs+U7pINRGGveN6Vpp2U8Is/KyDZHVQoe8HCrKWjkXWzk+oKoab0WzDSQZEELZeehHDMOL4VkbH/ZWNzNDatT6WHI4XzXAY6XOyVy0Ac1Lb33birQx1J40vNYJuJPrEQxLtinO2OSgKQkA==
-Received: from BN9PR03CA0343.namprd03.prod.outlook.com (2603:10b6:408:f6::18)
- by CY5PR12MB6130.namprd12.prod.outlook.com (2603:10b6:930:26::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.31; Tue, 11 Apr
- 2023 11:02:29 +0000
-Received: from BN8NAM11FT111.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:f6:cafe::d5) by BN9PR03CA0343.outlook.office365.com
- (2603:10b6:408:f6::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6277.34 via Frontend
- Transport; Tue, 11 Apr 2023 11:02:28 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- BN8NAM11FT111.mail.protection.outlook.com (10.13.177.54) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6298.24 via Frontend Transport; Tue, 11 Apr 2023 11:02:28 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Tue, 11 Apr 2023
- 04:02:15 -0700
-Received: from rnnvmail204.nvidia.com (10.129.68.6) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Tue, 11 Apr
- 2023 04:02:14 -0700
-Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.129.68.6) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Tue, 11 Apr 2023 04:02:09 -0700
-From:   Sumit Gupta <sumitg@nvidia.com>
-To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>, <helgaas@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v6 9/9] arm64: tegra: Add cpu OPP tables and interconnects property
-Date:   Tue, 11 Apr 2023 16:30:02 +0530
-Message-ID: <20230411110002.19824-10-sumitg@nvidia.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230411110002.19824-1-sumitg@nvidia.com>
-References: <20230411110002.19824-1-sumitg@nvidia.com>
-X-NVConfidentiality: public
+        with ESMTP id S229707AbjDKLDZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 07:03:25 -0400
+Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E62EB448D
+        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:02:50 -0700 (PDT)
+Received: by mail-pj1-x1035.google.com with SMTP id v9so12934949pjk.0
+        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 04:02:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681210968;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8NdaDMR88s+1WtvRZzFseNEUErd04u8W3GHHaAxJqcs=;
+        b=PcARvOGxXSQhEYhGNs5SJ4lcR/LE0utoGKPBYI+EgKQh+DGinmFPhN5kt43TQ2JyDd
+         dKLFtiOqLxKExs6YBGTsPI+kjuI1bSJXgCsoaceJ8gTo2vCVMNwY+9MNxohlTR1KlurA
+         ejPL/IfoGTmi99OxNcnJ73DXjqOBgU6/cZlBOKc2BccUlyhHcRUxYZ1t+2tiXT9rope9
+         Udup0Y2bP9bDgsRt8kX6kiSz3iUXFwhpMl7Y1oFOHuJF8orX/9f1Qp+qXPFN2SRJ4taQ
+         yW/TRxBSYfIyfeWR5l89vB7eQVuWohHz98m0UBLXiWpWMXvatYw+LkFnlYO3oWketJqC
+         YUNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681210968;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=8NdaDMR88s+1WtvRZzFseNEUErd04u8W3GHHaAxJqcs=;
+        b=WVf2w5rBx2t4rj/x3XUfyAUmDC/z+ST9alySxrDCycre66tXyJbv3RbpjNlAlrHmjR
+         aON4yCqd/DQswElB8OOYl/tnsOesjemhgaYy8QDF2Xkf6xwDpvJ1Y+1bNVFmNqObpa0G
+         5EOB+QIEOBr0soa+C6Hn9XGE/sWjARnJ0KYPcFYVq3SReJLtbGy3CKJof5fHCKaRuxQp
+         qE0tHZtKgD6VvR8AAvUq0k/sf/mR0lwTOSYYOKPB0A1inE0gUlLC55FZBzuNctty8nb3
+         8e9h2cxnG/g94Ot4mD56E6pyP5SZVh62pe7aHZcZ4+Bx90oenTEfXQrO4mpkQ03BkO8q
+         ngpw==
+X-Gm-Message-State: AAQBX9eu9cNQ2qgxTGMSfNZza4E31lfBjgNCqJOLsDUCmkFE3oyj9YKJ
+        GiyZZCjH1FsevZJWE0aP/GPx
+X-Google-Smtp-Source: AKy350YrgJ+yCoYpqvWMVoHJqr9R84fHbxO/QbzkuGhgDRXGWXXcdoOGiDeCw4wvWJg+mz30I1j3aA==
+X-Received: by 2002:a17:90b:1c8e:b0:234:e3f:f53b with SMTP id oo14-20020a17090b1c8e00b002340e3ff53bmr13789406pjb.21.1681210967895;
+        Tue, 11 Apr 2023 04:02:47 -0700 (PDT)
+Received: from thinkpad ([117.216.120.128])
+        by smtp.gmail.com with ESMTPSA id i6-20020a170902c28600b0019c92f56983sm9416236pld.120.2023.04.11.04.02.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Apr 2023 04:02:47 -0700 (PDT)
+Date:   Tue, 11 Apr 2023 16:32:40 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <20230411110240.GB5333@thinkpad>
+References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT111:EE_|CY5PR12MB6130:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9d934ed8-26e3-4e28-6b09-08db3a7c3d82
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: FPpY/cbFd2S+OkS4z5W4gvYQQOFVSflNdidc5lOnt2wJfSyaAtM7JEApLNXR64p65lNpiYrsnVO2Ny7/Ey8I7bHWQ5njWnGYWLp4ThPw9flZvDLPUAFbFLHLY2f7z9nMK5Spamtj2QBDjOtqsXJmlOWu5ttnEva3CXv/FRQVAG9/JS82g/GzzZVkjvxnp0A3j0txa/GHDs2AzB+7rGd650a7iLd7Z6ok8D3CAg6jG9rory1Pgy7knrnguSsKj0obsty7vKoJ3fKD/HxuoPw2oKcRWebxZHwwPBlw6+y4Xw3p9k5cZRikrb8ixaZZnePxRwC8hj/n0j1bJbDSBLCPOYoa6+AJSOalvYvgcSRKmUBU0qaKljwu2QH7KnodzaGtLjjCDSiy3Ax/ityuiTPExAnnbGzgpHyqhhL/uF75jpPPLUtS5tNIAgcE7A+IK02wnN0lOJ2hS1Ixbl/sd3Y0EXBQXoUAbFVOEzC4Z3AkSE5vAEaQ74a61ehRmaxay9Uk7yBnxcyJb9hYFYjvoXT8emfWiTJgwS//GGOw3IDEmJZyN4Wwys2XM7sqHJ27fkRjW+g5ocsY/LxnAf/zGWiMfaV9m9+3BdNp6VR88vx7jQYHMF4Ipdp+2x1KfXugLf6Ikj90mgarsTKeNbGB1jhRTpZpS+Wtz6SXQQPhmEiFgS6JkXHdNKbiRvTiuEpKVWtSLGE7+c5+jNA2P1m42LsellksuBbYI7jBrEv9M1TSjMMD0ETqlCGgSIsHHXZ81ibJ
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(396003)(136003)(451199021)(40470700004)(46966006)(36840700001)(186003)(8936002)(36860700001)(2616005)(83380400001)(426003)(47076005)(70586007)(6666004)(7696005)(54906003)(478600001)(26005)(107886003)(1076003)(110136005)(7416002)(82740400003)(356005)(5660300002)(36756003)(40460700003)(7636003)(2906002)(82310400005)(4326008)(86362001)(70206006)(41300700001)(40480700001)(316002)(8676002)(336012);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Apr 2023 11:02:28.3339
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9d934ed8-26e3-4e28-6b09-08db3a7c3d82
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT111.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6130
-X-Spam-Status: No, score=0.8 required=5.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE
-        autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+X-Spam-Status: No, score=-0.2 required=5.0 tests=DKIM_SIGNED,DKIM_VALID,
+        DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add OPP table and interconnects property to scale DDR frequency with
-CPU frequency for better performance. Each operating point entry of
-the OPP table has CPU freq to per MC channel bandwidth mapping.
-One table is added for each cluster even though the table data is
-same because the bandwidth request is per cluster. This is done
-because OPP framework creates a single icc path and hence single
-bandwidth request if the table is marked as 'opp-shared' and shared
-among all clusters. For us, the OPP table data is same but the MC
-Client ID argument to interconnects property is different for each
-cluster. So, having per cluster table makes different icc path for
-each cluster and helps to make per cluster BW requests.
+On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
+> It turns out the recent DW PCIe-related patchset was merged in with
+> several relatively trivial issues left unsettled (noted by Bjorn and
+> Manivannan). All of these lefovers have been fixed in this patchset.
+> Namely the series starts with two bug-fixes. The first one concerns the
+> improper link-mode initialization in case if the CDM-check is enabled. The
+> second unfortunate mistake I made in the IP-core version type helper. In
+> particular instead of testing the IP-core version type the macro function
+> referred to the just IP-core version which obviously wasn't what I
+> intended.
+> 
+> Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> asynchronous probe type which saved us of about 15% of bootup time if no any
+> PCIe peripheral device attached to the port.
+> 
+> Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> corresponding patch removes the false error message printed during the
+> controller probe procedure. I accidentally added the unconditional
+> dev_err_probe() method invocation. It was obviously wrong.
+> 
+> Then two trivial cleanups are introduced. The first one concerns the
+> duplicated fast-link-mode flag unsetting. The second one implies
+> dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> function.
+> 
+> The series continues with a patch inspired by the last @Bjorn note
+> regarding the generic resources request interface. As @Bjorn correctly
+> said it would be nice to have the new interface used wider in the DW PCIe
+> subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> PCIe driver can be easily converted to using the generic clock names.
+> That's what is done in the noted patch.
+> 
+> The patchset is closed with a series of MAINTAINERS-list related patches.
+> Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> update the MAINTAINER-list with the new files added in the framework of
+> that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> patchsets to review and not having any comments from the original driver
+> maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> eDMA drivers. Thus hopefully the new updates review process will be
+> performed with much less latencies. For the same reason I would also like
+> to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+> he isn't against that idea. What do you think about the last suggestion?
+> 
 
-Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
----
- arch/arm64/boot/dts/nvidia/tegra234.dtsi | 276 +++++++++++++++++++++++
- 1 file changed, 276 insertions(+)
+I'm willing to co-maintain the drivers.
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra234.dtsi b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-index 5d354f8923b4..8d0b89b5733e 100644
---- a/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra234.dtsi
-@@ -3011,6 +3011,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3027,6 +3030,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3043,6 +3049,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3059,6 +3068,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl0_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER0 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3075,6 +3087,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3091,6 +3106,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3107,6 +3125,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3123,6 +3144,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl1_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER1 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3139,6 +3163,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3155,6 +3182,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3171,6 +3201,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3187,6 +3220,9 @@
- 
- 			enable-method = "psci";
- 
-+			operating-points-v2 = <&cl2_opp_tbl>;
-+			interconnects = <&mc TEGRA_ICC_MC_CPU_CLUSTER2 &emc>;
-+
- 			i-cache-size = <65536>;
- 			i-cache-line-size = <64>;
- 			i-cache-sets = <256>;
-@@ -3461,4 +3497,244 @@
- 		interrupt-parent = <&gic>;
- 		always-on;
- 	};
-+
-+	cl0_opp_tbl: opp-table-cluster0 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl0_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl0_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl0_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl0_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl0_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl0_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl0_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl0_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
-+
-+	cl1_opp_tbl: opp-table-cluster1 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl1_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl1_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl1_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl1_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl1_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl1_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl1_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl1_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
-+
-+	cl2_opp_tbl: opp-table-cluster2 {
-+		compatible = "operating-points-v2";
-+		opp-shared;
-+
-+		cl2_ch1_opp1: opp-115200000 {
-+			  opp-hz = /bits/ 64 <115200000>;
-+			  opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp2: opp-268800000 {
-+			opp-hz = /bits/ 64 <268800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp3: opp-422400000 {
-+			opp-hz = /bits/ 64 <422400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp4: opp-576000000 {
-+			opp-hz = /bits/ 64 <576000000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp5: opp-729600000 {
-+			opp-hz = /bits/ 64 <729600000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp6: opp-883200000 {
-+			opp-hz = /bits/ 64 <883200000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp7: opp-1036800000 {
-+			opp-hz = /bits/ 64 <1036800000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp8: opp-1190400000 {
-+			opp-hz = /bits/ 64 <1190400000>;
-+			opp-peak-kBps = <816000>;
-+		};
-+
-+		cl2_ch1_opp9: opp-1344000000 {
-+			opp-hz = /bits/ 64 <1344000000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl2_ch1_opp10: opp-1497600000 {
-+			opp-hz = /bits/ 64 <1497600000>;
-+			opp-peak-kBps = <1632000>;
-+		};
-+
-+		cl2_ch1_opp11: opp-1651200000 {
-+			opp-hz = /bits/ 64 <1651200000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl2_ch1_opp12: opp-1804800000 {
-+			opp-hz = /bits/ 64 <1804800000>;
-+			opp-peak-kBps = <2660000>;
-+		};
-+
-+		cl2_ch1_opp13: opp-1958400000 {
-+			opp-hz = /bits/ 64 <1958400000>;
-+			opp-peak-kBps = <3200000>;
-+		};
-+
-+		cl2_ch1_opp14: opp-2112000000 {
-+			opp-hz = /bits/ 64 <2112000000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+
-+		cl2_ch1_opp15: opp-2201600000 {
-+			opp-hz = /bits/ 64 <2201600000>;
-+			opp-peak-kBps = <6400000>;
-+		};
-+	};
- };
+- Mani
+
+> Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v2:
+> - Rebase onto the kernel 6.3-rc2.
+> 
+> Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
+> Changelog v3:
+> - Drop the patch:
+>   [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
+>   and rebase onto the already submitted by @Yoshihiro fix:
+>   commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
+> - Just resend.
+> 
+> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+> Cc: linux-pci@vger.kernel.org
+> Cc: dmaengine@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> 
+> Serge Semin (10):
+>   PCI: dwc: Fix erroneous version type test helper
+>   PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+>   PCI: bt1: Enable async probe type
+>   PCI: bt1: Fix printing false error message
+>   PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+>   PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+>   PCI: visconti: Convert to using generic resources getter
+>   MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+>   MAINTAINERS: Add myself as the DW PCIe core reviewer
+>   MAINTAINERS: Add myself as the DW eDMA driver reviewer
+> 
+>  MAINTAINERS                                   |  5 ++-
+>  drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+>  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+>  drivers/pci/controller/dwc/pcie-designware.c  |  2 -
+>  drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+>  drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+>  6 files changed, 30 insertions(+), 28 deletions(-)
+> 
+> -- 
+> 2.40.0
+> 
+> 
+
 -- 
-2.17.1
-
+மணிவண்ணன் சதாசிவம்
