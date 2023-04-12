@@ -2,131 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D8D6DF6ED
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 15:22:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E0236DF72B
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 15:28:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230383AbjDLNWV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 09:22:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49148 "EHLO
+        id S229802AbjDLN25 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 09:28:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbjDLNWS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 09:22:18 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 086009EFD;
-        Wed, 12 Apr 2023 06:21:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681305718; x=1712841718;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=OPaJB6Rawo57Mhn6OmatsXFomMBlxxHp8ieaH0gHRmY=;
-  b=VtKrLYLj8uGU7d3BG0JEPsoqP4EVhKXdkmhRoUqJwgf6tHqVWdnsDdmH
-   LWzxxlfDhiGywy8/JcMDqILowYza/TG7BgJRrH+fwB/8Fstp9rqG1pSOR
-   tOPn2Rho8ZadCxrcztZUdJcc7rdzhSs7CO1k8El2x+fzip9+ndpSdCBxA
-   z3jLGETF7tR6DeQ/BRC3NlNdzSk6oepxvhSlxbuq4zzwnxKUxAs/ipN/B
-   HcEDpw+WYArhsVP3S83wDwyN7CKUTHkEVg0FzmHQgRnNv5ti7gIxDvW/L
-   EC9Sf4AAg6BjXdoOOH3nJw7nh6NmV4lyNWu+kzc5+c1JFVnboP+HUaxeF
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="345683541"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="345683541"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 06:20:39 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="719373457"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="719373457"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP; 12 Apr 2023 06:20:36 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1pmaOo-00Fx3H-0Q;
-        Wed, 12 Apr 2023 16:20:34 +0300
-Date:   Wed, 12 Apr 2023 16:20:33 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Donald Hunter <donald.hunter@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
- with igb
-Message-ID: <ZDawIXBd7gcA8DCk@smile.fi.intel.com>
-References: <20230410213754.GA4064490@bhelgaas>
- <m27cuih96y.fsf@gmail.com>
- <CAL_Jsq+nLP6rh3pdK3-5a8-mjR=dF48i-Z8d8u7N=fuYoCk92A@mail.gmail.com>
+        with ESMTP id S229549AbjDLN2z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 09:28:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74B8D30E0;
+        Wed, 12 Apr 2023 06:28:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E50D263515;
+        Wed, 12 Apr 2023 13:27:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2AA9C433D2;
+        Wed, 12 Apr 2023 13:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681306051;
+        bh=Ld11dOgUPPLuO+RTfYazRWeuclmWcoDOdBI3Qb45ECQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mWnnd+of213tclhn0KJZvcx97cy3nxc2fIaH4ni51skadPB3ZDfLRxFk7LA6Vy7zz
+         TACQOY8/JWyNGLe6Cm0CdFfCRQ40Do7b/5YA0qQJBCgEyd8wJ37t9uA2tVsVJabtAp
+         gtiLNM3BWrmSht4g9Sk8xV6vojAhBcIgSb3y6nSaER7LBlCo/IBRMngudTfboeuagj
+         fJqXClRCxt9G4HoHBhUmSC4+FVEQ0GZyqAZHEGZhgg7BN54yXuHgkB6klZjPH3lk9e
+         bKUU1Q66aLeBMIaZIyyu1qdCF73s3GtFLeoHdrmx0x3rPJ1M3tpoDnj9HODqxax6Dq
+         22J9LH36nxCcg==
+Date:   Wed, 12 Apr 2023 15:27:24 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Rob Herring <robh@kernel.org>, andersson@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, bhelgaas@google.com,
+        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Revert "dt-bindings: PCI: qcom: Add iommu-map properties"
+Message-ID: <ZDaxvBK9IqAhZwIM@lpieralisi>
+References: <20230411121533.22454-1-manivannan.sadhasivam@linaro.org>
+ <20230411174742.GA3428751-robh@kernel.org>
+ <20230411184231.GA59982@thinkpad>
+ <ZDZouY0PEL64MT6N@lpieralisi>
+ <20230412101112.GA9463@thinkpad>
+ <ZDaMCcTD/Nwx0vnh@lpieralisi>
+ <20230412112918.GB9463@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAL_Jsq+nLP6rh3pdK3-5a8-mjR=dF48i-Z8d8u7N=fuYoCk92A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230412112918.GB9463@thinkpad>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 02:02:03PM -0500, Rob Herring wrote:
-> On Tue, Apr 11, 2023 at 7:53 AM Donald Hunter <donald.hunter@gmail.com> wrote:
-> > Bjorn Helgaas <helgaas@kernel.org> writes:
-> > > On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
-> > >> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
-> > >> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > >> > > >
-> > >> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
-> > >> > > > because it apparently has an ACPI firmware node, and there's something
-> > >> > > > we don't expect about its status?
-> > >> > >
-> > >> > > Yes they are built-in, to my knowledge.
-> > >> > >
-> > >> > > > Hopefully Rob will look at this.  If I were looking, I would be
-> > >> > > > interested in acpidump to see what's in the DSDT.
-> > >> > >
-> > >> > > I can get an acpidump. Is there a preferred way to share the files, or just
-> > >> > > an email attachment?
-> > >> >
-> > >> > I think by default acpidump produces ASCII that can be directly
-> > >> > included in email.  http://vger.kernel.org/majordomo-info.html says
-> > >> > 100K is the limit for vger mailing lists.  Or you could open a report
-> > >> > at https://bugzilla.kernel.org and attach it there, maybe along with a
-> > >> > complete dmesg log and "sudo lspci -vv" output.
-> > >>
-> > >> Apologies for the delay, I was unable to access the machine while travelling.
-> > >>
-> > >> https://bugzilla.kernel.org/show_bug.cgi?id=217317
-> > >
-> > > Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
-> > > with this in the kernel parameters:
-> > >
-> > >   dyndbg="file drivers/acpi/* +p"
-> > >
-> > > and collect the entire dmesg log?
-> >
-> > Added to the bugzilla report.
+On Wed, Apr 12, 2023 at 04:59:18PM +0530, Manivannan Sadhasivam wrote:
+
+[...]
+
+> > > This is fine. The plan is to remove the "iommus" property from Qcom PCI binding
+> > > since we have removed the usage of that property from devicetree [1]. Initially
+> > > the iommu properties were not documented at all in the binding. But commit,
+> > > "dt-bindings: PCI: qcom: Add SM8550 compatible" added them to the binding to
+> > > satisfy dtbs check. But in parallel, the patch removing "iommus" property from
+> > > dts got merged to qcom tree.
+> > > 
+> > > So now we have 2 options here:
+> > > 
+> > > 1. Amend the commit "dt-bindings: PCI: qcom: Add SM8550 compatible" to remove
+> > > the "iommus" property.
+> > > 
+> > > 2. I will submit a separate patch removing that property.
+> > > 
+> > > Lorenzo, let me know what works for you. Sorry for the mess! Confusion happened
+> > > due to patches getting applied without sync.
+> > 
+> > You can inline a diff here for (1), I will amend the commit.
+> > 
 > 
-> Rafael, Andy, Any ideas why fwnode_device_is_available() would return
-> false for a built-in PCI device with a ACPI device entry? The only
-> thing I see in the log is it looks like the parent PCI bridge/bus
-> doesn't have ACPI device entry (based on "[    0.913389] pci_bus
-> 0000:07: No ACPI support"). For DT, if the parent doesn't have a node,
-> then the child can't. Not sure on ACPI.
+> Here you go:
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> index a1318a4ecadf..1548a7114732 100644
+> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+> @@ -60,9 +60,6 @@ properties:
+>      minItems: 1
+>      maxItems: 8
+>  
+> -  iommus:
+> -    maxItems: 1
+> -
+>    iommu-map:
+>      maxItems: 2
 
-Thanks for the Cc'ing. I haven't checked anything yet, but from the above it
-sounds like a BIOS issue. If PCI has no ACPI companion tree, then why the heck
-one of the devices has the entry? I'm not even sure this is allowed by ACPI
-specification, but as I said, I just solely used the above mail.
+Done, please check, thanks.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Lorenzo
