@@ -2,183 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B17326DF07C
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 11:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67C696DF0FC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 11:50:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229824AbjDLJee (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 05:34:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51176 "EHLO
+        id S229508AbjDLJuL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 05:50:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230046AbjDLJed (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 05:34:33 -0400
-Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BAF490
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 02:34:32 -0700 (PDT)
-Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-54ee12aa4b5so112255987b3.4
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 02:34:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681292071; x=1683884071;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=XXrY+88/qpDMfyRoUypnAqs2C5fQRNIfOwP/pzZA4NY=;
-        b=QU5NqCtV5OjmMJI+OPnWdgMJz9AQSpVorJrOF8/C71fRPP5pM3ILcKmEJLngJrDwa4
-         A+GsZItusJVI50m0ou8NLSW68dg44vWNAlY/RPuyCVKD0hMIGRf9Ad/iHegN5BpwB5M6
-         i0txi60uTwZYH/ez0iGQRAYy+XredvADGAM+vXqsUCrcCe/ZO1vOmwhE1vu9H9AElw8r
-         oWJCTVeIKi3DzMTTg0PM8kU4pk5YYUFRXsv+39jcFnPigxTegXlSRJ8SC0jZldNi1s9n
-         J3aLLWrWjN8w/UvG2zxi8h8CSUtdIYlcBT5LuBWE/IKQcf3sYaOl7w48exgd2TOH1/4E
-         +GeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681292071; x=1683884071;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XXrY+88/qpDMfyRoUypnAqs2C5fQRNIfOwP/pzZA4NY=;
-        b=rl3gDiYij+gJCulQwS5tK6xxtm+6c6lar+wuAu7f9rWqvUQNsncu45xa8Zers5cfVk
-         +C/+qi1RLITVIIftA5uJUbeWJcitRu6NHEY82Q2p/JivEZcFeEB4+L7IgHVrhQslnswd
-         m+gfJIlTqkPA/ORQ5Sw5UVn8eqEOCcJg5hsW9WAvf4jNX4KXzTtLXBrmOb8ll6ikyAbp
-         xKoKAsjUAjfSug6Mdq4pjlnMZVOgtHun2ON13oWnecfuuN31MlcrEUCZB2q9nBAJV4Xk
-         aMwoRP/PYa1T4xcrn9EbYFoS/FtRCGUfOlBVHP6702n5WHEwshj63/+B8RXNlCXT80PU
-         aRLw==
-X-Gm-Message-State: AAQBX9e4D8ziNAN394e0vos0uH2+/s8prTbF0gb3OLcIl5tWU4Yn4dLv
-        z10IZGq+P4KZrPnauRF9BB84l2uYSRBCkzsxgxDPUMTxqz4biV0csee6jpSv8/pzz+ANZ+MllGM
-        /zfqtgbSo+TqB77dVx+0o42c=
-X-Google-Smtp-Source: AKy350ZRkaFDNeBZD7HdE3CDPSM2DK+hW9zhFGSaHM4CkdWVS719+OORhaFoJitVu+Ig8CqYXHYwPHq1A1QMPNJauw==
-X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a25:cf48:0:b0:b8f:47c4:58ed with SMTP
- id f69-20020a25cf48000000b00b8f47c458edmr367727ybg.9.1681292071686; Wed, 12
- Apr 2023 02:34:31 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 15:04:25 +0530
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.40.0.577.gac1e443424-goog
-Message-ID: <20230412093425.3659088-1-ajayagarwal@google.com>
-Subject: [PATCH v4] PCI: dwc: Wait for link up only if link is started
-From:   Ajay Agarwal <ajayagarwal@google.com>
-To:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        "=?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?=" <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Nikhil Devshatwar <nikhilnd@google.com>,
-        Manu Gautam <manugautam@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sajid Dalvi <sdalvi@google.com>,
-        William McVicker <willmcvicker@google.com>
-Cc:     linux-pci@vger.kernel.org, Ajay Agarwal <ajayagarwal@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-ccpol: medium
-X-Spam-Status: No, score=-9.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S230359AbjDLJuB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 05:50:01 -0400
+Received: from mx2.zhaoxin.com (mx2.zhaoxin.com [203.110.167.99])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B39FA65B9
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 02:49:59 -0700 (PDT)
+X-ASG-Debug-ID: 1681292997-1eb14e6d7a6f5b0001-0c9NHn
+Received: from ZXSHMBX2.zhaoxin.com (ZXSHMBX2.zhaoxin.com [10.28.252.164]) by mx2.zhaoxin.com with ESMTP id 4kBpg2Oifq8Tdx6B (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Wed, 12 Apr 2023 17:49:57 +0800 (CST)
+X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX2.zhaoxin.com
+ (10.28.252.164) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Wed, 12 Apr
+ 2023 17:49:56 +0800
+Received: from [10.32.64.2] (10.32.64.2) by ZXBJMBX03.zhaoxin.com
+ (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Wed, 12 Apr
+ 2023 17:49:55 +0800
+X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.164
+Message-ID: <f3c4f38c-d45b-cf68-33e5-2e73dd73213d@zhaoxin.com>
+X-Barracuda-RBL-Trusted-Forwarder: 10.32.64.2
+Date:   Wed, 12 Apr 2023 17:49:55 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v2 3/5] ACPI/PCI: Add AER bits #defines for PCIe to
+ PCI/PCI-X Bridge
+To:     Bjorn Helgaas <helgaas@kernel.org>
+X-ASG-Orig-Subj: Re: [PATCH v2 3/5] ACPI/PCI: Add AER bits #defines for PCIe to
+ PCI/PCI-X Bridge
+CC:     <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
+        <tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
+        <ying.huang@intel.com>, <rdunlap@infradead.org>,
+        <bhelgaas@google.com>, <linux-acpi@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devel@acpica.org>, <CobeChen@zhaoxin.com>,
+        <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>
+References: <20230407232220.GA3830804@bhelgaas>
+From:   LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+In-Reply-To: <20230407232220.GA3830804@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.32.64.2]
+X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
+ ZXBJMBX03.zhaoxin.com (10.29.252.7)
+X-Barracuda-Connect: ZXSHMBX2.zhaoxin.com[10.28.252.164]
+X-Barracuda-Start-Time: 1681292997
+X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
+X-Barracuda-URL: https://10.28.252.36:4443/cgi-mod/mark.cgi
+X-Virus-Scanned: by bsmtpd at zhaoxin.com
+X-Barracuda-Scan-Msg-Size: 3198
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
+X-Barracuda-Spam-Score: -2.02
+X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.107310
+        Rule breakdown below
+         pts rule name              description
+        ---- ---------------------- --------------------------------------------------
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-In dw_pcie_host_init() regardless of whether the link has been
-started or not, the code waits for the link to come up. Even in
-cases where start_link() is not defined the code ends up spinning
-in a loop for 1 second. Since in some systems dw_pcie_host_init()
-gets called during probe, this one second loop for each pcie
-interface instance ends up extending the boot time.
 
-Wait for the link up in only if the start_link() is defined.
 
-Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
----
-Changelog since v3:
-- Run dw_pcie_start_link() only if link is not already up
+在 2023/4/8 7:22, Bjorn Helgaas 写道:
+> Since this patch has nothing to do with ACPI, update subject line to:
+> 
+>    PCI: Add PCIe to PCI/PCI-X Bridge AER fields
+> 
 
-Changelog since v2:
-- Wait for the link up if start_link() is really defined.
-- Print the link status if the link is up on init.
+Your description is more reasonable and I will update the header of this 
+patch later.
 
- .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++----
- drivers/pci/controller/dwc/pcie-designware.c  | 20 ++++++++++++-------
- drivers/pci/controller/dwc/pcie-designware.h  |  1 +
- 3 files changed, 23 insertions(+), 11 deletions(-)
+Yours sincerely,
+Leoliu-oc
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-index 9952057c8819..cf61733bf78d 100644
---- a/drivers/pci/controller/dwc/pcie-designware-host.c
-+++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-@@ -485,14 +485,19 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
- 	if (ret)
- 		goto err_remove_edma;
- 
--	if (!dw_pcie_link_up(pci)) {
-+	if (dw_pcie_link_up(pci)) {
-+		dw_pcie_print_link_status(pci);
-+	} else {
- 		ret = dw_pcie_start_link(pci);
- 		if (ret)
- 			goto err_remove_edma;
--	}
- 
--	/* Ignore errors, the link may come up later */
--	dw_pcie_wait_for_link(pci);
-+		if (pci->ops && pci->ops->start_link) {
-+			ret = dw_pcie_wait_for_link(pci);
-+			if (ret)
-+				goto err_stop_link;
-+		}
-+	}
- 
- 	bridge->sysdata = pp;
- 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 53a16b8b6ac2..03748a8dffd3 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -644,9 +644,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
- 	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
- }
- 
--int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+void dw_pcie_print_link_status(struct dw_pcie *pci)
- {
- 	u32 offset, val;
-+
-+	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-+	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-+
-+	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-+		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-+		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+}
-+
-+int dw_pcie_wait_for_link(struct dw_pcie *pci)
-+{
- 	int retries;
- 
- 	/* Check if the link is up or not */
-@@ -662,12 +673,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
- 		return -ETIMEDOUT;
- 	}
- 
--	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
--	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
--
--	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
--		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
--		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-+	dw_pcie_print_link_status(pci);
- 
- 	return 0;
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 79713ce075cc..615660640801 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -429,6 +429,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
- void dw_pcie_iatu_detect(struct dw_pcie *pci);
- int dw_pcie_edma_detect(struct dw_pcie *pci);
- void dw_pcie_edma_remove(struct dw_pcie *pci);
-+void dw_pcie_print_link_status(struct dw_pcie *pci);
- 
- static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
- {
--- 
-2.40.0.577.gac1e443424-goog
+> On Tue, Nov 15, 2022 at 11:12:44AM +0800, LeoLiu-oc wrote:
+>> From: leoliu-oc <leoliu-oc@zhaoxin.com>
+>>
+>> Define secondary uncorrectable error mask register, secondary
+>> uncorrectable error severity register and secondary error capabilities and
+>> control register bits in AER capability for PCIe to PCI/PCI-X Bridge.
+>> Please refer to PCIe to PCI/PCI-X Bridge Specification, sec 5.2.3.2,
+>> 5.2.3.3 and 5.2.3.4.
+> 
+> Capitalize register names to match the spec usage.
+> 
+Your suggestion is right, I'll update this in the next release.
 
+Yours sincerely,
+Leoliu-oc
+>> Signed-off-by: leoliu-oc <leoliu-oc@zhaoxin.com>
+> 
+> Assuming this goes along with a patch series that adds uses of these
+> definitions:
+> 
+> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> 
+>> ---
+>>   include/uapi/linux/pci_regs.h | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 57b8e2ffb1dd..37f3baa336d7 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -799,6 +799,11 @@
+>>   #define  PCI_ERR_ROOT_AER_IRQ		0xf8000000 /* Advanced Error Interrupt Message Number */
+>>   #define PCI_ERR_ROOT_ERR_SRC	0x34	/* Error Source Identification */
+>>   
+>> +/* PCIe advanced error reporting extended capabilities for PCIe to PCI/PCI-X Bridge */
+>> +#define PCI_ERR_UNCOR_MASK2		0x30	/* Secondary Uncorrectable Error Mask */
+>> +#define PCI_ERR_UNCOR_SEVER2	0x34	/* Secondary Uncorrectable Error Severit */
+>> +#define PCI_ERR_CAP2			0x38	/* Secondary Advanced Error Capabilities */
+> 
+> Please squash these right up next to the other PCI_ERR_* definitions
+> so it's obvious that they overlap PCI_ERR_ROOT_STATUS and
+> PCI_ERR_ROOT_ERR_SRC (which is fine since one device can't have both),
+> e.g.,
+> 
+>    #define PCI_ERR_ROOT_STATUS     0x30
+>    #define  PCI_ERR_ROOT_COR_RCV           0x00000001 /* ERR_COR Received */
+>    ...
+>    #define PCI_ERR_ROOT_ERR_SRC    0x34    /* Error Source Identification */
+>    #define PCI_ERR_UNCOR_MASK2     0x30    /* PCIe to PCI/PCI-X bridge */
+>    #define PCI_ERR_UNCOR_SEVER2    0x34    /* PCIe to PCI/PCI-X bridge */
+>    #define PCI_ERR_CAP2            0x38    /* PCIe to PCI/PCI-X bridge */
+> 
+
+I don't seem to understand what you mean. PCI_ERR_UNCOR_MASK2, 
+PCI_ERR_UNCOR_SEVER2, and PCI_ERR_CAP2 represent the control and 
+handling of individual errors that occur on traditional PCI or PCI-x 
+secondary bus interfaces, these registers are valid only for Bridge. 
+Although PCI_ERR_ROOT_ERR_SRC and PCI_ERR_UNCOR_SEVER2 have the same 
+value, they represent register definitions for different device types.
+
+Yours sincerely,
+Leoliu-oc
+
+>>   /* Virtual Channel */
+>>   #define PCI_VC_PORT_CAP1	0x04
+>>   #define  PCI_VC_CAP1_EVCC	0x00000007	/* extended VC count */
+>> -- 
+>> 2.20.1
+>>
