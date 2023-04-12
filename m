@@ -2,99 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6AB526DEBD8
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 08:34:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 332EA6DEBDB
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 08:35:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbjDLGeE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 02:34:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49274 "EHLO
+        id S229670AbjDLGfM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 02:35:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229634AbjDLGeD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 02:34:03 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CC4159C5
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 23:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681281240; x=1712817240;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=4wNKUUTYK71tU/wbxLVnosWcHOrc34RwoP8L/4AM4gQ=;
-  b=XYlrtxW1rwp9JH9mNc40VkIz8WOTsA3S14lrlBdw+obXz9K+di53WYoh
-   yF4opShSoevTaNDOB6KuWEuxeIqw2DjQoyxp4/1hAlXlOakwgoXKFtBQj
-   +B0vUZDKUOJpyP0wwu2Zz9jZXTHJobqrBYDcTdey+EKP4QXQwRAko9fVD
-   6MQfKJopMB6OwFDTlJYI7cwuix08KMbb/QhUnDUkEQxToV8A6pcY+Spet
-   6vJEGNEDiXGURS4IlJnw8BdXWz+42vdEhbTMwA45/GIqgh0qtRXfGExFs
-   O1Tu/wD1QPc+r0Aydr/CpVSQVqc2u+N83Q3FRy88sLL1qWV/OOfcAO5Km
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="343818467"
-X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="343818467"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Apr 2023 23:33:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="666231973"
-X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="666231973"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 11 Apr 2023 23:33:58 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pmU3J-000XNf-1d;
-        Wed, 12 Apr 2023 06:33:57 +0000
-Date:   Wed, 12 Apr 2023 14:33:15 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:aspm] BUILD SUCCESS 606012dddebbc4123d51a2223e2b26ed6c746696
-Message-ID: <643650ab.acyvYam943Ux0b3I%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        with ESMTP id S229575AbjDLGfL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 02:35:11 -0400
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E65AD3ABC;
+        Tue, 11 Apr 2023 23:35:09 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.98,338,1673881200"; 
+   d="scan'208";a="159142066"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 12 Apr 2023 15:35:09 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 4429B400F7A0;
+        Wed, 12 Apr 2023 15:35:09 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     lpieralisi@kernel.org, kw@linux.com, mani@kernel.org,
+        kishon@kernel.org, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Frank Li <Frank.Li@nxp.com>,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v12] PCI: endpoint: functions/pci-epf-test: Fix dma_chan direction
+Date:   Wed, 12 Apr 2023 15:34:47 +0900
+Message-Id: <20230412063447.2841177-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git aspm
-branch HEAD: 606012dddebbc4123d51a2223e2b26ed6c746696  PCI: Fix up L1SS capability for Intel Apollo Lake Root Port
+In the pci_epf_test_init_dma_chan(), epf_test->dma_chan_rx
+is assigned from dma_request_channel() with DMA_DEV_TO_MEM as
+filter.dma_mask. However, in the pci_epf_test_data_transfer(),
+if the dir is DMA_DEV_TO_MEM, it should use epf->dma_chan_rx,
+but it used epf_test->dma_chan_tx. So, fix it. Otherwise,
+results of pcitest with enabled DMA will be "NOT OKAY" on eDMA
+environment.
 
-elapsed time: 725m
+Fixes: 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with DMA capabilities")
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Reviewed-by: Frank Li <Frank.Li@nxp.com>
+Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ Patch history:
+ v1: https://lore.kernel.org/linux-pci/20230221100949.3530608-1-yoshihiro.shimoda.uh@renesas.com/
+ v1 resend: https://lore.kernel.org/linux-pci/20230221101706.3530869-1-yoshihiro.shimoda.uh@renesas.com/
+ v2: https://lore.kernel.org/linux-pci/20230222015327.3585691-1-yoshihiro.shimoda.uh@renesas.com/
+ v10 [1]: https://lore.kernel.org/linux-pci/20230308082352.491561-3-yoshihiro.shimoda.uh@renesas.com/
+ v11 [1]: https://lore.kernel.org/linux-pci/20230310123510.675685-3-yoshihiro.shimoda.uh@renesas.com/
+ v12: This patch.
 
-configs tested: 20
-configs skipped: 134
+ Changes from v11:
+ - Add Tested-by (Thanks Hayashi-san!).
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+[1] Include this patch into R-Car S4 support patch series. However, I need
+    more time to fix the R-Car patches. So, I send this fix patch independently.
 
-tested configs:
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a011   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a013   clang
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a015   clang
-i386                          randconfig-a016   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230410   clang
-x86_64               randconfig-a002-20230410   clang
-x86_64               randconfig-a003-20230410   clang
-x86_64               randconfig-a004-20230410   clang
-x86_64               randconfig-a005-20230410   clang
-x86_64               randconfig-a006-20230410   clang
-x86_64                               rhel-8.3   gcc  
+ drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 0f9d2ec822ac..172e5ac0bd96 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -112,7 +112,7 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+ 				      size_t len, dma_addr_t dma_remote,
+ 				      enum dma_transfer_direction dir)
+ {
+-	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ?
++	struct dma_chan *chan = (dir == DMA_MEM_TO_DEV) ?
+ 				 epf_test->dma_chan_tx : epf_test->dma_chan_rx;
+ 	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src : dma_dst;
+ 	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.25.1
+
