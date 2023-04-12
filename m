@@ -2,168 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 019576DFAE5
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:12:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A740F6DFB67
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:32:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjDLQMQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 12:12:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39972 "EHLO
+        id S229764AbjDLQcG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 12:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229574AbjDLQMP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:12:15 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E84427A98;
-        Wed, 12 Apr 2023 09:12:11 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id pc4-20020a17090b3b8400b0024676052044so12129907pjb.1;
-        Wed, 12 Apr 2023 09:12:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681315931; x=1683907931;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g3JlLGJe9jNa5faHy1EPzLcl/UMrCDP3TfzXac4OOno=;
-        b=r5Dv39pjzRFLTOrswhX14WN1TKtSDHvIkzKr0J6xP7GyGqT1lo0LETECLtXba1+yhv
-         YCj5VG2KQXS/HfF42nhSZMVpQMddoCS8Vyz5nKJqzqZ6K3qzccpNmZkwvRTmzItWUF/H
-         o86O88rq1eROZOiJcZKGATR5B2awQ+OydniBYAEdEx49Db7DD+ua5ry+RoCSRIdZEgLh
-         yzF+fneYf21YAslt+c5jGmuEFnmhgmEzE02VKKw/iHK2OI1YExvdnF+ttCb/2N1F86UJ
-         F8mT8OKA5n+s+sYFx8LWffSdXdUr+HZ7DV/2IRXS2TPah5l/iYitu+FDUtQCSmEgC4Hh
-         eMBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681315931; x=1683907931;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g3JlLGJe9jNa5faHy1EPzLcl/UMrCDP3TfzXac4OOno=;
-        b=cSZ0k1W/Rd/D2qF947YwJAU+3KppszJPSda8VvzMOMS4OP3uCj6EKLd/ImYQND7i+t
-         48hBKxcGFs3cP5w8HOwCn9FEi5OKHKYVf4yn5gewzStnF0sOniddrRhFG+VbpBu1kwCf
-         Ze0VHcT8ZtzTHJ3tZjVwFlRy6nWAZiDvkwmKflhBOk+MrE+2McTP8RbA+nlnbPk7n1po
-         ZLafWgyOcYykcVN9Pr5RVBSCASr1m1t3oCgvPJxDtLiSGr3Tsd64yrS+0KSC58UFE+90
-         sf4BwBFsYvK3bmEvv1Wqq0RCm+Lm0AeHZE45Oqu74hfz3d87eAwvSfFJtZn2Ii/bbm/p
-         hEVA==
-X-Gm-Message-State: AAQBX9dq1FdtvBuocdpypo6A36UuoQV2/jMJi9D6ez7wIf/hJsYwxV33
-        kiIQ9iAup+aHSvBDvRF3pCo=
-X-Google-Smtp-Source: AKy350Y6kmiAwS7hEYCLDrpnIlAWZb/8PtllMixj3VFO4bphJSzuZ7ECxrqTg9LOJrjffudyj5+8Lw==
-X-Received: by 2002:a17:90b:3ec4:b0:240:3ee4:d2d1 with SMTP id rm4-20020a17090b3ec400b002403ee4d2d1mr9349740pjb.13.1681315931213;
-        Wed, 12 Apr 2023 09:12:11 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id me18-20020a17090b17d200b00244991b3f7asm4938222pjb.1.2023.04.12.09.12.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 09:12:10 -0700 (PDT)
-Message-ID: <ac2245fd-52c8-3255-3e54-bd8daab1282d@gmail.com>
-Date:   Wed, 12 Apr 2023 09:12:07 -0700
+        with ESMTP id S229492AbjDLQcF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:32:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEA14228;
+        Wed, 12 Apr 2023 09:32:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 473AF63592;
+        Wed, 12 Apr 2023 16:32:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 651A1C433D2;
+        Wed, 12 Apr 2023 16:32:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681317123;
+        bh=Jd0KP9Be/J1eYVNg6f3gA2o2GR5IxjU2odxONAUvHX8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=u3Vq97gr0+butPSYqTNSkWT/rZLFJQ88FtvnlAQyeWnm/lM8+fP9AXhdEXCyyD9DB
+         hVDvIpCBNigVD8QggkamOvcnbvtoAHF9BnUXdFEY+EKuGg4K18DLYNWQ8e10I/21Ss
+         MCpe6yLCFLDGQXsLJdiVhInimXjMXfWhvKenerNUX6rALwfxcHptpa5RrqkPlmw/fI
+         bjiKp1HcUkDHTkXjdDtlp1rKVIH7uLlm+qJXpSkORwl+48ZbOwAMwylryCXB++cR31
+         hC09GskgKbrtJCcPvCfW44azJMVPAwXMH7gNueiLuB4NUMkVJNr3axDUUnNC/+1S8d
+         dhJoSr91G29kA==
+Date:   Wed, 12 Apr 2023 11:32:01 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Cc:     rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
+        tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com,
+        ying.huang@intel.com, rdunlap@infradead.org, bhelgaas@google.com,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@acpica.org,
+        CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        "Li, Ming" <ming4.li@intel.com>
+Subject: Re: [PATCH v2 0/5] Parse the PCIe AER and set to relevant registers
+Message-ID: <20230412163201.GA49069@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: brcmstb: Add two optional props
-Content-Language: en-US
-To:     Rob Herring <robh@kernel.org>, Jim Quinlan <jim2101024@gmail.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20230411165919.23955-1-jim2101024@gmail.com>
- <20230411165919.23955-2-jim2101024@gmail.com>
- <5a28e520-63e4-dbcf-5b3e-e5097f02dea2@linaro.org>
- <78c18cdb-5757-8d30-e2a6-414f09505cc6@gmail.com>
- <66b7d0b9-9569-ddaf-89ca-5a0133074a17@linaro.org>
- <CANCKTBtZt9QRkT4yAW5LsfHGf5TTL7tQ025H42+PPEi-=rWE8A@mail.gmail.com>
- <20230412153723.GA2473030-robh@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230412153723.GA2473030-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <433ad19a-8286-ff58-9fd8-d7dd13547032@zhaoxin.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/12/23 08:37, Rob Herring wrote:
-> On Wed, Apr 12, 2023 at 10:14:46AM -0400, Jim Quinlan wrote:
->> On Wed, Apr 12, 2023 at 7:56 AM Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 12/04/2023 13:49, Florian Fainelli wrote:
->>>>
->>>>
->>>> On 4/12/2023 1:09 AM, Krzysztof Kozlowski wrote:
->>>>> On 11/04/2023 18:59, Jim Quinlan wrote:
->>>>>> Regarding "brcm,enable-l1ss":
->>>>>>
->>>>>>     The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
->>>>>>     requires the driver probe() to deliberately place the HW one of three
->>>>>>     CLKREQ# modes:
->>>>>>
->>>>>>     (a) CLKREQ# driven by the RC unconditionally
->>>>>>     (b) CLKREQ# driven by the EP for ASPM L0s, L1
->>>>>>     (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
->>>>>>
->>>>>>     The HW+driver can tell the difference between downstream devices that
->>>>>>     need (a) and (b), but does not know when to configure (c).  Further, the
->>>>>>     HW may cause a CPU abort on boot if guesses wrong regarding the need for
->>>>>>     (c).  So we introduce the boolean "brcm,enable-l1ss" property to indicate
->>>>>>     that (c) is desired.  Setting this property only makes sense when the
->>>>>>     downstream device is L1SS-capable and the OS is configured to activate
->>>>>>     this mode (e.g. policy==superpowersave).
->>>>>>
->>>>>>     This property is already present in the Raspian version of Linux, but the
->>>>>>     upstream driver implementaion that will follow adds more details and
->>>>>
->>>>> typo, implementation
->>>>>
->>>>>>     discerns between (a) and (b).
->>>>>>
->>>>>> Regarding "brcm,completion-timeout-us"
->>>>>>
->>>>>>     Our HW will cause a CPU abort if the L1SS exit time is longer than the
->>>>>>     PCIe transaction completion abort timeout.  We've been asked to make this
->>>>>>     configurable, so we are introducing "brcm,completion-timeout-us".
->>>>>>
->>>>>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->>>>>
->>>>> What happened here? Where is the changelog?
->>>>
->>>> It is in the cover letter:
->>>>
->>>> https://lore.kernel.org/all/20230411165919.23955-1-jim2101024@gmail.com/
->>>>
->>>> but it does not look like the cover letter was copied to you or Rob.
->>>
->>> As you said, I did not get it.
->>
->> Yes, sorry about that; I use a wrapper over the "cocci_cc" script and
->> I need to modify one or both scripts to send the cover to the
->> superset of recipients in the constituent commits.
+On Wed, Apr 12, 2023 at 05:11:28PM +0800, LeoLiuoc wrote:
+> 在 2023/4/8 7:18, Bjorn Helgaas 写道:
+> > On Tue, Nov 15, 2022 at 11:11:15AM +0800, LeoLiu-oc wrote:
+> > > From: leoliu-oc <leoliu-oc@zhaoxin.com>
+> > > 
+> > > According to the sec 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI r6.5, the
+> > > register values form HEST PCI Express AER Structure should be written to
+> > > relevant PCIe Device's AER Capabilities. So the purpose of the patch set
+> > > is to extract register values from HEST PCI Express AER structures and
+> > > program them into AER Capabilities. Refer to the ACPI Spec r6.5 for a more
+> > > detailed description.
+> > 
+> > I wasn't involved in this part of the ACPI spec, and I don't
+> > understand how this is intended to work.
+> > 
+> > I see that this series extracts AER mask, severity, and control
+> > information from the ACPI HEST table and uses it to configure PCIe
+> > devices as they are enumerated.
+> > 
+> > What I don't understand is how this relates to ownership of the AER
+> > capability as negotiated by the _OSC method.  Firmware can configure
+> > the AER capability itself, and if it retains control of the AER
+> > capability, the OS can't write to it (with the exception of clearing
+> > EDR error status), so this wouldn't be necessary.
 > 
-> Try out 'b4'. It's much easier.
+> There is no relationship between the ownership of the AER related
+> register and the ownership of the AER capability in the OS or
+> Firmware.
+
+I don't understand this; can you say it another way?  "Ownership of
+the AER related register" and "ownership of the AER capability" sound
+exactly the same to me.
+
+> The processing here is to initialize the AER related register, not
+> the AER event. If Firmware is configured with AER register, it will
+> not be able to handle the runtime hot reset and link retrain cases
+> in addition to the hotplug case you mentioned below.
+>
+> > If the OS owns the AER capability, I assume it gets to decide for
+> > itself how to configure AER, no matter what the ACPI HEST says.
 > 
-> In any case, I don't read cover letters. Changes to a patch belong with
-> the patch.
+> What information does the OS use to decide how to configure AER? The
+> ACPI Spec has the following description: PCI Express (PCIe) root
+> ports may implement PCIe Advanced Error Reporting (AER) support.
+> This table(HEST) contains  information platform firmware supplies to
+> OSPM for configuring AER support on a given root port. We understand
+> that HEST stands for user to express expectations.
+> 
+> In the current implementation, the OS already configures a PCIE
+> device based on _HPP/_HPX method when configuring a PCI device
+> inserted into a hot-plug slot or initial configuration of a PCI
+> device at system boot. HEST is just another way to express the
+> desired configuration of the user.
 
-This is not what most other maintainers do, and there does not appear to 
-be a general consensus amongst maintainers that the changes belong in 
-the individual patches, or in the cover letter. Some trees like the 
-networking tree do merge commits of patch sets where the cover letter is 
-used as part of the merge commit message. Other maintainers don't, and 
-some want the change log after the '---' and some do not.
--- 
-Florian
+Why was the HEST mechanism added if the functionality is equivalent
+to the existing _HPP/_HPX?  There must be something that HEST supplies
+that _HPP/_HPX did not.
 
+I think we need some things in the commit log (and short comments in
+the code) to help maintain this in the future:
+
+  - What problem does this solve, e.g., is there some bug that happens
+    because we lack this functionality?
+
+  - How is this HEST mechanism related to _HPP/_HPX?  What are the
+    differences?
+
+  - How is this related to _OSC AER ownership?
+
+I think we ignore _OSC ownership in the existing _HPP/_HPX code, but
+that seems like a potential problem.  The PCI Firmware spec (r3.3, sec
+4.5.1) is pretty clear:
+
+  If control of this feature was requested and denied or was not
+  requested, firmware returns this bit set to 0, and the operating
+  system must not modify the Advanced Error Reporting Capability or
+  the other error enable/status bits listed above.
+
+> > Maybe this is intended for the case where firmware retains AER
+> > ownership but the OS uses native hotplug (pciehp), and this is a way
+> > for the OS to configure new devices as the firmware expects?  But in
+> > that case, we still have the problem that the OS can't write to the
+> > AER capability to do this configuration.
+> > 
+> > Bjorn
