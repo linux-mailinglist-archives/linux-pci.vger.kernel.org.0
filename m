@@ -2,145 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D3796DF463
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 13:56:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40F2B6DF519
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 14:24:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbjDLL4i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 07:56:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37608 "EHLO
+        id S230306AbjDLMYm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 08:24:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbjDLL4h (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 07:56:37 -0400
-Received: from mail-ed1-x532.google.com (mail-ed1-x532.google.com [IPv6:2a00:1450:4864:20::532])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E525B4C1F
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 04:56:33 -0700 (PDT)
-Received: by mail-ed1-x532.google.com with SMTP id 4fb4d7f45d1cf-504a37baf98so2233506a12.1
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 04:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681300592;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=viozi8WsbH/DNbU6I8Kpp6YtafxtKSmvjW088VP7BVQ=;
-        b=Kn6u/ENoZ+oxbCROGKcAR6CGVFthkc7bgQ1xOWjxoHq7fMIHgBptias+YEhQzLgKOG
-         6GUdcL91fMKJRLw/pk7A14is6kWS0nXXBeVrD6KZsHQVyL/hR+73csTlodLSrWPlimso
-         91sMW38iuc3FnNQiONjMQpzDEu67Zjwi8x6eFZ/MLG+Q/NBeIhQ93VYu1BIvTGNL2DQV
-         MrJafhEdDQRR60jeofPYda8oAkAnhUGm1c3SSGOGgcrwhLg1MCacBWLXHXr/I8dWCxFt
-         WMs5S7XXwukMGZWyW8eSjO4bv9c+egekJDfVB7qxpi7uxVXyBXb1jSOqeiuh0RyZNSSt
-         CEjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681300592;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=viozi8WsbH/DNbU6I8Kpp6YtafxtKSmvjW088VP7BVQ=;
-        b=1hT2Hh083AQDqSoaESe3CujCrPRGt17RA6CAv4bdyU0ripAO8j2pkFBeyZdF4T1lLz
-         kOOY+tcuHfIHQ4PXPSmsmDe3zMqnlyEd/lmEZoiDL03hQbx8HY4mODvMRe/wZdSywGus
-         UGS5pP3MzjKj/RMTTeYwE+a9B97YVC/nC6sHTN6vdrSYku/xxo+A5/ArWy+mndrO/dZP
-         IUf39W6Su4jvIPcOL8J4gSQVAzentZYQKojx0Xzp7qE/odTsvKoP57vcKhEiJWZBITiz
-         FEhS3Jmvx5cQwm8r2P3bCbXMgjpF+/nn0oZDvaSnsCToc7V3c9krG0O+RI4uC5ARGXsu
-         swjw==
-X-Gm-Message-State: AAQBX9c6bvK8ylD6MBCk73LRyyG10zkDHDNo3OWTaP33qIruRDwrDKt2
-        I3fAeDCrBNUoUU2pEGSarp3eMA==
-X-Google-Smtp-Source: AKy350aiP1FqqXG9WgEtDAIm9FtFj3ZnLVTn/hVAgjhJD+CkVEs9E5WifMD2ZngCXeeyRHodV3LmFw==
-X-Received: by 2002:aa7:c2d2:0:b0:4fa:fcee:1727 with SMTP id m18-20020aa7c2d2000000b004fafcee1727mr13574263edp.13.1681300592394;
-        Wed, 12 Apr 2023 04:56:32 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:8fa0:9989:3f72:b14f? ([2a02:810d:15c0:828:8fa0:9989:3f72:b14f])
-        by smtp.gmail.com with ESMTPSA id i13-20020a50c3cd000000b004fa012332ecsm5383882edf.1.2023.04.12.04.56.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 04:56:31 -0700 (PDT)
-Message-ID: <66b7d0b9-9569-ddaf-89ca-5a0133074a17@linaro.org>
-Date:   Wed, 12 Apr 2023 13:56:30 +0200
+        with ESMTP id S231551AbjDLMYl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 08:24:41 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DCB976BC
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 05:24:31 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pmZWX-0006e2-3C; Wed, 12 Apr 2023 14:24:29 +0200
+Message-ID: <ba7e422f-9468-cb3f-f5da-ccefdd018a2a@leemhuis.info>
+Date:   Wed, 12 Apr 2023 14:24:28 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.1
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: brcmstb: Add two optional props
-Content-Language: en-US
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20230411165919.23955-1-jim2101024@gmail.com>
- <20230411165919.23955-2-jim2101024@gmail.com>
- <5a28e520-63e4-dbcf-5b3e-e5097f02dea2@linaro.org>
- <78c18cdb-5757-8d30-e2a6-414f09505cc6@gmail.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <78c18cdb-5757-8d30-e2a6-414f09505cc6@gmail.com>
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+Content-Language: en-US, de-DE
+To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Linux kernel regressions list <regressions@lists.linux.dev>
+References: <20230411204229.GA4168208@bhelgaas>
+From:   "Linux regression tracking #adding (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <20230411204229.GA4168208@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1681302271;f1e22d48;
+X-HE-SMSGID: 1pmZWX-0006e2-3C
+X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 12/04/2023 13:49, Florian Fainelli wrote:
-> 
-> 
-> On 4/12/2023 1:09 AM, Krzysztof Kozlowski wrote:
->> On 11/04/2023 18:59, Jim Quinlan wrote:
->>> Regarding "brcm,enable-l1ss":
->>>
->>>    The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
->>>    requires the driver probe() to deliberately place the HW one of three
->>>    CLKREQ# modes:
->>>
->>>    (a) CLKREQ# driven by the RC unconditionally
->>>    (b) CLKREQ# driven by the EP for ASPM L0s, L1
->>>    (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
->>>
->>>    The HW+driver can tell the difference between downstream devices that
->>>    need (a) and (b), but does not know when to configure (c).  Further, the
->>>    HW may cause a CPU abort on boot if guesses wrong regarding the need for
->>>    (c).  So we introduce the boolean "brcm,enable-l1ss" property to indicate
->>>    that (c) is desired.  Setting this property only makes sense when the
->>>    downstream device is L1SS-capable and the OS is configured to activate
->>>    this mode (e.g. policy==superpowersave).
->>>
->>>    This property is already present in the Raspian version of Linux, but the
->>>    upstream driver implementaion that will follow adds more details and
->>
->> typo, implementation
->>
->>>    discerns between (a) and (b).
->>>
->>> Regarding "brcm,completion-timeout-us"
->>>
->>>    Our HW will cause a CPU abort if the L1SS exit time is longer than the
->>>    PCIe transaction completion abort timeout.  We've been asked to make this
->>>    configurable, so we are introducing "brcm,completion-timeout-us".
->>>
->>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
->>
->> What happened here? Where is the changelog?
-> 
-> It is in the cover letter:
-> 
-> https://lore.kernel.org/all/20230411165919.23955-1-jim2101024@gmail.com/
-> 
-> but it does not look like the cover letter was copied to you or Rob.
+A quick note before the usual boilerplate:
 
-As you said, I did not get it.
+Bjorn, you asked KobaKo some questions, but didn't CC him -- and the
+comment apparently did not make it to the bugzilla ticket. Something
+wrong there? I wish I could CC him, but due to bugzilla's "never show
+your email address to logged out users" policies I can't. I added a
+comment to the ticket pointing him to your mail.
 
-Best regards,
-Krzysztof
+[TLDR for the rest of the mail: adding this reported to the regression
+tracking]
 
+[CCing the regression list, as it should be in the loop for regressions:
+https://docs.kernel.org/admin-guide/reporting-regressions.html]
+
+On 11.04.23 22:42, Bjorn Helgaas wrote:
+> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
+>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
+>> ... 
+>>         Regression: No
+>>
+>> [Symptom]
+>> Intel cpu can't sleep deeper than pcˇ during long idle
+>> ~~~
+>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+>> ~~~
+>> [How to Reproduce]
+>> 1. run turbostat to monitor
+>> 2. leave machine idle
+>> 3. turbostat show cpu only go into pc2~pc3.
+>>
+>> [Misc]
+>> The culprit are this 
+>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+>> suspend/resume”
+>>
+>> if revert a7152be79b62, the issue is gone
+> 
+> Relevant commits:
+> 
+>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
+>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
+> 
+> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> Substates configuration was not preserved across suspend/resume, so
+> the system *worked* after resume, but used more power than expected.
+> 
+> But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> Substates configuration is likely not preserved across suspend/resume.
+> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> stable series starting with v6.1.12.
+> 
+> KobaKo, you don't mention any suspend/resume in this bug report, but
+> neither patch should make any difference unless suspend/resume is
+> involved.  Does the platform sleep as expected *before* suspend, but
+> fail to sleep after resume?
+> 
+> Or maybe some individual device was suspended via runtime power
+> management, and that device lost its L1 PM Substates config?  I don't
+> know if there's a way to disable runtime PM easily.
+> 
+> The lspci output attached to the bugzilla was not collected as root,
+> so it lacks the ASPM-related information.  Can you do this again with
+> "sudo lspci -vv"?
+#regzbot introduced: a7152be79b62
+https://bugzilla.kernel.org/show_bug.cgi?id=217321
+#regzbot title: PCI/ASPM: Intel system does not sleep deeper than PC3
+(caused by a revert applied to fixes another regression)
+#regzbot ignore-activity
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+That page also explains what to do if mails like this annoy you.
