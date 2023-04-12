@@ -2,113 +2,126 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4FF436DE765
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 00:40:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B376DE87E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 02:26:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229521AbjDKWkT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 18:40:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
+        id S229503AbjDLA0c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 11 Apr 2023 20:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjDKWkS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 18:40:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D2410D5
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 15:40:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B243F6280A
-        for <linux-pci@vger.kernel.org>; Tue, 11 Apr 2023 22:40:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1E94C433D2;
-        Tue, 11 Apr 2023 22:40:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681252817;
-        bh=Qwzk9Pesd0zqA5fjWLb38V32XLoHgQNrMgZ725utmhQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=R9SPvzjcfMh9j6Uo3oxvk1hyFg57Fj/l10Y7eyNoCDqq1LZ5HPGQ8eTrfOkjV65oQ
-         EagxHoF6YlB8PfIcj3gpyB9GrV/LJi/p6DWRvXjDm1roDU/NOjA2nsUmonc3I4AUS7
-         0XE3A8sNk+sz3mARh9r0PABTiOQ/OL9DnaA5/SBQv5yPbRKmpA81pYH27Trh0NzLZQ
-         2m0YD9/kl0XPgtBdNjWZL639/HNHOrHAU85aG0PGqOZLAkpWB1O+WQal/UGk/g3ah9
-         iqRBSZm0fb7v5Z80wEwrVTXyqSczY16FUh97uhP511krib1qf8Nn/I29f4tipFD3M0
-         LPCB6Aqoxpmgw==
-Date:   Tue, 11 Apr 2023 17:40:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI/PM: Resume/reset wait time change
-Message-ID: <20230411224014.GA4185844@bhelgaas>
+        with ESMTP id S229650AbjDLA0c (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 20:26:32 -0400
+Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E92D3;
+        Tue, 11 Apr 2023 17:26:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=oi+javVlViAf4EjInPqqFRpG+lPC235NHVxTYPy83Pc=; b=qGtIBd8qoTQvC9rbTN1JeCR3qW
+        UVut0/l1N/MsnfNw4HUr00Qd9GxECbA3IRCRBsLaxF1jDR5T4SwN1BHsI51FzSOG5p/H07zZMLcqq
+        vVBtg3p+/emgHINNlEVJXzwT3a7/QAyVOdErLabINOTj0no0nDzETKo9PLvVR/CGhofmGr/kS4Ep8
+        8hKX1BQPoL9u74G+8I17P23jiKbUNpLHqv8MDTByX6LcZXV6z3PBIiLk1KuDO+8MZ/t4aN3AA9t02
+        FQVmDOVdOS755tEs4MR5UT29UdaOyrpT9UzkUwM+Py6nW2XaQB8+IqcvWNP0mf69J5O5wef3FdaYT
+        lpwBy6Vg==;
+Received: from authenticated user
+        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <kibi@debian.org>)
+        id 1pmOJb-00GhHJ-UI; Wed, 12 Apr 2023 00:26:24 +0000
+Date:   Wed, 12 Apr 2023 02:26:21 +0200
+From:   Cyril Brulebois <kibi@debian.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] PCI: brcmstb: Set PCIe transaction completion
+ timeout
+Message-ID: <20230412002621.nuxkiflumz4vbang@mraw.org>
+Organization: Debian
+References: <20230411165919.23955-1-jim2101024@gmail.com>
+ <20230411165919.23955-4-jim2101024@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zhilsb22jfyf7zcz"
 Content-Disposition: inline
-In-Reply-To: <20230404052714.51315-1-mika.westerberg@linux.intel.com>
+In-Reply-To: <20230411165919.23955-4-jim2101024@gmail.com>
+X-Debian-User: kibi
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,UNPARSEABLE_RELAY autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 08:27:12AM +0300, Mika Westerberg wrote:
-> Hi all,
-> 
-> This series first increases the time we wait on resume path to
-> accommondate certain device, as reported in [1], and then "optimizes"
-> the timeout for slow links to avoid too long waits if a device is
-> disconnected during suspend.
-> 
-> Previous version can be found here:
-> 
->   https://lore.kernel.org/linux-pci/20230321095031.65709-1-mika.westerberg@linux.intel.com/
-> 
-> Changes from the previous version:
-> 
->   * Split the patch into two: one that increases the resume timeout (on
->     all links, I was not able to figure out a simple way to limit this
->     only for the fast links) and the one that decreases the timeout on
->     slow links.
-> 
->   * Use dev->link_active_reporting instead of speed to figure out slow
->     vs. fast links.
-> 
-> [1] https://bugzilla.kernel.org/show_bug.cgi?id=216728
-> 
-> Mika Westerberg (2):
->   PCI/PM: Increase wait time after resume
 
-I applied the above to pci/reset for v6.4.
+--zhilsb22jfyf7zcz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->   PCI/PM: Decrease wait time for devices behind slow links
+Hi Jim,
 
-Part of this patch is removing the pci_bridge_wait_for_secondary_bus()
-timeout parameter, since all callers now supply the same value
-(PCIE_RESET_READY_POLL_MS).  I extracted that part out and applied it
-as well.
+Jim Quinlan <jim2101024@gmail.com> (2023-04-11):
+> Since the STB PCIe HW will cause a CPU abort on a PCIe transaction
+> completion timeout abort, we might as well extend the default timeout
+> limit.  Further, different devices and systems may requires a larger or
+> smaller amount commensurate with their L1SS exit time, so the property
+> "brcm,completion-abort-us" may be used to set a custom timeout value.
+   ^^^^^^^^^^^^^^^^^^^^^^^^
 
-I'm hoping we can restructure the rest of this as mentioned in the
-thread.  If that's not possible, can you rebase what's left on top of
-this?
+> +	ret =3D of_property_read_u32(pcie->np, "brcm,completion-timeout-us",
+> +				   &timeout_us);
+> +	if (ret && ret !=3D -EINVAL)
+> +		dev_err(pcie->dev, "malformed/invalid 'brcm,completion-timeout-us'\n");
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=reset
+v2 renames brcm,completion-abort-msecs into brcm,completion-timeout-us
+but the commit message mentions the half-way brcm,completion-abort-us
+property instead.
 
->  drivers/pci/pci-driver.c |  2 +-
->  drivers/pci/pci.c        | 42 ++++++++++++++++++++++++++--------------
->  drivers/pci/pci.h        | 16 +--------------
->  drivers/pci/pcie/dpc.c   |  3 +--
->  4 files changed, 30 insertions(+), 33 deletions(-)
-> 
-> -- 
-> 2.39.2
-> 
+(Also spotted =E2=80=9Cimmplementation=E2=80=9D in 2/3 but I thought I'd sp=
+are everyone
+an extra mail.)
+
+
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
+
+--zhilsb22jfyf7zcz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmQ1+qkACgkQ/5FK8MKz
+VSDR9A//SGkUb7J8cgwWLrNmjetx04cvntLjkLt8/1iwZAGeEfIbD4VoeAxedneM
+ZcsuIW9DwkS9pnU/TBhyuTAMQ0F+fTX4EeunPSmE6jjLUPffDD2Z7Pqlygblq59r
++n2i17q26DP4ol6Vq7yKMmhPjldfI9SaImL+DzOsMITGG/D46vTmXJh8cbKEEpAw
+yZ163qBDJYnz5WI6fNbV/fU0NfIi2DiNHSDE1wWG5yEkAThchGGDXFabJIXuVWT4
+mQfflVQtniOLIohENmJQNRdG+AdveTBTXZ3N6vriFJR0E64rUcno89PKRSdLuyv9
+z7ihC+3AWGhZoIszb3R21bqU5kKJH/u62E9GB4BsQX/WwkGZD4bhUxExFak1ohaI
+HmHtG9Hwr8+ddUkQuNAT2MLyI0mav98fDkL5KN7gnmlRzCnlFp2BiJCdmdmvt6HB
+3BjRhfZSDNtv+vJIOUqYUUIS3DQ91Bj2e7TL9FuO99MDTzFKKjJ03A0A5xJxg2Sj
+qqegAd9kXWZuYD2OGJuVGFGEpt10ff0+Kpd2dHUfWXwjOkucMEJYi5pUR6QDrs28
+mLnO+llKJmf1W/3Idsci5yPNB7EjJfpMBsHspz+zzQD5EliZH5Nud98nL0jvKs4U
+zUagyQ8qTk6CLy8XkqZAOizzuNvpyfIv8uROm035MjGn2HRZzDc=
+=VjoP
+-----END PGP SIGNATURE-----
+
+--zhilsb22jfyf7zcz--
