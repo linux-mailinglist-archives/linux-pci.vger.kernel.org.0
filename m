@@ -2,157 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E4C9C6DED1E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 10:00:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5CFD86DED3B
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 10:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbjDLIA2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 04:00:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45498 "EHLO
+        id S229549AbjDLIJN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 04:09:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229755AbjDLIAY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 04:00:24 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E08059E0
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 01:00:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681286420; x=1712822420;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YwIDHCdPflPzLgnaZMzuueubcNvMs1oYYaOW70jlIAM=;
-  b=RXnbsXwEkZGyuda22RLCB08B4TAPJ0RybEIL3imonTE77T0HAfOBdQmb
-   zHBcnkEUN6ts/d/GcbaUVrMO5Pro0RIDdIbpYCfDU3Iap/v2h2FpKAC/f
-   1CFc9Hyku+mWNpzxFlBh8lHbgUy4U4paLK8jc96Yw7IBBYZQUgv7UKJYr
-   +PGwGjtmEkP4IZjd0ZJhtpwVqfGLaiuoHs2OKKL6+XDgFR0StZaW+zyQK
-   FFIiQbFjt695e4pGBx/cYJeOywS7vCE4DIhR84Z6jX9rlHuATeZS7Y8mb
-   CcVjd5gplhf31JVdSnTx/Hd+7ALnu/Vlmmg26XdZhZnNoDvnKtN4Xvu17
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="371684129"
-X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="371684129"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 01:00:20 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="639127661"
-X-IronPort-AV: E=Sophos;i="5.98,338,1673942400"; 
-   d="scan'208";a="639127661"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 12 Apr 2023 01:00:16 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id B974714B; Wed, 12 Apr 2023 11:00:19 +0300 (EEST)
-Date:   Wed, 12 Apr 2023 11:00:19 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] PCI/PM: Resume/reset wait time change
-Message-ID: <20230412080019.GE33314@black.fi.intel.com>
-References: <20230404052714.51315-1-mika.westerberg@linux.intel.com>
- <20230411224014.GA4185844@bhelgaas>
+        with ESMTP id S229578AbjDLIJL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 04:09:11 -0400
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3603955BD
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 01:09:09 -0700 (PDT)
+Received: by mail-ed1-x529.google.com with SMTP id 4fb4d7f45d1cf-5050491cb04so197235a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 01:09:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681286947;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=C/dGyY5TVITXQ9f4V3PWQDgLG26tGuInk2+5HFdtqR8=;
+        b=c+2NF6or5H/VIFSDJXyhSL+skI9ti8M2domvgV4yoDxz7yfc28S8trr32nb2BeOton
+         sRYRm54/JE9s0pd1E+K3QrhhEpSvioNkGpkDHuaAmwGE5XnKzc/oH2aJvvcnXi5QIXZR
+         3gTl1osfhP/7NvYulngudhiVVyKtASlOs2BD0ouCglCkguhiu9375QXPtZyt3aRu6gSX
+         6jcRErDcQ4Mwt0WVUczPRWufNVz/+yaeh2VvW2pK5jyP5xAlChaB1fMfMaF6R97ZbdrP
+         l4wmrrmMv5/qwVkFRTbiCUBzbgHaoVyrOmXLKsgGBQ+Vcd+Y0IiWSnHmo38sPBjOMsHC
+         deCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1681286947;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=C/dGyY5TVITXQ9f4V3PWQDgLG26tGuInk2+5HFdtqR8=;
+        b=eO5K49E3lXAKcz2iTvseDDUUszw+pc6nXjrYKYjJxH7zzOh3IcRyNEocVo4tWBHY7e
+         1qvxZNH4fTx9Ba/szfa7R7lqrqOi5HfADL9FoahPmJsKRtItmYFqovPfleiq+1OhOjew
+         wLI5pIPXauWFt8yb7NpsTls0+ReW2a0IYmfJQvs5kjuZAjmG9ampZcclS3bnaWydK96C
+         hVP02HZqEdTK+fva3CWQSqND/Wx2GMm0B+cJ6oDy33Rc+jgZY57l4M8iytmIbhN0n35U
+         /fvCpC9hkzr6ZHZrBE+DhlyXPNIGoKBHZWfFPK+72ExjOm0XRQQdgbI11FNwECLQzYni
+         sESw==
+X-Gm-Message-State: AAQBX9cs1R9VVIrrXMFTBzkW6xeuKlrDdkqW5povn1g4yOuHlxZc4aed
+        IEpYkahEuNCFXcG1wmPQCZOapQ==
+X-Google-Smtp-Source: AKy350bz0IrllROlyNxN4r5spnZP79yYjDpGswbEYI/n4wTyHF5BJPKSElpsgQxSPRBPFk8+VKgh3Q==
+X-Received: by 2002:a05:6402:1154:b0:504:c269:1497 with SMTP id g20-20020a056402115400b00504c2691497mr1462520edw.27.1681286947468;
+        Wed, 12 Apr 2023 01:09:07 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:8fa0:9989:3f72:b14f? ([2a02:810d:15c0:828:8fa0:9989:3f72:b14f])
+        by smtp.gmail.com with ESMTPSA id h2-20020a50c382000000b004ad601533a3sm6626809edf.55.2023.04.12.01.09.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Apr 2023 01:09:07 -0700 (PDT)
+Message-ID: <5a28e520-63e4-dbcf-5b3e-e5097f02dea2@linaro.org>
+Date:   Wed, 12 Apr 2023 10:09:05 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230411224014.GA4185844@bhelgaas>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: brcmstb: Add two optional props
+Content-Language: en-US
+To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230411165919.23955-1-jim2101024@gmail.com>
+ <20230411165919.23955-2-jim2101024@gmail.com>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230411165919.23955-2-jim2101024@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
-
-On Tue, Apr 11, 2023 at 05:40:14PM -0500, Bjorn Helgaas wrote:
-> On Tue, Apr 04, 2023 at 08:27:12AM +0300, Mika Westerberg wrote:
-> > Hi all,
-> > 
-> > This series first increases the time we wait on resume path to
-> > accommondate certain device, as reported in [1], and then "optimizes"
-> > the timeout for slow links to avoid too long waits if a device is
-> > disconnected during suspend.
-> > 
-> > Previous version can be found here:
-> > 
-> >   https://lore.kernel.org/linux-pci/20230321095031.65709-1-mika.westerberg@linux.intel.com/
-> > 
-> > Changes from the previous version:
-> > 
-> >   * Split the patch into two: one that increases the resume timeout (on
-> >     all links, I was not able to figure out a simple way to limit this
-> >     only for the fast links) and the one that decreases the timeout on
-> >     slow links.
-> > 
-> >   * Use dev->link_active_reporting instead of speed to figure out slow
-> >     vs. fast links.
-> > 
-> > [1] https://bugzilla.kernel.org/show_bug.cgi?id=216728
-> > 
-> > Mika Westerberg (2):
-> >   PCI/PM: Increase wait time after resume
+On 11/04/2023 18:59, Jim Quinlan wrote:
+> Regarding "brcm,enable-l1ss":
 > 
-> I applied the above to pci/reset for v6.4.
-
-Thanks!
-
-> >   PCI/PM: Decrease wait time for devices behind slow links
+>   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+>   requires the driver probe() to deliberately place the HW one of three
+>   CLKREQ# modes:
 > 
-> Part of this patch is removing the pci_bridge_wait_for_secondary_bus()
-> timeout parameter, since all callers now supply the same value
-> (PCIE_RESET_READY_POLL_MS).  I extracted that part out and applied it
-> as well.
+>   (a) CLKREQ# driven by the RC unconditionally
+>   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+>   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
 > 
-> I'm hoping we can restructure the rest of this as mentioned in the
-> thread.  If that's not possible, can you rebase what's left on top of
-> this?
+>   The HW+driver can tell the difference between downstream devices that
+>   need (a) and (b), but does not know when to configure (c).  Further, the
+>   HW may cause a CPU abort on boot if guesses wrong regarding the need for
+>   (c).  So we introduce the boolean "brcm,enable-l1ss" property to indicate
+>   that (c) is desired.  Setting this property only makes sense when the
+>   downstream device is L1SS-capable and the OS is configured to activate
+>   this mode (e.g. policy==superpowersave).
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=reset
+>   This property is already present in the Raspian version of Linux, but the
+>   upstream driver implementaion that will follow adds more details and
 
-Sure. The end result is below. I did not add the wait_for_link_active()
-because we already have the pcie_wait_for_link_delay(), and the
-msleep(100) really needs to be msleep(delay) because we extract that
-'delay' from the device d3cold_delay which can be more than 100 ms. Let
-me know what you think. I will send a proper patch tomorrow if no
-objections.
+typo, implementation
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 0b4f3b08f780..61bf8a4b2099 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5037,6 +5037,22 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		}
- 	}
- 
-+	/*
-+	 * Everything above is handling the delays mandated by the PCIe r6.0
-+	 * sec 6.6.1.
-+	 *
-+	 * If the port supports active link reporting we now check one more
-+	 * time if the link is active and if not bail out early with the
-+	 * assumption that the device is not present anymore.
-+	 */
-+	if (dev->link_active_reporting) {
-+		u16 status;
-+
-+		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-+		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+			return -ENOTTY;
-+	}
-+
- 	return pci_dev_wait(child, reset_type,
- 			    PCIE_RESET_READY_POLL_MS - delay);
- }
+>   discerns between (a) and (b).
+> 
+> Regarding "brcm,completion-timeout-us"
+> 
+>   Our HW will cause a CPU abort if the L1SS exit time is longer than the
+>   PCIe transaction completion abort timeout.  We've been asked to make this
+>   configurable, so we are introducing "brcm,completion-timeout-us".
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 
+What happened here? Where is the changelog?
+
+Best regards,
+Krzysztof
 
