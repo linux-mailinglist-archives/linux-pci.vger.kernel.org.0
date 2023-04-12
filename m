@@ -2,49 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A0856DFAC2
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:03:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9D8F6DFADC
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:10:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231379AbjDLQDC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 12:03:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
+        id S229839AbjDLQKQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 12:10:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230303AbjDLQC7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:02:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EFFC6EBA;
-        Wed, 12 Apr 2023 09:02:55 -0700 (PDT)
+        with ESMTP id S229604AbjDLQKP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:10:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26A441993;
+        Wed, 12 Apr 2023 09:10:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 78436636A7;
-        Wed, 12 Apr 2023 16:02:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A46B0C433EF;
-        Wed, 12 Apr 2023 16:02:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A5657636BC;
+        Wed, 12 Apr 2023 16:10:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3076C433EF;
+        Wed, 12 Apr 2023 16:10:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681315374;
-        bh=7bafig4Gjr1M4Mmce2Kn1RXfVldb+pDVH9bGirK31r0=;
+        s=k20201202; t=1681315814;
+        bh=WC1VZgkI+XhbE3uqeewqBrMZi5G6zrtIVqJ6zC75R4o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Ti1om2CyCAsGI37IcrPsSns/MS8hFtpaqrApyQUe3iwut1p58dnAPboxOf5fPh4YN
-         M2Ud3Ah4xyLEnaB1B9364/5vhsggedosXfT0EsWTaBMzVszfY2t9Wry/S2PXIvTxlH
-         uhJklkXY4aEj7Dh11PPATKxySKkfv15q3nr13OnR5Yf6zyfC3A7arRpD9xz6gSns0r
-         ApREjKKS+tRWDXtHI9YdVgNeW1UytA2oI5o16VhUtl3mBeozIc36sMPU9YxjgAStqR
-         zCt+qlnO9ZxGovsXUc90oaAFXylzQFCEsGB5JHRyORIXJL4RwrltEdc+DlZEMv9ke7
-         KFTN4eSKlPkaw==
-Date:   Wed, 12 Apr 2023 11:02:53 -0500
+        b=rpL0hOqQNTG3phxORdYz2c3JDVPXQH3sQLps2dbzqc4t1zogGwUSqmobJhAX9frBg
+         VguY13XL8/4VQjnuTRNrsjZapr9L480vf0laakqaIU1AUgklkl71gTI78cmfIEVUjc
+         ntb3l0O4xtyjM507o0ql0LlOEyXp16ZcBwdLHjnu1hgmY1V0u/EMSQXeyeHw2eOhJt
+         LNjTUQ5EwY2e4H4URC7cHe+Aj4aSZQw2HvBw1Q87l/Mwx5JIzjuSCS8GVl4ZcKo99y
+         PPAh67dmqrqkyc+cyWptIJxCAUg5szrlqGBe1EPgT4aMvToDoXaIcukDeKmKT998QF
+         tNBIT+n1qGDRw==
+Date:   Wed, 12 Apr 2023 11:10:12 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 1/1] PCI: of: Propagate firmware node
-Message-ID: <20230412160253.GA41376@bhelgaas>
+To:     LeoLiuoc <LeoLiu-oc@zhaoxin.com>
+Cc:     rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
+        tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com,
+        ying.huang@intel.com, rdunlap@infradead.org, bhelgaas@google.com,
+        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devel@acpica.org,
+        CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com
+Subject: Re: [PATCH v2 3/5] ACPI/PCI: Add AER bits #defines for PCIe to
+ PCI/PCI-X Bridge
+Message-ID: <20230412161012.GA48719@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230412131520.52840-1-andriy.shevchenko@linux.intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <f3c4f38c-d45b-cf68-33e5-2e73dd73213d@zhaoxin.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -52,78 +56,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 04:15:20PM +0300, Andy Shevchenko wrote:
-> Propagate firmware node by using a specific API call, i.e. device_set_node().
+On Wed, Apr 12, 2023 at 05:49:55PM +0800, LeoLiuoc wrote:
 
-Can you add a line or two about *why* we should do this, e.g., is this
-headed toward some goal?  Is it a simplification that's 100%
-equivalent (doesn't seem so, see below)?
-
-Seems like there's an underlying long-term effort to unify things from
-OF and ACPI, which seems like a good thing, but at the moment it's a
-little confusing to follow.  For instance pci_set_of_node() seems like
-it ought to be sort of analogous to pci_set_acpi_fwnode(), but they
-look nothing alike.
-
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/pci/of.c | 19 +++++++------------
->  1 file changed, 7 insertions(+), 12 deletions(-)
+> > > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> > > index 57b8e2ffb1dd..37f3baa336d7 100644
+> > > --- a/include/uapi/linux/pci_regs.h
+> > > +++ b/include/uapi/linux/pci_regs.h
+> > > @@ -799,6 +799,11 @@
+> > >   #define  PCI_ERR_ROOT_AER_IRQ		0xf8000000 /* Advanced Error Interrupt Message Number */
+> > >   #define PCI_ERR_ROOT_ERR_SRC	0x34	/* Error Source Identification */
+> > > +/* PCIe advanced error reporting extended capabilities for PCIe to PCI/PCI-X Bridge */
+> > > +#define PCI_ERR_UNCOR_MASK2		0x30	/* Secondary Uncorrectable Error Mask */
+> > > +#define PCI_ERR_UNCOR_SEVER2	0x34	/* Secondary Uncorrectable Error Severit */
+> > > +#define PCI_ERR_CAP2			0x38	/* Secondary Advanced Error Capabilities */
+> > 
+> > Please squash these right up next to the other PCI_ERR_* definitions
+> > so it's obvious that they overlap PCI_ERR_ROOT_STATUS and
+> > PCI_ERR_ROOT_ERR_SRC (which is fine since one device can't have both),
+> > e.g.,
+> > 
+> >    #define PCI_ERR_ROOT_STATUS     0x30
+> >    #define  PCI_ERR_ROOT_COR_RCV           0x00000001 /* ERR_COR Received */
+> >    ...
+> >    #define PCI_ERR_ROOT_ERR_SRC    0x34    /* Error Source Identification */
+> >    #define PCI_ERR_UNCOR_MASK2     0x30    /* PCIe to PCI/PCI-X bridge */
+> >    #define PCI_ERR_UNCOR_SEVER2    0x34    /* PCIe to PCI/PCI-X bridge */
+> >    #define PCI_ERR_CAP2            0x38    /* PCIe to PCI/PCI-X bridge */
 > 
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 196834ed44fe..4bba00dfbfc5 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -18,19 +18,18 @@
->  #ifdef CONFIG_PCI
->  void pci_set_of_node(struct pci_dev *dev)
->  {
-> +	struct device_node *node;
-> +
->  	if (!dev->bus->dev.of_node)
->  		return;
-> -	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
-> -						    dev->devfn);
-> -	if (dev->dev.of_node)
-> -		dev->dev.fwnode = &dev->dev.of_node->fwnode;
-> +	node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
-> +	device_set_node(&dev->dev, of_fwnode_handle(node));
+> I don't seem to understand what you mean. PCI_ERR_UNCOR_MASK2,
+> PCI_ERR_UNCOR_SEVER2, and PCI_ERR_CAP2 represent the control and handling of
+> individual errors that occur on traditional PCI or PCI-x secondary bus
+> interfaces, these registers are valid only for Bridge. Although
+> PCI_ERR_ROOT_ERR_SRC and PCI_ERR_UNCOR_SEVER2 have the same value, they
+> represent register definitions for different device types.
 
-This doesn't seem 100% equivalent.  If of_pci_find_child_device()
-returns NULL, the previous code doesn't set dev->dev.fwnode, but the
-new code does.
+Right.  I just don't want the blank line in the middle because it
+might be mistaken for items in a different capability.  All the other
+AER capability registers are defined together in a block, with no
+blank lines in the middle, so I think these new ones should be part of
+that block.
 
->  }
->  
->  void pci_release_of_node(struct pci_dev *dev)
->  {
->  	of_node_put(dev->dev.of_node);
-> -	dev->dev.of_node = NULL;
-> -	dev->dev.fwnode = NULL;
-> +	device_set_node(&dev->dev, NULL);
->  }
->  
->  void pci_set_bus_of_node(struct pci_bus *bus)
-> @@ -45,17 +44,13 @@ void pci_set_bus_of_node(struct pci_bus *bus)
->  			bus->self->external_facing = true;
->  	}
->  
-> -	bus->dev.of_node = node;
-> -
-> -	if (bus->dev.of_node)
-> -		bus->dev.fwnode = &bus->dev.of_node->fwnode;
-> +	device_set_node(&bus->dev, of_fwnode_handle(node));
->  }
->  
->  void pci_release_bus_of_node(struct pci_bus *bus)
->  {
->  	of_node_put(bus->dev.of_node);
-> -	bus->dev.of_node = NULL;
-> -	bus->dev.fwnode = NULL;
-> +	device_set_node(&bus->dev, NULL);
->  }
->  
->  struct device_node * __weak pcibios_get_phb_of_node(struct pci_bus *bus)
-> -- 
-> 2.40.0.1.gaa8946217a0b
-> 
+Bjorn
