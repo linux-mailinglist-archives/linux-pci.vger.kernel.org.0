@@ -2,145 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BE6A86DFB85
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:40:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD70F6DFC02
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 18:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbjDLQkj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 12:40:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39160 "EHLO
+        id S229864AbjDLQ6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 12:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229753AbjDLQkj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:40:39 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA6A3268B;
-        Wed, 12 Apr 2023 09:40:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681317631; x=1712853631;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=sTLon38OPXbfysSiDd/g82BG8HiU/yv8Ts1Zz5UbszU=;
-  b=aVck5hfAS7CW6zV+rb/ZBRFRSGh279y1k/Wrp5g/gLqNQLSynQFPuTqc
-   cvOA/UwhfWNv2ETvIGEbKfKlUmRJ5JaJuDUzE6KwSXqA7a3zLgrTsXW48
-   kVx5K4Y/XeAKeHb5lAQL3DsOQo40o+CMbjdG2fQaffrJ+mxPoRddTGL1M
-   Xky7aZc1araxPItRZHaAxdKK2HdR7mHJC4j5saafE212RgmIQC42QkOeg
-   2PRxrixYJv9tqrT2ioj6woAXl4fpDa1ULV+DQQbH2YfkLM1cMb0pWlk8Q
-   6a4hrDUDR0tGr4WADOfOUMIdw1qMzTVkOL0tlhu4S3B2IMnXq8WSNo/hD
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="324314753"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="324314753"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 09:40:29 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="863371940"
-X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
-   d="scan'208";a="863371940"
-Received: from wanglish-mobl2.amr.corp.intel.com (HELO [10.212.223.138]) ([10.212.223.138])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 09:40:27 -0700
-Message-ID: <292498f7-15ab-7cab-dc3a-ca5a13001e86@linux.intel.com>
-Date:   Wed, 12 Apr 2023 09:40:27 -0700
+        with ESMTP id S229950AbjDLQ63 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 12:58:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB11D9EC3;
+        Wed, 12 Apr 2023 09:58:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 65E6561169;
+        Wed, 12 Apr 2023 16:58:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F623C4339B;
+        Wed, 12 Apr 2023 16:58:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681318689;
+        bh=mvIllIwwL0a3N/4obdyiGIoypl2z7EHLEGkWiecz4W4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=If4vMZlVFmDy4ncqrtHqk9rr1iXk9l3r/MmO2bK2bDYqMNXk42gBYefyiSPPm71d3
+         Gw5GkARm8UyQLJdPj5rbPqtENXbffZCHV6Kar2gKsdaeNb4/0/iXjovTfQJRYlmd+P
+         qJy3mZ7KE5j5jxZAaVgvKtGwb7HH/ulLTCaKAHwqbi/m2oLmZYvDQO6GtJA0Ijbp7Q
+         7afHh3B4zLBvzNQE0MCn0ilUbSCI+eaoE557JjBhG5lFr4SN11yItMQgPuDI8HeUXS
+         hL4dcLIcqMBmAsk1OKYKqNBbAmB7p4j+9daLFIVl7HhYAnNpD5S5RD8QrJ5GouW7/3
+         V29DR5/yTbwbA==
+Date:   Wed, 12 Apr 2023 22:28:05 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <ZDbjHTenZMxfziZD@matsya>
+References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+ <20230411110240.GB5333@thinkpad>
+ <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.9.0
-Subject: Re: [PATCH v2 0/5] Parse the PCIe AER and set to relevant registers
-Content-Language: en-US
-To:     LeoLiuoc <LeoLiu-oc@zhaoxin.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     rafael@kernel.org, lenb@kernel.org, james.morse@arm.com,
-        tony.luck@intel.com, bp@alien8.de, robert.moore@intel.com,
-        ying.huang@intel.com, rdunlap@infradead.org, bhelgaas@google.com,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, devel@acpica.org,
-        CobeChen@zhaoxin.com, TonyWWang@zhaoxin.com, ErosZhang@zhaoxin.com,
-        "Li, Ming" <ming4.li@intel.com>
-References: <20230407231821.GA3831711@bhelgaas>
- <433ad19a-8286-ff58-9fd8-d7dd13547032@zhaoxin.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <433ad19a-8286-ff58-9fd8-d7dd13547032@zhaoxin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 11-04-23, 19:59, Serge Semin wrote:
+> On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
+> > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
+> > > It turns out the recent DW PCIe-related patchset was merged in with
+> > > several relatively trivial issues left unsettled (noted by Bjorn and
+> > > Manivannan). All of these lefovers have been fixed in this patchset.
+> > > Namely the series starts with two bug-fixes. The first one concerns the
+> > > improper link-mode initialization in case if the CDM-check is enabled. The
+> > > second unfortunate mistake I made in the IP-core version type helper. In
+> > > particular instead of testing the IP-core version type the macro function
+> > > referred to the just IP-core version which obviously wasn't what I
+> > > intended.
+> > > 
+> > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> > > asynchronous probe type which saved us of about 15% of bootup time if no any
+> > > PCIe peripheral device attached to the port.
+> > > 
+> > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> > > corresponding patch removes the false error message printed during the
+> > > controller probe procedure. I accidentally added the unconditional
+> > > dev_err_probe() method invocation. It was obviously wrong.
+> > > 
+> > > Then two trivial cleanups are introduced. The first one concerns the
+> > > duplicated fast-link-mode flag unsetting. The second one implies
+> > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> > > function.
+> > > 
+> > > The series continues with a patch inspired by the last @Bjorn note
+> > > regarding the generic resources request interface. As @Bjorn correctly
+> > > said it would be nice to have the new interface used wider in the DW PCIe
+> > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> > > PCIe driver can be easily converted to using the generic clock names.
+> > > That's what is done in the noted patch.
+> > > 
+> > > The patchset is closed with a series of MAINTAINERS-list related patches.
+> > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> > > update the MAINTAINER-list with the new files added in the framework of
+> > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> > > patchsets to review and not having any comments from the original driver
+> > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> > > eDMA drivers. Thus hopefully the new updates review process will be
+> > > performed with much less latencies. For the same reason I would also like
+> > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+> > > he isn't against that idea. What do you think about the last suggestion?
+> > > 
+> > 
+> > I'm willing to co-maintain the drivers.
+> 
+> Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
+> are ok with that shall I resubmit the series with @Mani added to the
+> DW PCIe/eDMA maintainers list or will you create the respective
+> patches yourself?
 
-
-On 4/12/23 2:11 AM, LeoLiuoc wrote:
-> 
-> 
-> 在 2023/4/8 7:18, Bjorn Helgaas 写道:
->> [+cc Sathy, Ming, since they commented on the previous version]
->>
->> On Tue, Nov 15, 2022 at 11:11:15AM +0800, LeoLiu-oc wrote:
->>> From: leoliu-oc <leoliu-oc@zhaoxin.com>
->>>
->>> According to the sec 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI r6.5, the
->>> register values form HEST PCI Express AER Structure should be written to
->>> relevant PCIe Device's AER Capabilities. So the purpose of the patch set
->>> is to extract register values from HEST PCI Express AER structures and
->>> program them into AER Capabilities. Refer to the ACPI Spec r6.5 for a more
->>> detailed description.
->>
->> I wasn't involved in this part of the ACPI spec, and I don't
->> understand how this is intended to work.
->>
->> I see that this series extracts AER mask, severity, and control
->> information from the ACPI HEST table and uses it to configure PCIe
->> devices as they are enumerated.
->>
->> What I don't understand is how this relates to ownership of the AER
->> capability as negotiated by the _OSC method.  Firmware can configure
->> the AER capability itself, and if it retains control of the AER
->> capability, the OS can't write to it (with the exception of clearing
->> EDR error status), so this wouldn't be necessary.
-> 
-> There is no relationship between the ownership of the AER related register and the ownership of the AER capability in the OS or Firmware. The processing here is to initialize the AER related register, not the AER event. If Firmware is configured 
-
-No, the above statement is not correct. Let's assume that if the AER
-feature is owned by firmware and OS arbitrarily configures the AER
-registers, does it seem right? If firmware or OS owns a feature, after
-_OSC negotiation, it assumed that other component will not touch the
-relevant registers. There could be exceptions (like EDR), but it needs
-to be documented in the spec.
-
-with AER register, it will not be able to handle the runtime hot reset and link retrain cases in addition to the hotplug case you mentioned below.
-
-IIUC, here we are trying to use HEST table to configure AER registers.
-Does HEST table override the _OSC based ownership? Can we assume if
-HEST table exist, then irrespective who owns the feature (firmware or
-OS), OS is allowed to configure the AER registers? Is there a spec
-statement confirming the above assumption?
-
-> 
->>
->> If the OS owns the AER capability, I assume it gets to decide for
->> itself how to configure AER, no matter what the ACPI HEST says.
->>
-> 
-> What information does the OS use to decide how to configure AER? The ACPI Spec has the following description: PCI Express (PCIe) root ports may implement PCIe Advanced Error Reporting (AER) support. This table(HEST) contains  information platform firmware supplies to OSPM for configuring AER support on a given root port. We understand that HEST stands for user to express expectations.
-> 
-> In the current implementation, the OS already configures a PCIE device based on _HPP/_HPX method when configuring a PCI device inserted into a hot-plug slot or initial configuration of a PCI device at system boot. HEST is just another way to express the desired configuration of the user.
-> 
-> Yours sincerely,
-> Leoliu-oc
-> 
->> Maybe this is intended for the case where firmware retains AER
->> ownership but the OS uses native hotplug (pciehp), and this is a way
->> for the OS to configure new devices as the firmware expects?  But in
->> that case, we still have the problem that the OS can't write to the
->> AER capability to do this configuration.
->>
->> Bjorn
-> 
+Pls send the patch, that is preferred.
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+~Vinod
