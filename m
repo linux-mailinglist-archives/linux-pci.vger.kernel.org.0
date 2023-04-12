@@ -2,77 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 61C276DF3E4
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 13:40:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE9C96DF42E
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 13:49:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229994AbjDLLjh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 07:39:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43482 "EHLO
+        id S229696AbjDLLtz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 07:49:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231239AbjDLLjK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 07:39:10 -0400
-Received: from mail-oa1-x32.google.com (mail-oa1-x32.google.com [IPv6:2001:4860:4864:20::32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C85B9
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 04:38:49 -0700 (PDT)
-Received: by mail-oa1-x32.google.com with SMTP id 586e51a60fabf-18779252f7fso1126341fac.12
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 04:38:49 -0700 (PDT)
+        with ESMTP id S230024AbjDLLts (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 07:49:48 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A1BC1BF;
+        Wed, 12 Apr 2023 04:49:40 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-63397c54c5aso1471566b3a.3;
+        Wed, 12 Apr 2023 04:49:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681299527; x=1683891527;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RguhCsxW3m1Xnak065S9tzxK4IAulmFgd1kMo/z7Tf4=;
-        b=mRpX/uNVogg67Gx9grBrsXIDhRV0KwSr8LCHn9ChfYRxk/ZQnyQpsDTRAYmjYD6VSY
-         hCh9I+fMK7Gq9K5qA34Un3RYYvIGJPhvKKY4IFNy98tTEOJikCSLS6Y85UJZI4/FYCos
-         +vQSGgtsGeRUGHDNUfwVHDZPofIp3puohH/7ThKiZaTczz4I4LZbGXJoNPOT3FgrE4S9
-         0O5L9+l57SYuMG43xlCOcOTrP+p9PUieUzTsqGUrcMU7W0ZbMMX19CpZRU2iBtRN+9Xu
-         jeC/k8d1SzIYbfK9dhXSJ4/qmRFsy6HVfv5LtjQBrdqax3JDqukAs/ISzGBISAt7NAqy
-         sPAQ==
+        d=gmail.com; s=20221208; t=1681300179; x=1683892179;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=LU0NNrMj/8UlufToqKjMQMv6WJwb/IxRYgWWMch67x4=;
+        b=qQOOyq6X4rTR64+g/4bntpfaKV6cLyGhlNoOUbD064dkffw6SlmvZEHgDYzMo0FNZ8
+         OmaGl+MgxC1vMKI2HHaHwlpC2J3sCp1f1OlRQsQ9ripvMe607ZMF/SB7utiA6ohV/H83
+         UFABZfVVKKIM+ynX6b+uDbQB/3sTRtONtrbNvJhEJJEBP70mb5CckJM1jPV4HX6mI2ts
+         JH380mtDSf6WdKzJh2DfXaF7IsYP7GvT8f65g66c9H1cWNds1agqtGNFcW05IFUyIX8j
+         xYggBo4BWcCYfpMMYEyyAHfGg+N8BlNZUMEl42anHcwTU/8SnYJ9plb44rEZ6NtPJv5g
+         1uug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681299527; x=1683891527;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20210112; t=1681300179; x=1683892179;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=RguhCsxW3m1Xnak065S9tzxK4IAulmFgd1kMo/z7Tf4=;
-        b=ZBpkNCoiHAeqG6vXvpawzIYaTF3un/RQQAQnijFTJmFyQM78Nb5wppAzRQiMGQNdmP
-         QV+0jt37w/4VdIwtfaAxKnYFW/OawPV9U1vPFgO7Jgdg1rEErbhH9ljm+2IO1PBCS8ow
-         lMiExzwXxUSnprM23Hnh/Aw+gVlxEnE62hU2n5AnhcTqiHBwEALhCqhskUPdokGwPJ71
-         ABQUTKIWVQqIlQRaPxAvQN6CdhhjevODL3GEUq5XNtJca6OoV+PnfKHmQxySsAarvs14
-         /z8bi8XOd4AcDGqtU8FOf0Rb9i24hSNSvrodIeK3PQKSvP5chKBuWq4VJREg4GEVB1nr
-         dYbg==
-X-Gm-Message-State: AAQBX9ftTfV7QbIgQkFYyzM86f8k6Bp/h9p8wciKDP6/5WxxhCmTGMZU
-        idjlKO1eIFZkuVM8U1DIQfZXu5H1T3qKij6fnQ==
-X-Google-Smtp-Source: AKy350YmhlUtJ1JNF1WBRpTF+TPlRqZ/iU4AhnXjjMUQjUQ91/jp8PojzYNo89aR9DsR0tyNJKptNQ==
-X-Received: by 2002:a05:6a20:3a9a:b0:e3:8710:6846 with SMTP id d26-20020a056a203a9a00b000e387106846mr5768238pzh.10.1681298965894;
-        Wed, 12 Apr 2023 04:29:25 -0700 (PDT)
-Received: from thinkpad ([117.217.185.192])
-        by smtp.gmail.com with ESMTPSA id v5-20020a62a505000000b00625e14d3a15sm11421561pfm.166.2023.04.12.04.29.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 04:29:25 -0700 (PDT)
-Date:   Wed, 12 Apr 2023 16:59:18 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, bhelgaas@google.com,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "dt-bindings: PCI: qcom: Add iommu-map properties"
-Message-ID: <20230412112918.GB9463@thinkpad>
-References: <20230411121533.22454-1-manivannan.sadhasivam@linaro.org>
- <20230411174742.GA3428751-robh@kernel.org>
- <20230411184231.GA59982@thinkpad>
- <ZDZouY0PEL64MT6N@lpieralisi>
- <20230412101112.GA9463@thinkpad>
- <ZDaMCcTD/Nwx0vnh@lpieralisi>
+        bh=LU0NNrMj/8UlufToqKjMQMv6WJwb/IxRYgWWMch67x4=;
+        b=JmxCdnV2ER/aD9sIHm8OtHSgENSu7rVVH5JZWaG08TQRxqlO781ZyC5El2Bj/OSGwh
+         l3lt4epy5dQD++PxhcGekGWMABvZIhSpkcOSb4ZeOTX/WgoPumH92X579+qhq/f17bVy
+         OysyqzZ7OmYJ0iGXwmQrVRaUSMNKEfPKTNTlkqVGxjZQLZamFQoXNSaee4//ISPIeeXg
+         K9r7qU9ZyvZo9I2ih0JGzEWKTtb+L3+POl7OqdKRplYHcYSrqeM3PNlqIZSHlghhl9RT
+         QwGrfFSIU4KxIK9VeKKydBIzukYr7v/3DXlR5bAChc8B/CZy3XnBnJI6qfVc+JJ9UFWs
+         g5Mg==
+X-Gm-Message-State: AAQBX9dwAYaUQ9d8MBZAA/bMP17fB7cNPiqeXhyYnT2lXGv9Le9lGISr
+        7VzQQBhtLNSRzoglf9rSoqk=
+X-Google-Smtp-Source: AKy350bFdYFz3IJL5nYzhZwjE0U1hAgIOeONbwcpftGqIbO4iVn75S8Kxf4U9HiU4tdSCCAdE1MDFg==
+X-Received: by 2002:a05:6a00:2da1:b0:63b:20f3:a8c9 with SMTP id fb33-20020a056a002da100b0063b20f3a8c9mr96761pfb.29.1681300179503;
+        Wed, 12 Apr 2023 04:49:39 -0700 (PDT)
+Received: from ?IPV6:2600:8802:b00:4a48:8589:ba50:9cee:d1f4? ([2600:8802:b00:4a48:8589:ba50:9cee:d1f4])
+        by smtp.gmail.com with ESMTPSA id c5-20020a62e805000000b0063b1d65cc6dsm441287pfi.127.2023.04.12.04.49.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 12 Apr 2023 04:49:38 -0700 (PDT)
+Message-ID: <78c18cdb-5757-8d30-e2a6-414f09505cc6@gmail.com>
+Date:   Wed, 12 Apr 2023 04:49:36 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZDaMCcTD/Nwx0vnh@lpieralisi>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: brcmstb: Add two optional props
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Cyril Brulebois <kibi@debian.org>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20230411165919.23955-1-jim2101024@gmail.com>
+ <20230411165919.23955-2-jim2101024@gmail.com>
+ <5a28e520-63e4-dbcf-5b3e-e5097f02dea2@linaro.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+In-Reply-To: <5a28e520-63e4-dbcf-5b3e-e5097f02dea2@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,114 +93,49 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 12:46:33PM +0200, Lorenzo Pieralisi wrote:
-> On Wed, Apr 12, 2023 at 03:41:12PM +0530, Manivannan Sadhasivam wrote:
-> > On Wed, Apr 12, 2023 at 10:15:53AM +0200, Lorenzo Pieralisi wrote:
-> > > On Wed, Apr 12, 2023 at 12:12:31AM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Apr 11, 2023 at 12:47:42PM -0500, Rob Herring wrote:
-> > > > > On Tue, Apr 11, 2023 at 05:45:33PM +0530, Manivannan Sadhasivam wrote:
-> > > > > > This reverts commit 6ebfa40b63ae65eac20834ef4f45355fc5ef6899.
-> > > > > > 
-> > > > > > "iommu-map" property is already documented in commit
-> > > > > 
-> > > > > Need the commit hash here.
-> > > > > 
-> > > > > > ("dt-bindings: PCI: qcom: Add SM8550 compatible") along with the "iommus"
-> > > > > > property.
-> > > > > 
-> > > > > Shouldn't there be a patch removing "iommus" as discussed?
-> > > > > 
-> > > > 
-> > > > Yeah, that was my intention after the dts patches were merged. And since the
-> > > > dts patches are in linux-next now, I could finally send the patch.
-> > > 
-> > > I don't understand what's the plan here. By the way, instead of merging
-> > > this revert I just dropped the commit that this patch is reverting from
-> > > the controller/qcom branch, please have a look to check if everything is
-> > > what you expect it to be there.
-> > > 
-> > 
-> > This is fine. The plan is to remove the "iommus" property from Qcom PCI binding
-> > since we have removed the usage of that property from devicetree [1]. Initially
-> > the iommu properties were not documented at all in the binding. But commit,
-> > "dt-bindings: PCI: qcom: Add SM8550 compatible" added them to the binding to
-> > satisfy dtbs check. But in parallel, the patch removing "iommus" property from
-> > dts got merged to qcom tree.
-> > 
-> > So now we have 2 options here:
-> > 
-> > 1. Amend the commit "dt-bindings: PCI: qcom: Add SM8550 compatible" to remove
-> > the "iommus" property.
-> > 
-> > 2. I will submit a separate patch removing that property.
-> > 
-> > Lorenzo, let me know what works for you. Sorry for the mess! Confusion happened
-> > due to patches getting applied without sync.
+
+
+On 4/12/2023 1:09 AM, Krzysztof Kozlowski wrote:
+> On 11/04/2023 18:59, Jim Quinlan wrote:
+>> Regarding "brcm,enable-l1ss":
+>>
+>>    The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+>>    requires the driver probe() to deliberately place the HW one of three
+>>    CLKREQ# modes:
+>>
+>>    (a) CLKREQ# driven by the RC unconditionally
+>>    (b) CLKREQ# driven by the EP for ASPM L0s, L1
+>>    (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+>>
+>>    The HW+driver can tell the difference between downstream devices that
+>>    need (a) and (b), but does not know when to configure (c).  Further, the
+>>    HW may cause a CPU abort on boot if guesses wrong regarding the need for
+>>    (c).  So we introduce the boolean "brcm,enable-l1ss" property to indicate
+>>    that (c) is desired.  Setting this property only makes sense when the
+>>    downstream device is L1SS-capable and the OS is configured to activate
+>>    this mode (e.g. policy==superpowersave).
+>>
+>>    This property is already present in the Raspian version of Linux, but the
+>>    upstream driver implementaion that will follow adds more details and
 > 
-> You can inline a diff here for (1), I will amend the commit.
+> typo, implementation
 > 
-
-Here you go:
-
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index a1318a4ecadf..1548a7114732 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -60,9 +60,6 @@ properties:
-     minItems: 1
-     maxItems: 8
- 
--  iommus:
--    maxItems: 1
--
-   iommu-map:
-     maxItems: 2
- 
-
-- Mani
-
-> Thanks,
-> Lorenzo
+>>    discerns between (a) and (b).
+>>
+>> Regarding "brcm,completion-timeout-us"
+>>
+>>    Our HW will cause a CPU abort if the L1SS exit time is longer than the
+>>    PCIe transaction completion abort timeout.  We've been asked to make this
+>>    configurable, so we are introducing "brcm,completion-timeout-us".
+>>
+>> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
 > 
-> > - Mani
-> > 
-> > [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6340b391e15094575911ab0d96bfff09deadafba
-> > 
-> > > Lorenzo
-> > > 
-> > > > - Mani
-> > > > 
-> > > > > > 
-> > > > > > So let's revert the commit that just added "iommu-map" to avoid
-> > > > > > duplication.
-> > > > > > 
-> > > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 --
-> > > > > >  1 file changed, 2 deletions(-)
-> > > > > > 
-> > > > > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > > index 5d236bac99b6..a1318a4ecadf 100644
-> > > > > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > > @@ -78,8 +78,6 @@ properties:
-> > > > > >  
-> > > > > >    dma-coherent: true
-> > > > > >  
-> > > > > > -  iommu-map: true
-> > > > > > -
-> > > > > >    interconnects:
-> > > > > >      maxItems: 2
-> > > > > >  
-> > > > > > -- 
-> > > > > > 2.25.1
-> > > > > > 
-> > > > 
-> > > > -- 
-> > > > மணிவண்ணன் சதாசிவம்
-> > 
-> > -- 
-> > மணிவண்ணன் சதாசிவம்
+> What happened here? Where is the changelog?
 
+It is in the cover letter:
+
+https://lore.kernel.org/all/20230411165919.23955-1-jim2101024@gmail.com/
+
+but it does not look like the cover letter was copied to you or Rob.
 -- 
-மணிவண்ணன் சதாசிவம்
+Florian
