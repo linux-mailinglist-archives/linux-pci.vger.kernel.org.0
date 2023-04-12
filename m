@@ -2,148 +2,145 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C8D726DF22F
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 12:46:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AE176DF3D7
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 13:36:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229930AbjDLKqu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 06:46:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48560 "EHLO
+        id S230063AbjDLLgD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 07:36:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230155AbjDLKqn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 06:46:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712736EAD;
-        Wed, 12 Apr 2023 03:46:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 026A2632E3;
-        Wed, 12 Apr 2023 10:46:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DBCC433D2;
-        Wed, 12 Apr 2023 10:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681296401;
-        bh=Tr7sV3WyZ6on9eEvc7Hx0VuBM8bAoYrBgT9VuZrFKkA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vPicg3eVeTDzbveoDfulpmZHOZi2awyobEqabPWEJY1aSq7NkoxiiX5WZSlGLXAh/
-         RAKAywOwVdpaT+TwxqyPUK/j8GwPBYcaRi/kpX47h9BmEj4MFoVo+wLrNb2vLiW2V8
-         pMfAFTUrWgUBAZ+rjoV+EB+rCvb26a8DpHoAegcckY/OVqISbOVAMEy7rGuPqo+uJN
-         wJNg1sCS0Ca1RYq/zlJOXI0hc1378bX3la53LSmO0qS1JfHN0SE9B6w4QbARQypMJi
-         ZGx2ZOXlqhehpQ70c7D+Mu1q0sXxlhc/OhQo7ITZow9eZrfUiYn7KQvE9Vq2eFpimP
-         3FcEfZ/UXqMDw==
-Date:   Wed, 12 Apr 2023 12:46:33 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, andersson@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, bhelgaas@google.com,
-        konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Revert "dt-bindings: PCI: qcom: Add iommu-map properties"
-Message-ID: <ZDaMCcTD/Nwx0vnh@lpieralisi>
-References: <20230411121533.22454-1-manivannan.sadhasivam@linaro.org>
- <20230411174742.GA3428751-robh@kernel.org>
- <20230411184231.GA59982@thinkpad>
- <ZDZouY0PEL64MT6N@lpieralisi>
- <20230412101112.GA9463@thinkpad>
+        with ESMTP id S230254AbjDLLf7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 07:35:59 -0400
+Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DB377AAC
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 04:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681299339; x=1712835339;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ksJLT/9v/nJqMf1pZJ9iLjQq7c4dxyeUC4wfGPb1Hgg=;
+  b=NuftliEuD/xQu/F+wDHIE0yvqHsq1FVdxt7gLHEYuhjUP8E8daw+x36G
+   jqP3jbaczZvvcYnZNC0f7nKPzLAAbtyLj1SR8ZYoLSdg6RiUoiUX2DzX1
+   GcnvMEGspoXx9v1+TN0k2ot/84X4f8QgGHIlYtkhEGcjoibDGYDAJaBkL
+   srCE2DP4N0jjb1N3xn8nfhAHPy127rHunek0ioWXbaCBpuHUQn3d9E7We
+   doO/a5vFZY8uf6+yWqFho4bj+vWgOpaxZ5cYAACUryl8h1Avgh5jAmDXl
+   qPp9FKXoCH7IV77SauzD7AEvYUX4rSyGMS5bRKVHGyZ7Qc0/TAMBqrvWd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="332561438"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="332561438"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 04:30:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10677"; a="812955895"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="812955895"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 12 Apr 2023 04:30:08 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pmYfv-000XgD-1w;
+        Wed, 12 Apr 2023 11:30:07 +0000
+Date:   Wed, 12 Apr 2023 19:29:09 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:reset] BUILD SUCCESS
+ e74b2b58ff715ca17bb49c3ad89f665a7150e14b
+Message-ID: <64369605.nN1CR49dWEDqm8cz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230412101112.GA9463@thinkpad>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 03:41:12PM +0530, Manivannan Sadhasivam wrote:
-> On Wed, Apr 12, 2023 at 10:15:53AM +0200, Lorenzo Pieralisi wrote:
-> > On Wed, Apr 12, 2023 at 12:12:31AM +0530, Manivannan Sadhasivam wrote:
-> > > On Tue, Apr 11, 2023 at 12:47:42PM -0500, Rob Herring wrote:
-> > > > On Tue, Apr 11, 2023 at 05:45:33PM +0530, Manivannan Sadhasivam wrote:
-> > > > > This reverts commit 6ebfa40b63ae65eac20834ef4f45355fc5ef6899.
-> > > > > 
-> > > > > "iommu-map" property is already documented in commit
-> > > > 
-> > > > Need the commit hash here.
-> > > > 
-> > > > > ("dt-bindings: PCI: qcom: Add SM8550 compatible") along with the "iommus"
-> > > > > property.
-> > > > 
-> > > > Shouldn't there be a patch removing "iommus" as discussed?
-> > > > 
-> > > 
-> > > Yeah, that was my intention after the dts patches were merged. And since the
-> > > dts patches are in linux-next now, I could finally send the patch.
-> > 
-> > I don't understand what's the plan here. By the way, instead of merging
-> > this revert I just dropped the commit that this patch is reverting from
-> > the controller/qcom branch, please have a look to check if everything is
-> > what you expect it to be there.
-> > 
-> 
-> This is fine. The plan is to remove the "iommus" property from Qcom PCI binding
-> since we have removed the usage of that property from devicetree [1]. Initially
-> the iommu properties were not documented at all in the binding. But commit,
-> "dt-bindings: PCI: qcom: Add SM8550 compatible" added them to the binding to
-> satisfy dtbs check. But in parallel, the patch removing "iommus" property from
-> dts got merged to qcom tree.
-> 
-> So now we have 2 options here:
-> 
-> 1. Amend the commit "dt-bindings: PCI: qcom: Add SM8550 compatible" to remove
-> the "iommus" property.
-> 
-> 2. I will submit a separate patch removing that property.
-> 
-> Lorenzo, let me know what works for you. Sorry for the mess! Confusion happened
-> due to patches getting applied without sync.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git reset
+branch HEAD: e74b2b58ff715ca17bb49c3ad89f665a7150e14b  PCI/PM: Drop pci_bridge_wait_for_secondary_bus() timeout parameter
 
-You can inline a diff here for (1), I will amend the commit.
+elapsed time: 739m
 
-Thanks,
-Lorenzo
+configs tested: 65
+configs skipped: 3
 
-> - Mani
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=6340b391e15094575911ab0d96bfff09deadafba
-> 
-> > Lorenzo
-> > 
-> > > - Mani
-> > > 
-> > > > > 
-> > > > > So let's revert the commit that just added "iommu-map" to avoid
-> > > > > duplication.
-> > > > > 
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/pci/qcom,pcie.yaml | 2 --
-> > > > >  1 file changed, 2 deletions(-)
-> > > > > 
-> > > > > diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > index 5d236bac99b6..a1318a4ecadf 100644
-> > > > > --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> > > > > @@ -78,8 +78,6 @@ properties:
-> > > > >  
-> > > > >    dma-coherent: true
-> > > > >  
-> > > > > -  iommu-map: true
-> > > > > -
-> > > > >    interconnects:
-> > > > >      maxItems: 2
-> > > > >  
-> > > > > -- 
-> > > > > 2.25.1
-> > > > > 
-> > > 
-> > > -- 
-> > > மணிவண்ணன் சதாசிவம்
-> 
-> -- 
-> மணிவண்ணன் சதாசிவம்
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r012-20230409   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r011-20230409   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230410   clang
+i386                 randconfig-a002-20230410   clang
+i386                 randconfig-a003-20230410   clang
+i386                 randconfig-a004-20230410   clang
+i386                 randconfig-a005-20230410   clang
+i386                 randconfig-a006-20230410   clang
+i386                 randconfig-a011-20230410   gcc  
+i386                 randconfig-a012-20230410   gcc  
+i386                 randconfig-a013-20230410   gcc  
+i386                 randconfig-a014-20230410   gcc  
+i386                 randconfig-a015-20230410   gcc  
+i386                 randconfig-a016-20230410   gcc  
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r011-20230410   clang
+nios2                               defconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230410   clang
+x86_64               randconfig-a002-20230410   clang
+x86_64               randconfig-a003-20230410   clang
+x86_64               randconfig-a004-20230410   clang
+x86_64               randconfig-a005-20230410   clang
+x86_64               randconfig-a006-20230410   clang
+x86_64                        randconfig-k001   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
