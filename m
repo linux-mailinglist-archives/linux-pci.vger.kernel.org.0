@@ -2,126 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 05B376DE87E
-	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 02:26:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93E826DEA58
+	for <lists+linux-pci@lfdr.de>; Wed, 12 Apr 2023 06:23:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229503AbjDLA0c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 11 Apr 2023 20:26:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55012 "EHLO
+        id S229513AbjDLEX3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 00:23:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjDLA0c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 11 Apr 2023 20:26:32 -0400
-Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E92D3;
-        Tue, 11 Apr 2023 17:26:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oi+javVlViAf4EjInPqqFRpG+lPC235NHVxTYPy83Pc=; b=qGtIBd8qoTQvC9rbTN1JeCR3qW
-        UVut0/l1N/MsnfNw4HUr00Qd9GxECbA3IRCRBsLaxF1jDR5T4SwN1BHsI51FzSOG5p/H07zZMLcqq
-        vVBtg3p+/emgHINNlEVJXzwT3a7/QAyVOdErLabINOTj0no0nDzETKo9PLvVR/CGhofmGr/kS4Ep8
-        8hKX1BQPoL9u74G+8I17P23jiKbUNpLHqv8MDTByX6LcZXV6z3PBIiLk1KuDO+8MZ/t4aN3AA9t02
-        FQVmDOVdOS755tEs4MR5UT29UdaOyrpT9UzkUwM+Py6nW2XaQB8+IqcvWNP0mf69J5O5wef3FdaYT
-        lpwBy6Vg==;
-Received: from authenticated user
-        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <kibi@debian.org>)
-        id 1pmOJb-00GhHJ-UI; Wed, 12 Apr 2023 00:26:24 +0000
-Date:   Wed, 12 Apr 2023 02:26:21 +0200
-From:   Cyril Brulebois <kibi@debian.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 3/3] PCI: brcmstb: Set PCIe transaction completion
- timeout
-Message-ID: <20230412002621.nuxkiflumz4vbang@mraw.org>
-Organization: Debian
-References: <20230411165919.23955-1-jim2101024@gmail.com>
- <20230411165919.23955-4-jim2101024@gmail.com>
+        with ESMTP id S229493AbjDLEX1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 00:23:27 -0400
+Received: from mx.socionext.com (mx.socionext.com [202.248.49.38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 37848268A;
+        Tue, 11 Apr 2023 21:23:25 -0700 (PDT)
+Received: from unknown (HELO iyokan2-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 12 Apr 2023 13:23:23 +0900
+Received: from mail.mfilter.local (mail-arc02.css.socionext.com [10.213.46.40])
+        by iyokan2-ex.css.socionext.com (Postfix) with ESMTP id D426D2059053;
+        Wed, 12 Apr 2023 13:23:23 +0900 (JST)
+Received: from kinkan2.css.socionext.com ([172.31.9.51]) by m-FILTER with ESMTP; Wed, 12 Apr 2023 13:23:23 +0900
+Received: from [10.212.156.72] (unknown [10.212.156.72])
+        by kinkan2.css.socionext.com (Postfix) with ESMTP id F1E7BB6341;
+        Wed, 12 Apr 2023 13:23:22 +0900 (JST)
+Message-ID: <ada2062d-c857-97c1-41fe-a2eedde1b832@socionext.com>
+Date:   Wed, 12 Apr 2023 13:23:22 +0900
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="zhilsb22jfyf7zcz"
-Content-Disposition: inline
-In-Reply-To: <20230411165919.23955-4-jim2101024@gmail.com>
-X-Debian-User: kibi
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,UNPARSEABLE_RELAY autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v11 02/13] PCI: endpoint: functions/pci-epf-test: Fix
+ dma_chan direction
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com
+Cc:     Sergey.Semin@baikalelectronics.ru, marek.vasut+renesas@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, Frank Li <Frank.Li@nxp.com>
+References: <20230310123510.675685-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230310123510.675685-3-yoshihiro.shimoda.uh@renesas.com>
+Content-Language: en-US
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+In-Reply-To: <20230310123510.675685-3-yoshihiro.shimoda.uh@renesas.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.1 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Shimoda-san,
 
---zhilsb22jfyf7zcz
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2023/03/10 21:34, Yoshihiro Shimoda wrote:
+> In the pci_epf_test_init_dma_chan(), epf_test->dma_chan_rx
+> is assigned from dma_request_channel() with DMA_DEV_TO_MEM as
+> filter.dma_mask. However, in the pci_epf_test_data_transfer(),
+> if the dir is DMA_DEV_TO_MEM, it should use epf->dma_chan_rx,
+> but it used epf_test->dma_chan_tx. So, fix it. Otherwise,
+> results of pcitest with enabled DMA will be "NOT OKAY" on eDMA
+> environment.
 
-Hi Jim,
+I also encounted this issue and found this patch before sending my fixes patch
+for the same diff as this one.
+And I confirmed the issue is fixed using pcitest with eDMA on UniPhier SoCs.
 
-Jim Quinlan <jim2101024@gmail.com> (2023-04-11):
-> Since the STB PCIe HW will cause a CPU abort on a PCIe transaction
-> completion timeout abort, we might as well extend the default timeout
-> limit.  Further, different devices and systems may requires a larger or
-> smaller amount commensurate with their L1SS exit time, so the property
-> "brcm,completion-abort-us" may be used to set a custom timeout value.
-   ^^^^^^^^^^^^^^^^^^^^^^^^
+For 02/13 patch if not already merged:
 
-> +	ret =3D of_property_read_u32(pcie->np, "brcm,completion-timeout-us",
-> +				   &timeout_us);
-> +	if (ret && ret !=3D -EINVAL)
-> +		dev_err(pcie->dev, "malformed/invalid 'brcm,completion-timeout-us'\n");
+Tested-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 
-v2 renames brcm,completion-abort-msecs into brcm,completion-timeout-us
-but the commit message mentions the half-way brcm,completion-abort-us
-property instead.
+Thank you,
 
-(Also spotted =E2=80=9Cimmplementation=E2=80=9D in 2/3 but I thought I'd sp=
-are everyone
-an extra mail.)
+> 
+> Fixes: 8353813c88ef ("PCI: endpoint: Enable DMA tests for endpoints with
+> DMA capabilities")
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> ---
+>   drivers/pci/endpoint/functions/pci-epf-test.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c
+> b/drivers/pci/endpoint/functions/pci-epf-test.c
+> index 0f9d2ec822ac..172e5ac0bd96 100644
+> --- a/drivers/pci/endpoint/functions/pci-epf-test.c
+> +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+> @@ -112,7 +112,7 @@ static int pci_epf_test_data_transfer(struct
+> pci_epf_test *epf_test,
+>   				      size_t len, dma_addr_t dma_remote,
+>   				      enum dma_transfer_direction dir)
+>   {
+> -	struct dma_chan *chan = (dir == DMA_DEV_TO_MEM) ?
+> +	struct dma_chan *chan = (dir == DMA_MEM_TO_DEV) ?
+>   				 epf_test->dma_chan_tx :
+> epf_test->dma_chan_rx;
+>   	dma_addr_t dma_local = (dir == DMA_MEM_TO_DEV) ? dma_src :
+> dma_dst;
+>   	enum dma_ctrl_flags flags = DMA_CTRL_ACK | DMA_PREP_INTERRUPT;
 
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---zhilsb22jfyf7zcz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmQ1+qkACgkQ/5FK8MKz
-VSDR9A//SGkUb7J8cgwWLrNmjetx04cvntLjkLt8/1iwZAGeEfIbD4VoeAxedneM
-ZcsuIW9DwkS9pnU/TBhyuTAMQ0F+fTX4EeunPSmE6jjLUPffDD2Z7Pqlygblq59r
-+n2i17q26DP4ol6Vq7yKMmhPjldfI9SaImL+DzOsMITGG/D46vTmXJh8cbKEEpAw
-yZ163qBDJYnz5WI6fNbV/fU0NfIi2DiNHSDE1wWG5yEkAThchGGDXFabJIXuVWT4
-mQfflVQtniOLIohENmJQNRdG+AdveTBTXZ3N6vriFJR0E64rUcno89PKRSdLuyv9
-z7ihC+3AWGhZoIszb3R21bqU5kKJH/u62E9GB4BsQX/WwkGZD4bhUxExFak1ohaI
-HmHtG9Hwr8+ddUkQuNAT2MLyI0mav98fDkL5KN7gnmlRzCnlFp2BiJCdmdmvt6HB
-3BjRhfZSDNtv+vJIOUqYUUIS3DQ91Bj2e7TL9FuO99MDTzFKKjJ03A0A5xJxg2Sj
-qqegAd9kXWZuYD2OGJuVGFGEpt10ff0+Kpd2dHUfWXwjOkucMEJYi5pUR6QDrs28
-mLnO+llKJmf1W/3Idsci5yPNB7EjJfpMBsHspz+zzQD5EliZH5Nud98nL0jvKs4U
-zUagyQ8qTk6CLy8XkqZAOizzuNvpyfIv8uROm035MjGn2HRZzDc=
-=VjoP
------END PGP SIGNATURE-----
-
---zhilsb22jfyf7zcz--
+---
+Best Regards
+Kunihiko Hayashi
