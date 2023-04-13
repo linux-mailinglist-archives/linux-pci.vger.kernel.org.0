@@ -2,84 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D31976E0F76
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 16:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F4A26E0FEB
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 16:25:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231712AbjDMOAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 10:00:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
+        id S229887AbjDMOZO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 10:25:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231721AbjDMOAn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 10:00:43 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14773127
-        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 07:00:40 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id i8so6089302plt.10
-        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 07:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1681394439; x=1683986439;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=eU7u0EkiQfnb6V3VFY3Ec1E3n975+Yez3QLaf1ODnhY=;
-        b=WQ71X16q30n1tfqSkTXLlQP4ewh0QXuSldlKGsgCOLGrpfK1U+iWXINSZ41KbS696t
-         IJLy7kBz6Koc+UIges8Fe2I5IRoERd7DiuEEVRsLfMxMwqrCRKDOG9qx3l9OVWUYsMg/
-         uysCWsUliRa3GCRm4vAiZzx5Wlt6MSdmyGqXBs8vOAry5UTX1xBj9uG/S1NcRoXweGkM
-         Ujv02Pxyiz94IX2mLjsVQdtXbY17BJX1+CnjROuH9dkI2w1mg+tPZPSfiXEOr444x3lh
-         8xV5MSlznYobKS/ii7vMwF/SR9nF1wviAWzACQTCbviOWEVuW5MZJtLVUfY6q/ts8tyg
-         VY5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681394439; x=1683986439;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=eU7u0EkiQfnb6V3VFY3Ec1E3n975+Yez3QLaf1ODnhY=;
-        b=OaHmcf8Nf5gjS+B0Hb02Z74OE/YRw+dGQnnTyPYWi9IXfIJ3WhxDgMLH5Srvypxn+M
-         WEsx6dTWjdQpdW8KPXAs85YmyCGFBnfysQThygTRASNC98k03ewuRarxdK8iPK4wNvsW
-         z/uLIR6prOhJVVoRgF0ZVqBh8fMnOk5hgx5IrBuRh2AerYNEyaxP8mZMa0FUXdKuh9Ta
-         tcHDMg3fkbWEpXWFDsGbLkqLmlXe9EdS3wXQg999rgeDmurG5FGUFXtCG6ZTGFzvj2/U
-         iXLL39xQbctl3uwJuusC2Wt17TIIFS73ly4+enD0rsLJ06z8T3MSgZ3QAmf7YABnPrDh
-         b6xA==
-X-Gm-Message-State: AAQBX9c2Gvjs2Y2WQ0Ht2tXEUkwaT6KCiiSVipTEJ6auo1W1ZIlQLIi6
-        h4xHDoW3YBdUD74GcSMR0dYX
-X-Google-Smtp-Source: AKy350a+RE5Hskp2Ss1xXf+Z4HSXMhew7c9wbH+dJHlwg2B0agWdmevsupoTrImu8QKwix9q4MHvZA==
-X-Received: by 2002:a17:903:90d:b0:1a1:e93c:8937 with SMTP id ll13-20020a170903090d00b001a1e93c8937mr2606863plb.35.1681394439278;
-        Thu, 13 Apr 2023 07:00:39 -0700 (PDT)
-Received: from thinkpad ([59.97.52.67])
-        by smtp.gmail.com with ESMTPSA id a1-20020a170902900100b001a6756a36f6sm1524223plp.101.2023.04.13.07.00.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 07:00:38 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 19:30:24 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Serge Semin <fancer.lancer@gmail.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
- cleanups
-Message-ID: <20230413140024.GA13020@thinkpad>
-References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
- <20230411110240.GB5333@thinkpad>
- <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
- <ZDbjHTenZMxfziZD@matsya>
- <20230413133454.ef7f5s34ysyequfz@mobilestation>
+        with ESMTP id S229765AbjDMOZN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 10:25:13 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FF059EF3
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 07:25:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681395911; x=1712931911;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=H19uVlVDoJGJGJkr8hqIqfEdu3UaUqA3i18T0xiIelI=;
+  b=TqaehIbKVrGvh2qf8GN+ye0y+jx0yECWisC4sWeSrrrsAXEJ7TANxv+X
+   mF9KSwaB4p+4XGs5xUd5N8AI1/i3bNetW3OlkFSlkyDrszlR9fVncDowf
+   erYB21z6OCviqDxn/tcCgoZ7HjEzid3YmO78I4MB91TCZlfb5rVjZ1kqm
+   Co2R8LlhG8yP4Yk2j376ucVTf/PJkiaQIcWEcOWi1WRIU5FZy3gXg/nj0
+   Me5Bgnh1TdUC6/izt5tuMtNVmAVF+Y4ts20icuLR5EXyDEE/1ojwjMqK5
+   3dGu0kSfKbRkis/CZXWXIkyxTikWeqSHvzIdrXfkiaX/Q7QhuZqL4pLY/
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="346899780"
+X-IronPort-AV: E=Sophos;i="5.99,193,1677571200"; 
+   d="scan'208";a="346899780"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 07:16:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="778793317"
+X-IronPort-AV: E=Sophos;i="5.99,193,1677571200"; 
+   d="scan'208";a="778793317"
+Received: from dalong-mobl1.amr.corp.intel.com (HELO [10.212.221.189]) ([10.212.221.189])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 07:16:47 -0700
+Message-ID: <4a294f9d-6395-b8de-eb36-46c636876c8e@linux.intel.com>
+Date:   Thu, 13 Apr 2023 07:16:46 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230413133454.ef7f5s34ysyequfz@mobilestation>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.9.0
+Subject: Re: [PATCH v3] PCI/PM: Bail out early in
+ pci_bridge_wait_for_secondary_bus() if link is not trained
+Content-Language: en-US
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
+        Lukas Wunner <lukas@wunner.de>,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sheng Bi <windy.bi.enflame@gmail.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Stanislav Spassov <stanspas@amazon.de>,
+        Yang Su <yang.su@linux.alibaba.com>,
+        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
+References: <20230413101642.8724-1-mika.westerberg@linux.intel.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230413101642.8724-1-mika.westerberg@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,82 +73,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 04:34:54PM +0300, Serge Semin wrote:
-> On Wed, Apr 12, 2023 at 10:28:05PM +0530, Vinod Koul wrote:
-> > On 11-04-23, 19:59, Serge Semin wrote:
-> > > On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
-> > > > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
-> > > > > It turns out the recent DW PCIe-related patchset was merged in with
-> > > > > several relatively trivial issues left unsettled (noted by Bjorn and
-> > > > > Manivannan). All of these lefovers have been fixed in this patchset.
-> > > > > Namely the series starts with two bug-fixes. The first one concerns the
-> > > > > improper link-mode initialization in case if the CDM-check is enabled. The
-> > > > > second unfortunate mistake I made in the IP-core version type helper. In
-> > > > > particular instead of testing the IP-core version type the macro function
-> > > > > referred to the just IP-core version which obviously wasn't what I
-> > > > > intended.
-> > > > > 
-> > > > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
-> > > > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
-> > > > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
-> > > > > asynchronous probe type which saved us of about 15% of bootup time if no any
-> > > > > PCIe peripheral device attached to the port.
-> > > > > 
-> > > > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
-> > > > > corresponding patch removes the false error message printed during the
-> > > > > controller probe procedure. I accidentally added the unconditional
-> > > > > dev_err_probe() method invocation. It was obviously wrong.
-> > > > > 
-> > > > > Then two trivial cleanups are introduced. The first one concerns the
-> > > > > duplicated fast-link-mode flag unsetting. The second one implies
-> > > > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
-> > > > > function.
-> > > > > 
-> > > > > The series continues with a patch inspired by the last @Bjorn note
-> > > > > regarding the generic resources request interface. As @Bjorn correctly
-> > > > > said it would be nice to have the new interface used wider in the DW PCIe
-> > > > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
-> > > > > PCIe driver can be easily converted to using the generic clock names.
-> > > > > That's what is done in the noted patch.
-> > > > > 
-> > > > > The patchset is closed with a series of MAINTAINERS-list related patches.
-> > > > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
-> > > > > update the MAINTAINER-list with the new files added in the framework of
-> > > > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
-> > > > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
-> > > > > patchsets to review and not having any comments from the original driver
-> > > > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
-> > > > > eDMA drivers. Thus hopefully the new updates review process will be
-> > > > > performed with much less latencies. For the same reason I would also like
-> > > > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
-> > > > > he isn't against that idea. What do you think about the last suggestion?
-> > > > > 
-> > > > 
-> > > > I'm willing to co-maintain the drivers.
-> > > 
-> > > Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
-> > > are ok with that shall I resubmit the series with @Mani added to the
-> > > DW PCIe/eDMA maintainers list or will you create the respective
-> > > patches yourself?
-> > 
-> 
-> > Pls send the patch, that is preferred.
-> 
-> Ok. I'll resubmit the series with the new patches replacing @Gustavo with
-> @Mani as the DW PCIe/eDMA drivers maintainer.
-> 
 
-I talked to Vinod about the non-responsive maintainers and he suggested first
-demoting them as Reviewers instead of dropping altogether. So you can move
-Gustavo as a Reviewer.
 
-- Mani
-
-> -Serge(y)
+On 4/13/23 3:16 AM, Mika Westerberg wrote:
+> If the Root/Downstream Port supports active link reporting we can check
+> if the link is trained before waiting for the device to respond. If the
+> link is not trained, there is no point waiting for the whole ~60s so
+> bail out early in that case.
 > 
-> > 
-> > -- 
-> > ~Vinod
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+
+Looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+> As discussed in the email thread of the previous version here:
+> 
+>   https://lore.kernel.org/linux-pci/20230404052714.51315-1-mika.westerberg@linux.intel.com/
+> 
+> This adds the last change on top of
+> 
+>   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=reset
+> 
+> 
+>  drivers/pci/pci.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 0b4f3b08f780..61bf8a4b2099 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5037,6 +5037,22 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Everything above is handling the delays mandated by the PCIe r6.0
+> +	 * sec 6.6.1.
+> +	 *
+> +	 * If the port supports active link reporting we now check one more
+> +	 * time if the link is active and if not bail out early with the
+> +	 * assumption that the device is not present anymore.
+> +	 */
+> +	if (dev->link_active_reporting) {
+> +		u16 status;
+> +
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
+> +		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +			return -ENOTTY;
+> +	}
+> +
+>  	return pci_dev_wait(child, reset_type,
+>  			    PCIE_RESET_READY_POLL_MS - delay);
+>  }
 
 -- 
-மணிவண்ணன் சதாசிவம்
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
