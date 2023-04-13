@@ -2,134 +2,167 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 846DC6E0F31
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 15:49:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D31976E0F76
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 16:00:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231341AbjDMNtl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 09:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51746 "EHLO
+        id S231712AbjDMOAp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 10:00:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231319AbjDMNtk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 09:49:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81BBE900F;
-        Thu, 13 Apr 2023 06:49:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F057463EB9;
-        Thu, 13 Apr 2023 13:49:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85363C433EF;
-        Thu, 13 Apr 2023 13:49:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681393776;
-        bh=PIQWxC9aTPIf5rBky0brQiHVlrCXX748Hlc0qxobWWk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ssbDb/ROcuAm1lbADBnLEOxZ36OxR1HvuPA7vufkKTMh7dVHBN21dNyd1wjTTlj9i
-         tIk1B1bFxpgUr77LDJ2BzuTsGKsS/KeI25HuF8pGbii4YJPTMl0w2pyKxZRfYBEFkA
-         n9zs07dhFigJJBJKJV9wL9AJLcigMIDtqBRlWyESwHs9JZD2UigsL06MFKUn4I1oFj
-         sPogYgWbE+6mLu9nac0AZAhuxmObCJ12UUPqfCGaz6lde1d36zuqsEhLq/QIwTnXt9
-         10BQnh+JOdJ35LsdtYzwMcA2KNui53jnvbGgpYYMbzucJTwPYsgICkfAl77oICevxB
-         TcJgwPClp/8mA==
-Date:   Thu, 13 Apr 2023 15:49:26 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Damien Le Moal <damien.lemoal@opensource.wdc.com>
-Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
-        rick.wertenbroek@heig-vd.ch, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Mikko Kovanen <mikko.kovanen@aavamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 0/9] PCI: rockchip: Fix RK3399 PCIe endpoint
- controller driver
-Message-ID: <ZDgIZmCgLoC/uieX@lpieralisi>
-References: <20230214140858.1133292-1-rick.wertenbroek@gmail.com>
- <ecd09f27-b799-4741-2c5a-a2de99776c51@opensource.wdc.com>
- <CAAEEuhrk4cSC312UiAL3UwoDZ=urrdDcBThcNHd1dqnAuJTzAw@mail.gmail.com>
- <3c4ed614-f088-928f-2807-deaa5e4b668a@opensource.wdc.com>
- <CAAEEuhqk0scWd3wFbVb9fSgHxPBKotpEPNi+YPG4GD9vLO94mw@mail.gmail.com>
- <8392a7de-666a-bce6-dc9f-b60d6dd93013@opensource.wdc.com>
- <1e8184e9-7e0b-2598-cc5a-e46d6c2f152a@opensource.wdc.com>
- <CAAEEuhoB2LqL=B_BQ0X2T-E+Yt83kPUiv-R9dgU0O-f22ukcWg@mail.gmail.com>
- <CAAEEuhp5WTkaPDRLa8frc9Sc43A3HwApW647v-E9Bse6p5Df5Q@mail.gmail.com>
- <15208569-b3d7-b9f7-6676-9d9122cac84a@opensource.wdc.com>
+        with ESMTP id S231721AbjDMOAn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 10:00:43 -0400
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14773127
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 07:00:40 -0700 (PDT)
+Received: by mail-pl1-x62f.google.com with SMTP id i8so6089302plt.10
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 07:00:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681394439; x=1683986439;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=eU7u0EkiQfnb6V3VFY3Ec1E3n975+Yez3QLaf1ODnhY=;
+        b=WQ71X16q30n1tfqSkTXLlQP4ewh0QXuSldlKGsgCOLGrpfK1U+iWXINSZ41KbS696t
+         IJLy7kBz6Koc+UIges8Fe2I5IRoERd7DiuEEVRsLfMxMwqrCRKDOG9qx3l9OVWUYsMg/
+         uysCWsUliRa3GCRm4vAiZzx5Wlt6MSdmyGqXBs8vOAry5UTX1xBj9uG/S1NcRoXweGkM
+         Ujv02Pxyiz94IX2mLjsVQdtXbY17BJX1+CnjROuH9dkI2w1mg+tPZPSfiXEOr444x3lh
+         8xV5MSlznYobKS/ii7vMwF/SR9nF1wviAWzACQTCbviOWEVuW5MZJtLVUfY6q/ts8tyg
+         VY5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681394439; x=1683986439;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eU7u0EkiQfnb6V3VFY3Ec1E3n975+Yez3QLaf1ODnhY=;
+        b=OaHmcf8Nf5gjS+B0Hb02Z74OE/YRw+dGQnnTyPYWi9IXfIJ3WhxDgMLH5Srvypxn+M
+         WEsx6dTWjdQpdW8KPXAs85YmyCGFBnfysQThygTRASNC98k03ewuRarxdK8iPK4wNvsW
+         z/uLIR6prOhJVVoRgF0ZVqBh8fMnOk5hgx5IrBuRh2AerYNEyaxP8mZMa0FUXdKuh9Ta
+         tcHDMg3fkbWEpXWFDsGbLkqLmlXe9EdS3wXQg999rgeDmurG5FGUFXtCG6ZTGFzvj2/U
+         iXLL39xQbctl3uwJuusC2Wt17TIIFS73ly4+enD0rsLJ06z8T3MSgZ3QAmf7YABnPrDh
+         b6xA==
+X-Gm-Message-State: AAQBX9c2Gvjs2Y2WQ0Ht2tXEUkwaT6KCiiSVipTEJ6auo1W1ZIlQLIi6
+        h4xHDoW3YBdUD74GcSMR0dYX
+X-Google-Smtp-Source: AKy350a+RE5Hskp2Ss1xXf+Z4HSXMhew7c9wbH+dJHlwg2B0agWdmevsupoTrImu8QKwix9q4MHvZA==
+X-Received: by 2002:a17:903:90d:b0:1a1:e93c:8937 with SMTP id ll13-20020a170903090d00b001a1e93c8937mr2606863plb.35.1681394439278;
+        Thu, 13 Apr 2023 07:00:39 -0700 (PDT)
+Received: from thinkpad ([59.97.52.67])
+        by smtp.gmail.com with ESMTPSA id a1-20020a170902900100b001a6756a36f6sm1524223plp.101.2023.04.13.07.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 07:00:38 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 19:30:24 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Serge Semin <fancer.lancer@gmail.com>
+Cc:     Vinod Koul <vkoul@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v3 00/10] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <20230413140024.GA13020@thinkpad>
+References: <20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru>
+ <20230411110240.GB5333@thinkpad>
+ <20230411165924.4zfwhwxacxxeg7rk@mobilestation>
+ <ZDbjHTenZMxfziZD@matsya>
+ <20230413133454.ef7f5s34ysyequfz@mobilestation>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <15208569-b3d7-b9f7-6676-9d9122cac84a@opensource.wdc.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230413133454.ef7f5s34ysyequfz@mobilestation>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Mar 17, 2023 at 07:09:04AM +0900, Damien Le Moal wrote:
-> On 3/17/23 01:34, Rick Wertenbroek wrote:
-> >>> By the way, enabling the interrupts to see the error notifications, I do see a
-> >>> lot of retry timeout and other recoverable errors. So the issues I am seeing
-> >>> could be due to my PCI cable setup that is not ideal (bad signal, ground loops,
-> >>> ... ?). Not sure. I do not have a PCI analyzer handy :)
+On Thu, Apr 13, 2023 at 04:34:54PM +0300, Serge Semin wrote:
+> On Wed, Apr 12, 2023 at 10:28:05PM +0530, Vinod Koul wrote:
+> > On 11-04-23, 19:59, Serge Semin wrote:
+> > > On Tue, Apr 11, 2023 at 04:32:40PM +0530, Manivannan Sadhasivam wrote:
+> > > > On Tue, Apr 11, 2023 at 06:39:18AM +0300, Serge Semin wrote:
+> > > > > It turns out the recent DW PCIe-related patchset was merged in with
+> > > > > several relatively trivial issues left unsettled (noted by Bjorn and
+> > > > > Manivannan). All of these lefovers have been fixed in this patchset.
+> > > > > Namely the series starts with two bug-fixes. The first one concerns the
+> > > > > improper link-mode initialization in case if the CDM-check is enabled. The
+> > > > > second unfortunate mistake I made in the IP-core version type helper. In
+> > > > > particular instead of testing the IP-core version type the macro function
+> > > > > referred to the just IP-core version which obviously wasn't what I
+> > > > > intended.
+> > > > > 
+> > > > > Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+> > > > > message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+> > > > > Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+> > > > > asynchronous probe type which saved us of about 15% of bootup time if no any
+> > > > > PCIe peripheral device attached to the port.
+> > > > > 
+> > > > > Then the patchset contains the Baikal-T1 PCIe driver fix. The
+> > > > > corresponding patch removes the false error message printed during the
+> > > > > controller probe procedure. I accidentally added the unconditional
+> > > > > dev_err_probe() method invocation. It was obviously wrong.
+> > > > > 
+> > > > > Then two trivial cleanups are introduced. The first one concerns the
+> > > > > duplicated fast-link-mode flag unsetting. The second one implies
+> > > > > dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+> > > > > function.
+> > > > > 
+> > > > > The series continues with a patch inspired by the last @Bjorn note
+> > > > > regarding the generic resources request interface. As @Bjorn correctly
+> > > > > said it would be nice to have the new interface used wider in the DW PCIe
+> > > > > subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+> > > > > PCIe driver can be easily converted to using the generic clock names.
+> > > > > That's what is done in the noted patch.
+> > > > > 
+> > > > > The patchset is closed with a series of MAINTAINERS-list related patches.
+> > > > > Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+> > > > > update the MAINTAINER-list with the new files added in the framework of
+> > > > > that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+> > > > > DW PCIe core driver maintainers. Secondly seeing how long it took for my
+> > > > > patchsets to review and not having any comments from the original driver
+> > > > > maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+> > > > > eDMA drivers. Thus hopefully the new updates review process will be
+> > > > > performed with much less latencies. For the same reason I would also like
+> > > > > to suggest to add @Manivannan as the DW PCIe/eDMA drivers maintainer if
+> > > > > he isn't against that idea. What do you think about the last suggestion?
+> > > > > 
+> > > > 
+> > > > I'm willing to co-maintain the drivers.
+> > > 
+> > > Awesome! @Bjorn, @Lorenzo, @Vinod what do you think about this? If you
+> > > are ok with that shall I resubmit the series with @Mani added to the
+> > > DW PCIe/eDMA maintainers list or will you create the respective
+> > > patches yourself?
 > > 
-> > I have enabled the IRQs and messages thanks to your patches but I don't get
-> > messages from the IRQs (it seems no IRQs are fired). My PCIe link seems stable.
-> > The main issue I face is still that after a random amount of time, the BARs are
-> > reset to 0, I don't have a PCIe analyzer so I cannot chase config space TLPs
-> > (e.g., host writing the BAR values to the config header), but I don't think that
-> > the problem comes from a TLP issued from the host. (it might be).
 > 
-> Hmmm... I am getting lots of IRQs, especially the ones signaling "replay timer
-> timed out" and "replay timer rolled over after 4 transmissions of the same TLP"
-> but also some "phy error detected on receive side"... Need to try to rework my
-> cable setup I guess.
+> > Pls send the patch, that is preferred.
 > 
-> As for the BARs being reset to 0, I have not checked, but it may be why I see
-> things not working after some inactivity. Will check that. We may be seeing the
-> same regarding that.
+> Ok. I'll resubmit the series with the new patches replacing @Gustavo with
+> @Mani as the DW PCIe/eDMA drivers maintainer.
 > 
-> > I don't think it's a buffer overflow / out-of-bounds access by kernel
-> > code for two reasons
-> > 1) The values in the config space around the BARs is coherent and unchanged
-> > 2) The bars are reset to 0 and not a random value
-> > 
-> > I suspect a hardware reset of those registers issued internally in the
-> > PCIe controller,
-> > I don't know why (it might be a link related event or power state
-> > related event).
-> > 
-> > I have also experienced very slow behavior with the PCI endpoint test driver,
-> > e.g., pcitest -w 1024 -d would take tens of seconds to complete. It seems to
-> > come from LCRC errors, when I check the "LCRC Error count register"
-> > @0xFD90'0214 I can see it drastically increase between two calls of pcitest
-> > (when I mean drastically it means by 6607 (0x19CF) for example).
-> > 
-> > The "ECC Correctable Error Count Register" @0xFD90'0218 reads 0 though.
-> > 
-> > I have tried to shorten the cabling by removing one of the PCIe extenders, that
-> > didn't change the issues much.
-> > 
-> > Any ideas as to why I see a large number of TLPs with LCRC errors in them ?
-> > Do you experience the same ? What are your values in 0xFD90'0214 when
-> > running e.g., pcitest -w 1024 -d (note: you can reset the counter by writing
-> > 0xFFFF to it in case it reaches the maximum value of 0xFFFF).
-> 
-> I have not checked. But I will look at these counters to see what I have there.
 
-Hi,
+I talked to Vinod about the non-responsive maintainers and he suggested first
+demoting them as Reviewers instead of dropping altogether. So you can move
+Gustavo as a Reviewer.
 
-checking where are we with this thread and whether there is something to
-consider for v6.4, if testing succeeds.
+- Mani
 
-Thanks,
-Lorenzo
+> -Serge(y)
+> 
+> > 
+> > -- 
+> > ~Vinod
+
+-- 
+மணிவண்ணன் சதாசிவம்
