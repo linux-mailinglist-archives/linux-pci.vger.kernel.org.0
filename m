@@ -2,84 +2,79 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31F276E143D
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 20:40:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4571D6E1451
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 20:42:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjDMSkR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 14:40:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58224 "EHLO
+        id S229917AbjDMSmD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 14:42:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjDMSkQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 14:40:16 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 331B240FD;
-        Thu, 13 Apr 2023 11:40:15 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id cm23so7113246qtb.3;
-        Thu, 13 Apr 2023 11:40:15 -0700 (PDT)
+        with ESMTP id S229893AbjDMSmC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 14:42:02 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6E1E6A70
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 11:41:52 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id h24-20020a17090a9c1800b002404be7920aso16214851pjp.5
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 11:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681411214; x=1684003214;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rQtEpZle81hoaqTdpulwOdpw8KqXnAar/PVE+B9TICc=;
-        b=P474q5oP2LI987/DecEQ3/p0SMtL1fQBQYFgk1hLlcvQfcEkyPCwiuFQgKQJlJ8cv0
-         5RSQfJi4CHGciKswyoG/HMwMgJ1SnD9UG0/O/PZXmSvBnGFVniVUlFQhDN0mOpjLn3Xq
-         TFNkGhPUpB1JKX9bEzyx81ERg0NVLJGJ0q9LwENMjpqs0SB8Y+M5T+ZayRasX+2+62Bx
-         EKI7b/XXyjUDkQ2SazxkmzrgNIIePmygmmSiOMVk23108Qfzz8Jy6DtjDFwgvhA4DVGp
-         mOUvp5WnEzyh0hyRfkCSsVTEtQ3W46F3I8Nj3xReqXRyp/KCLnImi658/TiORcHtHbmL
-         gQDQ==
+        d=linaro.org; s=google; t=1681411312; x=1684003312;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fP9X5OZI8qjcqvkXrZIFhyIDYB5ROevv5mssI8++2jA=;
+        b=MSJt8yJO28b1UJde8A4ss22XFIQd3l0Aol+2XKkmS/AsvRQCeynAwxy4NcB64Wm5Fw
+         RSYVGCV+yj76SmHow12XilUH90JXoL4pKaEDr7IadAfjmTRGHlIUstWox5OutVLjBIJX
+         SU3ftqiqrDjeg4LZX2UWri2CxRBIT4bJwfB+zjxDZpUQnj9/9P9baMpyBFnwXZy+B8np
+         aSIpnKWUa2LYB4x/pR/VXtnvkJcaBeoeNb6lY8ihPtBacJpOxBBN8YV70+ADGH6at8Eq
+         nNWNV06Tz3mMZjaxYKY2rg/BTSaPtLOrgPzbxToEko/bCFjARuDUAOnx8iokmiR+HuCL
+         XwVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681411214; x=1684003214;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1681411312; x=1684003312;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rQtEpZle81hoaqTdpulwOdpw8KqXnAar/PVE+B9TICc=;
-        b=hrmJKC4hykmzuWcIemENb1jn4Arq3w5837iokm93plTxH8G8ptb1PQHMMIJK3dw0Ly
-         YEXeUH7NMm7DWfYaMFU9axG7C33yzqCbqcXAl/QEoZLRKw/0ex60oHOiy2aEyqsrZniz
-         4di0RYkVNstOw0KOFhWCFylL1eFr+8iJo7tZvBZAXlwsx0ZnuNawyIfDbblXZJSWhfmu
-         1owAZaDg48vrD0lM3CAQXLZWTk0ehP3P8cqV12Y1J5zvw5ZXt28Csdr+iZSImxEDlNz9
-         2CkvGzJkquVDJgBenSPN+NCgYcPgygu2njjI1B8stlc67BwmZ/t3B3XsvJDo1ZgzIvrr
-         jqpQ==
-X-Gm-Message-State: AAQBX9f5cReqsZCJFfCJt7Kw5cTFl4bwNCUkpuNYI/zw+jpiOwSOyr0I
-        MBBkURBiEo7vXMI2yqD+fnQ=
-X-Google-Smtp-Source: AKy350YwqLvGxuXkbQqYKS2m5/KfU0SKlQOgBQRBuWiZ05fsd0xL8BIuH7TjtWiwcrVwrdcZm5ozVw==
-X-Received: by 2002:ac8:5b87:0:b0:3ea:1206:b812 with SMTP id a7-20020ac85b87000000b003ea1206b812mr3703163qta.38.1681411214235;
-        Thu, 13 Apr 2023 11:40:14 -0700 (PDT)
-Received: from [10.67.48.245] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id h18-20020a05620a285200b007425ef4cbc2sm654336qkp.100.2023.04.13.11.40.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 13 Apr 2023 11:40:13 -0700 (PDT)
-Message-ID: <d53c10d6-6a9c-c941-a7ff-70d4b4172960@gmail.com>
-Date:   Thu, 13 Apr 2023 11:40:11 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 0/3] PCI: brcmstb: CLKREQ# accomodations of downstream
- device
-Content-Language: en-US
-To:     Jim Quinlan <jim2101024@gmail.com>, linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        bh=fP9X5OZI8qjcqvkXrZIFhyIDYB5ROevv5mssI8++2jA=;
+        b=T+zS8K9H2FsERaowVxvDHOGju+koAhG/DcL04mL7T/7EG8kBK/XNj6qkylypATxLjG
+         BBde+KVGLD4KYanfWCffArjnFX97Qgrkmntb5wmU9gLDgUVAZgEMr+6Plbr2SvvfV3or
+         ZWJR+Al0eTlxLC9gHySHkUf5qmPvgtdf5YqpH1Qidu+n8i2xIM+s5NXlbRBcMOrewoYi
+         uoY5vKcnOopctLa+AXKSE01Xfg79dS3sb6pgmfhHqtjiuv2x8EOcRVEXHgYr4HOvVO+p
+         9cv/PI8pfH7MMCY/AEF1K3W+dqoUEQgPR/XI0FGYe/j1v+oBrbmCCFrLDlmKsXQm321P
+         cbCQ==
+X-Gm-Message-State: AAQBX9cZJVwaBxhIiwcAO2vdHdzky9elSxuDNW3kpF6aoGsOpjnBxaVL
+        0eq9n97dZk08ZP3JlIhlsxoi
+X-Google-Smtp-Source: AKy350YheU8dciKzG8kpPYaTvqnEZX2Ljccz95q1nhhOfOr/VPdj70vPVT01sEpJSR5TWPNtOwteuw==
+X-Received: by 2002:a05:6a20:be2f:b0:e7:568e:73d with SMTP id ge47-20020a056a20be2f00b000e7568e073dmr2844392pzb.56.1681411312123;
+        Thu, 13 Apr 2023 11:41:52 -0700 (PDT)
+Received: from thinkpad ([59.97.52.67])
+        by smtp.gmail.com with ESMTPSA id 11-20020a630c4b000000b0050927cb606asm1631076pgm.13.2023.04.13.11.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 11:41:51 -0700 (PDT)
+Date:   Fri, 14 Apr 2023 00:11:46 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     fancer.lancer@gmail.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cyril Brulebois <kibi@debian.org>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        Rob Herring <robh@kernel.org>
-References: <20230411165919.23955-1-jim2101024@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-In-Reply-To: <20230411165919.23955-1-jim2101024@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH RESEND v9 3/4] dmaengine: dw-edma: Add support for native
+ HDMA
+Message-ID: <20230413184146.GE13020@thinkpad>
+References: <20230413033156.93751-1-cai.huoqing@linux.dev>
+ <20230413033156.93751-4-cai.huoqing@linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230413033156.93751-4-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,93 +82,565 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/11/23 09:59, Jim Quinlan wrote:
-> v2 -- Changed binding property 'brcm,completion-timeout-msec' to
->        'brcm,completion-timeout-us'.  (StefanW for standard suffix).
->     -- Warn when clamping timeout value, and include clamped
->        region in message. Also add min and max in YAML. (StefanW)
->     -- Qualify description of "brcm,completion-timeout-us" so that
->        it refers to PCIe transactions. (StefanW)
->     -- Remvove mention of Linux specifics in binding description. (StefanW)
->     -- s/clkreq#/CLKREQ#/g (Bjorn)
->     -- Refactor completion-timeout-us code to compare max and min to
->        value given by the property (as opposed to the computed value).
+On Thu, Apr 13, 2023 at 11:31:54AM +0800, Cai Huoqing wrote:
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
 > 
-> v1 -- The current driver assumes the downstream devices can
->        provide CLKREQ# for ASPM.  These commits accomodate devices
->        w/ or w/o clkreq# and also handle L1SS-capable devices.
+> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+> And the native HDMA registers are different from eDMA, so this patch
+> add support for HDMA NATIVE mode.
 > 
->     -- The Raspian Linux folks have already been using a PCIe RC
->        property "brcm,enable-l1ss".  These commits use the same
->        property, in a backward-compatible manner, and the implementaion
->        adds more detail and also automatically identifies devices w/o
->        a clkreq# signal, i.e. most devices plugged into an RPi CM4
->        IO board.
+> HDMA write and read channels operate independently to maximize
+> the performance of the HDMA read and write data transfer over
+> the link When you configure the HDMA with multiple read channels,
+> then it uses a round robin (RR) arbitration scheme to select
+> the next read channel to be serviced.The same applies when you
+> have multiple write channels.
 > 
-> Jim Quinlan (3):
->    PCI: brcmstb: CLKREQ# accomodations of downstream device
->    PCI: brcmstb: Set PCIe transaction completion timeout
->    blah blah
+> The native HDMA driver also supports a maximum of 16 independent
+> channels (8 write + 8 read), which can run simultaneously.
+> Both SAR (Source Address Register) and DAR (Destination Address Register)
+> are aligned to byte.
+> 
+> Signed-off-by: Cai Huoqing <cai.huoqing@linux.dev>
 
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-On a 7216 system test with:
+- Mani
 
-01:00.0 Network controller: Intel Corporation Wireless 7260 (rev 73)
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+> v8->v9:
+>   1.Drop an empty line.
+> 
+> v8 link:
+>   https://lore.kernel.org/lkml/20230323034944.78357-4-cai.huoqing@linux.dev/
+> 
+>  drivers/dma/dw-edma/Makefile          |   5 +-
+>  drivers/dma/dw-edma/dw-edma-core.c    |   6 +-
+>  drivers/dma/dw-edma/dw-hdma-v0-core.c | 294 ++++++++++++++++++++++++++
+>  drivers/dma/dw-edma/dw-hdma-v0-core.h |  17 ++
+>  drivers/dma/dw-edma/dw-hdma-v0-regs.h | 129 +++++++++++
+>  include/linux/dma/edma.h              |   3 +-
+>  6 files changed, 450 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+>  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> 
+> diff --git a/drivers/dma/dw-edma/Makefile b/drivers/dma/dw-edma/Makefile
+> index 8d45c0d5689d..b1c91ef2c63d 100644
+> --- a/drivers/dma/dw-edma/Makefile
+> +++ b/drivers/dma/dw-edma/Makefile
+> @@ -2,6 +2,7 @@
+>  
+>  obj-$(CONFIG_DW_EDMA)		+= dw-edma.o
+>  dw-edma-$(CONFIG_DEBUG_FS)	:= dw-edma-v0-debugfs.o
+> -dw-edma-objs			:= dw-edma-core.o \
+> -					dw-edma-v0-core.o $(dw-edma-y)
+> +dw-edma-objs			:= dw-edma-core.o	\
+> +				   dw-edma-v0-core.o	\
+> +				   dw-hdma-v0-core.o $(dw-edma-y)
+>  obj-$(CONFIG_DW_EDMA_PCIE)	+= dw-edma-pcie.o
+> diff --git a/drivers/dma/dw-edma/dw-edma-core.c b/drivers/dma/dw-edma/dw-edma-core.c
+> index f916f0d84bd6..61a6719d9d4e 100644
+> --- a/drivers/dma/dw-edma/dw-edma-core.c
+> +++ b/drivers/dma/dw-edma/dw-edma-core.c
+> @@ -18,6 +18,7 @@
+>  
+>  #include "dw-edma-core.h"
+>  #include "dw-edma-v0-core.h"
+> +#include "dw-hdma-v0-core.h"
+>  #include "../dmaengine.h"
+>  #include "../virt-dma.h"
+>  
+> @@ -917,7 +918,10 @@ int dw_edma_probe(struct dw_edma_chip *chip)
+>  
+>  	dw->chip = chip;
+>  
+> -	dw_edma_v0_core_register(dw);
+> +	if (dw->chip->mf == EDMA_MF_HDMA_NATIVE)
+> +		dw_hdma_v0_core_register(dw);
+> +	else
+> +		dw_edma_v0_core_register(dw);
+>  
+>  	raw_spin_lock_init(&dw->lock);
+>  
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.c b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> new file mode 100644
+> index 000000000000..22b7b0410deb
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.c
+> @@ -0,0 +1,294 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 core
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/io-64-nonatomic-lo-hi.h>
+> +
+> +#include "dw-edma-core.h"
+> +#include "dw-hdma-v0-core.h"
+> +#include "dw-hdma-v0-regs.h"
+> +
+> +enum dw_hdma_control {
+> +	DW_HDMA_V0_CB					= BIT(0),
+> +	DW_HDMA_V0_TCB					= BIT(1),
+> +	DW_HDMA_V0_LLP					= BIT(2),
+> +	DW_HDMA_V0_LIE					= BIT(3),
+> +	DW_HDMA_V0_RIE					= BIT(4),
+> +	DW_HDMA_V0_CCS					= BIT(8),
+> +	DW_HDMA_V0_LLE					= BIT(9),
+> +};
+> +
+> +static inline struct dw_hdma_v0_regs __iomem *__dw_regs(struct dw_edma *dw)
+> +{
+> +	return dw->chip->reg_base;
+> +}
+> +
+> +static inline struct dw_hdma_v0_ch_regs __iomem *
+> +__dw_ch_regs(struct dw_edma *dw, enum dw_edma_dir dir, u16 ch)
+> +{
+> +	if (dir == EDMA_DIR_WRITE)
+> +		return &(__dw_regs(dw)->ch[ch].wr);
+> +	else
+> +		return &(__dw_regs(dw)->ch[ch].rd);
+> +}
+> +
+> +#define SET_CH_32(dw, dir, ch, name, value) \
+> +	writel(value, &(__dw_ch_regs(dw, dir, ch)->name))
+> +
+> +#define GET_CH_32(dw, dir, ch, name) \
+> +	readl(&(__dw_ch_regs(dw, dir, ch)->name))
+> +
+> +#define SET_BOTH_CH_32(dw, ch, name, value) \
+> +	do {					\
+> +		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_WRITE, ch)->name));	\
+> +		writel(value, &(__dw_ch_regs(dw, EDMA_DIR_READ, ch)->name));	\
+> +	} while (0)
+> +
+> +/* HDMA management callbacks */
+> +static void dw_hdma_v0_core_off(struct dw_edma *dw)
+> +{
+> +	int id;
+> +
+> +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> +		SET_BOTH_CH_32(dw, id, int_setup,
+> +			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_BOTH_CH_32(dw, id, int_clear,
+> +			       HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK);
+> +		SET_BOTH_CH_32(dw, id, ch_en, 0);
+> +	}
+> +}
+> +
+> +static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+> +{
+> +	u32 num_ch = 0;
+> +	int id;
+> +
+> +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> +		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+> +			num_ch++;
+> +	}
+> +
+> +	if (num_ch > HDMA_V0_MAX_NR_CH)
+> +		num_ch = HDMA_V0_MAX_NR_CH;
+> +
+> +	return (u16)num_ch;
+> +}
+> +
+> +static enum dma_status dw_hdma_v0_core_ch_status(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +	u32 tmp;
+> +
+> +	tmp = FIELD_GET(HDMA_V0_CH_STATUS_MASK,
+> +			GET_CH_32(dw, chan->id, chan->dir, ch_stat));
+> +
+> +	if (tmp == 1)
+> +		return DMA_IN_PROGRESS;
+> +	else if (tmp == 3)
+> +		return DMA_COMPLETE;
+> +	else
+> +		return DMA_ERROR;
+> +}
+> +
+> +static void dw_hdma_v0_core_clear_done_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_STOP_INT_MASK);
+> +}
+> +
+> +static void dw_hdma_v0_core_clear_abort_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	SET_CH_32(dw, chan->dir, chan->id, int_clear, HDMA_V0_ABORT_INT_MASK);
+> +}
+> +
+> +static u32 dw_hdma_v0_core_status_int(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	return GET_CH_32(dw, chan->dir, chan->id, int_stat);
+> +}
+> +
+> +static irqreturn_t
+> +dw_hdma_v0_core_handle_int(struct dw_edma_irq *dw_irq, enum dw_edma_dir dir,
+> +			   dw_edma_handler_t done, dw_edma_handler_t abort)
+> +{
+> +	struct dw_edma *dw = dw_irq->dw;
+> +	unsigned long total, pos, val;
+> +	irqreturn_t ret = IRQ_NONE;
+> +	struct dw_edma_chan *chan;
+> +	unsigned long off, mask;
+> +
+> +	if (dir == EDMA_DIR_WRITE) {
+> +		total = dw->wr_ch_cnt;
+> +		off = 0;
+> +		mask = dw_irq->wr_mask;
+> +	} else {
+> +		total = dw->rd_ch_cnt;
+> +		off = dw->wr_ch_cnt;
+> +		mask = dw_irq->rd_mask;
+> +	}
+> +
+> +	for_each_set_bit(pos, &mask, total) {
+> +		chan = &dw->chan[pos + off];
+> +
+> +		val = dw_hdma_v0_core_status_int(chan);
+> +		if (FIELD_GET(HDMA_V0_STOP_INT_MASK, val)) {
+> +			dw_hdma_v0_core_clear_done_int(chan);
+> +			done(chan);
+> +
+> +			ret = IRQ_HANDLED;
+> +		}
+> +
+> +		if (FIELD_GET(HDMA_V0_ABORT_INT_MASK, val)) {
+> +			dw_hdma_v0_core_clear_abort_int(chan);
+> +			abort(chan);
+> +
+> +			ret = IRQ_HANDLED;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void dw_hdma_v0_write_ll_data(struct dw_edma_chunk *chunk, int i,
+> +				     u32 control, u32 size, u64 sar, u64 dar)
+> +{
+> +	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
+> +
+> +	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		struct dw_hdma_v0_lli *lli = chunk->ll_region.vaddr.mem + ofs;
+> +
+> +		lli->control = control;
+> +		lli->transfer_size = size;
+> +		lli->sar.reg = sar;
+> +		lli->dar.reg = dar;
+> +	} else {
+> +		struct dw_hdma_v0_lli __iomem *lli = chunk->ll_region.vaddr.io + ofs;
+> +
+> +		writel(control, &lli->control);
+> +		writel(size, &lli->transfer_size);
+> +		writeq(sar, &lli->sar.reg);
+> +		writeq(dar, &lli->dar.reg);
+> +	}
+> +}
+> +
+> +static void dw_hdma_v0_write_ll_link(struct dw_edma_chunk *chunk,
+> +				     int i, u32 control, u64 pointer)
+> +{
+> +	ptrdiff_t ofs = i * sizeof(struct dw_hdma_v0_lli);
+> +
+> +	if (chunk->chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL) {
+> +		struct dw_hdma_v0_llp *llp = chunk->ll_region.vaddr.mem + ofs;
+> +
+> +		llp->control = control;
+> +		llp->llp.reg = pointer;
+> +	} else {
+> +		struct dw_hdma_v0_llp __iomem *llp = chunk->ll_region.vaddr.io + ofs;
+> +
+> +		writel(control, &llp->control);
+> +		writeq(pointer, &llp->llp.reg);
+> +	}
+> +}
+> +
+> +static void dw_hdma_v0_core_write_chunk(struct dw_edma_chunk *chunk)
+> +{
+> +	struct dw_edma_burst *child;
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	u32 control = 0, i = 0;
+> +	int j;
+> +
+> +	if (chunk->cb)
+> +		control = DW_HDMA_V0_CB;
+> +
+> +	j = chunk->bursts_alloc;
+> +	list_for_each_entry(child, &chunk->burst->list, list) {
+> +		j--;
+> +		if (!j) {
+> +			control |= DW_HDMA_V0_LIE;
+> +			if (!(chan->dw->chip->flags & DW_EDMA_CHIP_LOCAL))
+> +				control |= DW_HDMA_V0_RIE;
+> +		}
+> +
+> +		dw_hdma_v0_write_ll_data(chunk, i++, control, child->sz,
+> +					 child->sar, child->dar);
+> +	}
+> +
+> +	control = DW_HDMA_V0_LLP | DW_HDMA_V0_TCB;
+> +	if (!chunk->cb)
+> +		control |= DW_HDMA_V0_CB;
+> +
+> +	dw_hdma_v0_write_ll_link(chunk, i, control, chunk->ll_region.paddr);
+> +}
+> +
+> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	struct dw_edma *dw = chan->dw;
+> +	u32 tmp;
+> +
+> +	dw_hdma_v0_core_write_chunk(chunk);
+> +
+> +	if (first) {
+> +		/* Enable engine */
+> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> +		/* Interrupt enable&unmask - done, abort */
+> +		tmp = GET_CH_32(dw, chan->dir, chan->id, int_setup) |
+> +		      HDMA_V0_STOP_INT_MASK | HDMA_V0_ABORT_INT_MASK |
+> +		      HDMA_V0_LOCAL_STOP_INT_EN | HDMA_V0_LOCAL_STOP_INT_EN;
+> +		SET_CH_32(dw, chan->dir, chan->id, int_setup, tmp);
+> +		/* Channel control */
+> +		SET_CH_32(dw, chan->dir, chan->id, control1, HDMA_V0_LINKLIST_EN);
+> +		/* Linked list */
+> +		/* llp is not aligned on 64bit -> keep 32bit accesses */
+> +		SET_CH_32(dw, chan->dir, chan->id, llp.lsb,
+> +			  lower_32_bits(chunk->ll_region.paddr));
+> +		SET_CH_32(dw, chan->dir, chan->id, llp.msb,
+> +			  upper_32_bits(chunk->ll_region.paddr));
+> +	}
+> +	/* Set consumer cycle */
+> +	SET_CH_32(dw, chan->dir, chan->id, cycle_sync,
+> +		  HDMA_V0_CONSUMER_CYCLE_STAT | HDMA_V0_CONSUMER_CYCLE_BIT);
+> +	/* Doorbell */
+> +	SET_CH_32(dw, chan->dir, chan->id, doorbell, HDMA_V0_DOORBELL_START);
+> +}
+> +
+> +static void dw_hdma_v0_core_ch_config(struct dw_edma_chan *chan)
+> +{
+> +	struct dw_edma *dw = chan->dw;
+> +
+> +	/* MSI done addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_stop.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_stop.msb, chan->msi.address_hi);
+> +	/* MSI abort addr - low, high */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_abort.lsb, chan->msi.address_lo);
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_abort.msb, chan->msi.address_hi);
+> +	/* config MSI data */
+> +	SET_CH_32(dw, chan->dir, chan->id, msi_msgdata, chan->msi.data);
+> +}
+> +
+> +/* HDMA debugfs callbacks */
+> +static void dw_hdma_v0_core_debugfs_on(struct dw_edma *dw)
+> +{
+> +}
+> +
+> +static const struct dw_edma_core_ops dw_hdma_v0_core = {
+> +	.off = dw_hdma_v0_core_off,
+> +	.ch_count = dw_hdma_v0_core_ch_count,
+> +	.ch_status = dw_hdma_v0_core_ch_status,
+> +	.handle_int = dw_hdma_v0_core_handle_int,
+> +	.start = dw_hdma_v0_core_start,
+> +	.ch_config = dw_hdma_v0_core_ch_config,
+> +	.debugfs_on = dw_hdma_v0_core_debugfs_on,
+> +};
+> +
+> +void dw_hdma_v0_core_register(struct dw_edma *dw)
+> +{
+> +	dw->core = &dw_hdma_v0_core;
+> +}
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-core.h b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+> new file mode 100644
+> index 000000000000..c373b4f0bd8a
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-core.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 core
+> + *
+> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
+> + */
+> +
+> +#ifndef _DW_HDMA_V0_CORE_H
+> +#define _DW_HDMA_V0_CORE_H
+> +
+> +#include <linux/dma/edma.h>
+> +
+> +/* HDMA core register */
+> +void dw_hdma_v0_core_register(struct dw_edma *dw);
+> +
+> +#endif /* _DW_HDMA_V0_CORE_H */
+> diff --git a/drivers/dma/dw-edma/dw-hdma-v0-regs.h b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> new file mode 100644
+> index 000000000000..a974abdf8aaf
+> --- /dev/null
+> +++ b/drivers/dma/dw-edma/dw-hdma-v0-regs.h
+> @@ -0,0 +1,129 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2023 Cai Huoqing
+> + * Synopsys DesignWare HDMA v0 reg
+> + *
+> + * Author: Cai Huoqing <cai.huoqing@linux.dev>
+> + */
+> +
+> +#ifndef _DW_HDMA_V0_REGS_H
+> +#define _DW_HDMA_V0_REGS_H
+> +
+> +#include <linux/dmaengine.h>
+> +
+> +#define HDMA_V0_MAX_NR_CH			8
+> +#define HDMA_V0_LOCAL_ABORT_INT_EN		BIT(6)
+> +#define HDMA_V0_REMOTE_ABORT_INT_EN		BIT(5)
+> +#define HDMA_V0_LOCAL_STOP_INT_EN		BIT(4)
+> +#define HDMA_V0_REMOTEL_STOP_INT_EN		BIT(3)
+> +#define HDMA_V0_ABORT_INT_MASK			BIT(2)
+> +#define HDMA_V0_STOP_INT_MASK			BIT(0)
+> +#define HDMA_V0_LINKLIST_EN			BIT(0)
+> +#define HDMA_V0_CONSUMER_CYCLE_STAT		BIT(1)
+> +#define HDMA_V0_CONSUMER_CYCLE_BIT		BIT(0)
+> +#define HDMA_V0_DOORBELL_START			BIT(0)
+> +#define HDMA_V0_CH_STATUS_MASK			GENMASK(1, 0)
+> +
+> +struct dw_hdma_v0_ch_regs {
+> +	u32 ch_en;				/* 0x0000 */
+> +	u32 doorbell;				/* 0x0004 */
+> +	u32 prefetch;				/* 0x0008 */
+> +	u32 handshake;				/* 0x000c */
+> +	union {
+> +		u64 reg;			/* 0x0010..0x0014 */
+> +		struct {
+> +			u32 lsb;		/* 0x0010 */
+> +			u32 msb;		/* 0x0014 */
+> +		};
+> +	} llp;
+> +	u32 cycle_sync;				/* 0x0018 */
+> +	u32 transfer_size;			/* 0x001c */
+> +	union {
+> +		u64 reg;			/* 0x0020..0x0024 */
+> +		struct {
+> +			u32 lsb;		/* 0x0020 */
+> +			u32 msb;		/* 0x0024 */
+> +		};
+> +	} sar;
+> +	union {
+> +		u64 reg;			/* 0x0028..0x002c */
+> +		struct {
+> +			u32 lsb;		/* 0x0028 */
+> +			u32 msb;		/* 0x002c */
+> +		};
+> +	} dar;
+> +	u32 watermark_en;			/* 0x0030 */
+> +	u32 control1;				/* 0x0034 */
+> +	u32 func_num;				/* 0x0038 */
+> +	u32 qos;				/* 0x003c */
+> +	u32 padding_1[16];			/* 0x0040..0x007c */
+> +	u32 ch_stat;				/* 0x0080 */
+> +	u32 int_stat;				/* 0x0084 */
+> +	u32 int_setup;				/* 0x0088 */
+> +	u32 int_clear;				/* 0x008c */
+> +	union {
+> +		u64 reg;			/* 0x0090..0x0094 */
+> +		struct {
+> +			u32 lsb;		/* 0x0090 */
+> +			u32 msb;		/* 0x0094 */
+> +		};
+> +	} msi_stop;
+> +	union {
+> +		u64 reg;			/* 0x0098..0x009c */
+> +		struct {
+> +			u32 lsb;		/* 0x0098 */
+> +			u32 msb;		/* 0x009c */
+> +		};
+> +	} msi_watermark;
+> +	union {
+> +		u64 reg;			/* 0x00a0..0x00a4 */
+> +		struct {
+> +			u32 lsb;		/* 0x00a0 */
+> +			u32 msb;		/* 0x00a4 */
+> +		};
+> +	} msi_abort;
+> +	u32 msi_msgdata;			/* 0x00a8 */
+> +	u32 padding_2[21];			/* 0x00ac..0x00fc */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_ch {
+> +	struct dw_hdma_v0_ch_regs wr;		/* 0x0000 */
+> +	struct dw_hdma_v0_ch_regs rd;		/* 0x0100 */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_regs {
+> +	struct dw_hdma_v0_ch ch[HDMA_V0_MAX_NR_CH];	/* 0x0000..0x0fa8 */
+> +} __packed;
+> +
+> +struct dw_hdma_v0_lli {
+> +	u32 control;
+> +	u32 transfer_size;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} sar;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} dar;
+> +} __packed;
+> +
+> +struct dw_hdma_v0_llp {
+> +	u32 control;
+> +	u32 reserved;
+> +	union {
+> +		u64 reg;
+> +		struct {
+> +			u32 lsb;
+> +			u32 msb;
+> +		};
+> +	} llp;
+> +} __packed;
+> +
+> +#endif /* _DW_HDMA_V0_REGS_H */
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index ed401c965a87..3080747689f6 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -48,7 +48,8 @@ struct dw_edma_plat_ops {
+>  enum dw_edma_map_format {
+>  	EDMA_MF_EDMA_LEGACY = 0x0,
+>  	EDMA_MF_EDMA_UNROLL = 0x1,
+> -	EDMA_MF_HDMA_COMPAT = 0x5
+> +	EDMA_MF_HDMA_COMPAT = 0x5,
+> +	EDMA_MF_HDMA_NATIVE = 0x7,
+>  };
+>  
+>  /**
+> -- 
+> 2.34.1
+> 
 
-and on the CM4 I/O board with:
-
-01:00.0 Network controller: Intel Corporation Wireless 7260 (rev 73)
-
-01:00.0 Ethernet controller: Intel Corporation 82574L Gigabit Network 
-Connection
-
-01:00.0 Network controller: Broadcom Inc. and subsidiaries BCM43224 
-802.11a/b/g/n (rev 01)
-
-01:00.0 SATA controller: Marvell Technology Group Ltd. 88SE9125 PCIe 
-SATA 6.0 Gb/s controller (rev 11) (prog-if 01 [AHCI 1.0])
-
-01:00.0 Ethernet controller: Broadcom Inc. and subsidiaries NetXtreme 
-BCM5751 Gigabit Ethernet PCI Express (rev 21)
-
-01:00.0 PCI bridge: PLX Technology, Inc. PEX8112 x1 Lane PCI 
-Express-to-PCI Bridge (rev aa)
-02:00.0 Multiport serial controller: Pepperl+Fuchs RocketPort EXPRESS 
-8-port w/Octa Cable
-
-01:00.0 Ethernet controller: Qualcomm Atheros AR5008 Wireless Network 
-Adapter (rev 01)
-
-01:00.0 Network controller: Broadcom Inc. and subsidiaries BCM4311 
-802.11a/b/g (rev 01)
-
-01:00.0 Network controller: Broadcom Inc. and subsidiaries BCM4322 
-802.11a/b/g/n Wireless LAN Controller (rev 01)
-
-01:00.0 Network controller: Broadcom Inc. and subsidiaries BCM43602 
-802.11ac Wireless LAN SoC (rev 01)
-
-and finally with a 4 port switch:
-
--[0000:00]---00.0-[01-07]----00.0-[02-07]--+-01.0-[03]----00.0  Intel 
-Corporation 82574L Gigabit Network Connection
- 
-+-03.0-[04-05]----00.0-[05]----00.0  Pepperl+Fuchs RocketPort EXPRESS 
-8-port w/Octa Cable
-                                            +-05.0-[06]----00.0 
-Broadcom Inc. and subsidiaries NetXtreme BCM5751 Gigabit Ethernet PCI 
-Express
-                                            \-07.0-[07]----00.0  Intel 
-Corporation 82574L Gigabit Network Connection
-
-And than I ran out of devices that I could plug, the others were x4, x8 
-or x16.
-
-Most (all?) would previously fail, so definitively an improvement!
-
-Thanks!
 -- 
--- 
-Florian
-
+மணிவண்ணன் சதாசிவம்
