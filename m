@@ -2,261 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C0626E1320
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 19:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4BF56E1400
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 20:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230003AbjDMRFR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 13:05:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37624 "EHLO
+        id S229786AbjDMSXE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 14:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjDMRFO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 13:05:14 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E708A5E4;
-        Thu, 13 Apr 2023 10:05:12 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Py5XC1KD8z67Qj6;
-        Fri, 14 Apr 2023 01:04:11 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 13 Apr
- 2023 18:05:09 +0100
-Date:   Thu, 13 Apr 2023 18:05:08 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Robert Richter <rrichter@amd.com>
-CC:     Bjorn Helgaas <helgaas@kernel.org>,
-        Terry Bowman <terry.bowman@amd.com>,
-        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
-        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
-        <linux-cxl@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH v3 6/6] PCI/AER: Unmask RCEC internal errors to enable
- RCH downstream port error handling
-Message-ID: <20230413180508.00003f13@Huawei.com>
-In-Reply-To: <ZDgFv6AtCXkVl8IQ@rric.localdomain>
-References: <20230411180302.2678736-7-terry.bowman@amd.com>
-        <20230412212901.GA81099@bhelgaas>
-        <ZDgFv6AtCXkVl8IQ@rric.localdomain>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S229561AbjDMSXD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 14:23:03 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6288EE6F
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 11:23:02 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id h24-20020a17090a9c1800b002404be7920aso16155952pjp.5
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 11:23:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1681410182; x=1684002182;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=OZj7tX+onZ/w5nFTENrEQRRNbI5goS/EOTtR1AnrQuk=;
+        b=IvpeFWDPyAYXw5U9oh9b5vu7vcniXgjJddv7WuZKVPBhIU/UmNtY0Pcp0PAU6cHhlT
+         W+F4P0pEgsiO9HO13LoBEThwGSODTeJaIcBlztIzFjcGG2dgeGd3wg1E8RmdYCqqjWGu
+         0bMTQNX8zsGvGSMtcEiJ7YVwHumxFQJsfSPwdJOOgTVbkQp6RvFoMUZSnBL/Af+q0mcm
+         WWc58j/b0kHk3pwxzFpQUwopFHi2sYCvSyHpWeweHDCAzX7J5rQ2rHiAsUeFDfCgkUWY
+         pPGnNcqAe56trAnIbfXY/cBcgl1ICBViGAHNvQFATNmeuJk76uv7UyLty9L7uwkiCjMD
+         objw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681410182; x=1684002182;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OZj7tX+onZ/w5nFTENrEQRRNbI5goS/EOTtR1AnrQuk=;
+        b=Brw9wSESupXRqK6aRMqkxsJSds0uAV14c49U61pY97lQyWulJTd7Na4P4Wpf+kleUx
+         QoaB/4sPzPuy2EX6bES66pn+jGp/eTEEI/tg861mlEaO01X92fMG34U6VByZUuQuMwQa
+         0PKnea6LoKSBBDfxu2zAwtVGefhZ3uWYPsNQKAiN5+eIBX7sF2o2odAZYiJPuk39TY0O
+         GQtUwxUWrUviktdKKqsQIIpuXhqbjJRIUaAqaDuLRjxkNenrPqp/WcveMJ3SrqeIsy8I
+         lbAXO+nGY6jrtKNoT3ugYJYyzOrxbW11FTmbEYLRct0ZZhXOLryFRux188SV1PWXp3JA
+         0m1A==
+X-Gm-Message-State: AAQBX9djU4p2RUgCFWxr8FJKBTD097gh102IY3vldDasupasqmPBqywe
+        Ga0QKpRxl3r/mwyu0ojiNbtq
+X-Google-Smtp-Source: AKy350bDgqFxFtDm/UYrBjWPXPFIoSejizDZ+SCphLAKf+eInascLk6MVjodPl8Pk7sr9Mn/UIWw6Q==
+X-Received: by 2002:a17:903:22d0:b0:19e:b2ed:6fff with SMTP id y16-20020a17090322d000b0019eb2ed6fffmr3195821plg.31.1681410181764;
+        Thu, 13 Apr 2023 11:23:01 -0700 (PDT)
+Received: from thinkpad ([59.97.52.67])
+        by smtp.gmail.com with ESMTPSA id 20-20020a170902ee5400b001a19bac463fsm1783106plo.42.2023.04.13.11.22.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Apr 2023 11:23:01 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 23:52:54 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     fancer.lancer@gmail.com,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH RESEND v9 1/4] dmaengine: dw-edma: Rename
+ dw_edma_core_ops structure to dw_edma_plat_ops
+Message-ID: <20230413182254.GC13020@thinkpad>
+References: <20230413033156.93751-1-cai.huoqing@linux.dev>
+ <20230413033156.93751-2-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230413033156.93751-2-cai.huoqing@linux.dev>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 13 Apr 2023 15:38:07 +0200
-Robert Richter <rrichter@amd.com> wrote:
+On Thu, Apr 13, 2023 at 11:31:52AM +0800, Cai Huoqing wrote:
+> From: Cai huoqing <cai.huoqing@linux.dev>
+> 
+> The dw_edma_core_ops structure contains a set of the operations:
+> device IRQ numbers getter, CPU/PCI address translation. Based on the
+> functions semantics the structure name "dw_edma_plat_ops" looks more
+> descriptive since indeed the operations are platform-specific. The
+> "dw_edma_core_ops" name shall be used for a structure with the IP-core
+> specific set of callbacks in order to abstract out DW eDMA and DW HDMA
+> setups. Such structure will be added in one of the next commit in the
+> framework of the set of changes adding the DW HDMA device support.
+> 
+> Anyway the renaming was necessary to distinguish two types of
+> the implementation callbacks:
+> 1. DW eDMA/hDMA IP-core specific operations: device-specific CSR
+> setups in one or another aspect of the DMA-engine initialization.
+> 2. DW eDMA/hDMA platform specific operations: the DMA device
+> environment configs like IRQs, address translation, etc.
+> 
+> Signed-off-by: Cai huoqing <cai.huoqing@linux.dev>
+> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-> On 12.04.23 16:29:01, Bjorn Helgaas wrote:
-> > On Tue, Apr 11, 2023 at 01:03:02PM -0500, Terry Bowman wrote:  
-> > > From: Robert Richter <rrichter@amd.com>
-> > > 
-> > > RCEC AER corrected and uncorrectable internal errors (CIE/UIE) are
-> > > disabled by default.  
-> > 
-> > "Disabled by default" just means "the power-up state of CIE/UIC is
-> > that they are masked", right?  It doesn't mean that Linux normally
-> > masks them.  
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+
+- Mani
+
+> ---
+> v8->v9: No change
 > 
-> Yes, will change the wording here.
+> v8 link:
+>   https://lore.kernel.org/lkml/20230323034944.78357-2-cai.huoqing@linux.dev/
 > 
-> > > [1][2] Enable them to receive CXL downstream port
-> > > errors of a Restricted CXL Host (RCH).
-> > > 
-> > > [1] CXL 3.0 Spec, 12.2.1.1 - RCH Downstream Port Detected Errors
-> > > [2] PCIe Base Spec 6.0, 7.8.4.3 Uncorrectable Error Mask Register,
-> > >     7.8.4.6 Correctable Error Mask Register
-> > > 
-> > > Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> > > Signed-off-by: Robert Richter <rrichter@amd.com>
-> > > Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> > > Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> > > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > > Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-> > > Cc: linuxppc-dev@lists.ozlabs.org
-> > > Cc: linux-pci@vger.kernel.org
-> > > ---
-> > >  drivers/pci/pcie/aer.c | 73 ++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 73 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > > index 171a08fd8ebd..3973c731e11d 100644
-> > > --- a/drivers/pci/pcie/aer.c
-> > > +++ b/drivers/pci/pcie/aer.c
-> > > @@ -1000,7 +1000,79 @@ static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> > >  		pcie_walk_rcec(dev, cxl_handle_error_iter, info);
-> > >  }
-> > >  
-> > > +static bool cxl_error_is_native(struct pci_dev *dev)
-> > > +{
-> > > +	struct pci_host_bridge *host = pci_find_host_bridge(dev->bus);
-> > > +
-> > > +	if (pcie_ports_native)
-> > > +		return true;
-> > > +
-> > > +	return host->native_aer && host->native_cxl_error;
-> > > +}
-> > > +
-> > > +static int handles_cxl_error_iter(struct pci_dev *dev, void *data)
-> > > +{
-> > > +	int *handles_cxl = data;
-> > > +
-> > > +	*handles_cxl = is_cxl_mem_dev(dev) && cxl_error_is_native(dev);
-> > > +
-> > > +	return *handles_cxl;
-> > > +}
-> > > +
-> > > +static bool handles_cxl_errors(struct pci_dev *rcec)
-> > > +{
-> > > +	int handles_cxl = 0;
-> > > +
-> > > +	if (!rcec->aer_cap)
-> > > +		return false;
-> > > +
-> > > +	if (pci_pcie_type(rcec) == PCI_EXP_TYPE_RC_EC)
-> > > +		pcie_walk_rcec(rcec, handles_cxl_error_iter, &handles_cxl);
-> > > +
-> > > +	return !!handles_cxl;
-> > > +}
-> > > +
-> > > +static int __cxl_unmask_internal_errors(struct pci_dev *rcec)
-> > > +{
-> > > +	int aer, rc;
-> > > +	u32 mask;
-> > > +
-> > > +	/*
-> > > +	 * Internal errors are masked by default, unmask RCEC's here
-> > > +	 * PCI6.0 7.8.4.3 Uncorrectable Error Mask Register (Offset 08h)
-> > > +	 * PCI6.0 7.8.4.6 Correctable Error Mask Register (Offset 14h)
-> > > +	 */  
-> > 
-> > Unmasking internal errors doesn't have anything specific to do with
-> > CXL, so I don't think it should have "cxl" in the function name.
-> > Maybe something like "pci_aer_unmask_internal_errors()".  
+>  drivers/dma/dw-edma/dw-edma-pcie.c           | 4 ++--
+>  drivers/pci/controller/dwc/pcie-designware.c | 2 +-
+>  include/linux/dma/edma.h                     | 4 ++--
+>  3 files changed, 5 insertions(+), 5 deletions(-)
 > 
-> Since it is static I renamed it to aer_unmask_internal_errors() and
-> also moved it to the beginning of the #ifdef block for easier later
-> reuse.
-> 
-> > 
-> > This also has nothing special to do with RCECs, so I think we should
-> > refer to the device as "dev" as is typical in this file.  
-> 
-> Changed.
-> 
-> > 
-> > I think this needs to check pcie_aer_is_native() as is done by
-> > pci_aer_clear_nonfatal_status() and other functions that write the AER
-> > Capability.  
-> 
-> Also added the check to aer_unmask_internal_errors(). There was a
-> check for native_* in handles_cxl_errors() already, but only for the
-> pci devs of the RCEC. I added a check of the RCEC there too.
-> 
-> > 
-> > With the exception of this function, this patch looks like all CXL
-> > code that maybe could be with other CXL code.  Would require making
-> > pcie_walk_rcec() available outside drivers/pci, I guess.  
-> 
-> Even this is CXL code, it implements AER support and fits better here
-> around AER code. Export of pcie_walk_rcec() (and others?) is not the
-> main issue here. CXL drivers can come as modules and would need to
-> register a hook at the aer handler.  This would add even more
-> complexity here. In contrast, current solution just adds two functions
-> for enablement and handling which are empty stubs if code is disabled.
-> 
-> I could move that code to aer_cxl.c similar to aer_inject.c. Since the
-> CXL part is small compared to the remaining aer code I left it in
-> aer.c. Also, it is guarded by #ifdef which additionally encapsulates
-> it.
+> diff --git a/drivers/dma/dw-edma/dw-edma-pcie.c b/drivers/dma/dw-edma/dw-edma-pcie.c
+> index 2b40f2b44f5e..1c6043751dc9 100644
+> --- a/drivers/dma/dw-edma/dw-edma-pcie.c
+> +++ b/drivers/dma/dw-edma/dw-edma-pcie.c
+> @@ -109,7 +109,7 @@ static u64 dw_edma_pcie_address(struct device *dev, phys_addr_t cpu_addr)
+>  	return region.start;
+>  }
+>  
+> -static const struct dw_edma_core_ops dw_edma_pcie_core_ops = {
+> +static const struct dw_edma_plat_ops dw_edma_pcie_plat_ops = {
+>  	.irq_vector = dw_edma_pcie_irq_vector,
+>  	.pci_address = dw_edma_pcie_address,
+>  };
+> @@ -225,7 +225,7 @@ static int dw_edma_pcie_probe(struct pci_dev *pdev,
+>  
+>  	chip->mf = vsec_data.mf;
+>  	chip->nr_irqs = nr_irqs;
+> -	chip->ops = &dw_edma_pcie_core_ops;
+> +	chip->ops = &dw_edma_pcie_plat_ops;
+>  
+>  	chip->ll_wr_cnt = vsec_data.wr_ch_cnt;
+>  	chip->ll_rd_cnt = vsec_data.rd_ch_cnt;
+> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
+> index 8e33e6e59e68..1f2ee71da4da 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> @@ -828,7 +828,7 @@ static int dw_pcie_edma_irq_vector(struct device *dev, unsigned int nr)
+>  	return platform_get_irq_byname_optional(pdev, name);
+>  }
+>  
+> -static struct dw_edma_core_ops dw_pcie_edma_ops = {
+> +static struct dw_edma_plat_ops dw_pcie_edma_ops = {
+>  	.irq_vector = dw_pcie_edma_irq_vector,
+>  };
+>  
+> diff --git a/include/linux/dma/edma.h b/include/linux/dma/edma.h
+> index d2638d9259dc..ed401c965a87 100644
+> --- a/include/linux/dma/edma.h
+> +++ b/include/linux/dma/edma.h
+> @@ -40,7 +40,7 @@ struct dw_edma_region {
+>   *			iATU windows. That will be done by the controller
+>   *			automatically.
+>   */
+> -struct dw_edma_core_ops {
+> +struct dw_edma_plat_ops {
+>  	int (*irq_vector)(struct device *dev, unsigned int nr);
+>  	u64 (*pci_address)(struct device *dev, phys_addr_t cpu_addr);
+>  };
+> @@ -80,7 +80,7 @@ enum dw_edma_chip_flags {
+>  struct dw_edma_chip {
+>  	struct device		*dev;
+>  	int			nr_irqs;
+> -	const struct dw_edma_core_ops   *ops;
+> +	const struct dw_edma_plat_ops	*ops;
+>  	u32			flags;
+>  
+>  	void __iomem		*reg_base;
+> -- 
+> 2.34.1
 > 
 
-To throw another option in there (what Bjorn suggested IIRC for the more
-general case..) 
-
-Just enable internal errors always.  No need to know if they are CXL
-or something else.
-
-There will/might be fallout and it will be fun.
-
-Jonathan
-
-> >   
-> > > +	aer = rcec->aer_cap;
-> > > +	rc = pci_read_config_dword(rcec, aer + PCI_ERR_UNCOR_MASK, &mask);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +	mask &= ~PCI_ERR_UNC_INTN;
-> > > +	rc = pci_write_config_dword(rcec, aer + PCI_ERR_UNCOR_MASK, mask);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +
-> > > +	rc = pci_read_config_dword(rcec, aer + PCI_ERR_COR_MASK, &mask);
-> > > +	if (rc)
-> > > +		return rc;
-> > > +	mask &= ~PCI_ERR_COR_INTERNAL;
-> > > +	rc = pci_write_config_dword(rcec, aer + PCI_ERR_COR_MASK, mask);
-> > > +
-> > > +	return rc;
-> > > +}
-> > > +
-> > > +static void cxl_unmask_internal_errors(struct pci_dev *rcec)  
-> 
-> Also renaming this to cxl_enable_rcec() to more generalize the
-> function.
-> 
-> > > +{
-> > > +	if (!handles_cxl_errors(rcec))
-> > > +		return;
-> > > +
-> > > +	if (__cxl_unmask_internal_errors(rcec))
-> > > +		dev_err(&rcec->dev, "cxl: Failed to unmask internal errors");
-> > > +	else
-> > > +		dev_dbg(&rcec->dev, "cxl: Internal errors unmasked");  
-> 
-> I am going to change this to a pci_info() for alignment with other
-> messages around:
-> 
-> [   14.200265] pcieport 0000:40:00.3: PME: Signaling with IRQ 44
-> [   14.213925] pcieport 0000:40:00.3: AER: cxl: Internal errors unmasked
-> [   14.228413] pcieport 0000:40:00.3: AER: enabled with IRQ 44
-> 
-> Plus, using pci_err() instead of dev_err().
-> 
-> > > +}
-> > > +
-> > >  #else
-> > > +static inline void cxl_unmask_internal_errors(struct pci_dev *dev) { }
-> > >  static inline void cxl_handle_error(struct pci_dev *dev,
-> > >  				    struct aer_err_info *info) { }
-> > >  #endif
-> > > @@ -1397,6 +1469,7 @@ static int aer_probe(struct pcie_device *dev)
-> > >  		return status;
-> > >  	}
-> > >  
-> > > +	cxl_unmask_internal_errors(port);
-> > >  	aer_enable_rootport(rpc);
-> > >  	pci_info(port, "enabled with IRQ %d\n", dev->irq);
-> > >  	return 0;
-> > > -- 
-> > > 2.34.1
-> > >   
-> 
-> Thanks for review,
-> 
-> -Robert
-
+-- 
+மணிவண்ணன் சதாசிவம்
