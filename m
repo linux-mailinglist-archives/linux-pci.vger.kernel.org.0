@@ -2,279 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97D946E019F
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 00:02:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A3156E0376
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 03:05:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbjDLWCj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 18:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52830 "EHLO
+        id S229642AbjDMBFc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 21:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52942 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjDLWCh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 18:02:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EEFF59E1;
-        Wed, 12 Apr 2023 15:02:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B09E62CF0;
-        Wed, 12 Apr 2023 22:02:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F9ADC433D2;
-        Wed, 12 Apr 2023 22:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681336955;
-        bh=DW7xegFaolvGBJ2256BboSBdl8fEqguZRrLmrPW4TmI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hqh8QIOjLdcYMhEeayRe/x4dSNqv0nAJhYcaNWOdwmX09SoP2D1m+KhFUKRubudy0
-         0Nx2GLxTH4kjLmMTB527zhjFDr7pyfwW5C/K6uTT+0b5EeFp64vgTjle9IDGu3Fusq
-         jpBTRS4fpo0qnni2wFEQmvGNJS1Coav6iIWgHikwKvKoFjjH7LgK8LM/TH1dtxrcL4
-         R/QsXR3gHIr2A19pIvhm0fttAKndCcX1D968Q+bxwVDencpDJd0oLv3jRyPJQ58frS
-         53scneCqXonwVY4kNiBJheysykYMzIIcqPp6qdIO7PGTmb2YIYzfDy27GnCyYLNJ8d
-         +XKssHD0RqpCQ==
-Date:   Wed, 12 Apr 2023 17:02:33 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Terry Bowman <terry.bowman@amd.com>
-Cc:     alison.schofield@intel.com, vishal.l.verma@intel.com,
-        ira.weiny@intel.com, bwidawsk@kernel.org, dan.j.williams@intel.com,
-        dave.jiang@intel.com, Jonathan.Cameron@huawei.com,
-        linux-cxl@vger.kernel.org, rrichter@amd.com,
-        linux-kernel@vger.kernel.org, bhelgaas@google.com,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <20230412220233.GA83215@bhelgaas>
+        with ESMTP id S229441AbjDMBFb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 21:05:31 -0400
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED3334C2E;
+        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
+Received: by mail-wm1-f48.google.com with SMTP id j16so143455wms.0;
+        Wed, 12 Apr 2023 18:05:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681347929; x=1683939929;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UkmFhtjxWacnMCiO0oQv3pNqPctVfrO7QeMfZUAp/o=;
+        b=WXfUXfu106fH1coxexnbiajCnnD+MntT0bTDc9g/xygvsVK+fe2CfPs9wSradk9jgA
+         a5opeeGQL5MOGDvDVfi8pg7qZjrfo/nQZmlT8wXy0RDAVN+BiiZQhJY/T6Pxt4gCbvTT
+         85EVAtLdjCOlls9TsGTwUTt3KLdwzsbqkaQOGWAec2JTi+xZIkN33+Ldt+l+poSWu5gC
+         pJ+lTIWDnQGwnf0R1+vPOYigWHJy+A6RP5Q/nAauh5LhpmYAynkaNuRGIlozvtqyJu0o
+         RaxF7zhlf0PDVg86+m1sl1PQ1H4tqTooNUn3ZG0oLKvy1W1s/KqS5Am3sdQpHRG3SpBR
+         kSMQ==
+X-Gm-Message-State: AAQBX9deoecpwRnzQyXDvDovKudAbl1z8Dtx4nqC/IjR77o35CS0L81Q
+        etip6SCeShsmqsT0oOQIZ0Q=
+X-Google-Smtp-Source: AKy350bDDKhpd8MexEw/4tmaBStYzgn6bVDTaN7FSwiN/JqKxJOEBlxdeUeD/HykCmrarjBMVB1+fw==
+X-Received: by 2002:a1c:7701:0:b0:3f0:80cf:f2d5 with SMTP id t1-20020a1c7701000000b003f080cff2d5mr48283wmi.11.1681347929308;
+        Wed, 12 Apr 2023 18:05:29 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id p8-20020a05600c468800b003f09563445asm4128817wmo.0.2023.04.12.18.05.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 18:05:28 -0700 (PDT)
+Date:   Thu, 13 Apr 2023 01:05:24 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     hpa@zytor.com, kys@microsoft.com, haiyangz@microsoft.com,
+        wei.liu@kernel.org, decui@microsoft.com, luto@kernel.org,
+        peterz@infradead.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, lpieralisi@kernel.org,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com, arnd@arndb.de,
+        hch@lst.de, m.szyprowski@samsung.com, robin.murphy@arm.com,
+        thomas.lendacky@amd.com, brijesh.singh@amd.com, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        Tianyu.Lan@microsoft.com, kirill.shutemov@linux.intel.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, ak@linux.intel.com,
+        isaku.yamahata@intel.com, dan.j.williams@intel.com,
+        jane.chu@oracle.com, seanjc@google.com, tony.luck@intel.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-arch@vger.kernel.org,
+        iommu@lists.linux.dev
+Subject: Re: [PATCH v7 00/12] Add PCI pass-thru support to Hyper-V
+ Confidential VMs
+Message-ID: <ZDdVVJ2P+sJaUgtV@liuwe-devbox-debian-v2>
+References: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230411180302.2678736-6-terry.bowman@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <1679838727-87310-1-git-send-email-mikelley@microsoft.com>
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 01:03:01PM -0500, Terry Bowman wrote:
-> From: Robert Richter <rrichter@amd.com>
+On Sun, Mar 26, 2023 at 06:51:55AM -0700, Michael Kelley wrote:
+[...]
 > 
-> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
-> RCiEP, but CXL downstream and upstream ports are not enumerated and
-> not visible in the PCIe hierarchy. Protocol and link errors are sent
-> to an RCEC.
-> 
-> Restricted CXL host (RCH) downstream port-detected errors are signaled
-> as internal AER errors, either Uncorrectable Internal Error (UIE) or
-> Corrected Internal Errors (CIE). The error source is the id of the
-> RCEC. A CXL handler must then inspect the error status in various CXL
-> registers residing in the dport's component register space (CXL RAS
-> cap) or the dport's RCRB (AER ext cap). [1]
-> 
-> Errors showing up in the RCEC's error handler must be handled and
-> connected to the CXL subsystem. Implement this by forwarding the error
-> to all CXL devices below the RCEC. Since the entire CXL device is
-> controlled only using PCIe Configuration Space of device 0, Function
-> 0,
+> Michael Kelley (12):
+>   x86/ioremap: Add hypervisor callback for private MMIO mapping in coco VM
+>   x86/hyperv: Reorder code to facilitate future work
+>   Drivers: hv: Explicitly request decrypted in vmap_pfn() calls
+>   x86/mm: Handle decryption/re-encryption of bss_decrypted consistently
+>   init: Call mem_encrypt_init() after Hyper-V hypercall init is done
+>   x86/hyperv: Change vTOM handling to use standard coco mechanisms
+>   swiotlb: Remove bounce buffer remapping for Hyper-V
+>   Drivers: hv: vmbus: Remove second mapping of VMBus monitor pages
+>   Drivers: hv: vmbus: Remove second way of mapping ring buffers
+>   hv_netvsc: Remove second mapping of send and recv buffers
+>   Drivers: hv: Don't remap addresses that are above shared_gpa_boundary
+>   PCI: hv: Enable PCI pass-thru devices in Confidential VMs
 
-Capitalize "device" and "Function" the same way (also appears in
-comment below).
+I merged the first 6 from tip/x86/sev and then the rest directly to
+hyperv-next.
 
-> only pass it there [2]. These devices have the Memory Device class
-> code set (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver
-> can implement the handler. In addition to errors directed to the CXL
-> endpoint device, the handler must also inspect the CXL downstream
-> port's CXL RAS and PCIe AER external capabilities that is connected to
+The hv_netvsc patch did not apply cleanly, but that was easy to fix.
 
-"AER external capabilities" --  is that referring to the "AER
-*Extended* capability"?  If so, we usually don't bother including the
-"extended" part because it's usually not relevant.  But if you intended
-"external", I don't know what it means.
+Please check hyperv-next is what you expected.
 
-> the device.
-> 
-> Since CXL downstream port errors are signaled using internal errors,
-> the handler requires those errors to be unmasked. This is subject of a
-> follow-on patch.
-> 
-> The reason for choosing this implementation is that a CXL RCEC device
-> is bound to the AER port driver, but the driver does not allow it to
-> register a custom specific handler to support CXL. Connecting the RCEC
-> hard-wired with a CXL handler does not work, as the CXL subsystem
-> might not be present all the time. The alternative to add an
-> implementation to the portdrv to allow the registration of a custom
-> RCEC error handler isn't worth doing it as CXL would be its only user.
-> Instead, just check for an CXL RCEC and pass it down to the connected
-> CXL device's error handler. With this approach the code can entirely
-> be implemented in the PCIe AER driver and is independent of the CXL
-> subsystem. The CXL driver only provides the handler.
-
-Can you make this more concrete with an example topology so we can
-work through how this all works?  Correct me when I go off the rails
-here:
-
-The current code uses pcie_walk_rcec() in this path, which basically
-searches below a Root Port or RCEC for devices that have an AER error
-status bit set, add them to the e_info[] list, and call
-handle_error_source() for each one:
-
-  aer_isr_one_error
-    # get e_src from aer_fifo
-    find_source_device(e_src)
-      pcie_walk_rcec(find_device_iter)
-        find_device_iter
-          is_error_source
-            # read PCI_ERR_COR_STATUS or PCI_ERR_UNCOR_STATUS
-          if (error-source)
-            add_error_device
-              # add device to e_info[] list
-    # now call handle_error_source for everything in e_info[]
-    aer_process_err_devices
-      for (i = 0; i < e_info->err_dev_num; i++)
-        handle_error_source
-
-IIUC, this patch basically says that an RCEC should have an AER error
-status bit (UIE or CIE) set, but the devices "below" the RCEC will
-not, so they won't get added to e_info[].
-
-So we insert cxl_handle_error() in handle_error_source(), where it
-gets called for the RCEC, and then it uses pcie_walk_rcec() again to
-forcibly call handle_error_source() for *every* device "below" the
-RCEC (even though they don't have AER error status bits set).
-
-Then handle_error_source() ultimately calls the CXL driver err_handler
-entry points (.cor_error_detected(), .error_detected(), etc), which
-can look at the CXL-specific error status in the CXL RAS or RCRB or
-whatever.
-
-So this basically looks like a workaround for the fact that the AER
-code only calls handle_error_source() when it finds AER error status,
-and CXL doesn't *set* that AER error status.  There's not that much
-code here, but it seems like a quite a bit of complexity in an area
-that is already pretty complicated.
-
-Here's another idea: the ACPI GHES code (ghes_handle_aer()) basically
-receives a packet of error status from firmware and queues it for
-recovery via pcie_do_recovery().  What if you had a CXL module that
-knew how to look for the CXL error status, package it up similarly,
-and queue it via aer_recover_queue()?
-
-> [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
-> [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
-> 
-> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
-> Signed-off-by: Robert Richter <rrichter@amd.com>
-> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
-> Cc: "Oliver O'Halloran" <oohall@gmail.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pci@vger.kernel.org
-> ---
->  drivers/pci/pcie/Kconfig |  8 ++++++
->  drivers/pci/pcie/aer.c   | 61 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 69 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
-> index 228652a59f27..b0dbd864d3a3 100644
-> --- a/drivers/pci/pcie/Kconfig
-> +++ b/drivers/pci/pcie/Kconfig
-> @@ -49,6 +49,14 @@ config PCIEAER_INJECT
->  	  gotten from:
->  	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
->  
-> +config PCIEAER_CXL
-> +	bool "PCI Express CXL RAS support"
-> +	default y
-> +	depends on PCIEAER && CXL_PCI
-> +	help
-> +	  This enables CXL error handling for Restricted CXL Hosts
-> +	  (RCHs).
-> +
->  #
->  # PCI Express ECRC
->  #
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 7a25b62d9e01..171a08fd8ebd 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -946,6 +946,65 @@ static bool find_source_device(struct pci_dev *parent,
->  	return true;
->  }
->  
-> +#ifdef CONFIG_PCIEAER_CXL
-> +
-> +static bool is_cxl_mem_dev(struct pci_dev *dev)
-> +{
-> +	/*
-> +	 * A CXL device is controlled only using PCIe Configuration
-> +	 * Space of device 0, Function 0.
-> +	 */
-> +	if (dev->devfn != PCI_DEVFN(0, 0))
-> +		return false;
-> +
-> +	/* Right now there is only a CXL.mem driver */
-> +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static bool is_internal_error(struct aer_err_info *info)
-> +{
-> +	if (info->severity == AER_CORRECTABLE)
-> +		return info->status & PCI_ERR_COR_INTERNAL;
-> +
-> +	return info->status & PCI_ERR_UNC_INTN;
-> +}
-> +
-> +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info);
-> +
-> +static int cxl_handle_error_iter(struct pci_dev *dev, void *data)
-> +{
-> +	struct aer_err_info *e_info = (struct aer_err_info *)data;
-> +
-> +	if (!is_cxl_mem_dev(dev))
-> +		return 0;
-> +
-> +	/* pci_dev_put() in handle_error_source() */
-> +	dev = pci_dev_get(dev);
-> +	if (dev)
-> +		handle_error_source(dev, e_info);
-> +
-> +	return 0;
-> +}
-> +
-> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
-> +{
-> +	/*
-> +	 * CXL downstream port errors are signaled as RCEC internal
-> +	 * errors. Forward them to all CXL devices below the RCEC.
-> +	 */
-> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
-> +	    is_internal_error(info))
-> +		pcie_walk_rcec(dev, cxl_handle_error_iter, info);
-> +}
-> +
-> +#else
-> +static inline void cxl_handle_error(struct pci_dev *dev,
-> +				    struct aer_err_info *info) { }
-> +#endif
-> +
->  /**
->   * handle_error_source - handle logging error into an event log
->   * @dev: pointer to pci_dev data structure of error source device
-> @@ -957,6 +1016,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  {
->  	int aer = dev->aer_cap;
->  
-> +	cxl_handle_error(dev, info);
-> +
->  	if (info->severity == AER_CORRECTABLE) {
->  		/*
->  		 * Correctable error does not need software intervention.
-> -- 
-> 2.34.1
-> 
+Thanks,
+Wei.
