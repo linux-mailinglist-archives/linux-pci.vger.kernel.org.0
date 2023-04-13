@@ -2,102 +2,100 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B7E56E03CD
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 03:41:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C41CE6E03DA
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 03:50:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjDMBlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 21:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42578 "EHLO
+        id S229804AbjDMBuN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 21:50:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjDMBln (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 21:41:43 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38EB830CB;
-        Wed, 12 Apr 2023 18:41:42 -0700 (PDT)
-Received: by mail-wr1-f50.google.com with SMTP id i3so3342395wrc.4;
-        Wed, 12 Apr 2023 18:41:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681350101; x=1683942101;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uRK6818Jy+em8aMAf7sWZ9ZpmPkX8RUSskuWqBtofAg=;
-        b=I2Gsytenfi8Ewh82L+aoluskYoukCnDEzVfM10pTaPVhn1VWzh7seaYPI6fZpbaTVn
-         SSgUsbGfAbajjkB1MN8MqjYBI4PfWnI+xsrJw/KsdVufxNt7u4GJ23HUiH0Vl/ux8yfH
-         L0VWTEhRqT/FGNb9aZ6MFv5RlpkplPJYgXOUvLi+WbQCzSgbnKsZCw7AWthjEZeDyncM
-         7S+RAciKkO0e3UPYp9Cpm7oVCPj6D5ZCNB8LO2woNfJdukju3hTVn6URM4b3krUXQwjb
-         /ShGDf6rcf9z1uWooh7IKr8pypLUGZe/xBUByntm2mLiHRdFJgPjLe8wHOmBYanid6IH
-         JkPg==
-X-Gm-Message-State: AAQBX9dC6PVd05ePrLuam4rNvU2zLk6YDkVvDNEm3D/U10RwPbXH2eim
-        ViRoUWOSuTwstUVC5En8UhU=
-X-Google-Smtp-Source: AKy350YTMS2yn1zkhX69SeODq3A3IbWZT/r5T6TvWQeybqwM1usJCfEdQD0mJ4ztPhv7laCbuYmJLA==
-X-Received: by 2002:adf:f98c:0:b0:2f0:9f9f:797 with SMTP id f12-20020adff98c000000b002f09f9f0797mr99509wrr.16.1681350100712;
-        Wed, 12 Apr 2023 18:41:40 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id w13-20020adfec4d000000b002efb6e0c495sm129227wrn.91.2023.04.12.18.41.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Apr 2023 18:41:40 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 01:41:36 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Dexuan Cui <decui@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "wei.liu@kernel.org" <wei.liu@kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Replace retarget_msi_interrupt_params with
- hyperv_pcpu_input_arg
-Message-ID: <ZDdd0FZT9RHfg3cm@liuwe-devbox-debian-v2>
-References: <20230408211112.15235-1-decui@microsoft.com>
- <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
+        with ESMTP id S229722AbjDMBuK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 21:50:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C867ABC
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 18:50:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CE55625BD
+        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 01:50:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84078C433A8;
+        Thu, 13 Apr 2023 01:50:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681350606;
+        bh=ka/86xh6PiG3qeWJ0j9E8iYk1yKSEOizSsY25QiUIA4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=J3eLVknLXBhMqO1APf0qjJytikdu9FfOL64bxHjYm3pk7qkj6MUZtgItSTySETOV1
+         WJ1F48ef1FWKD34UbAgfZtOZsJ2cABMqEUF1Uj4SRg17mtPdmouSianKUElX29z9ww
+         jE7u8rnf0rEC8LhvuKFecxbbSLNUkEHk8WipEXncuNW/HHPCxJ/YaRE0p/Zd14+CnX
+         Ex4oheopo0vEK8SjahD3yQZiGqn/0c6AMH9IfO9C8iChV6whRY0aHKw1gmgnA7M6Ka
+         mhkGSramP6QoS7MoEgLq8/J960bB5o7iQTOcIdzuliZeeuhaPGWtHZHgVi/OtBYaCT
+         QqbkSUbyg948g==
+Message-ID: <20cfd32d-0e4c-a928-fc26-1c4c47972ece@kernel.org>
+Date:   Thu, 13 Apr 2023 10:50:03 +0900
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR21MB1688F1E184FD1A914637EFB0D79A9@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH v4 04/17] PCI: epf-test: Fix DMA transfer completion
+ detection
+Content-Language: en-US
+To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
+ <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
+ <9a70d819-70d1-fb69-b053-a37ccfacf145@igel.co.jp>
+ <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 05:27:41PM +0000, Michael Kelley (LINUX) wrote:
-> From: Dexuan Cui <decui@microsoft.com> Sent: Saturday, April 8, 2023 2:11 PM
-> > 
-> > 4 commits are involved here:
-> > A (2016): commit 0de8ce3ee8e3 ("PCI: hv: Allocate physically contiguous hypercall
-> > params buffer")
-> > B (2017): commit be66b6736591 ("PCI: hv: Use page allocation for hbus structure")
-> > C (2019): commit 877b911a5ba0 ("PCI: hv: Avoid a kmemleak false positive caused by
-> > the hbus buffer")
-> > D (2018): commit 68bb7bfb7985 ("X86/Hyper-V: Enable IPI enlightenments")
-> > 
-> > Patch D introduced the per-CPU hypercall input page "hyperv_pcpu_input_arg"
-> > in 2018. With patch D, we no longer need the per-Hyper-V-PCI-bus hypercall
-> > input page "hbus->retarget_msi_interrupt_params" that was added in patch A,
-> > and the issue addressed by patch B is no longer an issue, and we can also
-> > get rid of patch C.
-> > 
-> > The change here is required for PCI device assignment to work for
-> > Confidential VMs (CVMs), because otherwise we would have to call
-> > set_memory_decrypted() for "hbus->retarget_msi_interrupt_params" before
-> > calling the hypercall HVCALL_RETARGET_INTERRUPT.
+On 4/4/23 19:16, Damien Le Moal wrote:
+> On 4/4/23 18:47, Shunsuke Mie wrote:
+>>> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>>>   	struct dma_async_tx_descriptor *tx;
+>>>   	struct dma_slave_config sconf = {};
+>>>   	struct device *dev = &epf->dev;
+>>> -	dma_cookie_t cookie;
+>>>   	int ret;
+>>>   
+>>>   	if (IS_ERR_OR_NULL(chan)) {
+>>> @@ -152,25 +160,33 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
+>>>   	}
+>>>   
+>>>   	reinit_completion(&epf_test->transfer_complete);
+>>> +	epf_test->transfer_chan = chan;
+>>>   	tx->callback = pci_epf_test_dma_callback;
+>>>   	tx->callback_param = epf_test;
+>>> -	cookie = tx->tx_submit(tx);
+>>> +	epf_test->transfer_cookie = tx->tx_submit(tx);
+>>
+>> How about changing the code to use dmaengine_submit() API instead of 
+>> calling a raw function pointer?
 > 
-> Well, not all CVMs.  It's not required for SEV-SNP vTOM VMs on Hyper-V because
-> of the paravisor.  Is it more accurate to say "for Confidential VMs (CVMs) running
-> without a paravisor"?
-> 
+> This is done in patch 5 of the series.
 
-Let me know how this text should be reworded.
+Bjorn,
 
-> Otherwise,
-> 
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+My apologies for not replying to the series cover letter as I do not have it
+locally (due to WD on-going network issues).
+
+This is a ping about this series. Can we get it queued ?
+(I do not see it in PCI next tree)
+
