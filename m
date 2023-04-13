@@ -2,104 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 054566E1134
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 17:34:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 399216E1192
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 18:00:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbjDMPeP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 11:34:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52738 "EHLO
+        id S230153AbjDMQAd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 12:00:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229640AbjDMPeO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 11:34:14 -0400
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA6AD1735;
-        Thu, 13 Apr 2023 08:34:13 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id v20-20020a05600c471400b003ed8826253aso3971977wmo.0;
-        Thu, 13 Apr 2023 08:34:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681400052; x=1683992052;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fL7l8rFrlcpe/xiNSpGTIsY2ITjrB7+gQWfKwecs0Zk=;
-        b=J/x/D1qwiC8QULuqAIUApMTkALgb+hmGAXP5QJcj/hT83Vjmw4Y72JckJnzCglM7ro
-         T7zueBw/H50h8RYrGLCyq6R2WiH/CakU2Cb9UuauWnL9icxcrbq67XQykGOgfluRbZNN
-         nOFswHtlU1fOr1G8Fum3r4eWb34rL5Q4swGif1lOs0urXT8lrzaC6HgpH4NXYO0BHTSb
-         AiBn1DdNU+M1LlvFjq9e/Gg94IJbPgrtT9rotIkKF2dJkup92alnfGqSeu/I5w+YVmCE
-         D3cmfguo03vepQ9KHvanZbYkAZLQHBlpnSxQDhWFjsb/UeWc8rbA3UuNV1wW7FVg0YbJ
-         ptYQ==
-X-Gm-Message-State: AAQBX9cvOTBNKrWr29+0UPlECyEAK30LZ+2NGxHnZwC0HRqZSLIMdMno
-        dqguEpfR56vLNMmNKl4BdUY=
-X-Google-Smtp-Source: AKy350ZXINt7MAa6jIBI5IRWUmAG08Cv4/HGMeCXYz3QbS43jFGtd7EOBtgtIhVhrIZEEAarFjXTDQ==
-X-Received: by 2002:a1c:7312:0:b0:3f0:9f9b:1665 with SMTP id d18-20020a1c7312000000b003f09f9b1665mr2361796wmb.3.1681400052184;
-        Thu, 13 Apr 2023 08:34:12 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id u10-20020a7bc04a000000b003f09d7b6e20sm2136546wmc.2.2023.04.13.08.34.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Apr 2023 08:34:11 -0700 (PDT)
-Date:   Thu, 13 Apr 2023 15:34:06 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     "Michael Kelley (LINUX)" <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Jinank Jain <jinankjain@linux.microsoft.com>,
-        "g@liuwe-devbox-debian-v2" <g@liuwe-devbox-debian-v2>,
-        Jinank Jain <jinankjain@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Dexuan Cui <decui@microsoft.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "nunodasneves@linux.microsoft.com" <nunodasneves@linux.microsoft.com>
-Subject: Re: [PATCH] PCI: hv: Use nested hypercall for retargeting interrupts
-Message-ID: <ZDgg7sq4mXk8025W@liuwe-devbox-debian-v2>
-References: <20230404113546.856813-1-jinankjain@linux.microsoft.com>
- <ZDdZVw9Y0q7oT1FG@liuwe-devbox-debian-v2>
- <BYAPR21MB168827DA138ADE39298FFB37D7989@BYAPR21MB1688.namprd21.prod.outlook.com>
+        with ESMTP id S229633AbjDMQAc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 12:00:32 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAD6D1726;
+        Thu, 13 Apr 2023 09:00:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681401631; x=1712937631;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=LIJ4RlULt2rf1Gc6aHteTfEaZqZKJNQfvSIBCJ0nXxY=;
+  b=AGXkQ8hbhCroJU96bjTcOj9YBA5GkYUL0ugBg7yQVBJ7TNKr64KF26hU
+   QTjYDsHyJkHZRUkgZF5L6LZvGFXYmQP5wSviM7TM51yjGCJ+/Sf+RXHQb
+   KrPGXGYmqLaUjJ4sguva11J48ZDrHlI7AVsRpShmJOSC99mwt4KDGqQVt
+   NBT2myb1i2wqENLm6ChE07DR+BaUsMw1FejbGllhNNO0VIyvtMGfPiJ8/
+   fDE7lyqnc7HkSiQZmlKK7oQZP5u0qxBIjWTyMf3zyLwQk8m2i6cIci8QV
+   //skk80rb5UkcjLdpiCbA8sux9HggjIAaChEF+fEtZuWhx0WNRz79NEW5
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="342969930"
+X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
+   d="scan'208";a="342969930"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 09:00:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10679"; a="682994924"
+X-IronPort-AV: E=Sophos;i="5.99,194,1677571200"; 
+   d="scan'208";a="682994924"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP; 13 Apr 2023 09:00:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1pmzN5-00GcOw-08;
+        Thu, 13 Apr 2023 19:00:27 +0300
+Date:   Thu, 13 Apr 2023 19:00:26 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v1 1/1] PCI: of: Propagate firmware node
+Message-ID: <ZDgnGuycE5S6rlZk@smile.fi.intel.com>
+References: <20230412131520.52840-1-andriy.shevchenko@linux.intel.com>
+ <20230412160253.GA41376@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <BYAPR21MB168827DA138ADE39298FFB37D7989@BYAPR21MB1688.namprd21.prod.outlook.com>
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS
-        autolearn=no autolearn_force=no version=3.4.6
+In-Reply-To: <20230412160253.GA41376@bhelgaas>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 03:05:09AM +0000, Michael Kelley (LINUX) wrote:
-> From: Wei Liu <wei.liu@kernel.org> Sent: Wednesday, April 12, 2023 6:23 PM
-> > 
-> > On Tue, Apr 04, 2023 at 11:35:46AM +0000, Jinank Jain wrote:
-> > > In case of nested MSHV, retargeting interrupt hypercall should be sent
-> > > to L0 hypervisor instead of L1 hypervisor.
-> > >
-> > > Signed-off-by: Jinank Jain <jinankjain@linux.microsoft.com>
-> > 
-> > Applied to hyperv-next. Thanks.
+On Wed, Apr 12, 2023 at 11:02:53AM -0500, Bjorn Helgaas wrote:
+> On Wed, Apr 12, 2023 at 04:15:20PM +0300, Andy Shevchenko wrote:
+> > Propagate firmware node by using a specific API call, i.e. device_set_node().
 > 
-> I'd like to hold off on taking this change.  Nuno and I are discussing
-> how best to handle nested hypercalls.  In addition to the proposed
-> nested changes,  we have hypercall changes coming as part of the
-> TDX and fully enlightened SNP patch sets.  If possible, I'd like to
-> avoid adding logic at the hv_do_hypercall() call sites.  It's not clear
-> whether avoiding such logic will really be feasible, but I'd like to
-> think about it for a bit before reaching that conclusion.
+> Can you add a line or two about *why* we should do this, e.g., is this
+> headed toward some goal?
 
-I thought that discussion will go on for a while but this patch fixed a
-real bug.
+Because dereferencing the fwnode in struct device is preventing us from
+modifications of how fwnode looks like in the future.
 
-Holding off is fine too. I will remove this patch from hyperv-next.
+> Is it a simplification that's 100%
+> equivalent (doesn't seem so, see below)?
 
-Thanks,
-Wei.
+To me it's an equivalent, I'll explain below.
 
+> Seems like there's an underlying long-term effort to unify things from
+> OF and ACPI, which seems like a good thing, but at the moment it's a
+> little confusing to follow.  For instance pci_set_of_node() seems like
+> it ought to be sort of analogous to pci_set_acpi_fwnode(), but they
+> look nothing alike.
+
+Unification to some extent, but here is not a point of this change.
+
+...
+
+> > +	struct device_node *node;
+> > +
+> >  	if (!dev->bus->dev.of_node)
+> >  		return;
+> > -	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
+> > -						    dev->devfn);
+> > -	if (dev->dev.of_node)
+> > -		dev->dev.fwnode = &dev->dev.of_node->fwnode;
+> > +	node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
+> > +	device_set_node(&dev->dev, of_fwnode_handle(node));
 > 
-> Michael
-> 
+> This doesn't seem 100% equivalent.  If of_pci_find_child_device()
+> returns NULL, the previous code doesn't set dev->dev.fwnode, but the
+> new code does.
+
+Yes and this is not a problem. We create device with pci_alloc_dev() in both
+callers of the pci_setup_device() and the field is NULL anyway. So, the last
+condition there is a simple micro-optimisation.
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
