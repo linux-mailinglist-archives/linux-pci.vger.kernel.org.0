@@ -2,177 +2,202 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 214B96E1024
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 16:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4EA2B6E1063
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 16:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229564AbjDMOjo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 10:39:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35706 "EHLO
+        id S229805AbjDMOwU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 10:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229739AbjDMOjo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 10:39:44 -0400
-Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3FE5241;
-        Thu, 13 Apr 2023 07:39:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
-        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Yzic6zI3YNlW0bPd7Q9GpkS5SQuLmLYQ99sWX79o590=; b=cX/p+TjBBoumVnVFED9UxSNoxw
-        KUP1oyyldwaiscfrNaRXxuiGTz0FkB0avCn718k348CFryRny7uCvJBPHDGB+UfFX7+YpCtmf6wHY
-        W5DCWrLzN4eaR8de66SLCuWd//s3QIcXDcm2CGQ+X1kBpuTIKSygvkL5PAn18tu3v7ZFEjfCBPSmj
-        LeC3Iu1Tn82swFfomLMSTAtEM+XUW95TsjH5yBBOmjQVVNUvgUEfJFrJBv2EGsUHQbGDFRBpimY1Y
-        2C+8Gjec2DWrrKPQY2YsgtZECrj17V6yANjNTL+Cm9iOhLSNNWEq5+Jo2oJZvqQl9t4P4aUW6KfTp
-        eieliyLA==;
-Received: from authenticated user
-        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.94.2)
-        (envelope-from <kibi@debian.org>)
-        id 1pmy6s-000UoX-Ax; Thu, 13 Apr 2023 14:39:39 +0000
-Date:   Thu, 13 Apr 2023 16:39:35 +0200
-From:   Cyril Brulebois <kibi@debian.org>
-To:     Jim Quinlan <jim2101024@gmail.com>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 2/3] PCI: brcmstb: CLKREQ# accomodations of downstream
- device
-Message-ID: <20230413143935.pmbyjk2boxl3rwne@mraw.org>
-Organization: Debian
-References: <20230411165919.23955-1-jim2101024@gmail.com>
- <20230411165919.23955-3-jim2101024@gmail.com>
+        with ESMTP id S229564AbjDMOwT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 10:52:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25D0D99;
+        Thu, 13 Apr 2023 07:52:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B847263F45;
+        Thu, 13 Apr 2023 14:52:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6790DC4339B;
+        Thu, 13 Apr 2023 14:52:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681397537;
+        bh=QG9Ja6Qfdja3+F6aw1CtqZqw6k9MQzX8MhhvMSkoqxA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=AZURpi2bwBdV5kPciUgesKGZsSWm09HGKZW2sB6s/37Hig0Fg4lC6lNwxgFSWisgE
+         GP20+mS3rkZioj3dVnG+tpGUZLEMA1XZiBQ6el5iF3REiqkQYmmPdJUzkFr7k4hHcD
+         MhbAnLnxBJyeKIqpLEKg9ebIKMlR2PJ6McrEqfoTB7yTfzhzglf/Dy82wUF7C1qW9l
+         7IyCU5EdCKX476SshiOCjLyarFivvPnjBZXOseNMtjjQItfglcM7llqnIIP9q+dPdM
+         WzpTxLuNMf8SJJqK94R7iK3EiMoNzAFuu547JnrLBoIcEkq0ngKGmOBX88IUbWHbTr
+         WvlJ7QW67jVaA==
+Date:   Thu, 13 Apr 2023 16:52:08 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Sumit Gupta <sumitg@nvidia.com>
+Cc:     treding@nvidia.com, krzysztof.kozlowski@linaro.org,
+        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
+        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
+        helgaas@kernel.org, linux-kernel@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        mmaddireddy@nvidia.com, kw@linux.com, bhelgaas@google.com,
+        vidyas@nvidia.com, sanjayc@nvidia.com, ksitaraman@nvidia.com,
+        ishah@nvidia.com, bbasu@nvidia.com
+Subject: Re: [Patch v6 8/9] PCI: tegra194: Add interconnect support in
+ Tegra234
+Message-ID: <ZDgXGCJQAHpLTw9S@lpieralisi>
+References: <20230411110002.19824-1-sumitg@nvidia.com>
+ <20230411110002.19824-9-sumitg@nvidia.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lzs5lyynabvj7rjw"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230411165919.23955-3-jim2101024@gmail.com>
-X-Debian-User: kibi
+In-Reply-To: <20230411110002.19824-9-sumitg@nvidia.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Tue, Apr 11, 2023 at 04:30:01PM +0530, Sumit Gupta wrote:
+> Add support to request DRAM bandwidth with Memory Interconnect
+> in Tegra234 SoC. The DRAM BW required for different modes depends
+> on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
+> Currently, no latency is observed in data transfer with PCI as the
+> DRAM Freq is always set to max. But that results in high power
+> consumption. Now for Tegra234, we are enabling the dynamic scaling
+> of the DRAM Freq based on requests from Clients instead of running
+> at the max Freq always. This change does that for PCI MC client.
 
---lzs5lyynabvj7rjw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am sorry but this is still unclear to me. The sentence above makes
+me think that you are *adding* latency to the data transfer trading
+it with lower power consumption; probably that's a wrong parsing of
+what you are saying - so please explain what you want to say
+with "no latency is observed" and whether this patch changes that
+(which is not allowed because that would count as a regression).
 
-Hi Jim,
+Thanks,
+Lorenzo
 
-Jim Quinlan <jim2101024@gmail.com> (2023-04-11):
-> [=E2=80=A6]
-> This property has already been in use by Raspian Linux, but this
-> immplementation adds more details and discerns between (a) and (b)
-  ^^^^^^^^^^^^^^^
-  implementation
-
-> automatically.
->=20
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217276
-> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
-
-Sorry, it seems like my initial tests with v1 (applied on top of
-v6.3-rc5-137-gf2afccfefe7b) weren't thorough enough, and I'm seeing the
-same problems with v2 (applied on top of v6.3-rc6-46-gde4664485abb):
- - same setup as in https://bugzilla.kernel.org/show_bug.cgi?id=3D217276
- - the kernel panic is indeed gone;
- - a USB keyboard connected on that SupaHub PCIe-to-multiple-USB adapter
-   isn't seen by the kernel;
- - a USB memory stick connected on the same adapter isn't seen by the
-   kernel either;
- - of course both USB devices are confirmed to work fine if they're
-   plugged directly on the CM4's USB ports.
-
-Logs with v2:
-
-    root@cm4:~# dmesg|grep -i pci
-    [    0.610997] PCI: CLS 0 bytes, default 64
-    [    1.664886] shpchp: Standard Hot Plug PCI Controller Driver version:=
- 0.4
-    [    1.672083] brcm-pcie fd500000.pcie: host bridge /scb/pcie@7d500000 =
-ranges:
-    [    1.679125] brcm-pcie fd500000.pcie:   No bus range found for /scb/p=
-cie@7d500000, using [bus 00-ff]
-    [    1.688279] brcm-pcie fd500000.pcie:      MEM 0x0600000000..0x0603ff=
-ffff -> 0x00f8000000
-    [    1.696463] brcm-pcie fd500000.pcie:   IB MEM 0x0000000000..0x00ffff=
-ffff -> 0x0400000000
-    [    1.705282] brcm-pcie fd500000.pcie: PCI host bridge to bus 0000:00
-    [    1.711629] pci_bus 0000:00: root bus resource [bus 00-ff]
-    [    1.717172] pci_bus 0000:00: root bus resource [mem 0x600000000-0x60=
-3ffffff] (bus address [0xf8000000-0xfbffffff])
-    [    1.727653] pci 0000:00:00.0: [14e4:2711] type 01 class 0x060400
-    [    1.733768] pci 0000:00:00.0: PME# supported from D0 D3hot
-    [    1.740235] pci 0000:00:00.0: bridge configuration invalid ([bus 00-=
-00]), reconfiguring
-    [    1.855826] brcm-pcie fd500000.pcie: CLKREQ# ignored; no ASPM
-    [    1.863666] brcm-pcie fd500000.pcie: link up, 5.0 GT/s PCIe x1 (SSC)
-    [    1.870115] pci 0000:01:00.0: [1912:0014] type 00 class 0x0c0330
-    [    1.876205] pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x00001fff 6=
-4bit]
-    [    1.883177] pci 0000:01:00.0: PME# supported from D0 D3hot
-    [    1.888881] pci_bus 0000:01: busn_res: [bus 01-ff] end is updated to=
- 01
-    [    1.895581] pci 0000:00:00.0: BAR 14: assigned [mem 0x600000000-0x60=
-00fffff]
-    [    1.902707] pci 0000:01:00.0: BAR 0: assigned [mem 0x600000000-0x600=
-001fff 64bit]
-    [    1.910279] pci 0000:00:00.0: PCI bridge to [bus 01]
-    [    1.915293] pci 0000:00:00.0:   bridge window [mem 0x600000000-0x600=
-0fffff]
-    [    1.922412] pcieport 0000:00:00.0: enabling device (0000 -> 0002)
-    [    1.928633] pcieport 0000:00:00.0: PME: Signaling with IRQ 23
-    [    1.934609] pcieport 0000:00:00.0: AER: enabled with IRQ 23
-    [    1.940340] pci 0000:01:00.0: enabling device (0000 -> 0002)
-    [    6.946090] pci 0000:01:00.0: xHCI HW not ready after 5 sec (HC bug?=
-) status =3D 0x1801
-    [    6.954026] pci 0000:01:00.0: quirk_usb_early_handoff+0x0/0x968 took=
- 4896180 usecs
-
-Please let me know what I can do to help.
-
-
-Cheers,
---=20
-Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-D-I release manager -- Release team member -- Freelance Consultant
-
---lzs5lyynabvj7rjw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmQ4FCQACgkQ/5FK8MKz
-VSCn1g//bgrbJCd8aP3H59jBAPUa2gZdqBlqLxO20cmhLmn6rXSfvOsxW1X/W6GV
-EKggzAwPVHMRwLiyqXfso/pCZaDimcYVvdCJCgPAgfNRZyxxA/lEQDYt/cL9W1DZ
-WRrEPyjLUBcrVxLfWhRAo/S6QfvjYb8qoD2aA93rrmfccfKFdng6c36eK8QolV4J
-p7iC5MdDx9r6acUaKXu3M/3ggckDdEJndArcqPWoHfAjoijTHVVgz4LAryY7kptl
-MPo2NCKESA+ZQNhdoo8dlkaqYM9/z9X6Xx/pvTUFIgZmg+XGrNnruhS/ac9pgCt5
-wimQpLhoSH42WwVeid6/GwUQSpDh3/pJ5AED1ThkxANFlTJcwgwfH+XuCsrLC/rD
-a+u4ZcVRurVd+fgWuVl3MHt5zeVC7/sdUw81s868aEMJLpRq/i8rld0DNINhsNBK
-n+nJA49pCbgUh+phV6kj6qnQA+bynk+OtSLBdcSNLKqXwvK1tE0nFixwOwX3H3WQ
-jYwNsI9Pf5tNAG73PE0lieMtlg5UhDL6rmuQoh4lXsFf8RsblgDKWFqzqSQNv4SE
-oKfJJyqrATdJM6JiIVo5rWjM9q5C8lU5k7mha0GfSTShB0va9TuEwrk09cM75uDi
-2K9m3Q4wBDL/DRrwFN3RaTxiY5Kn6/ik03VwD0ZkA7a+gkIE8Jc=
-=avfM
------END PGP SIGNATURE-----
-
---lzs5lyynabvj7rjw--
+> 
+> Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 51 +++++++++++++++-------
+>  1 file changed, 35 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index e6eec85480ca..4fdadc7b045f 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/consumer.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> @@ -288,6 +289,7 @@ struct tegra_pcie_dw {
+>  	unsigned int pex_rst_irq;
+>  	int ep_state;
+>  	long link_status;
+> +	struct icc_path *icc_path;
+>  };
+>  
+>  static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+> @@ -310,6 +312,27 @@ struct tegra_pcie_soc {
+>  	enum dw_pcie_device_mode mode;
+>  };
+>  
+> +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
+> +{
+> +	struct dw_pcie *pci = &pcie->pci;
+> +	u32 val, speed, width;
+> +
+> +	val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
+> +
+> +	speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
+> +	width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+> +
+> +	val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
+> +
+> +	if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
+> +		dev_err(pcie->dev, "can't set bw[%u]\n", val);
+> +
+> +	if (speed >= ARRAY_SIZE(pcie_gen_freq))
+> +		speed = 0;
+> +
+> +	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+> +}
+> +
+>  static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
+>  {
+>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> @@ -453,18 +476,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>  	struct tegra_pcie_dw *pcie = arg;
+>  	struct dw_pcie_ep *ep = &pcie->pci.ep;
+>  	struct dw_pcie *pci = &pcie->pci;
+> -	u32 val, speed;
+> +	u32 val;
+>  
+>  	if (test_and_clear_bit(0, &pcie->link_status))
+>  		dw_pcie_ep_linkup(ep);
+>  
+> -	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+> -		PCI_EXP_LNKSTA_CLS;
+> -
+> -	if (speed >= ARRAY_SIZE(pcie_gen_freq))
+> -		speed = 0;
+> -
+> -	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+> +	tegra_pcie_icc_set(pcie);
+>  
+>  	if (pcie->of_data->has_ltr_req_fix)
+>  		return IRQ_HANDLED;
+> @@ -950,9 +967,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  
+>  static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>  {
+> -	u32 val, offset, speed, tmp;
+>  	struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+>  	struct dw_pcie_rp *pp = &pci->pp;
+> +	u32 val, offset, tmp;
+>  	bool retry = true;
+>  
+>  	if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
+> @@ -1023,13 +1040,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>  		goto retry_link;
+>  	}
+>  
+> -	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+> -		PCI_EXP_LNKSTA_CLS;
+> -
+> -	if (speed >= ARRAY_SIZE(pcie_gen_freq))
+> -		speed = 0;
+> -
+> -	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+> +	tegra_pcie_icc_set(pcie);
+>  
+>  	tegra_pcie_enable_interrupts(pp);
+>  
+> @@ -2233,6 +2244,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>  
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> +	pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
+> +	ret = PTR_ERR_OR_ZERO(pcie->icc_path);
+> +	if (ret) {
+> +		tegra_bpmp_put(pcie->bpmp);
+> +		dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
+> +		return ret;
+> +	}
+> +
+>  	switch (pcie->of_data->mode) {
+>  	case DW_PCIE_RC_TYPE:
+>  		ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
+> -- 
+> 2.17.1
+> 
