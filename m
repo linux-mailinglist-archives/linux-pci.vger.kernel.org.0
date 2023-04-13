@@ -2,100 +2,295 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C41CE6E03DA
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 03:50:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AA556E0414
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 04:26:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbjDMBuN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 12 Apr 2023 21:50:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45318 "EHLO
+        id S229713AbjDMC0g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 12 Apr 2023 22:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229722AbjDMBuK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 21:50:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12C867ABC
-        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 18:50:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7CE55625BD
-        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 01:50:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84078C433A8;
-        Thu, 13 Apr 2023 01:50:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681350606;
-        bh=ka/86xh6PiG3qeWJ0j9E8iYk1yKSEOizSsY25QiUIA4=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=J3eLVknLXBhMqO1APf0qjJytikdu9FfOL64bxHjYm3pk7qkj6MUZtgItSTySETOV1
-         WJ1F48ef1FWKD34UbAgfZtOZsJ2cABMqEUF1Uj4SRg17mtPdmouSianKUElX29z9ww
-         jE7u8rnf0rEC8LhvuKFecxbbSLNUkEHk8WipEXncuNW/HHPCxJ/YaRE0p/Zd14+CnX
-         Ex4oheopo0vEK8SjahD3yQZiGqn/0c6AMH9IfO9C8iChV6whRY0aHKw1gmgnA7M6Ka
-         mhkGSramP6QoS7MoEgLq8/J960bB5o7iQTOcIdzuliZeeuhaPGWtHZHgVi/OtBYaCT
-         QqbkSUbyg948g==
-Message-ID: <20cfd32d-0e4c-a928-fc26-1c4c47972ece@kernel.org>
-Date:   Thu, 13 Apr 2023 10:50:03 +0900
+        with ESMTP id S229674AbjDMC0f (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 12 Apr 2023 22:26:35 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B7062D43
+        for <linux-pci@vger.kernel.org>; Wed, 12 Apr 2023 19:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681352794; x=1712888794;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=PYu9/0RVxRIzPSNRqu5cKiBvH+OLhniGqejowZPL+6Y=;
+  b=Fcl2VEAD3GTWP7Om4zM1SI8C08J1zexfNXaVK8gixw3V292h5Xuw4rDh
+   ckG+YQ1D+vmJMqtbeCHzNuh8AOuBPGNnpGg9WK3HXBFihz6KtNIsAFgJ/
+   58kozyM7jesWJiBRBfdfYL8bG9QrBMdtR2s3SWg/HC/YJqJBu3l2MO6e5
+   XfAdv+jmkVVAS7OeXDOGjNL39v0AeQODdjvXgPZJZDxXjUAusRiFfSQXJ
+   nND4U3XVYTntPsUic6dPZgZRWyMRYPQ1/Aw0xDwLCDfWNJNjSpLvrQcDW
+   bZJqRO+f1lgVQ8y8EjAwp9CmFtx0PZyWmDJ0CyGdONTkK+uFO/X0N2ca0
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="328182054"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="328182054"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Apr 2023 19:26:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="639455023"
+X-IronPort-AV: E=Sophos;i="5.98,339,1673942400"; 
+   d="scan'208";a="639455023"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga003.jf.intel.com with ESMTP; 12 Apr 2023 19:26:32 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pmmfP-000YGb-1I;
+        Thu, 13 Apr 2023 02:26:31 +0000
+Date:   Thu, 13 Apr 2023 10:25:38 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/qcom] BUILD SUCCESS
+ c025c7e5dbf4706279183c16788fa83001b8331e
+Message-ID: <64376822.G4QCbaXDAkDXwaWz%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v4 04/17] PCI: epf-test: Fix DMA transfer completion
- detection
-Content-Language: en-US
-To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20230330085357.2653599-1-damien.lemoal@opensource.wdc.com>
- <20230330085357.2653599-5-damien.lemoal@opensource.wdc.com>
- <9a70d819-70d1-fb69-b053-a37ccfacf145@igel.co.jp>
- <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <a54f004c-31ce-b553-616b-d13fa76d709c@fastmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-8.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
+        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 4/4/23 19:16, Damien Le Moal wrote:
-> On 4/4/23 18:47, Shunsuke Mie wrote:
->>> @@ -120,7 +129,6 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->>>   	struct dma_async_tx_descriptor *tx;
->>>   	struct dma_slave_config sconf = {};
->>>   	struct device *dev = &epf->dev;
->>> -	dma_cookie_t cookie;
->>>   	int ret;
->>>   
->>>   	if (IS_ERR_OR_NULL(chan)) {
->>> @@ -152,25 +160,33 @@ static int pci_epf_test_data_transfer(struct pci_epf_test *epf_test,
->>>   	}
->>>   
->>>   	reinit_completion(&epf_test->transfer_complete);
->>> +	epf_test->transfer_chan = chan;
->>>   	tx->callback = pci_epf_test_dma_callback;
->>>   	tx->callback_param = epf_test;
->>> -	cookie = tx->tx_submit(tx);
->>> +	epf_test->transfer_cookie = tx->tx_submit(tx);
->>
->> How about changing the code to use dmaengine_submit() API instead of 
->> calling a raw function pointer?
-> 
-> This is done in patch 5 of the series.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/qcom
+branch HEAD: c025c7e5dbf4706279183c16788fa83001b8331e  dt-bindings: PCI: qcom: Document msi-map and msi-map-mask properties
 
-Bjorn,
+elapsed time: 726m
 
-My apologies for not replying to the series cover letter as I do not have it
-locally (due to WD on-going network issues).
+configs tested: 215
+configs skipped: 23
 
-This is a ping about this series. Can we get it queued ?
-(I do not see it in PCI next tree)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r011-20230409   gcc  
+arc                              allyesconfig   gcc  
+arc          buildonly-randconfig-r003-20230409   gcc  
+arc          buildonly-randconfig-r006-20230410   gcc  
+arc                                 defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                  randconfig-r002-20230409   gcc  
+arc                  randconfig-r005-20230409   gcc  
+arc                  randconfig-r005-20230412   gcc  
+arc                  randconfig-r013-20230410   gcc  
+arc                  randconfig-r043-20230409   gcc  
+arc                  randconfig-r043-20230410   gcc  
+arc                  randconfig-r043-20230412   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                          moxart_defconfig   clang
+arm                       netwinder_defconfig   clang
+arm                       omap2plus_defconfig   gcc  
+arm                  randconfig-r033-20230410   gcc  
+arm                  randconfig-r046-20230412   clang
+arm                           stm32_defconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r016-20230410   gcc  
+arm64                randconfig-r023-20230410   gcc  
+arm64                randconfig-r025-20230412   gcc  
+arm64                randconfig-r026-20230409   gcc  
+arm64                randconfig-r035-20230409   clang
+csky                                defconfig   gcc  
+csky                 randconfig-r014-20230410   gcc  
+csky                 randconfig-r021-20230409   gcc  
+csky                 randconfig-r024-20230410   gcc  
+csky                 randconfig-r031-20230412   gcc  
+hexagon              randconfig-r015-20230409   clang
+hexagon              randconfig-r033-20230409   clang
+hexagon              randconfig-r041-20230412   clang
+hexagon              randconfig-r045-20230412   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230410   clang
+i386                 randconfig-a002-20230410   clang
+i386                 randconfig-a003-20230410   clang
+i386                 randconfig-a004-20230410   clang
+i386                 randconfig-a005-20230410   clang
+i386                 randconfig-a006-20230410   clang
+i386                 randconfig-a011-20230410   gcc  
+i386                 randconfig-a012-20230410   gcc  
+i386                          randconfig-a012   gcc  
+i386                 randconfig-a013-20230410   gcc  
+i386                 randconfig-a014-20230410   gcc  
+i386                          randconfig-a014   gcc  
+i386                 randconfig-a015-20230410   gcc  
+i386                 randconfig-a016-20230410   gcc  
+i386                          randconfig-a016   gcc  
+i386                 randconfig-r036-20230410   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+ia64                 randconfig-r001-20230410   gcc  
+ia64                 randconfig-r015-20230410   gcc  
+ia64                 randconfig-r024-20230410   gcc  
+ia64                 randconfig-r025-20230409   gcc  
+ia64                 randconfig-r032-20230412   gcc  
+ia64                 randconfig-r035-20230413   gcc  
+ia64                 randconfig-r036-20230410   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r002-20230410   gcc  
+loongarch    buildonly-randconfig-r004-20230409   gcc  
+loongarch    buildonly-randconfig-r004-20230410   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r004-20230409   gcc  
+loongarch            randconfig-r013-20230410   gcc  
+loongarch            randconfig-r014-20230409   gcc  
+loongarch            randconfig-r016-20230410   gcc  
+loongarch            randconfig-r021-20230410   gcc  
+loongarch            randconfig-r031-20230412   gcc  
+loongarch            randconfig-r035-20230409   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r002-20230410   gcc  
+m68k         buildonly-randconfig-r005-20230409   gcc  
+m68k                                defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+m68k                 randconfig-r002-20230409   gcc  
+m68k                 randconfig-r021-20230410   gcc  
+m68k                 randconfig-r024-20230409   gcc  
+microblaze   buildonly-randconfig-r006-20230409   gcc  
+microblaze           randconfig-r004-20230409   gcc  
+microblaze           randconfig-r004-20230412   gcc  
+microblaze           randconfig-r005-20230410   gcc  
+microblaze           randconfig-r016-20230409   gcc  
+microblaze           randconfig-r023-20230410   gcc  
+microblaze           randconfig-r035-20230412   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips         buildonly-randconfig-r001-20230409   gcc  
+mips         buildonly-randconfig-r001-20230410   gcc  
+mips         buildonly-randconfig-r002-20230409   gcc  
+mips                         cobalt_defconfig   gcc  
+mips                     decstation_defconfig   gcc  
+mips                     loongson1b_defconfig   gcc  
+mips                      maltaaprp_defconfig   clang
+mips                           mtx1_defconfig   clang
+mips                 randconfig-r036-20230412   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r001-20230409   gcc  
+nios2                randconfig-r011-20230409   gcc  
+openrisc     buildonly-randconfig-r002-20230409   gcc  
+openrisc             randconfig-r003-20230409   gcc  
+openrisc             randconfig-r006-20230410   gcc  
+openrisc             randconfig-r024-20230410   gcc  
+openrisc             randconfig-r024-20230412   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r004-20230410   gcc  
+parisc               randconfig-r012-20230409   gcc  
+parisc               randconfig-r022-20230409   gcc  
+parisc               randconfig-r024-20230409   gcc  
+parisc               randconfig-r026-20230412   gcc  
+parisc               randconfig-r033-20230413   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r001-20230410   gcc  
+powerpc      buildonly-randconfig-r006-20230410   gcc  
+powerpc                      pcm030_defconfig   gcc  
+powerpc                     ppa8548_defconfig   clang
+powerpc              randconfig-r021-20230410   gcc  
+powerpc              randconfig-r025-20230409   gcc  
+powerpc              randconfig-r026-20230410   gcc  
+powerpc              randconfig-r034-20230409   clang
+powerpc              randconfig-r036-20230412   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r014-20230410   gcc  
+riscv                randconfig-r021-20230412   gcc  
+riscv                randconfig-r022-20230409   gcc  
+riscv                randconfig-r026-20230410   gcc  
+riscv                randconfig-r031-20230412   clang
+riscv                randconfig-r035-20230412   clang
+riscv                randconfig-r042-20230409   gcc  
+riscv                randconfig-r042-20230410   gcc  
+riscv                randconfig-r042-20230412   gcc  
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r023-20230409   gcc  
+s390                 randconfig-r025-20230410   gcc  
+s390                 randconfig-r031-20230413   gcc  
+s390                 randconfig-r033-20230410   clang
+s390                 randconfig-r044-20230409   gcc  
+s390                 randconfig-r044-20230410   gcc  
+s390                 randconfig-r044-20230412   gcc  
+sh                               allmodconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                          r7785rp_defconfig   gcc  
+sh                   randconfig-r001-20230412   gcc  
+sh                   randconfig-r014-20230409   gcc  
+sh                   randconfig-r015-20230409   gcc  
+sh                   randconfig-r023-20230409   gcc  
+sh                   randconfig-r023-20230410   gcc  
+sh                   randconfig-r026-20230409   gcc  
+sh                   randconfig-r032-20230410   gcc  
+sh                          rsk7264_defconfig   gcc  
+sparc        buildonly-randconfig-r003-20230409   gcc  
+sparc        buildonly-randconfig-r004-20230409   gcc  
+sparc        buildonly-randconfig-r005-20230409   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r012-20230409   gcc  
+sparc                randconfig-r023-20230412   gcc  
+sparc                randconfig-r032-20230412   gcc  
+sparc64      buildonly-randconfig-r005-20230410   gcc  
+sparc64              randconfig-r003-20230410   gcc  
+sparc64              randconfig-r006-20230409   gcc  
+sparc64              randconfig-r006-20230412   gcc  
+sparc64              randconfig-r021-20230409   gcc  
+sparc64              randconfig-r022-20230410   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230410   clang
+x86_64                        randconfig-a001   clang
+x86_64               randconfig-a002-20230410   clang
+x86_64               randconfig-a003-20230410   clang
+x86_64                        randconfig-a003   clang
+x86_64               randconfig-a004-20230410   clang
+x86_64               randconfig-a005-20230410   clang
+x86_64                        randconfig-a005   clang
+x86_64               randconfig-a006-20230410   clang
+x86_64               randconfig-a011-20230410   gcc  
+x86_64               randconfig-a012-20230410   gcc  
+x86_64                        randconfig-a012   clang
+x86_64               randconfig-a013-20230410   gcc  
+x86_64               randconfig-a014-20230410   gcc  
+x86_64                        randconfig-a014   clang
+x86_64               randconfig-a015-20230410   gcc  
+x86_64               randconfig-a016-20230410   gcc  
+x86_64                        randconfig-a016   clang
+x86_64               randconfig-r022-20230410   gcc  
+x86_64               randconfig-r025-20230410   gcc  
+x86_64               randconfig-r034-20230410   clang
+x86_64                               rhel-8.3   gcc  
+xtensa       buildonly-randconfig-r006-20230409   gcc  
+xtensa               randconfig-r002-20230410   gcc  
+xtensa               randconfig-r006-20230409   gcc  
+xtensa               randconfig-r034-20230412   gcc  
+xtensa                         virt_defconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
