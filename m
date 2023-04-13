@@ -2,120 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97A2C6E0B43
-	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 12:17:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6019C6E0B9E
+	for <lists+linux-pci@lfdr.de>; Thu, 13 Apr 2023 12:43:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjDMKRC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 13 Apr 2023 06:17:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
+        id S229728AbjDMKnh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 13 Apr 2023 06:43:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjDMKQo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 06:16:44 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFEB1113
-        for <linux-pci@vger.kernel.org>; Thu, 13 Apr 2023 03:16:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681381003; x=1712917003;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CRYHLrtB7tkYmx12gfnRFmla/xImqWAQNobWhWHoNgk=;
-  b=WM/VAFldKxVZyQUFr7M4oow9WLqvidLMTNWINRP6iMf5zb0UKIAyKRfl
-   2oGuiJ3a4P3aT1kgcnJdqLKaatHXVqJKnKOBRccQUXWpBOzI1fJ/qCqHJ
-   t7ZIooOyztg4Exmc4OXK0Ja823nBM2Hr4EE2gTAA/PITnkAt0SxeJOAKv
-   dyb7Mks6TQQQJGSeLUtIi43/Tx3gegRsWe5qjmhjABO2Vi1ukbgQ1TZWf
-   shXzmoY/Kb6sCxKCCf3fbKBzmR60qfkAAHqH84zxwIoWNp/1RkFu70lJx
-   4r8v02IRDJ1PTHvQGBfwYcnfbmx29Fu6sZGOqbyfetGGIx7GThhxHsQfB
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="346828787"
-X-IronPort-AV: E=Sophos;i="5.98,341,1673942400"; 
-   d="scan'208";a="346828787"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2023 03:16:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10678"; a="721997664"
-X-IronPort-AV: E=Sophos;i="5.98,341,1673942400"; 
-   d="scan'208";a="721997664"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga001.jf.intel.com with ESMTP; 13 Apr 2023 03:16:39 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id E60C326A; Thu, 13 Apr 2023 13:16:42 +0300 (EEST)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v3] PCI/PM: Bail out early in pci_bridge_wait_for_secondary_bus() if link is not trained
-Date:   Thu, 13 Apr 2023 13:16:42 +0300
-Message-Id: <20230413101642.8724-1-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229618AbjDMKng (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 13 Apr 2023 06:43:36 -0400
+X-Greylist: delayed 600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 13 Apr 2023 03:43:34 PDT
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7270CE4A;
+        Thu, 13 Apr 2023 03:43:33 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 8CCC0100E4193;
+        Thu, 13 Apr 2023 12:26:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 6BAD5382E3; Thu, 13 Apr 2023 12:26:36 +0200 (CEST)
+Date:   Thu, 13 Apr 2023 12:26:36 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ido Schimmel <idosch@nvidia.com>, Petr Machata <petrm@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Amit Cohen <amcohen@nvidia.com>, mlxsw@nvidia.com,
+        linux-pci@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [PATCH net-next 6/6] mlxsw: pci: Add support for new reset flow
+Message-ID: <20230413102636.GA18500@wunner.de>
+References: <ZCBOdunTNYsufhcn@shredder>
+ <20230329160144.GA2967030@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230329160144.GA2967030@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If the Root/Downstream Port supports active link reporting we can check
-if the link is trained before waiting for the device to respond. If the
-link is not trained, there is no point waiting for the whole ~60s so
-bail out early in that case.
+On Wed, Mar 29, 2023 at 11:01:44AM -0500, Bjorn Helgaas wrote:
+> On Sun, Mar 26, 2023 at 04:53:58PM +0300, Ido Schimmel wrote:
+> > On Thu, Mar 23, 2023 at 11:51:15AM -0500, Bjorn Helgaas wrote:
+> > > So the first question is why you don't simply use
+> > > pci_reset_function(), since it is supposed to cause a reset and do all
+> > > the necessary waiting for the device to be ready.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
-As discussed in the email thread of the previous version here:
+I agree, this driver should use one of the reset helpers provided
+by the PCI core.
 
-  https://lore.kernel.org/linux-pci/20230404052714.51315-1-mika.westerberg@linux.intel.com/
+Not least because if the Downstream Port is hotplug-capable,
+fiddling with the Link Disable bit behind the hotplug driver's back
+will cause unbinding and rebinding of the device.
 
-This adds the last change on top of
+> > __pci_reset_function_locked() is another option, but it assumes the
+> > device lock was already taken, which is correct during probe, but not
+> > when reset is performed as part of devlink reload.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git/log/?h=reset
+Just call pci_dev_lock() in the devlink reload code path.
 
+> Hmmm, pci_pm_reset() puts the device in D3hot, then back to D0.  Spec
+> says that results in "undefined internal Function state," which
+> doesn't even sound like a guaranteed reset, but it's what we have, and
+> in any case, it does not disable the link.
 
- drivers/pci/pci.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Per PCIe r6.0.1 sec 5.8, the device undergoes a Soft Reset when moving
+from D3hot to D0 (unless the No_Soft_Reset bit is set in the Power
+Management Control/Status Register, sec 7.5.2.2).
 
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 0b4f3b08f780..61bf8a4b2099 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -5037,6 +5037,22 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
- 		}
- 	}
- 
-+	/*
-+	 * Everything above is handling the delays mandated by the PCIe r6.0
-+	 * sec 6.6.1.
-+	 *
-+	 * If the port supports active link reporting we now check one more
-+	 * time if the link is active and if not bail out early with the
-+	 * assumption that the device is not present anymore.
-+	 */
-+	if (dev->link_active_reporting) {
-+		u16 status;
-+
-+		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-+		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-+			return -ENOTTY;
-+	}
-+
- 	return pci_dev_wait(child, reset_type,
- 			    PCIE_RESET_READY_POLL_MS - delay);
- }
--- 
-2.39.2
+The driver can set the PCI_DEV_FLAGS_NO_PM_RESET flag if this reset method
+doesn't have any effect (via quirk_no_pm_reset()).
 
+We could also discuss moving pci_pm_reset after pci_reset_bus_function
+in pci_reset_fn_methods[] if this reset method has little value on the
+majority of devices.
+
+Alternatively, if Secondary Bus Reset has the intended effect, the driver
+could invoke that directly via pci_reset_bus().
+
+> Spec (PCIe r6.0, sec 6.6.1) says "Disabling a Link causes Downstream
+> components to undergo a hot reset."  That seems like it *could* be a
+> general-purpose method of doing a reset, and I don't know why the PCI
+> core doesn't support it.  Added Alex and Lukas in case they know.
+
+Sounds reasonable to me.
+
+Thanks,
+
+Lukas
