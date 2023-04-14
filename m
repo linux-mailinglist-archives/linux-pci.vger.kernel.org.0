@@ -2,79 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D84F6E1C7C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 08:16:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DF776E1D66
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 09:42:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230250AbjDNGQt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Apr 2023 02:16:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48854 "EHLO
+        id S229744AbjDNHmq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Apr 2023 03:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230146AbjDNGQj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 02:16:39 -0400
-Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 980925FD0;
-        Thu, 13 Apr 2023 23:16:38 -0700 (PDT)
-X-IronPort-AV: E=Sophos;i="5.99,195,1677510000"; 
-   d="scan'208";a="159411153"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie6.idc.renesas.com with ESMTP; 14 Apr 2023 15:16:34 +0900
-Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 00AA04195F5A;
-        Fri, 14 Apr 2023 15:16:33 +0900 (JST)
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     jingoohan1@gmail.com, mani@kernel.org,
-        gustavo.pimentel@synopsys.com, fancer.lancer@gmail.com,
-        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
-        bhelgaas@google.com, kishon@kernel.org
-Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v12 19/19] misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
-Date:   Fri, 14 Apr 2023 15:16:22 +0900
-Message-Id: <20230414061622.2930995-20-yoshihiro.shimoda.uh@renesas.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com>
-References: <20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S229448AbjDNHmo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 03:42:44 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDAD4C0A
+        for <linux-pci@vger.kernel.org>; Fri, 14 Apr 2023 00:42:42 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1C80230000085;
+        Fri, 14 Apr 2023 09:42:39 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 08BA22A69; Fri, 14 Apr 2023 09:42:39 +0200 (CEST)
+Date:   Fri, 14 Apr 2023 09:42:38 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
+        Chris Chiu <chris.chiu@canonical.com>,
+        Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Sheng Bi <windy.bi.enflame@gmail.com>,
+        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
+        Stanislav Spassov <stanspas@amazon.de>,
+        Yang Su <yang.su@linux.alibaba.com>,
+        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v3] PCI/PM: Bail out early in
+ pci_bridge_wait_for_secondary_bus() if link is not trained
+Message-ID: <20230414074238.GA22973@wunner.de>
+References: <20230413101642.8724-1-mika.westerberg@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230413101642.8724-1-mika.westerberg@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add Renesas R8A779F0 in pci_device_id table so that pci-epf-test
-can be used for testing PCIe EP on R-Car S4-8.
+On Thu, Apr 13, 2023 at 01:16:42PM +0300, Mika Westerberg wrote:
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -5037,6 +5037,22 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Everything above is handling the delays mandated by the PCIe r6.0
+> +	 * sec 6.6.1.
+> +	 *
+> +	 * If the port supports active link reporting we now check one more
+> +	 * time if the link is active and if not bail out early with the
+> +	 * assumption that the device is not present anymore.
+> +	 */
+> +	if (dev->link_active_reporting) {
+> +		u16 status;
+> +
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
+> +		if (!(status & PCI_EXP_LNKSTA_DLLLA))
+> +			return -ENOTTY;
+> +	}
+> +
+>  	return pci_dev_wait(child, reset_type,
+>  			    PCIE_RESET_READY_POLL_MS - delay);
+>  }
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/misc/pci_endpoint_test.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hm, shouldn't the added code live in the
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a7244de081ec..1d8f72b42c0a 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -81,6 +81,7 @@
- #define PCI_DEVICE_ID_RENESAS_R8A774B1		0x002b
- #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
- #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
-+#define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
- 
- static DEFINE_IDA(pci_endpoint_test_ida);
- 
-@@ -993,6 +994,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774B1),},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774C0),},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774E1),},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779F0),
-+	  .driver_data = (kernel_ulong_t)&default_data,
-+	},
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
- 	  .driver_data = (kernel_ulong_t)&j721e_data,
- 	},
--- 
-2.25.1
+	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT)
 
+branch?  For the else branch (Gen3+ devices with > 5 GT/s),
+we've already waited for the link to become active, so the
+additional check seems superfluous.  (But maybe I'm missing
+something.)
+
+I also note that this documentation change has been dropped
+vis-à-vis v1 of the patch, not sure if that's intentional:
+
+-	* However, 100 ms is the minimum and the PCIe spec says the
+-	* software must allow at least 1s before it can determine that the
+-	* device that did not respond is a broken device. There is
+-	* evidence that 100 ms is not always enough, for example certain
+-	* Titan Ridge xHCI controller does not always respond to
+-	* configuration requests if we only wait for 100 ms (see
+-	* https://bugzilla.kernel.org/show_bug.cgi?id=203885).
++	* However, 100 ms is the minimum and the PCIe spec says the software
++	* must allow at least 1s before it can determine that the device that
++	* did not respond is a broken device. Also device can take longer than
++	* that to respond if it indicates so through Request Retry Status
++	* completions.
+
+Thanks,
+
+Lukas
