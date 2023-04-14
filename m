@@ -2,194 +2,254 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4835B6E22EE
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 14:14:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EBDD6E2303
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 14:20:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229673AbjDNMO6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Apr 2023 08:14:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33874 "EHLO
+        id S229762AbjDNMUM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Apr 2023 08:20:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjDNMO4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 08:14:56 -0400
-Received: from mail-vs1-xe2a.google.com (mail-vs1-xe2a.google.com [IPv6:2607:f8b0:4864:20::e2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 564DF1722;
-        Fri, 14 Apr 2023 05:14:55 -0700 (PDT)
-Received: by mail-vs1-xe2a.google.com with SMTP id y17so16210462vsd.9;
-        Fri, 14 Apr 2023 05:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681474494; x=1684066494;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qjiVKo1Y1OcOlbDVIJvSvV2H1MeJz//axCy7/BdCahk=;
-        b=Fe8m4/mmLHl4ZcnIo9fRP/p9xuMfWjJd0XRYLnfACf08hAOaoZwHLltFHx4kbzMnkE
-         m17/byXfxvA/+aYt3yW1bZihcAGFhsH816eL+hTqqE7+2ZMg06Gnia5UyfVGicIfMNK3
-         d2WpCUBZcjPwHLk8ykizOLdXj6eeP4lDuB5bUYZP2nkW6GvzmIMwPhLij7rpCNNoUi6t
-         T4O/ww+iNf7FrsuavkakQzLoEfwBCXLiuKaEX4UoQ7Z+1ovI1UIlSJVye70rkA/aPM5Z
-         bEght6Q9hNTgs7ISxw+jVDYwfNTAR7i5aP3pdMaY8jM3yeY0Z9ZEyDrXdIToDaj5s3/8
-         A5Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681474494; x=1684066494;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qjiVKo1Y1OcOlbDVIJvSvV2H1MeJz//axCy7/BdCahk=;
-        b=jlrtnzUKbIHJwMxo+8jGPghSu/XFmv9CprFj08/PPXMy9DxYWeVIYOSE8s6ol1B5TT
-         /FTx6O4CR1oeknu3My+dUzcQ7wCbsdl0nwiSjE0xY4rk+9as7zWyYAPXGoHMR15wYYKT
-         i9W1NpPoE/tNl6oAVhnFVUSP2G6UGIp7cLWviNmQ6rlNMLXy+AF+UgFF6KT50p30tfNJ
-         P3kLRx2ztJnPSxyOgRJxnd3zeNk1qxToTl/whsXavmU9wYPRtDoOxkqKAcdzpgWvXMKu
-         vtEndZynHSuYO3egtpVIIyqWxqSFJ/XqrCsPEGRTW5+ZTuHgjmsmZz4Y4V/aT54lCWJj
-         m06w==
-X-Gm-Message-State: AAQBX9c5BCVE/BSJOpBG0b8O7Hgw7gd4ieQ8ANJBcQCLhvVOGEVJurn8
-        BeleN1PWXAx6AHJPe38b4nwE4lrL8Ck470zw6T0=
-X-Google-Smtp-Source: AKy350ayHjK9a/ULv1Go4EqUSXtpslgMBDkHswCkCXSD3vSN1LlLTEVtwPpfrdd4gpdos1YOr7fJY3+3FggVQsUq1Gc=
-X-Received: by 2002:a67:ca8b:0:b0:42e:3afd:dc2d with SMTP id
- a11-20020a67ca8b000000b0042e3afddc2dmr1610104vsl.6.1681474494437; Fri, 14 Apr
- 2023 05:14:54 -0700 (PDT)
+        with ESMTP id S230401AbjDNMUF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 08:20:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0C69B74A;
+        Fri, 14 Apr 2023 05:19:54 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.206])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Pyb4X6Y3Dz6DDPf;
+        Fri, 14 Apr 2023 20:15:24 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Fri, 14 Apr
+ 2023 13:19:51 +0100
+Date:   Fri, 14 Apr 2023 13:19:50 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Terry Bowman <terry.bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 5/6] PCI/AER: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <20230414131950.00006e76@Huawei.com>
+In-Reply-To: <20230411180302.2678736-6-terry.bowman@amd.com>
+References: <20230411180302.2678736-1-terry.bowman@amd.com>
+        <20230411180302.2678736-6-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <20230411165919.23955-1-jim2101024@gmail.com> <20230411165919.23955-3-jim2101024@gmail.com>
- <20230413143935.pmbyjk2boxl3rwne@mraw.org> <CANCKTBtXKAYf1LxR4qN+dVyxsWgyDztUVB4EdG=xhHbuhNCq5w@mail.gmail.com>
- <20230413200646.ddgsoqgmaae343nl@mraw.org>
-In-Reply-To: <20230413200646.ddgsoqgmaae343nl@mraw.org>
-From:   Jim Quinlan <jim2101024@gmail.com>
-Date:   Fri, 14 Apr 2023 08:14:42 -0400
-Message-ID: <CANCKTBuZ=Hxy9WgnjbauhHqXGx4QU_t8pgX=3che2K89=2BT9A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] PCI: brcmstb: CLKREQ# accomodations of downstream device
-To:     Cyril Brulebois <kibi@debian.org>
-Cc:     linux-pci@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Phil Elwell <phil@raspberrypi.com>,
-        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-rpi-kernel@lists.infradead.org>,
-        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 13, 2023 at 4:06=E2=80=AFPM Cyril Brulebois <kibi@debian.org> w=
-rote:
->
-> Hi Jim,
->
-> Jim Quinlan <jim2101024@gmail.com> (2023-04-13):
-> > Can you provide (a) the full boot log prior to applying the patch
-> > series and (b) full boot log after applying the series, using an
-> > IDENTICAL setup. If it fails on both then it has little to do with my
-> > patch series.
->
-> Just to be clear, the issue I reported was with:
->  - Raspberry Pi Compute Module 4 (Rev 1.1, 4G RAM, 32G storage)
->  - Raspberry Pi Compute Module 4 IO Board
->  - SupaHub PCIe-to-multiple-USB adapter, reference PCE6U1C-R02, VER 006S
->
-> This was my minimal reproducer for the kernel panic at boot-up, which
-> goes away with either v1 or v2. When I realized I didn't actually check
-> whether the SupaHub board was working correctly, I plugged 2 devices to
-> obtain this setup:
->  - Raspberry Pi Compute Module 4 (Rev 1.1, 4G RAM, 32G storage)
->  - Raspberry Pi Compute Module 4 IO Board
->  - SupaHub PCIe-to-multiple-USB adapter, reference PCE6U1C-R02, VER 006S
->  - Kingston DataTraveler G4 32GB on USB-A port #1 of the SupaHub board.
->  - Logitech K120 keyboard on USB-A port #2 of the SupaHub board.
->
-> It turns out that this particular revision of the SupaHub board isn't
-> supported by xhci_hcd directly (failing to probe with error -110) and
-> one needs to enable CONFIG_USB_XHCI_PCI_RENESAS=3Dm and also ship its
-> accompanying firmware (/lib/firmware/renesas_usb_fw.mem). With this
-> updated kernel config, I'm able to use the keyboard and to read data
-> from the memory stick without problems (70 MB/s).
->
-> > In my last series your testing somehow conflated the effect of an
-> > unrelated MMC interrupt issue so please be precise.
->
-> I wish things would be simpler and didn't involve combinatorics, let
-> alone other bugs/regressions at times, but I'm really trying my best to
-> navigate and report issues and test patches when I can spare some time=E2=
-=80=A6
+On Tue, 11 Apr 2023 13:03:01 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Hi Cyril,
+> From: Robert Richter <rrichter@amd.com>
+> 
+> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+> RCiEP, but CXL downstream and upstream ports are not enumerated and
+> not visible in the PCIe hierarchy. Protocol and link errors are sent
+> to an RCEC.
+> 
+> Restricted CXL host (RCH) downstream port-detected errors are signaled
+> as internal AER errors, either Uncorrectable Internal Error (UIE) or
+> Corrected Internal Errors (CIE). The error source is the id of the
+> RCEC. A CXL handler must then inspect the error status in various CXL
+> registers residing in the dport's component register space (CXL RAS
+> cap) or the dport's RCRB (AER ext cap). [1]
+> 
+> Errors showing up in the RCEC's error handler must be handled and
+> connected to the CXL subsystem. Implement this by forwarding the error
+> to all CXL devices below the RCEC. Since the entire CXL device is
+> controlled only using PCIe Configuration Space of device 0, Function
+> 0, only pass it there [2]. These devices have the Memory Device class
+> code set (PCI_CLASS_MEMORY_CXL, 502h) and the existing cxl_pci driver
+> can implement the handler.
 
-I want to encourage you and others doing testing and bug reporting:
-everyone wins when a bug or issue is reported, fixed, and tested.
-I'm just asking that when you have negative results, that you provide
-information on the "before" and "after" test results of
-the patch series, and run both on the same test environment.
+This comment implies only class code compliant drivers.  Sure we don't
+have drivers for anything else yet, but we should try to avoid saying
+there won't be any (which I think above implies).
 
-Regards,
-Jim Quinlan
-Broadcom STB
+You have a comment in the code, but maybe relaxing the description above
+to "currently support devices have..."
 
->
->
-> In my defence, the very similar board PCE6U1C-R02, VER 006 boots without
-> a kernel panic, and works fine with xhci_hcd without that extra module
-> and its firmware. It's based on the exact same chip (Renesas Technology
-> Corp. uPD720201) though, that's why I didn't realize the need for an
-> extra module until now for the PCE6U1C-R02, VER 006S one. (Florian,
-> thanks for mentioning .config earlier=E2=80=A6)
->
-> To sum up, it seems both (sub)versions of that SupaHub PCE6U1C-R02 board
-> are usable with this patch series: the kernel panic at boot-up is gone,
-> and USB devices plugged into those boards are working as expected.
->
->
-> But, speaking of combinatorics, while the patch series helps fix
-> https://bugzilla.kernel.org/show_bug.cgi?id=3D217276 on that particular
-> initial combination of CM4 and SupaHub PCE6U1C-R02, VER 006S, it also
-> generates a regression if I use a different CM4=E2=80=A6
->
-> Setup:
->  - Raspberry Pi Compute Module 4 (Rev 1.0, 8G RAM, 32G storage)
->  - Raspberry Pi Compute Module 4 IO Board
->  - SupaHub PCIe-to-multiple-USB adapter, reference PCE6U1C-R02, VER 006S
->
-> You'll find attached (a) and (b) as requested above, for this setup, as
-> well as the kernel configuration file:
->  - (a) =3D dmesg-unpatched.txt =3D boots fine (and USB devices work fine =
-if
->    memory sticks or keyboards are plugged in).
->  - (b) =3D dmesg-patched.txt =3D kernel panic.
->  - cm4+pcie.config
->
-> I'm getting similar results with the other SupaHub board:
->  - Raspberry Pi Compute Module 4 (Rev 1.0, 8G RAM, 32G storage)
->  - Raspberry Pi Compute Module 4 IO Board
->  - SupaHub PCIe-to-multiple-USB adapter, reference PCE6U1C-R02, VER 006
->
->
-> This is probably best summarized this way:
->
->                               | unpatched    | patched
-> ------------------------------+--------------+--------------
-> CM4 Rev 1.1 4G/32G + VER 006  | OK           | OK
-> CM4 Rev 1.1 4G/32G + VER 006S | Kernel panic | OK            =E2=86=90 Bu=
-gzilla entry
-> CM4 Rev 1.0 8G/32G + VER 006  | OK           | Kernel panic
-> CM4 Rev 1.0 8G/32G + VER 006S | OK           | Kernel panic
->
->
-> (And I'm of course using the same settings regarding the serial console,
-> to get traces when needed.)
->
->
-> Cheers,
-> --
-> Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
-> D-I release manager -- Release team member -- Freelance Consultant
+> In addition to errors directed to the CXL
+> endpoint device, the handler must also inspect the CXL downstream
+> port's CXL RAS and PCIe AER external capabilities that is connected to
+> the device.
+> 
+> Since CXL downstream port errors are signaled using internal errors,
+> the handler requires those errors to be unmasked. This is subject of a
+> follow-on patch.
+> 
+> The reason for choosing this implementation is that a CXL RCEC device
+> is bound to the AER port driver, but the driver does not allow it to
+> register a custom specific handler to support CXL. Connecting the RCEC
+> hard-wired with a CXL handler does not work, as the CXL subsystem
+> might not be present all the time. The alternative to add an
+> implementation to the portdrv to allow the registration of a custom
+> RCEC error handler isn't worth doing it as CXL would be its only user.
+> Instead, just check for an CXL RCEC and pass it down to the connected
+> CXL device's error handler. With this approach the code can entirely
+> be implemented in the PCIe AER driver and is independent of the CXL
+> subsystem. The CXL driver only provides the handler.
+> 
+> [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
+> [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Mahesh J Salgaonkar <mahesh@linux.ibm.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pci@vger.kernel.org
+
+Generally looks good to me.  A few trivial comments inline.
+
+> ---
+>  drivers/pci/pcie/Kconfig |  8 ++++++
+>  drivers/pci/pcie/aer.c   | 61 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 69 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+> index 228652a59f27..b0dbd864d3a3 100644
+> --- a/drivers/pci/pcie/Kconfig
+> +++ b/drivers/pci/pcie/Kconfig
+> @@ -49,6 +49,14 @@ config PCIEAER_INJECT
+>  	  gotten from:
+>  	     https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+>  
+> +config PCIEAER_CXL
+> +	bool "PCI Express CXL RAS support"
+
+Description makes this sound too general. I'd mentioned restricted
+hosts even in the menu option title.
+
+
+> +	default y
+> +	depends on PCIEAER && CXL_PCI
+> +	help
+> +	  This enables CXL error handling for Restricted CXL Hosts
+> +	  (RCHs).
+
+Spec term is probably fine in the title, but in the help I'd 
+expand it as per the CXL 3.0 glossary to include
+"CXL Host that is operating in RCD mode."
+It might otherwise surprise people that this matters on their shiny
+new CXL X.0 host (because they found an old CXL 1.1 card in a box
+and decided to plug it in)
+
+Do we actually need this protection at all?  It's a tiny amount of code
+and I can't see anything immediately that requires the CXL_PCI dependency
+other than it's a bit pointless if that isn't here.
+
+> +
+>  #
+>  # PCI Express ECRC
+>  #
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 7a25b62d9e01..171a08fd8ebd 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -946,6 +946,65 @@ static bool find_source_device(struct pci_dev *parent,
+>  	return true;
+>  }
+>  
+> +#ifdef CONFIG_PCIEAER_CXL
+> +
+> +static bool is_cxl_mem_dev(struct pci_dev *dev)
+> +{
+> +	/*
+> +	 * A CXL device is controlled only using PCIe Configuration
+> +	 * Space of device 0, Function 0.
+
+That's not true in general.   Definitely true that CXL protocol
+error reporting is controlled only using this Devfn, but
+more generally there could be other stuff in later functions.
+So perhaps make the comment more specific.
+
+> +	 */
+> +	if (dev->devfn != PCI_DEVFN(0, 0))
+> +		return false;
+> +
+> +	/* Right now there is only a CXL.mem driver */
+> +	if ((dev->class >> 8) != PCI_CLASS_MEMORY_CXL)
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +static bool is_internal_error(struct aer_err_info *info)
+> +{
+> +	if (info->severity == AER_CORRECTABLE)
+> +		return info->status & PCI_ERR_COR_INTERNAL;
+> +
+> +	return info->status & PCI_ERR_UNC_INTN;
+> +}
+> +
+> +static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info);
+> +
+> +static int cxl_handle_error_iter(struct pci_dev *dev, void *data)
+> +{
+> +	struct aer_err_info *e_info = (struct aer_err_info *)data;
+> +
+> +	if (!is_cxl_mem_dev(dev))
+> +		return 0;
+> +
+> +	/* pci_dev_put() in handle_error_source() */
+> +	dev = pci_dev_get(dev);
+> +	if (dev)
+> +		handle_error_source(dev, e_info);
+> +
+> +	return 0;
+> +}
+> +
+> +static void cxl_handle_error(struct pci_dev *dev, struct aer_err_info *info)
+> +{
+> +	/*
+> +	 * CXL downstream port errors are signaled as RCEC internal
+
+Make this comment more specific (to RCH I think).
+
+> +	 * errors. Forward them to all CXL devices below the RCEC.
+> +	 */
+> +	if (pci_pcie_type(dev) == PCI_EXP_TYPE_RC_EC &&
+> +	    is_internal_error(info))
+> +		pcie_walk_rcec(dev, cxl_handle_error_iter, info);
+> +}
+> +
+> +#else
+> +static inline void cxl_handle_error(struct pci_dev *dev,
+> +				    struct aer_err_info *info) { }
+> +#endif
+> +
+>  /**
+>   * handle_error_source - handle logging error into an event log
+>   * @dev: pointer to pci_dev data structure of error source device
+> @@ -957,6 +1016,8 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  {
+>  	int aer = dev->aer_cap;
+>  
+> +	cxl_handle_error(dev, info);
+> +
+>  	if (info->severity == AER_CORRECTABLE) {
+>  		/*
+>  		 * Correctable error does not need software intervention.
+
