@@ -2,113 +2,147 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E63B6E236C
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 14:37:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2D1216E237D
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 14:39:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231162AbjDNMhW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Apr 2023 08:37:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54834 "EHLO
+        id S229553AbjDNMjP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Apr 2023 08:39:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230339AbjDNMhO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 08:37:14 -0400
-Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01C6C11C;
-        Fri, 14 Apr 2023 05:37:12 -0700 (PDT)
-Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-187bee46f9dso83544fac.11;
-        Fri, 14 Apr 2023 05:37:12 -0700 (PDT)
+        with ESMTP id S229540AbjDNMjO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 08:39:14 -0400
+Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F8CC113
+        for <linux-pci@vger.kernel.org>; Fri, 14 Apr 2023 05:39:13 -0700 (PDT)
+Received: by mail-pj1-x1032.google.com with SMTP id w11so18713319pjh.5
+        for <linux-pci@vger.kernel.org>; Fri, 14 Apr 2023 05:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20221208.gappssmtp.com; s=20221208; t=1681475952; x=1684067952;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6HYNyUUEorOF+isbH7MLUIuEp6e49eMyp3D2Mh/QBec=;
+        b=sX9xudieMQAT6uk2HyEujcuXLPGCVhLkbBS1MEggluyv2/BWsKTprUIhVNVt6ta/eD
+         d98sadGF1z6Q/jfpnFqkVPTHYZbJI2PTpdLqsBjTS7+cCgAdc/8BOQHqNNqHPuJr6K89
+         87mCXFZ5OFk1G0Jl7vPpBXS5iv9eOBQMlapv1bOtbl1ZPPBN/KZ/TRyvmmbjUZWP/MRM
+         ytMhjPizvYkw5flS0uc35OUOggApRHBcgNjjhj1zHv+91dP05JQx/leVr7yL4zJaZQlt
+         fUjct8dYbxDSu67+/cDb8jqZBQTwXnEGzsPNa4WogomhoENfUXiaDEPgIRaNfJ3nTQww
+         BkGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681475832; x=1684067832;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=tif8NhdXDaYsKWyUG+spnxjaLJkK+6EAtIt8ttAcEs4=;
-        b=i+4joY4xSfcJWUGbb/QKqQhM6JAFGQGGC2hc8kjXcu+DFxMEumpHtzO+djsGYvUHGM
-         V+P6a26j383t68rtnfI5RZh59jhcACjD9qLDg9yy6J6AuxUX9/RgpKZu6ANNokstysIm
-         nn5xVbT2iT76xHF7EFmYwHwy1B5kObd/euSHWH6L4WjG1OK4qNkgXASzVEkY1BAZDU/B
-         rj3ie90JVqz2NjaQG0EwhYHW1OqfD4wuEoUNrP3Hcl17PFlbu48BcwPX65eIOksUFKm0
-         AubaGQ0aS0y0XWTTRfccFLfws77JxLR/DYNBzAV+iTNLa99ZyrzJxlk+tYpPiq+EMQA0
-         pIUQ==
-X-Gm-Message-State: AAQBX9ci6Dmh/0k6E7y4OnObJ2LoDSC5mslbh+zaC6Y5PMJaEAuf645h
-        UMkGnIk2mwvMfuv4U6e/qQ==
-X-Google-Smtp-Source: AKy350YtIiRkiMozbJSJbOls/JKKCcKXGbj0sXIIm/2Aub6PlAVIfCaR3m+eP4C5BMr98YW8rvXHAQ==
-X-Received: by 2002:a05:6870:c227:b0:177:b6ed:a154 with SMTP id z39-20020a056870c22700b00177b6eda154mr4230820oae.34.1681475832618;
-        Fri, 14 Apr 2023 05:37:12 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id eb8-20020a056870a88800b001777244e3f9sm1740074oab.8.2023.04.14.05.37.11
+        d=1e100.net; s=20221208; t=1681475952; x=1684067952;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6HYNyUUEorOF+isbH7MLUIuEp6e49eMyp3D2Mh/QBec=;
+        b=SYtdHJKtVXAL31JswE+9pUp5tWW+ZKY5xgwI1j01nSoxqZQai0/WyTRQaoXwiHuucG
+         cLRimkVZ8pWRFHHTESO77/WOH93wHbNpwGCxenckh8stctuKkNlTpop+QNzJKlpkq2f2
+         bv2jKyqg115Wc7Vqj/4Mbm3XTKfYu3bEz5KF8BS/Hj9dZDIC3ZUqEyYdjQSe1DfkXKHM
+         RUpOUT+mc0seR1FmGZF7k18AyjuIoycpoi9qGJz0fBb7ZHEVmifxU3eClgoVbjUEfugK
+         izx+rhYAEhzwUwVnXAAhZv3aOqIeKsSngd2EEMPOQQTVHkGkPBLHbZ9F27IFJHSsDkSi
+         v7AQ==
+X-Gm-Message-State: AAQBX9dSb2LA6MAccQR2+AgLzYvO9KjHyAfpIPAS5dZjz0FZIqPm10WE
+        3cqC4b2J1FeGKaaSbH4cHaKGjw==
+X-Google-Smtp-Source: AKy350YpGxzPLIwor8+DKH5UMTOv8E83Zu2LeKHX4c7FkRKlCbIlCR8cBym6UhA2y6HclkSFaFD8Zg==
+X-Received: by 2002:a17:903:24d:b0:1a6:4a25:c7f7 with SMTP id j13-20020a170903024d00b001a64a25c7f7mr2653035plh.6.1681475952405;
+        Fri, 14 Apr 2023 05:39:12 -0700 (PDT)
+Received: from tyrell.hq.igel.co.jp (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id v21-20020a1709028d9500b001a527761c31sm3015366plo.79.2023.04.14.05.39.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Apr 2023 05:37:11 -0700 (PDT)
-Received: (nullmailer pid 3600812 invoked by uid 1000);
-        Fri, 14 Apr 2023 12:37:05 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Fri, 14 Apr 2023 05:39:12 -0700 (PDT)
+From:   Shunsuke Mie <mie@igel.co.jp>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Shunsuke Mie <mie@igel.co.jp>, Frank Li <Frank.Li@nxp.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [RFC PATCH 0/3] Introduce a PCIe endpoint virtio console
+Date:   Fri, 14 Apr 2023 21:39:00 +0900
+Message-Id: <20230414123903.896914-1-mie@igel.co.jp>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     kishon@kernel.org, linux-renesas-soc@vger.kernel.org,
-        robh+dt@kernel.org, bhelgaas@google.com,
-        gustavo.pimentel@synopsys.com, mani@kernel.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        fancer.lancer@gmail.com, marek.vasut+renesas@gmail.com,
-        kw@linux.com, lpieralisi@kernel.org, jingoohan1@gmail.com
-In-Reply-To: <20230414061622.2930995-15-yoshihiro.shimoda.uh@renesas.com>
-References: <20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com>
- <20230414061622.2930995-15-yoshihiro.shimoda.uh@renesas.com>
-Message-Id: <168147484959.3576429.13497930996151330300.robh@kernel.org>
-Subject: Re: [PATCH v12 14/19] dt-bindings: PCI: renesas: Add R-Car Gen4
- PCIe Host
-Date:   Fri, 14 Apr 2023 07:37:05 -0500
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+PCIe endpoint framework provides APIs to implement PCIe endpoint function.
+This framework allows defining various PCIe endpoint function behaviors in
+software. This patch extend the framework for virtio pci device. The
+virtio is defined to communicate guest on virtual machine and host side.
+Advantage of the virtio is the efficiency of data transfer and the conciseness
+of implementation device using software. It also be applied to PCIe
+endpoint function.
 
-On Fri, 14 Apr 2023 15:16:17 +0900, Yoshihiro Shimoda wrote:
-> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
-> PCIe host module.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
->  .../bindings/pci/rcar-gen4-pci-host.yaml      | 109 ++++++++++++++++++
->  1 file changed, 109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-> 
+We designed and implemented a PCIe EP virtio console function driver using
+the extended PCIe endpoint framework for virtio. It can be communicate
+host and endpoint over virtio as console.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+An architecture of the function driver is following:
 
-yamllint warnings/errors:
+ ┌────────────┐         ┌──────────────────────┬────────────┐
+ │virtio      │         │                      │virtio      │
+ │console drv │         ├───────────────┐      │console drv │
+ ├────────────┤         │(virtio console│      ├────────────┤
+ │ virtio bus │         │ device)       │◄────►│ virtio bus │
+ ├────────────┤         ├---------------┤      └────────────┤
+ │            │         │ pci ep virtio │                   │
+ │  pci bus   │         │  console drv  │                   │
+ │            │  pcie   ├───────────────┤                   │
+ │            │ ◄─────► │  pci ep Bus   │                   │
+ └────────────┘         └───────────────┴───────────────────┘
+   PCIe Root              PCIe Endpoint
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.example.dtb: pcie@e65d0000: reg: [[0, 3864854528, 0, 4096], [0, 3864862720, 0, 2048], [0, 3864866816, 0, 8192], [0, 3864875008, 0, 4608], [0, 3864879616, 0, 3584], [0, 4261412864, 0, 4194304]] is too long
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.example.dtb: pcie@e65d0000: reg-names: ['dbi', 'dbi2', 'atu', 'dma', 'app', 'config'] is too long
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.example.dtb: pcie@e65d0000: Unevaluated properties are not allowed ('#address-cells', '#interrupt-cells', '#size-cells', 'bus-range', 'device_type', 'dma-ranges', 'interrupt-map', 'interrupt-map-mask', 'ranges', 'snps,enable-cdm-check' were unexpected)
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+Introduced driver is `pci ep virtio console drv` in the figure. It works
+as ep function for PCIe root and virtual virtio console device for PCIe
+endpoint. Each side of virtio console driver has virtqueue, and
+introduced driver transfers data on the virtqueue to each other. A data
+on root tx queue is transfered to endpoint rx queue and vice versa.
 
-doc reference errors (make refcheckdocs):
+This patchset is depend follwing patches which are under discussion.
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230414061622.2930995-15-yoshihiro.shimoda.uh@renesas.com
+- [RFC PATCH 0/3] Deal with alignment restriction on EP side
+link: https://lore.kernel.org/linux-pci/20230113090350.1103494-1-mie@igel.co.jp/
+- [RFC PATCH v2 0/7] Introduce a vringh accessor for IO memory
+link: https://lore.kernel.org/virtualization/20230202090934.549556-1-mie@igel.co.jp/
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+First of this patchset is introduce a helper function to realize pci
+virtio function using PCIe endpoint framework. The second one is adding
+a missing definition for virtio pci header. The last one is for PCIe
+endpoint virtio console driver.
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
+This is tested on linux-20230406 and RCar S4 board as PCIe endpoint.
 
-pip3 install dtschema --upgrade
+Shunsuke Mie (3):
+  PCI: endpoint: introduce a helper to implement pci ep virtio function
+  virtio_pci: add a definition of queue flag in ISR
+  PCI: endpoint: Add EP function driver to provide virtio-console
+    functionality
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+ drivers/pci/endpoint/functions/Kconfig        |  19 +
+ drivers/pci/endpoint/functions/Makefile       |   2 +
+ drivers/pci/endpoint/functions/pci-epf-vcon.c | 554 ++++++++++++++++++
+ .../pci/endpoint/functions/pci-epf-virtio.c   | 469 +++++++++++++++
+ .../pci/endpoint/functions/pci-epf-virtio.h   | 123 ++++
+ include/uapi/linux/virtio_pci.h               |   3 +
+ 6 files changed, 1170 insertions(+)
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-vcon.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-virtio.c
+ create mode 100644 drivers/pci/endpoint/functions/pci-epf-virtio.h
+
+-- 
+2.25.1
 
