@@ -2,276 +2,205 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id ACE386E2151
-	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 12:54:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1780A6E21F0
+	for <lists+linux-pci@lfdr.de>; Fri, 14 Apr 2023 13:22:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbjDNKyd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Apr 2023 06:54:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57716 "EHLO
+        id S229933AbjDNLWA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Apr 2023 07:22:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjDNKyc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 06:54:32 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061f.outbound.protection.outlook.com [IPv6:2a01:111:f400:7e88::61f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9532719;
-        Fri, 14 Apr 2023 03:54:30 -0700 (PDT)
+        with ESMTP id S229722AbjDNLV7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 07:21:59 -0400
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2069.outbound.protection.outlook.com [40.107.96.69])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF5AFCF;
+        Fri, 14 Apr 2023 04:21:56 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=izIz//5ZdFyt9IFkHKxYXLgqu/PZs7zwe1vvQEjbcQrdNhFCGxXyvg6pwb1P5rXNz9vjOfpk2n+rqHAWDlAIOQiJaydNhbV2Jb3BEA2baztuXz0phd9Di/uMGsIYRzPkx/pvtb14d4lMgRdIQ3DqWAAM17fYg5Nf9/QAJaJ4VctdbCQyDz6YiwvSfU3lb35YW2pjkUOxZsZGKUvCetW5qgC+YXuaC/xuDeEn6Hfqzoah8C+KIBF9ubloTd9LzxkUinw2HI2Npe7XFOzuDmCxs5AwhQCNj3k4sBHDxj9hkPsri6NE9hOaHPporutUCaJwxQCNvaKDvXbgxKMGQrxTzw==
+ b=DgYt4OpC7HS+nE5XqZN1XLvp3CX1ZYXdqodsG92+eDfxjSHiZn9X/CtOKAjp5AKQ4UmKaLdAXOJM3C08imLWyCnxIfyHkxKWeyYIJ4yhHs3g+ytwpxvs6SFASMX/M8pYv+o7I/P2gqBAipoJppv4VpIaP5UiXwnZrwjftw+FNbT061ELqUynLVWOFXwm8IH7Y+Wg9no8R/7w4En/KPDTL+uV811u1hKr54ApiqWxDgJqZ0lKa5+2jrjlkKnUCFTfAtIV3USVXUH3qgmpEreGcHmvDebNXD2Spb85Bd5UGXw1gheRInP4Ohulz8TH9OYpchLXUooYPj243j8peUfWRA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=2N0Hz6Bg5g1ZA1jqc4u0pI2rS42RbEExSWRpoTUZYxQ=;
- b=E+7xp2bXPU+2GBNzExDW/lq7EvqxjzOsiMnBsXIlnKOY59caL42MKU89dIY2ZVW95GV6oFyRc+Pup7ZFkf4qaAN1r6v4BjZN8ARbppeiP9MiVXeUk/bPAzkDlcsUTT+ojBhEzaDlxSXyh2nH2kMQLbO1tA77mGAnoDXg5r5XtgzNreQPVxJxPzESF4Kf0U1cqZ9+leckhw1JGN6ijxSOlt1FSj/PxUD7MSfCi+1msZ7x1H77nBZgUDzMug/F9ae0xZ8oJPdi5Iz3vF4YTpXhRnsW8d+7LpmjHAK79dQv/YRr8ssUa5O9PlwI3mQpr0dEp3LjiVuT29Tx9lQd0p68Eg==
+ bh=P6c/zq0fGbrK8b51V+19DhwcLK/5pilgWfZ/i8zJ69E=;
+ b=ETxb0/a9sQ90mMSA5GsMugPx5E92c2e1QJKx8apzu+Zsmu3TLVcgAx42fslcECXrzLqVQB7kUEGoPlxM1EzD1Yno8qwacXVk2TX/F14h8HFkk6QTJMFcudfiSII/I+tbnKjtjK9YBsiHWmFC9v9HfPHuFtjEFBXjBzQ5CiBIwgFQBuiHU5fDuK5HCVdc0P4k7ibEn075tq9pc32CJm2k647NIXr/g/9VY/VcuyPM3kkBlUm0P5RfCqKH9eYtMx6kBlqNAzyjjupSxS4dgazd+s9LPGaRQEMi8VwRZBIOYz30QSW3/7luZvVDIXRr6leLjOXHyXLUQzTMERP1oXwrmg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2N0Hz6Bg5g1ZA1jqc4u0pI2rS42RbEExSWRpoTUZYxQ=;
- b=U6I1Zc11xHkmG5CqD8qZQkxc/3biOoqaYne1OgP6ot/3cfU2XDoHcoomPkbfj30Z0FKDVG56Zv6UI0N/LrBlbPQOlktuPCwv+MX78u1Vl+NyY2jIkwZ2x/eE5pU4aqaES/alKs3KVRpuC7ncHdK3Ze8DuoYFAjx/FPqVIpbIr4l2LvqNOser1rbfMragn2qgQyRa+6ICaYbIXwEqiq6AwzChIg49jfr/IjoXJf3iaCjTMWkyZF3PP4J0fXSMjM18I0bWmzm9e16e2CKy3LQU/TXfqHBouZVxii01zuDv1cligRWw33G1sZEqEXM86kpRagAOBaFd6mPA+jB3nCDKKw==
-Received: from MW4PR02CA0011.namprd02.prod.outlook.com (2603:10b6:303:16d::28)
- by BY5PR12MB4936.namprd12.prod.outlook.com (2603:10b6:a03:1d4::13) with
+ bh=P6c/zq0fGbrK8b51V+19DhwcLK/5pilgWfZ/i8zJ69E=;
+ b=A3whwXozY1CoQaGrJYCmIUwa9fY1JQiH1xnXOJJU1UzALQs/PYbYzpp1spaCUT5XyCdg+SGUJkQMFHcbmwYJDICe1uql1qPPPIXF79GSv/SGp63imMs1b+ImUKbs/CtnVVVB1PEdXqFdEx4JLlnZ6hrKc+Nb+FTK7mZA0cnc+8k=
+Received: from BN1PR12CA0004.namprd12.prod.outlook.com (2603:10b6:408:e1::9)
+ by CH0PR12MB5074.namprd12.prod.outlook.com (2603:10b6:610:e1::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Fri, 14 Apr
- 2023 10:54:26 +0000
-Received: from CO1NAM11FT033.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:16d:cafe::38) by MW4PR02CA0011.outlook.office365.com
- (2603:10b6:303:16d::28) with Microsoft SMTP Server (version=TLS1_2,
+ 2023 11:21:54 +0000
+Received: from BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:408:e1:cafe::cb) by BN1PR12CA0004.outlook.office365.com
+ (2603:10b6:408:e1::9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.36 via Frontend
- Transport; Fri, 14 Apr 2023 10:54:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- CO1NAM11FT033.mail.protection.outlook.com (10.13.174.247) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6298.36 via Frontend Transport; Fri, 14 Apr 2023 10:54:26 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Fri, 14 Apr 2023
- 03:54:13 -0700
-Received: from [10.41.21.79] (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Fri, 14 Apr
- 2023 03:54:05 -0700
-Message-ID: <7ce0a62a-546e-8b01-abe7-598012a6ac2d@nvidia.com>
-Date:   Fri, 14 Apr 2023 16:24:02 +0530
+ Transport; Fri, 14 Apr 2023 11:21:54 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN8NAM11FT063.mail.protection.outlook.com (10.13.177.110) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6298.36 via Frontend Transport; Fri, 14 Apr 2023 11:21:54 +0000
+Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 14 Apr
+ 2023 06:21:48 -0500
+Date:   Fri, 14 Apr 2023 13:21:37 +0200
+From:   Robert Richter <rrichter@amd.com>
+To:     Ira Weiny <ira.weiny@intel.com>
+CC:     Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        Terry Bowman <terry.bowman@amd.com>,
+        <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <bwidawsk@kernel.org>, <dan.j.williams@intel.com>,
+        <dave.jiang@intel.com>, <linux-cxl@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v3 6/6] PCI/AER: Unmask RCEC internal errors to enable
+ RCH downstream port error handling
+Message-ID: <ZDk3QeWZDOP8sr4s@rric.localdomain>
+References: <20230411180302.2678736-7-terry.bowman@amd.com>
+ <20230412212901.GA81099@bhelgaas>
+ <20230413180122.00007471@Huawei.com>
+ <643887b44b2d4_3a1882949d@iweiny-mobl.notmuch>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [Patch v6 8/9] PCI: tegra194: Add interconnect support in
- Tegra234
-Content-Language: en-US
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-CC:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
-        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
-        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <helgaas@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
-        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
-        <ishah@nvidia.com>, <bbasu@nvidia.com>,
-        Sumit Gupta <sumitg@nvidia.com>
-References: <20230411110002.19824-1-sumitg@nvidia.com>
- <20230411110002.19824-9-sumitg@nvidia.com> <ZDgXGCJQAHpLTw9S@lpieralisi>
-From:   Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <ZDgXGCJQAHpLTw9S@lpieralisi>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.230.37]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <643887b44b2d4_3a1882949d@iweiny-mobl.notmuch>
+X-Originating-IP: [10.180.168.240]
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT033:EE_|BY5PR12MB4936:EE_
-X-MS-Office365-Filtering-Correlation-Id: b060692f-c031-4fef-86db-08db3cd69d8a
+X-MS-TrafficTypeDiagnostic: BN8NAM11FT063:EE_|CH0PR12MB5074:EE_
+X-MS-Office365-Filtering-Correlation-Id: 63a70abd-3998-4231-22f8-08db3cda7392
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: ltKiJ6MoDqfpCQ289J2nm7Au0OzeYNRa/JCEThP7q4iCgoDstyZNcLyrlnQb2kQMe6D5PO72YksMdDN0KpPYh4aHDIfmpxIzkwwCfK7RkjMzIzBOCqfCb36h9EQrgR/Ln6JUTjop39ST4brC1lwqPYAA0la1hQKp3dmnDG6aeIvDI6plGPh+V0CetAWN5LN77VBCM0x2WCvnamDu+OL/QIHwJovjd4OcxW2XwqO/0UOeAPU+AJhHaGW3yGQlTWTr7F422KSa8qjqE1glX8FuwVSPT8dCBENRUaBc/LZUU4XxyJ5BKxjPj6XM0JAoZk2d6Pxo2tDvhhEVCxrNgrF8I25D7I3Dw5jd0ybbmXI0l8tlpooriGpO1vit+trpcpmXIZ6PUQ6TVg03vE0/1/g93LnN6dJxTsVtyRLUwTtNbzxfxnnGtNVa6096KanCWk+Yl3ywsDqkeajPj4ddz8vyAdE2pavkNztmHDDrgW+dVQ9qh4haeDWyiOX5zLRK6YVBhPd6imH7nkHgszM8ECgq74KI6apQpN7D1QjuiRDrL/tykv+MDZbESi+MVqGfeI4Mb+CaPYxTtiYZslv+DYz0x+vIeSYVsbLBIRUvxDz1L/uauzyRrX8l79DjEzdMm9dLc6Kta/IBwMfAvfabcrTXPYmmGEmfMlhYUH3tMcj0EJTQSDdCmkJG/fz7eTziMBbEo3jXWUvcM3TNFaJqdrHnMNPfyUtWrNzzzVln01b/8QjKgY2EWY4FduibK/ionxyoZ6zM27EkcKAfOC0+VXeGWn/QVjvf+mZCIspACKoYDpY2Yq7eCOr8dVzUf7Yz9Qvf
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(346002)(376002)(136003)(451199021)(46966006)(36840700001)(40470700004)(82310400005)(36756003)(40480700001)(40460700003)(478600001)(34020700004)(54906003)(8676002)(16576012)(6666004)(356005)(7636003)(41300700001)(8936002)(70206006)(316002)(4326008)(82740400003)(16526019)(6916009)(36860700001)(336012)(47076005)(426003)(83380400001)(2616005)(70586007)(31686004)(186003)(53546011)(26005)(107886003)(86362001)(5660300002)(7416002)(2906002)(31696002)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 10:54:26.5264
+X-Microsoft-Antispam-Message-Info: vzix4prmwlCEJND1FM0/GYC/b4UGfBoFnPdI+KfHYKTXGbz/Uls+75M2ejuswKu3iDXN1YBLIb7sKENkJMQbrAhyHbkuNTjFYcVkoEZQ8ka3GTnOub2YjEq4UFSgd+6Hchjq5OKkIqly2FYgd39E8m10NJi5vz8gEXKn0LW8/HaztFAgqlDKpobc2GyzFys6qs9dgeWf4MS+OcSaXKyooyrNjYEjSociQHx6zjaRFnh6EQgVswZmW1yr+9qmdLIWskjHQuzmLnUtbNh7I/I/PhdqlCzSqErkgQJWwqlhkIS38pk/P3/J9m3d5OB/KXyzrBNr7eiDlrme86g63qm8pa/ulbL/9VGiuupiPzW3M2iTAUlnpxi7Uh3fiz4JlR6D4evyD50EP9Af6zomnmDey7fN/JZMOvjpCi7JTxtpUxDqikiokcG8ejihwXBY3+IgPQbpXCib7mWHHWigWG3Uyd+Xy5d969cWzwNSoQFkxbaG3swsBRo/oP/fms9FLgi5F+Jm6T6A1IwLRQBMYAErpbL8pFVuLwrDDjxJRwVukDGEem38jq0yRBujSfz+I5p6bB4PsIYlm1CW75NyXZNSCGqw0hULifTC0rpOm7l+SASzXOIJ8L3GaCBBhLlZOln9MsBQCtBkXjF9NSWFCe1ZpNPxH8Fw2INGYqM4V+jYr9VLmimQomjuufb7Dl0nHtl8h7A1zqbwAQH85aKVxCtwZeJKW8PY6zIiYRCbvKqgxCcOwzhH0MhCQzxUis2XvRR8urapQdN8D7Bl2I1UL6GV0w==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(396003)(136003)(39860400002)(451199021)(46966006)(36840700001)(40470700004)(66899021)(36860700001)(336012)(70586007)(5660300002)(2906002)(7416002)(316002)(8676002)(40480700001)(55016003)(8936002)(41300700001)(81166007)(356005)(82310400005)(40460700003)(6916009)(82740400003)(4326008)(966005)(426003)(70206006)(47076005)(54906003)(186003)(26005)(478600001)(9686003)(53546011)(7696005)(6666004)(16526019)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Apr 2023 11:21:54.2082
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b060692f-c031-4fef-86db-08db3cd69d8a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT033.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63a70abd-3998-4231-22f8-08db3cda7392
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT063.eop-nam11.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4936
-X-Spam-Status: No, score=-3.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB5074
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On 13.04.23 15:52:36, Ira Weiny wrote:
+> Jonathan Cameron wrote:
+> > On Wed, 12 Apr 2023 16:29:01 -0500
+> > Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > 
+> > > On Tue, Apr 11, 2023 at 01:03:02PM -0500, Terry Bowman wrote:
+> > > > From: Robert Richter <rrichter@amd.com>
+> > > > 
 
-
-On 13/04/23 20:22, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
+> > > > +static int __cxl_unmask_internal_errors(struct pci_dev *rcec)
+> > > > +{
+> > > > +	int aer, rc;
+> > > > +	u32 mask;
+> > > > +
+> > > > +	/*
+> > > > +	 * Internal errors are masked by default, unmask RCEC's here
+> > > > +	 * PCI6.0 7.8.4.3 Uncorrectable Error Mask Register (Offset 08h)
+> > > > +	 * PCI6.0 7.8.4.6 Correctable Error Mask Register (Offset 14h)
+> > > > +	 */  
+> > > 
+> > > Unmasking internal errors doesn't have anything specific to do with
+> > > CXL, so I don't think it should have "cxl" in the function name.
+> > > Maybe something like "pci_aer_unmask_internal_errors()".
+> > 
+> > This reminds me.  Not sure we resolved earlier discussion on changing
+> > the system wide policy to turn these on 
+> > https://lore.kernel.org/linux-cxl/20221229172731.GA611562@bhelgaas/
+> > which needs pretty much the same thing.
+> > 
+> > Ira, I think you were picking this one up?
+> > https://lore.kernel.org/linux-cxl/63e5fb533f304_13244829412@iweiny-mobl.notmuch/
 > 
+> After this discussion I posted an RFC to enable those errors.
 > 
-> On Tue, Apr 11, 2023 at 04:30:01PM +0530, Sumit Gupta wrote:
->> Add support to request DRAM bandwidth with Memory Interconnect
->> in Tegra234 SoC. The DRAM BW required for different modes depends
->> on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
->> Currently, no latency is observed in data transfer with PCI as the
->> DRAM Freq is always set to max. But that results in high power
->> consumption. Now for Tegra234, we are enabling the dynamic scaling
->> of the DRAM Freq based on requests from Clients instead of running
->> at the max Freq always. This change does that for PCI MC client.
+> https://lore.kernel.org/all/20230209-cxl-pci-aer-v1-1-f9a817fa4016@intel.com/
 > 
-> I am sorry but this is still unclear to me. The sentence above makes
-> me think that you are *adding* latency to the data transfer trading
-> it with lower power consumption; probably that's a wrong parsing of
-> what you are saying - so please explain what you want to say
-> with "no latency is observed" and whether this patch changes that
-> (which is not allowed because that would count as a regression).
+> Unfortunately the prevailing opinion was that this was unsafe.  And no one
+> piped up with a reason to pursue the alternative of a pci core call to enable
+> them as needed.
 > 
-> Thanks,
-> Lorenzo
+> So I abandoned the work.
 > 
+> I think the direction things where headed was to have a call like:
+> 
+> int pci_enable_pci_internal_errors(struct pci_dev *dev)
+> {
+> 	int pos_cap_err;
+> 	u32 reg;
+> 
+> 	if (!pcie_aer_is_native(dev))
+> 		return -EIO;
+> 
+> 	pos_cap_err = dev->aer_cap;
+> 
+> 	/* Unmask correctable and uncorrectable (non-fatal) internal errors */
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, &reg);
+> 	reg &= ~PCI_ERR_COR_INTERNAL;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_COR_MASK, reg);
+> 	
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, &reg);
+> 	reg &= ~PCI_ERR_UNC_INTN;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_SEVER, reg);
+> 	
+> 	pci_read_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, &reg);
+> 	reg &= ~PCI_ERR_UNC_INTN;
+> 	pci_write_config_dword(dev, pos_cap_err + PCI_ERR_UNCOR_MASK, reg);
+> 
+> 	return 0;
+> }
+> 
+> ... and call this from the cxl code where it is needed.
 
-Rephrased as below. Please suggest if it is clear now.
+The version I have ready after addressing Bjorn's comments is pretty
+much the same, apart from error checking of the read/writes.
 
-Add support to request DRAM bandwidth with Memory Interconnect in
-Tegra234 SoC. The DRAM BW required for different modes depends on
-speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
-Currently, the DRAM freq is always set to max but that results in
-higher power consumption. Memory Interconnect feature adds capability
-for MC clients to request BW and scale the DRAM freq dynamically to
-provide the requested BW.
+From your patch proposed you will need it in aer.c too and we do not
+need to export it.
 
-Thank you,
-Sumit Gupta
+This patch only enables it for (CXL) RCECs. You might want to extend
+this for CXL endpoints (and ports?) then.
 
->>
->> Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
->> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
->> ---
->>   drivers/pci/controller/dwc/pcie-tegra194.c | 51 +++++++++++++++-------
->>   1 file changed, 35 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
->> index e6eec85480ca..4fdadc7b045f 100644
->> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
->> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
->> @@ -14,6 +14,7 @@
->>   #include <linux/delay.h>
->>   #include <linux/gpio.h>
->>   #include <linux/gpio/consumer.h>
->> +#include <linux/interconnect.h>
->>   #include <linux/interrupt.h>
->>   #include <linux/iopoll.h>
->>   #include <linux/kernel.h>
->> @@ -288,6 +289,7 @@ struct tegra_pcie_dw {
->>        unsigned int pex_rst_irq;
->>        int ep_state;
->>        long link_status;
->> +     struct icc_path *icc_path;
->>   };
->>
->>   static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
->> @@ -310,6 +312,27 @@ struct tegra_pcie_soc {
->>        enum dw_pcie_device_mode mode;
->>   };
->>
->> +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
->> +{
->> +     struct dw_pcie *pci = &pcie->pci;
->> +     u32 val, speed, width;
->> +
->> +     val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
->> +
->> +     speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
->> +     width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
->> +
->> +     val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
->> +
->> +     if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
->> +             dev_err(pcie->dev, "can't set bw[%u]\n", val);
->> +
->> +     if (speed >= ARRAY_SIZE(pcie_gen_freq))
->> +             speed = 0;
->> +
->> +     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
->> +}
->> +
->>   static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
->>   {
->>        struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->> @@ -453,18 +476,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
->>        struct tegra_pcie_dw *pcie = arg;
->>        struct dw_pcie_ep *ep = &pcie->pci.ep;
->>        struct dw_pcie *pci = &pcie->pci;
->> -     u32 val, speed;
->> +     u32 val;
->>
->>        if (test_and_clear_bit(0, &pcie->link_status))
->>                dw_pcie_ep_linkup(ep);
->>
->> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
->> -             PCI_EXP_LNKSTA_CLS;
->> -
->> -     if (speed >= ARRAY_SIZE(pcie_gen_freq))
->> -             speed = 0;
->> -
->> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
->> +     tegra_pcie_icc_set(pcie);
->>
->>        if (pcie->of_data->has_ltr_req_fix)
->>                return IRQ_HANDLED;
->> @@ -950,9 +967,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
->>
->>   static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
->>   {
->> -     u32 val, offset, speed, tmp;
->>        struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
->>        struct dw_pcie_rp *pp = &pci->pp;
->> +     u32 val, offset, tmp;
->>        bool retry = true;
->>
->>        if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
->> @@ -1023,13 +1040,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
->>                goto retry_link;
->>        }
->>
->> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
->> -             PCI_EXP_LNKSTA_CLS;
->> -
->> -     if (speed >= ARRAY_SIZE(pcie_gen_freq))
->> -             speed = 0;
->> -
->> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
->> +     tegra_pcie_icc_set(pcie);
->>
->>        tegra_pcie_enable_interrupts(pp);
->>
->> @@ -2233,6 +2244,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
->>
->>        platform_set_drvdata(pdev, pcie);
->>
->> +     pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
->> +     ret = PTR_ERR_OR_ZERO(pcie->icc_path);
->> +     if (ret) {
->> +             tegra_bpmp_put(pcie->bpmp);
->> +             dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
->> +             return ret;
->> +     }
->> +
->>        switch (pcie->of_data->mode) {
->>        case DW_PCIE_RC_TYPE:
->>                ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
->> --
->> 2.17.1
->>
+> 
+> Is this an acceptable direction?  Terry is welcome to steal the above from my
+> patch and throw it into the PCI core.
+> 
+> Looking at the current state of things I think cxl_pci_ras_unmask() may
+> actually be broken now without calling something like the above.  For that I
+> dropped the ball.
+
+Thanks,
+
+-Robert
+
+> 
+> Ira
