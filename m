@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C86F36E2EA5
-	for <lists+linux-pci@lfdr.de>; Sat, 15 Apr 2023 04:36:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE096E2EA6
+	for <lists+linux-pci@lfdr.de>; Sat, 15 Apr 2023 04:36:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbjDOCgH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 14 Apr 2023 22:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55702 "EHLO
+        id S230226AbjDOCgK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 14 Apr 2023 22:36:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjDOCgG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 22:36:06 -0400
+        with ESMTP id S230060AbjDOCgK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 14 Apr 2023 22:36:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 025B2199B
-        for <linux-pci@vger.kernel.org>; Fri, 14 Apr 2023 19:36:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F24065B8D
+        for <linux-pci@vger.kernel.org>; Fri, 14 Apr 2023 19:36:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BF48640A5
-        for <linux-pci@vger.kernel.org>; Sat, 15 Apr 2023 02:36:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A3B7C4339E;
-        Sat, 15 Apr 2023 02:36:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 590D964B4B
+        for <linux-pci@vger.kernel.org>; Sat, 15 Apr 2023 02:36:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54069C433A0;
+        Sat, 15 Apr 2023 02:36:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681526163;
-        bh=cljwCRniMK/wkn0U0i5rkIm26oxLcyZRQ09HVI78h5s=;
+        s=k20201202; t=1681526164;
+        bh=YYJHZeD6tS0XdBwd/PW+/MPA+LxHJ36xsB42mpfSO5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YZfG36PVwqR/fadg8Go7dsdz+SSs8bK+ZPjCaHPSZ7xUc/lzwMUkcQ6fmdD+kdD7I
-         6N4LctQm8EUXgSUhf+vfM9ZLDhrp0afV+5SWUtTFG7cMEGUurrpR9yrkLBbHHT1Ot5
-         gyJDGiqA7kxNY0/XDO4iM8n3EpA6iHRxqdFlz/K4sAUfb29QkYtvYMl21Bobw+FPTs
-         EV3ZjTT9rs19ZD7QtjFaKgir/rdbOqT5frf1OKdDNV6hB5smylYRQyXbkHgFsl27MN
-         gxdXJUfP3x3iBtZrU0HfT9BciWZOOWfFto2Ct9npRbBqmdLrKvVR4OxbSRf/sj/QFe
-         ax2KibmgPq0uA==
+        b=X3lsP0rnTtGY/cTvnMFZHod0c4m04CWgE2Q+2/1WGGFLuCF7Xf2x1nxaRFTeXztMR
+         MixqEj6u5iU0NpyMnY+mPCEVW2sUndBT4p1P3C218urG0GGF7QXfQxbzI2fvzFu/rd
+         nbdAOkkHtsI7dxkX5sXZGA9MPINoiw9VEq5TKbf4C/JLOzHmkk0bwWS4HbCZb3FEEQ
+         wUuN50fF2rQkpTT5FlDrbAHRQnVj0IuUfXa2Em/qi3zlhqikvRvo74vsuwmzriJlf/
+         ObOjdh1lXWPdGOrOMVdsqJcHsTqZfg87BNUBWnR546JUX8YTmHLgExZRQOK4S/eYZG
+         6/t7gDRvhy9IA==
 From:   Damien Le Moal <dlemoal@kernel.org>
 To:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
 Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Kishon Vijay Abraham I <kishon@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v5 10/17] PCI: epf-test: Cleanup pci_epf_test_cmd_handler()
-Date:   Sat, 15 Apr 2023 11:35:35 +0900
-Message-Id: <20230415023542.77601-11-dlemoal@kernel.org>
+Subject: [PATCH v5 11/17] PCI: epf-test: Cleanup request result handling
+Date:   Sat, 15 Apr 2023 11:35:36 +0900
+Message-Id: <20230415023542.77601-12-dlemoal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230415023542.77601-1-dlemoal@kernel.org>
 References: <20230415023542.77601-1-dlemoal@kernel.org>
@@ -58,78 +58,124 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Command codes are never combined together as flags into a single value.
-Thus we can replace the series of "if" tests in
-pci_epf_test_cmd_handler() with a cleaner switch-case statement.
-This also allows checking that we got a valid command and print an error
-message if we did not.
+Each of the test functions pci_epf_test_write(), pci_epf_test_read() and
+pci_epf_test_copy() return an int result which is used by
+pci_epf_test_cmd_handler() to set a success or error bit in the request
+status.
+
+In the spirit of keeping the processing of each test case self-contained
+within its own test function, move the request status field update from
+pci_epf_test_cmd_handler() to each of these test functions and change
+these functions declaration to returning void.
 
 Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-test.c | 30 +++++++++----------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-test.c | 46 +++++++++----------
+ 1 file changed, 21 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
-index fa48e9b3c393..7f482ec08754 100644
+index 7f482ec08754..e528b0915444 100644
 --- a/drivers/pci/endpoint/functions/pci-epf-test.c
 +++ b/drivers/pci/endpoint/functions/pci-epf-test.c
-@@ -676,41 +676,39 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
- 		goto reset_handler;
- 	}
+@@ -325,8 +325,8 @@ static void pci_epf_test_print_rate(const char *ops, u64 size,
+ 		(u64)ts.tv_sec, (u32)ts.tv_nsec, rate / 1024);
+ }
  
--	if ((command & COMMAND_RAISE_LEGACY_IRQ) ||
--	    (command & COMMAND_RAISE_MSI_IRQ) ||
--	    (command & COMMAND_RAISE_MSIX_IRQ)) {
-+	switch (command) {
-+	case COMMAND_RAISE_LEGACY_IRQ:
-+	case COMMAND_RAISE_MSI_IRQ:
-+	case COMMAND_RAISE_MSIX_IRQ:
- 		pci_epf_test_raise_irq(epf_test, reg);
--		goto reset_handler;
--	}
--
--	if (command & COMMAND_WRITE) {
-+		break;
-+	case COMMAND_WRITE:
- 		ret = pci_epf_test_write(epf_test, reg);
- 		if (ret)
- 			reg->status |= STATUS_WRITE_FAIL;
- 		else
- 			reg->status |= STATUS_WRITE_SUCCESS;
- 		pci_epf_test_raise_irq(epf_test, reg);
--		goto reset_handler;
--	}
--
--	if (command & COMMAND_READ) {
-+		break;
-+	case COMMAND_READ:
- 		ret = pci_epf_test_read(epf_test, reg);
- 		if (!ret)
- 			reg->status |= STATUS_READ_SUCCESS;
- 		else
- 			reg->status |= STATUS_READ_FAIL;
- 		pci_epf_test_raise_irq(epf_test, reg);
--		goto reset_handler;
--	}
--
--	if (command & COMMAND_COPY) {
-+		break;
-+	case COMMAND_COPY:
- 		ret = pci_epf_test_copy(epf_test, reg);
- 		if (!ret)
- 			reg->status |= STATUS_COPY_SUCCESS;
- 		else
- 			reg->status |= STATUS_COPY_FAIL;
- 		pci_epf_test_raise_irq(epf_test, reg);
--		goto reset_handler;
-+		break;
-+	default:
-+		dev_err(dev, "Invalid command 0x%x\n", command);
-+		break;
- 	}
+-static int pci_epf_test_copy(struct pci_epf_test *epf_test,
+-			     struct pci_epf_test_reg *reg)
++static void pci_epf_test_copy(struct pci_epf_test *epf_test,
++			      struct pci_epf_test_reg *reg)
+ {
+ 	int ret;
+ 	bool use_dma;
+@@ -420,11 +420,14 @@ static int pci_epf_test_copy(struct pci_epf_test *epf_test,
+ 	pci_epc_mem_free_addr(epc, src_phys_addr, src_addr, reg->size);
  
- reset_handler:
+ err:
+-	return ret;
++	if (!ret)
++		reg->status |= STATUS_COPY_SUCCESS;
++	else
++		reg->status |= STATUS_COPY_FAIL;
+ }
+ 
+-static int pci_epf_test_read(struct pci_epf_test *epf_test,
+-			     struct pci_epf_test_reg *reg)
++static void pci_epf_test_read(struct pci_epf_test *epf_test,
++			      struct pci_epf_test_reg *reg)
+ {
+ 	int ret;
+ 	void __iomem *src_addr;
+@@ -509,11 +512,14 @@ static int pci_epf_test_read(struct pci_epf_test *epf_test,
+ 	pci_epc_mem_free_addr(epc, phys_addr, src_addr, reg->size);
+ 
+ err:
+-	return ret;
++	if (!ret)
++		reg->status |= STATUS_READ_SUCCESS;
++	else
++		reg->status |= STATUS_READ_FAIL;
+ }
+ 
+-static int pci_epf_test_write(struct pci_epf_test *epf_test,
+-			      struct pci_epf_test_reg *reg)
++static void pci_epf_test_write(struct pci_epf_test *epf_test,
++			       struct pci_epf_test_reg *reg)
+ {
+ 	int ret;
+ 	void __iomem *dst_addr;
+@@ -604,7 +610,10 @@ static int pci_epf_test_write(struct pci_epf_test *epf_test,
+ 	pci_epc_mem_free_addr(epc, phys_addr, dst_addr, reg->size);
+ 
+ err:
+-	return ret;
++	if (!ret)
++		reg->status |= STATUS_WRITE_SUCCESS;
++	else
++		reg->status |= STATUS_WRITE_FAIL;
+ }
+ 
+ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
+@@ -655,7 +664,6 @@ static void pci_epf_test_raise_irq(struct pci_epf_test *epf_test,
+ 
+ static void pci_epf_test_cmd_handler(struct work_struct *work)
+ {
+-	int ret;
+ 	u32 command;
+ 	struct pci_epf_test *epf_test = container_of(work, struct pci_epf_test,
+ 						     cmd_handler.work);
+@@ -683,27 +691,15 @@ static void pci_epf_test_cmd_handler(struct work_struct *work)
+ 		pci_epf_test_raise_irq(epf_test, reg);
+ 		break;
+ 	case COMMAND_WRITE:
+-		ret = pci_epf_test_write(epf_test, reg);
+-		if (ret)
+-			reg->status |= STATUS_WRITE_FAIL;
+-		else
+-			reg->status |= STATUS_WRITE_SUCCESS;
++		pci_epf_test_write(epf_test, reg);
+ 		pci_epf_test_raise_irq(epf_test, reg);
+ 		break;
+ 	case COMMAND_READ:
+-		ret = pci_epf_test_read(epf_test, reg);
+-		if (!ret)
+-			reg->status |= STATUS_READ_SUCCESS;
+-		else
+-			reg->status |= STATUS_READ_FAIL;
++		pci_epf_test_read(epf_test, reg);
+ 		pci_epf_test_raise_irq(epf_test, reg);
+ 		break;
+ 	case COMMAND_COPY:
+-		ret = pci_epf_test_copy(epf_test, reg);
+-		if (!ret)
+-			reg->status |= STATUS_COPY_SUCCESS;
+-		else
+-			reg->status |= STATUS_COPY_FAIL;
++		pci_epf_test_copy(epf_test, reg);
+ 		pci_epf_test_raise_irq(epf_test, reg);
+ 		break;
+ 	default:
 -- 
 2.39.2
 
