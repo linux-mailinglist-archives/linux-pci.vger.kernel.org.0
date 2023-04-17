@@ -2,278 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 55A126E496F
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 15:10:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D600E6E498A
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 15:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231355AbjDQNK5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 09:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33194 "EHLO
+        id S229959AbjDQNMW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 09:12:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229929AbjDQNK0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 09:10:26 -0400
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7398119B5
-        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 06:10:03 -0700 (PDT)
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id AAE6A3F232
-        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 13:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1681736946;
-        bh=YiUFuqU/fhzjjmJ7DSn8Q7aAMZ0aYSzaCs/lV3Bh1Qo=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=lEOYQrARAaG2Dl7zcASdI5e4z9ASw/MgYvyvZEGwiwnvl4HMeuAyfEOwZslK2AYxT
-         ZbrYeSAg28TFG8vYlrXnKHA7e2rWRQ+iwrx/qjVnax62wWkqv4oSozhQIUISy7aS97
-         QEnCPxeWkviF6LkwbYCQkB57SH7H9X8MgNzZA9yEtXbMh6/VjnecYnsMcCFebvgIu2
-         +MczuXTr5uLYkmzFrL2rFAUGzA9WqnfRTblV2fwJ9sZY2m50jU0gHt46HTe/ZQrBAS
-         y8GZZHMGizvThK3H3Ae/E63oO3z7r9Ke1J5FpHF6D2HzQJ6dHcASC2LBvTtarhHEyG
-         G09UeqHuwsN2Q==
-Received: by mail-pl1-f199.google.com with SMTP id ki6-20020a170903068600b001a684425451so5790130plb.15
-        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 06:09:06 -0700 (PDT)
+        with ESMTP id S230304AbjDQNLm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 09:11:42 -0400
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B3BA7EE6;
+        Mon, 17 Apr 2023 06:11:06 -0700 (PDT)
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-1880110ebe5so500232fac.3;
+        Mon, 17 Apr 2023 06:11:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681736944; x=1684328944;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YiUFuqU/fhzjjmJ7DSn8Q7aAMZ0aYSzaCs/lV3Bh1Qo=;
-        b=O+GalCWxXwnr6yEou9Pey3mQmFb9ZMI757SE8OkV92ogFsbc+IIlq6MdKY6yYuFjW8
-         E9XOsPL9e9RFyOxNdYSkEwJo3QqRXgD0frnyBOhCtWYd2Y+v/ILiWYGVamNN7mm/NPcD
-         P3SgxuShChXIcsUuAA6l98oNEIOF46CYVzI/A4El0ISrXtErOAEdFbOzdT82i3NKivUS
-         kHWbtmSwaci04X7mGy4E8Xit1Irfg/9V3sg09dpvy9a71JpS2eBhu8U/Ttezbk+r+FmY
-         9DV3qipQg66OCg/65Xz5PxvKIHxMMfxXjVxaVNslFw+QOq5gwIs+urNIOdhFm6YXNjjL
-         6WkA==
-X-Gm-Message-State: AAQBX9dr/WREJadynTphgcU+md1JYyEYLj/S2OZBkHdkbwytCj4+PYW0
-        gGLKIdTZYdWuQnRuMmvqbvgdP98xOj5h4FPJ63UxGJ1J7oWZvtD5Rthfv4lA3ac3NDysYl6lHKa
-        L9rBs13verZY5U9k/XCWl29Zk+JCmUGopEj/l6FglSSUKjVIprJJWrQ==
-X-Received: by 2002:a05:6a21:3289:b0:ef:ead5:6fdf with SMTP id yt9-20020a056a21328900b000efead56fdfmr3237246pzb.33.1681736944220;
-        Mon, 17 Apr 2023 06:09:04 -0700 (PDT)
-X-Google-Smtp-Source: AKy350Y4+tmmuSr/2Z3KNN7Jh48j6KvrHrUIuFudVHw7Y7X97z4iFkBn86z0rfwYvct0MY7OmsK5RY2wd9BuIP5xboU=
-X-Received: by 2002:a05:6a21:3289:b0:ef:ead5:6fdf with SMTP id
- yt9-20020a056a21328900b000efead56fdfmr3237216pzb.33.1681736943751; Mon, 17
- Apr 2023 06:09:03 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681737032; x=1684329032;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=IXZt0KqImFgsyhhPxPLi1OSBe3TPO8lPA8li15emVQ8=;
+        b=eNmVN/i1QwqyB475WNYuIM60wcQSoX++knu5ea25r1tSb0PbiZhk95iEtxyqpfKLRO
+         uaG9JMtl70Y6JFjnYs95KSO2MUWDG7d0+x+8RQxUpQTych0Ei95nP7Eg7uJVDD5aJrgT
+         tjR8elV4dfqtHbtrGws3SkK5KJGDuccDvo94P90BghSFlA3K8vMcculAcC+I4k14+kma
+         PxMBEOA+pyIy+5pGDtxvvwAmsjqa4Ngrc64Hrm+nPTITFBHZnbtrNSbAxLB1q4yS/Xfu
+         awBNxpOFJ+yzGN62U5CkFGE/rUfBKAf7QSXi12LxEcuEDkX0iNunNCMJMlfmkPrM4Baa
+         EPlw==
+X-Gm-Message-State: AAQBX9eaT/zl1BPwadiyvcQgRqNaAWsZS3PxhA9+GOku4JwRNJLCOc22
+        Amw8+Mgg31EcY3/1IqWaAQ==
+X-Google-Smtp-Source: AKy350ayJO+eG9U/cqv47KAeV20FExrvvzSFt2UABLULJZ9LP4qdLHS8V2D+sSymTWdAERUmkEL1bg==
+X-Received: by 2002:a05:6870:519:b0:177:8200:d7b with SMTP id j25-20020a056870051900b0017782000d7bmr8842016oao.29.1681737032605;
+        Mon, 17 Apr 2023 06:10:32 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id du3-20020a0568703a0300b001723a2e84b6sm4540975oab.6.2023.04.17.06.10.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 06:10:31 -0700 (PDT)
+Received: (nullmailer pid 2588783 invoked by uid 1000);
+        Mon, 17 Apr 2023 13:10:27 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-References: <20220727013255.269815-3-kai.heng.feng@canonical.com> <20220928212438.GA1836272@bhelgaas>
-In-Reply-To: <20220928212438.GA1836272@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Mon, 17 Apr 2023 21:08:52 +0800
-Message-ID: <CAAd53p7C8UkpEqTEy-WN-uKTSJYOuxPz1kOOcOykYZBvjQX0xg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] PCI/DPC: Disable DPC service on suspend when IRQ is
- shared with PME
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, koba.ko@canonical.com,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        mika.westerberg@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+From:   Rob Herring <robh@kernel.org>
+To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc:     bhelgaas@google.com, lorenzo.pieralisi@arm.com,
+        krzysztof.kozlowski@linaro.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, bharat.kumar.gogada@amd.com,
+        robh+dt@kernel.org, michals@xilinx.com, devicetree@vger.kernel.org,
+        nagaradhesh.yeleswarapu@amd.com
+In-Reply-To: <20230417103226.334588-2-thippeswamy.havalige@amd.com>
+References: <20230417103226.334588-1-thippeswamy.havalige@amd.com>
+ <20230417103226.334588-2-thippeswamy.havalige@amd.com>
+Message-Id: <168173527725.2535601.7665980002341378947.robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: xilinx-xdma: Add YAML schemas
+ for Xilinx XDMA PCIe Root Port Bridge
+Date:   Mon, 17 Apr 2023 08:10:27 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Sep 29, 2022 at 5:24=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Wed, Jul 27, 2022 at 09:32:52AM +0800, Kai-Heng Feng wrote:
-> > PCIe service that shares IRQ with PME may cause spurious wakeup on
-> > system suspend.
-> >
-> > Since AER is conditionally disabled in previous patch, also apply the
-> > same condition to disable DPC which depends on AER to work.
-> >
-> > PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
-> > that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
-> > (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-> > much here to disable DPC during system suspend.
-> >
-> > This is very similar to previous attempts to suspend AER and DPC [1],
-> > but with a different reason.
-> >
-> > [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.=
-feng@canonical.com/
-> > Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
-> >
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pcie/dpc.c | 52 +++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 41 insertions(+), 11 deletions(-)
-> >
-> > diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> > index 3e9afee02e8d1..542f282c43f75 100644
-> > --- a/drivers/pci/pcie/dpc.c
-> > +++ b/drivers/pci/pcie/dpc.c
-> > @@ -343,13 +343,33 @@ void pci_dpc_init(struct pci_dev *pdev)
-> >       }
-> >  }
-> >
-> > +static void dpc_enable(struct pcie_device *dev)
-> > +{
-> > +     struct pci_dev *pdev =3D dev->port;
-> > +     u16 ctl;
-> > +
-> > +     pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl)=
-;
-> > +     ctl =3D (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_C=
-TL_INT_EN;
-> > +     pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl)=
-;
-> > +}
->
 
-Sorry for the belated response.
+On Mon, 17 Apr 2023 16:02:25 +0530, Thippeswamy Havalige wrote:
+> Add YAML dtschemas of Xilinx XDMA Soft IP PCIe Root Port Bridge
+> dt binding.
+> 
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+> Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+> ---
+>  .../bindings/pci/xlnx,xdma-host.yaml          | 117 ++++++++++++++++++
+>  1 file changed, 117 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+> 
 
-> I guess the reason we need this is because we disable interupts in
-> pci_pm_suspend() first, then we call pci_save_dpc_state() from
-> pci_pm_suspend_noirq(), so we save the *disabled* control register.
-> Then when we resume, we restore that disabled control register so we
-> need to enable DPC again.  Right?
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Sorry for the belated response.
+yamllint warnings/errors:
 
-Yes, and the same logic applies to AER too.
+dtschema/dtc warnings/errors:
+Documentation/devicetree/bindings/pci/xlnx,xdma-host.example.dtb: /example-0/soc/pcie@a0000000: failed to match any schema with compatible: ['xlnx,xdma-host-3.00']
 
->
-> I think we should save a "dpc_enabled" bit in the pci_dev and
-> conditionally set PCI_EXP_DPC_CTL_INT_EN here.  If we unconditionally
-> set it here, we depend on portdrv *not* calling dpc_resume() if we
-> didn't enable DPC at enumeration-time for some reason.
+doc reference errors (make refcheckdocs):
 
-Does this scenario really happen?
-Once the port is marked with PCIE_PORT_SERVICE_DPC, DPC will be
-enabled by dpc_probe().
-So an additional bit seems to be unnecessary.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230417103226.334588-2-thippeswamy.havalige@amd.com
 
->
-> And I would leave PCI_EXP_DPC_CTL_EN_FATAL alone; see below.
->
-> > +static void dpc_disable(struct pcie_device *dev)
-> > +{
-> > +     struct pci_dev *pdev =3D dev->port;
-> > +     u16 ctl;
-> > +
-> > +     pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl)=
-;
-> > +     ctl &=3D ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> > +     pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl)=
-;
->
->   #define  PCI_EXP_DPC_CTL_EN_FATAL       0x0001
->   #define  PCI_EXP_DPC_CTL_INT_EN         0x0008
->
-> Clearing PCI_EXP_DPC_CTL_INT_EN makes sense to me, but I don't
-> understand the PCI_EXP_DPC_CTL_EN_FATAL part.
->
-> PCI_EXP_DPC_CTL_EN_FATAL is one of the four values of the two-bit DPC
-> Trigger Enable, so clearing that bit leaves the field as either 00b
-> (DPC is disabled) or 10b (DPC enabled and triggered when the port
-> detects an uncorrectable error or receives an ERR_NONFATAL or
-> ERR_FATAL message).
->
-> I think we should only clear PCI_EXP_DPC_CTL_INT_EN.
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
-Yes, clearing PCI_EXP_DPC_CTL_INT_EN should be sufficient.
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
 
->
-> > +}
-> > +
-> >  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
-> >  static int dpc_probe(struct pcie_device *dev)
-> >  {
-> >       struct pci_dev *pdev =3D dev->port;
-> >       struct device *device =3D &dev->device;
-> >       int status;
-> > -     u16 ctl, cap;
-> > +     u16 cap;
-> >
-> >       if (!pcie_aer_is_native(pdev) && !pcie_ports_dpc_native)
-> >               return -ENOTSUPP;
-> > @@ -364,10 +384,7 @@ static int dpc_probe(struct pcie_device *dev)
-> >       }
-> >
-> >       pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap)=
-;
-> > -     pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl)=
-;
-> > -
-> > -     ctl =3D (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_C=
-TL_INT_EN;
-> > -     pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl)=
-;
->
-> I think we should keep the PCI_EXP_DPC_CTL_EN_FATAL part here. That
-> just sets the desired trigger mode but AFAICT, has nothing to do with
-> generating interrupts.
+pip3 install dtschema --upgrade
 
-Agree. Will do it in next revision.
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
->
-> > +     dpc_enable(dev);
->
-> Then dpc_enable() could be called something like dpc_enable_irq(), and
-> it would *only* control interupt generation.
-
-Will do.
-
-Kai-Heng
-
->
-> >       pci_info(pdev, "enabled with IRQ %d\n", dev->irq);
-> >
-> >       pci_info(pdev, "error containment capabilities: Int Msg #%d, RPEx=
-t%c PoisonedTLP%c SwTrigger%c RP PIO Log %d, DL_ActiveErr%c\n",
-> > @@ -380,14 +397,25 @@ static int dpc_probe(struct pcie_device *dev)
-> >       return status;
-> >  }
-> >
-> > -static void dpc_remove(struct pcie_device *dev)
-> > +static int dpc_suspend(struct pcie_device *dev)
-> >  {
-> > -     struct pci_dev *pdev =3D dev->port;
-> > -     u16 ctl;
-> > +     if (dev->shared_pme_irq)
-> > +             dpc_disable(dev);
-> >
-> > -     pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl)=
-;
-> > -     ctl &=3D ~(PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN);
-> > -     pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl)=
-;
-> > +     return 0;
-> > +}
-> > +
-> > +static int dpc_resume(struct pcie_device *dev)
-> > +{
-> > +     if (dev->shared_pme_irq)
-> > +             dpc_enable(dev);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static void dpc_remove(struct pcie_device *dev)
-> > +{
-> > +     dpc_disable(dev);
-> >  }
-> >
-> >  static struct pcie_port_service_driver dpcdriver =3D {
-> > @@ -395,6 +423,8 @@ static struct pcie_port_service_driver dpcdriver =
-=3D {
-> >       .port_type      =3D PCIE_ANY_PORT,
-> >       .service        =3D PCIE_PORT_SERVICE_DPC,
-> >       .probe          =3D dpc_probe,
-> > +     .suspend        =3D dpc_suspend,
-> > +     .resume         =3D dpc_resume,
-> >       .remove         =3D dpc_remove,
-> >  };
-> >
-> > --
-> > 2.36.1
-> >
