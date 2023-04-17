@@ -2,67 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 69B886E43B8
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 11:27:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C92026E43BC
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 11:27:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230370AbjDQJ1V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 05:27:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55714 "EHLO
+        id S230304AbjDQJ11 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 05:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230304AbjDQJ1I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 05:27:08 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98F761BCB;
-        Mon, 17 Apr 2023 02:27:07 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id dm2so62464795ejc.8;
-        Mon, 17 Apr 2023 02:27:07 -0700 (PDT)
+        with ESMTP id S229515AbjDQJ1U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 05:27:20 -0400
+Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 691B940F3;
+        Mon, 17 Apr 2023 02:27:11 -0700 (PDT)
+Received: by mail-ej1-x62d.google.com with SMTP id c9so23510696ejz.1;
+        Mon, 17 Apr 2023 02:27:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681723627; x=1684315627;
+        d=gmail.com; s=20221208; t=1681723630; x=1684315630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9o2pg3w12ouavDje0N4JvwoYzLr+bTenfDLP4dMvvbI=;
-        b=WV7PTmUGJUTWzo0TE4wOxhZM19buPC/10W4ajS3dSrvwsaDIcykO++vhlZUifCFDQV
-         97XATADfA8pnlPMXfN+NLVPf+PcO2BfHfuUJlfE/nW8Dz4gwW7m86WNU9HhAQ4l8j+Ul
-         7KEAG9od5Ot3r7ndyR6lGhUN+WGBfNgbOWQ7AHIJYKl85ZkA1/wO7RCmqYELrgFBCU+M
-         kx5CJq9Owr7hg6T532sl0h6sG6L3TvS300kUbKCFGc4lVusk643zGZbOkoiUDYGtSVv1
-         DMp/2fXt7+NcnYS01/l0vpQ1Lru6WKb9iFrx0RtRPxs6dP27CQ3hkMwoQNGNhKh2rC8/
-         YcZA==
+        bh=fadIVQZBpq46XVVpnX4ew17nOLJ18aM1wvmfilOrUDc=;
+        b=psQTvOwN7Im7UB8QEqR2OSmFumZOFwO6TfC7CGzCAdqk7edTq9n3bBGXaoFaeDrOnq
+         2wFEn2W/7f2ZdIIE9H3kNRoKffbD/ADS9E4RD5qMWcjFYDIVn4TDga04IfHew+3SIkbu
+         0/8YJXw3h91Mn6e1C690x8WkRkdDFiyplTC7/09g5JDMBs/pf+BA9Pgl/D8c8Y0zTP+e
+         dZKMuXH3oMHdnjXah6c7hv0yGPE2NHN93OJla4VTECgKG9hzck9ve6ZDTJqqErH10mLF
+         EgF0EetFr3vu+fP86r9QLq5hGlSBTOXplsltx6aZjpuw+OsizK/psmfVxBRGHrDeKgta
+         HfKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681723627; x=1684315627;
+        d=1e100.net; s=20221208; t=1681723630; x=1684315630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9o2pg3w12ouavDje0N4JvwoYzLr+bTenfDLP4dMvvbI=;
-        b=JPooHZV1njf7EmvDtALc95YuGXCu2Kei8Jxbp+KCk3uT4C7mE3O163DTsBC6Dc6Fk5
-         qocpI3x9ScX7wYkxFbfgvnzhlC+qWwOZ5YNt/MEgrbgMZJInWwXso/B2PD7+qpVma3Tk
-         2P79WTPZCU1SWJIj+DS0C6YRIGNVdSggvCG/0PXNom4Wtxa7k2jxJyP9wTQtnypRld61
-         70JG7pZ+3fKp7DPbmxY4/m40KWGmWikPNcJUsPfS6Z8hnMq3N6XKoqSh3SxP5+N/VRDx
-         1PjTV1hGhLgkFRwsuFh29mqOIJuawzTOLOA7KDMxeDENnq8vI8aybeV4bOJNO86KVcd6
-         /fZA==
-X-Gm-Message-State: AAQBX9fc6V1B+/iUrsOEC5vNni8JYJHwaR3aLKBLyPYN96D5LngVq/Xr
-        jvACaYHcJomSjKhL9ZnEOiU=
-X-Google-Smtp-Source: AKy350br86+0CQugtW4Cb99cZkIG693qlFALHky/w7duq27HmDN9ZYbEj3x2ENTRHDYuk3Sf2np+FQ==
-X-Received: by 2002:a17:906:4098:b0:94f:cc7:fd7f with SMTP id u24-20020a170906409800b0094f0cc7fd7fmr7143125ejj.65.1681723627086;
-        Mon, 17 Apr 2023 02:27:07 -0700 (PDT)
+        bh=fadIVQZBpq46XVVpnX4ew17nOLJ18aM1wvmfilOrUDc=;
+        b=IjIq25ieYW0tibpQiZoqgTRVWfpm92rkBwMZWXYICW95VcaYHfsLMJqUDuw2MkVNUA
+         s9fOWfGCUFhmA6wrbwfiyY6pXCvuNTdlDUGCq9p8OdnRiuNdM9C3QgOVVXqvzG4RE225
+         A2nNThDR9+1K4KAx72e8H70n8//GEUv7/i3MB3EIygbdeMS+/3kSRs1ZqhgmxnzAYx/u
+         S9iml2B1cvo4DJHjDDes8hGx2vBGUKblc7iwBMmq8V27wlo6qbv81n8b+X4IQQqWgja8
+         Hz7jr4LF51B5BpjFW8zX7m0QptvJXF9CuDJXlBwZDMldmL5MaJpkzBKS6YodMlNipSAB
+         /ysw==
+X-Gm-Message-State: AAQBX9fHRfandT/uh+SIL0UoX7901Sw6kkGrJ/x1joIX1xlVhR189Whx
+        Go1NF2ZYknhoMTX+cIH8d7Y=
+X-Google-Smtp-Source: AKy350awxorBAKdXhAo3Z/z2Yp8EU/GCSvHG4r9Ik0g7z6c9I+WLLYKUpyzkR7qfK0ZCMmbd9CUb4Q==
+X-Received: by 2002:a17:906:6d0f:b0:935:20d8:c3c with SMTP id m15-20020a1709066d0f00b0093520d80c3cmr6848788ejr.61.1681723629914;
+        Mon, 17 Apr 2023 02:27:09 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id p20-20020a170906615400b0094aa087578csm6398596ejl.171.2023.04.17.02.27.06
+        by smtp.googlemail.com with ESMTPSA id p20-20020a170906615400b0094aa087578csm6398596ejl.171.2023.04.17.02.27.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 02:27:06 -0700 (PDT)
+        Mon, 17 Apr 2023 02:27:09 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
 Cc:     xxm@rock-chips.com, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        stable@vger.kernel.org, Damien Le Moal <dlemoal@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
         Shawn Lin <shawn.lin@rock-chips.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
+        Corentin Labbe <clabbe@baylibre.com>,
         Brian Norris <briannorris@chromium.org>,
         Caleb Connolly <kc@postmarketos.org>,
-        Corentin Labbe <clabbe@baylibre.com>,
         Johan Jonker <jbx6244@gmail.com>,
         Judy Hsiao <judyhsiao@chromium.org>,
         Hugh Cole-Baker <sigmaris@gmail.com>,
@@ -70,9 +70,9 @@ Cc:     xxm@rock-chips.com, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 04/11] PCI: rockchip: Add poll and timeout to wait for PHY PLLs to be locked
-Date:   Mon, 17 Apr 2023 11:26:22 +0200
-Message-Id: <20230417092631.347976-5-rick.wertenbroek@gmail.com>
+Subject: [PATCH v4 05/11] arm64: dts: rockchip: Add dtsi entry for RK3399 PCIe endpoint core
+Date:   Mon, 17 Apr 2023 11:26:23 +0200
+Message-Id: <20230417092631.347976-6-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230417092631.347976-1-rick.wertenbroek@gmail.com>
 References: <20230417092631.347976-1-rick.wertenbroek@gmail.com>
@@ -88,79 +88,57 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The RK3399 PCIe controller should wait until the PHY PLLs are locked.
-Add poll and timeout to wait for PHY PLLs to be locked. If they cannot
-be locked generate error message and jump to error handler. Accessing
-registers in the PHY clock domain when PLLs are not locked causes hang
-The PHY PLLs status is checked through a side channel register.
-This is documented in the TRM section 17.5.8.1 "PCIe Initialization
-Sequence".
+Add dtsi entry for RK3399 PCIe endpoint core in the device tree.
+The status is "disabled" by default, so it will not be loaded unless
+explicitly chosen to. The RK3399 PCIe endpoit core should be enabled
+with the RK3399 PCIe root complex disabled because the RK3399 PCIe
+controller can only work one mode at the time, either in "root complex"
+mode or in "endpoint" mode.
 
-Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
-Cc: stable@vger.kernel.org
 Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
 Tested-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip.c | 17 +++++++++++++++++
- drivers/pci/controller/pcie-rockchip.h |  2 ++
- 2 files changed, 19 insertions(+)
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 27 ++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/drivers/pci/controller/pcie-rockchip.c b/drivers/pci/controller/pcie-rockchip.c
-index 990a00e08bc5..1aa84035a8bc 100644
---- a/drivers/pci/controller/pcie-rockchip.c
-+++ b/drivers/pci/controller/pcie-rockchip.c
-@@ -14,6 +14,7 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/iopoll.h>
- #include <linux/of_pci.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
-@@ -153,6 +154,12 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
- }
- EXPORT_SYMBOL_GPL(rockchip_pcie_parse_dt);
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 928948e7c7bb..9da0b6d77c8d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -265,6 +265,33 @@ pcie0_intc: interrupt-controller {
+ 		};
+ 	};
  
-+#define rockchip_pcie_read_addr(addr) rockchip_pcie_read(rockchip, addr)
-+/* 100 ms max wait time for PHY PLLs to lock */
-+#define RK_PHY_PLL_LOCK_TIMEOUT_US 100000
-+/* Sleep should be less than 20ms */
-+#define RK_PHY_PLL_LOCK_SLEEP_US 1000
++	pcie0_ep: pcie-ep@f8000000 {
++		compatible = "rockchip,rk3399-pcie-ep";
++		reg = <0x0 0xfd000000 0x0 0x1000000>,
++		      <0x0 0xfa000000 0x0 0x2000000>;
++		reg-names = "apb-base", "mem-base";
++		clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
++			 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
++		clock-names = "aclk", "aclk-perf",
++			      "hclk", "pm";
++		max-functions = /bits/ 8 <8>;
++		num-lanes = <4>;
++		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
++			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
++			 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>,
++			 <&cru SRST_A_PCIE>;
++		reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
++			      "pm", "pclk", "aclk";
++		phys = <&pcie_phy 0>, <&pcie_phy 1>,
++		       <&pcie_phy 2>, <&pcie_phy 3>;
++		phy-names = "pcie-phy-0", "pcie-phy-1",
++			    "pcie-phy-2", "pcie-phy-3";
++		rockchip,max-outbound-regions = <32>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie_clkreqnb_cpm>;
++		status = "disabled";
++	};
 +
- int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- {
- 	struct device *dev = rockchip->dev;
-@@ -254,6 +261,16 @@ int rockchip_pcie_init_port(struct rockchip_pcie *rockchip)
- 		}
- 	}
- 
-+	err = readx_poll_timeout(rockchip_pcie_read_addr,
-+				 PCIE_CLIENT_SIDE_BAND_STATUS,
-+				 regs, !(regs & PCIE_CLIENT_PHY_ST),
-+				 RK_PHY_PLL_LOCK_SLEEP_US,
-+				 RK_PHY_PLL_LOCK_TIMEOUT_US);
-+	if (err) {
-+		dev_err(dev, "PHY PLLs could not lock, %d\n", err);
-+		goto err_power_off_phy;
-+	}
-+
- 	/*
- 	 * Please don't reorder the deassert sequence of the following
- 	 * four reset pins.
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 51a123e5c0cf..f3a5ff1cf7f4 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -38,6 +38,8 @@
- #define   PCIE_CLIENT_MODE_EP            HIWORD_UPDATE(0x0040, 0)
- #define   PCIE_CLIENT_GEN_SEL_1		  HIWORD_UPDATE(0x0080, 0)
- #define   PCIE_CLIENT_GEN_SEL_2		  HIWORD_UPDATE_BIT(0x0080)
-+#define PCIE_CLIENT_SIDE_BAND_STATUS	(PCIE_CLIENT_BASE + 0x20)
-+#define   PCIE_CLIENT_PHY_ST			BIT(12)
- #define PCIE_CLIENT_DEBUG_OUT_0		(PCIE_CLIENT_BASE + 0x3c)
- #define   PCIE_CLIENT_DEBUG_LTSSM_MASK		GENMASK(5, 0)
- #define   PCIE_CLIENT_DEBUG_LTSSM_L1		0x18
+ 	gmac: ethernet@fe300000 {
+ 		compatible = "rockchip,rk3399-gmac";
+ 		reg = <0x0 0xfe300000 0x0 0x10000>;
 -- 
 2.25.1
 
