@@ -2,92 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 37BDA6E4191
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 09:46:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60F926E41F6
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 10:04:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229682AbjDQHqi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 03:46:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
+        id S230327AbjDQIEE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 04:04:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229627AbjDQHqh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 03:46:37 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2652A8;
-        Mon, 17 Apr 2023 00:46:35 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id E6437300002CD;
-        Mon, 17 Apr 2023 09:46:33 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id D4A1D3CB3B; Mon, 17 Apr 2023 09:46:33 +0200 (CEST)
-Date:   Mon, 17 Apr 2023 09:46:33 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Gerd Bayer <gbayer@linux.ibm.com>,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH v2 1/4] PCI: s390: Fix use-after-free of PCI resources
- with per-function hotplug
-Message-ID: <20230417074633.GA12881@wunner.de>
-References: <20230306151014.60913-1-schnelle@linux.ibm.com>
- <20230306151014.60913-2-schnelle@linux.ibm.com>
+        with ESMTP id S230352AbjDQIEA (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 04:04:00 -0400
+Received: from mail.feshiecree.pl (mail.feshiecree.pl [89.40.114.103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE323C10
+        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 01:03:56 -0700 (PDT)
+Received: by mail.feshiecree.pl (Postfix, from userid 1001)
+        id 736EA8628B; Mon, 17 Apr 2023 08:57:10 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=feshiecree.pl;
+        s=mail; t=1681718303;
+        bh=hFxZwVw4rIL+JwfEOGI47p+fdoVOAeqVswP6NWoHSHQ=;
+        h=Date:From:To:Subject:From;
+        b=V2r6f+/pJ/BY2w1QHJS4thlYN7drvSMRBIQsE8TSmdlzTFLdeu3vCJF2BDuq8P3OR
+         dejrKqK7oiNpa2RV9vf6DDwSfADzj5LnZEeSzJtI2cTPtJNr8QczXJV8oWUM27XVyC
+         7RCXAoTS5qsPOV0Y334YrHEFZEiHjvQLIOm64xK0KjsmdJVgIEnYQfk9/duJkbjwpy
+         bzHxtIpXUUyCkktDNS+LX7pGWG4F2wfRoulLyX2oF+YWoeaOq2PDtKWvlb/cNKRST4
+         3lYPSxBvN+5SH+R89miORVMID4llcb9fWSrI/TWhv/V68Ig+jXefCRg/nUof86TaN5
+         R85p/Lz9oMbhQ==
+Received: by mail.feshiecree.pl for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 07:55:56 GMT
+Message-ID: <20230417074502-0.1.22.b5hw.0.dpdbpdyv8w@feshiecree.pl>
+Date:   Mon, 17 Apr 2023 07:55:56 GMT
+From:   "Krystian Wieczorek" <krystian.wieczorek@feshiecree.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: W sprawie samochodu
+X-Mailer: mail.feshiecree.pl
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230306151014.60913-2-schnelle@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_SORBS_DUL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Mar 06, 2023 at 04:10:11PM +0100, Niklas Schnelle wrote:
-> --- a/drivers/pci/bus.c
-> +++ b/drivers/pci/bus.c
-> @@ -76,6 +76,27 @@ struct resource *pci_bus_resource_n(const struct pci_bus *bus, int n)
->  }
->  EXPORT_SYMBOL_GPL(pci_bus_resource_n);
->  
-> +void pci_bus_remove_resource(struct pci_bus *bus, struct resource *res)
-> +{
-> +	struct pci_bus_resource *bus_res, *tmp;
-> +	int i;
-> +
-> +	for (i = 0; i < PCI_BRIDGE_RESOURCE_NUM; i++) {
-> +		if (bus->resource[i] == res) {
-> +			bus->resource[i] = NULL;
-> +			return;
-> +		}
-> +	}
-> +
-> +	list_for_each_entry_safe(bus_res, tmp, &bus->resources, list) {
-> +		if (bus_res->res == res) {
-> +			list_del(&bus_res->list);
-> +			kfree(bus_res);
-> +			return;
-> +		}
-> +	}
-> +}
+Dzie=C5=84 dobry,
 
-I realize this has already been applied so s390.git/master,
-but nevertheless would like to point out there's a handy
-pci_bus_for_each_resource() helper which could have been
-used here instead of the for-loop.
+chcieliby=C5=9Bmy zapewni=C4=87 Pa=C5=84stwu kompleksowe rozwi=C4=85zania=
+, je=C5=9Bli chodzi o system monitoringu GPS.
 
-Sorry for chiming in late, I just spotted this while flushing out
-my inbox.
+Precyzyjne monitorowanie pojazd=C3=B3w na mapach cyfrowych, =C5=9Bledzeni=
+e ich parametr=C3=B3w eksploatacyjnych w czasie rzeczywistym oraz kontrol=
+a paliwa to kluczowe funkcjonalno=C5=9Bci naszego systemu.=20
 
-Adding Andy to cc: who's been active in this area recently.
+Organizowanie pracy pracownik=C3=B3w jest dzi=C4=99ki temu prostsze i bar=
+dziej efektywne, a oszcz=C4=99dno=C5=9Bci i optymalizacja w zakresie pono=
+szonych koszt=C3=B3w, maj=C4=85 dla ka=C5=BCdego przedsi=C4=99biorcy ogro=
+mne znaczenie.
 
-Thanks,
+Dopasujemy nasz=C4=85 ofert=C4=99 do Pa=C5=84stwa oczekiwa=C5=84 i potrze=
+b organizacji. Czy mogliby=C5=9Bmy porozmawia=C4=87 o naszej propozycji?
 
-Lukas
+
+Pozdrawiam
+Krystian Wieczorek
