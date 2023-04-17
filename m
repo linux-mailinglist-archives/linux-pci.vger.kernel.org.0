@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 53B0B6E3EA4
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 06:52:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43B036E3EC3
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 07:05:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229854AbjDQEwE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 00:52:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44280 "EHLO
+        id S229911AbjDQFF1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 01:05:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjDQEwD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 00:52:03 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2097.outbound.protection.outlook.com [40.107.113.97])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DC0E30CF;
-        Sun, 16 Apr 2023 21:52:01 -0700 (PDT)
+        with ESMTP id S229655AbjDQFF0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 01:05:26 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2091.outbound.protection.outlook.com [40.107.114.91])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E04E3595;
+        Sun, 16 Apr 2023 22:05:23 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OzlOKKQkl36x6MUkpUFknHozaoiSLxVYLgCuY6rSbWZ7qW/F8eUF8eRJsjUFRb177rVlWcXwI4Q9L4yZe1o6pRvkLwejOrq6jVaSRusp2bbRjk5mY2Otig1T6dd0MJFQQeIVk4hWoZlgUSkJj8c2D0Fg1V2o9MInnA279Vj90GqzoTWJThBgkCU7ZFMpK0M0I5Kj8sJelwdsq3U88lPmsiKHM8Tjj1s8SVO2A/Od9lY76aC6oAxfO5Q103e6AOCyQa+BS5LtkeqHNMNmkJwxpYmCwC/sfzkXoK24ifiLOBBRRAonMTGpxavzl3XhR4iNez934SrjWYDvLde5dBm5aA==
+ b=kI1xxIVW+GI3gmYWe0uxDpQLMrKPDL4DmBliPGKdmLiheVQUatRy+dvttPFe+ABFJCPynHJk8L7waWu2OgdzCtO+vX5u8BoV/UGLmjePIhewCdrY95l9yQahF+t4KTQegcpIFwoPFXzvLyIQXJG+urRV4BOzVXg7iZp4X8WHGNia1PDciz8USon+w5YxgfWkmoPYG1xBzt/KuxEGqosJQHMUC61N+Xas8KY5L5U/m0UTsroGdvk0XpyjDJFx0ZlDt7p+jEt+O/kuCCGZBr204Aeu68x9GQyJ3CCEJc/Us+5RMpHM93sAuhTvV7P58GQlnqmMWylWBmHAm6o5oDBe4A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pp0GO8nmUrK2L8oClsYamF4pL8Rld42Wrnoh8Iut6so=;
- b=fpgqPKQMdvYinCkdos9Fcigc8HRqw57C4GcD+kuZxu5T2yVThPfAp7rHj4G0xJ0cjNnZLR/LXRLetM8sFIpLSSX2D/PbWhIsAzTXaMUfHx2rg74SjaOgR1SdlWTsnI8bQnPDOW+iwyz2VPrJN+fYYmNEGez9iTakqg8lkl0Qmj8TIm4tjsqy8RFAC+DpC03NeTr9P6YVdCrV2C0CXe0vgqHHD0SZCUtNgieMVGs4xRo/kUxeZ8VeGsoUEqmYy4oSXQ6pr2coUe+3+V6EQQnjoBeLCrPuZBkwvfsh79OIBixFmbzSKyDsM8wXKVmlQ0+z4/j0P4KJZpwDNuNhFCEQmw==
+ bh=xNTRHy+h/0DBQ+7TZ17miFe0RxNO7M7u0cFmOXGLNv4=;
+ b=mPTLAEXwvlWh99vTIw8Zlmc6p77sA8rQb8asQObmm6uSB1jV/cLENhRN+nL8reXIaF6PyUiOorGwKzbPjK7DTrY4KTDjdc+UdFGQL21RtIM4k/Fy1c5z6B3WNyHUQifGMg4gDo4ELvCL8GDrf/dX6kI6TfiIsn3XmpLwh2qhRtOO0ZMzETbiiDpW8DondWNIR+hcUEKcFiHI/Wt03ZQEZGCFJ3jE+jDlcAmQwtpCSadXlud1xQnDDp1xXCfcZ/U4GDlArsZYG25HZlBB2Wvauc6w0ShpU0ztynVFKszt55qimN/olWMsPMIj3OdmLKU8yYRO4RhCI4z9xClEFw6nPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pp0GO8nmUrK2L8oClsYamF4pL8Rld42Wrnoh8Iut6so=;
- b=KQcN4Ay6AVY1AopNbfoP49N/IXTKpBk932vosTSIVmD4gghqjyLoaBif0aUlQ5HhaLy99MZBMLpJYWUaEGByF/++KVnL+hfc+60PkFxEPkbi6vk+pYDrV1Z4cdngJzrxKaIHW63eVgHMV6OiH66unxnBBkQtQ52QffIHWDjdIpU=
+ bh=xNTRHy+h/0DBQ+7TZ17miFe0RxNO7M7u0cFmOXGLNv4=;
+ b=a/fiO8r6qUNNjWEt2SQgxumT7maJMJ6QQMThOR7plVg2T/XwV9x+o+eaNTDT/ptu9Ivj816GOeb7qLSyVSo1dF3ywJwuv5mUyUeXovZE3rA8/QVe9feGupBgFYN+g22etqvjht2cF7qAGZ0vLS5eMCx1Ey3ihxVJwMh/JbEmRCw=
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by OS0PR01MB5346.jpnprd01.prod.outlook.com
- (2603:1096:604:a3::13) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:1096:404:8028::13) by TY3PR01MB11161.jpnprd01.prod.outlook.com
+ (2603:1096:400:3d5::12) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Mon, 17 Apr
- 2023 04:51:58 +0000
+ 2023 05:05:19 +0000
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003%5]) with mapi id 15.20.6298.045; Mon, 17 Apr 2023
- 04:51:58 +0000
+ 05:05:19 +0000
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
@@ -54,14 +54,14 @@ CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-renesas-soc@vger.kernel.org" 
         <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v12 03/19] PCI: Add PCI_HEADER_TYPE_MULTI_FUNC
-Thread-Topic: [PATCH v12 03/19] PCI: Add PCI_HEADER_TYPE_MULTI_FUNC
-Thread-Index: AQHZbpipXq+UNUurd0mXqLmdBe8ObK8rKO0AgAPIv5A=
-Date:   Mon, 17 Apr 2023 04:51:58 +0000
-Message-ID: <TYBPR01MB53418E476ED24B2BA922B7B2D89C9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20230414061622.2930995-4-yoshihiro.shimoda.uh@renesas.com>
- <20230414185812.GA212427@bhelgaas>
-In-Reply-To: <20230414185812.GA212427@bhelgaas>
+Subject: RE: [PATCH v12 02/19] PCI: Add INtx Mechanism Messages macros
+Thread-Topic: [PATCH v12 02/19] PCI: Add INtx Mechanism Messages macros
+Thread-Index: AQHZbpio0JNG2maAWEOtiSp2Bn7znK8rKV6AgAPNiCA=
+Date:   Mon, 17 Apr 2023 05:05:19 +0000
+Message-ID: <TYBPR01MB53413B963258BAD0EF34D726D89C9@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20230414061622.2930995-3-yoshihiro.shimoda.uh@renesas.com>
+ <20230414185947.GA212493@bhelgaas>
+In-Reply-To: <20230414185947.GA212493@bhelgaas>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach: 
@@ -69,57 +69,57 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|OS0PR01MB5346:EE_
-x-ms-office365-filtering-correlation-id: a44bea63-67da-45c9-e78c-08db3eff79d6
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TY3PR01MB11161:EE_
+x-ms-office365-filtering-correlation-id: 4f070c9e-7849-45f4-bfdc-08db3f015759
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: cgnsEaF7KsVbY0DWO0NSlzqUM4DodAuCBVm2LwMaluBkep0XrPclJ2AukuXUbtp91u4I6JGJunWOs4YCAM9iizQtUlFuF8CHttcwSWi65BS0utvmQAF9iAqQsjNnaS7UM7FB4c/3+7F2fGQyxXfSijzTSsBdJx4QuT8yiWQPCUjxS1pxwUW1bLn4InNLq/gvcXVIUFLpOWiIIHo1KMGShOifqH8TdNy4fxuRl7LZUSmXT2MhFEtzFeJWUOzTmabQeRifQthtISu9qMr6TTPZ5awOjPhfUnRG+tQQ8oPa3+X+auyCzziZfWbB2yqjQXuCsmW/nNEy5ykRm/W1AyEkS50RDX2srfzltUD+fIJ4a98pXugGpLaja4AE/eGYkkar6LCYo8xou9v2/SHu2Uj+xTBcs8z7qsu3VWC/qvpa49wXffKhWXCsWXOwurDuLy1hQDnjk1HClYbvscKwVBQCB3osB6fVfnjevSGb0Fnt3N2Clh2PrOGA9WC7tYsBgJdeT5p6pqflRDsdcWsoL2lm4s7E1+4n/1+djwDSm9S5MWMmiGpZ5HXAoPqhHZMVnWVB/TEgNE4+G+x2+mh62vY9WBQRnsBvCT3aM5BJYaBMOIUPTmpzS9utQ0YxsiJsxEW6
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(346002)(39860400002)(396003)(366004)(451199021)(4326008)(6916009)(64756008)(66446008)(66476007)(66556008)(66946007)(2906002)(7416002)(5660300002)(52536014)(8676002)(8936002)(316002)(55016003)(41300700001)(76116006)(478600001)(33656002)(54906003)(7696005)(71200400001)(186003)(122000001)(6506007)(86362001)(9686003)(83380400001)(38070700005)(38100700002);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: ttf9phgCztDohJxw2SyuzDDAj8eWGoCNWH+QNIAVIrLrks474MAkLecKNfYp/Xccpv5nG/Y5F3lM5u8cMoYJbm7GsbHkwJB2QukWAcviegTI8Zx++mnc27WqrLRqn3G5//bjFZAVRJqawBMe6K9f/WSyEJ4f+iQSo8PHNyP+8KyU886AjTFEDQ2c43axyEnjBsg3N57B2Q6RYDmj/B7wcDsiet1NOcpEIfUtm5O2POVJ12OtAm+X++q6lUPPv9i4McflzKZ57PYmz/YZWJgw8UPLs/fhhVEz59BSwQzR1C+Oqh655VNCw3BPHxO5lqNJSDjM0hbPe5Ivqgy+8pkZ6y2DHldcsy3hHybTsDuo42mOmdajzi2IHPlZeAWoZcYhl/5S0InB245dJN1llRlROZwb+FqP4auAPLnTTD/RG+jlM4Akbl8eSpblpHGUxru518r85e3GKxQ8yiA4+qOYFGZHFORMRgFGFwdRlWYf1cNIAtCV+3/bb7+1ahPf7Ln3v2fcz2Znmu4i719ELvJ5aZZDFFf1mIchIdtILylXGz7RI8DlGIdjE7V6zVSwup/cgyGvbmgeU2pky7z0Ts9L2hlOhqHia2eXPgPYJn6KPZG/qmEQRVt52yfSxk7UdBKS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(39860400002)(396003)(376002)(136003)(346002)(451199021)(54906003)(55016003)(7696005)(71200400001)(478600001)(41300700001)(316002)(83380400001)(6916009)(4326008)(64756008)(66556008)(186003)(66446008)(53546011)(6506007)(9686003)(76116006)(66946007)(66476007)(52536014)(5660300002)(15650500001)(7416002)(2906002)(8936002)(8676002)(38100700002)(38070700005)(122000001)(33656002)(86362001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?oppnSQEKbvqcFvZOE6WD01eDozeqL4Ed37b3r7tJvGGlQnU1BHiBwQoxz1nv?=
- =?us-ascii?Q?1tgeUcbPguetnJPsEuIxa1htaKUb8tWhcj0BCZ1injnWFn9WPjnigPNgyijz?=
- =?us-ascii?Q?Mc/s0WSfl68+nUx7bycQtEMTLeOfTYeKpCK3oyKGvrZQWYdhNg6+xpKI4aFy?=
- =?us-ascii?Q?thTdUiKalIftPfWUV1TcosaKqR8o+UaHClEhuDZ7Rj+dAVOwqjUyRitbMs2h?=
- =?us-ascii?Q?sgm3W1MIegMSpCzXx4aaLBFwNI5cwKJnN7AsnbklO9YyCc4c34kKhysq79sb?=
- =?us-ascii?Q?/3xiFe4nR8U5EVIBFJjyFXwa0fSwJ0yUxye12XJ0fAAFYO4mKrF4awQb3+l5?=
- =?us-ascii?Q?MeVgm4/+HUTVEDs1BKM9lhVR/RSoupcYnTqw74434fNlURvgzCPeUZMLgbpa?=
- =?us-ascii?Q?PVsXMa44Y+nfbaPLpz+9nLKiVPPsHQi9pJ/Vq5ZalOoR2JRAPTHlcS8AvS3p?=
- =?us-ascii?Q?rcBrBpXYt5Wo1mBkHmUeUgARx0jAYyuFJ16Oii9nOv8sjsoF9yKdl+6SmmDV?=
- =?us-ascii?Q?rJWnBnOZ4khcdixFM37QWl0FLlLUuaX1Rd5IhGSVhGuRKbDzuhidSR5AuOoK?=
- =?us-ascii?Q?0lSS3VjCXWzVWvCxLqELMMo2sdGWWLEC///sE9IPjJUax5z514ww2owhC0OS?=
- =?us-ascii?Q?0PbplHWlAhyZ+2sgz/Pmc5LMsh2O/sXQqT3OaUYOoX0pDON4tiw9GJzbj1U6?=
- =?us-ascii?Q?JJ+Z17QiEZK/izjmWXX9q0wNQNmuAsYK4KikmalRAaGgVKSOc0X4VuSTWFB/?=
- =?us-ascii?Q?YyKUsJ7clDqsvmnarhBiGfkiGYVj9GnTfHKdvB1ZQwS189Hjkp0saeX4gGS5?=
- =?us-ascii?Q?HTvfOrcRpVego0iqEizudScK0vYA/vpqnVHVK8xEA2spH2JopNQFVKDLGjo7?=
- =?us-ascii?Q?wKUhUcg755d7iPsRgpGVVN1gdHYz3GfAdNBzpSs+88noj1LIMQWiAyJv7UeT?=
- =?us-ascii?Q?XEGuoDyEUwy1teVwxIM+P1QP7Ti/vIdZ084BWOnIJbVKsfJzZ+d+30/IbPer?=
- =?us-ascii?Q?60vKlGhtcnDa33+VcgsmCYRWRuSwjshLqK3BgvWHORlcjcNJfRb8IN/oFYVL?=
- =?us-ascii?Q?Fy+MYgM583YdhPA0/9AHZcSjDO4GFrYTYWh37YAM3FARy2tF/buld4/bvYR6?=
- =?us-ascii?Q?pf4PF/VA85iozy+H6Nvzx+L9aFj04iSsNu2+Epj3DQI/KmbSIIP0N0t7vdni?=
- =?us-ascii?Q?r32Xo6jPtL38PxKD0r7tHPkjoZb8xxx60ZvvyanSyzOw9rqujvNg1SXm5kji?=
- =?us-ascii?Q?FhViQvcz+YCRCp1SH8qWaff3xkSMHcKS8oW1WUgGo0cDD5YJY7vGDFLXYgf4?=
- =?us-ascii?Q?5LXNMAasNSxtW2qPjL/ZkZhwphJIUACae6dJLDi/JL36QiL91qOMxQPIQXPC?=
- =?us-ascii?Q?w0Xtl9nVuKUKlCHUerJG6xHpzfs7pj5UksX6ijaUwUenpw514SV7vEHzxsjF?=
- =?us-ascii?Q?c9u4c/q1ivZyc16OrzAQW6bUEgJyPeQE0ZEqcMd09RhOaL42ePaIN5iL2R6o?=
- =?us-ascii?Q?Fhn7VeHataD3l18hR/iB42a2nNVAzSXebbzWCE7coMd+BTR/oE9t/zT0PVAc?=
- =?us-ascii?Q?aiuVRcWSCh1lhXEqHVdvcQwbxHEWaegkrsMz4AxR0Iga2d7DrQS3frYlZrU/?=
- =?us-ascii?Q?UrYvBE9ctIvEtqY7diKnw9V4/LtiyW1pg4akNBNL+KdsnjTt/qCcjT64j97r?=
- =?us-ascii?Q?02w9zA=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?CnrWVD2DAX/6pbeKVwXGotey9DQlwkKKZkIr2ah4ea59R8/PSy1smnzFCdF7?=
+ =?us-ascii?Q?bLOxLS4iPiSfS9P73/+rO5mJw0rROy1jTg8LwI8CQEENfmJeNTIhaB7JrZjc?=
+ =?us-ascii?Q?Bc6klRud5uoMeErA8Q6sjWp4tJMSFWVu5Gix8bC/fpRNe1uJqLi/QBBbrOh+?=
+ =?us-ascii?Q?lZEqpmLXdAhtfn8fY136CPZokFzvorAzJjUmxCkv7CkHpgeSlJnprjxM06ah?=
+ =?us-ascii?Q?4Ehfs/Rk229al5cceVLeGaUHiUiTkspjkn1wMtbqy3S75B8j+7p34Zf9rADG?=
+ =?us-ascii?Q?Xtx1eJrQLjeWaZcUN3nhYGvWWtQJECEGZhhcxNo0YTOrKkgZ5f7Dqk9Fpbiu?=
+ =?us-ascii?Q?bG/PhTDf+zNUG59Cayy3rGQ/azIQ9vDKUttJo9KW8kuAYRPMzX0dbYdadzGB?=
+ =?us-ascii?Q?VjaSGNCWrLgp3ogYiGp8GCl5cQObyUlSdMLxUbTRddoiabNf3NoLs+XWH4TH?=
+ =?us-ascii?Q?70A2Q8DGVqDDQpe1vJU9Qt69wiNItGTw2CSPtDpkped+4xWruXxro2t03a+6?=
+ =?us-ascii?Q?Afkgyo0uwwE3hYPLhipY+8msPE4eqSob8PSTdz4WH/GCSe/OFwH7iwuHQy+H?=
+ =?us-ascii?Q?q6M7wUbY4OdpcQ5lIelTprM7Hzoxb/eovVAuyybpRqWS3X5TF7P9AuanYyn2?=
+ =?us-ascii?Q?3yT0Ulps3cWRmMt90Y/pI1m6n1phlPxUaV5lkm0YdDh9SopP/ce+hJ64AUgN?=
+ =?us-ascii?Q?n4LmgDa+i+fMEKcV99tj5dsAm/SuhMcT2RDeO8L8VU1Ym+4ELCnbweOajw0m?=
+ =?us-ascii?Q?hJQlEBp6gvjcMqpDV5s7mnru28gQMPE3TJV61JLKLj4JF9TF1GuKcxPJmWGS?=
+ =?us-ascii?Q?vFvBK8zG+oOGsCRINgCSfug/4ybnDvqzLlDMi1l0QzmSc/pJUfoiYJQBQ+MQ?=
+ =?us-ascii?Q?LNJ50ivtuiclstgkSzm0gX8D9vSt1HdUfXcOIoVDEQXP96VRnyXHcqAFU1Dg?=
+ =?us-ascii?Q?lEe2YfLBQQtQSB9yC2YswuG3l65ap/VGAkKSCLF3pgC9xojTINgFmU3xJ19Y?=
+ =?us-ascii?Q?Ze/lLPcHEI4s20C0L4IJe4h9ku1VaYALvGF+ItyEIygc6zn0Jl6TPbx/CCyg?=
+ =?us-ascii?Q?yygq6CNqj+8f7wogwdlIXVHu7Y8Wzvl0PQcCepZI/O9yDop88BISXyPWGdvm?=
+ =?us-ascii?Q?YdmSCHK5QrwP2kIFJsiGdxZ+2NsoKA1R+Z5UAIyt4GWy++VM8JeNLHw9IFWm?=
+ =?us-ascii?Q?OptWGQmJoWERhJ74g5V+voGB+66YlGmkh+nLRZr2tLFS+SChPwUl0TSlINdK?=
+ =?us-ascii?Q?IuFcgzKOntyjr/bd+oLZwYeO+BtjhhG1Uj0xjWzzUDMtH0KcD5v6uDOuERNc?=
+ =?us-ascii?Q?ABH8BQSnqmxiE2tpb5B5KUgh/vhGm4qFoZzd7A0NZTFsWc/mJ4npsMMdGlrR?=
+ =?us-ascii?Q?bp4Oh9OjkLTEx2Esm6eG5G35OILKWCwhPWm7JOKPHGBKOwuALNxRDVzaBf3J?=
+ =?us-ascii?Q?FXuFi0saVqE7PSV0bzx038J63KZwZWBi6n54yBXgSe/I/v8nKoUDUtoNqI8w?=
+ =?us-ascii?Q?3jieiljcsnaQpg+kZQ/tfJiO6w70OD9/P9TkTE0jDXNiYtzUlRc5TmE1XB9C?=
+ =?us-ascii?Q?7WDp5JC2Uku+InyCUbxfo5nAVHQl8R36JZsGytV8swgXokuz3sGjamQry89b?=
+ =?us-ascii?Q?eRsjgtjZRxhs5+cFflxIb6Shf8YyRqhzTZlXZnyJ+1GgjURcVsGXOa3zvUEb?=
+ =?us-ascii?Q?mr1vQQ=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a44bea63-67da-45c9-e78c-08db3eff79d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2023 04:51:58.4497
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4f070c9e-7849-45f4-bfdc-08db3f015759
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2023 05:05:19.5753
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: HGQ2NzYWRQQZ5FxbSsyapBp9vqCkwtP48P35m28qB7jQl+dpDZKU4oyc7LbUC50d7uTxTbCi017TJhhNE6+1/svq4zYYPUkNaG4GGuMfxL5LLCJQqmFXKu9Wq782uNHF
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS0PR01MB5346
+X-MS-Exchange-CrossTenant-userprincipalname: 9XmMOYJpGXtydhLjwQTP5bIRDi44wXFoWLvwNZ8O87ubxAWZs6Red41VeoENy7YgKp0HPRpPt7s+K1krlV8JR7MEKS2eCroroPf+DoMZwHNVt7owCPLQrXQop80wPltb
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11161
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -132,43 +132,61 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
 
-> From: Bjorn Helgaas, Sent: Saturday, April 15, 2023 3:58 AM
+> From: Bjorn Helgaas, Sent: Saturday, April 15, 2023 4:00 AM
+> Subject: Re: [PATCH v12 02/19] PCI: Add INtx Mechanism Messages macros
 >=20
-> On Fri, Apr 14, 2023 at 03:16:06PM +0900, Yoshihiro Shimoda wrote:
-> > Add PCI_HEADER_TYPE_MULTI_FUNC macro which is "Multi-Function Device"
-> > of Header Type Register.
+> s/INtx/INTx/ in subject
+
+Oops. I'll fix it on v13.
+
+> On Fri, Apr 14, 2023 at 03:16:05PM +0900, Yoshihiro Shimoda wrote:
+> > Add "Message Routing" and "INTx Mechanism Messages" macros to send
+> > a message by a PCIe driver.
 > >
 > > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > > ---
-> >  include/uapi/linux/pci_regs.h | 1 +
-> >  1 file changed, 1 insertion(+)
+> >  include/linux/pci.h | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
 > >
-> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_reg=
-s.h
-> > index 5d48413ac28f..a302b67d2834 100644
-> > --- a/include/uapi/linux/pci_regs.h
-> > +++ b/include/uapi/linux/pci_regs.h
-> > @@ -80,6 +80,7 @@
-> >  #define  PCI_HEADER_TYPE_NORMAL		0
-> >  #define  PCI_HEADER_TYPE_BRIDGE		1
-> >  #define  PCI_HEADER_TYPE_CARDBUS	2
-> > +#define  PCI_HEADER_TYPE_MULTI_FUNC	0x80
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 0b57e37d8e77..ada1047035a8 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -1050,6 +1050,24 @@ enum {
+> >  #define PCI_IRQ_MSIX		(1 << 2) /* Allow MSI-X interrupts */
+> >  #define PCI_IRQ_AFFINITY	(1 << 3) /* Auto-assign affinity */
+> >
+> > +/* Message Routing */
+> > +#define PCI_MSG_ROUTING_RC	0
+> > +#define PCI_MSG_ROUTING_ADDR	1
+> > +#define PCI_MSG_ROUTING_ID	2
+> > +#define PCI_MSG_ROUTING_BC	3
+> > +#define PCI_MSG_ROUTING_LOCAL	4
+> > +#define PCI_MSG_ROUTING_GATHER	5
+> > +
+> > +/* INTx Mechanism Messages */
+> > +#define PCI_CODE_ASSERT_INTA	0x20
+> > +#define PCI_CODE_ASSERT_INTB	0x21
+> > +#define PCI_CODE_ASSERT_INTC	0x22
+> > +#define PCI_CODE_ASSERT_INTD	0x23
+> > +#define PCI_CODE_DEASSERT_INTA	0x24
+> > +#define PCI_CODE_DEASSERT_INTB	0x25
+> > +#define PCI_CODE_DEASSERT_INTC	0x26
+> > +#define PCI_CODE_DEASSERT_INTD	0x27
 >=20
-> We test this a few places already; if we add this new macro, shouldn't
-> we update those places to use it?
+> These look like things that should not be needed outside drivers/pci.
+> If that's the case, they should go in drivers/pci/pci.h, not
+> include/linux/pci.h.
 
-Thank you for your comment! We should updated drivers/pci/{probe,quirks}.c
-like the following code for example:
-
-	dev->multifunction =3D !!(hdr_type & 0x80);
-
-I'll update them on v13.
+I got it. I'll modify it on v13.
 
 Best regards,
 Yoshihiro Shimoda
 
-> >  #define PCI_BIST		0x0f	/* 8 bits */
-> >  #define  PCI_BIST_CODE_MASK	0x0f	/* Return result */
+> >  /* These external functions are only available when PCI support is ena=
+bled */
+> >  #ifdef CONFIG_PCI
+> >
 > > --
 > > 2.25.1
 > >
