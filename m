@@ -2,97 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E3A96E4585
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 12:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A647D6E46C4
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 13:49:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230029AbjDQKqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 06:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46800 "EHLO
+        id S229789AbjDQLtW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 07:49:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229967AbjDQKqy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 06:46:54 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14457173B;
-        Mon, 17 Apr 2023 03:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681728361; x=1713264361;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=Zl3T2zPqgisxE4JmoP0kazuc2BiWOAtj0xIgW3CbnOg=;
-  b=VoMF3nlEURTAvqBk8NoA7Ngh0gXuj9WT5GHv62TXu0W6lW1C7cWT4ceP
-   9pYg5gBn0ErlPhCJx2SM7NoFfFMv/okt67gy12ije8RXvqVwkD47K130A
-   E3N1YGAy44auQ3cIRL0aKVqjOIhFCIIED9MSO26742RbGd1DGz8Bl1z2X
-   Azxx5NTRoo8sIiATzxwB4YvL8Kn0RSNMtapTw6fJOlGgWLOApeYyguZBK
-   epvZf2Nmsr6W2KrLMr0CwsKEKUEXxeZCw35V9wvk5r9XxmUBlBRRU/wlK
-   6SvDXl1fu3uc/kdL1kN2UqqRabQpKeZoFuVtNaJsBnlxdgVmQe/x9nDND
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10682"; a="343615272"
-X-IronPort-AV: E=Sophos;i="5.99,203,1677571200"; 
-   d="scan'208";a="343615272"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Apr 2023 03:45:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10682"; a="780024740"
-X-IronPort-AV: E=Sophos;i="5.99,203,1677571200"; 
-   d="scan'208";a="780024740"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Apr 2023 03:45:13 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1poMMB-0012zB-2w;
-        Mon, 17 Apr 2023 13:45:11 +0300
-Date:   Mon, 17 Apr 2023 13:45:11 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v1 1/1] PCI: of: Propagate firmware node
-Message-ID: <ZD0jNxUjLIjyiiy/@smile.fi.intel.com>
-References: <ZDgnGuycE5S6rlZk@smile.fi.intel.com>
- <20230414185545.GA206084@bhelgaas>
+        with ESMTP id S230036AbjDQLtV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 07:49:21 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69D575FD0;
+        Mon, 17 Apr 2023 04:48:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CBD71063;
+        Mon, 17 Apr 2023 04:22:47 -0700 (PDT)
+Received: from [10.57.80.202] (unknown [10.57.80.202])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 858853F6C4;
+        Mon, 17 Apr 2023 04:22:02 -0700 (PDT)
+Message-ID: <6a775920-9260-f82e-dace-0b792f5371c4@arm.com>
+Date:   Mon, 17 Apr 2023 12:21:58 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230414185545.GA206084@bhelgaas>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Content-Language: en-GB
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linux regressions mailing list <regressions@lists.linux.dev>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>, iommu@lists.linux.dev,
+        baolu.lu@linux.intel.com
+References: <a79ea7f5-6a41-a6c9-cfec-ba01aa2a3cfa@leemhuis.info>
+ <20230328012231.GB21977@lst.de>
+ <01c50370-002d-5e18-3edc-81c9527aedc9@arm.com> <20230416064156.GA6410@lst.de>
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <20230416064156.GA6410@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 14, 2023 at 01:55:45PM -0500, Bjorn Helgaas wrote:
-> On Thu, Apr 13, 2023 at 07:00:26PM +0300, Andy Shevchenko wrote:
-> > On Wed, Apr 12, 2023 at 11:02:53AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Apr 12, 2023 at 04:15:20PM +0300, Andy Shevchenko wrote:
-
-...
-
-> > > > Propagate firmware node by using a specific API call, i.e. device_set_node().
-> > > 
-> > > Can you add a line or two about *why* we should do this, e.g., is this
-> > > headed toward some goal?
-> > 
-> > Because dereferencing the fwnode in struct device is preventing us from
-> > modifications of how fwnode looks like in the future.
+On 2023-04-16 07:41, Christoph Hellwig wrote:
+> On Thu, Mar 30, 2023 at 01:18:45PM +0100, Robin Murphy wrote:
+>> FWIW "Marvell SATA" instantly makes me suspect the phantom function quirk.
+>> What *should* happen is the IOMMU driver sees the PCI DMA aliases correctly
+>> and sets up context entries for both 07.00.0 and 07.00.1, but it looks like
+>> that may be what's gone awry.
 > 
-> How do you want to express this in the commit log?  Something like
-> this?
-> 
->   Insulate pci_set_of_node() and pci_set_bus_of_node() from possible
->   changes to fwnode_handle implementation by using device_set_node()
->   instead of open-coding dev->dev.fwnode assignments.
+> Looking at the bug report it seems this is device 9235, which doesn't
+> need the DMA alias quirks.
 
-Sounds good to me, thanks for the draft. I will do it in v2 this way.
+Indeed that one doesn't appear to be in the quirk list currently. 
+However the symptom of DMA traffic from function 1 which the IOMMU 
+clearly wasn't expecting firmly suggests that it *does* need the quirk. 
+Digging up the original report, the lspci output there suggests that 
+07:00.1 isn't a real function, which would further confirm it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+The other thing which catches my interest is the seemingly-conflicting 
+"iommu=soft" and "intel_iommu=on" arguments - I could well believe that 
+refactoring the x86 IOMMU detection stuff might have subtly changed the 
+interaction there, such that previously it ended up not actually using 
+the IOMMU for DMA ops, but now it is?
 
-
+Robin.
