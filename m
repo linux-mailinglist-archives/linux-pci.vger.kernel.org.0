@@ -2,57 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 329F96E43D6
-	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 11:28:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E75B6E43DE
+	for <lists+linux-pci@lfdr.de>; Mon, 17 Apr 2023 11:29:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230445AbjDQJ2S (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 17 Apr 2023 05:28:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56974 "EHLO
+        id S230484AbjDQJ3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 17 Apr 2023 05:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230440AbjDQJ1l (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 05:27:41 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6248140D5;
-        Mon, 17 Apr 2023 02:27:26 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id xi5so62356701ejb.13;
-        Mon, 17 Apr 2023 02:27:26 -0700 (PDT)
+        with ESMTP id S230488AbjDQJ1n (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 17 Apr 2023 05:27:43 -0400
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01838271B;
+        Mon, 17 Apr 2023 02:27:28 -0700 (PDT)
+Received: by mail-ej1-x62e.google.com with SMTP id ud9so62161313ejc.7;
+        Mon, 17 Apr 2023 02:27:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681723644; x=1684315644;
+        d=gmail.com; s=20221208; t=1681723647; x=1684315647;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=b4o02lv8btLHgvAb0bTyOqyBzz9fqiO7r5dsELy7YLE=;
-        b=eQb1XOV8ngNBdjCD96k1WhxndY5V/fi5QMDlfdfy3TRvVfxf1KjlEoQNSEm8xMkIQ1
-         Iv1PZA/EEeHliDoTolA+RKwUruKcutkagCQm03K13UWzHHovuIulrqF1QD1BGj1eGEjM
-         +SBUI/srFp+ChU/sWgmmaAkvm9XSQXnm8SUUWpl34IFfZbsH6Gu6sXHLZ67mTk5S66+S
-         aNuUYxSgBSIa3rAY964AELIDZQ/wyRa9VVwE8T4igE2cpavZcdbWV7SVjqIlm+9R9xNA
-         LQqWuokexr/+aQaoX2wbfiq+DCg11wUUTp1ewYU2+zac1cLhijCv4wUzmW93aYj/skZ1
-         SMMQ==
+        bh=mIzKLg4GpjOzi297VJ0dtCu0S6Mi4dppQa6/15EW5pk=;
+        b=DGwKRCNVQmOXvqi1wI53bFf+tp8DMr0UfGFDldJ1hYnZv9tpCW2WTYgVa1QA17xwC+
+         YHL6JmzMiuHDLrGts81MkWsgHDF66J5Oz7A1O1cbLT5vUgoWb2zKGAuGeLg4US4NBVCc
+         TnirPg0MAj4NOfTESsXhbHThAQRt3lqknbPksa79D0CSSsmLz0wJvr4AIz7XKPQRsclm
+         hO1GZNyXDQdgt/gmuj30I1fj1EQr6+1K/8xZF8FMiirgNLcsGg8Qxala5zqixKMi5W1B
+         oa5k2wUsFNqh77QKDqnGuiaptUoWj8t3Ew2o6Cpt/e93dvnpwwwgYMrxKOEMI8D59ABU
+         W7dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681723644; x=1684315644;
+        d=1e100.net; s=20221208; t=1681723647; x=1684315647;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=b4o02lv8btLHgvAb0bTyOqyBzz9fqiO7r5dsELy7YLE=;
-        b=UkyJU0La8fqxGtR9K0yzvCb+d4wPXOYINC8u+246G5zeq2328ePFcJAl8tO/iupbsJ
-         4eEApXsIdM1l7G4/puu3BpInxP7JOlIyuHeZPjoSwlHFNdcCiczVnSvkXDumfP7dQVCX
-         lF3/iQl64wXjzHKVj4j8DsWjwiXm41ajmX3QcZl2nPAzNVa5NTlFzxV1YHaKLcSMQI+e
-         eF4nYGD9iCq5BbfmlNz+U6LBknagt6bijYJijc6lir52PHrWkaLk0uBALW2BFCq/rb4g
-         tQElKfqyWgtxUdBrtYOC2+xlfiSp7BIQUN/b7aceEvizqUda2ogpiJGGDg9aWOgmji9+
-         F8bQ==
-X-Gm-Message-State: AAQBX9dTiiFD5AvmqZp/vUz4SyRzlfZ8F3zWASawI8aZRlC817YKxFKn
-        OSQaN1NGRUchfMD3DPank6s=
-X-Google-Smtp-Source: AKy350Yu2DfKlLCPe0jbhDidtr/vhADslB5wz9t6ykKrfUfMo2K7+3iYAI5wQ4yllCekR4AHpY7SYA==
-X-Received: by 2002:a17:906:89a4:b0:94e:23b:75e9 with SMTP id gg36-20020a17090689a400b0094e023b75e9mr6008515ejc.43.1681723644295;
-        Mon, 17 Apr 2023 02:27:24 -0700 (PDT)
+        bh=mIzKLg4GpjOzi297VJ0dtCu0S6Mi4dppQa6/15EW5pk=;
+        b=Ah0AVgqJ78pc7JwlQOT6PU/Zv13bcUDldQuheIlAq2534wYkIQKPP2AB2eYblm+Tn1
+         FdblRaF/T4M2GqSRmB19ghbOkSgt9pUZHSRFoleUqsPtdqjCM1R9LYc36ZPlvhkAsAgr
+         mnfkGSFD1hCh1/A2X2fMiERFxUKk5WwoZQlH2zdokDXJz29vjwdbpZzepLR36DetQ4DN
+         OVIzZjFCte3LJMikA++uSgCcTHsaeoqzUiqPPTUDt9QEdXYUqbiTovR0YAoZvIpvnBZd
+         8AZkaAP3c3wtDCAMA4wBCcYdyFQlXBCqOrfNRehrtu2JUMUpsFCiVMMdlDqZ6PU1o6sh
+         Oiyw==
+X-Gm-Message-State: AAQBX9fjQ+WaB9IxODDkPebYcf+MAYavjgN/dXBWlcwzDMvKWncPZyly
+        slpqthdf9Mw/cHnJ5vm2W3I=
+X-Google-Smtp-Source: AKy350a1J6+gjrzwXv0Ks+vuzPkCdPg2TE3nyMnSTa1A9epJMEunrqg4MJREhDQaLIBvDxzcasA+mA==
+X-Received: by 2002:a17:907:6e14:b0:94f:4bd4:36f with SMTP id sd20-20020a1709076e1400b0094f4bd4036fmr4374087ejc.64.1681723647131;
+        Mon, 17 Apr 2023 02:27:27 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id p20-20020a170906615400b0094aa087578csm6398596ejl.171.2023.04.17.02.27.23
+        by smtp.googlemail.com with ESMTPSA id p20-20020a170906615400b0094aa087578csm6398596ejl.171.2023.04.17.02.27.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 02:27:24 -0700 (PDT)
+        Mon, 17 Apr 2023 02:27:26 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
-Cc:     xxm@rock-chips.com, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Damien Le Moal <dlemoal@kernel.org>,
+Cc:     xxm@rock-chips.com, Damien Le Moal <dlemoal@kernel.org>,
         Shawn Lin <shawn.lin@rock-chips.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -60,19 +59,21 @@ Cc:     xxm@rock-chips.com, Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
-        Brian Norris <briannorris@chromium.org>,
         Johan Jonker <jbx6244@gmail.com>,
         Caleb Connolly <kc@postmarketos.org>,
+        Brian Norris <briannorris@chromium.org>,
         Corentin Labbe <clabbe@baylibre.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Rick Wertenbroek <rick.wertenbroek@gmail.com>,
         Judy Hsiao <judyhsiao@chromium.org>,
         Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/11] PCI: rockchip: Don't advertise MSI-X in PCIe capabilities
-Date:   Mon, 17 Apr 2023 11:26:28 +0200
-Message-Id: <20230417092631.347976-11-rick.wertenbroek@gmail.com>
+Subject: [PATCH v4 11/11] PCI: rockchip: Set address alignment for endpoint mode
+Date:   Mon, 17 Apr 2023 11:26:29 +0200
+Message-Id: <20230417092631.347976-12-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230417092631.347976-1-rick.wertenbroek@gmail.com>
 References: <20230417092631.347976-1-rick.wertenbroek@gmail.com>
@@ -88,91 +89,30 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The RK3399 PCIe endpoint controller cannot generate MSI-X IRQs.
-This is documented in the RK3399 technical reference manual (TRM)
-section 17.5.9 "Interrupt Support".
+From: Damien Le Moal <dlemoal@kernel.org>
 
-MSI-X capability should therefore not be advertised. Remove the
-MSI-X capability by editing the capability linked-list. The
-previous entry is the MSI capability, therefore get the next
-entry from the MSI-X capability entry and set it as next entry
-for the MSI capability. This in effect removes MSI-X from the list.
+The address translation unit of the rockchip EP controller does not use
+the lower 8 bits of a PCIe-space address to map local memory. Thus we
+must set the align feature field to 256 to let the user know about this
+constraint.
 
-Linked list before : MSI cap -> MSI-X cap -> PCIe Device cap -> ...
-Linked list now : MSI cap -> PCIe Device cap -> ...
-
-Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
-Tested-by: Damien Le Moal <dlemoal@kernel.org>
+Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 24 +++++++++++++++++++++++
- drivers/pci/controller/pcie-rockchip.h    |  5 +++++
- 2 files changed, 29 insertions(+)
+ drivers/pci/controller/pcie-rockchip-ep.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index 63fbb379638b..edfced311a9f 100644
+index edfced311a9f..0af0e965fb57 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -507,6 +507,7 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 	size_t max_regions;
- 	struct pci_epc_mem_window *windows = NULL;
- 	int err, i;
-+	u32 cfg_msi, cfg_msix_cp;
+@@ -442,6 +442,7 @@ static const struct pci_epc_features rockchip_pcie_epc_features = {
+ 	.linkup_notifier = false,
+ 	.msi_capable = true,
+ 	.msix_capable = false,
++	.align = 256,
+ };
  
- 	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
- 	if (!ep)
-@@ -582,6 +583,29 @@ static int rockchip_pcie_ep_probe(struct platform_device *pdev)
- 
- 	ep->irq_pci_addr = ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR;
- 
-+	/*
-+	 * MSI-X is not supported but the controller still advertises the MSI-X
-+	 * capability by default, which can lead to the Root Complex side
-+	 * allocating MSI-X vectors which cannot be used. Avoid this by skipping
-+	 * the MSI-X capability entry in the PCIe capabilities linked-list: get
-+	 * the next pointer from the MSI-X entry and set that in the MSI
-+	 * capability entry (which is the previous entry). This way the MSI-X
-+	 * entry is skipped (left out of the linked-list) and not advertised.
-+	 */
-+	cfg_msi = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
-+				     ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+
-+	cfg_msi &= ~ROCKCHIP_PCIE_EP_MSI_CP1_MASK;
-+
-+	cfg_msix_cp = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_BASE +
-+					 ROCKCHIP_PCIE_EP_MSIX_CAP_REG) &
-+					 ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK;
-+
-+	cfg_msi |= cfg_msix_cp;
-+
-+	rockchip_pcie_write(rockchip, cfg_msi,
-+			    PCIE_EP_CONFIG_BASE + ROCKCHIP_PCIE_EP_MSI_CTRL_REG);
-+
- 	rockchip_pcie_write(rockchip, PCIE_CLIENT_CONF_ENABLE,
- 			    PCIE_CLIENT_CONFIG);
- 
-diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
-index 501d859420b4..fe0333778fd9 100644
---- a/drivers/pci/controller/pcie-rockchip.h
-+++ b/drivers/pci/controller/pcie-rockchip.h
-@@ -227,6 +227,8 @@
- #define ROCKCHIP_PCIE_EP_CMD_STATUS			0x4
- #define   ROCKCHIP_PCIE_EP_CMD_STATUS_IS		BIT(19)
- #define ROCKCHIP_PCIE_EP_MSI_CTRL_REG			0x90
-+#define   ROCKCHIP_PCIE_EP_MSI_CP1_OFFSET		8
-+#define   ROCKCHIP_PCIE_EP_MSI_CP1_MASK			GENMASK(15, 8)
- #define   ROCKCHIP_PCIE_EP_MSI_FLAGS_OFFSET		16
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_OFFSET		17
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MMC_MASK		GENMASK(19, 17)
-@@ -234,6 +236,9 @@
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MME_MASK		GENMASK(22, 20)
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_ME				BIT(16)
- #define   ROCKCHIP_PCIE_EP_MSI_CTRL_MASK_MSI_CAP	BIT(24)
-+#define ROCKCHIP_PCIE_EP_MSIX_CAP_REG			0xb0
-+#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_OFFSET		8
-+#define   ROCKCHIP_PCIE_EP_MSIX_CAP_CP_MASK		GENMASK(15, 8)
- #define ROCKCHIP_PCIE_EP_DUMMY_IRQ_ADDR				0x1
- #define ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR		0x3
- #define ROCKCHIP_PCIE_EP_FUNC_BASE(fn) \
+ static const struct pci_epc_features*
 -- 
 2.25.1
 
