@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31FD76E6B4A
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 19:44:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 85FCA6E6B48
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 19:44:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232532AbjDRRoD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S232575AbjDRRoD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Tue, 18 Apr 2023 13:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52500 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52478 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232622AbjDRRoA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 13:44:00 -0400
+        with ESMTP id S232603AbjDRRoC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 13:44:02 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F34BBB5;
-        Tue, 18 Apr 2023 10:43:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C3169EEA;
+        Tue, 18 Apr 2023 10:43:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 50CA363777;
-        Tue, 18 Apr 2023 17:43:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79E6AC4339C;
-        Tue, 18 Apr 2023 17:43:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 09AEF63774;
+        Tue, 18 Apr 2023 17:43:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A657C4339C;
+        Tue, 18 Apr 2023 17:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681839836;
-        bh=AL3+SyTTFCGKDjWw5td9YZ2QKfBI0GTdJPgM4AiAhe4=;
+        s=k20201202; t=1681839838;
+        bh=VFe7w/vnycRWYHKPu1DTbqCJhhPF6tfQJVe3yM8cJOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JAT2gw1Tw2FDwQKJRtKhP2QuKhZEZDORi5PZa6kKxzEqCrB3ljiU3FdGz2BmAod8W
-         /R5OGZyEhdpRtwhpTEPNoCUrzjkGA+E1lIYG2z1Qm+WvzvnDvOOjgBIpl59Jdjw3lN
-         VfEHH0iON+Rr93MQfGoDrpclF3bWSvNirIZhYRnJL0tjMDgINuKtuGeHmBtAhcfxGe
-         0Jn7EggHHVG4cUjuGifgMvR9FH6myR3nwPx6HD4/CCkegCZ+hZoSQaSY/D5f9pTX6m
-         nAB2KifRYjpUqWW895aJo7HV626CPcgzQeBwif3qBcP+RMFodkFMrLbWk4VbDg98HZ
-         oI8skUATWZrvw==
+        b=Ye4zKqDaO8mzIT7AVAh/i5g/N8+rFaU//8YDTfHrwD3DZ/tqvreG5KBM7FXmujkHq
+         W3tAojyDM/87MIrgo80L5cqnybn1/VxHDfD4cw9H0XH4AUqZJoUGcnO4MBPgCMiY9w
+         xWMWcbdGVCRDrgSr7o7rrieiAcUaPmct2EalbzhhTRYayU8MPWogIcEeQgw4N7IFcP
+         8kQ7g4wWorCSMhE/6WwwlOw1K7I15VO6bHGikvYZ4m4EeWyEUqqWLDBQZG32pHkExD
+         kWHC+wU7zbdhIMD+M24/FX/0oKNpFskqpGmN55cWyFjsJseCiNVUO3FBg/3WKkdVNM
+         PYfMInHSH05+g==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/7] PCI: Sort controller Kconfig entries by vendor
-Date:   Tue, 18 Apr 2023 12:43:34 -0500
-Message-Id: <20230418174336.145585-6-helgaas@kernel.org>
+Subject: [PATCH 6/7] PCI: dwc: Sort Kconfig entries by vendor
+Date:   Tue, 18 Apr 2023 12:43:35 -0500
+Message-Id: <20230418174336.145585-7-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230418174336.145585-1-helgaas@kernel.org>
 References: <20230418174336.145585-1-helgaas@kernel.org>
@@ -61,525 +61,498 @@ menuconfig.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 ---
- drivers/pci/controller/Kconfig | 456 ++++++++++++++++-----------------
- 1 file changed, 228 insertions(+), 228 deletions(-)
+ drivers/pci/controller/dwc/Kconfig | 406 ++++++++++++++---------------
+ 1 file changed, 203 insertions(+), 203 deletions(-)
 
-diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-index 7690cc7bbd3f..c52ca0c9550d 100644
---- a/drivers/pci/controller/Kconfig
-+++ b/drivers/pci/controller/Kconfig
-@@ -3,19 +3,6 @@
- menu "PCI controller drivers"
- 	depends on PCI
- 
--config PCI_MVEBU
--	tristate "Marvell EBU PCIe controller"
--	depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
--	depends on MVEBU_MBUS
--	depends on ARM
--	depends on OF
--	depends on BROKEN
--	select PCI_BRIDGE_EMUL
--	help
--	 Add support for Marvell EBU PCIe controller. This PCIe controller
--	 is used on 32-bit Marvell ARM SoCs: Dove, Kirkwood, Armada 370,
--	 Armada XP, Armada 375, Armada 38x and Armada 39x.
--
- config PCI_AARDVARK
- 	tristate "Aardvark PCIe controller"
- 	depends on (ARCH_MVEBU && ARM64) || COMPILE_TEST
-@@ -27,120 +14,54 @@ config PCI_AARDVARK
- 	 controller is part of the South Bridge of the Marvel Armada
- 	 3700 SoC.
- 
--config PCIE_XILINX_NWL
--	bool "Xilinx NWL PCIe controller"
--	depends on ARCH_ZYNQMP || COMPILE_TEST
-+config PCIE_ALTERA
-+	tristate "Altera PCIe controller"
-+	depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
-+	help
-+	  Say Y here if you want to enable PCIe controller support on Altera
-+	  FPGA.
-+
-+config PCIE_ALTERA_MSI
-+	tristate "Altera PCIe MSI feature"
-+	depends on PCIE_ALTERA
- 	depends on PCI_MSI
- 	help
--	 Say 'Y' here if you want kernel support for Xilinx
--	 NWL PCIe controller. The controller can act as Root Port
--	 or End Point. The current option selection will only
--	 support root port enabling.
-+	  Say Y here if you want PCIe MSI support for the Altera FPGA.
-+	  This MSI driver supports Altera MSI to GIC controller IP.
- 
--config PCI_FTPCI100
--	bool "Faraday Technology FTPCI100 PCI controller"
-+config PCIE_APPLE_MSI_DOORBELL_ADDR
-+	hex
-+	default 0xfffff000
-+	depends on PCIE_APPLE
-+
-+config PCIE_APPLE
-+	tristate "Apple PCIe controller"
-+	depends on ARCH_APPLE || COMPILE_TEST
- 	depends on OF
--	default ARCH_GEMINI
--
--config PCI_IXP4XX
--	bool "Intel IXP4xx PCI controller"
--	depends on ARM && OF
--	depends on ARCH_IXP4XX || COMPILE_TEST
--	default ARCH_IXP4XX
--	help
--	  Say Y here if you want support for the PCI host controller found
--	  in the Intel IXP4xx XScale-based network processor SoC.
--
--config PCI_TEGRA
--	bool "NVIDIA Tegra PCIe controller"
--	depends on ARCH_TEGRA || COMPILE_TEST
- 	depends on PCI_MSI
--	help
--	  Say Y here if you want support for the PCIe host controller found
--	  on NVIDIA Tegra SoCs.
--
--config PCI_RCAR_GEN2
--	bool "Renesas R-Car Gen2 Internal PCI controller"
--	depends on ARCH_RENESAS || COMPILE_TEST
--	depends on ARM
--	help
--	  Say Y here if you want internal PCI support on R-Car Gen2 SoC.
--	  There are 3 internal PCI controllers available with a single
--	  built-in EHCI/OHCI host controller present on each one.
--
--config PCIE_RCAR_HOST
--	bool "Renesas R-Car PCIe controller (host mode)"
--	depends on ARCH_RENESAS || COMPILE_TEST
--	depends on PCI_MSI
--	help
--	  Say Y here if you want PCIe controller support on R-Car SoCs in host
--	  mode.
--
--config PCIE_RCAR_EP
--	bool "Renesas R-Car PCIe controller (endpoint mode)"
--	depends on ARCH_RENESAS || COMPILE_TEST
--	depends on PCI_ENDPOINT
--	help
--	  Say Y here if you want PCIe controller support on R-Car SoCs in
--	  endpoint mode.
--
--config PCI_HOST_COMMON
--	tristate
--	select PCI_ECAM
--
--config PCI_HOST_GENERIC
--	tristate "Generic PCI host controller"
--	depends on OF
--	select PCI_HOST_COMMON
--	select IRQ_DOMAIN
--	help
--	  Say Y here if you want to support a simple generic PCI host
--	  controller, such as the one emulated by kvmtool.
--
--config PCIE_XILINX
--	bool "Xilinx AXI PCIe controller"
--	depends on OF || COMPILE_TEST
--	depends on PCI_MSI
--	help
--	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
--	  Host Bridge driver.
--
--config PCIE_XILINX_CPM
--	bool "Xilinx Versal CPM PCI controller"
--	depends on ARCH_ZYNQMP || COMPILE_TEST
- 	select PCI_HOST_COMMON
- 	help
--	  Say 'Y' here if you want kernel support for the
--	  Xilinx Versal CPM host bridge.
-+	  Say Y here if you want to enable PCIe controller support on Apple
-+	  system-on-chips, like the Apple M1. This is required for the USB
-+	  type-A ports, Ethernet, Wi-Fi, and Bluetooth.
- 
--config PCI_XGENE
--	bool "X-Gene PCIe controller"
--	depends on ARM64 || COMPILE_TEST
--	depends on OF || (ACPI && PCI_QUIRKS)
--	help
--	  Say Y here if you want internal PCI support on APM X-Gene SoC.
--	  There are 5 internal PCIe ports available. Each port is GEN3 capable
--	  and have varied lanes from x1 to x8.
--
--config PCI_XGENE_MSI
--	bool "X-Gene v1 PCIe MSI feature"
--	depends on PCI_XGENE
--	depends on PCI_MSI
--	default y
--	help
--	  Say Y here if you want PCIe MSI support for the APM X-Gene v1 SoC.
--	  This MSI driver supports 5 PCIe ports on the APM X-Gene v1 SoC.
--
--config PCI_V3_SEMI
--	bool "V3 Semiconductor PCI controller"
--	depends on OF
--	depends on ARM || COMPILE_TEST
--	default ARCH_INTEGRATOR_AP
-+	  If unsure, say Y if you have an Apple Silicon system.
- 
- config PCI_VERSATILE
- 	bool "ARM Versatile PB PCI controller"
- 	depends on ARCH_VERSATILE || COMPILE_TEST
- 
-+config PCIE_BRCMSTB
-+	tristate "Broadcom Brcmstb PCIe controller"
-+	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCMBCA || \
-+		   BMIPS_GENERIC || COMPILE_TEST
-+	depends on OF
-+	depends on PCI_MSI
-+	default ARCH_BRCMSTB || BMIPS_GENERIC
-+	help
-+	  Say Y here to enable PCIe host controller support for
-+	  Broadcom STB based SoCs, like the Raspberry Pi 4.
-+
- config PCIE_IPROC
- 	tristate
- 	help
-@@ -177,21 +98,6 @@ config PCIE_IPROC_MSI
- 	  Say Y here if you want to enable MSI support for Broadcom's iProc
- 	  PCIe controller
- 
--config PCIE_ALTERA
--	tristate "Altera PCIe controller"
--	depends on ARM || NIOS2 || ARM64 || COMPILE_TEST
--	help
--	  Say Y here if you want to enable PCIe controller support on Altera
--	  FPGA.
--
--config PCIE_ALTERA_MSI
--	tristate "Altera PCIe MSI feature"
--	depends on PCIE_ALTERA
--	depends on PCI_MSI
--	help
--	  Say Y here if you want PCIe MSI support for the Altera FPGA.
--	  This MSI driver supports Altera MSI to GIC controller IP.
--
- config PCI_HOST_THUNDER_PEM
- 	bool "Cavium Thunder PCIe controller to off-chip devices"
- 	depends on ARM64 || COMPILE_TEST
-@@ -208,6 +114,157 @@ config PCI_HOST_THUNDER_ECAM
- 	help
- 	  Say Y here if you want ECAM support for CN88XX-Pass-1.x Cavium Thunder SoCs.
- 
-+config PCI_FTPCI100
-+	bool "Faraday Technology FTPCI100 PCI controller"
-+	depends on OF
-+	default ARCH_GEMINI
-+
-+config PCI_HOST_COMMON
-+	tristate
-+	select PCI_ECAM
-+
-+config PCI_HOST_GENERIC
-+	tristate "Generic PCI host controller"
-+	depends on OF
-+	select PCI_HOST_COMMON
-+	select IRQ_DOMAIN
-+	help
-+	  Say Y here if you want to support a simple generic PCI host
-+	  controller, such as the one emulated by kvmtool.
-+
-+config PCIE_HISI_ERR
-+	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
-+	bool "HiSilicon HIP PCIe controller error handling driver"
-+	help
-+	  Say Y here if you want error handling support
-+	  for the PCIe controller's errors on HiSilicon HIP SoCs
-+
-+config PCI_IXP4XX
-+	bool "Intel IXP4xx PCI controller"
-+	depends on ARM && OF
-+	depends on ARCH_IXP4XX || COMPILE_TEST
-+	default ARCH_IXP4XX
-+	help
-+	  Say Y here if you want support for the PCI host controller found
-+	  in the Intel IXP4xx XScale-based network processor SoC.
-+
-+config VMD
-+	depends on PCI_MSI && X86_64 && !UML
-+	tristate "Intel Volume Management Device Driver"
-+	help
-+	  Adds support for the Intel Volume Management Device (VMD). VMD is a
-+	  secondary PCI host bridge that allows PCI Express root ports,
-+	  and devices attached to them, to be removed from the default
-+	  PCI domain and placed within the VMD domain. This provides
-+	  more bus resources than are otherwise possible with a
-+	  single domain. If you know your system provides one of these and
-+	  has devices attached to it, say Y; if you are not sure, say N.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called vmd.
-+
-+config PCI_LOONGSON
-+	bool "LOONGSON PCIe controller"
-+	depends on MACH_LOONGSON64 || COMPILE_TEST
-+	depends on OF || ACPI
-+	depends on PCI_QUIRKS
-+	default MACH_LOONGSON64
-+	help
-+	  Say Y here if you want to enable PCI controller support on
-+	  Loongson systems.
-+
-+config PCI_MVEBU
-+	tristate "Marvell EBU PCIe controller"
-+	depends on ARCH_MVEBU || ARCH_DOVE || COMPILE_TEST
-+	depends on MVEBU_MBUS
-+	depends on ARM
-+	depends on OF
-+	depends on BROKEN
-+	select PCI_BRIDGE_EMUL
-+	help
-+	 Add support for Marvell EBU PCIe controller. This PCIe controller
-+	 is used on 32-bit Marvell ARM SoCs: Dove, Kirkwood, Armada 370,
-+	 Armada XP, Armada 375, Armada 38x and Armada 39x.
-+
-+config PCIE_MEDIATEK
-+	tristate "MediaTek PCIe controller"
-+	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
-+	depends on OF
-+	depends on PCI_MSI
-+	help
-+	  Say Y here if you want to enable PCIe controller support on
-+	  MediaTek SoCs.
-+
-+config PCIE_MEDIATEK_GEN3
-+	tristate "MediaTek Gen3 PCIe controller"
-+	depends on ARCH_MEDIATEK || COMPILE_TEST
-+	depends on PCI_MSI
-+	help
-+	  Adds support for PCIe Gen3 MAC controller for MediaTek SoCs.
-+	  This PCIe controller is compatible with Gen3, Gen2 and Gen1 speed,
-+	  and support up to 256 MSI interrupt numbers for
-+	  multi-function devices.
-+
-+	  Say Y here if you want to enable Gen3 PCIe controller support on
-+	  MediaTek SoCs.
-+
-+config PCIE_MT7621
-+	tristate "MediaTek MT7621 PCIe controller"
-+	depends on SOC_MT7621 || COMPILE_TEST
-+	select PHY_MT7621_PCI
-+	default SOC_MT7621
-+	help
-+	  This selects a driver for the MediaTek MT7621 PCIe Controller.
-+
-+config PCIE_MICROCHIP_HOST
-+	bool "Microchip AXI PCIe controller"
-+	depends on PCI_MSI && OF
-+	select PCI_HOST_COMMON
-+	help
-+	  Say Y here if you want kernel to support the Microchip AXI PCIe
-+	  Host Bridge driver.
-+
-+config PCI_HYPERV_INTERFACE
-+	tristate "Microsoft Hyper-V PCI Interface"
-+	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
-+	help
-+	  The Hyper-V PCI Interface is a helper driver that allows other
-+	  drivers to have a common interface with the Hyper-V PCI frontend
-+	  driver.
-+
-+config PCI_TEGRA
-+	bool "NVIDIA Tegra PCIe controller"
-+	depends on ARCH_TEGRA || COMPILE_TEST
-+	depends on PCI_MSI
-+	help
-+	  Say Y here if you want support for the PCIe host controller found
-+	  on NVIDIA Tegra SoCs.
-+
-+config PCIE_RCAR_HOST
-+	bool "Renesas R-Car PCIe controller (host mode)"
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on PCI_MSI
-+	help
-+	  Say Y here if you want PCIe controller support on R-Car SoCs in host
-+	  mode.
-+
-+config PCIE_RCAR_EP
-+	bool "Renesas R-Car PCIe controller (endpoint mode)"
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on PCI_ENDPOINT
-+	help
-+	  Say Y here if you want PCIe controller support on R-Car SoCs in
-+	  endpoint mode.
-+
-+config PCI_RCAR_GEN2
-+	bool "Renesas R-Car Gen2 Internal PCI controller"
-+	depends on ARCH_RENESAS || COMPILE_TEST
-+	depends on ARM
-+	help
-+	  Say Y here if you want internal PCI support on R-Car Gen2 SoC.
-+	  There are 3 internal PCI controllers available with a single
-+	  built-in EHCI/OHCI host controller present on each one.
-+
- config PCIE_ROCKCHIP
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 4c44ad9f8f2b..ab96da43e0c2 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -14,82 +14,61 @@ config PCIE_DW_EP
  	bool
- 	depends on PCI
-@@ -236,114 +293,57 @@ config PCIE_ROCKCHIP_EP
- 	  endpoint mode on Rockchip SoC. There is 1 internal PCIe port
- 	  available to support GEN2 with 4 slots.
+ 	select PCIE_DW
  
--config PCIE_MEDIATEK
--	tristate "MediaTek PCIe controller"
--	depends on ARCH_AIROHA || ARCH_MEDIATEK || COMPILE_TEST
-+config PCI_V3_SEMI
-+	bool "V3 Semiconductor PCI controller"
- 	depends on OF
-+	depends on ARM || COMPILE_TEST
-+	default ARCH_INTEGRATOR_AP
-+
-+config PCI_XGENE
-+	bool "X-Gene PCIe controller"
-+	depends on ARM64 || COMPILE_TEST
-+	depends on OF || (ACPI && PCI_QUIRKS)
-+	help
-+	  Say Y here if you want internal PCI support on APM X-Gene SoC.
-+	  There are 5 internal PCIe ports available. Each port is GEN3 capable
-+	  and have varied lanes from x1 to x8.
-+
-+config PCI_XGENE_MSI
-+	bool "X-Gene v1 PCIe MSI feature"
-+	depends on PCI_XGENE
-+	depends on PCI_MSI
-+	default y
-+	help
-+	  Say Y here if you want PCIe MSI support for the APM X-Gene v1 SoC.
-+	  This MSI driver supports 5 PCIe ports on the APM X-Gene v1 SoC.
-+
-+config PCIE_XILINX
-+	bool "Xilinx AXI PCIe controller"
-+	depends on OF || COMPILE_TEST
+-config PCI_DRA7XX
+-	tristate
+-
+-config PCI_DRA7XX_HOST
+-	tristate "TI DRA7xx PCIe controller (host mode)"
+-	depends on SOC_DRA7XX || COMPILE_TEST
+-	depends on OF && HAS_IOMEM && TI_PIPE3
++config PCIE_AL
++	bool "Amazon Annapurna Labs PCIe controller"
++	depends on OF && (ARM64 || COMPILE_TEST)
  	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+-	select PCI_DRA7XX
+-	default y if SOC_DRA7XX
++	select PCI_ECAM
+ 	help
+-	  Enables support for the PCIe controller in the DRA7xx SoC to work in
+-	  host mode. There are two instances of PCIe controller in DRA7xx.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCI_DRA7XX_HOST must be selected and in order
+-	  to enable device-specific features PCI_DRA7XX_EP must be selected.
+-	  This uses the DesignWare core.
++	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
++	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
++	  core plus Annapurna Labs proprietary hardware wrappers. This is
++	  required only for DT-based platforms. ACPI platforms with the
++	  Annapurna Labs PCIe controller don't need to enable this.
+ 
+-config PCI_DRA7XX_EP
+-	tristate "TI DRA7xx PCIe controller (endpoint mode)"
+-	depends on SOC_DRA7XX || COMPILE_TEST
+-	depends on OF && HAS_IOMEM && TI_PIPE3
+-	depends on PCI_ENDPOINT
+-	select PCIE_DW_EP
+-	select PCI_DRA7XX
++config PCI_MESON
++	tristate "Amlogic Meson PCIe controller"
++	default m if ARCH_MESON
++	depends on PCI_MSI
++	select PCIE_DW_HOST
+ 	help
+-	  Enables support for the PCIe controller in the DRA7xx SoC to work in
+-	  endpoint mode. There are two instances of PCIe controller in DRA7xx.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCI_DRA7XX_HOST must be selected and in order
+-	  to enable device-specific features PCI_DRA7XX_EP must be selected.
+-	  This uses the DesignWare core.
++	  Say Y here if you want to enable PCI controller support on Amlogic
++	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
++	  and therefore the driver re-uses the DesignWare core functions to
++	  implement the driver.
+ 
+-config PCIE_DW_PLAT
++config PCIE_ARTPEC6
+ 	bool
+ 
+-config PCIE_DW_PLAT_HOST
+-	bool "Platform bus based DesignWare PCIe controller (host mode)"
++config PCIE_ARTPEC6_HOST
++	bool "Axis ARTPEC-6 PCIe controller (host mode)"
++	depends on MACH_ARTPEC6 || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+-	select PCIE_DW_PLAT
++	select PCIE_ARTPEC6
+ 	help
+-	  Enables support for the PCIe controller in the Designware IP to
+-	  work in host mode. There are two instances of PCIe controller in
+-	  Designware IP.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+-	  order to enable device-specific features PCI_DW_PLAT_EP must be
+-	  selected.
++	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
++	  host mode. This uses the DesignWare core.
+ 
+-config PCIE_DW_PLAT_EP
+-	bool "Platform bus based DesignWare PCIe controller (endpoint mode)"
+-	depends on PCI && PCI_MSI
++config PCIE_ARTPEC6_EP
++	bool "Axis ARTPEC-6 PCIe controller (endpoint mode)"
++	depends on MACH_ARTPEC6 || COMPILE_TEST
+ 	depends on PCI_ENDPOINT
+ 	select PCIE_DW_EP
+-	select PCIE_DW_PLAT
++	select PCIE_ARTPEC6
+ 	help
+-	  Enables support for the PCIe controller in the Designware IP to
+-	  work in endpoint mode. There are two instances of PCIe controller
+-	  in Designware IP.
+-	  This controller can work either as EP or RC. In order to enable
+-	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
+-	  order to enable device-specific features PCI_DW_PLAT_EP must be
+-	  selected.
++	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
++	  endpoint mode. This uses the DesignWare core.
+ 
+-config PCI_EXYNOS
+-	tristate "Samsung Exynos PCIe controller"
+-	depends on ARCH_EXYNOS || COMPILE_TEST
++config PCIE_BT1
++	tristate "Baikal-T1 PCIe controller"
++	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+ 	help
+-	  Enables support for the PCIe controller in the Samsung Exynos SoCs
+-	  to work in host mode. The PCI controller is based on the DesignWare
+-	  hardware and therefore the driver re-uses the DesignWare core
+-	  functions to implement the driver.
++	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
++	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
+ 
+ config PCI_IMX6
+ 	bool
+@@ -118,41 +97,6 @@ config PCI_IMX6_EP
+ 	  on DesignWare hardware and therefore the driver re-uses the
+ 	  DesignWare core functions to implement the driver.
+ 
+-config PCIE_SPEAR13XX
+-	bool "STMicroelectronics SPEAr PCIe controller"
+-	depends on ARCH_SPEAR13XX || COMPILE_TEST
+-	depends on PCI_MSI
+-	select PCIE_DW_HOST
+-	help
+-	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+-
+-config PCI_KEYSTONE
+-	bool
+-
+-config PCI_KEYSTONE_HOST
+-	bool "TI Keystone PCIe controller (host mode)"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+-	depends on PCI_MSI
+-	select PCIE_DW_HOST
+-	select PCI_KEYSTONE
+-	help
+-	  Enables support for the PCIe controller in the Keystone SoC to
+-	  work in host mode. The PCI controller on Keystone is based on
+-	  DesignWare hardware and therefore the driver re-uses the
+-	  DesignWare core functions to implement the driver.
+-
+-config PCI_KEYSTONE_EP
+-	bool "TI Keystone PCIe controller (endpoint mode)"
+-	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+-	depends on PCI_ENDPOINT
+-	select PCIE_DW_EP
+-	select PCI_KEYSTONE
+-	help
+-	  Enables support for the PCIe controller in the Keystone SoC to
+-	  work in endpoint mode. The PCI controller on Keystone is based
+-	  on DesignWare hardware and therefore the driver re-uses the
+-	  DesignWare core functions to implement the driver.
+-
+ config PCI_LAYERSCAPE
+ 	bool "Freescale Layerscape PCIe controller (host mode)"
+ 	depends on OF && (ARM || ARCH_LAYERSCAPE || COMPILE_TEST)
+@@ -188,80 +132,23 @@ config PCI_HISI
+ 	  Say Y here if you want PCIe controller support on HiSilicon
+ 	  Hip05 and Hip06 SoCs
+ 
+-config PCIE_QCOM
+-	bool "Qualcomm PCIe controller (host mode)"
+-	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++config PCIE_KIRIN
++	depends on OF && (ARM64 || COMPILE_TEST)
++	tristate "HiSilicon Kirin PCIe controller"
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+-	select CRC8
++	select REGMAP_MMIO
+ 	help
+-	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
+-	  PCIe controller uses the DesignWare core plus Qualcomm-specific
+-	  hardware wrappers.
++	  Say Y here if you want PCIe controller support
++	  on HiSilicon Kirin series SoCs.
+ 
+-config PCIE_QCOM_EP
+-	tristate "Qualcomm PCIe controller (endpoint mode)"
+-	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+-	depends on PCI_ENDPOINT
+-	select PCIE_DW_EP
+-	help
+-	  Say Y here to enable support for the PCIe controllers on Qualcomm SoCs
+-	  to work in endpoint mode. The PCIe controller uses the DesignWare core
+-	  plus Qualcomm-specific hardware wrappers.
+-
+-config PCIE_ARMADA_8K
+-	bool "Marvell Armada-8K PCIe controller"
+-	depends on ARCH_MVEBU || COMPILE_TEST
++config PCIE_HISI_STB
++	bool "HiSilicon STB PCIe controller"
++	depends on ARCH_HISI || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
  	help
 -	  Say Y here if you want to enable PCIe controller support on
--	  MediaTek SoCs.
+-	  Armada-8K SoCs. The PCIe controller on Armada-8K is based on
+-	  DesignWare hardware and therefore the driver re-uses the
+-	  DesignWare core functions to implement the driver.
 -
--config PCIE_MEDIATEK_GEN3
--	tristate "MediaTek Gen3 PCIe controller"
--	depends on ARCH_MEDIATEK || COMPILE_TEST
+-config PCIE_ARTPEC6
+-	bool
+-
+-config PCIE_ARTPEC6_HOST
+-	bool "Axis ARTPEC-6 PCIe controller (host mode)"
+-	depends on MACH_ARTPEC6 || COMPILE_TEST
 -	depends on PCI_MSI
+-	select PCIE_DW_HOST
+-	select PCIE_ARTPEC6
 -	help
--	  Adds support for PCIe Gen3 MAC controller for MediaTek SoCs.
--	  This PCIe controller is compatible with Gen3, Gen2 and Gen1 speed,
--	  and support up to 256 MSI interrupt numbers for
--	  multi-function devices.
+-	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+-	  host mode. This uses the DesignWare core.
 -
--	  Say Y here if you want to enable Gen3 PCIe controller support on
--	  MediaTek SoCs.
--
--config VMD
--	depends on PCI_MSI && X86_64 && !UML
--	tristate "Intel Volume Management Device Driver"
+-config PCIE_ARTPEC6_EP
+-	bool "Axis ARTPEC-6 PCIe controller (endpoint mode)"
+-	depends on MACH_ARTPEC6 || COMPILE_TEST
+-	depends on PCI_ENDPOINT
+-	select PCIE_DW_EP
+-	select PCIE_ARTPEC6
 -	help
--	  Adds support for the Intel Volume Management Device (VMD). VMD is a
--	  secondary PCI host bridge that allows PCI Express root ports,
--	  and devices attached to them, to be removed from the default
--	  PCI domain and placed within the VMD domain. This provides
--	  more bus resources than are otherwise possible with a
--	  single domain. If you know your system provides one of these and
--	  has devices attached to it, say Y; if you are not sure, say N.
+-	  Enables support for the PCIe controller in the ARTPEC-6 SoC to work in
+-	  endpoint mode. This uses the DesignWare core.
 -
--	  To compile this driver as a module, choose M here: the
--	  module will be called vmd.
+-config PCIE_BT1
+-	tristate "Baikal-T1 PCIe controller"
+-	depends on MIPS_BAIKAL_T1 || COMPILE_TEST
+-	depends on PCI_MSI
+-	select PCIE_DW_HOST
+-	help
+-	  Enables support for the PCIe controller in the Baikal-T1 SoC to work
+-	  in host mode. It's based on the Synopsys DWC PCIe v4.60a IP-core.
 -
--config PCIE_BRCMSTB
--	tristate "Broadcom Brcmstb PCIe controller"
--	depends on ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCMBCA || \
--		   BMIPS_GENERIC || COMPILE_TEST
+-config PCIE_ROCKCHIP_DW_HOST
+-	bool "Rockchip DesignWare PCIe controller"
+-	select PCIE_DW
+-	select PCIE_DW_HOST
+-	depends on PCI_MSI
+-	depends on ARCH_ROCKCHIP || COMPILE_TEST
 -	depends on OF
--	depends on PCI_MSI
--	default ARCH_BRCMSTB || BMIPS_GENERIC
 -	help
--	  Say Y here to enable PCIe host controller support for
--	  Broadcom STB based SoCs, like the Raspberry Pi 4.
--
--config PCI_HYPERV_INTERFACE
--	tristate "Microsoft Hyper-V PCI Interface"
--	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
--	help
--	  The Hyper-V PCI Interface is a helper driver that allows other
--	  drivers to have a common interface with the Hyper-V PCI frontend
--	  driver.
--
--config PCI_LOONGSON
--	bool "LOONGSON PCIe controller"
--	depends on MACH_LOONGSON64 || COMPILE_TEST
--	depends on OF || ACPI
--	depends on PCI_QUIRKS
--	default MACH_LOONGSON64
--	help
--	  Say Y here if you want to enable PCI controller support on
--	  Loongson systems.
--
--config PCIE_MICROCHIP_HOST
--	bool "Microchip AXI PCIe controller"
--	depends on PCI_MSI && OF
--	select PCI_HOST_COMMON
--	help
--	  Say Y here if you want kernel to support the Microchip AXI PCIe
-+	  Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
- 	  Host Bridge driver.
+-	  Enables support for the DesignWare PCIe controller in the
+-	  Rockchip SoC except RK3399.
++	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
  
--config PCIE_HISI_ERR
--	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
--	bool "HiSilicon HIP PCIe controller error handling driver"
+ config PCIE_INTEL_GW
+ 	bool "Intel Gateway PCIe controller "
+@@ -302,34 +189,16 @@ config PCIE_KEEMBAY_EP
+ 	  The PCIe controller is based on DesignWare Hardware and uses
+ 	  DesignWare core functions.
+ 
+-config PCIE_KIRIN
+-	depends on OF && (ARM64 || COMPILE_TEST)
+-	tristate "HiSilicon Kirin PCIe controller"
+-	depends on PCI_MSI
+-	select PCIE_DW_HOST
+-	select REGMAP_MMIO
 -	help
--	  Say Y here if you want error handling support
--	  for the PCIe controller's errors on HiSilicon HIP SoCs
+-	  Say Y here if you want PCIe controller support
+-	  on HiSilicon Kirin series SoCs.
 -
--config PCIE_APPLE_MSI_DOORBELL_ADDR
--	hex
--	default 0xfffff000
--	depends on PCIE_APPLE
--
--config PCIE_APPLE
--	tristate "Apple PCIe controller"
--	depends on ARCH_APPLE || COMPILE_TEST
--	depends on OF
-+config PCIE_XILINX_NWL
-+	bool "Xilinx NWL PCIe controller"
-+	depends on ARCH_ZYNQMP || COMPILE_TEST
+-config PCIE_HISI_STB
+-	bool "HiSilicon STB PCIe controller"
+-	depends on ARCH_HISI || COMPILE_TEST
++config PCIE_ARMADA_8K
++	bool "Marvell Armada-8K PCIe controller"
++	depends on ARCH_MVEBU || COMPILE_TEST
  	depends on PCI_MSI
-+	help
-+	 Say 'Y' here if you want kernel support for Xilinx
-+	 NWL PCIe controller. The controller can act as Root Port
-+	 or End Point. The current option selection will only
-+	 support root port enabling.
-+
-+config PCIE_XILINX_CPM
-+	bool "Xilinx Versal CPM PCI controller"
-+	depends on ARCH_ZYNQMP || COMPILE_TEST
- 	select PCI_HOST_COMMON
+ 	select PCIE_DW_HOST
  	help
--	  Say Y here if you want to enable PCIe controller support on Apple
--	  system-on-chips, like the Apple M1. This is required for the USB
--	  type-A ports, Ethernet, Wi-Fi, and Bluetooth.
+-	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
 -
--	  If unsure, say Y if you have an Apple Silicon system.
--
--config PCIE_MT7621
--	tristate "MediaTek MT7621 PCIe controller"
--	depends on SOC_MT7621 || COMPILE_TEST
--	select PHY_MT7621_PCI
--	default SOC_MT7621
+-config PCI_MESON
+-	tristate "Amlogic Meson PCIe controller"
+-	default m if ARCH_MESON
+-	depends on PCI_MSI
+-	select PCIE_DW_HOST
 -	help
--	  This selects a driver for the MediaTek MT7621 PCIe Controller.
-+	  Say 'Y' here if you want kernel support for the
-+	  Xilinx Versal CPM host bridge.
+-	  Say Y here if you want to enable PCI controller support on Amlogic
+-	  SoCs. The PCI controller on Amlogic is based on DesignWare hardware
+-	  and therefore the driver re-uses the DesignWare core functions to
+-	  implement the driver.
++	  Say Y here if you want to enable PCIe controller support on
++	  Armada-8K SoCs. The PCIe controller on Armada-8K is based on
++	  DesignWare hardware and therefore the driver re-uses the
++	  DesignWare core functions to implement the driver.
  
-+source "drivers/pci/controller/cadence/Kconfig"
- source "drivers/pci/controller/dwc/Kconfig"
- source "drivers/pci/controller/mobiveil/Kconfig"
--source "drivers/pci/controller/cadence/Kconfig"
+ config PCIE_TEGRA194
+ 	tristate
+@@ -364,14 +233,89 @@ config PCIE_TEGRA194_EP
+ 	  in order to enable device-specific features PCIE_TEGRA194_EP must be
+ 	  selected. This uses the DesignWare core.
+ 
+-config PCIE_VISCONTI_HOST
+-	bool "Toshiba Visconti PCIe controller"
+-	depends on ARCH_VISCONTI || COMPILE_TEST
++config PCIE_DW_PLAT
++	bool
++
++config PCIE_DW_PLAT_HOST
++	bool "Platform bus based DesignWare PCIe controller (host mode)"
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	select PCIE_DW_PLAT
++	help
++	  Enables support for the PCIe controller in the Designware IP to
++	  work in host mode. There are two instances of PCIe controller in
++	  Designware IP.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
++	  order to enable device-specific features PCI_DW_PLAT_EP must be
++	  selected.
++
++config PCIE_DW_PLAT_EP
++	bool "Platform bus based DesignWare PCIe controller (endpoint mode)"
++	depends on PCI && PCI_MSI
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	select PCIE_DW_PLAT
++	help
++	  Enables support for the PCIe controller in the Designware IP to
++	  work in endpoint mode. There are two instances of PCIe controller
++	  in Designware IP.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCIE_DW_PLAT_HOST must be selected and in
++	  order to enable device-specific features PCI_DW_PLAT_EP must be
++	  selected.
++
++config PCIE_QCOM
++	bool "Qualcomm PCIe controller (host mode)"
++	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	select CRC8
++	help
++	  Say Y here to enable PCIe controller support on Qualcomm SoCs. The
++	  PCIe controller uses the DesignWare core plus Qualcomm-specific
++	  hardware wrappers.
++
++config PCIE_QCOM_EP
++	tristate "Qualcomm PCIe controller (endpoint mode)"
++	depends on OF && (ARCH_QCOM || COMPILE_TEST)
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	help
++	  Say Y here to enable support for the PCIe controllers on Qualcomm SoCs
++	  to work in endpoint mode. The PCIe controller uses the DesignWare core
++	  plus Qualcomm-specific hardware wrappers.
++
++config PCIE_ROCKCHIP_DW_HOST
++	bool "Rockchip DesignWare PCIe controller"
++	select PCIE_DW
++	select PCIE_DW_HOST
++	depends on PCI_MSI
++	depends on ARCH_ROCKCHIP || COMPILE_TEST
++	depends on OF
++	help
++	  Enables support for the DesignWare PCIe controller in the
++	  Rockchip SoC except RK3399.
++
++config PCI_EXYNOS
++	tristate "Samsung Exynos PCIe controller"
++	depends on ARCH_EXYNOS || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
+-	  This driver supports TMPV7708 SoC.
++	  Enables support for the PCIe controller in the Samsung Exynos SoCs
++	  to work in host mode. The PCI controller is based on the DesignWare
++	  hardware and therefore the driver re-uses the DesignWare core
++	  functions to implement the driver.
++
++config PCIE_FU740
++	bool "SiFive FU740 PCIe controller"
++	depends on PCI_MSI
++	depends on SOC_SIFIVE || COMPILE_TEST
++	select PCIE_DW_HOST
++	help
++	  Say Y here if you want PCIe controller support for the SiFive
++	  FU740.
+ 
+ config PCIE_UNIPHIER
+ 	bool "Socionext UniPhier PCIe controller (host mode)"
+@@ -393,26 +337,82 @@ config PCIE_UNIPHIER_EP
+ 	  Say Y here if you want PCIe endpoint controller support on
+ 	  UniPhier SoCs. This driver supports Pro5 SoC.
+ 
+-config PCIE_AL
+-	bool "Amazon Annapurna Labs PCIe controller"
+-	depends on OF && (ARM64 || COMPILE_TEST)
++config PCIE_SPEAR13XX
++	bool "STMicroelectronics SPEAr PCIe controller"
++	depends on ARCH_SPEAR13XX || COMPILE_TEST
+ 	depends on PCI_MSI
+ 	select PCIE_DW_HOST
+-	select PCI_ECAM
+ 	help
+-	  Say Y here to enable support of the Amazon's Annapurna Labs PCIe
+-	  controller IP on Amazon SoCs. The PCIe controller uses the DesignWare
+-	  core plus Annapurna Labs proprietary hardware wrappers. This is
+-	  required only for DT-based platforms. ACPI platforms with the
+-	  Annapurna Labs PCIe controller don't need to enable this.
++	  Say Y here if you want PCIe support on SPEAr13XX SoCs.
+ 
+-config PCIE_FU740
+-	bool "SiFive FU740 PCIe controller"
++config PCI_DRA7XX
++	tristate
++
++config PCI_DRA7XX_HOST
++	tristate "TI DRA7xx PCIe controller (host mode)"
++	depends on SOC_DRA7XX || COMPILE_TEST
++	depends on OF && HAS_IOMEM && TI_PIPE3
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	select PCI_DRA7XX
++	default y if SOC_DRA7XX
++	help
++	  Enables support for the PCIe controller in the DRA7xx SoC to work in
++	  host mode. There are two instances of PCIe controller in DRA7xx.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCI_DRA7XX_HOST must be selected and in order
++	  to enable device-specific features PCI_DRA7XX_EP must be selected.
++	  This uses the DesignWare core.
++
++config PCI_DRA7XX_EP
++	tristate "TI DRA7xx PCIe controller (endpoint mode)"
++	depends on SOC_DRA7XX || COMPILE_TEST
++	depends on OF && HAS_IOMEM && TI_PIPE3
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	select PCI_DRA7XX
++	help
++	  Enables support for the PCIe controller in the DRA7xx SoC to work in
++	  endpoint mode. There are two instances of PCIe controller in DRA7xx.
++	  This controller can work either as EP or RC. In order to enable
++	  host-specific features PCI_DRA7XX_HOST must be selected and in order
++	  to enable device-specific features PCI_DRA7XX_EP must be selected.
++	  This uses the DesignWare core.
++
++config PCI_KEYSTONE
++	bool
++
++config PCI_KEYSTONE_HOST
++	bool "TI Keystone PCIe controller (host mode)"
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
++	depends on PCI_MSI
++	select PCIE_DW_HOST
++	select PCI_KEYSTONE
++	help
++	  Enables support for the PCIe controller in the Keystone SoC to
++	  work in host mode. The PCI controller on Keystone is based on
++	  DesignWare hardware and therefore the driver re-uses the
++	  DesignWare core functions to implement the driver.
++
++config PCI_KEYSTONE_EP
++	bool "TI Keystone PCIe controller (endpoint mode)"
++	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
++	depends on PCI_ENDPOINT
++	select PCIE_DW_EP
++	select PCI_KEYSTONE
++	help
++	  Enables support for the PCIe controller in the Keystone SoC to
++	  work in endpoint mode. The PCI controller on Keystone is based
++	  on DesignWare hardware and therefore the driver re-uses the
++	  DesignWare core functions to implement the driver.
++
++config PCIE_VISCONTI_HOST
++	bool "Toshiba Visconti PCIe controller"
++	depends on ARCH_VISCONTI || COMPILE_TEST
+ 	depends on PCI_MSI
+-	depends on SOC_SIFIVE || COMPILE_TEST
+ 	select PCIE_DW_HOST
+ 	help
+-	  Say Y here if you want PCIe controller support for the SiFive
+-	  FU740.
++	  Say Y here if you want PCIe controller support on Toshiba Visconti SoC.
++	  This driver supports TMPV7708 SoC.
+ 
  endmenu
 -- 
 2.25.1
