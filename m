@@ -2,141 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 25F4E6E6865
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 17:38:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2D1D6E697B
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 18:27:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230318AbjDRPia convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 18 Apr 2023 11:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
+        id S232500AbjDRQ1i (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 12:27:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjDRPi3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 11:38:29 -0400
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CACD8A7C;
-        Tue, 18 Apr 2023 08:38:28 -0700 (PDT)
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-94a342f4c8eso123033766b.0;
-        Tue, 18 Apr 2023 08:38:28 -0700 (PDT)
+        with ESMTP id S232477AbjDRQ1h (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 12:27:37 -0400
+Received: from mail-oi1-f175.google.com (mail-oi1-f175.google.com [209.85.167.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A999ABBAB;
+        Tue, 18 Apr 2023 09:27:22 -0700 (PDT)
+Received: by mail-oi1-f175.google.com with SMTP id 5614622812f47-38dfa504415so583910b6e.0;
+        Tue, 18 Apr 2023 09:27:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681832306; x=1684424306;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bX5JtbWnAvg+crNo/UlGoA1FN4ablS2htBjudS2jtMo=;
-        b=GDUvhDaHPSnMxziI3jNN156QyI3HNTNgboUKhtMCog4kI5IUbhm+XNkkTrZO/EhtV5
-         tklNdK1hn/KUvQ01pj2OrTq18CQeTWfxFq84eHx9Ap6TK262xiJhm2V/dPlsIHhTRBEw
-         UXp2BnGXK/2IVsWKT94PpAJtwqE6kwZhFgWMgNLs2tttnyjCJZgAoZWT1EBKfqB5lpza
-         EPqLnLnXzPoe5Q13AJJANNNR5eA5KF/V77tsa/IJoEbleCnthr/qpsCaNX0yPy0PmGdK
-         k30cMz7u/aIB27obmn+90j4Tguo4yYKltt7IUQx/uDKCz7hXYkSGbawBUEEjvSWt8TvF
-         CfJA==
-X-Gm-Message-State: AAQBX9er/ZdHYM1jZ2SwMqA3+gQWIiP9i6TAI2S1Mhcg+wJWH4pAkOH6
-        qJLo66TIXrpz5sfSpTJh4WGGRSkPraLhtR4W3uI=
-X-Google-Smtp-Source: AKy350bOR+SkKVHFACawhYxJyGdkhcr5ebtHYNhLwYmkmp/x3f4p9QSi7Bor8nUNJ+sPa7CYzQ1UqhTQTK7VhoVK4GM=
-X-Received: by 2002:a17:906:7a45:b0:94e:9235:d77e with SMTP id
- i5-20020a1709067a4500b0094e9235d77emr10972251ejo.3.1681832306558; Tue, 18 Apr
- 2023 08:38:26 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681835242; x=1684427242;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KA3Wj6o+Guvdyn6RVWvc15n99JJqv1Kt6CugaXzG/F8=;
+        b=mGsWZW/8X0/PhZqjkhij0g3zsoUHvTBhb0SpsjQhi8nOFJRbfmcdUnKM9GScncj7jk
+         7mepd1GwBgrfS/UGbmzMVztZFONLgU5LMsPgZZ3R1dGwaGoWqJDD6PFN6p0T4FnArzyE
+         XWi21AAO36UYeGKHWO/8j3PJEYZmB0MSMc81tCduD6ompeTpNbnjN2JHvP3w0YM7qu4z
+         2g0c9ZrHB27VyRe3oKb/Q24di1LMbbM3aft3dEYbILzMroPur2HrO4rqv+b/Tvq/cdLb
+         X6QXbiZz0EzjKW19Itfaok7DjEfRggGkodLeBEzYFSkplBm4P19g2TWiEl7FRO4ezp0S
+         /L+g==
+X-Gm-Message-State: AAQBX9dgSZKuvtOplE8SAbQ4kNm2zIYvIKJVI81SgL/n6ghkUseqzy9j
+        RxJ8drhRX5hd2R3YqH48omI3hBt42g==
+X-Google-Smtp-Source: AKy350bBHLRqNa07Du4N0WmT6K0vuSFaG9g8fJGUXZXaLSnM3rdYMjG2JcU3ECFR82i0sqHbDMgiyw==
+X-Received: by 2002:a05:6808:2203:b0:38e:390b:777b with SMTP id bd3-20020a056808220300b0038e390b777bmr1228732oib.59.1681835241818;
+        Tue, 18 Apr 2023 09:27:21 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id i11-20020aca3b0b000000b0038c235e24fesm2204031oia.48.2023.04.18.09.27.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 09:27:20 -0700 (PDT)
+Received: (nullmailer pid 1810183 invoked by uid 1000);
+        Tue, 18 Apr 2023 16:27:19 -0000
+Date:   Tue, 18 Apr 2023 11:27:19 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Tyrel Datwyler <tyreld@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        linux-tegra@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] PCI: Use of_property_present() for testing DT property
+ presence
+Message-ID: <20230418162719.GF1764573-robh@kernel.org>
+References: <20230310144719.1544443-1-robh@kernel.org>
 MIME-Version: 1.0
-References: <20230418085030.2154918-1-imammedo@redhat.com> <CAJZ5v0geYujyXKv9mG_i+2rjcdrMVh+jmE1ffJ79_oFr8GNoMg@mail.gmail.com>
- <20230418161702.0945fc67@imammedo.users.ipa.redhat.com>
-In-Reply-To: <20230418161702.0945fc67@imammedo.users.ipa.redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 18 Apr 2023 17:38:15 +0200
-Message-ID: <CAJZ5v0gWKwOiACmK9=ru5W15Kydv6JqKJ8d4ngzKC7jqAjjcpQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: acpiphp: try to reassign resources on bridge if necessary
-To:     Igor Mammedov <imammedo@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, mst@redhat.com, lenb@kernel.org,
-        bhelgaas@google.com, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310144719.1544443-1-robh@kernel.org>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 4:17 PM Igor Mammedov <imammedo@redhat.com> wrote:
->
-> On Tue, 18 Apr 2023 14:55:29 +0200
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->
-> > On Tue, Apr 18, 2023 at 10:50 AM Igor Mammedov <imammedo@redhat.com> wrote:
-> > >
-> > > When using ACPI PCI hotplug, hotplugging a device with
-> > > large BARs may fail if bridge windows programmed by
-> > > firmware are not large enough.
-> > >
-> > > Reproducer:
-> > >   $ qemu-kvm -monitor stdio -M q35  -m 4G \
-> > >       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
-> > >       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
-> > >       disk_image
-> > >
-> > >  wait till linux guest boots, then hotplug device
-> > >    (qemu) device_add qxl,bus=rp1
-> > >
-> > >  hotplug on guest side fails with:
-> > >    pci 0000:01:00.0: [1b36:0100] type 00 class 0x038000
-> > >    pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x03ffffff]
-> > >    pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x03ffffff]
-> > >    pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x00001fff]
-> > >    pci 0000:01:00.0: reg 0x1c: [io  0x0000-0x001f]
-> > >    pci 0000:01:00.0: BAR 0: no space for [mem size 0x04000000]
-> > >    pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x04000000]
-> > >    pci 0000:01:00.0: BAR 1: no space for [mem size 0x04000000]
-> > >    pci 0000:01:00.0: BAR 1: failed to assign [mem size 0x04000000]
-> > >    pci 0000:01:00.0: BAR 2: assigned [mem 0xfe800000-0xfe801fff]
-> > >    pci 0000:01:00.0: BAR 3: assigned [io  0x1000-0x101f]
-> > >    qxl 0000:01:00.0: enabling device (0000 -> 0003)
-> > >    Unable to create vram_mapping
-> > >    qxl: probe of 0000:01:00.0 failed with error -12
-> > >
-> > > However when using native PCIe hotplug
-> > >   '-global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off'
-> > > it works fine, since kernel attempts to reassign unused resources.
-> > > Use the same machinery as native PCIe hotplug to (re)assign resources.
-> > >
-> > > Signed-off-by: Igor Mammedov <imammedo@redhat.com>
-> >
-> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >
-> > or please let me know if you want me to pick this up.
->
-> It would be nice if you could pick it up.
+On Fri, Mar 10, 2023 at 08:47:19AM -0600, Rob Herring wrote:
+> It is preferred to use typed property access functions (i.e.
+> of_property_read_<type> functions) rather than low-level
+> of_get_property/of_find_property functions for reading properties. As
+> part of this, convert of_get_property/of_find_property calls to the
+> recently added of_property_present() helper when we just want to test
+> for presence of a property and nothing more.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  drivers/pci/controller/pci-tegra.c     | 4 ++--
+>  drivers/pci/controller/pcie-mediatek.c | 2 +-
+>  drivers/pci/hotplug/rpaphp_core.c      | 4 ++--
+>  drivers/pci/of.c                       | 2 +-
+>  4 files changed, 6 insertions(+), 6 deletions(-)
 
-OK, I'll do that unless Bjorn tells me that he prefers to take it via
-the PCI tree.
+Ping!
 
-Thanks!
-
-> >
-> > > ---
-> > > tested in QEMU with Q35 machine on PCIE root port and also
-> > > with nested conventional bridge attached to root port.
-> > > ---
-> > >  drivers/pci/hotplug/acpiphp_glue.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> > > index 5b1f271c6034..9aebde28a92f 100644
-> > > --- a/drivers/pci/hotplug/acpiphp_glue.c
-> > > +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> > > @@ -517,7 +517,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
-> > >                                 }
-> > >                         }
-> > >                 }
-> > > -               __pci_bus_assign_resources(bus, &add_list, NULL);
-> > > +               pci_assign_unassigned_bridge_resources(bus->self);
-> > >         }
-> > >
-> > >         acpiphp_sanitize_bus(bus);
-> > > --
-> > > 2.39.1
-> > >
-> >
->
+> 
+> diff --git a/drivers/pci/controller/pci-tegra.c b/drivers/pci/controller/pci-tegra.c
+> index 74c109f14ff0..79630885b9c8 100644
+> --- a/drivers/pci/controller/pci-tegra.c
+> +++ b/drivers/pci/controller/pci-tegra.c
+> @@ -1375,7 +1375,7 @@ static int tegra_pcie_phys_get(struct tegra_pcie *pcie)
+>  	struct tegra_pcie_port *port;
+>  	int err;
+>  
+> -	if (!soc->has_gen2 || of_find_property(np, "phys", NULL) != NULL)
+> +	if (!soc->has_gen2 || of_property_present(np, "phys"))
+>  		return tegra_pcie_phys_get_legacy(pcie);
+>  
+>  	list_for_each_entry(port, &pcie->ports, list) {
+> @@ -1944,7 +1944,7 @@ static bool of_regulator_bulk_available(struct device_node *np,
+>  	for (i = 0; i < num_supplies; i++) {
+>  		snprintf(property, 32, "%s-supply", supplies[i].supply);
+>  
+> -		if (of_find_property(np, property, NULL) == NULL)
+> +		if (!of_property_present(np, property))
+>  			return false;
+>  	}
+>  
+> diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
+> index ae5ad05ddc1d..31de7a29192c 100644
+> --- a/drivers/pci/controller/pcie-mediatek.c
+> +++ b/drivers/pci/controller/pcie-mediatek.c
+> @@ -643,7 +643,7 @@ static int mtk_pcie_setup_irq(struct mtk_pcie_port *port,
+>  		return err;
+>  	}
+>  
+> -	if (of_find_property(dev->of_node, "interrupt-names", NULL))
+> +	if (of_property_present(dev->of_node, "interrupt-names"))
+>  		port->irq = platform_get_irq_byname(pdev, "pcie_irq");
+>  	else
+>  		port->irq = platform_get_irq(pdev, port->slot);
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index 491986197c47..2316de0fd198 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -278,7 +278,7 @@ int rpaphp_check_drc_props(struct device_node *dn, char *drc_name,
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (of_find_property(dn->parent, "ibm,drc-info", NULL))
+> +	if (of_property_present(dn->parent, "ibm,drc-info"))
+>  		return rpaphp_check_drc_props_v2(dn, drc_name, drc_type,
+>  						be32_to_cpu(*my_index));
+>  	else
+> @@ -440,7 +440,7 @@ int rpaphp_add_slot(struct device_node *dn)
+>  	if (!of_node_name_eq(dn, "pci"))
+>  		return 0;
+>  
+> -	if (of_find_property(dn, "ibm,drc-info", NULL))
+> +	if (of_property_present(dn, "ibm,drc-info"))
+>  		return rpaphp_drc_info_add_slot(dn);
+>  	else
+>  		return rpaphp_drc_add_slot(dn);
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 196834ed44fe..e085f2eca372 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -447,7 +447,7 @@ static int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *
+>  		return -ENODEV;
+>  
+>  	/* Local interrupt-map in the device node? Use it! */
+> -	if (of_get_property(dn, "interrupt-map", NULL)) {
+> +	if (of_property_present(dn, "interrupt-map")) {
+>  		pin = pci_swizzle_interrupt_pin(pdev, pin);
+>  		ppnode = dn;
+>  	}
+> -- 
+> 2.39.2
+> 
