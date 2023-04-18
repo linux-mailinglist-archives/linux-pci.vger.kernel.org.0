@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AF2676E5ADB
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 09:48:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8216C6E5AD8
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 09:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231281AbjDRHsg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 03:48:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56346 "EHLO
+        id S231289AbjDRHsf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 03:48:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231283AbjDRHsR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 03:48:17 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51393A8;
-        Tue, 18 Apr 2023 00:47:59 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id fy21so27827589ejb.9;
-        Tue, 18 Apr 2023 00:47:59 -0700 (PDT)
+        with ESMTP id S231296AbjDRHsT (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 03:48:19 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AF7410D0;
+        Tue, 18 Apr 2023 00:48:02 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id dm2so70933224ejc.8;
+        Tue, 18 Apr 2023 00:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681804078; x=1684396078;
+        d=gmail.com; s=20221208; t=1681804081; x=1684396081;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RwLbYZDwc7R0aamwDMRBreebcY+MnR13G3D7+Shwj4c=;
-        b=p/IV8Ns/lQ2b4Z3CTadshP9tNshQA64srbd3yX+L5pHYJlTn7J+adNGfcdFn5dzOCW
-         i439Cy+DpOETJ51rlz+SLPvDP79i9QXV0zOFNrXQplGp0ALyROniEHb9yj0T/o4jUX22
-         IwOP2wV202MLr4mY7qQMxFKJenBNe2rv9wdlBSKoK9mIm8Hb/ik70D9MLNg+gKfSKNEL
-         AKV/d3tuUlpRBTu1s2+e9CpmActLBJqJ1ceXY9nfNjRa4t6u/zQtt9z7wau67PzjIS1c
-         Tiy9RXtlL9jI02xE07CI6pYLK1gTQbi8Qy+pZGDEkNhcSfR1me5t6gWg1xZfZhH1C4fr
-         PAdQ==
+        bh=gXA2hp0m2ISM3D3+h81RjtKD9xln/dgRYjKYAUjtQ4k=;
+        b=HeGTxBf5hkXgKM82MTFMBD1JwNMaS+brmpfjsfyAc/stReV+zQGDm3L7DAFgXeeV/a
+         JtGc6oQfx9gdPrOTAtI99+AoIKG+35GFkwZfzG6YDvdSU/mynPuBMOHZvkK53auXYliz
+         ec+/swgcYT4LWcH5qRDffWJRufhEc6tNZs8U24Aj9/vaL05AIuG+Yt8zKiszNDfHzPUi
+         MKo8UkMoryGjbln11/5vjBmCsZx9MnGDVWD+SnXY0WIC+Qfw9PgT3zi+J8FUpN//gIrF
+         uW4wlOC8bCTrcluf6WSaT1qvljqzMAiDARCbgrSDPq6eL1CYedPFG/W5lfdzCO34MYCS
+         yfJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681804078; x=1684396078;
+        d=1e100.net; s=20221208; t=1681804081; x=1684396081;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=RwLbYZDwc7R0aamwDMRBreebcY+MnR13G3D7+Shwj4c=;
-        b=FjyTA+hsyAuhd/mdyrsRqTtZwPsEuxUZDtZK8M92zfjch24BvvW3sWSN8j6PddkWEB
-         23rnKvD1EK9fW117PGEHTlxGbkBCWY72ma4tyYQBYyAPc0Wt0h2ermLYzcXmA5O271pQ
-         Q3WJoUqYURuSME1INxJ/kH4PiC7+IKz2fdqBEPnI7Y9iaIRCp8zCk7GauuPHRLPji3d8
-         qG8JTDwck3bW4ZqTMf+ETmlPBZ2CTguIKPooeVUJd30G4YRt9m4HcfAAGnFU1yZkz1X6
-         FEr1XzO21YCzNPish6iDuwcXxCdIpeSVeUxNJN0QOeDn0TRs1XUzfDadAb5YR3TuKT82
-         1OxQ==
-X-Gm-Message-State: AAQBX9d9So/gRvcGk7J6GOu8LnkknytNxzQtb/ZImQjUiQhTt6TmkWxi
-        KVpJ3922spteAvmRgcuCqZE=
-X-Google-Smtp-Source: AKy350aInQ7VklbPdBPTxpuqMekh45aB6ze2dUESPSKfcnmqsyduEjtaP5U/6IKKN6ZobF6U4WmGIQ==
-X-Received: by 2002:a17:906:28d0:b0:94f:27a1:f1d with SMTP id p16-20020a17090628d000b0094f27a10f1dmr9533165ejd.77.1681804077666;
-        Tue, 18 Apr 2023 00:47:57 -0700 (PDT)
+        bh=gXA2hp0m2ISM3D3+h81RjtKD9xln/dgRYjKYAUjtQ4k=;
+        b=Z8+Y0gaXX5gERP/0qEQXG+mVnPSEdBsQsjdDoRINsK5t5pqazp3X7wArzGLxXExe3A
+         E5bcvQdBXkoHmVt2lFt48Wv00iF6NWM/Oc023tEcIBnm8sG1MoTXdyptMjc0xqfDQ5jg
+         CdI43RMRLAj5Qt81x9DrknfvhJTpMPCqNik2X6TN8hB78IsNqmWilGU3Vqp6xlC2lgho
+         OA1lsgI/qxIbNOzNLfUyIS/ZbQ9KaqB8X3nu3eoKpxb208xcYkmhWq2SnLTkVt3olkSe
+         Sgo6WK/T3pGXPuTEwrvFrPXfIBNMD+7p8hC+D1zMZa8t1rSWf5GW8tmA6451IyZgISDm
+         Ql+g==
+X-Gm-Message-State: AAQBX9cg9meeL3CgCIJegWWm1OS55LzlXH0aUc/fAfFK/iBeeki0tshW
+        UsrX3rvnjf2OjKl68Rb7Px0=
+X-Google-Smtp-Source: AKy350b3uvf3QU6Pks+6V6f07eNS+rVQtEMVNNrUYXPONdsugq3XZKDH6diqvWA5xXyFg9/1QyqaPQ==
+X-Received: by 2002:a17:907:7f04:b0:94b:7743:3971 with SMTP id qf4-20020a1709077f0400b0094b77433971mr11033815ejc.63.1681804081136;
+        Tue, 18 Apr 2023 00:48:01 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id gs8-20020a1709072d0800b0094f694e4ecbsm3048545ejc.146.2023.04.18.00.47.56
+        by smtp.googlemail.com with ESMTPSA id gs8-20020a1709072d0800b0094f694e4ecbsm3048545ejc.146.2023.04.18.00.47.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 00:47:57 -0700 (PDT)
+        Tue, 18 Apr 2023 00:48:00 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
 Cc:     xxm@rock-chips.com, dlemoal@kernel.org,
@@ -61,19 +61,19 @@ Cc:     xxm@rock-chips.com, dlemoal@kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
         Caleb Connolly <kc@postmarketos.org>,
-        Brian Norris <briannorris@chromium.org>,
         Corentin Labbe <clabbe@baylibre.com>,
+        Brian Norris <briannorris@chromium.org>,
         Johan Jonker <jbx6244@gmail.com>,
+        Judy Hsiao <judyhsiao@chromium.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Hugh Cole-Baker <sigmaris@gmail.com>,
-        Judy Hsiao <judyhsiao@chromium.org>,
         Arnaud Ferraris <arnaud.ferraris@collabora.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 05/11] arm64: dts: rockchip: Add dtsi entry for RK3399 PCIe endpoint core
-Date:   Tue, 18 Apr 2023 09:46:52 +0200
-Message-Id: <20230418074700.1083505-6-rick.wertenbroek@gmail.com>
+Subject: [PATCH v5 06/11] dt-bindings: PCI: Update the RK3399 example to a valid one
+Date:   Tue, 18 Apr 2023 09:46:53 +0200
+Message-Id: <20230418074700.1083505-7-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230418074700.1083505-1-rick.wertenbroek@gmail.com>
 References: <20230418074700.1083505-1-rick.wertenbroek@gmail.com>
@@ -89,57 +89,41 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add dtsi entry for RK3399 PCIe endpoint core in the device tree.
-The status is "disabled" by default, so it will not be loaded unless
-explicitly chosen to. The RK3399 PCIe endpoit core should be enabled
-with the RK3399 PCIe root complex disabled because the RK3399 PCIe
-controller can only work one mode at the time, either in "root complex"
-mode or in "endpoint" mode.
+Update the example in the documentation to a valid example.
+Address for mem-base was invalid, it pointed to address
+0x8000'0000 which is the upper region of the DDR which
+is not necessarily populated depending on the board.
+This address should point to the base of the memory
+window region of the controller which is 0xfa00'0000.
+Add missing pinctrl.
 
-Tested-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 27 ++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ .../devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml      | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 928948e7c7bb..9da0b6d77c8d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -265,6 +265,33 @@ pcie0_intc: interrupt-controller {
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+index 88386a6d7011..6b62f6f58efe 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
++++ b/Documentation/devicetree/bindings/pci/rockchip,rk3399-pcie-ep.yaml
+@@ -47,7 +47,7 @@ examples:
  
-+	pcie0_ep: pcie-ep@f8000000 {
-+		compatible = "rockchip,rk3399-pcie-ep";
-+		reg = <0x0 0xfd000000 0x0 0x1000000>,
-+		      <0x0 0xfa000000 0x0 0x2000000>;
-+		reg-names = "apb-base", "mem-base";
-+		clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
-+			 <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
-+		clock-names = "aclk", "aclk-perf",
-+			      "hclk", "pm";
-+		max-functions = /bits/ 8 <8>;
-+		num-lanes = <4>;
-+		resets = <&cru SRST_PCIE_CORE>, <&cru SRST_PCIE_MGMT>,
-+			 <&cru SRST_PCIE_MGMT_STICKY>, <&cru SRST_PCIE_PIPE>,
-+			 <&cru SRST_PCIE_PM>, <&cru SRST_P_PCIE>,
-+			 <&cru SRST_A_PCIE>;
-+		reset-names = "core", "mgmt", "mgmt-sticky", "pipe",
-+			      "pm", "pclk", "aclk";
-+		phys = <&pcie_phy 0>, <&pcie_phy 1>,
-+		       <&pcie_phy 2>, <&pcie_phy 3>;
-+		phy-names = "pcie-phy-0", "pcie-phy-1",
-+			    "pcie-phy-2", "pcie-phy-3";
-+		rockchip,max-outbound-regions = <32>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_clkreqnb_cpm>;
-+		status = "disabled";
-+	};
-+
- 	gmac: ethernet@fe300000 {
- 		compatible = "rockchip,rk3399-gmac";
- 		reg = <0x0 0xfe300000 0x0 0x10000>;
+         pcie-ep@f8000000 {
+             compatible = "rockchip,rk3399-pcie-ep";
+-            reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0x80000000 0x0 0x20000>;
++            reg = <0x0 0xfd000000 0x0 0x1000000>, <0x0 0xfa000000 0x0 0x2000000>;
+             reg-names = "apb-base", "mem-base";
+             clocks = <&cru ACLK_PCIE>, <&cru ACLK_PERF_PCIE>,
+               <&cru PCLK_PCIE>, <&cru SCLK_PCIE_PM>;
+@@ -63,6 +63,8 @@ examples:
+             phys = <&pcie_phy 0>, <&pcie_phy 1>, <&pcie_phy 2>, <&pcie_phy 3>;
+             phy-names = "pcie-phy-0", "pcie-phy-1", "pcie-phy-2", "pcie-phy-3";
+             rockchip,max-outbound-regions = <16>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&pcie_clkreqnb_cpm>;
+         };
+     };
+ ...
 -- 
 2.25.1
 
