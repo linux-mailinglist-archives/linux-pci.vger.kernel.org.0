@@ -2,123 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 910026E6798
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 16:55:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25F4E6E6865
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 17:38:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230181AbjDROzR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 10:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52406 "EHLO
+        id S230318AbjDRPia convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 18 Apr 2023 11:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230027AbjDROzQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 10:55:16 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A188BAF1D
-        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 07:54:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681829689; x=1713365689;
-  h=message-id:date:mime-version:subject:to:references:from:
-   in-reply-to:content-transfer-encoding;
-  bh=L0pUtgBS78VC98o2+JRpZi8ia2HzKCrQ1F99P8IxInM=;
-  b=e/O6WOt9Fw9/4Y+TMD4a89CiBM3Ux1vOKS43q1mJr0Pmoz5/p1GgQ+Af
-   GG7nPcXq6QsBcwtQIH4GbhyxCsRLKhJwB5N8I6ifQFzuOC2UTnSBurZaD
-   Q25Xedy76VTGTZKCx4KCSNGMIP7VCLbApAbc/CIoAHD1l6EVH9orJPdnt
-   rnlqVyxGfyrUPeecl2sTX80uRio5vL3Ny6E0t6waVEvwvPABqlDjgJQ/7
-   +vqOdjzdMGw2Hvj204VJo2EUq0O6irQPRbT4o6hFf8e3Sn9KibnmeaWXP
-   MlB7b6B/+ZRenv5JysfWPjRsVlq9NYjr302aeJSP0H7d/VItww5l1CruM
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="410417039"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="410417039"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 07:54:34 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10684"; a="815243668"
-X-IronPort-AV: E=Sophos;i="5.99,207,1677571200"; 
-   d="scan'208";a="815243668"
-Received: from mjgonzal-mobl1.amr.corp.intel.com (HELO [10.212.85.238]) ([10.212.85.238])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Apr 2023 07:54:33 -0700
-Message-ID: <1858f4fc-ae60-60cf-0e45-f648c563d1a0@linux.intel.com>
-Date:   Tue, 18 Apr 2023 07:54:33 -0700
+        with ESMTP id S229978AbjDRPi3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 11:38:29 -0400
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CACD8A7C;
+        Tue, 18 Apr 2023 08:38:28 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-94a342f4c8eso123033766b.0;
+        Tue, 18 Apr 2023 08:38:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681832306; x=1684424306;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bX5JtbWnAvg+crNo/UlGoA1FN4ablS2htBjudS2jtMo=;
+        b=GDUvhDaHPSnMxziI3jNN156QyI3HNTNgboUKhtMCog4kI5IUbhm+XNkkTrZO/EhtV5
+         tklNdK1hn/KUvQ01pj2OrTq18CQeTWfxFq84eHx9Ap6TK262xiJhm2V/dPlsIHhTRBEw
+         UXp2BnGXK/2IVsWKT94PpAJtwqE6kwZhFgWMgNLs2tttnyjCJZgAoZWT1EBKfqB5lpza
+         EPqLnLnXzPoe5Q13AJJANNNR5eA5KF/V77tsa/IJoEbleCnthr/qpsCaNX0yPy0PmGdK
+         k30cMz7u/aIB27obmn+90j4Tguo4yYKltt7IUQx/uDKCz7hXYkSGbawBUEEjvSWt8TvF
+         CfJA==
+X-Gm-Message-State: AAQBX9er/ZdHYM1jZ2SwMqA3+gQWIiP9i6TAI2S1Mhcg+wJWH4pAkOH6
+        qJLo66TIXrpz5sfSpTJh4WGGRSkPraLhtR4W3uI=
+X-Google-Smtp-Source: AKy350bOR+SkKVHFACawhYxJyGdkhcr5ebtHYNhLwYmkmp/x3f4p9QSi7Bor8nUNJ+sPa7CYzQ1UqhTQTK7VhoVK4GM=
+X-Received: by 2002:a17:906:7a45:b0:94e:9235:d77e with SMTP id
+ i5-20020a1709067a4500b0094e9235d77emr10972251ejo.3.1681832306558; Tue, 18 Apr
+ 2023 08:38:26 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] PCI: vmd: Reset VMD config register between soft reboots
-Content-Language: en-US
-To:     Jonathan Derrick <jonathan.derrick@linux.dev>,
+References: <20230418085030.2154918-1-imammedo@redhat.com> <CAJZ5v0geYujyXKv9mG_i+2rjcdrMVh+jmE1ffJ79_oFr8GNoMg@mail.gmail.com>
+ <20230418161702.0945fc67@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20230418161702.0945fc67@imammedo.users.ipa.redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 18 Apr 2023 17:38:15 +0200
+Message-ID: <CAJZ5v0gWKwOiACmK9=ru5W15Kydv6JqKJ8d4ngzKC7jqAjjcpQ@mail.gmail.com>
+Subject: Re: [PATCH] pci: acpiphp: try to reassign resources on bridge if necessary
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, mst@redhat.com, lenb@kernel.org,
+        bhelgaas@google.com, linux-acpi@vger.kernel.org,
         linux-pci@vger.kernel.org
-References: <20230224202811.644370-1-nirmal.patel@linux.intel.com>
- <8b5e6130-13c2-8142-6e70-075ba735fe60@linux.intel.com>
- <ef8c77ef-c29a-0a5e-0ba2-33fbd6039700@linux.dev>
-From:   "Patel, Nirmal" <nirmal.patel@linux.intel.com>
-In-Reply-To: <ef8c77ef-c29a-0a5e-0ba2-33fbd6039700@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 3/17/2023 8:15 PM, Jonathan Derrick wrote:
+On Tue, Apr 18, 2023 at 4:17 PM Igor Mammedov <imammedo@redhat.com> wrote:
 >
+> On Tue, 18 Apr 2023 14:55:29 +0200
+> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
 >
-> On 3/15/23 3:51 PM, Patel, Nirmal wrote:
->> On 2/24/2023 1:28 PM, Nirmal Patel wrote:
->>> VMD driver can disable or enable MSI remapping by changing
->>> VMCONFIG_MSI_REMAP register. This register needs to be set to the
->>> default value during soft reboots. Drives failed to enumerate
->>> when Windows boots after performing a soft reboot from Linux.
->>> Windows doesn't support MSI remapping disable feature and stale
->>> register value hinders Windows VMD driver initialization process.
->>> Adding vmd_shutdown function to make sure to set the VMCONFIG
->>> register to the default value.
->>>
->>> Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
->>> Fixes: ee81ee84f873 ("PCI: vmd: Disable MSI-X remapping when possible")
->>> ---
->>>   drivers/pci/controller/vmd.c | 8 ++++++++
->>>   1 file changed, 8 insertions(+)
->>>
->>> diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
->>> index 769eedeb8802..50a187a29a1d 100644
->>> --- a/drivers/pci/controller/vmd.c
->>> +++ b/drivers/pci/controller/vmd.c
->>> @@ -979,6 +979,13 @@ static void vmd_remove(struct pci_dev *dev)
->>>       ida_simple_remove(&vmd_instance_ida, vmd->instance);
->>>   }
->>>   +static void vmd_shutdown(struct pci_dev *dev)
->>> +{
->>> +        struct vmd_dev *vmd = pci_get_drvdata(dev);
->>> +
->>> +        vmd_remove_irq_domain(vmd);
->>> +}
->>> +
->>>   #ifdef CONFIG_PM_SLEEP
->>>   static int vmd_suspend(struct device *dev)
->>>   {
->>> @@ -1056,6 +1063,7 @@ static struct pci_driver vmd_drv = {
->>>       .id_table    = vmd_ids,
->>>       .probe        = vmd_probe,
->>>       .remove        = vmd_remove,
->>> +    .shutdown    = vmd_shutdown,
->>>       .driver        = {
->>>           .pm    = &vmd_dev_pm_ops,
->>>       },
->>
->> Gentle ping.
->>
->> Thanks
->>
+> > On Tue, Apr 18, 2023 at 10:50 AM Igor Mammedov <imammedo@redhat.com> wrote:
+> > >
+> > > When using ACPI PCI hotplug, hotplugging a device with
+> > > large BARs may fail if bridge windows programmed by
+> > > firmware are not large enough.
+> > >
+> > > Reproducer:
+> > >   $ qemu-kvm -monitor stdio -M q35  -m 4G \
+> > >       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
+> > >       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
+> > >       disk_image
+> > >
+> > >  wait till linux guest boots, then hotplug device
+> > >    (qemu) device_add qxl,bus=rp1
+> > >
+> > >  hotplug on guest side fails with:
+> > >    pci 0000:01:00.0: [1b36:0100] type 00 class 0x038000
+> > >    pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x03ffffff]
+> > >    pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x03ffffff]
+> > >    pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x00001fff]
+> > >    pci 0000:01:00.0: reg 0x1c: [io  0x0000-0x001f]
+> > >    pci 0000:01:00.0: BAR 0: no space for [mem size 0x04000000]
+> > >    pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x04000000]
+> > >    pci 0000:01:00.0: BAR 1: no space for [mem size 0x04000000]
+> > >    pci 0000:01:00.0: BAR 1: failed to assign [mem size 0x04000000]
+> > >    pci 0000:01:00.0: BAR 2: assigned [mem 0xfe800000-0xfe801fff]
+> > >    pci 0000:01:00.0: BAR 3: assigned [io  0x1000-0x101f]
+> > >    qxl 0000:01:00.0: enabling device (0000 -> 0003)
+> > >    Unable to create vram_mapping
+> > >    qxl: probe of 0000:01:00.0 failed with error -12
+> > >
+> > > However when using native PCIe hotplug
+> > >   '-global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off'
+> > > it works fine, since kernel attempts to reassign unused resources.
+> > > Use the same machinery as native PCIe hotplug to (re)assign resources.
+> > >
+> > > Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> >
+> > Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >
+> > or please let me know if you want me to pick this up.
 >
-> LGTM
-> Reviewed-by: Jon Derrick <jonathan.derrick@linux.dev>
+> It would be nice if you could pick it up.
 
-Gentle ping.
+OK, I'll do that unless Bjorn tells me that he prefers to take it via
+the PCI tree.
 
-Thanks
+Thanks!
 
+> >
+> > > ---
+> > > tested in QEMU with Q35 machine on PCIE root port and also
+> > > with nested conventional bridge attached to root port.
+> > > ---
+> > >  drivers/pci/hotplug/acpiphp_glue.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> > > index 5b1f271c6034..9aebde28a92f 100644
+> > > --- a/drivers/pci/hotplug/acpiphp_glue.c
+> > > +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> > > @@ -517,7 +517,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+> > >                                 }
+> > >                         }
+> > >                 }
+> > > -               __pci_bus_assign_resources(bus, &add_list, NULL);
+> > > +               pci_assign_unassigned_bridge_resources(bus->self);
+> > >         }
+> > >
+> > >         acpiphp_sanitize_bus(bus);
+> > > --
+> > > 2.39.1
+> > >
+> >
+>
