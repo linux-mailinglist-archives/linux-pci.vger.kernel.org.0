@@ -2,74 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DECDC6E5900
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 08:00:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DA9D6E5A23
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 09:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230280AbjDRF7t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 01:59:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43716 "EHLO
+        id S230173AbjDRHLp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 03:11:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230400AbjDRF7p (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 01:59:45 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26FBD5BA3
-        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 22:59:33 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dm2so70346691ejc.8
-        for <linux-pci@vger.kernel.org>; Mon, 17 Apr 2023 22:59:33 -0700 (PDT)
+        with ESMTP id S229862AbjDRHLo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 03:11:44 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E83561713;
+        Tue, 18 Apr 2023 00:11:43 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-38be7a5ab37so203086b6e.3;
+        Tue, 18 Apr 2023 00:11:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681797571; x=1684389571;
-        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=h2u+IvYIbnFxxtQG/ZtOJXOGODtmHZE6DE2kphmV5deUhBtI5SSl5ZpPS81I4DoyvM
-         cL/QsMoq/nZ79QoTUVBpjigDCpbkhNV4ihdOYSWAZCOke9dA/QR1VB/koOlQ9LVEDYMX
-         XtbtlwSc8k7WA+c3R6xpugIUkMv4IcvxiBX5jugHOkE6bIQRd6XIP4bPoYTYUOtLJ8cY
-         jqOSy7VahCSY+50nHqKMLAvtMY0jgSKZG9RLZ0VM4rlX3dlYAIwPmpAZEs5sdE1jKPzt
-         sUSa+Yt3rvdogEL685HX9OzzgKvbxUuLxSFiR0ubii95w3DTWRmDDneYGKBqJn2l6obd
-         7Bag==
+        d=gmail.com; s=20221208; t=1681801903; x=1684393903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eTWib7JxQgRfPP7nkQkRpwdyPsWxBj+IL3VbidooW0M=;
+        b=hVUcF1oeFKWWGWNtlbS0nussKF65jhn4dl3su18uwaKlEFYNbn9AzxAimO05juCoyM
+         SOzC/5V49vwQhx5oOvjVsiuX3DNzd8fjNFzEvDhb3FUmMFyiuZ3a5caQmC0Ic6w2pyyS
+         m5sW/WXoqRsxgRBCg/Dso40zZJ2+qAYKe66v7aktSGuLBf1PFfK3s8RLoSPeMw+hvEvh
+         90nbYjRMCvhJ6WwELi7bByENsM9LyQNq0jkn8JjKMbOkkbC7yykbhELYktynIBEFy+1F
+         eCmZwd4PR9Pesm1OMHBqR1X4/BQAhiVAC/jKEnhHz12jwCgOlhxVWsob4arYHJLRhOz5
+         DV9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681797571; x=1684389571;
-        h=to:subject:message-id:date:from:reply-to:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dQlu0Oc2Q0nPMBCNq5iTPUZpwrRZlsMdPt2zjra8+VI=;
-        b=WjxP1dCGjKE74JR0toT/OTZRBtCm6FtIOpaq7jg9imngg9bWp6U9jaccbdbAcNl2kp
-         4LLH3LSBQRGSHbAuPSJtmLlf9nnE6FmUg+5GJQveMCSWtzGII64V8tuZGcec2XpuY8jI
-         MqO2iFqHCnAsXJKAUZdycwJH1fn0Rqm7vySn9RKvakbEzOiB4g3iRZgdcCsKAtTeopaH
-         odNlko559JSQ6BU8A+ZhZSA8CzRFG7dIykmXfme/Z/vXjXHueNG4JnQnRCSN1dqDBhcY
-         7BAn1ZImJo4adjxV6BYPGYNFrZcXlPr5F4wZo4Ggpf9V/T7eaEI/bhBGSoBkQr1hjDbh
-         AG2Q==
-X-Gm-Message-State: AAQBX9cuQG6QKDITcKpnX/tw78KNo4fyXCET6cJZJbyXGuyK5dUp4S8j
-        EiqJQ94XcmLsjjwGZ8UA5q6I/DE8brugKVROPZLmDuyXMT8R7kZ5
-X-Google-Smtp-Source: AKy350YRsUSKQ0+i58Lzun7WtY7IrRwSkm+DWIi2JdfS71rVYYWUT2OQ/a/Q5PRWIBazn3AQLm2dWBYGVxBajLvvRoE=
-X-Received: by 2002:a05:6512:96b:b0:4e8:4b7a:6b73 with SMTP id
- v11-20020a056512096b00b004e84b7a6b73mr2935594lft.4.1681797550844; Mon, 17 Apr
- 2023 22:59:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681801903; x=1684393903;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eTWib7JxQgRfPP7nkQkRpwdyPsWxBj+IL3VbidooW0M=;
+        b=Vgn2qpreq2eawLugudYMljzZoTPrPMFqJ0SiXucbjXP4iVigoGPFBWEyqQjcgwI2Me
+         Rw+z3XUFYidXPz4xyY54t6fHy9b+dvJP65tVA64bVjjdf8lwzVNFfAtn22nYT/vLW5P7
+         NJ58sX503iFZMh0W8wDKZoUVWgn0UOuYXY/8/prJpI2RDtBvZA7oIAKNbRbw+9HczOwW
+         jrkbZU5wdKU+YtQU/42S4I6wDPWq8iwMeziGJh5SUwWqbQ/Cvtt0FnzJB2ldS6OEMFsi
+         hfo8T5B+GmuyqlaxK2HEZ7JSjHUpoRKabnFjM8a6hg7qLrt8c656Z6jDpKy53DRID/jK
+         C6mQ==
+X-Gm-Message-State: AAQBX9cLHpuXkPKoN47jPH4dL3/1yVYJ2ozSnWG3PuulmnniiOv3eDMr
+        vKbT5hIvnTwjdhEhF4p5A1BgAoNK8vqiKFyPOoheCE7u/Cg=
+X-Google-Smtp-Source: AKy350aMS52U0BpcvRun1qRMCtVKhTYvV6yb/hI65EaQPrxsqIVekJ5kylKFKvwKZcLodcwL9kc3njD3myEsrtI+Nyw=
+X-Received: by 2002:aca:db54:0:b0:38b:c09e:500f with SMTP id
+ s81-20020acadb54000000b0038bc09e500fmr248261oig.10.1681801903242; Tue, 18 Apr
+ 2023 00:11:43 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:ab2:2681:0:b0:1b6:840f:9075 with HTTP; Mon, 17 Apr 2023
- 22:59:10 -0700 (PDT)
-Reply-To: mariamkouame.info@myself.com
-From:   Mariam Kouame <mariamkouame1992@gmail.com>
-Date:   Mon, 17 Apr 2023 22:59:10 -0700
-Message-ID: <CADUz=agNY633M0qMXMnAP3Ms7-3rKuWtAZGCOQZKeYpCdBxT_w@mail.gmail.com>
-Subject: from mariam kouame
-To:     undisclosed-recipients:;
+References: <20230417092631.347976-1-rick.wertenbroek@gmail.com>
+ <20230417092631.347976-12-rick.wertenbroek@gmail.com> <cf47e154-1a48-58a9-b139-95b51b87d356@kernel.org>
+In-Reply-To: <cf47e154-1a48-58a9-b139-95b51b87d356@kernel.org>
+From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
+Date:   Tue, 18 Apr 2023 09:11:07 +0200
+Message-ID: <CAAEEuhq0nCT0XVuEeiHxY=tAsHipJPY=Uq59B=vZAwrXXjMzcg@mail.gmail.com>
+Subject: Re: [PATCH v4 11/11] PCI: rockchip: Set address alignment for
+ endpoint mode
+To:     Damien Le Moal <dlemoal@kernel.org>
+Cc:     alberto.dassatti@heig-vd.ch, xxm@rock-chips.com,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Johan Jonker <jbx6244@gmail.com>,
+        Caleb Connolly <kc@postmarketos.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Corentin Labbe <clabbe@baylibre.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
+        Judy Hsiao <judyhsiao@chromium.org>,
+        Arnaud Ferraris <arnaud.ferraris@collabora.com>,
+        linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,FREEMAIL_REPLYTO,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Level: **
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Dear,
+On Tue, Apr 18, 2023 at 1:51=E2=80=AFAM Damien Le Moal <dlemoal@kernel.org>=
+ wrote:
+>
+> On 4/17/23 18:26, Rick Wertenbroek wrote:
+> > From: Damien Le Moal <dlemoal@kernel.org>
+> >
+> > The address translation unit of the rockchip EP controller does not use
+> > the lower 8 bits of a PCIe-space address to map local memory. Thus we
+> > must set the align feature field to 256 to let the user know about this
+> > constraint.
+> >
+> > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+>
+> I think this one also needs the tag:
+>
+> Fixes: cf590b078391 ("...")
+> Cc: stable@vger.kernel.org
+>
+> And you forgot to add you Signed-off-by tag (when sending someones else p=
+atch,
+> you must add your own SoB tag after the author's tag).
+>
 
-Please grant me permission to share a very crucial discussion with
-you. I am looking forward to hearing from you at your earliest
-convenience.
+Thank you for all your comments, I'll add the tags.
+I reread the documentation, I missed it, it's the first
+time I sent someone elses patch.
 
-Mrs. Mariam Kouame
+> > ---
+> >  drivers/pci/controller/pcie-rockchip-ep.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/co=
+ntroller/pcie-rockchip-ep.c
+> > index edfced311a9f..0af0e965fb57 100644
+> > --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> > +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> > @@ -442,6 +442,7 @@ static const struct pci_epc_features rockchip_pcie_=
+epc_features =3D {
+> >       .linkup_notifier =3D false,
+> >       .msi_capable =3D true,
+> >       .msix_capable =3D false,
+> > +     .align =3D 256,
+> >  };
+> >
+> >  static const struct pci_epc_features*
+>
