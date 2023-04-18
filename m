@@ -2,77 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DE256E5AC8
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 09:48:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D69516E5ACD
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 09:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231169AbjDRHsM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 03:48:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55860 "EHLO
+        id S231251AbjDRHsO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 03:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231175AbjDRHsE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 03:48:04 -0400
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D6A72B9;
-        Tue, 18 Apr 2023 00:47:47 -0700 (PDT)
-Received: by mail-ej1-x634.google.com with SMTP id kt6so32664692ejb.0;
-        Tue, 18 Apr 2023 00:47:47 -0700 (PDT)
+        with ESMTP id S230526AbjDRHsK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 03:48:10 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D6B76A5;
+        Tue, 18 Apr 2023 00:47:50 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a5so14292586ejb.6;
+        Tue, 18 Apr 2023 00:47:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681804066; x=1684396066;
+        d=gmail.com; s=20221208; t=1681804068; x=1684396068;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qaDb5cHcj0sq9Nv0eUzX1LbgrLSdfw3K6Yu7Lv5vb5M=;
-        b=iy8MkyX0C205CH/ZIQg6+jYo8nDDTIv1sn0cJgbUnPNG9JbLRGoe/uEXFDZlL5Mo9x
-         s6CQav2nfSqQex7hEzXscd6l+6dI0RW31sdgGzjzGJsyIUuBdG3j/wUAd95/uGq8AOzV
-         Ev2a2CFHv12V4WohFnoFxCN9ASBiXwkwg90kRK0E1lVL6M7cOkK56qgMHGOI+MI1awv0
-         fI+OqwIeJ5b+g3R1N3hJKPWqtw6dt0/siAmRea5EI5xaLF71f4vXZJ6nCD3L2C4U8pCT
-         ZSv9GtB7tXucMPRQ9EWqtDNsvDjb7y250QP4Q+mU9ckasqmjxRk2VbkL5wukF0EhGEEH
-         Y3VA==
+        bh=LB/hBZR8yZjvvma1XgK2soZdHK9U46eqjW0k2u2qdaw=;
+        b=VvPmODTRSWxRQw4z5PuphOXjk9QKXdVuOolVhs0pLbWpGo5OrxV1SiE/G7BVu39CLc
+         SFeHjPqqce1UwUjn8luF8/WxJ3kkJgdgiWP/T7S1MDpiO2rxruY4dyRzOxj3Vhb0YJjc
+         uJoWIIyQKVFjrR9ORY72jCos/xlMCdkZ9wsQyBm1pwZJxYIqbwvA9FSUNwydHZoOl6An
+         hdU+tBwtgJZz0Kwm0Nyl/PZthI/X2I4rK84fKwNDpzmSZ0gVt+yLjAoLYvVycGq97l7q
+         YD5K0nYhfHIHdLY13LvrsfNZ6rjUNqlv5FqbMPBoyydFC/j0OmW9gaeUtXjcSapjxIVr
+         i0Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681804066; x=1684396066;
+        d=1e100.net; s=20221208; t=1681804068; x=1684396068;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qaDb5cHcj0sq9Nv0eUzX1LbgrLSdfw3K6Yu7Lv5vb5M=;
-        b=Q+HMfn0aSbFkt65eJShQdhR+tjJD79sTrE73f2O2C7zAXDXNaF4OWabmPWAcNbNhf8
-         VnNV8TTwPz3duCOqg649LX01KPNye6bx3SLmzUReRIWbbKH6/Ih40x9XZ6zmzrwknOqV
-         gyNpz/oeuD+ggDQOUG937UkwlEA7s4iOXj2zBegRHydA959Npjr+VcuMHir0gMVlcXkH
-         wZT6kq4DdV3VCxPfshPqiVWgnd5swRHdFmCcNgKsDkP1B5O/5X7H4ykgHvwo2b0bBfwr
-         qYmMBHb6vPnyBD9xC/gUH1NuQhZjOhuPWaCR0n2hEAiPb5+zoEYuAFZCd+f/f7cgkTRq
-         vtMA==
-X-Gm-Message-State: AAQBX9cW7RtO4dwo+uDVlhYHwpVt0f8hBsgt1qVos7t6+jpjzueEj1RR
-        HOpA2xbBaYwHGnZZ2OMTp1SBZnSwnZZ7DA==
-X-Google-Smtp-Source: AKy350aEw4nobnCvQETROqWtNOjoNa5NoUTEONLCrQUYQCkCbsJM3x3G1cs6LR0LZcZrJwIe+He5Gg==
-X-Received: by 2002:a17:906:f6c5:b0:94a:74b8:7a79 with SMTP id jo5-20020a170906f6c500b0094a74b87a79mr9871917ejb.59.1681804065737;
-        Tue, 18 Apr 2023 00:47:45 -0700 (PDT)
+        bh=LB/hBZR8yZjvvma1XgK2soZdHK9U46eqjW0k2u2qdaw=;
+        b=FrhNR89SKhmC+g5WJe1RxmhKt38jUuLHN/dCsjcwOjT6nGGA0UTi1lJD/Th1UJCUi2
+         gHMeO6YBg9jN3DUY50W6MBflaOfZkGiD1WS7piMq5Jlu1cjrBjDs4HqUXxtxlX/br9OM
+         hAMQAQesCTOV2eb9Os1ehPXiwBYqN16hpvbIXwTfomiQPTiBWJfKvUlB0Pwoy36lkBTO
+         F6ej3F8qFnsvRhWfobdUot0vW3Ep1CTBoBSZm4qXPQhAvIEqKJRzMbDSeLGopje+ZJEw
+         GCkCSrgWw1bN1X1cmGfkV2/3Nm3N05FBHlW07IWtoftMC1OlpuAuISSCY5hUE+1/12FT
+         i4dA==
+X-Gm-Message-State: AAQBX9cQxKOv1YjUnK0ibnJNxA/QpNlqalCiS4Ni5ZC+7lx7S22xOjBK
+        CAUwnAWuj4i2QNPgdVWwggM=
+X-Google-Smtp-Source: AKy350aYQU0ctOk0PyP74jWCcA9w/O/pwliRjBYZUKfvc0UrcfFPuvvj54f9Lt7AKK2eUMbuFoUQ8A==
+X-Received: by 2002:a17:906:350d:b0:94a:8f3a:1a77 with SMTP id r13-20020a170906350d00b0094a8f3a1a77mr9390578eja.8.1681804068555;
+        Tue, 18 Apr 2023 00:47:48 -0700 (PDT)
 Received: from A13PC04R.einet.ad.eivd.ch ([193.134.219.72])
-        by smtp.googlemail.com with ESMTPSA id gs8-20020a1709072d0800b0094f694e4ecbsm3048545ejc.146.2023.04.18.00.47.44
+        by smtp.googlemail.com with ESMTPSA id gs8-20020a1709072d0800b0094f694e4ecbsm3048545ejc.146.2023.04.18.00.47.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 00:47:45 -0700 (PDT)
+        Tue, 18 Apr 2023 00:47:48 -0700 (PDT)
 From:   Rick Wertenbroek <rick.wertenbroek@gmail.com>
 To:     alberto.dassatti@heig-vd.ch
 Cc:     xxm@rock-chips.com, dlemoal@kernel.org,
         Rick Wertenbroek <rick.wertenbroek@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
+        stable@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
         Heiko Stuebner <heiko@sntech.de>,
+        Caleb Connolly <kc@postmarketos.org>,
+        Brian Norris <briannorris@chromium.org>,
         Corentin Labbe <clabbe@baylibre.com>,
         Johan Jonker <jbx6244@gmail.com>,
-        Brian Norris <briannorris@chromium.org>,
-        Caleb Connolly <kc@postmarketos.org>,
+        Hugh Cole-Baker <sigmaris@gmail.com>,
         Judy Hsiao <judyhsiao@chromium.org>,
         Arnaud Ferraris <arnaud.ferraris@collabora.com>,
-        Hugh Cole-Baker <sigmaris@gmail.com>,
         linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 01/11] PCI: rockchip: Remove writes to unused registers
-Date:   Tue, 18 Apr 2023 09:46:48 +0200
-Message-Id: <20230418074700.1083505-2-rick.wertenbroek@gmail.com>
+Subject: [PATCH v5 02/11] PCI: rockchip: Write PCI Device ID to correct register
+Date:   Tue, 18 Apr 2023 09:46:49 +0200
+Message-Id: <20230418074700.1083505-3-rick.wertenbroek@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230418074700.1083505-1-rick.wertenbroek@gmail.com>
 References: <20230418074700.1083505-1-rick.wertenbroek@gmail.com>
@@ -88,45 +88,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Remove write accesses to registers that are marked "unused" (and
-therefore read-only) in the technical reference manual (TRM)
-(see RK3399 TRM 17.6.8.1)
+Write PCI Device ID (DID) to the correct register. The Device ID was not
+updated through the correct register. Device ID was written to a read-only
+register and therefore did not work. The Device ID is now set through the
+correct register. This is documented in the RK3399 TRM section 17.6.6.1.1
 
-Tested-by: Damien Le Moal <dlemoal@kernel.org>
+Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+Cc: stable@vger.kernel.org
 Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Tested-by: Damien Le Moal <dlemoal@kernel.org>
 Signed-off-by: Rick Wertenbroek <rick.wertenbroek@gmail.com>
 ---
- drivers/pci/controller/pcie-rockchip-ep.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/pci/controller/pcie-rockchip-ep.c | 6 ++++--
+ drivers/pci/controller/pcie-rockchip.h    | 2 ++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
-index d1a200b93b2b..d5c477020417 100644
+index d5c477020417..9b835377bd9e 100644
 --- a/drivers/pci/controller/pcie-rockchip-ep.c
 +++ b/drivers/pci/controller/pcie-rockchip-ep.c
-@@ -61,10 +61,6 @@ static void rockchip_pcie_clear_ep_ob_atu(struct rockchip_pcie *rockchip,
- 			    ROCKCHIP_PCIE_AT_OB_REGION_DESC0(region));
- 	rockchip_pcie_write(rockchip, 0,
- 			    ROCKCHIP_PCIE_AT_OB_REGION_DESC1(region));
--	rockchip_pcie_write(rockchip, 0,
--			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(region));
--	rockchip_pcie_write(rockchip, 0,
--			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(region));
- }
- 
- static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
-@@ -114,12 +110,6 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
- 		     PCIE_CORE_OB_REGION_ADDR0_LO_ADDR);
- 		addr1 = upper_32_bits(cpu_addr);
- 	}
--
--	/* CPU bus address region */
--	rockchip_pcie_write(rockchip, addr0,
--			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR0(r));
--	rockchip_pcie_write(rockchip, addr1,
--			    ROCKCHIP_PCIE_AT_OB_REGION_CPU_ADDR1(r));
- }
- 
+@@ -115,6 +115,7 @@ static void rockchip_pcie_prog_ep_ob_atu(struct rockchip_pcie *rockchip, u8 fn,
  static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+ 					 struct pci_epf_header *hdr)
+ {
++	u32 reg;
+ 	struct rockchip_pcie_ep *ep = epc_get_drvdata(epc);
+ 	struct rockchip_pcie *rockchip = &ep->rockchip;
+ 
+@@ -127,8 +128,9 @@ static int rockchip_pcie_ep_write_header(struct pci_epc *epc, u8 fn, u8 vfn,
+ 				    PCIE_CORE_CONFIG_VENDOR);
+ 	}
+ 
+-	rockchip_pcie_write(rockchip, hdr->deviceid << 16,
+-			    ROCKCHIP_PCIE_EP_FUNC_BASE(fn) + PCI_VENDOR_ID);
++	reg = rockchip_pcie_read(rockchip, PCIE_EP_CONFIG_DID_VID);
++	reg = (reg & 0xFFFF) | (hdr->deviceid << 16);
++	rockchip_pcie_write(rockchip, reg, PCIE_EP_CONFIG_DID_VID);
+ 
+ 	rockchip_pcie_write(rockchip,
+ 			    hdr->revid |
+diff --git a/drivers/pci/controller/pcie-rockchip.h b/drivers/pci/controller/pcie-rockchip.h
+index 32c3a859c26b..51a123e5c0cf 100644
+--- a/drivers/pci/controller/pcie-rockchip.h
++++ b/drivers/pci/controller/pcie-rockchip.h
+@@ -133,6 +133,8 @@
+ #define PCIE_RC_RP_ATS_BASE		0x400000
+ #define PCIE_RC_CONFIG_NORMAL_BASE	0x800000
+ #define PCIE_RC_CONFIG_BASE		0xa00000
++#define PCIE_EP_CONFIG_BASE		0xa00000
++#define PCIE_EP_CONFIG_DID_VID		(PCIE_EP_CONFIG_BASE + 0x00)
+ #define PCIE_RC_CONFIG_RID_CCR		(PCIE_RC_CONFIG_BASE + 0x08)
+ #define PCIE_RC_CONFIG_DCR		(PCIE_RC_CONFIG_BASE + 0xc4)
+ #define   PCIE_RC_CONFIG_DCR_CSPL_SHIFT		18
 -- 
 2.25.1
 
