@@ -2,50 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 22D896E6DF0
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 23:17:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FD646E6FB7
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 00:58:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232901AbjDRVRl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 17:17:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35592 "EHLO
+        id S230312AbjDRW6K (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 18:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232900AbjDRVRk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 17:17:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E8594688;
-        Tue, 18 Apr 2023 14:17:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CE1BA61527;
-        Tue, 18 Apr 2023 21:17:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F87C433EF;
-        Tue, 18 Apr 2023 21:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681852655;
-        bh=/WN+jSvvaiPgz9D3hM879Tv3AkpeCRe7ftdrJ4uxz7c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=uCiGf+PQUM+hYkkkDjrrl0zqs/NVGHbafTX0s0bHgSxzQ8dY3lfahQQB7UnTUDDQW
-         FgI9Ehh1zPVgsgLWzA3eQS8XkfajUegdGQYfe1PMCdbItKeLyJhqnLPynzSPEzMtQF
-         F4FW2NOvOiOYr6hPwGLx6CLBNS9CnPyT1qMbynx7KwsqJcUKUGWWCzAvIcxOGIs95G
-         WNggdS4wcnUhUt9hKMQJvlI/sw+mKxW44Sp++5dG0QwX7HRt+NOxxKtEtYNfffERd9
-         ymf5FS5GdFBelamIGqIqR8Qz4SI/XbgYoiBlDt2aAWesVathVzcrSYfB7KpE84m6gW
-         +TpB4W5PKKOzQ==
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Patrick McLean <chutzpah@gentoo.org>,
-        linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH] PCI: Expand comment about sorting entries
-Date:   Tue, 18 Apr 2023 16:17:31 -0500
-Message-Id: <20230418211731.162149-1-helgaas@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S229906AbjDRW6J (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 18:58:09 -0400
+Received: from smtp.gentoo.org (mail.gentoo.org [IPv6:2001:470:ea4a:1:5054:ff:fec7:86e4])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C12072B4;
+        Tue, 18 Apr 2023 15:58:08 -0700 (PDT)
+From:   Patrick McLean <chutzpah@gentoo.org>
+To:     Dave Airlie <airlied@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVER FOR AST SERVER
+        GRAPHICS CHIPS), linux-kernel@vger.kernel.org (open list),
+        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM)
+Cc:     Patrick McLean <chutzpah@gentoo.org>
+Subject: [PATCH] PCI: Add ASPEED vendor ID
+Date:   Tue, 18 Apr 2023 15:57:57 -0700
+Message-Id: <20230418225757.1361301-1-chutzpah@gentoo.org>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -53,29 +39,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+Currently the ASPEED PCI vendor ID is defined in
+drivers/gpu/drm/ast/ast_drv.c, move that to include/linux/pci_ids.h
+with all the rest of the PCI vendor ID definitions. Rename the definition
+to follow the format that the other definitions follow.
 
-Clarify the request to sort Vendor ID and Device ID entries by numeric
-value, not alphabetically.
-
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Patrick McLean <chutzpah@gentoo.org>
 ---
- include/linux/pci_ids.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/ast/ast_drv.c | 4 +---
+ include/linux/pci_ids.h       | 2 ++
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
+index d78852c7cf5b..232e797793b6 100644
+--- a/drivers/gpu/drm/ast/ast_drv.c
++++ b/drivers/gpu/drm/ast/ast_drv.c
+@@ -70,12 +70,10 @@ static const struct drm_driver ast_driver = {
+  * PCI driver
+  */
+ 
+-#define PCI_VENDOR_ASPEED 0x1a03
+-
+ #define AST_VGA_DEVICE(id, info) {		\
+ 	.class = PCI_BASE_CLASS_DISPLAY << 16,	\
+ 	.class_mask = 0xff0000,			\
+-	.vendor = PCI_VENDOR_ASPEED,			\
++	.vendor = PCI_VENDOR_ID_ASPEED,			\
+ 	.device = id,				\
+ 	.subvendor = PCI_ANY_ID,		\
+ 	.subdevice = PCI_ANY_ID,		\
 diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 45c3d62e616d..4d2001b86e6b 100644
+index 45c3d62e616d..40e04e88ca5a 100644
 --- a/include/linux/pci_ids.h
 +++ b/include/linux/pci_ids.h
-@@ -2,7 +2,7 @@
- /*
-  *	PCI Class, Vendor and Device IDs
-  *
-- *	Please keep sorted.
-+ *	Please keep sorted by numeric Vendor ID and Device ID.
-  *
-  *	Do not add new entries to this file unless the definitions
-  *	are shared between multiple drivers.
+@@ -2553,6 +2553,8 @@
+ #define PCI_DEVICE_ID_NETRONOME_NFP3800_VF	0x3803
+ #define PCI_DEVICE_ID_NETRONOME_NFP6000_VF	0x6003
+ 
++#define PCI_VENDOR_ID_ASPEED		0x1a03
++
+ #define PCI_VENDOR_ID_QMI		0x1a32
+ 
+ #define PCI_VENDOR_ID_AZWAVE		0x1a3b
 -- 
-2.25.1
+2.40.0
 
