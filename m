@@ -2,44 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FFE16E6B40
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 19:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7B306E6B43
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 19:43:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232455AbjDRRnw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 13:43:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52230 "EHLO
+        id S232491AbjDRRnx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 13:43:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232384AbjDRRnv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 13:43:51 -0400
+        with ESMTP id S230202AbjDRRnx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 13:43:53 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62E147A85;
-        Tue, 18 Apr 2023 10:43:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E3DF8A66;
+        Tue, 18 Apr 2023 10:43:52 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F1A9663773;
-        Tue, 18 Apr 2023 17:43:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384B8C433D2;
-        Tue, 18 Apr 2023 17:43:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CC4D363773;
+        Tue, 18 Apr 2023 17:43:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0446CC433D2;
+        Tue, 18 Apr 2023 17:43:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681839829;
-        bh=MdyZykpiq5BpjDBeaDgyaG0Z5BebUvCvzDO8pMjMAmk=;
+        s=k20201202; t=1681839831;
+        bh=pEZfh99cq2P1zARfhUOHhO1PChw+njk2jDt6BjMYCjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i+RcpWgdQeMdEkeQ1O9fcSc6bduSv61oX5qUnVu6cCs1Z8sBdsertOHGCiaYTrlUC
-         ebXlgJUmgAe4Gcy6RiThLpm4S8ScoLbYBTbENHl6Y7wxzakHMlpmxxBVWMv+0m0Yqo
-         adLqiCEp46M/vE1oFWHdDq/GCjGlOr38pD78YZGPejKOqGG8Yz1uDBLFaY2znBUVHy
-         rSZ3rO8mTCMwuE3JfleZ7ogFRHqKNsqE1N9BlThAmnZ+MUPRHq/BcxV/wGicIUwIeH
-         tJebQRPHQ2ZQeuuNvDxoxn1g63LqzN+3DwW3lMNG24nOf8ojwm9Q/mkCdVDEpO1FB0
-         6Q0t3vLcWD+gA==
+        b=Mtp9TXED5GogTEZ8T49C1bheOxOdV13tPaZWyDtfEx6DRoVxxGH+UfWd1kjfVjF3U
+         D2CtF9GF+5WKu9KitkXtLGlYniAk+03jjHy66aqxFg3smGQKfz76I8W5ZchkXCRxn4
+         j2vPoHg9hd3wPpzBAkTaKp2sI2QDHiKpXp4Um+O/VFJFcNU7cBaRKzilGQAvbkhVUj
+         A/GrXMkaIqQG483ajYufK3JxaJvgr/7PnrdakOpphr8Q4BGXFZFL322bf2ezBURaJU
+         usDxfLVHxd0DF5/D/+zzDOFZ9hKO42zgwPyOMBoQXFLaXzdKyNa3RNukcE3UltO8C0
+         hdRETNfVbE1bg==
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Yue Wang <yue.wang@Amlogic.com>
-Subject: [PATCH 1/7] PCI: meson: Add 'Amlogic' to Kconfig prompt
-Date:   Tue, 18 Apr 2023 12:43:30 -0500
-Message-Id: <20230418174336.145585-2-helgaas@kernel.org>
+        "K . Y . Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH 2/7] PCI: hv: Add 'Microsoft' to Kconfig prompt
+Date:   Tue, 18 Apr 2023 12:43:31 -0500
+Message-Id: <20230418174336.145585-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230418174336.145585-1-helgaas@kernel.org>
 References: <20230418174336.145585-1-helgaas@kernel.org>
@@ -57,29 +59,38 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-Add the "Amlogic" vendor name to the CONFIG_PCI_MESON Kconfig prompt to
-match other PCIe drivers.  Capitalize "Meson" to match other Meson Kconfig
-prompts.
+Add the "Microsoft" vendor name to the CONFIG_PCI_HYPERV_INTERFACE Kconfig
+prompt so it matches other PCIe drivers and other Hyper-V prompts.
 
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@Amlogic.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: Wei Liu <wei.liu@kernel.org>
+Cc: Dexuan Cui <decui@microsoft.com>
 ---
- drivers/pci/controller/dwc/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-index d29551261e80..617fcc7563ae 100644
---- a/drivers/pci/controller/dwc/Kconfig
-+++ b/drivers/pci/controller/dwc/Kconfig
-@@ -321,7 +321,7 @@ config PCIE_HISI_STB
- 	  Say Y here if you want PCIe controller support on HiSilicon STB SoCs
+diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+index 42654035654a..8b1f9a3f83ea 100644
+--- a/drivers/pci/controller/Kconfig
++++ b/drivers/pci/controller/Kconfig
+@@ -285,11 +285,12 @@ config PCIE_BRCMSTB
+ 	  Broadcom STB based SoCs, like the Raspberry Pi 4.
  
- config PCI_MESON
--	tristate "MESON PCIe controller"
-+	tristate "Amlogic Meson PCIe controller"
- 	default m if ARCH_MESON
- 	depends on PCI_MSI
- 	select PCIE_DW_HOST
+ config PCI_HYPERV_INTERFACE
+-	tristate "Hyper-V PCI Interface"
++	tristate "Microsoft Hyper-V PCI Interface"
+ 	depends on ((X86 && X86_64) || ARM64) && HYPERV && PCI_MSI
+ 	help
+-	  The Hyper-V PCI Interface is a helper driver allows other drivers to
+-	  have a common interface with the Hyper-V PCI frontend driver.
++	  The Hyper-V PCI Interface is a helper driver that allows other
++	  drivers to have a common interface with the Hyper-V PCI frontend
++	  driver.
+ 
+ config PCI_LOONGSON
+ 	bool "LOONGSON PCI Controller"
 -- 
 2.25.1
 
