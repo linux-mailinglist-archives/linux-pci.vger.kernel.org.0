@@ -2,146 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFC36E5F59
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 13:08:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6ED116E6139
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 14:24:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230244AbjDRLI4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 07:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50204 "EHLO
+        id S231161AbjDRMYh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 08:24:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229664AbjDRLIz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 07:08:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AAE77DA1
-        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 04:08:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681816096;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZKEfYGa3UvFKKaowY9sL3AcD6BO4UURgowBGbsTt0fI=;
-        b=BSL/Dc64y7xMbRw3/jfrGBAiZR7v6Idi+5rOXzc1BE82p3ofEG7kW8SAoDDsaapryAQHuK
-        bJ2R64wC1snwtPlXSWFJp94DrBUbUNkDp64W8uYF0DCbD9F08Ago8ceHaNUsn1xWerPZRJ
-        f9HeNzaN7MAh/+KFwegxw+HpyoE57x0=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-112-tFOHrcJoO5yqt0M7gIACkA-1; Tue, 18 Apr 2023 07:08:15 -0400
-X-MC-Unique: tFOHrcJoO5yqt0M7gIACkA-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-2f831f6e175so1122747f8f.2
-        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 04:08:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681816094; x=1684408094;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKEfYGa3UvFKKaowY9sL3AcD6BO4UURgowBGbsTt0fI=;
-        b=FI5DYiPKUIdD/DsFzgs0g1ebs+wVeG8Tu2n2PfLw2lcSLYrr0DszmpEGg/sUkLAQbF
-         4dIc/8tGGlqL3stfq1Nbe+dFrS8vDDvxYBA/O5woKInYUyFgTSsKmtRnBeGT9upY4hCF
-         lkZ6FEF0+lbOCpZlBnvYFpEFg9BtVxzTSeDvR4/0NMmtVj2n8wGjVfnLSv8p4PXzkyTo
-         8sHuGbvLnPooKbXAsjD5N9+isgtDPRQUYCNRE6iHn+RWVj+K+664jlWvfh4eRyZ38tDY
-         FwpCBvmjk2DA7dIMK71JuTWUIwFJEsZplsWzLG/LQwQ6QzCe72D5ponUM7/oiYwKJjo4
-         9ZTA==
-X-Gm-Message-State: AAQBX9dvAMVri76B4axbdotHCARNZcVBBCC2nQflnhKNkAT7luBY9by6
-        MuIMdoiePBkKOFnqDIWISTYoxj8vBGvgX2/EgIF08umLi+kuAhB9t2W6fa/0HXv3ahr+bApDE0Y
-        dRia/sHjw4UEeeB1sFq/C
-X-Received: by 2002:a5d:6708:0:b0:2f7:8f62:1a45 with SMTP id o8-20020a5d6708000000b002f78f621a45mr1532075wru.66.1681816093916;
-        Tue, 18 Apr 2023 04:08:13 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YZ1NCpYtRz9weic8B+ifu5Tys9OSKO4MurPWYbZhcWZaN/lJ4Sqz3OgA6Sep5i/d/fLMif9g==
-X-Received: by 2002:a5d:6708:0:b0:2f7:8f62:1a45 with SMTP id o8-20020a5d6708000000b002f78f621a45mr1532057wru.66.1681816093622;
-        Tue, 18 Apr 2023 04:08:13 -0700 (PDT)
-Received: from redhat.com ([2.52.136.129])
-        by smtp.gmail.com with ESMTPSA id z18-20020adfd0d2000000b002da75c5e143sm12849658wrh.29.2023.04.18.04.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Apr 2023 04:08:13 -0700 (PDT)
-Date:   Tue, 18 Apr 2023 07:08:09 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Igor Mammedov <imammedo@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org, lenb@kernel.org,
-        bhelgaas@google.com, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] pci: acpiphp: try to reassign resources on bridge if
- necessary
-Message-ID: <20230418070640-mutt-send-email-mst@kernel.org>
-References: <20230418085030.2154918-1-imammedo@redhat.com>
+        with ESMTP id S230501AbjDRMYg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 08:24:36 -0400
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7539A9023;
+        Tue, 18 Apr 2023 05:24:13 -0700 (PDT)
+X-IronPort-AV: E=Sophos;i="5.99,207,1677510000"; 
+   d="scan'208";a="156404592"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 18 Apr 2023 21:24:12 +0900
+Received: from localhost.localdomain (unknown [10.166.15.32])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id C0871423C459;
+        Tue, 18 Apr 2023 21:24:12 +0900 (JST)
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     jingoohan1@gmail.com, mani@kernel.org,
+        gustavo.pimentel@synopsys.com, fancer.lancer@gmail.com,
+        lpieralisi@kernel.org, robh+dt@kernel.org, kw@linux.com,
+        bhelgaas@google.com, kishon@kernel.org
+Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v13 00/22] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Date:   Tue, 18 Apr 2023 21:23:41 +0900
+Message-Id: <20230418122403.3178462-1-yoshihiro.shimoda.uh@renesas.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230418085030.2154918-1-imammedo@redhat.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=1.1 required=5.0 tests=AC_FROM_MANY_DOTS,BAYES_00,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
+X-Spam-Level: *
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 10:50:30AM +0200, Igor Mammedov wrote:
-> When using ACPI PCI hotplug, hotplugging a device with
-> large BARs may fail if bridge windows programmed by
-> firmware are not large enough.
-> 
-> Reproducer:
->   $ qemu-kvm -monitor stdio -M q35  -m 4G \
->       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
->       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
->       disk_image
-> 
->  wait till linux guest boots, then hotplug device
->    (qemu) device_add qxl,bus=rp1
-> 
->  hotplug on guest side fails with:
->    pci 0000:01:00.0: [1b36:0100] type 00 class 0x038000
->    pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x03ffffff]
->    pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x03ffffff]
->    pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x00001fff]
->    pci 0000:01:00.0: reg 0x1c: [io  0x0000-0x001f]
->    pci 0000:01:00.0: BAR 0: no space for [mem size 0x04000000]
->    pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x04000000]
->    pci 0000:01:00.0: BAR 1: no space for [mem size 0x04000000]
->    pci 0000:01:00.0: BAR 1: failed to assign [mem size 0x04000000]
->    pci 0000:01:00.0: BAR 2: assigned [mem 0xfe800000-0xfe801fff]
->    pci 0000:01:00.0: BAR 3: assigned [io  0x1000-0x101f]
->    qxl 0000:01:00.0: enabling device (0000 -> 0003)
->    Unable to create vram_mapping
->    qxl: probe of 0000:01:00.0 failed with error -12
-> 
-> However when using native PCIe hotplug
->   '-global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off'
-> it works fine, since kernel attempts to reassign unused resources.
-> Use the same machinery as native PCIe hotplug to (re)assign resources.
-> 
-> Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+To support them, modify PCIe DesignWare common codes.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+Changes from v12:
+https://lore.kernel.org/linux-pci/20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on next-20230414
+ - (no change, JFYI) Based on the following cleanups patches:
+   [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
+   https://lore.kernel.org/linux-pci/20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru/
+ - Use PCI_HEADER_TYPE_MULTI_FUNC on probe.c and quirks.c.
+ - Rename "Legacy IRQ" with "INTx".
+ - Change order of patches. (INTx related patches at first.)
+ - Change maxItems of reg and reg-names on the dt-bindings doc.
+ - Fix minor typos.
+ - Change waiting period in the INTx function and add comment.
 
-And I think:
+Changes from v11:
+https://lore.kernel.org/linux-pci/20230310123510.675685-1-yoshihiro.shimoda.uh@renesas.com/
+ - Based on next-20230413
+ - Based on the following cleanups patches:
+   [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
+   https://lore.kernel.org/linux-pci/20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru/
+ - Drop a fixed patch of pci-epf-test because I have submitted it independently.
+ - Split patches about adding dw_pcie_link_set_max_* functions.
+ - Split patches about modify __dw_pcie_prog_outbound_atu().
+ - Add description about num lanes into the commit log.
+ - Add some macros into pci_regs.h and pci.h.
+ - Add comment about disabling bars in pcie-rcar-gen4-host.c.
+ - Set MAX_MSI_IRQS to num_vectors for handling 32 MSIs.
+ - Add .ep_deinit().
+ - Add retrain link handling of PCIe Host mode for detecting PCIe Gen4.
+ - Modify some minor things.
 
-Fixes: d66ecb7220a7 ("PCI / ACPI: Use boot-time resource allocation rules during hotplug")
+Changes from v10:
+https://lore.kernel.org/linux-pci/20230308082352.491561-1-yoshihiro.shimoda.uh@renesas.com/
+ - Fix dt-bindings doc for endpoint (reported by Rob's bot).
+ - Add reg and reg-names to the dt-bindings doc of host.
+ - Fix examples in the dt-bindings docs of both host and endpoint.
+ - Add R-Car S4-8 device ID into the pci_test_endpoint driver.
 
+Yoshihiro Shimoda (22):
+  PCI: Add PCI_EXP_LNKCAP_MLW macros
+  PCI: Add PCI_HEADER_TYPE_MULTI_FUNC
+  PCI: Add INTx Mechanism Messages macros
+  PCI: Rename PCI_EPC_IRQ_LEGACY with PCI_EPC_IRQ_INTX
+  PCI: dwc: Rename with dw_pcie_ep_raise_intx_irq()
+  PCI: dwc: Introduce struct dw_pcie_outbound_atu
+  PCI: dwc: Add members into struct dw_pcie_outbound_atu
+  PCI: dwc: Change arguments of dw_pcie_prog_ep_outbound_atu()
+  PCI: dwc: Add support for triggering INTx IRQs
+  PCI: dwc: Add dw_pcie_link_set_max_link_width()
+  PCI: dwc: Add dw_pcie_link_set_max_width()
+  PCI: dwc: Add dw_pcie_link_set_max_cap_width()
+  PCI: dwc: Add EDMA_UNROLL capability flag
+  PCI: dwc: Expose dw_pcie_ep_exit() to module
+  PCI: dwc: Introduce .ep_pre_init() and .ep_deinit()
+  dt-bindings: PCI: dwc: Update maxItems of reg and reg-names
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+  dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+  PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+  PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+  MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+  misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
 
-> ---
-> tested in QEMU with Q35 machine on PCIE root port and also
-> with nested conventional bridge attached to root port.
-> ---
->  drivers/pci/hotplug/acpiphp_glue.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
-> index 5b1f271c6034..9aebde28a92f 100644
-> --- a/drivers/pci/hotplug/acpiphp_glue.c
-> +++ b/drivers/pci/hotplug/acpiphp_glue.c
-> @@ -517,7 +517,7 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
->  				}
->  			}
->  		}
-> -		__pci_bus_assign_resources(bus, &add_list, NULL);
-> +		pci_assign_unassigned_bridge_resources(bus->self);
->  	}
->  
->  	acpiphp_sanitize_bus(bus);
-> -- 
-> 2.39.1
+ .../bindings/pci/rcar-gen4-pci-ep.yaml        |  98 +++++++++
+ .../bindings/pci/rcar-gen4-pci-host.yaml      | 109 ++++++++++
+ .../bindings/pci/snps,dw-pcie-ep.yaml         |   4 +-
+ .../devicetree/bindings/pci/snps,dw-pcie.yaml |   4 +-
+ MAINTAINERS                                   |   1 +
+ drivers/misc/pci_endpoint_test.c              |   4 +
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   2 +-
+ drivers/pci/controller/dwc/Kconfig            |  18 ++
+ drivers/pci/controller/dwc/Makefile           |   4 +
+ drivers/pci/controller/dwc/pci-dra7xx.c       |   2 +-
+ drivers/pci/controller/dwc/pci-imx6.c         |   4 +-
+ drivers/pci/controller/dwc/pci-keystone.c     |   2 +-
+ .../pci/controller/dwc/pci-layerscape-ep.c    |   4 +-
+ drivers/pci/controller/dwc/pcie-artpec6.c     |   2 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   | 103 +++++++--
+ .../pci/controller/dwc/pcie-designware-plat.c |   4 +-
+ drivers/pci/controller/dwc/pcie-designware.c  | 201 +++++++++++-------
+ drivers/pci/controller/dwc/pcie-designware.h  |  31 ++-
+ drivers/pci/controller/dwc/pcie-keembay.c     |   2 +-
+ drivers/pci/controller/dwc/pcie-qcom-ep.c     |   4 +-
+ .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 166 +++++++++++++++
+ .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 134 ++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 187 ++++++++++++++++
+ drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  49 +++++
+ drivers/pci/controller/dwc/pcie-tegra194.c    |   2 +-
+ drivers/pci/controller/dwc/pcie-uniphier-ep.c |   2 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |   2 +-
+ drivers/pci/controller/pcie-rockchip-ep.c     |   2 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |  12 +-
+ drivers/pci/pci.h                             |  19 ++
+ drivers/pci/probe.c                           |   2 +-
+ drivers/pci/quirks.c                          |   4 +-
+ include/linux/pci-epc.h                       |   4 +-
+ include/uapi/linux/pci_regs.h                 |   7 +
+ 34 files changed, 1063 insertions(+), 132 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+ create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
+
+-- 
+2.25.1
 
