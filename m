@@ -2,214 +2,137 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6279E6E5BCB
-	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 10:14:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CC6A6E5C2E
+	for <lists+linux-pci@lfdr.de>; Tue, 18 Apr 2023 10:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231381AbjDRIOW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 04:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57780 "EHLO
+        id S231229AbjDRIgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 04:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231312AbjDRIOO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 04:14:14 -0400
-Received: from mx1.zhaoxin.com (MX1.ZHAOXIN.COM [210.0.225.12])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C54E5
-        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 01:14:06 -0700 (PDT)
-X-ASG-Debug-ID: 1681805642-086e237e521b2b0001-0c9NHn
-Received: from ZXSHMBX1.zhaoxin.com (ZXSHMBX1.zhaoxin.com [10.28.252.163]) by mx1.zhaoxin.com with ESMTP id CVqYVaUsMbxi6l05 (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO); Tue, 18 Apr 2023 16:14:02 +0800 (CST)
-X-Barracuda-Envelope-From: LeoLiu-oc@zhaoxin.com
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Received: from ZXBJMBX03.zhaoxin.com (10.29.252.7) by ZXSHMBX1.zhaoxin.com
- (10.28.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 18 Apr
- 2023 16:14:02 +0800
-Received: from [10.32.64.2] (10.32.64.2) by ZXBJMBX03.zhaoxin.com
- (10.29.252.7) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.16; Tue, 18 Apr
- 2023 16:14:00 +0800
-X-Barracuda-RBL-Trusted-Forwarder: 10.28.252.163
-Message-ID: <865bd45f-396f-2afd-7206-04f7972e9e0c@zhaoxin.com>
-X-Barracuda-RBL-Trusted-Forwarder: 10.32.64.2
-Date:   Tue, 18 Apr 2023 16:13:58 +0800
+        with ESMTP id S231356AbjDRIgF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 04:36:05 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C4027A83
+        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 01:35:55 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id 5b1f17b1804b1-3f167d0cbb7so5614155e9.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 01:35:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google; t=1681806953; x=1684398953;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JZfMIf6u2tlZmg4ytV/RdzlZiQTZycAHSYhPqTETFDk=;
+        b=AtH7SlgZznmpIhtRcbYWvzjRwhwYiDcaGCXHsyrlVtfMKNEUgXd//CR8T7s9VHs9co
+         wIIiCpC5EXMXAPVzbvJpBaqlsVvCZExTRXbkJqyC5ff1XFzg1BFz/9bIY8mhYG04fZjD
+         1swtlQei9mCVpTXwIEAkAr1HSpnuQ4UhW8i1k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681806953; x=1684398953;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JZfMIf6u2tlZmg4ytV/RdzlZiQTZycAHSYhPqTETFDk=;
+        b=BEHvGxA0QCNtg28NoUiG5NaFFLKS+bE39fU7lAUIFMSzcQ5b+xyGJNQ1CGrlryHeMI
+         YAx/0dCF3saL8EAk/XoSF+ucN8elWFZbyfqnAg7GrODzhM2Vj4YsCqXHk4Ak1ndtNJ4+
+         XiKTX2BYwpybTzOkUULGh48v36F66S5TmLRbnkabukiO1u77/+sAJNevId3Fa5LEyEO2
+         yYLdkDxjTJeWrlCvtnqtLtEdM/nczqLsUKtOYDStfc3OLzUq160siahcRPTjcyfFLLbB
+         ADTGAtAIIoTVbOSa8iHtDrpaE7Ft59WA2RVTvj/e4WolilUYl0LliWICNAZHsystEZr9
+         2r1Q==
+X-Gm-Message-State: AAQBX9f8PDGEYj5eWDio9UrtzNmWrIwbSyjc6r9MspuIY3/zK8HJT0mV
+        c+UmJt11SV/gBKalB2vbpb/PlA==
+X-Google-Smtp-Source: AKy350baNsjdpiDs8wIYqCjrn145jmIxJrw1PWocYcVGuMonwKXArSOSkN30FZe2g02CXjtvgmQoIQ==
+X-Received: by 2002:a05:600c:3d18:b0:3f1:7490:e595 with SMTP id bh24-20020a05600c3d1800b003f17490e595mr3714170wmb.2.1681806953655;
+        Tue, 18 Apr 2023 01:35:53 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-33.fiber7.init7.net. [212.51.149.33])
+        by smtp.gmail.com with ESMTPSA id l12-20020a1c790c000000b003f179fc6d8esm1146495wme.44.2023.04.18.01.35.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 01:35:53 -0700 (PDT)
+Date:   Tue, 18 Apr 2023 10:35:51 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Patrick McLean <chutzpah@gentoo.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-ide@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dave Airlie <airlied@redhat.com>
+Subject: Re: [PATCH 1/2] gpu: Move ASPEED vendor ID definition to pci_ids.h
+Message-ID: <ZD5WZ+HYGBV3g7SL@phenom.ffwll.local>
+Mail-Followup-To: Patrick McLean <chutzpah@gentoo.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-ide@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dave Airlie <airlied@redhat.com>
+References: <20230418011720.3900090-1-chutzpah@gentoo.org>
+ <20230418011720.3900090-2-chutzpah@gentoo.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2 0/5] Parse the PCIe AER and set to relevant registers
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-X-ASG-Orig-Subj: Re: [PATCH v2 0/5] Parse the PCIe AER and set to relevant registers
-CC:     <rafael@kernel.org>, <lenb@kernel.org>, <james.morse@arm.com>,
-        <tony.luck@intel.com>, <bp@alien8.de>, <robert.moore@intel.com>,
-        <ying.huang@intel.com>, <rdunlap@infradead.org>,
-        <bhelgaas@google.com>, <linux-acpi@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devel@acpica.org>, <CobeChen@zhaoxin.com>,
-        <TonyWWang@zhaoxin.com>, <ErosZhang@zhaoxin.com>,
-        "Li, Ming" <ming4.li@intel.com>
-References: <20230407231821.GA3831711@bhelgaas>
- <433ad19a-8286-ff58-9fd8-d7dd13547032@zhaoxin.com>
- <292498f7-15ab-7cab-dc3a-ca5a13001e86@linux.intel.com>
-From:   LeoLiuoc <LeoLiu-oc@zhaoxin.com>
-In-Reply-To: <292498f7-15ab-7cab-dc3a-ca5a13001e86@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.32.64.2]
-X-ClientProxiedBy: ZXSHCAS2.zhaoxin.com (10.28.252.162) To
- ZXBJMBX03.zhaoxin.com (10.29.252.7)
-X-Barracuda-Connect: ZXSHMBX1.zhaoxin.com[10.28.252.163]
-X-Barracuda-Start-Time: 1681805642
-X-Barracuda-Encrypted: ECDHE-RSA-AES128-GCM-SHA256
-X-Barracuda-URL: https://10.28.252.35:4443/cgi-mod/mark.cgi
-X-Virus-Scanned: by bsmtpd at zhaoxin.com
-X-Barracuda-Scan-Msg-Size: 7386
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-Bayes: INNOCENT GLOBAL 0.0000 1.0000 -2.0210
-X-Barracuda-Spam-Score: -2.02
-X-Barracuda-Spam-Status: No, SCORE=-2.02 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=9.0 tests=
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.107580
-        Rule breakdown below
-         pts rule name              description
-        ---- ---------------------- --------------------------------------------------
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230418011720.3900090-2-chutzpah@gentoo.org>
+X-Operating-System: Linux phenom 6.1.0-7-amd64 
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-在 2023/4/13 0:40, Sathyanarayanan Kuppuswamy 写道:
+On Mon, Apr 17, 2023 at 06:17:19PM -0700, Patrick McLean wrote:
+> Currently the ASPEED PCI vendor ID is defined in drivers/gpu/drm/ast/ast_drv.c,
+> move that to include/linux/pci_ids.h with all the rest of the PCI vendor ID
+> definitions. Rename the definition to follow the format that the other
+> definitions follow.
 > 
+> Signed-off-by: Patrick McLean <chutzpah@gentoo.org>
+
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+for merging through whatever tree this series lands through.
+-Daniel
+
+> ---
+>  drivers/gpu/drm/ast/ast_drv.c | 4 +---
+>  include/linux/pci_ids.h       | 2 ++
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> On 4/12/23 2:11 AM, LeoLiuoc wrote:
->>
->>
->> 在 2023/4/8 7:18, Bjorn Helgaas 写道:
->>> [+cc Sathy, Ming, since they commented on the previous version]
->>>
->>> On Tue, Nov 15, 2022 at 11:11:15AM +0800, LeoLiu-oc wrote:
->>>> From: leoliu-oc <leoliu-oc@zhaoxin.com>
->>>>
->>>> According to the sec 18.3.2.4, 18.3.2.5 and 18.3.2.6 in ACPI r6.5, the
->>>> register values form HEST PCI Express AER Structure should be written to
->>>> relevant PCIe Device's AER Capabilities. So the purpose of the patch set
->>>> is to extract register values from HEST PCI Express AER structures and
->>>> program them into AER Capabilities. Refer to the ACPI Spec r6.5 for a more
->>>> detailed description.
->>>
->>> I wasn't involved in this part of the ACPI spec, and I don't
->>> understand how this is intended to work.
->>>
->>> I see that this series extracts AER mask, severity, and control
->>> information from the ACPI HEST table and uses it to configure PCIe
->>> devices as they are enumerated.
->>>
->>> What I don't understand is how this relates to ownership of the AER
->>> capability as negotiated by the _OSC method.  Firmware can configure
->>> the AER capability itself, and if it retains control of the AER
->>> capability, the OS can't write to it (with the exception of clearing
->>> EDR error status), so this wouldn't be necessary.
->>
->> There is no relationship between the ownership of the AER related register and the ownership of the AER capability in the OS or Firmware. The processing here is to initialize the AER related register, not the AER event. If Firmware is configured
-> 
-> No, the above statement is not correct. Let's assume that if the AER
-> feature is owned by firmware and OS arbitrarily configures the AER
-> registers, does it seem right? If firmware or OS owns a feature, after
-> _OSC negotiation, it assumed that other component will not touch the
-> relevant registers. There could be exceptions (like EDR), but it needs
-> to be documented in the spec.
-> 
-
-I do not find a direct statement from ACPI Spec r6.5 that allows the OS 
-to write the value of the HEST AER register to the AER register of the 
-corresponding device without AER control but I looked in ACPI Spec for a 
-description of the relationship between writing to the AER register 
-through the _HPP/_HPX method and whether the OS requires AER control：
-The expression are as follows:
-1. OSPM uses the information returned by _HPX to determine how ①to 
-configure PCI Functions that are hot- plugged into the system, ②to 
-configure Functions not configured by the platform firmware during 
-initial system boot, ③and to configure Functions any time they lose 
-configuration space settings (e.g. OSPM issues a Secondary Bus 
-Reset/Function Level Reset or Downstream Port Containment is triggered).
-
-2. _HPX may return multiple types or Record Settings (each setting in a 
-single sub-package.) OSPM is responsible for detecting the type of 
-Function and for applying the appropriate settings. OSPM is also 
-responsible for detecting the device / port type of the PCI Express 
-Function and applying the appropriate settings provided. For example, 
-the Secondary Uncorrectable Error Severity and Secondary Uncorrectable 
-Error Mask settings of Type 2 record are only applicable to PCI Express 
-to PCI-X/PCI Bridge whose device / port type is 1000b. Similarly, AER 
-settings are only applicable to hot plug PCI Express devices that 
-support the optional AER capability.
-
-3. Note: OSPM may override the settings provided by the _HPX object’s 
-Type2 record (PCI Express Settings) or Type3 record (PCI Express 
-Descriptor Settings) when OSPM has assumed native control of the 
-corresponding feature. For example, if OSPM has assumed ownership of AER 
-(via _OSC), OSPM may override AER related settings returned by _HPX.
-
-This means that writing the AER register value by _HPX does not require 
-the OS to gain control of the AER. Also from the usage description of 
-_HPX, I think ownership of AER means who decides the configuration value 
-of the AER register rather than who can write the configuration value. 
-Even though the OS does not have control or ownership of the AER, it 
-should still write the configuration values determined by the firmware 
-to the AER register at the request of the firmware. Therefore, 
-considering that HEST AER patch is an effective supplement to _HPP/_HPX 
-method when the Firmware does not support the _HPP/_HPX method, I think 
-the question about whether OS has control of AER to write the 
-information in the HEST AER structure to the AER register of the 
-corresponding device is similar to the question about _HPX/_HPP method 
-to write the AER information to the AER register of the corresponding 
-device. Therefore, the ownership of AER is not considered in this patch.
-
-> with AER register, it will not be able to handle the runtime hot reset and link retrain cases in addition to the hotplug case you mentioned below.
-> 
-> IIUC, here we are trying to use HEST table to configure AER registers.
-> Does HEST table override the _OSC based ownership? Can we assume if
-> HEST table exist, then irrespective who owns the feature (firmware or
-> OS), OS is allowed to configure the AER registers? Is there a spec
-> statement confirming the above assumption?
+> diff --git a/drivers/gpu/drm/ast/ast_drv.c b/drivers/gpu/drm/ast/ast_drv.c
+> index d78852c7cf5b..232e797793b6 100644
+> --- a/drivers/gpu/drm/ast/ast_drv.c
+> +++ b/drivers/gpu/drm/ast/ast_drv.c
+> @@ -70,12 +70,10 @@ static const struct drm_driver ast_driver = {
+>   * PCI driver
+>   */
+>  
+> -#define PCI_VENDOR_ASPEED 0x1a03
+> -
+>  #define AST_VGA_DEVICE(id, info) {		\
+>  	.class = PCI_BASE_CLASS_DISPLAY << 16,	\
+>  	.class_mask = 0xff0000,			\
+> -	.vendor = PCI_VENDOR_ASPEED,			\
+> +	.vendor = PCI_VENDOR_ID_ASPEED,			\
+>  	.device = id,				\
+>  	.subvendor = PCI_ANY_ID,		\
+>  	.subdevice = PCI_ANY_ID,		\
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 45c3d62e616d..6634741aea80 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -815,6 +815,8 @@
+>  #define PCI_VENDOR_ID_ASUSTEK		0x1043
+>  #define PCI_DEVICE_ID_ASUSTEK_0675	0x0675
+>  
+> +#define PCI_VENDOR_ID_ASPEED		0x1a03
+> +
+>  #define PCI_VENDOR_ID_DPT		0x1044
+>  #define PCI_DEVICE_ID_DPT		0xa400
+>  
+> -- 
+> 2.40.0
 > 
 
-No direct statement to support this view is explicitly found in ACPI 
-Spec v6.5. Considering that HEST AER patch is an effective supplement to 
-_HPP/_HPX method when the Firmware does not support the _HPP/_HPX 
-method, I think the question about whether OS has control of AER to 
-write the information in the HEST AER structure to the AER register of 
-the corresponding device is similar to the question about _HPX/_HPP 
-method to write the AER information to the AER register of the 
-corresponding device. Since writing the AER register value by _HPX does 
-not require the OS to gain control of the AER, the ownership of AER is 
-not considered in this patch.
-
-Your sincerely,
-Leoliu-oc
-
->>
->>>
->>> If the OS owns the AER capability, I assume it gets to decide for
->>> itself how to configure AER, no matter what the ACPI HEST says.
->>>
->>
->> What information does the OS use to decide how to configure AER? The ACPI Spec has the following description: PCI Express (PCIe) root ports may implement PCIe Advanced Error Reporting (AER) support. This table(HEST) contains  information platform firmware supplies to OSPM for configuring AER support on a given root port. We understand that HEST stands for user to express expectations.
->>
->> In the current implementation, the OS already configures a PCIE device based on _HPP/_HPX method when configuring a PCI device inserted into a hot-plug slot or initial configuration of a PCI device at system boot. HEST is just another way to express the desired configuration of the user.
->>
->> Yours sincerely,
->> Leoliu-oc
->>
->>> Maybe this is intended for the case where firmware retains AER
->>> ownership but the OS uses native hotplug (pciehp), and this is a way
->>> for the OS to configure new devices as the firmware expects?  But in
->>> that case, we still have the problem that the OS can't write to the
->>> AER capability to do this configuration.
->>>
->>> Bjorn
->>
-> 
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
