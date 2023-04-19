@@ -2,136 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C59506E7160
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 04:59:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C905C6E71B6
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 05:39:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231251AbjDSC7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 22:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39780 "EHLO
+        id S231617AbjDSDjw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 23:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231208AbjDSC7N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 22:59:13 -0400
-Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.216])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6FDE944AC
-        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 19:59:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
-        Content-Type; bh=J1SqxCAzuzg7aJHGJAYANDzwYeuKvoL5zMmHF3XKmxA=;
-        b=FYG8BcnFwoqOfVF+ZQfNXfnEogU6pX4dTpU86Vw4sVq7/0vAgjbb9LA9j53P21
-        YPl1FuddIvbF6bsunAFhNtBeX3GcrpAwE6jt7cI71wPoHpHTOBFF5++MacIZZXj1
-        I6/zFUciUDsefscV2xQNzncSOxzh1JGeOLOmgjdeyuKX4=
-Received: from [172.20.125.31] (unknown [116.128.244.169])
-        by zwqz-smtp-mta-g0-3 (Coremail) with SMTP id _____wBnbzPZWD9kYhpTBw--.16710S2;
-        Wed, 19 Apr 2023 10:58:34 +0800 (CST)
-Subject: Re: [PATCH v1] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
- Presence Detect Changed event occurred
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
-        Rongguang Wei <weirongguang@kylinos.cn>
-References: <20230403054619.19163-1-clementwei90@163.com>
- <20230416151826.GA13954@wunner.de>
- <93177ee9-2e77-1ce3-8a57-91cfb58f6eed@163.com>
- <20230417071125.GA4930@wunner.de>
-In-Reply-To: <20230417071125.GA4930@wunner.de>
-From:   Rongguang Wei <clementwei90@163.com>
-Message-ID: <2c288cac-cc3b-09cb-efbb-2e07f3b16fe6@163.com>
-Date:   Wed, 19 Apr 2023 10:58:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
- Thunderbird/78.8.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: _____wBnbzPZWD9kYhpTBw--.16710S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAw1UZF4xKrW7Ww18Xry7KFg_yoW5ArWxpF
-        Z8JFWIkFykXa1UXw42qF48Wr1Yk3savrWUGrn8K347Z3WfCFyfGFykKrWavrWagrWDAry2
-        9an0gwn7uFyUJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U1GQgUUUUU=
-X-Originating-IP: [116.128.244.169]
-X-CM-SenderInfo: 5fohzv5qwzvxizq6il2tof0z/xtbBzh9Wa2I0Y5NbrwAAs+
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S231580AbjDSDjo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 23:39:44 -0400
+Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340DA40EC
+        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 20:39:43 -0700 (PDT)
+Received: by mail-pg1-x531.google.com with SMTP id 41be03b00d2f7-518d325b8a2so1083034a12.0
+        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 20:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1681875582; x=1684467582;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=a0e/blrL6Tf9C9Zm88s7yEUaau7+OiJEMt6DtUxmn8U=;
+        b=heQMR9KeF4YP7cYFKebZxUoa0zwSm6yermCbrw1yWPuH8qOnanz2PICoK7wFsHoCii
+         ITyyopfMMFdHPQ3l53RQJ9R0iCJNIqSOBu8v2kGorc56fgoHdo+lwQn7Rtyot6Fc2TRr
+         edENA3S1GqNaFQoyAISXSMcD9w43pa2t9HmnVeof/RNZ8rjOMFaCqEAh77zgB8EAoQ6W
+         kv4VzctHo6uh6MWOsPvjXLQbUvLQo6wLB2L4hbWjvmnu6qu8dtL4oR5XBt2/YOm2Avu/
+         Hj08KoyiW66V1OPkWan8ZU06NlDH8ZrKHOh5SaFHvZXODbRYM1HW4zSJDCITBvWtjQwK
+         dRYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681875582; x=1684467582;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=a0e/blrL6Tf9C9Zm88s7yEUaau7+OiJEMt6DtUxmn8U=;
+        b=QaBaw6lftjKl3yCdWlpTiO5HPqvAVhckD9CQnNsNaZs95zzK928taZT4ejrHwh4k2x
+         rmup+gOSQ2CHMhrbV7qFYF4YPhhbcEFhDKKXmRYx1pjfNwCcmSBcxzOJjQ2uaFOBcV66
+         a5FECCtrnG4Tb83YFzZRxcPdJg9xhjjomM//db9iroB412MEfaoz/nCvV8htkQJ114ct
+         fct5ByOhFX1+3w210uVY+CsVUEaIUUS/CHpFVSM3JrABSwcuB7lC68uxELksQK0iGE2U
+         e7SghEO/Rxtb7XU11xI4QeGkv1o1HAqExMtIfs7c9IhxycdPH8TBSzd1xIAd1DLaw/20
+         fUMw==
+X-Gm-Message-State: AAQBX9cKAk+05AqMwbEBpOnaajwqaE0cmxYCgQnueSJjfPQPqKtXKAMq
+        icE37EQic5S2O7+nClTrpAxqYnBYFpaH/rA87c0=
+X-Google-Smtp-Source: AKy350bVWhvudAUkLl/P0TT9j1GmLD1pufJBRjFi20EeKXYqEO3qjLGawXTfX3mlLaN9b1oPB/HNmA==
+X-Received: by 2002:a05:6a00:2e94:b0:63b:89a2:d62d with SMTP id fd20-20020a056a002e9400b0063b89a2d62dmr2618037pfb.20.1681875582590;
+        Tue, 18 Apr 2023 20:39:42 -0700 (PDT)
+Received: from localhost ([135.180.227.0])
+        by smtp.gmail.com with ESMTPSA id n9-20020aa79049000000b0062ddcad2cbesm10270224pfo.145.2023.04.18.20.39.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 20:39:42 -0700 (PDT)
+Date:   Tue, 18 Apr 2023 20:39:42 -0700 (PDT)
+X-Google-Original-Date: Tue, 18 Apr 2023 20:39:34 PDT (-0700)
+Subject:     Re: [PATCH v1 3/4] soc: sifive: make SiFive's cache controller driver depend on ARCH_ symbols
+In-Reply-To: <20230406-subdued-observer-cbb0e2f72cc7@spud>
+CC:     linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>,
+        Conor Dooley <conor.dooley@microchip.com>,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, Greg KH <gregkh@linuxfoundation.org>,
+        jirislaby@kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-serial@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     Conor Dooley <conor@kernel.org>
+Message-ID: <mhng-8318a24b-b187-4056-ba08-3dfe2054d4fe@palmer-ri-x1c9>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
-
-On 4/17/23 3:11 PM, Lukas Wunner wrote:
-> On Mon, Apr 17, 2023 at 11:04:31AM +0800, Rongguang Wei wrote:
->> On 4/16/23 11:18 PM, Lukas Wunner wrote:
->>> On Mon, Apr 03, 2023 at 01:46:19PM +0800, Rongguang Wei wrote:
->>>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
->>>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
->>>> @@ -232,6 +232,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->>>>  	 */
->>>>  	mutex_lock(&ctrl->state_lock);
->>>>  	switch (ctrl->state) {
->>>> +	case BLINKINGON_STATE:
->>>>  	case BLINKINGOFF_STATE:
->>>>  		cancel_delayed_work(&ctrl->button_work);
->>>>  		fallthrough;
->>>
->>> This solution has the disadvantage that a gratuitous "Card not present"
->>> message is emitted even if the slot is occupied.
->>
->> I think when the "Card not present" is emitted, it may not consider the
->> slot status from the beginning.
-> 
-> I don't quite follow.  With the change you're proposing, if the Attention
-> Button has been pressed and there's a card in the slot, after five seconds
-> you'll emit an erroneous "Card not present" message.  Erroneous because
-> there's a card in the slot.
-> 
-> 
->> If the slot is in ON_STATE and is occupied, turn the slot off and then
->> back on. The message is also emitted at first.
-> 
-> That's intentional.  If the slot is occupied and a Presence Detect Changed
-> event was received, it means the card in the slot may be a different one.
-> So the "Card not present" message relates to the card that was
-> *previously* in the slot.
-> 
-> If the slot is still (or again) occupied, we'll then try to bring it up
-> and that will lead to a subsequent "Card present" message.
-> 
-> 
->> Maybe I can rework to add like this to prevent the gratuitous message:
-> 
-> Could you just test if the 1-line change I suggested in my previous e-mail
-> fixes the issue for you?
-> 
-> Thanks,
-> 
-> Lukas
+On Thu, 06 Apr 2023 13:57:49 PDT (-0700), Conor Dooley wrote:
+> From: Conor Dooley <conor.dooley@microchip.com>
 >
-I test the 1-line change and it make the test failed. The dmesg like this:
+> As part of converting RISC-V SOC_FOO symbols to ARCH_FOO to match the
+> use of such symbols on other architectures, convert the SiFive soc
+> drivers to use the new ARCH_FOO symbols.
+>
+> Signed-off-by: Conor Dooley <conor.dooley@microchip.com>
+> ---
+>  drivers/soc/sifive/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/soc/sifive/Kconfig b/drivers/soc/sifive/Kconfig
+> index e86870be34c9..139884addc41 100644
+> --- a/drivers/soc/sifive/Kconfig
+> +++ b/drivers/soc/sifive/Kconfig
+> @@ -1,6 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>
+> -if SOC_SIFIVE || SOC_STARFIVE
+> +if ARCH_SIFIVE || ARCH_STARFIVE
+>
+>  config SIFIVE_CCACHE
+>  	bool "Sifive Composable Cache controller"
 
-pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
-pcieport 0000:00:01.5: pciehp: Slot(0-5): Powering off due to button press
-pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
-pcieport 0000:00:01.5: pciehp: Slot(0-5): Ignoring invalid state 0x4
-
-all ABP event are print "Ignoring invalid state 0x4". 
-
-I was add 1 line to disable slot and it works. This looks like what was done
-before.
-
-diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-index 529c34808440..462a61fc7313 100644
---- a/drivers/pci/hotplug/pciehp_ctrl.c
-+++ b/drivers/pci/hotplug/pciehp_ctrl.c
-@@ -256,7 +256,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
- 	present = pciehp_card_present(ctrl);
- 	link_active = pciehp_check_link_active(ctrl);
- 	if (present <= 0 && link_active <= 0) {
-+		ctrl->state = POWEROFF_STATE;
- 		mutex_unlock(&ctrl->state_lock);
-+		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
- 		return;
- 	}
-
+Reviewed-by: Palmer Dabbelt <palmer@rivosinc.com>
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
