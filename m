@@ -2,107 +2,136 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CDDAC6E70CD
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 03:39:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C59506E7160
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 04:59:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231613AbjDSBjg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 18 Apr 2023 21:39:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36990 "EHLO
+        id S231251AbjDSC7O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 18 Apr 2023 22:59:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230377AbjDSBjf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 21:39:35 -0400
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BC81FD3;
-        Tue, 18 Apr 2023 18:39:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046051;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0VgSP52n_1681868370;
-Received: from 30.97.56.117(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VgSP52n_1681868370)
-          by smtp.aliyun-inc.com;
-          Wed, 19 Apr 2023 09:39:31 +0800
-Message-ID: <2dc023c9-7805-3dfa-f902-31468a2d3f7e@linux.alibaba.com>
-Date:   Wed, 19 Apr 2023 09:39:28 +0800
+        with ESMTP id S231208AbjDSC7N (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 18 Apr 2023 22:59:13 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.216])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6FDE944AC
+        for <linux-pci@vger.kernel.org>; Tue, 18 Apr 2023 19:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
+        Content-Type; bh=J1SqxCAzuzg7aJHGJAYANDzwYeuKvoL5zMmHF3XKmxA=;
+        b=FYG8BcnFwoqOfVF+ZQfNXfnEogU6pX4dTpU86Vw4sVq7/0vAgjbb9LA9j53P21
+        YPl1FuddIvbF6bsunAFhNtBeX3GcrpAwE6jt7cI71wPoHpHTOBFF5++MacIZZXj1
+        I6/zFUciUDsefscV2xQNzncSOxzh1JGeOLOmgjdeyuKX4=
+Received: from [172.20.125.31] (unknown [116.128.244.169])
+        by zwqz-smtp-mta-g0-3 (Coremail) with SMTP id _____wBnbzPZWD9kYhpTBw--.16710S2;
+        Wed, 19 Apr 2023 10:58:34 +0800 (CST)
+Subject: Re: [PATCH v1] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
+ Presence Detect Changed event occurred
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Rongguang Wei <weirongguang@kylinos.cn>
+References: <20230403054619.19163-1-clementwei90@163.com>
+ <20230416151826.GA13954@wunner.de>
+ <93177ee9-2e77-1ce3-8a57-91cfb58f6eed@163.com>
+ <20230417071125.GA4930@wunner.de>
+In-Reply-To: <20230417071125.GA4930@wunner.de>
+From:   Rongguang Wei <clementwei90@163.com>
+Message-ID: <2c288cac-cc3b-09cb-efbb-2e07f3b16fe6@163.com>
+Date:   Wed, 19 Apr 2023 10:58:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.9.0
-Subject: Re: [PATCH v2 2/3] drivers/perf: add DesignWare PCIe PMU driver
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>, helgaas@kernel.org,
-        yangyicong@huawei.com, will@kernel.org, Jonathan.Cameron@huawei.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        robin.murphy@arm.com, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com
-References: <20220917121036.14864-1-xueshuai@linux.alibaba.com>
- <20230410031702.68355-3-xueshuai@linux.alibaba.com>
- <713d8162-dd3c-483c-b984-7707ef8aaa36@linux.alibaba.com>
- <ca46be9a-77f2-80ee-62e8-a3ce3eb02097@linux.alibaba.com>
- <e2397b81-ec19-25e4-ee47-29da29984f9c@linux.alibaba.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <e2397b81-ec19-25e4-ee47-29da29984f9c@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-12.5 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: _____wBnbzPZWD9kYhpTBw--.16710S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw1UZF4xKrW7Ww18Xry7KFg_yoW5ArWxpF
+        Z8JFWIkFykXa1UXw42qF48Wr1Yk3savrWUGrn8K347Z3WfCFyfGFykKrWavrWagrWDAry2
+        9an0gwn7uFyUJFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U1GQgUUUUU=
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: 5fohzv5qwzvxizq6il2tof0z/xtbBzh9Wa2I0Y5NbrwAAs+
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi
 
-
-On 2023/4/18 AM9:51, Baolin Wang wrote:
-> 
-> 
-> On 4/17/2023 9:16 AM, Shuai Xue wrote:
-> 
-> [snip]
-> 
->>>> +
->>>> +static void dwc_pcie_pmu_event_update(struct perf_event *event)
->>>> +{
->>>> +    u64 counter;
->>>> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->>>> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->>>> +    struct pci_dev *pdev = rp_info->pdev;
->>>> +    u16 ras_des = rp_info->ras_des;
->>>> +    struct hw_perf_event *hwc = &event->hw;
->>>> +    enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->>>> +    u64 delta, prev, now;
->>>> +
->>>> +    do {
->>>> +        prev = local64_read(&hwc->prev_count);
->>>> +
->>>> +        if (type == DWC_PCIE_LANE_EVENT)
->>>> +            dwc_pcie_pmu_read_event_counter(pdev, ras_des, &counter);
->>>> +        else if (type == DWC_PCIE_TIME_BASE_EVENT)
->>>> +            dwc_pcie_pmu_read_base_time_counter(pdev, ras_des,
->>>> +                                &counter);
->>>> +        else
->>>> +            dev_err(pcie_pmu->dev, "invalid event type: 0x%x\n", type);
->>>> +
->>>> +        now = counter;
->>>> +    } while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
->>>> +
->>>> +    delta = now - prev;
+On 4/17/23 3:11 PM, Lukas Wunner wrote:
+> On Mon, Apr 17, 2023 at 11:04:31AM +0800, Rongguang Wei wrote:
+>> On 4/16/23 11:18 PM, Lukas Wunner wrote:
+>>> On Mon, Apr 03, 2023 at 01:46:19PM +0800, Rongguang Wei wrote:
+>>>> --- a/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
+>>>> @@ -232,6 +232,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+>>>>  	 */
+>>>>  	mutex_lock(&ctrl->state_lock);
+>>>>  	switch (ctrl->state) {
+>>>> +	case BLINKINGON_STATE:
+>>>>  	case BLINKINGOFF_STATE:
+>>>>  		cancel_delayed_work(&ctrl->button_work);
+>>>>  		fallthrough;
 >>>
->>> This can be overflow? better to add a mask to avoid possible overflow.
+>>> This solution has the disadvantage that a gratuitous "Card not present"
+>>> message is emitted even if the slot is occupied.
 >>
->> I think it can not. This Root Complex supports up to PCIe Gen5 (32 GT/s)
->> and one root port support up to x16 lanes, with peek bandwidth 64 GB/s.
->> On Yitian 710, one root port is x4 lane with peak bandwidth 16 GB/s.
->> The counter is 64 bit width with 16 bytes unit.
->>
->>     2^64*16/(64*10^9)/60/60/24/365 = 146 years
->>
->> For x16 root port, it will not overflow within 146 yeasr and for yitian 710,
->> it will never overflow in my life too.
+>> I think when the "Card not present" is emitted, it may not consider the
+>> slot status from the beginning.
 > 
-> However the lane event counter is 32bit, so still a maximum counter mask is preferable.
+> I don't quite follow.  With the change you're proposing, if the Attention
+> Button has been pressed and there's a card in the slot, after five seconds
+> you'll emit an erroneous "Card not present" message.  Erroneous because
+> there's a card in the slot.
+> 
+> 
+>> If the slot is in ON_STATE and is occupied, turn the slot off and then
+>> back on. The message is also emitted at first.
+> 
+> That's intentional.  If the slot is occupied and a Presence Detect Changed
+> event was received, it means the card in the slot may be a different one.
+> So the "Card not present" message relates to the card that was
+> *previously* in the slot.
+> 
+> If the slot is still (or again) occupied, we'll then try to bring it up
+> and that will lead to a subsequent "Card present" message.
+> 
+> 
+>> Maybe I can rework to add like this to prevent the gratuitous message:
+> 
+> Could you just test if the 1-line change I suggested in my previous e-mail
+> fixes the issue for you?
+> 
+> Thanks,
+> 
+> Lukas
+>
+I test the 1-line change and it make the test failed. The dmesg like this:
 
-You are right, will mask it in next version.
+pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
+pcieport 0000:00:01.5: pciehp: Slot(0-5): Powering off due to button press
+pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
+pcieport 0000:00:01.5: pciehp: Slot(0-5): Ignoring invalid state 0x4
 
-Thank you.
-Best Regards,
-Shuai
+all ABP event are print "Ignoring invalid state 0x4". 
+
+I was add 1 line to disable slot and it works. This looks like what was done
+before.
+
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 529c34808440..462a61fc7313 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -256,7 +256,9 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	present = pciehp_card_present(ctrl);
+ 	link_active = pciehp_check_link_active(ctrl);
+ 	if (present <= 0 && link_active <= 0) {
++		ctrl->state = POWEROFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
++		pciehp_disable_slot(ctrl, SURPRISE_REMOVAL);
+ 		return;
+ 	}
+
