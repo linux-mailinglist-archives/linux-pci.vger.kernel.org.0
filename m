@@ -2,105 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3464F6E7C2A
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 16:18:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0459C6E7C7C
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 16:25:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229448AbjDSOSH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Apr 2023 10:18:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46210 "EHLO
+        id S229877AbjDSOYx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Apr 2023 10:24:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232007AbjDSOSG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 10:18:06 -0400
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2040.outbound.protection.outlook.com [40.107.243.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C4B61A1;
-        Wed, 19 Apr 2023 07:18:00 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W/UrsZVNTxrSRmD217QExTJqQ1eH2+HtD/DMGJNVaFeFdl99YR0FxlbzTdwkr9J9oywWBlirGLbJr16MatlBxNSYTpzO/8BtcIr663AVNJygT/f41FyVpBcmH/vH1wL5LUOxrBwQX9cdIqM1KttmrLswAY3N4Uk+A/RI6bkj4K5w65+uGDT8m6gItvZWJ8sWW2rflzT05P8o1mLcXjr8x7EtlUf7NxlyeKyzE4PP3i4IYJZwADpc9z4PklGB56DdFWmNqqKRbIBe9IhCDOcLbyP0zgxd9JykY2duF4KUXyWZ6qhs6URM4qI6OGYTcQTGL9FT7sS56wCHH9PtmRubuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V+m4Wi5dg3l9GANgbvJ8QvKfYclSxuRaJckyHL8lh9I=;
- b=WchZoc1ZgGMjmvikeme+V9rk6tEItq86TSJrVTutvoiM7fFvmzzFVVdOpRa1DplVzlAtR6/jkSq0tup4QMYuRXO1pmT9buAwDfXeTBau+62n6YlcfoYQ5nAmnhNNzmkebVQhx7jWvBYNtP8Y7yx2RH1qw002BZ6MvrBCc1zlvioWzcKwQTLMug4904+P+zPbxyRRxRwfIDusMMb+TGiC/En61hsnvcAuhYvu4vVAWG1VC/eYrXbH4x+l0V7lYmyrfKzzeloiXW5Rs6ensp2vkUsatVSIf0Dqe08cSyM78AKq7dyZT6XN9OeePuEQzAJMH0RlxN3ntgnQgvignnbnWg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V+m4Wi5dg3l9GANgbvJ8QvKfYclSxuRaJckyHL8lh9I=;
- b=aPOyfJIXVSTs/jfg8jgPL9Ya+RgHaQzLXgFkmxaUu2ghLCE8xcYVwkX95wyFZ7tze1r0k8E37XxFvPu1qljjOD+4KOF+tHQ9XkrPR5gao/LvCdjR+kzJZ9uK+J91v0qxq74x3Lqxf10YUMqA+/fCDAPCPOPZM9FaGYM2ulpVzDQ=
-Received: from BLAPR05CA0019.namprd05.prod.outlook.com (2603:10b6:208:36e::24)
- by MN0PR12MB6270.namprd12.prod.outlook.com (2603:10b6:208:3c2::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.45; Wed, 19 Apr
- 2023 14:17:57 +0000
-Received: from BL02EPF0000C409.namprd05.prod.outlook.com
- (2603:10b6:208:36e:cafe::8a) by BLAPR05CA0019.outlook.office365.com
- (2603:10b6:208:36e::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.22 via Frontend
- Transport; Wed, 19 Apr 2023 14:17:57 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0000C409.mail.protection.outlook.com (10.167.241.11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.6319.16 via Frontend Transport; Wed, 19 Apr 2023 14:17:57 +0000
-Received: from rric.localdomain (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Wed, 19 Apr
- 2023 09:17:53 -0500
-Date:   Wed, 19 Apr 2023 16:17:50 +0200
-From:   Robert Richter <rrichter@amd.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-CC:     <alison.schofield@intel.com>, <dave.jiang@intel.com>,
-        Terry Bowman <terry.bowman@amd.com>,
-        <vishal.l.verma@intel.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-cxl@vger.kernel.org>,
-        "Mahesh J Salgaonkar" <mahesh@linux.ibm.com>,
-        <bhelgaas@google.com>, Oliver O'Halloran <oohall@gmail.com>,
-        <Jonathan.Cameron@huawei.com>, <bwidawsk@kernel.org>,
-        <dan.j.williams@intel.com>, <ira.weiny@intel.com>
-Subject: Re: [PATCH v3 5/6] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <ZD/4Dimu19lsJLyO@rric.localdomain>
-References: <ZDfbLF1ZYc3uIC19@rric.localdomain>
- <20230414213254.GA219190@bhelgaas>
- <ZD3BlNYeiXQR2h6+@rric.localdomain>
+        with ESMTP id S232606AbjDSOYm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 10:24:42 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1205976A5;
+        Wed, 19 Apr 2023 07:24:06 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id v18so11658030uak.8;
+        Wed, 19 Apr 2023 07:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681914239; x=1684506239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+1WTh5tAbWrd9+DY82MbH//HicCuqopdYUorpC0WJeI=;
+        b=aL0NggV3xngUc/myEWqZ8Lqe3xTihoNP1mh0oyQmYj5CTAM9w6utd8P6PKieuJ15UQ
+         nEYBRykLlkr4OSG9xMZB9Tbi1Hs4osdnoMicliQMd5cB0tw54A3R7bgmM4mYMuTuSiT+
+         8aHHChZEbWsmjXPkGqH0XV9z2atkh1YayZag87tLWMk15NeSJmPk7AJkmBE6TiJUKR+f
+         BOzi9gNI7f293MQNHVcuJbihPbwtBYDXbRga/CEv4/YgkQzU3GskB10/dzPzTmqxwftQ
+         czlzSUlTKpaRiGjlMVQvBP5WqJgJk5ipNUcF78Ft1cwfTwrlTEDU52h764TbuuHFAYnj
+         Oc6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681914239; x=1684506239;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+1WTh5tAbWrd9+DY82MbH//HicCuqopdYUorpC0WJeI=;
+        b=PVxpD7joEyjejw2T/ZT9ND5gPOFNW+6LTxDfIMK3a2Syp1AD0Dr1Y7izAPddnI71UI
+         VfnMR1fUFQK0ND5Y7zuU1H6BV97Q5fSGYB2+eSCsDhvDJ999ovsvoMpnYxpoOgA9mpTA
+         v75MsknEGO5CUr0at8eiJbIfnowj5uJVlvFloN5xMWlpYe9p+eLwW8fblkXkraN2y0mD
+         6x9AoHPp8Vno2uiwXWEgvpJT738hVhQ9oQITSz/YYg1VZ2nTbW1sFIElHAmKjRqm646w
+         wUp5EFD63BWg6kpl3TkWgQNFnZUCi1EQlFKIC5ffmkTe4slojlXLVxpC7dbEqieh1tgM
+         Otmg==
+X-Gm-Message-State: AAQBX9dSsgBSNbjQbPtafKdiyL2VIBXShx9WT0QIpBhJ9sR48qFA+rCu
+        XgbkRSBVp+XWTpW3uy7pgt4NOHmm8fSzlfNemmE=
+X-Google-Smtp-Source: AKy350ZFyn5W2/GGnxLxLBg+Iw3saMmI1Tp1Q2pTC75/oCOfXytsakfO7PSjFu6Sg9RCdp3xARNoSLTReRizaWX05mk=
+X-Received: by 2002:a1f:4305:0:b0:43b:eed8:98a4 with SMTP id
+ q5-20020a1f4305000000b0043beed898a4mr99817vka.7.1681914239159; Wed, 19 Apr
+ 2023 07:23:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZD3BlNYeiXQR2h6+@rric.localdomain>
-X-Originating-IP: [10.180.168.240]
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0000C409:EE_|MN0PR12MB6270:EE_
-X-MS-Office365-Filtering-Correlation-Id: 92e20c4b-83b0-4778-a27b-08db40e0dfb2
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1Z8OY3IrofSdpbC5KijyrsIo2h+bYGDkaH3/A5ZI2wxoqtv6JOb9mloUlvBxR1hiKGXyUfiZ1p79D0IAEBqyzRKrrFniMaAd9yQRhjSI4J0IwhuAG3HJQ/es+V33ddMNwS9SqKdZp/plzQ48Jc831WzqvE4bm9c/sy5ONLqZ5LikED4Pqu0qD1Jhnmxru3/wRmuWk3zvhXj7xNIb/4X+miYT2uiX4OMJI8YS5/MehPq+CZHiDBXU9Ht12zlb6YHuPzIMiD9PI6J9kNnkq2W6nxUhenTq+4+mNfOlg8h2C/rbpKnZeuZp0BwxlaiCL1AjdXPsG+HHEdPIqcDegTam+jbohkL9hyctsbwaFy/ykzfkW8+hl5MVbJRRtEn97RvgfM8QGyZjy3bUhAqJv7y60Q0n8BuQgxdKlP86wyEOxc1AY54tT71VkWehuGqiYmOiOhOAfyPi/Xz1qzJWVr3Qb9Tw6jv8D8wIUSJE+WXoK/J8KeshqHIxwri7m+Ix/yt35S9u3XOl8tbd3zJVNKAhfmewM0zAqfB2NOHcAynXu4XbHvYL9FhIULQE5mi2K4LXCPjx5Gpw9Gszv5LVUwmPuEbGLaDFwMFQOI5qHrzW0H/yD4LLYVm/bB7sUf787X9AabNf6tsPV54aGqGdpwbNumQ2dHUXE7TwLPQlMC1PqgCj04NlXoUL5k5Clr6zg1UQ+QrzBDgTtrIExVGtLNOWsdqc9Sz6/CwgQeD+K/0sDUI=
-X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(376002)(136003)(39860400002)(346002)(396003)(451199021)(40470700004)(46966006)(36840700001)(356005)(82740400003)(478600001)(7696005)(40460700003)(54906003)(55016003)(66899021)(81166007)(2906002)(40480700001)(83380400001)(426003)(336012)(47076005)(186003)(16526019)(53546011)(9686003)(82310400005)(36860700001)(4326008)(5660300002)(316002)(7416002)(70586007)(26005)(70206006)(6916009)(41300700001)(8676002)(8936002)(36900700001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Apr 2023 14:17:57.2466
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 92e20c4b-83b0-4778-a27b-08db40e0dfb2
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF0000C409.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN0PR12MB6270
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+References: <20230411165919.23955-1-jim2101024@gmail.com> <20230411165919.23955-3-jim2101024@gmail.com>
+ <20230413143935.pmbyjk2boxl3rwne@mraw.org> <CANCKTBtXKAYf1LxR4qN+dVyxsWgyDztUVB4EdG=xhHbuhNCq5w@mail.gmail.com>
+ <20230413200646.ddgsoqgmaae343nl@mraw.org> <CANCKTBuZ=Hxy9WgnjbauhHqXGx4QU_t8pgX=3che2K89=2BT9A@mail.gmail.com>
+ <85a1cca1-f59b-6a0c-dee3-9d9ed5d6b6d1@gmail.com> <20230414161907.zfd2ibshfx4rz56j@mraw.org>
+In-Reply-To: <20230414161907.zfd2ibshfx4rz56j@mraw.org>
+From:   Jim Quinlan <jim2101024@gmail.com>
+Date:   Wed, 19 Apr 2023 10:23:47 -0400
+Message-ID: <CANCKTBsgkv-8cCMi+H=3xYrdgVcDVTRNczg667L7b=DH2J76Bw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] PCI: brcmstb: CLKREQ# accomodations of downstream device
+To:     Cyril Brulebois <kibi@debian.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -108,162 +84,135 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
+On Fri, Apr 14, 2023 at 12:19=E2=80=AFPM Cyril Brulebois <kibi@debian.org> =
+wrote:
+>
+> Florian Fainelli <f.fainelli@gmail.com> (2023-04-14):
+> > Cyril, based upon the table and logs you provided whereby you have used=
+ the
+> > following:
+> >
+> > - Raspberry Pi Compute Module 4 (Rev 1.0, 8G RAM, 32G storage)
+> > - Raspberry Pi Compute Module 4 IO Board
+> > - SupaHub PCIe-to-multiple-USB adapter, reference PCE6U1C-R02, VER 006S
+> >
+> > in the before/unpatched case we have a PCIe link down and in the
+> > after/patched we have a PCIe link up but a kernel panic. Neither are gr=
+eat
+> > nor resulting in a fully functional PCIe device.
+>
+> Based on Jim's feedback, I'm attaching a new dmesg for the aforementioned
+> setup, with an unpatched kernel (dmesg-unpatched-pcie-link-up.txt).
 
-On 18.04.23 00:00:58, Robert Richter wrote:
-> On 14.04.23 16:32:54, Bjorn Helgaas wrote:
-> > On Thu, Apr 13, 2023 at 01:40:52PM +0200, Robert Richter wrote:
-> > > On 12.04.23 17:02:33, Bjorn Helgaas wrote:
-> > > > On Tue, Apr 11, 2023 at 01:03:01PM -0500, Terry Bowman wrote:
+Hello Cyril,
 
-> > I'm mostly interested in the PCI entities involved because that's all
-> > aer.c can deal with.  For the above, I think the PCI core only knows
-> > about these:
-> > 
-> >   00:00.0 RCEC  with AER, RCEC EA includes 00:01.0
-> >   00:01.0 RCiEP with AER
-> > 
-> > aer_irq() would handle AER interrupts from 00:00.0.
-> > cxl_handle_error() would be called for 00:00.0 and would call
-> > handle_error_source() for everything below it (only 00:01.0 here).
-> > 
-> > > > The current code uses pcie_walk_rcec() in this path, which basically
-> > > > searches below a Root Port or RCEC for devices that have an AER error
-> > > > status bit set, add them to the e_info[] list, and call
-> > > > handle_error_source() for each one:
-> > > 
-> > > For reference, this series adds support to handle RCH downstream
-> > > port-detected errors as described in CXL 3.0, 12.2.1.1.
-> > > 
-> > > This flow looks correct to me, see comments inline.
-> > 
-> > We seem to be on the same page here, so I'll trim it out.
-> > 
-> > > ...
-> > > > So we insert cxl_handle_error() in handle_error_source(), where it
-> > > > gets called for the RCEC, and then it uses pcie_walk_rcec() again to
-> > > > forcibly call handle_error_source() for *every* device "below" the
-> > > > RCEC (even though they don't have AER error status bits set).
-> > > 
-> > > The CXL device contains the links to the dport's caps. Also, there can
-> > > be multiple RCs with CXL devs connected to it. So we must search for
-> > > all CXL devices now, determine the corresponding dport and inspect
-> > > both, PCIe AER and CXL RAS caps.
-> > > 
-> > > > Then handle_error_source() ultimately calls the CXL driver err_handler
-> > > > entry points (.cor_error_detected(), .error_detected(), etc), which
-> > > > can look at the CXL-specific error status in the CXL RAS or RCRB or
-> > > > whatever.
-> > > 
-> > > The AER driver (portdrv) does not have the knowledge of CXL internals.
-> > > Thus the approach is to pass dport errors to the cxl_mem driver to
-> > > handle it there in addition to cxl mem dev errors.
-> > > 
-> > > > So this basically looks like a workaround for the fact that the AER
-> > > > code only calls handle_error_source() when it finds AER error status,
-> > > > and CXL doesn't *set* that AER error status.  There's not that much
-> > > > code here, but it seems like a quite a bit of complexity in an area
-> > > > that is already pretty complicated.
-> > 
-> > My main point here (correct me if I got this wrong) is that:
-> > 
-> >   - A RCEC generates an AER interrupt
-> > 
-> >   - find_source_device() searches all devices below the RCEC and
-> >     builds a list everything for which to call handle_error_source()
-> 
-> find_source_device() does not walk the RCEC if the error source is the
-> RCEC itself (note that find_device_iter() is called for the root/rcec
-> device first and exits early then).
-> 
-> > 
-> >   - cxl_handle_error() *again* looks at all devices below the same
-> >     RCEC and calls handle_error_source() for each one
-> > 
-> > So the main difference here is that the existing flow only calls
-> > handle_error_source() when it finds an error logged in an AER status
-> > register, while the new CXL flow calls handle_error_source() for
-> > *every* device below the RCEC.
-> 
-> That is limited as much as possible:
-> 
->  * The RCEC walk to handle CXL dport errors is done only in case of
->    internal errors, for an RCEC only (not a port) (check in
->    cxl_handle_error()).
-> 
->  * Internal errors are only enabled for RCECs connected to CXL devices
->    (handles_cxl_errors()).
-> 
->  * The handler is only called if it is a CXL memory device (class code
->    set and zero devfn) (check in cxl_handle_error_iter()).
-> 
-> An optimization I see here is to convert some runtime checks to cached
-> values determined during device enumeration (CXL device list, RCEC is
-> associated with CXL devices). Some sort of RCEC-to-CXL-dev
-> association, similar to rcec->rcec_ea.
-> 
-> > 
-> > I think it's OK to do that, but the almost recursive structure and the
-> > unusual reference counting make the overall AER flow much harder to
-> > understand.
-> > 
-> > What if we changed is_error_source() to add every CXL.mem device it
-> > finds to the e_info[] list, which I think could nicely encapsulate the
-> > idea that "CXL devices have error state we don't know how to interpret
-> > here"?  Would the existing loop in aer_process_err_devices() then do
-> > what you need?
-> 
-> I did not want to mix this with devices determined by the Error Source
-> Identification Register. CXL device may not be the error source of an
-> error which may cause some unwanted side-effects. We must also touch
-> AER_MAX_MULTI_ERR_DEVICES then and how the dev list is implemented as
-> the max number of devices is unclear.
-> 
-> > 
-> > > > Here's another idea: the ACPI GHES code (ghes_handle_aer()) basically
-> > > > receives a packet of error status from firmware and queues it for
-> > > > recovery via pcie_do_recovery().  What if you had a CXL module that
-> > > > knew how to look for the CXL error status, package it up similarly,
-> > > > and queue it via aer_recover_queue()?
-> > > 
-> > > ...
-> > > But first, RCEC error notifications (RCEC AER interrupts) must be sent
-> > > to the CXL driver to look into the dport's RCRB.
-> > 
-> > Right.  I think it could be solvable to have aer_irq() call or wake a
-> > CXL interface that has been registered.  But maybe changing
-> > is_error_source() would be simpler.
-> 
-> I am going to see if is_error_source() can be used to also find CXL
-> devices. But my main concern here is to mix CXL devices with actual
-> devices identified by the Error Source ID.
+I'm still seeing things in the logs that do not make sense to me.
 
-I have looked into reusing is_error_source() and modifying
-find_source_device() to also add CXL devices (the RCiEPs) to the dev
-list in e_info. The problem I see is that at AER level it is unknown
-whether an error happened or not. The downstream port AER capability
-also does not reside in a PCI config space header and thus is not
-directly bound to a pci_dev. That means the endpoint's AER capability
-in pci_dev is not the one we need, instead a CXL aware driver must
-lookup the RCRB which contains the AER. Additional, the CXL RAS cap
-must be inspected by that driver.
+First, the "unpatched" version logs -- including the Raspian case --
+all have the following lines:
 
-Assuming we add the RCiEP to the dev list the CXL endpoint will be
-processed by aer_get_device_error_info(), aer_print_error() and
-handle_error_source(). This is done for the endpoint device even if
-the source is the dport. Also we need to check the error status of
-both caps registers first. This will cause error reports and status
-checks of devices not being the error source.
+    [    0.000000] Movable zone start for each node
+    /* ... */
+    [    0.000000] pcpu-alloc: s88232 r8192 d30552 u126976 alloc=3D31*4096
+    [    0.000000] pcpu-alloc: [0] 0 [0] 1 [0] 2 [0] 3
 
-That said, I think the best option is still to delegate the error down
-to a CXL handler and do the error status check, reporting and handling
-of the CXL specifics there.
+The above lines are also in my logs.  But they are missing from your
+"after patch" logs -- what did you  change to have these lines
+disappear on the patched logs?
 
-I see your point that esp. the pci_dev's refcount handling needs to be
-improved. I will address that along with the other review comments in
-a next version of this patch series. Let's then revisit this
-discussion here?
+Second, you say that you used a different "CM4" from the one used in
+the Bugzilla  report -- what do you mean by that?   Are you referring
+to the CM4 module proper, whose only change was going from 4GB to 8GB,
+or the IO board being used?  My  testing is done with a standard RPi
+CM4 and standard RPi IO board.  Before this patch series, the only way
+this standard configuration can work for most hobbyist PCI cards (i.e.
+floating CLKREQ# pin) is by using Raspian AND adding
+"brcm,enable-l1ss" to the DT node.
 
-Thanks,
+I'm guessing that you are using the configuration that you described
+to me in  a personal email: "[the] chip is embedded directly on the
+modified PCB, as opposed to plugged into the PCIe slot on the official
+CM4 IO Board".  If true, you are testing on a configuration that (a)
+is unique to you and your group and (b) must be doing something with
+the CLKREQ# signal so that your "before" case does not panic.  Is this
+the case?
 
--Robert
+Finally, and this is a big one, is the fact that in both of the
+"before" and "after" cases the value written to the internal Brcm
+CLKREQ# register is the same.
+This is evident by this line in the "after" patch:  "brcm-pcie
+fd500000.pcie: uni-dir CLKREQ# for ASPM".  This mode is the only mode
+supported by the "before"
+case.  Now there are  some other things going on in the patch series
+-- reading two registers and extending the timeout value of a
+completion abort, but I'm having
+a hard time imagining how they could cause a panic.
+
+Regards,
+Jim
+
+PS  Can you please include in your logs the output of  "sudo lspci
+-vvv" for those cases that boot to prompt?
+>
+> I fear that initially I might have not waited enough before power off and
+> power on when replugging the SupaHub adapter, and I've only seen the PCIe
+> link down a few times (now that I'm actively paying attention to that
+> part). I'm indeed seeing PCIe link up consistently (100%) when using the
+> following method:
+>
+>     for i in $(seq 1 20); do
+>       # power on, let the system boot up and settle:
+>       sispmctl -t 4; sleep 2m
+>       ssh cm4 sh -c "dmesg > dmesg-$i.txt; poweroff"
+>       # let the system power down, and power off:
+>       sleep 30; sispmctl -t 4
+>       # wait before power cycling:
+>       sleep 10
+>     done
+>
+> > Looking at:
+> > https://www.amazon.co.uk/SupaHub-Express-BandWidth-Capable-Expanding/dp=
+/B092ZQWG5B
+> >
+> > it would appear that it can accept an external power supply, do you hav=
+e one
+> > connected to that USB expansion card by any chance?
+>
+> With the patched kernel, I have tried several things (leaving the regular
+> 12V adapter plugged in all the time):
+>  - No external power supply (that's what I've been using in all previous
+>    attempts).
+>  - Using a 5V PSU with 2 pins (ground and 5V) plugged on the Ext PSU
+>    4-pin header on the IO Board.
+>  - Using a 5V PSU with a SATA connector plugged directly onto the SupaHub
+>    adapter.
+>
+> I'm getting the same trace in all cases.
+>
+> > Are you able to boot the kernel before/after if you disconnect any USB
+> > peripheral?
+>
+> The trace is obtained without any USB peripheral (on the extension card o=
+r
+> on the onboard USB slots). Besides the SupaHub adapter on the PCIe slot, =
+I
+> only have Ethernet and HDMI plugged in (I'm getting traces via serial
+> console, and operating the system over SSH when it boots fine).
+>
+> As soon as I unplug the SupaHub board itself, the system boots fine.
+>
+> > Does that SupaHub board plugged to the CM4 1.0 system work fine in the
+> > Raspberry Pi kernel tree?
+>
+> With the Raspberry Pi OS (64-bit) > Raspberry Pi OS Lite image
+> (2023-02-21-raspios-bullseye-arm64-lite.img.xz), the system at least
+> boots fine; I haven't tried adding devices to the mix just yet, trying
+> to stick with that particular setup.
+>
+> A full dmesg is attached (dmesg-raspios.txt).
+>
+>
+> Cheers,
+> --
+> Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+> D-I release manager -- Release team member -- Freelance Consultant
