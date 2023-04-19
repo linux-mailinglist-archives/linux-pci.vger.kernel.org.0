@@ -2,145 +2,181 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E10D6E81F1
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 21:34:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9135E6E820F
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 21:45:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230428AbjDSTeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Apr 2023 15:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
+        id S230190AbjDSTph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Apr 2023 15:45:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229816AbjDSTeg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 15:34:36 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F044C37;
-        Wed, 19 Apr 2023 12:34:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 946B66387D;
-        Wed, 19 Apr 2023 19:34:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B016FC433EF;
-        Wed, 19 Apr 2023 19:34:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681932874;
-        bh=D8f2TK4KWlcGU0rkl/iLAMhKKliIy6rzA32Y1nAl+Rk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=NyPtwHK/o+953FXF80P3Pc4FIIuW0dkMPH7jJbtaLTelB6xJLBWliqw567+XMeMq4
-         YJ4LIAJ0EzJRlSlb2oI3Vr/n6Usxv99DY+d46DnX+IYWjFmXbBj0hYISrraT3usMzl
-         0AB21BnLyt9l+IzFaVHLqPLYZa4PaWO68BI4ExYCOx/ooEbW+0Cjtj00WjHS1rqiaI
-         lvElsNiiQeejDdh0rbulj9gY3fqeJP4EgvH9dPGQA0+CuLsHGbKu7MdqtU2oCsyACr
-         peo3WnLOlnyMtU/LtfsaTL2XXJhF/uZsoWu/gJ/PLQIjfaY3r3i2qeQGGfxDsdSdFg
-         nIdgdnoC+wywQ==
-Date:   Wed, 19 Apr 2023 14:34:32 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Rob Herring <robh@kernel.org>,
-        Donald Hunter <donald.hunter@gmail.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>
-Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
- with igb
-Message-ID: <20230419193432.GA220432@bhelgaas>
+        with ESMTP id S230086AbjDSTpf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 15:45:35 -0400
+Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3009740F9;
+        Wed, 19 Apr 2023 12:45:34 -0700 (PDT)
+Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6a5f8e1f6d1so106762a34.0;
+        Wed, 19 Apr 2023 12:45:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681933533; x=1684525533;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/631JTKEftCEl7U0RJYhImjUppejEtL4G7lWmxhVT0k=;
+        b=lOVpdG+dgmWSGal+5sb5fZNPGemmycwhU9BSPS/jYeZvutZ/yrM97gQn3lkfO4EfVi
+         fNS6FRR4KOMx20BkAO5bfmxbdF1mM9ox4UP1U2LrlXPmVquXobeas79PALwJA8PnLjaa
+         UHqRz3AGmkk0IXMsgks8jM5tWzeiXiuJyxKHkX/Bc7StvRe13dCGi6T2S39ao6ntuYre
+         dVa6bJFnWn9esZcE4IZSQsAZBRt7TaMmHu+Q7zx93oABQPC0lGQnN5txLB5SyRv36mK9
+         8ji805J3I1ubSd+CLmAJo8XkLfzO58AlXBtbqVrFUFurXWRxYwlXMA1EMl5T20qgULFw
+         fx1g==
+X-Gm-Message-State: AAQBX9elBvCz2me6FAsDj5vdzpwrldhbqNXIaABk1uZMVRDxRrkg7kmD
+        JMdSCpoZYkssLtL9Vds/8A==
+X-Google-Smtp-Source: AKy350ZhHG7jL9fgTZrKNE0S8W/JtB1boKT5IJduWDlB+oTDDfPakxGs3BL63VwcT51+kXrRt9N15A==
+X-Received: by 2002:a05:6830:1e04:b0:6a3:df63:59b4 with SMTP id s4-20020a0568301e0400b006a3df6359b4mr476793otr.14.1681933533325;
+        Wed, 19 Apr 2023 12:45:33 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id z10-20020a9d7a4a000000b006a4244d2a7asm6948049otm.9.2023.04.19.12.45.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Apr 2023 12:45:32 -0700 (PDT)
+Received: (nullmailer pid 722598 invoked by uid 1000);
+        Wed, 19 Apr 2023 19:45:32 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Donald Hunter <donald.hunter@gmail.com>,
+        Binbin Zhou <zhoubinbin@loongson.cn>,
+        Liu Peibao <liupeibao@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI: Restrict device disabled status check to DT
+Date:   Wed, 19 Apr 2023 14:35:13 -0500
+Message-Id: <20230419193513.708818-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZDawIXBd7gcA8DCk@smile.fi.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 12, 2023 at 04:20:33PM +0300, Andy Shevchenko wrote:
-> On Tue, Apr 11, 2023 at 02:02:03PM -0500, Rob Herring wrote:
-> > On Tue, Apr 11, 2023 at 7:53 AM Donald Hunter <donald.hunter@gmail.com> wrote:
-> > > Bjorn Helgaas <helgaas@kernel.org> writes:
-> > > > On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
-> > > >> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
-> > > >> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >> > > >
-> > > >> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
-> > > >> > > > because it apparently has an ACPI firmware node, and there's something
-> > > >> > > > we don't expect about its status?
-> > > >> > >
-> > > >> > > Yes they are built-in, to my knowledge.
-> > > >> > >
-> > > >> > > > Hopefully Rob will look at this.  If I were looking, I would be
-> > > >> > > > interested in acpidump to see what's in the DSDT.
-> > > >> > >
-> > > >> > > I can get an acpidump. Is there a preferred way to share the files, or just
-> > > >> > > an email attachment?
-> > > >> >
-> > > >> > I think by default acpidump produces ASCII that can be directly
-> > > >> > included in email.  http://vger.kernel.org/majordomo-info.html says
-> > > >> > 100K is the limit for vger mailing lists.  Or you could open a report
-> > > >> > at https://bugzilla.kernel.org and attach it there, maybe along with a
-> > > >> > complete dmesg log and "sudo lspci -vv" output.
-> > > >>
-> > > >> Apologies for the delay, I was unable to access the machine while travelling.
-> > > >>
-> > > >> https://bugzilla.kernel.org/show_bug.cgi?id=217317
-> > > >
-> > > > Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
-> > > > with this in the kernel parameters:
-> > > >
-> > > >   dyndbg="file drivers/acpi/* +p"
-> > > >
-> > > > and collect the entire dmesg log?
-> > >
-> > > Added to the bugzilla report.
-> > 
-> > Rafael, Andy, Any ideas why fwnode_device_is_available() would return
-> > false for a built-in PCI device with a ACPI device entry? The only
-> > thing I see in the log is it looks like the parent PCI bridge/bus
-> > doesn't have ACPI device entry (based on "[    0.913389] pci_bus
-> > 0000:07: No ACPI support"). For DT, if the parent doesn't have a node,
-> > then the child can't. Not sure on ACPI.
-> 
-> Thanks for the Cc'ing. I haven't checked anything yet, but from the above it
-> sounds like a BIOS issue. If PCI has no ACPI companion tree, then why the heck
-> one of the devices has the entry? I'm not even sure this is allowed by ACPI
-> specification, but as I said, I just solely used the above mail.
+Commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
+checked the firmware device status for both DT and ACPI devices. That
+caused a regression in some ACPI systems. The exact reason isn't clear.
+It's possibly a firmware bug. For now, at least, refactor the check to
+be for DT based systems only.
 
-ACPI r6.5, sec 6.3.7, about _STA says:
+Note that the original implementation leaked a refcount which is now
+correctly handled.
 
-  - Bit [0] - Set if the device is present.
-  - Bit [1] - Set if the device is enabled and decoding its resources.
-  - Bit [3] - Set if the device is functioning properly (cleared if
-    device failed its diagnostics).
+Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
+Link: https://lore.kernel.org/all/m2fs9lgndw.fsf@gmail.com/
+Reported-by: Donald Hunter <donald.hunter@gmail.com>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>
+Cc: Liu Peibao <liupeibao@loongson.cn>
+Cc: Huacai Chen <chenhuacai@loongson.cn>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/pci/of.c    | 30 ++++++++++++++++++++++++------
+ drivers/pci/pci.h   |  4 ++--
+ drivers/pci/probe.c |  8 ++++----
+ 3 files changed, 30 insertions(+), 12 deletions(-)
 
-  ...
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 196834ed44fe..4c2ef2e28fb5 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -16,14 +16,32 @@
+ #include "pci.h"
+ 
+ #ifdef CONFIG_PCI
+-void pci_set_of_node(struct pci_dev *dev)
++/**
++ * pci_set_of_node - Find and set device's DT device_node
++ * @dev: the PCI device structure to fill
++ *
++ * Returns 0 on success with of_node set or when no device is described in the
++ * DT. Returns -ENODEV if the device is present, but disabled in the DT.
++ */
++int pci_set_of_node(struct pci_dev *dev)
+ {
++	struct device_node *node;
++
+ 	if (!dev->bus->dev.of_node)
+-		return;
+-	dev->dev.of_node = of_pci_find_child_device(dev->bus->dev.of_node,
+-						    dev->devfn);
+-	if (dev->dev.of_node)
+-		dev->dev.fwnode = &dev->dev.of_node->fwnode;
++		return 0;
++
++	node = of_pci_find_child_device(dev->bus->dev.of_node, dev->devfn);
++	if (!node)
++		return 0;
++
++	if (!of_device_is_available(node)) {
++		of_node_put(node);
++		return -ENODEV;
++	}
++
++	dev->dev.of_node = node;
++	dev->dev.fwnode = &node->fwnode;
++	return 0;
+ }
+ 
+ void pci_release_of_node(struct pci_dev *dev)
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index d2c08670a20e..2b48a0aa8008 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -624,7 +624,7 @@ int of_pci_get_max_link_speed(struct device_node *node);
+ u32 of_pci_get_slot_power_limit(struct device_node *node,
+ 				u8 *slot_power_limit_value,
+ 				u8 *slot_power_limit_scale);
+-void pci_set_of_node(struct pci_dev *dev);
++int pci_set_of_node(struct pci_dev *dev);
+ void pci_release_of_node(struct pci_dev *dev);
+ void pci_set_bus_of_node(struct pci_bus *bus);
+ void pci_release_bus_of_node(struct pci_bus *bus);
+@@ -662,7 +662,7 @@ of_pci_get_slot_power_limit(struct device_node *node,
+ 	return 0;
+ }
+ 
+-static inline void pci_set_of_node(struct pci_dev *dev) { }
++static inline int pci_set_of_node(struct pci_dev *dev) { return 0; }
+ static inline void pci_release_of_node(struct pci_dev *dev) { }
+ static inline void pci_set_bus_of_node(struct pci_bus *bus) { }
+ static inline void pci_release_bus_of_node(struct pci_bus *bus) { }
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index a3f68b6ba6ac..f96fa83f2627 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1826,7 +1826,7 @@ int pci_setup_device(struct pci_dev *dev)
+ 	u32 class;
+ 	u16 cmd;
+ 	u8 hdr_type;
+-	int pos = 0;
++	int err, pos = 0;
+ 	struct pci_bus_region region;
+ 	struct resource *res;
+ 
+@@ -1840,10 +1840,10 @@ int pci_setup_device(struct pci_dev *dev)
+ 	dev->error_state = pci_channel_io_normal;
+ 	set_pcie_port_type(dev);
+ 
+-	pci_set_of_node(dev);
++	err = pci_set_of_node(dev);
++	if (err)
++		return err;
+ 	pci_set_acpi_fwnode(dev);
+-	if (dev->dev.fwnode && !fwnode_device_is_available(dev->dev.fwnode))
+-		return -ENODEV;
+ 
+ 	pci_dev_assign_slot(dev);
+ 
+-- 
+2.39.2
 
-  If a device is present on an enumerable bus, then _STA must not
-  return 0. In that case, bit[0] must be set and if the status of the
-  device can be determined through a bus-specific enumeration and
-  discovery mechanism, it must be reflected by the values of bit[1]
-  and bit[3], even though the OSPM is not required to take them into
-  account.
-
-Since PCI *is* an enumerable bus, I don't think we can use _STA to
-decide whether a PCI device is present.
-
-We can use _STA to decide whether a host bridge is present, of course,
-but that doesn't help here because the host bridge in question is
-PNP0A08:00 that leads to [bus 00-3d], and it is present.
-
-I don't know exactly what path led to the igb issue, but I don't think
-we need to figure that out.  I think we just need to avoid the use of
-_STA in fwnode_device_is_available().
-
-6fffbc7ae137 ("PCI: Honor firmware's device disabled status") appeared
-in v6.3-rc1, so I think we need to revert or fix it before v6.3, which
-will probably be tagged Sunday (and I'll be on vacation
-Friday-Monday).
-
-Bjorn
