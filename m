@@ -2,78 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 041AC6E81E8
-	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 21:29:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E10D6E81F1
+	for <lists+linux-pci@lfdr.de>; Wed, 19 Apr 2023 21:34:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjDST3V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 19 Apr 2023 15:29:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44152 "EHLO
+        id S230428AbjDSTeh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 19 Apr 2023 15:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbjDST3U (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 15:29:20 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0024132
-        for <linux-pci@vger.kernel.org>; Wed, 19 Apr 2023 12:29:18 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1a652700c36so226245ad.0
-        for <linux-pci@vger.kernel.org>; Wed, 19 Apr 2023 12:29:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1681932558; x=1684524558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=IGsM6giMJ8jEMRE16CRgLycYEggEEJdPAU7brk8BtS0=;
-        b=3pPZRlDEPaqyX7DR39qGhZwgQFFV32xBdFhiM7hNLwha7KGAeM7WTwuK9N5tbkm3UR
-         +VdHnwxaRos73xvmoZD4tDFhc31Ha0WTt7eTzxSzdCb53ny6Czq+B8ySlqgLq1W+jmx0
-         JPbSJPdimFGZ7HNMiCgOvk4MSTjXqFQpmBh2al00FzP54uqsddji8QHlvCk7YYx5jmdg
-         n8RjJ9l1xlczREsabn6rSd1h+LqcOsK+HieWMfXNYLSCXuF6Te3cwYXffh+WErrJLI9q
-         3C9b0jUYyGyNzrCmb9PBEPRpweM/W5OhJAvH9KSkjPlizo8dYfJ3HGxj+jQpaROl7ygZ
-         Ux+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681932558; x=1684524558;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IGsM6giMJ8jEMRE16CRgLycYEggEEJdPAU7brk8BtS0=;
-        b=BIDb6cpRFXRWpUU82UNaGV/najUMpjLLd/SfAxKHRj2/3T3/kLfZZPsD35HDNTUWsO
-         kWMb3s2i+G37MKTyCw9j8qPLoYNpeZOwsV3227LekSRJ69oFQVmqwTGaGDq9L5sOAmiQ
-         oYwpbSNYRY0LKcb0CQfPmlhsTd1wlHZVJ0cSXAGnFFveoWcmUSf9M2+lhz6MUNRKBokO
-         /l1QPCWTAmYPNC6xXY+uQwU2OyP5/PHAs8OE9JvUrtsUl3KlEGDtUCZtyEsLkhwoM+xp
-         0fkQgwCpT1EUtlEAk2DdssB2ncqBsQAaDPDWgtL97AiQ9359e07GOgBWGS98wXHJIX/P
-         zC2A==
-X-Gm-Message-State: AAQBX9eTUzFYAyRuAjEtLn0pov+SEaCeT6XErtI6NQAFJSsvrClZxv/9
-        y5QY4y4+gAmNoxuyQBi85pYOauqyifPYzIUi8Gz+jmMRafKJ1rQwH9FPmdoDIpoO4hmeNO9dlyU
-        7aq1OtWtJjCc=
-X-Google-Smtp-Source: AKy350aFY3iDR/NUpn8mtVaPoGjOA/1RnbaaaNJo7ZL9aw0YdlPFPZ+JLOpGjHzNg3YqrAko2WANAg==
-X-Received: by 2002:a17:902:e752:b0:1a6:42f0:e575 with SMTP id p18-20020a170902e75200b001a642f0e575mr31479plf.5.1681932558191;
-        Wed, 19 Apr 2023 12:29:18 -0700 (PDT)
-Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
-        by smtp.gmail.com with ESMTPSA id p11-20020a170902a40b00b001a240f053aasm918792plq.180.2023.04.19.12.29.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Apr 2023 12:29:17 -0700 (PDT)
-Date:   Wed, 19 Apr 2023 12:29:14 -0700
-From:   William McVicker <willmcvicker@google.com>
-To:     Ajay Agarwal <ajayagarwal@google.com>
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Nikhil Devshatwar <nikhilnd@google.com>,
-        Manu Gautam <manugautam@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sajid Dalvi <sdalvi@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI: dwc: Wait for link up only if link is started
-Message-ID: <ZEBBCg3DEhytqnMb@google.com>
-References: <20230412093425.3659088-1-ajayagarwal@google.com>
+        with ESMTP id S229816AbjDSTeg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 19 Apr 2023 15:34:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F044C37;
+        Wed, 19 Apr 2023 12:34:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 946B66387D;
+        Wed, 19 Apr 2023 19:34:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B016FC433EF;
+        Wed, 19 Apr 2023 19:34:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681932874;
+        bh=D8f2TK4KWlcGU0rkl/iLAMhKKliIy6rzA32Y1nAl+Rk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NyPtwHK/o+953FXF80P3Pc4FIIuW0dkMPH7jJbtaLTelB6xJLBWliqw567+XMeMq4
+         YJ4LIAJ0EzJRlSlb2oI3Vr/n6Usxv99DY+d46DnX+IYWjFmXbBj0hYISrraT3usMzl
+         0AB21BnLyt9l+IzFaVHLqPLYZa4PaWO68BI4ExYCOx/ooEbW+0Cjtj00WjHS1rqiaI
+         lvElsNiiQeejDdh0rbulj9gY3fqeJP4EgvH9dPGQA0+CuLsHGbKu7MdqtU2oCsyACr
+         peo3WnLOlnyMtU/LtfsaTL2XXJhF/uZsoWu/gJ/PLQIjfaY3r3i2qeQGGfxDsdSdFg
+         nIdgdnoC+wywQ==
+Date:   Wed, 19 Apr 2023 14:34:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Donald Hunter <donald.hunter@gmail.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>
+Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
+ with igb
+Message-ID: <20230419193432.GA220432@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230412093425.3659088-1-ajayagarwal@google.com>
-X-ccpol: medium
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZDawIXBd7gcA8DCk@smile.fi.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -81,117 +59,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 04/12/2023, Ajay Agarwal wrote:
-> In dw_pcie_host_init() regardless of whether the link has been
-> started or not, the code waits for the link to come up. Even in
-> cases where start_link() is not defined the code ends up spinning
-> in a loop for 1 second. Since in some systems dw_pcie_host_init()
-> gets called during probe, this one second loop for each pcie
-> interface instance ends up extending the boot time.
+On Wed, Apr 12, 2023 at 04:20:33PM +0300, Andy Shevchenko wrote:
+> On Tue, Apr 11, 2023 at 02:02:03PM -0500, Rob Herring wrote:
+> > On Tue, Apr 11, 2023 at 7:53 AM Donald Hunter <donald.hunter@gmail.com> wrote:
+> > > Bjorn Helgaas <helgaas@kernel.org> writes:
+> > > > On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
+> > > >> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
+> > > >> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >> > > >
+> > > >> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
+> > > >> > > > because it apparently has an ACPI firmware node, and there's something
+> > > >> > > > we don't expect about its status?
+> > > >> > >
+> > > >> > > Yes they are built-in, to my knowledge.
+> > > >> > >
+> > > >> > > > Hopefully Rob will look at this.  If I were looking, I would be
+> > > >> > > > interested in acpidump to see what's in the DSDT.
+> > > >> > >
+> > > >> > > I can get an acpidump. Is there a preferred way to share the files, or just
+> > > >> > > an email attachment?
+> > > >> >
+> > > >> > I think by default acpidump produces ASCII that can be directly
+> > > >> > included in email.  http://vger.kernel.org/majordomo-info.html says
+> > > >> > 100K is the limit for vger mailing lists.  Or you could open a report
+> > > >> > at https://bugzilla.kernel.org and attach it there, maybe along with a
+> > > >> > complete dmesg log and "sudo lspci -vv" output.
+> > > >>
+> > > >> Apologies for the delay, I was unable to access the machine while travelling.
+> > > >>
+> > > >> https://bugzilla.kernel.org/show_bug.cgi?id=217317
+> > > >
+> > > > Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
+> > > > with this in the kernel parameters:
+> > > >
+> > > >   dyndbg="file drivers/acpi/* +p"
+> > > >
+> > > > and collect the entire dmesg log?
+> > >
+> > > Added to the bugzilla report.
+> > 
+> > Rafael, Andy, Any ideas why fwnode_device_is_available() would return
+> > false for a built-in PCI device with a ACPI device entry? The only
+> > thing I see in the log is it looks like the parent PCI bridge/bus
+> > doesn't have ACPI device entry (based on "[    0.913389] pci_bus
+> > 0000:07: No ACPI support"). For DT, if the parent doesn't have a node,
+> > then the child can't. Not sure on ACPI.
 > 
-> Wait for the link up in only if the start_link() is defined.
-> 
-> Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
-> Changelog since v3:
-> - Run dw_pcie_start_link() only if link is not already up
-> 
-> Changelog since v2:
-> - Wait for the link up if start_link() is really defined.
-> - Print the link status if the link is up on init.
-> 
->  .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++----
->  drivers/pci/controller/dwc/pcie-designware.c  | 20 ++++++++++++-------
->  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
->  3 files changed, 23 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 9952057c8819..cf61733bf78d 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -485,14 +485,19 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
->  	if (ret)
->  		goto err_remove_edma;
->  
-> -	if (!dw_pcie_link_up(pci)) {
-> +	if (dw_pcie_link_up(pci)) {
-> +		dw_pcie_print_link_status(pci);
-> +	} else {
->  		ret = dw_pcie_start_link(pci);
->  		if (ret)
->  			goto err_remove_edma;
-> -	}
->  
-> -	/* Ignore errors, the link may come up later */
-> -	dw_pcie_wait_for_link(pci);
-> +		if (pci->ops && pci->ops->start_link) {
-> +			ret = dw_pcie_wait_for_link(pci);
-> +			if (ret)
-> +				goto err_stop_link;
-> +		}
-> +	}
->  
->  	bridge->sysdata = pp;
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 53a16b8b6ac2..03748a8dffd3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -644,9 +644,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci, u32 dir, int index)
->  	dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
->  }
->  
-> -int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> +void dw_pcie_print_link_status(struct dw_pcie *pci)
->  {
->  	u32 offset, val;
-> +
-> +	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> +
-> +	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> +		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> +		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> +}
-> +
-> +int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> +{
->  	int retries;
->  
->  	/* Check if the link is up or not */
-> @@ -662,12 +673,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
->  		return -ETIMEDOUT;
->  	}
->  
-> -	offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> -	val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> -
-> -	dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> -		 FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> -		 FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> +	dw_pcie_print_link_status(pci);
->  
->  	return 0;
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 79713ce075cc..615660640801 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -429,6 +429,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
->  void dw_pcie_iatu_detect(struct dw_pcie *pci);
->  int dw_pcie_edma_detect(struct dw_pcie *pci);
->  void dw_pcie_edma_remove(struct dw_pcie *pci);
-> +void dw_pcie_print_link_status(struct dw_pcie *pci);
->  
->  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg, u32 val)
->  {
-> -- 
-> 2.40.0.577.gac1e443424-goog
-> 
+> Thanks for the Cc'ing. I haven't checked anything yet, but from the above it
+> sounds like a BIOS issue. If PCI has no ACPI companion tree, then why the heck
+> one of the devices has the entry? I'm not even sure this is allowed by ACPI
+> specification, but as I said, I just solely used the above mail.
 
-Thanks for sending this patch Ajay! I tested this on my Pixel 6 with 6.3-rc1.
-I verified the PCIe RC probes without the 1s delay in dw_pcie_wait_for_link().
-Feel free to include
+ACPI r6.5, sec 6.3.7, about _STA says:
 
-Tested-by: Will McVicker <willmcvicker@google.com>
+  - Bit [0] - Set if the device is present.
+  - Bit [1] - Set if the device is enabled and decoding its resources.
+  - Bit [3] - Set if the device is functioning properly (cleared if
+    device failed its diagnostics).
+
+  ...
+
+  If a device is present on an enumerable bus, then _STA must not
+  return 0. In that case, bit[0] must be set and if the status of the
+  device can be determined through a bus-specific enumeration and
+  discovery mechanism, it must be reflected by the values of bit[1]
+  and bit[3], even though the OSPM is not required to take them into
+  account.
+
+Since PCI *is* an enumerable bus, I don't think we can use _STA to
+decide whether a PCI device is present.
+
+We can use _STA to decide whether a host bridge is present, of course,
+but that doesn't help here because the host bridge in question is
+PNP0A08:00 that leads to [bus 00-3d], and it is present.
+
+I don't know exactly what path led to the igb issue, but I don't think
+we need to figure that out.  I think we just need to avoid the use of
+_STA in fwnode_device_is_available().
+
+6fffbc7ae137 ("PCI: Honor firmware's device disabled status") appeared
+in v6.3-rc1, so I think we need to revert or fix it before v6.3, which
+will probably be tagged Sunday (and I'll be on vacation
+Friday-Monday).
+
+Bjorn
