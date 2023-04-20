@@ -2,148 +2,159 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DACD6E97B8
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 16:53:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFF246E9856
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 17:32:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231933AbjDTOx1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 10:53:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45938 "EHLO
+        id S230386AbjDTPcz convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 20 Apr 2023 11:32:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229515AbjDTOx0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 10:53:26 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDC414EDE;
-        Thu, 20 Apr 2023 07:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682002402; x=1713538402;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=o/3VG858q4YbnM1I++jrLu1F3Cew6aaRH5Qeb4OT78Q=;
-  b=TSEUYmem78P5tAztsA1Ahseb7foYdls9ncHPqq8wBKurX7Y1eZZy6swB
-   YLhI++x4TGk/whOvC6WpMMlaQxLnQ5KIWUOTsjjsXsXvHgiHPbTQcDiRJ
-   CRYf/YlUciSVo7sPkBoUUaOpjynf3FY4ERAI0DCz/HsHiiGGJtXbxF0ZL
-   9R8W6Ptr5xgNP0Wrhcg5VFMjmVzpcherr4zD2KoPvcBDYkcV96yNFrWEV
-   OXPlmtDfnqX/ZtsEpBa2yqJsv84gfiX4bildvOjBou5RzrpNakYjL0Z85
-   oooZb8rnIo0FML4BNoxq/pDY0OOBHd10dwYaoC/Rd9a8wo02kpBlx0M/V
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="373658541"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="373658541"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 07:53:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="642165231"
-X-IronPort-AV: E=Sophos;i="5.99,213,1677571200"; 
-   d="scan'208";a="642165231"
-Received: from samuelra-mobl7.amr.corp.intel.com (HELO [10.255.229.46]) ([10.255.229.46])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 07:53:22 -0700
-Message-ID: <f1409ba9-5370-1e0d-8b6c-e9782505937f@linux.intel.com>
-Date:   Thu, 20 Apr 2023 07:53:21 -0700
+        with ESMTP id S230089AbjDTPcy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 11:32:54 -0400
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DABB1736;
+        Thu, 20 Apr 2023 08:32:53 -0700 (PDT)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-94ea38c90ccso26376966b.1;
+        Thu, 20 Apr 2023 08:32:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682004771; x=1684596771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mrbfS9qzAxsg7Mxmkhy5II3bga2P8KO4swtn5KuXyG0=;
+        b=TlMP3bcXxxzTa1z+DfVAg1mqaQr7IS1hhd6hY9R6Vy2ecHTFd32yH+uhtupfN24fVn
+         SBxV4gatEkhNO/kWqDBwBBS5AECalqhyjxqxinbNab1d6R0aKuxWOsSr6Y1zIzndxzAM
+         ckypduQxnjB1r4esT2fFjpONh1VvuVziKOsXL2/zlApaUZPAKobEz95wo9NvhKVPPhW6
+         XodA/CR9tyMFw3NDbV2LCnwtH43+E/orf9bL3NQyl4rdgDm/XHgs4ybNQ5PE8zFP+1y1
+         VVXIWFnkmIqwP0IA5NgVJsfe6ZZ/dqzHuQZfF8Xgqo58wY5a876zlDrcBByr3hptBJmG
+         7G1Q==
+X-Gm-Message-State: AAQBX9eLrqcieB1LMurVwLKOObbk5Wu9CB9fO8TNikKDimnTJznkoFNM
+        ko1K5lJCR0TdVrmqNxNmwKJ/1WHkLNvJdp7CRq0=
+X-Google-Smtp-Source: AKy350Yp5p3Ap4k0cXbpLtdUdBH0oPAfDQGOUBN5Ag0FOx1IxezOJl4tNjCHJh/vRgVV5aucOQ/D3YCwgLgctxjR6+Q=
+X-Received: by 2002:a17:906:54d:b0:94e:dbce:69fe with SMTP id
+ k13-20020a170906054d00b0094edbce69femr1914715eja.2.1682004771101; Thu, 20 Apr
+ 2023 08:32:51 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v3 3/4] PCI/AER: Disable AER interrupt on suspend
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
-Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230420125941.333675-1-kai.heng.feng@canonical.com>
- <20230420125941.333675-3-kai.heng.feng@canonical.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230420125941.333675-3-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <ZDawIXBd7gcA8DCk@smile.fi.intel.com> <20230419193432.GA220432@bhelgaas>
+In-Reply-To: <20230419193432.GA220432@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 20 Apr 2023 17:32:39 +0200
+Message-ID: <CAJZ5v0ir_SQgs=4_tdjbdrF0vnM5=6dQKw-Y=LxTyCAW2kZuhQ@mail.gmail.com>
+Subject: Re: [BUG] net, pci: 6.3-rc1-4 hangs during boot on PowerEdge R620
+ with igb
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rob Herring <robh@kernel.org>,
+        Donald Hunter <donald.hunter@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, netdev@vger.kernel.org,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Wed, Apr 19, 2023 at 9:34 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Wed, Apr 12, 2023 at 04:20:33PM +0300, Andy Shevchenko wrote:
+> > On Tue, Apr 11, 2023 at 02:02:03PM -0500, Rob Herring wrote:
+> > > On Tue, Apr 11, 2023 at 7:53 AM Donald Hunter <donald.hunter@gmail.com> wrote:
+> > > > Bjorn Helgaas <helgaas@kernel.org> writes:
+> > > > > On Mon, Apr 10, 2023 at 04:10:54PM +0100, Donald Hunter wrote:
+> > > > >> On Sun, 2 Apr 2023 at 23:55, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >> > On Sat, Apr 01, 2023 at 01:52:25PM +0100, Donald Hunter wrote:
+> > > > >> > > On Fri, 31 Mar 2023 at 20:42, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > >> > > >
+> > > > >> > > > I assume this igb NIC (07:00.0) must be built-in (not a plug-in card)
+> > > > >> > > > because it apparently has an ACPI firmware node, and there's something
+> > > > >> > > > we don't expect about its status?
+> > > > >> > >
+> > > > >> > > Yes they are built-in, to my knowledge.
+> > > > >> > >
+> > > > >> > > > Hopefully Rob will look at this.  If I were looking, I would be
+> > > > >> > > > interested in acpidump to see what's in the DSDT.
+> > > > >> > >
+> > > > >> > > I can get an acpidump. Is there a preferred way to share the files, or just
+> > > > >> > > an email attachment?
+> > > > >> >
+> > > > >> > I think by default acpidump produces ASCII that can be directly
+> > > > >> > included in email.  http://vger.kernel.org/majordomo-info.html says
+> > > > >> > 100K is the limit for vger mailing lists.  Or you could open a report
+> > > > >> > at https://bugzilla.kernel.org and attach it there, maybe along with a
+> > > > >> > complete dmesg log and "sudo lspci -vv" output.
+> > > > >>
+> > > > >> Apologies for the delay, I was unable to access the machine while travelling.
+> > > > >>
+> > > > >> https://bugzilla.kernel.org/show_bug.cgi?id=217317
+> > > > >
+> > > > > Thanks for that!  Can you boot a kernel with 6fffbc7ae137 reverted
+> > > > > with this in the kernel parameters:
+> > > > >
+> > > > >   dyndbg="file drivers/acpi/* +p"
+> > > > >
+> > > > > and collect the entire dmesg log?
+> > > >
+> > > > Added to the bugzilla report.
+> > >
+> > > Rafael, Andy, Any ideas why fwnode_device_is_available() would return
+> > > false for a built-in PCI device with a ACPI device entry? The only
+> > > thing I see in the log is it looks like the parent PCI bridge/bus
+> > > doesn't have ACPI device entry (based on "[    0.913389] pci_bus
+> > > 0000:07: No ACPI support"). For DT, if the parent doesn't have a node,
+> > > then the child can't. Not sure on ACPI.
+> >
+> > Thanks for the Cc'ing. I haven't checked anything yet, but from the above it
+> > sounds like a BIOS issue. If PCI has no ACPI companion tree, then why the heck
+> > one of the devices has the entry? I'm not even sure this is allowed by ACPI
+> > specification, but as I said, I just solely used the above mail.
+>
+> ACPI r6.5, sec 6.3.7, about _STA says:
+>
+>   - Bit [0] - Set if the device is present.
+>   - Bit [1] - Set if the device is enabled and decoding its resources.
+>   - Bit [3] - Set if the device is functioning properly (cleared if
+>     device failed its diagnostics).
+>
+>   ...
+>
+>   If a device is present on an enumerable bus, then _STA must not
+>   return 0. In that case, bit[0] must be set and if the status of the
+>   device can be determined through a bus-specific enumeration and
+>   discovery mechanism, it must be reflected by the values of bit[1]
+>   and bit[3], even though the OSPM is not required to take them into
+>   account.
+>
+> Since PCI *is* an enumerable bus, I don't think we can use _STA to
+> decide whether a PCI device is present.
 
+You are right, _STA can't be used for that.
 
-On 4/20/23 5:59 AM, Kai-Heng Feng wrote:
-> PCIe service that shares IRQ with PME may cause spurious wakeup on
-> system suspend.
-> 
-> PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
-> that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
-> (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-> much here to disable AER during system suspend.
-> 
-> This is very similar to previous attempts to suspend AER and DPC [1],
-> but with a different reason.
-> 
-> [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.feng@canonical.com/
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
+> We can use _STA to decide whether a host bridge is present, of course,
+> but that doesn't help here because the host bridge in question is
+> PNP0A08:00 that leads to [bus 00-3d], and it is present.
+>
+> I don't know exactly what path led to the igb issue, but I don't think
+> we need to figure that out.  I think we just need to avoid the use of
+> _STA in fwnode_device_is_available().
 
-In Patch #1, you skip clearing AER errors in the resume path, right? So if we disable
-interrupts here, will AER driver not be notified on resume path error?
+I agree.  It is incorrect.
 
-> v3:
->  - No change.
-> 
-> v2:
->  - Only disable AER IRQ.
->  - No more check on PME IRQ#.
->  - Use helper.
-> 
->  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 1420e1f27105..9c07fdbeb52d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
->  	return 0;
->  }
->  
-> +static int aer_suspend(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	aer_disable_irq(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int aer_resume(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	aer_enable_irq(pdev);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->   * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver = {
->  	.service	= PCIE_PORT_SERVICE_AER,
->  
->  	.probe		= aer_probe,
-> +	.suspend	= aer_suspend,
-> +	.resume		= aer_resume,
->  	.remove		= aer_remove,
->  };
->  
+> 6fffbc7ae137 ("PCI: Honor firmware's device disabled status") appeared
+> in v6.3-rc1, so I think we need to revert or fix it before v6.3, which
+> will probably be tagged Sunday (and I'll be on vacation
+> Friday-Monday).
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Yes, please revert this one ASAP.
+
+Cheers,
+Rafael
