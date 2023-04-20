@@ -2,126 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 913666E8E14
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 11:30:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 385686E8E6A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 11:45:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234087AbjDTJa4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 05:30:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47182 "EHLO
+        id S234330AbjDTJpR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 05:45:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229775AbjDTJaz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 05:30:55 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A24192
-        for <linux-pci@vger.kernel.org>; Thu, 20 Apr 2023 02:30:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681983009;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cDEs65ZY4C9svszuIZjn2vdR/JFQxFQIyNLFZevs4tE=;
-        b=cIYoCgnBIPSd7QH2/2Lm/7TiivV9+D26d+LPdsSqbOD6YuyML1hb6TBo/ais3rG0+K/EBm
-        XfSPV4noL2NBrTYSsPZ3eNAudrCYhVddrzB15hpWLV8dtzdlL8K1Iw+ZlshSicMPR56e7O
-        rovrifU1UOOImd2IRGeE7DrNJbD1mKs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-qyRGLDggMQ2VU3DDhT6s-w-1; Thu, 20 Apr 2023 05:30:08 -0400
-X-MC-Unique: qyRGLDggMQ2VU3DDhT6s-w-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-3f171d201afso3094225e9.0
-        for <linux-pci@vger.kernel.org>; Thu, 20 Apr 2023 02:30:07 -0700 (PDT)
+        with ESMTP id S234566AbjDTJou (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 05:44:50 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 590E972B7;
+        Thu, 20 Apr 2023 02:43:37 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id d2e1a72fcca58-63b7b54642cso668970b3a.0;
+        Thu, 20 Apr 2023 02:43:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681983817; x=1684575817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=GL/FkQKGL/P5lWSjTq7c3Pg0SaQ1eNQckaMYnyh+DUk=;
+        b=RhhzFDMKZ1kIqLGtozulZoedaUTHVms6wb7ySjjZL/ubfFgxvE0Gx0jC0mJUqdVEBt
+         VWot2xAfxFc2dHWxMlcwBWGk38ZAb0/RmnJSJInmJeV5nVgo+2DqCuZjio543R/OFDLo
+         1o0lyU+jTpPauvg2a22g928ZVIItgitUyJ1AKWdtaxMUY1lbHa0JsPsisdmEtHTFUV9L
+         WVjvuanX6Syivyj1VKvYFwf16MlYl2w9SaigCfuQ9xQ/NxrYuc/tEMjVkpSfTMSK/pEE
+         CRabIEBsaFWUt/w+RI6I36yNrxaqrr7xG3JFU8uxfsAW/EqWMM9z7+flucJv0yPWtcr4
+         z4fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681983007; x=1684575007;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cDEs65ZY4C9svszuIZjn2vdR/JFQxFQIyNLFZevs4tE=;
-        b=XIZSreCaMitWsRRxQl816wXML2NJxvGbo4lHuvEjROBeMQbLpkqAOc34+Tt1BmTE2b
-         y7XTj3OX1U5FVF+ciHtUBjuep87wILcUwRj3Z/xYfs6Ns7hL+On8hm8O720agIXRe+uI
-         ysYcw7wxnKP+vZf5HdCCfFDBU/KBvOl99gL9xW6fzTstKYayYROyG8K6yDLp/5RhOh6a
-         kK0uA5crjfTliFlcyFOAGTTAzNo/3VWPtP6fpDHet0Ei7HbxABfeuZhRmPRuFUHJFm6U
-         tSm62g/T4tGucW600XjLLv7e6RJciyG0bZtBdAPzjOzk1S4fTFjsX4wv70Lq1+ahf8To
-         6JaA==
-X-Gm-Message-State: AAQBX9cjgSdLO3MFicPzIRpvjbWfcTXVehZxn70ha08gnb6xJmM6QYVG
-        icu4D4KKKo+1w/7dS0VQe4qPfz1BKPo0qbudHEoduKYRWGCcgu/oxmzjB1sLq1nFqvg4TIB6w8B
-        3hReBXp+ChSah56gs8Xr4
-X-Received: by 2002:adf:efca:0:b0:2f5:5538:2589 with SMTP id i10-20020adfefca000000b002f555382589mr845791wrp.31.1681983007068;
-        Thu, 20 Apr 2023 02:30:07 -0700 (PDT)
-X-Google-Smtp-Source: AKy350YMtYMcOObUPin35/aM2AJ1xnbjW42cLOVhTBp9bVJzETGAUNOgAqF9WAusiYj56KscOLEdXw==
-X-Received: by 2002:adf:efca:0:b0:2f5:5538:2589 with SMTP id i10-20020adfefca000000b002f555382589mr845771wrp.31.1681983006729;
-        Thu, 20 Apr 2023 02:30:06 -0700 (PDT)
-Received: from fedora (g2.ign.cz. [91.219.240.8])
-        by smtp.gmail.com with ESMTPSA id t15-20020adfe44f000000b002f00793bd7asm1478740wrm.27.2023.04.20.02.30.05
+        d=1e100.net; s=20221208; t=1681983817; x=1684575817;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=GL/FkQKGL/P5lWSjTq7c3Pg0SaQ1eNQckaMYnyh+DUk=;
+        b=QkWkkBetIIkD9U1f1uExW3Uu1rsJ0GJXuspsQq8QCs7V5Mnjbzhgb2xiJo2wUY5GzG
+         hUASMZgUutiQxBNfE1GMKbc+NhblZVu1Idu+NwuaBw3k4WuIZpRaugaS/4cELltpqExX
+         n358F/E9wVLzy7aXtEyrteGdQqn8feOvHMLhvHCZWK96QeNSVBC8Q27Pu9Wqy+xmtql9
+         aSLW+O3gE0sDFRekLe6wWakIGYMzDKYV3jAdL9wLasEsNDAcBhUCJ9AekEFDQQWNHPPs
+         6e17WuyVCF10mpG4D9JqKc/cXeX4QuVpikoF/BFffhKYYpg7LNy1bmc0hyR4i+dyJ5yh
+         EJTQ==
+X-Gm-Message-State: AAQBX9dMOH+g0t/AE3mNqhOxFdqo23wAcDVl0dhhRGWcGEr2adXwio7D
+        zBXLHTCEjLFwluWWrJyf74r0cj4NyYV6Y7Fu
+X-Google-Smtp-Source: AKy350agXIMzaDUBQ+NbW1h2m4IjePZmdznEitmY6vZEOJ2v+aRFxDaXT2nUm7/CTZEF5+eUe0EUkg==
+X-Received: by 2002:a05:6a20:440f:b0:de:13c4:5529 with SMTP id ce15-20020a056a20440f00b000de13c45529mr1428465pzb.62.1681983816675;
+        Thu, 20 Apr 2023 02:43:36 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.141.8])
+        by smtp.gmail.com with ESMTPSA id t1-20020a62d141000000b0063b8ce0e860sm874336pfl.21.2023.04.20.02.43.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 02:30:06 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>, Rob Herring <robh@kernel.org>
-Cc:     Donald Hunter <donald.hunter@gmail.com>,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        regressions@lists.linux.dev, mstowe@redhat.com
-Subject: Re: [PATCH] PCI: Restrict device disabled status check to DT
-In-Reply-To: <20230419202042.GA223738@bhelgaas>
-References: <20230419202042.GA223738@bhelgaas>
-Date:   Thu, 20 Apr 2023 11:30:04 +0200
-Message-ID: <87leimnboj.fsf@redhat.com>
+        Thu, 20 Apr 2023 02:43:36 -0700 (PDT)
+From:   korantwork@gmail.com
+To:     dlemoal@kernel.org, helgaas@kernel.org,
+        nirmal.patel@linux.intel.com, kbusch@kernel.org,
+        jonathan.derrick@linux.dev, lpieralisi@kernel.org
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Xinghui Li <korantli@tencent.com>
+Subject: [PATCH v2 0/2] PCI: vmd: Fix two issues in VMD reported by Smatch
+Date:   Thu, 20 Apr 2023 17:43:30 +0800
+Message-Id: <20230420094332.1507900-1-korantwork@gmail.com>
+X-Mailer: git-send-email 2.31.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+From: Xinghui Li <korantli@tencent.com>
 
-> [+cc Vitaly, Jesse, Tony, Andy, regressions, regarding reports of
-> hang or crash during boot in igb driver, some with AWS Xen]
->
-> On Wed, Apr 19, 2023 at 02:35:13PM -0500, Rob Herring wrote:
->> Commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
->> checked the firmware device status for both DT and ACPI devices. That
->> caused a regression in some ACPI systems. The exact reason isn't clear.
->> It's possibly a firmware bug. For now, at least, refactor the check to
->> be for DT based systems only.
->> 
->> Note that the original implementation leaked a refcount which is now
->> correctly handled.
->> 
->> Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
->> Link: https://lore.kernel.org/all/m2fs9lgndw.fsf@gmail.com/
->> Reported-by: Donald Hunter <donald.hunter@gmail.com>
->> Cc: Binbin Zhou <zhoubinbin@loongson.cn>
->> Cc: Liu Peibao <liupeibao@loongson.cn>
->> Cc: Huacai Chen <chenhuacai@loongson.cn>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->
-> Applied to for-linus for (hopefully) v6.3.  I added:
->
->   [bhelgaas: Per ACPI r6.5, sec 6.3.7, for devices on an enumerable
->   bus, _STA must return with bit[0] ("device is present") set]
->
->   Link: https://bugzilla.kernel.org/show_bug.cgi?id=217317
->
-> It would be really great if anybody who has seen this issue could test
-> and report whether this patch solves it.
->
+Fix two issues when building kernel with Smatch check.
 
-[Cc: Myron]
+v1->v2:
+According to Damien's suggestion, I split it from 1 patch to 2 different
+patches. Change 'inconsistent indenting' patch's title from 'fix' to
+'clean up'.
 
-I can confirm the patch fixes the issue I've reported with AWS Xen
-instances, so:
+Xinghui Li (2):
+  PCI: vmd: Fix one uninitialized symbol error reported by Smatch
+  PCI: vmd: Clean up one inconsistent indenting warn reported by Smatch
 
-Tested-by:  Vitaly Kuznetsov <vkuznets@redhat.com>
+ drivers/pci/controller/vmd.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 -- 
-Vitaly
+2.31.1
 
