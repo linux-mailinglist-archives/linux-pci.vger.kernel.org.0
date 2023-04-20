@@ -2,76 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 553B46E9D54
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 22:40:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F35C6E9D5A
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 22:41:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231987AbjDTUkG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 16:40:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56620 "EHLO
+        id S231929AbjDTUlg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 16:41:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231166AbjDTUkE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 16:40:04 -0400
-Received: from mail-lf1-x12c.google.com (mail-lf1-x12c.google.com [IPv6:2a00:1450:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E310A10D8;
-        Thu, 20 Apr 2023 13:40:02 -0700 (PDT)
-Received: by mail-lf1-x12c.google.com with SMTP id 2adb3069b0e04-4ec81245ae1so876855e87.0;
-        Thu, 20 Apr 2023 13:40:02 -0700 (PDT)
+        with ESMTP id S229599AbjDTUle (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 16:41:34 -0400
+Received: from mail-lf1-x12d.google.com (mail-lf1-x12d.google.com [IPv6:2a00:1450:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D4F10D8;
+        Thu, 20 Apr 2023 13:41:33 -0700 (PDT)
+Received: by mail-lf1-x12d.google.com with SMTP id 2adb3069b0e04-4edbd6cc46bso868621e87.2;
+        Thu, 20 Apr 2023 13:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682023201; x=1684615201;
+        d=gmail.com; s=20221208; t=1682023292; x=1684615292;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2AUbQ+MnIhboEjV+/fmnhA5xYvv9W6JDCwMUV4DMmoc=;
-        b=NuD9Tf7QOTcnmEjUEJinD5uDjBkNph/F1HQvY4UIBtzt25HuFOyEQ8MZjzCiZKgyIr
-         gvdmRL5cmXZ7V9y4PB2iFd9Disf7TCpgcSFODkdxOI7BkS1GQ20s2O9XimOiGo8XYvRR
-         InHFCK5MUoXdsbpSpaPhtdfWTNqzkUoSC2A/HFa+Hugsl6dTAK62wODI/yEBWM2HbGXb
-         rVHgL1niDyHI46E3BQjkJ1Rr8hTB/+/CK7SKn5hw5PSp1fehYU/vuoXA01rS7jBNQSi+
-         B3hf+w9DQ+UKKuIgVY2KNSiMYets+srEIruy6/kOzn4UMxTV0Tsy9zUdRtsCS5+XdybX
-         WQMw==
+        bh=KhElb28iR/NglY9VogLv5MYd3xHZWkf+h78YlCqS+po=;
+        b=AU4W0d+wvkmrS7Aebkzd5dU+qDMceAWNhvQ5wwOMSmKmxeAcf/kDaMk6yC0bG2mgrV
+         xI4/K1re9QObI4Pigjzw8WPQjRoWSYqP5LcYvLGScAWnYwsbMcnyaJ2+6qbAhJPhHhrW
+         BjUjxmlpuWNTdu8/MR8dbz7p1onCm3ehtgbohy7geffsn/Z0gqlZrKN3NaaQU0wNug0l
+         C8go76PmFvM/+ksa9h9Nf1/VNQtEiBCW1RX7eBfPjL/cP9T3p/zVXZZzindeI3/5uT/n
+         QVv1DZc0UnIVuSkU/CBOVFhNNIPBBCyJRS0vzCw9TbJkAZaYS0ho/GJlFlIP1Fd2VH7v
+         fWJg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682023201; x=1684615201;
+        d=1e100.net; s=20221208; t=1682023292; x=1684615292;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=2AUbQ+MnIhboEjV+/fmnhA5xYvv9W6JDCwMUV4DMmoc=;
-        b=VFmC99n5NcETr6CLQX+kfyAZQDwAsmjKIRkQWVW0erYCvfXHt6o7BttVVw5K4Mv00o
-         FumEp8X7bitG7cYCO3+tGHWOHNYnSwS9e9e0lCsv3xw6AzrdUQEypdjSl7g0Hoa9svn/
-         WCFSxjT+sLXUG4MfTzZz+wUmRpOGTCdyUPwQsa5iz4o0AMikn5Raqu8GR0AjG7WdpLnu
-         DGtLkVCFu2z8ur5x4oig8sZH1QFCuzHGBqd0n8FAgJY98D2vkfmUaGrAh+18YJIxyEij
-         IASbIwDaE6mCBs0V5uwqPKOQ6CZV5QkLdcntfwcK1gy23d6KX0PTxXkI2ojFcjvI5Zy5
-         f3Og==
-X-Gm-Message-State: AAQBX9cvYCkzchWlnR8McyQYZDupJ4I5gcYkONMmFhfYPIjAmlySVA8S
-        daGB9z420GL8JaFJR0t0qhI=
-X-Google-Smtp-Source: AKy350Yg05neSwu4t2MBMCcOjh/n1P7hxNGl3ovJLFfWIAQBo8kYEJM3ks+Xncy5Dg7TSmksqVSW3A==
-X-Received: by 2002:ac2:5103:0:b0:4ed:be06:9e9a with SMTP id q3-20020ac25103000000b004edbe069e9amr713354lfb.26.1682023201014;
-        Thu, 20 Apr 2023 13:40:01 -0700 (PDT)
+        bh=KhElb28iR/NglY9VogLv5MYd3xHZWkf+h78YlCqS+po=;
+        b=VITICV+tqRg8zZvys8r47GrTpgIlIA/bSSe1TZxJ2fxIACLYvUOOMWacid0fHA7x6m
+         RrVkmZLlFwT3z9OJTy/dP/2U9SiO6qu25u/GVrkl6EOZC6PklfnGgoI2M+q5zr+c1+Gh
+         QKa+UCEZCIFoRNCjYwHEfyhBwczSk+SNuye82Cwm61NKUTob69HRb5lJTnJ7T7D5Kd4z
+         U64htlfDiReYNVmUUpcg7ifyQap/Vs2BBQ96EWc7AWecHPm5g791GbLipgZviPUCcTcr
+         ssq+PFUvksKiWu/ls9vEVMEF3+D+M90WGG303BRoK7v3ySbICaAuFBzNRZpAh4twumc0
+         TeoQ==
+X-Gm-Message-State: AAQBX9fFagHmgQuDyTxhlpytfe3cwitlYLeLG4nLMoPlK+D4IBFvkr3s
+        OixOURwHcF0srmAlgJ4sDh2uu9t9HOY=
+X-Google-Smtp-Source: AKy350Z473TcrgsGDXrVNj/lHuZU764Y3cd0IAp2RSySzdhR8ZSXdcPaQvw+nKuVREx4tV6sTet1ug==
+X-Received: by 2002:a05:6512:38af:b0:4ed:d216:8217 with SMTP id o15-20020a05651238af00b004edd2168217mr668157lft.11.1682023291752;
+        Thu, 20 Apr 2023 13:41:31 -0700 (PDT)
 Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id e14-20020ac2546e000000b004eaeb0a984csm326772lfn.88.2023.04.20.13.39.59
+        by smtp.gmail.com with ESMTPSA id x25-20020ac259d9000000b004ec89319b03sm324810lfn.211.2023.04.20.13.41.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 13:40:00 -0700 (PDT)
-Date:   Thu, 20 Apr 2023 23:39:58 +0300
+        Thu, 20 Apr 2023 13:41:31 -0700 (PDT)
+Date:   Thu, 20 Apr 2023 23:41:29 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        linux-pci@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
-Message-ID: <20230420203958.vozr25hbfx2d7gjt@mobilestation>
-References: <20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     jingoohan1@gmail.com, mani@kernel.org,
+        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
+        robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
+        kishon@kernel.org, marek.vasut+renesas@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v12 00/19] PCI: rcar-gen4: Add R-Car Gen4 PCIe support
+Message-ID: <20230420204129.azbopwklu2yetfrf@mobilestation>
+References: <20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru>
+In-Reply-To: <20230414061622.2930995-1-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -82,117 +74,103 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn, Vinod, Mani
+Hi Yoshihiro
 
-On Fri, Apr 14, 2023 at 05:18:18AM +0300, Serge Semin wrote:
-> It turns out the recent DW PCIe-related patchset was merged in with
-> several relatively trivial issues left unsettled (noted by Bjorn and
-> Manivannan). All of these lefovers have been fixed in this patchset.
-> Namely the series starts with two bug-fixes. The first one concerns the
-> improper link-mode initialization in case if the CDM-check is enabled. The
-> second unfortunate mistake I made in the IP-core version type helper. In
-> particular instead of testing the IP-core version type the macro function
-> referred to the just IP-core version which obviously wasn't what I
-> intended.
-> 
-> Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
-> message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
-> Secondly the Baikal-T1 PCIe Host driver is converted to perform the
-> asynchronous probe type which saved us of about 15% of bootup time if no any
-> PCIe peripheral device attached to the port.
-> 
-> Then the patchset contains the Baikal-T1 PCIe driver fix. The
-> corresponding patch removes the false error message printed during the
-> controller probe procedure. I accidentally added the unconditional
-> dev_err_probe() method invocation. It was obviously wrong.
-> 
-> Then two trivial cleanups are introduced. The first one concerns the
-> duplicated fast-link-mode flag unsetting. The second one implies
-> dropping a redundant empty line from the dw_pcie_link_set_max_speed()
-> function.
-> 
-> The series continues with a patch inspired by the last @Bjorn note
-> regarding the generic resources request interface. As @Bjorn correctly
-> said it would be nice to have the new interface used wider in the DW PCIe
-> subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
-> PCIe driver can be easily converted to using the generic clock names.
-> That's what is done in the noted patch.
-> 
-> The patchset is closed with a series of MAINTAINERS-list related patches.
-> Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
-> update the MAINTAINER-list with the new files added in the framework of
-> that procedure. All the snps,dw-pcie* schemas shall be maintained by the
-> DW PCIe core driver maintainers. Secondly seeing how long it took for my
-> patchsets to review and not having any comments from the original driver
-> maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
-> eDMA drivers. Thus hopefully the new updates review process will be
-> performed with much less latencies. For the same reason @Manivannan is
-> added to the maintainers list of the DW PCIe/eDMA drivers as he already
-> agreed to be in.
+On Fri, Apr 14, 2023 at 03:16:03PM +0900, Yoshihiro Shimoda wrote:
+> Add R-Car S4-8 (R-Car Gen4) PCIe Host and Endpoint support.
+> To support them, modify PCIe DesignWare common codes.
 
-@Bjorn, anything to say about this patchset? If you are ok with the
-changes please merge in the PCI patches.
-@Vinod, as you requested the series has been extended with the patches
-based on v3 discussion. Please have a look.
-@Mani, the series has been updated with the patches adding you as the
-DW PCIe/eDMA maintainer as per your permission retrieved on v3.
+Thanks for the updates. I'll have a look at the series on the next
+week.
 
 -Serge(y)
 
 > 
-> Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v2:
-> - Rebase onto the kernel 6.3-rc2.
+> Changes from v11:
+> https://lore.kernel.org/linux-pci/20230310123510.675685-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Based on next-20230413
+>  - Based on the following cleanups patches:
+>    [PATCH v4 00/14] PCI: dwc: Relatively simple fixes and cleanups
+>    https://lore.kernel.org/linux-pci/20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru/
+>  - Drop a fixed patch of pci-epf-test because I have submitted it independently.
+>  - Split patches about adding dw_pcie_link_set_max_* functions.
+>  - Split patches about modify __dw_pcie_prog_outbound_atu().
+>  - Add description about num lanes into the commit log.
+>  - Add some macros into pci_regs.h and pci.h.
+>  - Add comment about disabling bars in pcie-rcar-gen4-host.c.
+>  - Set MAX_MSI_IRQS to num_vectors for handling 32 MSIs.
+>  - Add .ep_deinit().
+>  - Add retrain link handling of PCIe Host mode for detecting PCIe Gen4.
+>  - Modify some minor things.
 > 
-> Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v3:
-> - Drop the patch:
->   [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
->   and rebase onto the already submitted by @Yoshihiro fix:
->   commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
-> - Just resend.
+> Changes from v10:
+> https://lore.kernel.org/linux-pci/20230308082352.491561-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Fix dt-bindings doc for endpoint (reported by Rob's bot).
+>  - Add reg and reg-names to the dt-bindings doc of host.
+>  - Fix examples in the dt-bindings docs of both host and endpoint.
+>  - Add R-Car S4-8 device ID into the pci_test_endpoint driver.
 > 
-> Link: https://lore.kernel.org/linux-pci/20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru/
-> Changelog v4:
-> - Demote @Gustavo to being DW PCIe/eDMA drivers reviewer:
->   [PATCH v4 9/14] MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
->   [PATCH v4 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
-> - Add Manivannan to the DW PCIe/eDMA drivers maintainers list:
->   [PATCH v4 10/14] MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
->   [PATCH v4 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+> Changes from v9:
+> https://lore.kernel.org/linux-pci/20230210134917.2909314-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Based on next-20230306
+>  - Add bug fix patches into this patch series.
+>    https://lore.kernel.org/linux-pci/20230216092012.3256440-1-yoshihiro.shimoda.uh@renesas.com/
+>    https://lore.kernel.org/linux-pci/20230222015327.3585691-1-yoshihiro.shimoda.uh@renesas.com/
+>  - Add maximum for max-link-speed and num-lanes to dt-bindings of both host and endpoint.
+>  - Add max-functions to dt-bindings of endpoint.
+>  - Use reg-names "app" on endpoint.
+>  - Remove unnecessary linkup and wait process in rcar_gen4_pcie_host_init().
+>  - Remove unnecessary macros in pcie-rcar-gen4.h.
+>  - Use dbi2 to write BAR mask registers.
+>  - Remove no_msix and intx_by_atu flags.
+>  - Reduce __dw_pcie_prog_outbound_atu() arguments.
+>  - Add dw_pcie_num_lanes_setup() to setup num_lanes.
+>  - Refactor dw_pcie_setup() to avoid PCIE_PORT_LINK_CONTROL writing twice.
 > 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
-> Cc: linux-pci@vger.kernel.org
-> Cc: dmaengine@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
+> Yoshihiro Shimoda (19):
+>   PCI: Add PCI_EXP_LNKCAP_MLW macros
+>   PCI: Add INtx Mechanism Messages macros
+>   PCI: Add PCI_HEADER_TYPE_MULTI_FUNC
+>   PCI: dwc: Add dw_pcie_link_set_max_link_width()
+>   PCI: dwc: Add dw_pcie_link_set_max_width()
+>   PCI: dwc: Add dw_pcie_link_set_max_cap_width()
+>   PCI: dwc: Expose dw_pcie_ep_exit() to module
+>   PCI: dwc: Introduce struct dw_pcie_outbound_atu
+>   PCI: dwc: Add members into struct dw_pcie_outbound_atu
+>   PCI: dwc: Change arguments of dw_pcie_prog_ep_outbound_atu()
+>   PCI: dwc: Add support for triggering legacy IRQs
+>   PCI: dwc: Add EDMA_UNROLL capability flag
+>   PCI: dwc: Introduce .ep_pre_init() and .ep_deinit()
+>   dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Host
+>   dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe Endpoint
+>   PCI: rcar-gen4: Add R-Car Gen4 PCIe Host support
+>   PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint support
+>   MAINTAINERS: Update PCI DRIVER FOR RENESAS R-CAR for R-Car Gen4
+>   misc: pci_endpoint_test: Add Device ID for R-Car S4-8 PCIe controller
 > 
-> Serge Semin (14):
->   PCI: dwc: Fix erroneous version type test helper
->   PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
->   PCI: bt1: Enable async probe type
->   PCI: bt1: Fix printing false error message
->   PCI: dwc: Drop duplicated fast-link-mode flag unsetting
->   PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
->   PCI: visconti: Convert to using generic resources getter
->   MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
->   MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
->   MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
->   MAINTAINERS: Add myself as the DW PCIe core reviewer
->   MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
->   MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
->   MAINTAINERS: Add myself as the DW eDMA driver reviewer
-> 
->  MAINTAINERS                                   | 11 ++++--
->  drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
->  .../pci/controller/dwc/pcie-designware-host.c |  2 +-
->  drivers/pci/controller/dwc/pcie-designware.c  |  2 -
->  drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
->  drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
->  6 files changed, 34 insertions(+), 30 deletions(-)
+>  .../bindings/pci/rcar-gen4-pci-ep.yaml        |  98 +++++++++
+>  .../bindings/pci/rcar-gen4-pci-host.yaml      | 109 ++++++++++
+>  MAINTAINERS                                   |   1 +
+>  drivers/misc/pci_endpoint_test.c              |   4 +
+>  drivers/pci/controller/dwc/Kconfig            |  18 ++
+>  drivers/pci/controller/dwc/Makefile           |   4 +
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  93 ++++++--
+>  drivers/pci/controller/dwc/pcie-designware.c  | 201 +++++++++++-------
+>  drivers/pci/controller/dwc/pcie-designware.h  |  27 ++-
+>  .../pci/controller/dwc/pcie-rcar-gen4-ep.c    | 166 +++++++++++++++
+>  .../pci/controller/dwc/pcie-rcar-gen4-host.c  | 134 ++++++++++++
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.c   | 187 ++++++++++++++++
+>  drivers/pci/controller/dwc/pcie-rcar-gen4.h   |  49 +++++
+>  include/linux/pci.h                           |  18 ++
+>  include/uapi/linux/pci_regs.h                 |   7 +
+>  15 files changed, 1020 insertions(+), 96 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
+>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-host.yaml
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-ep.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4-host.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.c
+>  create mode 100644 drivers/pci/controller/dwc/pcie-rcar-gen4.h
 > 
 > -- 
-> 2.40.0
-> 
+> 2.25.1
 > 
