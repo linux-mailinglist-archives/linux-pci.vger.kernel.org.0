@@ -2,174 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B5CF6E8AF1
+	by mail.lfdr.de (Postfix) with ESMTP id 3DCCB6E8AF0
 	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 09:09:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233964AbjDTHJu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 03:09:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57638 "EHLO
+        id S234007AbjDTHJt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 03:09:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233975AbjDTHJn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 03:09:43 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39A8558D;
-        Thu, 20 Apr 2023 00:09:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id d2e1a72fcca58-63b7588005fso676845b3a.0;
-        Thu, 20 Apr 2023 00:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681974559; x=1684566559;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RgJY1hiFKqX+w6LLZ3fee7l/ovDaM7Mvo24SInHmDsg=;
-        b=V+ZsB60bpdgJy7Dn9GZC4OnTeeHxQPWo9NW7+bMfokCuZxbGmstFSeYHez97GS6a42
-         QQAECBG9Pp1B7RogsbqgT3gkj0CZ57DStXkghmir9fl76hBozq60MOapPmNv6VuxEK4a
-         QcupBobZmpVym6dZTlZWINENyzfoQsrVGh/1zMnEca3kYFCaTbjlRAbkTxJfs90kWJtT
-         Bumq5J0dITt379+n84an6gwpXRV/6ke6MMi+dbCK8USYsIURfkiUmL4y9s7oBiwAvo52
-         QDTbvDsFoPfTB8iXVyrgzJnRwp9G33SRbMvePwYf4SB0pkQWQWGiVRhsQXNge/vQI3nZ
-         I/GQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681974559; x=1684566559;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RgJY1hiFKqX+w6LLZ3fee7l/ovDaM7Mvo24SInHmDsg=;
-        b=a1lIhHwWF/ZrnmRY0vfSSbMc+P30Zf7KR1f9QS7m0ARJoUAEC/Qsczz3s81OImOeUr
-         cB18jwZv3hLjlnHXNU9YYepMPoBEKa4JAltytu5ehCwvcuESTigv19ejZNYdYy/0f98W
-         pFMY0iFmMoIif0f0GHPG5hlLLW2Y7XWWOs8TMeWFi6S8epN9Nt7VbQFaFerYmRL6u6zY
-         1eIqqQBJq8akDhgtN1S8Y83xbQa0y7q8FCWnu0UrKIwSI/obCAwHjQCaIlx2w7f0vTaA
-         7sj/QdpbC/xNGDeVPpXb5ksIaNXl5Upvru46mnd6j+9WWxWYpjpaxFwrhatq69XaH9oB
-         8YAA==
-X-Gm-Message-State: AAQBX9foZmCyVzWXPfEshA21IW0w1UVIxDvTA8MjOHvr9ryKou7GhYOO
-        Zech4wZXFP48YGIpaCW7HjI=
-X-Google-Smtp-Source: AKy350Z8+n5KwNdXI9m+pUnlYONRImHCi5g8u9N65BgFlbMvpIkvdtVEjvlMqTmKZcZli4hvS17Ptg==
-X-Received: by 2002:a05:6a20:8e0c:b0:ef:2389:66c5 with SMTP id y12-20020a056a208e0c00b000ef238966c5mr1277801pzj.12.1681974559066;
-        Thu, 20 Apr 2023 00:09:19 -0700 (PDT)
-Received: from localhost.localdomain ([43.132.141.8])
-        by smtp.gmail.com with ESMTPSA id h64-20020a638343000000b0051b603bf22csm503080pge.69.2023.04.20.00.09.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 00:09:18 -0700 (PDT)
-From:   korantwork@gmail.com
-To:     helgaas@kernel.org, nirmal.patel@linux.intel.com,
-        kbusch@kernel.org, jonathan.derrick@linux.dev,
-        lpieralisi@kernel.org
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xinghui Li <korantli@tencent.com>
-Subject: [PATCH v5] PCI: vmd: Add the module param to adjust MSI mode
-Date:   Thu, 20 Apr 2023 15:09:14 +0800
-Message-Id: <20230420070914.1383918-1-korantwork@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S233995AbjDTHJr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 03:09:47 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1A9940DF;
+        Thu, 20 Apr 2023 00:09:22 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id A754921A02;
+        Thu, 20 Apr 2023 07:09:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+        t=1681974561; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g7PEASouucR8lmJyIoRFJDXMLm7lyANi4CRdrHkuzLU=;
+        b=TvbKm/78kC/GPD5SPCtfKG4/kINB4iClfVNCBpPkdHz0LkmsRFpo2A4Mgl1bRXkHq1iNgT
+        PVHivTmlQeqa9uFON13PJW1KWdf8tjTXTqxgryFX+wFsVt2OcgIDkk/iGJGb3nPf60nHj+
+        tKMbZ7l933rKhsqnZf2YG0MhAWzL92Y=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+        s=susede2_ed25519; t=1681974561;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=g7PEASouucR8lmJyIoRFJDXMLm7lyANi4CRdrHkuzLU=;
+        b=1a2dOGXMGpaL8/Nw/4cA7ISuvdAnUgObcmI1+PHG0jfA3+wbaefmPa+sItFbY76ZIkukr+
+        iKf1p70TKYbQgwDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7E36113584;
+        Thu, 20 Apr 2023 07:09:21 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id e8bqHSHlQGSGQAAAMHmgww
+        (envelope-from <tzimmermann@suse.de>); Thu, 20 Apr 2023 07:09:21 +0000
+Message-ID: <e716d245-8aae-5ecc-1304-e8f753b16c55@suse.de>
+Date:   Thu, 20 Apr 2023 09:09:21 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] PCI: Add ASPEED vendor ID
+Content-Language: en-US
+To:     Patrick McLean <chutzpah@gentoo.org>,
+        Dave Airlie <airlied@redhat.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:DRM DRIVER FOR AST SERVER GRAPHICS CHIPS" 
+        <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+References: <20230418225757.1361301-1-chutzpah@gentoo.org>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+In-Reply-To: <20230418225757.1361301-1-chutzpah@gentoo.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------wHqiJap4Z9oPBUe6Q3BcuFku"
+X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Xinghui Li <korantli@tencent.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------wHqiJap4Z9oPBUe6Q3BcuFku
+Content-Type: multipart/mixed; boundary="------------cO3tBNtltCyOuuw8mP0oWYbC";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Patrick McLean <chutzpah@gentoo.org>, Dave Airlie <airlied@redhat.com>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ "open list:DRM DRIVER FOR AST SERVER GRAPHICS CHIPS"
+ <dri-devel@lists.freedesktop.org>, open list <linux-kernel@vger.kernel.org>,
+ "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>
+Message-ID: <e716d245-8aae-5ecc-1304-e8f753b16c55@suse.de>
+Subject: Re: [PATCH] PCI: Add ASPEED vendor ID
+References: <20230418225757.1361301-1-chutzpah@gentoo.org>
+In-Reply-To: <20230418225757.1361301-1-chutzpah@gentoo.org>
 
-In the past, the vmd MSI mode can only be adjusted by configuring
-vmd_ids table. This patch adds another way to adjust MSI mode by
-adjusting module parameter, which allows users easier to adjust the vmd
-according to the I/O scenario without rebuilding driver.
+--------------cO3tBNtltCyOuuw8mP0oWYbC
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-- "disable_msi_bypass=0 or other values":
-  Under normal circumstances, we recommend enable the VMD MSI-X bypass
-  feature, which improves interrupt handling performance by avoiding
-  the VMD MSI-X domain interrupt handler.
+DQoNCkFtIDE5LjA0LjIzIHVtIDAwOjU3IHNjaHJpZWIgUGF0cmljayBNY0xlYW46DQo+IEN1
+cnJlbnRseSB0aGUgQVNQRUVEIFBDSSB2ZW5kb3IgSUQgaXMgZGVmaW5lZCBpbg0KPiBkcml2
+ZXJzL2dwdS9kcm0vYXN0L2FzdF9kcnYuYywgbW92ZSB0aGF0IHRvIGluY2x1ZGUvbGludXgv
+cGNpX2lkcy5oDQo+IHdpdGggYWxsIHRoZSByZXN0IG9mIHRoZSBQQ0kgdmVuZG9yIElEIGRl
+ZmluaXRpb25zLiBSZW5hbWUgdGhlIGRlZmluaXRpb24NCj4gdG8gZm9sbG93IHRoZSBmb3Jt
+YXQgdGhhdCB0aGUgb3RoZXIgZGVmaW5pdGlvbnMgZm9sbG93Lg0KPiANCj4gU2lnbmVkLW9m
+Zi1ieTogUGF0cmljayBNY0xlYW4gPGNodXR6cGFoQGdlbnRvby5vcmc+DQoNClJldmlld2Vk
+LWJ5OiBUaG9tYXMgWmltbWVybWFubiA8dHppbW1lcm1hbm5Ac3VzZS5kZT4NCg0KPiAtLS0N
+Cj4gICBkcml2ZXJzL2dwdS9kcm0vYXN0L2FzdF9kcnYuYyB8IDQgKy0tLQ0KPiAgIGluY2x1
+ZGUvbGludXgvcGNpX2lkcy5oICAgICAgIHwgMiArKw0KPiAgIDIgZmlsZXMgY2hhbmdlZCwg
+MyBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvZ3B1L2RybS9hc3QvYXN0X2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2FzdC9hc3Rf
+ZHJ2LmMNCj4gaW5kZXggZDc4ODUyYzdjZjViLi4yMzJlNzk3NzkzYjYgMTAwNjQ0DQo+IC0t
+LSBhL2RyaXZlcnMvZ3B1L2RybS9hc3QvYXN0X2Rydi5jDQo+ICsrKyBiL2RyaXZlcnMvZ3B1
+L2RybS9hc3QvYXN0X2Rydi5jDQo+IEBAIC03MCwxMiArNzAsMTAgQEAgc3RhdGljIGNvbnN0
+IHN0cnVjdCBkcm1fZHJpdmVyIGFzdF9kcml2ZXIgPSB7DQo+ICAgICogUENJIGRyaXZlcg0K
+PiAgICAqLw0KPiAgIA0KPiAtI2RlZmluZSBQQ0lfVkVORE9SX0FTUEVFRCAweDFhMDMNCj4g
+LQ0KPiAgICNkZWZpbmUgQVNUX1ZHQV9ERVZJQ0UoaWQsIGluZm8pIHsJCVwNCj4gICAJLmNs
+YXNzID0gUENJX0JBU0VfQ0xBU1NfRElTUExBWSA8PCAxNiwJXA0KPiAgIAkuY2xhc3NfbWFz
+ayA9IDB4ZmYwMDAwLAkJCVwNCj4gLQkudmVuZG9yID0gUENJX1ZFTkRPUl9BU1BFRUQsCQkJ
+XA0KPiArCS52ZW5kb3IgPSBQQ0lfVkVORE9SX0lEX0FTUEVFRCwJCQlcDQo+ICAgCS5kZXZp
+Y2UgPSBpZCwJCQkJXA0KPiAgIAkuc3VidmVuZG9yID0gUENJX0FOWV9JRCwJCVwNCj4gICAJ
+LnN1YmRldmljZSA9IFBDSV9BTllfSUQsCQlcDQo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
+bnV4L3BjaV9pZHMuaCBiL2luY2x1ZGUvbGludXgvcGNpX2lkcy5oDQo+IGluZGV4IDQ1YzNk
+NjJlNjE2ZC4uNDBlMDRlODhjYTVhIDEwMDY0NA0KPiAtLS0gYS9pbmNsdWRlL2xpbnV4L3Bj
+aV9pZHMuaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L3BjaV9pZHMuaA0KPiBAQCAtMjU1Myw2
+ICsyNTUzLDggQEANCj4gICAjZGVmaW5lIFBDSV9ERVZJQ0VfSURfTkVUUk9OT01FX05GUDM4
+MDBfVkYJMHgzODAzDQo+ICAgI2RlZmluZSBQQ0lfREVWSUNFX0lEX05FVFJPTk9NRV9ORlA2
+MDAwX1ZGCTB4NjAwMw0KPiAgIA0KPiArI2RlZmluZSBQQ0lfVkVORE9SX0lEX0FTUEVFRAkJ
+MHgxYTAzDQo+ICsNCj4gICAjZGVmaW5lIFBDSV9WRU5ET1JfSURfUU1JCQkweDFhMzINCj4g
+ICANCj4gICAjZGVmaW5lIFBDSV9WRU5ET1JfSURfQVpXQVZFCQkweDFhM2INCg0KLS0gDQpU
+aG9tYXMgWmltbWVybWFubg0KR3JhcGhpY3MgRHJpdmVyIERldmVsb3Blcg0KU1VTRSBTb2Z0
+d2FyZSBTb2x1dGlvbnMgR2VybWFueSBHbWJIDQpGcmFua2Vuc3RyYXNzZSAxNDYsIDkwNDYx
+IE51ZXJuYmVyZywgR2VybWFueQ0KR0Y6IEl2byBUb3RldiwgQW5kcmV3IE15ZXJzLCBBbmRy
+ZXcgTWNEb25hbGQsIEJvdWRpZW4gTW9lcm1hbg0KSFJCIDM2ODA5IChBRyBOdWVybmJlcmcp
+DQo=
 
-- "disable_msi_bypass=1":
-  Use this when multiple NVMe devices are mounted on the same PCIe
-  node with a high volume of 4K random I/O. It mitigates excessive
-  pressure on the PCIe node caused by numerous interrupts from NVMe
-  drives, resulting in improved I/O performance. Such as:
+--------------cO3tBNtltCyOuuw8mP0oWYbC--
 
-  In FIO 4K random test when 4 NVME(Gen4) mounted on the same PCIE port:
-    - Enable bypass: read: IOPS=562k, BW=2197MiB/s, io=644GiB
-    - Disable bypass: read: IOPS=1144k, BW=4470MiB/s, io=1310GiB
+--------------wHqiJap4Z9oPBUe6Q3BcuFku
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
 
-As not all devices support VMD MSI-X bypass, this parameter is
-only applicable to devices that support the bypass function and
-have already enabled it, such as VMD_28C0. Besides, this parameter
-does not affect the MSI-X working mode in guest.
+-----BEGIN PGP SIGNATURE-----
 
-Signed-off-by: Xinghui Li <korantli@tencent.com>
----
- drivers/pci/controller/vmd.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRA5SEFAwAAAAAACgkQlh/E3EQov+Bs
+LQ//UxYth6q5sg0WbbQlG2RdG7PCp9c5q0RiYTghI10qc/OKdz/N85mDUYckfD+tEcsaH5XPQVXY
+kZLLFfDFaiU/2m0PQClkEKnTcMRJZNahmZOgwaBuP0kmmkTDsbwzpILpjDLXX/D0JfanlOgmZ9az
+J+uEx37nHr0jK+ee7ELvcC06CsLRMsdG9ux7YFyubbFOnp54VUrMErU8Uth/G4C6o/ALufl+Mb3Z
+ly27DD5fnvkJ18+zz9uGU1jkb7Lb43XsEDF7nADUMmZTeCd49zmTKtCzghk+2hzfl4e3Pr4GKI36
+Se+xuhfbM8zGw3pHwqsWoSGl4Cb16qnOa8WDTKLaToQrmviDRKPvwPsvusHDVvp37y799U7Y7dTI
+mWZVf0wsZnSo7nw4qNrQqohd0e/vbw/ZifsNd7CAYUrTtKqBPsnlS4ALB2Mx+nmQCG1zvzDjW0u/
+EWtcCfMuGsvzmnc0qpscecr9OS1kEauwJpO3uAs4TeMfZ7ECAWcp+y7wTFW0a2fHxoVyxRuCNsyI
+d9ln7CZp8ELiFSkHh8xhQSIuLL/mEsmraPbasCJrUIEECaYJMkYb77vc6100UdiWTG715GJrDNC6
+ewUMWs6VfxfX8eebNq/Xg3+fgqAq2/WyTO7BR3qsIRLvk3XnOIzUHCoMXM1/PQIIDEToBSTbPS7l
+EF8=
+=RQjA
+-----END PGP SIGNATURE-----
 
-diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
-index 990630ec57c6..8ee673810cbf 100644
---- a/drivers/pci/controller/vmd.c
-+++ b/drivers/pci/controller/vmd.c
-@@ -34,6 +34,20 @@
- #define MB2_SHADOW_OFFSET	0x2000
- #define MB2_SHADOW_SIZE		16
- 
-+/*
-+ * The VMD disable_msi_bypass module parameter provides the alternative
-+ * way to adjust MSI mode when loading vmd.ko. This parameter is only applicable
-+ * to devices that both support and have enabled bypass, such as VMD_28C0.
-+ * Besides, it does not affect MSI-X mode in the guest.
-+ *
-+ * 1: disable MSI-X bypass
-+ * other values: not disable MSI-X bypass
-+ */
-+static int disable_msi_bypass;
-+module_param(disable_msi_bypass, int, 0444);
-+MODULE_PARM_DESC(disable_msi_bypass, "Whether to disable MSI-X bypass function.\n"
-+	"\t\t  Only effective on the device supporting bypass, such as 28C0.");
-+
- enum vmd_features {
- 	/*
- 	 * Device may contain registers which hint the physical location of the
-@@ -875,6 +889,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 			return ret;
- 
- 		vmd_set_msi_remapping(vmd, true);
-+		dev_info(&vmd->dev->dev, "init vmd with remapping MSI-X\n");
- 
- 		ret = vmd_create_irq_domain(vmd);
- 		if (ret)
-@@ -887,6 +902,7 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 		irq_domain_update_bus_token(vmd->irq_domain, DOMAIN_BUS_VMD_MSI);
- 	} else {
- 		vmd_set_msi_remapping(vmd, false);
-+		dev_info(&vmd->dev->dev, "init vmd with bypass MSI-X\n");
- 	}
- 
- 	pci_add_resource(&resources, &vmd->resources[0]);
-@@ -955,6 +971,17 @@ static int vmd_enable_domain(struct vmd_dev *vmd, unsigned long features)
- 	return 0;
- }
- 
-+static void vmd_config_msi_bypass_param(unsigned long *features)
-+{
-+	/*
-+	 * Not every VMD device supports and enables bypass MSI-X.
-+	 * Make sure current device has the bypass flag set.
-+	 */
-+	if (disable_msi_bypass == 1 &&
-+	  *features & VMD_FEAT_CAN_BYPASS_MSI_REMAP)
-+		*features &= ~(VMD_FEAT_CAN_BYPASS_MSI_REMAP);
-+}
-+
- static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- {
- 	unsigned long features = (unsigned long) id->driver_data;
-@@ -984,6 +1011,8 @@ static int vmd_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	if (err < 0)
- 		goto out_release_instance;
- 
-+	vmd_config_msi_bypass_param(&features);
-+
- 	vmd->cfgbar = pcim_iomap(dev, VMD_CFGBAR, 0);
- 	if (!vmd->cfgbar) {
- 		err = -ENOMEM;
--- 
-2.31.1
-
+--------------wHqiJap4Z9oPBUe6Q3BcuFku--
