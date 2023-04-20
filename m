@@ -2,89 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D026E9703
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 16:28:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1D726E9757
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 16:39:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbjDTO2C convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 20 Apr 2023 10:28:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50982 "EHLO
+        id S231801AbjDTOjF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 10:39:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34194 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229849AbjDTO2B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 10:28:01 -0400
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37618271C;
-        Thu, 20 Apr 2023 07:28:00 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-54fc337a650so44554077b3.4;
-        Thu, 20 Apr 2023 07:28:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682000879; x=1684592879;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+SOFY2R5CmNUgUkHciJCCV1KTLZWvAaY7EL+I77EmoM=;
-        b=JT7fOY2C23I3g/cAFyNec6XoolyZmaa2ALUWtd7R0lht5Wrmkbql/pX3ufUl9rPGKP
-         jHpPA286rrpu85PsMfu5wp5qj6eJfYcUttcLz5J04+S88mSPPi3f4Q8KAQkuACzgWmM/
-         SNGeaoxALiRaw6ZDzpNgiayL3XUyB2Uh0NNZ2Siuz+6Khkscj2H+RSNc1m9xNEAMlNfx
-         QeM+8tw2ErymTDHT0E9QpfozJtMqoL+zogU5UYHwl4V9vV9Yy76ptnZleanSr4Y9BRx/
-         lkyWnz6gIGVuoWWQ1dwvKBQPU2MIb4mfmJehloUzjjNyN2sNxbYUlEF9zlG4EwcU6xmC
-         KUcQ==
-X-Gm-Message-State: AAQBX9eDWjdgULtP+jkqdxRdZO1U7ce/J4ji4ZCIPMCTcVaEUV6qwQfj
-        iFP9fzXpw7c8aegz2xnkdozFsi83PD2Xhb49
-X-Google-Smtp-Source: AKy350Y8ZchLVd0i6hFpZc2HFV9lP9PXFi5hUgf/Qewj8oT+wJdlkYiiI+ZFqZlfeog5f+bkd5WyKg==
-X-Received: by 2002:a0d:d753:0:b0:552:b9ad:f2e4 with SMTP id z80-20020a0dd753000000b00552b9adf2e4mr977861ywd.51.1682000879208;
-        Thu, 20 Apr 2023 07:27:59 -0700 (PDT)
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
-        by smtp.gmail.com with ESMTPSA id i66-20020a0df845000000b0054601bc6ce2sm359010ywf.118.2023.04.20.07.27.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Apr 2023 07:27:58 -0700 (PDT)
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-54f6a796bd0so43105857b3.12;
-        Thu, 20 Apr 2023 07:27:58 -0700 (PDT)
-X-Received: by 2002:a0d:d406:0:b0:555:d281:173 with SMTP id
- w6-20020a0dd406000000b00555d2810173mr962594ywd.47.1682000878519; Thu, 20 Apr
- 2023 07:27:58 -0700 (PDT)
+        with ESMTP id S229769AbjDTOjE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 10:39:04 -0400
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7596511B;
+        Thu, 20 Apr 2023 07:39:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682001543; x=1713537543;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=X6cExS7IoeCdndXtN18tKJWcJfT4ILOBMtIjbdNVnnQ=;
+  b=DtEwN5Oc94htF25WSBYFKlV5xOvahAgIl1PlCTN7N38EbUhCj6ySCB3h
+   zxCD4XOvfRmJuP6Oj5oi11/8TbWgtybOyl+YZBjo7EtRIBonnGKMo98xv
+   hksVJZiqKsRvmiMoiEX7EaBP74G6+70WwXMGrEMZd+gjqWKxlYA+Pb+ik
+   70Mbo0vbnJa4Q150PV5FkjNOHxTDJAw1X14/cel3g5KqFFSMY3IPai9JZ
+   l2E4k18ncuzkhIFv0oh7qK3qdMampfz2x5n7w5XBFAoHV872NdnwoMEur
+   Bh2q0+2cbrP5hNGkfOZEsQTKvk2wVMME5XgNNXX+oEHdc/9EWp8WQhAEz
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="432030449"
+X-IronPort-AV: E=Sophos;i="5.99,212,1677571200"; 
+   d="scan'208";a="432030449"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 07:39:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="691935092"
+X-IronPort-AV: E=Sophos;i="5.99,212,1677571200"; 
+   d="scan'208";a="691935092"
+Received: from samuelra-mobl7.amr.corp.intel.com (HELO [10.255.229.46]) ([10.255.229.46])
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 07:39:02 -0700
+Message-ID: <e84eda25-dbe9-a108-c4d4-ee3fa746d9ca@linux.intel.com>
+Date:   Thu, 20 Apr 2023 07:39:02 -0700
 MIME-Version: 1.0
-References: <20230323091644.91981-1-yang.lee@linux.alibaba.com>
-In-Reply-To: <20230323091644.91981-1-yang.lee@linux.alibaba.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 20 Apr 2023 16:27:46 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdW_jNor3mEw595OBK1B4UUBM-=iKAGBZZLM0M88atMo9A@mail.gmail.com>
-Message-ID: <CAMuHMdW_jNor3mEw595OBK1B4UUBM-=iKAGBZZLM0M88atMo9A@mail.gmail.com>
-Subject: Re: [PATCH -next] PCI: rcar-gen2: Use devm_platform_get_and_ioremap_resource()
-To:     Yang Li <yang.lee@linux.alibaba.com>
-Cc:     marek.vasut+renesas@gmail.com, yoshihiro.shimoda.uh@renesas.com,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v3 1/4] PCI: Keep AER status in pci_restore_state()
+Content-Language: en-US
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
+Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230420125941.333675-1-kai.heng.feng@canonical.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230420125941.333675-1-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 10:24 AM Yang Li <yang.lee@linux.alibaba.com> wrote:
-> According to commit 890cc39a8799 ("drivers: provide
-> devm_platform_get_and_ioremap_resource()"), convert
-> platform_get_resource(), devm_ioremap_resource() to a single
-> call to devm_platform_get_and_ioremap_resource(), as this is exactly
-> what this function does.
->
-> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Hi Kai,
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 4/20/23 5:59 AM, Kai-Heng Feng wrote:
+> When AER is using the same IRQ as PME, AER interrupt is treated as a
+> wakeup event and it can disrupt system suspend process.
+> 
+> If that happens, the system will report it's woken up by PME IRQ without
+> indicating any AER error since AER status is cleared on resume.
+> 
+> So keep the AER status so users can know the system is woken up by AER
+> instead of PME.
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
 
-Gr{oetje,eeting}s,
+Any history on why it is cleared before? Is it done to hide some resume
+issues?
 
-                        Geert
+> v3:
+>  - No change.
+> 
+> v2:
+>  - New patch.
+> 
+>  drivers/pci/pci.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 7a67611dc5f4..71aead00fc20 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1778,7 +1778,6 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_restore_dpc_state(dev);
+>  	pci_restore_ptm_state(dev);
+>  
+> -	pci_aer_clear_status(dev);
+>  	pci_restore_aer_state(dev);
+>  
+>  	pci_restore_config_space(dev);
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
