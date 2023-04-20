@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E95C6E953D
-	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 15:01:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B812E6E9539
+	for <lists+linux-pci@lfdr.de>; Thu, 20 Apr 2023 15:00:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230208AbjDTNAn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 09:00:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48492 "EHLO
+        id S231262AbjDTNAz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 09:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbjDTNAj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 09:00:39 -0400
+        with ESMTP id S231269AbjDTNAw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 09:00:52 -0400
 Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F0AE65BF;
-        Thu, 20 Apr 2023 06:00:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EA597DA3;
+        Thu, 20 Apr 2023 06:00:45 -0700 (PDT)
 Received: from localhost.localdomain (unknown [10.101.196.174])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 1522241D96;
-        Thu, 20 Apr 2023 13:00:32 +0000 (UTC)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 2C90A3F182;
+        Thu, 20 Apr 2023 13:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1681995636;
-        bh=fLE9tMg1S+y52mJHeepsWqa/wGSHDhaLLeWS3MHOXJQ=;
+        s=20210705; t=1681995640;
+        bh=jsxRECAWKxu6+FKz10CvYEuv0vI1s8ubwhCbdG4uyhM=;
         h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
          MIME-Version;
-        b=kBRGCB11Do1i/99WeIc+Cup6/KSCJIjpC1ztovsh7AlITDxxvZnebv3MCaY377Nwz
-         Xm83QZuSCisFr55orPAQnQvjLWzzjbi8Bs8Zg3JkRTER49/Ehe2FKdcdPd5eX0huVT
-         D7Q7S1XBu7XIeNic0JMgxwXVP3h4AuaNGBjB2WkRf/LAe6cFczDSriOOoCAuHFc6kb
-         yNHcUInDTp5wcGUG6Wb0CtpEo6sPDeisSv9TmhT9tPXu30Nd70xx28CvLjWpR8C8EZ
-         Wqzx+74n0rU2jzhVXnTjc1s7SAKtpRq3vludKSidtsWkROl5EA0gkLYNTdhH3CDkFo
-         uM7HKTSoCBw2Q==
+        b=I2dT33SwEwSdFk7KGFxupIRUuxkjltc/yu7z08vMH3PZWXnsr3zZNi1LO3a7lU81O
+         lHcPGkM3bMbt1guWrUScGOcF0Z+p4wW63hItblzr2U9wcSgpCrVRqpULqUePLf6g4P
+         4v4PS30sBdIXDe7aDnAWa5FgKNx6VottwDGJct1zAJ44wz/8LFZXbP2NTDAYpKP4sI
+         tn4bq3S1tyN2SIMR00A3Tg8z1X4cAfUoE68PkVkUpo3pkg9tD3FNCa3GaKhDDM+9tI
+         gyMbgAz1PYpOB75rMgAgVBCeLg15f7bqL4XRMif8Fl3tjnZv3lU8y01rz4LBSRaH2i
+         20R97yQOvwgMQ==
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
 To:     bhelgaas@google.com
 Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
@@ -40,9 +40,9 @@ Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
         "Oliver O'Halloran" <oohall@gmail.com>,
         linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/4] PCI/AER: Disable AER interrupt on suspend
-Date:   Thu, 20 Apr 2023 20:59:39 +0800
-Message-Id: <20230420125941.333675-3-kai.heng.feng@canonical.com>
+Subject: [PATCH v3 4/4] PCI/DPC: Disable DPC interrupt during suspend
+Date:   Thu, 20 Apr 2023 20:59:40 +0800
+Message-Id: <20230420125941.333675-4-kai.heng.feng@canonical.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230420125941.333675-1-kai.heng.feng@canonical.com>
 References: <20230420125941.333675-1-kai.heng.feng@canonical.com>
@@ -61,10 +61,13 @@ X-Mailing-List: linux-pci@vger.kernel.org
 PCIe service that shares IRQ with PME may cause spurious wakeup on
 system suspend.
 
+Since AER is conditionally disabled in previous patch, also apply the
+same logic to disable DPC which depends on AER to work.
+
 PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
 that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
 (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-much here to disable AER during system suspend.
+much here to disable DPC during system suspend.
 
 This is very similar to previous attempts to suspend AER and DPC [1],
 but with a different reason.
@@ -79,51 +82,54 @@ v3:
  - No change.
 
 v2:
- - Only disable AER IRQ.
+ - Only disable DPC IRQ.
  - No more check on PME IRQ#.
- - Use helper.
 
- drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+ drivers/pci/pcie/dpc.c | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-index 1420e1f27105..9c07fdbeb52d 100644
---- a/drivers/pci/pcie/aer.c
-+++ b/drivers/pci/pcie/aer.c
-@@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
- 	return 0;
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index a5d7c69b764e..98bdefde6df1 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -385,6 +385,30 @@ static int dpc_probe(struct pcie_device *dev)
+ 	return status;
  }
  
-+static int aer_suspend(struct pcie_device *dev)
++static int dpc_suspend(struct pcie_device *dev)
 +{
-+	struct aer_rpc *rpc = get_service_data(dev);
-+	struct pci_dev *pdev = rpc->rpd;
++	struct pci_dev *pdev = dev->port;
++	u16 ctl;
 +
-+	aer_disable_irq(pdev);
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
++	ctl &= ~PCI_EXP_DPC_CTL_INT_EN;
++	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
 +
 +	return 0;
 +}
 +
-+static int aer_resume(struct pcie_device *dev)
++static int dpc_resume(struct pcie_device *dev)
 +{
-+	struct aer_rpc *rpc = get_service_data(dev);
-+	struct pci_dev *pdev = rpc->rpd;
++	struct pci_dev *pdev = dev->port;
++	u16 ctl;
 +
-+	aer_enable_irq(pdev);
++	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
++	ctl |= PCI_EXP_DPC_CTL_INT_EN;
++	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
 +
 +	return 0;
 +}
 +
- /**
-  * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
-  * @dev: pointer to Root Port, RCEC, or RCiEP
-@@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver = {
- 	.service	= PCIE_PORT_SERVICE_AER,
- 
- 	.probe		= aer_probe,
-+	.suspend	= aer_suspend,
-+	.resume		= aer_resume,
- 	.remove		= aer_remove,
+ static void dpc_remove(struct pcie_device *dev)
+ {
+ 	struct pci_dev *pdev = dev->port;
+@@ -400,6 +424,8 @@ static struct pcie_port_service_driver dpcdriver = {
+ 	.port_type	= PCIE_ANY_PORT,
+ 	.service	= PCIE_PORT_SERVICE_DPC,
+ 	.probe		= dpc_probe,
++	.suspend	= dpc_suspend,
++	.resume		= dpc_resume,
+ 	.remove		= dpc_remove,
  };
  
 -- 
