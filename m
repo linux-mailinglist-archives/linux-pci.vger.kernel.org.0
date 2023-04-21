@@ -2,134 +2,120 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 358DC6EB30C
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 22:51:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CD5426EB324
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 22:55:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229578AbjDUUvV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Apr 2023 16:51:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42608 "EHLO
+        id S232357AbjDUUza (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Apr 2023 16:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjDUUvT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 16:51:19 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D34BB1FD8
-        for <linux-pci@vger.kernel.org>; Fri, 21 Apr 2023 13:51:17 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 446B4300037FF;
-        Fri, 21 Apr 2023 22:51:14 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 3909E171760; Fri, 21 Apr 2023 22:51:14 +0200 (CEST)
-Date:   Fri, 21 Apr 2023 22:51:14 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/PM: Shorten pci_bridge_wait_for_secondary_bus()
- wait time for slow links
-Message-ID: <20230421205114.GA24809@wunner.de>
-References: <20230418072808.10431-1-mika.westerberg@linux.intel.com>
+        with ESMTP id S231282AbjDUUz3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 16:55:29 -0400
+Received: from mail-oo1-f44.google.com (mail-oo1-f44.google.com [209.85.161.44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FFD71FD5;
+        Fri, 21 Apr 2023 13:54:53 -0700 (PDT)
+Received: by mail-oo1-f44.google.com with SMTP id 006d021491bc7-546db536a6bso1271871eaf.1;
+        Fri, 21 Apr 2023 13:54:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682110493; x=1684702493;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W84o70SFFAn33dQVLvp99vQMoIhhXVO36lCwloIL3Jk=;
+        b=dwmimoBj5692sLUqgCCW4PgQMVTOROa5+MboUjCApV9CxCHTMBLzDiBYgh6UkkcXXR
+         hYFEw6bEYoFd9O/NB08211YkwpotVln0Wdoi2WHjjDb4aSi6Br/yUPqJLfOgixfxC2tU
+         pVkDYAQpl2M5TT+V4ItbwpYt1nEOVaYGRwNyutH6aSRUoPUXSbEUjPK/X1HpyavdIxQw
+         u9lC8UJWKLOFOzW3BLt09NzFdiO8WIwsHYjSAXMR+ncnzeOWlabgbpeO2LDN4YcMiQPl
+         Qu0Z7R3J0xFWP/sr07zWngI5s1w91OsMDuJJ9NpDkHhvTaiDAEn/V+TMYgEcJqSmy9sd
+         Tswg==
+X-Gm-Message-State: AAQBX9cqzW0T76MaYsKj/EJKIuvxTvFBgEF5VhlA6GvJrhpqBoVUK4fn
+        p3JXyHGf043iTLvlnL5icQ==
+X-Google-Smtp-Source: AKy350bAhxx/BDKWjYLTicqHbDU8c5LjsZeqGtx7qDZou8uAl5wb3yZZpJCfX44nckE5zh0R6I27zg==
+X-Received: by 2002:a05:6808:209f:b0:386:9720:77da with SMTP id s31-20020a056808209f00b00386972077damr3883015oiw.26.1682110492770;
+        Fri, 21 Apr 2023 13:54:52 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id p82-20020acad855000000b00383ef567cfdsm1984996oig.21.2023.04.21.13.54.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Apr 2023 13:54:52 -0700 (PDT)
+Received: (nullmailer pid 1750051 invoked by uid 1000);
+        Fri, 21 Apr 2023 20:54:51 -0000
+Date:   Fri, 21 Apr 2023 15:54:51 -0500
+From:   Rob Herring <robh@kernel.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-rpi-kernel@lists.infradead.org,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Phil Elwell <phil@raspberrypi.com>, james.quinlan@broadcom.com,
+        Cyril Brulebois <kibi@debian.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: brcmstb:
+ brcm,{enable-l1ss,completion-timeout-us} props
+Message-ID: <168211049118.1749998.10567032742795047284.robh@kernel.org>
+References: <20230419165721.29533-1-jim2101024@gmail.com>
+ <20230419165721.29533-2-jim2101024@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230418072808.10431-1-mika.westerberg@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230419165721.29533-2-jim2101024@gmail.com>
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 10:28:08AM +0300, Mika Westerberg wrote:
-> With slow links (<= 5GT/s) active link reporting is not mandatory, so if
-> a device is disconnected during system sleep we might end up waiting for
-> it to respond for ~60s slowing down resume time. PCIe spec r6.0 sec
-> 6.6.1 mandates that the system software must wait for at least 1s before
-> it can determine the device as brokine device so use the minimum
-                                 ^^^^^^^
-				 broken
 
+On Wed, 19 Apr 2023 12:57:18 -0400, Jim Quinlan wrote:
+> This commit introduces two new properties:
+> 
+> brcm,enable-l1ss (bool):
+> 
+>   The Broadcom STB/CM PCIe HW -- a core that is also used by RPi SOCs --
+>   requires the driver probe() to deliberately place the HW one of three
+>   CLKREQ# modes:
+> 
+>   (a) CLKREQ# driven by the RC unconditionally
+>   (b) CLKREQ# driven by the EP for ASPM L0s, L1
+>   (c) Bidirectional CLKREQ#, as used for L1 Substates (L1SS).
+> 
+>   The HW+driver can tell the difference between downstream devices that
+>   need (a) and (b), but does not know when to configure (c).  All devices
+>   should work fine when the driver chooses (a) or (b), but (c) may be
+>   desired to realize the extra power savings that L1SS offers.  So we
+>   introduce the boolean "brcm,enable-l1ss" property to inform the driver
+>   that (c) is desired.  Setting this property only makes sense when the
+>   downstream device is L1SS-capable and the OS is configured to activate
+>   this mode (e.g. policy==superpowersave).
+> 
+>   This property is already present in the Raspian version of Linux, but the
+>   upstream driver implementaion that follows adds more details and discerns
+>   between (a) and (b).
+> 
+> brcm,completion-timeout-us (u32):
+> 
+>   Our HW will cause a CPU abort on any PCI transaction completion abort
+>   error.  It makes sense then to increase the timeout value for this type
+>   of error in hopes that the response is merely delayed.  Further,
+>   L1SS-capable devices may have a long L1SS exit time and may require a
+>   custom timeout value: we've been asked by our customers to make this
+>   configurable for just this reason.
+> 
+> Signed-off-by: Jim Quinlan <jim2101024@gmail.com>
+> ---
+>  .../devicetree/bindings/pci/brcm,stb-pcie.yaml   | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
 
-> @@ -5027,14 +5032,29 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
-> -	} else {
-> -		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> -			delay);
-> -		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> -			/* Did not train, no need to wait any further */
-> -			pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> -			return -ENOTTY;
-> +
-> +		/*
-> +		 * If the port supports active link reporting we now check
-> +		 * whether the link is active and if not bail out early with
-> +		 * the assumption that the device is not present anymore.
-> +		 */
-> +		if (dev->link_active_reporting) {
-> +			u16 status;
-> +
-> +			pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-> +			if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> +				return -ENOTTY;
->  		}
-> +
-> +		return pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay);
-> +	}
+Reviewed-by: Rob Herring <robh@kernel.org>
 
-So above in the Gen1/Gen2 case (<= 5 GT/s), a delay of 100 msec is afforded
-and if the link isn't up by then, the function returns an error.
-
-Doesn't that violate PCIe r6.0.1 sec 6.6.1 that states:
-
- "system software must allow at least 1.0 s following exit from a
-  Conventional Reset of a device, before determining that the device
-  is broken if it fails to return a Successful Completion status for
-  a valid Configuration Request.  This period is independent of how
-  quickly Link training completes."
-
-I think what we can do here is:
-
-		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
-			return 0;
-
-		if (!dev->link_active_reporting)
-			return -ENOTTY;
-
-		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-			return -ENOTTY;
-
-		return pci_dev_wait(child, reset_type,
-				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-
-In other words, if link active reporting is unsupported, we can only
-afford the 1 second prescribed by the spec and that's it.  If the
-subordinate device is still inaccessible after that, reset recovery
-failed.
-
-If link active reporting is supported and the link is up, then we know
-the device is accessible but may need more time.  In that case the
-full 60 seconds are afforded.
-
-Does that make sense?
-
-Thanks,
-
-Lukas
