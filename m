@@ -2,49 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 658396EA7CC
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 12:04:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 923866EA7D9
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 12:07:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230480AbjDUKEX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Apr 2023 06:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39626 "EHLO
+        id S230091AbjDUKHb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Apr 2023 06:07:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231148AbjDUKEW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 06:04:22 -0400
+        with ESMTP id S231562AbjDUKHb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 06:07:31 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99CF5FE6;
-        Fri, 21 Apr 2023 03:04:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD46EAD17;
+        Fri, 21 Apr 2023 03:07:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5167764FB0;
-        Fri, 21 Apr 2023 10:04:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DC5C433D2;
-        Fri, 21 Apr 2023 10:04:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 795A064FB3;
+        Fri, 21 Apr 2023 10:07:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9051C433EF;
+        Fri, 21 Apr 2023 10:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682071460;
-        bh=g3WHW+xRgwO3ZHAUrKODgElvqmfjuqfmpZpWonWjEOI=;
+        s=k20201202; t=1682071648;
+        bh=/0OhRuGj6n5KH5ITNoVDRZmLJcKTXz8TiF6s12pumHw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oOiuR7FV67WxFwGwxkgMPC4g8g/xlpD9SLtIFFTyYg+TQfRsUXNZsWyoew9NrKzQJ
-         p/cglKug0my+LAlIQN7ZarZsK9giXZ1PhevEpOs69drgTDBkcVZ1MUEVbo+ZW53XNd
-         CEuYUBUc8tcpxIdIEr4m5kNp/U82qONDgNzBrZlKNYZc5u4gMJEyJ9X7fkFq9jk9/m
-         Y9j2fZ6rukWvOCfRH+SL7yQ78YcMCM+iAC+IibCWPEz2ftpMtXHZnx3AMk53FZbzp1
-         jhIGCm+X/P9aidjfywCs4JnHccIpInQMFZag0rY2jQIb/ksrKLBdp/u+49S//z5/SH
-         pwQ+FKxbDiAkA==
+        b=nUSI4nqcJJRvWVuFElINY+HOdSmiFzUCbJCkglbJ+xHi0+olKr/y1/Y1LPC5XBDp1
+         yBj53LFhBn82gJyoWD54OQ1aQndyzDzOQLYxRkJaDfhEaL8O9sMKBsTsWrccrR8QRV
+         Kf+pfJtHGjFUdjuB5DAYDYCrA758VgAgS1hApxBboHDMDqV/VBC6PfpcdC61RLdXs1
+         1DidMI0JUj6j03rvNwieIndY0KImh6mdww85LuGHeGWZLpV+3Bkd5qoQnPHRs/obRm
+         4qzO3wmEQW0J3YZscEf/OWe/Hf/O8gdMDOAypByUM4D7cXlakIOas1liR4Pg6Gx3Aq
+         HspWlEUMgPl/g==
 From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        mani@kernel.org, bhelgaas@google.com, kw@linux.com,
-        robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     Shunsuke Mie <mie@igel.co.jp>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 0/5] Add PCIe EP support for SDX65
-Date:   Fri, 21 Apr 2023 12:04:13 +0200
-Message-Id: <168207144110.82183.2405271863357510101.b4-ty@kernel.org>
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Jon Mason <jdmason@kudzu.us>, Frank Li <Frank.Li@nxp.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ren Zhijie <renzhijie2@huawei.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: Fix a Kconfig prompt of vNTB driver
+Date:   Fri, 21 Apr 2023 12:07:23 +0200
+Message-Id: <168207163080.82492.11121926793358179384.b4-ty@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <1680243502-23744-1-git-send-email-quic_rohiagar@quicinc.com>
-References: <1680243502-23744-1-git-send-email-quic_rohiagar@quicinc.com>
+In-Reply-To: <20230202103832.2038286-1-mie@igel.co.jp>
+References: <20230202103832.2038286-1-mie@igel.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -58,20 +61,18 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 31 Mar 2023 11:48:17 +0530, Rohit Agarwal wrote:
-> Changes in v5:
->  - Addressed some minor comments from Konrad
->  - Rebased on top of 6.3-rc5.
+On Thu, 02 Feb 2023 19:38:32 +0900, Shunsuke Mie wrote:
+> vNTB driver and NTB driver have same Kconfig prompt. Changed to make it
+> distinguishable.
 > 
-> Changes in v4:
->  - Addressed comment from Dmitry to move the gpios to the board file.
+> Fixes: e35f56bb0330 ("PCI: endpoint: Support NTB transfer between RC and EP")
 > 
-> [...]
+> 
 
-Applied to controller/dt, thanks!
+Applied to controller/endpoint, thanks!
 
-[1/5] dt-bindings: PCI: qcom: Add SDX65 SoC
-      https://git.kernel.org/pci/pci/c/661a7e9aa551
+[1/1] PCI: endpoint: Fix a Kconfig prompt of vNTB driver
+      https://git.kernel.org/pci/pci/c/e49f106fb073
 
 Thanks,
 Lorenzo
