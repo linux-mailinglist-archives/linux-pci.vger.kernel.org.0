@@ -2,138 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 76D056EA1A4
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 04:30:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E51986EA20F
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 04:58:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233518AbjDUCaz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 20 Apr 2023 22:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34098 "EHLO
+        id S233672AbjDUC6z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 20 Apr 2023 22:58:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232030AbjDUCay (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 22:30:54 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1A8D2680;
-        Thu, 20 Apr 2023 19:30:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682044253; x=1713580253;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=lXmb3JKMQYphwt/h/vLhy2biJxC/A3UU1XVEqedzQEc=;
-  b=Ibdf87UTT57mwRLYE9PRvoufavJsyCZtiZRphTpzCDcgdHdbmtejbWVd
-   Sp30EfDuaOZBHHi1iWt7jX6qHZet6+9BLT3XXNdurj3059fCestLKVsRZ
-   F0Lx7VvnF/yeRN5uuxFkVddTONF9ieyt3rQ1kr2EjavdBKnr0peyILhVc
-   MkvaLeUmZ3qwx7kTId4+EBSM+o+MFRW3kaka95bX2IjOPcOXak+MOCUou
-   HM+L39dDEKYWNJaQQ2XwAoZSn6iS6blSO+Y1Rrq74Y6dS85+UBobI+vIC
-   glNqgdrCAKHbru/1OqIkYJOlnoKOQcIjB0lZuhUAmirFGC2ZP6v9gVK+F
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="408836761"
-X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="408836761"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 19:30:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="866546785"
-X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="866546785"
-Received: from bgroza-mobl.amr.corp.intel.com (HELO [10.212.168.100]) ([10.212.168.100])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Apr 2023 19:30:51 -0700
-Message-ID: <adad9761-b671-66ec-8946-78d017071076@linux.intel.com>
-Date:   Thu, 20 Apr 2023 19:30:47 -0700
+        with ESMTP id S233505AbjDUC6z (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 20 Apr 2023 22:58:55 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 71CCA7AA5
+        for <linux-pci@vger.kernel.org>; Thu, 20 Apr 2023 19:58:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=EUyY2
+        sIlajTXj7j1Siih+C/A87NtF5xo0yxTLcIy4Tc=; b=HVJ+k6Pc/W1QwSOWqZQMZ
+        ZSmtU30qgtjDRIGAmgyhsV59cECVE2QZ89eAzAMYDX8rkJVtyJFHi6reHNniQNRg
+        freV/XjIH9TScrj4vcxElucOKXzuhbU+r9vRovgfTsck+NuLAuTmDrHWY8jJR6vf
+        jolzwidMzLAU5EH6NdYX74=
+Received: from localhost.localdomain (unknown [116.128.244.169])
+        by zwqz-smtp-mta-g5-3 (Coremail) with SMTP id _____wBnlzd1+0Fk2m0_CA--.3189S2;
+        Fri, 21 Apr 2023 10:56:53 +0800 (CST)
+From:   Rongguang Wei <clementwei90@163.com>
+To:     lukas@wunner.de
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Rongguang Wei <weirongguang@kylinos.cn>
+Subject: [PATCH v3] PCI: pciehp: Fix the slot in BLINKINGON_STATE when Presence Detect Changed event occurred
+Date:   Fri, 21 Apr 2023 10:56:41 +0800
+Message-Id: <20230421025641.655991-1-clementwei90@163.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v3 1/4] PCI: Keep AER status in pci_restore_state()
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
-        koba.ko@canonical.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230420125941.333675-1-kai.heng.feng@canonical.com>
- <e84eda25-dbe9-a108-c4d4-ee3fa746d9ca@linux.intel.com>
- <CAAd53p4hYR9f_Mh9cxGfBVnK_akLQMBACLDBnEHHzacJ5OZEGg@mail.gmail.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <CAAd53p4hYR9f_Mh9cxGfBVnK_akLQMBACLDBnEHHzacJ5OZEGg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+X-CM-TRANSID: _____wBnlzd1+0Fk2m0_CA--.3189S2
+X-Coremail-Antispam: 1Uf129KBjvJXoW7WFWfWrW8Jr4UKFW5Gr1Dtrb_yoW8KF15pa
+        yDGa1agry0gayUXws3XF48Ww1Yy3savrWUCF1DCw17ua1fCr4xJasY9ryYqrZI9FWkXaya
+        93WDKFyDW3WUAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07Utl1PUUUUU=
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: 5fohzv5qwzvxizq6il2tof0z/1tbiXRpYa1WBpTy8kQAAsU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Rongguang Wei <weirongguang@kylinos.cn>
 
+pciehp's behavior is incorrect if the Attention Button is pressed
+on an unoccupied slot.
 
-On 4/20/23 6:35 PM, Kai-Heng Feng wrote:
-> Hi Sathyanarayanan,
-> 
-> On Thu, Apr 20, 2023 at 10:39 PM Sathyanarayanan Kuppuswamy
-> <sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
->>
->> Hi Kai,
-> 
-> It's Kai-Heng :)
-> 
->>
->> On 4/20/23 5:59 AM, Kai-Heng Feng wrote:
->>> When AER is using the same IRQ as PME, AER interrupt is treated as a
->>> wakeup event and it can disrupt system suspend process.
->>>
->>> If that happens, the system will report it's woken up by PME IRQ without
->>> indicating any AER error since AER status is cleared on resume.
->>>
->>> So keep the AER status so users can know the system is woken up by AER
->>> instead of PME.
->>>
->>> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>
->> Any history on why it is cleared before? Is it done to hide some resume
->> issues?
-> 
-> It was introduced by commit b07461a8e45b ("PCI/AER: Clear error status
-> registers during enumeration and restore").
-> The justification is quite reasonable so I think maybe we should keep it as is.
+When a Presence Detect Changed event has occurred, the slot status
+in either BLINKINGOFF_STATE or OFF_STATE, turn it off unconditionally.
+But if the slot status is in BLINKINGON_STATE and the slot is currently
+empty, the slot status was staying in BLINKINGON_STATE.
 
-Yes. It looks like it is better to leave it as it is.
+The message print like this:
+    pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
+    pcieport 0000:00:01.5: pciehp: Slot(0-5) Powering on due to button press
+    pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
+    pcieport 0000:00:01.5: pciehp: Slot(0-5): Button cancel
+    pcieport 0000:00:01.5: pciehp: Slot(0-5): Action canceled due to button press
 
+It cause the next Attention Button Pressed event become Button cancel
+and missing the Presence Detect Changed event with this button press
+though this button presses event is occurred after 5s.
 
-> 
-> Kai-Heng
-> 
->>
->>> v3:
->>>  - No change.
->>>
->>> v2:
->>>  - New patch.
->>>
->>>  drivers/pci/pci.c | 1 -
->>>  1 file changed, 1 deletion(-)
->>>
->>> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->>> index 7a67611dc5f4..71aead00fc20 100644
->>> --- a/drivers/pci/pci.c
->>> +++ b/drivers/pci/pci.c
->>> @@ -1778,7 +1778,6 @@ void pci_restore_state(struct pci_dev *dev)
->>>       pci_restore_dpc_state(dev);
->>>       pci_restore_ptm_state(dev);
->>>
->>> -     pci_aer_clear_status(dev);
->>>       pci_restore_aer_state(dev);
->>>
->>>       pci_restore_config_space(dev);
->>
->> --
->> Sathyanarayanan Kuppuswamy
->> Linux Kernel Developer
+According to the Commit d331710ea78f ("PCI: pciehp: Become resilient
+to missed events"), if the slot is currently occupied, turn it on and
+if the slot is empty, it need to set in OFF_STATE rather than stay in
+current status when pciehp_handle_presence_or_link_change() bails out.
 
+V2: Update to simple code and avoid gratuitous message.
+V3: Add Suggested-by.
+
+Fixes: d331710ea78f ("PCI: pciehp: Become resilient to missed events")
+Link: https://lore.kernel.org/linux-pci/20230403054619.19163-1-clementwei90@163.com/
+Suggested-by: Lukas Wunner <lukas@wunner.de>
+Signed-off-by: Rongguang Wei <weirongguang@kylinos.cn>
+---
+ drivers/pci/hotplug/pciehp_ctrl.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
+index 529c34808440..1f78e401e9b6 100644
+--- a/drivers/pci/hotplug/pciehp_ctrl.c
++++ b/drivers/pci/hotplug/pciehp_ctrl.c
+@@ -256,6 +256,7 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
+ 	present = pciehp_card_present(ctrl);
+ 	link_active = pciehp_check_link_active(ctrl);
+ 	if (present <= 0 && link_active <= 0) {
++		ctrl->state = OFF_STATE;
+ 		mutex_unlock(&ctrl->state_lock);
+ 		return;
+ 	}
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+2.25.1
+
+
+No virus found
+		Checked by Hillstone Network AntiVirus
+
