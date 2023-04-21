@@ -2,76 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BFE6EA417
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 08:49:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8CED6EA58F
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 10:08:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230217AbjDUGts (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Apr 2023 02:49:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43090 "EHLO
+        id S231382AbjDUIIM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Apr 2023 04:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230208AbjDUGtr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 02:49:47 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526F176BF;
-        Thu, 20 Apr 2023 23:49:46 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id A08C221A49;
-        Fri, 21 Apr 2023 06:49:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-        t=1682059784; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0mL3bzad1QHRe9VCAioiPaObVOPkzy0anH65oXAYvDI=;
-        b=rYmCIvDqzr2HAlMLS4LV+LM//AY2XWgNMZD8S3QLE1xStKCJ+aGtqWJZj8UObk8PSnm8iU
-        780cBikny7GxXZdKrD1FnKjLYYVM60+rzcRyQ75UPBnYBHJFl8z+KoqYk9L1LP/LNatm1W
-        YA7UCyjqeesVDtcBW2lUKIJPEoiga7w=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-        s=susede2_ed25519; t=1682059784;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0mL3bzad1QHRe9VCAioiPaObVOPkzy0anH65oXAYvDI=;
-        b=JsBJ7D40m8PLBHHEh84apyF1ZfDunve0Vd2tmd2b3bHEQDgNRsUPh132+2Uz5if4cXxa3p
-        MtclOkhWind2CNBg==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 694EE13456;
-        Fri, 21 Apr 2023 06:49:44 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id JLLBGAgyQmQKegAAMHmgww
-        (envelope-from <tzimmermann@suse.de>); Fri, 21 Apr 2023 06:49:44 +0000
-Message-ID: <b28f6831-3be1-305e-72a5-c4df4e5f6eba@suse.de>
-Date:   Fri, 21 Apr 2023 08:49:43 +0200
+        with ESMTP id S229650AbjDUIIL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 04:08:11 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 730054EDF
+        for <linux-pci@vger.kernel.org>; Fri, 21 Apr 2023 01:08:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682064490; x=1713600490;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=yi3LKoB2bMgDLo1gX3PxSwvOnNHJgR+Rj8QDcAy7aIw=;
+  b=LDMs7clXM8imHaGcepLlQjUAtnsBLb1f+BvK51HRDqgbO5qFAqlDMD8L
+   Z0IVHyM52cN8/NaVklvgX/GFmc6mNtk4/lobhbJY7NB8lAftJLBb2g91v
+   469KFQ9DHzzKE9L/knRyBYZY+T08MmCfvGQcNDnovJU9BX20x90CcPlNx
+   M/Co1Ye3wbNb1SBXdBGNFHNPe0Px0eyzAMa0Pum2ZnnRUt0xtOt5m1esA
+   QxTTjfzs+v3+DFDIUaKUCHq92LJG95Af+wTloFb3QtBieCP6TB8WRGwWi
+   rL8X3g8Ul6/FNcPSohqbiDLPjejaklatFPR9/wooez8Hi1IPIbx+l8yCv
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="344696722"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="344696722"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 01:08:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="685656392"
+X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
+   d="scan'208";a="685656392"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 21 Apr 2023 01:08:08 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pploN-000gRE-2J;
+        Fri, 21 Apr 2023 08:08:07 +0000
+Date:   Fri, 21 Apr 2023 16:07:31 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:for-linus] BUILD SUCCESS
+ 0d21e71a91debc87e88437a2cf9c6f34f8bf012f
+Message-ID: <64424443.BohnYtisA+f01/Vd%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] PCI: Add ASPEED vendor ID
-To:     Damien Le Moal <dlemoal@kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR AST SERVER GRAPHICS CHIPS" 
-        <dri-devel@lists.freedesktop.org>, linux-ide@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Patrick McLean <chutzpah@gentoo.org>
-References: <20230420191036.GA315493@bhelgaas>
- <6b7c1f22-2d97-bda9-affd-2e3a7a1d42ed@kernel.org>
-Content-Language: en-US
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-In-Reply-To: <6b7c1f22-2d97-bda9-affd-2e3a7a1d42ed@kernel.org>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="------------NjQl9J8kFPXn1vl8muUvi8P0"
-X-Spam-Status: No, score=-6.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,99 +63,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---------------NjQl9J8kFPXn1vl8muUvi8P0
-Content-Type: multipart/mixed; boundary="------------uFQteqgvespC5dXpZUcsNmFJ";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Damien Le Moal <dlemoal@kernel.org>, Bjorn Helgaas <helgaas@kernel.org>
-Cc: "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
- open list <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVER FOR AST SERVER GRAPHICS CHIPS"
- <dri-devel@lists.freedesktop.org>, linux-ide@vger.kernel.org,
- Bjorn Helgaas <bhelgaas@google.com>, Dave Airlie <airlied@redhat.com>,
- Patrick McLean <chutzpah@gentoo.org>
-Message-ID: <b28f6831-3be1-305e-72a5-c4df4e5f6eba@suse.de>
-Subject: Re: [PATCH] PCI: Add ASPEED vendor ID
-References: <20230420191036.GA315493@bhelgaas>
- <6b7c1f22-2d97-bda9-affd-2e3a7a1d42ed@kernel.org>
-In-Reply-To: <6b7c1f22-2d97-bda9-affd-2e3a7a1d42ed@kernel.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git for-linus
+branch HEAD: 0d21e71a91debc87e88437a2cf9c6f34f8bf012f  PCI: Restrict device disabled status check to DT
 
---------------uFQteqgvespC5dXpZUcsNmFJ
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+elapsed time: 787m
 
-SGkNCg0KQW0gMjEuMDQuMjMgdW0gMDA6MDQgc2NocmllYiBEYW1pZW4gTGUgTW9hbDoNCj4g
-T24gNC8yMS8yMyAwNDoxMCwgQmpvcm4gSGVsZ2FhcyB3cm90ZToNCj4+IFsrY2MgRGFtaWVu
-LCBsaW51eC1pZGVdDQo+Pg0KPj4gT24gVGh1LCBBcHIgMjAsIDIwMjMgYXQgMDk6MDg6NDhB
-TSArMDIwMCwgVGhvbWFzIFppbW1lcm1hbm4gd3JvdGU6DQo+Pj4gQW0gMTkuMDQuMjMgdW0g
-MjA6Mzcgc2NocmllYiBCam9ybiBIZWxnYWFzOg0KPj4+PiBPbiBXZWQsIEFwciAxOSwgMjAy
-MyBhdCAwOTowMDoxNUFNICswMjAwLCBUaG9tYXMgWmltbWVybWFubiB3cm90ZToNCj4+Pj4+
-IEFtIDE5LjA0LjIzIHVtIDAwOjU3IHNjaHJpZWIgUGF0cmljayBNY0xlYW46DQo+Pj4+Pj4g
-Q3VycmVudGx5IHRoZSBBU1BFRUQgUENJIHZlbmRvciBJRCBpcyBkZWZpbmVkIGluDQo+Pj4+
-Pj4gZHJpdmVycy9ncHUvZHJtL2FzdC9hc3RfZHJ2LmMsIG1vdmUgdGhhdCB0byBpbmNsdWRl
-L2xpbnV4L3BjaV9pZHMuaA0KPj4+Pj4+IHdpdGggYWxsIHRoZSByZXN0IG9mIHRoZSBQQ0kg
-dmVuZG9yIElEIGRlZmluaXRpb25zLiBSZW5hbWUgdGhlIGRlZmluaXRpb24NCj4+Pj4+PiB0
-byBmb2xsb3cgdGhlIGZvcm1hdCB0aGF0IHRoZSBvdGhlciBkZWZpbml0aW9ucyBmb2xsb3cu
-DQo+Pj4+Pg0KPj4+Pj4gVGhhbmtzIGEgbG90LiBDYW4geW91IHBsZWFzZSBhbHNvIG1vdmUg
-YW5kIHJlbmFtZSB0aGUgUENJIGRldmljZSBpZHM/IFsxXQ0KPj4+Pg0KPj4+PiBHZW5lcmFs
-bHkgd2UgbW92ZSB0aGluZ3MgdG8gcGNpX2lkcy5oIG9ubHkgd2hlbiB0aGV5IGFyZSBzaGFy
-ZWQNCj4+Pj4gYmV0d2VlbiBtdWx0aXBsZSBkcml2ZXJzLiAgVGhpcyBpcyBtb3N0bHkgdG8g
-bWFrZSBiYWNrcG9ydHMgZWFzaWVyLg0KPj4+Pg0KPj4+PiBQQ0lfVkVORE9SX0lEX0FTUEVF
-RCBpcyAob3Igd2lsbCBiZSkgdXNlZCBpbiBib3RoIGFzdF9kcnYuYyBhbmQNCj4+Pj4gbGli
-YXRhLWNvcmUuYywgc28gaXQgcXVhbGlmaWVzLg0KPj4+Pg0KPj4+PiBJdCBkb2Vzbid0IGxv
-b2sgbGlrZSBQQ0lfQ0hJUF9BU1QyMDAwIGFuZCBQQ0lfQ0hJUF9BU1QyMTAwIHdvdWxkDQo+
-Pj4+IHF1YWxpZnkgc2luY2UgdGhleSdyZSBvbmx5IHVzZWQgaW4gYXN0X2Rydi5jIGFuZCBh
-c3RfbWFpbi5jLCB3aGljaCBhcmUNCj4+Pj4gcGFydCBvZiB0aGUgc2FtZSBkcml2ZXIuDQo+
-Pj4NCj4+PiBPaywgSSBzZWUuIENhbiBJIHRha2UgdGhlIHBhdGNoIGludG8gRFJNIHRyZWVz
-Pw0KPj4NCj4+IFRoZSBmaXJzdCB0aW1lIGFyb3VuZCBJIGdvdCB0d28gcGF0Y2hlcyBbMl0u
-ICBUaGlzIHRpbWUgSSBvbmx5IGdvdA0KPj4gdGhpcyBwYXRjaCwgYnV0IElJVUMgdGhlcmUg
-YXJlIHN0aWxsIHR3byBwYXRjaGVzIGluIHBsYXkgaGVyZToNCj4+DQo+PiAgICAtIFRoaXMg
-b25lLCB3aGljaCBtb3ZlcyBQQ0lfVkVORE9SX0lEX0FTUEVFRCB0byBwY2lfaWRzLmgsIGFu
-ZA0KPj4gICAgLSBUaGUgbGliYXRhLWNvcmUgb25lIHRoYXQgYWRkcyBhIHVzZSBpbiBhdGFf
-ZGV2X2NvbmZpZ19uY3EoKQ0KPj4NCj4+IFRob3NlIHNob3VsZCBnbyB0b2dldGhlciB2aWEg
-dGhlIHNhbWUgdHJlZS4gIEkgc3VwcGxpZWQgbXkgYWNrIHRvDQo+PiBpbmRpY2F0ZSB0aGF0
-IEknbSBub3QgZ29pbmcgdG8gbWVyZ2UgYW55dGhpbmcgbXlzZWxmLCBhbmQgSSBleHBlY3QN
-Cj4+IHdob2V2ZXIgbWVyZ2VzIHRoZSBsaWJhdGEgcGF0Y2ggdG8gYWxzbyBtZXJnZSB0aGlz
-IG9uZS4NCj4+DQo+PiBJZiBmb3Igc29tZSByZWFzb24gdGhlIGxpYmF0YS1jb3JlIHBhdGNo
-IGRvZXNuJ3QgaGFwcGVuLCB0aGVuIHRoaXMNCj4+IHBhdGNoIHNob3VsZG4ndCBoYXBwZW4g
-ZWl0aGVyLCBiZWNhdXNlIHRoZXJlIHdvdWxkIG5vIGxvbmdlciBiZSBhbnkNCj4+IHNoYXJp
-bmcgYmV0d2VlbiBkcml2ZXJzIHRoYXQgd291bGQganVzdGlmeSBhIHBjaV9pZHMuaCBhZGRp
-dGlvbi4NCj4gDQo+IEkgY2FuIHRha2UgYm90aCBwYXRjaGVzIHRocm91Z2ggdGhlIGxpYmF0
-YSB0cmVlIGJ1dCB0aGVyZSB3ZXJlIGNvbW1lbnRzIG9uIHRoZQ0KPiBzZWNvbmQgcGF0Y2gg
-Zm9yIGxpYmF0YSBhbmQgSSBoYXZlIG5vdCBzZWVuIHRoZXNlIGFkZHJlc3NlZCB5ZXQgKEkg
-ZGlkIG5vdCBnZXQgYQ0KPiB2MikuIEFuZCBpbiB0aGUgbWVhbnRpbWUsIGl0IHNlZW1zIHRo
-YXQgdGhlIFBDSSBJRCBwYXRjaCB3YXMgcmV3b3JrZWQgYXMgYQ0KPiBzaW5nbGUgcGF0Y2gu
-Li4gTm90IHN1cmUgd2hhdCdzIGhhcHBlbmluZyBoZXJlLg0KDQpJIGRvbid0IHRoaW5rIEkn
-dmUgZXZlbiBzZWVuIHRoZSBsaWJhdGEgcGF0Y2guIFBsZWFzZSB0YWtlIGJvdGggcGF0Y2hl
-cyANCnRocm91Z2ggeW91ciB0cmVlIHdoZW4gdGhleSBhcmUgcmVhZHkuDQoNCkJlc3QgcmVn
-YXJkcw0KVGhvbWFzDQoNCj4gDQo+IA0KDQotLSANClRob21hcyBaaW1tZXJtYW5uDQpHcmFw
-aGljcyBEcml2ZXIgRGV2ZWxvcGVyDQpTVVNFIFNvZnR3YXJlIFNvbHV0aW9ucyBHZXJtYW55
-IEdtYkgNCkZyYW5rZW5zdHJhc3NlIDE0NiwgOTA0NjEgTnVlcm5iZXJnLCBHZXJtYW55DQpH
-RjogSXZvIFRvdGV2LCBBbmRyZXcgTXllcnMsIEFuZHJldyBNY0RvbmFsZCwgQm91ZGllbiBN
-b2VybWFuDQpIUkIgMzY4MDkgKEFHIE51ZXJuYmVyZykNCg==
+configs tested: 85
+configs skipped: 3
 
---------------uFQteqgvespC5dXpZUcsNmFJ--
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
---------------NjQl9J8kFPXn1vl8muUvi8P0
-Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="OpenPGP_signature"
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230416   gcc  
+arc                  randconfig-r043-20230417   gcc  
+arc                  randconfig-r043-20230419   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r046-20230416   clang
+arm                  randconfig-r046-20230417   gcc  
+arm                  randconfig-r046-20230419   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r041-20230416   clang
+hexagon              randconfig-r041-20230417   clang
+hexagon              randconfig-r041-20230419   clang
+hexagon              randconfig-r045-20230416   clang
+hexagon              randconfig-r045-20230417   clang
+hexagon              randconfig-r045-20230419   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-a001-20230417   gcc  
+i386                 randconfig-a002-20230417   gcc  
+i386                 randconfig-a003-20230417   gcc  
+i386                 randconfig-a004-20230417   gcc  
+i386                 randconfig-a005-20230417   gcc  
+i386                 randconfig-a006-20230417   gcc  
+i386                 randconfig-a011-20230417   clang
+i386                 randconfig-a012-20230417   clang
+i386                 randconfig-a013-20230417   clang
+i386                 randconfig-a014-20230417   clang
+i386                 randconfig-a015-20230417   clang
+i386                 randconfig-a016-20230417   clang
+ia64                             allmodconfig   gcc  
+ia64                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                               defconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230416   gcc  
+riscv                randconfig-r042-20230417   clang
+riscv                randconfig-r042-20230419   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r044-20230416   gcc  
+s390                 randconfig-r044-20230417   clang
+s390                 randconfig-r044-20230419   clang
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230417   gcc  
+x86_64               randconfig-a002-20230417   gcc  
+x86_64               randconfig-a003-20230417   gcc  
+x86_64               randconfig-a004-20230417   gcc  
+x86_64               randconfig-a005-20230417   gcc  
+x86_64               randconfig-a006-20230417   gcc  
+x86_64               randconfig-a011-20230417   clang
+x86_64               randconfig-a012-20230417   clang
+x86_64               randconfig-a013-20230417   clang
+x86_64               randconfig-a014-20230417   clang
+x86_64               randconfig-a015-20230417   clang
+x86_64               randconfig-a016-20230417   clang
+x86_64                               rhel-8.3   gcc  
 
------BEGIN PGP SIGNATURE-----
-
-wsF5BAABCAAjFiEExndm/fpuMUdwYFFolh/E3EQov+AFAmRCMgcFAwAAAAAACgkQlh/E3EQov+BT
-9Q//VJW3pNtxksnkx4pGQy966g4XWUFPRr0ZaPDwdE/sJKXIfvsfQ7RifTIeUPb9IwVatm27hS3N
-JkDb//auhJmxfRFcf75bJwt2DbjnfsLjjQGu6qaGFz2e2vbzT+YzMt/8WXuhHKCtMLLbYd0fPU3N
-fSm5VxMZaRda+dqBbEGxNsblURfCz1Kv7/RkKNHzVsP6fjpcn2PTO8nRbnPhASm6k6S6+tqBGcfp
-mvzbrR+DsE00ju4chdjb7TZgMYiT56djz4mem0i81CMK/CYw6AetDFcmqFrgLUOFHPkpD/0lW/4w
-ya++7VGwFEvq48hEFm31yUqcutLePHQtlKYiC6ZeWY+0bP6q+UXcy8XhQCsJVC4dLVnd11dZAenn
-zSnV1a/JkEgPEhAUbSKmnXw23z9iIMoeSDecOBHcTlTWOxXsC/X2uwUwwStmhl9zD9oasSV22Esv
-DPaDArxX7jTYgXUV6W8SR5msxziL742DeMvCQDkGwrCWNxy8B4OLbZ55dX4iTXTjYQrp7CDQm3ib
-w1egNvY8p3P+cz5dMxS3lO3YAdKMmzRjSvtsm9+NwFkChufZPLE37PNQXRdnS83/yDy6Og89TdrN
-m9sw6RSp22xx+X6Jhn1h86ZvTnvob8cYjSoYIHijscIltndz7ByZ/GvgqT0rN0FSpPa9B7afL6UC
-+Xs=
-=8LDA
------END PGP SIGNATURE-----
-
---------------NjQl9J8kFPXn1vl8muUvi8P0--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
