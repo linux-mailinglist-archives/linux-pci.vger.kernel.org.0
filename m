@@ -2,83 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 36A3A6EA7B6
-	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 11:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 658396EA7CC
+	for <lists+linux-pci@lfdr.de>; Fri, 21 Apr 2023 12:04:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230005AbjDUJ7I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 21 Apr 2023 05:59:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36692 "EHLO
+        id S230480AbjDUKEX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 21 Apr 2023 06:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230317AbjDUJ7H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 05:59:07 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D65FAD0B;
-        Fri, 21 Apr 2023 02:59:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682071146; x=1713607146;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=rAFsYIkaIU7P/XAdE8H660r0J/Gv+OzxiWnAIJBjL0Q=;
-  b=jTypmE8KVHIk85mijDvlcoQEs9nP/67rMSAW6cAjZeUegqdF8iFUe8pi
-   hSq1sFg72Sc1jkVCygeJkuPppQ60XK/bnp7EXWbnmenOv/igpnsFCMbgp
-   EKLUDMuizVVYiqLvw16337PVi1bkAcMEOe1nz1bdVdMayoFNvQqVhJbd/
-   8rP8lbjw4X9xTQFbI3vaQgjPHkuEhtSQvWtjVulWZ1+wLYSsLVThNk8lG
-   NMaBD0G34eaR8Wlpwh8G+H9QHL/iOx8zj9GHSgeZq0puw8Q4NQnqTLGwk
-   xfIuugly9/jzkpCyqAiB3D47lPzc9sBQEsVW98f3OLnD6hcTnCa/Om/H+
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="334834622"
-X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="334834622"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Apr 2023 02:59:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10686"; a="803680543"
-X-IronPort-AV: E=Sophos;i="5.99,214,1677571200"; 
-   d="scan'208";a="803680543"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP; 21 Apr 2023 02:59:04 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1ppnXi-003652-2Y;
-        Fri, 21 Apr 2023 12:59:02 +0300
-Date:   Fri, 21 Apr 2023 12:59:02 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Rob Herring <robh@kernel.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 1/1] PCI: of: Propagate firmware node by calling
- device_set_node()
-Message-ID: <ZEJeZh8CCPc7xqr9@smile.fi.intel.com>
-References: <20230421092945.66176-1-andriy.shevchenko@linux.intel.com>
+        with ESMTP id S231148AbjDUKEW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 21 Apr 2023 06:04:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B99CF5FE6;
+        Fri, 21 Apr 2023 03:04:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5167764FB0;
+        Fri, 21 Apr 2023 10:04:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DC5C433D2;
+        Fri, 21 Apr 2023 10:04:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682071460;
+        bh=g3WHW+xRgwO3ZHAUrKODgElvqmfjuqfmpZpWonWjEOI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oOiuR7FV67WxFwGwxkgMPC4g8g/xlpD9SLtIFFTyYg+TQfRsUXNZsWyoew9NrKzQJ
+         p/cglKug0my+LAlIQN7ZarZsK9giXZ1PhevEpOs69drgTDBkcVZ1MUEVbo+ZW53XNd
+         CEuYUBUc8tcpxIdIEr4m5kNp/U82qONDgNzBrZlKNYZc5u4gMJEyJ9X7fkFq9jk9/m
+         Y9j2fZ6rukWvOCfRH+SL7yQ78YcMCM+iAC+IibCWPEz2ftpMtXHZnx3AMk53FZbzp1
+         jhIGCm+X/P9aidjfywCs4JnHccIpInQMFZag0rY2jQIb/ksrKLBdp/u+49S//z5/SH
+         pwQ+FKxbDiAkA==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        mani@kernel.org, bhelgaas@google.com, kw@linux.com,
+        robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: (subset) [PATCH v5 0/5] Add PCIe EP support for SDX65
+Date:   Fri, 21 Apr 2023 12:04:13 +0200
+Message-Id: <168207144110.82183.2405271863357510101.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <1680243502-23744-1-git-send-email-quic_rohiagar@quicinc.com>
+References: <1680243502-23744-1-git-send-email-quic_rohiagar@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230421092945.66176-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 12:29:45PM +0300, Andy Shevchenko wrote:
-> Insulate pci_set_of_node() and pci_set_bus_of_node() from possible
-> changes to fwnode_handle implementation by using device_set_node()
-> instead of open-coding dev->dev.fwnode assignments.
+On Fri, 31 Mar 2023 11:48:17 +0530, Rohit Agarwal wrote:
+> Changes in v5:
+>  - Addressed some minor comments from Konrad
+>  - Rebased on top of 6.3-rc5.
+> 
+> Changes in v4:
+>  - Addressed comment from Dmitry to move the gpios to the board file.
+> 
+> [...]
 
-Sorry, this version needs to be discarded. It has a non-squashed change and
-hence can't be compiled.
+Applied to controller/dt, thanks!
 
+[1/5] dt-bindings: PCI: qcom: Add SDX65 SoC
+      https://git.kernel.org/pci/pci/c/661a7e9aa551
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Lorenzo
