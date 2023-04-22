@@ -2,102 +2,193 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09BFF6EB9C4
-	for <lists+linux-pci@lfdr.de>; Sat, 22 Apr 2023 16:51:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 642066EB9F5
+	for <lists+linux-pci@lfdr.de>; Sat, 22 Apr 2023 17:17:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229539AbjDVOvq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 22 Apr 2023 10:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
+        id S229669AbjDVPRI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 22 Apr 2023 11:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjDVOvq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Apr 2023 10:51:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40A221723;
-        Sat, 22 Apr 2023 07:51:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CD990617ED;
-        Sat, 22 Apr 2023 14:51:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91B0BC433EF;
-        Sat, 22 Apr 2023 14:51:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682175104;
-        bh=KeQQKkot+tXQJMDWgdwmy79BKsRWMCpyn3+/1yDukH4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Y1EDmmXkMHXvJ0cctvCcimDFMWMc3juo4kjBCSxUO78Yv0tJuMix6SDgtqNhkOe1K
-         BghfL5F833QEQdqXjyByDszuMAj/KTLotiPxukUnAEF28TE+4koGHBIHU8jgmGoNX6
-         MwGKi8nTToou4+XHus0Qxx1Ud/XAmkziTrbW7L2KSymtZB19QWwKCZnBWTklZal+cn
-         QNp1ky3FmQapJjscBJ5I7TV2+8qILk8++7ixlTa12l+ZHkTtmiWKBylPrCCNznL+Qk
-         TVvcfdneoflf1/njm0RUXrcCIAU9HEclXyVw9hSfF0hrAZi83T59VISPjsLGPdXTAW
-         4Ewe5UR8UtR9w==
-Date:   Sat, 22 Apr 2023 20:21:36 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        fancer.lancer@gmail.com, lpieralisi@kernel.org, robh+dt@kernel.org,
-        kw@linux.com, bhelgaas@google.com, kishon@kernel.org,
-        marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v13 22/22] misc: pci_endpoint_test: Add Device ID for
- R-Car S4-8 PCIe controller
-Message-ID: <20230422145136.GS4769@thinkpad>
-References: <20230418122403.3178462-1-yoshihiro.shimoda.uh@renesas.com>
- <20230418122403.3178462-23-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S229533AbjDVPRH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 22 Apr 2023 11:17:07 -0400
+Received: from smtp.smtpout.orange.fr (smtp-12.smtpout.orange.fr [80.12.242.12])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A8A9E
+        for <linux-pci@vger.kernel.org>; Sat, 22 Apr 2023 08:17:05 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id qEyvpze6qLbpDqEyvpaKkO; Sat, 22 Apr 2023 17:17:02 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1682176622;
+        bh=3H0scDFKyehOgT0V6d/W2chtkfq7ZCGqxH+0r3owNTc=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=d+I+RI9QA70aL4CBNXknbwd9lmwZNk2qAl1wJ+DKPc5xtafv3H98XLQ4TrD9x/krA
+         Vm7u3lgqthfsF4X62ViOVJ/ejGOpdjrHBm1BGd3SIJ7l7wDiySHhLTobjPQzjI3m5t
+         iWvYIKNuDs29kcPMVbY+f+IDXCiJoCVFVWBeSCO0VQeYM7dhPkm2c/lWfGQGr0eTK5
+         oR6CaRsf0IcSNEWhBAnhM5v9yw6mJOhcyDNZWCADkYaN+Z04l4wJJINDj650XwVwF5
+         9YGzyNNAIpfKlR8M9YNNn0GAZxxAZq4N9taRAgzmThwT346kxZrwD57DbsPCNStqFC
+         Wf0KIGPhMJXQg==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 22 Apr 2023 17:17:02 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <5fe7ba30-5a87-74cc-d817-9384fa340e6e@wanadoo.fr>
+Date:   Sat, 22 Apr 2023 17:16:57 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH] pci: controller: pci-ftpci100: Release the clock
+ resources
+Content-Language: fr
+To:     Junyan Ye <yejunyan@hust.edu.cn>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230422074254.14473-1-yejunyan@hust.edu.cn>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20230422074254.14473-1-yejunyan@hust.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230418122403.3178462-23-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 09:24:03PM +0900, Yoshihiro Shimoda wrote:
-> Add Renesas R8A779F0 in pci_device_id table so that pci-epf-test
-> can be used for testing PCIe EP on R-Car S4-8.
+Le 22/04/2023 à 09:42, Junyan Ye a écrit :
+> Smatch reported:
+> 1. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe()
+> warn: 'clk' from clk_prepare_enable() not released on lines:
+> 442,451,462,478,512,517.
+> 2. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe()
+> warn: 'p->bus_clk' from clk_prepare_enable() not released on lines:
+> 451,462,478,512,517.
 > 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Acked-by: Manivannan Sadhasivam <mani@kernel.org>
-
-- Mani
-
+> The clock resource is obtained by the devm_clk_get function. The
+> clk_prepare_enable function then makes the clock resource ready for use,
+> notifying the system that the clock resource should be run. After that,
+> the clock resource should be released when it is no longer needed. This
+> includes notifying the system that the clock resource is no longer needed
+> and revoking the prepared clock. The corresponding function is
+> clk_disable_unprepare. However, while doing some error handling in the
+> faraday_pci_probe function, the clk_disable_unprepare function is not
+> called to release the clk and p->bus_clk resources.
+> 
+> Fix the warning by adding the clk_disable_unprepare function before
+> returning the error message.
+> 
+> Fixes: b3c433efb8a3 ("PCI: faraday: Fix wrong pointer passed to PTR_ERR()")
+> Fixes: 2eeb02b28579 ("PCI: faraday: Add clock handling")
+> Fixes: 783a862563f7 ("PCI: faraday: Use pci_parse_request_of_pci_ranges()")
+> Fixes: d3c68e0a7e34 ("PCI: faraday: Add Faraday Technology FTPCI100 PCI Host Bridge driver")
+> Fixes: f1e8bd21e39e ("PCI: faraday: Convert IRQ masking to raw PCI config accessors")
+> Signed-off-by: Junyan Ye <yejunyan@hust.edu.cn>
+> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
 > ---
->  drivers/misc/pci_endpoint_test.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> This issue is found by static analyzer.
 > 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index a7244de081ec..1d8f72b42c0a 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -81,6 +81,7 @@
->  #define PCI_DEVICE_ID_RENESAS_R8A774B1		0x002b
->  #define PCI_DEVICE_ID_RENESAS_R8A774C0		0x002d
->  #define PCI_DEVICE_ID_RENESAS_R8A774E1		0x0025
-> +#define PCI_DEVICE_ID_RENESAS_R8A779F0		0x0031
->  
->  static DEFINE_IDA(pci_endpoint_test_ida);
->  
-> @@ -993,6 +994,9 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774B1),},
->  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774C0),},
->  	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A774E1),},
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_R8A779F0),
-> +	  .driver_data = (kernel_ulong_t)&default_data,
-> +	},
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_J721E),
->  	  .driver_data = (kernel_ulong_t)&j721e_data,
->  	},
-> -- 
-> 2.25.1
+>   drivers/pci/controller/pci-ftpci100.c | 31 +++++++++++++++++++--------
+>   1 file changed, 22 insertions(+), 9 deletions(-)
 > 
+> diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+> index ecd3009df586..ca3ba377b3dd 100644
+> --- a/drivers/pci/controller/pci-ftpci100.c
+> +++ b/drivers/pci/controller/pci-ftpci100.c
+> @@ -438,17 +438,21 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   		return ret;
+>   	}
+>   	p->bus_clk = devm_clk_get(dev, "PCICLK");
+> -	if (IS_ERR(p->bus_clk))
+> -		return PTR_ERR(p->bus_clk);
 
--- 
-மணிவண்ணன் சதாசிவம்
+Hi,
+
+switching to devm_clk_get_enabled() would
+   - fix the leak you reported
+   - fix the same leak hapening in the (non-existent) remove() function
+   - remove some lines of code, which is always great.
+
+CJ
+
+
+> +	if (IS_ERR(p->bus_clk)) {
+> +		ret = PTR_ERR(p->bus_clk);
+> +		goto err_release_clk;
+> +	}
+>   	ret = clk_prepare_enable(p->bus_clk);
+>   	if (ret) {
+>   		dev_err(dev, "could not prepare PCICLK\n");
+> -		return ret;
+> +		goto err_release_clk;
+>   	}
+>   
+>   	p->base = devm_platform_ioremap_resource(pdev, 0);
+> -	if (IS_ERR(p->base))
+> -		return PTR_ERR(p->base);
+> +	if (IS_ERR(p->base)) {
+> +		ret = PTR_ERR(p->base);
+> +		goto err_release_p_bus_clk;
+> +	}
+>   
+>   	win = resource_list_first_type(&host->windows, IORESOURCE_IO);
+>   	if (win) {
+> @@ -459,7 +463,8 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   			writel(val, p->base + FTPCI_IOSIZE);
+>   		} else {
+>   			dev_err(dev, "illegal IO mem size\n");
+> -			return -EINVAL;
+> +			ret = -EINVAL;
+> +			goto err_release_p_bus_clk;
+>   		}
+>   	}
+>   
+> @@ -475,7 +480,7 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   		ret = faraday_pci_setup_cascaded_irq(p);
+>   		if (ret) {
+>   			dev_err(dev, "failed to setup cascaded IRQ\n");
+> -			return ret;
+> +			goto err_release_p_bus_clk;
+>   		}
+>   	}
+>   
+> @@ -509,12 +514,12 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   
+>   	ret = faraday_pci_parse_map_dma_ranges(p);
+>   	if (ret)
+> -		return ret;
+> +		goto err_release_p_bus_clk;
+>   
+>   	ret = pci_scan_root_bus_bridge(host);
+>   	if (ret) {
+>   		dev_err(dev, "failed to scan host: %d\n", ret);
+> -		return ret;
+> +		goto err_release_p_bus_clk;
+>   	}
+>   	p->bus = host->bus;
+>   	p->bus->max_bus_speed = max_bus_speed;
+> @@ -524,6 +529,14 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   	pci_bus_add_devices(p->bus);
+>   
+>   	return 0;
+> +
+> +err_release_p_bus_clk:
+> +	clk_disable_unprepare(p->bus_clk);
+> +
+> +err_release_clk:
+> +	clk_disable_unprepare(clk);
+> +
+> +	return ret;
+>   }
+>   
+>   /*
+
