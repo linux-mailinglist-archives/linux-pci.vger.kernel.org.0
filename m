@@ -2,256 +2,316 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E4106ECB6F
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Apr 2023 13:37:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 650496ECC79
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Apr 2023 15:03:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231494AbjDXLhP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Apr 2023 07:37:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39326 "EHLO
+        id S231668AbjDXNDG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Apr 2023 09:03:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54300 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbjDXLhO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Apr 2023 07:37:14 -0400
-Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2123.outbound.protection.outlook.com [40.107.113.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F5D8E77;
-        Mon, 24 Apr 2023 04:37:12 -0700 (PDT)
+        with ESMTP id S229581AbjDXNDF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Apr 2023 09:03:05 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2068.outbound.protection.outlook.com [40.107.244.68])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C64E358E;
+        Mon, 24 Apr 2023 06:03:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ghb/rx+lCLy+MOhzVg0kvwfW22ac/UWno0Fskm5MJJOlPQ1A9j1fcvvzfE51rSPuhm9uJnnYLjxhWxK5wgbrcXOtYuwNYPMg4B7yJGXf5NqI1DETLHQ04DK1KTU4EgizVSWUSUGy2f+2zK2fxDo3CKQ0aWlhBCyHCwDObG4DrSVAF+7JwWNWWv/O+briOyaz4fvIZ6w/JiF2bawvbYM8eEyN71dkQYb3WoXeQS9Vu3crhsYXhyL+i/lgdZjrYfyrXG8Hnp0XqQOngF5ke8I2YESxsIiThM1lQw5KHkHEz630Lsm8pGEhDY73ix0KULnNZt1hcgBLW5w5mlCN0x/MIQ==
+ b=EhIzf2YI9+VzstIXk0Q5aTx5xt3DsdzJO9+oMnEeNTcPdEk8avPNmEUQIyezAAdElIZU2sRUkr+lWpyOX6kNLIfb83wur/61nE6HT/ei+Yx/6xF+6I4tCAlbPwh24PAOKMMtSFegB/WVbrIAHmYNlcKgtSlhksiw+zpqmkJYXwWSu6aYZ/F9Dlw6xjp3xFJwkPR5Z0pHT5ZmDrn49M7CpX6/Ssn7MlbDsFdofEAj7mWHr54UfQPhTHTG+OFMaeZNFcjQDsnoa7rae78RMUE0cO4lHkvRkGgQ7topetOqhx2bnyNxkilWybkJ1OJi0D0g56bdaYds1bMtchgHW/RalA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l/87YMCQxi5Xnj1TnbBmAUO6oTb5rClOQcqLDfcYCA8=;
- b=bX2isY9dmlsq8JfgKxCfNNofY62QFS+BF6JsGzZ4kRXX1UdzsjhQssf7uK8tx5SuZeriV5sYQ9guns3JlCfiFInXsPtI4qZPdTovovC13DN7hdP6qtSh64w+Ds994tdMw/uSA9ofttXsORIDYQx1iYfM+DrOwe6+OqxhJ+NsM3+2ktzyX8sedCJGg/6DZ04zo8xGlmzXeaLjSD0PaJ4R0So+y3dtS0I2O1+dNBaVBFrGArjJrSGHK90sy3KaVtKvQYrmPhAx1K5v/AEarH7hT6324recuy4l0XmBjw1TmsdBmB7FLbcRJuxewlRTWZ5JqY+UU8YhUHLZDlbO/nL8qg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
+ bh=+TmGxs+VxSNvjaNL4uZYNU3QmebfhaCMAcXlWXwMViI=;
+ b=GoEgP1hi8yHGNwQ86Ww1ZmRt7Jk33gX9yTEiHKCLfcX8nv8TIsgyhKuze6ZIvEwEFfDJwpWXuL3ajqb0c8nd4YD/0QrTv9DLveUunLKQo/QA5HKQn5OLHp/NEOkrAE6gTjgp2AjvEqHpA4eE99m+r/FPh415ttLRNAVrf2zcT78gqckkIPp2pvJGzhoBFR3RVnaiLPjdx6z4XdQo1reaU8+1ncJX6MbGxzzsXEHELTygx/qhr6jRPMmImnBByNmIOTnR+bNOD9VW5ve7sB5ASJUOX9FkQTxISEZpjGtvOt+ZoRpOimcQ7kUeMCvS1kDj1sbenkH8NQiUC+EHqYsMaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/87YMCQxi5Xnj1TnbBmAUO6oTb5rClOQcqLDfcYCA8=;
- b=phT7DHg/V3Wd+vIBRtmvC3G3RaNvE7q5Z6fWi+bfmYK6k48Wc0w4aMULMMUYPCoT+hwP1eFg1ElcuEjRcHQUAuy2s1GnhlEN5zDl6X9gmLeeyq5cgm2cuzpx9HTPuSoiCnkfTYlEasKynmx6I4qtaXejX1gFXXxTopI2odg0UzE=
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TYWPR01MB8446.jpnprd01.prod.outlook.com
- (2603:1096:400:175::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33; Mon, 24 Apr
- 2023 11:37:09 +0000
-Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::5198:fdcf:d9b1:6003]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
- ([fe80::5198:fdcf:d9b1:6003%5]) with mapi id 15.20.6319.033; Mon, 24 Apr 2023
- 11:37:09 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Manivannan Sadhasivam <mani@kernel.org>
-CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "kw@linux.com" <kw@linux.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "kishon@kernel.org" <kishon@kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v13 20/22] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe Endpoint
- support
-Thread-Topic: [PATCH v13 20/22] PCI: rcar-gen4-ep: Add R-Car Gen4 PCIe
- Endpoint support
-Thread-Index: AQHZcfCxBKZSVtq36EKDOc0QiWJf8a83bsMAgALu7JA=
-Date:   Mon, 24 Apr 2023 11:37:09 +0000
-Message-ID: <TYBPR01MB53411A92C3AE26E692B47B11D8679@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-References: <20230418122403.3178462-1-yoshihiro.shimoda.uh@renesas.com>
- <20230418122403.3178462-21-yoshihiro.shimoda.uh@renesas.com>
- <20230422144712.GQ4769@thinkpad>
-In-Reply-To: <20230422144712.GQ4769@thinkpad>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYWPR01MB8446:EE_
-x-ms-office365-filtering-correlation-id: ee316dc2-e2f5-4c69-8898-08db44b83d5d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TjWixAdXiZsT60+9b7BJ73Isht5xJZ2oXMnFqK80b/Htknb2p1eFDiRG9hRJ1DzU+XQTUbTo5N4BnlApQfOmtimxE0Bcg1Lni/Z6A1hGaufPhhH80XANP2MVGFDP7qDNNz6tK8M203VIvM+J3iXKXrtfRKssFPAnWeVGonKxTojCplXex3C5ibI1Np1tl18LV4iKZn1VIQZiqoLvc1jjdbWvoOLMW9e9G/h+cd4lrnT9Ye52QXBEJPaETrq/HObO/jJYv581JXa4Rv4WX0U20T6kUtjZl+JBLyKl4OnnmetGZBKJaf10YLxmya3UVHP4Eh0lJOKr2d/ZenBeV5PMYxqlY38jO3kZJYHhFMRYpWeHTvZC7Szdjeraq42qLEeVJOfGhslIXXrFfJ5xgHKuv6WDNsoOMhZzR1R/CHBPWzsJf6Pw6jYgyibVVFJvlWz4WOBigNT8V05IW3DwEIMU8clQ6NsFA++pNIkamcqtx7OQNSwyfyEM2YAiJSDuxfrlWocGDv0jBAcn5DrYPTeU4WCuzEdCJrd4Js+IjOWeZ7rYnfxroomS4QIqdTZZZdwBjvKGzZDLAvNB8mj7LO3Pr/FUmt1LsYd5N/DQ5165bGZS6Sp4y9LFDuL19h1yFJ7X
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(366004)(376002)(346002)(396003)(451199021)(2906002)(76116006)(64756008)(66446008)(66476007)(66556008)(66946007)(6916009)(316002)(4326008)(52536014)(7416002)(8676002)(8936002)(5660300002)(38070700005)(41300700001)(33656002)(86362001)(55016003)(9686003)(186003)(122000001)(71200400001)(38100700002)(478600001)(7696005)(83380400001)(6506007)(54906003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?V2kvYms1SkZOZEdPQXRsdVd3Vmk0Ym1QeEUwWFl2RkVLWlpKQmNVczF3c0E4?=
- =?utf-8?B?V3Fhd014VTRtN1dvVWY4RzJMS0NkSzVOb2dCaWN0d0xlUjJCcmxSNEpmVnZz?=
- =?utf-8?B?dDd4TWN0QlJvRldyL2JGdEZuS2ZObHpTaGZLVHZQdEt2SVI3RVpVUG93aUR0?=
- =?utf-8?B?ZDZjZ3dpOTU4S3kwSXpxWDA3aWJINzk3aVhPeTNlQ21CNGdodWp5aTkxRGZn?=
- =?utf-8?B?WW9QWHFETUJ2VXNsSklSU3hvcEFrTDdpKzAvbDBQdVF2ZzlqUVZVcUhYdTJ4?=
- =?utf-8?B?ZFpmQ2NEYWtqZDc2UTJ6Uk44NlRkTmlJTmdEeTdMb2JBbkZpbFROTldEUk5w?=
- =?utf-8?B?V2xXenBzVUl5cVUxQlVMWW9pVXQxYmZXVEh2b0RoZG9hbTBxU3ROaldZT01o?=
- =?utf-8?B?MkFwa25UaU5jM09CUCtIbFdHaGZaeHdaSU5waFVxQ2NQVGU5bkkwQ1prcms1?=
- =?utf-8?B?MGJJdExXNFI1bEtkanM4YXF2K3pXQVl5TzRnTXlIRGlNZWtoa1RNRlMzV3M1?=
- =?utf-8?B?bzhsaTI4RVY5Z3M3TWh2ejhLMVJWY3hQTGtKb2R4OEJzL1RnZElSQThIRHN6?=
- =?utf-8?B?d0dzUUVta05BWFAvRCtGYkZRa2hRM0VXWDJ2dWd6cm1lWEY2ZXd4SGlwYTB5?=
- =?utf-8?B?NWNIVC81aXpwcFFLM2pVb2tPaWY1Rll5ZVhwNElzMVdiS2hid3JvT0tVaUdY?=
- =?utf-8?B?T0F6alliOVBlcWpMWVNmWGFvUmdNaFdjbDY5dTJJZlM2UGRybnJRWDRPSVg4?=
- =?utf-8?B?dXBhVFhHOUR0TkhPMmZEV3cra042UEJYbGQrRGtmZkI4RUJ5TkY3ZlFwYWls?=
- =?utf-8?B?cDgzZXVzdUI3L1QrN3NrUmFWS2F5TWR5bVVXc3BqeS9zZW0yMUhSNEdxNk5X?=
- =?utf-8?B?MTlxVysxNGk5WTUzNDBSbzNlUFdaMzBvSkdleXRhRlBUenh3cGIxSm1scnNX?=
- =?utf-8?B?YnFDR2JPL0FxbmxPR1NGa1M5QklUemdOdXJwTHNwelc2Rk9HZEZZMkFMaTBZ?=
- =?utf-8?B?QzRFMG5lSjdxVlBvVmdWQ3dFSU0xSzJXdlVtei9EaUo1L21UYythUlBkM2ly?=
- =?utf-8?B?bU9BV2NoU3ZrV2F6T3F1OThYZlNRSmQ3L2ZaYmhjOFh3U3l3RUNadmlrM3ph?=
- =?utf-8?B?Nyt2WmVUQ1BBcG15dkllTGQyT24yU3lOMHRHOW5WdmVzclFJU2lIL1JGVjZw?=
- =?utf-8?B?MnRGa1VTbUJiaXAwU2tsUENmS1BOZk5NL005d1ErNzVONXNBQ3hOMzk4YXk5?=
- =?utf-8?B?WFgyOFltRCszTk01a3JGZ3dmNFg3U1ZrOUJXUlJtejEvdUxjcStDQWIzRUc3?=
- =?utf-8?B?QjNESGJyNXhLMUtwNkNTamg0YUE3MXVad2JBN1lGc0xWdFA0bXF1WVZXR084?=
- =?utf-8?B?WGlxTmFUVDlxaEFGb0tFY3pwVkhHK1MyQk5XSEw0bkhwZGp1ODJFQ2pxT2Ix?=
- =?utf-8?B?M1RVeUIyalJQNXVDT2hlbTVsZzZNMDA2MDU1Y29RRDRaMjBTeVVWQmJrNk05?=
- =?utf-8?B?S1FoL2FxcGRsY213MjZUMFE1Q2MyVDJlZ2xrVURoTkJqUE42N0x2ZW50am9s?=
- =?utf-8?B?Z1dVVGE4djBXWnd5cElhcjdmZmV4cTR0ZjNTUXdIZU9CRVRjMWxBN0FUYW9E?=
- =?utf-8?B?MWY5cU1MZks4VTdFQm5YRlJIQ0p4b245Si9DcmoyTzNtRy8wblR5QzQ2bDgw?=
- =?utf-8?B?YVUrSVcvYWlwZDAwb2hHajI4cSsrNXlKdEVWSVAvbzNtcFVja2p3WlkyZ2Ew?=
- =?utf-8?B?RW9Rc2J3SzJTVDcxZDVhNmtwZXorZzQwR2JhSHlaaldmdXJoTTYzTXc0eWFz?=
- =?utf-8?B?V1RERm9sWEZ3N3RFR2dNa0VTdmc5dFVsMkpRN1Z4eVdSYVA2b0p3M0pnTk13?=
- =?utf-8?B?TTFrZ1R1RXJ5QXlxejRCVFpoZ3pHaDlYUFZRWjFvTFNCL1JnelNJanduZGVM?=
- =?utf-8?B?dG5PMzJqOFNvS1orcHdqOWRJUHFPZkEwZlhBVTJOUHRDeTI3dnJnMEsvVnMv?=
- =?utf-8?B?aGU1K3VFUFhPUklyN3QrL3VRVHpPcUJnaDJDZTA2aWRCOWVSZGdSTzc3UUx5?=
- =?utf-8?B?R3dUa3E0YllzejR5eGcwVy95VzdkYktMdnNlSFNRZjRJTjRmclVpbFpIZmFt?=
- =?utf-8?B?NTZvakN0Q3B4UTEwRTZLbW5rMS9WZk5leGZmMFRHeG5wTmM4OWQxWWVxQjNt?=
- =?utf-8?B?MFB2SnhaTCsvelJVYjJNcUFHcm5SdHo3TTlzUFpMTkw2SEpYQlg1QzM5OWg5?=
- =?utf-8?B?TWsyOVl1WnMzMkdVSnJJRnNROFJ3PT0=?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+ bh=+TmGxs+VxSNvjaNL4uZYNU3QmebfhaCMAcXlWXwMViI=;
+ b=aO+ppxGzkDPpgAR06/HsjNEj9JrRXCFRu/gfKF7ktkbkOA22LNRFYJGmyaYlfcPOfi6/kJaIJWeLy+Z9Fh7uhsyCzeKDoZHKhwkw1cpkLC0AXj+GKUc8+iRbC7fOPH3mfRqxu3l9mXyFKSAxFB55w1ITjLiB4N57dRWsN1qkG0ErVpluDkx+wtrOsQrLmqXiHRHy0WtMXJ8WX6XX/cHGaCjGnCNOWzKaaOCwEujqekq7cdWM4Z3SWWAFcmhmERS8m1Xx3R4i2PMO97K84Aimh54bZa07Z3j6FZRbFP2fwQdPXj8Cmg0dk3eD/bWaaBxGv2LeVjEZs6AI6GUFVrauEg==
+Received: from DS7PR07CA0011.namprd07.prod.outlook.com (2603:10b6:5:3af::22)
+ by SA3PR12MB7974.namprd12.prod.outlook.com (2603:10b6:806:307::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.32; Mon, 24 Apr
+ 2023 13:02:58 +0000
+Received: from DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:3af:cafe::a) by DS7PR07CA0011.outlook.office365.com
+ (2603:10b6:5:3af::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33 via Frontend
+ Transport; Mon, 24 Apr 2023 13:02:58 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ DM6NAM11FT008.mail.protection.outlook.com (10.13.172.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6340.18 via Frontend Transport; Mon, 24 Apr 2023 13:02:57 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 24 Apr 2023
+ 06:02:45 -0700
+Received: from [10.41.21.79] (10.126.231.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Mon, 24 Apr
+ 2023 06:02:39 -0700
+Message-ID: <51807461-5454-9997-a6f6-3d8bb63a4e3a@nvidia.com>
+Date:   Mon, 24 Apr 2023 18:32:37 +0530
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee316dc2-e2f5-4c69-8898-08db44b83d5d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2023 11:37:09.7247
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [Patch v6 8/9] PCI: tegra194: Add interconnect support in
+ Tegra234
+Content-Language: en-US
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+CC:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
+        <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
+        <rafael@kernel.org>, <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
+        <helgaas@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-pm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <mmaddireddy@nvidia.com>, <kw@linux.com>, <bhelgaas@google.com>,
+        <vidyas@nvidia.com>, <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>,
+        <ishah@nvidia.com>, <bbasu@nvidia.com>,
+        Sumit Gupta <sumitg@nvidia.com>
+References: <20230411110002.19824-1-sumitg@nvidia.com>
+ <20230411110002.19824-9-sumitg@nvidia.com> <ZDgXGCJQAHpLTw9S@lpieralisi>
+ <7ce0a62a-546e-8b01-abe7-598012a6ac2d@nvidia.com>
+ <ZEKLaveXizeptIIh@lpieralisi>
+From:   Sumit Gupta <sumitg@nvidia.com>
+In-Reply-To: <ZEKLaveXizeptIIh@lpieralisi>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.126.231.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT008:EE_|SA3PR12MB7974:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2927d829-0151-4668-2e6a-08db44c439f7
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ycn/m7yXI++0Dp29cKTVuC3op/MM30wmGgp/1V7GHOQUpe46UwdQnKoADsU0BbC14oqVzmmV/G47jmb02pk2EFfsapFSdsLEHOzs3cc/oX7a9Nhimae+HRnXhg3o8t3WvFZd/6KQuRMb7C6UqZzPGOmHo4GakQWQoPTLKwtG1ftpQWqsoXoGM6GBEOLV23Hw0O4S3WdpnfkYZDkKGaZD7xNKY9zYfSvDqctLu1Fio/3YER6fi8yHktzlartRlZGfz23u9wW7qfYLx0OMzmgAWS3yg1xxOc9IijLW8VhJxVT4wF06phy9FhtFqfuUfFjFw9X1BNrmVdvTG9ThF9myS4fdeJ7uEZHjE9n+LQ6twji99tXlcd3iHIATNU1pEODTOnEyBH+NDAV2+1Fo20yKjKnQyj61TzFpvgDRf5VgpoADuVl5Hdga7g1GVg0rP/6dXpIOT3Ya5hE6idg/mCEvc0Kw12+5cBTUF+6mV6zUj9T8NyWCfsPL5SRZR0V4P+6Hzk7orFPlR8XcSp8urLx+wfatrekNAM/AOMuRlsE0zhMsjN88CfcifI6qnYapXQMKBV0DS7Myy/vbiZ6LyeDxWSTPec4aK903Wg199dFxJ7v4H1JUbhXqBlO9M+d/5iPIJFGinUTEhwl9Xo21h+sT2bVxbNNqmAuBlAIajdAJ0Ud4jUAK44KJSjDcGiO3kvJ+IjMkbu3q28G/BfRzWehCJYEywLKFYcC3dNMUY3QUSpXZVxBLsdunYCfck5G1nO/8WW4o/qAXpALnsD1iDY4txQ==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(136003)(396003)(451199021)(36840700001)(46966006)(40470700004)(478600001)(40460700003)(16526019)(31696002)(16576012)(54906003)(86362001)(36756003)(107886003)(34020700004)(186003)(53546011)(26005)(82310400005)(40480700001)(4326008)(6916009)(316002)(82740400003)(83380400001)(70206006)(70586007)(36860700001)(2906002)(7636003)(336012)(356005)(426003)(41300700001)(8676002)(8936002)(31686004)(5660300002)(47076005)(7416002)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2023 13:02:57.8430
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 87Nr4MHZXDgLJ2YUmhPQgZObePfsQNrUuJyXjqQeIc4GC9hVVtl/PJgCMy/KiNaWDhqprEP+38IgBylngxKDNjCcPKaJsSd8xrLLEkfXMbUh6cJ7PtsVQHOm/WE30OUp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB8446
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2927d829-0151-4668-2e6a-08db44c439f7
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7974
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-SGkgTWFuaXZhbm5hbiwNCg0KPiBGcm9tOiBNYW5pdmFubmFuIFNhZGhhc2l2YW0sIFNlbnQ6IFNh
-dHVyZGF5LCBBcHJpbCAyMiwgMjAyMyAxMTo0NyBQTQ0KPiANCj4gT24gVHVlLCBBcHIgMTgsIDIw
-MjMgYXQgMDk6MjQ6MDFQTSArMDkwMCwgWW9zaGloaXJvIFNoaW1vZGEgd3JvdGU6DQo+ID4gQWRk
-IFItQ2FyIEdlbjQgUENJZSBFbmRwb2ludCBzdXBwb3J0LiBUaGlzIGNvbnRyb2xsZXIgaXMgYmFz
-ZWQgb24NCj4gPiBTeW5vcHN5cyBEZXNpZ25XYXJlIFBDSWUuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
-LWJ5OiBZb3NoaWhpcm8gU2hpbW9kYSA8eW9zaGloaXJvLnNoaW1vZGEudWhAcmVuZXNhcy5jb20+
-DQo+IA0KPiBTbWFsbCBuaXQgYmVsb3cuLi4NCj4gDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNp
-L2NvbnRyb2xsZXIvZHdjL0tjb25maWcgICAgICAgICAgICB8ICAgOSArDQo+ID4gIGRyaXZlcnMv
-cGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlICAgICAgICAgICB8ICAgMiArDQo+ID4gIC4uLi9w
-Y2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdlbjQtZXAuYyAgICB8IDE2NiArKysrKysrKysr
-KysrKysrKysNCj4gPiAgMyBmaWxlcyBjaGFuZ2VkLCAxNzcgaW5zZXJ0aW9ucygrKQ0KPiA+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdl
-bjQtZXAuYw0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdj
-L0tjb25maWcgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9LY29uZmlnDQo+ID4gaW5kZXgg
-ZWI5MGUyMTE2ZTU5Li4xYjYwY2FkZThhMjAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvS2NvbmZpZw0KPiA+ICsrKyBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
-ZHdjL0tjb25maWcNCj4gPiBAQCAtNDI0LDQgKzQyNCwxMyBAQCBjb25maWcgUENJRV9SQ0FSX0dF
-TjQNCj4gPiAgCSAgU2F5IFkgaGVyZSBpZiB5b3Ugd2FudCBQQ0llIGhvc3QgY29udHJvbGxlciBz
-dXBwb3J0IG9uIFItQ2FyIEdlbjQgU29Dcy4NCj4gPiAgCSAgVGhpcyB1c2VzIHRoZSBEZXNpZ25X
-YXJlIGNvcmUuDQo+ID4NCj4gPiArY29uZmlnIFBDSUVfUkNBUl9HRU40X0VQDQo+ID4gKwl0cmlz
-dGF0ZSAiUmVuZXNhcyBSLUNhciBHZW40IFBDSWUgRW5kcG9pbnQgY29udHJvbGxlciINCj4gPiAr
-CWRlcGVuZHMgb24gQVJDSF9SRU5FU0FTIHx8IENPTVBJTEVfVEVTVA0KPiA+ICsJZGVwZW5kcyBv
-biBQQ0lfRU5EUE9JTlQNCj4gPiArCXNlbGVjdCBQQ0lFX0RXX0VQDQo+ID4gKwloZWxwDQo+ID4g
-KwkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgUENJZSBlbmRwb2ludCBjb250cm9sbGVyIHN1cHBv
-cnQgb24gUi1DYXIgR2VuNA0KPiA+ICsJICBTb0NzLiBUaGlzIHVzZXMgdGhlIERlc2lnbldhcmUg
-Y29yZS4NCj4gPiArDQo+ID4gIGVuZG1lbnUNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wY2kv
-Y29udHJvbGxlci9kd2MvTWFrZWZpbGUgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9NYWtl
-ZmlsZQ0KPiA+IGluZGV4IDQ4NmNmNzA2YjUzZC4uMGZiMGJkZTI2YWM0IDEwMDY0NA0KPiA+IC0t
-LSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL01ha2VmaWxlDQo+ID4gKysrIGIvZHJpdmVy
-cy9wY2kvY29udHJvbGxlci9kd2MvTWFrZWZpbGUNCj4gPiBAQCAtMjgsNiArMjgsOCBAQCBvYmot
-JChDT05GSUdfUENJRV9VTklQSElFUl9FUCkgKz0gcGNpZS11bmlwaGllci1lcC5vDQo+ID4gIG9i
-ai0kKENPTkZJR19QQ0lFX1ZJU0NPTlRJX0hPU1QpICs9IHBjaWUtdmlzY29udGkubw0KPiA+ICBw
-Y2llLXJjYXItZ2VuNC1ob3N0LWRydi1vYmpzIDo9IHBjaWUtcmNhci1nZW40Lm8gcGNpZS1yY2Fy
-LWdlbjQtaG9zdC5vDQo+ID4gIG9iai0kKENPTkZJR19QQ0lFX1JDQVJfR0VONCkgKz0gcGNpZS1y
-Y2FyLWdlbjQtaG9zdC1kcnYubw0KPiA+ICtwY2llLXJjYXItZ2VuNC1lcC1kcnYtb2JqcyA6PSBw
-Y2llLXJjYXItZ2VuNC5vIHBjaWUtcmNhci1nZW40LWVwLm8NCj4gPiArb2JqLSQoQ09ORklHX1BD
-SUVfUkNBUl9HRU40X0VQKSArPSBwY2llLXJjYXItZ2VuNC1lcC1kcnYubw0KPiA+DQo+ID4gICMg
-VGhlIGZvbGxvd2luZyBkcml2ZXJzIGFyZSBmb3IgZGV2aWNlcyB0aGF0IHVzZSB0aGUgZ2VuZXJp
-YyBBQ1BJDQo+ID4gICMgcGNpX3Jvb3QuYyBkcml2ZXIgYnV0IGRvbid0IHN1cHBvcnQgc3RhbmRh
-cmQgRUNBTSBjb25maWcgYWNjZXNzLg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250
-cm9sbGVyL2R3Yy9wY2llLXJjYXItZ2VuNC1lcC5jIGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9k
-d2MvcGNpZS1yY2FyLWdlbjQtZXAuYw0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5k
-ZXggMDAwMDAwMDAwMDAwLi5lYjRiMjljOTQ4ZDUNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysr
-IGIvZHJpdmVycy9wY2kvY29udHJvbGxlci9kd2MvcGNpZS1yY2FyLWdlbjQtZXAuYw0KPiA+IEBA
-IC0wLDAgKzEsMTY2IEBADQo+ID4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiBHUEwtMi4w
-LW9ubHkNCj4gPiArLyoNCj4gPiArICogUENJZSBFbmRwb2ludCBkcml2ZXIgZm9yIFJlbmVzYXMg
-Ui1DYXIgR2VuNCBTZXJpZXMgU29Dcw0KPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMjItMjAyMyBS
-ZW5lc2FzIEVsZWN0cm9uaWNzIENvcnBvcmF0aW9uDQo+ID4gKyAqLw0KPiA+ICsNCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2ludGVycnVwdC5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+
-DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4gPiArI2luY2x1ZGUgPGxpbnV4
-L3BjaS5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGV2aWNlLmg+DQo+ID4gKw0K
-PiA+ICsjaW5jbHVkZSAicGNpZS1yY2FyLWdlbjQuaCINCj4gPiArI2luY2x1ZGUgInBjaWUtZGVz
-aWdud2FyZS5oIg0KPiA+ICsNCj4gPiArc3RhdGljIHZvaWQgcmNhcl9nZW40X3BjaWVfZXBfcHJl
-X2luaXQoc3RydWN0IGR3X3BjaWVfZXAgKmVwKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZHdfcGNp
-ZSAqZHcgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJc3RydWN0IHJjYXJfZ2VuNF9w
-Y2llICpyY2FyID0gdG9fcmNhcl9nZW40X3BjaWUoZHcpOw0KPiA+ICsJdTggdmFsOw0KPiA+ICsN
-Cj4gPiArCXJjYXJfZ2VuNF9wY2llX3NldF9kZXZpY2VfdHlwZShyY2FyLCBmYWxzZSwgZHctPm51
-bV9sYW5lcyk7DQo+ID4gKw0KPiA+ICsJZHdfcGNpZV9kYmlfcm9fd3JfZW4oZHcpOw0KPiA+ICsN
-Cj4gPiArCS8qIFNpbmdsZSBmdW5jdGlvbiAqLw0KPiA+ICsJdmFsID0gZHdfcGNpZV9yZWFkYl9k
-YmkoZHcsIFBDSV9IRUFERVJfVFlQRSk7DQo+ID4gKwl2YWwgJj0gflBDSV9IRUFERVJfVFlQRV9N
-VUxUSV9GVU5DOw0KPiA+ICsJZHdfcGNpZV93cml0ZWJfZGJpKGR3LCBQQ0lfSEVBREVSX1RZUEUs
-IHZhbCk7DQo+ID4gKw0KPiA+ICsJZHdfcGNpZV9kYmlfcm9fd3JfZGlzKGR3KTsNCj4gPiArDQo+
-ID4gKwl3cml0ZWwoUENJRURNQUlOVFNUU0VOX0lOSVQsIHJjYXItPmJhc2UgKyBQQ0lFRE1BSU5U
-U1RTRU4pOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCByY2FyX2dlbjRfcGNpZV9l
-cF9kZWluaXQoc3RydWN0IGR3X3BjaWVfZXAgKmVwKQ0KPiA+ICt7DQo+ID4gKwlzdHJ1Y3QgZHdf
-cGNpZSAqZHcgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsJc3RydWN0IHJjYXJfZ2Vu
-NF9wY2llICpyY2FyID0gdG9fcmNhcl9nZW40X3BjaWUoZHcpOw0KPiA+ICsNCj4gPiArCXdyaXRl
-bCgwLCByY2FyLT5iYXNlICsgUENJRURNQUlOVFNUU0VOKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAr
-c3RhdGljIGludCByY2FyX2dlbjRfcGNpZV9lcF9yYWlzZV9pcnEoc3RydWN0IGR3X3BjaWVfZXAg
-KmVwLCB1OCBmdW5jX25vLA0KPiA+ICsJCQkJICAgICAgIGVudW0gcGNpX2VwY19pcnFfdHlwZSB0
-eXBlLA0KPiA+ICsJCQkJICAgICAgIHUxNiBpbnRlcnJ1cHRfbnVtKQ0KPiA+ICt7DQo+ID4gKwlz
-dHJ1Y3QgZHdfcGNpZSAqZHcgPSB0b19kd19wY2llX2Zyb21fZXAoZXApOw0KPiA+ICsNCj4gPiAr
-CXN3aXRjaCAodHlwZSkgew0KPiA+ICsJY2FzZSBQQ0lfRVBDX0lSUV9JTlRYOg0KPiA+ICsJCXJl
-dHVybiBkd19wY2llX2VwX3JhaXNlX2ludHhfaXJxKGVwLCBmdW5jX25vKTsNCj4gPiArCWNhc2Ug
-UENJX0VQQ19JUlFfTVNJOg0KPiA+ICsJCXJldHVybiBkd19wY2llX2VwX3JhaXNlX21zaV9pcnEo
-ZXAsIGZ1bmNfbm8sIGludGVycnVwdF9udW0pOw0KPiA+ICsJZGVmYXVsdDoNCj4gPiArCQlkZXZf
-ZXJyKGR3LT5kZXYsICJVTktOT1dOIElSUSB0eXBlXG4iKTsNCj4gDQo+IFVua25vd24NCg0KSSBn
-b3QgaXQuIEknbGwgZml4IGl0IG9uIHYxMy4NCg0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+
-ICsJfQ0KPiA+ICsNCj4gPiArCXJldHVybiAwOw0KPiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMg
-Y29uc3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMgcmNhcl9nZW40X3BjaWVfZXBjX2ZlYXR1cmVz
-ID0gew0KPiA+ICsJLmxpbmt1cF9ub3RpZmllciA9IGZhbHNlLA0KPiA+ICsJLm1zaV9jYXBhYmxl
-ID0gdHJ1ZSwNCj4gPiArCS5tc2l4X2NhcGFibGUgPSBmYWxzZSwNCj4gPiArCS5yZXNlcnZlZF9i
-YXIgPSAxIDw8IEJBUl81LA0KPiA+ICsJLmFsaWduID0gU1pfMU0sDQo+ID4gK307DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHBjaV9lcGNfZmVhdHVyZXMqDQo+ID4gK3JjYXJfZ2Vu
-NF9wY2llX2VwX2dldF9mZWF0dXJlcyhzdHJ1Y3QgZHdfcGNpZV9lcCAqZXApDQo+ID4gK3sNCj4g
-PiArCXJldHVybiAmcmNhcl9nZW40X3BjaWVfZXBjX2ZlYXR1cmVzOw0KPiA+ICt9DQo+ID4gKw0K
-PiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGR3X3BjaWVfZXBfb3BzIHBjaWVfZXBfb3BzID0gew0K
-PiA+ICsJLmVwX3ByZV9pbml0ID0gcmNhcl9nZW40X3BjaWVfZXBfcHJlX2luaXQsDQo+ID4gKwku
-ZXBfZGVpbml0ID0gcmNhcl9nZW40X3BjaWVfZXBfZGVpbml0LA0KPiA+ICsJLnJhaXNlX2lycSA9
-IHJjYXJfZ2VuNF9wY2llX2VwX3JhaXNlX2lycSwNCj4gPiArCS5nZXRfZmVhdHVyZXMgPSByY2Fy
-X2dlbjRfcGNpZV9lcF9nZXRfZmVhdHVyZXMsDQo+ID4gK307DQo+ID4gKw0KPiA+ICtzdGF0aWMg
-aW50IHJjYXJfZ2VuNF9hZGRfcGNpZV9lcChzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXIsDQo+
-ID4gKwkJCQkgc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArew0KPiA+ICsJc3Ry
-dWN0IGR3X3BjaWVfZXAgKmVwID0gJnJjYXItPmR3LmVwOw0KPiA+ICsJaW50IHJldDsNCj4gPiAr
-DQo+ID4gKwllcC0+b3BzID0gJnBjaWVfZXBfb3BzOw0KPiA+ICsNCj4gPiArCXJldCA9IGR3X3Bj
-aWVfZXBfaW5pdChlcCk7DQo+ID4gKwlpZiAocmV0KSB7DQo+ID4gKwkJZGV2X2VycigmcGRldi0+
-ZGV2LCAiZmFpbGVkIHRvIGluaXRpYWxpemUgZW5kcG9pbnRcbiIpOw0KPiA+ICsJCXJldHVybiBy
-ZXQ7DQo+ID4gKwl9DQo+ID4gKw0KPiA+ICsJcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo+ID4g
-K3N0YXRpYyB2b2lkIHJjYXJfZ2VuNF9yZW1vdmVfcGNpZV9lcChzdHJ1Y3QgcmNhcl9nZW40X3Bj
-aWUgKnJjYXIpDQo+ID4gK3sNCj4gPiArCWR3X3BjaWVfZXBfZXhpdCgmcmNhci0+ZHcuZXApOw0K
-PiA+ICt9DQo+ID4gKw0KPiA+ICtzdGF0aWMgaW50IHJjYXJfZ2VuNF9wY2llX2VwX3Byb2JlKHN0
-cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBkZXZpY2Ug
-KmRldiA9ICZwZGV2LT5kZXY7DQo+ID4gKwlzdHJ1Y3QgcmNhcl9nZW40X3BjaWUgKnJjYXI7DQo+
-ID4gKwlpbnQgZXJyOw0KPiA+ICsNCj4gPiArCXJjYXIgPSByY2FyX2dlbjRfcGNpZV9kZXZtX2Fs
-bG9jKGRldik7DQo+ID4gKwlpZiAoIXJjYXIpDQo+ID4gKwkJcmV0dXJuIC1FTk9NRU07DQo+ID4g
-Kw0KPiA+ICsJZXJyID0gcmNhcl9nZW40X3BjaWVfZ2V0X3Jlc291cmNlcyhyY2FyLCBwZGV2KTsN
-Cj4gPiArCWlmIChlcnIgPCAwKSB7DQo+ID4gKwkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gcmVx
-dWVzdCByZXNvdXJjZTogJWRcbiIsIGVycik7DQo+ID4gKwkJcmV0dXJuIGVycjsNCj4gPiArCX0N
-Cj4gDQo+IE5vIG5lZWQgdG8gYXNzZXJ0L2RlYXNzZXJ0IHJlc2V0Pw0KDQpJIGFzc3VtZWQgbm8g
-bmVlZCB0byBhc3NlcnQgcmVzZXQsIGFuZCBkZWFzc2VydGluZyB3aWxsIGJlIGlzc3VlZCBvbg0K
-cmNhcl9nZW40X3BjaWVfc2V0X2RldmljZV90eXBlKCkgZnJvbSByY2FyX2dlbjRfcGNpZV9lcF9w
-cmVfaW5pdCgpLg0KDQpCZXN0IHJlZ2FyZHMsDQpZb3NoaWhpcm8gU2hpbW9kYQ0KDQo+IC0gTWFu
-aQ0KPiANCj4gLS0NCj4g4K6u4K6j4K6/4K614K6j4K+N4K6j4K6p4K+NIOCumuCupOCuvuCumuCu
-v+CuteCuruCvjQ0K
+
+
+On 21/04/23 18:41, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Fri, Apr 14, 2023 at 04:24:02PM +0530, Sumit Gupta wrote:
+>>
+>>
+>> On 13/04/23 20:22, Lorenzo Pieralisi wrote:
+>>> External email: Use caution opening links or attachments
+>>>
+>>>
+>>> On Tue, Apr 11, 2023 at 04:30:01PM +0530, Sumit Gupta wrote:
+>>>> Add support to request DRAM bandwidth with Memory Interconnect
+>>>> in Tegra234 SoC. The DRAM BW required for different modes depends
+>>>> on speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
+>>>> Currently, no latency is observed in data transfer with PCI as the
+>>>> DRAM Freq is always set to max. But that results in high power
+>>>> consumption. Now for Tegra234, we are enabling the dynamic scaling
+>>>> of the DRAM Freq based on requests from Clients instead of running
+>>>> at the max Freq always. This change does that for PCI MC client.
+>>>
+>>> I am sorry but this is still unclear to me. The sentence above makes
+>>> me think that you are *adding* latency to the data transfer trading
+>>> it with lower power consumption; probably that's a wrong parsing of
+>>> what you are saying - so please explain what you want to say
+>>> with "no latency is observed" and whether this patch changes that
+>>> (which is not allowed because that would count as a regression).
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>>
+>>
+>> Rephrased as below. Please suggest if it is clear now.
+>>
+>> Add support to request DRAM bandwidth with Memory Interconnect in
+>> Tegra234 SoC. The DRAM BW required for different modes depends on
+>> speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
+>> Currently, the DRAM freq is always set to max but that results in
+>> higher power consumption. Memory Interconnect feature adds capability
+>> for MC clients to request BW and scale the DRAM freq dynamically to
+>> provide the requested BW.
+> 
+> What does "Memory Interconnect" stand for ?
+> 
+> Is that HW technology or a Linux framework (or both) ?
+> 
+> What does MC stand for ?
+> 
+> Update the commit log below accordingly.
+> 
+> "Add support to request DRAM bandwidth with Memory Interconnect
+> in Tegra234 SoC.
+> 
+> The DRAM BW required for different modes depends on the link
+> speed (Gen-1/2/3/4) and width/lanes (x1/x2/x4/x8).
+> 
+> Currently, the DRAM frequency is always set to the maximum available
+> but that results in the highest power consumption.
+> 
+> The Memory Interconnect feature adds the capability for MC clients to
+> request bandwidth and therefore scale DRAM frequency dynamically
+> depending on the required link speed so that the DRAM energy consumption
+> can be optimized".
+> 
+> With that:
+> 
+> Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> 
+Thank you for the inputs.
+Have added changes in v7.
+
+>>
+>> Thank you,
+>> Sumit Gupta
+>>
+>>>>
+>>>> Suggested-by: Manikanta Maddireddy <mmaddireddy@nvidia.com>
+>>>> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
+>>>> ---
+>>>>    drivers/pci/controller/dwc/pcie-tegra194.c | 51 +++++++++++++++-------
+>>>>    1 file changed, 35 insertions(+), 16 deletions(-)
+>>>>
+>>>> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+>>>> index e6eec85480ca..4fdadc7b045f 100644
+>>>> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+>>>> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+>>>> @@ -14,6 +14,7 @@
+>>>>    #include <linux/delay.h>
+>>>>    #include <linux/gpio.h>
+>>>>    #include <linux/gpio/consumer.h>
+>>>> +#include <linux/interconnect.h>
+>>>>    #include <linux/interrupt.h>
+>>>>    #include <linux/iopoll.h>
+>>>>    #include <linux/kernel.h>
+>>>> @@ -288,6 +289,7 @@ struct tegra_pcie_dw {
+>>>>         unsigned int pex_rst_irq;
+>>>>         int ep_state;
+>>>>         long link_status;
+>>>> +     struct icc_path *icc_path;
+>>>>    };
+>>>>
+>>>>    static inline struct tegra_pcie_dw *to_tegra_pcie(struct dw_pcie *pci)
+>>>> @@ -310,6 +312,27 @@ struct tegra_pcie_soc {
+>>>>         enum dw_pcie_device_mode mode;
+>>>>    };
+>>>>
+>>>> +static void tegra_pcie_icc_set(struct tegra_pcie_dw *pcie)
+>>>> +{
+>>>> +     struct dw_pcie *pci = &pcie->pci;
+>>>> +     u32 val, speed, width;
+>>>> +
+>>>> +     val = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA);
+>>>> +
+>>>> +     speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, val);
+>>>> +     width = FIELD_GET(PCI_EXP_LNKSTA_NLW, val);
+>>>> +
+>>>> +     val = width * (PCIE_SPEED2MBS_ENC(pcie_link_speed[speed]) / BITS_PER_BYTE);
+>>>> +
+>>>> +     if (icc_set_bw(pcie->icc_path, MBps_to_icc(val), 0))
+>>>> +             dev_err(pcie->dev, "can't set bw[%u]\n", val);
+>>>> +
+>>>> +     if (speed >= ARRAY_SIZE(pcie_gen_freq))
+>>>> +             speed = 0;
+>>>> +
+>>>> +     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+>>>> +}
+>>>> +
+>>>>    static void apply_bad_link_workaround(struct dw_pcie_rp *pp)
+>>>>    {
+>>>>         struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>> @@ -453,18 +476,12 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
+>>>>         struct tegra_pcie_dw *pcie = arg;
+>>>>         struct dw_pcie_ep *ep = &pcie->pci.ep;
+>>>>         struct dw_pcie *pci = &pcie->pci;
+>>>> -     u32 val, speed;
+>>>> +     u32 val;
+>>>>
+>>>>         if (test_and_clear_bit(0, &pcie->link_status))
+>>>>                 dw_pcie_ep_linkup(ep);
+>>>>
+>>>> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+>>>> -             PCI_EXP_LNKSTA_CLS;
+>>>> -
+>>>> -     if (speed >= ARRAY_SIZE(pcie_gen_freq))
+>>>> -             speed = 0;
+>>>> -
+>>>> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+>>>> +     tegra_pcie_icc_set(pcie);
+>>>>
+>>>>         if (pcie->of_data->has_ltr_req_fix)
+>>>>                 return IRQ_HANDLED;
+>>>> @@ -950,9 +967,9 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>>>>
+>>>>    static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>>>>    {
+>>>> -     u32 val, offset, speed, tmp;
+>>>>         struct tegra_pcie_dw *pcie = to_tegra_pcie(pci);
+>>>>         struct dw_pcie_rp *pp = &pci->pp;
+>>>> +     u32 val, offset, tmp;
+>>>>         bool retry = true;
+>>>>
+>>>>         if (pcie->of_data->mode == DW_PCIE_EP_TYPE) {
+>>>> @@ -1023,13 +1040,7 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
+>>>>                 goto retry_link;
+>>>>         }
+>>>>
+>>>> -     speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+>>>> -             PCI_EXP_LNKSTA_CLS;
+>>>> -
+>>>> -     if (speed >= ARRAY_SIZE(pcie_gen_freq))
+>>>> -             speed = 0;
+>>>> -
+>>>> -     clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
+>>>> +     tegra_pcie_icc_set(pcie);
+>>>>
+>>>>         tegra_pcie_enable_interrupts(pp);
+>>>>
+>>>> @@ -2233,6 +2244,14 @@ static int tegra_pcie_dw_probe(struct platform_device *pdev)
+>>>>
+>>>>         platform_set_drvdata(pdev, pcie);
+>>>>
+>>>> +     pcie->icc_path = devm_of_icc_get(&pdev->dev, "write");
+>>>> +     ret = PTR_ERR_OR_ZERO(pcie->icc_path);
+>>>> +     if (ret) {
+>>>> +             tegra_bpmp_put(pcie->bpmp);
+>>>> +             dev_err_probe(&pdev->dev, ret, "failed to get write interconnect\n");
+>>>> +             return ret;
+>>>> +     }
+>>>> +
+>>>>         switch (pcie->of_data->mode) {
+>>>>         case DW_PCIE_RC_TYPE:
+>>>>                 ret = devm_request_irq(dev, pp->irq, tegra_pcie_rp_irq_handler,
+>>>> --
+>>>> 2.17.1
+>>>>
