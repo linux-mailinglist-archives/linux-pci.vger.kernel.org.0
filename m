@@ -2,25 +2,25 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A8666ECCE2
-	for <lists+linux-pci@lfdr.de>; Mon, 24 Apr 2023 15:16:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACD8C6ECCE7
+	for <lists+linux-pci@lfdr.de>; Mon, 24 Apr 2023 15:16:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231705AbjDXNQd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 24 Apr 2023 09:16:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39298 "EHLO
+        id S231936AbjDXNQn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 24 Apr 2023 09:16:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbjDXNQb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Apr 2023 09:16:31 -0400
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2086.outbound.protection.outlook.com [40.107.94.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B664C33;
-        Mon, 24 Apr 2023 06:15:48 -0700 (PDT)
+        with ESMTP id S231288AbjDXNQh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 24 Apr 2023 09:16:37 -0400
+Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2040.outbound.protection.outlook.com [40.107.244.40])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A56E49FF;
+        Mon, 24 Apr 2023 06:16:07 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YR+P5ai1KOGNksJHWfCHvBha3Gup6POaWDOP67FJIkf6IwMQxvAhQsYBkKu2+37XuxwHr+fGBF9PW0fG7nedDmMCx4bYfLa1d8zatMdWVRQfWFzIi5q47gP3LQwRJyA9i7WSWWQd1Y00oloaKyLOAnxdBCpqa3ZPeRP5b5fBKo9w90prnra8cFvY5nFDUXWw/gpqUG7zVfi22LxeRAz1vF3eo35cMWWb5vZ2GCoVpxv2Kk2cWxbQhrc59GTZjLfrd4Gn9xwEg28f/7wBny8jwpj2Jv9l+yK8avgcWR9PuTR8gGnAT5Bm5qZRKIPNpnPWvpyAVEiUAcNcYNSS31araQ==
+ b=aUUo0tKzoIwb/CjBcW0KjJZiCxHKsOVr8YVrfhw/8fiRkcPxxNE2lejuH+j9viSHonqhuGc+HNhMT01uHO6k2vuiCYMS2j53l3tZkCfd03NqSfu90dEQ45ktLiQcmjRn4bxcchv6W19SuYG4l9VLtVS256yz1tXNQWb7PjLaxfZdsz1hWSZDD2+b6RMby8PqqWAWstMJFlIoARMX/a2+wpZxQq0o5OSwr1orgj8fRqh04lIqFjXBiOOs3j03R57R6M8aS6i4h2rlECKLKbs083VOdqzglv2y++nRHYVSzIU0O9KvzdNNGes/WJSDfMjFQ5efgc2Er9mwdY8VunAgGg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ujSnNtZYvpOXFvDgiegtE9Scjpidv1UphqcDnVciXG4=;
- b=RRAARlpQAeg7zHjEzNtMxdbQpyIPZWKzFFhmHW+Udw+EXYvRxw/DttwWY5G9tJCrjr75pl21Z+1XPQBNWxjL5AIvVU0gQyW21Fyoet1zMsMjK1Ir37fE+OtqnoFxX80QiD8w98AMaWu4LQn9AYJm7w32ATmlzpx6Jtyl4YCz+3RP0VXvKfQtsplyS6oI209S25b3+C0EgEKDIIxZA4G9tZniIuRqKaYJCiHi25OZ60Kno50z0M60ARmjyga7aqJLTRQAP8xAABg1v1PmXHSC8qYu1+OAWLufeZgXEnsq7BJ9SJOCkigoOb8j6JsJ+6ddiKLaGQsIqQxeH7WZgoVMDQ==
+ bh=XoLxQ/aoqkolqX/Bc5Ghr9wWeKjvVcGBxx3jPRPmbH4=;
+ b=QwSK0ZdMj+dkkQskkGFBsxy1C5o4ZXxF4oSP4VXRXL9fO9+dCXo01oSFYCMI0Mjo5KOijVp//RfLVH3zch/s/IUWoY7lXGKZS5hzLVLreXRV885tLnt5p0QHWvyESfuXBecIisu4WMfztdO17oZ9Oeg/fAgOQ1PG58aYH1tvBN4XUUGDjhnT0dgbjvCj39ufKCyUoIozrkWUkQ85GViptClJDt16j9+DnZ/pNynNO6/wQuyZb76PEUQfpliqapQ4jD2N1unm3d0BAFFyhCyPd1ZnXPsRJkowWwgxQyKiN0+eyoPWKlc4czosKekV/fQ5NCxbp+9gAlk5S/BeZOrMuQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  216.228.117.161) smtp.rcpttodomain=google.com smtp.mailfrom=nvidia.com;
  dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
@@ -28,17 +28,18 @@ ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ujSnNtZYvpOXFvDgiegtE9Scjpidv1UphqcDnVciXG4=;
- b=s8xy71Q8yaeKPNgnK8sqIRPctD4HFqFPkxxImSsifTtyPlNM+AFwliXYYiy87HzWy0lF4iJqS3QZKXxPef2iknCK7z8D26gYqygpMGarZttguGQ1VJnMWKVUnc1Hoc6nWKSBfdtRBf3Rg+yeJ4o76Ye3U2Q0U17Zib/yF1qglstMMBWq2fuMSVxMy0Sl6wIRshH5Ug75zFb/ZmjWAY9BAskgHZIUjiXssEqLG/vQ4X4FJWd0xiD0oDFhzAzf88RkT6msYF5dA30VeHKeQIQWnuqQwe1gd1ujzETF2lZn47rYfA1t6Zs/6+8Loj8yj4X6Zrq6BghZFuBRqS4AwsSpsg==
-Received: from MN2PR01CA0035.prod.exchangelabs.com (2603:10b6:208:10c::48) by
- DM4PR12MB5325.namprd12.prod.outlook.com (2603:10b6:5:390::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6319.33; Mon, 24 Apr 2023 13:15:35 +0000
-Received: from BL02EPF000145BB.namprd05.prod.outlook.com
- (2603:10b6:208:10c:cafe::fe) by MN2PR01CA0035.outlook.office365.com
- (2603:10b6:208:10c::48) with Microsoft SMTP Server (version=TLS1_2,
+ bh=XoLxQ/aoqkolqX/Bc5Ghr9wWeKjvVcGBxx3jPRPmbH4=;
+ b=NsLyj6cRFjg8CurCT4CsabTwuWAdj4r9mgZbtEf0Q+XX15Dlps7wy0KNz0/MzGheN1bJJzCBt/4LgGohpBfhHa9hI0lasJy2cOAcUxp8jP1RmnxSA8LsCNzOYVhq8lxa5o+jDHculhrRJNYEr+hWLULeRZdez83+erW7LzHBYLA9eVz0PS1OgiUraiXtzPj9COgBr9cdHCYV6Lxp1OaQHeIEF0o2au/fkiViqibH7+D8LQEkTnfcRTDOoxfmdR/6cciC6XxmJICU/OdlgU8TpRmYVB+sB+zVhcCjVGXaK7+urgRhlimIJbUNFQj4FnNyTqHWt5IcjAYLFJCbrgx09Q==
+Received: from MN2PR11CA0002.namprd11.prod.outlook.com (2603:10b6:208:23b::7)
+ by PH7PR12MB5733.namprd12.prod.outlook.com (2603:10b6:510:1e0::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.22; Mon, 24 Apr
+ 2023 13:15:48 +0000
+Received: from BL02EPF000145B8.namprd05.prod.outlook.com
+ (2603:10b6:208:23b:cafe::84) by MN2PR11CA0002.outlook.office365.com
+ (2603:10b6:208:23b::7) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6319.33 via Frontend
- Transport; Mon, 24 Apr 2023 13:15:34 +0000
+ Transport; Mon, 24 Apr 2023 13:15:47 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
  smtp.mailfrom=nvidia.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=nvidia.com;
@@ -46,20 +47,20 @@ Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
  216.228.117.161 as permitted sender) receiver=protection.outlook.com;
  client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
 Received: from mail.nvidia.com (216.228.117.161) by
- BL02EPF000145BB.mail.protection.outlook.com (10.167.241.211) with Microsoft
+ BL02EPF000145B8.mail.protection.outlook.com (10.167.241.208) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6340.15 via Frontend Transport; Mon, 24 Apr 2023 13:15:34 +0000
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by mail.nvidia.com
+ 15.20.6340.15 via Frontend Transport; Mon, 24 Apr 2023 13:15:47 +0000
+Received: from rnnvmail203.nvidia.com (10.129.68.9) by mail.nvidia.com
  (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 24 Apr 2023
- 06:15:19 -0700
-Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail205.nvidia.com
- (10.129.68.10) with Microsoft SMTP Server (version=TLS1_2,
+ 06:15:30 -0700
+Received: from rnnvmail205.nvidia.com (10.129.68.10) by rnnvmail203.nvidia.com
+ (10.129.68.9) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Mon, 24 Apr
- 2023 06:15:19 -0700
+ 2023 06:15:29 -0700
 Received: from sumitg-l4t.nvidia.com (10.127.8.10) by mail.nvidia.com
  (10.129.68.10) with Microsoft SMTP Server id 15.2.986.37 via Frontend
- Transport; Mon, 24 Apr 2023 06:15:13 -0700
+ Transport; Mon, 24 Apr 2023 06:15:23 -0700
 From:   Sumit Gupta <sumitg@nvidia.com>
 To:     <treding@nvidia.com>, <krzysztof.kozlowski@linaro.org>,
         <dmitry.osipenko@collabora.com>, <viresh.kumar@linaro.org>,
@@ -71,9 +72,9 @@ CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
         <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
         <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
         <bbasu@nvidia.com>, <sumitg@nvidia.com>
-Subject: [Patch v7 5/8] memory: tegra: make cpu cluster bw request a multiple of mc channels
-Date:   Mon, 24 Apr 2023 18:43:34 +0530
-Message-ID: <20230424131337.20151-6-sumitg@nvidia.com>
+Subject: [Patch v7 6/8] PCI: tegra194: Fix possible array out of bounds access
+Date:   Mon, 24 Apr 2023 18:43:35 +0530
+Message-ID: <20230424131337.20151-7-sumitg@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230424131337.20151-1-sumitg@nvidia.com>
 References: <20230424131337.20151-1-sumitg@nvidia.com>
@@ -82,23 +83,23 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF000145BB:EE_|DM4PR12MB5325:EE_
-X-MS-Office365-Filtering-Correlation-Id: a622a823-a022-4168-ea58-08db44c5fd25
+X-MS-TrafficTypeDiagnostic: BL02EPF000145B8:EE_|PH7PR12MB5733:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8130dd06-4705-4a63-e68d-08db44c604c2
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: NIXGPJ/84ccc6/d4OErGBjOfWm4Qi3KGxt8E8GVr7o8ZxjzNbFxfYB8WCxI/Gp6vL9U3duWDohuwgUoMIXDl9bT0sVz0Wos8uNmoAHXDxgcSy04WumWiSJ7/Bom615APM2CwzgDWgymPJRRkvDqA6Sys5hIk4jyD1Io3EdSqV1+2o+JJvNv/iV8pW0c4X0tOgmQ8nClwvCcBaaGu9OLl0vxML0mjwZxMcts1vo7uHsbj2VEEmmQmzgqcxhfdCDX335FjJ71CzBh4+p7O2HuUwsxFFVh5aHF9prmos6BLy3ivbAaoYGPvaUaeTbwSrhushzfrZTGoJtV3rSYLNZKwJ2qR1P5T06Y1PJxOcQhirGtEhaEhMdW008i/ibC8+Zko7R+amv9mw6X+ue78QI6qoqZrkRDkDyJIuKl2pZGMFjb8DU09EU2yxMSf4KTEAtX68K4V/0BAX2h2JoIVt2eM8epsD3rtAr3TMpOjaHjlsfvIo/Sh0UQBAWlfL1SEjXjQIeRqfMouio/GDGqdNDmoSpWqZJhCQJ9xfLL1bD+G5mvXOslthfNF7s1iQ/tJYhx7M7aFYpTk1HQCxykkwSxxS3mYhrAi+pGQ+5NdtyZtFJdycY+KQgv2LFIoaFEqHnulv1YRZGxkZmkZUTYKMHiL8ZI8ZoZwI1jr+QNnofCLEM7BnQ3knr04WSG7u90sWETbmQ6oLzLGQi82HjHd+pQASw==
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(136003)(396003)(451199021)(36840700001)(46966006)(40470700004)(478600001)(40460700003)(110136005)(54906003)(86362001)(36756003)(107886003)(186003)(7696005)(26005)(82310400005)(1076003)(40480700001)(6666004)(4326008)(316002)(82740400003)(83380400001)(70206006)(70586007)(36860700001)(2906002)(7636003)(336012)(356005)(426003)(41300700001)(8676002)(8936002)(5660300002)(47076005)(7416002)(2616005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: jUbBLggUrZ92LAwGHr8pJ4Eq1Ufv5so2SbByZWHcoOvQK++h71hN2gflYQ6/oMap0HdJ9VauceI88P+yTPrmJzvvSN8sbHvdpcJLbdwIo7+V5nLaabPojhxdY0RxGVnBlVA9N932p3cah1Q0jZ/RKoQvKrh93qJeM1EYsjWZrBy7SDmmNGYw5uNeUqL0mnK1+4MzAblQn6PcdixuKwSJ4pJS4v87aUW+BbacolIcJs+Vnbb6/JZzqDSS0HHdoyPwstIoeCKcgEXAcTKrtvGH8zyL2CA9ExR+j1vg9Q4ogIvThUJqulAADc6kd/w4/9qkegtuNhd4tKFj1klhCY8JWw+lPLbV+d6opHuOUQkiT32+lm5g/8ZJ7R8tr/ie3AS/2/5Svs4t3VVzVPVrUb44Zjcd5Vvy6NaDdNFgAAh9nJ+bDydYAcq3Zmu2I/+YE76EK/bzIacj/xNOS2s3zV7JedQe9QWxwV6VAk5oa1dqCKpq4hvzCHLQ4u4vwF7ilNsSZcwf54Qc4t5RZEJNeMQoKOT/5bPzm7w+7Y1CNmMN5XWDOfzDbN1c0whxd4ZjE35BoAzkLE1vNveH7xOQ0yhbw7xVbMvb5MqMB3yKJ8qoouq/wq6P/c7r3PO+nnWAQCWFTkNOn9bU+n1h/bn7dXVufC+As7ZZWpY2Dk4TlMKgdE0pJdpPoYSE0kQGYBG7yh/kkAfjQVyb0W0SlVLHZwZRgnkZ2dwr4Y9BDz2xEcR9oTWgqFq71uiEjMNWL/n/2wwx
+X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(346002)(136003)(396003)(376002)(451199021)(36840700001)(46966006)(40470700004)(426003)(336012)(966005)(40460700003)(107886003)(186003)(2616005)(1076003)(26005)(8676002)(8936002)(316002)(54906003)(7416002)(5660300002)(110136005)(41300700001)(86362001)(82310400005)(36756003)(82740400003)(4326008)(70586007)(70206006)(7636003)(356005)(6666004)(7696005)(47076005)(478600001)(40480700001)(36860700001)(2906002)(83380400001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2023 13:15:34.7548
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Apr 2023 13:15:47.5277
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a622a823-a022-4168-ea58-08db44c5fd25
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8130dd06-4705-4a63-e68d-08db44c604c2
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BL02EPF000145BB.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF000145B8.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5325
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5733
 X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -109,126 +110,58 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Make CPU cluster's bandwidth (BW) request a multiple of MC channels.
-CPU OPP tables have BW info per MC channel. But, the actual BW depends
-on the number of MC channels which can change as per the boot config.
-Get the number of MC channels which are actually enabled in current
-boot configuration and multiply the BW request from a CPU cluster with
-the number of enabled MC channels. This is not required to be done for
-other MC clients.
+Add check to fix the possible array out of bounds violation by
+making speed equal to GEN1_CORE_CLK_FREQ when its value is more
+than the size of "pcie_gen_freq" array. This array has size of
+four but possible speed (CLS) values are from "0 to 0xF". So,
+"speed - 1" values are "-1 to 0xE".
 
+Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
 Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Link: https://lore.kernel.org/lkml/72b9168b-d4d6-4312-32ea-69358df2f2d0@nvidia.com/
+Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
 ---
- drivers/memory/tegra/mc.c       | 19 +++++++++++++++++++
- drivers/memory/tegra/mc.h       |  1 +
- drivers/memory/tegra/tegra234.c | 24 +++++++++++++++++++++++-
- include/soc/tegra/mc.h          |  1 +
- 4 files changed, 44 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-tegra194.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index 983455b1f98d..4a750da1c12a 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -843,6 +843,23 @@ static int tegra_mc_interconnect_setup(struct tegra_mc *mc)
- 	return err;
- }
+diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+index 09825b4a075e..e6eec85480ca 100644
+--- a/drivers/pci/controller/dwc/pcie-tegra194.c
++++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+@@ -223,6 +223,7 @@
+ #define EP_STATE_ENABLED	1
  
-+static void tegra_mc_num_channel_enabled(struct tegra_mc *mc)
-+{
-+	unsigned int i;
-+	u32 value;
-+
-+	value = mc_ch_readl(mc, 0, MC_EMEM_ADR_CFG_CHANNEL_ENABLE);
-+	if (value <= 0) {
-+		mc->num_channels = mc->soc->num_channels;
-+		return;
-+	}
-+
-+	for (i = 0; i < 32; i++) {
-+		if (value & BIT(i))
-+			mc->num_channels++;
-+	}
-+}
-+
- static int tegra_mc_probe(struct platform_device *pdev)
- {
- 	struct tegra_mc *mc;
-@@ -881,6 +898,8 @@ static int tegra_mc_probe(struct platform_device *pdev)
- 			return err;
- 	}
+ static const unsigned int pcie_gen_freq[] = {
++	GEN1_CORE_CLK_FREQ,	/* PCI_EXP_LNKSTA_CLS == 0; undefined */
+ 	GEN1_CORE_CLK_FREQ,
+ 	GEN2_CORE_CLK_FREQ,
+ 	GEN3_CORE_CLK_FREQ,
+@@ -459,7 +460,11 @@ static irqreturn_t tegra_pcie_ep_irq_thread(int irq, void *arg)
  
-+	tegra_mc_num_channel_enabled(mc);
+ 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+ 		PCI_EXP_LNKSTA_CLS;
+-	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
 +
- 	if (mc->soc->ops && mc->soc->ops->handle_irq) {
- 		mc->irq = platform_get_irq(pdev, 0);
- 		if (mc->irq < 0)
-diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
-index bc01586b6560..c3f6655bec60 100644
---- a/drivers/memory/tegra/mc.h
-+++ b/drivers/memory/tegra/mc.h
-@@ -53,6 +53,7 @@
- #define MC_ERR_ROUTE_SANITY_ADR				0x9c4
- #define MC_ERR_GENERALIZED_CARVEOUT_STATUS		0xc00
- #define MC_ERR_GENERALIZED_CARVEOUT_ADR			0xc04
-+#define MC_EMEM_ADR_CFG_CHANNEL_ENABLE			0xdf8
- #define MC_GLOBAL_INTSTATUS				0xf24
- #define MC_ERR_ADR_HI					0x11fc
++	if (speed >= ARRAY_SIZE(pcie_gen_freq))
++		speed = 0;
++
++	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
  
-diff --git a/drivers/memory/tegra/tegra234.c b/drivers/memory/tegra/tegra234.c
-index 0fa68862749f..8e873a7bc34f 100644
---- a/drivers/memory/tegra/tegra234.c
-+++ b/drivers/memory/tegra/tegra234.c
-@@ -867,6 +867,28 @@ static int tegra234_mc_icc_set(struct icc_node *src, struct icc_node *dst)
- 	return ret;
- }
+ 	if (pcie->of_data->has_ltr_req_fix)
+ 		return IRQ_HANDLED;
+@@ -1020,7 +1025,11 @@ static int tegra_pcie_dw_start_link(struct dw_pcie *pci)
  
-+static int tegra234_mc_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
-+				     u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
-+{
-+	struct icc_provider *p = node->provider;
-+	struct tegra_mc *mc = icc_provider_to_tegra_mc(p);
+ 	speed = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKSTA) &
+ 		PCI_EXP_LNKSTA_CLS;
+-	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed - 1]);
 +
-+	if (!mc->bwmgr_mrq_supported)
-+		return -EINVAL;
++	if (speed >= ARRAY_SIZE(pcie_gen_freq))
++		speed = 0;
 +
-+	if (node->id == TEGRA_ICC_MC_CPU_CLUSTER0 ||
-+	    node->id == TEGRA_ICC_MC_CPU_CLUSTER1 ||
-+	    node->id == TEGRA_ICC_MC_CPU_CLUSTER2) {
-+		if (mc)
-+			peak_bw = peak_bw * mc->num_channels;
-+	}
-+
-+	*agg_avg += avg_bw;
-+	*agg_peak = max(*agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
- static struct icc_node*
- tegra234_mc_of_icc_xlate(struct of_phandle_args *spec, void *data)
- {
-@@ -898,7 +920,7 @@ static int tegra234_mc_icc_get_init_bw(struct icc_node *node, u32 *avg, u32 *pea
++	clk_set_rate(pcie->core_clk, pcie_gen_freq[speed]);
  
- static const struct tegra_mc_icc_ops tegra234_mc_icc_ops = {
- 	.xlate = tegra234_mc_of_icc_xlate,
--	.aggregate = icc_std_aggregate,
-+	.aggregate = tegra234_mc_icc_aggregate,
- 	.get_bw = tegra234_mc_icc_get_init_bw,
- 	.set = tegra234_mc_icc_set,
- };
-diff --git a/include/soc/tegra/mc.h b/include/soc/tegra/mc.h
-index 900d88b26fae..fc3001483e62 100644
---- a/include/soc/tegra/mc.h
-+++ b/include/soc/tegra/mc.h
-@@ -234,6 +234,7 @@ struct tegra_mc {
+ 	tegra_pcie_enable_interrupts(pp);
  
- 	struct tegra_mc_timing *timings;
- 	unsigned int num_timings;
-+	unsigned int num_channels;
- 
- 	bool bwmgr_mrq_supported;
- 	struct reset_controller_dev reset;
 -- 
 2.17.1
 
