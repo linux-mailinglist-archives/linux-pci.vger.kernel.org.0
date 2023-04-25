@@ -2,214 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC9CC6EE42A
-	for <lists+linux-pci@lfdr.de>; Tue, 25 Apr 2023 16:46:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6D476EE45D
+	for <lists+linux-pci@lfdr.de>; Tue, 25 Apr 2023 17:02:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233952AbjDYOqz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 25 Apr 2023 10:46:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56046 "EHLO
+        id S234290AbjDYPCz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 25 Apr 2023 11:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234337AbjDYOqz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Apr 2023 10:46:55 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB70626BD
-        for <linux-pci@vger.kernel.org>; Tue, 25 Apr 2023 07:46:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1682434003; x=1713970003;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=qHEu7Hqut+vyAmHrBraR3uDGHnBCmcoD7+ub35Sk+D0=;
-  b=GsAtlCJuafkcNXvTe70eWBB4UiqiGkNKTnUsq7qpi7VUqArTEc+fcSAd
-   9Ak6Hr5dg4gn4p6zGgorxQ6WmVJU9rXvfw6Zlf5yNpLvsQpLOmP4GAy+4
-   tWbDHyBVgObZAa7ShLsyY/pY/OeB1bVBmaF31wRwLCeaeKh9iRcsOsrgu
-   SBEABDQ4XAitGsTYR/a7WTHfSHbEebSe/orqckExBviV4Y/6pgFf/xA1o
-   EppashriU+emGDw1trhGvBJOZF6B3gt3CcErzoIqU1my/C3sesiro2XSA
-   a4x7psMpr/RXUVrrTXQ4FZJejYwdClLlG7rmdV1fP6ANeIk4tesLRw4jP
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10691"; a="348698867"
-X-IronPort-AV: E=Sophos;i="5.99,225,1677571200"; 
-   d="scan'208";a="348698867"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2023 07:46:43 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10691"; a="867897754"
-X-IronPort-AV: E=Sophos;i="5.99,225,1677571200"; 
-   d="scan'208";a="867897754"
-Received: from json-mobl1.amr.corp.intel.com (HELO [10.251.28.43]) ([10.251.28.43])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Apr 2023 07:46:25 -0700
-Message-ID: <79308cdd-5261-2908-683c-24ec85619709@linux.intel.com>
-Date:   Tue, 25 Apr 2023 07:46:13 -0700
+        with ESMTP id S234301AbjDYPCw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 25 Apr 2023 11:02:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72578CC17;
+        Tue, 25 Apr 2023 08:02:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5207E62638;
+        Tue, 25 Apr 2023 15:02:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC2B2C433D2;
+        Tue, 25 Apr 2023 15:02:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682434967;
+        bh=ehMxtfgPPt4ARwMuISJWQt1frJpETdzqR5PFSNkI3Ww=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=mid3BpQNkz6A4sjuloyiRKEi/ZNvzgU2H0NOiRRhgSZ71U0S6bXkX6ganwSq0PamO
+         dBeY8lg7AsBhniOmSiARWDU+IeLIixSdqKlUbmKVU9UgTV0QJpmwBJ72qREEkRCaty
+         JNdEMHZ/2w0Jec6hFQbICB4DXClWLB1op62Siq+umyaJkYrrWlaOrvScBxM1E8aGdr
+         +GMQGdmm4RHgNsPcSv29QxXguXbUHWXJNc3W/TpL//VdujmJQBQAeDxvODqaL/QUDm
+         LcELcr6SCF/iIrewVCo/ItAniVBW+X98IGLRjYTpAZtci8HC8fVJ7wN4E0thfakauJ
+         X7To8A8ioovBw==
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-54fe2e39156so69672287b3.2;
+        Tue, 25 Apr 2023 08:02:47 -0700 (PDT)
+X-Gm-Message-State: AAQBX9de6bwLaWNip+O47QpvlRScM1bWDszxCjdSNM9mi59VG5oXoG+u
+        e917maeT1SOmqDXm4naRNMUGQGfi2OWPsy8LfA==
+X-Google-Smtp-Source: AKy350ajbnJBSl+HX3xPAJuZvpzT6q61Hk4UPSoaLf53K+qGoELszHvCtA9ylEA2fRvYJV8F5bUvL1c7LsJ5XbQC+d8=
+X-Received: by 2002:a81:658a:0:b0:54f:badd:d148 with SMTP id
+ z132-20020a81658a000000b0054fbaddd148mr10819011ywb.14.1682434966624; Tue, 25
+ Apr 2023 08:02:46 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v5] PCI/PM: Shorten pci_bridge_wait_for_secondary_bus()
- wait time for slow links
-Content-Language: en-US
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Mahesh J Salgaonkar <mahesh@linux.ibm.com>, oohall@gmail.com,
-        Lukas Wunner <lukas@wunner.de>,
-        Chris Chiu <chris.chiu@canonical.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Sheng Bi <windy.bi.enflame@gmail.com>,
-        Ravi Kishore Koppuravuri <ravi.kishore.koppuravuri@intel.com>,
-        Stanislav Spassov <stanspas@amazon.de>,
-        Yang Su <yang.su@linux.alibaba.com>,
-        shuo.tan@linux.alibaba.com, linux-pci@vger.kernel.org
-References: <20230425064751.24951-1-mika.westerberg@linux.intel.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230425064751.24951-1-mika.westerberg@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+References: <1681877994-16487-1-git-send-email-lizhi.hou@amd.com>
+ <1681877994-16487-3-git-send-email-lizhi.hou@amd.com> <20230419231155.GA899497-robh@kernel.org>
+ <20d251bc-c4ec-64cc-8e6b-10c24cae6c9b@amd.com>
+In-Reply-To: <20d251bc-c4ec-64cc-8e6b-10c24cae6c9b@amd.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 25 Apr 2023 10:02:35 -0500
+X-Gmail-Original-Message-ID: <CAL_Jsq+P-_w8q7ahKpRzw=A1kkWBWocrWnni8P4LmpxffS0pfA@mail.gmail.com>
+Message-ID: <CAL_Jsq+P-_w8q7ahKpRzw=A1kkWBWocrWnni8P4LmpxffS0pfA@mail.gmail.com>
+Subject: Re: [PATCH V8 2/3] PCI: Create device tree node for selected devices
+To:     Lizhi Hou <lizhi.hou@amd.com>
+Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, frowand.list@gmail.com,
+        helgaas@kernel.org, clement.leger@bootlin.com, max.zhen@amd.com,
+        sonal.santan@amd.com, larry.liu@amd.com, brian.xu@amd.com,
+        stefano.stabellini@xilinx.com, trix@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, Apr 20, 2023 at 11:05=E2=80=AFAM Lizhi Hou <lizhi.hou@amd.com> wrot=
+e:
+> On 4/19/23 16:11, Rob Herring wrote:
+> > On Tue, Apr 18, 2023 at 09:19:53PM -0700, Lizhi Hou wrote:
+> >> The PCI endpoint device such as Xilinx Alveo PCI card maps the registe=
+r
+> >> spaces from multiple hardware peripherals to its PCI BAR. Normally,
+> >> the PCI core discovers devices and BARs using the PCI enumeration proc=
+ess.
+> >> There is no infrastructure to discover the hardware peripherals that a=
+re
+> >> present in a PCI device, and which can be accessed through the PCI BAR=
+s.
+
+[...]
+
+> >> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> >> index 196834ed44fe..42a5cfac2d34 100644
+> >> --- a/drivers/pci/of.c
+> >> +++ b/drivers/pci/of.c
+> >> @@ -469,6 +469,8 @@ static int of_irq_parse_pci(const struct pci_dev *=
+pdev, struct of_phandle_args *
+> >>              } else {
+> >>                      /* We found a P2P bridge, check if it has a node =
+*/
+> >>                      ppnode =3D pci_device_to_OF_node(ppdev);
+> >> +                    if (ppnode && of_node_check_flag(ppnode, OF_DYNAM=
+IC))
+> >> +                            ppnode =3D NULL;
+> > Again, different behavior if dynamic. I'm not seeing why you need this
+> > change.
+> This change is required. For dynamic generated node, we do not generate
+> interrupt routing related properties. Thus we need to fallback to use
+> pci_swizzle_interrupt_pin(). Generating interrupt routing related
+> properties might be difficult. I think we can differ it to the future
+> patches. Or just use pci_swizzle_interrupt_pin() which is much simpler.
+
+I don't think we need to generate anything else in the DT. I think we
+need to break from the loop if (ppnode && of_property_present(ppnode,
+"interrupt-map")) instead.
 
 
-On 4/24/23 11:47 PM, Mika Westerberg wrote:
-> With slow links (<= 5GT/s) active link reporting is not mandatory, so if
-> a device is disconnected during system sleep we might end up waiting for
-> it to respond for ~60s slowing down resume time. PCIe spec r6.0 sec
-> 6.6.1 mandates that the system software must wait for at least 1s before
-> it can determine the device as broken device so use the minimum
-> requirement for slow links and bail out if we do not get reply within
-> 1s. However, if the port supports active link reporting we can continue
-> the wait following what we do with the fast links.
-> 
-> This should make system resume time faster for slow links as well while
-> still following the PCIe spec.
-> 
-> While there move the PCI_RESET_WAIT constant into pci.c because it is
-> not used outside of that file anymore.
-> 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
+> >> +static int of_pci_prop_reg(struct pci_dev *pdev, struct of_changeset =
+*ocs,
+> >> +                       struct device_node *np)
+> >> +{
+> >> +    struct of_pci_addr_pair *reg;
+> >> +    int i =3D 1, resno, ret =3D 0;
+> >> +    u32 flags, base_addr;
+> >> +    resource_size_t sz;
+> >> +
+> >> +    reg =3D kcalloc(PCI_STD_NUM_BARS + 1, sizeof(*reg), GFP_KERNEL);
+> >> +    if (!reg)
+> >> +            return -ENOMEM;
+> >> +
+> >> +    /* configuration space */
+> >> +    of_pci_set_address(pdev, reg[0].phys_addr, 0, 0, 0, true);
+> >> +
+> >> +    base_addr =3D PCI_BASE_ADDRESS_0;
+> >> +    for (resno =3D PCI_STD_RESOURCES; resno <=3D PCI_STD_RESOURCE_END=
+;
+> >> +         resno++, base_addr +=3D 4) {
+> >> +            sz =3D pci_resource_len(pdev, resno);
+> >> +            if (!sz)
+> >> +                    continue;
+> >> +
+> >> +            ret =3D of_pci_get_addr_flags(&pdev->resource[resno], &fl=
+ags);
+> >> +            if (ret)
+> >> +                    continue;
+> >> +
+> >> +            of_pci_set_address(pdev, reg[i].phys_addr, 0, base_addr, =
+flags,
+> >> +                               true);
+> >> +            reg[i].size[0] =3D FIELD_GET(OF_PCI_SIZE_HI, (u64)sz);
+> >> +            reg[i].size[1] =3D FIELD_GET(OF_PCI_SIZE_LO, (u64)sz);
+> >> +            i++;
+> >> +    }
+> >> +
+> >> +    ret =3D of_changeset_add_prop_u32_array(ocs, np, "reg", (u32 *)re=
+g,
+> > I believe this should be 'assigned-addresses' rather than 'reg'. But th=
+e
+> > config space entry above does go in 'reg'.
+>
+> Do you mean I need to add 'assigned-addresses' in this patch?
 
-Looks good to me.
+Yes, but on further thought, I think they can just be omitted. They
+are only needed
+if we need of_pci_address_to_resource() to work.
 
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>
+> For 'reg', it needs to have pairs for memory space or I/O space. Here is
+> what I saw in IEEE1275:
+>
+> "In the first such pair, the phys-addr component shall be the
+> Configuration Space address of the
+> beginning of the function's set of configuration registers (i.e. the
+> rrrrrrrr field is zero) and the size component shall
+> be zero. Each additional (phys-addr, size) pair shall specify the
+> address of an addressable region of Memory Space or I/
+> O Space associated with the function. In these pairs, if the "n" bit of
+> phys.hi is 0, reflecting a relocatable address, then
+> phys.mid and phys.lo specify an address relative to the value of the
+> associated base register. In general this value will be
+> zero, specifying an address range corresponding directly to the
+> hardware's. If the "n" bit of phys.hi is 1, reflecting a nonrelocatable
+> address, then phys.mid and phys.hi specify an absolute PCI address."
 
-> Hi all,
-> 
-> The previous version of the patch can be found here:
-> 
->   https://lore.kernel.org/linux-pci/20230418072808.10431-1-mika.westerberg@linux.intel.com/
-> 
-> Changes from the previous version:
-> 
->   * Observe the mandatory 1s delay before looking at the active link
->     reporting as suggesteed by Lukas.
-> 
->  drivers/pci/pci.c | 49 +++++++++++++++++++++++++++++++++++------------
->  drivers/pci/pci.h |  7 -------
->  2 files changed, 37 insertions(+), 19 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 0b4f3b08f780..6bc0eeeb37fa 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -64,6 +64,13 @@ struct pci_pme_device {
->  
->  #define PME_TIMEOUT 1000 /* How long between PME checks */
->  
-> +/*
-> + * Following exit from Conventional Reset, devices must be ready within 1 sec
-> + * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
-> + * Reset (PCIe r6.0 sec 5.8).
-> + */
-> +#define PCI_RESET_WAIT 1000 /* msec */
-> +
->  /*
->   * Devices may extend the 1 sec period through Request Retry Status
->   * completions (PCIe r6.0 sec 2.3.1).  The spec does not provide an upper
-> @@ -5012,11 +5019,9 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  	 *
->  	 * However, 100 ms is the minimum and the PCIe spec says the
->  	 * software must allow at least 1s before it can determine that the
-> -	 * device that did not respond is a broken device. There is
-> -	 * evidence that 100 ms is not always enough, for example certain
-> -	 * Titan Ridge xHCI controller does not always respond to
-> -	 * configuration requests if we only wait for 100 ms (see
-> -	 * https://bugzilla.kernel.org/show_bug.cgi?id=203885).
-> +	 * device that did not respond is a broken device. Also device can
-> +	 * take longer than that to respond if it indicates so through Request
-> +	 * Retry Status completions.
->  	 *
->  	 * Therefore we wait for 100 ms and check for the device presence
->  	 * until the timeout expires.
-> @@ -5025,16 +5030,36 @@ int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type)
->  		return 0;
->  
->  	if (pcie_get_speed_cap(dev) <= PCIE_SPEED_5_0GT) {
-> +		u16 status;
-> +
->  		pci_dbg(dev, "waiting %d ms for downstream link\n", delay);
->  		msleep(delay);
-> -	} else {
-> -		pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> -			delay);
-> -		if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> -			/* Did not train, no need to wait any further */
-> -			pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +
-> +		if (!pci_dev_wait(child, reset_type, PCI_RESET_WAIT - delay))
-> +			return 0;
-> +
-> +		/*
-> +		 * If the port supports active link reporting we now check
-> +		 * whether the link is active and if not bail out early with
-> +		 * the assumption that the device is not present anymore.
-> +		 */
-> +		if (!dev->link_active_reporting)
->  			return -ENOTTY;
-> -		}
-> +
-> +		pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &status);
-> +		if (!(status & PCI_EXP_LNKSTA_DLLLA))
-> +			return -ENOTTY;
-> +
-> +		return pci_dev_wait(child, reset_type,
-> +				    PCIE_RESET_READY_POLL_MS - PCI_RESET_WAIT);
-> +	}
-> +
-> +	pci_dbg(dev, "waiting %d ms for downstream link, after activation\n",
-> +		delay);
-> +	if (!pcie_wait_for_link_delay(dev, true, delay)) {
-> +		/* Did not train, no need to wait any further */
-> +		pci_info(dev, "Data Link Layer Link Active not set in 1000 msec\n");
-> +		return -ENOTTY;
->  	}
->  
->  	return pci_dev_wait(child, reset_type,
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 67005a0ee381..42ce4c6e738f 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -64,13 +64,6 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
->  #define PCI_PM_D3HOT_WAIT       10	/* msec */
->  #define PCI_PM_D3COLD_WAIT      100	/* msec */
->  
-> -/*
-> - * Following exit from Conventional Reset, devices must be ready within 1 sec
-> - * (PCIe r6.0 sec 6.6.1).  A D3cold to D0 transition implies a Conventional
-> - * Reset (PCIe r6.0 sec 5.8).
-> - */
-> -#define PCI_RESET_WAIT		1000	/* msec */
-> -
->  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
->  void pci_refresh_power_state(struct pci_dev *dev);
->  int pci_power_up(struct pci_dev *dev);
+I think this is a case where true OpenFirmware and FDT differ
+slightly. In OF, the DT reflects everything the firmware discovered
+and configured. FDT is more just what's static and not discoverable.
+(Though generating nodes here is more OF like.) For example, we don't
+put the bus numbers in the DT as those are dynamic and assigned by the
+OS. The purpose of the BAR registers in reg is to define the BAR size
+(and address only if fixed). We don't need that unless what's
+discoverable is wrong and we want to override it.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+
+> >> diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+> >> index 57ddcc59af30..9120ca63a82a 100644
+> >> --- a/drivers/pci/pci-driver.c
+> >> +++ b/drivers/pci/pci-driver.c
+> >> @@ -1634,7 +1634,8 @@ static int pci_dma_configure(struct device *dev)
+> >>      bridge =3D pci_get_host_bridge_device(to_pci_dev(dev));
+> >>
+> >>      if (IS_ENABLED(CONFIG_OF) && bridge->parent &&
+> >> -        bridge->parent->of_node) {
+> >> +        bridge->parent->of_node &&
+> >> +        !of_node_check_flag(bridge->parent->of_node, OF_DYNAMIC)) {
+> > Again, I don't think changing behavior for dynamic case is right. I
+> > haven't dug into what an ACPI+DT case would look like here. (Hint:
+> > someone that wants this merged can dig into that)
+>
+> I think this is required. Without dynamic node, on pure DT system,
+> has_acpi_companion() will return false. Then "ret" is 0 and the
+> following iommu_device_use_default_domain() might be called.
+>
+> With dynamic node, of_dma_configure() might return error because dma
+> related properties are not generated. Thus, "ret" is none zero and the
+> following iommu_device_use_default_domain() will be skipped.
+
+Again, dynamic is the wrong thing to key off of. If we need
+properties, then they should be added. However, I think the host
+bridge should have what's needed. If the code needs to handle this
+case, then we need to figure out the right thing to do.
+
+Rob
