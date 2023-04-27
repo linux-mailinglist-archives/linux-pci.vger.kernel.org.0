@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D324C6F0A2C
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 18:47:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 56EC76F0A34
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 18:48:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244020AbjD0Qq4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Apr 2023 12:46:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38680 "EHLO
+        id S244226AbjD0QsV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Apr 2023 12:48:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40642 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244209AbjD0Qqy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 12:46:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C60DF40DA;
-        Thu, 27 Apr 2023 09:46:53 -0700 (PDT)
+        with ESMTP id S243883AbjD0QsU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 12:48:20 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB9E1FD3;
+        Thu, 27 Apr 2023 09:48:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FA3063E59;
-        Thu, 27 Apr 2023 16:46:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8330AC4339B;
-        Thu, 27 Apr 2023 16:46:52 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0DCFF618B3;
+        Thu, 27 Apr 2023 16:48:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40BEEC433D2;
+        Thu, 27 Apr 2023 16:48:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682614012;
-        bh=17fxjxInOE1pmRBAKjYLZA9hzBwswVGO+5F5rsMk/j0=;
+        s=k20201202; t=1682614098;
+        bh=T0rLCI9XgjgU7NCOg8dPs1VgXJlChr+LXaa8cgXxdVM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UotPGb6RzP9FJ5Ib3+QAdAFc3dZJ/3yHIGuEKxZUDZQ2lbgNTnY5pkk8t5D6jj2JJ
-         5jt8ethLENcrL636wO9GpQZK/E5hOXMUBVwh2VMZchq3YN5yo6Nmx0xl1HO3vfuwIC
-         jardQAHlD5oxZhNjD3TUp8JNpACgX48zuX2SW5/UHJGkk6X2yD7Wr7vpSGlXkMUBn4
-         yeMJXlbAz6zou5ToaGX/fByz0M/f3RPZCDU7xXcDL7RtudSjSNM+zpnsi/2oJSmknv
-         HHs8YkbpWe2wqj+hKeME7h3ZGbGRb+FzAuNgw4xLju6SXOt3eeSoPeTZxidhgUNfrD
-         xX4yuyE2tB15g==
-Date:   Thu, 27 Apr 2023 11:46:51 -0500
+        b=N/tIPz/i6iljBz++XKfKc8EeLHEZ8BILNYPh4jQvZtEIYzFOmutcogNmSBE30/5II
+         lq8h7uyIoRxPSanGJLayU1D654Q6zUBRtY//75DXxqSIJKHGnDL2b96OPeQ2OMfOK4
+         ojeg1qXGFC1B+Ro9lAi5Dw6fUqWMxYiR5w9TM0h2qXXuWjt7PO2RgYEOLYpkTAzTED
+         2gEN31zHe0hrQw2o79jE7MD0H+u0DYvW6hFI1y0CmUWrze1IrRkwQdj16Rixie9zWM
+         08VEloLZm7+x1CqCXoVYq1DkEA93aXC6oY5saCehG0avsTv6mXMKWfQ4F2wPcSK5sS
+         p7Qcue3ikQpZg==
+Date:   Thu, 27 Apr 2023 11:48:16 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     Mario Limonciello <mario.limonciello@amd.com>
 Cc:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -45,13 +45,13 @@ Cc:     Bjorn Helgaas <bhelgaas@google.com>,
         "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-pci@vger.kernel.org
 Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
-Message-ID: <20230427164651.GA255475@bhelgaas>
+Message-ID: <20230427164816.GA255750@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 In-Reply-To: <20230427053338.16653-2-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -72,12 +72,51 @@ On Thu, Apr 27, 2023 at 12:33:36AM -0500, Mario Limonciello wrote:
 > amd_smn_read() wouldn't work.
 > 
 > Add the missing ID into amd_nb, restoring s2idle on this system.
+> 
+> Fixes: 310e782a99c7 ("platform/x86/amd: pmc: Utilize SMN index 0 for driver probe")
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
 
-Is there a long-term solution for this that will not require adding
-new IDs every time new hardware comes out?
+Grudgingly, because this really isn't a maintainable strategy:
 
-drivers/platform/x86/amd/pmc.c already matches ACPI IDs; maybe there's
-some way for the platform to provide the information you need via
-ACPI or something?
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>  # pci_ids.h
 
-Bjorn
+> ---
+>  arch/x86/kernel/amd_nb.c | 2 ++
+>  include/linux/pci_ids.h  | 1 +
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+> index 4266b64631a4..7e331e8f3692 100644
+> --- a/arch/x86/kernel/amd_nb.c
+> +++ b/arch/x86/kernel/amd_nb.c
+> @@ -36,6 +36,7 @@
+>  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
+>  #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F4 0x14e4
+>  #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F4 0x14f4
+> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F4 0x12fc
+>  
+>  /* Protect the PCI config register pairs used for SMN. */
+>  static DEFINE_MUTEX(smn_mutex);
+> @@ -79,6 +80,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M60H_DF_F3) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_DF_F3) },
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M78H_DF_F3) },
+>  	{}
+>  };
+>  
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 45c3d62e616d..95f33dadb2be 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -567,6 +567,7 @@
+>  #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
+>  #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F3 0x14e3
+>  #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F3 0x14f3
+> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F3 0x12fb
+>  #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+>  #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+>  #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+> -- 
+> 2.34.1
+> 
