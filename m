@@ -2,52 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 49C2B6F0BF1
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 20:30:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4B966F0C0D
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 20:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244545AbjD0Sau (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Apr 2023 14:30:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49958 "EHLO
+        id S244443AbjD0Sii (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Apr 2023 14:38:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244546AbjD0Sao (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 14:30:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88C6C469A;
-        Thu, 27 Apr 2023 11:30:43 -0700 (PDT)
+        with ESMTP id S243558AbjD0Sih (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 14:38:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0813BE4;
+        Thu, 27 Apr 2023 11:38:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 260A063F0A;
-        Thu, 27 Apr 2023 18:30:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44B61C433EF;
-        Thu, 27 Apr 2023 18:30:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 97BCA63F15;
+        Thu, 27 Apr 2023 18:38:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2D27C433D2;
+        Thu, 27 Apr 2023 18:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682620242;
-        bh=NiPVASGTL10NsQ2t5nKmx3Y9actc0pulKd/ynk55T3U=;
+        s=k20201202; t=1682620715;
+        bh=63rZ6oKXHT4RQ6j3QCN/KK6+FdSVlUibkCVfjxxt48o=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Mmg5Z4peeCtCbta+mpL3brQO89VZ8CbOpm4Iy47TehE8T9qb8QsCTWUbYeRTkUwFF
-         1L3mkekbJT2VaDNNaHUzzZkcyYIWPLfR4VG6n9r82kx3Lw35pa9WP9RgY6VW9KJiPU
-         DxwivkgxeMF6ntqRZ8p6rXH1zt95K1ngQJYAGM+stk6bXk+fLtE6xEVpjCyb54YPh7
-         W4qiFzEzN+2GKh2K8qoMNb2+5Up3cchUvTLpENbGpOb1ETX8zbflvP/ENh9vSyolNi
-         yY4GWZf/ayLT0X9i1f6PaZTT5uYENDK4Hi28yAMg5EQwkFFPV6xd9LLNfzbGU18eAy
-         rgzo7rSKyze9w==
-Date:   Thu, 27 Apr 2023 13:30:40 -0500
+        b=jbz73+aINXhOJZT8oWCJ3Zbs8TSg4d28s+hqlwHSNge1JLHpAoFNQbntGLQ/3l6hV
+         90Ok6oFO+gyX8mrgFhW9KdHYTayo5OiNlmscRdIg7yFZ8M/dDnKIxptUjBNi9pUTHN
+         4a4A7zYrv371pDdtOwwfZiVSK2BIwhaUmwRxpZVVutudMGJ56r1KHIfLAzEcT61vJ+
+         Rrl5QPc/W/GHjDmTiG7GTSahGA2cluxRhPfsSG6riDs35tNLm5ab50E2Wz9xmU8uuF
+         taKfxVTIHljklAmw2k8cVnRJJbo8X2nbDlJS3L8LRlbpNbcnoENKWlvAIduc0D6Qfn
+         eCn1IvcvGSUkg==
+Date:   Thu, 27 Apr 2023 13:38:33 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Dominic Rath <rath@ibv-augsburg.de>
-Cc:     robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-        tjoseph@cadence.com, bhelgaas@google.com, lpieralisi@kernel.org,
-        nm@ti.com, vigneshr@ti.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        christian.gmeiner@gmail.com, bahle@ibv-augsburg.de
-Subject: Re: [PATCH v2 1/3] dt-bindings: phy: cadence-torrent: Add latency
- properties
-Message-ID: <20230427183040.GA263395@bhelgaas>
+To:     Junyan Ye <yejunyan@hust.edu.cn>
+Cc:     christophe.jaillet@wanadoo.fr,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pci: controller: pci-ftpci100: Release the clock
+ resources
+Message-ID: <20230427183833.GA263506@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230427055032.85015-2-rath@ibv-augsburg.de>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230423053208.2348-1-yejunyan@hust.edu.cn>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -56,18 +62,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 07:50:30AM +0200, Dominic Rath wrote:
-> From: Alexander Bahle <bahle@ibv-augsburg.de>
-> 
-> Add "tx-phy-latency-ps" and "rx-phy-latency-ps" DT bindings for
-> setting the PCIe PHY latencies.
-> The properties expect a list of uint32 PHY latencies in picoseconds for
-> every supported speed starting at PCIe Gen1, e.g.:
-> 
->   tx-phy-latency-ps = <100000 200000>; /* Gen1: 100ns, Gen2: 200ns */
->   rx-phy-latency-ps = <150000 250000>; /* Gen1: 150ns, Gen2: 250ns */
+On Sun, Apr 23, 2023 at 01:32:07PM +0800, Junyan Ye wrote:
+> Smatch reported:
+> 1. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe()
+> warn: 'clk' from clk_prepare_enable() not released on lines:
+> 442,451,462,478,512,517.
+> 2. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe()
+> warn: 'p->bus_clk' from clk_prepare_enable() not released on lines:
+> 451,462,478,512,517.
 
-Are these things that could/should be described in a more generic
-place?  They don't look necessarily Cadence-specific.
+If/when you repost this, please:
+
+  - Rebase to v6.4-rc1 (when it's available).
+
+  - Look at subject line history for this file and match it.
+
+  - Include the smatch warnings exactly above (not wrapped to fit in
+    75 columns).  This is to make it easier to search for the text.
+
+  - Add "()" after function names below to make it obvious they are
+    functions.  You can also omit "function", e.g., "... is obtained
+    by devm_clk_get()."
+
+> The clock resource is obtained by the devm_clk_get function. The
+> clk_prepare_enable function then makes the clock resource ready for use,
+> notifying the system that the clock resource should be run. After that,
+> the clock resource should be released when it is no longer needed. The
+> corresponding function is clk_disable_unprepare. However, while doing
+> some error handling in the faraday_pci_probe function, the
+> clk_disable_unprepare function is not called to release the clk and
+> p->bus_clk resources.
+
+I don't know the clk terminology.  Does "... clock resource should be
+run" mean the clock should be "running" or "enabled"?
+include/linux/clk.h only uses "running" twice but has many instances
+of "enable", so maybe that would be better.  Or maybe it's enough to
+say:
+
+  clk_prepare_enable() then makes the clock resource ready for use.
+
+and omit the rest of that sentence?
+
+Looks like a nice fix, thank you!
 
 Bjorn
