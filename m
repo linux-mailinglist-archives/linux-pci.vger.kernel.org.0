@@ -2,46 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4CCA26F00D1
-	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 08:34:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF8736F0299
+	for <lists+linux-pci@lfdr.de>; Thu, 27 Apr 2023 10:31:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242788AbjD0GeF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 27 Apr 2023 02:34:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40740 "EHLO
+        id S243120AbjD0IbZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 27 Apr 2023 04:31:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233083AbjD0GeE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 02:34:04 -0400
-Received: from out30-98.freemail.mail.aliyun.com (out30-98.freemail.mail.aliyun.com [115.124.30.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 354A14497;
-        Wed, 26 Apr 2023 23:33:58 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R911e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Vh6GU01_1682577233;
-Received: from 30.240.114.50(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vh6GU01_1682577233)
-          by smtp.aliyun-inc.com;
-          Thu, 27 Apr 2023 14:33:54 +0800
-Message-ID: <7aec4dbd-91d5-2a14-8779-f239a58cbbae@linux.alibaba.com>
-Date:   Thu, 27 Apr 2023 14:33:50 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.0
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
-To:     Robin Murphy <robin.murphy@arm.com>, helgaas@kernel.org,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
-References: <20220917121036.14864-1-xueshuai@linux.alibaba.com>
- <20230417061729.84422-3-xueshuai@linux.alibaba.com>
- <b1d9509c-8e8c-b05b-cbaf-576a7b2f99e7@arm.com>
+        with ESMTP id S243118AbjD0IbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 27 Apr 2023 04:31:23 -0400
+Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253A935A6;
+        Thu, 27 Apr 2023 01:31:14 -0700 (PDT)
+X-UUID: dc6eaa2ee4d511eda9a90f0bb45854f4-20230427
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=behlzJ7kADJdH96B5eIU9iC/GC1kHI1feLpUNnwI7Yk=;
+        b=ZjkIB06+Zzf04CvsXvjU6/BcOOrP94gdLsQuATs1/tTZmhxQ5bS4+jap2ky6TVX/Q/wceLNZXdbG3j55xrsId6vusjet56XVLAO5rg3Fj0veVnCWc9aw1fryYu7776bdFh0J4E37FJtc2RZAQOLN6yUv7aNervYN1MdplHSDadc=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:669c8f04-530f-45cd-9ac4-0bfebdf84847,IP:0,U
+        RL:0,TC:0,Content:-5,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+        :release,TS:-5
+X-CID-META: VersionHash:120426c,CLOUDID:ae26156a-2f20-4998-991c-3b78627e4938,B
+        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
+        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: dc6eaa2ee4d511eda9a90f0bb45854f4-20230427
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw01.mediatek.com
+        (envelope-from <jianjun.wang@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 678845966; Thu, 27 Apr 2023 16:31:09 +0800
+Received: from mtkmbs10n1.mediatek.inc (172.21.101.34) by
+ mtkmbs11n2.mediatek.inc (172.21.101.187) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.26; Thu, 27 Apr 2023 16:31:09 +0800
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (172.21.101.237)
+ by mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server id
+ 15.2.1118.25 via Frontend Transport; Thu, 27 Apr 2023 16:31:09 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=djRfXIhCOGMHclnhGzCi07ihoc1D4tOhSqrdyY1KpaSqSRaed0WGrsqcHOECIfaM9CzTWWmQbVICs4Ox5DQ8lWNqL3QTfTA9AcK3UA1Mr2R3g91vb8yA5QEk1OLD4/cg9ZhUO+MlSw11mmjNouMAj+Fsm0xWYUyayrgOpyw/Prsk9S8W/HcAocIgqE2kDFdbFjyTMvb1Ksukdq6d+welZs4c7qq/UUSt2axmWTRaXK+4mqXL2TvAhXQBHv4c3uhGTEs4B2SroPcNRKUCUcPeeeMXCKXgjTmtEXkCNMUu0ZZx6xmnnRb2LhOD7eHj6aaE0ESfnuUKlGzNraq4dcd5yQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=behlzJ7kADJdH96B5eIU9iC/GC1kHI1feLpUNnwI7Yk=;
+ b=XUw9dsT55fpHcBBHA0VPIYirwbw4ZTyWBv54xkAuTyZCf/KrYSrKcQ+mC3Tqt1oMmyAdFiRlMKgLEQPl26JQ5EX5bVcytHDht6hx9bFEc0x+tJUBaapvq5vpl5x9aKoGmazY7UE4r2Hmv++TRGZyZWfu402l3T5f5P03LW8UC42JxWjv2TRn1N3ZO0CbYha+OU4yjm08HTDOYAZM08AYqPwNaX4a5rIUXN4yOTo5CoMUSlooOh32d8O0CUX2Sk5puyqSXRnn83WrNy6fjWd+cSqjOUUrlagp8lTn/mqHOn4RAnqI9Hnh3SMAqzHn+q5+cMNRIesCu4X3drsZd9NUHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
+ dkim=pass header.d=mediatek.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=behlzJ7kADJdH96B5eIU9iC/GC1kHI1feLpUNnwI7Yk=;
+ b=WFX0DdEwZ8qZpm+uB/AFu0CaMF5vaz1hSwFW+alwaIprIZxi23GUyGej09ayZP2YFQZuPFO7Z2G4ydPbLKh3SVZTUV9QqFDwy9mmr+6+OYdrRk6YHeqKZlO4ARPtSJDUlU6JYH2ukv7BVb+sO8ucUxxD9z/L1mu6xjmPRcN2UrU=
+Received: from PSAPR03MB5365.apcprd03.prod.outlook.com (2603:1096:301:17::5)
+ by TYZPR03MB5214.apcprd03.prod.outlook.com (2603:1096:400:37::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.22; Thu, 27 Apr
+ 2023 08:31:07 +0000
+Received: from PSAPR03MB5365.apcprd03.prod.outlook.com
+ ([fe80::6eca:1bb6:7d2c:a4e0]) by PSAPR03MB5365.apcprd03.prod.outlook.com
+ ([fe80::6eca:1bb6:7d2c:a4e0%6]) with mapi id 15.20.6340.022; Thu, 27 Apr 2023
+ 08:31:07 +0000
+From:   =?utf-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
+        <Jianjun.Wang@mediatek.com>
+To:     "frank-w@public-files.de" <frank-w@public-files.de>,
+        "linux@fw-web.de" <linux@fw-web.de>
+CC:     "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        =?utf-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
+        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        Ryder Lee <Ryder.Lee@mediatek.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Subject: Re: Aw: [PATCH] PCI: mediatek-gen3: handle PERST after reset
+Thread-Topic: Aw: [PATCH] PCI: mediatek-gen3: handle PERST after reset
+Thread-Index: AQHZZWUN3oyBy4cfO0S7ujfcGrEDja8+AfWAgAD4eAA=
+Date:   Thu, 27 Apr 2023 08:31:07 +0000
+Message-ID: <74149a72313c1b944c870a45b55893e1b9331c8e.camel@mediatek.com>
+References: <20230402131347.99268-1-linux@fw-web.de>
+         <trinity-8c5502f4-34bc-456b-9e4b-37edac37c3ed-1682530907724@3c-app-gmx-bs05>
+In-Reply-To: <trinity-8c5502f4-34bc-456b-9e4b-37edac37c3ed-1682530907724@3c-app-gmx-bs05>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
-In-Reply-To: <b1d9509c-8e8c-b05b-cbaf-576a7b2f99e7@arm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-11.3 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL autolearn=ham autolearn_force=no
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=mediatek.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PSAPR03MB5365:EE_|TYZPR03MB5214:EE_
+x-ms-office365-filtering-correlation-id: 96e1be67-e8b4-4a6c-3fa2-08db46f9bf4a
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 098oIE9ENfoNYlwHxJUI2sQPQg5DXdPLOOM7NcT0TSxXMm8af0znul7b/g2Fp3crKjjisagxdfjwewgtmquAC9ardpAmL7wjmZ9u0VXfTfF3ZlzuWPw9twBiVl58Rq8xEi7SjCBTPpT4Hny4Dc7mdsmEO57ycgTsq9uYeyiwHI6uDHcXOnucvtO3A7yVZa07EsNZczTvGSQsrmsqLPlF/+g45jIM1lnGCQAZVy7ueUwBCM6zvhaV53qmpHgyZv+5HymOLZGq1PEc78mxghjndC+MWJgRTlspBRJ9EmE7cNWehyV6K+79MY91coRMWDfdSncMhYqpRsipP+7w9GfeAm5kod8VrwkX0GaNOYR7/o9FGpaCGF0At6yA7zGgaCaiOW6s/8fC8fsfDvIfzUxbwuH8GZ6cxe00N75P60hp/RKv7U1uT59IeWAzB547JRaEp+5oO57jNWlNCXVs5qBvUWauEfQGp3oN9w1bhx19FZ7lsnW/ViT1cjXYyOpp6CIn4eDjMll9um3Qely6sOMNKmBJitlbAnv4k9DMyP08rx9YXQtrk+8zMhU4sCSU+bb9g6Us8qfy+2pLlVnmyBmznURFbpXfRXjbL84j4nyjMLY=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PSAPR03MB5365.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(39860400002)(136003)(366004)(396003)(376002)(451199021)(86362001)(38070700005)(36756003)(2906002)(85182001)(6486002)(71200400001)(186003)(83380400001)(2616005)(26005)(6512007)(966005)(6506007)(66476007)(4326008)(66556008)(64756008)(66946007)(110136005)(76116006)(478600001)(91956017)(316002)(66446008)(38100700002)(41300700001)(8676002)(54906003)(5660300002)(122000001)(7416002)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?L2pxNE5jb0hiNkFzTWZtMjFaTkdoWFRqNHdGRzQ1UGt2Sk1pckhTWTRRd0h0?=
+ =?utf-8?B?VHJqTVJkcCtSOWYvNDhaQTdURk9lbUlwVEI0THpLTWhPL29iSU0wMHlsVWdv?=
+ =?utf-8?B?aE4yRlAxY2VsQU5XWUNYUEZBa1BXODdUM29UM09QUkVzZTVDSzNNTVVlak41?=
+ =?utf-8?B?VjA1NzdGbXhIZ21GaHBTQ3laNDBMU05oT1pFb3pEczhWRHdPT2VpU2h1aWs3?=
+ =?utf-8?B?NkwwbUlyS1hGckxDc013dmd0dTFjMXB4Ny8xU1FGa2FrQjcrMU81TThnTktp?=
+ =?utf-8?B?emxKZGlJdFZHYU5iYmtabVFlbXk3NWIvVUJ5QXZDYlpreWltVWhVbVZ4N0NV?=
+ =?utf-8?B?aHlSa0VaRGd5ZFJYUGF4SityZ1dJRVNwWnZVQTB6d3VKWjQ2aHA5KzUrNnRr?=
+ =?utf-8?B?MGRKd2JsYnMxUXorZU5ENHlXd3h5SjFKcjZUMFhKOGlzcURVR0MxUnd4dXJB?=
+ =?utf-8?B?Q0E0NUFNeXBDSkJ0OTJ3Z2ZSKzZjMWFzdWFvcFRyeG9TMms2eVh6NzFUemdP?=
+ =?utf-8?B?M09jMzg2cFRQK1VmTmIyY0ZUSkJmK3Blb2JRVzZNd3V4VUZaQkVyQ240RnlI?=
+ =?utf-8?B?UC9KektEYm9ydmRtVnNqYUpJSGtDZFdtODlONSsyV3M1R2RsN3FyZzlhbExG?=
+ =?utf-8?B?MEdOaXNWeGl0SzREMkhRbS9PZldDbW9pTzF3V1BXZWVqemUrZlFURzB0TWpD?=
+ =?utf-8?B?QXM3MmNXdE5EYlF2bG8vL0FualV3cEp6eTF2djlsRXhCNmpJcHRBLzBIdmVM?=
+ =?utf-8?B?WW5GTUFHR1puL2NFYlpYZEVmVXUwc1ZuazFtN09kaWVaTzJEamZZUHVScWNx?=
+ =?utf-8?B?WlRhM3ZtL29kU3NLUlIxU0xiZmMyYzk5QXpndnVnZS8rY1A2NTIvL3ZjK2w0?=
+ =?utf-8?B?K25NTDluVTdlV0VUMDJmWFNIdnlxRkpDM0w2aEZWd053UnBnZXZ5bk5VTXlx?=
+ =?utf-8?B?RlJmQ2FlY05vWU5BMGwzRkdPc2NHUEVNemlJQk42UGlpMDBwRVlVMTBKUUh1?=
+ =?utf-8?B?Y2lrRG1iOEQrcGRMdERQL2UwMnZuTGR4SHJUZjBlU0VLL0dhSVArWVRuYjR5?=
+ =?utf-8?B?WjJWTFJaVVQ3QlAwT09JWVJNMDNkSmpsS0pKWVB0dHcxZ2s5UXJlZVhMWUlW?=
+ =?utf-8?B?QktxSnF1QTlBVUNEeUtNTXlyWVFEM3p2YnYxby90Q1p1TDNxYzFobGovcUI3?=
+ =?utf-8?B?dTBHbnpOLy9tYktyUGRqdlpwV1h6amg0RUdjOUZ6OGY5bXpIdUtJUVQrdlZw?=
+ =?utf-8?B?QWV5L2lIZkdjNGJyRlJFZXFkZUJmYkVQMS9pSUxXcjFOTGgzQlJUejR4OHYw?=
+ =?utf-8?B?d0dRekNhMmw3ZDBQeE8zRVA1UGEvajFhM0crT0hjWktwU2pkSXpCK2lHR0R3?=
+ =?utf-8?B?VjdEa0YyM2ZnU1NYdWl1b2x4M3h5RldSZWFaaFgrcjR3TC9FWWpqRURCV1Vq?=
+ =?utf-8?B?NlFQT0dWcVBobHBZdHpEaHFycUhsL2NqQXZoVk40UWc3cmx0dkZrTTBaSVM5?=
+ =?utf-8?B?NVdkSDd5WnFXUGJCY0Z0MHlWQWhuWmh0d2M4MGlOdjZKSnpJelErc1hvTC9Y?=
+ =?utf-8?B?cTFwd0dEajFxNU1kaG5LaWhlVmMyOFEzNU5EakVOWTV6VnJ6VHZTMHVuSndS?=
+ =?utf-8?B?TlBjTDJsQkEzY0Fic3VsS2RWL0dkUG1sQXhoeW15ZC8xbmxBSG50WFFzU1NJ?=
+ =?utf-8?B?SDVocU5OeFNkYXY3enVNR0c5dkV4VGZERG1BTExqTmtFRFdJMEpUWkZjYWgx?=
+ =?utf-8?B?Ky84UkZabzEvK3FPR2Q4WDBvRndXWnFvWHlscjZrVTZjRzh3SnNsaWJoSnJN?=
+ =?utf-8?B?VDh2UjNZRnpGZ0JiVXFVaGp4cnpxN2ZNZzRvc2xDUDdYNXFBZVZSYVU2R01D?=
+ =?utf-8?B?K2NJVEdxZHdYRlRqZkIyUUo5Mjlqb3N6WHB3Z0orOFc2akI1R0FkelRrMzFs?=
+ =?utf-8?B?dUkwV1RIZlE5MEJHZFlRMmk1MjZibjBuTWl6d2tkZFBScXZTcjVMbFBzaW9k?=
+ =?utf-8?B?Z01zTEFnK3huMFA5SFF5aTdFSmN2V2g1V1lHNS8wMWRYZ2tQWUtYay9LcHZa?=
+ =?utf-8?B?Wnp6KzJDZkF3aFZ6K3BVZlRFOVNRcm92a1F1bzZ0SVI5R1cycHkrcEtHMklr?=
+ =?utf-8?B?UXBYakVNams3ZllKYi9ja3h3dGNIanVQRFVQM3kwTmE2cmZ6V2RMNGczcFhZ?=
+ =?utf-8?B?aEE9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F0B356C1168E0E41AD839982A99A9F09@apcprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PSAPR03MB5365.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 96e1be67-e8b4-4a6c-3fa2-08db46f9bf4a
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Apr 2023 08:31:07.2705
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: VhPVNlFxnBHh2BDNpby4X/x0I8OLGpTdeIWBT2+fEMKOkFJ3lmdwP8ibPO3y0OB/g4PYOSAFxeQdRXYLQGOmf5vAXSegofbEKRsS8slHAlk=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR03MB5214
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_TEMPERROR,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,1231 +163,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 2023/4/19 AM7:30, Robin Murphy wrote:
-> On 2023-04-17 07:17, Shuai Xue wrote:
->> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->> Core controller IP which provides statistics feature. The PMU is not a PCIe
->> Root Complex integrated End Point(RCiEP) device but only register counters
->> provided by each PCIe Root Port.
->>
->> To facilitate collection of statistics the controller provides the
->> following two features for each Root Port:
->>
->> - Time Based Analysis (RX/TX data throughput and time spent in each
->>    low-power LTSSM state)
->> - Event counters (Error and Non-Error for lanes)
->>
->> Note, only one counter for each type and does not overflow interrupt.
->>
->> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->> named based the BDF of Root Port. For example,
->>
->>      30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>
->> the PMU device name for this Root Port is dwc_rootport_3018.
->>
->> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
->>
->>      $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>
->> average RX bandwidth can be calculated like this:
->>
->>      PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> ---
->>   drivers/perf/Kconfig        |   7 +
->>   drivers/perf/Makefile       |   1 +
->>   drivers/perf/dwc_pcie_pmu.c | 855 ++++++++++++++++++++++++++++++++++++
->>   3 files changed, 863 insertions(+)
->>   create mode 100644 drivers/perf/dwc_pcie_pmu.c
->>
->> diff --git a/drivers/perf/Kconfig b/drivers/perf/Kconfig
->> index 66c259000a44..57bce3880cba 100644
->> --- a/drivers/perf/Kconfig
->> +++ b/drivers/perf/Kconfig
->> @@ -199,6 +199,13 @@ config MARVELL_CN10K_DDR_PMU
->>         Enable perf support for Marvell DDR Performance monitoring
->>         event on CN10K platform.
->>   +config DWC_PCIE_PMU
->> +    tristate "Enable Synopsys DesignWare PCIe PMU Support"
->> +    depends on ARM64 || (COMPILE_TEST && 64BIT)
-> 
-> Is there anything here that really depends on 64BIT? Nothing obvious stands out.
-> 
->> +    help
->> +      Enable perf support for Synopsys DesignWare PCIe PMU Performance
->> +      monitoring event on Yitian 710 platform.
->> +
->>   source "drivers/perf/arm_cspmu/Kconfig"
->>     source "drivers/perf/amlogic/Kconfig"
->> diff --git a/drivers/perf/Makefile b/drivers/perf/Makefile
->> index 13e45da61100..3f233e96524e 100644
->> --- a/drivers/perf/Makefile
->> +++ b/drivers/perf/Makefile
->> @@ -21,5 +21,6 @@ obj-$(CONFIG_MARVELL_CN10K_TAD_PMU) += marvell_cn10k_tad_pmu.o
->>   obj-$(CONFIG_MARVELL_CN10K_DDR_PMU) += marvell_cn10k_ddr_pmu.o
->>   obj-$(CONFIG_APPLE_M1_CPU_PMU) += apple_m1_cpu_pmu.o
->>   obj-$(CONFIG_ALIBABA_UNCORE_DRW_PMU) += alibaba_uncore_drw_pmu.o
->> +obj-$(CONFIG_DWC_PCIE_PMU) += dwc_pcie_pmu.o
->>   obj-$(CONFIG_ARM_CORESIGHT_PMU_ARCH_SYSTEM_PMU) += arm_cspmu/
->>   obj-$(CONFIG_MESON_DDR_PMU) += amlogic/
->> diff --git a/drivers/perf/dwc_pcie_pmu.c b/drivers/perf/dwc_pcie_pmu.c
->> new file mode 100644
->> index 000000000000..b7691cfe0df4
->> --- /dev/null
->> +++ b/drivers/perf/dwc_pcie_pmu.c
->> @@ -0,0 +1,855 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Synopsys DesignWare PCIe PMU driver
->> + *
->> + * Copyright (C) 2021-2023 Alibaba Inc.
->> + */
->> +
->> +#include <linux/pci.h>
->> +#include <linux/bitfield.h>
->> +#include <linux/bitops.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/cpumask.h>
->> +#include <linux/device.h>
->> +#include <linux/errno.h>
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/perf_event.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/smp.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/types.h>
->> +#define PCI_VENDOR_ID_ALIBABA 0x1ded
-> 
-> Shouldn't that belong in linux/pci_ids.h?
-
-Yes, it also exist in drivers/infiniband/hw/erdma/erdma_hw.h
-I will add a prepare patch to define it in linux/pci_ids.h.
-
-> 
->> +
->> +#define ATTRI_NAME_MAX_SIZE            32
->> +#define DWC_PCIE_VSEC_RAS_DES_ID        0x02
->> +
->> +#define DWC_PCIE_EVENT_CNT_CTL            0x8
->> +#define DWC_PCIE_CNT_EVENT_SEL            GENMASK(27, 16)
->> +#define DWC_PCIE_CNT_LANE_SEL            GENMASK(11, 8)
->> +#define DWC_PCIE_CNT_STATUS            BIT(7)
->> +#define DWC_PCIE_CNT_ENABLE            GENMASK(4, 2)
->> +#define DWC_PCIE_PER_EVENT_OFF            FIELD_PREP(DWC_PCIE_CNT_ENABLE, 0x1)
->> +#define DWC_PCIE_PER_EVENT_ON            FIELD_PREP(DWC_PCIE_CNT_ENABLE, 0x3)
-> 
-> Those two don't look right... :/
-
-You are right, those two are a nested FIELD_PREP, will fix it!
-
-> 
->> +#define DWC_PCIE_EVENT_CLEAR            GENMASK(1, 0)
->> +#define DWC_PCIE_EVENT_PER_CLEAR        0x1
->> +
->> +#define DWC_PCIE_EVENT_CNT_DATA            0xC
->> +
->> +#define DWC_PCIE_TIME_BASED_ANAL_CTL        0x10
->> +#define DWC_PCIE_TIME_BASED_REPORT_SEL        GENMASK(31, 24)
->> +#define DWC_PCIE_TIME_BASED_DURATION_SEL    GENMASK(15, 8)
->> +#define DWC_PCIE_DURATION_MANUAL_CTL        0x0
->> +#define DWC_PCIE_DURATION_1MS            0x1
->> +#define DWC_PCIE_DURATION_10MS            0x2
->> +#define DWC_PCIE_DURATION_100MS            0x3
->> +#define DWC_PCIE_DURATION_1S            0x4
->> +#define DWC_PCIE_DURATION_2S            0x5
->> +#define DWC_PCIE_DURATION_4S            0x6
->> +#define DWC_PCIE_DURATION_4US            0xff
->> +#define DWC_PCIE_TIME_BASED_TIMER_START     BIT(0)
->> +#define DWC_PCIE_TIME_BASED_CNT_ENABLE        0x1
->> +
->> +#define DWC_PCIE_TIME_BASED_ANAL_DATA_REG_LOW    0x14
->> +#define DWC_PCIE_TIME_BASED_ANAL_DATA_REG_HIGH    0x18
->> +
->> +/* Event attributes */
->> +#define DWC_PCIE_CONFIG_EVENTID            GENMASK(15, 0)
->> +#define DWC_PCIE_CONFIG_TYPE            GENMASK(19, 16)
->> +#define DWC_PCIE_CONFIG_LANE            GENMASK(27, 20)
->> +
->> +#define DWC_PCIE_EVENT_ID(event)    FIELD_GET(DWC_PCIE_CONFIG_EVENTID, (event)->attr.config)
->> +#define DWC_PCIE_EVENT_TYPE(event)    FIELD_GET(DWC_PCIE_CONFIG_TYPE, (event)->attr.config)
->> +#define DWC_PCIE_EVENT_LANE(event)    FIELD_GET(DWC_PCIE_CONFIG_LANE, (event)->attr.config)
->> +
->> +enum dwc_pcie_event_type {
->> +    DWC_PCIE_TYPE_INVALID,
->> +    DWC_PCIE_TIME_BASE_EVENT,
->> +    DWC_PCIE_LANE_EVENT,
->> +};
->> +
->> +struct dwc_event_counters {
->> +    const char name[32];
->> +    u32 event_id;
->> +};
->> +
->> +struct dwc_pcie_pmu {
->> +    struct hlist_node node;
-> 
-> This isn't used anywhere (but it should be).
-
-Yes, I will refator this struct.
-
-> 
->> +    unsigned int on_cpu;
->> +    struct pmu pmu;
->> +    struct device *dev;
->> +};
->> +
->> +struct dwc_pcie_rp_info {
->> +    u32 bdf;
->> +    u32 ras_des;
->> +    u32 num_lanes;
->> +
->> +    struct list_head rp_node;
->> +    struct pci_dev *pdev;
->> +    struct dwc_pcie_pmu pcie_pmu;
->> +    bool pmu_is_register;
->> +    struct perf_event *event;
->> +
->> +    struct dwc_pcie_event_attr *lane_event_attrs;
->> +    struct attribute **pcie_pmu_event_attrs;
->> +    struct attribute_group pcie_pmu_event_attrs_group;
->> +    const struct attribute_group *pcie_pmu_attr_groups[4];
->> +};
-> 
-> Is there any particular reason for the seemingly arbitrary split between dwc_pcie_pmu and dwc_pcie_rp_info? It doesn't appear obvious from the design of the code; if anything it mostly just seems to make things a bit more busy than they need to be.
-
-No particular reason, I intend to collect root port specific info to dwc_pcie_rp_info and
-define PMU specific to dwc_pcie_pmu.
-
-I will move it togother.
-
-> 
->> +
->> +struct dwc_pcie_pmu_priv {
->> +    struct device *dev;
->> +    u32 pcie_ctrl_num;
->> +    struct list_head rp_infos;
->> +};
->> +
->> +#define to_dwc_pcie_pmu(p) (container_of(p, struct dwc_pcie_pmu, pmu))
->> +
->> +static struct platform_device *dwc_pcie_pmu_dev;
->> +static ssize_t cpumask_show(struct device *dev,
->> +                     struct device_attribute *attr,
->> +                     char *buf)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(dev_get_drvdata(dev));
->> +
->> +    return cpumap_print_to_pagebuf(true, buf, cpumask_of(pcie_pmu->on_cpu));
->> +}
->> +static DEVICE_ATTR_RO(cpumask);
->> +
->> +static struct attribute *dwc_pcie_pmu_cpumask_attrs[] = {
->> +    &dev_attr_cpumask.attr,
->> +    NULL
->> +};
->> +
->> +static struct attribute_group pcie_pmu_cpumask_attrs_group = {
->> +    .attrs = dwc_pcie_pmu_cpumask_attrs,
->> +};
->> +
->> +struct dwc_pcie_format_attr {
->> +    struct device_attribute attr;
->> +    u64 field;
->> +    int config;
->> +};
->> +
->> +static ssize_t dwc_pcie_pmu_format_show(struct device *dev,
->> +                    struct device_attribute *attr,
->> +                    char *buf)
->> +{
->> +    struct dwc_pcie_format_attr *fmt = container_of(attr, typeof(*fmt), attr);
->> +    int lo = __ffs(fmt->field), hi = __fls(fmt->field);
->> +
->> +    if (lo == hi)
->> +        return snprintf(buf, PAGE_SIZE, "config:%d\n", lo);
->> +
->> +    if (!fmt->config)
->> +        return snprintf(buf, PAGE_SIZE, "config:%d-%d\n", lo, hi);
->> +
->> +    return snprintf(buf, PAGE_SIZE, "config%d:%d-%d\n", fmt->config, lo,
->> +            hi);
-> 
-> A lot of this is unnecessary - you don't have any single-bit config fields, and you aren't using config1 or config2, so it's kind of confusing to have all the code and data for handling them.
-
-Will remove it.
-
-> 
-> Also, please use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
-
-Ok, I will use sysfs_emit() instead.
-
-> 
->> +}
->> +
->> +#define _dwc_pcie_format_attr(_name, _cfg, _fld)                \
->> +    (&((struct dwc_pcie_format_attr[]) {{                \
->> +        .attr = __ATTR(_name, 0444, dwc_pcie_pmu_format_show, NULL),    \
->> +        .config = _cfg,                        \
->> +        .field = _fld,                        \
->> +    }})[0].attr.attr)
->> +
->> +#define dwc_pcie_format_attr(_name, _fld)    _dwc_pcie_format_attr(_name, 0, _fld)
->> +
->> +static struct attribute *dwc_pcie_format_attrs[] = {
->> +    dwc_pcie_format_attr(type, DWC_PCIE_CONFIG_TYPE),
->> +    dwc_pcie_format_attr(eventid, DWC_PCIE_CONFIG_EVENTID),
->> +    dwc_pcie_format_attr(lane, DWC_PCIE_CONFIG_LANE),
->> +    NULL,
->> +};
->> +
->> +static struct attribute_group pcie_pmu_format_attrs_group = {
->> +    .name = "format",
->> +    .attrs = dwc_pcie_format_attrs,
->> +};
->> +
->> +struct dwc_pcie_event_attr {
->> +    struct device_attribute attr;
->> +    enum dwc_pcie_event_type type;
->> +    u16 eventid;
->> +    u8 lane;
->> +};
->> +
->> +static ssize_t dwc_pcie_event_show(struct device *dev,
->> +                struct device_attribute *attr, char *page)
->> +{
->> +    struct dwc_pcie_event_attr *eattr;
->> +
->> +    eattr = container_of(attr, typeof(*eattr), attr);
->> +
->> +    if (eattr->type == DWC_PCIE_LANE_EVENT)
->> +        return sprintf(page, "eventid=0x%lx, type=0x%lx, lane=0x%lx\n",
-> 
-> Convention seems to be that these strings do not have spaces in them, so there's a small chance that it may confuse some userspace tools.
-
-Yes, you are right. I will remove the unnecessary spaces.
-
-> 
->> +                   (unsigned long)eattr->eventid,
->> +                   (unsigned long)eattr->type,
->> +                   (unsigned long)eattr->lane);
-> 
-> Hmm, why use %lx and then have to cast everything, rather than just %x?
-
-I misunderstand the usage of eattr->var, will just use %x instead.
-
-> 
->> +
->> +    return sprintf(page, "eventid=0x%lx, type=0x%lx",
->> +               (unsigned long)eattr->eventid,
->> +               (unsigned long)eattr->type);
->> +}
->> +
->> +#define DWC_PCIE_EVENT_ATTR(_name, _type, _eventid, _lane)        \
->> +    (&((struct dwc_pcie_event_attr[]) {{                \
->> +        .attr = __ATTR(_name, 0444, dwc_pcie_event_show, NULL),    \
->> +        .type = _type,                        \
->> +        .eventid = _eventid,                    \
->> +        .lane = _lane,                    \
->> +    }})[0].attr.attr)
->> +
->> +#define DWC_PCIE_PMU_BASE_TIME_ATTR(_name, _eventid)            \
->> +    DWC_PCIE_EVENT_ATTR(_name, DWC_PCIE_TIME_BASE_EVENT, _eventid, 0)
->> +
->> +static struct attribute *dwc_pcie_pmu_time_event_attrs[] = {
->> +    /* Group #0 */
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(one_cycle, 0x00),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(TX_L0S, 0x01),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(RX_L0S, 0x02),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L0, 0x03),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L1, 0x04),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L1_1, 0x05),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L1_2, 0x06),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(CFG_RCVRY, 0x07),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(TX_RX_L0S, 0x08),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L1_AUX, 0x09),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(ONE_cycle, 0x10),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(TX_L0S_, 0x11),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(RX_L0S_, 0x12),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L0_, 0x13),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(L1_, 0x17),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(CFG_RCVRY_, 0x17),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(TX_RX_L0S_, 0x18),
->> +    /* Group #1 */
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(Tx_PCIe_TLP_Data_Payload, 0x20),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(Rx_PCIe_TLP_Data_Payload, 0x21),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(Tx_CCIX_TLP_Data_Payload, 0x22),
->> +    DWC_PCIE_PMU_BASE_TIME_ATTR(Rx_CCIX_TLP_Data_Payload, 0x23),
->> +    NULL
->> +};
->> +
->> +static inline umode_t pcie_pmu_event_attr_is_visible(struct kobject *kobj,
->> +                             struct attribute *attr,
->> +                             int unuse)
->> +{
->> +    return attr->mode;
-> 
-> There is no point implementing an optional callback which only replicates the default behaviour of not having the callback.
-> 
-> Whether to simply remove it, or instead implement more meaningful behaviour here to save complexity elsewhere, is something I'll come back to later...
-
-I will use it for new defined lane event type in next version, as you suggested later.
-
-> 
->> +}
->> +
->> +static inline bool pci_dev_is_rootport(struct pci_dev *pdev)
->> +{
->> +    return (pci_is_pcie(pdev) &&
->> +        pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT);
->> +}
->> +
->> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
->> +{
->> +    int index = 0;
->> +    struct pci_dev *pdev = NULL;
->> +    struct dwc_pcie_rp_info *rp_info;
->> +
->> +    INIT_LIST_HEAD(&priv->rp_infos);
->> +
->> +    /* Match the rootport with VSEC_RAS_DES_ID */
->> +    for_each_pci_dev(pdev) {
-> 
-> Does the PCI layer not offer a more robust mechanism for this? (PCI fixups come to mind, but I don't actually know whether that would be a viable approach or not.) 
-
-I am afraid not yet. Jonathan try to add a PMU service but it is not merged into mainline.
-
-As things stand, it seems like you've got a potential ordering problem if this is built-in and runs before PCI devices have been fully discovered.
-
-If this is built-in, the module is init by device_initcall, level 6.
-As far as I konw, PCI and PCIe devices are init in acpi_init,
-a subsys_initcall, level 4, so we will not get a potential ordering
-problem? If I missed anything, please correct me.
-
-> 
->> +        u16 vsec;
->> +        u32 val;
->> +
->> +        if (!pci_dev_is_rootport(pdev))
->> +            continue;
->> +
->> +        rp_info = devm_kzalloc(&pdev->dev, sizeof(*rp_info), GFP_KERNEL);
->> +        if (!rp_info)
->> +            return -ENOMEM;
-> 
-> This leaks a refcount on the device.
-
-Aha, you are right, I should pci_dev_put first! Will fix it in next version.
-
-> 
->> +
->> +        rp_info->bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
-> 
-> Do you really need to store this? It could just as well be a local variable in the one scope where it's used later.
-
-Ok, I will remove the bdf from rp_info and get it form pdev at where it used.	
-
-> 
->> +        rp_info->pdev = pdev;
->> +
->> +        vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
->> +                        DWC_PCIE_VSEC_RAS_DES_ID);
->> +        if (!vsec)
->> +            continue;
->> +
->> +        pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
->> +        if (PCI_VNDR_HEADER_REV(val) != 0x04 ||
->> +            PCI_VNDR_HEADER_LEN(val) != 0x100)
->> +            continue;
->> +        pci_dbg(pdev,
->> +            "Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
->> +
-> 
-> Could you not finish all the checks before allocating rp_info? I'm guessing you probably don't expect to find a mix of root ports where only some have this capability, but if that ever did happen it would be nicer not to leave a bunch of wasted memory hanging around for the lifetime of the driver.
-
-Good suggestion, I will do all check before allocating rp_info.
-
-> 
->> +        rp_info->ras_des = vsec;
->> +        rp_info->num_lanes = pcie_get_width_cap(pdev);
->> +
->> +        list_add(&rp_info->rp_node, &priv->rp_infos);
->> +        index++;
->> +    }
->> +
->> +    if (!index)
->> +        return -ENODEV;
->> +
->> +    priv->pcie_ctrl_num = index;
-> 
-> You never use this.
-
-Yes, I forgot to delete it after patch v1. Will delete it in next version.
-
-> 
->> +
->> +    return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_set_event_id(struct pci_dev *pdev, u16 ras_des,
->> +                     int event_id)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, &val);
->> +
->> +    val |= FIELD_PREP(DWC_PCIE_CNT_EVENT_SEL, event_id);
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, val);
->> +}
->> +
->> +static void dwc_pcie_pmu_write_event_lane(struct pci_dev *pdev, u16 ras_des,
->> +                     int lane, int event_id)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, &val);
->> +
->> +    val |= FIELD_PREP(DWC_PCIE_CNT_EVENT_SEL, lane);
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, val);
->> +}
-> 
-> What's the purpose of these two functions doing the exact same thing, but one having an extra unused argument?
-
-Good catch, I should put it all together.
-
-> 
->> +
->> +static void dwc_pcie_pmu_event_enable(struct pci_dev *pdev, u16 ras_des,
->> +                     u32 enable)
-> 
-> Pass Boolean arguments as bool.
-
-Will fix it.
-
-> 
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, &val);
->> +
->> +    if (enable)
->> +        val |= FIELD_PREP(DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_ON);
->> +    else
->> +        val |= FIELD_PREP(DWC_PCIE_CNT_ENABLE, DWC_PCIE_PER_EVENT_OFF);
-> 
-> This looks suspicious - even if the values were defined correctly, the read-modify-write implies that a transition from enabled to disabled would result in ON | OFF == ON, which doesn't appear to make much sense.
-
-Good catch, I will clear bits in DWC_PCIE_CNT_ENABLE first.
-
-> 
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, val);
->> +}
->> +
->> +static void dwc_pcie_pmu_base_time_enable(struct pci_dev *pdev, u16 ras_des,
->> +                     u32 enable)
-> 
-> bool again.
-
-Will fix it.
-
-> 
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +                  &val);
->> +
->> +    if (enable)
->> +        val |= DWC_PCIE_TIME_BASED_CNT_ENABLE;
->> +    else
->> +        val &= ~DWC_PCIE_TIME_BASED_CNT_ENABLE;
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +                   val);
->> +}
->> +
->> +static void dwc_pcie_pmu_read_event_counter(struct pci_dev *pdev, u16 ras_des,
->> +                        u64 *counter)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_DATA, &val);
->> +    *counter = val;
-> 
-> Why not just return a u64 by value?
-
-Will change it return a u64 from void.
-
-> 
->> +}
->> +
->> +/* The results are cleared when next measurement starts. */
->> +static void dwc_pcie_pmu_read_base_time_counter(struct pci_dev *pdev,
->> +                        u16 ras_des, u64 *counter)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(
->> +        pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_DATA_REG_HIGH,
->> +        &val);
->> +    *counter = val;
->> +    *counter <<= 32;
->> +
->> +    pci_read_config_dword(
->> +        pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_DATA_REG_LOW,
->> +        &val);
->> +
->> +    *counter += val;
-> 
-> Ditto.
-
-Ok, I will do it.
-
-
-> 
->> +}
->> +
->> +static void dwc_pcie_pmu_clear_event_counter(struct pci_dev *pdev, u16 ras_des)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, &val);
->> +
->> +    val |= FIELD_PREP(DWC_PCIE_EVENT_CLEAR, DWC_PCIE_EVENT_PER_CLEAR);
-> 
-> OK, does this EVENT_CNT_CTL register just have some really weird behaviour where the fields we touch are self-clearing but other bits still have to be preserved when written?
-> 
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_EVENT_CNT_CTL, val);
->> +}
->> +
->> +static void dwc_pcie_pmu_base_time_add_prepare(struct pci_dev *pdev,
->> +                           u16 ras_des, u32 event_id)
->> +{
->> +    u32 val;
->> +
->> +    pci_read_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +                  &val);
->> +
->> +    val |= FIELD_PREP(DWC_PCIE_TIME_BASED_REPORT_SEL, event_id);
-> 
-> Ditto for this one, in fact.
-
-No, all valid field are writeAsRead. You mean I should write to all filed
-without a write-after-read when .add() a event, right?
-
-> 
->> +
->> +    /*
->> +     * TIME_BASED_ANAL_DATA_REG is a 64 bit register, we can safely
->> +     * use it with any manually controlled duration.
->> +     */
->> +    val |= FIELD_PREP(DWC_PCIE_TIME_BASED_DURATION_SEL,
->> +              DWC_PCIE_DURATION_MANUAL_CTL);
->> +
->> +    pci_write_config_dword(pdev, ras_des + DWC_PCIE_TIME_BASED_ANAL_CTL,
->> +                   val);
->> +}
->> +
->> +static struct dwc_pcie_rp_info *pmu_to_pcie_info(struct pmu *pmu)
->> +{
->> +    struct dwc_pcie_rp_info *rp_info;
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(pmu);
->> +
->> +    rp_info = container_of(pcie_pmu, struct dwc_pcie_rp_info, pcie_pmu);
->> +
->> +    return rp_info;
->> +}
->> +
->> +static void dwc_pcie_pmu_event_update(struct perf_event *event)
->> +{
->> +    u64 counter;
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->> +    struct pci_dev *pdev = rp_info->pdev;
->> +    u16 ras_des = rp_info->ras_des;
->> +    struct hw_perf_event *hwc = &event->hw;
->> +    enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +    u64 delta, prev, now;
-> 
-> That's an awful lot of boilerplate - straight away, pcie_pmu is redundant since &pdev->dev would give you the same thing, but then you don't actually need that anyway, so it would be even cleaner to pass rp_info directly to the read_*_counter helpers for them to dereference pdev and ras_des for themselves. Same thing in the start, stop and add callbacks below.
-
-Good suggestion. will do it.
-
-> 
->> +
->> +    do {
->> +        prev = local64_read(&hwc->prev_count);
->> +
->> +        if (type == DWC_PCIE_LANE_EVENT)
->> +            dwc_pcie_pmu_read_event_counter(pdev, ras_des, &counter);
->> +        else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +            dwc_pcie_pmu_read_base_time_counter(pdev, ras_des,
->> +                                &counter);
->> +        else
->> +            dev_err(pcie_pmu->dev, "invalid event type: 0x%x\n", type);
-> 
-> If that could ever happen, you've got a bug in your event_init or event_add, or something has corrupted memory in a way you cannot possibly attempt to reason about. In fact, pretending to handle such a theoretical bug here is its own *real* bug, since if that path is taken then it leads to consuming an uninitialised variable below.
-
-Yes, it should checked in init event.
-
-> 
->> +
->> +        now = counter;
-> 
-> Get rid of the redundant "counter" variable. It's really not helpful.
-
-Got it. Will remove it.
-
-> 
->> +    } while (local64_cmpxchg(&hwc->prev_count, prev, now) != prev);
->> +
->> +    delta = now - prev;
->> +
->> +    local64_add(delta, &event->count);
->> +}
->> +
->> +static int dwc_pcie_pmu_event_init(struct perf_event *event)
->> +{
->> +    struct hw_perf_event *hwc = &event->hw;
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct perf_event *sibling;
->> +
->> +    if (event->attr.type != event->pmu->type)
->> +        return -ENOENT;
->> +
->> +    if (hwc->sample_period) {
-> 
-> This confused me - it might work, but please use is_sampling_event() to be consistent with everything else.
-
-Ok, I'd like to use is_sampling_event().
-
-> 
->> +        dev_err(pcie_pmu->dev, "Sampling not supported\n");
-> 
-> dev_dbg() at best, but TBH I'd just remove it. I know this has been debated a lot, but FWIW I'm firmly in the "giving users the capability to use to use perf events should not give them the implicit capability to flood the kernel log and fill up journald's disk quota" camp.
-
-Ok, I will remove it.
-> 
->> +        return -EOPNOTSUPP;
-> 
-> Use EINVAL. It's not that you simply don't support sampling, it's that there is fundamentally no meaningful context in a PCIe lane to sample from, so it is not a valid event at all>
-> 
->> +    }
->> +
->> +    if (event->cpu < 0) {
->> +        dev_err(pcie_pmu->dev, "Per-task mode not supported\n");
->> +        return -EOPNOTSUPP;
-> 
-> Same comments as above.
-
-Thank you for explanation. I will use EINVAL.
-
-> 
->> +    }
->> +
->> +    event->cpu = pcie_pmu->on_cpu;
-> 
-> It would seem neater not to start modifying the event until after you've finished validating it.
-
-Will move it to later.
-
-> 
->> +
->> +    if (event->group_leader != event &&
->> +        !is_software_event(event->group_leader))
->> +        return -EINVAL;
->> +
->> +    for_each_sibling_event(sibling, event->group_leader) {
->> +        if (sibling != event && !is_software_event(sibling))
-> 
-> An event cannot possibly be its own sibling.
-
-Good catch, I should compare event->pmu with sibling->pmu.
-
-> 
->> +            return -EINVAL;
->> +    }
->> +
->> +    hwc->idx = -1;
-> 
-> You never use this.
-
-Will remove it.
-> 
->> +
->> +    return 0;
-> 
-> This would be the point to check that the event's config actually makes sense and is supported by this PMU.
-> 
->> +}
->> +
->> +static void dwc_pcie_pmu_set_period(struct hw_perf_event *hwc)
->> +{
->> +    local64_set(&hwc->prev_count, 0);
->> +}
->> +
->> +static void dwc_pcie_pmu_event_start(struct perf_event *event, int flags)
->> +{
->> +    struct hw_perf_event *hwc = &event->hw;
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->> +    struct pci_dev *pdev = rp_info->pdev;
->> +    u16 ras_des = rp_info->ras_des;
->> +    enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +
->> +    hwc->state = 0;
->> +    dwc_pcie_pmu_set_period(hwc);
->> +
->> +    if (type == DWC_PCIE_LANE_EVENT)
->> +        dwc_pcie_pmu_event_enable(pdev, ras_des, 1);
->> +    else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +        dwc_pcie_pmu_base_time_enable(pdev, ras_des, 1);
->> +    else
->> +        dev_err(pcie_pmu->dev, "invalid event type: 0x%x\n", type);
-> 
-> Again, that should be impossible if you validated it correctly in event_init>
-> 
->> +}
->> +
->> +static void dwc_pcie_pmu_event_stop(struct perf_event *event, int flags)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->> +    struct pci_dev *pdev = rp_info->pdev;
->> +    u16 ras_des = rp_info->ras_des;
->> +
->> +    enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +
->> +    if (event->hw.state & PERF_HES_STOPPED)
->> +        return;
->> +
->> +    if (type == DWC_PCIE_LANE_EVENT)
->> +        dwc_pcie_pmu_event_enable(pdev, ras_des, 0);
->> +    else if (type == DWC_PCIE_TIME_BASE_EVENT)
->> +        dwc_pcie_pmu_base_time_enable(pdev, ras_des, 0);
->> +    else
->> +        dev_err(pcie_pmu->dev, "invalid event type: 0x%x\n", type);
-> 
-> Ditto.
-
-Good suggestion, I will validate it correctly in event_init.
-
-> 
->> +
->> +    dwc_pcie_pmu_event_update(event);
->> +}
->> +
->> +static int dwc_pcie_pmu_event_add(struct perf_event *event, int flags)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu = to_dwc_pcie_pmu(event->pmu);
->> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->> +    struct pci_dev *pdev = rp_info->pdev;
->> +    u16 ras_des = rp_info->ras_des;
->> +    struct hw_perf_event *hwc = &event->hw;
->> +    enum dwc_pcie_event_type type = DWC_PCIE_EVENT_TYPE(event);
->> +    int event_id = DWC_PCIE_EVENT_ID(event);
->> +    int lane = DWC_PCIE_EVENT_LANE(event);
->> +
->> +    /* Only one counter and it is in use */
->> +    if (rp_info->event)
->> +        return -ENOSPC;
-> 
-> Out of curiosity, is this a technical limitation, or just a case of keeping the initial driver simple? The registers seem to imply that lane events and time events are pretty much independent of each other, so maybe it might be possible for one of each to coexist.
-
-The are independent of each other, I just to keep the driver simple :)
-
-> 
->> +
->> +    rp_info->event = event;
->> +
->> +    hwc->state = PERF_HES_STOPPED | PERF_HES_UPTODATE;
->> +
->> +    if (type == DWC_PCIE_LANE_EVENT) {
->> +        dwc_pcie_pmu_event_enable(pdev, ras_des, 0);
->> +        dwc_pcie_pmu_write_event_lane(pdev, ras_des, lane, event_id);
->> +        dwc_pcie_pmu_set_event_id(pdev, ras_des, event_id);
->> +        dwc_pcie_pmu_clear_event_counter(pdev, ras_des);
-> 
-> Eww, the helpers were already confusing enough, but is it necessary to do *four* back-to-back RMW operations on the same register? Can you really not just write the whole thing in one go?
-
-Sure, I will warp them in one prepare().
-
-> 
->> +    } else if (type == DWC_PCIE_TIME_BASE_EVENT) {
->> +        dwc_pcie_pmu_base_time_enable(pdev, ras_des, 0);
->> +        dwc_pcie_pmu_base_time_add_prepare(pdev, ras_des, event_id);
->> +    } else {
->> +        dev_err(pcie_pmu->dev, "invalid event type: 0x%x\n", type);
->> +        return -EINVAL;
->> +    }
->> +
->> +    if (flags & PERF_EF_START)
->> +        dwc_pcie_pmu_event_start(event, PERF_EF_RELOAD);
->> +
->> +    perf_event_update_userpage(event);
->> +
->> +    return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_event_del(struct perf_event *event, int flags)
->> +{
->> +    struct dwc_pcie_rp_info *rp_info = pmu_to_pcie_info(event->pmu);
->> +
->> +    dwc_pcie_pmu_event_stop(event, flags | PERF_EF_UPDATE);
->> +    perf_event_update_userpage(event);
->> +    rp_info->event = NULL;
->> +}
->> +
->> +static void dwc_pcie_pmu_event_read(struct perf_event *event)
->> +{
->> +    dwc_pcie_pmu_event_update(event);
->> +}
-> 
-> What use is a function wrapper that does nothing but call a function with an identical signature? Whatever would call this can just call dwc_pcie_pmu_event_update() directly.
-
-Haha, I have to admit that I do not know why. The dmc620, dsu, smmu_pmu, arm-cci,
-arm-cci drivers use .update() in .read() with the smae identical signature.
-
-After a double check, the drivers fsl_imx8_ddr_perf.c, marvell_cn10k_ddr_pmu.c
-use .update() as .read(), e.g.
-
-	.read	     = cn10k_ddr_perf_event_update,
-
-I think we should use .update() as .read() directly, right?
-
->> +
->> +static struct dwc_event_counters event_array[] = {
->> +    {"tx_ack_dllp", 0x600},
->> +    {"tx_update_fc_dllp", 0x601},
->> +    {"rx_ack_dllp", 0x602},
->> +    {"rx_update_fc_dllp", 0x603},
->> +    {"rx_nulified_tlp", 0x604},
->> +    {"tx_nulified_tlp", 0x605},
->> +    {"rx_duplicate_tlp", 0x606},
->> +    {"tx_memory_write", 0x700},
->> +    {"tx_memory_read", 0x701},
->> +    {"tx_configuration_write", 0x702},
->> +    {"tx_configuration_read", 0x703},
->> +    {"tx_io_write", 0x704},
->> +    {"tx_io_read", 0x705},
->> +    {"tx_completion_without_data", 0x706},
->> +    {"tx_completion_with_data", 0x707},
->> +    {"tx_message_tlp", 0x708},
->> +    {"tx_atomic", 0x709},
->> +    {"tx_tlp_with_prefix", 0x70A},
->> +    {"rx_memory_write", 0x70B},
->> +    {"rx_memory_read", 0x70C},
->> +    {"rx_io_write", 0x70F},
->> +    {"rx_io_read", 0x710},
->> +    {"rx_completion_without_data", 0x711},
->> +    {"rx_completion_with_data", 0x712},
->> +    {"rx_message_tlp", 0x713},
->> +    {"rx_atomic", 0x714},
->> +    {"rx_tlp_with_prefix", 0x715},
->> +    {"tx_ccix_tlp", 0x716},
->> +    {"rx_ccix_tlp", 0x717},
->> +};
->> +
->> +static int dwc_pcie_pmu_attr_init(struct dwc_pcie_pmu_priv *priv,
->> +                  struct dwc_pcie_rp_info *rp_info)
->> +{
->> +    int i, j;
->> +    char lane[8];
->> +    const char tmp[64];
->> +    int events_per_lane;
->> +    int num_lane_events;
->> +    int time_base_count;
->> +    int num_attrs, attr_idx;
->> +    struct dwc_pcie_event_attr *lane_attrs;
->> +    struct attribute **pmu_attrs;
->> +
->> +    memset((void *)tmp, 0, sizeof(tmp));
->> +    memset((void *)lane, 0, sizeof(lane));
->> +    time_base_count = ARRAY_SIZE(dwc_pcie_pmu_time_event_attrs);
->> +    events_per_lane = ARRAY_SIZE(event_array);
->> +    num_lane_events = rp_info->num_lanes * events_per_lane;
->> +    num_attrs = time_base_count + num_lane_events;
->> +
->> +    rp_info->lane_event_attrs =
->> +        devm_kcalloc(priv->dev, num_lane_events,
->> +                sizeof(struct dwc_pcie_event_attr),
->> +                GFP_KERNEL);
->> +    if (!rp_info->lane_event_attrs)
->> +        return -ENOMEM;
->> +    lane_attrs = rp_info->lane_event_attrs;
->> +    rp_info->pcie_pmu_event_attrs =
->> +        devm_kcalloc(priv->dev, num_attrs, sizeof(struct attribute *),
->> +             GFP_KERNEL);
->> +    if (!rp_info->pcie_pmu_event_attrs)
->> +        return -ENOMEM;
->> +    pmu_attrs = rp_info->pcie_pmu_event_attrs;
->> +
->> +    for (i = 0; i < num_lane_events; i++) {
->> +        lane_attrs[i].attr.attr.name =
->> +            devm_kzalloc(priv->dev, sizeof(char)
->> +                 * ATTRI_NAME_MAX_SIZE, GFP_KERNEL);
->> +        if (!lane_attrs[i].attr.attr.name)
->> +            return -ENOMEM;
->> +    }
->> +
->> +    attr_idx = 0;
->> +    for (i = 0; i < rp_info->num_lanes; i++) {
->> +        sprintf(lane, "_lane%d", i);
->> +
->> +        for (j = 0; j < events_per_lane; j++) {
->> +            int pos = i * events_per_lane + j;
->> +
->> +            strcat((char *)tmp, event_array[j].name);
->> +            strcat((char *)tmp, lane);
->> +            memcpy((void *)lane_attrs[pos].attr.attr.name,
->> +                   (void *)tmp,
->> +                   sizeof(tmp));
->> +
->> +            lane_attrs[pos].attr.attr.mode =
->> +                VERIFY_OCTAL_PERMISSIONS(0444);
->> +            lane_attrs[pos].attr.show = dwc_pcie_event_show;
->> +            lane_attrs[pos].attr.store = NULL;
->> +            lane_attrs[pos].type = DWC_PCIE_LANE_EVENT;
->> +            lane_attrs[pos].eventid = event_array[j].event_id;
->> +            lane_attrs[pos].lane = i;
->> +            pmu_attrs[attr_idx++] = &lane_attrs[pos].attr.attr;
->> +
->> +            memset((void *)tmp, 0, sizeof(tmp));
->> +        }
->> +    }
->> +
->> +    for (i = 0; i < ARRAY_SIZE(dwc_pcie_pmu_time_event_attrs); i++)
->> +        pmu_attrs[attr_idx++] = dwc_pcie_pmu_time_event_attrs[i];
->> +
->> +    rp_info->pcie_pmu_event_attrs[attr_idx++] = NULL;
->> +
->> +    rp_info->pcie_pmu_event_attrs_group.name = "events";
->> +    rp_info->pcie_pmu_event_attrs_group.is_visible =
->> +        pcie_pmu_event_attr_is_visible;
->> +    rp_info->pcie_pmu_event_attrs_group.attrs =
->> +        rp_info->pcie_pmu_event_attrs;
->> +
->> +    rp_info->pcie_pmu_attr_groups[0] =
->> +        &rp_info->pcie_pmu_event_attrs_group;
->> +    rp_info->pcie_pmu_attr_groups[1] = &pcie_pmu_format_attrs_group;
->> +    rp_info->pcie_pmu_attr_groups[2] = &pcie_pmu_cpumask_attrs_group;
->> +    rp_info->pcie_pmu_attr_groups[3] = NULL;
->> +
->> +    return 0;
-> 
-> That took a while to make sense of... dynamically generating event attrs is a bit horrible, especially if it means you waste a bunch of memory duplicating the same stuff over and over again for every PMU instance.
-> 
-> You can achieve the same effect far more neatly by statically defining all possible events, then using the .is_visible callback to hide any which are not supported by the given PMU instance.
-> 
-> However, I'm not sure it's really worth even doing that (especially if I've counted right and it means 464 events for a maximum of 16 lanes). It doesn't seem like the difference in typing "tx_io_read_lane0" vs. "tx_io_read,lane=0" will have a significant impact on user experience. Conversely, I happen to know that some users actively dislike the experience of "perf list" spewing out hundreds of events that swamp out the ones they're looking for. If this is the SoC which also has arm-cmn then it's already more than bad enough (sorry!) - describing 29 distinct events as just 29 events will be a lot more popular and manageable. If you like you can output "lane=?" in the event string to make it even more obvious - perf tool will then require the user to provide a lane value instead of defaulting to 0 if it isn't specified.
-
-Got your point, the prolem is that we can't use part of symbolic name,
-right?
-
-"tx_io_read_lane0" vs. "tx_io_read,lane=0", I prefer the latter. But
-the right latter is "eventid=0x705,lane=0", right?
-
-I should add a description in document.
-
-> 
->> +}
->> +
->> +static int __dwc_pcie_pmu_probe(struct dwc_pcie_pmu_priv *priv,
->> +                struct dwc_pcie_rp_info *rp_info)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +    struct device *dev;
->> +    char *name;
->> +    int ret;
->> +
->> +    pcie_pmu = &rp_info->pcie_pmu;
->> +    dev = &rp_info->pdev->dev;
->> +
->> +    ret = dwc_pcie_pmu_attr_init(priv, rp_info);
->> +    if (ret) {
->> +        pci_err(rp_info->pdev, "PMU attr init fail ret=%d\n", ret);
->> +        return ret;
->> +    }
->> +
->> +    pcie_pmu->dev = dev;
->> +    pcie_pmu->pmu = (struct pmu) {
->> +        .module        = THIS_MODULE,
->> +        .task_ctx_nr    = perf_invalid_context,
->> +        .pmu_enable    = NULL,
->> +        .pmu_disable    = NULL,
-> 
-> If I counted right there are still 28 other fields being default-initialised to 0 or NULL here, what's special about these two? ;)
-
-Nope, I will delete it. It is optional to implement.
-
-> 
->> +        .event_init    = dwc_pcie_pmu_event_init,
->> +        .add        = dwc_pcie_pmu_event_add,
->> +        .del        = dwc_pcie_pmu_event_del,
->> +        .start        = dwc_pcie_pmu_event_start,
->> +        .stop        = dwc_pcie_pmu_event_stop,
->> +        .read        = dwc_pcie_pmu_event_read,
->> +        .attr_groups    = rp_info->pcie_pmu_attr_groups,
->> +        .capabilities    = PERF_PMU_CAP_NO_EXCLUDE,
->> +    };
->> +
->> +    name = devm_kasprintf(priv->dev, GFP_KERNEL, "dwc_rootport_%x",
->> +                  rp_info->bdf);
->> +    if (!name)
->> +        return -ENOMEM;
->> +
->> +    /*
->> +     * Pick one CPU to be the preferred one on local NUMA node.
->> +     *
->> +     * Note, this PMU does NOT support interrupt, set on_cpu to indicate it
->> +     * is a uncore PMU device.
->> +     */
->> +    pcie_pmu->on_cpu = cpumask_local_spread(0, dev_to_node(pcie_pmu->dev));
-> 
-> You need to cope with the possibility of that CPU going offline.
-
-As I commented here, the PMU does NOT support interrupt, and the on_cpu
-just indicate it is a uncore PMU device as Yicong Yang suggested. So the
-selected CPU is not really used.
-
-Do we need to care about that CPU going offline?
-
-> 
->> +    ret = perf_pmu_register(&pcie_pmu->pmu, name, -1);
->> +    if (ret) {
->> +        pci_err(rp_info->pdev, "Error %d registering PMU @%x\n", ret,
->> +                 rp_info->bdf);
->> +        return ret;
->> +    }
->> +
->> +    rp_info->pmu_is_register = true;
->> +
->> +    return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_remove(struct platform_device *pdev)
->> +{
->> +    struct dwc_pcie_pmu_priv *priv = platform_get_drvdata(pdev);
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +    struct dwc_pcie_rp_info *rp_info;
->> +
->> +    list_for_each_entry(rp_info, &priv->rp_infos, rp_node) {
->> +        if (rp_info->pmu_is_register) {
->> +            pcie_pmu = &rp_info->pcie_pmu;
->> +            perf_pmu_unregister(&pcie_pmu->pmu);
->> +        }
->> +    }
->> +    return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_probe(struct platform_device *pdev)
->> +{
->> +    int ret;
->> +    struct dwc_pcie_pmu_priv *priv;
->> +    struct dwc_pcie_rp_info *rp_info;
->> +
->> +    priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->> +    priv->dev = &pdev->dev;
->> +    platform_set_drvdata(pdev, priv);
->> +
->> +    /* If RAS_DES PMU is not supported on current platform, keep silent */
->> +    ret = dwc_pcie_ras_des_discover(priv);
->> +    if (ret)
->> +        return ret;
->> +
->> +    list_for_each_entry(rp_info, &priv->rp_infos, rp_node) {
->> +        struct pci_dev *rp = rp_info->pdev;
->> +
->> +        ret = __dwc_pcie_pmu_probe(priv, rp_info);
-> 
-> If the PMUs are independent of each other, why not just probe them directly during the PCIe capability walk? That way you could easily ensure that the list only ever contains successfully-registered PMUs by construction, and make cleanup even simpler.
-
-Yes, they are independent of each other and belongs to different root port.
-Good suggestion, I will probe them during the PCIe capability walk in next version.
-
-
->> +        if (ret) {
->> +            dev_err(&rp->dev, "PCIe PMU probe fail\n");
->> +            goto pmu_unregister;
->> +        }
->> +    }
->> +
->> +    return 0;
->> +
->> +pmu_unregister:
->> +    dwc_pcie_pmu_remove(pdev);
->> +
->> +    return ret;
->> +}
->> +
->> +static struct platform_driver dwc_pcie_pmu_driver = {
->> +    .probe = dwc_pcie_pmu_probe,
->> +    .remove = dwc_pcie_pmu_remove,
->> +    .driver = {.name = "dwc_pcie_pmu",},
->> +};
->> +
->> +static int __init dwc_pcie_pmu_init(void)
->> +{
->> +    int ret;
->> +
->> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
->> +
->> +    if (ret)
->> +        return ret;
->> +
->> +    dwc_pcie_pmu_dev = platform_device_register_simple(
->> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
->> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
->> +        platform_driver_unregister(&dwc_pcie_pmu_driver);
->> +        return PTR_ERR(dwc_pcie_pmu_dev);
->> +    }
-> 
-> Why go through all this bother of inventing a device and registering a driver just to take a long round-trip through the driver core to call dwc_pcie_pmu_probe()? Why not just do the work of dwc_pcie_pmu_probe() right here? Sure, you'd also need to manually clean up a couple of allocations on failure or exit instead of using devres, but that's still considerably less hassle than invoking the whole driver model just to disguise a list_head and a couple of function calls.
-> 
-
-I directly call dwc_pcie_pmu_probe in first internal version. I see
-some PMU drivers register simple platform devices, like riscv_pmu_legacy.c
-and riscv_pmu_sbi.c.
-
-If you are asking to call dwc_pcie_pmu_probe() directly, I'd
-like to change it back.
-
-> Thanks,
-> Robin.
-> 
-
-Thank you very much for your valuable comments.
-
-Best Regards,
-Shuai
-
-
->> +
->> +    return 0;
->> +}
->> +
->> +static void __exit dwc_pcie_pmu_exit(void)
->> +{
->> +    platform_device_unregister(dwc_pcie_pmu_dev);
->> +    platform_driver_unregister(&dwc_pcie_pmu_driver);
->> +}
->> +
->> +module_init(dwc_pcie_pmu_init);
->> +module_exit(dwc_pcie_pmu_exit);
->> +
->> +MODULE_DESCRIPTION("PMU driver for DesignWare Cores PCI Express Controller");
->> +MODULE_AUTHOR("Shuai xue <xueshuai@linux.alibaba.com>");
->> +MODULE_AUTHOR("Wen Cheng <yinxuan_cw@linux.alibaba.com>");
->> +MODULE_LICENSE("GPL v2");
+SGkgRnJhbmssDQoNClNlZW1zIHRoaXMgcGF0Y2ggaGFzIGh1Z2UgaW1wYWN0IG9uIGJvb3QgdGlt
+ZSwgSSdtIGN1cmlvdXMgYWJvdXQgdGhlDQpOVk1lIGRldGVjdGlvbiBpc3N1ZSBvbiBtdDc5ODYs
+IGNhbiB5b3Ugc2hhcmUgdGhlIFNTRCBtb2RlbCB0aGF0IHlvdQ0KYXJlIHVzaW5nIGFuZCB0aGUg
+Ym9vdHVwIGxvZ3Mgd2l0aCB0aGF0IFNTRD8NCg0KVGhhbmtzLg0KDQpPbiBXZWQsIDIwMjMtMDQt
+MjYgYXQgMTk6NDEgKzAyMDAsIEZyYW5rIFd1bmRlcmxpY2ggd3JvdGU6DQo+IEV4dGVybmFsIGVt
+YWlsIDogUGxlYXNlIGRvIG5vdCBjbGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVudGls
+DQo+IHlvdSBoYXZlIHZlcmlmaWVkIHRoZSBzZW5kZXIgb3IgdGhlIGNvbnRlbnQuDQo+IA0KPiAN
+Cj4gSGkNCj4gDQo+ID4gR2VzZW5kZXQ6IFNvbm50YWcsIDAyLiBBcHJpbCAyMDIzIHVtIDE1OjEz
+IFVocg0KPiA+IFZvbjogIkZyYW5rIFd1bmRlcmxpY2giIDxsaW51eEBmdy13ZWIuZGU+DQo+ID4g
+RGUtYXNzZXJ0IFBFUlNUIGluIHNlcGFyYXRlIHN0ZXAgYWZ0ZXIgcmVzZXQgc2lnbmFscyB0byBm
+dWxseQ0KPiA+IGNvbXBseQ0KPiA+IHRoZSBQQ0llIENFTSBjbGF1c2UgMi4yLg0KPiA+IA0KPiA+
+IFRoaXMgZml4ZXMgc29tZSBOVk1FIGRldGVjdGlvbiBpc3N1ZXMgb24gbXQ3OTg2Lg0KPiA+IA0K
+PiA+IEZpeGVzOiBkM2JmNzViNTc5YjkgKCJQQ0k6IG1lZGlhdGVrLWdlbjM6IEFkZCBNZWRpYVRl
+ayBHZW4zIGRyaXZlcg0KPiA+IGZvciBNVDgxOTIiKQ0KPiA+IFNpZ25lZC1vZmYtYnk6IEZyYW5r
+IFd1bmRlcmxpY2ggPGZyYW5rLXdAcHVibGljLWZpbGVzLmRlPg0KPiA+IC0tLQ0KPiA+IFBhdGNo
+IGlzIHRha2VuIGZyb20gdXNlciBSdXNsYW4gYWthIFJSS2g2MSAocGVybWl0dGVkIG1lIHRvIHNl
+bmQgaXQNCj4gPiB3aXRoIG1lIGFzIGF1dGhvcikuDQo+ID4gDQo+ID4gDQpodHRwczovL3VybGRl
+ZmVuc2UuY29tL3YzL19faHR0cHM6Ly9mb3J1bS5iYW5hbmEtcGkub3JnL3QvYnBpLXIzLW52bWUt
+Y29ubmVjdGlvbi1pc3N1ZS8xNDU2My8xN19fOyEhQ1RSTktBOXdNZzBBUmJ3IW5DWEVNNjg1cGtV
+cG9pWllHS3B0UFljY05yV01lTjJEM2pJTzVfaXJ3eFpKN2M2WnpFZUFDSXgtVjJXZVpIQVBfMEZL
+bERESVEwUmJESjg5MnBydG9Ub0R2MzAkDQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvcGNpZS1tZWRpYXRlay1nZW4zLmMgfCA4ICsrKysrKystDQo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCA3IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLWdlbjMuYw0KPiA+IGIvZHJp
+dmVycy9wY2kvY29udHJvbGxlci9wY2llLW1lZGlhdGVrLWdlbjMuYw0KPiA+IGluZGV4IGI4NjEy
+Y2U1ZjRkMC4uMTc2YjFhMDQ1NjVkIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvcGNpZS1tZWRpYXRlay1nZW4zLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9s
+bGVyL3BjaWUtbWVkaWF0ZWstZ2VuMy5jDQo+ID4gQEAgLTM1MCw3ICszNTAsMTMgQEAgc3RhdGlj
+IGludCBtdGtfcGNpZV9zdGFydHVwX3BvcnQoc3RydWN0DQo+ID4gbXRrX2dlbjNfcGNpZSAqcGNp
+ZSkNCj4gPiAgICAgICBtc2xlZXAoMTAwKTsNCj4gPiANCj4gPiAgICAgICAvKiBEZS1hc3NlcnQg
+cmVzZXQgc2lnbmFscyAqLw0KPiA+IC0gICAgIHZhbCAmPSB+KFBDSUVfTUFDX1JTVEIgfCBQQ0lF
+X1BIWV9SU1RCIHwgUENJRV9CUkdfUlNUQiB8DQo+ID4gUENJRV9QRV9SU1RCKTsNCj4gPiArICAg
+ICB2YWwgJj0gfihQQ0lFX01BQ19SU1RCIHwgUENJRV9QSFlfUlNUQiB8IFBDSUVfQlJHX1JTVEIp
+Ow0KPiA+ICsgICAgIHdyaXRlbF9yZWxheGVkKHZhbCwgcGNpZS0+YmFzZSArIFBDSUVfUlNUX0NU
+UkxfUkVHKTsNCj4gPiArDQo+ID4gKyAgICAgbXNsZWVwKDEwMCk7DQo+ID4gKw0KPiA+ICsgICAg
+IC8qIERlLWFzc2VydCBQRVJTVCMgc2lnbmFscyAqLw0KPiA+ICsgICAgIHZhbCAmPSB+KFBDSUVf
+UEVfUlNUQik7DQo+ID4gICAgICAgd3JpdGVsX3JlbGF4ZWQodmFsLCBwY2llLT5iYXNlICsgUENJ
+RV9SU1RfQ1RSTF9SRUcpOw0KPiA+IA0KPiA+ICAgICAgIC8qIENoZWNrIGlmIHRoZSBsaW5rIGlz
+IHVwIG9yIG5vdCAqLw0KPiANCj4gSGkNCj4gDQo+IGp1c3QgYSBmcmllbmRseSByZW1pbmRlci4u
+Li5kbyBpIG1pc3MgYW55IHJlY2lwaWVudD8NCj4gDQo+IHJlZ2FyZHMgRnJhbmsNCj4gDQo=
