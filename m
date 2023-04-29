@@ -2,232 +2,280 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AB7C06F23C3
-	for <lists+linux-pci@lfdr.de>; Sat, 29 Apr 2023 11:03:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F3B256F24DB
+	for <lists+linux-pci@lfdr.de>; Sat, 29 Apr 2023 15:33:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbjD2JDf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 29 Apr 2023 05:03:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34878 "EHLO
+        id S229658AbjD2Ndi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 29 Apr 2023 09:33:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjD2JDe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Apr 2023 05:03:34 -0400
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 305DC1BE1;
-        Sat, 29 Apr 2023 02:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=public-files.de;
-        s=s31663417; t=1682758988; i=frank-w@public-files.de;
-        bh=ryb3vuchOoJz9RS7o/F3W2E9bKSR6lft0Zkkvso8m/k=;
-        h=X-UI-Sender-Class:Date:From:To:CC:Subject:Reply-to:In-Reply-To:
-         References;
-        b=L5YJAr+2E2LcMEEJqJK/9d565npA56tb9dp3jQZ45+q7rx9jXNBzu577KRlWtHO7A
-         A6/byWVZGY6Q40LJ7KaTYt555ERn0zxo8UvQwut2v4EWXKMbgsGxWURuBuqAq0eSCp
-         0TXkBSyEb0Hti28uPSDr481LNyfqEj9qTGAQ/qHNEquYfpQ4e7xYBDoS0DPTrqZLRh
-         se1Z04W3kUFsjjxvw5oXDw3Bp4keyzaPJhavsFGBuTQ+HQmK2Ibfz6w1DWbAb288A/
-         p86oVuQ3ghOr/q26b/qWUGi+zj+bwlENAP4w8lVmmwZJN8LNX4594BiqLcfrNWiAjE
-         jIXhxAm+IHG0w==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [IPv6:::1] ([80.187.107.191]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M3lYB-1ptVhH1XZD-000rop; Sat, 29
- Apr 2023 11:03:08 +0200
-Date:   Sat, 29 Apr 2023 11:03:07 +0200
-From:   Frank Wunderlich <frank-w@public-files.de>
-To:     =?UTF-8?B?Smlhbmp1biBXYW5nICjnjovlu7rlhpsp?= 
-        <Jianjun.Wang@mediatek.com>, "linux@fw-web.de" <linux@fw-web.de>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        =?UTF-8?B?SmlleXkgWWFuZyAo5p2o5rSBKQ==?= <Jieyy.Yang@mediatek.com>,
-        "robh@kernel.org" <robh@kernel.org>, "kw@linux.com" <kw@linux.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        Ryder Lee <Ryder.Lee@mediatek.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Subject: Re: Aw: [PATCH] PCI: mediatek-gen3: handle PERST after reset
-User-Agent: K-9 Mail for Android
-Reply-to: frank-w@public-files.de
-In-Reply-To: <cd7c2672cc7cb97086cdb8d2079ad38c7fd6367f.camel@mediatek.com>
-References: <20230402131347.99268-1-linux@fw-web.de> <trinity-8c5502f4-34bc-456b-9e4b-37edac37c3ed-1682530907724@3c-app-gmx-bs05> <74149a72313c1b944c870a45b55893e1b9331c8e.camel@mediatek.com> <EF6EF3CD-5741-449E-B7E0-27DF9A6C297D@fw-web.de> <cd7c2672cc7cb97086cdb8d2079ad38c7fd6367f.camel@mediatek.com>
-Message-ID: <82F47DB2-CFB9-4DA0-97A7-81F1B939A025@public-files.de>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:JR3F6ExB6t3PQ1jvjE/YAPO0mawhIxMF9NyaDlRF6YSjDK9UCIq
- zD7WrK+S36RUkr1wp1LJSAbqfztP8GjfGx7fz0+hgCC6tBjm9vq1g/0QTZ/jDD7wYz5jUYG
- l+nyIlRo14LyhmGgkC5hyzwqTS7VeGuWGjbxdYsUBQ4AiYQMRaTp5rG4J2zjbPs9snZMGe4
- dL9vSNjCtb1aie2NKFm+A==
-UI-OutboundReport: notjunk:1;M01:P0:UiIpUD1Nvy8=;X4DRTtJw5QEf48g4Z0juQBiy7cX
- qgo2iI9AyV7fO503Zzj2ceto0Hc2QWr7kno477wVNPba+/nMkMcPxBDcJCkbWJcjf3nves/6J
- NZVCok+v5Yu+3W2RkhSojP6dCpl4dRLdwgfhoOKF5HZwOZoF4bRLr8XcJGm4jkbrIowI5TF81
- kDFcXm93qAiBAuXkWcGjt5mz6qrDpm0LitqvGIGMOcBTDDiOtskhFqpcTJ4FpfnbDhRi2/1oT
- wnJs22/DXApVRKBAPFRlR7J1PAkSdoNYdbsuYE2G0nhGwrMmW2aWm/yJaT/R7swye6pyof09U
- g+0QbXU/BUGPsEnywYLXv8I7dx235Xhf/BrcC5h6TYsPjvPrFBch2sAJaMSUGcNJ1xdoLIwfW
- G58YVWywL9IzW38QuV3p9I8BENe32QuglK08UlCfuv3EHkXNdFESCO6M0K1hXham5zr/BmKzK
- WEqMRPZhqpO1o6nB2m4zh3V6xa2SqbXcKZrMQQOaQs9qx6vrdZeEkSr5qNZCWcj9c71hN8HgK
- DiO31J95MJZ0DYYhG8kkgA1fc18+dIqGmqQYLci5lTDG8Gu+HKSQFUc7Vgh/02j5nnJbwKITY
- rZvNpyaDCQmMojYMA4QwrhIWTaNEHgGHwAgVuhAH5uPxSSMyjtVe423DE6VcCeIxOhVdnNWST
- n3jW/tYKLEz7xG+LpY7Vg19n3TI0pT0QavqKoGMI0GGVM1NRXTphqQ7aPyHWMSMjSaaj7UIWq
- MrKZHe4IBeYmhZQ7aaWzSsfMx8xWlfr0WHUiSoM1yJBN2ZH7ZUf/dVc3hH/HCEvsp1gohs7ik
- 3fQLUUrCqeH9SMrYNmoLyR88MH38zeuj9QCoEtA/5l1f293UBFI1rm08o4l8ujec0k9GrfVed
- FUsmXetUrbBOKhE/+W1aKohb8oZpOj4RrdBbhSwal0f8DYJaPdz2WXNF/fpzoLcRt4MNnj2H1
- l+AoXibw3rhuxDNieWKbA8dxwZ+YMWkoNdyKh6cnD0usPplmZENLKcu5lzbT/X05Mx6T+w==
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        with ESMTP id S229507AbjD2Ndh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 29 Apr 2023 09:33:37 -0400
+X-Greylist: delayed 391 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 29 Apr 2023 06:33:33 PDT
+Received: from mail-m11876.qiye.163.com (mail-m11876.qiye.163.com [115.236.118.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A750198A;
+        Sat, 29 Apr 2023 06:33:33 -0700 (PDT)
+Received: from localhost.localdomain (unknown [IPV6:240e:3b7:3271:1d90:5cf2:8ef5:1dc9:a429])
+        by mail-m11876.qiye.163.com (Hmail) with ESMTPA id AC06E3C0380;
+        Sat, 29 Apr 2023 21:26:58 +0800 (CST)
+From:   Ding Hui <dinghui@sangfor.com.cn>
+To:     bhelgaas@google.com
+Cc:     sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
+        david.e.box@linux.intel.com, kai.heng.feng@canonical.com,
+        michael.a.bottini@linux.intel.com, rajatja@google.com,
+        qinzongquan@sangfor.com.cn, dinghui@sangfor.com.cn,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] PCI/ASPM: fix UAF by removing cached downstream
+Date:   Sat, 29 Apr 2023 21:26:04 +0800
+Message-Id: <20230429132604.31853-1-dinghui@sangfor.com.cn>
+X-Mailer: git-send-email 2.17.1
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSE9LVkhIGkhMQhgfGBhKQlUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSBlMQUhJTEpBSh9CS0FOGB1JQUMeHU5BSh8YQkEaT0lCWVdZFhoPEhUdFF
+        lBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a87cd3200ba2eb2kusnac06e3c0380
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PAw6Chw4ND0JQ0w3M04ZKQsj
+        HT4KCjVVSlVKTUNJTExPQ0pCTklCVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlJT0seQUgZTEFISUxKQUofQktBThgdSUFDHh1OQUofGEJBGk9JQllXWQgBWUFKS0NOSzcG
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi
+If the function 0 of a multifunction device is removed, an freed
+downstream pointer will be left in struct pcie_link_state, and then
+when pcie_config_aspm_link() be invoked from any path, we will get a
+KASAN use-after-free report.
 
-Am 29=2E April 2023 05:15:51 MESZ schrieb "Jianjun Wang (=E7=8E=8B=E5=BB=
-=BA=E5=86=9B)" <Jianjun=2EWang@mediatek=2Ecom>:
->Hi Frank,
->
->On Fri, 2023-04-28 at 07:50 +0200, Frank Wunderlich wrote:
->> External email : Please do not click links or open attachments until
->> you have verified the sender or the content=2E
->>=20
->>=20
->> Am 27=2E April 2023 10:31:07 MESZ schrieb "Jianjun Wang (=E7=8E=8B=E5=
-=BB=BA=E5=86=9B)" <
->> Jianjun=2EWang@mediatek=2Ecom>:
->> > Hi Frank,
->> >=20
->> > Seems this patch has huge impact on boot time, I'm curious about
->> > the
->> > NVMe detection issue on mt7986, can you share the SSD model that
->> > you
->> > are using and the bootup logs with that SSD?
->>=20
->> Which "huge" delay do you get in which setup? It adds a 100ms delay
->> yes,but this seems needed to some devices working=2Ei found several
->> sources talking about the 100ms wake-up time=2E=2E=2E
+Reproducer:
 
->Some products are very sensitive to the bootup time, especially the
->platforms with many PCIe ports, adding this 100ms delay for each port
->will cause the bootup time be increased by multiple times(depending on
->the number of PCIe ports it uses), and also the wake-up time, since the
->mtk_pcie_starup_port() function will be called on resume stage=2E
+  [root@host ~]# cat repro.sh
+  #!/bin/bash
+  DEV_F0="0000:03:00.0"
+  echo 1 > /sys/bus/pci/devices/$DEV_F0/remove
+  echo powersave > /sys/module/pcie_aspm/parameters/policy
 
-Thanks for taking time for analysing it=2E
+Result:
 
->> I do not have this issue,but some users in bpi-forum reorted it=2E
->> Pcie-controller on mt7986/bpi-r3 does simply not detect the nvme and
->> returned ETIMEDOUT (110)=2E
->Since we're already comply with the PCIe CEM specification sections
->2=2E2(PERST# signal)[1], and this issue only occurs on a few platforms,
+[  177.433490] ==================================================================
+[  177.433814] BUG: KASAN: slab-use-after-free in pcie_config_aspm_link+0x42d/0x500
+[  177.434114] Read of size 4 at addr ffff8881070c80a0 by task repro.sh/2056
 
-I see there is the msleep before the reset,where the patch splits reset an=
-d perst (and add the sleep between)=2E
+[  177.434747] CPU: 3 PID: 2056 Comm: repro.sh Not tainted 6.3.0+ #15
+[  177.435062] Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+[  177.435379] Call Trace:
+[  177.435741]  <TASK>
+[  177.436058]  dump_stack_lvl+0x33/0x50
+[  177.436379]  print_address_description.constprop.0+0x27/0x310
+[  177.436733]  print_report+0x3e/0x70
+[  177.437067]  ? pcie_config_aspm_link+0x42d/0x500
+[  177.437398]  kasan_report+0xae/0xe0
+[  177.437753]  ? pcie_config_aspm_link+0x42d/0x500
+[  177.438115]  pcie_config_aspm_link+0x42d/0x500
+[  177.438447]  pcie_aspm_set_policy+0x8e/0x1a0
+[  177.438862]  param_attr_store+0x162/0x2c0
+[  177.439217]  ? __pfx_sysfs_kf_write+0x10/0x10
+[  177.439571]  module_attr_store+0x3e/0x80
+[  177.439898]  kernfs_fop_write_iter+0x2d5/0x460
+[  177.440218]  vfs_write+0x72e/0xae0
+[  177.440552]  ? __pfx_vfs_write+0x10/0x10
+[  177.440866]  ? __count_memcg_events+0xea/0x1d0
+[  177.441173]  ksys_write+0xed/0x1c0
+[  177.441519]  ? __pfx_ksys_write+0x10/0x10
+[  177.441874]  do_syscall_64+0x38/0x90
+[  177.442202]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[  177.442547] RIP: 0033:0x7f0829a622c7
+[  177.442922] Code: 0e 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 b8 01 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 51 c3 48 83 ec 28 48 89 54 24 18 48 89 74 24
+[  177.443721] RSP: 002b:00007ffc6bb2d128 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  177.444151] RAX: ffffffffffffffda RBX: 000000000000000a RCX: 00007f0829a622c7
+[  177.444572] RDX: 000000000000000a RSI: 000055b8e6b168f0 RDI: 0000000000000001
+[  177.445049] RBP: 000055b8e6b168f0 R08: 00007f0829b12000 R09: 00007f0829b12080
+[  177.445490] R10: 00007f0829b11f80 R11: 0000000000000246 R12: 000000000000000a
+[  177.445984] R13: 00007f0829b535a0 R14: 000000000000000a R15: 00007f0829b53780
+[  177.446443]  </TASK>
 
-So imho the best way is to move the existing msleep between these "splitte=
-d" signals instead of adding a second one=2E I have to verify it with someo=
-ne who have the issue currently=2E
+[  177.447402] Allocated by task 1:
+[  177.447902]  kasan_save_stack+0x1e/0x40
+[  177.448444]  kasan_set_track+0x21/0x30
+[  177.448946]  __kasan_kmalloc+0x7b/0x90
+[  177.449447]  pci_alloc_dev+0x44/0x260
+[  177.449950]  pci_scan_single_device+0x132/0x280
+[  177.450467]  pci_scan_slot+0x193/0x510
+[  177.450986]  pci_scan_child_bus_extend+0x61/0x5d0
+[  177.451528]  pci_scan_bridge_extend+0xc4c/0x10c0
+[  177.452021]  pci_scan_child_bus_extend+0x332/0x5d0
+[  177.452539]  acpi_pci_root_create+0x4ec/0x700
+[  177.453015]  pci_acpi_scan_root+0x3ad/0x4e0
+[  177.453495]  acpi_pci_root_add+0x3f2/0x910
+[  177.453973]  acpi_bus_attach+0x38b/0x890
+[  177.454415]  device_for_each_child+0xd8/0x150
+[  177.454896]  acpi_dev_for_each_child+0x77/0xa0
+[  177.455328]  acpi_bus_attach+0x19f/0x890
+[  177.455785]  device_for_each_child+0xd8/0x150
+[  177.456189]  acpi_dev_for_each_child+0x77/0xa0
+[  177.456626]  acpi_bus_attach+0x19f/0x890
+[  177.457077]  acpi_bus_scan+0x98/0x160
+[  177.457481]  acpi_scan_init+0x1e3/0x3f0
+[  177.457905]  acpi_init+0xff/0x2c0
+[  177.458300]  do_one_initcall+0x87/0x300
+[  177.458694]  do_initcalls+0x127/0x260
+[  177.459113]  kernel_init_freeable+0x811/0xc80
+[  177.459517]  kernel_init+0x1b/0x1e0
+[  177.459915]  ret_from_fork+0x29/0x50
 
->I'll inclined to it's might be a signal quality issue=2E Also I checked
->the BPI-R3 schematic diagram[2], and noticed that there are no AC
->Coupling capacitors on the transmitter side, which described in PCIe
->CEM Spec sections 4=2E7=2E1, but this schematic diagram only have part of
->it, can you help to check the board design or share the full schematic
->diagram for further analysis?=20
+[  177.460724] Freed by task 2011:
+[  177.461119]  kasan_save_stack+0x1e/0x40
+[  177.461556]  kasan_set_track+0x21/0x30
+[  177.461939]  kasan_save_free_info+0x2a/0x50
+[  177.462320]  __kasan_slab_free+0x106/0x190
+[  177.462737]  __kmem_cache_free+0x133/0x270
+[  177.463115]  device_release+0x98/0x210
+[  177.463492]  kobject_cleanup+0x101/0x360
+[  177.463952]  pci_stop_and_remove_bus_device_locked+0xdb/0x110
+[  177.464341]  remove_store+0xcf/0xe0
+[  177.464746]  kernfs_fop_write_iter+0x2d5/0x460
+[  177.465112]  vfs_write+0x72e/0xae0
+[  177.465493]  ksys_write+0xed/0x1c0
+[  177.465834]  do_syscall_64+0x38/0x90
+[  177.466174]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
 
-I gave the questions to board vendor in forum=2E
+This patch is based on original RFC by Bolarinwa O. Saheed in 2021 [1],
+which using pci_function_0() to obtain child instead of cached
+downstream pointer in struct pcie_link_state.
 
->[1]:=20
->https://git=2Ekernel=2Eorg/pub/scm/linux/kernel/git/torvalds/linux=2Egit/=
-tree/drivers/pci/controller/pcie-mediatek-gen3=2Ec?h=3Dv6=2E3#n344
->[2]:
->https://drive=2Egoogle=2Ecom/file/d/1mxKb8CBbnzfNSd_4esmcX_NovxaXjEb8/vie=
-w
->
->Thanks=2E
->>=20
->> # dmesg | grep 'pci'
->> [ 5=2E235564] mtk-pcie-gen3 11280000=2Epcie: host bridge=20
->> /soc/pcie@11280000 ranges:
->> [ 5=2E242938] mtk-pcie-gen3 11280000=2Epcie: Parsing ranges property=2E=
-=2E=2E
->> [ 5=2E249235] mtk-pcie-gen3 11280000=2Epcie: MEM
->> 0x0020000000=2E=2E0x002fffffff -> 0x0020000000
->> [ 5=2E478062] mtk-pcie-gen3 11280000=2Epcie: PCIe link down, current
->> LTSSM state: detect=2Eactive (0x10 00001)
->> [ 5=2E487491] mtk-pcie-gen3: probe of 11280000=2Epcie failed with error
->> -110
->>=20
->> One specific hardware is reported as example:
->>=20
->> Adata Legend710 512GB x3
->>=20
->> > Thanks=2E
->> >=20
->> > On Wed, 2023-04-26 at 19:41 +0200, Frank Wunderlich wrote:
->> > > External email : Please do not click links or open attachments
->> > > until
->> > > you have verified the sender or the content=2E
->> > >=20
->> > >=20
->> > > Hi
->> > >=20
->> > > > Gesendet: Sonntag, 02=2E April 2023 um 15:13 Uhr
->> > > > Von: "Frank Wunderlich" <linux@fw-web=2Ede>
->> > > > De-assert PERST in separate step after reset signals to fully
->> > > > comply
->> > > > the PCIe CEM clause 2=2E2=2E
->> > > >=20
->> > > > This fixes some NVME detection issues on mt7986=2E
->> > > >=20
->> > > > Fixes: d3bf75b579b9 ("PCI: mediatek-gen3: Add MediaTek Gen3
->> > > > driver
->> > > > for MT8192")
->> > > > Signed-off-by: Frank Wunderlich <frank-w@public-files=2Ede>
->> > > > ---
->> > > > Patch is taken from user Ruslan aka RRKh61 (permitted me to
->> > > > send it
->> > > > with me as author)=2E
->> > > >=20
->> > > >=20
->> >=20
->> >=20
->https://urldefense=2Ecom/v3/__https://forum=2Ebanana-pi=2Eorg/t/bpi-r3-nv=
-me-connection-issue/14563/17__;!!CTRNKA9wMg0ARbw!nCXEM685pkUpoiZYGKptPYccNr=
-WMeN2D3jIO5_irwxZJ7c6ZzEeACIx-V2WeZHAP_0FKlDDIQ0RbDJ892prtoToDv30$
->> > > > ---
->> > > >  drivers/pci/controller/pcie-mediatek-gen3=2Ec | 8 +++++++-
->> > > >  1 file changed, 7 insertions(+), 1 deletion(-)
->> > > >=20
->> > > > diff --git a/drivers/pci/controller/pcie-mediatek-gen3=2Ec
->> > > > b/drivers/pci/controller/pcie-mediatek-gen3=2Ec
->> > > > index b8612ce5f4d0=2E=2E176b1a04565d 100644
->> > > > --- a/drivers/pci/controller/pcie-mediatek-gen3=2Ec
->> > > > +++ b/drivers/pci/controller/pcie-mediatek-gen3=2Ec
->> > > > @@ -350,7 +350,13 @@ static int mtk_pcie_startup_port(struct
->> > > > mtk_gen3_pcie *pcie)
->> > > >       msleep(100);
-Maybe the better way is to drop this msleep when adding the new one below =
-the reset asserts?
+In addition, I added the condition about child to avoid dereference
+null pointer, in case the device is removed without rescan back.
 
->> > > >       /* De-assert reset signals */
->> > > > -     val &=3D ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB |
->> > > > PCIE_PE_RSTB);
->> > > > +     val &=3D ~(PCIE_MAC_RSTB | PCIE_PHY_RSTB | PCIE_BRG_RSTB);
->> > > > +     writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
->> > > > +
->> > > > +     msleep(100);
->> > > > +
->> > > > +     /* De-assert PERST# signals */
->> > > > +     val &=3D ~(PCIE_PE_RSTB);
->> > > >       writel_relaxed(val, pcie->base + PCIE_RST_CTRL_REG);
->> > > >=20
->> > > >       /* Check if the link is up or not */
+[1] https://lore.kernel.org/lkml/20211106175503.27178-5-refactormyself@gmail.com/
 
+--------
 
+The commit log of original patch:
 
-regards Frank
+Information on the downstream component is cached in
+struct pcie_link_state.downstream it obtained within
+alloc_pcie_link_state() by calling pci_function_0()
+
+ - remove *downstream* from the struct pcie_link_state.
+ - replaces references to pcie_link_state.downstream with
+   a call to pci_function_0(pdev->subordinate).
+
+Originally-by: Bolarinwa O. Saheed <refactormyself@gmail.com>
+Fixes: b5a0a9b59c81 ("PCI/ASPM: Read and set up L1 substate capabilities")
+Debugged-by: Zongquan Qin <qinzongquan@sangfor.com.cn>
+Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
+---
+ drivers/pci/pcie/aspm.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+index 66d7514ca111..bca3f52009fe 100644
+--- a/drivers/pci/pcie/aspm.c
++++ b/drivers/pci/pcie/aspm.c
+@@ -44,7 +44,6 @@
+ 
+ struct pcie_link_state {
+ 	struct pci_dev *pdev;		/* Upstream component of the Link */
+-	struct pci_dev *downstream;	/* Downstream component, function 0 */
+ 	struct pcie_link_state *root;	/* pointer to the root port link */
+ 	struct pcie_link_state *parent;	/* pointer to the parent Link state */
+ 	struct list_head sibling;	/* node in link_list */
+@@ -474,7 +473,8 @@ static void pci_clear_and_set_dword(struct pci_dev *pdev, int pos,
+ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 				u32 parent_l1ss_cap, u32 child_l1ss_cap)
+ {
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	u32 val1, val2, scale1, scale2;
+ 	u32 t_common_mode, t_power_on, l1_2_threshold, scale, value;
+ 	u32 ctl1 = 0, ctl2 = 0;
+@@ -484,6 +484,9 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 	if (!(link->aspm_support & ASPM_STATE_L1_2_MASK))
+ 		return;
+ 
++	if (!child)
++		return;
++
+ 	/* Choose the greater of the two Port Common_Mode_Restore_Times */
+ 	val1 = (parent_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+ 	val2 = (child_l1ss_cap & PCI_L1SS_CAP_CM_RESTORE_TIME) >> 8;
+@@ -565,11 +568,12 @@ static void aspm_calc_l1ss_info(struct pcie_link_state *link,
+ 
+ static void aspm_l1ss_init(struct pcie_link_state *link)
+ {
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	u32 parent_l1ss_cap, child_l1ss_cap;
+ 	u32 parent_l1ss_ctl1 = 0, child_l1ss_ctl1 = 0;
+ 
+-	if (!parent->l1ss || !child->l1ss)
++	if (!parent->l1ss || !child || !child->l1ss)
+ 		return;
+ 
+ 	/* Setup L1 substate */
+@@ -622,7 +626,8 @@ static void aspm_l1ss_init(struct pcie_link_state *link)
+ 
+ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ {
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	u32 parent_lnkcap, child_lnkcap;
+ 	u16 parent_lnkctl, child_lnkctl;
+ 	struct pci_bus *linkbus = parent->subordinate;
+@@ -634,6 +639,9 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ 		return;
+ 	}
+ 
++	if (!child)
++		return;
++
+ 	/*
+ 	 * If ASPM not supported, don't mess with the clocks and link,
+ 	 * bail out now.
+@@ -701,7 +709,11 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+ static void pcie_config_aspm_l1ss(struct pcie_link_state *link, u32 state)
+ {
+ 	u32 val, enable_req;
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
++
++	if (!child)
++		return;
+ 
+ 	enable_req = (link->aspm_enabled ^ state) & state;
+ 
+@@ -760,9 +772,13 @@ static void pcie_config_aspm_dev(struct pci_dev *pdev, u32 val)
+ static void pcie_config_aspm_link(struct pcie_link_state *link, u32 state)
+ {
+ 	u32 upstream = 0, dwstream = 0;
+-	struct pci_dev *child = link->downstream, *parent = link->pdev;
++	struct pci_dev *parent = link->pdev;
++	struct pci_dev *child = pci_function_0(link->pdev->subordinate);
+ 	struct pci_bus *linkbus = parent->subordinate;
+ 
++	if (!child)
++		return;
++
+ 	/* Enable only the states that were not explicitly disabled */
+ 	state &= (link->aspm_capable & ~link->aspm_disable);
+ 
+@@ -867,7 +883,6 @@ static struct pcie_link_state *alloc_pcie_link_state(struct pci_dev *pdev)
+ 
+ 	INIT_LIST_HEAD(&link->sibling);
+ 	link->pdev = pdev;
+-	link->downstream = pci_function_0(pdev->subordinate);
+ 
+ 	/*
+ 	 * Root Ports and PCI/PCI-X to PCIe Bridges are roots of PCIe
+-- 
+2.17.1
+
