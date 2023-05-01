@@ -2,109 +2,286 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BDD406F315F
-	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 15:03:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4B5616F323B
+	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 16:48:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232340AbjEANDr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 May 2023 09:03:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49658 "EHLO
+        id S232525AbjEAOsb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 May 2023 10:48:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230401AbjEANDq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 09:03:46 -0400
-Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86B88192
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 06:03:42 -0700 (PDT)
-Received: from albireo.burrow.ucw.cz (albireo.ucw.cz [91.219.245.20])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256
-         client-signature RSA-PSS (1024 bits) client-digest SHA256)
-        (Client CN "albireo.ucw.cz", Issuer "ucw.cz" (verified OK))
-        by jabberwock.ucw.cz (Postfix) with ESMTPS id 3A83F1C0E58
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 15:03:40 +0200 (CEST)
-Authentication-Results: jabberwock.ucw.cz;
-        dkim=none;
-        dmarc=fail reason="No valid SPF, No valid DKIM" header.from=ucw.cz (policy=none);
-        spf=none (jabberwock.ucw.cz: domain of "mj+f-010523+linux-pci=vger.kernel.org@ucw.cz" has no SPF policy when checking 91.219.245.20) smtp.mailfrom="mj+f-010523+linux-pci=vger.kernel.org@ucw.cz"
-Received: by albireo.burrow.ucw.cz (Postfix, from userid 1000)
-        id DD9C51A0A2A; Mon,  1 May 2023 15:03:39 +0200 (CEST)
-Date:   Mon, 1 May 2023 15:03:39 +0200
-From:   Martin =?utf-8?B?TWFyZcWh?= <mj@ucw.cz>
-To:     Linux-PCI Mailing List <linux-pci@vger.kernel.org>
-Subject: pciutils 3.10.0 released
-Message-ID: <mj+md-20230501.130215.83088.albireo@ucw.cz>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        with ESMTP id S230114AbjEAOsa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 10:48:30 -0400
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (mail-db5eur01on2079.outbound.protection.outlook.com [40.107.15.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B287DA6;
+        Mon,  1 May 2023 07:48:28 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B76etKSjYOWtG/sIw84K/hciQSePhDP6NCHm38rZ0e1FkDzS37gVBbSZ3Oi9ha+MjX8+EwOT4QPPDR4GpMLudL972UnAmPyHVfWn8u2XGoKOYBWS4WZ1Z4ROBkF1Lrq1Ax3WkR86AcQjWgUiFQB6DcMQuojh0GeE4qB7JqEG5VFmSh1eF+aEzM7zF5BuBj9HGCLaf5Wn3XQ0JKKSBIQDYY7nHRx1R4UpfHPsezP1wDIFK9ruYiPMFaLhmXi3MrIeL+TUqF2hByGU1hhuUx64aG6UUxnrbtoKDH8aqpCwzGaq6oMV5fHdhFGl9kckHICEtpN5Kf8aQ9nDxtB8zb+bbQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UJCb6CBnDRZR0a3V9sER/CfxeQhN8R4aSNYlHWPQsX8=;
+ b=g7riQRvR+/LmIrtmhMtanrEf/gYJb1COh4E668ZDSZwzZnUQ/YASVogSr35Xs5JzbAqd1eEjejqeEjpyBHNwDC/HxDykuRcTNgXWKV574cI16OkQ7+q0AwvLOcGnuugInB8xbnJLX1r996OdUVKl94M6ouY1aluxpgymzH49GtRewp8iL7i+hOiJlYuae4fWite8ommWPf2z5+xtZHTLpvq3qscpDJftbCGdkO9Phjy7ugiokHm9a/MOvVVOXyzv3MNkhNDh7CYrpExRjSpNHsRs2bTvjHt3dP3PetE0Jpk5OS0qhgT3iy9T4WIaoBmBx0WtbF0hofQhTOLdzTHZqg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UJCb6CBnDRZR0a3V9sER/CfxeQhN8R4aSNYlHWPQsX8=;
+ b=BeouNjuiEYsHttwHzEGdVryxDM1mhTCBntgV1cIetQubpRG58A3p+/e7JtG6DxbeghKeBwrM7u7aWORXFQbTbfnThNl/KrI0HHCIS2f2puPcKrO+Bl2FZRQw79o4MBYR//kloluvxYbl4XutW6XUSMF9MrE34W9Yv+JNuf5+nn8=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
+ by PAXPR04MB8333.eurprd04.prod.outlook.com (2603:10a6:102:1c0::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.30; Mon, 1 May
+ 2023 14:48:26 +0000
+Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::bcdd:75c9:176c:39ed]) by AM6PR04MB4838.eurprd04.prod.outlook.com
+ ([fe80::bcdd:75c9:176c:39ed%4]) with mapi id 15.20.6340.027; Mon, 1 May 2023
+ 14:48:26 +0000
+From:   Frank Li <Frank.Li@nxp.com>
+To:     Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org (open list:PCI DRIVER FOR FREESCALE
+        LAYERSCAPE),
+        linux-pci@vger.kernel.org (open list:PCI DRIVER FOR FREESCALE
+        LAYERSCAPE),
+        linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR
+        FREESCALE LAYERSCAPE), linux-kernel@vger.kernel.org (open list)
+Cc:     imx@lists.linux.dev
+Subject: [PATCH v2 1/1] PCI: layerscape: Add the endpoint linkup notifier support
+Date:   Mon,  1 May 2023 10:48:06 -0400
+Message-Id: <20230501144807.1616244-1-Frank.Li@nxp.com>
+X-Mailer: git-send-email 2.34.1
 Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: -
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
-X-Rspamd-Queue-Id: 3A83F1C0E58
-X-Spamd-Result: default: False [-1.79 / 15.00];
-        BAYES_HAM(-2.55)[97.99%];
-        HFILTER_HELO_IP_A(1.00)[albireo.burrow.ucw.cz];
-        IP_REPUTATION_HAM(-0.89)[asn: 51744(-0.24), country: CZ(-0.00), ip: 91.219.245.20(-0.65)];
-        NEURAL_SPAM(0.36)[0.359];
-        HFILTER_HELO_NORES_A_OR_MX(0.30)[albireo.burrow.ucw.cz];
-        MIME_GOOD(-0.10)[text/plain];
-        DMARC_POLICY_SOFTFAIL(0.10)[ucw.cz : No valid SPF, No valid DKIM,none];
-        R_MIXED_CHARSET(0.00)[subject];
-        RCVD_TLS_LAST(0.00)[];
-        TO_DN_ALL(0.00)[];
-        TO_MATCH_ENVRCPT_ALL(0.00)[];
-        RCPT_COUNT_ONE(0.00)[1];
-        R_SPF_NA(0.00)[no SPF record];
-        BLOCKLISTDE_FAIL(0.00)[91.219.245.20:server fail];
-        R_DKIM_NA(0.00)[];
-        FROM_HAS_DN(0.00)[];
-        ARC_NA(0.00)[];
-        ASN(0.00)[asn:51744, ipnet:91.219.244.0/22, country:CZ];
-        FROM_EQ_ENVFROM(0.00)[];
-        TAGGED_FROM(0.00)[f-010523,linux-pci=vger.kernel.org];
-        RCVD_COUNT_TWO(0.00)[2];
-        MID_RHS_MATCH_FROM(0.00)[];
-        MIME_TRACE(0.00)[0:+]
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR05CA0161.namprd05.prod.outlook.com
+ (2603:10b6:a03:339::16) To AM6PR04MB4838.eurprd04.prod.outlook.com
+ (2603:10a6:20b:4::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|PAXPR04MB8333:EE_
+X-MS-Office365-Filtering-Correlation-Id: de1849de-54ae-4fed-efc4-08db4a531ea8
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WxiU1Mf241nPoKMS+84xcFIWF3k6ToLMPcK1Kh/NF2yfuDkgWYaR6kTH89uIFgZJnCBShqVDhCcRv+YOCQv9Rpk7UPtf1ZrD3CIbMo7jnsVIdGjVDNXq7fftGRqs9yBQIn2PbFw8LxMHhxIOWu3sUU2sZXAVvOCgVOFTAN4jFQ6KPDv9LkMjsdyFXJxoNj+oE2KTcpPzcvBZ556HAUSerJZJ7eLddg5QWVuGfISW0F0ykQeVGPV/fVLzpbkDJYlmynWvOf2XZ9+XaJL5dTDPEcvuckji7BmPGU47yjuTqKBzmkSMvJVnB+lgZF0o/N4knnOoPIao5lnPetCIAKTFGJe5C/pRnbAdRU7PrdMuZAcYcErhbA1kTqM551fPeVvBd0utUxUf02bB1lXGufIyayVzNEhxpF9Zp4oZRGyPlUqu1rBnXV+cC8oY/373FJdkfo8WiXu3a1LGZKKGWGDFxfwRHO9buH2AfF88SfAgLPVO8gGKwxhapSrXJDSuFiEwIU7b85pCAkFKc/u2UkxpYO/3qsG/GXmovbObAMxBXz5VONUU0VrvcOlJwhapL98Sx5/DIW4riwrsctPwlrkKdN5gMk+GGZEYmbrTpYQrYTZgYIkW0qJYCA6SWtsUD2SByeqeYPI+QG3+5SYSR6dunQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(451199021)(2616005)(316002)(4326008)(6512007)(6506007)(186003)(41300700001)(83380400001)(1076003)(66946007)(478600001)(26005)(110136005)(52116002)(6486002)(66556008)(6666004)(66476007)(38350700002)(38100700002)(2906002)(921005)(36756003)(86362001)(8936002)(8676002)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?H1g0Hhws+rBiIQUQRzwhztRSIKZx0+sDxsgpv1G2IVY/oIbXGCZqC8uQ1tCn?=
+ =?us-ascii?Q?1TyImmq30GV/ikeAZlnVoIAx9NJXcSWx/bau4xaXt9eE/BeZAj/OFBqjbj69?=
+ =?us-ascii?Q?tpP6YDOevxUXG1JkkYYavRpmOEVgPkTEiUnFNzBlP8UHWthUTEqvg4LWnqSf?=
+ =?us-ascii?Q?qWi1h/8KEPwkh0fAtlyuyeA6UseGRVL+Aq2FbZXQnY5xrG+cECn+1BgfFgbr?=
+ =?us-ascii?Q?tM3mBGISd5nfUIeQRawK8MXdQFGueh8r2lczYKmHRZgZGQyBYlsqJnwgtOfV?=
+ =?us-ascii?Q?ixPCwjnUQPB6oGrtRN8syjPFmoF9MA5Bv/LErOPs/mFfxm5CxYaOJkozESxi?=
+ =?us-ascii?Q?OoEZW11kkN5U8/ZyLIsgQ/SUmb/+6BCuSNRWwC0Sz1iIS47APRa0NXF21Xo8?=
+ =?us-ascii?Q?B4kGLFUIO7Z8QymxQLBCxiCy/hfvyN5pLZOnYrKxtt6ha8Dkch7bXoxH2OP7?=
+ =?us-ascii?Q?CqBc/QK7KjVIyYheTNWiyRUrufTrw8ObDfN1zc4mZDuiBb32tOJIQx008uvO?=
+ =?us-ascii?Q?x3bvzGmJ/Bj7sW/5HL5MKeS9NcimWJWPAhqoIlCEzVlcRhvO/f1E70gyTWDp?=
+ =?us-ascii?Q?6jpIOf2T0OQ69GkXdIQVI2JPjIXvmpVEknfp0B8dMwJsvkCl/2Kd8QES/7Sx?=
+ =?us-ascii?Q?PEuPizGgOYxCHqi15q/EUzxaLG94BsPfVoyA4VAfpiMiFDSEbOS8GjYRZOWB?=
+ =?us-ascii?Q?7X/HLv53zE7rzklKhij0kCO5mtDUy6mA7XPeq08192zUQq++v1ykyU0tkmQQ?=
+ =?us-ascii?Q?5LQV9appX/lSggqIqaH+Jzgd4ZAH4KrypiplYeb/BHUsNGV1v3FMsbMa7KSj?=
+ =?us-ascii?Q?gP1WthJwMi5D3iQcLZtj1A6WAjKmVZhiGE8wLHx9Fr+p1ca9IqnncJLiAr2E?=
+ =?us-ascii?Q?L5Pt6MxI2YjN30sSWbLk/UvskBvrJXI2k0USvnuti8fEZMTepXop6K8MDftw?=
+ =?us-ascii?Q?mlg8SmE1Z56T4vGK1WXta2cMv8sY2aV25shh4nwqsQ/JJua9xgFSOgop+rAV?=
+ =?us-ascii?Q?9zz+RVWYge2dRMk5EpGgjMGdSQv7pVUEcwYn3Ghmi25yXDzyLHUIV0UvaciG?=
+ =?us-ascii?Q?2N9ASzhRhG9GpbQIAFbUO7LuPUbZLpGo3rv3Hqc9kNzLToPqAJ98xcsg7xgw?=
+ =?us-ascii?Q?TN5hCKIoBdkxacIHKu+cbFCpvXkQwtnaIdlhUOghbKZII7+ph+/Rng1FUwNz?=
+ =?us-ascii?Q?8XXQpyb9ui/lkyFN3pyU2jhOKAyO4qQA/fHj5+NPcRfBPvkSAvxLVR4DpmHi?=
+ =?us-ascii?Q?vbmjREeSDEHHjTnvyeS1KcCYjGDXW7T7bHoTgnTu1SpIzE3Ss5hBJljqPJ3t?=
+ =?us-ascii?Q?Sr+/sKfTeaMHeZ/3k38MRBCvNq+9Mq1q/BAEc/s1UkiTHNXGgy48X3/FV9ZI?=
+ =?us-ascii?Q?HskYOCdEnIbhefFuDgEkWxSb37BBCGBWtCjXxJ/mQ60XWQ1EpQ/tYuM4MqHK?=
+ =?us-ascii?Q?eF3/ebXbnZhPfUacwTojiYoLqwYrbcLr0DDYA7InCldwZZO3nO7eC6jcaL84?=
+ =?us-ascii?Q?s9tUHUNhhXtOtA7dAg2jRiFzFqOmbkkfMpEXMaFsNGOiw1si6uvXbUK9K9pX?=
+ =?us-ascii?Q?9aWlY32Lj8EX7Vw8++05EKU5rf8AfyN6aqAvE+VP?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: de1849de-54ae-4fed-efc4-08db4a531ea8
+X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2023 14:48:26.1675
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: CG8nSTC6y0RU/ihFfRdibYgr+eRbiVfodw4Zvv1mXi4RWIbsOD6gD84NklV+KMgSMlJCQxUf+fqTfeO9mIdF3g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8333
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello, world!\n
+Layerscape has PME interrupt, which can be used as linkup notifier.
+Set CFG_READY bit when linkup detected.
 
-I released pciutils 3.10.0. Thus quoth the changelog:
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Signed-off-by: Frank Li <Frank.Li@nxp.com>
+---
+Change from v1 to v2
+- pme -> PME
+- irq -> IRQ
+- update dev_info message according to Bjorn's suggestion
+- remove '.' at error message
+	
+ .../pci/controller/dwc/pci-layerscape-ep.c    | 104 +++++++++++++++++-
+ 1 file changed, 103 insertions(+), 1 deletion(-)
 
-    * Released as 3.10.0.
-
-    * Fixed bug in definition of versioned symbol aliases
-      in shared libpci, which made compiling with link-time
-      optimization fail.
-
-    * Filters now accept "0x..." syntax for backward compatibility.
-
-    * Windows: The cfgmgr32 back-end which provides the list of devices
-      can be combined with another back-end which provides access
-      to configuration space.
-
-    * ECAM (Enhanced Configuration Access Mechanism), which is defined
-      by the PCIe standard, is now supported. It requires root privileges,
-      access to physical memory, and also manual configuration on some
-      systems.
-
-    * lspci: Tree view now works on multi-domain systems. It now respects
-      filters properly.
-
-    * Last but not least, pci.ids were updated to the current snapshot
-      of the database. This includes overall cleanup of entries with
-      non-ASCII characters in their names -- such characters are allowed,
-      but only if they convey interesting information (e.g., umlauts
-      in German company names, but not the "registered trade mark" sign).
-
-Thanks to all contributors, most importantly Pali Rohár.
-
-			Have a nice fortnight
+diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+index c640db60edc6..e974fbe3b6d8 100644
+--- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
++++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+@@ -18,6 +18,20 @@
+ 
+ #include "pcie-designware.h"
+ 
++#define PEX_PF0_CONFIG			0xC0014
++#define PEX_PF0_CFG_READY		BIT(0)
++
++/* PEX PFa PCIE PME and message interrupt registers*/
++#define PEX_PF0_PME_MES_DR		0xC0020
++#define PEX_PF0_PME_MES_DR_LUD		BIT(7)
++#define PEX_PF0_PME_MES_DR_LDD		BIT(9)
++#define PEX_PF0_PME_MES_DR_HRD		BIT(10)
++
++#define PEX_PF0_PME_MES_IER		0xC0028
++#define PEX_PF0_PME_MES_IER_LUDIE	BIT(7)
++#define PEX_PF0_PME_MES_IER_LDDIE	BIT(9)
++#define PEX_PF0_PME_MES_IER_HRDIE	BIT(10)
++
+ #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+ 
+ struct ls_pcie_ep_drvdata {
+@@ -30,8 +44,88 @@ struct ls_pcie_ep {
+ 	struct dw_pcie			*pci;
+ 	struct pci_epc_features		*ls_epc;
+ 	const struct ls_pcie_ep_drvdata *drvdata;
++	bool				big_endian;
++	int				irq;
+ };
+ 
++static u32 ls_lut_readl(struct ls_pcie_ep *pcie, u32 offset)
++{
++	struct dw_pcie *pci = pcie->pci;
++
++	if (pcie->big_endian)
++		return ioread32be(pci->dbi_base + offset);
++	else
++		return ioread32(pci->dbi_base + offset);
++}
++
++static void ls_lut_writel(struct ls_pcie_ep *pcie, u32 offset,
++			  u32 value)
++{
++	struct dw_pcie *pci = pcie->pci;
++
++	if (pcie->big_endian)
++		iowrite32be(value, pci->dbi_base + offset);
++	else
++		iowrite32(value, pci->dbi_base + offset);
++}
++
++static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
++{
++	struct ls_pcie_ep *pcie = (struct ls_pcie_ep *)dev_id;
++	struct dw_pcie *pci = pcie->pci;
++	u32 val, cfg;
++
++	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
++	if (!val)
++		return IRQ_NONE;
++
++	if (val & PEX_PF0_PME_MES_DR_LUD) {
++		cfg = ls_lut_readl(pcie, PEX_PF0_CONFIG);
++		cfg |= PEX_PF0_CFG_READY;
++		ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
++		dw_pcie_ep_linkup(&pci->ep);
++
++		dev_info(pci->dev, "Link up\n");
++	} else if (val & PEX_PF0_PME_MES_DR_LDD) {
++		dev_info(pci->dev, "Link down\n");
++	} else if (val & PEX_PF0_PME_MES_DR_HRD) {
++		dev_info(pci->dev, "Hot reset\n");
++	}
++
++	ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
++
++	return IRQ_HANDLED;
++}
++
++static int ls_pcie_ep_interrupt_init(struct ls_pcie_ep *pcie,
++				     struct platform_device *pdev)
++{
++	u32 val;
++	int ret;
++
++	pcie->irq = platform_get_irq_byname(pdev, "pme");
++	if (pcie->irq < 0) {
++		dev_err(&pdev->dev, "Can't get 'pme' IRQ\n");
++		return pcie->irq;
++	}
++
++	ret = devm_request_irq(&pdev->dev, pcie->irq,
++			       ls_pcie_ep_event_handler, IRQF_SHARED,
++			       pdev->name, pcie);
++	if (ret) {
++		dev_err(&pdev->dev, "Can't register PCIe IRQ\n");
++		return ret;
++	}
++
++	/* Enable interrupts */
++	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_IER);
++	val |=  PEX_PF0_PME_MES_IER_LDDIE | PEX_PF0_PME_MES_IER_HRDIE |
++		PEX_PF0_PME_MES_IER_LUDIE;
++	ls_lut_writel(pcie, PEX_PF0_PME_MES_IER, val);
++
++	return 0;
++}
++
+ static const struct pci_epc_features*
+ ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+ {
+@@ -125,6 +219,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 	struct ls_pcie_ep *pcie;
+ 	struct pci_epc_features *ls_epc;
+ 	struct resource *dbi_base;
++	int ret;
+ 
+ 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+ 	if (!pcie)
+@@ -144,6 +239,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 	pci->ops = pcie->drvdata->dw_pcie_ops;
+ 
+ 	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4);
++	ls_epc->linkup_notifier = true;
+ 
+ 	pcie->pci = pci;
+ 	pcie->ls_epc = ls_epc;
+@@ -155,9 +251,15 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+ 
+ 	pci->ep.ops = &ls_pcie_ep_ops;
+ 
++	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
++
+ 	platform_set_drvdata(pdev, pcie);
+ 
+-	return dw_pcie_ep_init(&pci->ep);
++	ret = dw_pcie_ep_init(&pci->ep);
++	if (ret)
++		return  ret;
++
++	return  ls_pcie_ep_interrupt_init(pcie, pdev);
+ }
+ 
+ static struct platform_driver ls_pcie_ep_driver = {
 -- 
-Martin `MJ' Mareš                        <mj@ucw.cz>   http://mj.ucw.cz/
-United Computer Wizards, Prague, Czech Republic, Europe, Earth, Universe
-Wanted: Schroedinger Cat. Dead or Alive.
+2.34.1
+
