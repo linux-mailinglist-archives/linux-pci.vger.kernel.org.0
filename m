@@ -2,109 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 97C2A6F3505
-	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 19:26:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72E836F3513
+	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 19:35:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232208AbjEARV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 May 2023 13:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
+        id S232181AbjEARev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 May 2023 13:34:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231500AbjEARV1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 13:21:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FCE1994
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 10:21:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C6AC61382
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 17:21:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92491C433EF;
-        Mon,  1 May 2023 17:21:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682961676;
-        bh=bw+KrDCTBO3uTsopMPF+Jqg74R5lTCzq5LMg66p/LkQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n7Ql1jmkRAyyeRrMrAo5Ps0aGnPoWRSrYsILON00hpjxRFi298/Mp2Q0xSU9DkkXK
-         iEFkB19vVoFCzF0KAZErT9fvBKoAmqDqkKb/BWl7tKmKUQo2bnuO5c5guToSzn18cd
-         PIfhMDAxWLPE70vwoMhZhl9oM+HMS+tC7Z4V8FZk1gsXbskpbwrkx/TKHUgWZ4JKzS
-         wzq3tN/kPuZ9xKEl8GoFptFoGpqXjhDoFoqUnks83Q89rVdGRyJhub1O3QPbV+eIra
-         o+wpsk2+uMDY42DQlEWJ2Tu7uGcRbN5M7skVMww7LRYkphnqcWJQds4ff32Ld5G7aE
-         zDm3CMMVIWAQQ==
-Date:   Mon, 1 May 2023 12:21:14 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ajay Agarwal <ajayagarwal@google.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Nikhil Devshatwar <nikhilnd@google.com>,
-        Manu Gautam <manugautam@google.com>,
-        "David E. Box" <david.e.box@linux.intel.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Michael Bottini <michael.a.bottini@linux.intel.com>,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH 1/3] PCI/ASPM: Disable ASPM_STATE_L1 only when class
- driver disables L1 ASPM
-Message-ID: <20230501172114.GA591899@bhelgaas>
+        with ESMTP id S232235AbjEARet (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 13:34:49 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0436E131;
+        Mon,  1 May 2023 10:34:47 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2a8bca69e8bso27031881fa.3;
+        Mon, 01 May 2023 10:34:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682962485; x=1685554485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7qDertiE/stwvspc2q5M0aytmBGASM3Bx9bVGlotrTI=;
+        b=H1PD/IwYaXhSBtmhDB7BvSoHGdrbiodRXgHgi0jJFXhvPlL9vmJkCI4ZDW4zfghPxu
+         HrNaLIN6nXeHm2js3jM0/0jd66WLfJRI1rc7LL4o+adtxftsIrAgyFTWS+27jxXLbhR9
+         i3AIBfG/7JgUn99YcytxevRIz33yzMJb4cR9dDGSVSTh+nHO74GUlSxSkogIWKkTRVn/
+         Lm2d+RVxbC6fft7oq1Bjd8gRybxyOhThoGAsQFav8ZMDTLP567No2HfPkDRdEuEaxYj2
+         h2lzvX5cICzdqphEhAPGRf+l7Bi+dqMWXsHfCoiahUo+gpJjtOC6Gg6y8nCySTE6dO0r
+         fuPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682962485; x=1685554485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7qDertiE/stwvspc2q5M0aytmBGASM3Bx9bVGlotrTI=;
+        b=aVfk2igx67rQx9iCDUNisprkiAfz2oJi3IzY05ofyLd6sQ4+P0dpOHKmueeTmKLHEh
+         UC21IWHeYmY4FtwfrULTPgAOzAXWoHCeFxZYcUKXETyPcTRx6MKj5K5D1SAziW1y1Okd
+         xVd84vS12LIBztLlcpYUkAd0e9SomCCkvSh2VphWBfq77Y9crNBu03dpgU18HxdqDncd
+         X//HjAiXNcDYlhIbiLxVDMO0iTOep2hWie3dDx+bno9Tvu0f6/UhLcNU1b48bfGXwhr0
+         vbf32PEIMf+LVY4dkkJMFSFjZ1/FlCx8seJ2mf+GJHTlUkXBSm2oCi4HGza7WeBNgBm5
+         suNA==
+X-Gm-Message-State: AC+VfDyanA/F+Nm72AMweYjaE/BhLRldicJEqDiB5MKsUBnIPdHqvV5B
+        ip/5nHTXxKvqal2rNeVMyrY=
+X-Google-Smtp-Source: ACHHUZ5aybLjN1UxarBAuIcxFC0JqilXu2MAFrZTB14DEx4FQybAgyoLcOdNa/gkhlzp/kl6M5FKiA==
+X-Received: by 2002:a2e:9bd1:0:b0:2a9:f640:2032 with SMTP id w17-20020a2e9bd1000000b002a9f6402032mr3755800ljj.5.1682962485045;
+        Mon, 01 May 2023 10:34:45 -0700 (PDT)
+Received: from mobilestation ([95.79.140.35])
+        by smtp.gmail.com with ESMTPSA id z8-20020a2e7e08000000b002a777ce224dsm4750711ljc.138.2023.05.01.10.34.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 May 2023 10:34:44 -0700 (PDT)
+Date:   Mon, 1 May 2023 20:34:42 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     jingoohan1@gmail.com, mani@kernel.org,
+        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
+        robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
+        kishon@kernel.org, marek.vasut+renesas@gmail.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v14 03/21] PCI: Add INTx Mechanism Messages macros
+Message-ID: <20230501173442.reje55nattksdpuk@mobilestation>
+References: <20230426045557.3613826-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230426045557.3613826-4-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230411111034.1473044-2-ajayagarwal@google.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230426045557.3613826-4-yoshihiro.shimoda.uh@renesas.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 04:40:32PM +0530, Ajay Agarwal wrote:
-> Currently the aspm driver sets ASPM_STATE_L1 as well as
-> ASPM_STATE_L1SS bits when the class driver disables L1.
-
-I would have said just "driver" -- do you mean something different by
-using "class driver"?  The callers I see are garden-variety drivers
-for individual devices like hci_bcm4377, xillybus_pcie, e1000e, jme,
-etc.
-
-> pcie_config_aspm_link takes care that L1ss ASPM is not enabled
-> if L1 is disabled. ASPM_STATE_L1SS bits do not need to be
-> explicitly set. The sysfs node store() function, which also
-> modifies the aspm_disable value, does not set these bits either
-> when only L1 ASPM is disabled by the user.
-
-Right.  It'd be nice to combine __pci_disable_link_state() and
-aspm_attr_store_common() so they use the same logic for this, but
-that's not really trivial to do.
-
-> Disable ASPM_STATE_L1 only when class driver disables L1 ASPM.
-
-So IIUC, this is a cleanup and should not fix any actual function
-bugs, right?  If it *does* fix a bug, we should add a Fixes: tag and a
-description of the bug.
-
-> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> ---
->  drivers/pci/pcie/aspm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+On Wed, Apr 26, 2023 at 01:55:39PM +0900, Yoshihiro Shimoda wrote:
+> Add "Message Routing" and "INTx Mechanism Messages" macros to send
+> a message by a PCIe driver.
 > 
-> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 66d7514ca111..5765b226102a 100644
-> --- a/drivers/pci/pcie/aspm.c
-> +++ b/drivers/pci/pcie/aspm.c
-> @@ -1095,8 +1095,7 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
->  	if (state & PCIE_LINK_STATE_L0S)
->  		link->aspm_disable |= ASPM_STATE_L0S;
->  	if (state & PCIE_LINK_STATE_L1)
-> -		/* L1 PM substates require L1 */
-> -		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
-> +		link->aspm_disable |= ASPM_STATE_L1;
->  	if (state & PCIE_LINK_STATE_L1_1)
->  		link->aspm_disable |= ASPM_STATE_L1_1;
->  	if (state & PCIE_LINK_STATE_L1_2)
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>  .../pci/controller/dwc/pcie-designware-ep.c   |  1 +
+>  drivers/pci/pci.h                             | 19 +++++++++++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> index f9182f8d552f..205bbcc6af27 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  
+
+> +#include "../../pci.h"
+
+Unrelated change since the new macros are left unused in the framework
+of this patch. Please move it to the patch which implies using the new
+defines and where the included header file content is required.
+
+>  #include "pcie-designware.h"
+>  #include <linux/pci-epc.h>
+>  #include <linux/pci-epf.h>
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index 2475098f6518..4be376c121a4 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -11,6 +11,25 @@
+>  
+>  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+>  
+> +/* Message Routing */
+> +#define PCI_MSG_ROUTING_RC	0
+> +#define PCI_MSG_ROUTING_ADDR	1
+> +#define PCI_MSG_ROUTING_ID	2
+> +#define PCI_MSG_ROUTING_BC	3
+> +#define PCI_MSG_ROUTING_LOCAL	4
+> +#define PCI_MSG_ROUTING_GATHER	5
+> +
+> +/* INTx Mechanism Messages */
+> +#define PCI_CODE_ASSERT_INTA	0x20
+> +#define PCI_CODE_ASSERT_INTB	0x21
+> +#define PCI_CODE_ASSERT_INTC	0x22
+> +#define PCI_CODE_ASSERT_INTD	0x23
+> +#define PCI_CODE_DEASSERT_INTA	0x24
+> +#define PCI_CODE_DEASSERT_INTB	0x25
+> +#define PCI_CODE_DEASSERT_INTC	0x26
+> +#define PCI_CODE_DEASSERT_INTD	0x27
+> +
+
+> +
+
+Excessive new line. Please drop it.
+
+-Serge(y)
+
+>  extern const unsigned char pcie_link_speed[];
+>  extern bool pci_early_dump;
+>  
 > -- 
-> 2.40.0.577.gac1e443424-goog
+> 2.25.1
 > 
