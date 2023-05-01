@@ -2,50 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 648EE6F33A6
-	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 18:53:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97C2A6F3505
+	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 19:26:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232169AbjEAQw7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 May 2023 12:52:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57646 "EHLO
+        id S232208AbjEARV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 May 2023 13:21:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229679AbjEAQw6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 12:52:58 -0400
+        with ESMTP id S231500AbjEARV1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 13:21:27 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EB2AE73;
-        Mon,  1 May 2023 09:52:56 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10FCE1994
+        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 10:21:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 76DBA61898;
-        Mon,  1 May 2023 16:52:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2A6EC433D2;
-        Mon,  1 May 2023 16:52:55 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C6AC61382
+        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 17:21:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92491C433EF;
+        Mon,  1 May 2023 17:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682959975;
-        bh=IuOYTFg/MA6zMnwWvVURCF5r2TJLNDfHDi/8ec8i6qM=;
+        s=k20201202; t=1682961676;
+        bh=bw+KrDCTBO3uTsopMPF+Jqg74R5lTCzq5LMg66p/LkQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=ZPxzr7AJT5miKZp6D42X7SuJW7y3cz91RQQkSxn65CMqIi1YUWQZxmuD9fk25P8u5
-         SdU8QAwfeYaHOAq+n907/tjyIJTIHc7H2avgSzg9A+95Kj5Jv8ZosjDNfe5FrsHKuk
-         vpkLcv67snVZR6k614LZTpLIcG8yXa7l09I7Y5w95T1QpfO/VprW6iZVEQhnEitqOc
-         /xIz6hX0GGMs6CFQ4aj5PZ1HPeKPv1dab/11eucl8dxSVxHYWFpgvtPbNj4NC+XkGE
-         GhHA8Ck96MpJawAGZod4tEUn6DcBWi5qRlfErGJW8XLXRT68G0Jn8SylMgj0JoowL3
-         iZCXNZ6TFkg7Q==
-Date:   Mon, 1 May 2023 11:52:54 -0500
+        b=n7Ql1jmkRAyyeRrMrAo5Ps0aGnPoWRSrYsILON00hpjxRFi298/Mp2Q0xSU9DkkXK
+         iEFkB19vVoFCzF0KAZErT9fvBKoAmqDqkKb/BWl7tKmKUQo2bnuO5c5guToSzn18cd
+         PIfhMDAxWLPE70vwoMhZhl9oM+HMS+tC7Z4V8FZk1gsXbskpbwrkx/TKHUgWZ4JKzS
+         wzq3tN/kPuZ9xKEl8GoFptFoGpqXjhDoFoqUnks83Q89rVdGRyJhub1O3QPbV+eIra
+         o+wpsk2+uMDY42DQlEWJ2Tu7uGcRbN5M7skVMww7LRYkphnqcWJQds4ff32Ld5G7aE
+         zDm3CMMVIWAQQ==
+Date:   Mon, 1 May 2023 12:21:14 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ding Hui <dinghui@sangfor.com.cn>
-Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        vidyas@nvidia.com, david.e.box@linux.intel.com,
-        kai.heng.feng@canonical.com, michael.a.bottini@linux.intel.com,
-        rajatja@google.com, qinzongquan@sangfor.com.cn,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI/ASPM: fix UAF by removing cached downstream
-Message-ID: <20230501165254.GA589004@bhelgaas>
+To:     Ajay Agarwal <ajayagarwal@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/3] PCI/ASPM: Disable ASPM_STATE_L1 only when class
+ driver disables L1 ASPM
+Message-ID: <20230501172114.GA591899@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <03b45702-d799-f299-1c24-4e5e2e2897d2@sangfor.com.cn>
+In-Reply-To: <20230411111034.1473044-2-ajayagarwal@google.com>
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,96 +61,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 01, 2023 at 11:50:50AM +0800, Ding Hui wrote:
-> On 2023/5/1 10:10, Bjorn Helgaas wrote:
-> > On Sat, Apr 29, 2023 at 09:26:04PM +0800, Ding Hui wrote:
-> > > If the function 0 of a multifunction device is removed, an freed
-> > > downstream pointer will be left in struct pcie_link_state, and then
-> > > when pcie_config_aspm_link() be invoked from any path, we will get a
-> > > KASAN use-after-free report.
-> > 
-> > Thanks for finding this problem, debugging it, and the patch!
-> > 
-> > In this case we're doing a "software remove" and the other functions
-> > are still present, right?  It's kind of annoying that there's only one
-> > link, but all the functions of a multifunction device have a Link
-> > Control register, and the spec "recommends" that software program the
-> > same ASPM control value for all the functions.
-> 
-> Yes, that is the case.
-> 
-> > The hardware of course doesn't know anything about this software
-> > remove; all the functions are still physically present and powered up.
-> > 
-> > That makes me think that if software ignores the "removed" function
-> > and continues to operate ASPM on the N-1 remaining functions, we're
-> > outside the spec recommendations because the ASPM configuration is no
-> > longer the same across all the functions.
-> > 
-> > So my inclination would be disable ASPM completely when any function
-> > of a multi-function device is removed.  What are your thoughts on
-> > this?
-> 
-> Agree with you.
-> 
-> Previously, I thought another fix that was if the function 0 is removed,
-> we can free the link state to disable ASPM for this link.
-> 
-> Now following you suggestion, it can be expanded to any child function.
-> 
-> How about fixing like this?
+On Tue, Apr 11, 2023 at 04:40:32PM +0530, Ajay Agarwal wrote:
+> Currently the aspm driver sets ASPM_STATE_L1 as well as
+> ASPM_STATE_L1SS bits when the class driver disables L1.
+
+I would have said just "driver" -- do you mean something different by
+using "class driver"?  The callers I see are garden-variety drivers
+for individual devices like hci_bcm4377, xillybus_pcie, e1000e, jme,
+etc.
+
+> pcie_config_aspm_link takes care that L1ss ASPM is not enabled
+> if L1 is disabled. ASPM_STATE_L1SS bits do not need to be
+> explicitly set. The sysfs node store() function, which also
+> modifies the aspm_disable value, does not set these bits either
+> when only L1 ASPM is disabled by the user.
+
+Right.  It'd be nice to combine __pci_disable_link_state() and
+aspm_attr_store_common() so they use the same logic for this, but
+that's not really trivial to do.
+
+> Disable ASPM_STATE_L1 only when class driver disables L1 ASPM.
+
+So IIUC, this is a cleanup and should not fix any actual function
+bugs, right?  If it *does* fix a bug, we should add a Fixes: tag and a
+description of the bug.
+
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> ---
+>  drivers/pci/pcie/aspm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-> index 66d7514ca111..657e0647d19f 100644
+> index 66d7514ca111..5765b226102a 100644
 > --- a/drivers/pci/pcie/aspm.c
 > +++ b/drivers/pci/pcie/aspm.c
-> @@ -1011,12 +1011,11 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->  	down_read(&pci_bus_sem);
->  	mutex_lock(&aspm_lock);
->  	/*
-> -	 * All PCIe functions are in one slot, remove one function will remove
-> -	 * the whole slot, so just wait until we are the last function left.
-> +	 * All PCIe functions are in one slot.
-> +	 * The spec "recommends" that software program set the same ASPM control
-> +	 * value for all the functions.
-> +	 * Disable ASPM when any child function is removed.
-
-Since we're updating the comment anyway, let's clean up the "slot"
-language here.  The PCIe spec doesn't use "slot" in the context of the
-bus/device/function PCIe topology; it only uses it when referring to a
-physical connector where a card might be installed.  What we want here
-is "Device," and then we have to consider whether ARI makes any
-difference here.
-
-The spec says (referring to ASPM Control):
-
-  For Multi-Function Devices (including ARI Devices), it is
-  recommended that software program the same value for this field in
-  all Functions. For non-ARI Multi-Function Devices, only capabilities
-  enabled in all Functions are enabled for the component as a whole.
-
-  For ARI Devices, ASPM Control is determined solely by the setting in
-  Function 0, regardless of Function 0’s D-state. The settings in the
-  other Functions always return whatever value software programmed for
-  each, but otherwise are ignored by the component.
-
-A spec reference, e.g., "PCIe r6.0, sec 7.5.3.7", would be good here.
-
-Anyway, I think the idea of "software removing" a single function is
-kind of a niche situation that we don't need to worry about
-optimizing, and I think turning off ASPM completely will avoid a lot
-of weird corner cases.
-
->  	 */
-> -	if (!list_empty(&parent->subordinate->devices))
-> -		goto out;
-> -
->  	link = parent->link_state;
->  	root = link->root;
->  	parent_link = link->parent;
-> 
-> 
+> @@ -1095,8 +1095,7 @@ static int __pci_disable_link_state(struct pci_dev *pdev, int state, bool sem)
+>  	if (state & PCIE_LINK_STATE_L0S)
+>  		link->aspm_disable |= ASPM_STATE_L0S;
+>  	if (state & PCIE_LINK_STATE_L1)
+> -		/* L1 PM substates require L1 */
+> -		link->aspm_disable |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
+> +		link->aspm_disable |= ASPM_STATE_L1;
+>  	if (state & PCIE_LINK_STATE_L1_1)
+>  		link->aspm_disable |= ASPM_STATE_L1_1;
+>  	if (state & PCIE_LINK_STATE_L1_2)
 > -- 
-> Thanks,
-> -dinghui
+> 2.40.0.577.gac1e443424-goog
 > 
