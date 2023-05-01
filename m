@@ -2,143 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 72E836F3513
-	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 19:35:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D596F352A
+	for <lists+linux-pci@lfdr.de>; Mon,  1 May 2023 19:44:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232181AbjEARev (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 May 2023 13:34:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34006 "EHLO
+        id S230337AbjEARon (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 1 May 2023 13:44:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232235AbjEARet (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 13:34:49 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0436E131;
-        Mon,  1 May 2023 10:34:47 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2a8bca69e8bso27031881fa.3;
-        Mon, 01 May 2023 10:34:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682962485; x=1685554485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7qDertiE/stwvspc2q5M0aytmBGASM3Bx9bVGlotrTI=;
-        b=H1PD/IwYaXhSBtmhDB7BvSoHGdrbiodRXgHgi0jJFXhvPlL9vmJkCI4ZDW4zfghPxu
-         HrNaLIN6nXeHm2js3jM0/0jd66WLfJRI1rc7LL4o+adtxftsIrAgyFTWS+27jxXLbhR9
-         i3AIBfG/7JgUn99YcytxevRIz33yzMJb4cR9dDGSVSTh+nHO74GUlSxSkogIWKkTRVn/
-         Lm2d+RVxbC6fft7oq1Bjd8gRybxyOhThoGAsQFav8ZMDTLP567No2HfPkDRdEuEaxYj2
-         h2lzvX5cICzdqphEhAPGRf+l7Bi+dqMWXsHfCoiahUo+gpJjtOC6Gg6y8nCySTE6dO0r
-         fuPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682962485; x=1685554485;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7qDertiE/stwvspc2q5M0aytmBGASM3Bx9bVGlotrTI=;
-        b=aVfk2igx67rQx9iCDUNisprkiAfz2oJi3IzY05ofyLd6sQ4+P0dpOHKmueeTmKLHEh
-         UC21IWHeYmY4FtwfrULTPgAOzAXWoHCeFxZYcUKXETyPcTRx6MKj5K5D1SAziW1y1Okd
-         xVd84vS12LIBztLlcpYUkAd0e9SomCCkvSh2VphWBfq77Y9crNBu03dpgU18HxdqDncd
-         X//HjAiXNcDYlhIbiLxVDMO0iTOep2hWie3dDx+bno9Tvu0f6/UhLcNU1b48bfGXwhr0
-         vbf32PEIMf+LVY4dkkJMFSFjZ1/FlCx8seJ2mf+GJHTlUkXBSm2oCi4HGza7WeBNgBm5
-         suNA==
-X-Gm-Message-State: AC+VfDyanA/F+Nm72AMweYjaE/BhLRldicJEqDiB5MKsUBnIPdHqvV5B
-        ip/5nHTXxKvqal2rNeVMyrY=
-X-Google-Smtp-Source: ACHHUZ5aybLjN1UxarBAuIcxFC0JqilXu2MAFrZTB14DEx4FQybAgyoLcOdNa/gkhlzp/kl6M5FKiA==
-X-Received: by 2002:a2e:9bd1:0:b0:2a9:f640:2032 with SMTP id w17-20020a2e9bd1000000b002a9f6402032mr3755800ljj.5.1682962485045;
-        Mon, 01 May 2023 10:34:45 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id z8-20020a2e7e08000000b002a777ce224dsm4750711ljc.138.2023.05.01.10.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 May 2023 10:34:44 -0700 (PDT)
-Date:   Mon, 1 May 2023 20:34:42 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, mani@kernel.org,
-        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
-        robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
-        kishon@kernel.org, marek.vasut+renesas@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v14 03/21] PCI: Add INTx Mechanism Messages macros
-Message-ID: <20230501173442.reje55nattksdpuk@mobilestation>
-References: <20230426045557.3613826-1-yoshihiro.shimoda.uh@renesas.com>
- <20230426045557.3613826-4-yoshihiro.shimoda.uh@renesas.com>
+        with ESMTP id S230129AbjEARon (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 13:44:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EBCD1A4
+        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 10:44:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 950B160FE8
+        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 17:44:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3C03C433EF;
+        Mon,  1 May 2023 17:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682963081;
+        bh=l45KaNKEwM2WOBlw6nXGgjqSL+qfWU5VYRYg9+gW3ho=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=kdlcjbsIDVv7N7bPToLfa6MOCynQqq1bQW71egJkXWns/e4L6/IiAapLj8xOrdzin
+         fzUabicOyQHnlW/wq42fAkhxaxFOvvUiuXWNmMMF4vtuZOris6wtSc2vhVzfhaYLTo
+         YERC63OngUjurI45XLBV7tkUJZK/DeP3iL3b9mvwDMlgVNstk0NXqpRqi5AuX+xzrD
+         NaM3T1Yt36GFyV4SU6RTTZPoS/AH9iz60aEUeHJOTbxYYGahO41KxMcsLMJmfKCXXs
+         r9Gan7nB3+liiov2ckYqJNJGi7u7e380/fV2YTdUDS6Wg8D3VIkQYonJeHx45GpA9G
+         Yqn4dP8JtcNsg==
+Date:   Mon, 1 May 2023 12:44:39 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ajay Agarwal <ajayagarwal@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>
+Subject: Re: [PATCH 2/3] PCI/ASPM: Set ASPM_STATE_L1 when class driver
+ enables L1ss
+Message-ID: <20230501174439.GA592767@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230426045557.3613826-4-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <20230411111034.1473044-3-ajayagarwal@google.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 26, 2023 at 01:55:39PM +0900, Yoshihiro Shimoda wrote:
-> Add "Message Routing" and "INTx Mechanism Messages" macros to send
-> a message by a PCIe driver.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+[+cc Nirmal, Jonathan, since vmd is the only caller of
+pci_enable_link_state()]
+
+On Tue, Apr 11, 2023 at 04:40:33PM +0530, Ajay Agarwal wrote:
+> Currently the aspm driver does not set ASPM_STATE_L1 bit in
+> aspm_default when the class driver requests L1SS ASPM state.
+> This will lead to pcie_config_aspm_link() not enabling the
+> requested L1SS state. Set ASPM_STATE_L1 when class driver
+> enables L1ss.
+
+Since vmd is currently the only caller of pci_enable_link_state(), and
+it supplies PCIE_LINK_STATE_ALL:
+
+  #define PCIE_LINK_STATE_ALL (PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1 |\
+                               PCIE_LINK_STATE_CLKPM | PCIE_LINK_STATE_L1_1 |\
+                               PCIE_LINK_STATE_L1_2 | PCIE_LINK_STATE_L1_1_PCIPM |\
+                               PCIE_LINK_STATE_L1_2_PCIPM)
+
+I don't think this makes any functional difference at this point,
+right?
+
+> Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
 > ---
->  .../pci/controller/dwc/pcie-designware-ep.c   |  1 +
->  drivers/pci/pci.h                             | 19 +++++++++++++++++++
->  2 files changed, 20 insertions(+)
+>  drivers/pci/pcie/aspm.c | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index f9182f8d552f..205bbcc6af27 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -9,6 +9,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 5765b226102a..7c9935f331f1 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1170,16 +1170,16 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
+>  	if (state & PCIE_LINK_STATE_L0S)
+>  		link->aspm_default |= ASPM_STATE_L0S;
+>  	if (state & PCIE_LINK_STATE_L1)
+> -		/* L1 PM substates require L1 */
+> -		link->aspm_default |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
+> +		link->aspm_default |= ASPM_STATE_L1;
+> +	/* L1 PM substates require L1 */
+>  	if (state & PCIE_LINK_STATE_L1_1)
+> -		link->aspm_default |= ASPM_STATE_L1_1;
+> +		link->aspm_default |= ASPM_STATE_L1_1 | ASPM_STATE_L1;
+
+IIUC, this:
+
+  pci_enable_link_state(PCIE_LINK_STATE_L1_1)
+
+currently doesn't actually enable L1.1 because the caller didn't
+supply "PCIE_LINK_STATE_L1 | PCIE_LINK_STATE_L1_1".
+
+I'm not sure that's a problem -- the driver can easily supply both if
+it wants both.
+
+For devices that support only L1,
+"pci_enable_link_state(PCIE_LINK_STATE_L1_1)" would implicitly enable
+L1 even though L1.1 is not supported, which seems a little bit weird.
+
+>  	if (state & PCIE_LINK_STATE_L1_2)
+> -		link->aspm_default |= ASPM_STATE_L1_2;
+> +		link->aspm_default |= ASPM_STATE_L1_2 | ASPM_STATE_L1;
+>  	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+> -		link->aspm_default |= ASPM_STATE_L1_1_PCIPM;
+> +		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+>  	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+> -		link->aspm_default |= ASPM_STATE_L1_2_PCIPM;
+> +		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
+>  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
 >  
-
-> +#include "../../pci.h"
-
-Unrelated change since the new macros are left unused in the framework
-of this patch. Please move it to the patch which implies using the new
-defines and where the included header file content is required.
-
->  #include "pcie-designware.h"
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 2475098f6518..4be376c121a4 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -11,6 +11,25 @@
->  
->  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
->  
-> +/* Message Routing */
-> +#define PCI_MSG_ROUTING_RC	0
-> +#define PCI_MSG_ROUTING_ADDR	1
-> +#define PCI_MSG_ROUTING_ID	2
-> +#define PCI_MSG_ROUTING_BC	3
-> +#define PCI_MSG_ROUTING_LOCAL	4
-> +#define PCI_MSG_ROUTING_GATHER	5
-> +
-> +/* INTx Mechanism Messages */
-> +#define PCI_CODE_ASSERT_INTA	0x20
-> +#define PCI_CODE_ASSERT_INTB	0x21
-> +#define PCI_CODE_ASSERT_INTC	0x22
-> +#define PCI_CODE_ASSERT_INTD	0x23
-> +#define PCI_CODE_DEASSERT_INTA	0x24
-> +#define PCI_CODE_DEASSERT_INTB	0x25
-> +#define PCI_CODE_DEASSERT_INTC	0x26
-> +#define PCI_CODE_DEASSERT_INTD	0x27
-> +
-
-> +
-
-Excessive new line. Please drop it.
-
--Serge(y)
-
->  extern const unsigned char pcie_link_speed[];
->  extern bool pci_early_dump;
->  
+>  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
 > -- 
-> 2.25.1
+> 2.40.0.577.gac1e443424-goog
 > 
