@@ -2,50 +2,85 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C73A6F3B11
-	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 01:49:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C95466F3D15
+	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 07:39:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjEAXs6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 1 May 2023 19:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57932 "EHLO
+        id S233564AbjEBFjX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 May 2023 01:39:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233281AbjEAXr6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 1 May 2023 19:47:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AC9358B
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 16:47:57 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C0B162036
-        for <linux-pci@vger.kernel.org>; Mon,  1 May 2023 23:47:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F19D5C433D2;
-        Mon,  1 May 2023 23:47:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1682984876;
-        bh=tDpd21tGKFTe5xeAgZInQx1DWKsVjiIWei2U+dU5OZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uFU80+qD7tDhH5RLXOAaQaRJ6s5o2Ozz2u4Z5+J/7IwobUB5FaEyg3vppbVOoRwcB
-         tvzJrRKyKi1/Iz4PhzUsQp52DaPxFnm+XzTbiFnA7WKgGt4jvCRGa/HFg0+A5fHDho
-         WIb0s+KRomEHK26EVfm6uWRGnu1wj4D8y1ofKOZI=
-Date:   Tue, 2 May 2023 08:47:53 +0900
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Ashutosh Sharma <ashutosh.dandora4@gmail.com>,
-        linux-pci@vger.kernel.org, alex.williamson@redhat.com,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Timothy Redaelli <tredaelli@redhat.com>
-Subject: Re: How to disable Linux kernel nvme driver for a particular PCI
- address ?
-Message-ID: <2023050252-sitting-clean-8649@gregkh>
-References: <CADOvten3LND2XnKbUuEmKni7c93DPXdP99ZbW84mouGtdBSHZw@mail.gmail.com>
- <20230501163128.GA587981@bhelgaas>
+        with ESMTP id S230004AbjEBFjU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 May 2023 01:39:20 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8269AE52;
+        Mon,  1 May 2023 22:39:19 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3425GU1H031986;
+        Tue, 2 May 2023 05:39:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=PrAFe7ea7BirIRPVaDBoFpQItMlnOPom8nGljtcwk9Y=;
+ b=FqKeMCvI3uJXUuU0UL20EgdHCgG/UUKE+x3ZWZIIvg7ugm5ceZ59U5jPsJ8nmds5n8fC
+ /zUaYt9fZeVuU6UWbA+L39Rdo4oQDEH+u6XkVkv0Oj3gdY5j83doBObdqotzQMyB5GEX
+ KuUdF8rnTK+h9trR3sFIurrZD+n+hrzz8L0Q32ag4R/9XluL9kKv6pwEZKpt5erJ6XuV
+ 5hJB09GMedTci0y4b7rfiURg7tKAurer5kAqm9tlWeRX5k8BiXC+FF9RMrUokAJuDhdE
+ J8lV96P+PPknawqZ++B1ZQAfLpuZUfkKH3+2m+xVmntnYV593WETLPb8VHWJhtavnrb+ kw== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q8ufc5dpj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 02 May 2023 05:39:13 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3425cwn5010848
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 2 May 2023 05:38:58 GMT
+Received: from [10.242.243.253] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Mon, 1 May 2023
+ 22:38:50 -0700
+Message-ID: <fa1f011a-9f18-5799-dbf3-ad5b1893f57b@quicinc.com>
+Date:   Tue, 2 May 2023 11:08:39 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230501163128.GA587981@bhelgaas>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 3/6] dt-bindings: PCI: qcom: Add IPQ9574
+To:     Rob Herring <robh@kernel.org>
+CC:     <agross@kernel.org>, <andersson@kernel.org>,
+        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <bhelgaas@google.com>,
+        <krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+        <sboyd@kernel.org>, <mani@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <quic_srichara@quicinc.com>,
+        <quic_sjaganat@quicinc.com>, <quic_kathirav@quicinc.com>,
+        <quic_arajkuma@quicinc.com>, <quic_anusha@quicinc.com>,
+        <quic_ipkumar@quicinc.com>
+References: <20230421124938.21974-1-quic_devipriy@quicinc.com>
+ <20230421124938.21974-4-quic_devipriy@quicinc.com>
+ <20230425173330.GA1985131-robh@kernel.org>
+Content-Language: en-US
+From:   Devi Priya <quic_devipriy@quicinc.com>
+In-Reply-To: <20230425173330.GA1985131-robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Rrfp5iF_YPZ1tvVUs0Qeb6soHz_aEy6n
+X-Proofpoint-GUID: Rrfp5iF_YPZ1tvVUs0Qeb6soHz_aEy6n
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-02_02,2023-04-27_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ adultscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0 impostorscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2305020049
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_LOW,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,41 +89,115 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 01, 2023 at 11:31:28AM -0500, Bjorn Helgaas wrote:
-> [+cc Greg, Rafael, Timothy]
+
+
+On 4/25/2023 11:03 PM, Rob Herring wrote:
+> On Fri, Apr 21, 2023 at 06:19:35PM +0530, Devi Priya wrote:
+>> Add bindings for PCIe hosts on IPQ9574 platform and allow
+>> msi-parent property.
 > 
-> On Mon, May 01, 2023 at 12:19:39PM +0530, Ashutosh Sharma wrote:
-> > Hi,
-> > 
-> > I have multiple NVMe drives of same type (same vendor and same model)
-> > attached to my system running Ubuntu 22.04.2 LTS with Linux kernel
-> > version 5.19.0-35-generic.I have unbound one drive from 'nvme' driver
-> > and bound to the 'vfio-pci' driver using "driverctl
-> > set-override"command.
+> Go see the long discussion about why msi-parent with msi-map is wrong.
+> If something changed, explain that here.
+Sure, okay
 
-First off, I just "love" how the vfio people have taken a debugging tool
-and made it part of a "enterprise configuration" process.  That's a
-horrible hack and the vfio developers really should not be doing this as
-people have found out.
-
-> > But when I perform the hot plugging on that particular drive, then
-> > after plugged in, the drive by default binds with 'nvme' driver. So, I
-> > want to permanently bypass/disable the 'nvme' driver only for a
-> > particular pci address/slot. I cannot blacklist the 'nvme' driver
-> > entirely, as other drives still need to be bound with 'nvme' driver.
-> > 
-> > So, Is there any way to disable the 'nvme' driver for a particular PCI
-> > address/slot ?
+Thanks,
+Devi Priya
 > 
-> I think this is more of a device model or udev question than a PCI
-> subsystem question, so I cc'd some of those folks.
-
-It's up to userspace to write tools to do this if they want to continue
-to force userspace to be the one that does this binding/unbinding for
-the vfio drivers.  Otherwise, the vfio driver itself should be the one
-doing the binding to the device automatically, not the nvme driver, IF
-that driver is supposed to be the one actually controlling it.
-
-sorry, and good luck!
-
-greg k-h
+>>
+>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>> ---
+>>   Changes in V3:
+>> 	- Rebased on linux-next/master
+>>
+>>   .../devicetree/bindings/pci/qcom,pcie.yaml    | 40 +++++++++++++++++++
+>>   1 file changed, 40 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> index 81971be4e554..a92cecc5fe6f 100644
+>> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
+>> @@ -26,6 +26,7 @@ properties:
+>>             - qcom,pcie-ipq8064-v2
+>>             - qcom,pcie-ipq8074
+>>             - qcom,pcie-ipq8074-gen3
+>> +          - qcom,pcie-ipq9574
+>>             - qcom,pcie-msm8996
+>>             - qcom,pcie-qcs404
+>>             - qcom,pcie-sa8540p
+>> @@ -113,6 +114,8 @@ properties:
+>>     power-domains:
+>>       maxItems: 1
+>>   
+>> +  msi-parent: true
+>> +
+>>     perst-gpios:
+>>       description: GPIO controlled connection to PERST# signal
+>>       maxItems: 1
+>> @@ -138,6 +141,8 @@ anyOf:
+>>     - required:
+>>         - msi-map
+>>         - msi-map-mask
+>> +  - required:
+>> +      - msi-parent
+>>   
+>>   allOf:
+>>     - $ref: /schemas/pci/pci-bus.yaml#
+>> @@ -171,6 +176,7 @@ allOf:
+>>               enum:
+>>                 - qcom,pcie-ipq6018
+>>                 - qcom,pcie-ipq8074-gen3
+>> +              - qcom,pcie-ipq9574
+>>       then:
+>>         properties:
+>>           reg:
+>> @@ -382,6 +388,39 @@ allOf:
+>>               - const: ahb # AHB Reset
+>>               - const: axi_m_sticky # AXI Master Sticky reset
+>>   
+>> +  - if:
+>> +      properties:
+>> +        compatible:
+>> +          contains:
+>> +            enum:
+>> +              - qcom,pcie-ipq9574
+>> +    then:
+>> +      properties:
+>> +        clocks:
+>> +          minItems: 6
+>> +          maxItems: 6
+>> +        clock-names:
+>> +          items:
+>> +            - const: ahb  # AHB clock
+>> +            - const: aux  # Auxiliary clock
+>> +            - const: axi_m # AXI Master clock
+>> +            - const: axi_s # AXI Slave clock
+>> +            - const: axi_bridge # AXI bridge clock
+>> +            - const: rchng
+>> +        resets:
+>> +          minItems: 8
+>> +          maxItems: 8
+>> +        reset-names:
+>> +          items:
+>> +            - const: pipe # PIPE reset
+>> +            - const: sticky # Core Sticky reset
+>> +            - const: axi_s_sticky # AXI Slave Sticky reset
+>> +            - const: axi_s # AXI Slave reset
+>> +            - const: axi_m_sticky # AXI Master Sticky reset
+>> +            - const: axi_m # AXI Master reset
+>> +            - const: aux # AUX Reset
+>> +            - const: ahb # AHB Reset
+>> +
+>>     - if:
+>>         properties:
+>>           compatible:
+>> @@ -767,6 +806,7 @@ allOf:
+>>                   - qcom,pcie-ipq8064v2
+>>                   - qcom,pcie-ipq8074
+>>                   - qcom,pcie-ipq8074-gen3
+>> +                - qcom,pcie-ipq9574
+>>                   - qcom,pcie-qcs404
+>>       then:
+>>         required:
+>> -- 
+>> 2.17.1
+>>
