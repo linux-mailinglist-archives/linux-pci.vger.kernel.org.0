@@ -2,59 +2,57 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 17BA66F4736
-	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 17:30:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FFBD6F47E5
+	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 18:02:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234285AbjEBPai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 May 2023 11:30:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47786 "EHLO
+        id S229586AbjEBQCa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 May 2023 12:02:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234176AbjEBPai (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 May 2023 11:30:38 -0400
+        with ESMTP id S229457AbjEBQC2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 May 2023 12:02:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 852B9197;
-        Tue,  2 May 2023 08:30:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F23AD26AC
+        for <linux-pci@vger.kernel.org>; Tue,  2 May 2023 09:02:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1FAA661947;
-        Tue,  2 May 2023 15:30:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34D3FC433EF;
-        Tue,  2 May 2023 15:30:32 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BE4662630
+        for <linux-pci@vger.kernel.org>; Tue,  2 May 2023 16:02:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9349C433EF;
+        Tue,  2 May 2023 16:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683041432;
-        bh=oOAFn1iw+VvOdPt870Z4/mUcqKg5x0WNhxwZ+XrKuhI=;
+        s=k20201202; t=1683043345;
+        bh=F6INMunzyO3L4GZXfQTNJWSQpvK9guG1xwYpn5xxaXM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=FNTxB/0hXeVVhLW2dD5Dk+1hNcyjBdeS129PxOXvlmvYOZoD/D1TkPMMgEXMKv1aa
-         eXsQ2S4cYnSdJkG1TVfatugGxRB/Xm+xyIyBQujRbVFHW9g9fqK+LMfka25Zm7f8LG
-         2IZky9g1kYeiYMbhdwqVPWu/n4kD4cm/U9zwYXDRqPmN3k0DyS58uz59216UMTjveF
-         Cs4jDM3uwbi3PPjHOdr53EFLO5rG7u2YKUG5USbP5TrFstlkgVkEgv0sQFBKOc7OC7
-         ZtSJG6nPX5mHb60bmUeDKTmE7Z90Y4gLhubF/zfphv9Uey/iG4j1Dutw5bup8zemoX
-         elOJVLFssnLrQ==
-Date:   Tue, 2 May 2023 10:30:30 -0500
+        b=lKTe2tZPuTup5GtlG9gyqXlFF88n5Br/Oz0YggWQMYoJ9rw4TlUiKgkrbhYT5SgQ8
+         8yAN6Og8soLk65Q7dRWkGDifnH6JJ6YveC46MmyhQcw1YeipJLwyA+hijtewPcSMw2
+         P+gSbWP2ElKqU13KLOZ7ftNwTd2x2pE519vi/4bBd+cn0nYIt31YHmGrotBrQb01rF
+         5Yo2NNx9nF3tP49gzlr1YKciaBG3K7XLMFGNC+dLreCiERX9HrDt8xF+2s19MSknxH
+         XHZQrFW6uYraRlEwz2m/YJrgo4e57BB3rS/6t/MSbqiT5MdortzzBfnkIjfj7nB/1G
+         6f+99TSUfNFGA==
+Date:   Tue, 2 May 2023 11:02:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>
-Subject: Re: [PATCH v3 21/38] parport: PC style parport depends on HAS_IOPORT
-Message-ID: <20230502153030.GA688533@bhelgaas>
+To:     Ajay Agarwal <ajayagarwal@google.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
+        "David E. Box" <david.e.box@linux.intel.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        linux-pci@vger.kernel.org,
+        Nirmal Patel <nirmal.patel@linux.intel.com>,
+        Jonathan Derrick <jonathan.derrick@linux.dev>
+Subject: Re: [PATCH 2/3] PCI/ASPM: Set ASPM_STATE_L1 when class driver
+ enables L1ss
+Message-ID: <20230502160224.GA682469@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230314121216.413434-22-schnelle@linux.ibm.com>
+In-Reply-To: <ZFEJ+rcE0D/rhJnq@google.com>
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -65,64 +63,112 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The wording of this subject line is a bit ambiguous and doesn't quite
-say what the patch does.
+On Tue, May 02, 2023 at 06:32:50PM +0530, Ajay Agarwal wrote:
+> On Mon, May 01, 2023 at 12:44:39PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Apr 11, 2023 at 04:40:33PM +0530, Ajay Agarwal wrote:
+> > > Currently the aspm driver does not set ASPM_STATE_L1 bit in
+> > > aspm_default when the class driver requests L1SS ASPM state.
+> > > This will lead to pcie_config_aspm_link() not enabling the
+> > > requested L1SS state. Set ASPM_STATE_L1 when class driver
+> > > enables L1ss.
+> > 
+> > Since vmd is currently the only caller of pci_enable_link_state(), and
+> > it supplies PCIE_LINK_STATE_ALL:
+> > 
+> >   #define PCIE_LINK_STATE_ALL (PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1 |\
+> >                                PCIE_LINK_STATE_CLKPM | PCIE_LINK_STATE_L1_1 |\
+> >                                PCIE_LINK_STATE_L1_2 | PCIE_LINK_STATE_L1_1_PCIPM |\
+> >                                PCIE_LINK_STATE_L1_2_PCIPM)
+> > 
+> > I don't think this makes any functional difference at this point,
+> > right?
+>
+> Yes, this does not make any functional difference to the vmd driver.
+> ...
 
-It reads like a statement of fact, i.e., "this is the current state,"
-but I think the patch actually *adds* a HAS_IOPORT dependency like
-many of the other patches.
+> > > @@ -1170,16 +1170,16 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
+> > >  	if (state & PCIE_LINK_STATE_L0S)
+> > >  		link->aspm_default |= ASPM_STATE_L0S;
+> > >  	if (state & PCIE_LINK_STATE_L1)
+> > > -		/* L1 PM substates require L1 */
+> > > -		link->aspm_default |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
+> > > +		link->aspm_default |= ASPM_STATE_L1;
+> > > +	/* L1 PM substates require L1 */
+> > >  	if (state & PCIE_LINK_STATE_L1_1)
+> > > -		link->aspm_default |= ASPM_STATE_L1_1;
+> > > +		link->aspm_default |= ASPM_STATE_L1_1 | ASPM_STATE_L1;
+> > 
+> > IIUC, this:
+> > 
+> >   pci_enable_link_state(PCIE_LINK_STATE_L1_1)
+> > 
+> > currently doesn't actually enable L1.1 because the caller didn't
+> > supply "PCIE_LINK_STATE_L1 | PCIE_LINK_STATE_L1_1".
+> > 
+> > I'm not sure that's a problem -- the driver can easily supply both if
+> > it wants both.
+>
+> Consider this: A driver wants to enable L1.1. So it calls:
+>     pci_enable_link_state(PCIE_LINK_STATE_L1 | PCIE_LINK_STATE_L1_1)
+> The current logic will end up enabling L1.2 as well. The driver does
+> not want that.
 
-I guess it also *removes* a HAS_IOMEM dependency; I didn't investigate
-to figure out why that is or whether it's even related (I guess it is,
-but I don't know how).
+Hmmm, I think I see what you mean.  ASPM_STATE_L1SS includes both
+ASPM_STATE_L1_1 and ASPM_STATE_L1_2:
 
-On Tue, Mar 14, 2023 at 01:11:59PM +0100, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> not being declared. As PC style parport uses these functions we need to
-> handle this dependency.
-> 
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/parport/Kconfig | 4 ++--
->  include/linux/parport.h | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/parport/Kconfig b/drivers/parport/Kconfig
-> index 5561362224e2..5c471c73629f 100644
-> --- a/drivers/parport/Kconfig
-> +++ b/drivers/parport/Kconfig
-> @@ -14,7 +14,6 @@ config ARCH_MIGHT_HAVE_PC_PARPORT
->  
->  menuconfig PARPORT
->  	tristate "Parallel port support"
-> -	depends on HAS_IOMEM
->  	help
->  	  If you want to use devices connected to your machine's parallel port
->  	  (the connector at the computer with 25 holes), e.g. printer, ZIP
-> @@ -42,7 +41,8 @@ if PARPORT
->  
->  config PARPORT_PC
->  	tristate "PC-style hardware"
-> -	depends on ARCH_MIGHT_HAVE_PC_PARPORT || (PCI && !S390)
-> +	depends on ARCH_MIGHT_HAVE_PC_PARPORT
-> +	depends on HAS_IOPORT
->  	help
->  	  You should say Y here if you have a PC-style parallel port. All
->  	  IBM PC compatible computers and some Alphas have PC-style
-> diff --git a/include/linux/parport.h b/include/linux/parport.h
-> index a0bc9e0267b7..fff39bc30629 100644
-> --- a/include/linux/parport.h
-> +++ b/include/linux/parport.h
-> @@ -514,7 +514,7 @@ extern int parport_device_proc_register(struct pardevice *device);
->  extern int parport_device_proc_unregister(struct pardevice *device);
->  
->  /* If PC hardware is the only type supported, we can optimise a bit.  */
-> -#if !defined(CONFIG_PARPORT_NOT_PC)
-> +#if !defined(CONFIG_PARPORT_NOT_PC) && defined(CONFIG_PARPORT_PC)
->  
->  #include <linux/parport_pc.h>
->  #define parport_write_data(p,x)            parport_pc_write_data(p,x)
-> -- 
-> 2.37.2
-> 
+  #define ASPM_STATE_L1_2_MASK    (ASPM_STATE_L1_2 | ASPM_STATE_L1_2_PCIPM)
+  #define ASPM_STATE_L1SS         (ASPM_STATE_L1_1 | ASPM_STATE_L1_1_PCIPM |\
+				   ASPM_STATE_L1_2_MASK)
+
+so this sets ASPM_STATE_L1_1 and ASPM_STATE_L1_2:
+
+  if (state & PCIE_LINK_STATE_L1)
+    link->aspm_default |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
+
+which makes it pointless for a caller to supply PCIE_LINK_STATE_L1_1
+or PCIE_LINK_STATE_L1_2:
+
+  if (state & PCIE_LINK_STATE_L1_1)
+    link->aspm_default |= ASPM_STATE_L1_1;
+  if (state & PCIE_LINK_STATE_L1_2)
+    link->aspm_default |= ASPM_STATE_L1_2;
+
+> Also, we should be letting the ASPM core driver handle the logic that
+> L1.0 needs to be set for L1.1/L1.2 to happen, instead of putting that
+> responsibility to the caller driver.
+>
+> > For devices that support only L1,
+> > "pci_enable_link_state(PCIE_LINK_STATE_L1_1)" would implicitly enable
+> > L1 even though L1.1 is not supported, which seems a little bit weird.
+> >
+> If L1.1 is not supported, then ASPM_STATE_L1_1 will not be set in
+> `aspm_capable` right? That will not allow L1.1 to be enabled. So, we
+> should be fine.
+
+It seems like there are two questions here:
+
+  1) We currently enable L1.2 when the caller didn't request it.  This
+  seems clearly wrong and we should fix it.  If we can make a patch
+  that does just this part, that would be good.
+
+  2) Should the PCI core enable L1 if the caller requests only L1.1
+  (or L1.2)?  This one isn't as clear to me, but there's only one
+  caller, and whatever we do won't make a difference to it, so it can
+  go either way.  If we want to make a semantic change here, that's
+  OK, but I'd like to make that its own patch if possible.
+
+> > >  	if (state & PCIE_LINK_STATE_L1_2)
+> > > -		link->aspm_default |= ASPM_STATE_L1_2;
+> > > +		link->aspm_default |= ASPM_STATE_L1_2 | ASPM_STATE_L1;
+> > >  	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+> > > -		link->aspm_default |= ASPM_STATE_L1_1_PCIPM;
+> > > +		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+> > >  	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+> > > -		link->aspm_default |= ASPM_STATE_L1_2_PCIPM;
+> > > +		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
+> > >  	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+> > >  
+> > >  	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
+> > > -- 
+> > > 2.40.0.577.gac1e443424-goog
+> > > 
