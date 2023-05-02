@@ -2,56 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B07FB6F4A63
-	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 21:32:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C58B96F4A64
+	for <lists+linux-pci@lfdr.de>; Tue,  2 May 2023 21:32:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229556AbjEBTcC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 2 May 2023 15:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52368 "EHLO
+        id S229552AbjEBTcH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 2 May 2023 15:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjEBTcB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 May 2023 15:32:01 -0400
+        with ESMTP id S229584AbjEBTcG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 2 May 2023 15:32:06 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86FF01BF9
-        for <linux-pci@vger.kernel.org>; Tue,  2 May 2023 12:32:00 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b9dcfade347so5700916276.2
-        for <linux-pci@vger.kernel.org>; Tue, 02 May 2023 12:32:00 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 903901FE2
+        for <linux-pci@vger.kernel.org>; Tue,  2 May 2023 12:32:05 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-b8f324b3ef8so5236826276.0
+        for <linux-pci@vger.kernel.org>; Tue, 02 May 2023 12:32:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683055919; x=1685647919;
+        d=google.com; s=20221208; t=1683055925; x=1685647925;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwJUylU4tx2YBYWLpswcUDBipNDG8GjX+zB/YTSAsRo=;
-        b=awEZO+qiQQ/Q9PJg/D8xSgR/SLOxEPypra28/HovU3g/gjU0GO5lUBlIJBs8dUmQRX
-         nfe3SaTC8ADcQZnfxkMojymqledGwFz4aToFhZ7oPo8AD4OjMlkZiYBcBKb//Ir16jYI
-         Xn/V0UbLISaLEbEI8s6qIIdSOT/mHXtxvffm7fO+s8f2f1bUBHUIRPsi8dOYz+0J3yV/
-         vjYQmeagQD1JOr1ceiRUQRaT4z+ukl8/T9PnsevmMaXdP9T1UKRbv1LniCXP8EMGS0Du
-         DmA6/TxEGn/DYWax9n0tKo9vO4ZrBSITyEB99cgm6nCjfZ5vEF9PASeI8loHoDHoVvUA
-         rHxg==
+        bh=OjGj+uU9+T3V55g9RkXA5Hr9eIueNSu8jnz5r8uDglg=;
+        b=7pAcOuNoQQuwyjpcVBq9yaubxHt3Wg72udTISOJdOFGzqUAOCkS/npOH2gNCWk1k2/
+         YwRUA/BARDv4wWb5NvbKhsm6WcGUOULqQ3dAjYCVoRxc5lmkXwl7m1aby9sd4VNwdgnA
+         sYFVf56PCjr6xne5xuqu3rh2C1r2fJZpHPYLWC8E6N1/S/zLjO5yZ72nXaAJNqtQI4fb
+         spY8RWldLz307sreaUG5a4rVFT5nTlYBrlB+2pkwTc+KcSjlCZKLFn35/9OIrhMjuIE0
+         2EE06wqxPMtLELV5lNR8MDSdxEPmhg5cuofVaviarHtHg1Yf61AUAwL96vZQsavWUGVc
+         r2kw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683055919; x=1685647919;
+        d=1e100.net; s=20221208; t=1683055925; x=1685647925;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwJUylU4tx2YBYWLpswcUDBipNDG8GjX+zB/YTSAsRo=;
-        b=Sfx7r36mLzEo3m80uNPQxBzOhDoVln2hMGl0/S60SZXqgEeEPw5tQsckF6lRS4WH20
-         nrohvKMyVxGPCG7NoTHNzEPzXI/nwnrkCFXGbYZtrIovbKgvR5UqZ8B6xaVSOtPJj5OH
-         0Snm72CrhFJOZ9zs3nDTdmUPvRUavAfB6ZJwFkvLmkIO6sK2VIu4T8gvUIZWAzWqGZvR
-         a5eqiMrNpBTM3aV6Zfkb0h1aT1h3OYzexy2SEidiCYaJo5RnPx4D9zx27u4/JOLMnuFN
-         KusbiSJvXoXJgCs0PbP/V/e+755J6pYhG8ByvI+wkmZwUitK4slsSAiSmpin1Ow5SxTE
-         t6xg==
-X-Gm-Message-State: AC+VfDydVBMHQpgYrs3mjrUhMM0nX1y8ypvkr7viGmrgVYEPgsw/XB/o
-        K2GoaXyveNfvbvagEY1jvh2FJkEoAiPJWFJncg==
-X-Google-Smtp-Source: ACHHUZ4vw2y1tj3KoswA2EHsJV2aHNWsSGUnuHcsX+VjT9gXOODHCJIvz6nTvqAIGd3B0ZHDPXF4H+Nh+j4doaynaQ==
+        bh=OjGj+uU9+T3V55g9RkXA5Hr9eIueNSu8jnz5r8uDglg=;
+        b=jo80m6fH9YNW0Tb7mAxpgokRmaMS9AogchKm689L4EXcAvvRr7OA/OUbtBS/yz5A3i
+         rmFPfNsQNEAjQR4Sn73IxOSLi2TTKdfTWPzOoidkcjr+YrjrUkffIcVuIr4gFy9cqy4D
+         pDOSWzHzUrd97wnWUyXRZuU6okoab1vhkwhKKeO4O0/ZzcKhg/6f38QaltWUs0TM7ada
+         iOve7dmOohk+mpB69Z8vo4UayfGqRi28ycMH9Po7TUNhZvLDeDaa3nF/riTRmFxyDfrm
+         z/rmedytwAYmm7Lfeq91hlw/fWpmYymJ6yiO9wQWC43YuoISlcZHa50RB8vkvnq/aWh8
+         sBXQ==
+X-Gm-Message-State: AC+VfDzwmWD2GY0/PHY830Hvvd+60N6rGccbf31IqnLiZsLa1YhnOu9v
+        1PoGj8QpEn5jfaDe6mMYgTKS7gJjxCTj1TA3bQ==
+X-Google-Smtp-Source: ACHHUZ4B7tuEWArY6pfOKLezRsrD1nh24mWdeq9N1fxuZiw922qKscZ150nnqycJpyo6lWEBh3EsqS9VE4PybReDBg==
 X-Received: from ajaya.c.googlers.com ([fda3:e722:ac3:cc00:4f:4b78:c0a8:39b5])
- (user=ajayagarwal job=sendgmr) by 2002:a25:403:0:b0:b9e:7d81:4b91 with SMTP
- id 3-20020a250403000000b00b9e7d814b91mr1017275ybe.9.1683055919721; Tue, 02
- May 2023 12:31:59 -0700 (PDT)
-Date:   Wed,  3 May 2023 01:01:37 +0530
+ (user=ajayagarwal job=sendgmr) by 2002:a25:ac4c:0:b0:b9e:635c:7970 with SMTP
+ id r12-20020a25ac4c000000b00b9e635c7970mr2354030ybd.3.1683055924888; Tue, 02
+ May 2023 12:32:04 -0700 (PDT)
+Date:   Wed,  3 May 2023 01:01:38 +0530
 In-Reply-To: <20230502193140.1062470-1-ajayagarwal@google.com>
 Mime-Version: 1.0
 References: <20230502193140.1062470-1-ajayagarwal@google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-Message-ID: <20230502193140.1062470-3-ajayagarwal@google.com>
-Subject: [PATCH v2 2/5] PCI/ASPM: Set ASPM_STATE_L1 only when driver enables L1.0
+Message-ID: <20230502193140.1062470-4-ajayagarwal@google.com>
+Subject: [PATCH v2 3/5] PCI/ASPM: Set ASPM_STATE_L1 when driver enables L1ss
 From:   Ajay Agarwal <ajayagarwal@google.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Kuppuswamy Sathyanarayanan 
@@ -74,33 +74,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Currently the core driver sets ASPM_STATE_L1 as well as
-ASPM_STATE_L1SS when the caller wants to enable just L1.0.
-This is incorrect. Fix this by setting the ASPM_STATE_L1 bit
-only when the caller wishes to enable L1.0.
+Currently the aspm driver does not set ASPM_STATE_L1 bit in
+aspm_default when the caller requests L1SS ASPM state. This will
+lead to pcie_config_aspm_link() not enabling the requested L1SS
+state. Set ASPM_STATE_L1 when driver enables L1ss.
 
 Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
 ---
 Changelog since v1:
  - Break down the L1 and L1ss handling into separate patches
 
- drivers/pci/pcie/aspm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/pci/pcie/aspm.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 5765b226102a..4ad0bf5d5838 100644
+index 4ad0bf5d5838..7c9935f331f1 100644
 --- a/drivers/pci/pcie/aspm.c
 +++ b/drivers/pci/pcie/aspm.c
-@@ -1170,8 +1170,7 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
- 	if (state & PCIE_LINK_STATE_L0S)
+@@ -1171,14 +1171,15 @@ int pci_enable_link_state(struct pci_dev *pdev, int state)
  		link->aspm_default |= ASPM_STATE_L0S;
  	if (state & PCIE_LINK_STATE_L1)
--		/* L1 PM substates require L1 */
--		link->aspm_default |= ASPM_STATE_L1 | ASPM_STATE_L1SS;
-+		link->aspm_default |= ASPM_STATE_L1;
+ 		link->aspm_default |= ASPM_STATE_L1;
++	/* L1 PM substates require L1 */
  	if (state & PCIE_LINK_STATE_L1_1)
- 		link->aspm_default |= ASPM_STATE_L1_1;
+-		link->aspm_default |= ASPM_STATE_L1_1;
++		link->aspm_default |= ASPM_STATE_L1_1 | ASPM_STATE_L1;
  	if (state & PCIE_LINK_STATE_L1_2)
+-		link->aspm_default |= ASPM_STATE_L1_2;
++		link->aspm_default |= ASPM_STATE_L1_2 | ASPM_STATE_L1;
+ 	if (state & PCIE_LINK_STATE_L1_1_PCIPM)
+-		link->aspm_default |= ASPM_STATE_L1_1_PCIPM;
++		link->aspm_default |= ASPM_STATE_L1_1_PCIPM | ASPM_STATE_L1;
+ 	if (state & PCIE_LINK_STATE_L1_2_PCIPM)
+-		link->aspm_default |= ASPM_STATE_L1_2_PCIPM;
++		link->aspm_default |= ASPM_STATE_L1_2_PCIPM | ASPM_STATE_L1;
+ 	pcie_config_aspm_link(link, policy_to_aspm_state(link));
+ 
+ 	link->clkpm_default = (state & PCIE_LINK_STATE_CLKPM) ? 1 : 0;
 -- 
 2.40.1.495.gc816e09b53d-goog
 
