@@ -2,202 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 191946F58DC
-	for <lists+linux-pci@lfdr.de>; Wed,  3 May 2023 15:19:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ED2F6F5918
+	for <lists+linux-pci@lfdr.de>; Wed,  3 May 2023 15:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229691AbjECNTC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 3 May 2023 09:19:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42388 "EHLO
+        id S229587AbjECNbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 3 May 2023 09:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbjECNTB (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 May 2023 09:19:01 -0400
-Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24FE04EE3;
-        Wed,  3 May 2023 06:19:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1683119941; x=1714655941;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=5qY6hxBY40KASy+98g6jZI4fvE1bwgAl23ESUykmNsg=;
-  b=IkmiogEVDztPAwavdF6wMBs1Qo87FT/UxGRsffIvVHhFqiz7JPP1mRxK
-   sz01x6kETEXfGqbQudY9MskQO/NHSbU2fjnpIANzi0Lp9RLdx+tj40Dh9
-   fcKqVpiMjpI3iwl5AMyjvbtSEvQzLwhM0Fo4aADyIDU78m8vud2Muni+c
-   w=;
-X-IronPort-AV: E=Sophos;i="5.99,247,1677542400"; 
-   d="scan'208";a="327667209"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2a-m6i4x-83883bdb.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 May 2023 13:18:56 +0000
-Received: from EX19D008EUC001.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan2.pdx.amazon.com [10.236.137.194])
-        by email-inbound-relay-pdx-2a-m6i4x-83883bdb.us-west-2.amazon.com (Postfix) with ESMTPS id 1C7BB60F81;
-        Wed,  3 May 2023 13:18:53 +0000 (UTC)
-Received: from EX19MTAUWC001.ant.amazon.com (10.250.64.145) by
- EX19D008EUC001.ant.amazon.com (10.252.51.165) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.26; Wed, 3 May 2023 13:18:52 +0000
-Received: from dev-dsk-mheyne-1b-c1362c4d.eu-west-1.amazon.com (10.15.57.183)
- by mail-relay.amazon.com (10.250.64.145) with Microsoft SMTP Server id
- 15.2.1118.25 via Frontend Transport; Wed, 3 May 2023 13:18:51 +0000
-Received: by dev-dsk-mheyne-1b-c1362c4d.eu-west-1.amazon.com (Postfix, from userid 5466572)
-        id 38D6595D; Wed,  3 May 2023 13:18:51 +0000 (UTC)
-From:   Maximilian Heyne <mheyne@amazon.de>
-CC:     Maximilian Heyne <mheyne@amazon.de>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Ashok Raj <ashok.raj@intel.com>,
-        "Ahmed S. Darwish" <darwi@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <xen-devel@lists.xenproject.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] x86/pci/xen: populate MSI sysfs entries
-Date:   Wed, 3 May 2023 13:16:53 +0000
-Message-ID: <20230503131656.15928-1-mheyne@amazon.de>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229916AbjECNbr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 3 May 2023 09:31:47 -0400
+Received: from mail-m11876.qiye.163.com (mail-m11876.qiye.163.com [115.236.118.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7A37102;
+        Wed,  3 May 2023 06:31:43 -0700 (PDT)
+Received: from [IPV6:240e:3b7:327f:5c30:3c7d:9d61:755a:9449] (unknown [IPV6:240e:3b7:327f:5c30:3c7d:9d61:755a:9449])
+        by mail-m11876.qiye.163.com (Hmail) with ESMTPA id 8D8403C039C;
+        Wed,  3 May 2023 21:31:38 +0800 (CST)
+Message-ID: <8f4d543a-0b6d-65ca-59ef-70370fbfcb12@sangfor.com.cn>
+Date:   Wed, 3 May 2023 21:31:42 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_PERMERROR
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:102.0)
+ Gecko/20100101 Thunderbird/102.8.0
+Cc:     dinghui@sangfor.com.cn, bhelgaas@google.com,
+        sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
+        david.e.box@linux.intel.com, kai.heng.feng@canonical.com,
+        michael.a.bottini@linux.intel.com, rajatja@google.com,
+        qinzongquan@sangfor.com.cn, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: fix UAF by removing cached downstream
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20230501165254.GA589004@bhelgaas>
+From:   Ding Hui <dinghui@sangfor.com.cn>
+In-Reply-To: <20230501165254.GA589004@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQxpMVhkeGkwaQ0xJS0keSFUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUlPSx5BSBlMQUhJTB1BThhIS0FIGEwfQUIfTUpBTE5OGkFCT09CWVdZFhoPEhUdFF
+        lBWU9LSFVKSktISkxVSktLVUtZBg++
+X-HM-Tid: 0a87e1cfb64d2eb2kusn8d8403c039c
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6MT46LSo*HD0IIzkPP0oYFA0X
+        HTAaCk5VSlVKTUNISklLTUJCSEJIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
+        QVlJT0seQUgZTEFISUwdQU4YSEtBSBhMH0FCH01KQUxOThpBQk9PQllXWQgBWUFOTEJNNwY+
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Commit bf5e758f02fc ("genirq/msi: Simplify sysfs handling") reworked the
-creation of sysfs entries for MSI IRQs. The creation used to be in
-msi_domain_alloc_irqs_descs_locked after calling ops->domain_alloc_irqs.
-Then it moved into __msi_domain_alloc_irqs which is an implementation of
-domain_alloc_irqs. However, Xen comes with the only other implementation
-of domain_alloc_irqs and hence doesn't run the sysfs population code
-anymore.
+On 2023/5/2 12:52 上午, Bjorn Helgaas wrote:
+> On Mon, May 01, 2023 at 11:50:50AM +0800, Ding Hui wrote:
+>> On 2023/5/1 10:10, Bjorn Helgaas wrote:
+>>> On Sat, Apr 29, 2023 at 09:26:04PM +0800, Ding Hui wrote:
+>>>> If the function 0 of a multifunction device is removed, an freed
+>>>> downstream pointer will be left in struct pcie_link_state, and then
+>>>> when pcie_config_aspm_link() be invoked from any path, we will get a
+>>>> KASAN use-after-free report.
+>>>
+>>> Thanks for finding this problem, debugging it, and the patch!
+>>>
+>>> In this case we're doing a "software remove" and the other functions
+>>> are still present, right?  It's kind of annoying that there's only one
+>>> link, but all the functions of a multifunction device have a Link
+>>> Control register, and the spec "recommends" that software program the
+>>> same ASPM control value for all the functions.
+>>
+>> Yes, that is the case.
+>>
+>>> The hardware of course doesn't know anything about this software
+>>> remove; all the functions are still physically present and powered up.
+>>>
+>>> That makes me think that if software ignores the "removed" function
+>>> and continues to operate ASPM on the N-1 remaining functions, we're
+>>> outside the spec recommendations because the ASPM configuration is no
+>>> longer the same across all the functions.
+>>>
+>>> So my inclination would be disable ASPM completely when any function
+>>> of a multi-function device is removed.  What are your thoughts on
+>>> this?
+>>
+>> Agree with you.
+>>
+>> Previously, I thought another fix that was if the function 0 is removed,
+>> we can free the link state to disable ASPM for this link.
+>>
+>> Now following you suggestion, it can be expanded to any child function.
+>>
+>> How about fixing like this?
+>>
+>> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+>> index 66d7514ca111..657e0647d19f 100644
+>> --- a/drivers/pci/pcie/aspm.c
+>> +++ b/drivers/pci/pcie/aspm.c
+>> @@ -1011,12 +1011,11 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>>   	down_read(&pci_bus_sem);
+>>   	mutex_lock(&aspm_lock);
+>>   	/*
+>> -	 * All PCIe functions are in one slot, remove one function will remove
+>> -	 * the whole slot, so just wait until we are the last function left.
+>> +	 * All PCIe functions are in one slot.
+>> +	 * The spec "recommends" that software program set the same ASPM control
+>> +	 * value for all the functions.
+>> +	 * Disable ASPM when any child function is removed.
+> 
+> Since we're updating the comment anyway, let's clean up the "slot"
+> language here.  The PCIe spec doesn't use "slot" in the context of the
+> bus/device/function PCIe topology; it only uses it when referring to a
+> physical connector where a card might be installed.  What we want here
+> is "Device," and then we have to consider whether ARI makes any
+> difference here.
+> 
+> The spec says (referring to ASPM Control):
+> 
+>    For Multi-Function Devices (including ARI Devices), it is
+>    recommended that software program the same value for this field in
+>    all Functions. For non-ARI Multi-Function Devices, only capabilities
+>    enabled in all Functions are enabled for the component as a whole.
+> 
+>    For ARI Devices, ASPM Control is determined solely by the setting in
+>    Function 0, regardless of Function 0’s D-state. The settings in the
+>    other Functions always return whatever value software programmed for
+>    each, but otherwise are ignored by the component.
+> 
+> A spec reference, e.g., "PCIe r6.0, sec 7.5.3.7", would be good here.
+> 
+> Anyway, I think the idea of "software removing" a single function is
+> kind of a niche situation that we don't need to worry about
+> optimizing, and I think turning off ASPM completely will avoid a lot
+> of weird corner cases.
+> 
 
-Commit 6c796996ee70 ("x86/pci/xen: Fixup fallout from the PCI/MSI
-overhaul") set the flag MSI_FLAG_DEV_SYSFS for the xen msi_domain_info
-but that doesn't actually have an effect because Xen uses it's own
-domain_alloc_irqs implementation.
+Thanks for details.
 
-Fix this by making use of the fallback functions for sysfs population.
+I'll redo the patch with different title.
 
-Fixes: bf5e758f02fc ("genirq/msi: Simplify sysfs handling")
-Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
----
- arch/x86/pci/xen.c  | 8 +++++---
- include/linux/msi.h | 9 ++++++++-
- kernel/irq/msi.c    | 4 ++--
- 3 files changed, 15 insertions(+), 6 deletions(-)
+>>   	 */
+>> -	if (!list_empty(&parent->subordinate->devices))
+>> -		goto out;
+>> -
+>>   	link = parent->link_state;
+>>   	root = link->root;
+>>   	parent_link = link->parent;
+>>
+>>
+>> -- 
+>> Thanks,
+>> -dinghui
+>>
+> 
 
-diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-index 8babce71915f..014c508e914d 100644
---- a/arch/x86/pci/xen.c
-+++ b/arch/x86/pci/xen.c
-@@ -198,7 +198,7 @@ static int xen_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
- 		i++;
- 	}
- 	kfree(v);
--	return 0;
-+	return msi_device_populate_sysfs(&dev->dev);
- 
- error:
- 	if (ret == -ENOSYS)
-@@ -254,7 +254,7 @@ static int xen_hvm_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
- 		dev_dbg(&dev->dev,
- 			"xen: msi --> pirq=%d --> irq=%d\n", pirq, irq);
- 	}
--	return 0;
-+	return msi_device_populate_sysfs(&dev->dev);
- 
- error:
- 	dev_err(&dev->dev, "Failed to create MSI%s! ret=%d!\n",
-@@ -346,7 +346,7 @@ static int xen_initdom_setup_msi_irqs(struct pci_dev *dev, int nvec, int type)
- 		if (ret < 0)
- 			goto out;
- 	}
--	ret = 0;
-+	ret = msi_device_populate_sysfs(&dev->dev);
- out:
- 	return ret;
- }
-@@ -394,6 +394,8 @@ static void xen_teardown_msi_irqs(struct pci_dev *dev)
- 			xen_destroy_irq(msidesc->irq + i);
- 		msidesc->irq = 0;
- 	}
-+
-+	msi_device_destroy_sysfs(&dev->dev);
- }
- 
- static void xen_pv_teardown_msi_irqs(struct pci_dev *dev)
-diff --git a/include/linux/msi.h b/include/linux/msi.h
-index cdb14a1ef268..a50ea79522f8 100644
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -383,6 +383,13 @@ int arch_setup_msi_irq(struct pci_dev *dev, struct msi_desc *desc);
- void arch_teardown_msi_irq(unsigned int irq);
- int arch_setup_msi_irqs(struct pci_dev *dev, int nvec, int type);
- void arch_teardown_msi_irqs(struct pci_dev *dev);
-+#endif /* CONFIG_PCI_MSI_ARCH_FALLBACKS */
-+
-+/*
-+ * Xen uses non-default msi_domain_ops and hence needs a way to populate sysfs
-+ * entries of MSI IRQs.
-+ */
-+#if defined(CONFIG_PCI_XEN) || defined(CONFIG_PCI_MSI_ARCH_FALLBACKS)
- #ifdef CONFIG_SYSFS
- int msi_device_populate_sysfs(struct device *dev);
- void msi_device_destroy_sysfs(struct device *dev);
-@@ -390,7 +397,7 @@ void msi_device_destroy_sysfs(struct device *dev);
- static inline int msi_device_populate_sysfs(struct device *dev) { return 0; }
- static inline void msi_device_destroy_sysfs(struct device *dev) { }
- #endif /* !CONFIG_SYSFS */
--#endif /* CONFIG_PCI_MSI_ARCH_FALLBACKS */
-+#endif /* CONFIG_PCI_XEN || CONFIG_PCI_MSI_ARCH_FALLBACKS */
- 
- /*
-  * The restore hook is still available even for fully irq domain based
-diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-index 7a97bcb086bf..b4c31a5c1147 100644
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -542,7 +542,7 @@ static int msi_sysfs_populate_desc(struct device *dev, struct msi_desc *desc)
- 	return ret;
- }
- 
--#ifdef CONFIG_PCI_MSI_ARCH_FALLBACKS
-+#if defined(CONFIG_PCI_MSI_ARCH_FALLBACKS) || defined(CONFIG_PCI_XEN)
- /**
-  * msi_device_populate_sysfs - Populate msi_irqs sysfs entries for a device
-  * @dev:	The device (PCI, platform etc) which will get sysfs entries
-@@ -574,7 +574,7 @@ void msi_device_destroy_sysfs(struct device *dev)
- 	msi_for_each_desc(desc, dev, MSI_DESC_ALL)
- 		msi_sysfs_remove_desc(dev, desc);
- }
--#endif /* CONFIG_PCI_MSI_ARCH_FALLBACK */
-+#endif /* CONFIG_PCI_MSI_ARCH_FALLBACK || CONFIG_PCI_XEN */
- #else /* CONFIG_SYSFS */
- static inline int msi_sysfs_create_group(struct device *dev) { return 0; }
- static inline int msi_sysfs_populate_desc(struct device *dev, struct msi_desc *desc) { return 0; }
 -- 
-2.39.2
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+Thanks,
+-dinghui
 
