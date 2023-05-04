@@ -2,172 +2,337 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 77D8F6F70CB
-	for <lists+linux-pci@lfdr.de>; Thu,  4 May 2023 19:23:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 056876F78F5
+	for <lists+linux-pci@lfdr.de>; Fri,  5 May 2023 00:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229626AbjEDRXO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 4 May 2023 13:23:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54738 "EHLO
+        id S229649AbjEDWUy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 4 May 2023 18:20:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjEDRXN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 May 2023 13:23:13 -0400
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98281422C
-        for <linux-pci@vger.kernel.org>; Thu,  4 May 2023 10:23:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683220992; x=1714756992;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=TbJYKgi+1F+E28TvFUjzPRKi6z3OJJS3om9ZhsBGu6Q=;
-  b=Uzq1dHvBKIYLWr3kSQdzZHoAj5mNRUURK3Ob3k14oieWgkOG7Q1ZQj8x
-   FTjoEJi1fN+oi0RC9V64jkhfKIR0LsjM4U/L9qfpU1OQZmhCYFd5yTBJp
-   G9yGKu4A3UgSmti75yCW1zPlGNB5mYrhNq/92/g5suE3RwUv5xBj9HmM/
-   fTpoA1Pqrg4QlQY2I+E4Na4z9vxOiAEWT3DXmqW8TLRUABm7d6OvUOoX0
-   OFWM183hxcdMjipxT7bPwHgyFt/Tkd+8oCGXrVVjOUIZE6qDXIi5yyQyF
-   7t6tMkBC+9XpfBAde5OcGOrr7f8qliflfiPx9/3SWYM30dE8LQWQfVoYb
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10700"; a="435313123"
-X-IronPort-AV: E=Sophos;i="5.99,250,1677571200"; 
-   d="scan'208";a="435313123"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2023 10:23:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10700"; a="691232715"
-X-IronPort-AV: E=Sophos;i="5.99,250,1677571200"; 
-   d="scan'208";a="691232715"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga007.jf.intel.com with ESMTP; 04 May 2023 10:22:59 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 4 May 2023 10:22:59 -0700
-Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Thu, 4 May 2023 10:22:59 -0700
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.104)
- by edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Thu, 4 May 2023 10:22:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JK4NouEMvzUSzoWC/sCyLUkaqLDfIqU2Wpk+m9RqoU1ShXqxAA67NNpTv8Yw8ASLTbEl8sQa87/24iUsAnvDOSEFjYfyPxWCC52TjtKyDBvtP+V0WEnz1Omr6JpwlzcKfTrELG37mSuRtFyYRBpLXyUB3TgFSsAdeXuQPfBGXpxujfJYU8I8F0XHUHKCvHS7JE9VYtXBwgC8tcHlDRTpzqVrMHj1dM2xP86b4T7z+1NeAVF6L0baNiJc7emG7Zyg3eSUiuiJh4veQ3+KdrRSiXpt5keSnzdDIzGN7eF/6fZY7iIASxM5DrWK8SXX3fpHeBbe5j4t3qj+sQdrRcMSAg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zS+2NA0nlzGHcIfY4UoyELCCwjrpbuHQ4sNHFTCpnM8=;
- b=ftxkkRzORMGM2tQ5IdqZHF2XFQoE8ZIQe/NYXlhUWQ/Pj86XxVf3xnLBEUDGPXj0uzlDVJ2oAVgnRWufeCNRku6cZvmr2ExXdvxO7hc20P0u10i8B0uDGa9sBFrQp7QMfA0QAlYbKsxT951jUXbB+AoKyyb7vhVO5kf48U37GjTDUtmmvyOmWAHGx1uuezel2ScI35/pc4AGIC0wA7RsNekidPiZkk/qQkgCwgo3g0mM0T8xX+u83YZoydX7FgrfGYaR6rkOFTrdV4woo5d//PKufjyqDczRcN8vtEo/6eAiLniGJyBp3hNyLSpRp2CQujrwl3bvxnFWiUGICfFz1g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com (2603:10b6:806:2f1::13)
- by PH8PR11MB7989.namprd11.prod.outlook.com (2603:10b6:510:258::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.22; Thu, 4 May
- 2023 17:22:57 +0000
-Received: from SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::b3a5:53f9:3055:e9ff]) by SA3PR11MB8118.namprd11.prod.outlook.com
- ([fe80::b3a5:53f9:3055:e9ff%4]) with mapi id 15.20.6363.026; Thu, 4 May 2023
- 17:22:57 +0000
-Date:   Thu, 4 May 2023 10:22:54 -0700
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     Mariusz Tkaczyk <mariusz.tkaczyk@linux.intel.com>,
-        <helgaas@kernel.org>
-CC:     <linux-pci@vger.kernel.org>, <stuart.w.hayes@gmail.com>,
-        <dan.j.williams@intel.com>
-Subject: RE: [PATCH 1/3] misc: enclosure: remove get_active() callback
-Message-ID: <6453e9ee667dc_2ec5d29462@dwillia2-xfh.jf.intel.com.notmuch>
-References: <20221117163407.28472-1-mariusz.tkaczyk@linux.intel.com>
- <20221117163407.28472-2-mariusz.tkaczyk@linux.intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20221117163407.28472-2-mariusz.tkaczyk@linux.intel.com>
-X-ClientProxiedBy: BYAPR11CA0056.namprd11.prod.outlook.com
- (2603:10b6:a03:80::33) To SA3PR11MB8118.namprd11.prod.outlook.com
- (2603:10b6:806:2f1::13)
+        with ESMTP id S229472AbjEDWUx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 4 May 2023 18:20:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70E529EE8;
+        Thu,  4 May 2023 15:20:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 063E263A6F;
+        Thu,  4 May 2023 22:20:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C8DEC433EF;
+        Thu,  4 May 2023 22:20:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683238850;
+        bh=rwx7iUdSi9ZJ936Oee+tnrMgzVQXpxJNfSPrASIpy3Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=YKsUVpu0ptYjRBovoU/uOo2fA0BLiAZ1A+MBoqqjLC4c5AS7LeMY8bwZEN8loP+Gs
+         32n4NOnIJBMoV5gKsEAkVHH0nJiXS1gPKnCxotZljfqR1V4u4dNPWyAWtx8U0yfbCT
+         SXACPyg87+6r2MlTf67MfYt+OvW2G2HHVFp3SnMXecSyCAEHHBTsJrSqfGym4NDomP
+         DMk3EPIfkqNi9tsmpRaccspQfjuesw8vkZMyprA6GPQvMtpC8eQpyHfbZysO7RoPlU
+         xIdDEW6wAuoObJ8PfmRChxOfCuTrKWbAgYzUDSL4n2lAZB9iu7OBv8SWzhKNMd8m7j
+         3LCQ1rhIJRL5w==
+Date:   Thu, 4 May 2023 17:20:48 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Stefan Roese <sr@denx.de>, Jim Wilson <wilson@tuliptree.org>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 7/7] PCI: Work around PCIe link training failures
+Message-ID: <20230504222048.GA887151@bhelgaas>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA3PR11MB8118:EE_|PH8PR11MB7989:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0c127c9b-ae2c-43db-be46-08db4cc433c6
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: UuCHkaCid55HtiCC7wYYxivJqmbnUSlUV82ecDPMO5mK5i+TGHfNd77vDXM3SxF6fpxz6UE4dxfNAHY1kVKocGQLqA6Cra2AFLdnLm+bcKvf5VTPb2YkTMQudi07rbb7ya00LyJWcWiHmIV/qL+KtRFioG3YZxieSSHbdf0TSv9Mioymbs79Kvt8MZaqcoinoEv1g6p5/Bnb+8YtEGW7ql+iSS2ix4qDW7qnuvHMEozi2hOhaXwq6eZKH7Zoc28grNDCrQ0iQTDp1osH7iP027KT4fR7Vcc8MuG4r56MEgld6KPIHrDMB7OjZXEIFbY+KPZxINAvqq2bnL45Rv3exB0dunrIJi1gCPvdnVgLdK8mBtucmNMfHsFwoCbslNWXF0nvqs3NDlx894kdsKOQ4/ugellzRp04TcnyhRRhd8jrsIC/MwnT5GSlz7WZu/LRw64tWsqX+zDPOYfSy5qsTcUgWxiX1w15z8iwZkKppC3BZ7akevYYonwRuROyneil0QcLPZBissl8RES7IB7aBniZLq9WA3gukSkKkzK5UORIDbwZCnBcmhMR3LKflba1
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA3PR11MB8118.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(366004)(136003)(346002)(376002)(396003)(451199021)(41300700001)(83380400001)(316002)(8936002)(8676002)(5660300002)(4326008)(66946007)(66556008)(66476007)(38100700002)(2906002)(186003)(9686003)(82960400001)(26005)(6512007)(6506007)(6486002)(6666004)(4744005)(86362001)(478600001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?wfyjHtmQzIZ/q6cXD93YdhVYFtBdacqLwoyAEHnesT5h3v+SSaitsmrrCRkR?=
- =?us-ascii?Q?aUtS1S+0W/YZeeKkwznsh+dPEJQQsWtw77he9QlOXbJTeyor12odSvYFpMvj?=
- =?us-ascii?Q?xXaI8snVg9Bu5t4if40oSnXWv96UFX5rW3z65ySDUodG8Ow0TuqEBhS9mZAB?=
- =?us-ascii?Q?BLX6OeLz3JRuGHqBfOisPBw7sX5z4Fl2u3E6WwK44+Tq74/ybbkKi+ZctnBZ?=
- =?us-ascii?Q?h/96nwQY6i2PBaTo9eaPelkVJldlYOTVCR023e8Yc2As8XWG/78yRkXUOXmE?=
- =?us-ascii?Q?eyctd1QYUG3ESdpCF53EacPn+0C8k4zMtwqddcfRW58e+TZchHUCfrLtV2rR?=
- =?us-ascii?Q?gQvBD740MB508VcfEwauzAYAclVT+/L5Qvppf2sjXKKzn7w3KBIciwrfjjyL?=
- =?us-ascii?Q?5jm+qbffWoqDHjnRt+b/GFyUEFun9k2A2xlQA6i9Sd4TO6AYUkfrS8DUGele?=
- =?us-ascii?Q?wCzBAEGxF/TvOJvGvh5jRiigC4LxcCuYhO9inRadP6RJHAjgPzxVmxX/3C1a?=
- =?us-ascii?Q?9mjEsDy8dWeEsJIu2jK6qNzqoJ7KpFTMbS4b7wad5W53wGDhuA9C/5WVnsM5?=
- =?us-ascii?Q?VU0ZEIX88fAIhppoL9sylFxQVBs5hQkR7Mdxi6epOhQ0BEdeNZSwPs95g+t+?=
- =?us-ascii?Q?7PEVe5bbnhWvvH3emkNRtx8BR2C1Nvk0LI4K4p5mdTeZGxKA6dxIiTE7qftA?=
- =?us-ascii?Q?FkdI+xzRJX80vpS1CibA7YsEjTJHKAbEO5XuVphceB6lkNT8PNgM67nXnEAb?=
- =?us-ascii?Q?bmlrHhN/HkwNgHDcqMHgdPUwuRHcpCMi+dtshBmtd8VHvrLZXQb5FAgmBOpX?=
- =?us-ascii?Q?gtxKKxbyKOtjBv3YIq0dkZZPVURhW5JMONo+vCmzVb4zo2+wRWdGrNaI47oa?=
- =?us-ascii?Q?9584sa/xErRn+lEoKx2YYSqq1b14FXDO+yk8ZYsyH93LbjcnaiddA1FbZGea?=
- =?us-ascii?Q?01QYqY2UtoyQ1/d/lZV0sexebBGEQIyyGqdGZFT5dXV+gKaWkjGmdIcfKk+t?=
- =?us-ascii?Q?eFeAw6HGOoNvesqKSsmwR6RaLFuz/vseBqm1rnv/MVXxi8F5D86v3UL2zc8y?=
- =?us-ascii?Q?WuDHCQ/i89nV5RhzYzM03her5UWXAQrAqd62Aq5+vKWHBll/mGUrW8hJjrD2?=
- =?us-ascii?Q?tfM5tKD3anALTP1YZk5TU3d8IfR2JCvqqRicbCto2OgKQeK4R2/6fFwP+vXd?=
- =?us-ascii?Q?ZDC8PGshogoKuAaUfCpoZ2YQeC6mVI0Z1kl7d6cLjkKlf7Jg6xHQHtKky5u1?=
- =?us-ascii?Q?rDmKwoisfcxhg6jLF66uVjNiS/Vv9quSTxrszRggREA9QzSsl8RdWO4VODBC?=
- =?us-ascii?Q?NdmymOUZWEo5UAA2PibKwCTQtD57a0VXX6jOGmAJVIY9uv/CB4feOWPt4XqC?=
- =?us-ascii?Q?oqhSIO/pECMBQKjvwHY8yO/3MYRLdH3lznOMBBDTIqpRb6OtB2qTEAPyUjRz?=
- =?us-ascii?Q?fF0E59sloQ/hFXYUyFqD0skZX854nR7k8hCQ41L3BjRtryrqEZoCCG1HvNyO?=
- =?us-ascii?Q?Oi19XNZX3Eb0BB/55bWuP4wXtlXj8e6PqUi46mFdS2prBbYIijn0I6itwhBB?=
- =?us-ascii?Q?x9oRISeHLkwNSopcK3d5nqgUmEtM12h5C42cNUtzpcvYNrr2OZVvevXNq+FR?=
- =?us-ascii?Q?tA=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0c127c9b-ae2c-43db-be46-08db4cc433c6
-X-MS-Exchange-CrossTenant-AuthSource: SA3PR11MB8118.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 May 2023 17:22:57.1242
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 98ZRYF32HIWmLZIL1PP+NVVqRIedSFMcZkkNZUr8Ha1tCyr2utHQSJVgbtEnYotVx06suEhVx4E/IkSs8OOPxvOTnrK+ZHU3ZzrE6wXNRfk=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB7989
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.2304060116380.13659@angie.orcam.me.uk>
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Mariusz Tkaczyk wrote:
-> The callback is not used, remove it.
+On Thu, Apr 06, 2023 at 01:21:31AM +0100, Maciej W. Rozycki wrote:
+> Attempt to handle cases such as with a downstream port of the ASMedia 
+> ASM2824 PCIe switch where link training never completes and the link 
+> continues switching between speeds indefinitely with the data link layer 
+> never reaching the active state.
 
-While the callback is not used, userspace might still be dependent upon
-on the "active" attribute being readable. So I think the change would be
-limited to:
+We're going to land this series this cycle, come hell or high water.
 
-diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
-index 4ba966529458..0d7225dc5d45 100644
---- a/drivers/misc/enclosure.c
-+++ b/drivers/misc/enclosure.c
-@@ -534,11 +534,8 @@ static ssize_t set_component_status(struct device *cdev,
- static ssize_t get_component_active(struct device *cdev,
-                                    struct device_attribute *attr, char *buf)
- {
--       struct enclosure_device *edev = to_enclosure_device(cdev->parent);
-        struct enclosure_component *ecomp = to_enclosure_component(cdev);
- 
--       if (edev->cb->get_active)
--               edev->cb->get_active(edev, ecomp);
-        return sysfs_emit(buf, "%d\n", ecomp->active);
- }
- 
-...unless you can prove that userspace never reads "active", but I
-expect it is too late to make a breaking change like that.
+We talked about reusing pcie_retrain_link() earlier.  IIRC that didn't
+work: ASPM needs to use PCI_EXP_LNKSTA_LT because not all devices
+support PCI_EXP_LNKSTA_DLLLA, and you need PCI_EXP_LNKSTA_DLLLA
+because the erratum makes PCI_EXP_LNKSTA_LT flap.
+
+What if we made pcie_retrain_link() reusable by making it:
+
+  bool pcie_retrain_link(struct pci_dev *pdev, u16 link_status_bit)
+
+so ASPM could use pcie_retrain_link(link->pdev, PCI_EXP_LNKSTA_LT) and
+you could use pcie_retrain_link(dev, PCI_EXP_LNKSTA_DLLLA)?
+
+Maybe do it two steps?
+
+  1) Move pcie_retrain_link() just after pcie_wait_for_link() and make
+  it take link->pdev instead of link.
+
+  2) Add the bit parameter.
+
+I'm OK with having pcie_retrain_link() in pci.c, but the surrounding
+logic about restricting to 2.5GT/s, retraining, removing the
+restriction, retraining again is stuff I'd rather have in quirks.c so
+it doesn't clutter pci.c.
+
+I think it'd be good if the pci_device_add() path made clear that this
+is a workaround for a problem, e.g.,
+
+  void pci_device_add(struct pci_dev *dev, struct pci_bus *bus)
+  {
+    ...
+    if (pcie_link_failed(dev))
+      pcie_fix_link_train(dev);
+
+where pcie_fix_link_train() could live in quirks.c (with a stub when
+CONFIG_PCI_QUIRKS isn't enabled).  It *might* even be worth adding it
+and the stub first because that's a trivial patch and wouldn't clutter
+the probe.c git history with all the grotty details about ASM2824 and
+this topology.
+
+> +int pcie_downstream_link_retrain(struct pci_dev *dev)
+> +{
+> +	static const struct pci_device_id ids[] = {
+> +		{ PCI_VDEVICE(ASMEDIA, 0x2824) }, /* ASMedia ASM2824 */
+> +		{}
+> +	};
+> +	u16 lnksta, lnkctl2;
+> +
+> +	if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+> +	    !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+> +		return -1;
+> +
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+> +	pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+> +	if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
+> +	    PCI_EXP_LNKSTA_LBMS) {
+
+You go to some trouble to make sure PCI_EXP_LNKSTA_LBMS is set, and I
+can't remember what the reason is.  If you make a preparatory patch
+like this, it would give a place for that background, e.g.,
+
+  +bool pcie_link_failed(struct pci_dev *dev)
+  +{
+  +       u16 lnksta;
+  +
+  +       if (!pci_is_pcie(dev) || !pcie_downstream_port(dev) ||
+  +           !pcie_cap_has_lnkctl2(dev) || !dev->link_active_reporting)
+  +               return false;
+  +
+  +       pcie_capability_read_word(dev, PCI_EXP_LNKSTA, &lnksta);
+  +       if ((lnksta & (PCI_EXP_LNKSTA_LBMS | PCI_EXP_LNKSTA_DLLLA)) ==
+  +                       PCI_EXP_LNKSTA_LBMS)
+  +               return true;
+  +
+  +       return false;
+  +}
+
+If this is a generic thing and checking PCI_EXP_LNKSTA_LBMS makes
+sense for everybody, it could go in pci.c; otherwise it could go in
+quirks.c as well.  I guess it's not *truly* generic anyway because it
+only detects link training failures for devices that have LNKCTL2 and
+link_active_reporting.
+
+> +		unsigned long timeout;
+> +		u16 lnkctl;
+> +
+> +		pci_info(dev, "broken device, retraining non-functional downstream link at 2.5GT/s\n");
+> +
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> +		lnkctl |= PCI_EXP_LNKCTL_RL;
+> +		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+> +		lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
+> +		/*
+> +		 * Due to an erratum in some devices the Retrain Link bit
+> +		 * needs to be cleared again manually to allow the link
+> +		 * training to succeed.
+> +		 */
+> +		lnkctl &= ~PCI_EXP_LNKCTL_RL;
+> +		if (dev->clear_retrain_link)
+> +			pcie_capability_write_word(dev, PCI_EXP_LNKCTL,
+> +						   lnkctl);
+> +
+> +		timeout = jiffies + PCIE_LINK_RETRAIN_TIMEOUT;
+> +		do {
+> +			pcie_capability_read_word(dev, PCI_EXP_LNKSTA,
+> +					     &lnksta);
+> +			if (lnksta & PCI_EXP_LNKSTA_DLLLA)
+> +				break;
+> +			usleep_range(10000, 20000);
+> +		} while (time_before(jiffies, timeout));
+> +
+> +		if (!(lnksta & PCI_EXP_LNKSTA_DLLLA)) {
+> +			pci_info(dev, "retraining failed\n");
+> +			return -1;
+> +		}
+> +	}
+
+> +	if (IS_ENABLED(CONFIG_PCI_QUIRKS) && (lnksta & PCI_EXP_LNKSTA_DLLLA) &&
+> +	    (lnkctl2 & PCI_EXP_LNKCTL2_TLS) == PCI_EXP_LNKCTL2_TLS_2_5GT &&
+> +	    pci_match_id(ids, dev)) {
+> +		u32 lnkcap;
+> +		u16 lnkctl;
+> +
+> +		pci_info(dev, "removing 2.5GT/s downstream link speed restriction\n");
+> +		pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+> +		pcie_capability_read_word(dev, PCI_EXP_LNKCTL, &lnkctl);
+> +		lnkctl |= PCI_EXP_LNKCTL_RL;
+> +		lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+> +		lnkctl2 |= lnkcap & PCI_EXP_LNKCAP_SLS;
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+> +		pcie_capability_write_word(dev, PCI_EXP_LNKCTL, lnkctl);
+
+This starts a retrain; should we wait for training to complete?
+
+> +	}
+
+If we put most of this into a pcie_fix_link_train() (separated from
+detecting the *need* to fix something), could it be made to look
+sort of like this?  (I suppose you'd want to return bool and rename
+it that reads naturally, e.g., "pcie_link_forcibly_retrained()",
+"pcie_link_retrained()", etc)
+
+  +void pcie_fix_link_train(struct pci_dev *dev)
+  +{
+  +       u16 lnkctl2;
+  +       u32 lnkcap;
+  +       bool linkup;
+  +
+  +       pci_info(dev, "attempting link retrain at 2.5GT/s\n");
+  +       pcie_capability_read_word(dev, PCI_EXP_LNKCTL2, &lnkctl2);
+  +       lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+  +       lnkctl2 |= PCI_EXP_LNKCTL2_TLS_2_5GT;
+  +       pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+  +
+  +       linkup = pcie_retrain_link(dev, PCI_EXP_LNKSTA_DLLLA);
+  +       if (!linkup) {
+  +               pci_info(dev, "retraining failed\n");
+  +               return;
+  +       }
+  +
+  +       if (LNKCAP supports only 2.5GT/s)
+  +               return;
+  +
+  +       if (!pci_match_id(ids, dev))
+  +               return;
+
+Your comment said "if we know this is *safe*"; I can't remember if
+pci_match_id() is there to avoid a known problem?
+
+  +
+  +       pci_info(dev, "attempting link retrain at max supported rate\n");
+  +       pcie_capability_read_dword(dev, PCI_EXP_LNKCAP, &lnkcap);
+  +       lnkctl2 &= ~PCI_EXP_LNKCTL2_TLS;
+  +       lnkctl2 |= lnkcap & PCI_EXP_LNKCAP_SLS;
+  +       pcie_capability_write_word(dev, PCI_EXP_LNKCTL2, lnkctl2);
+  +
+  +       linkup = pcie_retrain_link(dev, PCI_EXP_LNKSTA_DLLLA);
+  +       if (!linkup)
+  +               pci_info(dev, "retraining failed\n");
+  +}
+
+> +
+> +	return 0;
+> +}
+> +
+> +/* Same as above, but called for a downstream device.  */
+> +static int pcie_upstream_link_retrain(struct pci_dev *dev)
+> +{
+> +	struct pci_dev *bridge;
+> +
+> +	bridge = pci_upstream_bridge(dev);
+> +	if (bridge)
+> +		return pcie_downstream_link_retrain(bridge);
+> +	else
+> +		return -1;
+> +}
+> +
+>  static int pci_acs_enable;
+>  
+>  /**
+> @@ -1148,8 +1274,8 @@ void pci_resume_bus(struct pci_bus *bus)
+>  
+>  static int pci_dev_wait(struct pci_dev *dev, char *reset_type, int timeout)
+>  {
+> +	int retrain = 0;
+>  	int delay = 1;
+> -	u32 id;
+>  
+>  	/*
+>  	 * After reset, the device should not silently discard config
+> @@ -1163,21 +1289,37 @@ static int pci_dev_wait(struct pci_dev *
+>  	 * Command register instead of Vendor ID so we don't have to
+>  	 * contend with the CRS SV value.
+>  	 */
+> -	pci_read_config_dword(dev, PCI_COMMAND, &id);
+> -	while (PCI_POSSIBLE_ERROR(id)) {
+> +	for (;;) {
+> +		u32 id;
+> +
+> +		pci_read_config_dword(dev, PCI_COMMAND, &id);
+> +		if (!PCI_POSSIBLE_ERROR(id)) {
+> +			if (delay > PCI_RESET_WAIT)
+> +				pci_info(dev, "ready %dms after %s\n",
+> +					 delay - 1, reset_type);
+> +			break;
+> +		}
+> +
+>  		if (delay > timeout) {
+>  			pci_warn(dev, "not ready %dms after %s; giving up\n",
+>  				 delay - 1, reset_type);
+>  			return -ENOTTY;
+>  		}
+>  
+> -		if (delay > PCI_RESET_WAIT)
+> +		if (delay > PCI_RESET_WAIT) {
+> +			if (!retrain) {
+> +				retrain = 1;
+> +				if (pcie_upstream_link_retrain(dev) == 0) {
+> +					delay = 1;
+> +					continue;
+> +				}
+> +			}
+>  			pci_info(dev, "not ready %dms after %s; waiting\n",
+>  				 delay - 1, reset_type);
+> +		}
+
+Thanks for fixing this in the reset path, too.  Can we move this part
+to a separate patch?  It's related to the rest of the patch, but it
+looks so much different that I think it would be easier to understand
+by itself.
+
+I think I might try to fold the pcie_upstream_link_retrain() directly
+in here because the "upstream link retrain" in the function name
+doesn't really make sense in PCIe terms.
+
+Bjorn
