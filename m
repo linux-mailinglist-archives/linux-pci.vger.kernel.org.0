@@ -2,166 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E90B6F7C02
-	for <lists+linux-pci@lfdr.de>; Fri,  5 May 2023 06:41:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2122C6F7D51
+	for <lists+linux-pci@lfdr.de>; Fri,  5 May 2023 08:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229758AbjEEEk6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 May 2023 00:40:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42476 "EHLO
+        id S229577AbjEEG5Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 May 2023 02:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229606AbjEEEkx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 May 2023 00:40:53 -0400
-Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B77961BC;
-        Thu,  4 May 2023 21:40:43 -0700 (PDT)
-Received: from [0.0.0.0] (unknown [172.96.223.238])
-        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id C4EA7A402F3;
-        Fri,  5 May 2023 12:40:34 +0800 (CST)
-Message-ID: <0d2f0f66-02a6-0cdd-4d96-f11f09ff71aa@sangfor.com.cn>
-Date:   Fri, 5 May 2023 12:40:31 +0800
+        with ESMTP id S230402AbjEEG5P (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 May 2023 02:57:15 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84F051AE
+        for <linux-pci@vger.kernel.org>; Thu,  4 May 2023 23:57:13 -0700 (PDT)
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4A7C63F32E
+        for <linux-pci@vger.kernel.org>; Fri,  5 May 2023 06:57:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1683269828;
+        bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=NfU3WA7eujrzWkerGNvcJDIU6KMltE1nGL52dRJy2EaaNhhBGEopPNMsJbYDnAQaQ
+         Rl5AeShfZbxEjWlUD3Rn4J5kuoczccJ26D5QWzvucWus4lH41p6AdSqtAmihDmkHcy
+         Cr2GM9QFInxdHk6mgU8Y1T7ya6CI0arZS8RaYyCT+ed6Zc0eeoYJXIHWT70k4JKD7z
+         kOO/7u2yyBNv5Mv7R1XQAr/Pz/z/XGI8HOZY0lm9h/i2Cq0Pno+m/4ijo/S308MvX0
+         z+ExvgsVOQTJEmGpN6FRMsAqsbN84QqPuMKNfR/Xhe3WrLc+IiYWqNBoFQAQUEkSAs
+         e8Xq8tTmuKARw==
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-24e43240e9fso676848a91.3
+        for <linux-pci@vger.kernel.org>; Thu, 04 May 2023 23:57:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683269827; x=1685861827;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8Ffn34QdIPteAhuo1D55q6Psg3jmIbfrccXTKRJ40S0=;
+        b=bNqyuJ43DqeZeyczIf8oeV7qT7+Z2dcsFufXx20+RZE3K0BgMWtWwMzn4iFEU7nRrq
+         P9bjNnVkLskNx6cbSqqtfPJtd4xJqca+gCLo4SAtOocGnSBZTwuVWAb5M4WP6eikjWQ6
+         x0IabvyQ4LswLhVQMXn+eAneOHJDxFLX8E5FHRySnzZ0Nc4Vxh+0ZhJVfPYW9tIPt6A1
+         2Wftb2pZLXk08d3gDsNMNWzl2yZg09w0gqaMelMYc42u5MAspDhmbVAF6ykzg7R2G9ii
+         roGpcJIUG+zyLGjrwRAveiXaxgMjUUOaLmDcUhHaaVSyKXQU8ZBkx5biHS9Seku8yroo
+         ceIA==
+X-Gm-Message-State: AC+VfDyPv/sY4uQgBXE77zPnMsapr0q7L/AY8RaDvr4wHZXpp5M9E/0s
+        zgi8VL9BUlf+bNiBicHVeqxsIXuz4WVhdF/Ptzsbognv5jyNF+CforS0aRKGBetBf/9tlFFVrNl
+        iIUKeSDbUHxTbJsHLj4NyOcxcyzFBpvHh/ZC5Vq3P1sZpVL7Disuqfw==
+X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id bf21-20020a17090b0b1500b00246bb614a56mr484463pjb.27.1683269826877;
+        Thu, 04 May 2023 23:57:06 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ53iTMBSNhcrnIPyTfvwZ8N19AD181tDNAR5buVj0cJloI3cWhtExnX2UdH5CGdk2teqlzLhTHDhq/f/wafQfw=
+X-Received: by 2002:a17:90b:b15:b0:246:bb61:4a56 with SMTP id
+ bf21-20020a17090b0b1500b00246bb614a56mr484451pjb.27.1683269826445; Thu, 04
+ May 2023 23:57:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH] PCI/ASPM: fix UAF by disable ASPM for link when child
- function is removed
-Content-Language: en-US
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>, bhelgaas@google.com
-Cc:     vidyas@nvidia.com, david.e.box@linux.intel.com,
-        kai.heng.feng@canonical.com, michael.a.bottini@linux.intel.com,
-        rajatja@google.com, qinzongquan@sangfor.com.cn,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230504123418.4438-1-dinghui@sangfor.com.cn>
- <2f32591a-77d8-f620-46bf-825074ba24c2@linux.intel.com>
-From:   Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <2f32591a-77d8-f620-46bf-825074ba24c2@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaQ04dVklKSEgeSk8fHx0eGFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
-X-HM-Tid: 0a87ea364addb282kuuuc4ea7a402f3
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OjY6GDo*Mz0PFT0qHE86FlEU
-        GQwwFA9VSlVKTUNISU1KTU9LSUNIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFOSUhNNwY+
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230411204229.GA4168208@bhelgaas> <20230504152344.GA857680@bhelgaas>
+In-Reply-To: <20230504152344.GA857680@bhelgaas>
+From:   Koba Ko <koba.ko@canonical.com>
+Date:   Fri, 5 May 2023 08:56:54 +0200
+Message-ID: <CAJB-X+Vu8HJSNza896ELGrUKk64gPH=MjbYQMSxW6Xiw4MSiJw@mail.gmail.com>
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
+        Ajay Agarwal <ajayagarwal@google.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>, regressions@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/5/5 10:51, Sathyanarayanan Kuppuswamy wrote:
-> Hi,
-> 
-> On 5/4/23 5:34 AM, Ding Hui wrote:
-> 
-> Maybe you can use the following title?
-> 
-> "PCI/ASPM: Fix UAF by disabling ASPM for link when child function is removed
-> 
+On Thu, May 4, 2023 at 5:23=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
+>
+> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
+>
+> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
+> > On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wr=
+ote:
+> > > https://bugzilla.kernel.org/show_bug.cgi?id=3D217321
+> > > ...
+> > >         Regression: No
+> > >
+> > > [Symptom]
+> > > Intel cpu can't sleep deeper than pc=CB=87 during long idle
+> > > ~~~
+> > > Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > > 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+> > > 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+> > > ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+> > > 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+> > > 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+> > > ~~~
+> > > [How to Reproduce]
+> > > 1. run turbostat to monitor
+> > > 2. leave machine idle
+> > > 3. turbostat show cpu only go into pc2~pc3.
+> > >
+> > > [Misc]
+> > > The culprit are this
+> > > a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+> > > suspend/resume=E2=80=9D
+> > >
+> > > if revert a7152be79b62, the issue is gone
+> >
+> > Relevant commits:
+> >
+> >   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/=
+resume")
+> >   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for =
+suspend/resume"")
+> >
+> > 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+> > Substates configuration was not preserved across suspend/resume, so
+> > the system *worked* after resume, but used more power than expected.
+> >
+> > But 4ff116d0d5fd caused resume to fail completely on some systems, so
+> > a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+> > Substates configuration is likely not preserved across suspend/resume.
+> > a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+> > stable series starting with v6.1.12.
+> >
+> > KobaKo, you don't mention any suspend/resume in this bug report, but
+> > neither patch should make any difference unless suspend/resume is
+> > involved.  Does the platform sleep as expected *before* suspend, but
+> > fail to sleep after resume?
+> >
+> > Or maybe some individual device was suspended via runtime power
+> > management, and that device lost its L1 PM Substates config?  I don't
+> > know if there's a way to disable runtime PM easily.
+>
+> Koba, per your bugzilla update, the issue happens even without
+> suspend/resume.  And we don't know whether some particular device is
+> responsible.
+>
+> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
+> we don't preserve L1SS state, we can't.
+>
+> We definitely want to preserve the L1SS state, but we can't simply
+> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
+> suspend/resume") again because it caused its own regressions [1,2,3]
+>
+> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
+> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
+> and Mark, and then we can apply it.
+>
+> Bjorn
 
-Thanks, I'll fix it in next patch.
+Good days, discussed with Kai-Heng and he mentioned  the GPU may not
+be pulled off the power.
+then the GPU needs L1ss to get into power saving.
 
->> If the Function 0 of a Multi-Function device is software removed,
->> a freed downstream pointer will be left in struct pcie_link_state,
->> and then when pcie_config_aspm_link() be invoked from any path,
->> we will trigger use-after-free.
->>
->> Based on the PCIe spec about ASPM Control (PCIe r6.0, sec 7.5.3.7),
-> 
-> As per PCIe spec r6.0, sec 7.5.3.7, it is recommended
-> 
+I will investigate further on this way.
 
-Thanks, I'll fix it in next patch.
-
->> for Multi-Function Devices (including ARI Devices), it is recommended
->> that software program the same value in all Functions. For ARI
->> Devices, ASPM Control is determined solely by the setting in Function 0.
->>
->> So we can just disable ASPM of the whole component if any child
->> function is removed, the downstream pointer will be avoided from
->> use-after-free, that will also avoid other potential corner cases.
->>
->> Fixes: b5a0a9b59c81 ("PCI/ASPM: Read and set up L1 substate capabilities")
->> Debugged-by: Zongquan Qin <qinzongquan@sangfor.com.cn>
-> 
-> Any bugzilla link with error log and reproduction steps?
-
-Yes, I should link previous
-https://lore.kernel.org/lkml/20230429132604.31853-1-dinghui@sangfor.com.cn/
-
-Since Bjorn think the ALL details is not necessary, so I'll add the
-reproducer and compact result in next patch.
-
-> 
->> Suggestion-by: Bjorn Helgaas <bhelgaas@google.com>
-> 
-> Suggested-by?
-
-Sorry, I'll fix it in next patch.
-
-> 
->> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
->> ---
->>   drivers/pci/pcie/aspm.c | 15 +++++++--------
->>   1 file changed, 7 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->> index 66d7514ca111..1bf8306141aa 100644
->> --- a/drivers/pci/pcie/aspm.c
->> +++ b/drivers/pci/pcie/aspm.c
->> @@ -1010,18 +1010,17 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->>   
->>   	down_read(&pci_bus_sem);
->>   	mutex_lock(&aspm_lock);
->> -	/*
->> -	 * All PCIe functions are in one slot, remove one function will remove
->> -	 * the whole slot, so just wait until we are the last function left.
->> -	 */
->> -	if (!list_empty(&parent->subordinate->devices))
->> -		goto out;
->>   
->>   	link = parent->link_state;
->>   	root = link->root;
->>   	parent_link = link->parent;
->>   
->> -	/* All functions are removed, so just disable ASPM for the link */
->> +	/*
->> +	 * Any function is removed (including software removing), just
->> +	 * disable ASPM for the link, in case we can not configure the same
->> +	 * setting for all functions.
-> 
-> How about following?
-> 
-> /*
->   * For any function removed, disable ASPM for the link. See PCIe r6.0,
->   * sec 7.7.3.7 for details.
->   */
-> 
-
-Thanks, it's better.
-
->> +	 * See PCIe r6.0, sec 7.5.3.7.
->> +	 */
->>   	pcie_config_aspm_link(link, 0);
->>   	list_del(&link->sibling);
->>   	/* Clock PM is for endpoint device */
->> @@ -1032,7 +1031,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->>   		pcie_update_aspm_capable(root);
->>   		pcie_config_aspm_path(parent_link);
->>   	}
->> -out:
->> +
->>   	mutex_unlock(&aspm_lock);
->>   	up_read(&pci_bus_sem);
->>   }
-> 
-
--- 
-Thanks,
-- Ding Hui
-
+>
+> [1] https://git.kernel.org/linus/a7152be79b62
+> [2] https://bugzilla.kernel.org/show_bug.cgi?id=3D216782
+> [3] https://bugzilla.kernel.org/show_bug.cgi?id=3D216877
