@@ -2,50 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 900236F896F
-	for <lists+linux-pci@lfdr.de>; Fri,  5 May 2023 21:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A94BA6F8A7B
+	for <lists+linux-pci@lfdr.de>; Fri,  5 May 2023 22:58:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233200AbjEETWN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 May 2023 15:22:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
+        id S233406AbjEEU6t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 5 May 2023 16:58:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232937AbjEETWM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 May 2023 15:22:12 -0400
+        with ESMTP id S231519AbjEEU6t (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 May 2023 16:58:49 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46A6E6A;
-        Fri,  5 May 2023 12:22:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A9ECC0;
+        Fri,  5 May 2023 13:58:48 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D57264004;
-        Fri,  5 May 2023 19:22:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85A84C433D2;
-        Fri,  5 May 2023 19:22:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9C2A663DA0;
+        Fri,  5 May 2023 20:58:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F07C433EF;
+        Fri,  5 May 2023 20:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683314530;
-        bh=F1EwEIEQYCrE2wRZwLhg+lUx3xE4/L3DxAf6BZZ3Unk=;
+        s=k20201202; t=1683320327;
+        bh=pSZtoLI3P14PzFPlXCopMdsVdDAbhVVobh2s7pM4kHs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=YwTdfSXXkUaVZVYnPIvGcCvU1pI5Ybu20g/RPIVeMA9cbkxDIZoOCdzm5IriR0OEC
-         45lphTtTVD6/Gbb65q6Gdv/U5viDq97AFV2UvvtSyCYRWRef/av4ZWxOtPwlaIUga4
-         imhV2c6c66VTs2i6sW/NNbY74EHya4ywNXL1h9VIaV/w/UB4OmDrWbLU9vm92EJlnP
-         eoPNa7lmXqAgWTlyCs1J7Fc1Yi0PDq/B41IwNkfm4knaSHXPCxEPukq1dpaG3qN7kx
-         yI3jzkjA84g/8/nFPRkbamP8CzZlCHycvlNhc9tr5N1Xx6EV4CjQStQApUWRqKuLIs
-         C4aWftP8Y982g==
-Date:   Fri, 5 May 2023 14:22:08 -0500
+        b=RCyCrMRFqdx0kRTbESWE59KRg72n1BT3yPW1QkH9ekR5NysdWxalf2Xjh1F3bhKDE
+         ftn1Tpv41Ot/vYGWpp8Wdsg299U0E/esv345bxEUNeynXsFMMT7LyEykBvBFWyRQCc
+         s4vdNY8FcH/JexN5HO1UnK+DM1VAMDWPSrMujT06/dD71x0Wo/h+r+ct+sJ/JEMs/6
+         JBwpS5mB5MkaFVBXBjve+yWZdYkVm3Cs45hi+HQnHyqb0sjJJ+e9Aj23ve3UAe/PwZ
+         ImhZhhivmyQs4pQpCqoLYiTT+VaBs4gxCq1i8EmZ6v8DSmavyjA68xXJ8LJ0FclhRb
+         2HII3W1SB0m5g==
+Date:   Fri, 5 May 2023 15:58:45 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
-        koba.ko@canonical.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] PCI/AER: Disable AER interrupt on suspend
-Message-ID: <20230505192208.GA970992@bhelgaas>
+To:     Ding Hui <dinghui@sangfor.com.cn>
+Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
+        vidyas@nvidia.com, david.e.box@linux.intel.com,
+        kai.heng.feng@canonical.com, michael.a.bottini@linux.intel.com,
+        rajatja@google.com, qinzongquan@sangfor.com.cn,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: fix UAF by disable ASPM for link when child
+ function is removed
+Message-ID: <20230505205845.GA978671@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230424055249.460381-2-kai.heng.feng@canonical.com>
+In-Reply-To: <20230504123418.4438-1-dinghui@sangfor.com.cn>
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,77 +56,107 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, Apr 24, 2023 at 01:52:48PM +0800, Kai-Heng Feng wrote:
-> PCIe service that shares IRQ with PME may cause spurious wakeup on
-> system suspend.
+On Thu, May 04, 2023 at 08:34:18PM +0800, Ding Hui wrote:
+> If the Function 0 of a Multi-Function device is software removed,
+> a freed downstream pointer will be left in struct pcie_link_state,
+> and then when pcie_config_aspm_link() be invoked from any path,
+> we will trigger use-after-free.
 > 
-> PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
-> that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
-> (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-> much here to disable AER during system suspend.
+> Based on the PCIe spec about ASPM Control (PCIe r6.0, sec 7.5.3.7),
+> for Multi-Function Devices (including ARI Devices), it is recommended
+> that software program the same value in all Functions. For ARI
+> Devices, ASPM Control is determined solely by the setting in Function 0.
 > 
-> This is very similar to previous attempts to suspend AER and DPC [1],
-> but with a different reason.
-
-What is the reason?  I assume it's something to do with the bugzilla
-below, but the commit log should outline the user-visible problem this
-fixes.  The commit log basically makes the case for "why should we
-merge this patch."
-
-I assume it's along the lines of "I tried to suspend this system, but
-it immediately woke up again because of an AER interrupt, and
-disabling AER during suspend avoids this problem.  And disabling
-the AER interrupt is not a problem because X"
-
-> [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.feng@canonical.com/
-> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> So we can just disable ASPM of the whole component if any child
+> function is removed, the downstream pointer will be avoided from
+> use-after-free, that will also avoid other potential corner cases.
 > 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> Fixes: b5a0a9b59c81 ("PCI/ASPM: Read and set up L1 substate capabilities")
+> Debugged-by: Zongquan Qin <qinzongquan@sangfor.com.cn>
+> Suggestion-by: Bjorn Helgaas <bhelgaas@google.com>
+> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
 > ---
->  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+>  drivers/pci/pcie/aspm.c | 15 +++++++--------
+>  1 file changed, 7 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 1420e1f27105..9c07fdbeb52d 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
->  	return 0;
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 66d7514ca111..1bf8306141aa 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -1010,18 +1010,17 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+
+Not directly related to your patch, but this looks racy to me:
+
+  void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+  {
+    struct pci_dev *parent = pdev->bus->self;
+
+    if (!parent || !parent->link_state)
+      return;
+
+    down_read(&pci_bus_sem);
+    mutex_lock(&aspm_lock);
+
+    link = parent->link_state;
+    root = link->root;
+    ...
+    free_link_state(link);
+      link->pdev->link_state = NULL;
+      kfree(link);
+
+Since we check "parent->link_state" before acquiring the locks, I
+suspect that removing two functions at the same time could end up with
+a NULL pointer dereference:
+
+  pcie_aspm_exit_link_state(fn 0)    pcie_aspm_exit_link_state(fn 1)
+  parent = X                         parent = X
+  parent->link_state != NULL         parent->link_state != NULL
+
+  acquire locks
+  free_link_state(link)
+  link->pdev->link_state = NULL # aka parent->link_state
+  kfree(link)
+  release locks
+
+                                     acquire locks
+                                     link = parent->link_state # now NULL
+                                     root = link->root         # NULL ptr
+
+What do you think?  I guess if this *is* a race, it should be fixed by
+a separate patch.
+
+>  	down_read(&pci_bus_sem);
+>  	mutex_lock(&aspm_lock);
+> -	/*
+> -	 * All PCIe functions are in one slot, remove one function will remove
+> -	 * the whole slot, so just wait until we are the last function left.
+> -	 */
+> -	if (!list_empty(&parent->subordinate->devices))
+> -		goto out;
+>  
+>  	link = parent->link_state;
+>  	root = link->root;
+>  	parent_link = link->parent;
+>  
+> -	/* All functions are removed, so just disable ASPM for the link */
+> +	/*
+> +	 * Any function is removed (including software removing), just
+> +	 * disable ASPM for the link, in case we can not configure the same
+> +	 * setting for all functions.
+> +	 * See PCIe r6.0, sec 7.5.3.7.
+> +	 */
+>  	pcie_config_aspm_link(link, 0);
+>  	list_del(&link->sibling);
+>  	/* Clock PM is for endpoint device */
+> @@ -1032,7 +1031,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
+>  		pcie_update_aspm_capable(root);
+>  		pcie_config_aspm_path(parent_link);
+>  	}
+> -out:
+> +
+>  	mutex_unlock(&aspm_lock);
+>  	up_read(&pci_bus_sem);
 >  }
->  
-> +static int aer_suspend(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	aer_disable_irq(pdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int aer_resume(struct pcie_device *dev)
-> +{
-> +	struct aer_rpc *rpc = get_service_data(dev);
-> +	struct pci_dev *pdev = rpc->rpd;
-> +
-> +	aer_enable_irq(pdev);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
->   * @dev: pointer to Root Port, RCEC, or RCiEP
-> @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver = {
->  	.service	= PCIE_PORT_SERVICE_AER,
->  
->  	.probe		= aer_probe,
-> +	.suspend	= aer_suspend,
-> +	.resume		= aer_resume,
->  	.remove		= aer_remove,
->  };
->  
 > -- 
-> 2.34.1
+> 2.17.1
 > 
