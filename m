@@ -2,171 +2,111 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 249C16F8D30
-	for <lists+linux-pci@lfdr.de>; Sat,  6 May 2023 02:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7F686F8FCE
+	for <lists+linux-pci@lfdr.de>; Sat,  6 May 2023 09:18:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232281AbjEFAof (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 5 May 2023 20:44:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36636 "EHLO
+        id S229686AbjEFHS6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 May 2023 03:18:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229792AbjEFAoe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 5 May 2023 20:44:34 -0400
-Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C537D4ED0;
-        Fri,  5 May 2023 17:44:32 -0700 (PDT)
-Received: from [0.0.0.0] (unknown [172.96.223.238])
-        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id F1C18A401D7;
-        Sat,  6 May 2023 08:44:22 +0800 (CST)
-Message-ID: <306e8a8b-e411-102c-3ebb-a226dcb5adc8@sangfor.com.cn>
-Date:   Sat, 6 May 2023 08:44:19 +0800
+        with ESMTP id S229660AbjEFHS5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 May 2023 03:18:57 -0400
+X-Greylist: delayed 450 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 06 May 2023 00:18:55 PDT
+Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C0ACF11567
+        for <linux-pci@vger.kernel.org>; Sat,  6 May 2023 00:18:55 -0700 (PDT)
+Received: from pop-os.home ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id vC4bpnvtnGGqgvC4bpbPWL; Sat, 06 May 2023 09:11:23 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1683357083;
+        bh=LCwtFRx+YxY+EmtN+x8N93lmLUJnBu1GrjughYec7hk=;
+        h=From:To:Cc:Subject:Date;
+        b=dPDRr9NJWUcumThQ3K8vmGoeFthoe40EmUuljc44kB6Db1/nur+r3j+irmyyDY6fJ
+         FmKTLTebxollA+5WkjbG2hHYBh5hFwz3qxCz8BDkV87L2Wuu23WF7DKfRW1Ial90IE
+         nbOfhNAHOwV+1ohcE2SbHWbX2vvLqqkeXTFS9yu0Rty0IZZgHs4RQpkMXHpBuPSZlQ
+         EYiSdWajeq+wLrAAIe8ZbciQvBNHEWi02kTHh2743MgdarwyrNThgKMAXI8MQ5WFbx
+         bpdXtTSUSISBEm98bDhfFG5cIyjrNgJIaKWxKHfQIhn1LYLohibYm2U8NrvfMspNZN
+         gChnjeggQqtTw==
+X-ME-Helo: pop-os.home
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 06 May 2023 09:11:23 +0200
+X-ME-IP: 86.243.2.178
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+Cc:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        linux-pci@vger.kernel.org
+Subject: [PATCH 1/2] x86/PCI: Fix a sanity check in pirq_convert_irt_table()
+Date:   Sat,  6 May 2023 09:11:09 +0200
+Message-Id: <bc8422a8bf3ff99809413eb62dd12aacc85a9950.1683356951.git.christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [PATCH] PCI/ASPM: fix UAF by disable ASPM for link when child
- function is removed
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        vidyas@nvidia.com, david.e.box@linux.intel.com,
-        kai.heng.feng@canonical.com, michael.a.bottini@linux.intel.com,
-        rajatja@google.com, qinzongquan@sangfor.com.cn,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230505205845.GA978671@bhelgaas>
-From:   Ding Hui <dinghui@sangfor.com.cn>
-In-Reply-To: <20230505205845.GA978671@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDH0JOVk0eQktKS0pNSBhNGVUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpMSVVCTVVJSUhVSUhDWVdZFhoPEhUdFFlBWU9LSFVKSktISkNVSktLVUtZBg++
-X-HM-Tid: 0a87ee8468cfb282kuuuf1c18a401d7
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pj46Lyo5Dj0NLzxDTDFWPzYJ
-        Sg8KCTJVSlVKTUNISEhIQ01DTkNJVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlKTElVQk1VSUlIVUlIQ1lXWQgBWUFOTENKNwY+
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/5/6 4:58, Bjorn Helgaas wrote:
-> On Thu, May 04, 2023 at 08:34:18PM +0800, Ding Hui wrote:
->> If the Function 0 of a Multi-Function device is software removed,
->> a freed downstream pointer will be left in struct pcie_link_state,
->> and then when pcie_config_aspm_link() be invoked from any path,
->> we will trigger use-after-free.
->>
->> Based on the PCIe spec about ASPM Control (PCIe r6.0, sec 7.5.3.7),
->> for Multi-Function Devices (including ARI Devices), it is recommended
->> that software program the same value in all Functions. For ARI
->> Devices, ASPM Control is determined solely by the setting in Function 0.
->>
->> So we can just disable ASPM of the whole component if any child
->> function is removed, the downstream pointer will be avoided from
->> use-after-free, that will also avoid other potential corner cases.
->>
->> Fixes: b5a0a9b59c81 ("PCI/ASPM: Read and set up L1 substate capabilities")
->> Debugged-by: Zongquan Qin <qinzongquan@sangfor.com.cn>
->> Suggestion-by: Bjorn Helgaas <bhelgaas@google.com>
->> Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
->> ---
->>   drivers/pci/pcie/aspm.c | 15 +++++++--------
->>   1 file changed, 7 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
->> index 66d7514ca111..1bf8306141aa 100644
->> --- a/drivers/pci/pcie/aspm.c
->> +++ b/drivers/pci/pcie/aspm.c
->> @@ -1010,18 +1010,17 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
-> 
-> Not directly related to your patch, but this looks racy to me:
-> 
->    void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->    {
->      struct pci_dev *parent = pdev->bus->self;
-> 
->      if (!parent || !parent->link_state)
->        return;
-> 
->      down_read(&pci_bus_sem);
->      mutex_lock(&aspm_lock);
-> 
->      link = parent->link_state;
->      root = link->root;
->      ...
->      free_link_state(link);
->        link->pdev->link_state = NULL;
->        kfree(link);
-> 
-> Since we check "parent->link_state" before acquiring the locks, I
-> suspect that removing two functions at the same time could end up with
-> a NULL pointer dereference:
-> 
->    pcie_aspm_exit_link_state(fn 0)    pcie_aspm_exit_link_state(fn 1)
->    parent = X                         parent = X
->    parent->link_state != NULL         parent->link_state != NULL
-> 
->    acquire locks
->    free_link_state(link)
->    link->pdev->link_state = NULL # aka parent->link_state
->    kfree(link)
->    release locks
-> 
->                                       acquire locks
->                                       link = parent->link_state # now NULL
->                                       root = link->root         # NULL ptr
-> 
-> What do you think?  I guess if this *is* a race, it should be fixed by
-> a separate patch.
-> 
+We compare the size in bytes of a struct (and its ending flexible array)
+with the number of elements in a flexible array.
 
-Maybe there's no need to worry about the race, when a pci device is removing,
-the pci_rescan_remove_lock should be acquired.
+This is wrong and "ir->size < ir->used" is likely to be always false.
 
-Anyway, double check would be safer.
+Compute the number of possible entries instead, as already done in other
+places, and compare it to the number of used entries.
 
->>   	down_read(&pci_bus_sem);
->>   	mutex_lock(&aspm_lock);
->> -	/*
->> -	 * All PCIe functions are in one slot, remove one function will remove
->> -	 * the whole slot, so just wait until we are the last function left.
->> -	 */
->> -	if (!list_empty(&parent->subordinate->devices))
->> -		goto out;
->>   
->>   	link = parent->link_state;
->>   	root = link->root;
->>   	parent_link = link->parent;
->>   
->> -	/* All functions are removed, so just disable ASPM for the link */
->> +	/*
->> +	 * Any function is removed (including software removing), just
->> +	 * disable ASPM for the link, in case we can not configure the same
->> +	 * setting for all functions.
->> +	 * See PCIe r6.0, sec 7.5.3.7.
->> +	 */
->>   	pcie_config_aspm_link(link, 0);
->>   	list_del(&link->sibling);
->>   	/* Clock PM is for endpoint device */
->> @@ -1032,7 +1031,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
->>   		pcie_update_aspm_capable(root);
->>   		pcie_config_aspm_path(parent_link);
->>   	}
->> -out:
->> +
->>   	mutex_unlock(&aspm_lock);
->>   	up_read(&pci_bus_sem);
->>   }
->> -- 
->> 2.17.1
->>
-> 
+Fixes: b584db0c84db ("x86/PCI: Add $IRT PIRQ routing table support")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
 
+/!\  This patch is speculative. Review with care  /!\
+
+
+I'm not sure that this sanity check is needed at all.
+
+If 'used' was the size of the flexible array, I think it would simplify
+the code in other places. It will also help scripts when __counted_by macro
+will be added.
+See [1].
+
+[1]: https://lore.kernel.org/all/6453f739.170a0220.62695.7785@mx.google.com/
+---
+ arch/x86/pci/irq.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index a498b847d740..e29b487cc069 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -128,12 +128,16 @@ static inline struct irq_routing_table *pirq_convert_irt_table(u8 *addr,
+ {
+ 	struct irt_routing_table *ir;
+ 	struct irq_routing_table *rt;
++	int entries;
+ 	u16 size;
+ 	u8 sum;
+ 	int i;
+ 
+ 	ir = (struct irt_routing_table *)addr;
+-	if (ir->signature != IRT_SIGNATURE || !ir->used || ir->size < ir->used)
++	entries = (ir->size - sizeof(struct irq_routing_table)) /
++		sizeof(struct irq_info);
++
++	if (ir->signature != IRT_SIGNATURE || !ir->used || entries < ir->used)
+ 		return NULL;
+ 
+ 	size = sizeof(*ir) + ir->used * sizeof(ir->slots[0]);
 -- 
-Thanks,
-- Ding Hui
+2.34.1
 
