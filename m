@@ -2,60 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 558296F91D1
-	for <lists+linux-pci@lfdr.de>; Sat,  6 May 2023 14:03:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 810156F91D2
+	for <lists+linux-pci@lfdr.de>; Sat,  6 May 2023 14:04:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231569AbjEFMD0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 May 2023 08:03:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
+        id S231916AbjEFMD7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 6 May 2023 08:03:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232125AbjEFMDZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 May 2023 08:03:25 -0400
-Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4156311610
-        for <linux-pci@vger.kernel.org>; Sat,  6 May 2023 05:03:20 -0700 (PDT)
-Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4ec8149907aso3195244e87.1
-        for <linux-pci@vger.kernel.org>; Sat, 06 May 2023 05:03:20 -0700 (PDT)
+        with ESMTP id S231343AbjEFMD6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 May 2023 08:03:58 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BF2A11B55
+        for <linux-pci@vger.kernel.org>; Sat,  6 May 2023 05:03:39 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2ac831bb762so24669531fa.3
+        for <linux-pci@vger.kernel.org>; Sat, 06 May 2023 05:03:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683374598; x=1685966598;
+        d=linaro.org; s=google; t=1683374617; x=1685966617;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=iDA1o5DOpOhngrWpyHFqKpT+FKuc32+BdG6EdkURD0I=;
-        b=XzsoB368bAHnBWpU15NLULOnKVfBGXSJfEvW60ldEpQwUiYs0l6Bvd8VpTBDHnGF20
-         bQQLcEtJLmrha2Tc9BwlkAC5lWVI4fY9CyGbrRWVFD6TsyJUUwZ0NOMpaz4ZF3jmTP2c
-         LgFmeetudSh9VhiaWcwy2fXQGczMPPPMs1MtO8tb2Hz0u+mYuV2ociKPzAGarAC/xTNn
-         g9Y00e5pjXMZzFnE9wz+LAbZs10L5EzOJUSLB7H3YgQivJb5H8C0JFFqtuVmqkTMqB0k
-         plBOmAqf9cCTjOdbyGHEzJrzSoxfhCTQuLMzKuMfjYJgQt1HhwLJcerE6vcio/dYDrkR
-         O2Dw==
+        bh=tULkpgt2x9nNYQ3ef7qoDxx5GJASjFLnUGSKrUazgGA=;
+        b=VvAWn8j/KsyJjz04hzdwxfCFTSiMYAC8h6f3lE+C+zCdF5zUiyswVbGQPg8+9hDxK6
+         Ch4KPBgazGntgUVD9jTtHm/UC0psc/mlnxHwJjwuieUyHBtfIX9lRQ9m3kL9YExQ84UE
+         2VyKsbiyHRE4upGEfeIW9QjsXJG5gqkMaiOG1lagC7SV8/YntU3PD66D8C0Q+dC04Jku
+         MB1SWxPakYqSFD5VoQPR/7KFnnafP0/lgPYmerDMoVb8Ce5oMQokS30WeCknwA97r3HF
+         PXlGwt0Iwq+XPy4Z6ha8ZY2wfzbpJg8TxN7xzYkDop5Gf/RueLyyJoCzHUw41xLfdWx5
+         g+GQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683374598; x=1685966598;
+        d=1e100.net; s=20221208; t=1683374617; x=1685966617;
         h=content-transfer-encoding:in-reply-to:references:cc:to:from
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=iDA1o5DOpOhngrWpyHFqKpT+FKuc32+BdG6EdkURD0I=;
-        b=BgVyMkZYtucuZ/decqCcV1lj4H95JrwRYS6PxT6AGWDYhjPh0bBzD2zgiPhTCZURRf
-         p0JWrBDXDNXA1rV5O/c81odH9KRlCoUMFlXe6xD4cVG4mhB5Pg2eaAOpwpwI5tPr+VTr
-         BVT02l6icjGo1imgLDpitO5FJIAdqc+z50jZcRXt4EVdSPXPv8saF5s/6eqXTtrXe+6x
-         RT/Ul5yjV7dMnRVxdNfy+qVtBwqSpI3XRv7IbN4N5tZ4IGuwPfh3mlmJIC7zxeAL0hTk
-         dnotVUqwXjlwa3auJXO2rHIrD+d9j49q7Y0/ryeD/VpzJeCtNyFJag2gubnDLARCofqe
-         e2rg==
-X-Gm-Message-State: AC+VfDyRq5HEhj/+QMUcF7GiNSWwpDu7fMmFM0whedjr3G8ob+vh51b7
-        p487Ecqeaa2bFZA0KH0hT6ufDA==
-X-Google-Smtp-Source: ACHHUZ657exLovcKVKLg88kAQmx0RX8h5aAvhO9CpNbhD2LkobNTGOHPK+ztRA1IPGF2OD+m5vgyww==
-X-Received: by 2002:a05:6512:1026:b0:4eb:7e:1fa5 with SMTP id r6-20020a056512102600b004eb007e1fa5mr1102362lfr.8.1683374598443;
-        Sat, 06 May 2023 05:03:18 -0700 (PDT)
+        bh=tULkpgt2x9nNYQ3ef7qoDxx5GJASjFLnUGSKrUazgGA=;
+        b=I9XlwqHXFyHKkc0YF5ajJGj65CKKliEcup6S/LSScJwjmRQ/xn4jUwUMsPRbIywYnC
+         5aE5o3ttYIkm7W8Nd/R7mHega0WHImxk2QU97Kt6ed3uoqS2YCO1lzENe72HRACdZSMe
+         YSz8M+ugOjUMSWgoMfMPc4Tb0dO50x0XQWc8aFn+vvu8z0IGLJTTlOnXKnOwetiuiCDd
+         BQo2HTTLcGZB1vuJKrOQ2PUsTuF04MRmH96rhGY0+R8ad/CZM4c6IM8B+dqsor4s3E7D
+         5kWjwUIwkdmXxfWr+3SM7s9v/2ln/kDMQtiO2eCazMJ/+TUZBmLafHAcw9qQx32ZE6zQ
+         E3SA==
+X-Gm-Message-State: AC+VfDzr8iJJw8Zqj3K9BTLbNcEn9pL3nE1z44dAWtks32Z41fZjYy80
+        P6fsnPJxhgSnQaaF5rIOkFDXgA==
+X-Google-Smtp-Source: ACHHUZ7tZ5uihbNR3knCgkgUnqBWgwbECpYX4LWtA9HJv579T4lYYG1gmnBZFIHKnxoL7TmvjZyXYA==
+X-Received: by 2002:a2e:9a89:0:b0:298:aad1:5df0 with SMTP id p9-20020a2e9a89000000b00298aad15df0mr1114721lji.41.1683374617260;
+        Sat, 06 May 2023 05:03:37 -0700 (PDT)
 Received: from ?IPV6:2001:14ba:a0db:1f00::8a5? (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
-        by smtp.gmail.com with ESMTPSA id o3-20020a056512050300b004efe9a169d2sm632963lfb.64.2023.05.06.05.03.17
+        by smtp.gmail.com with ESMTPSA id 15-20020a05651c00cf00b002ab309da60fsm350472ljr.103.2023.05.06.05.03.36
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 06 May 2023 05:03:17 -0700 (PDT)
-Message-ID: <ce925269-2cc1-c431-898a-fa53f2f48def@linaro.org>
-Date:   Sat, 6 May 2023 15:03:17 +0300
+        Sat, 06 May 2023 05:03:36 -0700 (PDT)
+Message-ID: <14e56402-bc81-723b-1d0e-323072f05014@linaro.org>
+Date:   Sat, 6 May 2023 15:03:36 +0300
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 1/8] PCI: qcom: Use DWC helpers for modifying the
- read-only DBI registers
+Subject: Re: [PATCH 3/8] PCI: qcom: Do not advertise hotplug capability for
+ IPs v2.7.0 and v1.9.0
 Content-Language: en-GB
 From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
@@ -65,9 +65,9 @@ Cc:     robh@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
         linux-kernel@vger.kernel.org, steev@kali.org,
         quic_srichara@quicinc.com
 References: <20230506073139.8789-1-manivannan.sadhasivam@linaro.org>
- <20230506073139.8789-2-manivannan.sadhasivam@linaro.org>
- <81d5643b-3aec-a987-eaf4-e89b0887ce64@linaro.org>
-In-Reply-To: <81d5643b-3aec-a987-eaf4-e89b0887ce64@linaro.org>
+ <20230506073139.8789-4-manivannan.sadhasivam@linaro.org>
+ <870ea899-b405-8061-93fe-cf50de595808@linaro.org>
+In-Reply-To: <870ea899-b405-8061-93fe-cf50de595808@linaro.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -80,25 +80,37 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 06/05/2023 14:43, Dmitry Baryshkov wrote:
+On 06/05/2023 15:01, Dmitry Baryshkov wrote:
 > On 06/05/2023 10:31, Manivannan Sadhasivam wrote:
->> DWC core already exposes dw_pcie_dbi_ro_wr_{en/dis} helper APIs for
->> enabling and disabling the write access to read only DBI registers. So
->> let's use them instead of doing it manually.
+>> SoCs making use of Qcom PCIe controller IPs v2.7.0 and v1.9.0 do not
+>> support hotplug functionality. But the hotplug capability bit is set by
+>> default in the hardware. This causes the kernel PCI core to register
+>> hotplug service for the controller and send hotplug commands to it. But
+>> those commands will timeout generating messages as below during boot and
+>> suspend/resume.
 >>
->> Also, the existing code doesn't disable the write access when it's done.
->> This is also fixed now.
+>> [    5.782159] pcieport 0001:00:00.0: pciehp: Timeout on hotplug 
+>> command 0x03c0 (issued 2020 msec ago)
+>> [    5.810161] pcieport 0001:00:00.0: pciehp: Timeout on hotplug 
+>> command 0x03c0 (issued 2048 msec ago)
+>> [    7.838162] pcieport 0001:00:00.0: pciehp: Timeout on hotplug 
+>> command 0x07c0 (issued 2020 msec ago)
+>> [    7.870159] pcieport 0001:00:00.0: pciehp: Timeout on hotplug 
+>> command 0x07c0 (issued 2052 msec ago)
 >>
->> Fixes: 5d76117f070d ("PCI: qcom: Add support for IPQ8074 PCIe 
->> controller")
+>> This not only spams the console output but also induces a delay of a
+>> couple of seconds. To fix this issue, let's clear the HPC bit in
+>> PCI_EXP_SLTCAP register as a part of the post init sequence to not
+>> advertise the hotplug capability for the controller.
+>>
 >> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 >> ---
->>   drivers/pci/controller/dwc/pcie-qcom.c | 10 +++++-----
->>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>   drivers/pci/controller/dwc/pcie-qcom.c | 19 +++++++++++++++++++
+>>   1 file changed, 19 insertions(+)
 > 
 > Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@gmail.com>
+> 
 
-Of course:
 Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 
