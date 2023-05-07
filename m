@@ -2,61 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 860D86F9754
-	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 09:36:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 792286F97D4
+	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 11:06:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbjEGHgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 May 2023 03:36:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
+        id S229980AbjEGJGg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 May 2023 05:06:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjEGHgH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 03:36:07 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCAD4132BD
-        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 00:36:05 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3f389c519e5so3130901cf.2
-        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 00:36:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oobak.org; s=ghs; t=1683444965; x=1686036965;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=oKDZorWA8bxcpIoWQc9u4DPSLdhcXPQtyOtwgtWCV8Y=;
-        b=fpswxqYKS06GeJF40Y+9wmbWBDNjJleXBOao7KIB1qsgb+mDki6UhRxMC02379B48E
-         JY7QQieo2pRKVxyiYknA8lLOv9MKEbwsmEIPbarDj2j7ybkxU3qt2tSnQu49aGh65hVe
-         buFG0fXwnlSYJWMzmiVhcnWi0skkwA1zixS6E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683444965; x=1686036965;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=oKDZorWA8bxcpIoWQc9u4DPSLdhcXPQtyOtwgtWCV8Y=;
-        b=GMQoXPVhZydUrMPljFZOJN/of8TKtXtLHk40FcQKqaOZvOP+92Cr4N5aotJhdpQDTD
-         Cy5IC7Rb1Lj/kELzglLL3r3zmmhVR9cuhpFnEL+1E65P9SeEvP6dBnmDNb+DkCIclWsR
-         oWRns83FIzDEbyEoxPZLkYa26lCKTfgSquFrep+qTM3gIDNBJ37sizmSSTqbaBO5vVLv
-         o3ocSfWkPjGpq6BpHEvBkw4CfDRhPqrlJJHlv7iYD1vBE+vxJZOzrxdnl4XT4oHGciRY
-         2S88Is1XfnneV29Glz108bsbTmv325lvI/uSefElFn20AkIRP1FsCvi1v4JuL0AbH8Id
-         bZfQ==
-X-Gm-Message-State: AC+VfDxXor4RX01QeFT26xI2lAo08dWtr1BmR7rD13C2PCTptqJROx1y
-        3j095vZBU7Mc0dTBI6+R2ycmSpCOU10/KCBoCmwRsg==
-X-Google-Smtp-Source: ACHHUZ7T761G0qiKBvd4ajbLCaJG4BNMMfeDv76kQsbTeb9CuVGEKOejYwnhMaReiUmo3QCgfh+Wmw==
-X-Received: by 2002:ac8:7c4d:0:b0:3f1:a6d:d976 with SMTP id o13-20020ac87c4d000000b003f10a6dd976mr10073290qtv.48.1683444964631;
-        Sun, 07 May 2023 00:36:04 -0700 (PDT)
-Received: from hyperion.jumbo (162-198-119-188.lightspeed.cicril.sbcglobal.net. [162.198.119.188])
-        by smtp.gmail.com with ESMTPSA id x18-20020ac87012000000b003ef3df76ec7sm2035108qtm.93.2023.05.07.00.36.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 May 2023 00:36:04 -0700 (PDT)
-From:   Mike Pastore <mike@oobak.org>
-To:     linux-pci@vger.kernel.org
-Cc:     Mike Pastore <mike@oobak.org>
-Subject: [PATCH] PCI: Apply Intel NVMe quirk to Solidigm P44 Pro
-Date:   Sun,  7 May 2023 02:35:19 -0500
-Message-Id: <20230507073519.9737-1-mike@oobak.org>
-X-Mailer: git-send-email 2.39.2
+        with ESMTP id S229628AbjEGJGf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 05:06:35 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBA2D13C12;
+        Sun,  7 May 2023 02:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683450393; x=1714986393;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ObwBHhpjW+EYmpG1SC4zZ6cBhW2d+cGNNSnYZsS3dvk=;
+  b=bJEUCk21poE/X1l2PSpcn44CjjGcB/9stJ0ogLCGeDjeK3PrnTxQyyaU
+   Qz7H+SNd/g4EcD2oiX9h0mpef6OSIn6NxAcDxq3q2z851Rkn8YogYuVMZ
+   5Aq2uZ3uL/Ah2H5I1kmCycqSF7BgwzkdrqNQ5lLkH0ulJMRD4pW8wIC3U
+   PBjUhTaV51F/c6czhWNEz3Fw8nFwRK6SCJeD8rYsxOpRmETRfmf1ZYcSZ
+   OI0ECH01qRS8Vlrau+pwDPdAdH/8RMsrUm4EGGGt3CsADw8Rq/pcQeLDa
+   YbSW2q5m0tU72nn5rYr9Fe+AIMzhPw/hQ0HV4ShMAtd06A19yC8rAyrkA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10702"; a="349495139"
+X-IronPort-AV: E=Sophos;i="5.99,256,1677571200"; 
+   d="scan'208";a="349495139"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2023 02:06:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10702"; a="692262613"
+X-IronPort-AV: E=Sophos;i="5.99,256,1677571200"; 
+   d="scan'208";a="692262613"
+Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 07 May 2023 02:06:31 -0700
+Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pvaLe-0000hl-0n;
+        Sun, 07 May 2023 09:06:30 +0000
+Date:   Sun, 7 May 2023 17:05:45 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Alexander Stein <alexander.stein@ew.tq-group.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Alexander Stein <alexander.stein@ew.tq-group.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Korneliusz Osmenda <korneliuszo@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH 2/3] PCI/sysfs: create private functions for
+ pci_create_legacy_files/pci_create_sysfs_dev_files
+Message-ID: <202305071649.zjynmg3E-lkp@intel.com>
+References: <20230427142901.3570536-3-alexander.stein@ew.tq-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230427142901.3570536-3-alexander.stein@ew.tq-group.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -64,61 +69,64 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Prevent KVM hang when a Solidgm P44 Pro NVMe is passed through to a
-guest via IOMMU and the guest is subsequently rebooted.
+Hi Alexander,
 
-A similar issue was identified and patched in commit 51ba09452d11b
-("PCI: Delay after FLR of Intel DC P3700 NVMe") and the same fix can be
-aplied for this case. (Intel spun off their NAND and SSD business as
-Solidigm and sold it to SK Hynix in late 2021.)
+kernel test robot noticed the following build warnings:
 
-Signed-off-by: Mike Pastore <mike@oobak.org>
----
- drivers/pci/quirks.c    | 10 ++++++----
- include/linux/pci_ids.h |  2 ++
- 2 files changed, 8 insertions(+), 4 deletions(-)
+[auto build test WARNING on pci/next]
+[also build test WARNING on pci/for-linus linus/master v6.3 next-20230505]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index 44cab813bf95..b47844d0e574 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3980,10 +3980,11 @@ static int nvme_disable_and_flr(struct pci_dev *dev, bool probe)
- }
- 
- /*
-- * Intel DC P3700 NVMe controller will timeout waiting for ready status
-- * to change after NVMe enable if the driver starts interacting with the
-- * device too soon after FLR.  A 250ms delay after FLR has heuristically
-- * proven to produce reliably working results for device assignment cases.
-+ * Some NVMe controllers such as Intel DC P3700 and Solidigm P44 Pro will
-+ * timeout waiting for ready status to change after NVMe enable if the driver
-+ * starts interacting with the device too soon after FLR.  A 250ms delay after
-+ * FLR has heuristically proven to produce reliably working results for device
-+ * assignment cases.
-  */
- static int delay_250ms_after_flr(struct pci_dev *dev, bool probe)
- {
-@@ -4070,6 +4071,7 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
- 	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
- 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
- 	{ PCI_VENDOR_ID_INTEL, 0x0a54, delay_250ms_after_flr },
-+	{ PCI_VENDOR_ID_SOLIDIGM, 0xf1ac, delay_250ms_after_flr },
- 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
- 		reset_chelsio_generic_dev },
- 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
-diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-index 45c3d62e616d..6105eddf41bf 100644
---- a/include/linux/pci_ids.h
-+++ b/include/linux/pci_ids.h
-@@ -3119,4 +3119,6 @@
- 
- #define PCI_VENDOR_ID_NCUBE		0x10ff
- 
-+#define PCI_VENDOR_ID_SOLIDIGM		0x025e
-+
- #endif /* _LINUX_PCI_IDS_H */
+url:    https://github.com/intel-lab-lkp/linux/commits/Alexander-Stein/PCI-sysfs-sort-headers-alphabetically/20230427-223059
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
+patch link:    https://lore.kernel.org/r/20230427142901.3570536-3-alexander.stein%40ew.tq-group.com
+patch subject: [PATCH 2/3] PCI/sysfs: create private functions for pci_create_legacy_files/pci_create_sysfs_dev_files
+config: mips-maltaup_defconfig (https://download.01.org/0day-ci/archive/20230507/202305071649.zjynmg3E-lkp@intel.com/config)
+compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project b0fb98227c90adf2536c9ad644a74d5e92961111)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # install mips cross compiling tool for clang build
+        # apt-get install binutils-mipsel-linux-gnu
+        # https://github.com/intel-lab-lkp/linux/commit/cbc778730116b49890b5c41ffc9fc664b566e3c4
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Alexander-Stein/PCI-sysfs-sort-headers-alphabetically/20230427-223059
+        git checkout cbc778730116b49890b5c41ffc9fc664b566e3c4
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/pci/ mm/
 
-base-commit: 63355b9884b3d1677de6bd1517cd2b8a9bf53978
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202305071649.zjynmg3E-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+>> drivers/pci/pci-sysfs.c:1502:18: warning: no previous prototype for function '__pci_create_sysfs_dev_files' [-Wmissing-prototypes]
+   int __must_check __pci_create_sysfs_dev_files(struct pci_dev *pdev)
+                    ^
+   drivers/pci/pci-sysfs.c:1502:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
+   int __must_check __pci_create_sysfs_dev_files(struct pci_dev *pdev)
+   ^
+   static 
+   drivers/pci/pci-sysfs.c:1015:13: warning: unused function '__pci_create_legacy_files' [-Wunused-function]
+   static void __pci_create_legacy_files(struct pci_bus *b) {}
+               ^
+   2 warnings generated.
+
+
+vim +/__pci_create_sysfs_dev_files +1502 drivers/pci/pci-sysfs.c
+
+  1501	
+> 1502	int __must_check __pci_create_sysfs_dev_files(struct pci_dev *pdev)
+  1503	{
+  1504		return pci_create_resource_files(pdev);
+  1505	}
+  1506	
+
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
