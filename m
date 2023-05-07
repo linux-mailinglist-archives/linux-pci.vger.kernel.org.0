@@ -2,252 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 47A406F97DB
-	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 11:11:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80CDA6F9881
+	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 14:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230381AbjEGJLP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 May 2023 05:11:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
+        id S229454AbjEGMvs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 May 2023 08:51:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230415AbjEGJLN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 05:11:13 -0400
-Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C1F3C14
-        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 02:11:11 -0700 (PDT)
-Received: by mail-ed1-x535.google.com with SMTP id 4fb4d7f45d1cf-50bc456cc39so5158078a12.1
-        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 02:11:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683450670; x=1686042670;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=WJVeF+6z9/ggAVBD2uz3HdoqI651ez6nvvs/Z94Hn3E=;
-        b=ge34Tv1nacy0JlU4TMCDkcjgWKAcwLxMPJ2dqttvd5QDmlGBDNjo3SDaU8jS089GVp
-         97aXexc5Ub/WBVBLBKqwau9eKg4cPpITPJiu9XBXVv4sWtFkODGN+fZRYn0+Lwj78Wr9
-         fOCcWeplDjReFtG1ZWY+8Gg2ComYyfme+ZItmqx1XGp1d+YGrInfxG3ssasguj6Cmj4I
-         UTuYDaGVfumJ4RzEE9sZ+/IqtW0M5spGQAofcgx5AzDbXSrirbcMKLuMiR+Wcl3xBsCV
-         HiX+k/H4PkUKmHdfKesGyx5UbqayeiVibn5DjwZLthhz+4P6ExoNcTFTN5AuH7Pamixs
-         JCxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683450670; x=1686042670;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WJVeF+6z9/ggAVBD2uz3HdoqI651ez6nvvs/Z94Hn3E=;
-        b=AzGBsYbA2z+C68ZrBI3IyD+4DNl2/W0jKYSHXSeu6IVhIDOr80DCYIRnzgQDbnPgqM
-         DDz4Ar0ySi8kFKouOi3zPAqXhp8RAheKd/4ClgKuXk4CDwbmQbviu2p0d4dVsjRI9bsG
-         f5T9YClyXhwHgyqyeLItgswNPLFIi9rdVNomCQX9eW5HV7dBM3MXyuOk79TaRlZY2yMF
-         010Wn4jLCkCRvPizyZ6sLuPy2KFvrfE34teYa1qPa89kyRijBmkIzhCBHQZs5PgGWD0M
-         ilVQtYauQy4qBV+YHrWKMUXIwvPh8XBvWlhAhc9gwK5Z7RVWjsqPRAuMerEleGDjXtd0
-         3Cdw==
-X-Gm-Message-State: AC+VfDxyn1b4OrcgwLfSQVo3GoaYJGzg9ZhU3tvlr6SVIticx6kj/Nqn
-        WIGm+ihGsZcu9VqGH9hOxcf41w==
-X-Google-Smtp-Source: ACHHUZ56Cj45M5bkDI2Qkj+cfrrqHrRXimMDzax69r9LP0DJegFaXQGg0XWQuxCR+n66BEZ9LerK4Q==
-X-Received: by 2002:a17:907:6d01:b0:957:29e5:1695 with SMTP id sa1-20020a1709076d0100b0095729e51695mr5594140ejc.65.1683450669593;
-        Sun, 07 May 2023 02:11:09 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:183b:950f:b4d5:135a? ([2a02:810d:15c0:828:183b:950f:b4d5:135a])
-        by smtp.gmail.com with ESMTPSA id ze16-20020a170906ef9000b00965ec1faf27sm3024164ejb.74.2023.05.07.02.11.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 May 2023 02:11:08 -0700 (PDT)
-Message-ID: <10b32e55-4d28-5405-035e-c73a514c95e4@linaro.org>
-Date:   Sun, 7 May 2023 11:11:07 +0200
-MIME-Version: 1.0
+        with ESMTP id S229441AbjEGMvr (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 08:51:47 -0400
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2085.outbound.protection.outlook.com [40.107.100.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DE71DB;
+        Sun,  7 May 2023 05:51:45 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eA6Y2vSIETahadTSM9qm2m4UuEsf+335cu5snqGLZNVegD4rKtqcv5UFmCjKOfBnjMapQBv5u6aeOROFfU0wAl2R3wnQTsLSfF0H8mX0zRVB2nTpclOTS+jl1cgTzkL9xDcbWZy64lQyVK7PT4hB4uticbgC9DBVKTF+c4JtKlClPvQptAYnGjRNS5pj3ZyrHfVf7ElBUqU3yB4LSaKpT0E+K3Gws0PQoZeajmvm+lngVPd9eX6FleOnu72AfpGIvLLrY1M4pJDZignKqsklhmKprHlfitS4T6WSWfUwoxA9hCYRJx3S7mUYtwttn2e/B0JcKlnEBvfafGu0N2UOQQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8+KQ9iLeqb+Mb/FnFeH+7X5EFsicFw6ZJrVxgpO00cI=;
+ b=Yv2GeKlxcGzWtvnX+f/KzQhacDL9eKrLYPh4HSy2SGLCnMWN2CfDc7LlcpfPpB5qC0+hZX7oVXTlDdmIV9gWS3N5WKIfI0AUVLks/YYTXHeIRfL5ujittWn3HovmYymk0+cY1FJ3lIKZew9BKUTUDomPtiNwLWLBy1wKn/M8li4vp3BGUqJqyXkEIeclc+0Io/uZ+Sf8/R/hqtxaTBEKtpnzRN8a89DHWhMwya2rMnYBOPsA0Dlm9gShAK8G+IP6+VP+wNz0Jo7FP8XAeLHWpeKVgNF57NPi28DPN7tNrRVeiWwtf3AdpY1vTi56BQSgJrqDGOwgRIGBQs9sjumzUg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8+KQ9iLeqb+Mb/FnFeH+7X5EFsicFw6ZJrVxgpO00cI=;
+ b=sW0I16Mxah46SyJuqW3l/8PEjNPJ8//nUL5s8PnHI8iXgQ3hOP0zmA3JkWHiz/JDFE9ELS58vw4+YdhniRtIIG+UwSvm5zSZZ8U8Sgxz+7mzNdSZDn9W4a9QA2IuIDyxSqAzlgPdlRmf2+TKkVu2+e3OJUvMFX6kGYmNQnZA5Io=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from DS7PR12MB6095.namprd12.prod.outlook.com (2603:10b6:8:9c::19) by
+ SA0PR12MB4398.namprd12.prod.outlook.com (2603:10b6:806:9f::8) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6363.31; Sun, 7 May 2023 12:51:42 +0000
+Received: from DS7PR12MB6095.namprd12.prod.outlook.com
+ ([fe80::ea3d:ec42:656e:a248]) by DS7PR12MB6095.namprd12.prod.outlook.com
+ ([fe80::ea3d:ec42:656e:a248%4]) with mapi id 15.20.6363.031; Sun, 7 May 2023
+ 12:51:42 +0000
+Message-ID: <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
+Date:   Sun, 7 May 2023 07:51:44 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [Patch v7 1/8] memory: tegra: add interconnect support for DRAM
- scaling in Tegra234
+ Thunderbird/102.10.0
+Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
 Content-Language: en-US
-To:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, helgaas@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com, kw@linux.com,
-        bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
-        ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
-References: <20230424131337.20151-1-sumitg@nvidia.com>
- <20230424131337.20151-2-sumitg@nvidia.com>
- <7c6c6584-204a-ada1-d669-2e8bef50e5e5@linaro.org>
- <3071273b-b03b-5fc8-ffa1-9b18311a3a5d@nvidia.com>
- <5ab9687e-756d-f94b-b085-931d4ea534c1@nvidia.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <5ab9687e-756d-f94b-b085-931d4ea534c1@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+To:     Guenter Roeck <linux@roeck-us.net>,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        Richard gong <richard.gong@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+References: <20230427053338.16653-1-mario.limonciello@amd.com>
+ <20230427053338.16653-2-mario.limonciello@amd.com>
+ <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
+From:   Mario Limonciello <mario.limonciello@amd.com>
+In-Reply-To: <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: DM5PR07CA0056.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::21) To DS7PR12MB6095.namprd12.prod.outlook.com
+ (2603:10b6:8:9c::19)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS7PR12MB6095:EE_|SA0PR12MB4398:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4862c393-bcf2-486b-0b9b-08db4ef9ce57
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: XOyN24Y3EVcMFe6AUhdDALL420NL6wXMc5YHeh8gfJOFWI+LR4/8f6eXgktCiSzfCMyvVp5kkJahediIM77bVxGbUqNBlp6b6U94vokTozYABd+dNH3Z3BH0gbsigIKLoBgn9gKssjnpghi0NZeoqrdzhEFf17sh5wy5+2REvVUC1cttT7jZzych7X9hUiraE/hdDQih4HZeqvfRil59CW2E1eYM1dqagLlA+jDdMSMjA64CkCTa0si091jq6b2dl/hMncw07gLWIizq/i+k7GtBlkdSz18ZI7Oso9dN/yAPxfZ+z4xqFe2wZhAnf0PzF3O8ozJ00eR1HzziHtGI5eMAXjYmQzDiGCL1dtCyn+6PQ0krfXsH/C11YVcIVKoMkvWRS6Lex1vm4Q1eyJuXV1LY63icJn8nDzsFu+y7CsV/fa363NdKaGLhMtvvNKZ7L24+dgmkmww+5mcksmBno6mjmaVoN+e52PLmHp5JMoHnszR49TvJlFTv50nbWqf+hpQJA3rFhtAVrx5OIgbL/sVp6ZeFQvcwFQt8K+f9jCA7P51pkFZl+iFioAexFr2OHF0G3oY7Q6hJgO5ztdW5+tg6Dn/5nsSU8sf6u0heGvmEGG81i91e3FxY+izTNW5DujYT1xOvqoLmWwE4XpBwgQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS7PR12MB6095.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(346002)(376002)(39860400002)(396003)(451199021)(83380400001)(478600001)(6486002)(54906003)(110136005)(2616005)(6512007)(6506007)(53546011)(186003)(44832011)(7416002)(2906002)(36756003)(38100700002)(66476007)(66556008)(66946007)(4326008)(41300700001)(5660300002)(8676002)(8936002)(31696002)(86362001)(316002)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?ZmY2UEoyL0tMTGEybWgxWVZQK0poYzNMQTZWS1kwejhEcFRxUGlEWjQzeG5T?=
+ =?utf-8?B?MDZiWnowdk5lRXFRbU5BTTNZYUNhaW9lY0xrQlM3MkkxMm9ZQkZUUkFQOHMr?=
+ =?utf-8?B?ZnFtZlJTZXd1RHhZSktCZ1FjV2NMa3g4T1BGMS9DKzdpeXRKV1VXM25qais0?=
+ =?utf-8?B?WXJ0U1hzZVFEYnBUVFBYaFc4VEZ5L0hWUkExQjIyeUpEV0JSVTdvSTVXT1NO?=
+ =?utf-8?B?NUQ4UkMrUDVCNzY3ZzZJTEcwSUtyY2sxUDZycDhuZ1hOSXpiaS9Pd2YyTmhs?=
+ =?utf-8?B?akZRY0Q4VmQ4TGVBOFpXTE9LT1Q3V0c0Vk5seU1JVWZ0RTE2MUREWjRKZjln?=
+ =?utf-8?B?aUxFQ2dPK1UzL09CUnNpZnhVQ05JVXhhQzRNYWhmVis1ZjdUN3VEWEIreHJN?=
+ =?utf-8?B?NTI2Z2haMnplY0lmVmVORW9LUVlyT3R5aUV2cXRrd2tBaDlRc3RxK25veUs0?=
+ =?utf-8?B?b3VVSjhHT3FYcEdWZVMyNk52Rk91Y2dsSEVrQzJ5WGJZV091UXBuT2xCdnky?=
+ =?utf-8?B?Q3pFM1JIVHhrLzVaS2Y3SHVOa0k2bDlCRWIwNmFFazZsNGh3TERpUnp3YnJ1?=
+ =?utf-8?B?bjU3MlhvR2lLaEs0S094TXEyaUhzL2J5TUlnVGJLV2hnWkZRYU9SNFVRRDBo?=
+ =?utf-8?B?eWhobmxQQmhMZW43SEF6bk90dFIrb0Vna0Z4dkVSQytKV2lxc0NEeEFreU0y?=
+ =?utf-8?B?emZwWDNScjF3U2kzZldZcmg2QjRXbElOV2EzRDYrcFVCUk9BVWRBWjRVWTE3?=
+ =?utf-8?B?Z292bDdPVWVpZEV0NXJYUUZtbmxPMUdOSENrSXJUOWNFUVBleFNHV3FlR1Br?=
+ =?utf-8?B?b01lUDNGM0MvMTJsNTlkalc2Tjh0QTFpcFFwdHM3b1dDWVhkcmpUd3g0ejQv?=
+ =?utf-8?B?ejRiRU81bzhoenA1YkVqand5bkUzbkFldC9ZUUpFQ0dSNkRhdTIvT1FicjZX?=
+ =?utf-8?B?MzRPbFNCd3JKNDhWUnVhQlF1bEFIRkFIVlB6Y2RoL0Z1eFZMNk5FaWVINFF6?=
+ =?utf-8?B?RmJUYkswTmdNUk9Fa3NQaGJxOXBDY0ZJd013dXJBYVVLSUJFS1NrMGNZelQ5?=
+ =?utf-8?B?dVJ3T2pPbTg3a3V3ckJsczNacEhVVktKTXhnejBVZDhBOFJoakJPOFZoQ3pH?=
+ =?utf-8?B?WjB3K0pwbmlYRzVHVFE0aVJlZDdmV1R1K3R0VHRsZkVQdm5zRUhGSTRsa3hs?=
+ =?utf-8?B?UVFqRkZqZTNVVVFsUXRvaFFKVWRuZ2xoQjRBNUFoU3FKOWF4alVYYVBNS2xO?=
+ =?utf-8?B?Nm9YK0NCb0pjRUpKN0xTSG1DdVpuREQwalh0UFc1SjA3Z1pGY1RQRVV4M3Ew?=
+ =?utf-8?B?NlJQSk9MSTBweVVrZWM2b2JtNHVDeDZyUm5tRU5Zd05LeUR0eE85eFo1Y091?=
+ =?utf-8?B?d3JkdllGSVNOQkVadzBOUnhiZG9hekpiSWFibkphZWNUa0JRV1AvWU1jcmg3?=
+ =?utf-8?B?K2xKdUhNejcraVJOaElueEY5cUQ2eko3cUMzZmd6SDlEdEMvRnR0eW1mT0dK?=
+ =?utf-8?B?UFhXN012Ykd5OTlYSTJ4V3dPeEJyb0ZDYkNseXBCSTVOWHZTTkJnbjhNSHN6?=
+ =?utf-8?B?VFdHMnEzeExPTWdNdlVvOVNPU0FrSjUrem8vWGx3bjU3MENSWmgzYU9EK0pE?=
+ =?utf-8?B?SzZIOExqNlp6L1VQbC9sNVVMY1hzVnNvL2VLTHIxSUNqZjZCY2pVT1BDa2s3?=
+ =?utf-8?B?OTFPSVhReXQvMEUxVmU3ZndBQWVBYkVvamFDUnRqcmhLa3VNNkJyVUluNCtS?=
+ =?utf-8?B?Yk94QjJrcFdwTVJLUkx6MnNFTVk3UkJOWUVTSmFsUWlRVEQvOUZJYjVyZkZE?=
+ =?utf-8?B?WXJnTFBhcDNYd3BobDNEa2Naa05MMnl2eHAyTWlOU2llczlwS09wbU5GbktW?=
+ =?utf-8?B?VWNzQlk4dWRPN3JPNVpvcmY1SzR2Vjd5R2VYUDZPa20xdlBRcE84VzJ5Y21W?=
+ =?utf-8?B?dFllN0ZQRDErR2luWFhPWkNoZzlydW5rQ2ZYK3U0YitZQUNvT21yMU43RG9z?=
+ =?utf-8?B?dWM1U0hhVFBNTVpmTWZiQkRERHA0SFN4YmhkbFMyckV2cE5MMGliNTE5RmF0?=
+ =?utf-8?B?Y3hBZE5jZnY1WkIrZE90Ri9kTUlvdTFoL1d3blpJVmNDMjFPQmhtTXowOFh3?=
+ =?utf-8?B?dGZKellMUFV3d3dFTW9sRDh6eUFTZFBkUkR3ajQxSXBFM2tOdWRYZmo0OFZl?=
+ =?utf-8?Q?0MSrwSUXnExTWz4De6Fz82epvW9q36ADl2kWikWzf+Up?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4862c393-bcf2-486b-0b9b-08db4ef9ce57
+X-MS-Exchange-CrossTenant-AuthSource: DS7PR12MB6095.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2023 12:51:42.0582
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: LAdr9Jo7IvjaIfEn/114TpuvHS2XJ/zZV4PsfHKJSXtRUVz01rHlpclXtJ3sfaoV8lj+laCpXm3euauKF8mDkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA0PR12MB4398
+X-Spam-Status: No, score=-3.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 24/04/2023 17:21, Sumit Gupta wrote:
-> 
-> 
-> On 24/04/23 20:30, Sumit Gupta wrote:
->>
->>
->> On 24/04/23 19:18, Krzysztof Kozlowski wrote:
->>> External email: Use caution opening links or attachments
->>>
->>>
->>> On 24/04/2023 15:13, Sumit Gupta wrote:
->>>> Add Interconnect framework support to dynamically set the DRAM
->>>> bandwidth from different clients. Both the MC and EMC drivers are
->>>> added as ICC providers. The path for any request is:
->>>>   MC-Client[1-n] -> MC -> EMC -> EMEM/DRAM
->>>>
->>> Thank you for your patch. There is something to discuss/improve.
->>>
->>>
->>>> +static int tegra_emc_interconnect_init(struct tegra186_emc *emc)
->>>> +{
->>>> +     struct tegra_mc *mc = dev_get_drvdata(emc->dev->parent);
->>>> +     const struct tegra_mc_soc *soc = mc->soc;
->>>> +     struct icc_node *node;
->>>> +     int err;
->>>> +
->>>> +     emc->provider.dev = emc->dev;
->>>> +     emc->provider.set = tegra_emc_icc_set_bw;
->>>> +     emc->provider.data = &emc->provider;
->>>> +     emc->provider.aggregate = soc->icc_ops->aggregate;
->>>> +     emc->provider.xlate = tegra_emc_of_icc_xlate;
->>>> +     emc->provider.get_bw = tegra_emc_icc_get_init_bw;
->>>> +
->>>> +     icc_provider_init(&emc->provider);
->>>> +
->>>> +     /* create External Memory Controller node */
->>>> +     node = icc_node_create(TEGRA_ICC_EMC);
->>>> +     if (IS_ERR(node)) {
->>>> +             err = PTR_ERR(node);
->>>> +             goto err_msg;
->>>> +     }
->>>> +
->>>> +     node->name = "External Memory Controller";
->>>> +     icc_node_add(node, &emc->provider);
->>>> +
->>>> +     /* link External Memory Controller to External Memory (DRAM) */
->>>> +     err = icc_link_create(node, TEGRA_ICC_EMEM);
->>>> +     if (err)
->>>> +             goto remove_nodes;
->>>> +
->>>> +     /* create External Memory node */
->>>> +     node = icc_node_create(TEGRA_ICC_EMEM);
->>>> +     if (IS_ERR(node)) {
->>>> +             err = PTR_ERR(node);
->>>> +             goto remove_nodes;
->>>> +     }
->>>> +
->>>> +     node->name = "External Memory (DRAM)";
->>>> +     icc_node_add(node, &emc->provider);
->>>> +
->>>> +     err = icc_provider_register(&emc->provider);
->>>> +     if (err)
->>>> +             goto remove_nodes;
->>>> +
->>>> +     return 0;
->>>> +
->>>> +remove_nodes:
->>>> +     icc_nodes_remove(&emc->provider);
->>>> +err_msg:
->>>> +     dev_err(emc->dev, "failed to initialize ICC: %d\n", err);
->>>> +
->>>> +     return err;
->>>> +}
->>>> +
->>>>   static int tegra186_emc_probe(struct platform_device *pdev)
->>>>   {
->>>> +     struct tegra_mc *mc = dev_get_drvdata(pdev->dev.parent);
->>>>        struct mrq_emc_dvfs_latency_response response;
->>>>        struct tegra_bpmp_message msg;
->>>>        struct tegra186_emc *emc;
->>>> @@ -236,6 +339,29 @@ static int tegra186_emc_probe(struct 
->>>> platform_device *pdev)
->>>>        debugfs_create_file("max_rate", S_IRUGO | S_IWUSR, 
->>>> emc->debugfs.root,
->>>>                            emc, &tegra186_emc_debug_max_rate_fops);
->>>>
->>>> +     if (mc && mc->soc->icc_ops) {
->>>> +             /*
->>>> +              * Initialize the ICC even if BPMP-FW doesn't support 
->>>> 'MRQ_BWMGR_INT'.
->>>> +              * Use the flag 'mc->bwmgr_mrq_supported' within MC 
->>>> driver and return
->>>> +              * EINVAL instead of passing the request to BPMP-FW 
->>>> later when the BW
->>>> +              * request is made by client with 'icc_set_bw()' call.
->>>> +              */
->>>> +             err = tegra_emc_interconnect_init(emc);
->>>> +             if (err)
->>>> +                     goto put_bpmp;
->>>> +
->>>> +             if (tegra_bpmp_mrq_is_supported(emc->bpmp, 
->>>> MRQ_BWMGR_INT)) {
->>>> +                     mc->bwmgr_mrq_supported = true;
->>>> +
->>>> +                     /*
->>>> +                      * MC driver probe can't get BPMP reference as 
->>>> it gets probed
->>>> +                      * earlier than BPMP. So, save the BPMP ref got 
->>>> from the EMC
->>>> +                      * DT node in the mc->bpmp and use it in MC's 
->>>> icc_set hook.
->>>> +                      */
->>>> +                     mc->bpmp = emc->bpmp;
->>>
->>> This (and ()) are called without any locking. You register first the
->>> interconnect, so set() callback can be used, right? Then set() could be
->>> called anytime between tegra_emc_interconnect_init() and assignment
->>> above. How do you synchronize these?
->>>
->>> Best regards,
->>> Krzysztof
->>>
->>
->> Currently, the tegra234_mc_icc_set() has NULL check. So, it will give 
->> this error.
->>   if (!mc->bpmp) {
 
-How does it solve concurrent accesses and re-ordering of instructions by
-compiler or CPU?
-
->>           dev_err(mc->dev, "BPMP reference NULL\n");
->>           return -ENOENT;
->>   }
+On 5/6/23 09:05, Guenter Roeck wrote:
+> On Thu, Apr 27, 2023 at 12:33:36AM -0500, Mario Limonciello wrote:
+>> s2idle previously worked on this system, but it regressed in kernel
+>> 6.4 due to commit 310e782a99c7 ("platform/x86/amd: pmc: Utilize SMN
+>> index 0 for driver probe").
 >>
->> To fix, we can do the below change and swap the order. Please let me 
->> know if this sounds fine ?
->>   if (mc && mc->soc->icc_ops) {
->>           if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT)) {
->>                   mc->bwmgr_mrq_supported = true;
->>                   mc->bpmp = emc->bpmp;
->>           }
+>> The reason for the regression is that before this commit the SMN
+>> communication was hardcoded, but after amd_smn_read() is used which
+>> relies upon the misc PCI ID used by DF function 3 being included in
+>> a table.  The ID was missing for model 78h, so this meant that the
+>> amd_smn_read() wouldn't work.
 >>
->>           err = tegra_emc_interconnect_init(emc);
->>           if (err)
->>                   goto put_bpmp;
+>> Add the missing ID into amd_nb, restoring s2idle on this system.
 >>
->>   }
-> Sorry, replied too soon. Missed setting "mc->bpmp" to NULL. Sharing new 
-> proposed change. Please let me know if this looks OK.
-> 
->   if (mc && mc->soc->icc_ops) {
->      if (tegra_bpmp_mrq_is_supported(emc->bpmp, MRQ_BWMGR_INT)) {
->              mc->bwmgr_mrq_supported = true;
->              mc->bpmp = emc->bpmp;
->      }
-> 
->      err = tegra_emc_interconnect_init(emc);
->      if (err) {
->              mc->bpmp = NULL;
->              goto put_bpmp;
+>> Fixes: 310e782a99c7 ("platform/x86/amd: pmc: Utilize SMN index 0 for driver probe")
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> FWIW:
+>
+> Acked-by: Guenter Roeck <linux@roeck-us.net>
+>
+> Note that this patch is not upstream, meaning the second patch
+> in the series can not be applied either. I am not sure if that is
+> because of "regressed in kernel 6.4" - after all, that kernel does not
+> exist yet. The offending patch _is_ in the upstream kernel, though.
+> It might make sense to inform the regression bot if the problem is
+> not fixed when v6.4-rc1 is made available.
 
-Sorry, I didn't check the code. I assume you should do it...
+You're right; the commit message should:
 
-Best regards,
-Krzysztof
+s,but it regressed in kernel 6.4 due,but it regressed in,
 
+
+Boris told me that he's waiting for 6.4-rc1 to pick this series up.
+
+#regzbot ^introduced 310e782a99c7
+
+>
+> Guenter
+>
+>> ---
+>>   arch/x86/kernel/amd_nb.c | 2 ++
+>>   include/linux/pci_ids.h  | 1 +
+>>   2 files changed, 3 insertions(+)
+>>
+>> diff --git a/arch/x86/kernel/amd_nb.c b/arch/x86/kernel/amd_nb.c
+>> index 4266b64631a4..7e331e8f3692 100644
+>> --- a/arch/x86/kernel/amd_nb.c
+>> +++ b/arch/x86/kernel/amd_nb.c
+>> @@ -36,6 +36,7 @@
+>>   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F4 0x166e
+>>   #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F4 0x14e4
+>>   #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F4 0x14f4
+>> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F4 0x12fc
+>>   
+>>   /* Protect the PCI config register pairs used for SMN. */
+>>   static DEFINE_MUTEX(smn_mutex);
+>> @@ -79,6 +80,7 @@ static const struct pci_device_id amd_nb_misc_ids[] = {
+>>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M50H_DF_F3) },
+>>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M60H_DF_F3) },
+>>   	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M70H_DF_F3) },
+>> +	{ PCI_DEVICE(PCI_VENDOR_ID_AMD, PCI_DEVICE_ID_AMD_19H_M78H_DF_F3) },
+>>   	{}
+>>   };
+>>   
+>> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+>> index 45c3d62e616d..95f33dadb2be 100644
+>> --- a/include/linux/pci_ids.h
+>> +++ b/include/linux/pci_ids.h
+>> @@ -567,6 +567,7 @@
+>>   #define PCI_DEVICE_ID_AMD_19H_M50H_DF_F3 0x166d
+>>   #define PCI_DEVICE_ID_AMD_19H_M60H_DF_F3 0x14e3
+>>   #define PCI_DEVICE_ID_AMD_19H_M70H_DF_F3 0x14f3
+>> +#define PCI_DEVICE_ID_AMD_19H_M78H_DF_F3 0x12fb
+>>   #define PCI_DEVICE_ID_AMD_CNB17H_F3	0x1703
+>>   #define PCI_DEVICE_ID_AMD_LANCE		0x2000
+>>   #define PCI_DEVICE_ID_AMD_LANCE_HOME	0x2001
+>> -- 
+>> 2.34.1
+>>
