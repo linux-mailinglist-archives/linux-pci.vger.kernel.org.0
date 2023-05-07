@@ -2,43 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7AAAA6F96BB
-	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 05:41:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 860D86F9754
+	for <lists+linux-pci@lfdr.de>; Sun,  7 May 2023 09:36:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229551AbjEGDlo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 6 May 2023 23:41:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36592 "EHLO
+        id S230090AbjEGHgI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 May 2023 03:36:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbjEGDlm (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 6 May 2023 23:41:42 -0400
-Received: from mail-m127104.qiye.163.com (mail-m127104.qiye.163.com [115.236.127.104])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6BE9132BE;
-        Sat,  6 May 2023 20:41:39 -0700 (PDT)
-Received: from localhost.localdomain (unknown [IPV6:240e:3b7:3277:3e50:d9d7:3dc:49c3:c0bf])
-        by mail-m127104.qiye.163.com (Hmail) with ESMTPA id A44EFA40198;
-        Sun,  7 May 2023 11:41:34 +0800 (CST)
-From:   Ding Hui <dinghui@sangfor.com.cn>
-To:     bhelgaas@google.com
-Cc:     sathyanarayanan.kuppuswamy@linux.intel.com, vidyas@nvidia.com,
-        david.e.box@linux.intel.com, kai.heng.feng@canonical.com,
-        michael.a.bottini@linux.intel.com, rajatja@google.com,
-        refactormyself@gmail.com, qinzongquan@sangfor.com.cn,
-        dinghui@sangfor.com.cn, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] PCI/ASPM: Fix UAF by disabling ASPM for link when child function is removed
-Date:   Sun,  7 May 2023 11:40:57 +0800
-Message-Id: <20230507034057.20970-1-dinghui@sangfor.com.cn>
-X-Mailer: git-send-email 2.17.1
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSE5LVktLH0IfSkpDHUMeS1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUlPSx5BSBlMQUhJTExBSB5OS0EfQh9MQUgfGEFPQhhIQRhLGR1ZV1kWGg8SFR0UWU
-        FZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Tid: 0a87f44cee36b282kuuua44efa40198
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PC46Vhw5Hj0OTjJJGD0ZKA4L
-        HUwaFFFVSlVKTUNIT0hLQ0JOTUpIVTMWGhIXVR8SFRwTDhI7CBoVHB0UCVUYFBZVGBVFWVdZEgtZ
-        QVlJT0seQUgZTEFISUxMQUgeTktBH0IfTEFIHxhBT0IYSEEYSxkdWVdZCAFZQU9NTU43Bg++
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_NONE,
+        with ESMTP id S229462AbjEGHgH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 03:36:07 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCAD4132BD
+        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 00:36:05 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3f389c519e5so3130901cf.2
+        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 00:36:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=oobak.org; s=ghs; t=1683444965; x=1686036965;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=oKDZorWA8bxcpIoWQc9u4DPSLdhcXPQtyOtwgtWCV8Y=;
+        b=fpswxqYKS06GeJF40Y+9wmbWBDNjJleXBOao7KIB1qsgb+mDki6UhRxMC02379B48E
+         JY7QQieo2pRKVxyiYknA8lLOv9MKEbwsmEIPbarDj2j7ybkxU3qt2tSnQu49aGh65hVe
+         buFG0fXwnlSYJWMzmiVhcnWi0skkwA1zixS6E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683444965; x=1686036965;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oKDZorWA8bxcpIoWQc9u4DPSLdhcXPQtyOtwgtWCV8Y=;
+        b=GMQoXPVhZydUrMPljFZOJN/of8TKtXtLHk40FcQKqaOZvOP+92Cr4N5aotJhdpQDTD
+         Cy5IC7Rb1Lj/kELzglLL3r3zmmhVR9cuhpFnEL+1E65P9SeEvP6dBnmDNb+DkCIclWsR
+         oWRns83FIzDEbyEoxPZLkYa26lCKTfgSquFrep+qTM3gIDNBJ37sizmSSTqbaBO5vVLv
+         o3ocSfWkPjGpq6BpHEvBkw4CfDRhPqrlJJHlv7iYD1vBE+vxJZOzrxdnl4XT4oHGciRY
+         2S88Is1XfnneV29Glz108bsbTmv325lvI/uSefElFn20AkIRP1FsCvi1v4JuL0AbH8Id
+         bZfQ==
+X-Gm-Message-State: AC+VfDxXor4RX01QeFT26xI2lAo08dWtr1BmR7rD13C2PCTptqJROx1y
+        3j095vZBU7Mc0dTBI6+R2ycmSpCOU10/KCBoCmwRsg==
+X-Google-Smtp-Source: ACHHUZ7T761G0qiKBvd4ajbLCaJG4BNMMfeDv76kQsbTeb9CuVGEKOejYwnhMaReiUmo3QCgfh+Wmw==
+X-Received: by 2002:ac8:7c4d:0:b0:3f1:a6d:d976 with SMTP id o13-20020ac87c4d000000b003f10a6dd976mr10073290qtv.48.1683444964631;
+        Sun, 07 May 2023 00:36:04 -0700 (PDT)
+Received: from hyperion.jumbo (162-198-119-188.lightspeed.cicril.sbcglobal.net. [162.198.119.188])
+        by smtp.gmail.com with ESMTPSA id x18-20020ac87012000000b003ef3df76ec7sm2035108qtm.93.2023.05.07.00.36.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 07 May 2023 00:36:04 -0700 (PDT)
+From:   Mike Pastore <mike@oobak.org>
+To:     linux-pci@vger.kernel.org
+Cc:     Mike Pastore <mike@oobak.org>
+Subject: [PATCH] PCI: Apply Intel NVMe quirk to Solidigm P44 Pro
+Date:   Sun,  7 May 2023 02:35:19 -0500
+Message-Id: <20230507073519.9737-1-mike@oobak.org>
+X-Mailer: git-send-email 2.39.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -47,105 +64,61 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-If the Function 0 of a Multi-Function device is software removed,
-a freed downstream pointer will be left in struct pcie_link_state,
-and then when pcie_config_aspm_link() be invoked from any path,
-we will trigger use-after-free, e.g.:
+Prevent KVM hang when a Solidgm P44 Pro NVMe is passed through to a
+guest via IOMMU and the guest is subsequently rebooted.
 
-Reproducer:
+A similar issue was identified and patched in commit 51ba09452d11b
+("PCI: Delay after FLR of Intel DC P3700 NVMe") and the same fix can be
+aplied for this case. (Intel spun off their NAND and SSD business as
+Solidigm and sold it to SK Hynix in late 2021.)
 
-  [root@host ~]# cat repro.sh
-  #!/bin/bash
-  DEV_F0="0000:03:00.0"
-  echo 1 > /sys/bus/pci/devices/$DEV_F0/remove
-  echo powersave > /sys/module/pcie_aspm/parameters/policy
-
-Result:
-
-  ==================================================================
-  BUG: KASAN: slab-use-after-free in pcie_config_aspm_link+0x42d/0x500
-  Read of size 4 at addr ffff8881070c80a0 by task repro.sh/2056
-  CPU: 3 PID: 2056 Comm: repro.sh Not tainted 6.3.0+ #15
-  Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
-  Call Trace:
-   <TASK>
-   dump_stack_lvl+0x33/0x50
-   print_address_description.constprop.0+0x27/0x310
-   print_report+0x3e/0x70
-   kasan_report+0xae/0xe0
-   pcie_config_aspm_link+0x42d/0x500
-   pcie_aspm_set_policy+0x8e/0x1a0
-   param_attr_store+0x162/0x2c0
-   module_attr_store+0x3e/0x80
-   kernfs_fop_write_iter+0x2d5/0x460
-   vfs_write+0x72e/0xae0
-   ksys_write+0xed/0x1c0
-   do_syscall_64+0x38/0x90
-   entry_SYSCALL_64_after_hwframe+0x72/0xdc
-
-As per PCIe spec r6.0, sec 7.5.3.7, it is recommended that software
-program the same value in all Functions for Multi-Function Devices
-(including ARI Devices). For ARI Devices, ASPM Control is determined
-solely by the setting in Function 0.
-
-So we can just disable ASPM of the whole component if any child
-function is removed, the downstream pointer will be avoided from
-use-after-free, that will also avoid other potential corner cases.
-
-Fixes: b5a0a9b59c81 ("PCI/ASPM: Read and set up L1 substate capabilities")
-Debugged-by: Zongquan Qin <qinzongquan@sangfor.com.cn>
-Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
+Signed-off-by: Mike Pastore <mike@oobak.org>
 ---
-v2:
-  - better commit title and message
-  - update comment
-  - add reproduction steps
+ drivers/pci/quirks.c    | 10 ++++++----
+ include/linux/pci_ids.h |  2 ++
+ 2 files changed, 8 insertions(+), 4 deletions(-)
 
-v1: https://lore.kernel.org/lkml/20230504123418.4438-1-dinghui@sangfor.com.cn/
-
-Link: https://lore.kernel.org/lkml/20230429132604.31853-1-dinghui@sangfor.com.cn/
-
----
- drivers/pci/pcie/aspm.c | 13 +++++--------
- 1 file changed, 5 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 66d7514ca111..06152cc39fea 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -1010,18 +1010,15 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 
- 	down_read(&pci_bus_sem);
- 	mutex_lock(&aspm_lock);
--	/*
--	 * All PCIe functions are in one slot, remove one function will remove
--	 * the whole slot, so just wait until we are the last function left.
--	 */
--	if (!list_empty(&parent->subordinate->devices))
--		goto out;
- 
- 	link = parent->link_state;
- 	root = link->root;
- 	parent_link = link->parent;
- 
--	/* All functions are removed, so just disable ASPM for the link */
-+	/*
-+	 * For any function removed, disable ASPM for the link. See PCIe r6.0,
-+	 * sec 7.7.3.7 for details.
-+	 */
- 	pcie_config_aspm_link(link, 0);
- 	list_del(&link->sibling);
- 	/* Clock PM is for endpoint device */
-@@ -1032,7 +1029,7 @@ void pcie_aspm_exit_link_state(struct pci_dev *pdev)
- 		pcie_update_aspm_capable(root);
- 		pcie_config_aspm_path(parent_link);
- 	}
--out:
-+
- 	mutex_unlock(&aspm_lock);
- 	up_read(&pci_bus_sem);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 44cab813bf95..b47844d0e574 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3980,10 +3980,11 @@ static int nvme_disable_and_flr(struct pci_dev *dev, bool probe)
  }
+ 
+ /*
+- * Intel DC P3700 NVMe controller will timeout waiting for ready status
+- * to change after NVMe enable if the driver starts interacting with the
+- * device too soon after FLR.  A 250ms delay after FLR has heuristically
+- * proven to produce reliably working results for device assignment cases.
++ * Some NVMe controllers such as Intel DC P3700 and Solidigm P44 Pro will
++ * timeout waiting for ready status to change after NVMe enable if the driver
++ * starts interacting with the device too soon after FLR.  A 250ms delay after
++ * FLR has heuristically proven to produce reliably working results for device
++ * assignment cases.
+  */
+ static int delay_250ms_after_flr(struct pci_dev *dev, bool probe)
+ {
+@@ -4070,6 +4071,7 @@ static const struct pci_dev_reset_methods pci_dev_reset_methods[] = {
+ 	{ PCI_VENDOR_ID_SAMSUNG, 0xa804, nvme_disable_and_flr },
+ 	{ PCI_VENDOR_ID_INTEL, 0x0953, delay_250ms_after_flr },
+ 	{ PCI_VENDOR_ID_INTEL, 0x0a54, delay_250ms_after_flr },
++	{ PCI_VENDOR_ID_SOLIDIGM, 0xf1ac, delay_250ms_after_flr },
+ 	{ PCI_VENDOR_ID_CHELSIO, PCI_ANY_ID,
+ 		reset_chelsio_generic_dev },
+ 	{ PCI_VENDOR_ID_HUAWEI, PCI_DEVICE_ID_HINIC_VF,
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 45c3d62e616d..6105eddf41bf 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -3119,4 +3119,6 @@
+ 
+ #define PCI_VENDOR_ID_NCUBE		0x10ff
+ 
++#define PCI_VENDOR_ID_SOLIDIGM		0x025e
++
+ #endif /* _LINUX_PCI_IDS_H */
+
+base-commit: 63355b9884b3d1677de6bd1517cd2b8a9bf53978
 -- 
-2.17.1
+2.39.2
 
