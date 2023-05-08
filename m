@@ -2,183 +2,143 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 017096FB0B8
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 15:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 32A5A6FB17E
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 15:28:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234281AbjEHNAW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 09:00:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54602 "EHLO
+        id S233480AbjEHN2a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 09:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232838AbjEHNAS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 09:00:18 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14B335B2C;
-        Mon,  8 May 2023 06:00:16 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id d2e1a72fcca58-64384c6797eso3607679b3a.2;
-        Mon, 08 May 2023 06:00:16 -0700 (PDT)
+        with ESMTP id S233699AbjEHN22 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 09:28:28 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FBC33FCC;
+        Mon,  8 May 2023 06:28:06 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-24df4ecdb87so3106387a91.0;
+        Mon, 08 May 2023 06:28:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683550816; x=1686142816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e8dlsQ2CwmNO7wfwJytQqAVyx7gIUYGLIcScY05pJUU=;
-        b=NyWAEC0fnznRXTC4DtRIIkKzkIm/1m7MLZYu7hkwFiZfu3TJcwv/ghlR1ZGi3KAEXi
-         i3pyhB0QyRq383PB3jJBae8v/RLPWd2TmPUyL+Um4O3Eh7CKm+ImQcdWyOgWUBfK3ePL
-         v81os/n/d8cr1PqvEaDrfaG/E3w2EueJLFCi5caLkNInssVvkz1yvnxdK5NsZmlZ775N
-         HENZvYx90UgR0CFpOON3swIvLhXgnT6i3/ncd3NQh6hsIo2aWDn/ePqaVykZCHJw0Xnt
-         Kw8nRYSECqQXNeZzBF0K8odGEjdO14bJnK1xMX/WacD1niF5Ic21yWBtibzwACcqQTTU
-         9Y/Q==
+        d=gmail.com; s=20221208; t=1683552485; x=1686144485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hJL7on47Y+qnReWK+RN8hsZ4/lRT/GdxonZVZJkZNFc=;
+        b=L0wSaMX47AxHW+5mwIPiPG/LQyY070h6LJllIePcS0Sv63IYnmEKAxprG7ulLTB+bH
+         Bi04krbmZ+1+aUPcvtl38Rf+WNUx2fuZje/fD6QlJ67/Kc5/1U6kkA7vqW/KJ//OBLHV
+         bwKg2UF6Gl5ahTvzQSjbAi3IpW0EGnxZ27tXmzgk8bokLmeEZTQitq+Yf30EBJ65kBqC
+         pMytV3CruCfrvMZWAx4uGdYJYC75WEjWjnUQZN6eqf4f79g68YqPLCOBfMBuFwfALXr+
+         m+CSnYPXFzT2O8djZ58xoWOKYQM0gYAssrTjzx23YiE2o4aiiUxGjrsLsVIVHNLsKnwj
+         xf3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683550816; x=1686142816;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1683552485; x=1686144485;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e8dlsQ2CwmNO7wfwJytQqAVyx7gIUYGLIcScY05pJUU=;
-        b=ZpVog3VcSS2iRv4Q7lXzo3XhQ4RDrR/wmDn0Xx7EdrNiRJUxzAmGGxuHDptKmhKKrS
-         6xl8oqIhBletT1LOba5gA1Uz6AK+GO8tJFJACR7TfvJr9SfsTywDeERz7N9nkwkoBvRS
-         xpW39pw9MgRo74/1In40EyPFIzIr7bs57gYy0mskQ8nE3nBjVtmdzqxYrg53mUBLvJd5
-         uo70sZlOOf1CXVLHqK3s/Wrbo8VYgPv+lRpLGQ2cHzz2sW+ZdPQpoWThwfczZomZrQt7
-         Xat9CRXBSxqXaC607BBg+45yBivwA1HCm5ATjZ6PDksfJGKP3Fd3RWsS0cwuWKYtZTgs
-         /o3g==
-X-Gm-Message-State: AC+VfDx4G9ItDR4e/bTP0LXcMbuxXQC9IX9QY3RG2lmnOEG21islUtAN
-        CgQ9h6/r6QiQWf2svwoD8AHrWUs599yskyMG2/Q=
-X-Google-Smtp-Source: ACHHUZ5BlhTTpgXl7d19lzo59cLz8865HsCq/XLKKxmwEt6g82Je8ChFuu2vk29C8N48WYQ4iLf9IIRGL0N+vDblejc=
-X-Received: by 2002:a05:6a00:190e:b0:646:2ec8:3360 with SMTP id
- y14-20020a056a00190e00b006462ec83360mr2972330pfi.23.1683550816074; Mon, 08
- May 2023 06:00:16 -0700 (PDT)
+        bh=hJL7on47Y+qnReWK+RN8hsZ4/lRT/GdxonZVZJkZNFc=;
+        b=D6/WkAGlDAmmxQFoAGTucFpX48Cb0Y8Qj7V5NfL93PWKpm8WuwixNm35bKSx6nesq0
+         h3QFXQw4xcKrVXGNwqI2ZSP8zvK/kV+wwuJH4PEn28EBMCVYooxJkjaekSHC4v21LLPx
+         EQGUcwOXEcP5RWWQkaBYVz0wJHXQo7ShxQNuu61/2Hk0AOFkn79/2FsfePwB7aweB0/q
+         wlKVbhInSudAqZlsikgkGJjx9dc8VIsziF0HaxnXTigvH+BFHpaiY7ahBeB1U9GP7o7r
+         BBIzbF8jplqJ5d+ctH3xoSBiWWlosg2EKIpfoMcAi+Di94pUJUJUxXtBpjJjTiFl8S10
+         fRlw==
+X-Gm-Message-State: AC+VfDx16dhtlHpdiuvLBvVTiKoO0Le2xnF8bVkd3yGjCftWItuCQXo5
+        1hD6EXmYoJ9uuYkW6/26TcM=
+X-Google-Smtp-Source: ACHHUZ7SfPi65V3zWt309n46kENPv3m7W6VlKo6duJegzYEYg4ZrHDn5RTJrY1k/8sJlgWcvVxtxpg==
+X-Received: by 2002:a17:90b:a48:b0:24d:f2f5:f571 with SMTP id gw8-20020a17090b0a4800b0024df2f5f571mr10606107pjb.36.1683552485567;
+        Mon, 08 May 2023 06:28:05 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id fs9-20020a17090af28900b002470f179b92sm9869455pjb.43.2023.05.08.06.28.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 06:28:04 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date:   Mon, 8 May 2023 06:28:03 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Shyam Sundar S K <Shyam-sundar.S-k@amd.com>,
+        Sanket Goswami <Sanket.Goswami@amd.com>,
+        Richard gong <richard.gong@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
+Message-ID: <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
+References: <20230427053338.16653-1-mario.limonciello@amd.com>
+ <20230427053338.16653-2-mario.limonciello@amd.com>
+ <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
+ <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
+ <084837c4-72c8-be92-fd1c-5ccbd805c559@leemhuis.info>
+ <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
 MIME-Version: 1.0
-References: <CAEm4hYUdkoZkdVg9tQ=fZoCk-1DYrNrDxmPc=+ZyRJaSnGOxwA@mail.gmail.com>
- <20230505160759.GA955334@bhelgaas>
-In-Reply-To: <20230505160759.GA955334@bhelgaas>
-From:   Xinghui Li <korantwork@gmail.com>
-Date:   Mon, 8 May 2023 21:01:31 +0800
-Message-ID: <CAEm4hYU5o43UqXT69o-uUYEu8k0jbtSbeVUO214VWo+gM+d+Zg@mail.gmail.com>
-Subject: Re: [PATCH v5] PCI: vmd: Add the module param to adjust MSI mode
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     nirmal.patel@linux.intel.com, kbusch@kernel.org,
-        jonathan.derrick@linux.dev, lpieralisi@kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Xinghui Li <korantli@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
+X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 6, 2023 at 12:08=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> > I am fine with these two ways naming of the param. Adjusting from
-> > enable_msi_remaping to disable_msi_bypass was aimed to trying address
-> > your comment about dealing with the device not supporting bypass.
-> > And in vmd drivers, the vmd bypass feature is enabled by adding the fla=
-g
-> > "VMD_FEAT_CAN_BYPASS_MSI_REMAP".  Therefore, I think disabling
-> > bypass seems more appropriate. This patch aims to provide a convenient
-> > way to remove that flag in a specific case.
->
-> Users don't care about the name of VMD_FEAT_CAN_BYPASS_MSI_REMAP.  I
-> don't think that's a very good name either (in my opinion
-> "VMD_FEAT_MSI_REMAP_DISABLE" would be more descriptive, and
-> VMCONFIG_MSI_REMAP is even worse since setting it *disables* MSI
-> remapping), but in any case these are internal to the driver.
->
-> > On Sat, Apr 29, 2023 at 2:40=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > > The "disable_msi_bypass" parameter name also leads to some complicate=
-d
-> > > logic.  IIUC, "disable_msi_bypass=3D0" means "do not disable MSI rema=
-p
-> > > bypassing" or, in other words, "do not remap MSIs."  This is only
-> > > supported by some VMDs.  Using "disable_msi_bypass=3D0" to *enable* t=
-he
-> > > bypass feature is confusing.
-> >
-> > However, as you said, it does lead to some complicated logic.  So, I
-> > also believe that these two approaches have their own pros and cons.
-> >
-> > > I still don't understand what causes the performance problem here.  I
-> > > guess you see higher performance when the VMD remaps child MSIs?  So
-> > > adding the VMD MSI-X domain interrupt handler and squashing all the
-> > > child MSI vectors into the VMD MSI vector space makes things better?
-> > > That seems backwards.  Is this because of cache effects or something?
-> >
-> > > What does "excessive pressure on the PCIe node" mean?  I assume the
-> > > PCIe node means the VMD?  It receives the same number of child
-> > > interrupts in either case.
-> >
-> > What I mean is that there will be performance issues when a PCIe domain
-> > is fully loaded with 4 Gen4 NVMe devices.  like this:
-> >  +-[10002:00]-+-01.0-[01]----00.0  device0
-> >  |                     +-03.0-[02]----00.0  device1
-> >  |                     +-05.0-[03]----00.0  device2
-> >  |                      \-07.0-[04]----00.0  device3
-> >
-> > According to the perf/irqtop tool, we found the os does get the same
-> > counts of interrupts in different modes. However, when the above
-> > situation occurs, we observed a significant increase in CPU idle
-> > time. Besides, the data and performance when using the bypass VMD
-> > feature were identical to when VMD was disabled. And after the
-> > devices mounted on a domain are reduced, the IOPS of individual
-> > devices will rebound somewhat. Therefore, we speculate that VMD can
-> > play a role in balancing and buffering interrupt loads. Therefore,
-> > in this situation, we believe that VMD ought to not be bypassed to
-> > handle MSI.
->
-> The proposed text was:
->
->   Use this when multiple NVMe devices are mounted on the same PCIe
->   node with a high volume of 4K random I/O. It mitigates excessive
->   pressure on the PCIe node caused by numerous interrupts from NVMe
->   drives, resulting in improved I/O performance. Such as:
->
-> The NVMe configuration and workload you mentioned works better with
-> MSI-X remapping.  But I don't know *why*, and I don't know that NVMe
-> is the only device affected.  So it's hard to write useful guidance
-> for users, other than "sometimes it helps."
->
-> Straw man proposal:
->
->   msi_remap=3D0
->
->     Disable VMD MSI-X remapping, which improves interrupt performance
->     because child device interrupts avoid the VMD MSI-X domain
->     interrupt handler.  Not all VMD devices support this, but for
->     those that do, this is the default.
->
->   msi_remap=3D1
->
->     Remap child MSI-X interrupts into VMD MSI-X interrupts.  This
->     limits the number of MSI-X vectors available to the whole child
->     device domain to the number of VMD MSI-X interrupts.
->
->     This may be required in some virtualization scenarios.
->
->     This may improve performance in some I/O topologies, e.g., several
->     NVMe devices doing lots of random I/O, but we don't know why.
->
-> I hate the idea of "we don't know why."  If you *do* know why, it
-> would be much better to outline the mechanism because that would help
-> users know when to use this.  But if we don't know why, admitting that
-> straight out is better than hand-waving about excessive pressure, etc.
->
-I completely agree with you. I discovered this issue using the bisect metho=
-d.
-Based on the observed data and experiments, I drew the above conclusions.
-We deduced the cause from the observed results. However, I have not yet
-been able to determine the precise cause of this issue.
+On Mon, May 08, 2023 at 01:25:43PM +0200, Borislav Petkov wrote:
+> On Mon, May 08, 2023 at 01:13:14PM +0200, Thorsten Leemhuis wrote:
+> > Which afaics means that users of -rc1 are now affected by this and might
+> > waste time bisecting a known issue that could easily have been fixed
+> > already. :-/ That doesn't feel right. Or am I missing something?
+> 
+> -rc1 is pretty much the most broken tree there is. And it is not an
+> officially released tree but a, well, the first release candidate. So
+> fixes are trickling in, there's lag between what gets found, when the
+> maintainers pick it up and when it ends up upstream and so on and so on.
+> 
+> Some fixes need longer testing because there have been cases where a fix
+> breaks something else.
+> 
+> And yes, maintainers can always expedite a fix or Linus will pick it up
+> directly if it breaks a lot of boxes in a nasty way.
+> 
+> So, long story short, I don't think you should track -rcs. You are
+> tracking the reports already and you're tracking where their fixes land
+> so I guess that's good enough.
+> 
 
-> The same applies to the virtualization caveat.  The text above is not
-> actionable -- how do users know whether their particular
-> virtualization scenario requires this option?
->
-I will add a note to make it clear that bypass mode will not work in guest
-passthrought mode, only remapping mode can be used.
+I absolutely disagree. Without Thorsten's tracking, Linus would have no
+idea what the status of the kernel is.
 
-Thanks
+> > /me wonders I he should start tracking regressions more closely during
+> > the merge window to catch and prevent situations like this...
+> 
+> I don't see a "situation" here. rcs can be broken for some use cases and
+> that is fine as long as that breakage doesn't get released.
+> 
+
+Again, I disagree. The whole point of testing release candidates is to get
+problems fixed. If issues are not fixed timely, they just pile up on top
+of each other and make it difficult to identify new issues (and, in many
+cases, to test the kernel in the first place).
+
+I find it quite annoying that problems are identfied, often even in -next,
+the patch intoducing them is applied to mainline anyway, and then
+it sometimes takes until -rc5 or even later to get the fix applied (even if
+the fix has been known for weeks or even months). It sometimes even takes
+Linus' intervention to get fixes applied to the upstream kernel. That
+really should not be necessary. Telling those who track regressions
+to stay away from release candidates is absolutely the wrong thing to do
+and would only serve to make release candidates quite pointless.
+
+v6.4-rc1 is a good example. Fixes for all build breakages were published
+before the commit window opened, yet at least one of them did not make
+it into -rc1. Together with this patch there are now at least two
+regressions if -rc1 whch could have been avoided and may impact testability
+on affected systems.
+
+Guenter
