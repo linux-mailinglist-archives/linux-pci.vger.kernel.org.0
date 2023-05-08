@@ -2,115 +2,222 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C23B56FACCA
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 13:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 378486FADF5
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 13:40:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235787AbjEHL2M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 07:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45438 "EHLO
+        id S235844AbjEHLkI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 07:40:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235786AbjEHL1q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 07:27:46 -0400
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23C50E48;
-        Mon,  8 May 2023 04:27:35 -0700 (PDT)
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-6ab074ef787so263799a34.0;
-        Mon, 08 May 2023 04:27:35 -0700 (PDT)
+        with ESMTP id S236185AbjEHLjx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 07:39:53 -0400
+Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4E5A411A3
+        for <linux-pci@vger.kernel.org>; Mon,  8 May 2023 04:39:43 -0700 (PDT)
+Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2ac770a99e2so48517021fa.3
+        for <linux-pci@vger.kernel.org>; Mon, 08 May 2023 04:39:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683545982; x=1686137982;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MexXMEnvHcUnDYaMqmVY/MSHM/LherZWjP+20kmXVqY=;
+        b=WCaDKEpWxQvYqhKslJuI6E4qcU2uFvPbdI0djxGp1xxik6KdDtp3q/nCsmctEdIW4j
+         vY4QK6uYYiF5F1KhSwXAJklU7araihN5GvHeR+hKFACwW351mpY3IPEGlIXEvc1aqYml
+         Xf/dahyqCmciWP+mgnmI92CcOLnQ80BN/gAMzqMti9qX+qswfnOAaQ20DZ0tZ2xWjSbZ
+         iQM/QCHgaAz3oCANYf2DdpwZmGten6ADoW0ZeIRICeOvwv1042ybx8TIZAwjM8xQBcFx
+         PSkLN66PUh8Z6Xp3v/loqrmTIdSvwxnaMgCHMaoJtiDOkT1YLsj8s8Kg3C9tCt9sy31a
+         0ZxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683545254; x=1686137254;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yMxrGhF5fj/3JoYFKkI+lC/oQhJpPCoS64Ws4CRWfrA=;
-        b=bO1qCNhFEVb07Iir9R+DzwOqXz25xPGCPtHrPpq3u/lxJmZ6CFNxNs1bxRIFLhIL43
-         8E7C+NcdRvGtIdGM4p7/K7NuYPiE7O3wOxHMCp/o7SpqJUfIbxO4943i4Ht94l9snmOJ
-         spIoH3graEZibcrYj4IEazp1eoTjmLZai3Bqd8mLfgRVlDJLtTKs2fzqXU4VWIWZCnNm
-         zwiMwu22Pcn57W7YXeweazZuuWFE006fF1+8TWKHr2G9KorAFWaQocl7GxSKQtwfFtRh
-         S/nDN880HBkny2hzym06iIN2HUN5pLeHRdj7M6/i7vQQdilYOa1WIage2njrbUXVoOTe
-         xgaA==
-X-Gm-Message-State: AC+VfDxOIrNaBK/d2Opru3u40TIc1ZUVCIiUc/Ivj8kV7YomSu2H0p6R
-        xp0udiRV9wWxVDXfbQ5NHQ==
-X-Google-Smtp-Source: ACHHUZ48fwZKDNWYvkwazCmeTz96sb7FQBsEdEaLloaLh7S/di9IH9Rfj7VagInKNk1wRti83UH6zA==
-X-Received: by 2002:a05:6808:3d4:b0:389:4f86:205e with SMTP id o20-20020a05680803d400b003894f86205emr4417581oie.9.1683545254054;
-        Mon, 08 May 2023 04:27:34 -0700 (PDT)
-Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id u3-20020a056808000300b00383ef58c15bsm5425446oic.28.2023.05.08.04.27.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 May 2023 04:27:32 -0700 (PDT)
-Received: (nullmailer pid 789286 invoked by uid 1000);
-        Mon, 08 May 2023 11:27:28 -0000
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        d=1e100.net; s=20221208; t=1683545982; x=1686137982;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MexXMEnvHcUnDYaMqmVY/MSHM/LherZWjP+20kmXVqY=;
+        b=Hp9B8IIZnZeGLxjP0AjUhls44EoxGpfe2IeOT9xTIuPA+5hUfkOL9WHz8htQJvd1sG
+         BdRZDlE4Cx6ymG25zzpi+t+CiateehVCicWmfx0Pc2CCzDm5IYfNKMI4z1QdzMx6BkpA
+         vun7pyZ+MOD5BmhV2MUi9z55z83ibEqGFARdB9xRCQEzevOdn9+/9kQdbXHTIrw5Fb4M
+         ivpJ8pW+N6gNSrjDM9ME2TYkljy5Y420fkCLNTBvQZbIYsBIwjMmBQTN1hDsSwSUEJjr
+         RNbVhpku4gHT1VKYabG/UtLrWSd6yd3wWTeiaPNFdQUcg9XBI7pnqnf2KSAd3zdPz33d
+         3EFQ==
+X-Gm-Message-State: AC+VfDylLdEbRN+V5noz6GDIe5P0Ok/UXSLZPLbmudLqAw0Da9/fdsI7
+        Ny+8tr7ppo9eqmCQWz/50RmUTg==
+X-Google-Smtp-Source: ACHHUZ66251TTq/ybOlW2YVgnvnqHsTExmFa9F/UDFJGUqL7omt0e4DgRvnmXKm0af1SqwTOmRcpOA==
+X-Received: by 2002:a2e:900d:0:b0:2a8:c7f8:58ef with SMTP id h13-20020a2e900d000000b002a8c7f858efmr2638998ljg.22.1683545981956;
+        Mon, 08 May 2023 04:39:41 -0700 (PDT)
+Received: from ?IPV6:2001:14ba:a0db:1f00::8a5? (dzdqv0yyyyyyyyyyybcwt-3.rev.dnainternet.fi. [2001:14ba:a0db:1f00::8a5])
+        by smtp.gmail.com with ESMTPSA id o13-20020a2e9b4d000000b002ad92dff470sm377803ljj.134.2023.05.08.04.39.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 May 2023 04:39:41 -0700 (PDT)
+Message-ID: <fdf697c1-16a3-6b8c-90fa-51ef7137d546@linaro.org>
+Date:   Mon, 8 May 2023 14:39:40 +0300
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        linux-renesas-soc@vger.kernel.org,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-In-Reply-To: <20230508104557.47889-2-wsa+renesas@sang-engineering.com>
-References: <20230508104557.47889-1-wsa+renesas@sang-engineering.com>
- <20230508104557.47889-2-wsa+renesas@sang-engineering.com>
-Message-Id: <168354524790.789228.15379102393089960407.robh@kernel.org>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: PCI: rcar-pci-host: add optional
- regulators
-Date:   Mon, 08 May 2023 06:27:28 -0500
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
-        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V3 5/6] arm64: dts: qcom: ipq9574: Enable PCIe PHYs and
+ controllers
+Content-Language: en-GB
+To:     Devi Priya <quic_devipriy@quicinc.com>
+Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
+        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
+        mturquette@baylibre.com, sboyd@kernel.org, mani@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-clk@vger.kernel.org, quic_srichara@quicinc.com,
+        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
+        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
+        quic_ipkumar@quicinc.com
+References: <20230421124938.21974-1-quic_devipriy@quicinc.com>
+ <20230421124938.21974-6-quic_devipriy@quicinc.com>
+ <CAA8EJpqx1jv_xEnS-2rOOGCtEB=1vo477H7XLGGvH=o7NHJD7w@mail.gmail.com>
+ <6c962760-d81c-af52-bce2-49090f66f4ee@quicinc.com>
+From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+In-Reply-To: <6c962760-d81c-af52-bce2-49090f66f4ee@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-3.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On Mon, 08 May 2023 12:45:55 +0200, Wolfram Sang wrote:
-> Support regulators found on the e.g. KingFisher board.
+On 08/05/2023 13:55, Devi Priya wrote:
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/devicetree/bindings/pci/rcar-pci-host.yaml | 8 ++++++++
->  1 file changed, 8 insertions(+)
 > 
+> On 4/22/2023 5:43 AM, Dmitry Baryshkov wrote:
+>> On Fri, 21 Apr 2023 at 15:51, Devi Priya <quic_devipriy@quicinc.com> 
+>> wrote:
+>>>
+>>> Enable the PCIe controller and PHY nodes corresponding to
+>>> RDP 433.
+>>>
+>>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+>>> ---
+>>>   Changes in V3:
+>>>          - No change
+>>>
+>>>   arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts | 62 +++++++++++++++++++++
+>>>   1 file changed, 62 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts 
+>>> b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>> index 7be578017bf7..3ae38cf327ea 100644
+>>> --- a/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>> +++ b/arch/arm64/boot/dts/qcom/ipq9574-rdp433.dts
+>>> @@ -8,6 +8,7 @@
+>>>
+>>>   /dts-v1/;
+>>>
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>>   #include "ipq9574.dtsi"
+>>>
+>>>   / {
+>>> @@ -43,6 +44,42 @@
+>>>          };
+>>>   };
+>>>
+>>> +&pcie1_phy {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pcie1 {
+>>> +       pinctrl-names = "default";
+>>> +       pinctrl-0 = <&pcie_1_pin>;
+>>> +
+>>> +       perst-gpios = <&tlmm 26 GPIO_ACTIVE_LOW>;
+>>
+>> Usually qcom PCIe hosts also define wake-gpios.
+> In IPQ9574, we do not have hot plug support and host always starts the
+> enumeration for the device. Hence no wake pin is required.
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+None of the qcom PCIe hosts support hotplug, if I remember correctly. 
+This is not a reason not to describe the hardware.
 
-yamllint warnings/errors:
+>>
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pcie2_phy {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pcie2 {
+>>> +       pinctrl-names = "default";
+>>> +       pinctrl-0 = <&pcie_2_pin>;
+>>> +
+>>> +       perst-gpios = <&tlmm 29 GPIO_ACTIVE_LOW>;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pcie3_phy {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&pcie3 {
+>>> +       pinctrl-names = "default";
+>>> +       pinctrl-0 = <&pcie_3_pin>;
+>>> +
+>>> +       perst-gpios = <&tlmm 32 GPIO_ACTIVE_LOW>;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>>   &sdhc_1 {
+>>>          pinctrl-0 = <&sdc_default_state>;
+>>>          pinctrl-names = "default";
+>>> @@ -60,6 +97,31 @@
+>>>   };
+>>>
+>>>   &tlmm {
+>>> +
+>>> +       pcie_1_pin: pcie-1-state {
+>>> +               pins = "gpio26";
+>>> +               function = "gpio";
+>>> +               drive-strength = <8>;
+>>> +               bias-pull-down;
+>>> +               output-low;
+>>
+>> No clkreq and no wake gpios?
+> We do not use any PCIe low power states and link is always in L0.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/rockchip-isp1.example.dtb: camera@3c: port:endpoint:data-lanes: [[1]] is too short
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.example.dtb: camera-sensor@3c: port:endpoint:data-lanes: [[1]] is too short
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.example.dtb: pcie-ep@33800000: Unevaluated properties are not allowed ('assigned-clock-parents', 'assigned-clock-rates', 'assigned-clocks' were unexpected)
-	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+Again. We = software. Please describe the hardware here.
 
-doc reference errors (make refcheckdocs):
-Documentation/usb/gadget_uvc.rst: Documentation/userspace-api/media/v4l/pixfmt-packed.yuv.rst
-MAINTAINERS: Documentation/devicetree/bindings/pwm/pwm-apple.yaml
+> 
+> Thanks,
+> Devi Priya
+>>
+>>> +       };
+>>> +
+>>> +       pcie_2_pin: pcie-2-state {
+>>> +               pins = "gpio29";
+>>> +               function = "gpio";
+>>> +               drive-strength = <8>;
+>>> +               bias-pull-down;
+>>> +               output-low;
+>>> +       };
+>>> +
+>>> +       pcie_3_pin: pcie-3-state {
+>>> +               pins = "gpio32";
+>>> +               function = "gpio";
+>>> +               drive-strength = <8>;
+>>> +               bias-pull-up;
+>>> +               output-low;
+>>> +       };
+>>> +
+>>>          sdc_default_state: sdc-default-state {
+>>>                  clk-pins {
+>>>                          pins = "gpio5";
+>>> -- 
+>>> 2.17.1
+>>>
+>>
+>>
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230508104557.47889-2-wsa+renesas@sang-engineering.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+With best wishes
+Dmitry
 
