@@ -2,62 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8EE5F6FB3F2
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 17:37:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70E3A6FB46F
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 17:53:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234494AbjEHPhc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 11:37:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50616 "EHLO
+        id S234622AbjEHPxf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 11:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234501AbjEHPhb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 11:37:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C62016E8A;
-        Mon,  8 May 2023 08:37:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        with ESMTP id S234439AbjEHPxe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 11:53:34 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6610F97;
+        Mon,  8 May 2023 08:53:30 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4F4436254C;
-        Mon,  8 May 2023 15:37:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C9CFC433EF;
-        Mon,  8 May 2023 15:37:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683560239;
-        bh=qel2kewVtsWY2T8P8nd4z4jo4QGJjpzs3QivQR26XnU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BFpzuOPxLR7YpgCaQn1Qyzm7HajYuF8kDSIUFBxHW6XKzeXc4SJcbptiQWGrVF9tK
-         9+TPanXeI85eM12C+vQWxoO9n/g4MCnMqVpYjKYH9340zEgYiCwefB6tEo13hofdzM
-         droRdHz5COjR8pYAc4YTf8h1g2b2KSp+EDk6aUF2vNfm62dcTDqosiJH2C3pyWzOYU
-         39Vnao3Gzl+dEYC4Qp7vk2o6oyaIFmc6Twm5FyR2ugVtPk12bxzpG7JMtNOtUsftKr
-         ygcZyzrCOso78EuXUbc2xLZbaV/QsT4kWsZzGj2Yr+Vvt/pIQ61B1J5/wHTJFjriei
-         VHz1jXZAC0rfQ==
-Date:   Mon, 8 May 2023 21:07:06 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Cc:     Devi Priya <quic_devipriy@quicinc.com>, agross@kernel.org,
-        andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-clk@vger.kernel.org, quic_srichara@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_ipkumar@quicinc.com
-Subject: Re: [PATCH V3 6/6] PCI: qcom: Add support for IPQ9574
-Message-ID: <20230508153706.GA14969@thinkpad>
-References: <20230421124938.21974-1-quic_devipriy@quicinc.com>
- <20230421124938.21974-7-quic_devipriy@quicinc.com>
- <20230508122109.GC4190@thinkpad>
- <CAA8EJppKUwfatdNoQPD4QbEPXyv1cEz3cDLfND+70Veq5Bcf8Q@mail.gmail.com>
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 02C4F21DB3;
+        Mon,  8 May 2023 15:53:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1683561209; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=enCmPKVL/QYyWJsvjc1siLNro32aXyEZpjP4ToWLEys=;
+        b=ithED1KI1jXI4dpx1wT8kE5Q567qTNV290ZWYDHVsYekplRXDrxtJQ+EvU5F7c90fBjv19
+        TB5/cxMwkMWg5B9aAl5f6H/hSokrfNUEno+6Xt156PNgM0Dk2JrTcpTPyZexNh7ip4e8ou
+        tWXTL7Rb7w06LMHD/hNPWswPX0spdsY=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 809EE1346B;
+        Mon,  8 May 2023 15:53:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id y8mUHfgaWWQfOQAAMHmgww
+        (envelope-from <jgross@suse.com>); Mon, 08 May 2023 15:53:28 +0000
+Message-ID: <3ce78def-659c-a3c2-3633-26e5b0a212b1@suse.com>
+Date:   Mon, 8 May 2023 17:53:28 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAA8EJppKUwfatdNoQPD4QbEPXyv1cEz3cDLfND+70Veq5Bcf8Q@mail.gmail.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [PATCH] x86/pci/xen: populate MSI sysfs entries
+Content-Language: en-US
+To:     Maximilian Heyne <mheyne@amazon.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Marc Zyngier <maz@kernel.org>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Ashok Raj <ashok.raj@intel.com>,
+        "Ahmed S. Darwish" <darwi@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230503131656.15928-1-mheyne@amazon.de>
+From:   Juergen Gross <jgross@suse.com>
+In-Reply-To: <20230503131656.15928-1-mheyne@amazon.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------qUSNF0DqSSSO09uggR0ul3al"
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -66,202 +74,129 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 08, 2023 at 03:46:53PM +0300, Dmitry Baryshkov wrote:
-> On Mon, 8 May 2023 at 15:21, Manivannan Sadhasivam <mani@kernel.org> wrote:
-> >
-> > On Fri, Apr 21, 2023 at 06:19:38PM +0530, Devi Priya wrote:
-> > > The IPQ9574 platform has 4 Gen3 PCIe controllers: two single-lane
-> > > and two dual-lane based on SNPS core 5.70a
-> > > The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
-> > > Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-> > > which reuses all the members of 'ops_2_9_0' except for the post_init
-> > > as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
-> > > and 1_27_0.
-> > > Also, modified get_resources of 'ops 2_9_0' to get the clocks
-> > > from the device tree and modelled the post init sequence as
-> > > a common function to avoid code redundancy.
-> > >
-> > > Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> > > Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> > > Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> >
-> > One comment below. With that fixed,
-> >
-> > Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> >
-> > - Mani
-> >
-> > > ---
-> > >  Changes in V3:
-> > >       - Rebased on top of linux-next/master
-> > >
-> > >  drivers/pci/controller/dwc/pcie-qcom.c | 61 ++++++++++++++++++--------
-> > >  1 file changed, 43 insertions(+), 18 deletions(-)
-> > >
-> > > diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > index 4ab30892f6ef..3682ecdead1f 100644
-> > > --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> > > +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> > > @@ -107,6 +107,7 @@
-> > >
-> > >  /* PARF_SLV_ADDR_SPACE_SIZE register value */
-> > >  #define SLV_ADDR_SPACE_SZ                    0x10000000
-> > > +#define SLV_ADDR_SPACE_SZ_1_27_0             0x08000000
-> > >
-> > >  /* PARF_MHI_CLOCK_RESET_CTRL register fields */
-> > >  #define AHB_CLK_EN                           BIT(0)
-> > > @@ -202,10 +203,10 @@ struct qcom_pcie_resources_2_7_0 {
-> > >       struct reset_control *rst;
-> > >  };
-> > >
-> > > -#define QCOM_PCIE_2_9_0_MAX_CLOCKS           5
-> > >  struct qcom_pcie_resources_2_9_0 {
-> > > -     struct clk_bulk_data clks[QCOM_PCIE_2_9_0_MAX_CLOCKS];
-> > > +     struct clk_bulk_data *clks;
-> > >       struct reset_control *rst;
-> > > +     int num_clks;
-> > >  };
-> > >
-> > >  union qcom_pcie_resources {
-> > > @@ -1050,17 +1051,10 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
-> > >       struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> > >       struct dw_pcie *pci = pcie->pci;
-> > >       struct device *dev = pci->dev;
-> > > -     int ret;
-> > >
-> > > -     res->clks[0].id = "iface";
-> > > -     res->clks[1].id = "axi_m";
-> > > -     res->clks[2].id = "axi_s";
-> > > -     res->clks[3].id = "axi_bridge";
-> > > -     res->clks[4].id = "rchng";
-> > > -
-> > > -     ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> > > -     if (ret < 0)
-> > > -             return ret;
-> > > +     res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
-> > > +     if (res->clks < 0)
-> > > +             return res->num_clks;
-> >
-> > Why not return proper error no?
-> 
-> Instead the question should be, why not the proper condition: it tells
-> `if (res->clks < 0)', while it should be `if (res->num_clks < 0)'.
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------qUSNF0DqSSSO09uggR0ul3al
+Content-Type: multipart/mixed; boundary="------------2VgdL2ARHnFdKP06t0hm3NRa";
+ protected-headers="v1"
+From: Juergen Gross <jgross@suse.com>
+To: Maximilian Heyne <mheyne@amazon.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner
+ <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Marc Zyngier <maz@kernel.org>, Kevin Tian <kevin.tian@intel.com>,
+ Jason Gunthorpe <jgg@ziepe.ca>, Ashok Raj <ashok.raj@intel.com>,
+ "Ahmed S. Darwish" <darwi@linutronix.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <3ce78def-659c-a3c2-3633-26e5b0a212b1@suse.com>
+Subject: Re: [PATCH] x86/pci/xen: populate MSI sysfs entries
+References: <20230503131656.15928-1-mheyne@amazon.de>
+In-Reply-To: <20230503131656.15928-1-mheyne@amazon.de>
 
-Heh. I completely overlooked that part. Yes, the if condition itself should be
-fixed.
+--------------2VgdL2ARHnFdKP06t0hm3NRa
+Content-Type: multipart/mixed; boundary="------------5l1refLpYoFuAkuHwmsfSyyJ"
 
-- Mani
+--------------5l1refLpYoFuAkuHwmsfSyyJ
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-> >
-> > >
-> > >       res->rst = devm_reset_control_array_get_exclusive(dev);
-> > >       if (IS_ERR(res->rst))
-> > > @@ -1073,7 +1067,7 @@ static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
-> > >  {
-> > >       struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
-> > >
-> > > -     clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-> > > +     clk_bulk_disable_unprepare(res->num_clks, res->clks);
-> > >  }
-> > >
-> > >  static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> > > @@ -1102,19 +1096,16 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> > >
-> > >       usleep_range(2000, 2500);
-> > >
-> > > -     return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> > > +     return clk_bulk_prepare_enable(res->num_clks, res->clks);
-> > >  }
-> > >
-> > > -static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> > > +static int qcom_pcie_post_init(struct qcom_pcie *pcie)
-> > >  {
-> > >       struct dw_pcie *pci = pcie->pci;
-> > >       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > >       u32 val;
-> > >       int i;
-> > >
-> > > -     writel(SLV_ADDR_SPACE_SZ,
-> > > -             pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> > > -
-> > >       val = readl(pcie->parf + PARF_PHY_CTRL);
-> > >       val &= ~PHY_TEST_PWR_DOWN;
-> > >       writel(val, pcie->parf + PARF_PHY_CTRL);
-> > > @@ -1151,6 +1142,26 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> > >       return 0;
-> > >  }
-> > >
-> > > +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-> > > +{
-> > > +     writel(SLV_ADDR_SPACE_SZ_1_27_0,
-> > > +            pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> > > +
-> > > +     qcom_pcie_post_init(pcie);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> > > +{
-> > > +     writel(SLV_ADDR_SPACE_SZ,
-> > > +            pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> > > +
-> > > +     qcom_pcie_post_init(pcie);
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > >  static int qcom_pcie_link_up(struct dw_pcie *pci)
-> > >  {
-> > >       u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > @@ -1291,6 +1302,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
-> > >       .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> > >  };
-> > >
-> > > +/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-> > > +static const struct qcom_pcie_ops ops_1_27_0 = {
-> > > +     .get_resources = qcom_pcie_get_resources_2_9_0,
-> > > +     .init = qcom_pcie_init_2_9_0,
-> > > +     .post_init = qcom_pcie_post_init_1_27_0,
-> > > +     .deinit = qcom_pcie_deinit_2_9_0,
-> > > +     .ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> > > +};
-> > > +
-> > >  static const struct qcom_pcie_cfg cfg_1_0_0 = {
-> > >       .ops = &ops_1_0_0,
-> > >  };
-> > > @@ -1323,6 +1343,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
-> > >       .ops = &ops_2_9_0,
-> > >  };
-> > >
-> > > +static const struct qcom_pcie_cfg cfg_1_27_0 = {
-> > > +     .ops = &ops_1_27_0,
-> > > +};
-> > > +
-> > >  static const struct dw_pcie_ops dw_pcie_ops = {
-> > >       .link_up = qcom_pcie_link_up,
-> > >       .start_link = qcom_pcie_start_link,
-> > > @@ -1607,6 +1631,7 @@ static const struct of_device_id qcom_pcie_match[] = {
-> > >       { .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
-> > >       { .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
-> > >       { .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-> > > +     { .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
-> > >       { .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
-> > >       { .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
-> > >       { .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > மணிவண்ணன் சதாசிவம்
-> 
-> 
-> 
-> -- 
-> With best wishes
-> Dmitry
+T24gMDMuMDUuMjMgMTU6MTYsIE1heGltaWxpYW4gSGV5bmUgd3JvdGU6DQo+IENvbW1pdCBi
+ZjVlNzU4ZjAyZmMgKCJnZW5pcnEvbXNpOiBTaW1wbGlmeSBzeXNmcyBoYW5kbGluZyIpIHJl
+d29ya2VkIHRoZQ0KPiBjcmVhdGlvbiBvZiBzeXNmcyBlbnRyaWVzIGZvciBNU0kgSVJRcy4g
+VGhlIGNyZWF0aW9uIHVzZWQgdG8gYmUgaW4NCj4gbXNpX2RvbWFpbl9hbGxvY19pcnFzX2Rl
+c2NzX2xvY2tlZCBhZnRlciBjYWxsaW5nIG9wcy0+ZG9tYWluX2FsbG9jX2lycXMuDQo+IFRo
+ZW4gaXQgbW92ZWQgaW50byBfX21zaV9kb21haW5fYWxsb2NfaXJxcyB3aGljaCBpcyBhbiBp
+bXBsZW1lbnRhdGlvbiBvZg0KPiBkb21haW5fYWxsb2NfaXJxcy4gSG93ZXZlciwgWGVuIGNv
+bWVzIHdpdGggdGhlIG9ubHkgb3RoZXIgaW1wbGVtZW50YXRpb24NCj4gb2YgZG9tYWluX2Fs
+bG9jX2lycXMgYW5kIGhlbmNlIGRvZXNuJ3QgcnVuIHRoZSBzeXNmcyBwb3B1bGF0aW9uIGNv
+ZGUNCj4gYW55bW9yZS4NCj4gDQo+IENvbW1pdCA2Yzc5Njk5NmVlNzAgKCJ4ODYvcGNpL3hl
+bjogRml4dXAgZmFsbG91dCBmcm9tIHRoZSBQQ0kvTVNJDQo+IG92ZXJoYXVsIikgc2V0IHRo
+ZSBmbGFnIE1TSV9GTEFHX0RFVl9TWVNGUyBmb3IgdGhlIHhlbiBtc2lfZG9tYWluX2luZm8N
+Cj4gYnV0IHRoYXQgZG9lc24ndCBhY3R1YWxseSBoYXZlIGFuIGVmZmVjdCBiZWNhdXNlIFhl
+biB1c2VzIGl0J3Mgb3duDQo+IGRvbWFpbl9hbGxvY19pcnFzIGltcGxlbWVudGF0aW9uLg0K
+PiANCj4gRml4IHRoaXMgYnkgbWFraW5nIHVzZSBvZiB0aGUgZmFsbGJhY2sgZnVuY3Rpb25z
+IGZvciBzeXNmcyBwb3B1bGF0aW9uLg0KPiANCj4gRml4ZXM6IGJmNWU3NThmMDJmYyAoImdl
+bmlycS9tc2k6IFNpbXBsaWZ5IHN5c2ZzIGhhbmRsaW5nIikNCj4gU2lnbmVkLW9mZi1ieTog
+TWF4aW1pbGlhbiBIZXluZSA8bWhleW5lQGFtYXpvbi5kZT4NCg0KUmV2aWV3ZWQtYnk6IEp1
+ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT4NCg0KDQpKdWVyZ2VuDQoNCg==
+--------------5l1refLpYoFuAkuHwmsfSyyJ
+Content-Type: application/pgp-keys; name="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Disposition: attachment; filename="OpenPGP_0xB0DE9DD628BF132F.asc"
+Content-Description: OpenPGP public key
+Content-Transfer-Encoding: quoted-printable
 
--- 
-மணிவண்ணன் சதாசிவம்
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+jR/i1DG86lem3iBDXzXsZDn8R38=3D
+=3D2wuH
+-----END PGP PUBLIC KEY BLOCK-----
+
+--------------5l1refLpYoFuAkuHwmsfSyyJ--
+
+--------------2VgdL2ARHnFdKP06t0hm3NRa--
+
+--------------qUSNF0DqSSSO09uggR0ul3al
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature"
+
+-----BEGIN PGP SIGNATURE-----
+
+wsB5BAABCAAjFiEEhRJncuj2BJSl0Jf3sN6d1ii/Ey8FAmRZGvgFAwAAAAAACgkQsN6d1ii/Ey93
+MQf/cxKVXhKe0gAEAMln7DmZGr6S7zdybp9iDiXoHMLt9maAVZlKd7AoiwoDqsSRJCkaxoZWtPfC
+1ShfFUXQrH3X+RXM0xoOZbwErxXDCnT06ZAtV4muq8RUWfw6wTppfnvd0t0WxuYhEtvdbU40zH0u
++K26n/zsBHSUygZ6kpnHLvMAI/BarkuOamBar8fkKQ3SxhKdOtpNWSn7UgmyvO0tDyepG3GciLy6
+cMrI5ibjjWIOeOJD93KNpihT0QlSlVVfQ2MYr58QUyTmi4VLtIJ2LPI/H6whMc1d399u16pzjpfJ
+gIE01xfP/1/0PoBJhnL3Y+9LNzY1ZGzF/iKfnTxP7Q==
+=cQFh
+-----END PGP SIGNATURE-----
+
+--------------qUSNF0DqSSSO09uggR0ul3al--
