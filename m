@@ -2,81 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id EC1FA6F9E87
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 06:04:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0091B6F9EB2
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 06:34:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230348AbjEHEEo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 00:04:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58770 "EHLO
+        id S229986AbjEHEen (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 00:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230114AbjEHEEn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 00:04:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD32A526E
-        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 21:03:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683518639;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cjPs9stpL32DcqNj5bKjn9GpBpdTZMFDdDnlNEkwniM=;
-        b=PQAbHiyZvGjJURQVJ2p12JQsBbYSJGxu5Jw/43HKRsjtvPhzNqbQSUHnDiGdTVqB4wEE2O
-        tME8Cy95IiUcp+vMy9IucaTcxeygCWCUGAVs6Kdr9c83r4QE31hyz/yz4xWugNC7oDPtzb
-        pWuuou0cKYqYFU9+9IdOPPI3CUBBfdo=
-Received: from mail-lf1-f72.google.com (mail-lf1-f72.google.com
- [209.85.167.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-360-Ez0reH5RNte-kqSNgl7WxQ-1; Mon, 08 May 2023 00:03:57 -0400
-X-MC-Unique: Ez0reH5RNte-kqSNgl7WxQ-1
-Received: by mail-lf1-f72.google.com with SMTP id 2adb3069b0e04-4edc7406cbaso2064558e87.2
-        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 21:03:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683518636; x=1686110636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cjPs9stpL32DcqNj5bKjn9GpBpdTZMFDdDnlNEkwniM=;
-        b=JC8rUE/fFwA9X1Y5GqcHr5u5dJqiSagivFcKq1ammH0fWzWeurjILsQfyCKJEuQ2UE
-         H0nxI/Kk196t5GRbncw0mdCYPPHSHXd8LKXZFEWs/T2vL309eIfi6jNl54c6AKK0n0lb
-         JfSoq23cFVQyaw3Nh1aDPlu+1zuVO54xKB3KyTKvGFFCqB9erzY2IhFUajEWSBhrZlDB
-         dJgX4TDsaChBB29qFH7XEnxdzhpXnIium26YX1F/EK0+5zqLCIzCSZmiDW+gePCuN/1T
-         kqSPmDRjfGYrqnc/65utdX7e57UvnXrjmfZkmnD81Y3Lq733JZbTRMKk5f61a+5+CPfe
-         yDKQ==
-X-Gm-Message-State: AC+VfDxdmKsBDEFnS39TYx7snBy4BGmu7t/Pyjq1BPC6xe3ccQ938TIu
-        +fk2QqdYvk+kKlR0lK3SlGnL8SUlfD9lsTJfxjZbrzkJ4ml04zDpRFcdeO4X9DT3C1Xe2ldT9x5
-        y02lViNjCPbW9oWW7fYBK6l6tLS2xL5GYVuTH
-X-Received: by 2002:ac2:5d42:0:b0:4f0:1a32:d51f with SMTP id w2-20020ac25d42000000b004f01a32d51fmr2130087lfd.23.1683518636469;
-        Sun, 07 May 2023 21:03:56 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7qV2KFVI/GVAa9K7BHzf5fBIl+dJd4cI1tXXN94p9wvE+RjD75G6WDEDrhlh3J58C1wRSGJhuSPvsX2+k1sEs=
-X-Received: by 2002:ac2:5d42:0:b0:4f0:1a32:d51f with SMTP id
- w2-20020ac25d42000000b004f01a32d51fmr2130074lfd.23.1683518636126; Sun, 07 May
- 2023 21:03:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230427104428.862643-1-mie@igel.co.jp> <20230427104428.862643-4-mie@igel.co.jp>
-In-Reply-To: <20230427104428.862643-4-mie@igel.co.jp>
-From:   Jason Wang <jasowang@redhat.com>
-Date:   Mon, 8 May 2023 12:03:44 +0800
-Message-ID: <CACGkMEsjH8fA2r=0CacK8WK_sUTAcTK7SQ_VwkJpa1rSgDP0dg@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 3/3] PCI: endpoint: Add EP function driver to
- provide virtio-console functionality
-To:     Shunsuke Mie <mie@igel.co.jp>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, Frank Li <Frank.Li@nxp.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        with ESMTP id S229540AbjEHEem (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 00:34:42 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2129.outbound.protection.outlook.com [40.107.114.129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1814FAD0E;
+        Sun,  7 May 2023 21:34:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=GBvW/5uLfEIT7Gw1DvqTDaiyrqh7R4h/JRFMsK15qjJaK+eUh1ZQY1iOCCCsSXfZZCgWeF/6qcWUwXFHHT4XA3EPBcy5Ybq+VA9sNrTz427NxTrWCFjbe7njD+oMw4QJn1EyMXKtFT0S+OHy8YLF+huRK42wHJH5IKfG3B8/tpm4eNyelsw+qJ1rBwUkCzcTh6QKFieI14LBzV0MIIDD3ZR5SOqgM5mx/IOT0H/3VJZDdF9SKLJBegVRFDCTiqElgMo9HIs3V3OwVjn+G6U5phb4schq/sPHcILerLenEpVrvl+3qRlTJDeYQTfuD9GgplDdjNuPLJXRqFMQwlwgvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=V5B8Te8YGKY+NyrT5KJTGwx30BkMDm6ImX8fzUduhfo=;
+ b=cCIeqYfEkLeh5QJV/HF9tdxsHnhIYxfpiqbJolq7u0PvjPODZP8q4CveFPrjqCh+a2LH4+uHu/i1VqzNhEsEZ7HTdt+QZ7yUtRMCFiEV+iwKHdCycws8vRglKPRqAJWIdWaIbGqGabAwzgDDbB8cOAS9PqwizgjBliImxWpaqmgvrSF/B1FOJspmKe5fPCaHEBsxgYMogkE7B504+ZE1+aKy0Wplevt6T/sAfh4WgxJXuK3/b2GcBQM0dHwYi9RetcazVCK+YFSSt+5qIisQW5z7Qcd/HpDy8Qo/qh+iCUMyttLZHp87kBjPTpNUa0nPQrau8zXzUVsPU39q/hPdzw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V5B8Te8YGKY+NyrT5KJTGwx30BkMDm6ImX8fzUduhfo=;
+ b=Ym18O/eVGbjz84OugTbDja04SIZtVpHul5sCd3FiKgvoK9SQWUIvyZRgSBLmkatIIQ7/bPY0Ch4TsRsyKBSBOwiDG6z0hQq+v1wk7QkzNGyf1hbb7zHLYOFlTT6Nsqn3KAlImvzvX+ids7MDN8TnZ+OB7kBYcSeT4EZwfIKkAs4=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by TY3PR01MB11791.jpnprd01.prod.outlook.com
+ (2603:1096:400:40a::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Mon, 8 May
+ 2023 04:34:37 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::5198:fdcf:d9b1:6003]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::5198:fdcf:d9b1:6003%7]) with mapi id 15.20.6363.032; Mon, 8 May 2023
+ 04:34:37 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v14 03/21] PCI: Add INTx Mechanism Messages macros
+Thread-Topic: [PATCH v14 03/21] PCI: Add INTx Mechanism Messages macros
+Thread-Index: AQHZd/tpaA4M8P0GFk2s58kOTEXnV69FtnUAgAolxOA=
+Date:   Mon, 8 May 2023 04:34:36 +0000
+Message-ID: <TYBPR01MB53416C8C4DE5E8BC6A8C84C5D8719@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+References: <20230426045557.3613826-1-yoshihiro.shimoda.uh@renesas.com>
+ <20230426045557.3613826-4-yoshihiro.shimoda.uh@renesas.com>
+ <20230501173442.reje55nattksdpuk@mobilestation>
+In-Reply-To: <20230501173442.reje55nattksdpuk@mobilestation>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TY3PR01MB11791:EE_
+x-ms-office365-filtering-correlation-id: b695aec5-bd44-41ce-6294-08db4f7d87ca
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: CFtkKqhPVwlVCzEEhmfwlyrMasEwOILZEuvkVklvF0Z+veW7LIgTyA27IgyhcHI0Bc6GSHiiM5eo72CPJ8OAHlullbclruDGmfLmIxLFVmfmzYXUXfpSseIFX/REGylH/LMInpG/ARHB8f56RU4ZucUkl7n8uY+1UOENSu6iaEZGjOYFTAZgWYER0hODjQU6iBPpjbc7WO9TXGtIF7ymoy7aU7UgFsxPmH13ydFsDKmTD2pUOzr0LUNI9lENrZ1y+2x3gObs3xY4tWgAvEV81YtneGvy6sYMMEJLLXHkTVUC37HHK1vMe7bLNJ6qZ+k3IQDywzCPpT4jpO8XjHG9YsMtnk62ktzxf9SwEkKZxSqf2hyRXVjp1VbAIMnSq/0FMZnHjFtyLsuq2X46zSIr6JzjXPGyaF260cv94Ru1Jz2OvVDVoEjG7qZ4l9ywid/WJmrNfuSqWY6wQbHO9Uee5pcovXCnfSqZvI4ueq4lsj254+KLMYley7Aa4JnsWjJ9PP73C2sgRVsDJS8jBCTpqLl7NvC/3wUe6nnhET5ZCm0xYhTABuBXWINjQoDPAuA9vzPH8MQutbc6fzjL5g+m6g5W351PYxyW/LqFMh/DZoaMcBmuhQa+e136MOAAaNjN
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(451199021)(76116006)(7416002)(64756008)(6916009)(5660300002)(66446008)(4326008)(478600001)(8936002)(8676002)(66476007)(54906003)(66946007)(2906002)(66556008)(71200400001)(316002)(41300700001)(52536014)(15650500001)(7696005)(9686003)(6506007)(186003)(55016003)(83380400001)(38070700005)(33656002)(38100700002)(86362001)(122000001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?lJGt1bkZHHS5JumBANy5OSXdt01X9FLGnJ85vulQCCPFpmBYoXzDL20ORg1c?=
+ =?us-ascii?Q?YA+lHPAk+0abJd/YYNwc6kaBZk1Ehx5hgco85BWDc4Xog08glhDTxf1YuJ3f?=
+ =?us-ascii?Q?QteQVy+o/slNikjMXZfABqT7bgWz+4BZKI8fqSPzqkQyfUAyc7x+G+J1DFxw?=
+ =?us-ascii?Q?ldID50jHMPmOJyfi2ocAs0726hkBICTR0vNrn7d89nueJN6Whb2CfxnbDDhI?=
+ =?us-ascii?Q?2AZUoLBcUFrwOficPxs+1T6Embo+ySjgfR4PpJIyM2mc4esZ43ss95AC6JkS?=
+ =?us-ascii?Q?6/fUgmX9fni0ikbfiZvaiWj5Otz3yjjPgqATaO+FWqh4DAKBZX0Q8SWFfGut?=
+ =?us-ascii?Q?15o4hy5/iQfTzQBL1cMkS3VWHl3zJ+a0VJ6dHpn3Es3eh2Gc1x2TPDFP4GZh?=
+ =?us-ascii?Q?BMEsGDxlK4unpVuLz5r6oAl3uI+QmHoow2iQiTcUoXgm5IUySooSF2QZFfoe?=
+ =?us-ascii?Q?t1qMkbn86cgZjvE5wgTJYti52KNQ79C9w0jr4XEcwsIKJ9/K0MeRBsFqB/1G?=
+ =?us-ascii?Q?bj5PK3HfTZaUNRboJhqASp4Wpr6lNn2PQGorOBaKsLbEwY8QMzX8Px5zA0It?=
+ =?us-ascii?Q?dCAGWDckH+9EwAD+9/SGLuIKFgZkHrhgkbfX5s4QtlUKlgtuiklp7d/vgcwM?=
+ =?us-ascii?Q?K6lGYsfp6L8DgBqJkX5DKf8YULUv376K6qZvE/SqJdLtckhibv3UpRPqOlTF?=
+ =?us-ascii?Q?SHuBMXZrYziZXC0DQmrO9uvON9SYV/vx4z+EBtDkgRNimubGDs48hfNukRCY?=
+ =?us-ascii?Q?84+vXcR88fQ3obfgyvi/ypLoid9bLpaEhR2kOsMG6KHjLUx5mccK685Cn08Q?=
+ =?us-ascii?Q?CE3nca0jLggejSdyoZ3L9lRpJzACW5RvkJO6Du23o8Whz0HFZKqBYLZL/dkC?=
+ =?us-ascii?Q?Wv8DpJRcqsTBV2XW3Cb9ir1wrkXO8yxUx8K6q+OWwwEKEGO3d1VPoOihggym?=
+ =?us-ascii?Q?RtoKWH/xI94ryvlYeu0f0FGUXtdpiVSi7sJfxwg+VkAXwfcZailhoCf5HdIQ?=
+ =?us-ascii?Q?mYAN+Ng0wRhcA1suhG3AHB1M9PVg/SAuHAQdxiNr+TdEnLmE7qs5YZl8QSNn?=
+ =?us-ascii?Q?5XvbLsUoGMBbhAyJokCatGe0kCblpaL1PF8CcSmyyjvBJNKJGv25MbKd5SAm?=
+ =?us-ascii?Q?2QH4g4fMrLPkdh2Lork8slDsZtgEiygD3sIIKBbhRMJltTXONbtfBUpHKDOQ?=
+ =?us-ascii?Q?6cC1cpIa9bKKL6lC+vxYt0QA7ei7DqskmoGUHKwpZnTvYzoDwWvr40tMx60z?=
+ =?us-ascii?Q?r+TbV5Jl3IKFnOGseksdpk7ZGosSC9IwW3myVOvxKXCsF6Jc7jLq+6XlcSkp?=
+ =?us-ascii?Q?yGMSZ1l2ssNwON0Mb8UX0dkaDrEb4PeGWvztGUtobPqHmff9lCaMfr5snjyr?=
+ =?us-ascii?Q?dQd7ffVhCBsmLImBja8/JzjMra4GiOc6ESJZatwv8brmwD07RasP4zICylai?=
+ =?us-ascii?Q?SqPkaMffU7No/SMGDkO0m1swGKT81P2iUI7RWStkQTHac245NNymnvz+PzJp?=
+ =?us-ascii?Q?G6OVEIF3qzpasNoZ5Cfv3oY58223OLrckuuzFfs0BiAI4HnksJC0WavoU9Gy?=
+ =?us-ascii?Q?j7aXX8MBmMIp8s2yOUpwIvOMPj7WbxsBBomo9YHILLJj++gUaGKo/e8UMizQ?=
+ =?us-ascii?Q?ZNmj8KD+X8v6CcQD0yZMCSBf/QQkOWFoG2JLz7wXoh2bG5wb/rAkZx3sh2k8?=
+ =?us-ascii?Q?OFzxGA=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b695aec5-bd44-41ce-6294-08db4f7d87ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2023 04:34:37.0612
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wujez+qpFi1bnGeB3rilPF1l4i1oSVtXVP5DwZZnHJhTdwficpsCCVcEtDIsN0uLpGBILMCtMJNlAdPCmyC0gxUbHI7VQWp7LQ+pzcgVEAn1cOQRLZ0Iw+846Jqw28fr
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11791
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -84,196 +130,82 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 6:44=E2=80=AFPM Shunsuke Mie <mie@igel.co.jp> wrote=
-:
->
-> Add a new PCIe endpoint function driver that works as a pci virtio-consol=
-e
-> device. The console connect to endpoint side console. It enables to
-> communicate PCIe host and endpoint.
->
-> Architecture is following:
->
->  =E2=94=8C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90         =E2=94=8C=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=AC=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=90
->  =E2=94=82virtioe     =E2=94=82         =E2=94=82                      =
-=E2=94=82virtio      =E2=94=82
->  =E2=94=82console drv =E2=94=82         =E2=94=9C=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=90      =E2=94=82console drv =E2=
-=94=82
->  =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4         =E2=94=82(vi=
-rtio console=E2=94=82      =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=A4
->  =E2=94=82 virtio bus =E2=94=82         =E2=94=82 device)       =E2=94=82=
-=E2=97=84=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=96=BA=E2=94=82 virtio bus =
-=E2=94=82
->  =E2=94=9C=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4         =E2=94=9C---=
-------------=E2=94=A4      =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=A4
->  =E2=94=82            =E2=94=82         =E2=94=82 pci ep virtio =E2=94=82=
-                   =E2=94=82
->  =E2=94=82  pci bus   =E2=94=82         =E2=94=82  console drv  =E2=94=82=
-                   =E2=94=82
->  =E2=94=82            =E2=94=82  pcie   =E2=94=9C=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=A4                   =E2=94=82
->  =E2=94=82            =E2=94=82 =E2=97=84=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=96=BA =E2=94=82  pci ep Bus   =E2=94=82                 =
-  =E2=94=82
->  =E2=94=94=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=98         =E2=94=94=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=B4=E2=94=80=
-=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=
-=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=80=E2=94=
-=80=E2=94=80=E2=94=98
->    PCIe Root              PCIe Endpoint
->
+Hi Serge,
 
-I think it might only works for peer devices like:
+> From: Serge Semin, Sent: Tuesday, May 2, 2023 2:35 AM
+>=20
+> On Wed, Apr 26, 2023 at 01:55:39PM +0900, Yoshihiro Shimoda wrote:
+> > Add "Message Routing" and "INTx Mechanism Messages" macros to send
+> > a message by a PCIe driver.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   |  1 +
+> >  drivers/pci/pci.h                             | 19 +++++++++++++++++++
+> >  2 files changed, 20 insertions(+)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/=
+pci/controller/dwc/pcie-designware-ep.c
+> > index f9182f8d552f..205bbcc6af27 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -9,6 +9,7 @@
+> >  #include <linux/of.h>
+> >  #include <linux/platform_device.h>
+> >
+>=20
+> > +#include "../../pci.h"
+>=20
+> Unrelated change since the new macros are left unused in the framework
+> of this patch. Please move it to the patch which implies using the new
+> defines and where the included header file content is required.
 
-net, console or vsock.
+I got it. I'll move this to the patch 8/21 on v15.
 
-So there're many choices here, I'd like to know what's the reason for
-you to implement a mediation.
+> >  #include "pcie-designware.h"
+> >  #include <linux/pci-epc.h>
+> >  #include <linux/pci-epf.h>
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 2475098f6518..4be376c121a4 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -11,6 +11,25 @@
+> >
+> >  #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
+> >
+> > +/* Message Routing */
+> > +#define PCI_MSG_ROUTING_RC	0
+> > +#define PCI_MSG_ROUTING_ADDR	1
+> > +#define PCI_MSG_ROUTING_ID	2
+> > +#define PCI_MSG_ROUTING_BC	3
+> > +#define PCI_MSG_ROUTING_LOCAL	4
+> > +#define PCI_MSG_ROUTING_GATHER	5
+> > +
+> > +/* INTx Mechanism Messages */
+> > +#define PCI_CODE_ASSERT_INTA	0x20
+> > +#define PCI_CODE_ASSERT_INTB	0x21
+> > +#define PCI_CODE_ASSERT_INTC	0x22
+> > +#define PCI_CODE_ASSERT_INTD	0x23
+> > +#define PCI_CODE_DEASSERT_INTA	0x24
+> > +#define PCI_CODE_DEASSERT_INTB	0x25
+> > +#define PCI_CODE_DEASSERT_INTC	0x26
+> > +#define PCI_CODE_DEASSERT_INTD	0x27
+> > +
+>=20
+> > +
+>=20
+> Excessive new line. Please drop it.
 
-An alternative is to implement a dedicated net, console and vsock
-driver for vringh (CAIF somehow works like this). This would have
-better performance.
+Oops. I'll drop it.
 
+Best regards,
+Yoshihiro Shimoda
 
-
-> This driver has two roles. The first is as a PCIe endpoint virtio console
-> function, which is implemented using the PCIe endpoint framework and PCIe
-> EP virtio helpers. The second is as a virtual virtio console device
-> connected to the virtio bus on PCIe endpoint Linux.
->
-> Communication between the two is achieved by copying the virtqueue data
-> between PCIe root and endpoint, respectively.
->
-> This is a simple implementation and does not include features of
-> virtio-console such as MULTIPORT, EMERG_WRITE, etc. As a result, each
-> virtio console driver only displays /dev/hvc0.
->
-> As an example of usage, by setting getty to /dev/hvc0, it is possible to
-> login to another host.
->
-> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
-> ---
-> Changes from v2:
-> - Change to use copy functions between kiovs of pci-epf-virtio.
->
->  drivers/pci/endpoint/functions/Kconfig        |  12 +
->  drivers/pci/endpoint/functions/Makefile       |   1 +
->  drivers/pci/endpoint/functions/pci-epf-vcon.c | 596 ++++++++++++++++++
->  3 files changed, 609 insertions(+)
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-vcon.c
->
-> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoin=
-t/functions/Kconfig
-> index fa1a6a569a8f..9ce2698b67e1 100644
-> --- a/drivers/pci/endpoint/functions/Kconfig
-> +++ b/drivers/pci/endpoint/functions/Kconfig
-> @@ -44,3 +44,15 @@ config PCI_EPF_VIRTIO
->         select VHOST_RING_IOMEM
->         help
->           Helpers to implement PCI virtio Endpoint function
-> +
-> +config PCI_EPF_VCON
-> +       tristate "PCI Endpoint virito-console driver"
-> +       depends on PCI_ENDPOINT
-> +       select VHOST_RING
-> +       select PCI_EPF_VIRTIO
-> +       help
-> +         PCIe Endpoint virtio-console function implementatino. This modu=
-le
-> +         enables to show the virtio-console as pci device to PCIe host s=
-ide, and
-> +         another virtual virtio-console device registers to endpoint sys=
-tem.
-> +         Those devices are connected virtually and can communicate each =
-other.
-> +
-> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoi=
-nt/functions/Makefile
-> index a96f127ce900..b4056689ce33 100644
-> --- a/drivers/pci/endpoint/functions/Makefile
-> +++ b/drivers/pci/endpoint/functions/Makefile
-> @@ -7,3 +7,4 @@ obj-$(CONFIG_PCI_EPF_TEST)              +=3D pci-epf-test=
-.o
->  obj-$(CONFIG_PCI_EPF_NTB)              +=3D pci-epf-ntb.o
->  obj-$(CONFIG_PCI_EPF_VNTB)             +=3D pci-epf-vntb.o
->  obj-$(CONFIG_PCI_EPF_VIRTIO)           +=3D pci-epf-virtio.o
-> +obj-$(CONFIG_PCI_EPF_VCON)             +=3D pci-epf-vcon.o
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-vcon.c b/drivers/pci/=
-endpoint/functions/pci-epf-vcon.c
-> new file mode 100644
-> index 000000000000..31f4247cd10f
-> --- /dev/null
-> +++ b/drivers/pci/endpoint/functions/pci-epf-vcon.c
-> @@ -0,0 +1,596 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Endpoint function driver to impliment virtio-console device
-> + * functionality.
-> + */
-> +#include <linux/pci-epf.h>
-> +#include <linux/virtio_ids.h>
-> +#include <linux/virtio_pci.h>
-> +#include <linux/virtio_console.h>
-> +#include <linux/virtio_ring.h>
-> +
-> +#include "pci-epf-virtio.h"
-> +
-> +static int virtio_queue_size =3D 0x100;
-> +module_param(virtio_queue_size, int, 0444);
-> +MODULE_PARM_DESC(virtio_queue_size, "A length of virtqueue");
-> +
-> +struct epf_vcon {
-> +       /* To access virtqueues on remote host */
-> +       struct epf_virtio evio;
-> +       struct vringh_kiov *rdev_iovs;
-> +
-> +       /* To register a local virtio bus */
-> +       struct virtio_device vdev;
-> +
-> +       /* To access virtqueus of local host driver */
-> +       struct vringh *vdev_vrhs;
-> +       struct vringh_kiov *vdev_iovs;
-> +       struct virtqueue **vdev_vqs;
-> +
-> +       /* For transportation and notification */
-> +       struct workqueue_struct *task_wq;
-> +       struct work_struct raise_irq_work, rx_work, tx_work;
-> +
-> +       /* To retain virtio features. It is commonly used local and remot=
-e. */
-> +       u64 features;
-> +
-> +       /* To show a status whether this driver is ready and the remote i=
-s connected */
-> +       bool connected;
-> +};
-> +
-> +enum {
-> +       VCON_VIRTQUEUE_RX,
-> +       VCON_VIRTQUEUE_TX,
-> +       // Should be end of enum
-> +       VCON_VIRTQUEUE_NUM
-> +};
-
-It would be better if we can split the console specific thing out,
-then it allows us to do ethernet and vsock in the future.
-
-Thanks
-
+> -Serge(y)
+>=20
+> >  extern const unsigned char pcie_link_speed[];
+> >  extern bool pci_early_dump;
+> >
+> > --
+> > 2.25.1
+> >
