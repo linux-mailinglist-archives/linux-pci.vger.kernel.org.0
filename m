@@ -2,107 +2,151 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3072C6FA020
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 08:49:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50A526FA060
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 08:59:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232542AbjEHGtp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 02:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34366 "EHLO
+        id S231234AbjEHG7s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 02:59:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231882AbjEHGto (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 02:49:44 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D608D30E1
-        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 23:49:42 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bcb4a81ceso7535066a12.2
-        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 23:49:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683528581; x=1686120581;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=owglAIa5kuQUWU8LYudk3cpBwsL5QOQS+UaPIohU72s=;
-        b=juqBhIy3mhApMy45yj/452aJRsvKSFWXCaTisxLtLGzdkVQy2g8YtKV97x46AMQlDB
-         tOjjJV81f+HnSjTItl6rSfo2/WJq1oj/2JuF5HEUK6RsXMzblJRdrQOH/QPMEWVvijoG
-         T8FnD/H35XmKkieclMTkJilDiGma6tACTf5KpOjxpTrf+DnykodPhhTPuxah0w/b9f5s
-         6rnCuTjqnB+QIPA8qXIqfyPmMVZ9taEIR4BvXq60iG/RIqeCk/MO2Va2XPcxiVV9UM5h
-         lDh8SpRXIOulJ8EQMt6pnLTbOkbN0Rn8w9ZiuF4quIT+ENfLQu40yiJ+TV+SYknK6rI6
-         Xu8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683528581; x=1686120581;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=owglAIa5kuQUWU8LYudk3cpBwsL5QOQS+UaPIohU72s=;
-        b=KpJKLRGc+Voc1FQUMvWMZfgJKwHrF5PQwsaYvJH+Ej87lb7JUG+ZsVk+caf8s6L3Ku
-         QWhtWG3d0/rhJxuvT7btvt0r9adaKR3jfdoYJA1EbI7IgoCrlIIHm2yPO5HWfor2aY7i
-         Wh00ZPJq+VxEFRkTO4lU2ZzGRYwu7eNUtMljh+SgoNxjEpOOqwM1vvDdX2qN1PKnw4V/
-         u+T627uJ4Yp7s5siCUeqDG6Ng2tv20p3oQdGWzGdmq2BFuQbwNqudow0PFdMGaUNXy+i
-         3lRcKSfaxtfWeDugD31bvG570wMm3i3SH72ncQ6roXjOcQskV8bE6DwRPO/Fz5CxZeEi
-         4pUg==
-X-Gm-Message-State: AC+VfDwgacl9xufLlSbaIl9Nmc/Z4P2Srs8kzITwajwqE4E5AsDWp57F
-        KC2NNax1XcvnpNudPsHAQaZ6dQ==
-X-Google-Smtp-Source: ACHHUZ5RjRP/6P+ztDo5LfTWm2+d+eo6dAfjRkQUYH7xhjnhTgUHFVJmwZvj6Z4gYSXrbJD44porzg==
-X-Received: by 2002:a17:907:2da9:b0:94f:247d:44d2 with SMTP id gt41-20020a1709072da900b0094f247d44d2mr8728072ejc.5.1683528581386;
-        Sun, 07 May 2023 23:49:41 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:50e0:ebdf:b755:b300? ([2a02:810d:15c0:828:50e0:ebdf:b755:b300])
-        by smtp.gmail.com with ESMTPSA id jz19-20020a17090775f300b00965c6c63ea3sm4549615ejc.35.2023.05.07.23.49.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 07 May 2023 23:49:40 -0700 (PDT)
-Message-ID: <4853c769-e1ec-f2e7-aaf7-5b67a2cd6b5f@linaro.org>
-Date:   Mon, 8 May 2023 08:49:39 +0200
+        with ESMTP id S233253AbjEHG7g (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 02:59:36 -0400
+Received: from smtp.smtpout.orange.fr (smtp-14.smtpout.orange.fr [80.12.242.14])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A9B412497
+        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 23:59:23 -0700 (PDT)
+Received: from [192.168.1.18] ([86.243.2.178])
+        by smtp.orange.fr with ESMTPA
+        id vuq3pLWu0unMHvuq3pBwg2; Mon, 08 May 2023 08:59:21 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+        s=t20230301; t=1683529161;
+        bh=Ryhq4eaEWmWDYOdIXBNmYtLvCNROHD7rXvSdIVxOm0c=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=h86uiNgobj8OHnUlZm8V2grAj3q3ci8iC0qVk46uo5eN377DtEykldpJIuRyDuokr
+         yhrzdNzi2PUnQNxexCNSZFyWLPjMBmZ4Cgn7f48hkrWcnm0CslcYwBOubM2H/jwmMo
+         b8Qait6jaUPATs5S5DicF28oXnVoT3O4mQb1o5YB78gBogK34hzFgYUY5SWXZHEOeq
+         TfkcLwDzYEugRZokteWYZGVkdkv3hNroXMqdwBnAQR/Txg/TgU+cVsKmAKeUoMv+lx
+         BYvGWsp7GzM3KBwCsKdHXpwwyk9AfYsMDZLV3r/e/CqFsjL4cCyGZiO+U75EMCr/OS
+         nIHyjGooJiyTA==
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 08 May 2023 08:59:21 +0200
+X-ME-IP: 86.243.2.178
+Message-ID: <430d0357-d10e-db3d-bc82-722b022b519b@wanadoo.fr>
+Date:   Mon, 8 May 2023 08:59:15 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.1
-Subject: Re: [RESEND v10 1/4] dt-bindings: imx6q-pcie: Restruct i.MX PCIe
- schema
-Content-Language: en-US
-To:     Richard Zhu <hongxing.zhu@nxp.com>, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, l.stach@pengutronix.de,
-        shawnguo@kernel.org, lorenzo.pieralisi@arm.com, peng.fan@nxp.com,
-        marex@denx.de, marcel.ziswiler@toradex.com, tharvey@gateworks.com,
-        frank.li@nxp.com
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel@pengutronix.de, linux-imx@nxp.com
-References: <1676441915-1394-1-git-send-email-hongxing.zhu@nxp.com>
- <1676441915-1394-2-git-send-email-hongxing.zhu@nxp.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <1676441915-1394-2-git-send-email-hongxing.zhu@nxp.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v3] pci: controller: pci-ftpci100: Release the clock
+ resources
+Content-Language: fr, en-US
+To:     Junyan Ye <yejunyan@hust.edu.cn>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>
+Cc:     hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230508043641.23807-1-yejunyan@hust.edu.cn>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20230508043641.23807-1-yejunyan@hust.edu.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-5.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 15/02/2023 07:18, Richard Zhu wrote:
-> Restruct i.MX PCIe schema, derive the common properties, thus they can
-> be shared by both the RC and Endpoint schema.
+Le 08/05/2023 à 06:36, Junyan Ye a écrit :
+> Smatch reported:
+> 1. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe() warn:
+> 'clk' from clk_prepare_enable() not released on lines: 442,451,462,478,512,517.
+> 2. drivers/pci/controller/pci-ftpci100.c:526 faraday_pci_probe() warn:
+> 'p->bus_clk' from clk_prepare_enable() not released on lines: 451,462,478,512,517.
 > 
-> Update the description of fsl,imx6q-pcie.yaml, and move the EP mode
-> compatible to fsl,imx6q-pcie-ep.yaml.
+> The clock resource is obtained by devm_clk_get(), and then
+> clk_prepare_enable() makes the clock resource ready for use. After that,
+> clk_disable_unprepare() should be called to release the clock resource
+> when it is no longer needed. However, while doing some error handling
+> in faraday_pci_probe(), clk_disable_unprepare() is not called to release
+> clk and p->bus_clk before returning. These return lines are exactly 442,
+> 451, 462, 478, 512, 517.
 > 
-> Add support for i.MX8M PCIe Endpoint modes, and update the MAINTAINER
-> accordingly.
+> Fix this warning by replacing devm_clk_get() with devm_clk_get_enabled(),
+> which is equivalent to devm_clk_get() + clk_prepare_enable(). And with
+> devm_clk_get_enabled(), the clock will automatically be disabled,
+> unprepared and freed when the device is unbound from the bus.
 > 
-> Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Fixes: b3c433efb8a3 ("PCI: faraday: Fix wrong pointer passed to PTR_ERR()")
+> Fixes: 2eeb02b28579 ("PCI: faraday: Add clock handling")
+> Fixes: 783a862563f7 ("PCI: faraday: Use pci_parse_request_of_pci_ranges()")
+> Fixes: d3c68e0a7e34 ("PCI: faraday: Add Faraday Technology FTPCI100 PCI Host Bridge driver")
+> Fixes: f1e8bd21e39e ("PCI: faraday: Convert IRQ masking to raw PCI config accessors")
+> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+> Signed-off-by: Junyan Ye <yejunyan@hust.edu.cn>
 > ---
->  .../bindings/pci/fsl,imx6q-pcie-common.yaml   | 279 ++++++++++++++++++
->  .../bindings/pci/fsl,imx6q-pcie-ep.yaml       |  85 ++++++
->  .../bindings/pci/fsl,imx6q-pcie.yaml          | 240 +--------------
->  MAINTAINERS                                   |   2 +
->  4 files changed, 372 insertions(+), 234 deletions(-)
+> v2 -> v3: Rebase to v6.4-rc1 and modify commit message.
+> v1 -> v2: Switch from clk_disable_unprepare() to devm_clk_get_enabled() to release the clock.
+> This issue is found by static analyzer.
+> 
+>   drivers/pci/controller/pci-ftpci100.c | 14 ++------------
+>   1 file changed, 2 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/pci-ftpci100.c b/drivers/pci/controller/pci-ftpci100.c
+> index ecd3009df586..6e7981d2ed5e 100644
+> --- a/drivers/pci/controller/pci-ftpci100.c
+> +++ b/drivers/pci/controller/pci-ftpci100.c
+> @@ -429,22 +429,12 @@ static int faraday_pci_probe(struct platform_device *pdev)
+>   	p->dev = dev;
+>   
+>   	/* Retrieve and enable optional clocks */
 
-This keeps reporting errors since a month, so I would assume author
-would fix his patch... Now failures are in Linus' v6.4-rc1.
+Hi,
 
-Best regards,
-Krzysztof
+completely unrelated to your patch, but this comments state "optional". 
+The code below seems to make both clocks mandatory.
+
+Moreover, a few lines later, we have:
+     if (!IS_ERR(p->bus_clk)) {
+which seems to say that bus_clk is optional.
+
+This was introduced by 2eeb02b28579.
+
+Just a guess, but either the comment should be updated, or the code 
+modified.
+
+Just my 2c,
+
+CJ
+
+
+> -	clk = devm_clk_get(dev, "PCLK");
+> +	clk = devm_clk_get_enabled(dev, "PCLK");
+>   	if (IS_ERR(clk))
+>   		return PTR_ERR(clk);
+> -	ret = clk_prepare_enable(clk);
+> -	if (ret) {
+> -		dev_err(dev, "could not prepare PCLK\n");
+> -		return ret;
+> -	}
+> -	p->bus_clk = devm_clk_get(dev, "PCICLK");
+> +	p->bus_clk = devm_clk_get_enabled(dev, "PCICLK");
+>   	if (IS_ERR(p->bus_clk))
+>   		return PTR_ERR(p->bus_clk);
+> -	ret = clk_prepare_enable(p->bus_clk);
+> -	if (ret) {
+> -		dev_err(dev, "could not prepare PCICLK\n");
+> -		return ret;
+> -	}
+>   
+>   	p->base = devm_platform_ioremap_resource(pdev, 0);
+>   	if (IS_ERR(p->base))
 
