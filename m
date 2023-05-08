@@ -2,168 +2,80 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52B416F9DCB
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 04:41:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB0386F9E73
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 05:58:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231301AbjEHClj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 7 May 2023 22:41:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34742 "EHLO
+        id S231631AbjEHD6E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 7 May 2023 23:58:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229577AbjEHCli (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 22:41:38 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 145C73A87;
-        Sun,  7 May 2023 19:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683513697; x=1715049697;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=AIMFKiveuZFASO/Il+k5d1oXB0kCPuNo29EYiWI12pk=;
-  b=frjafN6h5i4VoaLIJ6uLEYp7H1Sr2tP7Dvpa4oQH+8I9KUeoWUx5Gckl
-   ZBzePLt4o79KYZpKt91+/Gc0I0KlILI1nDDuTAXVj8v7dkwJnOQ7Gn73E
-   6FeffVbxNPxsDuVEKcS1GqDhP/27CJvK5iWr7FQfW28v7pQZdCW3Jo5zi
-   pFg4vDAqY438yMQKM0LwnEmX9YpKtehZWEU2BK29pMDh6mM+jS+3q4ku3
-   eLcg0CRO9TdsZv35AKZb+u2HRbckD1gG8GrMg9l2KheIFRRxJAqqsuNe1
-   h3Lulg/KaUYTgLwCfZO/ivr6ePJyti5zyUX0oArDOdwyRfQE0LqNnTRR/
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="415096986"
-X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
-   d="scan'208";a="415096986"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2023 19:41:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10703"; a="767899356"
-X-IronPort-AV: E=Sophos;i="5.99,258,1677571200"; 
-   d="scan'208";a="767899356"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by fmsmga004.fm.intel.com with ESMTP; 07 May 2023 19:41:35 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sun, 7 May 2023 19:41:35 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Sun, 7 May 2023 19:41:35 -0700
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23 via Frontend Transport; Sun, 7 May 2023 19:41:35 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.108)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.23; Sun, 7 May 2023 19:41:35 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cwBSs2ZG6z8shYGUMhHxcl8cqRFuYufxudiaa1+LC9o1syTm0zBclHiJ8YEhb1Y3TteuWUVtwf13P+AotGf9dxefKt8JIXXBCPv0TrfH9LfagbExrW+5J2P6L1+Qbxvfug5RkNZXZEpYla/UgoeNYdSJM8gAIstTN1JInz5LCJL26etbxs4r0iVaCVIMDj/Md5pnEENQyeEQDSaVxVxWvxAyp41mY5jEDWAtr/mFishP85NaGRHOAFXeCqa9CGRhHH45mHk1QTkFnGOs4U65zNFBpo1FzL7KotbGqxwbIcGsKI9tjjghl+NxX9pdmpsy+MjGBniwDVLlzMd28u9Z7Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7oPPX9uILWkhIngAjt9kt48o959MfqT37hqW2T3IIms=;
- b=XtnDm0uYzrwAux25KfnxE+n+rRssgeXYEgRu26LyVLgrvwJ/3Tvnjj70FWG1Du7Ae7Ah8jT9X38MBJz+6zFhfqZU2L/OC7KMZDE3mADRiGPlomts89B5EHVw1DgMyOxEvciOilqW6IzMNQ8uluxTsnG7bio4brMVzOsjPI3tfXxhjfACg0j0k95ybG+XtLozaKIQ5SPHvpdiNEsuEBBMSyDe7oB0S9F0ur2c3YkGwuDvp0mEy21AHBc2cZoQepkhE903g9wz9N8DtGx4PdlRkSFdLHUyqa9MzkEAyVaPrBO8AZuFQDiNekqgMEu2wu1gWrVic60vYsJtoGuH91dj0w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com (2603:10b6:806:25c::17)
- by CY5PR11MB6113.namprd11.prod.outlook.com (2603:10b6:930:2e::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Mon, 8 May
- 2023 02:41:33 +0000
-Received: from SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::4fe2:e207:596b:d145]) by SA1PR11MB6733.namprd11.prod.outlook.com
- ([fe80::4fe2:e207:596b:d145%5]) with mapi id 15.20.6363.032; Mon, 8 May 2023
- 02:41:33 +0000
-Date:   Sun, 7 May 2023 19:41:25 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Huai-Cheng <hchkuo@avery-design.com.tw>,
-        Ira Weiny <ira.weiny@intel.com>
-CC:     Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        "Vishal Verma" <vishal.l.verma@intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ben Widawsky <bwidawsk@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v7 1/8] cxl/mem: Read, trace, and clear events on driver
- load
-Message-ID: <645861555f7a8_4513a29424@iweiny-mobl.notmuch>
-References: <20221216-cxl-ev-log-v7-0-2316a5c8f7d8@intel.com>
- <20221216-cxl-ev-log-v7-1-2316a5c8f7d8@intel.com>
- <CA+2kVq_L0_OGLR5VXL1sHDeGa+RPTt-Kj9Ajnc8j82jsi2XM7Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+2kVq_L0_OGLR5VXL1sHDeGa+RPTt-Kj9Ajnc8j82jsi2XM7Q@mail.gmail.com>
-X-ClientProxiedBy: BY3PR05CA0042.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::17) To SA1PR11MB6733.namprd11.prod.outlook.com
- (2603:10b6:806:25c::17)
+        with ESMTP id S231301AbjEHD6D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 7 May 2023 23:58:03 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC22F3A8D
+        for <linux-pci@vger.kernel.org>; Sun,  7 May 2023 20:57:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683518235;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i91vpv5xI9eOoiC7RRdi6WyfJZYJucuHqIMPJTLnImA=;
+        b=DgcD4U/kffSFos8uzqS2CL8if/uqcgQDth+xpR7MfS1FkX8betTHvdVbdkBEgZ3Np6FzHH
+        NRVx9pC+oNT4yJBsJSBgn2lq1aFnco6ODCcKQv4s9FVyPR3+DwIRi843A3yZP9OoprgWeX
+        30oDX09VB2TrwEemdpX/SUsjwVbx7G0=
+Received: from mail-lj1-f198.google.com (mail-lj1-f198.google.com
+ [209.85.208.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-246-FRenL5YXNge051ZoXgu90A-1; Sun, 07 May 2023 23:57:13 -0400
+X-MC-Unique: FRenL5YXNge051ZoXgu90A-1
+Received: by mail-lj1-f198.google.com with SMTP id 38308e7fff4ca-2ac98a3d564so8565491fa.3
+        for <linux-pci@vger.kernel.org>; Sun, 07 May 2023 20:57:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683518232; x=1686110232;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=i91vpv5xI9eOoiC7RRdi6WyfJZYJucuHqIMPJTLnImA=;
+        b=EQzUufY/x4O3DwC01YBwnNYPdtrm1SsVWql1qiCzh3/iRb3QcvwodvIwHF8VgTA04G
+         +zJM6Y4qgG1AsM+FpeGECvRauseKiJ9jj0qF9Ml/tFPQjfo5YvfNztZYa+R9gFgtVdUX
+         5BferHxuihNt9l5W37M8jTlTmXuUDSkH3kPXsCo6eNwKidy9M3rlChc7qqOOyLXufciQ
+         5cPfPbcwPMshK9GGC2cOwgPLRSU/1jDIEyduIPkZBaV2P76BXkf/0hFAD8Sr/E6b8sV2
+         57uG6tTy7tL7P01drZcqSEeH0gvgxYqmqAtfR5m2mmrjdvpyZC6dNCa+zjJ/oerslyJj
+         l3fQ==
+X-Gm-Message-State: AC+VfDz6EuUW/QAOaS2IVuegEWFp0RYL+59qgCUFzfnn1eIuIOHxIeoD
+        DAdIMzUp5PJ53bgiPAnDT7ktrSWcOr0yTVC+7KGCJt57Plq1Yd/DLjzOCR0EIPfaPVi5I1/B9sx
+        xrCkfOHXPhhXU1YB2oPL1ZxwGyOjlpfhJBc0/
+X-Received: by 2002:a2e:a3d7:0:b0:2a7:6e2e:20e0 with SMTP id w23-20020a2ea3d7000000b002a76e2e20e0mr2358989lje.7.1683518232251;
+        Sun, 07 May 2023 20:57:12 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5u93lIq7NaRxNHzxCXrGIqso8w+PBjqeamQ31AANjgSg0MuDhWLywZFKK4cjWi4nwTnqWmmQ3Hg5Sm1/42Vmg=
+X-Received: by 2002:a2e:a3d7:0:b0:2a7:6e2e:20e0 with SMTP id
+ w23-20020a2ea3d7000000b002a76e2e20e0mr2358978lje.7.1683518231831; Sun, 07 May
+ 2023 20:57:11 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA1PR11MB6733:EE_|CY5PR11MB6113:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2edb2d6a-6b6b-484e-9651-08db4f6dbbef
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: cHFzr4o71cFt3IIIDU9CXzQLDEAbHABN+td8lJ++0o/0YIqXQoeLYEISaMDNbBBznIo26ULKZmyyrmp1/OXjmvkns3a0oKetSvtRiXwmhBKw1PVYo7GJkWWmG0L0U42ui7t61VNg+O5Qa4Ciglo0CWg9n/XXGNp1yjvg0P0p6bAq6xZLuVtw+LUYbXxrhpL3Kw1b2SDme9Dqq50FycuzfjxN5zw1v8Ptz8vkw/6viUDkUy7djsk5U2eyhV6DlijcqGjNEaUzjsvYXTKeCSFX6q6j8jAp6kNRwVxX40Qyn+rPH7HaVfEqu6qrtH15g336OAqw2X2FxKq6OCo6AZ2p6CbXhcTJ7+Nt36UlvN9vF670B7hDYFZhuOKXYJOddYciSXJbQTqhKy9/oi7naqLXZaL3mSnaWKHJEj4kT5ddSfcvXEqdJio6Q5ETJ/I1qd39aLo8jTwMPhtJ/tigXzJZNPfW5Qw/2FFBlyByMcECh8G7wAw7Rtsa12j6ypItJrJ5MEACOa2d+s9F0il51nAvchBuexJdVU3S0j9Glq56vNi1WEU+zvF3uSVGFCI3ewyf
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR11MB6733.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(396003)(39860400002)(346002)(136003)(451199021)(66946007)(66556008)(66476007)(4326008)(478600001)(6486002)(316002)(110136005)(54906003)(86362001)(83380400001)(53546011)(9686003)(6512007)(6506007)(6666004)(186003)(8676002)(8936002)(5660300002)(7416002)(44832011)(41300700001)(2906002)(82960400001)(38100700002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?aU9TN29xaU9DQWtWSldwTjZYNW9iUDdPYVJEcDdOUkhyQmE4ZWo4VGdZeEo5?=
- =?utf-8?B?aGU2OU0za2hUU3R2ek5kWTdXcmNXcnk1OTRjM3Y1R3lBSGF4UmlsaVVSOHlC?=
- =?utf-8?B?dTUxdk81bEsybnh6NkZXbFZwa2Nrc1lOK0h0aVlINnZKR2VvOEdRcDVwUk84?=
- =?utf-8?B?WnZiYnZuZkpEUkxUTTRadkliOFBsUWoxOS9UaHpuaWtoM2VXbm9LbEM1aGRs?=
- =?utf-8?B?ekx6RHFRRXpQNjhMYVVYREcrc29VRzQvZ1UwMEhrYjMydXdOQlg0bFdhQ3Va?=
- =?utf-8?B?bC9FUVQ5WGVxQkpPUTZEbXVtdXVDT0UxcVorSXJVMmdBZnB0SW9jTTkyeW55?=
- =?utf-8?B?V2NmZlM1Zkwxb2FzVmVPSUFhWWVZMTI5MEkza1B0WWM2UFFNbVJwc1hHejV6?=
- =?utf-8?B?MHBRZW1uUHhZelBUa0ptZ0w3NlNscTBzS3crQmZPMWtLRHRYVklXTXEyZlBR?=
- =?utf-8?B?cE44TVhrbFB3RlhLd0J1ZjZLZ0pjWnBMeTV5K3ZYejdWSGdnZCtBa1g2akxM?=
- =?utf-8?B?eStwTnRXeEZFbWZna01acVVWOTlFZ2EyNFB0VVB4RXBtaDZIanlRK1JDNHVG?=
- =?utf-8?B?ejE4c2Y1b3BLV3NhYldKVXFOem10ZGxIZk5TblZPSk5JTS93bUFHTExhVkNY?=
- =?utf-8?B?UkNxSUJ4S0ZldklFdWVYdWV6K0g0TjdFejdXVFBnQkkyTm5hTytHcVJVQVhS?=
- =?utf-8?B?VVllZGhzenZOS0x5UDVGb1YrbUZCWFliVWhocm1TVVB6WXl6WUFCTFFTR1lU?=
- =?utf-8?B?V2x0R3FtYTZPNmYySWVyZXZTZE8ycjJGSlM3TjFyK3lPdVhiZ1UxRjRMOW9l?=
- =?utf-8?B?SmdiU1NhYUlFVk1wUlNOSTFEVnkrMTdWczFZU25rQnhkUEZGL1NSV3pvWjdl?=
- =?utf-8?B?MGYyc0ZvSkFyZkxHZzVDYW5VMFdGUVhTc1NEb2VCRUl1WllMMyszZG8xcTBs?=
- =?utf-8?B?SDU3bVpHbytXZ01kaDhMSVFKajFyNkNtUmVPZFVoOHcwSmZpQmNhSUxtcEJp?=
- =?utf-8?B?STdtM0pDZ05nTEU2cTlTTTZlSmNxZStHMEYvS2xhTTVxZDRoSExkbVQrL1or?=
- =?utf-8?B?V295eVI0R21YWjlNaHliMkZ0MTFZaysvNXJtdEJOcGZGbzEwTitUaXdsYnZI?=
- =?utf-8?B?MlJoSTI4dEJzdi9EOUpkbm9PVW85WEEyd2xqd0J4ZlJRM3M1ZnRISFZTOXRI?=
- =?utf-8?B?aHdaeWh2VkxwdkdrUnY3U3lJVEZCVERGM3g1M3cxc1VMSEFDUDZmOVhwd3lv?=
- =?utf-8?B?Q1pvMjNUdit4NXdkRmxDYVNNWUlmYk56L0tUU3pDZ1NLZThQZ051cTlSZzZW?=
- =?utf-8?B?RHhQTUF1QnVHQ1RDbzlPQXNaMTJIdGo1OWEvRXhQMG5yK1JFRWk3VDJiaHo0?=
- =?utf-8?B?TU15aTlySVVrUGdvOVBPRnNqTWJmSHl3QkxoTS9lYS8rakxHRlRyU3VWNWRR?=
- =?utf-8?B?ZnBZOS9WZGdIVWkrb0FVTTZJRW5ScWQyRVhKYytQK3Q3Z09IVGFMOHR5eG83?=
- =?utf-8?B?VVRneEJyNEZNTGs2MThGODh0cFBkOWtWd3JhNUZ5ayt6NmpUTmV2ZGQweU5T?=
- =?utf-8?B?dWZubVNOQmpVWXBmQUFQdXBwYzFpcUpub2NJY3luUXYrK292S3Y3WFVuRDlG?=
- =?utf-8?B?NmxDdHJYNUNUTnpoUi9LS2U1K1B5OWlsNFJZY3lxM2RRaEEwYnNTNjdaNEgv?=
- =?utf-8?B?YnhMajhLRG96TTlKd2hoR2FsQkZzZ3VxaVlzZXNPWlcxdFdqNjc3a0M3UE5V?=
- =?utf-8?B?L1crcFpjdmYzZ0lxL0JWdWptWDNVZ0Y5Tnc2dkEvWFV3eU9FTGYxRkd6a2Mz?=
- =?utf-8?B?ZlV4MHlzaGZ1Smh5VmszQkNlbEllaXd0Qk1uWmxKTzMwSHRUcTM2TmhEaHBS?=
- =?utf-8?B?M05ZbFAvNXMrOVdudS9Tb201cFlPVjdkSExiNHE4MVdJT0NCandXT3VPQmlL?=
- =?utf-8?B?OS8ycGxwOUw4V1MxUDluSkJETEFPdFhIMW11eVVQWTk1akQ5WGNYMEdtUzVU?=
- =?utf-8?B?bStXOGJieTU3TGlrZHg1aFYzMitVLzZLT0VldEJuSGhLTDNzRlI4dndUYzlX?=
- =?utf-8?B?T2hkR1lzNXlUS0JONytXbFRGVmhobkw2eUpEOEJleHpINWJVcTcxSjJqcVh6?=
- =?utf-8?B?WmR0SjJRWTdiWmFXSkhKTVkzVDVNeVl2SEdQeDkyTHorc0RjWldWYjArUVFr?=
- =?utf-8?Q?L+zIS0U/1/quosEeuSAvuQua2RQn7i8Q3dHdHvuXwrcy?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2edb2d6a-6b6b-484e-9651-08db4f6dbbef
-X-MS-Exchange-CrossTenant-AuthSource: SA1PR11MB6733.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2023 02:41:33.1018
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RDTX86lPkdjjbjM82h6lqjEV4vSJTS+GJNaJkSxvmXwweFrgBzG6Iqdri8tx2iYDzJGpKxiBYgBOJFAMdsmEzw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR11MB6113
-X-OriginatorOrg: intel.com
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+References: <20230427104428.862643-1-mie@igel.co.jp> <20230427104428.862643-2-mie@igel.co.jp>
+In-Reply-To: <20230427104428.862643-2-mie@igel.co.jp>
+From:   Jason Wang <jasowang@redhat.com>
+Date:   Mon, 8 May 2023 11:57:00 +0800
+Message-ID: <CACGkMEsuyHAg=iq_w=jOyjbx5YK2GDF_=RCX-ncqDvEiVMu+Jg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 1/3] PCI: endpoint: introduce a helper to implement
+ pci ep virtio function
+To:     Shunsuke Mie <mie@igel.co.jp>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, Frank Li <Frank.Li@nxp.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -172,68 +84,611 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Huai-Cheng wrote:
-> On Wed, Jan 18, 2023 at 1:53 PM Ira Weiny <ira.weiny@intel.com> wrote:
+On Thu, Apr 27, 2023 at 6:44=E2=80=AFPM Shunsuke Mie <mie@igel.co.jp> wrote=
+:
+>
+> The Linux PCIe Endpoint framework supports to implement PCIe endpoint
+> functions using a PCIe controller operating in endpoint mode.
+> It is possble to realize the behavior of PCIe device, such as virtio PCI
+> device. This patch introduces a setof helper functions and data structure=
+s
+> to implement a PCIe endpoint function that behaves as a virtio device.
+>
+> Those functions enable the implementation PCIe endpoint function that
+> comply with the virtio lecacy specification. Because modern virtio
+> specifications require devices to implement custom PCIe capabilities, whi=
+ch
+> are not currently supported by either PCIe controllers/drivers or the PCI=
+e
+> endpoint framework.
+>
+> The helper functions work with the new struct epf_virtio, which is
+> initialized and finalized using the following functions:
+>
+> - int epf_virtio_init();
+> - void epf_virtio_final()
+>
+> Once initialized, the PCIe configuration space can be read and written
+> using the following functions:
+>
+> - epf_virtio_cfg_{read,write}#size()
+> - epf_virtio_cfg_{set,clear}#size()
+> - epf_virtio_cfg_memcpy_toio()
+>
+> The size is supported 8, 16 and 32bits. The content of configuration spac=
+e
+> varies depending on the type of virtio device.
+>
+> After the setup, launch the kernel thread for negotiation with host virti=
+o
+> drivers and detection virtqueue notifications with the function:
+>
+> - epf_virtio_launch_bgtask()
+>
+> Also there are functions to shutdown and reset the kthread.
+>
+> - epf_virtio_terminate_bgtask()
+> - epf_virtio_terminate_reset()
+>
+> Data transfer function is also provide.
+>
+> - epf_virtio_memcpy_kiov2kiov()
+>
+> While this patch provides functions for negotiating with host drivers and
+> copying data, each PCIe function driver must impl ement operations that
+> depend on each specific device, such as network, block, etc.
+>
+> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+> ---
+>
+> Changes from v2:
+> - Improve the memcpy function between kiov and kiov on local ram and
+> remote ram via pcie bus.
+>
+>  drivers/pci/endpoint/functions/Kconfig        |   7 +
+>  drivers/pci/endpoint/functions/Makefile       |   1 +
+>  .../pci/endpoint/functions/pci-epf-virtio.c   | 458 ++++++++++++++++++
+>  .../pci/endpoint/functions/pci-epf-virtio.h   | 126 +++++
+>  4 files changed, 592 insertions(+)
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-virtio.c
+>  create mode 100644 drivers/pci/endpoint/functions/pci-epf-virtio.h
+>
+> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoin=
+t/functions/Kconfig
+> index 9fd560886871..fa1a6a569a8f 100644
+> --- a/drivers/pci/endpoint/functions/Kconfig
+> +++ b/drivers/pci/endpoint/functions/Kconfig
+> @@ -37,3 +37,10 @@ config PCI_EPF_VNTB
+>           between PCI Root Port and PCIe Endpoint.
+>
+>           If in doubt, say "N" to disable Endpoint NTB driver.
+> +
+> +config PCI_EPF_VIRTIO
+> +       tristate
+> +       depends on PCI_ENDPOINT
+> +       select VHOST_RING_IOMEM
+> +       help
+> +         Helpers to implement PCI virtio Endpoint function
+> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoi=
+nt/functions/Makefile
+> index 5c13001deaba..a96f127ce900 100644
+> --- a/drivers/pci/endpoint/functions/Makefile
+> +++ b/drivers/pci/endpoint/functions/Makefile
+> @@ -6,3 +6,4 @@
+>  obj-$(CONFIG_PCI_EPF_TEST)             +=3D pci-epf-test.o
+>  obj-$(CONFIG_PCI_EPF_NTB)              +=3D pci-epf-ntb.o
+>  obj-$(CONFIG_PCI_EPF_VNTB)             +=3D pci-epf-vntb.o
+> +obj-$(CONFIG_PCI_EPF_VIRTIO)           +=3D pci-epf-virtio.o
+> diff --git a/drivers/pci/endpoint/functions/pci-epf-virtio.c b/drivers/pc=
+i/endpoint/functions/pci-epf-virtio.c
+> new file mode 100644
+> index 000000000000..f67610dd247d
+> --- /dev/null
+> +++ b/drivers/pci/endpoint/functions/pci-epf-virtio.c
+> @@ -0,0 +1,458 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Helpers to implement PCIe virtio EP function.
+> + */
+> +#include <linux/virtio_pci.h>
+> +#include <linux/virtio_config.h>
+> +#include <linux/kthread.h>
+> +
+> +#include "pci-epf-virtio.h"
+> +
+> +static void epf_virtio_unmap_vq(struct pci_epf *epf, void __iomem *vq_vi=
+rt,
+> +                               phys_addr_t vq_phys, unsigned int num)
+> +{
+> +       size_t vq_size =3D vring_size(num, VIRTIO_PCI_VRING_ALIGN);
+> +
+> +       pci_epc_unmap_addr(epf->epc, epf->func_no, epf->vfunc_no, vq_phys=
+,
+> +                          vq_virt, vq_size);
+> +       pci_epc_mem_free_addr(epf->epc, vq_phys, vq_virt, vq_size);
+> +}
+> +
+> +static void __iomem *epf_virtio_map_vq(struct pci_epf *epf,
+> +                                      phys_addr_t vq_pci_addr,
+> +                                      unsigned int num, phys_addr_t *vq_=
+phys)
+> +{
+> +       int err;
+> +       size_t vq_size;
+> +       void __iomem *vq_virt;
+> +
+> +       vq_size =3D vring_size(num, VIRTIO_PCI_VRING_ALIGN);
+> +
+> +       vq_virt =3D pci_epc_map_addr(epf->epc, epf->func_no, epf->vfunc_n=
+o,
+> +                                  vq_pci_addr, vq_phys, vq_size);
+> +       if (IS_ERR(vq_virt)) {
+> +               pr_err("Failed to map virtuqueue to local");
+> +               goto err_free;
+> +       }
+> +
+> +       return vq_virt;
+> +
+> +err_free:
+> +       pci_epc_mem_free_addr(epf->epc, *vq_phys, vq_virt, vq_size);
+> +
+> +       return ERR_PTR(err);
+> +}
+> +
+> +static void epf_virtio_free_vringh(struct pci_epf *epf, struct epf_vring=
+h *evrh)
+> +{
+> +       epf_virtio_unmap_vq(epf, evrh->virt, evrh->phys, evrh->num);
+> +       kfree(evrh);
+> +}
+> +
+> +static struct epf_vringh *epf_virtio_alloc_vringh(struct pci_epf *epf,
+> +                                                 u64 features,
+> +                                                 phys_addr_t pci_addr,
+> +                                                 unsigned int num)
+> +{
+> +       int err;
+> +       struct vring vring;
+> +       struct epf_vringh *evrh;
+> +
+> +       evrh =3D kmalloc(sizeof(*evrh), GFP_KERNEL);
+> +       if (!evrh) {
+> +               err =3D -ENOMEM;
+> +               goto err_unmap_vq;
+> +       }
+> +
+> +       evrh->num =3D num;
+> +
+> +       evrh->virt =3D epf_virtio_map_vq(epf, pci_addr, num, &evrh->phys)=
+;
+> +       if (IS_ERR(evrh->virt))
+> +               return evrh->virt;
+> +
+> +       vring_init(&vring, num, evrh->virt, VIRTIO_PCI_VRING_ALIGN);
+> +
+> +       err =3D vringh_init_iomem(&evrh->vrh, features, num, false, vring=
+.desc,
+> +                               vring.avail, vring.used);
+> +       if (err)
+> +               goto err_free_epf_vq;
+> +
+> +       return evrh;
+> +
+> +err_free_epf_vq:
+> +       kfree(evrh);
+> +
+> +err_unmap_vq:
+> +       epf_virtio_unmap_vq(epf, evrh->virt, evrh->phys, evrh->num);
+> +
+> +       return ERR_PTR(err);
+> +}
+> +
+> +#define VIRTIO_PCI_LEGACY_CFG_BAR 0
+> +
+> +static void __iomem *epf_virtio_alloc_bar(struct pci_epf *epf, size_t si=
+ze)
+> +{
+> +       struct pci_epf_bar *config_bar =3D &epf->bar[VIRTIO_PCI_LEGACY_CF=
+G_BAR];
+> +       const struct pci_epc_features *features;
+> +       void __iomem *bar;
+> +       int err;
+> +
+> +       features =3D pci_epc_get_features(epf->epc, epf->func_no, epf->vf=
+unc_no);
+> +       if (!features) {
+> +               pr_debug("Failed to get PCI EPC features\n");
+> +               return ERR_PTR(-EOPNOTSUPP);
+> +       }
+> +
+> +       if (features->reserved_bar & BIT(VIRTIO_PCI_LEGACY_CFG_BAR)) {
+> +               pr_debug("Cannot use the PCI BAR for legacy virtio pci\n"=
+);
+> +               return ERR_PTR(-EOPNOTSUPP);
 
-[snip]
+Since 1.0 has been used for years, I would suggest starting from a
+modern device other than a legacy one. Otherwise you may end up with
+some hacky stuffs more below.
 
-> > +static void cxl_mem_get_records_log(struct cxl_dev_state *cxlds,
-> > +                                   enum cxl_event_log_type type)
-> > +{
-> > +       struct cxl_get_event_payload *payload;
-> > +       struct cxl_mbox_cmd mbox_cmd;
-> > +       u8 log_type = type;
-> > +       u16 nr_rec;
-> > +
-> > +       mutex_lock(&cxlds->event.log_lock);
-> > +       payload = cxlds->event.buf;
-> > +
-> > +       mbox_cmd = (struct cxl_mbox_cmd) {
-> > +               .opcode = CXL_MBOX_OP_GET_EVENT_RECORD,
-> > +               .payload_in = &log_type,
-> > +               .size_in = sizeof(log_type),
-> > +               .payload_out = payload,
-> > +               .size_out = cxlds->payload_size,
-> > +               .min_out = struct_size(payload, records, 0),
-> > +       };
-> > +
-> > +       do {
-> > +               int rc, i;
-> > +
-> > +               rc = cxl_internal_send_cmd(cxlds, &mbox_cmd);
-> > +               if (rc) {
-> > +                       dev_err_ratelimited(cxlds->dev,
-> > +                               "Event log '%d': Failed to query event records : %d",
-> > +                               type, rc);
-> > +                       break;
-> > +               }
-> > +
-> > +               nr_rec = le16_to_cpu(payload->record_count);
-> > +               if (!nr_rec)
-> > +                       break;
-> > +
-> > +               for (i = 0; i < nr_rec; i++)
-> > +                       trace_cxl_generic_event(cxlds->dev, type,
-> > +                                               &payload->records[i]);
-> > +
-> > +               if (payload->flags & CXL_GET_EVENT_FLAG_OVERFLOW)
-> > +                       trace_cxl_overflow(cxlds->dev, type, payload);
-> > +
-> > +               rc = cxl_clear_event_record(cxlds, type, payload);
-> > +               if (rc) {
-> > +                       dev_err_ratelimited(cxlds->dev,
-> > +                               "Event log '%d': Failed to clear events : %d",
-> > +                               type, rc);
-> > +                       break;
-> > +               }
-> > +       } while (nr_rec);
-> Should the (payload->flags & CXL_GET_EVENT_FLAG_MORE_RECORDS) be used
-> instead of (nr_rec) in this while condition? According to the spec,
-> this bit is used to see if there
-> are more event records.
+> +       }
+> +
+> +       if (features->bar_fixed_size[VIRTIO_PCI_LEGACY_CFG_BAR]) {
+> +               if (size >
+> +                   features->bar_fixed_size[VIRTIO_PCI_LEGACY_CFG_BAR]) =
+{
+> +                       pr_debug("PCI BAR size is not enough\n");
+> +                       return ERR_PTR(-ENOMEM);
+> +               }
+> +       }
+> +
+> +       bar =3D pci_epf_alloc_space(epf, size, VIRTIO_PCI_LEGACY_CFG_BAR,
+> +                                 features->align, PRIMARY_INTERFACE);
+> +       if (!bar) {
+> +               pr_debug("Failed to allocate virtio-net config memory\n")=
+;
+> +               return ERR_PTR(-ENOMEM);
+> +       }
+> +
+> +       config_bar->flags |=3D PCI_BASE_ADDRESS_MEM_TYPE_64;
 
-It is not an error to query for events with no events being present.
-Because we want to read all the events we keep reading if there 'may' be
-more and don't care about the overhead of an extra read if there is not.
+This is the tricky part:
 
-Ira
+1) spec said legacy bar is I/O not memory
+2) this code may still work if the host is running with Linux since
+the virtio driver work for memory bar
+3) but it may not work if the host is not running with Linux
+
+> +       err =3D pci_epc_set_bar(epf->epc, epf->func_no, epf->vfunc_no,
+> +                             config_bar);
+> +       if (err) {
+> +               pr_debug("Failed to set PCI BAR");
+> +               goto err_free_space;
+> +       }
+> +
+> +       return bar;
+> +
+> +err_free_space:
+> +
+> +       pci_epf_free_space(epf, bar, VIRTIO_PCI_LEGACY_CFG_BAR,
+> +                          PRIMARY_INTERFACE);
+> +
+> +       return ERR_PTR(err);
+> +}
+> +
+> +static void epf_virtio_free_bar(struct pci_epf *epf, void __iomem *bar)
+> +{
+> +       struct pci_epf_bar *config_bar =3D &epf->bar[VIRTIO_PCI_LEGACY_CF=
+G_BAR];
+> +
+> +       pci_epc_clear_bar(epf->epc, epf->func_no, epf->vfunc_no, config_b=
+ar);
+> +       pci_epf_free_space(epf, bar, VIRTIO_PCI_LEGACY_CFG_BAR,
+> +                          PRIMARY_INTERFACE);
+> +}
+> +
+> +static void epf_virtio_init_bar(struct epf_virtio *evio, void __iomem *b=
+ar)
+> +{
+> +       evio->bar =3D bar;
+> +
+> +       epf_virtio_cfg_write32(evio, VIRTIO_PCI_HOST_FEATURES, evio->feat=
+ures);
+> +       epf_virtio_cfg_write16(evio, VIRTIO_PCI_ISR, VIRTIO_PCI_ISR_QUEUE=
+);
+> +       epf_virtio_cfg_write16(evio, VIRTIO_PCI_QUEUE_NUM, evio->vqlen);
+> +       epf_virtio_cfg_write16(evio, VIRTIO_PCI_QUEUE_NOTIFY, evio->nvq);
+> +       epf_virtio_cfg_write8(evio, VIRTIO_PCI_STATUS, 0);
+> +}
+> +
+> +/**
+> + * epf_virtio_init - initialize struct epf_virtio and setup BAR for virt=
+io
+> + * @evio: struct epf_virtio to initialize.
+> + * @hdr: pci configuration space to show remote host.
+> + * @bar_size: pci BAR size it depends on the virtio device type.
+> + *
+> + * Returns zero or a negative error.
+> + */
+> +int epf_virtio_init(struct epf_virtio *evio, struct pci_epf_header *hdr,
+> +                   size_t bar_size)
+> +{
+> +       struct pci_epf *epf =3D evio->epf;
+> +       void __iomem *bar;
+> +       int err;
+> +
+> +       err =3D pci_epc_write_header(epf->epc, epf->func_no, epf->vfunc_n=
+o, hdr);
+> +       if (err)
+> +               return err;
+> +
+> +       bar =3D epf_virtio_alloc_bar(epf, bar_size);
+> +       if (IS_ERR(bar))
+> +               return PTR_ERR(bar);
+> +
+> +       epf_virtio_init_bar(evio, bar);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(epf_virtio_init);
+> +
+> +/**
+> + * epf_virtio_final - finalize struct epf_virtio. it frees bar and memor=
+ies
+> + * @evio: struct epf_virtio to finalize.
+> + */
+> +void epf_virtio_final(struct epf_virtio *evio)
+> +{
+> +       epf_virtio_free_bar(evio->epf, evio->bar);
+> +
+> +       for (int i =3D 0; i < evio->nvq; i++)
+> +               epf_virtio_free_vringh(evio->epf, evio->vrhs[i]);
+> +
+> +       kfree(evio->vrhs);
+> +}
+> +EXPORT_SYMBOL_GPL(epf_virtio_final);
+> +
+> +static int epf_virtio_negotiate_vq(struct epf_virtio *evio)
+> +{
+> +       u32 pfn;
+> +       u16 sel;
+> +       int i =3D 0;
+> +       struct _pair {
+> +               u32 pfn;
+> +               u16 sel;
+> +       } *tmp;
+> +       int err =3D 0;
+> +       size_t nvq =3D evio->nvq;
+> +
+> +       tmp =3D kmalloc_array(nvq, sizeof(tmp[0]), GFP_KERNEL);
+> +       if (!tmp)
+> +               return -ENOMEM;
+> +
+> +       /*
+> +        * PCIe EP framework has no capability to hook access PCI BAR spa=
+ce from
+> +        * remote host driver, so poll the specific register, queue pfn t=
+o detect
+> +        * the writing from the driver.
+
+There were discussions in the past which tried to have a new transport
+that works for the endpoint instead of doing tricks like this. Have
+you ever considered this?
+
+> +        *
+> +        * This implementation assumes that the address of each virtqueue=
+ is
+> +        * written only once.
+> +        */
+> +       for (i =3D 0; i < nvq; i++) {
+> +               while (!(pfn =3D epf_virtio_cfg_read32(evio,
+> +                                                    VIRTIO_PCI_QUEUE_PFN=
+)) &&
+> +                      evio->running)
+> +                       ;
+
+Should we do cond_resched() here?
+
+> +
+> +               sel =3D epf_virtio_cfg_read16(evio, VIRTIO_PCI_QUEUE_SEL)=
+;
+> +
+> +               epf_virtio_cfg_write32(evio, VIRTIO_PCI_QUEUE_PFN, 0);
+> +
+> +               tmp[i].pfn =3D pfn;
+> +               tmp[i].sel =3D sel;
+> +       }
+> +
+> +       if (!evio->running)
+> +               goto err_out;
+> +
+> +       evio->vrhs =3D kmalloc_array(nvq, sizeof(evio->vrhs[0]), GFP_KERN=
+EL);
+> +       if (!evio->vrhs) {
+> +               err =3D -ENOMEM;
+> +               goto err_out;
+> +       }
+> +
+> +       for (i =3D 0; i < nvq; i++) {
+> +               phys_addr_t pci =3D tmp[i].pfn << VIRTIO_PCI_QUEUE_ADDR_S=
+HIFT;
+> +
+> +               evio->vrhs[i] =3D epf_virtio_alloc_vringh(
+> +                       evio->epf, evio->features, pci, evio->vqlen);
+> +               if (IS_ERR(evio->vrhs[i])) {
+> +                       err =3D PTR_ERR(evio->vrhs[i]);
+> +                       goto err_free_evrhs;
+> +               }
+> +       }
+> +
+> +       kfree(tmp);
+> +
+> +       return 0;
+> +
+> +err_free_evrhs:
+> +       for (i -=3D 1; i > 0; i--)
+> +               epf_virtio_free_vringh(evio->epf, evio->vrhs[i]);
+> +
+> +       kfree(evio->vrhs);
+> +
+> +err_out:
+> +       kfree(tmp);
+> +
+> +       return err;
+> +}
+> +
+> +static void epf_virtio_monitor_qnotify(struct epf_virtio *evio)
+> +{
+> +       const u16 qn_default =3D evio->nvq;
+> +       u16 tmp;
+> +
+> +       /* Since there is no way to synchronize between the host and EP f=
+unctions,
+> +        * it is possible to miss multiple notifications.
+> +        */
+> +       while (evio->running) {
+> +               tmp =3D epf_virtio_cfg_read16(evio, VIRTIO_PCI_QUEUE_NOTI=
+FY);
+> +               if (tmp =3D=3D qn_default)
+> +                       continue;
+
+cond_resched()?
+
+> +
+> +               epf_virtio_cfg_write16(evio, VIRTIO_PCI_QUEUE_NOTIFY,
+> +                                      qn_default);
+> +
+> +               evio->qn_callback(evio->qn_param);
+> +       }
+> +}
+> +
+> +static int epf_virtio_bgtask(void *param)
+> +{
+> +       struct epf_virtio *evio =3D param;
+> +       int err;
+> +
+> +       err =3D epf_virtio_negotiate_vq(evio);
+> +       if (err < 0) {
+> +               pr_err("failed to negoticate configs with driver\n");
+> +               return err;
+> +       }
+> +
+> +       while (!(epf_virtio_cfg_read8(evio, VIRTIO_PCI_STATUS) &
+> +                VIRTIO_CONFIG_S_DRIVER_OK) &&
+> +              evio->running)
+> +               ;
+> +
+> +       if (evio->ic_callback && evio->running)
+> +               evio->ic_callback(evio->ic_param);
+> +
+> +       epf_virtio_monitor_qnotify(evio);
+> +
+> +       return 0;
+> +}
+> +
+> +/**
+> + * epf_virtio_launch_bgtask - spawn a kthread that emulates virtio devic=
+e
+> + * operations.
+> + * @evio: It should be initialized prior with epf_virtio_init().
+> + *
+> + * Returns zero or a negative error.
+> + */
+> +int epf_virtio_launch_bgtask(struct epf_virtio *evio)
+> +{
+> +       evio->bgtask =3D kthread_create(epf_virtio_bgtask, evio,
+> +                                     "pci-epf-virtio/bgtask");
+> +       if (IS_ERR(evio->bgtask))
+> +               return PTR_ERR(evio->bgtask);
+> +
+> +       evio->running =3D true;
+> +
+> +       sched_set_fifo(evio->bgtask);
+> +       wake_up_process(evio->bgtask);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(epf_virtio_launch_bgtask);
+> +
+> +/**
+> + * epf_virtio_terminate_bgtask - shutdown a device emulation kthread.
+> + * @evio: struct epf_virtio it already launched bgtask.
+> + */
+> +void epf_virtio_terminate_bgtask(struct epf_virtio *evio)
+> +{
+> +       evio->running =3D false;
+> +
+> +       kthread_stop(evio->bgtask);
+> +}
+> +EXPORT_SYMBOL_GPL(epf_virtio_terminate_bgtask);
+> +
+> +/**
+> + * epf_virtio_reset - reset virtio status
+> + * @evio: struct epf_virtio to reset
+> + *
+> + * Returns zero or a negative error.
+> + */
+> +int epf_virtio_reset(struct epf_virtio *evio)
+> +{
+> +       epf_virtio_terminate_bgtask(evio);
+> +       epf_virtio_init_bar(evio, evio->bar);
+> +
+> +       return epf_virtio_launch_bgtask(evio);
+> +}
+> +EXPORT_SYMBOL_GPL(epf_virtio_reset);
+> +
+> +int epf_virtio_getdesc(struct epf_virtio *evio, int index,
+> +                      struct vringh_kiov *riov, struct vringh_kiov *wiov=
+,
+> +                      u16 *head)
+> +{
+> +       struct vringh *vrh =3D &evio->vrhs[index]->vrh;
+> +
+> +       return vringh_getdesc_iomem(vrh, riov, wiov, head, GFP_KERNEL);
+> +}
+> +
+> +void epf_virtio_abandon(struct epf_virtio *evio, int index, int num)
+> +{
+> +       struct vringh *vrh =3D &evio->vrhs[index]->vrh;
+> +
+> +       vringh_abandon_iomem(vrh, num);
+> +}
+> +
+> +void epf_virtio_iov_complete(struct epf_virtio *evio, int index, u16 hea=
+d,
+> +                            size_t total_len)
+> +{
+> +       struct vringh *vrh =3D &evio->vrhs[index]->vrh;
+> +
+> +       vringh_complete_iomem(vrh, head, total_len);
+> +}
+> +
+> +int epf_virtio_memcpy_kiov2kiov(struct epf_virtio *evio,
+> +                               struct vringh_kiov *siov,
+> +                               struct vringh_kiov *diov,
+> +                               enum dma_transfer_direction dir)
+> +{
+> +       struct pci_epf *epf =3D evio->epf;
+> +       size_t slen, dlen;
+> +       u64 sbase, dbase;
+> +       phys_addr_t phys;
+> +       void *dst, *src;
+> +
+> +       for (; siov->i < siov->used; siov->i++, diov->i++) {
+> +               slen =3D siov->iov[siov->i].iov_len;
+> +               sbase =3D (u64)siov->iov[siov->i].iov_base;
+> +               dlen =3D diov->iov[diov->i].iov_len;
+> +               dbase =3D (u64)diov->iov[diov->i].iov_base;
+> +
+> +               if (dlen < slen) {
+> +                       pr_info("not enough buffer\n");
+> +                       return -EINVAL;
+> +               }
+> +
+> +               if (dir =3D=3D DMA_MEM_TO_DEV) {
+> +                       src =3D phys_to_virt(sbase);
+> +
+> +                       dst =3D pci_epc_map_addr(epf->epc, epf->func_no,
+> +                                              epf->vfunc_no, dbase, &phy=
+s,
+> +                                              slen);
+> +                       if (IS_ERR(dst)) {
+> +                               pr_err("failed to map pci mmoery spact to=
+ local\n");
+
+Typos.
+
+> +                               return PTR_ERR(dst);
+> +                       }
+> +               } else {
+> +                       src =3D pci_epc_map_addr(epf->epc, epf->func_no,
+> +                                              epf->vfunc_no, sbase, &phy=
+s,
+> +                                              slen);
+> +                       if (IS_ERR(src)) {
+> +                               pr_err("failed to map pci mmoery spact to=
+ local\n");
+
+Typos.
+
+Thanks
+
