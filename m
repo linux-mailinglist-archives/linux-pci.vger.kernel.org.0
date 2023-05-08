@@ -2,59 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 32BDA6FAFCE
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 14:21:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D35F6FB045
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 14:39:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234100AbjEHMV1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 08:21:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51104 "EHLO
+        id S234390AbjEHMjY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 08:39:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234076AbjEHMVX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 08:21:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 948D131565;
-        Mon,  8 May 2023 05:21:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 201D563BFA;
-        Mon,  8 May 2023 12:21:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55314C433D2;
-        Mon,  8 May 2023 12:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683548481;
-        bh=uq5dzUvZQoVw3C52vq/DdsRT8oi8aDqjHTKmyLpSfZo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=r0SxYbcZN3jgbBBE4ta+Dzn8/3lyfGNX3BbuOqE8B84X1N1cIKwIzO4SYcQVgH9iH
-         MeLYFhhvGzQSFVyn/1hCKtRerG1EFDNPyCKzUcebDRXTMur1z8zpAnRJwl0lw8Mogq
-         sOC/3m5d9rmB3H2i+skm0YQ4clsnrWhOe552wdOL8Inj8vCFx/gEG6BEUgmZ2j5ZWd
-         XGu5dLYnJ6dLJFJJGn/MyHLMp1rP4A7stireL7O6syT+xGhcl7AfHaaG6P3osBPkxJ
-         V4BsPL7ppePFvF4cfTSD8UPiJXKmGbzY65wl/Kjr2m+jRw3p+7RxsUvyOAocS/MX3+
-         Dg5171/dpRdFw==
-Date:   Mon, 8 May 2023 17:51:09 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Devi Priya <quic_devipriy@quicinc.com>
-Cc:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
-        lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, krzysztof.kozlowski+dt@linaro.org,
-        mturquette@baylibre.com, sboyd@kernel.org, mani@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-clk@vger.kernel.org, quic_srichara@quicinc.com,
-        quic_sjaganat@quicinc.com, quic_kathirav@quicinc.com,
-        quic_arajkuma@quicinc.com, quic_anusha@quicinc.com,
-        quic_ipkumar@quicinc.com
-Subject: Re: [PATCH V3 6/6] PCI: qcom: Add support for IPQ9574
-Message-ID: <20230508122109.GC4190@thinkpad>
-References: <20230421124938.21974-1-quic_devipriy@quicinc.com>
- <20230421124938.21974-7-quic_devipriy@quicinc.com>
+        with ESMTP id S234775AbjEHMjR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 08:39:17 -0400
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13B263A286
+        for <linux-pci@vger.kernel.org>; Mon,  8 May 2023 05:39:08 -0700 (PDT)
+Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-b9a6eec8611so24722758276.0
+        for <linux-pci@vger.kernel.org>; Mon, 08 May 2023 05:39:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683549548; x=1686141548;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uROyBrg4Rj4m8VfCLH63bHghL03rmG36CD/tTQoIjDc=;
+        b=TpEzbfix6RIrR/JlLG63lTb15z44oEkRjGofFW29A0MN7BOInaRnSkqHTvYVhkKQgb
+         3TWhd0n+6n1bF2K6Z6DD8ohTKKfVNNm31T9EAKdcuN2lwLBuciqdjlXcxMwIQY4LSsk+
+         wbitVqddA81Ndh1TbwZFpfntDp4mSuJaJrCfX8lr3b5TRc02JpN3wusASiQ20/kEC/gz
+         f7AWqfnKUv472FVV4Ut3FlWjDNy/g8XSEefAra4Ju5G7DoX0RiICWefNpfJxKeu8umE+
+         Y66B2DiKKT26LRJFh3AeeeNf2QUVcc8d/DXOcHH129HXPfpTlZ8LPxkgxmtr0oXpw3ve
+         yBPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683549548; x=1686141548;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uROyBrg4Rj4m8VfCLH63bHghL03rmG36CD/tTQoIjDc=;
+        b=D4vEI51Ba9tS8DHqh9G/mZka4tB2ZZwGJZ0To3YfKGAmdfRv6Q3Z4aiqmxgsenvY4z
+         BJreLGW2zrW5ZuGZuAJBlCmr0VLho5DvbzK4ZmQFXccTxd4SgTnwTPTUy3K35nQhQHSH
+         4guEzV2ewPhEG1NBSCIzjuA2dbyXap4+Wn4XIqmdu4G0zUmg/plcO/gxa6PnA0p6Mm3K
+         Pzsiu5lpc1zXOKHFxiLe/dPAUen7sj6ul+zzO6Tmtxnr/nA1Hjdjvg6Y3XHK152cQfC+
+         3uo5diCS9xMZJIn7uWCDdcnMXKKguke5DX0Ve1RkuzrIh/6Je/N6hMJgQxuxt61EcDID
+         XlUg==
+X-Gm-Message-State: AC+VfDyuVew0SY28KQEJVT+K6mhgehjUGY1SUznrx8sglosFiBJqKV+d
+        utBFPkUNG14tROh7HdnVEHsXnAXBL4TEhyY6li/QQA==
+X-Google-Smtp-Source: ACHHUZ5jBvl+0pVUDygH87dIQI5+wsNCOfP5FbE3+s/fQidEE1nNvoYXgM3WWx2UgSOufKK3tCw/bOlQcyUE+7oE8b8=
+X-Received: by 2002:a25:4ac9:0:b0:ba1:6bad:9270 with SMTP id
+ x192-20020a254ac9000000b00ba16bad9270mr12863241yba.27.1683549548166; Mon, 08
+ May 2023 05:39:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230421124938.21974-7-quic_devipriy@quicinc.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+References: <20230508043641.23807-1-yejunyan@hust.edu.cn> <430d0357-d10e-db3d-bc82-722b022b519b@wanadoo.fr>
+In-Reply-To: <430d0357-d10e-db3d-bc82-722b022b519b@wanadoo.fr>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 8 May 2023 14:38:57 +0200
+Message-ID: <CACRpkdbPzGumK=wAvOr99TQZB4hTjxvymPCvj_3qU1XSPKkpOA@mail.gmail.com>
+Subject: Re: [PATCH v3] pci: controller: pci-ftpci100: Release the clock resources
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc:     Junyan Ye <yejunyan@hust.edu.cn>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -63,180 +76,25 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Apr 21, 2023 at 06:19:38PM +0530, Devi Priya wrote:
-> The IPQ9574 platform has 4 Gen3 PCIe controllers: two single-lane
-> and two dual-lane based on SNPS core 5.70a
-> The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
-> Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-> which reuses all the members of 'ops_2_9_0' except for the post_init
-> as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
-> and 1_27_0.
-> Also, modified get_resources of 'ops 2_9_0' to get the clocks
-> from the device tree and modelled the post init sequence as
-> a common function to avoid code redundancy.
-> 
-> Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+On Mon, May 8, 2023 at 8:59=E2=80=AFAM Christophe JAILLET
+<christophe.jaillet@wanadoo.fr> wrote:
 
-One comment below. With that fixed,
+> completely unrelated to your patch, but this comments state "optional".
+> The code below seems to make both clocks mandatory.
+>
+> Moreover, a few lines later, we have:
+>      if (!IS_ERR(p->bus_clk)) {
+> which seems to say that bus_clk is optional.
+>
+> This was introduced by 2eeb02b28579.
+>
+> Just a guess, but either the comment should be updated, or the code
+> modified.
 
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+It's fine to make the clocks mandatory, because all Gemini
+systems provide these clocks.
 
-- Mani
+But that is good to mention in the commit message as well.
 
-> ---
->  Changes in V3:
-> 	- Rebased on top of linux-next/master
-> 
->  drivers/pci/controller/dwc/pcie-qcom.c | 61 ++++++++++++++++++--------
->  1 file changed, 43 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 4ab30892f6ef..3682ecdead1f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -107,6 +107,7 @@
->  
->  /* PARF_SLV_ADDR_SPACE_SIZE register value */
->  #define SLV_ADDR_SPACE_SZ			0x10000000
-> +#define SLV_ADDR_SPACE_SZ_1_27_0		0x08000000
->  
->  /* PARF_MHI_CLOCK_RESET_CTRL register fields */
->  #define AHB_CLK_EN				BIT(0)
-> @@ -202,10 +203,10 @@ struct qcom_pcie_resources_2_7_0 {
->  	struct reset_control *rst;
->  };
->  
-> -#define QCOM_PCIE_2_9_0_MAX_CLOCKS		5
->  struct qcom_pcie_resources_2_9_0 {
-> -	struct clk_bulk_data clks[QCOM_PCIE_2_9_0_MAX_CLOCKS];
-> +	struct clk_bulk_data *clks;
->  	struct reset_control *rst;
-> +	int num_clks;
->  };
->  
->  union qcom_pcie_resources {
-> @@ -1050,17 +1051,10 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
->  	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
->  	struct dw_pcie *pci = pcie->pci;
->  	struct device *dev = pci->dev;
-> -	int ret;
->  
-> -	res->clks[0].id = "iface";
-> -	res->clks[1].id = "axi_m";
-> -	res->clks[2].id = "axi_s";
-> -	res->clks[3].id = "axi_bridge";
-> -	res->clks[4].id = "rchng";
-> -
-> -	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
-> -	if (ret < 0)
-> -		return ret;
-> +	res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
-> +	if (res->clks < 0)
-> +		return res->num_clks;
-
-Why not return proper error no?
-
->  
->  	res->rst = devm_reset_control_array_get_exclusive(dev);
->  	if (IS_ERR(res->rst))
-> @@ -1073,7 +1067,7 @@ static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
->  {
->  	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
->  
-> -	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-> +	clk_bulk_disable_unprepare(res->num_clks, res->clks);
->  }
->  
->  static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-> @@ -1102,19 +1096,16 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
->  
->  	usleep_range(2000, 2500);
->  
-> -	return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	return clk_bulk_prepare_enable(res->num_clks, res->clks);
->  }
->  
-> -static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +static int qcom_pcie_post_init(struct qcom_pcie *pcie)
->  {
->  	struct dw_pcie *pci = pcie->pci;
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
->  	u32 val;
->  	int i;
->  
-> -	writel(SLV_ADDR_SPACE_SZ,
-> -		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> -
->  	val = readl(pcie->parf + PARF_PHY_CTRL);
->  	val &= ~PHY_TEST_PWR_DOWN;
->  	writel(val, pcie->parf + PARF_PHY_CTRL);
-> @@ -1151,6 +1142,26 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
->  	return 0;
->  }
->  
-> +static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-> +{
-> +	writel(SLV_ADDR_SPACE_SZ_1_27_0,
-> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> +
-> +	qcom_pcie_post_init(pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-> +{
-> +	writel(SLV_ADDR_SPACE_SZ,
-> +	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-> +
-> +	qcom_pcie_post_init(pcie);
-> +
-> +	return 0;
-> +}
-> +
->  static int qcom_pcie_link_up(struct dw_pcie *pci)
->  {
->  	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> @@ -1291,6 +1302,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
->  	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
->  };
->  
-> +/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-> +static const struct qcom_pcie_ops ops_1_27_0 = {
-> +	.get_resources = qcom_pcie_get_resources_2_9_0,
-> +	.init = qcom_pcie_init_2_9_0,
-> +	.post_init = qcom_pcie_post_init_1_27_0,
-> +	.deinit = qcom_pcie_deinit_2_9_0,
-> +	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-> +};
-> +
->  static const struct qcom_pcie_cfg cfg_1_0_0 = {
->  	.ops = &ops_1_0_0,
->  };
-> @@ -1323,6 +1343,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
->  	.ops = &ops_2_9_0,
->  };
->  
-> +static const struct qcom_pcie_cfg cfg_1_27_0 = {
-> +	.ops = &ops_1_27_0,
-> +};
-> +
->  static const struct dw_pcie_ops dw_pcie_ops = {
->  	.link_up = qcom_pcie_link_up,
->  	.start_link = qcom_pcie_start_link,
-> @@ -1607,6 +1631,7 @@ static const struct of_device_id qcom_pcie_match[] = {
->  	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
->  	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
->  	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-> +	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
->  	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
->  	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
->  	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
-> -- 
-> 2.17.1
-> 
-
--- 
-மணிவண்ணன் சதாசிவம்
+Yours,
+Linus Walleij
