@@ -2,237 +2,134 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 944376FA21A
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 10:24:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDFD46FA236
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 10:27:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233079AbjEHIYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 04:24:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47586 "EHLO
+        id S232935AbjEHI1Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 04:27:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233009AbjEHIXv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 04:23:51 -0400
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C85D1CFDA;
-        Mon,  8 May 2023 01:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1683534230; x=1715070230;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hlyuFLKeGB1+i6aF1UQOhgZD24UMcmO95zWntN5xZBE=;
-  b=2dPFf8klo8fVOzWvSGpVH7NYhDq34oITCnJxboSbxuDVxplP5pGD76+M
-   kYgfbjYKbLUPIjv2yWhF3kx8Xp6RggbPqy18XCJ/ajn7N4gqeS36e/v2y
-   /QNetmERCtE6YkZNBtVKDly5J+lQPD4pfUqLJbE3K3kwrKqyP2OzvSuvE
-   U+3+SA8iSf3cDq+eJ2RT4BUSwfAoQSL3b6HKyEOCNqtg48s4RLUWWzs0C
-   HiO0LfMlTZbZoUhVjHCMQ7QKcr18Soabp0RwryZJNeXRq8FHOUYg9S+A+
-   9T0FZI0BQFUFXPNemFSK29Mv0vMQcIAJtvFXg9RHJF6/V2U6G6YLcPlU/
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.99,258,1677567600"; 
-   d="asc'?scan'208";a="224279113"
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 08 May 2023 01:23:48 -0700
-Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Mon, 8 May 2023 01:23:48 -0700
-Received: from wendy (10.10.115.15) by chn-vm-ex01.mchp-main.com
- (10.10.85.143) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.21 via Frontend
- Transport; Mon, 8 May 2023 01:23:45 -0700
-Date:   Mon, 8 May 2023 09:23:26 +0100
-From:   Conor Dooley <conor.dooley@microchip.com>
+        with ESMTP id S232700AbjEHI1X (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 04:27:23 -0400
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 530341A125;
+        Mon,  8 May 2023 01:27:07 -0700 (PDT)
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5475e0147c9so1143360eaf.1;
+        Mon, 08 May 2023 01:27:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683534426; x=1686126426;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WHUlZpeMyjqd2JYUgY2eHNWG1bqzG/LjLu6e2GSUtNk=;
+        b=OlC8rCuChWAeg/QY8MZOKhpKQH9b4JPgs98Xml7j2rxY/qmUkQcyZhiOZwu1XbBWNL
+         a2wcbpbpRqL1/1/6j4kxKSits12dkeXk+vh6XywP1lOPVbcuxVkV6LCYYhab3089IPqt
+         aHT9GIaBgTm6fEWx8Q3gsvJQpFbuI3AL/o/05rlvlOAeWJWA7fQDqy1AYnuV0AXI90dR
+         FdSo7fODhmb+X9n3tmQw1eQCytz8Ftm5qep6j4iia56LLQvH2E4RMl/tEMW9tF/6Brjd
+         M1cKHwxFN+68fFT+1fR1th87wMbyWyCnv6LbNZWvWWLt8qzoUfJuuQNSQo9INHWS5Cmd
+         CdOA==
+X-Gm-Message-State: AC+VfDwB3VM9Fl+POANiGOLg4MOpu/dY2xpVSgXkPY3B+gED1fjVLyUv
+        N90y5GVECMDSbN02nhC1YQ==
+X-Google-Smtp-Source: ACHHUZ64TdmlneC7I2hyuGS9hkgReKtzuOarI8Il6BCrERKnGSiV8pCbE8zCqMVSck1GuBov3oW27w==
+X-Received: by 2002:a4a:9c4e:0:b0:541:f9a3:3455 with SMTP id c14-20020a4a9c4e000000b00541f9a33455mr3750503ook.4.1683534426014;
+        Mon, 08 May 2023 01:27:06 -0700 (PDT)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id v26-20020a4ae6da000000b0054c84710025sm3821446oot.8.2023.05.08.01.27.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 May 2023 01:27:05 -0700 (PDT)
+Received: (nullmailer pid 462508 invoked by uid 1000);
+        Mon, 08 May 2023 08:27:04 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Rob Herring <robh@kernel.org>
 To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-CC:     Richard Zhu <hongxing.zhu@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+Cc:     Lucas Stach <l.stach@pengutronix.de>,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
+        linux-kernel@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Richard Zhu <hongxing.zhu@nxp.com>,
         NXP Linux Team <linux-imx@nxp.com>,
-        <linux-pci@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-pci@vger.kernel.org
+In-Reply-To: <20230508071837.68552-1-krzysztof.kozlowski@linaro.org>
+References: <20230508071837.68552-1-krzysztof.kozlowski@linaro.org>
+Message-Id: <168353442421.462471.2290093137731039069.robh@kernel.org>
 Subject: Re: [PATCH fixes] dt-bindings: PCI: fsl,imx6q: fix assigned-clocks
  warning
-Message-ID: <20230508-purely-radar-8fb16747ba60@wendy>
-References: <20230508071837.68552-1-krzysztof.kozlowski@linaro.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="QtB+N7QIRkmC4l2w"
-Content-Disposition: inline
-In-Reply-To: <20230508071837.68552-1-krzysztof.kozlowski@linaro.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Date:   Mon, 08 May 2023 03:27:04 -0500
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,
+        RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---QtB+N7QIRkmC4l2w
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, May 08, 2023 at 09:18:37AM +0200, Krzysztof Kozlowski wrote:
-> @@ -49,6 +62,31 @@ required:
->  allOf:
->    - $ref: /schemas/pci/snps,dw-pcie-ep.yaml#
->    - $ref: /schemas/pci/fsl,imx6q-pcie-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx8mq-pcie-ep
+On Mon, 08 May 2023 09:18:37 +0200, Krzysztof Kozlowski wrote:
+> assigned-clocks are a dependency of clocks, however the dtschema has
+> limitation and expects clocks to be present in the binding using
+> assigned-clocks, not in other referenced bindings.  The clocks were
+> defined in common fsl,imx6q-pcie-common.yaml, which is referenced by fsl,imx6q-pcie-ep.yaml.  The fsl,imx6q-pcie-ep.yaml used assigned-clocks thus leading to warnings:
+> 
+>   Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.example.dtb: pcie-ep@33800000:
+>     Unevaluated properties are not allowed ('assigned-clock-parents', 'assigned-clock-rates', 'assigned-clocks' were unexpected)
+>   From schema: Documentation/devicetree/bindings/pci/fsl,imx6q-pcie-ep.yaml
+> 
+> Fix this by moving clocks to each specific schema from the common one
+> and narrowing them to strictly match what is expected for given device.
+> 
+> Fixes: b10f82380eeb ("dt-bindings: imx6q-pcie: Restruct i.MX PCIe schema")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Patch for current cycle (v6.4-rc).   Please take directly as fixes or
+> let me know, so I will send it to Linus.
+> ---
+>  .../bindings/pci/fsl,imx6q-pcie-common.yaml   | 13 +---
+>  .../bindings/pci/fsl,imx6q-pcie-ep.yaml       | 38 +++++++++
+>  .../bindings/pci/fsl,imx6q-pcie.yaml          | 77 +++++++++++++++++++
+>  3 files changed, 117 insertions(+), 11 deletions(-)
+> 
 
-How come this is enum rather than const (and same for the other
-single-compatible ones below)?
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-Cheers,
-Conor.
+yamllint warnings/errors:
 
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 4
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_phy
-> +            - const: pcie_aux
-> +    else:
-> +      properties:
-> +        clocks:
-> +          maxItems: 3
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_aux
-> +
-> =20
->  unevaluatedProperties: false
-> =20
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml b/=
-Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> index 2443641754d3..81bbb8728f0f 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.yaml
-> @@ -40,6 +40,19 @@ properties:
->        - const: dbi
->        - const: config
-> =20
-> +  clocks:
-> +    minItems: 3
-> +    items:
-> +      - description: PCIe bridge clock.
-> +      - description: PCIe bus clock.
-> +      - description: PCIe PHY clock.
-> +      - description: Additional required clock entry for imx6sx-pcie,
-> +           imx6sx-pcie-ep, imx8mq-pcie, imx8mq-pcie-ep.
-> +
-> +  clock-names:
-> +    minItems: 3
-> +    maxItems: 4
-> +
->    interrupts:
->      items:
->        - description: builtin MSI controller.
-> @@ -77,6 +90,70 @@ required:
->  allOf:
->    - $ref: /schemas/pci/snps,dw-pcie.yaml#
->    - $ref: /schemas/pci/fsl,imx6q-pcie-common.yaml#
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx6sx-pcie
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 4
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_phy
-> +            - const: pcie_inbound_axi
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx8mq-pcie
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 4
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_phy
-> +            - const: pcie_aux
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx6q-pcie
-> +            - fsl,imx6qp-pcie
-> +            - fsl,imx7d-pcie
-> +    then:
-> +      properties:
-> +        clocks:
-> +          maxItems: 3
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_phy
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          enum:
-> +            - fsl,imx8mm-pcie
-> +            - fsl,imx8mp-pcie
-> +    then:
-> +      properties:
-> +        clocks:
-> +          maxItems: 3
-> +        clock-names:
-> +          items:
-> +            - const: pcie
-> +            - const: pcie_bus
-> +            - const: pcie_aux
-> =20
->  unevaluatedProperties: false
-> =20
-> --=20
-> 2.34.1
->=20
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.example.dtb: camera-sensor@3c: port:endpoint:data-lanes: [[1]] is too short
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/rockchip-isp1.example.dtb: camera@3c: port:endpoint:data-lanes: [[1]] is too short
+	From schema: /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/media/i2c/ovti,ov2685.yaml
 
---QtB+N7QIRkmC4l2w
-Content-Type: application/pgp-signature; name="signature.asc"
+doc reference errors (make refcheckdocs):
+Documentation/usb/gadget_uvc.rst: Documentation/userspace-api/media/v4l/pixfmt-packed.yuv.rst
+MAINTAINERS: Documentation/devicetree/bindings/pwm/pwm-apple.yaml
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230508071837.68552-1-krzysztof.kozlowski@linaro.org
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZFixcAAKCRB4tDGHoIJi
-0hl7AP4x1NzK+26z63yAD+Pl99r+yAFmNg1IKq8KmxhVMOHLZwD/c2HvdUBgj+A/
-VXIO5d2wSOFSW0nWqet8dkJfD9Aw2w4=
-=vPiN
------END PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
---QtB+N7QIRkmC4l2w--
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
