@@ -2,42 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C9D3D6F9EB8
-	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 06:39:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E7B6F9ED3
+	for <lists+linux-pci@lfdr.de>; Mon,  8 May 2023 06:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232291AbjEHEjB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 8 May 2023 00:39:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38472 "EHLO
+        id S229986AbjEHEzm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 8 May 2023 00:55:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43246 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229540AbjEHEjA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 00:39:00 -0400
-Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2119.outbound.protection.outlook.com [40.107.114.119])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBC541569E;
-        Sun,  7 May 2023 21:38:58 -0700 (PDT)
+        with ESMTP id S229662AbjEHEzl (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 8 May 2023 00:55:41 -0400
+Received: from JPN01-TYC-obe.outbound.protection.outlook.com (mail-tycjpn01on2120.outbound.protection.outlook.com [40.107.114.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBDB57AA1;
+        Sun,  7 May 2023 21:55:38 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QsP1w3rbBW5SkhLdP4zWszb+U7hyjVLiPIi0kAKUNbg2/7N6ThjXFjt4nDhqoO8irNsiSivtTmcewcyBK8pTnGxsPEwgAPgRipIXGEBVcew/H38YqaLuCjt6OjJ5FUhnfQ57XFpjxTbqWoWrWTFnKHbNbgeB9Y0SLeqAu2bak0YlmtJynWJZAwsE04T2P34Zaie4t+yeo0mMtV74kKsZy7WaO6PWWnOgDJBE705q+oX7yKKO1/5tkK7MljyV5ZO0U9T/lovO3mUQjogygKMvFmgYs21O8qoorBAsOyaX+ISb6rMWGHuKt5MysakX1ku2mPqmn5SfpbUh9dGyZtTrdQ==
+ b=lQIgpaa1sFUuseBbyKy637PpzC3TnCJzku59ULqJgVOBHnzIL9KIoN0aq7kF+IUHWSSjb9QIHVe+t1HAM3ZiKiGctuW9dHEa65JQ72VyWz+9EkWPp9gO6VMZytMiu+DOp2qcgrD3oaPhOQXVt1aSm0SQlBN6y0upS71+vUAcici5UAirknXbdm2WnX/FCNYXsdxKCLbFp2Nhi7OA8fVnt9TTAt8ClzzQpvXBujoAes0I2Mzpjzu1rVfNkCBsVykd1iFXRch9ao845gCAP9qLx852Yv/otA1JEofAvqvW38TaBctIDBPIUnyQ7uL7PRkjCgB9f6cNdfY7tzX924R6xA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Jxv81IS8ebmvJ9ihzRG0JJgurHuXEBR6JGbaNEy0FGE=;
- b=Xt2XzcPxWxkBbS5l87CpsjHDwPzR3vABVti864ilIz7fMn8hnl+mVJJmHXWobj7bvO6388CYQrMyWN7G8D8epdv1INLDB67ckbH1oq2i/wFAwCpN5l4HTmJHK05puVaR4p2HpNOocuH98RWto66Ju9mgGYTb7/ApeQrczp6lETFtWSoVP0bK2rjHYx6owdH2/rhq0eJIza/XDYT4GzFjLrFvu7hEDtoSitCn7fJ1oMZcATCTH65Vyz2aXzWyJeQW+CcRmN6rKKI44J8F78Phl1JeW8sAS4Q1Ug1uPtOzBlsrXAkR4i9jDOJVmxgYbYhrtaSeEZxdvd0vRAp84Oggkw==
+ bh=KSH2THgbmc5fctr91VNFe18IIdN+U85NPYMLMghAUYg=;
+ b=SCoXt1Fn7RUzHvosRKqdLjL/m6Fgzxvu7gc1qaB7LhnNzEfU849idL87ArFTBCbgv89L+WEpZGQbCW/IJ9wGMxwgq/PEseFqN+rNV7rJUviZb0dQI58z3PPWhzd52wPxg5QmacjBvY7EGinG2laZlEDWcW85itLlwDeHifm1cTcC62qpEHgxYacqX8mO+uNFKY7XwpqD3HRKwjpFQCPNXxK4rxYm+pXw7yH6EMarvF5yTzenRjyljSy+Tmy0Zz1vRAFEx8O6uyCc4J3WmNDBw2F/jKUE5QjUv8dG1Xba+A4bxcmTkaskgneNqZ/cdngfMStNMB55APKbP5vBflOKug==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
  dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Jxv81IS8ebmvJ9ihzRG0JJgurHuXEBR6JGbaNEy0FGE=;
- b=hBdNut0WzlNde32TsDrOOf8saUeHuxh5WCTMnmBw6V8JCA29RzfXk3VfcH0v4ND80LnwMo1HtAFlMoXV+bYr+8Nk2LNVN0n+yzB/upRt0qd+VOyntzcj7cP4KI5AYhBS5gdELF6iRzPlbK2VmJ9GmbTTpuYxslmRe6rBHDm2LIg=
+ bh=KSH2THgbmc5fctr91VNFe18IIdN+U85NPYMLMghAUYg=;
+ b=VuJoMAUZ5NPnJQz1v3dQa4FQe8MazmCQlL8T4i4pARi7y8Di9e+HcXytoKXi2KiFNfVFQqRryYCbgvNZ8EHI3eUHkHZYQKCmdKv59qEQ6JgasIJZi2/k1AzxECSVicpbmyGFyi3bvHvs9qZjR90aDyhNtugQfvwVLwlI8gfmAxA=
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
- (2603:1096:404:8028::13) by TY3PR01MB11791.jpnprd01.prod.outlook.com
- (2603:1096:400:40a::6) with Microsoft SMTP Server (version=TLS1_2,
+ (2603:1096:404:8028::13) by TYAPR01MB6028.jpnprd01.prod.outlook.com
+ (2603:1096:402:35::10) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6363.32; Mon, 8 May
- 2023 04:38:56 +0000
+ 2023 04:55:35 +0000
 Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
  ([fe80::5198:fdcf:d9b1:6003%7]) with mapi id 15.20.6363.032; Mon, 8 May 2023
- 04:38:56 +0000
+ 04:55:35 +0000
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     Serge Semin <fancer.lancer@gmail.com>
 CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
@@ -52,19 +52,18 @@ CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
         "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
         "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
         "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Subject: RE: [PATCH v14 05/21] PCI: dwc: Rename "legacy_irq" to "INTx_irq" in
- DWC core
-Thread-Topic: [PATCH v14 05/21] PCI: dwc: Rename "legacy_irq" to "INTx_irq" in
- DWC core
-Thread-Index: AQHZd/tpsF9o9OFj/kyMTTuM2a02/K9FwAsAgAoc89A=
-Date:   Mon, 8 May 2023 04:38:55 +0000
-Message-ID: <TYBPR01MB5341AAE8C3846683953E506AD8719@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v14 06/21] PCI: dwc: Change arguments of
+ dw_pcie_prog_ep_outbound_atu()
+Thread-Topic: [PATCH v14 06/21] PCI: dwc: Change arguments of
+ dw_pcie_prog_ep_outbound_atu()
+Thread-Index: AQHZd/tpZybyaUTX00a3iipgujTYea9FzeOAgAoQgrA=
+Date:   Mon, 8 May 2023 04:55:35 +0000
+Message-ID: <TYBPR01MB53416B39491E8238814D976FD8719@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 References: <20230426045557.3613826-1-yoshihiro.shimoda.uh@renesas.com>
- <20230426045557.3613826-6-yoshihiro.shimoda.uh@renesas.com>
- <20230501180900.6jmxgd2ob2ebf34d@mobilestation>
-In-Reply-To: <20230501180900.6jmxgd2ob2ebf34d@mobilestation>
+ <20230426045557.3613826-7-yoshihiro.shimoda.uh@renesas.com>
+ <20230501185833.mcunpdtvc3qjl72w@mobilestation>
+In-Reply-To: <20230501185833.mcunpdtvc3qjl72w@mobilestation>
 Accept-Language: ja-JP, en-US
 Content-Language: ja-JP
 X-MS-Has-Attach: 
@@ -72,57 +71,57 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=renesas.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TY3PR01MB11791:EE_
-x-ms-office365-filtering-correlation-id: a94fed9d-bac9-4511-91e1-08db4f7e2225
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|TYAPR01MB6028:EE_
+x-ms-office365-filtering-correlation-id: 2fde6819-1b49-4eec-d720-08db4f8075ca
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: AjjdT0nij55rMezyd2AKNsLrM+F7CsKWEvp64roTLVA92zOhoulYOHzr/y9Gpw0wUNHXWSZQMJTHn4hIChHlYcm3Es7DfK60fdP/6puvhPpmd9SAzMYddMiyEif7xOH1vp4Hqp/PnBCG6n0l/tEGqog1Jjax3eGwCXvmo1sq/WXwbh4BvDb8stnWzA4rbS+IUWLZa+kS7Bvgx8+Yqae0LQqNnk1yijqXRggl+AzcPczIWmsFs6ZoUJzQ8KVXEo9xz4x2kUYtFY6lxZm9CCChsqwmgrE6kX2K22//QG9X38sMF0js0OpcdgmqpqWJnJmfNSUfCSLHT1nZv2rqCNyvesNkft/RtbQ+l4EvWaiI8KfDL15N18i1qutUX1s3C0TvA1tz1BwMXy/00xBzK4Plc4Dv1+gno0PzL5aakDw93Oj8PNF+J06LctW4gVqbqSv9VVFU1Pjs+vWGQbAHkIqBPBsk1tPEg3D3+jkY2sciuyrLfP5ZTMu8tCTL4C2Lym45Jq6oXjLm8gpH0TWgz9YE1Z+paFMKrioap5uayribczsJyMFULalb0FDlFN5HTkp6cNkb18HyCFnTSY0iUI5iGvknSrouLoaTtPo0KsrFqTkhpWljEOJVnhWCAimw2bYI
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(451199021)(76116006)(7416002)(64756008)(6916009)(5660300002)(66446008)(4326008)(478600001)(8936002)(8676002)(66476007)(54906003)(66946007)(2906002)(66556008)(71200400001)(316002)(41300700001)(52536014)(7696005)(9686003)(6506007)(186003)(55016003)(83380400001)(38070700005)(33656002)(38100700002)(86362001)(122000001);DIR:OUT;SFP:1102;
+x-microsoft-antispam-message-info: h+O/shxFdsYnejdqsA5decL8ZAD+dg4eU6808df7zpCu52rljSS/7iKsRaCyBCCL5I0a/zRtuq9oRP9Gjk85HPmZ6A1pbfkSiF00Pn4GjPQzPm10k2xTOugaM3/IMYWG7zH6FJlGEXimTH0TOHYwy+iKUnqbSRbQKJn2ENAH5kionK4469O/K+eRzmJ88nk+je5WlNDVyheV5gBXa9Q2gRa8DOhw0KcooToKbcboYodyOOWFQvKXJ3J+ng3T3Aq4ku+9N6pV4zGcryWOydLwv5YwvwcnZAM/whf3zqszgoqdUjUaWcSlPE3EDD598/5uH9Vflc9xCwB/be3LNApD3mmr5zIKQEPKB3dkHlsnWsJuwKlQc073s41jAL9PBnsxU1YSkLMg0CopZFA3iZR/Z8wEjYEfdkin8U8EVtJA7dQojtpiZ8m++MinTD2S22SZv379wy9853CTjPHV49huImd4Vfjz4/tuzKOxpzxuNsxS/e0sRnG6HwxoZzX3BsrJHyITyzWhwrBrWcUcS7nMZDGOVGmZBNipZKSeEyjngAAVnuP1g7xFMsYVqxzhzJD/pXjD3wBeBHcvZKd+osz8IQ55uy0Z/gEFB2hQ11HYqMas2E37j+tAe+thtsVQGD57
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(136003)(39860400002)(346002)(451199021)(76116006)(7416002)(64756008)(6916009)(5660300002)(66446008)(4326008)(478600001)(8936002)(8676002)(66476007)(54906003)(66946007)(30864003)(2906002)(66556008)(71200400001)(316002)(41300700001)(52536014)(7696005)(9686003)(6506007)(186003)(55016003)(83380400001)(38070700005)(33656002)(38100700002)(86362001)(122000001);DIR:OUT;SFP:1102;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aqLKFAONSj9oU9BxLIT5iwoz9oduZAjchcanwC6gIRZTyFK0gIQb/Mq0uaAY?=
- =?us-ascii?Q?rYCGpSHS6zTjPfFyUe+kPOJe6CXfWyKSVRGEVGdzpfE1e+8xR7sLsVKYUDDh?=
- =?us-ascii?Q?ychGIJIkBAWaCo2+HzTLNDnrtIyKZ2bLgYEJ23TOmvfG4bvZ/pK31K77PSp8?=
- =?us-ascii?Q?/QkRraS4vDD74WN2FsVHp2P8VTPtN8e/0wGy1scXKGPdZP4nzXDXToxeRfYR?=
- =?us-ascii?Q?T1PnxPB0UtLRydyM8egNtgalEuWohNfNe94lqzwa4rdgPaG51J3xl0NNOgte?=
- =?us-ascii?Q?MzXBOSASJ8rGmaZL9njrE2KE/215KTQR0Ig4jAwc4Dg42SEa23M/u2j2+cAG?=
- =?us-ascii?Q?LTn2p/c3wKEIa6SkbOBGjXAZWUbKAlCLkYw+b54DXjuaA0K9Hl5YjKnA8tuH?=
- =?us-ascii?Q?SyEpw9aSL5RzFUzLjKzXzvsCi95BK3cF7WMcPX6vvQxcsw2hitF31lX9GeFP?=
- =?us-ascii?Q?9lGgRquJQ0H7I0/th1o3QmR7ZiCBvWLUZbHBuEuOolAsy7nSIzfCcoMsEcdl?=
- =?us-ascii?Q?y3DT4vPdPJdW3rhryUH6T2e1p+7tHM0Au6mF5rEcLS59rOZxdvUV3yUqe4Wq?=
- =?us-ascii?Q?15kab3AUnjMX6pIQ8VzG1TvFV1tp37J1qycndo2sXMK1l9jz6/1zvI5gexmd?=
- =?us-ascii?Q?S4srXHKIYV9qlcDas9uTPLtIR5N0MP/W3tRkTApJnN/yN/DAyQ6CPQqpQure?=
- =?us-ascii?Q?Yx0Xkel20wwXZ97pVO95TRNX9kdWIKXuAHIzn1tsmzRbdiObGjMTG0tj4V/a?=
- =?us-ascii?Q?6IOpfk9YC7jn9ow7EpiVDpo1tztkqG1y+TacemfwfcMODhJmfkzMVXeDo44v?=
- =?us-ascii?Q?wURKqVaXW9e1XlnnVzNNWuGtzWDur/jvKljxI7E45lMH+m6HNpQ/RaYHJj7g?=
- =?us-ascii?Q?EC1FLbNMcwP0OJ49qHCdIgm9ciIycY9L2W6avhDz8jq3DwW/g3q9M83L3z6P?=
- =?us-ascii?Q?UGqOF/O4Mm95f7CxVpLPrr6la94O/0MTe8M7NilSQPNFbNsoFm7n0cnJRj7J?=
- =?us-ascii?Q?52oJizaoSHXGJLdqv3B0ahGJO/JZBD8LNMRQ1K/kIkzuzMa9IUXtOkWq8e1s?=
- =?us-ascii?Q?eV8Rx1H5lMyC4BVkmeElsIA+yoPcTaYlNw8HIu1fp3AJ+NSB6crNREJ4nQlU?=
- =?us-ascii?Q?8GUKgfvEGHivAS9kCBI6DCgFuykQ/GkMNNH5nNU+Y17XjRSNRc8bmMklzjwa?=
- =?us-ascii?Q?Fr5z/Q0Xl2eDBAfinTRx5EJulj7XsjYVkom+5zvP2+rulJKPFDgWafNNIwz/?=
- =?us-ascii?Q?YVbY0FrvlzjAJQxZWyM/6LT3B3CEqADaJYAhVFkX3ikCF4pe07MqDAoD+KJT?=
- =?us-ascii?Q?ncOKgeON91UhllbkkLeobKXdtaZdUvwfesXDUkG4D7cGvA6RFMQpKGG/Nsvv?=
- =?us-ascii?Q?4ZY11pZsaIPN34ZSOFb/GfplFDLoFbEh36C89mpAMS1njHIqeubr/d5RwkDl?=
- =?us-ascii?Q?PNuP0/QGbUozPqs8WHYGNsCPUATrLxS7QcbwyvayNW8HKli+oGyOlgZL6LQL?=
- =?us-ascii?Q?dwXq/FUGQYNzgzjhrKSramyenk0CAXpw/zRfGCG7kjbwuGNIPf4gmRlgEto3?=
- =?us-ascii?Q?OEXatnH6Eg+r/UjRcGyfuGFyeLVpv5ZPfkP7KsGfPcLFqEg1J/DX+E/eL1rL?=
- =?us-ascii?Q?aetRGtPKy5TaxQ0VDcAThxsL2eOi0VouoklFqiTorLtCzRUxUeEKnpVimJIZ?=
- =?us-ascii?Q?hFM0Eg=3D=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?aA0P5CI3oGK2q6drZO5jiKGDFd5QDV8rvsrROKltfeHsk+k+W2cbsMs2JuX0?=
+ =?us-ascii?Q?/cPs15ak1UCOpTRnQ82iPiyLBOu6hNp4k600DWEA/fiUahXpWXAR0KkWQaTt?=
+ =?us-ascii?Q?p1nzvMWQcaZzMYERcdBeO9nRqn88UdEqlSraBfsyRnL+8M8yfKMlwHZtNSGH?=
+ =?us-ascii?Q?KzmIcsGWOF77CUSz0V0YIb0XDNW9/8rnM4+/utwCPwO+03KZzjphP/sRv0NC?=
+ =?us-ascii?Q?Hs0rFIyy9K1Lp5Su+Ko9AIWib3D5d4NLVsApbu7sJmFI7gnm2AAo7k4GTqB/?=
+ =?us-ascii?Q?xpzQyaN0Rijg3QrrlSwN9PU3gGYvSKWniW5ZIToE+RJwSBfQxglqUE425fvv?=
+ =?us-ascii?Q?qIa8ONYkaYTuAxwQjtwwL+2ROKxoStJI+NKJZOJbSdAb0HQZa6GJ+GvvP9m8?=
+ =?us-ascii?Q?giuC8Dyy+RxGORXr9ZkZWMQS4ugXV96XwxwvD+ERcH9Fb6OlL0QeHUHa8k2r?=
+ =?us-ascii?Q?nMNmfFuTR3VOc31qikcF+c+F5jF2uCvKqNEmYpgS5p14shOqCZvmDeSIbN/j?=
+ =?us-ascii?Q?Dnh7+EAVnE4BmGK53iUSG3OtWNkz/Yvj+MmEoWwYuEqk8LpdMUyQPIeQqiBl?=
+ =?us-ascii?Q?r+l5YVptIu92SQ21q+kwnhmusDNpjyGOOIOFc+eTr6WqQlcgQxqEn3iTD7nm?=
+ =?us-ascii?Q?izDFECsBYE99Vh0qE8Rv1Eslmo95qpj+lMX3cZ9Qi3PhR5pqBu6raZOHY609?=
+ =?us-ascii?Q?rdusic+MRdx9MDNQbB3h99GkrS3jkB0nIYKYM9k2wfCM648Ji8JeDtx5lQWY?=
+ =?us-ascii?Q?trnboTc9DUCS8wd8OxtrKiv+Ig9xzwbtjvphEE5zZH9NgJQ28sBSkaNj3utM?=
+ =?us-ascii?Q?Ua7UYajBrNftClZABL+fyL8qTXQpcMBlY4eV4zcr2FfFDWobCcsjXJ3mpQ37?=
+ =?us-ascii?Q?/NZRbV+qa/rBxNczSa3PhVrp8LGC/AAj1ELnLUtACZcP2ukGx45/5OfxjV8l?=
+ =?us-ascii?Q?4yPNhLrq6hs3cZNM1wBZjljmGCUYeqVEE55hCOKAdtO6ZXAPJqgBX5KgZd3e?=
+ =?us-ascii?Q?9hHTOTQZWgAB46Si763kBFswGcSqpEmw3XBY9AFV4xjFW3rYmn8/xpwDOPRW?=
+ =?us-ascii?Q?TqHaNUy5aoyZmZ7hdEj8kDIsRNIgbTPK2WO4QShdcU7picQE30vNNCTDRtJx?=
+ =?us-ascii?Q?zZPEhdbhnD915jGt4/NbSP5v1xVAyUsU6fS/+JezliNXT1h6I6xAgr5253r1?=
+ =?us-ascii?Q?/QyexbCX8HNJhdeHv9rxTaWt4fvqDUQJHvm+r9ZceHGC1bw0EK14hsq4E+sH?=
+ =?us-ascii?Q?4Ua30VkuvxSsNy65wUnQcwm7ReIEbyiEfPlxg56Q+NuWn8bhDGFqIOB+Oklu?=
+ =?us-ascii?Q?w1IM9OmHPq/DKSUnLZ7qNHCUyEOQp2EZR+9/3NR2kZ+XbyGY3SbH5NhjxZ6S?=
+ =?us-ascii?Q?swQ7APz0FY4REMYoo+7RQoi+u223r9mF+kFbMctBciPTBuj60fnTzgekgG6O?=
+ =?us-ascii?Q?OEBTYcES77HIkPAejSqCtdqzBt/uNsSzb5TKyhMG0DtROOrwaczo/sOMNQBd?=
+ =?us-ascii?Q?eeD3yc7PCsj1ZJUNkmLjI1gnhK0ta6yJYU8hEmHQHZU7LN35wDBjoPGFH9wf?=
+ =?us-ascii?Q?qJqBwsiswEo6zQhgeNuwnZbFwn14DfSK3UJCVr6ZKdo8+MuKtg6+7d7/cg+S?=
+ =?us-ascii?Q?PhtJAo5AvZiMr/DLoSW/fd4BZaGIVJh40kJV7ul4mSN96ZaapAobobvX7jXw?=
+ =?us-ascii?Q?vPSLYA=3D=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a94fed9d-bac9-4511-91e1-08db4f7e2225
-X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2023 04:38:56.0169
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fde6819-1b49-4eec-d720-08db4f8075ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 08 May 2023 04:55:35.3370
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sJxkxpIy8pLwH0Cy/vmNgd5DZc9OacXEhgatyZo4jM+GA51NR7Y47b3XYxStixRKRDnKAfY9xu+r0WsFNEjettlG1tZhDBOC9gYXf+dMgKwk7x0l4feZZb+s/nr2euST
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY3PR01MB11791
+X-MS-Exchange-CrossTenant-userprincipalname: L2vK+vgj5zn20Tdc5uBmyGy5ipt+sRwR/nWiE7DM0AYZluFX99riRv2evGPsFq4IuHYvd+ug8dCKPHqFZYxOby+pFNHCB8QZMxucwge+44i47BW8dCqcdEc1FoOMvz8J
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB6028
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -135,157 +134,303 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Serge,
 
-> From: Serge Semin, Sent: Tuesday, May 2, 2023 3:09 AM
+> From: Serge Semin, Sent: Tuesday, May 2, 2023 3:59 AM
 >=20
-> On Wed, Apr 26, 2023 at 01:55:41PM +0900, Yoshihiro Shimoda wrote:
-> > Using "INTx" instead of "legacy" is more specific. So, rename
-> > dw_pcie_ep_raise_legacy_irq() to dw_pcie_ep_raise_intx_irq().
+> On Wed, Apr 26, 2023 at 01:55:42PM +0900, Yoshihiro Shimoda wrote:
+> > To add more arguments to the dw_pcie_prog_ep_outbound_atu() in
+> > the future, introduce struct dw_pcie_outbound_atu and change
+> > the argument. No behavior changes.
 >=20
-> [PATCH v14 05/21] PCI: dwc: Rename "legacy_irq" to "INTx_irq" in DWC core
+> The change now looks much more coherent than before. Though it still look=
+s
+> as an incomplete measure. The core driver still have two global outbound
+> ATU windows config methods which basically cause the same update
+> (performed by the same backend function), but which prototypes are
+> completely different. What about dropping the separate
+> dw_pcie_prog_outbound_atu() and dw_pcie_prog_outbound_atu() methods,
+> convert __dw_pcie_prog_outbound_atu() to dw_pcie_prog_outbound_atu(pci, a=
+tu)
+> and use it in both RP and EP drivers instead?
 >=20
-> Drop "DWC core" from the subject. It's implied by the subsystem/vendor
-> prefix of the title.
+> As a result we would have got a single outbound ATUs config method with
+> the next prototype:
+> int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, struct dw_pcie_ob_atu_=
+cfg *atu);
+> Thus we would have reduced a number of the globally defined methods,
+> would have got a more unified outbound ATU setup interface which
+> by its nature would imply that the OB ATU entries setup is almost the
+> same for both RP and EP platforms.
+
+Thank you for your comments! I understood it. I'll modify this patch on v15=
+.
+
+> Please see a few more comments below.
+>=20
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > ---
+> >  .../pci/controller/dwc/pcie-designware-ep.c   | 21 ++++---
+> >  drivers/pci/controller/dwc/pcie-designware.c  | 63 ++++++++++---------
+> >  drivers/pci/controller/dwc/pcie-designware.h  | 13 +++-
+> >  3 files changed, 57 insertions(+), 40 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/=
+pci/controller/dwc/pcie-designware-ep.c
+> > index a80b9fd03638..96375b0aba82 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
+> > @@ -183,9 +183,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep=
+ *ep, u8 func_no, int type,
+> >  	return 0;
+> >  }
+> >
+> > -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
+> > -				   phys_addr_t phys_addr,
+> > -				   u64 pci_addr, size_t size)
+> > +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
+> > +				   struct dw_pcie_outbound_atu *atu)
+> >  {
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> >  	u32 free_win;
+> > @@ -197,13 +196,13 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie=
+_ep *ep, u8 func_no,
+> >  		return -EINVAL;
+> >  	}
+> >
+> > -	ret =3D dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU=
+_TYPE_MEM,
+> > -					   phys_addr, pci_addr, size);
+> > +	atu->index =3D free_win;
+> > +	ret =3D dw_pcie_prog_ep_outbound_atu(pci, atu);
+> >  	if (ret)
+> >  		return ret;
+> >
+> >  	set_bit(free_win, ep->ob_window_map);
+> > -	ep->outbound_addr[free_win] =3D phys_addr;
+> > +	ep->outbound_addr[free_win] =3D atu->cpu_addr;
+> >
+> >  	return 0;
+> >  }
+> > @@ -306,8 +305,14 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc=
+, u8 func_no, u8 vfunc_no,
+> >  	int ret;
+> >  	struct dw_pcie_ep *ep =3D epc_get_drvdata(epc);
+> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
+> > -
+> > -	ret =3D dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
+> > +	struct dw_pcie_outbound_atu atu =3D { 0 };
+> > +
+> > +	atu.func_no =3D func_no;
+> > +	atu.type =3D PCIE_ATU_TYPE_MEM;
+> > +	atu.cpu_addr =3D addr;
+> > +	atu.pci_addr =3D pci_addr;
+> > +	atu.size =3D size;
+> > +	ret =3D dw_pcie_ep_outbound_atu(ep, &atu);
+> >  	if (ret) {
+> >  		dev_err(pci->dev, "Failed to enable address\n");
+> >  		return ret;
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci=
+/controller/dwc/pcie-designware.c
+> > index ede166645289..782c4b34d0a3 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > @@ -464,56 +464,55 @@ static inline u32 dw_pcie_enable_ecrc(u32 val)
+> >  	return val | PCIE_ATU_TD;
+> >  }
+> >
+>=20
+> > -static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no=
+,
+> > -				       int index, int type, u64 cpu_addr,
+> > -				       u64 pci_addr, u64 size)
+> > +static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
+> > +				       struct dw_pcie_outbound_atu *atu)
+> >  {
+> >  	u32 retries, val;
+> >  	u64 limit_addr;
+> >
+> >  	if (pci->ops && pci->ops->cpu_addr_fixup)
+> > -		cpu_addr =3D pci->ops->cpu_addr_fixup(pci, cpu_addr);
+> > +		atu->cpu_addr =3D pci->ops->cpu_addr_fixup(pci, atu->cpu_addr);
+>=20
+> This changes the method semantic a bit. The passed structure will be
+> updated meanwhile the former semantic implies the locally defined
+> variable modification. Please define a local var "cpu_addr" initialized
+> with the atu->cpu_addr field by default.
+
+I'll fix it.
+
+> >
+> > -	limit_addr =3D cpu_addr + size - 1;
+> > +	limit_addr =3D atu->cpu_addr + atu->size - 1;
+> >
+> > -	if ((limit_addr & ~pci->region_limit) !=3D (cpu_addr & ~pci->region_l=
+imit) ||
+> > -	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
+> > -	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
+> > +	if ((limit_addr & ~pci->region_limit) !=3D (atu->cpu_addr & ~pci->reg=
+ion_limit) ||
+> > +	    !IS_ALIGNED(atu->cpu_addr, pci->region_align) ||
+> > +	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size) {
+> >  		return -EINVAL;
+> >  	}
+> >
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_BASE,
+> > -			      lower_32_bits(cpu_addr));
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_BASE,
+> > -			      upper_32_bits(cpu_addr));
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_BASE,
+> > +			      lower_32_bits(atu->cpu_addr));
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_BASE,
+> > +			      upper_32_bits(atu->cpu_addr));
+> >
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LIMIT,
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LIMIT,
+> >  			      lower_32_bits(limit_addr));
+> >  	if (dw_pcie_ver_is_ge(pci, 460A))
+> > -		dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_LIMIT,
+> > +		dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_LIMIT,
+> >  				      upper_32_bits(limit_addr));
+> >
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_TARGET,
+> > -			      lower_32_bits(pci_addr));
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_TARGET,
+> > -			      upper_32_bits(pci_addr));
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_TARGET,
+> > +			      lower_32_bits(atu->pci_addr));
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_TARGET,
+> > +			      upper_32_bits(atu->pci_addr));
+> >
+> > -	val =3D type | PCIE_ATU_FUNC_NUM(func_no);
+> > -	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
+> > +	val =3D atu->type | PCIE_ATU_FUNC_NUM(atu->func_no);
+> > +	if (upper_32_bits(limit_addr) > upper_32_bits(atu->cpu_addr) &&
+> >  	    dw_pcie_ver_is_ge(pci, 460A))
+> >  		val |=3D PCIE_ATU_INCREASE_REGION_SIZE;
+> >  	if (dw_pcie_ver_is(pci, 490A))
+> >  		val =3D dw_pcie_enable_ecrc(val);
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL1, val);
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL1, val);
+> >
+> > -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENA=
+BLE);
+> > +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, PCIE_AT=
+U_ENABLE);
+> >
+> >  	/*
+> >  	 * Make sure ATU enable takes effect before any subsequent config
+> >  	 * and I/O accesses.
+> >  	 */
+> >  	for (retries =3D 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) =
+{
+> > -		val =3D dw_pcie_readl_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2);
+> > +		val =3D dw_pcie_readl_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2)=
+;
+> >  		if (val & PCIE_ATU_ENABLE)
+> >  			return 0;
+> >
+> > @@ -528,16 +527,20 @@ static int __dw_pcie_prog_outbound_atu(struct dw_=
+pcie *pci, u8 func_no,
+>=20
+> >  int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type=
+,
+> >  			      u64 cpu_addr, u64 pci_addr, u64 size)
+> >  {
+> > -	return __dw_pcie_prog_outbound_atu(pci, 0, index, type,
+> > -					   cpu_addr, pci_addr, size);
+> > +	struct dw_pcie_outbound_atu atu =3D { 0 };
+> > +
+> > +	atu.index =3D index;
+> > +	atu.type =3D type;
+> > +	atu.cpu_addr =3D cpu_addr;
+> > +	atu.pci_addr =3D pci_addr;
+> > +	atu.size =3D size;
+> > +	return __dw_pcie_prog_outbound_atu(pci, &atu);
+> >  }
+> >
+> > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int =
+index,
+> > -				 int type, u64 cpu_addr, u64 pci_addr,
+> > -				 u64 size)
+> > +int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci,
+> > +				 struct dw_pcie_outbound_atu *atu)
+> >  {
+> > -	return __dw_pcie_prog_outbound_atu(pci, func_no, index, type,
+> > -					   cpu_addr, pci_addr, size);
+> > +	return __dw_pcie_prog_outbound_atu(pci, atu);
+> >  }
+>=20
+> This could have been dropped if you got to implement what I suggested in
+> the head of the message.
+
+I got it. I'll modify this patch on v15.
+
+> >
+> >  static inline u32 dw_pcie_readl_atu_ib(struct dw_pcie *pci, u32 index,=
+ u32 reg)
+> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci=
+/controller/dwc/pcie-designware.h
+> > index 9acf6c40d252..81c7558a4718 100644
+> > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > @@ -291,6 +291,15 @@ enum dw_pcie_core_rst {
+> >  	DW_PCIE_NUM_CORE_RSTS
+> >  };
+> >
+>=20
+> > +struct dw_pcie_outbound_atu {
+>=20
+> what about using the name "dw_pcie_ob_atu_cfg" instead?
+
+It looks better than dw_pcie_outbound_atu. I'll change the name.
+
+> > +	u64 cpu_addr;
+> > +	u64 pci_addr;
+> > +	u64 size;
+> > +	int index;
+> > +	int type;
+> > +	u8 func_no;
+>=20
+> The structure will be padded by 7 bytes anyway. Let's move the "index",
+> "type" and "func_no" group to the head of the structure declaration.
 
 I got it.
 
-> Other than that the patch looks good. Although it would have been nice
-> to fix the local namings in the LLD drivers too...
+> > +};
+> > +
+> >  struct dw_pcie_host_ops {
+> >  	int (*host_init)(struct dw_pcie_rp *pp);
+> >  	void (*host_deinit)(struct dw_pcie_rp *pp);
+> > @@ -421,8 +430,8 @@ void dw_pcie_upconfig_setup(struct dw_pcie *pci);
+> >  int dw_pcie_wait_for_link(struct dw_pcie *pci);
+>=20
+> >  int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type=
+,
+> >  			      u64 cpu_addr, u64 pci_addr, u64 size);
+> > -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int =
+index,
+> > -				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
+> > +int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci,
+> > +				 struct dw_pcie_outbound_atu *atu);
+>=20
+> What about converting it to just a single:
+> dw_pcie_prog_outbound_atu(struct dw_pcie *pci, const struct dw_pcie_ob_at=
+u_cfg *atu);
+> ?
 
-I'm afraid but, what is "the LLD drivers"?
-
-> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
-
-Thank you for your review!
+I got it. I will use dw_pcie_prog_outbound_atu() only. I also think that us=
+ing
+"const struct dw_pcie_ob_atu_cfg *atu" is better.
 
 Best regards,
 Yoshihiro Shimoda
 
 > -Serge(y)
 >=20
-> >
-> > Suggested-by: Bjorn Helgaas <helgaas@kernel.org>
-> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> > ---
-> >  drivers/pci/controller/dwc/pci-imx6.c             | 2 +-
-> >  drivers/pci/controller/dwc/pci-layerscape-ep.c    | 2 +-
-> >  drivers/pci/controller/dwc/pcie-designware-ep.c   | 6 +++---
-> >  drivers/pci/controller/dwc/pcie-designware-plat.c | 2 +-
-> >  drivers/pci/controller/dwc/pcie-designware.h      | 4 ++--
-> >  drivers/pci/controller/dwc/pcie-qcom-ep.c         | 2 +-
-> >  6 files changed, 9 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/contro=
-ller/dwc/pci-imx6.c
-> > index 1f39e733ce19..0831f3947220 100644
-> > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > @@ -1063,7 +1063,7 @@ static int imx6_pcie_ep_raise_irq(struct dw_pcie_=
-ep *ep, u8 func_no,
-> >
-> >  	switch (type) {
-> >  	case PCI_EPC_IRQ_INTX:
-> > -		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> > +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> >  	case PCI_EPC_IRQ_MSI:
-> >  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> >  	case PCI_EPC_IRQ_MSIX:
-> > diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/p=
-ci/controller/dwc/pci-layerscape-ep.c
-> > index ab3306e206d8..3d58fc1670b4 100644
-> > --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-> > @@ -66,7 +66,7 @@ static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep=
-, u8 func_no,
-> >
-> >  	switch (type) {
-> >  	case PCI_EPC_IRQ_INTX:
-> > -		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> > +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> >  	case PCI_EPC_IRQ_MSI:
-> >  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> >  	case PCI_EPC_IRQ_MSIX:
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/=
-pci/controller/dwc/pcie-designware-ep.c
-> > index 205bbcc6af27..a80b9fd03638 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> > @@ -480,16 +480,16 @@ static const struct pci_epc_ops epc_ops =3D {
-> >  	.get_features		=3D dw_pcie_ep_get_features,
-> >  };
-> >
-> > -int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no)
-> > +int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
-> >  {
-> >  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
-> >  	struct device *dev =3D pci->dev;
-> >
-> > -	dev_err(dev, "EP cannot trigger legacy IRQs\n");
-> > +	dev_err(dev, "EP cannot trigger INTx IRQs\n");
-> >
-> >  	return -EINVAL;
-> >  }
-> > -EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_legacy_irq);
-> > +EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
-> >
-> >  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  			     u8 interrupt_num)
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware-plat.c b/driver=
-s/pci/controller/dwc/pcie-designware-plat.c
-> > index fc3b02949218..2689ff7939e4 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware-plat.c
-> > +++ b/drivers/pci/controller/dwc/pcie-designware-plat.c
-> > @@ -49,7 +49,7 @@ static int dw_plat_pcie_ep_raise_irq(struct dw_pcie_e=
-p *ep, u8 func_no,
-> >
-> >  	switch (type) {
-> >  	case PCI_EPC_IRQ_INTX:
-> > -		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> > +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> >  	case PCI_EPC_IRQ_MSI:
-> >  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> >  	case PCI_EPC_IRQ_MSIX:
-> > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci=
-/controller/dwc/pcie-designware.h
-> > index adad0ea61799..9acf6c40d252 100644
-> > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > @@ -550,7 +550,7 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep);
-> >  int dw_pcie_ep_init_complete(struct dw_pcie_ep *ep);
-> >  void dw_pcie_ep_init_notify(struct dw_pcie_ep *ep);
-> >  void dw_pcie_ep_exit(struct dw_pcie_ep *ep);
-> > -int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u8 func_no);
-> > +int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no);
-> >  int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u8 func_no,
-> >  			     u8 interrupt_num);
-> >  int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-> > @@ -583,7 +583,7 @@ static inline void dw_pcie_ep_exit(struct dw_pcie_e=
-p *ep)
-> >  {
-> >  }
-> >
-> > -static inline int dw_pcie_ep_raise_legacy_irq(struct dw_pcie_ep *ep, u=
-8 func_no)
-> > +static inline int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 =
-func_no)
-> >  {
-> >  	return 0;
-> >  }
-> > diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/co=
-ntroller/dwc/pcie-qcom-ep.c
-> > index 077afce48d0b..3061e5e13476 100644
-> > --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> > @@ -659,7 +659,7 @@ static int qcom_pcie_ep_raise_irq(struct dw_pcie_ep=
- *ep, u8 func_no,
-> >
-> >  	switch (type) {
-> >  	case PCI_EPC_IRQ_INTX:
-> > -		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-> > +		return dw_pcie_ep_raise_intx_irq(ep, func_no);
-> >  	case PCI_EPC_IRQ_MSI:
-> >  		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-> >  	default:
+> >  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
+> >  			     u64 cpu_addr, u64 pci_addr, u64 size);
+> >  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int i=
+ndex,
 > > --
 > > 2.25.1
 > >
