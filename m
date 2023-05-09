@@ -2,65 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F12336FC023
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 09:08:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8A8E36FC0B0
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 09:47:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235196AbjEIHH7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 May 2023 03:07:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        id S234506AbjEIHr0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 03:47:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235112AbjEIHHy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 03:07:54 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A74EE43;
-        Tue,  9 May 2023 00:07:52 -0700 (PDT)
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34977aVt054583;
-        Tue, 9 May 2023 02:07:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1683616056;
-        bh=m9xWIx7fRxqM+94No2mQfJDt43t0l4QUNDEOExprT2s=;
-        h=Date:CC:Subject:To:References:From:In-Reply-To;
-        b=O6sSPHZwBpVWb4ruA5xFdtMkW6yRkC2D8VvUIszHcuutnNntvJ1I1YTUY0wYEZHSu
-         LzlBnPbggayfNVnQy3NvmBwZwpLpuU4Mqdk/kPx6D10cjWvx6XfvhT9nUwIrCB6d86
-         iFxsG895IjPdh0SL3KX9HyNokLlaEz889bzHrOCE=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34977aur015186
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 9 May 2023 02:07:36 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
- May 2023 02:07:36 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 9 May 2023 02:07:36 -0500
-Received: from [172.24.145.61] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34977WMT021513;
-        Tue, 9 May 2023 02:07:32 -0500
-Message-ID: <6dd91ab0-cc7f-45c4-bded-688bab5d6050@ti.com>
-Date:   Tue, 9 May 2023 12:37:31 +0530
+        with ESMTP id S234413AbjEIHrV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 03:47:21 -0400
+Received: from stravinsky.debian.org (stravinsky.debian.org [IPv6:2001:41b8:202:deb::311:108])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C872DD8D;
+        Tue,  9 May 2023 00:47:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=debian.org;
+        s=smtpauto.stravinsky; h=X-Debian-User:In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=9mfOEh12/KcZK8TFY/ZX3oxJrF5qjW2s2MPzvQR6Ugk=; b=ANXdghA1pad72REMAS3MA6NTWc
+        5jN+DUGCfIxMy4hgzzLjDSJTCbQsbFC7bFAXLPPF4uNx2A10yMgN94ZJHTR0eGfW1+Kxd/JO5IRXg
+        kJiqfsKryN+TBskVUgHOi1CkGD+kxtw1fcIdWyxOv6ntwxbXabNM0XN+26fQRfnpzP45ouIOGA/NF
+        FLHEzwwk6JqZ3tA+XWfTJtr459eri2EhsfEZcP3POXSDe2fhKUAvYe2g5hdImx46f6yLDsGCAEGmn
+        H53iYpWbotH2phcQDEqKTTDQzSVgx7OA8shwTeBsYBh3sT+0xwKwZw1DvqMHQwKlYmAQiITk13CJJ
+        a3/e6k3Q==;
+Received: from authenticated user
+        by stravinsky.debian.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.94.2)
+        (envelope-from <kibi@debian.org>)
+        id 1pwI3j-008YQj-Ep; Tue, 09 May 2023 07:46:56 +0000
+Date:   Tue, 9 May 2023 09:46:51 +0200
+From:   Cyril Brulebois <kibi@debian.org>
+To:     Jim Quinlan <jim2101024@gmail.com>
+Cc:     linux-pci@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Phil Elwell <phil@raspberrypi.com>,
+        bcm-kernel-feedback-list@broadcom.com, james.quinlan@broadcom.com,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:BROADCOM BCM2711/BCM2835 ARM ARCHITECTURE" 
+        <linux-rpi-kernel@lists.infradead.org>
+Subject: Re: [PATCH v5 0/5] PCI: brcmstb: Configure appropriate HW CLKREQ#
+ mode
+Message-ID: <20230509074651.ixcqhhmazjngxur6@mraw.org>
+Organization: Debian
+References: <20230508220126.16241-1-jim2101024@gmail.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-CC:     <tjoseph@cadence.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
-        <kw@linux.com>, <bhelgaas@google.com>, <nadeem@cadence.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
-        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v2] PCI: cadence: Fix Gen2 Link Retraining process
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <20230508211430.GA1185556@bhelgaas>
-From:   Siddharth Vadapalli <s-vadapalli@ti.com>
-In-Reply-To: <20230508211430.GA1185556@bhelgaas>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
-X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5ogfywygslxit6od"
+Content-Disposition: inline
+In-Reply-To: <20230508220126.16241-1-jim2101024@gmail.com>
+X-Debian-User: kibi
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,
         URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -68,145 +72,76 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Bjorn,
 
-Thank you for reviewing the patch.
+--5ogfywygslxit6od
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 09/05/23 02:44, Bjorn Helgaas wrote:
-> On Wed, Mar 15, 2023 at 12:38:00PM +0530, Siddharth Vadapalli wrote:
->> The Link Retraining process is initiated to account for the Gen2 defect in
->> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
->> is i2085, documented at:
->> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
->>
->> The existing workaround implemented for the errata waits for the Data Link
->> initialization to complete and assumes that the link retraining process
->> at the Physical Layer has completed. However, it is possible that the
->> Physical Layer training might be ongoing as indicated by the
->> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
->>
->> Fix the existing workaround, to ensure that the Physical Layer training
->> has also completed, in addition to the Data Link initialization.
->>
->> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
->> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
->> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
->> ---
->> Changes from v1:
->> 1. Collect Reviewed-by tag from Vignesh Raghavendra.
->> 2. Rebase on next-20230315.
->>
->> v1:
->> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com
->>
->>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>
->> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> index 940c7dd701d6..5b14f7ee3c79 100644
->> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
->> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
->> @@ -12,6 +12,8 @@
->>  
->>  #include "pcie-cadence.h"
->>  
->> +#define LINK_RETRAIN_TIMEOUT HZ
->> +
->>  static u64 bar_max_size[] = {
->>  	[RP_BAR0] = _ULL(128 * SZ_2G),
->>  	[RP_BAR1] = SZ_2G,
->> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
->>  	.write		= pci_generic_config_write,
->>  };
->>  
->> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
-> 
-> This is kind of weird because it's named like a predicate, i.e., "this
-> function tells me whether link training is complete", but it returns
-> *zero* for success.
-> 
-> This is the opposite of j721e_pcie_link_up(), which returns "true"
-> when the link is up, so code like this reads naturally:
-> 
->   if (pcie->ops->link_up(pcie))
->     /* do something if the link is up */
+Hi Jim,
 
-I agree. The function name can be changed to indicate that it is waiting for
-completion rather than indicating completion. If this is the only change, I will
-post a patch to fix it. On the other hand, based on your comments in the next
-section, I am thinking of an alternative approach of merging the current
-"cdns_pcie_host_training_complete()" function's operation as well into the
-"cdns_pcie_host_wait_for_link()" function. If this is acceptable, I will post a
-different patch and the name change patch won't be necessary.
+Jim Quinlan <jim2101024@gmail.com> (2023-05-08):
+> v5 -- Remove DT property "brcm,completion-timeout-us" from	=20
+>       "DT bindings" commit.  Although this error may be reported	=20
+>       as a completion timeout, its cause was traced to an	=20
+>       internal bus timeout which may occur even when there is	=20
+>       no PCIe access being processed.  We set a timeout of four	=20
+>       seconds only if we are operating in "L1SS CLKREQ#" mode.
+>    -- Correct CEM 2.0 reference provided by HW engineer,
+>       s/3.2.5.2.5/3.2.5.2.2/ (Bjorn)
+>    -- Add newline to dev_info() string (Stefan)
+>    -- Change variable rval to unsigned (Stefan)
+>    -- s/implementaion/implementation/ (Bjorn)
+>    -- s/superpowersave/powersupersave/ (Bjorn)
+>    -- Slightly modify message on "PERST#" commit.
+>    -- Rebase to torvalds master
 
-> 
->> +{
->> +	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
->> +	unsigned long end_jiffies;
->> +	u16 lnk_stat;
->> +
->> +	/* Wait for link training to complete. Exit after timeout. */
->> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
->> +	do {
->> +		lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
->> +		if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
->> +			break;
->> +		usleep_range(0, 1000);
->> +	} while (time_before(jiffies, end_jiffies));
->> +
->> +	if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
->> +		return 0;
->> +
->> +	return -ETIMEDOUT;
->> +}
->> +
->>  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
->>  {
->>  	struct device *dev = pcie->dev;
->> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
->>  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
->>  				    lnk_ctl);
->>  
->> +		ret = cdns_pcie_host_training_complete(pcie);
->> +		if (ret)
->> +			return ret;
->> +
->>  		ret = cdns_pcie_host_wait_for_link(pcie);
-> 
-> It seems a little clumsy that we wait for two things in succession:
-> 
->   - cdns_pcie_host_training_complete() waits up to 1s for
->     PCI_EXP_LNKSTA_LT to be cleared
-> 
->   - cdns_pcie_host_wait_for_link() waits between .9s and 1s for
->     LINK_UP_DL_COMPLETED on j721e (and not at all for other platforms)
+Same results as with v4: looks good to me!
 
-Is it acceptable to merge "cdns_pcie_host_training_complete()" into
-"cdns_pcie_host_wait_for_link()"?
+Using an official CM4 IO Board, I've successfully tested the same 9
+setups as before, combining each:
+ - CM4 Lite Rev 1.0
+ - CM4 8/32 Rev 1.0
+ - CM4 4/32 Rev 1.1
 
-> 
-> dw_pcie_wait_for_link() is basically similar but has a single wait
-> loop around the dw_pcie_link_up() callback.  Several of those
-> callbacks check multiple things.  Can we do the same here?
+with each off-the-shelf PCIe/USB adapter at my disposal:
+ - SupaHub PCE6U1C-R02, VER 006
+ - SupaHub PCE6U1C-R02, VER 006S
+ - Waveshare based on VIA VL805/806
 
-I assume you are referring to merging the functions together?
+Each system boots successfully, exposes the Kingston memory stick
+plugged onto the PCIe/USB adapter, and happily reads data from it.
 
-> 
-> Is the "host" in the cdns_pcie_host_wait_for_link() name necessary?
-> Maybe it could be cdns_pcie_wait_for_link() to be similar to
-> dw_pcie_wait_for_link()?  Or, if "host" is necessary, it could be
-> cdns_host_pcie_wait_for_link() so it matches the same
-> "pcie_wait_for_link" grep pattern as most of the others?
+Note: I only tested each CM4 with the upgraded EEPROM (2023-01-11),
+and without tweaking the DTB (i.e. without adding brcm,enable-l1ss).
 
-If the functions are merged, I believe that the word "host" can be dropped in
-the new function which can be named "cdns_pcie_wait_for_link()" as suggested by you.
 
-Please let me know.
+Tested-By: Cyril Brulebois <cyril@debamax.com>
 
-> 
->>  	}
->>  	return ret;
 
--- 
-Regards,
-Siddharth.
+Cheers,
+--=20
+Cyril Brulebois (kibi@debian.org)            <https://debamax.com/>
+D-I release manager -- Release team member -- Freelance Consultant
+
+--5ogfywygslxit6od
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEtg6/KYRFPHDXTPR4/5FK8MKzVSAFAmRZ+mgACgkQ/5FK8MKz
+VSCWQA/8C/o/6Lqq9PIxjWkSNDHEMmI/V+x09sfj0zDIX+56AVJmlYW9PbUrRM+b
+yXjmElnr++pl2ECeXyGgocO3YIfxKqNH+06/2xplScb9PlIfXwiyf5p6uxhiFoTn
+ROH6QqM17MUl3Fv1zYZfvB/AQqAfhi5Fx4kepc3I2wLxZREl6f627+xJ5R7p9bfe
+e4UnFTpQht4CVZj7HJ9KXsTibpeqzR79CnjX9iyFmYcDWSqHQ0jiM9glG6/HgbHp
+wMRHyswZp7sLsDTSkk31pL+VXSRFF5ABGeITw52LJnjNh+i8TYZbxpuYlPP4MlUo
+HzegbF2DdJDFssNkxXeBNRe7L5a82B2Bx5SW+DHNB5dmtaCQrM+2FzV5mBubba/L
+gEsbNLYngQZCoS3jV09mqc56dSpp7B+EC2IoDuJkhFqCB3UjLvimzM9CGDdM5Jm7
+NbQeeo9RUbdEOv9GLQwimp+h7S7N38XMnpTqDol0XQyYOMBRl5Ploi7JJwbGt6N7
+VvyTh5tGVtXycIDJ/+Gwy1RUIokMqHns+FPbJSig7oMdttz6GDk0Hr1QctFtN9CL
+3F61fVxJ+8QsXyrUtcnEPM6F9AmRJAtekOl4EjhJWlWlmXUkYwbcoKquzOUhJd1X
+OYLCHVj4DIA4NlXtump3gi68cW+SxUl/H2o0lBF27vLWGPKBlMU=
+=m9/Z
+-----END PGP SIGNATURE-----
+
+--5ogfywygslxit6od--
