@@ -2,67 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C495C6FD08C
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 23:10:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DBE6FD0B0
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 23:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235452AbjEIVKM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 May 2023 17:10:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59572 "EHLO
+        id S234876AbjEIVTJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 17:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235450AbjEIVKL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 17:10:11 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0202A138;
-        Tue,  9 May 2023 14:10:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683666610; x=1715202610;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=KjPYSE1JbH8g/utPpcER5AfLTVzK93rKvQog1KIojnc=;
-  b=V/TkuqhO8sve2R7CrfS53t8DiybQtO/lQZuJUoJHMUZh6Nwba2o/Ih7P
-   HTZUXAYXIXo8sflplinzEcNheOlkKPGIIXVHHDBFIqEX0mi0DNJrR0MHy
-   1zCfW2oq1EiRoKqgN1n5n9eCf8LTkKIPuEkGI5DzX9UrTIZPpWxFcQvl9
-   j+UBGOAVgsPQyY+PUlhRIMcyMSeE5exh6dnJnI6mzdKm9vloRXHQxxM1t
-   l8bGU7zJ5RxkoBvNZDxqVBgz3PFmLyA+qlpkwO4nJbzh19r0lheEZZhA9
-   /F4n/DPIexhHqn2pXXR11Lh9kdvTPHvjfRIIgTdIJJv9bC9F7Gl6g0a69
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="334511305"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="334511305"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 14:10:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="731892083"
-X-IronPort-AV: E=Sophos;i="5.99,262,1677571200"; 
-   d="scan'208";a="731892083"
-Received: from kvnguye3-mobl1.amr.corp.intel.com (HELO [10.212.145.31]) ([10.212.145.31])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 May 2023 14:10:09 -0700
-Message-ID: <8e1e8daa-f6d5-3cb9-e2d1-cb4ef8f7f3ad@linux.intel.com>
-Date:   Tue, 9 May 2023 14:10:01 -0700
+        with ESMTP id S230124AbjEIVTI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 17:19:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EBFE3C0C;
+        Tue,  9 May 2023 14:19:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0D106345E;
+        Tue,  9 May 2023 21:19:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1962C433D2;
+        Tue,  9 May 2023 21:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683667145;
+        bh=paFIiV0ojWVNmpAG7xnNSJM6eT+FwbQEGoSUL07SX9E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=Osqy01NModmG70vIdcLfjI4bTcs6w3AwYzLBNAL5wzYbz8J78Eck1IqtWWcc3tMHQ
+         mfwtaHhDJOmN8phCSA9ShpYhisTVQSIvqnvVknukuqmjulR2LFh8OQRs8EfdOsZRes
+         C/S3TDloBE6VMjfkr3YclV9+5t9m9Unm0rWUW9U7MdSUpj6RnXUw2zse8ttpFbUPMd
+         UzaGreBQW8g+6ML9V+s/dgX+zKW+q2RhSYPRX2nd6wXp1Xi4ztQoNQqAlaukmkMzrB
+         iWG3gT92ASwVa4NxiOdhQ0g5l60PoTW6ckle+kPHAhKVvwCeBPNktFL2kQUM1p+7jR
+         e32tevANNQpuQ==
+Date:   Tue, 9 May 2023 16:19:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
+Cc:     linux-pci@vger.kernel.org, robh@kernel.org, heiko@sntech.de,
+        kw@linux.com, shawn.lin@rock-chips.com,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        linux-rockchip@lists.infradead.org, broonie@kernel.org,
+        bhelgaas@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        lpieralisi@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dan Johansen <strit@manjaro.org>
+Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
+ Rockchip PCIe bus scan
+Message-ID: <20230509211902.GA1270901@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.10.0
-Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
- native AER and DPC/EDR
-Content-Language: en-US
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>
-References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230509153912.515218-1-vincenzopalazzodev@gmail.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -70,157 +59,233 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi Vincenzo,
 
+Thanks for raising this issue.  Let's see what we can do to address
+it.
 
-On 4/18/23 2:05 PM, Smita Koralahalli wrote:
-> According to Section 6.7.6 of PCIe Base Specification [1], async removal
-> with DPC and EDR may be unexpected and may result in a Surprise Down error.
-> This error is just a side effect of hot remove. Most of the time, these
-> errors will be abstract to the OS as current systems rely on Firmware-First
-> model for AER and DPC, where the error handling (side effects of async
-> remove) and other necessary HW sequencing actions is taken care by the FW
-> and is abstract to the OS. However, FW-First model poses issues while
-> rolling out updates or fixing bugs as the servers need to be brought down
-> for firmware updates.
+On Tue, May 09, 2023 at 05:39:12PM +0200, Vincenzo Palazzo wrote:
+> Add a configurable delay to the Rockchip PCIe driver to address
+> crashes that occur on some old devices, such as the Pine64 RockPro64.
 > 
-> Add support for async hot-plug with native AER and DPC/EDR. Here, OS is
-> responsible for handling async add and remove along with handling of AER
-> and DPC events which are generated as a side-effect of async remove.
+> This issue is affecting the ARM community, but there is no
+> upstream solution for it yet.
 
-PCIe spec r6.0, sec 6.7.6 mentions that the async removal can be handled
-via DPC. So why treat it as a special case here? What do we gain with this
-patch other than preventing the error recovery process?
+It sounds like this happens with several endpoints, right?  And I
+assume the endpoints work fine in other non-Rockchip systems?  If
+that's the case, my guess is the problem is with the Rockchip host
+controller and how it's initialized, not with the endpoints.
 
-> 
-> The implementation is as follows: On an async remove a DPC is triggered
-> along with a Presence Detect State change. Determine it's an async remove
-> by checking for DPC Trigger Status in DPC Status Register and Surprise Down
-> Error Status in AER Uncorrected Error Status to be non-zero. If true, treat
-> the DPC event as a side-effect of async remove, clear the error status
-> registers and continue with hot-plug tear down routines. If not, follow the
-> existing routine to handle AER and DPC errors.
-> 
-> Dmesg before:
-> 
->   pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
->   pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
->   pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
->   pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
->   pcieport 0000:00:01.4:    [ 5] SDES (First)
->   nvme nvme2: frozen state error detected, reset controller
->   pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
->   pcieport 0000:00:01.4: AER: subordinate device reset failed
->   pcieport 0000:00:01.4: AER: device recovery failed
->   pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
->   nvme2n1: detected capacity change from 1953525168 to 0
->   pci 0000:04:00.0: Removing from iommu group 49
-> 
-> Dmesg after:
-> 
->  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
->  nvme1n1: detected capacity change from 1953525168 to 0
->  pci 0000:04:00.0: Removing from iommu group 37
-> 
-> [1] PCI Express Base Specification Revision 6.0, Dec 16 2021.
->     https://members.pcisig.com/wg/PCI-SIG/document/16609
-> 
-> Signed-off-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-> ---
-> v2:
-> 	Indentation is taken care. (Bjorn)
-> 	Unrelevant dmesg logs are removed. (Bjorn)
-> 	Rephrased commit message, to be clear on native vs FW-First
-> 	handling. (Bjorn and Sathyanarayanan)
-> 	Prefix changed from pciehp_ to dpc_. (Lukas)
-> 	Clearing ARI and AtomicOp Requester are performed as a part of
-> 	(de-)enumeration in pciehp_unconfigure_device(). (Lukas)
-> 	Changed to clearing all optional capabilities in DEVCTL2.
-> 	OS-First -> native. (Sathyanarayanan)
-> 
-> Please note that, I have provided explanation why I'm not setting the
-> Surprise Down bit in uncorrectable error mask register in AER.
-> https://lore.kernel.org/all/fba22d6b-c225-4b44-674b-2c62306135ed@amd.com/
-> 
-> Also, while testing I noticed PCI_STATUS and PCI_EXP_DEVSTA will be set
-> on an async remove and will not be cleared while the device is brought
-> down. I have included clearing them here in order to mask any kind of
-> appearance that there was an error and as well duplicating our BIOS
-> functionality. I can remove if its not necessary.
-> 
-> On AMD systems we observe Presence Detect State change along with DPC
-> event on an async remove. Hence, the errors observed are benign on AMD
-> systems and the device will be brought down normally with PDSC. But the
-> errors logged might confuse users.
-> ---
->  drivers/pci/pcie/dpc.c | 50 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
-> 
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index a5d7c69b764e..78559188b9ac 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -293,10 +293,60 @@ void dpc_process_error(struct pci_dev *pdev)
->  	}
->  }
+The only delays and timeouts I see in the driver now are in
+rockchip_pcie_host_init_port(), where it waits for link training to
+complete.  I assume the link training did completely successfully
+since you don't mention either a gen1 or gen2 timeout (although the
+gen2 message is a dev_dbg() that normally wouldn't go to the console).
+
+I don't know that the spec contains a retrain timeout value.  Several
+other drivers use 1 second, while rockchip uses 500ms (for example,
+see LINK_RETRAIN_TIMEOUT and LINK_UP_TIMEOUT).
+
+I think we need to understand the issue better before adding a DT
+property and a module parameter.  Those are hard for users to deal
+with.  If we can figure out a value that works for everybody, it would
+be better to just hard-code it in the driver and use that all the
+time.
+
+A few minor style/formatting comments below just for future reference:
+
+> Crash dump (customized Manjaro kernel before this patch):
+> [    1.229856] SError Interrupt on CPU4, code 0xbf000002 -- SError
+> [    1.229860] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.9.9-2.0-MANJARO-ARM #1
+> [    1.229862] Hardware name: Pine64 RockPro64 v2.1 (DT)
+> [    1.229864] pstate: 60000085 (nZCv daIf -PAN -UAO BTYPE=--)
+> [    1.229866] pc : rockchip_pcie_rd_conf+0xb4/0x270
+> [    1.229868] lr : rockchip_pcie_rd_conf+0x1b4/0x270
+> [    1.229870] sp : ffff80001004b850
+> [    1.229872] x29: ffff80001004b850 x28: 0000000000000001
+> [    1.229877] x27: 0000000000000000 x26: ffff00007a795000
+> [    1.229882] x25: ffff00007a7910b0 x24: 0000000000000000
+> [    1.229887] x23: 0000000000000000 x22: ffff00007b3a4380
+> [    1.229891] x21: ffff80001004b8c4 x20: 0000000000000004
+> [    1.229895] x19: 0000000000100000 x18: 0000000000000020
+> [    1.229900] x17: 0000000000000001 x16: 0000000000000019
+> [    1.229904] x15: ffff00007b222fd8 x14: ffffffffffffffff
+> [    1.229908] x13: ffff00007a79ba1c x12: ffff00007a79b290
+> [    1.229912] x11: 0101010101010101 x10: 7f7f7f7f7f7f7f7f
+> [    1.229917] x9 : ff72646268756463 x8 : 0000000000000391
+> [    1.229921] x7 : ffff80001004b880 x6 : 0000000000000001
+> [    1.229925] x5 : 0000000000000000 x4 : 0000000000000000
+> [    1.229930] x3 : 0000000000c00008 x2 : 000000000080000a
+> [    1.229934] x1 : 0000000000000000 x0 : ffff800014000000
+> [    1.229939] Kernel panic - not syncing: Asynchronous SError Interrupt
+> [    1.229942] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.9.9-2.0-MANJARO-ARM #1
+> [    1.229944] Hardware name: Pine64 RockPro64 v2.1 (DT)
+> [    1.229946] Call trace:
+> [    1.229948]  dump_backtrace+0x0/0x1d0
+> [    1.229949]  show_stack+0x18/0x24
+> [    1.229951]  dump_stack+0xc0/0x118
+> [    1.229953]  panic+0x148/0x320
+> [    1.229955]  nmi_panic+0x8c/0x90
+> [    1.229956]  arm64_serror_panic+0x78/0x84
+> [    1.229958]  do_serror+0x15c/0x160
+> [    1.229960]  el1_error+0x84/0x100
+> [    1.229962]  rockchip_pcie_rd_conf+0xb4/0x270
+> [    1.229964]  pci_bus_read_config_dword+0x6c/0xd0
+> [    1.229966]  pci_bus_generic_read_dev_vendor_id+0x34/0x1b0
+> [    1.229968]  pci_scan_single_device+0xa4/0x144
+> [    1.229970]  pci_scan_slot+0x40/0x12c
+> [    1.229972]  pci_scan_child_bus_extend+0x58/0x34c
+> [    1.229974]  pci_scan_bridge_extend+0x310/0x590
+> [    1.229976]  pci_scan_child_bus_extend+0x210/0x34c
+> [    1.229978]  pci_scan_root_bus_bridge+0x68/0xdc
+> [    1.229980]  pci_host_probe+0x18/0xc4
+> [    1.229981]  rockchip_pcie_probe+0x204/0x330
+
+Include only the parts of the crash dump that are needed to debug the
+problem or identify the problem enough to find this patch.  Timestamps
+probably aren't necessary.  Register contents -- probably not either.
+
+The rest of the backtrace (below here) probably isn't useful.
+
+> [    1.229984]  platform_drv_probe+0x54/0xb0
+> [    1.229985]  really_probe+0xe8/0x500
+> [    1.229987]  driver_probe_device+0xd8/0xf0
+> [    1.229989]  device_driver_attach+0xc0/0xcc
+> [    1.229991]  __driver_attach+0xa4/0x170
+> [    1.229993]  bus_for_each_dev+0x70/0xc0
+> [    1.229994]  driver_attach+0x24/0x30
+> [    1.229996]  bus_add_driver+0x140/0x234
+> [    1.229998]  driver_register+0x78/0x130
+> [    1.230000]  __platform_driver_register+0x4c/0x60
+> [    1.230002]  rockchip_pcie_driver_init+0x1c/0x28
+> [    1.230004]  do_one_initcall+0x54/0x1c0
+> [    1.230005]  do_initcalls+0xf4/0x130
+> [    1.230007]  kernel_init_freeable+0x144/0x19c
+> [    1.230009]  kernel_init+0x14/0x11c
+> [    1.230011]  ret_from_fork+0x10/0x34
+> [    1.230035] SMP: stopping secondary CPUs
+> [    1.230037] Kernel Offset: disabled
+> [    1.230039] CPU features: 0x0240022,2100200c
+> [    1.230041] Memory Limit: none
+
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4286,6 +4286,14 @@
+>  				any pair of devices, possibly at the cost of
+>  				reduced performance.  This also guarantees
+>  				that hot-added devices will work.
+> +		pcie_rockchip_host.bus_scan_delay=	[PCIE] Delay in ms before
+> +			scanning PCIe bus in Rockchip PCIe host driver. Some PCIe
+> +			cards seem to need delays that can be several hundred ms.
+> +			If set to greater than or equal to 0 this parameter will
+> +			override delay that can be set in device tree.
+> +			Values less than 0 the module will hit an assertion
+> +			during the init.
+> +			The default value is 0.
+
+Generally speaking module-specific stuff like this doesn't get
+documented in kernel-parameters.txt.
+
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dtsi
+> @@ -663,7 +663,8 @@ &pcie0 {
+>  	pinctrl-0 = <&pcie_perst>;
+>  	vpcie12v-supply = <&vcc12v_dcin>;
+>  	vpcie3v3-supply = <&vcc3v3_pcie>;
+> -	status = "okay";
+> +    bus-scan-delay-ms = <0>;
+> +    status = "okay";
+
+Please don't add arbitrary whitespace changes (it looks like this
+uses leading spaces instead of tabs).
+
+> +/* bus_scan_delay - module parameter to override the
+> + * device tree value, which is 0 by default. */
+
+Please follow comment style in the file, i.e.,
+
+  /*
+   * bus_scan_delay - ...
+   */
+
+Wrap comments to fill 78 columns or so to match the rest of the file.
+
+> @@ -987,6 +996,23 @@ static int rockchip_pcie_probe(struct platform_device *pdev)
 >  
-> +static void pci_clear_surpdn_errors(struct pci_dev *pdev)
-> +{
-> +	u16 reg16;
-> +	u32 reg32;
-> +
-> +	pci_read_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, &reg32);
-> +	pci_write_config_dword(pdev, pdev->dpc_cap + PCI_EXP_DPC_RP_PIO_STATUS, reg32);
-> +
-> +	pci_read_config_word(pdev, PCI_STATUS, &reg16);
-> +	pci_write_config_word(pdev, PCI_STATUS, reg16);
-> +
-> +	pcie_capability_read_word(pdev, PCI_EXP_DEVSTA, &reg16);
-> +	pcie_capability_write_word(pdev, PCI_EXP_DEVSTA, reg16);
-> +}
-> +
-> +static void dpc_handle_surprise_removal(struct pci_dev *pdev)
-> +{
-> +	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
-> +		return;
+>  	rockchip_pcie_enable_interrupts(rockchip);
+>  
+> +	prob_delay = rockchip->bus_scan_delay;
+> +	if (bus_scan_delay)
+> +		prob_delay = bus_scan_delay;
 > +
 > +	/*
-> +	 * According to Section 6.7.6 of the PCIe Base Spec 6.0, since async
-> +	 * removal might be unexpected, errors might be reported as a side
-> +	 * effect of the event and software should handle them as an expected
-> +	 * part of this event.
-> +	 */
-> +	pci_aer_raw_clear_status(pdev);
-> +	pci_clear_surpdn_errors(pdev);
-> +
-> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
-> +			      PCI_EXP_DPC_STATUS_TRIGGER);
-> +}
-> +
-> +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-> +{
-> +	u16 status;
-> +
-> +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
-> +
-> +	if (!(status & PCI_ERR_UNC_SURPDN))
-> +		return false;
-> +
-> +	dpc_handle_surprise_removal(pdev);
-> +
-> +	return true;
-> +}
-> +
->  static irqreturn_t dpc_handler(int irq, void *context)
->  {
->  	struct pci_dev *pdev = context;
->  
-> +	if (dpc_is_surprise_removal(pdev))
-> +		return IRQ_HANDLED;
-> +
->  	dpc_process_error(pdev);
->  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
+> +	 * FIXME: This is a workaround for some devices that crash on calls to pci_host_probe()
+> +	 * or pci_scan_root_bus_bridge(). We add a delay before bus scanning to avoid the crash.
+> +	 * The call trace reaches rockchip_pcie_rd_conf() while attempting to read the vendor ID
+> +	 * (pci_bus_generic_read_dev_vendor_id() is in the call stack) before panicking.
+> +	 *
+> +	 * I'm not sure why this workaround is effective or what causes the panic. It may be related
+> +	 * to the cansleep value.
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Wrap comments to fit in 78 columns to match the rest of the file.
+
+> +	 */
+> +	dev_info(dev, "wait %u ms before bus scan\n", prob_delay);
+> +	if (prob_delay > 0)
+> +		msleep(prob_delay);
+
+I don't think we want to just add a random delay here that's not
+connected to anything else.  I assume it could go in
+rockchip_pcie_host_init_port() or perhaps rockchip_pcie_init_port()
+(which deasserts resets, and there are usually timing constraints
+related to deasserting resets).  Hopefully Shawn can shed some light
+on this.
+
+>  	err = pci_host_probe(bridge);
+>  	if (err < 0)
+>  		goto err_remove_irq_domain;
+> @@ -1055,6 +1081,11 @@ static struct platform_driver rockchip_pcie_driver = {
+>  };
+>  module_platform_driver(rockchip_pcie_driver);
+>  
+> +/** Allow to override the device tree default configuration with
+> + * a command line argument.
+> + **/
+
+Use multi-line comment style that matches the rest of the file.
+
+> +module_param_named(bus_scan_delay, bus_scan_delay, int, S_IRUGO);
+
+This should go right next to the bus_scan_delay definition above.
+
+> +++ b/drivers/pci/controller/pcie-rockchip.c
+> @@ -149,6 +149,11 @@ int rockchip_pcie_parse_dt(struct rockchip_pcie *rockchip)
+>  		return PTR_ERR(rockchip->clk_pcie_pm);
+>  	}
+>  
+> +	err = of_property_read_u32(node, "bus-scan-delay-ms", &rockchip->bus_scan_delay);
+> +	if (err) {
+> +		dev_info(dev, "no bus scan delay, default to 0 ms\n");
+> +		rockchip->bus_scan_delay = 0;
+
+I hope we don't need this property at all, but if we do, I assume it
+should be optional, with no message needed if it's not present.
+
+> +++ b/drivers/pci/controller/pcie-rockchip.h
+> @@ -299,6 +299,16 @@ struct rockchip_pcie {
+>  	phys_addr_t msg_bus_addr;
+>  	bool is_rc;
+>  	struct resource *mem_res;
+> +
+> +	/* It seems that the driver crashes on some
+> +	 * older devices. To work around this, we
+> +	 * should add a sleep delay before probing.
+> +	 *
+> +	 * FIXME: need more investigated with an,
+> +	 * but looks like the problem can be related with
+> +	 * the cansleep value?
+> +	 **/
+
+We need better understanding of what's going on here.  Then this
+comment could be made more specific, shorter, and formatted like
+others.
+
+> +	u32 bus_scan_delay;
