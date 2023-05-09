@@ -2,24 +2,24 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA9D06FC6A7
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 14:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D1BD6FC6B0
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 14:42:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235140AbjEIMmE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 May 2023 08:42:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49480 "EHLO
+        id S235533AbjEIMmG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 08:42:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235215AbjEIMmD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 08:42:03 -0400
+        with ESMTP id S235215AbjEIMmE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 08:42:04 -0400
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 76CEAFD;
-        Tue,  9 May 2023 05:42:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 261301BF9;
+        Tue,  9 May 2023 05:42:02 -0700 (PDT)
 X-IronPort-AV: E=Sophos;i="5.99,262,1677510000"; 
-   d="scan'208";a="158709368"
+   d="scan'208";a="158709371"
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
   by relmlie5.idc.renesas.com with ESMTP; 09 May 2023 21:42:00 +0900
 Received: from localhost.localdomain (unknown [10.166.15.32])
-        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 0A78640359CB;
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 2AD56403832F;
         Tue,  9 May 2023 21:42:00 +0900 (JST)
 From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 To:     jingoohan1@gmail.com, mani@kernel.org,
@@ -29,9 +29,9 @@ To:     jingoohan1@gmail.com, mani@kernel.org,
 Cc:     marek.vasut+renesas@gmail.com, linux-pci@vger.kernel.org,
         devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v15 02/22] PCI: Add PCI_HEADER_TYPE_MULTI_FUNC
-Date:   Tue,  9 May 2023 21:41:36 +0900
-Message-Id: <20230509124156.150200-3-yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v15 03/22] PCI: Add INTx Mechanism Messages macros
+Date:   Tue,  9 May 2023 21:41:37 +0900
+Message-Id: <20230509124156.150200-4-yoshihiro.shimoda.uh@renesas.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230509124156.150200-1-yoshihiro.shimoda.uh@renesas.com>
 References: <20230509124156.150200-1-yoshihiro.shimoda.uh@renesas.com>
@@ -46,63 +46,43 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCI_HEADER_TYPE_MULTI_FUNC macro which is "Multi-Function Device"
-of Header Type Register.
+Add "Message Routing" and "INTx Mechanism Messages" macros to send
+a message by a PCIe driver.
 
 Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pci/probe.c           | 2 +-
- drivers/pci/quirks.c          | 4 ++--
- include/uapi/linux/pci_regs.h | 1 +
- 3 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/pci/pci.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0b2826c4a832..56f01b48fb81 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1836,7 +1836,7 @@ int pci_setup_device(struct pci_dev *dev)
- 	dev->dev.parent = dev->bus->bridge;
- 	dev->dev.bus = &pci_bus_type;
- 	dev->hdr_type = hdr_type & 0x7f;
--	dev->multifunction = !!(hdr_type & 0x80);
-+	dev->multifunction = !!(hdr_type & PCI_HEADER_TYPE_MULTI_FUNC);
- 	dev->error_state = pci_channel_io_normal;
- 	set_pcie_port_type(dev);
+diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+index 2475098f6518..67badc40e90b 100644
+--- a/drivers/pci/pci.h
++++ b/drivers/pci/pci.h
+@@ -11,6 +11,24 @@
  
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f4e2a88729fd..8ceb970ccf1f 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -1750,7 +1750,7 @@ static void quirk_jmicron_ata(struct pci_dev *pdev)
- 	/* Update pdev accordingly */
- 	pci_read_config_byte(pdev, PCI_HEADER_TYPE, &hdr);
- 	pdev->hdr_type = hdr & 0x7f;
--	pdev->multifunction = !!(hdr & 0x80);
-+	pdev->multifunction = !!(hdr & PCI_HEADER_TYPE_MULTI_FUNC);
+ #define PCI_VSEC_ID_INTEL_TBT	0x1234	/* Thunderbolt */
  
- 	pci_read_config_dword(pdev, PCI_CLASS_REVISION, &class);
- 	pdev->class = class >> 8;
-@@ -5567,7 +5567,7 @@ static void quirk_nvidia_hda(struct pci_dev *gpu)
++/* Message Routing */
++#define PCI_MSG_ROUTING_RC	0
++#define PCI_MSG_ROUTING_ADDR	1
++#define PCI_MSG_ROUTING_ID	2
++#define PCI_MSG_ROUTING_BC	3
++#define PCI_MSG_ROUTING_LOCAL	4
++#define PCI_MSG_ROUTING_GATHER	5
++
++/* INTx Mechanism Messages */
++#define PCI_CODE_ASSERT_INTA	0x20
++#define PCI_CODE_ASSERT_INTB	0x21
++#define PCI_CODE_ASSERT_INTC	0x22
++#define PCI_CODE_ASSERT_INTD	0x23
++#define PCI_CODE_DEASSERT_INTA	0x24
++#define PCI_CODE_DEASSERT_INTB	0x25
++#define PCI_CODE_DEASSERT_INTC	0x26
++#define PCI_CODE_DEASSERT_INTD	0x27
++
+ extern const unsigned char pcie_link_speed[];
+ extern bool pci_early_dump;
  
- 	/* The GPU becomes a multi-function device when the HDA is enabled */
- 	pci_read_config_byte(gpu, PCI_HEADER_TYPE, &hdr_type);
--	gpu->multifunction = !!(hdr_type & 0x80);
-+	gpu->multifunction = !!(hdr_type & PCI_HEADER_TYPE_MULTI_FUNC);
- }
- DECLARE_PCI_FIXUP_CLASS_HEADER(PCI_VENDOR_ID_NVIDIA, PCI_ANY_ID,
- 			       PCI_BASE_CLASS_DISPLAY, 16, quirk_nvidia_hda);
-diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-index 5d48413ac28f..a302b67d2834 100644
---- a/include/uapi/linux/pci_regs.h
-+++ b/include/uapi/linux/pci_regs.h
-@@ -80,6 +80,7 @@
- #define  PCI_HEADER_TYPE_NORMAL		0
- #define  PCI_HEADER_TYPE_BRIDGE		1
- #define  PCI_HEADER_TYPE_CARDBUS	2
-+#define  PCI_HEADER_TYPE_MULTI_FUNC	0x80
- 
- #define PCI_BIST		0x0f	/* 8 bits */
- #define  PCI_BIST_CODE_MASK	0x0f	/* Return result */
 -- 
 2.25.1
 
