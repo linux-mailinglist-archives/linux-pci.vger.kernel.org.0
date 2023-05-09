@@ -2,130 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 560BF6FC306
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 11:46:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95AC36FC3BF
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 12:20:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234398AbjEIJqm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 May 2023 05:46:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58494 "EHLO
+        id S229519AbjEIKUz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 06:20:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233625AbjEIJql (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 05:46:41 -0400
-Received: from wout1-smtp.messagingengine.com (wout1-smtp.messagingengine.com [64.147.123.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF2FE171F;
-        Tue,  9 May 2023 02:46:40 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id E4128320093C;
-        Tue,  9 May 2023 05:46:38 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 09 May 2023 05:46:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-transfer-encoding:content-type:content-type:date
-        :date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to; s=fm3; t=
-        1683625598; x=1683711998; bh=u9SCxQzR1XRkuaK/HGEsP2C84rfrSTM5IbR
-        tH9r44/0=; b=xsuYH3zyc+pyQRCICfLBLOEfXjd0W2cbd556J6ykaf1Lhn7og8o
-        HkCo9u+lUzW/HlTtp0TOFC2/5dhlwiT5BZTp3CAixxnAdSbG/oYnOVwMb9+GsOJY
-        cR2DWaSOspnaNmfkz2IAueXX+EG2RQmdph+jhOa5UYFGvDfJCZBIH+NsgftbjTEB
-        oy6he9tSfhL5QTVpznG6K/YUHUTQzQWNEYdEgtJhVCmES7yfPkYB0r2lEqRxnNIg
-        NCwRbdmLomfQM3ZrNAOS8cG60pSgnR/YJifjl5V/ZQDXGSZeYAqHAZHl2mRCK8ci
-        PGLkWpbEr6Db7QF7KqvJVB3vJDZ9b9QJzVg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:date:feedback-id:feedback-id
-        :from:from:in-reply-to:in-reply-to:message-id:mime-version
-        :references:reply-to:sender:subject:subject:to:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; t=
-        1683625598; x=1683711998; bh=u9SCxQzR1XRkuaK/HGEsP2C84rfrSTM5IbR
-        tH9r44/0=; b=PDYTOJ2FeGFHDtds1EECengCf0mZbivbrCJcuIM7cuwh4uFv2bn
-        C6yFjmtjzZcvTrgwvqtOftXKTBo/KNrAnVFZO8fbJ/YwkOGH+zzsNLPKrW5VwjLw
-        0VJ60On9uPreuwZO5S3mDSECRMTkqVim9ZioscBfhDQHCQ3IlpzpIP1HgnugWymJ
-        iz4qXPFCa5oM6eqnmruN0QYlqF21ltcO8tav7hIWrI0Hn0W2rc3SgzB+PkxAULPU
-        QTeNnyGb0KSUL2+tD9uDaQHCKiM/4w8vODRRNMrZ89DgHyijCAENiBo9dnz1OKdq
-        huytW+qiET6PfShKNYA+HQvT8TLqBBrGNZw==
-X-ME-Sender: <xms:fRZaZF3sviVxEUTjAsp7jOIEuHgOE5L_SUAHRK7W6RJgSp9HPajSyQ>
-    <xme:fRZaZMFNWG5C_Ssc9kdo1O1mXRAMMMuCxxJjzZbUuek_NQ-zBzUiPmTfimAkzZLOF
-    ix1k0FUfto9GOxSvhc>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeegtddgudelucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    rhhnugcuuegvrhhgmhgrnhhnfdcuoegrrhhnugesrghrnhgusgdruggvqeenucggtffrrg
-    htthgvrhhnpeegfeejhedvledvffeijeeijeeivddvhfeliedvleevheejleetgedukedt
-    gfejveenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
-    grrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:fRZaZF7ZwFT0eAW2DlF9XbAwfrQiKZ_qdrPGLG04wlbd0r7IpQm6EQ>
-    <xmx:fRZaZC1t8oQXBmIxq3m_b_3PNJj2IZZ9F8Oq04YBIkitGEHXO_f1KQ>
-    <xmx:fRZaZIGuDlHcAuT0F5kNcvqCGfsTBQ7eOy9qlIjO_83rpXPXOQ_kUg>
-    <xmx:fhZaZGVG-sKlc8heSc9s9z56UwKusDfj-AEn30QNvqOjEYXM7kMefQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 7DE38B60086; Tue,  9 May 2023 05:46:37 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-415-gf2b17fe6c3-fm-20230503.001-gf2b17fe6
-Mime-Version: 1.0
-Message-Id: <e68c7dab-94a2-4b27-8c06-a788510c236b@app.fastmail.com>
-In-Reply-To: <CAMuHMdV-CY_foGPY5PZV=W92rnvSa0X3PTsUoBpzQ6vCNLSzEw@mail.gmail.com>
-References: <20230314121216.413434-1-schnelle@linux.ibm.com>
- <20230314121216.413434-29-schnelle@linux.ibm.com>
- <202303141252027ef5511a@mail.local>
- <aa68b4afdca34bf3bfd2439b03e6f9bcfad94903.camel@linux.ibm.com>
- <b7017996-b079-4534-a24a-080003772a66@app.fastmail.com>
- <CAMuHMdXJ=hsB=A_umQnPMVSU+BGqeHt3O-2ygr3p_f7pHHvf=Q@mail.gmail.com>
- <552c51fb-41b2-430b-b13c-0e578098dbf6@app.fastmail.com>
- <CAMuHMdV-CY_foGPY5PZV=W92rnvSa0X3PTsUoBpzQ6vCNLSzEw@mail.gmail.com>
-Date:   Tue, 09 May 2023 11:46:16 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Geert Uytterhoeven" <geert@linux-m68k.org>
-Cc:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
-        "Alexandre Belloni" <alexandre.belloni@bootlin.com>,
-        "Alessandro Zummo" <a.zummo@towertech.it>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-pci@vger.kernel.org, "Arnd Bergmann" <arnd@kernel.org>,
-        linux-rtc@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
-Subject: Re: [PATCH v3 28/38] rtc: add HAS_IOPORT dependencies
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
+        with ESMTP id S235041AbjEIKUy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 06:20:54 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BA39D2D4
+        for <linux-pci@vger.kernel.org>; Tue,  9 May 2023 03:20:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=P6Olt4QFOU/QFInNW9J3fmj152gv
+        eLBp7EYTA0uPfnw=; b=wKVbIUQGfL7aLUupwIJYjPd5j8MZ2Vbvpk4Cm+9raVVZ
+        eCKQWmwF/v2R+nl+a6y5ThnCuq4h9d/mbTCiYt0SvAQijvywVFtEtyAUdY3rN+lZ
+        uz2XTu8xvyM5j8IgxvuAzpyH7WGzLC2jA92keVlpB03AdUQQMBnVyr+fWGLLCKI=
+Received: (qmail 2038819 invoked from network); 9 May 2023 12:20:46 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 9 May 2023 12:20:46 +0200
+X-UD-Smtp-Session: l3s3148p1@IXbPG0D7WL0ujnsI
+Date:   Tue, 9 May 2023 12:20:46 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/3] PCI: rcar-host: add support for optional
+ regulators
+Message-ID: <ZFoeftCOnSDYFfHb@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-renesas-soc@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230508104557.47889-1-wsa+renesas@sang-engineering.com>
+ <20230508104557.47889-3-wsa+renesas@sang-engineering.com>
+ <CAMuHMdUZUTJmrE==zf2OxaBdQGa-zS2VC7hTtcE9aD+MD7JYDQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="DvudHUKh+55nlmsU"
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUZUTJmrE==zf2OxaBdQGa-zS2VC7hTtcE9aD+MD7JYDQ@mail.gmail.com>
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 9, 2023, at 10:51, Geert Uytterhoeven wrote:
-> On Tue, May 9, 2023 at 10:23=E2=80=AFAM Arnd Bergmann <arnd@arndb.de> =
-wrote:
->> On Tue, May 9, 2023, at 08:38, Geert Uytterhoeven wrote:
->> If you ever want to revisit this, I suspect the harder part here
->> is to detach arch/m68k/ from the RTC_DRV_GENERIC code first, pushing
->> the device registration into the individual machine specific time.c
->> code. It's probably not even worth trying to share the rtc-cmos
->> driver, but it might be useful to share the library code like
->> RTC_DRV_ALPHA does.
->
-> Arch/m68k is not that entangled with RTC_DRV_GENERIC, as amiga_defconf=
-ig
-> does not enable it, but enables CONFIG_RTC_DRV_MSM6242 and
-> CONFIG_RTC_DRV_RP5C01 instead.
 
-Ah, I see now, I misremembered this part. The only bit that
-is shared on m68k is the mach_hwclk() function that is used
-for either read_persistent_clock64() or rtc_generic on platforms
-that have one. So any platform could indeed be converted from
-mach_hwclk() to a custom rtc driver without affecting the others.
+--DvudHUKh+55nlmsU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-    Arnd
+
+> I don't know if PCIe specifies some ordering w.r.t. power supply
+> enablement.
+
+I found this which is good enough for me:
+
+"There is no requirement for supply sequencing in either
+PCI Express or PCI Express Mini Card; the supplies may
+come up or go down in any order." [1]
+
+Thanks, Linear Technology!
+
+[1] https://www.analog.com/media/en/reference-design-documentation/design-notes/dn346f.pdf
+
+
+--DvudHUKh+55nlmsU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmRaHnoACgkQFA3kzBSg
+KbaGsg/+KdqT90l9mzXpWEtpc9NGGpXyONO9E3Y7Xqdipr0RaQRZ2N8THpD90hTR
+fmk3yZq6H9KPN6ZaUcLmRYoBUy9zV39I4i+MGB44rZEdpETlmZdOPhMHPKQhnmCz
+QSEPEeVzjrG8Ag0oqLpQEtHCXCVmzjoK0he/eJ0f09Dq5HPbZQafDedNJE9fhuOD
+uZbN2md+5ZW+Hauc6StzAPKgv1Whm9XOn8lmSVtVPqr3nyvmi28LOWvR2fz4nnkB
+nvKFLSNolH4baL2D8GnO5ArCjuHl/MpROYbL0EhGyDWkbsrMdfbvaomUscdtgxpT
+BxIZdlCndtz8o6NDBg9/cOYWyMADZfzo2GIgRQFln9eezTmFiHYlHpjvMMd1D7yZ
+RIEvmbrD9ldOyZCY3WrkHcy52IfY+KvI8HAzjAtK/Obb1HqH3uf2HCUfl2HNV/oG
+/n5/QSOWY0euRuzcesH5Ntfl6MkIEpIQ3CNa4dq5bbb9GcDvJ4uwBjCELtuiPBfh
+s3oq9wPc8wyH86NfyhJ25kEhTY2aZ5dLQ33OXqekEQtmoeuymfEWQVAYGi+Q4XPE
+sK54gPMZ6XESGL84t5VnaqeBRQXk3lLCqPySJBlNG7Gw9gKMNG7oWJgr3gbnjzBz
+KcY77ELwSf4MXXthI8yBlvi58/ZCws49cnLjHh/e/a+Wp3sVjyA=
+=XPyg
+-----END PGP SIGNATURE-----
+
+--DvudHUKh+55nlmsU--
