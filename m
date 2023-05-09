@@ -2,126 +2,160 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 70BD46FCDA4
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 20:21:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D38D06FCDB7
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 20:24:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234319AbjEISV2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 9 May 2023 14:21:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46564 "EHLO
+        id S229741AbjEISYV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 14:24:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229543AbjEISV1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 14:21:27 -0400
+        with ESMTP id S229643AbjEISYU (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 14:24:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 327EF4C2D;
-        Tue,  9 May 2023 11:21:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA94A1B5;
+        Tue,  9 May 2023 11:24:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BB6FA6132C;
-        Tue,  9 May 2023 18:21:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE77FC433EF;
-        Tue,  9 May 2023 18:21:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 29CA0615B3;
+        Tue,  9 May 2023 18:24:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E256C433EF;
+        Tue,  9 May 2023 18:24:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683656484;
-        bh=wTrGWZ/prXac+ksuuHC0df7jUrXSG9zBg0tuZm4eZAk=;
+        s=k20201202; t=1683656658;
+        bh=JxRLdpeyathG6LDtAP61I3JBOatVT/wKrI3SwwTHfJI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=eWEhqVADxc/GqJSwXnOQ3JLmV9EVm67GRKXU/8kCH+e7bYAn4tbjZ8OZRHVaX3ZcO
-         S0xv0AhCQd5NINM++YJU/lVWNxRqARJ2JdTZgkf8DKQ/aBVDAb43Y4DpvrsggmiDhc
-         VLuK4RypC1++gIMHtYJwDcVU3u+My56Q4IZYK0at1LgOku1qb8yZmqculMrILZXTXZ
-         neG8vnzAeERR8/VCvqWmCzd1JtSknWdohvz8yYije8I6fBKpAtZuUigoK/yqxiyRiQ
-         4E280Lp7b1rI5aQ6wbmUv7nAdHleWjJ8JY7/fVD00VEW304Ke/w4PCv+lqMsKKDnXi
-         XzOdVIUpJ2dRg==
-Date:   Tue, 9 May 2023 13:21:22 -0500
+        b=S6DSqFnRRQd+uzd2S8vyMRJPsT5ehnxOFoFqHn01vGeS7zf3eWRaBmHZUrm0KhXqW
+         k7SWasXPaFZZwVGfzoFqjdw7MzW7Y/LJzmmsYPBrLP46NIyw/cFBIm5ImBLHG3/Dku
+         z3CObWE52WKtpd8fgRkLeu8x9qHopwVeXEE1QSonqU29Nj/qKldfqJvWv8AyESL/Yg
+         D4sFMws1a4gdsj3PgdYlTT7F21SdFRCTO9sWulqEbEOj6Ek9yVomkFHeOJsyuUJ7G9
+         uiNICB3+wbWEwFzh6SzSfdhZO/i5NNma+yIbMDa8yvpjK+TNWvWAYK222M3F8VI/a/
+         5Iptz6PscZ3Jg==
+Date:   Tue, 9 May 2023 13:24:16 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-mips@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
- users
-Message-ID: <20230509182122.GA1259567@bhelgaas>
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc:     tjoseph@cadence.com, lpieralisi@kernel.org, robh@kernel.org,
+        kw@linux.com, bhelgaas@google.com, nadeem@cadence.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, srk@ti.com,
+        nm@ti.com
+Subject: Re: [PATCH v2] PCI: cadence: Fix Gen2 Link Retraining process
+Message-ID: <20230509182416.GA1259841@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230404161101.GA3554747@bhelgaas>
+In-Reply-To: <6dd91ab0-cc7f-45c4-bded-688bab5d6050@ti.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
-> > Provide two new helper macros to iterate over PCI device resources and
-> > convert users.
+On Tue, May 09, 2023 at 12:37:31PM +0530, Siddharth Vadapalli wrote:
+> Bjorn,
+> 
+> Thank you for reviewing the patch.
+> 
+> On 09/05/23 02:44, Bjorn Helgaas wrote:
+> > On Wed, Mar 15, 2023 at 12:38:00PM +0530, Siddharth Vadapalli wrote:
+> >> The Link Retraining process is initiated to account for the Gen2 defect in
+> >> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+> >> is i2085, documented at:
+> >> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
+> >>
+> >> The existing workaround implemented for the errata waits for the Data Link
+> >> initialization to complete and assumes that the link retraining process
+> >> at the Physical Layer has completed. However, it is possible that the
+> >> Physical Layer training might be ongoing as indicated by the
+> >> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+> >>
+> >> Fix the existing workaround, to ensure that the Physical Layer training
+> >> has also completed, in addition to the Data Link initialization.
+> >>
+> >> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+> >> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> >> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> >> ---
+> >> Changes from v1:
+> >> 1. Collect Reviewed-by tag from Vignesh Raghavendra.
+> >> 2. Rebase on next-20230315.
+> >>
+> >> v1:
+> >> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com
+> >>
+> >>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
+> >>  1 file changed, 27 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> index 940c7dd701d6..5b14f7ee3c79 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> @@ -12,6 +12,8 @@
+> >>  
+> >>  #include "pcie-cadence.h"
+> >>  
+> >> +#define LINK_RETRAIN_TIMEOUT HZ
+> >> +
+> >>  static u64 bar_max_size[] = {
+> >>  	[RP_BAR0] = _ULL(128 * SZ_2G),
+> >>  	[RP_BAR1] = SZ_2G,
+> >> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
+> >>  	.write		= pci_generic_config_write,
+> >>  };
+> >>  
+> >> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+> > 
+> > This is kind of weird because it's named like a predicate, i.e., "this
+> > function tells me whether link training is complete", but it returns
+> > *zero* for success.
+> > 
+> > This is the opposite of j721e_pcie_link_up(), which returns "true"
+> > when the link is up, so code like this reads naturally:
+> > 
+> >   if (pcie->ops->link_up(pcie))
+> >     /* do something if the link is up */
+> 
+> I agree. The function name can be changed to indicate that it is
+> waiting for completion rather than indicating completion. If this is
+> the only change, I will post a patch to fix it. On the other hand,
+> based on your comments in the next section, I am thinking of an
+> alternative approach of merging the current
+> "cdns_pcie_host_training_complete()" function's operation as well
+> into the "cdns_pcie_host_wait_for_link()" function. If this is
+> acceptable, I will post a different patch and the name change patch
+> won't be necessary.
 
-> Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
+Yeah, sorry, I meant to delete this part of my response after I wrote
+the one below.
 
-This is 09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()")
-upstream now.
+> >> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+> >>  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+> >>  				    lnk_ctl);
+> >>  
+> >> +		ret = cdns_pcie_host_training_complete(pcie);
+> >> +		if (ret)
+> >> +			return ret;
+> >> +
+> >>  		ret = cdns_pcie_host_wait_for_link(pcie);
+> > 
+> > It seems a little clumsy that we wait for two things in succession:
+> > 
+> >   - cdns_pcie_host_training_complete() waits up to 1s for
+> >     PCI_EXP_LNKSTA_LT to be cleared
+> > 
+> >   - cdns_pcie_host_wait_for_link() waits between .9s and 1s for
+> >     LINK_UP_DL_COMPLETED on j721e (and not at all for other platforms)
+> 
+> Is it acceptable to merge "cdns_pcie_host_training_complete()" into
+> "cdns_pcie_host_wait_for_link()"?
 
-Coverity complains about each use, sample below from
-drivers/pci/vgaarb.c.  I didn't investigate at all, so it might be a
-false positive; just FYI.
+That's what I'm proposing.  Maybe someone who is more familiar with
+Cadence would have an argument against it, but I think making it
+structurally the same as dw_pcie_wait_for_link() would be a good
+thing.
 
-	  1. Condition screen_info.capabilities & (2U /* 1 << 1 */), taking true branch.
-  556        if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-  557                base |= (u64)screen_info.ext_lfb_base << 32;
-  558
-  559        limit = base + size;
-  560
-  561        /* Does firmware framebuffer belong to us? */
-	  2. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-	  3. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-	  6. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-	  7. cond_at_most: Checking __b < PCI_NUM_RESOURCES implies that __b may be up to 16 on the true branch.
-	  8. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-	  11. incr: Incrementing __b. The value of __b may now be up to 17.
-	  12. alias: Assigning: r = &pdev->resource[__b]. r may now point to as high as element 17 of pdev->resource (which consists of 17 64-byte elements).
-	  13. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-	  14. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-  562        pci_dev_for_each_resource(pdev, r) {
-	  4. Condition resource_type(r) != 512, taking true branch.
-	  9. Condition resource_type(r) != 512, taking true branch.
-
-  CID 1529911 (#1 of 1): Out-of-bounds read (OVERRUN)
-  15. overrun-local: Overrunning array of 1088 bytes at byte offset 1088 by dereferencing pointer r. [show details]
-  563                if (resource_type(r) != IORESOURCE_MEM)
-	  5. Continuing loop.
-	  10. Continuing loop.
-  564                        continue;
+Bjorn
