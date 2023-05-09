@@ -2,123 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E31A26FC410
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 12:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E4F26FC414
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 12:39:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235262AbjEIKgO convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 9 May 2023 06:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37682 "EHLO
+        id S235247AbjEIKjN (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 06:39:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39520 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235258AbjEIKgC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 06:36:02 -0400
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 569D7106E5;
-        Tue,  9 May 2023 03:35:49 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-55a829411b5so51867797b3.1;
-        Tue, 09 May 2023 03:35:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683628539; x=1686220539;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        with ESMTP id S235208AbjEIKjM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 06:39:12 -0400
+Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF27B19A1
+        for <linux-pci@vger.kernel.org>; Tue,  9 May 2023 03:39:11 -0700 (PDT)
+Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3f38956ffdbso15891491cf.1
+        for <linux-pci@vger.kernel.org>; Tue, 09 May 2023 03:39:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683628751; x=1686220751;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=STRG9z0qGkjgtmp/Ps+FRw09qM+RNYz5SrXCeHI+JvM=;
-        b=LnHcvKDYr8O+nD84jiRRtE+nsuRO+Y79Pj9hGS952uKq/vzJW4s357JFbho8d/M5lO
-         76X51V1AJwLvAs4/huy8Pg5M8j4JixEE6urk8ikVMbcBXZThu8u9E4RZ8K4V9uQaIz0r
-         Mn3xM9XoCbYBnWVWaesGwNPbsCLqU/8se/KmcKnKYeai6Nw6tXRmGB0NTkOqQrIlxxW2
-         r+vUBxXNTT7Icz00gucwnSenXBhZ7dcIXC8EoFxlSBgheJ/46Dt0no5jQsoZXt4fQZAo
-         2uK6/syaXdXedAipo13eA3yFbN/bY5BQmZ4nuyCJO7ocqtrgYVyLaKAWl95TK+w6NR52
-         LFkg==
-X-Gm-Message-State: AC+VfDxMdiLc2KDXaNj8unEAVb36p7BNSWRlCBKQ1FC/WcsjFKQO9Ycc
-        mzMR/+MCiuYfS5uhBwYKENysHU3h+tqtCA==
-X-Google-Smtp-Source: ACHHUZ4pZlGzrTflynDcIgK6hxKFt8Aqe8g8SmveSIhcsigtQrFOUhoAlFdNVE8fnV+ai98Z70b3QQ==
-X-Received: by 2002:a81:4602:0:b0:55a:c42:406d with SMTP id t2-20020a814602000000b0055a0c42406dmr15061368ywa.3.1683628539086;
-        Tue, 09 May 2023 03:35:39 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id a145-20020a0dd897000000b0055a07c7be39sm3199458ywe.31.2023.05.09.03.35.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 09 May 2023 03:35:38 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-b9e27684b53so4982207276.0;
-        Tue, 09 May 2023 03:35:38 -0700 (PDT)
-X-Received: by 2002:a25:258a:0:b0:b96:e7a6:dbe4 with SMTP id
- l132-20020a25258a000000b00b96e7a6dbe4mr12470821ybl.21.1683628537827; Tue, 09
- May 2023 03:35:37 -0700 (PDT)
+        bh=opeeHjTpE8hf7IkSOrjrz4V6UTxg/7z0lzjIXtvA3kY=;
+        b=Ha8yslMinv6gOBVO/lcrLrH1IuvYZ1gnn7kieHBrb/XDG8/1s9ZK8Hhkv6ZeUzfCYf
+         XKu0EM/s+UaNnsCV0YaViDMqZzlFfvPCda0/aG9iAgCx0ielbFEouClO1aMjz660/Os+
+         5EgebudrxsBLvIWELN46weK478AkeqXJe8AXw/Aa/hikpMJ+W0RJz7884wcYHC9OkU3g
+         2LXgaelQOtVs7zEOXFlBZLHyzyUrel51QrVJzdVFAV2O5SAr0ooKPR4S9q54qSs7yI5D
+         1OPjIm7xi5z9oLSxRuhymL3szShLsFGu1J3wenAMafod6GZRL+j3+HUYn8WIe9Xxyiz+
+         C1zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683628751; x=1686220751;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=opeeHjTpE8hf7IkSOrjrz4V6UTxg/7z0lzjIXtvA3kY=;
+        b=Rt7fYvN+j1RbOsgMDMjZTcBIZ6t3LW9Wn7WeDNVv12qdRHqcnTsw6EOzaZznegUsK6
+         LIC670ibxTmSDmF77SrxujlhRLsBb0ndq2SzqtE0bQDwdC+Ys7VmVc7W/lc8bY8etAAt
+         KN+pWmeR4+3fFmbC+mZtYsM3lbIYumCs7kEWKkqcf0TI9a5FZZtHAd9BUwqdlB9HIwvH
+         wHNdMmxa7xmrjPi7PkJJmLP1v8Phgb//Lqd7beCz4JR/5GvwPDukAIz4Lwp0nN69cf1i
+         HcxBMn+yroVyEKrqb+AqfXMM88j/E+Foguc3L2X0a429PDSxjRLRG+2jxqbyePvldoBw
+         Gv/g==
+X-Gm-Message-State: AC+VfDx3pM8YpaLNcPRatNckh6eHfHrIlgVcJ78y6Tqat1j6HqNRDr53
+        XzCkcOJyYU8pUa3x50nswfY197sDKMJWFqvm4MU=
+X-Google-Smtp-Source: ACHHUZ4tpxlxZU6i9SZ0ZVGoAJzHgYT/rTbM5b7ODuBKEL35zYNTQBhDE4SAoB8aLWYVnCmn3A2qbw59/TswLmk2K8k=
+X-Received: by 2002:a05:622a:286:b0:3f3:8ddc:d760 with SMTP id
+ z6-20020a05622a028600b003f38ddcd760mr9859421qtw.12.1683628750848; Tue, 09 May
+ 2023 03:39:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230508104557.47889-1-wsa+renesas@sang-engineering.com>
- <20230508104557.47889-2-wsa+renesas@sang-engineering.com> <CAMuHMdWGaDT_XGpeVm-915hbxa8-w5303QWg0a0iCjqk998unQ@mail.gmail.com>
- <ZFlD7x99++k3yfE1@kunai>
-In-Reply-To: <ZFlD7x99++k3yfE1@kunai>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 9 May 2023 12:35:26 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUS56xQbOcRx7kVhL_irQQR2cnDr0Y6p6q8tCjZ2U_dwg@mail.gmail.com>
-Message-ID: <CAMuHMdUS56xQbOcRx7kVhL_irQQR2cnDr0Y6p6q8tCjZ2U_dwg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/3] dt-bindings: PCI: rcar-pci-host: add optional regulators
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-renesas-soc@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Sender: didiekodjo@gmail.com
+Received: by 2002:a05:622a:150:b0:3f2:8f3:5f76 with HTTP; Tue, 9 May 2023
+ 03:39:10 -0700 (PDT)
+From:   Kayla Manthey <sgtkylamanthey73@gmail.com>
+Date:   Tue, 9 May 2023 10:39:10 +0000
+X-Google-Sender-Auth: Tw0XzwO6MP-YGbBgFI-kL7zGDpc
+Message-ID: <CAB56QimTUkPER-4fN=1j2114zzvo2DvfoBCPSdQg8DN71NZE1A@mail.gmail.com>
+Subject: 
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=0.6 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Wolfram,
-
-On Mon, May 8, 2023 at 8:48 PM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
-> > > +  vpcie1v5-supply:
-> > > +    description: The 1.5v regulator to use for PCIe.
-> >
-> > +1.5V is only present on mini-PCIe slots...
->
-> Since mini-PCIe is a subset of PCIe, I'd think we can leave the
-> description as-is.
-
-Sure, the description is fine.
-
-> > > +
-> > > +  vpcie3v3-supply:
-> > > +    description: The 3.3v regulator to use for PCIe.
-> >
-> > ... while +3.3V is present on PCIe, mini-PCIe, and M2 PCIe slots.
-> >
-> > In addition, normal PCIe slots also have +12V.
-> > So I think it would be prudent to add a vpcie12v0-supply property, too.
->
-> I agree. I can't test it but it is trivial enough to add 12v support as
-> well.
->
-> > W.r.t. to the actual naming, I don't know if there's already a (de facto)
-> > standard for that?
->
-> I couldn't find one and took what I think is the most used pattern. But
-> I wasn't entirely sure, this is why the series is still RFC.
-
-Upon second thought, shouldn't these supplies be part of a PCIe
-connector subnode, as they are not properties of the PCIe host
-controller itself?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hello, please did you receive my previous email?, thank you.
