@@ -2,144 +2,211 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 597DE6FBF56
-	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 08:39:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F12336FC023
+	for <lists+linux-pci@lfdr.de>; Tue,  9 May 2023 09:08:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234928AbjEIGjH convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 9 May 2023 02:39:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43402 "EHLO
+        id S235196AbjEIHH7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 9 May 2023 03:07:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234929AbjEIGjF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 02:39:05 -0400
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 453E2AD19;
-        Mon,  8 May 2023 23:39:00 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-b9a6f17f2b6so28813169276.1;
-        Mon, 08 May 2023 23:39:00 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683614339; x=1686206339;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xOcwavl5tEhjFo+qvl4oybTvYsklKUcQFW6RYMWOTw0=;
-        b=XN/nxjv8ybmedDeeokUrHmWGX7ALZ14UXYy3ffHqQ9lGkzlb68u0cgJBfRfxvXL9qG
-         G7Xu/UgvtaMic3ZIW0O1sKEPRtryQqXpLBbEG9AxxFrigccVYa3aiuA8dbl85T6oNBHw
-         QpqFs1GE/725xsP2lb0JhFm0XXL048WjAR4nfkiaIu8aIa7vvvAjdDBqQVGfI3Tv9S8i
-         LLb3nl/D/CjBZEGS1ocHdlIxrb+Q3iZcH4KnvkaWcJgAK8W1bCuEjTQSfdXCp2jUaQLz
-         AU92c0for24Fvt8nxW1zxLCM/F4gSkNVA7C1yr3Bj6SeLWLToU00XPVTEGHjzWGr5KTN
-         KTTw==
-X-Gm-Message-State: AC+VfDxZ4t/2KTMzOfAGgRbYpCKH5pCxWJZq16GacyahIiZYm3MtV0tT
-        rY5qjdc3u6eH6y3NbXiAlaFMRZkqSSmsNA==
-X-Google-Smtp-Source: ACHHUZ6ap/xwk1m7OJLMrlWWCTWBpmPjMB96v6F5WcrE2/NNfSac50vN9pt4HxQ/9dPhb28nzoQ4AQ==
-X-Received: by 2002:a81:a4c:0:b0:55d:9c2d:20d with SMTP id 73-20020a810a4c000000b0055d9c2d020dmr13442966ywk.6.1683614339091;
-        Mon, 08 May 2023 23:38:59 -0700 (PDT)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id q66-20020a0dce45000000b0054f03d75882sm3087071ywd.71.2023.05.08.23.38.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 May 2023 23:38:57 -0700 (PDT)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-b9a6eec8611so28900065276.0;
-        Mon, 08 May 2023 23:38:56 -0700 (PDT)
-X-Received: by 2002:a25:51c7:0:b0:b9a:867b:462a with SMTP id
- f190-20020a2551c7000000b00b9a867b462amr15472830ybb.7.1683614336436; Mon, 08
- May 2023 23:38:56 -0700 (PDT)
+        with ESMTP id S235112AbjEIHHy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 9 May 2023 03:07:54 -0400
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A74EE43;
+        Tue,  9 May 2023 00:07:52 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34977aVt054583;
+        Tue, 9 May 2023 02:07:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1683616056;
+        bh=m9xWIx7fRxqM+94No2mQfJDt43t0l4QUNDEOExprT2s=;
+        h=Date:CC:Subject:To:References:From:In-Reply-To;
+        b=O6sSPHZwBpVWb4ruA5xFdtMkW6yRkC2D8VvUIszHcuutnNntvJ1I1YTUY0wYEZHSu
+         LzlBnPbggayfNVnQy3NvmBwZwpLpuU4Mqdk/kPx6D10cjWvx6XfvhT9nUwIrCB6d86
+         iFxsG895IjPdh0SL3KX9HyNokLlaEz889bzHrOCE=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34977aur015186
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 9 May 2023 02:07:36 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 9
+ May 2023 02:07:36 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 9 May 2023 02:07:36 -0500
+Received: from [172.24.145.61] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34977WMT021513;
+        Tue, 9 May 2023 02:07:32 -0500
+Message-ID: <6dd91ab0-cc7f-45c4-bded-688bab5d6050@ti.com>
+Date:   Tue, 9 May 2023 12:37:31 +0530
 MIME-Version: 1.0
-References: <20230314121216.413434-1-schnelle@linux.ibm.com>
- <20230314121216.413434-29-schnelle@linux.ibm.com> <202303141252027ef5511a@mail.local>
- <aa68b4afdca34bf3bfd2439b03e6f9bcfad94903.camel@linux.ibm.com> <b7017996-b079-4534-a24a-080003772a66@app.fastmail.com>
-In-Reply-To: <b7017996-b079-4534-a24a-080003772a66@app.fastmail.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 9 May 2023 08:38:45 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdXJ=hsB=A_umQnPMVSU+BGqeHt3O-2ygr3p_f7pHHvf=Q@mail.gmail.com>
-Message-ID: <CAMuHMdXJ=hsB=A_umQnPMVSU+BGqeHt3O-2ygr3p_f7pHHvf=Q@mail.gmail.com>
-Subject: Re: [PATCH v3 28/38] rtc: add HAS_IOPORT dependencies
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-rtc@vger.kernel.org,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+CC:     <tjoseph@cadence.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
+        <kw@linux.com>, <bhelgaas@google.com>, <nadeem@cadence.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
+        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v2] PCI: cadence: Fix Gen2 Link Retraining process
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+References: <20230508211430.GA1185556@bhelgaas>
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20230508211430.GA1185556@bhelgaas>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-6.2 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Arnd,
+Bjorn,
 
-On Mon, May 8, 2023 at 10:01 PM Arnd Bergmann <arnd@arndb.de> wrote:
-> On Mon, May 8, 2023, at 17:36, Niklas Schnelle wrote:
-> > On Tue, 2023-03-14 at 13:52 +0100, Alexandre Belloni wrote:
-> >> On 14/03/2023 13:12:06+0100, Niklas Schnelle wrote:
-> >> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> >> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> >> > those drivers using them.
-> >> >
-> >> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> >> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> >> > ---
-> >> >  drivers/rtc/Kconfig | 4 +++-
-> >> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >> >
-> >> > diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> >> > index 5a71579af0a1..20aa77bf0a9f 100644
-> >> > --- a/drivers/rtc/Kconfig
-> >> > +++ b/drivers/rtc/Kconfig
-> >> > @@ -956,6 +956,7 @@ comment "Platform RTC drivers"
-> >> >  config RTC_DRV_CMOS
-> >> >    tristate "PC-style 'CMOS'"
-> >> >    depends on X86 || ARM || PPC || MIPS || SPARC64
-> >> > +  depends on HAS_IOPORT
-> >>
-> >> Did you check that this will not break platforms that doesn't have RTC_PORT defined?
-> >> >
-> >
-> > From what I can tell the CMOS_READ() macro this driver relies on uses
-> > some form of inb() style I/O port access in all its definitions. So my
-> > understanding is that this device is always accessed via I/O ports even
-> > if the variants differ slightly and would make no sense on a platform
-> > without any way of accessing I/O ports which is what lack of HAS_IOPORT
-> > means. From what I can see even without RTC_PORT being defined the
-> > CMOS_READ is still used. Hope that answers your question?
->
-> I think the m68k/atari and mips/dec variants don't necessarily
-> qualify as PIO, those are really just pointer dereferences, and
-> they don't use the actual inb/outb functions.
->
-> On atari, it looks like HAS_IOPORT may be set if ATARI_ROM_ISA
-> is, but on dec it's never enabled.
+Thank you for reviewing the patch.
 
-Atari does not use RTC_DRV_CMOS, but still relies on generic RTC
-instead.
+On 09/05/23 02:44, Bjorn Helgaas wrote:
+> On Wed, Mar 15, 2023 at 12:38:00PM +0530, Siddharth Vadapalli wrote:
+>> The Link Retraining process is initiated to account for the Gen2 defect in
+>> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+>> is i2085, documented at:
+>> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
+>>
+>> The existing workaround implemented for the errata waits for the Data Link
+>> initialization to complete and assumes that the link retraining process
+>> at the Physical Layer has completed. However, it is possible that the
+>> Physical Layer training might be ongoing as indicated by the
+>> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+>>
+>> Fix the existing workaround, to ensure that the Physical Layer training
+>> has also completed, in addition to the Data Link initialization.
+>>
+>> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+>> ---
+>> Changes from v1:
+>> 1. Collect Reviewed-by tag from Vignesh Raghavendra.
+>> 2. Rebase on next-20230315.
+>>
+>> v1:
+>> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com
+>>
+>>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>
+>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> index 940c7dd701d6..5b14f7ee3c79 100644
+>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>> @@ -12,6 +12,8 @@
+>>  
+>>  #include "pcie-cadence.h"
+>>  
+>> +#define LINK_RETRAIN_TIMEOUT HZ
+>> +
+>>  static u64 bar_max_size[] = {
+>>  	[RP_BAR0] = _ULL(128 * SZ_2G),
+>>  	[RP_BAR1] = SZ_2G,
+>> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
+>>  	.write		= pci_generic_config_write,
+>>  };
+>>  
+>> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+> 
+> This is kind of weird because it's named like a predicate, i.e., "this
+> function tells me whether link training is complete", but it returns
+> *zero* for success.
+> 
+> This is the opposite of j721e_pcie_link_up(), which returns "true"
+> when the link is up, so code like this reads naturally:
+> 
+>   if (pcie->ops->link_up(pcie))
+>     /* do something if the link is up */
 
-Last time (in 2013?) I tried converting to RTC_DRV_CMOS by registering
-an "rtc_cmos" platform device, I couldn't get it to work.
+I agree. The function name can be changed to indicate that it is waiting for
+completion rather than indicating completion. If this is the only change, I will
+post a patch to fix it. On the other hand, based on your comments in the next
+section, I am thinking of an alternative approach of merging the current
+"cdns_pcie_host_training_complete()" function's operation as well into the
+"cdns_pcie_host_wait_for_link()" function. If this is acceptable, I will post a
+different patch and the name change patch won't be necessary.
 
-Gr{oetje,eeting}s,
+> 
+>> +{
+>> +	u32 pcie_cap_off = CDNS_PCIE_RP_CAP_OFFSET;
+>> +	unsigned long end_jiffies;
+>> +	u16 lnk_stat;
+>> +
+>> +	/* Wait for link training to complete. Exit after timeout. */
+>> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+>> +	do {
+>> +		lnk_stat = cdns_pcie_rp_readw(pcie, pcie_cap_off + PCI_EXP_LNKSTA);
+>> +		if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
+>> +			break;
+>> +		usleep_range(0, 1000);
+>> +	} while (time_before(jiffies, end_jiffies));
+>> +
+>> +	if (!(lnk_stat & PCI_EXP_LNKSTA_LT))
+>> +		return 0;
+>> +
+>> +	return -ETIMEDOUT;
+>> +}
+>> +
+>>  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+>>  {
+>>  	struct device *dev = pcie->dev;
+>> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>>  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+>>  				    lnk_ctl);
+>>  
+>> +		ret = cdns_pcie_host_training_complete(pcie);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>>  		ret = cdns_pcie_host_wait_for_link(pcie);
+> 
+> It seems a little clumsy that we wait for two things in succession:
+> 
+>   - cdns_pcie_host_training_complete() waits up to 1s for
+>     PCI_EXP_LNKSTA_LT to be cleared
+> 
+>   - cdns_pcie_host_wait_for_link() waits between .9s and 1s for
+>     LINK_UP_DL_COMPLETED on j721e (and not at all for other platforms)
 
-                        Geert
+Is it acceptable to merge "cdns_pcie_host_training_complete()" into
+"cdns_pcie_host_wait_for_link()"?
+
+> 
+> dw_pcie_wait_for_link() is basically similar but has a single wait
+> loop around the dw_pcie_link_up() callback.  Several of those
+> callbacks check multiple things.  Can we do the same here?
+
+I assume you are referring to merging the functions together?
+
+> 
+> Is the "host" in the cdns_pcie_host_wait_for_link() name necessary?
+> Maybe it could be cdns_pcie_wait_for_link() to be similar to
+> dw_pcie_wait_for_link()?  Or, if "host" is necessary, it could be
+> cdns_host_pcie_wait_for_link() so it matches the same
+> "pcie_wait_for_link" grep pattern as most of the others?
+
+If the functions are merged, I believe that the word "host" can be dropped in
+the new function which can be named "cdns_pcie_wait_for_link()" as suggested by you.
+
+Please let me know.
+
+> 
+>>  	}
+>>  	return ret;
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Regards,
+Siddharth.
