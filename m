@@ -2,212 +2,183 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 09D666FDDAF
-	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 14:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 435DF6FDE5B
+	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 15:18:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236998AbjEJMXg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 May 2023 08:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59734 "EHLO
+        id S235752AbjEJNSW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 May 2023 09:18:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236086AbjEJMXf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 08:23:35 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A81876B8
-        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 05:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683721412; x=1715257412;
-  h=date:from:to:cc:subject:message-id;
-  bh=4MvldK90ysMlol6TB54KNZoVG0It/qPcA/jZIsdmPJA=;
-  b=XWyKdnFnN/r2y6VK8eUYMleqKVerJJYDvmVG7gafiqvP5/txz/CknEm4
-   iIbhJD8WAGIIKa5bygaC9WK1Nxz0sJSrauhzyXSA+soDjExJiFf8uKziz
-   nJs2oi3stUEIhzCRIAFa1CRUMrjSH1e+0q1NiEWurGLUhRWQl4yOwlyO+
-   tC7QeJawgmniPFDAE6UvJARqxcnkqhfCc9C4Br9g3w1NA0eu8VmcmfTIJ
-   0PFO86HuO5unbf7c+XbGaub181JfCgAftTTlMobQDF72hBdPPViuWbYI+
-   Iq6A9uvVc0iGY4Yn0eUc6dZvOSngactBiCFhpG/9KybmyNL+Z5mpwnavB
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="334666133"
-X-IronPort-AV: E=Sophos;i="5.99,264,1677571200"; 
-   d="scan'208";a="334666133"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 May 2023 05:23:31 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10705"; a="873560234"
-X-IronPort-AV: E=Sophos;i="5.99,264,1677571200"; 
-   d="scan'208";a="873560234"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 10 May 2023 05:23:30 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pwiqw-0003H2-02;
-        Wed, 10 May 2023 12:23:30 +0000
-Date:   Wed, 10 May 2023 20:22:35 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S236672AbjEJNSV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 09:18:21 -0400
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1998E9EE9;
+        Wed, 10 May 2023 06:18:09 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34ADHqn0008399;
+        Wed, 10 May 2023 08:17:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1683724672;
+        bh=e04CwVGEcYcZioFWK5DNhxUsu5YL8S/UKSIPmLEP1PY=;
+        h=Date:CC:Subject:To:References:From:In-Reply-To;
+        b=PnVxA6OrVMYMncIUBXh2q16QlEakh7HOMHzC5f46OuAKMud72GmxqncdACQLe1Qts
+         DLn1DDNyj5mbgLZPaNTphJ0/J/5UmoTuDCmtCY/dIT9ygfj+jxEKRljWv4A9nYVuW9
+         3qJUWEyz5NcJ0GEbpbLCXsXZufky1jTM7167iIKw=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34ADHq9b043784
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 10 May 2023 08:17:52 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 10
+ May 2023 08:17:51 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 10 May 2023 08:17:51 -0500
+Received: from [10.249.138.110] (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34ADHlia007546;
+        Wed, 10 May 2023 08:17:48 -0500
+Message-ID: <0ef69859-7ff9-1988-3c7e-692d8692b59f@ti.com>
+Date:   Wed, 10 May 2023 18:47:46 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+CC:     <tjoseph@cadence.com>, <lpieralisi@kernel.org>, <robh@kernel.org>,
+        <kw@linux.com>, <bhelgaas@google.com>, <nadeem@cadence.com>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <vigneshr@ti.com>,
+        <srk@ti.com>, <nm@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v2] PCI: cadence: Fix Gen2 Link Retraining process
+Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- 174977dc80b75a490369800ecb05d525b91a59d4
-Message-ID: <20230510122235.63YDa%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230509182416.GA1259841@bhelgaas>
+From:   Siddharth Vadapalli <s-vadapalli@ti.com>
+In-Reply-To: <20230509182416.GA1259841@bhelgaas>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-7.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: 174977dc80b75a490369800ecb05d525b91a59d4  Merge branch 'pci/controller/vmd'
 
-elapsed time: 721m
 
-configs tested: 136
-configs skipped: 7
+On 09-05-2023 23:54, Bjorn Helgaas wrote:
+> On Tue, May 09, 2023 at 12:37:31PM +0530, Siddharth Vadapalli wrote:
+>> Bjorn,
+>>
+>> Thank you for reviewing the patch.
+>>
+>> On 09/05/23 02:44, Bjorn Helgaas wrote:
+>>> On Wed, Mar 15, 2023 at 12:38:00PM +0530, Siddharth Vadapalli wrote:
+>>>> The Link Retraining process is initiated to account for the Gen2 defect in
+>>>> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+>>>> is i2085, documented at:
+>>>> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
+>>>>
+>>>> The existing workaround implemented for the errata waits for the Data Link
+>>>> initialization to complete and assumes that the link retraining process
+>>>> at the Physical Layer has completed. However, it is possible that the
+>>>> Physical Layer training might be ongoing as indicated by the
+>>>> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+>>>>
+>>>> Fix the existing workaround, to ensure that the Physical Layer training
+>>>> has also completed, in addition to the Data Link initialization.
+>>>>
+>>>> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+>>>> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+>>>> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+>>>> ---
+>>>> Changes from v1:
+>>>> 1. Collect Reviewed-by tag from Vignesh Raghavendra.
+>>>> 2. Rebase on next-20230315.
+>>>>
+>>>> v1:
+>>>> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com
+>>>>
+>>>>  .../controller/cadence/pcie-cadence-host.c    | 27 +++++++++++++++++++
+>>>>  1 file changed, 27 insertions(+)
+>>>>
+>>>> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> index 940c7dd701d6..5b14f7ee3c79 100644
+>>>> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+>>>> @@ -12,6 +12,8 @@
+>>>>  
+>>>>  #include "pcie-cadence.h"
+>>>>  
+>>>> +#define LINK_RETRAIN_TIMEOUT HZ
+>>>> +
+>>>>  static u64 bar_max_size[] = {
+>>>>  	[RP_BAR0] = _ULL(128 * SZ_2G),
+>>>>  	[RP_BAR1] = SZ_2G,
+>>>> @@ -77,6 +79,27 @@ static struct pci_ops cdns_pcie_host_ops = {
+>>>>  	.write		= pci_generic_config_write,
+>>>>  };
+>>>>  
+>>>> +static int cdns_pcie_host_training_complete(struct cdns_pcie *pcie)
+>>>
+>>> This is kind of weird because it's named like a predicate, i.e., "this
+>>> function tells me whether link training is complete", but it returns
+>>> *zero* for success.
+>>>
+>>> This is the opposite of j721e_pcie_link_up(), which returns "true"
+>>> when the link is up, so code like this reads naturally:
+>>>
+>>>   if (pcie->ops->link_up(pcie))
+>>>     /* do something if the link is up */
+>>
+>> I agree. The function name can be changed to indicate that it is
+>> waiting for completion rather than indicating completion. If this is
+>> the only change, I will post a patch to fix it. On the other hand,
+>> based on your comments in the next section, I am thinking of an
+>> alternative approach of merging the current
+>> "cdns_pcie_host_training_complete()" function's operation as well
+>> into the "cdns_pcie_host_wait_for_link()" function. If this is
+>> acceptable, I will post a different patch and the name change patch
+>> won't be necessary.
+> 
+> Yeah, sorry, I meant to delete this part of my response after I wrote
+> the one below.
+> 
+>>>> @@ -118,6 +141,10 @@ static int cdns_pcie_retrain(struct cdns_pcie *pcie)
+>>>>  		cdns_pcie_rp_writew(pcie, pcie_cap_off + PCI_EXP_LNKCTL,
+>>>>  				    lnk_ctl);
+>>>>  
+>>>> +		ret = cdns_pcie_host_training_complete(pcie);
+>>>> +		if (ret)
+>>>> +			return ret;
+>>>> +
+>>>>  		ret = cdns_pcie_host_wait_for_link(pcie);
+>>>
+>>> It seems a little clumsy that we wait for two things in succession:
+>>>
+>>>   - cdns_pcie_host_training_complete() waits up to 1s for
+>>>     PCI_EXP_LNKSTA_LT to be cleared
+>>>
+>>>   - cdns_pcie_host_wait_for_link() waits between .9s and 1s for
+>>>     LINK_UP_DL_COMPLETED on j721e (and not at all for other platforms)
+>>
+>> Is it acceptable to merge "cdns_pcie_host_training_complete()" into
+>> "cdns_pcie_host_wait_for_link()"?
+> 
+> That's what I'm proposing.  Maybe someone who is more familiar with
+> Cadence would have an argument against it, but I think making it
+> structurally the same as dw_pcie_wait_for_link() would be a good
+> thing.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Thank you for the confirmation. I will work on it and post a patch.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r005-20230509   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r011-20230509   gcc  
-arc                  randconfig-r014-20230509   gcc  
-arc                  randconfig-r043-20230510   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                          exynos_defconfig   gcc  
-arm                          moxart_defconfig   clang
-arm                  randconfig-r046-20230510   gcc  
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r004-20230509   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r016-20230509   clang
-arm64                randconfig-r021-20230509   clang
-arm64                randconfig-r026-20230509   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r001-20230509   gcc  
-csky                 randconfig-r014-20230509   gcc  
-csky                 randconfig-r015-20230509   gcc  
-hexagon      buildonly-randconfig-r006-20230509   clang
-hexagon              randconfig-r031-20230509   clang
-hexagon              randconfig-r041-20230509   clang
-hexagon              randconfig-r041-20230510   clang
-hexagon              randconfig-r045-20230509   clang
-hexagon              randconfig-r045-20230510   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                          randconfig-a002   clang
-i386                          randconfig-a004   clang
-i386                          randconfig-a006   clang
-i386                          randconfig-a012   gcc  
-i386                          randconfig-a014   gcc  
-i386                          randconfig-a016   gcc  
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r012-20230509   gcc  
-ia64                 randconfig-r013-20230509   gcc  
-ia64                 randconfig-r015-20230509   gcc  
-ia64                 randconfig-r023-20230509   gcc  
-ia64                 randconfig-r025-20230509   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                          amiga_defconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
-microblaze   buildonly-randconfig-r002-20230509   gcc  
-microblaze           randconfig-r005-20230509   gcc  
-microblaze           randconfig-r012-20230509   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r001-20230509   clang
-nios2                               defconfig   gcc  
-nios2                randconfig-r011-20230509   gcc  
-openrisc     buildonly-randconfig-r005-20230509   gcc  
-openrisc             randconfig-r006-20230509   gcc  
-openrisc             randconfig-r022-20230509   gcc  
-parisc       buildonly-randconfig-r002-20230509   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r015-20230509   gcc  
-parisc               randconfig-r024-20230509   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      makalu_defconfig   gcc  
-powerpc                 mpc8560_ads_defconfig   clang
-powerpc              randconfig-r004-20230509   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv        buildonly-randconfig-r002-20230509   clang
-riscv        buildonly-randconfig-r003-20230509   clang
-riscv        buildonly-randconfig-r004-20230509   clang
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r042-20230509   clang
-riscv                randconfig-r042-20230510   clang
-riscv                          rv32_defconfig   gcc  
-s390                             alldefconfig   clang
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r002-20230509   gcc  
-s390                 randconfig-r021-20230509   clang
-s390                 randconfig-r026-20230509   clang
-s390                 randconfig-r044-20230509   clang
-s390                 randconfig-r044-20230510   clang
-sh                               allmodconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
-sh                   randconfig-r002-20230509   gcc  
-sh                   randconfig-r014-20230509   gcc  
-sh                   rts7751r2dplus_defconfig   gcc  
-sh                           se7780_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sh                              ul2_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            alldefconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r003-20230509   gcc  
-sparc                randconfig-r012-20230509   gcc  
-sparc64      buildonly-randconfig-r001-20230509   gcc  
-sparc64              randconfig-r006-20230509   gcc  
-sparc64              randconfig-r016-20230509   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                        randconfig-a001   clang
-x86_64                        randconfig-a002   gcc  
-x86_64                        randconfig-a003   clang
-x86_64                        randconfig-a004   gcc  
-x86_64                        randconfig-a005   clang
-x86_64                        randconfig-a006   gcc  
-x86_64                        randconfig-a011   gcc  
-x86_64                        randconfig-a012   clang
-x86_64                        randconfig-a013   gcc  
-x86_64                        randconfig-a014   clang
-x86_64                        randconfig-a015   gcc  
-x86_64                        randconfig-a016   clang
-x86_64                        randconfig-k001   clang
-x86_64                          rhel-8.3-func   gcc  
-x86_64                    rhel-8.3-kselftests   gcc  
-x86_64                           rhel-8.3-ltp   gcc  
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r001-20230509   gcc  
-xtensa                generic_kc705_defconfig   gcc  
-xtensa               randconfig-r001-20230509   gcc  
+> 
+> Bjorn
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Regards,
+Siddharth.
