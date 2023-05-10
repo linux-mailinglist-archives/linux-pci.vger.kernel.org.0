@@ -2,91 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E5F196FE0BD
-	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 16:47:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E58F6FE0A8
+	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 16:43:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237585AbjEJOr5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 May 2023 10:47:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51124 "EHLO
+        id S237569AbjEJOna (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 May 2023 10:43:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237592AbjEJOr4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 10:47:56 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B678CE7E;
-        Wed, 10 May 2023 07:47:53 -0700 (PDT)
-Received: from dggpemm100003.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QGchT74PCzsRGV;
-        Wed, 10 May 2023 22:23:37 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm100003.china.huawei.com (7.185.36.68) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Wed, 10 May 2023 22:25:30 +0800
-Received: from huawei.com (10.175.104.170) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Wed, 10 May
- 2023 22:25:30 +0800
-From:   Zhuang Shengen <zhuangshengen@huawei.com>
-To:     <sgarzare@redhat.com>
-CC:     <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <longpeng2@huawei.com>, <jianjay.zhou@huawei.com>
-Subject: [PATCH] vsock: bugfix port residue in server
-Date:   Wed, 10 May 2023 22:25:02 +0800
-Message-ID: <20230510142502.2293109-1-zhuangshengen@huawei.com>
-X-Mailer: git-send-email 2.23.0
+        with ESMTP id S237258AbjEJOn3 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 10:43:29 -0400
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B962A5BA9
+        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 07:43:27 -0700 (PDT)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-9659e9bbff5so1328326566b.1
+        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 07:43:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683729806; x=1686321806;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oDVdWICwavrWQ8UAVYhe8ynFXsBBW1vVQ7W08zgiq24=;
+        b=l6To9sPEpSbIWjVuYFn3N8A4xyUkOSXWPU+gac7BMA1NKvt+vlSB4BSYdxIBeLdq6I
+         7J3FwoXiu9g48a3GUDp9he3aNiTphlqmPsAS57dP7BAAPxg7YaR5MkMEbW9qdJHJPI3B
+         TapmipPRJb44QBIEDWQhKCVzABz5zWw5J2x/KjMBQ5PPW7r3I9jt/uCGGgg9CPwM52ZJ
+         xWAsJlA9jtBg5BxLdh26ImhCHXPee2eC7QKZmXkcvZhZNRnwHvYwd2OcCcSyZVcwiYLR
+         oLs/rGfXRpqmiM5W0IDdhvbc5ugGTkbC50P9KESnX433/nodsVtKjUMeLRYYETlzfO+R
+         bmCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683729806; x=1686321806;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oDVdWICwavrWQ8UAVYhe8ynFXsBBW1vVQ7W08zgiq24=;
+        b=Ep7aqoWjBt5hxRArH6/BH4NJFua+alDkcwPJhwLQGUqjO0zEhdVf3KEcWg3gcJ7H4i
+         jkrmFKHRW1B0/pd55M1gOw57mirbKJ7Rxkxa8AlJ1RDY/1phQzxLXkjLA1q3Nyzk0i2T
+         5I5+W0CFGUKIxoK1WVvVuOG63qYq/R8Beq+geo3ODdC4Ta+SxxJKAOAcg1UUVTYaSbFV
+         CD0AcYMryao8n4RfK/4UGidiVOdcOVm/ZdWbWd1tAC3EKyz3Cd4c3PUNeiBuWdQvu/u4
+         wudyU1Ibiv2mEPpQlVInbW1xE/sVbZnDeTv7LAqKoLdbqjNtGChOY5f+ltL7O4kD0lgT
+         FNuA==
+X-Gm-Message-State: AC+VfDwwt1bM8Yn3lzThvq/px1dBii9HBNV4+sdMEv3jsV2oYa6CBZB6
+        hAQnpsKZePEb+YYGDAw4CyRIVFI6pv4j4ed4M1U=
+X-Google-Smtp-Source: ACHHUZ6DN8RuAX6s2lS63jiwkU/AaCfNfZ6u9DthVIAEiXvwt46sQnPXhcpTtaIqDbw80DBuKTIBBlCxBKEmyC2yy7I=
+X-Received: by 2002:a17:906:db0d:b0:94a:35d1:59a with SMTP id
+ xj13-20020a170906db0d00b0094a35d1059amr14117358ejb.14.1683729806136; Wed, 10
+ May 2023 07:43:26 -0700 (PDT)
 MIME-Version: 1.0
+Received: by 2002:ab4:a502:0:b0:209:c5a4:ad9a with HTTP; Wed, 10 May 2023
+ 07:43:25 -0700 (PDT)
+Reply-To: ninacoulibaly03@hotmail.com
+From:   nina coulibaly <coulibalynina09@gmail.com>
+Date:   Wed, 10 May 2023 07:43:25 -0700
+Message-ID: <CABeZed7eVgREt4osqeMzVuuDy603jQNiA2_BewSMaEU+1Y+SXg@mail.gmail.com>
+Subject: from nina coulibaly
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.175.104.170]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=4.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,FREEMAIL_REPLYTO,FREEMAIL_REPLYTO_END_DIGIT,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Level: ****
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When client and server establish a connection through vsock,
-the client send a request to the server to initiate the connection,
-then start a timer to wait for the server's response. When the server's
-RESPONSE message arrives, the timer also times out and exits. The
-server's RESPONSE message is processed first, and the connection is
-established. However, the client's timer also times out, the original
-processing logic of the client is to directly set the state of this vsock
-to CLOSE and return ETIMEDOUT, User will release the port. It will not
-notify the server when the port is released, causing the server port remain
+Dear,
 
-when client's vsock_connect timeout，it should check sk state is
-ESTABLISHED or not. if sk state is ESTABLISHED, it means the connection
-is established, the client should not set the sk state to CLOSE
+I am interested to invest with you in your country with total trust
+and i hope you will give me total support, sincerity and commitment.
+Please get back to me as soon as possible so that i can give you my
+proposed details of funding and others.
 
-Note: I encountered this issue on kernel-4.18, which can be fixed by
-this patch. Then I checked the latest code in the community
-and found similar issue.
+Best Regards.
 
-Signed-off-by: Zhuang Shengen <zhuangshengen@huawei.com>
----
- net/vmw_vsock/af_vsock.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
-index 413407bb646c..efb8a0937a13 100644
---- a/net/vmw_vsock/af_vsock.c
-+++ b/net/vmw_vsock/af_vsock.c
-@@ -1462,7 +1462,7 @@ static int vsock_connect(struct socket *sock, struct sockaddr *addr,
- 			vsock_transport_cancel_pkt(vsk);
- 			vsock_remove_connected(vsk);
- 			goto out_wait;
--		} else if (timeout == 0) {
-+		} else if ((sk->sk_state != TCP_ESTABLISHED) && (timeout == 0)) {
- 			err = -ETIMEDOUT;
- 			sk->sk_state = TCP_CLOSE;
- 			sock->state = SS_UNCONNECTED;
--- 
-2.27.0
-
+Mrs Nina Coulibaly
