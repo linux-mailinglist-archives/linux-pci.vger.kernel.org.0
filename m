@@ -2,122 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4990A6FD7AC
-	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 08:58:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5FBB6FD7DB
+	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 09:08:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236290AbjEJG6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 May 2023 02:58:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
+        id S236404AbjEJHIs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 May 2023 03:08:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236291AbjEJG6s (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 02:58:48 -0400
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE24F61B7
-        for <linux-pci@vger.kernel.org>; Tue,  9 May 2023 23:58:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=NL8Px7oRKFrzxo
-        pCNFzqBDySrKj3AzZYm+5yTb2UOmo=; b=jy5JWjo/SDn0z5xNJERHSnpEOqZ2yi
-        tfAeznphYEcr5xgkUsRKJWObgNglVY7mm/uEMTdPiykAIhTOXYyrgm5XwM0IRCQH
-        J3q75h/foIq0y4XnZqNYjzUrPNpYecs85PHquqnaiXkjccl6gqOfrmzKg/WmQ7GR
-        Om9MD60Gt31l0=
-Received: (qmail 2328266 invoked from network); 10 May 2023 08:58:31 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 May 2023 08:58:31 +0200
-X-UD-Smtp-Session: l3s3148p1@p1ZPZlH7ar8ujnsI
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-renesas-soc@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] PCI: rcar-host: add support for optional regulators
-Date:   Wed, 10 May 2023 08:58:18 +0200
-Message-Id: <20230510065819.3987-3-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230510065819.3987-1-wsa+renesas@sang-engineering.com>
-References: <20230510065819.3987-1-wsa+renesas@sang-engineering.com>
+        with ESMTP id S236144AbjEJHIq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 03:08:46 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 049164218
+        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 00:08:43 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bd37ca954so66133084a12.0
+        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 00:08:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683702521; x=1686294521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=eS3uKPsHcGZIkIwsTVqRC2UstZ20/qzhnJE4KmhckrU=;
+        b=mFvIMsraSpSLac8c2tS5ssp1cJyaxzreWmrSM5dgoDZ2KLfxsrTzpo0m0GX8ob3x3r
+         a36SpBDjTgDS73b4J8appqeHn3S+cpHOFNRFthKUpW6Wur7qLZy6HjRhjJr6U14Ozz3b
+         CK/J0N42wvsZkrFds3y7x+wQTqNR+Uw/0yKLk3rUDXRT5qqDGHkHjLzcsUfjOffg2ZWp
+         CNWW/W3UslpyAXVQNka5yxtt0Pqg7g26hKp97yAR+/jbLqZrTLFZFj2fnxao0mknJJXb
+         Z5fov0AUVpH1cZ+ZFGl2/LrR36hzk9xBgy6atvO5YaHH79rwccDXIgYzEzBb3r2vhEpA
+         B95Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683702521; x=1686294521;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=eS3uKPsHcGZIkIwsTVqRC2UstZ20/qzhnJE4KmhckrU=;
+        b=Yqar3ELYOEOsVmB0AvtJx71Av52P0xQS8wfquzJzR2KoUeUzJFeHWmx1XQ/SAEn25t
+         EqEVBz8o3pCU2+MtKbhlXpCLaZS1k6VTkb8FevdDIHawjUd6sizfbH12uHkAkI/7uS6G
+         hhGX3Rz/wMxbl6HTRBTi2utMR4hA9J6crwDpYj+XrV2llFVpwoOzjd2keidZOwf1/trb
+         q2c9duMrVsBqcMWFS8zaUxdUQMZOyaEgm0HNcE5mDlaxvDt8j4KGBWBc1Y/e7nQo38t1
+         GcTMk1uTK7PNj+1IkktJq8huICkYWiwZNwxG12vJGCDf0UCqow6597pTXksOWV/SUW6N
+         FDqg==
+X-Gm-Message-State: AC+VfDyF/gS2Gwvzd2xaSZwKgDn9UlKmYrnDubJ1uzWTB6xrmRWRQCbl
+        yN4XWzdIrD1+4iZ+HyCSq+N0QQ==
+X-Google-Smtp-Source: ACHHUZ4+6ytKlhUVP5y89FeW6sU98CuIgCUYoFhX3AKqeJ+z+TpD9k2DS2crnv8ssBOurHYlauHY1Q==
+X-Received: by 2002:a17:907:d0e:b0:94a:57d1:5539 with SMTP id gn14-20020a1709070d0e00b0094a57d15539mr15154034ejc.5.1683702521312;
+        Wed, 10 May 2023 00:08:41 -0700 (PDT)
+Received: from ?IPV6:2a02:810d:15c0:828:c175:a0f9:6928:8c9d? ([2a02:810d:15c0:828:c175:a0f9:6928:8c9d])
+        by smtp.gmail.com with ESMTPSA id w10-20020a170907270a00b00965e9a23f2bsm2263354ejk.134.2023.05.10.00.08.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 10 May 2023 00:08:40 -0700 (PDT)
+Message-ID: <6a36a4ad-6d46-4e4e-1724-ed27513a72ef@linaro.org>
+Date:   Wed, 10 May 2023 09:08:39 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v2 1/3] dt-bindings: phy: cadence-torrent: Add latency
+ properties
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Dominic Rath <rath@ibv-augsburg.de>,
+        krzysztof.kozlowski+dt@linaro.org, tjoseph@cadence.com,
+        bhelgaas@google.com, lpieralisi@kernel.org, nm@ti.com,
+        vigneshr@ti.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        bahle@ibv-augsburg.de
+References: <20230509215700.GA1277746@bhelgaas>
+From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20230509215700.GA1277746@bhelgaas>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The KingFisher board has regulators. They just need to be en-/disabled,
-so we can leave the handling to devm.
+On 09/05/2023 23:57, Bjorn Helgaas wrote:
+> On Tue, May 09, 2023 at 05:31:19PM +0200, Christian Gmeiner wrote:
+>>> On Thu, Apr 27, 2023 at 07:50:30AM +0200, Dominic Rath wrote:
+>>>> From: Alexander Bahle <bahle@ibv-augsburg.de>
+>>>>
+>>>> Add "tx-phy-latency-ps" and "rx-phy-latency-ps" DT bindings for
+>>>> setting the PCIe PHY latencies.
+>>>> The properties expect a list of uint32 PHY latencies in picoseconds for
+>>>> every supported speed starting at PCIe Gen1, e.g.:
+>>>>
+>>>>   tx-phy-latency-ps = <100000 200000>; /* Gen1: 100ns, Gen2: 200ns */
+>>>>   rx-phy-latency-ps = <150000 250000>; /* Gen1: 150ns, Gen2: 250ns */
+>>>
+>>> Are these things that could/should be described in a more generic
+>>> place?  They don't look necessarily Cadence-specific.
+>>
+>> As there is currently no generic binding, would you like to see a new
+>> yaml binding
+>> added (Documentation/devicetree/bindings/phy/phy.yaml) that contains just the
+>> two phy properties?
+> 
+> The whole thing is more a question for Rob.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
+For which you might wait a bit currently.
 
-Changes since RFC:
-* add 12v regulator
-* add comment about the order of enabling the regulators
-* use a for-loop to iterate over the regulators
+If the question is only about location of the properties - device schema
+or something generic - then for now you can keep it here. Moving to
+generic schema is always easy later.
 
-Sidenote: I tried to introduce 'devm_regulator_bulk_get_enable_optional'
-to avoid the for-loop but that was a too intrusive change because all of
-the regulator_bulk logic is designed to fail if something bad happens
-somewhere.
+Better to have proper names for properties.
 
- drivers/pci/controller/pcie-rcar-host.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index e80e56b2a842..e86bf0f7729b 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -29,6 +29,7 @@
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
-+#include <linux/regulator/consumer.h>
- 
- #include "pcie-rcar.h"
- 
-@@ -974,13 +975,18 @@ static const struct of_device_id rcar_pcie_of_match[] = {
- 	{},
- };
- 
-+/* Design note 346 from Linear Technology says order is not important */
-+static const char * const rcar_pcie_supplies[] = {
-+	"vpcie12v", "vpcie3v3", "vpcie1v5"
-+};
-+
- static int rcar_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
- 	struct rcar_pcie_host *host;
- 	struct rcar_pcie *pcie;
- 	u32 data;
--	int err;
-+	int i, err;
- 	struct pci_host_bridge *bridge;
- 
- 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
-@@ -992,6 +998,13 @@ static int rcar_pcie_probe(struct platform_device *pdev)
- 	pcie->dev = dev;
- 	platform_set_drvdata(pdev, host);
- 
-+	for (i = 0; i < ARRAY_SIZE(rcar_pcie_supplies); i++) {
-+		err = devm_regulator_get_enable_optional(dev, rcar_pcie_supplies[i]);
-+		if (err < 0 && err != -ENODEV)
-+			dev_err_probe(dev, err, "error enabling regulator %s\n",
-+				      rcar_pcie_supplies[i]);
-+	}
-+
- 	pm_runtime_enable(pcie->dev);
- 	err = pm_runtime_get_sync(pcie->dev);
- 	if (err < 0) {
--- 
-2.30.2
+Best regards,
+Krzysztof
 
