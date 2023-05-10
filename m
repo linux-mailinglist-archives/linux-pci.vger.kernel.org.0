@@ -2,28 +2,28 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62D506FD7A8
-	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 08:58:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4990A6FD7AC
+	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 08:58:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236275AbjEJG6v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 May 2023 02:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58450 "EHLO
+        id S236290AbjEJG6x (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 May 2023 02:58:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236250AbjEJG6s (ORCPT
+        with ESMTP id S236291AbjEJG6s (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 02:58:48 -0400
 Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421B26A5A
-        for <linux-pci@vger.kernel.org>; Tue,  9 May 2023 23:58:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE24F61B7
+        for <linux-pci@vger.kernel.org>; Tue,  9 May 2023 23:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=k1; bh=QyI1ARe5ZoJkWo
-        LnXCds/cO9nbHrDO4GzO2tDFOIIQI=; b=vN6oqJ5gRpAekZqKHP9B6R0mAuxCI5
-        SCm8ybqSvm2ieoHBsH820mazCyK3RrEuGJSkNQ8bCh933qpMunrgfks6erhoJBLI
-        UfB94zgEkowsxErVtH482uAfUzDACKgPXMc9sUIjc+JRyz7XcYJzQ+c/hzwCceEM
-        qOmmoHVbkwXao=
-Received: (qmail 2328201 invoked from network); 10 May 2023 08:58:30 +0200
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 May 2023 08:58:30 +0200
-X-UD-Smtp-Session: l3s3148p1@1TxFZlH7Wr8ujnsI
+        :mime-version:content-transfer-encoding; s=k1; bh=NL8Px7oRKFrzxo
+        pCNFzqBDySrKj3AzZYm+5yTb2UOmo=; b=jy5JWjo/SDn0z5xNJERHSnpEOqZ2yi
+        tfAeznphYEcr5xgkUsRKJWObgNglVY7mm/uEMTdPiykAIhTOXYyrgm5XwM0IRCQH
+        J3q75h/foIq0y4XnZqNYjzUrPNpYecs85PHquqnaiXkjccl6gqOfrmzKg/WmQ7GR
+        Om9MD60Gt31l0=
+Received: (qmail 2328266 invoked from network); 10 May 2023 08:58:31 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 10 May 2023 08:58:31 +0200
+X-UD-Smtp-Session: l3s3148p1@p1ZPZlH7ar8ujnsI
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-renesas-soc@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
@@ -32,13 +32,11 @@ Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: PCI: rcar-pci-host: add optional regulators
-Date:   Wed, 10 May 2023 08:58:17 +0200
-Message-Id: <20230510065819.3987-2-wsa+renesas@sang-engineering.com>
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2] PCI: rcar-host: add support for optional regulators
+Date:   Wed, 10 May 2023 08:58:18 +0200
+Message-Id: <20230510065819.3987-3-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230510065819.3987-1-wsa+renesas@sang-engineering.com>
 References: <20230510065819.3987-1-wsa+renesas@sang-engineering.com>
@@ -55,48 +53,71 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Support regulators found on the e.g. KingFisher board for miniPCIe and
-add a 12v regulator while we are here.
+The KingFisher board has regulators. They just need to be en-/disabled,
+so we can leave the handling to devm.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
 
 Changes since RFC:
-* added 12V supply for completeness
-* use PCIe slot in the example instead of miniPCIe because that is what
-  the Koelsch board offers (just without the regulators ;))
+* add 12v regulator
+* add comment about the order of enabling the regulators
+* use a for-loop to iterate over the regulators
 
- .../devicetree/bindings/pci/rcar-pci-host.yaml        | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Sidenote: I tried to introduce 'devm_regulator_bulk_get_enable_optional'
+to avoid the for-loop but that was a too intrusive change because all of
+the regulator_bulk logic is designed to fail if something bad happens
+somewhere.
 
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-index 8fdfbc763d70..b6a7cb32f61e 100644
---- a/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci-host.yaml
-@@ -68,6 +68,15 @@ properties:
-   phy-names:
-     const: pcie
+ drivers/pci/controller/pcie-rcar-host.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
+index e80e56b2a842..e86bf0f7729b 100644
+--- a/drivers/pci/controller/pcie-rcar-host.c
++++ b/drivers/pci/controller/pcie-rcar-host.c
+@@ -29,6 +29,7 @@
+ #include <linux/phy/phy.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
++#include <linux/regulator/consumer.h>
  
-+  vpcie1v5-supply:
-+    description: The 1.5v regulator to use for PCIe.
+ #include "pcie-rcar.h"
+ 
+@@ -974,13 +975,18 @@ static const struct of_device_id rcar_pcie_of_match[] = {
+ 	{},
+ };
+ 
++/* Design note 346 from Linear Technology says order is not important */
++static const char * const rcar_pcie_supplies[] = {
++	"vpcie12v", "vpcie3v3", "vpcie1v5"
++};
 +
-+  vpcie3v3-supply:
-+    description: The 3.3v regulator to use for PCIe.
+ static int rcar_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct rcar_pcie_host *host;
+ 	struct rcar_pcie *pcie;
+ 	u32 data;
+-	int err;
++	int i, err;
+ 	struct pci_host_bridge *bridge;
+ 
+ 	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*host));
+@@ -992,6 +998,13 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+ 	pcie->dev = dev;
+ 	platform_set_drvdata(pdev, host);
+ 
++	for (i = 0; i < ARRAY_SIZE(rcar_pcie_supplies); i++) {
++		err = devm_regulator_get_enable_optional(dev, rcar_pcie_supplies[i]);
++		if (err < 0 && err != -ENODEV)
++			dev_err_probe(dev, err, "error enabling regulator %s\n",
++				      rcar_pcie_supplies[i]);
++	}
 +
-+  vpcie12v-supply:
-+    description: The 12v regulator to use for PCIe.
-+
- required:
-   - compatible
-   - reg
-@@ -121,5 +130,7 @@ examples:
-              clock-names = "pcie", "pcie_bus";
-              power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
-              resets = <&cpg 319>;
-+             vpcie3v3-supply = <&pcie_3v3>;
-+             vpcie12v-supply = <&pcie_12v>;
-          };
-     };
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+ 	if (err < 0) {
 -- 
 2.30.2
 
