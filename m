@@ -2,183 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E89EB6FE4F0
-	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 22:19:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B486E6FE55E
+	for <lists+linux-pci@lfdr.de>; Wed, 10 May 2023 22:48:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236373AbjEJUTv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 10 May 2023 16:19:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49860 "EHLO
+        id S229661AbjEJUsD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 10 May 2023 16:48:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236042AbjEJUTn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 16:19:43 -0400
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [IPv6:2a01:37:1000::53df:5f64:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301DC30D4;
-        Wed, 10 May 2023 13:19:41 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id ABF55300000B8;
-        Wed, 10 May 2023 22:19:37 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 9EF091AAC62; Wed, 10 May 2023 22:19:37 +0200 (CEST)
-Date:   Wed, 10 May 2023 22:19:37 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>
-Subject: Re: [PATCH 1/2] PCI: pciehp: Add support for OS-First Hotplug and
- AER/DPC
-Message-ID: <20230510201937.GA11550@wunner.de>
-References: <20221101000719.36828-1-Smita.KoralahalliChannabasappa@amd.com>
- <20221101000719.36828-2-Smita.KoralahalliChannabasappa@amd.com>
- <20221104101536.GA11363@wunner.de>
- <fba22d6b-c225-4b44-674b-2c62306135ed@amd.com>
+        with ESMTP id S230004AbjEJUsC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 10 May 2023 16:48:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2100C10FA;
+        Wed, 10 May 2023 13:48:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9DCFC64043;
+        Wed, 10 May 2023 20:48:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B46C433D2;
+        Wed, 10 May 2023 20:47:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683751680;
+        bh=p1v9BgVQxNA6CFzcqYCk9q5zJL82xRDoaqm5OkM6CLg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jWrc2Fp4/sCVBp6UHKhYlkrY8SgsyIV1wgvS1fT/r2/D0jxYgQ0LsGjy8CTO+dRSV
+         MeUtgW5MbckP8PH4JKRXRc2HjkiksoEE+2fvebpIt2/1WRl8MWeoLKYXwK2XbGJ8eq
+         h3Vd9/7EDn8otCnP42jgnCokGb7J0bGy4j4y7UzVVQliiTs67fxCcRGNhGh/BNxwuv
+         jj7lz8nAhxCjQ7EwG34CFIavsuOrEysWMXjda8d/QAscgTcZ7z6olL/VpTZgyK8CNG
+         oMqpOAQC2uHVa5owxMaThE5Yj2W2Ph8LeLMN4Ksy4njspZ996Tb4XTOdzB6x2YbGQ+
+         1jzhTYmToHSdA==
+Date:   Wed, 10 May 2023 15:47:58 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Peter Geis <pgwipeout@gmail.com>
+Cc:     Vincenzo Palazzo <vincenzopalazzodev@gmail.com>,
+        linux-pci@vger.kernel.org, robh@kernel.org, heiko@sntech.de,
+        kw@linux.com, shawn.lin@rock-chips.com,
+        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
+        linux-rockchip@lists.infradead.org, broonie@kernel.org,
+        bhelgaas@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        lpieralisi@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dan Johansen <strit@manjaro.org>
+Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
+ Rockchip PCIe bus scan
+Message-ID: <ZFwC/seTfSoaLn0v@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fba22d6b-c225-4b44-674b-2c62306135ed@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMdYzYp6=mYSoUHN3TEXVSMbRt1HpRm0X_4RMez09V0XzQewaw@mail.gmail.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Feb 14, 2023 at 01:33:54AM -0800, Smita Koralahalli wrote:
-> On 11/4/2022 3:15 AM, Lukas Wunner wrote:
-> > On Tue, Nov 01, 2022 at 12:07:18AM +0000, Smita Koralahalli wrote:
-> > > The implementation is as follows: On an async remove a DPC is triggered as
-> > > a side-effect along with an MSI to the OS. Determine it's an async remove
-> > > by checking for DPC Trigger Status in DPC Status Register and Surprise
-> > > Down Error Status in AER Uncorrected Error Status to be non-zero. If true,
-> > > treat the DPC event as a side-effect of async remove, clear the error
-> > > status registers and continue with hot-plug tear down routines. If not,
-> > > follow the existing routine to handle AER/DPC errors.
-> > 
-> > Instead of having the OS recognize and filter Surprise Down events,
-> > it would also be possible to simply set the Surprise Down bit in the
-> > Uncorrectable Error Mask Register.  This could be constrained to
-> > Downstream Ports capable of surprise removal, i.e. those where the
-> > is_hotplug_bridge in struct pci_dev is set.  And that check and the
-> > register change could be performed in pci_dpc_init().
-> > 
-> > Have you considered such an alternative approach?  If you have, what
-> > was the reason to prefer the more complex solution you're proposing?
-[...]
-> Second thing, is masking Surprise Down bit has no impact on logging errors
-> in AER registers.
+On Tue, May 09, 2023 at 08:11:29PM -0400, Peter Geis wrote:
+> On Tue, May 9, 2023 at 5:19 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Tue, May 09, 2023 at 05:39:12PM +0200, Vincenzo Palazzo wrote:
+> > > Add a configurable delay to the Rockchip PCIe driver to address
+> > > crashes that occur on some old devices, such as the Pine64 RockPro64.
+> > >
+> > > This issue is affecting the ARM community, but there is no
+> > > upstream solution for it yet.
+> >
+> > It sounds like this happens with several endpoints, right?  And I
+> > assume the endpoints work fine in other non-Rockchip systems?  If
+> > that's the case, my guess is the problem is with the Rockchip host
+> > controller and how it's initialized, not with the endpoints.
+> > ...
 
-Why do you think so?  PCIe r6.0.1 sec 7.8.4.3 says:
+> The main issue with the rk3399 is the PCIe controller is buggy and
+> triggers a SoC panic when certain error conditions occur that should
+> be handled gracefully. One of those conditions is when an endpoint
+> requests an access to wait and retry later.
 
-   "A masked error [...] is not recorded or reported in the Header Log,
-    TLP Prefix Log, or First Error Pointer, and is not reported to the
-    PCI Express Root Complex by this Function."
+I assume this refers to a Completion with Request Retry Status (RRS)?
 
-So if you set the Surprise Down Error Mask bit on hotplug ports
-capable of surprise removal, there should be no logging and thus
-no logs to clear.
+> Many years ago we ran that issue to ground and with Robin Murphy's
+> help we found that while it's possible to gracefully handle that
+> condition it required hijacking the entire arm64 error handling
+> routine. Not exactly scalable for just one SoC.
 
+Do you have a pointer to that discussion?  The URL might save
+repeating the whole exercise and could be useful for the commit log
+when we try to resolve this.
 
-> So, I think that approach probably will not resolve the issue of clearing
-> the logs in AER registers and complicate things while differentiating true
-> errors vs surprise down events. Please correct me if I'm wrong!!
+> The configurable waits allow us to program reasonable times for
+> 90% of the endpoints that come up in the normal amount of time, while
+> being able to adjust it for the other 10% that do not. Some require
+> multiple seconds before they return without error. Part of the reason
+> we don't want to hardcode the wait time is because the probe isn't
+> handled asynchronously, so the kernel appears to hang while waiting
+> for the timeout.
 
-I disagree, I think it's worth a try.  Below please find a patch which
-sets the Surprise Down Error mask bit.  Could you test if this fixes
-the issue for you?
+Is there some way for users to figure out that they would need this
+property?  Or is it just "if your kernel panics on boot, try
+adding or increasing "bus-scan-delay-ms" in your DT?
 
-
-> And setting this bit at initialization might not trigger true DPC events..
-
-I think we cannot discern whether a Surprise Down Error is caused by
-surprise removal or is a true error.  We must assume the former on
-surprise-capable hotplug ports.
-
-Thanks,
-
-Lukas
-
--- >8 --
-
-From: Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH] PCI: pciehp: Disable Surprise Down Error reporting
-
-On hotplug ports capable of surprise removal, Surprise Down Errors are
-expected and no reason for AER or DPC to spring into action.  Although
-a Surprise Down event might be caused by an error, software cannot
-discern that from regular surprise removal.
-
-Any well-behaved BIOS should mask such errors, but Smita reports a case
-where hot-removing an Intel NVMe SSD [8086:0a54] from an AMD Root Port
-[1022:14ab] results in irritating AER log messages and a delay of more
-than 1 second caused by DPC handling:
-
-  pcieport 0000:00:01.4: DPC: containment event, status:0x1f01 source:0x0000
-  pcieport 0000:00:01.4: DPC: unmasked uncorrectable error detected
-  pcieport 0000:00:01.4: PCIe Bus Error: severity=Uncorrected (Fatal), type=Transaction Layer, (Receiver ID)
-  pcieport 0000:00:01.4:   device [1022:14ab] error status/mask=00000020/04004000
-  pcieport 0000:00:01.4:    [ 5] SDES (First)
-  nvme nvme2: frozen state error detected, reset controller
-  pcieport 0000:00:01.4: DPC: Data Link Layer Link Active not set in 1000 msec
-  pcieport 0000:00:01.4: AER: subordinate device reset failed
-  pcieport 0000:00:01.4: AER: device recovery failed
-  pcieport 0000:00:01.4: pciehp: Slot(16): Link Down
-  nvme2n1: detected capacity change from 1953525168 to 0
-  pci 0000:04:00.0: Removing from iommu group 49
-
-Avoid by masking Surprise Down Errors on hotplug ports capable of
-surprise removal.
-
-Mask them even if AER or DPC is handled by firmware because if hotplug
-control was granted to the operating system, it owns hotplug and thus
-Surprise Down events.  So firmware has no business reporting or reacting
-to them.
-
-Reported-by: Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Link: https://lore.kernel.org/all/20221101000719.36828-2-Smita.KoralahalliChannabasappa@amd.com/
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
----
- drivers/pci/hotplug/pciehp_hpc.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index f8c70115b691..2a206dbd76b6 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -985,6 +985,7 @@ struct controller *pcie_init(struct pcie_device *dev)
- {
- 	struct controller *ctrl;
- 	u32 slot_cap, slot_cap2, link_cap;
-+	u16 aer_cap;
- 	u8 poweron;
- 	struct pci_dev *pdev = dev->port;
- 	struct pci_bus *subordinate = pdev->subordinate;
-@@ -1030,6 +1031,15 @@ struct controller *pcie_init(struct pcie_device *dev)
- 	if (dmi_first_match(inband_presence_disabled_dmi_table))
- 		ctrl->inband_presence_disabled = 1;
- 
-+	/*
-+	 * Surprise Down Errors are par for the course on Hot-Plug Surprise
-+	 * capable ports, so disable reporting in case BIOS left it enabled.
-+	 */
-+	aer_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_ERR);
-+	if (aer_cap && slot_cap & PCI_EXP_SLTCAP_HPS)
-+		pcie_capability_set_dword(pdev, aer_cap + PCI_ERR_UNCOR_MASK,
-+					  PCI_ERR_UNC_SURPDN);
-+
- 	/* Check if Data Link Layer Link Active Reporting is implemented */
- 	pcie_capability_read_dword(pdev, PCI_EXP_LNKCAP, &link_cap);
- 
--- 
-2.39.2
-
+Bjorn
