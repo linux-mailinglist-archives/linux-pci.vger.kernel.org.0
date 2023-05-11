@@ -2,148 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A39586FF204
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74666FF24F
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:15:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237655AbjEKNBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 09:01:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
+        id S238060AbjEKNPK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 09:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236152AbjEKNBx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:01:53 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7547AA8
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:00:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683810029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1YNgJu9g4hsRAs0h9Bi/9rkG5y7jrDdpJUfTR0KD1Tg=;
-        b=MFuv4tzHyMoUJDKq2BoIp2XmufbDzJCZRNRnO1CACAd/m9Vw0Qtzy4+DPm6KKnrHLc0RFb
-        zuqikoyuLRwd4xgXbQiqc3UIkI3IqDzr23QPjbKxas/WJr4Mf5wtKDWqcmwT5zatebag2U
-        Pl/cTwMGeU9BAi+aRKHo2zhC3Og417o=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-363-Ix0HTTL8O7mLbD7sRCa8kw-1; Thu, 11 May 2023 09:00:28 -0400
-X-MC-Unique: Ix0HTTL8O7mLbD7sRCa8kw-1
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-307bac4c949so1226633f8f.0
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:00:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683810026; x=1686402026;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1YNgJu9g4hsRAs0h9Bi/9rkG5y7jrDdpJUfTR0KD1Tg=;
-        b=kDUXmMxd2T5KWw+Y3CuzrddfrLnyAOS5bh+yVaZYSsihsDuwehFtYp8GHrZN4Xvjko
-         yp/1cAEVWOh2EsWxPmMp2hyakIrbIOuXA/aDlZv3iRCyoowp4rEEW4Cpyvp8nTrNqwfw
-         /9HQN5ffUpkO3iPXxQBhHYliphIjGlk6xXeKxvSHz+2vuN+pY4HnfpqmmnGEEx/U6tn+
-         ClGHmiPvwEkFCr+ZYqp5MgMnbmEblE0WfAH2BMmgWJKanYmbg5q75ERnAWajOPJ4aD/U
-         Di2Nhb2fEM3EXHsOJWZucKS/nBGUiAe7ChlVMeRGgfyqO/tgnACwPB8808t9fYQ5dvVC
-         dUKA==
-X-Gm-Message-State: AC+VfDy62hJ/TbAUubAbTlYFC+hexgLNR3poIVFR8RErOMlYBQ0C9oUa
-        qF0D6n6yQ8EFBRGKlG4h18XcK1AJNgNRjyhWdwztNcv73+FWFHjxzneP80JvHsXSuytP/QTqYiR
-        ZyyDW/rrI+c/tbCYEXik4
-X-Received: by 2002:a5d:55cf:0:b0:304:b967:956f with SMTP id i15-20020a5d55cf000000b00304b967956fmr16336613wrw.8.1683810026738;
-        Thu, 11 May 2023 06:00:26 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6maX1bAPZW0k8hxurkuPzMZqG473m27W7e8iBYUPNc8cfDsYenYLW5jeTNv5v8llwVfwyINA==
-X-Received: by 2002:a5d:55cf:0:b0:304:b967:956f with SMTP id i15-20020a5d55cf000000b00304b967956fmr16336585wrw.8.1683810026412;
-        Thu, 11 May 2023 06:00:26 -0700 (PDT)
-Received: from sgarzare-redhat ([5.77.69.175])
-        by smtp.gmail.com with ESMTPSA id w14-20020a5d680e000000b003079693eff2sm12447627wru.41.2023.05.11.06.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 06:00:25 -0700 (PDT)
-Date:   Thu, 11 May 2023 15:00:20 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Zhuang Shengen <zhuangshengen@huawei.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, longpeng2@huawei.com,
-        jianjay.zhou@huawei.com
-Subject: Re: [PATCH net v2] vsock: avoid to close connected socket after the
- timeout
-Message-ID: <atd47kt3wyhw2mhrzob4fxzlvmw37xviehn7agao3srni2jmts@gxgzvqrb7mc7>
-References: <20230511113430.646292-1-zhuangshengen@huawei.com>
+        with ESMTP id S238029AbjEKNPE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:15:04 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48614B4;
+        Thu, 11 May 2023 06:14:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683810892; x=1715346892;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=G+5HyfbacWCARVulfMfPWuWB6RG+cA594cVFDya9HqM=;
+  b=SlcLMRjoANXgSMyAUUfl7H8J+kCh6wNXpPV7nfpYCs7bBLmeu0u8++kH
+   QxRYjV6KaALk8XexE2F6MPw7uxd7ISSCtW8weVrZWzljnZR19Y1gUFnLD
+   Nj2MhdLMS6UgjOr+lYBQg0hhu7CVrKRREA/YlPSO9+9QKMM32/mHzoKl0
+   sh2TDy5jhsHD9ehDxuly6FshOv9wxtrjCvgwp+uKYlUWFW4XRfYwCCeVb
+   PPgt5ueZZzTu6hpF12W5aXP/qRU9ngQUm/2IX4mTz82rqTg+QZbsMLNul
+   2OWGndFtTJOIhJqCiYIetF1WaFdMFoQxuDNRHy2rngGkQPurJw85Up6bI
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="378619298"
+X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
+   d="scan'208";a="378619298"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:14:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650169373"
+X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
+   d="scan'208";a="650169373"
+Received: from jsanche3-mobl1.ger.corp.intel.com (HELO ijarvine-MOBL2.ger.corp.intel.com) ([10.252.39.112])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:14:48 -0700
+From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 00/17] PCI: Improve LNKCTL & LNKCTL2 concurrency control
+Date:   Thu, 11 May 2023 16:14:24 +0300
+Message-Id: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230511113430.646292-1-zhuangshengen@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 11, 2023 at 07:34:30PM +0800, Zhuang Shengen wrote:
->When client and server establish a connection through vsock,
->the client send a request to the server to initiate the connection,
->then start a timer to wait for the server's response. When the server's
->RESPONSE message arrives, the timer also times out and exits. The
->server's RESPONSE message is processed first, and the connection is
->established. However, the client's timer also times out, the original
->processing logic of the client is to directly set the state of this vsock
->to CLOSE and return ETIMEDOUT. It will not notify the server when the port
->is released, causing the server port remain.
->when client's vsock_connect timeout，it should check sk state is
->ESTABLISHED or not. if sk state is ESTABLISHED, it means the connection
->is established, the client should not set the sk state to CLOSE
->
->Note: I encountered this issue on kernel-4.18, which can be fixed by
->this patch. Then I checked the latest code in the community
->and found similar issue.
->
->Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
->Signed-off-by: Zhuang Shengen <zhuangshengen@huawei.com>
->---
-> net/vmw_vsock/af_vsock.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
+LNKCTL register is written by a number of things in the kernel as RMW
+operations without any concurrency control. This could in the unlucky
+case lead to losing one of the updates. One of the most obvious path
+which can race with most of the other LNKCTL RMW operations seems to be
+ASPM policy sysfs write which triggers LNKCTL update.
 
-The patch LGTM:
+Add pcie_capability_clear_and_set_word_locked() that uses a per device
+spinlock to protect the RMW operations. Introduce helpers for updating
+LNKCTL and LNKCTL2 that internally do
+pcie_capability_clear_and_set_word_locked(). Convert RMW to use the new
+helpers.
 
-Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+These could be mostly marked with Fixes tags but I've not spent the
+effort to find those out for each and every patch until this series has
+seen some discussion. I certainly will try to find the Fixes tags if
+asked to.
 
-I noticed that the net maintainers are not in cc, if this patch isn't
-queued in the next days, please resend it by cc'ing all the
-maintainers [1]:
+There could be a few LNKCTL RMW that are so early into the init that
+they would be safe but I was not able to convince myself so I've
+included them (namely, some ASPM init paths and hp link enable). Even
+if that is the case, it seems safer to use an access pattern with these
+registers that is safe even if there would be a few cases where locking
+would not be stricly necessary.
 
-$ ./scripts/get_maintainer.pl \
-   20230510_zhuangshengen_vsock_bugfix_port_residue_in_server.mbx
-Stefano Garzarella <sgarzare@redhat.com> (maintainer:VM SOCKETS (AF_VSOCK))
-"David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [GENERAL])
-Eric Dumazet <edumazet@google.com> (maintainer:NETWORKING [GENERAL])
-Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
-Paolo Abeni <pabeni@redhat.com> (maintainer:NETWORKING [GENERAL])
-virtualization@lists.linux-foundation.org (open list:VM SOCKETS (AF_VSOCK))
-netdev@vger.kernel.org (open list:VM SOCKETS (AF_VSOCK))
-linux-kernel@vger.kernel.org (open list)
+As for LNKCTL2, I think all current users are safe but these came up as
+a part of PCIe bandwidth control work (for thermal reasons) that will
+be adding a writer for LNKCTL2. I'll send PCI BW ctrl patches
+separately later as there's plenty of patches in this series already.
+If most of this series is deemed worthy of Fixes tags, I could separate
+those few LNKCTL2 changes into own patches.
 
-Thanks,
-Stefano
+The series is based on top of the "PCI/ASPM: Handle link retraining
+race" patch I sent earlier but is not yet applied.
 
-[1] https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#select-the-recipients-for-your-patch
+Ilpo Järvinen (17):
+  PCI: Add concurrency safe clear_and_set variants for LNKCTL{,2}
+  PCI: pciehp: Protect LNKCTL changes
+  PCI/ASPM: Use pcie_lnkctl_clear_and_set()
+  drm/amdgpu: Use pcie_lnkctl{,2}_clear_and_set() for changing
+    LNKCTL{,2}
+  drm/radeon: Use pcie_lnkctl{,2}_clear_and_set() for changing
+    LNKCTL{,2}
+  IB/hfi1: Use pcie_lnkctl{,2}_clear_and_set() for changing LNKCTL{,2}
+  e1000e: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  net/mlx5: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  wifi: ath9k: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  mt76: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  Bluetooth: hci_bcm4377: Use pcie_lnkctl_clear_and_set() for changing
+    LNKCTL
+  misc: rtsx: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  net/tg3: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  r8169: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  wifi: ath11k: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  wifi: ath12k: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+  wifi: ath10k: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
 
->
->diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->index 413407bb646c..efb8a0937a13 100644
->--- a/net/vmw_vsock/af_vsock.c
->+++ b/net/vmw_vsock/af_vsock.c
->@@ -1462,7 +1462,7 @@ static int vsock_connect(struct socket *sock, struct sockaddr *addr,
-> 			vsock_transport_cancel_pkt(vsk);
-> 			vsock_remove_connected(vsk);
-> 			goto out_wait;
->-		} else if (timeout == 0) {
->+		} else if ((sk->sk_state != TCP_ESTABLISHED) && (timeout == 0)) {
-> 			err = -ETIMEDOUT;
-> 			sk->sk_state = TCP_CLOSE;
-> 			sock->state = SS_UNCONNECTED;
->-- 
->2.27.0
->
+ drivers/bluetooth/hci_bcm4377.c               |  3 +-
+ drivers/gpu/drm/amd/amdgpu/cik.c              | 72 +++++-------------
+ drivers/gpu/drm/amd/amdgpu/si.c               | 74 ++++++-------------
+ drivers/gpu/drm/radeon/cik.c                  | 71 +++++-------------
+ drivers/gpu/drm/radeon/si.c                   | 72 +++++-------------
+ drivers/infiniband/hw/hfi1/aspm.c             | 16 ++--
+ drivers/infiniband/hw/hfi1/pcie.c             | 28 ++-----
+ drivers/misc/cardreader/rts5228.c             |  6 +-
+ drivers/misc/cardreader/rts5261.c             |  6 +-
+ drivers/misc/cardreader/rtsx_pcr.c            |  8 +-
+ drivers/net/ethernet/broadcom/tg3.c           | 14 ++--
+ drivers/net/ethernet/intel/e1000e/netdev.c    |  6 +-
+ .../ethernet/mellanox/mlx5/core/fw_reset.c    |  9 +--
+ drivers/net/ethernet/realtek/r8169_main.c     |  6 +-
+ drivers/net/wireless/ath/ath10k/pci.c         |  8 +-
+ drivers/net/wireless/ath/ath11k/pci.c         |  8 +-
+ drivers/net/wireless/ath/ath12k/pci.c         |  8 +-
+ drivers/net/wireless/ath/ath9k/pci.c          |  9 ++-
+ drivers/net/wireless/mediatek/mt76/pci.c      |  5 +-
+ drivers/pci/access.c                          | 14 ++++
+ drivers/pci/hotplug/pciehp_hpc.c              | 11 +--
+ drivers/pci/pcie/aspm.c                       | 48 ++++--------
+ drivers/pci/probe.c                           |  1 +
+ include/linux/pci.h                           | 17 +++++
+ 24 files changed, 183 insertions(+), 337 deletions(-)
+
+-- 
+2.30.2
 
