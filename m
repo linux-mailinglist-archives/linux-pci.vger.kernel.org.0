@@ -2,80 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCF1E6FFB13
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 22:11:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE4A56FFB26
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 22:17:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238084AbjEKULk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 16:11:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56296 "EHLO
+        id S238053AbjEKUR0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 16:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238053AbjEKULj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 16:11:39 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABD9310EC;
-        Thu, 11 May 2023 13:11:38 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-50b8d2eed3dso13816445a12.0;
-        Thu, 11 May 2023 13:11:38 -0700 (PDT)
+        with ESMTP id S239288AbjEKURZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 16:17:25 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F692D68;
+        Thu, 11 May 2023 13:17:24 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-966287b0f72so1222425766b.0;
+        Thu, 11 May 2023 13:17:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683835897; x=1686427897;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4Gv59x7GRc5rw9NVZjRlpFcBsJGKMNlvZ+8b/lko974=;
-        b=U9jwxYVWRvc7c3eyMw7CX12GG4sKAyEyzAA+PJAODX5/yYAfX1SZB6hQe0nKAaCeFT
-         AyDl2k49B8BGm9h8XkL+n/41aza9gqD034iCxh/JMFGOWPLRO3pBKMYyzG0l9gzVoqyy
-         a7RR/FOuXjKHjkYBCtoGnqCtwsGAPY61QqgQYEYvoKHaBzjM6JBeLGAvQGCuc9OjVhB9
-         BlR33EQUKnNPcvMtAj9yBRE8D9cKZuqHHDz2Uax0Atza+WtlcnM6ZqQUq/bbFz60Ans0
-         BFwaugWAg4Vl7GbCno+D3aSO8YmnZt2SKJcSPWNHi0DvG9r570qW6hSdBGkhp7SF00Rf
-         Qejg==
+        d=gmail.com; s=20221208; t=1683836243; x=1686428243;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o3yFd0Z3WkTu4ff6EQ3UVzmE4FT+cDY8nxJOS33vY3M=;
+        b=b6NNutiXCUcgjnqS41dQCxSVX20rYGFiKJnBG1Q49NP9vu7P8kiGuCCRWQXXe0KcpI
+         yWsOPq7ohgyb+ebyllHnUEc0KKFG9AVIuCMgDvTpNRQBz0mK5PlCbW4bqODkrYpTAdCV
+         XJlOepYB1lXmFBbavUBxszPsEDn6XcKpmGB26aBmh7/HSR6AvU6nTonVZIwo2vyMdNr0
+         1aR895mCqBZZLL01K26jyBmCev/VoF+xJ8/PKwGXta9BzJrvMg3tPLeeShdZzfiLXZOV
+         rB/wecx7wOiZCaqh2ORsQfxK5wsnI8Q31NvBGQ1YP5yMFu6pC3TlNPLKNJL2tjYww7n1
+         S98g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683835897; x=1686427897;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1683836243; x=1686428243;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4Gv59x7GRc5rw9NVZjRlpFcBsJGKMNlvZ+8b/lko974=;
-        b=XgGjgwKM7U8W2s/TLMeZ4c5rHnn3JrAvwl+sxdqJl+/sVHk6OMFfiF14yQG013byod
-         4S7BFZmx7j/IyhD23iAgfqta5vWcW/DGYyI9t+lof130Wf7Ijvg1PIp0z+uyTIpoivAc
-         iOrIhyfuDEyxja1OJDECu8B0Ok0G6tHraLxBkuPph0UAxS94A9tpaN+Hy3j4N1ZiGGr4
-         ZD5l97TsqsZZdAOSFV7vPDwOQ27urIs57KSAdqN0pVdkd0Mtes815jyfL1lqlYR7eSac
-         Qvu8ag9CkI53T2bn7xZTjQSvX36SyWYRwTGHCNs1ezRa9IOw++WmWtvbcjYCKLx/TKp/
-         yG2Q==
-X-Gm-Message-State: AC+VfDwFHC+EC7zFwXy1ysFuwbNe/g0fJTNkSlXce1aWmUn8Yw4UHdfa
-        aQ9znDY4gqS4uDbJveJD4PoPHwmlMg4=
-X-Google-Smtp-Source: ACHHUZ61T6/jjmTvoOauQp2G3JqGNSx50QqwOuG6jWjusDoinNT7NX/OAG0HNY9C4xqkCVIME1Zw+g==
-X-Received: by 2002:a17:906:7949:b0:969:ffcb:1eb4 with SMTP id l9-20020a170906794900b00969ffcb1eb4mr9552168ejo.2.1683835896960;
-        Thu, 11 May 2023 13:11:36 -0700 (PDT)
+        bh=o3yFd0Z3WkTu4ff6EQ3UVzmE4FT+cDY8nxJOS33vY3M=;
+        b=F9rP3beOTkdBymZ7qSw5Ewa6yV8vkI9xbzxrIYeyNmeVT8ZEboUr237RSGzBTY1lAa
+         Fe+mXUCBA8AHnHVeAqibJWXsn6C0aNytVfJdglIEIRyIt020RnH0lTzzOsNXYSSMZky1
+         M1QyUjzEVSvZIoeoCXlmpY2U2q0MQxygcwzvy04omcSRlpr+lB0oWnKQTtbwd9Sq0Kna
+         wMS8OHAA/UdjAXzEPs0272AE5gHjboiaX/vXukDVZj1ao1xONXj9DBIScneVaxuh4TXD
+         I67w6vJTddb3VglBzSRXwr1gYmTfTm0kUBrBME1FENChU6HIiZgkMOfXIKd+cyFDCaVn
+         O4pw==
+X-Gm-Message-State: AC+VfDwflfLYKAuv9fymjlOexCDBRDtet4aSfciEuLrUS2LWE/Zwh9SD
+        h8LN80/YXFtP7PUdic4QDI0=
+X-Google-Smtp-Source: ACHHUZ60bvluRMfqGjeIfH67tu9UTIjdzm5Olcmw+CtDjzQtA9hK1sFgcrZ/qUrj6j1rQ/psI4+oYA==
+X-Received: by 2002:a17:906:4fd6:b0:94e:56c4:59f2 with SMTP id i22-20020a1709064fd600b0094e56c459f2mr19981370ejw.26.1683836242905;
+        Thu, 11 May 2023 13:17:22 -0700 (PDT)
 Received: from ?IPV6:2a01:c23:c58e:b900:c905:524d:7524:40e1? (dynamic-2a01-0c23-c58e-b900-c905-524d-7524-40e1.c23.pool.telefonica.de. [2a01:c23:c58e:b900:c905:524d:7524:40e1])
-        by smtp.googlemail.com with ESMTPSA id jz10-20020a17090775ea00b00965ef79ae14sm4398958ejc.189.2023.05.11.13.11.36
+        by smtp.googlemail.com with ESMTPSA id hf15-20020a1709072c4f00b008f89953b761sm4466209ejc.3.2023.05.11.13.17.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 May 2023 13:11:36 -0700 (PDT)
-Message-ID: <f96e4a8a-1b69-a783-d1ca-7d8e48100954@gmail.com>
-Date:   Thu, 11 May 2023 22:11:32 +0200
+        Thu, 11 May 2023 13:17:22 -0700 (PDT)
+Message-ID: <7bb6e2c9-835c-c8d9-f8a5-baa3d3b03b12@gmail.com>
+Date:   Thu, 11 May 2023 22:17:18 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
-Subject: Re: [PATCH 14/17] r8169: Use pcie_lnkctl_clear_and_set() for changing
- LNKCTL
 Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>,
-        =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Wilczy?ski <kw@linux.com>, nic_swsd@realtek.com,
+        Krzysztof Wilczy??ski <kw@linux.com>, nic_swsd@realtek.com,
         "David S. Miller" <davem@davemloft.net>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 References: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
  <20230511131441.45704-15-ilpo.jarvinen@linux.intel.com>
  <98b3b70a-86c0-78c0-b734-0764bb5a21fc@gmail.com>
- <985b617-c5d7-dce3-318b-f2f8412beed3@linux.intel.com>
- <20230511201025.GC31598@wunner.de>
+ <20230511200244.GA31598@wunner.de>
 From:   Heiner Kallweit <hkallweit1@gmail.com>
-In-Reply-To: <20230511201025.GC31598@wunner.de>
+Subject: Re: [PATCH 14/17] r8169: Use pcie_lnkctl_clear_and_set() for changing
+ LNKCTL
+In-Reply-To: <20230511200244.GA31598@wunner.de>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
@@ -88,26 +86,28 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11.05.2023 22:10, Lukas Wunner wrote:
-> On Thu, May 11, 2023 at 11:00:02PM +0300, Ilpo Järvinen wrote:
->> On Thu, 11 May 2023, Heiner Kallweit wrote:
->>> On 11.05.2023 15:14, Ilpo Järvinen wrote:
->>>> Don't assume that only the driver would be accessing LNKCTL. ASPM
->>>> policy changes can trigger write to LNKCTL outside of driver's control.
->>>>
->>>> Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
->>>> losing concurrent updates to the register value.
->>>>
+On 11.05.2023 22:02, Lukas Wunner wrote:
+> On Thu, May 11, 2023 at 09:49:52PM +0200, Heiner Kallweit wrote:
+>> On 11.05.2023 15:14, Ilpo Järvinen wrote:
+>>> Don't assume that only the driver would be accessing LNKCTL. ASPM
+>>> policy changes can trigger write to LNKCTL outside of driver's control.
 >>>
->>> Wouldn't it be more appropriate to add proper locking to the
->>> underlying pcie_capability_clear_and_set_word()?
+>>> Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
+>>> losing concurrent updates to the register value.
 >>
->> As per discussion for the other patch, that's where this series is now 
->> aiming to in v2.
+>> Wouldn't it be more appropriate to add proper locking to the
+>> underlying pcie_capability_clear_and_set_word()?
 > 
-> That discussion wasn't cc'ed to Heiner.  For reference, this is the
-> message Ilpo is referring to:
-> 
-> https://lore.kernel.org/linux-pci/ZF1AjOKDVlbNFJPK@bhelgaas/
+> PCI config space accessors such as this one are also used in hot paths
+> (e.g. interrupt handlers).  They should be kept lean (and lockless)
 
-Thanks for the link!
+I *think* in case the system uses threaded interrupts you may need locking
+also in interrupt handlers.
+
+> by default.  We only need locking for specific PCIe Extended Capabilities
+> which are concurrently accessed by PCI core code and drivers.
+> 
+> Thanks,
+> 
+> Lukas
+
