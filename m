@@ -2,67 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FCC96FF276
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F16B36FF272
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238178AbjEKNRQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 09:17:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35618 "EHLO
+        id S238134AbjEKNR2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 09:17:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbjEKNQt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:16:49 -0400
+        with ESMTP id S238135AbjEKNQ7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:16:59 -0400
 Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D4D0E73F;
-        Thu, 11 May 2023 06:15:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F072100DC;
+        Thu, 11 May 2023 06:15:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683810935; x=1715346935;
+  t=1683810946; x=1715346946;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wdSBw6kmMXKbjHj4XOjr3hir47yLMEiBhsxfNK+xo6c=;
-  b=LDCREMqa8hlXwt4smpWTc1bCDR0zeyjwOh6OZqSmixVWSoKdvL2MdKdP
-   SXfO0VVHVtly2yMwbPRiggrvyfpGQLYqkS/KkhAEFo40pXD6ry9Fbd9ru
-   YqUiGbarXlxzWxsc/Tgq/0TrbZvXvuScFCHMqT5ZJYBSJkjOBhmvuydyy
-   qvMwMev84MeDlZGKn0UXyjIadFAhtrnBfJMkoIeGVZSQbRr9fBOYBJd8v
-   UZkwoweij1YFzAsudC2daxV1AwksZr65nFWUQ0HkhQPkojliMJLMEK19z
-   KfKPkOBnTTcQrB9lTWFVY54qY67joCQ5df1hsRzVmHlTKl94ZkwpVJN4U
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="378619584"
+  bh=8XQL7bYEaCNAsPYfNtNmF5YMRERIojn4B8v+BqlhGOQ=;
+  b=mflnzpifX7zqm8eXAwHKvnk5a4hleC0Ctjaa1b5ho4zFevEThqLI7Y2o
+   WJbJpN/YRgFYEbKyno1PUiMkoDnCEfjCfaGeBDZzgZ3QWZRbdHBZ3MGXB
+   /rhZYT4LAi7cqJB3K7VoA+RTyC6FS2z5tQd0776DfXoxy5iLTqDTtHXVh
+   DVMDxhUhgDYLcXB1MdsNt4HNGy0oE3N/yKVvgAPoVZZ5PQP9cEyc190i8
+   BT/xsfZS95yJW84QPmOzsFSn0/HMcj3cZF5J0k+v9Wc4ewbMeRuUxjCFc
+   K/647eNMV594JyZdoMR8NuWvTHtsk9BJQPzrVMoO+odMmjeD5iO2JC6yk
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="378619605"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="378619584"
+   d="scan'208";a="378619605"
 Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:15:35 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:15:39 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650169844"
+X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650169921"
 X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="650169844"
+   d="scan'208";a="650169921"
 Received: from jsanche3-mobl1.ger.corp.intel.com (HELO ijarvine-MOBL2.ger.corp.intel.com) ([10.252.39.112])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:15:29 -0700
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:15:35 -0700
 From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
         Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>, Felix Fietkau <nbd@nbd.name>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Shayne Chen <shayne.chen@mediatek.com>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
+        Lukas Wunner <lukas@wunner.de>,
+        Hector Martin <marcan@marcan.st>,
+        Sven Peter <sven@svenpeter.dev>,
+        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+        asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 10/17] mt76: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
-Date:   Thu, 11 May 2023 16:14:34 +0300
-Message-Id: <20230511131441.45704-11-ilpo.jarvinen@linux.intel.com>
+Subject: [PATCH 11/17] Bluetooth: hci_bcm4377: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
+Date:   Thu, 11 May 2023 16:14:35 +0300
+Message-Id: <20230511131441.45704-12-ilpo.jarvinen@linux.intel.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
 References: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
@@ -81,8 +74,6 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 Don't assume that only the driver would be accessing LNKCTL. ASPM
 policy changes can trigger write to LNKCTL outside of driver's control.
-And in the case of upstream (parent), the driver does not even own the
-device it's changing LNKCTL for.
 
 Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
 losing concurrent updates to the register value.
@@ -90,25 +81,23 @@ losing concurrent updates to the register value.
 Suggested-by: Lukas Wunner <lukas@wunner.de>
 Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 ---
- drivers/net/wireless/mediatek/mt76/pci.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/bluetooth/hci_bcm4377.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/mediatek/mt76/pci.c b/drivers/net/wireless/mediatek/mt76/pci.c
-index 4c1c159fbb62..8c6444f5fac3 100644
---- a/drivers/net/wireless/mediatek/mt76/pci.c
-+++ b/drivers/net/wireless/mediatek/mt76/pci.c
-@@ -39,9 +39,8 @@ void mt76_pci_disable_aspm(struct pci_dev *pdev)
- 	/* both device and parent should have the same ASPM setting.
- 	 * disable ASPM in downstream component first and then upstream.
+diff --git a/drivers/bluetooth/hci_bcm4377.c b/drivers/bluetooth/hci_bcm4377.c
+index 19ad0e788646..e2b489f678d9 100644
+--- a/drivers/bluetooth/hci_bcm4377.c
++++ b/drivers/bluetooth/hci_bcm4377.c
+@@ -2232,8 +2232,7 @@ static void bcm4377_disable_aspm(struct bcm4377_data *bcm4377)
+ 	 * or if the BIOS hasn't handed over control to us. We must *always*
+ 	 * disable ASPM for this device due to hardware errata though.
  	 */
--	pcie_capability_clear_word(pdev, PCI_EXP_LNKCTL, aspm_conf);
-+	pcie_lnkctl_clear_and_set(pdev, aspm_conf, 0);
- 	if (parent)
--		pcie_capability_clear_word(parent, PCI_EXP_LNKCTL,
--					   aspm_conf);
-+		pcie_lnkctl_clear_and_set(parent, aspm_conf, 0);
+-	pcie_capability_clear_word(bcm4377->pdev, PCI_EXP_LNKCTL,
+-				   PCI_EXP_LNKCTL_ASPMC);
++	pcie_lnkctl_clear_and_set(bcm4377->pdev, PCI_EXP_LNKCTL_ASPMC, 0);
  }
- EXPORT_SYMBOL_GPL(mt76_pci_disable_aspm);
+ 
+ static void bcm4377_pci_free_irq_vectors(void *data)
 -- 
 2.30.2
 
