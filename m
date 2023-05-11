@@ -2,153 +2,114 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 399AF6FED7A
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 10:06:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CC36FF072
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 13:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234239AbjEKIGZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 04:06:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
+        id S236807AbjEKLTK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 07:19:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233790AbjEKIGL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 04:06:11 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF5F4213
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 01:05:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683792322;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TDguPfFBQ1A5HBLbGPkFIstEpZuKohqgknZXXQa2m5U=;
-        b=XRSVCdTeLtNJV5gDvq+BSVg/tBc5cG9zczitwq4Q5Qg3UwtuNKdFZloq0ZlgQEP+lmyjrP
-        nC5D6+o+qxTWvDxj8JIt2lkzreJAXyCO/BWPmqguPUDvvWJWT55jLTeTzKGSwLhwEx4sVQ
-        mnRHE96PRAxOVZ7ib3++h508Fd4Ob+k=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-609-JtZRZoHpOMKmYEl3LM4YCg-1; Thu, 11 May 2023 04:05:21 -0400
-X-MC-Unique: JtZRZoHpOMKmYEl3LM4YCg-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-307897bc279so3499912f8f.3
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 01:05:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683792320; x=1686384320;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TDguPfFBQ1A5HBLbGPkFIstEpZuKohqgknZXXQa2m5U=;
-        b=U031Ry2iC75/Q44EsohYo0xgSAa+N4+kmxeYX+FcTF3fgH8iQVW+za8MD86ny9lo3o
-         30jmDtWzfsxUJd2IEgbYJ4yWhkhaK4NMI0SzFMMCHu29CnyNC2o564k71iZ8GprpbGto
-         jW64KQ+pCEmyBBB2PhIH/FQEap6JYRCI8mfVj6p7IhhmxLAEXPpHKtqVhiDXmP1zeXHM
-         T9/INBPw1GTalngJDkQ7CKvf5Qf2flOkqKBri/0l1in9Znt24LkPtq2OVwJPILUdMVto
-         b6pWWESsZmHtO0w80kL7RBqBWGIyYqVgdFZeSvnKuxIol6e7fTkq2l06nx9xeMoa8PFX
-         LhuQ==
-X-Gm-Message-State: AC+VfDy1iSJMQG2FXK70g0DFldtRcT1yD1ZiESFkTUnk5CHWq1CjqYl3
-        ChJfwFppITq1ZsdXqRfy/i6rTsEfezOotEZ1ZlXOhezsO+tTaaqyjTZfZRhsFHFtYI7zHkrnW0N
-        9U1lmIm+bOSvQhrwt//JR
-X-Received: by 2002:adf:dbd0:0:b0:306:39e3:8409 with SMTP id e16-20020adfdbd0000000b0030639e38409mr14427163wrj.49.1683792320330;
-        Thu, 11 May 2023 01:05:20 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7l+BpAdb0iCMyJ1RUUM102Pj/7Li/+Avs0LqpRU6YbPaKu+/sEc+cIjTbpYXL8YuEmB9Vy/Q==
-X-Received: by 2002:adf:dbd0:0:b0:306:39e3:8409 with SMTP id e16-20020adfdbd0000000b0030639e38409mr14427142wrj.49.1683792320001;
-        Thu, 11 May 2023 01:05:20 -0700 (PDT)
-Received: from sgarzare-redhat ([5.77.69.175])
-        by smtp.gmail.com with ESMTPSA id e13-20020a5d65cd000000b0030789698eebsm15980169wrw.89.2023.05.11.01.05.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 01:05:19 -0700 (PDT)
-Date:   Thu, 11 May 2023 10:05:16 +0200
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Zhuang Shengen <zhuangshengen@huawei.com>
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        arei.gonglei@huawei.com, longpeng2@huawei.com,
-        jianjay.zhou@huawei.com
-Subject: Re: [PATCH] vsock: bugfix port residue in server
-Message-ID: <oavxfpkinrpj7n24myvgmyq34aymvjm5lx3lqwhwxw6nbumam3@vwg76jsvjdaj>
-References: <20230510142502.2293109-1-zhuangshengen@huawei.com>
- <ftuh7vhoxdxbymg6u3wlkfhlfoufupeqampqxc2ktqrpxndow3@dkpufdnuwlln>
- <f7ab6d78-1815-bd3e-c365-1bf054138366@huawei.com>
+        with ESMTP id S230466AbjEKLTJ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 07:19:09 -0400
+X-Greylist: delayed 15746 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 11 May 2023 04:19:04 PDT
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD85765A8;
+        Thu, 11 May 2023 04:19:04 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 075E110029C2F;
+        Thu, 11 May 2023 13:19:03 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id D240D160E2E; Thu, 11 May 2023 13:19:02 +0200 (CEST)
+Date:   Thu, 11 May 2023 13:19:02 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
+Message-ID: <20230511111902.GA10720@wunner.de>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-3-Smita.KoralahalliChannabasappa@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <f7ab6d78-1815-bd3e-c365-1bf054138366@huawei.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230418210526.36514-3-Smita.KoralahalliChannabasappa@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 11, 2023 at 03:03:24PM +0800, Zhuang Shengen wrote:
->Hi Stefano:
->
->在 2023/5/10 23:23, Stefano Garzarella 写道:
->>Hi,
->>thanks for the patch, the change LGTM, but I have the following
->>suggestions:
->>
->>Please avoid "bugfix" in the subject, "fix" should be enough:
->>https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#describe-your-changes
->>
->>
->>Anyway, I suggest to change the subject in
->>"vsock: avoid to close connected socket after the timeout"
->>
->thanks for your suggestion, I will change the subject
->>On Wed, May 10, 2023 at 10:25:02PM +0800, Zhuang Shengen wrote:
->>>When client and server establish a connection through vsock,
->>>the client send a request to the server to initiate the connection,
->>>then start a timer to wait for the server's response. When the server's
->>>RESPONSE message arrives, the timer also times out and exits. The
->>>server's RESPONSE message is processed first, and the connection is
->>>established. However, the client's timer also times out, the original
->>>processing logic of the client is to directly set the state of 
->>>this vsock
->>>to CLOSE and return ETIMEDOUT, User will release the port. It will not
->>
->>What to you mean with "User" here?
->>
->The User means Client, I will delete the statement "User will release 
->the por", it indeed difficult to understand
->>>notify the server when the port is released, causing the server 
->>>port remain
->>>
->>
->>Can we remove this blank line?
->>
->OK
->>>when client's vsock_conqnect timeout，it should check sk state is
->>
->>The remote peer can't trust the other peer, indeed it will receive an
->>error after sending the first message and it will remove the connection,
->>right?
->>
->If this situation happend, the server will response a RST? Anyway the 
->connection will not established before timeout, The sk state wont be 
->ESTABLISHED.
->>>ESTABLISHED or not. if sk state is ESTABLISHED, it means the connection
->>>is established, the client should not set the sk state to CLOSE
->>>
->>>Note: I encountered this issue on kernel-4.18, which can be fixed by
->>>this patch. Then I checked the latest code in the community
->>>and found similar issue.
->>>
->>
->>In order to backport it to the stable kernels, we should add a Fixes tag:
->>https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#describe-your-changes
->>
->>
->OK, I add a Fixes: d021c344051a ("VSOCK: Introduce VM Sockets") in the 
->new patch.
->
->I put the new patch with v2 title in the attachment, please check.
+On Tue, Apr 18, 2023 at 09:05:26PM +0000, Smita Koralahalli wrote:
+> Clear all capabilities in Device Control 2 register as they are optional
+> and it is not determined whether the next device inserted will support
+> these capabilities. Moreover, Section 6.13 of the PCIe Base
+> Specification [1], recommends clearing the ARI Forwarding Enable bit on
+> a hot-plug event as its not guaranteed that the newly added component
+> is in fact an ARI device.
 
-LGTM (great to have added the net tag!), but please post as plain text 
-like v1.
+Clearing ARI Forwarding Enable sounds reasonable, but I don't see
+why all the other bits in the Device Control 2 register need to be
+cleared.  If there isn't a reason to clear them, I'd be in favor of
+leaving them alone.
+
+As for clearing ARI Forwarding Enable, it seems commit b0cc6020e1cc
+("PCI: Enable ARI if dev and upstream bridge support it; disable
+otherwise") already solved this problem.  Quoth its commit message:
+
+   "Currently, we enable ARI in a device's upstream bridge if the bridge and
+    the device support it.  But we never disable ARI, even if the device is
+    removed and replaced with a device that doesn't support ARI.
+    
+    This means that if we hot-remove an ARI device and replace it with a
+    non-ARI multi-function device, we find only function 0 of the new device
+    because the upstream bridge still has ARI enabled, and next_ari_fn()
+    only returns function 0 for the new non-ARI device.
+    
+    This patch disables ARI in the upstream bridge if the device doesn't
+    support ARI.  See the PCIe spec, r3.0, sec 6.13."
+
+My superficial understanding of that patch is that we do find function 0,
+while enumerating it we clear the ARI Forwarding Enable bit and thus the
+remaining functions become accessible and are subsequently enumerated.
+
+Are you seeing issues when removing an ARI-capable endpoint from a
+hotplug slot and replacing it with a non-ARI-capable device?
+If you do, the question is why the above-quoted commit doesn't avoid them.
+
+
+> --- a/drivers/pci/hotplug/pciehp_pci.c
+> +++ b/drivers/pci/hotplug/pciehp_pci.c
+> @@ -104,6 +104,7 @@ void pciehp_unconfigure_device(struct controller *ctrl, bool presence)
+>  	list_for_each_entry_safe_reverse(dev, temp, &parent->devices,
+>  					 bus_list) {
+>  		pci_dev_get(dev);
+> +		pcie_capability_clear_word(dev, PCI_EXP_DEVCTL2, 0xffff);
+>  		pci_stop_and_remove_bus_device(dev);
+>  		/*
+>  		 * Ensure that no new Requests will be generated from
+
+This clears the Device Control 2 register on the hotplugged device,
+but to clear ARI Forwarding Enable, you'd have to clear the register
+of the hotplug port, i.e. the *parent* of the hotplugged device.
+
+Also, this patch doesn't apply cleanly to v6.4-rc1 because of a context
+change by f5eff5591b8f ("PCI: pciehp: Fix AB-BA deadlock between
+reset_lock and device_lock").
 
 Thanks,
-Stefano
 
+Lukas
