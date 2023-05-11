@@ -2,57 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2095E6FF5FF
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 17:31:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DAFA86FF685
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 17:55:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237885AbjEKPbE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 11:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54618 "EHLO
+        id S238125AbjEKPzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 11:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238053AbjEKPbD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 11:31:03 -0400
+        with ESMTP id S238236AbjEKPzO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 11:55:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 899E719B2;
-        Thu, 11 May 2023 08:30:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D54976BB;
+        Thu, 11 May 2023 08:55:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E8CD64F11;
-        Thu, 11 May 2023 15:30:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE00C433EF;
-        Thu, 11 May 2023 15:30:54 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A57164F73;
+        Thu, 11 May 2023 15:55:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A512EC433D2;
+        Thu, 11 May 2023 15:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683819057;
-        bh=SJGJCU3gDVdyuC2QEctenjUwW0dVdNNgc2Fs7wfRUns=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Plchd8Sgzf0HyZ6hAta56VujgSCqgIqmnXlPXxDg3/EQeUS2meUBh57yRNcbIwcvf
-         ymUNvFgu9cQF2habL+H6SJxZyzn0tSJV68f1wG3dlb8dcbYDPRRCylRubpvGiung9b
-         Acu3rRXq2q6WQ4S592Be2MD7seZqsiHsRJm9kjPULT4RIIz5eeSAiL+mBiBqBSJ29e
-         nvQTswr6Xhoao9K2aYU2ZCFBoAXe1qDBf8MpGgmIipD+pWELVlZfFstz5/Wwh6gpQy
-         cm9Pq+e3lC3hTAIuubP7rfe07pmFqU8pnAD3sPbd6sWBhcsi6eiB+4xiyjIHYHU0x1
-         n71zOWGE8XU0w==
-Date:   Thu, 11 May 2023 16:30:52 +0100
-From:   Conor Dooley <conor@kernel.org>
-To:     Simon Horman <horms@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Daire McNamara <daire.mcnamara@microchip.com>,
-        Conor Dooley <conor.dooley@microchip.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        s=k20201202; t=1683820508;
+        bh=QRaJ2wFNH9rmkUNsYI7EcEVD2fVj4LcKgN5B3/qU0LM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=u5qEG5bDdT5fTqcwhgWFwqAxaItJBe1PkoHlu/D+Agi7TF6WCVZ9UZQ/SQBge9+NX
+         jN84pzJ56EIPh3mwk6QueC8qrdANgORcY9dXiWbY8SP+zdYohj+4QMKOw7aTLmNvH1
+         XdxHOmiN0eib6pj78tmb/fqZaGD/ZJ3nClRffqEcaT+44+u9nLW3tT1tQhFgCHfLW2
+         W8/j/wSgP8zIX73jKvNaTnJClfF9Tm4EWe1xaMJKFdDLh/zSr2l3d4PHxMW1XVqn5X
+         +1iIPitqfXG+KiaD+ZWKCUUYcJL4lQuD8cRUOuDXCFvREwU5aa7VlSk1XZEuGiwp+M
+         qFLZIyNUEwlig==
+Date:   Thu, 11 May 2023 10:55:06 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Rix <trix@redhat.com>, linux-riscv@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev
-Subject: Re: [PATCH] PCI: microchip: Avoid cast to incompatible function type
-Message-ID: <20230511-coming-saturate-a2ae32462a3a@spud>
-References: <20230511-pci-microchip-clk-cast-v1-1-7674f4d4e218@kernel.org>
+        Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
+ for LNKCTL{,2}
+Message-ID: <ZF0P2hedTFXPv8IK@bhelgaas>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="EILHGzwimB/Seb9q"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230511-pci-microchip-clk-cast-v1-1-7674f4d4e218@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230511131441.45704-2-ilpo.jarvinen@linux.intel.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -63,97 +58,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, May 11, 2023 at 04:14:25PM +0300, Ilpo Järvinen wrote:
+> A few places write LNKCTL and LNKCTL2 registers without proper
+> concurrency control and this could result in losing the changes
+> one of the writers intended to make.
+> 
+> Add pcie_capability_clear_and_set_word_locked() and helpers to use it
+> with LNKCTL and LNKCTL2. The concurrency control is provided using a
+> spinlock in the struct pci_dev.
+> 
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
 
---EILHGzwimB/Seb9q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for raising this issue!  Definitely looks like something that
+needs attention.
 
-On Thu, May 11, 2023 at 05:24:18PM +0200, Simon Horman wrote:
-> Rather than casting clk_disable_unprepare to an incompatible function typ=
-e,
-> update the type to match that expected by devm_add_action_or_reset.
->=20
-> Reported by clang-16 with W-1:
->=20
->  .../pcie-microchip-host.c:866:32: warning: cast from 'void (*)(struct cl=
-k *)' to 'void (*)(void *)' converts to incompatible function type [-Wcast-=
-function-type-strict]
->          devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unp=
-repare,
->                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~
->  ./include/linux/device.h:265:38: note: expanded from macro 'devm_add_act=
-ion_or_reset'
->          __devm_add_action_or_reset(release, action, data, #action)
->                                              ^~~~~~
-> No functional change intended.
-> Compile tested only.
->=20
-
-Yeah, there's already a patch for this:
-https://lore.kernel.org/linux-pci/20230111125323.1911373-3-daire.mcnamara@m=
-icrochip.com/
-
-The lads didn't want to pick any of that piecemeal & Daire hasn't been
-able to get back to that work until this week.
-
-I don't think we an ETA though on a v4, so:
-Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controll=
-er driver")
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-and I don't know if you wanna propagate the:
-| Reported-by: kernel test robot <lkp@intel.com>
-
-Thanks,
-Conor.
-
-> Signed-off-by: Simon Horman <horms@kernel.org>
 > ---
->  drivers/pci/controller/pcie-microchip-host.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/c=
-ontroller/pcie-microchip-host.c
-> index 5e710e485464..d8aa6e3cdbff 100644
-> --- a/drivers/pci/controller/pcie-microchip-host.c
-> +++ b/drivers/pci/controller/pcie-microchip-host.c
-> @@ -848,6 +848,11 @@ static const struct irq_domain_ops event_domain_ops =
-=3D {
->  	.map =3D mc_pcie_event_map,
->  };
-> =20
-> +inline void mc_clk_disable_unprepare(void *data)
+>  drivers/pci/access.c | 14 ++++++++++++++
+>  drivers/pci/probe.c  |  1 +
+>  include/linux/pci.h  | 17 +++++++++++++++++
+>  3 files changed, 32 insertions(+)
+> 
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 3c230ca3de58..d92a3daadd0c 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -531,6 +531,20 @@ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+>  }
+>  EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
+>  
+> +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> +					      u16 clear, u16 set)
 > +{
-> +	clk_disable_unprepare(data);
+> +	unsigned long flags;
+> +	int ret;
+> +
+> +	spin_lock_irqsave(&dev->cap_lock, flags);
+> +	ret = pcie_capability_clear_and_set_word(dev, pos, clear, set);
+> +	spin_unlock_irqrestore(&dev->cap_lock, flags);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
+
+I didn't see the prior discussion with Lukas, so maybe this was
+answered there, but is there any reason not to add locking to
+pcie_capability_clear_and_set_word() and friends directly?  
+
+It would be nice to avoid having to decide whether to use the locked
+or unlocked versions.  It would also be nice to preserve the use of
+PCI_EXP_LNKCTL directly, for grep purposes.  And it would obviate the
+need for some of these patches, e.g., the use of
+pcie_capability_clear_word(), where it's not obvious at the call site
+why a change is needed.
+
+Bjorn
+
+>  int pci_read_config_byte(const struct pci_dev *dev, int where, u8 *val)
+>  {
+>  	if (pci_dev_is_disconnected(dev)) {
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0b2826c4a832..0c14a283f1c7 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2318,6 +2318,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+>  		.end = -1,
+>  	};
+>  
+> +	spin_lock_init(&dev->cap_lock);
+>  #ifdef CONFIG_PCI_MSI
+>  	raw_spin_lock_init(&dev->msi_lock);
+>  #endif
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 60b8772b5bd4..82faea085d95 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -467,6 +467,7 @@ struct pci_dev {
+>  	pci_dev_flags_t dev_flags;
+>  	atomic_t	enable_cnt;	/* pci_enable_device has been called */
+>  
+> +	spinlock_t	cap_lock;		/* Protects RMW ops done with locked RMW capability accessors */
+>  	u32		saved_config_space[16]; /* Config space saved at suspend time */
+>  	struct hlist_head saved_cap_space;
+>  	int		rom_attr_enabled;	/* Display of ROM attribute enabled? */
+> @@ -1221,6 +1222,8 @@ int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+>  				       u16 clear, u16 set);
+>  int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+>  					u32 clear, u32 set);
+> +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> +					      u16 clear, u16 set);
+>  
+>  static inline int pcie_capability_set_word(struct pci_dev *dev, int pos,
+>  					   u16 set)
+> @@ -1246,6 +1249,20 @@ static inline int pcie_capability_clear_dword(struct pci_dev *dev, int pos,
+>  	return pcie_capability_clear_and_set_dword(dev, pos, clear, 0);
+>  }
+>  
+> +static inline int pcie_lnkctl_clear_and_set(struct pci_dev *dev, u16 clear,
+> +					    u16 set)
+> +{
+> +	return pcie_capability_clear_and_set_word_locked(dev, PCI_EXP_LNKCTL,
+> +							 clear, set);
 > +}
 > +
->  static inline struct clk *mc_pcie_init_clk(struct device *dev, const cha=
-r *id)
->  {
->  	struct clk *clk;
-> @@ -863,8 +868,7 @@ static inline struct clk *mc_pcie_init_clk(struct dev=
-ice *dev, const char *id)
->  	if (ret)
->  		return ERR_PTR(ret);
-> =20
-> -	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
-> -				 clk);
-> +	devm_add_action_or_reset(dev, mc_clk_disable_unprepare, clk);
-> =20
->  	return clk;
->  }
->=20
-
---EILHGzwimB/Seb9q
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZF0KLAAKCRB4tDGHoIJi
-0tK+AQD8LmbqfvLBNOFt2fxN3TxKPiyS2a77L81h8U5fsh6TCQD/ZHftPgTlHksh
-kHFdg+H8MRi1rLrypMvc0N6nRlCySwM=
-=Prv1
------END PGP SIGNATURE-----
-
---EILHGzwimB/Seb9q--
+> +static inline int pcie_lnkctl2_clear_and_set(struct pci_dev *dev, u16 clear,
+> +					    u16 set)
+> +{
+> +	return pcie_capability_clear_and_set_word_locked(dev, PCI_EXP_LNKCTL2,
+> +							 clear, set);
+> +}
+> +
+>  /* User-space driven config access */
+>  int pci_user_read_config_byte(struct pci_dev *dev, int where, u8 *val);
+>  int pci_user_read_config_word(struct pci_dev *dev, int where, u16 *val);
+> -- 
+> 2.30.2
+> 
