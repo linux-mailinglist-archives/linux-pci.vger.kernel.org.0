@@ -2,114 +2,172 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96B1E6FF27C
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:18:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBE086FF31E
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:37:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238211AbjEKNSZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 09:18:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35738 "EHLO
+        id S238267AbjEKNhP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 09:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238140AbjEKNRz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:17:55 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1D9010A12;
-        Thu, 11 May 2023 06:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683811004; x=1715347004;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=OrrhJ317Kw06HAPoI/hZey2W13pWMJL3yvTYoQlLmp4=;
-  b=FGzm7oyAIdyidsqlTJzCL/iBZu6ciQHHg1ASb95n5fplekNh4OGT8T2f
-   BQedL7h/i4KDndlpOoAqowTR2LB+NY7J9TJGYKgUrxGz3OlehPUF7YmT+
-   U7wArPcmf94fyF7Tnypa7ckcPc23mplZ3AyuQOfrETJXngCLC36ewPRnA
-   F+8eBjxJ5uBg4sKK2C86WxvfHMzX+Fe8i440eirdQEYhhywq4H9A0pkYN
-   tg19Ugt7dlpi4ahjLO/8mhb+v1lu15keay/QXqHlvlt+Y0HPo4QMAwS4n
-   abGWtlDI8Zn8Gujd+/LZHLmOyCRpOB6KS9W+2q+EcNa0gkvZPmF9H3kec
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="378619820"
-X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="378619820"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:16:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10706"; a="650170218"
-X-IronPort-AV: E=Sophos;i="5.99,266,1677571200"; 
-   d="scan'208";a="650170218"
-Received: from jsanche3-mobl1.ger.corp.intel.com (HELO ijarvine-MOBL2.ger.corp.intel.com) ([10.252.39.112])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 06:16:02 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>, Kalle Valo <kvalo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, ath10k@lists.infradead.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [PATCH 17/17] wifi: ath10k: Use pcie_lnkctl_clear_and_set() for changing LNKCTL
-Date:   Thu, 11 May 2023 16:14:41 +0300
-Message-Id: <20230511131441.45704-18-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
-References: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S238330AbjEKNfs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:35:48 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36F9F10DA
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:34:42 -0700 (PDT)
+Received: from mail-pj1-f69.google.com (mail-pj1-f69.google.com [209.85.216.69])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 567233F4A5
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 13:34:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1683812079;
+        bh=011K5wvvIoIZK715UN1HjkgAo3VxiaK+uINHfyAtcqg=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=Xg3006bxwcFF0VwLT5HTnNaBwVjOYROYUXaaKVgifm+ApNL1dSvIFi56ogQnYd9x8
+         JUMFSLkbX8ZLnpSmjijte6LeknNGD8fwsqtX4GMZ35Z9DTtfYAu3jNPq5iFnX9MaIH
+         RwWHzSBSl/JAtOpUtYz5EcmuLCSowa2IFBZTiealhw+lNYnjxU1CjVRz83Ev0tUWPU
+         +fy5nfdG7HqI6EU6RUihQtItgDXMHjct5+fGBPd2PWsCkHAERc+y5ixTLBv29p18eS
+         Gs8jYOh35ERt5m00Y/8LAjtrZGomBpl7qZiXcLVbyI3PISeHo3sFFr3Lxn/ZTNTA5o
+         MU51boXNiQwpQ==
+Received: by mail-pj1-f69.google.com with SMTP id 98e67ed59e1d1-24e4531d571so4812206a91.1
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:34:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683812078; x=1686404078;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=011K5wvvIoIZK715UN1HjkgAo3VxiaK+uINHfyAtcqg=;
+        b=H/5InlYRuov97ft6BRdasKmBXP7+DqcIXhANl1+7prubTovPmvnxapQwS+enaovmvD
+         i1tBy3UMYHPkXkTCSd4SHbKfcDWOQhk0HKMHd/2qXbAL9FQSGwK4taOwnzgJZTnPfr20
+         cEf++ece3XpWqRP83vrxS7skbYhxN915Vk4R4eSxznk0wOzvn2gaw0K8IE0KsY2h02u2
+         h9kxGz7V6+eJ8GNhbc5qJ9Y+sdXonGIwuxCm+wzOUjoa+35mRepNmYF0Qx/0QsrbDbU6
+         Cun8JU/UfMOr/uwSmpIpI39+BeeU6eJVB7mhblcrPzGqLrDSuVBpB+w1ewn/qSc/6AEQ
+         vU5Q==
+X-Gm-Message-State: AC+VfDzXyH64btAXt3wor22veJRlEPiUWgRjT8D2Nuf70MXtXrldcx66
+        jJHytYO+PS+EYWlyW2SexL3n1YxZkeB2RN5wQ7Z9OBu95YvGGrIqf4E4XOEhRaP+m0aAyJDi2Vf
+        rsxUVV+DMpQ2Fb6AxtgoJ9dQu5vyo5X1XmgcSeOBZTPsz9mzcvLet9k6xjpO6pQ==
+X-Received: by 2002:a17:90a:db4d:b0:250:8258:1a5 with SMTP id u13-20020a17090adb4d00b00250825801a5mr15729704pjx.33.1683812077995;
+        Thu, 11 May 2023 06:34:37 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4PM1BwcYbS1lb5Q9CzUvOu/d5br84AluARyXzOfos8pADmP57XceNs9VQKShDZU3Dx3q9SP47ED8gQ1AomNMk=
+X-Received: by 2002:a17:90a:db4d:b0:250:8258:1a5 with SMTP id
+ u13-20020a17090adb4d00b00250825801a5mr15729681pjx.33.1683812077662; Thu, 11
+ May 2023 06:34:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+References: <20230424055249.460381-1-kai.heng.feng@canonical.com>
+ <20230424055249.460381-2-kai.heng.feng@canonical.com> <97260e8b-1892-49a5-3792-0e3c28378fc0@linux.intel.com>
+In-Reply-To: <97260e8b-1892-49a5-3792-0e3c28378fc0@linux.intel.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Thu, 11 May 2023 21:34:26 +0800
+Message-ID: <CAAd53p5FUJpd2jENOo6YV8MhXdA1pZiO8G3Ho0x26=gL+vDAqw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] PCI/AER: Disable AER interrupt on suspend
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
+        koba.ko@canonical.com, Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Don't assume that only the driver would be accessing LNKCTL. ASPM
-policy changes can trigger write to LNKCTL outside of driver's control.
+On Tue, Apr 25, 2023 at 7:47=E2=80=AFAM Sathyanarayanan Kuppuswamy
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 4/23/23 10:52 PM, Kai-Heng Feng wrote:
+> > PCIe service that shares IRQ with PME may cause spurious wakeup on
+> > system suspend.
+> >
+> > PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
+> > that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
+> > (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
+> > much here to disable AER during system suspend.
+> >
+> > This is very similar to previous attempts to suspend AER and DPC [1],
+> > but with a different reason.
+> >
+> > [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.=
+feng@canonical.com/
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
+> >
+> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+>
+> IIUC, you encounter AER errors during the suspend/resume process, which
+> results in AER IRQ. Because AER and PME share an IRQ, it is regarded as a
+> spurious wake-up IRQ. So to fix it, you want to disable AER reporting,
+> right?
+>
+> It looks like it is harmless to disable the AER during the suspend/resume
+> path. But, I am wondering why we get these errors? Did you check what err=
+ors
+> you get during the suspend/resume path? Are these errors valid?
 
-Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
-losing concurrent updates to the register value. Convert one of the
-writes to only touch PCI_EXP_LNKCTL_ASPMC field which the driver itself
-has been changing, leave the other fields untouched.
+AFAIK those errors comes from firmware/hardware side, especially when
+the device gets put to D3hot/D3cold.
 
-Suggested-by: Lukas Wunner <lukas@wunner.de>
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
----
- drivers/net/wireless/ath/ath10k/pci.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Kai-Heng
 
-diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
-index a7f44f6335fb..d18dfb495194 100644
---- a/drivers/net/wireless/ath/ath10k/pci.c
-+++ b/drivers/net/wireless/ath/ath10k/pci.c
-@@ -1963,8 +1963,8 @@ static int ath10k_pci_hif_start(struct ath10k *ar)
- 	ath10k_pci_irq_enable(ar);
- 	ath10k_pci_rx_post(ar);
- 
--	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
--				   ar_pci->link_ctl);
-+	pcie_lnkctl_clear_and_set(ar_pci->pdev, 0,
-+				  ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC);
- 
- 	return 0;
- }
-@@ -2821,8 +2821,8 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
- 
- 	pcie_capability_read_word(ar_pci->pdev, PCI_EXP_LNKCTL,
- 				  &ar_pci->link_ctl);
--	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
--				   ar_pci->link_ctl & ~PCI_EXP_LNKCTL_ASPMC);
-+	pcie_lnkctl_clear_and_set(ar_pci->pdev,
-+				  ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC, 0);
- 
- 	/*
- 	 * Bring the target up cleanly.
--- 
-2.30.2
-
+>
+>
+> >  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> >
+> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> > index 1420e1f27105..9c07fdbeb52d 100644
+> > --- a/drivers/pci/pcie/aer.c
+> > +++ b/drivers/pci/pcie/aer.c
+> > @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
+> >       return 0;
+> >  }
+> >
+> > +static int aer_suspend(struct pcie_device *dev)
+> > +{
+> > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > +     struct pci_dev *pdev =3D rpc->rpd;
+> > +
+> > +     aer_disable_irq(pdev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int aer_resume(struct pcie_device *dev)
+> > +{
+> > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > +     struct pci_dev *pdev =3D rpc->rpd;
+> > +
+> > +     aer_enable_irq(pdev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver =
+=3D {
+> >       .service        =3D PCIE_PORT_SERVICE_AER,
+> >
+> >       .probe          =3D aer_probe,
+> > +     .suspend        =3D aer_suspend,
+> > +     .resume         =3D aer_resume,
+> >       .remove         =3D aer_remove,
+> >  };
+> >
+>
+> --
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
