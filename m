@@ -2,144 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 85AA26FEB05
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 07:03:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C5EA6FEC06
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 08:57:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231797AbjEKFDk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 01:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36996 "EHLO
+        id S235540AbjEKG5Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 02:57:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236949AbjEKFDj (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 01:03:39 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B44E40EE
-        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 22:03:38 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-956ff2399c9so1550100566b.3
-        for <linux-pci@vger.kernel.org>; Wed, 10 May 2023 22:03:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683781416; x=1686373416;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4sEbxgolIUmjMoQJHrzBiAW9JiPuzPau1FkgVjAr2Lk=;
-        b=JHUlyNtBDmJi7ZyhaZ+2XmG6NGuCZprqL5U1uevdReL5xyrr6B2xPEfWkkm0enqWj6
-         aah0WBF6NxthDPziJHudJfQbdx1qq6KYmOQT3fWX3dHgW8FjP9AppC0CvV6SpY586ne5
-         jr6ba2ncS283K9ja6T9KprKC5uaDfGYwAbRYtjz4GIzJgSXwCQVSx6gKfY9Y9C2hoqDd
-         KvYFL3hbq1V0nQ6PbjoeZrpCDqH3r5B1YQ09/tB0wrjg3Tz9iP2SvjON7nTVzmCeTKm8
-         KmsxIi9K6vivhMHO7hAb8S2fEwLkJj5vi83anB3n28ov1HZBdQDJt1XepOZq9wL/3zsB
-         KCVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683781416; x=1686373416;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4sEbxgolIUmjMoQJHrzBiAW9JiPuzPau1FkgVjAr2Lk=;
-        b=QY06SWCwkZMzwyiU9ohRZesjrWOkR1db8TC4VFl6vkKtUQmGGgA8vKO4VvYrrbyJB8
-         PpxlrteriRUcugcRA5f3LHI4xgQ6YbetkrEck6bE3YpNYr9BGBhjUgbEK0y3f5Ru2Zfz
-         Z3Moa6IUGQWqOGAnTCk8SUV0Khz5Ndrjv8PS3u0BIy2tu6+9c0ROHdQVdU0FeVXZpJ82
-         KjYDsLC+K5jj2OoZvBUh2oqeqDL1AArsX8LreiHRbfOLTtVZW0xnj0znjvIXgyiUZNmO
-         WTPzbyV2IOYbNodFfmdlkt/GdsJz7jHE5mujtX8tJAwp/HbAZ8vugnkc6SLkRAPqRDB9
-         F41Q==
-X-Gm-Message-State: AC+VfDzY9NWbHC1N4FU7So5j5bpHHzJdpfhKqxHnjvBwvdnFoSWto3lS
-        PccnLday+/fV6RC/SgoDA+oMyw==
-X-Google-Smtp-Source: ACHHUZ6hUvyAqt6ZB1PqKCv8CJoeSHW7WOek/O5ToLGtQQz1dGpJoODgI5zUJ2Sgkiv+nLrL0GwcZA==
-X-Received: by 2002:a17:907:3f88:b0:96a:6e42:7123 with SMTP id hr8-20020a1709073f8800b0096a6e427123mr351552ejc.36.1683781416396;
-        Wed, 10 May 2023 22:03:36 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:a01e:5c6:be3:7baa? ([2a02:810d:15c0:828:a01e:5c6:be3:7baa])
-        by smtp.gmail.com with ESMTPSA id lf23-20020a170906ae5700b0094ee700d8e4sm3435867ejb.44.2023.05.10.22.03.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 10 May 2023 22:03:35 -0700 (PDT)
-Message-ID: <09988b0a-91cc-1253-2a5a-10922699b4d0@linaro.org>
-Date:   Thu, 11 May 2023 07:03:34 +0200
+        with ESMTP id S229536AbjEKG47 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 02:56:59 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 544756A76;
+        Wed, 10 May 2023 23:56:40 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id B571D100EF4DF;
+        Thu, 11 May 2023 08:56:36 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 8B8E4228AE5; Thu, 11 May 2023 08:56:36 +0200 (CEST)
+Date:   Thu, 11 May 2023 08:56:36 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Message-ID: <20230511065636.GA2478@wunner.de>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
+ <8e1e8daa-f6d5-3cb9-e2d1-cb4ef8f7f3ad@linux.intel.com>
+ <5efcb6a9-5878-1e26-dd43-2e4bd01bc8a1@amd.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v16 18/22] dt-bindings: PCI: renesas: Add R-Car Gen4 PCIe
- Endpoint
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        "mani@kernel.org" <mani@kernel.org>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "kw@linux.com" <kw@linux.com>,
-        "fancer.lancer@gmail.com" <fancer.lancer@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "kishon@kernel.org" <kishon@kernel.org>
-References: <20230510062234.201499-1-yoshihiro.shimoda.uh@renesas.com>
- <20230510062234.201499-19-yoshihiro.shimoda.uh@renesas.com>
- <20230510100309.e3ggidtc35xi7jde@krzk-bin>
- <TYBPR01MB5341D96B3E3F65BD12434F09D8749@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-Content-Language: en-US
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <TYBPR01MB5341D96B3E3F65BD12434F09D8749@TYBPR01MB5341.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-5.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5efcb6a9-5878-1e26-dd43-2e4bd01bc8a1@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/05/2023 02:23, Yoshihiro Shimoda wrote:
-> Hi Krzysztof,
-> 
->> From: Krzysztof Kozlowski, Sent: Wednesday, May 10, 2023 7:03 PM
->>
->> On Wed, 10 May 2023 15:22:30 +0900, Yoshihiro Shimoda wrote:
->>> Document bindings for Renesas R-Car Gen4 and R-Car S4-8 (R8A779F0)
->>> PCIe endpoint module.
->>>
->>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
->>> Acked-by: Manivannan Sadhasivam <mani@kernel.org>
->>> ---
->>>  .../bindings/pci/rcar-gen4-pci-ep.yaml        | 98 +++++++++++++++++++
->>>  1 file changed, 98 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
->>>
->>
->> BTW, you keep not-ccing me. Since long time. I don't understand why. I
->> don't have the emails in inbox, so I won't be responding to your
->> patchset.
-> 
-> I'm sorry. This is my bad. My using script for sending PCI patches didn't describe
-> your email address and I didn't realize that until now. Today I added your email
-> address and Conor's email address into my script.
-> 
->>
->> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
->> on your patch (DT_CHECKER_FLAGS is new in v5.13):
->>
->> yamllint warnings/errors:
->>
->> dtschema/dtc warnings/errors:
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.example.dtb:
->> pcie-ep@e65d0000: reg: [[0, 3864854528, 0, 8192], [0, 3864864768, 0, 2048], [0, 3864866816, 0, 8192], [0, 3864875008,
->> 0, 4608], [0, 3864879616, 0, 3584], [0, 4261412864, 0, 4194304]] is too long
->>       From schema:
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.example.dtb:
->> pcie-ep@e65d0000: reg-names: ['dbi', 'dbi2', 'atu', 'dma', 'app', 'addr_space'] is too long
->>       From schema:
->> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/rcar-gen4-pci-ep.yaml
-> 
-> I believe these errors disappear if we apply the patch [16/22] of this patch series.
-> So, we can ignore these errors.
+On Wed, May 10, 2023 at 02:42:13PM -0700, Smita Koralahalli wrote:
+> As far as I can see, async removal solely with DPC is not handled properly
+> in Linux.
 
-Yes, seems so.
+The dpc driver can react to a DPC event, attempt reset recovery.
 
-Best regards,
-Krzysztof
+But it doesn't do de-enumeration or re-enumeration of subordinate devices.
+It also doesn't do slot handling (enable/disable Power Controller etc).
+That's only implemented in the hotplug driver.
 
+PCIe r6.0.1 contains appendix I.2 which basically suggests to "use DPC"
+for async hot-plug but that doesn't really seem to make sense.
+
+
+> On AMD systems, PDSC is triggered along with DPC on a async remove. And this
+> PDSC event (hotplug handler) will unconfigure and uninitialize the driver
+> and device.
+> This is one thing which I wanted clarity on as per my question in v1.
+> Whether all systems
+> trigger PDSC on a async remove along with DPC?
+
+In principle, yes.  Actually the hotplug driver will see both a DLLSC
+*and* a PDC event and will react to whichever comes first.  Experience
+has shown that the two events may occur in arbitrary order and with
+significant delays in-between.
+
+There are systems which erroneously hardwire Presence Detect to zero.
+The hotplug driver works even with those.  It solely relies on the
+DLLSC event then, see commit 80696f991424 ("PCI: pciehp: Tolerate
+Presence Detect hardwired to zero").
+
+
+> I feel there are two approaches going forward. Since, hotplug handler is
+> also
+> triggered with PDSC, rely on it to bring down the device and prevent calling
+> the
+> error_recovery process in dpc handler as its not a true error event. I have
+> taken this
+> approach.
+> 
+> Or, don't call the hotplug handler at all and rely on DPC solely to bring
+> down the device
+> but here, there should be additional callbacks to unconfigure and
+> uninitialize the pcie
+> driver and currently I only see report_slot_reset() being called from
+> error_recovery()
+> and I don't think it unconfigures the driver/device.
+
+The latter approach doesn't really make sense to me because we'd have to
+duplicate all the slot handling and device de-/re-enumeration in the dpc
+driver.
+
+Let's try masking Surprise Down Errors first and see how that goes.
+
+Thanks,
+
+Lukas
