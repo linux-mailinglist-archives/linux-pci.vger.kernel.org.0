@@ -2,77 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DD446FF1D0
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 14:49:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A39586FF204
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 15:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237754AbjEKMtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 08:49:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
+        id S237655AbjEKNBy (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 09:01:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237735AbjEKMtP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 08:49:15 -0400
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDFB5B97
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:49:14 -0700 (PDT)
-Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 754BC3F4E3
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 12:49:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1683809353;
-        bh=ol2Z7aMVfchGYQa9rHq5vwmYfVHXB9l1MkpDsHEuF7g=;
-        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-         To:Cc:Content-Type;
-        b=r13QcGAeC562TeVQOAnzogr1HvayvxEEL53xsUYsPHjk1KuhNOaqfqccOW95hIXm+
-         Ha1Pu1NX4xQ5Ya/DvGWFEoab76xvXvyFP548zzjYp1uwUKBBrdrVUo9aJ2lqY+z0t5
-         jDqTVmzbnZkX6PRuNGmcFHP9LidjUDnyFC7GVMUuAzrp18TrgO2+lGF5Cu3+kCzvFX
-         Md/Hxy/5ziw+wOWMik4QvtnaeynF7GtCBMMfki9Ue56/GWeoaXhvAGeWU+87NMmUUa
-         WAK5rkLa4+hkLTzbsu+c7XT+6ATlK5Bm94ojmq10h3MXsUL5omDqPv3i6rLyPXgT73
-         ao8oKZLLSEpCg==
-Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-52855ba7539so4536038a12.3
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:49:12 -0700 (PDT)
+        with ESMTP id S236152AbjEKNBx (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 09:01:53 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E7547AA8
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:00:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683810029;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1YNgJu9g4hsRAs0h9Bi/9rkG5y7jrDdpJUfTR0KD1Tg=;
+        b=MFuv4tzHyMoUJDKq2BoIp2XmufbDzJCZRNRnO1CACAd/m9Vw0Qtzy4+DPm6KKnrHLc0RFb
+        zuqikoyuLRwd4xgXbQiqc3UIkI3IqDzr23QPjbKxas/WJr4Mf5wtKDWqcmwT5zatebag2U
+        Pl/cTwMGeU9BAi+aRKHo2zhC3Og417o=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-363-Ix0HTTL8O7mLbD7sRCa8kw-1; Thu, 11 May 2023 09:00:28 -0400
+X-MC-Unique: Ix0HTTL8O7mLbD7sRCa8kw-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-307bac4c949so1226633f8f.0
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 06:00:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683809351; x=1686401351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ol2Z7aMVfchGYQa9rHq5vwmYfVHXB9l1MkpDsHEuF7g=;
-        b=a+yygyNrWZ2xoO+lBauEFXW9AghgkdGAAuTdNnx79cUzvTTnzP4fc1KJ3DiBzkPATK
-         r/feBxxNQoPcen/Vj6AwoS77Lyyfs9s9wJt759Mqg7HTrNOXaNlSG0W+IA53YQ8rM2C0
-         euKQUIe82v5HB7/JIuU2TJNTMDJCalE81GuBOXqKg6MXwxBNMpnJRVGmX/zRiQayZlUJ
-         gJv4JWnY5VgK1Wo0Vcy1yGHYqGHFypv/2M7ggw1XsrySrSgAUqtiY4N+XoU7kA1xrk1f
-         rENl1LGFk38E+YxY+VD/HIhpSx14tmeWwotilolzqTUeIicMPJdcBuNSrP+W+oS+Q+YA
-         7m4A==
-X-Gm-Message-State: AC+VfDzanl2HpIlFP85W60w9nsIO29boLFnOHvkAXsY2ZuuMelmE7Z0F
-        ijwSIpA9nHciPnXpq7JrJJWbZ6+3W2AuSgK+gU8OY8xu9P44Y8uM/CiIwBlfgTHDdLc+k+Tx/h7
-        7SaZnOY9bVPGvOmBoVWDpsY8mmaumt16OvUmTPXGNjiBzoPFCJRxkhQ==
-X-Received: by 2002:a05:6a20:8e04:b0:100:1583:f230 with SMTP id y4-20020a056a208e0400b001001583f230mr22433986pzj.53.1683809350851;
-        Thu, 11 May 2023 05:49:10 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4O3tqxxukugzTWtunS2y3hSSJYIfQzWJ0EpAS43vCnCzWOri7iVs1hU9nKhzrLFBqWz843HwoBRtH1DQ2Yp8I=
-X-Received: by 2002:a05:6a20:8e04:b0:100:1583:f230 with SMTP id
- y4-20020a056a208e0400b001001583f230mr22433964pzj.53.1683809350580; Thu, 11
- May 2023 05:49:10 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683810026; x=1686402026;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1YNgJu9g4hsRAs0h9Bi/9rkG5y7jrDdpJUfTR0KD1Tg=;
+        b=kDUXmMxd2T5KWw+Y3CuzrddfrLnyAOS5bh+yVaZYSsihsDuwehFtYp8GHrZN4Xvjko
+         yp/1cAEVWOh2EsWxPmMp2hyakIrbIOuXA/aDlZv3iRCyoowp4rEEW4Cpyvp8nTrNqwfw
+         /9HQN5ffUpkO3iPXxQBhHYliphIjGlk6xXeKxvSHz+2vuN+pY4HnfpqmmnGEEx/U6tn+
+         ClGHmiPvwEkFCr+ZYqp5MgMnbmEblE0WfAH2BMmgWJKanYmbg5q75ERnAWajOPJ4aD/U
+         Di2Nhb2fEM3EXHsOJWZucKS/nBGUiAe7ChlVMeRGgfyqO/tgnACwPB8808t9fYQ5dvVC
+         dUKA==
+X-Gm-Message-State: AC+VfDy62hJ/TbAUubAbTlYFC+hexgLNR3poIVFR8RErOMlYBQ0C9oUa
+        qF0D6n6yQ8EFBRGKlG4h18XcK1AJNgNRjyhWdwztNcv73+FWFHjxzneP80JvHsXSuytP/QTqYiR
+        ZyyDW/rrI+c/tbCYEXik4
+X-Received: by 2002:a5d:55cf:0:b0:304:b967:956f with SMTP id i15-20020a5d55cf000000b00304b967956fmr16336613wrw.8.1683810026738;
+        Thu, 11 May 2023 06:00:26 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6maX1bAPZW0k8hxurkuPzMZqG473m27W7e8iBYUPNc8cfDsYenYLW5jeTNv5v8llwVfwyINA==
+X-Received: by 2002:a5d:55cf:0:b0:304:b967:956f with SMTP id i15-20020a5d55cf000000b00304b967956fmr16336585wrw.8.1683810026412;
+        Thu, 11 May 2023 06:00:26 -0700 (PDT)
+Received: from sgarzare-redhat ([5.77.69.175])
+        by smtp.gmail.com with ESMTPSA id w14-20020a5d680e000000b003079693eff2sm12447627wru.41.2023.05.11.06.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 06:00:25 -0700 (PDT)
+Date:   Thu, 11 May 2023 15:00:20 +0200
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Zhuang Shengen <zhuangshengen@huawei.com>
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        arei.gonglei@huawei.com, longpeng2@huawei.com,
+        jianjay.zhou@huawei.com
+Subject: Re: [PATCH net v2] vsock: avoid to close connected socket after the
+ timeout
+Message-ID: <atd47kt3wyhw2mhrzob4fxzlvmw37xviehn7agao3srni2jmts@gxgzvqrb7mc7>
+References: <20230511113430.646292-1-zhuangshengen@huawei.com>
 MIME-Version: 1.0
-References: <20230424055249.460381-2-kai.heng.feng@canonical.com> <20230505192208.GA970992@bhelgaas>
-In-Reply-To: <20230505192208.GA970992@bhelgaas>
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 11 May 2023 20:48:59 +0800
-Message-ID: <CAAd53p7FpSDh2nHYk1Tory3bvhKcmNQFYqC2GOM+jEyy0osceQ@mail.gmail.com>
-Subject: Re: [PATCH v4 2/3] PCI/AER: Disable AER interrupt on suspend
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
-        koba.ko@canonical.com, sathyanarayanan.kuppuswamy@linux.intel.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230511113430.646292-1-zhuangshengen@huawei.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,88 +81,69 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sat, May 6, 2023 at 3:22=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> w=
-rote:
+On Thu, May 11, 2023 at 07:34:30PM +0800, Zhuang Shengen wrote:
+>When client and server establish a connection through vsock,
+>the client send a request to the server to initiate the connection,
+>then start a timer to wait for the server's response. When the server's
+>RESPONSE message arrives, the timer also times out and exits. The
+>server's RESPONSE message is processed first, and the connection is
+>established. However, the client's timer also times out, the original
+>processing logic of the client is to directly set the state of this vsock
+>to CLOSE and return ETIMEDOUT. It will not notify the server when the port
+>is released, causing the server port remain.
+>when client's vsock_connect timeout，it should check sk state is
+>ESTABLISHED or not. if sk state is ESTABLISHED, it means the connection
+>is established, the client should not set the sk state to CLOSE
 >
-> On Mon, Apr 24, 2023 at 01:52:48PM +0800, Kai-Heng Feng wrote:
-> > PCIe service that shares IRQ with PME may cause spurious wakeup on
-> > system suspend.
-> >
-> > PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
-> > that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
-> > (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
-> > much here to disable AER during system suspend.
-> >
-> > This is very similar to previous attempts to suspend AER and DPC [1],
-> > but with a different reason.
+>Note: I encountered this issue on kernel-4.18, which can be fixed by
+>this patch. Then I checked the latest code in the community
+>and found similar issue.
 >
-> What is the reason?  I assume it's something to do with the bugzilla
-> below, but the commit log should outline the user-visible problem this
-> fixes.  The commit log basically makes the case for "why should we
-> merge this patch."
->
-> I assume it's along the lines of "I tried to suspend this system, but
-> it immediately woke up again because of an AER interrupt, and
-> disabling AER during suspend avoids this problem.  And disabling
-> the AER interrupt is not a problem because X"
+>Fixes: d021c344051a ("VSOCK: Introduce VM Sockets")
+>Signed-off-by: Zhuang Shengen <zhuangshengen@huawei.com>
+>---
+> net/vmw_vsock/af_vsock.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Yes that's the reason :)
-Will update the message to better reflect what's going on.
+The patch LGTM:
 
-Kai-Heng
+Reviewed-by: Stefano Garzarella <sgarzare@redhat.com>
+
+I noticed that the net maintainers are not in cc, if this patch isn't
+queued in the next days, please resend it by cc'ing all the
+maintainers [1]:
+
+$ ./scripts/get_maintainer.pl \
+   20230510_zhuangshengen_vsock_bugfix_port_residue_in_server.mbx
+Stefano Garzarella <sgarzare@redhat.com> (maintainer:VM SOCKETS (AF_VSOCK))
+"David S. Miller" <davem@davemloft.net> (maintainer:NETWORKING [GENERAL])
+Eric Dumazet <edumazet@google.com> (maintainer:NETWORKING [GENERAL])
+Jakub Kicinski <kuba@kernel.org> (maintainer:NETWORKING [GENERAL])
+Paolo Abeni <pabeni@redhat.com> (maintainer:NETWORKING [GENERAL])
+virtualization@lists.linux-foundation.org (open list:VM SOCKETS (AF_VSOCK))
+netdev@vger.kernel.org (open list:VM SOCKETS (AF_VSOCK))
+linux-kernel@vger.kernel.org (open list)
+
+Thanks,
+Stefano
+
+[1] https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#select-the-recipients-for-your-patch
 
 >
-> > [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.=
-feng@canonical.com/
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
-> >
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> > ---
-> >  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
-> >  1 file changed, 22 insertions(+)
-> >
-> > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index 1420e1f27105..9c07fdbeb52d 100644
-> > --- a/drivers/pci/pcie/aer.c
-> > +++ b/drivers/pci/pcie/aer.c
-> > @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
-> >       return 0;
-> >  }
-> >
-> > +static int aer_suspend(struct pcie_device *dev)
-> > +{
-> > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > +     struct pci_dev *pdev =3D rpc->rpd;
-> > +
-> > +     aer_disable_irq(pdev);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int aer_resume(struct pcie_device *dev)
-> > +{
-> > +     struct aer_rpc *rpc =3D get_service_data(dev);
-> > +     struct pci_dev *pdev =3D rpc->rpd;
-> > +
-> > +     aer_enable_irq(pdev);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /**
-> >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
-> >   * @dev: pointer to Root Port, RCEC, or RCiEP
-> > @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver =
-=3D {
-> >       .service        =3D PCIE_PORT_SERVICE_AER,
-> >
-> >       .probe          =3D aer_probe,
-> > +     .suspend        =3D aer_suspend,
-> > +     .resume         =3D aer_resume,
-> >       .remove         =3D aer_remove,
-> >  };
-> >
-> > --
-> > 2.34.1
-> >
+>diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
+>index 413407bb646c..efb8a0937a13 100644
+>--- a/net/vmw_vsock/af_vsock.c
+>+++ b/net/vmw_vsock/af_vsock.c
+>@@ -1462,7 +1462,7 @@ static int vsock_connect(struct socket *sock, struct sockaddr *addr,
+> 			vsock_transport_cancel_pkt(vsk);
+> 			vsock_remove_connected(vsk);
+> 			goto out_wait;
+>-		} else if (timeout == 0) {
+>+		} else if ((sk->sk_state != TCP_ESTABLISHED) && (timeout == 0)) {
+> 			err = -ETIMEDOUT;
+> 			sk->sk_state = TCP_CLOSE;
+> 			sock->state = SS_UNCONNECTED;
+>-- 
+>2.27.0
+>
+
