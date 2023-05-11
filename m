@@ -2,143 +2,171 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB5706FF89E
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 19:37:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF19D6FF9C5
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 21:09:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238860AbjEKRhS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 13:37:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36756 "EHLO
+        id S233472AbjEKTJa (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 15:09:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238726AbjEKRhR (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 13:37:17 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83F196EA1;
-        Thu, 11 May 2023 10:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683826614; x=1715362614;
-  h=date:from:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=9apNON2HayPVUNwneb8oHhRTLdSk+kuKVsHWIPL5d58=;
-  b=ApLnp+cG/htFQdEXZT/fu38YXR3c5QoNfsTkdvAiZwKOaMYVDGNEOigw
-   2q8ox/E6NQv8dKN6+FwxRvBtOaOw2WtU+56LXo1dJFPX927inIbHAx/wr
-   WjGKL+18DZqoXF6hsq1+75ElXAZ9pC45tIAIoVYYqOEAOIzknfrPz13IL
-   5ntpHarIJkxquaJ7as8cX+1P+qJnb8gqS/LTWnP0Flx6SxQcbc8Z8AqR8
-   thztGzXLLdaTlbnLI9yTfVR4ojjWqVPlp4O1V2mRNy7wz1p69pR027yJj
-   f8i+IheF4EijfE7+ICPbI7aMfpX+tGDBvgeIMF06xBa9EqSiMdQLEPNZF
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="330932331"
-X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
-   d="scan'208";a="330932331"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 10:35:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="730463586"
-X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
-   d="scan'208";a="730463586"
-Received: from jsanche3-mobl1.ger.corp.intel.com ([10.252.39.112])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 10:35:51 -0700
-Date:   Thu, 11 May 2023 20:35:48 +0300 (EEST)
-From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        with ESMTP id S238725AbjEKTJY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 15:09:24 -0400
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5B6C36A52;
+        Thu, 11 May 2023 12:09:20 -0700 (PDT)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 7FA95E0EB3;
+        Thu, 11 May 2023 22:09:17 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=PuMGmJI
+        UhZCmLfTOtaUizJFxzeU1KYOXEXJs6qIN77o=; b=tF+SiV6M/G7aifDcie3zMw4
+        HkYTLQmf1ATR3mrtBCuojJisOfQaqlGJbJ/JNgXkNyeU4ael7BYze4SFt4D7Cj3q
+        W0XUPYYZ3GSCMBcQIYFl3rqncaD6eIeMJBC3OZTcuFe7bFopjMkjyCQHqHFZ36uD
+        ww/lL9BasqZSfDtuyrI0=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 644BEE0EB1;
+        Thu, 11 May 2023 22:09:17 +0300 (MSK)
+Received: from localhost (10.8.30.6) by mail (192.168.51.25) with Microsoft
+ SMTP Server (TLS) id 15.0.1395.4; Thu, 11 May 2023 22:09:16 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
- for LNKCTL{,2}
-In-Reply-To: <ZF0P2hedTFXPv8IK@bhelgaas>
-Message-ID: <5140259d-4425-3166-438a-bc9fbbaa49f9@linux.intel.com>
-References: <ZF0P2hedTFXPv8IK@bhelgaas>
+        Cai Huoqing <cai.huoqing@linux.dev>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND v5 00/14] PCI: dwc: Relatively simple fixes and cleanups
+Date:   Thu, 11 May 2023 22:08:48 +0300
+Message-ID: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323329-1704685674-1683825428=:1900"
-Content-ID: <8185a32d-d6e3-5273-2777-a48ebb2f4a5a@linux.intel.com>
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.8.30.6]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+It turns out the recent DW PCIe-related patchset was merged in with
+several relatively trivial issues left unsettled (noted by Bjorn and
+Manivannan). All of these lefovers have been fixed in this patchset.
+Namely the series starts with two bug-fixes. The first one concerns the
+improper link-mode initialization in case if the CDM-check is enabled. The
+second unfortunate mistake I made in the IP-core version type helper. In
+particular instead of testing the IP-core version type the macro function
+referred to the just IP-core version which obviously wasn't what I
+intended.
 
---8323329-1704685674-1683825428=:1900
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
-Content-ID: <eaf4a3e3-e929-4154-99b5-f0e7a3c58625@linux.intel.com>
+Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+asynchronous probe type which saved us of about 15% of bootup time if no any
+PCIe peripheral device attached to the port.
 
-On Thu, 11 May 2023, Bjorn Helgaas wrote:
+Then the patchset contains the Baikal-T1 PCIe driver fix. The
+corresponding patch removes the false error message printed during the
+controller probe procedure. I accidentally added the unconditional
+dev_err_probe() method invocation. It was obviously wrong.
 
-> On Thu, May 11, 2023 at 04:14:25PM +0300, Ilpo Järvinen wrote:
-> > A few places write LNKCTL and LNKCTL2 registers without proper
-> > concurrency control and this could result in losing the changes
-> > one of the writers intended to make.
-> > 
-> > Add pcie_capability_clear_and_set_word_locked() and helpers to use it
-> > with LNKCTL and LNKCTL2. The concurrency control is provided using a
-> > spinlock in the struct pci_dev.
-> > 
-> > Suggested-by: Lukas Wunner <lukas@wunner.de>
-> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> 
-> Thanks for raising this issue!  Definitely looks like something that
-> needs attention.
-> 
-> > ---
-> >  drivers/pci/access.c | 14 ++++++++++++++
-> >  drivers/pci/probe.c  |  1 +
-> >  include/linux/pci.h  | 17 +++++++++++++++++
-> >  3 files changed, 32 insertions(+)
-> > 
-> > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> > index 3c230ca3de58..d92a3daadd0c 100644
-> > --- a/drivers/pci/access.c
-> > +++ b/drivers/pci/access.c
-> > @@ -531,6 +531,20 @@ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
-> >  }
-> >  EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
-> >  
-> > +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
-> > +					      u16 clear, u16 set)
-> > +{
-> > +	unsigned long flags;
-> > +	int ret;
-> > +
-> > +	spin_lock_irqsave(&dev->cap_lock, flags);
-> > +	ret = pcie_capability_clear_and_set_word(dev, pos, clear, set);
-> > +	spin_unlock_irqrestore(&dev->cap_lock, flags);
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
-> 
-> I didn't see the prior discussion with Lukas, so maybe this was
-> answered there, but is there any reason not to add locking to
-> pcie_capability_clear_and_set_word() and friends directly?  
->
-> It would be nice to avoid having to decide whether to use the locked
-> or unlocked versions.  It would also be nice to preserve the use of
-> PCI_EXP_LNKCTL directly, for grep purposes.  And it would obviate the
-> need for some of these patches, e.g., the use of
-> pcie_capability_clear_word(), where it's not obvious at the call site
-> why a change is needed.
+Then two trivial cleanups are introduced. The first one concerns the
+duplicated fast-link-mode flag unsetting. The second one implies
+dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+function.
 
-There wasn't that big discussion about it (internally). I brought both
-alternatives up and Lukas just said he didn't know what's the best 
-approach (+ gave a weak nudge towards the separate accessor so I went 
-with it to make forward progress). Based on that I don't think he had a 
-strong opinion on it.
+The series continues with a patch inspired by the last @Bjorn note
+regarding the generic resources request interface. As @Bjorn correctly
+said it would be nice to have the new interface used wider in the DW PCIe
+subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+PCIe driver can be easily converted to using the generic clock names.
+That's what is done in the noted patch.
 
-I'm certainly fine to just use it in the normal accessor functions that 
-do RMW and add the locking there. It would certainly have to those good 
-sides you mentioned.
+The patchset is closed with a series of MAINTAINERS-list related patches.
+Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+update the MAINTAINER-list with the new files added in the framework of
+that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+DW PCIe core driver maintainers. Secondly seeing how long it took for my
+patchsets to review and not having any comments from the original driver
+maintainers I'd suggest to add myself as the reviewer to the DW PCIe and
+eDMA drivers. Thus hopefully the new updates review process will be
+performed with much less latencies. For the same reason @Manivannan is
+added to the maintainers list of the DW PCIe/eDMA drivers as he already
+agreed to be in.
+
+Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Rebase onto the kernel 6.3-rc2.
+
+Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Drop the patch:
+  [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
+  and rebase onto the already submitted by @Yoshihiro fix:
+  commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
+- Just resend.
+
+Link: https://lore.kernel.org/linux-pci/20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Demote @Gustavo to being DW PCIe/eDMA drivers reviewer:
+  [PATCH v4 9/14] MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  [PATCH v4 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+- Add Manivannan to the DW PCIe/eDMA drivers maintainers list:
+  [PATCH v4 10/14] MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  [PATCH v4 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+
+Link: https://lore.kernel.org/linux-pci/20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v5:
+- Rebase onto the kernel 6.4-rc1.
+- Just resend.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: linux-pci@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (14):
+  PCI: dwc: Fix erroneous version type test helper
+  PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+  PCI: bt1: Enable async probe type
+  PCI: bt1: Fix printing false error message
+  PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+  PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+  PCI: visconti: Convert to using generic resources getter
+  MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+  MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  MAINTAINERS: Add myself as the DW PCIe core reviewer
+  MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+  MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+  MAINTAINERS: Add myself as the DW eDMA driver reviewer
+
+ MAINTAINERS                                   | 11 ++++--
+ drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+ .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |  2 -
+ drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+ drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+ 6 files changed, 34 insertions(+), 30 deletions(-)
 
 -- 
- i.
---8323329-1704685674-1683825428=:1900--
+2.40.0
+
+
