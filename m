@@ -2,66 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2F5C6FF1CD
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 14:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DD446FF1D0
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 14:49:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237730AbjEKMsX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 08:48:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43730 "EHLO
+        id S237754AbjEKMtQ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 08:49:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229921AbjEKMsX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 08:48:23 -0400
+        with ESMTP id S237735AbjEKMtP (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 08:49:15 -0400
 Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E0275B8B
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:48:21 -0700 (PDT)
-Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com [209.85.210.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCDFB5B97
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:49:14 -0700 (PDT)
+Received: from mail-pg1-f200.google.com (mail-pg1-f200.google.com [209.85.215.200])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id CDF733F4D8
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 12:48:18 +0000 (UTC)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 754BC3F4E3
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 12:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-        s=20210705; t=1683809298;
-        bh=ZkSgjZyo9xVh4gblsVQOCDmnEdqEfK/tJWBgTKA7lTY=;
+        s=20210705; t=1683809353;
+        bh=ol2Z7aMVfchGYQa9rHq5vwmYfVHXB9l1MkpDsHEuF7g=;
         h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
          To:Cc:Content-Type;
-        b=nMlylJqE+NjtauI/vFU5ePvu8CCkAgsYY7a6PfeZeygWICEGHJkMxHcetKqdFyAzX
-         +IBVFEbNIjonmBaZLfzYd6uTIHe+8QizOz/qNSMx+9Ti+7YdkX33/SA36OlScTatRP
-         apxOZJOR8rcZABcFo8f6VQ9+wFOJJijGAexH/pEXY9uH2CDbfS9JFOjokv0cTcRHMh
-         yGzF5aVNuvdGaThgn+SmHEvqxrT7BDnsYWjryDXQUMdWWjNhq0/U+mJU1wlpma4xCS
-         yaRaqE5lDFpJnHrKrlPZ10NBL2ae7vnTaCSASZhMY1snWwk3viY8sHATijQrGiHbs1
-         efw0EUAHnVi+w==
-Received: by mail-pf1-f199.google.com with SMTP id d2e1a72fcca58-643aad3bbf3so4296189b3a.0
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:48:18 -0700 (PDT)
+        b=r13QcGAeC562TeVQOAnzogr1HvayvxEEL53xsUYsPHjk1KuhNOaqfqccOW95hIXm+
+         Ha1Pu1NX4xQ5Ya/DvGWFEoab76xvXvyFP548zzjYp1uwUKBBrdrVUo9aJ2lqY+z0t5
+         jDqTVmzbnZkX6PRuNGmcFHP9LidjUDnyFC7GVMUuAzrp18TrgO2+lGF5Cu3+kCzvFX
+         Md/Hxy/5ziw+wOWMik4QvtnaeynF7GtCBMMfki9Ue56/GWeoaXhvAGeWU+87NMmUUa
+         WAK5rkLa4+hkLTzbsu+c7XT+6ATlK5Bm94ojmq10h3MXsUL5omDqPv3i6rLyPXgT73
+         ao8oKZLLSEpCg==
+Received: by mail-pg1-f200.google.com with SMTP id 41be03b00d2f7-52855ba7539so4536038a12.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 05:49:12 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683809297; x=1686401297;
+        d=1e100.net; s=20221208; t=1683809351; x=1686401351;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ZkSgjZyo9xVh4gblsVQOCDmnEdqEfK/tJWBgTKA7lTY=;
-        b=QfeVLp4YBul9cducQJzF2OMEVOFz+vId8uvtrJMGYMPzxWFTwW3/EfWfonmZuh8vJd
-         nr4wt1Y9fStix0daRmMfywpQ4o1XF9dXj8dDCYDP+49YKp5ueFsDykV7sDx3IOePJgT1
-         U8nyhNX/jFwb8pBQ1ndCSAXXMGU7vdRFcRXs7F0O9gNNdq9vQ3yAiFO99+CGrt7mCpl0
-         D5qDSSCY+rCFLxBtF9FzxEhWBqQLO/UgKvIonRSh95PJaDr7TAidfVPrWWw3fIq2Ooii
-         0dlk8yeVxVGd5u2NncQtU9+Mt4GPsk2DfiGCUDbAmClIct1aq0hSVUqC79mQH3PzfD7b
-         n1cg==
-X-Gm-Message-State: AC+VfDzuw57bMNGEN1MOsH3mxrrKEwn1UmHqKeO3T9M+2an3KdQ1iWH6
-        /b8sy+P9QEK9YQ+g5aCk96V1Xi+qtZYl5CWV0ZLpmQOgCOMF96HTI0rrgouJl785R/1iSgME+Ln
-        m5gaO2Pxk0U88cSE6fLmU4zHiOEsNuhnlm9/JIr8K3XtV4JjhUjFlbQ==
-X-Received: by 2002:a05:6a20:3d84:b0:103:ce90:f3d2 with SMTP id s4-20020a056a203d8400b00103ce90f3d2mr2897374pzi.9.1683809297245;
-        Thu, 11 May 2023 05:48:17 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7a5HjvgwmUzaFJhBxIy+pEBXHv6RWgm6O2IL/k7CBCtcM/768F9wF5Jd+uvw8d2kAoRH3ALgS/uKmLbD05/78=
-X-Received: by 2002:a05:6a20:3d84:b0:103:ce90:f3d2 with SMTP id
- s4-20020a056a203d8400b00103ce90f3d2mr2897350pzi.9.1683809296857; Thu, 11 May
- 2023 05:48:16 -0700 (PDT)
+        bh=ol2Z7aMVfchGYQa9rHq5vwmYfVHXB9l1MkpDsHEuF7g=;
+        b=a+yygyNrWZ2xoO+lBauEFXW9AghgkdGAAuTdNnx79cUzvTTnzP4fc1KJ3DiBzkPATK
+         r/feBxxNQoPcen/Vj6AwoS77Lyyfs9s9wJt759Mqg7HTrNOXaNlSG0W+IA53YQ8rM2C0
+         euKQUIe82v5HB7/JIuU2TJNTMDJCalE81GuBOXqKg6MXwxBNMpnJRVGmX/zRiQayZlUJ
+         gJv4JWnY5VgK1Wo0Vcy1yGHYqGHFypv/2M7ggw1XsrySrSgAUqtiY4N+XoU7kA1xrk1f
+         rENl1LGFk38E+YxY+VD/HIhpSx14tmeWwotilolzqTUeIicMPJdcBuNSrP+W+oS+Q+YA
+         7m4A==
+X-Gm-Message-State: AC+VfDzanl2HpIlFP85W60w9nsIO29boLFnOHvkAXsY2ZuuMelmE7Z0F
+        ijwSIpA9nHciPnXpq7JrJJWbZ6+3W2AuSgK+gU8OY8xu9P44Y8uM/CiIwBlfgTHDdLc+k+Tx/h7
+        7SaZnOY9bVPGvOmBoVWDpsY8mmaumt16OvUmTPXGNjiBzoPFCJRxkhQ==
+X-Received: by 2002:a05:6a20:8e04:b0:100:1583:f230 with SMTP id y4-20020a056a208e0400b001001583f230mr22433986pzj.53.1683809350851;
+        Thu, 11 May 2023 05:49:10 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4O3tqxxukugzTWtunS2y3hSSJYIfQzWJ0EpAS43vCnCzWOri7iVs1hU9nKhzrLFBqWz843HwoBRtH1DQ2Yp8I=
+X-Received: by 2002:a05:6a20:8e04:b0:100:1583:f230 with SMTP id
+ y4-20020a056a208e0400b001001583f230mr22433964pzj.53.1683809350580; Thu, 11
+ May 2023 05:49:10 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230424055249.460381-1-kai.heng.feng@canonical.com> <20230505163714.000003a9@Huawei.com>
-In-Reply-To: <20230505163714.000003a9@Huawei.com>
+References: <20230424055249.460381-2-kai.heng.feng@canonical.com> <20230505192208.GA970992@bhelgaas>
+In-Reply-To: <20230505192208.GA970992@bhelgaas>
 From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-Date:   Thu, 11 May 2023 20:48:05 +0800
-Message-ID: <CAAd53p63TspntTfVUq5cxNQUVnw_owvwn=Y1RJq67LSUDvxH8w@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] PCI/AER: Factor out interrupt toggling into helpers
-To:     Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Date:   Thu, 11 May 2023 20:48:59 +0800
+Message-ID: <CAAd53p7FpSDh2nHYk1Tory3bvhKcmNQFYqC2GOM+jEyy0osceQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/3] PCI/AER: Disable AER interrupt on suspend
+To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     bhelgaas@google.com, mika.westerberg@linux.intel.com,
         koba.ko@canonical.com, sathyanarayanan.kuppuswamy@linux.intel.com,
         Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
@@ -72,7 +72,7 @@ Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,133 +80,88 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 5, 2023 at 11:37=E2=80=AFPM Jonathan Cameron
-<Jonathan.Cameron@huawei.com> wrote:
+On Sat, May 6, 2023 at 3:22=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> w=
+rote:
 >
-> On Mon, 24 Apr 2023 13:52:47 +0800
-> Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> On Mon, Apr 24, 2023 at 01:52:48PM +0800, Kai-Heng Feng wrote:
+> > PCIe service that shares IRQ with PME may cause spurious wakeup on
+> > system suspend.
+> >
+> > PCIe Base Spec 5.0, section 5.2 "Link State Power Management" states
+> > that TLP and DLLP transmission is disabled for a Link in L2/L3 Ready
+> > (D3hot), L2 (D3cold with aux power) and L3 (D3cold), so we don't lose
+> > much here to disable AER during system suspend.
+> >
+> > This is very similar to previous attempts to suspend AER and DPC [1],
+> > but with a different reason.
 >
-> > There are many places that enable and disable AER interrput, so move
+> What is the reason?  I assume it's something to do with the bugzilla
+> below, but the commit log should outline the user-visible problem this
+> fixes.  The commit log basically makes the case for "why should we
+> merge this patch."
 >
-> interrupt
+> I assume it's along the lines of "I tried to suspend this system, but
+> it immediately woke up again because of an AER interrupt, and
+> disabling AER during suspend avoids this problem.  And disabling
+> the AER interrupt is not a problem because X"
 
-Thanks, will correct that in next revision.
+Yes that's the reason :)
+Will update the message to better reflect what's going on.
 
 Kai-Heng
 
 >
-> > them into helpers.
->
-> Otherwise looks like a good clean up to me.
-> FWIW
-> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->
+> > [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.=
+feng@canonical.com/
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D216295
 > >
 > > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@lin=
-ux.intel.com>
 > > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 > > ---
-> >  drivers/pci/pcie/aer.c | 45 +++++++++++++++++++++++++-----------------
-> >  1 file changed, 27 insertions(+), 18 deletions(-)
+> >  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
 > >
 > > diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> > index f6c24ded134c..1420e1f27105 100644
+> > index 1420e1f27105..9c07fdbeb52d 100644
 > > --- a/drivers/pci/pcie/aer.c
 > > +++ b/drivers/pci/pcie/aer.c
-> > @@ -1227,6 +1227,28 @@ static irqreturn_t aer_irq(int irq, void *contex=
-t)
-> >       return IRQ_WAKE_THREAD;
+> > @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
+> >       return 0;
 > >  }
 > >
-> > +static void aer_enable_irq(struct pci_dev *pdev)
+> > +static int aer_suspend(struct pcie_device *dev)
 > > +{
-> > +     int aer =3D pdev->aer_cap;
-> > +     u32 reg32;
+> > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > +     struct pci_dev *pdev =3D rpc->rpd;
 > > +
-> > +     /* Enable Root Port's interrupt in response to error messages */
-> > +     pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> > +     reg32 |=3D ROOT_PORT_INTR_ON_MESG_MASK;
-> > +     pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> > +}
-> > +
-> > +static void aer_disable_irq(struct pci_dev *pdev)
-> > +{
-> > +     int aer =3D pdev->aer_cap;
-> > +     u32 reg32;
-> > +
-> > +     /* Disable Root's interrupt in response to error messages */
-> > +     pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> > +     reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
-> > +     pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> > +}
-> > +
-> >  /**
-> >   * aer_enable_rootport - enable Root Port's interrupts when receiving =
-messages
-> >   * @rpc: pointer to a Root Port data structure
-> > @@ -1256,10 +1278,7 @@ static void aer_enable_rootport(struct aer_rpc *=
-rpc)
-> >       pci_read_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, &reg32);
-> >       pci_write_config_dword(pdev, aer + PCI_ERR_UNCOR_STATUS, reg32);
-> >
-> > -     /* Enable Root Port's interrupt in response to error messages */
-> > -     pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> > -     reg32 |=3D ROOT_PORT_INTR_ON_MESG_MASK;
-> > -     pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
-> > +     aer_enable_irq(pdev);
-> >  }
-> >
-> >  /**
-> > @@ -1274,10 +1293,7 @@ static void aer_disable_rootport(struct aer_rpc =
-*rpc)
-> >       int aer =3D pdev->aer_cap;
-> >       u32 reg32;
-> >
-> > -     /* Disable Root's interrupt in response to error messages */
-> > -     pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, &reg32);
-> > -     reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
-> > -     pci_write_config_dword(pdev, aer + PCI_ERR_ROOT_COMMAND, reg32);
 > > +     aer_disable_irq(pdev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int aer_resume(struct pcie_device *dev)
+> > +{
+> > +     struct aer_rpc *rpc =3D get_service_data(dev);
+> > +     struct pci_dev *pdev =3D rpc->rpd;
+> > +
+> > +     aer_enable_irq(pdev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+> >   * @dev: pointer to Root Port, RCEC, or RCiEP
+> > @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver =
+=3D {
+> >       .service        =3D PCIE_PORT_SERVICE_AER,
 > >
-> >       /* Clear Root's error status reg */
-> >       pci_read_config_dword(pdev, aer + PCI_ERR_ROOT_STATUS, &reg32);
-> > @@ -1372,12 +1388,8 @@ static pci_ers_result_t aer_root_reset(struct pc=
-i_dev *dev)
-> >        */
-> >       aer =3D root ? root->aer_cap : 0;
+> >       .probe          =3D aer_probe,
+> > +     .suspend        =3D aer_suspend,
+> > +     .resume         =3D aer_resume,
+> >       .remove         =3D aer_remove,
+> >  };
 > >
-> > -     if ((host->native_aer || pcie_ports_native) && aer) {
-> > -             /* Disable Root's interrupt in response to error messages=
- */
-> > -             pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &=
-reg32);
-> > -             reg32 &=3D ~ROOT_PORT_INTR_ON_MESG_MASK;
-> > -             pci_write_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, =
-reg32);
-> > -     }
-> > +     if ((host->native_aer || pcie_ports_native) && aer)
-> > +             aer_disable_irq(root);
+> > --
+> > 2.34.1
 > >
-> >       if (type =3D=3D PCI_EXP_TYPE_RC_EC || type =3D=3D PCI_EXP_TYPE_RC=
-_END) {
-> >               rc =3D pcie_reset_flr(dev, PCI_RESET_DO_RESET);
-> > @@ -1396,10 +1408,7 @@ static pci_ers_result_t aer_root_reset(struct pc=
-i_dev *dev)
-> >               pci_read_config_dword(root, aer + PCI_ERR_ROOT_STATUS, &r=
-eg32);
-> >               pci_write_config_dword(root, aer + PCI_ERR_ROOT_STATUS, r=
-eg32);
-> >
-> > -             /* Enable Root Port's interrupt in response to error mess=
-ages */
-> > -             pci_read_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, &=
-reg32);
-> > -             reg32 |=3D ROOT_PORT_INTR_ON_MESG_MASK;
-> > -             pci_write_config_dword(root, aer + PCI_ERR_ROOT_COMMAND, =
-reg32);
-> > +             aer_enable_irq(root);
-> >       }
-> >
-> >       return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
->
