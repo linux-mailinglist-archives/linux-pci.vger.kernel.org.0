@@ -2,200 +2,103 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B2966FEC3D
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 09:04:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C79D46FEC57
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 09:07:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237174AbjEKHEb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 03:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38290 "EHLO
+        id S237241AbjEKHHe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 03:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237261AbjEKHEH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 03:04:07 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9186A79;
-        Thu, 11 May 2023 00:03:42 -0700 (PDT)
-Received: from dggpemm100016.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QH2r40mQ6zsRBN;
-        Thu, 11 May 2023 15:01:40 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm100016.china.huawei.com (7.185.36.192) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 15:03:33 +0800
-Received: from [10.174.150.180] (10.174.150.180) by
- dggpemm500007.china.huawei.com (7.185.36.183) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 11 May 2023 15:03:33 +0800
-Content-Type: multipart/mixed;
-        boundary="------------SHVJ7X6OJBJvh5hGfukHDv1g"
-Message-ID: <f7ab6d78-1815-bd3e-c365-1bf054138366@huawei.com>
-Date:   Thu, 11 May 2023 15:03:24 +0800
+        with ESMTP id S237325AbjEKHHW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 03:07:22 -0400
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5F030C5
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 00:06:49 -0700 (PDT)
+Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f435658d23so21702525e9.3
+        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 00:06:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1683788807; x=1686380807;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uIcWuLsvmopxNqnqJDp9shwq0Jdw37qdS0lcw8bVdic=;
+        b=ycpeV+yVsSbxBLOUN79yLRjIrWyZ1UvlH3EIkpTwQK2p4gMxr6g6dqro38HZ/+R77E
+         +luQnv+aHBa8YS5usgays2YhAsyDQEpMSNJhr+3WfDmU/ctRqEAc9vsJ7zE6Pd+plKkO
+         cKfD1zfNmYZqSIJJI/UTy6GiIpUIu609x9EwF/GK0ppFTUKxEHEJ0YQZoHrwDupKkV3H
+         KJpCM0K+7BtER+PE/eMNRRVlqD3kIWr9ByIs6mgVcBk4j9ImjG8vnJOem1MfQt8cjfDq
+         gTJ6VsTsF2Q1nTqGBnfVHJOta874HvcVNE/qESKdFGjjzc51TwjwCa5HtvfZACgH5oUO
+         AVKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683788807; x=1686380807;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uIcWuLsvmopxNqnqJDp9shwq0Jdw37qdS0lcw8bVdic=;
+        b=GHG12aeVOS6mwbPb/xJesw6IMU7z/tfknf/7iE1v9ozmqLx3n33m3+bfe/i8CZ2Nqi
+         7kuiwOjmk6+azdvLkOl0LnbWyXb/df0aNkEfTXhzBDs8adDfUTdwZPATkUZonc+n6eoh
+         K2CeMXWbLd4KM4nh1CW2gS8U68vSAn/cIbWr6zV9/mV6BeCFQLggRY2Dl5DXRXDova9T
+         AZH+5QGxFtzLaXCBJxB1M8sVzne2cb7UZ8tVznXwuZskGSjkzApIAONub1lo5RKHD4QE
+         3AJu8omLdaGp10nAdp6A7JgTvkNehStgCW3Mw+AlZSCunMitrOTKGJ8YsraiZZHZckP9
+         WNAw==
+X-Gm-Message-State: AC+VfDwfg4cdGlwkb39hYZ+wEOE7bYauNm+PAzPtSveNriwWWc9PorIr
+        atqlcQYCRBvKeIhJdDTkIL4XZg==
+X-Google-Smtp-Source: ACHHUZ7hOcdwBFm1sYha2YbMHDckIxJuYC0atDMrBhdTB//xTqsxFg5ia4bmoOpOuMORz9HmP6yWUw==
+X-Received: by 2002:a05:600c:b44:b0:3f4:23a4:7a93 with SMTP id k4-20020a05600c0b4400b003f423a47a93mr9294986wmr.25.1683788807559;
+        Thu, 11 May 2023 00:06:47 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id l2-20020a1c7902000000b003f195d540d9sm24508171wme.14.2023.05.11.00.06.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 00:06:45 -0700 (PDT)
+Date:   Thu, 11 May 2023 10:06:40 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     dlemoal@kernel.org
+Cc:     linux-pci@vger.kernel.org
+Subject: [bug report] PCI: endpoint: Automatically create a function specific
+ attributes group
+Message-ID: <95d23290-496a-462c-87c5-944df1e20ba1@kili.mountain>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-From:   Zhuang Shengen <zhuangshengen@huawei.com>
-Subject: Re: [PATCH] vsock: bugfix port residue in server
-To:     Stefano Garzarella <sgarzare@redhat.com>
-CC:     <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <arei.gonglei@huawei.com>,
-        <longpeng2@huawei.com>, <jianjay.zhou@huawei.com>
-References: <20230510142502.2293109-1-zhuangshengen@huawei.com>
- <ftuh7vhoxdxbymg6u3wlkfhlfoufupeqampqxc2ktqrpxndow3@dkpufdnuwlln>
-In-Reply-To: <ftuh7vhoxdxbymg6u3wlkfhlfoufupeqampqxc2ktqrpxndow3@dkpufdnuwlln>
-X-Originating-IP: [10.174.150.180]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-6.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
---------------SHVJ7X6OJBJvh5hGfukHDv1g
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+Hello Damien Le Moal,
 
-Hi Stefano:
+The patch 01c68988addf: "PCI: endpoint: Automatically create a
+function specific attributes group" from Apr 15, 2023, leads to the
+following Smatch static checker warning:
 
-在 2023/5/10 23:23, Stefano Garzarella 写道:
-> Hi,
-> thanks for the patch, the change LGTM, but I have the following
-> suggestions:
->
-> Please avoid "bugfix" in the subject, "fix" should be enough:
-> https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#describe-your-changes 
->
->
-> Anyway, I suggest to change the subject in
-> "vsock: avoid to close connected socket after the timeout"
->
-thanks for your suggestion, I will change the subject
-> On Wed, May 10, 2023 at 10:25:02PM +0800, Zhuang Shengen wrote:
->> When client and server establish a connection through vsock,
->> the client send a request to the server to initiate the connection,
->> then start a timer to wait for the server's response. When the server's
->> RESPONSE message arrives, the timer also times out and exits. The
->> server's RESPONSE message is processed first, and the connection is
->> established. However, the client's timer also times out, the original
->> processing logic of the client is to directly set the state of this 
->> vsock
->> to CLOSE and return ETIMEDOUT, User will release the port. It will not
->
-> What to you mean with "User" here?
->
-The User means Client, I will delete the statement "User will release 
-the por", it indeed difficult to understand
->> notify the server when the port is released, causing the server port 
->> remain
->>
->
-> Can we remove this blank line?
->
-OK
->> when client's vsock_conqnect timeout，it should check sk state is
->
-> The remote peer can't trust the other peer, indeed it will receive an
-> error after sending the first message and it will remove the connection,
-> right?
->
-If this situation happend, the server will response a RST? Anyway the 
-connection will not established before timeout, The sk state wont be 
-ESTABLISHED.
->> ESTABLISHED or not. if sk state is ESTABLISHED, it means the connection
->> is established, the client should not set the sk state to CLOSE
->>
->> Note: I encountered this issue on kernel-4.18, which can be fixed by
->> this patch. Then I checked the latest code in the community
->> and found similar issue.
->>
->
-> In order to backport it to the stable kernels, we should add a Fixes tag:
-> https://www.kernel.org/doc/html/v4.17/process/submitting-patches.html#describe-your-changes 
->
->
-OK, I add a Fixes: d021c344051a ("VSOCK: Introduce VM Sockets") in the 
-new patch.
+	drivers/pci/endpoint/pci-ep-cfs.c:540 pci_ep_cfs_add_type_group()
+	warn: 'group' isn't an ERR_PTR
 
-I put the new patch with v2 title in the attachment, please check.
-Thanks,
-Shengen
+drivers/pci/endpoint/pci-ep-cfs.c
+    532 static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
+    533 {
+    534         struct config_group *group;
+    535 
+    536         group = pci_epf_type_add_cfs(epf_group->epf, &epf_group->group);
+    537         if (!group)
+    538                 return;
+    539 
+--> 540         if (IS_ERR(group)) {
 
-> Thanks,
-> Stefano
->
->> Signed-off-by: Zhuang Shengen <zhuangshengen@huawei.com>
->> ---
->> net/vmw_vsock/af_vsock.c | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/net/vmw_vsock/af_vsock.c b/net/vmw_vsock/af_vsock.c
->> index 413407bb646c..efb8a0937a13 100644
->> --- a/net/vmw_vsock/af_vsock.c
->> +++ b/net/vmw_vsock/af_vsock.c
->> @@ -1462,7 +1462,7 @@ static int vsock_connect(struct socket *sock, 
->> struct sockaddr *addr,
->>             vsock_transport_cancel_pkt(vsk);
->>             vsock_remove_connected(vsk);
->>             goto out_wait;
->> -        } else if (timeout == 0) {
->> +        } else if ((sk->sk_state != TCP_ESTABLISHED) && (timeout == 
->> 0)) {
->>             err = -ETIMEDOUT;
->>             sk->sk_state = TCP_CLOSE;
->>             sock->state = SS_UNCONNECTED;
->> -- 
->> 2.27.0
->>
->
---------------SHVJ7X6OJBJvh5hGfukHDv1g
-Content-Type: text/plain; charset="UTF-8";
-	name="0001-vsock-avoid-to-close-connected-socket-after-the-time.patch"
-Content-Disposition: attachment;
-	filename*0="0001-vsock-avoid-to-close-connected-socket-after-the-time.pa";
-	filename*1="tch"
-Content-Transfer-Encoding: base64
+pci_epf_type_add_cfs() does not return error pointers currently.  Which
+is fine.  Presumably it will start returning them later.  But could you
+add some comments next to the pci_epf_type_add_cfs() to explain what a
+NULL return means vs an error pointer return?
 
-RnJvbSBiYTk4MjZjNTAxZDQ1Y2I0Njg4ZWI2NzkyNGFjNmRjODZjMTYwODhlIE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBaaHVhbmcgU2hlbmdlbiA8emh1YW5nc2hlbmdlbkBo
-dWF3ZWkuY29tPgpEYXRlOiBXZWQsIDEwIE1heSAyMDIzIDIxOjM2OjQ2ICswODAwClN1Ympl
-Y3Q6IFtQQVRDSCBuZXQgdjJdIHZzb2NrOiBhdm9pZCB0byBjbG9zZSBjb25uZWN0ZWQgc29j
-a2V0IGFmdGVyIHRoZSB0aW1lb3V0Ck1JTUUtVmVyc2lvbjogMS4wCkNvbnRlbnQtVHlwZTog
-dGV4dC9wbGFpbjsgY2hhcnNldD1VVEYtOApDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiA4
-Yml0CgpXaGVuIGNsaWVudCBhbmQgc2VydmVyIGVzdGFibGlzaCBhIGNvbm5lY3Rpb24gdGhy
-b3VnaCB2c29jaywKdGhlIGNsaWVudCBzZW5kIGEgcmVxdWVzdCB0byB0aGUgc2VydmVyIHRv
-IGluaXRpYXRlIHRoZSBjb25uZWN0aW9uLAp0aGVuIHN0YXJ0IGEgdGltZXIgdG8gd2FpdCBm
-b3IgdGhlIHNlcnZlcidzIHJlc3BvbnNlLiBXaGVuIHRoZSBzZXJ2ZXIncwpSRVNQT05TRSBt
-ZXNzYWdlIGFycml2ZXMsIHRoZSB0aW1lciBhbHNvIHRpbWVzIG91dCBhbmQgZXhpdHMuIFRo
-ZQpzZXJ2ZXIncyBSRVNQT05TRSBtZXNzYWdlIGlzIHByb2Nlc3NlZCBmaXJzdCwgYW5kIHRo
-ZSBjb25uZWN0aW9uIGlzCmVzdGFibGlzaGVkLiBIb3dldmVyLCB0aGUgY2xpZW50J3MgdGlt
-ZXIgYWxzbyB0aW1lcyBvdXQsIHRoZSBvcmlnaW5hbApwcm9jZXNzaW5nIGxvZ2ljIG9mIHRo
-ZSBjbGllbnQgaXMgdG8gZGlyZWN0bHkgc2V0IHRoZSBzdGF0ZSBvZiB0aGlzIHZzb2NrCnRv
-IENMT1NFIGFuZCByZXR1cm4gRVRJTUVET1VULiBJdCB3aWxsIG5vdCBub3RpZnkgdGhlIHNl
-cnZlciB3aGVuIHRoZSBwb3J0CmlzIHJlbGVhc2VkLCBjYXVzaW5nIHRoZSBzZXJ2ZXIgcG9y
-dCByZW1haW4uCndoZW4gY2xpZW50J3MgdnNvY2tfY29ubmVjdCB0aW1lb3V077yMaXQgc2hv
-dWxkIGNoZWNrIHNrIHN0YXRlIGlzCkVTVEFCTElTSEVEIG9yIG5vdC4gaWYgc2sgc3RhdGUg
-aXMgRVNUQUJMSVNIRUQsIGl0IG1lYW5zIHRoZSBjb25uZWN0aW9uCmlzIGVzdGFibGlzaGVk
-LCB0aGUgY2xpZW50IHNob3VsZCBub3Qgc2V0IHRoZSBzayBzdGF0ZSB0byBDTE9TRQoKTm90
-ZTogSSBlbmNvdW50ZXJlZCB0aGlzIGlzc3VlIG9uIGtlcm5lbC00LjE4LCB3aGljaCBjYW4g
-YmUgZml4ZWQgYnkKdGhpcyBwYXRjaC4gVGhlbiBJIGNoZWNrZWQgdGhlIGxhdGVzdCBjb2Rl
-IGluIHRoZSBjb21tdW5pdHkKYW5kIGZvdW5kIHNpbWlsYXIgaXNzdWUuCgpGaXhlczogZDAy
-MWMzNDQwNTFhICgiVlNPQ0s6IEludHJvZHVjZSBWTSBTb2NrZXRzIikKU2lnbmVkLW9mZi1i
-eTogWmh1YW5nIFNoZW5nZW4gPHpodWFuZ3NoZW5nZW5AaHVhd2VpLmNvbT4KLS0tCiBuZXQv
-dm13X3Zzb2NrL2FmX3Zzb2NrLmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9uZXQvdm13X3Zzb2NrL2FmX3Zz
-b2NrLmMgYi9uZXQvdm13X3Zzb2NrL2FmX3Zzb2NrLmMKaW5kZXggNDEzNDA3YmI2NDZjLi5l
-ZmI4YTA5MzdhMTMgMTAwNjQ0Ci0tLSBhL25ldC92bXdfdnNvY2svYWZfdnNvY2suYworKysg
-Yi9uZXQvdm13X3Zzb2NrL2FmX3Zzb2NrLmMKQEAgLTE0NjIsNyArMTQ2Miw3IEBAIHN0YXRp
-YyBpbnQgdnNvY2tfY29ubmVjdChzdHJ1Y3Qgc29ja2V0ICpzb2NrLCBzdHJ1Y3Qgc29ja2Fk
-ZHIgKmFkZHIsCiAJCQl2c29ja190cmFuc3BvcnRfY2FuY2VsX3BrdCh2c2spOwogCQkJdnNv
-Y2tfcmVtb3ZlX2Nvbm5lY3RlZCh2c2spOwogCQkJZ290byBvdXRfd2FpdDsKLQkJfSBlbHNl
-IGlmICh0aW1lb3V0ID09IDApIHsKKwkJfSBlbHNlIGlmICgoc2stPnNrX3N0YXRlICE9IFRD
-UF9FU1RBQkxJU0hFRCkgJiYgKHRpbWVvdXQgPT0gMCkpIHsKIAkJCWVyciA9IC1FVElNRURP
-VVQ7CiAJCQlzay0+c2tfc3RhdGUgPSBUQ1BfQ0xPU0U7CiAJCQlzb2NrLT5zdGF0ZSA9IFNT
-X1VOQ09OTkVDVEVEOwotLSAKMi4yNy4wCgo=
+    541                 dev_err(&epf_group->epf->dev,
+    542                         "failed to create epf type specific attributes\n");
+    543                 return;
+    544         }
+    545 
+    546         configfs_register_group(&epf_group->group, group);
+    547 }
 
---------------SHVJ7X6OJBJvh5hGfukHDv1g--
+regards,
+dan carpenter
