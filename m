@@ -2,103 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C79D46FEC57
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 09:07:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD6CC6FEC69
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 09:11:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237241AbjEKHHe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 03:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41898 "EHLO
+        id S236462AbjEKHL4 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 11 May 2023 03:11:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237325AbjEKHHW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 03:07:22 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B5F030C5
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 00:06:49 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f435658d23so21702525e9.3
-        for <linux-pci@vger.kernel.org>; Thu, 11 May 2023 00:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683788807; x=1686380807;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=uIcWuLsvmopxNqnqJDp9shwq0Jdw37qdS0lcw8bVdic=;
-        b=ycpeV+yVsSbxBLOUN79yLRjIrWyZ1UvlH3EIkpTwQK2p4gMxr6g6dqro38HZ/+R77E
-         +luQnv+aHBa8YS5usgays2YhAsyDQEpMSNJhr+3WfDmU/ctRqEAc9vsJ7zE6Pd+plKkO
-         cKfD1zfNmYZqSIJJI/UTy6GiIpUIu609x9EwF/GK0ppFTUKxEHEJ0YQZoHrwDupKkV3H
-         KJpCM0K+7BtER+PE/eMNRRVlqD3kIWr9ByIs6mgVcBk4j9ImjG8vnJOem1MfQt8cjfDq
-         gTJ6VsTsF2Q1nTqGBnfVHJOta874HvcVNE/qESKdFGjjzc51TwjwCa5HtvfZACgH5oUO
-         AVKw==
+        with ESMTP id S229903AbjEKHLz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 03:11:55 -0400
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EDDC2D51;
+        Thu, 11 May 2023 00:11:53 -0700 (PDT)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-55a26b46003so124440107b3.1;
+        Thu, 11 May 2023 00:11:53 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683788807; x=1686380807;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uIcWuLsvmopxNqnqJDp9shwq0Jdw37qdS0lcw8bVdic=;
-        b=GHG12aeVOS6mwbPb/xJesw6IMU7z/tfknf/7iE1v9ozmqLx3n33m3+bfe/i8CZ2Nqi
-         7kuiwOjmk6+azdvLkOl0LnbWyXb/df0aNkEfTXhzBDs8adDfUTdwZPATkUZonc+n6eoh
-         K2CeMXWbLd4KM4nh1CW2gS8U68vSAn/cIbWr6zV9/mV6BeCFQLggRY2Dl5DXRXDova9T
-         AZH+5QGxFtzLaXCBJxB1M8sVzne2cb7UZ8tVznXwuZskGSjkzApIAONub1lo5RKHD4QE
-         3AJu8omLdaGp10nAdp6A7JgTvkNehStgCW3Mw+AlZSCunMitrOTKGJ8YsraiZZHZckP9
-         WNAw==
-X-Gm-Message-State: AC+VfDwfg4cdGlwkb39hYZ+wEOE7bYauNm+PAzPtSveNriwWWc9PorIr
-        atqlcQYCRBvKeIhJdDTkIL4XZg==
-X-Google-Smtp-Source: ACHHUZ7hOcdwBFm1sYha2YbMHDckIxJuYC0atDMrBhdTB//xTqsxFg5ia4bmoOpOuMORz9HmP6yWUw==
-X-Received: by 2002:a05:600c:b44:b0:3f4:23a4:7a93 with SMTP id k4-20020a05600c0b4400b003f423a47a93mr9294986wmr.25.1683788807559;
-        Thu, 11 May 2023 00:06:47 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id l2-20020a1c7902000000b003f195d540d9sm24508171wme.14.2023.05.11.00.06.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 00:06:45 -0700 (PDT)
-Date:   Thu, 11 May 2023 10:06:40 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     dlemoal@kernel.org
-Cc:     linux-pci@vger.kernel.org
-Subject: [bug report] PCI: endpoint: Automatically create a function specific
- attributes group
-Message-ID: <95d23290-496a-462c-87c5-944df1e20ba1@kili.mountain>
+        d=1e100.net; s=20221208; t=1683789112; x=1686381112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/XubI+1BOUm/SMLdlvRJpQb47bFFwKaY8cjy83hRjvc=;
+        b=ikZQOsxPeTHNvGfyis2udfksz8hTNJcx+DXDkM7wi8z/pVUthizA10qmIDAe9WXAC1
+         flFV72GvvwXvyypbGe3d82gYuZw2zRTlxH7k2rtdWRcjhWr4HURROtMFVqParXZ6Ilt5
+         gUDgjtRHczNS3jzhKBQlBtWJmGAS/Y89gkDR+bqNx/tOy+CJE8uSFrj9rTRpehbN9EV5
+         pfb4Qi3nuniDT/IcU75Jfq96ZYk0/PoUYbsk5qrniT3AJ72OdJYpiA/BXW1O1NhUlCsg
+         4kOp8zj1hEbY9ehh5uVaav6N0U0OHDj0HKqCGZsd/18P0NsJvMUvi6TFZc1SLciAwM8E
+         T+XA==
+X-Gm-Message-State: AC+VfDzRnXxWo/TwjlFIeLK9fhMKBegqhLKydhdN38jgZDOUpd557hJz
+        9gdAW7vuAHs5QjEucWkLWauX0TObbygG3g==
+X-Google-Smtp-Source: ACHHUZ6BejJ5wJ5cCWcp1Y7XF7WUJ7upf2iDDwjDWd8jzb6hidJn8OrCcsjod/Ma/LHo36BUd/TCww==
+X-Received: by 2002:a81:6587:0:b0:555:cee3:d143 with SMTP id z129-20020a816587000000b00555cee3d143mr20484752ywb.4.1683789112319;
+        Thu, 11 May 2023 00:11:52 -0700 (PDT)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id h11-20020a816c0b000000b0054fdc874c8asm4707051ywc.59.2023.05.11.00.11.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 May 2023 00:11:51 -0700 (PDT)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-55a26b46003so124439697b3.1;
+        Thu, 11 May 2023 00:11:51 -0700 (PDT)
+X-Received: by 2002:a81:8843:0:b0:559:cc36:d367 with SMTP id
+ y64-20020a818843000000b00559cc36d367mr21260559ywf.6.1683789111034; Thu, 11
+ May 2023 00:11:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230510190252.19030-1-wsa+renesas@sang-engineering.com> <20230510190252.19030-3-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20230510190252.19030-3-wsa+renesas@sang-engineering.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Thu, 11 May 2023 09:11:39 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXx5gUez8JoWch4A9qVCfobWG1bO==UXTfvGHryP2y9dg@mail.gmail.com>
+Message-ID: <CAMuHMdXx5gUez8JoWch4A9qVCfobWG1bO==UXTfvGHryP2y9dg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] PCI: rcar-host: add support for optional regulators
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello Damien Le Moal,
+Hi Wolfram,
 
-The patch 01c68988addf: "PCI: endpoint: Automatically create a
-function specific attributes group" from Apr 15, 2023, leads to the
-following Smatch static checker warning:
+On Wed, May 10, 2023 at 9:06 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> The KingFisher board has regulators. They just need to be en-/disabled,
+> so we can leave the handling to devm. Order variables in reverse-xmas
+> while we are here.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+> Changes since v1:
+>
+> * use unsigned int for i
+> * use reverse-xmas for variable declaration
+> * really bail out now on error
 
-	drivers/pci/endpoint/pci-ep-cfs.c:540 pci_ep_cfs_add_type_group()
-	warn: 'group' isn't an ERR_PTR
+Thanks for the update!
 
-drivers/pci/endpoint/pci-ep-cfs.c
-    532 static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
-    533 {
-    534         struct config_group *group;
-    535 
-    536         group = pci_epf_type_add_cfs(epf_group->epf, &epf_group->group);
-    537         if (!group)
-    538                 return;
-    539 
---> 540         if (IS_ERR(group)) {
+> --- a/drivers/pci/controller/pcie-rcar-host.c
+> +++ b/drivers/pci/controller/pcie-rcar-host.c
 
-pci_epf_type_add_cfs() does not return error pointers currently.  Which
-is fine.  Presumably it will start returning them later.  But could you
-add some comments next to the pci_epf_type_add_cfs() to explain what a
-NULL return means vs an error pointer return?
+> @@ -992,6 +999,15 @@ static int rcar_pcie_probe(struct platform_device *pdev)
+>         pcie->dev = dev;
+>         platform_set_drvdata(pdev, host);
+>
+> +       for (i = 0; i < ARRAY_SIZE(rcar_pcie_supplies); i++) {
+> +               err = devm_regulator_get_enable_optional(dev, rcar_pcie_supplies[i]);
+> +               if (err < 0 && err != -ENODEV) {
+> +                       dev_err_probe(dev, err, "error enabling regulator %s\n",
+> +                                     rcar_pcie_supplies[i]);
+> +                       return err;
 
-    541                 dev_err(&epf_group->epf->dev,
-    542                         "failed to create epf type specific attributes\n");
-    543                 return;
-    544         }
-    545 
-    546         configfs_register_group(&epf_group->group, group);
-    547 }
+dev_err_probe() was designed for daisy-chaining, so please use
 
-regards,
-dan carpenter
+    return dev_err_probe(...);
+
+instead.
+
+> +               }
+> +       }
+> +
+>         pm_runtime_enable(pcie->dev);
+>         err = pm_runtime_get_sync(pcie->dev);
+>         if (err < 0) {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
