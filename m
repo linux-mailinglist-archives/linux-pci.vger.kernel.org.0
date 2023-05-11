@@ -2,135 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 62B626FFA18
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 21:23:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DC426FFAD9
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 21:50:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239114AbjEKTXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 15:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
+        id S239428AbjEKTup (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 15:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238599AbjEKTXa (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 15:23:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CABAD3A;
-        Thu, 11 May 2023 12:22:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF24B650FC;
-        Thu, 11 May 2023 19:22:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A35C433D2;
-        Thu, 11 May 2023 19:22:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683832974;
-        bh=QpSSk/1ebWRADeVKkTa0UQcYPlC3k/G654CAP3C9inA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=hjjNUy+EMZYUa9Mq/8GFHcLgiNT1wA7pnV4d5hK0g5b5gfK/AxH0JtcG3mfc26cM0
-         0TLz0V91O3tCA7Tg68LvnFnyG93r0BojVB4UoPw36+TfN+suZe17QTwllS99InSZd+
-         PZmdpfOahm8FX8WgCf9PSAz9+Wg7GLPJSVG0683QUq4698jNt1vleo6u0oI3KvOyjw
-         GEarGhSluLFERM0wXSI3EWxkl2wpJE31/ryrcMRzzKONgNDgxz5oo+0rFmfZk7iXCO
-         6pUez+FBLUFPTE/ANUW2la4479WLQC31Dz1MWo+kOs2oJ4wCoAsrFsKXBeS07tHNvt
-         2WaY/zmB8dPmg==
-Date:   Thu, 11 May 2023 14:22:52 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
- for LNKCTL{,2}
-Message-ID: <ZF1AjOKDVlbNFJPK@bhelgaas>
+        with ESMTP id S239584AbjEKTug (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 15:50:36 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F93D041;
+        Thu, 11 May 2023 12:50:18 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-9659f452148so1616556466b.1;
+        Thu, 11 May 2023 12:50:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683834597; x=1686426597;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=49+wF3dhiJ5ry2Q356rv8LAmJkXZ30kFszS6vJAnNZs=;
+        b=g0LA4OoUg3kQOmMAzBOrSwRBOXXIKInTZnHL0lTfR77a7OyJ/NCj4+fk7crY2JRd/5
+         4YSVadRTFFlwhBIRQfrIx0cxfx6CDFJ7EiPuFtKhkwVU2Xyk9qH+Pq50Z80rMCgZkHMT
+         /VdV7VsTCoPJID8JrTJOPMj6XksVZJLigx9HNpdXlBKIbzQAgPymTETRQC0kwnRKxrVZ
+         tttHHS1qYpUoJgIXUs7ne7JH50GlNC4qcRlfUqfV97K6m197dbKU1yYADReh01GPNlK6
+         BHinkNX1wMW7X1/tpu8bGP+WdFexL0r2PQyBcDlHlLKsDM6aS+fmFpMefpDAJNCvs1+o
+         E7+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683834597; x=1686426597;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=49+wF3dhiJ5ry2Q356rv8LAmJkXZ30kFszS6vJAnNZs=;
+        b=bjF7HEZu4lqIxPsuv3sOUh8Dw+qz7u7rB+LycCioFTxD0vW8wcywpHcONCp3Yyql2g
+         Jff7ZxSLPcGsuxQPutGtAmjoz28XIXQuKCy9FUD1kc29aEoceivFoM7APjcrsIfJL+vM
+         tsIMmNLzbiQKzE5h9xfm3iPsYI0VLlPJrtQ7P5uJlWIYenSqoilmhopLtkSQ9gQssJFj
+         dKR617AfqHawZ8JJ22NDBirUtXyA2zzGTWiINb7QztHkL1OBNqPIVxosJzbO04iR0npM
+         sc7x5hVWSY48HJlOX2zXfT6j0+IZgWWuBUH9pHYinUODb/oQSfXvPs3wiC6GqVZhgPb+
+         /2FA==
+X-Gm-Message-State: AC+VfDx2KRecoUcevOm3XuTC+FyiFFwXgwcCYKESPS/uwA0nkT4XbyhP
+        ds44xghP7ON5HbbQk8a90No=
+X-Google-Smtp-Source: ACHHUZ5OPPbd7yz9fMwLSwXmpWJ8icV82cKE5yuc6idjNH+I+rZ24nf5enOSgo65ZAWuwzP8Nvtzug==
+X-Received: by 2002:a17:906:58cd:b0:966:350f:f42d with SMTP id e13-20020a17090658cd00b00966350ff42dmr19047994ejs.23.1683834597092;
+        Thu, 11 May 2023 12:49:57 -0700 (PDT)
+Received: from ?IPV6:2a01:c23:c58e:b900:c905:524d:7524:40e1? (dynamic-2a01-0c23-c58e-b900-c905-524d-7524-40e1.c23.pool.telefonica.de. [2a01:c23:c58e:b900:c905:524d:7524:40e1])
+        by smtp.googlemail.com with ESMTPSA id n5-20020a1709065da500b0096616adc0d5sm4432982ejv.104.2023.05.11.12.49.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 11 May 2023 12:49:56 -0700 (PDT)
+Message-ID: <98b3b70a-86c0-78c0-b734-0764bb5a21fc@gmail.com>
+Date:   Thu, 11 May 2023 21:49:52 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 14/17] r8169: Use pcie_lnkctl_clear_and_set() for changing
+ LNKCTL
+To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>, nic_swsd@realtek.com,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
+ <20230511131441.45704-15-ilpo.jarvinen@linux.intel.com>
+Content-Language: en-US
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+In-Reply-To: <20230511131441.45704-15-ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <5140259d-4425-3166-438a-bc9fbbaa49f9@linux.intel.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 11, 2023 at 08:35:48PM +0300, Ilpo Järvinen wrote:
-> On Thu, 11 May 2023, Bjorn Helgaas wrote:
+On 11.05.2023 15:14, Ilpo JÃ¤rvinen wrote:
+> Don't assume that only the driver would be accessing LNKCTL. ASPM
+> policy changes can trigger write to LNKCTL outside of driver's control.
 > 
-> > On Thu, May 11, 2023 at 04:14:25PM +0300, Ilpo Järvinen wrote:
-> > > A few places write LNKCTL and LNKCTL2 registers without proper
-> > > concurrency control and this could result in losing the changes
-> > > one of the writers intended to make.
-> > > 
-> > > Add pcie_capability_clear_and_set_word_locked() and helpers to use it
-> > > with LNKCTL and LNKCTL2. The concurrency control is provided using a
-> > > spinlock in the struct pci_dev.
-> > > 
-> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
-> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-> > 
-> > Thanks for raising this issue!  Definitely looks like something that
-> > needs attention.
-> > 
-> > > ---
-> > >  drivers/pci/access.c | 14 ++++++++++++++
-> > >  drivers/pci/probe.c  |  1 +
-> > >  include/linux/pci.h  | 17 +++++++++++++++++
-> > >  3 files changed, 32 insertions(+)
-> > > 
-> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
-> > > index 3c230ca3de58..d92a3daadd0c 100644
-> > > --- a/drivers/pci/access.c
-> > > +++ b/drivers/pci/access.c
-> > > @@ -531,6 +531,20 @@ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
-> > >  }
-> > >  EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
-> > >  
-> > > +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
-> > > +					      u16 clear, u16 set)
-> > > +{
-> > > +	unsigned long flags;
-> > > +	int ret;
-> > > +
-> > > +	spin_lock_irqsave(&dev->cap_lock, flags);
-> > > +	ret = pcie_capability_clear_and_set_word(dev, pos, clear, set);
-> > > +	spin_unlock_irqrestore(&dev->cap_lock, flags);
-> > > +
-> > > +	return ret;
-> > > +}
-> > > +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
-> > 
-> > I didn't see the prior discussion with Lukas, so maybe this was
-> > answered there, but is there any reason not to add locking to
-> > pcie_capability_clear_and_set_word() and friends directly?  
-> >
-> > It would be nice to avoid having to decide whether to use the locked
-> > or unlocked versions.  It would also be nice to preserve the use of
-> > PCI_EXP_LNKCTL directly, for grep purposes.  And it would obviate the
-> > need for some of these patches, e.g., the use of
-> > pcie_capability_clear_word(), where it's not obvious at the call site
-> > why a change is needed.
+> Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
+> losing concurrent updates to the register value.
 > 
-> There wasn't that big discussion about it (internally). I brought both
-> alternatives up and Lukas just said he didn't know what's the best 
-> approach (+ gave a weak nudge towards the separate accessor so I went 
-> with it to make forward progress). Based on that I don't think he had a 
-> strong opinion on it.
+
+Wouldn't it be more appropriate to add proper locking to the
+underlying pcie_capability_clear_and_set_word()?
+
+
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Ilpo JÃ¤rvinen <ilpo.jarvinen@linux.intel.com>
+> ---
+>  drivers/net/ethernet/realtek/r8169_main.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> I'm certainly fine to just use it in the normal accessor functions that 
-> do RMW and add the locking there. It would certainly have to those good 
-> sides you mentioned.
-
-Let's start with that, then.
-
-Many of these are ASPM-related updates that IMHO should not be in
-drivers at all.  Drivers should use PCI core interfaces so the core
-doesn't get confused.
-
-Bjorn
-
+> diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/ethernet/realtek/r8169_main.c
+> index a7e376e7e689..c0294a833681 100644
+> --- a/drivers/net/ethernet/realtek/r8169_main.c
+> +++ b/drivers/net/ethernet/realtek/r8169_main.c
+> @@ -2686,14 +2686,12 @@ static void __rtl_ephy_init(struct rtl8169_private *tp,
+>  
+>  static void rtl_disable_clock_request(struct rtl8169_private *tp)
+>  {
+> -	pcie_capability_clear_word(tp->pci_dev, PCI_EXP_LNKCTL,
+> -				   PCI_EXP_LNKCTL_CLKREQ_EN);
+> +	pcie_lnkctl_clear_and_set(tp->pci_dev, PCI_EXP_LNKCTL_CLKREQ_EN, 0);
+>  }
+>  
+>  static void rtl_enable_clock_request(struct rtl8169_private *tp)
+>  {
+> -	pcie_capability_set_word(tp->pci_dev, PCI_EXP_LNKCTL,
+> -				 PCI_EXP_LNKCTL_CLKREQ_EN);
+> +	pcie_lnkctl_clear_and_set(tp->pci_dev, 0, PCI_EXP_LNKCTL_CLKREQ_EN);
+>  }
+>  
+>  static void rtl_pcie_state_l2l3_disable(struct rtl8169_private *tp)
 
