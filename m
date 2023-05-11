@@ -2,113 +2,166 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BFBA66FFC18
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 23:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 751B16FFC8F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 00:08:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239232AbjEKVu6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 17:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48260 "EHLO
+        id S239402AbjEKWIX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 18:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57854 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238053AbjEKVu5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 17:50:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACDBC5BB4;
-        Thu, 11 May 2023 14:50:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A625651FF;
-        Thu, 11 May 2023 21:50:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4118C433EF;
-        Thu, 11 May 2023 21:50:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683841851;
-        bh=K4WgEsYyO81HfMwY9MP7UqaYLOk4som61w9X0fncpTA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D1Ma5etn8qiIyII92l350T7Kxgywc1UZMcdJDZ2SWzXv7qCxL0vkrwEik9Ckw0b3R
-         y4RzWkniCey3x25t9y8sL53vQsyQOPgoZGp6qcUyM5RzCDeIh3JuuJAf260dmjuiRK
-         5ClqUIV2tXrig9u8DpnkR7LofOh5EleiEC+9GVo4dzp5MIdCJLMkGDePR4uKax8IZQ
-         6SyelbV1jhY8YtiB2Nl1zV6K057I6tPJlkCleXot1Z9gIwrC7nfnWqiOiVnYs8T4bP
-         mTL9PAA3GFA2MeA04BmoIOiN6tcWVLmJCGQb8V+wIEDEFk/OD2FOUDoXes4W31fHgZ
-         Op9Zwe0tIvwwg==
-Date:   Thu, 11 May 2023 17:50:46 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     "Limonciello, Mario" <Mario.Limonciello@amd.com>
-Cc:     Thorsten Leemhuis <linux@leemhuis.info>,
-        Linux regressions mailing list <regressions@lists.linux.dev>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "S-k, Shyam-sundar" <Shyam-sundar.S-k@amd.com>,
-        "Goswami, Sanket" <Sanket.Goswami@amd.com>,
-        "Gong, Richard" <Richard.Gong@amd.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/2] amd_nb: Add PCI ID for family 19h model 78h
-Message-ID: <ZF1jNnETIZD97XmQ@sashalap>
-References: <20230427053338.16653-1-mario.limonciello@amd.com>
- <20230427053338.16653-2-mario.limonciello@amd.com>
- <7b74c389-97b7-4f56-851b-6ce17950a4d1@roeck-us.net>
- <f2b81356-e702-3026-660f-d9a88edff632@amd.com>
- <084837c4-72c8-be92-fd1c-5ccbd805c559@leemhuis.info>
- <20230508112543.GBZFjcN2oxk4do31w4@fat_crate.local>
- <a8b29619-f1da-4cb9-a5bd-a396b52e159f@roeck-us.net>
- <20230508134414.GCZFj8rieNwF1AOerB@fat_crate.local>
- <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
+        with ESMTP id S239572AbjEKWIF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 18:08:05 -0400
+Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F598AD3A;
+        Thu, 11 May 2023 15:07:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1683842862; x=1715378862;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=dcivrtBNBKYrwhHCG20eFak+R1jORc9y5Sw1snBi2S4=;
+  b=kxqy3PvUa9WGfpgr+LUEjRxmxUm+zOOENAL6qsOFn8dSkbOUCqHGYL0Z
+   7lXCS6z4OCarbm3jfExXgAAkgqWTx/guJ5pH6OlLGf4BfvHLccFA7/Dy4
+   PgxqKUXsjdWp41iFRXckIONgwPPIWhg5fMf8b4BFia08nwn6JetdP2nw1
+   x2nYIQDBDOoVIwjcPIHEZO9onQgQNLWJD4d6CNcsHqVvsoDGRhej8l8f3
+   e7+QxR4NX11fNgYkUi4DNEMjxKHiZPTwxetNzjoqRcaClmok/6U3CG+qS
+   1wxPwDKjb/oOi8wX6idciuU2KaVCCPQupFz46NS8vrwWcwOOnGXh2U77G
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="378780014"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="378780014"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 15:07:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10707"; a="824138929"
+X-IronPort-AV: E=Sophos;i="5.99,268,1677571200"; 
+   d="scan'208";a="824138929"
+Received: from swalker-mobl1.amr.corp.intel.com (HELO [10.209.63.194]) ([10.209.63.194])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 May 2023 15:07:23 -0700
+Message-ID: <35b33699-227d-d1f5-285a-e18ef8e91e57@linux.intel.com>
+Date:   Thu, 11 May 2023 15:07:22 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <MN0PR12MB610132F2277B0F1DB1039A15E2749@MN0PR12MB6101.namprd12.prod.outlook.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.10.0
+Subject: Re: [PATCH v5 2/3] PCI/AER: Disable AER interrupt on suspend
+Content-Language: en-US
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
+Cc:     mika.westerberg@linux.intel.com, koba.ko@canonical.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230511133610.99759-1-kai.heng.feng@canonical.com>
+ <20230511133610.99759-2-kai.heng.feng@canonical.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230511133610.99759-2-kai.heng.feng@canonical.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-6.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 11, 2023 at 07:51:42PM +0000, Limonciello, Mario wrote:
->[AMD Official Use Only - General]
->
->+stable, Sasha
->
->> > Together with this patch there are now at least two regressions if
->> > -rc1 whch could have been avoided and may impact testability on
->> > affected systems.
->>
->> Are you saying that this patch which fixes s2idle on some random box
->> should've gone to Linus *immediately*?
->>
->> And read my mail again:
->>
->> "Some fixes need longer testing because there have been cases where
->> a fix breaks something else."
->>
->> So yes, I disagree with rushing fixes immediately. If they're obvious
->> - whatever that means - then sure but not all of them are such.
->>
->> --
->
->Unfortunately, it looks like the broken commit got backported into 6.1.28,
->but the fix still isn't in Linus' tree.
->
->Sasha,
->
->Can you please pick up
->https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=23a5b8bb022c1e071ca91b1a9c10f0ad6a0966e9
->for 6.1.29 to fix the regression?
 
-Happily, once it lands upstream :)
+
+On 5/11/23 6:36 AM, Kai-Heng Feng wrote:
+> PCIe service that shares IRQ with PME may cause spurious wakeup on
+> system suspend.
+> 
+> This is very similar to previous attempts to suspend AER and DPC [1],
+> but this time disabling AER IRQ is to prevent immediate PME wakeup when
+> AER shares the same IRQ line with PME.
+
+IMHO, you don't need to mention the previous submission reason.
+
+> 
+> It's okay to disable AER because PCIe Base Spec 5.0, section 5.2 "Link
+> State Power Management" states that TLP and DLLP transmission is
+> disabled for a Link in L2/L3 Ready (D3hot), L2 (D3cold with aux power)
+> and L3 (D3cold), hence we don't lose much here to disable AER IRQ during
+> system suspend.
+
+May be something like below?
+
+PCIe services that share an IRQ with PME, such as AER or DPC, may cause a
+spurious wakeup on system suspend. To prevent this, disable the AER
+interrupt notification during the system suspend process.
+
+As Per PCIe Base Spec 5.0, section 5.2, titled "Link State Power Management",
+TLP and DLLP transmission are disabled for a Link in L2/L3 Ready (D3hot), L2
+(D3cold with aux power) and L3 (D3cold) states. So disabling the AER notification
+during suspend and re-enabling them during the resume process should not affect
+the basic functionality.
+
+> 
+> [1] https://lore.kernel.org/linux-pci/20220408153159.106741-1-kai.heng.feng@canonical.com/
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=216295
+> 
+> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v5:
+>  - Wording.
+> 
+> v4:
+> v3:
+>  - No change.
+> 
+> v2:
+>  - Only disable AER IRQ.
+>  - No more check on PME IRQ#.
+>  - Use helper.
+> 
+>  drivers/pci/pcie/aer.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 1420e1f27105..9c07fdbeb52d 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -1356,6 +1356,26 @@ static int aer_probe(struct pcie_device *dev)
+>  	return 0;
+>  }
+>  
+> +static int aer_suspend(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	aer_disable_irq(pdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static int aer_resume(struct pcie_device *dev)
+> +{
+> +	struct aer_rpc *rpc = get_service_data(dev);
+> +	struct pci_dev *pdev = rpc->rpd;
+> +
+> +	aer_enable_irq(pdev);
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * aer_root_reset - reset Root Port hierarchy, RCEC, or RCiEP
+>   * @dev: pointer to Root Port, RCEC, or RCiEP
+> @@ -1420,6 +1440,8 @@ static struct pcie_port_service_driver aerdriver = {
+>  	.service	= PCIE_PORT_SERVICE_AER,
+>  
+>  	.probe		= aer_probe,
+> +	.suspend	= aer_suspend,
+> +	.resume		= aer_resume,
+>  	.remove		= aer_remove,
+>  };
+>  
 
 -- 
-Thanks,
-Sasha
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
