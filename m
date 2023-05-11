@@ -2,83 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DE4A56FFB26
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 22:17:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2BE56FFB33
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 22:23:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238053AbjEKUR0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 16:17:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59410 "EHLO
+        id S238051AbjEKUXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 16:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239288AbjEKURZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 16:17:25 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92F692D68;
-        Thu, 11 May 2023 13:17:24 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-966287b0f72so1222425766b.0;
-        Thu, 11 May 2023 13:17:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683836243; x=1686428243;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=o3yFd0Z3WkTu4ff6EQ3UVzmE4FT+cDY8nxJOS33vY3M=;
-        b=b6NNutiXCUcgjnqS41dQCxSVX20rYGFiKJnBG1Q49NP9vu7P8kiGuCCRWQXXe0KcpI
-         yWsOPq7ohgyb+ebyllHnUEc0KKFG9AVIuCMgDvTpNRQBz0mK5PlCbW4bqODkrYpTAdCV
-         XJlOepYB1lXmFBbavUBxszPsEDn6XcKpmGB26aBmh7/HSR6AvU6nTonVZIwo2vyMdNr0
-         1aR895mCqBZZLL01K26jyBmCev/VoF+xJ8/PKwGXta9BzJrvMg3tPLeeShdZzfiLXZOV
-         rB/wecx7wOiZCaqh2ORsQfxK5wsnI8Q31NvBGQ1YP5yMFu6pC3TlNPLKNJL2tjYww7n1
-         S98g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683836243; x=1686428243;
-        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
-         :content-language:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=o3yFd0Z3WkTu4ff6EQ3UVzmE4FT+cDY8nxJOS33vY3M=;
-        b=F9rP3beOTkdBymZ7qSw5Ewa6yV8vkI9xbzxrIYeyNmeVT8ZEboUr237RSGzBTY1lAa
-         Fe+mXUCBA8AHnHVeAqibJWXsn6C0aNytVfJdglIEIRyIt020RnH0lTzzOsNXYSSMZky1
-         M1QyUjzEVSvZIoeoCXlmpY2U2q0MQxygcwzvy04omcSRlpr+lB0oWnKQTtbwd9Sq0Kna
-         wMS8OHAA/UdjAXzEPs0272AE5gHjboiaX/vXukDVZj1ao1xONXj9DBIScneVaxuh4TXD
-         I67w6vJTddb3VglBzSRXwr1gYmTfTm0kUBrBME1FENChU6HIiZgkMOfXIKd+cyFDCaVn
-         O4pw==
-X-Gm-Message-State: AC+VfDwflfLYKAuv9fymjlOexCDBRDtet4aSfciEuLrUS2LWE/Zwh9SD
-        h8LN80/YXFtP7PUdic4QDI0=
-X-Google-Smtp-Source: ACHHUZ60bvluRMfqGjeIfH67tu9UTIjdzm5Olcmw+CtDjzQtA9hK1sFgcrZ/qUrj6j1rQ/psI4+oYA==
-X-Received: by 2002:a17:906:4fd6:b0:94e:56c4:59f2 with SMTP id i22-20020a1709064fd600b0094e56c459f2mr19981370ejw.26.1683836242905;
-        Thu, 11 May 2023 13:17:22 -0700 (PDT)
-Received: from ?IPV6:2a01:c23:c58e:b900:c905:524d:7524:40e1? (dynamic-2a01-0c23-c58e-b900-c905-524d-7524-40e1.c23.pool.telefonica.de. [2a01:c23:c58e:b900:c905:524d:7524:40e1])
-        by smtp.googlemail.com with ESMTPSA id hf15-20020a1709072c4f00b008f89953b761sm4466209ejc.3.2023.05.11.13.17.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 11 May 2023 13:17:22 -0700 (PDT)
-Message-ID: <7bb6e2c9-835c-c8d9-f8a5-baa3d3b03b12@gmail.com>
-Date:   Thu, 11 May 2023 22:17:18 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Content-Language: en-US
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S238381AbjEKUXf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 16:23:35 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49C6549DB;
+        Thu, 11 May 2023 13:23:34 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 06D00300002CB;
+        Thu, 11 May 2023 22:23:33 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id E47DD160E04; Thu, 11 May 2023 22:23:32 +0200 (CEST)
+Date:   Thu, 11 May 2023 22:23:32 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+        linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Krzysztof Wilczy??ski <kw@linux.com>, nic_swsd@realtek.com,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         linux-kernel@vger.kernel.org
-References: <20230511131441.45704-1-ilpo.jarvinen@linux.intel.com>
- <20230511131441.45704-15-ilpo.jarvinen@linux.intel.com>
- <98b3b70a-86c0-78c0-b734-0764bb5a21fc@gmail.com>
- <20230511200244.GA31598@wunner.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 14/17] r8169: Use pcie_lnkctl_clear_and_set() for changing
- LNKCTL
-In-Reply-To: <20230511200244.GA31598@wunner.de>
-Content-Type: text/plain; charset=UTF-8
+Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
+ for LNKCTL{,2}
+Message-ID: <20230511202332.GD31598@wunner.de>
+References: <20230511131441.45704-2-ilpo.jarvinen@linux.intel.com>
+ <ZF0P2hedTFXPv8IK@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+In-Reply-To: <ZF0P2hedTFXPv8IK@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -86,28 +52,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11.05.2023 22:02, Lukas Wunner wrote:
-> On Thu, May 11, 2023 at 09:49:52PM +0200, Heiner Kallweit wrote:
->> On 11.05.2023 15:14, Ilpo JÃ¤rvinen wrote:
->>> Don't assume that only the driver would be accessing LNKCTL. ASPM
->>> policy changes can trigger write to LNKCTL outside of driver's control.
->>>
->>> Use pcie_lnkctl_clear_and_set() which does proper locking to avoid
->>> losing concurrent updates to the register value.
->>
->> Wouldn't it be more appropriate to add proper locking to the
->> underlying pcie_capability_clear_and_set_word()?
+On Thu, May 11, 2023 at 10:55:06AM -0500, Bjorn Helgaas wrote:
+> On Thu, May 11, 2023 at 04:14:25PM +0300, Ilpo Järvinen wrote:
+> > +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> > +					      u16 clear, u16 set)
+> > +{
+> > +	unsigned long flags;
+> > +	int ret;
+> > +
+> > +	spin_lock_irqsave(&dev->cap_lock, flags);
+> > +	ret = pcie_capability_clear_and_set_word(dev, pos, clear, set);
+> > +	spin_unlock_irqrestore(&dev->cap_lock, flags);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
 > 
-> PCI config space accessors such as this one are also used in hot paths
-> (e.g. interrupt handlers).  They should be kept lean (and lockless)
-
-I *think* in case the system uses threaded interrupts you may need locking
-also in interrupt handlers.
-
-> by default.  We only need locking for specific PCIe Extended Capabilities
-> which are concurrently accessed by PCI core code and drivers.
+> I didn't see the prior discussion with Lukas, so maybe this was
+> answered there, but is there any reason not to add locking to
+> pcie_capability_clear_and_set_word() and friends directly?
 > 
-> Thanks,
-> 
-> Lukas
+> It would be nice to avoid having to decide whether to use the locked
+> or unlocked versions.
 
+I think we definitely want to also offer lockless accessors which
+can be used in hotpaths such as interrupt handlers if the accessed
+registers don't need any locking (e.g. because there are no concurrent
+accesses).
+
+So the relatively lean approach chosen here which limits locking to
+Link Control and Link Control 2, but allows future expansion to other
+registers as well, seemed reasonable to me.
+
+Thanks,
+
+Lukas
