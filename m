@@ -2,94 +2,135 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 014446FF9E4
-	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 21:09:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62B626FFA18
+	for <lists+linux-pci@lfdr.de>; Thu, 11 May 2023 21:23:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239129AbjEKTJm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 11 May 2023 15:09:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36836 "EHLO
+        id S239114AbjEKTXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 11 May 2023 15:23:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239035AbjEKTJ3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 15:09:29 -0400
-Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1C6DC5BB2;
-        Thu, 11 May 2023 12:09:28 -0700 (PDT)
-Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id AAF06E0EC8;
-        Thu, 11 May 2023 22:09:27 +0300 (MSK)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
-        :content-type:content-type:date:from:from:in-reply-to:message-id
-        :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=aQn0dbwJHG6Y+ZqZl2fkBWcHMJmERaYFt7DSJry68/g=; b=M1UU+mveWStN
-        3gTNpPEzVjcVfuM3zt+w2PWSSkpl+T3ykmbJ/VHmgTpA91L1JEr8oG8YsYddb8uu
-        Qfg1nOwNfCicxV+e+UjVPUrj3OHUSH3wJKtz/fISylJKBWBVKmgMQ3qes1kvG1kk
-        U3rRhm0RyL4J6pxHD3p0EcN1WYXhm5Q=
-Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id 92F71E0EB1;
-        Thu, 11 May 2023 22:09:27 +0300 (MSK)
-Received: from localhost (10.8.30.6) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Thu, 11 May 2023 22:09:27 +0300
-From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
+        with ESMTP id S238599AbjEKTXa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 11 May 2023 15:23:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4CABAD3A;
+        Thu, 11 May 2023 12:22:55 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF24B650FC;
+        Thu, 11 May 2023 19:22:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19A35C433D2;
+        Thu, 11 May 2023 19:22:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683832974;
+        bh=QpSSk/1ebWRADeVKkTa0UQcYPlC3k/G654CAP3C9inA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=hjjNUy+EMZYUa9Mq/8GFHcLgiNT1wA7pnV4d5hK0g5b5gfK/AxH0JtcG3mfc26cM0
+         0TLz0V91O3tCA7Tg68LvnFnyG93r0BojVB4UoPw36+TfN+suZe17QTwllS99InSZd+
+         PZmdpfOahm8FX8WgCf9PSAz9+Wg7GLPJSVG0683QUq4698jNt1vleo6u0oI3KvOyjw
+         GEarGhSluLFERM0wXSI3EWxkl2wpJE31/ryrcMRzzKONgNDgxz5oo+0rFmfZk7iXCO
+         6pUez+FBLUFPTE/ANUW2la4479WLQC31Dz1MWo+kOs2oJ4wCoAsrFsKXBeS07tHNvt
+         2WaY/zmB8dPmg==
+Date:   Thu, 11 May 2023 14:22:52 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Rob Herring <robh@kernel.org>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Cai Huoqing <cai.huoqing@linux.dev>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Rob Herring <robh@kernel.org>
-CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
-        <linux-pci@vger.kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v5 14/14] MAINTAINERS: Add myself as the DW eDMA driver reviewer
-Date:   Thu, 11 May 2023 22:09:02 +0300
-Message-ID: <20230511190902.28896-15-Sergey.Semin@baikalelectronics.ru>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
-References: <20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru>
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
+ for LNKCTL{,2}
+Message-ID: <ZF1AjOKDVlbNFJPK@bhelgaas>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Originating-IP: [10.8.30.6]
-X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+In-Reply-To: <5140259d-4425-3166-438a-bc9fbbaa49f9@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The driver original maintainer has been inactive for almost two years now.
-It doesn't positively affect the new patches tests and reviews process.
-Since the DW eDMA engine has been embedded into the PCIe controllers in
-several our SoCs we will be interested in helping with the updates review.
+On Thu, May 11, 2023 at 08:35:48PM +0300, Ilpo Järvinen wrote:
+> On Thu, 11 May 2023, Bjorn Helgaas wrote:
+> 
+> > On Thu, May 11, 2023 at 04:14:25PM +0300, Ilpo Järvinen wrote:
+> > > A few places write LNKCTL and LNKCTL2 registers without proper
+> > > concurrency control and this could result in losing the changes
+> > > one of the writers intended to make.
+> > > 
+> > > Add pcie_capability_clear_and_set_word_locked() and helpers to use it
+> > > with LNKCTL and LNKCTL2. The concurrency control is provided using a
+> > > spinlock in the struct pci_dev.
+> > > 
+> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > 
+> > Thanks for raising this issue!  Definitely looks like something that
+> > needs attention.
+> > 
+> > > ---
+> > >  drivers/pci/access.c | 14 ++++++++++++++
+> > >  drivers/pci/probe.c  |  1 +
+> > >  include/linux/pci.h  | 17 +++++++++++++++++
+> > >  3 files changed, 32 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> > > index 3c230ca3de58..d92a3daadd0c 100644
+> > > --- a/drivers/pci/access.c
+> > > +++ b/drivers/pci/access.c
+> > > @@ -531,6 +531,20 @@ int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+> > >  }
+> > >  EXPORT_SYMBOL(pcie_capability_clear_and_set_dword);
+> > >  
+> > > +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> > > +					      u16 clear, u16 set)
+> > > +{
+> > > +	unsigned long flags;
+> > > +	int ret;
+> > > +
+> > > +	spin_lock_irqsave(&dev->cap_lock, flags);
+> > > +	ret = pcie_capability_clear_and_set_word(dev, pos, clear, set);
+> > > +	spin_unlock_irqrestore(&dev->cap_lock, flags);
+> > > +
+> > > +	return ret;
+> > > +}
+> > > +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
+> > 
+> > I didn't see the prior discussion with Lukas, so maybe this was
+> > answered there, but is there any reason not to add locking to
+> > pcie_capability_clear_and_set_word() and friends directly?  
+> >
+> > It would be nice to avoid having to decide whether to use the locked
+> > or unlocked versions.  It would also be nice to preserve the use of
+> > PCI_EXP_LNKCTL directly, for grep purposes.  And it would obviate the
+> > need for some of these patches, e.g., the use of
+> > pcie_capability_clear_word(), where it's not obvious at the call site
+> > why a change is needed.
+> 
+> There wasn't that big discussion about it (internally). I brought both
+> alternatives up and Lukas just said he didn't know what's the best 
+> approach (+ gave a weak nudge towards the separate accessor so I went 
+> with it to make forward progress). Based on that I don't think he had a 
+> strong opinion on it.
+> 
+> I'm certainly fine to just use it in the normal accessor functions that 
+> do RMW and add the locking there. It would certainly have to those good 
+> sides you mentioned.
 
-Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Let's start with that, then.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9f66461ede29..485d32e630d4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -5887,6 +5887,7 @@ F:	drivers/mtd/nand/raw/denali*
- DESIGNWARE EDMA CORE IP DRIVER
- M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- R:	Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-+R:	Serge Semin <fancer.lancer@gmail.com>
- L:	dmaengine@vger.kernel.org
- S:	Maintained
- F:	drivers/dma/dw-edma/
--- 
-2.40.0
+Many of these are ASPM-related updates that IMHO should not be in
+drivers at all.  Drivers should use PCI core interfaces so the core
+doesn't get confused.
+
+Bjorn
 
 
