@@ -2,43 +2,43 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8981470010E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 09:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B9E18700114
+	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 09:10:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240238AbjELHJO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 May 2023 03:09:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50714 "EHLO
+        id S240207AbjELHKE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 May 2023 03:10:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50250 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240125AbjELHIk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 03:08:40 -0400
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9EF100EC;
-        Fri, 12 May 2023 00:06:13 -0700 (PDT)
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34C75Dsc122240;
-        Fri, 12 May 2023 02:05:13 -0500
+        with ESMTP id S240212AbjELHJL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 03:09:11 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FCF712095;
+        Fri, 12 May 2023 00:06:39 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34C75E4D125715;
+        Fri, 12 May 2023 02:05:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1683875113;
-        bh=SJegm5qRgk88aX5Cfoj8MhGkSbXMWitrn5EIgTQL/G4=;
+        s=ti-com-17Q1; t=1683875114;
+        bh=W2z9EymAVcHf3YmNdGpWkV/HLFBGVHGolK8DvU5iDoI=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=QDwMwbxCoiVjvts6vLVxOyZVj/EKRz17UDrcWoC755vdybtooP6m45OietsbXPgMl
-         aceomcv8UyHyj/fWVOQijTC3VJm4n/NA3eDFbm3V3ZP6YFcb2FnB3kN0vNdu9X4HaH
-         qMjQAQuyDK8CM3jg/L4EZGA55/keNLCBLjsoSR6k=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34C75Dmu012014
+        b=erviDJORMAI3ukX1nbJO2KJlrdF/vnCNzBIJmZq9HUIAXWyyRY1Iz9KFFA9dr03MM
+         xkYgfLFv2KYQ8XtSZ9jx47x8QPH6L3l29XexWT9LlJBotv0UDzNy2hiqQLzFDTYQTT
+         JpcsuhBvabd8hAu83OgbRbWGExhBSLuEFuWrgSR4=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34C75EIM098141
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 12 May 2023 02:05:13 -0500
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+        Fri, 12 May 2023 02:05:14 -0500
+Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 12
- May 2023 02:05:12 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ May 2023 02:05:14 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 12 May 2023 02:05:12 -0500
+ Frontend Transport; Fri, 12 May 2023 02:05:14 -0500
 Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34C75CDv054911;
-        Fri, 12 May 2023 02:05:12 -0500
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34C75DHE014677;
+        Fri, 12 May 2023 02:05:13 -0500
 From:   Achal Verma <a-verma1@ti.com>
 To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -61,9 +61,9 @@ To:     Tom Joseph <tjoseph@cadence.com>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
         <linux-omap@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
-Subject: [PATCH 1/3] PCI: cadence: Add support to build pcie-cadence library as a kernel module.
-Date:   Fri, 12 May 2023 12:35:08 +0530
-Message-ID: <20230512070510.1873171-2-a-verma1@ti.com>
+Subject: [PATCH 2/3] PCIE: j721e: Add support to build pci-j721e as a kernel module
+Date:   Fri, 12 May 2023 12:35:09 +0530
+Message-ID: <20230512070510.1873171-3-a-verma1@ti.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230512070510.1873171-1-a-verma1@ti.com>
 References: <20230512070510.1873171-1-a-verma1@ti.com>
@@ -81,180 +81,924 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
+pci-j721e driver can be build as a in-built kernel driver only, which is not required as it
+is not used during boot time in most cases. This change add support to build pci-j721e as a
+kernel loadable module.
+J721e PCIe controller can work in both host mode and end-point mode.
+In order to enable host mode driver and endpoint driver to be built independently either
+as built-in or kernel module, the pcie-j721e.c driver is refactored into following components:
 
-Cadence PCIe controller driver can be build as kernel built-in driver only, which
-is not required since its not required at boot time.
-Thus, this change adds support to build Cadence PCIe driver as kernel module as well.
+1) pci-j721e-host.c : Driver used when PCIe controller has to be initialized in host mode.
+2) pci-j721e-ep.c : Driver used when PCIe controller has to be initialized in endpoint mode.
+3) pci-j721e.c : contains common code required in both modes.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Achal Verma <a-verma1@ti.com>
 ---
- drivers/pci/controller/cadence/Kconfig             | 6 +++---
- drivers/pci/controller/cadence/pcie-cadence-ep.c   | 4 ++++
- drivers/pci/controller/cadence/pcie-cadence-host.c | 5 +++++
- drivers/pci/controller/cadence/pcie-cadence.c      | 9 +++++++++
- drivers/pci/controller/cadence/pcie-cadence.h      | 4 ++--
- 5 files changed, 23 insertions(+), 5 deletions(-)
+ drivers/pci/controller/cadence/Kconfig        |   6 +-
+ drivers/pci/controller/cadence/Makefile       |   2 +
+ drivers/pci/controller/cadence/pci-j721e-ep.c | 130 +++++++
+ .../pci/controller/cadence/pci-j721e-host.c   | 204 +++++++++++
+ drivers/pci/controller/cadence/pci-j721e.c    | 343 +-----------------
+ drivers/pci/controller/cadence/pci-j721e.h    |  88 +++++
+ 6 files changed, 443 insertions(+), 330 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e-ep.c
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e-host.c
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.h
 
 diff --git a/drivers/pci/controller/cadence/Kconfig b/drivers/pci/controller/cadence/Kconfig
-index 291d12711363..abc245dbedab 100644
+index abc245dbedab..936335483b76 100644
 --- a/drivers/pci/controller/cadence/Kconfig
 +++ b/drivers/pci/controller/cadence/Kconfig
-@@ -4,16 +4,16 @@ menu "Cadence-based PCIe controllers"
- 	depends on PCI
+@@ -43,10 +43,10 @@ config PCIE_CADENCE_PLAT_EP
+ 	  different vendors SoCs.
  
- config PCIE_CADENCE
+ config PCI_J721E
 -	bool
 +	tristate
  
- config PCIE_CADENCE_HOST
--	bool
-+	tristate
+ config PCI_J721E_HOST
+-	bool "TI J721E PCIe controller (host mode)"
++	tristate "TI J721E PCIe platform host controller"
  	depends on OF
- 	select IRQ_DOMAIN
- 	select PCIE_CADENCE
+ 	select PCIE_CADENCE_HOST
+ 	select PCI_J721E
+@@ -56,7 +56,7 @@ config PCI_J721E_HOST
+ 	  core.
  
- config PCIE_CADENCE_EP
--	bool
-+	tristate
+ config PCI_J721E_EP
+-	bool "TI J721E PCIe controller (endpoint mode)"
++	tristate "TI J721E PCIe platform endpoint controller"
  	depends on OF
  	depends on PCI_ENDPOINT
- 	select PCIE_CADENCE
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-ep.c b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-index b8b655d4047e..598b2b9c5969 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-ep.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-ep.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/delay.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pci-epc.h>
- #include <linux/platform_device.h>
-@@ -741,3 +742,6 @@ int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_ep_setup);
+ 	select PCIE_CADENCE_EP
+diff --git a/drivers/pci/controller/cadence/Makefile b/drivers/pci/controller/cadence/Makefile
+index 9bac5fb2f13d..d49709870102 100644
+--- a/drivers/pci/controller/cadence/Makefile
++++ b/drivers/pci/controller/cadence/Makefile
+@@ -4,3 +4,5 @@ obj-$(CONFIG_PCIE_CADENCE_HOST) += pcie-cadence-host.o
+ obj-$(CONFIG_PCIE_CADENCE_EP) += pcie-cadence-ep.o
+ obj-$(CONFIG_PCIE_CADENCE_PLAT) += pcie-cadence-plat.o
+ obj-$(CONFIG_PCI_J721E) += pci-j721e.o
++obj-$(CONFIG_PCI_J721E_HOST) += pci-j721e-host.o
++obj-$(CONFIG_PCI_J721E_EP) += pci-j721e-ep.o
+diff --git a/drivers/pci/controller/cadence/pci-j721e-ep.c b/drivers/pci/controller/cadence/pci-j721e-ep.c
+new file mode 100644
+index 000000000000..33922e81b4e5
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pci-j721e-ep.c
+@@ -0,0 +1,130 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * pci-j721e-ep - PCIe end-point controller driver for TI's J721E SoCs
++ *
++ * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ */
 +
-+MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-index 940c7dd701d6..84754c63df34 100644
---- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-@@ -5,6 +5,7 @@
- 
- #include <linux/delay.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- #include <linux/list_sort.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
-@@ -70,6 +71,7 @@ void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 
- 	return rc->cfg_base + (where & 0xfff);
- }
-+EXPORT_SYMBOL_GPL(cdns_pci_map_bus);
- 
- static struct pci_ops cdns_pcie_host_ops = {
- 	.map_bus	= cdns_pci_map_bus,
-@@ -542,3 +544,6 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_host_setup);
++#include <linux/clk.h>
++#include <linux/of_device.h>
 +
++#include "pcie-cadence.h"
++#include "pci-j721e.h"
++
++static const struct j721e_pcie_data j721e_pcie_ep_data = {
++	.mode = PCI_MODE_EP,
++	.linkdown_irq_regfield = LINK_DOWN,
++};
++
++static const struct j721e_pcie_data j7200_pcie_ep_data = {
++	.mode = PCI_MODE_EP,
++	.quirk_detect_quiet_flag = true,
++	.quirk_disable_flr = true,
++};
++
++static const struct j721e_pcie_data am64_pcie_ep_data = {
++	.mode = PCI_MODE_EP,
++	.linkdown_irq_regfield = J7200_LINK_DOWN,
++};
++
++static const struct of_device_id of_j721e_pcie_ep_match[] = {
++	{
++		.compatible = "ti,j721e-pcie-ep",
++		.data = &j721e_pcie_ep_data,
++	},
++	{
++		.compatible = "ti,j7200-pcie-ep",
++		.data = &j7200_pcie_ep_data,
++	},
++	{
++		.compatible = "ti,am64-pcie-ep",
++		.data = &am64_pcie_ep_data,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_j721e_pcie_ep_match);
++
++static int j721e_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	const struct j721e_pcie_data *data;
++	struct cdns_pcie *cdns_pcie;
++	struct j721e_pcie *pcie;
++	struct cdns_pcie_ep *ep = NULL;
++	int ret;
++
++	data = of_device_get_match_data(dev);
++	if (!data)
++		return -EINVAL;
++
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
++	if (!ep)
++		return -ENOMEM;
++
++	ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++	ep->quirk_disable_flr = data->quirk_disable_flr;
++
++	cdns_pcie = &ep->pcie;
++	cdns_pcie->dev = dev;
++	cdns_pcie->ops = &j721e_pcie_ops;
++	pcie->cdns_pcie = cdns_pcie;
++
++	pcie->mode = PCI_MODE_EP;
++	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
++
++	ret = j721e_pcie_common_init(pcie);
++	if (ret)
++		return ret;
++
++	ret = cdns_pcie_init_phy(dev, cdns_pcie);
++	if (ret) {
++		dev_err(dev, "Failed to init phy\n");
++		goto err_get_sync;
++	}
++
++	ret = cdns_pcie_ep_setup(ep);
++	if (ret < 0)
++		goto err_pcie_setup;
++
++
++	return 0;
++
++err_pcie_setup:
++	cdns_pcie_disable_phy(cdns_pcie);
++
++err_get_sync:
++	j721e_disable_common_init(dev);
++
++	return ret;
++}
++
++static int j721e_pcie_remove(struct platform_device *pdev)
++{
++	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
++	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
++	struct device *dev = &pdev->dev;
++
++	clk_disable_unprepare(pcie->refclk);
++	cdns_pcie_disable_phy(cdns_pcie);
++	j721e_disable_common_init(dev);
++
++	return 0;
++}
++
++static struct platform_driver j721e_pcie_ep_driver = {
++	.probe  = j721e_pcie_probe,
++	.remove = j721e_pcie_remove,
++	.driver = {
++		.name	= "j721e-pcie-ep",
++		.of_match_table = of_j721e_pcie_ep_match,
++		.suppress_bind_attrs = true,
++	},
++};
++module_platform_driver(j721e_pcie_ep_driver);
++MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.c b/drivers/pci/controller/cadence/pcie-cadence.c
-index 13c4032ca379..8e3a86578284 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.c
-+++ b/drivers/pci/controller/cadence/pcie-cadence.c
-@@ -4,6 +4,7 @@
- // Author: Cyrille Pitchen <cyrille.pitchen@free-electrons.com>
+diff --git a/drivers/pci/controller/cadence/pci-j721e-host.c b/drivers/pci/controller/cadence/pci-j721e-host.c
+new file mode 100644
+index 000000000000..8f995d3f710c
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pci-j721e-host.c
+@@ -0,0 +1,204 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * pci-j721e-host - PCIe host controller driver for TI's J721E SoCs
++ *
++ * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com
++ * Author: Kishon Vijay Abraham I <kishon@ti.com>
++ */
++
++#include <linux/clk.h>
++#include <linux/gpio/consumer.h>
++#include <linux/delay.h>
++#include <linux/of_device.h>
++
++#include "pcie-cadence.h"
++#include "pci-j721e.h"
++
++static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
++				    int where, int size, u32 *value)
++{
++	if (pci_is_root_bus(bus))
++		return pci_generic_config_read32(bus, devfn, where, size,
++						 value);
++
++	return pci_generic_config_read(bus, devfn, where, size, value);
++}
++
++static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
++				     int where, int size, u32 value)
++{
++	if (pci_is_root_bus(bus))
++		return pci_generic_config_write32(bus, devfn, where, size,
++						  value);
++
++	return pci_generic_config_write(bus, devfn, where, size, value);
++}
++
++static struct pci_ops cdns_ti_pcie_host_ops = {
++	.map_bus	= cdns_pci_map_bus,
++	.read		= cdns_ti_pcie_config_read,
++	.write		= cdns_ti_pcie_config_write,
++};
++
++static const struct j721e_pcie_data j721e_pcie_rc_data = {
++	.mode = PCI_MODE_RC,
++	.quirk_retrain_flag = true,
++	.byte_access_allowed = false,
++	.linkdown_irq_regfield = LINK_DOWN,
++};
++
++static const struct j721e_pcie_data j7200_pcie_rc_data = {
++	.mode = PCI_MODE_RC,
++	.quirk_detect_quiet_flag = true,
++	.linkdown_irq_regfield = J7200_LINK_DOWN,
++	.byte_access_allowed = true,
++};
++
++static const struct j721e_pcie_data am64_pcie_rc_data = {
++	.mode = PCI_MODE_RC,
++	.linkdown_irq_regfield = J7200_LINK_DOWN,
++	.byte_access_allowed = true,
++};
++
++static const struct of_device_id of_j721e_pcie_host_match[] = {
++	{
++		.compatible = "ti,j721e-pcie-host",
++		.data = &j721e_pcie_rc_data,
++	},
++	{
++		.compatible = "ti,j7200-pcie-host",
++		.data = &j7200_pcie_rc_data,
++	},
++	{
++		.compatible = "ti,am64-pcie-host",
++		.data = &am64_pcie_rc_data,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_j721e_pcie_host_match);
++
++static int j721e_pcie_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pci_host_bridge *bridge;
++	const struct j721e_pcie_data *data;
++	struct cdns_pcie *cdns_pcie;
++	struct j721e_pcie *pcie;
++	struct cdns_pcie_rc *rc = NULL;
++	struct gpio_desc *gpiod;
++	struct clk *clk;
++	int ret;
++
++	data = of_device_get_match_data(dev);
++	if (!data)
++		return -EINVAL;
++
++	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
++	if (!pcie)
++		return -ENOMEM;
++
++	bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
++	if (!bridge)
++		return -ENOMEM;
++
++	if (!data->byte_access_allowed)
++		bridge->ops = &cdns_ti_pcie_host_ops;
++	rc = pci_host_bridge_priv(bridge);
++	rc->quirk_retrain_flag = data->quirk_retrain_flag;
++	rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
++
++	cdns_pcie = &rc->pcie;
++	cdns_pcie->dev = dev;
++	cdns_pcie->ops = &j721e_pcie_ops;
++	pcie->cdns_pcie = cdns_pcie;
++
++	pcie->mode = PCI_MODE_RC;
++	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
++
++	ret = j721e_pcie_common_init(pcie);
++	if (ret)
++		return ret;
++
++	gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(gpiod)) {
++		ret = PTR_ERR(gpiod);
++		if (ret != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get reset GPIO\n");
++		goto err_get_sync;
++	}
++
++	ret = cdns_pcie_init_phy(dev, cdns_pcie);
++	if (ret) {
++		dev_err(dev, "Failed to init phy\n");
++		goto err_get_sync;
++	}
++
++	clk = devm_clk_get_optional(dev, "pcie_refclk");
++	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
++		dev_err(dev, "failed to get pcie_refclk\n");
++		goto err_pcie_setup;
++	}
++
++	ret = clk_prepare_enable(clk);
++	if (ret) {
++		dev_err(dev, "failed to enable pcie_refclk\n");
++		goto err_pcie_setup;
++	}
++	pcie->refclk = clk;
++
++	/*
++	 * "Power Sequencing and Reset Signal Timings" table in
++	 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
++	 * indicates PERST# should be deasserted after minimum of 100us
++	 * once REFCLK is stable. The REFCLK to the connector in RC
++	 * mode is selected while enabling the PHY. So deassert PERST#
++	 * after 100 us.
++	 */
++	if (gpiod) {
++		usleep_range(100, 200);
++		gpiod_set_value_cansleep(gpiod, 1);
++	}
++
++	ret = cdns_pcie_host_setup(rc);
++	if (ret < 0) {
++		clk_disable_unprepare(pcie->refclk);
++		goto err_pcie_setup;
++	}
++
++	return 0;
++
++err_pcie_setup:
++	cdns_pcie_disable_phy(cdns_pcie);
++
++err_get_sync:
++	j721e_disable_common_init(dev);
++
++	return ret;
++}
++
++static int j721e_pcie_remove(struct platform_device *pdev)
++{
++	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
++	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
++	struct device *dev = &pdev->dev;
++
++	clk_disable_unprepare(pcie->refclk);
++	cdns_pcie_disable_phy(cdns_pcie);
++	j721e_disable_common_init(dev);
++
++	return 0;
++}
++
++static struct platform_driver j721e_pcie_host_driver = {
++	.probe  = j721e_pcie_probe,
++	.remove = j721e_pcie_remove,
++	.driver = {
++		.name	= "j721e-pcie-host",
++		.of_match_table = of_j721e_pcie_host_match,
++		.suppress_bind_attrs = true,
++	},
++};
++module_platform_driver(j721e_pcie_host_driver);
++MODULE_AUTHOR("Kishon Vijay Abraham I <kishon@ti.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
+index cc83a8925ce0..832644ee2c70 100644
+--- a/drivers/pci/controller/cadence/pci-j721e.c
++++ b/drivers/pci/controller/cadence/pci-j721e.c
+@@ -2,98 +2,18 @@
+ /*
+  * pci-j721e - PCIe controller driver for TI's J721E SoCs
+  *
+- * Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com
++ * Copyright (C) 2020-2023 Texas Instruments Incorporated - http://www.ti.com
+  * Author: Kishon Vijay Abraham I <kishon@ti.com>
+  */
  
- #include <linux/kernel.h>
+-#include <linux/clk.h>
+-#include <linux/delay.h>
+-#include <linux/gpio/consumer.h>
+-#include <linux/io.h>
+-#include <linux/irqchip/chained_irq.h>
+-#include <linux/irqdomain.h>
+ #include <linux/mfd/syscon.h>
+-#include <linux/of.h>
 +#include <linux/module.h>
+ #include <linux/of_device.h>
+-#include <linux/pci.h>
+-#include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
  
+ #include "../../pci.h"
  #include "pcie-cadence.h"
+-
+-#define ENABLE_REG_SYS_2	0x108
+-#define STATUS_REG_SYS_2	0x508
+-#define STATUS_CLR_REG_SYS_2	0x708
+-#define LINK_DOWN		BIT(1)
+-#define J7200_LINK_DOWN		BIT(10)
+-
+-#define J721E_PCIE_USER_CMD_STATUS	0x4
+-#define LINK_TRAINING_ENABLE		BIT(0)
+-
+-#define J721E_PCIE_USER_LINKSTATUS	0x14
+-#define LINK_STATUS			GENMASK(1, 0)
+-
+-enum link_status {
+-	NO_RECEIVERS_DETECTED,
+-	LINK_TRAINING_IN_PROGRESS,
+-	LINK_UP_DL_IN_PROGRESS,
+-	LINK_UP_DL_COMPLETED,
+-};
+-
+-#define J721E_MODE_RC			BIT(7)
+-#define LANE_COUNT_MASK			BIT(8)
+-#define LANE_COUNT(n)			((n) << 8)
+-
+-#define GENERATION_SEL_MASK		GENMASK(1, 0)
+-
+-#define MAX_LANES			2
+-
+-struct j721e_pcie {
+-	struct cdns_pcie	*cdns_pcie;
+-	struct clk		*refclk;
+-	u32			mode;
+-	u32			num_lanes;
+-	void __iomem		*user_cfg_base;
+-	void __iomem		*intd_cfg_base;
+-	u32			linkdown_irq_regfield;
+-};
+-
+-enum j721e_pcie_mode {
+-	PCI_MODE_RC,
+-	PCI_MODE_EP,
+-};
+-
+-struct j721e_pcie_data {
+-	enum j721e_pcie_mode	mode;
+-	unsigned int		quirk_retrain_flag:1;
+-	unsigned int		quirk_detect_quiet_flag:1;
+-	unsigned int		quirk_disable_flr:1;
+-	u32			linkdown_irq_regfield;
+-	unsigned int		byte_access_allowed:1;
+-};
+-
+-static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
+-{
+-	return readl(pcie->user_cfg_base + offset);
+-}
+-
+-static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
+-					  u32 value)
+-{
+-	writel(value, pcie->user_cfg_base + offset);
+-}
+-
+-static inline u32 j721e_pcie_intd_readl(struct j721e_pcie *pcie, u32 offset)
+-{
+-	return readl(pcie->intd_cfg_base + offset);
+-}
+-
+-static inline void j721e_pcie_intd_writel(struct j721e_pcie *pcie, u32 offset,
+-					  u32 value)
+-{
+-	writel(value, pcie->intd_cfg_base + offset);
+-}
++#include "pci-j721e.h"
  
-@@ -22,6 +23,7 @@ void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
- 
- 	cdns_pcie_writel(pcie, CDNS_PCIE_LTSSM_CONTROL_CAP, ltssm_control_cap);
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_detect_quiet_min_delay_set);
- 
- void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
- 				   u32 r, bool is_io,
-@@ -99,6 +101,7 @@ void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 busnr, u8 fn,
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), addr0);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), addr1);
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_set_outbound_region);
- 
- void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
- 						  u8 busnr, u8 fn,
-@@ -133,6 +136,7 @@ void cdns_pcie_set_outbound_region_for_normal_msg(struct cdns_pcie *pcie,
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), addr0);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), addr1);
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_set_outbound_region_for_normal_msg);
- 
- void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
+ static irqreturn_t j721e_pcie_link_irq_handler(int irq, void *priv)
  {
-@@ -145,6 +149,7 @@ void cdns_pcie_reset_outbound_region(struct cdns_pcie *pcie, u32 r)
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR0(r), 0);
- 	cdns_pcie_writel(pcie, CDNS_PCIE_AT_OB_REGION_CPU_ADDR1(r), 0);
+@@ -155,11 +75,12 @@ static bool j721e_pcie_link_up(struct cdns_pcie *cdns_pcie)
+ 	return false;
  }
-+EXPORT_SYMBOL_GPL(cdns_pcie_reset_outbound_region);
  
- void cdns_pcie_disable_phy(struct cdns_pcie *pcie)
- {
-@@ -155,6 +160,7 @@ void cdns_pcie_disable_phy(struct cdns_pcie *pcie)
- 		phy_exit(pcie->phy[i]);
- 	}
+-static const struct cdns_pcie_ops j721e_pcie_ops = {
++const struct cdns_pcie_ops j721e_pcie_ops = {
+ 	.start_link = j721e_pcie_start_link,
+ 	.stop_link = j721e_pcie_stop_link,
+ 	.link_up = j721e_pcie_link_up,
+ };
++EXPORT_SYMBOL_GPL(j721e_pcie_ops);
+ 
+ static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon,
+ 			       unsigned int offset)
+@@ -181,7 +102,7 @@ static int j721e_pcie_set_mode(struct j721e_pcie *pcie, struct regmap *syscon,
  }
-+EXPORT_SYMBOL_GPL(cdns_pcie_disable_phy);
  
- int cdns_pcie_enable_phy(struct cdns_pcie *pcie)
+ static int j721e_pcie_set_link_speed(struct j721e_pcie *pcie,
+-				     struct regmap *syscon, unsigned int offset)
++			     struct regmap *syscon, unsigned int offset)
  {
-@@ -242,6 +248,7 @@ int cdns_pcie_init_phy(struct device *dev, struct cdns_pcie *pcie)
+ 	struct device *dev = pcie->cdns_pcie->dev;
+ 	struct device_node *np = dev->of_node;
+@@ -259,167 +180,15 @@ static int j721e_pcie_ctrl_init(struct j721e_pcie *pcie)
+ 	return 0;
+ }
+ 
+-static int cdns_ti_pcie_config_read(struct pci_bus *bus, unsigned int devfn,
+-				    int where, int size, u32 *value)
+-{
+-	if (pci_is_root_bus(bus))
+-		return pci_generic_config_read32(bus, devfn, where, size,
+-						 value);
+-
+-	return pci_generic_config_read(bus, devfn, where, size, value);
+-}
+-
+-static int cdns_ti_pcie_config_write(struct pci_bus *bus, unsigned int devfn,
+-				     int where, int size, u32 value)
+-{
+-	if (pci_is_root_bus(bus))
+-		return pci_generic_config_write32(bus, devfn, where, size,
+-						  value);
+-
+-	return pci_generic_config_write(bus, devfn, where, size, value);
+-}
+-
+-static struct pci_ops cdns_ti_pcie_host_ops = {
+-	.map_bus	= cdns_pci_map_bus,
+-	.read		= cdns_ti_pcie_config_read,
+-	.write		= cdns_ti_pcie_config_write,
+-};
+-
+-static const struct j721e_pcie_data j721e_pcie_rc_data = {
+-	.mode = PCI_MODE_RC,
+-	.quirk_retrain_flag = true,
+-	.byte_access_allowed = false,
+-	.linkdown_irq_regfield = LINK_DOWN,
+-};
+-
+-static const struct j721e_pcie_data j721e_pcie_ep_data = {
+-	.mode = PCI_MODE_EP,
+-	.linkdown_irq_regfield = LINK_DOWN,
+-};
+-
+-static const struct j721e_pcie_data j7200_pcie_rc_data = {
+-	.mode = PCI_MODE_RC,
+-	.quirk_detect_quiet_flag = true,
+-	.linkdown_irq_regfield = J7200_LINK_DOWN,
+-	.byte_access_allowed = true,
+-};
+-
+-static const struct j721e_pcie_data j7200_pcie_ep_data = {
+-	.mode = PCI_MODE_EP,
+-	.quirk_detect_quiet_flag = true,
+-	.quirk_disable_flr = true,
+-};
+-
+-static const struct j721e_pcie_data am64_pcie_rc_data = {
+-	.mode = PCI_MODE_RC,
+-	.linkdown_irq_regfield = J7200_LINK_DOWN,
+-	.byte_access_allowed = true,
+-};
+-
+-static const struct j721e_pcie_data am64_pcie_ep_data = {
+-	.mode = PCI_MODE_EP,
+-	.linkdown_irq_regfield = J7200_LINK_DOWN,
+-};
+-
+-static const struct of_device_id of_j721e_pcie_match[] = {
+-	{
+-		.compatible = "ti,j721e-pcie-host",
+-		.data = &j721e_pcie_rc_data,
+-	},
+-	{
+-		.compatible = "ti,j721e-pcie-ep",
+-		.data = &j721e_pcie_ep_data,
+-	},
+-	{
+-		.compatible = "ti,j7200-pcie-host",
+-		.data = &j7200_pcie_rc_data,
+-	},
+-	{
+-		.compatible = "ti,j7200-pcie-ep",
+-		.data = &j7200_pcie_ep_data,
+-	},
+-	{
+-		.compatible = "ti,am64-pcie-host",
+-		.data = &am64_pcie_rc_data,
+-	},
+-	{
+-		.compatible = "ti,am64-pcie-ep",
+-		.data = &am64_pcie_ep_data,
+-	},
+-	{},
+-};
+-
+-static int j721e_pcie_probe(struct platform_device *pdev)
++int j721e_pcie_common_init(struct j721e_pcie *pcie)
+ {
+-	struct device *dev = &pdev->dev;
++	struct device *dev = pcie->cdns_pcie->dev;
++	struct platform_device *pdev = to_platform_device(dev);
+ 	struct device_node *node = dev->of_node;
+-	struct pci_host_bridge *bridge;
+-	const struct j721e_pcie_data *data;
+-	struct cdns_pcie *cdns_pcie;
+-	struct j721e_pcie *pcie;
+-	struct cdns_pcie_rc *rc = NULL;
+-	struct cdns_pcie_ep *ep = NULL;
+-	struct gpio_desc *gpiod;
+ 	void __iomem *base;
+-	struct clk *clk;
++	int irq;
+ 	u32 num_lanes;
+-	u32 mode;
+ 	int ret;
+-	int irq;
+-
+-	data = of_device_get_match_data(dev);
+-	if (!data)
+-		return -EINVAL;
+-
+-	mode = (u32)data->mode;
+-
+-	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+-	if (!pcie)
+-		return -ENOMEM;
+-
+-	switch (mode) {
+-	case PCI_MODE_RC:
+-		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_HOST))
+-			return -ENODEV;
+-
+-		bridge = devm_pci_alloc_host_bridge(dev, sizeof(*rc));
+-		if (!bridge)
+-			return -ENOMEM;
+-
+-		if (!data->byte_access_allowed)
+-			bridge->ops = &cdns_ti_pcie_host_ops;
+-		rc = pci_host_bridge_priv(bridge);
+-		rc->quirk_retrain_flag = data->quirk_retrain_flag;
+-		rc->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
+-
+-		cdns_pcie = &rc->pcie;
+-		cdns_pcie->dev = dev;
+-		cdns_pcie->ops = &j721e_pcie_ops;
+-		pcie->cdns_pcie = cdns_pcie;
+-		break;
+-	case PCI_MODE_EP:
+-		if (!IS_ENABLED(CONFIG_PCIE_CADENCE_EP))
+-			return -ENODEV;
+-
+-		ep = devm_kzalloc(dev, sizeof(*ep), GFP_KERNEL);
+-		if (!ep)
+-			return -ENOMEM;
+-
+-		ep->quirk_detect_quiet_flag = data->quirk_detect_quiet_flag;
+-		ep->quirk_disable_flr = data->quirk_disable_flr;
+-
+-		cdns_pcie = &ep->pcie;
+-		cdns_pcie->dev = dev;
+-		cdns_pcie->ops = &j721e_pcie_ops;
+-		pcie->cdns_pcie = cdns_pcie;
+-		break;
+-	default:
+-		dev_err(dev, "INVALID device type %d\n", mode);
+-		return 0;
+-	}
+-
+-	pcie->mode = mode;
+-	pcie->linkdown_irq_regfield = data->linkdown_irq_regfield;
+ 
+ 	base = devm_platform_ioremap_resource_byname(pdev, "intd_cfg");
+ 	if (IS_ERR(base))
+@@ -444,6 +213,7 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 		return irq;
+ 
+ 	dev_set_drvdata(dev, pcie);
++
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+@@ -466,103 +236,22 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+ 
+ 	j721e_pcie_config_link_irq(pcie);
+ 
+-	switch (mode) {
+-	case PCI_MODE_RC:
+-		gpiod = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_LOW);
+-		if (IS_ERR(gpiod)) {
+-			ret = PTR_ERR(gpiod);
+-			if (ret != -EPROBE_DEFER)
+-				dev_err(dev, "Failed to get reset GPIO\n");
+-			goto err_get_sync;
+-		}
+-
+-		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+-		if (ret) {
+-			dev_err(dev, "Failed to init phy\n");
+-			goto err_get_sync;
+-		}
+-
+-		clk = devm_clk_get_optional(dev, "pcie_refclk");
+-		if (IS_ERR(clk)) {
+-			ret = PTR_ERR(clk);
+-			dev_err(dev, "failed to get pcie_refclk\n");
+-			goto err_pcie_setup;
+-		}
+-
+-		ret = clk_prepare_enable(clk);
+-		if (ret) {
+-			dev_err(dev, "failed to enable pcie_refclk\n");
+-			goto err_pcie_setup;
+-		}
+-		pcie->refclk = clk;
+-
+-		/*
+-		 * "Power Sequencing and Reset Signal Timings" table in
+-		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
+-		 * indicates PERST# should be deasserted after minimum of 100us
+-		 * once REFCLK is stable. The REFCLK to the connector in RC
+-		 * mode is selected while enabling the PHY. So deassert PERST#
+-		 * after 100 us.
+-		 */
+-		if (gpiod) {
+-			usleep_range(100, 200);
+-			gpiod_set_value_cansleep(gpiod, 1);
+-		}
+-
+-		ret = cdns_pcie_host_setup(rc);
+-		if (ret < 0) {
+-			clk_disable_unprepare(pcie->refclk);
+-			goto err_pcie_setup;
+-		}
+-
+-		break;
+-	case PCI_MODE_EP:
+-		ret = cdns_pcie_init_phy(dev, cdns_pcie);
+-		if (ret) {
+-			dev_err(dev, "Failed to init phy\n");
+-			goto err_get_sync;
+-		}
+-
+-		ret = cdns_pcie_ep_setup(ep);
+-		if (ret < 0)
+-			goto err_pcie_setup;
+-
+-		break;
+-	}
+-
+ 	return 0;
+ 
+-err_pcie_setup:
+-	cdns_pcie_disable_phy(cdns_pcie);
+-
+ err_get_sync:
+ 	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
  
  	return ret;
- }
-+EXPORT_SYMBOL_GPL(cdns_pcie_init_phy);
- 
- static int cdns_pcie_suspend_noirq(struct device *dev)
- {
-@@ -270,3 +277,5 @@ const struct dev_pm_ops cdns_pcie_pm_ops = {
- 	NOIRQ_SYSTEM_SLEEP_PM_OPS(cdns_pcie_suspend_noirq,
- 				  cdns_pcie_resume_noirq)
- };
 +
+ }
++EXPORT_SYMBOL_GPL(j721e_pcie_common_init);
+ 
+-static int j721e_pcie_remove(struct platform_device *pdev)
++void j721e_disable_common_init(struct device *dev)
+ {
+-	struct j721e_pcie *pcie = platform_get_drvdata(pdev);
+-	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
+-	struct device *dev = &pdev->dev;
+-
+-	clk_disable_unprepare(pcie->refclk);
+-	cdns_pcie_disable_phy(cdns_pcie);
+ 	pm_runtime_put(dev);
+ 	pm_runtime_disable(dev);
+-
+-	return 0;
+ }
++EXPORT_SYMBOL_GPL(j721e_disable_common_init);
+ 
+-static struct platform_driver j721e_pcie_driver = {
+-	.probe  = j721e_pcie_probe,
+-	.remove = j721e_pcie_remove,
+-	.driver = {
+-		.name	= "j721e-pcie",
+-		.of_match_table = of_j721e_pcie_match,
+-		.suppress_bind_attrs = true,
+-	},
+-};
+-builtin_platform_driver(j721e_pcie_driver);
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 190786e47df9..65b330c28299 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -514,7 +514,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
- 	return true;
- }
- 
--#ifdef CONFIG_PCIE_CADENCE_HOST
-+#if IS_ENABLED(CONFIG_PCIE_CADENCE_HOST)
- int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
- void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
- 			       int where);
-@@ -531,7 +531,7 @@ static inline void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int d
- }
- #endif
- 
--#ifdef CONFIG_PCIE_CADENCE_EP
-+#if IS_ENABLED(CONFIG_PCIE_CADENCE_EP)
- int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep);
- #else
- static inline int cdns_pcie_ep_setup(struct cdns_pcie_ep *ep)
+diff --git a/drivers/pci/controller/cadence/pci-j721e.h b/drivers/pci/controller/cadence/pci-j721e.h
+new file mode 100644
+index 000000000000..3f3cfed16ad7
+--- /dev/null
++++ b/drivers/pci/controller/cadence/pci-j721e.h
+@@ -0,0 +1,88 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * pci-j721e - PCIe controller driver for TI's J721E SoCs
++ *
++ * Copyright (C) 2023 Texas Instruments Incorporated - http://www.ti.com
++ */
++
++#ifndef _PCIE_J721E_H
++#define _PCIE_J721E_H
++
++#define ENABLE_REG_SYS_2	0x108
++#define STATUS_REG_SYS_2	0x508
++#define STATUS_CLR_REG_SYS_2	0x708
++#define LINK_DOWN		BIT(1)
++#define J7200_LINK_DOWN		BIT(10)
++
++#define J721E_PCIE_USER_CMD_STATUS	0x4
++#define LINK_TRAINING_ENABLE		BIT(0)
++
++#define J721E_PCIE_USER_LINKSTATUS	0x14
++#define LINK_STATUS			GENMASK(1, 0)
++
++enum link_status {
++	NO_RECEIVERS_DETECTED,
++	LINK_TRAINING_IN_PROGRESS,
++	LINK_UP_DL_IN_PROGRESS,
++	LINK_UP_DL_COMPLETED,
++};
++
++#define J721E_MODE_RC			BIT(7)
++#define LANE_COUNT_MASK			BIT(8)
++#define LANE_COUNT(n)			((n) << 8)
++
++#define GENERATION_SEL_MASK		GENMASK(1, 0)
++
++#define MAX_LANES			2
++
++struct j721e_pcie {
++	struct cdns_pcie	*cdns_pcie;
++	struct clk		*refclk;
++	u32			mode;
++	u32			num_lanes;
++	void __iomem		*user_cfg_base;
++	void __iomem		*intd_cfg_base;
++	u32			linkdown_irq_regfield;
++};
++
++enum j721e_pcie_mode {
++	PCI_MODE_RC,
++	PCI_MODE_EP,
++};
++
++struct j721e_pcie_data {
++	enum j721e_pcie_mode	mode;
++	unsigned int		quirk_retrain_flag:1;
++	unsigned int		quirk_detect_quiet_flag:1;
++	unsigned int		quirk_disable_flr:1;
++	u32			linkdown_irq_regfield;
++	unsigned int		byte_access_allowed:1;
++};
++
++static inline u32 j721e_pcie_user_readl(struct j721e_pcie *pcie, u32 offset)
++{
++	return readl(pcie->user_cfg_base + offset);
++}
++
++static inline void j721e_pcie_user_writel(struct j721e_pcie *pcie, u32 offset,
++					  u32 value)
++{
++	writel(value, pcie->user_cfg_base + offset);
++}
++
++static inline u32 j721e_pcie_intd_readl(struct j721e_pcie *pcie, u32 offset)
++{
++	return readl(pcie->intd_cfg_base + offset);
++}
++
++static inline void j721e_pcie_intd_writel(struct j721e_pcie *pcie, u32 offset,
++					  u32 value)
++{
++	writel(value, pcie->intd_cfg_base + offset);
++}
++
++extern const struct cdns_pcie_ops j721e_pcie_ops;
++int j721e_pcie_common_init(struct j721e_pcie *pcie);
++void j721e_disable_common_init(struct device *dev);
++
++#endif /* _PCIE_J721E_H */
 -- 
 2.25.1
 
