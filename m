@@ -2,68 +2,84 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A516E700D4B
-	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 18:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B2E8A700D85
+	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 19:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237350AbjELQra (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 May 2023 12:47:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        id S237237AbjELRAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 May 2023 13:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230102AbjELQrZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 12:47:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD1439ED6;
-        Fri, 12 May 2023 09:47:24 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7863663BBE;
-        Fri, 12 May 2023 16:47:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94B4DC4339B;
-        Fri, 12 May 2023 16:47:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683910043;
-        bh=KlgnmU4xeqwpanlDerWw2/PC991uOcdGI+fGV9j4OTY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=N9jPyD71TiXbKqopq9EEb7oCcX5tIofr695ll+49fTMNjlJZxK3MDjwQa4IrwQur+
-         qf69CQLqDuQv/By+iSPtWlnuDcT5tYSVS/aF6lexCfotl73qEdbUWKyWU88f/cdkfW
-         /UaGSm7HiTEuxMXGn0K5trrNy9RhlWoP+rwEk5YKh+mHgrCPkKlA/IJs80DbcNiOir
-         rRLxq8vA29b1fzyivSuXKO2gWFIFdF6gTTeEmvyqfCNuJAbg68n9jSwik9hkpiwCaX
-         3o6V42MTdNEouECEfzyOOo0W7+OEnMaLG4ZPdIUSbdkvIlXDjNhLWA4JE68VnbsS9Z
-         QaPlBzoq4lkug==
-Date:   Fri, 12 May 2023 11:47:21 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Achal Verma <a-verma1@ti.com>
-Cc:     Tom Joseph <tjoseph@cadence.com>,
+        with ESMTP id S230333AbjELRAi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 13:00:38 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DC09EE6
+        for <linux-pci@vger.kernel.org>; Fri, 12 May 2023 10:00:37 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1ac65ab7432so529355ad.0
+        for <linux-pci@vger.kernel.org>; Fri, 12 May 2023 10:00:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1683910836; x=1686502836;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=hZ1+7EbVf1QE+O4BKyWenr/HeQYsusqDcW+MZj0maDE=;
+        b=6QZZvAO4rpV40tlIVIVrCxYRO2ECeipHVSckXlhFTrjxJpHZJJ6pxgJn1X4Gy0HJma
+         HdF6f4fcwVWQOv/ijY/elO91KjYz97QTw5tRmZKWjmAXN3V55vjn121FCXl1LDye4+rg
+         6wMMSqHAhLwodTgsexUHsv+WHRV1RT3SgeUGih6lgXIy2UczHtQ68gbpz+HLID81BzwL
+         wdVTjtXAgCLJTSdjDVWEC1xWia1OdnvipoVdfZ4i9kTE69nHIhcUogNLu8IsnVscPxuI
+         vTlVeGALMDxeCCSO4xIAXkLY5jFx1h9NFzggrMn4lU0nVQfO0CtxBwp4oNyuniWbKJ68
+         13WA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683910836; x=1686502836;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hZ1+7EbVf1QE+O4BKyWenr/HeQYsusqDcW+MZj0maDE=;
+        b=QZ6PAaToT7YeNFyXQckr866mGRAmo7n5jfwDtxNlzcfraPJUIUKmvlRowXfORoGn1o
+         nk2zQcaTSDUvYkwtkBTwQTu2n2mqHU8B0gFL5WU/MPOK26e+Bmlgj35yPRD8sCA+Yx0g
+         IJAkgO/yje0c50p+KrM9bcVXupTZ6mrInrZUop5XODsuDBSe4q5gTt2pnKDkleczrVi8
+         ZdCcaeZjfPjcmbkyFIs8S+OmaHVj4cQWFDAUTL8tcWAJpySMuQRP4oWlDvUShVYEydz5
+         t2OAXTSOUZGqqx9FqXLzvrqUBuF4AVcGz5Il/D6pEVquya26tOiU3HNAvgLRdRSE9p1g
+         Tfzw==
+X-Gm-Message-State: AC+VfDwDPZ2nfS7pgnozUKHIfJWaH+9MTl4cajyv7NH/hVhWu60hPuOu
+        uUmfGEmSL64vaJWfSB4NGn6Fxrk1O7GiXMvrEz/hQ1/wLEOMuyuZf84H4AgaBSOGvXYPEGvz200
+        5dIb4AbN3sho=
+X-Google-Smtp-Source: ACHHUZ6RRUGYG+1pZTg2lcaXGTNSN1Y2jPJ23dZyhdKk2r5f/BPYrx79YCYyFkFdj4arSYLzv1/Bpw==
+X-Received: by 2002:a17:902:fb83:b0:1a8:96c:738 with SMTP id lg3-20020a170902fb8300b001a8096c0738mr312104plb.2.1683910834972;
+        Fri, 12 May 2023 10:00:34 -0700 (PDT)
+Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
+        by smtp.gmail.com with ESMTPSA id g15-20020a63f40f000000b0053031f7a367sm7019460pgi.85.2023.05.12.10.00.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 May 2023 10:00:34 -0700 (PDT)
+Date:   Fri, 12 May 2023 10:00:30 -0700
+From:   William McVicker <willmcvicker@google.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof Wilczy_ski <kw@linux.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "N_colas F . R . A . Prado" <nfraprado@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rafa_ Mi_ecki <rafal@milecki.pl>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Nishanth Menon <nm@ti.com>, Milind Parab <mparab@cadence.com>,
-        Swapnil Kashinath Jakhade <sjakhade@cadence.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCH 2/3] PCIE: j721e: Add support to build pci-j721e as a
- kernel module
-Message-ID: <ZF5tmV+cXc/qwQAU@bhelgaas>
+        Sajid Dalvi <sdalvi@google.com>, linux-pci@vger.kernel.org,
+        Ajay Agarwal <ajayagarwal@google.com>
+Subject: Re: [PATCH v4] PCI: dwc: Wait for link up only if link is started
+Message-ID: <ZF5wrpjqpekZu4s5@google.com>
+References: <CAHMEbQ_8KNWwWxaY-7JxEu=wQ58WXQQ5XBaHOxFUE7NRKSNiUA@mail.gmail.com>
+ <20230425190724.GA59133@bhelgaas>
+ <CAHMEbQ-wuX1ky3v6JnAcPq752zbvoiZJ6AjXG863d7J3ATfqig@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230512070510.1873171-3-a-verma1@ti.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHMEbQ-wuX1ky3v6JnAcPq752zbvoiZJ6AjXG863d7J3ATfqig@mail.gmail.com>
+X-ccpol: medium
+X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
+        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -71,27 +87,159 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Follow previous subject line style (specifically, "PCI" not "PCIE"):
-
-  053ca37c87af ("PCI: j721e: Initialize pcie->cdns_pcie before using it")
-  19e863828acf ("PCI: j721e: Drop redundant struct device *")
-  72de208f2bda ("PCI: j721e: Drop pointless of_device_get_match_data() cast")
-  496bb18483cc ("PCI: j721e: Fix j721e_pcie_probe() error path")
-  c8a375a8e15a ("PCI: j721e: Add PCIe support for AM64")
-  f1de58802f0f ("PCI: j721e: Add PCIe support for J7200")
-
-On Fri, May 12, 2023 at 12:35:09PM +0530, Achal Verma wrote:
-> pci-j721e driver can be build as a in-built kernel driver only, which is not required as it
-> is not used during boot time in most cases. This change add support to build pci-j721e as a
-> kernel loadable module.
-> J721e PCIe controller can work in both host mode and end-point mode.
-> In order to enable host mode driver and endpoint driver to be built independently either
-> as built-in or kernel module, the pcie-j721e.c driver is refactored into following components:
+On 05/08/2023, Ajay Agarwal wrote:
+> Sure, understood. Thanks Bjorn for the explanation.
+> If v6.4-rc1 is tagged by now, please consider applying this patch to the
+> main branch.
 > 
-> 1) pci-j721e-host.c : Driver used when PCIe controller has to be initialized in host mode.
-> 2) pci-j721e-ep.c : Driver used when PCIe controller has to be initialized in endpoint mode.
-> 3) pci-j721e.c : contains common code required in both modes.
+> -Ajay
+> 
+> On Wed, Apr 26, 2023 at 12:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> 
+> > On Tue, Apr 25, 2023 at 11:44:59PM +0530, Ajay Agarwal wrote:
+> > > Thanks for the review and testing the patch William!
+> > >
+> > > Hi Lorenzo
+> > > Can you please include this patch in the next release if it looks good?
+> >
+> > Just to set expectations, the v6.4 merge window is open now, so we'll
+> > be asking Linus to pull everything that has already been merged.
+> > v6.4-rc1 should be tagged May 7, and then we'll start applying patches
+> > (like this one) that are destined for v6.5.
+> >
+> > Bjorn
+> >
+> > > On Thu, Apr 20, 2023 at 12:59 AM William McVicker
+> > > <willmcvicker@google.com> wrote:
+> > > >
+> > > > On 04/12/2023, Ajay Agarwal wrote:
+> > > > > In dw_pcie_host_init() regardless of whether the link has been
+> > > > > started or not, the code waits for the link to come up. Even in
+> > > > > cases where start_link() is not defined the code ends up spinning
+> > > > > in a loop for 1 second. Since in some systems dw_pcie_host_init()
+> > > > > gets called during probe, this one second loop for each pcie
+> > > > > interface instance ends up extending the boot time.
+> > > > >
+> > > > > Wait for the link up in only if the start_link() is defined.
+> > > > >
+> > > > > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
+> > > > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
+> > > > > ---
+> > > > > Changelog since v3:
+> > > > > - Run dw_pcie_start_link() only if link is not already up
+> > > > >
+> > > > > Changelog since v2:
+> > > > > - Wait for the link up if start_link() is really defined.
+> > > > > - Print the link status if the link is up on init.
+> > > > >
+> > > > >  .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++----
+> > > > >  drivers/pci/controller/dwc/pcie-designware.c  | 20
+> > ++++++++++++-------
+> > > > >  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
+> > > > >  3 files changed, 23 insertions(+), 11 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > index 9952057c8819..cf61733bf78d 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > @@ -485,14 +485,19 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
+> > > > >       if (ret)
+> > > > >               goto err_remove_edma;
+> > > > >
+> > > > > -     if (!dw_pcie_link_up(pci)) {
+> > > > > +     if (dw_pcie_link_up(pci)) {
+> > > > > +             dw_pcie_print_link_status(pci);
+> > > > > +     } else {
+> > > > >               ret = dw_pcie_start_link(pci);
+> > > > >               if (ret)
+> > > > >                       goto err_remove_edma;
+> > > > > -     }
+> > > > >
+> > > > > -     /* Ignore errors, the link may come up later */
+> > > > > -     dw_pcie_wait_for_link(pci);
+> > > > > +             if (pci->ops && pci->ops->start_link) {
+> > > > > +                     ret = dw_pcie_wait_for_link(pci);
+> > > > > +                     if (ret)
+> > > > > +                             goto err_stop_link;
+> > > > > +             }
+> > > > > +     }
+> > > > >
+> > > > >       bridge->sysdata = pp;
+> > > > >
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
+> > b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > index 53a16b8b6ac2..03748a8dffd3 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
+> > > > > @@ -644,9 +644,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci,
+> > u32 dir, int index)
+> > > > >       dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
+> > > > >  }
+> > > > >
+> > > > > -int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > > > > +void dw_pcie_print_link_status(struct dw_pcie *pci)
+> > > > >  {
+> > > > >       u32 offset, val;
+> > > > > +
+> > > > > +     offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > > > > +     val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> > > > > +
+> > > > > +     dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> > > > > +              FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> > > > > +              FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
+> > > > > +}
+> > > > > +
+> > > > > +int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > > > > +{
+> > > > >       int retries;
+> > > > >
+> > > > >       /* Check if the link is up or not */
+> > > > > @@ -662,12 +673,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
+> > > > >               return -ETIMEDOUT;
+> > > > >       }
+> > > > >
+> > > > > -     offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> > > > > -     val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
+> > > > > -
+> > > > > -     dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
+> > > > > -              FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
+> > > > > -              FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
+> > > > > +     dw_pcie_print_link_status(pci);
+> > > > >
+> > > > >       return 0;
+> > > > >  }
+> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
+> > b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > index 79713ce075cc..615660640801 100644
+> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > @@ -429,6 +429,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
+> > > > >  void dw_pcie_iatu_detect(struct dw_pcie *pci);
+> > > > >  int dw_pcie_edma_detect(struct dw_pcie *pci);
+> > > > >  void dw_pcie_edma_remove(struct dw_pcie *pci);
+> > > > > +void dw_pcie_print_link_status(struct dw_pcie *pci);
+> > > > >
+> > > > >  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg,
+> > u32 val)
+> > > > >  {
+> > > > > --
+> > > > > 2.40.0.577.gac1e443424-goog
+> > > > >
+> > > >
+> > > > Thanks for sending this patch Ajay! I tested this on my Pixel 6 with
+> > 6.3-rc1.
+> > > > I verified the PCIe RC probes without the 1s delay in
+> > dw_pcie_wait_for_link().
+> > > > Feel free to include
+> > > >
+> > > > Tested-by: Will McVicker <willmcvicker@google.com>
+> >
 
-Wrap all to fit in 75 columns, add blank lines between paragraphs.
+Hi Lorenzo,
 
-Bjorn
+Could you confirm that you'll be taking this patch for the v6.5 main PCI branch
+please?
+
+Thanks,
+Will
