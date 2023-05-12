@@ -2,84 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B2E8A700D85
-	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 19:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 09E8F700E0F
+	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 19:43:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237237AbjELRAj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 May 2023 13:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50738 "EHLO
+        id S238125AbjELRnT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 May 2023 13:43:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230333AbjELRAi (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 13:00:38 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DC09EE6
-        for <linux-pci@vger.kernel.org>; Fri, 12 May 2023 10:00:37 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1ac65ab7432so529355ad.0
-        for <linux-pci@vger.kernel.org>; Fri, 12 May 2023 10:00:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1683910836; x=1686502836;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=hZ1+7EbVf1QE+O4BKyWenr/HeQYsusqDcW+MZj0maDE=;
-        b=6QZZvAO4rpV40tlIVIVrCxYRO2ECeipHVSckXlhFTrjxJpHZJJ6pxgJn1X4Gy0HJma
-         HdF6f4fcwVWQOv/ijY/elO91KjYz97QTw5tRmZKWjmAXN3V55vjn121FCXl1LDye4+rg
-         6wMMSqHAhLwodTgsexUHsv+WHRV1RT3SgeUGih6lgXIy2UczHtQ68gbpz+HLID81BzwL
-         wdVTjtXAgCLJTSdjDVWEC1xWia1OdnvipoVdfZ4i9kTE69nHIhcUogNLu8IsnVscPxuI
-         vTlVeGALMDxeCCSO4xIAXkLY5jFx1h9NFzggrMn4lU0nVQfO0CtxBwp4oNyuniWbKJ68
-         13WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683910836; x=1686502836;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hZ1+7EbVf1QE+O4BKyWenr/HeQYsusqDcW+MZj0maDE=;
-        b=QZ6PAaToT7YeNFyXQckr866mGRAmo7n5jfwDtxNlzcfraPJUIUKmvlRowXfORoGn1o
-         nk2zQcaTSDUvYkwtkBTwQTu2n2mqHU8B0gFL5WU/MPOK26e+Bmlgj35yPRD8sCA+Yx0g
-         IJAkgO/yje0c50p+KrM9bcVXupTZ6mrInrZUop5XODsuDBSe4q5gTt2pnKDkleczrVi8
-         ZdCcaeZjfPjcmbkyFIs8S+OmaHVj4cQWFDAUTL8tcWAJpySMuQRP4oWlDvUShVYEydz5
-         t2OAXTSOUZGqqx9FqXLzvrqUBuF4AVcGz5Il/D6pEVquya26tOiU3HNAvgLRdRSE9p1g
-         Tfzw==
-X-Gm-Message-State: AC+VfDwDPZ2nfS7pgnozUKHIfJWaH+9MTl4cajyv7NH/hVhWu60hPuOu
-        uUmfGEmSL64vaJWfSB4NGn6Fxrk1O7GiXMvrEz/hQ1/wLEOMuyuZf84H4AgaBSOGvXYPEGvz200
-        5dIb4AbN3sho=
-X-Google-Smtp-Source: ACHHUZ6RRUGYG+1pZTg2lcaXGTNSN1Y2jPJ23dZyhdKk2r5f/BPYrx79YCYyFkFdj4arSYLzv1/Bpw==
-X-Received: by 2002:a17:902:fb83:b0:1a8:96c:738 with SMTP id lg3-20020a170902fb8300b001a8096c0738mr312104plb.2.1683910834972;
-        Fri, 12 May 2023 10:00:34 -0700 (PDT)
-Received: from google.com (13.65.82.34.bc.googleusercontent.com. [34.82.65.13])
-        by smtp.gmail.com with ESMTPSA id g15-20020a63f40f000000b0053031f7a367sm7019460pgi.85.2023.05.12.10.00.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 May 2023 10:00:34 -0700 (PDT)
-Date:   Fri, 12 May 2023 10:00:30 -0700
-From:   William McVicker <willmcvicker@google.com>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Nikhil Devshatwar <nikhilnd@google.com>,
-        Manu Gautam <manugautam@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sajid Dalvi <sdalvi@google.com>, linux-pci@vger.kernel.org,
-        Ajay Agarwal <ajayagarwal@google.com>
-Subject: Re: [PATCH v4] PCI: dwc: Wait for link up only if link is started
-Message-ID: <ZF5wrpjqpekZu4s5@google.com>
-References: <CAHMEbQ_8KNWwWxaY-7JxEu=wQ58WXQQ5XBaHOxFUE7NRKSNiUA@mail.gmail.com>
- <20230425190724.GA59133@bhelgaas>
- <CAHMEbQ-wuX1ky3v6JnAcPq752zbvoiZJ6AjXG863d7J3ATfqig@mail.gmail.com>
+        with ESMTP id S237840AbjELRnQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 13:43:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6D88A60;
+        Fri, 12 May 2023 10:43:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E95C655A2;
+        Fri, 12 May 2023 17:43:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 281FCC433D2;
+        Fri, 12 May 2023 17:43:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683913392;
+        bh=8dnEAPYSaM02SPoSf8y4owLG82vWOcV/xnoeR97sfyk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=jGZXxrtBpXH+FlPyX750QDcQSG5gCO5NIaf3MV5P87ApMc+KRqbmU4qs6TnxfouXD
+         y+0Hqmi9LDK3lvkq0Sl09zQo9kx/DBzLqcFiLd4XREXJ+CafFw65P0jxQLnuz7HOBp
+         2jw8PQAGGKJaiyXfUPiqSyicXNKSFQSE5bDa7B5TtIpyu5ht7PIaocaoLxBJkERG6I
+         7VOFkiDlk9Ny2TEpKtG87YcWLl5HbrEfrAHnkW2X41g1YGFt4ap6GSOF+qGEUNhjNq
+         Le86qjlsYanzZ9azPFxg3rUtyy0cmSXd5D/0o0iod8dXIDWVWz+iVWufsYXzJ8SU//
+         j09X9fP+RpnRA==
+Date:   Fri, 12 May 2023 12:43:08 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, krzysztof.kozlowski@linaro.org,
+        bhelgaas@google.com, michals@xilinx.com, robh+dt@kernel.org,
+        nagaradhesh.yeleswarapu@amd.com, bharat.kumar.gogada@amd.com,
+        lorenzo.pieralisi@arm.com
+Subject: Re: [PATCH v2 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
+Message-ID: <ZF56rHL+4Cv7VOuN@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHMEbQ-wuX1ky3v6JnAcPq752zbvoiZJ6AjXG863d7J3ATfqig@mail.gmail.com>
-X-ccpol: medium
-X-Spam-Status: No, score=-17.6 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        ENV_AND_HDR_SPF_MATCH,HK_RANDOM_ENVFROM,HK_RANDOM_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        USER_IN_DEF_DKIM_WL,USER_IN_DEF_SPF_WL autolearn=ham
+In-Reply-To: <20230512062725.1208385-4-thippeswamy.havalige@amd.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,159 +55,119 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05/08/2023, Ajay Agarwal wrote:
-> Sure, understood. Thanks Bjorn for the explanation.
-> If v6.4-rc1 is tagged by now, please consider applying this patch to the
-> main branch.
+On Fri, May 12, 2023 at 11:57:25AM +0530, Thippeswamy Havalige wrote:
+> Add support for Xilinx XDMA Soft IP core as Root Port.
 > 
-> -Ajay
+> The Zynq UltraScale+ MPSoCs devices support XDMA soft IP module in
+> programmable logic.
 > 
-> On Wed, Apr 26, 2023 at 12:37 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> 
-> > On Tue, Apr 25, 2023 at 11:44:59PM +0530, Ajay Agarwal wrote:
-> > > Thanks for the review and testing the patch William!
-> > >
-> > > Hi Lorenzo
-> > > Can you please include this patch in the next release if it looks good?
-> >
-> > Just to set expectations, the v6.4 merge window is open now, so we'll
-> > be asking Linus to pull everything that has already been merged.
-> > v6.4-rc1 should be tagged May 7, and then we'll start applying patches
-> > (like this one) that are destined for v6.5.
-> >
-> > Bjorn
-> >
-> > > On Thu, Apr 20, 2023 at 12:59 AM William McVicker
-> > > <willmcvicker@google.com> wrote:
-> > > >
-> > > > On 04/12/2023, Ajay Agarwal wrote:
-> > > > > In dw_pcie_host_init() regardless of whether the link has been
-> > > > > started or not, the code waits for the link to come up. Even in
-> > > > > cases where start_link() is not defined the code ends up spinning
-> > > > > in a loop for 1 second. Since in some systems dw_pcie_host_init()
-> > > > > gets called during probe, this one second loop for each pcie
-> > > > > interface instance ends up extending the boot time.
-> > > > >
-> > > > > Wait for the link up in only if the start_link() is defined.
-> > > > >
-> > > > > Signed-off-by: Sajid Dalvi <sdalvi@google.com>
-> > > > > Signed-off-by: Ajay Agarwal <ajayagarwal@google.com>
-> > > > > ---
-> > > > > Changelog since v3:
-> > > > > - Run dw_pcie_start_link() only if link is not already up
-> > > > >
-> > > > > Changelog since v2:
-> > > > > - Wait for the link up if start_link() is really defined.
-> > > > > - Print the link status if the link is up on init.
-> > > > >
-> > > > >  .../pci/controller/dwc/pcie-designware-host.c | 13 ++++++++----
-> > > > >  drivers/pci/controller/dwc/pcie-designware.c  | 20
-> > ++++++++++++-------
-> > > > >  drivers/pci/controller/dwc/pcie-designware.h  |  1 +
-> > > > >  3 files changed, 23 insertions(+), 11 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > index 9952057c8819..cf61733bf78d 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > @@ -485,14 +485,19 @@ int dw_pcie_host_init(struct dw_pcie_rp *pp)
-> > > > >       if (ret)
-> > > > >               goto err_remove_edma;
-> > > > >
-> > > > > -     if (!dw_pcie_link_up(pci)) {
-> > > > > +     if (dw_pcie_link_up(pci)) {
-> > > > > +             dw_pcie_print_link_status(pci);
-> > > > > +     } else {
-> > > > >               ret = dw_pcie_start_link(pci);
-> > > > >               if (ret)
-> > > > >                       goto err_remove_edma;
-> > > > > -     }
-> > > > >
-> > > > > -     /* Ignore errors, the link may come up later */
-> > > > > -     dw_pcie_wait_for_link(pci);
-> > > > > +             if (pci->ops && pci->ops->start_link) {
-> > > > > +                     ret = dw_pcie_wait_for_link(pci);
-> > > > > +                     if (ret)
-> > > > > +                             goto err_stop_link;
-> > > > > +             }
-> > > > > +     }
-> > > > >
-> > > > >       bridge->sysdata = pp;
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.c
-> > b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > index 53a16b8b6ac2..03748a8dffd3 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> > > > > @@ -644,9 +644,20 @@ void dw_pcie_disable_atu(struct dw_pcie *pci,
-> > u32 dir, int index)
-> > > > >       dw_pcie_writel_atu(pci, dir, index, PCIE_ATU_REGION_CTRL2, 0);
-> > > > >  }
-> > > > >
-> > > > > -int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> > > > > +void dw_pcie_print_link_status(struct dw_pcie *pci)
-> > > > >  {
-> > > > >       u32 offset, val;
-> > > > > +
-> > > > > +     offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > > > +     val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> > > > > +
-> > > > > +     dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> > > > > +              FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> > > > > +              FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> > > > > +}
-> > > > > +
-> > > > > +int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> > > > > +{
-> > > > >       int retries;
-> > > > >
-> > > > >       /* Check if the link is up or not */
-> > > > > @@ -662,12 +673,7 @@ int dw_pcie_wait_for_link(struct dw_pcie *pci)
-> > > > >               return -ETIMEDOUT;
-> > > > >       }
-> > > > >
-> > > > > -     offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> > > > > -     val = dw_pcie_readw_dbi(pci, offset + PCI_EXP_LNKSTA);
-> > > > > -
-> > > > > -     dev_info(pci->dev, "PCIe Gen.%u x%u link up\n",
-> > > > > -              FIELD_GET(PCI_EXP_LNKSTA_CLS, val),
-> > > > > -              FIELD_GET(PCI_EXP_LNKSTA_NLW, val));
-> > > > > +     dw_pcie_print_link_status(pci);
-> > > > >
-> > > > >       return 0;
-> > > > >  }
-> > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h
-> > b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > index 79713ce075cc..615660640801 100644
-> > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > @@ -429,6 +429,7 @@ void dw_pcie_setup(struct dw_pcie *pci);
-> > > > >  void dw_pcie_iatu_detect(struct dw_pcie *pci);
-> > > > >  int dw_pcie_edma_detect(struct dw_pcie *pci);
-> > > > >  void dw_pcie_edma_remove(struct dw_pcie *pci);
-> > > > > +void dw_pcie_print_link_status(struct dw_pcie *pci);
-> > > > >
-> > > > >  static inline void dw_pcie_writel_dbi(struct dw_pcie *pci, u32 reg,
-> > u32 val)
-> > > > >  {
-> > > > > --
-> > > > > 2.40.0.577.gac1e443424-goog
-> > > > >
-> > > >
-> > > > Thanks for sending this patch Ajay! I tested this on my Pixel 6 with
-> > 6.3-rc1.
-> > > > I verified the PCIe RC probes without the 1s delay in
-> > dw_pcie_wait_for_link().
-> > > > Feel free to include
-> > > >
-> > > > Tested-by: Will McVicker <willmcvicker@google.com>
-> >
+> The integrated XDMA soft IP block has integrated bridge function that
+> can act as PCIe Root Port.
 
-Hi Lorenzo,
+> +config PCIE_XILINX_DMA
+> +	bool "Xilinx DMA PL PCIe host bridge support"
 
-Could you confirm that you'll be taking this patch for the v6.5 main PCI branch
-please?
+Whatever name/text you settle on, make sure it's in alpha order in the
+config menu seen by users.  As-is, this patch would make it:
 
-Thanks,
-Will
+  Xilinx AXI PCIe controller
+  Xilinx NWL PCIe controller
+  Xilinx Versal CPM PCI controller
+  Xilinx DMA PL PCIe host bridge support
+
+which is not in alpha order.
+
+> +	  Say 'Y' here if you want kernel to enable support for the
+> +	  XILINX PL PCIe host bridge support, this PCIe controller
+> +	  includes DMA PL component.
+
+> +obj-$(CONFIG_PCIE_XILINX_DMA) += pcie-xdma-pl.o
+
+I think this filename needs to include xilinx somehow, not just "xdma".
+
+Since the probe function calls pci_host_probe() in addition to the DMA
+setup, I guess this is a fourth Xilinx host bridge, a peer of AXI,
+CPM, and NWL, and independent of them?
+
+Is the "xdma" or ("DMA PL" as used in Kconfig) name also a peer to
+"CPM" and "NWL"?  The Kconfig text, especially, should use names that
+users will recognize.  "DMA" or "XDMA" seems a little generic.  The
+commit log mentions "Zynq" and "Ultrascale+", neither of which appears
+in Kconfig, so there are a lot of names in play here, which is
+confusing.
+
+> +struct xilinx_pcie_dma {
+
+git grep "^struct .*pcie.*" drivers/pci/controller/ says the typical
+names are "<driver>_pcie".  Please do the same.
+
+> +	void __iomem			*reg_base;
+> +	u32				irq;
+> +	struct pci_config_window	*cfg;
+> +	struct device			*dev;
+
+Please use typical order, i.e., "dev" first, followed by "reg_base",
+etc.  Look at other drivers and make this similar.  No need to be
+creatively different.
+
+> +static inline bool xilinx_pcie_dma_linkup(struct xilinx_pcie_dma *port)
+
+Please use the *_pcie_link_up() naming scheme used elsewhere in
+drivers/pci/controller/.
+
+> +static bool xilinx_pcie_dma_valid_device(struct pci_bus *bus, unsigned int devfn)
+
+Similarly, *_pcie_valid_device().  Lots more instances below.  Don't
+split the "pcie" from the rest of the generic parts of the name.
+
+> +static struct pci_ecam_ops xilinx_pcie_dma_ops = {
+
+const *_ecam_ops
+
+> +static void xilinx_mask_leg_irq(struct irq_data *data)
+> +static void xilinx_unmask_leg_irq(struct irq_data *data)
+> +static struct irq_chip xilinx_leg_irq_chip = {
+> +	.name           = "INTx",
+> +	.irq_mask       = xilinx_mask_leg_irq,
+> +	.irq_unmask     = xilinx_unmask_leg_irq,
+> +};
+
+You use "intx" in the names below.  Please also use "intx" instead of
+"leg" in the names above.  No need for two different names for the
+same concept.
+
+> +static const struct irq_domain_ops intx_domain_ops = {
+> +	.map = xilinx_pcie_dma_intx_map,
+
+> +	/* Enable the Bridge enable bit */
+
+"Set the ... enable bit"
+
+> +	pcie_write(port, pcie_read(port, XILINX_PCIE_DMA_REG_RPSC) |
+
+> +static int xilinx_pcie_dma_parse_dt(struct xilinx_pcie_dma *port,
+> +				    struct resource *bus_range)
+> +{
+> +	struct device *dev = port->dev;
+> +	int err;
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct resource *res;
+
+Weird ordering.  Suggest order of use:
+
+  struct device *dev = port->dev;
+  struct platform_device *pdev = to_platform_device(dev);
+  struct resource *res;
+  int err;
+
+> +static int xilinx_pcie_dma_probe(struct platform_device *pdev)
+> +{
+> +	struct xilinx_pcie_dma *port;
+> +	struct device *dev = &pdev->dev;
+> +	struct pci_host_bridge *bridge;
+> +	struct resource_entry *bus;
+> +	int err;
+
+Would order "struct device *dev" first.
+
+Bjorn
