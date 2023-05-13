@@ -2,81 +2,56 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DFFE6700F6E
-	for <lists+linux-pci@lfdr.de>; Fri, 12 May 2023 21:48:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A7187013B9
+	for <lists+linux-pci@lfdr.de>; Sat, 13 May 2023 03:24:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238790AbjELTsz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 12 May 2023 15:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53160 "EHLO
+        id S241173AbjEMBYo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 12 May 2023 21:24:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238608AbjELTsx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 15:48:53 -0400
+        with ESMTP id S230048AbjEMBYn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 12 May 2023 21:24:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 572B27693;
-        Fri, 12 May 2023 12:48:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6120140ED;
+        Fri, 12 May 2023 18:24:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E00DB6585A;
-        Fri, 12 May 2023 19:48:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04CD3C433D2;
-        Fri, 12 May 2023 19:48:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E26A063EFA;
+        Sat, 13 May 2023 01:24:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F15BFC433D2;
+        Sat, 13 May 2023 01:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683920931;
-        bh=UJAu/sEPUEjYwNghUWoNUhNjtFQtSfleebB2APfRPuI=;
+        s=k20201202; t=1683941081;
+        bh=ufptWhk0BbCBOlRE0pk1y6y1XcHSouNAvlan/zSTrAY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=izATGEJPbIV3K4bCaiKo7Hs1883mTtDq56tAMqR9b8VXex2H1Ta5qXbJ34DUMlipI
-         hkP36Hf18gfQ/c5WhLTbqHxqmGDxT8c6GZsTNVnFEdOQaZaJ/oYwHmrit1EAw1x+1Y
-         2z22L2JvUWHTpA485tRqm3EMRgDgtReOCU64LBI1xffqjx2Y+7vetzAwosC65+lInq
-         x9YdWwtXI3O85iO05qxJMbcPnrLIE+gUjS7LacDVi8KOmMYZ7RSibPwc0Q194zjna+
-         tNHv7vuMAsogyAVpsXpRcwcmIepl/BM1Pky4mWnjJL9I8gbCdKyEWdBqbLqeB9zbcY
-         repkA1Uz/worA==
-Date:   Fri, 12 May 2023 14:48:49 -0500
+        b=sxtJ8CfHTCeAo0D9/++DN1TpfPp54rd4Bjo9/cVcNl+dpoRXUItLhHO5gRcwq/76H
+         iG2T612DUkjnlkyelE9eD2HgVSk04mxeWbB0MU+5ARtEwZw1qO4cyCfiHmHjmGZvH1
+         nDgF5O5vp+wv35xUsBBE8WZaXp3awA3WiHOajXq++DOBOGEEF7LKHnbMDxrj4WqF+Q
+         O+3N4Vm1dRMOBRBmrKN/f+e07pyMPCq7HDKGhx1ySipqxRfIZJme8kOOTfOjO6rJ8b
+         ogh0CxwXsoQHtYEWTf8j2mjN7gAEPM4vUsAqY6xRymjRUSmPw989oheJkEI1Qy1xl7
+         2SRbEcfq/u5IQ==
+Date:   Fri, 12 May 2023 20:24:38 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-mips@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
- users
-Message-ID: <ZF6YIezraETr9iNM@bhelgaas>
+To:     Vincenzo Palazzo <vincenzopalazzodev@gmail.com>
+Cc:     Peter Geis <pgwipeout@gmail.com>, kw@linux.com, heiko@sntech.de,
+        robh@kernel.org, linux-pci@vger.kernel.org,
+        shawn.lin@rock-chips.com, linux-kernel@vger.kernel.org,
+        lgirdwood@gmail.com, linux-rockchip@lists.infradead.org,
+        broonie@kernel.org, bhelgaas@google.com,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        lpieralisi@kernel.org, linux-arm-kernel@lists.infradead.org,
+        Dan Johansen <strit@manjaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
+ Rockchip PCIe bus scan
+Message-ID: <ZF7m1npzLZmawT8Y@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZF4bXaz2r75dlA5g@smile.fi.intel.com>
+In-Reply-To: <CSK8M39MQL2C.3S7JO031H0BA2@vincent-arch>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -87,77 +62,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 12, 2023 at 01:56:29PM +0300, Andy Shevchenko wrote:
-> On Tue, May 09, 2023 at 01:21:22PM -0500, Bjorn Helgaas wrote:
-> > On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
-> > > On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
-> > > > Provide two new helper macros to iterate over PCI device resources and
-> > > > convert users.
-> > 
-> > > Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
-> > 
-> > This is 09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()")
-> > upstream now.
-> > 
-> > Coverity complains about each use,
-> 
-> It needs more clarification here. Use of reduced variant of the
-> macro or all of them? If the former one, then I can speculate that
-> Coverity (famous for false positives) simply doesn't understand `for
-> (type var; var ...)` code.
+[+cc ARM64 folks, in case you have abort handling tips; thread at:
+https://lore.kernel.org/r/20230509153912.515218-1-vincenzopalazzodev@gmail.com]
 
-True, Coverity finds false positives.  It flagged every use in
-drivers/pci and drivers/pnp.  It didn't mention the arch/alpha, arm,
-mips, powerpc, sh, or sparc uses, but I think it just didn't look at
-those.
+Pine64 RockPro64 panics while enumerating some PCIe devices.  Adding a
+delay avoids the panic.  My theory is a PCIe Request Retry Status to a
+Vendor ID config read causes an abort that we don't handle.
 
-It flagged both:
+> On Tue, May 09, 2023 at 05:39:12PM +0200, Vincenzo Palazzo wrote:
+>> ...
+>> [    1.229856] SError Interrupt on CPU4, code 0xbf000002 -- SError
+>> [    1.229860] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.9.9-2.0-MANJARO-ARM
+>> #1
+>> [    1.229862] Hardware name: Pine64 RockPro64 v2.1 (DT)
+>> [    1.229864] pstate: 60000085 (nZCv daIf -PAN -UAO BTYPE=--)
+>> [    1.229866] pc : rockchip_pcie_rd_conf+0xb4/0x270
+>> [    1.229868] lr : rockchip_pcie_rd_conf+0x1b4/0x270
+>> ...
+>> [    1.229939] Kernel panic - not syncing: Asynchronous SError Interrupt
+>> ...
+>> [    1.229955]  nmi_panic+0x8c/0x90
+>> [    1.229956]  arm64_serror_panic+0x78/0x84
+>> [    1.229958]  do_serror+0x15c/0x160
+>> [    1.229960]  el1_error+0x84/0x100
+>> [    1.229962]  rockchip_pcie_rd_conf+0xb4/0x270
+>> [    1.229964]  pci_bus_read_config_dword+0x6c/0xd0
+>> [    1.229966]  pci_bus_generic_read_dev_vendor_id+0x34/0x1b0
+>> [    1.229968]  pci_scan_single_device+0xa4/0x144
 
-  pbus_size_io    pci_dev_for_each_resource(dev, r)
-  pbus_size_mem   pci_dev_for_each_resource(dev, r, i)
+On Fri, May 12, 2023 at 12:46:21PM +0200, Vincenzo Palazzo wrote:
+> ... Is there any way to tell the kernel "hey we need some more time
+> here"?
 
-Here's a spreadsheet with a few more details (unfortunately I don't
-know how to make it dump the actual line numbers or analysis like I
-pasted below, so "pci_dev_for_each_resource" doesn't appear).  These
-are mostly in the "Drivers-PCI" component.
+We enumerate PCI devices by trying to read the Vendor ID of every
+possible device address (see pci_scan_slot()).  On PCIe, if a device
+doesn't exist at that address, the Vendor ID config read will be
+terminated with Unsupported Request (UR) status.  This is normal
+and happens every time we enumerate devices.
 
-https://docs.google.com/spreadsheets/d/1ohOJwxqXXoDUA0gwopgk-z-6ArLvhN7AZn4mIlDkHhQ/edit?usp=sharing
+The crash doesn't happen every time we enumerate, so I don't think
+this UR is the problem.  Also, if it *were* the problem, adding a
+delay would not make any difference.
 
-These particular reports are in the "High Impact Outstanding" tab.
+There *is* a way for a PCIe device to say "I need more time".  It does
+this by responding to that Vendor ID config read with Request Retry
+Status (RRS, aka CRS in older specs), which means "I'm not ready yet,
+but I will be ready in the future."  Adding a delay would definitely
+make a difference here, so my guess is this is what's happening.
 
-> >	sample below from
-> > drivers/pci/vgaarb.c.  I didn't investigate at all, so it might be a
-> > false positive; just FYI.
-> > 
-> > 	  1. Condition screen_info.capabilities & (2U /* 1 << 1 */), taking true branch.
-> >   556        if (screen_info.capabilities & VIDEO_CAPABILITY_64BIT_BASE)
-> >   557                base |= (u64)screen_info.ext_lfb_base << 32;
-> >   558
-> >   559        limit = base + size;
-> >   560
-> >   561        /* Does firmware framebuffer belong to us? */
-> > 	  2. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-> > 	  3. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-> > 	  6. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-> > 	  7. cond_at_most: Checking __b < PCI_NUM_RESOURCES implies that __b may be up to 16 on the true branch.
-> > 	  8. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-> > 	  11. incr: Incrementing __b. The value of __b may now be up to 17.
-> > 	  12. alias: Assigning: r = &pdev->resource[__b]. r may now point to as high as element 17 of pdev->resource (which consists of 17 64-byte elements).
-> > 	  13. Condition __b < PCI_NUM_RESOURCES, taking true branch.
-> > 	  14. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-> >   562        pci_dev_for_each_resource(pdev, r) {
-> > 	  4. Condition resource_type(r) != 512, taking true branch.
-> > 	  9. Condition resource_type(r) != 512, taking true branch.
-> > 
-> >   CID 1529911 (#1 of 1): Out-of-bounds read (OVERRUN)
-> >   15. overrun-local: Overrunning array of 1088 bytes at byte offset 1088 by dereferencing pointer r. [show details]
-> >   563                if (resource_type(r) != IORESOURCE_MEM)
-> > 	  5. Continuing loop.
-> > 	  10. Continuing loop.
-> >   564                        continue;
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Most root complexes return ~0 data to the CPU when a config read
+terminates with UR or RRS.  It sounds like rockchip does this for UR
+but possibly not for RRS.
+
+There is a "RRS Software Visibility" feature, which is supposed to
+turn the RRS into a special value (Vendor ID == 0x0001), but per [1],
+rockchip doesn't support it (lspci calls it "CRSVisible").
+
+But the CPU load instruction corresponding to the config read has to
+complete by reading *something* or else be aborted.  It sounds like
+it's aborted in this case.  I don't know the arm64 details, but if we
+could catch that abort and determine that it was an RRS and not a UR,
+maybe we could fabricate the magic RRS 0x0001 value.
+
+imx6q_pcie_abort_handler() does something like that, although I think
+it's for arm32, not arm64.  But obviously we already catch the abort
+enough to dump the register state and panic, so maybe there's a way to
+extend that?
+
+Bjorn
+
+[1] https://lore.kernel.org/linux-pci/CAMdYzYpOFAVq30N+O2gOxXiRtpoHpakFg3LKq3TEZq4S6Y0y0g@mail.gmail.com/
