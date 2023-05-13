@@ -2,73 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64C44701818
-	for <lists+linux-pci@lfdr.de>; Sat, 13 May 2023 17:57:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8F47018E3
+	for <lists+linux-pci@lfdr.de>; Sat, 13 May 2023 20:01:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232258AbjEMP5c (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 May 2023 11:57:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34960 "EHLO
+        id S237327AbjEMSBU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 May 2023 14:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjEMP5c (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 May 2023 11:57:32 -0400
-X-Greylist: delayed 498 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 13 May 2023 08:57:29 PDT
-Received: from lizimbra02.cittadellasalute.to.it (lizimbra02.cittadellasalute.to.it [109.69.144.62])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 2585519B3;
-        Sat, 13 May 2023 08:57:28 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by lizimbra02.cittadellasalute.to.it (Postfix) with ESMTP id 5AFF740AFB25;
-        Sat, 13 May 2023 17:49:10 +0200 (CEST)
-Received: from lizimbra02.cittadellasalute.to.it ([127.0.0.1])
-        by localhost (lizimbra02.cittadellasalute.to.it [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id etH2UU8TRHDt; Sat, 13 May 2023 17:49:09 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by lizimbra02.cittadellasalute.to.it (Postfix) with ESMTP id 93AF9418D7EC;
-        Sat, 13 May 2023 17:49:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at lizimbra02.cittadellasalute.to.it
-Received: from lizimbra02.cittadellasalute.to.it ([127.0.0.1])
-        by localhost (lizimbra02.cittadellasalute.to.it [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id n92-61ra9tbe; Sat, 13 May 2023 17:49:09 +0200 (CEST)
-Received: from lizimbra07.cittadellasalute.to.it (lizimbra07.cittadellasalute.to.it [172.19.100.53])
-        by lizimbra02.cittadellasalute.to.it (Postfix) with ESMTPS id 5D95540AE5FE;
-        Sat, 13 May 2023 17:49:09 +0200 (CEST)
-Received: from lizimbra07.cittadellasalute.to.it (localhost [127.0.0.1])
-        by lizimbra07.cittadellasalute.to.it (Postfix) with ESMTP id 4QJTmR4JtvzMwRnJ;
-        Sat, 13 May 2023 17:18:31 +0200 (CEST)
-Date:   Sat, 13 May 2023 17:18:31 +0200 (CEST)
-From:   Account principale <vbiondo@cittadellasalute.to.it>
-Reply-To: bbirseas@gmail.com
-Message-ID: <71985948.15296757.1683991111543.JavaMail.zimbra@cittadellasalute.to.it>
-Subject: Re: blessed deal!
+        with ESMTP id S233993AbjEMSBC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 May 2023 14:01:02 -0400
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADD835AC;
+        Sat, 13 May 2023 11:00:23 -0700 (PDT)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34DHwTdY129663;
+        Sat, 13 May 2023 12:58:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1684000709;
+        bh=mePJ/RInYE0y486rwBOzi4W43YzL4ZNbENMKuvC0VrQ=;
+        h=Date:Subject:To:CC:References:From:In-Reply-To;
+        b=ER4Zn/Yqprfvj+/F3pwYP12no5AmhVWle7eAm4Xx81m8Ogk5GQla434ZDVuuUx1sw
+         TeQLq9GgZAzpQRIPQMlaaz0BbwwguiyRh+t0tuTxO6lVsHZKgr8A2aGsF6l9tbQjKC
+         c5JgYPUcJLviB5SpyAArIdo0eq5/qM1WrEkgXwe4=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34DHwT0j079199
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 13 May 2023 12:58:29 -0500
+Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 13
+ May 2023 12:58:29 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 13 May 2023 12:58:29 -0500
+Received: from [10.249.131.60] (ileaxei01-snat2.itg.ti.com [10.180.69.6])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34DHwMIY020336;
+        Sat, 13 May 2023 12:58:23 -0500
+Message-ID: <3b5d7c3c-164d-0690-c2e8-2c7daec4865c@ti.com>
+Date:   Sat, 13 May 2023 23:28:22 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.1
+Subject: Re: [EXTERNAL] Re: [PATCH 3/3] arm64: defconfig: enable J721e PCIe
+ controller
+Content-Language: en-US
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof Wilczy_ski <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Bjorn Andersson <quic_bjorande@quicinc.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        "N_colas F . R . A . Prado" <nfraprado@collabora.com>,
+        Mark Brown <broonie@kernel.org>,
+        Rafa_ Mi_ecki <rafal@milecki.pl>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Nishanth Menon <nm@ti.com>, Milind Parab <mparab@cadence.com>,
+        Swapnil Kashinath Jakhade <sjakhade@cadence.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, achal Verma <a-verma1@ti.com>
+References: <20230512070510.1873171-1-a-verma1@ti.com>
+ <20230512070510.1873171-4-a-verma1@ti.com>
+ <13028434-f68c-cad3-056e-d319c1ec35cf@linaro.org>
+From:   "Verma, Achal" <a-verma1@ti.com>
+In-Reply-To: <13028434-f68c-cad3-056e-d319c1ec35cf@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [156.146.41.20, 172.19.100.208]
-X-Mailer: Zimbra 8.8.15_GA_4481 (zclient/8.8.15_GA_4481)
-Thread-Index: THXAiHqbTGqRvMcR4kuhNtUVtzj2YQ==
-Thread-Topic: blessed deal!
-X-Spam-Status: Yes, score=5.5 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,MISSING_HEADERS,REPLYTO_WITHOUT_TO_CC,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
-X-Spam-Report: *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.4997]
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  1.0 MISSING_HEADERS Missing To: header
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  1.6 REPLYTO_WITHOUT_TO_CC No description available.
-        *  2.1 FREEMAIL_FORGED_REPLYTO Freemail in Reply-To, but not From
-X-Spam-Level: *****
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-5.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
-To:     unlisted-recipients:; (no To-header on input)
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
+Hello Krzysztof,
+On 5/12/2023 12:53 PM, Krzysztof Kozlowski wrote:
+> On 12/05/2023 09:05, Achal Verma wrote:
+>> Enable Cadence PCIe controller and pci-j721e drivers to be built as
+>> kernel modules.
+> 
+> Why? IOW, who needs them. Please provide rationale in the commit msg. I
+> am pretty sure I asked for this...
+> 
+On TI's J7 SOCs, PCIe is composed of PCIe core from Cadence and TI 
+wrapper. It is desired to have J7 PCIe working on upstream kernel by 
+default. So to enable this I have pushed these defconfig changes.
 
-Hello!
-Did you see my blessed deal message???
-From the United States Marine Corps (USMC)
-Sgt Irene
+BTW, I am planning to hold this change until PCIe code changes (rest of 
+the patches in this series) gets merged.
+
+Please let me know if there are more concern to this.
+Sorry, for this time.
+
+Thanks,
+Achal Verma
+> 
+> Best regards,
+> Krzysztof
+> 
