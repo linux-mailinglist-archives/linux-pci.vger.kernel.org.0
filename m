@@ -2,91 +2,66 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 932BD701945
-	for <lists+linux-pci@lfdr.de>; Sat, 13 May 2023 20:39:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 491C070195B
+	for <lists+linux-pci@lfdr.de>; Sat, 13 May 2023 20:46:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229566AbjEMSjc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 13 May 2023 14:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34180 "EHLO
+        id S233014AbjEMSqn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 13 May 2023 14:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjEMSja (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 May 2023 14:39:30 -0400
-Received: from mail-ej1-x635.google.com (mail-ej1-x635.google.com [IPv6:2a00:1450:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E410E1FCB
-        for <linux-pci@vger.kernel.org>; Sat, 13 May 2023 11:39:28 -0700 (PDT)
-Received: by mail-ej1-x635.google.com with SMTP id a640c23a62f3a-965fc25f009so1769517566b.3
-        for <linux-pci@vger.kernel.org>; Sat, 13 May 2023 11:39:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684003167; x=1686595167;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tJgRipBTIMb9CKVptB0CK8vcEy1PL4DIIOTmSIIgPL0=;
-        b=iG2e9xty+mu13wsk5ZZM2QaivT8V52G8/Af/PifVYBtLEzIXHIe06u/elBe1sr0Djd
-         aSAji3yS5LgcoFTRpqxzNPwTOm8stv9rdWo/6ANeKzHlZDreAKLVD94/cUt0xVM5gLB8
-         bh7XvLe2HRcyEKASv5Vwswa/IKzWZ5qAGsa72ikRD4XhA6/QbLsuMGoMFSlXLgwpobcS
-         urJPJ8tAzXUdsO8gn+IGWMMXRX6q09fLGsj1T2s9mBTSuGT/efeJ8ugbCVhoFSejB/Tb
-         RpUjM7gZkem4Ep8SQfrahiNgJY90jVtc5ycgRjkbFJsS6zh34P015AyayIO3TXKXcG5W
-         299w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684003167; x=1686595167;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJgRipBTIMb9CKVptB0CK8vcEy1PL4DIIOTmSIIgPL0=;
-        b=d3ggjOvK/PlAT+Aj8spIFb9iXvkctni0Ot789RUtRGEXcFZdlYp1JWFmLYiBRE3To7
-         02v9xQZ/1qxjw4DV/sCpCIWfffDcKd8bMgsjidkC25tP9Wtf9XU+Jxxq4ThmYLS/HdvK
-         XgLn4NwgJZ6Uj4SX3InD9fouxDYbu9yITpsNF7u+zQkdhWe6cC6X75hm6bPSrOlh8ru5
-         E8HVu6SAhzSZ4Hb2IqA8gNnSUXLurGya51J47zJIFO0BqyvMFy4MpxC0AGgQMt/mVc6k
-         Wp0VhzTs1phBXq44GaKH56Kv2TTkq5XuTqAMMd5ArksjJml+QJGNmtO4FChGtVbs5nwG
-         tExA==
-X-Gm-Message-State: AC+VfDyQhKazNLDBDXLuHEkSgN7nu/11aMGUdngRENHxqOZ4wDdlKasc
-        YON5hcMREeozltFNBXYZPZRoQg==
-X-Google-Smtp-Source: ACHHUZ7KQIKKSFZzxRVxqQy6v2UvaVPHdQTePpga0/dLKovt2/RDIklcz0rqo0618m3DIDXIpqarsw==
-X-Received: by 2002:a17:906:db0d:b0:94a:35d1:59a with SMTP id xj13-20020a170906db0d00b0094a35d1059amr23656859ejb.14.1684003167395;
-        Sat, 13 May 2023 11:39:27 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:ba68:e5c9:694e:c6e4? ([2a02:810d:15c0:828:ba68:e5c9:694e:c6e4])
-        by smtp.gmail.com with ESMTPSA id k18-20020a17090632d200b009661f07db93sm7049268ejk.223.2023.05.13.11.39.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 May 2023 11:39:26 -0700 (PDT)
-Message-ID: <d137b401-5b4a-bab7-ec21-ea267bd07c41@linaro.org>
-Date:   Sat, 13 May 2023 20:39:25 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [EXTERNAL] Re: [PATCH 3/3] arm64: defconfig: enable J721e PCIe
- controller
-Content-Language: en-US
-To:     "Verma, Achal" <a-verma1@ti.com>, Tom Joseph <tjoseph@cadence.com>,
+        with ESMTP id S232059AbjEMSqm (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 13 May 2023 14:46:42 -0400
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F55F1FE7;
+        Sat, 13 May 2023 11:46:41 -0700 (PDT)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 34DIkL9a020730;
+        Sat, 13 May 2023 13:46:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1684003581;
+        bh=FoD2T3LojdIzEds4W1JZPhABIQecZl+CEOroidmMWKs=;
+        h=From:To:CC:Subject:Date;
+        b=uz8a3RiY9TyGP5pnTVrhaZ8sq+IvG+inSf9WoNqT+VzghcDbKgsClSKBLbk3NVt//
+         ZxJC6x/RZFODa/mPJ3P5EaBXk3VQJXl/NjTMQXL/2/kE8hxKJtjRtDhQBDCGY8olj9
+         dADVj6t0l6/Am0IH01DvQy5YxvkODCDadd+2lADg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 34DIkLYp011316
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sat, 13 May 2023 13:46:21 -0500
+Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Sat, 13
+ May 2023 13:46:21 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Sat, 13 May 2023 13:46:21 -0500
+Received: from localhost (ileaxei01-snat.itg.ti.com [10.180.69.5])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 34DIkKun128428;
+        Sat, 13 May 2023 13:46:21 -0500
+From:   Achal Verma <a-verma1@ti.com>
+To:     Tom Joseph <tjoseph@cadence.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Krzysztof Wilczy_ski <kw@linux.com>,
         Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Andersson <quic_bjorande@quicinc.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        "N_colas F . R . A . Prado" <nfraprado@collabora.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rafa_ Mi_ecki <rafal@milecki.pl>,
         Vignesh Raghavendra <vigneshr@ti.com>,
         Nishanth Menon <nm@ti.com>, Milind Parab <mparab@cadence.com>,
         Swapnil Kashinath Jakhade <sjakhade@cadence.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-omap@vger.kernel.org
-References: <20230512070510.1873171-1-a-verma1@ti.com>
- <20230512070510.1873171-4-a-verma1@ti.com>
- <13028434-f68c-cad3-056e-d319c1ec35cf@linaro.org>
- <3b5d7c3c-164d-0690-c2e8-2c7daec4865c@ti.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <3b5d7c3c-164d-0690-c2e8-2c7daec4865c@ti.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, Achal Verma <a-verma1@ti.com>
+Subject: [PATCH 0/2] Add support to build pci-j721e as a kernel module
+Date:   Sun, 14 May 2023 00:16:18 +0530
+Message-ID: <20230513184620.2200916-1-a-verma1@ti.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -94,30 +69,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 13/05/2023 19:58, Verma, Achal wrote:
-> 
-> Hello Krzysztof,
-> On 5/12/2023 12:53 PM, Krzysztof Kozlowski wrote:
->> On 12/05/2023 09:05, Achal Verma wrote:
->>> Enable Cadence PCIe controller and pci-j721e drivers to be built as
->>> kernel modules.
->>
->> Why? IOW, who needs them. Please provide rationale in the commit msg. I
->> am pretty sure I asked for this...
->>
-> On TI's J7 SOCs, PCIe is composed of PCIe core from Cadence and TI 
-> wrapper. It is desired to have J7 PCIe working on upstream kernel by 
-> default. So to enable this I have pushed these defconfig changes.
-> 
-> BTW, I am planning to hold this change until PCIe code changes (rest of 
-> the patches in this series) gets merged.
-> 
-> Please let me know if there are more concern to this.
+J721e PCie driver is not required during linux boot, thus it should be
+build as a loadable kernel module. This series add support to build pci-j721e
+driver and pcie-cadence library as lodable modules.
 
-The concerns are that commit msg does not explain this. Please always
-provide in commit msg answer to "why you are doing this". In case of
-defconfig the answer to "why" is: "board foo bar with SoC baz uses it".
+Changes from v1:
+* Reword subject line to use PCI in place of PCIe to maintain consistency
+with older commit messages.
+* Fix word wrapping in commit message to 75 columns and add newline
+between paragraphs.
+* Drop PATCH 3 (defconfig changes) from v1 and will repost it
+separately.
 
-Best regards,
-Krzysztof
+Achal Verma (1):
+  PCI: j721e: Add support to build pci-j721e as a kernel module
+
+Kishon Vijay Abraham I (1):
+  PCI: cadence: Add support to build pcie-cadence library as a kernel
+    module.
+
+ drivers/pci/controller/cadence/Kconfig        |  12 +-
+ drivers/pci/controller/cadence/Makefile       |   2 +
+ drivers/pci/controller/cadence/pci-j721e-ep.c | 130 +++++++
+ .../pci/controller/cadence/pci-j721e-host.c   | 204 +++++++++++
+ drivers/pci/controller/cadence/pci-j721e.c    | 343 +-----------------
+ drivers/pci/controller/cadence/pci-j721e.h    |  88 +++++
+ .../pci/controller/cadence/pcie-cadence-ep.c  |   4 +
+ .../controller/cadence/pcie-cadence-host.c    |   5 +
+ drivers/pci/controller/cadence/pcie-cadence.c |   9 +
+ drivers/pci/controller/cadence/pcie-cadence.h |   4 +-
+ 10 files changed, 466 insertions(+), 335 deletions(-)
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e-ep.c
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e-host.c
+ create mode 100644 drivers/pci/controller/cadence/pci-j721e.h
+
+-- 
+2.25.1
 
