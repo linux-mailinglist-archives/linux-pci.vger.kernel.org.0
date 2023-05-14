@@ -2,77 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD509701CE4
-	for <lists+linux-pci@lfdr.de>; Sun, 14 May 2023 12:41:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2308B701D9B
+	for <lists+linux-pci@lfdr.de>; Sun, 14 May 2023 15:37:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237372AbjENKly (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 14 May 2023 06:41:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
+        id S229987AbjENNhA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 14 May 2023 09:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230043AbjENKlw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 May 2023 06:41:52 -0400
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9A291727
-        for <linux-pci@vger.kernel.org>; Sun, 14 May 2023 03:41:48 -0700 (PDT)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-50bc4bc2880so17772199a12.2
-        for <linux-pci@vger.kernel.org>; Sun, 14 May 2023 03:41:48 -0700 (PDT)
+        with ESMTP id S229808AbjENNg7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 14 May 2023 09:36:59 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 082FBE78
+        for <linux-pci@vger.kernel.org>; Sun, 14 May 2023 06:36:58 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1ab0c697c2bso108226685ad.1
+        for <linux-pci@vger.kernel.org>; Sun, 14 May 2023 06:36:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684060907; x=1686652907;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gwvE8GNOC0Y0ULH3wWZ0RD6YUfvTg/EgGGBaYirIjjU=;
-        b=X8vX7sb/2ICyD45fHKhcZEvafp0UJUpUyLdrS4617/T11tJ03hIm25+AmlJV8b4SkX
-         0ezvvPbDG/H7FyF8GzXE9VgleFOnawnlxOvMfnYP4H0Hm/4Kmqd9pPdfH1rMas7LAoRb
-         zm2us3n5EzsL0P0Jhe+W7FtgMjBIadSNPohNb6RW4NoprSIsGAQxSLAJKLnKstM+bzX/
-         XB2lWH3zmviWy+Q4+4LVIuIu5ouJWaKk4O0L8115o3Z2p0Opw/SkRmdEtL9eEnTn/yse
-         bzwngs61W3zBYHfrJud9wcXLwM5gTcix/QzmnTo+DG04LxHla+cSljwtBybl0e6jw9D8
-         vR9A==
+        d=linaro.org; s=google; t=1684071417; x=1686663417;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YunAsxB0preFd2Aglri80o56LhPHmcI0QVuqcP66y/g=;
+        b=V8vXrQUtSQeoctGj74qhO/gfaf3wUmaow7G0SBLx/KI6X/FnixQebCDQplpyuKgnwf
+         Zakc2Kl+OmrUFi7nwy5LoxOtZIcTTijGVFCON0k1tnUT4B1e1cFJuaxaalNKKfi6l63C
+         EubvtRLj7YCDG787tIdU8wAhJIIgYAC1h85h1gJYKPx8J3jz0brDi/4th0kAq1trLzaY
+         40l7qQWCUfslhAhBp+Z+/c5ordSX0kFf6+V3PE46UvtibwEgkES8jhKR4G12FNlFJ7Ph
+         63BiHiMsUST6Q5WLf9dDTus51XUAkscVL3PPwRDCjMZBfEDTcU86awJubNQRZQSyTYZg
+         9EcQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684060907; x=1686652907;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20221208; t=1684071417; x=1686663417;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gwvE8GNOC0Y0ULH3wWZ0RD6YUfvTg/EgGGBaYirIjjU=;
-        b=DYOTT6FkouSpEJ2WW8p9W1qkFrYMy5GfVCl0V+wsdlWVRAEDHMCU6g9SOwobJhtjJt
-         DyOGqDFkE8KesK3MAYnFMwcuDPlVBbqsIt1x6bbS+GXKmlbdUT5c3+sR0ESTpeTL0U9S
-         pX2GSb77VJpNo2Vx3ZIb0fDZqFr7mHR6TF4NnWhpQ5H2N6maOE+o93vQoPIiN1xojYGE
-         Y6eIZXquBO5csLqDPWtp2sGZEoboIPTm/u4eLfbcBsVNLpa+GAHLc0MwL81fuD/0AZ+1
-         wj9qApDAfEHZxxjszPXpj1aXj7Fv+kJNm7ghYMvJ3+5UVBDIwDP1OtLaDjrgnoFSEjA8
-         JOTg==
-X-Gm-Message-State: AC+VfDwDZtd0wY2RRiRKNqd7eYbMjaG05hsVjDqmzEOOgNCGA1uxogUo
-        S4eEp2rWBsEwgguzO6TkZpkLBg==
-X-Google-Smtp-Source: ACHHUZ71Wpwgtz5ebkZ+S7SwGCJVQIZ49/lwyvoEEIpUuaCZjlowkuyZuXXdaQeWV8w2n4DxmA/8uw==
-X-Received: by 2002:aa7:d945:0:b0:50b:e1d1:91cb with SMTP id l5-20020aa7d945000000b0050be1d191cbmr23936014eds.8.1684060907378;
-        Sun, 14 May 2023 03:41:47 -0700 (PDT)
-Received: from ?IPV6:2a02:810d:15c0:828:715f:ddce:f2ba:123b? ([2a02:810d:15c0:828:715f:ddce:f2ba:123b])
-        by smtp.gmail.com with ESMTPSA id b13-20020a056402138d00b004af6c5f1805sm5854441edv.52.2023.05.14.03.41.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 14 May 2023 03:41:46 -0700 (PDT)
-Message-ID: <a032d9e6-6cb5-1856-9eda-28028bf05633@linaro.org>
-Date:   Sun, 14 May 2023 12:41:45 +0200
+        bh=YunAsxB0preFd2Aglri80o56LhPHmcI0QVuqcP66y/g=;
+        b=LcrNWbddSar62m1bgS2zW+kou7O/uOWPziiP1D4Q5dNAmU5+9T+rc1knWITQuerTHs
+         LQx8vPLZ8+nHbly06OYTN2n46Zso4IUGfFTUBRXrEQPgY04MwJiDKV6lTW57lL5/kVDF
+         0Up0iTbreAonqlhty2zZP5TzpqfVfmj7FJ6w2DcD2pVU9P/OltL8rUXK77lsk9TNHFMH
+         26R9GMKLyNPrSlXyVtQRHaHQsV9PB9DLmRlJk8TNlVenyo+2j9L3Sfhxm10RpVvPOPa2
+         hlaCOb8PIX9HMNq7srHIpfMTCSNsvj0ZMQ5umNrVGO1zIv3xP80AFcW+D6ezLKD7EsHl
+         sLDw==
+X-Gm-Message-State: AC+VfDzdvhWzIAEJfHaEltGf4bNxo2Y31hfcgUYVbNZi01krehUs6Gj3
+        OsYlNLWe50iXHoVH7aeT2wTa
+X-Google-Smtp-Source: ACHHUZ7Tfut5t8Afgt+tjg1zjeYnhNrhRYCoFy5lPsgM8aR/36bafmGbARNRYIqo9BXf6Q3icsONBw==
+X-Received: by 2002:a17:902:788d:b0:1ac:8215:623d with SMTP id q13-20020a170902788d00b001ac8215623dmr21572554pll.0.1684071417435;
+        Sun, 14 May 2023 06:36:57 -0700 (PDT)
+Received: from thinkpad ([120.138.12.96])
+        by smtp.gmail.com with ESMTPSA id gb12-20020a17090b060c00b00250334d97dasm15977448pjb.31.2023.05.14.06.36.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 May 2023 06:36:56 -0700 (PDT)
+Date:   Sun, 14 May 2023 19:06:52 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     dlemoal@kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [bug report] PCI: endpoint: Automatically create a function
+ specific attributes group
+Message-ID: <20230514133652.GA116991@thinkpad>
+References: <95d23290-496a-462c-87c5-944df1e20ba1@kili.mountain>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Patch v8 0/8] Tegra234 Memory interconnect support
-Content-Language: en-US
-To:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
-        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
-        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
-        lpieralisi@kernel.org, helgaas@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com, kw@linux.com,
-        bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
-        ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
-References: <20230511173211.9127-1-sumitg@nvidia.com>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230511173211.9127-1-sumitg@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-3.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <95d23290-496a-462c-87c5-944df1e20ba1@kili.mountain>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -80,18 +72,50 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 11/05/2023 19:32, Sumit Gupta wrote:
-> Hi All,
+On Thu, May 11, 2023 at 10:06:40AM +0300, Dan Carpenter wrote:
+> Hello Damien Le Moal,
 > 
-> Have incorporated the suggestions in v7. Only changed 'patch 1' in v7
-> to fix possible race when setting 'mc->bpmp' as pointed by Krzysztof.
-> Requesting to merge the patch series.
+> The patch 01c68988addf: "PCI: endpoint: Automatically create a
+> function specific attributes group" from Apr 15, 2023, leads to the
+> following Smatch static checker warning:
+> 
+> 	drivers/pci/endpoint/pci-ep-cfs.c:540 pci_ep_cfs_add_type_group()
+> 	warn: 'group' isn't an ERR_PTR
+> 
+> drivers/pci/endpoint/pci-ep-cfs.c
+>     532 static void pci_ep_cfs_add_type_group(struct pci_epf_group *epf_group)
+>     533 {
+>     534         struct config_group *group;
+>     535 
+>     536         group = pci_epf_type_add_cfs(epf_group->epf, &epf_group->group);
+>     537         if (!group)
+>     538                 return;
+>     539 
+> --> 540         if (IS_ERR(group)) {
+> 
+> pci_epf_type_add_cfs() does not return error pointers currently.  Which
+> is fine.  Presumably it will start returning them later.  But could you
+> add some comments next to the pci_epf_type_add_cfs() to explain what a
+> NULL return means vs an error pointer return?
 > 
 
-Can I apply it since you request it? I asked you long time ago to
-clearly state dependencies or merging limitations. It's v8 and cover
-letter still does not state it. Neither the patches do.
+pci_epf_type_add_cfs() may return ERR_PTR from add_cfs() callback.
 
-Best regards,
-Krzysztof
+Regarding comments, it should be added as a part of kdoc for
+pci_epf_type_add_cfs(). It already does for NULL part but not for ERR_PTR.
 
+- Mani
+
+>     541                 dev_err(&epf_group->epf->dev,
+>     542                         "failed to create epf type specific attributes\n");
+>     543                 return;
+>     544         }
+>     545 
+>     546         configfs_register_group(&epf_group->group, group);
+>     547 }
+> 
+> regards,
+> dan carpenter
+
+-- 
+மணிவண்ணன் சதாசிவம்
