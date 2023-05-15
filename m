@@ -2,180 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 27943702BBB
-	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 13:44:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91897702C28
+	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 14:02:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241380AbjEOLn7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 May 2023 07:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47742 "EHLO
+        id S241624AbjEOMCU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 May 2023 08:02:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241531AbjEOLl6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 07:41:58 -0400
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99DD273D
-        for <linux-pci@vger.kernel.org>; Mon, 15 May 2023 04:36:53 -0700 (PDT)
-Received: by mail-pl1-x62a.google.com with SMTP id d9443c01a7336-1aaed87d8bdso89038865ad.3
-        for <linux-pci@vger.kernel.org>; Mon, 15 May 2023 04:36:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684150613; x=1686742613;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JDGTIMvQ20JVretXaWpYChh5fuqmnmjbHjkoKJsET3E=;
-        b=gsDwZ5YYgydAKCX/7AZ61JKSBtxGPl3Mm/uK9A8rkw23VSkL2jYq4AHgq9Hlj5mbUj
-         K/uX65RocRePHnFKmO1F9GF3Oyzq+UYK/qbWZYLmjc5tMlecJNE9H7FT7TgU1FW5UoRk
-         wfyfKTWTO0XoaOsrb/DTy9/FEPq4Iz3P5K4tfomcj1DZSjeV09VAEWGBYAJJjI3qh1Qb
-         b7w0bMTQJDchFDDSP+Bz4vR9zj6D5Fy2EepuZZBsCIyGyXFYsLs4LHwQfRUmvDg9+pnJ
-         smZp+G6nnvcVxKjltdM9ldEPYpEVR8Zj3uGxiFh59anC9xkN56PiWNJC6SMVAUuWYPLK
-         TtAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684150613; x=1686742613;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JDGTIMvQ20JVretXaWpYChh5fuqmnmjbHjkoKJsET3E=;
-        b=D7oaYnlPjUjwDqOY99guRaiXZfGpSLx6yJ8mDhH/eCfSQs52qGe2UJYYbs50o8y14L
-         10B2h+NZf2UnjFVXos1zo3ocd1jzpIp3DPJ8QgzQAc2+QRLTCJR9y664H5b6j/7uQO8E
-         4/Dqvw6hqeggU11EDlMjrE8+HkkTJNAuny6bkfsSZFTh8bqE3LWglZb4eW8C32RnUzjL
-         71QuzywyXZQvCb3DGz5ZhQl/a1Pi7X5RnARcPjmDQcke7fwr/+uFi7R8h3MulGC0AtP2
-         84L2Sv1dEch/3NDt+eQY4srcOdL81nNCE8OOay7NJ40Xn65W6wkxi0HXj8r7UWVvb9Im
-         haoA==
-X-Gm-Message-State: AC+VfDxyTjje+bmER6SlqWYYLLH98Z+vLyHiD0I0KnoEzjXIiTQxLKQQ
-        U14ry0jy8yzIN59gPp0xspjM
-X-Google-Smtp-Source: ACHHUZ7p1EfpEfxZTNZfQR84HRz/yhR66O35QNmEBHtA7e0wDXhMBrPFi4yV+hz8WZJN8J5bhTiJAA==
-X-Received: by 2002:a17:903:245:b0:1a9:85f2:5df6 with SMTP id j5-20020a170903024500b001a985f25df6mr40646014plh.6.1684150613021;
-        Mon, 15 May 2023 04:36:53 -0700 (PDT)
-Received: from thinkpad ([120.138.12.27])
-        by smtp.gmail.com with ESMTPSA id u5-20020a170903124500b001ae2b94701fsm203842plh.21.2023.05.15.04.36.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 04:36:52 -0700 (PDT)
-Date:   Mon, 15 May 2023 17:06:47 +0530
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     Kishon VijayAbraham I <kvijayab@amd.com>
-Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] PCI: endpoint: Add PCI Endpoint function driver
- for MHI bus
-Message-ID: <20230515113647.GA42703@thinkpad>
-References: <20230314044623.10254-1-manivannan.sadhasivam@linaro.org>
- <20230314044623.10254-8-manivannan.sadhasivam@linaro.org>
- <d25fdf75-e1fe-b83b-cb9c-ec0fb62f9254@amd.com>
+        with ESMTP id S241741AbjEOMCH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 08:02:07 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AD01FC6;
+        Mon, 15 May 2023 05:00:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684152012; x=1715688012;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=lXKrOwj5PNXOGKYnVu6DDSnA2jMvT5ryqCZud7eQiLY=;
+  b=cxHkjYWnAItLLE0+qZjhBXvIIKbtIdiGc4S0/DbEOqjGsmMCEAE4cEqG
+   jFQH0lddWSzXTa9JRH29YGLSKVOqHri2OH1lxQnZklIa+elbIPL3JMIij
+   Iv3RAb8zD5q9CKG0d5v5n60wu1ZenOrA4mtFXNTH4GxM40Sb3PES/2WVu
+   mH+mz8ULoBI1vtTXtPW01F72Ux91bsmmjXuEYRswzMiiVFKbzKQVlqfnU
+   L2Mns2NHTbhJjz/48ROeGnkDlHJr36JYuT3gUMqPTtBtgp6MFgD/bRjuL
+   zyznhr0d6vnj9W/1UhptxwLVJziyUNaFsXixZa973tp8XwKYZifIyVM9B
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10710"; a="354337606"
+X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
+   d="scan'208";a="354337606"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 04:59:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10710"; a="703964116"
+X-IronPort-AV: E=Sophos;i="5.99,276,1677571200"; 
+   d="scan'208";a="703964116"
+Received: from fsamelis-mobl.ger.corp.intel.com ([10.252.42.18])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 04:59:47 -0700
+Date:   Mon, 15 May 2023 14:59:42 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Lukas Wunner <lukas@wunner.de>
+cc:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        Rob Herring <robh@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Krzysztof Wilczy??ski <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 01/17] PCI: Add concurrency safe clear_and_set variants
+ for LNKCTL{,2}
+In-Reply-To: <20230514101041.GA1881@wunner.de>
+Message-ID: <2832e4a-8ef5-8695-3ca2-2b2f287a44d@linux.intel.com>
+References: <20230511131441.45704-2-ilpo.jarvinen@linux.intel.com> <ZF0P2hedTFXPv8IK@bhelgaas> <20230511202332.GD31598@wunner.de> <51577aaa-dc96-d588-2ecf-5bac4b59284@linux.intel.com> <20230514101041.GA1881@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <d25fdf75-e1fe-b83b-cb9c-ec0fb62f9254@amd.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; BOUNDARY="8323329-1734733710-1684147086=:2173"
+Content-ID: <bc617524-c5f3-4ced-f67a-378470bd19ac@linux.intel.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Kishon,
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-On Mon, May 15, 2023 at 01:37:28PM +0530, Kishon VijayAbraham I wrote:
-> Hi Manivannan,
-> 
-> On 3/14/2023 10:16 AM, Manivannan Sadhasivam wrote:
-> > Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
-> > The driver implements the MHI function over PCI in the endpoint device
-> > such as SDX55 modem. The MHI endpoint function driver acts as a
-> > controller driver for the MHI Endpoint stack and carries out all PCI
-> > related activities like mapping the host memory using iATU, triggering
-> > MSIs etc...
+--8323329-1734733710-1684147086=:2173
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <6044db88-bfe0-d5dd-baa3-6ca6ecdc6ba9@linux.intel.com>
+
+On Sun, 14 May 2023, Lukas Wunner wrote:
+
+> On Fri, May 12, 2023 at 11:25:32AM +0300, Ilpo J�rvinen wrote:
+> > On Thu, 11 May 2023, Lukas Wunner wrote:
+> > > On Thu, May 11, 2023 at 10:55:06AM -0500, Bjorn Helgaas wrote:
+> > > > I didn't see the prior discussion with Lukas, so maybe this was
+> > > > answered there, but is there any reason not to add locking to
+> > > > pcie_capability_clear_and_set_word() and friends directly?
+> > > > 
+> > > > It would be nice to avoid having to decide whether to use the locked
+> > > > or unlocked versions.
+> > > 
+> > > I think we definitely want to also offer lockless accessors which
+> > > can be used in hotpaths such as interrupt handlers if the accessed
+> > > registers don't need any locking (e.g. because there are no concurrent
+> > > accesses).
+> > > 
+> > > So the relatively lean approach chosen here which limits locking to
+> > > Link Control and Link Control 2, but allows future expansion to other
+> > > registers as well, seemed reasonable to me.
 > > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >   drivers/pci/endpoint/functions/Kconfig       |  10 +
-> >   drivers/pci/endpoint/functions/Makefile      |   1 +
-> >   drivers/pci/endpoint/functions/pci-epf-mhi.c | 454 +++++++++++++++++++
-> >   3 files changed, 465 insertions(+)
-> >   create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > I went through every single use of these functions in the mainline tree 
+> > excluding LNKCTL/LNKCTL2 ones which will be having the lock anyway:
 > > 
-> > diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-> > index 9fd560886871..f5171b4fabbe 100644
-> > --- a/drivers/pci/endpoint/functions/Kconfig
-> > +++ b/drivers/pci/endpoint/functions/Kconfig
-> > @@ -37,3 +37,13 @@ config PCI_EPF_VNTB
-> >   	  between PCI Root Port and PCIe Endpoint.
-> >   	  If in doubt, say "N" to disable Endpoint NTB driver.
-> > +
-> > +config PCI_EPF_MHI
-> > +	tristate "PCI Endpoint driver for MHI bus"
-> > +	depends on PCI_ENDPOINT && MHI_BUS_EP
-> > +	help
-> > +	   Enable this configuration option to enable the PCI Endpoint
-> > +	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
-> > +	   devices such as SDX55.
-> > +
-> > +	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
-> > diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
-> > index 5c13001deaba..696473fce50e 100644
-> > --- a/drivers/pci/endpoint/functions/Makefile
-> > +++ b/drivers/pci/endpoint/functions/Makefile
-> > @@ -6,3 +6,4 @@
-> >   obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
-> >   obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
-> >   obj-$(CONFIG_PCI_EPF_VNTB) 		+= pci-epf-vntb.o
-> > +obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > new file mode 100644
-> > index 000000000000..03e7f42663b3
-> > --- /dev/null
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> .
-> .
-> <snip>
-> .
-> .
-> > +static int pci_epf_mhi_link_up(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> > +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> > +	struct pci_epc *epc = epf->epc;
-> > +	struct device *dev = &epf->dev;
-> > +	int ret;
-> > +
-> > +	mhi_cntrl->mmio = epf_mhi->mmio;
-> > +	mhi_cntrl->irq = epf_mhi->irq;
-> > +	mhi_cntrl->mru = info->mru;
-> > +
-> > +	/* Assign the struct dev of PCI EP as MHI controller device */
-> > +	mhi_cntrl->cntrl_dev = epc->dev.parent;
-> > +	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
-> > +	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
-> > +	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-> > +	mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
-> > +	mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
-> > +
-> > +	/* Register the MHI EP controller */
-> > +	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
-> > +		return ret;
-> > +	}
+> > - pcie_capability_clear_and_set_*
+> > - pcie_capability_set_*
+> > - pcie_capability_clear_*
 > 
-> Any reason for delaying registration with MHI bus till link up? Since after
-> linkup, the host can start using the device, this should be doing minimal
-> stuff IMHO. Or is there further handshake between the host side MHI driver
-> and the endpoint side MHI driver?
+> We're also performing RMW through pcie_capability_read_word() +
+> pcie_capability_write_word() combos, see drivers/pci/hotplug/pciehp_hpc.c
+> for examples.
+
+That's why I said there could be other RMW operations outside of what
+I carefully looked at. It, however, does not mean I didn't take any look 
+at those.
+
+But since brought it up, lets go through this case with
+drivers/pci/hotplug/pciehp_hpc.c, it won't change anything:
+
+All PCI_EXP_SLTSTA ones looked not real RMW but ACK bits type of writes
+(real RMW = preverse other bits vs ACK write = other bits are written as 
+zeros). Using RMW accessors would need an odd construct such as this
+(and pcie_capability_set/clear_word() would be plain wrong):
+	pcie_capability_clear_and_set_word(dev, PCI_EXP_SLTSTA,
+					   ~PCI_EXP_SLTSTA_CC,
+					   PCI_EXP_SLTSTA_CC);
+
+PCI_EXP_SLTCTL write is protected by a mutex, it doesn't look something 
+that matches your initial concern about "hot paths (e.g. interrupt 
+handlers)".
+
+In general, outside of drivers/pci/hotplug there are not that many 
+capability writes (beyond LNKCTL/LNKCTL2 and now also RTCTL). None of 
+those seem hot paths.
+
+> > Do you still feel there's a need to differentiate this per capability 
+> > given all the information above?
 > 
+> What I think is unnecessary and counterproductive is to add wholesale
+> locking of any access to the PCI Express Capability Structure.
+> 
+> It's fine to have a single spinlock, but I'd suggest only using it
+> for registers which are actually accessed concurrently by multiple
+> places in the kernel.
 
-Yes, there are further handshakes required between ep and host before the host
-can start using MHI and this is done during mhi_ep_power_up(). Moreover,
-registering the controller during link_up event allows us to do cleanup properly
-when the link goes down.
+While it does feel entirely unnecessary layer of complexity to me, it would 
+be possible to rename the original pcie_capability_clear_and_set_word() to 
+pcie_capability_clear_and_set_word_unlocked() and add this into 
+include/linux/pci.h:
 
-- Mani
- 
-> Thanks,
-> Kishon
+static inline int pcie_capability_clear_and_set_word(struct pci_dev *dev,
+					int pos, u16 clear, u16 set)
+{
+	if (pos == PCI_EXP_LNKCTL || pos == PCI_EXP_LNKCTL2 ||
+	    pos == PCI_EXP_RTCTL)
+		pcie_capability_clear_and_set_word_locked(...);
+	else
+		pcie_capability_clear_and_set_word_unlocked(...);
+}
+
+It would keep the interface exactly the same but protect only a selectable 
+set of registers. As pos is always a constant, the compiler should be able 
+to optimize all the dead code away.
+
+Would that be ok then?
 
 -- 
-மணிவண்ணன் சதாசிவம்
+ i.
+
+
+> > spinlock + irq / work drivers/pci/pcie/pme.c: pcie_capability_set_word(dev, PCI_EXP_RTCTL,
+> > spinlock + irq / work drivers/pci/pcie/pme.c: pcie_capability_clear_word(dev, PCI_EXP_RTCTL,
+> [...]
+> > What's more important though, isn't it possible that AER and PME RMW
+> > PCI_EXP_RTCTL at the same time so it would need this RMW locking too 
+> > despite the pme internal spinlock?
+> 
+> Yes that looks broken, so RTCTL would be another register besides
+> LNKCTL and LNKCTL2 that needs protection, good catch.
+> 
+> Thanks,
+> 
+> Lukas
+> 
+--8323329-1734733710-1684147086=:2173--
