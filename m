@@ -2,157 +2,109 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20D6F702595
-	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 09:01:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E45A87025F3
+	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 09:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238608AbjEOHBJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 May 2023 03:01:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58326 "EHLO
+        id S238808AbjEOHUG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 May 2023 03:20:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238149AbjEOHBH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 03:01:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31A6B6;
-        Mon, 15 May 2023 00:01:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 71833612B4;
-        Mon, 15 May 2023 07:01:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9242C4339B;
-        Mon, 15 May 2023 07:00:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684134060;
-        bh=B6gZLaOczooVV49cVdQgxVZpzjPdFzf9quJfF9D6WF4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nLKwlOc8aSY4mMyC+OZTSbNu1d4vsoi+MtOkqpid4XLA6AZnPPnPkBGJUAWErFvCl
-         PkuoksEnXkYZe71koSsZaWk+jSAJGn2YTYeNqDuKJsC/YlAo2Ef0gz1t7VH1VD17bw
-         qWDzO33PhPc/wGVMyhfBUJaChzPDES+ZmKOR818zrRrGRywsdWtRx5vkIbqdmEYpob
-         W5Kl7SF2/Nugi0us+sMMptAql/seF/T0MeTsbip2ue89So3/7Ntub9hP7FFHRhish4
-         Xn/vGT7LJWXG98lzb99NXb1YVt8/daMckAOwAo2+1l7/DL8puiiQ6GDQjOBtK4K/9O
-         4gheg6/TuWQbw==
-Date:   Mon, 15 May 2023 12:30:53 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] Add support for MHI Endpoint function driver
-Message-ID: <20230515070053.GE5143@thinkpad>
-References: <20230314044623.10254-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S231651AbjEOHUE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 03:20:04 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698F6E6D
+        for <linux-pci@vger.kernel.org>; Mon, 15 May 2023 00:20:03 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1aaed87d8bdso87114405ad.3
+        for <linux-pci@vger.kernel.org>; Mon, 15 May 2023 00:20:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1684135203; x=1686727203;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lncfMMTwbGRpxdM66jyOZHMGDe9OaKkXzVHI9UOTGKU=;
+        b=tcLzgDaJTWyOpQepCChhsuHwJpFK8+P5fmDrHeEDS9MAGQ/F3XrXfwhQ81VFinUVyY
+         RooepIA9ZIuty/wkztpflRJ+dHCSa9tDBtAsH1Y1CaCMyXNScWQxiy4TRKsN17E9FojQ
+         k+B/fgVQ72Tok71hQX1ll8KKoZN0m5La/ExTqyhVOQGxMoOfpZCj5DBvaZXXaxntWqiE
+         udVPZMPEKamYmbV3fAigISmRliEi/ogm9UHR8Ppb4tnQBOPqVWNwWTgoxlzDiPJ/mHYF
+         +FFvwURP3jMVn3w2Qz5g8uyeZf0TZIfDD6QiH9J+26P5s7Axq0YSDqWeFsNRJjcBMdMw
+         FkSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684135203; x=1686727203;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lncfMMTwbGRpxdM66jyOZHMGDe9OaKkXzVHI9UOTGKU=;
+        b=RdoT0VaraleSZ+To5+NCPd3Wq40zbcnirZUweYQxf+jVc5VEvG4R7zPAE202eNAeEn
+         R7J8Dl/93w5VPE3IZSBm0ZeeFe3efooDXmW4/7sTpNc0uLMUVg0WJ95UdFTCaui/F9oJ
+         N17ZDqBBMhBHuqwHEo9cZF3lDB/n7oYUM5Cwx+ohKr6VhilTzOEmpmMEHQb/t3EUkkD4
+         vzrwZZvqacDheFX1ZQklWtE2HlPjtYTNwtVDME1Fg/yTyPMNdAxDbDYZd3l/8KUqLH6x
+         87dcNVMtARawjhjPuiGbhrlnxQ3+KsYYlwi70cjIKlorheKEnMubTkSYRiELVr8MiRH+
+         GZdw==
+X-Gm-Message-State: AC+VfDxUhT8o5HeFxmewLWaHPPBRdc/GLNvjqBXw3P+q+QGnBh9OpR24
+        N68Gs4O4eVpIkPPKDU8IhMPg
+X-Google-Smtp-Source: ACHHUZ5Aqda8tXQabS34UWDAo2FvBV1b9ref9spuUM7iqZv97okaGSdBSbioo9apOIMVS35AbRwciw==
+X-Received: by 2002:a17:902:c952:b0:1ad:ca0e:cf23 with SMTP id i18-20020a170902c95200b001adca0ecf23mr18312601pla.3.1684135202785;
+        Mon, 15 May 2023 00:20:02 -0700 (PDT)
+Received: from thinkpad ([103.28.246.73])
+        by smtp.gmail.com with ESMTPSA id g12-20020a170902740c00b0019a5aa7eab0sm12698690pll.54.2023.05.15.00.19.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 00:20:02 -0700 (PDT)
+Date:   Mon, 15 May 2023 12:49:58 +0530
+From:   Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
+To:     Damien Le Moal <dlemoal@kernel.org>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>
+Subject: Re: [PATCH 1/2] PCI: endpoint: Improve pci_epf_type_add_cfs()
+Message-ID: <20230515071958.GA30758@thinkpad>
+References: <20230515051500.574127-1-dlemoal@kernel.org>
+ <20230515051500.574127-2-dlemoal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230314044623.10254-1-manivannan.sadhasivam@linaro.org>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <20230515051500.574127-2-dlemoal@kernel.org>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,RCVD_IN_SBL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, Mar 14, 2023 at 10:16:16AM +0530, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This series adds support for Modem Host Interface (MHI) Endpoint function
-> driver and few updates to the PCI endpoint core.
-> 
-> MHI
-> ===
-> 
-> MHI is the communication protocol used by the host machines to control and
-> communicate with the Qualcomm modems/WLAN devices over any high speed physical
-> bus like PCIe. In Linux kernel, MHI is modeled as a bus driver [1] and there
-> are two instances of MHI used in a typical setup.
-> 
-> 1. MHI host - MHI implementation for the host machines like x86/ARM64.
-> 2. MHI Endpoint - MHI implementation for the endpoint devices like modems.
-> 
-> MHI EPF
-> =======
-> 
-> The MHI Endpoint function driver (MHI EPF) is used on the MHI endpoint devices
-> like modems. The MHI EPF driver sits in between the PCIe EP and MHI EP bus and
-> carries out all of the PCIe related activities like BAR config, PCIe Event
-> handling, MMIO read/write etc,... for the MHI EP bus.
-> 
-> Below is the simple representation of the setup:
-> 
-> 
->                  +----------------------------------------------------+
->                  |                  Endpoint CPU                      |                   
->                  |                                                    |
-> +------------+   |   +------------+   +-----------+   +-----------+   |
-> |            |   |   |            |   |           |   |           |   |
-> |            |   |   |   MHI EP   |   |           |   |           |   | PCIe Bus
-> |  Modem DSP +---+---+    Bus     +---+  MHI EPF  +---+  PCIe EP  +---+---------
-> |            |   |   |            |   |           |   |           |   |
-> |            |   |   |            |   |           |   |           |   |
-> +------------+   |   +------------+   +-----------+   +-----------+   |
->                  |                                                    |
->                  |                                                    |
->                  +----------------------------------------------------+
-> 
-> The data packets will be read from the Modem DSP by the MHI stack and will be
-> transmitted to the host machine over PCIe bus with the help of MHI EPF driver.
-> 
-> Test setup
-> ==========
-> 
-> This series has been tested on Snapdragon X55 modem a.k.a SDX55 connected to
-> the ARM64 host machine.
+On Mon, May 15, 2023 at 02:14:59PM +0900, Damien Le Moal wrote:
+> pci_epf_type_add_cfs() should not be called with an unbound EPF device,
+> that is, an epf device with epf->driver not set. For such case, replace
+> the NULL return in pci_epf_type_add_cfs() with a clear ERR_PTR(-EINVAL)
+> error return.
 > 
 
-Lorenzo, gentle ping on this series.
+Shouldn't the error code be -ENODEV?
 
 - Mani
 
-> Thanks,
-> Mani
+> Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
+> ---
+>  drivers/pci/endpoint/pci-ep-cfs.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> [1] https://www.kernel.org/doc/html/latest/mhi/mhi.html
-> 
-> Changes in v3:
-> 
-> * Fixed the probe function of EPF_VNTB driver
-> 
-> Changes in v2:
-> 
-> * Rebased on top of v6.3-rc1
-> * Switched to the new callback interface for passing events from EPC to EPF
-> * Dropped one patch related to notifier
-> 
-> Manivannan Sadhasivam (7):
->   PCI: endpoint: Pass EPF device ID to the probe function
->   PCI: endpoint: Warn and return if EPC is started/stopped multiple
->     times
->   PCI: endpoint: Add linkdown notifier support
->   PCI: endpoint: Add BME notifier support
->   PCI: qcom-ep: Add support for Link down notification
->   PCI: qcom-ep: Add support for BME notification
->   PCI: endpoint: Add PCI Endpoint function driver for MHI bus
-> 
->  drivers/pci/controller/dwc/pcie-qcom-ep.c     |   2 +
->  drivers/pci/endpoint/functions/Kconfig        |  10 +
->  drivers/pci/endpoint/functions/Makefile       |   1 +
->  drivers/pci/endpoint/functions/pci-epf-mhi.c  | 454 ++++++++++++++++++
->  drivers/pci/endpoint/functions/pci-epf-ntb.c  |   3 +-
->  drivers/pci/endpoint/functions/pci-epf-test.c |   2 +-
->  drivers/pci/endpoint/functions/pci-epf-vntb.c |   2 +-
->  drivers/pci/endpoint/pci-ep-cfs.c             |   3 +
->  drivers/pci/endpoint/pci-epc-core.c           |  52 ++
->  drivers/pci/endpoint/pci-epf-core.c           |   8 +-
->  include/linux/pci-epc.h                       |   2 +
->  include/linux/pci-epf.h                       |   8 +-
->  12 files changed, 540 insertions(+), 7 deletions(-)
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
-> 
+> diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+> index 0fb6c376166f..d8a6abe2c31c 100644
+> --- a/drivers/pci/endpoint/pci-ep-cfs.c
+> +++ b/drivers/pci/endpoint/pci-ep-cfs.c
+> @@ -516,7 +516,7 @@ static struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+>  
+>  	if (!epf->driver) {
+>  		dev_err(&epf->dev, "epf device not bound to driver\n");
+> -		return NULL;
+> +		return ERR_PTR(-EINVAL);
+>  	}
+>  
+>  	if (!epf->driver->ops->add_cfs)
 > -- 
-> 2.25.1
+> 2.40.1
 > 
 
 -- 
