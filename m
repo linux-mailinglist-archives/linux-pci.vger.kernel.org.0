@@ -2,149 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4324C702AF5
-	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 12:57:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9AD00702B07
+	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 13:04:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236542AbjEOK5j (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 May 2023 06:57:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45334 "EHLO
+        id S240066AbjEOLEl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 May 2023 07:04:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229963AbjEOK5i (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 06:57:38 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2040.outbound.protection.outlook.com [40.107.236.40])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D374493;
-        Mon, 15 May 2023 03:57:36 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Btr6T0G/yC7QxBY32sjMYFXMS99v9MdLzBwxCwtSrYUTgal3j0uAgblGI/c6TlNMOcaOaemRh9xgCeyL3LvzQOp4rwYxOUPui7NFTiTRs/ObMhsVXXodz9PZ8vzDhTKe3kT+CrHw+uUo7KNFzIq4QTejyKZp6VKUiu3yFWGrfbaB/uRom1XlMEKKc37Iyf27LQwwP9rQQrUjh0dFpBeDDR04/KD6aIZlj+7ZP0aPfwJnFZ+EvqPaVpA+STrIrCpIfLRryGt33kfOQheVDWk+YspF0vKvXsIewk9GFiFyItHn5WTg8KA4fEVPMdEemhm9UvgziIJ5r2Lc2+bHOCQt6A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bJOw3ltf55yXRRRLkl6eJw2L8EdRoG2qgOJnBEGqafg=;
- b=Lck+/zsxxlp/ZjFGKFJirkG/nra/PjWEH3MZMhXLd9zddWEo4R16WoFg4vVOh0iB0gdV199oKcsCz9AZawx9RQkStlyiVlvPY0yJ0Mhty6o3EggUcPOOrUFVJNSJrmwQjaqtQA06RtjWQ5N121SdsUvMa+p63xjRAUx/ac4VGNgWOeUkXdBQEKbZu++4dx156MKoby9MzaoVbA1SGnZRrDcosvM1rXJYRStSbr2Mdf9eOaVWwEc+PAtIrn6BVBOAA0ks1lnLlqAqOzGXiBzNrrVzJ+0Axrkg3VsKvMsgnGC3PaOoHCBBTllup5S1IdN34RQPcWHEXTCNa99jj56rrw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.160) smtp.rcpttodomain=linaro.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bJOw3ltf55yXRRRLkl6eJw2L8EdRoG2qgOJnBEGqafg=;
- b=ZP6rhHbRsf6FWwCcJI7U9YxQVSRlD5dgQJ8Fnq5HotWStU5bNWv16fIveHSGId9CMfNFLi6BFvwU5XOm/+ErwMXPyEYQZxjSwQjOwzknaA4fdQ63rtuisvH41nWGptiemAVH+Q37oZJXujKVObic8fBBfWlha9uUcAJZP1tx4sB3pGd43E/IrMva7ZPj1p8143QCOGRHvGEO52TaG/jWk20A4lVvpdgOAfTrhZosbFYGW1Z8WzE9t0rgrTID2rF1G4XIpCSK19MLqOGxgoCx4ODJp+AXIUV2BF5+Z7V5cna2V0YUDVYB8hANBcOTeigs3mNNy/kGliU2MWAQ4D39mw==
-Received: from MW4PR03CA0223.namprd03.prod.outlook.com (2603:10b6:303:b9::18)
- by MN2PR12MB4391.namprd12.prod.outlook.com (2603:10b6:208:269::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Mon, 15 May
- 2023 10:57:34 +0000
-Received: from CO1NAM11FT069.eop-nam11.prod.protection.outlook.com
- (2603:10b6:303:b9:cafe::3a) by MW4PR03CA0223.outlook.office365.com
- (2603:10b6:303:b9::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30 via Frontend
- Transport; Mon, 15 May 2023 10:57:34 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.160) by
- CO1NAM11FT069.mail.protection.outlook.com (10.13.174.129) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6411.14 via Frontend Transport; Mon, 15 May 2023 10:57:34 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Mon, 15 May 2023
- 03:57:23 -0700
-Received: from [10.41.21.79] (10.126.230.37) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Mon, 15 May
- 2023 03:57:17 -0700
-Message-ID: <6c8f0a58-ee37-8588-42fc-55697dd6dd37@nvidia.com>
-Date:   Mon, 15 May 2023 16:27:14 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [Patch v8 0/8] Tegra234 Memory interconnect support
-Content-Language: en-US
-To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <treding@nvidia.com>, <dmitry.osipenko@collabora.com>,
-        <viresh.kumar@linaro.org>, <rafael@kernel.org>,
-        <jonathanh@nvidia.com>, <robh+dt@kernel.org>,
-        <lpieralisi@kernel.org>, <helgaas@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, <mmaddireddy@nvidia.com>,
-        <kw@linux.com>, <bhelgaas@google.com>, <vidyas@nvidia.com>,
-        <sanjayc@nvidia.com>, <ksitaraman@nvidia.com>, <ishah@nvidia.com>,
-        <bbasu@nvidia.com>, Sumit Gupta <sumitg@nvidia.com>
-References: <20230511173211.9127-1-sumitg@nvidia.com>
- <a032d9e6-6cb5-1856-9eda-28028bf05633@linaro.org>
-From:   Sumit Gupta <sumitg@nvidia.com>
-In-Reply-To: <a032d9e6-6cb5-1856-9eda-28028bf05633@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.126.230.37]
-X-ClientProxiedBy: rnnvmail203.nvidia.com (10.129.68.9) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1NAM11FT069:EE_|MN2PR12MB4391:EE_
-X-MS-Office365-Filtering-Correlation-Id: 13f27d27-ad9d-45f2-359d-08db5533303a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: osKsD75lLZ/NBHfCXVEt/32xfH8LPBZ7pHWzR9akWNXR6APFAda+29YII4Y9RRfPMUyAf6ZOC3ifL2etgUTDdZaM+wB7lIyC43J0DMHp7opHnIeN/81LWU4tZu5SYROl9vQBzPhQYrOo4zQe8FTIBo0TRiFErGOVBibfpPjLuIgBnDNZC83LbPU3yGq8nixQHS1f4aee0yKeW31glwuUsgVZfsBqcnEIv29IC2ugVFp+VTk5OhbZujJOt5+HzPtL7kd82FW6Zt+Txv3YK4qrrC5Dw5OHs3bN4PsXd3JDDwQ90l0XIyGpLxGuaOFqXdmsrO+tJZb4eaDso3EBQlovDDQtar85gdauSPWVuse4DWxaQlsqifSUgxAVUJS8MS/Es48CGmDQA10YQklvrURbg8uCIjSn9JMMk6xCj2xDkXYizIUZmm4a127R9HeJew2oFougqMSkLKuNivgSxSv2AfadoeKvcBklcwO6hcpCJWZl+b0n+M51JAAMsxqAQDBtDMuu/hiv5s84NTnlvr1fUZMDTSSyFplaYn4KQsRsYkoow+VSKKNlFgg40uFhf7H79IYIUegsEBGcKuDoBk6287VlP6J2T8FUBTBfIaRodfKym+zVf3lka7UElOsB4cI6tBNc2e9KMUAqiLuPuDEZBzXf9r3XQbtiZyK8Vo6Pt+MoUSTcXq3EJfsgjETPAEmvbXqlN9SK+5/8VgOC72+LdujqKaw2zYlQ7lo/571wxcNu2ha5kjEZGD0Fcln6CCyp/cnv6YWtQPQUGD/RUYpnqPRpWOiFYY6mNAyDfejPBXkmrSgqLf78OqM+9fGL/rmV
-X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(39860400002)(136003)(346002)(451199021)(46966006)(36840700001)(40470700004)(36756003)(86362001)(16576012)(54906003)(110136005)(316002)(4326008)(70206006)(70586007)(966005)(478600001)(4744005)(82310400005)(40480700001)(5660300002)(8676002)(8936002)(6666004)(2906002)(7416002)(7636003)(31696002)(356005)(82740400003)(41300700001)(16526019)(2616005)(186003)(53546011)(107886003)(26005)(336012)(36860700001)(83380400001)(426003)(47076005)(31686004)(40460700003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2023 10:57:34.2933
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13f27d27-ad9d-45f2-359d-08db5533303a
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT069.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4391
-X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232090AbjEOLEk (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 07:04:40 -0400
+Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2835C93;
+        Mon, 15 May 2023 04:04:39 -0700 (PDT)
+Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-96adcb66f37so441816166b.1;
+        Mon, 15 May 2023 04:04:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684148677; x=1686740677;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lERUo+WLdZx4JBH1Pw+XtLzFG1CgqVYgHbVRbkTw/zc=;
+        b=MpUkLvhNClhT0+vzP2Wf7eEd6ur5TUAoj+zZSAkek414G63FLBv4no2rTUVduz4l9o
+         qkQRw2DEssURnU9zbv5bHx5vD+nvhTvl8ea3XSimE6AOLO4oY0qpexU4ZSZg8IZ5fJmc
+         fNzTTXcbVeNjkFD7KRdDF47H50mlVHyyX7IsGC3ri3KKZjxHL7CkiYH6MVa4xiDdClQN
+         exzTJ/0ON2HEwQxZ9/vz+uw40MScC4o/fRjspKeyp+5Tfxx75YbqBTrmPWNZkrz2/9GE
+         eyTLzYpJNPOP1M5XMjvE+pUt5Les/zp/XhJ+h1XFmMEDxwJvlILT6ZOd+dQk1qdcI/PQ
+         uRfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684148677; x=1686740677;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=lERUo+WLdZx4JBH1Pw+XtLzFG1CgqVYgHbVRbkTw/zc=;
+        b=SMGNAp+SPRewDvseC7ir4fLCrRHu2XFZPFxbbqrRImP3cwqdr5TlOkafwYPYvNzP/O
+         QEXPN4zXlEp1NxxhTM6abEGTeWZUKVEYEMM9QgingCx8uKf9/JrNvHTxreO5+DQWVBlX
+         7G4cScbj9gxTzDsRgR8Pd/ykMhtLsuFvBPCBNBqK1ofyZ00r/EJieAd1ISmslvjkPfir
+         5r+FFD4O5XK7nq4/TpVA0ZN3dW5mYRz3Vf/dkCtEbSgYs9NS1lp+mVB8qljENa5S0ogY
+         ks2ziz+xR+c8bsvn7SXqtL140aoslrbXZDYftWDXGDv/QCNYhC9SJJ0zkJDAAov7xrX4
+         oEKQ==
+X-Gm-Message-State: AC+VfDwaDX/dYovvLv7xw7Q4RNeHUoTrDBNF+y+kIid2gzaDt3gw8e83
+        NnONQLZC/dIsluxlmsH2r68=
+X-Google-Smtp-Source: ACHHUZ6wMR84Ke6Bj7QUjIoHhVknpSvv7L8BQTIL2uFttHnpEnLdiTBzHPFK9FhK4YNbXf1M57YKrQ==
+X-Received: by 2002:a17:907:7e97:b0:968:4ce9:677a with SMTP id qb23-20020a1709077e9700b009684ce9677amr24562615ejc.38.1684148677324;
+        Mon, 15 May 2023 04:04:37 -0700 (PDT)
+Received: from localhost ([146.70.133.78])
+        by smtp.gmail.com with ESMTPSA id de9-20020a1709069bc900b0094e6a9c1d24sm9520105ejc.12.2023.05.15.04.04.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 15 May 2023 04:04:36 -0700 (PDT)
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date:   Mon, 15 May 2023 13:04:34 +0200
+Message-Id: <CSMSVO8Z73NV.3MX3FRNO026T9@vincent-arch>
+Cc:     <kw@linux.com>, <heiko@sntech.de>, <robh@kernel.org>,
+        <linux-pci@vger.kernel.org>, <shawn.lin@rock-chips.com>,
+        <linux-kernel@vger.kernel.org>, <lgirdwood@gmail.com>,
+        <linux-rockchip@lists.infradead.org>, <broonie@kernel.org>,
+        <bhelgaas@google.com>,
+        <linux-kernel-mentees@lists.linuxfoundation.org>,
+        <lpieralisi@kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        "Dan Johansen" <strit@manjaro.org>,
+        "Catalin Marinas" <catalin.marinas@arm.com>,
+        "Will Deacon" <will@kernel.org>,
+        "Robin Murphy" <robin.murphy@arm.com>
+Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
+ Rockchip PCIe bus scan
+From:   "Vincenzo Palazzo" <vincenzopalazzodev@gmail.com>
+To:     "Peter Geis" <pgwipeout@gmail.com>,
+        "Bjorn Helgaas" <helgaas@kernel.org>
+X-Mailer: aerc 0.15.1
+References: <CSK8M39MQL2C.3S7JO031H0BA2@vincent-arch>
+ <ZF7m1npzLZmawT8Y@bhelgaas>
+ <CAMdYzYqV72=pQa-U3a2N7MZ2ChBNL74QrxHQLbMZJxiftTK9sA@mail.gmail.com>
+In-Reply-To: <CAMdYzYqV72=pQa-U3a2N7MZ2ChBNL74QrxHQLbMZJxiftTK9sA@mail.gmail.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+> >
+> > There *is* a way for a PCIe device to say "I need more time".  It does
+> > this by responding to that Vendor ID config read with Request Retry
+> > Status (RRS, aka CRS in older specs), which means "I'm not ready yet,
+> > but I will be ready in the future."  Adding a delay would definitely
+> > make a difference here, so my guess is this is what's happening.
+> >
+> > Most root complexes return ~0 data to the CPU when a config read
+> > terminates with UR or RRS.  It sounds like rockchip does this for UR
+> > but possibly not for RRS.
+> >
+> > There is a "RRS Software Visibility" feature, which is supposed to
+> > turn the RRS into a special value (Vendor ID =3D=3D 0x0001), but per [1=
+],
+> > rockchip doesn't support it (lspci calls it "CRSVisible").
+> >
+> > But the CPU load instruction corresponding to the config read has to
+> > complete by reading *something* or else be aborted.  It sounds like
+> > it's aborted in this case.  I don't know the arm64 details, but if we
+> > could catch that abort and determine that it was an RRS and not a UR,
+> > maybe we could fabricate the magic RRS 0x0001 value.
+> >
+> > imx6q_pcie_abort_handler() does something like that, although I think
+> > it's for arm32, not arm64.  But obviously we already catch the abort
+> > enough to dump the register state and panic, so maybe there's a way to
+> > extend that?
+>
+> Perhaps a hook mechanism that allows drivers to register with the
+> serror handler and offer to handle specific errors before the generic
+> code causes the system panic?
 
+This sounds to me a good general solution that also help to handle=20
+future HW like this one.
 
-On 14/05/23 16:11, Krzysztof Kozlowski wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On 11/05/2023 19:32, Sumit Gupta wrote:
->> Hi All,
->>
->> Have incorporated the suggestions in v7. Only changed 'patch 1' in v7
->> to fix possible race when setting 'mc->bpmp' as pointed by Krzysztof.
->> Requesting to merge the patch series.
->>
-> 
-> Can I apply it since you request it? 
+So this is a Concept Ack for me.
 
-Yes, the patch series can be applied in current sequence except that
-the 'patch 4' comes before 'patch 3' (just realized).
+Cheers!
 
-Would you please swap 'patch 4' with 'patch 3' while applying
-(or) you want me to re-send?
-
-I asked you long time ago to
-> clearly state dependencies or merging limitations. It's v8 and cover
-> letter still does not state it. Neither the patches do.
-> 
-I added the dependency list in previous versions [7] but removed
-thinking the patch series will now be applied altogether.
-
-[7] https://lore.kernel.org/lkml/20230424131337.20151-1-sumitg@nvidia.com/
-
-Thank you,
-Sumit Gupta
+Vincent.
