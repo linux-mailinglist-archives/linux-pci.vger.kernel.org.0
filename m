@@ -2,118 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA1CA703127
-	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 17:11:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8EDE57032B5
+	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 18:19:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237999AbjEOPLU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 May 2023 11:11:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56270 "EHLO
+        id S242040AbjEOQS4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 May 2023 12:18:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242303AbjEOPLM (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 11:11:12 -0400
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2064.outbound.protection.outlook.com [40.107.22.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C651D2713;
-        Mon, 15 May 2023 08:11:10 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fQ13WkHzzmSScXUemU9ACiNAZNEBaiSMrQGyCoOk+44RSWrdxFBkWFOopwZSsdxFGo86nRR3k8U/JAW5ZB80b4LD4eu55EKign+G/mmwZvJaMVOaz2KORKxTzEmeQqo4s3yAsXz0uoTWqt/kjLDuQk1nmW1PduspWv6zQsQrhxjf6MCKBieaIlcdebpG6JDMzLBYNUSFiZMAO1RkIEO7BtRo1pMYAlGuMMD6QWXPhayv/y7s/ZLCQwYyl7ZkVCsDJsb49S0xyKRGvCzhUoaa0zg9CjDLTWU7k5mGjJnSdxuvBDDZSRYlZDczDrTcUqYYs5mkMoRyMNfDRsI30FBtEQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MmoW8CkBzWddOW6kR9p58cG3bHx/cN1yvCC5Kj7rf8g=;
- b=JXPF28SQAK00pDslHAeVCWr46FnbL4OfJYzoAiIjKZ9taYmdXhQunXB5iNnsOheGjBokjW8Mh/cXdzzNrk6xFBVKZEj4cibpTty3mhzBB5KMXTu+COkFhaBvecIw8A4VFrFYwas+b+NXHvHCRSoQJPvELanJMdtiWBG+8sjDk4nrIi4MnlRW8Q8ljEe87gl9NtBEzMMh9ltk1H921a/1A/bDouK6ztQc4UTLPFjrs8NcvfqPMBQ6Y2mmcbQSszDk3nwpBPOFC3POJxOAFMCqWvqiTN0Nq6lGNT2tEK0zwxPwRMkMIJpkUXeSQwzvgCAmfaUt+soVIcqRUrguPXje9g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MmoW8CkBzWddOW6kR9p58cG3bHx/cN1yvCC5Kj7rf8g=;
- b=XFjRCzBrpgFEIntB8WRog2wrsDxm0PXwsgbDepKm1z4A74YakFeMC1NQOvWto9sQlWQhBRCio1/Wr9wgZZvfepBHgcdekfZhSXo+fkVmKabKqMkwe++weJ//ZlatPL10U2NPlS/u2ENt5YS0oTs12SS/rfmqgYZQR57KoiI41VY=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com (2603:10a6:20b:4::16)
- by DU2PR04MB8872.eurprd04.prod.outlook.com (2603:10a6:10:2e3::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Mon, 15 May
- 2023 15:11:07 +0000
-Received: from AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::25d3:de2:ef1:3884]) by AM6PR04MB4838.eurprd04.prod.outlook.com
- ([fe80::25d3:de2:ef1:3884%4]) with mapi id 15.20.6387.030; Mon, 15 May 2023
- 15:11:07 +0000
-From:   Frank Li <Frank.Li@nxp.com>
-To:     manivannan.sadhasivam@linaro.org,
-        Minghuan Lian <minghuan.Lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linuxppc-dev@lists.ozlabs.org (open list:PCI DRIVER FOR FREESCALE
-        LAYERSCAPE),
-        linux-pci@vger.kernel.org (open list:PCI DRIVER FOR FREESCALE
-        LAYERSCAPE),
-        linux-arm-kernel@lists.infradead.org (moderated list:PCI DRIVER FOR
-        FREESCALE LAYERSCAPE), linux-kernel@vger.kernel.org (open list)
-Cc:     imx@lists.linux.dev
-Subject: [PATCH v4 1/1] PCI: layerscape: Add the endpoint linkup notifier support
-Date:   Mon, 15 May 2023 11:10:49 -0400
-Message-Id: <20230515151049.2797105-1-Frank.Li@nxp.com>
-X-Mailer: git-send-email 2.34.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY5PR16CA0023.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::36) To AM6PR04MB4838.eurprd04.prod.outlook.com
- (2603:10a6:20b:4::16)
+        with ESMTP id S242300AbjEOQSo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 12:18:44 -0400
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22910A3;
+        Mon, 15 May 2023 09:18:43 -0700 (PDT)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-96622bca286so2067008766b.1;
+        Mon, 15 May 2023 09:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684167521; x=1686759521;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fFPJu/bdf2To7OKUQNPH4m9IQexv87evllOs7pwaC0s=;
+        b=HOI4BtGRGKeREF4vFCjUoTunSeoZhYrwxv47tp75FfmjjcgWHsaU0LNYoVuKZrMktk
+         hqnIWnXQb2ZfIUWOuSigjbAmmxsWMLe3HoI9rUbL/UDVgYtGx5YtzY0RcqES+MTXVvR1
+         hDy5+Aj56e/EaKdD+mRC9hKUcKxf1WalvDAvcjlUFDy0GQprZivcrhDgOKsh5HvbvNrF
+         y6aeTIBOi2EYSWOYWNOJpYnIOLmYGiJUoP83ZTY7j+HcaEbEd6SN2u5/VbJsg9oOb4g4
+         EUMNKOklA2Cck+L3MZEP6xP4GMOVmdwDpEmt11g44Gg1sb2sR66mrk9filyfrArjC5cp
+         AoEg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684167521; x=1686759521;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fFPJu/bdf2To7OKUQNPH4m9IQexv87evllOs7pwaC0s=;
+        b=OaJgIFpzvW35q/x6rkvvpf7YrobK0jFQ8fE/cbupTpMk+UpEAy5PAFg7P0+xnRbEhl
+         uc7If/S6AudcW0s9bLuTXjTJvvVbftDyktkIMYFFScGc1UFFETmD2nMKvlngDoxSYcBn
+         QIY65JdlnkCoYiB7y2PqANYv5av2kouX1hL2yflE1QONSLTbiNsqvaLSmjMf9onpEdf5
+         jFtLwh5Jhd52DjoobJ0jry0rOFblDksgRmtxLUDq5e3AvrALaSlaxJBpi3HckibQjrtf
+         cVFoR3sqnk7Z2sz1mvj8ujltoQyQdzqmu3DELwMQpygjZQVJn2Bft2/eXrlTgNVd6Ur3
+         7DSA==
+X-Gm-Message-State: AC+VfDwMK/MPgzpe/jWPiLkeJ29OGvmyIbIlLjBj4sDD2Mk7gAkMEnnT
+        b6jfwq+t3JGNWB8xqnN6VqCxg1f7fLGjRg==
+X-Google-Smtp-Source: ACHHUZ7syZQng2BvbRJEc59vRXvP+m7Y4V8LOWuPg2Y+gG3U6DbYMfHN6uYfLKL8kbgDSe1ANhRheQ==
+X-Received: by 2002:a17:907:d91:b0:933:4d37:82b2 with SMTP id go17-20020a1709070d9100b009334d3782b2mr31727220ejc.57.1684167521167;
+        Mon, 15 May 2023 09:18:41 -0700 (PDT)
+Received: from orome (p200300e41f305300f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f30:5300:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id hg10-20020a1709072cca00b009659c23e78fsm9653018ejc.215.2023.05.15.09.18.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 09:18:40 -0700 (PDT)
+Date:   Mon, 15 May 2023 18:18:38 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc:     Sumit Gupta <sumitg@nvidia.com>, treding@nvidia.com,
+        dmitry.osipenko@collabora.com, viresh.kumar@linaro.org,
+        rafael@kernel.org, jonathanh@nvidia.com, robh+dt@kernel.org,
+        lpieralisi@kernel.org, helgaas@kernel.org,
+        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-pci@vger.kernel.org, mmaddireddy@nvidia.com, kw@linux.com,
+        bhelgaas@google.com, vidyas@nvidia.com, sanjayc@nvidia.com,
+        ksitaraman@nvidia.com, ishah@nvidia.com, bbasu@nvidia.com
+Subject: Re: [Patch v8 0/8] Tegra234 Memory interconnect support
+Message-ID: <ZGJbXg88JOu4aiNe@orome>
+References: <20230511173211.9127-1-sumitg@nvidia.com>
+ <a032d9e6-6cb5-1856-9eda-28028bf05633@linaro.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM6PR04MB4838:EE_|DU2PR04MB8872:EE_
-X-MS-Office365-Filtering-Correlation-Id: 99648f0f-8352-4188-c507-08db55569c02
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sJkQQZlGhug+YNJUwOK/dEkITe8qw15XwWdn1RUHAjEWYjFbHv8oQCylAifQxLJJXfK4jzv/9qseAc3dohIx774Voo/BKPteF9PG2A6HsFIYbXWN/WrIwlOSd7SeOP2rbzrjKAUhfWPtX/xSWdh2eDgI4rMLcdVCrskTakoovRpXMuenlpIEhwTzETh3Ba7MFgWn3DI/ysbKXB8amESoKKs7EmiYIWpcwKReQizpicF1MYjWEMdZOvtEsE0cWqa6R5Et3Bnp15ev1xy8CW8WNHmZ7gwkT2ra9uZVugvLhhWvWJyJTC+yT82uFHhWUY051piaQGB3uRzdz3+dgMQ8bheGosYsdvYYD086PLJGOzMlh3klaILU2Yh+EwnTdQ2rqg9M5OfnxfwZ4vcw/nj5dGFc7h6YwkY1hIq+Sn2ozM3+cWwUoq2IpIyXDi418sCB0oJk48gWgltzxMnkrknrSOxJwrD11CgTYw4G5yKHEQk8r2YwYG5mHetsWQU5RCavkp9jOfAGvMehymFtyVinOIHqFJNjUtbAfsO7UkTdgcpgxEJRskOm8qberjvL4xysP/wgx/qANO/JSgpaELGASXO+CLIzn7GjrLHL+tIZh6dgbPt/wJ9C3/pwHvYPVjYNLvpuLOD0vuOZrD2LJ8BUwg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4838.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(451199021)(66556008)(4326008)(478600001)(66476007)(66946007)(110136005)(186003)(6506007)(6512007)(38350700002)(38100700002)(83380400001)(2616005)(36756003)(8676002)(8936002)(2906002)(6666004)(6486002)(52116002)(316002)(921005)(86362001)(5660300002)(41300700001)(7416002)(26005)(1076003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EYmgEHoriVAsjNeQPrm8f3F1Y8WyDHnOBXb8Bc4s8VFRggiYIKZmPVm2QjLw?=
- =?us-ascii?Q?Kv1U61HiW7n4+Q1wNox58SB4nYYd2aInDbJA9pbaPir9UAUtEEdazJ1foA6y?=
- =?us-ascii?Q?wbmMaWEXzTuv2ogzjIUEQbF+hZ4u1L/elPB6zX2E2yG5ljN5iG0QuTq1XamL?=
- =?us-ascii?Q?mpo+Fob1of4l2V0vW5qPHwkWX4MMCKSa4HVthrJ0JoP7xkC0v4m4wgzSsmWn?=
- =?us-ascii?Q?Fvz45imQPZh6T9Ba6+Q0uG+J2J8h0GTvp3r9k0gTnnDGGB4v2ReVC7deilYt?=
- =?us-ascii?Q?e1VeZqqRik3ElqCKGy4Srzf4X1Y3axdeZmg+N8DygewoJF+u9h8EPoHnKXQz?=
- =?us-ascii?Q?QKmB8L/OCRkT0PCJLbr7I44RYeW3xej9L35xTQXW1PLz8+TkNuhgT8RKQJRw?=
- =?us-ascii?Q?XEP9t6hUsgeFMwH+1eXVlFwyTGXI/5ntDHgPu5k3RIsGfyi9LOVxMgRLa9KI?=
- =?us-ascii?Q?auHSFuQCQOvzzBABq7SD4OVwQQD+z/bp09BZEBZgtYCC9MvVLWlHbbQxrDAV?=
- =?us-ascii?Q?sRQM3MLLuFgJrkVFs2FkuDdySwSDycDixKK8gXz+Rpvj/2FaWby5gUfdCb3d?=
- =?us-ascii?Q?vtWjiqYMK/70xXH86o1fwJmILKBYl/X5JPbSL3AYHecTjMXaTZu4lXnQdfOd?=
- =?us-ascii?Q?YBeIzW+iptPAzlm61/fkbCVhjC6eP+HaoToRtQX4OWKUAwXKebRAyJECe71J?=
- =?us-ascii?Q?CPgCDdEwiTj2YFfuFU/glGHBl2ikXjCHwG7qCBL11KMTXeAArzukrJQy6K4u?=
- =?us-ascii?Q?uVq9qlBTY9WStI264tjTAs3rvfOhJmQ8ySknWU2JRcO02RREUbbu+lMZIVFl?=
- =?us-ascii?Q?xYu7EoHf7CvzWxGIMrVNS3x91XOx+6CaPB4qdCVlgY9aMAYS4qf6Ak4erRVR?=
- =?us-ascii?Q?oXolWsc3OUv0g7leKd/JWBXsCutzc1sdGP8MR9gMxodwrS43edDXOzlN/pcZ?=
- =?us-ascii?Q?oHalw2tYUNhiQBnaxO/Kc8W4V1G0rZ8I0Yjfmr/+8A9fr+aUoB2hPKBlEij6?=
- =?us-ascii?Q?hO24ggPTW7/rqemdV9GoZWtAgq1MpTlTy53Z5+cp2TTeOS8/+THsEoVaxOsz?=
- =?us-ascii?Q?4pnbSVqGSjHvGHhRKnu/D4867d1lRFfONcHGOPbCD1j4h2yuK34AOduqVutC?=
- =?us-ascii?Q?3KfdOHEa3xW0Gq6rp0PbuOEquTIUT/gXyJgUgp6urm4C662T19QC7lKeClca?=
- =?us-ascii?Q?j8LErbZBPmGt0R1Cyc1AGW+EspmpWysUKLBMAkwrI13zdhb7I4E2+eHMr162?=
- =?us-ascii?Q?FOQCD9nOoFbrEo1C7sguUGLz5oWNRK8CLc4sFNtzZD2tB7cKjwXHQAkEo8lg?=
- =?us-ascii?Q?pwltBtwBGo0DpnL/DFdyofWBMcseHmVbMRS+TYAJm7k9Jv+FwVRtHFfDhl3l?=
- =?us-ascii?Q?qsDbXS9bqpqZ1keEqUfqRvmIZ/J8Hk2tTBApZoKhh71lhyatmhhcywFm3m7n?=
- =?us-ascii?Q?/rKF4wlH8bUWDkrOl0pXuse22mmIe6Te9ZEv0Dp+qtO77vpbn8DMXB9+znLF?=
- =?us-ascii?Q?4mp1egMmC/ny/iwtPO5XeST1HuiD1H5imXXWtgNxBB34wY2g7dxtAAhLIRTx?=
- =?us-ascii?Q?r5qSMbZPe8xjEiUuxGrHURZaBP18P0n92Sbk//qi?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99648f0f-8352-4188-c507-08db55569c02
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4838.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2023 15:11:07.7625
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4pxIkmf/qD4x73w/eKg76gso1pJfcndod/59WoP2k3IAl4cXRv5EcemA1/JeJ2geCjosskn7ZN5iP751/qIA4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8872
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="8qg6A1xwpz6/pQdH"
+Content-Disposition: inline
+In-Reply-To: <a032d9e6-6cb5-1856-9eda-28028bf05633@linaro.org>
+User-Agent: Mutt/2.2.10 (2023-03-25)
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -121,176 +81,59 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Layerscape has PME interrupt, which can be used as linkup notifier.
-Set CFG_READY bit of PEX_PF0_CONFIG to enable accesses from root complex
-when linkup detected.
 
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Signed-off-by: Frank Li <Frank.Li@nxp.com>
----
-Change from v3 to v4
- - swap irq and big_endian
-Change from v2 to v3
- - align 80 column
- - clear irq firstly
- - dev_info to dev_dbg
- - remove double space
- - update commit message
+--8qg6A1xwpz6/pQdH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Change from v1 to v2
-- pme -> PME
-- irq -> IRQ
-- update dev_info message according to Bjorn's suggestion
+On Sun, May 14, 2023 at 12:41:45PM +0200, Krzysztof Kozlowski wrote:
+> On 11/05/2023 19:32, Sumit Gupta wrote:
+> > Hi All,
+> >=20
+> > Have incorporated the suggestions in v7. Only changed 'patch 1' in v7
+> > to fix possible race when setting 'mc->bpmp' as pointed by Krzysztof.
+> > Requesting to merge the patch series.
+> >=20
+>=20
+> Can I apply it since you request it? I asked you long time ago to
+> clearly state dependencies or merging limitations. It's v8 and cover
+> letter still does not state it. Neither the patches do.
 
- .../pci/controller/dwc/pci-layerscape-ep.c    | 102 +++++++++++++++++-
- 1 file changed, 101 insertions(+), 1 deletion(-)
+I thought we had discussed and agreed to merge this through the Tegra
+tree, which is why you had provided Acked-bys on all the patches. I was
+waiting for a final Acked-by on patch 1, since that was the only one
+still being revised.
 
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-index c640db60edc6..5398641b6b7e 100644
---- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -18,6 +18,20 @@
- 
- #include "pcie-designware.h"
- 
-+#define PEX_PF0_CONFIG			0xC0014
-+#define PEX_PF0_CFG_READY		BIT(0)
-+
-+/* PEX PFa PCIE PME and message interrupt registers*/
-+#define PEX_PF0_PME_MES_DR		0xC0020
-+#define PEX_PF0_PME_MES_DR_LUD		BIT(7)
-+#define PEX_PF0_PME_MES_DR_LDD		BIT(9)
-+#define PEX_PF0_PME_MES_DR_HRD		BIT(10)
-+
-+#define PEX_PF0_PME_MES_IER		0xC0028
-+#define PEX_PF0_PME_MES_IER_LUDIE	BIT(7)
-+#define PEX_PF0_PME_MES_IER_LDDIE	BIT(9)
-+#define PEX_PF0_PME_MES_IER_HRDIE	BIT(10)
-+
- #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
- 
- struct ls_pcie_ep_drvdata {
-@@ -30,8 +44,86 @@ struct ls_pcie_ep {
- 	struct dw_pcie			*pci;
- 	struct pci_epc_features		*ls_epc;
- 	const struct ls_pcie_ep_drvdata *drvdata;
-+	int				irq;
-+	bool				big_endian;
- };
- 
-+static u32 ls_lut_readl(struct ls_pcie_ep *pcie, u32 offset)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pcie->big_endian)
-+		return ioread32be(pci->dbi_base + offset);
-+	else
-+		return ioread32(pci->dbi_base + offset);
-+}
-+
-+static void ls_lut_writel(struct ls_pcie_ep *pcie, u32 offset, u32 value)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+
-+	if (pcie->big_endian)
-+		iowrite32be(value, pci->dbi_base + offset);
-+	else
-+		iowrite32(value, pci->dbi_base + offset);
-+}
-+
-+static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
-+{
-+	struct ls_pcie_ep *pcie = dev_id;
-+	struct dw_pcie *pci = pcie->pci;
-+	u32 val, cfg;
-+
-+	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
-+	ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
-+
-+	if (!val)
-+		return IRQ_NONE;
-+
-+	if (val & PEX_PF0_PME_MES_DR_LUD) {
-+		cfg = ls_lut_readl(pcie, PEX_PF0_CONFIG);
-+		cfg |= PEX_PF0_CFG_READY;
-+		ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
-+		dw_pcie_ep_linkup(&pci->ep);
-+
-+		dev_dbg(pci->dev, "Link up\n");
-+	} else if (val & PEX_PF0_PME_MES_DR_LDD) {
-+		dev_dbg(pci->dev, "Link down\n");
-+	} else if (val & PEX_PF0_PME_MES_DR_HRD) {
-+		dev_dbg(pci->dev, "Hot reset\n");
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int ls_pcie_ep_interrupt_init(struct ls_pcie_ep *pcie,
-+				     struct platform_device *pdev)
-+{
-+	u32 val;
-+	int ret;
-+
-+	pcie->irq = platform_get_irq_byname(pdev, "pme");
-+	if (pcie->irq < 0) {
-+		dev_err(&pdev->dev, "Can't get 'pme' IRQ\n");
-+		return pcie->irq;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, pcie->irq, ls_pcie_ep_event_handler,
-+			       IRQF_SHARED, pdev->name, pcie);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Can't register PCIe IRQ\n");
-+		return ret;
-+	}
-+
-+	/* Enable interrupts */
-+	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_IER);
-+	val |=  PEX_PF0_PME_MES_IER_LDDIE | PEX_PF0_PME_MES_IER_HRDIE |
-+		PEX_PF0_PME_MES_IER_LUDIE;
-+	ls_lut_writel(pcie, PEX_PF0_PME_MES_IER, val);
-+
-+	return 0;
-+}
-+
- static const struct pci_epc_features*
- ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
- {
-@@ -125,6 +217,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 	struct ls_pcie_ep *pcie;
- 	struct pci_epc_features *ls_epc;
- 	struct resource *dbi_base;
-+	int ret;
- 
- 	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
- 	if (!pcie)
-@@ -144,6 +237,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 	pci->ops = pcie->drvdata->dw_pcie_ops;
- 
- 	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4);
-+	ls_epc->linkup_notifier = true;
- 
- 	pcie->pci = pci;
- 	pcie->ls_epc = ls_epc;
-@@ -155,9 +249,15 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
- 
- 	pci->ep.ops = &ls_pcie_ep_ops;
- 
-+	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
-+
- 	platform_set_drvdata(pdev, pcie);
- 
--	return dw_pcie_ep_init(&pci->ep);
-+	ret = dw_pcie_ep_init(&pci->ep);
-+	if (ret)
-+		return ret;
-+
-+	return ls_pcie_ep_interrupt_init(pcie, pdev);
- }
- 
- static struct platform_driver ls_pcie_ep_driver = {
--- 
-2.34.1
+If you prefer to merge this, that works for me too. In that case, the
+series:
 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+Although it might be good if I pick up at least patch 8, just as a
+precautionary measure to avoid potential conflicts going forward. As I
+understand, it should be safe to apply that separately.
+
+Thierry
+
+--8qg6A1xwpz6/pQdH
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmRiW14ACgkQ3SOs138+
+s6Hwyg//UwQpQ0EtSE3NvPmUTkNdtOnRCNocLMvlMPxH/nQSEy+fKcNW1vtXrFWn
+2hOa0ZdmQaS+3M8ZECIQlnuu9AsBJuivyeuGhOvyf7FX96wiGqtgSxbZHk/mzljL
+N3n1dOX90QYos9kh2OvRxreV/CnSwutuvs3AmhXv3MS1MNHBSFCAJ/RIc+n8McqU
+WDxRDhdyUyPdfsaO7rEpdm3VbSQqcUSEnY6q93lJd6/I4xYacQDPsKxlSyurZT07
+pqn+6oPTXnfRJH2qhXPDLceVLV2RxJdj8dv5ig/cpZBGPUPSY7gDsVhpib8OikUt
+NXfT/TXX0GVwC+w0T7BXbFS1ZlHUeoA/cW+l5wOjz5zKHMNqkjpKYQ8gHDC3fX7p
+0Lm4Jpj+TRr5Crb0pXNdRk9t5ZxeFGndOyqOW2CZTEbVNKjSNVsEhGd5AmsEny0u
+6yk9+iLf1mcLrWwzAWF6WwzyYOcB45cDRv8YFbyaTy9HIVH0ZZuJi+anaYZQRcOF
+sK3ERbA9P/e+d0j7pRgN8J2DR44z71Qq5jP338tBUeyq4xG970h4ikdVd9rF7Arb
+8ZJyRhHJnQ4zfbhCRGioIU5aINj3yn87p9l1N5MIoFV4ZzsGiO2e1zAGBUh7QN/b
+5YxjVuIyMSsH+tYrb5GHHtrJPmBOV9swfnwQHkfXiIEMd1Lnn3c=
+=V4PZ
+-----END PGP SIGNATURE-----
+
+--8qg6A1xwpz6/pQdH--
