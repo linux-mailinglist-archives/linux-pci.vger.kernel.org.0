@@ -2,223 +2,186 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 96CE3703EE2
-	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 22:52:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 470F6703EED
+	for <lists+linux-pci@lfdr.de>; Mon, 15 May 2023 22:56:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242991AbjEOUwe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 15 May 2023 16:52:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56462 "EHLO
+        id S245336AbjEOU4b (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 15 May 2023 16:56:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244817AbjEOUwd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 16:52:33 -0400
-Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4164A5E9;
-        Mon, 15 May 2023 13:52:29 -0700 (PDT)
-Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-965d2749e2eso2010026266b.1;
-        Mon, 15 May 2023 13:52:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684183948; x=1686775948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M/2uUKqg/Ab7BmGViY4uFNbKZ61QIe3EzqjsTUTm1Z8=;
-        b=V/2yfYMNotTUH5sWqlZZYGANTIWGAy2JE8hvjMGxZglBgjlScTYvPicblpEntPXHPT
-         wNc7Nx/p6BG7OyHikNoPvkPV52u5HbAIEvoIMOBFIJ0ea8O8rkTyexKTmBfclnpHVwyO
-         Ww0MMeqR1n4GfDGQCAkctMo3xTdCid+FK+pH6y6O28FTJIBNWgPdpNtUw2vwjPxdL934
-         9CjsvLQRCg+KHKd0fDR/IvsK54JPe9LCl7t/d5BkBOdUic1gIhJBahqpi6ZDydnVgMQi
-         MO/AjjKC1rAUFR+sI6YdX3/R8m347DCknc20SW/4gY+SiMMhMuQQ56FMFk5pz+H5B/Uc
-         esSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684183948; x=1686775948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M/2uUKqg/Ab7BmGViY4uFNbKZ61QIe3EzqjsTUTm1Z8=;
-        b=E/lsS+aOfYlHE+YMFha3ZPG8L2S0JR5cARujSIiJNgNEnwJv9RFKi58+xz6CCs3am5
-         eI3Il4VmOXEAEByRwMua/7NLqHS3tDi31RFbJdyp0PADE77IvbpPcM9wzEjFejWl08NG
-         wzLIb7uMCvvWYf2tW6+zLzPdJawtOknPsojBhYt0uGAUbhwk+/xh3S3YT6BrQSyv+fmv
-         tyJrAUF0VvVPuxWkMtlWJ5roHzu1PGyt3XZCRkfJ3YEvpcPuXpw8jQ5dEu+I8EMycLjT
-         73vPoqKfTR7+TplLtGLwtw5iAX7DI7+pxH2oJvSqT5a8LYXw7teed3fBwDQgo9Dh5na+
-         F8tg==
-X-Gm-Message-State: AC+VfDw+lzKlN4TLoWbiluAMjddB8CG1dCIpYnq3+12aPaisaaB9AZv+
-        95374OoBIVW4FIHL54Gy1w2CG/hE+tfEdsR4AYFi/yBEYh8=
-X-Google-Smtp-Source: ACHHUZ6RO+g+onx2wiXt9im45PpNoTTLqVha9ZLhkMKcmXatlco2sUSvPD4Ho5HdVHM8xwLpyJVbKC0fWf36YYnQkFI=
-X-Received: by 2002:a17:907:8690:b0:96a:3119:ac0 with SMTP id
- qa16-20020a170907869000b0096a31190ac0mr17725693ejc.69.1684183947424; Mon, 15
- May 2023 13:52:27 -0700 (PDT)
+        with ESMTP id S242991AbjEOU4a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 15 May 2023 16:56:30 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2042.outbound.protection.outlook.com [40.107.93.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A230F9ECC;
+        Mon, 15 May 2023 13:56:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=THkukpmu2OwePakKnb+YW4UHRluaVLon9nyButcZMlNn6h3z3Z9LQU1Rz+e238gcRPJLCbM9YE2B/pfKmQ+7PRHW3fRiv6CLo380U1JMjvUSsKHsQFM3T3jnG6BAARkL5mXnQjTOTIhQhZgc5Sz5W3Tqlwp5NuQwABvD7u3AbhJqx/DZAUyfcKkOCxvky5NjLTlDtrRisvrNLce6cVCFjyzzhPS8LE3bAwGAbABz/qOYZRZceevxVLQqxOVxo1CmvY1Q4l8pTUOKhgi9qrKZ49g1sxCABynB3tuEN0EAjRytiqwZzE1V+OHrAw1BeKfwZczlXcdq3NoHV7HOXf/tHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=40owDK9uoDhQ0EEjZdZfLTSPxtU3+qFdgnk8ypFEqYU=;
+ b=WN7f+tShdN085rb3wXmjYf1ypiWqI5i4uQPBtrNT+Jtkfy1cEb25rbbGTl2rhMIreSX9xaYrW6Ta/brHk7riiXT41uffqCmOUN/JJ6hqhe8Zoa66OMeglHM+DfdOgPDqi2efZaZFEX/GHTVTtB4tPFRHFJjC/S5fkIS4j8LY7LOsHUyXyy8sitrtCyZj4Hz6B5MdMI8CgBMAWsV414dTVhHGTnkn6L8DglUewNmY+miTaE/ufx5pmwie/+TrLxVysPGi+1oKRCeKOvMHlX5eBNdL8WFcY+wQ9dXzMhEIL+yRwDozONR+Webrj7igQL4fBeMYkqCaMLGigomhSKHyaA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=40owDK9uoDhQ0EEjZdZfLTSPxtU3+qFdgnk8ypFEqYU=;
+ b=NxUGlvCVcD6X3EWHcQ3lMjTlVeb2mjRIEc+rhzTJX99yyoyTs3dmlsChbhi1/Rn46k0S/zLfZuRB0AytN2/O+SBSvOcMa2Y4PS2v28TrEQTBUbORH2wzzX8Z0ZzXwUX8lXEE9ixvHBo5K4xOLWALMqnDWkFOF3/b5uKNrqOi6Sw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
+ by CY8PR12MB8339.namprd12.prod.outlook.com (2603:10b6:930:7e::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.30; Mon, 15 May
+ 2023 20:56:27 +0000
+Received: from BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::8b48:9557:ef60:f7b4]) by BYAPR12MB2869.namprd12.prod.outlook.com
+ ([fe80::8b48:9557:ef60:f7b4%3]) with mapi id 15.20.6387.030; Mon, 15 May 2023
+ 20:56:27 +0000
+Message-ID: <14ac1391-9ab9-d352-d3b1-ba6caae3d9df@amd.com>
+Date:   Mon, 15 May 2023 13:56:25 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH 1/2] PCI: pciehp: Add support for OS-First Hotplug and
+ AER/DPC
+Content-Language: en-US
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+References: <20221101000719.36828-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20221101000719.36828-2-Smita.KoralahalliChannabasappa@amd.com>
+ <20221104101536.GA11363@wunner.de>
+ <fba22d6b-c225-4b44-674b-2c62306135ed@amd.com>
+ <20230510201937.GA11550@wunner.de> <20230511152326.GA16215@wunner.de>
+ <579cb233-4827-2d03-56ad-1b807a189ba8@amd.com>
+ <20230515193835.GA17526@wunner.de>
+From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+In-Reply-To: <20230515193835.GA17526@wunner.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0290.namprd03.prod.outlook.com
+ (2603:10b6:a03:39e::25) To BYAPR12MB2869.namprd12.prod.outlook.com
+ (2603:10b6:a03:132::30)
 MIME-Version: 1.0
-References: <CAMdYzYqV72=pQa-U3a2N7MZ2ChBNL74QrxHQLbMZJxiftTK9sA@mail.gmail.com>
- <ZGJjHnHNJPqvuqVC@bhelgaas>
-In-Reply-To: <ZGJjHnHNJPqvuqVC@bhelgaas>
-From:   Peter Geis <pgwipeout@gmail.com>
-Date:   Mon, 15 May 2023 16:52:14 -0400
-Message-ID: <CAMdYzYqzHFo+223gfE4T2XGqGUPT6Zy=4AkadgpG=o_KN3MvXQ@mail.gmail.com>
-Subject: Re: [PATCH v1] drivers: pci: introduce configurable delay for
- Rockchip PCIe bus scan
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     robh@kernel.org, heiko@sntech.de, Will Deacon <will@kernel.org>,
-        kw@linux.com, linux-pci@vger.kernel.org, shawn.lin@rock-chips.com,
-        linux-kernel@vger.kernel.org, lgirdwood@gmail.com,
-        linux-rockchip@lists.infradead.org, broonie@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>, bhelgaas@google.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        lpieralisi@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Dan Johansen <strit@manjaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|CY8PR12MB8339:EE_
+X-MS-Office365-Filtering-Correlation-Id: f7752140-1f08-4c13-241a-08db5586d99d
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: MDZx/toFbJpZZq5tKFtxgCHOYEnNEbwkv+dE2WkPejEWK+FvQpp34KPDCIxqiiLNYj+wiSUotUGtYEXzzKpejiO6bT0CqtWu3WZfiqmO1jMqS/En8RLXOr1xSGIEQMYa0JNCUV0f9bpNS9ylxg7o9rFbZZtEe8km+ZR5MZW7Oec1habZxS28G0RzE253u+A7JF9J8uSEoJrAEL3sA5uR01dKI0ordJNpPTWeqB8knC5b3Z+6gsPqpFTcXo1h5tfw6LzadUtxZv1CPsKgSZnV9ZnYGOkixvwgtAZbDj5LMsSBkpI4vTTJFxVtKW49qHZKC1+XD7e2+jEJsO89sfHz01Lmodburo2zXsEDyeTN9KnqejQQk/Uw6qMn098RW7pF4YYk2HG9wpV3MN6ygyHLdk4lpL6w1BaCWPiD9ubXtNov7qTEMBu35ThLJ8e9wCFr2zUT3SnMaEFnd+1L3SOtqRlRmacKvmJzLbzdflpiqH6dGnTbvCGzJnTbsoMrJAbp+C+tUr5LfAsP6opqOZ+1LNgSpRmBALxhE9kmlD2AsWDYYdTmHGLN213JhcrOV0y8ju5ucqU6gl0cL3HxHKc9yH7O9M1H88vY6fh34gyIfM5SRWuEXQssu+BImwaXw5qpqAsX2WxhcYxa6ezcdwaNTQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(39860400002)(346002)(136003)(376002)(451199021)(36756003)(86362001)(54906003)(316002)(66946007)(66476007)(66556008)(478600001)(6916009)(4326008)(6486002)(5660300002)(8676002)(8936002)(2906002)(38100700002)(41300700001)(31696002)(2616005)(6512007)(186003)(53546011)(6506007)(83380400001)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?M3RjcU5XZXlXcWE2RExjTDd1TTR1MmRCaVdLTkFYemJqb0VQNnBFRWlOVHZy?=
+ =?utf-8?B?TVpHc2ZqSjJ5bStsTGJTRGllQTVvVDc2TkZhbnJpSWpXK0lSTi85dFRCZk8x?=
+ =?utf-8?B?QWk0Um0rVE5DT3cyaGtFL2haaEtoN3d6MWsydnovaE5XMlFsOTZDc2Q4YmZM?=
+ =?utf-8?B?dXJpTVlTS0svUnNrTWxCeUNWSDlGeEc1YWxYQmxDWEJxVHRBT3oxWlRXQmtF?=
+ =?utf-8?B?TDArUGU4OGNGTGRQeFUzdlRWSFEvN1RhY2p4WVV5bHVQL3grMkxlZzNsMXBG?=
+ =?utf-8?B?ZzZ6QjZyczZqYjgrem8zOHgzdU4zZHl4UGhsNkFaTmEzM0VycEp2WUtOOVZy?=
+ =?utf-8?B?YVAydmNEa0xJNkd0VEtxTzJrcmRsVHlkK1o3cFBwT25GSURMMmtsL2hSaFpz?=
+ =?utf-8?B?NE1La1Y3QyszWkZKUVRRc2Fxb3cwVXFqYVpGMTUrVmRNTXVCZFhFOGNndHph?=
+ =?utf-8?B?VWc5M3FJNFJnR3l5dUF0Y09KVGk0ajFQOEpMRmhtdlg4WEQxdmMxbEwveDA1?=
+ =?utf-8?B?b1hMOVp0Uy9Cam9QUmFNeTNmWFVDazZJUmZIWXJaU1Z1ZlMxSW9mcUFzczgr?=
+ =?utf-8?B?SUFyMk9vbVRtaDVqcW9uVmxsYW1pNzVRMFhlRmRJZU4wVDFIRDFFL3dqZVNJ?=
+ =?utf-8?B?Q3lGbmNydXg2QjQwdGFPc0JtYTRRL3JGV1BISjZ0b2xuKzZ0N2lkV2NQWXBo?=
+ =?utf-8?B?NXVrSHJhVndJS3B0KyswcllNbUp2NmNwQjdRT1N2K0xka1ZIZmJ5bGRzOXp3?=
+ =?utf-8?B?bXMzZThYZDByM1lRQVByQ0lOdFVmc24vMjk3VWFicFFJc2FOdkRhTUVEQzA2?=
+ =?utf-8?B?bXJLZENVNHJGcVNwQjR4K0xKVE5JR3Mrby8xNmh3T1ZMSVJwZjFmT3hqYmU5?=
+ =?utf-8?B?VTlyNGdDTGJrd0E2N0diYWU2SmJtWWx6SW1xcDk4bXNYRmthb0p0TkVlWW5G?=
+ =?utf-8?B?YWRLdDJWUElRTzc0bUY5b3VHUitjVklrZ2RMZ1o2bzhLOVRlb3lJQkoxRzU2?=
+ =?utf-8?B?ckd6ZCsvWlp3eWhUQUJ0QjhTODhXMTdWVm5GVVhuRXdCQkhtTEZrM0NkUjRF?=
+ =?utf-8?B?RVQ2NE9XcVNMMmhaTllXV1JOZDA0MXFIa1ZpRjNXYXFFcXhzRUhQYnRCVUQy?=
+ =?utf-8?B?MUV2d1ZuUkVPd2tTTytmcnVHT253TklmSG9Ea0YrYXZqejJldXdqdERHbVJy?=
+ =?utf-8?B?SzdjeG5OL0lLaVlZTDhjeGpXQnpvR0tLeFZnZERvUC9CdnNQVHFBWjM4ZVdZ?=
+ =?utf-8?B?UzZtUlROUE8zVjRoak9yU1ZQKzdCMnhObVdlWG1ad2tmVGR1eCtyemJocDBl?=
+ =?utf-8?B?UmFGT1FNRTI2L1RlcW9OeXdKQ2tXNnNLOTVjTHFCUDZnNWtQbjI4d0dRWmdU?=
+ =?utf-8?B?L2NnOXA5NzA4Z0pEN056TDZWREhnZmpnMDdGUk4zWU1kRnliTDZVR0F4V3Zz?=
+ =?utf-8?B?MDEyaXlFMU9tNnJlWDhnc2lOeWkyRUFUYm1qeG00K3M3KzY1b2hhbVBCZzVL?=
+ =?utf-8?B?VzM1YjhSNks0K3gzbTNPaGRsdnJHV1Y4Q2FQVDlTTVNaME9iVWNYL0FLT09J?=
+ =?utf-8?B?Yko4TFBadjVLZFpjMHdROEEzZ1krN1l1c3hBcWVFQ1UyYll0M0FrcG5wNDFR?=
+ =?utf-8?B?Uyt3ajhJdEdyZldJcFR2QnRqRlgwdVlPWW5MY2s0cmx2UzBpWmNtbkFVdHc5?=
+ =?utf-8?B?N2p3aVUrRDVPaEYvMUcvMU1iK3llSnRJd0l6amJrQW9HRHVlTm1WS1loY3lQ?=
+ =?utf-8?B?eVRBdmNpVHVOU0k5czgzTGozczlnR1hQQVVOa2JxWklPU0dTNUoxcEU5M3BM?=
+ =?utf-8?B?QXplS2dQWGpBam94NmEzOVFNd2NRQ3VwNklPdUhCSEg0cTFsRHpQZDZ6OXE0?=
+ =?utf-8?B?MkFTOFJ4NnhCMXpvaXpYU3k5RHhuSEUvczlDREJxUDJZN1NjYTh6OXBLSFlq?=
+ =?utf-8?B?cXVZZCsvRXM1UmtMQmhBZm1MMlRCYW00Ty9xVzBiMEdmbGl6anhxQzJxYW9v?=
+ =?utf-8?B?L2RvTzl0cEU0djRsVXNuSXd2ekVMSm52RElmcExBWTN2SWNidGFyemZDTWpv?=
+ =?utf-8?B?L0xlR0xCeU55eEpSTjBMNGhjMzl4TG9vZTJWQTg5b29UaEVEa1lCRzIrUmxm?=
+ =?utf-8?B?bXN2OW4zOXZ2Y3dWVjVBa2ZFbmRCdnRnU2tIenNTcUlpYWNqcU81UEdTc1Rk?=
+ =?utf-8?Q?sh01Z7nILaEP3+QLpZAYIG8H+y7PhGqFm5UbZAX1RSMa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7752140-1f08-4c13-241a-08db5586d99d
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 May 2023 20:56:27.0367
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0fXLnOTP4RvhlYbzLLuwDbPEj3ULYVxolMtt1mqEV5Mt8xVGalrJJ/RzNEUGGgcfdzl+GZY3sKp/J8GbHlJzvw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB8339
+X-Spam-Status: No, score=-4.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 15, 2023 at 12:51=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.org>=
- wrote:
->
-> On Sat, May 13, 2023 at 07:40:12AM -0400, Peter Geis wrote:
-> > On Fri, May 12, 2023 at 9:24=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
-rg> wrote:
-> > >
-> > > [+cc ARM64 folks, in case you have abort handling tips; thread at:
-> > > https://lore.kernel.org/r/20230509153912.515218-1-vincenzopalazzodev@=
-gmail.com]
-> > >
-> > > Pine64 RockPro64 panics while enumerating some PCIe devices.  Adding =
-a
-> > > delay avoids the panic.  My theory is a PCIe Request Retry Status to =
-a
-> > > Vendor ID config read causes an abort that we don't handle.
-> > >
-> > > > On Tue, May 09, 2023 at 05:39:12PM +0200, Vincenzo Palazzo wrote:
-> > > >> ...
-> > > >> [    1.229856] SError Interrupt on CPU4, code 0xbf000002 -- SError
-> > > >> [    1.229860] CPU: 4 PID: 1 Comm: swapper/0 Not tainted 5.9.9-2.0=
--MANJARO-ARM
-> > > >> #1
-> > > >> [    1.229862] Hardware name: Pine64 RockPro64 v2.1 (DT)
-> > > >> [    1.229864] pstate: 60000085 (nZCv daIf -PAN -UAO BTYPE=3D--)
-> > > >> [    1.229866] pc : rockchip_pcie_rd_conf+0xb4/0x270
-> > > >> [    1.229868] lr : rockchip_pcie_rd_conf+0x1b4/0x270
-> > > >> ...
-> > > >> [    1.229939] Kernel panic - not syncing: Asynchronous SError Int=
-errupt
-> > > >> ...
-> > > >> [    1.229955]  nmi_panic+0x8c/0x90
-> > > >> [    1.229956]  arm64_serror_panic+0x78/0x84
-> > > >> [    1.229958]  do_serror+0x15c/0x160
-> > > >> [    1.229960]  el1_error+0x84/0x100
-> > > >> [    1.229962]  rockchip_pcie_rd_conf+0xb4/0x270
-> > > >> [    1.229964]  pci_bus_read_config_dword+0x6c/0xd0
-> > > >> [    1.229966]  pci_bus_generic_read_dev_vendor_id+0x34/0x1b0
-> > > >> [    1.229968]  pci_scan_single_device+0xa4/0x144
-> > >
-> > > On Fri, May 12, 2023 at 12:46:21PM +0200, Vincenzo Palazzo wrote:
-> > > > ... Is there any way to tell the kernel "hey we need some more time
-> > > > here"?
-> > >
-> > > We enumerate PCI devices by trying to read the Vendor ID of every
-> > > possible device address (see pci_scan_slot()).  On PCIe, if a device
-> > > doesn't exist at that address, the Vendor ID config read will be
-> > > terminated with Unsupported Request (UR) status.  This is normal
-> > > and happens every time we enumerate devices.
-> > >
-> > > The crash doesn't happen every time we enumerate, so I don't think
-> > > this UR is the problem.  Also, if it *were* the problem, adding a
-> > > delay would not make any difference.
-> >
-> > Is this behavior different if there is a switch device forwarding on
-> > the UR? On rk3399 switches are completely non-functional because of
-> > the panic, which is observed in the output of the dmesg in [2] with
-> > the hack patch enabled. Considering what you just described it looks
-> > like the forwarded UR for each non-existent device behind the switch
-> > is causing an serror.
->
-> I don't know exactly what the panic looks like, but I wouldn't expect
-> UR handling to be different when there's a switch.
->
-> pcie-rockchip-host.c does handle devices on the root bus (00)
-> differently than others because rockchip_pcie_valid_device() knows
-> that device 00:00 is the only device on the root bus.  That part makes
-> sense because 00:00 is built into the SoC.
->
-> I'm a little suspicious of the fact that rockchip_pcie_valid_device()
-> also enforces that bus 01 can only have a single device on it.  No
-> other *_pcie_valid_device() implementations enforce that.  It's true
-> that traditional PCIe devices can only implement device 00, but ARI
-> relaxes that by reusing the Device Number as extended Function Number
-> bits.
+On 5/15/2023 12:38 PM, Lukas Wunner wrote:
+> On Mon, May 15, 2023 at 12:20:42PM -0700, Smita Koralahalli wrote:
+>> On 5/11/2023 8:23 AM, Lukas Wunner wrote:
+>>> Subject: [PATCH] PCI: pciehp: Disable Surprise Down Error reporting
+>>>
+[...]
+>>
+>> I have logged in the status registers after the device is removed in
+>> pciehp_handle_presence_or_link_change().
+> [...]
+>> Section 6.2.3.2.2 in PCIe Spec v6.0 has also mentioned that:
+>> "If an individual error is masked when it is detected, its error status bit
+>> is still affected, but no error reporting Message is sent to the Root
+>> Complex, and the error is not recorded in the Header Log, TLP Prefix Log, or
+>> First Error Pointer"..
+> 
+> Thanks for the thorough testing.  So the error is logged and next time
+> a reporting message for a different error is sent to the Root Complex,
+> that earlier Surprise Down Error will be seen and you'd get belated
+> log messages for it, is that what you're saying?
 
-Bjorn, great catch, thank you!
+Yes, thereby confusing user on a false error.
+> 
+> I guess I could amend the patch to let pciehp unconditionally clear
+> the Surprise Down Error Status bit upon a DLLSC event.
 
-I suspect you're actually onto the core of the problem. Looking
-through various other drivers that implement _pcie_valid_device they
-all appear to file similar restrictions on scanning for devices. The
-drivers are all similar enough that I am starting to suspect they are
-all running some version of the same bugged IP. Then I came across
-advk_pcie_pio_is_running() in pci-aardvark.c, which describes our
-issue pretty spot on including the same exact SError. Interestingly
-enough they made a TF-A patch [3] to catch and handle the error
-without ever passing it to the kernel. Other limitations they added
-are ensuring reads are not attempted while the link is down.
-pci-aardvark.c also implements limitations on Completion Retry Status.
-It has given me ideas for solving the problem.
+OK. First, mask the uncorrected AER status register for surprise down 
+during initialization and then clear all status registers 
+unconditionally including DPC_RP_PIO and others inside 
+pciehp_handle_presence_or_link_change()..?
 
-Very Respectfully,
-Peter Geis
+Could I please know, why do you think masking surprise down during 
+initialization would be a better approach than reading surprise down 
+error status on a DPC event? Because in both approaches we should be 
+however clearing status registers right?
 
-[3] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/commit/?id=
-=3D3c7dcdac5c50
+> 
+> Does the patch otherwise do what you want, i.e. no irritating messages
+> and no extra delay incurred by AER/DPC handling?
 
->
-> > > There *is* a way for a PCIe device to say "I need more time".  It doe=
-s
-> > > this by responding to that Vendor ID config read with Request Retry
-> > > Status (RRS, aka CRS in older specs), which means "I'm not ready yet,
-> > > but I will be ready in the future."  Adding a delay would definitely
-> > > make a difference here, so my guess is this is what's happening.
-> > >
-> > > Most root complexes return ~0 data to the CPU when a config read
-> > > terminates with UR or RRS.  It sounds like rockchip does this for UR
-> > > but possibly not for RRS.
-> > >
-> > > There is a "RRS Software Visibility" feature, which is supposed to
-> > > turn the RRS into a special value (Vendor ID =3D=3D 0x0001), but per =
-[1],
-> > > rockchip doesn't support it (lspci calls it "CRSVisible").
-> > >
-> > > But the CPU load instruction corresponding to the config read has to
-> > > complete by reading *something* or else be aborted.  It sounds like
-> > > it's aborted in this case.  I don't know the arm64 details, but if we
-> > > could catch that abort and determine that it was an RRS and not a UR,
-> > > maybe we could fabricate the magic RRS 0x0001 value.
-> > >
-> > > imx6q_pcie_abort_handler() does something like that, although I think
-> > > it's for arm32, not arm64.  But obviously we already catch the abort
-> > > enough to dump the register state and panic, so maybe there's a way t=
-o
-> > > extend that?
-> >
-> > Perhaps a hook mechanism that allows drivers to register with the
-> > serror handler and offer to handle specific errors before the generic
-> > code causes the system panic?
-> >
-> > Very Respectfully,
-> > Peter Geis
-> >
-> > [2] https://lore.kernel.org/linux-pci/CAMdYzYqn3L7x-vc+_K6jG0EVTiPGbz8p=
-Q-N1Q1mRbcVXE822Yg@mail.gmail.com/
-> >
-> > >
-> > > Bjorn
-> > >
-> > > [1] https://lore.kernel.org/linux-pci/CAMdYzYpOFAVq30N+O2gOxXiRtpoHpa=
-kFg3LKq3TEZq4S6Y0y0g@mail.gmail.com/
-> > _______________________________________________
-> > Linux-kernel-mentees mailing list
-> > Linux-kernel-mentees@lists.linuxfoundation.org
-> > https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
+no irritating messages and no delay as there is no DPC error logged now.
+
+Thanks,
+Smita
+> 
+> Thanks!
+> 
+> Lukas
+
