@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 951B5705734
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:36:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 717F770573C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:36:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjEPTgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 15:36:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55244 "EHLO
+        id S229944AbjEPTgg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 15:36:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55792 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229889AbjEPTgW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:36:22 -0400
+        with ESMTP id S229814AbjEPTge (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:36:34 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F4D7ED2;
-        Tue, 16 May 2023 12:36:20 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1193B93DD;
+        Tue, 16 May 2023 12:36:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6382E63DB9;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 84061633A0;
+        Tue, 16 May 2023 19:36:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50CFDC433D2;
         Tue, 16 May 2023 19:36:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3326DC4339C;
-        Tue, 16 May 2023 19:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684265779;
-        bh=1y8qB7kv+xDWqxOYw4K9L6tE3JzzzyJ6tx4iNSAnwRU=;
+        s=k20201202; t=1684265786;
+        bh=L/Qp31ZARnIa1bxC1DyJGeKMdFS5Wgtrq4kpQkQu2zw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1TfAHj/hol7TROTcUR6gshmlOixx+65a3Ny2hHWBSJC5v+DkbnglNdZhuHcyHDF1
-         TGrpdPBwNN+NswjZNBi8Y8axdkLspbxGTmhWJm3FISvx8uYKpFvWNvMYUCeI0BwiSq
-         o2a0BV8veTqGfq/kZefozxrUC+JvKPGZDvIk8eukSQlrMDWDfPGou7ctUpolUaZ2wS
-         VqKfOGtBPnd7AVKTmQ7p3HUnf7CiL3BOgYkssO0EHfiTrF/sy6ARFEYqTGdMUd/NC6
-         B708eZZdFX4plzFfEgIC/q+8LA6b9xp6feRVGoJ6xTNav8yRpOnn1MkAw3aOWScHlE
-         /IvgTFvadxfTQ==
+        b=bB9/JNuGXy+CuuSmBA1mIJQRdm3PDhpA4MNWL9vDjPPUv0Axx1Q2VLtiOmu5h4wlO
+         ZIiveTA4vEzmvtg6jqHfnB2IA/KyFoLv58fU1C/G4RLxDtlLb+qWaDnPLIHqxp+uJN
+         YuIEMEzwPeJyaUbpe/498ig/Aj8SroIALwN5a9JdhgsmlVncnEE6j0ApQr0CD6wwpG
+         uayon8hFFnce7FZ+xk3f501jDfoYnSDBCEasqeaP9EuAKAaVBUhLY0N+aATStZTdOq
+         FxWM3nrGI7ppoWHfghhJ25EqNePfkhNvOQNgYm+lOBRhMsfTshiuFBM/UygrVqzdJr
+         FaoOyV2QyNahg==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     x86@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -56,9 +56,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH 02/20] x86: ce4100: Mark local functions as 'static'
-Date:   Tue, 16 May 2023 21:35:31 +0200
-Message-Id: <20230516193549.544673-3-arnd@kernel.org>
+Subject: [PATCH 03/20] x86: apic: hide unused safe_smp_processor_id on UP
+Date:   Tue, 16 May 2023 21:35:32 +0200
+Message-Id: <20230516193549.544673-4-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
 References: <20230516193549.544673-1-arnd@kernel.org>
@@ -76,40 +76,36 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Two functions in this file are global but have no prototype in
-a header and are not called from elsewhere, so they should
-be static:
+When CONFIG_SMP is disabled, the prototype for safe_smp_processor_id()
+is hidden, which causes a W=1 warning:
 
-arch/x86/pci/ce4100.c:86:6: error: no previous prototype for 'sata_revid_init' [-Werror=missing-prototypes]
-arch/x86/pci/ce4100.c:175:5: error: no previous prototype for 'bridge_read' [-Werror=missing-prototypes]
+/home/arnd/arm-soc/arch/x86/kernel/apic/ipi.c:316:5: error: no previous prototype for 'safe_smp_processor_id' [-Werror=missing-prototypes]
+
+Since there are no callers in this configuration, just hide the definition
+as well.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/pci/ce4100.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/apic/ipi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
-index 584c25b588b4..87313701f069 100644
---- a/arch/x86/pci/ce4100.c
-+++ b/arch/x86/pci/ce4100.c
-@@ -83,7 +83,7 @@ static void ehci_reg_read(struct sim_dev_reg *reg, u32 *value)
- 		*value |= 0x100;
+diff --git a/arch/x86/kernel/apic/ipi.c b/arch/x86/kernel/apic/ipi.c
+index 2a6509e8c840..9bfd6e397384 100644
+--- a/arch/x86/kernel/apic/ipi.c
++++ b/arch/x86/kernel/apic/ipi.c
+@@ -301,6 +301,7 @@ void default_send_IPI_mask_logical(const struct cpumask *cpumask, int vector)
+ 	local_irq_restore(flags);
  }
  
--void sata_revid_init(struct sim_dev_reg *reg)
-+static void sata_revid_init(struct sim_dev_reg *reg)
++#ifdef CONFIG_SMP
+ /* must come after the send_IPI functions above for inlining */
+ static int convert_apicid_to_cpu(int apic_id)
  {
- 	reg->sim_reg.value = 0x01060100;
- 	reg->sim_reg.mask = 0;
-@@ -172,7 +172,7 @@ static inline void extract_bytes(u32 *value, int reg, int len)
- 	*value &= mask;
+@@ -329,3 +330,4 @@ int safe_smp_processor_id(void)
+ 	return cpuid >= 0 ? cpuid : 0;
  }
- 
--int bridge_read(unsigned int devfn, int reg, int len, u32 *value)
-+static int bridge_read(unsigned int devfn, int reg, int len, u32 *value)
- {
- 	u32 av_bridge_base, av_bridge_limit;
- 	int retval = 0;
+ #endif
++#endif
 -- 
 2.39.2
 
