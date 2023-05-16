@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 51B8F705742
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:36:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AA7570574A
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:37:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjEPTgt (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 15:36:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56252 "EHLO
+        id S229921AbjEPThG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 15:37:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229632AbjEPTgr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:36:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E867EE8;
-        Tue, 16 May 2023 12:36:33 -0700 (PDT)
+        with ESMTP id S229961AbjEPThE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:37:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A24A24C;
+        Tue, 16 May 2023 12:36:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B74963E83;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B0BC663E59;
+        Tue, 16 May 2023 19:36:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CFFC433A1;
         Tue, 16 May 2023 19:36:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DA1EC4339B;
-        Tue, 16 May 2023 19:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684265792;
-        bh=NCehg1lkd+BZGGfLe6zB+YpAMyX3wRQS6FlZqTExKsY=;
+        s=k20201202; t=1684265798;
+        bh=9077UjXDS1JwWtjrb4zvyxiWevrXkl5r2sPVXNElvI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pMmYMmj61h1ryVXMWXgEPNi4c4GgRS8wGlxnCd9UxrJ05iwjecyfTOduY+WoqWZpO
-         Cvm/AJCD+MXi+4Shut/6HQufiGCdANXUBd424+CiNufUW6Mt2CPMf2SX0Erut/1Yjz
-         CZmpdbkHOQ1xlqE6pSRjeDiYME9avcj4NHsxu1xrpZ1j/RY+4x7QvymeScI7FPaZ6A
-         7vr/gZpCa3X1Nt6lxKZnO93JGkaChZ3M73Qb3fsEPkq2r9hKpfzvuhPaebh6V7v7p/
-         EnZrHT3z5U/r3Es9dGNnRROzYJFVNwRgJqycAOQQGvYgjBv9ea9EtDpGHUpfp80+kM
-         +ZmQV+6dglcAw==
+        b=nU4bcoQ15stgmO0CsrS+eCvsm+gCXhBNBFSdZUZJDZs6Fl6sPo6aQAEbL7HvpgQPw
+         34YU/6UqjzMRVqANQ++OmNHESa6zNkcaFm2LUOgnGFvueZRpIj33bI3tKq9iIVMOE8
+         GqW/XJRm7a1E2WWrjpdlejWdGAQtbuecvIZU5NAHZBM5oQh2e9un6it3oTQsqi/lTG
+         5kxTBEILwkSTC+lRDq4IqynAvKjTaueAozerHdsQ+TGjB+//lEcb2OOHgN+9Q9axD4
+         hkpT/62nrOrSL8vWP+nEXayygL8S/uqGna9VmOHK6w0B/JcOokBXElfO8XCeFSQKdo
+         bT2kB6PN6dMAg==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     x86@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -56,16 +56,16 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH 04/20] x86: avoid unneeded __div64_32 function definition
-Date:   Tue, 16 May 2023 21:35:33 +0200
-Message-Id: <20230516193549.544673-5-arnd@kernel.org>
+Subject: [PATCH 05/20] x86: head: add dummy prototype for mk_early_pgtbl_32
+Date:   Tue, 16 May 2023 21:35:34 +0200
+Message-Id: <20230516193549.544673-6-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
 References: <20230516193549.544673-1-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -76,34 +76,31 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The __div64_32() function is provided for 32-bit architectures that
-don't have a custom do_div() implementation. x86_32 has one, and
-does not use the header file that declares the function prototype,
-so the definition causes a W=1 warning:
+'make W=1' warns about a function without a prototype in the x86-32 head code:
 
-lib/math/div64.c:31:32: error: no previous prototype for '__div64_32' [-Werror=missing-prototypes]
+arch/x86/kernel/head32.c:72:13: error: no previous prototype for 'mk_early_pgtbl_32' [-Werror=missing-prototypes]
 
-Define an empty macro to prevent the function definition from getting
-built, which avoids the warning and saves a little .text space.
+This is called from assembler code, so it does not actually need a prototype.
+I could not find an appropriate header for it, so just declare it in front
+of the definition to shut up th warning.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/include/asm/div64.h | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/head32.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/include/asm/div64.h b/arch/x86/include/asm/div64.h
-index b8f1dc0761e4..9826d5fc12e3 100644
---- a/arch/x86/include/asm/div64.h
-+++ b/arch/x86/include/asm/div64.h
-@@ -71,6 +71,8 @@ static inline u64 mul_u32_u32(u32 a, u32 b)
- }
- #define mul_u32_u32 mul_u32_u32
- 
-+#define __div64_32 /* not needed */
-+
- #else
- # include <asm-generic/div64.h>
- 
+diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
+index 10c27b4261eb..246a609f889b 100644
+--- a/arch/x86/kernel/head32.c
++++ b/arch/x86/kernel/head32.c
+@@ -69,6 +69,7 @@ asmlinkage __visible void __init __noreturn i386_start_kernel(void)
+  * to the first kernel PMD. Note the upper half of each PMD or PTE are
+  * always zero at this stage.
+  */
++void __init mk_early_pgtbl_32(void);
+ void __init mk_early_pgtbl_32(void)
+ {
+ #ifdef __pa
 -- 
 2.39.2
 
