@@ -2,54 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C5D9705174
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 17:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2425970521C
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 17:29:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234092AbjEPPDT convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Tue, 16 May 2023 11:03:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34318 "EHLO
+        id S233868AbjEPP3B (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 11:29:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234095AbjEPPDQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 11:03:16 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B7D76B2;
-        Tue, 16 May 2023 08:03:09 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QLKFC4Vf1z67mgD;
-        Tue, 16 May 2023 23:01:19 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 16 May
- 2023 16:03:05 +0100
-Date:   Tue, 16 May 2023 16:03:04 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-CC:     Robin Murphy <robin.murphy@arm.com>, <helgaas@kernel.org>,
-        <yangyicong@huawei.com>, <will@kernel.org>,
-        <baolin.wang@linux.alibaba.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <rdunlap@infradead.org>, <mark.rutland@arm.com>,
-        <zhuo.song@linux.alibaba.com>, <linux-cxl@vger.kernel.org>
-Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Message-ID: <20230516160304.00000544@Huawei.com>
-In-Reply-To: <7aec4dbd-91d5-2a14-8779-f239a58cbbae@linux.alibaba.com>
-References: <20220917121036.14864-1-xueshuai@linux.alibaba.com>
-        <20230417061729.84422-3-xueshuai@linux.alibaba.com>
-        <b1d9509c-8e8c-b05b-cbaf-576a7b2f99e7@arm.com>
-        <7aec4dbd-91d5-2a14-8779-f239a58cbbae@linux.alibaba.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S233111AbjEPP25 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 11:28:57 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37075FF1;
+        Tue, 16 May 2023 08:28:56 -0700 (PDT)
+Received: from mercury (dyndsl-091-248-191-196.ewe-ip-backbone.de [91.248.191.196])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id E5ABC66058F4;
+        Tue, 16 May 2023 16:28:54 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1684250935;
+        bh=9Zbfci1TdhO6S4+wcLiRqTU98Ygr/MBClVVcg3Aacnc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C1QarmdofT6VuceBRnhEC8QA2IPFK3B3SaZk26W0KRWVXlGUlIglp+j8hZXgrPxdG
+         LTeVPM0qZvYgHO1l9oqgcIEQn0gJwiSqEucxe+xaM0LYqLk1TqIBiVuL7Gm/oIKhD5
+         68Ij32npBTDNc0taR6+PPTMFtvQjsQliy8dnEghJQqd3bRIcYv9L9xVTFgNE6/C5qv
+         rBzBOGihvBPpFDnLWeiA1xKeSk1SGhShAPSdghTQx/XCF15KRTI3kVqum3t9PXxGeq
+         WzzNxjfsKP6UZPDajDyqisD4fYCP66aPFjXp91/mZypwjMcmGd6P5NQ7HYSNuTbIt/
+         LUOnsiSpa0Xdg==
+Received: by mercury (Postfix, from userid 1000)
+        id E1D901060F7F; Tue, 16 May 2023 17:28:51 +0200 (CEST)
+Date:   Tue, 16 May 2023 17:28:51 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Michal Simek <michal.simek@amd.com>
+Cc:     piyush.mehta@amd.com, nava.kishore.manne@amd.com,
+        sai.krishna.potthuri@amd.com, shubhrajyoti.datta@amd.com,
+        vishal.sagar@amd.com, kalyani.akula@amd.com,
+        bharat.kumar.gogada@amd.com, linux-kernel@vger.kernel.org,
+        monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Rix <trix@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
+Message-ID: <20230516152851.74xcwa7naaniox6x@mercury.elektranox.org>
+References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uzdssvofxc7p4teh"
+Content-Disposition: inline
+In-Reply-To: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -57,132 +100,44 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-PCI folks, Question below directed at you. Please take a look.
-+CC linux-cxl because a similar question is going to bite us shortly
-if we want CXL PMUs to work well on RP or Switch ports.
+--uzdssvofxc7p4teh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> >> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
-> >> +{
-> >> +    int index = 0;
-> >> +    struct pci_dev *pdev = NULL;
-> >> +    struct dwc_pcie_rp_info *rp_info;
-> >> +
-> >> +    INIT_LIST_HEAD(&priv->rp_infos);
-> >> +
-> >> +    /* Match the rootport with VSEC_RAS_DES_ID */
-> >> +    for_each_pci_dev(pdev) {  
-> > 
-> > Does the PCI layer not offer a more robust mechanism for this? (PCI fixups come to mind, but I don't actually know whether that would be a viable approach or not.)   
-> 
-> I am afraid not yet. Jonathan try to add a PMU service but it is not merged into mainline.
-I wouldn't read much into that 'failure'.  We never persisted with that driver because it was for an old
-generation of hardware.  Mostly the aim with that was to explore the area of PCIe PMU in general
-rather than to get the support upstream. Some of the counters on that hardware were too small to
-be of much use anyway :)
+Hi,
 
-Grabbing just relevant functions..
+On Tue, May 16, 2023 at 03:51:08PM +0200, Michal Simek wrote:
+> @xilinx.com is still working but better to switch to new amd.com after
+> AMD/Xilinx acquisition.
 
-Bjorn, we need to figure out a way forwards for this sort of case and I'd
-appreciate your input on the broad brush question of 'how should it be done'?
+[...]
 
-This is a case where a PCIe port (RP here) correctly has the PCIe class code
-so binds to the pcie_port driver, but has a VSEC (others examples use DOE, or DVSEC)
-that provides extended functionality.  The referred to PCIe PMU from our older Hisilicon
-platforms did it by adding another service driver - that probably doesn't extend well.
+>  .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml    | 2 +-
 
-The approach used here is to separately walk the PCI topology and register the devices.
-It can 'maybe' get away with that because no interrupts and I assume resets have no
-nasty impacts on it because the device is fairly simple.  In general that's not going
-to work.  CXL does a similar trick (which I don't much like, but too late now),
-but we've also run into the problem of how to get interrupts if not the main driver.
+[...]
 
-So what approach should we look at to solve this in general?
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 
-Jonathan
+-- Sebastian
 
-> +static int dwc_pcie_ras_des_discover(struct dwc_pcie_pmu_priv *priv)
-> +{
-> +	int index = 0;
-> +	struct pci_dev *pdev = NULL;
-> +	struct dwc_pcie_rp_info *rp_info;
-> +
-> +	INIT_LIST_HEAD(&priv->rp_infos);
-> +
-> +	/* Match the rootport with VSEC_RAS_DES_ID */
-> +	for_each_pci_dev(pdev) {
-> +		u16 vsec;
-> +		u32 val;
-> +
-> +		if (!pci_dev_is_rootport(pdev))
-> +			continue;
-> +
-> +		rp_info = devm_kzalloc(&pdev->dev, sizeof(*rp_info), GFP_KERNEL);
-> +		if (!rp_info)
-> +			return -ENOMEM;
-> +
-> +		rp_info->bdf = PCI_DEVID(pdev->bus->number, pdev->devfn);
-> +		rp_info->pdev = pdev;
-> +
-> +		vsec = pci_find_vsec_capability(pdev, PCI_VENDOR_ID_ALIBABA,
-> +						DWC_PCIE_VSEC_RAS_DES_ID);
-> +		if (!vsec)
-> +			continue;
-> +
-> +		pci_read_config_dword(pdev, vsec + PCI_VNDR_HEADER, &val);
-> +		if (PCI_VNDR_HEADER_REV(val) != 0x04 ||
-> +		    PCI_VNDR_HEADER_LEN(val) != 0x100)
-> +			continue;
-> +		pci_dbg(pdev,
-> +			"Detected PCIe Vendor-Specific Extended Capability RAS DES\n");
-> +
-> +		rp_info->ras_des = vsec;
-> +		rp_info->num_lanes = pcie_get_width_cap(pdev);
-> +
-> +		list_add(&rp_info->rp_node, &priv->rp_infos);
-> +		index++;
-> +	}
-> +
-> +	if (!index)
-> +		return -ENODEV;
-> +
-> +	priv->pcie_ctrl_num = index;
-> +
-> +	return 0;
-> +}
+--uzdssvofxc7p4teh
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> +static int dwc_pcie_pmu_probe(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct dwc_pcie_pmu_priv *priv;
-> +	struct dwc_pcie_rp_info *rp_info;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* If RAS_DES PMU is not supported on current platform, keep silent */
-> +	ret = dwc_pcie_ras_des_discover(priv);
-> +	if (ret)
-> +		return ret;
-> +
-> +	list_for_each_entry(rp_info, &priv->rp_infos, rp_node) {
-> +		struct pci_dev *rp = rp_info->pdev;
-> +
-> +		ret = __dwc_pcie_pmu_probe(priv, rp_info);
-> +		if (ret) {
-> +			dev_err(&rp->dev, "PCIe PMU probe fail\n");
-> +			goto pmu_unregister;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +
-> +pmu_unregister:
-> +	dwc_pcie_pmu_remove(pdev);
-> +
-> +	return ret;
-> +}
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmRjoSkACgkQ2O7X88g7
++pqZnA//TDDMhr+y5x6WtK0aAHgdZNjN+PvDZjdFdHabNv9Ne7ZbkH8zfacX2Ixj
+vcRQLK7IEndRfP76oe/Yd30gDh3af+G/6sGDihy7qDIYKFZ4U59e52eijzGtzOzd
+bIQd+nK7rVLLPD6TCQnIMd59dX0YBGWW1NQsc9viEUKa73617ANSXPmUS9/z7BAc
+TB9a9Wh11wWkmndxV32Fquuq7mTmmqfBMh7rPnKm8WIqxWfdMZeZy2UvZMBVj2YB
+yXzEskCayveuLHQMKZoHrj8nUpItatw6BOupTR5Df1VQ8aZGpiedTulY/dVgusiR
+4qO9zXCKpjpRb7X4CgfvWM9L8qVEG1X47iepFNX+CEQXv+3EJCHZEF8QSyPxAk8P
+85aI/FZOmLHKjTlu9TMJspG1ruxDaPyhxtfZEpI7+xGhiH4OQN48QRk+PfIpIEqt
+9c+PCUCXosIGpX7sNn3hrXGQhPRItiRGDEX2tqt0SWyn3/V2GvG+8rOqIv3F42Bg
+5vRf8LlcgEZlAeu0CNwUFmi4T/Wu+/77sa7Tbm+HDIqEo1kHJnlLJTs2LRjSgqSR
+/vlgH3m61YKqg9jy5xrmuFeH6Yg2GQQVtig9l1+r1XmHTUXrTvROk5kQ8AgTOYZh
+ZAqxk1Gb2IdIBXK0U6iG/7jHEhu3spe5gSzqdFc/+FUfveluN/o=
+=1MS+
+-----END PGP SIGNATURE-----
+
+--uzdssvofxc7p4teh--
