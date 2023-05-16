@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B21CF705731
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:36:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 951B5705734
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:36:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229922AbjEPTgT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 15:36:19 -0400
+        id S229894AbjEPTgX (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 15:36:23 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55244 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229898AbjEPTgS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:36:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB9EC86AE;
-        Tue, 16 May 2023 12:36:14 -0700 (PDT)
+        with ESMTP id S229889AbjEPTgW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:36:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F4D7ED2;
+        Tue, 16 May 2023 12:36:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4DC4063E8A;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6382E63DB9;
+        Tue, 16 May 2023 19:36:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3326DC4339C;
         Tue, 16 May 2023 19:36:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06C9EC4339B;
-        Tue, 16 May 2023 19:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684265773;
-        bh=+r42W67OGDQQqAy2PIbpqRJtm86RNedMVE1BNsE+HVE=;
+        s=k20201202; t=1684265779;
+        bh=1y8qB7kv+xDWqxOYw4K9L6tE3JzzzyJ6tx4iNSAnwRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AOBuVWv84dy+YEirfBc0rOgB6n5+cRsHG61qC/Lnfi2dGn7Jv+JKh/H02eWWfMUF3
-         Ex2ZkwkMb7pU24/iLpb6Y8hKTZK4ttU1eJ2NobvkypPk2O2EnpVw+0yr+dF/PpkZQx
-         3eL/opgEW1QD86klpYN2w8CV+JEExP433BmmgiImAub0k+8is2vhhwVU/VPp6XDlfH
-         3XztpmqkQ5qaQ29gLQgBc9KgSs6vC4RdNI63NsfmLz+6t5LxvmdPqe41UvKb/ArBhl
-         S7oIwLXWs1/hwyZUUfG2KjSn5ZNqk85FsE1YOlhxhVLrZXk744pPU+X1xr/Njx6aQp
-         zQ2/DkqcjEvOQ==
+        b=N1TfAHj/hol7TROTcUR6gshmlOixx+65a3Ny2hHWBSJC5v+DkbnglNdZhuHcyHDF1
+         TGrpdPBwNN+NswjZNBi8Y8axdkLspbxGTmhWJm3FISvx8uYKpFvWNvMYUCeI0BwiSq
+         o2a0BV8veTqGfq/kZefozxrUC+JvKPGZDvIk8eukSQlrMDWDfPGou7ctUpolUaZ2wS
+         VqKfOGtBPnd7AVKTmQ7p3HUnf7CiL3BOgYkssO0EHfiTrF/sy6ARFEYqTGdMUd/NC6
+         B708eZZdFX4plzFfEgIC/q+8LA6b9xp6feRVGoJ6xTNav8yRpOnn1MkAw3aOWScHlE
+         /IvgTFvadxfTQ==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     x86@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -56,17 +56,16 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH 01/20] x86: move prepare_ftrace_return prototype to header
-Date:   Tue, 16 May 2023 21:35:30 +0200
-Message-Id: <20230516193549.544673-2-arnd@kernel.org>
+Subject: [PATCH 02/20] x86: ce4100: Mark local functions as 'static'
+Date:   Tue, 16 May 2023 21:35:31 +0200
+Message-Id: <20230516193549.544673-3-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
 References: <20230516193549.544673-1-arnd@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -77,49 +76,40 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-On 32-bit builds, the prepare_ftrace_return() function only has a global
-definition, but no prototype before it, which causes a warning:
+Two functions in this file are global but have no prototype in
+a header and are not called from elsewhere, so they should
+be static:
 
-arch/x86/kernel/ftrace.c:625:6: warning: no previous prototype for ‘prepare_ftrace_return’ [-Wmissing-prototypes]
-  625 | void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
-
-Move the prototype that is already needed for some configurations into
-a header file where it can be seen unconditionally.
+arch/x86/pci/ce4100.c:86:6: error: no previous prototype for 'sata_revid_init' [-Werror=missing-prototypes]
+arch/x86/pci/ce4100.c:175:5: error: no previous prototype for 'bridge_read' [-Werror=missing-prototypes]
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/include/asm/ftrace.h | 3 +++
- arch/x86/kernel/ftrace.c      | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/pci/ce4100.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
-index 5061ac98ffa1..b8d4a07f9595 100644
---- a/arch/x86/include/asm/ftrace.h
-+++ b/arch/x86/include/asm/ftrace.h
-@@ -106,6 +106,9 @@ struct dyn_arch_ftrace {
- 
- #ifndef __ASSEMBLY__
- 
-+void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
-+			   unsigned long frame_pointer);
-+
- #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
- extern void set_ftrace_ops_ro(void);
- #else
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 5e7ead52cfdb..01e8f34daf22 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -525,9 +525,6 @@ static void *addr_from_call(void *ptr)
- 	return ptr + CALL_INSN_SIZE + call.disp;
+diff --git a/arch/x86/pci/ce4100.c b/arch/x86/pci/ce4100.c
+index 584c25b588b4..87313701f069 100644
+--- a/arch/x86/pci/ce4100.c
++++ b/arch/x86/pci/ce4100.c
+@@ -83,7 +83,7 @@ static void ehci_reg_read(struct sim_dev_reg *reg, u32 *value)
+ 		*value |= 0x100;
  }
  
--void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
--			   unsigned long frame_pointer);
--
- /*
-  * If the ops->trampoline was not allocated, then it probably
-  * has a static trampoline func, or is the ftrace caller itself.
+-void sata_revid_init(struct sim_dev_reg *reg)
++static void sata_revid_init(struct sim_dev_reg *reg)
+ {
+ 	reg->sim_reg.value = 0x01060100;
+ 	reg->sim_reg.mask = 0;
+@@ -172,7 +172,7 @@ static inline void extract_bytes(u32 *value, int reg, int len)
+ 	*value &= mask;
+ }
+ 
+-int bridge_read(unsigned int devfn, int reg, int len, u32 *value)
++static int bridge_read(unsigned int devfn, int reg, int len, u32 *value)
+ {
+ 	u32 av_bridge_base, av_bridge_limit;
+ 	int retval = 0;
 -- 
 2.39.2
 
