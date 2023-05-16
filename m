@@ -2,115 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 635E47057E4
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:49:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2321A7057EF
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:51:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229558AbjEPTtl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 15:49:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43538 "EHLO
+        id S229551AbjEPTvj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 15:51:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjEPTtk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:49:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E39C5A9;
-        Tue, 16 May 2023 12:49:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7FA2162D8A;
-        Tue, 16 May 2023 19:49:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FD71C433D2;
-        Tue, 16 May 2023 19:49:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684266578;
-        bh=K90crMBvGWv1uFUHmxW01PE2M6Nmno0yReDGlpG1yUE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=i38RnsNXEGAT4Q2f69Z/KFOKrz6IDzh8dR9mh5/NQGvzl++wCasx8R/rulrL156IA
-         fs1YIKV55Nj4VXr/ijEYiDbPaxoUFHE4PaG3yFEw2z9ZNdNbdlSbNBJ3DqX+5I4E5s
-         rK2ih/C+nzAwd8p384qrzL3Y1P2+Cg82RQbiNfzbIezifo7UE1VTqkYbiVRBrO/ffh
-         eogPSspVZ443o//v8lekINHrHM85a5/ww43sRC1woMlj2zVapLaEG0nAbx9aCDGlrx
-         /v+bjORKf57xcIeIwqAe0VexcNO8wFAnwdad6auNzEgKWOQbbFwh9/h3m4RTMEEopz
-         bG0SJZWPoF6tA==
-Date:   Tue, 16 May 2023 14:49:36 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S229555AbjEPTvi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:51:38 -0400
+Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
+        by lindbergh.monkeyblade.net (Postfix) with SMTP id 9C24C44AD
+        for <linux-pci@vger.kernel.org>; Tue, 16 May 2023 12:51:31 -0700 (PDT)
+Received: (qmail 845160 invoked by uid 1000); 16 May 2023 15:51:30 -0400
+Date:   Tue, 16 May 2023 15:51:30 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        hust-os-kernel-patches@googlegroups.com,
-        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: dwc: keystone: Free IRQ in `ks_pcie_remove` and the
- error handling section of `ks_pcie_probe`
-Message-ID: <ZGPeUNqznHKETgqs@bhelgaas>
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v4 35/41] usb: uhci: handle HAS_IOPORT dependencies
+Message-ID: <23936929-80e4-4599-827a-d09b4960f3ab@rowland.harvard.edu>
+References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
+ <20230516110038.2413224-36-schnelle@linux.ibm.com>
+ <2023051643-overtime-unbridle-7cdd@gregkh>
+ <4e291030-99d9-4b8b-9389-9b8f2560b8e8@app.fastmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230516051659.22194-1-xyzeng@stu.xidian.edu.cn>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <4e291030-99d9-4b8b-9389-9b8f2560b8e8@app.fastmail.com>
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 16, 2023 at 01:16:59PM +0800, Xiangyi Zeng wrote:
-> Smatch complains that:
-> drivers/pci/controller/dwc/pci-keystone.c:1303 ks_pcie_probe() warn:
-> 'irq' from request_irq() not released on lines: 1183,1187,1303.
-
-Make this the entire warning line from smatch with no extra newlines
-inserted.
-
-> "ks-pcie-error-irq" was requested in the `ks_pcie_probe` function, but
-> was not freed neither in the error handling part of `ks_pcie_probe`
-> nor in the `ks_pcie_remove` function.
+On Tue, May 16, 2023 at 06:44:34PM +0200, Arnd Bergmann wrote:
+> On Tue, May 16, 2023, at 18:29, Greg Kroah-Hartman wrote:
+> > On Tue, May 16, 2023 at 01:00:31PM +0200, Niklas Schnelle wrote:
 > 
-> Fix this by adding `free_irq` in `ks_pcie_remove` and in a new error
-> handling label `err_alloc` after `err_link` in `ks_pcie_probe`. In
-> `ks_pcie_probe`, if `phy` or `link` memory allocation fails, we will
-> fall to `err_alloc`. If any other error occurs that leads to
-> `err_get_sync` or `err_link`, we end up going to `err_alloc`.
-
-I think the backticks (`) are markdown that makes these "code".
-Personally I think ks_pcie_probe() is more readable than
-`ks_pcie_probe` since most people (I think) read these in plain-ASCII
-situations.  And using backticks for labels and local variables seems
-like overkill.
-
-> Fixes: 0790eb175ee0 ("PCI: keystone: Cleanup error_irq configuration")
-> Signed-off-by: Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
-> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
-
-It's best if the Reviewed-by tag is not added until Dongliang sends
-email with that tag directly to the mailing list.  Internal reviews
-before posting to the mailing list aren't worth much.
-
-> @@ -1309,12 +1316,14 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
->  	struct device_link **link = ks_pcie->link;
->  	int num_lanes = ks_pcie->num_lanes;
->  	struct device *dev = &pdev->dev;
-> +	int irq = platform_get_irq(pdev, 0);
-
-I think it's better to save the irq we looked up in ks_pcie_probe()
-and free *that*.  It's probably the same thing you get by calling
-platform_get_irq() again, but it seems cleaner to me to save what we
-got in ks_pcie_probe().
-
->  	pm_runtime_put(dev);
->  	pm_runtime_disable(dev);
->  	ks_pcie_disable_phy(ks_pcie);
->  	while (num_lanes--)
->  		device_link_del(link[num_lanes]);
-> +	free_irq(irq, ks_pcie);
->  
->  	return 0;
->  }
-> -- 
-> 2.34.1
+> >>  #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
+> >>  /* Support PCI only */
+> >>  static inline u32 uhci_readl(const struct uhci_hcd *uhci, int reg)
+> >>  {
+> >> -	return inl(uhci->io_addr + reg);
+> >> +	return UHCI_IN(inl(uhci->io_addr + reg));
+> >>  }
+> >>  
+> >>  static inline void uhci_writel(const struct uhci_hcd *uhci, u32 val, int reg)
+> >>  {
+> >> -	outl(val, uhci->io_addr + reg);
+> >> +	UHCI_OUT(outl(val, uhci->io_addr + reg));
+> >
+> > I'm confused now.
+> >
+> > So if CONFIG_HAS_IOPORT is enabled, wonderful, all is good.
+> >
+> > But if it isn't, then these are just no-ops that do nothing?  So then
+> > the driver will fail to work?  Why have these stubs at all?
+> >
+> > Why not just not build the driver at all if this option is not enabled?
 > 
+> If I remember correctly, the problem here is the lack of
+> abstractions in the uhci driver, it instead supports all
+> combinations of on-chip non-PCI devices using readb()/writeb()
+> and PCI devices using inb()/outb() in a shared codebase.
+
+Isn't that an abstraction?  A single set of operations (uhci_readl(), 
+uhci_writel(), etc.) that always does the right sort of I/O even when 
+talking to different buses?
+
+So I'm not sure what you mean by "the lack of abstractions".
+
+> A particularly tricky combination is a kernel that supports on-chip
+> UHCI as well as CONFIG_USB_PCI (for EHCI/XHCI) but does not support
+> I/O ports because of platform limitations. The trick is to come up
+> with a set of changes that doesn't have to rewrite the entire logic
+> but also doesn't add an obscene number of #ifdef checks.
+
+Indeed, in a kernel supporting that tricky combination the no-op code 
+would be generated.  But it would never execute at runtime because the 
+uhci_has_pci_registers(uhci) test would always return 0, and so the 
+driver wouldn't fail.
+
+> That said, there is a minor problem with the empty definition
+> 
+> +#define UHCI_OUT(x)
+> 
+> I think this should be "do { } while (0)" to avoid warnings
+> about empty if/else blocks.
+
+I'm sure Niklas wouldn't mind making such a change.  But do we really 
+get such warnings?  Does the compiler really think that this kind of 
+(macro-expanded) code:
+
+	if (uhci_has_pci_registers(uhci))
+		;
+	else if (uhci_is_aspeed(uhci))
+		writel(val, uhci->regs + uhci_aspeed_reg(reg));
+
+deserves a warning?  I write stuff like that fairly often; it's a good 
+way to showcase a high-probability do-nothing pathway at the start of a 
+series of conditional cases.  And I haven't noticed any complaints from 
+the compiler.
+
+Alan Stern
