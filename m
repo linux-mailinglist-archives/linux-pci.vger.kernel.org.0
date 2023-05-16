@@ -2,57 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1440704480
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 07:18:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6962E7044F1
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 07:59:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229662AbjEPFSB (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 01:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44198 "EHLO
+        id S229619AbjEPF7V (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 01:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229538AbjEPFSA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 01:18:00 -0400
-Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A878A2119;
-        Mon, 15 May 2023 22:17:56 -0700 (PDT)
-Received: from wings-Z3-Air-S-Series-GK5MR0O.. (unknown [113.200.174.9])
-        by sr0414.icoremail.net (Coremail) with SMTP id AQAAfwB3YyCaEWNkWFlrAA--.3787S4;
-        Tue, 16 May 2023 13:16:11 +0800 (CST)
-From:   Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     hust-os-kernel-patches@googlegroups.com,
-        Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>,
-        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI: dwc: keystone: Free IRQ in `ks_pcie_remove` and the error handling section of `ks_pcie_probe`
-Date:   Tue, 16 May 2023 13:16:59 +0800
-Message-Id: <20230516051659.22194-1-xyzeng@stu.xidian.edu.cn>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S229972AbjEPF7U (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 01:59:20 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C3D40EC;
+        Mon, 15 May 2023 22:59:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684216751; x=1715752751;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=QNL0Q4ixECAp72yv2Prm4lhm6brOEysrOMff6IkHi6o=;
+  b=Y108G7OOw72WOqdDjRg63wFHFLW97Xbl9lvqcva2rZlYzHOXEIttZLlJ
+   ZGSqddSHXa45GioLrTC6xk8hOxO9Bdc82HDACQ8OIUjqzyLbEcyjt6347
+   49JKahHYb5uoJ0EAfdaWflicvr5eHJEZ8ZEivVVIEoa3wqi1kXujIRpoS
+   FmrTh2G0CV+EkCi43W8kdZx0butrldG5NIgfFN9iVeV350tys/Du6UYRS
+   AAYjQ3Ois2HQCJvYDPpkIR8ssE7hHMWlOD6ilPcwrAXrcCGzIfmqiUbcw
+   0n3But3qpN7SsloyI5lusa2yh3XFxOx+E3J6GYIFyPkoZ7tzMYlzjAd0b
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="331752493"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="331752493"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 May 2023 22:59:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10711"; a="875486991"
+X-IronPort-AV: E=Sophos;i="5.99,277,1677571200"; 
+   d="scan'208";a="875486991"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga005.jf.intel.com with ESMTP; 15 May 2023 22:59:08 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 31A1E618; Tue, 16 May 2023 08:59:18 +0300 (EEST)
+Date:   Tue, 16 May 2023 08:59:18 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Deucher Alexander <Alexander.Deucher@amd.com>,
+        Iain Lane <iain@orangesquash.org.uk>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [PATCH] PCI: Only put >= 2015 root ports into D3 on Intel
+Message-ID: <20230516055918.GS66750@black.fi.intel.com>
+References: <20230515231515.1440-1-mario.limonciello@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAfwB3YyCaEWNkWFlrAA--.3787S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Zr4rtF18GFy5Zr47Zr4fZrb_yoW5JF4UpF
-        Z3AFsFkFW8JF17u34fAas8ZF1Yv3Zaka47G3s29392vr9xArZ8tFyftry2qasayrWkJa43
-        tFyDtFy7CFs5GwUanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUvK14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr
-        1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
-        7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
-        1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
-        628vn2kIc2xKxwCY02Avz4vE14v_GrWl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
-        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
-        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
-        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
-        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxh
-        VjvjDU0xZFpf9x0JUP5rcUUUUU=
-X-CM-SenderInfo: p012v0vj6v33wo0lvxldqovvfxof0/
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230515231515.1440-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -60,79 +67,123 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Smatch complains that:
-drivers/pci/controller/dwc/pci-keystone.c:1303 ks_pcie_probe() warn:
-'irq' from request_irq() not released on lines: 1183,1187,1303.
++Rafael
 
-"ks-pcie-error-irq" was requested in the `ks_pcie_probe` function, but
-was not freed neither in the error handling part of `ks_pcie_probe`
-nor in the `ks_pcie_remove` function.
+Hi Mario,
 
-Fix this by adding `free_irq` in `ks_pcie_remove` and in a new error
-handling label `err_alloc` after `err_link` in `ks_pcie_probe`. In
-`ks_pcie_probe`, if `phy` or `link` memory allocation fails, we will
-fall to `err_alloc`. If any other error occurs that leads to
-`err_get_sync` or `err_link`, we end up going to `err_alloc`.
+On Mon, May 15, 2023 at 06:15:15PM -0500, Mario Limonciello wrote:
+> Using an XHCI device to wakeup the system from s2idle fails when
+> that XHCI device is connected to a USB-C port for an AMD USB4
+> router.
+> 
+> Due to commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
+> suspend") all root port go into D3 during s2idle.
+> When the root ports are in D3 over s2idle it's not possible for the
+> platform firmware to properly identify the wakeup source.
+> 
+> As a user presses a key on a keyboard the APU will exit
+> hardware sleep, but no wake source will be active so the kernel will
+> let the APU enter back into a hardware sleep state.
+> 
+> Here is an example of that sequence of events.  The USB keyboard was
+> pressed after 11.9 seconds, and then a GPIO was triggered after
+> another 12 seconds.
+> ```
+> PM: suspend-to-idle
+> ACPI: EC: ACPI EC GPE status set
+> ACPI: PM: Rearming ACPI SCI for wakeup
+> amd_pmc AMDI0007:00: SMU idlemask s0i3: 0x8fff9eb5
+> Timekeeping suspended for 11.985 seconds
+> PM: Triggering wakeup from IRQ 9
+> ACPI: EC: ACPI EC GPE status set
+> ACPI: EC: ACPI EC GPE dispatched
+> ACPI: EC: ACPI EC work flushed
+> ACPI: EC: ACPI EC work flushed
+> ACPI: PM: Rearming ACPI SCI for wakeup
+> amd_pmc AMDI0007:00: SMU idlemask s0i3: 0x8fff9eb5
+> PM: Triggering wakeup from IRQ 9
+> ACPI: EC: ACPI EC GPE status set
+> ACPI: PM: Rearming ACPI SCI for wakeup
+> amd_pmc AMDI0007:00: SMU idlemask s0i3: 0x8fff9eb5
+> Timekeeping suspended for 12.916 seconds
+> PM: Triggering wakeup from IRQ 9
+> PM: Triggering wakeup from IRQ 7
+> ACPI: EC: ACPI EC GPE status set
+> ACPI: EC: ACPI EC GPE dispatched
+> ACPI: EC: ACPI EC work flushed
+> ACPI: PM: Wakeup after ACPI Notify sync
+> PM: resume from suspend-to-idle
+> ```
+> 
+> If the root ports are in D0 during s2idle, then the wake source is
+> properly identified and an IRQ is active for the root port, waking
+> the system up.
+> 
+> Here is the same sequence with root ports in D0.  The USB keyboard
+> was pressed after 11 seconds.
+> ```
+> PM: suspend-to-idle
+> ACPI: EC: ACPI EC GPE status set
+> ACPI: PM: Rearming ACPI SCI for wakeup
+> amd_pmc AMDI0007:00: SMU idlemask s0i3: 0x8fff9eb5
+> Timekeeping suspended for 11.138 seconds
+> PM: Triggering wakeup from IRQ 9
+> ACPI: PM: ACPI non-EC GPE wakeup
+> PM: resume from suspend-to-idle
+> PM: Triggering wakeup from IRQ 40
+> ```
+> 
+> Comparing registers between Linux and Windows 11 this behavior to put root
+> ports into D3 at suspend is unique to Linux. Windows does not put the
+> root ports into D3 over Modern Standby.
 
-Fixes: 0790eb175ee0 ("PCI: keystone: Cleanup error_irq configuration")
-Signed-off-by: Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
-Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
----
-This patch is tested with compilation and passed Smatch.
----
- drivers/pci/controller/dwc/pci-keystone.c | 17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+Are you sure this is the case? Leaving the root port in D0 would mean
+its power resource is left on and that would leave the whole USB4 domain
+on consuming quite a lot of power. The root ports involved are supposed
+to support PME from the D3hot/cold (this is what they advertise in their
+config spaces) which should allow the OS to move the port into low power
+states. Of course the PME from D3cold in general needs some ACPI support
+(typically a GPE) in the BIOS.
 
-diff --git a/drivers/pci/controller/dwc/pci-keystone.c b/drivers/pci/controller/dwc/pci-keystone.c
-index 78818853af9e..f321bc2e8026 100644
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -1179,12 +1179,16 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 		num_lanes = 1;
- 
- 	phy = devm_kzalloc(dev, sizeof(*phy) * num_lanes, GFP_KERNEL);
--	if (!phy)
--		return -ENOMEM;
-+	if (!phy) {
-+		ret = -ENOMEM;
-+		goto err_alloc;
-+	}
- 
- 	link = devm_kzalloc(dev, sizeof(*link) * num_lanes, GFP_KERNEL);
--	if (!link)
--		return -ENOMEM;
-+	if (!link) {
-+		ret = -ENOMEM;
-+		goto err_alloc;
-+	}
- 
- 	for (i = 0; i < num_lanes; i++) {
- 		snprintf(name, sizeof(name), "pcie-phy%d", i);
-@@ -1300,6 +1304,9 @@ static int __init ks_pcie_probe(struct platform_device *pdev)
- 	while (--i >= 0 && link[i])
- 		device_link_del(link[i]);
- 
-+err_alloc:
-+	free_irq(irq, ks_pcie);
-+
- 	return ret;
- }
- 
-@@ -1309,12 +1316,14 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
- 	struct device_link **link = ks_pcie->link;
- 	int num_lanes = ks_pcie->num_lanes;
- 	struct device *dev = &pdev->dev;
-+	int irq = platform_get_irq(pdev, 0);
- 
- 	pm_runtime_put(dev);
- 	pm_runtime_disable(dev);
- 	ks_pcie_disable_phy(ks_pcie);
- 	while (num_lanes--)
- 		device_link_del(link[num_lanes]);
-+	free_irq(irq, ks_pcie);
- 
- 	return 0;
- }
--- 
-2.34.1
+> As this policy change to put root ports into D3 if they're manufactured
+> after 2015 was originally introduced for Intel systems narrow it down to
+> only apply there.
+> 
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 5ede93222bc1..7d1b078b8d40 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3010,12 +3010,17 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  		if (dmi_check_system(bridge_d3_blacklist))
+>  			return false;
+>  
+> +#ifdef CONFIG_X86
+>  		/*
+> -		 * It should be safe to put PCIe ports from 2015 or newer
+> -		 * to D3.
+> +		 * It should be safe to put PCIe ports from Intel systems
+> +		 * from 2015 or newer to D3.
+> +		 * Windows 11 does not do this over Modern Standby and this is
+> +		 * known to cause problems with s2idle on some AMD systems.
+>  		 */
+> -		if (dmi_get_bios_year() >= 2015)
+> +		if (boot_cpu_data.x86_vendor == X86_VENDOR_INTEL &&
 
+Can't we then check here AMD case instead? Then generic case would be to
+support according what the port announces.
+
+> +		    dmi_get_bios_year() >= 2015)
+>  			return true;
+> +#endif
+>  		break;
+>  	}
+>  
+> -- 
+> 2.34.1
