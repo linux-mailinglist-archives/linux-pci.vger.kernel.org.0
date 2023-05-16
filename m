@@ -2,148 +2,94 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 39E3D705892
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 22:17:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A7777059BC
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 23:44:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229614AbjEPURv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 16:17:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38044 "EHLO
+        id S229814AbjEPVoc convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Tue, 16 May 2023 17:44:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjEPURt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 16:17:49 -0400
-Received: from netrider.rowland.org (netrider.rowland.org [192.131.102.5])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 781DF1AE
-        for <linux-pci@vger.kernel.org>; Tue, 16 May 2023 13:17:46 -0700 (PDT)
-Received: (qmail 846405 invoked by uid 1000); 16 May 2023 16:17:45 -0400
-Date:   Tue, 16 May 2023 16:17:45 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        with ESMTP id S229565AbjEPVob (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 17:44:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7123170D;
+        Tue, 16 May 2023 14:44:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 33A3463FB5;
+        Tue, 16 May 2023 21:44:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF912C433EF;
+        Tue, 16 May 2023 21:44:25 +0000 (UTC)
+Date:   Tue, 16 May 2023 17:44:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     x86@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH v4 35/41] usb: uhci: handle HAS_IOPORT dependencies
-Message-ID: <2c03973e-0635-4dbb-a1df-bfda8cbee161@rowland.harvard.edu>
-References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
- <20230516110038.2413224-36-schnelle@linux.ibm.com>
- <2023051643-overtime-unbridle-7cdd@gregkh>
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 01/20] x86: move prepare_ftrace_return prototype to
+ header
+Message-ID: <20230516174422.63e1e942@gandalf.local.home>
+In-Reply-To: <20230516193549.544673-2-arnd@kernel.org>
+References: <20230516193549.544673-1-arnd@kernel.org>
+        <20230516193549.544673-2-arnd@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2023051643-overtime-unbridle-7cdd@gregkh>
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-4.0 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 16, 2023 at 06:29:56PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, May 16, 2023 at 01:00:31PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> > not being declared. We thus need to guard sections of code calling them
-> > as alternative access methods with CONFIG_HAS_IOPORT checks. For
-> > uhci-hcd there are a lot of I/O port uses that do have MMIO alternatives
-> > all selected by uhci_has_pci_registers() so this can be handled by
-> > UHCI_IN/OUT macros and making uhci_has_pci_registers() constant 0 if
-> > CONFIG_HAS_IOPORT is unset.
-> > 
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> > ---
-> > Note: The HAS_IOPORT Kconfig option was added in v6.4-rc1 so
-> >       per-subsystem patches may be applied independently
-> > 
-> >  drivers/usb/host/uhci-hcd.c |  2 +-
-> >  drivers/usb/host/uhci-hcd.h | 36 +++++++++++++++++++++++-------------
-> >  2 files changed, 24 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/usb/host/uhci-hcd.c b/drivers/usb/host/uhci-hcd.c
-> > index 7cdc2fa7c28f..fd2408b553cf 100644
-> > --- a/drivers/usb/host/uhci-hcd.c
-> > +++ b/drivers/usb/host/uhci-hcd.c
-> > @@ -841,7 +841,7 @@ static int uhci_count_ports(struct usb_hcd *hcd)
-> >  
-> >  static const char hcd_name[] = "uhci_hcd";
-> >  
-> > -#ifdef CONFIG_USB_PCI
-> > +#if defined(CONFIG_USB_PCI) && defined(CONFIG_HAS_IOPORT)
-> >  #include "uhci-pci.c"
-> >  #define	PCI_DRIVER		uhci_pci_driver
-> >  #endif
-> > diff --git a/drivers/usb/host/uhci-hcd.h b/drivers/usb/host/uhci-hcd.h
-> > index 0688c3e5bfe2..c77705d03ed0 100644
-> > --- a/drivers/usb/host/uhci-hcd.h
-> > +++ b/drivers/usb/host/uhci-hcd.h
-> > @@ -505,41 +505,49 @@ static inline bool uhci_is_aspeed(const struct uhci_hcd *uhci)
-> >   * we use memory mapped registers.
-> >   */
-> >  
-> > +#ifdef CONFIG_HAS_IOPORT
-> > +#define UHCI_IN(x)	x
-> > +#define UHCI_OUT(x)	x
-> > +#else
-> > +#define UHCI_IN(x)	0
-> > +#define UHCI_OUT(x)
-> > +#endif
-> > +
-> >  #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
-> >  /* Support PCI only */
-> >  static inline u32 uhci_readl(const struct uhci_hcd *uhci, int reg)
-> >  {
-> > -	return inl(uhci->io_addr + reg);
-> > +	return UHCI_IN(inl(uhci->io_addr + reg));
-> >  }
-> >  
-> >  static inline void uhci_writel(const struct uhci_hcd *uhci, u32 val, int reg)
-> >  {
-> > -	outl(val, uhci->io_addr + reg);
-> > +	UHCI_OUT(outl(val, uhci->io_addr + reg));
+On Tue, 16 May 2023 21:35:30 +0200
+Arnd Bergmann <arnd@kernel.org> wrote:
+
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> I'm confused now.
+> On 32-bit builds, the prepare_ftrace_return() function only has a global
+> definition, but no prototype before it, which causes a warning:
 > 
-> So if CONFIG_HAS_IOPORT is enabled, wonderful, all is good.
+> arch/x86/kernel/ftrace.c:625:6: warning: no previous prototype for ‘prepare_ftrace_return’ [-Wmissing-prototypes]
+>   625 | void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
 > 
-> But if it isn't, then these are just no-ops that do nothing?  So then
-> the driver will fail to work?  Why have these stubs at all?
+> Move the prototype that is already needed for some configurations into
+> a header file where it can be seen unconditionally.
 > 
-> Why not just not build the driver at all if this option is not enabled?
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/x86/include/asm/ftrace.h | 3 +++
+>  arch/x86/kernel/ftrace.c      | 3 ---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+> index 5061ac98ffa1..b8d4a07f9595 100644
+> --- a/arch/x86/include/asm/ftrace.h
+> +++ b/arch/x86/include/asm/ftrace.h
 
-I should add something to my previous email.  This particular section of 
-code is protected by:
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-#ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
-/* Support PCI only */
-
-So it gets used only in cases where the driver supports just a PCI bus 
--- no other sorts of non-PCI on-chip devices.  But the preceding patch 
-in this series changes the Kconfig file to say:
-
- config USB_UHCI_HCD
-	tristate "UHCI HCD (most Intel and VIA) support"
-	depends on (USB_PCI && HAS_IOPORT) || USB_UHCI_SUPPORT_NON_PCI_HC
-
-As a result, when the configuration includes support only for PCI 
-controllers the driver won't get built unless HAS_IOPORT is set.  Thus 
-the no-op case (in this part of the code) can't arise.
-
-Which is a long-winded way of saying that you're right; the UHCI_IN() 
-and UHCI_OUT() wrappers aren't needed in this part of the driver.  I 
-guess Niklas put them in either for consistency with the rest of the 
-code or because it didn't occur to him that they could be omitted.  (And 
-I didn't spot it either.)
-
-Alan Stern
+-- Steve
