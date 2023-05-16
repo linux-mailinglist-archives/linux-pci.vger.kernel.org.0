@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1AA7570574A
-	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:37:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3BC5470574F
+	for <lists+linux-pci@lfdr.de>; Tue, 16 May 2023 21:37:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjEPThG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 15:37:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56580 "EHLO
+        id S229961AbjEPThP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 15:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjEPThE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:37:04 -0400
+        with ESMTP id S229572AbjEPThO (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 15:37:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56A24A24C;
-        Tue, 16 May 2023 12:36:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C1B6B9;
+        Tue, 16 May 2023 12:36:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B0BC663E59;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C1BB563E89;
+        Tue, 16 May 2023 19:36:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98313C433A4;
         Tue, 16 May 2023 19:36:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83CFFC433A1;
-        Tue, 16 May 2023 19:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684265798;
-        bh=9077UjXDS1JwWtjrb4zvyxiWevrXkl5r2sPVXNElvI0=;
+        s=k20201202; t=1684265804;
+        bh=LoIviGdfSLH1ko7JOljz+WAWBtvFrxU7baITA30Kitg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nU4bcoQ15stgmO0CsrS+eCvsm+gCXhBNBFSdZUZJDZs6Fl6sPo6aQAEbL7HvpgQPw
-         34YU/6UqjzMRVqANQ++OmNHESa6zNkcaFm2LUOgnGFvueZRpIj33bI3tKq9iIVMOE8
-         GqW/XJRm7a1E2WWrjpdlejWdGAQtbuecvIZU5NAHZBM5oQh2e9un6it3oTQsqi/lTG
-         5kxTBEILwkSTC+lRDq4IqynAvKjTaueAozerHdsQ+TGjB+//lEcb2OOHgN+9Q9axD4
-         hkpT/62nrOrSL8vWP+nEXayygL8S/uqGna9VmOHK6w0B/JcOokBXElfO8XCeFSQKdo
-         bT2kB6PN6dMAg==
+        b=f0SoTDZCBXANhO1JcRHoynXaLVhlO4XJ4vTd5g+5q0mXl9+dwihXQSjEJ2aF5PXD/
+         YJxxo2zEzGeYvPkjnpK4ydF8PNotm4sCoP7sIPFgPh0+jYX3ClFJbP9hWa/pr/81FH
+         rmiMLwAicNzJUMwErqx6DSJsta/whdlp/sC/tZT1cvxj5paHYr0r+8Nyyo5u5xkv5T
+         3r84XCOMO59rOsDFBM8wNIcW0zhbFHV1ety++q1mSUr8ScvUEZcAnGwKVpfu1h2uwR
+         waDu2tWolCE9YEYKKmG7d67vPlyLJ4ZYk6cOavjtt4C56mPdY+e8uvRCKegTvnFXKC
+         xnJG4ywBEjUvw==
 From:   Arnd Bergmann <arnd@kernel.org>
 To:     x86@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -56,9 +56,9 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
-Subject: [PATCH 05/20] x86: head: add dummy prototype for mk_early_pgtbl_32
-Date:   Tue, 16 May 2023 21:35:34 +0200
-Message-Id: <20230516193549.544673-6-arnd@kernel.org>
+Subject: [PATCH 06/20] x86: math-emu: include asm/fpu/regset.h
+Date:   Tue, 16 May 2023 21:35:35 +0200
+Message-Id: <20230516193549.544673-7-arnd@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
 References: <20230516193549.544673-1-arnd@kernel.org>
@@ -76,31 +76,35 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-'make W=1' warns about a function without a prototype in the x86-32 head code:
+The fpregs_soft_set/fpregs_soft_get functions are declared in a
+header that is not included in the file that defines them, causing
+a W=1 warning:
 
-arch/x86/kernel/head32.c:72:13: error: no previous prototype for 'mk_early_pgtbl_32' [-Werror=missing-prototypes]
+/home/arnd/arm-soc/arch/x86/math-emu/fpu_entry.c:638:5: error: no previous prototype for 'fpregs_soft_set' [-Werror=missing-prototypes]
+  638 | int fpregs_soft_set(struct task_struct *target,
+      |     ^~~~~~~~~~~~~~~
+/home/arnd/arm-soc/arch/x86/math-emu/fpu_entry.c:690:5: error: no previous prototype for 'fpregs_soft_get' [-Werror=missing-prototypes]
+  690 | int fpregs_soft_get(struct task_struct *target,
 
-This is called from assembler code, so it does not actually need a prototype.
-I could not find an appropriate header for it, so just declare it in front
-of the definition to shut up th warning.
+Include the file here to avoid the warning.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kernel/head32.c | 1 +
+ arch/x86/math-emu/fpu_entry.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/head32.c b/arch/x86/kernel/head32.c
-index 10c27b4261eb..246a609f889b 100644
---- a/arch/x86/kernel/head32.c
-+++ b/arch/x86/kernel/head32.c
-@@ -69,6 +69,7 @@ asmlinkage __visible void __init __noreturn i386_start_kernel(void)
-  * to the first kernel PMD. Note the upper half of each PMD or PTE are
-  * always zero at this stage.
-  */
-+void __init mk_early_pgtbl_32(void);
- void __init mk_early_pgtbl_32(void)
- {
- #ifdef __pa
+diff --git a/arch/x86/math-emu/fpu_entry.c b/arch/x86/math-emu/fpu_entry.c
+index 7fe56c594aa6..91c52ead1226 100644
+--- a/arch/x86/math-emu/fpu_entry.c
++++ b/arch/x86/math-emu/fpu_entry.c
+@@ -32,6 +32,7 @@
+ #include <asm/traps.h>
+ #include <asm/user.h>
+ #include <asm/fpu/api.h>
++#include <asm/fpu/regset.h>
+ 
+ #include "fpu_system.h"
+ #include "fpu_emu.h"
 -- 
 2.39.2
 
