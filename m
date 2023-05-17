@@ -2,116 +2,115 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1F89705D5B
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 04:35:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42298705D9C
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 05:01:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjEQCft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 16 May 2023 22:35:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57828 "EHLO
+        id S232087AbjEQDB0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 16 May 2023 23:01:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229533AbjEQCft (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 22:35:49 -0400
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639744ED3;
-        Tue, 16 May 2023 19:35:34 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R471e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045168;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=12;SR=0;TI=SMTPD_---0Viqoj7k_1684290929;
-Received: from 30.240.113.228(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Viqoj7k_1684290929)
-          by smtp.aliyun-inc.com;
-          Wed, 17 May 2023 10:35:30 +0800
-Message-ID: <18b27158-a8fb-e1d9-f85e-f12620b69bfb@linux.alibaba.com>
-Date:   Wed, 17 May 2023 10:35:27 +0800
+        with ESMTP id S231656AbjEQDBZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 16 May 2023 23:01:25 -0400
+Received: from out-42.mta0.migadu.com (out-42.mta0.migadu.com [91.218.175.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01F5A124
+        for <linux-pci@vger.kernel.org>; Tue, 16 May 2023 20:01:23 -0700 (PDT)
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1684292482;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=uZlIpDLA3NZ6mp2Qw+zJKax+3uAeBqf9vfLEfM23DhI=;
+        b=HAd/eh84o8q70IuzgNiNsoSQwbhhbXZZdhWWmzbf/UdPuw7YzfFR26XftJKfbMfos8BBJC
+        q6v6LLH9QB/UNbVGYYRVNRlGv512VFIuOS+qwdpLKesdpDeiIgKDCnZ1vkcXhT6wFvD0bF
+        7V0WAT/iGZojpEE6uWQ42H7bLJ2y0x0=
+From:   Cai Huoqing <cai.huoqing@linux.dev>
+To:     vkoul@kernel.org
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v10 0/4] dmaengine: dw-edma: Add support for native HDMA
+Date:   Wed, 17 May 2023 11:01:10 +0800
+Message-Id: <20230517030115.21093-1-cai.huoqing@linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH v4 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com
-References: <ZGPXWzwrZPZTIMJd@bhelgaas>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ZGPXWzwrZPZTIMJd@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-12.6 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Add support for HDMA NATIVE, as long the IP design has set
+the compatible register map parameter-HDMA_NATIVE,
+which allows compatibility for native HDMA register configuration.
 
+The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
+And the native HDMA registers are different from eDMA,
+so this patch add support for HDMA NATIVE mode.
 
-On 2023/5/17 03:19, Bjorn Helgaas wrote:
-> On Tue, May 16, 2023 at 09:01:09PM +0800, Shuai Xue wrote:
->> ...
-> 
->> +#include <linux/pci.h>
->> +#include <linux/bitfield.h>
->> +#include <linux/bitops.h>
->> +#include <linux/cpuhotplug.h>
->> +#include <linux/cpumask.h>
->> +#include <linux/device.h>
->> +#include <linux/errno.h>
->> +#include <linux/kernel.h>
->> +#include <linux/list.h>
->> +#include <linux/perf_event.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/smp.h>
->> +#include <linux/sysfs.h>
->> +#include <linux/types.h>
-> 
-> Typically in alpha order.
+HDMA write and read channels operate independently to maximize
+the performance of the HDMA read and write data transfer over
+the link When you configure the HDMA with multiple read channels,
+then it uses a round robin (RR) arbitration scheme to select
+the next read channel to be serviced.The same applies when
+youhave multiple write channels.
 
-Got it, I will reorder them.
+The native HDMA driver also supports a maximum of 16 independent
+channels (8 write + 8 read), which can run simultaneously.
+Both SAR (Source Address Register) and DAR (Destination Address Register)
+are aligned to byte.
 
-> 
->> +#define DWC_PCIE_VSEC_RAS_DES_ID		0x02
->> +
->> +#define DWC_PCIE_EVENT_CNT_CTL			0x8
-> 
-> Add a blank line here.
+Cai Huoqing (1):
+  dmaengine: dw-edma: Add support for native HDMA
 
-Sure, will add it.
+Cai huoqing (3):
+  dmaengine: dw-edma: Rename dw_edma_core_ops structure to
+    dw_edma_plat_ops
+  dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
+    abstract controller operation
+  dmaengine: dw-edma: Add HDMA DebugFS support
 
-> 
->> +/*
->> + * Event Counter Data Select includes two parts:
-> 
->> +#define DWC_PCIE_EVENT_CNT_DATA			0xC
->> +#define DWC_PCIE_DURATION_4US			0xff
-> ...
-> Pick upper-case hex or lower-case hex and use consistently.
+Tested-by: Serge Semin <fancer.lancer@gmail.com>
 
-Will pick upper-case hex for all macros.
+v9->v10:
+  1.Update commit log.
+  2.rebase for dma-next
 
-> 
->> +#define DWC_PCIE_LANE_EVENT_MAX_PERIOD		(GENMASK_ULL(31, 0))
->> +#define DWC_PCIE_TIME_BASED_EVENT_MAX_PERIOD	(GENMASK_ULL(63, 0))
-> 
-> Unnecessary outer "()".
+v9 link:
+  https://lore.kernel.org/lkml/20230413033156.93751-1-cai.huoqing@linux.dev/
 
-Ok, will remove it.
+ drivers/dma/dw-edma/Makefile                 |   8 +-
+ drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
+ drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
+ drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
+ drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
+ drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
+ drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
+ drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
+ drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
+ drivers/pci/controller/dwc/pcie-designware.c |   2 +-
+ include/linux/dma/edma.h                     |   7 +-
+ 13 files changed, 807 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
+ create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
 
-> 
->> +struct dwc_pcie_pmu {
->> +	struct pci_dev		*pdev;		/* Root Port device */
->> +	u32			ras_des;	/* RAS DES capability offset */
-> 
-> u16 is enough to address all of config space.
-
-Go it. will fix in next version.
-
-Thank you :)
-
-Best Regards,
-Shuai
-
+-- 
+2.34.1
 
