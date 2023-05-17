@@ -2,35 +2,35 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6371570660C
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 13:05:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5ADC706610
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 13:05:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbjEQLFP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 May 2023 07:05:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50554 "EHLO
+        id S230447AbjEQLFW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 May 2023 07:05:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231226AbjEQLE4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 07:04:56 -0400
+        with ESMTP id S231136AbjEQLFV (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 07:05:21 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03FC9658E;
-        Wed, 17 May 2023 04:04:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFB65BA9;
+        Wed, 17 May 2023 04:05:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 793E963B0C;
-        Wed, 17 May 2023 11:04:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91E08C433A1;
-        Wed, 17 May 2023 11:04:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C85D61B39;
+        Wed, 17 May 2023 11:05:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0D99C43321;
+        Wed, 17 May 2023 11:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321445;
-        bh=tR3qS12+MUYmkZK6jLAcuvivmBsfJSWs1iLgSwCi8fY=;
+        s=k20201202; t=1684321504;
+        bh=dP7yShpUMKY1hlEFVakjZvlEQOr+IanDVhIYO9CmG5w=;
         h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=Q6w2br9fnsK/saD7J/nbmuE4MtaDXepq8RRZpSubF96Trnm6BvliJeDLqoVyWp+8z
-         egyinTUw3TEb4Y0N8JqJj19LLSGRYy8AwmGRHsov8tnU7aYGwUAXMoOD/7ZOxJ1Jn2
-         sIBxxCFFMzvMJYG1uWo5JZR1i2U6GBQdoW0xx/9JOt+ZgA96vEljgHPYz+ZJEcW3iZ
-         Pz1tXLN2HjdWaBEuYzPqNICJAGHli8WhH5+0PKIkpAb5t5/Tj8p0aoiIqZ2c6AZlox
-         gvjjVTQRDDlvr2prU1hIAtj7QPMX8jgFBRFhd0SGyfMKEtS8mNuV1RdNiuOY6Xnj4U
-         v2nQnGG9XAu1Q==
+        b=sYVd5TaLHaPo10KrzLin9+p+UZcAoZKhIB0zTnfJM7/tDjj2vQxqPnfkbpkAM5XRF
+         yvmTLmdAv72F8B2Y+gjCAO1XYQNSTXHJN3QiMpNZqi7oqOkGx2+RSze+BxiWbydQBL
+         rYlmk8K+8VlkuNP5OXxRxbYvyXQAHsQDGI/L3zhw/CpJL09omAQBBP3DQWyytuPbOn
+         OVNkVLBvBe6n+fPagVJiSoAFJlfbV5i09g10Fku9u5aU59aSs+zx+yxdlbnGxrfJYI
+         o+CDHbWACrq+ubGB54hIIudG4ITIKhR3Vi7MlyWQxuPjEAoXVZtc3t2rI4URVE3pL4
+         F7QEZsJf6fO/w==
 From:   Kalle Valo <kvalo@kernel.org>
 To:     Ilpo =?utf-8?Q?J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
@@ -45,24 +45,20 @@ Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Eric Dumazet <edumazet@google.com>,
         Jakub Kicinski <kuba@kernel.org>,
         Paolo Abeni <pabeni@redhat.com>,
-        Sriram R <quic_srirrama@quicinc.com>,
-        P Praneesh <quic_ppranees@quicinc.com>,
-        Ramya Gnanasekar <quic_rgnanase@quicinc.com>,
-        Karthikeyan Periyasamy <quic_periyasa@quicinc.com>,
-        Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
-        ath12k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        Carl Huang <cjhuang@codeaurora.org>,
+        ath11k@lists.infradead.org, linux-wireless@vger.kernel.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
         Dean Luick <dean.luick@cornelisnetworks.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         stable@vger.kernel.org
-Subject: Re: [PATCH v2 8/9] wifi: ath12k: Use RMW accessors for changing LNKCTL
+Subject: Re: [PATCH v2 7/9] wifi: ath11k: Use RMW accessors for changing LNKCTL
 References: <20230517105235.29176-1-ilpo.jarvinen@linux.intel.com>
-        <20230517105235.29176-9-ilpo.jarvinen@linux.intel.com>
-Date:   Wed, 17 May 2023 14:03:57 +0300
-In-Reply-To: <20230517105235.29176-9-ilpo.jarvinen@linux.intel.com> ("Ilpo
-        \=\?utf-8\?Q\?J\=C3\=A4rvinen\=22's\?\= message of "Wed, 17 May 2023 13:52:34
+        <20230517105235.29176-8-ilpo.jarvinen@linux.intel.com>
+Date:   Wed, 17 May 2023 14:04:57 +0300
+In-Reply-To: <20230517105235.29176-8-ilpo.jarvinen@linux.intel.com> ("Ilpo
+        \=\?utf-8\?Q\?J\=C3\=A4rvinen\=22's\?\= message of "Wed, 17 May 2023 13:52:33
  +0300")
-Message-ID: <871qjfmd7m.fsf@kernel.org>
+Message-ID: <87wn17kyli.fsf@kernel.org>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -86,7 +82,8 @@ Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com> writes:
 > concurrent updates to the register value. On restore, clear the ASPMC
 > field properly.
 >
-> Fixes: d889913205cf ("wifi: ath12k: driver for Qualcomm Wi-Fi 7 devices")
+> Fixes: e9603f4bdcc0 ("ath11k: pci: disable ASPM L0sLs before downloading =
+firmware")
 > Suggested-by: Lukas Wunner <lukas@wunner.de>
 > Signed-off-by: Ilpo J=C3=A4rvinen <ilpo.jarvinen@linux.intel.com>
 > Cc: stable@vger.kernel.org
