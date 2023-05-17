@@ -2,157 +2,141 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E1EC77067BD
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 14:12:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B31A7067ED
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 14:21:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231336AbjEQMMg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 May 2023 08:12:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56870 "EHLO
+        id S230002AbjEQMVO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 May 2023 08:21:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230139AbjEQMMe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 08:12:34 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F9213C3B;
-        Wed, 17 May 2023 05:12:16 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-64a9335a8e7so12707041b3a.0;
-        Wed, 17 May 2023 05:12:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684325536; x=1686917536;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jR9QVy06+8kCR0o/MKpVdWGpHv1t5cW3AKmbdvo1Kjc=;
-        b=mMxLZJ5ClWCNLFgj9hpEZpfDu1kAtMtUeeBNuLdH81tH6WbPdHzHkUF+T/nOslsRY9
-         RBh27yg9XsCmkG1aM0eVWFTBrsRzDOMf0T4WOYWA5PbyNP47/T80qU3HpdMfxuQmY0Yz
-         0ndK627AmJ0xWoyY8SKIeEpm8VPtbvwjnufBI7oWWD7xqtOd1d53896dqyjFwWoAUugU
-         HQMY8ok7AMqYSsDFhArRhT2nYB0as1luSohqkYvs5CNqyYaVKsBbPspT20mFYt6If5e3
-         UHxcagAgqk9ClsAVp4OxsJ70b6ifBOONkstfI/LtT3979vHc8VLBsQispsv/S///i2DP
-         7ZHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684325536; x=1686917536;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jR9QVy06+8kCR0o/MKpVdWGpHv1t5cW3AKmbdvo1Kjc=;
-        b=MnCBUFBWXyjqIBXOA7128NGSEnDm1iDcwP/USfnzBLuB0kL1Q86ZlI6l4p7FAKy3lc
-         3efdNagze1VB0iPDtQFxt9pYgeecc2oYquUUb8Yd5ovo5ewYBYqkh4IwytFXIiXUU3un
-         3phHuDPlaI9a5kT39F9ah0sv2muxBlYJcQg9H+0vYenGn9PrwanSPvYDLW5kBW02zFAa
-         9TjGAfw7BoN1mQJz5CNfx5NE/9GLPmObuRO2fftC92OpDaKzS+YmxFrAaXtGBTZ8yiut
-         EP7EeOUjW3RfNmVoE1aeykpybXYyrbuGecoMb2Uji7WUCgN0E1o0xm5ssQTonxfAZOfI
-         fgew==
-X-Gm-Message-State: AC+VfDxDdL1p8nzdaKDe4AsDkhjLOVqBP9oC/wpZGERPl/d4ygKljHvz
-        SCM2Vp2FpqlRAIR94v+4cg4=
-X-Google-Smtp-Source: ACHHUZ4ZyE/7M5xz4RF4owSSi09+sIdG3gisbl9+Vhh4syqW9Ou10ZCQBp3hmVhBuaWjYlpwSabJgA==
-X-Received: by 2002:a17:90b:120c:b0:253:25c3:7a95 with SMTP id gl12-20020a17090b120c00b0025325c37a95mr2402736pjb.14.1684325535612;
-        Wed, 17 May 2023 05:12:15 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j19-20020a17090ae61300b002500df72713sm1445765pjy.7.2023.05.17.05.12.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 05:12:15 -0700 (PDT)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date:   Wed, 17 May 2023 05:12:13 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Michal Simek <michal.simek@amd.com>
-Cc:     piyush.mehta@amd.com, nava.kishore.manne@amd.com,
-        sai.krishna.potthuri@amd.com, shubhrajyoti.datta@amd.com,
-        vishal.sagar@amd.com, kalyani.akula@amd.com,
-        bharat.kumar.gogada@amd.com, linux-kernel@vger.kernel.org,
-        monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Jolly Shah <jolly.shah@xilinx.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Moritz Fischer <mdf@kernel.org>,
-        Rajan Vaja <rajan.vaja@xilinx.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Srinivas Neeli <srinivas.neeli@amd.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tom Rix <trix@redhat.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
-Message-ID: <155bdc43-7606-4279-a6f4-fe6e29a61722@roeck-us.net>
-References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
-X-Spam-Status: No, score=-1.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+        with ESMTP id S230370AbjEQMVM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 08:21:12 -0400
+Received: from wout4-smtp.messagingengine.com (wout4-smtp.messagingengine.com [64.147.123.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 409955FCC;
+        Wed, 17 May 2023 05:20:56 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.west.internal (Postfix) with ESMTP id A81C0320010B;
+        Wed, 17 May 2023 08:20:54 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Wed, 17 May 2023 08:20:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1684326054; x=1684412454; bh=io
+        DFLJqXuMHAy8ZisCrVAdUFi7mpfdRTggwR7KwpJ/I=; b=n1+OhcBGIbGgmnDFTH
+        9Mp8FunJF/Hj/m5OKnDmlfaCkq4bZXBhTlz6GGzoPR2SbbWho71/Err4OXmIevWI
+        ESr4wZq2mgan4gHRFlfwv33DmOCGcK2RlqYT/VjkesDxHVj1YW/GlIkbA5gHSsT/
+        nl8uJ8XKVxL4G/2NYy4TBe+UGpQzd0CYxjxGG7RV/+3E8mE+sOuKqFME1a/WH8Hf
+        jgxuV9328QHf1xMBHntkZMHtWUhoifd7cOxaCv6y5m8Sq8/IrWMM68s6GJvf94K+
+        ycPL00bX1KQQ/Zs46Sf0RfaqZzW4vVTBXS7d+isPBUvo2cPq85tka8RGYkNn/y2G
+        RkbA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684326054; x=1684412454; bh=ioDFLJqXuMHAy
+        8ZisCrVAdUFi7mpfdRTggwR7KwpJ/I=; b=i1f9JIu1fAnawdVfNkN7qv45bSE8x
+        +ENHwvsHdfUDHBpwpjkL9JDAxcQ9uuoGYWq8g9Zjmn6BkpzR/o5kovp+HGQKoqwy
+        yrmHrjxik89+HDUeCMwgfzdayqaRE7HpCMUFZrJaA+Vv2WqbuiLvtkn6/ZKXuzSC
+        CFKRCUZzMLNvIda9U0kcdc9EKIZLnbqUxPKJx5uCsAYJAPk/Gy0gDTLUfjIrOKKm
+        fN/kVAjB/Qy7ZR4parXhSwHQZTvUzDATofyE7soLA8NOd63Ey0Ad6s1dBdvllxJS
+        z4Bjj13auITa7dF2YELLrIbZ1ZfUqs/BWCu8qmlqDs99JC9JZ1hcZM2LQ==
+X-ME-Sender: <xms:pcZkZFcu1YK1pDGxm-zCjddI4eueG27Txfy48615KJ9ZCcMmBqaDQg>
+    <xme:pcZkZDMBka7qpxkgt1Gj7XBZDWH6AO36Do687ffDYMPFmejsBGUzvAkFVn64tyezu
+    Gf-lkaCQuvXGEz4wCM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeiuddgheduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:pcZkZOisNec3xayVss6IpafKIKHWIjh-pHIYfpYe80MbdsgSE0XFsw>
+    <xmx:pcZkZO969oU0bgwiGrTDEgRjbGONCKHOrWvEQYL_WydOcqpgDk3pZw>
+    <xmx:pcZkZBvW_E64HmOTtezyw8u5bw8FkEn5QLhMmG4wJeXPxwDaqT99CA>
+    <xmx:psZkZCOQ8jQceD-rTypMpzpJ48UNMzRbGAJQ9qyno1x07JpeSqLE4w>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 31633B60086; Wed, 17 May 2023 08:20:53 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
+Mime-Version: 1.0
+Message-Id: <440855f4-897c-4597-bbe6-7c5f295f616a@app.fastmail.com>
+In-Reply-To: <2c03973e-0635-4dbb-a1df-bfda8cbee161@rowland.harvard.edu>
+References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
+ <20230516110038.2413224-36-schnelle@linux.ibm.com>
+ <2023051643-overtime-unbridle-7cdd@gregkh>
+ <2c03973e-0635-4dbb-a1df-bfda8cbee161@rowland.harvard.edu>
+Date:   Wed, 17 May 2023 14:17:58 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Alan Stern" <stern@rowland.harvard.edu>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Cc:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        "Geert Uytterhoeven" <geert@linux-m68k.org>,
+        "Paul Walmsley" <paul.walmsley@sifive.com>,
+        "Palmer Dabbelt" <palmer@dabbelt.com>,
+        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, "Arnd Bergmann" <arnd@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v4 35/41] usb: uhci: handle HAS_IOPORT dependencies
+Content-Type: text/plain
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,T_SCC_BODY_TEXT_LINE,
+        T_SPF_TEMPERROR,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 16, 2023 at 03:51:08PM +0200, Michal Simek wrote:
-> @xilinx.com is still working but better to switch to new amd.com after
-> AMD/Xilinx acquisition.
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
-> 
->  Documentation/devicetree/bindings/arm/xilinx.yaml             | 2 +-
->  Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml     | 2 +-
->  .../devicetree/bindings/clock/xlnx,clocking-wizard.yaml       | 2 +-
->  Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml  | 2 +-
->  Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml | 4 ++--
->  .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml        | 2 +-
->  .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml        | 2 +-
->  Documentation/devicetree/bindings/fpga/xlnx,versal-fpga.yaml  | 2 +-
->  .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.yaml       | 2 +-
->  Documentation/devicetree/bindings/gpio/gpio-zynq.yaml         | 2 +-
->  Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml  | 2 +-
->  .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 2 +-
->  Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml     | 2 +-
->  .../devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml  | 2 +-
->  .../devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml       | 2 +-
->  .../bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml      | 2 +-
->  .../bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml       | 2 +-
->  Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml  | 2 +-
->  .../devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml        | 2 +-
->  .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml      | 2 +-
->  .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml    | 2 +-
->  Documentation/devicetree/bindings/rtc/xlnx,zynqmp-rtc.yaml    | 2 +-
->  Documentation/devicetree/bindings/serial/cdns,uart.yaml       | 2 +-
->  Documentation/devicetree/bindings/spi/spi-cadence.yaml        | 2 +-
->  Documentation/devicetree/bindings/spi/spi-xilinx.yaml         | 2 +-
->  Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml    | 2 +-
->  Documentation/devicetree/bindings/spi/xlnx,zynq-qspi.yaml     | 2 +-
->  Documentation/devicetree/bindings/timer/cdns,ttc.yaml         | 2 +-
->  .../devicetree/bindings/watchdog/xlnx,xps-timebase-wdt.yaml   | 4 ++--
+On Tue, May 16, 2023, at 22:17, Alan Stern wrote:
+> On Tue, May 16, 2023 at 06:29:56PM +0200, Greg Kroah-Hartman wrote:
+>> On Tue, May 16, 2023 at 01:00:31PM +0200, Niklas Schnelle wrote:
+>
+>> I'm confused now.
+>> 
+>> So if CONFIG_HAS_IOPORT is enabled, wonderful, all is good.
+>> 
+>> But if it isn't, then these are just no-ops that do nothing?  So then
+>> the driver will fail to work?  Why have these stubs at all?
+>> 
+>> Why not just not build the driver at all if this option is not enabled?
+>
+> I should add something to my previous email.  This particular section of 
+> code is protected by:
+>
+> #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
+> /* Support PCI only */
+>
+> So it gets used only in cases where the driver supports just a PCI bus 
+> -- no other sorts of non-PCI on-chip devices.  But the preceding patch 
+> in this series changes the Kconfig file to say:
+>
+>  config USB_UHCI_HCD
+> 	tristate "UHCI HCD (most Intel and VIA) support"
+> 	depends on (USB_PCI && HAS_IOPORT) || USB_UHCI_SUPPORT_NON_PCI_HC
+>
+> As a result, when the configuration includes support only for PCI 
+> controllers the driver won't get built unless HAS_IOPORT is set.  Thus 
+> the no-op case (in this part of the code) can't arise.
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Indeed, that makes sense.
 
-Guenter
+> Which is a long-winded way of saying that you're right; the UHCI_IN() 
+> and UHCI_OUT() wrappers aren't needed in this part of the driver.  I 
+> guess Niklas put them in either for consistency with the rest of the 
+> code or because it didn't occur to him that they could be omitted.  (And 
+> I didn't spot it either.)
+
+It's probably less confusing to leave out the PCI-only part of
+the patch then and only modify the generic portion.
+
+      Arnd
