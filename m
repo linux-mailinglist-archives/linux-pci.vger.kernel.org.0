@@ -2,176 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C17C707376
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 23:02:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95AEB707379
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 23:02:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229461AbjEQVCG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 May 2023 17:02:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46982 "EHLO
+        id S229650AbjEQVC6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 May 2023 17:02:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjEQVCF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 17:02:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0755B123
-        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 14:02:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 988F264A23
-        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 21:02:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D176FC433EF;
-        Wed, 17 May 2023 21:02:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684357323;
-        bh=eotJq66CcMgwYH2kdzzNtbfkpYNplPetsFtg5OMN6UY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=SMtxNQUTtUKBF/nO/6Kf7LRIStyUUez8Bdq3dthKtighiulrP4If+/nR0oKynFG71
-         hA1X0nzLW/qsNK5ThK/zHGhxkcz9Bn3yRlgRefXS/42MW2X2dcsXLlxwHggPGTj+L3
-         BNJNl7tFAADjyqnyntra+xNloYMeDvp+r5q43uFoCXkS5FtacX65b5N4dyT0ADEc9v
-         hS9b32du88vaK9FfSfp2Wnigi4ySVR1sn/X4JJY1hgLszfaZwsHB9oAToOv7NmFaFI
-         HpbbBQWHC80F5CD+5shDszZTNHswKu6mx5rJXJlr/9WDybv37yLcmbTCfgRfFMF/4B
-         Z8z7yIbrNgybw==
-Date:   Wed, 17 May 2023 16:02:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Rongguang Wei <clementwei90@163.com>
-Cc:     lukas@wunner.de, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        Rongguang Wei <weirongguang@kylinos.cn>
-Subject: Re: [PATCH v4] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
- Presence Detect Changed event occurred
-Message-ID: <ZGVAyd23kpbLDdpw@bhelgaas>
+        with ESMTP id S229475AbjEQVC6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 17:02:58 -0400
+Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA41440E6
+        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 14:02:56 -0700 (PDT)
+Received: by mail-il1-x12f.google.com with SMTP id e9e14a558f8ab-33164ec77ccso49255ab.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 14:02:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684357376; x=1686949376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EcYeLGK9CKTywc7ALkojexG3Ujj8hio2Irffds26ng8=;
+        b=l0Vn+PJfSyVTO2gHeH3x4fH2JjOQEcj0rIJbOythNeDP8VOHqOEMK1yeOgpSD/YgQa
+         24ZpUrWjEzUM4pXro/9E4sUOxgdYWLDCMJNlprEjlntbOk8dUDiqJAImOM/WP7fr+J7h
+         ygKzUkbYhDr2QsQzMuthz/735hJm9iFqHkQm8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684357376; x=1686949376;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EcYeLGK9CKTywc7ALkojexG3Ujj8hio2Irffds26ng8=;
+        b=ZW0MaRWrFMoZwFjx2zd25Grc8DEutgqIRlt0/WQuoKE+Fv7x5pB07XCno2oXjcOS38
+         pX0LOKFYaak60tEU5OgdgxoJ72Be52F1vgVDjxY3Qf0zd6lE9p0DvVSwIfWx6MIp7QpR
+         QzZkrR/GpLKimGvJuro8QRzFCRttUfZ/SmPw1xUEg8tUyQLOMUsQQZOhI5rJjpdw1vOR
+         V3cRQ9EbwV3iULtbVHEu4tDdGMS2gliYqtADNlggwvr5MroNzPRSt04madKvsDUEhQVG
+         nuzvABOJwniymZOr8Sz6ziTXupXi7OeEJdneOXFRU8N4Nc826k7veMQBFeCN6gYiPPGK
+         UKdQ==
+X-Gm-Message-State: AC+VfDx01aeibJB9llRk2R96AHFvoLTOzPkridqnylHUjNZ0S4b9QVFw
+        KNvyPKRwuyIzE1RXCHNIZWkfyBlwAaYdYv6VmZtFYA==
+X-Google-Smtp-Source: ACHHUZ4vFPBYoUxskd6+n2+JnBS0dUlSvPK2Mtatq/nB93/9CwNwWWAutpY/dJgCD8yIQwmHurziU/bYwTQXP8SuS7I=
+X-Received: by 2002:a92:c24e:0:b0:331:948c:86f3 with SMTP id
+ k14-20020a92c24e000000b00331948c86f3mr19472ilo.19.1684357375830; Wed, 17 May
+ 2023 14:02:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230512021518.336460-1-clementwei90@163.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CANEJEGsE6KS484iSLkKV8hx2nNThZGfaaz+u+R-A3X5nRev6Gg@mail.gmail.com>
+ <ZGT6sTOtk+WY3aYt@bhelgaas>
+In-Reply-To: <ZGT6sTOtk+WY3aYt@bhelgaas>
+From:   Grant Grundler <grundler@chromium.org>
+Date:   Wed, 17 May 2023 14:02:43 -0700
+Message-ID: <CANEJEGv8yxcYmrn4dsc0GCrcMGSFJNoJ=-VUvTjPLCVug+X29w@mail.gmail.com>
+Subject: Re: [PATCHv2 pci-next 2/2] PCI/AER: Rate limit the reporting of the
+ correctable errors
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Grant Grundler <grundler@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
+        linux-pci@vger.kernel.org,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        linux-kernel@vger.kernel.org,
+        "Oliver O 'Halloran" <oohall@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-9.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED,USER_IN_DEF_SPF_WL autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 12, 2023 at 10:15:18AM +0800, Rongguang Wei wrote:
-> From: Rongguang Wei <weirongguang@kylinos.cn>
-> 
-> pciehp's behavior is incorrect if the Attention Button is pressed
-> on an unoccupied slot.
-> 
-> When a Presence Detect Changed event has occurred, the slot status
-> in either BLINKINGOFF_STATE or OFF_STATE, turn it off unconditionally.
-> But if the slot status is in BLINKINGON_STATE and the slot is currently
-> empty, the slot status was staying in BLINKINGON_STATE.
-
-Thanks for the patch!
-
-I don't quite follow the events here.  I think the current behavior is
-this (tell me if I'm going wrong):
-
-  - Slot is empty (OFF_STATE).
-
-  - User presses Attention Button.  pciehp_handle_button_press() sets
-    state to BLINKINGON_STATE, sets power indicator to blinking,
-    schedules pciehp_queue_pushbutton_work() to turn on power after
-    5 seconds.
-
-  - When pciehp_queue_pushbutton_work() runs 5 seconds later, it
-    synthesizes a PCI_EXP_SLTSTA_PDC event and wakes the IRQ thread.
-
-  - The IRQ thread (pciehp_ist()) calls
-    pciehp_handle_presence_or_link_change(), which does nothing since
-    the slot is in BLINKINGON_STATE, the slot is empty, and the link
-    is not active.
-
-  - Slot incorrectly remains in BLINKINGON_STATE and power indicator
-    remains blinking.
-
-And this patch changes pciehp_handle_presence_or_link_change() so that
-if the slot is empty, the link is not acive, and the slot is in
-BLINKINGON_STATE, we put it in OFF_STATE, cancel the delayed work, and
-turn off the power indicator.
-
-After this patch, the user experience is this:
-
-  - Slot is empty (OFF_STATE).
-
-  - User presses Attention Button.
-
-  - Power indicator blinks for 5 seconds.
-
-  - Power indicator turns off.
-
-which definitely seems better.
-
-I'm curious why we want the 5 seconds of blinking power indicator at
-all.  We can't really do anything in response to an Attention Button
-on an empty slot, so could we just ignore it completely in
-pciehp_handle_button_press()?
-
-IIUC, this patch leads to messages like these, which are slightly
-confusing because we say we're powering up the slot, then later decide
-"oops, there's nothing here, never mind" (or, I guess the user could
-push the button, *then* insert the card, and we would power it up,
-which seems a little sketchy):
-
-  [ 0.000] pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
-  [ 0.001] pcieport 0000:00:01.5: pciehp: Slot(0-5): Powering on due to button press
-  [ 5.001] pcieport 0000:00:01.5: pciehp: Slot(0-5): Card not present
-
-Is there a spec that covers the user experience of this case?  The
-closest I could find are SHPC r1.0, sec 2.5, and PCIe r6.0, sec
-6.7.1.5.  Both mention the 5-second abort interval with the power
-indicator blinking, but they implicitly assume the slot is occupied.
-Neither mentions the empty slot case.
-
-> The message print like this:
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5) Powering on due to button press
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Attention button pressed
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Button cancel
->     pcieport 0000:00:01.5: pciehp: Slot(0-5): Action canceled due to button press
+On Wed, May 17, 2023 at 9:03=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
 >
-> It cause the next Attention Button Pressed event become Button cancel
-> and missing the Presence Detect Changed event with this button press
-> though this button presses event is occurred after 5s.
-
-It seems like the problem ("empty slot staying in BLINKINGON_STATE
-forever after one Attention Button event") only requires one button
-press.
-
-If so, why do we talk about the *next* button press here?
-
-> According to the Commit d331710ea78f ("PCI: pciehp: Become resilient
-> to missed events"), if the slot is currently occupied, turn it on and
-> if the slot is empty, it need to set in OFF_STATE rather than stay in
-> current status when pciehp_handle_presence_or_link_change() bails out.
+> On Fri, Apr 07, 2023 at 04:46:03PM -0700, Grant Grundler wrote:
+> > On Fri, Apr 7, 2023 at 12:46=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.o=
+rg> wrote:
+> > > On Fri, Apr 07, 2023 at 11:53:27AM -0700, Grant Grundler wrote:
+> > > > On Thu, Apr 6, 2023 at 12:50=E2=80=AFPM Bjorn Helgaas <helgaas@kern=
+el.org>
+> > > wrote:
+> > > > > On Fri, Mar 17, 2023 at 10:51:09AM -0700, Grant Grundler wrote:
+> > > > > > From: Rajat Khandelwal <rajat.khandelwal@linux.intel.com>
+> > > > > >
+> > > > > > There are many instances where correctable errors tend to inund=
+ate
+> > > > > > the message buffer. We observe such instances during thunderbol=
+t PCIe
+> > > > > > tunneling.
+> > > > ...
+> > >
+> > > > > >               if (info->severity =3D=3D AER_CORRECTABLE)
+> > > > > > -                     pci_info(dev, "   [%2d] %-22s%s\n", i, er=
+rmsg,
+> > > > > > -                             info->first_error =3D=3D i ? " (F=
+irst)" :
+> > > "");
+> > > > > > +                     pci_info_ratelimited(dev, "   [%2d]
+> > > %-22s%s\n", i, errmsg,
+> > > > > > +                                          info->first_error =
+=3D=3D i ?
+> > > " (First)" : "");
+> > > > >
+> > > > > I don't think this is going to reliably work the way we want.  We=
+ have
+> > > > > a bunch of pci_info_ratelimited() calls, and each caller has its =
+own
+> > > > > ratelimit_state data.  Unless we call pci_info_ratelimited() exac=
+tly
+> > > > > the same number of times for each error, the ratelimit counters w=
+ill
+> > > > > get out of sync and we'll end up printing fragments from error A =
+mixed
+> > > > > with fragments from error B.
+> > > >
+> > > > Ok - what I'm reading between the lines here is the output should b=
+e
+> > > > emitted in one step, not multiple pci_info_ratelimited() calls. if =
+the
+> > > > code built an output string (using sprintnf()), and then called
+> > > > pci_info_ratelimited() exactly once at the bottom, would that be
+> > > > sufficient?
+> > > >
+> > > > > I think we need to explicitly manage the ratelimiting ourselves,
+> > > > > similar to print_hmi_event_info() or print_extlog_rcd().  Then we=
+ can
+> > > > > have a *single* ratelimit_state, and we can check it once to dete=
+rmine
+> > > > > whether to log this correctable error.
+> > > >
+> > > > Is the rate limiting per call location or per device? From above, I
+> > > > understood rate limiting is "per call location".  If the code only
+> > > > has one call location, it should achieve the same goal, right?
+> > >
+> > > Rate-limiting is per call location, so yes, if we only have one call
+> > > location, that would solve it.  It would also have the nice property
+> > > that all the output would be atomic so it wouldn't get mixed with
+> > > other stuff, and it might encourage us to be a little less wordy in
+> > > the output.
+> > >
+> >
+> > +1 to all of those reasons. Especially reducing the number of lines out=
+put.
+> >
+> > I'm going to be out for the next week. If someone else (Rajat Kendalwal
+> > maybe?) wants to rework this to use one call location it should be fair=
+ly
+> > straight forward. If not, I'll tackle this when I'm back (in 2 weeks
+> > essentially).
 >
-> Fixes: d331710ea78f ("PCI: pciehp: Become resilient to missed events")
-> Link: https://lore.kernel.org/linux-pci/20230403054619.19163-1-clementwei90@163.com/
-> Link: https://lore.kernel.org/linux-pci/20230421025641.655991-1-clementwei90@163.com/
-> Suggested-by: Lukas Wunner <lukas@wunner.de>
-> Signed-off-by: Rongguang Wei <weirongguang@kylinos.cn>
-> ---
->  drivers/pci/hotplug/pciehp_ctrl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/drivers/pci/hotplug/pciehp_ctrl.c b/drivers/pci/hotplug/pciehp_ctrl.c
-> index 529c34808440..32baba1b7f13 100644
-> --- a/drivers/pci/hotplug/pciehp_ctrl.c
-> +++ b/drivers/pci/hotplug/pciehp_ctrl.c
-> @@ -256,6 +256,14 @@ void pciehp_handle_presence_or_link_change(struct controller *ctrl, u32 events)
->  	present = pciehp_card_present(ctrl);
->  	link_active = pciehp_check_link_active(ctrl);
->  	if (present <= 0 && link_active <= 0) {
-> +		if (ctrl->state == BLINKINGON_STATE) {
-> +			ctrl->state = OFF_STATE;
-> +			cancel_delayed_work(&ctrl->button_work);
-> +			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
-> +					      INDICATOR_NOOP);
-> +			ctrl_info(ctrl, "Slot(%s): Card not present\n",
-> +				  slot_name(ctrl));
-> +		}
->  		mutex_unlock(&ctrl->state_lock);
->  		return;
->  	}
+> Ping?  Really hoping to merge this for v6.5.
+
+Sorry - I forgot about this... I'll take a shot at it. Should have
+something by this evening.
+
+cheers,
+grant
+
+>
+> Bjorn
