@@ -2,68 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B479370616D
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 09:41:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3673C70618B
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 09:45:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230075AbjEQHlU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 May 2023 03:41:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38168 "EHLO
+        id S230098AbjEQHpK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 17 May 2023 03:45:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbjEQHlP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 03:41:15 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C4BC35AB
-        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 00:41:13 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-64ab2a37812so11123408b3a.1
-        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 00:41:13 -0700 (PDT)
+        with ESMTP id S230154AbjEQHpI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 03:45:08 -0400
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855A6118
+        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 00:45:07 -0700 (PDT)
+Received: by mail-pl1-x630.google.com with SMTP id d9443c01a7336-1aaef97652fso4355385ad.0
+        for <linux-pci@vger.kernel.org>; Wed, 17 May 2023 00:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684309273; x=1686901273;
+        d=linaro.org; s=google; t=1684309507; x=1686901507;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=V4bcnuH4rJtJgBqr01lPK+xs70SyHiO9bI8F2exjHbE=;
-        b=QOacduidkWGR7Y8H/XJBiyG4FWbLDnZIKvm1x2VqSmDmYQtg+xFDcrdU9dk9aS6Da4
-         I05AO7pEOF1jbCh90x/JBWkstOKz0m2Z6pDt3jF1BswGdORryqcqKzWiO6Ro/AafzBnO
-         YN1mprbu/bm28IehbXVw9ZsdkFnd7nCzJClCpo6CC6K8zC5iUd3T5uXu0kjPYTQyyDMk
-         SqydgbAZnRGro99wzVD9rO40bHaIHPB9j9A9RbaZzo0YkmeVrEEW59WsbilVCC6szFMm
-         38NUm4wAmS/bP7TRFHCxuIUt8cnXbmeUyxdP8PJ8COMcTqzGId8JoPWSYtn5atsLvjGK
-         MehQ==
+        bh=Ddij+IgcohB+6avEyT6HE6OwNGw10qKKU1zhDBMIdCU=;
+        b=jkaTUZt9Hs97I1MjdIphtWrYTCS6celIa+fvsyxEcGRYkIlZ7s54nclg4kyRmb371q
+         kvxx8u6+mHZQBUb4taRXcquv2MNclgVbCDJhhHxUEerjDFKKAf9USgYGFEEU4709UZYT
+         2mJtLhhGZY3uDbc91ETeqKCTKQPkQAZvv3KIvFLATApzUcsZEcu0aSLZRwRtZ+euhN8u
+         03VHe7OKJZEV5TXXy6xQEyWt9xKbqVcTjTa/QstDHfPRl+rxRFtWrr4dPYLIik33gTQA
+         aG4hzo5p+lyBPME+8s6vnbdhy+0cfiEMzwBMlL4uZX5QuE8pMDKDdD7yVP0TzWjBHk4N
+         9d7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684309273; x=1686901273;
+        d=1e100.net; s=20221208; t=1684309507; x=1686901507;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=V4bcnuH4rJtJgBqr01lPK+xs70SyHiO9bI8F2exjHbE=;
-        b=WcA5QiYX/h96DG5YjXu6YuLHeJaKg4lenqi2BRqcoCl5lKUS8avhtPSNiXZuOwUzT9
-         2Gc2nMmIle+Vkcwz/UJwvgaeu9SeY1uj2rDPCqdjl56yOsqDmBDXsHVpFqFumI4fsksb
-         XwboXjSE38l3hjHY87hsnjrZqCHa3wjUad7xOdRNr/OZ4xz0HpF+4l426sb1D67WfqyE
-         cQ/Pc4ELkgKq/BoQcKVOdXq4PeBnLo7g8wfRnba+sMtWJgzQBD/+yD+g9ILSaNDGPh28
-         wCLwn/7/FneiWDfBM6t4li8ilj91HF1pVM2qAluQFDRamk2JmZYq6UxqDp5EQziU7iTK
-         FHsg==
-X-Gm-Message-State: AC+VfDztYLvOAz7bzXZeGUOB8AjSw6GSkn4/mMrgJL6PxvPSGGoDRpVS
-        qFdrylQCJm2JguuEa+ciY4fM
-X-Google-Smtp-Source: ACHHUZ7JxZpRNqDvfwNdfNoZfO/9KxQIZY5Ncde1GSHFloW3dZJsMEdk5j2nXrAGQr63YljO9BU4Tg==
-X-Received: by 2002:a17:902:c943:b0:1ad:1be7:2a76 with SMTP id i3-20020a170902c94300b001ad1be72a76mr1902116pla.10.1684309272737;
-        Wed, 17 May 2023 00:41:12 -0700 (PDT)
+        bh=Ddij+IgcohB+6avEyT6HE6OwNGw10qKKU1zhDBMIdCU=;
+        b=DYuEEQ32EkI+oukZOF+A6SRMzeJfPCdH6TJhkTGH9nfVgAbX0GOiTD15ry10VCD1aR
+         haIS4VwJLUkKRabVgJz1+Ut4Yjf9l1sri3Z2ZMG89Hnv3SMjb95D6ipsUfWy8tP1iWMT
+         dZkuDmoQYXQVbY6+ncsewpBSRV/jzgFZdc3WP2oUpSf7EMfxoAYB+3HscKbHCMp0fpLC
+         27dEayS1kj8m1S0iF2VhfA7he7w8WBiS3lqi1rvfdNoOYKA+sU0ulfTTEJGN3GMKmeCA
+         ntyKF67zruDIHajxsJ+tA+3KgPo4vRDLelFs9Y1blsHDFNvBI5Sheev1dWVrRyDMwybW
+         11tg==
+X-Gm-Message-State: AC+VfDwk/7F4NunpgJOD0bYBwiOjhUeiItqXSwJChAlCEri35ARux6K5
+        xiX5Ivc5da+QmL3V0P9OF02a
+X-Google-Smtp-Source: ACHHUZ7Pc+TZlRHUWTX9PYr3qJ+VJYdNJJmMTsMZkqfYNDlIGj+eCyDL38FMnMC/1h3DunGIn/7lew==
+X-Received: by 2002:a17:902:ced0:b0:1ad:c736:209a with SMTP id d16-20020a170902ced000b001adc736209amr23245827plg.56.1684309506983;
+        Wed, 17 May 2023 00:45:06 -0700 (PDT)
 Received: from thinkpad ([117.207.26.28])
-        by smtp.gmail.com with ESMTPSA id x12-20020a1709028ecc00b001ac7ab3e7ecsm9349591plo.210.2023.05.17.00.41.09
+        by smtp.gmail.com with ESMTPSA id jh19-20020a170903329300b001a9a8983a15sm16832784plb.231.2023.05.17.00.45.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 00:41:12 -0700 (PDT)
-Date:   Wed, 17 May 2023 13:11:05 +0530
+        Wed, 17 May 2023 00:45:06 -0700 (PDT)
+Date:   Wed, 17 May 2023 13:15:00 +0530
 From:   Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
 To:     Damien Le Moal <dlemoal@kernel.org>
 Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Kishon Vijay Abraham I <kishon@kernel.org>
-Subject: Re: [PATCH v2 1/2] PCI: endpoint: Improve pci_epf_type_add_cfs()
-Message-ID: <20230517074105.GJ4868@thinkpad>
+Subject: Re: [PATCH v2 2/2] PCI: endpoint: Add kdoc description of
+ pci_epf_type_add_cfs()
+Message-ID: <20230517074500.GK4868@thinkpad>
 References: <20230515074348.595704-1-dlemoal@kernel.org>
- <20230515074348.595704-2-dlemoal@kernel.org>
+ <20230515074348.595704-3-dlemoal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230515074348.595704-2-dlemoal@kernel.org>
+In-Reply-To: <20230515074348.595704-3-dlemoal@kernel.org>
 X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
         RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
@@ -74,12 +75,12 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 15, 2023 at 04:43:47PM +0900, Damien Le Moal wrote:
-> pci_epf_type_add_cfs() should not be called with an unbound EPF device,
-> that is, an epf device with epf->driver not set. For such case, replace
-> the NULL return in pci_epf_type_add_cfs() with a clear ERR_PTR(-ENODEV)
-> pointer error return.
+On Mon, May 15, 2023 at 04:43:48PM +0900, Damien Le Moal wrote:
+> Restore an improve the kdoc function description for
+> pci_epf_type_add_cfs() that was removed with commit
+> 893f14fed7d3 ("PCI: endpoint: Move pci_epf_type_add_cfs() code").
 > 
+> Fixes: 893f14fed7d3 ("PCI: endpoint: Move pci_epf_type_add_cfs() code")
 > Signed-off-by: Damien Le Moal <dlemoal@kernel.org>
 
 Reviewed-by: Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
@@ -87,22 +88,36 @@ Reviewed-by: Manivannan Sadhasivami <manivannan.sadhasivam@linaro.org>
 - Mani
 
 > ---
->  drivers/pci/endpoint/pci-ep-cfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/endpoint/pci-ep-cfs.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
 > diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
-> index 0fb6c376166f..0bf5be986e9b 100644
+> index 0bf5be986e9b..be042c3f50b5 100644
 > --- a/drivers/pci/endpoint/pci-ep-cfs.c
 > +++ b/drivers/pci/endpoint/pci-ep-cfs.c
-> @@ -516,7 +516,7 @@ static struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+> @@ -509,6 +509,22 @@ static const struct config_item_type pci_epf_type = {
+>  	.ct_owner	= THIS_MODULE,
+>  };
 >  
->  	if (!epf->driver) {
->  		dev_err(&epf->dev, "epf device not bound to driver\n");
-> -		return NULL;
-> +		return ERR_PTR(-ENODEV);
->  	}
->  
->  	if (!epf->driver->ops->add_cfs)
+> +/**
+> + * pci_epf_type_add_cfs() - Help function drivers to expose function specific   
+> + *                          attributes in configfs
+> + * @epf: the EPF device that has to be configured using configfs
+> + * @group: the parent configfs group (corresponding to entries in
+> + *         pci_epf_device_id)
+> + *
+> + * Invoke to expose function specific attributes in configfs.
+> + *
+> + * Return: A pointer to a config_group structure or NULL if the function driver
+> + * does not have anything to expose (attributes configured by user) or if the
+> + * the function driver does not implement the add_cfs() method.
+> + *
+> + * Returns an error pointer if this function is called for an unbound EPF device
+> + * or if the EPF driver add_cfs() method fails.
+> + */
+>  static struct config_group *pci_epf_type_add_cfs(struct pci_epf *epf,
+>  						 struct config_group *group)
+>  {
 > -- 
 > 2.40.1
 > 
