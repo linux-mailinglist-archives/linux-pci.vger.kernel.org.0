@@ -2,142 +2,266 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FB60706686
-	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 13:19:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C122E7066BC
+	for <lists+linux-pci@lfdr.de>; Wed, 17 May 2023 13:32:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230385AbjEQLTl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 17 May 2023 07:19:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40778 "EHLO
+        id S230399AbjEQLca convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 17 May 2023 07:32:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230258AbjEQLTk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 07:19:40 -0400
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2064.outbound.protection.outlook.com [40.107.223.64])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C36406A5F;
-        Wed, 17 May 2023 04:19:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=f8x3R0FoCLFtEy8RaYKKPKoS8XJnyNIsa0WqZXBuL3v9WZacKvUsZqQEVgXg/EEIlMzQi/GG5gZ0D3y+3uItA3/L+gh2KWP1fBqnr+zIE7hCv7TavI3pjvmusofr+VHRj3m9qyFGStztCkyQ/oC1lh3xNuJy4n9pIdk3Wz1OmsIu+AMbDrSLu6QrcRaKTRpxppAIV3J9J4/Ycs+NcwoQkqw01fBPHAB3w2Iu5kF+MKI1ZFsnz2TkjlZFBvS1diecGZp5HTBzA/I39FvQXYrRo4pHxMCjjn5o8h1Fbyg1azlDFssmCucpnxujbcwvnahtryIlZBBI3CJvtY8m9KQCOQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=lBxHf0emmQZ36V+QC7bQotzwRtZRNv7M04UQiQqsOwI=;
- b=BHcbowDY4SsB+HFcSx7rLgHXtn9JLNSH+Pn9qmo8Ojr/2AIU01vyLBln3DLhmZNK41J9hUCLU+6ahBmHYlRx1Oh5fL9I2aWBosoWkilajVg55JMMlJ/lfG2ZuKFZYehyuVo+Bv0PNp3pMvUrD/4VU7ThQ1YZnjLY+WucpfItWpUz+G6BqpVKG3ktEr80bXaUw88P3h2EsOkF2JrN6CW8o4vfPCJgqufBaW3aWlSOBz1mXXuHbaL4EJjAz6yFOCwIXZMucCmcDnWWEy4kKkI4U8cFRQPtRWXgoBQQLYf3dLyj6xyOvv3SAzBvaGEbCKkoV0Obbfgs921WkiVCMifj3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=linux.intel.com smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lBxHf0emmQZ36V+QC7bQotzwRtZRNv7M04UQiQqsOwI=;
- b=RH/pLQ8l0MTeO9tsSe5KhMi6Rql8m+/qAkvjihXiHIGn21YA4rw0jVt7+3c/9f48dtrMJs5YxD5DLUDxv44vGzVjgNsQ6SVgE9glLpriZbyQmEcxXEi2weyPRZiFjlbC+Rat4L4h4JWOBqFIomK0Wxh17ijpuN1GEPVUSiaV0HTa+Ej7kALIZXcdaDZA2XOObs4FJkKFLz5DH9BflPvGaoAFCluvxz3JLSjMvb8W8tfinGCrUzGoj0p5GrZe+cqOP1W2kCC33AZ/ZRUgR5pQBUZh7fdsUKX2+njMClPAN10e2e9+0ByBc6CEADBRoCu0CQrP8C/z26ANDJ/jzD5ipQ==
-Received: from BN9PR03CA0877.namprd03.prod.outlook.com (2603:10b6:408:13c::12)
- by BY5PR12MB4193.namprd12.prod.outlook.com (2603:10b6:a03:20c::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Wed, 17 May
- 2023 11:19:21 +0000
-Received: from BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
- (2603:10b6:408:13c:cafe::24) by BN9PR03CA0877.outlook.office365.com
- (2603:10b6:408:13c::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17 via Frontend
- Transport; Wed, 17 May 2023 11:19:21 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- BN8NAM11FT020.mail.protection.outlook.com (10.13.176.223) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.6411.17 via Frontend Transport; Wed, 17 May 2023 11:19:20 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.5; Wed, 17 May 2023
- 04:19:05 -0700
-Received: from [10.223.0.108] (10.126.230.35) by rnnvmail201.nvidia.com
- (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.37; Wed, 17 May
- 2023 04:19:00 -0700
-Message-ID: <fdd518db-a759-b520-fb1e-d697d6f08682@nvidia.com>
-Date:   Wed, 17 May 2023 14:18:58 +0300
+        with ESMTP id S230285AbjEQLc1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 17 May 2023 07:32:27 -0400
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CAB13AAA;
+        Wed, 17 May 2023 04:32:19 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-50d8d4efd13so154272a12.0;
+        Wed, 17 May 2023 04:32:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684323137; x=1686915137;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tT5wKb3Q9mX+99tWT8wqc8b9JlMpbf8NxJFJgAlwobg=;
+        b=J6/m+exVpAjjy8XB67dIvFtmdKgiYmaWF7AF2fp86l/dKiPQsP2ATx88bT1OJh0wcY
+         doTcgZjFkc3UFR73GsqbJmmWQFxRO2LY+OGoJuUyeFm3bLNxtFHFWqn9fS6lFknd2OqT
+         Gxiws8UU4J5SqZe0Xcpzwzt2DJHPhqOPfAPh1ZQykIPHdphRuT1mH1nualVo3AJCBmJf
+         wcWityZ8bk4UFqhCH0uN5s3dI7BJDfd18M1s2kSU1hiazfo0mJLVJ9JO+uZ4tIio+CeP
+         yxdkMhtrHc4bLno6I2/elJEogzFKbHlqNJnLzyuNfra0exitDv75Mxn2pIRIpXBaoXp0
+         Dk5Q==
+X-Gm-Message-State: AC+VfDydsnwUdN/csy5AnzR73vrNCzN2tisgyVyAq7hinmJD4ahvBUDe
+        J71TT1Vtww/lPU/AgjhxZNYCXFGE7fv2Qjal20Y=
+X-Google-Smtp-Source: ACHHUZ5XOYA3ey6OrTkLpKe3WS2/odhahmTy78/rkUwjMVQLgl5/ktN8RTltAfZD0tkPT+2FBue8ty5vtXVnjR7S7IU=
+X-Received: by 2002:a05:6402:440b:b0:502:e50:3358 with SMTP id
+ y11-20020a056402440b00b005020e503358mr2961328eda.3.1684323137386; Wed, 17 May
+ 2023 04:32:17 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v2 6/9] net/mlx5: Use RMW accessors for changing LNKCTL
-Content-Language: en-US
-To:     =?UTF-8?Q?Ilpo_J=c3=a4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-        <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-        "Lorenzo Pieralisi" <lorenzo.pieralisi@arm.com>,
+References: <20230517105235.29176-1-ilpo.jarvinen@linux.intel.com> <20230517105235.29176-2-ilpo.jarvinen@linux.intel.com>
+In-Reply-To: <20230517105235.29176-2-ilpo.jarvinen@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 17 May 2023 13:32:06 +0200
+Message-ID: <CAJZ5v0is40HhOwPyKe2_K6qcqVE0iNwUW3q746vW+fnRgzA9YQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/9] PCI: Add locking to RMW PCI Express Capability
+ Register accessors
+To:     =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
         Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
         "Rafael J . Wysocki" <rafael@kernel.org>,
         Heiner Kallweit <hkallweit1@gmail.com>,
         Lukas Wunner <lukas@wunner.de>,
-        "Saeed Mahameed" <saeedm@nvidia.com>,
-        Leon Romanovsky <leon@kernel.org>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Jiang Liu <jiang.liu@huawei.com>,
+        Yijing Wang <wangyijing@huawei.com>,
+        Greg Kroah-Hartman <gregkh@suse.de>,
+        Shaohua Li <shaohua.li@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>,
+        Dean Luick <dean.luick@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Ricky Wu <ricky_wu@realtek.com>,
+        Rui Feng <rui_feng@realsil.com.cn>,
+        Micky Ching <micky_ching@realsil.com.cn>,
+        Lee Jones <lee.jones@linaro.org>,
+        Samuel Ortiz <sameo@linux.intel.com>,
+        Wei WANG <wei_wang@realsil.com.cn>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Matt Carlson <mcarlson@broadcom.com>,
+        Michael Chan <mchan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jakub Kicinski" <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Moshe Shemesh <moshe@mellanox.com>, <netdev@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Dean Luick <dean.luick@cornelisnetworks.com>,
+        Francois Romieu <romieu@fr.zoreil.com>,
+        Sven Peter <sven@svenpeter.dev>,
+        Luiz Augusto von Dentz <luiz.von.dentz@intel.com>,
+        Bruce Allan <bruce.w.allan@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Jeff Garzik <jeff@garzik.org>,
+        Auke Kok <auke-jan.h.kok@intel.com>,
+        "John W. Linville" <linville@tuxdriver.com>,
+        Vasanthakumar Thiagarajan <vasanth@atheros.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@kernel.org>,
+        Lorenzo Bianconi <lorenzo@kernel.org>,
+        Felix Fietkau <nbd@nbd.name>, linux-kernel@vger.kernel.org,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        <stable@vger.kernel.org>
-References: <20230517105235.29176-1-ilpo.jarvinen@linux.intel.com>
- <20230517105235.29176-7-ilpo.jarvinen@linux.intel.com>
-From:   Moshe Shemesh <moshe@nvidia.com>
-In-Reply-To: <20230517105235.29176-7-ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.126.230.35]
-X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN8NAM11FT020:EE_|BY5PR12MB4193:EE_
-X-MS-Office365-Filtering-Correlation-Id: ee7f9d5b-87be-4d59-863e-08db56c88fa4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lS40t/O1vlY0kC6QxygEcx9RLW/UKZ2RidSEfs+UtYNCzpdazQUHPEzC31zpDZUyXc6/wNZZDnZz1nvjRYczpJLuPlSO2jBbkLTeAIS5pRPhWSEZJEuzMXHMm2mnTkhkxAy0eQQd479WZMTZtm1p2BrRmxEKN2NItQjlLnQM0gbRM0AJgn0dSgtDOKebIg5CqPXs5syw+7hVE3c35Is1GVn4186O59gpN+7Y16pez0yBnou8nFH0EsdGjZCArQKnke3wwsvgI5s15exZkbBuAN8gLweKmzGmaIyZ3k262I/BeRLG6iATLrdOCygH73yTLyY76mXZLVI3miwQ11XgFnVlOKGyECiLne2itdg3FjU1QCh/nEeEZoQlg6Wi2M+o2sM7319u1FSVVPiVcZwRMTyHsoJ3/B9OpIxrJwVrbJoKjO3yuqj4XDTA57eEqI3Trf3PX2dmRWZ2qukBrvyXDFihlkxAYwWIPAXA5suG45vLryJVJKv1P9AVbeY3N6+E4gK7ahp1bvv2+dlR7V5RTo49O0n8xgbdWsUvi6Hk0bhzTD7NxKosPxdnb/f3UWV8TuXUShUFoO9Jur16vTCcyIEFzV//48suYMfd7TuUDf0qtcX1651Sx9w8dVGzC6riPphkc6fE1J9Sk8Xu3bEH550SfeuzB/nv0sxaung6x9kkG2BavR/ER3pIM0H1oBnW94yH++HM/vLshzcAbaYKCEes4AHhcG0976UYVAcNd/Jus3uzliUUdpv2S0eTictC97/Bx+ATNxH7O2YrYqs70Mc7LeBZhfwZR280sLJMb9o=
-X-Forefront-Antispam-Report: CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(376002)(39860400002)(136003)(346002)(451199021)(36840700001)(46966006)(40470700004)(36860700001)(83380400001)(47076005)(426003)(336012)(478600001)(16576012)(110136005)(54906003)(2616005)(53546011)(26005)(186003)(16526019)(2906002)(4744005)(8936002)(8676002)(7416002)(5660300002)(36756003)(40460700003)(41300700001)(7636003)(921005)(356005)(82740400003)(4326008)(40480700001)(70206006)(70586007)(82310400005)(86362001)(316002)(31696002)(31686004)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2023 11:19:20.4554
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ee7f9d5b-87be-4d59-863e-08db56c88fa4
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource: BN8NAM11FT020.eop-nam11.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB4193
-X-Spam-Status: No, score=-2.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
-        NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+        stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On 5/17/2023 1:52 PM, Ilpo Järvinen wrote:
-> Don't assume that only the driver would be accessing LNKCTL of the
-> upstream bridge. ASPM policy changes can trigger write to LNKCTL
-> outside of driver's control.
+On Wed, May 17, 2023 at 12:53 PM Ilpo Järvinen
+<ilpo.jarvinen@linux.intel.com> wrote:
 >
-> Use RMW capability accessors which do proper locking to avoid losing
-> concurrent updates to the register value.
+> Many places in the kernel write the Link Control and Root Control PCI
+> Express Capability Registers without proper concurrency control and
+> this could result in losing the changes one of the writers intended to
+> make.
 >
-> Fixes: eabe8e5e88f5 ("net/mlx5: Handle sync reset now event")
-> Suggested-by: Lukas Wunner<lukas@wunner.de>
-> Signed-off-by: Ilpo Järvinen<ilpo.jarvinen@linux.intel.com>
-> Cc:stable@vger.kernel.org
-Reviewed-by: Moshe Shemesh <moshe@nvidia.com>
+> Add pcie_cap_lock spinlock into the struct pci_dev and use it to
+> protect bit changes made in the RMW capability accessors. Protect only
+> a selected set of registers by differentiating the RMW accessor
+> internally to locked/unlocked variants using a wrapper which has the
+> same signature as pcie_capability_clear_and_set_word(). As the
+> Capability Register (pos) given to the wrapper is always a constant,
+> the compiler should be able to simplify all the dead-code away.
+>
+> The RMW locking is only added to pcie_capability_clear_and_set_word()
+> because so far only the Link Control Register (ASPM, hotplug, various
+> drivers) and the Root Control Register (AER & PME) require RMW locking.
+>
+> Fixes: c7f486567c1d ("PCI PM: PCIe PME root port service driver")
+> Fixes: f12eb72a268b ("PCI/ASPM: Use PCI Express Capability accessors")
+> Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+> Fixes: affa48de8417 ("staging/rdma/hfi1: Add support for enabling/disabling PCIe ASPM")
+> Fixes: 849a9366cba9 ("misc: rtsx: Add support new chip rts5228 mmc: rtsx: Add support MMC_CAP2_NO_MMC")
+> Fixes: 3d1e7aa80d1c ("misc: rtsx: Use pcie_capability_clear_and_set_word() for PCI_EXP_LNKCTL")
+> Fixes: c0e5f4e73a71 ("misc: rtsx: Add support for RTS5261")
+> Fixes: 3df4fce739e2 ("misc: rtsx: separate aspm mode into MODE_REG and MODE_CFG")
+> Fixes: 121e9c6b5c4c ("misc: rtsx: modify and fix init_hw function")
+> Fixes: 19f3bd548f27 ("mfd: rtsx: Remove LCTLR defination")
+> Fixes: 773ccdfd9cc6 ("mfd: rtsx: Read vendor setting from config space")
+> Fixes: 8275b77a1513 ("mfd: rts5249: Add support for RTS5250S power saving")
+> Fixes: 5da4e04ae480 ("misc: rtsx: Add support for RTS5260")
+> Fixes: 0f49bfbd0f2e ("tg3: Use PCI Express Capability accessors")
+> Fixes: 5e7dfd0fb94a ("tg3: Prevent corruption at 10 / 100Mbps w CLKREQ")
+> Fixes: b726e493e8dc ("r8169: sync existing 8168 device hardware start sequences with vendor driver")
+> Fixes: e6de30d63eb1 ("r8169: more 8168dp support.")
+> Fixes: 8a06127602de ("Bluetooth: hci_bcm4377: Add new driver for BCM4377 PCIe boards")
+> Fixes: 6f461f6c7c96 ("e1000e: enable/disable ASPM L0s and L1 and ERT according to hardware errata")
+> Fixes: 1eae4eb2a1c7 ("e1000e: Disable L1 ASPM power savings for 82573 mobile variants")
+> Fixes: 8060e169e02f ("ath9k: Enable extended synch for AR9485 to fix L0s recovery issue")
+> Fixes: 69ce674bfa69 ("ath9k: do btcoex ASPM disabling at initialization time")
+> Fixes: f37f05503575 ("mt76: mt76x2e: disable pcie_aspm by default")
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: stable@vger.kernel.org
 
-Thanks!
+No objections, so
 
+Reviewed-by: Rafael J. Wysocki <rafael@kernel.org>
+
+> ---
+>  drivers/pci/access.c | 20 +++++++++++++++++---
+>  drivers/pci/probe.c  |  1 +
+>  include/linux/pci.h  | 34 ++++++++++++++++++++++++++++++++--
+>  3 files changed, 50 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/pci/access.c b/drivers/pci/access.c
+> index 3c230ca3de58..0b2e90d2f04f 100644
+> --- a/drivers/pci/access.c
+> +++ b/drivers/pci/access.c
+> @@ -497,8 +497,8 @@ int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val)
+>  }
+>  EXPORT_SYMBOL(pcie_capability_write_dword);
+>
+> -int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+> -                                      u16 clear, u16 set)
+> +int pcie_capability_clear_and_set_word_unlocked(struct pci_dev *dev, int pos,
+> +                                               u16 clear, u16 set)
+>  {
+>         int ret;
+>         u16 val;
+> @@ -512,7 +512,21 @@ int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+>
+>         return ret;
+>  }
+> -EXPORT_SYMBOL(pcie_capability_clear_and_set_word);
+> +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_unlocked);
+> +
+> +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> +                                             u16 clear, u16 set)
+> +{
+> +       unsigned long flags;
+> +       int ret;
+> +
+> +       spin_lock_irqsave(&dev->pcie_cap_lock, flags);
+> +       ret = pcie_capability_clear_and_set_word_unlocked(dev, pos, clear, set);
+> +       spin_unlock_irqrestore(&dev->pcie_cap_lock, flags);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(pcie_capability_clear_and_set_word_locked);
+>
+>  int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+>                                         u32 clear, u32 set)
+> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+> index 0b2826c4a832..53ac0d3287a8 100644
+> --- a/drivers/pci/probe.c
+> +++ b/drivers/pci/probe.c
+> @@ -2318,6 +2318,7 @@ struct pci_dev *pci_alloc_dev(struct pci_bus *bus)
+>                 .end = -1,
+>         };
+>
+> +       spin_lock_init(&dev->pcie_cap_lock);
+>  #ifdef CONFIG_PCI_MSI
+>         raw_spin_lock_init(&dev->msi_lock);
+>  #endif
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 60b8772b5bd4..ab7682ed172f 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -467,6 +467,7 @@ struct pci_dev {
+>         pci_dev_flags_t dev_flags;
+>         atomic_t        enable_cnt;     /* pci_enable_device has been called */
+>
+> +       spinlock_t      pcie_cap_lock;          /* Protects RMW ops in capability accessors */
+>         u32             saved_config_space[16]; /* Config space saved at suspend time */
+>         struct hlist_head saved_cap_space;
+>         int             rom_attr_enabled;       /* Display of ROM attribute enabled? */
+> @@ -1217,11 +1218,40 @@ int pcie_capability_read_word(struct pci_dev *dev, int pos, u16 *val);
+>  int pcie_capability_read_dword(struct pci_dev *dev, int pos, u32 *val);
+>  int pcie_capability_write_word(struct pci_dev *dev, int pos, u16 val);
+>  int pcie_capability_write_dword(struct pci_dev *dev, int pos, u32 val);
+> -int pcie_capability_clear_and_set_word(struct pci_dev *dev, int pos,
+> -                                      u16 clear, u16 set);
+> +int pcie_capability_clear_and_set_word_unlocked(struct pci_dev *dev, int pos,
+> +                                               u16 clear, u16 set);
+> +int pcie_capability_clear_and_set_word_locked(struct pci_dev *dev, int pos,
+> +                                             u16 clear, u16 set);
+>  int pcie_capability_clear_and_set_dword(struct pci_dev *dev, int pos,
+>                                         u32 clear, u32 set);
+>
+> +/**
+> + * pcie_capability_clear_and_set_word - RMW accessor for PCI Express Capability Registers
+> + * @dev:       PCI device structure of the PCI Express device
+> + * @pos:       PCI Express Capability Register
+> + * @clear:     Clear bitmask
+> + * @set:       Set bitmask
+> + *
+> + * Perform a Read-Modify-Write (RMW) operation using @clear and @set
+> + * bitmasks on PCI Express Capability Register at @pos. Certain PCI Express
+> + * Capability Registers are accessed concurrently in RMW fashion, hence
+> + * require locking which is handled transparently to the caller.
+> + */
+> +static inline int pcie_capability_clear_and_set_word(struct pci_dev *dev,
+> +                                                    int pos,
+> +                                                    u16 clear, u16 set)
+> +{
+> +       switch (pos) {
+> +       case PCI_EXP_LNKCTL:
+> +       case PCI_EXP_RTCTL:
+> +               return pcie_capability_clear_and_set_word_locked(dev, pos,
+> +                                                                clear, set);
+> +       default:
+> +               return pcie_capability_clear_and_set_word_unlocked(dev, pos,
+> +                                                                  clear, set);
+> +       }
+> +}
+> +
+>  static inline int pcie_capability_set_word(struct pci_dev *dev, int pos,
+>                                            u16 set)
+>  {
+> --
+> 2.30.2
+>
