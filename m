@@ -2,82 +2,76 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D16467086F3
-	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 19:32:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4076C708743
+	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 19:49:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjERRcD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 13:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
+        id S230038AbjERRst (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 May 2023 13:48:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbjERRcC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 13:32:02 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3451EAA;
-        Thu, 18 May 2023 10:31:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684431105; x=1715967105;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Wl8BDYVG0i7AvYNjyPawAfZhnam6nIO2zxc9kJVuY98=;
-  b=n6Zm4Of+BldnxQc0YUu+ASMgCbzK4g4rXyxfgtVIC2vl1JBt7SeLKpZp
-   qljjuxYfoDzKXUZrlcSJ89kfZoyqK51Ah7HKlru6SrdfmQjtom26vsrmd
-   TOIzyxXUW7jaHbalTuvAI6vAsv8BeJS5PSivMZqADfQvEUsb6QNBnDOmn
-   4uvBcFukVBd5uvAFCcVq2wE0EnIoU/3dqyDjA8JjMO9joNPR4DkFr1JcF
-   1eauAMqrJn+WNe3WKs76V6aTST7bAOz0hcGHGnpwt5bbMUA4UWBbmbijt
-   NHAUWy03yZZq1VYMJzqtfeiX9N23vPt6y1+9p/oqGcJzYakYCjK6DCG81
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354475452"
-X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="354475452"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="1032284552"
-X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="1032284552"
-Received: from nroy-mobl1.amr.corp.intel.com (HELO [10.209.81.123]) ([10.209.81.123])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:17 -0700
-Message-ID: <d03ef733-8098-69b7-97c2-304f1195e2a4@intel.com>
-Date:   Thu, 18 May 2023 10:31:16 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 00/20] x86: address -Wmissing-prototype warnings
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20230516193549.544673-1-arnd@kernel.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
+        with ESMTP id S229991AbjERRsR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 13:48:17 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF53410E7;
+        Thu, 18 May 2023 10:48:12 -0700 (PDT)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34IHUqY1022452;
+        Thu, 18 May 2023 17:48:06 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=WTKPEmwPBDbgN8kOTUBGCIrNhFkwyckDQpiQl/014S0=;
+ b=CNsoqVQGdTcncDhqrnyt0yofSP5/RdGRjTBnoy89LdcZUn2xghsy5ABaphDDPJxM8EsI
+ QPbeIVAebnMG5Z6Ap5c9uK2fBi33LtoFHGbssh2aEkVs5cS2srHsG3SfRAXL3pl4CDRI
+ aNZa3tatMESD3l1dwYSqLfnd/DDneoYi0faXbmF1QT7xIQyhpFIM6uCB+H9jqfzI81YE
+ MV5yeRxgqZWpHtmgz2URJRYjEUKNxV1ysCD8LYWYhb0WhFeXJrmbQijRdvAHPvBK3B2L
+ awpALY6///10fCnzXxkmP3IolQpvFaZNMEzMj1qk/TSZb6YzgQy1oTxNKmdKQMlEGIPx /g== 
+Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qmxyp3fx9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 18 May 2023 17:48:06 +0000
+Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 34IHm26u012082;
+        Thu, 18 May 2023 17:48:02 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 3qj3mkakxa-1;
+        Thu, 18 May 2023 17:48:02 +0000
+Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34IHm1pU011968;
+        Thu, 18 May 2023 17:48:01 GMT
+Received: from hu-sgudaval-hyd.qualcomm.com (hu-rohiagar-hyd.qualcomm.com [10.213.106.138])
+        by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 34IHm1Ow011966;
+        Thu, 18 May 2023 17:48:01 +0000
+Received: by hu-sgudaval-hyd.qualcomm.com (Postfix, from userid 3970568)
+        id C2E835EBF; Thu, 18 May 2023 23:18:00 +0530 (+0530)
+From:   Rohit Agarwal <quic_rohiagar@quicinc.com>
+To:     agross@kernel.org, andersson@kernel.org, konrad.dybcio@linaro.org,
+        mani@kernel.org, bhelgaas@google.com, lpieralisi@kernel.org,
+        kw@linux.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+        conor+dt@kernel.org, manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rohit Agarwal <quic_rohiagar@quicinc.com>
+Subject: [PATCH v6 0/5] Add PCIe EP support for SDX65
+Date:   Thu, 18 May 2023 23:17:48 +0530
+Message-Id: <1684432073-28490-1-git-send-email-quic_rohiagar@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: uHrNGR3ewPzzqUUESDrxn03tkERqLjKS
+X-Proofpoint-GUID: uHrNGR3ewPzzqUUESDrxn03tkERqLjKS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-18_13,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=719
+ priorityscore=1501 impostorscore=0 suspectscore=0 mlxscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305180144
+X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -85,12 +79,44 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/16/23 12:35, Arnd Bergmann wrote:
-> The ones that are a bit awkward are those that just add a prototype to
-> shut up the warning, but the prototypes are never used for calling the
-> function because the only caller is in assembler code. I tried to come up
-> with other ways to shut up the compiler using the asmlinkage annotation,
-> but with no success.
+Hi,
 
-I went looking for the same thing.  It's too bad gcc doesn't have an
-__attribute__ for it.
+Changes in v6:
+ - Rebased on top of 6.4-rc2.
+
+Changes in v5:
+ - Addressed some minor comments from Konrad
+ - Rebased on top of 6.3-rc5.
+
+Changes in v4:
+ - Addressed comment from Dmitry to move the gpios to the board file.
+
+Changes in v3:
+ - Removing the applied patch.
+ - Addressing some of the compile time issues missed in v2.
+
+Changes in v2:
+ - Addressing comments from Konrad and Dmitry.
+ - Rebased on top of 6.3-rc1.
+
+This series adds the devicetree support for PCIe PHY and PCIe EP on SDX65.
+The PCIe EP is enabled on SDX65 MTP board.
+
+Thanks,
+Rohit.
+
+Rohit Agarwal (5):
+  dt-bindings: PCI: qcom: Add SDX65 SoC
+  ARM: dts: qcom: sdx65: Add support for PCIe PHY
+  ARM: dts: qcom: sdx65: Add support for PCIe EP
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe PHY
+  ARM: dts: qcom: sdx65-mtp: Enable PCIe EP
+
+ .../devicetree/bindings/pci/qcom,pcie-ep.yaml      |  2 +
+ arch/arm/boot/dts/qcom-sdx65-mtp.dts               | 42 +++++++++++
+ arch/arm/boot/dts/qcom-sdx65.dtsi                  | 87 ++++++++++++++++++++++
+ 3 files changed, 131 insertions(+)
+
+-- 
+2.7.4
+
