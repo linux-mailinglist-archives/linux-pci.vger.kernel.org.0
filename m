@@ -2,41 +2,41 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 435F770795A
-	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 06:55:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1D99707963
+	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 06:58:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229557AbjEREzp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 00:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45492 "EHLO
+        id S229563AbjERE6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 May 2023 00:58:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjEREzo (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 00:55:44 -0400
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2042.outbound.protection.outlook.com [40.107.93.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55CC42693;
-        Wed, 17 May 2023 21:55:43 -0700 (PDT)
+        with ESMTP id S229549AbjERE6o (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 00:58:44 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2074.outbound.protection.outlook.com [40.107.92.74])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FD11271C;
+        Wed, 17 May 2023 21:58:42 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oEN7m++5nLrChQ04vjhLVL8GLjdnKi1rgygjlF1Y9HLuyl7YUBBNiONXd0Xkbn1964JThzJuTuNKHcqFDoYCVSFj15b1v4dEGVEetdLPQsE9Rmk10rgJoRthuCxtlBJ5R2wbnW5bxuzM+W0c5vSsK7Bze3F5qD/qVisSlk+ZPJ/GCyTYyq/iPCDXAu2bWw54PgRTVVFi8YPTuHxCx7aMzmk0kVLoWfGb/mh6vZ9I+Gl7uckkvj76HiPT0HY9+MTcnT4bHSRULYlT8Rib5Lzgz0uk9rkwS4X72D2248iMNuj4b1XRSRbDtgQhGID1pA3WFMwFO1xFtTTAQC1oaS9FWg==
+ b=Mw1F741JuGNV9Ek0lJYAZLdCyhsBruheMUrf2oj7IQbqvbj+2xSppXPuRKZLfP5UojvFD4vaojL1zVP8kqcMIofzayQeyAs1e/2vc7DsXnr3uAs4/wKPtYOAV8793rFJsdzojLn9U42Fg1du7dydejpCSSyEzwrkmIbemFpYiKpZDej5TYjCcoOc3554FPg52PLGCIi2FV0Z7yetkRbE+IPLNOmhmavCTCaz9PebJw5aQae2CkSydo2ySfQ5KHXZd2JlcnlqMbX9L8DtRm6QcUGZBhcwlwtQwQxpoAvQKctmyR4+7YwWnoofn5M3RdWz9yuv+Mystg06kHdUdEofNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jkxbQiNNEu0V+RfGymhvddZ4k9gg3JaIB9cHaGdCkfw=;
- b=RhnbW41UmXhzOs9Pu+JkD77EUQpI7F6Jtx0qiOXwHbCfjjgnshMWCsgjSgHTvkSs94EwclWD4bxr0RL+2b6Tk8B9FVKZmDcYV85dawDd3vJtUT8OyFDcezFhCZ7W3Z8xbuZLFmMsjjzgUllmPWnH00Q73FMKdY2rjCr4HHvXzNqrpBzfABnySLmMuTShZ9Pc25q3Az51ZKSbisCWfJ1BFDHKtzQPc7l9S/KMLiegde5BUuREOh1Z+KIPSdSK0u6l1XerXtOY/4mVTTFs5lUVBJywsgbJ0y5ql5jg18m1lE83vK6F7y/bp0n9sWnvOMs5VwyLXUNMVviEj5PDoFkzMA==
+ bh=OOku1OpwFkMynR9HRkczYSWiOJRot9kdbGhCrqvFkXQ=;
+ b=lIpSKNqnj4PWUCTD8IqnTXidS3exmjyBt2Zvi0+jmgCoS0ipqCd9zB1vJdzLSFCJ/RPHXqYwgMjq1pYpUGWYETFbn+Yrf46cCsobYLdPirW8ipvqOzg9xpOH7MvLu2MwIp3XS8KFPtCUr0M/X5SKeCpOcYLweklhooXfkBzT+kQjWgoGzb3DWWV6jNkFkrBmwBm6KqKzuPWUj+cpbqfs2b8iA1YI2yVTlzAhIh8iBfbPDH1J1Y1Gld3QRGza0HSV38WQ7AIPZk9xRgNpTb6pnGzAsH5s1c6v5itNil5iFBqt2cV+p0q043bnSn7U47lDBpRJWas+Hc+lPuaF/aY2iQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jkxbQiNNEu0V+RfGymhvddZ4k9gg3JaIB9cHaGdCkfw=;
- b=NRc5XQlUvgivYd41ccinok39wv1Mwnu73eg4Aar7JlJIfaM/L+tVlcNGSAGjwc2c1BEBk4sHoeCveaTiH93sEJArNp6EqUvmcQ1lq7wD54A8r0Xr+EEO4+lnxMeaxCtq4Xhc6gx0ERfcmGTOcy24U67tsIp6aUiocJwlcut0qR4=
+ bh=OOku1OpwFkMynR9HRkczYSWiOJRot9kdbGhCrqvFkXQ=;
+ b=cM6RNVSSVRC0peDpx/9eh5kp4AaPP7K2Xh65z9xk1fztwcTrEcTJoOvGbZV83v7/3hCykYsHWIPWS51YurmYb2HMBV5FzDyfA/q2mftT4pKP2FIyLKd5qZT8YmXdcmwd0csKOn8bTD+rbxOEmAsE+kXz1ti3E3F3EQIcf+JdqDo=
 Received: from SN7PR12MB7201.namprd12.prod.outlook.com (2603:10b6:806:2a8::22)
- by DM4PR12MB7575.namprd12.prod.outlook.com (2603:10b6:8:10d::9) with
+ by CY8PR12MB7681.namprd12.prod.outlook.com (2603:10b6:930:84::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.33; Thu, 18 May
- 2023 04:55:41 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.19; Thu, 18 May
+ 2023 04:58:39 +0000
 Received: from SN7PR12MB7201.namprd12.prod.outlook.com
  ([fe80::d31e:12f8:bbac:31b1]) by SN7PR12MB7201.namprd12.prod.outlook.com
  ([fe80::d31e:12f8:bbac:31b1%7]) with mapi id 15.20.6411.019; Thu, 18 May 2023
- 04:55:41 +0000
+ 04:58:39 +0000
 From:   "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
@@ -52,12 +52,12 @@ CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
 Subject: RE: [PATCH v2 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
 Thread-Topic: [PATCH v2 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port
  driver
-Thread-Index: AQHZhJrntUaPjNRHKk2++3mbbOWIBK9W6TcAgAiW+fA=
-Date:   Thu, 18 May 2023 04:55:41 +0000
-Message-ID: <SN7PR12MB72011B7A1B2B8FFAB140E6A08B7F9@SN7PR12MB7201.namprd12.prod.outlook.com>
+Thread-Index: AQHZhJrntUaPjNRHKk2++3mbbOWIBK9XB9EAgAh5VFA=
+Date:   Thu, 18 May 2023 04:58:38 +0000
+Message-ID: <SN7PR12MB720147CE15B2F018F3E7D5AF8B7F9@SN7PR12MB7201.namprd12.prod.outlook.com>
 References: <20230512062725.1208385-4-thippeswamy.havalige@amd.com>
- <ZF56rHL+4Cv7VOuN@bhelgaas>
-In-Reply-To: <ZF56rHL+4Cv7VOuN@bhelgaas>
+ <ZF6UWBd0x9LxAhoJ@bhelgaas>
+In-Reply-To: <ZF6UWBd0x9LxAhoJ@bhelgaas>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -65,55 +65,55 @@ X-MS-TNEF-Correlator:
 authentication-results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|DM4PR12MB7575:EE_
-x-ms-office365-filtering-correlation-id: 5d59e5f9-c04c-49b9-c70b-08db575c2159
+x-ms-traffictypediagnostic: SN7PR12MB7201:EE_|CY8PR12MB7681:EE_
+x-ms-office365-filtering-correlation-id: 30a24f2d-f0ef-4047-3bb3-08db575c8b66
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: hw5lWKExOPaL61HRmBOU/pxKB+04emL/MvRa32Mkc5PzSdXuMm8Bhdg1hFI7vZcZfLbhjWce3Ed/GJjEjkHHj7FZTXdbQ/JeFiLt/XWWfYeeT9KbKMPjWHHWFSgCbHXf8eH5Ev/ZHndqaqR/CAL09Ri/dEp5pHYWkdk6hrt3x39z7gE253xvaK7JJz/n9ep1rR/jWBs7iul9HOtVG5gY5j547pIgZvyStiV2+UOjpipjF7h/FwAo4e8fzUqt/BbBDsmioo9jn/Dt/vSLw++nWV9e+8FQkx8DHF/Cdm/DLw9oAidBhD4OYEIm3dG+vkAFaKiHghEhiq82qU25poKHlS5PLRg42ey3X6zEwSYeCgPC/NWetYZe15o08KgfqQbTD7C30zhPtTJfZ8gHqUO/635AB2i2O1KjCaq3hXY1e0Ho68DH9cb2qxDBP56JOgOR/2kP9p3ULF+7bBxxzZUivk/0xU4ts85HUda13yfEb0mg0hgQNrMPkVRitJ7CGz4KFddg1oRhVR6mvHDqLO6SMQD9FWKFra6Nr6/vmdUawSC8eGinr1sLQp4ukHzA4UM/fCv10+8LNn9SY/KNbSNLtjiPbPsVQT8cfB4zwiViLoj3dgoO3MTJgIp8bVcXuvX9
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(39860400002)(346002)(396003)(366004)(376002)(451199021)(33656002)(7696005)(316002)(54906003)(86362001)(66476007)(76116006)(66556008)(66446008)(4326008)(478600001)(6916009)(64756008)(66946007)(2906002)(8676002)(8936002)(41300700001)(5660300002)(52536014)(55016003)(38100700002)(122000001)(38070700005)(186003)(83380400001)(6506007)(9686003)(71200400001)(26005);DIR:OUT;SFP:1101;
+x-microsoft-antispam-message-info: uS1LrVgOWbxMQhhFselqaSaXigxEp8J/jp/t4ik0LC7r/8plkdAh4dQsYBAklVo0NhBx7/6BAIgVGXmsBZv6ylgtSj2fzTQ1M6MyLeIkyHs9OCV1YGQBbjPvVF0B+34LKS1mYEbRON9QUhvNf4TT16DaMqIQNxWNWEUS0NcS3vj5oPTg7Piz/kRNK2LMYo/dl6Cms2HW+EFgzaTyvssqrNT1ejjjQc79A1TEuZM9torPi3xgCqpZf0cLqI2nJx9YX0U+TsFlMlXY8O3M8eQkEoV3MSKQO6m2zVd2fPVsXtQPGJDQDwqOLxOErNWC+MPRwHjs1a+9VzSZTSryCXkGe0ZRQGQctkmJ0XS+1aP+hjWtfF2m2AuAU/FoBZhyOkv+ubaJ840hSxV4gUyB7PnihTxU+ct1NUb8bcZqEcGOzxXwobl24XdtXaYc/FJ2XLviPj2z5ovtkdjAUDit51cRNpDx94lpJUni/arWKepkjvK4lLIc+qUmViUCh4Gu9X3fpxd2PZPrisnQ+K0ZYYGkqqany8eVhH4vifpc1YXIJc2nG9UHTO76q4F+4RfWcBEriBo4ACqd45WMxWlKP1CF8CVI9uN13QObugbRiLhdnz4=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB7201.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(366004)(39860400002)(346002)(396003)(136003)(451199021)(26005)(9686003)(6506007)(53546011)(7696005)(83380400001)(33656002)(86362001)(38070700005)(122000001)(38100700002)(55016003)(186003)(54906003)(478600001)(316002)(2906002)(6916009)(4326008)(8936002)(8676002)(41300700001)(52536014)(5660300002)(64756008)(66446008)(66476007)(66946007)(66556008)(76116006)(71200400001);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?8eGRlU+IqCPNkOBnW9H/G9XCTW9e9XTLaX6nhokk8UP7xGRjVilODaGTHGyV?=
- =?us-ascii?Q?bBuPezK5ZUGHfUcjyrK4lKz70lZGmLubU7jdtefIBy9obed2fP+bEz0m1CaW?=
- =?us-ascii?Q?z0SdP/BXsMQo+f1MXfkjU0F5RoWTP10la8R/tarfn+WBkX/LKecG+lIpNvMf?=
- =?us-ascii?Q?dmOJdEYo9Pi7NiPBwWR0b6+Nd+iQNe3PQV7mXp6Hp96wHyjJpCNTJNS+WzxU?=
- =?us-ascii?Q?RmhtdVwlOe6R/VXpSRavJKcKKj8C+m5qWYBrg+0DYYmLrXDn9p24PcNUiOl/?=
- =?us-ascii?Q?5pKVqNASUqAaLFWST+Eih0MGO+h2sTd6/eGej0unBRmselLgxxRysTV0tXbE?=
- =?us-ascii?Q?iWC5mPxf6LOxQ+xLXN7vdh7g1TlljoOPFV8SaSV5W0uLjCmu0fna0Kn4wsB7?=
- =?us-ascii?Q?YPBgfqKV9VDh6oqjTTzj3khZ70p+nrKvYNkNDOuKgGb7vOFba0ob8yqW/veP?=
- =?us-ascii?Q?AHPkniOpsP2mAbgEvn6SJuoQ1ax4W5U46O43eLmt42SxcVGTD75LnELTFkE0?=
- =?us-ascii?Q?lZPRnI8K0KZG8C6XSkG5alFFkup10U1k9ZMPAMT4FW56yEeT8I/CXJJfe/5X?=
- =?us-ascii?Q?M44u6P8e8TNg6VuFhTlyA/YaPET6vt8Mk+JPQhtmgCkFt0KJ6SjNQpqZtFuB?=
- =?us-ascii?Q?F82rkcGhrg7Qs2p2s3RIFHmh8xBhfla3MqS/HPbICk5uQQ98UxfM/6Dk4Vy0?=
- =?us-ascii?Q?WwwTnFR5admHjV//suuG9jzQtsihT62UHPIbV9U8UpXUZDHJ8uBDQDD9Wwxk?=
- =?us-ascii?Q?JmaLOt31VXfqm0ACTufD0yL8Z9lkI08PwvqIcJIVwkkYUw4glhj+6tlOyUhU?=
- =?us-ascii?Q?XkNPY3GAgcMAYrFehWqRB6mB8e7L7/DCKuHFhHvOCgQV1lreHV276EoBfNMF?=
- =?us-ascii?Q?MsSGRboZU1BliaqwmXLmTMyidaMJLfvt9CkaAPM6ylmPwdSNwU6hzEua0AFb?=
- =?us-ascii?Q?B5PXReGhT4vEYB7CKvE4p/lurWxu+MjOHfEA/mygcfBPEWqdapn+UKIrAiDg?=
- =?us-ascii?Q?IhlgrG7xahg1VYDyQ87VWHcT76yQIk8zVRYpcQxiasFhJ/0+ikaG04XwmO7N?=
- =?us-ascii?Q?ddMXK69ukIzg0wmg18/qf/waFsZbKvJMR7mVsusK8MU9yYjN61ujzOL3VgRh?=
- =?us-ascii?Q?LiOqPtae0pB9HoI4DBwcBLg93tD9JVSrk88O1ycCnzaL4HqPMWM5bqkG+3Gd?=
- =?us-ascii?Q?b1qfzgJxq3iaiY7uvWDfbbrLfhu7pwAnbFZ934dzApAFuiHFO3b1QLMLZmeh?=
- =?us-ascii?Q?U5cLdDyCnje05btcW4dDpUYnz5qrF8aTtJfiYXcl9A6SgrY+rCVEa64wDwDZ?=
- =?us-ascii?Q?IXOoAC9krWdwzrKxT+aByEmIC2rYGeYXQTMX7vF74uFseGa6VP+e+BrRx3RO?=
- =?us-ascii?Q?uBlPVWpOuL82IXG1ZPD2APN/Nd+yNJb5Ymxo0GuryamEh00Jp/zvyNSK/ga4?=
- =?us-ascii?Q?fnn5JsdCzxyLHtp5Yl0WyKZdHiB2JBbG1O9401H3/7nfHnMaHNErxJuxeRHI?=
- =?us-ascii?Q?bfR67byHSuKLbzF+/y56YCO0CjujB7IpTBHBv7Ium4Xet+TJQiO3DQuxMLTc?=
- =?us-ascii?Q?n/U3YzbIZm++e1X5F7Y=3D?=
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?GZZDDyDsS/rpvEC0Ij8C7ruL33sjvF4oSsqWZwbC3XSRpI1wb+T4cyLweol8?=
+ =?us-ascii?Q?OW8VhqUqMubAtUfsF4hJhkYVch4EPKbQORAw+mey9VADxhUGdB8p1zDzNOJe?=
+ =?us-ascii?Q?sLSoBWiDvKv3D5c3/XukVi9q2Je027V8wtzzWrXAcqX8Nc90mBkr6aRuw/VV?=
+ =?us-ascii?Q?ctKMKxk6cNS8BBGNtdioflAYyF0AH3UB2/eDHXKN6mFqMPdwZ+T8idsF8+u8?=
+ =?us-ascii?Q?NBny15ncJrkUNGorz+i83qv9X4dgFO7uajRBKQK9RKQCcO9WfhmjouObPiXP?=
+ =?us-ascii?Q?zjuDhjAlFycZydVcGQUgPLJPg8tWWwvuTkVgViDlqYRKlPuaj9xwUSi99b9Y?=
+ =?us-ascii?Q?hyT+QEk2T+h5+6SdeMyKn2OZ0WesTZr3IMvOMBbugTRF8tjcS11YMW8SxZxa?=
+ =?us-ascii?Q?qoLbgi20HZij5PQl+q63rsyPzGvFOXzD8brKur90OPLYxdMdlc/EbBELXM1N?=
+ =?us-ascii?Q?y3FR4C96wLivjo0x6hBtxbpl3/GkXgTcGOFVAEt+YJh7iJlXkHyDRklsC6RT?=
+ =?us-ascii?Q?SsoukZJ/e279hXhiYaKnfbVI41foaos2Ikoo8hR962pnxBfNcmPJlVAZIuTO?=
+ =?us-ascii?Q?m0zgRxCWLXLLlrlZ/YHODF3J/l0PXjf4JGFrysauH3H/c4A5RZstI0aAuXkr?=
+ =?us-ascii?Q?CxX3IqghjrQZYXsQmL40UndHccp/2MElJd1GY4mudm9HSxuZlkqxZ1qpoo6G?=
+ =?us-ascii?Q?8CxMPXbXOW76AqSw8WaEJ7J2uYoXIje4I1IWqfm7r2CvfSb91vejcrgOM5wR?=
+ =?us-ascii?Q?GBXcD9K03UkV6+MrVQw/W7+7YPj7i0Cq6o15cEJsYpB4+ioLvjIli9/pvmk5?=
+ =?us-ascii?Q?PjsX5XKeanq/ohqQNsPrEwemadhg24yepQz1cHbag/hnS2yj4WD0BewvpEha?=
+ =?us-ascii?Q?n8iPG/OonipKnw7Bz2xlxnvSdM/iMKs5LDBUqMjo1ZyXU34DlgYmBrDMUQHz?=
+ =?us-ascii?Q?Gqf3jS9OjDAvygVfpB7Y+JwMJPuUwCAHDQrSxz7gjwE+mhNVe33cf6llokoE?=
+ =?us-ascii?Q?MiKIR/k5jXURuYlPy5aWctXwXGnKuY7hUVswINHPv681VUQB0VWE5ZUX12JJ?=
+ =?us-ascii?Q?9hYqDhxy6d/xRlYqLg/gmDlrDd3kkxxg2eF2RFWW0EWgmqbLtpIQp+NPVa7Q?=
+ =?us-ascii?Q?bXwpfEHVBG29CSGV+v1h5DTfiJ67L4CV7WkeNnWcsgA4PhSdt1HIE9R3AcX5?=
+ =?us-ascii?Q?f/K10EPGmI6mPIXT+pSN/sLifN/n/M/Y1ELtw3XNaSv+PwfQwr3hWUw8dr+s?=
+ =?us-ascii?Q?et+IqYbBtdubY4Euj+J1Pn9Trn2kCDYW4BLnJ+bX5yDdyaOt9C7FSJZuJY9H?=
+ =?us-ascii?Q?vU0mit2faSk4C03Z7Qcf8g2tSh2PWe6nuyS0O0nJ9rQsc0lkol9bvVPYj22J?=
+ =?us-ascii?Q?CYw8k+M/U3bF4Zsf76NEc0bOTSlhXDAcmMYRT6iOVDE05OufYDIZ5mkpMWKI?=
+ =?us-ascii?Q?lpQLBh4yA5uvkC67/ntYhBGURvc1hNzhLmGW5Xi1UVg0FzmriKNf22ZYMh/R?=
+ =?us-ascii?Q?eMqmFusHuQ9Dl6j+hACGzxP0piVtCDqwUFh0xCVWmDlEfzdQ3DcTW22fwJla?=
+ =?us-ascii?Q?7qWit0PrVE8U0GcNf3Y=3D?=
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 X-OriginatorOrg: amd.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
 X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB7201.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5d59e5f9-c04c-49b9-c70b-08db575c2159
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2023 04:55:41.0799
+X-MS-Exchange-CrossTenant-Network-Message-Id: 30a24f2d-f0ef-4047-3bb3-08db575c8b66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 May 2023 04:58:39.0015
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
 X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: xVeF7iD1jFymLgGxtvPmPVzvkqdidGBe+lNx2gkBSFaYtBLNg6tf9USMvYWJF/pxMSBsQL5CnbsXJtOq/WcYkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB7575
+X-MS-Exchange-CrossTenant-userprincipalname: RCWWVJKZoCnA47UaxUATwZOj0uaA1shYlrHkkDyl4mHvnA3/gXL9Db7D3AipMogdWtilUZ75VWSuKzv2WvQY8Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR12MB7681
 X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -125,115 +125,55 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 Hi Bjorn,
-> Whatever name/text you settle on, make sure it's in alpha order in the co=
-nfig
-> menu seen by users.  As-is, this patch would make it:
->=20
->   Xilinx AXI PCIe controller
->   Xilinx NWL PCIe controller
->   Xilinx Versal CPM PCI controller
->   Xilinx DMA PL PCIe host bridge support
->=20
- > which is not in alpha order.
->=20
-> > +	  Say 'Y' here if you want kernel to enable support for the
-> > +	  XILINX PL PCIe host bridge support, this PCIe controller
-> > +	  includes DMA PL component.
->=20
-> > +obj-$(CONFIG_PCIE_XILINX_DMA) +=3D pcie-xdma-pl.o
->=20
-> I think this filename needs to include xilinx somehow, not just "xdma".
->=20
-> Since the probe function calls pci_host_probe() in addition to the DMA se=
-tup,
-> I guess this is a fourth Xilinx host bridge, a peer of AXI, CPM, and NWL,=
- and
-> independent of them?
 
+Regards,
+Thippeswamy H
+> -----Original Message-----
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Saturday, May 13, 2023 1:03 AM
+> To: Havalige, Thippeswamy <thippeswamy.havalige@amd.com>
+> Cc: linux-pci@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; krzysztof.kozlowski@linaro.org;
+> bhelgaas@google.com; michals@xilinx.com; robh+dt@kernel.org;
+> Yeleswarapu, Nagaradhesh <nagaradhesh.yeleswarapu@amd.com>; Gogada,
+> Bharat Kumar <bharat.kumar.gogada@amd.com>;
+> lorenzo.pieralisi@arm.com
+> Subject: Re: [PATCH v2 3/3] PCI: xilinx-xdma: Add Xilinx XDMA Root Port d=
+river
+>=20
+> On Fri, May 12, 2023 at 11:57:25AM +0530, Thippeswamy Havalige wrote:
+> > Add support for Xilinx XDMA Soft IP core as Root Port.
+> > ...
+>=20
+> > +#include <linux/of_pci.h>
+> > +#include <linux/irqchip/chained_irq.h>
+>=20
+> The trend seems to be to alphabetize the system includes above.
 - Agreed, fix it in next patch
-> Is the "xdma" or ("DMA PL" as used in Kconfig) name also a peer to "CPM"
-> and "NWL"?  The Kconfig text, especially, should use names that users wil=
-l
-> recognize.  "DMA" or "XDMA" seems a little generic.  The commit log
-> mentions "Zynq" and "Ultrascale+", neither of which appears in Kconfig, s=
-o
-> there are a lot of names in play here, which is confusing.
->=20
-> > +struct xilinx_pcie_dma {
+> > +#include "pcie-xilinx-common.h"
+> > +
+> > +#include "../pci.h"
 - Agreed, fix it in next patch
-> git grep "^struct .*pcie.*" drivers/pci/controller/ says the typical name=
-s are
-> "<driver>_pcie".  Please do the same.
+> Put the pcie-xilinx-common.h include here, as you did for
+> pcie-xilinx-cpm.c:
 >=20
-> > +	void __iomem			*reg_base;
-> > +	u32				irq;
-> > +	struct pci_config_window	*cfg;
-> > +	struct device			*dev;
+>   #include <linux/irqchip/chained_irq.h>
 >=20
-> Please use typical order, i.e., "dev" first, followed by "reg_base", etc.=
-  Look at
-> other drivers and make this similar.  No need to be creatively different.
-- Agreed, fix it in next patch=20
-> > +static inline bool xilinx_pcie_dma_linkup(struct xilinx_pcie_dma
-> > +*port)
->=20
-> Please use the *_pcie_link_up() naming scheme used elsewhere in
-> drivers/pci/controller/.
+>   #include "../pci.h"
+>   #include "pcie-xilinx-common.h"
 - Agreed, fix it in next patch
-> > +static bool xilinx_pcie_dma_valid_device(struct pci_bus *bus,
-> > +unsigned int devfn)
+> pcie-xilinx.c has a very similar list of register definitions, which make=
+s me
+> wonder why it can't share pcie-xilinx-common.h as well.
 >=20
-> Similarly, *_pcie_valid_device().  Lots more instances below.  Don't spli=
-t the
-> "pcie" from the rest of the generic parts of the name.
+> Obviously it would take a bit of rework since it uses BIT(x) instead of j=
+ust "x".
+> But you hide the "BIT()" inside IMR(), which is arguably slightly obscure=
+ since
+> the #define value is not a register mask:
 >=20
-> > +static struct pci_ecam_ops xilinx_pcie_dma_ops =3D {
+> > +#define IMR(x) BIT(XILINX_PCIE_INTR_ ##x)
 >=20
-> const *_ecam_ops
-- Agreed, fix it in next patch
-> > +static void xilinx_mask_leg_irq(struct irq_data *data) static void
-> > +xilinx_unmask_leg_irq(struct irq_data *data) static struct irq_chip
-> > +xilinx_leg_irq_chip =3D {
-> > +	.name           =3D "INTx",
-> > +	.irq_mask       =3D xilinx_mask_leg_irq,
-> > +	.irq_unmask     =3D xilinx_unmask_leg_irq,
-> > +};
->=20
-> You use "intx" in the names below.  Please also use "intx" instead of "le=
-g" in
-> the names above.  No need for two different names for the same concept.
->=20
-> > +static const struct irq_domain_ops intx_domain_ops =3D {
-> > +	.map =3D xilinx_pcie_dma_intx_map,
->=20
-> > +	/* Enable the Bridge enable bit */
->=20
-> "Set the ... enable bit"
-- Agreed, fix it in next patch
-> > +	pcie_write(port, pcie_read(port, XILINX_PCIE_DMA_REG_RPSC) |
->=20
-> > +static int xilinx_pcie_dma_parse_dt(struct xilinx_pcie_dma *port,
-> > +				    struct resource *bus_range)
-> > +{
-> > +	struct device *dev =3D port->dev;
-> > +	int err;
-> > +	struct platform_device *pdev =3D to_platform_device(dev);
-> > +	struct resource *res;
->=20
-> Weird ordering.  Suggest order of use:
-- Agreed, fix it in next patch
->   struct device *dev =3D port->dev;
->   struct platform_device *pdev =3D to_platform_device(dev);
->   struct resource *res;
->   int err;
->=20
-> > +static int xilinx_pcie_dma_probe(struct platform_device *pdev) {
-> > +	struct xilinx_pcie_dma *port;
-> > +	struct device *dev =3D &pdev->dev;
-> > +	struct pci_host_bridge *bridge;
-> > +	struct resource_entry *bus;
-> > +	int err;
->=20
-> Would order "struct device *dev" first.
-- Agreed, fix it in next patch
+> I don't really care either way, but it seems like a possibly needless dif=
+ference.
 > Bjorn
