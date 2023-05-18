@@ -2,217 +2,236 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C98F7707E26
-	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 12:32:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB4F707E5E
+	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 12:46:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230286AbjERKci (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 06:32:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53490 "EHLO
+        id S230513AbjERKqG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 May 2023 06:46:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230271AbjERKci (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 06:32:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC8781FC2;
-        Thu, 18 May 2023 03:32:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 89E7164C1A;
-        Thu, 18 May 2023 10:32:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E776C433EF;
-        Thu, 18 May 2023 10:32:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1684405956;
-        bh=qcuIIFrV0HYuCZo4MxhSdAtu2G9Vl6jJfQro0EV5jFE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EezV9kRvovmhiPavc7xv9MDzTnxhP630H/UmxugMEifElrQf9RyQD8fB809XfbjWo
-         brJuCjqY9KLIC/B8gznaPBjEtTx5tvSVKTNZWUiQus6ImRXFtG2sXXmpa/9DhPpSJt
-         Oty3KT9wYLkucE89lGw5oKPNWcGuoxrGnULu6ojo=
-Date:   Thu, 18 May 2023 12:32:32 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Yinbo Zhu <zhuyinbo@loongson.cn>
-Cc:     Minas Harutyunyan <hminas@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>, wanghongliang@loongson.cn,
-        Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn
-Subject: Re: [PATCH v1] usb: dwc2: add pci_device_id driver_data parse support
-Message-ID: <2023051843-scruffy-gush-cdec@gregkh>
-References: <20230518092240.8023-1-zhuyinbo@loongson.cn>
+        with ESMTP id S230036AbjERKqD (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 06:46:03 -0400
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2041.outbound.protection.outlook.com [40.107.220.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D90410D8;
+        Thu, 18 May 2023 03:46:01 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ns9SK9wL30wTOCqtYqSkspI43Zt3BD8EmBGTJd3YKsCzNFgBSyeSjJ9Wrt6upy3ng4Qk6DtKykIA0243lUGM3QNwSHABSLl+PhkiHWlYEt/hmm4WO9Oj3Vcme9jOuYbFWQv/jWPW8x1bqKj3PYYFnwYccmG6LjfVBdNTuKSZSXFY5N6JhC1aFY/InChsRkQtkpGRWYFLN/ia9ASCCmBDaY4X3dR+wTlpD8LdA18Pzv/HVhlwbwH8pZBFvtHBLUlizZkZGDjFi+8zKigW0D9FjPoSQY88koQ2UmKlcICpM4ZedtA2isbI+7LapXWp979rE6w0B6QqZjgpKlhBgEF0LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=zgG52cfylsN99bm4Vj4x3TNKL1ezCzLg8m+LQg9FHFU=;
+ b=I79Yotpw+EdyKryhgVKYxdTCoqq4S24QH88KdbdIXH5TYZ+o1eO3vxENEkr+X7tycKtE0j6IOyVRypIjMbz13UFPnw3qcV7x+0/9MI/6oAHnV5/83XQgBAX6TttOGSdQSWPF0CP9I1COHvLDQ9CQ+XJLy7fYaNxq6bgVXWbdLGTPXTOWDiTTmKjFYSwRlb2/WAu11AsHHCcLBUuhqvuxDPxo9vghjGKBveabegUrhklfPCSi5d0MZsFVD3hCR4VCmmVYGHt4to53KblMdG343srLzr+HoEIrQAL40BY7mgWcSCXm/RzwzA0eruuER07Oe6kSNsYlqx9QUKIlZoLO2w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zgG52cfylsN99bm4Vj4x3TNKL1ezCzLg8m+LQg9FHFU=;
+ b=Sg2mE75qykbR9+ZgDLRZee2+yups9B70qdAw9pcUZ6kdeEPsgWjGwCIMNf4DJJf26pXCZnL5D7zf/31Ubfumi2tu8XG3QN+TYshy7S1GDZFs5hRmL/E4p83G/yjUDS022iJVA3Xa885tvTrbKvQaGAYEo5ef+rskCd1Sva55HlA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from BYAPR12MB4758.namprd12.prod.outlook.com (2603:10b6:a03:a5::28)
+ by DM6PR12MB4169.namprd12.prod.outlook.com (2603:10b6:5:215::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.19; Thu, 18 May
+ 2023 10:45:57 +0000
+Received: from BYAPR12MB4758.namprd12.prod.outlook.com
+ ([fe80::e78e:b7da:7b9a:a578]) by BYAPR12MB4758.namprd12.prod.outlook.com
+ ([fe80::e78e:b7da:7b9a:a578%4]) with mapi id 15.20.6411.019; Thu, 18 May 2023
+ 10:45:56 +0000
+Message-ID: <fe90f121-3e7e-7071-f654-6d77a7a8102e@amd.com>
+Date:   Thu, 18 May 2023 12:45:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] dt-bindings: xilinx: Switch xilinx.com emails to amd.com
+Content-Language: en-US
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     piyush.mehta@amd.com, nava.kishore.manne@amd.com,
+        sai.krishna.potthuri@amd.com, shubhrajyoti.datta@amd.com,
+        vishal.sagar@amd.com, kalyani.akula@amd.com,
+        bharat.kumar.gogada@amd.com, linux-kernel@vger.kernel.org,
+        monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Bartosz Golaszewski <brgl@bgdev.pl>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Manish Narani <manish.narani@xilinx.com>,
+        Mark Brown <broonie@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Moritz Fischer <mdf@kernel.org>,
+        Rajan Vaja <rajan.vaja@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Srinivas Neeli <srinivas.neeli@amd.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Rix <trix@redhat.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Wu Hao <hao.wu@intel.com>, Xu Yilun <yilun.xu@intel.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-ide@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+References: <f5b2bd1e78407e4128fc8f0b5874ba723e710a88.1684245058.git.michal.simek@amd.com>
+ <CABb+yY2JaC8b-HFEU_WnSBSCr2edgEezXJkfMUYqjeLBA1MvYw@mail.gmail.com>
+From:   Michal Simek <michal.simek@amd.com>
+In-Reply-To: <CABb+yY2JaC8b-HFEU_WnSBSCr2edgEezXJkfMUYqjeLBA1MvYw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: VI1PR10CA0099.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:28::28) To BYAPR12MB4758.namprd12.prod.outlook.com
+ (2603:10b6:a03:a5::28)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230518092240.8023-1-zhuyinbo@loongson.cn>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR12MB4758:EE_|DM6PR12MB4169:EE_
+X-MS-Office365-Filtering-Correlation-Id: 139c61e8-0e11-4501-c53b-08db578d0eb4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: nNxcxbO1ZyA8v3QXLrLu1RZCAhkAg5XTPt+/NpY2K9pd0a7iedl6t0bIWl2fAKhfpCdB6kXY3vy24R32C8mvSL5HWebPqi1fpxgrhZBtQ+tw6zY8TjYVvVi+jF0o/WE/FvGm5CgRILU/uE8jteJoQy2YXfhJmhs2Jus4A97zvGzXtK/CYJX47unLpMFH3BLDq6iAi1qdVcLGLEGpQZSK6EYSIW9DfhMrnw3+IGegRBthtPNJnjlLfY8e5+XxahA4j7eGtYMfOg7EikxA4VfJriXXPzX9lDAjFtM3/BlAyt8LwQrdgdGoFMgFDRCHbXpaeDpIGBrN7KKsNodPddc2abXvW6O6lNz7HjxOjjE8LeuT34jAHrbE5k8hxpmGvASUrmR2opIJqNQqeuzzztu2tEjDSF5GbZ7K0FeXzeMhFK0T/PDJq9uxcEokNOPZL+1A+vqcKXuoo6F71xwiCGJD7Ah90VS2BOPUgfaFwDdRHq1ouGh9nK2g9jb39k4NJSLrC1XQgHPdqpSqTp0rDAOZVqR1YsPgAJcCRfUlBbENAFMwU8AX9OVgk28DoXsfVFb9pEK4hmaoy7VlJ0yM2/FGtKvaljAnZavCwjtNJ4bWffQlKUVBgbc4ZlSpO/9ZPgr+vvo5tg3YTDP3AHmR0xGNsg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4758.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(451199021)(26005)(6506007)(6512007)(53546011)(36756003)(2616005)(83380400001)(31696002)(86362001)(38100700002)(186003)(6486002)(54906003)(44832011)(7416002)(7406005)(7366002)(478600001)(2906002)(316002)(31686004)(8936002)(4326008)(8676002)(6916009)(41300700001)(5660300002)(66476007)(66946007)(66556008)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NThMaTdpK0VaRjd6M3BWbkNPYVJocmo2OFJZdEMvVThBazZqR0sxN2tMeUxT?=
+ =?utf-8?B?dk4rcG1SV0pmeWcxMlhVdUxRdEhFUFVuNzkwVTJwRVFJb2FGd0RpamtwWjZy?=
+ =?utf-8?B?Y2dBQVc4NFMybmNBMmdRWGJ6QWZ2QkRydnN2anBCcDYwQ2dRY1VhSXBBZitW?=
+ =?utf-8?B?aGN4d2FGejB1eFhRWHQ3V0QrSkl6Y2hrNFU2RFFOY0NUSDFRMzcvUURBbW9R?=
+ =?utf-8?B?MkN4cWkvejRQL2JINXJia2pUOG1TQVVyS2dxSVZtVnVSMTBxcFcvTXpPTjZQ?=
+ =?utf-8?B?dG5MWFpUOTh5aDFnaXdDc05Pd1lVcUxaZTZOU2s1TlhhWVdLUENDZ3gwSzY0?=
+ =?utf-8?B?WE5GYXEreHhLMTNYdmRtOWIrU2JqVEs3S3JTcTRBUGxmam1XRjQ3Qjh2d0JH?=
+ =?utf-8?B?NlEvdW92WE9hK2pxZGpLN1lRV1g2MG94WVpCMWhrcTJGd1IzamRXc0MyakZJ?=
+ =?utf-8?B?dmlGOGhOWnJ6d2JkS2tKb3JvZnM2TGpnVEJWamxqcXV4RTFhVVY2MmVGY2wx?=
+ =?utf-8?B?aW1FVk0wYkFySnIxeXEwcUl5UkdsU2JGWEhIdS9ISEhvWDFETUp2dklCcWN5?=
+ =?utf-8?B?Z25jeFR4YktLUUp6Rm5oUnpPSndKSERmL2xTeTArTXd3K1pkWjE1RVlpSXNt?=
+ =?utf-8?B?N0M3VFZNQTZFK0Q3Skd4YkhzSlJ4OWFUK1JNbFFmSGp3WC9XTTYrdVpMQ2lm?=
+ =?utf-8?B?bmV1STZzUGNwSGVjUkcwbjU3NjdGZmRhYit2ajZjdHFIZ3BkS3BQRkY5WHRs?=
+ =?utf-8?B?czYvZHJJbFBrNGZ0YTJPbHlMdTR4dUViMGdaSHZaVEZ2ODBIcllIK0Z5NGM3?=
+ =?utf-8?B?NG5zdytRY3JydXRlVjhvVTd0QzZId1oxazZGOWhzR3ZCQ0pSaDBrblRRNTdU?=
+ =?utf-8?B?Z3dMd0M3L1NsbzVuRnpQWUo1R09lMTZ1K0tSTzdmdi9BNG1nVTFza0p0cFJ6?=
+ =?utf-8?B?QWxualNYS3VzNjFIY0c4QTd2VC9wV3Urb3R6NzIzUnFIU01wc1hJai85Q1Ir?=
+ =?utf-8?B?RjRWY3pmTXUzazlWdm5sTUs2TlNtVUtURVdXT3JzdC9RalhzaW00MnpVcGg3?=
+ =?utf-8?B?bGt1UTA2aDdFdGhFQlNKbnRHVmcxMm5KcHRUYmR2dDNGbUVZN1cwSE9xL1BI?=
+ =?utf-8?B?LzVzaFY0UkFZMjdUWG1xRkpJd2RFS1JXN2F6WkhlNHhzWU9pM1llbkFCb2lk?=
+ =?utf-8?B?TW9OTG8rN0hQT1lFTU8yN1pYemQxcC8xcmd1Z01aNFg0MkpET1U3Mk5WcTVB?=
+ =?utf-8?B?aFJjSnNIcE5zRndSZklUa0J5Njd1WC8yZnAwa2dBT1FvSEhCNDRyc1VBYUpl?=
+ =?utf-8?B?RGJxMTRGWnRhbjArbnc3d2ovc2dlb0Jpa2tXMDB1czdSVVE5eFBFWFpnSTdt?=
+ =?utf-8?B?cW5rbHJ5STErcHYwOG8zalZ1d3V4SUdwazhUazZGTjE2anIxRzZQUjJMVFA2?=
+ =?utf-8?B?Ymw4N2hOdk9hSnk5aHREQ3VWWER1UlJiQ0NrSkg1QlFiOEloZXdSMi9LTnFK?=
+ =?utf-8?B?U0JmeVhDRkVJbGNlVlVqNk91UzJabnZMWHZjN0U0Q1RxK0V5c1VobWtUdHZB?=
+ =?utf-8?B?WDNjaldtZ1F4UVJkZXIzcVk0TW1KbGp0V0QxbklBS1pEeldxV01aUnNUWVZw?=
+ =?utf-8?B?Z3RSWFRGYWlDb0k1b1JOUjlxWks1Ykd5V21xTE5zdlNCc1gzelViTldsbHlB?=
+ =?utf-8?B?K3JXRXE2V2NETWd2VXgzb05ySVo5Mi8reXljSXlGVjVWRENOY2tzOE5sUjVR?=
+ =?utf-8?B?M2sxVFdKa05CSkRjUnFaMlkrYjNJSDk3Z2ZuU3I1QlJLRmVvcFJlM1psRWNZ?=
+ =?utf-8?B?T1pxQ3A2aGNnUHFmMytUVHd5VjRtSWF6eThMK1dFYUtkY1hPeXduNEQ3eHhy?=
+ =?utf-8?B?NHN5Q0h3RXQrMGljMnlTUjUwQ0g3MGpnbmNHbjRWcllUQklsMUNJVUN1ZmZj?=
+ =?utf-8?B?Q1VLOGM5aGt4eFMzbFM3YkJZdTluZ0wvYzNiTExydFZib1lzY0t3TEk1SEFY?=
+ =?utf-8?B?cmR2b2VmQUErSVlIOS96TnVVM2F6em1sUXpmTFp1NlBobFI0d21MTGNxZ3Aw?=
+ =?utf-8?B?K3UwV2JnbEpOWHlpd1E5MmhpVmYxWTlsSnh2RU9LM3F2cnVLbDQyQlNVcG9k?=
+ =?utf-8?Q?OAEqqTVcjKJxC4XXXeR2O6Ti3?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 139c61e8-0e11-4501-c53b-08db578d0eb4
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4758.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 May 2023 10:45:55.7579
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6uZrmYD6r6sRW89Dt84pAx+OxwD6OlCnhivy0DFHHJjHbPhyEpwOrBfXE7lpxyRz
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4169
+X-Spam-Status: No, score=-3.7 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 18, 2023 at 05:22:40PM +0800, Yinbo Zhu wrote:
-> The dwc2 driver has everything we need to run in PCI mode except
-> for pci_device_id driver_data parse.  With that to set Loongson
-> dwc2 element and added identified as PCI_VENDOR_ID_LOONGSON
-> and PCI_DEVICE_ID_LOONGSON_DWC2 in dwc2_pci_ids, the Loongson
-> dwc2 controller will work.
+
+
+On 5/17/23 16:16, Jassi Brar wrote:
+> On Tue, May 16, 2023 at 8:51 AM Michal Simek <michal.simek@amd.com> wrote:
+>>
+>> @xilinx.com is still working but better to switch to new amd.com after
+>> AMD/Xilinx acquisition.
+>>
+>> Signed-off-by: Michal Simek <michal.simek@amd.com>
+>> ---
+>>
+>>   Documentation/devicetree/bindings/arm/xilinx.yaml             | 2 +-
+>>   Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml     | 2 +-
+>>   .../devicetree/bindings/clock/xlnx,clocking-wizard.yaml       | 2 +-
+>>   Documentation/devicetree/bindings/clock/xlnx,versal-clk.yaml  | 2 +-
+>>   Documentation/devicetree/bindings/crypto/xlnx,zynqmp-aes.yaml | 4 ++--
+>>   .../bindings/firmware/xilinx/xlnx,zynqmp-firmware.yaml        | 2 +-
+>>   .../devicetree/bindings/fpga/xilinx-zynq-fpga-mgr.yaml        | 2 +-
+>>   Documentation/devicetree/bindings/fpga/xlnx,versal-fpga.yaml  | 2 +-
+>>   .../devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.yaml       | 2 +-
+>>   Documentation/devicetree/bindings/gpio/gpio-zynq.yaml         | 2 +-
+>>   Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml  | 2 +-
+>>   .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    | 2 +-
+>>   Documentation/devicetree/bindings/i2c/cdns,i2c-r1p10.yaml     | 2 +-
+>>   .../devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml  | 2 +-
+>>   .../devicetree/bindings/media/xilinx/xlnx,csi2rxss.yaml       | 2 +-
+>>   .../bindings/memory-controllers/snps,dw-umctl2-ddrc.yaml      | 2 +-
+>>   .../bindings/memory-controllers/xlnx,zynq-ddrc-a05.yaml       | 2 +-
+>>   Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml  | 2 +-
+>>   .../devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml        | 2 +-
+>>   .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml      | 2 +-
+>>   .../devicetree/bindings/power/reset/xlnx,zynqmp-power.yaml    | 2 +-
+>>   Documentation/devicetree/bindings/rtc/xlnx,zynqmp-rtc.yaml    | 2 +-
+>>   Documentation/devicetree/bindings/serial/cdns,uart.yaml       | 2 +-
+>>   Documentation/devicetree/bindings/spi/spi-cadence.yaml        | 2 +-
+>>   Documentation/devicetree/bindings/spi/spi-xilinx.yaml         | 2 +-
+>>   Documentation/devicetree/bindings/spi/spi-zynqmp-qspi.yaml    | 2 +-
+>>   Documentation/devicetree/bindings/spi/xlnx,zynq-qspi.yaml     | 2 +-
+>>   Documentation/devicetree/bindings/timer/cdns,ttc.yaml         | 2 +-
+>>   .../devicetree/bindings/watchdog/xlnx,xps-timebase-wdt.yaml   | 4 ++--
+>>   29 files changed, 31 insertions(+), 31 deletions(-)
+>>
+> .....
+>> diff --git a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml
+>> index 374ffe64016f..aeaddbf574b0 100644
+>> --- a/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml
+>> +++ b/Documentation/devicetree/bindings/mailbox/xlnx,zynqmp-ipi-mailbox.yaml
+>> @@ -33,7 +33,7 @@ description: |
+>>                 +------------------------------------------+
+>>
+>>   maintainers:
+>> -  - Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+>> +  - Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>
+>>
+>>   properties:
+>>     compatible:
+>>
+> Acked-by: Jassi Brar <jassisinghbrar@gmail.com>
 > 
-> Signed-off-by: Yinbo Zhu <zhuyinbo@loongson.cn>
-> ---
->  drivers/usb/dwc2/core.h   |  1 +
->  drivers/usb/dwc2/params.c | 33 +++++++++++++++++++++++++++++++--
->  drivers/usb/dwc2/pci.c    | 14 +-------------
->  include/linux/pci_ids.h   |  2 ++
->  4 files changed, 35 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index 0bb4c0c845bf..c92a1da46a01 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -1330,6 +1330,7 @@ irqreturn_t dwc2_handle_common_intr(int irq, void *dev);
->  /* The device ID match table */
->  extern const struct of_device_id dwc2_of_match_table[];
->  extern const struct acpi_device_id dwc2_acpi_match[];
-> +extern const struct pci_device_id dwc2_pci_ids[];
->  
->  int dwc2_lowlevel_hw_enable(struct dwc2_hsotg *hsotg);
->  int dwc2_lowlevel_hw_disable(struct dwc2_hsotg *hsotg);
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index 21d16533bd2f..f7550d293c2d 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -7,6 +7,8 @@
->  #include <linux/module.h>
->  #include <linux/of_device.h>
->  #include <linux/usb/of.h>
-> +#include <linux/pci_ids.h>
-> +#include <linux/pci.h>
->  
->  #include "core.h"
->  
-> @@ -55,6 +57,14 @@ static void dwc2_set_jz4775_params(struct dwc2_hsotg *hsotg)
->  		!device_property_read_bool(hsotg->dev, "disable-over-current");
->  }
->  
-> +static void dwc2_set_loongson_params(struct dwc2_hsotg *hsotg)
-> +{
-> +	struct dwc2_core_params *p = &hsotg->params;
-> +
-> +	p->phy_utmi_width = 8;
-> +	p->power_down = DWC2_POWER_DOWN_PARAM_NONE;
-> +}
-> +
->  static void dwc2_set_x1600_params(struct dwc2_hsotg *hsotg)
->  {
->  	struct dwc2_core_params *p = &hsotg->params;
-> @@ -281,6 +291,22 @@ const struct acpi_device_id dwc2_acpi_match[] = {
->  };
->  MODULE_DEVICE_TABLE(acpi, dwc2_acpi_match);
->  
-> +const struct pci_device_id dwc2_pci_ids[] = {
-> +	{
-> +		PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_PRODUCT_ID_HAPS_HSOTG),
-> +	},
-> +	{
-> +		PCI_DEVICE(PCI_VENDOR_ID_STMICRO,
-> +			   PCI_DEVICE_ID_STMICRO_USB_OTG),
-> +	},
-> +	{
-> +		PCI_DEVICE(PCI_VENDOR_ID_LOONGSON, PCI_DEVICE_ID_LOONGSON_DWC2),
-> +		.driver_data = (unsigned long)dwc2_set_loongson_params,
-> +	},
-> +	{ /* end: all zeroes */ }
-> +};
-> +MODULE_DEVICE_TABLE(pci, dwc2_pci_ids);
-> +
->  static void dwc2_set_param_otg_cap(struct dwc2_hsotg *hsotg)
->  {
->  	switch (hsotg->hw_params.op_mode) {
-> @@ -929,10 +955,13 @@ int dwc2_init_params(struct dwc2_hsotg *hsotg)
->  		set_params(hsotg);
->  	} else {
->  		const struct acpi_device_id *amatch;
-> +		const struct pci_device_id *pmatch;
->  
->  		amatch = acpi_match_device(dwc2_acpi_match, hsotg->dev);
-> -		if (amatch && amatch->driver_data) {
-> -			set_params = (set_params_cb)amatch->driver_data;
-> +		pmatch = pci_match_id(dwc2_pci_ids, to_pci_dev(hsotg->dev->parent));
+> Just curious, some developers' ids are left unchanged, and not all
+> devs have S.O.B.
 
-Ick, this means this is not a "real" PCI driver, right?  Why not?
+I want to go over all xilinx.com emails and move that bindings to proper person 
+if that current person is no more active.
 
-Please tie into the PCI device probe call, don't walk all PCI devices
-like this.
+Thanks,
+Michal
 
-How are you _sure_ that the parent is really a PCI device?  That is very
-very fragile and will break.
-
-Do this properly instead.
-
-
-> +
-> +		if ((amatch && amatch->driver_data) || (pmatch && pmatch->driver_data)) {
-> +			set_params = (set_params_cb)pmatch->driver_data;
->  			set_params(hsotg);
->  		}
->  	}
-> diff --git a/drivers/usb/dwc2/pci.c b/drivers/usb/dwc2/pci.c
-> index b7306ed8be4c..f3a1e4232a31 100644
-> --- a/drivers/usb/dwc2/pci.c
-> +++ b/drivers/usb/dwc2/pci.c
-> @@ -24,7 +24,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/usb/usb_phy_generic.h>
->  
-> -#define PCI_PRODUCT_ID_HAPS_HSOTG	0xabc0
-> +#include "core.h"
->  
->  static const char dwc2_driver_name[] = "dwc2-pci";
->  
-> @@ -122,18 +122,6 @@ static int dwc2_pci_probe(struct pci_dev *pci,
->  	return ret;
->  }
->  
-> -static const struct pci_device_id dwc2_pci_ids[] = {
-> -	{
-> -		PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, PCI_PRODUCT_ID_HAPS_HSOTG),
-> -	},
-> -	{
-> -		PCI_DEVICE(PCI_VENDOR_ID_STMICRO,
-> -			   PCI_DEVICE_ID_STMICRO_USB_OTG),
-> -	},
-> -	{ /* end: all zeroes */ }
-> -};
-> -MODULE_DEVICE_TABLE(pci, dwc2_pci_ids);
-> -
->  static struct pci_driver dwc2_pci_driver = {
->  	.name = dwc2_driver_name,
->  	.id_table = dwc2_pci_ids,
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index e43ab203054a..6481f648695a 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -157,6 +157,7 @@
->  #define PCI_VENDOR_ID_PCI_SIG		0x0001
->  
->  #define PCI_VENDOR_ID_LOONGSON		0x0014
-> +#define PCI_DEVICE_ID_LOONGSON_DWC2	0x7a04
->  
->  #define PCI_VENDOR_ID_SOLIDIGM		0x025e
->  
-> @@ -2356,6 +2357,7 @@
->  #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB3_AXI	0xabce
->  #define PCI_DEVICE_ID_SYNOPSYS_HAPSUSB31	0xabcf
->  #define PCI_DEVICE_ID_SYNOPSYS_EDDA	0xedda
-> +#define PCI_PRODUCT_ID_HAPS_HSOTG       0xabc0
-
-Please read the top of this file for why you should not add new ids
-here.
-
-thanks,
-
-greg k-h
