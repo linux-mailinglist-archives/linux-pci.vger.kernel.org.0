@@ -2,48 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3FB857086E6
-	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 19:29:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D16467086F3
+	for <lists+linux-pci@lfdr.de>; Thu, 18 May 2023 19:32:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229999AbjERR3d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 13:29:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57224 "EHLO
+        id S229621AbjERRcD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 May 2023 13:32:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230071AbjERR3Q (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 13:29:16 -0400
+        with ESMTP id S229654AbjERRcC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 13:32:02 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60E510F8;
-        Thu, 18 May 2023 10:28:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3451EAA;
+        Thu, 18 May 2023 10:31:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684430940; x=1715966940;
+  t=1684431105; x=1715967105;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=YbB0ITNWC6W+DKq+pyGIH80h6yd4xEjccS7jew/3CTQ=;
-  b=LvgOCBPppG56F7c62H+OqHCOLayG5MSgAP7pjnVJmAVRoe8ymVZg/7HW
-   OXdAsRuXNnXbphEGwy8OLEdPFt9UCpjQGWIrgNAkTK1a/tUVuU3PaKppv
-   KR5rTNtDJxYikVk6lOHp2cenrRpo4rXwTbkyHjNo2IfmXaa28VQ57vZeo
-   7vJh3lq5M9L95dDhKwdf7StfZZD/8FscmggqN0QcYHRhWbCn12XX4l0tE
-   0lsvmtuiY2BkHOkiTmpL9edIjlLbi5JyeEHFlfej4k82yLkTeQozm6BZl
-   jfVslEHNeLHTKFXBiJbgwtiZw6BIOgdqnqwS0a+IbABS/M87FTFp8vnq9
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354474558"
+  bh=Wl8BDYVG0i7AvYNjyPawAfZhnam6nIO2zxc9kJVuY98=;
+  b=n6Zm4Of+BldnxQc0YUu+ASMgCbzK4g4rXyxfgtVIC2vl1JBt7SeLKpZp
+   qljjuxYfoDzKXUZrlcSJ89kfZoyqK51Ah7HKlru6SrdfmQjtom26vsrmd
+   TOIzyxXUW7jaHbalTuvAI6vAsv8BeJS5PSivMZqADfQvEUsb6QNBnDOmn
+   4uvBcFukVBd5uvAFCcVq2wE0EnIoU/3dqyDjA8JjMO9joNPR4DkFr1JcF
+   1eauAMqrJn+WNe3WKs76V6aTST7bAOz0hcGHGnpwt5bbMUA4UWBbmbijt
+   NHAUWy03yZZq1VYMJzqtfeiX9N23vPt6y1+9p/oqGcJzYakYCjK6DCG81
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354475452"
 X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="354474558"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:28:58 -0700
+   d="scan'208";a="354475452"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="702214993"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="1032284552"
 X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="702214993"
+   d="scan'208";a="1032284552"
 Received: from nroy-mobl1.amr.corp.intel.com (HELO [10.209.81.123]) ([10.209.81.123])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:28:58 -0700
-Message-ID: <cabdd839-71d5-aabb-aee6-d37ebcabf2ab@intel.com>
-Date:   Thu, 18 May 2023 10:28:58 -0700
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:17 -0700
+Message-ID: <d03ef733-8098-69b7-97c2-304f1195e2a4@intel.com>
+Date:   Thu, 18 May 2023 10:31:16 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH 10/20] x86: xen: add missing prototypes
+Subject: Re: [PATCH 00/20] x86: address -Wmissing-prototype warnings
 Content-Language: en-US
 To:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org
 Cc:     Arnd Bergmann <arnd@arndb.de>,
@@ -70,9 +70,8 @@ Cc:     Arnd Bergmann <arnd@arndb.de>,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
 References: <20230516193549.544673-1-arnd@kernel.org>
- <20230516193549.544673-11-arnd@kernel.org>
 From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230516193549.544673-11-arnd@kernel.org>
+In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-7.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
@@ -87,21 +86,11 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 On 5/16/23 12:35, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> arch/x86/xen/enlighten_pv.c:1233:34: error: no previous prototype for 'xen_start_kernel' [-Werror=missing-prototypes]
-> arch/x86/xen/irq.c:22:14: error: no previous prototype for 'xen_force_evtchn_callback' [-Werror=missing-prototypes]
-> arch/x86/xen/mmu_pv.c:358:20: error: no previous prototype for 'xen_pte_val' [-Werror=missing-prototypes]
-> arch/x86/xen/mmu_pv.c:366:20: error: no previous prototype for 'xen_pgd_val' [-Werror=missing-prototypes]
+> The ones that are a bit awkward are those that just add a prototype to
+> shut up the warning, but the prototypes are never used for calling the
+> function because the only caller is in assembler code. I tried to come up
+> with other ways to shut up the compiler using the asmlinkage annotation,
+> but with no success.
 
-What's the deal with this one?
-
-The patch is doing a bunch functions on top of the ones from the commit
-message.  Were you just showing a snippet of what the actual set of
-warnings is?
-
-Also, fwiw, it would be nice to have actual words in the changelog, even
-for these maddeningly repetitive series.  Even something like:
-
-	Xen has a bunch of these because of how the paravirt code uses
-	inline assembly.
+I went looking for the same thing.  It's too bad gcc doesn't have an
+__attribute__ for it.
