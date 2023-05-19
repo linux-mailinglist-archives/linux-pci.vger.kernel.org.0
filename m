@@ -2,247 +2,232 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 18C4470928E
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 11:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79318709315
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 11:31:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231331AbjESJEF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 05:04:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49894 "EHLO
+        id S229644AbjESJa7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 05:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37606 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231311AbjESJD7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 05:03:59 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12531BC8;
-        Fri, 19 May 2023 02:03:28 -0700 (PDT)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34J81B91004765;
-        Fri, 19 May 2023 09:03:22 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=+qPFDuZS2pivZBcOc3YcwlSzJjRWO/L2uVnS7tFny2M=;
- b=iFiG8fAOaea0qBpFuO9TpDZk/df0BSD4m8aLm9zO3buB28t3X6d3nVwoUEpgydR83USC
- mNI33hIy4EtvqNnep/STPu/t0l071X3cccN3VWv0oOrPXJzviDYyrjgNEzcQ5PjS06ap
- BVff1CEXcQ7nYiPd7OLOn4EFFSl9SI/qsVZvXBZgCl3IH+d1tVBZh5gvmRKbteBXlQ4r
- +463bd7yJpBWhFM/z4ZQGhMDDOvQ2e1z3lazyWGtZHz5lKu80my3tbDgGRXrAs912M14
- s5BwZbIyA+k9bt7LFsr2QxM+JVp8vKPekmG1LGb6IogSi8cTyAss/c5XDbVXE1kLuBgz yw== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3qp57y0365-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 May 2023 09:03:22 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 34J93Lkl005425
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 May 2023 09:03:21 GMT
-Received: from devipriy-linux.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.42; Fri, 19 May 2023 02:03:14 -0700
-From:   Devi Priya <quic_devipriy@quicinc.com>
-To:     <agross@kernel.org>, <andersson@kernel.org>,
-        <konrad.dybcio@linaro.org>, <lpieralisi@kernel.org>,
-        <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <mturquette@baylibre.com>, <sboyd@kernel.org>, <mani@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-clk@vger.kernel.org>
-CC:     <quic_srichara@quicinc.com>, <quic_sjaganat@quicinc.com>,
-        <quic_kathirav@quicinc.com>, <quic_arajkuma@quicinc.com>,
-        <quic_anusha@quicinc.com>, <quic_ipkumar@quicinc.com>
-Subject: [PATCH V4 6/6] PCI: qcom: Add support for IPQ9574
-Date:   Fri, 19 May 2023 14:32:19 +0530
-Message-ID: <20230519090219.15925-7-quic_devipriy@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230519090219.15925-1-quic_devipriy@quicinc.com>
-References: <20230519090219.15925-1-quic_devipriy@quicinc.com>
+        with ESMTP id S230435AbjESJa5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 05:30:57 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51BEBE42;
+        Fri, 19 May 2023 02:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1684488656; x=1716024656;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=3QfHmYRgUcLgG7yswANAS21WIRJnHhTTVTEGJa0Yw9M=;
+  b=aNPhWBtEmbfUJGCuZ6C/AS1LQLE60/QVbdL7GBDcF4QLgw8fDKmv35IX
+   GRxdptbCE+iSlpzfX2C+kniw7UWt8Pa+NvDFJsLv++Gr85rzsD7nPXu+Q
+   DPr4xMclzMPMflAUzxoyKws2UV0ZMLzkIY3Ahu15uBcw08ADcsI3d1qmN
+   3soASoX/Gc9vAxa3Z2qsu0Lo/Ut+h+EWiA6L9leF2skbCUjuSkZSJ7w5I
+   LLyJBOxL1Uz4RaONjT+mS9H5bQllEPwjfnmjLli0fXVyLROq71YLEtGBV
+   cj9oR4/sbXBCmHPnmKwALIjHZGl1T7dAq1bZi+Dgi1mmwveHRZ62DSAHq
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="336920982"
+X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
+   d="scan'208";a="336920982"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 02:30:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="792315594"
+X-IronPort-AV: E=Sophos;i="6.00,176,1681196400"; 
+   d="scan'208";a="792315594"
+Received: from iannetti-mobl.ger.corp.intel.com ([10.252.43.241])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 May 2023 02:30:36 -0700
+Date:   Fri, 19 May 2023 12:30:34 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Shaohua Li <shaohua.li@intel.com>,
+        Greg Kroah-Hartman <gregkh@suse.de>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/ASPM: Handle link retraining race
+In-Reply-To: <ZGaquEqo/psIH14Y@bhelgaas>
+Message-ID: <777a753-42f0-6616-5cc0-fceb157acc2@linux.intel.com>
+References: <ZGaquEqo/psIH14Y@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: UKn8ECl2vvAbogOMpC-bZvwfUA1Wt0Bn
-X-Proofpoint-ORIG-GUID: UKn8ECl2vvAbogOMpC-bZvwfUA1Wt0Bn
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-19_05,2023-05-17_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 phishscore=0
- spamscore=0 lowpriorityscore=0 malwarescore=0 mlxscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 impostorscore=0 suspectscore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2304280000
- definitions=main-2305190076
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: multipart/mixed; BOUNDARY="8323329-1530899728-1684488455=:1681"
+Content-ID: <94817ff1-4e4b-68c8-52bb-a4221219ee2@linux.intel.com>
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-The IPQ9574 platform has 4 Gen3 PCIe controllers: two single-lane
-and two dual-lane based on SNPS core 5.70a
-The Qcom IP rev is 1.27.0 and Synopsys IP rev is 5.80a
-Added a new compatible 'qcom,pcie-ipq9574' and 'ops_1_27_0'
-which reuses all the members of 'ops_2_9_0' except for the post_init
-as the SLV_ADDR_SPACE_SIZE configuration differs between 2_9_0
-and 1_27_0.
-Also, modified get_resources of 'ops 2_9_0' to get the clocks
-from the device tree and modelled the post init sequence as
-a common function to avoid code redundancy.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-Co-developed-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Anusha Rao <quic_anusha@quicinc.com>
-Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
----
- Changes in V4:
-	- Fixed the if conditional check in qcom_pcie_get_resources_2_9_0
-	  'if (res->clks < 0)' modified to 'if (res->num_clks < 0)'
-	- Picked up the R-b tags
+--8323329-1530899728-1684488455=:1681
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <1d89f724-36b9-5e14-7d6f-7ac47fa9bb14@linux.intel.com>
 
- drivers/pci/controller/dwc/pcie-qcom.c | 57 ++++++++++++++++++--------
- 1 file changed, 39 insertions(+), 18 deletions(-)
+On Thu, 18 May 2023, Bjorn Helgaas wrote:
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 4ab30892f6ef..c7579dfa5b1c 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -107,6 +107,7 @@
- 
- /* PARF_SLV_ADDR_SPACE_SIZE register value */
- #define SLV_ADDR_SPACE_SZ			0x10000000
-+#define SLV_ADDR_SPACE_SZ_1_27_0		0x08000000
- 
- /* PARF_MHI_CLOCK_RESET_CTRL register fields */
- #define AHB_CLK_EN				BIT(0)
-@@ -202,10 +203,10 @@ struct qcom_pcie_resources_2_7_0 {
- 	struct reset_control *rst;
- };
- 
--#define QCOM_PCIE_2_9_0_MAX_CLOCKS		5
- struct qcom_pcie_resources_2_9_0 {
--	struct clk_bulk_data clks[QCOM_PCIE_2_9_0_MAX_CLOCKS];
-+	struct clk_bulk_data *clks;
- 	struct reset_control *rst;
-+	int num_clks;
- };
- 
- union qcom_pcie_resources {
-@@ -1050,17 +1051,10 @@ static int qcom_pcie_get_resources_2_9_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
--	int ret;
--
--	res->clks[0].id = "iface";
--	res->clks[1].id = "axi_m";
--	res->clks[2].id = "axi_s";
--	res->clks[3].id = "axi_bridge";
--	res->clks[4].id = "rchng";
- 
--	ret = devm_clk_bulk_get(dev, ARRAY_SIZE(res->clks), res->clks);
--	if (ret < 0)
--		return ret;
-+	res->num_clks = devm_clk_bulk_get_all(dev, &res->clks);
-+	if (res->num_clks < 0)
-+		return res->num_clks;
- 
- 	res->rst = devm_reset_control_array_get_exclusive(dev);
- 	if (IS_ERR(res->rst))
-@@ -1073,7 +1067,7 @@ static void qcom_pcie_deinit_2_9_0(struct qcom_pcie *pcie)
- {
- 	struct qcom_pcie_resources_2_9_0 *res = &pcie->res.v2_9_0;
- 
--	clk_bulk_disable_unprepare(ARRAY_SIZE(res->clks), res->clks);
-+	clk_bulk_disable_unprepare(res->num_clks, res->clks);
- }
- 
- static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
-@@ -1102,19 +1096,16 @@ static int qcom_pcie_init_2_9_0(struct qcom_pcie *pcie)
- 
- 	usleep_range(2000, 2500);
- 
--	return clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-+	return clk_bulk_prepare_enable(res->num_clks, res->clks);
- }
- 
--static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+static int qcom_pcie_post_init(struct qcom_pcie *pcie)
- {
- 	struct dw_pcie *pci = pcie->pci;
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
- 	u32 val;
- 	int i;
- 
--	writel(SLV_ADDR_SPACE_SZ,
--		pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
--
- 	val = readl(pcie->parf + PARF_PHY_CTRL);
- 	val &= ~PHY_TEST_PWR_DOWN;
- 	writel(val, pcie->parf + PARF_PHY_CTRL);
-@@ -1151,6 +1142,22 @@ static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
- 	return 0;
- }
- 
-+static int qcom_pcie_post_init_1_27_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ_1_27_0,
-+	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	return qcom_pcie_post_init(pcie);
-+}
-+
-+static int qcom_pcie_post_init_2_9_0(struct qcom_pcie *pcie)
-+{
-+	writel(SLV_ADDR_SPACE_SZ,
-+	       pcie->parf + PARF_SLV_ADDR_SPACE_SIZE);
-+
-+	return qcom_pcie_post_init(pcie);
-+}
-+
- static int qcom_pcie_link_up(struct dw_pcie *pci)
- {
- 	u16 offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-@@ -1291,6 +1298,15 @@ static const struct qcom_pcie_ops ops_2_9_0 = {
- 	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
- };
- 
-+/* Qcom IP rev.: 1.27.0  Synopsys IP rev.: 5.80a */
-+static const struct qcom_pcie_ops ops_1_27_0 = {
-+	.get_resources = qcom_pcie_get_resources_2_9_0,
-+	.init = qcom_pcie_init_2_9_0,
-+	.post_init = qcom_pcie_post_init_1_27_0,
-+	.deinit = qcom_pcie_deinit_2_9_0,
-+	.ltssm_enable = qcom_pcie_2_3_2_ltssm_enable,
-+};
-+
- static const struct qcom_pcie_cfg cfg_1_0_0 = {
- 	.ops = &ops_1_0_0,
- };
-@@ -1323,6 +1339,10 @@ static const struct qcom_pcie_cfg cfg_2_9_0 = {
- 	.ops = &ops_2_9_0,
- };
- 
-+static const struct qcom_pcie_cfg cfg_1_27_0 = {
-+	.ops = &ops_1_27_0,
-+};
-+
- static const struct dw_pcie_ops dw_pcie_ops = {
- 	.link_up = qcom_pcie_link_up,
- 	.start_link = qcom_pcie_start_link,
-@@ -1607,6 +1627,7 @@ static const struct of_device_id qcom_pcie_match[] = {
- 	{ .compatible = "qcom,pcie-ipq8064-v2", .data = &cfg_2_1_0 },
- 	{ .compatible = "qcom,pcie-ipq8074", .data = &cfg_2_3_3 },
- 	{ .compatible = "qcom,pcie-ipq8074-gen3", .data = &cfg_2_9_0 },
-+	{ .compatible = "qcom,pcie-ipq9574", .data = &cfg_1_27_0 },
- 	{ .compatible = "qcom,pcie-msm8996", .data = &cfg_2_3_2 },
- 	{ .compatible = "qcom,pcie-qcs404", .data = &cfg_2_4_0 },
- 	{ .compatible = "qcom,pcie-sa8540p", .data = &cfg_1_9_0 },
+> On Tue, May 02, 2023 at 11:39:23AM +0300, Ilpo Järvinen wrote:
+> > Implementation Note at the end of PCIe r6.0.1 sec 7.5.3.7 recommends
+> > handling LTSSM race to ensure link retraining acquires correct
+> > parameters from the LNKCTL register. According to the implementation
+> > note, LTSSM might transition into Recovery or Configuration state
+> > independently of the driver requesting it, and if retraining due to
+> > such an event is still ongoing, the value written into the LNKCTL
+> > register might not be considered by the link retraining.
+> > 
+> > Ensure link training bit is clear before toggling link retraining bit
+> > to meet the requirements of the Implementation Note.
+> > 
+> > Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+> > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> > Cc: stable@vger.kernel.org
+> 
+> Thanks for this!
+> 
+> The existing pcie_retrain_link() and pcie_wait_for_retrain() both
+> return bool, but neither is named as a predicate, and it's always a
+> little hard for me to keep track of what the true/false return values
+> mean.
+> 
+> I propose tweaking them so they both return 0 for success or
+> -ETIMEDOUT for failure.  What do you think?  It does make the patch
+> bigger, which is kind of unfortunate.
+
+It's better, yes, unless stable folks think it's not a minimal change.
+
+As a confirmation for your return tweak improving things, I recall that I 
+had to be careful with the bool in this case for the reasons you mention 
+(it requires more mental capacity and verification which way the return 
+is).
+
+(Also, expect the error handling reindent to cause a conflict with the RMW 
+series.)
+
 -- 
-2.17.1
+ i.
 
+
+> commit f55ef626b57f ("PCI/ASPM: Avoid link retraining race")
+> parent e8d05f522fae
+> Author: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Date:   Tue May 2 11:39:23 2023 +0300
+> 
+>     PCI/ASPM: Avoid link retraining race
+>     
+>     PCIe r6.0.1, sec 7.5.3.7, recommends setting the link control parameters,
+>     then waiting for the Link Training bit to be clear before setting the
+>     Retrain Link bit.
+>     
+>     This avoids a race where the LTSSM may not use the updated parameters if it
+>     is already in the midst of link training because of other normal link
+>     activity.
+>     
+>     Wait for the Link Training bit to be clear before toggling the Retrain Link
+>     bit to ensure that the LTSSM uses the updated link control parameters.
+>     
+>     [bhelgaas: commit log, return 0 (success)/-ETIMEDOUT instead of bool for
+>     both pcie_wait_for_retrain() and the existing pcie_retrain_link()]
+>     Suggested-by: Lukas Wunner <lukas@wunner.de>
+>     Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+>     Link: https://lore.kernel.org/r/20230502083923.34562-1-ilpo.jarvinen@linux.intel.com
+>     Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+>     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+>     Reviewed-by: Lukas Wunner <lukas@wunner.de>
+>     Cc: stable@vger.kernel.org
+> 
+> diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> index 72cdb30a924a..3aa73ecdf86f 100644
+> --- a/drivers/pci/pcie/aspm.c
+> +++ b/drivers/pci/pcie/aspm.c
+> @@ -193,12 +193,39 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+>  	link->clkpm_disable = blacklist ? 1 : 0;
+>  }
+>  
+> -static bool pcie_retrain_link(struct pcie_link_state *link)
+> +static int pcie_wait_for_retrain(struct pci_dev *pdev)
+>  {
+> -	struct pci_dev *parent = link->pdev;
+>  	unsigned long end_jiffies;
+>  	u16 reg16;
+>  
+> +	/* Wait for Link Training to be cleared by hardware */
+> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> +	do {
+> +		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &reg16);
+> +		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+> +			return 0;
+> +		msleep(1);
+> +	} while (time_before(jiffies, end_jiffies));
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int pcie_retrain_link(struct pcie_link_state *link)
+> +{
+> +	struct pci_dev *parent = link->pdev;
+> +	int rc;
+> +	u16 reg16;
+> +
+> +	/*
+> +	 * Ensure the updated LNKCTL parameters are used during link
+> +	 * training by checking that there is no ongoing link training to
+> +	 * avoid LTSSM race as recommended in Implementation Note at the
+> +	 * end of PCIe r6.0.1 sec 7.5.3.7.
+> +	 */
+> +	rc = pcie_wait_for_retrain(parent);
+> +	if (rc)
+> +		return rc;
+> +
+>  	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+>  	reg16 |= PCI_EXP_LNKCTL_RL;
+>  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> @@ -212,15 +239,7 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+>  		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+>  	}
+>  
+> -	/* Wait for link training end. Break out after waiting for timeout */
+> -	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> -	do {
+> -		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
+> -		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+> -			break;
+> -		msleep(1);
+> -	} while (time_before(jiffies, end_jiffies));
+> -	return !(reg16 & PCI_EXP_LNKSTA_LT);
+> +	return pcie_wait_for_retrain(parent);
+>  }
+>  
+>  /*
+> @@ -289,15 +308,15 @@ static void pcie_aspm_configure_common_clock(struct pcie_link_state *link)
+>  		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+>  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+>  
+> -	if (pcie_retrain_link(link))
+> -		return;
+> +	if (pcie_retrain_link(link)) {
+>  
+> -	/* Training failed. Restore common clock configurations */
+> -	pci_err(parent, "ASPM: Could not configure common clock\n");
+> -	list_for_each_entry(child, &linkbus->devices, bus_list)
+> -		pcie_capability_write_word(child, PCI_EXP_LNKCTL,
+> +		/* Training failed. Restore common clock configurations */
+> +		pci_err(parent, "ASPM: Could not configure common clock\n");
+> +		list_for_each_entry(child, &linkbus->devices, bus_list)
+> +			pcie_capability_write_word(child, PCI_EXP_LNKCTL,
+>  					   child_reg[PCI_FUNC(child->devfn)]);
+> -	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_reg);
+> +		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_reg);
+> +	}
+>  }
+>  
+>  /* Convert L0s latency encoding to ns */
+--8323329-1530899728-1684488455=:1681--
