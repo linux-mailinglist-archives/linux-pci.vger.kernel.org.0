@@ -2,129 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 978BB709680
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 13:27:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8FE7096E6
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 13:56:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230464AbjESL1O (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 07:27:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59848 "EHLO
+        id S231774AbjESL4P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 07:56:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230250AbjESL1N (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 07:27:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9159DCF;
-        Fri, 19 May 2023 04:27:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 239EF656E8;
-        Fri, 19 May 2023 11:27:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A47D8C433EF;
-        Fri, 19 May 2023 11:27:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684495631;
-        bh=qjcsKYz9V3tQWvthXbfWyiuA1p7/z0QH8gQxDtAlfE8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uCIJGdMbQCusrgBjBbAoCuOFFISxJT/4gFJiHdgP+lcjXjzxarbB5KYqQHj3bHGFV
-         Lwn85tBg7ZgbRFjmicOScmIrIlB5WwKG4uT/eELoPTLXl5E9XZ1gEmb3odyjkKthKr
-         Nvq+K2WEosSYO7E04SxA5d6JrpWoFOlv7klcaUXm5KuecXlC6BsLh5F5Xz6vEM/4Zm
-         PpUBHYrR0sHAkorShiTZjHm5c9Be97c7lfF8zQx1Qupy50f9N1vNLYIi4w3o0bqVba
-         W/iy5eWcojn1r/cXB3ziD9KGVYLP43oWJlfi/5smoPCIAAiwIQEJX0EFkHasjzHyQO
-         EwUokvMx+PnPQ==
-Date:   Fri, 19 May 2023 16:57:06 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Cai Huoqing <cai.huoqing@linux.dev>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v10 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <ZGddCpjX8n1ML21j@matsya>
-References: <20230517030115.21093-1-cai.huoqing@linux.dev>
+        with ESMTP id S231650AbjESL4O (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 07:56:14 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43608E5E;
+        Fri, 19 May 2023 04:56:09 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34JBegei002873;
+        Fri, 19 May 2023 11:55:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=9ZSiz7QfDXxqo0dzVwJRj7KKiMlRRw/MuJmXwWIBDfI=;
+ b=QnETb8xjiv6buyLYJxqSkNJrj9ARvyH8aDYzfNQFN02XS2fs7NIL1ZMZ9gGHeLUCMcjd
+ KH7fJuxfPibvjc3VGNIpIpZ+qq1/BRVkZB7fou8nUOkkxAKul3+zRJ/gVNXOFgI8T/Yq
+ gexnBm4Vf9WXpQOZ/J7zB/ioISazd1lkgDS2V5GAjWULH96DRmRR2gXxZQTCI62bl8Jk
+ URmlevGPwQEjr8P7sd9JDruf8CHz0WJhaKxdOPU1HgEPl4KvWxmgwWvT5Q9RdsVGeEJU
+ dWPwJwij6MpnxOuzLxsbVFYmYlavgBsM9dveOPt5nkJkCqAHM0c0nmRrCrFcKDZxP8m/ Qw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp87srps0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 11:55:50 +0000
+Received: from m0353722.ppops.net (m0353722.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34JBf348005807;
+        Fri, 19 May 2023 11:55:50 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp87srprp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 11:55:50 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34J68cxA010601;
+        Fri, 19 May 2023 11:31:17 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3qj264tkpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 19 May 2023 11:31:16 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34JBVEnD46334256
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 May 2023 11:31:14 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E7F6A20049;
+        Fri, 19 May 2023 11:31:13 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC93020040;
+        Fri, 19 May 2023 11:31:12 +0000 (GMT)
+Received: from [9.171.0.172] (unknown [9.171.0.172])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 19 May 2023 11:31:12 +0000 (GMT)
+Message-ID: <8d5f62aff02f0043c8f601f24c949c5fe03e132e.camel@linux.ibm.com>
+Subject: Re: [PATCH v4 35/41] usb: uhci: handle HAS_IOPORT dependencies
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-usb@vger.kernel.org
+Date:   Fri, 19 May 2023 13:31:12 +0200
+In-Reply-To: <440855f4-897c-4597-bbe6-7c5f295f616a@app.fastmail.com>
+References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
+         <20230516110038.2413224-36-schnelle@linux.ibm.com>
+         <2023051643-overtime-unbridle-7cdd@gregkh>
+         <2c03973e-0635-4dbb-a1df-bfda8cbee161@rowland.harvard.edu>
+         <440855f4-897c-4597-bbe6-7c5f295f616a@app.fastmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230517030115.21093-1-cai.huoqing@linux.dev>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 1T9__fVrFL3mMdOF2NtPZnMYBMkNOv1B
+X-Proofpoint-GUID: CRBQV-gzzNZ6dGiIzrHsIfsCIhxyrMw4
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-05-19_08,2023-05-17_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ priorityscore=1501 mlxlogscore=562 lowpriorityscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 suspectscore=0 malwarescore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2304280000 definitions=main-2305190098
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 17-05-23, 11:01, Cai Huoqing wrote:
-> Add support for HDMA NATIVE, as long the IP design has set
-> the compatible register map parameter-HDMA_NATIVE,
-> which allows compatibility for native HDMA register configuration.
-> 
-> The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> And the native HDMA registers are different from eDMA,
-> so this patch add support for HDMA NATIVE mode.
-> 
-> HDMA write and read channels operate independently to maximize
-> the performance of the HDMA read and write data transfer over
-> the link When you configure the HDMA with multiple read channels,
-> then it uses a round robin (RR) arbitration scheme to select
-> the next read channel to be serviced.The same applies when
-> youhave multiple write channels.
-> 
-> The native HDMA driver also supports a maximum of 16 independent
-> channels (8 write + 8 read), which can run simultaneously.
-> Both SAR (Source Address Register) and DAR (Destination Address Register)
-> are aligned to byte.
-> 
-> Cai Huoqing (1):
->   dmaengine: dw-edma: Add support for native HDMA
-> 
-> Cai huoqing (3):
->   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
->     dw_edma_plat_ops
->   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
->     abstract controller operation
->   dmaengine: dw-edma: Add HDMA DebugFS support
+On Wed, 2023-05-17 at 14:17 +0200, Arnd Bergmann wrote:
+> On Tue, May 16, 2023, at 22:17, Alan Stern wrote:
+> > On Tue, May 16, 2023 at 06:29:56PM +0200, Greg Kroah-Hartman wrote:
+> > > On Tue, May 16, 2023 at 01:00:31PM +0200, Niklas Schnelle wrote:
+> >=20
+> > > I'm confused now.
+> > >=20
+> > > So if CONFIG_HAS_IOPORT is enabled, wonderful, all is good.
+> > >=20
+> > > But if it isn't, then these are just no-ops that do nothing?  So then
+> > > the driver will fail to work?  Why have these stubs at all?
+> > >=20
+> > > Why not just not build the driver at all if this option is not enable=
+d?
+> >=20
+> > I should add something to my previous email.  This particular section o=
+f=20
+> > code is protected by:
+> >=20
+> > #ifndef CONFIG_USB_UHCI_SUPPORT_NON_PCI_HC
+> > /* Support PCI only */
+> >=20
+> > So it gets used only in cases where the driver supports just a PCI bus=
+=20
+> > -- no other sorts of non-PCI on-chip devices.  But the preceding patch=
+=20
+> > in this series changes the Kconfig file to say:
+> >=20
+> >  config USB_UHCI_HCD
+> > 	tristate "UHCI HCD (most Intel and VIA) support"
+> > 	depends on (USB_PCI && HAS_IOPORT) || USB_UHCI_SUPPORT_NON_PCI_HC
+> >=20
+> > As a result, when the configuration includes support only for PCI=20
+> > controllers the driver won't get built unless HAS_IOPORT is set.  Thus=
+=20
+> > the no-op case (in this part of the code) can't arise.
+>=20
+> Indeed, that makes sense.
+>=20
+> > Which is a long-winded way of saying that you're right; the UHCI_IN()=
+=20
+> > and UHCI_OUT() wrappers aren't needed in this part of the driver.  I=
+=20
+> > guess Niklas put them in either for consistency with the rest of the=
+=20
+> > code or because it didn't occur to him that they could be omitted.  (An=
+d=20
+> > I didn't spot it either.)
+>=20
+> It's probably less confusing to leave out the PCI-only part of
+> the patch then and only modify the generic portion.
+>=20
+>       Arnd
 
-You should have a single name for all these patches :-(
+Yes I agree that way the UHCI_IN/OUT() macro is also only used directly
+in combination with uhci_has_pci_registers(). I've done this for v5.
 
-> 
-> Tested-by: Serge Semin <fancer.lancer@gmail.com>
-> 
-> v9->v10:
->   1.Update commit log.
->   2.rebase for dma-next
-> 
-> v9 link:
->   https://lore.kernel.org/lkml/20230413033156.93751-1-cai.huoqing@linux.dev/
-> 
->  drivers/dma/dw-edma/Makefile                 |   8 +-
->  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
->  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
->  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
->  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
->  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
->  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
->  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
->  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
->  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
->  include/linux/dma/edma.h                     |   7 +-
->  13 files changed, 807 insertions(+), 91 deletions(-)
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
->  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> 
-> -- 
-> 2.34.1
+Thanks,
+Niklas
 
--- 
-~Vinod
