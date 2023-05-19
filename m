@@ -2,143 +2,216 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 57E8D709816
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 15:18:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 57F22709850
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 15:30:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231744AbjESNSC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 09:18:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45624 "EHLO
+        id S229525AbjESNas (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 09:30:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231536AbjESNRx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 09:17:53 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE3B318F;
-        Fri, 19 May 2023 06:17:50 -0700 (PDT)
-Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34JDEUAY006321;
-        Fri, 19 May 2023 13:17:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=ijXvu111ai67ohCScJNa9NqtoJ30FOCHXdeN2lPmtM0=;
- b=GJ/2Q8ZQHCLzjnHwuNkxkxawD1abD4JUEx683+5UHiWKe99kZeohMWrToOxv01g+zlE/
- +MmQ/v+tAGQ5ZWm0Sa6i9FSpSB7GV9MERmXzOyxkTnWDuE2G3hZIypMIDNxrOB0Dpd5U
- kFgqfOHWD61Gg7HViJ+wwYWshdq66uMsAUVvNS8rsnoiwdFMzyEIl+ikvmax/6P1t5+y
- nIH1uLm/oTPsqIcqcL77XA+mMxQfWzz8rT0EplCzAh5Dipg2Y6C+mYMFUHExPVypzsJv
- iHmRoSbSY1g47yv2m7uy5X7zEFPtUeZ9GSxWaiAKiDcIcZl8cPjyqbzSAkNnkujoKSw8 HA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp9tm83ve-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 May 2023 13:17:35 +0000
-Received: from m0353724.ppops.net (m0353724.ppops.net [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 34JDEWH6006350;
-        Fri, 19 May 2023 13:17:34 GMT
-Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qp9tm83u6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 May 2023 13:17:34 +0000
-Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
-        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34J9cqFS025053;
-        Fri, 19 May 2023 13:17:32 GMT
-Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
-        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3qj264tmtb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 19 May 2023 13:17:32 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34JDHUde53870888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 19 May 2023 13:17:30 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25CA72004E;
-        Fri, 19 May 2023 13:17:30 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 40EFA20040;
-        Fri, 19 May 2023 13:17:29 +0000 (GMT)
-Received: from [9.171.0.172] (unknown [9.171.0.172])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 19 May 2023 13:17:29 +0000 (GMT)
-Message-ID: <6f4d672ba7136f2b01ea9ee69687b16168eddb8d.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 05/41] counter: add HAS_IOPORT dependencies
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     William Breathitt Gray <william.gray@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-iio@vger.kernel.org
-Date:   Fri, 19 May 2023 15:17:28 +0200
-In-Reply-To: <ZGbQYzXK8InMqkxu@fedora>
-References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
-         <20230516110038.2413224-6-schnelle@linux.ibm.com> <ZGbQYzXK8InMqkxu@fedora>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.1 (3.48.1-1.fc38) 
+        with ESMTP id S230406AbjESNao (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 09:30:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33A1C10F8;
+        Fri, 19 May 2023 06:30:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D9FB865792;
+        Fri, 19 May 2023 13:29:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144E2C433D2;
+        Fri, 19 May 2023 13:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684502988;
+        bh=iRvVooeKq1I+5NS1xQXfO0qpi/j4sF9DD1aseILelCE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=M1ayG2FT/ZDpinoT65KG3DFvA8cSEcWYBf4+K3ZY8Zl8R17rbsCmLkNPP4DEstn2S
+         yjpzkkT6vavkUKRzb/F7U0vUB0M4zNpMxr2Qyy3hHov8l8stLhPrhJHgN60xkxpjun
+         tsIJRgbONLJaaXYYhGwNU/XA3XMrCWVXpYL+3hhKpeyDWFICm/Za8IEuuqqwxfENSs
+         if6pZ07dHueyCYMdAxGsAZZNa4pMwSV+y5eUkZS5M6VUrwVAmi3zO8eb6OSPJPtQ1T
+         LZAQ7DgTFwCWp0Gj5dAADB9o9nSiwTE+viLCzmDSKwDOXWo2+UxlM+TUp2Hn7zGAzZ
+         FcKQY0EnQc1mQ==
+Date:   Fri, 19 May 2023 08:29:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Shaohua Li <shaohua.li@intel.com>,
+        Greg Kroah-Hartman <gregkh@suse.de>, linux-pci@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lukas Wunner <lukas@wunner.de>, stable@vger.kernel.org
+Subject: Re: [PATCH 1/1] PCI/ASPM: Handle link retraining race
+Message-ID: <ZGd5yqfyppu00OO9@bhelgaas>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Zof9Fp_j2zXxj6sECntRpw2dnvs6ntSY
-X-Proofpoint-GUID: DKFPxVQmw6qbh6pizGvz84p3u-eyrFmc
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-19_08,2023-05-17_02,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 impostorscore=0 phishscore=0
- adultscore=0 malwarescore=0 spamscore=0 clxscore=1015 bulkscore=0
- mlxscore=0 mlxlogscore=720 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2304280000 definitions=main-2305190110
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <777a753-42f0-6616-5cc0-fceb157acc2@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, 2023-05-18 at 21:26 -0400, William Breathitt Gray wrote:
-> On Tue, May 16, 2023 at 01:00:01PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friend=
-s
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them.
-> >=20
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> Hi Niklas,
->=20
-> The change itself is fine, but please update the description to reflect
-> that this is adding a depends on HAS_IOPORT_MAP rather than HAS_IOPORT,
-> along with the reason why it's needed (i.e. devm_ioport_map() is used).
->=20
-> Thanks,
->=20
-> William Breathitt Gray
->=20
->=20
+On Fri, May 19, 2023 at 12:30:34PM +0300, Ilpo Järvinen wrote:
+> On Thu, 18 May 2023, Bjorn Helgaas wrote:
+> > On Tue, May 02, 2023 at 11:39:23AM +0300, Ilpo Järvinen wrote:
+> > > Implementation Note at the end of PCIe r6.0.1 sec 7.5.3.7 recommends
+> > > handling LTSSM race to ensure link retraining acquires correct
+> > > parameters from the LNKCTL register. According to the implementation
+> > > note, LTSSM might transition into Recovery or Configuration state
+> > > independently of the driver requesting it, and if retraining due to
+> > > such an event is still ongoing, the value written into the LNKCTL
+> > > register might not be considered by the link retraining.
+> > > 
+> > > Ensure link training bit is clear before toggling link retraining bit
+> > > to meet the requirements of the Implementation Note.
+> > > 
+> > > Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+> > > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > > Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> > > Cc: stable@vger.kernel.org
+> > 
+> > Thanks for this!
+> > 
+> > The existing pcie_retrain_link() and pcie_wait_for_retrain() both
+> > return bool, but neither is named as a predicate, and it's always a
+> > little hard for me to keep track of what the true/false return values
+> > mean.
+> > 
+> > I propose tweaking them so they both return 0 for success or
+> > -ETIMEDOUT for failure.  What do you think?  It does make the patch
+> > bigger, which is kind of unfortunate.
+> 
+> It's better, yes, unless stable folks think it's not a minimal change.
+> 
+> As a confirmation for your return tweak improving things, I recall that I 
+> had to be careful with the bool in this case for the reasons you mention 
+> (it requires more mental capacity and verification which way the return 
+> is).
+> 
+> (Also, expect the error handling reindent to cause a conflict with the RMW 
+> series.)
 
-Right, this clearly needs adjustment. I went with the following commit
-message for v5:
+OK, thanks for taking a look!  I applied the revised patch to pci/aspm
+for v6.5.  I'll take care of any conflicts with the RMW series.
 
-"counter: add HAS_IOPORT_MAP dependency
-
-The 104_QUAD_8 counter driver uses devm_ioport_map() without depending
-on HAS_IOPORT_MAP. This causes compilation to fail on platforms such as
-s390 which do not support I/O port mapping. Add the missing
-HAS_IOPORT_MAP dependency to fix this."
-
-Thanks,
-Niklas
-
-
+> > commit f55ef626b57f ("PCI/ASPM: Avoid link retraining race")
+> > parent e8d05f522fae
+> > Author: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > Date:   Tue May 2 11:39:23 2023 +0300
+> > 
+> >     PCI/ASPM: Avoid link retraining race
+> >     
+> >     PCIe r6.0.1, sec 7.5.3.7, recommends setting the link control parameters,
+> >     then waiting for the Link Training bit to be clear before setting the
+> >     Retrain Link bit.
+> >     
+> >     This avoids a race where the LTSSM may not use the updated parameters if it
+> >     is already in the midst of link training because of other normal link
+> >     activity.
+> >     
+> >     Wait for the Link Training bit to be clear before toggling the Retrain Link
+> >     bit to ensure that the LTSSM uses the updated link control parameters.
+> >     
+> >     [bhelgaas: commit log, return 0 (success)/-ETIMEDOUT instead of bool for
+> >     both pcie_wait_for_retrain() and the existing pcie_retrain_link()]
+> >     Suggested-by: Lukas Wunner <lukas@wunner.de>
+> >     Fixes: 7d715a6c1ae5 ("PCI: add PCI Express ASPM support")
+> >     Link: https://lore.kernel.org/r/20230502083923.34562-1-ilpo.jarvinen@linux.intel.com
+> >     Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> >     Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> >     Reviewed-by: Lukas Wunner <lukas@wunner.de>
+> >     Cc: stable@vger.kernel.org
+> > 
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 72cdb30a924a..3aa73ecdf86f 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -193,12 +193,39 @@ static void pcie_clkpm_cap_init(struct pcie_link_state *link, int blacklist)
+> >  	link->clkpm_disable = blacklist ? 1 : 0;
+> >  }
+> >  
+> > -static bool pcie_retrain_link(struct pcie_link_state *link)
+> > +static int pcie_wait_for_retrain(struct pci_dev *pdev)
+> >  {
+> > -	struct pci_dev *parent = link->pdev;
+> >  	unsigned long end_jiffies;
+> >  	u16 reg16;
+> >  
+> > +	/* Wait for Link Training to be cleared by hardware */
+> > +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> > +	do {
+> > +		pcie_capability_read_word(pdev, PCI_EXP_LNKSTA, &reg16);
+> > +		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+> > +			return 0;
+> > +		msleep(1);
+> > +	} while (time_before(jiffies, end_jiffies));
+> > +
+> > +	return -ETIMEDOUT;
+> > +}
+> > +
+> > +static int pcie_retrain_link(struct pcie_link_state *link)
+> > +{
+> > +	struct pci_dev *parent = link->pdev;
+> > +	int rc;
+> > +	u16 reg16;
+> > +
+> > +	/*
+> > +	 * Ensure the updated LNKCTL parameters are used during link
+> > +	 * training by checking that there is no ongoing link training to
+> > +	 * avoid LTSSM race as recommended in Implementation Note at the
+> > +	 * end of PCIe r6.0.1 sec 7.5.3.7.
+> > +	 */
+> > +	rc = pcie_wait_for_retrain(parent);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> >  	pcie_capability_read_word(parent, PCI_EXP_LNKCTL, &reg16);
+> >  	reg16 |= PCI_EXP_LNKCTL_RL;
+> >  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> > @@ -212,15 +239,7 @@ static bool pcie_retrain_link(struct pcie_link_state *link)
+> >  		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> >  	}
+> >  
+> > -	/* Wait for link training end. Break out after waiting for timeout */
+> > -	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> > -	do {
+> > -		pcie_capability_read_word(parent, PCI_EXP_LNKSTA, &reg16);
+> > -		if (!(reg16 & PCI_EXP_LNKSTA_LT))
+> > -			break;
+> > -		msleep(1);
+> > -	} while (time_before(jiffies, end_jiffies));
+> > -	return !(reg16 & PCI_EXP_LNKSTA_LT);
+> > +	return pcie_wait_for_retrain(parent);
+> >  }
+> >  
+> >  /*
+> > @@ -289,15 +308,15 @@ static void pcie_aspm_configure_common_clock(struct pcie_link_state *link)
+> >  		reg16 &= ~PCI_EXP_LNKCTL_CCC;
+> >  	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, reg16);
+> >  
+> > -	if (pcie_retrain_link(link))
+> > -		return;
+> > +	if (pcie_retrain_link(link)) {
+> >  
+> > -	/* Training failed. Restore common clock configurations */
+> > -	pci_err(parent, "ASPM: Could not configure common clock\n");
+> > -	list_for_each_entry(child, &linkbus->devices, bus_list)
+> > -		pcie_capability_write_word(child, PCI_EXP_LNKCTL,
+> > +		/* Training failed. Restore common clock configurations */
+> > +		pci_err(parent, "ASPM: Could not configure common clock\n");
+> > +		list_for_each_entry(child, &linkbus->devices, bus_list)
+> > +			pcie_capability_write_word(child, PCI_EXP_LNKCTL,
+> >  					   child_reg[PCI_FUNC(child->devfn)]);
+> > -	pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_reg);
+> > +		pcie_capability_write_word(parent, PCI_EXP_LNKCTL, parent_reg);
+> > +	}
+> >  }
+> >  
+> >  /* Convert L0s latency encoding to ns */
 
