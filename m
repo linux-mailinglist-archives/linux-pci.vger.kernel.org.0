@@ -2,45 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B9BB9708E7A
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 05:56:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8459708EF7
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 06:47:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229493AbjESD4p (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 23:56:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39798 "EHLO
+        id S229890AbjESEq6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 00:46:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51400 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjESD4o (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 23:56:44 -0400
-X-Greylist: delayed 79 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 18 May 2023 20:56:02 PDT
+        with ESMTP id S229579AbjESEqz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 00:46:55 -0400
 Received: from us-smtp-delivery-115.mimecast.com (us-smtp-delivery-115.mimecast.com [170.10.133.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F1CE75
-        for <linux-pci@vger.kernel.org>; Thu, 18 May 2023 20:56:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8B010DC
+        for <linux-pci@vger.kernel.org>; Thu, 18 May 2023 21:46:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maxlinear.com;
-        s=selector; t=1684468561;
+        s=selector; t=1684471565;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=mUAOOvuJ71E7a8sz5yk0mrvRi53ftsjgLeuc9agjm50=;
-        b=Y7EKG+0YRqFO6NLjSdaRvHZbFDkipn57iDx1IrkAven6a4CdcKeiODL6MY8Vt/M0U0EsHj
-        iry4p7Mi2Hiatf2VqJnfvnJSbIHbihX45JGGMNV8FWJOTqh7AdPoKXILCuXA8pvDs2ambz
-        u0vUXOb0f8TUEySXySyudciIBvs3H2S5efvOXV8jpJNIpT5RJU59utZzUMqEhEyl+Tb6MS
-        jdKFJ4t0MZ+Z2qLYRcjzQhYT1zRXx83BAF3zfkxmtL1vrEW5Rna7ZW4aSTGYE6Ltcz9trY
-        fEiIzTf9tqfN6o/9utWI8xX20o83hWd06G0OcHogVliIZETWMyJjyBNWsenIUQ==
-Received: from mail.maxlinear.com (174-47-1-83.static.ctl.one [174.47.1.83])
+        bh=Lvv/vx9hgircVnC1zAHTlfLyXRGrim9JAwynveGdEPg=;
+        b=b3bfWw6WGLlXI/o9kxeVVXFeHQHkQgWIXOVhS352UFgMCThoVdIYGX28IbvPEFuMIjTxJS
+        s+g1O8b8X3f6zH/JcbQXKUSRDftsXni4r5bCwdwPSx3mkrh9IHyJqBiQ0uPWZqzZv+o5GQ
+        iIvJEhijXCO3Lpn1W+BDUsDo4Zl78t+LyYFfTj0oZutSWNRQqhuQwvMVYj55BH91WbDS48
+        sNLt4h8pOKbkxla0FEo8XmrVBRt4SkHBGeWruQZ2dd7szedwiCpaEk8LdzHABn+Q6ZH3Xo
+        XZj3nxhZfoycYMEQt8y5SCzlp2KV9DxyNgJ/lFbBDQzXjkGqdsuFmpRxPKccpw==
+Received: from mail.maxlinear.com (174-47-1-84.static.ctl.one [174.47.1.84])
  by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- us-mta-328-d_ORvbF9PZ6B45mPdvOi6A-1; Thu, 18 May 2023 23:54:40 -0400
-X-MC-Unique: d_ORvbF9PZ6B45mPdvOi6A-1
+ us-mta-402-ULVD0C1INFG90-klTOqsyQ-1; Fri, 19 May 2023 00:46:02 -0400
+X-MC-Unique: ULVD0C1INFG90-klTOqsyQ-1
 Received: from sgsxdev002.isng.phoenix.local (10.226.81.112) by
- mail.maxlinear.com (10.23.38.120) with Microsoft SMTP Server id 15.1.2375.24;
- Thu, 18 May 2023 20:54:36 -0700
+ mail.maxlinear.com (10.23.38.119) with Microsoft SMTP Server id 15.1.2375.34;
+ Thu, 18 May 2023 21:45:58 -0700
 From:   Zhu YiXin <yzhu@maxlinear.com>
 To:     <lchuanhua@maxlinear.com>, <torvalds@linux-foundation.org>
 CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <upstream_support@maxlinear.com>, Zhu YiXin <yzhu@maxlinear.com>
-Subject: [PATCH] MAINTAINERS: Update entry for PCIe driver for Intel LGM GW SoC
-Date:   Fri, 19 May 2023 11:54:24 +0800
-Message-ID: <20230519035424.53069-1-yzhu@maxlinear.com>
+        <pliem@maxlinear.com>, <qwu@maxlinear.com>, <yzhu@maxlinear.com>
+Subject: [PATCH v2 0/1] Update entry for PCIe driver for Intel LGM GW SoC
+Date:   Fri, 19 May 2023 12:45:54 +0800
+Message-ID: <20230519044555.3750-1-yzhu@maxlinear.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
@@ -57,32 +56,19 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rahul Tanwar is no longer at Maxlinear, so update the MAINTAINER's entry
-for the PCIe driver for Intel LGM GW SoC.
+v2 changes:
+Remove group email address as it is not valid to external user.
 
-Added group email address for support purpose.
+v1 changes:
+1. Updated Maintainer email address
+2. Add group email address as support email address
 
-Signed-off-by: Zhu YiXin <yzhu@maxlinear.com>
----
- MAINTAINERS | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Zhu YiXin (1):
+  MAINTAINERS: Update entry for PCIe driver for Intel LGM GW SoC
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index c8d274efff10..b97bdbcaf4e9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16383,8 +16383,9 @@ F:=09Documentation/devicetree/bindings/pci/intel,ke=
-embay-pcie*
- F:=09drivers/pci/controller/dwc/pcie-keembay.c
-=20
- PCIE DRIVER FOR INTEL LGM GW SOC
--M:=09Rahul Tanwar <rtanwar@maxlinear.com>
-+M:=09Chuanhua Lei <lchuanhua@maxlinear.com>
- L:=09linux-pci@vger.kernel.org
-+L:=09upstream_support@maxlinear.com
- S:=09Maintained
- F:=09Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
- F:=09drivers/pci/controller/dwc/pcie-intel-gw.c
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 --=20
 2.17.1
 
