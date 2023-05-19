@@ -2,135 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A73E709479
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 12:08:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B56970958C
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 13:00:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230193AbjESKIn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 06:08:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39540 "EHLO
+        id S231309AbjESK7v (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 06:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229912AbjESKIn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 06:08:43 -0400
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31635102;
-        Fri, 19 May 2023 03:08:38 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R311e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045176;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=13;SR=0;TI=SMTPD_---0Vj-PkJA_1684490913;
-Received: from 30.240.113.228(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vj-PkJA_1684490913)
-          by smtp.aliyun-inc.com;
-          Fri, 19 May 2023 18:08:34 +0800
-Message-ID: <09097e1e-fdf3-31ce-fadf-3c75dfc71fa2@linux.alibaba.com>
-Date:   Fri, 19 May 2023 18:08:31 +0800
+        with ESMTP id S230280AbjESK7u (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 06:59:50 -0400
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2079.outbound.protection.outlook.com [40.107.92.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EEE8113;
+        Fri, 19 May 2023 03:59:49 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XuF2ocjn0b/gNTw6pi+RH2w+NXrHzKYbSWijbpeKLOvVYn7aisSDErhTdndfDQMiUmueU2P4ZFbzocbiqGPLR6IsoRwu20n5R8HsTN6IVTM5eiuEMfvRkdMqYEAcijQte7Nyl71sLLa1C4UiwECnDllHpqW9JeERJP2o/rq3orJ17NyaqanP+JvmM6ULOUBqVcz2OKpN0VaMBMEdK+Sou4drQCkyp/SY+8T09Nt3VynssBz8AAjUolp7s+FpWnOBvaYZ2IQeU04lJb+4/Ewpyn+5d6+YnB/TPjfZQZ28uEqv48Ff3WvG57q3XBEjmVOsLAqHdmuSIu/0v6lwYPJtaw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DZmicaCvfQOrReh28SooQJoroCwMOl2g2iv2NvidjWs=;
+ b=l3YNLuFOCGfNkttTVxN1VmLrtk15Fg/i4O/hHNGazPXJ+/IITRUo8gS8h87RijvZhw3bRl26qZh3ooL6UOVC18pXv8bV5GQyiF4kPZ817fhKer9kDablWMYXUVEIVGsDfPC2ZtgKlodWwPj6rUUEGyeyA/Dsn8+v58lEdxhkmm0hG3VS5Udjache/zwGEb6eVQIPUKCw5oiMvcMzA0/Z7OGAiKXSkQ10eiFZIGsF21/RrFqQ+xXyI8KuAaYOyAADQBjl61R5odpWcnnam4caDvjjLcr0TsQK0sKa2Lg8JFkwJK4+R7aTZk1izxnzhZOJqMTzAfYb7l1s7lWJEG+Wrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DZmicaCvfQOrReh28SooQJoroCwMOl2g2iv2NvidjWs=;
+ b=3n+L/vrq+y5ZXA1VXEMu1PvbiqiwJWokj13TBCB41gaxpQUD68OiMjvP0KyIgjlwQUHsU89unjN8HmsVR9Bhjra33AwJyh0i/3HXWcpkVOCofkrqvIpyM6E4B1+gaD79biq04gO26S3iM9B7AT7fUDCINI+KdQGeN+evBQw0uoE=
+Received: from DM6PR04CA0025.namprd04.prod.outlook.com (2603:10b6:5:334::30)
+ by DM4PR12MB6280.namprd12.prod.outlook.com (2603:10b6:8:a2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.17; Fri, 19 May
+ 2023 10:59:46 +0000
+Received: from DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:5:334:cafe::56) by DM6PR04CA0025.outlook.office365.com
+ (2603:10b6:5:334::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.21 via Frontend
+ Transport; Fri, 19 May 2023 10:59:46 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DM6NAM11FT008.mail.protection.outlook.com (10.13.172.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.6411.21 via Frontend Transport; Fri, 19 May 2023 10:59:46 +0000
+Received: from SATLEXMB07.amd.com (10.181.41.45) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 19 May
+ 2023 05:59:45 -0500
+Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB07.amd.com
+ (10.181.41.45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2375.34; Fri, 19 May
+ 2023 03:59:45 -0700
+Received: from xhdthippesw40.xilinx.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Fri, 19 May 2023 05:59:42 -0500
+From:   Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+To:     <krzysztof.kozlowski@linaro.org>, <devicetree@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <robh+dt@kernel.org>, <bhelgaas@google.com>
+CC:     <lorenzo.pieralisi@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <bharat.kumar.gogada@amd.com>, <michals@amd.com>,
+        <nagaradhesh.yeleswarapu@amd.com>,
+        Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Subject: [PATCH v3 0/3] Add support for Xilinx XDMA Soft IP as Root Port.
+Date:   Fri, 19 May 2023 16:28:58 +0530
+Message-ID: <20230519105901.2399452-1-thippeswamy.havalige@amd.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH v3 2/3] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>, yangyicong@huawei.com,
-        will@kernel.org, baolin.wang@linux.alibaba.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        linux-cxl@vger.kernel.org
-References: <ZGUAWxoEngmqFcLJ@bhelgaas>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <ZGUAWxoEngmqFcLJ@bhelgaas>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-11.4 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM6NAM11FT008:EE_|DM4PR12MB6280:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1ad5cf5f-39c0-447f-bbf3-08db585828a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: R+Ef8nytKT6Q2MhmLZ3TvWqRTOgjktXy0vpl5clEXxOSKNnSHx31VpJi4saqyoj0p30m7s8AJ1gXmSGNTFDv5rVNiLe2M6KtKnd1FCZzcNImgJYWwYISLbmHdXs6P3gW+8/uPMVK8hTgqzZUNjL/g22X0WW2Ny6A+x4kJY1skvamhLZ7wAn4/NX6CyQvLMMleOuxdT8n15K9/HNSj5FSObSGNBJjHawrdTCHRdZgv7I0zxB++K1Rlc0dPaxWQyc9zQEW/XXLfYPZ7BqmcrvtsvZ0Eb23ckrv9H+2Et/M/Wjc5YqqqSJcHYKE2yYDd4/uz/bbhZDLarqHG4cAzceWxmjcXbRijO+Am3AzUXNE4W+qRZp+jQxmtpMybW/JeGW8MTD2INELNRnkPPyyY/12CjbBU9dW/j16ZszExaUqNdzr25/ONbMDgWz/dSH56MxDu453IhhtXc9GlJNdhmQgYiIEHeMdNgxYs7Czp3StlmKImZP5RnfHNs2uvHMTIg7ePoaTWuoa/+pnLBe9uUgg44AT5hVQxNzXAY0GZIfsJZpFaTZuC2JLtZKJFLpP3TzFiMBvYvrAod8IwCNnFBHdp6xWKLWumieTiKvkB18bZpkd4LoBaBXC1u5mzfWOK5yf62dUDFCT2VXbPsHE8ab/xIxeTftOI/3NwkfgjjIMwOnQT55d8k9AM1ocKs2MHrna7IS6RbipjqVbhATmYmfT00jozDqxGhYHaVnGsGr1+FeZAV5Rle1o9Zo83AVOUSAl6MefgHUiQzL7mVQxU49cKA==
+X-Forefront-Antispam-Report: CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(376002)(396003)(346002)(451199021)(36840700001)(46966006)(40470700004)(6666004)(40460700003)(70586007)(82740400003)(54906003)(110136005)(44832011)(2906002)(5660300002)(86362001)(41300700001)(36756003)(356005)(316002)(81166007)(82310400005)(4326008)(8676002)(8936002)(70206006)(40480700001)(478600001)(336012)(426003)(36860700001)(83380400001)(2616005)(186003)(47076005)(1076003)(26005)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2023 10:59:46.4330
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ad5cf5f-39c0-447f-bbf3-08db585828a1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource: DM6NAM11FT008.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB6280
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+This series of patch add support for Xilinx XDMA Soft IP as Root Port.
 
+The Xilinx XDMA Soft IP support's 32 bit and 64bit BAR's.
+As Root Port it supports MSI and legacy interrupts.
 
-On 2023/5/18 00:27, Bjorn Helgaas wrote:
-> On Wed, May 17, 2023 at 10:54:21AM +0100, Jonathan Cameron wrote:
->> On Tue, 16 May 2023 14:17:52 -0500
->> Bjorn Helgaas <helgaas@kernel.org> wrote:
->>
->>> On Tue, May 16, 2023 at 04:03:04PM +0100, Jonathan Cameron wrote:
->> ...
-> 
->>>> The approach used here is to separately walk the PCI topology and
->>>> register the devices.  It can 'maybe' get away with that because no
->>>> interrupts and I assume resets have no nasty impacts on it because
->>>> the device is fairly simple.  In general that's not going to work.
->>>> CXL does a similar trick (which I don't much like, but too late
->>>> now), but we've also run into the problem of how to get interrupts
->>>> if not the main driver.  
->>>
->>> Yes, this is a real problem.  I think the "walk all PCI devices
->>> looking for one we like" approach is terrible because it breaks a lot
->>> of driver model assumptions (no device ID to autoload module via udev,
->>> hotplug doesn't work, etc), but we don't have a good alternative right
->>> now.
->>>
->>> I think portdrv is slightly better because at least it claims the
->>> device in the usual way and gives a way for service drivers to
->>> register with it.  But I don't really like that either because it
->>> created a new weird /sys/bus/pci_express hierarchy full of these
->>> sub-devices that aren't really devices, and it doesn't solve the
->>> module load and hotplug issues.
->>>
->>> I would like to have portdrv be completely built into the PCI core and
->>> not claim Root Ports or Switch Ports.  Then those devices would be
->>> available via the usual driver model for driver loading and binding
->>> and for hotplug.
->>
->> Let me see if I understand this correctly as I can think of a few options
->> that perhaps are inline with what you are thinking.
->>
->> 1) All the portdrv stuff converted to normal PCI core helper functions
->>    that a driver bound to the struct pci_dev can use.
->> 2) Driver core itself provides a bunch of extra devices alongside the
->>    struct pci_dev one to which additional drivers can bind? - so kind
->>    of portdrv handling, but squashed into the PCI device topology?
->> 3) Have portdrv operated under the hood, so all the services etc that
->>    it provides don't require a driver to be bound at all.  Then
->>    allow usual VID/DID based driver binding.
->>
->> If 1 - we are going to run into class device restrictions and that will
->> just move where we have to handle the potential vendor specific parts.
->> We probably don't want that to be a hydra with all the functionality
->> and lookups etc driven from there, so do we end up with sub devices
->> of that new PCI port driver with a discover method based on either
->> vsec + VID or DVSEC with devices created under the main pci_dev.
->> That would have to include nastiness around interrupt discovery for
->> those sub devices. So ends up roughly like port_drv.
->>
->> I don't think 2 solves anything.
->>
->> For 3 - interrupts and ownership of facilities is going to be tricky
->> as initially those need to be owned by the PCI core (no device driver bound)
->> and then I guess handed off to the driver once it shows up?  Maybe that
->> driver should call a pci_claim_port() that gives it control of everything
->> and pci_release_port() that hands it all back to the core.  That seems
->> racey.
-> 
-> Yes, 3 is the option I want to explore.  That's what we already do for
-> things like ASPM.  Agreed, interrupts is a potential issue.  I think
-> the architected parts of config space should be implicitly owned by
-> the PCI core, with interfaces à la pci_disable_link_state() if drivers
-> need them.
-> 
+For code reusability existing CPM4 error interrupt bits are moved to
+common header.
 
-I agree "walk all PCI devices looking for one we like" approach is terrible
-in general. And I am glad to modify my code to adapt to a more suitable solution
-when it comes.
+Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@amd.com>
+---
+Thippeswamy Havalige (3):
+  Move and rename error interrupt bits to a common header.
+  dt-bindings: PCI: xilinx-xdma: Add YAML schemas for Xilinx XDMA PCIe
+    Root Port Bridge
+  PCI: xilinx-xdma: Add Xilinx XDMA Root Port driver
 
-For now, I will collect comments from v3 and v4 and send a new version after
-addressed them. Any alternative option is welcomed, always :)
+ .../bindings/pci/xlnx,xdma-host.yaml          | 114 +++
+ drivers/pci/controller/Kconfig                |  11 +
+ drivers/pci/controller/Makefile               |   1 +
+ drivers/pci/controller/pcie-xilinx-common.h   |  31 +
+ drivers/pci/controller/pcie-xilinx-cpm.c      |  38 +-
+ drivers/pci/controller/pcie-xilinx-dma-pl.c   | 795 ++++++++++++++++++
+ 6 files changed, 959 insertions(+), 31 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/xlnx,xdma-host.yaml
+ create mode 100644 drivers/pci/controller/pcie-xilinx-common.h
+ create mode 100644 drivers/pci/controller/pcie-xilinx-dma-pl.c
 
-> Bjorn
+-- 
+2.25.1
 
-Thank you.
-
-Best Regards,
-Shuai
