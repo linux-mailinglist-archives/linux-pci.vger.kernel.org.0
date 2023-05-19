@@ -2,146 +2,88 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B090708D51
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 03:27:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DA84708D56
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 03:28:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230192AbjESB1F (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 18 May 2023 21:27:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58458 "EHLO
+        id S229596AbjESB2I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 18 May 2023 21:28:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229995AbjESB1E (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 21:27:04 -0400
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9D94E41
-        for <linux-pci@vger.kernel.org>; Thu, 18 May 2023 18:27:03 -0700 (PDT)
-Received: by mail-yb1-xb2b.google.com with SMTP id 3f1490d57ef6-ba818eb96dcso2412669276.0
-        for <linux-pci@vger.kernel.org>; Thu, 18 May 2023 18:27:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684459623; x=1687051623;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1lvP7Q1DPXjSG9iBptgkojp087iyFGiylW3zAHv1G0s=;
-        b=vOVrSlpzLvgAwRxr0Q+rmluXHst7drYbuTE/FlnkA0sI0Vq+REfrWisZRfc1SzSbgw
-         tVsm1pXic0P6GJDF2/7zkD8ER83IoVL7aMp/bHPVrAHQkbbixm3Kg0HMLS35H/xAyVl+
-         UTmOzWe+uQHcb5OYgXl4x58ilZsw3U0w8CB/8DRxqCAwNxEdqhyYWM9g8qj7xVjIwSzv
-         RagYDOY7DuNgn/2/x2NdIprh8X8N+/x5WsqWtdLmu0RBcEsmDgIcvf39Vl0lvfYzI66p
-         MeMDa4CFtzCaOZN4K8cznxO5u8tCBERtUczXNEkQCmNWKWb8p/nq25Dyc4YI11GlL9x7
-         1/nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684459623; x=1687051623;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1lvP7Q1DPXjSG9iBptgkojp087iyFGiylW3zAHv1G0s=;
-        b=Lzb6JqnpYlk6wgz8NZtEg3m5cVqfSf8U+2ZkKFOqCDDTqxgb2WlqgJl1ZlyOqLPlGg
-         KI+eVrJAUo6iZ8+lGWVcnTLTKktheZ6ZBKBBwFRJ/bMgJE68mCKsJye9Dlylmm4pSihM
-         /7nlzktgmJM2gxraw29XyqagPpHMk2kzwrm7NsaqMajmJJbwm1pR8L+ir8omhppOHiZx
-         iociP4aF65orPSxPSoywB1ZGU8dN/06tKUjMZuq6s1vc05/zAbp+pYeN0MaifLtApqKr
-         xKjlbsM3lViFgasyzYMV/u9QOb8cdXBAM1Oo+LBaLIBMWj89RFw6hhMNnZ5Rm3GpVoIk
-         GMMg==
-X-Gm-Message-State: AC+VfDwNgynHJMbP3BLt+bSCMo/qPmAil/FW7PgIpFReQOuVXtLk5M/t
-        3akW6yi+jjr2M1oxtWBZ1rRQ1w==
-X-Google-Smtp-Source: ACHHUZ60fWA8dMxrxSEEE9Cq6HNL+5hZBH8mz2lPQkgrGsomWHcS7zVmJG4fADlLH1bX8uxE4zKyvA==
-X-Received: by 2002:a25:c7cb:0:b0:b8f:6cd0:4ef1 with SMTP id w194-20020a25c7cb000000b00b8f6cd04ef1mr192327ybe.17.1684459622935;
-        Thu, 18 May 2023 18:27:02 -0700 (PDT)
-Received: from fedora (69-109-179-158.lightspeed.dybhfl.sbcglobal.net. [69.109.179.158])
-        by smtp.gmail.com with ESMTPSA id x6-20020a259c46000000b00b9ba6a3b675sm699871ybo.50.2023.05.18.18.27.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 May 2023 18:27:02 -0700 (PDT)
-Date:   Thu, 18 May 2023 21:26:59 -0400
-From:   William Breathitt Gray <william.gray@linaro.org>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 05/41] counter: add HAS_IOPORT dependencies
-Message-ID: <ZGbQYzXK8InMqkxu@fedora>
-References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
- <20230516110038.2413224-6-schnelle@linux.ibm.com>
+        with ESMTP id S229557AbjESB2I (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 18 May 2023 21:28:08 -0400
+Received: from m12.mail.163.com (m12.mail.163.com [220.181.12.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E457B99
+        for <linux-pci@vger.kernel.org>; Thu, 18 May 2023 18:28:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version:
+        Content-Type; bh=u5wxDegre1Yr7vlRwGnw6Fam8P0Lv783DtVp537O9pM=;
+        b=IQIsF4V8tVeYXaFhHweJlXiKAOQZVSAhg40/AMC7YBSvObrFGsNdCxD2XlHosb
+        nqgA/Cz8iuXYdyj892oK+a+/RxWnXBGCABrAy9YKXYuk2UZ0vwyPHjNugeTnXYNE
+        aC5m0gT0B4KKKFEF4mD5RGMWd8+7Gni2oFtkCIeZWbP8s=
+Received: from [172.20.125.31] (unknown [116.128.244.169])
+        by zwqz-smtp-mta-g1-1 (Coremail) with SMTP id _____wBXP0eM0GZkUo0mAA--.10596S2;
+        Fri, 19 May 2023 09:27:42 +0800 (CST)
+Subject: Re: [PATCH v4] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
+ Presence Detect Changed event occurred
+To:     Bjorn Helgaas <helgaas@kernel.org>, Lukas Wunner <lukas@wunner.de>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        Rongguang Wei <weirongguang@kylinos.cn>
+References: <ZGYHdbvZ8JJUFPMc@bhelgaas>
+In-Reply-To: <ZGYHdbvZ8JJUFPMc@bhelgaas>
+From:   Rongguang Wei <clementwei90@163.com>
+Message-ID: <d818f249-a107-d229-461d-e905771177c9@163.com>
+Date:   Fri, 19 May 2023 09:27:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:78.0) Gecko/20100101
+ Thunderbird/78.8.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5bxTSeSIiawlWPZU"
-Content-Disposition: inline
-In-Reply-To: <20230516110038.2413224-6-schnelle@linux.ibm.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: _____wBXP0eM0GZkUo0mAA--.10596S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrurW5JFWDXFW7CF17uF15Arb_yoWkKrc_u3
+        4fZayqgw4vk395KFnrKr4rtF9rJrW3J3W0ga4xX34avrWrAaykurykXas8GF1UX398trZ8
+        Cwn0vryYqFyavjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUUznQ5UUUUU==
+X-Originating-IP: [116.128.244.169]
+X-CM-SenderInfo: 5fohzv5qwzvxizq6il2tof0z/1tbiGhJ0a1aEFR+BdQAAs7
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi
 
---5bxTSeSIiawlWPZU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 5/18/23 7:09 PM, Bjorn Helgaas wrote:
+> On Thu, May 18, 2023 at 08:25:57AM +0200, Lukas Wunner wrote:
+>> On Wed, May 17, 2023 at 04:02:01PM -0500, Bjorn Helgaas wrote:
+>>> I'm curious why we want the 5 seconds of blinking power indicator at
+>>> all.  We can't really do anything in response to an Attention Button
+>>> on an empty slot, so could we just ignore it completely in
+>>> pciehp_handle_button_press()?
+>>
+>> That wouldn't cover the case where the slot is occupied when the
+>> button is pressed, but the card is yanked out during the 5 second
+>> blinking interval.
+> 
+> Obviously we can't ignore a button press when the slot is occupied,
+> because that's part of the "insert card, press button to power it up"
+> and "press button to power down card, remove card" flows.
+> 
+> I'm asking about ignoring it when the slot is empty, which would mean
+> adding a check for card presence in pciehp_handle_button_press().  But
+> maybe there's a reason why we can't do that there?
+> 
+> Bjorn
+> 
+I think we can't add a check in pciehp_handle_button_press() because
+this function is handle the ABP event and the slot is occupied or empty
+is PDC event. Those two events are better not control in one function.
 
-On Tue, May 16, 2023 at 01:00:01PM +0200, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
->=20
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Thanks.
 
-Hi Niklas,
-
-The change itself is fine, but please update the description to reflect
-that this is adding a depends on HAS_IOPORT_MAP rather than HAS_IOPORT,
-along with the reason why it's needed (i.e. devm_ioport_map() is used).
-
-Thanks,
-
-William Breathitt Gray
-
-> ---
-> Note: The HAS_IOPORT Kconfig option was added in v6.4-rc1 so
->       per-subsystem patches may be applied independently
->=20
->  drivers/counter/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
-> index 4228be917038..e65a2bf178b8 100644
-> --- a/drivers/counter/Kconfig
-> +++ b/drivers/counter/Kconfig
-> @@ -15,6 +15,7 @@ if COUNTER
->  config 104_QUAD_8
->  	tristate "ACCES 104-QUAD-8 driver"
->  	depends on (PC104 && X86) || COMPILE_TEST
-> +	depends on HAS_IOPORT_MAP
->  	select ISA_BUS_API
->  	help
->  	  Say yes here to build support for the ACCES 104-QUAD-8 quadrature
-> --=20
-> 2.39.2
->=20
-
---5bxTSeSIiawlWPZU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSNN83d4NIlKPjon7a1SFbKvhIjKwUCZGbQYwAKCRC1SFbKvhIj
-Kwr/AP9BDmkAnBXC+MjVSJOmxTQF8Sx5RdpwwV0Oaq8V32L4cAEAjgIcBwlTHN/4
-SwcgWo1pJaiaLAG8+7C20VWkinQ4dwc=
-=WkDE
------END PGP SIGNATURE-----
-
---5bxTSeSIiawlWPZU--
