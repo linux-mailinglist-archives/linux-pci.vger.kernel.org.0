@@ -2,118 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 498D6709033
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 09:13:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DE3FD7091E4
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 10:44:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbjESHNc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 03:13:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51470 "EHLO
+        id S231131AbjESIow (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 04:44:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjESHNc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 03:13:32 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EC77310D0;
-        Fri, 19 May 2023 00:13:29 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.35])
-        by gateway (Coremail) with SMTP id _____8Cx_eqXIWdkChkKAA--.17539S3;
-        Fri, 19 May 2023 15:13:27 +0800 (CST)
-Received: from [10.20.42.35] (unknown [10.20.42.35])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8BxX+SQIWdk0IVpAA--.48203S3;
-        Fri, 19 May 2023 15:13:20 +0800 (CST)
-Subject: Re: [PATCH v1] usb: dwc2: add pci_device_id driver_data parse support
-To:     kernel test robot <lkp@intel.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, Jianmin Lv <lvjianmin@loongson.cn>,
-        wanghongliang@loongson.cn, Liu Peibao <liupeibao@loongson.cn>,
-        loongson-kernel@lists.loongnix.cn, zhuyinbo@loongson.cn
-References: <20230518092240.8023-1-zhuyinbo@loongson.cn>
- <202305190105.O6ycxCti-lkp@intel.com>
-From:   zhuyinbo <zhuyinbo@loongson.cn>
-Message-ID: <933c829f-0d27-f3b9-3db6-f2211495b086@loongson.cn>
-Date:   Fri, 19 May 2023 15:13:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S231181AbjESIot (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 04:44:49 -0400
+X-Greylist: delayed 1200 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Fri, 19 May 2023 01:44:46 PDT
+Received: from mail.corrib.pl (mail.corrib.pl [185.58.226.145])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD3AE5D
+        for <linux-pci@vger.kernel.org>; Fri, 19 May 2023 01:44:46 -0700 (PDT)
+Received: by mail.corrib.pl (Postfix, from userid 1001)
+        id 3BE4BA53ED; Fri, 19 May 2023 09:06:19 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=corrib.pl; s=mail;
+        t=1684483587; bh=85MOfYTjIHwki6Ys5IeFKzEzX5V7umZoL3TytLG0W/k=;
+        h=Date:From:To:Subject:From;
+        b=l4SDthPFPtSKSdSXRSR7nL4i0qSl8sy4mDeRlndsCuJNrV5oKGMk+94i4UqRWScjf
+         DEUK75mEWzl9GbPwIvnQ5kXiJHQCAyQeSTh6NABPBJHwgZKxABYv8y++6VfvPKlXHG
+         WDYX0ntPFSzR7kNM8L0+6Ipbig7Fbx8u5GSssqLetknzTu2RuOHa3VffhONLKvfv3L
+         aoPZQDFxNPdwBRwMhPW+EoECFukReY5L33mDJx0frOBjqPUh8cUZCUXqLyT3gPQ/oP
+         srX0Cvs8fRX+pPoR5c6RBt8zjkqY/+nBCPEKfwWsHRzTBa1Xwx07LXrx8CkC6b3/Bl
+         MS7AEw0x1b5ZA==
+Received: by mail.corrib.pl for <linux-pci@vger.kernel.org>; Fri, 19 May 2023 08:06:12 GMT
+Message-ID: <20230519074500-0.1.7b.ofb7.0.6g1lgtn67g@corrib.pl>
+Date:   Fri, 19 May 2023 08:06:12 GMT
+From:   "Szczepan Andryszczuk" <szczepan.andryszczuk@corrib.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: Faktoring
+X-Mailer: mail.corrib.pl
 MIME-Version: 1.0
-In-Reply-To: <202305190105.O6ycxCti-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8BxX+SQIWdk0IVpAA--.48203S3
-X-CM-SenderInfo: 52kx5xhqerqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxAw13AFW5ZFWkZFWUCw13twb_yoW5Jw4xpa
-        yUZrZFkr1Fqr18GayxGa4Uu3WYgrs5Ja4Ygr98Gw45ZrZrZa42qrs2kFy5trnrK3Z7GFy7
-        AFyfXrWv9a48Ja7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bDAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUXVWUAwA2ocxC64
-        kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28E
-        F7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJw
-        A2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY
-        6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrV
-        C2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE
-        7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14
-        v26r126r1DMxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIEY20_WwCFx2IqxVCFs4IE
-        7xkEbVWUJVW8JwCFI7km07C267AKxVWUAVWUtwC20s026c02F40E14v26r1j6r18MI8I3I
-        0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAI
-        cVC0I7IYx2IY67AKxVWUCVW8JwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcV
-        CF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r4j6F4UMIIF0xvEx4A2jsIE
-        c7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07jYnmiUUUUU=
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Dzie=C5=84 dobry,
+
+rozwa=C5=BCali Pa=C5=84stwo wyb=C3=B3r finansowania, kt=C3=B3re spe=C5=82=
+ni potrzeby firmy, zapewniaj=C4=85c natychmiastowy dost=C4=99p do got=C3=B3=
+wki, bez zb=C4=99dnych przestoj=C3=B3w?=20
+
+Przygotowali=C5=9Bmy rozwi=C4=85zania faktoringowe dopasowane do Pa=C5=84=
+stwa bran=C5=BCy i wielko=C5=9Bci firmy, dzi=C4=99ki kt=C3=B3rym, nie mus=
+z=C4=85 Pa=C5=84stwo martwi=C4=87 si=C4=99 o niewyp=C5=82acalno=C5=9B=C4=87=
+ kontrahent=C3=B3w, poniewa=C5=BC transakcje s=C4=85 zabezpieczone i posi=
+adaj=C4=85 gwarancj=C4=99 sp=C5=82aty.=20
+
+Chc=C4=85 Pa=C5=84stwo przeanalizowa=C4=87 dost=C4=99pne opcje?
 
 
-在 2023/5/19 上午1:52, kernel test robot 写道:
-> Hi Yinbo,
-> 
-> kernel test robot noticed the following build errors:
-> 
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on pci/for-linus westeri-thunderbolt/next linus/master v6.4-rc2 next-20230518]
-> [cannot apply to usb/usb-testing usb/usb-next usb/usb-linus]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Yinbo-Zhu/usb-dwc2-add-pci_device_id-driver_data-parse-support/20230518-173721
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-> patch link:    https://lore.kernel.org/r/20230518092240.8023-1-zhuyinbo%40loongson.cn
-> patch subject: [PATCH v1] usb: dwc2: add pci_device_id driver_data parse support
-> config: powerpc-allmodconfig
-> compiler: powerpc-linux-gcc (GCC) 12.1.0
-> reproduce (this is a W=1 build):
->          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->          chmod +x ~/bin/make.cross
->          # https://github.com/intel-lab-lkp/linux/commit/3ff56448e1442fe8b1e72651a8d4d6e1086ece32
->          git remote add linux-review https://github.com/intel-lab-lkp/linux
->          git fetch --no-tags linux-review Yinbo-Zhu/usb-dwc2-add-pci_device_id-driver_data-parse-support/20230518-173721
->          git checkout 3ff56448e1442fe8b1e72651a8d4d6e1086ece32
->          # save the config file
->          mkdir build_dir && cp config build_dir/.config
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
->          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash
-> 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202305190105.O6ycxCti-lkp@intel.com/
-> 
-> All errors (new ones prefixed by >>, old ones prefixed by <<):
-> 
->>> ERROR: modpost: "dwc2_pci_ids" [drivers/usb/dwc2/dwc2_pci.ko] undefined!
-
-
-I test it was set dwc2 pci driver as built-in, so no error, this compile
-error was that dwc2_pci_ids not export when driver as module and I will
-add EXPORT_SYMBOL_GPL(dwc2_pci_ids) to fix that compile issue.
-
-Thanks.
-> 
-
+Pozdrawiam
+Szczepan Andryszczuk
