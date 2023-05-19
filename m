@@ -2,579 +2,138 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CB469709A3C
-	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 16:43:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 012BD709A6B
+	for <lists+linux-pci@lfdr.de>; Fri, 19 May 2023 16:50:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232124AbjESOnY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 19 May 2023 10:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60150 "EHLO
+        id S232006AbjESOuI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 19 May 2023 10:50:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232249AbjESOnC (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 10:43:02 -0400
-Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44DDE1B0
-        for <linux-pci@vger.kernel.org>; Fri, 19 May 2023 07:42:48 -0700 (PDT)
-Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-64a9335a8e7so675186b3a.0
-        for <linux-pci@vger.kernel.org>; Fri, 19 May 2023 07:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1684507367; x=1687099367;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zrpMXZkshOTirNR2J7EhGnAOmpfci/CczBfCz/1mKrU=;
-        b=WZcpKF/PI20KxR39y+H3aAuysXS4AF2yxgqIQeraijv7jZ/8yWENTB5UzbjEKS4fO2
-         DI78ttT52iHxs2jutL6DXEW9CfqI04DcaAKjK9iIhB5LO9dWBqiDseZ8Is5HoSG1Ydmj
-         iEjv4I8yn3C38Xrm+HZ+WrM/VjNJTslkfDI64U8dLNzf3ETN/8OA+NbrWY1/F6SMnouz
-         GSRSDpv5q85NmELzyGcW1uQtlz0lT2YduclfYEw8Jwz+riur0eN88Lgnsx4VtdFDb18F
-         TqQ1tJdY2WyXXJY+sVKkB3fIbInr9PXwM0NGXEQYpP1R5qGvqUs00by70jJDkd97iHwi
-         EaSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684507367; x=1687099367;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zrpMXZkshOTirNR2J7EhGnAOmpfci/CczBfCz/1mKrU=;
-        b=gsfjNSp958eiilMpw+tVRjtbT3q688vZr4lDQJbiJcttMkjwQJKp2nPGQlTOEAKpsH
-         viIqdowCZZ0HbqXlTU/ozRn5x7qkl8KYt4cdcP1H8Uw81Z7mRxFepQoVEM7d0NhmLrEB
-         eHNZYUJ90a6Iqw/IUinm64UwbuQAdmFsrCG0whOK/DuPXre0JZ4Mm9wb2mzZvxIy9Rvt
-         b6HTTFZ4N8oGpxMg20zytTIb6CJQePhVYNztDnEmHSi06xuMm2JhqREZ1AyvtjoLay28
-         wDXpVR/IgtosGrE2TuB1cHkl/THC16KbH9aJ/XX3FQHfr7T7Wv6Le+h9jbANWPdjPtXh
-         5fMQ==
-X-Gm-Message-State: AC+VfDyigEcMmr2BLdYzD60JsAnIIAZ80M+mLag8KqwGevUFxPw9Y0x5
-        z7OCY+qaRhx2W1vxKtY7Wd8+
-X-Google-Smtp-Source: ACHHUZ4vWuw9L4KMR+GCQp+6J0gVLlQcVgLs79QGUYOLyXUKVHQJ3dgcWtrVaRx8jTipmHWFhpOJqg==
-X-Received: by 2002:a05:6a21:33a8:b0:106:a78f:be22 with SMTP id yy40-20020a056a2133a800b00106a78fbe22mr2851238pzb.31.1684507367583;
-        Fri, 19 May 2023 07:42:47 -0700 (PDT)
-Received: from localhost.localdomain ([117.202.184.13])
-        by smtp.gmail.com with ESMTPSA id v11-20020aa7808b000000b005d22639b577sm3089611pff.165.2023.05.19.07.42.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 07:42:47 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, kw@linux.com
-Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v4 7/7] PCI: endpoint: Add PCI Endpoint function driver for MHI bus
-Date:   Fri, 19 May 2023 20:12:15 +0530
-Message-Id: <20230519144215.25167-8-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230519144215.25167-1-manivannan.sadhasivam@linaro.org>
-References: <20230519144215.25167-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S232095AbjESOuH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 19 May 2023 10:50:07 -0400
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2EF41A6;
+        Fri, 19 May 2023 07:50:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.de; s=s31663417;
+        t=1684507765; i=deller@gmx.de;
+        bh=Pj1LG5Utwzy7oSUbGmPubC+BUUsniVXrDIxDTOEkeOI=;
+        h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:In-Reply-To;
+        b=tSCZRXCEu4HR2Kz+W3QijBKl9VTLiHC2N49HMFK+w1Hpq7F3BeCUmSxaeverRIduK
+         YvbL2Ymxs0+Kp5aDW7gqVB49juie7ExHaJUlFUs2v60jM15gQ9mF3aH93i9x42RO9w
+         9TXAzSs37I291wPx/bn8A73o/OlsLsYSYYE85DjzxMVaEA6yxB3HCFa+shHTzK9pxS
+         cPh+lmhPc3rkF4R1AOlxE6B/2vE5tYm+MxGhTMIvL78Q81QkBfWiGyuLYO4zWOaHMG
+         7hMnRilqDEXHeNRHjRPli5KXdm75BbFjdPjnsy5XqmnG2eFTxlZUPrDjQdX+ZaePe4
+         vJWTj7xRB3auQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.20.60] ([94.134.152.232]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MBDj4-1prnPX0fpm-00ChEA; Fri, 19
+ May 2023 16:49:25 +0200
+Message-ID: <ade998d7-abd7-3514-a8d4-25c3ec71b171@gmx.de>
+Date:   Fri, 19 May 2023 16:49:22 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 37/41] fbdev: atyfb: Remove unused clock determination
+Content-Language: en-US
+To:     =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
+ <20230516110038.2413224-38-schnelle@linux.ibm.com>
+ <ZGN2FKSBkMREujgR@intel.com>
+From:   Helge Deller <deller@gmx.de>
+In-Reply-To: <ZGN2FKSBkMREujgR@intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:imFSKe5fuE/OhtLKAsIULRQNuTzYdH/PCC+1ZlOSr9/KeiGoYxz
+ fYJzRc92qIRdL1vlEzKoSpyTFB2X9aetsOZCaYtRapiztiYKf/98SjySwc5QkoBZWZzWEkF
+ q0qexuWtAyK2XftNY9AlO8p9mW8zcBnBT2sDv400OmcOY2R9U7KuLU2NI085SY0Z71BsqbC
+ exRh04UzyoRal5s7TuQrw==
+UI-OutboundReport: notjunk:1;M01:P0:F6hcsYgijK4=;LujMkLAJlcpsClyXQ5ix44Lyzv1
+ pG/GAlVohiISVUdZUHbMVfGS1jS7GysZKXL0FMzoapBoGi2pXdgoFLOAyd1o2oQcbR8ek8qgb
+ 0Aade+CEV7000j7xt17IPxA89E7yJANid1SDclfwD0Vu+2pQCW1COH1OQr5JgHajjwY9u+cvn
+ hDxcqJHuJsDUBLG35UF8FcXwajiEv8alXQqRPU7J3TN2S2fGfGy56X6RpP1lXdwV29ftk/9LK
+ m4MS5skf4XWXnY272t1Ug6nLndfivDAiPNlqrZ02hnbhLaLJFSi2uRbkIaaP6fjmS6FCj9WIO
+ K+CCejY/g1os2LGVCrkGywZexGtloihZ/znNBovLll+IyFbbQX5PV4AoNvC9AXp2ELcEqZ3N3
+ 7Sl8mBkm6J4PEuJcggvbbcnCcL2Nt4658krAYzEFf7L6BS63+ygY4UZn1ZWXL4APN9s7lwpeD
+ O8k02ZtSvS2SNSrZDT6zd/mXV4m5Fo1e1ndvOmOlwqWn47in6/a3s2buDlBWcYwmaP2Zx+0yj
+ xjkh5d9MwfTWwIhn2KD3sX8I9MOb3raC012xJMMQxY6ecSIVKwr8cYorbQsNKtmiQp6HkIBp0
+ RfCETpwmwnwtikLsnsIjbK91deGnT/9OqKnB+dkWtRVBtlvobqnev0x3fQWLgSFwaKWiMmhaM
+ YPpuXwTig6zfYRgU6iZx1z2N566sx0hIFVkE8BRtMgIdlFSusxojz68tCpXe+UjkR6xCH9b1B
+ 5VXVVewjb4uniWy5nWm6Zrf9lJfRXCLlvPujACn6vB2XHRHQpQoIS2ZctTw1p/UIU7NoirNOS
+ 6/iapCj0rZfeR3ZxR1Hg8CshejQS9EqHSR0i98kWpM2K400vfe1TFKmZH9ozJfIEfJhxHZexg
+ GzzL6a7L8Sa8kM/QlauRe3mfbOrCtB+o1HB4Yot8sOOROs0s4+YGExAiW5NPj/SbFk91nQLq0
+ PBdmFaze2TUblHbilaOlhHirXv4=
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,NICE_REPLY_A,
+        RCVD_IN_DNSWL_LOW,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
-The driver implements the MHI function over PCI in the endpoint device
-such as SDX55 modem. The MHI endpoint function driver acts as a
-controller driver for the MHI Endpoint stack and carries out all PCI
-related activities like mapping the host memory using iATU, triggering
-MSIs etc...
+On 5/16/23 14:24, Ville Syrj=C3=A4l=C3=A4 wrote:
+> On Tue, May 16, 2023 at 01:00:33PM +0200, Niklas Schnelle wrote:
+>> Just below the removed lines par->clk_wr_offset is hard coded to 3 so
+>> there is no use in determining a different clock just to then ignore it
+>> anyway. This also removes the only I/O port use remaining in the driver
+>> allowing it to be built without CONFIG_HAS_IOPORT.
+>>
+>> Link: https://lore.kernel.org/all/ZBx5aLo5h546BzBt@intel.com/
+>> Suggested-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+>> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+>
+> Reviewed-by: Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@linux.intel.com>
+>
+>> ---
+>> Note: The HAS_IOPORT Kconfig option was added in v6.4-rc1 so
+>>        per-subsystem patches may be applied independently
 
-Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/Kconfig       |  10 +
- drivers/pci/endpoint/functions/Makefile      |   1 +
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 454 +++++++++++++++++++
- 3 files changed, 465 insertions(+)
- create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
+applied this patch to fbdev git tree.
 
-diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-index 9fd560886871..f5171b4fabbe 100644
---- a/drivers/pci/endpoint/functions/Kconfig
-+++ b/drivers/pci/endpoint/functions/Kconfig
-@@ -37,3 +37,13 @@ config PCI_EPF_VNTB
- 	  between PCI Root Port and PCIe Endpoint.
- 
- 	  If in doubt, say "N" to disable Endpoint NTB driver.
-+
-+config PCI_EPF_MHI
-+	tristate "PCI Endpoint driver for MHI bus"
-+	depends on PCI_ENDPOINT && MHI_BUS_EP
-+	help
-+	   Enable this configuration option to enable the PCI Endpoint
-+	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
-+	   devices such as SDX55.
-+
-+	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
-diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
-index 5c13001deaba..696473fce50e 100644
---- a/drivers/pci/endpoint/functions/Makefile
-+++ b/drivers/pci/endpoint/functions/Makefile
-@@ -6,3 +6,4 @@
- obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
- obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
- obj-$(CONFIG_PCI_EPF_VNTB) 		+= pci-epf-vntb.o
-+obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-new file mode 100644
-index 000000000000..df924fb10e4d
---- /dev/null
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -0,0 +1,454 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCI EPF driver for MHI Endpoint devices
-+ *
-+ * Copyright (C) 2022 Linaro Ltd.
-+ * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+ */
-+
-+#include <linux/mhi_ep.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pci-epc.h>
-+#include <linux/pci-epf.h>
-+
-+#define MHI_VERSION_1_0 0x01000000
-+
-+struct pci_epf_mhi_ep_info {
-+	const struct mhi_ep_cntrl_config *config;
-+	struct pci_epf_header *epf_header;
-+	enum pci_barno bar_num;
-+	u32 epf_flags;
-+	u32 msi_count;
-+	u32 mru;
-+};
-+
-+#define MHI_EP_CHANNEL_CONFIG_UL(ch_num, ch_name)	\
-+	{						\
-+		.num = ch_num,				\
-+		.name = ch_name,			\
-+		.dir = DMA_TO_DEVICE,			\
-+	}
-+
-+#define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-+	{						\
-+		.num = ch_num,				\
-+		.name = ch_name,			\
-+		.dir = DMA_FROM_DEVICE,			\
-+	}
-+
-+static const struct mhi_ep_channel_config mhi_v1_channels[] = {
-+	MHI_EP_CHANNEL_CONFIG_UL(0, "LOOPBACK"),
-+	MHI_EP_CHANNEL_CONFIG_DL(1, "LOOPBACK"),
-+	MHI_EP_CHANNEL_CONFIG_UL(2, "SAHARA"),
-+	MHI_EP_CHANNEL_CONFIG_DL(3, "SAHARA"),
-+	MHI_EP_CHANNEL_CONFIG_UL(4, "DIAG"),
-+	MHI_EP_CHANNEL_CONFIG_DL(5, "DIAG"),
-+	MHI_EP_CHANNEL_CONFIG_UL(6, "SSR"),
-+	MHI_EP_CHANNEL_CONFIG_DL(7, "SSR"),
-+	MHI_EP_CHANNEL_CONFIG_UL(8, "QDSS"),
-+	MHI_EP_CHANNEL_CONFIG_DL(9, "QDSS"),
-+	MHI_EP_CHANNEL_CONFIG_UL(10, "EFS"),
-+	MHI_EP_CHANNEL_CONFIG_DL(11, "EFS"),
-+	MHI_EP_CHANNEL_CONFIG_UL(12, "MBIM"),
-+	MHI_EP_CHANNEL_CONFIG_DL(13, "MBIM"),
-+	MHI_EP_CHANNEL_CONFIG_UL(14, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_DL(15, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_UL(16, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_DL(17, "QMI"),
-+	MHI_EP_CHANNEL_CONFIG_UL(18, "IP-CTRL-1"),
-+	MHI_EP_CHANNEL_CONFIG_DL(19, "IP-CTRL-1"),
-+	MHI_EP_CHANNEL_CONFIG_UL(20, "IPCR"),
-+	MHI_EP_CHANNEL_CONFIG_DL(21, "IPCR"),
-+	MHI_EP_CHANNEL_CONFIG_UL(32, "DUN"),
-+	MHI_EP_CHANNEL_CONFIG_DL(33, "DUN"),
-+	MHI_EP_CHANNEL_CONFIG_UL(46, "IP_SW0"),
-+	MHI_EP_CHANNEL_CONFIG_DL(47, "IP_SW0"),
-+};
-+
-+static const struct mhi_ep_cntrl_config mhi_v1_config = {
-+	.max_channels = 128,
-+	.num_channels = ARRAY_SIZE(mhi_v1_channels),
-+	.ch_cfg = mhi_v1_channels,
-+	.mhi_version = MHI_VERSION_1_0,
-+};
-+
-+static struct pci_epf_header sdx55_header = {
-+	.vendorid = PCI_VENDOR_ID_QCOM,
-+	.deviceid = 0x0306,
-+	.baseclass_code = PCI_BASE_CLASS_COMMUNICATION,
-+	.subclass_code = PCI_CLASS_COMMUNICATION_MODEM & 0xff,
-+	.interrupt_pin	= PCI_INTERRUPT_INTA,
-+};
-+
-+static const struct pci_epf_mhi_ep_info sdx55_info = {
-+	.config = &mhi_v1_config,
-+	.epf_header = &sdx55_header,
-+	.bar_num = BAR_0,
-+	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
-+	.msi_count = 32,
-+	.mru = 0x8000,
-+};
-+
-+struct pci_epf_mhi {
-+	const struct pci_epf_mhi_ep_info *info;
-+	struct mhi_ep_cntrl mhi_cntrl;
-+	struct pci_epf *epf;
-+	struct mutex lock;
-+	void __iomem *mmio;
-+	resource_size_t mmio_phys;
-+	u32 mmio_size;
-+	int irq;
-+	bool mhi_registered;
-+};
-+
-+static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-+				 phys_addr_t *phys_ptr, void __iomem **virt, size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-+	void __iomem *virt_addr;
-+	phys_addr_t phys_addr;
-+	int ret;
-+
-+	virt_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, size + offset);
-+	if (!virt_addr)
-+		return -ENOMEM;
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, phys_addr, pci_addr - offset,
-+			       size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, phys_addr, virt_addr, size + offset);
-+
-+		return ret;
-+	}
-+
-+	*phys_ptr = phys_addr + offset;
-+	*virt = virt_addr + offset;
-+
-+	return 0;
-+}
-+
-+static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-+				   phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf->epc;
-+	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, phys_addr - offset);
-+	pci_epc_mem_free_addr(epc, phys_addr - offset, virt_addr - offset, size + offset);
-+}
-+
-+static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf->epc;
-+
-+	/*
-+	 * Vector is incremented by 1 here as the DWC core will decrement it before
-+	 * writing to iATU.
-+	 */
-+	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI, vector + 1);
-+}
-+
-+static int pci_epf_mhi_read_from_host(struct mhi_ep_cntrl *mhi_cntrl, u64 from, void __iomem *to,
-+			       size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	void __iomem *tre_buf;
-+	phys_addr_t tre_phys;
-+	size_t offset = from % 0x1000;
-+	int ret;
-+
-+	mutex_lock(&epf_mhi->lock);
-+
-+	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-+	if (!tre_buf) {
-+		mutex_unlock(&epf_mhi->lock);
-+		return -ENOMEM;
-+	}
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, from - offset,
-+			       size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+		mutex_unlock(&epf_mhi->lock);
-+		return ret;
-+	}
-+
-+	memcpy_fromio(to, tre_buf + offset, size);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-+	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+
-+	mutex_unlock(&epf_mhi->lock);
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl, void __iomem *from, u64 to,
-+			      size_t size)
-+{
-+	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-+	struct pci_epf *epf = epf_mhi->epf;
-+	struct pci_epc *epc = epf_mhi->epf->epc;
-+	void __iomem *tre_buf;
-+	phys_addr_t tre_phys;
-+	size_t offset = to % 0x1000;
-+	int ret;
-+
-+	mutex_lock(&epf_mhi->lock);
-+
-+	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-+	if (!tre_buf) {
-+		mutex_unlock(&epf_mhi->lock);
-+		return -ENOMEM;
-+	}
-+
-+	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, to - offset,
-+			       size + offset);
-+	if (ret) {
-+		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+		mutex_unlock(&epf_mhi->lock);
-+		return ret;
-+	}
-+
-+	memcpy_toio(tre_buf + offset, from, size);
-+
-+	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-+	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-+
-+	mutex_unlock(&epf_mhi->lock);
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_core_init(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-+	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-+	struct pci_epc *epc = epf->epc;
-+	struct device *dev = &epf->dev;
-+	int ret;
-+
-+	epf_bar->phys_addr = epf_mhi->mmio_phys;
-+	epf_bar->size = epf_mhi->mmio_size;
-+	epf_bar->barno = info->bar_num;
-+	epf_bar->flags = info->epf_flags;
-+	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-+	if (ret) {
-+		dev_err(dev, "Failed to set BAR: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = pci_epc_set_msi(epc, epf->func_no, epf->vfunc_no,
-+			      order_base_2(info->msi_count));
-+	if (ret) {
-+		dev_err(dev, "Failed to set MSI configuration: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = pci_epc_write_header(epc, epf->func_no, epf->vfunc_no, epf->header);
-+	if (ret) {
-+		dev_err(dev, "Failed to set Configuration header: %d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_link_up(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+	struct pci_epc *epc = epf->epc;
-+	struct device *dev = &epf->dev;
-+	int ret;
-+
-+	mhi_cntrl->mmio = epf_mhi->mmio;
-+	mhi_cntrl->irq = epf_mhi->irq;
-+	mhi_cntrl->mru = info->mru;
-+
-+	/* Assign the struct dev of PCI EP as MHI controller device */
-+	mhi_cntrl->cntrl_dev = epc->dev.parent;
-+	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
-+	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
-+	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-+	mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
-+	mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
-+
-+	/* Register the MHI EP controller */
-+	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
-+	if (ret) {
-+		dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
-+		return ret;
-+	}
-+
-+	epf_mhi->mhi_registered = true;
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_link_down(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+
-+	if (epf_mhi->mhi_registered) {
-+		mhi_ep_power_down(mhi_cntrl);
-+		mhi_ep_unregister_controller(mhi_cntrl);
-+		epf_mhi->mhi_registered = false;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_bme(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+	struct device *dev = &epf->dev;
-+	int ret;
-+
-+	/* Power up the MHI EP stack if link is up and stack is in power down state */
-+	if (!mhi_cntrl->enabled && epf_mhi->mhi_registered) {
-+		ret = mhi_ep_power_up(mhi_cntrl);
-+		if (ret) {
-+			dev_err(dev, "Failed to power up MHI EP: %d\n", ret);
-+			mhi_ep_unregister_controller(mhi_cntrl);
-+			epf_mhi->mhi_registered = false;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int pci_epf_mhi_bind(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	struct pci_epc *epc = epf->epc;
-+	struct platform_device *pdev = to_platform_device(epc->dev.parent);
-+	struct device *dev = &epf->dev;
-+	struct resource *res;
-+	int ret;
-+
-+	if (WARN_ON_ONCE(!epc))
-+		return -EINVAL;
-+
-+	/* Get MMIO base address from Endpoint controller */
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mmio");
-+	epf_mhi->mmio_phys = res->start;
-+	epf_mhi->mmio_size = resource_size(res);
-+
-+	epf_mhi->mmio = ioremap_wc(epf_mhi->mmio_phys, epf_mhi->mmio_size);
-+	if (IS_ERR(epf_mhi->mmio))
-+		return PTR_ERR(epf_mhi->mmio);
-+
-+	ret = platform_get_irq_byname(pdev, "doorbell");
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get Doorbell IRQ\n");
-+		iounmap(epf_mhi->mmio);
-+		return ret;
-+	}
-+
-+	epf_mhi->irq = ret;
-+
-+	return 0;
-+}
-+
-+static void pci_epf_mhi_unbind(struct pci_epf *epf)
-+{
-+	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-+	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-+	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-+	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-+	struct pci_epc *epc = epf->epc;
-+
-+	/*
-+	 * Forcefully power down the MHI EP stack. Only way to bring the MHI EP stack
-+	 * back to working state after successive bind is by getting BME from host.
-+	 */
-+	if (epf_mhi->mhi_registered) {
-+		mhi_ep_power_down(mhi_cntrl);
-+		mhi_ep_unregister_controller(mhi_cntrl);
-+		epf_mhi->mhi_registered = false;
-+	}
-+
-+	iounmap(epf_mhi->mmio);
-+	pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-+}
-+
-+static struct pci_epc_event_ops pci_epf_mhi_event_ops = {
-+	.core_init = pci_epf_mhi_core_init,
-+	.link_up = pci_epf_mhi_link_up,
-+	.link_down = pci_epf_mhi_link_down,
-+	.bme = pci_epf_mhi_bme,
-+};
-+
-+static int pci_epf_mhi_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
-+{
-+	struct pci_epf_mhi_ep_info *info = (struct pci_epf_mhi_ep_info *) id->driver_data;
-+	struct pci_epf_mhi *epf_mhi;
-+	struct device *dev = &epf->dev;
-+
-+	epf_mhi = devm_kzalloc(dev, sizeof(*epf_mhi), GFP_KERNEL);
-+	if (!epf_mhi)
-+		return -ENOMEM;
-+
-+	epf->header = info->epf_header;
-+	epf_mhi->info = info;
-+	epf_mhi->epf = epf;
-+
-+	epf->event_ops = &pci_epf_mhi_event_ops;
-+
-+	mutex_init(&epf_mhi->lock);
-+
-+	epf_set_drvdata(epf, epf_mhi);
-+
-+	return 0;
-+}
-+
-+static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
-+	{
-+		.name = "sdx55", .driver_data = (kernel_ulong_t) &sdx55_info,
-+	},
-+	{},
-+};
-+
-+static struct pci_epf_ops pci_epf_mhi_ops = {
-+	.unbind	= pci_epf_mhi_unbind,
-+	.bind	= pci_epf_mhi_bind,
-+};
-+
-+static struct pci_epf_driver pci_epf_mhi_driver = {
-+	.driver.name	= "pci_epf_mhi",
-+	.probe		= pci_epf_mhi_probe,
-+	.id_table	= pci_epf_mhi_ids,
-+	.ops		= &pci_epf_mhi_ops,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int __init pci_epf_mhi_init(void)
-+{
-+	return pci_epf_register_driver(&pci_epf_mhi_driver);
-+}
-+module_init(pci_epf_mhi_init);
-+
-+static void __exit pci_epf_mhi_exit(void)
-+{
-+	pci_epf_unregister_driver(&pci_epf_mhi_driver);
-+}
-+module_exit(pci_epf_mhi_exit);
-+
-+MODULE_DESCRIPTION("PCI EPF driver for MHI Endpoint devices");
-+MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-+MODULE_LICENSE("GPL");
--- 
-2.25.1
+Thanks!
+
+Helge
+
+>>
+>>   drivers/video/fbdev/aty/atyfb_base.c | 5 -----
+>>   1 file changed, 5 deletions(-)
+>>
+>> diff --git a/drivers/video/fbdev/aty/atyfb_base.c b/drivers/video/fbdev=
+/aty/atyfb_base.c
+>> index b02e4e645035..cba2b113b28b 100644
+>> --- a/drivers/video/fbdev/aty/atyfb_base.c
+>> +++ b/drivers/video/fbdev/aty/atyfb_base.c
+>> @@ -3498,11 +3498,6 @@ static int atyfb_setup_generic(struct pci_dev *p=
+dev, struct fb_info *info,
+>>   	if (ret)
+>>   		goto atyfb_setup_generic_fail;
+>>   #endif
+>> -	if (!(aty_ld_le32(CRTC_GEN_CNTL, par) & CRTC_EXT_DISP_EN))
+>> -		par->clk_wr_offset =3D (inb(R_GENMO) & 0x0CU) >> 2;
+>> -	else
+>> -		par->clk_wr_offset =3D aty_ld_8(CLOCK_CNTL, par) & 0x03U;
+>> -
+>>   	/* according to ATI, we should use clock 3 for acelerated mode */
+>>   	par->clk_wr_offset =3D 3;
+>>
+>> --
+>> 2.39.2
+>
 
