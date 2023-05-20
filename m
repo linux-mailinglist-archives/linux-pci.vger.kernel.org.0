@@ -2,155 +2,93 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B528570A59F
-	for <lists+linux-pci@lfdr.de>; Sat, 20 May 2023 07:18:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C24A070A66A
+	for <lists+linux-pci@lfdr.de>; Sat, 20 May 2023 10:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230274AbjETFSY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 20 May 2023 01:18:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34862 "EHLO
+        id S230342AbjETIbY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 20 May 2023 04:31:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60084 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjETFSX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 May 2023 01:18:23 -0400
-Received: from out-49.mta0.migadu.com (out-49.mta0.migadu.com [IPv6:2001:41d0:1004:224b::31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 335491B0
-        for <linux-pci@vger.kernel.org>; Fri, 19 May 2023 22:18:22 -0700 (PDT)
-Date:   Sat, 20 May 2023 13:18:17 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1684559900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6hm7M8XDbSD+iSGn9J7trDiGr6FdOKQaknC5vC3b+WY=;
-        b=lyLDHsGT+JWt1IJfMJoxCQaWaKL5z6w5vmalX2MqStk2J7cHWDYnw7HIr9ZDDbGp7162ep
-        OdG8yAaNZLEJuLEer1KlqoWBFlTbBR779v4XfPybKkO6koJ0tuhtPLm21UFPtshFVKSPhI
-        5VV9gfWi5Pa4FXWN5etZIxrj+oasLzQ=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Cai Huoqing <cai.huoqing@linux.dev>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Serge Semin <fancer.lancer@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH v10 0/4] dmaengine: dw-edma: Add support for native HDMA
-Message-ID: <ZGhYGb47hv6Za34/@chq-MS-7D45>
-References: <20230517030115.21093-1-cai.huoqing@linux.dev>
- <ZGddCpjX8n1ML21j@matsya>
- <ZGd7/FGJVi6lDk8F@chq-MS-7D45>
- <ZGezgLc63PsqfWBs@matsya>
+        with ESMTP id S229568AbjETIbX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 20 May 2023 04:31:23 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC43F19A
+        for <linux-pci@vger.kernel.org>; Sat, 20 May 2023 01:31:20 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 06DCF100DA1A9;
+        Sat, 20 May 2023 10:31:19 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id CAAE96BE46; Sat, 20 May 2023 10:31:18 +0200 (CEST)
+Date:   Sat, 20 May 2023 10:31:18 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rongguang Wei <clementwei90@163.com>, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, Rongguang Wei <weirongguang@kylinos.cn>
+Subject: Re: [PATCH v4] PCI: pciehp: Fix the slot in BLINKINGON_STATE when
+ Presence Detect Changed event occurred
+Message-ID: <20230520083118.GA2713@wunner.de>
+References: <ZGVAyd23kpbLDdpw@bhelgaas>
+ <ZGfiR7ricXXo3JgO@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZGezgLc63PsqfWBs@matsya>
-X-Migadu-Flow: FLOW_OUT
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+In-Reply-To: <ZGfiR7ricXXo3JgO@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 19 5月 23 23:06:00, Vinod Koul wrote:
-> On 19-05-23, 21:39, Cai Huoqing wrote:
-> > On 19 5月 23 16:57:06, Vinod Koul wrote:
-> > > On 17-05-23, 11:01, Cai Huoqing wrote:
-> > > > Add support for HDMA NATIVE, as long the IP design has set
-> > > > the compatible register map parameter-HDMA_NATIVE,
-> > > > which allows compatibility for native HDMA register configuration.
-> > > > 
-> > > > The HDMA Hyper-DMA IP is an enhancement of the eDMA embedded-DMA IP.
-> > > > And the native HDMA registers are different from eDMA,
-> > > > so this patch add support for HDMA NATIVE mode.
-> > > > 
-> > > > HDMA write and read channels operate independently to maximize
-> > > > the performance of the HDMA read and write data transfer over
-> > > > the link When you configure the HDMA with multiple read channels,
-> > > > then it uses a round robin (RR) arbitration scheme to select
-> > > > the next read channel to be serviced.The same applies when
-> > > > youhave multiple write channels.
-> > > > 
-> > > > The native HDMA driver also supports a maximum of 16 independent
-> > > > channels (8 write + 8 read), which can run simultaneously.
-> > > > Both SAR (Source Address Register) and DAR (Destination Address Register)
-> > > > are aligned to byte.
-> > > > 
-> > > > Cai Huoqing (1):
-> > > >   dmaengine: dw-edma: Add support for native HDMA
-> > > > 
-> > > > Cai huoqing (3):
-> > > >   dmaengine: dw-edma: Rename dw_edma_core_ops structure to
-> > > >     dw_edma_plat_ops
-> > > >   dmaengine: dw-edma: Create a new dw_edma_core_ops structure to
-> > > >     abstract controller operation
-> > > >   dmaengine: dw-edma: Add HDMA DebugFS support
+On Fri, May 19, 2023 at 03:55:35PM -0500, Bjorn Helgaas wrote:
+> On Wed, May 17, 2023 at 04:02:01PM -0500, Bjorn Helgaas wrote:
+> > On Fri, May 12, 2023 at 10:15:18AM +0800, Rongguang Wei wrote:
+> > > From: Rongguang Wei <weirongguang@kylinos.cn>
 > > > 
-> > > You should have a single name for all these patches :-(
-> > 
-> > Hi Vinod,
-> > 
-> > Thanks for your reply.
-> > 
-> > Do you mean patch[0/4] and patch[3/4] shouldn't have the same name?
-> 
-> It should be Cai Huoqing or Cai huoqing not both :-)
-
-Sorry, My mistake :-)
-
-I resend v11 here:
-https://lore.kernel.org/lkml/20230520050854.73160-1-cai.huoqing@linux.dev/
-
-thanks,
-Cai-
-
-> 
-> > 
-> > Thanks,
-> > Cai-
+> > > pciehp's behavior is incorrect if the Attention Button is pressed
+> > > on an unoccupied slot.
 > > > 
-> > > > 
-> > > > Tested-by: Serge Semin <fancer.lancer@gmail.com>
-> > > > 
-> > > > v9->v10:
-> > > >   1.Update commit log.
-> > > >   2.rebase for dma-next
-> > > > 
-> > > > v9 link:
-> > > >   https://lore.kernel.org/lkml/20230413033156.93751-1-cai.huoqing@linux.dev/
-> > > > 
-> > > >  drivers/dma/dw-edma/Makefile                 |   8 +-
-> > > >  drivers/dma/dw-edma/dw-edma-core.c           |  86 ++----
-> > > >  drivers/dma/dw-edma/dw-edma-core.h           |  58 ++++
-> > > >  drivers/dma/dw-edma/dw-edma-pcie.c           |   4 +-
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.c        |  85 +++++-
-> > > >  drivers/dma/dw-edma/dw-edma-v0-core.h        |  14 +-
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-core.c        | 296 +++++++++++++++++++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-core.h        |  17 ++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.c     | 170 +++++++++++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-debugfs.h     |  22 ++
-> > > >  drivers/dma/dw-edma/dw-hdma-v0-regs.h        | 129 ++++++++
-> > > >  drivers/pci/controller/dwc/pcie-designware.c |   2 +-
-> > > >  include/linux/dma/edma.h                     |   7 +-
-> > > >  13 files changed, 807 insertions(+), 91 deletions(-)
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.c
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-core.h
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.c
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-debugfs.h
-> > > >  create mode 100644 drivers/dma/dw-edma/dw-hdma-v0-regs.h
-> > > > 
-> > > > -- 
-> > > > 2.34.1
-> > > 
-> > > -- 
-> > > ~Vinod
+> > > When a Presence Detect Changed event has occurred, the slot status
+> > > in either BLINKINGOFF_STATE or OFF_STATE, turn it off unconditionally.
 > 
-> -- 
-> ~Vinod
+> Was this supposed to say "BLINKINGOFF_STATE or ON_STATE"
+> (not "OFF_STATE")?
+
+Yes I think you're right.
+
+
+> I propose the following commit log:
+[...]
+>   pciehp_queue_pushbutton_work() synthesizes a Presence Detect Changed
+>   event, and pciehp_handle_presence_or_link_change() exits when it
+>   finds the slot empty, leaving the slot in BLINKINGON_STATE with the
+>   Power Indicator blinking.
+> 
+>   To fix the indefinitely blinking Power Indicator, change
+>   pciehp_handle_presence_or_link_change() to put the empty slot back
+>   in OFF_STATE and turn off the Power Indicator before exiting.
+
+The indefinitely blinking Power Indicator is only one half of the problem.
+The other half is that the next button press doesn't result in slot
+bringup, even if the slot is occupied and the 5 second timeout has
+elapsed.  Suggested wording, feel free to rephrase as you see fit:
+
+  Because the slot was previously left in BLINKINGON_STATE, the next
+  button press was interpreted as a "button cancel" event, even if the
+  slot was occupied upon that next button press:  pciehp stopped blinking
+  and did not perform another slot bringup attempt.
+
+  By putting the slot in OFF_STATE, such user-unfriendly behavior is
+  avoided:  Instead, the next button press will result in the slot
+  starting to blink again and another bringup attempt after 5 seconds.
+
+Thanks,
+
+Lukas
