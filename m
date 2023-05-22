@@ -2,48 +2,67 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D61DB70BC23
-	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AF3670BC30
+	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:49:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233397AbjEVLqF (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 May 2023 07:46:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53974 "EHLO
+        id S233423AbjEVLti (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 May 2023 07:49:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233401AbjEVLqD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:46:03 -0400
-Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61885B6
-        for <linux-pci@vger.kernel.org>; Mon, 22 May 2023 04:45:57 -0700 (PDT)
-Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
-        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        id 1q13z9-0001tx-Pk; Mon, 22 May 2023 13:45:55 +0200
-Message-ID: <844f3819-c819-bc55-0518-0b1b9651825f@leemhuis.info>
-Date:   Mon, 22 May 2023 13:45:55 +0200
+        with ESMTP id S232940AbjEVLth (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:49:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B6BAB;
+        Mon, 22 May 2023 04:49:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BF261611AC;
+        Mon, 22 May 2023 11:49:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D08FC433D2;
+        Mon, 22 May 2023 11:49:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684756175;
+        bh=MksqE9gv1SGdf5zP2megR4doE0nMrzoziEQVjPRPgGA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=ezTeSjZcoE828dZ4AfFTu2b1XRysWjgqhj4it4+vVaDGbuctXN9X2pDqmjF3mwcT+
+         B48yzvikaBwpbaPYDO9k1y4ag61WWuTfAfOO+IqX02YrrbldcjpnnDNHHgpSV/MOI5
+         O4SORRiVE1OdAZ7uQbkGyrstBHVpnRO9PI3+awszLeBJg729xnuUDKTzDUvXXnFtk1
+         0d+lm1vHd5dMgsX2yJIpcE+gudJaMxmJCcDv0MnPBXy+BfFjDg19rwAq7h6oMWyjvz
+         Plj2U0xnqIo9HByUX6+NgH3C48FaeHj2YRRe2XBrbD21Wsc22RHB3+2nj+gjkOsNzb
+         UxlCU2MpDfl/g==
+Message-ID: <27e793b1-8676-d90a-4808-b5e194a8741f@kernel.org>
+Date:   Mon, 22 May 2023 20:49:32 +0900
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
- during long idle
-Content-Language: en-US, de-DE
-To:     Koba Ko <koba.ko@canonical.com>, Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, Vidya Sagar <vidyas@nvidia.com>,
-        Ajay Agarwal <ajayagarwal@google.com>,
-        Tasev Nikola <tasev.stefanoska@skynet.be>,
-        Mark Enriquez <enriquezmark36@gmail.com>,
-        Thomas Witt <kernel@witt.link>, regressions@lists.linux.dev
-References: <20230411204229.GA4168208@bhelgaas>
- <20230504152344.GA857680@bhelgaas>
- <CAJB-X+Vu8HJSNza896ELGrUKk64gPH=MjbYQMSxW6Xiw4MSiJw@mail.gmail.com>
-From:   "Linux regression tracking (Thorsten Leemhuis)" 
-        <regressions@leemhuis.info>
-Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
-In-Reply-To: <CAJB-X+Vu8HJSNza896ELGrUKk64gPH=MjbYQMSxW6Xiw4MSiJw@mail.gmail.com>
+Subject: Re: [PATCH v5 02/44] ata: add HAS_IOPORT dependencies
+Content-Language: en-US
+To:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-ide@vger.kernel.org
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+ <20230522105049.1467313-3-schnelle@linux.ibm.com>
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230522105049.1467313-3-schnelle@linux.ibm.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684755957;b027ccca;
-X-HE-SMSGID: 1q13z9-0001tx-Pk
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -51,94 +70,181 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 05.05.23 08:56, Koba Ko wrote:
-> On Thu, May 4, 2023 at 5:23 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
->> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
->>> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
->>>> ...
->>>>         Regression: No
->>>>
->>>> [Symptom]
->>>> Intel cpu can't sleep deeper than pcˇ during long idle
->>>> ~~~
->>>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
->>>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
->>>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
->>>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
->>>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
->>>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
->>>> ~~~
->>>> [How to Reproduce]
->>>> 1. run turbostat to monitor
->>>> 2. leave machine idle
->>>> 3. turbostat show cpu only go into pc2~pc3.
->>>>
->>>> [Misc]
->>>> The culprit are this
->>>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
->>>> suspend/resume”
->>>>
->>>> if revert a7152be79b62, the issue is gone
->>>
->>> Relevant commits:
->>>
->>>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
->>>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
->>>
->>> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
->>> Substates configuration was not preserved across suspend/resume, so
->>> the system *worked* after resume, but used more power than expected.
->>>
->>> But 4ff116d0d5fd caused resume to fail completely on some systems, so
->>> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
->>> Substates configuration is likely not preserved across suspend/resume.
->>> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
->>> stable series starting with v6.1.12.
->>>
->>> KobaKo, you don't mention any suspend/resume in this bug report, but
->>> neither patch should make any difference unless suspend/resume is
->>> involved.  Does the platform sleep as expected *before* suspend, but
->>> fail to sleep after resume?
->>>
->>> Or maybe some individual device was suspended via runtime power
->>> management, and that device lost its L1 PM Substates config?  I don't
->>> know if there's a way to disable runtime PM easily.
->>
->> Koba, per your bugzilla update, the issue happens even without
->> suspend/resume.  And we don't know whether some particular device is
->> responsible.
->>
->> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
->> we don't preserve L1SS state, we can't.
->>
->> We definitely want to preserve the L1SS state, but we can't simply
->> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
->> suspend/resume") again because it caused its own regressions [1,2,3]
->>
->> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
->> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
->> and Mark, and then we can apply it.
+On 5/22/23 19:50, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. We thus need to add HAS_IOPORT as dependency for
+> those drivers using them.
 > 
-> Good days, discussed with Kai-Heng and he mentioned  the GPU may not
-> be pulled off the power.
-> then the GPU needs L1ss to get into power saving.
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+
+This new version looks much nicer !
+
+Please change my Ack to:
+
+Acked-by: Damien Le Moal <dlemoal@kernel.org>
+
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> ---
+>  drivers/ata/Kconfig      | 28 ++++++++++++++--------------
+>  drivers/ata/libata-sff.c |  4 ++++
+>  2 files changed, 18 insertions(+), 14 deletions(-)
 > 
-> I will investigate further on this way.
+> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
+> index 42b51c9812a0..c521cdc51f8c 100644
+> --- a/drivers/ata/Kconfig
+> +++ b/drivers/ata/Kconfig
+> @@ -557,7 +557,7 @@ comment "PATA SFF controllers with BMDMA"
+>  
+>  config PATA_ALI
+>  	tristate "ALi PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select PATA_TIMINGS
+>  	help
+>  	  This option enables support for the ALi ATA interfaces
+> @@ -567,7 +567,7 @@ config PATA_ALI
+>  
+>  config PATA_AMD
+>  	tristate "AMD/NVidia PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select PATA_TIMINGS
+>  	help
+>  	  This option enables support for the AMD and NVidia PATA
+> @@ -585,7 +585,7 @@ config PATA_ARASAN_CF
+>  
+>  config PATA_ARTOP
+>  	tristate "ARTOP 6210/6260 PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for ARTOP PATA controllers.
+>  
+> @@ -612,7 +612,7 @@ config PATA_ATP867X
+>  
+>  config PATA_CMD64X
+>  	tristate "CMD64x PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select PATA_TIMINGS
+>  	help
+>  	  This option enables support for the CMD64x series chips
+> @@ -659,7 +659,7 @@ config PATA_CS5536
+>  
+>  config PATA_CYPRESS
+>  	tristate "Cypress CY82C693 PATA support (Very Experimental)"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	select PATA_TIMINGS
+>  	help
+>  	  This option enables support for the Cypress/Contaq CY82C693
+> @@ -707,7 +707,7 @@ config PATA_HPT366
+>  
+>  config PATA_HPT37X
+>  	tristate "HPT 370/370A/371/372/374/302 PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for the majority of the later HPT
+>  	  PATA controllers via the new ATA layer.
+> @@ -716,7 +716,7 @@ config PATA_HPT37X
+>  
+>  config PATA_HPT3X2N
+>  	tristate "HPT 371N/372N/302N PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for the N variant HPT PATA
+>  	  controllers via the new ATA layer.
+> @@ -819,7 +819,7 @@ config PATA_MPC52xx
+>  
+>  config PATA_NETCELL
+>  	tristate "NETCELL Revolution RAID support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for the Netcell Revolution RAID
+>  	  PATA controller.
+> @@ -855,7 +855,7 @@ config PATA_OLDPIIX
+>  
+>  config PATA_OPTIDMA
+>  	tristate "OPTI FireStar PATA support (Very Experimental)"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables DMA/PIO support for the later OPTi
+>  	  controllers found on some old motherboards and in some
+> @@ -865,7 +865,7 @@ config PATA_OPTIDMA
+>  
+>  config PATA_PDC2027X
+>  	tristate "Promise PATA 2027x support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for Promise PATA pdc20268 to pdc20277 host adapters.
+>  
+> @@ -873,7 +873,7 @@ config PATA_PDC2027X
+>  
+>  config PATA_PDC_OLD
+>  	tristate "Older Promise PATA controller support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for the Promise 20246, 20262, 20263,
+>  	  20265 and 20267 adapters.
+> @@ -901,7 +901,7 @@ config PATA_RDC
+>  
+>  config PATA_SC1200
+>  	tristate "SC1200 PATA support"
+> -	depends on PCI && (X86_32 || COMPILE_TEST)
+> +	depends on PCI && (X86_32 || COMPILE_TEST) && HAS_IOPORT
+>  	help
+>  	  This option enables support for the NatSemi/AMD SC1200 SoC
+>  	  companion chip used with the Geode processor family.
+> @@ -919,7 +919,7 @@ config PATA_SCH
+>  
+>  config PATA_SERVERWORKS
+>  	tristate "SERVERWORKS OSB4/CSB5/CSB6/HT1000 PATA support"
+> -	depends on PCI
+> +	depends on PCI && HAS_IOPORT
+>  	help
+>  	  This option enables support for the Serverworks OSB4/CSB5/CSB6 and
+>  	  HT1000 PATA controllers, via the new ATA layer.
+> @@ -1183,7 +1183,7 @@ config ATA_GENERIC
+>  
+>  config PATA_LEGACY
+>  	tristate "Legacy ISA PATA support (Experimental)"
+> -	depends on (ISA || PCI)
+> +	depends on (ISA || PCI) && HAS_IOPORT
+>  	select PATA_TIMINGS
+>  	help
+>  	  This option enables support for ISA/VLB/PCI bus legacy PATA
+> diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+> index 9d28badfe41d..c8cb7ed28f83 100644
+> --- a/drivers/ata/libata-sff.c
+> +++ b/drivers/ata/libata-sff.c
+> @@ -3042,6 +3042,7 @@ EXPORT_SYMBOL_GPL(ata_bmdma_port_start32);
+>   */
+>  int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev)
+>  {
+> +#ifdef CONFIG_HAS_IOPORT
+>  	unsigned long bmdma = pci_resource_start(pdev, 4);
+>  	u8 simplex;
+>  
+> @@ -3054,6 +3055,9 @@ int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev)
+>  	if (simplex & 0x80)
+>  		return -EOPNOTSUPP;
+>  	return 0;
+> +#else
+> +	return -ENOENT;
+> +#endif /* CONFIG_HAS_IOPORT */
+>  }
+>  EXPORT_SYMBOL_GPL(ata_pci_bmdma_clear_simplex);
+>  
 
-Did anything come our of this?
+-- 
+Damien Le Moal
+Western Digital Research
 
-FWIW, I'm considering to drop this from the list of tracked regressions.
-Yes, this is a regression, but it's caused by fix for another (worse)
-regression -- so there is nothing we can do for now anyway (and Koba
-seems motivated already to look properly into all of this). Or does
-anyone consider this to be a problem?
-
-Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
---
-Everything you wanna know about Linux kernel regression tracking:
-https://linux-regtracking.leemhuis.info/about/#tldr
-If I did something stupid, please tell me, as explained on that page.
-
-#regzbot poke
