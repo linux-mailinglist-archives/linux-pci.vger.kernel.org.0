@@ -2,115 +2,129 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D4C70B4B3
-	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 07:56:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C3CF270B4E1
+	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 08:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbjEVFz7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 May 2023 01:55:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38020 "EHLO
+        id S229722AbjEVGHj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 May 2023 02:07:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229485AbjEVFz6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 01:55:58 -0400
-Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B246ACE;
-        Sun, 21 May 2023 22:55:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684734956; x=1716270956;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eHakiM3I/fF0t5+kZ7W9wxVporHqhdITdXWM+VUyzMY=;
-  b=kZ/DtsxjyxzTxsMypdNOUtkuLKVd4NPp2dnGEZiDJ0DX4dhAeu/5nEms
-   cGAd3LLD4wyf2ETl35XLaFBlqO58Z05AVhTPO7lRK+qSgaH6VLWKAetlO
-   yWnkZ8+rRqGy8tmLTZcp2T/oYOYcGp8lVm8X9w2pFWEPRtHrPMBhocrq3
-   c7ADuBF1VoVUf7R9KWbC07Iss0DygeHz60FgXG1w94t0wOHUtl3/TpgmB
-   iddDExWmO7aic3udA/2JhNtybxdH0jQ//aFe+9E5ssNI2TeEVCh/q5dUr
-   +Z7FXAl3SXMNh2s7VLMahiB+VnHvwna1M9MUoXLC+HI9EE+VcloPXh8fp
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="337423189"
-X-IronPort-AV: E=Sophos;i="6.00,183,1681196400"; 
-   d="scan'208";a="337423189"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 May 2023 22:55:56 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10717"; a="680832120"
-X-IronPort-AV: E=Sophos;i="6.00,183,1681196400"; 
-   d="scan'208";a="680832120"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 21 May 2023 22:55:53 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 393301CC; Mon, 22 May 2023 08:55:55 +0300 (EEST)
-Date:   Mon, 22 May 2023 08:55:55 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
-        Deucher Alexander <Alexander.Deucher@amd.com>,
-        Iain Lane <iain@orangesquash.org.uk>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [PATCH v2] PCI: Don't assume root ports from > 2015 are power
- manageable
-Message-ID: <20230522055555.GI45886@black.fi.intel.com>
-References: <20230517150827.89819-1-mario.limonciello@amd.com>
+        with ESMTP id S229571AbjEVGHi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 02:07:38 -0400
+Received: from zg8tmtyylji0my4xnjqumte4.icoremail.net (zg8tmtyylji0my4xnjqumte4.icoremail.net [162.243.164.118])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 120AEDB;
+        Sun, 21 May 2023 23:07:33 -0700 (PDT)
+Received: from [192.168.43.203] (unknown [113.140.11.4])
+        by sr0414.icoremail.net (Coremail) with SMTP id AQAAfwDHvSqBBmtkL08HAw--.36433S3;
+        Mon, 22 May 2023 14:06:59 +0800 (CST)
+Message-ID: <36474dbb-5020-9044-b47c-cb377fa5dea7@stu.xidian.edu.cn>
+Date:   Mon, 22 May 2023 14:07:10 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230517150827.89819-1-mario.limonciello@amd.com>
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] PCI: dwc: keystone: Free IRQ in `ks_pcie_remove` and the
+ error handling section of `ks_pcie_probe`
+Content-Language: en-US
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <ZGPeUNqznHKETgqs@bhelgaas>
+From:   =?UTF-8?B?5pu+56Wl57+8?= <xyzeng@stu.xidian.edu.cn>
+In-Reply-To: <ZGPeUNqznHKETgqs@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAfwDHvSqBBmtkL08HAw--.36433S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxXFyrAry8ZFWftr1furWDtwb_yoW5Aw4rpF
+        4DJF1qkF4kJFyUu347CaySqFyF9rs5Ary7t3s2k3s8uFn8XFW5tryxKr4ag3ZrCr4kJ3W2
+        qayUKr9ruFWruFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvEb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4
+        vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40E
+        FcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY
+        04v7Mxk0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7
+        v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF
+        1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIx
+        AIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI
+        42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWI
+        evJa73UjIFyTuYvjxUqEoXUUUUU
+X-CM-SenderInfo: p012v0vj6v33wo0lvxldqovvfxof0/
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Mario,
+On 17/5/2023 03:49, Bjorn Helgaas wrote:
+> On Tue, May 16, 2023 at 01:16:59PM +0800, Xiangyi Zeng wrote:
+>> Smatch complains that:
+>> drivers/pci/controller/dwc/pci-keystone.c:1303 ks_pcie_probe() warn:
+>> 'irq' from request_irq() not released on lines: 1183,1187,1303.
+> Make this the entire warning line from smatch with no extra newlines
+> inserted.
+Thank you for the suggestion. I will put the warning in one line.
+>> "ks-pcie-error-irq" was requested in the `ks_pcie_probe` function, but
+>> was not freed neither in the error handling part of `ks_pcie_probe`
+>> nor in the `ks_pcie_remove` function.
+>>
+>> Fix this by adding `free_irq` in `ks_pcie_remove` and in a new error
+>> handling label `err_alloc` after `err_link` in `ks_pcie_probe`. In
+>> `ks_pcie_probe`, if `phy` or `link` memory allocation fails, we will
+>> fall to `err_alloc`. If any other error occurs that leads to
+>> `err_get_sync` or `err_link`, we end up going to `err_alloc`.
+> I think the backticks (`) are markdown that makes these "code".
+> Personally I think ks_pcie_probe() is more readable than
+> `ks_pcie_probe` since most people (I think) read these in plain-ASCII
+> situations.  And using backticks for labels and local variables seems
+> like overkill.
+>
+Sorry for my wrong usage of backticks. I agree that it would be more
+readable to use plain-ASCII names for functions and variables. I will
+make sure to update the comment message and the subject.
+>> Fixes: 0790eb175ee0 ("PCI: keystone: Cleanup error_irq configuration")
+>> Signed-off-by: Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
+>> Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+> It's best if the Reviewed-by tag is not added until Dongliang sends
+> email with that tag directly to the mailing list.  Internal reviews
+> before posting to the mailing list aren't worth much.
+In our internal review process, only the patch with the Reviewed-by
+tag can be submitted to the mailing list. You can check this in our
+google group.
+https://groups.google.com/g/hust-os-kernel-patches/c/bt397rzVL24/m/l52XYbG4AgAJ
+We will consider omitting this tag when sending to the kernel mailing
+list in the future.
+>> @@ -1309,12 +1316,14 @@ static int __exit ks_pcie_remove(struct platform_device *pdev)
+>>   	struct device_link **link = ks_pcie->link;
+>>   	int num_lanes = ks_pcie->num_lanes;
+>>   	struct device *dev = &pdev->dev;
+>> +	int irq = platform_get_irq(pdev, 0);
+> I think it's better to save the irq we looked up in ks_pcie_probe()
+> and free *that*.  It's probably the same thing you get by calling
+> platform_get_irq() again, but it seems cleaner to me to save what we
+> got in ks_pcie_probe().
+Thanks for your guidance. I agree with saving the irq to make code cleaner.
+I will change it in the next version.
+>>   	pm_runtime_put(dev);
+>>   	pm_runtime_disable(dev);
+>>   	ks_pcie_disable_phy(ks_pcie);
+>>   	while (num_lanes--)
+>>   		device_link_del(link[num_lanes]);
+>> +	free_irq(irq, ks_pcie);
+>>   
+>>   	return 0;
+>>   }
+>> -- 
+>> 2.34.1
+>>
 
-On Wed, May 17, 2023 at 10:08:27AM -0500, Mario Limonciello wrote:
-> Using an XHCI device to wakeup the system from s2idle fails when
-> that XHCI device is connected to a USB-C port for an AMD USB4
-> router.
-> 
-> Due to commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during
-> suspend") all root port go into D3 during s2idle.
-> When the root ports are in D3 over s2idle it's not possible for the
-> platform firmware to properly identify the wakeup source.
-> 
-> Comparing registers between Linux and Windows 11 this behavior to put root
-> ports into D3 at suspend is unique to Linux.  On an affected system
-> Windows does not put the root ports into D3 over Modern Standby.
-> 
-> Windows doesn't put the root ports into D3 because root ports are not
-> power manageable; they're missing _PRW and _S0W.
-> 
-> Linux shouldn't be assuming they support D3 just because they're newer
-> than 2015, the ports should also be deemed power manageable.
-> Add an extra check for this to ensure D3 isn't selected for such machines.
-> 
-> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
-> Reported-by: Iain Lane <iain@orangesquash.org.uk>
-> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/pci.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 5ede93222bc1..3fe27aef09e6 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3010,6 +3010,9 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->  		if (dmi_check_system(bridge_d3_blacklist))
->  			return false;
->  
-> +		if (!platform_pci_power_manageable(bridge))
-> +			return false;
-> +
-
-We already call platform_pci_bridge_d3() few lines up. That function
-should know whether "platform" supports D3 for the bridges, and I think
-it actually calls acpi_device_power_manageable() that platform_pci_power_manageable()
-ends up checking too.
