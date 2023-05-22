@@ -2,51 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D9F5E70C2F2
-	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 18:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B52870C306
+	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 18:10:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230237AbjEVQEd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 May 2023 12:04:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52882 "EHLO
+        id S231321AbjEVQKx (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 May 2023 12:10:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234446AbjEVQEc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 12:04:32 -0400
+        with ESMTP id S229486AbjEVQKw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 12:10:52 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B657107;
-        Mon, 22 May 2023 09:04:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E95BB6;
+        Mon, 22 May 2023 09:10:51 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8535660C84;
-        Mon, 22 May 2023 16:04:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE75EC433D2;
-        Mon, 22 May 2023 16:04:27 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B780561D14;
+        Mon, 22 May 2023 16:10:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3F5FC433D2;
+        Mon, 22 May 2023 16:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684771468;
-        bh=meCLncrPuvhB8KcjkV9KWGZpz0fPVtjBdsvKv08SZtk=;
+        s=k20201202; t=1684771850;
+        bh=dl5gBDvuGabe6NnEiM5v+6b9yh126Z8E64wCTQABV84=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bHliJYeh3Oqqx8c9Pg29FiV3v69DnPVp/wVrct28320nrTV2RpzS13wdax/2CYBgU
-         VDEvyOKmuVL62/LFIooupTxO9DNe1KRk6khLrfwEyj7dgdbfiX4QGdbKgMbODI8akn
-         OrFv6pNCB2MYYwixCplUlKnIIhBihnjaDA84XeuGpYMOrghLmJRJX5z6jFgATOfU0y
-         FycubCFq/HmTtRl3C+OD81vQIsWNZloUt3X+jnREZKYRcDUqhCaFt3sINoZcRyC7+c
-         AY5csoLyYWOCs0bg/f0ngxedT9ZHPBpMnk/NFGD2aQnZS0JGPDOpoy0q+xmCvd27ga
-         Dk2AGM2xgfBzQ==
-Date:   Mon, 22 May 2023 11:04:26 -0500
+        b=MswPmM9NI3e5xAQ63TPGAmz4LWfmAxvmOAm1w6Nxd5caDVbDY6EJ5DO4JdAZZfyMw
+         xX0IU8l5sn6Ptp0juO72gtGBhjWuou9urMmu6svigxrG3lxrr6JJBF5/aZILGlfJh3
+         yuixiOI3kgB4WHVugbEt3UB6rBwWzWf2Ze0dprMUm6e/BpCrNJ+69Op93e+mfyboEg
+         vfgmEZRTOlLHgPs4uQZwhBV5l2POLB4dhKt/IeKgUisBKPCZDn9cp3KW7CHnLDegNK
+         MZyA85wQzQzmERMxYY4VGiZDG1pvVuNws7FOj8zy0ix1S62956R4kr/THBNpYb28Ze
+         qiCDSKXDh3gpQ==
+Date:   Mon, 22 May 2023 11:10:48 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Shuai Xue <xueshuai@linux.alibaba.com>
-Cc:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        rdunlap@infradead.org, mark.rutland@arm.com,
-        zhuo.song@linux.alibaba.com
-Subject: Re: [PATCH v5 2/4] PCI: move Alibaba Vendor ID linux/pci_ids.h
-Message-ID: <ZGuSimj1cuQl3W5L@bhelgaas>
+To:     =?utf-8?B?5pu+56Wl57+8?= <xyzeng@stu.xidian.edu.cn>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        hust-os-kernel-patches@googlegroups.com,
+        Dongliang Mu <dzm91@hust.edu.cn>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: dwc: keystone: Free IRQ in `ks_pcie_remove` and the
+ error handling section of `ks_pcie_probe`
+Message-ID: <ZGuUCADcy6PfOYrR@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230522035428.69441-3-xueshuai@linux.alibaba.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <36474dbb-5020-9044-b47c-cb377fa5dea7@stu.xidian.edu.cn>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -57,57 +60,31 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Please follow subject line capitalization style (learn it with "git
-log --oneline include/linux/pci_ids.h"):
+On Mon, May 22, 2023 at 02:07:10PM +0800, 曾祥翼 wrote:
+> On 17/5/2023 03:49, Bjorn Helgaas wrote:
+> > On Tue, May 16, 2023 at 01:16:59PM +0800, Xiangyi Zeng wrote:
+> > ...
 
-  PCI: Add Alibaba Vendor ID
+> > > Fixes: 0790eb175ee0 ("PCI: keystone: Cleanup error_irq configuration")
+> > > Signed-off-by: Xiangyi Zeng <xyzeng@stu.xidian.edu.cn>
+> > > Reviewed-by: Dongliang Mu <dzm91@hust.edu.cn>
+> >
+> > It's best if the Reviewed-by tag is not added until Dongliang sends
+> > email with that tag directly to the mailing list.  Internal reviews
+> > before posting to the mailing list aren't worth much.
+>
+> In our internal review process, only the patch with the Reviewed-by
+> tag can be submitted to the mailing list. You can check this in our
+> google group.
+> https://groups.google.com/g/hust-os-kernel-patches/c/bt397rzVL24/m/l52XYbG4AgAJ
+> We will consider omitting this tag when sending to the kernel mailing
+> list in the future.
 
-On Mon, May 22, 2023 at 11:54:26AM +0800, Shuai Xue wrote:
-> Move Alibaba Vendor ID (0x1ded) to linux/pci_ids.h so that it can shared by
-> several drivers.
+It's great that Dongliang has already reviewed it; I'm not suggesting
+you omit any of that internal review.  My point is that it's best if
+Dongliang's email review appears on linux-pci in addition to whatever
+internal email list you use.  The hust-os-kernel-patches Google Group
+is not archived and searchable the same way linux-pci@vger.kernel.org
+is on https://lore.kernel.org/linux-pci/.
 
-It would be helpful for reviewers to list the drivers here, since only
-one is obvious from the patch.
-
-Thanks for sorting the entry correctly!
-
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> ---
->  drivers/infiniband/hw/erdma/erdma_hw.h | 2 --
->  include/linux/pci_ids.h                | 2 ++
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/infiniband/hw/erdma/erdma_hw.h b/drivers/infiniband/hw/erdma/erdma_hw.h
-> index 76ce2856be28..ee35ebef9ee7 100644
-> --- a/drivers/infiniband/hw/erdma/erdma_hw.h
-> +++ b/drivers/infiniband/hw/erdma/erdma_hw.h
-> @@ -11,8 +11,6 @@
->  #include <linux/types.h>
->  
->  /* PCIe device related definition. */
-> -#define PCI_VENDOR_ID_ALIBABA 0x1ded
-> -
->  #define ERDMA_PCI_WIDTH 64
->  #define ERDMA_FUNC_BAR 0
->  #define ERDMA_MISX_BAR 2
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 95f33dadb2be..9e8aec472f06 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2586,6 +2586,8 @@
->  #define PCI_VENDOR_ID_TEKRAM		0x1de1
->  #define PCI_DEVICE_ID_TEKRAM_DC290	0xdc29
->  
-> +#define PCI_VENDOR_ID_ALIBABA		0x1ded
-> +
->  #define PCI_VENDOR_ID_TEHUTI		0x1fc9
->  #define PCI_DEVICE_ID_TEHUTI_3009	0x3009
->  #define PCI_DEVICE_ID_TEHUTI_3010	0x3010
-> -- 
-> 2.20.1.12.g72788fdb
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Bjorn
