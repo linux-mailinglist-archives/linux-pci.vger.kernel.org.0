@@ -2,249 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8AF3670BC30
-	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:49:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 37EEF70BC62
+	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:53:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233423AbjEVLti (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 May 2023 07:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56122 "EHLO
+        id S233417AbjEVLxU convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Mon, 22 May 2023 07:53:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59596 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232940AbjEVLth (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:49:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B6BAB;
-        Mon, 22 May 2023 04:49:36 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BF261611AC;
-        Mon, 22 May 2023 11:49:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D08FC433D2;
-        Mon, 22 May 2023 11:49:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684756175;
-        bh=MksqE9gv1SGdf5zP2megR4doE0nMrzoziEQVjPRPgGA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=ezTeSjZcoE828dZ4AfFTu2b1XRysWjgqhj4it4+vVaDGbuctXN9X2pDqmjF3mwcT+
-         B48yzvikaBwpbaPYDO9k1y4ag61WWuTfAfOO+IqX02YrrbldcjpnnDNHHgpSV/MOI5
-         O4SORRiVE1OdAZ7uQbkGyrstBHVpnRO9PI3+awszLeBJg729xnuUDKTzDUvXXnFtk1
-         0d+lm1vHd5dMgsX2yJIpcE+gudJaMxmJCcDv0MnPBXy+BfFjDg19rwAq7h6oMWyjvz
-         Plj2U0xnqIo9HByUX6+NgH3C48FaeHj2YRRe2XBrbD21Wsc22RHB3+2nj+gjkOsNzb
-         UxlCU2MpDfl/g==
-Message-ID: <27e793b1-8676-d90a-4808-b5e194a8741f@kernel.org>
-Date:   Mon, 22 May 2023 20:49:32 +0900
+        with ESMTP id S233118AbjEVLxS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:53:18 -0400
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EF4AB9;
+        Mon, 22 May 2023 04:52:57 -0700 (PDT)
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-96f66fbd770so64006766b.1;
+        Mon, 22 May 2023 04:52:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684756368; x=1687348368;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+FPeo127aNEneYS/+N/CPU60LUgRtnsXFwUreJ7fb7k=;
+        b=jz3PdrrCQfFvnqYya0g6pH1JIMvX2e2TyNVBJA27VLxJarUNbA09kYZ0OYos0xmaQr
+         xA5tdaNLwoXI2Da+eEgGqtpgaguSvA86Ire2+JiM46f1EIdU0/6wcHXQF672PqRRIJeU
+         vrX0gHLPlhxTor/m9/lb4eseDlGbmwVrKTrZxENLMlCj37bEzKybAOZu46M7OUGP3D4B
+         0op9A6nLxul24lcbD49nm+RZnq/5DNzHEBQ7d8X9qrXe02Q9v5iJP0sRqOIBLdzDjGb6
+         aR5p6yUjToQ1VLqb3tUZUB6eClTU9KS7uRRQl58RJ5XXX9gUB/R0ojdK++tVRpBbGcVv
+         xozA==
+X-Gm-Message-State: AC+VfDyUo5GHI7MJHwV/FsvF/IsIg2eATQvH2nTKRHNFQnaUwIFYMFtQ
+        PCMCZUbqn1Q7eW3c4u596wgfzPRO868JhLOCfAFaXXly
+X-Google-Smtp-Source: ACHHUZ7ay0sDw93PbatWpSuJjrVDcBSB58TJboeKwJrei0jiFWOncTr6FVqIaSmaVs0GDMnfXGEijnILFjvyFyMdQe8=
+X-Received: by 2002:a17:906:7495:b0:94e:9efa:a9ed with SMTP id
+ e21-20020a170906749500b0094e9efaa9edmr9837725ejl.7.1684756368268; Mon, 22 May
+ 2023 04:52:48 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v5 02/44] ata: add HAS_IOPORT dependencies
-Content-Language: en-US
-To:     Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-ide@vger.kernel.org
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
- <20230522105049.1467313-3-schnelle@linux.ibm.com>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230522105049.1467313-3-schnelle@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230424191557.2464760-1-imammedo@redhat.com> <20230522130635.5e3f8771@imammedo.users.ipa.redhat.com>
+In-Reply-To: <20230522130635.5e3f8771@imammedo.users.ipa.redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 22 May 2023 13:52:33 +0200
+Message-ID: <CAJZ5v0jcap1Qe=PeZ98csqN9DxwZLPRontGkbvMuah6XrtbT4A@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: acpiphp: Reassign resources on bridge if necessary
+To:     Igor Mammedov <imammedo@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, rafael@kernel.org, mst@redhat.com,
+        lenb@kernel.org, bhelgaas@google.com, linux-acpi@vger.kernel.org,
+        linux-pci@vger.kernel.org, helgaas@kernel.org,
+        mika.westerberg@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 5/22/23 19:50, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
-> 
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Acked-by: Damien Le Moal <damien.lemoal@opensource.wdc.com>
+On Mon, May 22, 2023 at 1:06 PM Igor Mammedov <imammedo@redhat.com> wrote:
+>
+> On Mon, 24 Apr 2023 21:15:57 +0200
+> Igor Mammedov <imammedo@redhat.com> wrote:
+>
+> > When using ACPI PCI hotplug, hotplugging a device with
+> > large BARs may fail if bridge windows programmed by
+> > firmware are not large enough.
+>
+> Rafael,
+>
+> Since there was no more comments for a while,
+> can you merge this patch through your tree?
 
-This new version looks much nicer !
+I need an ACK from Bjorn on this, as the PCI maintainer, or it can go
+in via the PCI tree as far as I'm concerned.
 
-Please change my Ack to:
+Thanks!
 
-Acked-by: Damien Le Moal <dlemoal@kernel.org>
-
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/ata/Kconfig      | 28 ++++++++++++++--------------
->  drivers/ata/libata-sff.c |  4 ++++
->  2 files changed, 18 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-> index 42b51c9812a0..c521cdc51f8c 100644
-> --- a/drivers/ata/Kconfig
-> +++ b/drivers/ata/Kconfig
-> @@ -557,7 +557,7 @@ comment "PATA SFF controllers with BMDMA"
->  
->  config PATA_ALI
->  	tristate "ALi PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	select PATA_TIMINGS
->  	help
->  	  This option enables support for the ALi ATA interfaces
-> @@ -567,7 +567,7 @@ config PATA_ALI
->  
->  config PATA_AMD
->  	tristate "AMD/NVidia PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	select PATA_TIMINGS
->  	help
->  	  This option enables support for the AMD and NVidia PATA
-> @@ -585,7 +585,7 @@ config PATA_ARASAN_CF
->  
->  config PATA_ARTOP
->  	tristate "ARTOP 6210/6260 PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for ARTOP PATA controllers.
->  
-> @@ -612,7 +612,7 @@ config PATA_ATP867X
->  
->  config PATA_CMD64X
->  	tristate "CMD64x PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	select PATA_TIMINGS
->  	help
->  	  This option enables support for the CMD64x series chips
-> @@ -659,7 +659,7 @@ config PATA_CS5536
->  
->  config PATA_CYPRESS
->  	tristate "Cypress CY82C693 PATA support (Very Experimental)"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	select PATA_TIMINGS
->  	help
->  	  This option enables support for the Cypress/Contaq CY82C693
-> @@ -707,7 +707,7 @@ config PATA_HPT366
->  
->  config PATA_HPT37X
->  	tristate "HPT 370/370A/371/372/374/302 PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for the majority of the later HPT
->  	  PATA controllers via the new ATA layer.
-> @@ -716,7 +716,7 @@ config PATA_HPT37X
->  
->  config PATA_HPT3X2N
->  	tristate "HPT 371N/372N/302N PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for the N variant HPT PATA
->  	  controllers via the new ATA layer.
-> @@ -819,7 +819,7 @@ config PATA_MPC52xx
->  
->  config PATA_NETCELL
->  	tristate "NETCELL Revolution RAID support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for the Netcell Revolution RAID
->  	  PATA controller.
-> @@ -855,7 +855,7 @@ config PATA_OLDPIIX
->  
->  config PATA_OPTIDMA
->  	tristate "OPTI FireStar PATA support (Very Experimental)"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables DMA/PIO support for the later OPTi
->  	  controllers found on some old motherboards and in some
-> @@ -865,7 +865,7 @@ config PATA_OPTIDMA
->  
->  config PATA_PDC2027X
->  	tristate "Promise PATA 2027x support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for Promise PATA pdc20268 to pdc20277 host adapters.
->  
-> @@ -873,7 +873,7 @@ config PATA_PDC2027X
->  
->  config PATA_PDC_OLD
->  	tristate "Older Promise PATA controller support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for the Promise 20246, 20262, 20263,
->  	  20265 and 20267 adapters.
-> @@ -901,7 +901,7 @@ config PATA_RDC
->  
->  config PATA_SC1200
->  	tristate "SC1200 PATA support"
-> -	depends on PCI && (X86_32 || COMPILE_TEST)
-> +	depends on PCI && (X86_32 || COMPILE_TEST) && HAS_IOPORT
->  	help
->  	  This option enables support for the NatSemi/AMD SC1200 SoC
->  	  companion chip used with the Geode processor family.
-> @@ -919,7 +919,7 @@ config PATA_SCH
->  
->  config PATA_SERVERWORKS
->  	tristate "SERVERWORKS OSB4/CSB5/CSB6/HT1000 PATA support"
-> -	depends on PCI
-> +	depends on PCI && HAS_IOPORT
->  	help
->  	  This option enables support for the Serverworks OSB4/CSB5/CSB6 and
->  	  HT1000 PATA controllers, via the new ATA layer.
-> @@ -1183,7 +1183,7 @@ config ATA_GENERIC
->  
->  config PATA_LEGACY
->  	tristate "Legacy ISA PATA support (Experimental)"
-> -	depends on (ISA || PCI)
-> +	depends on (ISA || PCI) && HAS_IOPORT
->  	select PATA_TIMINGS
->  	help
->  	  This option enables support for ISA/VLB/PCI bus legacy PATA
-> diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
-> index 9d28badfe41d..c8cb7ed28f83 100644
-> --- a/drivers/ata/libata-sff.c
-> +++ b/drivers/ata/libata-sff.c
-> @@ -3042,6 +3042,7 @@ EXPORT_SYMBOL_GPL(ata_bmdma_port_start32);
->   */
->  int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev)
->  {
-> +#ifdef CONFIG_HAS_IOPORT
->  	unsigned long bmdma = pci_resource_start(pdev, 4);
->  	u8 simplex;
->  
-> @@ -3054,6 +3055,9 @@ int ata_pci_bmdma_clear_simplex(struct pci_dev *pdev)
->  	if (simplex & 0x80)
->  		return -EOPNOTSUPP;
->  	return 0;
-> +#else
-> +	return -ENOENT;
-> +#endif /* CONFIG_HAS_IOPORT */
->  }
->  EXPORT_SYMBOL_GPL(ata_pci_bmdma_clear_simplex);
->  
-
--- 
-Damien Le Moal
-Western Digital Research
-
+> > Reproducer:
+> >   $ qemu-kvm -monitor stdio -M q35  -m 4G \
+> >       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
+> >       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
+> >       disk_image
+> >
+> >  wait till linux guest boots, then hotplug device
+> >    (qemu) device_add qxl,bus=rp1
+> >
+> >  hotplug on guest side fails with:
+> >    pci 0000:01:00.0: [1b36:0100] type 00 class 0x038000
+> >    pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x03ffffff]
+> >    pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x03ffffff]
+> >    pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x00001fff]
+> >    pci 0000:01:00.0: reg 0x1c: [io  0x0000-0x001f]
+> >    pci 0000:01:00.0: BAR 0: no space for [mem size 0x04000000]
+> >    pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x04000000]
+> >    pci 0000:01:00.0: BAR 1: no space for [mem size 0x04000000]
+> >    pci 0000:01:00.0: BAR 1: failed to assign [mem size 0x04000000]
+> >    pci 0000:01:00.0: BAR 2: assigned [mem 0xfe800000-0xfe801fff]
+> >    pci 0000:01:00.0: BAR 3: assigned [io  0x1000-0x101f]
+> >    qxl 0000:01:00.0: enabling device (0000 -> 0003)
+> >    Unable to create vram_mapping
+> >    qxl: probe of 0000:01:00.0 failed with error -12
+> >
+> > However when using native PCIe hotplug
+> >   '-global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=off'
+> > it works fine, since kernel attempts to reassign unused resources.
+> > Use the same machinery as native PCIe hotplug to (re)assign resources.
+> >
+> > Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+> > ---
+> > tested in QEMU with Q35 machine on PCIE root port and also
+> > with nested conventional bridge attached to root port.
+> >
+> > v2:
+> >   * fixup subject to match expected style
+> >   * drop no longer needed __pci_bus_size_bridges() to avoid
+> >     memory leak (Bjorn Helgaas <helgaas@kernel.org>)
+> > ---
+> >  drivers/pci/hotplug/acpiphp_glue.c | 5 +----
+> >  1 file changed, 1 insertion(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/pci/hotplug/acpiphp_glue.c b/drivers/pci/hotplug/acpiphp_glue.c
+> > index 5b1f271c6034..328d1e416014 100644
+> > --- a/drivers/pci/hotplug/acpiphp_glue.c
+> > +++ b/drivers/pci/hotplug/acpiphp_glue.c
+> > @@ -498,7 +498,6 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+> >                               acpiphp_native_scan_bridge(dev);
+> >               }
+> >       } else {
+> > -             LIST_HEAD(add_list);
+> >               int max, pass;
+> >
+> >               acpiphp_rescan_slot(slot);
+> > @@ -512,12 +511,10 @@ static void enable_slot(struct acpiphp_slot *slot, bool bridge)
+> >                               if (pass && dev->subordinate) {
+> >                                       check_hotplug_bridge(slot, dev);
+> >                                       pcibios_resource_survey_bus(dev->subordinate);
+> > -                                     __pci_bus_size_bridges(dev->subordinate,
+> > -                                                            &add_list);
+> >                               }
+> >                       }
+> >               }
+> > -             __pci_bus_assign_resources(bus, &add_list, NULL);
+> > +             pci_assign_unassigned_bridge_resources(bus->self);
+> >       }
+> >
+> >       acpiphp_sanitize_bus(bus);
+>
