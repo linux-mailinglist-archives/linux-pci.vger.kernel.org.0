@@ -2,125 +2,284 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C91570BBD2
-	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:30:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1520A70BBEE
+	for <lists+linux-pci@lfdr.de>; Mon, 22 May 2023 13:34:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230448AbjEVLaM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 22 May 2023 07:30:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
+        id S232901AbjEVLej (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 22 May 2023 07:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231665AbjEVLaK (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:30:10 -0400
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E61BF;
-        Mon, 22 May 2023 04:30:02 -0700 (PDT)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id E43463200893;
-        Mon, 22 May 2023 07:30:00 -0400 (EDT)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Mon, 22 May 2023 07:30:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-type:content-type:date:date:from:from:in-reply-to
-        :in-reply-to:message-id:mime-version:references:reply-to:sender
-        :subject:subject:to:to; s=fm3; t=1684755000; x=1684841400; bh=I0
-        ZUnK8Op8CDDPBL/yAYTQUqi/o9g4TW10EzMTLXfoE=; b=JrfcKAS3g1/MlJ/TTG
-        p1TlzSJzmscQRtD492EcrEi4L2I357wGZhHjkk4lcdB5RF82tv1BXWNPtCyeWAs6
-        uWxJEwWThmebIidKlPkuzV3ZIxaPKlUoapZ62RULygBOk3VfOCifYuXyNgID1CrP
-        0WmKtVMdlmDcsKxQYF2VfrJvqVKwn2LroEmcubIMYPNiR9RwT1fQkq8JhTKlaqsT
-        o28vY8fpAkzM2/jclDwgclzSsk40FVTudetkG/ACb/ARaMAJidON7CBin8/xtawd
-        smEHnv/g2P8Ad6OvTrGhs49Hf7ph12Q02uTrMd9l8qHlhjNMbmvSw6yqckqd4NhY
-        3i2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:content-type:date:date
-        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm1; t=1684755000; x=1684841400; bh=I0ZUnK8Op8CDD
-        PBL/yAYTQUqi/o9g4TW10EzMTLXfoE=; b=pbbdIOoJCIJmUbj0noPpve1ynfD7M
-        3tkh/4PFf6bnVetmhnINEiBY+kE5G9WcBOB9/m6403vpVg8+F+14KXnhZ0P9PSWC
-        8ATNjuWqyCPFjShDkPQbTm2daCxV9QQyEaBlnhHPM3dBDAGw+4aww452hnfjrKfD
-        LZ5XKLHZ1oI8VBQyqkmhJAQ7hVOnl2anNl2cRcWZa+ZEcZK4ELgUiDM4U0Dp1YfB
-        HYhn0cqWGnKzRPRe8cb8gDtPIshiVl9o53WGM4RAEJ0VkpNq3MLEEUeVSHbZKg8G
-        OsAQuBDiQopcbP9Ou04y4oAf8NRoY6x0qAtMlmIfP7X6I3jiFZk/SNbsg==
-X-ME-Sender: <xms:N1JrZPD-xQcG3Qk-fMmqY-uElwqU8b8nwl1pnONzdbtBQ7QwerD7Ww>
-    <xme:N1JrZFhIj5_AY1N-m-hPsfiQWwOqHhcd_9QcpA3kU6zzY3TWFJwPLoJ4oxi8J1hmb
-    prqOKjtiMmNjv3rx-U>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeejuddgfeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepvefhffeltdegheeffffhtdegvdehjedtgfekueevgfduffettedtkeekueef
-    hedunecuffhomhgrihhnpehkvghrnhgvlhdrohhrghenucevlhhushhtvghrufhiiigvpe
-    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
-X-ME-Proxy: <xmx:N1JrZKk1gaOfBgUq-41z42gjF28SibhfhCAn3GcHCT98XWnE2CkHlw>
-    <xmx:N1JrZBwb6f4BF97gPVu2JpfgdT_2_g96CQU7pN_RqMCOiVVOZQkbnA>
-    <xmx:N1JrZER3r3k5WK6Oz2U9NMwi6cbPc_k6HBTai-8jjcB1Zrpmds6-hg>
-    <xmx:OFJrZGBf4TQHGnLaaXI0u0JMCZUrL0qhyM45i4Tlqr6ss-FU5eI6Hw>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 9559DB60086; Mon, 22 May 2023 07:29:59 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
-Mime-Version: 1.0
-Message-Id: <7b5c40f3-d25b-4082-807d-4d75dc38886d@app.fastmail.com>
-In-Reply-To: <20230522105049.1467313-1-schnelle@linux.ibm.com>
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
-Date:   Mon, 22 May 2023 13:29:39 +0200
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
-        "Richard Cochran" <richardcochran@gmail.com>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Albert Ou" <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Netdev <netdev@vger.kernel.org>
-Subject: Re: [PATCH v5 00/44] treewide: Remove I/O port accessors for HAS_IOPORT=n
-Content-Type: text/plain
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,SPF_HELO_PASS,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S232730AbjEVLeh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 22 May 2023 07:34:37 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD4171B5;
+        Mon, 22 May 2023 04:34:13 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1q13nW-0007fz-1I; Mon, 22 May 2023 13:33:54 +0200
+Message-ID: <211f3938-2f93-cad7-a92b-821d3ac45b9e@leemhuis.info>
+Date:   Mon, 22 May 2023 13:33:53 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Content-Language: en-US, de-DE
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Jason Adriaanse <jason_a69@yahoo.co.uk>, hch@lst.de,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20230416065503.GB6410@lst.de>
+ <fc9f4cef-9426-c9d2-3c2c-3ce12fe5f6c3@yahoo.co.uk>
+ <5f37b0b0-6cb5-b210-a894-d1e91976126e@arm.com>
+ <2a699a99-545c-1324-e052-7d2f41fed1ae@yahoo.co.uk>
+ <07ee0cf7-a5c2-f87a-d627-8dd8fb082345@arm.com>
+ <9648f668-a3bc-3296-71d1-c91cd4c9980e@yahoo.co.uk>
+ <1539e760-392f-a33e-436e-bbf043e79bfc@arm.com>
+ <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk>
+ <1928df45-7b56-a8a4-21b5-22e5d8ef95eb@leemhuis.info>
+ <9b602abc-37e9-f236-37ee-71bcf1b7ce66@arm.com>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <9b602abc-37e9-f236-37ee-71bcf1b7ce66@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684755253;4be9d65c;
+X-HE-SMSGID: 1q13nW-0007fz-1I
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 22, 2023, at 12:50, Niklas Schnelle wrote:
+On 22.05.23 13:01, Robin Murphy wrote:
+> On 2023-05-22 11:26, Linux regression tracking (Thorsten Leemhuis) wrote:
+>>
+>> I might be missing something, but it looks to me like this regression
+>> was never fixed in mainline. Which is strange, as we apparently had a
+>> patch from Robin that fixed the issue for the reporter.
+>>
+>> Did it fall through the cracks or what am I missing?
+> 
+> Strictly, the regression itself has not been fixed - I guess it does
+> just about qualify since the rather-out-of-date
+> Documentation/arch/x86/x86_64/boot-options.rst does still say that
+> iommu=soft "can be used to prevent the usage of an available hardware
+> IOMMU", and that seems to be what has stopped happening here.
+> 
+> What it exposed was a latent issue that this particular device has never
+> been properly supported for use with an IOMMU, and that's what I guessed
+> at a fix for.
 
-> A few patches have already been applied but I've kept those which are not yet
-> in v6.4-rc3.
->
-> This version is based on v6.4-rc3 and is also available on my kernel.org tree
-> in the has_ioport_v5:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/niks/linux.git
+Thx for the summary. This sounds a lot like you have no interest in
+submitting the quirk entry yourself (please correct me if I'm wrong).
+Jason from looking at lore doesn't seem to be involved in kernel
+development regularly. And I try to stay out of such waters as well, as
+I try to draw a line there. Which leads to the question:
 
-I think it would be best if as many patches as possible get merged
-into v6.5 through the individidual subsystems, though I can take
-whatever is left through the asm-generic tree.
+Who will now submit the quirk entry?
 
-Since the goal is to have maintainers pick up part of this, I would
-recommend splitting the series per subsystem, having either a
-separate patch or a small series for each maintainer that should
-pick them up.
+From "git blame" it seems Bjorn and Alex added most of the other quirk
+entries for the marvel controllers (both CCed now). Could one of you add
+this one that Ron suggested in [1] as well?
 
-More importantly, I think you should rebase the series against
-linux-next in order to find and drop the patches that are queued
-up for 6.5 already. The patches will be applied into branches
-that are based on 6.4-rc of course, but basing on linux-next
-is usually the easiest when targeting multiple maintainer
-trees.
+/me wonders if they'd need a "Signed-off-by" from Ron for a one-liner
+that is mainly copy-n-paste
 
-Maybe let's give it another week to have more maintainers pick
-up stuff from v5, and then send out a v6 as separate submissions.
+Ciao, Thorsten
 
-    Arnd
+[1]
+https://lore.kernel.org/all/1539e760-392f-a33e-436e-bbf043e79bfc@arm.com/
+
+>> On 25.04.23 15:58, Jason Adriaanse wrote:
+>>> I am happy to report that the change worked, this is what
+>>> drivers/pci/quirks.c looks like
+>>>
+>>> /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>>>                           quirk_dma_func1_alias);
+>>> /* https://bugzilla.kernel.org/show_bug.cgi?id=217218 */
+>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>>>                           quirk_dma_func1_alias);
+>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>>>                           quirk_dma_func1_alias);
+>>>
+>>> Relevant output of dmesg -T with the new kernel running
+>>>
+>>> Tue Apr 25 21:45:13 2023] scsi host0: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host1: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host2: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host3: ahci
+>>> [Tue Apr 25 21:45:13 2023] ata1: SATA max UDMA/133 abar m2048@0xf7d06000
+>>> port 0xf7d06100 irq 40
+>>> [Tue Apr 25 21:45:13 2023] ata2: SATA max UDMA/133 abar m2048@0xf7d06000
+>>> port 0xf7d06180 irq 40
+>>> [Tue Apr 25 21:45:13 2023] ata3: DUMMY
+>>> [Tue Apr 25 21:45:13 2023] ata4: DUMMY
+>>> [Tue Apr 25 21:45:13 2023] igb 0000:05:00.0 enp5s0: renamed from eth0
+>>> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: AHCI 0001.0000 32 slots 4
+>>> ports 6 Gbps 0xf impl SATA mode
+>>> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: flags: 64bit ncq sntf led
+>>> only pmp fbs pio slum part sxs
+>>> [Tue Apr 25 21:45:13 2023] scsi host4: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host5: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host6: ahci
+>>> [Tue Apr 25 21:45:13 2023] scsi host7: ahci
+>>> [Tue Apr 25 21:45:13 2023] ata5: SATA max UDMA/133 abar m2048@0xf7b10000
+>>> port 0xf7b10100 irq 41
+>>> [Tue Apr 25 21:45:13 2023] ata6: SATA max UDMA/133 abar m2048@0xf7b10000
+>>> port 0xf7b10180 irq 41
+>>> [Tue Apr 25 21:45:13 2023] ata7: SATA max UDMA/133 abar m2048@0xf7b10000
+>>> port 0xf7b10200 irq 41
+>>> [Tue Apr 25 21:45:13 2023] ata8: SATA max UDMA/133 abar m2048@0xf7b10000
+>>> port 0xf7b10280 irq 41
+>>> [Tue Apr 25 21:45:13 2023] usb 1-1: new high-speed USB device number 2
+>>> using ehci-pci
+>>> [Tue Apr 25 21:45:14 2023] usb 3-1: new high-speed USB device number 2
+>>> using ehci-pci
+>>> [Tue Apr 25 21:45:14 2023] ata8: SATA link up 6.0 Gbps (SStatus 133
+>>> SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] ata6: SATA link up 6.0 Gbps (SStatus 133
+>>> SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] ata7: SATA link up 6.0 Gbps (SStatus 133
+>>> SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] ata5: SATA link up 6.0 Gbps (SStatus 133
+>>> SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] ata7.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>> 80.00A80, max UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata6.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>> 80.00A80, max UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata8.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>> 80.00A80, max UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata5.00: ATA-10: CT2000BX500SSD1, M6CR030,
+>>> max UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata6.00: 7814037168 sectors, multi 0: LBA48
+>>> NCQ (depth 32), AA
+>>> [Tue Apr 25 21:45:14 2023] ata7.00: 7814037168 sectors, multi 0: LBA48
+>>> NCQ (depth 32), AA
+>>> [Tue Apr 25 21:45:14 2023] ata8.00: 7814037168 sectors, multi 0: LBA48
+>>> NCQ (depth 32), AA
+>>> [Tue Apr 25 21:45:14 2023] ata5.00: 3907029168 sectors, multi 1: LBA48
+>>> NCQ (depth 32), AA
+>>> [Tue Apr 25 21:45:14 2023] ata6.00: configured for UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata7.00: configured for UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata8.00: configured for UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] ata1: SATA link down (SStatus 0 SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] ata5.00: Features: Dev-Sleep
+>>> [Tue Apr 25 21:45:14 2023] ata5.00: configured for UDMA/133
+>>> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device found, idVendor=8087,
+>>> idProduct=0024, bcdDevice= 0.00
+>>> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device strings: Mfr=0,
+>>> Product=0, SerialNumber=0
+>>> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: USB hub found
+>>> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: 4 ports detected
+>>> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device found, idVendor=8087,
+>>> idProduct=0024, bcdDevice= 0.00
+>>> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device strings: Mfr=0,
+>>> Product=0, SerialNumber=0
+>>> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: USB hub found
+>>> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: 6 ports detected
+>>> [Tue Apr 25 21:45:14 2023] ata2: SATA link down (SStatus 0 SControl 300)
+>>> [Tue Apr 25 21:45:14 2023] scsi 4:0:0:0: Direct-Access ATA
+>>> CT2000BX500SSD1  030  PQ: 0 ANSI: 5
+>>> [Tue Apr 25 21:45:14 2023] scsi 5:0:0:0: Direct-Access ATA      WDC
+>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>> [Tue Apr 25 21:45:14 2023] scsi 6:0:0:0: Direct-Access ATA      WDC
+>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>> [Tue Apr 25 21:45:14 2023] scsi 7:0:0:0: Direct-Access ATA      WDC
+>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>>
+>>> Thanks everyone for all your help.
+>>>
+>>> Jason
+>>>
+>>>
+>>> On 25/04/2023 19:37, Robin Murphy wrote:
+>>>> On 2023-04-25 05:17, Jason Adriaanse wrote:
+>>>>> Ok great,
+>>>>>
+>>>>> I take it a change needs to be made in
+>>>>> drivers/pci/quirks.c
+>>>>> ?
+>>>>> I do not mind making the change locally here and letting you know if
+>>>>> it works or not.
+>>>>
+>>>> Indeed, something like this (make sure the IDs actually match what your
+>>>> device reports, I'm just guessing):
+>>>>
+>>>>
+>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>> index 44cab813bf95..a9166e886b75 100644
+>>>> --- a/drivers/pci/quirks.c
+>>>> +++ b/drivers/pci/quirks.c
+>>>> @@ -4161,6 +4161,8 @@
+>>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
+>>>>   /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>>>>                quirk_dma_func1_alias);
+>>>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>>>> +             quirk_dma_func1_alias);
+>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>>>>                quirk_dma_func1_alias);
+>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0645,
+>>>>
+>>>>
+>>>> Marvell themselves seem to lump the 88SE92xx products together as a
+>>>> closely-related family, so given that we do have quirks for 3 of the 4
+>>>> already, this one does rather seem conspicuous by its absence...
+>>>>
+>>>> Thanks,
+>>>> Robin.
+>>>>
+>>>>> On 24/04/2023 22:07, Robin Murphy wrote:
+>>>>>> On 2023-04-24 14:44, Jason Adriaanse wrote:
+>>>>>>> I took out "iommu=soft" and the server failed to boot, so yes it
+>>>>>>> does break.
+>>>>>>>
+>>>>>>> The first error was
+>>>>>>> ata7.00: Failed to IDENTIFY (INIT_DEV_PARAMS failed , err_mask=0x80)
+>>>>>>
+>>>>>> OK, great, that confirms the underlying issue existed all along, so
+>>>>>> the regression is only a change in who wins a fight between certain
+>>>>>> conflicting command-line arguments, which is arguably not so
+>>>>>> critical.
+>>>>>>
+>>>>>> The rest of the evidence points to 88SE9235 wanting the same phantom
+>>>>>> function quirk as most other Marvell controllers, since although
+>>>>>> it's apparently been half-fixed such that DMA for two of the ports
+>>>>>> is being correctly emitted from function 0 - given that you say two
+>>>>>> of the disks *are* detected OK - the other two are still claiming to
+>>>>>> be function 1 after all.
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Robin.
+>>>>>>
+>>>>>>> On 24/04/2023 21:20, Robin Murphy wrote:
+>>>>>>>> On 2023-04-22 07:25, Jason Adriaanse wrote:
+>>>>>>>>> Hi Christoph,
+>>>>>>>>>
+>>>>>>>>> Sorry for my late reply, I have been on the road.
+>>>>>>>>>
+>>>>>>>>> So, if I boot with
+>>>>>>>>> intel_iommu=off
+>>>>>>>>> Then the server boots fine..although that is not a solution
+>>>>>>>>> because I need Intel iommu for virtualisation.
+>>>>>>>>>
+>>>>>>>>> Also, I build all my kernels with CONFIG_INTEL_IOMMU=y
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> If you boot 5.15 *without* the "iommu=soft" argument, just
+>>>>>>>> "intel_iommu=on", does that also break?
+>>>>>>>>
+>>>>>>>> Robin.
+>>>
+>>>
+> 
+> 
