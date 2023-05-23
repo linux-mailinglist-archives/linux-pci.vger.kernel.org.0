@@ -2,111 +2,125 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4933270E10B
-	for <lists+linux-pci@lfdr.de>; Tue, 23 May 2023 17:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3C18C70E390
+	for <lists+linux-pci@lfdr.de>; Tue, 23 May 2023 19:46:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237662AbjEWPw4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 May 2023 11:52:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52486 "EHLO
+        id S237858AbjEWRVq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 May 2023 13:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237273AbjEWPwv (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 May 2023 11:52:51 -0400
-Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE17697
-        for <linux-pci@vger.kernel.org>; Tue, 23 May 2023 08:52:49 -0700 (PDT)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed30:b0ac:7afd:272:4cff])
-        by laurent.telenet-ops.be with bizsmtp
-        id 0Fsn2A00N0Jkz7G01FsnZc; Tue, 23 May 2023 17:52:48 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan.of.borg with esmtp (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1q1UJN-002t6k-At;
-        Tue, 23 May 2023 17:52:47 +0200
-Received: from geert by rox.of.borg with local (Exim 4.95)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1q1UJb-00CksO-NR;
-        Tue, 23 May 2023 17:52:47 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-pci@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] PCI: rcar-host: Remove unused static pcie_base and pcie_dev
-Date:   Tue, 23 May 2023 17:52:44 +0200
-Message-Id: <f29a8c37bd906dfbe23208cc2b089da17e339a75.1684857051.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+        with ESMTP id S237736AbjEWRVp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 May 2023 13:21:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74FCBF;
+        Tue, 23 May 2023 10:21:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7BC2B634FD;
+        Tue, 23 May 2023 17:21:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC00CC433D2;
+        Tue, 23 May 2023 17:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684862487;
+        bh=Mlb70fPzSp44IfyqduXQkVQtlmfOh88KwIwDwATPXzo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=NbQWIb186lkngXgl31wbkSXEHdu2tTTAcq/u7WaYhqcsZyQF/JWdg3RqGgIGjKe5o
+         8e6Q2DdpbMyw/vVP3dpfs03F+ljNuPsPUS8xrWDRizmMT2fzOUA1GgxgA6AALl0S6x
+         7acE+Zc6ImBOtMBTbTwT6xeqlhHyNVhxMZIUii1LVHaMIYFPhEpckIxaxvo98U3hug
+         9T/Cu24Q3s2bzdTQyfhAWTfsGSVB1yKxuWILeCwTpI30C+zKCY0FrkIr8NpHqP08gY
+         kQyAzR5XhD/c6JFAzT8ifYl5K9bqFP+fGyNh3PHBIKIezJTxJR1gN3DjLIqlAnTz69
+         AAK4kGmcgXsAQ==
+Date:   Tue, 23 May 2023 12:21:25 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Cc:     Nirmal Patel <nirmal.patel@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Subject: Re: [Bug 217472] New: ACPI _OSC features have different values in
+ Host OS and Guest OS
+Message-ID: <ZGz2FQpHPKYgcc0+@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bug-217472-41252@https.bugzilla.kernel.org/>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-After the L1 link state transition exception handler rework, the static
-copies of the remapped PCIe controller address and the PCIe device
-pointer became unused.  Remove them.
+Hi Nirmal, thanks for the report!
 
-Fixes: 6e36203bc14ce147 ("PCI: rcar: Use PCI_SET_ERROR_RESPONSE after read which triggered an exception")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
-Probably this was not noticed before due to two function parameters with
-the same name, thus shadowing the static globals.
+On Mon, May 22, 2023 at 04:32:03PM +0000, bugzilla-daemon@kernel.org wrote:
+> https://bugzilla.kernel.org/show_bug.cgi?id=217472
+> ...
 
-v2:
-  - Add Reviewed-by.
----
- drivers/pci/controller/pcie-rcar-host.c | 21 ---------------------
- 1 file changed, 21 deletions(-)
+> Created attachment 304301
+>   --> https://bugzilla.kernel.org/attachment.cgi?id=304301&action=edit
+> Rhel9.1_Guest_dmesg
+> 
+> Issue:
+> NVMe Drives are still present after performing hotplug in guest OS. We have
+> tested with different combination of OSes, drives and Hypervisor. The issue is
+> present across all the OSes. 
 
-diff --git a/drivers/pci/controller/pcie-rcar-host.c b/drivers/pci/controller/pcie-rcar-host.c
-index e80e56b2a84243e5..7ffcd0f5aa45c989 100644
---- a/drivers/pci/controller/pcie-rcar-host.c
-+++ b/drivers/pci/controller/pcie-rcar-host.c
-@@ -41,21 +41,6 @@ struct rcar_msi {
- 	int irq2;
- };
- 
--#ifdef CONFIG_ARM
--/*
-- * Here we keep a static copy of the remapped PCIe controller address.
-- * This is only used on aarch32 systems, all of which have one single
-- * PCIe controller, to provide quick access to the PCIe controller in
-- * the L1 link state fixup function, called from the ARM fault handler.
-- */
--static void __iomem *pcie_base;
--/*
-- * Static copy of PCIe device pointer, so we can check whether the
-- * device is runtime suspended or not.
-- */
--static struct device *pcie_dev;
--#endif
--
- /* Structure representing the PCIe interface */
- struct rcar_pcie_host {
- 	struct rcar_pcie	pcie;
-@@ -879,12 +864,6 @@ static int rcar_pcie_get_resources(struct rcar_pcie_host *host)
- 	}
- 	host->msi.irq2 = i;
- 
--#ifdef CONFIG_ARM
--	/* Cache static copy for L1 link state fixup hook on aarch32 */
--	pcie_base = pcie->base;
--	pcie_dev = pcie->dev;
--#endif
--
- 	return 0;
- 
- err_irq2:
--- 
-2.34.1
+Maybe attach the specific commands to reproduce the problem in one of
+these scenarios to the bugzilla?  I'm a virtualization noob, so I
+can't visualize all the usual pieces.
 
+> The following patch was added to honor ACPI _OSC values set by BIOS and the
+> patch helped to bring the issue out in VM/ Guest OS.
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/drivers/pci/controller/vmd.c?id=04b12ef163d10e348db664900ae7f611b83c7a0e
+> 
+> 
+> I also compared the values of the parameters in the patch in Host and Guest OS.
+> The parameters with different values in Host and Guest OS are:
+> 
+> native_pcie_hotplug
+> native_shpc_hotplug
+> native_aer
+> native_ltr
+> 
+> i.e.
+> value of native_pcie_hotplug in Host OS is 1.
+> value of native_pcie_hotplug in Guest OS is 0.
+> 
+> I am not sure why "native_pcie_hotplug" is changed to 0 in guest.
+> Isn't it OSC_ managed parameter? If that is the case, it should
+> have same value in Host and Guest OS.
+
+From your dmesg:
+
+  DMI: Red Hat KVM/RHEL, BIOS 1.16.0-4.el9 04/01/2014
+  _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+  _OSC: platform does not support [PCIeHotplug LTR DPC]
+  _OSC: OS now controls [SHPCHotplug PME AER PCIeCapability]
+  acpiphp: Slot [0] registered
+  virtio_blk virtio3: [vda] 62914560 512-byte logical blocks (32.2 GB/30.0 GiB)
+
+So the DMI ("KVM/RHEL ...") is the BIOS seen by the guest.  Doesn't
+mean anything to me, but the KVM folks would know about it.  In any
+event, the guest BIOS is different from the host BIOS, so I'm not
+surprised that _OSC is different.
+
+That guest BIOS _OSC declined to grant control of PCIe native hotplug
+to the guest OS, so the guest will use acpiphp (not pciehp, which
+would be used if native_pcie_hotplug were set).
+
+The dmesg doesn't mention the nvme driver.  Are you using something
+like virtio_blk with qemu pointed at an NVMe drive?  And you
+hot-remove the NVMe device, but the guest OS thinks it's still
+present?
+
+Since the guest is using acpiphp, I would think a hot-remove of a host
+NVMe device should be noticed by qemu and turned into an ACPI
+notification that the guest OS would consume.  But I don't know how
+those connections work.
+
+Bjorn
