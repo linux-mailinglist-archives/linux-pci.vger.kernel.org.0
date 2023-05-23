@@ -2,168 +2,188 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A353370E438
-	for <lists+linux-pci@lfdr.de>; Tue, 23 May 2023 20:15:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 091CC70E566
+	for <lists+linux-pci@lfdr.de>; Tue, 23 May 2023 21:31:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235384AbjEWSHR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 May 2023 14:07:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58492 "EHLO
+        id S238338AbjEWTbI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 23 May 2023 15:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238180AbjEWSHP (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 May 2023 14:07:15 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68F0197
-        for <linux-pci@vger.kernel.org>; Tue, 23 May 2023 11:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684865190;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SG2XCSWG0GUXh4a7boUJOB62oZ1UHvd8/4f8ByVuALo=;
-        b=PvZ9OxBkVWTEniYSyHUVHstt1vPWVkBruZtaRtRZ+N9UJf7nhjaX//iCsA8EBYprpZy5Aq
-        KlzWn8boTx/XOcmd3Ozloxlv/HPNZk1U5fbgD5WWAn8N7qRQqjolmZsGaNyGEqDECmX6jW
-        XcrqLxBs9lhaTR/rjRtIkf/hfjsdxvU=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-522-Aqkc340SOdenUmcEb_Xf-w-1; Tue, 23 May 2023 14:06:29 -0400
-X-MC-Unique: Aqkc340SOdenUmcEb_Xf-w-1
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-76c56492fa0so7655339f.2
-        for <linux-pci@vger.kernel.org>; Tue, 23 May 2023 11:06:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684865188; x=1687457188;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SG2XCSWG0GUXh4a7boUJOB62oZ1UHvd8/4f8ByVuALo=;
-        b=jc+wajGAxb/vwgFIwHxaD/+mjqLf/UQXaTgaVoIo/ArRZbQ50/F6dJVMHlpuno8x7H
-         F/r9QU7GYKJnrkvZgfHdiNPSDgNl9z+lPVW63vAHmJsEzqjuFOElBasJz6hFKYgJH4c2
-         UQeuJ6DRFEQngYbzE9ijAGM+pNei8YNSSCkWuEbcnAP808sbPW2orbjUDRXnl80tIshy
-         BgNDa5qL52VRZGhatsccuk9zhHc4Fr1pMJelR6pKTExB3sKpz7p3KFmwinx1OKCjAm5q
-         uswgMQKTICYPyJRJeCCtA07V1+p4uTkt1BQLZe1Af74uSDSU+ZgIKvzTIebw8Y+7A03j
-         1P0Q==
-X-Gm-Message-State: AC+VfDwMIY3GhV1I6ukCamFa78QoH6ZiKHEfr58riGBJ/CFYqhYNA5UH
-        7tJjqSnargfKO+Exnp6/0M5YOPKDZnyXVeJimGoPqXj9WfJZSGwJJ39pGbHIyrq9bTykJb/T5ND
-        9V6o34aUo6V87YGNGL/X7
-X-Received: by 2002:a5d:9499:0:b0:774:8176:6e20 with SMTP id v25-20020a5d9499000000b0077481766e20mr2131561ioj.21.1684865188466;
-        Tue, 23 May 2023 11:06:28 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6DtVEwkEI5aNETNJ3Rca8ixXfaH9IgtR2PLMVrIfsiDmIeMO0mu5OmcabBctnp3iipzNnDag==
-X-Received: by 2002:a5d:9499:0:b0:774:8176:6e20 with SMTP id v25-20020a5d9499000000b0077481766e20mr2131554ioj.21.1684865188218;
-        Tue, 23 May 2023 11:06:28 -0700 (PDT)
-Received: from redhat.com ([38.15.36.239])
-        by smtp.gmail.com with ESMTPSA id w8-20020a056638138800b0041658c1838asm2684880jad.81.2023.05.23.11.06.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 May 2023 11:06:27 -0700 (PDT)
-Date:   Tue, 23 May 2023 12:06:26 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        linux-acpi@vger.kernel.org, Nirmal Patel <nirmal.patel@intel.com>
-Subject: Re: [Bug 217472] New: ACPI _OSC features have different values in
- Host OS and Guest OS
-Message-ID: <20230523120626.5b76d289.alex.williamson@redhat.com>
-In-Reply-To: <ZGz2FQpHPKYgcc0+@bhelgaas>
-References: <bug-217472-41252@https.bugzilla.kernel.org/>
-        <ZGz2FQpHPKYgcc0+@bhelgaas>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.35; x86_64-redhat-linux-gnu)
+        with ESMTP id S238383AbjEWTa7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 May 2023 15:30:59 -0400
+Received: from DM5PR00CU002.outbound.protection.outlook.com (mail-centralusazon11021026.outbound.protection.outlook.com [52.101.62.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3FA010C4;
+        Tue, 23 May 2023 12:30:40 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lL5XwCbRaV+VE6R6jdF8NFvrP8/TtZP7t+xSv9pJ1kJHH6fEcadu7L92P6KCTxFFzUHqykvGMCUkgpioMg1mreNFX5COzOKu/a1HTeSn8yjGip02Ca2qzheY/9DYYPnmqw6jonwl8dYXzqMFHtVJiAYo6kha/EhYV3UZd2VGXPlXyval4DALdmy4ns5/4G/EmqhjJlfnwORfD0Opjmjvwogf0ctiOMH8kY182+ckJhU4BHZb7nL10KBVxyQT1a1KVOpT5689JsTBd58PNBc0X9eyWQ35ZBrgmOD4PR5QBK7IKE0Iqrdg8J6h9/1YbwSCR99Fvy6FYUOQ7OoEFG2QIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dUOrsJYrsFkCBHMJuybvyu+NhE81VgyEwuBOhHmc2I8=;
+ b=h/oGks4kOeiQ2u09XZgROmaGOUc27TreEoAs1hSX5tdb8qxfX6vrceiDF/FKqLXlZCMMY667EfRTaHHC44PSf904q9OSvJe4gDcdgN3DVTQzT1nU0T7HRPiMdZWWlzCNs626SaDG3z6vliN+V63n8EAH4/m2+x1o8Y03C3wzdZA02/rMSHqOav9RWSSBb3aS8kIu0ppf4Uc3jE0le5PIjjVTkwHyUfIhKXQQS5myHNND3CizkB1qzTV94zpu5I6e6qQBsksHYkMtrU6ZVBUZcSuzvSoQZv84zNNZE8BQNeumSwNxWa3Nk5/piHze0Bi+bupZWlLkl28g3pwwVmYKLg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dUOrsJYrsFkCBHMJuybvyu+NhE81VgyEwuBOhHmc2I8=;
+ b=jF1LqbhNmJ0oOEIkZ0EGYS/9D4ggb+Z0dsm5BapJ0sMlJVt1a/5tuYLVGWkkgX3yj4/Z3WCSI3CMTE9IdHPG0m0ZRWUCTKydTQ9xwUXif81jvP5SplGnZIWiMqGHXflPI9jpQYOTsst5zYu+lJmPXCe22cYQRibVMRu8CFTQDc4=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by BL1PR21MB3114.namprd21.prod.outlook.com (2603:10b6:208:392::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.13; Tue, 23 May
+ 2023 19:30:37 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::c454:256a:ce51:e983]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::c454:256a:ce51:e983%4]) with mapi id 15.20.6455.004; Tue, 23 May 2023
+ 19:30:37 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        'Lorenzo Pieralisi' <lpieralisi@kernel.org>,
+        "'bhelgaas@google.com'" <bhelgaas@google.com>
+CC:     "'davem@davemloft.net'" <davem@davemloft.net>,
+        "'edumazet@google.com'" <edumazet@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "'kuba@kernel.org'" <kuba@kernel.org>,
+        "'kw@linux.com'" <kw@linux.com>, KY Srinivasan <kys@microsoft.com>,
+        "'leon@kernel.org'" <leon@kernel.org>,
+        "'linux-pci@vger.kernel.org'" <linux-pci@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "'pabeni@redhat.com'" <pabeni@redhat.com>,
+        "'robh@kernel.org'" <robh@kernel.org>,
+        "'saeedm@nvidia.com'" <saeedm@nvidia.com>,
+        "'wei.liu@kernel.org'" <wei.liu@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "'boqun.feng@gmail.com'" <boqun.feng@gmail.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "'helgaas@kernel.org'" <helgaas@kernel.org>,
+        "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'linux-rdma@vger.kernel.org'" <linux-rdma@vger.kernel.org>,
+        "'netdev@vger.kernel.org'" <netdev@vger.kernel.org>,
+        Jose Teuttli Carranco <josete@microsoft.com>,
+        "'stable@vger.kernel.org'" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Topic: [PATCH v3 6/6] PCI: hv: Use async probing to reduce boot time
+Thread-Index: AQHZgxiydynY9JdEwE2LUDobn6ASSK9TueZQgAnkUiCACrRlcA==
+Date:   Tue, 23 May 2023 19:30:37 +0000
+Message-ID: <SA1PR21MB1335467F58B7BB5EBC9AD543BF40A@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20230420024037.5921-1-decui@microsoft.com>
+ <20230420024037.5921-7-decui@microsoft.com> <ZFtUgCVaneGVKBsW@lpieralisi>
+ <SA1PR21MB13355D8F2A7AC6CA91FE1D1BBF779@SA1PR21MB1335.namprd21.prod.outlook.com>
+ <SA1PR21MB133549FB41041ED218E2C73BBF7E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+In-Reply-To: <SA1PR21MB133549FB41041ED218E2C73BBF7E9@SA1PR21MB1335.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9404ba2f-9e11-476c-bee1-b05b22020f31;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-05-10T16:54:12Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|BL1PR21MB3114:EE_
+x-ms-office365-filtering-correlation-id: ddd1e713-de15-432c-800e-08db5bc42f77
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: B41YGk0lc3PlqemGwFGS+l+Im2r/DRCGRF/dIbNPWc3/Ri/OT8F+4KJSztAh/J9fF1WmUXF52jMLG+0rtwq008DwOSwxbzOUrXDabtyv1f4xJuzuHjd0F69HsV3mmRq6tKNS1TdLXFR6NL9dUYR/tphMCIQdqsQRnenSeCqN4EKjqNXkN8zBn4IqrNotFEXGajv/bqPsMFsIWOnuDOZ6r3QiYReB72khflsvKEF4QU6fOqlVH0lMK6tmJO+zOyy7TffGXZ7WhsunJECsobafU4vLVoGNboRRae/5il3GhUHf1bRoYzTXM9aJFK2qrlv4KafUXWo8KGt6+ESYV8RmRYyDFNapToMATSDglYJYMEYMTfFfILd88W5s9dIhS5WxjRfzythUq4yXELM1mOz5buG7MHMvfbexiFScltGgH9nZv2B1Fab6dj6qw3QUcd/ph3h6uOEIZudEEfvM/0RJ23aKSRvnESS3mDFIP7pR64oZtX3xzP5juzGD73ZK4i2uQA6mSwIvaJyvr7UEFiVeyOAzpObG5lfZvV+ryLOI096Af5PpH0qA7RJ71aS7hqrQcKciV/tTMTnC5YP7SClKWBP43mNCg6sX+MIMnl7s0H2T7OkJa5Tn+9HZm0Ypg3s9ftF1k7WkATdfXNd7A7A7qN4YfQ9pGz545QFHx4KNnHs=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(451199021)(8990500004)(83380400001)(186003)(2906002)(7696005)(4326008)(66446008)(64756008)(66556008)(66946007)(76116006)(41300700001)(786003)(316002)(54906003)(66476007)(478600001)(71200400001)(110136005)(8676002)(53546011)(52536014)(7416002)(5660300002)(9686003)(6506007)(26005)(966005)(8936002)(10290500003)(55016003)(38070700005)(82950400001)(86362001)(122000001)(82960400001)(38100700002)(33656002)(491001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?mchEVf1h9egY5lKW/SxxyamvQLzKyWARi6RuJXb5B+MOUiCT7HhARoSnWTcJ?=
+ =?us-ascii?Q?CJySe9M00cKHs+xJ1RRV5bwJYvcG/fi23VD0wSdFvQzaLDrswVbx2g7vfqB3?=
+ =?us-ascii?Q?TPjUuDuPJ2HGX11ibSbkCQxYYmOmls7jfcNjr86sSQUjtYs7BEr9QUQNaceM?=
+ =?us-ascii?Q?zgkZyobTpBRl5oFBj635njrvGOYUCeE3WrHnhW5ao4FKF22MztcMellCYnDP?=
+ =?us-ascii?Q?rGhbDIf+bOSm+Cp2mGpHLGYvHyf6heyp/snFo3gXSXMaCIAuB0wgNJanR155?=
+ =?us-ascii?Q?tV7BGglzjdU32SDiAOOigHLdmcBkExFdF7ss1NORt6nvr2sIk5P7FDY4Yt5N?=
+ =?us-ascii?Q?L3ysJuYG218KiNqKdX4W08O64sO3CXt+WG+90yxYgn3zIAk/BvjmUsT1yqaM?=
+ =?us-ascii?Q?SOw89S0MYcqcxM2uXv6BOfk856GhpZTPCUFYjzJxW4uTMVFirFLMOn97k/OG?=
+ =?us-ascii?Q?4qXWzFtTcL58iuHVfO9OdYSZOyx29dvUGCdAmIo23izYRvTUlgRibGYy1HAs?=
+ =?us-ascii?Q?556bwQ9rh7+dQbVxRuSqsyfgBC8+E8N+DBv3aEPjtTgbV2ayuZi9YTxTTEpE?=
+ =?us-ascii?Q?bIX4UUt+xbPKMEx8NHGcd6/ewAB4+n1YoIbFt9azuNV+Em/SOSuxvYsu3EzO?=
+ =?us-ascii?Q?Z0B1JLpXjgHm/iu5js6yprFps38a/LErqdQEiJEzEBpe5TOCZEQZQy4kCYCY?=
+ =?us-ascii?Q?/a6iZf7cRAVXyw2ul+5OrOKxFj5De8/0EE8C4UGlVn8RKXnOL6kx1UpvvA5V?=
+ =?us-ascii?Q?2nKa2V+y7SFkbE+lXkBbUFZ7xQF123BA+UCkamRGIBE4/nuuGQAt1aNFoVg9?=
+ =?us-ascii?Q?VyUfycYezPUqbTR30nY8bnQoEpI4BpqiXLtxkqteDUe/oiNcub1XmNQHpHZB?=
+ =?us-ascii?Q?2msd6+2JineMz3Xb1VLcSktlRH5N4GtaLgHOQHVR5SR21hPOcv49Lbqiw793?=
+ =?us-ascii?Q?NdJ4cuHeSiWLlOEwaK2K1zJL/IbIx4uVbO+RXlPUPDCW5cW4A6ZwgpF/1ZRg?=
+ =?us-ascii?Q?9KWfuIma8b7SKnmME5N7Xi8d1LFNYROphRYq4OQM3oXDQEpGGIBkUZuONCvU?=
+ =?us-ascii?Q?4umX49xJd0Ok2v37oRsdZrz8cWVep4hdQeB47BfBbhh5KEtL08UVQS5w2zxJ?=
+ =?us-ascii?Q?GQBVt1II1dRSiWuYFlkisZzS4+HI3IF6UhbO39iCRdtFl35KtXaFJF+EIWbO?=
+ =?us-ascii?Q?BcKF1lv+z/6fP9oLadePKBLF3jTSScHinUyia109YzpsR1gVIG4FnYnsn4YQ?=
+ =?us-ascii?Q?XI1bxxG+pwW+M4kCVJ9Csocb2Xxd08usUAikfERzONUoCkP3V/tpIh9ach2z?=
+ =?us-ascii?Q?mNhPY/j2bUsv+H30zfmKqQs04KLAsaZAZX/QNOUOXMsLYqgHFE3zyoL3jnBX?=
+ =?us-ascii?Q?dc48HzGmEOEy/RLK1ZEd/GxxAJ332Nv0jZTZGHUOts18Y2yUuMyH97JmigmA?=
+ =?us-ascii?Q?G6YrWQyOVY3q5+beEN3FFKykb+JGxi5wOfcRsvCqXW6+oU3qfAHTw/oJwpat?=
+ =?us-ascii?Q?esEKGTiWe3Q1KlzfXWYwjhIzZgarebWqHrUiE/4EoF+Ysk7Oyg40ed3e2HEu?=
+ =?us-ascii?Q?LagPtRx22ikdsZhQDJdsUlLgW9cvvAH6gbRpYdN2?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ddd1e713-de15-432c-800e-08db5bc42f77
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 May 2023 19:30:37.0937
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: P3IOglv1Crv/ysxiRRViBEyGNjnprONM+s8q93IkiScQ95CiuyAa7fVPlrMnMdut4DbM0moj7qu/rcL6k5NZCg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL1PR21MB3114
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 23 May 2023 12:21:25 -0500
-Bjorn Helgaas <helgaas@kernel.org> wrote:
+> From: Dexuan Cui <decui@microsoft.com>
+> Sent: Tuesday, May 16, 2023 5:03 PM
+>  ...
+> > From: Dexuan Cui
+> > Sent: Wednesday, May 10, 2023 10:12 AM
+> > To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> > > ...
+> > > This patch should be split, first thing is to fix and document what
+> > > you are changing for pci_{lock,unlock}_rescan_remove() then add
+> > > asynchronous probing.
+> > >
+> > > Lorenzo
+> > Ok, I'll split this patch into two.
+> >
+> > Thanks for reviewing the patch.
+> > Can you please give an "Acked-by" or "Reviewed-by" to patch 1~5
+> > if they look good to you? The first 5 patches have been there for a
+> > while, and they already got Michael's Reviewed-by.
+>
+> Hi Lorenzo, Bjorn and all,
+> Ping -- it would be great to have your Acked-by or Reviewed-by for
+> patch 1 to 5.
 
-> Hi Nirmal, thanks for the report!
-> 
-> On Mon, May 22, 2023 at 04:32:03PM +0000, bugzilla-daemon@kernel.org wrote:
-> > https://bugzilla.kernel.org/show_bug.cgi?id=217472
-> > ...  
-> 
-> > Created attachment 304301  
-> >   --> https://bugzilla.kernel.org/attachment.cgi?id=304301&action=edit  
-> > Rhel9.1_Guest_dmesg
-> > 
-> > Issue:
-> > NVMe Drives are still present after performing hotplug in guest OS. We have
-> > tested with different combination of OSes, drives and Hypervisor. The issue is
-> > present across all the OSes.   
-> 
-> Maybe attach the specific commands to reproduce the problem in one of
-> these scenarios to the bugzilla?  I'm a virtualization noob, so I
-> can't visualize all the usual pieces.
-> 
-> > The following patch was added to honor ACPI _OSC values set by BIOS and the
-> > patch helped to bring the issue out in VM/ Guest OS.
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/commit/drivers/pci/controller/vmd.c?id=04b12ef163d10e348db664900ae7f611b83c7a0e
-> > 
-> > 
-> > I also compared the values of the parameters in the patch in Host and Guest OS.
-> > The parameters with different values in Host and Guest OS are:
-> > 
-> > native_pcie_hotplug
-> > native_shpc_hotplug
-> > native_aer
-> > native_ltr
-> > 
-> > i.e.
-> > value of native_pcie_hotplug in Host OS is 1.
-> > value of native_pcie_hotplug in Guest OS is 0.
-> > 
-> > I am not sure why "native_pcie_hotplug" is changed to 0 in guest.
-> > Isn't it OSC_ managed parameter? If that is the case, it should
-> > have same value in Host and Guest OS.  
-> 
-> From your dmesg:
-> 
->   DMI: Red Hat KVM/RHEL, BIOS 1.16.0-4.el9 04/01/2014
->   _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
->   _OSC: platform does not support [PCIeHotplug LTR DPC]
->   _OSC: OS now controls [SHPCHotplug PME AER PCIeCapability]
->   acpiphp: Slot [0] registered
->   virtio_blk virtio3: [vda] 62914560 512-byte logical blocks (32.2 GB/30.0 GiB)
-> 
-> So the DMI ("KVM/RHEL ...") is the BIOS seen by the guest.  Doesn't
-> mean anything to me, but the KVM folks would know about it.  In any
-> event, the guest BIOS is different from the host BIOS, so I'm not
-> surprised that _OSC is different.
+Gentle ping .
 
-Right, the premise of the issue that guest and host should have the
-same OSC features is flawed.  The guest is a virtual machine that can
-present an entirely different feature set from the host.  A software
-hotplug on the guest can occur without any bearing to the slot status
-on the host.
-
-> That guest BIOS _OSC declined to grant control of PCIe native hotplug
-> to the guest OS, so the guest will use acpiphp (not pciehp, which
-> would be used if native_pcie_hotplug were set).
-> 
-> The dmesg doesn't mention the nvme driver.  Are you using something
-> like virtio_blk with qemu pointed at an NVMe drive?  And you
-> hot-remove the NVMe device, but the guest OS thinks it's still
-> present?
-> 
-> Since the guest is using acpiphp, I would think a hot-remove of a host
-> NVMe device should be noticed by qemu and turned into an ACPI
-> notification that the guest OS would consume.  But I don't know how
-> those connections work.
-
-If vfio-pci is involved, a cooperative hot-unplug will attempt to
-unbind the host driver, which triggers a device request through vfio,
-which is ultimately seen as a hotplug eject operation by the guest.
-Surprise hotplugs of assigned devices are not supported.  There's not
-enough info in the bz to speculate how this VM is wired or what actions
-are taken.  Thanks,
-
-Alex
+> > I hope the first 5 patches can go through the hyperv-fixes branch in
+> > the hyperv tree
+> >
+> https://git.ke/
+> rnel.org%2Fpub%2Fscm%2Flinux%2Fkernel%2Fgit%2Fhyperv%2Flinux.git%2F
+> log%2F%3Fh%3Dhyp&data=3D05%7C01%7Cdecui%40microsoft.com%7C65c86f
+> fe8d8542dbae0708db566a1607%7C72f988bf86f141af91ab2d7cd011db47%
+> 7C1%7C0%7C638198785892993948%7CUnknown%7CTWFpbGZsb3d8eyJWIj
+> oiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3D%7C3
+> 000%7C%7C%7C&sdata=3Dh9vxjnGo6oYzare%2FqqcXndg2NZZ0Ap%2BH33q0i
+> Mtf7D4%3D&reserved=3D0
+> > erv-fixes
+> > since they are specific to Hyper-V.
+> >
+> > After the first 5 patches are in, I can refer to the commit IDs, and I
+> > will split this patch (patch 6).
+> >
+> > Thanks,
+> > Dexuan
 
