@@ -2,131 +2,117 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CF9470EFF3
-	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 09:54:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DEE7F70F2FD
+	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 11:37:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239912AbjEXHyY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 May 2023 03:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50856 "EHLO
+        id S230142AbjEXJhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 May 2023 05:37:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235456AbjEXHyX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 03:54:23 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 036CB93;
-        Wed, 24 May 2023 00:54:22 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34O7j72e000529;
-        Wed, 24 May 2023 07:54:18 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=d5QAF16BJKDuMg4CE8wCgJ8dMnnIFqFme5RRke6iDFA=;
- b=XEyL8zw10tjh/hvNzSk2aRRknxFC/Jzx7CglgwPl+o4F9J6gXLd0FkldvvZ+QF5DBplU
- MkzdWKohEv94lBW583NzTdIRTXq7dmRJTLbjPf+VlsVF9GKKmW7WY1BBu+BkU+RVie55
- LiSuJdSFklzWazs1ffSK2IfUFv0bTAxPns0TnQu8MTbaeYuawud/yxbmewcxdKAinfkH
- z3jRK3Ng8c78ySGIGdPUrIrUHaEZmyotydXsnl437ht/90XmwjCO6IPhSRiWSUAeXoJg
- r0Xe2RiO/cGsH7RJ2DRnKs00YP7+qDz0MO6nrsOmw8qCaqyk0jQEl/OAndDazXLOTvEf zQ== 
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3qse4kgmmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 May 2023 07:54:18 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 34O2v3Le000965;
-        Wed, 24 May 2023 07:54:15 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3qppcf1hc6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 24 May 2023 07:54:15 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 34O7sCjo30802350
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 24 May 2023 07:54:12 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E66F020043;
-        Wed, 24 May 2023 07:54:11 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B53020040;
-        Wed, 24 May 2023 07:54:11 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Wed, 24 May 2023 07:54:11 +0000 (GMT)
-From:   Niklas Schnelle <schnelle@linux.ibm.com>
-To:     Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Wenjia Zhang <wenjia@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
-        Matthew Rosato <mjrosato@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCH net-next] s390/ism: Set DMA coherent mask
-Date:   Wed, 24 May 2023 09:54:10 +0200
-Message-Id: <20230524075411.3734141-1-schnelle@linux.ibm.com>
-X-Mailer: git-send-email 2.39.2
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: IP9jPuNTbIrXKI-7-cVVuXaYW72dL7NF
-X-Proofpoint-ORIG-GUID: IP9jPuNTbIrXKI-7-cVVuXaYW72dL7NF
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        with ESMTP id S229457AbjEXJgw (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 05:36:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE170E7A
+        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 02:36:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8770E6101A
+        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 09:36:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA8EC433EF;
+        Wed, 24 May 2023 09:36:42 +0000 (UTC)
+From:   Huacai Chen <chenhuacai@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Huacai Chen <chenhuacai@gmail.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        loongson-kernel@lists.loongnix.cn,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Juxin Gao <gaojuxin@loongson.cn>
+Subject: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
+Date:   Wed, 24 May 2023 17:36:23 +0800
+Message-Id: <20230524093623.3698134-1-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-05-24_03,2023-05-23_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=955
- lowpriorityscore=0 spamscore=0 mlxscore=0 suspectscore=0 bulkscore=0
- adultscore=0 priorityscore=1501 malwarescore=0 phishscore=0
- impostorscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2304280000 definitions=main-2305240064
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-A future change will convert the DMA API implementation from the
-architecture specific arch/s390/pci/pci_dma.c to using the common code
-drivers/iommu/dma-iommu.c which the utilizes the same IOMMU hardware
-through the s390-iommu driver. Unlike the s390 specific DMA API this
-requires devices to correctly set the coherent mask to be allowed to use
-IOVAs >2^32 in dma_alloc_coherent(). This was however not done for ISM
-devices. ISM requires such addresses since currently the DMA aperture
-for PCI devices starts at 2^32 and all calls to dma_alloc_coherent()
-would thus fail.
+Some platforms (such as LoongArch) cannot provide enough irq numbers as
+many as logical cpu numbers. So we should limit pci irq numbers when
+allocate msi/msix vectors, otherwise some device drivers may fail at
+initialization. This patch add a cmdline parameter "pci_irq_limit=xxxx"
+to control the limit.
 
-Link: https://lore.kernel.org/all/20230310-dma_iommu-v9-1-65bb8edd2beb@linux.ibm.com/
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Matthew Rosato <mjrosato@linux.ibm.com>
-Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+The default pci msi/msix number limit is defined 32 for LoongArch and
+NR_IRQS for other platforms.
+
+Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
 ---
-Note: This was previously sent and reviewed as part of multiple versions of the
-s390 DMA API conversion series which requires this change as a pre-requisite
-with the latest version at the Link. Sending separately to add the net-next
-prefix so this can be integrated.
+ drivers/pci/msi/msi.c | 26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
- drivers/s390/net/ism_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 8acb9eba691b..1399b5dc646c 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -660,7 +660,7 @@ static int ism_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	if (ret)
- 		goto err_disable;
+diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+index ef1d8857a51b..6617381e50e7 100644
+--- a/drivers/pci/msi/msi.c
++++ b/drivers/pci/msi/msi.c
+@@ -402,12 +402,34 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
+ 	return ret;
+ }
  
--	ret = dma_set_mask(&pdev->dev, DMA_BIT_MASK(64));
-+	ret = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
- 	if (ret)
- 		goto err_resource;
++#ifdef CONFIG_LOONGARCH
++#define DEFAULT_PCI_IRQ_LIMITS 32
++#else
++#define DEFAULT_PCI_IRQ_LIMITS NR_IRQS
++#endif
++
++static int pci_irq_limits = DEFAULT_PCI_IRQ_LIMITS;
++
++static int __init pci_irq_limit(char *str)
++{
++	get_option(&str, &pci_irq_limits);
++
++	if (pci_irq_limits == 0)
++		pci_irq_limits = DEFAULT_PCI_IRQ_LIMITS;
++
++	return 0;
++}
++
++early_param("pci_irq_limit", pci_irq_limit);
++
+ int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
+ 			   struct irq_affinity *affd)
+ {
+ 	int nvec;
+ 	int rc;
  
++	maxvec = clamp_val(maxvec, 0, pci_irq_limits);
++
+ 	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
+ 		return -EINVAL;
+ 
+@@ -776,7 +798,9 @@ static bool pci_msix_validate_entries(struct pci_dev *dev, struct msix_entry *en
+ int __pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries, int minvec,
+ 			    int maxvec, struct irq_affinity *affd, int flags)
+ {
+-	int hwsize, rc, nvec = maxvec;
++	int hwsize, rc, nvec;
++
++	nvec = clamp_val(maxvec, 0, pci_irq_limits);
+ 
+ 	if (maxvec < minvec)
+ 		return -ERANGE;
 -- 
-2.39.2
+2.39.1
 
