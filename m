@@ -2,117 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DEE7F70F2FD
-	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 11:37:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BFEAA70F3BD
+	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 12:08:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230142AbjEXJhM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 May 2023 05:37:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53466 "EHLO
+        id S231565AbjEXKI1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 May 2023 06:08:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjEXJgw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 05:36:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE170E7A
-        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 02:36:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8770E6101A
-        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 09:36:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AA8EC433EF;
-        Wed, 24 May 2023 09:36:42 +0000 (UTC)
-From:   Huacai Chen <chenhuacai@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Huacai Chen <chenhuacai@gmail.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongson-kernel@lists.loongnix.cn,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Juxin Gao <gaojuxin@loongson.cn>
-Subject: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
-Date:   Wed, 24 May 2023 17:36:23 +0800
-Message-Id: <20230524093623.3698134-1-chenhuacai@loongson.cn>
-X-Mailer: git-send-email 2.39.1
+        with ESMTP id S229575AbjEXKI0 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 06:08:26 -0400
+Received: from bmailout2.hostsharing.net (bmailout2.hostsharing.net [IPv6:2a01:37:3000::53df:4ef0:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4C37C0
+        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 03:08:24 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout2.hostsharing.net (Postfix) with ESMTPS id 1EA4E2800081C;
+        Wed, 24 May 2023 12:08:23 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 13C58313759; Wed, 24 May 2023 12:08:23 +0200 (CEST)
+Date:   Wed, 24 May 2023 12:08:23 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Rongguang Wei <clementwei90@163.com>,
+        Rongguang Wei <weirongguang@kylinos.cn>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH] PCI: pciehp: Simplify Attention Button logging
+Message-ID: <20230524100823.GA23020@wunner.de>
+References: <20230523052957.GB30083@wunner.de>
+ <ZGzedx3zZ0exN6C9@bhelgaas>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-6.7 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZGzedx3zZ0exN6C9@bhelgaas>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Some platforms (such as LoongArch) cannot provide enough irq numbers as
-many as logical cpu numbers. So we should limit pci irq numbers when
-allocate msi/msix vectors, otherwise some device drivers may fail at
-initialization. This patch add a cmdline parameter "pci_irq_limit=xxxx"
-to control the limit.
+On Tue, May 23, 2023 at 10:40:39AM -0500, Bjorn Helgaas wrote:
+> I was trying to make it OFF/ON case parallel to the BLINKING case that
+> only has one ctrl_info(), but I think that makes it a little harder to
+> read in addition to being less efficient.
+> 
+> And the language is definitely confusing.   How about this?
 
-The default pci msi/msix number limit is defined 32 for LoongArch and
-NR_IRQS for other platforms.
+Perfect, feel free to add my
 
-Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
----
- drivers/pci/msi/msi.c | 26 +++++++++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
+Reviewed-by: Lukas Wunner <lukas@wunner.de>
 
-diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
-index ef1d8857a51b..6617381e50e7 100644
---- a/drivers/pci/msi/msi.c
-+++ b/drivers/pci/msi/msi.c
-@@ -402,12 +402,34 @@ static int msi_capability_init(struct pci_dev *dev, int nvec,
- 	return ret;
- }
- 
-+#ifdef CONFIG_LOONGARCH
-+#define DEFAULT_PCI_IRQ_LIMITS 32
-+#else
-+#define DEFAULT_PCI_IRQ_LIMITS NR_IRQS
-+#endif
-+
-+static int pci_irq_limits = DEFAULT_PCI_IRQ_LIMITS;
-+
-+static int __init pci_irq_limit(char *str)
-+{
-+	get_option(&str, &pci_irq_limits);
-+
-+	if (pci_irq_limits == 0)
-+		pci_irq_limits = DEFAULT_PCI_IRQ_LIMITS;
-+
-+	return 0;
-+}
-+
-+early_param("pci_irq_limit", pci_irq_limit);
-+
- int __pci_enable_msi_range(struct pci_dev *dev, int minvec, int maxvec,
- 			   struct irq_affinity *affd)
- {
- 	int nvec;
- 	int rc;
- 
-+	maxvec = clamp_val(maxvec, 0, pci_irq_limits);
-+
- 	if (!pci_msi_supported(dev, minvec) || dev->current_state != PCI_D0)
- 		return -EINVAL;
- 
-@@ -776,7 +798,9 @@ static bool pci_msix_validate_entries(struct pci_dev *dev, struct msix_entry *en
- int __pci_enable_msix_range(struct pci_dev *dev, struct msix_entry *entries, int minvec,
- 			    int maxvec, struct irq_affinity *affd, int flags)
- {
--	int hwsize, rc, nvec = maxvec;
-+	int hwsize, rc, nvec;
-+
-+	nvec = clamp_val(maxvec, 0, pci_irq_limits);
- 
- 	if (maxvec < minvec)
- 		return -ERANGE;
--- 
-2.39.1
+to commit 6d433b9ddfda on pci/hotplug.
 
+Thanks a lot!
+
+Lukas
+
+> @@ -166,11 +166,11 @@ void pciehp_handle_button_press(struct controller *ctrl)
+>  	case ON_STATE:
+>  		if (ctrl->state == ON_STATE) {
+>  			ctrl->state = BLINKINGOFF_STATE;
+> -			ctrl_info(ctrl, "Slot(%s): Powering off due to button press\n",
+> +			ctrl_info(ctrl, "Slot(%s): Button press: will power off in 5 sec\n",
+>  				  slot_name(ctrl));
+>  		} else {
+>  			ctrl->state = BLINKINGON_STATE;
+> -			ctrl_info(ctrl, "Slot(%s) Powering on due to button press\n",
+> +			ctrl_info(ctrl, "Slot(%s): Button press: will power on in 5 sec\n",
+>  				  slot_name(ctrl));
+>  		}
+>  		/* blink power indicator and turn off attention */
+> @@ -185,22 +185,23 @@ void pciehp_handle_button_press(struct controller *ctrl)
+>  		 * press the attention again before the 5 sec. limit
+>  		 * expires to cancel hot-add or hot-remove
+>  		 */
+> -		ctrl_info(ctrl, "Slot(%s): Button cancel\n", slot_name(ctrl));
+>  		cancel_delayed_work(&ctrl->button_work);
+>  		if (ctrl->state == BLINKINGOFF_STATE) {
+>  			ctrl->state = ON_STATE;
+>  			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_ON,
+>  					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+> +			ctrl_info(ctrl, "Slot(%s): Button press: canceling request to power off\n",
+> +				  slot_name(ctrl));
+>  		} else {
+>  			ctrl->state = OFF_STATE;
+>  			pciehp_set_indicators(ctrl, PCI_EXP_SLTCTL_PWR_IND_OFF,
+>  					      PCI_EXP_SLTCTL_ATTN_IND_OFF);
+> +			ctrl_info(ctrl, "Slot(%s): Button press: canceling request to power on\n",
+> +				  slot_name(ctrl));
+>  		}
+> -		ctrl_info(ctrl, "Slot(%s): Action canceled due to button press\n",
+> -			  slot_name(ctrl));
+>  		break;
