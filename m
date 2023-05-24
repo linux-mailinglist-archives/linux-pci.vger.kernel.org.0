@@ -2,204 +2,155 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E082970EBBA
-	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 05:13:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B777670EC68
+	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 06:15:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239272AbjEXDNn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 23 May 2023 23:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43914 "EHLO
+        id S231316AbjEXEP4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 May 2023 00:15:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239120AbjEXDNe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 23 May 2023 23:13:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75BEBE52;
-        Tue, 23 May 2023 20:13:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0ABA7612E8;
-        Wed, 24 May 2023 03:13:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D37FEC433EF;
-        Wed, 24 May 2023 03:13:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684898006;
-        bh=3H1qeGguqJKKMRIbLHzFc86BBXitdWvieNfjpJfbtpA=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=NECt5kz/EJAgcb0xFaBtRHdfh1BUer4D/itQ4rKZCSImAvRk2CR78gphL24VJDzwh
-         NYJX6TnzVcrsX+u1t/i/YulT5/SDmYb1pKsLe3WZn2OtNrSjcpvOAFnzrgABnCTIfb
-         zCJ5ZzMxOZoWlMQNW/HR7m50t6tnJH9ARD69s93rDYE4pnV2IT2AOkAMel3Qb7wT3+
-         hM11T6vjMX3AYPWbIyMpf8q96FKnNtca8Cq3wEsL30IpEux0N7wLblDQj2LYrYKKEc
-         Y2Eq1WVW+PI7V7llp4/nVKzX0eWvqNodozQAJ9BkIRLcVgdcTQU6/ErTLBqQo2V1ug
-         4ZOWXOmPUcsGg==
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        with ESMTP id S230520AbjEXEPz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 00:15:55 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4388119
+        for <linux-pci@vger.kernel.org>; Tue, 23 May 2023 21:15:50 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1q1fud-00017U-RP; Wed, 24 May 2023 06:15:47 +0200
+Message-ID: <28b9d910-c485-5ecb-e2ac-1c735a4cfcb9@leemhuis.info>
+Date:   Wed, 24 May 2023 06:15:47 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [Bug 217321] New: Intel platforms can't sleep deeper than PC3
+ during long idle
+Content-Language: en-US, de-DE
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Linux regressions mailing list <regressions@lists.linux.dev>
+Cc:     Koba Ko <koba.ko@canonical.com>, linux-pci@vger.kernel.org,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Ajay Agarwal <ajayagarwal@google.com>,
+        Tasev Nikola <tasev.stefanoska@skynet.be>,
+        Mark Enriquez <enriquezmark36@gmail.com>,
+        Thomas Witt <kernel@witt.link>
+References: <ZG00zhXPMigJIISI@bhelgaas>
+From:   "Linux regression tracking #update (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+In-Reply-To: <ZG00zhXPMigJIISI@bhelgaas>
 Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 24 May 2023 06:13:21 +0300
-Message-Id: <CSU6HS37JN7M.11R5RM34EADW@suppilovahvero>
-Subject: Re: [PATCH v5 05/44] char: tpm: handle HAS_IOPORT dependencies
-From:   "Jarkko Sakkinen" <jarkko@kernel.org>
-To:     "Niklas Schnelle" <schnelle@linux.ibm.com>,
-        "Arnd Bergmann" <arnd@arndb.de>, "Peter Huewe" <peterhuewe@gmx.de>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>
-Cc:     "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Geert Uytterhoeven" <geert@linux-m68k.org>,
-        "Paul Walmsley" <paul.walmsley@sifive.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Albert Ou" <aou@eecs.berkeley.edu>,
-        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
-        <linux-pci@vger.kernel.org>, "Arnd Bergmann" <arnd@kernel.org>,
-        <linux-integrity@vger.kernel.org>
-X-Mailer: aerc 0.14.0
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
- <20230522105049.1467313-6-schnelle@linux.ibm.com>
-In-Reply-To: <20230522105049.1467313-6-schnelle@linux.ibm.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1684901750;d5719135;
+X-HE-SMSGID: 1q1fud-00017U-RP
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,T_SCC_BODY_TEXT_LINE,T_SPF_TEMPERROR
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon May 22, 2023 at 1:50 PM EEST, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> not being declared. We thus need to add this dependency and ifdef
-> sections of code using inb()/outb() as alternative access methods.
->
-> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
-> ---
->  drivers/char/tpm/Kconfig        |  1 +
->  drivers/char/tpm/tpm_infineon.c | 16 ++++++++++++----
->  drivers/char/tpm/tpm_tis_core.c | 19 ++++++++-----------
->  3 files changed, 21 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/char/tpm/Kconfig b/drivers/char/tpm/Kconfig
-> index 927088b2c3d3..418c9ed59ffd 100644
-> --- a/drivers/char/tpm/Kconfig
-> +++ b/drivers/char/tpm/Kconfig
-> @@ -149,6 +149,7 @@ config TCG_NSC
->  config TCG_ATMEL
->  	tristate "Atmel TPM Interface"
->  	depends on PPC64 || HAS_IOPORT_MAP
-> +	depends on HAS_IOPORT
->  	help
->  	  If you have a TPM security chip from Atmel say Yes and it=20
->  	  will be accessible from within Linux.  To compile this driver=20
-> diff --git a/drivers/char/tpm/tpm_infineon.c b/drivers/char/tpm/tpm_infin=
-eon.c
-> index 9c924a1440a9..99c6e565ec8d 100644
-> --- a/drivers/char/tpm/tpm_infineon.c
-> +++ b/drivers/char/tpm/tpm_infineon.c
-> @@ -26,7 +26,9 @@
->  #define	TPM_MAX_TRIES		5000
->  #define	TPM_INFINEON_DEV_VEN_VALUE	0x15D1
-> =20
-> +#ifdef CONFIG_HAS_IOPORT
->  #define TPM_INF_IO_PORT		0x0
-> +#endif
->  #define TPM_INF_IO_MEM		0x1
-> =20
->  #define TPM_INF_ADDR		0x0
-> @@ -51,34 +53,40 @@ static struct tpm_inf_dev tpm_dev;
-> =20
->  static inline void tpm_data_out(unsigned char data, unsigned char offset=
-)
->  {
-> +#ifdef CONFIG_HAS_IOPORT
->  	if (tpm_dev.iotype =3D=3D TPM_INF_IO_PORT)
->  		outb(data, tpm_dev.data_regs + offset);
->  	else
-> +#endif
->  		writeb(data, tpm_dev.mem_base + tpm_dev.data_regs + offset);
->  }
-> =20
->  static inline unsigned char tpm_data_in(unsigned char offset)
->  {
-> +#ifdef CONFIG_HAS_IOPORT
->  	if (tpm_dev.iotype =3D=3D TPM_INF_IO_PORT)
->  		return inb(tpm_dev.data_regs + offset);
-> -	else
-> -		return readb(tpm_dev.mem_base + tpm_dev.data_regs + offset);
-> +#endif
-> +	return readb(tpm_dev.mem_base + tpm_dev.data_regs + offset);
->  }
-> =20
->  static inline void tpm_config_out(unsigned char data, unsigned char offs=
-et)
->  {
-> +#ifdef CONFIG_HAS_IOPORT
->  	if (tpm_dev.iotype =3D=3D TPM_INF_IO_PORT)
->  		outb(data, tpm_dev.config_port + offset);
->  	else
-> +#endif
->  		writeb(data, tpm_dev.mem_base + tpm_dev.index_off + offset);
->  }
-> =20
->  static inline unsigned char tpm_config_in(unsigned char offset)
->  {
-> +#ifdef CONFIG_HAS_IOPORT
->  	if (tpm_dev.iotype =3D=3D TPM_INF_IO_PORT)
->  		return inb(tpm_dev.config_port + offset);
-> -	else
-> -		return readb(tpm_dev.mem_base + tpm_dev.index_off + offset);
-> +#endif
-> +	return readb(tpm_dev.mem_base + tpm_dev.index_off + offset);
->  }
-> =20
->  /* TPM header definitions */
-> diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_c=
-ore.c
-> index 558144fa707a..0ee5a83e35a8 100644
-> --- a/drivers/char/tpm/tpm_tis_core.c
-> +++ b/drivers/char/tpm/tpm_tis_core.c
-> @@ -954,11 +954,6 @@ static void tpm_tis_clkrun_enable(struct tpm_chip *c=
-hip, bool value)
->  		clkrun_val &=3D ~LPC_CLKRUN_EN;
->  		iowrite32(clkrun_val, data->ilb_base_addr + LPC_CNTRL_OFFSET);
-> =20
-> -		/*
-> -		 * Write any random value on port 0x80 which is on LPC, to make
-> -		 * sure LPC clock is running before sending any TPM command.
-> -		 */
-> -		outb(0xCC, 0x80);
->  	} else {
->  		data->clkrun_enabled--;
->  		if (data->clkrun_enabled)
-> @@ -969,13 +964,15 @@ static void tpm_tis_clkrun_enable(struct tpm_chip *=
-chip, bool value)
->  		/* Enable LPC CLKRUN# */
->  		clkrun_val |=3D LPC_CLKRUN_EN;
->  		iowrite32(clkrun_val, data->ilb_base_addr + LPC_CNTRL_OFFSET);
-> -
-> -		/*
-> -		 * Write any random value on port 0x80 which is on LPC, to make
-> -		 * sure LPC clock is running before sending any TPM command.
-> -		 */
-> -		outb(0xCC, 0x80);
->  	}
-> +
-> +#ifdef CONFIG_HAS_IOPORT
-> +	/*
-> +	 * Write any random value on port 0x80 which is on LPC, to make
-> +	 * sure LPC clock is running before sending any TPM command.
-> +	 */
-> +	outb(0xCC, 0x80);
-> +#endif
->  }
-> =20
->  static const struct tpm_class_ops tpm_tis =3D {
-> --=20
-> 2.39.2
+On 23.05.23 23:49, Bjorn Helgaas wrote:
+> On Mon, May 22, 2023 at 01:45:55PM +0200, Linux regression tracking (Thorsten Leemhuis) wrote:
+>> On 05.05.23 08:56, Koba Ko wrote:
+>>> On Thu, May 4, 2023 at 5:23 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>>>> [+cc Koba, Ajay, Tasev, Mark, Thomas, regressions list]
+>>>> On Tue, Apr 11, 2023 at 03:42:29PM -0500, Bjorn Helgaas wrote:
+>>>>> On Tue, Apr 11, 2023 at 08:32:04AM +0000, bugzilla-daemon@kernel.org wrote:
+>>>>>> https://bugzilla.kernel.org/show_bug.cgi?id=217321
+>>>>>> ...
+>>>>>>         Regression: No
+>>>>>>
+>>>>>> [Symptom]
+>>>>>> Intel cpu can't sleep deeper than pcˇ during long idle
+>>>>>> ~~~
+>>>>>> Pkg%pc2 Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>>>>>> 15.08   75.02   0.00    0.00    0.00    0.00    0.00
+>>>>>> 15.09   75.02   0.00    0.00    0.00    0.00    0.00
+>>>>>> ^CPkg%pc2       Pkg%pc3 Pkg%pc6 Pkg%pc7 Pkg%pc8 Pkg%pc9 Pk%pc10
+>>>>>> 15.38   68.97   0.00    0.00    0.00    0.00    0.00
+>>>>>> 15.38   68.96   0.00    0.00    0.00    0.00    0.00
+>>>>>> ~~~
+>>>>>> [How to Reproduce]
+>>>>>> 1. run turbostat to monitor
+>>>>>> 2. leave machine idle
+>>>>>> 3. turbostat show cpu only go into pc2~pc3.
+>>>>>>
+>>>>>> [Misc]
+>>>>>> The culprit are this
+>>>>>> a7152be79b62) Revert "PCI/ASPM: Save L1 PM Substates Capability for
+>>>>>> suspend/resume”
+>>>>>>
+>>>>>> if revert a7152be79b62, the issue is gone
+>>>>>
+>>>>> Relevant commits:
+>>>>>
+>>>>>   4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for suspend/resume")
+>>>>>   a7152be79b62 ("Revert "PCI/ASPM: Save L1 PM Substates Capability for suspend/resume"")
+>>>>>
+>>>>> 4ff116d0d5fd appeared in v6.1-rc1.  Prior to 4ff116d0d5fd, ASPM L1 PM
+>>>>> Substates configuration was not preserved across suspend/resume, so
+>>>>> the system *worked* after resume, but used more power than expected.
+>>>>>
+>>>>> But 4ff116d0d5fd caused resume to fail completely on some systems, so
+>>>>> a7152be79b62 reverted it.  With a7152be79b62 reverted, ASPM L1 PM
+>>>>> Substates configuration is likely not preserved across suspend/resume.
+>>>>> a7152be79b62 appeared in v6.2-rc8 and was backported to the v6.1
+>>>>> stable series starting with v6.1.12.
+>>>>>
+>>>>> KobaKo, you don't mention any suspend/resume in this bug report, but
+>>>>> neither patch should make any difference unless suspend/resume is
+>>>>> involved.  Does the platform sleep as expected *before* suspend, but
+>>>>> fail to sleep after resume?
+>>>>>
+>>>>> Or maybe some individual device was suspended via runtime power
+>>>>> management, and that device lost its L1 PM Substates config?  I don't
+>>>>> know if there's a way to disable runtime PM easily.
+>>>>
+>>>> Koba, per your bugzilla update, the issue happens even without
+>>>> suspend/resume.  And we don't know whether some particular device is
+>>>> responsible.
+>>>>
+>>>> But if we save/restore L1SS state, we can sleep deeper than PC3.  If
+>>>> we don't preserve L1SS state, we can't.
+>>>>
+>>>> We definitely want to preserve the L1SS state, but we can't simply
+>>>> apply 4ff116d0d5fd ("PCI/ASPM: Save L1 PM Substates Capability for
+>>>> suspend/resume") again because it caused its own regressions [1,2,3]
+>>>>
+>>>> So somebody needs to figure out what was wrong with 4ff116d0d5fd, fix
+>>>> it, verify that it doesn't cause the issues reported by Tasev, Thomas,
+>>>> and Mark, and then we can apply it.
+>>>
+>>> Good days, discussed with Kai-Heng and he mentioned  the GPU may not
+>>> be pulled off the power.
+>>> then the GPU needs L1ss to get into power saving.
+>>>
+>>> I will investigate further on this way.
+>>
+>> Did anything come our of this?
+>>
+>> FWIW, I'm considering to drop this from the list of tracked regressions.
+>> Yes, this is a regression, but it's caused by fix for another (worse)
+>> regression -- so there is nothing we can do for now anyway (and Koba
+>> seems motivated already to look properly into all of this). Or does
+>> anyone consider this to be a problem?
+> 
+> I would drop this from the regression list.
+> 
+> Yes, bz 217321 is a bug, and yes, 4ff116d0d5fd is a partial fix for
+> it, but 4ff116d0d5fd causes worse problems (it breaks resume from
+> suspend) than just living with bz 217321, which is a "mere" power
+> consumption issue.
 
-Acked-by: Jarkko Sakkinen <jarkko@kernel.org>
+Thx for confirming and putting it in better words.
 
-BR, Jarkko
+#regzbot inconclusive: can't be solved for now, as this is a regression
+causes by a fix for a regression (see list/bz for details)
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
