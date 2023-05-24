@@ -2,56 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C165D70F68B
-	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 14:34:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEBD670F9D3
+	for <lists+linux-pci@lfdr.de>; Wed, 24 May 2023 17:11:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231206AbjEXMeq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 24 May 2023 08:34:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53976 "EHLO
+        id S235577AbjEXPK6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 24 May 2023 11:10:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbjEXMep (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 08:34:45 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A33DBE55
-        for <linux-pci@vger.kernel.org>; Wed, 24 May 2023 05:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684931670; x=1716467670;
-  h=date:from:to:cc:subject:message-id;
-  bh=8m2SF7cnFI34djpnbZrNLl+bb4TZey/OtpsaLsfKjGM=;
-  b=hjZWn2JgW1drQDET/gj1gFY2Vm8ojB4b0m7W3JyX0eY3GPQKu+cPG3GH
-   JbYgbdZCR3ORpXKgZ0PHPswG/O1qf82D2Aen4qilu0SqXmrKC86W/u2hs
-   /PIoz6g7kCWZhXx1wXfhxVQOugbSLeZoRNxkw4W9ktyQTiKyOQvxU1Rcv
-   jjta8dmPSGxOOsQ0V/pr8nWMFgtcTTTBetvt+YZidq3hDcqDJKR+MU1di
-   KSNSpPaHMl1nTuGGI0cY5Dlo6dV2dDl8oerNFYqVgVMP0coNWyIqY7nMu
-   lxOKxJ5c8k4HWehaXrsJErBDIVN9+sZxdPDedXZg04VDhgFlYefR+RCIP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="353571281"
-X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
-   d="scan'208";a="353571281"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 May 2023 05:31:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="654781166"
-X-IronPort-AV: E=Sophos;i="6.00,189,1681196400"; 
-   d="scan'208";a="654781166"
-Received: from lkp-server01.sh.intel.com (HELO dea6d5a4f140) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 24 May 2023 05:31:05 -0700
-Received: from kbuild by dea6d5a4f140 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q1ndw-000Enj-0u;
-        Wed, 24 May 2023 12:31:04 +0000
-Date:   Wed, 24 May 2023 20:30:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- a40140c9f009c5f9ebe48082d6a6cdc09de97ee1
-Message-ID: <20230524123033.PFLDp%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        with ESMTP id S231633AbjEXPK6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 24 May 2023 11:10:58 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B02FE9;
+        Wed, 24 May 2023 08:10:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BA398632AF;
+        Wed, 24 May 2023 15:10:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD444C433D2;
+        Wed, 24 May 2023 15:10:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684941056;
+        bh=1HziZk0Ofryk7MpDRZfUaSYzXybvtVckG6+PfRVCo1c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=VtjnI42vjLtKXXQrmlFpD4S0MDxUXc3TpPumveYqzmCrv1phZPzw7aRVWX9r8I8yP
+         YcjvDpK6GkfOBA/6OeuZwCDBgZ2WckqL/A+/9iwEtBPG9/SIwno60R6pfkl913ttyW
+         nL25h06PJrbFVcD7bmLFRfSdcJJU5y29FLYXidHBuQRR+cf4ZNvdjD1T7PWAaVwSFC
+         Rj0W0eGEa4LsxRsjwtWcKvGP92NeX3DdYfDctqQnAGbBjegMhH5WDiuy3f+XbD978d
+         cu7RGX43IKJ6B0X2NNZRbNNbflLK2CP+uPHAUTIf75BZNgbEoakwdIXqFS2oTrmxBt
+         7JaVh7h5oEUrw==
+Date:   Wed, 24 May 2023 10:10:54 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>, Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        Janusz Dziedzic <janusz.dziedzic@tieto.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] wifi: ath10k: Use RMW accessors for changing
+ LNKCTL
+Message-ID: <ZG4o/pYseBklnrTc@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230517105235.29176-10-ilpo.jarvinen@linux.intel.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,215 +71,68 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: INFO setup_repo_specs: /db/releases/20230524154417/lkp-src/repo/*/pci
-https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: a40140c9f009c5f9ebe48082d6a6cdc09de97ee1  Merge branch 'pci/controller/vmd'
+On Wed, May 17, 2023 at 01:52:35PM +0300, Ilpo Järvinen wrote:
+> Don't assume that only the driver would be accessing LNKCTL. ASPM
+> policy changes can trigger write to LNKCTL outside of driver's control.
+> 
+> Use RMW capability accessors which does proper locking to avoid losing
+> concurrent updates to the register value. On restore, clear the ASPMC
+> field properly.
+> 
+> Fixes: 76d870ed09ab ("ath10k: enable ASPM")
+> Suggested-by: Lukas Wunner <lukas@wunner.de>
+> Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+> index a7f44f6335fb..9275a672f90c 100644
+> --- a/drivers/net/wireless/ath/ath10k/pci.c
+> +++ b/drivers/net/wireless/ath/ath10k/pci.c
+> @@ -1963,8 +1963,9 @@ static int ath10k_pci_hif_start(struct ath10k *ar)
+>  	ath10k_pci_irq_enable(ar);
+>  	ath10k_pci_rx_post(ar);
+>  
+> -	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> -				   ar_pci->link_ctl);
+> +	pcie_capability_clear_and_set_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> +					   PCI_EXP_LNKCTL_ASPMC,
+> +					   ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC);
+>  
+>  	return 0;
+>  }
+> @@ -2821,8 +2822,8 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
+>  
+>  	pcie_capability_read_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+>  				  &ar_pci->link_ctl);
+> -	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> -				   ar_pci->link_ctl & ~PCI_EXP_LNKCTL_ASPMC);
+> +	pcie_capability_clear_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> +				   PCI_EXP_LNKCTL_ASPMC);
 
-elapsed time: 911m
+These ath drivers all have the form:
 
-configs tested: 195
-configs skipped: 15
+  1) read LNKCTL
+  2) save LNKCTL value in ->link_ctl
+  3) write LNKCTL with "->link_ctl & ~PCI_EXP_LNKCTL_ASPMC"
+     to disable ASPM
+  4) write LNKCTL with ->link_ctl, presumably to re-enable ASPM
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+These patches close the hole between 1) and 3) where other LNKCTL
+updates could interfere, which is definitely a good thing.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r001-20230523   gcc  
-alpha        buildonly-randconfig-r002-20230522   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r013-20230521   gcc  
-alpha                randconfig-r013-20230523   gcc  
-alpha                randconfig-r014-20230523   gcc  
-arc                              allyesconfig   gcc  
-arc                          axs101_defconfig   gcc  
-arc          buildonly-randconfig-r002-20230521   gcc  
-arc          buildonly-randconfig-r004-20230521   gcc  
-arc          buildonly-randconfig-r005-20230521   gcc  
-arc                                 defconfig   gcc  
-arc                            hsdk_defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                  randconfig-r011-20230522   gcc  
-arc                  randconfig-r015-20230521   gcc  
-arc                  randconfig-r033-20230522   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r001-20230521   clang
-arm                                 defconfig   gcc  
-arm                       imx_v6_v7_defconfig   gcc  
-arm                  randconfig-r015-20230521   clang
-arm                  randconfig-r016-20230522   gcc  
-arm                  randconfig-r034-20230522   clang
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r002-20230522   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r011-20230523   gcc  
-arm64                randconfig-r031-20230521   clang
-arm64                randconfig-r035-20230521   clang
-csky                                defconfig   gcc  
-csky                 randconfig-r012-20230521   gcc  
-csky                 randconfig-r022-20230522   gcc  
-csky                 randconfig-r026-20230521   gcc  
-hexagon              randconfig-r021-20230522   clang
-hexagon              randconfig-r026-20230522   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-a001-20230522   gcc  
-i386                 randconfig-a002-20230522   gcc  
-i386                 randconfig-a003-20230522   gcc  
-i386                 randconfig-a004-20230522   gcc  
-i386                 randconfig-a005-20230522   gcc  
-i386                 randconfig-a006-20230522   gcc  
-i386                 randconfig-a011-20230522   clang
-i386                 randconfig-a012-20230522   clang
-i386                 randconfig-a013-20230522   clang
-i386                 randconfig-a014-20230522   clang
-i386                 randconfig-a015-20230522   clang
-i386                 randconfig-a016-20230522   clang
-i386                 randconfig-i051-20230524   gcc  
-i386                 randconfig-i052-20230524   gcc  
-i386                 randconfig-i053-20230524   gcc  
-i386                 randconfig-i054-20230524   gcc  
-i386                 randconfig-i055-20230524   gcc  
-i386                 randconfig-i056-20230524   gcc  
-i386                 randconfig-i061-20230523   clang
-i386                 randconfig-i062-20230523   clang
-i386                 randconfig-i063-20230523   clang
-i386                 randconfig-i064-20230523   clang
-i386                 randconfig-i065-20230523   clang
-i386                 randconfig-i066-20230523   clang
-ia64                             allmodconfig   gcc  
-ia64                                defconfig   gcc  
-ia64                 randconfig-r015-20230523   gcc  
-ia64                 randconfig-r016-20230521   gcc  
-ia64                 randconfig-r023-20230521   gcc  
-ia64                 randconfig-r032-20230521   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch    buildonly-randconfig-r003-20230521   gcc  
-loongarch    buildonly-randconfig-r004-20230521   gcc  
-loongarch    buildonly-randconfig-r006-20230523   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r012-20230522   gcc  
-loongarch            randconfig-r012-20230523   gcc  
-loongarch            randconfig-r022-20230521   gcc  
-loongarch            randconfig-r024-20230522   gcc  
-loongarch            randconfig-r032-20230522   gcc  
-m68k                             allmodconfig   gcc  
-m68k         buildonly-randconfig-r003-20230522   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r024-20230522   gcc  
-microblaze   buildonly-randconfig-r003-20230522   gcc  
-microblaze           randconfig-r011-20230521   gcc  
-microblaze           randconfig-r015-20230522   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips         buildonly-randconfig-r004-20230523   gcc  
-mips         buildonly-randconfig-r006-20230521   gcc  
-mips                malta_qemu_32r6_defconfig   clang
-mips                 randconfig-r016-20230521   clang
-mips                 randconfig-r022-20230522   gcc  
-nios2        buildonly-randconfig-r006-20230522   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r025-20230521   gcc  
-nios2                randconfig-r035-20230522   gcc  
-openrisc     buildonly-randconfig-r001-20230522   gcc  
-openrisc             randconfig-r012-20230521   gcc  
-openrisc             randconfig-r015-20230522   gcc  
-openrisc             randconfig-r033-20230521   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r022-20230521   gcc  
-parisc               randconfig-r023-20230521   gcc  
-parisc               randconfig-r023-20230522   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc      buildonly-randconfig-r004-20230522   clang
-powerpc      buildonly-randconfig-r005-20230523   gcc  
-powerpc                      chrp32_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r013-20230522   clang
-riscv                randconfig-r024-20230521   gcc  
-riscv                randconfig-r034-20230521   clang
-riscv                randconfig-r035-20230521   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r003-20230521   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r014-20230521   gcc  
-s390                 randconfig-r025-20230521   gcc  
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r002-20230523   gcc  
-sh                           se7705_defconfig   gcc  
-sh                     sh7710voipgw_defconfig   gcc  
-sparc        buildonly-randconfig-r005-20230522   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r012-20230522   gcc  
-sparc                randconfig-r023-20230522   gcc  
-sparc                randconfig-r025-20230522   gcc  
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230522   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230522   gcc  
-x86_64               randconfig-a002-20230522   gcc  
-x86_64               randconfig-a003-20230522   gcc  
-x86_64               randconfig-a004-20230522   gcc  
-x86_64               randconfig-a005-20230522   gcc  
-x86_64               randconfig-a006-20230522   gcc  
-x86_64               randconfig-a011-20230522   clang
-x86_64               randconfig-a012-20230522   clang
-x86_64               randconfig-a013-20230522   clang
-x86_64               randconfig-a014-20230522   clang
-x86_64               randconfig-a015-20230522   clang
-x86_64               randconfig-a016-20230522   clang
-x86_64               randconfig-k001-20230524   clang
-x86_64               randconfig-x051-20230522   clang
-x86_64               randconfig-x052-20230522   clang
-x86_64                        randconfig-x052   clang
-x86_64               randconfig-x053-20230522   clang
-x86_64               randconfig-x054-20230522   clang
-x86_64                        randconfig-x054   clang
-x86_64               randconfig-x055-20230522   clang
-x86_64               randconfig-x056-20230522   clang
-x86_64                        randconfig-x056   clang
-x86_64               randconfig-x061-20230522   clang
-x86_64               randconfig-x062-20230522   clang
-x86_64               randconfig-x063-20230522   clang
-x86_64               randconfig-x064-20230522   clang
-x86_64               randconfig-x065-20230522   clang
-x86_64               randconfig-x066-20230522   clang
-x86_64               randconfig-x071-20230522   gcc  
-x86_64               randconfig-x072-20230522   gcc  
-x86_64               randconfig-x073-20230522   gcc  
-x86_64               randconfig-x074-20230522   gcc  
-x86_64               randconfig-x075-20230522   gcc  
-x86_64               randconfig-x076-20230522   gcc  
-x86_64               randconfig-x081-20230522   gcc  
-x86_64               randconfig-x082-20230522   gcc  
-x86_64               randconfig-x083-20230522   gcc  
-x86_64               randconfig-x084-20230522   gcc  
-x86_64               randconfig-x085-20230522   gcc  
-x86_64               randconfig-x086-20230522   gcc  
-x86_64               randconfig-x091-20230524   clang
-x86_64               randconfig-x092-20230524   clang
-x86_64               randconfig-x093-20230524   clang
-x86_64               randconfig-x094-20230524   clang
-x86_64               randconfig-x095-20230524   clang
-x86_64               randconfig-x096-20230524   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r005-20230522   gcc  
-xtensa               randconfig-r021-20230521   gcc  
-xtensa               randconfig-r026-20230521   gcc  
+But the hole between 1) and 4) is much bigger and still there.  Any
+update by the PCI core in that interval would be lost.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Straw-man proposal:
+
+  - Change pci_disable_link_state() so it ignores aspm_disabled and
+    always disables ASPM even if platform firmware hasn't granted
+    ownership.  Maybe this should warn and taint the kernel.
+
+  - Change drivers to use pci_disable_link_state() instead of writing
+    LNKCTL directly.
+
+Bjorn
