@@ -2,58 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AA497710DC7
-	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 16:00:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5FDA710E10
+	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 16:15:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241442AbjEYOAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 May 2023 10:00:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
+        id S240923AbjEYOPq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Thu, 25 May 2023 10:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241445AbjEYOAf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 10:00:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F531A8;
-        Thu, 25 May 2023 07:00:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 11766645FF;
-        Thu, 25 May 2023 14:00:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 6CD96C4339E;
-        Thu, 25 May 2023 14:00:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685023221;
-        bh=gfRrbhhyEcqbLyZDyAZGcAkDAS8G/fyE/7edxRHWzWA=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=tFs1hrqMAOfe3D+3+g6imFRefaUOB1J+FtU3P2LhkbSR/PiRkavm8sFdT1CPgKbs1
-         K1JcAF61qCTDSr/Gi37M29/vn98Lt9AN0oWH1P2T49BKd5WKwyVqAxFPo0mc4v9Zhc
-         m42SMhyZvafGwLSTma8taYbhqev06FL8JwUWc/w/vDt2D/+auWB1Y5FvlifLV+9ccS
-         gsEtFkOKNz/mjjV6UpIrFqa7sdXgSmZv5l7OfrtwM/fHDptFuGboQw9Gdabhkovjro
-         ZAsIYaSO+nS9Idjqlrj0erH32LUcxiaoyiDufXA/nyw+5USvbph0wbDN10IRPdrENg
-         q5NjHmg2C5w9A==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4695CC395DF;
-        Thu, 25 May 2023 14:00:21 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        with ESMTP id S232848AbjEYOPp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 10:15:45 -0400
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82422183;
+        Thu, 25 May 2023 07:15:43 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-96f44435d92so63296366b.0;
+        Thu, 25 May 2023 07:15:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685024142; x=1687616142;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aQ2g4elRikyixYIC50RK+Kur2gPh7SkgFNK50sXBtIU=;
+        b=ljOzKGF7YfR1iOeq0xMEdkB/yQIaChrCege93rkn+Nr78TUusLUMfJjVSH32sd0H6c
+         BEBJ3Nt0wjMEHVw+z116epDyUXu1wgrM1InGac1Ypxq36uvBC/CBCncRxP4WyHZ6/dgL
+         E7yHZ1u0TyWB2cXUUMDwz1mmxaZzwmco3NRjVdrH0lwK/ATs53ijImVzeBbv/BQslO0F
+         vBk4H5eSF2hRDKMoI9HVBFxB8U+x5JZ5lQmaO6YxPEYNVLSDxZ2e9kp31LiIq9DsGtEA
+         KOgc2hiIqrbWc4mYJfR4tKxvm3nNB0I2A6dIkCypwuXzjAWBXrLOL7un0vGwEcI+ktNZ
+         9hWQ==
+X-Gm-Message-State: AC+VfDxU41QVEVqBcv/YMcrtrKrcnr+g2mm7OzNvoUJkUFfZDNErqQ9b
+        Gql7uEK2/IYm0z+Y65hjkeV16/3eQKEkQAB03yU=
+X-Google-Smtp-Source: ACHHUZ4hzHl+ujaKW7jGsG5zfh0wu+kzIkGH1M/X2hpn4MzleSBJWnQCYvcE6JgR+CFem1LH+sjTv1jhOvGlHTywx/s=
+X-Received: by 2002:a17:906:d3:b0:94f:66af:b1f7 with SMTP id
+ 19-20020a17090600d300b0094f66afb1f7mr18698786eji.1.1685024141748; Thu, 25 May
+ 2023 07:15:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] s390/ism: Set DMA coherent mask
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168502322128.12931.12742922917026189347.git-patchwork-notify@kernel.org>
-Date:   Thu, 25 May 2023 14:00:21 +0000
-References: <20230524075411.3734141-1-schnelle@linux.ibm.com>
-In-Reply-To: <20230524075411.3734141-1-schnelle@linux.ibm.com>
-To:     Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     kuba@kernel.org, davem@davemloft.net, wintera@linux.ibm.com,
-        wenjia@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
-        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
-        svens@linux.ibm.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, mjrosato@linux.ibm.com,
-        pmorel@linux.ibm.com, linux-s390@vger.kernel.org
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+References: <20230524190726.17012-1-mario.limonciello@amd.com> <20230524190726.17012-2-mario.limonciello@amd.com>
+In-Reply-To: <20230524190726.17012-2-mario.limonciello@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 25 May 2023 16:15:30 +0200
+Message-ID: <CAJZ5v0j8b78LWiO0UsiXvdf6jLqnQ6yLM4hRgCjyNrDncaZMZQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] PCI: Don't assume root ports from > 2015 are power manageable
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Deucher Alexander <Alexander.Deucher@amd.com>,
+        linux-pm@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Iain Lane <iain@orangesquash.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -61,31 +64,70 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello:
+On Wed, May 24, 2023 at 9:07 PM Mario Limonciello
+<mario.limonciello@amd.com> wrote:
+>
+> Using a USB keyboard or mouse to wakeup the system from s2idle fails when
+> that XHCI device is connected to a USB-C port for an AMD USB4 router.
+>
+> Due to commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> all PCIe ports go into D3 during s2idle.
+>
+> When specific root ports are put into D3 over s2idle on some AMD platforms
+> it is not possible for the platform to properly identify wakeup sources.
+> This happens whether the root port goes into D3hot or D3cold.
+>
+> Comparing registers between Linux and Windows 11 this behavior to put
+> these specific root ports into D3 at suspend is unique to Linux. On an
+> affected system Windows does not put those specific root ports into D3
+> over Modern Standby.
+>
+> Windows doesn't put the root ports into D3 because root ports are not
+> power manageable.
+>
+> Linux shouldn't assume root ports support D3 just because they're on a
+> machine newer than 2015, the ports should also be deemed power manageable.
+> Add an extra check explicitly for root ports to ensure D3 isn't selected
+> for these ports.
 
-This patch was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+"D3 isn't selected for them if they are not power-manageable through
+platform firmware."  Or similar.
 
-On Wed, 24 May 2023 09:54:10 +0200 you wrote:
-> A future change will convert the DMA API implementation from the
-> architecture specific arch/s390/pci/pci_dma.c to using the common code
-> drivers/iommu/dma-iommu.c which the utilizes the same IOMMU hardware
-> through the s390-iommu driver. Unlike the s390 specific DMA API this
-> requires devices to correctly set the coherent mask to be allowed to use
-> IOVAs >2^32 in dma_alloc_coherent(). This was however not done for ISM
-> devices. ISM requires such addresses since currently the DMA aperture
-> for PCI devices starts at 2^32 and all calls to dma_alloc_coherent()
-> would thus fail.
-> 
-> [...]
+With this addressed:
 
-Here is the summary with links:
-  - [net-next] s390/ism: Set DMA coherent mask
-    https://git.kernel.org/netdev/net-next/c/657d42cf5df6
+Acked-by: Rafael J. Wysocki <rafael@kernel.org>
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v3->v4:
+>  * Move after refactor
+> ---
+>  drivers/pci/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d1fa040bcea7..d293db963327 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3015,6 +3015,14 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>         if (dmi_check_system(bridge_d3_blacklist))
+>                 return false;
+>
+> +       /*
+> +        * It's not safe to put root ports that don't support power
+> +        * management into D3.
+> +        */
+> +       if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT &&
+> +           !platform_pci_power_manageable(bridge))
+> +               return false;
+> +
+>         /*
+>          * It should be safe to put PCIe ports from 2015 or newer
+>          * to D3.
+> --
+> 2.34.1
+>
