@@ -2,230 +2,105 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8A98E71074E
-	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 10:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E4CA47107AC
+	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 10:36:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236207AbjEYI1s (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 May 2023 04:27:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53508 "EHLO
+        id S240278AbjEYIga (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 May 2023 04:36:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235794AbjEYI1r (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 04:27:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6EAC186;
-        Thu, 25 May 2023 01:27:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3805A63C3E;
-        Thu, 25 May 2023 08:27:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BF57C433EF;
-        Thu, 25 May 2023 08:27:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685003264;
-        bh=TXzkAJJtr+rb8+qhlaMHIqTqmmEXt7KMrw8HfElDAJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J35245Wq98yYPRUnLLCiT44fAp7tz9SYlr6TWHMK2i4IvPOJAmr2x/gsAVhHmh0BW
-         M5pefjyGo5aDKkPtKyHYK6omGZDyqWCWRhEI/G7GsEJE2IKx6+NuSI+uX3Bm1Calrc
-         tc5MpwpSqLCg4Gp69lLvO+fxKwk2QqI+lQ5OItzhqQYasd4Pm+U0mvMPOsNJAsQs+6
-         ybY/dfxk49hudYozaRGRRWD8OtxgaJme91Q+zWxenywCQNcu9qNo79Q7UHAeD9h5iF
-         4NJejm1VsfleZXpbjxCKYfiusxtEcKiTJj67zeKAp2l5b35mW4qAsxfZjWLuGbWXs/
-         unNc/oob7IUBA==
-Date:   Thu, 25 May 2023 10:27:35 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     bhelgaas@google.com, davem@davemloft.net, edumazet@google.com,
-        haiyangz@microsoft.com, jakeo@microsoft.com, kuba@kernel.org,
-        kw@linux.com, kys@microsoft.com, leon@kernel.org,
-        linux-pci@vger.kernel.org, mikelley@microsoft.com,
-        pabeni@redhat.com, robh@kernel.org, saeedm@nvidia.com,
-        wei.liu@kernel.org, longli@microsoft.com, boqun.feng@gmail.com,
-        ssengar@microsoft.com, helgaas@kernel.org,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        josete@microsoft.com, stable@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] PCI: hv: Add a per-bus mutex state_lock
-Message-ID: <ZG8b933WBtpssRz0@lpieralisi>
-References: <20230420024037.5921-1-decui@microsoft.com>
- <20230420024037.5921-6-decui@microsoft.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230420024037.5921-6-decui@microsoft.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+        with ESMTP id S240167AbjEYIgL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 04:36:11 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0BFC171F;
+        Thu, 25 May 2023 01:35:40 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-64d604cc0aaso1512572b3a.2;
+        Thu, 25 May 2023 01:35:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685003722; x=1687595722;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XwxYuZAaDrbWvA6fNvvfa3UTwfQ09LwU2WlVlYLVfbE=;
+        b=OI4KQNs0Vu1mrj91oIqkWUzpeXRr0QJ9eEwkadPD2CL2y6GsKvDqvnbWBpG3CNT4Dn
+         r9iDQyKXs1IBFmRDsad/RRGqhQrI2g93M1m0fy/jEMKkJkxb2wHpzUHPaU2q+5RwsDni
+         F3arDPu3mhEBTz5Tfs6YjoPtW9TkCVF/CG0xnJh4P/5WEO0t1W4hlU0MNQLYbTjLhSgP
+         j9gOCSCRTaoXmOib23ugSq1IaY+NVgf8uZUPrSAcpNjz0dNouMuDyff1+Ty41IblF2sW
+         JwcqJvBsYOE3I9zHc2mmIl/MGAwFO/D4RdtL3rNrSLF+dqAqyvamQt4BEEhTJ21wLqfs
+         /J1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685003722; x=1687595722;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XwxYuZAaDrbWvA6fNvvfa3UTwfQ09LwU2WlVlYLVfbE=;
+        b=M0b4W+6HnhSf0etHKyD5B5xFZGgH3dduzkhmHY7akUw7utbnTkHtCgeeLfNxXAKJOn
+         gJtjs8nJWCBEXIwn3TM7JS5uOu0IHI2x/Q/e68C32B5tBI7mBk/O7vPFUy9bpq7MAI8c
+         T8EojQ7gXf/mXq3xvWwMyJcajpvj7UuUMbhfFfNCwyQg8AquS4vcfmSNnrF7sQWPnpRi
+         p+3ICwfDCt7nbIFNYpWfm/Bc9oZH9iyGf5XyZ/kAlJ1c4PGYNpgxjd+52hBrRf+EvTiW
+         6vdLkJ72FcjKrZpeWvQmjdDxEfLFENa1gYVlBlJnHlnZwG2m34lsMu/xIP8ot2zTQVR4
+         JYjw==
+X-Gm-Message-State: AC+VfDx/F2nmLnGZatmLxwc/RM+0+ZT+CuBVD7AzCLm6pHNSowNE+H5M
+        nDGRAYuYViz1xsFp+7oa1C5a02ewCt0=
+X-Google-Smtp-Source: ACHHUZ4+5SxtRm9CgY7J+ueqXlkL6tT7R6vQIICSqjLkt0XTKenkbef6qa/gd03b1V7gqjhSk0CDxA==
+X-Received: by 2002:a05:6a00:2d09:b0:64f:4019:ec5b with SMTP id fa9-20020a056a002d0900b0064f4019ec5bmr9014927pfb.7.1685003722494;
+        Thu, 25 May 2023 01:35:22 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e2ae-cfb3-c8e7-b613-8fc3-c8f3.emome-ip6.hinet.net. [2001:b400:e2ae:cfb3:c8e7:b613:8fc3:c8f3])
+        by smtp.gmail.com with ESMTPSA id x7-20020a056a00270700b0062bc045bf4fsm747951pfv.19.2023.05.25.01.35.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 May 2023 01:35:21 -0700 (PDT)
+From:   Owen Yang <ecs.taipeikernel@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Bob Moragues <moragues@google.com>,
+        Abner Yen <abner.yen@ecs.com.tw>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@google.com>,
+        Stephen Boyd <swboyd@chromium.org>, Harvey <hunge@google.com>,
+        Gavin Lee <gavin.lee@ecs.com.tw>,
+        Owen Yang <ecs.taipeikernel@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v1] drivers: pci: quirks: Add suspend fixup for SSD on sc7280
+Date:   Thu, 25 May 2023 16:35:12 +0800
+Message-Id: <20230525163448.v1.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Apr 19, 2023 at 07:40:36PM -0700, Dexuan Cui wrote:
-> In the case of fast device addition/removal, it's possible that
-> hv_eject_device_work() can start to run before create_root_hv_pci_bus()
-> starts to run; as a result, the pci_get_domain_bus_and_slot() in
-> hv_eject_device_work() can return a 'pdev' of NULL, and
-> hv_eject_device_work() can remove the 'hpdev', and immediately send a
-> message PCI_EJECTION_COMPLETE to the host, and the host immediately
-> unassigns the PCI device from the guest; meanwhile,
-> create_root_hv_pci_bus() and the PCI device driver can be probing the
-> dead PCI device and reporting timeout errors.
-> 
-> Fix the issue by adding a per-bus mutex 'state_lock' and grabbing the
-> mutex before powering on the PCI bus in hv_pci_enter_d0(): when
-> hv_eject_device_work() starts to run, it's able to find the 'pdev' and call
-> pci_stop_and_remove_bus_device(pdev): if the PCI device driver has
-> loaded, the PCI device driver's probe() function is already called in
-> create_root_hv_pci_bus() -> pci_bus_add_devices(), and now
-> hv_eject_device_work() -> pci_stop_and_remove_bus_device() is able
-> to call the PCI device driver's remove() function and remove the device
-> reliably; if the PCI device driver hasn't loaded yet, the function call
-> hv_eject_device_work() -> pci_stop_and_remove_bus_device() is able to
-> remove the PCI device reliably and the PCI device driver's probe()
-> function won't be called; if the PCI device driver's probe() is already
-> running (e.g., systemd-udev is loading the PCI device driver), it must
-> be holding the per-device lock, and after the probe() finishes and releases
-> the lock, hv_eject_device_work() -> pci_stop_and_remove_bus_device() is
-> able to proceed to remove the device reliably.
-> 
-> Fixes: 4daace0d8ce8 ("PCI: hv: Add paravirtual PCI front-end for Microsoft Hyper-V VMs")
-> Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-> Cc: stable@vger.kernel.org
-> ---
-> 
-> v2:
->   Removed the "debug code".
->   Fixed the "goto out" in hv_pci_resume() [Michael Kelley]
->   Added Cc:stable
-> 
-> v3:
->   Added Michael's Reviewed-by.
-> 
->  drivers/pci/controller/pci-hyperv.c | 29 ++++++++++++++++++++++++++---
->  1 file changed, 26 insertions(+), 3 deletions(-)
+Implement this workaround until Qualcomm fixed the
+ correct NVMe suspend process.
 
-Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
+---
 
-> diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> index 48feab095a144..3ae2f99dea8c2 100644
-> --- a/drivers/pci/controller/pci-hyperv.c
-> +++ b/drivers/pci/controller/pci-hyperv.c
-> @@ -489,7 +489,10 @@ struct hv_pcibus_device {
->  	struct fwnode_handle *fwnode;
->  	/* Protocol version negotiated with the host */
->  	enum pci_protocol_version_t protocol_version;
-> +
-> +	struct mutex state_lock;
->  	enum hv_pcibus_state state;
-> +
->  	struct hv_device *hdev;
->  	resource_size_t low_mmio_space;
->  	resource_size_t high_mmio_space;
-> @@ -2512,6 +2515,8 @@ static void pci_devices_present_work(struct work_struct *work)
->  	if (!dr)
->  		return;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	/* First, mark all existing children as reported missing. */
->  	spin_lock_irqsave(&hbus->device_list_lock, flags);
->  	list_for_each_entry(hpdev, &hbus->children, list_entry) {
-> @@ -2593,6 +2598,8 @@ static void pci_devices_present_work(struct work_struct *work)
->  		break;
->  	}
->  
-> +	mutex_unlock(&hbus->state_lock);
-> +
->  	kfree(dr);
->  }
->  
-> @@ -2741,6 +2748,8 @@ static void hv_eject_device_work(struct work_struct *work)
->  	hpdev = container_of(work, struct hv_pci_dev, wrk);
->  	hbus = hpdev->hbus;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	/*
->  	 * Ejection can come before or after the PCI bus has been set up, so
->  	 * attempt to find it and tear down the bus state, if it exists.  This
-> @@ -2777,6 +2786,8 @@ static void hv_eject_device_work(struct work_struct *work)
->  	put_pcichild(hpdev);
->  	put_pcichild(hpdev);
->  	/* hpdev has been freed. Do not use it any more. */
-> +
-> +	mutex_unlock(&hbus->state_lock);
->  }
->  
->  /**
-> @@ -3562,6 +3573,7 @@ static int hv_pci_probe(struct hv_device *hdev,
->  		return -ENOMEM;
->  
->  	hbus->bridge = bridge;
-> +	mutex_init(&hbus->state_lock);
->  	hbus->state = hv_pcibus_init;
->  	hbus->wslot_res_allocated = -1;
->  
-> @@ -3670,9 +3682,11 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_irq_domain;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	ret = hv_pci_enter_d0(hdev);
->  	if (ret)
-> -		goto free_irq_domain;
-> +		goto release_state_lock;
->  
->  	ret = hv_pci_allocate_bridge_windows(hbus);
->  	if (ret)
-> @@ -3690,12 +3704,15 @@ static int hv_pci_probe(struct hv_device *hdev,
->  	if (ret)
->  		goto free_windows;
->  
-> +	mutex_unlock(&hbus->state_lock);
->  	return 0;
->  
->  free_windows:
->  	hv_pci_free_bridge_windows(hbus);
->  exit_d0:
->  	(void) hv_pci_bus_exit(hdev, true);
-> +release_state_lock:
-> +	mutex_unlock(&hbus->state_lock);
->  free_irq_domain:
->  	irq_domain_remove(hbus->irq_domain);
->  free_fwnode:
-> @@ -3945,20 +3962,26 @@ static int hv_pci_resume(struct hv_device *hdev)
->  	if (ret)
->  		goto out;
->  
-> +	mutex_lock(&hbus->state_lock);
-> +
->  	ret = hv_pci_enter_d0(hdev);
->  	if (ret)
-> -		goto out;
-> +		goto release_state_lock;
->  
->  	ret = hv_send_resources_allocated(hdev);
->  	if (ret)
-> -		goto out;
-> +		goto release_state_lock;
->  
->  	prepopulate_bars(hbus);
->  
->  	hv_pci_restore_msi_state(hbus);
->  
->  	hbus->state = hv_pcibus_installed;
-> +	mutex_unlock(&hbus->state_lock);
->  	return 0;
-> +
-> +release_state_lock:
-> +	mutex_unlock(&hbus->state_lock);
->  out:
->  	vmbus_close(hdev->channel);
->  	return ret;
-> -- 
-> 2.25.1
-> 
+ drivers/pci/quirks.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f4e2a88729fd..b57876dc2624 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5945,6 +5945,16 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
+ 
++/* In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD won't enter
++ * the correct ASPM state properly. Therefore. Implement this workaround
++ * until Qualcomm fixed the correct NVMe suspend process*/
++static void phison_suspend_fixup(struct pci_dev *pdev)
++{
++	msleep(30);
++}
++DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5013, phison_suspend_fixup);
++DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5015, phison_suspend_fixup);
++
+ static void rom_bar_overlap_defect(struct pci_dev *dev)
+ {
+ 	pci_info(dev, "working around ROM BAR overlap defect\n");
+-- 
+2.17.1
+
