@@ -2,50 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FF73710926
-	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 11:46:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4C85710993
+	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 12:12:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239334AbjEYJqf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 May 2023 05:46:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37340 "EHLO
+        id S240810AbjEYKMV (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 May 2023 06:12:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47708 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229719AbjEYJqe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 05:46:34 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDBAA9
-        for <linux-pci@vger.kernel.org>; Thu, 25 May 2023 02:46:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=oTK7jsFG28WXK3rbDJ/X/Ehdt81MjRxqzlzU9gtnCdI=; b=GCvl5EpAe4K7xorgvYX2XrZY+l
-        ZHjzsPZmS6uPnJEDZgkpv1YolqRKeRvnJVfXQcEH/6MhsiI4lCj9rZL7bi0Cz2HVqXuCBF2458npC
-        qct8mWiVBOlbDH1Upozmbw6HDpfGsSZTqhUt9cWZ5+rMQK2yUW/5nz157uwKoRxQpwq4FmJeq+17M
-        whMfn2hfs0V4htWG+NlwFI6YrErSvFfGz/8q4vsfncbt3DND4jrpm7Fw69l2TkB1Oh1bBDMDlx3s2
-        zHzLfi59XfctH7e3OoaElA3O6Ad6bqCLDbjhb+aZ+cnapfLh/6/ag0Yz2VViKoV+NPWmiakEx34Pn
-        Cnm7wEqw==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q27YF-00GBSU-10;
-        Thu, 25 May 2023 09:46:31 +0000
-Date:   Thu, 25 May 2023 02:46:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Shiwu Zhang <shiwu.zhang@amd.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH] drm/amdgpu: add the accelerator pcie class
-Message-ID: <ZG8ud4JWpF7BXJ7c@infradead.org>
-References: <20230523040232.21756-1-shiwu.zhang@amd.com>
- <ZGxfEklioAu6orvo@infradead.org>
- <CADnq5_Pnob2+NPyf6GEcsCExC26qg_QvTri_CQLT=ArPibSxSA@mail.gmail.com>
+        with ESMTP id S240809AbjEYKMQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 06:12:16 -0400
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06FE51B1;
+        Thu, 25 May 2023 03:12:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685009522; x=1716545522;
+  h=date:from:to:cc:subject:in-reply-to:message-id:
+   references:mime-version:content-id;
+  bh=N/zwrSVypYR69GoZqPE+SbIhxpOv+B6QByyWYEs768E=;
+  b=ilJ1+XzFjHnlOrV0x8DWRKcoNnbkuh3EgV+pLe/6Leqe9Mb+GZkJxaca
+   NAnjT3/oLwrVH+hbB0dIfGWBCbUIQJN4x2Ep8BeydXW6eDM2y4I61/uwH
+   TbyL3zYTm5WSWDx3y7035arwab5+BTuuhY2yT6as1XEQuNapUeXjoAAsQ
+   lExkOKaDi0CXPTqoAjwOgc4qnP3Q6FIiv269YBuaLeQ4lNpH0hYbmnTwg
+   pM1nLy2oJWlsXefRiGLj2Xum/6+Ba4JlR/hBcnPTQohNH3MhUg1c8Fd8S
+   pPB84aOx3kf3OezJkxHVBZrrk8toFZDdoxVYyVpLmw4hJpwf92q//y25D
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="334194535"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="334194535"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 03:12:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10720"; a="655164459"
+X-IronPort-AV: E=Sophos;i="6.00,190,1681196400"; 
+   d="scan'208";a="655164459"
+Received: from aghiriba-mobl.ger.corp.intel.com ([10.249.40.17])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 03:11:54 -0700
+Date:   Thu, 25 May 2023 13:11:51 +0300 (EEST)
+From:   =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        =?ISO-8859-2?Q?Krzysztof_Wilczy=F1ski?= <kw@linux.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Lukas Wunner <lukas@wunner.de>, Kalle Valo <kvalo@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Michal Kazior <michal.kazior@tieto.com>,
+        Janusz Dziedzic <janusz.dziedzic@tieto.com>,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dean Luick <dean.luick@cornelisnetworks.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] wifi: ath10k: Use RMW accessors for changing
+ LNKCTL
+In-Reply-To: <ZG4o/pYseBklnrTc@bhelgaas>
+Message-ID: <ecdc8e85-786-db97-a7d4-bfd82c08714@linux.intel.com>
+References: <ZG4o/pYseBklnrTc@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CADnq5_Pnob2+NPyf6GEcsCExC26qg_QvTri_CQLT=ArPibSxSA@mail.gmail.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+Content-Type: multipart/mixed; BOUNDARY="8323329-1525169391-1685006896=:1738"
+Content-ID: <e7b32c4d-e7b9-c81d-670-b54285b6b554@linux.intel.com>
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
         SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -54,29 +79,107 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 23, 2023 at 10:02:32AM -0400, Alex Deucher wrote:
-> On Tue, May 23, 2023 at 5:25â€¯AM Christoph Hellwig <hch@infradead.org> wrote:
-> >
-> > On Tue, May 23, 2023 at 12:02:32PM +0800, Shiwu Zhang wrote:
-> > > +     { PCI_DEVICE(0x1002, PCI_ANY_ID),
-> > > +       .class = PCI_CLASS_ACCELERATOR_PROCESSING << 8,
-> > > +       .class_mask = 0xffffff,
-> > > +       .driver_data = CHIP_IP_DISCOVERY },
-> >
-> > Probing for every single device of a given class for a single vendor
-> > to a driver is just fundamentaly wrong.  Please list the actual IDs
-> > that the driver can handle.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1525169391-1685006896=:1738
+Content-Type: text/plain; CHARSET=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
+Content-ID: <5114585-6ccd-c09a-416-a53bb2256299@linux.intel.com>
+
+On Wed, 24 May 2023, Bjorn Helgaas wrote:
+
+> On Wed, May 17, 2023 at 01:52:35PM +0300, Ilpo Järvinen wrote:
+> > Don't assume that only the driver would be accessing LNKCTL. ASPM
+> > policy changes can trigger write to LNKCTL outside of driver's control.
+> > 
+> > Use RMW capability accessors which does proper locking to avoid losing
+> > concurrent updates to the register value. On restore, clear the ASPMC
+> > field properly.
+> > 
+> > Fixes: 76d870ed09ab ("ath10k: enable ASPM")
+> > Suggested-by: Lukas Wunner <lukas@wunner.de>
+> > Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+> > Cc: stable@vger.kernel.org
+> > ---
+> >  drivers/net/wireless/ath/ath10k/pci.c | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/drivers/net/wireless/ath/ath10k/pci.c b/drivers/net/wireless/ath/ath10k/pci.c
+> > index a7f44f6335fb..9275a672f90c 100644
+> > --- a/drivers/net/wireless/ath/ath10k/pci.c
+> > +++ b/drivers/net/wireless/ath/ath10k/pci.c
+> > @@ -1963,8 +1963,9 @@ static int ath10k_pci_hif_start(struct ath10k *ar)
+> >  	ath10k_pci_irq_enable(ar);
+> >  	ath10k_pci_rx_post(ar);
+> >  
+> > -	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> > -				   ar_pci->link_ctl);
+> > +	pcie_capability_clear_and_set_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> > +					   PCI_EXP_LNKCTL_ASPMC,
+> > +					   ar_pci->link_ctl & PCI_EXP_LNKCTL_ASPMC);
+> >  
+> >  	return 0;
+> >  }
+> > @@ -2821,8 +2822,8 @@ static int ath10k_pci_hif_power_up(struct ath10k *ar,
+> >  
+> >  	pcie_capability_read_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> >  				  &ar_pci->link_ctl);
+> > -	pcie_capability_write_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> > -				   ar_pci->link_ctl & ~PCI_EXP_LNKCTL_ASPMC);
+> > +	pcie_capability_clear_word(ar_pci->pdev, PCI_EXP_LNKCTL,
+> > +				   PCI_EXP_LNKCTL_ASPMC);
 > 
-> How so?  The driver handles all devices of that class.  We already do
-> that for PCI_CLASS_DISPLAY_VGA and PCI_CLASS_DISPLAY_OTHER.  Other
-> drivers do similar things.
+> These ath drivers all have the form:
+> 
+>   1) read LNKCTL
+>   2) save LNKCTL value in ->link_ctl
+>   3) write LNKCTL with "->link_ctl & ~PCI_EXP_LNKCTL_ASPMC"
+>      to disable ASPM
+>   4) write LNKCTL with ->link_ctl, presumably to re-enable ASPM
+> 
+> These patches close the hole between 1) and 3) where other LNKCTL
+> updates could interfere, which is definitely a good thing.
+> 
+> But the hole between 1) and 4) is much bigger and still there.  Any
+> update by the PCI core in that interval would be lost.
 
-How is that going to work in the long run?  The chances of totally
-incompatbile devices from the same vendor appearing is absolutely given.
+Any update to PCI_EXP_LNKCTL_ASPMC field in that interval is lost yes, the 
+updates to _the other fields_ in LNKCTL are not lost.
 
-> The hda audio driver does the same thing
-> for PCI_CLASS_MULTIMEDIA_HD_AUDIO for example.
->
+I know this might result in drivers/pci/pcie/aspm.c disagreeing what
+the state of the ASPM is (as shown under sysfs) compared with LNKCTL 
+value but the cause can no longer be due racing RMW. Essentially, 4) is 
+seen as an override to what core did if it changed ASPMC in between. 
+Technically, something is still "lost" like you say but for a different 
+reason than this series is trying to fix.
 
-That, just like PCI_CLASS_STORAGE_EXPRESS is a different case, as
-the class is associated with an actual documented programming interface.
+> Straw-man proposal:
+> 
+>   - Change pci_disable_link_state() so it ignores aspm_disabled and
+>     always disables ASPM even if platform firmware hasn't granted
+>     ownership.  Maybe this should warn and taint the kernel.
+> 
+>   - Change drivers to use pci_disable_link_state() instead of writing
+>     LNKCTL directly.
+
+I fully agree that's the direction we should be moving, yes. However, I'm 
+a bit hesitant to take that leap in one step. These drivers currently not 
+only disable ASPM but also re-enable it (assuming we guessed the intent
+right).
+
+If I directly implement that proposal, ASPM is not going to be re-enabled 
+when PCI core does not allowing it. Could it cause some power related 
+regression?
+
+My plan is to make another patch series after these to realize exactly 
+what you're proposing. It would allow better to isolate the problems that 
+related to the lack of ASPM.
+
+I hope this two step approach is an acceptable way forward? I can of 
+course add those patches on top of these if that would be preferrable.
+
+
+-- 
+ i.
+--8323329-1525169391-1685006896=:1738--
