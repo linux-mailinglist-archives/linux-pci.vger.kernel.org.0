@@ -2,178 +2,90 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4971C710D92
-	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 15:48:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA497710DC7
+	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 16:00:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241266AbjEYNs6 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 25 May 2023 09:48:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34248 "EHLO
+        id S241442AbjEYOAh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 May 2023 10:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234480AbjEYNs5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 09:48:57 -0400
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC6F2183;
-        Thu, 25 May 2023 06:48:55 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-94f9cd65b1aso54103466b.0;
-        Thu, 25 May 2023 06:48:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685022534; x=1687614534;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ulnPbMasQZ9QdQSKeDVnzi24f6zdyBi+Im7ADEzJMyA=;
-        b=XaNcHxhEAmDGuVwxCq70Z5N5u8KfkwQS73atiWfYPhefn6JV4ADb7WoQrv3xAI/YNi
-         h6IZgVF98ETL9QckdAImEqjhfviFJJ632RlN9BaAlWm2m39KiFBuOs6FOVrRv05P5Ukf
-         f9epoio+RxuQVVcsHIhvxDcfBLCAxb8bytyQWIWpiO3ucqfmhIJj8g2rEuFtuOkPq0Hx
-         /HPv97stMP66/V+/BOhFiFcNvrmYHeKYJx/yhag/QohOxQbp3n9CADeRvxOXYAxE+zXH
-         lMf6A5Op4UCAn7hPRSmDJWzjfvMuF5iuwfEseX9qjTkM+V84cOwwcFd7W+LN3D6Rg8cR
-         Fidw==
-X-Gm-Message-State: AC+VfDxLLEj0SR94DJpRdqntoeZZNfLIOz0aysnic49C9PTrl/YoGVog
-        hWitHGL8S2AcYk9Ufx1endKO3AngIG5uAw4ufU0=
-X-Google-Smtp-Source: ACHHUZ4wqlnjPOCJ8af3d2Nl3n7/PWvdla2xecKePUGzrk4AZjwzkc6IoazM4SzubxM5+y7DNbP8QEf6V2ExJyqunEA=
-X-Received: by 2002:a17:906:5350:b0:92e:f520:7762 with SMTP id
- j16-20020a170906535000b0092ef5207762mr19461750ejo.6.1685022533907; Thu, 25
- May 2023 06:48:53 -0700 (PDT)
+        with ESMTP id S241445AbjEYOAf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 10:00:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F531A8;
+        Thu, 25 May 2023 07:00:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 11766645FF;
+        Thu, 25 May 2023 14:00:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6CD96C4339E;
+        Thu, 25 May 2023 14:00:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685023221;
+        bh=gfRrbhhyEcqbLyZDyAZGcAkDAS8G/fyE/7edxRHWzWA=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=tFs1hrqMAOfe3D+3+g6imFRefaUOB1J+FtU3P2LhkbSR/PiRkavm8sFdT1CPgKbs1
+         K1JcAF61qCTDSr/Gi37M29/vn98Lt9AN0oWH1P2T49BKd5WKwyVqAxFPo0mc4v9Zhc
+         m42SMhyZvafGwLSTma8taYbhqev06FL8JwUWc/w/vDt2D/+auWB1Y5FvlifLV+9ccS
+         gsEtFkOKNz/mjjV6UpIrFqa7sdXgSmZv5l7OfrtwM/fHDptFuGboQw9Gdabhkovjro
+         ZAsIYaSO+nS9Idjqlrj0erH32LUcxiaoyiDufXA/nyw+5USvbph0wbDN10IRPdrENg
+         q5NjHmg2C5w9A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 4695CC395DF;
+        Thu, 25 May 2023 14:00:21 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20230524190726.17012-1-mario.limonciello@amd.com>
-In-Reply-To: <20230524190726.17012-1-mario.limonciello@amd.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 25 May 2023 15:48:42 +0200
-Message-ID: <CAJZ5v0hhymQ-MSMOc0kCV4as6UhU0oHq0L0LRj4NC=VdAbrwVA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] PCI: Refactor pci_bridge_d3_possible()
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
-        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
-        Deucher Alexander <Alexander.Deucher@amd.com>,
-        linux-pm@vger.kernel.org, Lukas Wunner <lukas@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no
-        version=3.4.6
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] s390/ism: Set DMA coherent mask
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <168502322128.12931.12742922917026189347.git-patchwork-notify@kernel.org>
+Date:   Thu, 25 May 2023 14:00:21 +0000
+References: <20230524075411.3734141-1-schnelle@linux.ibm.com>
+In-Reply-To: <20230524075411.3734141-1-schnelle@linux.ibm.com>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     kuba@kernel.org, davem@davemloft.net, wintera@linux.ibm.com,
+        wenjia@linux.ibm.com, hca@linux.ibm.com, gor@linux.ibm.com,
+        agordeev@linux.ibm.com, borntraeger@linux.ibm.com,
+        svens@linux.ibm.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, mjrosato@linux.ibm.com,
+        pmorel@linux.ibm.com, linux-s390@vger.kernel.org
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 24, 2023 at 9:07 PM Mario Limonciello
-<mario.limonciello@amd.com> wrote:
->
-> All of the cases handled by pci_bridge_d3_possible() are specific
-> to these branches:
-> ```
->         case PCI_EXP_TYPE_ROOT_PORT:
->         case PCI_EXP_TYPE_UPSTREAM:
->         case PCI_EXP_TYPE_DOWNSTREAM:
-> ```
-> Drop a level of indentation by returning false in the default case
-> instead.  No intended functional changes.
->
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Hello:
 
-Acked-by: Rafael J. Wysocki <rafael@kernel.org>
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-> ---
-> v3->v4:
->  * New patch
-> ---
->  drivers/pci/pci.c | 68 +++++++++++++++++++++++------------------------
->  1 file changed, 34 insertions(+), 34 deletions(-)
->
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 5ede93222bc1..d1fa040bcea7 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -2978,48 +2978,48 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
->         case PCI_EXP_TYPE_ROOT_PORT:
->         case PCI_EXP_TYPE_UPSTREAM:
->         case PCI_EXP_TYPE_DOWNSTREAM:
-> -               if (pci_bridge_d3_disable)
-> -                       return false;
-> +               break;
-> +       default:
-> +               return false;
-> +       }
->
-> -               /*
-> -                * Hotplug ports handled by firmware in System Management Mode
-> -                * may not be put into D3 by the OS (Thunderbolt on non-Macs).
-> -                */
-> -               if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
-> -                       return false;
-> +       if (pci_bridge_d3_disable)
-> +               return false;
->
-> -               if (pci_bridge_d3_force)
-> -                       return true;
-> +       /*
-> +        * Hotplug ports handled by firmware in System Management Mode
-> +        * may not be put into D3 by the OS (Thunderbolt on non-Macs).
-> +        */
-> +       if (bridge->is_hotplug_bridge && !pciehp_is_native(bridge))
-> +               return false;
->
-> -               /* Even the oldest 2010 Thunderbolt controller supports D3. */
-> -               if (bridge->is_thunderbolt)
-> -                       return true;
-> +       if (pci_bridge_d3_force)
-> +               return true;
->
-> -               /* Platform might know better if the bridge supports D3 */
-> -               if (platform_pci_bridge_d3(bridge))
-> -                       return true;
-> +       /* Even the oldest 2010 Thunderbolt controller supports D3. */
-> +       if (bridge->is_thunderbolt)
-> +               return true;
->
-> -               /*
-> -                * Hotplug ports handled natively by the OS were not validated
-> -                * by vendors for runtime D3 at least until 2018 because there
-> -                * was no OS support.
-> -                */
-> -               if (bridge->is_hotplug_bridge)
-> -                       return false;
-> +       /* Platform might know better if the bridge supports D3 */
-> +       if (platform_pci_bridge_d3(bridge))
-> +               return true;
->
-> -               if (dmi_check_system(bridge_d3_blacklist))
-> -                       return false;
-> +       /*
-> +        * Hotplug ports handled natively by the OS were not validated
-> +        * by vendors for runtime D3 at least until 2018 because there
-> +        * was no OS support.
-> +        */
-> +       if (bridge->is_hotplug_bridge)
-> +               return false;
->
-> -               /*
-> -                * It should be safe to put PCIe ports from 2015 or newer
-> -                * to D3.
-> -                */
-> -               if (dmi_get_bios_year() >= 2015)
-> -                       return true;
-> -               break;
-> -       }
-> +       if (dmi_check_system(bridge_d3_blacklist))
-> +               return false;
->
-> -       return false;
-> +       /*
-> +        * It should be safe to put PCIe ports from 2015 or newer
-> +        * to D3.
-> +        */
-> +       return dmi_get_bios_year() >= 2015;
->  }
->
->  static int pci_dev_check_d3cold(struct pci_dev *dev, void *data)
-> --
-> 2.34.1
->
+On Wed, 24 May 2023 09:54:10 +0200 you wrote:
+> A future change will convert the DMA API implementation from the
+> architecture specific arch/s390/pci/pci_dma.c to using the common code
+> drivers/iommu/dma-iommu.c which the utilizes the same IOMMU hardware
+> through the s390-iommu driver. Unlike the s390 specific DMA API this
+> requires devices to correctly set the coherent mask to be allowed to use
+> IOVAs >2^32 in dma_alloc_coherent(). This was however not done for ISM
+> devices. ISM requires such addresses since currently the DMA aperture
+> for PCI devices starts at 2^32 and all calls to dma_alloc_coherent()
+> would thus fail.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next] s390/ism: Set DMA coherent mask
+    https://git.kernel.org/netdev/net-next/c/657d42cf5df6
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
