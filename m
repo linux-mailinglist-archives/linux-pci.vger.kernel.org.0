@@ -2,76 +2,70 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 52848710FAB
-	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 17:34:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2ADA71104F
+	for <lists+linux-pci@lfdr.de>; Thu, 25 May 2023 18:03:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234918AbjEYPd6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 May 2023 11:33:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33610 "EHLO
+        id S241849AbjEYQDj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 May 2023 12:03:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49440 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233645AbjEYPd5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 11:33:57 -0400
-X-Greylist: delayed 62 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 25 May 2023 08:33:56 PDT
-Received: from esa1.hc3370-68.iphmx.com (esa1.hc3370-68.iphmx.com [216.71.145.142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8F62D8;
-        Thu, 25 May 2023 08:33:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1685028836;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FXbmH67vlk1ZslsVcFKkeP9jHQ12gqPMkF+FEgaa2jA=;
-  b=HQG55yWLi9e9wPc7tTHvtj+WVo7GD93Op+k1snKXRxUOVqFONQhfB7dv
-   4nZwKZx8gPHMBU/jleatI7Xfzm0U3s8GncX2vwaz8cJ5vhuRhPE20tBlL
-   7ULjonTJmNxdxBN07dF+TH1/97GCDr9hZXSkt4q9Lcb3lbcP+aPkIBZur
-   M=;
-Authentication-Results: esa1.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-X-SBRS: 4.0
-X-MesageID: 110823932
-X-Ironport-Server: esa1.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.156.123
-X-Policy: $RELAYED
-IronPort-Data: A9a23:4T++xal2YBO981LnvP4aVKDo5gy8JkRdPkR7XQ2eYbSJt1+Wr1Gzt
- xJOCj/SbKmOM2OgL98laou0oBsEusDTz9IyHFZtpHsyHyMWpZLJC+rCIxarNUt+DCFhoGFPt
- JxCN4aafKjYaleG+39B55C49SEUOZmgH+a6U6icfHgqH2eIcQ954Tp7gek1n4V0ttawBgKJq
- LvartbWfVSowFaYCEpNg064gE0p5KyaVA8w5ARkPqgW5gKGzhH5MbpETU2PByqgKmVrNrbSq
- 9brlNmR4m7f9hExPdKp+p6TnpoiG+O60aCm0xK6aoD66vRwjnVaPpUTbZLwXXx/mTSR9+2d/
- f0W3XCGpaXFCYWX8AgVe0Ew/yiTpsSq8pefSZS0mZT7I0Er7xIAahihZa07FdRwxwp5PY1B3
- aQSGDQrRD6Evsiz4vWkUOBSmMoOAvC+aevzulk4pd3YJfMvQJSFSKTW/95Imjw3g6iiH96HO
- ZBfM2A2Kk2dPVsWYAx/5JEWxY9EglHldCZD7lacqqct/GHXyCR60aT3McqTcduPLSlQth/B/
- jKcpDWiWHn2MvSgkT+Y1EvwmtXLhCT7VJ0VT+OC+PVD1Qj7Kms7V0RNCArTTeOCokq/Xc9Pb
- k8Z4CwjqYAs+0GxCNrwRRu1pDiDpBF0c95RFfAqrRmGy4LK7AuDQGsJVDhMbJohrsBebTYq2
- 1uGltryLTNot7KRRDSW8bL8hTC7OG4VIGkNIyEJSwQt6NDlp4cyhRvLCN1kFcaIYsbdQG+qh
- WrQ9W5n2utV1JRQv0mmwbzZq2qmlpzvZCAy3y/SfCW69ApHeoCISbX9vDA38s18BIqeS1CAu
- l0NlM6f8P0CAPmxqcCdfAkeNOr3vqjYaVUwlXYqRsB8rGr1pxZPaKgKuFlDyFFV3tHokNMDS
- Gvaoktv6ZBaJxNGhocnMtvqW6zGIUUNfOkJt8w4jPIUOvCdlyfdpkmCgHJ8OEiz+HXAaYllZ
- f+mnT+EVB7285hPwjusXPs62rQ23C04zm67bcmln0j2jOHEPyTMFO9t3L6yggcRtfnsneko2
- 4wHa5viJ+t3C4USnRU7AaZMdAtXfBDX9Lj9qtBNd/7rHzeK7FoJUqeLqZt4ItwNokigvruQl
- p1LchMCmQWXaLyuAVniV02Pn5u+Bc8h8yphZUTB/z+AghAeXGpm149HH7NfQFXt3LULISJcJ
- xXdR/i9Pw==
-IronPort-HdrOrdr: A9a23:7hFbx6vlKNLnW8uKukIyJoyH7skDstV00zEX/kB9WHVpm6yj+v
- xG/c5rsCMc7Qx6ZJhOo7+90cW7L080lqQFg7X5X43DYOCOggLBQL2KhbGI/9SKIVycygcy78
- Zdm6gVMqyLMbB55/yKnTVRxbwbsaW6GKPDv5ag8590JzsaD52Jd21Ce36m+ksdfnggObMJUK
- Cyy+BgvDSadXEefq2AdwI4t7iqnaysqHr+CyR2fiIa1A==
-X-Talos-CUID: 9a23:gblOT21ga868H7LQD4hZQLxfQsoVdlv34nDpCUqaTnlzQYOLR3K+wfYx
-X-Talos-MUID: 9a23:3DDZ/ARrwfXsWvHGRXTT3DR/Ev40/56qEUcNnYoB4Je+OydZbmI=
-X-IronPort-AV: E=Sophos;i="6.00,191,1681185600"; 
-   d="scan'208";a="110823932"
-From:   Ross Lagerwall <ross.lagerwall@citrix.com>
-To:     <linux-pci@vger.kernel.org>
-CC:     Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        <linux-kernel@vger.kernel.org>,
-        Ross Lagerwall <ross.lagerwall@citrix.com>
-Subject: [PATCH] PCI: Release coalesced resource
-Date:   Thu, 25 May 2023 16:32:48 +0100
-Message-ID: <20230525153248.712779-1-ross.lagerwall@citrix.com>
-X-Mailer: git-send-email 2.31.1
+        with ESMTP id S240972AbjEYQDi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 12:03:38 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 412F31A1;
+        Thu, 25 May 2023 09:03:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685030609; x=1716566609;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=tKSomgZfJIJViV5AgHDrW8vEErjJuh+A/tbGzRSSoJA=;
+  b=I21IISzJ0LfUbewdIJJDnAo0AGwoa5Ed80TjfEP3ThAE64cHoLBBFFzN
+   XM5udKnbuJclmBpaWhVJaoNxI8jvMBkY5Ukqzbs6c+kqC71iRYaJGjprD
+   KEDlwiJEKoxL2BhTyAC/ItNtoDEAV0rUjmaCCnzYvLY/vvMstSYYcGqIT
+   dkwsYnzXj5M85q2pnJFHnP+oWM5u1DcDT4L0i5Cg1JnXVB/oCKygxRA/8
+   LJjwQMw/GaSSV8BuV6FlL+8ZfQVX1h778eL5kgT4jFkQZrAtU7QBmMpwO
+   lm7MkJdSTqsSEpAeSWMlLnsYxCkEKirZfdP1TPuzOj3iRMu2om540pvyq
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="417411727"
+X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
+   d="scan'208";a="417411727"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 09:03:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10721"; a="708055450"
+X-IronPort-AV: E=Sophos;i="6.00,191,1681196400"; 
+   d="scan'208";a="708055450"
+Received: from satuan-mobl1.amr.corp.intel.com (HELO [10.212.187.173]) ([10.212.187.173])
+  by fmsmga007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 May 2023 09:03:02 -0700
+Message-ID: <9cf6d69c-7c14-e709-0cd7-d51f21c6141f@linux.intel.com>
+Date:   Thu, 25 May 2023 09:03:01 -0700
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH v4 2/2] PCI: Don't assume root ports from > 2015 are power
+ manageable
+Content-Language: en-US
+To:     Mario Limonciello <mario.limonciello@amd.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        S-k Shyam-sundar <Shyam-sundar.S-k@amd.com>,
+        Natikar Basavaraj <Basavaraj.Natikar@amd.com>,
+        Deucher Alexander <Alexander.Deucher@amd.com>,
+        linux-pm@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Iain Lane <iain@orangesquash.org.uk>
+References: <20230524190726.17012-1-mario.limonciello@amd.com>
+ <20230524190726.17012-2-mario.limonciello@amd.com>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230524190726.17012-2-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_PASS,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -79,45 +73,75 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-When contiguous windows are coalesced, the resource is invalidated and
-consequently not added to the bus. However, it remains in the resource
-hierarchy:
 
-...
-  ef2fff00-ef2fffff : 0000:00:13.2
-    ef2fff00-ef2fffff : ehci_hcd
-00000000-00000000 : PCI Bus 0000:00
-f0000000-f3ffffff : PCI MMCONFIG 0000 [bus 00-3f]
-  f0000000-f3ffffff : Reserved
-...
 
-In some cases (e.g. the Xen scratch region), this causes future calls to
-allocate_resource() to choose an inappropriate location which the caller
-cannot handle. Fix by releasing the resource and removing from the
-hierarchy.
+On 5/24/23 12:07 PM, Mario Limonciello wrote:
 
-Fixes: 7c3855c423b1 ("PCI: Coalesce host bridge contiguous apertures")
-Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
----
- drivers/pci/probe.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+This looks like a generic fix to me. So why talk about > 2015? IMO,
+you can remove > 2015 from the title.
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 0b2826c4a832..00ed20ac0dd6 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -997,8 +997,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
- 	resource_list_for_each_entry_safe(window, n, &resources) {
- 		offset = window->offset;
- 		res = window->res;
--		if (!res->flags && !res->start && !res->end)
-+		if (!res->flags && !res->start && !res->end) {
-+			release_resource(res);
- 			continue;
-+		}
- 
- 		list_move_tail(&window->node, &bridge->windows);
- 
+> Using a USB keyboard or mouse to wakeup the system from s2idle fails when
+> that XHCI device is connected to a USB-C port for an AMD USB4 router.
+> 
+> Due to commit 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> all PCIe ports go into D3 during s2idle.
+> 
+> When specific root ports are put into D3 over s2idle on some AMD platforms
+> it is not possible for the platform to properly identify wakeup sources.
+> This happens whether the root port goes into D3hot or D3cold.
+
+I think Linux/Windows comparison is also not needed. But it is up to you.
+
+> 
+> Comparing registers between Linux and Windows 11 this behavior to put
+> these specific root ports into D3 at suspend is unique to Linux. On an
+> affected system Windows does not put those specific root ports into D3
+> over Modern Standby.
+> 
+> Windows doesn't put the root ports into D3 because root ports are not
+> power manageable.
+> 
+> Linux shouldn't assume root ports support D3 just because they're on a
+> machine newer than 2015, the ports should also be deemed power manageable.
+> Add an extra check explicitly for root ports to ensure D3 isn't selected
+> for these ports.
+> 
+
+Other than above suggestions, rest looks good to me.
+
+Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+
+> Fixes: 9d26d3a8f1b0 ("PCI: Put PCIe ports into D3 during suspend")
+> Reported-by: Iain Lane <iain@orangesquash.org.uk>
+> Closes: https://forums.lenovo.com/t5/Ubuntu/Z13-can-t-resume-from-suspend-with-external-USB-keyboard/m-p/5217121
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v3->v4:
+>  * Move after refactor
+> ---
+>  drivers/pci/pci.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index d1fa040bcea7..d293db963327 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3015,6 +3015,14 @@ bool pci_bridge_d3_possible(struct pci_dev *bridge)
+>  	if (dmi_check_system(bridge_d3_blacklist))
+>  		return false;
+>  
+> +	/*
+> +	 * It's not safe to put root ports that don't support power
+> +	 * management into D3.
+> +	 */
+> +	if (pci_pcie_type(bridge) == PCI_EXP_TYPE_ROOT_PORT &&
+> +	    !platform_pci_power_manageable(bridge))
+> +		return false;
+> +
+>  	/*
+>  	 * It should be safe to put PCIe ports from 2015 or newer
+>  	 * to D3.
+
 -- 
-2.31.1
-
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
