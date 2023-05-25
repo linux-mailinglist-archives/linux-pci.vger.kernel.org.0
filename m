@@ -2,52 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E0BA57119EA
-	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 00:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D75FC711A01
+	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 00:10:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233496AbjEYWBI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 25 May 2023 18:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56636 "EHLO
+        id S242084AbjEYWKj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 25 May 2023 18:10:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60058 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjEYWBH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 18:01:07 -0400
+        with ESMTP id S231776AbjEYWKf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 25 May 2023 18:10:35 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72DDE183;
-        Thu, 25 May 2023 15:01:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16D3C12F;
+        Thu, 25 May 2023 15:10:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03ECA615C8;
-        Thu, 25 May 2023 22:01:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A547C433D2;
-        Thu, 25 May 2023 22:01:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A109D64B8D;
+        Thu, 25 May 2023 22:10:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D109CC433D2;
+        Thu, 25 May 2023 22:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685052063;
-        bh=ptE4zUO2N1qn5e28e8ELQ07KDbno8edydjVNz2FJipk=;
+        s=k20201202; t=1685052633;
+        bh=GICPxmeMSLHJJ2bS0drEJtpZ8BdqsvczeM+s9pyEXR4=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=tlUgaxrF3z9IwUeA0DGL4h+NIbcmOJM/r14l3L3I9HRklMIf5eX3CeONLvzDEntda
-         osuUN5uTSj89B76YksTuXRcjG3o8fnn1/nKVfoBt6SjNv1TMJy8pxP0weYoXN08/LZ
-         NnWpZaqHEPkpZ9EFY31YI9li4C+FWhtxNf9dtO5psADQ1v26O4DYueomEjqdkpDHdo
-         L9s2ilCnNe0E8J44KETH5vfeLzcAjK1qIvGazQyKlmwaBwWn7amMIDus4DjZp+Q/fw
-         CgxEXg46iB38Nmidqd9ugZLtJxkJb0isTuKOi0eGXQXe/NfDzgbtfkzFzNEvgjyGAN
-         CxYZdeN6e4wtQ==
-Date:   Thu, 25 May 2023 17:01:01 -0500
+        b=ObXl45XugUdH+acc1ChFRJxlBJT11kmUi30HaoOtvZAX6uhkh0XzGrAvL+7Q0OTbf
+         Jrss0NqKDneQSsVAersnFSGMbwt0aGQnX7Ns5dYDwzacOEGw7+OBdogccAwn1fhj3r
+         XMP6JJdEIeYF9jsfNSqHkJsjG6EV/IHLb4OAgv/2XYQbUqheBr2giAp4ThrCo3JgGk
+         2H1xfSavlCdAW4U02FCdX9G3sr1GoSE8RzJGxSsYBaoEh9TX+wpCjCCRM0XjEQiI6W
+         6qql+YjuW8CkA9ZOCcrXppEW6KhzwMEJ4YwcdVtcyEP5AZWJZ7pkZl4f43TtRLHdVA
+         q1YGxj76k5fuA==
+Date:   Thu, 25 May 2023 17:10:31 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Robert Richter <rrichter@amd.com>
-Cc:     alison.schofield@intel.com, dave.jiang@intel.com,
-        Terry Bowman <terry.bowman@amd.com>, vishal.l.verma@intel.com,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-        bhelgaas@google.com, Oliver O'Halloran <oohall@gmail.com>,
-        Jonathan.Cameron@huawei.com, bwidawsk@kernel.org,
-        dan.j.williams@intel.com, ira.weiny@intel.com
-Subject: Re: [PATCH v4 22/23] PCI/AER: Forward RCH downstream port-detected
- errors to the CXL.mem dev handler
-Message-ID: <ZG/anZ78FukSpERs@bhelgaas>
+To:     Owen Yang <ecs.taipeikernel@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Bob Moragues <moragues@google.com>,
+        Abner Yen <abner.yen@ecs.com.tw>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@google.com>,
+        Stephen Boyd <swboyd@chromium.org>, Harvey <hunge@google.com>,
+        Gavin Lee <gavin.lee@ecs.com.tw>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v1] drivers: pci: quirks: Add suspend fixup for SSD on
+ sc7280
+Message-ID: <ZG/c1+/mCp/PfFSO@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZG/TKOgMTSljryHN@rric.localdomain>
+In-Reply-To: <20230525163448.v1.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -58,87 +59,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 25, 2023 at 11:29:58PM +0200, Robert Richter wrote:
-> eOn 24.05.23 16:32:35, Bjorn Helgaas wrote:
-> > On Tue, May 23, 2023 at 06:22:13PM -0500, Terry Bowman wrote:
-> > > From: Robert Richter <rrichter@amd.com>
-> > > 
-> > > In Restricted CXL Device (RCD) mode a CXL device is exposed as an
-> > > RCiEP, but CXL downstream and upstream ports are not enumerated and
-> > > not visible in the PCIe hierarchy. Protocol and link errors are sent
-> > > to an RCEC.
-> > >
-> > > Restricted CXL host (RCH) downstream port-detected errors are signaled
-> > > as internal AER errors, either Uncorrectable Internal Error (UIE) or
-> > > Corrected Internal Errors (CIE). 
-> > 
-> > From the parallelism with RCD above, I first thought that RCH devices
-> > were non-RCD mode and *were* enumerated as part of the PCIe hierarchy,
-> > but actually I suspect it's more like the following?
-> > 
-> >   ... but CXL downstream and upstream ports are not enumerated and not
-> >   visible in the PCIe hierarchy.
-> > 
-> >   Protocol and link errors from these non-enumerated ports are
-> >   signaled as internal AER errors ... via a CXL RCEC.
-> 
-> Exactly, except the RCEC is standard PCIe and also must not
-> necessarily on the same PCI bus as the CXL RCiEPs are.
+On Thu, May 25, 2023 at 04:35:12PM +0800, Owen Yang wrote:
+> Implement this workaround until Qualcomm fixed the
+>  correct NVMe suspend process.
 
-So make it "RCEC" instead of "CXL RCEC", I guess?  PCIe r6.0, sec
-7.9.10.3, allows an RCEC to be associated with RCiEPs on different
-buses, so nothing to see there.
+Thanks for the patch.  Before I can do anything, this needs:
 
-> > > The error source is the id of the RCEC.
-> > 
-> > This seems odd; I assume this refers to the RCEC's AER Error Source
-> > Identification register, and the ERR_COR or ERR_FATAL/NONFATAL Source
-> > Identification would ordinarily be the Requester ID of the RCiEP that
-> > "sent" the Error Message.  But you're saying it's actually the ID of
-> > the *RCEC*, not the RCiEP?
-> 
-> Right, the downstream port has its own AER ext capability in
-> non-config (io mapped) RCRB register range. Errors originating from
-> there are signaled as internal AER errors via the RCEC *with* the
-> RCEC's Requester ID. Code walks through all associated CXL endpoints,
-> determines the dport and checks its AER.
-> 
-> There is also an RDPAS structure defined in CXL but that is only a
-> different way to provide the RCEC to dport association instead of
-> using the RCEC's Endpoint Association Extended Capability. In the end
-> we get all associated RCHs and check the AER of all their dports.
-> 
-> The upstream port is signaled using the RCiEP's AER. CXL spec is
-> strict here: "Upstream Port RCRB shall not implement the AER Extended
-> Capability." The RCiEP's requestor ID is used then and its config
-> space the AER is in.
-> 
-> CXL.cachemem errors are reported with the RCiEP as requester
-> too. Status is in the CXL RAS cap and the UIE or CIE is set
-> respectively in the AER status of the RCiEP.
->
-> > We're going to call pci_aer_handle_error() as well, to handle the
-> > non-internal errors, and I'm pretty sure that path expects the RCiEP
-> > ID there.
-> > 
-> > Whatever the answer, I'm not sure this sentence is actually relevant
-> > to this patch, since this patch doesn't read PCI_ERR_ROOT_ERR_SRC or
-> > look at struct aer_err_source.id.
-> 
-> The source id is used in aer_process_err_devices() which finally calls
-> handle_error_source() for the device with the requestor id. This is
-> the place where cxl_rch_handle_error() checks if it is an RCEC that
-> received an internal error and has cxl devices connected to it. Then,
-> the request is forwarded to the cxl_mem handler which also needs to
-> check the dport now. That is, pcie_walk_rcec() in
-> cxl_rch_handle_error() is called with the RCEC's pci handle,
-> cxl_rch_handle_error_iter() with the RCiEP's pci handle.
+  - Subject line in style of the file (use "git log --oneline
+    drivers/pci/quirks.c").
 
-I'm still not sure this is relevant.  Isn't that last sentence just
-the way we always use pcie_walk_rcec()?
+  - Format commit log correctly (fill 75 columns, no leading spaces).
 
-If there's something *different* here about CXL, and it's important to
-this patch, sure.  But I don't see that yet.  Maybe a comment in the
-code if you think it's important to clarify something there.
+  - Description of incorrect behavior.  What does the user see?  If
+    there's a bug report, include a link to it.
+
+  - Multi-line code comments in style of the file (look at existing
+    comments in the file).
+
+  - Details of "the correct ASPM state".  ASPM may be enabled or
+    disabled by the user, so you can't assume any particular ASPM
+    configuration.
+
+  - Details on the Qualcomm sc7280 connection.  This quirk would
+    affect Phison SSDs on *all* platforms, not just sc7280.  I don't
+    want to slow down suspend on all platforms just for a sc7280
+    issue.
+
+  - Drop the "until Qualcomm fixes NVMe suspend" text.  Even if
+    Qualcomm fixes something, we can't just drop this quirk because
+    there will be platforms in the field that don't have the Qualcomm
+    fix.
 
 Bjorn
+
+> Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
+> ---
+> 
+>  drivers/pci/quirks.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index f4e2a88729fd..b57876dc2624 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5945,6 +5945,16 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+>  }
+>  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
+>  
+> +/* In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD won't enter
+> + * the correct ASPM state properly. Therefore. Implement this workaround
+> + * until Qualcomm fixed the correct NVMe suspend process*/
+> +static void phison_suspend_fixup(struct pci_dev *pdev)
+> +{
+> +	msleep(30);
+> +}
+> +DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5013, phison_suspend_fixup);
+> +DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5015, phison_suspend_fixup);
+> +
+>  static void rom_bar_overlap_defect(struct pci_dev *dev)
+>  {
+>  	pci_info(dev, "working around ROM BAR overlap defect\n");
+> -- 
+> 2.17.1
+> 
