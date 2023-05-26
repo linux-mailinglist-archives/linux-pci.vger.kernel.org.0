@@ -2,66 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA441712085
-	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 08:55:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 21D117121FA
+	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 10:18:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjEZGzP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 May 2023 02:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46208 "EHLO
+        id S242494AbjEZIR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 May 2023 04:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229805AbjEZGzO (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 May 2023 02:55:14 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA49D95
-        for <linux-pci@vger.kernel.org>; Thu, 25 May 2023 23:55:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=vKzQlhcxkkMQoEfvC17xC/R7J7Er0cfz4WtFMuyrbs8=; b=dnAYnsr9eJUK36/YqKROOcjok7
-        Y6ihOcpYfhW2J/pvOgP+eBXvG9Dm3VsVJhwM5Hu0S45bkXohWI7ckNFaeMdKR2h6pkvoS35pxqbYh
-        0Or60z7pNg/fkozMkKVbLBxIrG6WIq8AHG5xVZAdIDfZlD7KOvGNaTdesCAx89kGB6UfrAY6YdbaR
-        9movQHme2dhEi7AcAhlQZmmohz+gnzIIeTJZrQJFuDPJSw/lV0jy/z+zYdLOUXZR3+9bFOLP8u2DI
-        /gLXN3AQlQHzU4Nj4aqM55x9u222DtlDzoP/bg7PHj9tVcHOIr3xiPuyZ4EPV6yOUoDwEehWMXxdP
-        fYog8VpQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1q2RLw-001KMS-1q;
-        Fri, 26 May 2023 06:55:08 +0000
-Date:   Thu, 25 May 2023 23:55:08 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Deucher, Alexander" <Alexander.Deucher@amd.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Alex Deucher <alexdeucher@gmail.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
-        "Zhang, Morris" <Shiwu.Zhang@amd.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-Subject: Re: [PATCH] drm/amdgpu: add the accelerator pcie class
-Message-ID: <ZHBXzItiT1+OSsjX@infradead.org>
-References: <20230523040232.21756-1-shiwu.zhang@amd.com>
- <ZGxfEklioAu6orvo@infradead.org>
- <CADnq5_Pnob2+NPyf6GEcsCExC26qg_QvTri_CQLT=ArPibSxSA@mail.gmail.com>
- <ZG8ud4JWpF7BXJ7c@infradead.org>
- <BL1PR12MB5144DDA502D52040945DFC4BF7469@BL1PR12MB5144.namprd12.prod.outlook.com>
+        with ESMTP id S229911AbjEZIR6 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 May 2023 04:17:58 -0400
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D917BA3;
+        Fri, 26 May 2023 01:17:56 -0700 (PDT)
+Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-95fde138693so298238966b.0;
+        Fri, 26 May 2023 01:17:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685089075; x=1687681075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LuRt6dAOm751tuQulnhfMWILFn11xZG+6XyABCY5UmI=;
+        b=ZLIgYtH2UgfBtYcPSuVxdRj1OGaA+lGpqyd+ZORNt3C8wO+m+ET9qmnkIdsCts6TAu
+         83Ml4c9AJGub3HULQKMvpacTEHxyw9W1084rZSeHIflQD3Y/cCCq/c9uLylZej3JQyEE
+         H5zukiTFxRaUbTJGuCo5brSVALLlR9qj3KFnv36F78Y5vCLLrrCl+YB4j2ZMsv3EIA+E
+         3h1yptlRCpCKQZnlQjHDorvHCVsMvMbrJepnNF4uyl53lCatjlJsJla8crKd7kXkm+yQ
+         XcjwdPb0ZxuWCOGaoDeyA6MiTPe98VIw6CunpV5kR9dkwWWzseceZSDHupMnunxCbHo2
+         i8IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685089075; x=1687681075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=LuRt6dAOm751tuQulnhfMWILFn11xZG+6XyABCY5UmI=;
+        b=UHdHmTVrYsoRbnOmwNL7qep4b3S7RO2Dt4FSASB0W4VjUi0eBF7L+jAkKJiRkKvbHW
+         dghBPYGPoNPYZYkJ1lWHOtsAEPfmMaO+cXfoSIkRFWoDAkyWgJ5E34tAmc78J8x7aGTO
+         dRZqarXYpcWoWhQvutKgqiY8I1mPmw3hDv4GcZrkDiwKaF4eZukMsho+4jt/4Y329kG7
+         I7W6crf+VQbLoqgMi62k8sX/XcbZmJs7IbTAjlIqJLm3rdlTaHVrvp8SVUX8minu0DB1
+         cIez7WIkPUgi+IMPpyZceXx7Z/XQq0QnrvsZxdL/IfMcvSUKZFR9ozowvqz/WvT4eos+
+         fG4w==
+X-Gm-Message-State: AC+VfDzS55VLbk60RS63eBLN8kH/a/G1IHytj1MZS7RoWU1Q/5+Ez34u
+        uSstE8Fa5YUeTTVj0Xwafrh0VDY9blG22QEl6+/YOE0n2LYKjbUmNOI=
+X-Google-Smtp-Source: ACHHUZ59QhH5H8ZOmVSmXeKDnnlxkNV3y/SbDkI//z7eGAl/S9o5aZ74c3Yq1Kp5yWKC3ocuXwnjPu4cpYtsDxPT7l4=
+X-Received: by 2002:a17:907:9692:b0:96a:99d2:a680 with SMTP id
+ hd18-20020a170907969200b0096a99d2a680mr866775ejc.34.1685089075063; Fri, 26
+ May 2023 01:17:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <BL1PR12MB5144DDA502D52040945DFC4BF7469@BL1PR12MB5144.namprd12.prod.outlook.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
-        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAAhV-H5u8qtXpr-mY+pKq7UfmyBgr3USRTQpo9-w28w8pHX8QQ@mail.gmail.com>
+ <ZG/V4C0zlXaFv/1b@bhelgaas>
+In-Reply-To: <ZG/V4C0zlXaFv/1b@bhelgaas>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Fri, 26 May 2023 16:17:39 +0800
+Message-ID: <CAAhV-H6jokg2q4d7Of-5yPspzNYKc5Whn+1O9hiwWjtV4ACd1A@mail.gmail.com>
+Subject: Re: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        loongson-kernel@lists.loongnix.cn,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 25, 2023 at 08:52:06PM +0000, Deucher, Alexander wrote:
-> We already handle this today for CLASS_DISPLAY via a data table provided on our hardware that details the components on the board.  The driver can then determine whether or not that combination of components is supported.  If the data table doesn't exist or isn’t parse-able, or the components enumerated are not supported, the driver doesn't load.
+Hi, Bjorn and Marc,
 
-But things like module loading and initramfs generation still work
-off the ID table and not your internal tables.
+On Fri, May 26, 2023 at 5:40=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
+wrote:
+>
+> On Thu, May 25, 2023 at 05:14:28PM +0800, Huacai Chen wrote:
+> > On Wed, May 24, 2023 at 11:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
+org> wrote:
+> > > On Wed, May 24, 2023 at 05:36:23PM +0800, Huacai Chen wrote:
+> > > > Some platforms (such as LoongArch) cannot provide enough irq number=
+s as
+> > > > many as logical cpu numbers. So we should limit pci irq numbers whe=
+n
+> > > > allocate msi/msix vectors, otherwise some device drivers may fail a=
+t
+> > > > initialization. This patch add a cmdline parameter "pci_irq_limit=
+=3Dxxxx"
+> > > > to control the limit.
+> > > >
+> > > > The default pci msi/msix number limit is defined 32 for LoongArch a=
+nd
+> > > > NR_IRQS for other platforms.
+> > >
+> > > The IRQ experts can chime in on this, but this doesn't feel right to
+> > > me.  I assume arch code should set things up so only valid IRQ number=
+s
+> > > can be allocated.  This doesn't seem necessarily PCI-specific, I'd
+> > > prefer to avoid an arch #ifdef here, and I'd also prefer to avoid a
+> > > command-line parameter that users have to discover and supply.
+> >
+> > The problem we meet: LoongArch machines can have as many as 256
+> > logical cpus, and the maximum of msi vectors is 192. Even on a 64-core
+> > machine, 192 irqs can be easily exhausted if there are several NICs
+> > (NIC usually allocates msi irqs depending on the number of online
+> > cpus). So we want to limit the msi allocation.
+> >
+> > This is not a LoongArch-specific problem, because I think other
+> > platforms can also meet if they have many NICs. But of course,
+> > LoongArch can meet it more easily because the available msi vectors
+> > are very few. So, adding a cmdline parameter is somewhat reasonable.
+>
+> The patch contains "#ifdef CONFIG_LOONGARCH", which makes this
+> solution LoongArch-specific.  I'm not willing for that yet.
+>
+> It sounds like the LoongArch MSI limit is known at compile-time, or at
+> least at boot-time, so the kernel ought to be able to figure out what
+> to do without a command-line parameter.
+>
+> > After some investigation, I think it may be possible to modify
+> > drivers/irqchip/irq-loongson-pch-msi.c and override
+> > msi_domain_info::domain_alloc_irqs() to limit msi allocation. However,
+> > doing that need to remove the "static" before
+> > __msi_domain_alloc_irqs(), which means revert
+> > 762687ceb31fc296e2e1406559e8bb5 ("genirq/msi: Make
+> > __msi_domain_alloc_irqs() static"), I don't know whether that is
+> > acceptable.
+>
+> I guess you mean msi_domain_ops::domain_alloc_irqs() (not
+> msi_domain_info).  If this is really a generic problem, I'm surprised
+> that no other arch has needed to override .domain_alloc_irqs().
+Yes, I mean msi_domain_ops::domain_alloc_irqs() here.
 
+>
+> I think you'll have better luck getting feedback if you can post the
+> complete working patch.  At the very least, you'll learn more about
+> the problem by doing that.
+Emm, I found I can do some small modification on
+msi_domain_prepare_irqs(), and solve the problem by overriding
+msi_domain_ops::msi_prepare(), thanks. And patches is coming soon.
+
+Huacai
+>
+> Bjorn
