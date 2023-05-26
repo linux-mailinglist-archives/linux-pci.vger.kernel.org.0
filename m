@@ -2,152 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 21D117121FA
-	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 10:18:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5905C712295
+	for <lists+linux-pci@lfdr.de>; Fri, 26 May 2023 10:46:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242494AbjEZIR7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 26 May 2023 04:17:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57292 "EHLO
+        id S236911AbjEZIqc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 26 May 2023 04:46:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229911AbjEZIR6 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 May 2023 04:17:58 -0400
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D917BA3;
-        Fri, 26 May 2023 01:17:56 -0700 (PDT)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-95fde138693so298238966b.0;
-        Fri, 26 May 2023 01:17:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685089075; x=1687681075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LuRt6dAOm751tuQulnhfMWILFn11xZG+6XyABCY5UmI=;
-        b=ZLIgYtH2UgfBtYcPSuVxdRj1OGaA+lGpqyd+ZORNt3C8wO+m+ET9qmnkIdsCts6TAu
-         83Ml4c9AJGub3HULQKMvpacTEHxyw9W1084rZSeHIflQD3Y/cCCq/c9uLylZej3JQyEE
-         H5zukiTFxRaUbTJGuCo5brSVALLlR9qj3KFnv36F78Y5vCLLrrCl+YB4j2ZMsv3EIA+E
-         3h1yptlRCpCKQZnlQjHDorvHCVsMvMbrJepnNF4uyl53lCatjlJsJla8crKd7kXkm+yQ
-         XcjwdPb0ZxuWCOGaoDeyA6MiTPe98VIw6CunpV5kR9dkwWWzseceZSDHupMnunxCbHo2
-         i8IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685089075; x=1687681075;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LuRt6dAOm751tuQulnhfMWILFn11xZG+6XyABCY5UmI=;
-        b=UHdHmTVrYsoRbnOmwNL7qep4b3S7RO2Dt4FSASB0W4VjUi0eBF7L+jAkKJiRkKvbHW
-         dghBPYGPoNPYZYkJ1lWHOtsAEPfmMaO+cXfoSIkRFWoDAkyWgJ5E34tAmc78J8x7aGTO
-         dRZqarXYpcWoWhQvutKgqiY8I1mPmw3hDv4GcZrkDiwKaF4eZukMsho+4jt/4Y329kG7
-         I7W6crf+VQbLoqgMi62k8sX/XcbZmJs7IbTAjlIqJLm3rdlTaHVrvp8SVUX8minu0DB1
-         cIez7WIkPUgi+IMPpyZceXx7Z/XQq0QnrvsZxdL/IfMcvSUKZFR9ozowvqz/WvT4eos+
-         fG4w==
-X-Gm-Message-State: AC+VfDzS55VLbk60RS63eBLN8kH/a/G1IHytj1MZS7RoWU1Q/5+Ez34u
-        uSstE8Fa5YUeTTVj0Xwafrh0VDY9blG22QEl6+/YOE0n2LYKjbUmNOI=
-X-Google-Smtp-Source: ACHHUZ59QhH5H8ZOmVSmXeKDnnlxkNV3y/SbDkI//z7eGAl/S9o5aZ74c3Yq1Kp5yWKC3ocuXwnjPu4cpYtsDxPT7l4=
-X-Received: by 2002:a17:907:9692:b0:96a:99d2:a680 with SMTP id
- hd18-20020a170907969200b0096a99d2a680mr866775ejc.34.1685089075063; Fri, 26
- May 2023 01:17:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAAhV-H5u8qtXpr-mY+pKq7UfmyBgr3USRTQpo9-w28w8pHX8QQ@mail.gmail.com>
- <ZG/V4C0zlXaFv/1b@bhelgaas>
-In-Reply-To: <ZG/V4C0zlXaFv/1b@bhelgaas>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Fri, 26 May 2023 16:17:39 +0800
-Message-ID: <CAAhV-H6jokg2q4d7Of-5yPspzNYKc5Whn+1O9hiwWjtV4ACd1A@mail.gmail.com>
-Subject: Re: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Huacai Chen <chenhuacai@loongson.cn>,
+        with ESMTP id S236628AbjEZIqa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 26 May 2023 04:46:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E27E99
+        for <linux-pci@vger.kernel.org>; Fri, 26 May 2023 01:46:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C2EDC64DD2
+        for <linux-pci@vger.kernel.org>; Fri, 26 May 2023 08:46:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF95FC433EF;
+        Fri, 26 May 2023 08:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685090788;
+        bh=JmNrnz4ycjGv0qHOQ25z547dw+Goux1xgW4eGfd6U/g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eO2uWAkS/XTgW20eTG9sMtxTMj7XdS6zB+tz6wEP56U6Kdv59JCqrzwO+S4k00wHV
+         JivoiQdaNHCZhaJr1/nNYWVRTo2eBJZGrSO07M7mnq0+aXc25ozaPJe44/LzsF3N3e
+         TV1bQcPHcfKUMN3ToJBa2O8B4QgwLciaY2P2ggKc8ldC91boq4RB4EfEyPRpe6Veew
+         BjqN6o6Nf5J9c0N9cD/Sy3IsLaay2hwvK052DNYQTyc+ZT43+fG208qx0qYd5Y0pup
+         Zww9PSamwz9gDlw7Fl0miRyCdIUe8SABhNVmzYGYVmAeB+jbVK9tT3U+8YCXhZfuMa
+         Foturj42ep0WA==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Nikhil Devshatwar <nikhilnd@google.com>,
+        Manu Gautam <manugautam@google.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongson-kernel@lists.loongnix.cn,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        Sajid Dalvi <sdalvi@google.com>,
+        William McVicker <willmcvicker@google.com>,
+        Ajay Agarwal <ajayagarwal@google.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v4] PCI: dwc: Wait for link up only if link is started
+Date:   Fri, 26 May 2023 10:46:19 +0200
+Message-Id: <168509076553.135117.7288121992217982937.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230412093425.3659088-1-ajayagarwal@google.com>
+References: <20230412093425.3659088-1-ajayagarwal@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn and Marc,
+On Wed, 12 Apr 2023 15:04:25 +0530, Ajay Agarwal wrote:
+> In dw_pcie_host_init() regardless of whether the link has been
+> started or not, the code waits for the link to come up. Even in
+> cases where start_link() is not defined the code ends up spinning
+> in a loop for 1 second. Since in some systems dw_pcie_host_init()
+> gets called during probe, this one second loop for each pcie
+> interface instance ends up extending the boot time.
+> 
+> [...]
 
-On Fri, May 26, 2023 at 5:40=E2=80=AFAM Bjorn Helgaas <helgaas@kernel.org> =
-wrote:
->
-> On Thu, May 25, 2023 at 05:14:28PM +0800, Huacai Chen wrote:
-> > On Wed, May 24, 2023 at 11:21=E2=80=AFPM Bjorn Helgaas <helgaas@kernel.=
-org> wrote:
-> > > On Wed, May 24, 2023 at 05:36:23PM +0800, Huacai Chen wrote:
-> > > > Some platforms (such as LoongArch) cannot provide enough irq number=
-s as
-> > > > many as logical cpu numbers. So we should limit pci irq numbers whe=
-n
-> > > > allocate msi/msix vectors, otherwise some device drivers may fail a=
-t
-> > > > initialization. This patch add a cmdline parameter "pci_irq_limit=
-=3Dxxxx"
-> > > > to control the limit.
-> > > >
-> > > > The default pci msi/msix number limit is defined 32 for LoongArch a=
-nd
-> > > > NR_IRQS for other platforms.
-> > >
-> > > The IRQ experts can chime in on this, but this doesn't feel right to
-> > > me.  I assume arch code should set things up so only valid IRQ number=
-s
-> > > can be allocated.  This doesn't seem necessarily PCI-specific, I'd
-> > > prefer to avoid an arch #ifdef here, and I'd also prefer to avoid a
-> > > command-line parameter that users have to discover and supply.
-> >
-> > The problem we meet: LoongArch machines can have as many as 256
-> > logical cpus, and the maximum of msi vectors is 192. Even on a 64-core
-> > machine, 192 irqs can be easily exhausted if there are several NICs
-> > (NIC usually allocates msi irqs depending on the number of online
-> > cpus). So we want to limit the msi allocation.
-> >
-> > This is not a LoongArch-specific problem, because I think other
-> > platforms can also meet if they have many NICs. But of course,
-> > LoongArch can meet it more easily because the available msi vectors
-> > are very few. So, adding a cmdline parameter is somewhat reasonable.
->
-> The patch contains "#ifdef CONFIG_LOONGARCH", which makes this
-> solution LoongArch-specific.  I'm not willing for that yet.
->
-> It sounds like the LoongArch MSI limit is known at compile-time, or at
-> least at boot-time, so the kernel ought to be able to figure out what
-> to do without a command-line parameter.
->
-> > After some investigation, I think it may be possible to modify
-> > drivers/irqchip/irq-loongson-pch-msi.c and override
-> > msi_domain_info::domain_alloc_irqs() to limit msi allocation. However,
-> > doing that need to remove the "static" before
-> > __msi_domain_alloc_irqs(), which means revert
-> > 762687ceb31fc296e2e1406559e8bb5 ("genirq/msi: Make
-> > __msi_domain_alloc_irqs() static"), I don't know whether that is
-> > acceptable.
->
-> I guess you mean msi_domain_ops::domain_alloc_irqs() (not
-> msi_domain_info).  If this is really a generic problem, I'm surprised
-> that no other arch has needed to override .domain_alloc_irqs().
-Yes, I mean msi_domain_ops::domain_alloc_irqs() here.
+Applied to controller/dwc, thanks!
 
->
-> I think you'll have better luck getting feedback if you can post the
-> complete working patch.  At the very least, you'll learn more about
-> the problem by doing that.
-Emm, I found I can do some small modification on
-msi_domain_prepare_irqs(), and solve the problem by overriding
-msi_domain_ops::msi_prepare(), thanks. And patches is coming soon.
+[1/1] PCI: dwc: Wait for link up only if link is started
+      https://git.kernel.org/pci/pci/c/da56a1bfbab5
 
-Huacai
->
-> Bjorn
+Thanks,
+Lorenzo
