@@ -2,108 +2,77 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 991FF714406
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:16:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1D2071440B
+	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:16:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjE2GQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 02:16:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
+        id S231467AbjE2GQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 02:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230318AbjE2GQX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:16:23 -0400
-Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8689E1;
-        Sun, 28 May 2023 23:15:53 -0700 (PDT)
-Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b02d0942caso8268945ad.1;
-        Sun, 28 May 2023 23:15:53 -0700 (PDT)
+        with ESMTP id S231449AbjE2GQf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:16:35 -0400
+Received: from mail-yb1-xb34.google.com (mail-yb1-xb34.google.com [IPv6:2607:f8b0:4864:20::b34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 309A2C6
+        for <linux-pci@vger.kernel.org>; Sun, 28 May 2023 23:16:06 -0700 (PDT)
+Received: by mail-yb1-xb34.google.com with SMTP id 3f1490d57ef6-bacfc573647so4365019276.1
+        for <linux-pci@vger.kernel.org>; Sun, 28 May 2023 23:16:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685340952; x=1687932952;
-        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EcQN8VgoDYPYnc3V4elXqbCt7D4H65Z/7XNtLl1+E5g=;
-        b=pW5b94mZADa2C+g+WEXSfS2ewafvu3n4QW2Iq+3NdaSLsQ1FHZjHDLyMAxuTB3lvdj
-         oXs6hnTYF2YOyCn2wMTrZIbMSVBD+WooJeik5bIFhA96vrrIBuVxfppRBoTKarwEsRSA
-         oATEm20DWqFwD3oD4CLrGPFd4C9+mZ3+4TsF74un/s2M7leM8lCZ44UOIj5Q8C96botd
-         SPB3TVN1E6XMljWMzS0WYxETPBKr2Ovc1tgiG9QTl1aeNywv6Y4CCxc4wrSzHycByEpj
-         a+XKIEcYONdy+XshmkNkbbDv8zn7mnwmaokx3aFCktUJmh/afDSY/LScu1MUb/9WYUlu
-         qcNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685340952; x=1687932952;
-        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=gmail.com; s=20221208; t=1685340963; x=1687932963;
+        h=to:subject:message-id:date:from:sender:mime-version:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EcQN8VgoDYPYnc3V4elXqbCt7D4H65Z/7XNtLl1+E5g=;
-        b=NkGql1Lgy3iA7C78mrR6NIGAL33c3rYG64CRyg18/vEW6u7vzkk3Wo0MrMdiLzuKfA
-         L+p87N1+g8GRIAu6MfXoGOJAqs1RBR3gt+pyk0vbSgWZFbtpq2ge6M89G+tWHlx5CnRM
-         owwmpvBd2b3SFCIRFCawOlkKUbcu9YjavnFzv0J3nBUkeD7gEZ1bMFnSoGfr8NSwLsDD
-         mVIw3wd0sKoqlAtHKc80riD248N3V98AEJFPY7nKRr2Gwi6cPbH5hr4rNkMfR63xCTWf
-         vGcwuBXjhE2Vr8SKyp+HY+Qb0a191ufrN6Z2dRpTFKCjUg1VEUzZQexdJhOqPAwf3UjX
-         qSrA==
-X-Gm-Message-State: AC+VfDzt81wrM79nzQ8EjJREZNdZhHKsA995AAGTkkPET787iy3QQf+O
-        hkRZGIfGB/JJ7DDOxMNtkJ81p4b8cqw=
-X-Google-Smtp-Source: ACHHUZ7asIUDUnelNdN6ELbB/y06Mv3zvsXl7aRIuHsGdgHEFGyNRVPWCl2peKuHKUUV0c9z6JEhqw==
-X-Received: by 2002:a17:902:d2d0:b0:1ac:61ad:d6bd with SMTP id n16-20020a170902d2d000b001ac61add6bdmr13289840plc.65.1685340952171;
-        Sun, 28 May 2023 23:15:52 -0700 (PDT)
-Received: from localhost.localdomain (2001-b400-e28a-e298-44b2-039a-c888-7c56.emome-ip6.hinet.net. [2001:b400:e28a:e298:44b2:39a:c888:7c56])
-        by smtp.gmail.com with ESMTPSA id p23-20020a170902a41700b001aaecc0b6ffsm7270393plq.160.2023.05.28.23.15.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 May 2023 23:15:51 -0700 (PDT)
-From:   Owen Yang <ecs.taipeikernel@gmail.com>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Doug Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@google.com>, Harvey <hunge@google.com>,
-        Bob Moragues <moragues@google.com>,
-        Gavin Lee <gavin.lee@ecs.com.tw>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Abner Yen <abner.yen@ecs.com.tw>,
-        Owen Yang <ecs.taipeikernel@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: [PATCH v1] PCI: Add suspend fixup for SSD on sc7280
-Date:   Mon, 29 May 2023 14:15:41 +0800
-Message-Id: <20230529141527.v1.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
-X-Mailer: git-send-email 2.17.1
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        bh=YgsQjPYSA4x9EUAST26pLIMgzwk5/fmUNEDBBVE+P4A=;
+        b=jmjP9j++MRBLdN8rfr+SqJTV9f1XKJdeCPimoc4lPKYVpw76K+XJIQsYAtdrA7gF4n
+         1SaJbICc614D+5TJseSaIuOCtYVo8VoIrVnXgsdf4+kCN4/sTzY0lmmzNlwkDN06S3KX
+         UAc3Vetup5ocJf3t46getpJbmyFFL31D/cS4Q7ZYc6BWAblARgfaab7mCyzZL5fo6Psr
+         P0SX549xKpDAXZo6zA129lHVS/1OcgpXJrCWPDsqGFbibM5j6RdIKWAZBPVJ8JA891Iz
+         SVvWjSZybG3RdHRqibagmzqSupd2lFtkMFthM+y/7Am/kX9dcJmVFGYTMSf0ZeFwq4kf
+         Jrkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685340963; x=1687932963;
+        h=to:subject:message-id:date:from:sender:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YgsQjPYSA4x9EUAST26pLIMgzwk5/fmUNEDBBVE+P4A=;
+        b=IwzXOwDdJcWZyWu67fCdiI+QKf6SeJ6sneahrRmcVXwGvcp+zJVwFGaRbkDXUzqmiI
+         TZ28Qi13KOJGT/johBy+UxXspaDssxU7ySNybTp9DbtLxRKU6DIToNaYpBwhRmhKNg+o
+         lhKmTE2OqGAWLPVaaATi22iWEkauu0XtZ3cpCK889C4k4jrRIgHer4viiovrBIEzQFsV
+         D+OXUzeL1Sr4W9zpRdIIfMXsTKn1LnsaX4vAyK4jX0de9sT9SYcKrP0qRcLU51qoBfRa
+         mH1YF2/b2bPdMl0K7/s9MJfQqD468bfyqGiB9wmlt4bkAlw3w7MedsoGZWB4Aeb052pM
+         6tPg==
+X-Gm-Message-State: AC+VfDz7qKrv/MDQ4RPl2K2cQfeYOKvVAlrGQtzswc6c88OOKJEBVdcG
+        +5Z7DhIgzd+u8RnnVM7Wl89WnGMeH5Yb9BmE/TE=
+X-Google-Smtp-Source: ACHHUZ5mER2Rzdz2RWP7zak3yY0eQnK0yqG8LbRLfpq+ciuwMKRNQdgcbF6LmTRnUnZfH1HDD+rlc8rVb6TIe6jouiw=
+X-Received: by 2002:a25:4148:0:b0:ba8:1e01:ead5 with SMTP id
+ o69-20020a254148000000b00ba81e01ead5mr9430746yba.60.1685340963536; Sun, 28
+ May 2023 23:16:03 -0700 (PDT)
+MIME-Version: 1.0
+Sender: mrderick.smith2@gmail.com
+Received: by 2002:a05:7108:5386:b0:30b:2a5b:30b0 with HTTP; Sun, 28 May 2023
+ 23:16:02 -0700 (PDT)
+From:   Dr Lisa Williams <lw4666555@gmail.com>
+Date:   Sun, 28 May 2023 23:16:02 -0700
+X-Google-Sender-Auth: WmBFA3qCmfVyriCgQimHjX2virg
+Message-ID: <CAO-9xdkGmDRhnyb2T0xHjfLF0efFvD28KsjZzXviF2ua5Hfw7Q@mail.gmail.com>
+Subject: Hi,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+X-Spam-Status: No, score=0.8 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_ENVFROM_END_DIGIT,
+        FREEMAIL_FROM,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=unavailable autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Implement this workaround to correct NVMe suspend process.
+Hi,
 
-Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
----
+My name is Dr. Lisa Williams, from the United States, currently living
+in the United Kingdom.
 
- drivers/pci/quirks.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I hope you consider my friend request. I will share some of my photos
+and more details about me when I get your reply.
 
-diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f4e2a88729fd..3e7da7174f0c 100644
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -5945,6 +5945,20 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
- }
- DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
- 
-+/* In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD will enter
-+ * D3cold instead of L1ss.It cause the device will randomly crash after
-+ * suspend within 100~250+ cycles of suspend/resume test.
-+ *
-+ * After adding this fixup.We've verified that 10 devices passed
-+ * the suspend/resume 2500 cycles test.
-+ */
-+static void phison_suspend_fixup(struct pci_dev *pdev)
-+{
-+	msleep(30);
-+}
-+DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5013, phison_suspend_fixup);
-+DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5015, phison_suspend_fixup);
-+
- static void rom_bar_overlap_defect(struct pci_dev *dev)
- {
- 	pci_info(dev, "working around ROM BAR overlap defect\n");
--- 
-2.17.1
-
+With love
+Lisa
