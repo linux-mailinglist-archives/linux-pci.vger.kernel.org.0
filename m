@@ -2,50 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BB87C7149E7
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 15:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 01FF2714C19
+	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 16:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229504AbjE2NL1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 09:11:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
+        id S229744AbjE2Oes (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 10:34:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjE2NL0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 09:11:26 -0400
+        with ESMTP id S229528AbjE2Oeq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 10:34:46 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DCE69B;
-        Mon, 29 May 2023 06:11:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21663A0;
+        Mon, 29 May 2023 07:34:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EBDB06142F;
-        Mon, 29 May 2023 13:11:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 507B4C433EF;
-        Mon, 29 May 2023 13:11:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685365882;
-        bh=17HLyGNUhCF02gKPE9xEhli/U7a2vM6mU7mHYmIE+jo=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A53C06259C;
+        Mon, 29 May 2023 14:34:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94580C433D2;
+        Mon, 29 May 2023 14:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1685370884;
+        bh=GJMlPkfiBRehYueIEr8g//eXbGFihHTHSmG8zMigUe0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q3cjdVn3hQe+J5YPa17fzajrtgxDAj3wQI08Ro7F53dExIdF6cbJTk9DhMuNu9GeU
-         Cgts122U2vHMsUXiIRbjXBUpr5tNi9t8cuhSAlE3f5DW9QHZYQeyiyIas/boBuPMmH
-         RRJnAE+YhBtHrBe06Gd12xhktfm13vYT4Qz50CR6Dgfp02ZLi1So6+ZmMJ4raGVziM
-         ia99dnfReEzS5v5OquTuhVmkjPucU3kDL9dETF8awg5IpPU7AL/tAUbCIMy1BjHGVU
-         RoEcYK2sLh8ebxVKYp1ch6ISjCTvKxFqYfNju+Apqgs6h++BPgvEqwOOXNp8gmP12s
-         gfJXqyA9PoglA==
-Date:   Mon, 29 May 2023 15:11:17 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     kw@linux.com, kishon@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] PCI: endpoint: Add PCI Endpoint function driver
- for MHI bus
-Message-ID: <ZHSkdakXJegKRD+q@lpieralisi>
-References: <20230519144215.25167-1-manivannan.sadhasivam@linaro.org>
- <20230519144215.25167-8-manivannan.sadhasivam@linaro.org>
+        b=xX0dqLt8Y01r+5+NFqeEhUEBzv1rVVNeNFAjfhv9asauDPVpSmOLGKrmLGGaGEBTT
+         P+JDISnbiJzkDgF//fD58BwkduXtWi99+qT20GpEfrqGr2uUrT8PpxBWhd8U08LS6m
+         PeWrnZG3Fu/1Z1cxw28ArgBGZ6Q6f0+Yk0oYZ9Lc=
+Date:   Mon, 29 May 2023 15:34:41 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-usb@vger.kernel.org
+Subject: Re: [PATCH v5 38/44] usb: pci-quirks: handle HAS_IOPORT dependencies
+Message-ID: <2023052910-motivator-angler-bed7@gregkh>
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+ <20230522105049.1467313-39-schnelle@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230519144215.25167-8-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20230522105049.1467313-39-schnelle@linux.ibm.com>
 X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -56,559 +64,322 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 19, 2023 at 08:12:15PM +0530, Manivannan Sadhasivam wrote:
-> Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
-> The driver implements the MHI function over PCI in the endpoint device
-> such as SDX55 modem. The MHI endpoint function driver acts as a
-> controller driver for the MHI Endpoint stack and carries out all PCI
-> related activities like mapping the host memory using iATU, triggering
-> MSIs etc...
+On Mon, May 22, 2023 at 12:50:43PM +0200, Niklas Schnelle wrote:
+> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
+> not being declared. In the pci-quirks case the I/O port acceses are
+> used in the quirks for several AMD south bridges. Move unrelated
+> ASMEDIA quirks out of the way and introduce an additional config option
+> for the AMD quirks that depends on HAS_IOPORT.
+
+This is really messy and hard to review in one commit.  I know I got
+lost a bunch, and it's still messy:
+
 > 
-> Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
 > ---
->  drivers/pci/endpoint/functions/Kconfig       |  10 +
->  drivers/pci/endpoint/functions/Makefile      |   1 +
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 454 +++++++++++++++++++
->  3 files changed, 465 insertions(+)
->  create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
+>  drivers/usb/Kconfig           |  10 +++
+>  drivers/usb/core/hcd-pci.c    |   2 +
+>  drivers/usb/host/pci-quirks.c | 125 ++++++++++++++++++----------------
+>  drivers/usb/host/pci-quirks.h |  30 ++++++--
+>  4 files changed, 101 insertions(+), 66 deletions(-)
 > 
-> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-> index 9fd560886871..f5171b4fabbe 100644
-> --- a/drivers/pci/endpoint/functions/Kconfig
-> +++ b/drivers/pci/endpoint/functions/Kconfig
-> @@ -37,3 +37,13 @@ config PCI_EPF_VNTB
->  	  between PCI Root Port and PCIe Endpoint.
+> diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+> index 7f33bcc315f2..abf8c6cdea9e 100644
+> --- a/drivers/usb/Kconfig
+> +++ b/drivers/usb/Kconfig
+> @@ -91,6 +91,16 @@ config USB_PCI
+>  	  If you have such a device you may say N here and PCI related code
+>  	  will not be built in the USB driver.
 >  
->  	  If in doubt, say "N" to disable Endpoint NTB driver.
-> +
-> +config PCI_EPF_MHI
-> +	tristate "PCI Endpoint driver for MHI bus"
-> +	depends on PCI_ENDPOINT && MHI_BUS_EP
+> +config USB_PCI_AMD
+> +	bool "AMD PCI USB host support"
+> +	depends on USB_PCI && HAS_IOPORT
+> +	default X86 || MACH_LOONGSON64 || PPC_PASEMI
 > +	help
-> +	   Enable this configuration option to enable the PCI Endpoint
-> +	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
-> +	   devices such as SDX55.
-> +
-> +	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
-> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
-> index 5c13001deaba..696473fce50e 100644
-> --- a/drivers/pci/endpoint/functions/Makefile
-> +++ b/drivers/pci/endpoint/functions/Makefile
-> @@ -6,3 +6,4 @@
->  obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
->  obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
->  obj-$(CONFIG_PCI_EPF_VNTB) 		+= pci-epf-vntb.o
-> +obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
-> diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> new file mode 100644
-> index 000000000000..df924fb10e4d
-> --- /dev/null
-> +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -0,0 +1,454 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI EPF driver for MHI Endpoint devices
-> + *
-> + * Copyright (C) 2022 Linaro Ltd.
-> + * Author: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> + */
-> +
-> +#include <linux/mhi_ep.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pci-epc.h>
-> +#include <linux/pci-epf.h>
-> +
-> +#define MHI_VERSION_1_0 0x01000000
-> +
-> +struct pci_epf_mhi_ep_info {
-> +	const struct mhi_ep_cntrl_config *config;
-> +	struct pci_epf_header *epf_header;
-> +	enum pci_barno bar_num;
-> +	u32 epf_flags;
-> +	u32 msi_count;
-> +	u32 mru;
-> +};
-> +
-> +#define MHI_EP_CHANNEL_CONFIG_UL(ch_num, ch_name)	\
-> +	{						\
-> +		.num = ch_num,				\
-> +		.name = ch_name,			\
-> +		.dir = DMA_TO_DEVICE,			\
-> +	}
-> +
-> +#define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-> +	{						\
-> +		.num = ch_num,				\
-> +		.name = ch_name,			\
-> +		.dir = DMA_FROM_DEVICE,			\
-> +	}
+> +	  Enable workarounds for USB implementation quirks in SB600/SB700/SB800
+> +	  and later south bridge implementations. These are common on x86 PCs
+> +	  with AMD CPUs but rarely used elsewhere, with the exception of a few
+> +	  powerpc and mips desktop machines.
 
-You can define it as:
+This is fine, make one commit for this, and then we can argue if you
+really need it. :)
 
-#define MHI_EP_CHANNEL_CONFIG(ch_num, ch_name, dir)	\
-	{						\
-		.num = ch_num,				\
-		.name = ch_name,			\
-		.dir = dir,				\
-	}
-
-#define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-	MHI_EP_CHANNEL_CONFIG(ch_num, ch_name, DMA_FROM_DEVICE)
-
-
-etc.
-
-		
 > +
-> +static const struct mhi_ep_channel_config mhi_v1_channels[] = {
-> +	MHI_EP_CHANNEL_CONFIG_UL(0, "LOOPBACK"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(1, "LOOPBACK"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(2, "SAHARA"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(3, "SAHARA"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(4, "DIAG"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(5, "DIAG"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(6, "SSR"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(7, "SSR"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(8, "QDSS"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(9, "QDSS"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(10, "EFS"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(11, "EFS"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(12, "MBIM"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(13, "MBIM"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(14, "QMI"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(15, "QMI"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(16, "QMI"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(17, "QMI"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(18, "IP-CTRL-1"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(19, "IP-CTRL-1"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(20, "IPCR"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(21, "IPCR"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(32, "DUN"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(33, "DUN"),
-> +	MHI_EP_CHANNEL_CONFIG_UL(46, "IP_SW0"),
-> +	MHI_EP_CHANNEL_CONFIG_DL(47, "IP_SW0"),
-> +};
-> +
-> +static const struct mhi_ep_cntrl_config mhi_v1_config = {
-> +	.max_channels = 128,
-> +	.num_channels = ARRAY_SIZE(mhi_v1_channels),
-> +	.ch_cfg = mhi_v1_channels,
-> +	.mhi_version = MHI_VERSION_1_0,
-> +};
-> +
-> +static struct pci_epf_header sdx55_header = {
-> +	.vendorid = PCI_VENDOR_ID_QCOM,
-> +	.deviceid = 0x0306,
-> +	.baseclass_code = PCI_BASE_CLASS_COMMUNICATION,
-> +	.subclass_code = PCI_CLASS_COMMUNICATION_MODEM & 0xff,
-> +	.interrupt_pin	= PCI_INTERRUPT_INTA,
-> +};
-> +
-> +static const struct pci_epf_mhi_ep_info sdx55_info = {
-> +	.config = &mhi_v1_config,
-> +	.epf_header = &sdx55_header,
-> +	.bar_num = BAR_0,
-> +	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
-> +	.msi_count = 32,
-> +	.mru = 0x8000,
-> +};
-> +
-> +struct pci_epf_mhi {
-> +	const struct pci_epf_mhi_ep_info *info;
-> +	struct mhi_ep_cntrl mhi_cntrl;
-> +	struct pci_epf *epf;
-> +	struct mutex lock;
-> +	void __iomem *mmio;
-> +	resource_size_t mmio_phys;
-> +	u32 mmio_size;
-> +	int irq;
-> +	bool mhi_registered;
+>  if USB
+>  
+>  source "drivers/usb/core/Kconfig"
+> diff --git a/drivers/usb/core/hcd-pci.c b/drivers/usb/core/hcd-pci.c
+> index ab2f3737764e..85a0aeae85cd 100644
+> --- a/drivers/usb/core/hcd-pci.c
+> +++ b/drivers/usb/core/hcd-pci.c
+> @@ -206,8 +206,10 @@ int usb_hcd_pci_probe(struct pci_dev *dev, const struct hc_driver *driver)
+>  		goto free_irq_vectors;
+>  	}
+>  
+> +#ifdef CONFIG_USB_PCI_AMD
+>  	hcd->amd_resume_bug = (usb_hcd_amd_remote_wakeup_quirk(dev) &&
+>  			driver->flags & (HCD_USB11 | HCD_USB3)) ? 1 : 0;
+> +#endif /* CONFIG_USB_PCI_AMD */
 
-Do we really need this variable ? Can't it be inferred from
-the framework ?
+No #ifdef in .c files if at all possible please.  Why is this needed?
 
-> +};
+And I hate ? : logic, please spell it out.
+
+>  
+>  	if (driver->flags & HCD_MEMORY) {
+>  		/* EHCI, OHCI */
+> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
+> index 2665832f9add..e0612f909fad 100644
+> --- a/drivers/usb/host/pci-quirks.c
+> +++ b/drivers/usb/host/pci-quirks.c
+> @@ -60,6 +60,23 @@
+>  #define EHCI_USBLEGCTLSTS	4		/* legacy control/status */
+>  #define EHCI_USBLEGCTLSTS_SOOE	(1 << 13)	/* SMI on ownership change */
+>  
+> +/* ASMEDIA quirk use */
+> +#define ASMT_DATA_WRITE0_REG	0xF8
+> +#define ASMT_DATA_WRITE1_REG	0xFC
+> +#define ASMT_CONTROL_REG	0xE0
+> +#define ASMT_CONTROL_WRITE_BIT	0x02
+> +#define ASMT_WRITEREG_CMD	0x10423
+> +#define ASMT_FLOWCTL_ADDR	0xFA30
+> +#define ASMT_FLOWCTL_DATA	0xBA
+> +#define ASMT_PSEUDO_DATA	0
 > +
-> +static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-> +				 phys_addr_t *phys_ptr, void __iomem **virt, size_t size)
+> +/* Intel quirk use */
+> +#define USB_INTEL_XUSB2PR      0xD0
+> +#define USB_INTEL_USB2PRM      0xD4
+> +#define USB_INTEL_USB3_PSSEN   0xD8
+> +#define USB_INTEL_USB3PRM      0xDC
+> +
+> +#ifdef CONFIG_USB_PCI_AMD
+>  /* AMD quirk use */
+>  #define	AB_REG_BAR_LOW		0xe0
+>  #define	AB_REG_BAR_HIGH		0xe1
+> @@ -93,21 +110,6 @@
+>  #define	NB_PIF0_PWRDOWN_0	0x01100012
+>  #define	NB_PIF0_PWRDOWN_1	0x01100013
+>  
+> -#define USB_INTEL_XUSB2PR      0xD0
+> -#define USB_INTEL_USB2PRM      0xD4
+> -#define USB_INTEL_USB3_PSSEN   0xD8
+> -#define USB_INTEL_USB3PRM      0xDC
+> -
+> -/* ASMEDIA quirk use */
+> -#define ASMT_DATA_WRITE0_REG	0xF8
+> -#define ASMT_DATA_WRITE1_REG	0xFC
+> -#define ASMT_CONTROL_REG	0xE0
+> -#define ASMT_CONTROL_WRITE_BIT	0x02
+> -#define ASMT_WRITEREG_CMD	0x10423
+> -#define ASMT_FLOWCTL_ADDR	0xFA30
+> -#define ASMT_FLOWCTL_DATA	0xBA
+> -#define ASMT_PSEUDO_DATA	0
+> -
+>  /*
+>   * amd_chipset_gen values represent AMD different chipset generations
+>   */
+> @@ -458,50 +460,6 @@ void usb_amd_quirk_pll_disable(void)
+>  }
+>  EXPORT_SYMBOL_GPL(usb_amd_quirk_pll_disable);
+>  
+> -static int usb_asmedia_wait_write(struct pci_dev *pdev)
+
+Moving these is odd, why?  They are just doing pci accesses.
+
+
+> -{
+> -	unsigned long retry_count;
+> -	unsigned char value;
+> -
+> -	for (retry_count = 1000; retry_count > 0; --retry_count) {
+> -
+> -		pci_read_config_byte(pdev, ASMT_CONTROL_REG, &value);
+> -
+> -		if (value == 0xff) {
+> -			dev_err(&pdev->dev, "%s: check_ready ERROR", __func__);
+> -			return -EIO;
+> -		}
+> -
+> -		if ((value & ASMT_CONTROL_WRITE_BIT) == 0)
+> -			return 0;
+> -
+> -		udelay(50);
+> -	}
+> -
+> -	dev_warn(&pdev->dev, "%s: check_write_ready timeout", __func__);
+> -	return -ETIMEDOUT;
+> -}
+> -
+> -void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev)
+> -{
+> -	if (usb_asmedia_wait_write(pdev) != 0)
+> -		return;
+> -
+> -	/* send command and address to device */
+> -	pci_write_config_dword(pdev, ASMT_DATA_WRITE0_REG, ASMT_WRITEREG_CMD);
+> -	pci_write_config_dword(pdev, ASMT_DATA_WRITE1_REG, ASMT_FLOWCTL_ADDR);
+> -	pci_write_config_byte(pdev, ASMT_CONTROL_REG, ASMT_CONTROL_WRITE_BIT);
+> -
+> -	if (usb_asmedia_wait_write(pdev) != 0)
+> -		return;
+> -
+> -	/* send data to device */
+> -	pci_write_config_dword(pdev, ASMT_DATA_WRITE0_REG, ASMT_FLOWCTL_DATA);
+> -	pci_write_config_dword(pdev, ASMT_DATA_WRITE1_REG, ASMT_PSEUDO_DATA);
+> -	pci_write_config_byte(pdev, ASMT_CONTROL_REG, ASMT_CONTROL_WRITE_BIT);
+> -}
+> -EXPORT_SYMBOL_GPL(usb_asmedia_modifyflowcontrol);
+> -
+>  void usb_amd_quirk_pll_enable(void)
+>  {
+>  	usb_amd_quirk_pll(0);
+> @@ -630,7 +588,53 @@ bool usb_amd_pt_check_port(struct device *device, int port)
+>  	return !(value & BIT(port_shift));
+>  }
+>  EXPORT_SYMBOL_GPL(usb_amd_pt_check_port);
+> +#endif /* CONFIG_USB_PCI_AMD */
+>  
+> +static int usb_asmedia_wait_write(struct pci_dev *pdev)
 > +{
-> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> +	struct pci_epf *epf = epf_mhi->epf;
-> +	struct pci_epc *epc = epf_mhi->epf->epc;
-> +	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> +	void __iomem *virt_addr;
-> +	phys_addr_t phys_addr;
-> +	int ret;
+> +	unsigned long retry_count;
+> +	unsigned char value;
 > +
-> +	virt_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, size + offset);
-> +	if (!virt_addr)
-> +		return -ENOMEM;
+> +	for (retry_count = 1000; retry_count > 0; --retry_count) {
 > +
-> +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, phys_addr, pci_addr - offset,
-> +			       size + offset);
-> +	if (ret) {
-> +		pci_epc_mem_free_addr(epc, phys_addr, virt_addr, size + offset);
+> +		pci_read_config_byte(pdev, ASMT_CONTROL_REG, &value);
 > +
-> +		return ret;
-> +	}
-> +
-> +	*phys_ptr = phys_addr + offset;
-> +	*virt = virt_addr + offset;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-> +				   phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> +	struct pci_epf *epf = epf_mhi->epf;
-> +	struct pci_epc *epc = epf->epc;
-> +	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> +
-> +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, phys_addr - offset);
-> +	pci_epc_mem_free_addr(epc, phys_addr - offset, virt_addr - offset, size + offset);
-> +}
-> +
-> +static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> +	struct pci_epf *epf = epf_mhi->epf;
-> +	struct pci_epc *epc = epf->epc;
-> +
-> +	/*
-> +	 * Vector is incremented by 1 here as the DWC core will decrement it before
-> +	 * writing to iATU.
-
-This isn't OK. It is an API, you can't write code explicitly relying on
-the underlying implementation. I assume the API is not well specified,
-that's why we need these tricks ?
-
-> +	 */
-> +	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI, vector + 1);
-> +}
-> +
-> +static int pci_epf_mhi_read_from_host(struct mhi_ep_cntrl *mhi_cntrl, u64 from, void __iomem *to,
-> +			       size_t size)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> +	struct pci_epf *epf = epf_mhi->epf;
-> +	struct pci_epc *epc = epf_mhi->epf->epc;
-> +	void __iomem *tre_buf;
-> +	phys_addr_t tre_phys;
-> +	size_t offset = from % 0x1000;
-
-Explain what 0x1000 represents - make it a macro if that
-helps
-
-> +	int ret;
-> +
-> +	mutex_lock(&epf_mhi->lock);
-> +
-> +	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-> +	if (!tre_buf) {
-> +		mutex_unlock(&epf_mhi->lock);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, from - offset,
-> +			       size + offset);
-> +	if (ret) {
-> +		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> +		mutex_unlock(&epf_mhi->lock);
-
-I'd prefer a single goto label instead of repeating the code for every
-branch taken but that's up to you.
-
-> +		return ret;
-> +	}
-> +
-> +	memcpy_fromio(to, tre_buf + offset, size);
-> +
-> +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-> +	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> +
-> +	mutex_unlock(&epf_mhi->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl, void __iomem *from, u64 to,
-> +			      size_t size)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> +	struct pci_epf *epf = epf_mhi->epf;
-> +	struct pci_epc *epc = epf_mhi->epf->epc;
-> +	void __iomem *tre_buf;
-> +	phys_addr_t tre_phys;
-> +	size_t offset = to % 0x1000;
-
-Ditto as above.
-
-> +	int ret;
-> +
-> +	mutex_lock(&epf_mhi->lock);
-> +
-> +	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-> +	if (!tre_buf) {
-> +		mutex_unlock(&epf_mhi->lock);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, to - offset,
-> +			       size + offset);
-> +	if (ret) {
-> +		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> +		mutex_unlock(&epf_mhi->lock);
-
-Ditto.
-
-> +		return ret;
-> +	}
-> +
-> +	memcpy_toio(tre_buf + offset, from, size);
-> +
-> +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-> +	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> +
-> +	mutex_unlock(&epf_mhi->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_mhi_core_init(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> +	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-> +	struct pci_epc *epc = epf->epc;
-> +	struct device *dev = &epf->dev;
-> +	int ret;
-> +
-> +	epf_bar->phys_addr = epf_mhi->mmio_phys;
-> +	epf_bar->size = epf_mhi->mmio_size;
-> +	epf_bar->barno = info->bar_num;
-> +	epf_bar->flags = info->epf_flags;
-> +	ret = pci_epc_set_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set BAR: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = pci_epc_set_msi(epc, epf->func_no, epf->vfunc_no,
-> +			      order_base_2(info->msi_count));
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set MSI configuration: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = pci_epc_write_header(epc, epf->func_no, epf->vfunc_no, epf->header);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to set Configuration header: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_mhi_link_up(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> +	struct pci_epc *epc = epf->epc;
-> +	struct device *dev = &epf->dev;
-> +	int ret;
-> +
-> +	mhi_cntrl->mmio = epf_mhi->mmio;
-> +	mhi_cntrl->irq = epf_mhi->irq;
-> +	mhi_cntrl->mru = info->mru;
-> +
-> +	/* Assign the struct dev of PCI EP as MHI controller device */
-> +	mhi_cntrl->cntrl_dev = epc->dev.parent;
-> +	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
-> +	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
-> +	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-> +	mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
-> +	mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
-> +
-> +	/* Register the MHI EP controller */
-> +	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	epf_mhi->mhi_registered = true;
-
-I don't like this. It should be part of mhi_ep_register_controller();
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_mhi_link_down(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> +
-> +	if (epf_mhi->mhi_registered) {
-> +		mhi_ep_power_down(mhi_cntrl);
-> +		mhi_ep_unregister_controller(mhi_cntrl);
-> +		epf_mhi->mhi_registered = false;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int pci_epf_mhi_bme(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> +	struct device *dev = &epf->dev;
-> +	int ret;
-> +
-> +	/* Power up the MHI EP stack if link is up and stack is in power down state */
-> +	if (!mhi_cntrl->enabled && epf_mhi->mhi_registered) {
-> +		ret = mhi_ep_power_up(mhi_cntrl);
-> +		if (ret) {
-> +			dev_err(dev, "Failed to power up MHI EP: %d\n", ret);
-> +			mhi_ep_unregister_controller(mhi_cntrl);
-> +			epf_mhi->mhi_registered = false;
+> +		if (value == 0xff) {
+> +			dev_err(&pdev->dev, "%s: check_ready ERROR", __func__);
+> +			return -EIO;
 > +		}
+> +
+> +		if ((value & ASMT_CONTROL_WRITE_BIT) == 0)
+> +			return 0;
+> +
+> +		udelay(50);
 > +	}
 > +
-> +	return 0;
+> +	dev_warn(&pdev->dev, "%s: check_write_ready timeout", __func__);
+> +	return -ETIMEDOUT;
 > +}
 > +
-> +static int pci_epf_mhi_bind(struct pci_epf *epf)
+> +void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev)
 > +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	struct pci_epc *epc = epf->epc;
-> +	struct platform_device *pdev = to_platform_device(epc->dev.parent);
-> +	struct device *dev = &epf->dev;
-> +	struct resource *res;
-> +	int ret;
+> +	if (usb_asmedia_wait_write(pdev) != 0)
+> +		return;
 > +
-> +	if (WARN_ON_ONCE(!epc))
-> +		return -EINVAL;
+> +	/* send command and address to device */
+> +	pci_write_config_dword(pdev, ASMT_DATA_WRITE0_REG, ASMT_WRITEREG_CMD);
+> +	pci_write_config_dword(pdev, ASMT_DATA_WRITE1_REG, ASMT_FLOWCTL_ADDR);
+> +	pci_write_config_byte(pdev, ASMT_CONTROL_REG, ASMT_CONTROL_WRITE_BIT);
 > +
-> +	/* Get MMIO base address from Endpoint controller */
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mmio");
-> +	epf_mhi->mmio_phys = res->start;
-> +	epf_mhi->mmio_size = resource_size(res);
+> +	if (usb_asmedia_wait_write(pdev) != 0)
+> +		return;
 > +
-> +	epf_mhi->mmio = ioremap_wc(epf_mhi->mmio_phys, epf_mhi->mmio_size);
+> +	/* send data to device */
+> +	pci_write_config_dword(pdev, ASMT_DATA_WRITE0_REG, ASMT_FLOWCTL_DATA);
+> +	pci_write_config_dword(pdev, ASMT_DATA_WRITE1_REG, ASMT_PSEUDO_DATA);
+> +	pci_write_config_byte(pdev, ASMT_CONTROL_REG, ASMT_CONTROL_WRITE_BIT);
+> +}
+> +EXPORT_SYMBOL_GPL(usb_asmedia_modifyflowcontrol);
+> +
+> +#if defined(CONFIG_HAS_IOPORT) && defined(CONFIG_USB_UHCI_HCD)
 
-ioremap_wc(). Why wc mappings ? Please explain.
+Is this really needed?  This feels wrong, why is ioport odd like this?
 
-Thanks,
-Lorenzo
+>  /*
+>   * Make sure the controller is completely inactive, unable to
+>   * generate interrupts or do DMA.
+> @@ -711,6 +715,7 @@ int uhci_check_and_reset_hc(struct pci_dev *pdev, unsigned long base)
+>  	return 1;
+>  }
+>  EXPORT_SYMBOL_GPL(uhci_check_and_reset_hc);
+> +#endif /* defined(CONFIG_HAS_IOPORT && defined(CONFIG_USB_UHCI_HCD) */
+>  
+>  static inline int io_type_enabled(struct pci_dev *pdev, unsigned int mask)
+>  {
+> @@ -723,6 +728,7 @@ static inline int io_type_enabled(struct pci_dev *pdev, unsigned int mask)
+>  
+>  static void quirk_usb_handoff_uhci(struct pci_dev *pdev)
+>  {
+> +#ifdef CONFIG_HAS_IOPORT
+>  	unsigned long base = 0;
+>  	int i;
+>  
+> @@ -737,6 +743,7 @@ static void quirk_usb_handoff_uhci(struct pci_dev *pdev)
+>  
+>  	if (base)
+>  		uhci_check_and_reset_hc(pdev, base);
+> +#endif /* CONFIG_HAS_IOPORT */
+>  }
+>  
+>  static int mmio_resource_enabled(struct pci_dev *pdev, int idx)
+> diff --git a/drivers/usb/host/pci-quirks.h b/drivers/usb/host/pci-quirks.h
+> index e729de21fad7..8c87505f0abc 100644
+> --- a/drivers/usb/host/pci-quirks.h
+> +++ b/drivers/usb/host/pci-quirks.h
+> @@ -2,9 +2,10 @@
+>  #ifndef __LINUX_USB_PCI_QUIRKS_H
+>  #define __LINUX_USB_PCI_QUIRKS_H
+>  
+> -#ifdef CONFIG_USB_PCI
+>  void uhci_reset_hc(struct pci_dev *pdev, unsigned long base);
+>  int uhci_check_and_reset_hc(struct pci_dev *pdev, unsigned long base);
+> +
+> +#ifdef CONFIG_USB_PCI_AMD
+>  int usb_hcd_amd_remote_wakeup_quirk(struct pci_dev *pdev);
+>  bool usb_amd_hang_symptom_quirk(void);
+>  bool usb_amd_prefetch_quirk(void);
+> @@ -12,23 +13,38 @@ void usb_amd_dev_put(void);
+>  bool usb_amd_quirk_pll_check(void);
+>  void usb_amd_quirk_pll_disable(void);
+>  void usb_amd_quirk_pll_enable(void);
+> -void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev);
+> -void usb_enable_intel_xhci_ports(struct pci_dev *xhci_pdev);
+> -void usb_disable_xhci_ports(struct pci_dev *xhci_pdev);
+>  void sb800_prefetch(struct device *dev, int on);
+>  bool usb_amd_pt_check_port(struct device *device, int port);
+>  #else
+> -struct pci_dev;
+> +static inline bool usb_amd_hang_symptom_quirk(void)
+> +{
+> +	return false;
+> +};
+> +static inline bool usb_amd_prefetch_quirk(void)
+> +{
+> +	return false;
+> +}
+> +static inline bool usb_amd_quirk_pll_check(void)
+> +{
+> +	return false;
+> +}
+>  static inline void usb_amd_quirk_pll_disable(void) {}
+>  static inline void usb_amd_quirk_pll_enable(void) {}
+> -static inline void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev) {}
+>  static inline void usb_amd_dev_put(void) {}
+> -static inline void usb_disable_xhci_ports(struct pci_dev *xhci_pdev) {}
+>  static inline void sb800_prefetch(struct device *dev, int on) {}
+>  static inline bool usb_amd_pt_check_port(struct device *device, int port)
+>  {
+>  	return false;
+>  }
+> +#endif /* CONFIG_USB_PCI_AMD */
+> +
+> +#ifdef CONFIG_USB_PCI
+> +void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev);
+> +void usb_enable_intel_xhci_ports(struct pci_dev *xhci_pdev);
+> +void usb_disable_xhci_ports(struct pci_dev *xhci_pdev);
+> +#else
+> +static inline void usb_asmedia_modifyflowcontrol(struct pci_dev *pdev) {}
+> +static inline void usb_disable_xhci_ports(struct pci_dev *xhci_pdev) {}
+>  #endif  /* CONFIG_USB_PCI */
 
-> +	if (IS_ERR(epf_mhi->mmio))
-> +		return PTR_ERR(epf_mhi->mmio);
-> +
-> +	ret = platform_get_irq_byname(pdev, "doorbell");
-> +	if (ret < 0) {
-> +		dev_err(dev, "Failed to get Doorbell IRQ\n");
-> +		iounmap(epf_mhi->mmio);
-> +		return ret;
-> +	}
-> +
-> +	epf_mhi->irq = ret;
-> +
-> +	return 0;
-> +}
-> +
-> +static void pci_epf_mhi_unbind(struct pci_epf *epf)
-> +{
-> +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> +	struct pci_epf_bar *epf_bar = &epf->bar[info->bar_num];
-> +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> +	struct pci_epc *epc = epf->epc;
-> +
-> +	/*
-> +	 * Forcefully power down the MHI EP stack. Only way to bring the MHI EP stack
-> +	 * back to working state after successive bind is by getting BME from host.
-> +	 */
-> +	if (epf_mhi->mhi_registered) {
-> +		mhi_ep_power_down(mhi_cntrl);
-> +		mhi_ep_unregister_controller(mhi_cntrl);
-> +		epf_mhi->mhi_registered = false;
-> +	}
-> +
-> +	iounmap(epf_mhi->mmio);
-> +	pci_epc_clear_bar(epc, epf->func_no, epf->vfunc_no, epf_bar);
-> +}
-> +
-> +static struct pci_epc_event_ops pci_epf_mhi_event_ops = {
-> +	.core_init = pci_epf_mhi_core_init,
-> +	.link_up = pci_epf_mhi_link_up,
-> +	.link_down = pci_epf_mhi_link_down,
-> +	.bme = pci_epf_mhi_bme,
-> +};
-> +
-> +static int pci_epf_mhi_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
-> +{
-> +	struct pci_epf_mhi_ep_info *info = (struct pci_epf_mhi_ep_info *) id->driver_data;
-> +	struct pci_epf_mhi *epf_mhi;
-> +	struct device *dev = &epf->dev;
-> +
-> +	epf_mhi = devm_kzalloc(dev, sizeof(*epf_mhi), GFP_KERNEL);
-> +	if (!epf_mhi)
-> +		return -ENOMEM;
-> +
-> +	epf->header = info->epf_header;
-> +	epf_mhi->info = info;
-> +	epf_mhi->epf = epf;
-> +
-> +	epf->event_ops = &pci_epf_mhi_event_ops;
-> +
-> +	mutex_init(&epf_mhi->lock);
-> +
-> +	epf_set_drvdata(epf, epf_mhi);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pci_epf_device_id pci_epf_mhi_ids[] = {
-> +	{
-> +		.name = "sdx55", .driver_data = (kernel_ulong_t) &sdx55_info,
-> +	},
-> +	{},
-> +};
-> +
-> +static struct pci_epf_ops pci_epf_mhi_ops = {
-> +	.unbind	= pci_epf_mhi_unbind,
-> +	.bind	= pci_epf_mhi_bind,
-> +};
-> +
-> +static struct pci_epf_driver pci_epf_mhi_driver = {
-> +	.driver.name	= "pci_epf_mhi",
-> +	.probe		= pci_epf_mhi_probe,
-> +	.id_table	= pci_epf_mhi_ids,
-> +	.ops		= &pci_epf_mhi_ops,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int __init pci_epf_mhi_init(void)
-> +{
-> +	return pci_epf_register_driver(&pci_epf_mhi_driver);
-> +}
-> +module_init(pci_epf_mhi_init);
-> +
-> +static void __exit pci_epf_mhi_exit(void)
-> +{
-> +	pci_epf_unregister_driver(&pci_epf_mhi_driver);
-> +}
-> +module_exit(pci_epf_mhi_exit);
-> +
-> +MODULE_DESCRIPTION("PCI EPF driver for MHI Endpoint devices");
-> +MODULE_AUTHOR("Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>");
-> +MODULE_LICENSE("GPL");
-> -- 
-> 2.25.1
-> 
+Again, the changes here are hard to follow, why?
+
+Please break up into smaller pieces.
+
+thanks,
+
+greg k-h
