@@ -2,440 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B17BD714EF9
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 19:38:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC5367150B5
+	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 22:48:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229517AbjE2Ric (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 13:38:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58546 "EHLO
+        id S229502AbjE2UsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 16:48:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbjE2Rib (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 13:38:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65841AB;
-        Mon, 29 May 2023 10:38:29 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E89166215D;
-        Mon, 29 May 2023 17:38:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B713C433D2;
-        Mon, 29 May 2023 17:38:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685381908;
-        bh=BcptRJMJlcnUYUvoqWq/afyC9AvdhFG2DLnFCC2jcqk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=N2Xhtlq+R+eMSWPYviKxJ7Fx6JhscEBtrq17/MwvV0wD4hyx6j4sg9bmgcGf7+oZx
-         b1PexLNt7DnJ+OhZhJYv2szm3xNbUFu+Sv38f1QgQH214fhr00q3zBSB6IHTsJvzcj
-         JyHfZU6A5Vw49mVZdcOjgjXBVx6w77r6iWGhQjA3N+KbHO4kYjXPP3e5XB8+ZQyWx0
-         DlLXdx/TnSfCElQ8KA1IxxcSeWU1Ch0DL0xtDQeaWWYQ4Pa7M8beEtiiwLWNjbQTNj
-         Q6RsvbKGDKEoA9vz5C7gmatZ+4bsxTrdFCJ4XUELNygjMSs5DglI2otDKOfbq5VMOB
-         cf+E+Pzjwx12A==
-Date:   Mon, 29 May 2023 23:08:15 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        kw@linux.com, kishon@kernel.org, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4 7/7] PCI: endpoint: Add PCI Endpoint function driver
- for MHI bus
-Message-ID: <20230529173815.GG5633@thinkpad>
-References: <20230519144215.25167-1-manivannan.sadhasivam@linaro.org>
- <20230519144215.25167-8-manivannan.sadhasivam@linaro.org>
- <ZHSkdakXJegKRD+q@lpieralisi>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        with ESMTP id S229459AbjE2UsQ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 16:48:16 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2045.outbound.protection.outlook.com [40.107.8.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D729C7;
+        Mon, 29 May 2023 13:48:15 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H+NF1NQLIO+2xuEmdMyZeDzCRbAsOvC7O3Zlf/RtiBT20WCXw7oN90o57e8iiFfuyNnqXDCYG5ZrOYylRTQJZrT07PnVZFJSGwYSnqn5UvvI0DxI8vwHFi177bovGTaDxaspxdf67uRbY3AwOTU0HowDWHFTdA5kpDii3R3pLMhifig9Emho1H7EjcwOsh5Hnj1f+pjGNahWA0DSLHC/FsHZXzcilLe2ldkkG0+Aic0B7A1eqEJpVcTCfOYz57IgdB4KvNcEN1HiIApwwQoXKB1MGh/Io3hsV/Mc7oVcADDYyXzRmXBIQ6QB0MqnwINx0a40iyez+7Jd8rcrMIZOFQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=yh+HjzpDilKdeOeetgB5Qv2okDjMkRled+EY/Gc3QXo=;
+ b=lw0yAVxHPM9jYxYDnlm7KM67Ui7AxnV5kSDmMhO/dxxNM3L/VtAWKdyntLndELM36+kPpAPkDVzT3cs4i0g4iBzayElkwmx8eXK5cXp4jb7CmSfwuEa0SmgXB/1+s1m3SLoPWvCjt/VRWtIhw1fbl8cI2hlOzOSU9t7ylfD+jGz/s1R4TKlOEbIMrWjd28py4PqguL7UNT9idNaCvdtLrCbxiMZyXHnlRwNtva6yfijtOB6mKHSEKC9ZejjtiQuHoViWpP5rOjQDn3LikalmwlHgvIPdRRY60lA3rvBELVKoqONmiZgsCyhkTpXFsZmYgP6xu1EHIGmIF3DsxccWZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yh+HjzpDilKdeOeetgB5Qv2okDjMkRled+EY/Gc3QXo=;
+ b=OY7ycAKz5riNfRaCLGq7lh8YDqu9DePip6ZUFFn/vh/TnfMHepDhFlY1a8N+59h4K0m7bnwJutl7Zhm4toznPc2MCsqljw/CMWtOQ6ZqDXgI3dEZCoXI+J0i0PIN/n0ER/wNGDUZF+nGcG8pgK9L2Vy3X0W/bdmPtMpwEfSB42M=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
+ by DBBPR04MB7884.eurprd04.prod.outlook.com (2603:10a6:10:1f2::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Mon, 29 May
+ 2023 20:48:12 +0000
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::b027:17aa:e5f5:4fea]) by AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::b027:17aa:e5f5:4fea%6]) with mapi id 15.20.6433.022; Mon, 29 May 2023
+ 20:48:11 +0000
+Date:   Mon, 29 May 2023 23:48:07 +0300
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
+Cc:     netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
+ node has status = "disabled"
+Message-ID: <20230529204807.z2th6cilnrbzj2e2@skbuf>
+References: <20230521115141.2384444-1-vladimir.oltean@nxp.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZHSkdakXJegKRD+q@lpieralisi>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230521115141.2384444-1-vladimir.oltean@nxp.com>
+X-ClientProxiedBy: VI1PR0102CA0096.eurprd01.prod.exchangelabs.com
+ (2603:10a6:803:15::37) To AM0PR04MB6452.eurprd04.prod.outlook.com
+ (2603:10a6:208:16d::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DBBPR04MB7884:EE_
+X-MS-Office365-Filtering-Correlation-Id: d3a1f2c2-8a79-477e-79f7-08db6086043b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1AACoHPbsNk6s6Wi87sRbx8R6TQ9mI9uSBMGeQ1U4BEsI7MXg46RWxNbbx3qNTp6S2VepqSg9Zpsc6i1HUmwng+a+EsEfOuVF8ViphKYq5c4TEFeHyod+pfiA/UO4zG96HGe4khuNSm19LoEh1YIuv270VFM5QolPLRVQ07PjG+Wwuz4KW37+aMc1+t9tW1KtUCNmjjfXmcksHAJUqmJ6gkVm05ukjmZSyIGf4fgKWXWsdZZXM/OW2cVPRRSAdYYSKQBkgiHQvVCS1X4st9MyS9z0QCVM7uTBCPMzm9FKzIOjUdqQ6ykwK40p+YFFU0zIjq83Fn3jY6yQumxZ/kbzI/KP3BRgnrUJUVa8GhNsrBMXPpiJDvjvK2mfh8uLPpDVQen+DPa+CMYGuv8voz0QdHTihvXnPAkeQJuh1Kq6+h1EKHO2VllmpRj6NY6eaZAh/fBDARnc9TOLByx3eHRTxRQp7hrfWah2AzqaTuDZTO7ixqJvwmFPzTeQyVX1WJGkHtAVcfD83SJUNx1Z3awIBFVq8P9Ha5U+ZQsKT3PwZbkAmnwwdBZHXE5NbTJnm4I
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(346002)(366004)(376002)(136003)(39860400002)(396003)(451199021)(478600001)(54906003)(8676002)(8936002)(44832011)(5660300002)(2906002)(33716001)(86362001)(66556008)(4326008)(6916009)(66476007)(66946007)(316002)(38100700002)(41300700001)(186003)(6512007)(9686003)(6506007)(26005)(1076003)(6486002)(6666004)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eLYGi/MPDLcd87XDSae2QkEdbZLFTuXE2buw53iVXU66j/rahNuPpqfVZo0b?=
+ =?us-ascii?Q?mC1NDqG9sVb+LYrSQuHGl17wRbMYfUJ1+8bW+R4HKQ8dDPMbS0gpkjXK1wkx?=
+ =?us-ascii?Q?JHEJ7NiLBRiZt5c4eox+hmgYHS69pBF8vbAopqG9tdv4mXH71pY8emoteI8f?=
+ =?us-ascii?Q?VNViKlcFbS8jAwUJ+WsM2+RpgTyxvc4e4MIZ+LT9zOdNEfRiaKYDLlfZjL/c?=
+ =?us-ascii?Q?TMMZh/NqXBJfBoz5G17t3w4RtewjzrITae8OokELT57c/13Z7Ub4soK4K3lE?=
+ =?us-ascii?Q?ccVU+kTDCqk+JH8hx/v29BWWcah7yPzEER+ofipTpHb2PpA9cO6GvUSOX1ny?=
+ =?us-ascii?Q?ifdf+3vX2DybOPBUaWGfrnJu99Ep9rfQBQPmFqzm2U8GtWm939SIYzVQzpy6?=
+ =?us-ascii?Q?jXi3M9Us1gDy3Bm0PGIWJNdQ7Kv82fLiuQa4alt8BEKlzuCH+i7dTQ+2vQKr?=
+ =?us-ascii?Q?qbOtFcUeUXtMf5/NkYoeB/Jcz5kZjO8RgxGwN8QcQq0DhwmtzqrSf99wQ2Az?=
+ =?us-ascii?Q?EA6Ztq/Gb6BZIFs1X5LQSRnR0wD2Rc+W8vcnu8tX8BwwMtb56qwVa19xfCAw?=
+ =?us-ascii?Q?RQ3NSNu+LtZWpQHRsbyU4iKWYvaIi0JF3Id+xESRlZNQDdYDZsKF9GBP51TI?=
+ =?us-ascii?Q?VEuhjuqU9Hw+xytwO/2IWKoETD4cInzHWgHInR4fgV34ZEvzTQOILqA/+HN6?=
+ =?us-ascii?Q?5GtUaYUtGN4bCAVbX7o65+dcNNFrTzlque9G3QszfOtoCcOyvZtMkmo0hdjX?=
+ =?us-ascii?Q?hijsg9cCc9C5rkN4KD+UUwPeQdg7nAn5Vqq4/inHa+ngfCo7kzn5zQLsWVSr?=
+ =?us-ascii?Q?dJYECoVG+GLxhapbWHwZ1o6Q6zjFZH8ktf/nZB/kRbaAL6zNKQqQ1x3XDIs9?=
+ =?us-ascii?Q?roRvUavomY8+gGUR5jgcjLrbq6WuuPVoBOjhiqhLGd5B6JBTqQrejnnigd+/?=
+ =?us-ascii?Q?FmfhgZqk4oRXNjSIUQEGPLy7vmM0eodAXOMGo5MohOYDHOvupeSKyuETTvtD?=
+ =?us-ascii?Q?0UTpsCCCSRauuGJ4ChEuntmYArKeGM5gbv9z/ryGmRIlXyWQ2VN/5yP0LzlC?=
+ =?us-ascii?Q?0FLT9/2wwxEH0m4o7qzWyTgl6qkkgCvzFwnwSEw1LoVbedjYcE7zZJmKvBtL?=
+ =?us-ascii?Q?M9kk5P9Dg3dmZvC+PGJqjsfiN9WYdg+o2bwa26G9HSjmh8ksajuZ8KBq0jgM?=
+ =?us-ascii?Q?NVocS584DSQtKFFwzJXzeXut1b+a7lYi/kiiNTK4ajhA9M+xTUkgMx+ac91p?=
+ =?us-ascii?Q?cPvHYWAsC0RnX5tbkA7O+H+qUgD7cqpyqdJmzP2VtijTS4CQmnIwVTojedLm?=
+ =?us-ascii?Q?cC3rtNAgO+BckMaAkbscyOuXJzo/hKEIk0Ip9m1gLM/dsfmGex+siZfoS1fu?=
+ =?us-ascii?Q?O4nsAyOR1TRUPLii5hSkcUsqZ6CsHvVZ93dsxV2AyndYxtQgu2CeZ5Bo08bS?=
+ =?us-ascii?Q?P4N2t+dQN+/jGodSNJ3dvKhe1RiAp40lv27mtw4LMEJdZf3nFUHZ9+2a3iM4?=
+ =?us-ascii?Q?1lBKgYx5fScnesnt/p190tto9euo6hYrNUYll5dVC7YbMYwntgPPkdVZYMtf?=
+ =?us-ascii?Q?ooZp9NhMh3JsuFMh4u1C22QPJ7WcowcBLDpqmCHz6U4OvRWTvQlcwWGsYCWD?=
+ =?us-ascii?Q?jw=3D=3D?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3a1f2c2-8a79-477e-79f7-08db6086043b
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2023 20:48:11.8035
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: d17Vi5XTX1odm0nnPrpv9+stoOkuQkTKCaOumSrQ6FQ+Ao0H5uxGDAn2z3idVl+QxiKVDpHG4JsgLXxuYFFYMw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7884
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 29, 2023 at 03:11:17PM +0200, Lorenzo Pieralisi wrote:
-> On Fri, May 19, 2023 at 08:12:15PM +0530, Manivannan Sadhasivam wrote:
-> > Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
-> > The driver implements the MHI function over PCI in the endpoint device
-> > such as SDX55 modem. The MHI endpoint function driver acts as a
-> > controller driver for the MHI Endpoint stack and carries out all PCI
-> > related activities like mapping the host memory using iATU, triggering
-> > MSIs etc...
-> > 
-> > Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  drivers/pci/endpoint/functions/Kconfig       |  10 +
-> >  drivers/pci/endpoint/functions/Makefile      |   1 +
-> >  drivers/pci/endpoint/functions/pci-epf-mhi.c | 454 +++++++++++++++++++
-> >  3 files changed, 465 insertions(+)
-> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > 
-> > diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
-> > index 9fd560886871..f5171b4fabbe 100644
-> > --- a/drivers/pci/endpoint/functions/Kconfig
-> > +++ b/drivers/pci/endpoint/functions/Kconfig
-> > @@ -37,3 +37,13 @@ config PCI_EPF_VNTB
-> >  	  between PCI Root Port and PCIe Endpoint.
-> >  
-> >  	  If in doubt, say "N" to disable Endpoint NTB driver.
-> > +
-> > +config PCI_EPF_MHI
-> > +	tristate "PCI Endpoint driver for MHI bus"
-> > +	depends on PCI_ENDPOINT && MHI_BUS_EP
-> > +	help
-> > +	   Enable this configuration option to enable the PCI Endpoint
-> > +	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
-> > +	   devices such as SDX55.
-> > +
-> > +	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
-> > diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
-> > index 5c13001deaba..696473fce50e 100644
-> > --- a/drivers/pci/endpoint/functions/Makefile
-> > +++ b/drivers/pci/endpoint/functions/Makefile
-> > @@ -6,3 +6,4 @@
-> >  obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
-> >  obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
-> >  obj-$(CONFIG_PCI_EPF_VNTB) 		+= pci-epf-vntb.o
-> > +obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
-> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> > new file mode 100644
-> > index 000000000000..df924fb10e4d
-> > --- /dev/null
-> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+Hi Bjorn,
 
-[...]
-
-> > +#define MHI_EP_CHANNEL_CONFIG_UL(ch_num, ch_name)	\
-> > +	{						\
-> > +		.num = ch_num,				\
-> > +		.name = ch_name,			\
-> > +		.dir = DMA_TO_DEVICE,			\
-> > +	}
-> > +
-> > +#define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-> > +	{						\
-> > +		.num = ch_num,				\
-> > +		.name = ch_name,			\
-> > +		.dir = DMA_FROM_DEVICE,			\
-> > +	}
+On Sun, May 21, 2023 at 02:51:41PM +0300, Vladimir Oltean wrote:
+> pci_scan_child_bus_extend() calls pci_scan_slot() with devfn
+> (bus:device:function) being a multiple of 8, i.e. for each unique
+> device.
 > 
-> You can define it as:
+> pci_scan_slot() has logic to say that if the function 0 of a device is
+> absent, the entire device is absent and we can skip the other functions
+> entirely. Traditionally, this has meant that pci_bus_read_dev_vendor_id()
+> returns an error code for that function.
 > 
-> #define MHI_EP_CHANNEL_CONFIG(ch_num, ch_name, dir)	\
-> 	{						\
-> 		.num = ch_num,				\
-> 		.name = ch_name,			\
-> 		.dir = dir,				\
-> 	}
+> However, since the blamed commit, there is an extra confounding
+> condition: function 0 of the device exists and has a valid vendor id,
+> but it is disabled in the device tree. In that case, pci_scan_slot()
+> would incorrectly skip the entire device instead of just that function.
 > 
-> #define MHI_EP_CHANNEL_CONFIG_DL(ch_num, ch_name)	\
-> 	MHI_EP_CHANNEL_CONFIG(ch_num, ch_name, DMA_FROM_DEVICE)
+> Such is the case with the NXP LS1028A SoC, which has an ECAM
+> for embedded Ethernet (see pcie@1f0000000 in
+> arm64/boot/dts/freescale/fsl-ls1028a.dtsi). Each Ethernet port
+> represents a function within the ENETC ECAM, with function 0 going
+> to ENETC Ethernet port 0, connected to SERDES port 0 (SGMII or USXGMII).
 > 
+> When using a SERDES protocol such as 0x9999, all 4 SERDES lanes go to
+> the Ethernet switch (function 5 on this ECAM) and none go to ENETC
+> port 0. So, ENETC port 0 needs to have status = "disabled", and embedded
+> Ethernet takes place just through the other functions (fn 2 is the DSA
+> master, fn 3 is the MDIO controller, fn 5 is the DSA switch etc).
+> Contrast this with other SERDES protocols like 0x85bb, where the switch
+> takes up a single SERDES lane and uses the QSGMII protocol - so ENETC
+> port 0 also gets access to a SERDES lane.
 > 
-> etc.
-
-Ok.
-
+> Therefore, here, function 0 being unused has nothing to do with the
+> entire PCI device being unused.
 > 
-> 		
-> > +
-> > +static const struct mhi_ep_channel_config mhi_v1_channels[] = {
-> > +	MHI_EP_CHANNEL_CONFIG_UL(0, "LOOPBACK"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(1, "LOOPBACK"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(2, "SAHARA"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(3, "SAHARA"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(4, "DIAG"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(5, "DIAG"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(6, "SSR"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(7, "SSR"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(8, "QDSS"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(9, "QDSS"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(10, "EFS"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(11, "EFS"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(12, "MBIM"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(13, "MBIM"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(14, "QMI"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(15, "QMI"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(16, "QMI"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(17, "QMI"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(18, "IP-CTRL-1"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(19, "IP-CTRL-1"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(20, "IPCR"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(21, "IPCR"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(32, "DUN"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(33, "DUN"),
-> > +	MHI_EP_CHANNEL_CONFIG_UL(46, "IP_SW0"),
-> > +	MHI_EP_CHANNEL_CONFIG_DL(47, "IP_SW0"),
-> > +};
-> > +
-> > +static const struct mhi_ep_cntrl_config mhi_v1_config = {
-> > +	.max_channels = 128,
-> > +	.num_channels = ARRAY_SIZE(mhi_v1_channels),
-> > +	.ch_cfg = mhi_v1_channels,
-> > +	.mhi_version = MHI_VERSION_1_0,
-> > +};
-> > +
-> > +static struct pci_epf_header sdx55_header = {
-> > +	.vendorid = PCI_VENDOR_ID_QCOM,
-> > +	.deviceid = 0x0306,
-> > +	.baseclass_code = PCI_BASE_CLASS_COMMUNICATION,
-> > +	.subclass_code = PCI_CLASS_COMMUNICATION_MODEM & 0xff,
-> > +	.interrupt_pin	= PCI_INTERRUPT_INTA,
-> > +};
-> > +
-> > +static const struct pci_epf_mhi_ep_info sdx55_info = {
-> > +	.config = &mhi_v1_config,
-> > +	.epf_header = &sdx55_header,
-> > +	.bar_num = BAR_0,
-> > +	.epf_flags = PCI_BASE_ADDRESS_MEM_TYPE_32,
-> > +	.msi_count = 32,
-> > +	.mru = 0x8000,
-> > +};
-> > +
-> > +struct pci_epf_mhi {
-> > +	const struct pci_epf_mhi_ep_info *info;
-> > +	struct mhi_ep_cntrl mhi_cntrl;
-> > +	struct pci_epf *epf;
-> > +	struct mutex lock;
-> > +	void __iomem *mmio;
-> > +	resource_size_t mmio_phys;
-> > +	u32 mmio_size;
-> > +	int irq;
-> > +	bool mhi_registered;
+> Add a "bool present_but_skipped" which is propagated from the caller
+> of pci_set_of_node() all the way to pci_scan_slot(), so that it can
+> distinguish an error reading the ECAM from a disabled device in the
+> device tree.
 > 
-> Do we really need this variable ? Can't it be inferred from
-> the framework ?
-> 
+> Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
+> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> ---
 
-Looks like yes. More below.
+Do you have some comments here?
 
-> > +};
-> > +
-> > +static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-> > +				 phys_addr_t *phys_ptr, void __iomem **virt, size_t size)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> > +	struct pci_epf *epf = epf_mhi->epf;
-> > +	struct pci_epc *epc = epf_mhi->epf->epc;
-> > +	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> > +	void __iomem *virt_addr;
-> > +	phys_addr_t phys_addr;
-> > +	int ret;
-> > +
-> > +	virt_addr = pci_epc_mem_alloc_addr(epc, &phys_addr, size + offset);
-> > +	if (!virt_addr)
-> > +		return -ENOMEM;
-> > +
-> > +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, phys_addr, pci_addr - offset,
-> > +			       size + offset);
-> > +	if (ret) {
-> > +		pci_epc_mem_free_addr(epc, phys_addr, virt_addr, size + offset);
-> > +
-> > +		return ret;
-> > +	}
-> > +
-> > +	*phys_ptr = phys_addr + offset;
-> > +	*virt = virt_addr + offset;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
-> > +				   phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> > +	struct pci_epf *epf = epf_mhi->epf;
-> > +	struct pci_epc *epc = epf->epc;
-> > +	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
-> > +
-> > +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, phys_addr - offset);
-> > +	pci_epc_mem_free_addr(epc, phys_addr - offset, virt_addr - offset, size + offset);
-> > +}
-> > +
-> > +static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> > +	struct pci_epf *epf = epf_mhi->epf;
-> > +	struct pci_epc *epc = epf->epc;
-> > +
-> > +	/*
-> > +	 * Vector is incremented by 1 here as the DWC core will decrement it before
-> > +	 * writing to iATU.
-> 
-> This isn't OK. It is an API, you can't write code explicitly relying on
-> the underlying implementation. I assume the API is not well specified,
-> that's why we need these tricks ?
-> 
-
-Well, this is not an API issue but rather an implementation detail of the DWC EP
-core driver. The DWC driver expects the interrupt vectors to be 1 based, so it
-decrements it before writing to the MSI address:
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-designware-ep.c#n537
-
-> > +	 */
-> > +	pci_epc_raise_irq(epc, epf->func_no, epf->vfunc_no, PCI_EPC_IRQ_MSI, vector + 1);
-> > +}
-> > +
-> > +static int pci_epf_mhi_read_from_host(struct mhi_ep_cntrl *mhi_cntrl, u64 from, void __iomem *to,
-> > +			       size_t size)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
-> > +	struct pci_epf *epf = epf_mhi->epf;
-> > +	struct pci_epc *epc = epf_mhi->epf->epc;
-> > +	void __iomem *tre_buf;
-> > +	phys_addr_t tre_phys;
-> > +	size_t offset = from % 0x1000;
-> 
-> Explain what 0x1000 represents - make it a macro if that
-> helps
-> 
-
-Ok.
-
-> > +	int ret;
-> > +
-> > +	mutex_lock(&epf_mhi->lock);
-> > +
-> > +	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
-> > +	if (!tre_buf) {
-> > +		mutex_unlock(&epf_mhi->lock);
-> > +		return -ENOMEM;
-> > +	}
-> > +
-> > +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys, from - offset,
-> > +			       size + offset);
-> > +	if (ret) {
-> > +		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> > +		mutex_unlock(&epf_mhi->lock);
-> 
-> I'd prefer a single goto label instead of repeating the code for every
-> branch taken but that's up to you.
-> 
-
-Ok.
-
-> > +		return ret;
-> > +	}
-> > +
-> > +	memcpy_fromio(to, tre_buf + offset, size);
-> > +
-> > +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
-> > +	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
-> > +
-> > +	mutex_unlock(&epf_mhi->lock);
-> > +
-> > +	return 0;
-> > +}
-> > +
-
-[...]
-
-> > +static int pci_epf_mhi_link_up(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > +	const struct pci_epf_mhi_ep_info *info = epf_mhi->info;
-> > +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> > +	struct pci_epc *epc = epf->epc;
-> > +	struct device *dev = &epf->dev;
-> > +	int ret;
-> > +
-> > +	mhi_cntrl->mmio = epf_mhi->mmio;
-> > +	mhi_cntrl->irq = epf_mhi->irq;
-> > +	mhi_cntrl->mru = info->mru;
-> > +
-> > +	/* Assign the struct dev of PCI EP as MHI controller device */
-> > +	mhi_cntrl->cntrl_dev = epc->dev.parent;
-> > +	mhi_cntrl->raise_irq = pci_epf_mhi_raise_irq;
-> > +	mhi_cntrl->alloc_map = pci_epf_mhi_alloc_map;
-> > +	mhi_cntrl->unmap_free = pci_epf_mhi_unmap_free;
-> > +	mhi_cntrl->read_from_host = pci_epf_mhi_read_from_host;
-> > +	mhi_cntrl->write_to_host = pci_epf_mhi_write_to_host;
-> > +
-> > +	/* Register the MHI EP controller */
-> > +	ret = mhi_ep_register_controller(mhi_cntrl, info->config);
-> > +	if (ret) {
-> > +		dev_err(dev, "Failed to register MHI EP controller: %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	epf_mhi->mhi_registered = true;
-> 
-> I don't like this. It should be part of mhi_ep_register_controller();
-> 
-
-Hmm, I could use the "mhi_dev" pointer instead of a dedicated variable.
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_epf_mhi_link_down(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> > +
-> > +	if (epf_mhi->mhi_registered) {
-> > +		mhi_ep_power_down(mhi_cntrl);
-> > +		mhi_ep_unregister_controller(mhi_cntrl);
-> > +		epf_mhi->mhi_registered = false;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_epf_mhi_bme(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > +	struct mhi_ep_cntrl *mhi_cntrl = &epf_mhi->mhi_cntrl;
-> > +	struct device *dev = &epf->dev;
-> > +	int ret;
-> > +
-> > +	/* Power up the MHI EP stack if link is up and stack is in power down state */
-> > +	if (!mhi_cntrl->enabled && epf_mhi->mhi_registered) {
-> > +		ret = mhi_ep_power_up(mhi_cntrl);
-> > +		if (ret) {
-> > +			dev_err(dev, "Failed to power up MHI EP: %d\n", ret);
-> > +			mhi_ep_unregister_controller(mhi_cntrl);
-> > +			epf_mhi->mhi_registered = false;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pci_epf_mhi_bind(struct pci_epf *epf)
-> > +{
-> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
-> > +	struct pci_epc *epc = epf->epc;
-> > +	struct platform_device *pdev = to_platform_device(epc->dev.parent);
-> > +	struct device *dev = &epf->dev;
-> > +	struct resource *res;
-> > +	int ret;
-> > +
-> > +	if (WARN_ON_ONCE(!epc))
-> > +		return -EINVAL;
-> > +
-> > +	/* Get MMIO base address from Endpoint controller */
-> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mmio");
-> > +	epf_mhi->mmio_phys = res->start;
-> > +	epf_mhi->mmio_size = resource_size(res);
-> > +
-> > +	epf_mhi->mmio = ioremap_wc(epf_mhi->mmio_phys, epf_mhi->mmio_size);
-> 
-> ioremap_wc(). Why wc mappings ? Please explain.
-> 
-
-I saw a reference to write combined access requirement for the MMIO region but
-couldn't verify it now. Will revert to non_wc mapping.
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Thanks,
+Vladimir
