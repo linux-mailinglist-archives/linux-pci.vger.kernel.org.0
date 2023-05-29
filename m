@@ -2,46 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 744D77144EE
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:33:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8BAC71451E
+	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:52:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231640AbjE2Gdn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 02:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60212 "EHLO
+        id S229813AbjE2Gwr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 02:52:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231569AbjE2Gdn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:33:43 -0400
-Received: from out30-111.freemail.mail.aliyun.com (out30-111.freemail.mail.aliyun.com [115.124.30.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 150B4E8;
-        Sun, 28 May 2023 23:33:26 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vjgj2wz_1685342001;
-Received: from 30.240.113.228(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0Vjgj2wz_1685342001)
-          by smtp.aliyun-inc.com;
-          Mon, 29 May 2023 14:33:22 +0800
-Message-ID: <1a1af428-0794-514d-1d79-52e3796a0707@linux.alibaba.com>
-Date:   Mon, 29 May 2023 14:33:20 +0800
+        with ESMTP id S229802AbjE2Gwq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:52:46 -0400
+Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 219AFA3;
+        Sun, 28 May 2023 23:52:44 -0700 (PDT)
+Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-5147e40bbbbso4035881a12.3;
+        Sun, 28 May 2023 23:52:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685343162; x=1687935162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8xLU0TDl8S2h/LajmRlkUSNAeMKsxbvqXKst8upBRuE=;
+        b=LnzifqjYS+B2tULydawHuxxg+0jiTM3TjUV3DioFI26sY+LZ+SSFwChZsZaWitKw2n
+         nFxVa2wSbWlFKw+3KOPipVLhGjWlL+gBGfCqrT6Mr1nqLI93jl2gMq/oKePEhfhpPJGH
+         cu2o0bcAM/JUEetuNOS4Ezzn2+gthSxNwXvlC8iVqZGe5eJ5p7DPyOJ0Rky1T1UUi//X
+         gvONRZaYwG4P0kmiyU/Nkz1CHCrmtibyi+CNcrVGCBZgZ3vQipuK/KwZ7heoEbz6MmZX
+         f5waS5EHckuomnV0fzg9qsAGawIchNaorV6IpTYkPn7elH6Mbj3VxwxX2t14pFic2OxA
+         M7OQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685343162; x=1687935162;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8xLU0TDl8S2h/LajmRlkUSNAeMKsxbvqXKst8upBRuE=;
+        b=hQeYQ7LBa1AsSZJiaTxqauvmOEQBZ3faP1o606rzie8oUh7oOLT8Xgntxt5y3qBcS8
+         mYz0afaL/lMxFookQ9u3zvQ0CGTraV6/1/vRJUFNKz1l+f/6HL5fU2r7OHh6SCkE9Asl
+         VylZNoLt6IP2qKQCNxS24CMMPfKepc/2McnVGHeq9gzod1B99mbwRDRuI3+2haW7893Z
+         SYBKVLsM5qz2F5nNZvdRuXZ9U1GY/jLd+StQ02EnpJ+1qc8vEhmu/DWbrP1cSjy3VSLF
+         MwRxadXMXAYdmSsyKIDVdEVP9FVBlilrSbngHOT2IThD08UK9ndmsqbaE7CnYcRSBC72
+         joZw==
+X-Gm-Message-State: AC+VfDy1VdiohNreb4s8bYNWW6yU+Wq35elan2RNfsWxvjotPDAZmNh+
+        E6No7IdrTKM8l+rXp8jllNpf9wEcdy1vMVZomv4=
+X-Google-Smtp-Source: ACHHUZ4jYsiG4h1SNeAONK8ZW0V2k2rMFPZdC6crFet24ZOpKZSwB2Cj/fm2N2wxMjBZDTtJUb9Fsyl9ji9DMdcoQ0M=
+X-Received: by 2002:a17:906:d555:b0:960:c5fe:a36a with SMTP id
+ cr21-20020a170906d55500b00960c5fea36amr9914575ejc.61.1685343162370; Sun, 28
+ May 2023 23:52:42 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH v5 3/4] drivers/perf: add DesignWare PCIe PMU driver
-Content-Language: en-US
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>,
-        chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
-References: <20220917121036.14864-1-xueshuai@linux.alibaba.com>
- <20230522035428.69441-4-xueshuai@linux.alibaba.com>
- <505a5d3a-c970-8d15-ea60-444a3630c199@linux.alibaba.com>
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-In-Reply-To: <505a5d3a-c970-8d15-ea60-444a3630c199@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+References: <20230524093623.3698134-1-chenhuacai@loongson.cn>
+ <ZG4rZYBKaWrsctuH@bhelgaas> <CAAhV-H5u8qtXpr-mY+pKq7UfmyBgr3USRTQpo9-w28w8pHX8QQ@mail.gmail.com>
+ <20230528165738.GF2814@thinkpad> <CAAhV-H5u0ibghgwbfJT1V_oWUWi0rie0NHWTSkpCVat3_ARvKw@mail.gmail.com>
+ <20230529053919.GB2856@thinkpad>
+In-Reply-To: <20230529053919.GB2856@thinkpad>
+From:   Huacai Chen <chenhuacai@gmail.com>
+Date:   Mon, 29 May 2023 14:52:29 +0800
+Message-ID: <CAAhV-H6EPkGJchA4pg=zctmmt=9LboaFqKhFgQxZKNxJxQVT7g@mail.gmail.com>
+Subject: Re: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Huacai Chen <chenhuacai@loongson.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Ahmed S . Darwish" <darwi@linutronix.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
+        Jianmin Lv <lvjianmin@loongson.cn>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        loongson-kernel@lists.loongnix.cn,
+        Juxin Gao <gaojuxin@loongson.cn>,
+        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -49,186 +81,206 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi, Manivannan,
 
+On Mon, May 29, 2023 at 1:39=E2=80=AFPM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Mon, May 29, 2023 at 10:02:20AM +0800, Huacai Chen wrote:
+> > Hi, Manivannan,
+> >
+> > On Mon, May 29, 2023 at 12:57=E2=80=AFAM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > On Thu, May 25, 2023 at 05:14:28PM +0800, Huacai Chen wrote:
+> > > > Hi, Bjorn,
+> > > >
+> > > > On Wed, May 24, 2023 at 11:21=E2=80=AFPM Bjorn Helgaas <helgaas@ker=
+nel.org> wrote:
+> > > > >
+> > > > > [+cc Marc, LKML]
+> > > > >
+> > > > > On Wed, May 24, 2023 at 05:36:23PM +0800, Huacai Chen wrote:
+> > > > > > Some platforms (such as LoongArch) cannot provide enough irq nu=
+mbers as
+> > > > > > many as logical cpu numbers. So we should limit pci irq numbers=
+ when
+> > > > > > allocate msi/msix vectors, otherwise some device drivers may fa=
+il at
+> > > > > > initialization. This patch add a cmdline parameter "pci_irq_lim=
+it=3Dxxxx"
+> > > > > > to control the limit.
+> > > > > >
+> > > > > > The default pci msi/msix number limit is defined 32 for LoongAr=
+ch and
+> > > > > > NR_IRQS for other platforms.
+> > > > >
+> > > > > The IRQ experts can chime in on this, but this doesn't feel right=
+ to
+> > > > > me.  I assume arch code should set things up so only valid IRQ nu=
+mbers
+> > > > > can be allocated.  This doesn't seem necessarily PCI-specific, I'=
+d
+> > > > > prefer to avoid an arch #ifdef here, and I'd also prefer to avoid=
+ a
+> > > > > command-line parameter that users have to discover and supply.
+> > > > The problem we meet: LoongArch machines can have as many as 256
+> > > > logical cpus, and the maximum of msi vectors is 192. Even on a 64-c=
+ore
+> > > > machine, 192 irqs can be easily exhausted if there are several NICs
+> > > > (NIC usually allocates msi irqs depending on the number of online
+> > > > cpus). So we want to limit the msi allocation.
+> > > >
+> > >
+> > > If the MSI allocation fails with multiple vectors, then the NIC drive=
+r should
+> > > revert to a single MSI vector. Is that happening in your case?
+> > Thank you for pointing this out. Yes, I know  most existing drivers
+> > will fallback to use single msi or legacy irqs when failed. However,
+> > as I
+> > replied in another thread (the new solution of this problem [1]), we
+> > want to do some proactive throttling rather than consume msi vectors
+> > aggressively. For example, if we have two NICs, we want both of them
+> > to get 32 msi vectors; not one exhaust all available vectors, and the
+> > other fallback to use single msi or legacy irq.
+> >
+> > I hope I have explained clearly, thanks.
+> >
+>
+> The problem you are facing is not specific to Loongsoon but rather generi=
+c. And
+> the solution we have currently is what you were also aware of it seems. S=
+o if
+> you want to propose an alternative solution, it should be generic and als=
+o a
+> good justification needs to be provided to the maintainers i.e., comparin=
+g two
+> solutions and why yours is better.
+Yes, I think we are facing a generic problem, but it is more obvious
+on platforms which provide less MSI vectors. And my solution seems
+generic enough. :)
 
-On 2023/5/29 14:13, Baolin Wang wrote:
-> 
-> 
-> On 5/22/2023 11:54 AM, Shuai Xue wrote:
->> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
->> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
->> Core controller IP which provides statistics feature. The PMU is not a PCIe
->> Root Complex integrated End Point(RCiEP) device but only register counters
->> provided by each PCIe Root Port.
->>
->> To facilitate collection of statistics the controller provides the
->> following two features for each Root Port:
->>
->> - Time Based Analysis (RX/TX data throughput and time spent in each
->>    low-power LTSSM state)
->> - Event counters (Error and Non-Error for lanes)
->>
->> Note, only one counter for each type and does not overflow interrupt.
->>
->> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
->> named based the BDF of Root Port. For example,
->>
->>      30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
->>
->> the PMU device name for this Root Port is dwc_rootport_3018.
->>
->> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
->>
->>      $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
->>
->> average RX bandwidth can be calculated like this:
->>
->>      PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
->>
->> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
->> Reported-by: kernel test robot <lkp@intel.com>
->> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
->> ---
-> 
-> [snip]
-> 
->> +static int dwc_pcie_pmu_remove(struct platform_device *pdev)
->> +{
->> +    struct dwc_pcie_pmu_priv *priv = platform_get_drvdata(pdev);
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +
->> +    list_for_each_entry(pcie_pmu, &priv->pmu_nodes, pmu_node) {
->> +        cpuhp_state_remove_instance(dwc_pcie_pmu_hp_state,
->> +                        &pcie_pmu->cpuhp_node);
->> +        perf_pmu_unregister(&pcie_pmu->pmu);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_probe(struct platform_device *pdev)
->> +{
->> +    struct dwc_pcie_pmu_priv *priv;
->> +
->> +    priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
->> +    if (!priv)
->> +        return -ENOMEM;
->> +
->> +    priv->dev = &pdev->dev;
->> +    platform_set_drvdata(pdev, priv);
->> +
->> +    /* If one PMU registration fails, remove all. */
->> +    if (__dwc_pcie_pmu_probe(priv))
->> +        dwc_pcie_pmu_remove(pdev);
-> 
-> In this case, you should return error from __dwc_pcie_pmu_probe() instead of returning 0, to release the requested resources of the PMU deivce.
+At least in my example, "proactive throttling" is better than
+"aggressive consuming", because two (or more) NICs have more balanced
+throughput.
 
-You are right, will fix it in next version.
+>
+> But IMO what you are proposing seems like usecase driven and may not work=
+ all
+> the time due to architecture limitation. This again proves that the exist=
+ing
+> solution is sufficient enough.
+Yes, it's a usecase driven solution, so I provide a cmdline parameter
+to let the user decide.
 
-> 
->> +
->> +    return 0;
->> +}
->> +
->> +static void dwc_pcie_pmu_migrate(struct dwc_pcie_pmu *pcie_pmu, unsigned int cpu)
->> +{
->> +    /* This PMU does NOT support interrupt, just migrate context. */
->> +    perf_pmu_migrate_context(&pcie_pmu->pmu, pcie_pmu->oncpu, cpu);
->> +    pcie_pmu->oncpu = cpu;
->> +}
->> +
->> +static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +    struct pci_dev *pdev;
->> +    int node;
->> +
->> +    pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
->> +    pdev = pcie_pmu->pdev;
->> +    node = dev_to_node(&pdev->dev);
->> +
->> +    if (node != NUMA_NO_NODE && cpu_to_node(pcie_pmu->oncpu) != node &&
->> +        cpu_to_node(cpu) == node)
->> +        dwc_pcie_pmu_migrate(pcie_pmu, cpu);
->> +
->> +    return 0;
->> +}
->> +
->> +static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
->> +{
->> +    struct dwc_pcie_pmu *pcie_pmu;
->> +    struct pci_dev *pdev;
->> +    int node;
->> +    cpumask_t mask;
->> +    unsigned int target;
->> +
->> +    pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
->> +    if (cpu != pcie_pmu->oncpu)
->> +        return 0;
->> +
->> +    pdev = pcie_pmu->pdev;
->> +    node = dev_to_node(&pdev->dev);
->> +    if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
->> +        cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
->> +        target = cpumask_any(&mask);
->> +    else
->> +        target = cpumask_any_but(cpu_online_mask, cpu);
->> +    if (target < nr_cpu_ids)
->> +        dwc_pcie_pmu_migrate(pcie_pmu, target);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct platform_driver dwc_pcie_pmu_driver = {
->> +    .probe = dwc_pcie_pmu_probe,
->> +    .remove = dwc_pcie_pmu_remove,
->> +    .driver = {.name = "dwc_pcie_pmu",},
->> +};
->> +
->> +static int __init dwc_pcie_pmu_init(void)
->> +{
->> +    int ret;
->> +
->> +    ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
->> +                      "perf/dwc_pcie_pmu:online",
->> +                      dwc_pcie_pmu_online_cpu,
->> +                      dwc_pcie_pmu_offline_cpu);
->> +    if (ret < 0)
->> +        return ret;
->> +
->> +    dwc_pcie_pmu_hp_state = ret;
->> +
->> +    ret = platform_driver_register(&dwc_pcie_pmu_driver);
->> +    if (ret) {
->> +        cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
->> +        return ret;
->> +    }
->> +
->> +    dwc_pcie_pmu_dev = platform_device_register_simple(
->> +                "dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
->> +    if (IS_ERR(dwc_pcie_pmu_dev)) {
->> +        platform_driver_unregister(&dwc_pcie_pmu_driver);
->> +        return PTR_ERR(dwc_pcie_pmu_dev);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static void __exit dwc_pcie_pmu_exit(void)
->> +{
->> +    platform_device_unregister(dwc_pcie_pmu_dev);
->> +    platform_driver_unregister(&dwc_pcie_pmu_driver);
-> 
-> You should also call 'cpuhp_remove_multi_state()' when exiting the driver.
-
-Good catch, will add it in next version.
-
-
-> 
-> With above issues fixed, you can add:
-> Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
-
-Thank you :)
-
-Best Regards,
-Shuai
+Huacai
+>
+> - Mani
+>
+> > [1] https://lore.kernel.org/lkml/20230527054633.704916-1-chenhuacai@loo=
+ngson.cn/T/#t
+> >
+> > Huacai
+> > >
+> > > - Mani
+> > >
+> > > > This is not a LoongArch-specific problem, because I think other
+> > > > platforms can also meet if they have many NICs. But of course,
+> > > > LoongArch can meet it more easily because the available msi vectors
+> > > > are very few. So, adding a cmdline parameter is somewhat reasonable=
+.
+> > > >
+> > > > After some investigation, I think it may be possible to modify
+> > > > drivers/irqchip/irq-loongson-pch-msi.c and override
+> > > > msi_domain_info::domain_alloc_irqs() to limit msi allocation. Howev=
+er,
+> > > > doing that need to remove the "static" before
+> > > > __msi_domain_alloc_irqs(), which means revert
+> > > > 762687ceb31fc296e2e1406559e8bb5 ("genirq/msi: Make
+> > > > __msi_domain_alloc_irqs() static"), I don't know whether that is
+> > > > acceptable.
+> > > >
+> > > > If such a revert is not acceptable, it seems that we can only use t=
+he
+> > > > method in this patch. Maybe rename pci_irq_limits to pci_msi_limits=
+ is
+> > > > a little better.
+> > > >
+> > > > Huacai
+> > > >
+> > > > >
+> > > > > > Signed-off-by: Juxin Gao <gaojuxin@loongson.cn>
+> > > > > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> > > > > > ---
+> > > > > >  drivers/pci/msi/msi.c | 26 +++++++++++++++++++++++++-
+> > > > > >  1 file changed, 25 insertions(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/drivers/pci/msi/msi.c b/drivers/pci/msi/msi.c
+> > > > > > index ef1d8857a51b..6617381e50e7 100644
+> > > > > > --- a/drivers/pci/msi/msi.c
+> > > > > > +++ b/drivers/pci/msi/msi.c
+> > > > > > @@ -402,12 +402,34 @@ static int msi_capability_init(struct pci=
+_dev *dev, int nvec,
+> > > > > >       return ret;
+> > > > > >  }
+> > > > > >
+> > > > > > +#ifdef CONFIG_LOONGARCH
+> > > > > > +#define DEFAULT_PCI_IRQ_LIMITS 32
+> > > > > > +#else
+> > > > > > +#define DEFAULT_PCI_IRQ_LIMITS NR_IRQS
+> > > > > > +#endif
+> > > > > > +
+> > > > > > +static int pci_irq_limits =3D DEFAULT_PCI_IRQ_LIMITS;
+> > > > > > +
+> > > > > > +static int __init pci_irq_limit(char *str)
+> > > > > > +{
+> > > > > > +     get_option(&str, &pci_irq_limits);
+> > > > > > +
+> > > > > > +     if (pci_irq_limits =3D=3D 0)
+> > > > > > +             pci_irq_limits =3D DEFAULT_PCI_IRQ_LIMITS;
+> > > > > > +
+> > > > > > +     return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +early_param("pci_irq_limit", pci_irq_limit);
+> > > > > > +
+> > > > > >  int __pci_enable_msi_range(struct pci_dev *dev, int minvec, in=
+t maxvec,
+> > > > > >                          struct irq_affinity *affd)
+> > > > > >  {
+> > > > > >       int nvec;
+> > > > > >       int rc;
+> > > > > >
+> > > > > > +     maxvec =3D clamp_val(maxvec, 0, pci_irq_limits);
+> > > > > > +
+> > > > > >       if (!pci_msi_supported(dev, minvec) || dev->current_state=
+ !=3D PCI_D0)
+> > > > > >               return -EINVAL;
+> > > > > >
+> > > > > > @@ -776,7 +798,9 @@ static bool pci_msix_validate_entries(struc=
+t pci_dev *dev, struct msix_entry *en
+> > > > > >  int __pci_enable_msix_range(struct pci_dev *dev, struct msix_e=
+ntry *entries, int minvec,
+> > > > > >                           int maxvec, struct irq_affinity *affd=
+, int flags)
+> > > > > >  {
+> > > > > > -     int hwsize, rc, nvec =3D maxvec;
+> > > > > > +     int hwsize, rc, nvec;
+> > > > > > +
+> > > > > > +     nvec =3D clamp_val(maxvec, 0, pci_irq_limits);
+> > > > > >
+> > > > > >       if (maxvec < minvec)
+> > > > > >               return -ERANGE;
+> > > > > > --
+> > > > > > 2.39.1
+> > > > > >
+> > >
+> > > --
+> > > =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=
+=A9=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=
+=AE=E0=AF=8D
+>
+> --
+> =E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
+=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
+=E0=AF=8D
