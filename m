@@ -2,111 +2,60 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AC5367150B5
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 22:48:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6BF70715259
+	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 01:37:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229502AbjE2UsS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 16:48:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54412 "EHLO
+        id S229498AbjE2XhP (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 19:37:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjE2UsQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 16:48:16 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2045.outbound.protection.outlook.com [40.107.8.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D729C7;
-        Mon, 29 May 2023 13:48:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H+NF1NQLIO+2xuEmdMyZeDzCRbAsOvC7O3Zlf/RtiBT20WCXw7oN90o57e8iiFfuyNnqXDCYG5ZrOYylRTQJZrT07PnVZFJSGwYSnqn5UvvI0DxI8vwHFi177bovGTaDxaspxdf67uRbY3AwOTU0HowDWHFTdA5kpDii3R3pLMhifig9Emho1H7EjcwOsh5Hnj1f+pjGNahWA0DSLHC/FsHZXzcilLe2ldkkG0+Aic0B7A1eqEJpVcTCfOYz57IgdB4KvNcEN1HiIApwwQoXKB1MGh/Io3hsV/Mc7oVcADDYyXzRmXBIQ6QB0MqnwINx0a40iyez+7Jd8rcrMIZOFQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=yh+HjzpDilKdeOeetgB5Qv2okDjMkRled+EY/Gc3QXo=;
- b=lw0yAVxHPM9jYxYDnlm7KM67Ui7AxnV5kSDmMhO/dxxNM3L/VtAWKdyntLndELM36+kPpAPkDVzT3cs4i0g4iBzayElkwmx8eXK5cXp4jb7CmSfwuEa0SmgXB/1+s1m3SLoPWvCjt/VRWtIhw1fbl8cI2hlOzOSU9t7ylfD+jGz/s1R4TKlOEbIMrWjd28py4PqguL7UNT9idNaCvdtLrCbxiMZyXHnlRwNtva6yfijtOB6mKHSEKC9ZejjtiQuHoViWpP5rOjQDn3LikalmwlHgvIPdRRY60lA3rvBELVKoqONmiZgsCyhkTpXFsZmYgP6xu1EHIGmIF3DsxccWZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yh+HjzpDilKdeOeetgB5Qv2okDjMkRled+EY/Gc3QXo=;
- b=OY7ycAKz5riNfRaCLGq7lh8YDqu9DePip6ZUFFn/vh/TnfMHepDhFlY1a8N+59h4K0m7bnwJutl7Zhm4toznPc2MCsqljw/CMWtOQ6ZqDXgI3dEZCoXI+J0i0PIN/n0ER/wNGDUZF+nGcG8pgK9L2Vy3X0W/bdmPtMpwEfSB42M=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by DBBPR04MB7884.eurprd04.prod.outlook.com (2603:10a6:10:1f2::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.23; Mon, 29 May
- 2023 20:48:12 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::b027:17aa:e5f5:4fea]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::b027:17aa:e5f5:4fea%6]) with mapi id 15.20.6433.022; Mon, 29 May 2023
- 20:48:11 +0000
-Date:   Mon, 29 May 2023 23:48:07 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Cc:     netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-Message-ID: <20230529204807.z2th6cilnrbzj2e2@skbuf>
-References: <20230521115141.2384444-1-vladimir.oltean@nxp.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230521115141.2384444-1-vladimir.oltean@nxp.com>
-X-ClientProxiedBy: VI1PR0102CA0096.eurprd01.prod.exchangelabs.com
- (2603:10a6:803:15::37) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
+        with ESMTP id S229647AbjE2XhM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 19:37:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D46F0B5;
+        Mon, 29 May 2023 16:37:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 60DCC62835;
+        Mon, 29 May 2023 23:37:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C3DC433EF;
+        Mon, 29 May 2023 23:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685403429;
+        bh=3B+MmOlbiMmgBtxc8d5IIkby4kqCRhuIzE/NwcQYrDg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=X0pHygzc6Dje+aO7lTX72oPwP92fCVMmmZUL3M/v9OHYGwylAUgwNOXe2ujTVDmGX
+         k+NUncRC0TK3C4nJ3tmAPw06XRiD/j+03OTGkrd8DLgd7NniQ8MHfDiiurJSX005IS
+         Hccj1QS7DlUxHe6UAapx5rUWcX0dkXAnjBl9AShxVjnexu5zvoqzHKQUvCAFDU+3Oy
+         Q8ISqFWdIKX+7r8UI+7HxxfDPmi22i1f8MRTNATmR8ZpvGFAVSns45xPOdXoXkWkKI
+         FtVatZtYXGR95z2qWCxobgCnaH9H1N9VyOUwSS0YmtzYeC3TYp9uFJbWSrqr0Afo/G
+         3IHLiFMm5QD3w==
+Message-ID: <dd4b1867-204d-8ee0-fcfc-29c52abddb48@kernel.org>
+Date:   Tue, 30 May 2023 08:37:07 +0900
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DBBPR04MB7884:EE_
-X-MS-Office365-Filtering-Correlation-Id: d3a1f2c2-8a79-477e-79f7-08db6086043b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1AACoHPbsNk6s6Wi87sRbx8R6TQ9mI9uSBMGeQ1U4BEsI7MXg46RWxNbbx3qNTp6S2VepqSg9Zpsc6i1HUmwng+a+EsEfOuVF8ViphKYq5c4TEFeHyod+pfiA/UO4zG96HGe4khuNSm19LoEh1YIuv270VFM5QolPLRVQ07PjG+Wwuz4KW37+aMc1+t9tW1KtUCNmjjfXmcksHAJUqmJ6gkVm05ukjmZSyIGf4fgKWXWsdZZXM/OW2cVPRRSAdYYSKQBkgiHQvVCS1X4st9MyS9z0QCVM7uTBCPMzm9FKzIOjUdqQ6ykwK40p+YFFU0zIjq83Fn3jY6yQumxZ/kbzI/KP3BRgnrUJUVa8GhNsrBMXPpiJDvjvK2mfh8uLPpDVQen+DPa+CMYGuv8voz0QdHTihvXnPAkeQJuh1Kq6+h1EKHO2VllmpRj6NY6eaZAh/fBDARnc9TOLByx3eHRTxRQp7hrfWah2AzqaTuDZTO7ixqJvwmFPzTeQyVX1WJGkHtAVcfD83SJUNx1Z3awIBFVq8P9Ha5U+ZQsKT3PwZbkAmnwwdBZHXE5NbTJnm4I
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(7916004)(346002)(366004)(376002)(136003)(39860400002)(396003)(451199021)(478600001)(54906003)(8676002)(8936002)(44832011)(5660300002)(2906002)(33716001)(86362001)(66556008)(4326008)(6916009)(66476007)(66946007)(316002)(38100700002)(41300700001)(186003)(6512007)(9686003)(6506007)(26005)(1076003)(6486002)(6666004)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?eLYGi/MPDLcd87XDSae2QkEdbZLFTuXE2buw53iVXU66j/rahNuPpqfVZo0b?=
- =?us-ascii?Q?mC1NDqG9sVb+LYrSQuHGl17wRbMYfUJ1+8bW+R4HKQ8dDPMbS0gpkjXK1wkx?=
- =?us-ascii?Q?JHEJ7NiLBRiZt5c4eox+hmgYHS69pBF8vbAopqG9tdv4mXH71pY8emoteI8f?=
- =?us-ascii?Q?VNViKlcFbS8jAwUJ+WsM2+RpgTyxvc4e4MIZ+LT9zOdNEfRiaKYDLlfZjL/c?=
- =?us-ascii?Q?TMMZh/NqXBJfBoz5G17t3w4RtewjzrITae8OokELT57c/13Z7Ub4soK4K3lE?=
- =?us-ascii?Q?ccVU+kTDCqk+JH8hx/v29BWWcah7yPzEER+ofipTpHb2PpA9cO6GvUSOX1ny?=
- =?us-ascii?Q?ifdf+3vX2DybOPBUaWGfrnJu99Ep9rfQBQPmFqzm2U8GtWm939SIYzVQzpy6?=
- =?us-ascii?Q?jXi3M9Us1gDy3Bm0PGIWJNdQ7Kv82fLiuQa4alt8BEKlzuCH+i7dTQ+2vQKr?=
- =?us-ascii?Q?qbOtFcUeUXtMf5/NkYoeB/Jcz5kZjO8RgxGwN8QcQq0DhwmtzqrSf99wQ2Az?=
- =?us-ascii?Q?EA6Ztq/Gb6BZIFs1X5LQSRnR0wD2Rc+W8vcnu8tX8BwwMtb56qwVa19xfCAw?=
- =?us-ascii?Q?RQ3NSNu+LtZWpQHRsbyU4iKWYvaIi0JF3Id+xESRlZNQDdYDZsKF9GBP51TI?=
- =?us-ascii?Q?VEuhjuqU9Hw+xytwO/2IWKoETD4cInzHWgHInR4fgV34ZEvzTQOILqA/+HN6?=
- =?us-ascii?Q?5GtUaYUtGN4bCAVbX7o65+dcNNFrTzlque9G3QszfOtoCcOyvZtMkmo0hdjX?=
- =?us-ascii?Q?hijsg9cCc9C5rkN4KD+UUwPeQdg7nAn5Vqq4/inHa+ngfCo7kzn5zQLsWVSr?=
- =?us-ascii?Q?dJYECoVG+GLxhapbWHwZ1o6Q6zjFZH8ktf/nZB/kRbaAL6zNKQqQ1x3XDIs9?=
- =?us-ascii?Q?roRvUavomY8+gGUR5jgcjLrbq6WuuPVoBOjhiqhLGd5B6JBTqQrejnnigd+/?=
- =?us-ascii?Q?FmfhgZqk4oRXNjSIUQEGPLy7vmM0eodAXOMGo5MohOYDHOvupeSKyuETTvtD?=
- =?us-ascii?Q?0UTpsCCCSRauuGJ4ChEuntmYArKeGM5gbv9z/ryGmRIlXyWQ2VN/5yP0LzlC?=
- =?us-ascii?Q?0FLT9/2wwxEH0m4o7qzWyTgl6qkkgCvzFwnwSEw1LoVbedjYcE7zZJmKvBtL?=
- =?us-ascii?Q?M9kk5P9Dg3dmZvC+PGJqjsfiN9WYdg+o2bwa26G9HSjmh8ksajuZ8KBq0jgM?=
- =?us-ascii?Q?NVocS584DSQtKFFwzJXzeXut1b+a7lYi/kiiNTK4ajhA9M+xTUkgMx+ac91p?=
- =?us-ascii?Q?cPvHYWAsC0RnX5tbkA7O+H+qUgD7cqpyqdJmzP2VtijTS4CQmnIwVTojedLm?=
- =?us-ascii?Q?cC3rtNAgO+BckMaAkbscyOuXJzo/hKEIk0Ip9m1gLM/dsfmGex+siZfoS1fu?=
- =?us-ascii?Q?O4nsAyOR1TRUPLii5hSkcUsqZ6CsHvVZ93dsxV2AyndYxtQgu2CeZ5Bo08bS?=
- =?us-ascii?Q?P4N2t+dQN+/jGodSNJ3dvKhe1RiAp40lv27mtw4LMEJdZf3nFUHZ9+2a3iM4?=
- =?us-ascii?Q?1lBKgYx5fScnesnt/p190tto9euo6hYrNUYll5dVC7YbMYwntgPPkdVZYMtf?=
- =?us-ascii?Q?ooZp9NhMh3JsuFMh4u1C22QPJ7WcowcBLDpqmCHz6U4OvRWTvQlcwWGsYCWD?=
- =?us-ascii?Q?jw=3D=3D?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d3a1f2c2-8a79-477e-79f7-08db6086043b
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2023 20:48:11.8035
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: d17Vi5XTX1odm0nnPrpv9+stoOkuQkTKCaOumSrQ6FQ+Ao0H5uxGDAn2z3idVl+QxiKVDpHG4JsgLXxuYFFYMw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB7884
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v4 7/7] PCI: endpoint: Add PCI Endpoint function driver
+ for MHI bus
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        kw@linux.com, kishon@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20230519144215.25167-1-manivannan.sadhasivam@linaro.org>
+ <20230519144215.25167-8-manivannan.sadhasivam@linaro.org>
+ <ZHSkdakXJegKRD+q@lpieralisi> <20230529173815.GG5633@thinkpad>
+Content-Language: en-US
+From:   Damien Le Moal <dlemoal@kernel.org>
+Organization: Western Digital Research
+In-Reply-To: <20230529173815.GG5633@thinkpad>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.7 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -114,51 +63,45 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Bjorn,
+On 5/30/23 02:38, Manivannan Sadhasivam wrote:
+[...]
+>>> +static void pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
+>>> +				   phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
+>>> +{
+>>> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
+>>> +	struct pci_epf *epf = epf_mhi->epf;
+>>> +	struct pci_epc *epc = epf->epc;
+>>> +	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
+>>> +
+>>> +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, phys_addr - offset);
+>>> +	pci_epc_mem_free_addr(epc, phys_addr - offset, virt_addr - offset, size + offset);
+>>> +}
+>>> +
+>>> +static void pci_epf_mhi_raise_irq(struct mhi_ep_cntrl *mhi_cntrl, u32 vector)
+>>> +{
+>>> +	struct pci_epf_mhi *epf_mhi = container_of(mhi_cntrl, struct pci_epf_mhi, mhi_cntrl);
+>>> +	struct pci_epf *epf = epf_mhi->epf;
+>>> +	struct pci_epc *epc = epf->epc;
+>>> +
+>>> +	/*
+>>> +	 * Vector is incremented by 1 here as the DWC core will decrement it before
+>>> +	 * writing to iATU.
+>>
+>> This isn't OK. It is an API, you can't write code explicitly relying on
+>> the underlying implementation. I assume the API is not well specified,
+>> that's why we need these tricks ?
+>>
+> 
+> Well, this is not an API issue but rather an implementation detail of the DWC EP
+> core driver. The DWC driver expects the interrupt vectors to be 1 based, so it
+> decrements it before writing to the MSI address:
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/pci/controller/dwc/pcie-designware-ep.c#n537
 
-On Sun, May 21, 2023 at 02:51:41PM +0300, Vladimir Oltean wrote:
-> pci_scan_child_bus_extend() calls pci_scan_slot() with devfn
-> (bus:device:function) being a multiple of 8, i.e. for each unique
-> device.
-> 
-> pci_scan_slot() has logic to say that if the function 0 of a device is
-> absent, the entire device is absent and we can skip the other functions
-> entirely. Traditionally, this has meant that pci_bus_read_dev_vendor_id()
-> returns an error code for that function.
-> 
-> However, since the blamed commit, there is an extra confounding
-> condition: function 0 of the device exists and has a valid vendor id,
-> but it is disabled in the device tree. In that case, pci_scan_slot()
-> would incorrectly skip the entire device instead of just that function.
-> 
-> Such is the case with the NXP LS1028A SoC, which has an ECAM
-> for embedded Ethernet (see pcie@1f0000000 in
-> arm64/boot/dts/freescale/fsl-ls1028a.dtsi). Each Ethernet port
-> represents a function within the ENETC ECAM, with function 0 going
-> to ENETC Ethernet port 0, connected to SERDES port 0 (SGMII or USXGMII).
-> 
-> When using a SERDES protocol such as 0x9999, all 4 SERDES lanes go to
-> the Ethernet switch (function 5 on this ECAM) and none go to ENETC
-> port 0. So, ENETC port 0 needs to have status = "disabled", and embedded
-> Ethernet takes place just through the other functions (fn 2 is the DSA
-> master, fn 3 is the MDIO controller, fn 5 is the DSA switch etc).
-> Contrast this with other SERDES protocols like 0x85bb, where the switch
-> takes up a single SERDES lane and uses the QSGMII protocol - so ENETC
-> port 0 also gets access to a SERDES lane.
-> 
-> Therefore, here, function 0 being unused has nothing to do with the
-> entire PCI device being unused.
-> 
-> Add a "bool present_but_skipped" which is propagated from the caller
-> of pci_set_of_node() all the way to pci_scan_slot(), so that it can
-> distinguish an error reading the ECAM from a disabled device in the
-> device tree.
-> 
-> Fixes: 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
-> Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-> ---
+Then the driver should be fixed so that this peculiarity is not visible at the
+user API level, resulting in a uniform usage of the API for all functions
+regardless of the controller being used.
 
-Do you have some comments here?
+-- 
+Damien Le Moal
+Western Digital Research
 
-Thanks,
-Vladimir
