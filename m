@@ -2,44 +2,68 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9BB867143ED
-	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:13:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 991FF714406
+	for <lists+linux-pci@lfdr.de>; Mon, 29 May 2023 08:16:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjE2GNY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 29 May 2023 02:13:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42182 "EHLO
+        id S229692AbjE2GQY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 29 May 2023 02:16:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjE2GNY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:13:24 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574F5AF;
-        Sun, 28 May 2023 23:13:21 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=baolin.wang@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0Vjgsk4h_1685340796;
-Received: from 30.97.48.60(mailfrom:baolin.wang@linux.alibaba.com fp:SMTPD_---0Vjgsk4h_1685340796)
-          by smtp.aliyun-inc.com;
-          Mon, 29 May 2023 14:13:17 +0800
-Message-ID: <505a5d3a-c970-8d15-ea60-444a3630c199@linux.alibaba.com>
-Date:   Mon, 29 May 2023 14:13:34 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v5 3/4] drivers/perf: add DesignWare PCIe PMU driver
-To:     Shuai Xue <xueshuai@linux.alibaba.com>, chengyou@linux.alibaba.com,
-        kaishen@linux.alibaba.com, helgaas@kernel.org,
-        yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com
-References: <20220917121036.14864-1-xueshuai@linux.alibaba.com>
- <20230522035428.69441-4-xueshuai@linux.alibaba.com>
-From:   Baolin Wang <baolin.wang@linux.alibaba.com>
-In-Reply-To: <20230522035428.69441-4-xueshuai@linux.alibaba.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-10.0 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        with ESMTP id S230318AbjE2GQX (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 29 May 2023 02:16:23 -0400
+Received: from mail-pl1-x633.google.com (mail-pl1-x633.google.com [IPv6:2607:f8b0:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8689E1;
+        Sun, 28 May 2023 23:15:53 -0700 (PDT)
+Received: by mail-pl1-x633.google.com with SMTP id d9443c01a7336-1b02d0942caso8268945ad.1;
+        Sun, 28 May 2023 23:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685340952; x=1687932952;
+        h=message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EcQN8VgoDYPYnc3V4elXqbCt7D4H65Z/7XNtLl1+E5g=;
+        b=pW5b94mZADa2C+g+WEXSfS2ewafvu3n4QW2Iq+3NdaSLsQ1FHZjHDLyMAxuTB3lvdj
+         oXs6hnTYF2YOyCn2wMTrZIbMSVBD+WooJeik5bIFhA96vrrIBuVxfppRBoTKarwEsRSA
+         oATEm20DWqFwD3oD4CLrGPFd4C9+mZ3+4TsF74un/s2M7leM8lCZ44UOIj5Q8C96botd
+         SPB3TVN1E6XMljWMzS0WYxETPBKr2Ovc1tgiG9QTl1aeNywv6Y4CCxc4wrSzHycByEpj
+         a+XKIEcYONdy+XshmkNkbbDv8zn7mnwmaokx3aFCktUJmh/afDSY/LScu1MUb/9WYUlu
+         qcNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685340952; x=1687932952;
+        h=message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EcQN8VgoDYPYnc3V4elXqbCt7D4H65Z/7XNtLl1+E5g=;
+        b=NkGql1Lgy3iA7C78mrR6NIGAL33c3rYG64CRyg18/vEW6u7vzkk3Wo0MrMdiLzuKfA
+         L+p87N1+g8GRIAu6MfXoGOJAqs1RBR3gt+pyk0vbSgWZFbtpq2ge6M89G+tWHlx5CnRM
+         owwmpvBd2b3SFCIRFCawOlkKUbcu9YjavnFzv0J3nBUkeD7gEZ1bMFnSoGfr8NSwLsDD
+         mVIw3wd0sKoqlAtHKc80riD248N3V98AEJFPY7nKRr2Gwi6cPbH5hr4rNkMfR63xCTWf
+         vGcwuBXjhE2Vr8SKyp+HY+Qb0a191ufrN6Z2dRpTFKCjUg1VEUzZQexdJhOqPAwf3UjX
+         qSrA==
+X-Gm-Message-State: AC+VfDzt81wrM79nzQ8EjJREZNdZhHKsA995AAGTkkPET787iy3QQf+O
+        hkRZGIfGB/JJ7DDOxMNtkJ81p4b8cqw=
+X-Google-Smtp-Source: ACHHUZ7asIUDUnelNdN6ELbB/y06Mv3zvsXl7aRIuHsGdgHEFGyNRVPWCl2peKuHKUUV0c9z6JEhqw==
+X-Received: by 2002:a17:902:d2d0:b0:1ac:61ad:d6bd with SMTP id n16-20020a170902d2d000b001ac61add6bdmr13289840plc.65.1685340952171;
+        Sun, 28 May 2023 23:15:52 -0700 (PDT)
+Received: from localhost.localdomain (2001-b400-e28a-e298-44b2-039a-c888-7c56.emome-ip6.hinet.net. [2001:b400:e28a:e298:44b2:39a:c888:7c56])
+        by smtp.gmail.com with ESMTPSA id p23-20020a170902a41700b001aaecc0b6ffsm7270393plq.160.2023.05.28.23.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 May 2023 23:15:51 -0700 (PDT)
+From:   Owen Yang <ecs.taipeikernel@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@google.com>, Harvey <hunge@google.com>,
+        Bob Moragues <moragues@google.com>,
+        Gavin Lee <gavin.lee@ecs.com.tw>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Abner Yen <abner.yen@ecs.com.tw>,
+        Owen Yang <ecs.taipeikernel@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
+Subject: [PATCH v1] PCI: Add suspend fixup for SSD on sc7280
+Date:   Mon, 29 May 2023 14:15:41 +0800
+Message-Id: <20230529141527.v1.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
+X-Mailer: git-send-email 2.17.1
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -47,173 +71,39 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Implement this workaround to correct NVMe suspend process.
 
+Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
+---
 
-On 5/22/2023 11:54 AM, Shuai Xue wrote:
-> This commit adds the PCIe Performance Monitoring Unit (PMU) driver support
-> for T-Head Yitian SoC chip. Yitian is based on the Synopsys PCI Express
-> Core controller IP which provides statistics feature. The PMU is not a PCIe
-> Root Complex integrated End Point(RCiEP) device but only register counters
-> provided by each PCIe Root Port.
-> 
-> To facilitate collection of statistics the controller provides the
-> following two features for each Root Port:
-> 
-> - Time Based Analysis (RX/TX data throughput and time spent in each
->    low-power LTSSM state)
-> - Event counters (Error and Non-Error for lanes)
-> 
-> Note, only one counter for each type and does not overflow interrupt.
-> 
-> This driver adds PMU devices for each PCIe Root Port. And the PMU device is
-> named based the BDF of Root Port. For example,
-> 
->      30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
-> 
-> the PMU device name for this Root Port is dwc_rootport_3018.
-> 
-> Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
-> 
->      $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
-> 
-> average RX bandwidth can be calculated like this:
-> 
->      PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
-> 
-> Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/oe-kbuild-all/202305170639.XU3djFZX-lkp@intel.com/
-> ---
+ drivers/pci/quirks.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-[snip]
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index f4e2a88729fd..3e7da7174f0c 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5945,6 +5945,20 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
+ }
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
+ 
++/* In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD will enter
++ * D3cold instead of L1ss.It cause the device will randomly crash after
++ * suspend within 100~250+ cycles of suspend/resume test.
++ *
++ * After adding this fixup.We've verified that 10 devices passed
++ * the suspend/resume 2500 cycles test.
++ */
++static void phison_suspend_fixup(struct pci_dev *pdev)
++{
++	msleep(30);
++}
++DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5013, phison_suspend_fixup);
++DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5015, phison_suspend_fixup);
++
+ static void rom_bar_overlap_defect(struct pci_dev *dev)
+ {
+ 	pci_info(dev, "working around ROM BAR overlap defect\n");
+-- 
+2.17.1
 
-> +static int dwc_pcie_pmu_remove(struct platform_device *pdev)
-> +{
-> +	struct dwc_pcie_pmu_priv *priv = platform_get_drvdata(pdev);
-> +	struct dwc_pcie_pmu *pcie_pmu;
-> +
-> +	list_for_each_entry(pcie_pmu, &priv->pmu_nodes, pmu_node) {
-> +		cpuhp_state_remove_instance(dwc_pcie_pmu_hp_state,
-> +					    &pcie_pmu->cpuhp_node);
-> +		perf_pmu_unregister(&pcie_pmu->pmu);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc_pcie_pmu_probe(struct platform_device *pdev)
-> +{
-> +	struct dwc_pcie_pmu_priv *priv;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	/* If one PMU registration fails, remove all. */
-> +	if (__dwc_pcie_pmu_probe(priv))
-> +		dwc_pcie_pmu_remove(pdev);
-
-In this case, you should return error from __dwc_pcie_pmu_probe() 
-instead of returning 0, to release the requested resources of the PMU 
-deivce.
-
-> +
-> +	return 0;
-> +}
-> +
-> +static void dwc_pcie_pmu_migrate(struct dwc_pcie_pmu *pcie_pmu, unsigned int cpu)
-> +{
-> +	/* This PMU does NOT support interrupt, just migrate context. */
-> +	perf_pmu_migrate_context(&pcie_pmu->pmu, pcie_pmu->oncpu, cpu);
-> +	pcie_pmu->oncpu = cpu;
-> +}
-> +
-> +static int dwc_pcie_pmu_online_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-> +{
-> +	struct dwc_pcie_pmu *pcie_pmu;
-> +	struct pci_dev *pdev;
-> +	int node;
-> +
-> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
-> +	pdev = pcie_pmu->pdev;
-> +	node = dev_to_node(&pdev->dev);
-> +
-> +	if (node != NUMA_NO_NODE && cpu_to_node(pcie_pmu->oncpu) != node &&
-> +	    cpu_to_node(cpu) == node)
-> +		dwc_pcie_pmu_migrate(pcie_pmu, cpu);
-> +
-> +	return 0;
-> +}
-> +
-> +static int dwc_pcie_pmu_offline_cpu(unsigned int cpu, struct hlist_node *cpuhp_node)
-> +{
-> +	struct dwc_pcie_pmu *pcie_pmu;
-> +	struct pci_dev *pdev;
-> +	int node;
-> +	cpumask_t mask;
-> +	unsigned int target;
-> +
-> +	pcie_pmu = hlist_entry_safe(cpuhp_node, struct dwc_pcie_pmu, cpuhp_node);
-> +	if (cpu != pcie_pmu->oncpu)
-> +		return 0;
-> +
-> +	pdev = pcie_pmu->pdev;
-> +	node = dev_to_node(&pdev->dev);
-> +	if (cpumask_and(&mask, cpumask_of_node(node), cpu_online_mask) &&
-> +	    cpumask_andnot(&mask, &mask, cpumask_of(cpu)))
-> +		target = cpumask_any(&mask);
-> +	else
-> +		target = cpumask_any_but(cpu_online_mask, cpu);
-> +	if (target < nr_cpu_ids)
-> +		dwc_pcie_pmu_migrate(pcie_pmu, target);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver dwc_pcie_pmu_driver = {
-> +	.probe = dwc_pcie_pmu_probe,
-> +	.remove = dwc_pcie_pmu_remove,
-> +	.driver = {.name = "dwc_pcie_pmu",},
-> +};
-> +
-> +static int __init dwc_pcie_pmu_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
-> +				      "perf/dwc_pcie_pmu:online",
-> +				      dwc_pcie_pmu_online_cpu,
-> +				      dwc_pcie_pmu_offline_cpu);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	dwc_pcie_pmu_hp_state = ret;
-> +
-> +	ret = platform_driver_register(&dwc_pcie_pmu_driver);
-> +	if (ret) {
-> +		cpuhp_remove_multi_state(dwc_pcie_pmu_hp_state);
-> +		return ret;
-> +	}
-> +
-> +	dwc_pcie_pmu_dev = platform_device_register_simple(
-> +				"dwc_pcie_pmu", PLATFORM_DEVID_NONE, NULL, 0);
-> +	if (IS_ERR(dwc_pcie_pmu_dev)) {
-> +		platform_driver_unregister(&dwc_pcie_pmu_driver);
-> +		return PTR_ERR(dwc_pcie_pmu_dev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void __exit dwc_pcie_pmu_exit(void)
-> +{
-> +	platform_device_unregister(dwc_pcie_pmu_dev);
-> +	platform_driver_unregister(&dwc_pcie_pmu_driver);
-
-You should also call 'cpuhp_remove_multi_state()' when exiting the driver.
-
-With above issues fixed, you can add:
-Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
