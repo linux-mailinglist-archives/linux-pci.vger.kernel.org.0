@@ -2,130 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F138A716ACD
-	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 19:24:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8C1716AA7
+	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 19:19:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233421AbjE3RYU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 May 2023 13:24:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
+        id S233176AbjE3RTJ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 May 2023 13:19:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232991AbjE3RXl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 13:23:41 -0400
+        with ESMTP id S233001AbjE3RTI (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 13:19:08 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BA47171F;
-        Tue, 30 May 2023 10:23:07 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6391BD9;
+        Tue, 30 May 2023 10:19:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7BEFC63114;
-        Tue, 30 May 2023 17:22:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B27E8C4339B;
-        Tue, 30 May 2023 17:22:43 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE7B7630C8;
+        Tue, 30 May 2023 17:19:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA22EC433D2;
+        Tue, 30 May 2023 17:19:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685467363;
-        bh=fDJgY69hwhL+3CR1eSDi7/Wi+6ZsYK6idV3Bjue83t4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=AsG5JlLrY2cX845sSfS5azR6HQlCeFCiUku4z/OI1kmprAYseS23AbN8f98Fi3rmd
-         BA5ktDXruURv3Z6Sj+PwOCi77xwz8oDiQ9RRjbK0eW43FCaIb9nuhxtJkBYBcF7vUx
-         YkhX0ew6QPMf4muutU04vUK13p55mqmaogiwV8NngHd19MzL5J1bNtZeOY1pcUQD89
-         zjoLp7ouFi8Y+Z+1ac+s5gDXOlx03/oPKhf2ifkC7WldqVKoVdi2aekuaz3m+++IhM
-         01gfSG/NnM4S7lqg9W54Ay/DL93i+9E/51uGOkDGkQlGHbGJikAPmsClSl/8L6KNFd
-         06bnLO8U5F/EQ==
-Date:   Tue, 30 May 2023 12:22:42 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Owen Yang <ecs.taipeikernel@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Matthias Kaehlcke <mka@google.com>,
-        Doug Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, Harvey <hunge@google.com>,
-        Gavin Lee <gavin.lee@ecs.com.tw>,
-        Abner Yen <abner.yen@ecs.com.tw>,
-        Bob Moragues <moragues@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>
-Subject: Re: [PATCH v3] PCI: Add suspend fixup for SSD on sc7280
-Message-ID: <ZHYw4mQ5I3y2XibL@bhelgaas>
+        s=k20201202; t=1685467146;
+        bh=PIBi+WICffiBvaB2Kw9KN3H9bNAFCDH01ZgbVaQGbpg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=E2Xa4JrAvvdRGyRf3zxeWBvkc5cuOtjqlw0qF7dZxyI06ngCrCEr+2VfwVIRMVVdd
+         V5zTylUXQRCf1KW4HPXzMIdv+9vrMt1yP+n7FUDa+t2FjNJ4LF5+BlKFZwjSqNBqRe
+         ZHB1IFdqYD9OcZl9/+Ecs/JcoSOvUOC9V09t4ZzWib5Tw6UHYj9RtfWvo7heP6Av47
+         dD3CVQoa6UM26DNqLEt2ojddXXiZcVQpH+lX3kslYjvfSLtg1sWzEWznuptvI921Y/
+         KH17pTxqsO/dGyBabW1mpfH4P2fEriexl3TKpaNOhSUcu+Vgyc5AIWsf3E+ZScPJZ6
+         l+0N0Pn0M1pBQ==
+From:   Bjorn Andersson <andersson@kernel.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Bart Van Assche <bvanassche@acm.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        linux-pci@vger.kernel.org,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        devicetree@vger.kernel.org,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Wesley Cheng <quic_wcheng@quicinc.com>,
+        linux-scsi@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Avri Altman <avri.altman@wdc.com>,
+        Georgi Djakov <djakov@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: (subset) [PATCH v3 00/15] Introduce the SC8180x devices
+Date:   Tue, 30 May 2023 10:22:49 -0700
+Message-Id: <168546732606.2227271.7267063763992454803.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230530162454.51708-1-vkoul@kernel.org>
+References: <20230530162454.51708-1-vkoul@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230530102613.v3.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Manivannan]
-
-On Tue, May 30, 2023 at 10:26:29AM +0800, Owen Yang wrote:
-> Implement this workaround to correct NVMe suspend process.
-> 
-> SSD will randomly crashed at 100~250+ suspend/resume cycle. Phison and
-> Qualcomm found that its due to NVMe entering D3cold instead of L1ss.
-> https://partnerissuetracker.corp.google.com/issues/275663637
-> 
-> According to Qualcomm. This issue has been found last year and they have
-> attempt to submit some patches to fix the pci suspend behavior.
-> (ref:https://patchwork.kernel.org/project/linux-arm-msm/list/?
-> series=665060&state=%2A&archive=both).
-> But somehow these patches were rejected because of its complexity. And
-> we've got advise from Google that it will be more efficient that we
-> implement a quirks to fix this issue.
-> 
-> The DECLARE_PCI_FIXUP_SUSPEND function has already specify the PCI device
-> ID. And this SSD will only be used at our Chromebook device only.
-
-I'll wait for your response to Manivannan:
-https://lore.kernel.org/r/20230529164856.GE5633@thinkpad
-
-If the issue is caused by an out-of-tree patch, this fix needs to stay
-with that patch.  If the issue doesn't happen with the current
-upstream kernel, this patch isn't relevant for upstream.
-
-> Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
-> ---
+On Tue, 30 May 2023 21:54:39 +0530, Vinod Koul wrote:
+> This introduces Qualcomm SC8180x SoC which features in Lenovo Flex 5G
+> laptop. This also adds support for Primus platform as well as Lenovo Flex 5G
+> laptop.
 > 
 > Changes in v3:
-> - Adjust comment about issue behavior, ASPM, and the sc7280 connection.
-> - Fix multi-line code comment.
+>  - Split DTS patch into smaller check
+>  - checkpatch and dtbs check error fixes
+>  - fix comments from Konrad/Krzysztof
 > 
-> Changes in v2:
-> - Fix subject line style from "drivers: pci: quirks:" to "PCI:"
-> - Adjust comment.
-> 
->  drivers/pci/quirks.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> index f4e2a88729fd..6d895a4da4b5 100644
-> --- a/drivers/pci/quirks.c
-> +++ b/drivers/pci/quirks.c
-> @@ -5945,6 +5945,21 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
->  }
->  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
->  
-> +/* 
-> + * In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD will enter
-> + * D3cold instead of L1ss.It cause the device will randomly crash after
-> + * suspend within 100~250+ cycles of suspend/resume test.
-> + *
-> + * After adding this fixup.We've verified that 10 devices passed
-> + * the suspend/resume 2500 cycles test.
-> + */
-> +static void phison_suspend_fixup(struct pci_dev *pdev)
-> +{
-> +	msleep(30);
-> +}
-> +DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5013, phison_suspend_fixup);
-> +DECLARE_PCI_FIXUP_SUSPEND(0x1987, 0x5015, phison_suspend_fixup);
-> +
->  static void rom_bar_overlap_defect(struct pci_dev *dev)
->  {
->  	pci_info(dev, "working around ROM BAR overlap defect\n");
-> -- 
-> 2.17.1
-> 
+> [...]
+
+Quite a few DT validation warnings left, but let's get it merged so that we can
+work on those together.
+
+Applied, thanks!
+
+[06/15] arm64: dts: qcom: Introduce the SC8180x platform
+        commit: 8575f197b077001591ef3ff709cdee48785daf0d
+[07/15] arm64: dts: qcom: sc8180x: Add interconnects and lmh
+        commit: f3be8a111d7eaf4e291b6c2d51dd0adb39934b32
+[08/15] arm64: dts: qcom: sc8180x: Add thermal zones
+        commit: d1d3ca03554e51be44546638f83169bb05b20ef8
+[09/15] arm64: dts: qcom: sc8180x: Add QUPs
+        commit: 0018761d1564f64d567e119fd9156c473b4592d7
+[10/15] arm64: dts: qcom: sc8180x: Add PCIe instances
+        commit: d20b6c84f56ae3a9823cc0fa5cfad330536ba0d1
+[11/15] arm64: dts: qcom: sc8180x: Add remoteprocs, wifi and usb nodes
+        commit: b080f53a8f44eeaa9db9628d8d339ab5a2afb5bd
+[12/15] arm64: dts: qcom: sc8180x: Add display and gpu nodes
+        commit: 494dec9b6f541451b2e82905b0eebd9a4ac9848b
+[13/15] arm64: dts: qcom: sc8180x: Add pmics
+        commit: d3302290f59e8533a56a8fa2455357f843d8dcf6
+[14/15] arm64: dts: qcom: sc8180x: Introduce Primus
+        commit: 2ce38cc1e8fea4e251e4563e436104369bf3b322
+[15/15] arm64: dts: qcom: sc8180x: Introduce Lenovo Flex 5G
+        commit: 20dea72a393c6d5572088b8ad01dbb9e9aca64ce
+
+Best regards,
+-- 
+Bjorn Andersson <andersson@kernel.org>
