@@ -2,118 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D6104716F8A
-	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 23:17:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 98D99716F9E
+	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 23:24:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231419AbjE3VRG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 May 2023 17:17:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45136 "EHLO
+        id S230215AbjE3VYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 May 2023 17:24:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231243AbjE3VRF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 17:17:05 -0400
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5422C9
-        for <linux-pci@vger.kernel.org>; Tue, 30 May 2023 14:17:03 -0700 (PDT)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-33b04c8f3eeso27379775ab.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 May 2023 14:17:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685481423; x=1688073423;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=P8AWK6vW9g0L9wKhlsKR98Xhgzj+ZXqnUK/AQ7fXJZc=;
-        b=MOsoJ6/qQUZ/QT/3MGmK4wChP3Sna3iH3M+Et0lQ8mCnYYkQsijBsSdtlfRoIyQLWC
-         ri7/g6cADkwlUccTDRew97+m4P85QOQ7NVJWZGqBB8KnWiz3H/DhS1dKAB8Yk18v2GcP
-         WDepOB5+MFL2jjPDwAk3jF7nt7pEBk0pNdiNg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685481423; x=1688073423;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P8AWK6vW9g0L9wKhlsKR98Xhgzj+ZXqnUK/AQ7fXJZc=;
-        b=c5Rw1+sJpMKG3LBoddOna3PZzLsvEm7YujywUgV5CyHHWaSOKt5eoyXw4gWT6FKNrN
-         zYC0QDcc/ufVVCzFt2+wrGOVPBG8xqPKxqSwkNQPjgIVxtwkjAGvxqNpCgrWDCG8fjxo
-         t1ZCzlTKpyoaC2orHTOPlSt5Zg6xv2j3FFwlMSlyt1jgSdDh9do0mZ5+s5raHstaRoq4
-         l8cMXhm9ojcZtvvQHyqTqDn7QZW7G9AG6/TDPV1O9pHLvrh4InprAIKMDH8jIi9Zf4kw
-         L2c2WWblYKWRW3xfof+QZ/96FhYQ0q9lR6nkoj+jNGsgSIZOyKFoYQvO+WKH2YGMT9Qq
-         UptQ==
-X-Gm-Message-State: AC+VfDyWT+Cr3nnYf+CaZSOdKDAOrY7CW3roL31yzjprGJT7h4PCOAbu
-        r08rqaMLNE5tAF5FzRIpMXEKJw==
-X-Google-Smtp-Source: ACHHUZ5/Ilt2O7jEL8iLyLVlFNOWDAsFDyM1uRUTYJQ8+z4fK22hjW1uA7wA/E9+ayMRzB4dYka1Ug==
-X-Received: by 2002:a05:6e02:68d:b0:338:1370:a7e with SMTP id o13-20020a056e02068d00b0033813700a7emr496712ils.25.1685481423174;
-        Tue, 30 May 2023 14:17:03 -0700 (PDT)
-Received: from localhost (30.23.70.34.bc.googleusercontent.com. [34.70.23.30])
-        by smtp.gmail.com with UTF8SMTPSA id q13-20020a92d40d000000b0032ca1426ddesm2743528ilm.55.2023.05.30.14.17.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 May 2023 14:17:02 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-X-Google-Original-From: Matthias Kaehlcke <mka@google.com>
-Date:   Tue, 30 May 2023 21:17:02 +0000
-To:     Manivannan Sadhasivam <mani@kernel.org>
-Cc:     Owen Yang <ecs.taipeikernel@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Bob Moragues <moragues@google.com>,
-        Abner Yen <abner.yen@ecs.com.tw>,
-        Doug Anderson <dianders@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, Harvey <hunge@google.com>,
-        Gavin Lee <gavin.lee@ecs.com.tw>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v1] drivers: pci: quirks: Add suspend fixup for SSD on
- sc7280
-Message-ID: <ZHZnzqeFbwkGFUud@google.com>
-References: <20230525163448.v1.1.Id388e4e2aa48fc56f9cd2d413aabd461ff81d615@changeid>
- <20230529164856.GE5633@thinkpad>
+        with ESMTP id S230193AbjE3VYG (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 17:24:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C77AD9;
+        Tue, 30 May 2023 14:24:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5C1E6338E;
+        Tue, 30 May 2023 21:24:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB01EC4339B;
+        Tue, 30 May 2023 21:24:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685481844;
+        bh=nSQjRvB5sqKGMsdtyBRHXZYqX4emyOnsRXhxnpxj5CY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=TV1bjAHwa6NLdVZVD7DllGDZUObfyAObgZ8dpZarPA3MFb+4JwjHeGjrah/sKeuB6
+         Xq8Z6uhzHX0F3PKJSdkRh1pFxjO+XorK0VZvx6no556rDJNfISNz+wSJYYSdEmvn7Z
+         hUMZYEgCtddE7YUdKaua4hQLvfWtpf57g3PAd+6ZmWrfu2xY5A7mha+RytVeJ/84Sv
+         mxnDEJPKCDkp/bA6BADO+x5ZZtDdknfJeDc4bcwl2S3en2mWL+rmMtiDyQsmiX2t01
+         UKGSafGTnUjV0OrS31D6yutY2Y59cmVv6Xh9lXe15RO90svr9jvNnhSKkE8vII7TeO
+         VMw5j/h0xzgKQ==
+Date:   Tue, 30 May 2023 16:24:02 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        linux-kernel@vger.kernel.org,
+        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
+        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
+        Anatolij Gustschin <agust@denx.de>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-mips@vger.kernel.org,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        linux-alpha@vger.kernel.org,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Maciej W. Rozycki" <macro@orcam.me.uk>
+Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
+ users
+Message-ID: <ZHZpcli2UmdzHgme@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230529164856.GE5633@thinkpad>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <ZF6YIezraETr9iNM@bhelgaas>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 29, 2023 at 10:18:56PM +0530, Manivannan Sadhasivam wrote:
-> On Thu, May 25, 2023 at 04:35:12PM +0800, Owen Yang wrote:
-> > Implement this workaround until Qualcomm fixed the
-> >  correct NVMe suspend process.
+On Fri, May 12, 2023 at 02:48:51PM -0500, Bjorn Helgaas wrote:
+> On Fri, May 12, 2023 at 01:56:29PM +0300, Andy Shevchenko wrote:
+> > On Tue, May 09, 2023 at 01:21:22PM -0500, Bjorn Helgaas wrote:
+> > > On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
+> > > > On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
+> > > > > Provide two new helper macros to iterate over PCI device resources and
+> > > > > convert users.
+> > > 
+> > > > Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
+> > > 
+> > > This is 09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()")
+> > > upstream now.
+> > > 
+> > > Coverity complains about each use,
 > > 
-> > Signed-off-by: Owen Yang <ecs.taipeikernel@gmail.com>
-> > ---
-> > 
-> >  drivers/pci/quirks.c | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-> > index f4e2a88729fd..b57876dc2624 100644
-> > --- a/drivers/pci/quirks.c
-> > +++ b/drivers/pci/quirks.c
-> > @@ -5945,6 +5945,16 @@ static void nvidia_ion_ahci_fixup(struct pci_dev *pdev)
-> >  }
-> >  DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_NVIDIA, 0x0ab8, nvidia_ion_ahci_fixup);
-> >  
-> > +/* In Qualcomm 7c gen 3 sc7280 platform. Some of the SSD won't enter
-> > + * the correct ASPM state properly. Therefore. Implement this workaround
-> > + * until Qualcomm fixed the correct NVMe suspend process*/
+> > It needs more clarification here. Use of reduced variant of the
+> > macro or all of them? If the former one, then I can speculate that
+> > Coverity (famous for false positives) simply doesn't understand `for
+> > (type var; var ...)` code.
 > 
-> What is there to fix during suspend? Currently, Qcom PCIe driver just votes for
-> low interconnect bandwidth and keeps the resources (clocks, regulators) ON
-> during suspend. So there is no way the device would move to D3Cold.
+> True, Coverity finds false positives.  It flagged every use in
+> drivers/pci and drivers/pnp.  It didn't mention the arch/alpha, arm,
+> mips, powerpc, sh, or sparc uses, but I think it just didn't look at
+> those.
 > 
-> Earlier Qcom reported that during suspend, link down event happens when the
-> resources are turned OFF without waiting for the link to enter L1ss. But as I
-> said above, we are _not_ turning OFF any resources.
+> It flagged both:
+> 
+>   pbus_size_io    pci_dev_for_each_resource(dev, r)
+>   pbus_size_mem   pci_dev_for_each_resource(dev, r, i)
+> 
+> Here's a spreadsheet with a few more details (unfortunately I don't
+> know how to make it dump the actual line numbers or analysis like I
+> pasted below, so "pci_dev_for_each_resource" doesn't appear).  These
+> are mostly in the "Drivers-PCI" component.
+> 
+> https://docs.google.com/spreadsheets/d/1ohOJwxqXXoDUA0gwopgk-z-6ArLvhN7AZn4mIlDkHhQ/edit?usp=sharing
+> 
+> These particular reports are in the "High Impact Outstanding" tab.
 
-Right, it makes little sense that the NVMe would move to D3Cold. And why does
-the issue only reproduces sometimes (with certain NVMes) and not consistently?
+Where are we at?  Are we going to ignore this because some Coverity
+reports are false positives?
 
-> I believe this patch is addressing an issue that is caused by an out-of-tree
-> patch.
-
-I think ECS observed this with Chrome OS v5.15 kernel. On the PCI side this
-kernel only has backported changes from upstream  (mostly clean picks), no
-downstream patches, so it seems unlikely that the issue is caused by a
-downstream patch.
+Bjorn
