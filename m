@@ -2,84 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 98D99716F9E
-	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 23:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9DD30717014
+	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 23:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230215AbjE3VYH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 May 2023 17:24:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48698 "EHLO
+        id S233421AbjE3V7t (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 May 2023 17:59:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbjE3VYG (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 17:24:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C77AD9;
-        Tue, 30 May 2023 14:24:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B5C1E6338E;
-        Tue, 30 May 2023 21:24:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB01EC4339B;
-        Tue, 30 May 2023 21:24:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685481844;
-        bh=nSQjRvB5sqKGMsdtyBRHXZYqX4emyOnsRXhxnpxj5CY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=TV1bjAHwa6NLdVZVD7DllGDZUObfyAObgZ8dpZarPA3MFb+4JwjHeGjrah/sKeuB6
-         Xq8Z6uhzHX0F3PKJSdkRh1pFxjO+XorK0VZvx6no556rDJNfISNz+wSJYYSdEmvn7Z
-         hUMZYEgCtddE7YUdKaua4hQLvfWtpf57g3PAd+6ZmWrfu2xY5A7mha+RytVeJ/84Sv
-         mxnDEJPKCDkp/bA6BADO+x5ZZtDdknfJeDc4bcwl2S3en2mWL+rmMtiDyQsmiX2t01
-         UKGSafGTnUjV0OrS31D6yutY2Y59cmVv6Xh9lXe15RO90svr9jvNnhSKkE8vII7TeO
-         VMw5j/h0xzgKQ==
-Date:   Tue, 30 May 2023 16:24:02 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-mips@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
- users
-Message-ID: <ZHZpcli2UmdzHgme@bhelgaas>
+        with ESMTP id S233628AbjE3V7s (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 17:59:48 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D23CAA
+        for <linux-pci@vger.kernel.org>; Tue, 30 May 2023 14:59:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685483976; x=1717019976;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Gs0a0e67Z1AGpqKObS7tTS6PkKI8LscyYZSog/7DaV0=;
+  b=UXonn62DM7dgC7zlRBA9qqszyxO5oLYk7FfIsKj4TdGBLDvYUcys6+aL
+   Zu31nkkpWNIUWUOHQX8oKuLhKHi0LgIg/MsjIZjW7caFEa/cfhvsW9c7x
+   IB9RIQ3D50OhRr4Cz8mYTMmtBIoMcuhJD+PnBpAKpmf59vTUNw7y8jLW6
+   CipcSyqinnThGi1rdJUjISBxVVho5G4i7OMWI0Gi5pyZwH2ZyFU6m5lvw
+   YmU4e21Zx3czy8VfLIQHM5e1IEbGuLFIDXr0QMkaPsGDeeI18DKkA2LVs
+   yDEKyNS0GV3S06g7CaqxKpsHH+MaQya6tjO9Um+w3qKl3LI/TdcHeO8zi
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="418545071"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="418545071"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 14:59:33 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10726"; a="1036767090"
+X-IronPort-AV: E=Sophos;i="6.00,205,1681196400"; 
+   d="scan'208";a="1036767090"
+Received: from unknown (HELO ocsbesrhlrepo01.amr.corp.intel.com) ([10.2.230.16])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 May 2023 14:59:32 -0700
+From:   Nirmal Patel <nirmal.patel@linux.intel.com>
+To:     <linux-pci@vger.kernel.org>
+Cc:     Nirmal Patel <nirmal.patel@linux.intel.com>
+Subject: [PATCH] PCI: vmd: Fix domain reset operation
+Date:   Tue, 30 May 2023 14:47:06 -0700
+Message-Id: <20230530214706.75700-1-nirmal.patel@linux.intel.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZF6YIezraETr9iNM@bhelgaas>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -87,46 +57,55 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, May 12, 2023 at 02:48:51PM -0500, Bjorn Helgaas wrote:
-> On Fri, May 12, 2023 at 01:56:29PM +0300, Andy Shevchenko wrote:
-> > On Tue, May 09, 2023 at 01:21:22PM -0500, Bjorn Helgaas wrote:
-> > > On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
-> > > > On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
-> > > > > Provide two new helper macros to iterate over PCI device resources and
-> > > > > convert users.
-> > > 
-> > > > Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
-> > > 
-> > > This is 09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()")
-> > > upstream now.
-> > > 
-> > > Coverity complains about each use,
-> > 
-> > It needs more clarification here. Use of reduced variant of the
-> > macro or all of them? If the former one, then I can speculate that
-> > Coverity (famous for false positives) simply doesn't understand `for
-> > (type var; var ...)` code.
-> 
-> True, Coverity finds false positives.  It flagged every use in
-> drivers/pci and drivers/pnp.  It didn't mention the arch/alpha, arm,
-> mips, powerpc, sh, or sparc uses, but I think it just didn't look at
-> those.
-> 
-> It flagged both:
-> 
->   pbus_size_io    pci_dev_for_each_resource(dev, r)
->   pbus_size_mem   pci_dev_for_each_resource(dev, r, i)
-> 
-> Here's a spreadsheet with a few more details (unfortunately I don't
-> know how to make it dump the actual line numbers or analysis like I
-> pasted below, so "pci_dev_for_each_resource" doesn't appear).  These
-> are mostly in the "Drivers-PCI" component.
-> 
-> https://docs.google.com/spreadsheets/d/1ohOJwxqXXoDUA0gwopgk-z-6ArLvhN7AZn4mIlDkHhQ/edit?usp=sharing
-> 
-> These particular reports are in the "High Impact Outstanding" tab.
+During domain reset process we are accidentally enabling
+the prefetchable memory by writing 0x0 to Prefetchable Memory
+Base and Prefetchable Memory Limit registers. As a result certain
+platforms failed to boot up.
 
-Where are we at?  Are we going to ignore this because some Coverity
-reports are false positives?
+Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
 
-Bjorn
+  The Prefetchable Memory Limit register must be programmed to a smaller
+  value than the Prefetchable Memory Base register if there is no
+  prefetchable memory on the secondary side of the bridge.
+
+When clearing Prefetchable Memory Base, Prefetchable Memory
+Limit and Prefetchable Base Upper 32 bits, the prefetchable
+memory range becomes 0x0-0x575000fffff. As a result the
+prefetchable memory is enabled accidentally.
+
+Implementing correct operation by writing a value to Prefetchable
+Base Memory larger than the value of Prefetchable Memory Limit.
+
+Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+---
+ drivers/pci/controller/vmd.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+index 769eedeb8802..f3eb740e3028 100644
+--- a/drivers/pci/controller/vmd.c
++++ b/drivers/pci/controller/vmd.c
+@@ -526,8 +526,18 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+ 				     PCI_CLASS_BRIDGE_PCI))
+ 					continue;
+ 
+-				memset_io(base + PCI_IO_BASE, 0,
+-					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
++				writel(0, base + PCI_IO_BASE);
++				writew(0xFFF0, base + PCI_MEMORY_BASE);
++				writew(0, base + PCI_MEMORY_LIMIT);
++
++				writew(0xFFF1, base + PCI_PREF_MEMORY_BASE);
++				writew(0, base + PCI_PREF_MEMORY_LIMIT);
++
++				writel(0xFFFFFFFF, base + PCI_PREF_BASE_UPPER32);
++				writel(0, base + PCI_PREF_LIMIT_UPPER32);
++
++				writel(0, base + PCI_IO_BASE_UPPER16);
++				writeb(0, base + PCI_CAPABILITY_LIST);
+ 			}
+ 		}
+ 	}
+-- 
+2.27.0
+
