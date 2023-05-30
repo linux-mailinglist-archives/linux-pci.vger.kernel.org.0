@@ -2,153 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C6863716D2D
-	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 21:07:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91081716E64
+	for <lists+linux-pci@lfdr.de>; Tue, 30 May 2023 22:11:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231360AbjE3THg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 30 May 2023 15:07:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        id S229920AbjE3ULI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 30 May 2023 16:11:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231286AbjE3THf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 15:07:35 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29CA68E
-        for <linux-pci@vger.kernel.org>; Tue, 30 May 2023 12:06:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685473614;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=fSmFtWgu65TksWT+Us90A+D3QMtRR1H00zZMfgSmti4=;
-        b=QzszITu9pKqNPFfMBBMa5xC9116n+6/rmfdzOhAMa7t33AK+aOrk/yp24XlOQgR6bE3CIU
-        SZSY+cwSEGSQj5L9wikVJ7c3cOWYS+dfJBcM10jeim4ayA0Zky1tkv0q+zevG4IMtH44oi
-        NvFZp2A9JCatBERWmsKNamUadFODUv4=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-328-DAJIgW6yOl-fa65Y-b80bA-1; Tue, 30 May 2023 15:06:52 -0400
-X-MC-Unique: DAJIgW6yOl-fa65Y-b80bA-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-4f4b2a2040bso2565174e87.0
-        for <linux-pci@vger.kernel.org>; Tue, 30 May 2023 12:06:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685473611; x=1688065611;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fSmFtWgu65TksWT+Us90A+D3QMtRR1H00zZMfgSmti4=;
-        b=brsyvRluzN7Hol76vbmNp4QkQP8ZUT35ovtCbG9Q8Nr7rCJhM84F7J0d4Lna1vP5TG
-         XWHlIJOVRHUv6aBsuGYvoPjqD3YxskJOIzcVA9YuBufQwW4K87D996R3L+8KnbeicItI
-         Uy8YYe2cmp/gsKHtshonW5AXRIepoxf9CmPQ3SPjgpWA9WauJm5lSa2SUiGr46p102vL
-         FhE1L+KOTUwAEpLrYtUpcCs3sBgcOi0bRx/dFvISMIqZf1KshkSBr9PudF4HbskqjEJE
-         ll5hEMEY1pHCufNq7zbZZH8Ag+sMzT5f6buKv6/I510iRaJ0R3a/6ODe21+L07D5K+YC
-         h8ew==
-X-Gm-Message-State: AC+VfDy9nCpMe2H1xp2bSdD+crvziJeAIyq0tbcihT23ECIUUgr1cKBr
-        uiW6VKdxiFdhuodxszGdefdxvRxxiqYWAaISkdeL43TOppCOol5O8FOUZlGZyin8Vqzt7DjRa1d
-        A6lBkNkK0D1rajsZTphnl
-X-Received: by 2002:ac2:43c7:0:b0:4f3:a49b:121f with SMTP id u7-20020ac243c7000000b004f3a49b121fmr1286303lfl.40.1685473611539;
-        Tue, 30 May 2023 12:06:51 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6i347dAklPJbPv8EkDS2YnvF4+V4rWvJj6xX7aXx26i4gIYG6DhV3FoTipjX8Q0zjzNeUxZQ==
-X-Received: by 2002:ac2:43c7:0:b0:4f3:a49b:121f with SMTP id u7-20020ac243c7000000b004f3a49b121fmr1286284lfl.40.1685473611189;
-        Tue, 30 May 2023 12:06:51 -0700 (PDT)
-Received: from redhat.com ([176.12.143.106])
-        by smtp.gmail.com with ESMTPSA id d10-20020ac24c8a000000b004f252f48e5fsm429049lfl.40.2023.05.30.12.06.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 May 2023 12:06:50 -0700 (PDT)
-Date:   Tue, 30 May 2023 15:06:45 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Igor Mammedov <imammedo@redhat.com>, linux-kernel@vger.kernel.org,
-        rafael@kernel.org, lenb@kernel.org, bhelgaas@google.com,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org,
-        mika.westerberg@linux.intel.com
-Subject: Re: [PATCH v2] PCI: acpiphp: Reassign resources on bridge if
- necessary
-Message-ID: <20230530150019-mutt-send-email-mst@kernel.org>
-References: <20230530141321-mutt-send-email-mst@kernel.org>
- <ZHZGkAg34ltZLV9J@bhelgaas>
+        with ESMTP id S230176AbjE3ULH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 30 May 2023 16:11:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258DEF9;
+        Tue, 30 May 2023 13:11:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A9FAC62B4D;
+        Tue, 30 May 2023 20:11:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E68E8C4339B;
+        Tue, 30 May 2023 20:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685477465;
+        bh=rzTSFWP7EGhI75f20uvSZ1KlSZQvqYicerFpFWGj7LA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=CrqJrNf15J8HEy6u8b6SKublH4XlrkC2j1/c2WHHKu9UCqsuHbBqK40rd29XYDNmc
+         fg0K17IRRdFwDTywyiNpmlrE3qW0cBq2TW2Q5z9Y17QmFRiqYbmHCfKy6oyRSf787/
+         1at8CgZmPRHHk3IMGaSTrl8WmCJSMh4/28uoB3zCJ99yicByuuuzRqSR7/LdAFlZdV
+         HV8/A1Ur8/4BhuBauvN6rRAPY06Me1tNxF+ntI+MHYlmsMhLiJNNWPu7LCW0Lejw3t
+         C7Fg/5z3yZtpKIvYYg7JBnmp7hj7y4tmjnEwt2nwz4EgbmhqCHXqYpEqUkO3VApzQG
+         qOgRZ1rXswaNw==
+Date:   Tue, 30 May 2023 15:11:03 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] linux/pci.h: add a dummy implement for pci_clear_master()
+Message-ID: <ZHZYVyqsJjiSNNsP@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZHZGkAg34ltZLV9J@bhelgaas>
-X-Spam-Status: No, score=-2.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230530101655.2275731-1-suijingfeng@loongson.cn>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, May 30, 2023 at 01:55:12PM -0500, Bjorn Helgaas wrote:
-> On Tue, May 30, 2023 at 02:16:36PM -0400, Michael S. Tsirkin wrote:
-> > On Tue, May 30, 2023 at 12:12:44PM -0500, Bjorn Helgaas wrote:
-> > > On Mon, Apr 24, 2023 at 09:15:57PM +0200, Igor Mammedov wrote:
-> > > > When using ACPI PCI hotplug, hotplugging a device with
-> > > > large BARs may fail if bridge windows programmed by
-> > > > firmware are not large enough.
-> > > > 
-> > > > Reproducer:
-> > > >   $ qemu-kvm -monitor stdio -M q35  -m 4G \
-> > > >       -global ICH9-LPC.acpi-pci-hotplug-with-bridge-support=on \
-> > > >       -device id=rp1,pcie-root-port,bus=pcie.0,chassis=4 \
-> > > >       disk_image
-> > > > 
-> > > >  wait till linux guest boots, then hotplug device
-> > > >    (qemu) device_add qxl,bus=rp1
-> > > > 
-> > > >  hotplug on guest side fails with:
-> > > >    pci 0000:01:00.0: [1b36:0100] type 00 class 0x038000
-> > > >    pci 0000:01:00.0: reg 0x10: [mem 0x00000000-0x03ffffff]
-> > > >    pci 0000:01:00.0: reg 0x14: [mem 0x00000000-0x03ffffff]
-> > > >    pci 0000:01:00.0: reg 0x18: [mem 0x00000000-0x00001fff]
-> > > >    pci 0000:01:00.0: reg 0x1c: [io  0x0000-0x001f]
-> > > >    pci 0000:01:00.0: BAR 0: no space for [mem size 0x04000000]
-> > > >    pci 0000:01:00.0: BAR 0: failed to assign [mem size 0x04000000]
-> > > >    pci 0000:01:00.0: BAR 1: no space for [mem size 0x04000000]
-> > > >    pci 0000:01:00.0: BAR 1: failed to assign [mem size 0x04000000]
-> > > >    pci 0000:01:00.0: BAR 2: assigned [mem 0xfe800000-0xfe801fff]
-> > > >    pci 0000:01:00.0: BAR 3: assigned [io  0x1000-0x101f]
-> > > >    qxl 0000:01:00.0: enabling device (0000 -> 0003)
-> > > 
-> > > Ugh, I just noticed that we turned on PCI_COMMAND_MEMORY even though
-> > > BARs 0 and 1 haven't been assigned.  How did that happen?  It looks
-> > > like pci_enable_resources() checks for that, but there must be a hole
-> > > somewhere.
-> > 
-> > Maybe because BAR2 was assigned? I think pci_enable_resources just
-> > does
-> >                 if (r->flags & IORESOURCE_MEM)
-> >                         cmd |= PCI_COMMAND_MEMORY;
-> > in a loop so if any memory BARs are assigned then PCI_COMMAND_MEMORY
-> > is set.
+On Tue, May 30, 2023 at 06:16:55PM +0800, Sui Jingfeng wrote:
+> As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
+> call pci_clear_master() without config_pci guard can not built.
 > 
-> It does, but it also bails out if it finds IORESOURCE_UNSET:
+>    drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
+>    In function 'etnaviv_gpu_pci_fini':
+> >> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
+>    error: implicit declaration of function 'pci_clear_master';
+>    did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
+>       32 |         pci_clear_master(pdev);
+>          |         ^~~~~~~~~~~~~~~~
+>          |         pci_set_master
+>    cc1: some warnings being treated as errors
 > 
->   pci_enable_resources()
->   {
->     ...
->     pci_dev_for_each_resource(dev, r, i) {
->       ...
->       if (r->flags & IORESOURCE_UNSET) {
->         pci_err(dev, "can't enable device: BAR %d %pR not assigned\n");
->         return -EINVAL;
->       }
->       ...
->       if (r->flags & IORESOURCE_MEM)
->         cmd |= PCI_COMMAND_MEMORY;
->     }
->     ...
->   }
-> 
-> I expected that IORESOURCE_UNSET would still be there from
-> pci_assign_resource(), since we saw the "failed to assign" messages,
-> but there must be more going on.
-> 
-> Bjorn
+> [1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
 
-Oh you are right. I donnu.
+I don't mind adding a stub if it's needed, but I don't understand why
+it's needed here.  The caller is in etnaviv_pci_drv.c, and if I
+understand the patch at [1], etnaviv_pci_drv.c is only compiled when
+CONFIG_PCI=y.
 
--- 
-MST
+Bjorn
 
+[1] https://lore.kernel.org/all/20230530160643.2344551-6-suijingfeng@loongson.cn/
+
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
+> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+> ---
+>  include/linux/pci.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d0c19ff0c958..71c85380676c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
+>  #define pci_dev_put(dev)	do { } while (0)
+>  
+>  static inline void pci_set_master(struct pci_dev *dev) { }
+> +static inline void pci_clear_master(struct pci_dev *dev) { }
+>  static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+>  static inline void pci_disable_device(struct pci_dev *dev) { }
+>  static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
+> -- 
+> 2.25.1
+> 
