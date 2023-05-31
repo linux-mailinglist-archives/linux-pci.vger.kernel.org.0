@@ -2,79 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B35DA717CEF
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 12:13:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BD0D3717D32
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 12:28:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbjEaKN0 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 06:13:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33888 "EHLO
+        id S232156AbjEaK2E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 06:28:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235852AbjEaKNY (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 06:13:24 -0400
-X-Greylist: delayed 939 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 31 May 2023 03:13:20 PDT
-Received: from imap5.colo.codethink.co.uk (imap5.colo.codethink.co.uk [78.40.148.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C004C188
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 03:13:20 -0700 (PDT)
-Received: from [167.98.27.226] (helo=[10.35.5.28])
-        by imap5.colo.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
-        id 1q4IaI-0087hR-P2; Wed, 31 May 2023 10:57:39 +0100
-Message-ID: <9d4f0f57-0458-987f-d9e7-0ece2a2476b9@codethink.co.uk>
-Date:   Wed, 31 May 2023 10:57:38 +0100
+        with ESMTP id S229949AbjEaK2D (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 06:28:03 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E949FB3;
+        Wed, 31 May 2023 03:28:01 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Dxd_EwIXdkE+8CAA--.6608S3;
+        Wed, 31 May 2023 18:28:00 +0800 (CST)
+Received: from openarena.loongson.cn (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx77MtIXdk+juCAA--.15700S2;
+        Wed, 31 May 2023 18:27:57 +0800 (CST)
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ben Hutchings <bhutchings@solarflare.com>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>
+Cc:     Li Yi <liyi@loongson.cn>, linux-pci@vger.kernel.org,
+        loongson-kernel@lists.loongnix.cn, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kernel test robot <lkp@intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v2] PCI: Add dummy implement for pci_clear_master() function
+Date:   Wed, 31 May 2023 18:27:44 +0800
+Message-Id: <20230531102744.2354313-1-suijingfeng@loongson.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH] pci: add PCI_EXT_CAP_ID_PL_32GT define
-Content-Language: en-GB
-To:     linux-pci@vger.kernel.org, bhelgaas@google.com
-Cc:     Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
-        Jude Onyenegecha <jude.onyenegecha@codethink.co.uk>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Jeegar Lakhani <jeegar.lakhani@sifive.com>,
-        Ben Dooks <ben.dooks@sifive.com>
-References: <20230531095545.293063-1-ben.dooks@codethink.co.uk>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-In-Reply-To: <20230531095545.293063-1-ben.dooks@codethink.co.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8Cx77MtIXdk+juCAA--.15700S2
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7CryUGr15Xw4UKr1xurWxZwb_yoW8Aw4rpa
+        98AFyrCrW8GFy8Gw4UJFyIvF1ag39xZ34Sy3y7Kwn09a9Fya4rtFnYkF17Arn3JrWvkFy3
+        Ww17Ka1DWw4YyFJanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bh8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
+        e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
+        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
+        aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+        Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+        O2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+        WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+        JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
+        WUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j
+        6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU2gyCDUUUU
+X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
+        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 31/05/2023 10:55, Ben Dooks wrote:
-> From: Ben Dooks <ben.dooks@sifive.com>
-> 
-> Add the define for PCI_EXT_CAP_ID_PL_32GT for drivers that
-> will want this whilst doing Gen5/Gen6 accesses.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> ---
->   include/uapi/linux/pci_regs.h | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
-> index dc2000e0fe3a..e5f558d96493 100644
-> --- a/include/uapi/linux/pci_regs.h
-> +++ b/include/uapi/linux/pci_regs.h
-> @@ -738,6 +738,7 @@
->   #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
->   #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
->   #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
-> +#define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
->   #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
->   #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
+call pci_clear_master() without config_pci guard can not pass compile test.
 
-Just noticed this isn't tab indented, so fixed and sent a v2.
+   drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
+   In function 'etnaviv_gpu_pci_fini':
+>> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
+   error: implicit declaration of function 'pci_clear_master';
+   did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
+      32 |         pci_clear_master(pdev);
+         |         ^~~~~~~~~~~~~~~~
+         |         pci_set_master
+   cc1: some warnings being treated as errors
 
+[1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
+
+V2:
+	* Adjust commit log style to meet the convention and add Fixes tag
+
+Fixes: 6a479079c072 ("PCI: Add pci_clear_master() as opposite of pci_set_master()")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+---
+ include/linux/pci.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index d0c19ff0c958..71c85380676c 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
+ #define pci_dev_put(dev)	do { } while (0)
+ 
+ static inline void pci_set_master(struct pci_dev *dev) { }
++static inline void pci_clear_master(struct pci_dev *dev) { }
+ static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+ static inline void pci_disable_device(struct pci_dev *dev) { }
+ static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
-
-https://www.codethink.co.uk/privacy.html
+2.25.1
 
