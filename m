@@ -2,110 +2,98 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D7DD7189EA
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 21:14:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2F07718B20
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 22:25:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbjEaTOH (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 15:14:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48462 "EHLO
+        id S230134AbjEaUZA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 16:25:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229483AbjEaTOH (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 15:14:07 -0400
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1DB123
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 12:14:05 -0700 (PDT)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3f82c0cdd02so22822661cf.3
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 12:14:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google; t=1685560445; x=1688152445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q0tywlLlHZmN2sb1VXP3e/xTGJtBP4rtM1yXFljfO7I=;
-        b=ElUCH1LpTJHtkSCpamXz3jwnnOkpxNLsLN8nx7oiDLy9hx53VnFli4EjzZz8Sav69f
-         MrDWZ36frz2K016iKV8291YRTmkXZCNs79ckPQyRyoChIgIhmxHW+D3Hg+md/5ppcSHm
-         iAMO+RW6Jx1og9XK9MG7FWd7cnLfQHmzHcl0//gxK9723wd9H3sKnKj3K9m7lU1oCu0R
-         UsGTQ1MBGXAd5tErFLFtSd3nibLDOJ42dlDpIe+pKGP4oTYGfLOQGbLRu34ISc2Uun3Q
-         XC/ny8h6vpNuAxaB5By8r6QfSq17hNwjt8mP7u7zugPHZWfTDGD/mxj6NDjdmFepDREk
-         z9/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685560445; x=1688152445;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q0tywlLlHZmN2sb1VXP3e/xTGJtBP4rtM1yXFljfO7I=;
-        b=UrY5L66KYMtQftle07LeLYzEfmN0aD8ThSdWThy118T3q10W9oseRIE/tyvYqAxUbu
-         FTgC3GY/RZo93OGU4amVIYOZRxVxulF1s3FATpXRbF6Pc1votCNzJXVMc0yTypjPu14h
-         npohNx8/R7aVhwNNah16UrizRwfzIZ4aFfKP3/DhENYrOrfIUMUun3Z6T1xJC2XESm3m
-         +Oq6B/VzzGoXSchpypda1JOtS3GYWueLTxmXt398a0J5Rc3mj3SqIgM3QQUTijiwNgTr
-         +/jBHI/zl0B771TXEOwQ+AgGZ5cJhZATE4P/WeNf3HHVDxcJXyhoqu91/a2lillvSG3e
-         ax7A==
-X-Gm-Message-State: AC+VfDzqXPpJattnV5OTWlpPf9F0SECqbrKB2BwyqgnQTooQ4JkMvkdP
-        OAaI+y2a8FXc0E6OHqaMdIvtsA==
-X-Google-Smtp-Source: ACHHUZ6cpQLrHNwS+2SmmQFahiElKqp1WZDxoi2ZVEf2d22+YdLH0Lu2HdHD64oOTK+T40VqBdI0Pw==
-X-Received: by 2002:ac8:7c4d:0:b0:3f4:ff4e:c5ed with SMTP id o13-20020ac87c4d000000b003f4ff4ec5edmr7340582qtv.47.1685560444973;
-        Wed, 31 May 2023 12:14:04 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id cp10-20020a05622a420a00b003f4a76d4981sm6296426qtb.66.2023.05.31.12.14.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 31 May 2023 12:14:04 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1q4RGl-0017ZO-JH;
-        Wed, 31 May 2023 16:14:03 -0300
-Date:   Wed, 31 May 2023 16:14:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Huacai Chen <chenhuacai@gmail.com>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
+        with ESMTP id S230303AbjEaUYu (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 16:24:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44796101;
+        Wed, 31 May 2023 13:24:49 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D678F63F0E;
+        Wed, 31 May 2023 20:24:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C53ADC433D2;
+        Wed, 31 May 2023 20:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685564688;
+        bh=7r8nK+oO+zadbfBQmkkb4fRHaIJIBVonKzfYO5BLeJ8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=d1ewYAhFOgglzfl4VxYT6tvES1rLDUAGUGuYDf+vWFPrppA/pQmCxmrdqZ1EX/7NH
+         n0G6IGEqqCNLCv7dMvLTTjozqwyVgqEFuHm1r/YPSTYnaL2hwTj430Nu6yRA7cI8XW
+         CruOz9vwg6cp6Trv3cBsoC95rqTFU3PvOXdFNhJ6L2rWl/E6BnED05MzhnhJTy8qJl
+         azmTRWs3q6iQA/o2B0RyNVabhgl7/FVohnSKVwjF4VhehsRTEZ5SWVtONVzFX0I9In
+         R7GzTPZa8fzFWiKFXZnXjUolwBTwO4slzywzkHGRchdcG6ftqGNoC3dPHhirlEbav1
+         TOmgKmqgTpD3A==
+Date:   Wed, 31 May 2023 15:24:46 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     linux-pci@vger.kernel.org, netdev@vger.kernel.org,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongson-kernel@lists.loongnix.cn,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
-Message-ID: <ZHeceyZ9eUC27WcE@ziepe.ca>
-References: <20230524093623.3698134-1-chenhuacai@loongson.cn>
- <ZG4rZYBKaWrsctuH@bhelgaas>
- <CAAhV-H5u8qtXpr-mY+pKq7UfmyBgr3USRTQpo9-w28w8pHX8QQ@mail.gmail.com>
- <20230528165738.GF2814@thinkpad>
- <CAAhV-H5u0ibghgwbfJT1V_oWUWi0rie0NHWTSkpCVat3_ARvKw@mail.gmail.com>
- <20230529053919.GB2856@thinkpad>
- <CAAhV-H6EPkGJchA4pg=zctmmt=9LboaFqKhFgQxZKNxJxQVT7g@mail.gmail.com>
+        Rob Herring <robh@kernel.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        Liu Peibao <liupeibao@loongson.cn>,
+        Binbin Zhou <zhoubinbin@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
+ node has status = "disabled"
+Message-ID: <ZHetDo5PozWdtrxP@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H6EPkGJchA4pg=zctmmt=9LboaFqKhFgQxZKNxJxQVT7g@mail.gmail.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+In-Reply-To: <20230531165819.phx7uwlgtvnt3tvb@skbuf>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Mon, May 29, 2023 at 02:52:29PM +0800, Huacai Chen wrote:
+[+cc Loongson folks, thread at
+https://lore.kernel.org/r/20230521115141.2384444-1-vladimir.oltean@nxp.com]
 
-> > But IMO what you are proposing seems like usecase driven and may not work all
-> > the time due to architecture limitation. This again proves that the existing
-> > solution is sufficient enough.
+On Wed, May 31, 2023 at 07:58:19PM +0300, Vladimir Oltean wrote:
+> On Wed, May 31, 2023 at 11:56:02AM -0500, Bjorn Helgaas wrote:
+> > What bad things happen without this patch?
+> 
+> It's in the commit title: probing the entire device (PCI device!!!) is
+> skipped if function 0 has status = "disabled". Aka PCIe functions 1, 2, 3, 4, ...
 
-> Yes, it's a usecase driven solution, so I provide a cmdline parameter
-> to let the user decide.
+I guess I should have asked "what bad things happen without this patch
+and without the DT 'disabled' status"?
 
-The NIC drivers should be consuming interrupts based on the number of
-queues they are using, and that is something you can control from the
-command line, eg ethtool IIRC. Usually it defaults to the number of
-CPUs.
+I think 6fffbc7ae137 ("PCI: Honor firmware's device disabled status")
+was basically a workaround for Loongson making a device visible in PCI
+config space when it shouldn't have been [1].
 
-Basically, you want to enable the user to configure the system with a
-user specified reduced number of NIC queues, and we already have way
-to do that.
+6fffbc7ae137 [2] means we pretend the PCI device doesn't exist if DT
+status is "disabled".  If the device happens to be Function 0, that
+means we don't look for any more functions.  I guess that doesn't
+matter for Loongson.  But it does matter for this NXP platform, where
+we don't want to use Function 0, but we *do* want to use other
+Functions.
 
-Jason
+There are several PCIe things that are required to be in Function 0
+(MPS, ASPM, IDE, CMA/SPDM, etc), at least in certain cases.
+
+What would happen if instead of making pci_setup_device() fail (as
+both 6fffbc7ae137 and this patch do, which means the device doesn't
+even show up in "lspci"), we just prevent drivers from binding to it,
+e.g., by making pci_device_probe() fail?  The device would then appear
+in "lspci" and the PCI core would configure things as usual, but no
+drivers would be able to claim it.
+
+Bjorn
+
+[1] https://lore.kernel.org/all/20221114074346.23008-1-liupeibao@loongson.cn/
+[2] https://git.kernel.org/linus/6fffbc7ae137
