@@ -2,170 +2,165 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D1162718996
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 20:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 67A057189A5
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 20:52:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230328AbjEaSs7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 14:48:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37718 "EHLO
+        id S229561AbjEaSwN convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 31 May 2023 14:52:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230376AbjEaSsz (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 14:48:55 -0400
-Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FDA319F;
-        Wed, 31 May 2023 11:48:47 -0700 (PDT)
-Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1b1806264e9so111605ad.0;
-        Wed, 31 May 2023 11:48:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685558927; x=1688150927;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3EtbHmfy3w5R7KQLkJ5R/6zIzXV1vr/wfKtqhO2sLZ4=;
-        b=Hm0hCkYdtfQRemjMKlbllQL4O8L2Qa3TjHMKohF0mlxv+EqXmacGN9VR1Ny8tXDjdD
-         ACVftV9H3bIHuquZ0Z6IE+mZYNe74kNRg3Br1jlJLowCFdPWRxtQpFk0AR3q9LiI7a38
-         qPm3c5PRQ8s61eGVhHEjXW5Ih2HToJ0OAz+aWBcvAjzRU6N56VF0Fcsn7e4Of0o6uY+V
-         qRpB5UPr9AHKifnMYX6CIDRDJncTTr+hdj/URjfBb9uRPa4+D9LrQ9gR8d8PKDjKpkeg
-         cNuAOwwh+6NOWOIuGiEwVq+aM6BLqglu5nX06SX1AVpMS+9Xl4QNAABt0kr2BfTfppz2
-         6BaA==
+        with ESMTP id S229484AbjEaSwM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 14:52:12 -0400
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBE11101;
+        Wed, 31 May 2023 11:52:10 -0700 (PDT)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-568ba7abc11so37396017b3.3;
+        Wed, 31 May 2023 11:52:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685558927; x=1688150927;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3EtbHmfy3w5R7KQLkJ5R/6zIzXV1vr/wfKtqhO2sLZ4=;
-        b=RGo653AQMrYXPwh934cN6ib/r0oWdFF8BIt1fb666ay2xn2C/tYAoggGazMiR9mAXG
-         +rCrI5FXJrttxvrFM5EHZgUtZfNtxhm2ey9rfkIjrHdx7kkWo5LluCHvDrXaPzt8K/SP
-         vYwsQwh0YBpgoc+9hS2ByBPD+H67eMgwY1pS8KIe15MP3nWRJ5AMKtFGZF9A3Ajm40DO
-         SC8pROQJsBCWqROpKNWPz5kirirgH/a+4zjiTE0yEnNS4arw81+kS6RPbKc7IlQWXn2s
-         b9IErGqyzM5UQToDusgYngJ4awcw39lE7oVc0srI5hYfOv3UXBBH8JNwqDma/spMeWDQ
-         uCYw==
-X-Gm-Message-State: AC+VfDwycDsPJWrRf4HxemiP6gvarLDbCmT9LXSipgCGUHUaGaKEP/Ib
-        sIVy1g+Vm4fpT/0kKFOFoyeaA7iTxNLkBah9pRo=
-X-Google-Smtp-Source: ACHHUZ5M6iYi6/JD6zVRIpgmhcItbt+ub8OAZYuPz3aXn9kIu5A1prvbpB5UhWxoMoGIS6vgwfkfFLYekeLrKRbR0kQ=
-X-Received: by 2002:a17:902:ce86:b0:1b0:3df7:5992 with SMTP id
- f6-20020a170902ce8600b001b03df75992mr5572003plg.32.1685558926693; Wed, 31 May
- 2023 11:48:46 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1685559130; x=1688151130;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6JIO+6ewBG4mSCCvBnEBG6HW6H1zG6Bueptsr1w2opg=;
+        b=EL4upUNRL419u8zViYkdAvN0HyOds+TXncZ4GsDIRQG4cTAOSwZKMJ289KukqvOHF8
+         K8FA6C1Xr+Jsv3XzKruh/ojf7gEHv8VC/jQLIkVoZ8E1tj1F2mlCX3vAB9jf2pL9FAmJ
+         pzs7FJYZWLY33XCWzieVXSpcC+ZxupKx/mElcjsZCBR0jiiVlnjmGV3n2c555465pPi3
+         gWPbYfVszWCWuTrrqOa5iB/mBJAdmEVRaB7+W/+fI7bzPi5uiYpOc5g1U4YeAPxTg9LU
+         oUir2dRs1+uOaWrN2jsggrEAbxp24qL8ppVvJOg/OkH/xEzG9QM8q5DpXJyTt2TIh5dG
+         V1KQ==
+X-Gm-Message-State: AC+VfDy6svYDQXgrTBfERBwKga9LHOT/G+eGnpvpusr2LJoal6uAITJ1
+        DRNJGB86bCFe40VmFZ4FwwElUg+R8ueHXQ==
+X-Google-Smtp-Source: ACHHUZ6MSuC33DtuccyiiLIzgWHAmIqHJqmMqzJ49iU0Q8NzyqWcTJW4rTTyETs0/+jfG/oUvzWExg==
+X-Received: by 2002:a81:d250:0:b0:565:bf0d:e27a with SMTP id m16-20020a81d250000000b00565bf0de27amr8129881ywl.15.1685559129726;
+        Wed, 31 May 2023 11:52:09 -0700 (PDT)
+Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
+        by smtp.gmail.com with ESMTPSA id v135-20020a81488d000000b005688deeefc2sm2768705ywa.20.2023.05.31.11.52.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 May 2023 11:52:09 -0700 (PDT)
+Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-b9a7e639656so10463548276.0;
+        Wed, 31 May 2023 11:52:08 -0700 (PDT)
+X-Received: by 2002:a25:dbcd:0:b0:bad:4de:f6d0 with SMTP id
+ g196-20020a25dbcd000000b00bad04def6d0mr7553666ybf.64.1685559128663; Wed, 31
+ May 2023 11:52:08 -0700 (PDT)
 MIME-Version: 1.0
-References: <ZF6YIezraETr9iNM@bhelgaas> <ZHZpcli2UmdzHgme@bhelgaas>
-In-Reply-To: <ZHZpcli2UmdzHgme@bhelgaas>
-From:   Jonas Gorski <jonas.gorski@gmail.com>
-Date:   Wed, 31 May 2023 20:48:35 +0200
-Message-ID: <CAOiHx==5YWhDiZP2PyHZiJrmtqRzvqCqoSO59RwuYuR85BezBg@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update users
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-pci@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-mips@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
+References: <ZHeA6eB5FocARdwl@bhelgaas> <b0faa79d-21e2-fe5d-f9bc-3abbf488ec1c@loongson.cn>
+In-Reply-To: <b0faa79d-21e2-fe5d-f9bc-3abbf488ec1c@loongson.cn>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 31 May 2023 20:51:55 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdWSwwNnTMkTXjNsUoByq2qH=V+PEZPAUVsA4zZVoU-c5Q@mail.gmail.com>
+Message-ID: <CAMuHMdWSwwNnTMkTXjNsUoByq2qH=V+PEZPAUVsA4zZVoU-c5Q@mail.gmail.com>
+Subject: Re: [PATCH] linux/pci.h: add a dummy implement for pci_clear_master()
+To:     Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
+        kernel test robot <lkp@intel.com>,
+        Michael Auchter <michael.auchter@ni.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+Hi Sui,
 
-On Tue, 30 May 2023 at 23:34, Bjorn Helgaas <helgaas@kernel.org> wrote:
-> On Fri, May 12, 2023 at 02:48:51PM -0500, Bjorn Helgaas wrote:
-> > On Fri, May 12, 2023 at 01:56:29PM +0300, Andy Shevchenko wrote:
-> > > On Tue, May 09, 2023 at 01:21:22PM -0500, Bjorn Helgaas wrote:
-> > > > On Tue, Apr 04, 2023 at 11:11:01AM -0500, Bjorn Helgaas wrote:
-> > > > > On Thu, Mar 30, 2023 at 07:24:27PM +0300, Andy Shevchenko wrote:
-> > > > > > Provide two new helper macros to iterate over PCI device resources and
-> > > > > > convert users.
-> > > >
-> > > > > Applied 2-7 to pci/resource for v6.4, thanks, I really like this!
-> > > >
-> > > > This is 09cc90063240 ("PCI: Introduce pci_dev_for_each_resource()")
-> > > > upstream now.
-> > > >
-> > > > Coverity complains about each use,
-> > >
-> > > It needs more clarification here. Use of reduced variant of the
-> > > macro or all of them? If the former one, then I can speculate that
-> > > Coverity (famous for false positives) simply doesn't understand `for
-> > > (type var; var ...)` code.
+On Wed, May 31, 2023 at 7:46 PM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
+> On 2023/6/1 01:16, Bjorn Helgaas wrote:
+> > On Wed, May 31, 2023 at 12:25:10PM +0800, Sui Jingfeng wrote:
+> >> On 2023/5/31 04:11, Bjorn Helgaas wrote:
+> >>> On Tue, May 30, 2023 at 06:16:55PM +0800, Sui Jingfeng wrote:
+> >>>> As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
+> >>>> call pci_clear_master() without config_pci guard can not built.
+> >>>>
+> >>>>      drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
+> >>>>      In function 'etnaviv_gpu_pci_fini':
+> >>>>>> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
+> >>>>      error: implicit declaration of function 'pci_clear_master';
+> >>>>      did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
+> >>>>         32 |         pci_clear_master(pdev);
+> >>>>            |         ^~~~~~~~~~~~~~~~
+> >>>>            |         pci_set_master
+> >>>>      cc1: some warnings being treated as errors
+> >>>>
+> >>>> [1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
+> >>> I don't mind adding a stub if it's needed, but I don't understand why
+> >>> it's needed here.
+> >> For a single driver that supports both platform devices and PCI devices,
+> >>
+> >> Sometimes there is no way to separate the PCI driver part and the platform
+> >> driver part cleanly and clearly.
+> >>
+> >> For example, the module_init() and module_exit() functions,
+> >>
+> >> where we have to register PCI drivers and platform drivers there.
+> >>
+> >> We can't simply let the entire driver depend on PCI in Kconfig,
+> >>
+> >> This will make this driver unable to compile, which it's originally could.
+> >>
+> >> The PCI core could do such a thing for us, and
+> >>
+> >> There is no need to introduce a driver-specific guard then.
+> >>
+> >>
+> >> There is already a dummy stub for pci_set_master().
+> >>
+> >> Therefore, pci_clear_master() should also have a counterpart.
+> >>
+> >> They should emerge in pairs.
+> >>
+> >> This could probably eliminate pain for PCI driver writers,
+> >>
+> >> This patch is still useful.
+> >>
+> >>
+> >>>    The caller is in etnaviv_pci_drv.c, and if I
+> >>> understand the patch at [1], etnaviv_pci_drv.c is only compiled when
+> >>> CONFIG_PCI=y.
+> >> Yes, you are right. This is the right thing to do for the driver, though.
+> >>
+> >> Pure PCI device driver does not need to worry about this.
+> >>
+> >> Like drm/ast, drm/amdgpu, drm/radeon, etc.
+> >>
+> >> But drm/etnaviv is special; it's a platform driver that could pass the
+> >> compile test originally.
+> >>
+> >>
+> >> When patching it (Etnaviv) with PCI device driver support,
+> >>
+> >> This forces the PCI driver writer to add another config option.
+> >>
+> >> (which depends on the PCI config option.) in the Kconfig.
+> >>
+> >> For my case, it's theDRM_ETNAVIV_PCI_DRIVER config option.
+> > So if I understand correctly, you would prefer not to add the
+> > DRM_ETNAVIV_PCI_DRIVER config option, and if we add this stub, you
+> > won't need to add it?
 > >
-> > True, Coverity finds false positives.  It flagged every use in
-> > drivers/pci and drivers/pnp.  It didn't mention the arch/alpha, arm,
-> > mips, powerpc, sh, or sparc uses, but I think it just didn't look at
-> > those.
-> >
-> > It flagged both:
-> >
-> >   pbus_size_io    pci_dev_for_each_resource(dev, r)
-> >   pbus_size_mem   pci_dev_for_each_resource(dev, r, i)
-> >
-> > Here's a spreadsheet with a few more details (unfortunately I don't
-> > know how to make it dump the actual line numbers or analysis like I
-> > pasted below, so "pci_dev_for_each_resource" doesn't appear).  These
-> > are mostly in the "Drivers-PCI" component.
-> >
-> > https://docs.google.com/spreadsheets/d/1ohOJwxqXXoDUA0gwopgk-z-6ArLvhN7AZn4mIlDkHhQ/edit?usp=sharing
-> >
-> > These particular reports are in the "High Impact Outstanding" tab.
+> > That's a good reason to add this patch.
 >
-> Where are we at?  Are we going to ignore this because some Coverity
-> reports are false positives?
+> Yes, please add this patch.
+>
+> Otherwise, other people may suffer from the same issue someday.
 
-Looking at the code I understand where coverity is coming from:
+People already have, several years ago, cfr.
+https://lore.kernel.org/all/20160309003955.GA1589@tilquin.amer.corp.natinst.com
 
-#define __pci_dev_for_each_res0(dev, res, ...)                         \
-       for (unsigned int __b = 0;                                      \
-            res = pci_resource_n(dev, __b), __b < PCI_NUM_RESOURCES;   \
-            __b++)
+Gr{oetje,eeting}s,
 
- res will be assigned before __b is checked for being less than
-PCI_NUM_RESOURCES, making it point to behind the array at the end of
-the last loop iteration.
+                        Geert
 
-Rewriting the test expression as
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-__b < PCI_NUM_RESOURCES && (res = pci_resource_n(dev, __b));
-
-should avoid the (coverity) warning by making use of lazy evaluation.
-
-It probably makes the code slightly less performant as res will now be
-checked for being not NULL (which will always be true), but I doubt it
-will be significant (or in any hot paths).
-
-Regards,
-Jonas
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
