@@ -2,163 +2,176 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1169B7179D3
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 10:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E581717A29
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 10:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235176AbjEaITY (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 04:19:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44982 "EHLO
+        id S232511AbjEaIfO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 04:35:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235145AbjEaITX (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 04:19:23 -0400
-Received: from mail-ej1-x62b.google.com (mail-ej1-x62b.google.com [IPv6:2a00:1450:4864:20::62b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9AE099
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 01:19:20 -0700 (PDT)
-Received: by mail-ej1-x62b.google.com with SMTP id a640c23a62f3a-973bf581759so960739466b.0
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 01:19:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685521159; x=1688113159;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=17G7fgccZw26IuKEnhcF6apgAkC9GALykdO8V5FR4Zc=;
-        b=jIe6mWyUFq7h8o883sjF4wSXtBDd+bizNgKp2DtJauDCvI5g4VWQcvYx3wxWVLtPmq
-         DwxwtXoa4Pog0Kchm7HKAqaML2QCVDfxTVIcZHUx9Q/nXjFeLO4p5BqWeMEiRSDRuBf3
-         +EiqsspEnZsz+874OwruO1KbzkrW3v4QC1KeQeCafNQfI7P6qZ9NN8ZfNXxz8LENrZi7
-         BQOTVODkD57MOtE1Jal69BticPl3JoW1oYtUQc0AFU7i65yvtcqSrP4CKXZubagVbX9V
-         Td+OXZhyQk78D6E96Up6MMmP+hEKuk/bOjpPYjVPN/bb4Zuc1GWL7283Mxxh0pQIGqkK
-         M3+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685521159; x=1688113159;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=17G7fgccZw26IuKEnhcF6apgAkC9GALykdO8V5FR4Zc=;
-        b=ef3zgC+1een2pBJ6uv45JKEOd/ZIxF/rOgy3JGB+s8B/CO4uIonIuIJ6k2wV6sa6Fg
-         TjEMz1NmKZAX8A4EH/H4CmQL69JxlpQ0ckycvAETQw+GaCLS2Ucj20UHF26TxuRBX8mW
-         VMpoJ8EPmmCuxZZcOJDFQrVyiRALvIHkXawp3AuAzTQQvD1VEDPQbBC+5cD1EM+qzbTP
-         Ay4E2jsT0o83uyD/zH+SHD8UJUlA6+soAsPmiR4v8YFZC2o0wX2koFKOvYK0dRj0Xi8d
-         ngPw/27I8DP0mw5wXbQPE2eMnYSJ5dVQaAnC+XpfNpp1GU2JOBhZZCKtvDFVVq0TVg1j
-         XU2A==
-X-Gm-Message-State: AC+VfDy1jIpGfcOnxkgM8JxlxU1hGyjX7Mc1NOqmlFqnpTSg1AZmLgr7
-        UL3bfSDXsVhHtdpLSFXViKB7Lw==
-X-Google-Smtp-Source: ACHHUZ5ecctufjEICHVJOxqbmGFp4cMb86II1wutT7aAwcq/GT4AF70E5eF22KgMKCTBhO6z0IHKaA==
-X-Received: by 2002:a17:907:1c84:b0:974:32e:7de9 with SMTP id nb4-20020a1709071c8400b00974032e7de9mr5775337ejc.56.1685521159179;
-        Wed, 31 May 2023 01:19:19 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.199.204])
-        by smtp.gmail.com with ESMTPSA id a6-20020a170906244600b00965b416585bsm8528500ejb.118.2023.05.31.01.19.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 01:19:18 -0700 (PDT)
-Message-ID: <4fcbb3b7-ed44-d8e6-a601-e3e957c55ebf@linaro.org>
-Date:   Wed, 31 May 2023 10:19:16 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v3 01/15] dt-bindings: PCI: qcom: Fix sc8180x clocks and
- interrupts
-Content-Language: en-US
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        with ESMTP id S235112AbjEaIfL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 04:35:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8E61122;
+        Wed, 31 May 2023 01:35:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3556862871;
+        Wed, 31 May 2023 08:35:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E457C433EF;
+        Wed, 31 May 2023 08:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685522106;
+        bh=NvnORJxFYk7Gbi9d+lRiKRLianbRU171EPYVxebojBQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N5TFcW7QfAm4i7Jr8Eu5N6ipqg9wVM7yUZYxuGQqkY2ughfXFASU8XWJ607C2vmtK
+         DKZR3sj3VLJAUrwCizJPjNLU9rNDtWbhDE2ZT2cFKGu8yd+80HEgusu3FPFpJjMpqG
+         QHcWMBFhM5KEKbtiVkZYchimZvjfNNIS66Y/BNe2U1yY/XzzY8uHNMLyG8+Kwf6pUR
+         7ADPZGhTGh953nl+J0EzPGjqQW6fg6fN5QwR4EePiqtr3wPMz9easemvNKYNi5g6NR
+         v4yfjo6KdAcxbsRl/B+MbsxtACM7m4HtB/S07V4JNhJN9RXTL5N8tG0XrTpqHnZsbM
+         kS4PDHWOxrkYQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.95)
+        (envelope-from <maz@kernel.org>)
+        id 1q4HIO-001YmU-AJ;
+        Wed, 31 May 2023 09:35:04 +0100
+Date:   Wed, 31 May 2023 09:35:03 +0100
+Message-ID: <861qiwdhl4.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
+        linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Ammar Faizi <ammarfaizi2@gnuweeb.org>,
+        Robin Murphy <robin.murphy@arm.com>,
         Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230530162454.51708-1-vkoul@kernel.org>
- <20230530162454.51708-2-vkoul@kernel.org>
-From:   Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20230530162454.51708-2-vkoul@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        Nishanth Menon <nm@ti.com>, Tero Kristo <kristo@kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Vinod Koul <vkoul@kernel.org>, Sinan Kaya <okaya@kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shameerali Kolothum Thodi 
+        <shameerali.kolothum.thodi@huawei.com>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Anna-Maria Behnsen <anna-maria.behnsen@linutronix.de>
+Subject: Re: [patch V2 06/40] PCI/MSI: Provide static key for parent mask/unmask
+In-Reply-To: <87lehfurij.ffs@tglx>
+References: <20221121135653.208611233@linutronix.de>
+        <20221121140048.659849460@linutronix.de>
+        <8635a8o65q.wl-maz@kernel.org>
+        <87bkowcx0z.ffs@tglx>
+        <86zgcgmpzl.wl-maz@kernel.org>
+        <87v8n3c2qy.ffs@tglx>
+        <87ttw4wiro.ffs@tglx>
+        <86r0r7cpks.wl-maz@kernel.org>
+        <87lehfurij.ffs@tglx>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: tglx@linutronix.de, linux-kernel@vger.kernel.org, will@kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, lorenzo.pieralisi@arm.com, gregkh@linuxfoundation.org, jgg@mellanox.com, andrew@lunn.ch, gregory.clement@bootlin.com, sebastian.hesselbarth@gmail.com, ammarfaizi2@gnuweeb.org, robin.murphy@arm.com, lpieralisi@kernel.org, nm@ti.com, kristo@kernel.org, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org, vkoul@kernel.org, okaya@kernel.org, agross@kernel.org, andersson@kernel.org, mark.rutland@arm.com, shameerali.kolothum.thodi@huawei.com, yuzenghui@huawei.com, shawnguo@kernel.org, s.hauer@pengutronix.de, festevam@gmail.com, anna-maria.behnsen@linutronix.de
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 30/05/2023 18:24, Vinod Koul wrote:
-> Commit 45a3ec891370 ("PCI: qcom: Add sc8180x compatible") added sc8180x
-> compatible and commit 075a9d55932e ("dt-bindings: PCI: qcom: Convert to
-> YAML") converted the description to yaml
+On Tue, 23 May 2023 14:05:56 +0100,
+Thomas Gleixner <tglx@linutronix.de> wrote:
 > 
-> But there are still some errors specific to sc8180x which this change
-> attempts to fix. The clocks and resets for sc8180 pcie controller are
-> different so need to be documented separately
-
-I don't get what's the error here to fix. The clocks you list are
-already there as part of oneOf.
-
+> On Tue, May 23 2023 at 11:25, Marc Zyngier wrote:
+> > On Mon, 22 May 2023 15:19:39 +0100,
+> > Thomas Gleixner <tglx@linutronix.de> wrote:
+> >> On the other hand for PCI/MSI[x] the mask/unmask operations are not in
+> >> the hot path as PCI/MSI[x] are strictly edge. Mask/unmask is only
+> >> happening on startup, shutdown and when an interrupt arrives after
+> >> disable_irq() incremented the lazy disable counter.
+> >> 
+> >> For regular interrupt handling mask/unmask is not involved.
+> >> 
+> >> So to avoid that global key we can let the parent domain set a new flag,
+> >> e.g. MSI_FLAG_PCI_MSI_MASK_PARENT, in msi_parent_ops::supported_flags
+> >> and let the PCI/MSI core code query that information when the per device
+> >> domain is created and select the appropriate template or fixup the
+> >> callbacks after the domain is created.
+> >> 
+> >> Does that address your concerns?
+> >
+> > It does to a certain extent.
+> >
+> > But what I'd really like is that in the most common case where the
+> > interrupt controller is capable of masking MSIs, the PCI/MSI
+> > *enabling* becomes the responsibility of the PCI core code and not the
+> > IRQ code.
+> >
+> > The IRQ code should ideally only be concerned with the masking of the
+> > interrupt at the irqchip level, and not beyond that. And that'd solve
+> > the Xen problem by merely ignoring it.
+> >
+> > If we have HW out there that cannot mask MSIs at the interrupt
+> > controller level, then we'd have to fallback to device-side masking,
+> > which doesn't really work in general (MultiMSI being my favourite
+> > example). My gut feeling is that this is rare, but I'm pretty sure it
+> > exists.
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie.yaml    | 29 ++++++++++++++++++-
->  1 file changed, 28 insertions(+), 1 deletion(-)
+> Sure. There are 3 parts involved:
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> index 81971be4e554..40a1f451a3d3 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-> @@ -476,6 +476,33 @@ allOf:
->            items:
->              - const: pci # PCIe core reset
->  
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            enum:
-> +              - qcom,pcie-sc8180x
-> +    then:
-> +      properties:
-> +        clocks:
-> +          minItems: 8
-> +          maxItems: 8
-> +        clock-names:
-> +          items:
-> +            - const: pipe # PIPE clock
-> +            - const: aux # Auxiliary clock
-> +            - const: cfg # Configuration clock
-> +            - const: bus_master # Master AXI clock
-> +            - const: bus_slave # Slave AXI clock
-> +            - const: slave_q2a # Slave Q2A clock
-> +            - const: ref # REFERENCE clock
-> +            - const: tbu # PCIe TBU clock
-> +        resets:
-> +          maxItems: 1
-> +        reset-names:
-> +          items:
-> +            - const: pci # PCIe core reset
-> +
->    - if:
->        properties:
->          compatible:
-> @@ -524,7 +551,6 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> -              - qcom,pcie-sc8180x
->                - qcom,pcie-sm8150
->                - qcom,pcie-sm8250
->      then:
-> @@ -749,6 +775,7 @@ allOf:
->            contains:
->              enum:
->                - qcom,pcie-sa8540p
-> +              - qcom,pcie-sc8180x
->                - qcom,pcie-sc8280xp
->      then:
->        required:
+>       [Device]--->[PCI/MSI]---->[GIC]
+>                    irqchip      irqchip
+> 
+> Controlling the interrupt machinery in the device happens at the device
+> driver level and is conceptually independent of the interrupt
+> manangement code. The device driver has no access to the PCI/MSI irqchip
+> and all it can do is to enable/disable the source of the interrupt in
+> the device.
+> 
+> For the interrupt management code the job is to ensure that an interrupt
+> can be prevented from disrupting the OS operation independent of the
+> device driver correctness.
+> 
+> As a matter of fact we know that PCI/MSI masking ranges from not
+> possible over flaky to properly working. So we can't reliably prevent
+> that a rougue device spams the PCIe bus with messages.
+> 
+> Which means that we should utilize the fact that the next interrupt chip
+> in the hierarchy can mask reliably. I wish I could disable individual
+> vectors at the local APIC level on x86...
+> 
+> Now the question is whether we want to make this conditional depending
+> on what the PCI/MSI[X] hardware advertises or just keep it simple and do
+> it unconditionally.
 
-Best regards,
-Krzysztof
+I think this should be unconditional if the root irqchip (the GIC in
+this instance) is capable of it.
 
+So a suggestion where the root irqchip exposes its masking capability,
+which upon detection by the upper layer (whateverbusyouwant/MSI) makes
+it stop playing with its own device-level mask has my full support
+(and now breathe normally).
+
+Thanks,
+
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
