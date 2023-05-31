@@ -2,106 +2,289 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BD0D3717D32
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 12:28:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 35ED8717D66
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 12:51:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232156AbjEaK2E (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 06:28:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41902 "EHLO
+        id S234094AbjEaKvu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 06:51:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48672 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229949AbjEaK2D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 06:28:03 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E949FB3;
-        Wed, 31 May 2023 03:28:01 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8Dxd_EwIXdkE+8CAA--.6608S3;
-        Wed, 31 May 2023 18:28:00 +0800 (CST)
-Received: from openarena.loongson.cn (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cx77MtIXdk+juCAA--.15700S2;
-        Wed, 31 May 2023 18:27:57 +0800 (CST)
-From:   Sui Jingfeng <suijingfeng@loongson.cn>
-To:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ben Hutchings <bhutchings@solarflare.com>,
-        Jesse Barnes <jbarnes@virtuousgeek.org>
-Cc:     Li Yi <liyi@loongson.cn>, linux-pci@vger.kernel.org,
-        loongson-kernel@lists.loongnix.cn, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kernel test robot <lkp@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2] PCI: Add dummy implement for pci_clear_master() function
-Date:   Wed, 31 May 2023 18:27:44 +0800
-Message-Id: <20230531102744.2354313-1-suijingfeng@loongson.cn>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S231942AbjEaKvt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 06:51:49 -0400
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC07126
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 03:51:47 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-33b3cfb9495so22231155ab.2
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 03:51:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20221208.gappssmtp.com; s=20221208; t=1685530306; x=1688122306;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=OL+MUAGjHXCcVBhRxcCYXFGT+AfAFBLYOnPjKg/aVcI=;
+        b=Eh+I0hgvt7vbsksAnBxrKvE4+kAg82/jq/WqMTCfwpB6OOhlxkMjQmpKkQLwUDz0jj
+         VF8wShWQF/m5XJ+GeyDOCwaB8QRsPnjqRIjLXh/s5NqQk6uTUJ/6vYQkkC9CrUZX5jZ4
+         TJIBITvLjFM+I57GTztJJ58kFDtAUmnlG5+KQbgXDoX/CZ2+oDs8LUVi9O9aVsU8p0Zq
+         H/ZXbcAjkfyWpoOVydazKLtDVtY7wWbXmHyeG5rNo4wvfk8Ea5/Z/MTu9z6H30hYA/0N
+         4E8r9KZF+N/Jigi0LROJvNcqN8CXNZQWaPW1aoQEJbSR1I5djVOz94pyaOZ/mCDY4nDK
+         JWIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685530306; x=1688122306;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OL+MUAGjHXCcVBhRxcCYXFGT+AfAFBLYOnPjKg/aVcI=;
+        b=UQXrDgM/ieFq4xKbwuDr7HyBpaIMF8wzcnaA2bLj+KAnsdYXZ/dJ5k4VtJUVY7n3pa
+         UA9z5ycsfguo4Hwr1dDc7N9fdAiqAg0NUq9MwZ19JvGWDyByW/OrR7b8moWxbiABx4dp
+         uEGWAuurFI7IViOQx8k61CI7ja2l8YBT5681SktWZqUcrFCyb2M0zwe4aZexJbIVu20o
+         D26hjPaiUWTyJ+ynh0c0DkTDPN1yx32Cc4edodnrpXieAME02HQAkX0rrK8NzgzqI3hK
+         ZSTAwxH5Tq0/Hmc/ityN2O/RycaoggsKlYlFtrYnedvRyz+tQB/hRWHvMGORGaKFNywR
+         7QCQ==
+X-Gm-Message-State: AC+VfDzPObM/AnxreMSKzen0edH5zTxLYto6ulLGWAP9u8MlXXrtrZoo
+        FycQGzt+i8Bng5qnDckpOP2GVw==
+X-Google-Smtp-Source: ACHHUZ5wTHf6brPVTM9Pu10tfLM6QoR8MR+RK/fU0uvSnUIafDy/ueDylPxOs/iblYKzccIBhVU3DA==
+X-Received: by 2002:a92:c144:0:b0:33a:f1b2:eb6c with SMTP id b4-20020a92c144000000b0033af1b2eb6cmr2344646ilh.3.1685530306356;
+        Wed, 31 May 2023 03:51:46 -0700 (PDT)
+Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
+        by smtp.gmail.com with ESMTPSA id jd21-20020a170903261500b001b045c9abd2sm1041969plb.143.2023.05.31.03.51.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 31 May 2023 03:51:45 -0700 (PDT)
+Message-ID: <2422273d-5ac2-63ef-8a31-230ebfbe3b23@igel.co.jp>
+Date:   Wed, 31 May 2023 19:51:38 +0900
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.0
+Subject: Re: [RFC PATCH v2 3/3] PCI: endpoint: Add EP function driver to
+ provide virtio-console functionality
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>, Frank Li <Frank.Li@nxp.com>,
+        Jon Mason <jdmason@kudzu.us>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ren Zhijie <renzhijie2@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+References: <20230427104428.862643-1-mie@igel.co.jp>
+ <20230427104428.862643-4-mie@igel.co.jp>
+ <CACGkMEsjH8fA2r=0CacK8WK_sUTAcTK7SQ_VwkJpa1rSgDP0dg@mail.gmail.com>
+ <CANXvt5r7eha_xnExsdS_4yMW8xTJxVzYhMVrXyQkGQe-_ZURBg@mail.gmail.com>
+ <ad3dd4ef-3489-683c-c9e1-2592621687f7@igel.co.jp>
+ <CACGkMEvdVHQEcDD74TpeWgmHQ+J9aMpv5ui=iwT8E_SDZoY7EA@mail.gmail.com>
+Content-Language: en-US
+From:   Shunsuke Mie <mie@igel.co.jp>
+In-Reply-To: <CACGkMEvdVHQEcDD74TpeWgmHQ+J9aMpv5ui=iwT8E_SDZoY7EA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Cx77MtIXdk+juCAA--.15700S2
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW7CryUGr15Xw4UKr1xurWxZwb_yoW8Aw4rpa
-        98AFyrCrW8GFy8Gw4UJFyIvF1ag39xZ34Sy3y7Kwn09a9Fya4rtFnYkF17Arn3JrWvkFy3
-        Ww17Ka1DWw4YyFJanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bh8YFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_JrI_Jryl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-        x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr1j6rxdM2kK
-        e7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI
-        0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUAVWUtwAv7VC2z280
-        aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
-        Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
-        O2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
-        WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
-        JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rV
-        WUJVWUCwCI42IY6I8E87Iv67AKxVW8Jr0_Cr1UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr1j
-        6F4UJbIYCTnIWIevJa73UjIFyTuYvjxU2gyCDUUUU
-X-Spam-Status: No, score=-1.9 required=5.0 tests=BAYES_00,SPF_HELO_NONE,
-        SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
-call pci_clear_master() without config_pci guard can not pass compile test.
+I'm sorry for late response.
 
-   drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
-   In function 'etnaviv_gpu_pci_fini':
->> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
-   error: implicit declaration of function 'pci_clear_master';
-   did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
-      32 |         pci_clear_master(pdev);
-         |         ^~~~~~~~~~~~~~~~
-         |         pci_set_master
-   cc1: some warnings being treated as errors
+On 2023/05/19 11:01, Jason Wang wrote:
+> On Thu, May 18, 2023 at 5:54 PM Shunsuke Mie <mie@igel.co.jp> wrote:
+>> Gentle ping ...
+>>
+>>
+>> Thanks,
+>>
+>> Shunsuke.
+>>
+>> On 2023/05/10 12:17, Shunsuke Mie wrote:
+>>> Hi Json,
+>>> 2023年5月8日(月) 13:03 Jason Wang <jasowang@redhat.com>:
+>>>> On Thu, Apr 27, 2023 at 6:44 PM Shunsuke Mie <mie@igel.co.jp> wrote:
+>>>>> Add a new PCIe endpoint function driver that works as a pci virtio-console
+>>>>> device. The console connect to endpoint side console. It enables to
+>>>>> communicate PCIe host and endpoint.
+>>>>>
+>>>>> Architecture is following:
+>>>>>
+>>>>>    ┌────────────┐         ┌──────────────────────┬────────────┐
+>>>>>    │virtioe     │         │                      │virtio      │
+>>>>>    │console drv │         ├───────────────┐      │console drv │
+>>>>>    ├────────────┤         │(virtio console│      ├────────────┤
+>>>>>    │ virtio bus │         │ device)       │◄────►│ virtio bus │
+>>>>>    ├────────────┤         ├---------------┤      └────────────┤
+>>>>>    │            │         │ pci ep virtio │                   │
+>>>>>    │  pci bus   │         │  console drv  │                   │
+>>>>>    │            │  pcie   ├───────────────┤                   │
+>>>>>    │            │ ◄─────► │  pci ep Bus   │                   │
+>>>>>    └────────────┘         └───────────────┴───────────────────┘
+>>>>>      PCIe Root              PCIe Endpoint
+>>>>>
+>>>> I think it might only works for peer devices like:
+>>>>
+>>>> net, console or vsock.
+>>> Could you tell me what "peer devices" means?
+> I meant, for example we know in the case of virtio-net, TX can talk
+> with RX belonging to another device directly.
+>
+> But this is not the case for other devices like virito-blk.
+Thank you. I comprehended it.
+>>>> So there're many choices here, I'd like to know what's the reason for
+>>>> you to implement a mediation.
+>>>>
+>>>> An alternative is to implement a dedicated net, console and vsock
+>>>> driver for vringh (CAIF somehow works like this). This would have
+>>>> better performance.
+>>> Does it mean that the driver also functions as a network driver directly?
+> I meant, e.g in the case of networking, you can have a dedicated
+> driver with two vringh in the endpoint side.
+>
+> The benefit is the performance, no need for the (datapath) mediation.
+>
+> But if we don't care about the performance, this proposal seems to be fine.
+>
+> Thanks
+I agree with you.  The design you suggested is better in terms of 
+performance.
+However, the proposed design is not bad for the following the reasons I 
+think.
 
-[1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
+The proposed design has one more operation in control plane because the data
+steps over the virtio-net driver, but the number of copies at the data plane
+remains the same. I think the operation added in control plane has small 
+effects
+for performance.
 
-V2:
-	* Adjust commit log style to meet the convention and add Fixes tag
+Moreover, there are some advantages when the data step over the virtio-net
+driver. We can make use of the optimizations and some functions without
+modifications and implementations. e.g. ethtool and XDP(BPF) supports.
 
-Fixes: 6a479079c072 ("PCI: Add pci_clear_master() as opposite of pci_set_master()")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
----
- include/linux/pci.h | 1 +
- 1 file changed, 1 insertion(+)
+Any comments would be appreciated.
 
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index d0c19ff0c958..71c85380676c 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
- #define pci_dev_put(dev)	do { } while (0)
- 
- static inline void pci_set_master(struct pci_dev *dev) { }
-+static inline void pci_clear_master(struct pci_dev *dev) { }
- static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
- static inline void pci_disable_device(struct pci_dev *dev) { }
- static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
--- 
-2.25.1
+>>>>> This driver has two roles. The first is as a PCIe endpoint virtio console
+>>>>> function, which is implemented using the PCIe endpoint framework and PCIe
+>>>>> EP virtio helpers. The second is as a virtual virtio console device
+>>>>> connected to the virtio bus on PCIe endpoint Linux.
+>>>>>
+>>>>> Communication between the two is achieved by copying the virtqueue data
+>>>>> between PCIe root and endpoint, respectively.
+>>>>>
+>>>>> This is a simple implementation and does not include features of
+>>>>> virtio-console such as MULTIPORT, EMERG_WRITE, etc. As a result, each
+>>>>> virtio console driver only displays /dev/hvc0.
+>>>>>
+>>>>> As an example of usage, by setting getty to /dev/hvc0, it is possible to
+>>>>> login to another host.
+>>>>>
+>>>>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
+>>>>> ---
+>>>>> Changes from v2:
+>>>>> - Change to use copy functions between kiovs of pci-epf-virtio.
+>>>>>
+>>>>>    drivers/pci/endpoint/functions/Kconfig        |  12 +
+>>>>>    drivers/pci/endpoint/functions/Makefile       |   1 +
+>>>>>    drivers/pci/endpoint/functions/pci-epf-vcon.c | 596 ++++++++++++++++++
+>>>>>    3 files changed, 609 insertions(+)
+>>>>>    create mode 100644 drivers/pci/endpoint/functions/pci-epf-vcon.c
+>>>>>
+>>>>> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+>>>>> index fa1a6a569a8f..9ce2698b67e1 100644
+>>>>> --- a/drivers/pci/endpoint/functions/Kconfig
+>>>>> +++ b/drivers/pci/endpoint/functions/Kconfig
+>>>>> @@ -44,3 +44,15 @@ config PCI_EPF_VIRTIO
+>>>>>           select VHOST_RING_IOMEM
+>>>>>           help
+>>>>>             Helpers to implement PCI virtio Endpoint function
+>>>>> +
+>>>>> +config PCI_EPF_VCON
+>>>>> +       tristate "PCI Endpoint virito-console driver"
+>>>>> +       depends on PCI_ENDPOINT
+>>>>> +       select VHOST_RING
+>>>>> +       select PCI_EPF_VIRTIO
+>>>>> +       help
+>>>>> +         PCIe Endpoint virtio-console function implementatino. This module
+>>>>> +         enables to show the virtio-console as pci device to PCIe host side, and
+>>>>> +         another virtual virtio-console device registers to endpoint system.
+>>>>> +         Those devices are connected virtually and can communicate each other.
+>>>>> +
+>>>>> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
+>>>>> index a96f127ce900..b4056689ce33 100644
+>>>>> --- a/drivers/pci/endpoint/functions/Makefile
+>>>>> +++ b/drivers/pci/endpoint/functions/Makefile
+>>>>> @@ -7,3 +7,4 @@ obj-$(CONFIG_PCI_EPF_TEST)              += pci-epf-test.o
+>>>>>    obj-$(CONFIG_PCI_EPF_NTB)              += pci-epf-ntb.o
+>>>>>    obj-$(CONFIG_PCI_EPF_VNTB)             += pci-epf-vntb.o
+>>>>>    obj-$(CONFIG_PCI_EPF_VIRTIO)           += pci-epf-virtio.o
+>>>>> +obj-$(CONFIG_PCI_EPF_VCON)             += pci-epf-vcon.o
+>>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-vcon.c b/drivers/pci/endpoint/functions/pci-epf-vcon.c
+>>>>> new file mode 100644
+>>>>> index 000000000000..31f4247cd10f
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-vcon.c
+>>>>> @@ -0,0 +1,596 @@
+>>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>>> +/*
+>>>>> + * PCI Endpoint function driver to impliment virtio-console device
+>>>>> + * functionality.
+>>>>> + */
+>>>>> +#include <linux/pci-epf.h>
+>>>>> +#include <linux/virtio_ids.h>
+>>>>> +#include <linux/virtio_pci.h>
+>>>>> +#include <linux/virtio_console.h>
+>>>>> +#include <linux/virtio_ring.h>
+>>>>> +
+>>>>> +#include "pci-epf-virtio.h"
+>>>>> +
+>>>>> +static int virtio_queue_size = 0x100;
+>>>>> +module_param(virtio_queue_size, int, 0444);
+>>>>> +MODULE_PARM_DESC(virtio_queue_size, "A length of virtqueue");
+>>>>> +
+>>>>> +struct epf_vcon {
+>>>>> +       /* To access virtqueues on remote host */
+>>>>> +       struct epf_virtio evio;
+>>>>> +       struct vringh_kiov *rdev_iovs;
+>>>>> +
+>>>>> +       /* To register a local virtio bus */
+>>>>> +       struct virtio_device vdev;
+>>>>> +
+>>>>> +       /* To access virtqueus of local host driver */
+>>>>> +       struct vringh *vdev_vrhs;
+>>>>> +       struct vringh_kiov *vdev_iovs;
+>>>>> +       struct virtqueue **vdev_vqs;
+>>>>> +
+>>>>> +       /* For transportation and notification */
+>>>>> +       struct workqueue_struct *task_wq;
+>>>>> +       struct work_struct raise_irq_work, rx_work, tx_work;
+>>>>> +
+>>>>> +       /* To retain virtio features. It is commonly used local and remote. */
+>>>>> +       u64 features;
+>>>>> +
+>>>>> +       /* To show a status whether this driver is ready and the remote is connected */
+>>>>> +       bool connected;
+>>>>> +};
+>>>>> +
+>>>>> +enum {
+>>>>> +       VCON_VIRTQUEUE_RX,
+>>>>> +       VCON_VIRTQUEUE_TX,
+>>>>> +       // Should be end of enum
+>>>>> +       VCON_VIRTQUEUE_NUM
+>>>>> +};
+>>>> It would be better if we can split the console specific thing out,
+>>>> then it allows us to do ethernet and vsock in the future.
+>>> I'm planning to implement each virtio device in a separate file.
+>>> https://lwn.net/Articles/922124/
+>>>
+>>>
+>>>
+>>>> Thanks
+>>>>
+>>> Best regards,
+>>> Shunsuke
+
+Best regards,
+
+Shunsuke
 
