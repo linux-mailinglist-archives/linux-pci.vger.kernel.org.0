@@ -2,83 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F64D718BD7
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 23:30:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B257718D5F
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 23:39:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229560AbjEaVav (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 17:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38412 "EHLO
+        id S229865AbjEaVjM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 17:39:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjEaVau (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 17:30:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E1A01A2;
-        Wed, 31 May 2023 14:30:31 -0700 (PDT)
+        with ESMTP id S230364AbjEaVjE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 17:39:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0577610DD
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 14:38:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A5E2E63391;
-        Wed, 31 May 2023 21:30:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7E1C433D2;
-        Wed, 31 May 2023 21:30:29 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B160361199
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 21:37:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDE05C433EF;
+        Wed, 31 May 2023 21:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685568630;
-        bh=gW9waI0b8IiYUwk0vfOCM7pXk2nDw1QSAznIy/h3ghs=;
+        s=k20201202; t=1685569045;
+        bh=Y75wlnG/s3w6EhCt4lznVv+Zyft2P2jQ0Lp47yr0LM0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=KtBbCN/ixHzj8ZulEY/5zCSpe/VVKBpSZFDZuNCSDCoNNZ4IeoA+28lWLQWvSlii6
-         83BDJpZxFh6HJCKpfPSOLONuS2M6Vumh+ceOlzxWjyrmYHupNvr4DztdjDLJl3iqmN
-         E3araGx+1PyOqST2zluz35yOcgzUDjix8glDLTAN/wUxtojSsJeinZtS0BNCLJVOXb
-         hkXJLKswE11TqxiL8vaPqm931ggJJ71GILWlC61yGzVhgB56FeGO9+L1ZryEUY7qlP
-         EPZxdEvOEEyvpu7VdWJnY4Z4bFlhgqbJcQ6tWlmZqEjiu2TPM90LCU6E74dCFHn04m
-         J5aGwHVGTvHag==
-Date:   Wed, 31 May 2023 16:30:28 -0500
+        b=Bk/h4SsWHoPBdbgbW7sSGA/fDHne/tkL8KyGs9SQ8NzQhnD83wBT+9NcXqZNk7XYs
+         F69luu63jJpvCeQiK/kgz71iWukcYTwZaYLAMduKsPAo7SNQnQgbyLwp9Awzt5pwAt
+         a2d0W+yv7BkzrfR17HnuqyJK1EpvoV7MSr2Tmy3nYaJsgl8vUb4dSwbLFbWUjH7HtQ
+         rrF8bmp9ArhKbQ1kVfEiupwkk/6T/aOhU6LEqabzs+RNDg0+BE2O+oWCkWTPrSmnsL
+         0vyQZiSbKtelREnyKQpN1/Vrqo+t+0CAXc5hZOioZAI3XnyXPpuiqkht+O6wQkPrLL
+         iYtcudqqjAi2g==
+Date:   Wed, 31 May 2023 16:37:23 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Jonas Gorski <jonas.gorski@gmail.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <philmd@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-mips@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update
- users
-Message-ID: <ZHe8dKb3f392MfBO@bhelgaas>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-pci@vger.kernel.org, bhelgaas@google.com,
+        Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
+        Jude Onyenegecha <jude.onyenegecha@codethink.co.uk>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jeegar Lakhani <jeegar.lakhani@sifive.com>,
+        Ben Dooks <ben.dooks@sifive.com>
+Subject: Re: [PATCHv2] pci: add PCI_EXT_CAP_ID_PL_32GT define
+Message-ID: <ZHe+E7+GOgnP2fmM@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOiHx==5YWhDiZP2PyHZiJrmtqRzvqCqoSO59RwuYuR85BezBg@mail.gmail.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <20230531095713.293229-1-ben.dooks@codethink.co.uk>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -87,32 +56,38 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 31, 2023 at 08:48:35PM +0200, Jonas Gorski wrote:
-> ...
+On Wed, May 31, 2023 at 10:57:13AM +0100, Ben Dooks wrote:
+> From: Ben Dooks <ben.dooks@sifive.com>
+> 
+> Add the define for PCI_EXT_CAP_ID_PL_32GT for drivers that
+> will want this whilst doing Gen5/Gen6 accesses.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@sifive.com>
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 
-> Looking at the code I understand where coverity is coming from:
-> 
-> #define __pci_dev_for_each_res0(dev, res, ...)                         \
->        for (unsigned int __b = 0;                                      \
->             res = pci_resource_n(dev, __b), __b < PCI_NUM_RESOURCES;   \
->             __b++)
-> 
->  res will be assigned before __b is checked for being less than
-> PCI_NUM_RESOURCES, making it point to behind the array at the end of
-> the last loop iteration.
-> 
-> Rewriting the test expression as
-> 
-> __b < PCI_NUM_RESOURCES && (res = pci_resource_n(dev, __b));
-> 
-> should avoid the (coverity) warning by making use of lazy evaluation.
-> 
-> It probably makes the code slightly less performant as res will now be
-> checked for being not NULL (which will always be true), but I doubt it
-> will be significant (or in any hot paths).
+I applied this to pci/enumeration for v6.5, thanks.
 
-Thanks a lot for looking into this!  I think you're right, and I think
-the rewritten expression is more logical as well.  Do you want to post
-a patch for it?
+But I'm very curious about where you expect this to be used.
 
-Bjorn
+> --
+> v2:
+>   - fixed tabs
+> ---
+>  include/uapi/linux/pci_regs.h | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index dc2000e0fe3a..e5f558d96493 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -738,6 +738,7 @@
+>  #define PCI_EXT_CAP_ID_DVSEC	0x23	/* Designated Vendor-Specific */
+>  #define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+>  #define PCI_EXT_CAP_ID_PL_16GT	0x26	/* Physical Layer 16.0 GT/s */
+> +#define PCI_EXT_CAP_ID_PL_32GT  0x2A    /* Physical Layer 32.0 GT/s */
+>  #define PCI_EXT_CAP_ID_DOE	0x2E	/* Data Object Exchange */
+>  #define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_DOE
+>  
+> -- 
+> 2.39.2
+> 
