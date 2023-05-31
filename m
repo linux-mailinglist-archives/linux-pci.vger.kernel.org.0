@@ -2,85 +2,58 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35ED8717D66
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 12:51:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0459717DF4
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 13:26:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234094AbjEaKvu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 06:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48672 "EHLO
+        id S235314AbjEaL0N (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 07:26:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231942AbjEaKvt (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 06:51:49 -0400
-Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC07126
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 03:51:47 -0700 (PDT)
-Received: by mail-il1-x12e.google.com with SMTP id e9e14a558f8ab-33b3cfb9495so22231155ab.2
-        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 03:51:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20221208.gappssmtp.com; s=20221208; t=1685530306; x=1688122306;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OL+MUAGjHXCcVBhRxcCYXFGT+AfAFBLYOnPjKg/aVcI=;
-        b=Eh+I0hgvt7vbsksAnBxrKvE4+kAg82/jq/WqMTCfwpB6OOhlxkMjQmpKkQLwUDz0jj
-         VF8wShWQF/m5XJ+GeyDOCwaB8QRsPnjqRIjLXh/s5NqQk6uTUJ/6vYQkkC9CrUZX5jZ4
-         TJIBITvLjFM+I57GTztJJ58kFDtAUmnlG5+KQbgXDoX/CZ2+oDs8LUVi9O9aVsU8p0Zq
-         H/ZXbcAjkfyWpoOVydazKLtDVtY7wWbXmHyeG5rNo4wvfk8Ea5/Z/MTu9z6H30hYA/0N
-         4E8r9KZF+N/Jigi0LROJvNcqN8CXNZQWaPW1aoQEJbSR1I5djVOz94pyaOZ/mCDY4nDK
-         JWIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685530306; x=1688122306;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OL+MUAGjHXCcVBhRxcCYXFGT+AfAFBLYOnPjKg/aVcI=;
-        b=UQXrDgM/ieFq4xKbwuDr7HyBpaIMF8wzcnaA2bLj+KAnsdYXZ/dJ5k4VtJUVY7n3pa
-         UA9z5ycsfguo4Hwr1dDc7N9fdAiqAg0NUq9MwZ19JvGWDyByW/OrR7b8moWxbiABx4dp
-         uEGWAuurFI7IViOQx8k61CI7ja2l8YBT5681SktWZqUcrFCyb2M0zwe4aZexJbIVu20o
-         D26hjPaiUWTyJ+ynh0c0DkTDPN1yx32Cc4edodnrpXieAME02HQAkX0rrK8NzgzqI3hK
-         ZSTAwxH5Tq0/Hmc/ityN2O/RycaoggsKlYlFtrYnedvRyz+tQB/hRWHvMGORGaKFNywR
-         7QCQ==
-X-Gm-Message-State: AC+VfDzPObM/AnxreMSKzen0edH5zTxLYto6ulLGWAP9u8MlXXrtrZoo
-        FycQGzt+i8Bng5qnDckpOP2GVw==
-X-Google-Smtp-Source: ACHHUZ5wTHf6brPVTM9Pu10tfLM6QoR8MR+RK/fU0uvSnUIafDy/ueDylPxOs/iblYKzccIBhVU3DA==
-X-Received: by 2002:a92:c144:0:b0:33a:f1b2:eb6c with SMTP id b4-20020a92c144000000b0033af1b2eb6cmr2344646ilh.3.1685530306356;
-        Wed, 31 May 2023 03:51:46 -0700 (PDT)
-Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id jd21-20020a170903261500b001b045c9abd2sm1041969plb.143.2023.05.31.03.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 03:51:45 -0700 (PDT)
-Message-ID: <2422273d-5ac2-63ef-8a31-230ebfbe3b23@igel.co.jp>
-Date:   Wed, 31 May 2023 19:51:38 +0900
+        with ESMTP id S234589AbjEaL0L (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 07:26:11 -0400
+Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4BCBDE8;
+        Wed, 31 May 2023 04:26:07 -0700 (PDT)
+Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 2B5C2E0DE7;
+        Wed, 31 May 2023 14:26:06 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        baikalelectronics.ru; h=cc:cc:content-transfer-encoding
+        :content-type:content-type:date:from:from:message-id
+        :mime-version:reply-to:subject:subject:to:to; s=post; bh=Hl82/s5
+        xZmhkiS8NV0lDG/1nVA6g7+Pvsvq3KsV4rSo=; b=PJSZnfn3TUd/avJIKAlkG+F
+        KbfnYxFrJ4z7YIVj8VLtubEvjTMbm4Q7qqX2bLxouqj2eQ0KFRywbpE6PuBMLvKk
+        hvFA0mZE7buWB/AdZKu1x4j2EP7nkqQTOKU0C2lFXhObj/8x/KDLSB3QBZdG29LT
+        ze2fFolGUlYzD2TueiG8=
+Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
+        by post.baikalelectronics.com (Proxmox) with ESMTP id 06498E0DE3;
+        Wed, 31 May 2023 14:26:06 +0300 (MSK)
+Received: from localhost (10.8.30.6) by mail (192.168.51.25) with Microsoft
+ SMTP Server (TLS) id 15.0.1395.4; Wed, 31 May 2023 14:26:05 +0300
+From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH RESEND v6 00/11] PCI: dwc: Relatively simple fixes and cleanups
+Date:   Wed, 31 May 2023 14:25:51 +0300
+Message-ID: <20230531112602.7222-1-Sergey.Semin@baikalelectronics.ru>
+X-Mailer: git-send-email 2.40.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.0
-Subject: Re: [RFC PATCH v2 3/3] PCI: endpoint: Add EP function driver to
- provide virtio-console functionality
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>, Frank Li <Frank.Li@nxp.com>,
-        Jon Mason <jdmason@kudzu.us>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ren Zhijie <renzhijie2@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-References: <20230427104428.862643-1-mie@igel.co.jp>
- <20230427104428.862643-4-mie@igel.co.jp>
- <CACGkMEsjH8fA2r=0CacK8WK_sUTAcTK7SQ_VwkJpa1rSgDP0dg@mail.gmail.com>
- <CANXvt5r7eha_xnExsdS_4yMW8xTJxVzYhMVrXyQkGQe-_ZURBg@mail.gmail.com>
- <ad3dd4ef-3489-683c-c9e1-2592621687f7@igel.co.jp>
- <CACGkMEvdVHQEcDD74TpeWgmHQ+J9aMpv5ui=iwT8E_SDZoY7EA@mail.gmail.com>
-Content-Language: en-US
-From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <CACGkMEvdVHQEcDD74TpeWgmHQ+J9aMpv5ui=iwT8E_SDZoY7EA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+Content-Type: text/plain
+X-Originating-IP: [10.8.30.6]
+X-ClientProxiedBy: MAIL.baikal.int (192.168.51.25) To mail (192.168.51.25)
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -89,202 +62,116 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-I'm sorry for late response.
+It turns out the recent DW PCIe-related patchset was merged in with
+several relatively trivial issues left unsettled (noted by Bjorn and
+Manivannan). All of these lefovers have been fixed in this patchset.
+Namely the series starts with two bug-fixes. The first one concerns the
+improper link-mode initialization in case if the CDM-check is enabled. The
+second unfortunate mistake I made in the IP-core version type helper. In
+particular instead of testing the IP-core version type the macro function
+referred to the just IP-core version which obviously wasn't what I
+intended.
 
-On 2023/05/19 11:01, Jason Wang wrote:
-> On Thu, May 18, 2023 at 5:54 PM Shunsuke Mie <mie@igel.co.jp> wrote:
->> Gentle ping ...
->>
->>
->> Thanks,
->>
->> Shunsuke.
->>
->> On 2023/05/10 12:17, Shunsuke Mie wrote:
->>> Hi Json,
->>> 2023年5月8日(月) 13:03 Jason Wang <jasowang@redhat.com>:
->>>> On Thu, Apr 27, 2023 at 6:44 PM Shunsuke Mie <mie@igel.co.jp> wrote:
->>>>> Add a new PCIe endpoint function driver that works as a pci virtio-console
->>>>> device. The console connect to endpoint side console. It enables to
->>>>> communicate PCIe host and endpoint.
->>>>>
->>>>> Architecture is following:
->>>>>
->>>>>    ┌────────────┐         ┌──────────────────────┬────────────┐
->>>>>    │virtioe     │         │                      │virtio      │
->>>>>    │console drv │         ├───────────────┐      │console drv │
->>>>>    ├────────────┤         │(virtio console│      ├────────────┤
->>>>>    │ virtio bus │         │ device)       │◄────►│ virtio bus │
->>>>>    ├────────────┤         ├---------------┤      └────────────┤
->>>>>    │            │         │ pci ep virtio │                   │
->>>>>    │  pci bus   │         │  console drv  │                   │
->>>>>    │            │  pcie   ├───────────────┤                   │
->>>>>    │            │ ◄─────► │  pci ep Bus   │                   │
->>>>>    └────────────┘         └───────────────┴───────────────────┘
->>>>>      PCIe Root              PCIe Endpoint
->>>>>
->>>> I think it might only works for peer devices like:
->>>>
->>>> net, console or vsock.
->>> Could you tell me what "peer devices" means?
-> I meant, for example we know in the case of virtio-net, TX can talk
-> with RX belonging to another device directly.
->
-> But this is not the case for other devices like virito-blk.
-Thank you. I comprehended it.
->>>> So there're many choices here, I'd like to know what's the reason for
->>>> you to implement a mediation.
->>>>
->>>> An alternative is to implement a dedicated net, console and vsock
->>>> driver for vringh (CAIF somehow works like this). This would have
->>>> better performance.
->>> Does it mean that the driver also functions as a network driver directly?
-> I meant, e.g in the case of networking, you can have a dedicated
-> driver with two vringh in the endpoint side.
->
-> The benefit is the performance, no need for the (datapath) mediation.
->
-> But if we don't care about the performance, this proposal seems to be fine.
->
-> Thanks
-I agree with you.  The design you suggested is better in terms of 
-performance.
-However, the proposed design is not bad for the following the reasons I 
-think.
+Afterwards two @Mani-noted fixes follow. Firstly the dma-ranges related warning
+message is fixed to start with "DMA-ranges" word instead of "Dma-ranges".
+Secondly the Baikal-T1 PCIe Host driver is converted to perform the
+asynchronous probe type which saved us of about 15% of bootup time if no any
+PCIe peripheral device attached to the port.
 
-The proposed design has one more operation in control plane because the data
-steps over the virtio-net driver, but the number of copies at the data plane
-remains the same. I think the operation added in control plane has small 
-effects
-for performance.
+Then the patchset contains the Baikal-T1 PCIe driver fix. The
+corresponding patch removes the false error message printed during the
+controller probe procedure. I accidentally added the unconditional
+dev_err_probe() method invocation. It was obviously wrong.
 
-Moreover, there are some advantages when the data step over the virtio-net
-driver. We can make use of the optimizations and some functions without
-modifications and implementations. e.g. ethtool and XDP(BPF) supports.
+Then two trivial cleanups are introduced. The first one concerns the
+duplicated fast-link-mode flag unsetting. The second one implies
+dropping a redundant empty line from the dw_pcie_link_set_max_speed()
+function.
 
-Any comments would be appreciated.
+The series continues with a patch inspired by the last @Bjorn note
+regarding the generic resources request interface. As @Bjorn correctly
+said it would be nice to have the new interface used wider in the DW PCIe
+subsystem. Aside with the Baikal-T1 PCIe Host driver the Toshiba Visconti
+PCIe driver can be easily converted to using the generic clock names.
+That's what is done in the noted patch.
 
->>>>> This driver has two roles. The first is as a PCIe endpoint virtio console
->>>>> function, which is implemented using the PCIe endpoint framework and PCIe
->>>>> EP virtio helpers. The second is as a virtual virtio console device
->>>>> connected to the virtio bus on PCIe endpoint Linux.
->>>>>
->>>>> Communication between the two is achieved by copying the virtqueue data
->>>>> between PCIe root and endpoint, respectively.
->>>>>
->>>>> This is a simple implementation and does not include features of
->>>>> virtio-console such as MULTIPORT, EMERG_WRITE, etc. As a result, each
->>>>> virtio console driver only displays /dev/hvc0.
->>>>>
->>>>> As an example of usage, by setting getty to /dev/hvc0, it is possible to
->>>>> login to another host.
->>>>>
->>>>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
->>>>> ---
->>>>> Changes from v2:
->>>>> - Change to use copy functions between kiovs of pci-epf-virtio.
->>>>>
->>>>>    drivers/pci/endpoint/functions/Kconfig        |  12 +
->>>>>    drivers/pci/endpoint/functions/Makefile       |   1 +
->>>>>    drivers/pci/endpoint/functions/pci-epf-vcon.c | 596 ++++++++++++++++++
->>>>>    3 files changed, 609 insertions(+)
->>>>>    create mode 100644 drivers/pci/endpoint/functions/pci-epf-vcon.c
->>>>>
->>>>> diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
->>>>> index fa1a6a569a8f..9ce2698b67e1 100644
->>>>> --- a/drivers/pci/endpoint/functions/Kconfig
->>>>> +++ b/drivers/pci/endpoint/functions/Kconfig
->>>>> @@ -44,3 +44,15 @@ config PCI_EPF_VIRTIO
->>>>>           select VHOST_RING_IOMEM
->>>>>           help
->>>>>             Helpers to implement PCI virtio Endpoint function
->>>>> +
->>>>> +config PCI_EPF_VCON
->>>>> +       tristate "PCI Endpoint virito-console driver"
->>>>> +       depends on PCI_ENDPOINT
->>>>> +       select VHOST_RING
->>>>> +       select PCI_EPF_VIRTIO
->>>>> +       help
->>>>> +         PCIe Endpoint virtio-console function implementatino. This module
->>>>> +         enables to show the virtio-console as pci device to PCIe host side, and
->>>>> +         another virtual virtio-console device registers to endpoint system.
->>>>> +         Those devices are connected virtually and can communicate each other.
->>>>> +
->>>>> diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
->>>>> index a96f127ce900..b4056689ce33 100644
->>>>> --- a/drivers/pci/endpoint/functions/Makefile
->>>>> +++ b/drivers/pci/endpoint/functions/Makefile
->>>>> @@ -7,3 +7,4 @@ obj-$(CONFIG_PCI_EPF_TEST)              += pci-epf-test.o
->>>>>    obj-$(CONFIG_PCI_EPF_NTB)              += pci-epf-ntb.o
->>>>>    obj-$(CONFIG_PCI_EPF_VNTB)             += pci-epf-vntb.o
->>>>>    obj-$(CONFIG_PCI_EPF_VIRTIO)           += pci-epf-virtio.o
->>>>> +obj-$(CONFIG_PCI_EPF_VCON)             += pci-epf-vcon.o
->>>>> diff --git a/drivers/pci/endpoint/functions/pci-epf-vcon.c b/drivers/pci/endpoint/functions/pci-epf-vcon.c
->>>>> new file mode 100644
->>>>> index 000000000000..31f4247cd10f
->>>>> --- /dev/null
->>>>> +++ b/drivers/pci/endpoint/functions/pci-epf-vcon.c
->>>>> @@ -0,0 +1,596 @@
->>>>> +// SPDX-License-Identifier: GPL-2.0
->>>>> +/*
->>>>> + * PCI Endpoint function driver to impliment virtio-console device
->>>>> + * functionality.
->>>>> + */
->>>>> +#include <linux/pci-epf.h>
->>>>> +#include <linux/virtio_ids.h>
->>>>> +#include <linux/virtio_pci.h>
->>>>> +#include <linux/virtio_console.h>
->>>>> +#include <linux/virtio_ring.h>
->>>>> +
->>>>> +#include "pci-epf-virtio.h"
->>>>> +
->>>>> +static int virtio_queue_size = 0x100;
->>>>> +module_param(virtio_queue_size, int, 0444);
->>>>> +MODULE_PARM_DESC(virtio_queue_size, "A length of virtqueue");
->>>>> +
->>>>> +struct epf_vcon {
->>>>> +       /* To access virtqueues on remote host */
->>>>> +       struct epf_virtio evio;
->>>>> +       struct vringh_kiov *rdev_iovs;
->>>>> +
->>>>> +       /* To register a local virtio bus */
->>>>> +       struct virtio_device vdev;
->>>>> +
->>>>> +       /* To access virtqueus of local host driver */
->>>>> +       struct vringh *vdev_vrhs;
->>>>> +       struct vringh_kiov *vdev_iovs;
->>>>> +       struct virtqueue **vdev_vqs;
->>>>> +
->>>>> +       /* For transportation and notification */
->>>>> +       struct workqueue_struct *task_wq;
->>>>> +       struct work_struct raise_irq_work, rx_work, tx_work;
->>>>> +
->>>>> +       /* To retain virtio features. It is commonly used local and remote. */
->>>>> +       u64 features;
->>>>> +
->>>>> +       /* To show a status whether this driver is ready and the remote is connected */
->>>>> +       bool connected;
->>>>> +};
->>>>> +
->>>>> +enum {
->>>>> +       VCON_VIRTQUEUE_RX,
->>>>> +       VCON_VIRTQUEUE_TX,
->>>>> +       // Should be end of enum
->>>>> +       VCON_VIRTQUEUE_NUM
->>>>> +};
->>>> It would be better if we can split the console specific thing out,
->>>> then it allows us to do ethernet and vsock in the future.
->>> I'm planning to implement each virtio device in a separate file.
->>> https://lwn.net/Articles/922124/
->>>
->>>
->>>
->>>> Thanks
->>>>
->>> Best regards,
->>> Shunsuke
+The patchset is closed with a series of MAINTAINERS-list related patches.
+Firstly after getting the DW PCIe RP/EP DT-schemas refactored I forgot to
+update the MAINTAINER-list with the new files added in the framework of
+that procedure. All the snps,dw-pcie* schemas shall be maintained by the
+DW PCIe core driver maintainers. Secondly seeing how long it took for my
+patchsets to review and not having any comments from the original driver
+maintainers I'd suggest to add myself as the reviewer of the DW PCIe
+driver. Thus hopefully the new updates review process will be performed
+with much less latencies. For the same reason @Manivannan is added to the
+maintainers list of the DW PCIe/eDMA drivers as he already agreed to be
+in.
 
-Best regards,
+Link: https://lore.kernel.org/linux-pci/20230217093956.27126-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v2:
+- Rebase onto the kernel 6.3-rc2.
 
-Shunsuke
+Link: https://lore.kernel.org/linux-pci/20230313200816.30105-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v3:
+- Drop the patch:
+  [PATCH v2 01/11] PCI: dwc: Fix port link CSR improper init if CDM check enabled
+  and rebase onto the already submitted by @Yoshihiro fix:
+  commit cdce67099117 ("PCI: dwc: Fix PORT_LINK_CONTROL update when CDM check enabled")
+- Just resend.
+
+Link: https://lore.kernel.org/linux-pci/20230411033928.30397-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v4:
+- Demote @Gustavo to being DW PCIe/eDMA drivers reviewer:
+  [PATCH v4 9/14] MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  [PATCH v4 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+- Add Manivannan to the DW PCIe/eDMA drivers maintainers list:
+  [PATCH v4 10/14] MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  [PATCH v4 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+
+Link: https://lore.kernel.org/linux-pci/20230414021832.13167-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v5:
+- Rebase onto the kernel 6.4-rc1.
+- Just resend.
+
+Link: https://lore.kernel.org/linux-pci/20230511190902.28896-1-Sergey.Semin@baikalelectronics.ru/
+Changelog v6:
+- Remove Vinod and DMA-engine mailing-list from Cc-list since the
+  DMA-related patches have already been merged in.
+- Drop the next patches:
+  [PATCH RESEND v5 12/14] MAINTAINERS: Demote Gustavo Pimentel to DW EDMA driver reviewer
+  [PATCH RESEND v5 13/14] MAINTAINERS: Add Manivannan to DW eDMA driver maintainers list
+  [PATCH RESEND v5 14/14] MAINTAINERS: Add myself as the DW eDMA driver reviewer
+  since they are in the dmeengine next git-branch already.
+- Just resend.
+
+Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
+Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
+Cc: Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Serge Semin (11):
+  PCI: dwc: Fix erroneous version type test helper
+  PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+  PCI: bt1: Enable async probe type
+  PCI: bt1: Fix printing false error message
+  PCI: dwc: Drop duplicated fast-link-mode flag unsetting
+  PCI: dwc: Drop empty line from dw_pcie_link_set_max_speed()
+  PCI: visconti: Convert to using generic resources getter
+  MAINTAINERS: Add all generic DW PCIe RP/EP DT-schemas
+  MAINTAINERS: Demote Gustavo Pimentel to DW PCIe core reviewer
+  MAINTAINERS: Add Manivannan to DW PCIe core maintainers list
+  MAINTAINERS: Add myself as the DW PCIe core reviewer
+
+ MAINTAINERS                                   |  7 ++--
+ drivers/pci/controller/dwc/pcie-bt1.c         |  5 ++-
+ .../pci/controller/dwc/pcie-designware-host.c |  2 +-
+ drivers/pci/controller/dwc/pcie-designware.c  |  2 -
+ drivers/pci/controller/dwc/pcie-designware.h  |  7 +++-
+ drivers/pci/controller/dwc/pcie-visconti.c    | 37 +++++++++----------
+ 6 files changed, 31 insertions(+), 29 deletions(-)
+
+-- 
+2.40.0
+
 
