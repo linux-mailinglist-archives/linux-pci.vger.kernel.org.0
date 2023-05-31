@@ -2,47 +2,47 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8823D718235
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 15:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95B78718298
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 15:44:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236462AbjEaNkq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 09:40:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54516 "EHLO
+        id S236677AbjEaNoW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 09:44:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236149AbjEaNkk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 09:40:40 -0400
+        with ESMTP id S236446AbjEaNoB (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 09:44:01 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C8BD137;
-        Wed, 31 May 2023 06:40:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D508D10C0;
+        Wed, 31 May 2023 06:42:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7095163B14;
-        Wed, 31 May 2023 13:40:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34DDDC43443;
-        Wed, 31 May 2023 13:40:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6122A63B28;
+        Wed, 31 May 2023 13:42:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23CA8C433D2;
+        Wed, 31 May 2023 13:42:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685540433;
-        bh=uVLvJFqCtBCFoD3U8CvCkGWS/edNg3ODXo2sOwJUcl0=;
+        s=k20201202; t=1685540537;
+        bh=fdVj8BXjOEAs5TW0LSt3vogjdTYde6j0fNINNh2ZRzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=khGxYNRzrnJWvljzOhIRjNWSOO7uOEROalsiphY9SZWAiS+RnaCOkzIcPVUKM19Tu
-         Jo8Qh3fI/G1FQzGXNBwMzrWbDxT+aJSPJAUyeMYTyF6SeiL3OjSvRNQ4/fIyxMaHYP
-         TwnxnchKQsZNojW40IEcO77d35DwSXKqSVqvDTuSsHnPgvzQDo7rLm4U0UFjReAdrj
-         WspQQcDElN5AVThGzM/rZKKdqJN56bDuUgVTUl/IFafJCPqaGN4CbO3a6YW/zuWyRz
-         92zG/FTYi00DEfwJdxph6HH2dwmwlhjbFoObsp5gHehT2JbJ3MfrM+vb9/2UPOPwiM
-         C8RMo9ww8320w==
+        b=KEmfH/KgS146P7MiVcA9cJqmJnFOVRkgvCBOa8kPfKhMfJU6JMYNl/kqTEsNQ19Yh
+         gxUM6Ap+PCvohN/bTaKA6e9t1hLuRvAjo5B5BfqnkDINfP+L+emmLRzVlkeV5wPum9
+         aw4ZDb6aMhaE/iAupSR6IVy9fEcpxw2GXqxTKF5SGinUbxbhdyjq8vghpKUBqEc531
+         S/eHu9fv+v5SOm8qxY2saQqtYIQRCFsLI8G9DzgIHCFXGZbWC2rAyftW1mH1kl+Hyb
+         21kZU8rarLaRhSsEgO5I8zAR4yJfbloEx5s5sYWf6Oyh5k12gCv6RjwGFBJJ8d+W60
+         uJUZE7PP8GkSg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
         Mark Blakeney <mark.blakeney@bullet-systems.net>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>, linux-pci@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.3 09/37] PCI/DPC: Quirk PIO log size for Intel Ice Lake Root Ports
-Date:   Wed, 31 May 2023 09:39:51 -0400
-Message-Id: <20230531134020.3383253-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 08/33] PCI/DPC: Quirk PIO log size for Intel Ice Lake Root Ports
+Date:   Wed, 31 May 2023 09:41:34 -0400
+Message-Id: <20230531134159.3383703-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230531134020.3383253-1-sashal@kernel.org>
-References: <20230531134020.3383253-1-sashal@kernel.org>
+In-Reply-To: <20230531134159.3383703-1-sashal@kernel.org>
+References: <20230531134159.3383703-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -85,10 +85,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
-index f4e2a88729fd1..c525867760bf8 100644
+index 8d32a3834688f..ccc90656130a0 100644
 --- a/drivers/pci/quirks.c
 +++ b/drivers/pci/quirks.c
-@@ -6003,8 +6003,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency
+@@ -5995,8 +5995,9 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x56c1, aspm_l1_acceptable_latency
  
  #ifdef CONFIG_PCIE_DPC
  /*
@@ -100,7 +100,7 @@ index f4e2a88729fd1..c525867760bf8 100644
   */
  static void dpc_log_size(struct pci_dev *dev)
  {
-@@ -6027,6 +6028,10 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x461f, dpc_log_size);
+@@ -6019,6 +6020,10 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x461f, dpc_log_size);
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x462f, dpc_log_size);
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x463f, dpc_log_size);
  DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_INTEL, 0x466e, dpc_log_size);
