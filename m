@@ -2,34 +2,34 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A3AC717DF3
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 13:26:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87BF8717DF1
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 13:26:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235038AbjEaL0M (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 07:26:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
+        id S234935AbjEaL0L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 07:26:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232620AbjEaL0K (ORCPT
+        with ESMTP id S229936AbjEaL0K (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 07:26:10 -0400
 Received: from post.baikalelectronics.com (post.baikalelectronics.com [213.79.110.86])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4D45CE5;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B9895123;
         Wed, 31 May 2023 04:26:08 -0700 (PDT)
 Received: from post.baikalelectronics.com (localhost.localdomain [127.0.0.1])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id DC144E0DE9;
-        Wed, 31 May 2023 14:26:06 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id CEC3DE0DEA;
+        Wed, 31 May 2023 14:26:07 +0300 (MSK)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         baikalelectronics.ru; h=cc:cc:content-transfer-encoding
         :content-type:content-type:date:from:from:in-reply-to:message-id
         :mime-version:references:reply-to:subject:subject:to:to; s=post;
-         bh=LHPyA9tgRl2Gs6Hh3GgNy+g6dEDqK2VKmPfH8Gos1h8=; b=mllTnkyiWEER
-        e61pGtlj3+KXm6EsmFlqGkrW/g2YlHYCbDcGrdD8L06jquddFLPLzZ3VCzL0EL8N
-        541QQYLBIPWUG8cPyqBv5UVambUGkotPR2+dWgCdPSbwZtzzLyykfzc+b3YfzuKO
-        K3Cz4L3Uiwd7YUqXzIC9bZI74RlJqMU=
+         bh=7SbAcuds+tlWFnTKWKdoeNb1Lhp8lSpPRXuDUOszIQI=; b=aImCJQZ014Me
+        kT/OIT+rp+XA7RSh57y7bgpmGlYnUgNtn1t1ww0Ml58s+Fs93rIl3avwih4zqLZo
+        r2pk2KMXOwxTgJ3LoIldRYNDvPl2zsv53S4FgfqsMqLamh85lJe+Ds8bSSGFlr6Q
+        dkF6z3XvJiKP4VGcGRI6uGdk0hOKgDg=
 Received: from mail.baikal.int (mail.baikal.int [192.168.51.25])
-        by post.baikalelectronics.com (Proxmox) with ESMTP id B5583E0DE3;
-        Wed, 31 May 2023 14:26:06 +0300 (MSK)
+        by post.baikalelectronics.com (Proxmox) with ESMTP id AB609E0DE3;
+        Wed, 31 May 2023 14:26:07 +0300 (MSK)
 Received: from localhost (10.8.30.6) by mail (192.168.51.25) with Microsoft
- SMTP Server (TLS) id 15.0.1395.4; Wed, 31 May 2023 14:26:06 +0300
+ SMTP Server (TLS) id 15.0.1395.4; Wed, 31 May 2023 14:26:07 +0300
 From:   Serge Semin <Sergey.Semin@baikalelectronics.ru>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
@@ -46,9 +46,9 @@ CC:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
         Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
         <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH RESEND v6 01/11] PCI: dwc: Fix erroneous version type test helper
-Date:   Wed, 31 May 2023 14:25:52 +0300
-Message-ID: <20230531112602.7222-2-Sergey.Semin@baikalelectronics.ru>
+Subject: [PATCH RESEND v6 02/11] PCI: dwc: Fix inbound iATU entries out-of-bounds warning message
+Date:   Wed, 31 May 2023 14:25:53 +0300
+Message-ID: <20230531112602.7222-3-Sergey.Semin@baikalelectronics.ru>
 X-Mailer: git-send-email 2.40.0
 In-Reply-To: <20230531112602.7222-1-Sergey.Semin@baikalelectronics.ru>
 References: <20230531112602.7222-1-Sergey.Semin@baikalelectronics.ru>
@@ -67,48 +67,33 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Due to an unfortunate mistake the macro function actually checks the
-IP-core version instead of the IP-core version type which isn't what
-originally implied. Fix it by introducing a new helper
-__dw_pcie_ver_type_cmp() with the same semantic as the __dw_pcie_ver_cmp()
-counterpart except it refers to the dw_pcie.type field in order to perform
-the passed comparison operation.
+The message is printed if the number of requested inbound iATU windows
+exceed the device capability. In that case the message should either refer
+to the "dma-ranges" DT property or to the DMA-ranges mapping. We suggest
+to use the later version as a counterpart to the just CPU-ranges mapping.
+In any case the current "Dma-ranges" phrase seems incorrect.
 
-Fixes: 0b0a780d52ad ("PCI: dwc: Add macros to compare Synopsys IP core versions")
+Suggested-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
 Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Reviewed-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/pci/controller/dwc/pcie-designware.h | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/pci/controller/dwc/pcie-designware-host.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index 79713ce075cc..adad0ea61799 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -37,17 +37,20 @@
- #define __dw_pcie_ver_cmp(_pci, _ver, _op) \
- 	((_pci)->version _op DW_PCIE_VER_ ## _ver)
+diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+index 9952057c8819..5718b4bb67f0 100644
+--- a/drivers/pci/controller/dwc/pcie-designware-host.c
++++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+@@ -723,7 +723,7 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
+ 	}
  
-+#define __dw_pcie_ver_type_cmp(_pci, _type, _op) \
-+	((_pci)->type _op DW_PCIE_VER_TYPE_ ## _type)
-+
- #define dw_pcie_ver_is(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, ==)
+ 	if (pci->num_ib_windows <= i)
+-		dev_warn(pci->dev, "Dma-ranges exceed inbound iATU size (%u)\n",
++		dev_warn(pci->dev, "DMA-ranges exceed inbound iATU size (%u)\n",
+ 			 pci->num_ib_windows);
  
- #define dw_pcie_ver_is_ge(_pci, _ver) __dw_pcie_ver_cmp(_pci, _ver, >=)
- 
- #define dw_pcie_ver_type_is(_pci, _ver, _type) \
- 	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
--	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, ==))
-+	 __dw_pcie_ver_type_cmp(_pci, _type, ==))
- 
- #define dw_pcie_ver_type_is_ge(_pci, _ver, _type) \
- 	(__dw_pcie_ver_cmp(_pci, _ver, ==) && \
--	 __dw_pcie_ver_cmp(_pci, TYPE_ ## _type, >=))
-+	 __dw_pcie_ver_type_cmp(_pci, _type, >=))
- 
- /* DWC PCIe controller capabilities */
- #define DW_PCIE_CAP_REQ_RES		0
+ 	return 0;
 -- 
 2.40.0
 
