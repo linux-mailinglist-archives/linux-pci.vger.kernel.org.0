@@ -2,63 +2,42 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4680D717781
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 09:05:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FD837179AA
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 10:11:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232344AbjEaHFF convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Wed, 31 May 2023 03:05:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55822 "EHLO
+        id S234783AbjEaILS (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 04:11:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231963AbjEaHFE (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 03:05:04 -0400
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECF08F;
-        Wed, 31 May 2023 00:05:02 -0700 (PDT)
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-565de553de1so9828417b3.0;
-        Wed, 31 May 2023 00:05:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685516702; x=1688108702;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XSZ0pDbxO01uL9m24dxyZWTludUV0st1ROFCQOeFL7I=;
-        b=VfRXYu2sxhR8osmcKqD+hSK4XHa4Zztg8XTcfKvwYJsRScWYTecz+fgytQii1A1pH7
-         xAmMkMXVMPdCUgjfVNXe8pbxvzFmPPZvmYcdlAxvcrFjpQhc6NGQ6H5jJyoIIbbVe536
-         suBsIalG8HNUVrDTWk3csbFGfTfD+IW2iBTG4oGNhaJ8lbR9C8rW7JYHMRORE8fJDE3X
-         E2pFMB0b0ep1DPPHczv/v7KZUc61xxgo9ajnWC4MUXleG5y2fy81/tbI9b2ZrbINoDC1
-         2kyuOWrjBiRlC1TAcrLbNxTn0/tfynTmHcrv2HUfv9KIta5mq9fHnG1rr3TpvvXX6HpG
-         tduw==
-X-Gm-Message-State: AC+VfDyMkRq4k68epAfGxBRlXMpEfU9SUqZ7AGgT2anAAoltw+xOkuou
-        TU9IVVf8SUWUrPZOyXBEzfNdj/++2EtOoQ==
-X-Google-Smtp-Source: ACHHUZ7jzudn+XdRuOR+mhQ9iHj3oVa/Lr3vRxvvteJ3ymB8KM+k59WTy3ay+DczGofLT8PUOhk2Cw==
-X-Received: by 2002:a0d:d889:0:b0:54c:1716:b20 with SMTP id a131-20020a0dd889000000b0054c17160b20mr5655213ywe.17.1685516701856;
-        Wed, 31 May 2023 00:05:01 -0700 (PDT)
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
-        by smtp.gmail.com with ESMTPSA id m6-20020a0de306000000b0055a486140b6sm5166952ywe.36.2023.05.31.00.05.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 May 2023 00:05:01 -0700 (PDT)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-568928af8f5so9620367b3.1;
-        Wed, 31 May 2023 00:05:01 -0700 (PDT)
-X-Received: by 2002:a0d:d515:0:b0:568:ed48:21bb with SMTP id
- x21-20020a0dd515000000b00568ed4821bbmr1415156ywd.13.1685516700803; Wed, 31
- May 2023 00:05:00 -0700 (PDT)
+        with ESMTP id S234370AbjEaILR (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 04:11:17 -0400
+Received: from mail.mahavavy.com (mail.mahavavy.com [92.222.170.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84A0F93
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 01:11:16 -0700 (PDT)
+Received: by mail.mahavavy.com (Postfix, from userid 1002)
+        id DCC99232A1; Wed, 31 May 2023 08:11:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mahavavy.com; s=mail;
+        t=1685520674; bh=IfqQW79nVX/qUpmHcJiWDpV9BQnOf/s+Zcq9ON74QJY=;
+        h=Date:From:To:Subject:From;
+        b=RYbBmEGlt6wLne2FChATQvL4jRAIM1VtNnFlcN+VyUqLdfao7HjLD54zcLH6SOTEh
+         kXYZadNhUvZVKSv+hTfRwxirMHFSPe4TxCE8cnkKVDNnupPasJQL7BVujea/DmOTXF
+         YecL6+c0EG9urTeKbMyMJpCeXdCv8V/wiABSJrXkJqLgmKNOEuTVY7vzpKxQOBlacx
+         HeMIBs8EPlMaEqmZ3qbP+ABuBCCc2OQ83nQdJEvdMc50ICWzLySNGGHsGTW2q+hg0I
+         bUyv6lbkPSqmDorhJ7cfu8UrSax5wgaxK0jJ/7zMYw495fsYhbBm1ZVr4aoENkR7ci
+         ySx3N4Q0BeH1g==
+Received: by mail.mahavavy.com for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 08:10:56 GMT
+Message-ID: <20230531064500-0.1.2u.5kpl.0.tdvrqr8g72@mahavavy.com>
+Date:   Wed, 31 May 2023 08:10:56 GMT
+From:   =?UTF-8?Q? "Kristi=C3=A1n_Plet=C3=A1nek" ?= 
+        <kristian.pletanek@mahavavy.com>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?UTF-8?Q?Tlakov=C4=9B_lit=C3=BD?=
+X-Mailer: mail.mahavavy.com
 MIME-Version: 1.0
-References: <20230530101655.2275731-1-suijingfeng@loongson.cn>
-In-Reply-To: <20230530101655.2275731-1-suijingfeng@loongson.cn>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Wed, 31 May 2023 09:04:47 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdVU1qurBki6uf3UadK0Dted67pnhE7+2CDGYmK7QCNY0g@mail.gmail.com>
-Message-ID: <CAMuHMdVU1qurBki6uf3UadK0Dted67pnhE7+2CDGYmK7QCNY0g@mail.gmail.com>
-Subject: Re: [PATCH] linux/pci.h: add a dummy implement for pci_clear_master()
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
-        kernel test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=0.3 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,MIXED_ES,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,56 +46,23 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sui,
+Dobr=C3=A9 r=C3=A1no,
 
-On Tue, May 30, 2023 at 12:21 PM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
-> As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
-> call pci_clear_master() without config_pci guard can not built.
->
->    drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
->    In function 'etnaviv_gpu_pci_fini':
-> >> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
->    error: implicit declaration of function 'pci_clear_master';
->    did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
->       32 |         pci_clear_master(pdev);
->          |         ^~~~~~~~~~~~~~~~
->          |         pci_set_master
->    cc1: some warnings being treated as errors
->
-> [1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
->
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
-> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+zaji=C5=A1=C5=A5ujeme technologii tlakov=C3=A9ho lit=C3=AD hlin=C3=ADku.
 
-Thanks for your patch!
+M=C3=A1me v=C3=BDrobn=C3=AD z=C3=A1vody v Polsku, =C5=A0v=C3=A9dsku a =C4=
+=8C=C3=ADn=C4=9B se schopnost=C3=AD flexibiln=C4=9B p=C5=99esouvat v=C3=BD=
+robu mezi lokalitami.
 
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
->  #define pci_dev_put(dev)       do { } while (0)
->
->  static inline void pci_set_master(struct pci_dev *dev) { }
-> +static inline void pci_clear_master(struct pci_dev *dev) { }
->  static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
->  static inline void pci_disable_device(struct pci_dev *dev) { }
->  static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
+Na=C5=A1e lic=C3=AD bu=C5=88ky jsou v=C4=9Bt=C5=A1inou automatick=C3=A9 n=
+ebo poloautomatick=C3=A9, co=C5=BE umo=C5=BE=C5=88uje v=C3=BDrobu velk=C3=
+=BDch v=C3=BDrobn=C3=ADch s=C3=A9ri=C3=AD s vysokou flexibilitou detail=C5=
+=AF.
+=20
+Poskytujeme podporu v ka=C5=BEd=C3=A9 f=C3=A1zi v=C3=BDvoje projektu, vyv=
+=C3=ADj=C3=ADme strukturu detailu.
 
-Makes perfect sense, given there has been a dummy for pci_set_master()
-since the git stone age. Apparently adding the dummy was forgotten
-when pci_clear_master() was introduced.
+Cht=C4=9Bli byste mluvit o spolupr=C3=A1ci v t=C3=A9to oblasti?
 
-Fixes: 6a479079c07211bf ("PCI: Add pci_clear_master() as opposite of
-pci_set_master()")
-Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Pozdravy
+Kristi=C3=A1n Plet=C3=A1nek
