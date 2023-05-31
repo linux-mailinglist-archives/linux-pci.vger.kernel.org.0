@@ -2,87 +2,123 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B090718857
-	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 19:21:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB6C9718872
+	for <lists+linux-pci@lfdr.de>; Wed, 31 May 2023 19:28:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjEaRVs (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 31 May 2023 13:21:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55926 "EHLO
+        id S229671AbjEaR2L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 31 May 2023 13:28:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229528AbjEaRVr (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 13:21:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD650101;
-        Wed, 31 May 2023 10:21:46 -0700 (PDT)
+        with ESMTP id S229676AbjEaR2K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 31 May 2023 13:28:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B53BE;
+        Wed, 31 May 2023 10:28:09 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4C0BE637E5;
-        Wed, 31 May 2023 17:21:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76AF5C433D2;
-        Wed, 31 May 2023 17:21:45 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B94261199;
+        Wed, 31 May 2023 17:28:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFF8DC433EF;
+        Wed, 31 May 2023 17:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685553705;
-        bh=nTMXCgyHDtjRFmdEA9PM4ahOKoXAJkdDrxqWv4NyEfY=;
+        s=k20201202; t=1685554086;
+        bh=QUys/yTxIdSYTpQugTpVBvBDboSkoG+k/FTxlWRW0II=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=bqFqPKw7hPRlxRApTZKF5DFOZYcivhUwItbSLoEQ++e+Errt6BvQdE1H7nhkOejdG
-         iM2lJS26GQMRiZ7Wazuj2BBC1JxgpDYHEYU7UL2O57WfdR9zIYdGxBuJym5wK5ZUdI
-         vXOsvIkKakvnZt+juuLaM9Cd6E6jsEaQm6yLyb5PYyRVqijKnEzxU5k8Ic1TZlbOPV
-         r9+ck4Lq2dKAklL7dMpthOcRo7S6AnexiR8Fz7T1N9Cg58feEb2ffgRUveFmTTPy7r
-         rPbCh0PFNOpKcaJlv5BmyVmI5Jt0LYE0rvm5PFBbUPKBJ6BdwR90fZtQZkJnBnGihI
-         IAWOg4EubdC0g==
-Date:   Wed, 31 May 2023 12:21:44 -0500
+        b=OmJ1ssTzhjT6CCXPr0dF/pbWm9TbHyxrH7iMFETRLmMIJZSDRpmCETKbi+hba0C2b
+         dm9pVYYD6SmaWnkWw5LP9lbH0qS8UfWA6av3tKFTO0PLeoaPW907E335Cwn2rMgFLT
+         GyuorTUazfiqACcAdF3OOoYOeCqdUHxrI3J1zmBXSRkglmr3kToLgIna8DzC3Vo1O4
+         0hac1ipWWdsgPqZRCxsW7GOxnUr4URhdidQh0JNcy63x8T8LZrGixjOTRfP2z/raAj
+         GCMf8clZ8F2nCj9zcEBdlmjLocOeYW6mqMIZ3+vstSTOgJKc4NQkyqTz03Hs6WhfdK
+         +euCGNig9Eufw==
+Date:   Wed, 31 May 2023 12:28:05 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Zhu YiXin <yzhu@maxlinear.com>
-Cc:     lchuanhua@maxlinear.com, torvalds@linux-foundation.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pliem@maxlinear.com, qwu@maxlinear.com,
-        Rahul Tanwar <rahul_tanwar@yahoo.com>
-Subject: Re: [PATCH v2 1/1] MAINTAINERS: Update entry for PCIe driver for
- Intel LGM GW SoC
-Message-ID: <ZHeCKKInjVpLBfda@bhelgaas>
+To:     Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ben Hutchings <bhutchings@solarflare.com>,
+        Jesse Barnes <jbarnes@virtuousgeek.org>,
+        kernel test robot <lkp@intel.com>, Li Yi <liyi@loongson.cn>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        loongson-kernel@lists.loongnix.cn,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Add dummy implement for pci_clear_master()
+ function
+Message-ID: <ZHeDpbtM3FFOPn6d@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230519044555.3750-2-yzhu@maxlinear.com>
-X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230531102744.2354313-1-suijingfeng@loongson.cn>
+X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rahul]
-
-On Fri, May 19, 2023 at 12:45:55PM +0800, Zhu YiXin wrote:
-> Rahul Tanwar is no longer at Maxlinear, so update the MAINTAINER's entry
-> for the PCIe driver for Intel LGM GW SoC.
+On Wed, May 31, 2023 at 06:27:44PM +0800, Sui Jingfeng wrote:
+> As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
+> call pci_clear_master() without config_pci guard can not pass compile test.
 > 
-> Signed-off-by: Zhu YiXin <yzhu@maxlinear.com>
+>    drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
+>    In function 'etnaviv_gpu_pci_fini':
+> >> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
+>    error: implicit declaration of function 'pci_clear_master';
+>    did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
+>       32 |         pci_clear_master(pdev);
+>          |         ^~~~~~~~~~~~~~~~
+>          |         pci_set_master
+>    cc1: some warnings being treated as errors
+> 
+> [1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
+> 
+> V2:
+> 	* Adjust commit log style to meet the convention and add Fixes tag
+> 
+> Fixes: 6a479079c072 ("PCI: Add pci_clear_master() as opposite of pci_set_master()")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
+> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
 
-Applied with acks from Rahul Tanwar and Lei Chuanhua to for-linus for
-v6.4, thanks!
+Applied to pci/misc for v6.5 as follows:
+
+  Author: Sui Jingfeng <suijingfeng@loongson.cn>
+  Date:   Wed May 31 18:27:44 2023 +0800
+
+    PCI: Add pci_clear_master() stub for non-CONFIG_PCI
+    
+    Add a pci_clear_master() stub when CONFIG_PCI is not set so drivers that
+    support both PCI and platform devices don't need #ifdefs or extra Kconfig
+    symbols for the PCI parts.
+    
+    [bhelgaas: commit log]
+    Fixes: 6a479079c072 ("PCI: Add pci_clear_master() as opposite of pci_set_master()")
+    Link: https://lore.kernel.org/r/20230531102744.2354313-1-suijingfeng@loongson.cn
+    Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+    Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+    Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
 > ---
->  MAINTAINERS | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  include/linux/pci.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index c8d274efff10..6091bbb0e1d7 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -16383,7 +16383,7 @@ F:	Documentation/devicetree/bindings/pci/intel,keembay-pcie*
->  F:	drivers/pci/controller/dwc/pcie-keembay.c
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index d0c19ff0c958..71c85380676c 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
+>  #define pci_dev_put(dev)	do { } while (0)
 >  
->  PCIE DRIVER FOR INTEL LGM GW SOC
-> -M:	Rahul Tanwar <rtanwar@maxlinear.com>
-> +M:	Chuanhua Lei <lchuanhua@maxlinear.com>
->  L:	linux-pci@vger.kernel.org
->  S:	Maintained
->  F:	Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+>  static inline void pci_set_master(struct pci_dev *dev) { }
+> +static inline void pci_clear_master(struct pci_dev *dev) { }
+>  static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
+>  static inline void pci_disable_device(struct pci_dev *dev) { }
+>  static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
 > -- 
-> 2.17.1
+> 2.25.1
 > 
