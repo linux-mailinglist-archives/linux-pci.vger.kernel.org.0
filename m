@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BC64471A1C2
+	by mail.lfdr.de (Postfix) with ESMTP id 1616671A1C0
 	for <lists+linux-pci@lfdr.de>; Thu,  1 Jun 2023 17:04:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234620AbjFAPDw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jun 2023 11:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
+        id S234764AbjFAPEg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jun 2023 11:04:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234598AbjFAPDl (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 11:03:41 -0400
+        with ESMTP id S233746AbjFAPEH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 11:04:07 -0400
 Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5ECA2120
-        for <linux-pci@vger.kernel.org>; Thu,  1 Jun 2023 08:02:32 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b011cffef2so8754815ad.3
-        for <linux-pci@vger.kernel.org>; Thu, 01 Jun 2023 08:02:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397B910EC
+        for <linux-pci@vger.kernel.org>; Thu,  1 Jun 2023 08:03:03 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b011cffe7fso4308225ad.1
+        for <linux-pci@vger.kernel.org>; Thu, 01 Jun 2023 08:03:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685631683; x=1688223683;
+        d=linaro.org; s=google; t=1685631687; x=1688223687;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=sAFeVd+dwK+9T/TQ3aqc3usXxG9M6VjGUKGIkkMeOq4=;
-        b=SX+BIkngzKzYRFKhsNp95dh7zWKTA1kb5QAAFgWG2NWebTcfDnznm+pD+ff915iZMO
-         tBOaulh0/a8u4OLG+4/YaTkThYpYmHjmEDAe8hkLkzILwsYDgxlpmGARw1iZO6bwYrqo
-         DgcoO2jriCI2vU6d+KQU0mA0uJ3m/fJzlix3nz4gpST3dIWfOk98xvJT5ipyoSL4XH1m
-         GL3hp6b3f7+To59JkvAJhxc0V5S3BkU4NvfbhxPKon0SfcVB6S1m+qI9+C6/hHCxm0Up
-         tdhC6VMzJ8RgHmZA+pdAJKnsBg6DFFQ7zQNCgvVCVN/jV1RlUNJDNlg1UKHJRVNnOkQb
-         SG+A==
+        bh=cwXI2MDftw2Rb8IrxQ8Wa3XnLpiqiT4qkX9vMeeuaOg=;
+        b=VvI1kqae2QZnufvvPgJXDg6cf7eJl0z5keTy1LamC9RB/+jM1kie76LkszTp4+i7oI
+         OqIKE2r6LEQEVFaN3uhUTTPsop3WOaBoMGfCPtW1p5o+/wd/I6jl8RfNCZlwlIHiERZq
+         Glk+Ee2Wzi7zg3gdgBww2dyDESl4g4ngtQsTi/8sBMQDBg9b/DYEilX9WItSJ0r9YKTy
+         cru5R1ZoNpuTC9PimQTu3S/f5qKfzvjoCuztNGe64RIGiwzfl5ivIQ4OQ9XJxdq7u1kh
+         62BwrKNfLA8U57Ow+9bsaPfIcnvHhsvL6JJZNRTuFg8ZMjiY2ikn/ImD0NqgJs16KOH7
+         IBWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685631683; x=1688223683;
+        d=1e100.net; s=20221208; t=1685631687; x=1688223687;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sAFeVd+dwK+9T/TQ3aqc3usXxG9M6VjGUKGIkkMeOq4=;
-        b=QJiO8VngXdQAMZwzWjdXAlpjNuSZYmFe6fb9wD0hD6+/3gLLG+XFVMXQs3qYRjq9J1
-         PWf8D46JFw84gim6A+d/paOVMeiKYMlEqVoWFVE9iT7ILHHdpJoUxCSd0yBa7KHPQx6M
-         2dJxqpMKXvsUDk87RL8gl3WWDVV4XK+UE02DuMjtphG4iXqxIwCYwEMbqbATljAAHtTb
-         XVPGu7GRDIXnU5fTLJ7m+/ybfxXLGUyCZD5qgxstv0c9jn8re8ZWVZmExnLIFfYRsB+a
-         n2/J6zcROvV8DlJ8HjLiUlLkh1pcj82VP99M+zNOmGOpqo4WWFcm3HK0hZrbslObD3m1
-         MoEA==
-X-Gm-Message-State: AC+VfDwfZiE9Gc4+L2wWnWuxNjtxwYKaFbGwdavcQdJc1afNzgCdSokO
-        8g6VVA9Oi2XJlT3VjIWyuRvr
-X-Google-Smtp-Source: ACHHUZ6QOo5ARvwszO6PQhxgQry+278ZPmIgukEv7g4yVmOVQsDHcTNEAQtS0AKFVAYwq6GWYgheXA==
-X-Received: by 2002:a17:902:c20d:b0:1b0:4c32:5d6d with SMTP id 13-20020a170902c20d00b001b04c325d6dmr8966653pll.31.1685631683470;
-        Thu, 01 Jun 2023 08:01:23 -0700 (PDT)
+        bh=cwXI2MDftw2Rb8IrxQ8Wa3XnLpiqiT4qkX9vMeeuaOg=;
+        b=G2c/B73CDVOtrLfssYciqdAjQ5DjoYC+1DiL74EXR3HuRi3yZn/dfHP8bsu5IW95Ym
+         yqIWpiSQmTDN30lxhF/nwY3KxkLIWtwB6z0P3Ur3TtodEmASNtmeoWgI7Q5fEgAMfPg3
+         hd3o/4lyN4cX+gHvT6+BbeGyHoilOluZ+TRN75BFlZ4uTNRE26iAEF/PsnVAuSym/mD+
+         /p/WIPA5dLmjGlppJ7Xmcx9RQfASBlBaW7cdrBJhG4AkqDiUsEM1m6tmqhcSFkFs+GZJ
+         //bQ3sd9sAH6kXdiOw+NtQR5uSs1i1IwufpbFQYopvqB6UtuJ9azYDs9hVkVY4sE8qBz
+         b7YA==
+X-Gm-Message-State: AC+VfDzDLLJtxf7t4GJedAfy8uPRtVs1FnfJEOd1iUSoUledfM3SFcQl
+        Y6K9RPjyBhn4fQ6ThN/o2m6i
+X-Google-Smtp-Source: ACHHUZ6tXF6b5Iv8EcneyxM0Nv9lFFaEyYDIso8TvENtbnTGJf0PwozcSurKXQrDwf1rjyrDe42FnA==
+X-Received: by 2002:a17:902:d504:b0:1b0:496b:5ae9 with SMTP id b4-20020a170902d50400b001b0496b5ae9mr7091233plg.25.1685631686761;
+        Thu, 01 Jun 2023 08:01:26 -0700 (PDT)
 Received: from localhost.localdomain ([117.217.186.123])
-        by smtp.gmail.com with ESMTPSA id q7-20020a170902dac700b001b0499bee11sm3595480plx.240.2023.06.01.08.01.20
+        by smtp.gmail.com with ESMTPSA id q7-20020a170902dac700b001b0499bee11sm3595480plx.240.2023.06.01.08.01.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 08:01:23 -0700 (PDT)
+        Thu, 01 Jun 2023 08:01:26 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     lpieralisi@kernel.org, kw@linux.com
 Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [RESEND PATCH v5 1/9] PCI: endpoint: Add missing documentation about the MSI/MSI-X range
-Date:   Thu,  1 Jun 2023 20:30:55 +0530
-Message-Id: <20230601150103.12755-2-manivannan.sadhasivam@linaro.org>
+Subject: [RESEND PATCH v5 2/9] PCI: endpoint: Pass EPF device ID to the probe function
+Date:   Thu,  1 Jun 2023 20:30:56 +0530
+Message-Id: <20230601150103.12755-3-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230601150103.12755-1-manivannan.sadhasivam@linaro.org>
 References: <20230601150103.12755-1-manivannan.sadhasivam@linaro.org>
@@ -72,39 +72,157 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Both pci_epc_raise_irq() and pci_epc_map_msi_irq() APIs expects the
-MSI/MSI-X vectors to start from 1 but it is not documented. Add the
-range info to the kdoc of the APIs to make it clear.
+Currently, the EPF probe function doesn't get the device ID argument needed
+to correctly identify the device table ID of the EPF device.
 
-Fixes: 5e8cb4033807 ("PCI: endpoint: Add EP core layer to enable EP controller and EP functions")
-Fixes: 87d5972e476f ("PCI: endpoint: Add pci_epc_ops to map MSI IRQ")
+When multiple entries are added to the "struct pci_epf_device_id" table,
+the probe function needs to identify the correct one. This is achieved by
+modifying the pci_epf_match_id() function to return the match ID pointer
+and passing it to the driver's probe function.
+
+pci_epf_device_match() function can return bool based on the return value
+of pci_epf_match_id().
+
+Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/pci-epc-core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pci/endpoint/functions/pci-epf-ntb.c  |  3 ++-
+ drivers/pci/endpoint/functions/pci-epf-test.c |  2 +-
+ drivers/pci/endpoint/functions/pci-epf-vntb.c |  2 +-
+ drivers/pci/endpoint/pci-epf-core.c           | 20 ++++++++++++-------
+ include/linux/pci-epf.h                       |  4 +++-
+ 5 files changed, 20 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
-index 46c9a5c3ca14..0cf602c83d4a 100644
---- a/drivers/pci/endpoint/pci-epc-core.c
-+++ b/drivers/pci/endpoint/pci-epc-core.c
-@@ -213,7 +213,7 @@ EXPORT_SYMBOL_GPL(pci_epc_start);
-  * @func_no: the physical endpoint function number in the EPC device
-  * @vfunc_no: the virtual endpoint function number in the physical function
-  * @type: specify the type of interrupt; legacy, MSI or MSI-X
-- * @interrupt_num: the MSI or MSI-X interrupt number
-+ * @interrupt_num: the MSI or MSI-X interrupt number with range (1-N)
+diff --git a/drivers/pci/endpoint/functions/pci-epf-ntb.c b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+index 9a00448c7e61..980b4ecf19a2 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-ntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-ntb.c
+@@ -2075,11 +2075,12 @@ static struct config_group *epf_ntb_add_cfs(struct pci_epf *epf,
+ /**
+  * epf_ntb_probe() - Probe NTB function driver
+  * @epf: NTB endpoint function device
++ * @id: NTB endpoint function device ID
   *
-  * Invoke to raise an legacy, MSI or MSI-X interrupt
+  * Probe NTB function driver when endpoint function bus detects a NTB
+  * endpoint function.
   */
-@@ -246,7 +246,7 @@ EXPORT_SYMBOL_GPL(pci_epc_raise_irq);
-  * @func_no: the physical endpoint function number in the EPC device
-  * @vfunc_no: the virtual endpoint function number in the physical function
-  * @phys_addr: the physical address of the outbound region
-- * @interrupt_num: the MSI interrupt number
-+ * @interrupt_num: the MSI interrupt number with range (1-N)
-  * @entry_size: Size of Outbound address region for each interrupt
-  * @msi_data: the data that should be written in order to raise MSI interrupt
-  *            with interrupt number as 'interrupt num'
+-static int epf_ntb_probe(struct pci_epf *epf)
++static int epf_ntb_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
+ {
+ 	struct epf_ntb *ntb;
+ 	struct device *dev;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-test.c b/drivers/pci/endpoint/functions/pci-epf-test.c
+index 0f9d2ec822ac..d5fcc78a5b73 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-test.c
++++ b/drivers/pci/endpoint/functions/pci-epf-test.c
+@@ -980,7 +980,7 @@ static const struct pci_epf_device_id pci_epf_test_ids[] = {
+ 	{},
+ };
+ 
+-static int pci_epf_test_probe(struct pci_epf *epf)
++static int pci_epf_test_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
+ {
+ 	struct pci_epf_test *epf_test;
+ 	struct device *dev = &epf->dev;
+diff --git a/drivers/pci/endpoint/functions/pci-epf-vntb.c b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+index b7c7a8af99f4..122eb7a12028 100644
+--- a/drivers/pci/endpoint/functions/pci-epf-vntb.c
++++ b/drivers/pci/endpoint/functions/pci-epf-vntb.c
+@@ -1401,7 +1401,7 @@ static struct pci_epf_ops epf_ntb_ops = {
+  *
+  * Returns: Zero for success, or an error code in case of failure
+  */
+-static int epf_ntb_probe(struct pci_epf *epf)
++static int epf_ntb_probe(struct pci_epf *epf, const struct pci_epf_device_id *id)
+ {
+ 	struct epf_ntb *ntb;
+ 	struct device *dev;
+diff --git a/drivers/pci/endpoint/pci-epf-core.c b/drivers/pci/endpoint/pci-epf-core.c
+index 2036e38be093..7307e052136f 100644
+--- a/drivers/pci/endpoint/pci-epf-core.c
++++ b/drivers/pci/endpoint/pci-epf-core.c
+@@ -493,16 +493,16 @@ static const struct device_type pci_epf_type = {
+ 	.release	= pci_epf_dev_release,
+ };
+ 
+-static int
+-pci_epf_match_id(const struct pci_epf_device_id *id, const struct pci_epf *epf)
++static const struct pci_epf_device_id
++*pci_epf_match_id(const struct pci_epf_device_id *id, const struct pci_epf *epf)
+ {
+ 	while (id->name[0]) {
+ 		if (strcmp(epf->name, id->name) == 0)
+-			return true;
++			return id;
+ 		id++;
+ 	}
+ 
+-	return false;
++	return NULL;
+ }
+ 
+ static int pci_epf_device_match(struct device *dev, struct device_driver *drv)
+@@ -510,8 +510,12 @@ static int pci_epf_device_match(struct device *dev, struct device_driver *drv)
+ 	struct pci_epf *epf = to_pci_epf(dev);
+ 	struct pci_epf_driver *driver = to_pci_epf_driver(drv);
+ 
+-	if (driver->id_table)
+-		return pci_epf_match_id(driver->id_table, epf);
++	if (driver->id_table) {
++		if (pci_epf_match_id(driver->id_table, epf))
++			return true;
++		else
++			return false;
++	}
+ 
+ 	return !strcmp(epf->name, drv->name);
+ }
+@@ -520,13 +524,15 @@ static int pci_epf_device_probe(struct device *dev)
+ {
+ 	struct pci_epf *epf = to_pci_epf(dev);
+ 	struct pci_epf_driver *driver = to_pci_epf_driver(dev->driver);
++	const struct pci_epf_device_id *id;
+ 
+ 	if (!driver->probe)
+ 		return -ENODEV;
+ 
+ 	epf->driver = driver;
++	id = pci_epf_match_id(driver->id_table, epf);
+ 
+-	return driver->probe(epf);
++	return driver->probe(epf, id);
+ }
+ 
+ static void pci_epf_device_remove(struct device *dev)
+diff --git a/include/linux/pci-epf.h b/include/linux/pci-epf.h
+index a215dc8ce693..bc613f0df7e3 100644
+--- a/include/linux/pci-epf.h
++++ b/include/linux/pci-epf.h
+@@ -89,7 +89,7 @@ struct pci_epc_event_ops {
+  * @id_table: identifies EPF devices for probing
+  */
+ struct pci_epf_driver {
+-	int	(*probe)(struct pci_epf *epf);
++	int	(*probe)(struct pci_epf *epf, const struct pci_epf_device_id *id);
+ 	void	(*remove)(struct pci_epf *epf);
+ 
+ 	struct device_driver	driver;
+@@ -131,6 +131,7 @@ struct pci_epf_bar {
+  * @epc: the EPC device to which this EPF device is bound
+  * @epf_pf: the physical EPF device to which this virtual EPF device is bound
+  * @driver: the EPF driver to which this EPF device is bound
++ * @id: Pointer to the EPF device ID
+  * @list: to add pci_epf as a list of PCI endpoint functions to pci_epc
+  * @lock: mutex to protect pci_epf_ops
+  * @sec_epc: the secondary EPC device to which this EPF device is bound
+@@ -158,6 +159,7 @@ struct pci_epf {
+ 	struct pci_epc		*epc;
+ 	struct pci_epf		*epf_pf;
+ 	struct pci_epf_driver	*driver;
++	const struct pci_epf_device_id *id;
+ 	struct list_head	list;
+ 	/* mutex to protect against concurrent access of pci_epf_ops */
+ 	struct mutex		lock;
 -- 
 2.25.1
 
