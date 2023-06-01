@@ -2,152 +2,116 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B4F719AD0
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jun 2023 13:17:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68432719F23
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jun 2023 16:07:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232375AbjFALRg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jun 2023 07:17:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34964 "EHLO
+        id S233018AbjFAOHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jun 2023 10:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230222AbjFALRe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 07:17:34 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9442F123;
-        Thu,  1 Jun 2023 04:17:33 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id 98e67ed59e1d1-256422ad25dso220377a91.0;
-        Thu, 01 Jun 2023 04:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685618253; x=1688210253;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3KLMivggFERHTUQ4oKDCdCn/4yto409QZ31zuIfVcxw=;
-        b=MeUm9YdyFvQ+EmzMauQm3DwWlQ0uGm51kMyqs4PhBgH/mijyrQiG2NopdYymwRbJxY
-         WBb3Tf1Ln6XZqKWhH5S7yQhGi9LLiabQOTeQ8Pbm6c1NX2Xy4WY3/v4jgXe5Wm7qcbDH
-         yEY3HNSHJGimYiFdpPz7nmg67nUmGWb4PamYB7ge/Vdfq0ytqPkY0wlqmD8GxJ3QU2ha
-         YMgYHSJ7Qpd2tGHgPxbotFgYnGiJWb6n/hwdCwf80mscrhqXd4SxH5LEbISu95zojTnv
-         WNtxh7RS0s5xKaXlqlboISfHSVYLF8kc+uAACZeNu+Oizk+CGC+kRe6EXEKAHfyfkH5e
-         ZLFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685618253; x=1688210253;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3KLMivggFERHTUQ4oKDCdCn/4yto409QZ31zuIfVcxw=;
-        b=RcCHXsj7SADJjX8LoYm8YZ6XSsyAKEX80PbN+8tjRUAXmFv8b0WFJactfdjnSTJymo
-         1qEWsxAl2RhgT8ZNTTLv9S11j06hTGI8HJlLXQf4br9QCcXSuum0HYRg8vM/iwU1x29z
-         seYB1oPre0yXKkGQ1Ok7BJa57By6vwZjH6QelFu1OOhozVLmgs3bhNTEt/7qPxTTi1nT
-         05Vu4RlEgSGYkoaJ6cd9SP0mNFUUBDLENKic/FoyAXJ2W0iW09vwd1xg/cY764mmOOQf
-         6TPTcaDW56Yj/SG7t709tWa3ATgRFOjQRmypeYBOLsHag0iYVa3i5QZWRon8jInf16tI
-         z+/A==
-X-Gm-Message-State: AC+VfDxLWwLoXQEaH63HYCU/AZNlNMQyR6MmfbRvbIXj0hkzZAAuHw4I
-        YuPFuzlA9KjC4jUByC1U6Ulu4Zq5vkLZUTVsVE0=
-X-Google-Smtp-Source: ACHHUZ7nalKosql0wqoA6eLZQyCHzFFB2nLyOpniZjsGzpomunYZZ7UC7Kcp/mX27yNINR6qH69ddmRyUjrovwtppOk=
-X-Received: by 2002:a17:90a:9f01:b0:253:50d0:a39d with SMTP id
- n1-20020a17090a9f0100b0025350d0a39dmr5508485pjp.48.1685618252985; Thu, 01 Jun
- 2023 04:17:32 -0700 (PDT)
+        with ESMTP id S233416AbjFAOHH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 10:07:07 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A913199;
+        Thu,  1 Jun 2023 07:07:01 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4QX7F664D3z6D8W5;
+        Thu,  1 Jun 2023 22:05:14 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Thu, 1 Jun
+ 2023 15:06:58 +0100
+Date:   Thu, 1 Jun 2023 15:06:58 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Terry Bowman <terry.bowman@amd.com>
+CC:     <alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+        <ira.weiny@intel.com>, <bwidawsk@kernel.org>,
+        <dan.j.williams@intel.com>, <dave.jiang@intel.com>,
+        <linux-cxl@vger.kernel.org>, <rrichter@amd.com>,
+        <linux-kernel@vger.kernel.org>, <bhelgaas@google.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH v4 22/23] PCI/AER: Forward RCH downstream port-detected
+ errors to the CXL.mem dev handler
+Message-ID: <20230601150658.000021d4@Huawei.com>
+In-Reply-To: <20230523232214.55282-23-terry.bowman@amd.com>
+References: <20230523232214.55282-1-terry.bowman@amd.com>
+        <20230523232214.55282-23-terry.bowman@amd.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-References: <CAOiHx==5YWhDiZP2PyHZiJrmtqRzvqCqoSO59RwuYuR85BezBg@mail.gmail.com>
- <ZHe8dKb3f392MfBO@bhelgaas>
-In-Reply-To: <ZHe8dKb3f392MfBO@bhelgaas>
-From:   Jonas Gorski <jonas.gorski@gmail.com>
-Date:   Thu, 1 Jun 2023 13:17:21 +0200
-Message-ID: <CAOiHx=nTgtnfUqRDJR0yFP0du3Yvs73PkEUR_1eb+1gtbDBM-g@mail.gmail.com>
-Subject: Re: [PATCH v8 0/7] Add pci_dev_for_each_resource() helper and update users
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Andrew Lunn <andrew@lunn.ch>, sparclinux@vger.kernel.org,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-acpi@vger.kernel.org, Miguel Ojeda <ojeda@kernel.org>,
-        xen-devel@lists.xenproject.org, Matt Turner <mattst88@gmail.com>,
-        Anatolij Gustschin <agust@denx.de>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        =?UTF-8?Q?Philippe_Mathieu=2DDaud=C3=A9?= <philmd@linaro.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-mips@vger.kernel.org,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        linux-alpha@vger.kernel.org,
-        =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Maciej W. Rozycki" <macro@orcam.me.uk>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml500002.china.huawei.com (7.191.160.78) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 31 May 2023 at 23:30, Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, May 31, 2023 at 08:48:35PM +0200, Jonas Gorski wrote:
-> > ...
->
-> > Looking at the code I understand where coverity is coming from:
-> >
-> > #define __pci_dev_for_each_res0(dev, res, ...)                         \
-> >        for (unsigned int __b = 0;                                      \
-> >             res = pci_resource_n(dev, __b), __b < PCI_NUM_RESOURCES;   \
-> >             __b++)
-> >
-> >  res will be assigned before __b is checked for being less than
-> > PCI_NUM_RESOURCES, making it point to behind the array at the end of
-> > the last loop iteration.
-> >
-> > Rewriting the test expression as
-> >
-> > __b < PCI_NUM_RESOURCES && (res = pci_resource_n(dev, __b));
-> >
-> > should avoid the (coverity) warning by making use of lazy evaluation.
-> >
-> > It probably makes the code slightly less performant as res will now be
-> > checked for being not NULL (which will always be true), but I doubt it
-> > will be significant (or in any hot paths).
->
-> Thanks a lot for looking into this!  I think you're right, and I think
-> the rewritten expression is more logical as well.  Do you want to post
-> a patch for it?
+On Tue, 23 May 2023 18:22:13 -0500
+Terry Bowman <terry.bowman@amd.com> wrote:
 
-Not sure when I'll come around to, so I have no strong feeling here.
-So feel free to just borrow my suggestion, especially since I won't be
-able to test it (don't have a kernel tree ready I can build and boot).
+> From: Robert Richter <rrichter@amd.com>
+> 
+> In Restricted CXL Device (RCD) mode a CXL device is exposed as an
+> RCiEP, but CXL downstream and upstream ports are not enumerated and
+> not visible in the PCIe hierarchy. Protocol and link errors are sent
+> to an RCEC.
+> 
+> Restricted CXL host (RCH) downstream port-detected errors are signaled
+> as internal AER errors, either Uncorrectable Internal Error (UIE) or
+> Corrected Internal Errors (CIE). The error source is the id of the
+> RCEC. A CXL handler must then inspect the error status in various CXL
+> registers residing in the dport's component register space (CXL RAS
+> capability) or the dport's RCRB (PCIe AER extended capability). [1]
+> 
+> Errors showing up in the RCEC's error handler must be handled and
+> connected to the CXL subsystem. Implement this by forwarding the error
+> to all CXL devices below the RCEC. Since the entire CXL device is
+> controlled only using PCIe Configuration Space of device 0, function
+> 0, only pass it there [2]. The error handling is limited to currently
+> supported devices with the Memory Device class code set
+> (PCI_CLASS_MEMORY_CXL, 502h), where the handler can be implemented in
+> the existing cxl_pci driver. Support of CXL devices (e.g. a CXL.cache
+> device) can be enabled later.
+> 
+> In addition to errors directed to the CXL endpoint device, a handler
+> must also inspect the CXL RAS and PCIe AER capabilities of the CXL
+> downstream port that is connected to the device.
+> 
+> Since CXL downstream port errors are signaled using internal errors,
+> the handler requires those errors to be unmasked. This is subject of a
+> follow-on patch.
+> 
+> The reason for choosing this implementation is that a CXL RCEC device
+> is bound to the AER port driver, but the driver does not allow it to
+> register a custom specific handler to support CXL. Connecting the RCEC
+> hard-wired with a CXL handler does not work, as the CXL subsystem
+> might not be present all the time. The alternative to add an
+> implementation to the portdrv to allow the registration of a custom
+> RCEC error handler isn't worth doing it as CXL would be its only user.
+> Instead, just check for an CXL RCEC and pass it down to the connected
+> CXL device's error handler. With this approach the code can entirely
+> be implemented in the PCIe AER driver and is independent of the CXL
+> subsystem. The CXL driver only provides the handler.
+> 
+> [1] CXL 3.0 spec, 12.2.1.1 RCH Downstream Port-detected Errors
+> [2] CXL 3.0 spec, 8.1.3 PCIe DVSEC for CXL Devices
+> 
+> Co-developed-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Terry Bowman <terry.bowman@amd.com>
+> Signed-off-by: Robert Richter <rrichter@amd.com>
+> Cc: "Oliver O'Halloran" <oohall@gmail.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pci@vger.kernel.org
+> ---
+Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-Also looking more closely at the Coverity output, I think it might not
-handle the comma operator well in the loop condition:
-
->          11. incr: Incrementing __b. The value of __b may now be up to 17.
->          12. alias: Assigning: r = &pdev->resource[__b]. r may now point to as high as element 17 of pdev->resource (which consists of 17 64-byte elements).
->          13. Condition __b < PCI_NUM_RESOURCES, taking true branch.
->          14. Condition (r = &pdev->resource[__b]) , (__b < PCI_NUM_RESOURCES), taking true branch.
-
-13 If __b is 17 ( = PCI_NUM_RESOURCES) we wouldn't taking the true
-branch, but somehow Coverity thinks that we do. No idea if it is worth
-reporting to Coverity.
-
-The changed condition statement should hopefully silence the warning though.
-
-Regards
-Jonas
