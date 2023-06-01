@@ -2,112 +2,194 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 220BB7191AB
-	for <lists+linux-pci@lfdr.de>; Thu,  1 Jun 2023 06:19:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECB527192F0
+	for <lists+linux-pci@lfdr.de>; Thu,  1 Jun 2023 08:04:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229562AbjFAETW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 1 Jun 2023 00:19:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60688 "EHLO
+        id S229689AbjFAGEU (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 1 Jun 2023 02:04:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36848 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230387AbjFAETU (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 00:19:20 -0400
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5CC123;
-        Wed, 31 May 2023 21:19:18 -0700 (PDT)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-96f7377c86aso44465566b.1;
-        Wed, 31 May 2023 21:19:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685593157; x=1688185157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FuhgxPXicpi9bptXsF+r9ZkKydiyiuwfFbVWLA6m4U8=;
-        b=iEO11g7ZIdIY3ags8hV0W4asSjRwTLTe2835JA9S4LrFS89FWTZCnZ8Z/RzHxYmTYO
-         zKuy9u6GTcRFjnrIz88CVavzdM5pY9/ourVw8SZdOrioCGmb9V6Id1beACXgSrnhuCG2
-         H/bR27HrFvf12JTzCmFUgfkSJD2IlIZueJQC4gis8AYSmxuC9PdgQ62PkYwXdTi5Kd/H
-         tsCPnOKhuOVJeJ1ZpziDSIW3Uv8BkyhZiZCbOwRhAJ1mCuNl5jBYq0XQSCupv65Q/5te
-         EoKgOobhj7mE8vS0ywmZ1IrrJVjHUGwtixvPbDDBHiImyFr+h087dtUNYIDYMKXtuzCp
-         DI8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685593157; x=1688185157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FuhgxPXicpi9bptXsF+r9ZkKydiyiuwfFbVWLA6m4U8=;
-        b=XlQcxr9Y2XmnNz1LsOIRzODRocsi+oxAVpatv8z/msPbGyI7jGuWY7gONUQ5kRqIkA
-         nNlVyuXifbtCnVthgKoSedaFt+gpzbV5jKzYnDDfptfXsktNqnCiRzdHNN09PuX4jG5q
-         zQLmDLcS0hLYd9p25eSYAjwmDm70iaVlMdW9TaMNXBzkBskc93lWgDbCwwEO/ZqqRh6r
-         c08L+SeNxJ3m5UQiT+GNF6wwWHIeLoYkc4+8oJuJP+9/rQz2jTfbbnvSi3Si8NBLwrme
-         dLvvSV21KcHlV9FovrS3zUfCosZsWWMfMjfDhppzgJQzjpCD0Q+gvZEsZhQjiolW+m72
-         CtmA==
-X-Gm-Message-State: AC+VfDxFN8AaIzH16MOnWDTPNlQCDuN4dncl9vH7GIxGtepe0cgUPrs/
-        22U64fD/fn3KNlspaflE7mDh3+F1eg29GnbUSRo=
-X-Google-Smtp-Source: ACHHUZ73fa6Q0MXdWs1vW7wajfB8wzVAAd1UQPUi8QjdruZqa0vetFOff995iwrUE3N/d08WyKbjr7KSsxQoSVSAUMY=
-X-Received: by 2002:a17:907:86a9:b0:961:a67:28d with SMTP id
- qa41-20020a17090786a900b009610a67028dmr7893146ejc.22.1685593156524; Wed, 31
- May 2023 21:19:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230524093623.3698134-1-chenhuacai@loongson.cn>
- <ZG4rZYBKaWrsctuH@bhelgaas> <CAAhV-H5u8qtXpr-mY+pKq7UfmyBgr3USRTQpo9-w28w8pHX8QQ@mail.gmail.com>
- <20230528165738.GF2814@thinkpad> <CAAhV-H5u0ibghgwbfJT1V_oWUWi0rie0NHWTSkpCVat3_ARvKw@mail.gmail.com>
- <20230529053919.GB2856@thinkpad> <CAAhV-H6EPkGJchA4pg=zctmmt=9LboaFqKhFgQxZKNxJxQVT7g@mail.gmail.com>
- <ZHeceyZ9eUC27WcE@ziepe.ca>
-In-Reply-To: <ZHeceyZ9eUC27WcE@ziepe.ca>
-From:   Huacai Chen <chenhuacai@gmail.com>
-Date:   Thu, 1 Jun 2023 12:19:04 +0800
-Message-ID: <CAAhV-H64NWn0gk6Y0gAHe+YUUuALPySgKPC1WR5faWihV_s5rQ@mail.gmail.com>
-Subject: Re: [PATCH] pci: irq: Add an early parameter to limit pci irq numbers
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Huacai Chen <chenhuacai@loongson.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Kevin Tian <kevin.tian@intel.com>, linux-pci@vger.kernel.org,
-        Jianmin Lv <lvjianmin@loongson.cn>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongson-kernel@lists.loongnix.cn,
-        Juxin Gao <gaojuxin@loongson.cn>,
-        Marc Zyngier <maz@kernel.org>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S229682AbjFAGET (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 1 Jun 2023 02:04:19 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DBB6E2
+        for <linux-pci@vger.kernel.org>; Wed, 31 May 2023 23:04:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1685599455; x=1717135455;
+  h=date:from:to:cc:subject:message-id;
+  bh=fuNvyid9kWrXHYNipttguZr9z5tHO+4xPIfyZLPJY64=;
+  b=dBDsgpBtdX0np3wpdqCc7IiT51sb3CnqzEOm35MuSTu+9nHmAi94E7CU
+   kCUpA3vTIFxS5vCkGNJBW7jeC78HP5L2X74kbGyfLBK8/DCjLdpC5CrMG
+   gun7hXPEpzuvCegVR20GHYfTvgtPvWhCFp8XXl1xINdxKjvoZ83Ic/9C9
+   VgMWVE+cNt+4xzgu2k6ff6Brw00xoyIo1FiMCWu2uBh4OM7wLV8UvtaLf
+   eKYt5eAO8pnFdEkMgXeQiSq+oyOg1YT+nitTTohEkzwlY4BOW2ezOawvW
+   xfyfXMsXvWX3QEen7bH7isbwgu8LCUDxBhGLEPTDO8Zc9jk43AW+Xmszf
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="355470515"
+X-IronPort-AV: E=Sophos;i="6.00,209,1681196400"; 
+   d="scan'208";a="355470515"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 May 2023 23:04:06 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10727"; a="684713731"
+X-IronPort-AV: E=Sophos;i="6.00,209,1681196400"; 
+   d="scan'208";a="684713731"
+Received: from lkp-server01.sh.intel.com (HELO fb1ced2c09fb) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 31 May 2023 23:04:05 -0700
+Received: from kbuild by fb1ced2c09fb with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q4bPo-0001yj-1L;
+        Thu, 01 Jun 2023 06:04:04 +0000
+Date:   Thu, 01 Jun 2023 14:03:32 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:misc] BUILD SUCCESS
+ 2aa5ac633259843f656eb6ecff4cf01e8e810c5e
+Message-ID: <20230601060332.v84qY%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Jason,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git misc
+branch HEAD: 2aa5ac633259843f656eb6ecff4cf01e8e810c5e  PCI: Add pci_clear_master() stub for non-CONFIG_PCI
 
-On Thu, Jun 1, 2023 at 3:14=E2=80=AFAM Jason Gunthorpe <jgg@ziepe.ca> wrote=
-:
->
-> On Mon, May 29, 2023 at 02:52:29PM +0800, Huacai Chen wrote:
->
-> > > But IMO what you are proposing seems like usecase driven and may not =
-work all
-> > > the time due to architecture limitation. This again proves that the e=
-xisting
-> > > solution is sufficient enough.
->
-> > Yes, it's a usecase driven solution, so I provide a cmdline parameter
-> > to let the user decide.
->
-> The NIC drivers should be consuming interrupts based on the number of
-> queues they are using, and that is something you can control from the
-> command line, eg ethtool IIRC. Usually it defaults to the number of
-> CPUs.
->
-> Basically, you want to enable the user to configure the system with a
-> user specified reduced number of NIC queues, and we already have way
-> to do that.
-Yes, ethtool is a possible way, thank you very much.
+elapsed time: 726m
 
-Huacai
->
-> Jason
+configs tested: 118
+configs skipped: 8
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r026-20230531   gcc  
+alpha                randconfig-r034-20230531   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r043-20230531   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r022-20230531   gcc  
+arm                  randconfig-r046-20230531   gcc  
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r002-20230531   gcc  
+arm64        buildonly-randconfig-r005-20230531   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r036-20230531   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r014-20230531   clang
+hexagon              randconfig-r015-20230531   clang
+hexagon              randconfig-r041-20230531   clang
+hexagon              randconfig-r045-20230531   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230531   gcc  
+i386                 randconfig-i002-20230531   gcc  
+i386                 randconfig-i003-20230531   gcc  
+i386                 randconfig-i004-20230531   gcc  
+i386                 randconfig-i005-20230531   gcc  
+i386                 randconfig-i006-20230531   gcc  
+i386                 randconfig-i011-20230531   clang
+i386                 randconfig-i012-20230531   clang
+i386                 randconfig-i013-20230531   clang
+i386                 randconfig-i014-20230531   clang
+i386                 randconfig-i015-20230531   clang
+i386                 randconfig-i016-20230531   clang
+i386                 randconfig-i051-20230531   gcc  
+i386                 randconfig-i052-20230531   gcc  
+i386                 randconfig-i053-20230531   gcc  
+i386                 randconfig-i054-20230531   gcc  
+i386                 randconfig-i055-20230531   gcc  
+i386                 randconfig-i056-20230531   gcc  
+i386                 randconfig-i061-20230531   gcc  
+i386                 randconfig-i062-20230531   gcc  
+i386                 randconfig-i063-20230531   gcc  
+i386                 randconfig-i064-20230531   gcc  
+i386                 randconfig-i065-20230531   gcc  
+i386                 randconfig-i066-20230531   gcc  
+i386                 randconfig-r003-20230531   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r001-20230531   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r002-20230531   gcc  
+loongarch            randconfig-r016-20230531   gcc  
+loongarch            randconfig-r024-20230531   gcc  
+m68k                             allmodconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r011-20230531   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                 randconfig-r001-20230531   clang
+nios2                               defconfig   gcc  
+openrisc             randconfig-r035-20230531   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc              randconfig-r021-20230531   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r042-20230531   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390         buildonly-randconfig-r003-20230531   clang
+s390         buildonly-randconfig-r006-20230531   clang
+s390                                defconfig   gcc  
+s390                 randconfig-r031-20230531   gcc  
+s390                 randconfig-r044-20230531   clang
+sh                               allmodconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r013-20230531   gcc  
+sparc64              randconfig-r012-20230531   gcc  
+sparc64              randconfig-r033-20230531   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r004-20230531   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230531   gcc  
+x86_64               randconfig-a002-20230531   gcc  
+x86_64               randconfig-a003-20230531   gcc  
+x86_64               randconfig-a004-20230531   gcc  
+x86_64               randconfig-a005-20230531   gcc  
+x86_64               randconfig-a006-20230531   gcc  
+x86_64               randconfig-a011-20230531   clang
+x86_64               randconfig-a012-20230531   clang
+x86_64               randconfig-a013-20230531   clang
+x86_64               randconfig-a014-20230531   clang
+x86_64               randconfig-a015-20230531   clang
+x86_64               randconfig-a016-20230531   clang
+x86_64               randconfig-x051-20230531   clang
+x86_64               randconfig-x052-20230531   clang
+x86_64               randconfig-x053-20230531   clang
+x86_64               randconfig-x054-20230531   clang
+x86_64               randconfig-x055-20230531   clang
+x86_64               randconfig-x056-20230531   clang
+x86_64               randconfig-x061-20230531   clang
+x86_64               randconfig-x062-20230531   clang
+x86_64               randconfig-x063-20230531   clang
+x86_64               randconfig-x064-20230531   clang
+x86_64               randconfig-x065-20230531   clang
+x86_64               randconfig-x066-20230531   clang
+x86_64                               rhel-8.3   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
