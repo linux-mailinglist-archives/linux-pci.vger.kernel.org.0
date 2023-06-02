@@ -2,241 +2,179 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA04371FB17
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 09:37:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E87F371FC57
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 10:45:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234400AbjFBHhT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 03:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42892 "EHLO
+        id S234740AbjFBIpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 04:45:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234326AbjFBHgw (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 03:36:52 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 9EF1B1B9;
-        Fri,  2 Jun 2023 00:36:22 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.116])
-        by gateway (Coremail) with SMTP id _____8AxXuv1m3lk1YsDAA--.3320S3;
-        Fri, 02 Jun 2023 15:36:21 +0800 (CST)
-Received: from [10.20.42.116] (unknown [10.20.42.116])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Dx_8vzm3lksIiFAA--.19512S3;
-        Fri, 02 Jun 2023 15:36:19 +0800 (CST)
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-To:     Liu Peibao <liupeibao@loongson.cn>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org, netdev@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
- <ZHjaq+TDW/RFcoxW@bhelgaas> <20230601221532.2rfcda4sg5nl7pzp@skbuf>
- <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
-Date:   Fri, 2 Jun 2023 15:36:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S234135AbjFBIpF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 04:45:05 -0400
+Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE41E67;
+        Fri,  2 Jun 2023 01:44:32 -0700 (PDT)
+Received: from [192.168.0.2] (ip5f5aebf4.dynamic.kabel-deutschland.de [95.90.235.244])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2F6E361EA1BFF;
+        Fri,  2 Jun 2023 10:43:27 +0200 (CEST)
+Message-ID: <577f38ed-8532-c32e-07bd-4a3b384d5fe8@molgen.mpg.de>
+Date:   Fri, 2 Jun 2023 10:43:27 +0200
 MIME-Version: 1.0
-In-Reply-To: <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: Use PME poll to circumvent
+ unreliable ACPI wake
 Content-Language: en-US
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Alexander H Duyck <alexander.duyck@gmail.com>
+Cc:     linux-pm@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, linux-pci@vger.kernel.org
+References: <20230601162537.1163270-1-kai.heng.feng@canonical.com>
+ <269262acfcce8eb1b85ee1fe3424a5ef2991f481.camel@gmail.com>
+ <CAAd53p7c6eEqxd3jecfgvpxuYO3nmmmovcqD=3PgbqSVCWFfxA@mail.gmail.com>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+In-Reply-To: <CAAd53p7c6eEqxd3jecfgvpxuYO3nmmmovcqD=3PgbqSVCWFfxA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8Dx_8vzm3lksIiFAA--.19512S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBjvJXoW3GFWxXF17Cr4UCF13Xr1kXwb_yoW3ArW3pF
-        W5ta92kF4DJF4aywnFvw45ury0yrWkJ3sxXrn8J34UC398ur1Sqr4xtr4j9a4Uur4kKw12
-        qFWrtryxCF4qyaDanT9S1TB71UUUUUDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bakYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
-        e2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2
-        IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4U
-        McvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62AI1cAE67vIY487Mx
-        AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1D
-        MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67
-        AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0
-        cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z2
-        80aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIF
-        yTuYvjxU7_MaUUUUU
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+[Cc: linux-pci@vger.kernel.org]
+
+Dear Kai,
 
 
-On 2023/6/2 下午3:21, Liu Peibao wrote:
-> Hi all,
+Thank you for your patch.
+
+Am 02.06.23 um 03:46 schrieb Kai-Heng Feng:
+> On Fri, Jun 2, 2023 at 4:24 AM Alexander H Duyck wrote:
+>>
+>> On Fri, 2023-06-02 at 00:25 +0800, Kai-Heng Feng wrote:
+>>> On some I219 devices, ethernet cable plugging detection only works once
+>>> from PCI D3 state. Subsequent cable plugging does set PME bit correctly,
+>>> but device still doesn't get woken up.
+
+Could you please add the list of all the devices with the firmware 
+version, you know this problem exists on? Please also add the URLs of 
+the bug reports at the end of the commit message.
+
+Is that problem logged somehow? Could a log message be added first?
+
+>> Do we have a root cause on why things don't get woken up? This seems
+>> like an issue where something isn't getting reset after the first
+>> wakeup and so future ones are blocked.
 > 
-> It seems that modification for current PCI enumeration framework is
-> needed to solve the problem. If the effect of this modification is not
-> easy to evaluate, for the requirement of Loongson, it should be OK that
-> do the things in Loongson PCI controller driver like discussed
-> before[1].
-> 
-> Br,
-> Peibao
-> 
-> [1] https://lore.kernel.org/all/20221114074346.23008-1-liupeibao@loongson.cn/
-> 
+> No we don't know the root cause.
+> I guess the D3 wake isn't really tested under Windows because I219
+> doesn't use runtime D3 on Windows.
 
-Agree. For current pci core code, all functions of the device will be 
-skipped if function 0 is not found, even without the patch 6fffbc7ae137 
-(e.g. the func 0 is disabled in bios by setting pci header to 
-0xffffffff). So it seems that there are two ways for the issue:
+How do you know? Where you able to look at the Microsoft Windows driver 
+source code?
 
-1. Adjust the pci scan core code to allow separate function to be 
-enumerated, which will affect widely the pci core code.
-2. Only Adjust loongson pci controller driver as Peibao said, and any 
-function of the device should use platform device in DT if function 0 is 
-disabled, which is acceptable for loongson.
-
-Thanks,
-Jianmin
-
-> On 6/2/23 6:15 AM, Vladimir Oltean wrote:
->> On Thu, Jun 01, 2023 at 12:51:39PM -0500, Bjorn Helgaas wrote:
->>>>> Doing it in Linux would minimize dependences on the bootloader, so
->>>>> that seems desirable to me. That means Linux needs to enumerate
->>>>> Function 0 so it is visible to a driver or possibly a quirk.
->>>>
->>>> Uhm... no, that wouldn't be enough. Only a straight revert would satisfy
->>>> the workaround that we currently have for NXP ENETC in Linux.
+>>> Since I219 connects to the root complex directly, it relies on platform
+>>> firmware (ACPI) to wake it up. In this case, the GPE from _PRW only
+>>> works for first cable plugging but fails to notify the driver for
+>>> subsequent plugging events.
 >>>
->>> I guess you mean a revert of 6fffbc7ae137?
->>
->> Yes.
->>
->>> This whole conversation is about whether we can rework 6fffbc7ae137 to
->>> work both for Loongson and for you, so nothing is decided yet.
->>
->> After reading
->> https://lore.kernel.org/linux-pci/20221117020935.32086-1-liupeibao@loongson.cn/
->> and
->> https://lore.kernel.org/linux-pci/20221103090040.836-1-liupeibao@loongson.cn/
->> and seeing the GMAC OF node at arch/mips/boot/dts/loongson/loongson64-2k1000.dtsi,
->> I believe that a solution that would work for both Loongson and NXP would be to:
->>
->> - patch loongson_dwmac_probe() to check for of_device_is_available()
->> - revert commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled
->>    status")
->>
->> I'm not sure what else of what was concretely proposed would work.
->> Anything else is just wishful thinking that the PCI core can start
->> enforcing a central policy, after letting device drivers get to choose
->> how (and whether) to treat the "status" OF property for years on end.
->>
->> As an added benefit, the disabled GMAC would become visible in lspci for
->> the Loongson SoC.
->>
->>> The point is, I assume you agree that it's preferable if we don't have
->>> to depend on a bootloader to clear the memory.
->>
->> I am confused by the message you are transmitting here.
->>
->> With my user hat on, yes, maintaining the effect of commit 3222b5b613db
->> from Linux is preferable.
->>
->> Although Rob will probably not be happy about the way in which that will
->> be achieved. And you haven't proposed ways in which that would remain
->> possible, short of a revert of commit 6fffbc7ae137.
->>
->>> After 6fffbc7ae137, the probe function is not called if the device is
->>> disabled in DT because there's no pci_dev for it at all.
->>
->> Correct, but commit 3222b5b613db pre-dates it by 2 years, and thus, it
->> is broken by Rob's change.
->>
->>>> My problem is that I don't really understand what was the functional
->>>> need for commit 6fffbc7ae137 ("PCI: Honor firmware's device disabled
->>>> status") in the first place, considering that any device driver can
->>>> already fail to probe based on the same condition at its own will.
->>>
->>> In general, PCI drivers shouldn't rely on DT.  If the bus driver (PCI
->>> in this case) calls a driver's probe function, the driver can assume
->>> the device exists.
->>
->> Well, the device exists...
->>
->>> But enetc is not a general-purpose driver, and if DT is the only way
->>> to discover this property, I guess you're stuck doing that.
->>
->> So what Loongson tried to do - break enumeration of the on-chip GMAC
->> PCIe device at the level of the PCIe controller, if the GMAC's pinmuxing
->> doesn't make it available for networking - is encouraged?
->>
->> Do you consider that their patch would have been better in the original
->> form, if instead of the "skip-scan" property, they would have built some
->> smarts into drivers/pci/controller/pci-loongson.c which would intentionally
->> break config space access to gmac@3,0, without requiring OF to specify this?
->>
->> Are you saying that this "present but unusable due to pinmuxing" is an
->> incorrect use of status = "disabled"? What would it constitute correct
->> use of, then?
->>
->> The analogous situation for ENETC would be to patch the "pci-host-ecam-generic"
->> driver to read the SERDES and pinmuxing configuration of the SoC, and to
->> mask/unmask the config access to function 0 based on that. I mean - I could...
->> but is it really a good idea? The principle of separation of concerns
->> tells me no. The fact that the pinmuxing of the device makes it unavailable
->> pertains to the IP-specific logic, it doesn't change whether it's enumerable
->> or accessible on its bus.
->>
->>>>> Is DT the only way to learn the NXP SERDES configuration?  I think it
->>>>> would be much better if there were a way to programmatically learn it,
->>>>> because then you wouldn't have to worry about syncing the DT with the
->>>>> platform configuration, and it would decouple this from the Loongson
->>>>> situation.
->>>>
->>>> Syncing the DT with the platform configuration will always be necessary,
->>>> because for networking we will also need extra information which is
->>>> completely non-discoverable, like a phy-handle or such, and that depends
->>>> on the wiring and static pinmuxing of the SoC. So it is practically
->>>> reasonable to expect that what is usable has status = "okay", and what
->>>> isn't has status = "disabled". Not to mention, there are already device
->>>> trees in circulation which are written that way, and those need to
->>>> continue to work.
->>>
->>> Just because we need DT for non-discoverable info A doesn't mean we
->>> should depend on it for B if B *is* discoverable.
->>
->> But the argument was: we already have device trees with a certain
->> convention, and that is to expect having status = "disabled" for
->> unusable ports. I don't believe that changing that is realistically in
->> scope for fixing this. And if we have device trees with status =
->> "disabled" in circulation which we (I) don't want to break, then we're
->> back to square 1 regarding the probing of disabled devices.
->>
->>> This question of disabling a device via DT but still needing to do
->>> things to the device is ... kind of a sticky wicket.
->>
->> It boils down to whether accessing a disabled device is permitted or
->> not. I opened the devicetree specification and it didn't say anything
->> conclusive. Though it's certainly above my pay grade to say anything
->> with certainty in this area. Apart from "okay" and "disabled", "status"
->> takes other documented values too, like "reserved", "fail" and
->> "fail-sss". Linux treats everything that's not "okay" the same.
->> Krzysztof Kozlowski came with the suggestion for Loongson to replace
->> "skip-scan" with "status", during the review of their v1 patch.
->>
->> In any case, that question will only recur one level lower - in U-Boot,
->> where we make an effort to keep device trees in sync in Linux. Why would
->> U-Boot need to do things to a disabled device? :)
->>
->>> Maybe this should be a different DT property (not "status").  Then PCI
->>> enumeration could work normally and 6fffbc7ae137 wouldn't be in the
->>> way.
->>
->> I'm not quite sure where you're going with this. More concretely?
->>
+>>> The issue was originally found on CNP, but the same issue can be found
+>>> on ADL too. So workaround the issue by continuing use PME poll after
 
+The verb is spelled with a space: work around.
+
+>>> first ACPI wake. As PME poll is always used, the runtime suspend
+>>> restriction for CNP can also be removed.
+
+When was that restriction for CNP added?
+
+>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+>>> ---
+>>>   drivers/net/ethernet/intel/e1000e/netdev.c | 4 +++-
+>>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> index bd7ef59b1f2e..f0e48f2bc3a2 100644
+>>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+>>> @@ -7021,6 +7021,8 @@ static __maybe_unused int e1000e_pm_runtime_resume(struct device *dev)
+>>>        struct e1000_adapter *adapter = netdev_priv(netdev);
+>>>        int rc;
+>>>
+>>> +     pdev->pme_poll = true;
+>>> +
+>>>        rc = __e1000_resume(pdev);
+>>>        if (rc)
+>>>                return rc;
+>>
+>> Doesn't this enable this too broadly. I know there are a number of
+>> devices that run under the e1000e and I would imagine that we don't
+>> want them all running with "pme_poll = true" do we?
+> 
+> Whack a mole isn't scaling, either.
+> The generation between CNP and ADL are probably affected too.
+> 
+>> It seems like at a minimum we should only be setting this for specific
+>> platofrms or devices instead of on all of them.
+>>
+>> Also this seems like something we should be setting on the suspend side
+>> since it seems to be cleared in the wakeup calls.
+> 
+> pme_poll gets cleared on wakeup, and once it's cleared the device will
+> be removed from pci_pme_list.
+> 
+> To prevent that, reset pme_poll to true immediately on runtime resume.
+> 
+>> Lastly I am not sure the first one is necessarily succeeding. You might
+>> want to check the status of pme_poll before you run your first test.
+>> From what I can tell it looks like the initial state is true in
+>> pci_pm_init. If so it might be getting cleared after the first wakeup
+>> which is what causes your issues.
+> 
+> That's by design. pme_poll gets cleared when the hardware is capable
+> to signal wakeup via PME# or ACPI GPE. For detected hardwares, the
+> pme_poll will never be cleared.
+> So this becomes tricky for the issue, since the ACPI GPE works for
+> just one time, but never again.
+> 
+>>> @@ -7682,7 +7684,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>>
+>>>        dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_SMART_PREPARE);
+>>>
+>>> -     if (pci_dev_run_wake(pdev) && hw->mac.type != e1000_pch_cnp)
+>>> +     if (pci_dev_run_wake(pdev))
+>>>                pm_runtime_put_noidle(&pdev->dev);
+>>>
+>>>        return 0;
+>>
+>> I assume this is the original workaround that was put in to address
+>> this issue. Perhaps you should add a Fixes tag to this to identify
+>> which workaround this patch is meant to be replacing.
+> 
+> Another possibility is to remove runtime power management completely.
+> I wonder why Windows keep the device at D0 all the time?
+
+Who knows how to contact Intel’s driver developers for Microsoft Windows?
+
+> Can Linux align with Windows?
+
+Before deciding this, the power usage in the different states should be 
+measured.
+
+
+Kind regards,
+
+Paul
