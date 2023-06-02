@@ -2,157 +2,302 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B4407201F3
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 14:21:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18EDA7202A0
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 15:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235676AbjFBMVf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 08:21:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33442 "EHLO
+        id S235843AbjFBNHc (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 09:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235508AbjFBMVT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 08:21:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2491AD;
-        Fri,  2 Jun 2023 05:21:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4573164FD9;
-        Fri,  2 Jun 2023 12:21:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63064C433EF;
-        Fri,  2 Jun 2023 12:21:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685708467;
-        bh=PLdBfEClAMSly38pIj5EbZNFFoVKxAsoZhfeXQhzduA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=L1sdvIBBDriYTc0lag8r7w3THWmMo0Y5lCAZz/kfobeaQPaWnxiQZ3xyJd8vyt0dN
-         EG2ERiE/y7zFLcEsOJuLtfXnu3283Y4wIJCtt+gktxlKuyPsoo8jIJmRJ0lJMj1tD8
-         LDJWnR3fkz9ZVm3nnuAPWZLBQUt8/agkm08cJFwy/WaCjrGj4uIbQzdGhtlT2fMwpd
-         qFn6MVBebfAJcJ2pGcqrghuTogK8PPe4vZgnVW9dQ1Cd4zBeORfty6obIWl8EMdtEz
-         BPNi0BVkOxLfPAvjXF2aXqtk87CpZs5KwNOKta0qHTlIvxqJXwKgOfNtBQXXEet8Ej
-         EMEdzpGsIvePA==
-Message-ID: <7a4f4f8a-8edf-0ac4-2e9f-a341fd589e8e@kernel.org>
-Date:   Fri, 2 Jun 2023 21:21:03 +0900
+        with ESMTP id S235464AbjFBNHb (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 09:07:31 -0400
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3B58E40;
+        Fri,  2 Jun 2023 06:07:25 -0700 (PDT)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1q54Uy-0000CX-Jv; Fri, 02 Jun 2023 15:07:20 +0200
+Message-ID: <c7da7095-7d68-c65b-daf8-7eee43b79d53@leemhuis.info>
+Date:   Fri, 2 Jun 2023 15:07:19 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [RFC PATCH 1/3] PCI: endpoint: support an alignment aware
- map/unmaping
-Content-Language: en-US
-To:     Shunsuke Mie <mie@igel.co.jp>,
-        Kishon Vijay Abraham I <kvijayab@amd.com>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230113090350.1103494-1-mie@igel.co.jp>
- <20230113090350.1103494-2-mie@igel.co.jp>
- <e417f2c9-1fcb-cf57-3524-1408c9aae5fa@amd.com>
- <978b63ac-90b5-b909-d259-0668b77f1cc8@kernel.org>
- <8bc9affb-7b72-0495-16de-c0867a141f9f@igel.co.jp>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <8bc9affb-7b72-0495-16de-c0867a141f9f@igel.co.jp>
+Subject: Re: [regression] Bug 217218 - Trying to boot Linux version 6-2.2
+ kernel with Marvell SATA controller 88SE9235
+Content-Language: en-US, de-DE
+From:   Thorsten Leemhuis <regressions@leemhuis.info>
+To:     Robin Murphy <robin.murphy@arm.com>,
+        Linux regressions mailing list <regressions@lists.linux.dev>,
+        Jason Adriaanse <jason_a69@yahoo.co.uk>, hch@lst.de,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux.dev,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+References: <20230416065503.GB6410@lst.de>
+ <fc9f4cef-9426-c9d2-3c2c-3ce12fe5f6c3@yahoo.co.uk>
+ <5f37b0b0-6cb5-b210-a894-d1e91976126e@arm.com>
+ <2a699a99-545c-1324-e052-7d2f41fed1ae@yahoo.co.uk>
+ <07ee0cf7-a5c2-f87a-d627-8dd8fb082345@arm.com>
+ <9648f668-a3bc-3296-71d1-c91cd4c9980e@yahoo.co.uk>
+ <1539e760-392f-a33e-436e-bbf043e79bfc@arm.com>
+ <14f2b1ab-2c7c-fa4d-5854-3df08ac9feef@yahoo.co.uk>
+ <1928df45-7b56-a8a4-21b5-22e5d8ef95eb@leemhuis.info>
+ <9b602abc-37e9-f236-37ee-71bcf1b7ce66@arm.com>
+ <211f3938-2f93-cad7-a92b-821d3ac45b9e@leemhuis.info>
+In-Reply-To: <211f3938-2f93-cad7-a92b-821d3ac45b9e@leemhuis.info>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-7.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
-        RCVD_IN_DNSWL_HI,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1685711246;3491e0ec;
+X-HE-SMSGID: 1q54Uy-0000CX-Jv
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,T_SPF_HELO_TEMPERROR,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/2/23 18:42, Shunsuke Mie wrote:
-> Hi Damien,
-> 
-> On 2023/06/02 8:43, Damien Le Moal wrote:
->> On 6/2/23 00:06, Kishon Vijay Abraham I wrote:
->>> Hi Shunsuke,
+Christoph, could you do me a favor and...
+
+On 22.05.23 13:33, Linux regression tracking (Thorsten Leemhuis) wrote:
+> On 22.05.23 13:01, Robin Murphy wrote:
+>> On 2023-05-22 11:26, Linux regression tracking (Thorsten Leemhuis) wrote:
 >>>
->>> On 1/13/2023 2:33 PM, Shunsuke Mie wrote:
->>>> Add an align_mem operation to the EPC ops, which function is used to
->>>> pci_epc_map/unmap_addr(). These change to enable mapping for any alignment
->>>> restriction of EPC. The map function maps an aligned memory to include a
->>>> requested memory region.
->>> I'd prefer all the PCIe address alignment restriction be handled in the
->>> endpoint function drivers and not inside the core layer (esp in map and
->>> unmap calls).
->> That is a really *bad* idea ! Most function drivers should be able to work with
->> any EP controller hardware. Asking these drivers to support all the alignment
->> peculiarities of every possible EP controller is impossible.
+>>> I might be missing something, but it looks to me like this regression
+>>> was never fixed in mainline. Which is strange, as we apparently had a
+>>> patch from Robin that fixed the issue for the reporter.
+>>>
+>>> Did it fall through the cracks or what am I missing?
 >>
->>> IMO, get the pci address alignment restriction using pci_epc_features.
->>> And use a bigger size (based on alignment restriction) in
->>> pci_epc_mem_alloc_addr() and access the allocated window using an offset
->>> (based on alignment value). You can add separate helpers if required.
->> That is too simplistic and not enough. Example: Rick and I working on an nvme
->> function driver are facing a lot of issues with the EPC API for mem & mapping
->> management because we have 0 control over the PCI address that the host will
->> use. Alignment is all over the place, and the current EPC memory API
->> restrictions (window size limitations) make it impossible to transparently
->> handle all cases. We endup with NVMe command failures simply because of the API
->> limitations.
-> 
-> I think so to.
-> 
-> I'm also proposing virtio-console function driver[1]. I suppose the 
-> virtio function
-> driver and your nvme function driver are the same in that the spec is 
-> defined and
-> host side driver must work as is.
-> 
-> [1] 
-> https://lore.kernel.org/linux-pci/20230427104428.862643-4-mie@igel.co.jp/
-> 
+>> Strictly, the regression itself has not been fixed - I guess it does
+>> just about qualify since the rather-out-of-date
+>> Documentation/arch/x86/x86_64/boot-options.rst does still say that
+>> iommu=soft "can be used to prevent the usage of an available hardware
+>> IOMMU", and that seems to be what has stopped happening here.
 >>
->> And sure, we can modify that driver to better support the EP controller we are
->> using (rockchip). But we need to support other EP controllers as well. So API
->> changes are definitely needed. Working on that. That is not easy as the mapping
->> API and its semantic impacts data transfers (memcpy_from|toio and DMA).
+>> What it exposed was a latent issue that this particular device has never
+>> been properly supported for use with an IOMMU, and that's what I guessed
+>> at a fix for.
+> 
+> Thx for the summary. This sounds a lot like you have no interest in
+> submitting the quirk entry yourself (please correct me if I'm wrong).
+> Jason from looking at lore doesn't seem to be involved in kernel
+> development regularly. And I try to stay out of such waters as well, as
+> I try to draw a line there. Which leads to the question:
+> 
+> Who will now submit the quirk entry?
+> 
+> From "git blame" it seems Bjorn and Alex added most of the other quirk
+> entries for the marvel controllers (both CCed now). Could one of you add
+> this one that Ron suggested in [1] as well?
+
+...submit that quirk, as Bjorn and Alex apparently didn't pick this up?
+I could do so myself, but prefer to leave that to people that actually
+known what they are doing -- and thus can also handle problems later, in
+case any show up. And strictly speaking it apparently was you who caused
+this regression with 78013eaadf6 ("x86: remove the IOMMU table
+infrastructure").
+
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
+
+#regzbot poke
+
+> /me wonders if they'd need a "Signed-off-by" from Ron for a one-liner
+> that is mainly copy-n-paste
+> 
+> Ciao, Thorsten
+> 
+> [1]
+> https://lore.kernel.org/all/1539e760-392f-a33e-436e-bbf043e79bfc@arm.com/
+> 
+>>> On 25.04.23 15:58, Jason Adriaanse wrote:
+>>>> I am happy to report that the change worked, this is what
+>>>> drivers/pci/quirks.c looks like
+>>>>
+>>>> /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+>>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>>>>                           quirk_dma_func1_alias);
+>>>> /* https://bugzilla.kernel.org/show_bug.cgi?id=217218 */
+>>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>>>>                           quirk_dma_func1_alias);
+>>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>>>>                           quirk_dma_func1_alias);
+>>>>
+>>>> Relevant output of dmesg -T with the new kernel running
+>>>>
+>>>> Tue Apr 25 21:45:13 2023] scsi host0: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host1: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host2: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host3: ahci
+>>>> [Tue Apr 25 21:45:13 2023] ata1: SATA max UDMA/133 abar m2048@0xf7d06000
+>>>> port 0xf7d06100 irq 40
+>>>> [Tue Apr 25 21:45:13 2023] ata2: SATA max UDMA/133 abar m2048@0xf7d06000
+>>>> port 0xf7d06180 irq 40
+>>>> [Tue Apr 25 21:45:13 2023] ata3: DUMMY
+>>>> [Tue Apr 25 21:45:13 2023] ata4: DUMMY
+>>>> [Tue Apr 25 21:45:13 2023] igb 0000:05:00.0 enp5s0: renamed from eth0
+>>>> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: AHCI 0001.0000 32 slots 4
+>>>> ports 6 Gbps 0xf impl SATA mode
+>>>> [Tue Apr 25 21:45:13 2023] ahci 0000:07:00.0: flags: 64bit ncq sntf led
+>>>> only pmp fbs pio slum part sxs
+>>>> [Tue Apr 25 21:45:13 2023] scsi host4: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host5: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host6: ahci
+>>>> [Tue Apr 25 21:45:13 2023] scsi host7: ahci
+>>>> [Tue Apr 25 21:45:13 2023] ata5: SATA max UDMA/133 abar m2048@0xf7b10000
+>>>> port 0xf7b10100 irq 41
+>>>> [Tue Apr 25 21:45:13 2023] ata6: SATA max UDMA/133 abar m2048@0xf7b10000
+>>>> port 0xf7b10180 irq 41
+>>>> [Tue Apr 25 21:45:13 2023] ata7: SATA max UDMA/133 abar m2048@0xf7b10000
+>>>> port 0xf7b10200 irq 41
+>>>> [Tue Apr 25 21:45:13 2023] ata8: SATA max UDMA/133 abar m2048@0xf7b10000
+>>>> port 0xf7b10280 irq 41
+>>>> [Tue Apr 25 21:45:13 2023] usb 1-1: new high-speed USB device number 2
+>>>> using ehci-pci
+>>>> [Tue Apr 25 21:45:14 2023] usb 3-1: new high-speed USB device number 2
+>>>> using ehci-pci
+>>>> [Tue Apr 25 21:45:14 2023] ata8: SATA link up 6.0 Gbps (SStatus 133
+>>>> SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] ata6: SATA link up 6.0 Gbps (SStatus 133
+>>>> SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] ata7: SATA link up 6.0 Gbps (SStatus 133
+>>>> SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] ata5: SATA link up 6.0 Gbps (SStatus 133
+>>>> SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] ata7.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>>> 80.00A80, max UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata6.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>>> 80.00A80, max UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata8.00: ATA-9: WDC WD40EFRX-68WT0N0,
+>>>> 80.00A80, max UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata5.00: ATA-10: CT2000BX500SSD1, M6CR030,
+>>>> max UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata6.00: 7814037168 sectors, multi 0: LBA48
+>>>> NCQ (depth 32), AA
+>>>> [Tue Apr 25 21:45:14 2023] ata7.00: 7814037168 sectors, multi 0: LBA48
+>>>> NCQ (depth 32), AA
+>>>> [Tue Apr 25 21:45:14 2023] ata8.00: 7814037168 sectors, multi 0: LBA48
+>>>> NCQ (depth 32), AA
+>>>> [Tue Apr 25 21:45:14 2023] ata5.00: 3907029168 sectors, multi 1: LBA48
+>>>> NCQ (depth 32), AA
+>>>> [Tue Apr 25 21:45:14 2023] ata6.00: configured for UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata7.00: configured for UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata8.00: configured for UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] ata1: SATA link down (SStatus 0 SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] ata5.00: Features: Dev-Sleep
+>>>> [Tue Apr 25 21:45:14 2023] ata5.00: configured for UDMA/133
+>>>> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device found, idVendor=8087,
+>>>> idProduct=0024, bcdDevice= 0.00
+>>>> [Tue Apr 25 21:45:14 2023] usb 1-1: New USB device strings: Mfr=0,
+>>>> Product=0, SerialNumber=0
+>>>> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: USB hub found
+>>>> [Tue Apr 25 21:45:14 2023] hub 1-1:1.0: 4 ports detected
+>>>> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device found, idVendor=8087,
+>>>> idProduct=0024, bcdDevice= 0.00
+>>>> [Tue Apr 25 21:45:14 2023] usb 3-1: New USB device strings: Mfr=0,
+>>>> Product=0, SerialNumber=0
+>>>> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: USB hub found
+>>>> [Tue Apr 25 21:45:14 2023] hub 3-1:1.0: 6 ports detected
+>>>> [Tue Apr 25 21:45:14 2023] ata2: SATA link down (SStatus 0 SControl 300)
+>>>> [Tue Apr 25 21:45:14 2023] scsi 4:0:0:0: Direct-Access ATA
+>>>> CT2000BX500SSD1  030  PQ: 0 ANSI: 5
+>>>> [Tue Apr 25 21:45:14 2023] scsi 5:0:0:0: Direct-Access ATA      WDC
+>>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>>> [Tue Apr 25 21:45:14 2023] scsi 6:0:0:0: Direct-Access ATA      WDC
+>>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>>> [Tue Apr 25 21:45:14 2023] scsi 7:0:0:0: Direct-Access ATA      WDC
+>>>> WD40EFRX-68W 0A80 PQ: 0 ANSI: 5
+>>>>
+>>>> Thanks everyone for all your help.
+>>>>
+>>>> Jason
+>>>>
+>>>>
+>>>> On 25/04/2023 19:37, Robin Murphy wrote:
+>>>>> On 2023-04-25 05:17, Jason Adriaanse wrote:
+>>>>>> Ok great,
+>>>>>>
+>>>>>> I take it a change needs to be made in
+>>>>>> drivers/pci/quirks.c
+>>>>>> ?
+>>>>>> I do not mind making the change locally here and letting you know if
+>>>>>> it works or not.
+>>>>>
+>>>>> Indeed, something like this (make sure the IDs actually match what your
+>>>>> device reports, I'm just guessing):
+>>>>>
+>>>>>
+>>>>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+>>>>> index 44cab813bf95..a9166e886b75 100644
+>>>>> --- a/drivers/pci/quirks.c
+>>>>> +++ b/drivers/pci/quirks.c
+>>>>> @@ -4161,6 +4161,8 @@
+>>>>> DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9220,
+>>>>>   /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c49 */
+>>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9230,
+>>>>>                quirk_dma_func1_alias);
+>>>>> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9235,
+>>>>> +             quirk_dma_func1_alias);
+>>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0642,
+>>>>>                quirk_dma_func1_alias);
+>>>>>   DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_TTI, 0x0645,
+>>>>>
+>>>>>
+>>>>> Marvell themselves seem to lump the 88SE92xx products together as a
+>>>>> closely-related family, so given that we do have quirks for 3 of the 4
+>>>>> already, this one does rather seem conspicuous by its absence...
+>>>>>
+>>>>> Thanks,
+>>>>> Robin.
+>>>>>
+>>>>>> On 24/04/2023 22:07, Robin Murphy wrote:
+>>>>>>> On 2023-04-24 14:44, Jason Adriaanse wrote:
+>>>>>>>> I took out "iommu=soft" and the server failed to boot, so yes it
+>>>>>>>> does break.
+>>>>>>>>
+>>>>>>>> The first error was
+>>>>>>>> ata7.00: Failed to IDENTIFY (INIT_DEV_PARAMS failed , err_mask=0x80)
+>>>>>>>
+>>>>>>> OK, great, that confirms the underlying issue existed all along, so
+>>>>>>> the regression is only a change in who wins a fight between certain
+>>>>>>> conflicting command-line arguments, which is arguably not so
+>>>>>>> critical.
+>>>>>>>
+>>>>>>> The rest of the evidence points to 88SE9235 wanting the same phantom
+>>>>>>> function quirk as most other Marvell controllers, since although
+>>>>>>> it's apparently been half-fixed such that DMA for two of the ports
+>>>>>>> is being correctly emitted from function 0 - given that you say two
+>>>>>>> of the disks *are* detected OK - the other two are still claiming to
+>>>>>>> be function 1 after all.
+>>>>>>>
+>>>>>>> Thanks,
+>>>>>>> Robin.
+>>>>>>>
+>>>>>>>> On 24/04/2023 21:20, Robin Murphy wrote:
+>>>>>>>>> On 2023-04-22 07:25, Jason Adriaanse wrote:
+>>>>>>>>>> Hi Christoph,
+>>>>>>>>>>
+>>>>>>>>>> Sorry for my late reply, I have been on the road.
+>>>>>>>>>>
+>>>>>>>>>> So, if I boot with
+>>>>>>>>>> intel_iommu=off
+>>>>>>>>>> Then the server boots fine..although that is not a solution
+>>>>>>>>>> because I need Intel iommu for virtualisation.
+>>>>>>>>>>
+>>>>>>>>>> Also, I build all my kernels with CONFIG_INTEL_IOMMU=y
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> If you boot 5.15 *without* the "iommu=soft" argument, just
+>>>>>>>>> "intel_iommu=on", does that also break?
+>>>>>>>>>
+>>>>>>>>> Robin.
+>>>>
+>>>>
 >>
->> I do have a patch that does something similar as this one, but at a much higher
->> level with a helper function that gives the function driver the offset into the
->> allocated memory region to use for mapping a particular PCI address. And then
->> this helper is then in turn used into a new pci_epc_map() function which does
->> mem alloc + mapping in one go based on the EPC constraints. That hides all
->> alignment details to the function drivers, which greatlyu simplyfies the code.
->> But that is not enough as alignment also implies that we have to deal with
->> boundaries (due to limited window size) and so sometimes endpu failing a mapping
->> that is too large because the host used a PCI address close to the boundary.
->> More work is needed to have pci_epc_map() also hide that with tricks like
->> allowing the allocation and mapping of multiple contiguous windows. So EPC ops
->> API changes are also needed.
-> 
-> Could you submit the your changes if you can?
-> 
-> I'd like to solve the current EPC limitation for the mapping in a better 
-> way and avoid doing similar work.
-
-Will try to cleanup my patches and send an RFC next week. Need to rebase,
-cleanup etc. Not sure I can make it soon as I am busy with other things for 6.5
-right now.
-
-You can have a look at the work in progress here:
-
-https://github.com/damien-lemoal/linux/tree/rockpro64_ep_v21
-
-There are a bunch of epf and epc core patches as well as some rockchip driver
-patches. The first half of the patches on top of Linus 6.3 tag patch are already
-in pci-next.
-
-
--- 
-Damien Le Moal
-Western Digital Research
-
+>>
