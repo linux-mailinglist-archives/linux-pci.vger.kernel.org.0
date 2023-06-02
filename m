@@ -2,121 +2,146 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id CA5877209AC
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 21:19:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 653B2720A2F
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 22:21:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237159AbjFBTTi (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 15:19:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33376 "EHLO
+        id S235481AbjFBUVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 16:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237172AbjFBTTh (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 15:19:37 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A96EE1BF;
-        Fri,  2 Jun 2023 12:19:35 -0700 (PDT)
+        with ESMTP id S231676AbjFBUVW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 16:21:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0621F1B5;
+        Fri,  2 Jun 2023 13:21:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 351ED6123C;
-        Fri,  2 Jun 2023 19:19:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 657E9C433EF;
-        Fri,  2 Jun 2023 19:19:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C7D660C55;
+        Fri,  2 Jun 2023 20:21:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B27C433D2;
+        Fri,  2 Jun 2023 20:21:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685733574;
-        bh=2DysCi0izWWkAAQmUSsVWD5RYIHiULBjqxwGXFltK9o=;
+        s=k20201202; t=1685737276;
+        bh=gy+GKIB8wBKms5xw12H7bdeX00I9GSSZF+zA2BKmxPE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=iUqz86/VndTNM37qAyzcaE9ACYVoZ0nOT0mmMltHr0RnOYzg7qc+uA/tAqlpqbazK
-         Z7GkQb9StW9vbjFNPSqQCBN/uZQ9Z/q7pdRdITFaahlyxwfkwcCB9ThkZriZ8togNk
-         Riw5sbqDeNoDaXtiFlZXGahLfcMunuvcfISxIhP9TOyC9OoBZaJYN5eqfEqJ/VFS/F
-         e3OhYl4H6X+FMnUeBfrZZZDvVzDJeU1NPZSNuJnMBbqHqTeETEzR/YJxqbQdwSJ/3b
-         9OpVFFBcZ8hKjzCDJTTv9JMaBkSaPM0Bs2pNrDIEJdB12sQH/SMoxZ0XUaamcw80TN
-         5xyxZoebe1ZDA==
-Date:   Fri, 2 Jun 2023 14:19:32 -0500
+        b=jRNmjODirwoXcqf5yVLu4jP3gVFM69xE3sq/5l2zU+95FFFj3mfji/kM4+ekfh3uo
+         EJyJQMbItTYkA1obSrK/qVCgjxn/ARrLoQX0zX+DBVJHvRNQrtHf95WDAzK0GZU/2y
+         A5W5YsQuWcr4nqqqke1CoaACHC+TyY+ooHL//++BOdI7cB7urAT30pXFCSSuHimsUA
+         uSc6DsTNqkxcx1kE4bpj/tZzHnp5TLSQr8BdsXXli2zGDQnHNe5Wtd7OW23RZbmiEp
+         2RoZtlRaL82BaL/BmkmaTDTkrRHrnE7WcvwCEPg5lBNoN1Qc1LDy2yECN3vA4783tN
+         VrqVVKcQAyPBQ==
+Date:   Fri, 2 Jun 2023 15:21:15 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Huacai Chen <chenhuacai@kernel.org>
-Cc:     Bibo Mao <maobibo@loongson.cn>, WANG Xuerui <kernel@xen0n.name>,
-        Jianmin Lv <lvjianmin@loongson.cn>, loongarch@lists.linux.dev,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
-        linux-pci@vger.kernel.org
-Subject: Re: [PATCH] LoongArch: Align pci memory base address with page size
-Message-ID: <ZHpAxC1aedBsR3K2@bhelgaas>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH] PCI: Call _REG when saving/restoring PCI state
+Message-ID: <ZHpPOzT0nm+vddPq@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAAhV-H58dR4JWtCdqCR553H1-pbppKyi114BMhsrV74Zb_c58Q@mail.gmail.com>
-X-Spam-Status: No, score=-7.3 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230602031122.18350-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc linux-pci, beginning of thread:
-https://lore.kernel.org/all/20230602030732.1047696-1-maobibo@loongson.cn/]
+[+cc Rafael, Len, linux-acpi]
 
-On Fri, Jun 02, 2023 at 12:11:02PM +0800, Huacai Chen wrote:
-> On Fri, Jun 2, 2023 at 11:07 AM Bibo Mao <maobibo@loongson.cn> wrote:
-> >
-> > LoongArch linux kernel uses 16K page size by default, some pci devices have
-> > only 4K memory size, it is normal in general architectures. However memory
-> > space of different pci devices will share one physical page address space.
-> > This is not safe for mmu protection, also UIO and VFIO requires base
-> > address of pci memory space page aligned.
-> >
-> > This patch adds check with function pcibios_align_resource, and set base
-> > address of resource page aligned.
-> >
-> > Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > ---
-> >  arch/loongarch/pci/pci.c | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> >
-> > diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> > index 2726639150bc..1380f3672ba2 100644
-> > --- a/arch/loongarch/pci/pci.c
-> > +++ b/arch/loongarch/pci/pci.c
-> > @@ -83,6 +83,29 @@ int pcibios_alloc_irq(struct pci_dev *dev)
-> >         return acpi_pci_irq_enable(dev);
-> >  }
-> >
-> > +/*
-> > + * memory space size of some pci cards is 4K, it is separated with
-> > + * different pages for generic architectures, so that mmu protection can
-> > + * work with different pci cards. However page size for LoongArch system
-> > + * is 16K, memory space of different pci cards may share the same page
-> > + * on LoongArch, it is not safe here.
-> > + * Also uio drivers and vfio drivers sugguests that base address of memory
-> > + * space should page aligned. This function aligns base address with page size
-> > + */
-> > +resource_size_t pcibios_align_resource(void *data, const struct resource *res,
-> > +               resource_size_t size, resource_size_t align)
-> > +{
-> > +       resource_size_t start = res->start;
-> > +
-> > +       if (res->flags & IORESOURCE_MEM) {
-> > +               if (align & (PAGE_SIZE - 1)) {
-> > +                       align = PAGE_SIZE;
-> > +                       start = ALIGN(start, align);
-> I don't know whether this patch is really needed, but the logic here
-> has some problems.
+Hi Mario,
+
+On Thu, Jun 01, 2023 at 10:11:22PM -0500, Mario Limonciello wrote:
+> ASMedia PCIe GPIO controllers connected to AMD SOC fail functional tests
+> after returning from s2idle. This is because the BIOS checks whether the
+> OSPM has called the _REG method to determine whether it can interact with
+> the OperationRegion assigned to the device.
+
+"s2idle" is a Linux term; I'd prefer something that we can relate to
+the ACPI spec.
+
+Maybe a pointer to the specific function in the driver that has a
+problem?  Based on the patch, I assume the driver uses some control
+method that looks at PCI config space?
+
+> To fix this issue, call acpi_evaluate_reg() when saving and restoring the
+> state of PCI devices.
+
+Please include the spec citation: ACPI r6.5, sec 6.5.4.  The URL has
+changed in the past and may change in the future, but the name/section
+number will not.
+
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/pci/pci.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> For example, if PAGE_SIZE=16KB, align=18KB, what should we do? Align
-> to 16KB or align to 32KB? IMO it should align to 32KB, but in your
-> patch it will align to 16KB.
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e38c2f6eebd4..071ecba548b0 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1068,6 +1068,12 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+>  	return acpi_pci_bridge_d3(dev);
+>  }
+>  
+> +static inline int platform_toggle_reg(struct pci_dev *dev, int c)
+> +{
+> +	return acpi_evaluate_reg(ACPI_HANDLE(&dev->dev),
+> +				 ACPI_ADR_SPACE_PCI_CONFIG, c);
+> +}
+
+You never check the return value, so why return it?
+
+The function actually doesn't *toggle*; it connects or disconnects
+based on "c".
+
+This looks like it only builds when CONFIG_ACPI=y?
+
+>  /**
+>   * pci_update_current_state - Read power state of given device and cache it
+>   * @dev: PCI device to handle.
+> @@ -1645,6 +1651,9 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
+>  int pci_save_state(struct pci_dev *dev)
+>  {
+>  	int i;
+> +
+> +	platform_toggle_reg(dev, ACPI_REG_DISCONNECT);
+
+I would expect these to be in the PM code near the power state
+transitions, not in the state save/restore code.  These functions
+*are* used during suspend/resume, but are used in other places as
+well, where we probably don't want _REG executed.
+
+Cc'd Rafael and PM folks, who can give much better feedback.
+
+>  	/* XXX: 100% dword access ok here? */
+>  	for (i = 0; i < 16; i++) {
+>  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+> @@ -1790,6 +1799,8 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_enable_acs(dev);
+>  	pci_restore_iov_state(dev);
+>  
+> +	platform_toggle_reg(dev, ACPI_REG_CONNECT);
+> +
+>  	dev->state_saved = false;
+>  }
+>  EXPORT_SYMBOL(pci_restore_state);
+> @@ -3203,6 +3214,7 @@ void pci_pm_init(struct pci_dev *dev)
+>  	pci_read_config_word(dev, PCI_STATUS, &status);
+>  	if (status & PCI_STATUS_IMM_READY)
+>  		dev->imm_ready = 1;
+> +	platform_toggle_reg(dev, ACPI_REG_CONNECT);
+>  }
+>  
+>  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
+> -- 
+> 2.34.1
 > 
-> Huacai
-> > +               }
-> > +       }
-> > +       return start;
-> > +}
-> > +
-> >  static void pci_fixup_vgadev(struct pci_dev *pdev)
-> >  {
-> >         struct pci_dev *devp = NULL;
-> > --
-> > 2.27.0
-> >
