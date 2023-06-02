@@ -2,173 +2,101 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 037F27200DC
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 13:50:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B25B97200A9
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 13:49:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235707AbjFBLuk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 07:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38454 "EHLO
+        id S234933AbjFBLtC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 07:49:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37188 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235498AbjFBLu1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 07:50:27 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A46AE5E;
-        Fri,  2 Jun 2023 04:49:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1685706597; x=1717242597;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=dtcnuM+2TdnbsCijUckC327W0mtKyRtASd4omSZHYjg=;
-  b=dhOY6WwD9tFuCuNpuke6q6ieXvkiWB1ka421N2iGJyH3t11c/dO3Ave3
-   uyUjL8e54Ujg+zQDU3jo1J4Q+IfkMn0axTp/MwrpP4+M8IZL24fARlFCm
-   xNY0pBSFachRkmOSfzExXpZdwCroT+BmNhYuymJziAOrtOLLVj+72wJG5
-   HWVL5IALGh1McnNLAPzt7W27CmP2lyTl2xSdTc/en9YIAFh08RJdKEi6z
-   /JCRZV7LK92B/atT0xoeTI6QCjcWb4pFsRl6xub+Tkfwel/h8lOq7vW6H
-   ye6Es4NDwLnKTFqBxSP1Bo3V0sYYtYNWL2sWcwP0m6I2QiNMj40e/jRI5
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="358279796"
-X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
-   d="scan'208";a="358279796"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:49:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10728"; a="707819552"
-X-IronPort-AV: E=Sophos;i="6.00,212,1681196400"; 
-   d="scan'208";a="707819552"
-Received: from rspatil-mobl3.gar.corp.intel.com (HELO ijarvine-MOBL2.ger.corp.intel.com) ([10.251.208.112])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Jun 2023 04:49:11 -0700
-From:   =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To:     linux-pci@vger.kernel.org, Bjorn Helgaas <helgaas@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Subject: [RFC PATCH v1 12/13] IB/hfi1: Use pci_disable/enable_link_state()
-Date:   Fri,  2 Jun 2023 14:47:49 +0300
-Message-Id: <20230602114751.19671-13-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230602114751.19671-1-ilpo.jarvinen@linux.intel.com>
-References: <20230602114751.19671-1-ilpo.jarvinen@linux.intel.com>
+        with ESMTP id S235152AbjFBLst (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 07:48:49 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37E63E49
+        for <linux-pci@vger.kernel.org>; Fri,  2 Jun 2023 04:48:28 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-51458e3af68so2753155a12.2
+        for <linux-pci@vger.kernel.org>; Fri, 02 Jun 2023 04:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685706506; x=1688298506;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OZzlHz0HjDIVYRBaIDbbDRIPAZMGT2jNZydQ3880wqo=;
+        b=RSl1RhdQjDhcuoHbfJOFSu1v4UsLQbqbYR6fkQzgveTfVMFqyJIvEESXWjyQiQKous
+         ljRDVaAE0ibwe/S/6vlbINCYPya6Jprm5NlYJJVzCYseBfaGR1FO7h/dcPrv/2cp1JyM
+         YdJS12cwWcyLITajmfFC+TW1GJc0L+TjgWF/NXAR/BaO2zRa3KH/zSzugzg0vjg64ieP
+         bBufghgnW2u9YN8WI/27SC7bMFwpWK1VG0atI6KnGasYuOesmU1QOEN/YOi1seJY+Iad
+         s+Y1N2jWaEcafuU4gZNez2WqNTntVVfnLZ6X1OFS1r7kQv9VX9LLgy9fRB26DrAjNngp
+         mt9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685706506; x=1688298506;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OZzlHz0HjDIVYRBaIDbbDRIPAZMGT2jNZydQ3880wqo=;
+        b=g59Mo0Tax5vks7Knw4vV/ldLkta391tZwR0DyWrD1uwAmEmAYYG7Zk6mTNE0Idf7vP
+         f/0w913yg08wpnBs06IhgatjPevf8+ae9kOUsAvniAlrxo0O5W08cuLsx/FcSgV63ZAb
+         GpvAdTPNBnjyK0NTQ4UxLYLnRIz6Dgt9vxAaolW4m9buabRDDxYc4tZbc1rfOj+VQUxg
+         ssmgJykHEk8DI4qV+owaCrGd/nO8UXQZ3dqXJ/eLwz7S8P3fd8gnWLUTBNU1v19J0LQ0
+         aJrkJhhmJPLz52GQ2sOG4DgAVAhyJkGwx68xSTaE7WAmyHdz0ycHJxH0cbaJWj2Yu76k
+         XF7Q==
+X-Gm-Message-State: AC+VfDw31hlE4alL2Opxp0H4ZWiTGii/D45z8Q4lSQG8qTBoCY4KiE+k
+        006DBXpO2X91cX9PA9KwKdw/
+X-Google-Smtp-Source: ACHHUZ7pvmxtYN/zam3Dez9Klnh0TqVs/VqPnMqRQBA5+8cf7He7JCfxNNSnhe6KRNcTvnQsVD4x1g==
+X-Received: by 2002:a17:907:7f09:b0:96f:b58e:7e21 with SMTP id qf9-20020a1709077f0900b0096fb58e7e21mr11645865ejc.52.1685706506371;
+        Fri, 02 Jun 2023 04:48:26 -0700 (PDT)
+Received: from localhost.localdomain ([117.217.186.79])
+        by smtp.gmail.com with ESMTPSA id qu25-20020a170907111900b00974530bb44dsm658924ejb.183.2023.06.02.04.48.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jun 2023 04:48:26 -0700 (PDT)
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     lpieralisi@kernel.org, kw@linux.com
+Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dlemoal@kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 3/9] PCI: endpoint: Return error if EPC is started/stopped multiple times
+Date:   Fri,  2 Jun 2023 17:17:50 +0530
+Message-Id: <20230602114756.36586-4-manivannan.sadhasivam@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230602114756.36586-1-manivannan.sadhasivam@linaro.org>
+References: <20230602114756.36586-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.5 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-IB/hfi1 driver adjusts ASPM state itself which leaves ASPM service
-driver in PCI core unaware of the link state changes the driver
-implemented.
+When the EPC is started or stopped multiple times from configfs, just
+return -EALREADY. There is no need to call the EPC start/stop functions
+in those cases.
 
-Call pci_disable_link_state() and pci_enable_link_state() instead of
-adjusting ASPMC field in LNKCTL directly in the driver and let PCI core
-handle the ASPM state management. Remove the functions that handled the
-ASPM changes that are now unnecessary.
-
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
+Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/infiniband/hw/hfi1/aspm.c | 38 +++----------------------------
- drivers/infiniband/hw/hfi1/pcie.c |  2 +-
- 2 files changed, 4 insertions(+), 36 deletions(-)
+ drivers/pci/endpoint/pci-ep-cfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/infiniband/hw/hfi1/aspm.c b/drivers/infiniband/hw/hfi1/aspm.c
-index a3c53be4072c..8e3fc1d4c9c6 100644
---- a/drivers/infiniband/hw/hfi1/aspm.c
-+++ b/drivers/infiniband/hw/hfi1/aspm.c
-@@ -54,45 +54,13 @@ static void aspm_hw_set_l1_ent_latency(struct hfi1_devdata *dd)
- 	pci_write_config_dword(dd->pcidev, PCIE_CFG_REG_PL3, reg32);
- }
+diff --git a/drivers/pci/endpoint/pci-ep-cfs.c b/drivers/pci/endpoint/pci-ep-cfs.c
+index 4b8ac0ac84d5..7e0e430e4ceb 100644
+--- a/drivers/pci/endpoint/pci-ep-cfs.c
++++ b/drivers/pci/endpoint/pci-ep-cfs.c
+@@ -178,6 +178,9 @@ static ssize_t pci_epc_start_store(struct config_item *item, const char *page,
+ 	if (kstrtobool(page, &start) < 0)
+ 		return -EINVAL;
  
--static void aspm_hw_enable_l1(struct hfi1_devdata *dd)
--{
--	struct pci_dev *parent = dd->pcidev->bus->self;
--
--	/*
--	 * If the driver does not have access to the upstream component,
--	 * it cannot support ASPM L1 at all.
--	 */
--	if (!parent)
--		return;
--
--	/* Enable ASPM L1 first in upstream component and then downstream */
--	pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--	pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC,
--					   PCI_EXP_LNKCTL_ASPM_L1);
--}
--
--void aspm_hw_disable_l1(struct hfi1_devdata *dd)
--{
--	struct pci_dev *parent = dd->pcidev->bus->self;
--
--	/* Disable ASPM L1 first in downstream component and then upstream */
--	pcie_capability_clear_and_set_word(dd->pcidev, PCI_EXP_LNKCTL,
--					   PCI_EXP_LNKCTL_ASPMC, 0x0);
--	if (parent)
--		pcie_capability_clear_and_set_word(parent, PCI_EXP_LNKCTL,
--						   PCI_EXP_LNKCTL_ASPMC, 0x0);
--}
--
- static  void aspm_enable(struct hfi1_devdata *dd)
- {
- 	if (dd->aspm_enabled || aspm_mode == ASPM_MODE_DISABLED ||
- 	    !dd->aspm_supported)
- 		return;
- 
--	aspm_hw_enable_l1(dd);
-+	pci_enable_link_state(dd->pcidev, PCI_EXP_LNKCTL_ASPM_L1);
- 	dd->aspm_enabled = true;
- }
- 
-@@ -101,7 +69,7 @@ static  void aspm_disable(struct hfi1_devdata *dd)
- 	if (!dd->aspm_enabled || aspm_mode == ASPM_MODE_ENABLED)
- 		return;
- 
--	aspm_hw_disable_l1(dd);
-+	pci_disable_link_state(dd->pcidev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
- 	dd->aspm_enabled = false;
- }
- 
-@@ -254,7 +222,7 @@ void aspm_init(struct hfi1_devdata *dd)
- 	/* Start with ASPM disabled */
- 	aspm_hw_set_l1_ent_latency(dd);
- 	dd->aspm_enabled = false;
--	aspm_hw_disable_l1(dd);
-+	pci_disable_link_state(dd->pcidev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
- 
- 	/* Now turn on ASPM if configured */
- 	aspm_enable_all(dd);
-diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
-index 08732e1ac966..767f6cb770b6 100644
---- a/drivers/infiniband/hw/hfi1/pcie.c
-+++ b/drivers/infiniband/hw/hfi1/pcie.c
-@@ -1182,7 +1182,7 @@ int do_pcie_gen3_transition(struct hfi1_devdata *dd)
- 	 * will be enabled if required later
- 	 */
- 	dd_dev_info(dd, "%s: clearing ASPM\n", __func__);
--	aspm_hw_disable_l1(dd);
-+	pci_disable_link_state(dd->pcidev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
- 
- 	/*
- 	 * step 5f: clear DirectSpeedChange
++	if (start == epc_group->start)
++		return -EALREADY;
++
+ 	if (!start) {
+ 		pci_epc_stop(epc);
+ 		epc_group->start = 0;
 -- 
-2.30.2
+2.25.1
 
