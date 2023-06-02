@@ -2,296 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 82AF071FE1C
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 11:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59CF071FEC1
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 12:16:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234562AbjFBJm1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 05:42:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53200 "EHLO
+        id S234872AbjFBKQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 06:16:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234303AbjFBJm0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 05:42:26 -0400
-Received: from mail-ot1-x335.google.com (mail-ot1-x335.google.com [IPv6:2607:f8b0:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 718B61A8
-        for <linux-pci@vger.kernel.org>; Fri,  2 Jun 2023 02:42:14 -0700 (PDT)
-Received: by mail-ot1-x335.google.com with SMTP id 46e09a7af769-6af6f5fc42aso1834795a34.1
-        for <linux-pci@vger.kernel.org>; Fri, 02 Jun 2023 02:42:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=igel-co-jp.20221208.gappssmtp.com; s=20221208; t=1685698933; x=1688290933;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=KDrhfzHICQN9ayaPuS0DNQLuInOilyGOWl7DR14+R70=;
-        b=lshe2T0z3OCvdGuihY2E2siz79o3hWdAOOHEoR8opOvVyP+2SC9F+oklcAQmh+5rRZ
-         Ox9nQGsra2mYv1vzX86ZN7daTbYatroMRQwv37RhxZQwZT298tbwvm6JQNhjDrxZVTOZ
-         Lu2CCcyA8DO6jG6hgb6tMvCcGnRaRoptWT3bpN2oW6ZeASh6AAxrcneoVuCD57h9L2Sp
-         AObqCeN6Pk6xoVWqbL8aL4hVXXMS+ovHsTiaZoVeypNPogKnvkOwtTQf6c3Gy92SfHl+
-         UE+WXY2TCWekGLIGaVJuRWaG8C1IOxaICACYQP9euiMQugHD7yF+bacwRdmKlQQSTiun
-         Jgow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685698933; x=1688290933;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KDrhfzHICQN9ayaPuS0DNQLuInOilyGOWl7DR14+R70=;
-        b=ciFc4O0+faSAoPOWpcJvHCqIWLhEupT8L1hVufY3cqzkKCK0vkh+jIERsy0SclhyWl
-         +MDji/Xlj60ecwtieJ0zy1nmW1C5JSQdwCnPM/I0Pi75WQ2kjzhXG3Ka0uEMuQia11hz
-         CyoE0rllhzGiPnLCh8PjlVi9XwbzzjZn6kSkgg2Zjblq8lxw3U11HA1PqrGKWj62bvTW
-         0shDCa9TSw5Fy0q7LSsu/DfUtr4K0wpHk5EBxA9/km9wWHGyYhyZDSVO5BBlIZ8k9cAS
-         FZBuiAs4es9wZmHNwnC5gROzqcX9soMt0WA75Q8yl1O4DY7aFx2ltXDPe6iuDEkvgj0Z
-         1F5A==
-X-Gm-Message-State: AC+VfDzFQl3T/hrh9aWe+vn2nf9eOQhJSILxSlVRPgJdk1k5nbNyspcT
-        TAU9b60YOJLBfnOOPIJ89JsRqw==
-X-Google-Smtp-Source: ACHHUZ7WLiOMxS7DeVjZ9HpgKW2Cy5XQG9WC87Hw5WaH7gQC4b+eBkqSYYqxQM6ENRqdrA2YEzm/Ug==
-X-Received: by 2002:a9d:6c90:0:b0:6af:a1d3:e7f1 with SMTP id c16-20020a9d6c90000000b006afa1d3e7f1mr2127525otr.31.1685698933551;
-        Fri, 02 Jun 2023 02:42:13 -0700 (PDT)
-Received: from [10.16.161.199] (napt.igel.co.jp. [219.106.231.132])
-        by smtp.gmail.com with ESMTPSA id n10-20020a170902968a00b001b03f208323sm924463plp.64.2023.06.02.02.42.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Jun 2023 02:42:13 -0700 (PDT)
-Message-ID: <8bc9affb-7b72-0495-16de-c0867a141f9f@igel.co.jp>
-Date:   Fri, 2 Jun 2023 18:42:08 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.0
-Subject: Re: [RFC PATCH 1/3] PCI: endpoint: support an alignment aware
- map/unmaping
-Content-Language: en-US
-To:     Damien Le Moal <dlemoal@kernel.org>,
-        Kishon Vijay Abraham I <kvijayab@amd.com>,
-        Jingoo Han <jingoohan1@gmail.com>
-Cc:     Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        with ESMTP id S234510AbjFBKQf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 06:16:35 -0400
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2076.outbound.protection.outlook.com [40.107.20.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640E318D;
+        Fri,  2 Jun 2023 03:16:34 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=CPKWoEIUOQli6fNzGW+38RlYWlQ0Cn6AfxYsfOVE/mBvrgW1aig53d2ymHAYP/ot0CSBOGgAgAXIslkbjNL0MA6iP8GNnHURAnbCYsrNv5wgUr2UtjhqoMLUCPx9VbcOGe5udS4WAFcszWvQ/aLidNMswxaS/D3I5aEU4SIgtgRZ1VeCHbxM5uYOYYwovqCEPRV/M4stT0S/bdcIg6Xew2RPYntHxrsQkPxu7FFt7lfCOuQ0JrViQ9DZp4IMNgELpxD93iYUaqU772KQa1iQgaG3dAqQUEP08Gt7zWgFZWzR2DU3sPmTP4mf3qLFjrMZVOgftQPxpDhqhElydpNBkA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=palefHqkdCXUSxcSh8pSOE3kKrzI67pWlFf8WwKnHGg=;
+ b=n9ZXXlWilQX2Y0ehMKSQOqL0byfaMEzLtE2RB0N5q3NbCua7UnI67mBnlOF3tANBwxE93C+FruxWMK64MXdxM6L4Tgi8I4FKl3rzg4MrEtlREXu7LKOJfoScOO+TMhlaGLvQKsuX/skpQ8yq9a2LSZVRvwu9VAtCAjvAC9X9ngWIlYLTJQPKLeTbofRe90AuRJq9C7nwdqo92lKRgOMqMeiS5PCNpXQc1v5DojByvWu/dNT8esU4vvEDyITSg2E2XYTEj2efb/8E0Vk7qL/Bw98o4yPeHn1s9lK0J1fZ8Y6QAKHGQ5ANLj98ok4scI9smK8vWysL0m5RDDrXaBOr6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=palefHqkdCXUSxcSh8pSOE3kKrzI67pWlFf8WwKnHGg=;
+ b=V20wOK7JCXR7qEhc6aIr9/5ioeg2oCNSes8juMusJLoEL0N+p7sJfaIIlMDFBpTiGucQ01/h9djd9Sa/NplJS9zzq+zmbT46FNOTOUo/SuFFaTGAlSVupxbJot1Mus/xC7eV0dHahr2LKMQqyzNivXgg21kE6uAyGd43um3WrMs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
+ by DU2PR04MB8855.eurprd04.prod.outlook.com (2603:10a6:10:2e2::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.26; Fri, 2 Jun
+ 2023 10:16:32 +0000
+Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::47e4:eb1:e83c:fa4a]) by AM0PR04MB6452.eurprd04.prod.outlook.com
+ ([fe80::47e4:eb1:e83c:fa4a%4]) with mapi id 15.20.6455.020; Fri, 2 Jun 2023
+ 10:16:32 +0000
+Date:   Fri, 2 Jun 2023 13:16:28 +0300
+From:   Vladimir Oltean <vladimir.oltean@nxp.com>
+To:     Jianmin Lv <lvjianmin@loongson.cn>
+Cc:     Liu Peibao <liupeibao@loongson.cn>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Kishon Vijay Abraham I <kishon@kernel.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
-        Frank Li <Frank.Li@nxp.com>, Li Chen <lchen@ambarella.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230113090350.1103494-1-mie@igel.co.jp>
- <20230113090350.1103494-2-mie@igel.co.jp>
- <e417f2c9-1fcb-cf57-3524-1408c9aae5fa@amd.com>
- <978b63ac-90b5-b909-d259-0668b77f1cc8@kernel.org>
-From:   Shunsuke Mie <mie@igel.co.jp>
-In-Reply-To: <978b63ac-90b5-b909-d259-0668b77f1cc8@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        Binbin Zhou <zhoubinbin@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>
+Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
+ node has status = "disabled"
+Message-ID: <20230602101628.jkgq3cmwccgsfb4c@skbuf>
+References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
+ <ZHjaq+TDW/RFcoxW@bhelgaas>
+ <20230601221532.2rfcda4sg5nl7pzp@skbuf>
+ <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
+ <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
+X-ClientProxiedBy: BE1P281CA0124.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:b10:7a::10) To AM0PR04MB6452.eurprd04.prod.outlook.com
+ (2603:10a6:208:16d::21)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DU2PR04MB8855:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4ceb6c9e-9b77-4c42-67a1-08db63526ff5
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: AdSKMjJoEwKOhzEGD1uj/wti0bpZVTkU1QzbGvSgCljAkDR8ZU/D9PCS3YskuegmMxQYE9kU1DHy2AKosGEq+ueSN+gsMemfaJLzT087nWMIrVhmxVbebr8KQJeAoktZRbUMhyy6rQKqo7Uer0Mrsm9U7JSIu4gm3CyGVcZewbl0gP1JS6hfgSwjPm7O91SgmDX4AEH6WuoIrmi5OeRc00Qcqv68Po4hd6PmQMYsYTr+4TMdiJBtgYEWJWZVBR4BRWwZSdDJxavef0VAeGMSda1sgBjCygANFzTK5q6ZIAD28kQuZYbqlb1CnPIzTEJC9hOAponsfmhRhajPBhLzHR1o7qFB457Ly+m1KnDxNNyoqdOjzG4NY6mguj7MyjUud6H0mTjXkPGffL9cj1BpQ5woxNrtvwatLFBO3EqPeRJbtkkFzMi4xYyKQlG8X7iWTl1m92GkwKYcoZyWC2tWCqBj/gYHFWp2hs/WJYuCnRL1ZbRAJB/7UISf4dRjJITm1pxycgM3VRVqs4JK2vdQg0n9GizhJfbCc94+cJrhfQg=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(451199021)(186003)(86362001)(6486002)(33716001)(966005)(316002)(6666004)(4326008)(6916009)(41300700001)(66946007)(66556008)(66476007)(54906003)(478600001)(44832011)(7416002)(5660300002)(26005)(9686003)(2906002)(83380400001)(6506007)(6512007)(8676002)(8936002)(1076003)(38100700002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c0VIZVlFdjBqbGwxWGZPT3BrLzdLbjJTRHJmeU1YNFdCV3dEZTYzOWZFNDFG?=
+ =?utf-8?B?cUpUc09VVlRlZHlJSEJSQ0w3OHRXNzdsdVY2MjY5eWZVUTlpbG52Vk9tcmRk?=
+ =?utf-8?B?RUlmYndaZ2t1S3Mzckw5UnBZbnM3d2ZoRXVXdjlKK1dsQ0ZxMVZCeS9uMFpu?=
+ =?utf-8?B?YlN3aXZPaXhUQ0NDYkdjYndXM0l1NnVsOW44b3JDUE1UOThRV0djeGVMUkVI?=
+ =?utf-8?B?eGoreiszclU3Nk90Zm11UzkzdG9GTnZ3SlZNaG12S1BOS1M1cEhCRlVHalJs?=
+ =?utf-8?B?bWZTWGVFWUx6N01Eek9OOG5valJjeFRYMzVvam11ZEVIb0lJRUhHN0lTNmV0?=
+ =?utf-8?B?a0xpODB6TE01MzBsSjRDcmNPTFZwazhrVVV4bk5UQ29qL0ptMmNpY2pkMFFl?=
+ =?utf-8?B?RzhnL0pwdXRkVFBzaU04cVFYbnR3NHNzdUhjazR0cUtwamkxUnM2SXhubHZM?=
+ =?utf-8?B?M2JmVURBSzJNUlJTSlBkNG5VZTljdnBEUFhrWjFFTUswT3FBQUlLTUZTTEQr?=
+ =?utf-8?B?dXZuQmRJYlF0QkFobk5ET2tuWGMvVG1CZkJSVHM5UHZ2TXhOMXQ3U3AwZDJV?=
+ =?utf-8?B?Z3lnLzU3Mk1kQ21mM1BhWExXMXVaVXNOUlA3NmhHSDdQa3hqcFpwRzMxemN5?=
+ =?utf-8?B?SUtvUXZ4WEVCZWI2Rk1QUlRlS0YwRXlSb0JjYnhiMkRBMGhReDVLYVNoVHcz?=
+ =?utf-8?B?K3IzdkRQYk1Ud0ZjRHJ6aEpySTMvRGNRSjZ1RTd3TUYyOXhGcEdCaGxJcW1p?=
+ =?utf-8?B?RXRtOE1zMnJXOFB0bjBQdFVHNHg1WUxpblJmOCtnV1NxMmhTWHhsZFJrS3BC?=
+ =?utf-8?B?Y0pHa2o5YmxqQnJMZndlYlcxditpOWVJTUs4WmdCVytEbERvWWtIbXJWclND?=
+ =?utf-8?B?MnVaR1N6SUJ6SFpPeXpiNHRPRTFydm1XYitkR0pBaVJBbExiOWZ5RTl5bXhQ?=
+ =?utf-8?B?ZU9YU2Q5S3AwaTRuK0haYldZQnhJZ0lSS05JVXhsdEVXUzFmdzBwdmZObWJP?=
+ =?utf-8?B?MTl3RG92bVRzM2NWa3lVV3d6dkk1QjliNUUzRWxIbWF1c2wyMi8zZWdyTmhr?=
+ =?utf-8?B?NERacGtHb0EzUHJacElMSWZOZ0JlOWtvUWJlS0hGZ3dQeGhoaW5lRWxPYmVj?=
+ =?utf-8?B?YzAwbjlFZWcxNFpMenNmZitpay92dlBhbCtIVTh0NnpkWUplZUI1VUdZU1Ex?=
+ =?utf-8?B?WkxHc3ovNUZORGdMWmRrMGNWajlVZzBpUXhtS2FYOHpwenVZRk1XS3JhNGpT?=
+ =?utf-8?B?WExzTzg0ZnJwblVmZTZvSTUydHhqRmtwaEE3UE9JM0lrR0xUYndzMTMwRlJv?=
+ =?utf-8?B?c3Q0eG1rL05sSWZOcHFIbXluSDc5ODEyZkJtN1RCakRvSmZ2VGl0N1NSdUdL?=
+ =?utf-8?B?L054N2QrS2tHakoxaVpzOHI5T2FJcmR1N29CbjlOR09wcVI3VkZkREdFdzll?=
+ =?utf-8?B?VmpnSlVMczNseUdIcDB2Q3o1MzYxZGZSc0I1WHJrUXhTZURkN0l5eFhuaEpy?=
+ =?utf-8?B?anNwb3ltS0t6aEYxQkJpQ1FaaXYreng5OE0xVGhoWXlIRVFVYTJtUURQNXYx?=
+ =?utf-8?B?RlhCWVQrRlNqczJHcGVUd2dKL1RlVTVFT0lzYVJTYW1GTjBsdTFIcGpmemE3?=
+ =?utf-8?B?bytjeXFkT0NpdkJXTWV4SHgvVzY4WTk0SXZXeFQyWGxlYUlnb0NmYXNHQzBL?=
+ =?utf-8?B?R21PTjVERGZvSkNzRzlRQUgwZytFTC94emVNRWJSaEpXaWo4ODlpZEVTbS92?=
+ =?utf-8?B?RGJHTDh1eXJ2ME9Ra3lKc2JGaXFGTXZxdDUvN3FXZHpKVXhlMVVHTHdrdExT?=
+ =?utf-8?B?VUV6MHNXNStIZjVBaU5NYzArd0dxOFJpRVVtY3pURWdvSm82SCt2c0lTVGc3?=
+ =?utf-8?B?VjZ5eHh6OXFRdDduYUMwMklEWXY1R1A0VmhGUDdMTmk1SWkxcG5xeFM4bEZJ?=
+ =?utf-8?B?VldRNEdBYkZwc3NOanNsYk9sRmZ4M1RuMGJWcmxJYTErWnVhaVZmdzdiVDIx?=
+ =?utf-8?B?clpwN3pkTDc1S2ozSUI5bGpScWRZT01oUzV0ZjhlTnFTQ2xJMUM5M3JQWm1y?=
+ =?utf-8?B?a00ycHdWeE9hOVgxNmwvaTdNTkJiS2NtYmR3NG5kR25QTzBzdHRHbURTUjdy?=
+ =?utf-8?B?N2lzV3pEaXBrVWFLcG5haGdQbWxyeXZJOXBKQ3BSU2srM0pUaEFOUzdHbUZK?=
+ =?utf-8?B?TXc9PQ==?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ceb6c9e-9b77-4c42-67a1-08db63526ff5
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 10:16:32.1776
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MlGtQ7tv1GvME9U/gCTyBialKuz6JrVH2p7yuq2UNOsU9Xp/nwi3N+3Jps5pqfOKPzvFEzbhNJmKI+Qx1H+zhQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8855
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Damien,
+Hi Jianmin,
 
-On 2023/06/02 8:43, Damien Le Moal wrote:
-> On 6/2/23 00:06, Kishon Vijay Abraham I wrote:
->> Hi Shunsuke,
->>
->> On 1/13/2023 2:33 PM, Shunsuke Mie wrote:
->>> Add an align_mem operation to the EPC ops, which function is used to
->>> pci_epc_map/unmap_addr(). These change to enable mapping for any alignment
->>> restriction of EPC. The map function maps an aligned memory to include a
->>> requested memory region.
->> I'd prefer all the PCIe address alignment restriction be handled in the
->> endpoint function drivers and not inside the core layer (esp in map and
->> unmap calls).
-> That is a really *bad* idea ! Most function drivers should be able to work with
-> any EP controller hardware. Asking these drivers to support all the alignment
-> peculiarities of every possible EP controller is impossible.
->
->> IMO, get the pci address alignment restriction using pci_epc_features.
->> And use a bigger size (based on alignment restriction) in
->> pci_epc_mem_alloc_addr() and access the allocated window using an offset
->> (based on alignment value). You can add separate helpers if required.
-> That is too simplistic and not enough. Example: Rick and I working on an nvme
-> function driver are facing a lot of issues with the EPC API for mem & mapping
-> management because we have 0 control over the PCI address that the host will
-> use. Alignment is all over the place, and the current EPC memory API
-> restrictions (window size limitations) make it impossible to transparently
-> handle all cases. We endup with NVMe command failures simply because of the API
-> limitations.
+On Fri, Jun 02, 2023 at 03:36:18PM +0800, Jianmin Lv wrote:
+> On 2023/6/2 下午3:21, Liu Peibao wrote:
+> > Hi all,
+> > 
+> > It seems that modification for current PCI enumeration framework is
+> > needed to solve the problem. If the effect of this modification is not
+> > easy to evaluate, for the requirement of Loongson, it should be OK that
+> > do the things in Loongson PCI controller driver like discussed
+> > before[1].
+> > 
+> > Br,
+> > Peibao
+> > 
+> > [1] https://lore.kernel.org/all/20221114074346.23008-1-liupeibao@loongson.cn/
+> > 
+> 
+> Agree. For current pci core code, all functions of the device will be
+> skipped if function 0 is not found, even without the patch 6fffbc7ae137
+> (e.g. the func 0 is disabled in bios by setting pci header to 0xffffffff).
+> So it seems that there are two ways for the issue:
+> 
+> 1. Adjust the pci scan core code to allow separate function to be
+> enumerated, which will affect widely the pci core code.
+> 2. Only Adjust loongson pci controller driver as Peibao said, and any
+> function of the device should use platform device in DT if function 0 is
+> disabled, which is acceptable for loongson.
+> 
+> Thanks,
+> Jianmin
 
-I think so to.
-
-I'm also proposing virtio-console function driver[1]. I suppose the 
-virtio function
-driver and your nvme function driver are the same in that the spec is 
-defined and
-host side driver must work as is.
-
-[1] 
-https://lore.kernel.org/linux-pci/20230427104428.862643-4-mie@igel.co.jp/
-
->
-> And sure, we can modify that driver to better support the EP controller we are
-> using (rockchip). But we need to support other EP controllers as well. So API
-> changes are definitely needed. Working on that. That is not easy as the mapping
-> API and its semantic impacts data transfers (memcpy_from|toio and DMA).
->
-> I do have a patch that does something similar as this one, but at a much higher
-> level with a helper function that gives the function driver the offset into the
-> allocated memory region to use for mapping a particular PCI address. And then
-> this helper is then in turn used into a new pci_epc_map() function which does
-> mem alloc + mapping in one go based on the EPC constraints. That hides all
-> alignment details to the function drivers, which greatlyu simplyfies the code.
-> But that is not enough as alignment also implies that we have to deal with
-> boundaries (due to limited window size) and so sometimes endpu failing a mapping
-> that is too large because the host used a PCI address close to the boundary.
-> More work is needed to have pci_epc_map() also hide that with tricks like
-> allowing the allocation and mapping of multiple contiguous windows. So EPC ops
-> API changes are also needed.
-
-Could you submit the your changes if you can?
-
-I'd like to solve the current EPC limitation for the mapping in a better 
-way and avoid doing similar work.
-
->
->
->> Thanks,
->> Kishon
->>
->>> Signed-off-by: Shunsuke Mie <mie@igel.co.jp>
->>> ---
->>>    drivers/pci/endpoint/pci-epc-core.c | 57 ++++++++++++++++++++++++-----
->>>    include/linux/pci-epc.h             | 10 +++--
->>>    2 files changed, 53 insertions(+), 14 deletions(-)
->>>
->>> diff --git a/drivers/pci/endpoint/pci-epc-core.c b/drivers/pci/endpoint/pci-epc-core.c
->>> index 2542196e8c3d..60d586e05e7d 100644
->>> --- a/drivers/pci/endpoint/pci-epc-core.c
->>> +++ b/drivers/pci/endpoint/pci-epc-core.c
->>> @@ -430,8 +430,12 @@ EXPORT_SYMBOL_GPL(pci_epc_set_msix);
->>>     * Invoke to unmap the CPU address from PCI address.
->>>     */
->>>    void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> -			phys_addr_t phys_addr)
->>> +			phys_addr_t phys_addr, void __iomem *virt_addr, size_t size)
->>>    {
->>> +	u64 aligned_phys;
->>> +	void __iomem *aligned_virt;
->>> +	size_t offset;
->>> +
->>>    	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>>    		return;
->>>    
->>> @@ -441,9 +445,22 @@ void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>>    	if (!epc->ops->unmap_addr)
->>>    		return;
->>>    
->>> +	if (epc->ops->align_mem) {
->>> +		mutex_lock(&epc->lock);
->>> +		aligned_phys = epc->ops->align_mem(epc, phys_addr, &size);
->>> +		mutex_unlock(&epc->lock);
->>> +	} else {
->>> +		aligned_phys = phys_addr;
->>> +	}
->>> +
->>> +	offset = phys_addr - aligned_phys;
->>> +	aligned_virt = virt_addr - offset;
->>> +
->>>    	mutex_lock(&epc->lock);
->>> -	epc->ops->unmap_addr(epc, func_no, vfunc_no, phys_addr);
->>> +	epc->ops->unmap_addr(epc, func_no, vfunc_no, aligned_phys);
->>>    	mutex_unlock(&epc->lock);
->>> +
->>> +	pci_epc_mem_free_addr(epc, aligned_phys, aligned_virt, size);
->>>    }
->>>    EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>>    
->>> @@ -458,26 +475,46 @@ EXPORT_SYMBOL_GPL(pci_epc_unmap_addr);
->>>     *
->>>     * Invoke to map CPU address with PCI address.
->>>     */
->>> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> -		     phys_addr_t phys_addr, u64 pci_addr, size_t size)
->>> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> +		u64 pci_addr, phys_addr_t *phys_addr, size_t size)
->>>    {
->>>    	int ret;
->>> +	u64 aligned_addr;
->>> +	size_t offset;
->>> +	void __iomem *virt_addr;
->>>    
->>>    	if (IS_ERR_OR_NULL(epc) || func_no >= epc->max_functions)
->>> -		return -EINVAL;
->>> +		return ERR_PTR(-EINVAL);
->>>    
->>>    	if (vfunc_no > 0 && (!epc->max_vfs || vfunc_no > epc->max_vfs[func_no]))
->>> -		return -EINVAL;
->>> +		return ERR_PTR(-EINVAL);
->>>    
->>>    	if (!epc->ops->map_addr)
->>> -		return 0;
->>> +		return ERR_PTR(-ENOPTSUPP);
->>> +
->>> +	if (epc->ops->align_mem) {
->>> +		mutex_lock(&epc->lock);
->>> +		aligned_addr = epc->ops->align_mem(epc, pci_addr, &size);
->>> +		mutex_unlock(&epc->lock);
->>> +	} else {
->>> +		aligned_addr = pci_addr;
->>> +	}
->>> +
->>> +	offset = pci_addr - aligned_addr;
->>> +
->>> +	virt_addr = pci_epc_mem_alloc_addr(epc, phys_addr, size);
->>> +	if (!virt_addr)
->>> +		return ERR_PTR(-ENOMEM);
->>>    
->>>    	mutex_lock(&epc->lock);
->>> -	ret = epc->ops->map_addr(epc, func_no, vfunc_no, phys_addr, pci_addr,
->>> -				 size);
->>> +	ret = epc->ops->map_addr(epc, func_no, vfunc_no, *phys_addr, aligned_addr, size);
->>>    	mutex_unlock(&epc->lock);
->>> +	if (ret)
->>> +		return ERR_PTR(ret);
->>>    
->>> -	return ret;
->>> +	*phys_addr += offset;
->>> +
->>> +	return virt_addr + offset;
->>>    }
->>>    EXPORT_SYMBOL_GPL(pci_epc_map_addr);
->>>    
->>> diff --git a/include/linux/pci-epc.h b/include/linux/pci-epc.h
->>> index a48778e1a4ee..8f29161bce80 100644
->>> --- a/include/linux/pci-epc.h
->>> +++ b/include/linux/pci-epc.h
->>> @@ -84,6 +84,7 @@ struct pci_epc_ops {
->>>    			       phys_addr_t phys_addr, u8 interrupt_num,
->>>    			       u32 entry_size, u32 *msi_data,
->>>    			       u32 *msi_addr_offset);
->>> +	u64	(*align_mem)(struct pci_epc *epc, u64 addr, size_t *size);
->>>    	int	(*start)(struct pci_epc *epc);
->>>    	void	(*stop)(struct pci_epc *epc);
->>>    	const struct pci_epc_features* (*get_features)(struct pci_epc *epc,
->>> @@ -218,11 +219,12 @@ int pci_epc_set_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>>    		    struct pci_epf_bar *epf_bar);
->>>    void pci_epc_clear_bar(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>>    		       struct pci_epf_bar *epf_bar);
->>> -int pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> -		     phys_addr_t phys_addr,
->>> -		     u64 pci_addr, size_t size);
->>> +void __iomem *pci_epc_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> +			       u64 pci_addr, phys_addr_t *phys_addr,
->>> +			       size_t size);
->>>    void pci_epc_unmap_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>> -			phys_addr_t phys_addr);
->>> +			phys_addr_t phys_addr, void __iomem *virt_addr,
->>> +			size_t size);
->>>    int pci_epc_set_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->>>    		    u8 interrupts);
->>>    int pci_epc_get_msi(struct pci_epc *epc, u8 func_no, u8 vfunc_no);
-
-Best regards,
-
-Shunsuke
-
+How about 3. handle of_device_is_available() in the probe function of
+the "loongson, pci-gmac" driver? Would that not work?
