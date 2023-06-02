@@ -2,146 +2,133 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 653B2720A2F
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 22:21:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 026F5720B0E
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 23:37:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235481AbjFBUVW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 16:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51692 "EHLO
+        id S236293AbjFBVhj (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 17:37:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231676AbjFBUVW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 16:21:22 -0400
+        with ESMTP id S236246AbjFBVhi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 17:37:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0621F1B5;
-        Fri,  2 Jun 2023 13:21:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FEC51B5;
+        Fri,  2 Jun 2023 14:37:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C7D660C55;
-        Fri,  2 Jun 2023 20:21:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96B27C433D2;
-        Fri,  2 Jun 2023 20:21:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CE6BA61ED3;
+        Fri,  2 Jun 2023 21:37:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC9ACC433D2;
+        Fri,  2 Jun 2023 21:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685737276;
-        bh=gy+GKIB8wBKms5xw12H7bdeX00I9GSSZF+zA2BKmxPE=;
+        s=k20201202; t=1685741856;
+        bh=1FcV/MmMD469O1FQZ7KzmQXuisSwf/qS6Cx5HeBprRU=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=jRNmjODirwoXcqf5yVLu4jP3gVFM69xE3sq/5l2zU+95FFFj3mfji/kM4+ekfh3uo
-         EJyJQMbItTYkA1obSrK/qVCgjxn/ARrLoQX0zX+DBVJHvRNQrtHf95WDAzK0GZU/2y
-         A5W5YsQuWcr4nqqqke1CoaACHC+TyY+ooHL//++BOdI7cB7urAT30pXFCSSuHimsUA
-         uSc6DsTNqkxcx1kE4bpj/tZzHnp5TLSQr8BdsXXli2zGDQnHNe5Wtd7OW23RZbmiEp
-         2RoZtlRaL82BaL/BmkmaTDTkrRHrnE7WcvwCEPg5lBNoN1Qc1LDy2yECN3vA4783tN
-         VrqVVKcQAyPBQ==
-Date:   Fri, 2 Jun 2023 15:21:15 -0500
+        b=G1SmzjFN1fwdTVy/JX+tcplLxTUjUTUxEYFqWy36jkRCY8CssArfmtY6hLyIJ+eEl
+         Bsh5696NyIdCrSPjt2TUjM0RFMQlO0wpybcSRG6UraTxRxGXt4VITakX9oYodhFdyh
+         rfKi2TNtnhoeQ1oqNFE8gfgG28MlI7yJP3b9ig8g9v5cVOy5x4enFGWy4eo4eOhL/D
+         t0558CmqNSsrs8MIMUgAirdzk2AkEhL549O1T9Ri7JyW34yBjFQ+ghpcI6WWPzIPLi
+         /OsVnvTW9zVJhYn0W1r/GVQ7YvbUz4DhG+Daqqs+lJJtWaWxaXh3OmZq4hyGtUOW+P
+         FAVYBtTinWEBw==
+Date:   Fri, 2 Jun 2023 16:37:34 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mario Limonciello <mario.limonciello@amd.com>
-Cc:     bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] PCI: Call _REG when saving/restoring PCI state
-Message-ID: <ZHpPOzT0nm+vddPq@bhelgaas>
+To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Jim Quinlan <jim2101024@gmail.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tom Joseph <tjoseph@cadence.com>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        Rahul Tanwar <rtanwar@maxlinear.com>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Jisheng Zhang <jszhang@kernel.org>,
+        Miaoqian Lin <linmq006@gmail.com>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Jianjun Wang <jianjun.wang@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Toan Le <toan@os.amperecomputing.com>,
+        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+Subject: Re: [PATCH 00/15] PCI: Convert to platform remove callback returning
+ void
+Message-ID: <ZHphHkNLO4tEJIm/@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230602031122.18350-1-mario.limonciello@amd.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230530140742.ebbrxmpieuphbmz3@pengutronix.de>
 X-Spam-Status: No, score=-4.6 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[+cc Rafael, Len, linux-acpi]
-
-Hi Mario,
-
-On Thu, Jun 01, 2023 at 10:11:22PM -0500, Mario Limonciello wrote:
-> ASMedia PCIe GPIO controllers connected to AMD SOC fail functional tests
-> after returning from s2idle. This is because the BIOS checks whether the
-> OSPM has called the _REG method to determine whether it can interact with
-> the OperationRegion assigned to the device.
-
-"s2idle" is a Linux term; I'd prefer something that we can relate to
-the ACPI spec.
-
-Maybe a pointer to the specific function in the driver that has a
-problem?  Based on the patch, I assume the driver uses some control
-method that looks at PCI config space?
-
-> To fix this issue, call acpi_evaluate_reg() when saving and restoring the
-> state of PCI devices.
-
-Please include the spec citation: ACPI r6.5, sec 6.5.4.  The URL has
-changed in the past and may change in the future, but the name/section
-number will not.
-
-> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->  drivers/pci/pci.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+On Tue, May 30, 2023 at 04:07:42PM +0200, Uwe Kleine-König wrote:
+> Hello Bjorn,
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index e38c2f6eebd4..071ecba548b0 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -1068,6 +1068,12 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
->  	return acpi_pci_bridge_d3(dev);
->  }
->  
-> +static inline int platform_toggle_reg(struct pci_dev *dev, int c)
-> +{
-> +	return acpi_evaluate_reg(ACPI_HANDLE(&dev->dev),
-> +				 ACPI_ADR_SPACE_PCI_CONFIG, c);
-> +}
-
-You never check the return value, so why return it?
-
-The function actually doesn't *toggle*; it connects or disconnects
-based on "c".
-
-This looks like it only builds when CONFIG_ACPI=y?
-
->  /**
->   * pci_update_current_state - Read power state of given device and cache it
->   * @dev: PCI device to handle.
-> @@ -1645,6 +1651,9 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
->  int pci_save_state(struct pci_dev *dev)
->  {
->  	int i;
-> +
-> +	platform_toggle_reg(dev, ACPI_REG_DISCONNECT);
-
-I would expect these to be in the PM code near the power state
-transitions, not in the state save/restore code.  These functions
-*are* used during suspend/resume, but are used in other places as
-well, where we probably don't want _REG executed.
-
-Cc'd Rafael and PM folks, who can give much better feedback.
-
->  	/* XXX: 100% dword access ok here? */
->  	for (i = 0; i < 16; i++) {
->  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
-> @@ -1790,6 +1799,8 @@ void pci_restore_state(struct pci_dev *dev)
->  	pci_enable_acs(dev);
->  	pci_restore_iov_state(dev);
->  
-> +	platform_toggle_reg(dev, ACPI_REG_CONNECT);
-> +
->  	dev->state_saved = false;
->  }
->  EXPORT_SYMBOL(pci_restore_state);
-> @@ -3203,6 +3214,7 @@ void pci_pm_init(struct pci_dev *dev)
->  	pci_read_config_word(dev, PCI_STATUS, &status);
->  	if (status & PCI_STATUS_IMM_READY)
->  		dev->imm_ready = 1;
-> +	platform_toggle_reg(dev, ACPI_REG_CONNECT);
->  }
->  
->  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
-> -- 
-> 2.34.1
+> On Tue, Mar 21, 2023 at 08:31:53PM +0100, Uwe Kleine-König wrote:
+> > this series adapts the platform drivers below drivers/pci to use the
+> > .remove_new() callback. Compared to the traditional .remove() callback
+> > .remove_new() returns no value. This is a good thing because the driver core
+> > doesn't (and cannot) cope for errors during remove. The only effect of a
+> > non-zero return value in .remove() is that the driver core emits a warning. The
+> > device is removed anyhow and an early return from .remove() usually yields a
+> > resource leak.
+> > 
+> > By changing the remove callback to return void driver authors cannot
+> > reasonably assume any more that there is some kind of cleanup later.
+> > 
+> > All drivers were easy to convert as they all returned zero in their
+> > remove callback. Only for iproc the conversion wasn't trivial, the other
+> > were converted using coccinelle.
+> > 
+> > There are no interdependencies between these patches. So even if there
+> > are some concerns for individual patches, I ask you to apply the
+> > remaining set. Then I only have to care for the review feedback of the
+> > refused patches. (Having said that I don't expect any serious objection,
+> > just things like squashing or separating patches, or maybe I picked a
+> > wrong subject prefix.)
 > 
+> These patches wait for application for quite some time now. They apply
+> just fine to v6.4-rc1 and next/master. Would be great to get them in
+> during the next merge window and ideally give them some time in next
+> before.
+
+Thanks, these seem fine to me, and Lorenzo normally takes care of
+drivers/pci/controller/.  Lorenzo, if it's easier to have me apply
+them, that's fine, too, just let me know.
+
+The only tweaks I would make would be:
+
+  PCI: j721e: Convert to platform remove callback returning void
+  PCI: dwc: Convert to platform remove callback returning void
+
+to match the git history.
