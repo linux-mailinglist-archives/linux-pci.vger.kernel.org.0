@@ -2,168 +2,212 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 59CF071FEC1
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 12:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4CC70720081
+	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 13:38:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234872AbjFBKQg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 06:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41360 "EHLO
+        id S234878AbjFBLif (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 2 Jun 2023 07:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234510AbjFBKQf (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 06:16:35 -0400
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2076.outbound.protection.outlook.com [40.107.20.76])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640E318D;
-        Fri,  2 Jun 2023 03:16:34 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CPKWoEIUOQli6fNzGW+38RlYWlQ0Cn6AfxYsfOVE/mBvrgW1aig53d2ymHAYP/ot0CSBOGgAgAXIslkbjNL0MA6iP8GNnHURAnbCYsrNv5wgUr2UtjhqoMLUCPx9VbcOGe5udS4WAFcszWvQ/aLidNMswxaS/D3I5aEU4SIgtgRZ1VeCHbxM5uYOYYwovqCEPRV/M4stT0S/bdcIg6Xew2RPYntHxrsQkPxu7FFt7lfCOuQ0JrViQ9DZp4IMNgELpxD93iYUaqU772KQa1iQgaG3dAqQUEP08Gt7zWgFZWzR2DU3sPmTP4mf3qLFjrMZVOgftQPxpDhqhElydpNBkA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=palefHqkdCXUSxcSh8pSOE3kKrzI67pWlFf8WwKnHGg=;
- b=n9ZXXlWilQX2Y0ehMKSQOqL0byfaMEzLtE2RB0N5q3NbCua7UnI67mBnlOF3tANBwxE93C+FruxWMK64MXdxM6L4Tgi8I4FKl3rzg4MrEtlREXu7LKOJfoScOO+TMhlaGLvQKsuX/skpQ8yq9a2LSZVRvwu9VAtCAjvAC9X9ngWIlYLTJQPKLeTbofRe90AuRJq9C7nwdqo92lKRgOMqMeiS5PCNpXQc1v5DojByvWu/dNT8esU4vvEDyITSg2E2XYTEj2efb/8E0Vk7qL/Bw98o4yPeHn1s9lK0J1fZ8Y6QAKHGQ5ANLj98ok4scI9smK8vWysL0m5RDDrXaBOr6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=palefHqkdCXUSxcSh8pSOE3kKrzI67pWlFf8WwKnHGg=;
- b=V20wOK7JCXR7qEhc6aIr9/5ioeg2oCNSes8juMusJLoEL0N+p7sJfaIIlMDFBpTiGucQ01/h9djd9Sa/NplJS9zzq+zmbT46FNOTOUo/SuFFaTGAlSVupxbJot1Mus/xC7eV0dHahr2LKMQqyzNivXgg21kE6uAyGd43um3WrMs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com (2603:10a6:208:16d::21)
- by DU2PR04MB8855.eurprd04.prod.outlook.com (2603:10a6:10:2e2::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6433.26; Fri, 2 Jun
- 2023 10:16:32 +0000
-Received: from AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::47e4:eb1:e83c:fa4a]) by AM0PR04MB6452.eurprd04.prod.outlook.com
- ([fe80::47e4:eb1:e83c:fa4a%4]) with mapi id 15.20.6455.020; Fri, 2 Jun 2023
- 10:16:32 +0000
-Date:   Fri, 2 Jun 2023 13:16:28 +0300
-From:   Vladimir Oltean <vladimir.oltean@nxp.com>
-To:     Jianmin Lv <lvjianmin@loongson.cn>
-Cc:     Liu Peibao <liupeibao@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-Message-ID: <20230602101628.jkgq3cmwccgsfb4c@skbuf>
-References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
- <ZHjaq+TDW/RFcoxW@bhelgaas>
- <20230601221532.2rfcda4sg5nl7pzp@skbuf>
- <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
- <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
+        with ESMTP id S234703AbjFBLie (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 07:38:34 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B142194
+        for <linux-pci@vger.kernel.org>; Fri,  2 Jun 2023 04:38:33 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5147e40bbbbso2817859a12.3
+        for <linux-pci@vger.kernel.org>; Fri, 02 Jun 2023 04:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1685705911; x=1688297911;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=g4pVi7VOBRFaULLi4SVb4N0TF+UwJd4kFrSgP2liy+0=;
+        b=SRBOfRjcMUxkwQmK+GMU6ugb72NtsDBOdlKm2/+NDhdflQR5OD8Virae/S2OrpTlwO
+         ZjTzB626ks47GxAxK84SDSj1Tc3sIqO1dbzcOou0RHHXUCGn0cb7BIjMcEWsKOCQ9C4M
+         tPhbIcfhih3eRF0vixDhbxQ1z8D+GAZFZgazYUGZUEXQl1jcIZLxQobWdCQXF5m1xTjV
+         9Id59zqHmc9JcD2zUVHT1rQMIjhf0+5Sh5eTFyFHd9wjCd8xD8MBix6alPUWxr1ddJcW
+         2+eDvfzxDxwzpdyR1+lIogaHYzwAvkMe/Hizzbc7+CmakKaBvxuQxlfBQ35oFTKJTHqK
+         kOaQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685705911; x=1688297911;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=g4pVi7VOBRFaULLi4SVb4N0TF+UwJd4kFrSgP2liy+0=;
+        b=GwlAm7alP4oMSzIxOguGf1rMVYg18niBelRwt3Dq7BAOZz4E9dBNgLBiDZzRyPtK6K
+         nhIt/uYPFG04gIZNWGSVWNCmTrtczIc959NJXIPyQzLTE56ojoAavVcx7VKiXvfg2MM6
+         z/7pAGKhLXC9HCdfADqZx9QDOFb4qYeoMId1StSCi2Uvdyxyyn0Fu+3rY+cjcx4uH6n8
+         ae/2z1ZWFwJeozG9J44zvcWyD3+9Mnc80cEr5fZWUXR4P/XdMS+hUTeOV45G8wX7EDOF
+         qMEDKsEhXB0e/9nFO6XM3Pb/XgfKHzukF2j2gf79mPuzmMmGRaaqnAe+wy224Vu+mcq6
+         XeCQ==
+X-Gm-Message-State: AC+VfDzTnDTdpFiGTIkzw7UeAbDS9i6hMxOGWGPsMo28gz+r9G/qvOmU
+        12ETn2yTq5YWLkKUvxNrnQ8+
+X-Google-Smtp-Source: ACHHUZ6VUn698+qtREhO6oDsLHHVh8G2t6Kbo1RoMnm9smgysN+NtVSs8CbNvZvvDyoAZ8jpv79wzA==
+X-Received: by 2002:a05:6402:b34:b0:50c:9582:e968 with SMTP id bo20-20020a0564020b3400b0050c9582e968mr1801501edb.36.1685705911452;
+        Fri, 02 Jun 2023 04:38:31 -0700 (PDT)
+Received: from thinkpad ([117.217.186.79])
+        by smtp.gmail.com with ESMTPSA id w15-20020a056402070f00b00514bb73b8casm602807edx.57.2023.06.02.04.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Jun 2023 04:38:31 -0700 (PDT)
+Date:   Fri, 2 Jun 2023 17:08:20 +0530
+From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To:     Damien Le Moal <dlemoal@kernel.org>
+Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH v5 9/9] PCI: endpoint: Add PCI Endpoint function driver
+ for MHI bus
+Message-ID: <20230602113820.GA34855@thinkpad>
+References: <20230601145718.12204-1-manivannan.sadhasivam@linaro.org>
+ <20230601145718.12204-10-manivannan.sadhasivam@linaro.org>
+ <c13b5771-e619-60cb-791d-1458f7adc9ac@kernel.org>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
-X-ClientProxiedBy: BE1P281CA0124.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:b10:7a::10) To AM0PR04MB6452.eurprd04.prod.outlook.com
- (2603:10a6:208:16d::21)
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR04MB6452:EE_|DU2PR04MB8855:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4ceb6c9e-9b77-4c42-67a1-08db63526ff5
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: AdSKMjJoEwKOhzEGD1uj/wti0bpZVTkU1QzbGvSgCljAkDR8ZU/D9PCS3YskuegmMxQYE9kU1DHy2AKosGEq+ueSN+gsMemfaJLzT087nWMIrVhmxVbebr8KQJeAoktZRbUMhyy6rQKqo7Uer0Mrsm9U7JSIu4gm3CyGVcZewbl0gP1JS6hfgSwjPm7O91SgmDX4AEH6WuoIrmi5OeRc00Qcqv68Po4hd6PmQMYsYTr+4TMdiJBtgYEWJWZVBR4BRWwZSdDJxavef0VAeGMSda1sgBjCygANFzTK5q6ZIAD28kQuZYbqlb1CnPIzTEJC9hOAponsfmhRhajPBhLzHR1o7qFB457Ly+m1KnDxNNyoqdOjzG4NY6mguj7MyjUud6H0mTjXkPGffL9cj1BpQ5woxNrtvwatLFBO3EqPeRJbtkkFzMi4xYyKQlG8X7iWTl1m92GkwKYcoZyWC2tWCqBj/gYHFWp2hs/WJYuCnRL1ZbRAJB/7UISf4dRjJITm1pxycgM3VRVqs4JK2vdQg0n9GizhJfbCc94+cJrhfQg=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR04MB6452.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(7916004)(4636009)(346002)(376002)(396003)(136003)(39860400002)(366004)(451199021)(186003)(86362001)(6486002)(33716001)(966005)(316002)(6666004)(4326008)(6916009)(41300700001)(66946007)(66556008)(66476007)(54906003)(478600001)(44832011)(7416002)(5660300002)(26005)(9686003)(2906002)(83380400001)(6506007)(6512007)(8676002)(8936002)(1076003)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?c0VIZVlFdjBqbGwxWGZPT3BrLzdLbjJTRHJmeU1YNFdCV3dEZTYzOWZFNDFG?=
- =?utf-8?B?cUpUc09VVlRlZHlJSEJSQ0w3OHRXNzdsdVY2MjY5eWZVUTlpbG52Vk9tcmRk?=
- =?utf-8?B?RUlmYndaZ2t1S3Mzckw5UnBZbnM3d2ZoRXVXdjlKK1dsQ0ZxMVZCeS9uMFpu?=
- =?utf-8?B?YlN3aXZPaXhUQ0NDYkdjYndXM0l1NnVsOW44b3JDUE1UOThRV0djeGVMUkVI?=
- =?utf-8?B?eGoreiszclU3Nk90Zm11UzkzdG9GTnZ3SlZNaG12S1BOS1M1cEhCRlVHalJs?=
- =?utf-8?B?bWZTWGVFWUx6N01Eek9OOG5valJjeFRYMzVvam11ZEVIb0lJRUhHN0lTNmV0?=
- =?utf-8?B?a0xpODB6TE01MzBsSjRDcmNPTFZwazhrVVV4bk5UQ29qL0ptMmNpY2pkMFFl?=
- =?utf-8?B?RzhnL0pwdXRkVFBzaU04cVFYbnR3NHNzdUhjazR0cUtwamkxUnM2SXhubHZM?=
- =?utf-8?B?M2JmVURBSzJNUlJTSlBkNG5VZTljdnBEUFhrWjFFTUswT3FBQUlLTUZTTEQr?=
- =?utf-8?B?dXZuQmRJYlF0QkFobk5ET2tuWGMvVG1CZkJSVHM5UHZ2TXhOMXQ3U3AwZDJV?=
- =?utf-8?B?Z3lnLzU3Mk1kQ21mM1BhWExXMXVaVXNOUlA3NmhHSDdQa3hqcFpwRzMxemN5?=
- =?utf-8?B?SUtvUXZ4WEVCZWI2Rk1QUlRlS0YwRXlSb0JjYnhiMkRBMGhReDVLYVNoVHcz?=
- =?utf-8?B?K3IzdkRQYk1Ud0ZjRHJ6aEpySTMvRGNRSjZ1RTd3TUYyOXhGcEdCaGxJcW1p?=
- =?utf-8?B?RXRtOE1zMnJXOFB0bjBQdFVHNHg1WUxpblJmOCtnV1NxMmhTWHhsZFJrS3BC?=
- =?utf-8?B?Y0pHa2o5YmxqQnJMZndlYlcxditpOWVJTUs4WmdCVytEbERvWWtIbXJWclND?=
- =?utf-8?B?MnVaR1N6SUJ6SFpPeXpiNHRPRTFydm1XYitkR0pBaVJBbExiOWZ5RTl5bXhQ?=
- =?utf-8?B?ZU9YU2Q5S3AwaTRuK0haYldZQnhJZ0lSS05JVXhsdEVXUzFmdzBwdmZObWJP?=
- =?utf-8?B?MTl3RG92bVRzM2NWa3lVV3d6dkk1QjliNUUzRWxIbWF1c2wyMi8zZWdyTmhr?=
- =?utf-8?B?NERacGtHb0EzUHJacElMSWZOZ0JlOWtvUWJlS0hGZ3dQeGhoaW5lRWxPYmVj?=
- =?utf-8?B?YzAwbjlFZWcxNFpMenNmZitpay92dlBhbCtIVTh0NnpkWUplZUI1VUdZU1Ex?=
- =?utf-8?B?WkxHc3ovNUZORGdMWmRrMGNWajlVZzBpUXhtS2FYOHpwenVZRk1XS3JhNGpT?=
- =?utf-8?B?WExzTzg0ZnJwblVmZTZvSTUydHhqRmtwaEE3UE9JM0lrR0xUYndzMTMwRlJv?=
- =?utf-8?B?c3Q0eG1rL05sSWZOcHFIbXluSDc5ODEyZkJtN1RCakRvSmZ2VGl0N1NSdUdL?=
- =?utf-8?B?L054N2QrS2tHakoxaVpzOHI5T2FJcmR1N29CbjlOR09wcVI3VkZkREdFdzll?=
- =?utf-8?B?VmpnSlVMczNseUdIcDB2Q3o1MzYxZGZSc0I1WHJrUXhTZURkN0l5eFhuaEpy?=
- =?utf-8?B?anNwb3ltS0t6aEYxQkJpQ1FaaXYreng5OE0xVGhoWXlIRVFVYTJtUURQNXYx?=
- =?utf-8?B?RlhCWVQrRlNqczJHcGVUd2dKL1RlVTVFT0lzYVJTYW1GTjBsdTFIcGpmemE3?=
- =?utf-8?B?bytjeXFkT0NpdkJXTWV4SHgvVzY4WTk0SXZXeFQyWGxlYUlnb0NmYXNHQzBL?=
- =?utf-8?B?R21PTjVERGZvSkNzRzlRQUgwZytFTC94emVNRWJSaEpXaWo4ODlpZEVTbS92?=
- =?utf-8?B?RGJHTDh1eXJ2ME9Ra3lKc2JGaXFGTXZxdDUvN3FXZHpKVXhlMVVHTHdrdExT?=
- =?utf-8?B?VUV6MHNXNStIZjVBaU5NYzArd0dxOFJpRVVtY3pURWdvSm82SCt2c0lTVGc3?=
- =?utf-8?B?VjZ5eHh6OXFRdDduYUMwMklEWXY1R1A0VmhGUDdMTmk1SWkxcG5xeFM4bEZJ?=
- =?utf-8?B?VldRNEdBYkZwc3NOanNsYk9sRmZ4M1RuMGJWcmxJYTErWnVhaVZmdzdiVDIx?=
- =?utf-8?B?clpwN3pkTDc1S2ozSUI5bGpScWRZT01oUzV0ZjhlTnFTQ2xJMUM5M3JQWm1y?=
- =?utf-8?B?a00ycHdWeE9hOVgxNmwvaTdNTkJiS2NtYmR3NG5kR25QTzBzdHRHbURTUjdy?=
- =?utf-8?B?N2lzV3pEaXBrVWFLcG5haGdQbWxyeXZJOXBKQ3BSU2srM0pUaEFOUzdHbUZK?=
- =?utf-8?B?TXc9PQ==?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ceb6c9e-9b77-4c42-67a1-08db63526ff5
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR04MB6452.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Jun 2023 10:16:32.1776
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: MlGtQ7tv1GvME9U/gCTyBialKuz6JrVH2p7yuq2UNOsU9Xp/nwi3N+3Jps5pqfOKPzvFEzbhNJmKI+Qx1H+zhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB8855
+In-Reply-To: <c13b5771-e619-60cb-791d-1458f7adc9ac@kernel.org>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Jianmin,
+On Fri, Jun 02, 2023 at 08:31:31AM +0900, Damien Le Moal wrote:
+> On 6/1/23 23:57, Manivannan Sadhasivam wrote:
+> > Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
+> > The driver implements the MHI function over PCI in the endpoint device
+> > such as SDX55 modem. The MHI endpoint function driver acts as a
+> > controller driver for the MHI Endpoint stack and carries out all PCI
+> > related activities like mapping the host memory using iATU, triggering
+> > MSIs etc...
+> > 
+> > Reviewed-by: Kishon Vijay Abraham I <kishon@kernel.org>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> 
+> Looks good, but not knowing this hardware, I only did a style review. I added
+> some nits below.
+> 
+> Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+> 
+> 
+> > ---
+> >  drivers/pci/endpoint/functions/Kconfig       |  10 +
+> >  drivers/pci/endpoint/functions/Makefile      |   1 +
+> >  drivers/pci/endpoint/functions/pci-epf-mhi.c | 462 +++++++++++++++++++
+> >  3 files changed, 473 insertions(+)
+> >  create mode 100644 drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > 
+> > diff --git a/drivers/pci/endpoint/functions/Kconfig b/drivers/pci/endpoint/functions/Kconfig
+> > index 9fd560886871..f5171b4fabbe 100644
+> > --- a/drivers/pci/endpoint/functions/Kconfig
+> > +++ b/drivers/pci/endpoint/functions/Kconfig
+> > @@ -37,3 +37,13 @@ config PCI_EPF_VNTB
+> >  	  between PCI Root Port and PCIe Endpoint.
+> >  
+> >  	  If in doubt, say "N" to disable Endpoint NTB driver.
+> > +
+> > +config PCI_EPF_MHI
+> > +	tristate "PCI Endpoint driver for MHI bus"
+> > +	depends on PCI_ENDPOINT && MHI_BUS_EP
+> > +	help
+> > +	   Enable this configuration option to enable the PCI Endpoint
+> > +	   driver for Modem Host Interface (MHI) bus in Qualcomm Endpoint
+> > +	   devices such as SDX55.
+> > +
+> > +	   If in doubt, say "N" to disable Endpoint driver for MHI bus.
+> > diff --git a/drivers/pci/endpoint/functions/Makefile b/drivers/pci/endpoint/functions/Makefile
+> > index 5c13001deaba..696473fce50e 100644
+> > --- a/drivers/pci/endpoint/functions/Makefile
+> > +++ b/drivers/pci/endpoint/functions/Makefile
+> > @@ -6,3 +6,4 @@
+> >  obj-$(CONFIG_PCI_EPF_TEST)		+= pci-epf-test.o
+> >  obj-$(CONFIG_PCI_EPF_NTB)		+= pci-epf-ntb.o
+> >  obj-$(CONFIG_PCI_EPF_VNTB) 		+= pci-epf-vntb.o
+> > +obj-$(CONFIG_PCI_EPF_MHI)		+= pci-epf-mhi.o
+> > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
+> > new file mode 100644
+> > index 000000000000..98f0d96cfd46
+> > --- /dev/null
+> > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
 
-On Fri, Jun 02, 2023 at 03:36:18PM +0800, Jianmin Lv wrote:
-> On 2023/6/2 下午3:21, Liu Peibao wrote:
-> > Hi all,
-> > 
-> > It seems that modification for current PCI enumeration framework is
-> > needed to solve the problem. If the effect of this modification is not
-> > easy to evaluate, for the requirement of Loongson, it should be OK that
-> > do the things in Loongson PCI controller driver like discussed
-> > before[1].
-> > 
-> > Br,
-> > Peibao
-> > 
-> > [1] https://lore.kernel.org/all/20221114074346.23008-1-liupeibao@loongson.cn/
-> > 
-> 
-> Agree. For current pci core code, all functions of the device will be
-> skipped if function 0 is not found, even without the patch 6fffbc7ae137
-> (e.g. the func 0 is disabled in bios by setting pci header to 0xffffffff).
-> So it seems that there are two ways for the issue:
-> 
-> 1. Adjust the pci scan core code to allow separate function to be
-> enumerated, which will affect widely the pci core code.
-> 2. Only Adjust loongson pci controller driver as Peibao said, and any
-> function of the device should use platform device in DT if function 0 is
-> disabled, which is acceptable for loongson.
-> 
-> Thanks,
-> Jianmin
+[...]
 
-How about 3. handle of_device_is_available() in the probe function of
-the "loongson, pci-gmac" driver? Would that not work?
+> > +static int pci_epf_mhi_write_to_host(struct mhi_ep_cntrl *mhi_cntrl,
+> > +				     void __iomem *from, u64 to, size_t size)
+> > +{
+> > +	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
+> > +	struct pci_epf *epf = epf_mhi->epf;
+> > +	struct pci_epc *epc = epf_mhi->epf->epc;
+> > +	void __iomem *tre_buf;
+> > +	phys_addr_t tre_phys;
+> > +	size_t offset = to % SZ_4K;
+> > +	int ret;
+> > +
+> > +	mutex_lock(&epf_mhi->lock);
+> > +
+> > +	tre_buf = pci_epc_mem_alloc_addr(epc, &tre_phys, size + offset);
+> > +	if (!tre_buf) {
+> > +		ret = -ENOMEM;
+> > +		goto err_unlock;
+> > +	}
+> > +
+> > +	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, tre_phys,
+> > +			       to - offset, size + offset);
+> > +	if (ret) {
+> > +		pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
+> > +		goto err_unlock;
+> > +	}
+> 
+> The above 2 hunks are that same as in pci_epf_mhi_read_from_host(). May be pack
+> these in a helper function ? E.g. pci_epf_mhi_map() ?
+> Note that I have a patch series in the work that does that at the pci_epc API
+> level (pci_epc_map() + pci_epc_unmap()) to simplify function drivers.
+> 
+> > +
+> > +	memcpy_toio(tre_buf + offset, from, size);
+> > +
+> > +	pci_epc_unmap_addr(epc, epf->func_no, epf->vfunc_no, tre_phys);
+> > +	pci_epc_mem_free_addr(epc, tre_phys, tre_buf, size + offset);
+> 
+> Same here: pci_epf_mhi_unmap() ?
+> 
+
+Agree with both of the above comments. At have this change in my local tree but
+that's not part of this series. Will merge it to this patch itself.
+
+> > +
+> > +err_unlock:
+> > +	mutex_unlock(&epf_mhi->lock);
+> > +
+> > +	return ret;
+> > +}
+> > +
+
+[...]
+
+> > +static int pci_epf_mhi_bind(struct pci_epf *epf)
+> > +{
+> > +	struct pci_epf_mhi *epf_mhi = epf_get_drvdata(epf);
+> > +	struct pci_epc *epc = epf->epc;
+> > +	struct platform_device *pdev = to_platform_device(epc->dev.parent);
+> > +	struct device *dev = &epf->dev;
+> > +	struct resource *res;
+> > +	int ret;
+> > +
+> > +	if (WARN_ON_ONCE(!epc))
+> > +		return -EINVAL;
+> 
+> This should never happen. If there is a possibility that the EPC core code calls
+> bind with epc == NULL, we need to fix that there.
+> 
+
+Right, this seems to be redundant.
+
+- Mani
+
+-- 
+மணிவண்ணன் சதாசிவம்
