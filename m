@@ -2,179 +2,69 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id E87F371FC57
-	for <lists+linux-pci@lfdr.de>; Fri,  2 Jun 2023 10:45:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 72F6B720F80
+	for <lists+linux-pci@lfdr.de>; Sat,  3 Jun 2023 12:44:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234740AbjFBIpO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 2 Jun 2023 04:45:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48120 "EHLO
+        id S229853AbjFCKoz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 3 Jun 2023 06:44:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234135AbjFBIpF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 2 Jun 2023 04:45:05 -0400
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFE41E67;
-        Fri,  2 Jun 2023 01:44:32 -0700 (PDT)
-Received: from [192.168.0.2] (ip5f5aebf4.dynamic.kabel-deutschland.de [95.90.235.244])
-        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        (Authenticated sender: pmenzel)
-        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 2F6E361EA1BFF;
-        Fri,  2 Jun 2023 10:43:27 +0200 (CEST)
-Message-ID: <577f38ed-8532-c32e-07bd-4a3b384d5fe8@molgen.mpg.de>
-Date:   Fri, 2 Jun 2023 10:43:27 +0200
+        with ESMTP id S237127AbjFCKow (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 3 Jun 2023 06:44:52 -0400
+X-Greylist: delayed 4200 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 03 Jun 2023 03:44:51 PDT
+Received: from mail.webtopbits.pl (mail.webtopbits.pl [195.231.64.176])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A71CA
+        for <linux-pci@vger.kernel.org>; Sat,  3 Jun 2023 03:44:51 -0700 (PDT)
+Received: by mail.webtopbits.pl (Postfix, from userid 1001)
+        id 805CDA3917; Fri,  2 Jun 2023 09:55:50 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=webtopbits.pl;
+        s=mail; t=1685696161;
+        bh=Eh8ECMiYd4baGAwPAzhz8mhJACXX7NSRkYjh+plaY18=;
+        h=Date:From:To:Subject:From;
+        b=CMo8SkLnRpc32mD9suAFLsi43/n2FJUx94nwAWUtSff7FnT0qg2eNzYrAfUDi0SI/
+         fxS0UbH5ak7CK5Ad8xfPmDhrNPMBeM8supTfln0yTv0bG2g9luP4h8UIjrSvlaT/8Q
+         IKV6HMJAzOGHWnYmeSWzBTpqmJt9FB35Tyc+6AJS8RQ2c5idoXaRUCaavI1EZFxdYo
+         ix9BwDDE5m+rXV75SmyS2OOFCfTmkX53MIicAyW1A9v9yK7Nk23LHTAyFjWnii62hC
+         WMNRn1ZHlk0k2xR02OXNlsLSiltoZafeTAqTDvXv1I7hSmWIGA4nckJb84ZpW4b8P2
+         iYjD9ZAIN+B7w==
+Received: by mail.webtopbits.pl for <linux-pci@vger.kernel.org>; Fri,  2 Jun 2023 08:55:46 GMT
+Message-ID: <20230602085530-0.1.8w.5l35.0.n4msr8359a@webtopbits.pl>
+Date:   Fri,  2 Jun 2023 08:55:46 GMT
+From:   "Kamil Durjasz" <kamil.durjasz@webtopbits.pl>
+To:     <linux-pci@vger.kernel.org>
+Subject: =?UTF-8?Q?Wy=C5=BCsza_konwersja_w_e-sklepie_?=
+X-Mailer: mail.webtopbits.pl
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Intel-wired-lan] [PATCH] e1000e: Use PME poll to circumvent
- unreliable ACPI wake
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Alexander H Duyck <alexander.duyck@gmail.com>
-Cc:     linux-pm@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Jesse Brandeburg <jesse.brandeburg@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, linux-pci@vger.kernel.org
-References: <20230601162537.1163270-1-kai.heng.feng@canonical.com>
- <269262acfcce8eb1b85ee1fe3424a5ef2991f481.camel@gmail.com>
- <CAAd53p7c6eEqxd3jecfgvpxuYO3nmmmovcqD=3PgbqSVCWFfxA@mail.gmail.com>
-From:   Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <CAAd53p7c6eEqxd3jecfgvpxuYO3nmmmovcqD=3PgbqSVCWFfxA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=unavailable
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-[Cc: linux-pci@vger.kernel.org]
+Dzie=C5=84 dobry,
 
-Dear Kai,
+w jaki spos=C3=B3b docieraj=C4=85 Pa=C5=84stwo do odbiorc=C3=B3w?
 
+Tworzymy pot=C4=99=C5=BCne narz=C4=99dzia sprzeda=C5=BCy, kt=C3=B3re pozw=
+alaj=C4=85 kompleksowo rozwi=C4=85za=C4=87 problemy potencjalnych klient=C3=
+=B3w i skutecznie wp=C5=82yn=C4=85=C4=87 na ich decyzje zakupowe.=20
 
-Thank you for your patch.
+Skupiamy si=C4=99 na Pa=C5=84stwa potrzebach zwi=C4=85zanych z obs=C5=82u=
+g=C4=85 sklepu, oczekiwaniach i planach sprzeda=C5=BCowych. Szczeg=C3=B3=C5=
+=82owo dopasowujemy grafik=C4=99, funkcjonalno=C5=9Bci, struktur=C4=99 i =
+mikrointerakcje do Pa=C5=84stwa grupy docelowej, co przek=C5=82ada si=C4=99=
+ na oczekiwane rezultaty.
 
-Am 02.06.23 um 03:46 schrieb Kai-Heng Feng:
-> On Fri, Jun 2, 2023 at 4:24 AM Alexander H Duyck wrote:
->>
->> On Fri, 2023-06-02 at 00:25 +0800, Kai-Heng Feng wrote:
->>> On some I219 devices, ethernet cable plugging detection only works once
->>> from PCI D3 state. Subsequent cable plugging does set PME bit correctly,
->>> but device still doesn't get woken up.
-
-Could you please add the list of all the devices with the firmware 
-version, you know this problem exists on? Please also add the URLs of 
-the bug reports at the end of the commit message.
-
-Is that problem logged somehow? Could a log message be added first?
-
->> Do we have a root cause on why things don't get woken up? This seems
->> like an issue where something isn't getting reset after the first
->> wakeup and so future ones are blocked.
-> 
-> No we don't know the root cause.
-> I guess the D3 wake isn't really tested under Windows because I219
-> doesn't use runtime D3 on Windows.
-
-How do you know? Where you able to look at the Microsoft Windows driver 
-source code?
-
->>> Since I219 connects to the root complex directly, it relies on platform
->>> firmware (ACPI) to wake it up. In this case, the GPE from _PRW only
->>> works for first cable plugging but fails to notify the driver for
->>> subsequent plugging events.
->>>
->>> The issue was originally found on CNP, but the same issue can be found
->>> on ADL too. So workaround the issue by continuing use PME poll after
-
-The verb is spelled with a space: work around.
-
->>> first ACPI wake. As PME poll is always used, the runtime suspend
->>> restriction for CNP can also be removed.
-
-When was that restriction for CNP added?
-
->>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>> ---
->>>   drivers/net/ethernet/intel/e1000e/netdev.c | 4 +++-
->>>   1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
->>> index bd7ef59b1f2e..f0e48f2bc3a2 100644
->>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
->>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
->>> @@ -7021,6 +7021,8 @@ static __maybe_unused int e1000e_pm_runtime_resume(struct device *dev)
->>>        struct e1000_adapter *adapter = netdev_priv(netdev);
->>>        int rc;
->>>
->>> +     pdev->pme_poll = true;
->>> +
->>>        rc = __e1000_resume(pdev);
->>>        if (rc)
->>>                return rc;
->>
->> Doesn't this enable this too broadly. I know there are a number of
->> devices that run under the e1000e and I would imagine that we don't
->> want them all running with "pme_poll = true" do we?
-> 
-> Whack a mole isn't scaling, either.
-> The generation between CNP and ADL are probably affected too.
-> 
->> It seems like at a minimum we should only be setting this for specific
->> platofrms or devices instead of on all of them.
->>
->> Also this seems like something we should be setting on the suspend side
->> since it seems to be cleared in the wakeup calls.
-> 
-> pme_poll gets cleared on wakeup, and once it's cleared the device will
-> be removed from pci_pme_list.
-> 
-> To prevent that, reset pme_poll to true immediately on runtime resume.
-> 
->> Lastly I am not sure the first one is necessarily succeeding. You might
->> want to check the status of pme_poll before you run your first test.
->> From what I can tell it looks like the initial state is true in
->> pci_pm_init. If so it might be getting cleared after the first wakeup
->> which is what causes your issues.
-> 
-> That's by design. pme_poll gets cleared when the hardware is capable
-> to signal wakeup via PME# or ACPI GPE. For detected hardwares, the
-> pme_poll will never be cleared.
-> So this becomes tricky for the issue, since the ACPI GPE works for
-> just one time, but never again.
-> 
->>> @@ -7682,7 +7684,7 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->>>
->>>        dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_SMART_PREPARE);
->>>
->>> -     if (pci_dev_run_wake(pdev) && hw->mac.type != e1000_pch_cnp)
->>> +     if (pci_dev_run_wake(pdev))
->>>                pm_runtime_put_noidle(&pdev->dev);
->>>
->>>        return 0;
->>
->> I assume this is the original workaround that was put in to address
->> this issue. Perhaps you should add a Fixes tag to this to identify
->> which workaround this patch is meant to be replacing.
-> 
-> Another possibility is to remove runtime power management completely.
-> I wonder why Windows keep the device at D0 all the time?
-
-Who knows how to contact Intel’s driver developers for Microsoft Windows?
-
-> Can Linux align with Windows?
-
-Before deciding this, the power usage in the different states should be 
-measured.
+Ch=C4=99tnie przedstawi=C4=99 dotychczasowe realizacje, aby mogli Pa=C5=84=
+stwo przekona=C4=87 si=C4=99 o naszych mo=C5=BCliwo=C5=9Bciach. Mog=C4=99=
+ si=C4=99 skontaktowa=C4=87?
 
 
-Kind regards,
-
-Paul
+Pozdrawiam
+Kamil Durjasz
