@@ -2,73 +2,127 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A4523721B1F
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 01:56:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BE62721B26
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 02:14:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230153AbjFDX4R (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Jun 2023 19:56:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55940 "EHLO
+        id S230244AbjFEAOd (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sun, 4 Jun 2023 20:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229886AbjFDX4P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Jun 2023 19:56:15 -0400
-Received: from mail-lf1-x12a.google.com (mail-lf1-x12a.google.com [IPv6:2a00:1450:4864:20::12a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D295C4;
-        Sun,  4 Jun 2023 16:56:13 -0700 (PDT)
-Received: by mail-lf1-x12a.google.com with SMTP id 2adb3069b0e04-4f611ac39c5so3277072e87.2;
-        Sun, 04 Jun 2023 16:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685922971; x=1688514971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZWGxEA9l0UGhuiYJWE5IMwjM3NqB6B1yogiaO86CIeI=;
-        b=CG5wcdhkEP+Kri6HWVLpjcVMFzZqlSasqqNaP4dv8ofm8ecD+NnUzS302dCvFT+ftC
-         r8dAqHoz7GEDYS0ES4i+VAiHy9ssMJDO1G2eaYATKgXqwy1qUaziUnXIljrQURn/jh78
-         j2i2+cPgSdAV5wK4twarnG8SXK02SCZU1mfftPwKIqWOW3wpV3FT9Y/YJ6S6HgmY/kop
-         CMFvuFOhc4xnOHn6jJfUkNm8T2y1/8nxe4GTys6mNTd4guMk3ExwdhF4Rr8Y8lOT5XQI
-         8IbcxszSrEQ8OIXrUze7HBfc3OCcHcKTkcLOumViSszKxrqJIXEwVT6DFvs7uFXCYMOK
-         lHSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685922971; x=1688514971;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZWGxEA9l0UGhuiYJWE5IMwjM3NqB6B1yogiaO86CIeI=;
-        b=bhjAnJComIE//QJYVNlNmkHT79sbnCMuVpaMGlvRGTP6s1wueSfSnuZ/0zkjosb8jm
-         nNiIeRYngX9pA9HBpkBq32XRCapDJ1pcLKCPXOstw2xkO132d6cRwwq4KzNFp1uGnmXb
-         ytEftcqEcgckknzzUtetpJd/Y18hj5l8AfYdcqbFkaTVFRmJffeOuPmTyAa5gS0MPO6C
-         EWIawGTknW5ki4QvkE3xezlG4tsz9quMEPbnrlPskxZdUS/qtxOH22DrsJLsINM8buM4
-         Toj1hbdPR+NFetPkkoVcMbt3ni2MXzhxHB5cZukd8suT8juY+vudav/akutT3D7ihECM
-         FWZA==
-X-Gm-Message-State: AC+VfDywct5P0vbLszueZEqy/8rlJVoahXIQJ6NZ6bx/+sPH1lxFoolw
-        QlJERWW//zph2yXO2ddaYoI=
-X-Google-Smtp-Source: ACHHUZ7WoT1EQDx1v2u7rfSJ64Grww9YCa6m+t6rWb2WHhXg6467KQLvg7MLETytv5kiO8UfKTzenw==
-X-Received: by 2002:a2e:7310:0:b0:298:a840:ec65 with SMTP id o16-20020a2e7310000000b00298a840ec65mr3224022ljc.36.1685922970605;
-        Sun, 04 Jun 2023 16:56:10 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id a24-20020a2e9818000000b002ad994b0b51sm1207147ljj.16.2023.06.04.16.56.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 Jun 2023 16:56:10 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 02:56:07 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, mani@kernel.org,
-        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
-        robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
-        kishon@kernel.org, marek.vasut+renesas@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v16 06/22] PCI: dwc: Change arguments of
- dw_pcie_prog_outbound_atu()
-Message-ID: <20230604235607.nyiy4ghk3idgsd7u@mobilestation>
+        with ESMTP id S229886AbjFEAOc (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Jun 2023 20:14:32 -0400
+Received: from JPN01-OS0-obe.outbound.protection.outlook.com (mail-os0jpn01on2109.outbound.protection.outlook.com [40.107.113.109])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44111CD;
+        Sun,  4 Jun 2023 17:14:29 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mWiAdVa/K1Z6znM6KZfAHbg2P63A32iqv0om3mPR0Qxw88IW21s3+zMmwoM1SN4VFVGv4yt+s4gSYSwZR/x7iMLeMxRUcQfGE//hQHDroI4T1JkF7ZWza8Fa7sErl8qsku0ASzAyOYSfuQa01iLwtmbARyNBXcJTowImx+3YKMSjhQ2E7ensFjLxyzg7IwxE6w/aW7ASf9s4w5FtQRmNEazW5tJhi7tOw18zX46XLsKrJrQRnUiH6HCfovm9JmCGb+2EXNMo/gYvO2x6lMOqyQMN872Ar+xMza/LIwaNVqgUp3NzYXNTzBV571vsQLcjfX8w4w5QU5M5JY0ysRk1zA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=m6iPpzJ0Pjrujk97hKEoL18WBDwxsLU/o+BlqQrUBXc=;
+ b=oc+9d3D4LhFjHIQxy49JRaSzeRTP2egc3DufFIigit1xhpOOV9a6P7Z6t1xsjIDmS5s12rS8BfuRy9Porz4pQO7AV9db4Yhz33tuyg5cWIrsUfLzBhehiC9okHme1iIpXjeeTX2rReOO7hRZvexm6v1CviMj9XOqAOBMvl/cPprv1ghV+wHpzP0/9I1pWBx4KJ9RRDjuQN20aRXboeXB0p/tzfdYiKgMU9h2z2dM89m2e/GGQI7Hl/VC4cfz8C0atWyGgET5yzDlly2ZHXYbqlldSgJWJUD8bvFfMuJMUvjuFaKpLxQIILQmHzt4eWJWxKKh/PPcEQ0JfoF32Mm/WA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=m6iPpzJ0Pjrujk97hKEoL18WBDwxsLU/o+BlqQrUBXc=;
+ b=g2eBRZG019lWv43lpWHxjaKOVqBw6SUkJZ010B6UxcI+mGM8sG3/7CUNmJjk8/jRypQ1AdmlVz/GtRCUZbTFRlHx5Fkdo5r6NZ1LDAvJt9cOnGEWz83BsIYyCRZbMPX8g3KMIE47Qtc//D8Mk8sgNYVpnKiPetBT5+Qhy3UekC8=
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ (2603:1096:404:8028::13) by OS3PR01MB10423.jpnprd01.prod.outlook.com
+ (2603:1096:604:1ff::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32; Mon, 5 Jun
+ 2023 00:14:26 +0000
+Received: from TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::711d:f870:2e08:b6e1]) by TYBPR01MB5341.jpnprd01.prod.outlook.com
+ ([fe80::711d:f870:2e08:b6e1%3]) with mapi id 15.20.6455.030; Mon, 5 Jun 2023
+ 00:14:26 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v16 01/22] PCI: Add PCI_EXP_LNKCAP_MLW macros
+Thread-Topic: [PATCH v16 01/22] PCI: Add PCI_EXP_LNKCAP_MLW macros
+Thread-Index: AQHZgwfRNypZz/ijvkOLsJCqGkmnGa97Z+QAgAAVubA=
+Date:   Mon, 5 Jun 2023 00:14:26 +0000
+Message-ID: <TYBPR01MB534183482CD31D122C4735C0D84DA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 References: <20230510062234.201499-1-yoshihiro.shimoda.uh@renesas.com>
- <20230510062234.201499-7-yoshihiro.shimoda.uh@renesas.com>
+ <20230510062234.201499-2-yoshihiro.shimoda.uh@renesas.com>
+ <20230604225036.earzdx5dvzc3imoz@mobilestation>
+In-Reply-To: <20230604225036.earzdx5dvzc3imoz@mobilestation>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYBPR01MB5341:EE_|OS3PR01MB10423:EE_
+x-ms-office365-filtering-correlation-id: 73799d77-1ff9-4281-9c8b-08db6559d278
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: UXrUwqTAk+aKk8qxKvqz18X0v0rLRrm2b6+UKlkqz8tB8uPdYzd+JB4BKhJDI6Rnu1prjgKfGI8Uqxhyzu5qI+VdVf52LN7BFcp4/s0MH719/qwjPKAwrTg1IB4NwWkKFQLHvZBPwuJvBu7mtgh7FyTfOJF2YSrP5gfr/qbx2ag8wACVlrARV/QQhmRBpQotyzxSS6dlMq5ba8wpF4Ln9CxOb2dkz3Rj1Bf/3sK6yQRhmI2bNVFk1Npm9kT/t3jm/hFNOobsvhzLTvhb0Rw8gvVd4Ya3QHpyu+Kkh+E5ZDloZ3qlr7pSlEhFF3RUD/ucWRH0bahVN3Jb5e5w5BZ91JZr2PpdB0tJ96OV587E/F1r9WISQjg6C2V/QxOJfsS4KEMCKAs8LrfhriXdf1cJCgwn6BUmekt4r612NqOjohGgWJRMOEJMEIBB8CLl/F7HnLBsi6vXMSMFXCiCpb2NC4of61v9PcV4P5pT/X8S42IQmlD+pLMaSglumS8r81CUoDx7E0+kiM62W94J3/3ajrdIiVuAMTXQjbVHQm3KVDXXlb6p5OReBFFXosfvZdbCoE1giNlgri2GywbY4A1KDgz47T7dx8u7mjWFQKPoF1hLOz3DZylUnn1w6ACI5MNG
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYBPR01MB5341.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(39860400002)(376002)(136003)(396003)(451199021)(55016003)(110136005)(54906003)(478600001)(8936002)(8676002)(66476007)(4326008)(76116006)(66946007)(64756008)(66556008)(38100700002)(66446008)(122000001)(41300700001)(316002)(186003)(83380400001)(71200400001)(7696005)(9686003)(6506007)(33656002)(86362001)(5660300002)(52536014)(7416002)(38070700005)(2906002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?zK08e308AOYew9pzFsVm6GG5wh2H2M+pTUaYUcajFBOhDoTbkre7Ohm3yIWJ?=
+ =?us-ascii?Q?4ElWfSCdxeiIczrCQbD8N52y9QK7PMcs6TxJfGwK6t/mKuw++8nHUmrZlPxo?=
+ =?us-ascii?Q?SDbCv1hoNAqZv5UfIrwRv6LQA9pTkuq77ZaVbxPVA6fanXX1QugZGMEzE95U?=
+ =?us-ascii?Q?BgFO4feX/9OnL5PfBPnr6iBnmtWCeNsBqU9LN8OtjUek5ZJGLc8qVJKalJH2?=
+ =?us-ascii?Q?xo/lgKcJcscHBJgYMS/le3uyOVqMlcImXe4X5piF3peywkSQ8fvRo7DEjiWt?=
+ =?us-ascii?Q?b8t8gAI7OYY7416BZSBsLFPYmZLQu9fb4NGuU51nr7VX6oDXPTG4agmFZQ+7?=
+ =?us-ascii?Q?2aDV1p2WiUQM3QY23e7otmak1n7w+bn2yjxKXjychzmoyoM2jD9yuKsLlkX+?=
+ =?us-ascii?Q?Unr3pSr4qUQKacGCQt+d6yP/aXmrjwTibvHHJI5v3TcPIzx8qzsqcADh2IMW?=
+ =?us-ascii?Q?bNPUlw6CKZrxMqR3gfC45MzleNoVTzRGVUW2YlSHvNJf20X/kSVKmZj3/GNT?=
+ =?us-ascii?Q?oqL51oZTaNZGhnprc+6r+V+9VlF4mfNRSV3zxard0gMCAHO6gp9/HN19jyGw?=
+ =?us-ascii?Q?bicj4LMRmOv78hK7+tKUFzDPkdFxbK/gOEQhB8Que5voV5G6sAUX/18vb1Uy?=
+ =?us-ascii?Q?V83KgCNd5L2l2ujlksqlt/x2FlZXjtfIid3G5UMDrkI2UEdxABiHyP+2nmGR?=
+ =?us-ascii?Q?DN2xhQeYSRI96U4X3Z18q0mq1PWS23rmK69c0iygknHLmirhnaW40sNSBXkz?=
+ =?us-ascii?Q?KjzQcJZzfqBIBeDwIg03P6gZxIsKqdtsjUxG1UTGWb97U6stFQSdKVmeFyak?=
+ =?us-ascii?Q?/cvWGSsG673oOUaL0ih8xRhHuuYDJU4UhfGkDk3woCZ4yVjVdLasCm04Zlm4?=
+ =?us-ascii?Q?DeiuSgQexM+2IAlMrXQGtacI5qSUAEOeCxHZfHl7jN+0hDvBETEvRK9FohHJ?=
+ =?us-ascii?Q?arlFsJmbCWbo+7i8CaQf3E6YQkKvbai9ZHPN+RBLGwDSCqU6hG562daJuTt2?=
+ =?us-ascii?Q?1D4nHRQlw0JJW2xfRWOurqtNMexQUXOKnmSq6PjfvezFWEM2PoJyJPTihSUq?=
+ =?us-ascii?Q?mE4+/jKTCTCW0+ps7UNBU4WJxjWJlz2PSZ/ehgr0m2zF0SYv4eYrLiTd7ed9?=
+ =?us-ascii?Q?+8kl5EAmF3lRFhQRrY9nv6vnovAPzcAWfhFbTuLYavPyJpiWfJspBGpjZ3l5?=
+ =?us-ascii?Q?1BbG6MXavZplq4zMHOSr0Msn8CCAk2ydKcnOVjSoNgkXDMyqhPkce5YlaoUi?=
+ =?us-ascii?Q?dXgHE7qK/hHwhPD0cUgqEbnyfPX9u61ZOCr+WuQD9NX1UltPwftDW/1nD6L4?=
+ =?us-ascii?Q?wP3R/1ZxOKGKA0HEzB4ROWTrC8AH4aLRCejqeSoyQ/CvPz3+W8S2eyqMnTQX?=
+ =?us-ascii?Q?AhKqfx3OkUiF1Zl7jgBp0xwrTansPGElVb7hHzeKixAG559UFWkZuw2uTrHx?=
+ =?us-ascii?Q?zloLQ2clpWVG5lFcMyWbJknDFas7BtKJsesACjtY3T1nCLgeEGSkV6zaHmH+?=
+ =?us-ascii?Q?38Gi02MWemeb6EbV4e7lZUdc/GkidhUWwhRAKRKfu2BVtxwHnI0Qi1BQmQPd?=
+ =?us-ascii?Q?0PoXvdMZIrCVW3adog7fwzMx2UIC7IbNTnwtU7L6XV/FIvVtUithRHp/7rxC?=
+ =?us-ascii?Q?WiBxP0KLnNly8bsdreDxXEdKyutdRTUmM+T3MShnL3i5hzM6DfYaHa+/+iZ1?=
+ =?us-ascii?Q?q7u1Cg=3D=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230510062234.201499-7-yoshihiro.shimoda.uh@renesas.com>
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYBPR01MB5341.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 73799d77-1ff9-4281-9c8b-08db6559d278
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Jun 2023 00:14:26.0532
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 4HpTM8jpPZuYqJ053EoU5VfryK7WgT2Hs4Hfd6ExeyslIU+yx8tfXdt5ZNtgVoYLpXJc/jqhbd57QlZzxfSbC2yRFUiLnWRXwA5Hdi7rPA3i1qgPeTxiNX1UtO1XNTGU
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB10423
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -76,333 +130,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 10, 2023 at 03:22:18PM +0900, Yoshihiro Shimoda wrote:
-> To add more arguments to the dw_pcie_prog_outbound_atu() in
-> the future, introduce struct dw_pcie_ob_atu_cfg and change
-> the argument. And, drop dw_pcie_prog_ep_outbound_atu(). No behavior
-> changes.
+Hello Serge,
 
-I doubt anyone not being aware of the change context will understand
-your message. More details would help with that: why the conversion
-was necessary, how come the dw_pcie_prog_ep_outbound_atu() function
-turns to be redundant, what additional parameters will be added
-afterwards so this patch turns to be a preparation patch for that, etc.
+> From: Serge Semin, Sent: Monday, June 5, 2023 7:51 AM
+>=20
+> On Wed, May 10, 2023 at 03:22:13PM +0900, Yoshihiro Shimoda wrote:
+> > Add macros defining Maximum Link Width bits in Link Capabilities
+> > Register.
+> >
+> > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+>=20
+> You haven't been using these macros in the following up patches since
+> v9. Why do you keep submitting this change then? I would suggest to
+> drop the patch especially seeing the PCI_EXP_LNKCAP_MLW field directly
+> encodes the link width thus these macros unlikely will be of much use.
 
-Other than that the change looks good.
+Thank you for your review! You're correct. I didn't realized that
+the macros were not used on the patch series..
 
--Serge(y)
+However, I also realized that the patch 11/22 used the PCI_EXP_LNKSTA_NLW_S=
+HIFT
+macro for the PCI_EXP_LNKCAP register. So, I'm thinking that I should modif=
+y
+this patch as adding PCI_EXP_LNKCAP_MLW_SHIFT instead. But, what do you thi=
+nk?
 
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 21 +++++---
->  .../pci/controller/dwc/pcie-designware-host.c | 52 +++++++++++++------
->  drivers/pci/controller/dwc/pcie-designware.c  | 49 ++++++-----------
->  drivers/pci/controller/dwc/pcie-designware.h  | 15 ++++--
->  4 files changed, 77 insertions(+), 60 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index 27278010ecec..fe2e0d765be9 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -182,9 +182,8 @@ static int dw_pcie_ep_inbound_atu(struct dw_pcie_ep *ep, u8 func_no, int type,
->  	return 0;
->  }
->  
-> -static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
-> -				   phys_addr_t phys_addr,
-> -				   u64 pci_addr, size_t size)
-> +static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep,
-> +				   struct dw_pcie_ob_atu_cfg *atu)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	u32 free_win;
-> @@ -196,13 +195,13 @@ static int dw_pcie_ep_outbound_atu(struct dw_pcie_ep *ep, u8 func_no,
->  		return -EINVAL;
->  	}
->  
-> -	ret = dw_pcie_prog_ep_outbound_atu(pci, func_no, free_win, PCIE_ATU_TYPE_MEM,
-> -					   phys_addr, pci_addr, size);
-> +	atu->index = free_win;
-> +	ret = dw_pcie_prog_outbound_atu(pci, atu);
->  	if (ret)
->  		return ret;
->  
->  	set_bit(free_win, ep->ob_window_map);
-> -	ep->outbound_addr[free_win] = phys_addr;
-> +	ep->outbound_addr[free_win] = atu->cpu_addr;
->  
->  	return 0;
->  }
-> @@ -305,8 +304,14 @@ static int dw_pcie_ep_map_addr(struct pci_epc *epc, u8 func_no, u8 vfunc_no,
->  	int ret;
->  	struct dw_pcie_ep *ep = epc_get_drvdata(epc);
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-> -
-> -	ret = dw_pcie_ep_outbound_atu(ep, func_no, addr, pci_addr, size);
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
-> +
-> +	atu.func_no = func_no;
-> +	atu.type = PCIE_ATU_TYPE_MEM;
-> +	atu.cpu_addr = addr;
-> +	atu.pci_addr = pci_addr;
-> +	atu.size = size;
-> +	ret = dw_pcie_ep_outbound_atu(ep, &atu);
->  	if (ret) {
->  		dev_err(pci->dev, "Failed to enable address\n");
->  		return ret;
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> index 5718b4bb67f0..676216d540fe 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> @@ -544,6 +544,7 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
->  {
->  	struct dw_pcie_rp *pp = bus->sysdata;
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
->  	int type, ret;
->  	u32 busdev;
->  
-> @@ -566,8 +567,12 @@ static void __iomem *dw_pcie_other_conf_map_bus(struct pci_bus *bus,
->  	else
->  		type = PCIE_ATU_TYPE_CFG1;
->  
-> -	ret = dw_pcie_prog_outbound_atu(pci, 0, type, pp->cfg0_base, busdev,
-> -					pp->cfg0_size);
-> +	atu.type = type;
-> +	atu.cpu_addr = pp->cfg0_base;
-> +	atu.pci_addr = busdev;
-> +	atu.size = pp->cfg0_size;
-> +
-> +	ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  	if (ret)
->  		return NULL;
->  
-> @@ -579,6 +584,7 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
->  {
->  	struct dw_pcie_rp *pp = bus->sysdata;
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
->  	int ret;
->  
->  	ret = pci_generic_config_read(bus, devfn, where, size, val);
-> @@ -586,9 +592,12 @@ static int dw_pcie_rd_other_conf(struct pci_bus *bus, unsigned int devfn,
->  		return ret;
->  
->  	if (pp->cfg0_io_shared) {
-> -		ret = dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
-> -						pp->io_base, pp->io_bus_addr,
-> -						pp->io_size);
-> +		atu.type = PCIE_ATU_TYPE_IO;
-> +		atu.cpu_addr = pp->io_base;
-> +		atu.pci_addr = pp->io_bus_addr;
-> +		atu.size = pp->io_size;
-> +
-> +		ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  		if (ret)
->  			return PCIBIOS_SET_FAILED;
->  	}
-> @@ -601,6 +610,7 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
->  {
->  	struct dw_pcie_rp *pp = bus->sysdata;
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
->  	int ret;
->  
->  	ret = pci_generic_config_write(bus, devfn, where, size, val);
-> @@ -608,9 +618,12 @@ static int dw_pcie_wr_other_conf(struct pci_bus *bus, unsigned int devfn,
->  		return ret;
->  
->  	if (pp->cfg0_io_shared) {
-> -		ret = dw_pcie_prog_outbound_atu(pci, 0, PCIE_ATU_TYPE_IO,
-> -						pp->io_base, pp->io_bus_addr,
-> -						pp->io_size);
-> +		atu.type = PCIE_ATU_TYPE_IO;
-> +		atu.cpu_addr = pp->io_base;
-> +		atu.pci_addr = pp->io_bus_addr;
-> +		atu.size = pp->io_size;
-> +
-> +		ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  		if (ret)
->  			return PCIBIOS_SET_FAILED;
->  	}
-> @@ -645,6 +658,7 @@ static struct pci_ops dw_pcie_ops = {
->  static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
->  	struct resource_entry *entry;
->  	int i, ret;
->  
-> @@ -672,10 +686,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  		if (pci->num_ob_windows <= ++i)
->  			break;
->  
-> -		ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_MEM,
-> -						entry->res->start,
-> -						entry->res->start - entry->offset,
-> -						resource_size(entry->res));
-> +		atu.index = i;
-> +		atu.type = PCIE_ATU_TYPE_MEM;
-> +		atu.cpu_addr = entry->res->start;
-> +		atu.pci_addr = entry->res->start - entry->offset;
-> +		atu.size = resource_size(entry->res);
-> +
-> +		ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  		if (ret) {
->  			dev_err(pci->dev, "Failed to set MEM range %pr\n",
->  				entry->res);
-> @@ -685,10 +702,13 @@ static int dw_pcie_iatu_setup(struct dw_pcie_rp *pp)
->  
->  	if (pp->io_size) {
->  		if (pci->num_ob_windows > ++i) {
-> -			ret = dw_pcie_prog_outbound_atu(pci, i, PCIE_ATU_TYPE_IO,
-> -							pp->io_base,
-> -							pp->io_bus_addr,
-> -							pp->io_size);
-> +			atu.index = i;
-> +			atu.type = PCIE_ATU_TYPE_IO;
-> +			atu.cpu_addr = pp->io_base;
-> +			atu.pci_addr = pp->io_bus_addr;
-> +			atu.size = pp->io_size;
-> +
-> +			ret = dw_pcie_prog_outbound_atu(pci, &atu);
->  			if (ret) {
->  				dev_err(pci->dev, "Failed to set IO range %pr\n",
->  					entry->res);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index ede166645289..bd85a73d354b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -464,56 +464,56 @@ static inline u32 dw_pcie_enable_ecrc(u32 val)
->  	return val | PCIE_ATU_TD;
->  }
->  
-> -static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
-> -				       int index, int type, u64 cpu_addr,
-> -				       u64 pci_addr, u64 size)
-> +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
-> +			      const struct dw_pcie_ob_atu_cfg *atu)
->  {
-> +	u64 cpu_addr = atu->cpu_addr;
->  	u32 retries, val;
->  	u64 limit_addr;
->  
->  	if (pci->ops && pci->ops->cpu_addr_fixup)
->  		cpu_addr = pci->ops->cpu_addr_fixup(pci, cpu_addr);
->  
-> -	limit_addr = cpu_addr + size - 1;
-> +	limit_addr = cpu_addr + atu->size - 1;
->  
->  	if ((limit_addr & ~pci->region_limit) != (cpu_addr & ~pci->region_limit) ||
->  	    !IS_ALIGNED(cpu_addr, pci->region_align) ||
-> -	    !IS_ALIGNED(pci_addr, pci->region_align) || !size) {
-> +	    !IS_ALIGNED(atu->pci_addr, pci->region_align) || !atu->size) {
->  		return -EINVAL;
->  	}
->  
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_BASE,
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_BASE,
->  			      lower_32_bits(cpu_addr));
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_BASE,
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_BASE,
->  			      upper_32_bits(cpu_addr));
->  
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LIMIT,
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LIMIT,
->  			      lower_32_bits(limit_addr));
->  	if (dw_pcie_ver_is_ge(pci, 460A))
-> -		dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_LIMIT,
-> +		dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_LIMIT,
->  				      upper_32_bits(limit_addr));
->  
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_LOWER_TARGET,
-> -			      lower_32_bits(pci_addr));
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_UPPER_TARGET,
-> -			      upper_32_bits(pci_addr));
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_LOWER_TARGET,
-> +			      lower_32_bits(atu->pci_addr));
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_UPPER_TARGET,
-> +			      upper_32_bits(atu->pci_addr));
->  
-> -	val = type | PCIE_ATU_FUNC_NUM(func_no);
-> +	val = atu->type | PCIE_ATU_FUNC_NUM(atu->func_no);
->  	if (upper_32_bits(limit_addr) > upper_32_bits(cpu_addr) &&
->  	    dw_pcie_ver_is_ge(pci, 460A))
->  		val |= PCIE_ATU_INCREASE_REGION_SIZE;
->  	if (dw_pcie_ver_is(pci, 490A))
->  		val = dw_pcie_enable_ecrc(val);
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL1, val);
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL1, val);
->  
-> -	dw_pcie_writel_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
-> +	dw_pcie_writel_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2, PCIE_ATU_ENABLE);
->  
->  	/*
->  	 * Make sure ATU enable takes effect before any subsequent config
->  	 * and I/O accesses.
->  	 */
->  	for (retries = 0; retries < LINK_WAIT_MAX_IATU_RETRIES; retries++) {
-> -		val = dw_pcie_readl_atu_ob(pci, index, PCIE_ATU_REGION_CTRL2);
-> +		val = dw_pcie_readl_atu_ob(pci, atu->index, PCIE_ATU_REGION_CTRL2);
->  		if (val & PCIE_ATU_ENABLE)
->  			return 0;
->  
-> @@ -525,21 +525,6 @@ static int __dw_pcie_prog_outbound_atu(struct dw_pcie *pci, u8 func_no,
->  	return -ETIMEDOUT;
->  }
->  
-> -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> -			      u64 cpu_addr, u64 pci_addr, u64 size)
-> -{
-> -	return __dw_pcie_prog_outbound_atu(pci, 0, index, type,
-> -					   cpu_addr, pci_addr, size);
-> -}
-> -
-> -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> -				 int type, u64 cpu_addr, u64 pci_addr,
-> -				 u64 size)
-> -{
-> -	return __dw_pcie_prog_outbound_atu(pci, func_no, index, type,
-> -					   cpu_addr, pci_addr, size);
-> -}
-> -
->  static inline u32 dw_pcie_readl_atu_ib(struct dw_pcie *pci, u32 index, u32 reg)
->  {
->  	return dw_pcie_readl_atu(pci, PCIE_ATU_REGION_DIR_IB, index, reg);
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index 9acf6c40d252..b8fa099bbed3 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -291,6 +291,15 @@ enum dw_pcie_core_rst {
->  	DW_PCIE_NUM_CORE_RSTS
->  };
->  
-> +struct dw_pcie_ob_atu_cfg {
-> +	int index;
-> +	int type;
-> +	u8 func_no;
-> +	u64 cpu_addr;
-> +	u64 pci_addr;
-> +	u64 size;
-> +};
-> +
->  struct dw_pcie_host_ops {
->  	int (*host_init)(struct dw_pcie_rp *pp);
->  	void (*host_deinit)(struct dw_pcie_rp *pp);
-> @@ -419,10 +428,8 @@ void dw_pcie_write_dbi2(struct dw_pcie *pci, u32 reg, size_t size, u32 val);
->  int dw_pcie_link_up(struct dw_pcie *pci);
->  void dw_pcie_upconfig_setup(struct dw_pcie *pci);
->  int dw_pcie_wait_for_link(struct dw_pcie *pci);
-> -int dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
-> -			      u64 cpu_addr, u64 pci_addr, u64 size);
-> -int dw_pcie_prog_ep_outbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> -				 int type, u64 cpu_addr, u64 pci_addr, u64 size);
-> +int dw_pcie_prog_outbound_atu(struct dw_pcie *pci,
-> +			      const struct dw_pcie_ob_atu_cfg *atu);
->  int dw_pcie_prog_inbound_atu(struct dw_pcie *pci, int index, int type,
->  			     u64 cpu_addr, u64 pci_addr, u64 size);
->  int dw_pcie_prog_ep_inbound_atu(struct dw_pcie *pci, u8 func_no, int index,
-> -- 
-> 2.25.1
-> 
+--- on the patch 11/22 ---
+> +	cap =3D dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
+> +	val =3D dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
+> +	val &=3D ~PCI_EXP_LNKCAP_MLW;
+> +	val |=3D num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT;
+
+Perhaps, this should be PCI_EXP_LNKCAP_MLW_SHIFT instead.
+---
+
+Best regards,
+Yoshihiro Shimoda
+
+> -Serge(y)
+>=20
+> > ---
+> >  include/uapi/linux/pci_regs.h | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_reg=
+s.h
+> > index dc2000e0fe3a..5d48413ac28f 100644
+> > --- a/include/uapi/linux/pci_regs.h
+> > +++ b/include/uapi/linux/pci_regs.h
+> > @@ -538,6 +538,12 @@
+> >  #define  PCI_EXP_LNKCAP_SLS_16_0GB 0x00000004 /* LNKCAP2 SLS Vector bi=
+t 3 */
+> >  #define  PCI_EXP_LNKCAP_SLS_32_0GB 0x00000005 /* LNKCAP2 SLS Vector bi=
+t 4 */
+> >  #define  PCI_EXP_LNKCAP_SLS_64_0GB 0x00000006 /* LNKCAP2 SLS Vector bi=
+t 5 */
+> > +#define  PCI_EXP_LNKCAP_MLW_X1	0x00000010 /* Maximum Link Width x1 */
+> > +#define  PCI_EXP_LNKCAP_MLW_X2	0x00000020 /* Maximum Link Width x2 */
+> > +#define  PCI_EXP_LNKCAP_MLW_X4	0x00000040 /* Maximum Link Width x4 */
+> > +#define  PCI_EXP_LNKCAP_MLW_X8	0x00000080 /* Maximum Link Width x8 */
+> > +#define  PCI_EXP_LNKCAP_MLW_X12	0x000000c0 /* Maximum Link Width x12 *=
+/
+> > +#define  PCI_EXP_LNKCAP_MLW_X16	0x00000100 /* Maximum Link Width x16 *=
+/
+> >  #define  PCI_EXP_LNKCAP_MLW	0x000003f0 /* Maximum Link Width */
+> >  #define  PCI_EXP_LNKCAP_ASPMS	0x00000c00 /* ASPM Support */
+> >  #define  PCI_EXP_LNKCAP_ASPM_L0S 0x00000400 /* ASPM L0s Support */
+> > --
+> > 2.25.1
+> >
