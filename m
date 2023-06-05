@@ -2,53 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DD6722406
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 12:58:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20A69722429
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 13:07:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230223AbjFEK6o (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jun 2023 06:58:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32860 "EHLO
+        id S231840AbjFELG3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jun 2023 07:06:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229802AbjFEK6n (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 06:58:43 -0400
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B5ACEA;
-        Mon,  5 Jun 2023 03:58:41 -0700 (PDT)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2b1b30445cfso36784221fa.1;
-        Mon, 05 Jun 2023 03:58:41 -0700 (PDT)
+        with ESMTP id S232308AbjFELGW (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 07:06:22 -0400
+Received: from mail-lj1-x232.google.com (mail-lj1-x232.google.com [IPv6:2a00:1450:4864:20::232])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E055BD;
+        Mon,  5 Jun 2023 04:06:21 -0700 (PDT)
+Received: by mail-lj1-x232.google.com with SMTP id 38308e7fff4ca-2b1c30a1653so16859311fa.2;
+        Mon, 05 Jun 2023 04:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685962719; x=1688554719;
+        d=gmail.com; s=20221208; t=1685963179; x=1688555179;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=7GwBjzdlFiqH9/htrq3/gTiCUQ+rn2YtMAR4ZlxAmMk=;
-        b=cd1sGThJWyGiYTP0LEQ4AcWRcxlBQTg/p47lL9Dv+5rwOUqdlNJTim1hrEefNtPm6u
-         Z24ju/MFuFKzAn7dluHBkaFxO2J5DhvlJ2X4lsSXcipyZZkMvHxjEMCj9GrsjFUV9Vw0
-         fz9zgApWZ1gNAT8LE4A5EK2JeBjnHn/f9Tje4KjUZ3lpdMdfYzXB3XwPEypJrcIpjDCN
-         G41DeZLQIb4k88HA9QwQU/uuf3Pp/JIMXZgKZSCdcMjcKUmjLWvz0ST2gEC2vzXWqbzB
-         kdTMu01+m/28Y+jknJRg6gbw7hQrIYb0NHv0Wowc9KVWExiMiGyjzTkoB7ctVxhT+rZt
-         nzDw==
+        bh=H7M30gPRF1S9FmsectECqP03XbemHmNsuKOYVOI7zWc=;
+        b=YETGDHrlvlPXeuRrT+vezPoWYnsr7Xid2LpIK5AyVz3kNTn9HUBGpXZdHE0PoAupVc
+         uPEp2hIwRV6QqQXRkdj3HAnCZ4l9o0zjcpR+OPa7yNPle1K3A5T15RWP3hTP4Xuh+kep
+         ABMBanCYpppHk/rzmN+6jlJNcVwPS8gMU5aGELd+nhh3/qrxUBEWhVT++C2FHM9zpM9h
+         zavp90/YNL80eTU3ndAWSCmGoaUoiD4WhuZiTQZlZpvFSHi5YjoERSBWXS1XMBEEENR4
+         fTFQHItGpLes1oaXrzRNUK/OCejNTuGu7o/0Hz+fjMo+Qi40UwvTP+Gzwvb8USbSrOGE
+         P/sQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685962719; x=1688554719;
+        d=1e100.net; s=20221208; t=1685963179; x=1688555179;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7GwBjzdlFiqH9/htrq3/gTiCUQ+rn2YtMAR4ZlxAmMk=;
-        b=KBaoNJP+uf/pT9SZFFsQaa1Ciy/1lLehaYqY/TVH6n0tmFonfskMv8TMdNo/E6itNI
-         R0dYhF7F2Oi2rR3BZB64cadaZigLMw1VH7pQ3A0Mgd8WdRTn8TSUYnczarEFAesx/hu0
-         PlYvJtWtx1OehqzQcKIaUuPEjfW6xTbbRqKIH7KrJtQ2hPLbFRfFQCFEhUmFVd8ACNh/
-         vxGDetM50IMjiwk6UT6IDkt05mmCDLTpGw7+6KN5Nvw1j7RGQjrMjfT6V3DXq00zuuJE
-         r2MVfDf4iDjkwNTXg8nKha4bft99nNTnY6euG3uayZY/VnRGoZgNJsODc0Ms5SjNBh8I
-         jGdg==
-X-Gm-Message-State: AC+VfDxWrSvtOFgGHhQ3OYK5LgqhOnR+cDmkjRcTONWWeEJmuJd51RuP
-        YOgHxxOlp3BuQCXXGWvnbP4=
-X-Google-Smtp-Source: ACHHUZ57P9cW4s65TelliT9WOwKpN9ocbjXvamYeGPg+nAgaOAdNv0XmkX3vc1127aIjExtaaV6/Tw==
-X-Received: by 2002:a2e:3203:0:b0:2b0:2976:172d with SMTP id y3-20020a2e3203000000b002b02976172dmr4052358ljy.9.1685962719245;
-        Mon, 05 Jun 2023 03:58:39 -0700 (PDT)
+        bh=H7M30gPRF1S9FmsectECqP03XbemHmNsuKOYVOI7zWc=;
+        b=k9y8KM1NlbRR60gOEdSA8QMpl5z8vOWcTfekpJ3b3yomFcMBk2XKDpMRgSlyMo9ts5
+         tbMF5YYTNEFG/tzHfWpwuUZgWVqtzNOblLQmiiiL4+QuXLi552zrmM9BxQQ3p3QRIKhh
+         z69EWKaUv1A564BgqV2J50RH1tWHYYhRA6kWHy93QpJU8lzhSXlBgPzbtfFHlRNtdbSM
+         1gnVT619trVwXjS8/CrD3ZSgAqyobamc+1prCR7L1g4SwditVMoQBE1HF5D83Arf4mP/
+         rlnfP6SZPhdDa4mvvLhO3FtqB9H49UrHqYeL7QgoM02Kzxl1sqYHV14b4c8T418ZnbRL
+         VJsQ==
+X-Gm-Message-State: AC+VfDx/WzR3r88gneJuwGwCdXOOaUJM4n/8vdwg/J4vxdsot0F9a6YX
+        TwQxaGyW7/FBLjDqmDQSkv4=
+X-Google-Smtp-Source: ACHHUZ4W/mP7rRFDsy2/31Pt+q8ndVpZ9XK1lT5mr7917K/HPvUfBLgNp/FOioqFsZIVqOyNWeRuiA==
+X-Received: by 2002:a2e:3502:0:b0:2b1:eb62:ffc8 with SMTP id z2-20020a2e3502000000b002b1eb62ffc8mr293673ljz.6.1685963179228;
+        Mon, 05 Jun 2023 04:06:19 -0700 (PDT)
 Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id p15-20020a2ea40f000000b002adb6dd5a97sm1406292ljn.27.2023.06.05.03.58.38
+        by smtp.gmail.com with ESMTPSA id n21-20020a2e82d5000000b002a8c1462ecbsm1413836ljh.137.2023.06.05.04.06.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 03:58:38 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 13:58:36 +0300
+        Mon, 05 Jun 2023 04:06:18 -0700 (PDT)
+Date:   Mon, 5 Jun 2023 14:06:16 +0300
 From:   Serge Semin <fancer.lancer@gmail.com>
 To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 Cc:     jingoohan1@gmail.com, mani@kernel.org,
@@ -56,15 +56,17 @@ Cc:     jingoohan1@gmail.com, mani@kernel.org,
         robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
         kishon@kernel.org, marek.vasut+renesas@gmail.com,
         linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v16 11/22] PCI: dwc: Add dw_pcie_link_set_max_cap_width()
-Message-ID: <20230605105836.ddvbrhlf6xfnkd2y@mobilestation>
+        linux-renesas-soc@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH v16 12/22] PCI: tegra194: Drop PCI_EXP_LNKSTA_NLW setting.
+Message-ID: <20230605110616.k7l2o7fwwiy62jau@mobilestation>
 References: <20230510062234.201499-1-yoshihiro.shimoda.uh@renesas.com>
- <20230510062234.201499-12-yoshihiro.shimoda.uh@renesas.com>
+ <20230510062234.201499-13-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230510062234.201499-12-yoshihiro.shimoda.uh@renesas.com>
+In-Reply-To: <20230510062234.201499-13-yoshihiro.shimoda.uh@renesas.com>
 X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
         RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
@@ -75,82 +77,46 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 10, 2023 at 03:22:23PM +0900, Yoshihiro Shimoda wrote:
-> Add dw_pcie_link_set_max_cap_width() to set PCI_EXP_LNKCAP_MLW.
-> In accordance with the DW PCIe RC/EP HW manuals [1,2,3,...] aside with
-> the PORT_LINK_CTRL_OFF.LINK_CAPABLE and GEN2_CTRL_OFF.NUM_OF_LANES[8:0]
-> field there is another one which needs to be updated. It's
-> LINK_CAPABILITIES_REG.PCIE_CAP_MAX_LINK_WIDTH. If it isn't done at
-> the very least the maximum link-width capability CSR won't expose
-> the actual maximum capability.
+On Wed, May 10, 2023 at 03:22:24PM +0900, Yoshihiro Shimoda wrote:
+> dw_pcie_setup() will set PCI_EXP_LNKSTA_NLW to PCI_EXP_LNKCAP register
+> so that drop such setting from tegra_pcie_dw_host_init().
 > 
-> [1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.60a, March 2015, p.1032
-> [2] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.70a, March 2016, p.1065
-> [3] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->     Version 4.90a, March 2016, p.1057
-> ...
-> [X] DesignWare Cores PCI Express Controller Databook - DWC PCIe Endpoint,
->       Version 5.40a, March 2019, p.1396
-> [X+1] DesignWare Cores PCI Express Controller Databook - DWC PCIe Root Port,
->       Version 5.40a, March 2019, p.1266
-> 
-> The commit description is suggested by Serge Semin.
-> 
-> Suggested-by: Serge Semin <fancer.lancer@gmail.com>
 > Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  drivers/pci/controller/dwc/pcie-designware.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-> index 5dc423dd2f21..8b2978c6eb23 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -758,6 +758,21 @@ static void dw_pcie_link_set_max_link_width(struct dw_pcie *pci, u32 num_lanes)
->  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, lwsc);
->  }
->  
-> +static void dw_pcie_link_set_max_cap_width(struct dw_pcie *pci, int num_lanes)
-> +{
+> Cc: Thierry Reding <thierry.reding@gmail.com>
+> Cc: Jonathan Hunter <jonathanh@nvidia.com>
 
-> +	u32 val;
-> +	u8 cap;
-> +
-> +	if (!num_lanes)
-> +		return;
-> +
-> +	cap = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +	val = dw_pcie_readl_dbi(pci, cap + PCI_EXP_LNKCAP);
-> +	val &= ~PCI_EXP_LNKCAP_MLW;
-> +	val |= num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT;
-> +	dw_pcie_writel_dbi(pci, cap + PCI_EXP_LNKCAP, val);
+AFAICS this update isn't supposed to bring any regression since the
+tegra_pcie_dw_host_init() call is always followed by the
+dw_pcie_setup_rc() method invocation which thanks to your patches now
+fully performs the link width setups. So from my point of view:
 
-Once again. Please move this code to the
-dw_pcie_link_set_max_link_width() method as I already asked here:
-https://lore.kernel.org/linux-pci/20230501195753.o3qfcs7qyergccnr@mobilestation/
-There is no point in creating a separate method for the action which
-is implied by the already defined and incomplete
-dw_pcie_link_set_max_link_width() function.
+Reviewed-by: Serge Semin <fancer.lancer@gmail.com>
 
-Also as we already agreed please replace the hard-coded bitwise shift
-operation with the FIELD_PREP(PCI_EXP_LNKCAP_MLW, num_lanes)
-statement.
+Though testing this on a real hw would be very welcome.
 
 -Serge(y)
 
-> +}
-> +
->  void dw_pcie_iatu_detect(struct dw_pcie *pci)
->  {
->  	int max_region, ob, ib;
-> @@ -1040,4 +1055,5 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  	dw_pcie_writel_dbi(pci, PCIE_PORT_LINK_CONTROL, val);
+> ---
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/controller/dwc/pcie-tegra194.c
+> index 4adba379b83d..723a22ccd58c 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -901,12 +901,6 @@ static int tegra_pcie_dw_host_init(struct dw_pcie_rp *pp)
+>  		AMBA_ERROR_RESPONSE_CRS_SHIFT);
+>  	dw_pcie_writel_dbi(pci, PORT_LOGIC_AMBA_ERROR_RESPONSE_DEFAULT, val);
 >  
->  	dw_pcie_link_set_max_link_width(pci, pci->num_lanes);
-> +	dw_pcie_link_set_max_cap_width(pci, pci->num_lanes);
->  }
+> -	/* Configure Max lane width from DT */
+> -	val = dw_pcie_readl_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP);
+> -	val &= ~PCI_EXP_LNKCAP_MLW;
+> -	val |= (pcie->num_lanes << PCI_EXP_LNKSTA_NLW_SHIFT);
+> -	dw_pcie_writel_dbi(pci, pcie->pcie_cap_base + PCI_EXP_LNKCAP, val);
+> -
+>  	/* Clear Slot Clock Configuration bit if SRNS configuration */
+>  	if (pcie->enable_srns) {
+>  		val_16 = dw_pcie_readw_dbi(pci, pcie->pcie_cap_base +
 > -- 
 > 2.25.1
 > 
