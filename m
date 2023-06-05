@@ -2,238 +2,250 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 88A4C722077
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 10:05:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C01567220F1
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 10:25:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbjFEIFr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jun 2023 04:05:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49614 "EHLO
+        id S229761AbjFEIZu (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jun 2023 04:25:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjFEIFq (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 04:05:46 -0400
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C776A1;
-        Mon,  5 Jun 2023 01:05:45 -0700 (PDT)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-4f4b80bf93aso5545213e87.0;
-        Mon, 05 Jun 2023 01:05:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685952343; x=1688544343;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=e+P17w6os3VlVktb8tzavWx48OAiemwkjf6b5gb7S80=;
-        b=ATLKkK7Byb9mQFYPEefddnjKblvkT3hYp3IR/K9EXn12TfUhuOyXeVfuBrL7wi8jaV
-         jaYhIHq6gAssvsl6Mo0jRjiNYTPYJEmwqBhnpok5BejMMwhg6weMWjJWwvhohyAmXQ01
-         LnfOeM+mK5D19qO+bUnqMGqs7Ii7c0llDyH+mGwDOihyGiKTG2TFHY3IAoSC4sKIVTIu
-         xeYbhJKi/cS1UovqD9xLG2zeR9i+LhcndcvQxgUgbHv2u4WZRPazHswXjnP9hLjfNiP7
-         mxrijGCLHh09wQTI+ad+Noox5ctWEyPiJ1Ic2AAt0NG7d/0dXKiOfL0I+YbLRPbZsNu2
-         kv0g==
+        with ESMTP id S229590AbjFEIZt (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 04:25:49 -0400
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 044BBAD
+        for <linux-pci@vger.kernel.org>; Mon,  5 Jun 2023 01:25:46 -0700 (PDT)
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 686703F42E
+        for <linux-pci@vger.kernel.org>; Mon,  5 Jun 2023 08:25:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1685953545;
+        bh=w/vz4qy3Kc7GOpDb+K0VZMneVYxuO4mipxqG9LguKK8=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=lQXJHQdWxiAUtX8//YuXiJod2Y9mAZaTY22VEoNDePKm31+8wZLkJNnWaEGl2STaU
+         qTe0lRkI6py8cedsKN9vleECcGnyh4K+uzcTqHKjVwqhp2UfRrDyAN9pH/Oqy+U0K2
+         HpKf/HONW+PUsQsz7CBOZReRL2/391QMl9Mrr0LuMgnbu5IbwJ/S3W/MRR6YM1METd
+         GOBiWk10G/QBMQXb/r5fQBT+VLSNHB47gokw11neitRE7hDbV3WaR3/iqHcuj3kiT6
+         +XPGiqjPBOofdDqjT+ssr8sD4AT3igCbERR26/s6QgWd3gvRLk8tm+JmiLyqs+g4Lc
+         PL2s1uX/0jS2g==
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-75ec35e6e2fso14809085a.3
+        for <linux-pci@vger.kernel.org>; Mon, 05 Jun 2023 01:25:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685952343; x=1688544343;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=e+P17w6os3VlVktb8tzavWx48OAiemwkjf6b5gb7S80=;
-        b=a4C2y5O2/iL3TxRvk7mghthyOqrLpDe10cvFa7W5KBeIscse2Wr2P8wpWdR9qrt2y8
-         lL6eWH8to9G/lq6BJiAH8c/a902S+WWUQksROK82HIHnnG1HDUl0uFCFITP2iX6R4xe/
-         zYUn3iEd20yEqJdSW86asFPme5Xc8/KTbyNB9uVF3iY98TfYPDHZsLTNcTin1k2LbwL4
-         +OdRXBOd9sQuzCsE1OUC80A9oCPo7uI0reQp6hf9MNNXolAdZKA8VccciM5NlkjG2Tm0
-         CbFZMuEBBn0nJj0DBdWi8IAIQOeK682aqzUDwGmf4vBT7sz0CDqCOspk7mDu/dW6w5/o
-         qOxw==
-X-Gm-Message-State: AC+VfDxTL6hObLqra8el6dfpRrtfLXOJNGTqkzun8J+j+DJX/fuHYctE
-        WGGNyMvOSepBQ6nMKAbmgR4=
-X-Google-Smtp-Source: ACHHUZ7TG7uY2wGNnpHdmzkXGDqwicdkIgnj02shvhhVGbq2eWqmEy0ftrf8sGjc3fVWZfZ89K/FBQ==
-X-Received: by 2002:ac2:4c31:0:b0:4f6:10e9:c507 with SMTP id u17-20020ac24c31000000b004f610e9c507mr3921078lfq.23.1685952342983;
-        Mon, 05 Jun 2023 01:05:42 -0700 (PDT)
-Received: from mobilestation ([95.79.140.35])
-        by smtp.gmail.com with ESMTPSA id i21-20020ac25235000000b004f0199e8770sm1040382lfl.65.2023.06.05.01.05.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 01:05:42 -0700 (PDT)
-Date:   Mon, 5 Jun 2023 11:05:40 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc:     jingoohan1@gmail.com, mani@kernel.org,
-        gustavo.pimentel@synopsys.com, lpieralisi@kernel.org,
-        robh+dt@kernel.org, kw@linux.com, bhelgaas@google.com,
-        kishon@kernel.org, marek.vasut+renesas@gmail.com,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org
-Subject: Re: [PATCH v16 08/22] PCI: designware-ep: Add INTx IRQs support
-Message-ID: <20230605080540.hz6hn45zciqsun7o@mobilestation>
-References: <20230510062234.201499-1-yoshihiro.shimoda.uh@renesas.com>
- <20230510062234.201499-9-yoshihiro.shimoda.uh@renesas.com>
+        d=1e100.net; s=20221208; t=1685953544; x=1688545544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=w/vz4qy3Kc7GOpDb+K0VZMneVYxuO4mipxqG9LguKK8=;
+        b=cjH3kqQuqJK0ZwryhbY6I9S67zAm2jwYoZAf07zu2eq7VCWQHGAKcuZO6oOfxp1Znn
+         31JIRWVD9Z+eLWZDxya1zCFsPYEvZgpFk9DTsHUnGBuPCqwG+QsJ/rUXIMl5Nx6otXjL
+         PUrD6UkuTBcw/n0zeoVC3XOLcwzjmiKTAMF3rjWERCdRfCOzlVg+3eRUVrx7oPXLuhrn
+         yDgHHcXkhhGXiN4+GAFkRA7FkT9vA77kBNq/BPOQuablKfkPjrSp3LeIW7llDTI/PaR1
+         TfuSPxTqw33aklstEthRPtV8zvGz1FF334PwLZJnddeCkDrLE9vXnd9m2JPydjIEyn86
+         JyTQ==
+X-Gm-Message-State: AC+VfDx/nKlmegA/RcZBpmLEQdjpRiZ8+E8OwEvZ2OXFrycUqMOJJq5G
+        498kKwp389naqMy1G51mnYzJBUCt9dF6fL+I5R0+d3r2hY2417GgI8G3p4QIX7sPi7ZRfudHqjW
+        C8/lyq9TTm/tshzopBLrymRumIe92AvWQk1fMdfwT7iRkyGHKshbKuQ==
+X-Received: by 2002:a05:620a:678b:b0:75e:b9b8:ab57 with SMTP id rr11-20020a05620a678b00b0075eb9b8ab57mr1321524qkn.70.1685953544344;
+        Mon, 05 Jun 2023 01:25:44 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4AgPS6tYIm8uNjvjRnd4X/dKtb3kpAGwevuMacOVrV0JiWen9kzqyAmGft2GuHieBV9kyujChRhnQqQi4e9Po=
+X-Received: by 2002:a05:620a:678b:b0:75e:b9b8:ab57 with SMTP id
+ rr11-20020a05620a678b00b0075eb9b8ab57mr1321510qkn.70.1685953544065; Mon, 05
+ Jun 2023 01:25:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230510062234.201499-9-yoshihiro.shimoda.uh@renesas.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230601162537.1163270-1-kai.heng.feng@canonical.com>
+ <269262acfcce8eb1b85ee1fe3424a5ef2991f481.camel@gmail.com>
+ <CAAd53p7c6eEqxd3jecfgvpxuYO3nmmmovcqD=3PgbqSVCWFfxA@mail.gmail.com> <577f38ed-8532-c32e-07bd-4a3b384d5fe8@molgen.mpg.de>
+In-Reply-To: <577f38ed-8532-c32e-07bd-4a3b384d5fe8@molgen.mpg.de>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Mon, 5 Jun 2023 16:25:32 +0800
+Message-ID: <CAAd53p6TNFLrwJZaR5OJKnbDn6ggidOLgeaFSn8JVf4oXZUBcQ@mail.gmail.com>
+Subject: Re: [Intel-wired-lan] [PATCH] e1000e: Use PME poll to circumvent
+ unreliable ACPI wake
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Alexander H Duyck <alexander.duyck@gmail.com>,
+        linux-pm@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
+        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jesse Brandeburg <jesse.brandeburg@intel.com>,
+        Tony Nguyen <anthony.l.nguyen@intel.com>,
+        netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 10, 2023 at 03:22:20PM +0900, Yoshihiro Shimoda wrote:
-> Add support for triggering INTx IRQs by using outbound iATU.
-> Outbound iATU is utilized to send assert and de-assert INTx TLPs.
-> The message is generated based on the payloadless Msg TLP with type
-> 0x14, where 0x4 is the routing code implying the Terminate at
-> Receiver message. The message code is specified as b1000xx for
-> the INTx assertion and b1001xx for the INTx de-assertion.
-> 
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->  .../pci/controller/dwc/pcie-designware-ep.c   | 66 +++++++++++++++++--
->  drivers/pci/controller/dwc/pcie-designware.h  |  2 +
->  2 files changed, 64 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> index fe2e0d765be9..0abc0073b1cf 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -6,9 +6,11 @@
->   * Author: Kishon Vijay Abraham I <kishon@ti.com>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  
-> +#include "../../pci.h"
->  #include "pcie-designware.h"
->  #include <linux/pci-epc.h>
->  #include <linux/pci-epf.h>
-> @@ -484,14 +486,57 @@ static const struct pci_epc_ops epc_ops = {
->  	.get_features		= dw_pcie_ep_get_features,
->  };
->  
-> +static int dw_pcie_ep_send_msg(struct dw_pcie_ep *ep, u8 func_no, u8 code,
-> +			       u8 routing)
-> +{
-> +	struct dw_pcie_ob_atu_cfg atu = { 0 };
-> +	struct pci_epc *epc = ep->epc;
-> +	int ret;
-> +
-> +	atu.func_no = func_no;
-> +	atu.code = code;
-> +	atu.routing = routing;
-> +	atu.type = PCIE_ATU_TYPE_MSG;
-> +	atu.cpu_addr = ep->intx_mem_phys;
-> +	atu.size = epc->mem->window.page_size;
-> +
-> +	ret = dw_pcie_ep_outbound_atu(ep, &atu);
-> +	if (ret)
-> +		return ret;
-> +
-> +	writel(0, ep->intx_mem);
-> +
-> +	dw_pcie_ep_unmap_addr(epc, func_no, 0, ep->intx_mem_phys);
-> +
-> +	return 0;
-> +}
-> +
->  int dw_pcie_ep_raise_intx_irq(struct dw_pcie_ep *ep, u8 func_no)
->  {
->  	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
->  	struct device *dev = pci->dev;
-> +	int ret;
->  
-> -	dev_err(dev, "EP cannot trigger INTx IRQs\n");
-> +	if (!ep->intx_mem) {
-> +		dev_err(dev, "INTx not supported\n");
-> +		return -EOPNOTSUPP;
-> +	}
->  
-> -	return -EINVAL;
-> +	/*
+Hi Paul,
 
-> +	 * According to the document of PCIe, the INTx emulation should be
-> +	 * level-triggered. However, the Linux PCIe Endpoint framework only
-> +	 * supports edge-triggered for now. So, this function asserts INTx for
-> +	 * 50 usec, and then deasserts it.
+On Fri, Jun 2, 2023 at 4:43=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de> =
+wrote:
+>
+> [Cc: linux-pci@vger.kernel.org]
+>
+> Dear Kai,
+>
+>
+> Thank you for your patch.
+>
+> Am 02.06.23 um 03:46 schrieb Kai-Heng Feng:
+> > On Fri, Jun 2, 2023 at 4:24=E2=80=AFAM Alexander H Duyck wrote:
+> >>
+> >> On Fri, 2023-06-02 at 00:25 +0800, Kai-Heng Feng wrote:
+> >>> On some I219 devices, ethernet cable plugging detection only works on=
+ce
+> >>> from PCI D3 state. Subsequent cable plugging does set PME bit correct=
+ly,
+> >>> but device still doesn't get woken up.
+>
+> Could you please add the list of all the devices with the firmware
+> version, you know this problem exists on? Please also add the URLs of
+> the bug reports at the end of the commit message.
 
-"Document of PCIe"?)
-What about the next message:
-Even though the PCI bus specification implies the level-triggered INTx
-interrupts the kernel PCIe endpoint framework has a single
-PCI_EPC_IRQ_INTx flag defined for the legacy IRQs simulation. Thus
-this function sends the Deassert_INTx PCIe TLP after the Assert_INTx
-message with the 50 usec duration basically implementing the
-rising-edge triggering IRQ. Hopefully the interrupt controller will
-still be able to register the incoming IRQ event...
+Firmware do you mean the firmware on I219 device, or BIOS?
 
-Other than that the change looks good.
+>
+> Is that problem logged somehow? Could a log message be added first?
 
--Serge(y)
+There's nothing gets logged. When this happens the ACPI GPE is dead silent.
 
-> +	 */
-> +	ret = dw_pcie_ep_send_msg(ep, func_no, PCI_CODE_ASSERT_INTA,
-> +				  PCI_MSG_ROUTING_LOCAL);
-> +	if (ret)
-> +		return ret;
-> +
-> +	usleep_range(50, 100);
-> +
-> +	return dw_pcie_ep_send_msg(ep, func_no, PCI_CODE_DEASSERT_INTA,
-> +				   PCI_MSG_ROUTING_LOCAL);
->  }
->  EXPORT_SYMBOL_GPL(dw_pcie_ep_raise_intx_irq);
->  
-> @@ -622,6 +667,10 @@ void dw_pcie_ep_exit(struct dw_pcie_ep *ep)
->  
->  	dw_pcie_edma_remove(pci);
->  
-> +	if (ep->intx_mem)
-> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
-> +				      epc->mem->window.page_size);
-> +
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
->  			      epc->mem->window.page_size);
->  
-> @@ -793,9 +842,14 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  		goto err_exit_epc_mem;
->  	}
->  
-> +	ep->intx_mem = pci_epc_mem_alloc_addr(epc, &ep->intx_mem_phys,
-> +					      epc->mem->window.page_size);
-> +	if (!ep->intx_mem)
-> +		dev_warn(dev, "Failed to reserve memory for INTx\n");
-> +
->  	ret = dw_pcie_edma_detect(pci);
->  	if (ret)
-> -		goto err_free_epc_mem;
-> +		goto err_free_epc_mem_intx;
->  
->  	if (ep->ops->get_features) {
->  		epc_features = ep->ops->get_features(ep);
-> @@ -812,7 +866,11 @@ int dw_pcie_ep_init(struct dw_pcie_ep *ep)
->  err_remove_edma:
->  	dw_pcie_edma_remove(pci);
->  
-> -err_free_epc_mem:
-> +err_free_epc_mem_intx:
-> +	if (ep->intx_mem)
-> +		pci_epc_mem_free_addr(epc, ep->intx_mem_phys, ep->intx_mem,
-> +				      epc->mem->window.page_size);
-> +
->  	pci_epc_mem_free_addr(epc, ep->msi_mem_phys, ep->msi_mem,
->  			      epc->mem->window.page_size);
->  
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> index c83d1d176e62..06e044e2163a 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -369,6 +369,8 @@ struct dw_pcie_ep {
->  	unsigned long		*ob_window_map;
->  	void __iomem		*msi_mem;
->  	phys_addr_t		msi_mem_phys;
-> +	void __iomem		*intx_mem;
-> +	phys_addr_t		intx_mem_phys;
->  	struct pci_epf_bar	*epf_bar[PCI_STD_NUM_BARS];
->  };
->  
-> -- 
-> 2.25.1
-> 
+>
+> >> Do we have a root cause on why things don't get woken up? This seems
+> >> like an issue where something isn't getting reset after the first
+> >> wakeup and so future ones are blocked.
+> >
+> > No we don't know the root cause.
+> > I guess the D3 wake isn't really tested under Windows because I219
+> > doesn't use runtime D3 on Windows.
+>
+> How do you know? Where you able to look at the Microsoft Windows driver
+> source code?
+
+Device Manager shows the current PCI state.
+
+>
+> >>> Since I219 connects to the root complex directly, it relies on platfo=
+rm
+> >>> firmware (ACPI) to wake it up. In this case, the GPE from _PRW only
+> >>> works for first cable plugging but fails to notify the driver for
+> >>> subsequent plugging events.
+> >>>
+> >>> The issue was originally found on CNP, but the same issue can be foun=
+d
+> >>> on ADL too. So workaround the issue by continuing use PME poll after
+>
+> The verb is spelled with a space: work around.
+
+Sure, will change it.
+
+>
+> >>> first ACPI wake. As PME poll is always used, the runtime suspend
+> >>> restriction for CNP can also be removed.
+>
+> When was that restriction for CNP added?
+
+The restriction for CNP+ was introduced by commit 459d69c407f9
+("e1000e: Disable runtime PM on CNP+") and modified by 3335369bad99
+("e1000e: Remove the runtime suspend restriction on CNP+").
+
+>
+> >>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >>> ---
+> >>>   drivers/net/ethernet/intel/e1000e/netdev.c | 4 +++-
+> >>>   1 file changed, 3 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net=
+/ethernet/intel/e1000e/netdev.c
+> >>> index bd7ef59b1f2e..f0e48f2bc3a2 100644
+> >>> --- a/drivers/net/ethernet/intel/e1000e/netdev.c
+> >>> +++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+> >>> @@ -7021,6 +7021,8 @@ static __maybe_unused int e1000e_pm_runtime_res=
+ume(struct device *dev)
+> >>>        struct e1000_adapter *adapter =3D netdev_priv(netdev);
+> >>>        int rc;
+> >>>
+> >>> +     pdev->pme_poll =3D true;
+> >>> +
+> >>>        rc =3D __e1000_resume(pdev);
+> >>>        if (rc)
+> >>>                return rc;
+> >>
+> >> Doesn't this enable this too broadly. I know there are a number of
+> >> devices that run under the e1000e and I would imagine that we don't
+> >> want them all running with "pme_poll =3D true" do we?
+> >
+> > Whack a mole isn't scaling, either.
+> > The generation between CNP and ADL are probably affected too.
+> >
+> >> It seems like at a minimum we should only be setting this for specific
+> >> platofrms or devices instead of on all of them.
+> >>
+> >> Also this seems like something we should be setting on the suspend sid=
+e
+> >> since it seems to be cleared in the wakeup calls.
+> >
+> > pme_poll gets cleared on wakeup, and once it's cleared the device will
+> > be removed from pci_pme_list.
+> >
+> > To prevent that, reset pme_poll to true immediately on runtime resume.
+> >
+> >> Lastly I am not sure the first one is necessarily succeeding. You migh=
+t
+> >> want to check the status of pme_poll before you run your first test.
+> >> From what I can tell it looks like the initial state is true in
+> >> pci_pm_init. If so it might be getting cleared after the first wakeup
+> >> which is what causes your issues.
+> >
+> > That's by design. pme_poll gets cleared when the hardware is capable
+> > to signal wakeup via PME# or ACPI GPE. For detected hardwares, the
+> > pme_poll will never be cleared.
+> > So this becomes tricky for the issue, since the ACPI GPE works for
+> > just one time, but never again.
+> >
+> >>> @@ -7682,7 +7684,7 @@ static int e1000_probe(struct pci_dev *pdev, co=
+nst struct pci_device_id *ent)
+> >>>
+> >>>        dev_pm_set_driver_flags(&pdev->dev, DPM_FLAG_SMART_PREPARE);
+> >>>
+> >>> -     if (pci_dev_run_wake(pdev) && hw->mac.type !=3D e1000_pch_cnp)
+> >>> +     if (pci_dev_run_wake(pdev))
+> >>>                pm_runtime_put_noidle(&pdev->dev);
+> >>>
+> >>>        return 0;
+> >>
+> >> I assume this is the original workaround that was put in to address
+> >> this issue. Perhaps you should add a Fixes tag to this to identify
+> >> which workaround this patch is meant to be replacing.
+> >
+> > Another possibility is to remove runtime power management completely.
+> > I wonder why Windows keep the device at D0 all the time?
+>
+> Who knows how to contact Intel=E2=80=99s driver developers for Microsoft =
+Windows?
+
+Probably this mailing list?
+
+>
+> > Can Linux align with Windows?
+>
+> Before deciding this, the power usage in the different states should be
+> measured.
+
+The power usage doesn't matter if the device can't function properly.
+
+Kai-Heng
+
+>
+>
+> Kind regards,
+>
+> Paul
