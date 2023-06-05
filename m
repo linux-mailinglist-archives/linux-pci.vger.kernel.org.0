@@ -2,160 +2,97 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 87FD3721CB8
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 05:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D90DA721E19
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 08:29:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232856AbjFED6d (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 4 Jun 2023 23:58:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41256 "EHLO
+        id S229591AbjFEG3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jun 2023 02:29:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232559AbjFED61 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 4 Jun 2023 23:58:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 699F8DF;
-        Sun,  4 Jun 2023 20:58:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E621E61DE8;
-        Mon,  5 Jun 2023 03:58:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5394FC4339E;
-        Mon,  5 Jun 2023 03:58:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685937504;
-        bh=Lozl+B9c9ZtOgU9jlGHLMSW0ijTaUHs8B+vJDZaxmP0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=mgErmNctkUMj3Cg5fufF5WtfEHwtkGjsoSQf/8rbdjspHdQIHDDPJQHQgGOItjHpg
-         elJD8LbmhcJDo/sQ0FTE267hTCcyb6uM2z3tEFrhOIWFfJyTC099VWljAOwmxI8zx4
-         8SElgRpma4jSIuXrX3LwXFTtqnUzTBzaXxoKIzC1/rNkvvl6ehN+sL6hU1JwxeqaO6
-         NJYAUFQz5Z95djQor7BeNs+CikjXG92aMc8fE1WUrM66l5t+gPiGSn+oKs3F25rAUj
-         l4wDa3jUXSHgtTLyijLRrR5awkrjlyx9/66jpmBFYvDoynwxIX+QQnZj6rVVDlRd+J
-         RnkhWX1ANKVIw==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5147e441c33so9141696a12.0;
-        Sun, 04 Jun 2023 20:58:24 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyQ8Vqr73e6Z8kwnvW5u3n0LNgRLWU2Zg1Nd1Aqpg3gk1qfFLgD
-        nuRhDj7EJ6dXzbihNTOWd9+aq/zi5nx2bsYfJa4=
-X-Google-Smtp-Source: ACHHUZ6uzVN8ZGQlBo5csuBzT7qJ3sVK7iqjj3ky0+eHZij/P+I6xMbn/J0KyxfD9kmwLT9TeQvP2RVjDJKQEOHKUaU=
-X-Received: by 2002:aa7:c252:0:b0:514:a302:c334 with SMTP id
- y18-20020aa7c252000000b00514a302c334mr9117220edo.14.1685937502492; Sun, 04
- Jun 2023 20:58:22 -0700 (PDT)
+        with ESMTP id S229552AbjFEG3H (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 02:29:07 -0400
+Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46671E9
+        for <linux-pci@vger.kernel.org>; Sun,  4 Jun 2023 23:29:04 -0700 (PDT)
+Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-53f9a376f3eso3940257a12.0
+        for <linux-pci@vger.kernel.org>; Sun, 04 Jun 2023 23:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685946544; x=1688538544;
+        h=to:subject:message-id:date:from:reply-to:mime-version:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        b=nWBcolEecoNK5yR1yr3HXJ4UpE+3aNWa4aPrf3ZGPh8w0VogNEssoBYYioG7KxPB+J
+         3mycwp0MWcpc84uISVx4+BLxUFleOq/Vq3Kv8iT2MkUsxrWP220QlTWTjcbrUFcsy15z
+         EJdZxXdZFUrWwgOZSKhZrya20O7aGOel/pqixR4e1G04D9SWz6bQqpbTmd2hSpgBsVrj
+         g7+ynrDHBmNan0D2JrrHEm92ziX/zK8jaK/f9J8o7+6GXU1mZtzucgMVv3coV2RYTNr2
+         4mMVmj7XIEkwqc6WVXQiZ/QO1btigeeIkLnR/HugFW1W7JnC0EDE1MUGUCHNxshxD1S+
+         eTqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685946544; x=1688538544;
+        h=to:subject:message-id:date:from:reply-to:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=;
+        b=STdYdDLBO78ivbIZBpRbJmxIlt7I+1eal1uwN0LY/wjj5HkJjCibXw2C2/o7X8VFT9
+         UH5t5dQfFKzJxs49NLvpuxamMvBC7qT6IVwbeNIsUFsYNKa6kpvSJX0w1Z+6tHbj0caI
+         BIq22GvY+B0r487/7XqKduoanG3OMhx2+lxf8kAb/+E7DZxJPaHZPnw6/w9clqX4gasS
+         mZLUZGK6BQEWd4cx8vMzf9vwTn1TcAMneB9elmq3Pfk4Vzc1yakMFiPfbRyAChdvDTyW
+         ZMKfJCnnlW7o0I46H5OCaXjSR5WUnkPtyXF4vRYIYtvP5EF8eIc2Yj3+2BT4JSbwalMj
+         c0Ew==
+X-Gm-Message-State: AC+VfDweW0kMTw1lcXLoHX2IPRplFdWVEi9rDMs4YbNF703LqItELvGD
+        JqJAHEiul7xHKV0gvRAEXJBT1vgB+L/qbtO05c0=
+X-Google-Smtp-Source: ACHHUZ656m9/uQsE6aGvp3O6sMgLwx6cT+8/8CiEXsMiI16t7aPffWl72/XKm0jhtXDG1iLwrVTfWUvAkNhu2Xhld94=
+X-Received: by 2002:a05:6a20:7f8a:b0:10c:89cc:bc5f with SMTP id
+ d10-20020a056a207f8a00b0010c89ccbc5fmr7140786pzj.20.1685946543486; Sun, 04
+ Jun 2023 23:29:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230605034423.1528206-1-maobibo@loongson.cn>
-In-Reply-To: <20230605034423.1528206-1-maobibo@loongson.cn>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Mon, 5 Jun 2023 11:58:10 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
-Message-ID: <CAAhV-H6O+_EnmDU6kE-19PP+8tD3wwbzzuakE_vHZGCtjZWDbg@mail.gmail.com>
-Subject: Re: [PATCH v2] PCI: Align pci memory space base address with page size
-To:     Bibo Mao <maobibo@loongson.cn>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, helgaas@kernel.org,
-        linux-pci@vger.kernel.org, Jianmin Lv <lvjianmin@loongson.cn>,
-        WANG Xuerui <kernel@xen0n.name>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
+Received: by 2002:a05:6a10:169a:b0:475:3cf4:1bf6 with HTTP; Sun, 4 Jun 2023
+ 23:29:02 -0700 (PDT)
+Reply-To: officefile_0112@yahoo.co.jp
+From:   OFFICE FILE <hih92699@gmail.com>
+Date:   Mon, 5 Jun 2023 09:29:02 +0300
+Message-ID: <CAEgGz=9GDF5njgj6VVBNnOnR5KqzOZMKWRnZoh9LaddBs8vULg@mail.gmail.com>
+Subject: Contact Damoni Kitabire Chairman, Stanbic bank of Uganda Holdings
+ Ltd. Email: stanbicbankofuganda@gmail.com
+To:     undisclosed-recipients:;
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+X-Spam-Status: Yes, score=7.1 required=5.0 tests=BAYES_50,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,EMPTY_MESSAGE,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FREEMAIL_REPLYTO,
+        FREEMAIL_REPLYTO_END_DIGIT,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        UNDISC_FREEM autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
+        *      https://www.dnswl.org/, no trust
+        *      [2607:f8b0:4864:20:0:0:0:534 listed in]
+        [list.dnswl.org]
+        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
+        *      [score: 0.5000]
+        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
+        * -0.0 SPF_PASS SPF: sender matches SPF record
+        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
+        *      provider
+        *      [hih92699[at]gmail.com]
+        *  0.2 FREEMAIL_REPLYTO_END_DIGIT Reply-To freemail username ends in
+        *      digit
+        *      [officefile_0112[at]yahoo.co.jp]
+        *  0.2 FREEMAIL_ENVFROM_END_DIGIT Envelope-from freemail username ends
+        *       in digit
+        *      [hih92699[at]gmail.com]
+        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
+        *      author's domain
+        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
+        *      envelope-from domain
+        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
+        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
+        *       valid
+        *  2.3 EMPTY_MESSAGE Message appears to have no textual parts
+        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
+        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
+        *      different freemails
+X-Spam-Level: *******
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bibo,
 
-Three suggestions:
-1, split to two patches.
-2, the "(align < PAGE_SIZE)" condition can be removed.
-3, you can unify the comments between ARM64 and LoongArch.
-
-Huacai
-
-On Mon, Jun 5, 2023 at 11:44=E2=80=AFAM Bibo Mao <maobibo@loongson.cn> wrot=
-e:
->
-> Some PCI devices has only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is pass-through to vm.
->
-> It consumes more pci memory resource with page size alignment requirement=
-,
-> on 64 bit system it should not be a problem. And UEFI bios set pci memory
-> base address with 4K fixed-size aligned, the safer solution is to align
-> with larger size on UEFI BIOS stage on these architectures, linux kernel
-> can reuse resource from UEFI bios. For new devices such hotplug pci
-> devices and sriov devices, pci resource is assigned in Linux kernel side.
->
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> ---
->  arch/arm64/kernel/pci.c  | 13 +++++++++++++
->  arch/loongarch/pci/pci.c | 18 ++++++++++++++++++
->  2 files changed, 31 insertions(+)
->
-> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
-> index 2276689b5411..e2f7b176b156 100644
-> --- a/arch/arm64/kernel/pci.c
-> +++ b/arch/arm64/kernel/pci.c
-> @@ -232,4 +232,17 @@ void pcibios_remove_bus(struct pci_bus *bus)
->         acpi_pci_remove_bus(bus);
->  }
->
-> +resource_size_t pcibios_align_resource(void *data, const struct resource=
- *res,
-> +                               resource_size_t size, resource_size_t ali=
-gn)
-> +{
-> +       resource_size_t start =3D res->start;
-> +
-> +       /*
-> +        * align base address of pci memory resource with page size
-> +        */
-> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> +               start =3D ALIGN(start, PAGE_SIZE);
-> +
-> +       return start;
-> +}
->  #endif
-> diff --git a/arch/loongarch/pci/pci.c b/arch/loongarch/pci/pci.c
-> index 2726639150bc..943a48e60fb1 100644
-> --- a/arch/loongarch/pci/pci.c
-> +++ b/arch/loongarch/pci/pci.c
-> @@ -83,6 +83,24 @@ int pcibios_alloc_irq(struct pci_dev *dev)
->         return acpi_pci_irq_enable(dev);
->  }
->
-> +/*
-> + * memory space size of some pci cards is 4K, it is separated with
-> + * different pages for generic architectures, so that mmu protection can
-> + * work with different pci cards. However page size for LoongArch system
-> + * is 16K, memory space of different pci cards may share the same page
-> + * on LoongArch, it is not safe here.
-> + */
-> +resource_size_t pcibios_align_resource(void *data, const struct resource=
- *res,
-> +                               resource_size_t size, resource_size_t ali=
-gn)
-> +{
-> +       resource_size_t start =3D res->start;
-> +
-> +       if ((res->flags & IORESOURCE_MEM) && (align < PAGE_SIZE))
-> +               start =3D ALIGN(start, PAGE_SIZE);
-> +
-> +       return start;
-> +}
-> +
->  static void pci_fixup_vgadev(struct pci_dev *pdev)
->  {
->         struct pci_dev *devp =3D NULL;
-> --
-> 2.27.0
->
