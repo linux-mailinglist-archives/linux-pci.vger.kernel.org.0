@@ -2,155 +2,131 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 65A59722ECE
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 20:36:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6698F7230AB
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 22:05:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229968AbjFESf6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jun 2023 14:35:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51990 "EHLO
+        id S229807AbjFEUFv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jun 2023 16:05:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjFESf5 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 14:35:57 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 577D0D9;
-        Mon,  5 Jun 2023 11:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Content-Type:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=wwWxJXe5pQm4QqI2inojr71AUA3uHrvhwwB6tIvkbAY=;
-        t=1685990155; x=1687199755; b=vMSJw61j6Bh6IqvojaxzY4mlzdqYZK0dibeB2zbz+cgxLH6
-        Cm1urxgzbBLJyEl4zL4uNeEkwYkwQg6y5tYTSJBxSmcN4CKJr6ZADeL3QQgibgdB6vTOv03rT9xNC
-        yieSXPjOML3zRbfGrUXUKJ13FcU28wivSl2kyOH12vcCOnK0yTN/Y2bTw3z3F5HuZjFfPr55DF2Zt
-        X/LExVBoO3H2sSJznI1yFnlHW4ZEzaNkg8y5ICc0qlaJR5N+YLRn8abpVR6aYI+NK1FTXmmxtm0Zu
-        k7mwUMzGJMFZpRNGiu14eCJtzYgM/7dQPW3/s4J19wamxaNpabkHhU9vROR3WStg==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1q6F3W-00EaFL-2E;
-        Mon, 05 Jun 2023 20:35:50 +0200
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Cc:     rafael@kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH v2] PCI/PM: enable runtime PM later during device scanning
-Date:   Mon,  5 Jun 2023 20:35:45 +0200
-Message-Id: <20230605203519.bc4232207449.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230605121621.4259f1be6cd2.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid>
-References: <20230605121621.4259f1be6cd2.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid>
+        with ESMTP id S230121AbjFEUFq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 16:05:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 930BAB0;
+        Mon,  5 Jun 2023 13:05:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A1CC62A3E;
+        Mon,  5 Jun 2023 20:05:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7621C433EF;
+        Mon,  5 Jun 2023 20:05:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685995543;
+        bh=Xx+yBJPOSqZaPMUOD0JySnA5Nn1xDYj1t2eLuqIn69A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K1EJKtULBa7QUQw2Nxyj1jOD8qGhCDrmNtcPGUttqHywbiNYM+ukJPTIVNxX+uARw
+         dQHatOUa7/9g10f19oKNU+F8+/aGBktlOn8tDw4+DPRnu4nI3oB8cBI8UOIzvvR8Bf
+         UCoHhuNbXoWzid672SipILhGPXA6MWJMt6YJmmRMbxw5a4+oJRnz3Js3cohl43aN1L
+         ZWfzDAqQLwP+Ma39APcETWN0AZdmku07FYjftPfCg4mkhwWDe/nRZeQbiKQ+XAfIZg
+         ua3NyXGnAzS6ZenQsrgSp/it+ft0wmvqoD/4kc49kM3PZeI+3XUrADfmax16enPg7/
+         +HhqY1O6W4i7w==
+Date:   Mon, 5 Jun 2023 22:05:39 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v4 11/41] i2c: add HAS_IOPORT dependencies
+Message-ID: <ZH5AE61wB12B/6tr@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-pci@vger.kernel.org,
+        Arnd Bergmann <arnd@kernel.org>, linux-i2c@vger.kernel.org
+References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
+ <20230516110038.2413224-12-schnelle@linux.ibm.com>
+ <ZH21E3Obp+YPJHkl@shikoro>
+ <c439a6d6ed33fc25efc292828a102b6d7996da7a.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="V/LhWHPF5kUV8UA3"
+Content-Disposition: inline
+In-Reply-To: <c439a6d6ed33fc25efc292828a102b6d7996da7a.camel@linux.ibm.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
 
-We found that that the following race is possible if userspace
-enables runtime PM/auto-suspend immediately when a device shows
-up in sysfs, if there's any call to pci_rescan_bus() during
-normal system state (i.e. userspace is already active):
+--V/LhWHPF5kUV8UA3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- - we rescan the PCI bus (*)
- - this creates the new PCI device including its sysfs
-   representation
- - udev sees the new device, and the (OS-specific) scripting
-   enables runtime PM by writing to power/control; this can
-   happen _before_ the next step - this will runtime-suspend
-   the device which saves the config space, including the BARs
-   that weren't assigned yet
- - the bus rescan assigns resources to the devices and writes
-   them to the config space of the device
-   (but not the runtime-pm saved copy, course)
- - the driver binds and this disallows runtime PM, so the device
-   is resumed, restoring the (incomplete!) config space
- - the device cannot work due to BARs not being configured
+Hi,
 
-Fix this by allowing runtime PM only once the device has been
-fully added. Also, with a warning, reject runtime PM on a not-
-added device; this shouldn't happen anymore now.
+> I believe there were no changes for the i2c portion since v3. Other
+> that with the HAS_IOPORT Kconfig option merged the per-subsystem
+> patches are now independent and can be merged directly.
 
-Note that the comment that was there (that I'm replacing) was
-indicating that pci_device_add() wouldn't be called at this
-place yet, but in fact it's called much earlier during the whole
-scan/probe process, which in part causes this problem, but it
-doesn't seem possible to defer it until here either.
+Thanks for the feedback.
 
-(*) In the case we encountered, this happened due to some reset
-    of the iwlwifi device that the driver then needs to recover
-    from by rescanning the bus since the device was reset and
-    the system doesn't know about it yet.
+Only issue is then that PARPORT is still in there. Didn't you want to
+drop it as mentioned in http://patchwork.ozlabs.org/project/linux-i2c/patch/20211227164317.4146918-11-schnelle@linux.ibm.com/ ?
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
-v2: use pm_runtime_get_noresume()/pm_runtime_put_noidle()
-    instead as advised by Rafael
----
- drivers/pci/bus.c        | 8 ++++++--
- drivers/pci/pci-driver.c | 3 +++
- drivers/pci/pci.c        | 1 +
- 3 files changed, 10 insertions(+), 2 deletions(-)
+And from the same mail, did you reach a conclusion what to do with the
+ocores driver?
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 5bc81cc0a2de..e06ea5449be9 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -13,6 +13,7 @@
- #include <linux/ioport.h>
- #include <linux/proc_fs.h>
- #include <linux/slab.h>
-+#include <linux/pm_runtime.h>
- 
- #include "pci.h"
- 
-@@ -335,9 +336,12 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	int retval;
- 
- 	/*
--	 * Can not put in pci_device_add yet because resources
--	 * are not assigned yet for some devices.
-+	 * Allow runtime PM only here, since otherwise we may
-+	 * try to suspend a device that isn't fully configured
-+	 * yet, which causes problems.
- 	 */
-+	pm_runtime_put_noidle(&dev->dev);
-+
- 	pcibios_bus_add_device(dev);
- 	pci_fixup_device(pci_fixup_final, dev);
- 	pci_create_sysfs_dev_files(dev);
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index ae9baf801681..8d82b4abb169 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -1278,6 +1278,9 @@ static int pci_pm_runtime_suspend(struct device *dev)
- 	pci_power_t prev = pci_dev->current_state;
- 	int error;
- 
-+	if (WARN_ON(!pci_dev_is_added(pci_dev)))
-+		return -EBUSY;
-+
- 	pci_suspend_ptm(pci_dev);
- 
- 	/*
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 5ede93222bc1..808906ad14b9 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -3139,6 +3139,7 @@ void pci_pm_init(struct pci_dev *dev)
- 	u16 pmc;
- 
- 	pm_runtime_forbid(&dev->dev);
-+	pm_runtime_get_noresume(&dev->dev);
- 	pm_runtime_set_active(&dev->dev);
- 	pm_runtime_enable(&dev->dev);
- 	device_enable_async_suspend(&dev->dev);
--- 
-2.40.1
+Happy hacking,
 
+   Wolfram
+
+
+--V/LhWHPF5kUV8UA3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmR+QA8ACgkQFA3kzBSg
+KbZsWA/+Oy2ChLbPL+jNVuZQUZuwLhV4pik4RHRA+MO5CG3kK0bdfzmfyC9Kxi+m
++ZbOCd58RsMo2QdFUtpGxDqqWkX+e4BOX0PfS1QgkcTCW21rwaOqkuCzwxI8Np7E
+difVPTRIUGs3h8xfcWGoM2kUL4ZN2gFm13QtGe6QUtrqPCnJATU5oApHvz/muFVc
+Ux3T6HikEEfIQhh/SEIHv410MBx59ruKeGZBzcRX0zqQWKJ+djovXhxzIpHrvyFA
+awN9LCXsVUgmD39ZBswteuD9kUtvDJO+Ju6cU+xvtB+s9aGTL6ioq5wYZIk8bbqo
++3h2aUGnfW5HWP+Pvs5TWpAhK7fyl78iHANmLIBMBoS7AUh1EZHUTOVzh/XgiBom
+MF8d9fttsRcyzJ5E45JNcGg+QnSrXMBWIdmv4YD3KXBq7tx8admry5tVsqjp1V01
+Cr7XRHoQ1iQuw1S6RVFHVIaYgV2bO1tWDvjtfNCOOxFVpHEdKY3PdQwsH5ktV/uf
+0MxUDkm3+siukEVuYTJdp/sVEfmmbUfMOBX1Cj5YVEdgb14PJoi0bsQNVN8y9R2R
+mNx3/v7mK10i1PjRUZyjeWtgRYSJyWYk7swNeIMr9bPs1CV6Gh7ySIs4Ae83KXMB
+Rt06GbndrfcphLiQTfFUQYQh4fxO0MD1sJ46gmg/ooZqmhjjnD4=
+=kqOm
+-----END PGP SIGNATURE-----
+
+--V/LhWHPF5kUV8UA3--
