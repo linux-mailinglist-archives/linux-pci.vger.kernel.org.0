@@ -2,63 +2,44 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id BA79F722521
-	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 14:02:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 45C44722613
+	for <lists+linux-pci@lfdr.de>; Mon,  5 Jun 2023 14:38:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233212AbjFEMC1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 5 Jun 2023 08:02:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41072 "EHLO
+        id S230324AbjFEMix (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 5 Jun 2023 08:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233190AbjFEMCW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 08:02:22 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C3CE92
-        for <linux-pci@vger.kernel.org>; Mon,  5 Jun 2023 05:02:21 -0700 (PDT)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q68uP-0000Yl-Je; Mon, 05 Jun 2023 14:02:01 +0200
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-        by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q68uN-005GF8-Fp; Mon, 05 Jun 2023 14:01:59 +0200
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1q68uM-00BNcb-R6; Mon, 05 Jun 2023 14:01:58 +0200
-Date:   Mon, 5 Jun 2023 14:01:51 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Wolfram Sang <wsa@kernel.org>,
-        Niklas Schnelle <schnelle@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v4 11/41] i2c: add HAS_IOPORT dependencies
-Message-ID: <20230605120151.qpoe5ordzdvxmqv7@pengutronix.de>
-References: <20230516110038.2413224-1-schnelle@linux.ibm.com>
- <20230516110038.2413224-12-schnelle@linux.ibm.com>
- <ZH21E3Obp+YPJHkl@shikoro>
+        with ESMTP id S232068AbjFEMir (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 5 Jun 2023 08:38:47 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FDA898;
+        Mon,  5 Jun 2023 05:38:40 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QZY1p10MzzqTYb;
+        Mon,  5 Jun 2023 20:33:50 +0800 (CST)
+Received: from localhost.localdomain (10.50.163.32) by
+ canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 5 Jun 2023 20:38:35 +0800
+From:   Yicong Yang <yangyicong@huawei.com>
+To:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <jonathan.cameron@huawei.com>, <linux-kernel@vger.kernel.org>
+CC:     <alexander.shishkin@linux.intel.com>, <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <prime.zeng@huawei.com>,
+        <linuxarm@huawei.com>, <yangyicong@hisilicon.com>
+Subject: [PATCH] hwtracing: hisi_ptt: Fix potential sleep in atomic context
+Date:   Mon, 5 Jun 2023 20:37:08 +0800
+Message-ID: <20230605123708.9740-1-yangyicong@huawei.com>
+X-Mailer: git-send-email 2.31.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rrjpp6upncpe45z2"
-Content-Disposition: inline
-In-Reply-To: <ZH21E3Obp+YPJHkl@shikoro>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-pci@vger.kernel.org
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.50.163.32]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ canpemm500009.china.huawei.com (7.192.105.203)
+X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -66,52 +47,90 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+From: Yicong Yang <yangyicong@hisilicon.com>
 
---rrjpp6upncpe45z2
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We're using pci_irq_vector() to obtain the interrupt number and then
+bind it to the CPU start perf under the protection of spinlock in
+pmu::start(). pci_irq_vector() might sleep and use it in an atomic
+context is problematic. This patch cached the interrupt number in
+the probe() and uses the cached data instead to avoid potential
+sleep.
 
-Hello Wolfram,
+Fixes: ff0de066b463 ("hwtracing: hisi_ptt: Add trace function support for HiSilicon PCIe Tune and Trace device")
+Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+---
+ drivers/hwtracing/ptt/hisi_ptt.c | 12 +++++-------
+ drivers/hwtracing/ptt/hisi_ptt.h |  2 ++
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-On Mon, Jun 05, 2023 at 12:12:35PM +0200, Wolfram Sang wrote:
-> On Tue, May 16, 2023 at 01:00:07PM +0200, Niklas Schnelle wrote:
-> > In a future patch HAS_IOPORT=3Dn will result in inb()/outb() and friends
-> > not being declared. We thus need to add HAS_IOPORT as dependency for
-> > those drivers using them.
-> >=20
-> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
-> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
->=20
-> What has changed since V3? I didn't get the coverletter...
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+index 30f1525639b5..0915820f17ba 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.c
++++ b/drivers/hwtracing/ptt/hisi_ptt.c
+@@ -341,13 +341,12 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = devm_request_threaded_irq(&pdev->dev,
+-					pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ),
++	ret = devm_request_threaded_irq(&pdev->dev, hisi_ptt->trace_irq,
+ 					NULL, hisi_ptt_isr, 0,
+ 					DRV_NAME, hisi_ptt);
+ 	if (ret) {
+ 		pci_err(pdev, "failed to request irq %d, ret = %d\n",
+-			pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ), ret);
++			hisi_ptt->trace_irq, ret);
+ 		return ret;
+ 	}
+ 
+@@ -757,8 +756,7 @@ static void hisi_ptt_pmu_start(struct perf_event *event, int flags)
+ 	 * core in event_function_local(). If CPU passed is offline we'll fail
+ 	 * here, just log it since we can do nothing here.
+ 	 */
+-	ret = irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+-					      cpumask_of(cpu));
++	ret = irq_set_affinity(hisi_ptt->trace_irq, cpumask_of(cpu));
+ 	if (ret)
+ 		dev_warn(dev, "failed to set the affinity of trace interrupt\n");
+ 
+@@ -953,6 +951,7 @@ static int hisi_ptt_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	hisi_ptt->iobase = pcim_iomap_table(pdev)[2];
++	hisi_ptt->trace_irq = pci_irq_vector(pdev, HISI_PTT_TRACE_DMA_IRQ);
+ 
+ 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(64));
+ 	if (ret) {
+@@ -1018,8 +1017,7 @@ static int hisi_ptt_cpu_teardown(unsigned int cpu, struct hlist_node *node)
+ 	 * Also make sure the interrupt bind to the migrated CPU as well. Warn
+ 	 * the user on failure here.
+ 	 */
+-	if (irq_set_affinity(pci_irq_vector(hisi_ptt->pdev, HISI_PTT_TRACE_DMA_IRQ),
+-					    cpumask_of(target)))
++	if (irq_set_affinity(hisi_ptt->trace_irq, cpumask_of(target)))
+ 		dev_warn(dev, "failed to set the affinity of trace interrupt\n");
+ 
+ 	hisi_ptt->trace_ctrl.on_cpu = target;
+diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+index 5beb1648c93a..948a4c423152 100644
+--- a/drivers/hwtracing/ptt/hisi_ptt.h
++++ b/drivers/hwtracing/ptt/hisi_ptt.h
+@@ -166,6 +166,7 @@ struct hisi_ptt_pmu_buf {
+  * @pdev:         pci_dev of this PTT device
+  * @tune_lock:    lock to serialize the tune process
+  * @pmu_lock:     lock to serialize the perf process
++ * @trace_irq:    interrupt number used by trace
+  * @upper_bdf:    the upper BDF range of the PCI devices managed by this PTT device
+  * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
+  * @port_filters: the filter list of root ports
+@@ -180,6 +181,7 @@ struct hisi_ptt {
+ 	struct pci_dev *pdev;
+ 	struct mutex tune_lock;
+ 	spinlock_t pmu_lock;
++	int trace_irq;
+ 	u32 upper_bdf;
+ 	u32 lower_bdf;
+ 
+-- 
+2.24.0
 
-lore has it:
-https://lore.kernel.org/all/20230516110038.2413224-1-schnelle@linux.ibm.com/
-
-(Found via: https://lore.kernel.org/all/ZH21E3Obp+YPJHkl@shikoro where
-the last part of the URL is the Message-Id of your mail.)
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rrjpp6upncpe45z2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmR9zqkACgkQj4D7WH0S
-/k6J+wf8DmGrLkbb+yVGL7PepId5isI8DouAOsHiBL2947XH+XFzSbVniR3Ydjfa
-V+XHlHuatOVGSKP23q6pXNFWDhwxVbCZkMWlumoPKslLqIjU+Qgt+SCznZQDiDnZ
-QqOgKD2M1CLufMBb0W/dNcm/pVxDO0T8FeyiJZO9mttJQ8yQ4nzCHCDDKXH5NDXl
-Y2PMdDlLeba0kwleogS5j5JR/jxMLmnoDqCBWjb2v8ZJQMrIg3/6YmZRJ1/hXoHO
-QAdzEIxNOl/2Tj9Cc84+9oyk7J19OsvBhXNpR8g+kB7bS39dCIrE9di96BTDzfaW
-uxKsqfUGQ7aqF/xjpAM+0Bb6NkvhKQ==
-=pscJ
------END PGP SIGNATURE-----
-
---rrjpp6upncpe45z2--
