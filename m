@@ -2,127 +2,329 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D15F7723F08
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:15:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A056723F0E
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:15:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234308AbjFFKO7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 06:14:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42038 "EHLO
+        id S231626AbjFFKPZ (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 06:15:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233195AbjFFKOx (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:14:53 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64073196;
-        Tue,  6 Jun 2023 03:14:52 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.170])
-        by gateway (Coremail) with SMTP id _____8DxCeobBX9k4xYAAA--.103S3;
-        Tue, 06 Jun 2023 18:06:19 +0800 (CST)
-Received: from [10.20.42.170] (unknown [10.20.42.170])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxReQMBX9kkCcCAA--.9410S3;
-        Tue, 06 Jun 2023 18:06:04 +0800 (CST)
-Message-ID: <57c428e9-6d7c-c0b7-be5f-365373ab1b9c@loongson.cn>
-Date:   Tue, 6 Jun 2023 18:06:04 +0800
+        with ESMTP id S233058AbjFFKPY (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:15:24 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09DF1E47;
+        Tue,  6 Jun 2023 03:15:20 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb5sD2LrLz6D8Wm;
+        Tue,  6 Jun 2023 18:13:20 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
+ 2023 11:15:18 +0100
+Date:   Tue, 6 Jun 2023 11:15:17 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <corbet@lwn.net>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <prime.zeng@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v3 3/4] hwtracing: hisi_ptt: Export available filters
+ through sysfs
+Message-ID: <20230606111517.00007bc4@Huawei.com>
+In-Reply-To: <20230523093228.48149-4-yangyicong@huawei.com>
+References: <20230523093228.48149-1-yangyicong@huawei.com>
+        <20230523093228.48149-4-yangyicong@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v3] PCI: Align pci memory space base address with page
- size
-Content-Language: en-US
-From:   "bibo, mao" <maobibo@loongson.cn>
-To:     Huacai Chen <chenhuacai@kernel.org>,
-        Jianmin Lv <lvjianmin@loongson.cn>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20230606084539.1694441-1-maobibo@loongson.cn>
-In-Reply-To: <20230606084539.1694441-1-maobibo@loongson.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxReQMBX9kkCcCAA--.9410S3
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1xGry5Ar18WFW7Kr1xWFX_yoW8Kw4kpF
-        WxCFn8CrWkKr1fGws2qw1DuF4fWws2gFWYkrWIkas0k3Z7JasFyry7GrW5Cry8Wrs3Gr1j
-        qFs8tr1xXa48ZagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUPmb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
-        xVWxJr0_GcWln4kS14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12
-        xvs2x26I8E6xACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r12
-        6r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwI
-        xGrwCYjI0SjxkI62AI1cAE67vIY487MxkF7I0En4kS14v26r126r1DMxAIw28IcxkI7VAK
-        I48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r1Y6r17MI8I3I0E5I8CrV
-        AFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCI
-        c40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267
-        AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr1j
-        6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8
-        9SdDUUUUU==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Huacai,
+On Tue, 23 May 2023 17:32:27 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-Although I post this patch, I think this should be arch specified rather than general problem.
-X86 has solved this problem, arm64 with 64K page size is not popular. However LoongArch
-has this problem, page size is 16K rather than 4K. It is the problem of LoongArch system
-rather than generic issue.
-
-There is such discussion before:
-https://patchwork.kernel.org/project/linux-pci/patch/22400b8828ad44ddbccb876cc5ca3b11@FE-MBX1012.de.bosch.com/#19319457
-
-UEFI bios sets pci memory space 4K aligned, however Loongarch kernel rescans the pci
-bus and reassigns pci memory resource. So it it strange like this, here is pci memory info on
- my 7A2000 board.
-root@user-pc:~# lspci -vvv | grep Region
-        Region 5: Memory at e003526e800 (32-bit, non-prefetchable) [size=1K]
-        Region 0: Memory at e003526ec00 (64-bit, non-prefetchable) [size=1K]
-
-Regards
-Bibo, Mao
-
-在 2023/6/6 16:45, Bibo Mao 写道:
-> Some PCI devices have only 4K memory space size, it is normal in general
-> machines and aligned with page size. However some architectures which
-> support different page size, default page size on LoongArch is 16K, and
-> ARM64 supports page size varying from 4K to 64K. On machines where larger
-> page size is use, memory space region of two different pci devices may be
-> in one page. It is not safe with mmu protection, also VFIO pci device
-> driver requires base address of pci memory space page aligned, so that it
-> can be memory mapped to qemu user space when it is passed-through to vm.
+> From: Yicong Yang <yangyicong@hisilicon.com>
 > 
-> It consumes more pci memory resource with page size alignment requirement,
-> it should not be a problem on 64 bit system.
+> The PTT can only filter the traced TLP headers by the Root Ports or the
+> Requester ID of the Endpoint, which are located on the same core of the
+
+PCI core (could be confused with CPU core)
+
+> PTT device. The filter value used is derived from the BDF number of the
+> supported Root Port or the Endpoint. It's not friendly enough for the
+> users since it requires the user to be familiar enough with the platform
+> and calculate the filter value manually.
+
+Could we in theory push this problem to userspace?  If so perhaps
+call out advantages / disadvantages of doing so?
+
 > 
-> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+> This patch export the available filters through sysfs. Each available
+> filters is presented as an individual file with the name of the BDF
+> number of the related PCIe device. The files are created under
+> $(PTT PMU dir)/available_root_port_filters and
+> $(PTT PMU dir)/available_requester_filters respectively. The filter
+> value can be known by reading the related file.
+> 
+> Then the users can easily know the available filters for trace and get
+> the filter values without calculating.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+A few minor editorial type comments inline
+
+Jonathan
+
 > ---
->  drivers/pci/setup-res.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>  .../ABI/testing/sysfs-devices-hisi_ptt        |  50 +++++
+>  Documentation/trace/hisi-ptt.rst              |   6 +
+>  drivers/hwtracing/ptt/hisi_ptt.c              | 206 ++++++++++++++++++
+>  drivers/hwtracing/ptt/hisi_ptt.h              |  14 ++
+>  4 files changed, 276 insertions(+)
 > 
-> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> index 967f9a758923..55440ae0128d 100644
-> --- a/drivers/pci/setup-res.c
-> +++ b/drivers/pci/setup-res.c
-> @@ -339,6 +339,14 @@ int pci_assign_resource(struct pci_dev *dev, int resno)
->  		return -EINVAL;
->  	}
+> diff --git a/Documentation/ABI/testing/sysfs-devices-hisi_ptt b/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+> index 82de6d710266..190ed504346b 100644
+> --- a/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+> +++ b/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+> @@ -59,3 +59,53 @@ Description:	(RW) Control the allocated buffer watermark of outbound packets.
+>  		The available tune data is [0, 1, 2]. Writing a negative value
+>  		will return an error, and out of range values will be converted
+>  		to 2. The value indicates a probable level of the event.
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	This directory contains the files providing the PCIe Root Port filters
+> +		information used for PTT trace. Each file is named after the supported
+> +		Root Port device name <domain>:<bus>:<device>.<function>.
+> +
+> +		See the description of the "filter" in Documentation/trace/hisi-ptt.rst
+> +		for more information.
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters/multiselect
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	(Read) Indicates whether this kind of filter can be multiselected
+> +		or not. 1 for multiselectable, 0 for not.
+multiselect term isn't totally clear - so I'd say exactly what it means here.
+
+	Indicates if this kind of filter can be selected at the same time as
+        others filters, or must be used on it's own.
+
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters/<bdf>
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	(Read) Indicates the filter value of this Root Port filter, which
+> +		can be used to control the TLP headers to trace by the PTT trace.
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	This directory contains the files providing the PCIe Requester filters
+> +		information used for PTT trace. Each file is named after the supported
+> +		Endpoint device name <domain>:<bus>:<device>.<function>.
+> +
+> +		See the description of the "filter" in Documentation/trace/hisi-ptt.rst
+> +		for more information.
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters/multiselect
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	(Read) Indicates whether this kind of filter can be multiselected
+> +		or not. 1 for multiselectable, 0 for not.
+
+As above - explain multiselect using a different set of terms.
+
+> +
+> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters/<bdf>
+> +Date:		May 2023
+> +KernelVersion:	6.5
+> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+> +Description:	(Read) Indicates the filter value of this Requester filter, which
+> +		can be used to control the TLP headers to trace by the PTT trace.
+> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+> index 3641aca4287a..b8c7d71aee32 100644
+> --- a/Documentation/trace/hisi-ptt.rst
+> +++ b/Documentation/trace/hisi-ptt.rst
+> @@ -148,6 +148,12 @@ For example, if the desired filter is Endpoint function 0000:01:00.1 the filter
+>  value will be 0x00101. If the desired filter is Root Port 0000:00:10.0 then
+>  then filter value is calculated as 0x80001.
 >  
-> +#ifdef CONFIG_64BIT
+> +The driver also presents every supported Root Port and Requester filter through
+> +sysfs. Each filter will be an individual file with name of its related PCIe
+> +device name (domain:bus:device.function). The files of Root Port filters are
+> +under $(PTT PMU dir)/root_port_filters and files of Requester filters
+> +are under $(PTT PMU dir)/requester_filters.
+> +
+>  Note that multiple Root Ports can be specified at one time, but only one
+>  Endpoint function can be specified in one trace. Specifying both Root Port
+>  and function at the same time is not supported. Driver maintains a list of
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> index 9b4acbc434b0..65f4288a1915 100644
+> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -404,6 +404,142 @@ hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, u16 devid, bool is_port)
+>  	return filter;
+>  }
+>  
+> +static ssize_t hisi_ptt_filter_show(struct device *dev, struct device_attribute *attr,
+> +				    char *buf)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	unsigned long filter_val;
+> +
+> +	filter = container_of(attr, struct hisi_ptt_filter_desc, attr);
+> +	filter_val = hisi_ptt_get_filter_val(filter->devid, filter->is_port) |
+> +		     (filter->is_port ? HISI_PTT_PMU_FILTER_IS_PORT : 0);
+> +
+> +	return sysfs_emit(buf, "0x%05lx\n", filter_val);
+> +}
+> +
+> +static int hisi_ptt_create_rp_filter_attr(struct hisi_ptt *hisi_ptt,
+> +					  struct hisi_ptt_filter_desc *filter)
+> +{
+> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+> +
+> +	filter->attr.attr.name = filter->name;
+> +	filter->attr.attr.mode = 0400; /* DEVICE_ATTR_ADMIN_RO */
+> +	filter->attr.show = hisi_ptt_filter_show;
+> +
+> +	return sysfs_add_file_to_group(kobj, &filter->attr.attr,
+> +				       HISI_PTT_RP_FILTERS_GRP_NAME);
+> +}
+> +
+> +static void hisi_ptt_remove_rp_filter_attr(struct hisi_ptt *hisi_ptt,
+> +					  struct hisi_ptt_filter_desc *filter)
+> +{
+> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+> +
+> +	sysfs_remove_file_from_group(kobj, &filter->attr.attr,
+> +				     HISI_PTT_RP_FILTERS_GRP_NAME);
+> +}
+> +
+> +static int hisi_ptt_create_req_filter_attr(struct hisi_ptt *hisi_ptt,
+> +					   struct hisi_ptt_filter_desc *filter)
+> +{
+> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+> +
+> +	filter->attr.attr.name = filter->name;
+> +	filter->attr.attr.mode = 0400; /* DEVICE_ATTR_ADMIN_RO */
+> +	filter->attr.show = hisi_ptt_filter_show;
+> +
+> +	return sysfs_add_file_to_group(kobj, &filter->attr.attr,
+> +				       HISI_PTT_REQ_FILTERS_GRP_NAME);
+> +}
+> +
+> +static void hisi_ptt_remove_req_filter_attr(struct hisi_ptt *hisi_ptt,
+> +					   struct hisi_ptt_filter_desc *filter)
+> +{
+> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+> +
+> +	sysfs_remove_file_from_group(kobj, &filter->attr.attr,
+> +				     HISI_PTT_REQ_FILTERS_GRP_NAME);
+> +}
+> +
+> +static int hisi_ptt_create_filter_attr(struct hisi_ptt *hisi_ptt,
+> +				       struct hisi_ptt_filter_desc *filter)
+> +{
+> +	int ret;
+> +
+> +	if (filter->is_port)
+> +		ret = hisi_ptt_create_rp_filter_attr(hisi_ptt, filter);
+> +	else
+> +		ret = hisi_ptt_create_req_filter_attr(hisi_ptt, filter);
+> +
+> +	if (ret)
+> +		pci_err(hisi_ptt->pdev, "failed to create sysfs attribute for filter %s\n",
+> +			filter->name);
+> +
+> +	return ret;
+> +}
+> +
+> +static void hisi_ptt_remove_filter_attr(struct hisi_ptt *hisi_ptt,
+> +					struct hisi_ptt_filter_desc *filter)
+> +{
+> +	if (filter->is_port)
+> +		hisi_ptt_remove_rp_filter_attr(hisi_ptt, filter);
+> +	else
+> +		hisi_ptt_remove_req_filter_attr(hisi_ptt, filter);
+> +}
+> +
+> +static void hisi_ptt_remove_all_filter_attributes(void *data)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	struct hisi_ptt *hisi_ptt = data;
+> +
+> +	mutex_lock(&hisi_ptt->filter_lock);
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list)
+> +		hisi_ptt_remove_filter_attr(hisi_ptt, filter);
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list)
+> +		hisi_ptt_remove_filter_attr(hisi_ptt, filter);
+> +
+> +	hisi_ptt->sysfs_inited = false;
+> +	mutex_unlock(&hisi_ptt->filter_lock);
+> +}
+> +
+> +static int hisi_ptt_init_filter_attributes(struct hisi_ptt *hisi_ptt)
+> +{
+> +	struct hisi_ptt_filter_desc *filter;
+> +	int ret;
+> +
+> +	mutex_lock(&hisi_ptt->filter_lock);
+> +
 > +	/*
-> +	 * force minimum page alignment for vfio pci usage
-> +	 * supposing there is enough pci memory resource on 64bit system
+> +	 * Register the reset callback in the first stage. In reset we traverse
+> +	 * the filters list to remove the sysfs attributes so itself alone can
+
+"itself alone" is confusing.   Maybe "the callback"
+
+> +	 * be called safely even without below filter attributes creation work.
 > +	 */
-> +	if (res->flags & IORESOURCE_MEM)
-> +		align = max_t(resource_size_t, PAGE_SIZE, align);
-> +#endif
->  	size = resource_size(res);
->  	ret = _pci_assign_resource(dev, resno, size, align);
->  
+> +	ret = devm_add_action(&hisi_ptt->pdev->dev,
+> +			      hisi_ptt_remove_all_filter_attributes,
+> +			      hisi_ptt);
+> +	if (ret)
+> +		goto out;
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list) {
+> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+> +		if (ret)
+> +			goto out;
+> +	}
+> +
+> +	hisi_ptt->sysfs_inited = true;
+> +out:
+> +	mutex_unlock(&hisi_ptt->filter_lock);
+> +	return ret;
+> +}
+> +
+...
+
 
