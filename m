@@ -2,18 +2,18 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B6416723F06
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:14:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C8ED723EE5
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:07:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229532AbjFFKOE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 06:14:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41650 "EHLO
+        id S232432AbjFFKHI (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 06:07:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230110AbjFFKOD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:14:03 -0400
+        with ESMTP id S229656AbjFFKHH (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:07:07 -0400
 Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4B7DCE42;
-        Tue,  6 Jun 2023 03:14:01 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0EBE5196;
+        Tue,  6 Jun 2023 03:07:05 -0700 (PDT)
 Received: from loongson.cn (unknown [10.20.42.170])
         by gateway (Coremail) with SMTP id _____8DxCeobBX9k4xYAAA--.103S3;
         Tue, 06 Jun 2023 18:06:19 +0800 (CST)
@@ -60,7 +60,7 @@ X-Coremail-Antispam: 1Uk129KBj93XoW7Cw1xGry5Ar18WFW7Kr1xWFX_yoW8Kw4kpF
         6F4UJwCI42IY6I8E87Iv6xkF7I0E14v26r4UJVWxJrUvcSsGvfC2KfnxnUUI43ZEXa7IU8
         9SdDUUUUU==
 X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=unavailable
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
