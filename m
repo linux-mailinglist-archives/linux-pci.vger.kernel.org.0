@@ -2,22 +2,22 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F1AAD723A9B
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 09:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08E17723A9C
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 09:54:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235523AbjFFHyA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 03:54:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58114 "EHLO
+        id S235613AbjFFHyC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 03:54:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234697AbjFFHxZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 03:53:25 -0400
-Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657CB19B1;
-        Tue,  6 Jun 2023 00:49:48 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VkVT159_1686037781;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VkVT159_1686037781)
+        with ESMTP id S235415AbjFFHx1 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 03:53:27 -0400
+Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0D36E5D;
+        Tue,  6 Jun 2023 00:49:50 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018045192;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VkVT171_1686037784;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VkVT171_1686037784)
           by smtp.aliyun-inc.com;
-          Tue, 06 Jun 2023 15:49:44 +0800
+          Tue, 06 Jun 2023 15:49:46 +0800
 From:   Shuai Xue <xueshuai@linux.alibaba.com>
 To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
         helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
@@ -27,10 +27,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-pci@vger.kernel.org, rdunlap@infradead.org,
         mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
         xueshuai@linux.alibaba.com
-Subject: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU driver support
-Date:   Tue,  6 Jun 2023 15:49:34 +0800
-Message-Id: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+Subject: [PATCH v6 1/4] docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+Date:   Tue,  6 Jun 2023 15:49:35 +0800
+Message-Id: <20230606074938.97724-2-xueshuai@linux.alibaba.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
@@ -43,122 +45,134 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-changes since v5:
-- Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
-- return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
-- call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
-- pick up Review-by tag from Baolin for Patch 1 and 3
+Alibaba's T-Head Yitan 710 SoC includes Synopsys' DesignWare Core PCIe
+controller which implements which implements PMU for performance and
+functional debugging to facilitate system maintenance.
 
-changes since v4:
+Document it to provide guidance on how to use it.
 
-1. addressing commens from Bjorn Helgaas:
-- reorder the includes by alpha
-- change all macros with upper-case hex
-- change ras_des type into u16
-- remove unnecessary outer "()"
-- minor format changes
-
-2. Address commensts from Jonathan Cameron:
-- rewrite doc and add a example to show how to use lane event
-
-3. fix compile error reported by: kernel test robot
-- remove COMPILE_TEST and add depend on PCI in kconfig
-- add Reported-by: kernel test robot <lkp@intel.com>
-
-Changes since v3:
-
-1. addressing comments from Robin Murphy:
-- add a prepare patch to define pci id in linux/pci_ids.h
-- remove unnecessary 64BIT dependency
-- fix DWC_PCIE_PER_EVENT_OFF/ON macro
-- remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
-- remove unnecessary format field show
-- use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
-- remove unnecessary spaces and remove unnecessary cast to follow event show convention
-- remove pcie_pmu_event_attr_is_visible
-- fix a refcout leak on error branch when walk pci device in for_each_pci_dev
-- remove bdf field from dwc_pcie_rp_info and calculate it at runtime
-- finish all the checks before allocating rp_info to avoid hanging wasted memory
-- remove some unused fields
-- warp out control register configuration from sub function to .add()
-- make function return type with a proper signature
-- fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
-- pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
-- move event type validtion into .event_init()
-- use is_sampling_event() to be consistent with everything else of pmu drivers
-- remove unnecessary dev_err message in .event_init()
-- return EINVAL instead EOPNOTSUPP for not a valid event 
-- finish all the checks before start modifying the event
-- fix sibling event check by comparing event->pmu with sibling->pmu
-- probe PMU for each rootport independently
-- use .update() as .read() directly
-- remove dynamically generating symbolic name of lane event
-- redefine static symbolic name of lane event and leave lane filed to user
-- add CPU hotplug support
-
-2. addressing comments from Baolin:
-- add a mask to avoid possible overflow
-
-Changes since v2 addressing comments from Baolin:
-- remove redundant macro definitions
-- use dev_err to print error message
-- change pmu_is_register to boolean
-- use PLATFORM_DEVID_NONE macro
-- fix module author format
-
-Changes since v1:
-
-1. address comments from Jonathan:
-- drop marco for PMU name and VSEC version
-- simplify code with PCI standard marco
-- simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
-- name register filed with single _ instead double
-- wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
-- check vendor id while matching vesc with pci_find_vsec_capability()
-- remove RP_NUM_MAX and use a list to organize PMU devices for rootports
-- replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
-- comments on riping register together
-
-2. address comments from Bjorn:
-- rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
-- rename cap_pos to ras_des
-- simplify declare of device_attribute with DEVICE_ATTR_RO
-- simplify code with PCI standard macro and API like pcie_get_width_cap()
-- fix some code style problem and typo
-- drop meaningless snaity check of container_of
-
-3. address comments from Yicong:
-- use sysfs_emit() to replace sprintf()
-- simplify iteration of pci device with for_each_pci_dev
-- pick preferred CPUs on a near die and add comments
-- unregister PMU drivers only for failed ones
-- log on behalf PMU device and give more hint
-- fix some code style problem
-
-(Thanks for all comments and they are very valuable to me)
-
-This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
-for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
-Core controller IP which provides statistics feature.
-
-Shuai Xue (4):
-  docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
-  PCI: Add Alibaba Vendor ID to linux/pci_ids.h
-  drivers/perf: add DesignWare PCIe PMU driver
-  MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
-
- .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
- Documentation/admin-guide/perf/index.rst      |   1 +
- MAINTAINERS                                   |   6 +
- drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
- drivers/perf/Kconfig                          |   7 +
- drivers/perf/Makefile                         |   1 +
- drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
- include/linux/pci_ids.h                       |   2 +
- 8 files changed, 820 insertions(+), 2 deletions(-)
+Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
+Reviewed-by: Baolin Wang <baolin.wang@linux.alibaba.com>
+---
+ .../admin-guide/perf/dwc_pcie_pmu.rst         | 97 +++++++++++++++++++
+ Documentation/admin-guide/perf/index.rst      |  1 +
+ 2 files changed, 98 insertions(+)
  create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
- create mode 100644 drivers/perf/dwc_pcie_pmu.c
 
+diff --git a/Documentation/admin-guide/perf/dwc_pcie_pmu.rst b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+new file mode 100644
+index 000000000000..c1f671cb64ec
+--- /dev/null
++++ b/Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+@@ -0,0 +1,97 @@
++======================================================================
++Synopsys DesignWare Cores (DWC) PCIe Performance Monitoring Unit (PMU)
++======================================================================
++
++DesignWare Cores (DWC) PCIe PMU
++===============================
++
++The PMU is not a PCIe Root Complex integrated End Point (RCiEP) device but
++only PCIe configuration space register block provided by each PCIe Root
++Port in a Vendor-Specific Extended Capability named RAS DES (Debug, Error
++injection, and Statistics).
++
++As the name indicated, the RAS DES capability supports system level
++debugging, AER error injection, and collection of statistics. To facilitate
++collection of statistics, Synopsys DesignWare Cores PCIe controller
++provides the following two features:
++
++- Time Based Analysis (RX/TX data throughput and time spent in each
++  low-power LTSSM state)
++- Lane Event counters (Error and Non-Error for lanes)
++
++Time Based Analysis
++-------------------
++
++Using this feature you can obtain information regarding RX/TX data
++throughput and time spent in each low-power LTSSM state by the controller.
++
++The counters are 64-bit width and measure data in two categories,
++
++- percentage of time does the controller stay in LTSSM state in a
++  configurable duration. The measurement range of each Event in Group#0.
++- amount of data processed (Units of 16 bytes). The measurement range of
++  each Event in Group#1.
++
++Lane Event counters
++-------------------
++
++Using this feature you can obtain Error and Non-Error information in
++specific lane by the controller.
++
++The counters are 32-bit width and the measured event is select by:
++
++- Group i
++- Event j within the Group i
++- and Lane k
++
++Some of the event counters only exist for specific configurations.
++
++DesignWare Cores (DWC) PCIe PMU Driver
++=======================================
++
++This driver add PMU devices for each PCIe Root Port. And the PMU device is
++named based the BDF of Root Port. For example,
++
++    30:03.0 PCI bridge: Device 1ded:8000 (rev 01)
++
++the PMU device name for this Root Port is dwc_rootport_3018.
++
++The DWC PCIe PMU driver registers a perf PMU driver, which provides
++description of available events and configuration options in sysfs, see
++/sys/bus/event_source/devices/dwc_rootport_{bdf}.
++
++The "format" directory describes format of the config, fields of the
++perf_event_attr structure. The "events" directory provides configuration
++templates for all documented events.  For example,
++"Rx_PCIe_TLP_Data_Payload" is an equivalent of "eventid=0x22,type=0x1".
++
++The "perf list" command shall list the available events from sysfs, e.g.::
++
++    $# perf list | grep dwc_rootport
++    <...>
++    dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/        [Kernel PMU event]
++    <...>
++    dwc_rootport_3018/rx_memory_read,lane=?/               [Kernel PMU event]
++
++Time Based Analysis Event Usage
++-------------------------------
++
++Example usage of counting PCIe RX TLP data payload (Units of 16 bytes)::
++
++    $# perf stat -a -e dwc_rootport_3018/Rx_PCIe_TLP_Data_Payload/
++
++The average RX/TX bandwidth can be calculated using the following formula:
++
++    PCIe RX Bandwidth = PCIE_RX_DATA * 16B / Measure_Time_Window
++    PCIe TX Bandwidth = PCIE_TX_DATA * 16B / Measure_Time_Window
++
++Lane Event Usage
++-------------------------------
++
++Each lane has the same event set and to avoid generating a list of hundreds
++of events, the user need to specify the lane ID explicitly, e.g.::
++
++    $# perf stat -a -e dwc_rootport_3018/rx_memory_read,lane=4/
++
++The driver does not support sampling, therefore "perf record" will not
++work. Per-task (without "-a") perf sessions are not supported.
+diff --git a/Documentation/admin-guide/perf/index.rst b/Documentation/admin-guide/perf/index.rst
+index 9de64a40adab..11a80cd28a2e 100644
+--- a/Documentation/admin-guide/perf/index.rst
++++ b/Documentation/admin-guide/perf/index.rst
+@@ -19,5 +19,6 @@ Performance monitor support
+    arm_dsu_pmu
+    thunderx2-pmu
+    alibaba_pmu
++   dwc_pcie_pmu
+    nvidia-pmu
+    meson-ddr-pmu
 -- 
 2.20.1.12.g72788fdb
 
