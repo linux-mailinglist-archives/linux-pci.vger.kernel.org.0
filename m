@@ -2,27 +2,27 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D945F724101
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 13:35:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 93B4C72413A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 13:43:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236402AbjFFLf3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 07:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57214 "EHLO
+        id S236771AbjFFLnD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 07:43:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236409AbjFFLf3 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 07:35:29 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64262E47;
-        Tue,  6 Jun 2023 04:35:25 -0700 (PDT)
-Received: from canpemm500009.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Qb7cP2yyJzLqTL;
-        Tue,  6 Jun 2023 19:32:21 +0800 (CST)
+        with ESMTP id S232336AbjFFLnC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 07:43:02 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B6B99E;
+        Tue,  6 Jun 2023 04:43:00 -0700 (PDT)
+Received: from canpemm500009.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Qb7ph4mskz1c0H3;
+        Tue,  6 Jun 2023 19:41:16 +0800 (CST)
 Received: from [10.67.102.169] (10.67.102.169) by
  canpemm500009.china.huawei.com (7.192.105.203) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Tue, 6 Jun 2023 19:35:23 +0800
-Subject: Re: [PATCH v3 2/4] hwtracing: hisi_ptt: Add support for dynamically
- updating the filter list
+ 15.1.2507.23; Tue, 6 Jun 2023 19:42:58 +0800
+Subject: Re: [PATCH v3 3/4] hwtracing: hisi_ptt: Export available filters
+ through sysfs
 To:     Jonathan Cameron <Jonathan.Cameron@Huawei.com>
 CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
         <corbet@lwn.net>, <linux-kernel@vger.kernel.org>,
@@ -31,220 +31,314 @@ CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
         <prime.zeng@huawei.com>, Yicong Yang <yangyicong@huawei.com>,
         <yangyicong@hisilicon.com>
 References: <20230523093228.48149-1-yangyicong@huawei.com>
- <20230523093228.48149-3-yangyicong@huawei.com>
- <20230606105655.00006d92@Huawei.com>
+ <20230523093228.48149-4-yangyicong@huawei.com>
+ <20230606111517.00007bc4@Huawei.com>
 From:   Yicong Yang <yangyicong@huawei.com>
-Message-ID: <f6c80e50-d78e-e34a-be6b-7fd20c48a59f@huawei.com>
-Date:   Tue, 6 Jun 2023 19:35:22 +0800
+Message-ID: <9e4b323a-08e9-18ef-5a5b-259799f41910@huawei.com>
+Date:   Tue, 6 Jun 2023 19:42:58 +0800
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
  Thunderbird/78.5.1
 MIME-Version: 1.0
-In-Reply-To: <20230606105655.00006d92@Huawei.com>
+In-Reply-To: <20230606111517.00007bc4@Huawei.com>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.67.102.169]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
  canpemm500009.china.huawei.com (7.192.105.203)
 X-CFilter-Loop: Reflected
 X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 2023/6/6 17:56, Jonathan Cameron wrote:
-> On Tue, 23 May 2023 17:32:26 +0800
+On 2023/6/6 18:15, Jonathan Cameron wrote:
+> On Tue, 23 May 2023 17:32:27 +0800
 > Yicong Yang <yangyicong@huawei.com> wrote:
 > 
 >> From: Yicong Yang <yangyicong@hisilicon.com>
 >>
->> The PCIe devices supported by the PTT trace can be removed/rescanned by
->> hotplug or through sysfs.  Add support for dynamically updating the
->> available filter list by registering a PCI bus notifier block. Then user
->> can always get latest information about available tracing filters and
->> driver can block the invalid filters of which related devices no longer
->> exist in the system.
+>> The PTT can only filter the traced TLP headers by the Root Ports or the
+>> Requester ID of the Endpoint, which are located on the same core of the
+> 
+> PCI core (could be confused with CPU core)
+> 
+>> PTT device. The filter value used is derived from the BDF number of the
+>> supported Root Port or the Endpoint. It's not friendly enough for the
+>> users since it requires the user to be familiar enough with the platform
+>> and calculate the filter value manually.
+> 
+> Could we in theory push this problem to userspace?  If so perhaps
+> call out advantages / disadvantages of doing so?
+> 
+
+I'm not quite sure how userspace can get this mapping information, currently
+in the driver we get part of the information from the firmware. Userspace
+alone cannot handle it, I think it need driver assistant anyway.
+
+>>
+>> This patch export the available filters through sysfs. Each available
+>> filters is presented as an individual file with the name of the BDF
+>> number of the related PCIe device. The files are created under
+>> $(PTT PMU dir)/available_root_port_filters and
+>> $(PTT PMU dir)/available_requester_filters respectively. The filter
+>> value can be known by reading the related file.
+>>
+>> Then the users can easily know the available filters for trace and get
+>> the filter values without calculating.
 >>
 >> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-> Hi Yangyicong,
-> 
-> A few comments inline
+> A few minor editorial type comments inline
 
-Thanks for the comments! Will fix them up in next version.
+Will fix them up.
+
+Thanks.
 
 > 
 > Jonathan
 > 
 >> ---
->>  Documentation/trace/hisi-ptt.rst |   6 +-
->>  drivers/hwtracing/ptt/hisi_ptt.c | 165 +++++++++++++++++++++++++++++--
->>  drivers/hwtracing/ptt/hisi_ptt.h |  39 ++++++++
->>  3 files changed, 201 insertions(+), 9 deletions(-)
+>>  .../ABI/testing/sysfs-devices-hisi_ptt        |  50 +++++
+>>  Documentation/trace/hisi-ptt.rst              |   6 +
+>>  drivers/hwtracing/ptt/hisi_ptt.c              | 206 ++++++++++++++++++
+>>  drivers/hwtracing/ptt/hisi_ptt.h              |  14 ++
+>>  4 files changed, 276 insertions(+)
 >>
+>> diff --git a/Documentation/ABI/testing/sysfs-devices-hisi_ptt b/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>> index 82de6d710266..190ed504346b 100644
+>> --- a/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>> +++ b/Documentation/ABI/testing/sysfs-devices-hisi_ptt
+>> @@ -59,3 +59,53 @@ Description:	(RW) Control the allocated buffer watermark of outbound packets.
+>>  		The available tune data is [0, 1, 2]. Writing a negative value
+>>  		will return an error, and out of range values will be converted
+>>  		to 2. The value indicates a probable level of the event.
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	This directory contains the files providing the PCIe Root Port filters
+>> +		information used for PTT trace. Each file is named after the supported
+>> +		Root Port device name <domain>:<bus>:<device>.<function>.
+>> +
+>> +		See the description of the "filter" in Documentation/trace/hisi-ptt.rst
+>> +		for more information.
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters/multiselect
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	(Read) Indicates whether this kind of filter can be multiselected
+>> +		or not. 1 for multiselectable, 0 for not.
+> multiselect term isn't totally clear - so I'd say exactly what it means here.
+> 
+> 	Indicates if this kind of filter can be selected at the same time as
+>         others filters, or must be used on it's own.
+> 
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/root_port_filters/<bdf>
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	(Read) Indicates the filter value of this Root Port filter, which
+>> +		can be used to control the TLP headers to trace by the PTT trace.
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	This directory contains the files providing the PCIe Requester filters
+>> +		information used for PTT trace. Each file is named after the supported
+>> +		Endpoint device name <domain>:<bus>:<device>.<function>.
+>> +
+>> +		See the description of the "filter" in Documentation/trace/hisi-ptt.rst
+>> +		for more information.
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters/multiselect
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	(Read) Indicates whether this kind of filter can be multiselected
+>> +		or not. 1 for multiselectable, 0 for not.
+> 
+> As above - explain multiselect using a different set of terms.
+> 
+>> +
+>> +What:		/sys/devices/hisi_ptt<sicl_id>_<core_id>/requester_filters/<bdf>
+>> +Date:		May 2023
+>> +KernelVersion:	6.5
+>> +Contact:	Yicong Yang <yangyicong@hisilicon.com>
+>> +Description:	(Read) Indicates the filter value of this Requester filter, which
+>> +		can be used to control the TLP headers to trace by the PTT trace.
 >> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
->> index 4f87d8e21065..3641aca4287a 100644
+>> index 3641aca4287a..b8c7d71aee32 100644
 >> --- a/Documentation/trace/hisi-ptt.rst
 >> +++ b/Documentation/trace/hisi-ptt.rst
->> @@ -153,9 +153,9 @@ Endpoint function can be specified in one trace. Specifying both Root Port
+>> @@ -148,6 +148,12 @@ For example, if the desired filter is Endpoint function 0000:01:00.1 the filter
+>>  value will be 0x00101. If the desired filter is Root Port 0000:00:10.0 then
+>>  then filter value is calculated as 0x80001.
+>>  
+>> +The driver also presents every supported Root Port and Requester filter through
+>> +sysfs. Each filter will be an individual file with name of its related PCIe
+>> +device name (domain:bus:device.function). The files of Root Port filters are
+>> +under $(PTT PMU dir)/root_port_filters and files of Requester filters
+>> +are under $(PTT PMU dir)/requester_filters.
+>> +
+>>  Note that multiple Root Ports can be specified at one time, but only one
+>>  Endpoint function can be specified in one trace. Specifying both Root Port
 >>  and function at the same time is not supported. Driver maintains a list of
->>  available filters and will check the invalid inputs.
->>  
->> -Currently the available filters are detected in driver's probe. If the supported
->> -devices are removed/added after probe, you may need to reload the driver to update
->> -the filters.
->> +The available filters will be dynamically updates, which means you will always
-> 
-> updated, 
-> 
->> +get correct filter information when hotplug events happen, or when you manually
->> +remove/rescan the devices.
->>  
->>  2. Type
->>  -------
 >> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
->> index 548cfef51ace..9b4acbc434b0 100644
+>> index 9b4acbc434b0..65f4288a1915 100644
 >> --- a/drivers/hwtracing/ptt/hisi_ptt.c
 >> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
->> @@ -357,24 +357,41 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
-> 
-> ...
-> 
->>  static struct hisi_ptt_filter_desc *
->> -hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, struct pci_dev *pdev)
->> +hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, u16 devid, bool is_port)
->>  {
->>  	struct hisi_ptt_filter_desc *filter;
->> +	u8 devfn = devid & 0xff;
->> +	char *filter_name;
->> +
->> +	filter_name = kasprintf(GFP_KERNEL, "%04x:%02x:%02x.%d", pci_domain_nr(hisi_ptt->pdev->bus),
->> +				 PCI_BUS_NUM(devid), PCI_SLOT(devfn), PCI_FUNC(devfn));
->> +	if (!filter_name) {
->> +		pci_err(hisi_ptt->pdev, "failed to allocate name for filter %s\n",
->> +			filter_name);
->> +		kfree(filter);
-> 
-> Don't think you've allocated filter yet.
-> 
->> +		return NULL;
->> +	}
->>  
->>  	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
->>  	if (!filter) {
->>  		pci_err(hisi_ptt->pdev, "failed to add filter for %s\n",
->> -			pci_name(pdev));
->> +			filter_name);
->>  		return NULL;
->>  	}
->>  
->> -	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
->> -	filter->is_port = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT;
->> +	filter->name = filter_name;
->> +	filter->is_port = is_port;
->> +	filter->devid = devid;
->> +
->>  	if (filter->is_port) {
->>  		list_add_tail(&filter->list, &hisi_ptt->port_filters);
->>  
->> @@ -387,6 +404,102 @@ hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, struct pci_dev *pdev)
+>> @@ -404,6 +404,142 @@ hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, u16 devid, bool is_port)
 >>  	return filter;
 >>  }
-> 
-> 
-> 
-> 
-> ...
-> 
->> @@ -633,14 +752,19 @@ static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
->>  	 * For Requester ID filters, walk the available filter list to see
->>  	 * whether we have one matched.
->>  	 */
->> +	mutex_lock(&hisi_ptt->filter_lock);
->>  	if (!hisi_ptt->trace_ctrl.is_port) {
->>  		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
->> -			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port))
->> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port)) {
->> +				mutex_unlock(&hisi_ptt->filter_lock);
-> 
-> Perhaps a single exit location makes more sense given we need to unlock in
-> all paths?  goto unlock; etc
-> 
->>  				return 0;
->> +			}
->>  		}
->>  	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
->> +		mutex_unlock(&hisi_ptt->filter_lock);
->>  		return 0;
->>  	}
->> +	mutex_unlock(&hisi_ptt->filter_lock);
 >>  
->>  	return -EINVAL;
->>  }
->> @@ -916,6 +1040,31 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
->>  					&hisi_ptt->hisi_ptt_pmu);
->>  }
-> 
-> 
-> 
->> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
->> index 5beb1648c93a..d080b306af77 100644
->> --- a/drivers/hwtracing/ptt/hisi_ptt.h
->> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
-> 
-> ...
-> 
->> @@ -161,6 +182,7 @@ struct hisi_ptt_pmu_buf {
->>   * struct hisi_ptt - Per PTT device data
->>   * @trace_ctrl:   the control information of PTT trace
->>   * @hotplug_node: node for register cpu hotplug event
->> + * @hisi_ptt_nb:  dynamic filter update notifier
-> 
-> Wrong location. Order should match the fields in the structure.
-> So this belongs just above hotplug_node
-> 
-> 
->>   * @hisi_ptt_pmu: the pum device of trace
->>   * @iobase:       base IO address of the device
->>   * @pdev:         pci_dev of this PTT device
->> @@ -170,10 +192,15 @@ struct hisi_ptt_pmu_buf {
->>   * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
->>   * @port_filters: the filter list of root ports
->>   * @req_filters:  the filter list of requester ID
->> + * @filter_lock:  lock to protect the filters
->>   * @port_mask:    port mask of the managed root ports
->> + * @work:         delayed work for filter updating
->> + * @filter_update_lock: spinlock to protect the filter update fifo
->> + * @filter_update_fifo: fifo of the filters waiting to update the filter list
->>   */
->>  struct hisi_ptt {
->>  	struct hisi_ptt_trace_ctrl trace_ctrl;
->> +	struct notifier_block hisi_ptt_nb;
->>  	struct hlist_node hotplug_node;
->>  	struct pmu hisi_ptt_pmu;
->>  	void __iomem *iobase;
->> @@ -192,7 +219,19 @@ struct hisi_ptt {
->>  	 */
->>  	struct list_head port_filters;
->>  	struct list_head req_filters;
->> +	struct mutex filter_lock;
->>  	u16 port_mask;
+>> +static ssize_t hisi_ptt_filter_show(struct device *dev, struct device_attribute *attr,
+>> +				    char *buf)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +	unsigned long filter_val;
+>> +
+>> +	filter = container_of(attr, struct hisi_ptt_filter_desc, attr);
+>> +	filter_val = hisi_ptt_get_filter_val(filter->devid, filter->is_port) |
+>> +		     (filter->is_port ? HISI_PTT_PMU_FILTER_IS_PORT : 0);
+>> +
+>> +	return sysfs_emit(buf, "0x%05lx\n", filter_val);
+>> +}
+>> +
+>> +static int hisi_ptt_create_rp_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +					  struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+>> +
+>> +	filter->attr.attr.name = filter->name;
+>> +	filter->attr.attr.mode = 0400; /* DEVICE_ATTR_ADMIN_RO */
+>> +	filter->attr.show = hisi_ptt_filter_show;
+>> +
+>> +	return sysfs_add_file_to_group(kobj, &filter->attr.attr,
+>> +				       HISI_PTT_RP_FILTERS_GRP_NAME);
+>> +}
+>> +
+>> +static void hisi_ptt_remove_rp_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +					  struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+>> +
+>> +	sysfs_remove_file_from_group(kobj, &filter->attr.attr,
+>> +				     HISI_PTT_RP_FILTERS_GRP_NAME);
+>> +}
+>> +
+>> +static int hisi_ptt_create_req_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +					   struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+>> +
+>> +	filter->attr.attr.name = filter->name;
+>> +	filter->attr.attr.mode = 0400; /* DEVICE_ATTR_ADMIN_RO */
+>> +	filter->attr.show = hisi_ptt_filter_show;
+>> +
+>> +	return sysfs_add_file_to_group(kobj, &filter->attr.attr,
+>> +				       HISI_PTT_REQ_FILTERS_GRP_NAME);
+>> +}
+>> +
+>> +static void hisi_ptt_remove_req_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +					   struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	struct kobject *kobj = &hisi_ptt->hisi_ptt_pmu.dev->kobj;
+>> +
+>> +	sysfs_remove_file_from_group(kobj, &filter->attr.attr,
+>> +				     HISI_PTT_REQ_FILTERS_GRP_NAME);
+>> +}
+>> +
+>> +static int hisi_ptt_create_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +				       struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (filter->is_port)
+>> +		ret = hisi_ptt_create_rp_filter_attr(hisi_ptt, filter);
+>> +	else
+>> +		ret = hisi_ptt_create_req_filter_attr(hisi_ptt, filter);
+>> +
+>> +	if (ret)
+>> +		pci_err(hisi_ptt->pdev, "failed to create sysfs attribute for filter %s\n",
+>> +			filter->name);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void hisi_ptt_remove_filter_attr(struct hisi_ptt *hisi_ptt,
+>> +					struct hisi_ptt_filter_desc *filter)
+>> +{
+>> +	if (filter->is_port)
+>> +		hisi_ptt_remove_rp_filter_attr(hisi_ptt, filter);
+>> +	else
+>> +		hisi_ptt_remove_req_filter_attr(hisi_ptt, filter);
+>> +}
+>> +
+>> +static void hisi_ptt_remove_all_filter_attributes(void *data)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +	struct hisi_ptt *hisi_ptt = data;
+>> +
+>> +	mutex_lock(&hisi_ptt->filter_lock);
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list)
+>> +		hisi_ptt_remove_filter_attr(hisi_ptt, filter);
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list)
+>> +		hisi_ptt_remove_filter_attr(hisi_ptt, filter);
+>> +
+>> +	hisi_ptt->sysfs_inited = false;
+>> +	mutex_unlock(&hisi_ptt->filter_lock);
+>> +}
+>> +
+>> +static int hisi_ptt_init_filter_attributes(struct hisi_ptt *hisi_ptt)
+>> +{
+>> +	struct hisi_ptt_filter_desc *filter;
+>> +	int ret;
+>> +
+>> +	mutex_lock(&hisi_ptt->filter_lock);
 >> +
 >> +	/*
->> +	 * We use a delayed work here to avoid indefinitely waiting for
->> +	 * the hisi_ptt->mutex which protecting the filter list. The
->> +	 * work will be delayed only if the mutex can not be held,
->> +	 * otherwise no delay will be applied.
+>> +	 * Register the reset callback in the first stage. In reset we traverse
+>> +	 * the filters list to remove the sysfs attributes so itself alone can
+> 
+> "itself alone" is confusing.   Maybe "the callback"
+> 
+>> +	 * be called safely even without below filter attributes creation work.
 >> +	 */
->> +	struct delayed_work work;
->> +	spinlock_t filter_update_lock;
->> +	DECLARE_KFIFO(filter_update_kfifo, struct hisi_ptt_filter_update_info,
->> +		      HISI_PTT_FILTER_UPDATE_FIFO_SIZE);
->>  };
->>  
->>  #define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+>> +	ret = devm_add_action(&hisi_ptt->pdev->dev,
+>> +			      hisi_ptt_remove_all_filter_attributes,
+>> +			      hisi_ptt);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->port_filters, list) {
+>> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+>> +		if (ret)
+>> +			goto out;
+>> +	}
+>> +
+>> +	list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+>> +		ret = hisi_ptt_create_filter_attr(hisi_ptt, filter);
+>> +		if (ret)
+>> +			goto out;
+>> +	}
+>> +
+>> +	hisi_ptt->sysfs_inited = true;
+>> +out:
+>> +	mutex_unlock(&hisi_ptt->filter_lock);
+>> +	return ret;
+>> +}
+>> +
+> ...
+> 
 > 
 > .
 > 
