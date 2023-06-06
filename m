@@ -2,211 +2,241 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4CB9723E48
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 11:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F777723E8A
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 11:57:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231626AbjFFJu4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 05:50:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55804 "EHLO
+        id S236872AbjFFJ5J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 05:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230013AbjFFJuy (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 05:50:54 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C9083;
-        Tue,  6 Jun 2023 02:50:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686045052; x=1717581052;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3cNnMr81VZ0I0o8WZIbb8MszLRP+Xq3U1TWFpdzHIS8=;
-  b=TqWVUj855BxdguVSNtAtDqd29wz81yxZCN+FHRjy4YaNo6bImsxc/8Tu
-   WR3C5L7EAjNn95xLF0Zzv3bY7PzH1z1SngpJ5h+TCQ+9dozne1xPNr9MF
-   xIGfv7cQnTlHKPBW6Tj9WlRscD53xhyKlgAXT3G8tf+khEZGtfO0y2h29
-   tNzMqxU6W0NsUjcWtAeOTMspihXCriGc99gJx/3fGFt4/t1Ln9T6NxrpW
-   pV5DJitpqgYobRAM0rQhXZcdlcDYSUlNxvzjj3doRpRWGV9qShz4t+Ctz
-   6kCaCLKtCXt8b0CyIjYRVa69QABztOgLoxHcmkF+yJGqF0L1OK1MNylJg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="356630043"
-X-IronPort-AV: E=Sophos;i="6.00,219,1681196400"; 
-   d="scan'208";a="356630043"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 02:50:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10732"; a="709016088"
-X-IronPort-AV: E=Sophos;i="6.00,219,1681196400"; 
-   d="scan'208";a="709016088"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 06 Jun 2023 02:50:13 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q6TKP-00056l-0o;
-        Tue, 06 Jun 2023 09:50:13 +0000
-Date:   Tue, 6 Jun 2023 17:49:53 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Grant Grundler <grundler@chromium.org>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Oliver O 'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        Rajat Khandelwal <rajat.khandelwal@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rajat Jain <rajatja@chromium.org>,
-        Grant Grundler <grundler@chromium.org>
-Subject: Re: [PATCHv3 pci-next 2/2] PCI/AER: Rate limit the reporting of the
- correctable errors
-Message-ID: <202306061710.tDjm3jHD-lkp@intel.com>
-References: <20230606035442.2886343-2-grundler@chromium.org>
+        with ESMTP id S237502AbjFFJ5F (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 05:57:05 -0400
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80133E76;
+        Tue,  6 Jun 2023 02:57:03 -0700 (PDT)
+Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb5S71v1kz67lVQ;
+        Tue,  6 Jun 2023 17:55:03 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
+ 2023 10:57:01 +0100
+Date:   Tue, 6 Jun 2023 10:56:55 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Yicong Yang <yangyicong@huawei.com>
+CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
+        <corbet@lwn.net>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>, <alexander.shishkin@linux.intel.com>,
+        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
+        <prime.zeng@huawei.com>, <linuxarm@huawei.com>
+Subject: Re: [PATCH v3 2/4] hwtracing: hisi_ptt: Add support for dynamically
+ updating the filter list
+Message-ID: <20230606105655.00006d92@Huawei.com>
+In-Reply-To: <20230523093228.48149-3-yangyicong@huawei.com>
+References: <20230523093228.48149-1-yangyicong@huawei.com>
+        <20230523093228.48149-3-yangyicong@huawei.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230606035442.2886343-2-grundler@chromium.org>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.76]
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
+X-CFilter-Loop: Reflected
+X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Grant,
+On Tue, 23 May 2023 17:32:26 +0800
+Yicong Yang <yangyicong@huawei.com> wrote:
 
-kernel test robot noticed the following build errors:
+> From: Yicong Yang <yangyicong@hisilicon.com>
+> 
+> The PCIe devices supported by the PTT trace can be removed/rescanned by
+> hotplug or through sysfs.  Add support for dynamically updating the
+> available filter list by registering a PCI bus notifier block. Then user
+> can always get latest information about available tracing filters and
+> driver can block the invalid filters of which related devices no longer
+> exist in the system.
+> 
+> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
+Hi Yangyicong,
 
-[auto build test ERROR on pci/next]
-[also build test ERROR on pci/for-linus linus/master v6.4-rc5 next-20230606]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+A few comments inline
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Grant-Grundler/PCI-AER-Rate-limit-the-reporting-of-the-correctable-errors/20230606-115515
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/20230606035442.2886343-2-grundler%40chromium.org
-patch subject: [PATCHv3 pci-next 2/2] PCI/AER: Rate limit the reporting of the correctable errors
-config: x86_64-randconfig-x051-20230606 (https://download.01.org/0day-ci/archive/20230606/202306061710.tDjm3jHD-lkp@intel.com/config)
-compiler: clang version 15.0.7 (https://github.com/llvm/llvm-project.git 8dfdcc7b7bf66834a761bd8de445840ef68e4d1a)
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git remote add pci https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-        git fetch pci next
-        git checkout pci/next
-        b4 shazam https://lore.kernel.org/r/20230606035442.2886343-2-grundler@chromium.org
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang ~/bin/make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/pci/pcie/
+Jonathan
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306061710.tDjm3jHD-lkp@intel.com/
+> ---
+>  Documentation/trace/hisi-ptt.rst |   6 +-
+>  drivers/hwtracing/ptt/hisi_ptt.c | 165 +++++++++++++++++++++++++++++--
+>  drivers/hwtracing/ptt/hisi_ptt.h |  39 ++++++++
+>  3 files changed, 201 insertions(+), 9 deletions(-)
+> 
+> diff --git a/Documentation/trace/hisi-ptt.rst b/Documentation/trace/hisi-ptt.rst
+> index 4f87d8e21065..3641aca4287a 100644
+> --- a/Documentation/trace/hisi-ptt.rst
+> +++ b/Documentation/trace/hisi-ptt.rst
+> @@ -153,9 +153,9 @@ Endpoint function can be specified in one trace. Specifying both Root Port
+>  and function at the same time is not supported. Driver maintains a list of
+>  available filters and will check the invalid inputs.
+>  
+> -Currently the available filters are detected in driver's probe. If the supported
+> -devices are removed/added after probe, you may need to reload the driver to update
+> -the filters.
+> +The available filters will be dynamically updates, which means you will always
 
-All error/warnings (new ones prefixed by >>):
+updated, 
 
->> drivers/pci/pcie/aer.c:717:30: error: expected ';' after expression
-                   pci_err(dev, "%s", aer_msg):
-                                              ^
-                                              ;
->> drivers/pci/pcie/aer.c:746:28: warning: data argument not used by format string [-Wformat-extra-args]
-                           aer_error_layer[layer], aer_agent_string[agent],
-                           ~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/pci.h:2600:65: note: expanded from macro 'pci_err'
-   #define pci_err(pdev, fmt, arg...)      dev_err(&(pdev)->dev, fmt, ##arg)
-                                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-   include/linux/dev_printk.h:144:65: note: expanded from macro 'dev_err'
-           dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt), ##__VA_ARGS__)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~
-   include/linux/dev_printk.h:110:23: note: expanded from macro 'dev_printk_index_wrap'
-                   _p_func(dev, fmt, ##__VA_ARGS__);                       \
-                                ~~~    ^
-   1 warning and 1 error generated.
+> +get correct filter information when hotplug events happen, or when you manually
+> +remove/rescan the devices.
+>  
+>  2. Type
+>  -------
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
+> index 548cfef51ace..9b4acbc434b0 100644
+> --- a/drivers/hwtracing/ptt/hisi_ptt.c
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
+> @@ -357,24 +357,41 @@ static int hisi_ptt_register_irq(struct hisi_ptt *hisi_ptt)
+
+...
+
+>  static struct hisi_ptt_filter_desc *
+> -hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, struct pci_dev *pdev)
+> +hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, u16 devid, bool is_port)
+>  {
+>  	struct hisi_ptt_filter_desc *filter;
+> +	u8 devfn = devid & 0xff;
+> +	char *filter_name;
+> +
+> +	filter_name = kasprintf(GFP_KERNEL, "%04x:%02x:%02x.%d", pci_domain_nr(hisi_ptt->pdev->bus),
+> +				 PCI_BUS_NUM(devid), PCI_SLOT(devfn), PCI_FUNC(devfn));
+> +	if (!filter_name) {
+> +		pci_err(hisi_ptt->pdev, "failed to allocate name for filter %s\n",
+> +			filter_name);
+> +		kfree(filter);
+
+Don't think you've allocated filter yet.
+
+> +		return NULL;
+> +	}
+>  
+>  	filter = kzalloc(sizeof(*filter), GFP_KERNEL);
+>  	if (!filter) {
+>  		pci_err(hisi_ptt->pdev, "failed to add filter for %s\n",
+> -			pci_name(pdev));
+> +			filter_name);
+>  		return NULL;
+>  	}
+>  
+> -	filter->devid = PCI_DEVID(pdev->bus->number, pdev->devfn);
+> -	filter->is_port = pci_pcie_type(pdev) == PCI_EXP_TYPE_ROOT_PORT;
+> +	filter->name = filter_name;
+> +	filter->is_port = is_port;
+> +	filter->devid = devid;
+> +
+>  	if (filter->is_port) {
+>  		list_add_tail(&filter->list, &hisi_ptt->port_filters);
+>  
+> @@ -387,6 +404,102 @@ hisi_ptt_alloc_add_filter(struct hisi_ptt *hisi_ptt, struct pci_dev *pdev)
+>  	return filter;
+>  }
 
 
-vim +717 drivers/pci/pcie/aer.c
 
-   684	
-   685	static void __aer_print_error(struct pci_dev *dev,
-   686				      struct aer_err_info *info)
-   687	{
-   688		const char **strings;
-   689		char aer_msg[512];
-   690		unsigned long status = info->status & ~info->mask;
-   691		int i;
-   692	
-   693		memset(aer_msg, 0, sizeof(*aer_msg));
-   694		snprintf(aer_msg, sizeof(*aer_msg), "aer_status: 0x%08x, aer_mask: 0x%08x\n",
-   695				info->status, info->mask);
-   696	
-   697		strings = (info->severity == AER_CORRECTABLE) ?
-   698			aer_correctable_error_string : aer_uncorrectable_error_string;
-   699	
-   700		for_each_set_bit(i, &status, 32) {
-   701			const char *errmsg = strings[i];
-   702			char bitmsg[64];
-   703			memset(bitmsg, 0, sizeof(*bitmsg));
-   704	
-   705			if (!errmsg)
-   706				errmsg = "Unknown Error Bit";
-   707	
-   708			snprintf(bitmsg, sizeof(*bitmsg), "   [%2d] %-22s%s\n", i, errmsg,
-   709				    info->first_error == i ? " (First)" : "");
-   710	
-   711			strlcat(aer_msg, bitmsg, sizeof(*aer_msg));
-   712		}
-   713	
-   714		if (info->severity == AER_CORRECTABLE)
-   715			pci_info_ratelimited(dev, "%s", aer_msg);
-   716		else
- > 717			pci_err(dev, "%s", aer_msg):
-   718	
-   719		pci_dev_aer_stats_incr(dev, info);
-   720	}
-   721	
-   722	void aer_print_error(struct pci_dev *dev, struct aer_err_info *info)
-   723	{
-   724		int layer, agent;
-   725		int id = ((dev->bus->number << 8) | dev->devfn);
-   726	
-   727		if (!info->status) {
-   728			pci_err(dev, "PCIe Bus Error: severity=%s, type=Inaccessible, (Unregistered Agent ID)\n",
-   729				aer_error_severity_string[info->severity]);
-   730			goto out;
-   731		}
-   732	
-   733		layer = AER_GET_LAYER_ERROR(info->severity, info->status);
-   734		agent = AER_GET_AGENT(info->severity, info->status);
-   735	
-   736		if (info->severity == AER_CORRECTABLE) {
-   737			pci_info_ratelimited(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n"
-   738					"  device [%04x:%04x] error status/mask=%08x/%08x\n",
-   739					     aer_error_severity_string[info->severity],
-   740					     aer_error_layer[layer], aer_agent_string[agent],
-   741					     dev->vendor, dev->device, info->status, info->mask);
-   742		} else {
-   743			pci_err(dev, "PCIe Bus Error: severity=%s, type=%s, (%s)\n",
-   744				"  device [%04x:%04x] error status/mask=%08x/%08x\n",
-   745				aer_error_severity_string[info->severity],
- > 746				aer_error_layer[layer], aer_agent_string[agent],
-   747				dev->vendor, dev->device, info->status, info->mask);
-   748		}
-   749	
-   750		__aer_print_error(dev, info);
-   751	
-   752		if (info->tlp_header_valid)
-   753			__print_tlp_header(dev, &info->tlp);
-   754	
-   755	out:
-   756		if (info->id && info->error_dev_num > 1 && info->id == id)
-   757			pci_err(dev, "  Error of this Agent is reported first\n");
-   758	
-   759		trace_aer_event(dev_name(&dev->dev), (info->status & ~info->mask),
-   760				info->severity, info->tlp_header_valid, &info->tlp);
-   761	}
-   762	
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+...
+
+> @@ -633,14 +752,19 @@ static int hisi_ptt_trace_valid_filter(struct hisi_ptt *hisi_ptt, u64 config)
+>  	 * For Requester ID filters, walk the available filter list to see
+>  	 * whether we have one matched.
+>  	 */
+> +	mutex_lock(&hisi_ptt->filter_lock);
+>  	if (!hisi_ptt->trace_ctrl.is_port) {
+>  		list_for_each_entry(filter, &hisi_ptt->req_filters, list) {
+> -			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port))
+> +			if (val == hisi_ptt_get_filter_val(filter->devid, filter->is_port)) {
+> +				mutex_unlock(&hisi_ptt->filter_lock);
+
+Perhaps a single exit location makes more sense given we need to unlock in
+all paths?  goto unlock; etc
+
+>  				return 0;
+> +			}
+>  		}
+>  	} else if (bitmap_subset(&val, &port_mask, BITS_PER_LONG)) {
+> +		mutex_unlock(&hisi_ptt->filter_lock);
+>  		return 0;
+>  	}
+> +	mutex_unlock(&hisi_ptt->filter_lock);
+>  
+>  	return -EINVAL;
+>  }
+> @@ -916,6 +1040,31 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
+>  					&hisi_ptt->hisi_ptt_pmu);
+>  }
+
+
+
+> diff --git a/drivers/hwtracing/ptt/hisi_ptt.h b/drivers/hwtracing/ptt/hisi_ptt.h
+> index 5beb1648c93a..d080b306af77 100644
+> --- a/drivers/hwtracing/ptt/hisi_ptt.h
+> +++ b/drivers/hwtracing/ptt/hisi_ptt.h
+
+...
+
+> @@ -161,6 +182,7 @@ struct hisi_ptt_pmu_buf {
+>   * struct hisi_ptt - Per PTT device data
+>   * @trace_ctrl:   the control information of PTT trace
+>   * @hotplug_node: node for register cpu hotplug event
+> + * @hisi_ptt_nb:  dynamic filter update notifier
+
+Wrong location. Order should match the fields in the structure.
+So this belongs just above hotplug_node
+
+
+>   * @hisi_ptt_pmu: the pum device of trace
+>   * @iobase:       base IO address of the device
+>   * @pdev:         pci_dev of this PTT device
+> @@ -170,10 +192,15 @@ struct hisi_ptt_pmu_buf {
+>   * @lower_bdf:    the lower BDF range of the PCI devices managed by this PTT device
+>   * @port_filters: the filter list of root ports
+>   * @req_filters:  the filter list of requester ID
+> + * @filter_lock:  lock to protect the filters
+>   * @port_mask:    port mask of the managed root ports
+> + * @work:         delayed work for filter updating
+> + * @filter_update_lock: spinlock to protect the filter update fifo
+> + * @filter_update_fifo: fifo of the filters waiting to update the filter list
+>   */
+>  struct hisi_ptt {
+>  	struct hisi_ptt_trace_ctrl trace_ctrl;
+> +	struct notifier_block hisi_ptt_nb;
+>  	struct hlist_node hotplug_node;
+>  	struct pmu hisi_ptt_pmu;
+>  	void __iomem *iobase;
+> @@ -192,7 +219,19 @@ struct hisi_ptt {
+>  	 */
+>  	struct list_head port_filters;
+>  	struct list_head req_filters;
+> +	struct mutex filter_lock;
+>  	u16 port_mask;
+> +
+> +	/*
+> +	 * We use a delayed work here to avoid indefinitely waiting for
+> +	 * the hisi_ptt->mutex which protecting the filter list. The
+> +	 * work will be delayed only if the mutex can not be held,
+> +	 * otherwise no delay will be applied.
+> +	 */
+> +	struct delayed_work work;
+> +	spinlock_t filter_update_lock;
+> +	DECLARE_KFIFO(filter_update_kfifo, struct hisi_ptt_filter_update_info,
+> +		      HISI_PTT_FILTER_UPDATE_FIFO_SIZE);
+>  };
+>  
+>  #define to_hisi_ptt(pmu) container_of(pmu, struct hisi_ptt, hisi_ptt_pmu)
+
