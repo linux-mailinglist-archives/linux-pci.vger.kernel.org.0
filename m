@@ -2,176 +2,195 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D306B724CB4
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 21:14:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30C4F724CF1
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 21:23:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239343AbjFFTOo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 15:14:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44610 "EHLO
+        id S238761AbjFFTXp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 15:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239301AbjFFTOT (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 15:14:19 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 026BB19A1;
-        Tue,  6 Jun 2023 12:13:56 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8DxCepVhX9kcE0AAA--.702S3;
-        Wed, 07 Jun 2023 03:13:25 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxG8pRhX9k8vsCAA--.3210S3;
-        Wed, 07 Jun 2023 03:13:21 +0800 (CST)
-Message-ID: <8ec710dd-1b37-5440-5a3c-b30535b94350@loongson.cn>
-Date:   Wed, 7 Jun 2023 03:13:21 +0800
+        with ESMTP id S238464AbjFFTXp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 15:23:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2428FE60;
+        Tue,  6 Jun 2023 12:23:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AC698615CD;
+        Tue,  6 Jun 2023 19:23:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBD1EC433D2;
+        Tue,  6 Jun 2023 19:23:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686079423;
+        bh=p8Lxm7KhOJb3okWKEtpax6TjOrAnMjaevyCE24B4Rsk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=uH3ckJHJyod97p6orOKxPw6toM0mWCflU8PdXsuaWn57L2r0+/v3GJl1S12qrYqQ/
+         58QjPK9Pe/NSrJF+UMB3lUHsq/rTDAGHyw2hn50DK8bwfgqhOr1f/9w80lk9RQMs+1
+         tBYl++W54ZaPExo5uvuKPfNnl7DWN99kCA527+fkeqnlXvpw7QDK2kca3mv07w+/pR
+         9gFVJW/0MnJnyNEgzg6cEdYXFCON+31dkvjswKkYoNTphiQYGJUYreDKLGWzgemTQv
+         A7uZ4VKdSDeWMmhJjst4OGLuaetVuxcW+/xaeJ/1Ly5E3OHDaSSNgHoeL2TWmfcAjN
+         U9wtwQ3oRctaA==
+Date:   Tue, 6 Jun 2023 14:23:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mario Limonciello <mario.limonciello@amd.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v2] PCI: Call _REG when saving/restoring PCI state
+Message-ID: <20230606192341.GA1130972@bhelgaas>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] linux/pci.h: add a dummy implement for pci_clear_master()
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, loongson-kernel@lists.loongnix.cn,
-        kernel test robot <lkp@intel.com>
-References: <20230606184602.GA1134277@bhelgaas>
-From:   Sui Jingfeng <suijingfeng@loongson.cn>
-Organization: Loongson
-In-Reply-To: <20230606184602.GA1134277@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8CxG8pRhX9k8vsCAA--.3210S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxZry3KFWfuw13tr15tF1UJwc_yoWruF1Upa
-        yrJF4Fkr48JFy8Cr4IvF13XF1Fqws8X34xXrWUKw1q9a4qya48tFsYkF45CrnxXrZYkF4a
-        vr1akasxW3WUtagCm3ZEXasCq-sJn29KB7ZKAUJUUUU7529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUB0b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r106r15M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
-        Gr0_Gr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
-        kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
-        XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
-        k0xIA0c2IEe2xFo4CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_
-        Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67
-        AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8I
-        cVAFwI0_Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI
-        8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU4miiDUUUU
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230606162321.34222-1-mario.limonciello@amd.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Tue, Jun 06, 2023 at 11:23:21AM -0500, Mario Limonciello wrote:
+> ASMedia PCIe GPIO controllers fail functional tests after returning from
+> suspend (S3 or s2idle). This is because the BIOS checks whether the
+> OSPM has called the `_REG` method to determine whether it can interact with
+> the OperationRegion assigned to the device.
+> 
+> As described in 6.5.4 in the APCI spec, `_REG` is used to inform the AML
+> code on the availability of an operation region.
+> 
+> To fix this issue, call acpi_evaluate_reg() when saving and restoring the
+> state of PCI devices.
+> 
+> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v1->v2:
+>  * Handle case of no CONFIG_ACPI
+>  * Rename function
+>  * Update commit message
+>  * Move ACPI calling code into pci-acpi.c instead
+>  * Cite the ACPI spec
 
-On 2023/6/7 02:46, Bjorn Helgaas wrote:
-> On Wed, Jun 07, 2023 at 01:48:38AM +0800, Sui Jingfeng wrote:
->> On 2023/6/7 00:13, Bjorn Helgaas wrote:
->>> On Tue, May 30, 2023 at 06:16:55PM +0800, Sui Jingfeng wrote:
->>>> As some arch(m68k for example) doesn't have config_pci enabled, drivers[1]
->>>> call pci_clear_master() without config_pci guard can not built.
->>>>
->>>>      drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:
->>>>      In function 'etnaviv_gpu_pci_fini':
->>>>>> drivers/gpu/drm/etnaviv/etnaviv_pci_drv.c:32:9:
->>>>      error: implicit declaration of function 'pci_clear_master';
->>>>      did you mean 'pci_set_master'? [-Werror=implicit-function-declaration]
->>>>         32 |         pci_clear_master(pdev);
->>>>            |         ^~~~~~~~~~~~~~~~
->>>>            |         pci_set_master
->>>>      cc1: some warnings being treated as errors
->>>>
->>>> [1] https://patchwork.freedesktop.org/patch/539977/?series=118522&rev=1
->>>>
->>>> Reported-by: kernel test robot <lkp@intel.com>
->>>> Closes: https://lore.kernel.org/oe-kbuild-all/202305301659.4guSLavL-lkp@intel.com/
->>>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
->>> I applied this to pci/misc for v6.5, with commit log as below.
->>>
->>> But I suspect that it might make your life easier if you include it
->>> with your etnaviv series.  You may be able to avoid adding the
->>> CONFIG_DRM_ETNAVIV_PCI_DRIVER symbol.
->>>
->>> If so, feel free to include this patch in that series with my ack:
->>>
->>> Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->> I do want add this tag to my all  of the patches in the drm/etnaviv series,
->> thanks.
->>
->> and I really love you this idea.
-> Just to be clear, my ack only applies to the addition of the
-> pci_clear_master() stub in pci.h.  It does not apply to the patches in
-> the drm/etnaviv series at
-> https://lore.kernel.org/r/20230603105943.3042766-1-15330273260@189.cn
-Ok, I understand what you meant then.
->>> If you do include it in your series, please use the commit log below
->>> and let me know so I can drop it from my queue.
->> No, please keep this patch merged by you.
->>
->> Because this patch belong to drivers/pci, Its belong to you domain.
->>
->>
->> I might choose to  remove the CONFIG_DRM_ETNAVIV_PCI_DRIVER option at next
->> version
->>
->> of my drm/etnaviv patch If it arrived to drm/tip branch.
->>
->>
->> But I guess some reviewers may still prefer a CONFIG_DRM_ETNAVIV_PCI_DRIVER
->> option,
->>
->> depend on the attitude of etnaviv folks.
-> The purpose of my ack is to enable you to merge the patch along with
-> the series that uses it.  This is a normal way of handling things that
-> cross subsystem boundaries, so you don't need to feel uncomfortable
-> about it.
->
-> It is much more difficult to remove config options than it is to add
-> them, because you must ensure that the removal doesn't break old
-> .config files.
->
-> I will keep this patch in my queue unless you tell me to drop it.
->
-> Bjorn
->
->>>     Author: Sui Jingfeng <suijingfeng@loongson.cn>
->>>     Date:   Wed May 31 18:27:44 2023 +0800
->>>
->>>       PCI: Add pci_clear_master() stub for non-CONFIG_PCI
->>>       Add a pci_clear_master() stub when CONFIG_PCI is not set so drivers that
->>>       support both PCI and platform devices don't need #ifdefs or extra Kconfig
->>>       symbols for the PCI parts.
->>>       [bhelgaas: commit log]
->>>       Fixes: 6a479079c072 ("PCI: Add pci_clear_master() as opposite of pci_set_master()")
->>>       Link: https://lore.kernel.org/r/20230531102744.2354313-1-suijingfeng@loongson.cn
->>>       Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
->>>       Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
->>>       Acked-by: Bjorn Helgaas <bhelgaas@google.com>
->>>
->>>> ---
->>>>    include/linux/pci.h | 1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/include/linux/pci.h b/include/linux/pci.h
->>>> index d0c19ff0c958..71c85380676c 100644
->>>> --- a/include/linux/pci.h
->>>> +++ b/include/linux/pci.h
->>>> @@ -1904,6 +1904,7 @@ static inline int pci_dev_present(const struct pci_device_id *ids)
->>>>    #define pci_dev_put(dev)	do { } while (0)
->>>>    static inline void pci_set_master(struct pci_dev *dev) { }
->>>> +static inline void pci_clear_master(struct pci_dev *dev) { }
->>>>    static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
->>>>    static inline void pci_disable_device(struct pci_dev *dev) { }
->>>>    static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
->>>> -- 
->>>> 2.25.1
->>>>
->> -- 
->> Jingfeng
->>
--- 
-Jingfeng
+Thanks for the spec reference (s/APCI/ACPI/ and add the revision if
+you rev this (r6.5 is the latest, AFAIK) if you rev this).
 
+I don't see text in that section that connects S3 with _REG.  If it's
+there, you might have to quote the relevant sentence or two in the
+commit log.
+
+You mentioned _REG being sort of a mutex to synchronize OSPM vs
+platform access; if there's spec language to that effect, let's cite
+it.
+
+Ideally we should have been able to read the PCI and ACPI specs and
+implement this without tripping over problem on this particular
+hardware.  I'm looking for the text that enables that "clean-room"
+implementation.  If the spec doesn't have that text, it's either a
+hole in the spec or a BIOS defect that depends on something the spec
+doesn't require.
+
+Doing this in pci_save_state() still seems wrong to me.  For example,
+e1000_probe() calls pci_save_state(), but this is not part of suspend.
+IIUC, this patch will disconnect the opregion when we probe an e1000
+NIC.  Is that what you intend?
+
+> ---
+>  drivers/pci/pci-acpi.c | 10 ++++++++++
+>  drivers/pci/pci.c      | 14 ++++++++++++++
+>  drivers/pci/pci.h      |  2 ++
+>  3 files changed, 26 insertions(+)
+> 
+> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+> index 1698205dd73c..abc8bcfc2c71 100644
+> --- a/drivers/pci/pci-acpi.c
+> +++ b/drivers/pci/pci-acpi.c
+> @@ -1209,6 +1209,16 @@ void acpi_pci_remove_bus(struct pci_bus *bus)
+>  	acpi_pci_slot_remove(bus);
+>  }
+>  
+> +void acpi_pci_set_register_access(struct pci_dev *dev, bool enable)
+> +{
+> +	int val = enable ? ACPI_REG_CONNECT : ACPI_REG_DISCONNECT;
+> +	int ret = acpi_evaluate_reg(ACPI_HANDLE(&dev->dev),
+> +				    ACPI_ADR_SPACE_PCI_CONFIG, val);
+> +	if (ret)
+> +		pci_dbg(dev, "ACPI _REG %s evaluation failed (%d)\n",
+> +			val ? "connect" : "disconnect", ret);
+> +}
+> +
+>  /* ACPI bus type */
+>  
+>  
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index e38c2f6eebd4..b2f1f603ec62 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -1068,6 +1068,14 @@ static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+>  	return acpi_pci_bridge_d3(dev);
+>  }
+>  
+> +static inline void platform_set_register_access(struct pci_dev *dev, bool en)
+> +{
+> +	if (pci_use_mid_pm())
+> +		return;
+> +
+> +	acpi_pci_set_register_access(dev, en);
+> +}
+> +
+>  /**
+>   * pci_update_current_state - Read power state of given device and cache it
+>   * @dev: PCI device to handle.
+> @@ -1645,6 +1653,9 @@ static void pci_restore_ltr_state(struct pci_dev *dev)
+>  int pci_save_state(struct pci_dev *dev)
+>  {
+>  	int i;
+> +
+> +	platform_set_register_access(dev, false);
+> +
+>  	/* XXX: 100% dword access ok here? */
+>  	for (i = 0; i < 16; i++) {
+>  		pci_read_config_dword(dev, i * 4, &dev->saved_config_space[i]);
+> @@ -1790,6 +1801,8 @@ void pci_restore_state(struct pci_dev *dev)
+>  	pci_enable_acs(dev);
+>  	pci_restore_iov_state(dev);
+>  
+> +	platform_set_register_access(dev, true);
+> +
+>  	dev->state_saved = false;
+>  }
+>  EXPORT_SYMBOL(pci_restore_state);
+> @@ -3203,6 +3216,7 @@ void pci_pm_init(struct pci_dev *dev)
+>  	pci_read_config_word(dev, PCI_STATUS, &status);
+>  	if (status & PCI_STATUS_IMM_READY)
+>  		dev->imm_ready = 1;
+> +	platform_set_register_access(dev, true);
+>  }
+>  
+>  static unsigned long pci_ea_flags(struct pci_dev *dev, u8 prop)
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index ffccb03933e2..78961505aae2 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -703,6 +703,7 @@ void acpi_pci_refresh_power_state(struct pci_dev *dev);
+>  int acpi_pci_wakeup(struct pci_dev *dev, bool enable);
+>  bool acpi_pci_need_resume(struct pci_dev *dev);
+>  pci_power_t acpi_pci_choose_state(struct pci_dev *pdev);
+> +void acpi_pci_set_register_access(struct pci_dev *dev, bool enable);
+>  #else
+>  static inline int pci_dev_acpi_reset(struct pci_dev *dev, bool probe)
+>  {
+> @@ -742,6 +743,7 @@ static inline pci_power_t acpi_pci_choose_state(struct pci_dev *pdev)
+>  {
+>  	return PCI_POWER_ERROR;
+>  }
+> +static inline void acpi_pci_set_register_access(struct pci_dev *dev, bool enable) {}
+>  #endif
+>  
+>  #ifdef CONFIG_PCIEASPM
+> -- 
+> 2.34.1
+> 
