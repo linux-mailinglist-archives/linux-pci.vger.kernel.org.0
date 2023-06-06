@@ -2,61 +2,61 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DD4BE724186
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 13:59:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA2A2724188
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 13:59:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjFFL7T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 07:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41466 "EHLO
+        id S237408AbjFFL70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 07:59:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237397AbjFFL7G (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 07:59:06 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7B781722
-        for <linux-pci@vger.kernel.org>; Tue,  6 Jun 2023 04:58:52 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-655fce0f354so1623477b3a.0
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jun 2023 04:58:52 -0700 (PDT)
+        with ESMTP id S237440AbjFFL7K (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 07:59:10 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E72810FB
+        for <linux-pci@vger.kernel.org>; Tue,  6 Jun 2023 04:58:56 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-53404873a19so3091236a12.3
+        for <linux-pci@vger.kernel.org>; Tue, 06 Jun 2023 04:58:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686052732; x=1688644732;
+        d=linaro.org; s=google; t=1686052735; x=1688644735;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/A31/i+m7BU2Bqbrm76M8ZCTI2bY2FunS+Zgw078wns=;
-        b=NhFzPGK/LgXepWwy2zWYeTVSabXVDTmt8ct8uR0krlenAq1FVuPal+C5uyWaBMAvWB
-         olBB/nZ90xyde17yuqRavAiVOmguy6+B6tJrxDAS6B2d4HJj9Z7J8B+GSKVW5dLTr06w
-         gCUERydedQoK94netVwSSc1q+ZYPBfSa1XrwutHn51E9h24MMvvUO101pyo5XaYTTTsg
-         4tX8baj1Mxn6SJii54yc6J2GjgTg5DANSJ1qvQO0/3paMMjogfTu3oLn0+jjlHXgcYft
-         9H2mAY/7+/YxQBxKRBQhM8QcUxVEO1CJNM9lAFo9WztFujCmpovCta1TKGvk0/wxzeub
-         ysNg==
+        bh=cRwHHVBuwFdTSPfIU1R1ZLyGoM8LybFGSYGhuRMiUuk=;
+        b=GDNQ0tGgu2Z5y8Mf/D9JPoPQwu4ld0v9cyfkpZJS5csZsulT3j35QseR+SsQnfTBQC
+         xOCAQh5Z7tFWRC0ztLdPhOS7aGuPg+3nb50IMfsVjzmLOOr0oSfNHvA58qaJpp69HbY0
+         ADuxzsTs2X4H/XZiXmTOr+s3/g+tWoAv5AunAx5Xkeqr0EwRRVddE2H1ykfRmy02eAiR
+         kJ13TIm1dKH9TOloLhbQfqkeW1tq9tdVMTilRVH+vbqZPjlf8bOtU0I4peE4pbz9u3EP
+         sTkXNWr+h35oehx9f7j1eiwU3AXVzAK6JGNhNjqjkNUBbyX/MndA38mtAc8VBx1n4vEb
+         gPNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686052732; x=1688644732;
+        d=1e100.net; s=20221208; t=1686052735; x=1688644735;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/A31/i+m7BU2Bqbrm76M8ZCTI2bY2FunS+Zgw078wns=;
-        b=cKOZj3DdWexYVmMFN7PoFQ5THxp6iuQvu1vfh1Qgoau4eMgrh/5B03S2jo03UZnF20
-         eSjqNHroF/NJc/Zxkfs3lJf6DRZEcK5v4imylHzmH18QAww/rEM1A0w+33Wzg2Ba2Yd2
-         E91yonp/s0qD1d3rF2rDQ4OxSnqU97lKY/iMhgoBnnv0WrlZOIjab8RIRHKJL5WXEIRq
-         maxGUq3r4r9lWCmvfRiFzV8e9O/+I5T9EkM2LtmE/djXMH1KGlPMmZT2Gc4Um45TkU44
-         Ht/XJkNNvyn2xfEzjNfGe4lrQNOz43fOo/rTT58L4UheGijX8FpB6yHANVMCItsDpmgH
-         mSfw==
-X-Gm-Message-State: AC+VfDzhuam62SsKCIpD9x5uKvPEcfLapGiPEjZzpB1mObDZYV9kFk0x
-        SXsY/kCQDm15+xWzqBu0BXQG
-X-Google-Smtp-Source: ACHHUZ427+RHw6YrOxFJmdnCmiR67XrtYFqFzTz2NL98BS5AZnestvUvppQJ6wrLGfIAPOyHBMZqVA==
-X-Received: by 2002:a05:6a21:3290:b0:10c:7c72:bdd6 with SMTP id yt16-20020a056a21329000b0010c7c72bdd6mr954741pzb.59.1686052732117;
-        Tue, 06 Jun 2023 04:58:52 -0700 (PDT)
+        bh=cRwHHVBuwFdTSPfIU1R1ZLyGoM8LybFGSYGhuRMiUuk=;
+        b=hU1IMD8o8lZErqve9iLuU1SNOTW+YGgx/Esw8HPLv6FQPwlx4+UYFNbTpdukeFjBpu
+         tEaRTGAvFraY3654n/3s+G7XpEnZG/EofYzbuL+jerFIBBfdE3X2kBfPpUe7HC+lbd91
+         iVgB7W6kZ6uw3IpqBUny2j7ROAM0EEw5SeiPzS5TcJvzJG+g3eNF84tZ84onx0G+A5Sa
+         Fu9HbMC9vDLkPG8VcEZPg1GCaVcIRuzrbwyDwtjnqvyJxqzOs6DAsOri/M1sHJ5cjejH
+         XnVio8t4iAw9/y10Krk/cZJXkRw8ODRzyY0K4549v6+wjVkOLaBQFj8QmIHLIT6zjO0y
+         lL5w==
+X-Gm-Message-State: AC+VfDxhcnmUExEAMmApCMuYERJgDU06Ewf7ZBoclz/0eUM0ly/ED+Zx
+        kekzgKYfENwGWSlcvgq2kaGD6dxntKEPrRXsyw==
+X-Google-Smtp-Source: ACHHUZ4TaSeSgHzzlmzlfHDYxu6B/XdzkWmcSINkszkmDj0Di2XG9vgw4fFsdMUTnnzkxAr8YBTiSw==
+X-Received: by 2002:a17:902:7d98:b0:1a6:b971:faf6 with SMTP id a24-20020a1709027d9800b001a6b971faf6mr853968plm.35.1686052735442;
+        Tue, 06 Jun 2023 04:58:55 -0700 (PDT)
 Received: from localhost.localdomain ([117.202.186.178])
-        by smtp.gmail.com with ESMTPSA id b5-20020a170903228500b001acaf7e22bdsm8419226plh.14.2023.06.06.04.58.48
+        by smtp.gmail.com with ESMTPSA id b5-20020a170903228500b001acaf7e22bdsm8419226plh.14.2023.06.06.04.58.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 04:58:51 -0700 (PDT)
+        Tue, 06 Jun 2023 04:58:55 -0700 (PDT)
 From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 To:     lpieralisi@kernel.org, kw@linux.com
 Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
         Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 6/7] PCI: epf-mhi: Use iATU for small transfers
-Date:   Tue,  6 Jun 2023 17:28:13 +0530
-Message-Id: <20230606115814.53319-7-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 7/7] PCI: endpoint: Add kernel-doc for pci_epc_mem_init() API
+Date:   Tue,  6 Jun 2023 17:28:14 +0530
+Message-Id: <20230606115814.53319-8-manivannan.sadhasivam@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230606115814.53319-1-manivannan.sadhasivam@linaro.org>
 References: <20230606115814.53319-1-manivannan.sadhasivam@linaro.org>
@@ -72,43 +72,34 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-For transfers below 4K, let's use iATU since using eDMA for such small
-transfers is not efficient. This is mainly due to the fact that setting
-up a eDMA transfer and waiting for its completion adds some latency. This
-latency is negligible for large transfers but not for the smaller ones.
-
-With this hack, there is an increase in ~50Mbps throughput on both MHI UL
-(Uplink) and DL (Downlink) channels.
+Add missing kernel-doc for pci_epc_mem_init() API.
 
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/endpoint/pci-epc-mem.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index f4d1d60bde56..94cf68bdd235 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -288,6 +288,9 @@ static int pci_epf_mhi_edma_read(struct mhi_ep_cntrl *mhi_cntrl, u64 from,
- 	dma_addr_t dst_addr;
- 	int ret;
+diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
+index 7dcf6f480b82..a9c028f58da1 100644
+--- a/drivers/pci/endpoint/pci-epc-mem.c
++++ b/drivers/pci/endpoint/pci-epc-mem.c
+@@ -115,6 +115,16 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
+ }
+ EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
  
-+	if (size < SZ_4K)
-+		return pci_epf_mhi_iatu_read(mhi_cntrl, from, to, size);
-+
- 	mutex_lock(&epf_mhi->lock);
- 
- 	config.direction = DMA_DEV_TO_MEM;
-@@ -354,6 +357,9 @@ static int pci_epf_mhi_edma_write(struct mhi_ep_cntrl *mhi_cntrl, void *from,
- 	dma_addr_t src_addr;
- 	int ret;
- 
-+	if (size < SZ_4K)
-+		return pci_epf_mhi_iatu_write(mhi_cntrl, from, to, size);
-+
- 	mutex_lock(&epf_mhi->lock);
- 
- 	config.direction = DMA_MEM_TO_DEV;
++/**
++ * pci_epc_mem_init() - Initialize the pci_epc_mem structure
++ * @epc: the EPC device that invoked pci_epc_mem_init
++ * @base: Physical address of the window region
++ * @size: Total Size of the window region
++ * @page_size: Page size of the window region
++ *
++ * Invoke to initialize a single pci_epc_mem structure used by the
++ * endpoint functions to allocate memory for mapping the PCI host memory
++ */
+ int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
+ 		     size_t size, size_t page_size)
+ {
 -- 
 2.25.1
 
