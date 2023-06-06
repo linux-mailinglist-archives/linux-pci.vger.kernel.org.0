@@ -2,49 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 35EC2725003
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 00:37:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 876F37250E9
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 01:41:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239219AbjFFWhw (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 18:37:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59334 "EHLO
+        id S239928AbjFFXlb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 19:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240075AbjFFWhc (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 18:37:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 21C97172E;
-        Tue,  6 Jun 2023 15:36:23 -0700 (PDT)
+        with ESMTP id S234333AbjFFXl2 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 19:41:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79125E5B;
+        Tue,  6 Jun 2023 16:41:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3AFF1638A4;
-        Tue,  6 Jun 2023 22:36:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69DD6C433EF;
-        Tue,  6 Jun 2023 22:36:15 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E3A36312C;
+        Tue,  6 Jun 2023 23:41:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B538C433EF;
+        Tue,  6 Jun 2023 23:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686090975;
-        bh=BooVQxUHoch08PI32IhTPEi6alvADV2vunjk76rkxVA=;
+        s=k20201202; t=1686094886;
+        bh=rrITP7p0FWQ2ewrkDnu1CPZRryxU1CRoRzlhmNWeEhI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=GuGJPVi6pknz+WmZETWPSVs6G7l/ERhlSrTmFt6D6rc2/zc2lDxdZg/lpeicXpsKH
-         2kfWo/7Vj28EjMfQTBIQNXILm4go9ZnNqUuTs7nbqe3PwrpXyoZmrzLHmJATq/Yotd
-         a75H9JfhkvFBMfvh9HCJOG/UQLDJDNvqj/OfPSHg5pxdCzHtRnaloDi1gW2RE8jQs1
-         WmTw/cqsnrE8aNz/NQayXuJPa1TefyQj6dufrCMNIn4C7306XpomcLnBNzbbh0uT4/
-         7XaM/vtRuGD4zrbwVi1wfYw7Yij1JrwcgdX8m27HBGqlHfNRICGDjksOMunFd5bSjb
-         jp5fa/ki+eMDQ==
-Date:   Tue, 6 Jun 2023 17:36:13 -0500
+        b=sohfO1j9PlzPojlxWhLFK57mTg9hXWvOJFkQsGNKTZT582RvooGmd/u5XKOEfseIa
+         /UOzpYjREl+6vcboIzeJwQZdPD5FH7slqYWUxxX/PfE74ikpjhRUrnKMVyZvp2fa9I
+         Qt5XD4v3I1C1NyWUcrs4Rb4wq+HqJPpbmOqFaOLYI6wz8FDKGxnHLkZYTnNSua1GI5
+         5cG4vR11QRnApB6Ire/H7C/vgCLSrFA5VTurl9j9tgEC+MQ/OUZuSve/EAObnivniE
+         AiHFhodDWKfme+8uqWduL7OLbr/F4pScxNEFlutODQoc71EW7xKbqCApApDwKfuDAt
+         gVsxwU2Wv4eaA==
+Date:   Tue, 6 Jun 2023 18:41:24 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Ross Lagerwall <ross.lagerwall@citrix.com>
-Cc:     linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Release coalesced resource
-Message-ID: <20230606223613.GA1147805@bhelgaas>
+To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Bagas Sanjaya <bagasdotme@gmail.com>
+Subject: Re: FW: [Bug 217472] New: ACPI _OSC features have different values
+ in Host OS and Guest OS
+Message-ID: <20230606234124.GA1147990@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230525153248.712779-1-ross.lagerwall@citrix.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+In-Reply-To: <c49ed344-f521-b4b9-8a7a-a70600002358@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -53,56 +54,129 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Thu, May 25, 2023 at 04:32:48PM +0100, Ross Lagerwall wrote:
-> When contiguous windows are coalesced, the resource is invalidated and
-> consequently not added to the bus. However, it remains in the resource
-> hierarchy:
+[+cc Bagas]
+
+On Thu, May 25, 2023 at 01:33:27PM -0700, Patel, Nirmal wrote:
+> On 5/25/2023 1:19 PM, Patel, Nirmal wrote:
+> >> On Tue, 23 May 2023 12:21:25 -0500
+> >> Bjorn Helgaas <helgaas@kernel.org> wrote:
+> >>> On Mon, May 22, 2023 at 04:32:03PM +0000, bugzilla-daemon@kernel.org wrote:
+> >>>> https://bugzilla.kernel.org/show_bug.cgi?id=217472
+> >>>> ...  
+> >>>> Created attachment 304301  
+> >>>>   --> 
+> >>>> https://bugzilla.kernel.org/attachment.cgi?id=304301&action=edit
+> >>>> Rhel9.1_Guest_dmesg
+> >>>>
+> >>>> Issue:
+> >>>> NVMe Drives are still present after performing hotplug in guest
+> >>>> OS.  We have tested with different combination of OSes, drives
+> >>>> and Hypervisor. The issue is present across all the OSes.   
+> >>>
+> >>> Maybe attach the specific commands to reproduce the problem in one of 
+> >>> these scenarios to the bugzilla?  I'm a virtualization noob, so I 
+> >>> can't visualize all the usual pieces.
+> >>>
+> >>>> The following patch was added to honor ACPI _OSC values set by BIOS 
+> >>>> and the patch helped to bring the issue out in VM/ Guest OS.
+> >>>>
+> >>>> https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git/comm
+> >>>> it/drivers/pci/controller/vmd.c?id=04b12ef163d10e348db664900ae7f611b
+> >>>> 83c7a0e
+> >>>>
+> >>>>
+> >>>> I also compared the values of the parameters in the patch in
+> >>>> Host and Guest OS.  The parameters with different values in
+> >>>> Host and Guest OS are:
+> >>>>
+> >>>> native_pcie_hotplug
+> >>>> native_shpc_hotplug
+> >>>> native_aer
+> >>>> native_ltr
+> >>>>
+> >>>> i.e.
+> >>>> value of native_pcie_hotplug in Host OS is 1.
+> >>>> value of native_pcie_hotplug in Guest OS is 0.
+> >>>>
+> >>>> I am not sure why "native_pcie_hotplug" is changed to 0 in guest.
+> >>>> Isn't it OSC_ managed parameter? If that is the case, it should have 
+> >>>> same value in Host and Guest OS.
+> >>>
+> >>> From your dmesg:
+> >>>  
+> >>>   DMI: Red Hat KVM/RHEL, BIOS 1.16.0-4.el9 04/01/2014
+> >>>   _OSC: OS supports [ExtendedConfig ASPM ClockPM Segments MSI EDR HPX-Type3]
+> >>>   _OSC: platform does not support [PCIeHotplug LTR DPC]
+> >>>   _OSC: OS now controls [SHPCHotplug PME AER PCIeCapability]
+> >>>   acpiphp: Slot [0] registered
+> >>>   virtio_blk virtio3: [vda] 62914560 512-byte logical blocks (32.2 
+> >>> GB/30.0 GiB)
+> >>>
+> >>> So the DMI ("KVM/RHEL ...") is the BIOS seen by the guest.  Doesn't 
+> >>> mean anything to me, but the KVM folks would know about it.  In any 
+> >>> event, the guest BIOS is different from the host BIOS, so I'm not 
+> >>> surprised that _OSC is different.
+> >>
+> >> Right, the premise of the issue that guest and host should have
+> >> the same OSC features is flawed.  The guest is a virtual machine
+> >> that can present an entirely different feature set from the host.
+> >> A software hotplug on the guest can occur without any bearing to
+> >> the slot status on the host.
+> >>
+> >>> That guest BIOS _OSC declined to grant control of PCIe native
+> >>> hotplug to the guest OS, so the guest will use acpiphp (not
+> >>> pciehp, which would be used if native_pcie_hotplug were set).
+> >>>
+> >>> The dmesg doesn't mention the nvme driver.  Are you using
+> >>> something like virtio_blk with qemu pointed at an NVMe drive?
+> >>> And you hot-remove the NVMe device, but the guest OS thinks it's
+> >>> still present?
+> >>>
+> >>> Since the guest is using acpiphp, I would think a hot-remove of
+> >>> a host NVMe device should be noticed by qemu and turned into an
+> >>> ACPI notification that the guest OS would consume.  But I don't
+> >>> know how those connections work.
+> >>
+> >> If vfio-pci is involved, a cooperative hot-unplug will attempt to
+> >> unbind the host driver, which triggers a device request through
+> >> vfio, which is ultimately seen as a hotplug eject operation by
+> >> the guest.  Surprise hotplugs of assigned devices are not
+> >> supported.  There's not enough info in the bz to speculate how
+> >> this VM is wired or what actions are taken.  Thanks,
 > 
-> ...
->   ef2fff00-ef2fffff : 0000:00:13.2
->     ef2fff00-ef2fffff : ehci_hcd
-> 00000000-00000000 : PCI Bus 0000:00
-> f0000000-f3ffffff : PCI MMCONFIG 0000 [bus 00-3f]
->   f0000000-f3ffffff : Reserved
-> ...
+> Thanks Bjorn and Alex for quick response.
+> I agree with the analysis about guest BIOS not giving control of
+> PCIe native hotplug to guest OS.
 
-I assume the "00000000-00000000 : PCI Bus 0000:00" is the problematic
-part?  Is there anything in dmesg that shows the resources before they
-were coalesced?
+Can I back up and try to understand the problem better?  I'm sure I'm
+asking dumb questions, so please correct me:
 
-Is there an error message we could include here to link the problem
-with the solution?
+  - Can you add more details in the bz about what you're doing and
+    what is failing?
 
-> In some cases (e.g. the Xen scratch region), this causes future calls to
-> allocate_resource() to choose an inappropriate location which the caller
-> cannot handle. Fix by releasing the resource and removing from the
-> hierarchy.
-> 
-> Fixes: 7c3855c423b1 ("PCI: Coalesce host bridge contiguous apertures")
+  - I have the impression that the hotplug worked before 04b12ef163d1
+    ("PCI: vmd: Honor ACPI _OSC on PCIe features") but fails after?
 
-7c3855c423b1 appeared in v5.16, so we may need a stable tag?
+  - Can you attach dmesg logs from before and after 04b12ef163d1?
 
-> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
-> ---
->  drivers/pci/probe.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-> index 0b2826c4a832..00ed20ac0dd6 100644
-> --- a/drivers/pci/probe.c
-> +++ b/drivers/pci/probe.c
-> @@ -997,8 +997,10 @@ static int pci_register_host_bridge(struct pci_host_bridge *bridge)
->  	resource_list_for_each_entry_safe(window, n, &resources) {
->  		offset = window->offset;
->  		res = window->res;
-> -		if (!res->flags && !res->start && !res->end)
-> +		if (!res->flags && !res->start && !res->end) {
-> +			release_resource(res);
->  			continue;
-> +		}
->  
->  		list_move_tail(&window->node, &bridge->windows);
->  
-> -- 
-> 2.31.1
-> 
+  - What sort of virtualized guest is this?  qemu?
+
+  - How is the NVMe drive passed to the guest?  vfio-pci?
+
+  - Apparently the problem is with a hot-remove in the guest?  How are
+    you doing this?  Sysfs "remove" file?  qemu "device_del"?
+
+  - I assume this hot-remove is only from the *guest* and there's no
+    hotplug event for the *host*?
+
+> Adding some background about the patch f611b83c7a0e PCI: vmd: Honor
+> ACPI _OSC on PCIe features.
+
+Tangent, "f611b83c7a0e" is not a valid SHA1, so I was lost for a minute :)
+I guess you're referring to 04b12ef163d10e348db664900ae7f611b83c7a0e,
+where f611b83c7a0e is at the *end* of the SHA1.  You can abbreviate
+it, but you have to quote the *beginning*, not the end.  E.g., the
+conventional style would be 04b12ef163d1 ("PCI: vmd: Honor ACPI _OSC
+on PCIe features").
+
+Bjorn
