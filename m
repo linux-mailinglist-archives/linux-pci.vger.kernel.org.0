@@ -2,104 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DA2A2724188
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 13:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 26E6D7243B6
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 15:07:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237408AbjFFL70 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 07:59:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
+        id S238005AbjFFNHz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 09:07:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237440AbjFFL7K (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 07:59:10 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E72810FB
-        for <linux-pci@vger.kernel.org>; Tue,  6 Jun 2023 04:58:56 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-53404873a19so3091236a12.3
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jun 2023 04:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686052735; x=1688644735;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cRwHHVBuwFdTSPfIU1R1ZLyGoM8LybFGSYGhuRMiUuk=;
-        b=GDNQ0tGgu2Z5y8Mf/D9JPoPQwu4ld0v9cyfkpZJS5csZsulT3j35QseR+SsQnfTBQC
-         xOCAQh5Z7tFWRC0ztLdPhOS7aGuPg+3nb50IMfsVjzmLOOr0oSfNHvA58qaJpp69HbY0
-         ADuxzsTs2X4H/XZiXmTOr+s3/g+tWoAv5AunAx5Xkeqr0EwRRVddE2H1ykfRmy02eAiR
-         kJ13TIm1dKH9TOloLhbQfqkeW1tq9tdVMTilRVH+vbqZPjlf8bOtU0I4peE4pbz9u3EP
-         sTkXNWr+h35oehx9f7j1eiwU3AXVzAK6JGNhNjqjkNUBbyX/MndA38mtAc8VBx1n4vEb
-         gPNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686052735; x=1688644735;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cRwHHVBuwFdTSPfIU1R1ZLyGoM8LybFGSYGhuRMiUuk=;
-        b=hU1IMD8o8lZErqve9iLuU1SNOTW+YGgx/Esw8HPLv6FQPwlx4+UYFNbTpdukeFjBpu
-         tEaRTGAvFraY3654n/3s+G7XpEnZG/EofYzbuL+jerFIBBfdE3X2kBfPpUe7HC+lbd91
-         iVgB7W6kZ6uw3IpqBUny2j7ROAM0EEw5SeiPzS5TcJvzJG+g3eNF84tZ84onx0G+A5Sa
-         Fu9HbMC9vDLkPG8VcEZPg1GCaVcIRuzrbwyDwtjnqvyJxqzOs6DAsOri/M1sHJ5cjejH
-         XnVio8t4iAw9/y10Krk/cZJXkRw8ODRzyY0K4549v6+wjVkOLaBQFj8QmIHLIT6zjO0y
-         lL5w==
-X-Gm-Message-State: AC+VfDxhcnmUExEAMmApCMuYERJgDU06Ewf7ZBoclz/0eUM0ly/ED+Zx
-        kekzgKYfENwGWSlcvgq2kaGD6dxntKEPrRXsyw==
-X-Google-Smtp-Source: ACHHUZ4TaSeSgHzzlmzlfHDYxu6B/XdzkWmcSINkszkmDj0Di2XG9vgw4fFsdMUTnnzkxAr8YBTiSw==
-X-Received: by 2002:a17:902:7d98:b0:1a6:b971:faf6 with SMTP id a24-20020a1709027d9800b001a6b971faf6mr853968plm.35.1686052735442;
-        Tue, 06 Jun 2023 04:58:55 -0700 (PDT)
-Received: from localhost.localdomain ([117.202.186.178])
-        by smtp.gmail.com with ESMTPSA id b5-20020a170903228500b001acaf7e22bdsm8419226plh.14.2023.06.06.04.58.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 04:58:55 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, kw@linux.com
-Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 7/7] PCI: endpoint: Add kernel-doc for pci_epc_mem_init() API
-Date:   Tue,  6 Jun 2023 17:28:14 +0530
-Message-Id: <20230606115814.53319-8-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230606115814.53319-1-manivannan.sadhasivam@linaro.org>
-References: <20230606115814.53319-1-manivannan.sadhasivam@linaro.org>
+        with ESMTP id S238006AbjFFNHy (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 09:07:54 -0400
+X-Greylist: delayed 2731 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 06 Jun 2023 06:07:23 PDT
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33C8B199A;
+        Tue,  6 Jun 2023 06:07:23 -0700 (PDT)
+Received: from [90.160.41.100] (helo=[10.105.1.14])
+        by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+        id 1q6Vh5-00AOz5-Fy; Tue, 06 Jun 2023 13:21:47 +0100
+Message-ID: <d5140a48-7841-af9d-7560-acd677caec88@codethink.co.uk>
+Date:   Tue, 6 Jun 2023 13:21:33 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 2/2] dt-bindings: updated max-link-speed for newer
+ generations
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
+        bhelgaas@google.com, Conor Dooley <conor+dt@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
+        Jude Onyenegecha <jude.onyenegecha@codethink.co.uk>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        Jeegar Lakhani <jeegar.lakhani@sifive.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+References: <ZHeZxPRGw+X83V1k@bhelgaas>
+Content-Language: en-GB
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+In-Reply-To: <ZHeZxPRGw+X83V1k@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_PASS,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add missing kernel-doc for pci_epc_mem_init() API.
+On 31/05/2023 20:02, Bjorn Helgaas wrote:
+> Possible subject:
+> 
+>    dt-bindings: Add gen5, gen6 max-link-speed values
+> 
+> On Wed, May 31, 2023 at 10:21:21AM +0100, Ben Dooks wrote:
+>> Add updated max-link-speed values for newer generation PCIe link
+>> speeds.
+>>
+>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>   Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
+>> index 6a8f2874a24d..56391e193fc4 100644
+>> --- a/Documentation/devicetree/bindings/pci/pci.txt
+>> +++ b/Documentation/devicetree/bindings/pci/pci.txt
+>> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
+>>      If present this property specifies PCI gen for link capability.  Host
+>>      drivers could add this as a strategy to avoid unnecessary operation for
+>>      unsupported link speed, for instance, trying to do training for
+>> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
+>> -   for gen2, and '1' for gen1. Any other values are invalid.
+>> +   unsupported link speed, etc.  Must be '6' for gen6,  '5' for gen5,
+>> +   '4' for gen4, '3' for gen3, '2' for gen2, and '1' for gen1.
+>> +   Any other values are invalid.
+> 
+> I really wish we'd used values with some connection to the actual
+> speed, e.g., "16" for 16 GT/s.  These "gen X" values are a real hassle
+> to convert back to the speed.  But I guess that's water under the
+> bridge.
+> 
+> Maybe we should annotate the documentation here, though, e.g.,
+> 
+>    '6' for gen6 (64.0 GT/s), '5' for gen5 (32.0 GT/s), ...
+> 
+> Do I have that right?  I don't see "gen5" etc in the specs themselves,
+> so this is just based on Google.
+> 
+> Bjorn 
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/pci-epc-mem.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I checked the wikipedia, I've been working on a yet-to-be-released
+device that uses a gen5 phy so updating this would be useful.
 
-diff --git a/drivers/pci/endpoint/pci-epc-mem.c b/drivers/pci/endpoint/pci-epc-mem.c
-index 7dcf6f480b82..a9c028f58da1 100644
---- a/drivers/pci/endpoint/pci-epc-mem.c
-+++ b/drivers/pci/endpoint/pci-epc-mem.c
-@@ -115,6 +115,16 @@ int pci_epc_multi_mem_init(struct pci_epc *epc,
- }
- EXPORT_SYMBOL_GPL(pci_epc_multi_mem_init);
- 
-+/**
-+ * pci_epc_mem_init() - Initialize the pci_epc_mem structure
-+ * @epc: the EPC device that invoked pci_epc_mem_init
-+ * @base: Physical address of the window region
-+ * @size: Total Size of the window region
-+ * @page_size: Page size of the window region
-+ *
-+ * Invoke to initialize a single pci_epc_mem structure used by the
-+ * endpoint functions to allocate memory for mapping the PCI host memory
-+ */
- int pci_epc_mem_init(struct pci_epc *epc, phys_addr_t base,
- 		     size_t size, size_t page_size)
- {
 -- 
-2.25.1
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
 
