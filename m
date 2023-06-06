@@ -2,102 +2,256 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B35C9724ED8
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 23:35:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10FBC724EE8
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 23:41:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239736AbjFFVfK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 17:35:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44434 "EHLO
+        id S231373AbjFFVlT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 17:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234438AbjFFVfI (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 17:35:08 -0400
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 675FD1702;
-        Tue,  6 Jun 2023 14:35:07 -0700 (PDT)
-X-GND-Sasl: alexandre.belloni@bootlin.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-        t=1686087306;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1XFSVvR03cdHavqsyI2ReH2HR0OASN+BWS/ZNWB2Q1Y=;
-        b=mLaYdYZ3G8YSPAIk/y3/e/7fOzkBq7+GJ6e8FicInmJPgA/+K4phYAdHWgDiwAV8URldaS
-        iNd3Okf6ZsZIERSYvziYzltDgvxL2dD9IDIGqbRFUKloxOYv8cEJSCAo67Ny0UbceM14gu
-        1bzBngXucuUqwxKvq+5ygCoJISnOuC2zc2G9wpodHyDDsE1hlZxPXfpQbWtxRxoKlHk429
-        6LxkJxGFGKzcK7CWcfAQKaaBj6KwPWzp0OMNnbcY+l63OIgRBNIl1/aCnywsyPepaZ2A+g
-        20bDKK10EGgqpoTc5b25joaQ9lZG1A6B3wwyxQkiCmPDZpWgVK+WjYgdiPsjog==
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-X-GND-Sasl: alexandre.belloni@bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 2DA5A40002;
-        Tue,  6 Jun 2023 21:35:03 +0000 (UTC)
-Date:   Tue, 6 Jun 2023 23:35:03 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Niklas Schnelle <schnelle@linux.ibm.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
-        linux-rtc@vger.kernel.org
-Subject: Re: (subset) [PATCH v5 30/44] rtc: add HAS_IOPORT dependencies
-Message-ID: <168608721890.31838.6105330421293340689.b4-ty@bootlin.com>
-References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
- <20230522105049.1467313-31-schnelle@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230522105049.1467313-31-schnelle@linux.ibm.com>
-X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S238110AbjFFVlS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 17:41:18 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37B731706
+        for <linux-pci@vger.kernel.org>; Tue,  6 Jun 2023 14:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686087677; x=1717623677;
+  h=date:from:to:cc:subject:message-id;
+  bh=G8LLOZ/c2CJLaP136DIyqOYeE2dWhUus5aEl4v6lPts=;
+  b=egGDqXbq5E2s3IIW41XYh5SjP/n6/65NRFvA0NGIK1ufp4cTJtjeJ1Rw
+   lqLyu2r12GlRuMxBZVFzbRWdGb/wXhe5dhytwOJzxsLbUm58U2d72E29s
+   +DL5uJUcNnAidKx+Z8Kz/kfoRPHb89eUVcRRplYsa9c85nOh2/5f9v8jk
+   N1h65M5hkjVFo7hLc5dXpPlPQb4AE8agC7CDdm+6hjIBIF5qLcf+WHX+6
+   tvhDdQBJMAl6AK4XX9X/jM8ic2NteD5qwtD7D/pvTJ5XLA+jSffUg4dIi
+   Z9WpCK+7EZBrY/JPXIlmlFhdQX16tdXk7gDzgXiIS4evgj1naST4AcNdI
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="360130190"
+X-IronPort-AV: E=Sophos;i="6.00,222,1681196400"; 
+   d="scan'208";a="360130190"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jun 2023 14:41:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="742336607"
+X-IronPort-AV: E=Sophos;i="6.00,222,1681196400"; 
+   d="scan'208";a="742336607"
+Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 06 Jun 2023 14:41:15 -0700
+Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1q6eQU-0005ly-2Z;
+        Tue, 06 Jun 2023 21:41:14 +0000
+Date:   Wed, 07 Jun 2023 05:40:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/endpoint] BUILD SUCCESS
+ 1966e58011bc65eccf6d862096a94e4930ba4fe2
+Message-ID: <20230606214015.7Rrwr%lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/endpoint
+branch HEAD: 1966e58011bc65eccf6d862096a94e4930ba4fe2  MAINTAINERS: Add PCI MHI endpoint function driver under MHI bus
 
-On Mon, 22 May 2023 12:50:35 +0200, Niklas Schnelle wrote:
-> In a future patch HAS_IOPORT=n will result in inb()/outb() and friends
-> not being declared. We thus need to add HAS_IOPORT as dependency for
-> those drivers using them.
-> 
-> 
+elapsed time: 726m
 
-Applied, thanks!
+configs tested: 180
+configs skipped: 12
 
-[30/44] rtc: add HAS_IOPORT dependencies
-        commit: 8bb12adb214b2d7cdad84f89db2cbab4b2908b61
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r001-20230606   gcc  
+alpha        buildonly-randconfig-r004-20230606   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r001-20230606   gcc  
+alpha                randconfig-r013-20230606   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r012-20230606   gcc  
+arc                  randconfig-r016-20230606   gcc  
+arc                  randconfig-r043-20230606   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r003-20230606   clang
+arm                  randconfig-r004-20230606   clang
+arm                  randconfig-r014-20230606   gcc  
+arm                  randconfig-r046-20230606   gcc  
+arm64                            allyesconfig   gcc  
+arm64        buildonly-randconfig-r005-20230606   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r021-20230606   clang
+arm64                randconfig-r025-20230606   clang
+csky         buildonly-randconfig-r005-20230606   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r021-20230606   gcc  
+csky                 randconfig-r022-20230606   gcc  
+csky                 randconfig-r031-20230606   gcc  
+csky                 randconfig-r035-20230606   gcc  
+hexagon      buildonly-randconfig-r003-20230606   clang
+hexagon      buildonly-randconfig-r004-20230606   clang
+hexagon              randconfig-r002-20230606   clang
+hexagon              randconfig-r004-20230606   clang
+hexagon              randconfig-r022-20230606   clang
+hexagon              randconfig-r041-20230606   clang
+hexagon              randconfig-r045-20230606   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230606   gcc  
+i386                 randconfig-i002-20230606   gcc  
+i386                 randconfig-i003-20230606   gcc  
+i386                 randconfig-i004-20230606   gcc  
+i386                 randconfig-i005-20230606   gcc  
+i386                 randconfig-i006-20230606   gcc  
+i386                 randconfig-i011-20230606   clang
+i386                 randconfig-i012-20230606   clang
+i386                 randconfig-i013-20230606   clang
+i386                 randconfig-i014-20230606   clang
+i386                 randconfig-i015-20230606   clang
+i386                 randconfig-i016-20230606   clang
+i386                 randconfig-i051-20230606   gcc  
+i386                 randconfig-i052-20230606   gcc  
+i386                 randconfig-i053-20230606   gcc  
+i386                 randconfig-i054-20230606   gcc  
+i386                 randconfig-i055-20230606   gcc  
+i386                 randconfig-i056-20230606   gcc  
+i386                 randconfig-i061-20230606   gcc  
+i386                 randconfig-i062-20230606   gcc  
+i386                 randconfig-i063-20230606   gcc  
+i386                 randconfig-i064-20230606   gcc  
+i386                 randconfig-i065-20230606   gcc  
+i386                 randconfig-i066-20230606   gcc  
+i386                 randconfig-r024-20230606   clang
+i386                 randconfig-r034-20230606   gcc  
+i386                 randconfig-r036-20230606   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch    buildonly-randconfig-r003-20230606   gcc  
+loongarch    buildonly-randconfig-r006-20230606   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r003-20230606   gcc  
+loongarch            randconfig-r011-20230606   gcc  
+loongarch            randconfig-r013-20230606   gcc  
+loongarch            randconfig-r031-20230606   gcc  
+loongarch            randconfig-r032-20230606   gcc  
+loongarch            randconfig-r033-20230606   gcc  
+m68k                             allmodconfig   gcc  
+m68k         buildonly-randconfig-r004-20230606   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r012-20230606   gcc  
+m68k                 randconfig-r016-20230606   gcc  
+m68k                 randconfig-r022-20230606   gcc  
+m68k                 randconfig-r032-20230606   gcc  
+microblaze   buildonly-randconfig-r002-20230606   gcc  
+microblaze           randconfig-r012-20230606   gcc  
+microblaze           randconfig-r014-20230606   gcc  
+microblaze           randconfig-r015-20230606   gcc  
+microblaze           randconfig-r032-20230606   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips         buildonly-randconfig-r002-20230606   clang
+mips                 randconfig-r015-20230606   gcc  
+mips                 randconfig-r025-20230606   gcc  
+nios2        buildonly-randconfig-r004-20230606   gcc  
+nios2                               defconfig   gcc  
+nios2                randconfig-r014-20230606   gcc  
+openrisc             randconfig-r003-20230606   gcc  
+openrisc             randconfig-r014-20230606   gcc  
+openrisc             randconfig-r024-20230606   gcc  
+openrisc             randconfig-r025-20230606   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r034-20230606   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc      buildonly-randconfig-r001-20230606   clang
+powerpc              randconfig-r002-20230606   gcc  
+powerpc              randconfig-r006-20230606   gcc  
+powerpc              randconfig-r012-20230606   clang
+powerpc              randconfig-r021-20230606   clang
+powerpc              randconfig-r033-20230606   gcc  
+powerpc              randconfig-r035-20230606   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv        buildonly-randconfig-r001-20230606   clang
+riscv        buildonly-randconfig-r003-20230606   clang
+riscv                               defconfig   gcc  
+riscv                randconfig-r025-20230606   clang
+riscv                randconfig-r026-20230606   clang
+riscv                randconfig-r036-20230606   gcc  
+riscv                randconfig-r042-20230606   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r004-20230606   gcc  
+s390                 randconfig-r035-20230606   gcc  
+s390                 randconfig-r044-20230606   clang
+sh                               allmodconfig   gcc  
+sh                   randconfig-r001-20230606   gcc  
+sh                   randconfig-r006-20230606   gcc  
+sh                   randconfig-r013-20230606   gcc  
+sh                   randconfig-r023-20230606   gcc  
+sh                   randconfig-r033-20230606   gcc  
+sh                   randconfig-r035-20230606   gcc  
+sparc        buildonly-randconfig-r003-20230606   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r035-20230606   gcc  
+sparc                randconfig-r036-20230606   gcc  
+sparc64              randconfig-r002-20230606   gcc  
+sparc64              randconfig-r011-20230606   gcc  
+sparc64              randconfig-r031-20230606   gcc  
+sparc64              randconfig-r034-20230606   gcc  
+sparc64              randconfig-r036-20230606   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230606   gcc  
+x86_64               randconfig-a002-20230606   gcc  
+x86_64               randconfig-a003-20230606   gcc  
+x86_64               randconfig-a004-20230606   gcc  
+x86_64               randconfig-a005-20230606   gcc  
+x86_64               randconfig-a006-20230606   gcc  
+x86_64               randconfig-a011-20230606   clang
+x86_64               randconfig-a012-20230606   clang
+x86_64               randconfig-a013-20230606   clang
+x86_64               randconfig-a014-20230606   clang
+x86_64               randconfig-a015-20230606   clang
+x86_64               randconfig-a016-20230606   clang
+x86_64               randconfig-r005-20230606   gcc  
+x86_64               randconfig-r031-20230606   gcc  
+x86_64               randconfig-x051-20230606   clang
+x86_64               randconfig-x052-20230606   clang
+x86_64               randconfig-x053-20230606   clang
+x86_64               randconfig-x054-20230606   clang
+x86_64               randconfig-x055-20230606   clang
+x86_64               randconfig-x056-20230606   clang
+x86_64               randconfig-x061-20230606   clang
+x86_64               randconfig-x062-20230606   clang
+x86_64               randconfig-x063-20230606   clang
+x86_64               randconfig-x064-20230606   clang
+x86_64               randconfig-x065-20230606   clang
+x86_64               randconfig-x066-20230606   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r002-20230606   gcc  
+xtensa               randconfig-r024-20230606   gcc  
+xtensa               randconfig-r032-20230606   gcc  
+
 -- 
-Alexandre Belloni, co-owner and COO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
