@@ -2,74 +2,72 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 64705723AA3
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 09:54:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3F1A6723BE1
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 10:33:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229880AbjFFHyM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 03:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59502 "EHLO
+        id S230467AbjFFIdv (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 04:33:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234899AbjFFHx1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 03:53:27 -0400
-Received: from out30-110.freemail.mail.aliyun.com (out30-110.freemail.mail.aliyun.com [115.124.30.110])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A60122;
-        Tue,  6 Jun 2023 00:49:55 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VkVT1DD_1686037790;
-Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VkVT1DD_1686037790)
-          by smtp.aliyun-inc.com;
-          Tue, 06 Jun 2023 15:49:51 +0800
-From:   Shuai Xue <xueshuai@linux.alibaba.com>
-To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
-        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
-        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
-        robin.murphy@arm.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, rdunlap@infradead.org,
-        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
-        xueshuai@linux.alibaba.com
-Subject: [PATCH v6 4/4] MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
-Date:   Tue,  6 Jun 2023 15:49:38 +0800
-Message-Id: <20230606074938.97724-5-xueshuai@linux.alibaba.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
-References: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+        with ESMTP id S236368AbjFFIdp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 04:33:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D5D10CF;
+        Tue,  6 Jun 2023 01:33:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C39F462EB2;
+        Tue,  6 Jun 2023 08:33:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36F83C433D2;
+        Tue,  6 Jun 2023 08:33:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686040390;
+        bh=CdJanuObyG6+eqgZzEAO/tzXt5ffnMV7P2BI90Gcpvc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kDdLrmSV9LfBnHd6snA/yb5534Bi1rCnmciko+Wv+s54pvS01FOSuG8oGomb3XEjF
+         o6VGAziPMDOLOqRZ0DcvPZp3DoRNa2+n5Px2fAZXp5CxsPR/VzvDjGKfRju/nwcOKR
+         m8ME+enGbPrSbizmMatlEpanUWerodvKKre5xb/eFFvAe2YdMe1c0YAWosYQG6a7gP
+         nUsEdgkTx+GBYi1hkyd7Xg0Bsem6vJR2pdGH8KnbPwyiQtU3uscr4cYsm1i/rZmQtN
+         k5JsfuVPa7m4hfifY78MqNZdAo+YUkgbZdgNmzUNHXr4gr04iARmhZ5pJDI15UWV3o
+         QZBgFaCqUtV5Q==
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     kw@linux.com, Manivannan Sadhasivam <mani@kernel.org>
+Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>, kishon@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] PCI: endpoint: epf-mhi: Fix the outbound window offset handling
+Date:   Tue,  6 Jun 2023 10:33:04 +0200
+Message-Id: <168604028639.57025.13332670969969616995.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230606074657.31622-1-manivannan.sadhasivam@linaro.org>
+References: <20230606074657.31622-1-manivannan.sadhasivam@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
-        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
-        autolearn=ham autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add maintainers for Synopsys DesignWare PCIe PMU driver and driver
-document.
+On Tue, 06 Jun 2023 13:16:57 +0530, Manivannan Sadhasivam wrote:
+> __pci_epf_mhi_alloc_map() allocates and maps the PCI outbound window memory
+> to endpoint local memory. For taking care of alignment restrictions, the
+> caller needs to specify the address alignment offset. Currently, this
+> offset is not added to the allocated physical and virtual addresses before
+> returning from the function.
+> 
+> But __pci_epf_mhi_unmap_free() function substracts the offset before
+> unmapping and freeing the memory, leading to incorrect unmap and free.
+> 
+> [...]
 
-Signed-off-by: Shuai Xue <xueshuai@linux.alibaba.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+Squashed it with the commit it was fixing.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 250518fc70ff..3f0aaf15469b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -20483,6 +20483,12 @@ L:	linux-mmc@vger.kernel.org
- S:	Maintained
- F:	drivers/mmc/host/dw_mmc*
- 
-+SYNOPSYS DESIGNWARE PCIE PMU DRIVER
-+M:	Shuai Xue <xueshuai@linux.alibaba.com>
-+S:	Supported
-+F:	Documentation/admin-guide/perf/dwc_pcie_pmu.rst
-+F:	drivers/perf/dwc_pcie_pmu.c
-+
- SYNOPSYS HSDK RESET CONTROLLER DRIVER
- M:	Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
- S:	Supported
--- 
-2.20.1.12.g72788fdb
-
+Thanks,
+Lorenzo
