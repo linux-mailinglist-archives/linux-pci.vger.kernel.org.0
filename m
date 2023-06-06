@@ -2,143 +2,163 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8F907723A71
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 09:51:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1AAD723A9B
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 09:54:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236428AbjFFHvf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 03:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58126 "EHLO
+        id S235523AbjFFHyA (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 03:54:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237516AbjFFHu7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 03:50:59 -0400
-Received: from mail-oo1-xc2e.google.com (mail-oo1-xc2e.google.com [IPv6:2607:f8b0:4864:20::c2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DABF30E4
-        for <linux-pci@vger.kernel.org>; Tue,  6 Jun 2023 00:47:20 -0700 (PDT)
-Received: by mail-oo1-xc2e.google.com with SMTP id 006d021491bc7-557d4a08bbaso3446130eaf.2
-        for <linux-pci@vger.kernel.org>; Tue, 06 Jun 2023 00:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686037629; x=1688629629;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MlFTV010nZQAE6a30Glk0hPHQmKZoo0vKsFtf+4D2Uk=;
-        b=HIGV/CmWz7y7WrCFPo3V41nbzrubjgc5bQ1J/hcSntZSJCUYc1H0PYn7ddavlOfLhC
-         HNlTNIZxixuQufsN1uIHgSQVKtGbcbp7WnHO4qCF8ea3ryQlbTmrc6BFh1UsgsDQUdPp
-         akoLeV4s/a/XYd+z0Zn2o/xjqN3V5ZJsKeMrM4Z0wUcPTNdH2qsRHqqpk+d3sxotNQhi
-         AMmEnODQR85S9AwfSyP7QZkbxToObBv2U/o7sQL8M/5XGGbjJZfEQ44zTjQsvZcjLc/w
-         75gldNdlLGjy7/h5kwdDffrpxgzvYKTgfUr0sC5qmXe65ZU1TLyBFnQKGO4xw0fNtPu3
-         GNvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686037629; x=1688629629;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MlFTV010nZQAE6a30Glk0hPHQmKZoo0vKsFtf+4D2Uk=;
-        b=gaaBUglkDJy6rIc5wds73mMJ+LO3b78tiBDnZVgN9WYGioEufTFeUmzcbx10wjXzYo
-         rMsSwjR2AGuRm40jlkngh3YGmnHGxBtn6zyTAqvzZJVN25/BhSaN9srBYGgdQqCIZ07r
-         n7MQvlLZaQMfr663XWiNCcKE663LcSWf/i/MupLs+PwWdeJZpXmmbBgkjTpHB/K1wQj5
-         BZnAX27TksEObKRGhgqhjKcFIT2rPtOh8o9aVFGMoJwhLw2+IpwXBrRYPfCS4XZNIKvh
-         D/9DR2ijPFMdoQ4K+LEvenwmFBJGDKnNh49WJ9loLA/XyHcJc8tQNISYQZBEvTTSUvRq
-         qeDA==
-X-Gm-Message-State: AC+VfDz5tjwfk/ZJbYNF3JWZPqgEPaGqQUi4R9sVvGYYbpPfeY4d0M4Q
-        LMnwuBwLS9RK8nYfbdW2EXRL
-X-Google-Smtp-Source: ACHHUZ7LAgd37C5kKnCNBQWTGKJbGCJ5fd/gl0zPmNmKxpAwVLpglV/5zNTs1pfze7+ZOctzhxe41g==
-X-Received: by 2002:a05:6358:c027:b0:129:c886:9603 with SMTP id ez39-20020a056358c02700b00129c8869603mr931501rwb.11.1686037628588;
-        Tue, 06 Jun 2023 00:47:08 -0700 (PDT)
-Received: from localhost.localdomain ([117.202.186.178])
-        by smtp.gmail.com with ESMTPSA id k16-20020a63d110000000b00528b78ddbcesm6927063pgg.70.2023.06.06.00.47.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Jun 2023 00:47:08 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lpieralisi@kernel.org, kw@linux.com
-Cc:     kishon@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH] PCI: endpoint: epf-mhi: Fix the outbound window offset handling
-Date:   Tue,  6 Jun 2023 13:16:57 +0530
-Message-Id: <20230606074657.31622-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S234697AbjFFHxZ (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 03:53:25 -0400
+Received: from out30-131.freemail.mail.aliyun.com (out30-131.freemail.mail.aliyun.com [115.124.30.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657CB19B1;
+        Tue,  6 Jun 2023 00:49:48 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R921e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046060;MF=xueshuai@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0VkVT159_1686037781;
+Received: from localhost.localdomain(mailfrom:xueshuai@linux.alibaba.com fp:SMTPD_---0VkVT159_1686037781)
+          by smtp.aliyun-inc.com;
+          Tue, 06 Jun 2023 15:49:44 +0800
+From:   Shuai Xue <xueshuai@linux.alibaba.com>
+To:     chengyou@linux.alibaba.com, kaishen@linux.alibaba.com,
+        helgaas@kernel.org, yangyicong@huawei.com, will@kernel.org,
+        Jonathan.Cameron@huawei.com, baolin.wang@linux.alibaba.com,
+        robin.murphy@arm.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-pci@vger.kernel.org, rdunlap@infradead.org,
+        mark.rutland@arm.com, zhuo.song@linux.alibaba.com,
+        xueshuai@linux.alibaba.com
+Subject: [PATCH v6 0/4] drivers/perf: add Synopsys DesignWare PCIe PMU driver support
+Date:   Tue,  6 Jun 2023 15:49:34 +0800
+Message-Id: <20230606074938.97724-1-xueshuai@linux.alibaba.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-0.6 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        RCVD_IN_SORBS_WEB,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
-        URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.6
+X-Spam-Status: No, score=-9.9 required=5.0 tests=BAYES_00,
+        ENV_AND_HDR_SPF_MATCH,RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,UNPARSEABLE_RELAY,USER_IN_DEF_SPF_WL
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-__pci_epf_mhi_alloc_map() allocates and maps the PCI outbound window memory
-to endpoint local memory. For taking care of alignment restrictions, the
-caller needs to specify the address alignment offset. Currently, this
-offset is not added to the allocated physical and virtual addresses before
-returning from the function.
+changes since v5:
+- Rewrite the commit log to follow policy in pci_ids.h (Bjorn Helgaas)
+- return error code when __dwc_pcie_pmu_probe failed (Baolin Wang)
+- call 'cpuhp_remove_multi_state()' when exiting the driver. (Baolin Wang)
+- pick up Review-by tag from Baolin for Patch 1 and 3
 
-But __pci_epf_mhi_unmap_free() function substracts the offset before
-unmapping and freeing the memory, leading to incorrect unmap and free.
+changes since v4:
 
-Fix this issue by adding the offset to physical and virtual addresses in
-__pci_epf_mhi_alloc_map() itself. This also removes the need to add the
-offset while doing memcpy in iatu_{read/write}.
+1. addressing commens from Bjorn Helgaas:
+- reorder the includes by alpha
+- change all macros with upper-case hex
+- change ras_des type into u16
+- remove unnecessary outer "()"
+- minor format changes
 
-Fixes: fd0fda1ef61a ("PCI: endpoint: Add PCI Endpoint function driver for MHI bus")
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/pci/endpoint/functions/pci-epf-mhi.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+2. Address commensts from Jonathan Cameron:
+- rewrite doc and add a example to show how to use lane event
 
-diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-index f5bbaded49d4..18e46ee446c2 100644
---- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
-+++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-@@ -148,6 +148,9 @@ static int __pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
- 		return ret;
- 	}
- 
-+	*paddr = *paddr + offset;
-+	*vaddr = *vaddr + offset;
-+
- 	return 0;
- }
- 
-@@ -158,17 +161,9 @@ static int pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
- 	struct pci_epf_mhi *epf_mhi = to_epf_mhi(mhi_cntrl);
- 	struct pci_epc *epc = epf_mhi->epf->epc;
- 	size_t offset = pci_addr & (epc->mem->window.page_size - 1);
--	int ret;
- 
--	ret = __pci_epf_mhi_alloc_map(mhi_cntrl, pci_addr, paddr, vaddr,
-+	return __pci_epf_mhi_alloc_map(mhi_cntrl, pci_addr, paddr, vaddr,
- 				      offset, size);
--	if (ret)
--		return ret;
--
--	*paddr = *paddr + offset;
--	*vaddr = *vaddr + offset;
--
--	return 0;
- }
- 
- static void __pci_epf_mhi_unmap_free(struct mhi_ep_cntrl *mhi_cntrl,
-@@ -230,7 +225,7 @@ static int pci_epf_mhi_iatu_read(struct mhi_ep_cntrl *mhi_cntrl, u64 from,
- 		return ret;
- 	}
- 
--	memcpy_fromio(to, tre_buf + offset, size);
-+	memcpy_fromio(to, tre_buf, size);
- 
- 	__pci_epf_mhi_unmap_free(mhi_cntrl, from, tre_phys, tre_buf, offset,
- 				 size);
-@@ -258,7 +253,7 @@ static int pci_epf_mhi_iatu_write(struct mhi_ep_cntrl *mhi_cntrl,
- 		return ret;
- 	}
- 
--	memcpy_toio(tre_buf + offset, from, size);
-+	memcpy_toio(tre_buf, from, size);
- 
- 	__pci_epf_mhi_unmap_free(mhi_cntrl, to, tre_phys, tre_buf, offset,
- 				 size);
+3. fix compile error reported by: kernel test robot
+- remove COMPILE_TEST and add depend on PCI in kconfig
+- add Reported-by: kernel test robot <lkp@intel.com>
+
+Changes since v3:
+
+1. addressing comments from Robin Murphy:
+- add a prepare patch to define pci id in linux/pci_ids.h
+- remove unnecessary 64BIT dependency
+- fix DWC_PCIE_PER_EVENT_OFF/ON macro
+- remove dwc_pcie_pmu struct and move all its fileds into dwc_pcie_rp_info
+- remove unnecessary format field show
+- use sysfs_emit() instead of all the assorted sprintf() and snprintf() calls.
+- remove unnecessary spaces and remove unnecessary cast to follow event show convention
+- remove pcie_pmu_event_attr_is_visible
+- fix a refcout leak on error branch when walk pci device in for_each_pci_dev
+- remove bdf field from dwc_pcie_rp_info and calculate it at runtime
+- finish all the checks before allocating rp_info to avoid hanging wasted memory
+- remove some unused fields
+- warp out control register configuration from sub function to .add()
+- make function return type with a proper signature
+- fix lane event count enable by clear DWC_PCIE_CNT_ENABLE field first
+- pass rp_info directly to the read_*_counter helpers and in start, stop and add callbacks
+- move event type validtion into .event_init()
+- use is_sampling_event() to be consistent with everything else of pmu drivers
+- remove unnecessary dev_err message in .event_init()
+- return EINVAL instead EOPNOTSUPP for not a valid event 
+- finish all the checks before start modifying the event
+- fix sibling event check by comparing event->pmu with sibling->pmu
+- probe PMU for each rootport independently
+- use .update() as .read() directly
+- remove dynamically generating symbolic name of lane event
+- redefine static symbolic name of lane event and leave lane filed to user
+- add CPU hotplug support
+
+2. addressing comments from Baolin:
+- add a mask to avoid possible overflow
+
+Changes since v2 addressing comments from Baolin:
+- remove redundant macro definitions
+- use dev_err to print error message
+- change pmu_is_register to boolean
+- use PLATFORM_DEVID_NONE macro
+- fix module author format
+
+Changes since v1:
+
+1. address comments from Jonathan:
+- drop marco for PMU name and VSEC version
+- simplify code with PCI standard marco
+- simplify code with FIELD_PREP()/FIELD_GET() to replace shift marco
+- name register filed with single _ instead double
+- wrap dwc_pcie_pmu_{write}_dword out and drop meaningless snaity check 
+- check vendor id while matching vesc with pci_find_vsec_capability()
+- remove RP_NUM_MAX and use a list to organize PMU devices for rootports
+- replace DWC_PCIE_CREATE_BDF with standard PCI_DEVID
+- comments on riping register together
+
+2. address comments from Bjorn:
+- rename DWC_PCIE_VSEC_ID to DWC_PCIE_VSEC_RAS_DES_ID
+- rename cap_pos to ras_des
+- simplify declare of device_attribute with DEVICE_ATTR_RO
+- simplify code with PCI standard macro and API like pcie_get_width_cap()
+- fix some code style problem and typo
+- drop meaningless snaity check of container_of
+
+3. address comments from Yicong:
+- use sysfs_emit() to replace sprintf()
+- simplify iteration of pci device with for_each_pci_dev
+- pick preferred CPUs on a near die and add comments
+- unregister PMU drivers only for failed ones
+- log on behalf PMU device and give more hint
+- fix some code style problem
+
+(Thanks for all comments and they are very valuable to me)
+
+This patchset adds the PCIe Performance Monitoring Unit (PMU) driver support
+for T-Head Yitian 710 SoC chip. Yitian 710 is based on the Synopsys PCI Express
+Core controller IP which provides statistics feature.
+
+Shuai Xue (4):
+  docs: perf: Add description for Synopsys DesignWare PCIe PMU driver
+  PCI: Add Alibaba Vendor ID to linux/pci_ids.h
+  drivers/perf: add DesignWare PCIe PMU driver
+  MAINTAINERS: add maintainers for DesignWare PCIe PMU driver
+
+ .../admin-guide/perf/dwc_pcie_pmu.rst         |  97 +++
+ Documentation/admin-guide/perf/index.rst      |   1 +
+ MAINTAINERS                                   |   6 +
+ drivers/infiniband/hw/erdma/erdma_hw.h        |   2 -
+ drivers/perf/Kconfig                          |   7 +
+ drivers/perf/Makefile                         |   1 +
+ drivers/perf/dwc_pcie_pmu.c                   | 706 ++++++++++++++++++
+ include/linux/pci_ids.h                       |   2 +
+ 8 files changed, 820 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/admin-guide/perf/dwc_pcie_pmu.rst
+ create mode 100644 drivers/perf/dwc_pcie_pmu.c
+
 -- 
-2.25.1
+2.20.1.12.g72788fdb
 
