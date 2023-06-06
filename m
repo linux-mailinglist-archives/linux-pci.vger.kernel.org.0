@@ -2,89 +2,107 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B30D723F1A
-	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:17:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9720A723F5F
+	for <lists+linux-pci@lfdr.de>; Tue,  6 Jun 2023 12:27:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232303AbjFFKR2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 6 Jun 2023 06:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43564 "EHLO
+        id S232900AbjFFK1T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 6 Jun 2023 06:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230013AbjFFKR1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:17:27 -0400
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4049FEA;
-        Tue,  6 Jun 2023 03:17:26 -0700 (PDT)
-Received: from lhrpeml500005.china.huawei.com (unknown [172.18.147.226])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Qb5xb5bzMz6J7K1;
-        Tue,  6 Jun 2023 18:17:07 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.23; Tue, 6 Jun
- 2023 11:17:24 +0100
-Date:   Tue, 6 Jun 2023 11:17:23 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Yicong Yang <yangyicong@huawei.com>
-CC:     <mathieu.poirier@linaro.org>, <suzuki.poulose@arm.com>,
-        <corbet@lwn.net>, <linux-kernel@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>, <alexander.shishkin@linux.intel.com>,
-        <helgaas@kernel.org>, <linux-pci@vger.kernel.org>,
-        <prime.zeng@huawei.com>, <linuxarm@huawei.com>
-Subject: Re: [PATCH v3 4/4] hwtracing: hisi_ptt: Advertise
- PERF_PMU_CAP_NO_EXCLUDE for PTT PMU
-Message-ID: <20230606111723.000022d9@Huawei.com>
-In-Reply-To: <20230523093228.48149-5-yangyicong@huawei.com>
-References: <20230523093228.48149-1-yangyicong@huawei.com>
-        <20230523093228.48149-5-yangyicong@huawei.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+        with ESMTP id S231826AbjFFK1R (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 6 Jun 2023 06:27:17 -0400
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AAA16E5B;
+        Tue,  6 Jun 2023 03:27:15 -0700 (PDT)
+HMM_SOURCE_IP: 10.64.8.43:56328.1404265272
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-114.242.206.180 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id EFA0E1002A9;
+        Tue,  6 Jun 2023 18:27:10 +0800 (CST)
+Received: from  ([114.242.206.180])
+        by gateway-151646-dep-75648544bd-7vx9t with ESMTP id b5e6b79af1f8443dafae01c9526be680 for suijingfeng@loongson.cn;
+        Tue, 06 Jun 2023 18:27:14 CST
+X-Transaction-ID: b5e6b79af1f8443dafae01c9526be680
+X-Real-From: 15330273260@189.cn
+X-Receive-IP: 114.242.206.180
+X-MEDUSA-Status: 0
+Sender: 15330273260@189.cn
+Message-ID: <680cea2e-7984-5f26-c440-46047f4733fa@189.cn>
+Date:   Tue, 6 Jun 2023 18:27:05 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.76]
-X-ClientProxiedBy: lhrpeml100002.china.huawei.com (7.191.160.241) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
-X-CFilter-Loop: Reflected
-X-Spam-Status: No, score=-4.2 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Intel-gfx] [PATCH v2 1/2] vgaarb: various coding style and
+ comments fix
+To:     Sui Jingfeng <suijingfeng@loongson.cn>,
+        Andi Shyti <andi.shyti@linux.intel.com>
+Cc:     Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        YiPeng Chai <YiPeng.Chai@amd.com>,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Li Yi <liyi@loongson.cn>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Yishai Hadas <yishaih@nvidia.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        loongson-kernel@lists.loongnix.cn, amd-gfx@lists.freedesktop.org,
+        linux-pci@vger.kernel.org
+References: <20230604205831.3357596-1-15330273260@189.cn>
+ <ZH5epG6rfTOWT6CS@ashyti-mobl2.lan>
+ <f9e67fe9-a93b-75ab-1fdb-87d3783fe5fc@loongson.cn>
+Content-Language: en-US
+From:   Sui Jingfeng <15330273260@189.cn>
+In-Reply-To: <f9e67fe9-a93b-75ab-1fdb-87d3783fe5fc@loongson.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
+        FROM_LOCAL_HEX,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Tue, 23 May 2023 17:32:28 +0800
-Yicong Yang <yangyicong@huawei.com> wrote:
+Hi,
 
-> From: Yicong Yang <yangyicong@hisilicon.com>
-> 
-> The PTT trace collects PCIe TLP headers from the PCIe link and don't
-> have the ability to exclude certain context. It doesn't support itrace
-> as well. So only advertise PERF_PMU_CAP_NO_EXCLUDE. This will greatly
-> save the storage of final data. Tested tracing idle link for ~15s,
-> without this patch we'll collect ~28.682MB data for context related
-> information and with this patch it reduced to ~0.226MB.
-> 
-> Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
-Interesting - I didn't know about this flag.
+On 2023/6/6 10:06, Sui Jingfeng wrote:
+> Originally, I also want to express the opinion. 
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-> ---
->  drivers/hwtracing/ptt/hisi_ptt.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/hwtracing/ptt/hisi_ptt.c b/drivers/hwtracing/ptt/hisi_ptt.c
-> index 65f4288a1915..b9917db849bf 100644
-> --- a/drivers/hwtracing/ptt/hisi_ptt.c
-> +++ b/drivers/hwtracing/ptt/hisi_ptt.c
-> @@ -1210,7 +1210,7 @@ static int hisi_ptt_register_pmu(struct hisi_ptt *hisi_ptt)
->  
->  	hisi_ptt->hisi_ptt_pmu = (struct pmu) {
->  		.module		= THIS_MODULE,
-> -		.capabilities	= PERF_PMU_CAP_EXCLUSIVE | PERF_PMU_CAP_ITRACE,
-> +		.capabilities	= PERF_PMU_CAP_NO_EXCLUDE,
->  		.task_ctx_nr	= perf_sw_context,
->  		.attr_groups	= hisi_ptt_pmu_groups,
->  		.event_init	= hisi_ptt_pmu_event_init,
+Originally,  I want to express the same opinion as you told me.
+
+Because vga_iostate_to_str() function is taking unsigned int parameter.
+
+so, I think, using 'unsigned int *' type as the third parameter 
+vga_str_to_iostate() function is more suitable.
+
+
+But this patch is too trivial, so I smash them into one patch.
 
