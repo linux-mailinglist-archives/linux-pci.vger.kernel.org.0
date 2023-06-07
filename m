@@ -2,56 +2,81 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7756E725D04
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 13:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A66B5725DA7
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 13:50:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239150AbjFGL0C (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 07:26:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58286 "EHLO
+        id S235499AbjFGLuC (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jun 2023 07:50:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235736AbjFGL0B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 07:26:01 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2445710DE
-        for <linux-pci@vger.kernel.org>; Wed,  7 Jun 2023 04:25:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686137160; x=1717673160;
-  h=date:from:to:cc:subject:message-id;
-  bh=as/wWsjFnAoIqcac6SfVDmN46Pu/Wa/JVqiB6uuXpxg=;
-  b=CaCR+TPP79OxFkCZbg/I+0L2mMeCzDvlpswwD3YHfJC6umfdut6e1/+1
-   d2gUxrLmB6GublLtDtPDImewuUCETyseBd1dz08GCbxcaDqvALxvkvEfL
-   X3ZDxu/Cf0SdL+DbHTVL6G+UbWjJcjJEYeuWct35La9Rlkn5VarFxL7aJ
-   l7HE2zKMW5gf2SsZ7MrEG0ZCHG56PrVCNzhq+6y2xkGle5kEqElbw16dZ
-   0b8rg7aSGX1yzNyfZlccwxGXF/bqHqXdkYXi2LWTVrS82HEbMEeL5UZPr
-   uygK+L/l0++y/+AmXlPgXpDNT+Vn8mAABK/JzwYY+MgLnBXwwJKnQ/JVu
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="355813780"
-X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
-   d="scan'208";a="355813780"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 04:25:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="686928052"
-X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
-   d="scan'208";a="686928052"
-Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 07 Jun 2023 04:25:58 -0700
-Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q6rIc-0006VL-0R;
-        Wed, 07 Jun 2023 11:25:58 +0000
-Date:   Wed, 07 Jun 2023 19:25:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:next] BUILD SUCCESS
- f9dae2af6f947a299b4f32f70a936609b7914076
-Message-ID: <20230607112519.SV2us%lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        with ESMTP id S240492AbjFGLt4 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 07:49:56 -0400
+Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 351071BD7;
+        Wed,  7 Jun 2023 04:49:55 -0700 (PDT)
+Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b1a653b409so6314701fa.0;
+        Wed, 07 Jun 2023 04:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686138593; x=1688730593;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=KHzjjhm6r+h0VB7DbPCBL5uQXvRdaAwiHw841rXLOhs=;
+        b=H5BZzFhlox4FWGfl+SZhG9qWIsg1SZHq/vKqdazna/kU7ws/KktaZgpCZy/GnxdisL
+         vNfmX3n/cQGAGn/EIiEt5Q9j+rb5BrGkJovajm5B43LQi7EtyiJB4Ud5cgLU6PdGDQ2u
+         6ZbKnqhH0uwxg5ctbUxUBcdG11eKTY4+gaWsF6GIH4/JkJMjYhSBVA9uX1IXcG5rqjJW
+         ava9FTYQ/dlNCXz0cTsgN/T3fk7W0Xt86GeW+Va4HHTzrKK/K/O7DklyUh+YkmkR5v5s
+         427wWajyVxTzPkJvUHymfylsGAAIMvvO8SyQxJRac9K/VkeWIK+9KSu+O86MSMN1YWYo
+         HBag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686138593; x=1688730593;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=KHzjjhm6r+h0VB7DbPCBL5uQXvRdaAwiHw841rXLOhs=;
+        b=Ea35DETL29/bzHbwVSII6HlebMZx/zC4SOtOUXAWmlRSv5MBnXsJF1HzvyZ2lOWMnT
+         p9BblXg1vOeINJpN2pb4tqBqogr+2usnRdumFTcUofvYDMN33EJCt72LwHC9PItknhIa
+         XaDTvmWT7sYOEdhHTW4duUPVz+6YxPcDyY1QIkB3Ptx7/8/sm+ovA+sGp6uRn5noT8lS
+         BHmnPubM29pVWi5phJbn9I0hRI3ADEt5HSkIAtBWZdPon7xAKoTNMCxzgadPn2jzSe2u
+         TPii7R7hWGwSzYdM+5Wz+MsBtxCTEsuv0YvJsjeFhvrK2x0ds+kSYwta/PamuSY7WJLp
+         BWbQ==
+X-Gm-Message-State: AC+VfDyvTUyiMhjvz118iFOVs9KzF0P4NKKTFFZ5LQeSJgHrzE4660Up
+        u5p3tLBci9JW7iU0TKUy504=
+X-Google-Smtp-Source: ACHHUZ7ZvYRI7NquPD+zBHJhdDx5+k5OgD0smliQDH+Sp7Ez/u6SSSx4n39KTyDKPHfnZI23KTk4FA==
+X-Received: by 2002:a2e:b548:0:b0:2b1:b594:4675 with SMTP id a8-20020a2eb548000000b002b1b5944675mr4749264ljn.7.1686138593224;
+        Wed, 07 Jun 2023 04:49:53 -0700 (PDT)
+Received: from mobilestation ([91.144.185.176])
+        by smtp.gmail.com with ESMTPSA id v9-20020a2e9609000000b002ad5f774579sm2241854ljh.96.2023.06.07.04.49.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jun 2023 04:49:52 -0700 (PDT)
+Date:   Wed, 7 Jun 2023 14:49:50 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     =?utf-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+Cc:     Cai Huoqing <cai.huoqing@linux.dev>, vkoul@kernel.org,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v11 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <20230607114950.zml4l2rs77cbeesy@mobilestation>
+References: <20230520050854.73160-1-cai.huoqing@linux.dev>
+ <20230520050854.73160-4-cai.huoqing@linux.dev>
+ <20230607095832.6d6b1a73@kmaincent-XPS-13-7390>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230607095832.6d6b1a73@kmaincent-XPS-13-7390>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
         autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -59,59 +84,104 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-branch HEAD: f9dae2af6f947a299b4f32f70a936609b7914076  Merge branch 'pci/controller/endpoint'
+Hi Köry
 
-elapsed time: 724m
+On Wed, Jun 07, 2023 at 09:58:32AM +0200, Köry Maincent wrote:
+> On Sat, 20 May 2023 13:08:51 +0800
+> Cai Huoqing <cai.huoqing@linux.dev> wrote:
+> 
+> > Add support for HDMA NATIVE, as long the IP design has set
+> > the compatible register map parameter-HDMA_NATIVE,
+> > which allows compatibility for native HDMA register configuration.
+> 
+> I know the patch has been merged in dmaengine tree but something seems weird on
+> my side.
+> 
 
-configs tested: 40
-configs skipped: 2
+> The akida_dw_edma_probe function is selecting the minimum read and write
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+First of all. What is akida platform you are referring to? I failed to
+find any mention in the mainline kernel repo.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                                defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-sh                               allmodconfig   gcc  
-sparc                               defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                               rhel-8.3   gcc  
+> channels by doing the minimum between ll_wr_cnt and the ch_count callback.
+> The hdma ch_count callback is counting the number of channels enabled by reading
+> the number of ch_en registers set. At probe time there is no channels registers
+> that has been set as it is done later in the dw_hdma_v0_core_start function.
+> Then the dw_hdma_v0_core_ch_count will always return 0 at probe time and the
+> number of channels will be set to 0 which is not what we want.
+> Could I miss something?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Based on the HDMA patches content you are right. The channels must be
+pre-enabled in order to have the dw_hdma_v0_core_ch_count() procedure
+to work correctly otherwise you'll indeed end up with an empty list of
+channels. I don't have any device with the HDMA engine embedded so I
+couldn't have possibly tracked that peculiarity on review. Anyway
+AFAICS Cai just implemented a method which seemed to work for his
+hardware setup.
+
+If you think it doesn't work correctly or it isn't portable enough
+then you are free to provide your own implementation of the method and
+submit a patch. I hope Cai will be willing to test it out to make sure
+that it works correctly for you and his platforms.
+
+As for me if I were on your place I would have implemented a loop
+which would walk over all possible HDMA channels (HDMA_V0_MAX_NR_CH)
+and counted all channels which could be enabled. If the ch_en CSR is
+writable (that is the channel could be enabled) then it shall be
+considered as existent. Of course before that I would have made sure
+that the non-existent channels had non-writable ch_en CSR.
+
+-Serge(y)
+
+> 
+> See the functions bellow:
+> 
+> > int akida_dw_edma_probe(struct dw_edma_chip *chip)                         
+> > {                                                                          
+>  ...                               
+> >         dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,                        
+> >                               dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));  
+> >         dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);         
+> >                                                                            
+> >         dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,                        
+> >                               dw_edma_core_ch_count(dw, EDMA_DIR_READ));   
+> >         dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);         
+> >                                                                            
+> >         if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)                              
+> >                 return -EINVAL;            
+> ...
+> }
+> 
+> 
+> > +static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+> > +{
+> > +	u32 num_ch = 0;
+> > +	int id;
+> > +
+> > +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> > +		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+> > +			num_ch++;
+> > +	}
+> > +
+> > +	if (num_ch > HDMA_V0_MAX_NR_CH)
+> > +		num_ch = HDMA_V0_MAX_NR_CH;
+> > +
+> > +	return (u16)num_ch;
+> > +}
+> 
+> 
+> 
+> > +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> > +{
+> > +	struct dw_edma_chan *chan = chunk->chan;
+> > +	struct dw_edma *dw = chan->dw;
+> > +	u32 tmp;
+> > +
+> > +	dw_hdma_v0_core_write_chunk(chunk);
+> > +
+> > +	if (first) {
+> > +		/* Enable engine */
+> > +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+> ...
+> > +}
+> 
