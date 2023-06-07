@@ -2,66 +2,65 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C2868725D05
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 13:26:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 238E4725D06
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 13:26:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235736AbjFGL0D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        id S235326AbjFGL0D (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
         Wed, 7 Jun 2023 07:26:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58288 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235326AbjFGL0B (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 07:26:01 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 245751707
-        for <linux-pci@vger.kernel.org>; Wed,  7 Jun 2023 04:26:00 -0700 (PDT)
+        with ESMTP id S238716AbjFGL0C (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 07:26:02 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2743B1712
+        for <linux-pci@vger.kernel.org>; Wed,  7 Jun 2023 04:26:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686137160; x=1717673160;
+  t=1686137161; x=1717673161;
   h=date:from:to:cc:subject:message-id;
-  bh=XAk05I0P3OM8myYS2B+cvtHJsIpzmJDilxFTy+aFGbo=;
-  b=h7boB7XDS1iePEnmYOgxxJs5b2GhXtd0vEfppC18hz/85h900lM8w4O+
-   dylE2wdw3jxrQfK97KXk21d94fwEKr2Z314FYoZo1Yi8Q5/25+KMn2IzX
-   d5CTRyk74cQ53AKapUhFHNMapu7p9Xe4uEEDzX5qdU5Qe2IsUhTgK9iAC
-   XN9L7w8/6NsJ/HKH/9pRjQFq0XX1DIpV5h0Cmx8AlzkQ7XUFH6LoywaMO
-   BuuTAqtmYkHuEtAxLQl5Uk3vbZb+xRT34dGIZ7YlJIcfJnQu6QbFW//qX
-   H0GG+LTm9zQkoZGw/HHH9XQaLzQRE1tAwaT33Md3SGgcryDPdshce8dlK
+  bh=GWSdcQS5bR0Pw3nmHP2N3T+hsv6IX8AmVVFlh5fTbJA=;
+  b=Gy/u5CfcSj8mjvmva2ihH3C8PIov3MJ5s6qMCo8KYtfxDyEynnGyxZB3
+   WvnCcJGrPLAe5K7yM7pc8TLmVE2Et9ECAjPx5T2A8UVGIssNXqpoucyMZ
+   5EDmjSexW0WGHJpWkGXKq62C2Fl5VUgQHVi5WvBf/esS5kfx5zALH1qa1
+   bmmaY5QaTt1Lix1tI4aVGKA/Vr6EWKsKxVQvWRi3IP8PKu3ecy6GuQlpx
+   VV3o/Pw/zwgufQ9qn3dskCX5iCMBPkLqHnYDifdm11/ZtRyt+5/jTMP3b
+   DV/WcFBRLfRzA2owtzZpD1Hqf3tcVkv4IK7o3rHTAbCv+D9P/5LmyQtf3
    A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="385277717"
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="355813781"
 X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
-   d="scan'208";a="385277717"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 04:25:59 -0700
+   d="scan'208";a="355813781"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jun 2023 04:25:59 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="712580050"
+X-IronPort-AV: E=McAfee;i="6600,9927,10733"; a="686928051"
 X-IronPort-AV: E=Sophos;i="6.00,223,1681196400"; 
-   d="scan'208";a="712580050"
+   d="scan'208";a="686928051"
 Received: from lkp-server01.sh.intel.com (HELO 15ab08e44a81) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 07 Jun 2023 04:25:58 -0700
+  by orsmga006.jf.intel.com with ESMTP; 07 Jun 2023 04:25:58 -0700
 Received: from kbuild by 15ab08e44a81 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1q6rIc-0006VO-0a;
+        id 1q6rIc-0006VF-09;
         Wed, 07 Jun 2023 11:25:58 +0000
-Date:   Wed, 07 Jun 2023 19:25:04 +0800
+Date:   Wed, 07 Jun 2023 19:25:11 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>
 Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pm] BUILD SUCCESS
- 7b3ba09febf409117a6f5b3e8ae10d503a972fee
-Message-ID: <20230607112504.i4JH6%lkp@intel.com>
+Subject: [pci:enumeration] BUILD SUCCESS
+ c6f54cf44c3d05510f8f292a1782105c087797ba
+Message-ID: <20230607112511.DzEsp%lkp@intel.com>
 User-Agent: s-nail v14.9.24
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
-branch HEAD: 7b3ba09febf409117a6f5b3e8ae10d503a972fee  PCI/PM: Shorten pci_bridge_wait_for_secondary_bus() wait time for slow links
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
+branch HEAD: c6f54cf44c3d05510f8f292a1782105c087797ba  PCI: of: Propagate firmware node by calling device_set_node()
 
 elapsed time: 724m
 
