@@ -2,173 +2,95 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A9430727249
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 00:55:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 004217272AA
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 01:04:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233256AbjFGWze (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 18:55:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54252 "EHLO
+        id S232453AbjFGXEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jun 2023 19:04:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232099AbjFGWzZ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 18:55:25 -0400
-Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 733172684
-        for <linux-pci@vger.kernel.org>; Wed,  7 Jun 2023 15:55:13 -0700 (PDT)
-Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-977c88c9021so498066b.3
-        for <linux-pci@vger.kernel.org>; Wed, 07 Jun 2023 15:55:13 -0700 (PDT)
+        with ESMTP id S230104AbjFGXEd (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 19:04:33 -0400
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8674011A;
+        Wed,  7 Jun 2023 16:04:31 -0700 (PDT)
+Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-25692ff86cdso6444231a91.2;
+        Wed, 07 Jun 2023 16:04:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686178513; x=1688770513;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
-        b=h4j71OFNDV5FfvldtjCh/L+Qg71oYHcBnHuDB5srtk996zsBHlbD8SaqVv65TPPNSR
-         D55ZWk68qXdEmt+kIdXRugiaujZb/weZnFCTHcuZcbiNqcbtWT0X7OlskYnP/y/1JDzr
-         WbOZ68AcZfM/aHW4up57fkOGafclaBar/hLOCFBtTjAlCxKYQtVTvq0W4SECGmO4CUql
-         dig397pPxdZX0OTvC2J8JrOzuSqogeJM29duG5G1BgaFsW6donzZWRU1Jz4x6qDKSWR9
-         w6/41Hy1gwVz7zf6M5uQKiqeQS7jHj9sppdk3jRa//N+UQ6Qg+lxAaHE7mp4Zy+a5Adc
-         Kv2w==
+        d=gmail.com; s=20221208; t=1686179070; x=1688771070;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XEQmXBu5dD2JANi2wiTQk+OaHV1+Cn5N+E2Jx9Z9qA4=;
+        b=RylNv+3BIY+SkOFVAD23uBHZj3gl+6CGLSkAPg+jewP+TXl+yMgPLX6SW4utvQFk5H
+         EH7z/qzntgcgtmMbuBotoKMWdu1zz6kl61hyvmvMZemO0yBPxR5qJxn+hlm5VEyDdIwX
+         ASrRHvjOICNXkznM1ujPM6yNPppmEjhbN5H/OcrhR9xY+BAYQUVBWXyfAd28VEcEAGRJ
+         W6uwAK3z8RHShgB+B3TR+0qli2YJ9J5nN2uHEiUIy7UAHQcBknMD0d05qMnd5aL4gqcd
+         LdwMS7BKs1bMUBiJQvpGkweej2mWnwYJKjDUZ1rkkTAvpN2mrpqTEaFdTLdsRAZvO1eR
+         yk9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686178513; x=1688770513;
-        h=content-transfer-encoding:to:subject:message-id:date:from:reply-to
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lwmqmz3SLTAm/5XHn54kA2Qkz1KiGdBlOiEDAaxIk1A=;
-        b=b8yjjVaFDUvHO5iYC6MBeEBAqMNwyC3RuNmsEY7+3/QvnGgJ4FWVxIInYY+8O6eyuZ
-         YiRd+Q4Z/TCEm1U9TE6cQCBUMXVJiFO8VKcNaYcHs9/AvLymxMXuePBvtv41qrltuXGi
-         2aTcXWzqH3biVsAL5K20zqkf60eKMvfM8yIPXT4905FghJHgnHX8mhgTs+YyY2u+RQjq
-         dRcVeGOAWH7Hx4ZSf+kEOCUIl681FapRvFD0Dhc3EA45EbsR9ISvgOGO18YzcyUhY+f4
-         JxyK+C3d+H8y8tVDkK9s5uo75R/20++j07Hvma8e1hJ8kE28i5oRoKSoQZW02tO+ZxpS
-         IuPA==
-X-Gm-Message-State: AC+VfDwwSZGUxZaZmtvwRL/HvsO9QhIOSp3bKE6XjeCU1/1zwX3HQMGD
-        M+T0HVadpNl9qPboFLT5lRu97FAoSZ9LTyNvTE/Ke/wK8q9LwQ==
-X-Google-Smtp-Source: ACHHUZ5q9v5E8VuN7LGrTh1boUYVANIIUnJnBwlK4YNL8XVT+z7GalrAexguq0b795Op+2qoCUEoHnMN8sFXq0M0ebg=
-X-Received: by 2002:a17:907:8a15:b0:96f:d154:54f7 with SMTP id
- sc21-20020a1709078a1500b0096fd15454f7mr7113590ejc.42.1686178492570; Wed, 07
- Jun 2023 15:54:52 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686179070; x=1688771070;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XEQmXBu5dD2JANi2wiTQk+OaHV1+Cn5N+E2Jx9Z9qA4=;
+        b=fvSeaUio12PSHfo29bUmtGP6UNJwLUhC23kRyp+deAwfwYTCpPjBfwBUnrdVP3yM1W
+         VyWiijzudjsUoaIEqJghsy04ZrYGCpX3ceMzcUZm5f9gqwokdcumY03eSl7Ydm1tUAdc
+         fJ+UMAiGu4RmLeBrNPQ0tDD6QPkcXH8hF+3L3khoacnyZUhrfLSc74u1wBd6EEOemAkc
+         o0SPE3LdNhOcPa2tAEOppSr2IF3HaSdeMjKUtjX3oDH3+Znq9sj+asFkuykCPC2DdfzH
+         9CtBJa/jlSJZWCKIh1X7oyxg3Bz5bq2NXyJdRMaHMSTfz5OXmSHlRyYYr4jQJC338F0e
+         CwTQ==
+X-Gm-Message-State: AC+VfDz2dViX7b5iP4MrqMBM1LAdpjT2fAOAncHKpvHGljUsGKjmQT/r
+        YVVyBuuxdNsYp7Vethq6JrKsr/2QP1s0u0NHUmFXig3So7Y=
+X-Google-Smtp-Source: ACHHUZ72aumlNuKAoBEIFQvO8H4ETvfhLNixmshgtGFlUP5g7IApmZyyIjopu2EXDuiSlejJtibjp5Y+wkJnk1Q5LAs=
+X-Received: by 2002:a17:90b:4a08:b0:256:4217:b955 with SMTP id
+ kk8-20020a17090b4a0800b002564217b955mr5585682pjb.35.1686179070356; Wed, 07
+ Jun 2023 16:04:30 -0700 (PDT)
 MIME-Version: 1.0
-Received: by 2002:a54:2409:0:b0:217:72a9:f646 with HTTP; Wed, 7 Jun 2023
- 15:54:52 -0700 (PDT)
-Reply-To: unitednationcompensationcoordinatortreasury@hotmail.com
-From:   "UNITED NATION DEPUTY SECRETARY-GENERAL (U.N)" 
-        <successikolo@gmail.com>
-Date:   Wed, 7 Jun 2023 15:54:52 -0700
-Message-ID: <CADFNGJ8vkgORi1jPvvhP+FQnPCNqs4cr588+_a-ywDXpqf+qKA@mail.gmail.com>
-Subject: CONTACT DHL OFFICE IMMEDIATELY FOR YOUR ATM MASTER CARD 1.5 MILLION,
-To:     undisclosed-recipients:;
+References: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
+In-Reply-To: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Wed, 7 Jun 2023 16:03:54 -0700
+Message-ID: <CAKgT0UfMeVOz6AOqSvVvzpsedGDiXCNQrjM+4KDv7qJJ1orpsw@mail.gmail.com>
+Subject: Re: Question about reserved_regions w/ Intel IOMMU
+To:     LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>, iommu@lists.linux.dev
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: Yes, score=6.6 required=5.0 tests=ADVANCE_FEE_3_NEW_FRM_MNY,
-        BAYES_50,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,
-        FILL_THIS_FORM,FORM_FRAUD_5,FREEMAIL_FROM,FREEMAIL_REPLYTO,
-        LOTS_OF_MONEY,MONEY_FORM,MONEY_FRAUD_5,MONEY_FREEMAIL_REPTO,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,SUBJ_ALL_CAPS,
-        T_FILL_THIS_FORM_LOAN,T_SCC_BODY_TEXT_LINE,UNDISC_FREEM,UNDISC_MONEY
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Report: * -0.0 RCVD_IN_DNSWL_NONE RBL: Sender listed at
-        *      https://www.dnswl.org/, no trust
-        *      [2a00:1450:4864:20:0:0:0:630 listed in]
-        [list.dnswl.org]
-        *  0.8 BAYES_50 BODY: Bayes spam probability is 40 to 60%
-        *      [score: 0.5000]
-        *  0.0 SPF_HELO_NONE SPF: HELO does not publish an SPF Record
-        *  0.0 FREEMAIL_FROM Sender email is commonly abused enduser mail
-        *      provider
-        *      [successikolo[at]gmail.com]
-        *  0.5 SUBJ_ALL_CAPS Subject is all capitals
-        * -0.0 SPF_PASS SPF: sender matches SPF record
-        *  0.1 DKIM_SIGNED Message has a DKIM or DK signature, not necessarily
-        *       valid
-        * -0.1 DKIM_VALID Message has at least one valid DKIM or DK signature
-        * -0.1 DKIM_VALID_EF Message has a valid DKIM or DK signature from
-        *      envelope-from domain
-        * -0.1 DKIM_VALID_AU Message has a valid DKIM or DK signature from
-        *      author's domain
-        *  0.0 LOTS_OF_MONEY Huge... sums of money
-        * -0.0 T_SCC_BODY_TEXT_LINE No description available.
-        *  2.7 UNDISC_FREEM Undisclosed recipients + freemail reply-to
-        *  0.2 MONEY_FREEMAIL_REPTO Lots of money from someone using free
-        *      email?
-        *  1.0 FREEMAIL_REPLYTO Reply-To/From or Reply-To/body contain
-        *      different freemails
-        *  0.0 FILL_THIS_FORM Fill in a form with personal information
-        *  0.0 T_FILL_THIS_FORM_LOAN Answer loan question(s)
-        *  0.0 MONEY_FORM Lots of money if you fill out a form
-        *  1.3 UNDISC_MONEY Undisclosed recipients + money/fraud signs
-        *  0.0 ADVANCE_FEE_3_NEW_FRM_MNY Advance Fee fraud form and lots of
-        *      money
-        *  0.2 MONEY_FRAUD_5 Lots of money and many fraud phrases
-        *  0.0 FORM_FRAUD_5 Fill a form and many fraud phrases
-X-Spam-Level: ******
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-UNITED NATION DEPUTY SECRETARY-GENERAL.
+On Wed, Jun 7, 2023 at 3:40=E2=80=AFPM Alexander Duyck
+<alexander.duyck@gmail.com> wrote:
+>
+> I am running into a DMA issue that appears to be a conflict between
+> ACS and IOMMU. As per the documentation I can find, the IOMMU is
+> supposed to create reserved regions for MSI and the memory window
+> behind the root port. However looking at reserved_regions I am not
+> seeing that. I only see the reservation for the MSI.
+>
+> So for example with an enabled NIC and iommu enabled w/o passthru I am se=
+eing:
+> # cat /sys/bus/pci/devices/0000\:83\:00.0/iommu_group/reserved_regions
+> 0x00000000fee00000 0x00000000feefffff msi
+>
+> Shouldn't there also be a memory window for the region behind the root
+> port to prevent any possible peer-to-peer access?
 
-This is to official inform you that we have been having meetings for
-the past three (3) weeks which ended two days ago with MR. JIM YONG
-KIM the world bank president and other seven continent presidents on
-the congress we treated on solution to scam victim problems.
+Since the iommu portion of the email bounced I figured I would fix
+that and provide some additional info.
 
- Note: we have decided to contact you following the reports we
-received from anti-fraud international monitoring group your
-name/email has been submitted to us therefore the united nations have
-agreed to compensate you with the sum of (USD$ 1.5 Million) this
-compensation is also including international business that failed you
-in the past due to government problems etc.
+I added some instrumentation to the kernel to dump the resources found
+in iova_reserve_pci_windows. From what I can tell it is finding the
+correct resources for the Memory and Prefetchable regions behind the
+root port. It seems to be calling reserve_iova which is successfully
+allocating an iova to reserve the region.
 
- We have arranged your payment through our ATM Master Card and
-deposited it in DHL Office to deliver it to you which is the latest
-instruction from the World Bank president MR. JIM YONG KIM, For your
-information=E2=80=99s, the delivery charges already paid by U.N treasury, t=
-he
-only money you will send to DHL office south Korea is
-($500). for security keeping fee, U.N coordinator already paid for
-others charges fees for delivery except the security keeping fee, the
-director of DHL refused to collect the security keeping fee from U.N
-coordinator, the Director of DHL office said that they don=E2=80=99t know
-exactly time you will contact them to reconfirm your details to avoid
-counting demur-rage that is why they refused collecting the ($500) .
-for security keeping fee.
-
- Therefore be advice to contact DHL Office agent south Korea. Rev:John
-Lee Tae-seok
-who is in position to deliver your ATM
-Master Card to your location address, contact DHL Office immediately
-with the bellow email & phone number as listed below.
-
- Contact name: John Lee Tae-seok
-
- Email:( dhlgeneralheadquartersrepublic@gmail.com )
-
- Do not hesitate to Contact Rev: John Lee Tae-seok, as soon as you
-
- read this message. Email:( dhlgeneralheadquartersrepublic@gmail.com )
-
- Make sure you reconfirmed DHL Office your details ASAP as stated
-below to avoid wrong delivery.
-
- Your full name..........
-
- Home address:.........
-
- Your country...........
-
- Your city..............
-
- Telephone......
-
- Occupation:.......
-
- Age:=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6=E2=80=A6..
-
- Let us know as soon as possible you receive your ATM MasterCard
-for proper verification.
-
- Regards,
-
- Mrs Vivian kakadu.
-
- DEPUTY SECRETARY-GENERAL (U.N)
+However still no luck on why it isn't showing up in reserved_regions.
