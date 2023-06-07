@@ -2,158 +2,187 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B3015725B88
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 12:23:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F34F725CDF
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 13:17:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239354AbjFGKXf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 06:23:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        id S240202AbjFGLRq convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Wed, 7 Jun 2023 07:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233837AbjFGKXd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 06:23:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3944A1BD7;
-        Wed,  7 Jun 2023 03:23:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA7D363D54;
-        Wed,  7 Jun 2023 10:23:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 692A0C433D2;
-        Wed,  7 Jun 2023 10:23:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686133411;
-        bh=TNIgjcq56ZRDkdSGzMWMs6K5wEwgg10X47XgM2HsqZU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eEhM7wFquqbYVy9hJvmw6p/m8vmK3oiK0QX71oZ1jF4DzN91SwoiQhiVHL76lgj8J
-         FufTiPtOr5VeHU0ltMKxaQ9RcNivLi0jEq1szZpcxqc8oNKYhZISk2YU7ABzVDGLhx
-         16cAM0mA9RSeV4Y0I+zvK/Atmt4sWftFCu6f8oXjk+OQ+gw0F+pxbJPW8zsuoku1tf
-         IXB/w1/9n1yRkl4/lcB2G/cAdPC6wwGt1I0nbtUr20hTzG+c+S8HKndhx9VUljFa4S
-         Qv0CzK/na9L+dCKb8njZriyslS7BE5NzaY9DowafFWESdoAZJ/kzoduZ0n8WG/MddV
-         ApxCWSXg6xnFw==
-Date:   Wed, 7 Jun 2023 12:23:25 +0200
-From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     tjoseph@cadence.com, robh@kernel.org, kw@linux.com,
-        bhelgaas@google.com, nadeem@cadence.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        vigneshr@ti.com, srk@ti.com, nm@ti.com
-Subject: Re: [PATCH v3] PCI: cadence: Fix Gen2 Link Retraining process
-Message-ID: <ZIBanRGGPeFw90NZ@lpieralisi>
-References: <20230607091427.852473-1-s-vadapalli@ti.com>
+        with ESMTP id S239782AbjFGLRn (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 07:17:43 -0400
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 488EF2111;
+        Wed,  7 Jun 2023 04:17:25 -0700 (PDT)
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-50a20bfe366so1765334a12.0;
+        Wed, 07 Jun 2023 04:17:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686136643; x=1688728643;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nAdye/bk1h2dIXos4Zo0jp3AibrW3ouux0Tr4Db9GAM=;
+        b=ZksJmvmtGtQM4I1ltSZ4j4ezElTmQeg4i1HwkS00tcO5qcg/zyWYiityz5DD0jZuJt
+         SwdkA2o2PnuJtwQiCy1QEOkOZriWEjFJFVz5xPWjAg1tTv/2mMf+ikXfYjzs4zuwOlA+
+         7din0WKKmJqPw4KzcXE/PSf3doFDEVqIA6PdbvvKIlOBLgnVV9LVr440MEjOcjiNTsPE
+         egZFrjerQLR5oPGnb+YChD9ypnBSFIR0wwmjw3IzUQqmNSAHzkuKxcwLom4cF3Ul2XoY
+         uEwkMR8qQLXo04ZQnlB6unrtNZe3SC+5J/h0ezeIxPpPgVKZdGspR0sB7vnVf9FC6nLG
+         3EMw==
+X-Gm-Message-State: AC+VfDxu5itY3NWgjWfnbpgnme3yeZ9qaSnYJ0ViLLiplwIKNFjtvmKa
+        tG9qpTAsLfngT4WJdFnrkpKSzwRIGEG+yu+Gnp8=
+X-Google-Smtp-Source: ACHHUZ5DIcEt0d2n6c8SIyFLi/GqVaUxL5U6bOfuVIEvp31nKrxyH26E8oVp7xnDiLb/OSg1KAiRN6hLQkRP190F26c=
+X-Received: by 2002:a17:906:1ce:b0:976:50a4:ac49 with SMTP id
+ 14-20020a17090601ce00b0097650a4ac49mr4930349ejj.6.1686136643281; Wed, 07 Jun
+ 2023 04:17:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230607091427.852473-1-s-vadapalli@ti.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+References: <20230606195847.GA1142401@bhelgaas> <1d920ce5-8279-65e9-db6b-7cc8a9cb4779@amd.com>
+In-Reply-To: <1d920ce5-8279-65e9-db6b-7cc8a9cb4779@amd.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 7 Jun 2023 13:17:10 +0200
+Message-ID: <CAJZ5v0jqxGnQTHqS2TynLQb5H9we=dxOMH696wgSKrJNYgSVUw@mail.gmail.com>
+Subject: Re: [PATCH v2] PCI: Call _REG when saving/restoring PCI state
+To:     "Limonciello, Mario" <mario.limonciello@amd.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 02:44:27PM +0530, Siddharth Vadapalli wrote:
-> The Link Retraining process is initiated to account for the Gen2 defect in
-> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
-> is i2085, documented at:
-> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
-> 
-> The existing workaround implemented for the errata waits for the Data Link
-> initialization to complete and assumes that the link retraining process
-> at the Physical Layer has completed. However, it is possible that the
-> Physical Layer training might be ongoing as indicated by the
-> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
-> 
-> Fix the existing workaround, to ensure that the Physical Layer training
-> has also completed, in addition to the Data Link initialization.
-> 
-> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
-> 
-> Hello,
-> 
-> This patch is based on linux-next tagged next-20230606.
-> 
-> v2:
-> https://lore.kernel.org/r/20230315070800.1615527-1-s-vadapalli@ti.com/
-> Changes since v2:
-> - Merge the cdns_pcie_host_training_complete() function with the
->   cdns_pcie_host_wait_for_link() function, as suggested by Bjorn
->   for the v2 patch.
-> - Add dev_err() to notify when Link Training fails, since this is a
->   fatal error and proceeding from this point will almost always crash
->   the kernel.
-> 
-> v1:
-> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com/
-> Changes since v1:
-> - Collect Reviewed-by tag from Vignesh Raghavendra.
-> - Rebase on next-20230315.
-> 
-> Regards,
-> Siddharth.
-> 
->  .../controller/cadence/pcie-cadence-host.c    | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 940c7dd701d6..70a5f581ff4f 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,6 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> +#define LINK_RETRAIN_TIMEOUT HZ
-> +
->  static u64 bar_max_size[] = {
->  	[RP_BAR0] = _ULL(128 * SZ_2G),
->  	[RP_BAR1] = SZ_2G,
-> @@ -80,8 +82,26 @@ static struct pci_ops cdns_pcie_host_ops = {
->  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
-> +	unsigned long end_jiffies;
-> +	u16 link_status;
->  	int retries;
->  
-> +	/* Wait for link training to complete */
-> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
-> +	do {
-> +		link_status = cdns_pcie_rp_readw(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_LNKSTA);
-> +		if (!(link_status & PCI_EXP_LNKSTA_LT))
-> +			break;
+On Tue, Jun 6, 2023 at 10:26 PM Limonciello, Mario
+<mario.limonciello@amd.com> wrote:
+>
+>
+> On 6/6/2023 2:58 PM, Bjorn Helgaas wrote:
+> > On Tue, Jun 06, 2023 at 02:40:45PM -0500, Limonciello, Mario wrote:
+> >> On 6/6/2023 2:23 PM, Bjorn Helgaas wrote:
+> >>> On Tue, Jun 06, 2023 at 11:23:21AM -0500, Mario Limonciello wrote:
+> >>>> ASMedia PCIe GPIO controllers fail functional tests after returning from
+> >>>> suspend (S3 or s2idle). This is because the BIOS checks whether the
+> >>>> OSPM has called the `_REG` method to determine whether it can interact with
+> >>>> the OperationRegion assigned to the device.
+> >>>>
+> >>>> As described in 6.5.4 in the APCI spec, `_REG` is used to inform the AML
+> >>>> code on the availability of an operation region.
+> >>>>
+> >>>> To fix this issue, call acpi_evaluate_reg() when saving and restoring the
+> >>>> state of PCI devices.
+> >>>>
+> >>>> Link: https://uefi.org/htmlspecs/ACPI_Spec_6_4_html/06_Device_Configuration/Device_Configuration.html#reg-region
+> >>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> >>>> ---
+> >>>> v1->v2:
+> >>>>    * Handle case of no CONFIG_ACPI
+> >>>>    * Rename function
+> >>>>    * Update commit message
+> >>>>    * Move ACPI calling code into pci-acpi.c instead
+> >>>>    * Cite the ACPI spec
+> >>> Thanks for the spec reference (s/APCI/ACPI/ and add the revision if
+> >>> you rev this (r6.5 is the latest, AFAIK) if you rev this).
+> >>>
+> >>> I don't see text in that section that connects S3 with _REG.  If it's
+> >>> there, you might have to quote the relevant sentence or two in the
+> >>> commit log.
+> >> I don't think there is anything the spec connecting this
+> >> with S3.  At least from my perspective S3 is the reason
+> >> this was exposed but there is a deficiency that exists
+> >> that _REG is not being called by Linux.
+> >>
+> >> I intend to re-word the commit message something to the
+> >> effect of explaining what _REG does and why _REG should be
+> >> called, along with citations.
+> >>
+> >> Then in another paragraph "Fixing this resolves an issue ...".
+> >>
+> >>> You mentioned _REG being sort of a mutex to synchronize OSPM vs
+> >>> platform access; if there's spec language to that effect, let's cite
+> >>> it.
+> >> That sentence I included was cited from the spec.
+> > If it's necessary to justify the commit, include the citation in the
+> > commit log.
+> >
+> >>> Ideally we should have been able to read the PCI and ACPI specs and
+> >>> implement this without tripping over problem on this particular
+> >>> hardware.  I'm looking for the text that enables that "clean-room"
+> >>> implementation.  If the spec doesn't have that text, it's either a
+> >>> hole in the spec or a BIOS defect that depends on something the spec
+> >>> doesn't require.
+> >> IMO both the spec and BIOS are correct, it's a Linux
+> >> issue that _REG wasn't used.
+> > What tells Linux that _REG needs to be used here?  If there's nothing
+> > that tells Linux to use _REG here, I claim it's a BIOS defect.  I'm
+> > happy to be convinced otherwise; the way to convince me is to point to
+> > the spec.
+>  From the spec it says "control methods must assume
+> all operation regions are inaccessible until the
+> _REG(RegionSpace, 1) method is executed"
+>
+> It also points out the opposite: "Conversely,
+> control methods must not access fields in
+> operation regions when _REG method execution
+> has not indicated that the operation region
+> handler is ready."
+>
+> The ACPI spec doesn't refer to D3 in this context, but
+> it does make an allusion to power off in an example case.
+>
+> "Also, when the host controller or bridge controller
+> is turned off or disabled, PCI Config Space Operation
+> Regions for child devices are no longer available.
+> As such, ETH0’s _REG method will be run when it is
+> turned off and will again be run when PCI1 is
+> turned off."
+>
+> >
+> > If it's a BIOS defect, it's fine to work around it, but we need to
+> > understand that, own up to it, and make the exact requirements very
+> > clear.  Otherwise we're likely to break this in the future because
+> > future developers and maintainers will rely on the specs.
+>  From my discussions with BIOS developers, this is entirely
+> intended behavior based on the _REG section in the spec.
+> >>> Doing this in pci_save_state() still seems wrong to me.  For example,
+> >>> e1000_probe() calls pci_save_state(), but this is not part of suspend.
+> >>> IIUC, this patch will disconnect the opregion when we probe an e1000
+> >>> NIC.  Is that what you intend?
+> >> Thanks for pointing this one out.  I was narrowly focused
+> >> on callers in PCI core.  This was a caller I wasn't
+> >> aware of; I agree it doesn't make sense.
+> >>
+> >> I think pci_set_power_state() might be another good
+> >> candidate to use.  What do you think of this?
+> > I can't suggest a call site because (1) I'm not a power management
+> > person, and (2) I don't think we have a clear statement of when it is
+> > required.  This must be expressed in terms of PCI power state
+> > transitions, or at least something discoverable from a pci_dev, not
+> > "s2idle" or even "S3" because those are meaningless in the PCI
+> > context.
+> >
+> > Bjorn
+> Right; I'm with you on not putting it with a suspend
+> transition.
+>
+> The spec indicates that control methods can't access
+> the regions until _REG is called, so
+> my leaning is to keep the call at init time, and
+> then add another call for the D3 and D0 transitions
+> which is why I think pci_set_power_state() is probably
+> best.
 
-You can use a bool variable eg link_trained and use that below.
+Except that it is not used in all transitions; see the callers oif
+pci_power_up() for example.
 
-> +		usleep_range(0, 1000);
-> +	} while (time_before(jiffies, end_jiffies));
-> +
-> +	if (!(link_status & PCI_EXP_LNKSTA_LT)) {
-> +		dev_info(dev, "Link training complete\n");
-> +	} else {
-> +		dev_err(dev, "Fatal! Link training incomplete\n");
-> +		return -ETIMEDOUT;
-> +	}
-
-I don't necessarily see the reason why you are adding additional
-logging, more so given that this now does not affect just the
-workaround but all cadence controllers.
-
-Actually, is that something you have tested and considered ?
-
-Thanks,
-Lorenzo
-
-> +
->  	/* Check if the link is up or not */
->  	for (retries = 0; retries < LINK_WAIT_MAX_RETRIES; retries++) {
->  		if (cdns_pcie_link_up(pcie)) {
-> -- 
-> 2.25.1
-> 
+Technically, the config space should become accessible right after
+acpi_pci_set_power_state() has transitioned the device into D0 and it
+should be accessible still right before acpi_pci_set_power_state()
+attempts to transition the device into a low-power state, so it looks
+like _REG could be evaluated from there.
