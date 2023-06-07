@@ -2,53 +2,75 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A73CA72569F
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 09:58:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 474077256A2
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 09:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237843AbjFGH62 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 03:58:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        id S238078AbjFGH6l (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jun 2023 03:58:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237934AbjFGH61 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 03:58:27 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48C8C8E;
-        Wed,  7 Jun 2023 00:58:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-        Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-        Resent-Cc:Resent-Message-ID; bh=axps5vikobkT1mRFE9fglAhCSO+MMypFTxN72eeUtO0=;
-        t=1686124705; x=1687334305; b=kMfyNLOfrR5GeXbEHt9nEXTdQvySSOfXW53hCo+aMiOCKFZ
-        VjaTOmJclP54w5xMxgHhnKHy6ts2JJewj1niaIPBQ8SOsMuDz8mbFEMpgeBciSkaI2sT1FploU07s
-        y398ttaaB2g1e8t0THF45Y05YWT4icEApqNyb7P9i2xcbEa2geG6Ub1ZuwtLiQ1hQZB5aDgp+lqab
-        oujC9r3HMmF9HviLoM6bB9XDBgRFFkes0+9c2LuFWqkPYsUOY/MdpxwjmBJyv29ikkAyd4KTIXL/m
-        nlWw1iby6ECx8WfgFsOv8G/zBljBBagagaXrRSXpkSbv9mjrWHElYcSYIrr/JhUA==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1q6o3i-00GSjD-27;
-        Wed, 07 Jun 2023 09:58:22 +0200
-Message-ID: <c2b6599182b2f543da2d5fee17dce4b3a094535a.camel@sipsolutions.net>
-Subject: Re: [PATCH v2] PCI/PM: enable runtime PM later during device
- scanning
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     linux-wireless@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org, rafael@kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed, 07 Jun 2023 09:58:21 +0200
-In-Reply-To: <20230607074939.GA17700@wunner.de>
-References: <20230605121621.4259f1be6cd2.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid>
-         <20230605203519.bc4232207449.Idbaa55b93f780838af44ebccb84c36f60716df04@changeid>
-         <20230607074939.GA17700@wunner.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+        with ESMTP id S238076AbjFGH6k (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 03:58:40 -0400
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E00A184;
+        Wed,  7 Jun 2023 00:58:38 -0700 (PDT)
+X-GND-Sasl: kory.maincent@bootlin.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+        t=1686124717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1CesOrn3S5xmbOqBE/jrt0oeRW8/BTMMwLOrOA1WKmE=;
+        b=JJnBYuINopeh9Hnvk2xNOqaFMgd5LgqCtxlczCzP4zoqVxVN/rVdp6REzquaDZyj7FFqBc
+        ZNR/ymiTWn6mMWhQIyApDmm+4nHxDXTDxqms0C63gPvkHTS6s9oTQen6PrlfZDMhKCWfUZ
+        CcdhW5X8Z6AXHjaJm93BUqKQ5bE35+z+Ng9w9sOkIPM06xTObbnvqKh5aiK9RL1z0R1tmJ
+        9s9WLAiQIzdz5JE0qYIB0fwx/L0WtDargngeyj5C7LEJsPdMEXHOdwqo35vwFq0k9srTJC
+        NhjwcVYqzzv7v3twY3tXOcQnbWsIPlaNVXu7gxp6GyN0RRHFI7qRgjecSJHfLg==
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+X-GND-Sasl: kory.maincent@bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6E612E0010;
+        Wed,  7 Jun 2023 07:58:35 +0000 (UTC)
+Date:   Wed, 7 Jun 2023 09:58:32 +0200
+From:   =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>
+To:     Cai Huoqing <cai.huoqing@linux.dev>
+Cc:     vkoul@kernel.org, Serge Semin <fancer.lancer@gmail.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?UTF-8?B?V2lsY3p5xYRza2k=?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v11 3/4] dmaengine: dw-edma: Add support for native HDMA
+Message-ID: <20230607095832.6d6b1a73@kmaincent-XPS-13-7390>
+In-Reply-To: <20230520050854.73160-4-cai.huoqing@linux.dev>
+References: <20230520050854.73160-1-cai.huoqing@linux.dev>
+        <20230520050854.73160-4-cai.huoqing@linux.dev>
+Organization: bootlin
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_PASS,SPF_PASS,
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_PASS,
         T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
         version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -57,57 +79,73 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, 2023-06-07 at 09:49 +0200, Lukas Wunner wrote:
-> On Mon, Jun 05, 2023 at 08:35:45PM +0200, Johannes Berg wrote:
-> > @@ -3139,6 +3139,7 @@ void pci_pm_init(struct pci_dev *dev)
-> >  	u16 pmc;
-> > =20
-> >  	pm_runtime_forbid(&dev->dev);
-> > +	pm_runtime_get_noresume(&dev->dev);
-> >  	pm_runtime_set_active(&dev->dev);
-> >  	pm_runtime_enable(&dev->dev);
-> >  	device_enable_async_suspend(&dev->dev);
-> > @@ -335,9 +336,12 @@ void pci_bus_add_device(struct pci_dev *dev)
-> >  	int retval;
-> > =20
-> >  	/*
-> > -	 * Can not put in pci_device_add yet because resources
-> > -	 * are not assigned yet for some devices.
-> > +	 * Allow runtime PM only here, since otherwise we may
-> > +	 * try to suspend a device that isn't fully configured
-> > +	 * yet, which causes problems.
-> >  	 */
-> > +	pm_runtime_put_noidle(&dev->dev);
-> > +
-> >  	pcibios_bus_add_device(dev);
-> >  	pci_fixup_device(pci_fixup_final, dev);
-> >  	pci_create_sysfs_dev_files(dev);
->=20
-> There seem to be many different callers that end up in pci_pm_init()
-> and pci_bus_add_device().
->=20
-> Is it guaranteed that the two functions are always called in order?
-> Do callers exist which only invoke the former but not the latter or
-> vice-versa?  Can it happen that a caller of the former errors out,
-> so the latter is never called, leading to a runtime PM ref imbalance?
+On Sat, 20 May 2023 13:08:51 +0800
+Cai Huoqing <cai.huoqing@linux.dev> wrote:
 
-I did ask myself that too, and honestly, I'm not entirely sure - need
-somebody more familiar to really understand that, I think.
+> Add support for HDMA NATIVE, as long the IP design has set
+> the compatible register map parameter-HDMA_NATIVE,
+> which allows compatibility for native HDMA register configuration.
 
-Most places elsewhere _do_ call both, and it feels like you have to call
-both if you want to do something with the device.
+I know the patch has been merged in dmaengine tree but something seems weird on
+my side.
 
-However there are a few places that seem to call the first part and then
-remove the device again immediately after. That also seems harmless
-though.
+The akida_dw_edma_probe function is selecting the minimum read and write
+channels by doing the minimum between ll_wr_cnt and the ch_count callback.
+The hdma ch_count callback is counting the number of channels enabled by reading
+the number of ch_en registers set. At probe time there is no channels registers
+that has been set as it is done later in the dw_hdma_v0_core_start function.
+Then the dw_hdma_v0_core_ch_count will always return 0 at probe time and the
+number of channels will be set to 0 which is not what we want.
+Could I miss something?
 
-> It would be easier to ascertain correctness if you could find a
-> function at a higher level which (indirectly) calls both pci_pm_init()
-> and pci_bus_add_device() so that you can acquire and release the
-> runtimw PM ref in that single function.
->=20
+See the functions bellow:
 
-Unfortunately, there isn't such a place, since the scanning is done by
-various bus walks.
+> int akida_dw_edma_probe(struct dw_edma_chip *chip)                         
+> {                                                                          
+ ...                               
+>         dw->wr_ch_cnt = min_t(u16, chip->ll_wr_cnt,                        
+>                               dw_edma_core_ch_count(dw, EDMA_DIR_WRITE));  
+>         dw->wr_ch_cnt = min_t(u16, dw->wr_ch_cnt, EDMA_MAX_WR_CH);         
+>                                                                            
+>         dw->rd_ch_cnt = min_t(u16, chip->ll_rd_cnt,                        
+>                               dw_edma_core_ch_count(dw, EDMA_DIR_READ));   
+>         dw->rd_ch_cnt = min_t(u16, dw->rd_ch_cnt, EDMA_MAX_RD_CH);         
+>                                                                            
+>         if (!dw->wr_ch_cnt && !dw->rd_ch_cnt)                              
+>                 return -EINVAL;            
+...
+}
 
-johannes
+
+> +static u16 dw_hdma_v0_core_ch_count(struct dw_edma *dw, enum dw_edma_dir dir)
+> +{
+> +	u32 num_ch = 0;
+> +	int id;
+> +
+> +	for (id = 0; id < HDMA_V0_MAX_NR_CH; id++) {
+> +		if (GET_CH_32(dw, id, dir, ch_en) & BIT(0))
+> +			num_ch++;
+> +	}
+> +
+> +	if (num_ch > HDMA_V0_MAX_NR_CH)
+> +		num_ch = HDMA_V0_MAX_NR_CH;
+> +
+> +	return (u16)num_ch;
+> +}
+
+
+
+> +static void dw_hdma_v0_core_start(struct dw_edma_chunk *chunk, bool first)
+> +{
+> +	struct dw_edma_chan *chan = chunk->chan;
+> +	struct dw_edma *dw = chan->dw;
+> +	u32 tmp;
+> +
+> +	dw_hdma_v0_core_write_chunk(chunk);
+> +
+> +	if (first) {
+> +		/* Enable engine */
+> +		SET_CH_32(dw, chan->dir, chan->id, ch_en, BIT(0));
+...
+> +}
+
