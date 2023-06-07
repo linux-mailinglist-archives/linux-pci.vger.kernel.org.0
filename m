@@ -2,66 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C8DF727066
-	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 23:17:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D99872706D
+	for <lists+linux-pci@lfdr.de>; Wed,  7 Jun 2023 23:19:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbjFGVRo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 17:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44696 "EHLO
+        id S229917AbjFGVTq (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jun 2023 17:19:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjFGVRn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 17:17:43 -0400
-Received: from mail-io1-f53.google.com (mail-io1-f53.google.com [209.85.166.53])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7994F1BC2;
-        Wed,  7 Jun 2023 14:17:41 -0700 (PDT)
-Received: by mail-io1-f53.google.com with SMTP id ca18e2360f4ac-777b4716673so62429539f.1;
-        Wed, 07 Jun 2023 14:17:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686172660; x=1688764660;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CezTeziIf00zGpoaS9kJexhOOJCksUQFj/tFMeNhKEI=;
-        b=Zdew9f6v1S43JgwN6IG53pOGdqd+3oxYD028cfcvKVFUNPiwAAb1Di9fTFPHqO2l8A
-         CNXvCCQoTTOeNPWUQxYs6+gFFYixiukNA9VNOPviIotGGj0uY9XbSZuuT+PpiCtqApeL
-         DXNtA6foVRMMa3ou5RaZ94+C9Mx8D1kritb5r+eKWoihuPexKLbB0C55K6IJ+sEgTvbq
-         9ktXDUmBRzxKHHe77uMfrrKXIQ0O23FQ3yFvVPPiug3BPwZEV/MDhsc8eDGhznsWJTC8
-         JO8GpLUrrL0XeaMHvikrFzWuE8uFpZpCnGBpLIciEjND2uNJ6BnRx0gRg01jlTxB4XRD
-         ar6w==
-X-Gm-Message-State: AC+VfDxo7ji1dkmzUove//0iSqX9/ueY7k1EVitYg+a+QpQhc0LyQKHr
-        JlTbU+yx2n2/rYLxoJlR0g==
-X-Google-Smtp-Source: ACHHUZ7xDt00NqecnMVQ7QklGZOSiZ6wbDqFwT3Bg6xKWAh7OlzGKj1NKXq780cgjNHvEXrKVPDTJg==
-X-Received: by 2002:a6b:dd10:0:b0:777:a7a5:9c80 with SMTP id f16-20020a6bdd10000000b00777a7a59c80mr219524ioc.6.1686172660649;
-        Wed, 07 Jun 2023 14:17:40 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id d26-20020a5d9bda000000b00763699c3d02sm4097710ion.0.2023.06.07.14.17.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 14:17:39 -0700 (PDT)
-Received: (nullmailer pid 4108377 invoked by uid 1000);
-        Wed, 07 Jun 2023 21:17:38 -0000
-Date:   Wed, 7 Jun 2023 15:17:38 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     devicetree@vger.kernel.org, linux-pci@vger.kernel.org,
-        bhelgaas@google.com, Conor Dooley <conor+dt@kernel.org>,
-        Sudip Mukherjee <sudip.mukherjee@codethink.co.uk>,
-        Jude Onyenegecha <jude.onyenegecha@codethink.co.uk>,
-        Greentime Hu <greentime.hu@sifive.com>,
-        Jeegar Lakhani <jeegar.lakhani@sifive.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: updated max-link-speed for newer
- generations
-Message-ID: <20230607211738.GA4076577-robh@kernel.org>
-References: <20230531092121.291770-1-ben.dooks@codethink.co.uk>
- <20230531092121.291770-2-ben.dooks@codethink.co.uk>
+        with ESMTP id S229536AbjFGVTp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 17:19:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A23401984;
+        Wed,  7 Jun 2023 14:19:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 30F31648D3;
+        Wed,  7 Jun 2023 21:19:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B2D3C433D2;
+        Wed,  7 Jun 2023 21:19:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686172783;
+        bh=kPvir4ZLGQOIvoukeOAmyBe+ZNEwToynta1WPvI98us=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=l0CWu4k/EmTG+pvWHcMifGGTMeSBy+7GNaDZcly9c4fJJrCNY3+c8SQ929wWq+Zkq
+         nUMXR9LMAA743dHVIn0MPJlPa9rwlZK39iV7jcl5BIebw+tst0VGShLGvnhuRWX/jc
+         ncaXWegQgYqBAH0ZKzPZatAhQNug6N3wDoriNzzZ0JLF8mtaUZk4M0RpKVys5wED28
+         Y43yN4sHHvVyoZ+Wt0k1Xd4ZACEI4gUQa6SzLuEIbhT2xGM6k9YtDgPZp0TL4l+veF
+         y8LorTecMe69Qduynnv0EbaFPuMOxxJTwdhtQXWU0V/GwW06Y2Q7lYdhNxTZGQDJZ4
+         oxWfQNKKOgTvQ==
+Date:   Wed, 7 Jun 2023 16:19:41 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     lpieralisi@kernel.org, kw@linux.com, kishon@kernel.org,
+        bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dlemoal@kernel.org, Yang Li <yang.lee@linux.alibaba.com>
+Subject: Re: [PATCH v6 8/9] PCI: endpoint: Add PCI Endpoint function driver
+ for MHI bus
+Message-ID: <20230607211941.GA1176583@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230531092121.291770-2-ben.dooks@codethink.co.uk>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <20230607204923.GA1174664@bhelgaas>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -69,33 +55,40 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, May 31, 2023 at 10:21:21AM +0100, Ben Dooks wrote:
-> Add updated max-link-speed values for newer generation PCIe link
-> speeds.
+[+cc Yang Li, sorry I didn't notice your patch earlier:
+https://lore.kernel.org/r/20230607093514.104012-1-yang.lee@linux.alibaba.com]
+
+I think we can squash this into the original commit since it hasn't
+gone upstream yet.  Also note that removing the dev_err() apparently
+makes "dev" unused, so we'd have to remove that as well, based on this
+report [2].
+
+[2] https://lore.kernel.org/r/202306080418.i64hTj5T-lkp@intel.com
+
+On Wed, Jun 07, 2023 at 03:49:25PM -0500, Bjorn Helgaas wrote:
+> On Fri, Jun 02, 2023 at 05:17:55PM +0530, Manivannan Sadhasivam wrote:
+> > Add PCI Endpoint driver for the Qualcomm MHI (Modem Host Interface) bus.
+> > The driver implements the MHI function over PCI in the endpoint device
+> > such as SDX55 modem. The MHI endpoint function driver acts as a
+> > controller driver for the MHI Endpoint stack and carries out all PCI
+> > related activities like mapping the host memory using iATU, triggering
+> > MSIs etc...
+> > ...
 > 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/pci/pci.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> > +static int pci_epf_mhi_bind(struct pci_epf *epf)
+> > +{
+> > ...
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/pci.txt b/Documentation/devicetree/bindings/pci/pci.txt
-> index 6a8f2874a24d..56391e193fc4 100644
-> --- a/Documentation/devicetree/bindings/pci/pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/pci.txt
-> @@ -22,8 +22,9 @@ driver implementation may support the following properties:
->     If present this property specifies PCI gen for link capability.  Host
->     drivers could add this as a strategy to avoid unnecessary operation for
->     unsupported link speed, for instance, trying to do training for
-> -   unsupported link speed, etc.  Must be '4' for gen4, '3' for gen3, '2'
-> -   for gen2, and '1' for gen1. Any other values are invalid.
-> +   unsupported link speed, etc.  Must be '6' for gen6,  '5' for gen5,
-> +   '4' for gen4, '3' for gen3, '2' for gen2, and '1' for gen1.
-> +   Any other values are invalid.
-
-This file is a deadend to be removed.
-
-Please update dtschema with the new values.
-
-Rob
+> > +	ret = platform_get_irq_byname(pdev, "doorbell");
+> > +	if (ret < 0) {
+> > +		dev_err(dev, "Failed to get Doorbell IRQ\n");
+> 
+> This dev_err() causes this new warning from the 0-day robot [1]:
+> 
+>   drivers/pci/endpoint/functions/pci-epf-mhi.c:362:2-9: line 362 is redundant because platform_get_irq() already prints an error
+> 
+> Maybe we could drop it?
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/all/20230607163937.ZTc-D%25lkp@intel.com/
