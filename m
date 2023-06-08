@@ -2,121 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id A03957283BA
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 17:28:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A80D37283BF
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 17:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236958AbjFHP2J (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 8 Jun 2023 11:28:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54990 "EHLO
+        id S236585AbjFHP2r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 8 Jun 2023 11:28:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237092AbjFHP2D (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Jun 2023 11:28:03 -0400
-Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C0572D46;
-        Thu,  8 Jun 2023 08:28:03 -0700 (PDT)
-Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-777b4716673so18918239f.1;
-        Thu, 08 Jun 2023 08:28:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686238082; x=1688830082;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qr000rxGLVuWJZz2D0ArKGwSzq3Pa8ar0xjysheU/dU=;
-        b=WZRyiS3E0fuXwFPwXxtml2KtMBlbYjKiX4r0KFnMs/NxwkCrIiEzqBGOXq4eGfrubo
-         +zox4goabq5d5yBcVdqOyAgw9JvtwaK0MTT7/aldXjDDdDHE+z2IWKuiN1k5v/ODE7+M
-         F6y3D2bQUtlLeOdmrj/vbawdezcOUiMOFHRaNXNAZdYNZwLKYK7bRBI1vxowBAWcsop6
-         2qfy4w2wDXmbXwHebmRdeV1CrNMI1YxwdV9JMc5i748Li3PaXQWnDUorE8k4vutI4efm
-         LnmNGlz/mIZz56jaFB4SD2SpDC0UW289cbXItgqhtMPzI605u8aGT5789+B4C0kllA6M
-         pLFA==
-X-Gm-Message-State: AC+VfDzq4DFklGgJNJGxMGhMa30bdf6KclW9La33cLz7cTuT1XZyc3o0
-        XMXImi7alI+MI6wsw4EK4Q==
-X-Google-Smtp-Source: ACHHUZ7yIzpDskqBVsSZugxdatsLxV3rNEEOXYrrNCOawofOsVApP7TUr7KrKg+IbkgmirE1X6UUNw==
-X-Received: by 2002:a05:6602:2d01:b0:777:a4d2:8871 with SMTP id c1-20020a0566022d0100b00777a4d28871mr1838491iow.5.1686238082262;
-        Thu, 08 Jun 2023 08:28:02 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id t5-20020a028785000000b0040fa5258658sm332660jai.77.2023.06.08.08.28.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 08:28:01 -0700 (PDT)
-Received: (nullmailer pid 2724383 invoked by uid 1000);
-        Thu, 08 Jun 2023 15:27:59 -0000
-Date:   Thu, 8 Jun 2023 09:27:59 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
-        quic_ramkri@quicinc.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
-        <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: PCI: qcom: ep: Add interconnects path
-Message-ID: <20230608152759.GA2721945-robh@kernel.org>
-References: <1686154687-29356-1-git-send-email-quic_krichai@quicinc.com>
- <1686154687-29356-2-git-send-email-quic_krichai@quicinc.com>
+        with ESMTP id S235704AbjFHP2p (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 8 Jun 2023 11:28:45 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E3CAF2D70;
+        Thu,  8 Jun 2023 08:28:36 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32679AB6;
+        Thu,  8 Jun 2023 08:29:22 -0700 (PDT)
+Received: from [10.57.83.198] (unknown [10.57.83.198])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB8B53F6C4;
+        Thu,  8 Jun 2023 08:28:35 -0700 (PDT)
+Message-ID: <b24a6c7b-27fc-41c0-5c82-15696b4a7dc1@arm.com>
+Date:   Thu, 8 Jun 2023 16:28:24 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1686154687-29356-2-git-send-email-quic_krichai@quicinc.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
-        autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: Question about reserved_regions w/ Intel IOMMU
+To:     Baolu Lu <baolu.lu@linux.intel.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>, iommu@lists.linux.dev
+References: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
+ <CAKgT0UfMeVOz6AOqSvVvzpsedGDiXCNQrjM+4KDv7qJJ1orpsw@mail.gmail.com>
+ <a1cff65b-b390-3872-25b5-dd6bbfb3524c@linux.intel.com>
+Content-Language: en-GB
+From:   Robin Murphy <robin.murphy@arm.com>
+In-Reply-To: <a1cff65b-b390-3872-25b5-dd6bbfb3524c@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-4.3 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        RCVD_IN_DNSWL_MED,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 09:48:05PM +0530, Krishna chaitanya chundru wrote:
-> Add the "pcie-mem" interconnect path to the bindings.
+On 2023-06-08 04:03, Baolu Lu wrote:
+> On 6/8/23 7:03 AM, Alexander Duyck wrote:
+>> On Wed, Jun 7, 2023 at 3:40 PM Alexander Duyck
+>> <alexander.duyck@gmail.com> wrote:
+>>>
+>>> I am running into a DMA issue that appears to be a conflict between
+>>> ACS and IOMMU. As per the documentation I can find, the IOMMU is
+>>> supposed to create reserved regions for MSI and the memory window
+>>> behind the root port. However looking at reserved_regions I am not
+>>> seeing that. I only see the reservation for the MSI.
+>>>
+>>> So for example with an enabled NIC and iommu enabled w/o passthru I 
+>>> am seeing:
+>>> # cat /sys/bus/pci/devices/0000\:83\:00.0/iommu_group/reserved_regions
+>>> 0x00000000fee00000 0x00000000feefffff msi
+>>>
+>>> Shouldn't there also be a memory window for the region behind the root
+>>> port to prevent any possible peer-to-peer access?
+>>
+>> Since the iommu portion of the email bounced I figured I would fix
+>> that and provide some additional info.
+>>
+>> I added some instrumentation to the kernel to dump the resources found
+>> in iova_reserve_pci_windows. From what I can tell it is finding the
+>> correct resources for the Memory and Prefetchable regions behind the
+>> root port. It seems to be calling reserve_iova which is successfully
+>> allocating an iova to reserve the region.
+>>
+>> However still no luck on why it isn't showing up in reserved_regions.
 > 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> Perhaps I can ask the opposite question, why it should show up in
+> reserve_regions? Why does the iommu subsystem block any possible peer-
+> to-peer DMA access? Isn't that a decision of the device driver.
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index b3c22eb..6fc5440 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -70,6 +70,13 @@ properties:
->      description: GPIO used as WAKE# output signal
->      maxItems: 1
->  
-> +  interconnects:
-> +    maxItems: 1
-> +
-> +  interconnect-names:
-> +    items:
-> +      - const: pcie-mem
-> +
->    resets:
->      maxItems: 1
->  
-> @@ -97,6 +104,8 @@ required:
->    - interrupts
->    - interrupt-names
->    - reset-gpios
-> +  - interconnects
-> +  - interconnect-names
+> The iova_reserve_pci_windows() you've seen is for kernel DMA interfaces
+> which is not related to peer-to-peer accesses.
 
-You can't add required properties. That's an ABI break. Up to the 
-platform whether that's acceptible, but you have to explain all this in 
-the commmit msg.
+Right, in general the IOMMU driver cannot be held responsible for 
+whatever might happen upstream of the IOMMU input. The DMA layer carves 
+PCI windows out of its IOVA space unconditionally because we know that 
+they *might* be problematic, and we don't have any specific constraints 
+on our IOVA layout so it's no big deal to just sacrifice some space for 
+simplicity. We don't want to have to go digging any further into 
+bus-specific code to reason about whether the right ACS capabilities are 
+present and enabled everywhere to prevent direct P2P or not. Other 
+use-cases may have different requirements, though, so it's up to them 
+what they want to do.
 
->    - resets
->    - reset-names
->    - power-domains
-> -- 
-> 2.7.4
-> 
+It's conceptually pretty much the same as the case where the device (or 
+indeed a PCI host bridge or other interconnect segment in-between) has a 
+constrained DMA address width - the device may not be able to access all 
+of the address space that the IOMMU provides, but the IOMMU itself can't 
+tell you that.
+
+Thanks,
+Robin.
