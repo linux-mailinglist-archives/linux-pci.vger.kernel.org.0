@@ -2,95 +2,112 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 004217272AA
-	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 01:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E4E7727491
+	for <lists+linux-pci@lfdr.de>; Thu,  8 Jun 2023 03:44:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232453AbjFGXEe (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 7 Jun 2023 19:04:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59662 "EHLO
+        id S233405AbjFHBoT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 7 Jun 2023 21:44:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230104AbjFGXEd (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 19:04:33 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8674011A;
-        Wed,  7 Jun 2023 16:04:31 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id 98e67ed59e1d1-25692ff86cdso6444231a91.2;
-        Wed, 07 Jun 2023 16:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686179070; x=1688771070;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XEQmXBu5dD2JANi2wiTQk+OaHV1+Cn5N+E2Jx9Z9qA4=;
-        b=RylNv+3BIY+SkOFVAD23uBHZj3gl+6CGLSkAPg+jewP+TXl+yMgPLX6SW4utvQFk5H
-         EH7z/qzntgcgtmMbuBotoKMWdu1zz6kl61hyvmvMZemO0yBPxR5qJxn+hlm5VEyDdIwX
-         ASrRHvjOICNXkznM1ujPM6yNPppmEjhbN5H/OcrhR9xY+BAYQUVBWXyfAd28VEcEAGRJ
-         W6uwAK3z8RHShgB+B3TR+0qli2YJ9J5nN2uHEiUIy7UAHQcBknMD0d05qMnd5aL4gqcd
-         LdwMS7BKs1bMUBiJQvpGkweej2mWnwYJKjDUZ1rkkTAvpN2mrpqTEaFdTLdsRAZvO1eR
-         yk9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686179070; x=1688771070;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XEQmXBu5dD2JANi2wiTQk+OaHV1+Cn5N+E2Jx9Z9qA4=;
-        b=fvSeaUio12PSHfo29bUmtGP6UNJwLUhC23kRyp+deAwfwYTCpPjBfwBUnrdVP3yM1W
-         VyWiijzudjsUoaIEqJghsy04ZrYGCpX3ceMzcUZm5f9gqwokdcumY03eSl7Ydm1tUAdc
-         fJ+UMAiGu4RmLeBrNPQ0tDD6QPkcXH8hF+3L3khoacnyZUhrfLSc74u1wBd6EEOemAkc
-         o0SPE3LdNhOcPa2tAEOppSr2IF3HaSdeMjKUtjX3oDH3+Znq9sj+asFkuykCPC2DdfzH
-         9CtBJa/jlSJZWCKIh1X7oyxg3Bz5bq2NXyJdRMaHMSTfz5OXmSHlRyYYr4jQJC338F0e
-         CwTQ==
-X-Gm-Message-State: AC+VfDz2dViX7b5iP4MrqMBM1LAdpjT2fAOAncHKpvHGljUsGKjmQT/r
-        YVVyBuuxdNsYp7Vethq6JrKsr/2QP1s0u0NHUmFXig3So7Y=
-X-Google-Smtp-Source: ACHHUZ72aumlNuKAoBEIFQvO8H4ETvfhLNixmshgtGFlUP5g7IApmZyyIjopu2EXDuiSlejJtibjp5Y+wkJnk1Q5LAs=
-X-Received: by 2002:a17:90b:4a08:b0:256:4217:b955 with SMTP id
- kk8-20020a17090b4a0800b002564217b955mr5585682pjb.35.1686179070356; Wed, 07
- Jun 2023 16:04:30 -0700 (PDT)
+        with ESMTP id S231259AbjFHBoE (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 7 Jun 2023 21:44:04 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9BA826B8;
+        Wed,  7 Jun 2023 18:43:26 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 357N6Wgj007974;
+        Thu, 8 Jun 2023 01:42:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2023-03-30;
+ bh=mFKIyYLsNQOscJFsa1wB8vRCWUI5xZUPEr0GCqcpNhE=;
+ b=oOjz7dXtcBHJjLfKIzY/H+TLb46agXTkuSGNT0+jVN8b/9/qXf+mGErhazy9DufbGqXG
+ bO/Ibm10iohTU1AoIUtt5aLtnN171rleEoZIPnR+EtNqMBNguznKwWRFh2X7+hLPNaxU
+ 7h0zetwKukKoarUNDopn6H9cfxusuqEIGDyTXTyy4A0eKJnzeDYlc5Fr564gklzqwUUl
+ 7y+rEdbUMpSRE0/dMsQ3UHhLBVyNo2g6x8+vYzYKA/c/3s2JCRu4t5ioeomTm+Xa6PWD
+ WRY+RWuh72/tHszEZ8V43TYj+z3UTLML2UlgQnSHbx3raZpj1rJT0X/XsAv8i/wmIOQ2 eA== 
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3r2a6rk4we-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Jun 2023 01:42:50 +0000
+Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 3580Vp8F037094;
+        Thu, 8 Jun 2023 01:42:49 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3r2a6hytbv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 08 Jun 2023 01:42:49 +0000
+Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 3581gQVB031871;
+        Thu, 8 Jun 2023 01:42:48 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3r2a6hyt3a-17;
+        Thu, 08 Jun 2023 01:42:48 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v5 00/44] treewide: Remove I/O port accessors for HAS_IOPORT=n
+Date:   Wed,  7 Jun 2023 21:42:21 -0400
+Message-Id: <168618844281.2636448.12578848394814985642.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
 MIME-Version: 1.0
-References: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
-In-Reply-To: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Wed, 7 Jun 2023 16:03:54 -0700
-Message-ID: <CAKgT0UfMeVOz6AOqSvVvzpsedGDiXCNQrjM+4KDv7qJJ1orpsw@mail.gmail.com>
-Subject: Re: Question about reserved_regions w/ Intel IOMMU
-To:     LKML <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>, iommu@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-07_13,2023-06-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 adultscore=0 mlxlogscore=884 bulkscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306080011
+X-Proofpoint-ORIG-GUID: MzrzAX_nsiU9Fdxy46ABlaqqJPB34hNL
+X-Proofpoint-GUID: MzrzAX_nsiU9Fdxy46ABlaqqJPB34hNL
+X-Spam-Status: No, score=-2.8 required=5.0 tests=BAYES_00,DKIMWL_WL_MED,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_LOW,
+        RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 7, 2023 at 3:40=E2=80=AFPM Alexander Duyck
-<alexander.duyck@gmail.com> wrote:
->
-> I am running into a DMA issue that appears to be a conflict between
-> ACS and IOMMU. As per the documentation I can find, the IOMMU is
-> supposed to create reserved regions for MSI and the memory window
-> behind the root port. However looking at reserved_regions I am not
-> seeing that. I only see the reservation for the MSI.
->
-> So for example with an enabled NIC and iommu enabled w/o passthru I am se=
-eing:
-> # cat /sys/bus/pci/devices/0000\:83\:00.0/iommu_group/reserved_regions
-> 0x00000000fee00000 0x00000000feefffff msi
->
-> Shouldn't there also be a memory window for the region behind the root
-> port to prevent any possible peer-to-peer access?
+On Mon, 22 May 2023 12:50:05 +0200, Niklas Schnelle wrote:
 
-Since the iommu portion of the email bounced I figured I would fix
-that and provide some additional info.
+> Some platforms such as s390 do not support PCI I/O spaces. On such platforms
+> I/O space accessors like inb()/outb() are stubs that can never actually work.
+> The way these stubs are implemented in asm-generic/io.h leads to compiler
+> warnings because any use will be a NULL pointer access on these platforms. In
+> a previous patch we tried handling this with a run-time warning on access. This
+> approach however was rejected by Linus[0] with the argument that this really
+> should be a compile-time check and, though a much more invasive change, we
+> believe that is indeed the right approach.
+> 
+> [...]
 
-I added some instrumentation to the kernel to dump the resources found
-in iova_reserve_pci_windows. From what I can tell it is finding the
-correct resources for the Memory and Prefetchable regions behind the
-root port. It seems to be calling reserve_iova which is successfully
-allocating an iova to reserve the region.
+Applied to 6.5/scsi-queue, thanks!
 
-However still no luck on why it isn't showing up in reserved_regions.
+[21/44] mpt fusion: add HAS_IOPORT dependencies
+        https://git.kernel.org/mkp/scsi/c/c3f903472ffa
+[31/44] scsi: add HAS_IOPORT dependencies
+        https://git.kernel.org/mkp/scsi/c/b58b2ba351b0
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
