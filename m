@@ -2,72 +2,104 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 38D90729B31
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 15:13:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C0EF729D93
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 16:58:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231863AbjFINNG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 09:13:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
+        id S231295AbjFIO6U (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 10:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230305AbjFINNF (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 09:13:05 -0400
-Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D7E132;
-        Fri,  9 Jun 2023 06:13:04 -0700 (PDT)
-Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-33be5dbb90cso7462645ab.0;
-        Fri, 09 Jun 2023 06:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686316384; x=1688908384;
-        h=date:subject:message-id:references:in-reply-to:cc:to:from
-         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=M9D35kaOS2C39e0x3xanvuuHggxbq1FnGkrcYzbCLtU=;
-        b=WzG6EWqQUviK0Lgqsexec2C/Fo1Hd59OLpbqa/3tXUBVQQwRctzGR3F8wC1B2hdTwd
-         0+Vfe/vcpS5fgadaTT4xsvIVIqkQUYNtrstjqvZ6oYLdmhheVU9Ou8Kw+QDJZPf+HcJx
-         ynvh9XiY1+k/ZJwvocenrIT6Ii0/5zsGRn6VmjZDd/eD4QIgzcUjzO82MhDqLi7TFg2Y
-         EIN6NuPEZ9Uq7DuigfL32acnzrGIyL1ZHHXX85WSqrqQrDi7jIZRcrWCopIkEC6oyIGN
-         18IuPTsyauQExZlUeLsJBYkhfkY5/1FO/TPh4J5NEz0qTobizh/rpjQTaaFKjxoeyEei
-         j1qw==
-X-Gm-Message-State: AC+VfDw3gK/ZwoDsmitBujmfSku7g0WZeD6yNZc8OoOJ6OnMDRAjo/BO
-        kPnbOK0a2zPZWZNCXQ8t+A==
-X-Google-Smtp-Source: ACHHUZ5j0wP0elCI9OCxxC/oYXvqyZN73d9plY1jTIgztDBrNxHCN2RK5U+QxwWY+4Ul4XsgZoOnag==
-X-Received: by 2002:a92:ddcf:0:b0:335:38b:e734 with SMTP id d15-20020a92ddcf000000b00335038be734mr1479493ilr.28.1686316383875;
-        Fri, 09 Jun 2023 06:13:03 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id z6-20020a92d186000000b0033d2eba1800sm1086619ilz.15.2023.06.09.06.13.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 09 Jun 2023 06:13:02 -0700 (PDT)
-Received: (nullmailer pid 662840 invoked by uid 1000);
-        Fri, 09 Jun 2023 13:13:00 -0000
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+        with ESMTP id S231944AbjFIO6T (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 10:58:19 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C87AA3A82;
+        Fri,  9 Jun 2023 07:57:55 -0700 (PDT)
+Received: from pps.filterd (m0353728.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 359EqpFj032000;
+        Fri, 9 Jun 2023 14:57:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=mQ32Hj2rOLiDXWb7kXaNohNFO/t643oP8mOO5J5x8IE=;
+ b=qILm1AxEoZ/W+uLtIkUyETlZgGLsCl1tID6wa63/lfI4+67XBpli63h/xulpOXZ+emSt
+ +EFzDAGSwCqs8rvLR4go6ZEKBY9NxZyul3wmcFicxwsI1D5aCg0v1Gv4KGrWPjipjSva
+ XFCTBWKOMoHiz8k3vfGrSWbAWylesmzFOhtfMXn7tXM/BWjaVta99nhkEmXkb7HnXypL
+ 4B57Kae4jyT25SrSEKD025zsgfr8Iv5E1tP7zL9JJwvRfUdEqfTcgW/NRVDUa8zgbuzS
+ 3wqoTI3evnlpP8ZJ7kshaPstAzRDOHjSoRQ+ad5YE6hlswK0rDZXxh28fWdG4IDPv2Fq kg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r467yr398-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Jun 2023 14:57:35 +0000
+Received: from m0353728.ppops.net (m0353728.ppops.net [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 359ErMmh002656;
+        Fri, 9 Jun 2023 14:57:35 GMT
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3r467yr37v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Jun 2023 14:57:34 +0000
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 3593e50V009566;
+        Fri, 9 Jun 2023 14:57:30 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma04fra.de.ibm.com (PPS) with ESMTPS id 3r2a7a9eds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Jun 2023 14:57:30 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 359EvSFp44433852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Jun 2023 14:57:28 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6474920040;
+        Fri,  9 Jun 2023 14:57:28 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 578A020043;
+        Fri,  9 Jun 2023 14:57:27 +0000 (GMT)
+Received: from [9.171.40.189] (unknown [9.171.40.189])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri,  9 Jun 2023 14:57:27 +0000 (GMT)
+Message-ID: <f858c964f2fbe2fa5a92652c7d5022af7e3b76f1.camel@linux.ibm.com>
+Subject: Re: [PATCH v5 07/44] counter: add HAS_IOPORT_MAP dependency
+From:   Niklas Schnelle <schnelle@linux.ibm.com>
+To:     William Breathitt Gray <wbg@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        William Breathitt Gray <william.gray@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-pci@vger.kernel.org, Arnd Bergmann <arnd@kernel.org>,
+        linux-iio@vger.kernel.org
+Date:   Fri, 09 Jun 2023 16:57:27 +0200
+In-Reply-To: <ZIHs55tweGZTIiYk@ishi>
+References: <20230522105049.1467313-1-schnelle@linux.ibm.com>
+         <20230522105049.1467313-8-schnelle@linux.ibm.com> <ZIHs55tweGZTIiYk@ishi>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.48.2 (3.48.2-1.fc38) 
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: KHm5w9z_zuFS2xI7NoUPzgiEzAz0qS0i
+X-Proofpoint-ORIG-GUID: UtlFUumJPzZISw0sVTmb6j2eGl6-g7UC
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-From:   Rob Herring <robh@kernel.org>
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        manivannan.sadhasivam@linaro.org,
-        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        Bjorn Andersson <andersson@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Andy Gross <agross@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>
-In-Reply-To: <1686311249-6857-2-git-send-email-quic_krichai@quicinc.com>
-References: <1686311249-6857-1-git-send-email-quic_krichai@quicinc.com>
- <1686311249-6857-2-git-send-email-quic_krichai@quicinc.com>
-Message-Id: <168631638078.662811.2470035951687478762.robh@kernel.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: ep: Add interconnects
- path
-Date:   Fri, 09 Jun 2023 07:13:00 -0600
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-09_10,2023-06-09_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=833 bulkscore=0
+ spamscore=0 suspectscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 adultscore=0 clxscore=1011 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2305260000
+ definitions=main-2306090122
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_EF,RCVD_IN_MSPIKE_H5,RCVD_IN_MSPIKE_WL,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -75,50 +107,47 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Thu, 2023-06-08 at 10:59 -0400, William Breathitt Gray wrote:
+> On Mon, May 22, 2023 at 12:50:12PM +0200, Niklas Schnelle wrote:
+> > The 104_QUAD_8 counter driver uses devm_ioport_map() without depending
+> > on HAS_IOPORT_MAP. This means the driver is not usable on platforms such
+> > as s390 which do not support I/O port mapping. Add the missing
+> > HAS_IOPORT_MAP dependency to make this explicit.
+> >=20
+> > Co-developed-by: Arnd Bergmann <arnd@kernel.org>
+> > Signed-off-by: Arnd Bergmann <arnd@kernel.org>
+> > Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+> > ---
+> >  drivers/counter/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >=20
+> > diff --git a/drivers/counter/Kconfig b/drivers/counter/Kconfig
+> > index 4228be917038..e65a2bf178b8 100644
+> > --- a/drivers/counter/Kconfig
+> > +++ b/drivers/counter/Kconfig
+> > @@ -15,6 +15,7 @@ if COUNTER
+> >  config 104_QUAD_8
+> >  	tristate "ACCES 104-QUAD-8 driver"
+> >  	depends on (PC104 && X86) || COMPILE_TEST
+> > +	depends on HAS_IOPORT_MAP
+> >  	select ISA_BUS_API
+> >  	help
+> >  	  Say yes here to build support for the ACCES 104-QUAD-8 quadrature
+> > --=20
+> > 2.39.2
+> >=20
+>=20
+> This has a minor merge conflict with the current Kconfig in the Counter
+> tree. Would you rebase on the counter-next branch and resubmit?
+>=20
+> Thanks,
+>=20
+> William Breathitt Gray
 
-On Fri, 09 Jun 2023 17:17:26 +0530, Krishna chaitanya chundru wrote:
-> Some platforms may not boot if a device driver doesn't initialize
-> the interconnect path. Mostly it is handled by the bootloader but
-> we have starting to see cases where bootloader simply ignores them.
-> 
-> Add the "pcie-mem" interconnect path as a required property to the
-> bindings.
-> 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
+Sure can do. That said, using a three way merge as below doe handle the
+conflict correctly:
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
-
-yamllint warnings/errors:
-./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
-
-dtschema/dtc warnings/errors:
-make[1]: *** Deleting file 'Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts'
-Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: found a tab character where an indentation space is expected
-make[1]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: found a tab character where an indentation space is expected
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml: ignoring, error parsing file
-make: *** [Makefile:1512: dt_binding_check] Error 2
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1686311249-6857-2-git-send-email-quic_krichai@quicinc.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+% git checkout counter/counter-next
+% b4 am -P _ 'https://lore.kernel.org/all/20230522105049.1467313-8-schnelle=
+@linux.ibm.com/'
+% git am -3 v5_20230522_schnelle_counter_add_has_ioport_map_dependency.mbx
