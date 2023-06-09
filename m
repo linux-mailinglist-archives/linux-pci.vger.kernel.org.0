@@ -2,79 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C207972A095
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 18:49:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39DE272A0C3
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 18:58:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229969AbjFIQtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 12:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52522 "EHLO
+        id S229732AbjFIQ6a (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 12:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229956AbjFIQs7 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 12:48:59 -0400
+        with ESMTP id S229573AbjFIQ6a (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 12:58:30 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C640F3A8C;
-        Fri,  9 Jun 2023 09:48:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6657C3A97;
+        Fri,  9 Jun 2023 09:58:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 58DC665A02;
-        Fri,  9 Jun 2023 16:48:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7117EC433EF;
-        Fri,  9 Jun 2023 16:48:51 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 02C7561B83;
+        Fri,  9 Jun 2023 16:58:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26FDFC433D2;
+        Fri,  9 Jun 2023 16:58:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686329331;
-        bh=wj6ps6y4ft6WvpJQrBdcLusOhuloDy4bHnascQVlTT0=;
+        s=k20201202; t=1686329908;
+        bh=pjgfKaWVMdeYyIMbBJD5Sg5A3ohhPxW0Ef13dCshItk=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=O4xMnvyru9ylkQLSbinraMlwoqqoCRzqiohujByEGtJFDGMM2+bIqDUl5eHnyQxXo
-         rY6Jt+s9J9b2BJMm3LdqlppNkZafwg1ABQk0do5vWtrwv0HjpULglS2SDN2D6aMymp
-         CWxzgfiCmay+hbv7MVTWZ0mdVEp8uqGYXaqtxKSQkL5P7BHI2KgvO4BKLhYRuItyUe
-         b1MGXu2c7L7tT5+p5OajerVERb9IENBTZBVZNst9tkM+K3jNo95v+iyFA8Z0Q9QZCe
-         4IkGGUvPbx+9E+dUiQyq/RGdROHaFJmb7Ilr8VJ8sFWFpVVNEi3FletAovP7YIwJSa
-         +jJM45seUVXUw==
-Date:   Fri, 9 Jun 2023 11:48:50 -0500
+        b=XkkmdBfZIksnouDINNBR5DFTz+0ZxdelPRUY8ugmfCzWI9Nwhi8gDqycIXeRQN+sh
+         ATOoTwDhBPpwlQ7/H1WDLoaTe/OusGTzdDPKv1i3vBs+SS9qY8QWCRNuKAAJdmOS4y
+         T5e+Exwirlj3rZLHELNMgPuNq4hM/MDyiRywXvAkSrk2HMur+ZmGXWUDDsesJAqmL6
+         dYdnBRTFNALe7Pd8ekA798iIIrZ3pS/9jWhCK3bbItBiA6Ku4LZjo3wzp6etVX7wKa
+         VUnEGpJjYx/SzUJb0ApVA6RDkPSWdvKbWgeBkS6NP/gFpmquO5p0MhCvt0eicXGd3I
+         jqbJAMVxxESNA==
+Date:   Fri, 9 Jun 2023 11:58:26 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Sui Jingfeng <15330273260@189.cn>,
-        Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        nouveau@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, YiPeng Chai <YiPeng.Chai@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Lijo Lazar <lijo.lazar@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bokun Zhang <Bokun.Zhang@amd.com>,
-        intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        loongson-kernel@lists.loongnix.cn,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+To:     Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
+Cc:     manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
+        quic_ramkri@quicinc.com, Manivannan Sadhasivam <mani@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Yishai Hadas <yishaih@nvidia.com>, Li Yi <liyi@loongson.cn>,
-        Pan Xinhui <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian Konig <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-Subject: Re: [Intel-gfx] [PATCH v3 4/4] PCI/VGA: introduce is_boot_device
- function callback to vga_client_register
-Message-ID: <20230609164850.GA1251187@bhelgaas>
+        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
+        <linux-pci@vger.kernel.org>,
+        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
+        <linux-arm-msm@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] PCI: qcom-ep: Add ICC bandwidth voting support
+Message-ID: <20230609165826.GA1251610@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0d2ba099-9817-13be-c85b-997211443119@loongson.cn>
+In-Reply-To: <33098c17-ea24-f26c-2d37-707f13ce9716@quicinc.com>
 X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -85,57 +61,27 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 10:27:39AM +0800, Sui Jingfeng wrote:
-> On 2023/6/9 03:19, Bjorn Helgaas wrote:
-> > On Thu, Jun 08, 2023 at 07:43:22PM +0800, Sui Jingfeng wrote:
-> > > From: Sui Jingfeng <suijingfeng@loongson.cn>
-> > > 
-> > > The vga_is_firmware_default() function is arch-dependent, which doesn't
-> > > sound right. At least, it also works on the Mips and LoongArch platforms.
-> > > Tested with the drm/amdgpu and drm/radeon drivers. However, it's difficult
-> > > to enumerate all arch-driver combinations. I'm wrong if there is only one
-> > > exception.
-> > > 
-> > > With the observation that device drivers typically have better knowledge
-> > > about which PCI bar contains the firmware framebuffer, which could avoid
-> > > the need to iterate all of the PCI BARs.
-> > > 
-> > > But as a PCI function at pci/vgaarb.c, vga_is_firmware_default() is
-> > > probably not suitable to make such an optimization for a specific device.
-> > > 
-> > > There are PCI display controllers that don't have a dedicated VRAM bar,
-> > > this function will lose its effectiveness in such a case. Luckily, the
-> > > device driver can provide an accurate workaround.
-> > > 
-> > > Therefore, this patch introduces a callback that allows the device driver
-> > > to tell the VGAARB if the device is the default boot device. This patch
-> > > only intends to introduce the mechanism, while the implementation is left
-> > > to the device driver authors. Also honor the comment: "Clients have two
-> > > callback mechanisms they can use"
-> > s/bar/BAR/ (several)
-> > 
-> > Nothing here uses the callback.  I don't want to merge this until we
-> > have a user.
-> 
-> This is chicken and egg question.
-> 
-> If you could help get this merge first, I will show you the first user.
-> 
-> > I'm not sure why the device driver should know whether its device is
-> > the default boot device.
-> 
-> It's not that the device driver should know,
-> 
-> but it's about that the device driver has the right to override.
-> 
-> Device driver may have better approach to identify the default boot
-> device.
+On Fri, Jun 09, 2023 at 05:22:00PM +0530, Krishna Chaitanya Chundru wrote:
+> On 6/7/2023 10:13 PM, Bjorn Helgaas wrote:
+> > On Wed, Jun 07, 2023 at 09:48:07PM +0530, Krishna chaitanya chundru wrote:
+> > > Add support to vote for ICC bandwidth based on the link
+> > > speed and width.
 
-The way we usually handle this is to include the new callback in the
-same series as the first user of it.  That has two benefits:
-(1) everybody can review the whole picture and possibly suggest
-different approaches, and (2) when we merge the infrastructure,
-we also merge a user of it at the same time, so the whole thing can be
-tested and we don't end up with unused code.
+> > This plus the pcie_ep->icc init below is basically identical to
+> > qcom_pcie_icc_init() in pcie_qcom.c.  Why not use the same structure
+> > here, with a qcom_pcie_icc_init() function?  It's better to be the
+> > same than different (when possible, of course).
+> 
+> In pcie_qcom.c driver the resources will be turned on the probe itself.
+> 
+> But in pcie-qcom-ep.c driver will wait for the host to toggle the perst to
+> enable all the resources
+> 
+> that is reason it is different here.
+
+Understood, differences like this do make sense.  It's not always
+possible, but when it is, it's helpful to use similar structure and
+function names because it makes it easier to understand and easier to
+see opportunities for refactoring.
 
 Bjorn
