@@ -2,258 +2,106 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8019A72A1BA
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 19:58:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAAEA72A326
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 21:33:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230391AbjFIR6c convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Fri, 9 Jun 2023 13:58:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57272 "EHLO
+        id S231143AbjFITdr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 15:33:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjFIR6b (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 13:58:31 -0400
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B963D210E;
-        Fri,  9 Jun 2023 10:58:29 -0700 (PDT)
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9787d11a410so41550566b.0;
-        Fri, 09 Jun 2023 10:58:29 -0700 (PDT)
+        with ESMTP id S229695AbjFITdq (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 15:33:46 -0400
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40B8B2D44;
+        Fri,  9 Jun 2023 12:33:46 -0700 (PDT)
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-33b3cfb9495so9284855ab.2;
+        Fri, 09 Jun 2023 12:33:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686333508; x=1688925508;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=omrMTBTUOeGmnkUD34a5D4yr7A32MkADXoaBKxr36+8=;
-        b=e/N8W2c55zRfXQIIav3B0kwsoyVEJthSuzzvnMQnF/0uybUHf2xWSXOP7kCCyb3hUr
-         z7LqAmpdIqinnGkt7BApY67/qQs4eKBhMc6DqWVJFSWA/n6MyBtLbexspRWKJNAigOR6
-         BNRs26vb1gABfBD3zxMJAX0/4dsgaKZXQMdN2OYFqF4f58t1gQ1BM+jh0wlTg7Tnv6qi
-         InMg8GS1RoyIptWzBN5JZDPO4aKo+Q9lmpQ6XMXb2ljHjaHaB2nIxFuYWODH2E0lJtTT
-         eKBZhFEOub8I+WhctbrSF+tXIbMBYW7XyhOzf3QVKq9riqc+cWw7Egiaa7LJyASSUHgK
-         kMuA==
-X-Gm-Message-State: AC+VfDx3FqGy4YGhEXehdffImLTyBwZUWTpDy3b/7ojjTLDxKYNWGHkb
-        bGx3OF9ngTf90iQWT3/I76/tVn5+bFZEil4u75K7IVY74Wg=
-X-Google-Smtp-Source: ACHHUZ45AQiiCgPcEr0pxDGz4LtscgRjN+5o+OEHYthI7WFNPQnOiUgoD8ZegfXKCk6dsVshggVPfPw62F3oIB+XJdA=
-X-Received: by 2002:a17:906:72c4:b0:974:6025:cc6 with SMTP id
- m4-20020a17090672c400b0097460250cc6mr2019239ejl.6.1686333507923; Fri, 09 Jun
- 2023 10:58:27 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1686339225; x=1688931225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=rMoUuVCoy8iPi5l41BbPCFeIaC3DlfQ2sHoobxu0rd4=;
+        b=ZtkZ3qDX+p1flp8mOZ5JocGwjrh9j8wWAmeMehGXb5lKuO0UjHWEP/BucywwG2QNCH
+         Ll6OWk1RyzoQwvEcvS9edGerud6DeXl5U+rBKiRWjHPtyer2pivXBamWXw7NYE9Im+2w
+         j/jUy4ftWPgfF5OF4nAl18xvYEtw91fPEZZouNUdCEEBqEJs/ORdWSmieFQqzBlUPlbX
+         t3lYVp2fdaCpJBhEB/R/+fvwb3uGy2IwfRXNVhd9ZCtUjatKAoS5AvFRNTGtegrJH8y3
+         UkyzMikfQdoUelESVU8qpmVI9dGexSW7FT4NtD1f8psPrKbDkwxzXxfkgfMC1j0eWYBx
+         cSpA==
+X-Gm-Message-State: AC+VfDwIt4Jumy+qGMroxheORktZRE9Z5wdYik6sjYmZ4LVVOHPuy5XU
+        54DmxXqxbvN1rF353lUCqQq/Qicfjg==
+X-Google-Smtp-Source: ACHHUZ4pduV4nm+kOOf2LCKJZuG86VPl6p4jzzFbmjKFwp6EFkNLZ/0POAfMsLj1enQS0YlNO+g2ng==
+X-Received: by 2002:a92:c149:0:b0:338:c685:83d1 with SMTP id b9-20020a92c149000000b00338c68583d1mr2607823ilh.10.1686339225462;
+        Fri, 09 Jun 2023 12:33:45 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id i8-20020a056e02054800b003248469e5easm1264744ils.43.2023.06.09.12.33.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 12:33:44 -0700 (PDT)
+Received: (nullmailer pid 1963853 invoked by uid 1000);
+        Fri, 09 Jun 2023 19:33:43 -0000
+From:   Rob Herring <robh@kernel.org>
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Broadcom internal kernel review list 
+        <bcm-kernel-feedback-list@broadcom.com>
+Cc:     linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] PCI: iproc: Use of_property_read_bool() for boolean properties
+Date:   Fri,  9 Jun 2023 13:33:25 -0600
+Message-Id: <20230609193326.1963542-1-robh@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-References: <20230609023038.61388-1-zhiren.chen@mediatek.com> <20230609114920.GA1242120@bhelgaas>
-In-Reply-To: <20230609114920.GA1242120@bhelgaas>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 9 Jun 2023 19:58:13 +0200
-Message-ID: <CAJZ5v0iiAGGuzjT1-ZmCaUT9CH4uXaDG9XQ1QmKbp-bnCjEF6w@mail.gmail.com>
-Subject: Re: [PATCH] PCI:PM: Support platforms that do not implement ACPI
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Zhiren Chen <zhiren.chen@mediatek.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
-        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 9, 2023 at 1:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> [+cc Rafael, linux-pm]
->
-> On Fri, Jun 09, 2023 at 10:30:38AM +0800, Zhiren Chen wrote:
-> > From: Zhiren Chen <Zhiren.Chen@mediatek.com>
-> >
-> > The platform_pci_choose_state function and other low-level platform
-> > interfaces used by PCI power management processing did not take into
-> > account non-ACPI-supported platforms. This shortcoming can result in
-> > limitations and issues.
-> >
-> > For example, in embedded systems like smartphones, a PCI device can be
-> > shared by multiple processors for different purposes. The PCI device and
-> > some of the processors are controlled by Linux, while the rest of the
-> > processors runs its own operating system.
-> > When Linux initiates system-level sleep, if it does not consider the
-> > working state of the shared PCI device and forcefully sets the PCI device
-> > state to D3, it will affect the functionality of other processors that
-> > are currently using the PCI device.
-> >
-> > To address this problem, an interface should be created for PCI devices
-> > that don't support ACPI to enable accurate reporting of the power state
-> > during the PCI PM handling process.
-> >
-> > Signed-off-by: Zhiren Chen <Zhiren.Chen@mediatek.com>
+It is preferred to use typed property access functions (i.e.
+of_property_read_<type> functions) rather than low-level
+of_get_property/of_find_property functions for reading properties.
+Convert reading boolean properties to of_property_read_bool().
 
-Something like the pci_platform_pm_ops introduced here had been there
-for several years and the only users of it known to me were ACPI and
-Intel MID, which is why it was dropped.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+v2:
+ - Commit msg: s/to to/to/
+---
+ drivers/pci/controller/pcie-iproc-msi.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-I would like to see the platform code using these new callbacks in the
-first place.
+diff --git a/drivers/pci/controller/pcie-iproc-msi.c b/drivers/pci/controller/pcie-iproc-msi.c
+index fee036b07cd4..649fcb449f34 100644
+--- a/drivers/pci/controller/pcie-iproc-msi.c
++++ b/drivers/pci/controller/pcie-iproc-msi.c
+@@ -525,7 +525,7 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
+ 	if (!of_device_is_compatible(node, "brcm,iproc-msi"))
+ 		return -ENODEV;
+ 
+-	if (!of_find_property(node, "msi-controller", NULL))
++	if (!of_property_read_bool(node, "msi-controller"))
+ 		return -ENODEV;
+ 
+ 	if (pcie->msi)
+@@ -585,8 +585,7 @@ int iproc_msi_init(struct iproc_pcie *pcie, struct device_node *node)
+ 		return -EINVAL;
+ 	}
+ 
+-	if (of_find_property(node, "brcm,pcie-msi-inten", NULL))
+-		msi->has_inten_reg = true;
++	msi->has_inten_reg = of_property_read_bool(node, "brcm,pcie-msi-inten");
+ 
+ 	msi->nr_msi_vecs = msi->nr_irqs * EQ_LEN;
+ 	msi->bitmap = devm_bitmap_zalloc(pcie->dev, msi->nr_msi_vecs,
+-- 
+2.39.2
 
-> > ---
-> >  drivers/pci/pci.c   | 24 ++++++++++++++++++++++++
-> >  drivers/pci/pci.h   | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/pci.h |  1 +
-> >  3 files changed, 65 insertions(+)
-> >
-> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > index 5ede93222bc1..9f03406f3081 100644
-> > --- a/drivers/pci/pci.c
-> > +++ b/drivers/pci/pci.c
-> > @@ -1014,6 +1014,9 @@ static void pci_restore_bars(struct pci_dev *dev)
-> >
-> >  static inline bool platform_pci_power_manageable(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->is_manageable)
-> > +             return dev->platform_pm_ops->is_manageable(dev);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return true;
-> >
-> > @@ -1023,6 +1026,9 @@ static inline bool platform_pci_power_manageable(struct pci_dev *dev)
-> >  static inline int platform_pci_set_power_state(struct pci_dev *dev,
-> >                                              pci_power_t t)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->set_state)
-> > +             return dev->platform_pm_ops->set_state(dev, t);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return mid_pci_set_power_state(dev, t);
-> >
-> > @@ -1031,6 +1037,9 @@ static inline int platform_pci_set_power_state(struct pci_dev *dev,
-> >
-> >  static inline pci_power_t platform_pci_get_power_state(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->get_state)
-> > +             return dev->platform_pm_ops->get_state(dev);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return mid_pci_get_power_state(dev);
-> >
-> > @@ -1039,12 +1048,18 @@ static inline pci_power_t platform_pci_get_power_state(struct pci_dev *dev)
-> >
-> >  static inline void platform_pci_refresh_power_state(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->refresh_state)
-> > +             dev->platform_pm_ops->refresh_state(dev);
-> > +
-> >       if (!pci_use_mid_pm())
-> >               acpi_pci_refresh_power_state(dev);
-> >  }
-> >
-> >  static inline pci_power_t platform_pci_choose_state(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->choose_state)
-> > +             return dev->platform_pm_ops->choose_state(dev);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return PCI_POWER_ERROR;
-> >
-> > @@ -1053,6 +1068,9 @@ static inline pci_power_t platform_pci_choose_state(struct pci_dev *dev)
-> >
-> >  static inline int platform_pci_set_wakeup(struct pci_dev *dev, bool enable)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->set_wakeup)
-> > +             return dev->platform_pm_ops->set_wakeup(dev, enable);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return PCI_POWER_ERROR;
-> >
-> > @@ -1061,6 +1079,9 @@ static inline int platform_pci_set_wakeup(struct pci_dev *dev, bool enable)
-> >
-> >  static inline bool platform_pci_need_resume(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->need_resume)
-> > +             return dev->platform_pm_ops->need_resume(dev);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return false;
-> >
-> > @@ -1069,6 +1090,9 @@ static inline bool platform_pci_need_resume(struct pci_dev *dev)
-> >
-> >  static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
-> >  {
-> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->bridge_d3)
-> > +             return dev->platform_pm_ops->bridge_d3(dev);
-> > +
-> >       if (pci_use_mid_pm())
-> >               return false;
-> >
-> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> > index 2475098f6518..85154470c083 100644
-> > --- a/drivers/pci/pci.h
-> > +++ b/drivers/pci/pci.h
-> > @@ -71,6 +71,42 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
-> >   */
-> >  #define PCI_RESET_WAIT               1000    /* msec */
-> >
-> > +/**
-> > + * struct pci_platform_pm_ops - Firmware PM callbacks
-> > + *
-> > + * @is_manageable: returns 'true' if given device is power manageable by the
-> > + *                 platform firmware
-> > + *
-> > + * @set_state: invokes the platform firmware to set the device's power state
-> > + *
-> > + * @get_state: queries the platform firmware for a device's current power state
-> > + *
-> > + * @choose_state: returns PCI power state of given device preferred by the
-> > + *                platform; to be used during system-wide transitions from a
-> > + *                sleeping state to the working state and vice versa
-> > + *
-> > + * @set_wakeup: enables/disables wakeup capability for the device
-> > + *
-> > + * @need_resume: returns 'true' if the given device (which is currently
-> > + *           suspended) needs to be resumed to be configured for system
-> > + *           wakeup.
-> > + *
-> > + * @bridge_d3: return 'true' if given device supoorts D3 when it is a bridge
-> > + *
-> > + * @refresh_state: refresh the given device's power state
-> > + *
-> > + */
-> > +struct pci_platform_pm_ops {
-> > +     bool (*is_manageable)(struct pci_dev *dev);
-> > +     int (*set_state)(struct pci_dev *dev, pci_power_t state);
-> > +     pci_power_t (*get_state)(struct pci_dev *dev);
-> > +     pci_power_t (*choose_state)(struct pci_dev *dev);
-> > +     int (*set_wakeup)(struct pci_dev *dev, bool enable);
-> > +     bool (*need_resume)(struct pci_dev *dev);
-> > +     bool (*bridge_d3)(struct pci_dev *dev);
-> > +     void (*refresh_state)(struct pci_dev *dev);
-> > +};
-> > +
-> >  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
-> >  void pci_refresh_power_state(struct pci_dev *dev);
-> >  int pci_power_up(struct pci_dev *dev);
-> > @@ -96,6 +132,10 @@ void pci_bridge_d3_update(struct pci_dev *dev);
-> >  void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
-> >  int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
-> >
-> > +static inline void pci_set_platform_pm(struct pci_dev *dev, struct pci_platform_pm_ops *ops)
-> > +{
-> > +     dev->platform_pm_ops = ops;
-> > +}
-> >  static inline void pci_wakeup_event(struct pci_dev *dev)
-> >  {
-> >       /* Wait 100 ms before the system can be put into a sleep state. */
-> > diff --git a/include/linux/pci.h b/include/linux/pci.h
-> > index 60b8772b5bd4..a0171f1abf2f 100644
-> > --- a/include/linux/pci.h
-> > +++ b/include/linux/pci.h
-> > @@ -327,6 +327,7 @@ struct pci_dev {
-> >       void            *sysdata;       /* Hook for sys-specific extension */
-> >       struct proc_dir_entry *procent; /* Device entry in /proc/bus/pci */
-> >       struct pci_slot *slot;          /* Physical slot this device is in */
-> > +     struct pci_platform_pm_ops *platform_pm_ops;
-> >
-> >       unsigned int    devfn;          /* Encoded device & function index */
-> >       unsigned short  vendor;
-> > --
-> > 2.17.0
-> >
