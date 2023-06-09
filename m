@@ -2,36 +2,36 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 43CA4729F31
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 17:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D512F729F49
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 17:54:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241993AbjFIPuh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 11:50:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
+        id S241464AbjFIPy4 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 11:54:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241974AbjFIPu1 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 11:50:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C703E3C04;
-        Fri,  9 Jun 2023 08:50:22 -0700 (PDT)
+        with ESMTP id S242022AbjFIPyz (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 11:54:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77E243588;
+        Fri,  9 Jun 2023 08:54:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5AC4961C5A;
-        Fri,  9 Jun 2023 15:50:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BFA9C4339C;
-        Fri,  9 Jun 2023 15:50:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B51F65979;
+        Fri,  9 Jun 2023 15:54:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C736EC433D2;
+        Fri,  9 Jun 2023 15:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686325821;
-        bh=5w5b1lGyt+7thZ9+8s+QnKfndAO2UNpN5cwTTuTu32Q=;
+        s=k20201202; t=1686326093;
+        bh=1KbUY9Vhu1+io8eQ+reBgIq79Aw5VJ2eBzvHDIF9phA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EjK7sByqsGckkLQFc7E/3JROzrZQiLaTvcNflvXp6OVgMV8jCoubAaSupY83Ro+/r
-         5OECz/IWXRVlJ+AhWqJRoHIzlf1VH3Fz79rYtmqO0ECU0JB2JmK34JKgaS5HgDz62a
-         KSDcWOv1MV4lPBFzv5L7+JieO7HkPJo7gwG1qg/7oGntHL936Xvdu7MDTaxfiQ0Gj9
-         s1T+rkj5iT5B9il0b28NXaZCUnZIU28FBqJGKJfuAmkpmciNQBHh591JIoDtzquq0/
-         vJksFdS+pkfuCj3P/rBemODykSzsJQ2MTzNuuoyPoWe8uK5Mcarl5DXIMWpeB7jJ2W
-         i4Vpp8HSaUeXg==
-Date:   Fri, 9 Jun 2023 21:20:13 +0530
+        b=C/j8+h4oq5sEEG/ginRUITJm1K7uHXN6Pr7N97iBaWJc3ORNykAdwuJ47DFoBSsQU
+         8elMTo/vLp4UxXehHJdeBRpA4h68R16zlE8FDztbfZT97+lSKcH6UuXwAgCkmrixEM
+         WLEZV1fIJ4u9x9WcaZ8bUsYrHzcjSq4zkthPwYMTgl6vGtu2NjbcMQkrtLfRaeSxjn
+         8gfc6+fKEKjNEKCe7FBoKfz/4mc69O8ObJp8sDBhIVsjXAfFiGmtMIB8hSVB2EDC8G
+         vPzS6eZJx+JViWlsLxfLp9MXDI3AooLQ7XI6yCaP1DN2oTIlaHIqnZKXa04/kdpX7M
+         c1SxXWPK537qA==
+Date:   Fri, 9 Jun 2023 21:24:44 +0530
 From:   Manivannan Sadhasivam <mani@kernel.org>
 To:     Dan Carpenter <dan.carpenter@linaro.org>
 Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
@@ -41,17 +41,17 @@ Cc:     Lorenzo Pieralisi <lpieralisi@kernel.org>,
         Damien Le Moal <dlemoal@kernel.org>, mhi@lists.linux.dev,
         linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
         kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH 1/2] PCI: endpoint: Check correct variable in
- __pci_epf_mhi_alloc_map()
-Message-ID: <20230609155013.GD6847@thinkpad>
+Subject: Re: [PATCH 2/2] PCI: endpoint: Fix an IS_ERR() vs NULL bug
+Message-ID: <20230609155444.GE6847@thinkpad>
 References: <258e8de1-abff-4024-89e0-1c8df761d790@moroto.mountain>
+ <ca14e566-d9b7-471d-b738-56dd697b1417@moroto.mountain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <258e8de1-abff-4024-89e0-1c8df761d790@moroto.mountain>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+In-Reply-To: <ca14e566-d9b7-471d-b738-56dd697b1417@moroto.mountain>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -60,9 +60,9 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 01:49:33PM +0300, Dan Carpenter wrote:
-> This was intended to check "*vaddr" instead of "vaddr" (without an
-> asterisk).
+On Fri, Jun 09, 2023 at 01:50:09PM +0300, Dan Carpenter wrote:
+> The ioremap() function does not return error pointers, it returns NULL
+> on error.
 > 
 > Fixes: 7db424a84d96 ("PCI: endpoint: Add PCI Endpoint function driver for MHI bus")
 > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
@@ -72,22 +72,24 @@ Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
 - Mani
 
 > ---
->  drivers/pci/endpoint/functions/pci-epf-mhi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/pci/endpoint/functions/pci-epf-mhi.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/pci/endpoint/functions/pci-epf-mhi.c b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> index 1227f059ea12..e7d64b9d12ff 100644
+> index e7d64b9d12ff..b45db923306b 100644
 > --- a/drivers/pci/endpoint/functions/pci-epf-mhi.c
 > +++ b/drivers/pci/endpoint/functions/pci-epf-mhi.c
-> @@ -112,7 +112,7 @@ static int __pci_epf_mhi_alloc_map(struct mhi_ep_cntrl *mhi_cntrl, u64 pci_addr,
->  	int ret;
+> @@ -354,8 +354,8 @@ static int pci_epf_mhi_bind(struct pci_epf *epf)
+>  	epf_mhi->mmio_size = resource_size(res);
 >  
->  	*vaddr = pci_epc_mem_alloc_addr(epc, paddr, size + offset);
-> -	if (!vaddr)
-> +	if (!*vaddr)
->  		return -ENOMEM;
+>  	epf_mhi->mmio = ioremap(epf_mhi->mmio_phys, epf_mhi->mmio_size);
+> -	if (IS_ERR(epf_mhi->mmio))
+> -		return PTR_ERR(epf_mhi->mmio);
+> +	if (!epf_mhi->mmio)
+> +		return -ENOMEM;
 >  
->  	ret = pci_epc_map_addr(epc, epf->func_no, epf->vfunc_no, *paddr,
+>  	ret = platform_get_irq_byname(pdev, "doorbell");
+>  	if (ret < 0) {
 > -- 
 > 2.39.2
 > 
