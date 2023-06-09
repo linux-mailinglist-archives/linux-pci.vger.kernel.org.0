@@ -2,236 +2,140 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5091672A024
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 18:26:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C207972A095
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 18:49:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjFIQ0g (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 12:26:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39806 "EHLO
+        id S229969AbjFIQtD (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 12:49:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241801AbjFIQ0f (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 12:26:35 -0400
-Received: from mail-yb1-xb36.google.com (mail-yb1-xb36.google.com [IPv6:2607:f8b0:4864:20::b36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D288A3A91
-        for <linux-pci@vger.kernel.org>; Fri,  9 Jun 2023 09:26:32 -0700 (PDT)
-Received: by mail-yb1-xb36.google.com with SMTP id 3f1490d57ef6-bab8f66d3a2so1864707276.3
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jun 2023 09:26:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686327992; x=1688919992;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=kqmhgD0hzidkR7C4FG6ZaFcEzUFu8WFVvYV0gu30B4c=;
-        b=TpWGhj1go0f01Ili2y+lD2+R5W+Ad0HWc0ntIU994go70wqgsYE0Nbjoy5+25gjpdJ
-         HJWknYHWr5y/y7G73iIQZJ269NJ5e+84rcAcqX1VcSRYzXElE4lla3v4fDh90QKT5KL0
-         RrQs/yyErk3CZk0hVzl5gQhjpIwcbhGkMHipsQD9Qv7u4s36a8Zia4FXm+2aT74BFrP2
-         2V9mJrNVml0Kx+4g9wvMLhOjEJ+l9M2EGg/kgjmhGyFGZrPgCYYlxTODB/LfD1TRBVjp
-         R7QBMcLmvwCTJKQ/n3nzOjV9xqAWK8W+/Z4AgCUrGslkw7rOK6gp2v8PR7N90DjzBUiq
-         f3rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686327992; x=1688919992;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kqmhgD0hzidkR7C4FG6ZaFcEzUFu8WFVvYV0gu30B4c=;
-        b=EbPT1GVr6bMXeL4A1CUA+ta/ZY2DyGMPNZBlqetnt/LRt8G5B4+LdFMgiB7mSqS/ye
-         6Cub1WkLMZKPROWpe8zVQ7zNJu7pjnpRXl1V6O2wIr3kaTREMewt6Ezso1y0H14TtwVR
-         HAdib5rM+Nn6udi4okcwrBDT5e1hNL9O2oh8WkmcuYWj5GPmH0TkxZCyAu9MZnqHS7Vm
-         s+b1ds6qEMF3NsaAAZXdYASt2rdLbN2yYwksW+6ohwHAyAKSIcLJt+oQoKf48W+j3i15
-         TA4NEFpk5WoCPWRD9ErvW5LvTLXE0aw6kPZoUHWVWdJThTHRio2ln+R6C4Icg7Ul2Icl
-         WPGg==
-X-Gm-Message-State: AC+VfDxz3SsFU+S4bQixBd48U76XFvMP8bs1mp9WPlqNAnIwP8FcBbuN
-        ldsB3bfVETgJNU4/x/6gq5+J7HOYc7gIOK53upGNRg==
-X-Google-Smtp-Source: ACHHUZ7lgaJdipRWewn4T/8Urmy4/1Lpe4YcOBI9261oG/aAVvlcVZ2sljI+94p6NxKfmsTVf8Wn8Euzot46J05NHs4=
-X-Received: by 2002:a81:838c:0:b0:561:c9c1:ce with SMTP id t134-20020a81838c000000b00561c9c100cemr1775388ywf.8.1686327991956;
- Fri, 09 Jun 2023 09:26:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <1686311249-6857-1-git-send-email-quic_krichai@quicinc.com> <1686311249-6857-4-git-send-email-quic_krichai@quicinc.com>
-In-Reply-To: <1686311249-6857-4-git-send-email-quic_krichai@quicinc.com>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date:   Fri, 9 Jun 2023 19:26:21 +0300
-Message-ID: <CAA8EJppPt8utWbF83dqMD4y2Of2ufwcpSPvdTyoDndkrbnZm3Q@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] PCI: qcom-ep: Add ICC bandwidth voting support
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
-Cc:     manivannan.sadhasivam@linaro.org, quic_vbadigan@quicinc.com,
-        quic_ramkri@quicinc.com, linux-arm-msm@vger.kernel.org,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
+        with ESMTP id S229956AbjFIQs7 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 12:48:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C640F3A8C;
+        Fri,  9 Jun 2023 09:48:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58DC665A02;
+        Fri,  9 Jun 2023 16:48:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7117EC433EF;
+        Fri,  9 Jun 2023 16:48:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686329331;
+        bh=wj6ps6y4ft6WvpJQrBdcLusOhuloDy4bHnascQVlTT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=O4xMnvyru9ylkQLSbinraMlwoqqoCRzqiohujByEGtJFDGMM2+bIqDUl5eHnyQxXo
+         rY6Jt+s9J9b2BJMm3LdqlppNkZafwg1ABQk0do5vWtrwv0HjpULglS2SDN2D6aMymp
+         CWxzgfiCmay+hbv7MVTWZ0mdVEp8uqGYXaqtxKSQkL5P7BHI2KgvO4BKLhYRuItyUe
+         b1MGXu2c7L7tT5+p5OajerVERb9IENBTZBVZNst9tkM+K3jNo95v+iyFA8Z0Q9QZCe
+         4IkGGUvPbx+9E+dUiQyq/RGdROHaFJmb7Ilr8VJ8sFWFpVVNEi3FletAovP7YIwJSa
+         +jJM45seUVXUw==
+Date:   Fri, 9 Jun 2023 11:48:50 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Sui Jingfeng <15330273260@189.cn>,
+        Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        nouveau@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, YiPeng Chai <YiPeng.Chai@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        intel-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        loongson-kernel@lists.loongnix.cn,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
-        <linux-pci@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Yishai Hadas <yishaih@nvidia.com>, Li Yi <liyi@loongson.cn>,
+        Pan Xinhui <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+Subject: Re: [Intel-gfx] [PATCH v3 4/4] PCI/VGA: introduce is_boot_device
+ function callback to vga_client_register
+Message-ID: <20230609164850.GA1251187@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d2ba099-9817-13be-c85b-997211443119@loongson.cn>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, 9 Jun 2023 at 14:47, Krishna chaitanya chundru
-<quic_krichai@quicinc.com> wrote:
->
-> Add support to vote for ICC bandwidth based on the link speed and width.
->
-> This patch is inspired from pcie-qcom driver to add basic interconnect
-> support.
->
-> Link: https://lore.kernel.org/all/20221102090705.23634-1-johan+linaro@kernel.org/
+On Fri, Jun 09, 2023 at 10:27:39AM +0800, Sui Jingfeng wrote:
+> On 2023/6/9 03:19, Bjorn Helgaas wrote:
+> > On Thu, Jun 08, 2023 at 07:43:22PM +0800, Sui Jingfeng wrote:
+> > > From: Sui Jingfeng <suijingfeng@loongson.cn>
+> > > 
+> > > The vga_is_firmware_default() function is arch-dependent, which doesn't
+> > > sound right. At least, it also works on the Mips and LoongArch platforms.
+> > > Tested with the drm/amdgpu and drm/radeon drivers. However, it's difficult
+> > > to enumerate all arch-driver combinations. I'm wrong if there is only one
+> > > exception.
+> > > 
+> > > With the observation that device drivers typically have better knowledge
+> > > about which PCI bar contains the firmware framebuffer, which could avoid
+> > > the need to iterate all of the PCI BARs.
+> > > 
+> > > But as a PCI function at pci/vgaarb.c, vga_is_firmware_default() is
+> > > probably not suitable to make such an optimization for a specific device.
+> > > 
+> > > There are PCI display controllers that don't have a dedicated VRAM bar,
+> > > this function will lose its effectiveness in such a case. Luckily, the
+> > > device driver can provide an accurate workaround.
+> > > 
+> > > Therefore, this patch introduces a callback that allows the device driver
+> > > to tell the VGAARB if the device is the default boot device. This patch
+> > > only intends to introduce the mechanism, while the implementation is left
+> > > to the device driver authors. Also honor the comment: "Clients have two
+> > > callback mechanisms they can use"
+> > s/bar/BAR/ (several)
+> > 
+> > Nothing here uses the callback.  I don't want to merge this until we
+> > have a user.
+> 
+> This is chicken and egg question.
+> 
+> If you could help get this merge first, I will show you the first user.
+> 
+> > I'm not sure why the device driver should know whether its device is
+> > the default boot device.
+> 
+> It's not that the device driver should know,
+> 
+> but it's about that the device driver has the right to override.
+> 
+> Device driver may have better approach to identify the default boot
+> device.
 
-This link should be a part of the cover letter, not the commit msg. If
-you want to refer to the previous commits, please use the standard
-reference: commit abcdefabc ("PCI: qcom: Make foo and bar").
+The way we usually handle this is to include the new callback in the
+same series as the first user of it.  That has two benefits:
+(1) everybody can review the whole picture and possibly suggest
+different approaches, and (2) when we merge the infrastructure,
+we also merge a user of it at the same time, so the whole thing can be
+tested and we don't end up with unused code.
 
-> Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom-ep.c | 68 +++++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom-ep.c b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> index 19b3283..baf831f 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom-ep.c
-> @@ -13,6 +13,7 @@
->  #include <linux/debugfs.h>
->  #include <linux/delay.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/interconnect.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/phy/pcie.h>
->  #include <linux/phy/phy.h>
-> @@ -28,6 +29,7 @@
->  #define PARF_SYS_CTRL                          0x00
->  #define PARF_DB_CTRL                           0x10
->  #define PARF_PM_CTRL                           0x20
-> +#define PARF_PM_STTS                           0x24
->  #define PARF_MHI_CLOCK_RESET_CTRL              0x174
->  #define PARF_MHI_BASE_ADDR_LOWER               0x178
->  #define PARF_MHI_BASE_ADDR_UPPER               0x17c
-> @@ -128,6 +130,9 @@
->  /* DBI register fields */
->  #define DBI_CON_STATUS_POWER_STATE_MASK                GENMASK(1, 0)
->
-> +#define DBI_LINKCTRLSTATUS                     0x80
-> +#define DBI_LINKCTRLSTATUS_SHIFT               16
-> +
->  #define XMLH_LINK_UP                           0x400
->  #define CORE_RESET_TIME_US_MIN                 1000
->  #define CORE_RESET_TIME_US_MAX                 1005
-> @@ -178,6 +183,8 @@ struct qcom_pcie_ep {
->         struct phy *phy;
->         struct dentry *debugfs;
->
-> +       struct icc_path *icc_mem;
-> +
->         struct clk_bulk_data *clks;
->         int num_clks;
->
-> @@ -253,9 +260,51 @@ static void qcom_pcie_dw_stop_link(struct dw_pcie *pci)
->         disable_irq(pcie_ep->perst_irq);
->  }
->
-> +static void qcom_pcie_ep_icc_update(struct qcom_pcie_ep *pcie_ep)
-> +{
-> +       struct dw_pcie *pci = &pcie_ep->pci;
-> +       u32 offset, status, bw;
-> +       int speed, width;
-> +       int ret;
-> +
-> +       if (!pcie_ep->icc_mem)
-> +               return;
-> +
-> +       offset = dw_pcie_find_capability(pci, PCI_CAP_ID_EXP);
-> +       status = readw(pci->dbi_base + offset + PCI_EXP_LNKSTA);
-> +
-> +       speed = FIELD_GET(PCI_EXP_LNKSTA_CLS, status);
-> +       width = FIELD_GET(PCI_EXP_LNKSTA_NLW, status);
-> +
-> +       switch (speed) {
-> +       case 1:
-> +               bw = MBps_to_icc(250);  /* BW for GEN1 per lane: 250MBps */
-
-Please extract these constants to the defines. This would save you
-from duplicating 250 below.
-
-> +               break;
-> +       case 2:
-> +               bw = MBps_to_icc(500);  /* BW for GEN2 per lane: 500MBps */
-> +               break;
-> +       case 3:
-> +               bw = MBps_to_icc(985);  /* BW for GEN3 per lane: 985MBps */
-> +               break;
-> +       default:
-> +               WARN_ON_ONCE(1);
-> +               fallthrough;
-> +       case 4:
-> +               bw = MBps_to_icc(1969); /* BW for GEN4 per lane:1969MBps */
-> +               break;
-> +       }
-> +
-> +       ret = icc_set_bw(pcie_ep->icc_mem, 0, width * bw);
-> +       if (ret) {
-> +               dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +                       ret);
-> +       }
-> +}
-> +
->  static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->  {
->         int ret;
-> +       struct dw_pcie *pci = &pcie_ep->pci;
->
->         ret = clk_bulk_prepare_enable(pcie_ep->num_clks, pcie_ep->clks);
->         if (ret)
-> @@ -277,6 +326,20 @@ static int qcom_pcie_enable_resources(struct qcom_pcie_ep *pcie_ep)
->         if (ret)
->                 goto err_phy_exit;
->
-> +       /*
-> +        * Some Qualcomm platforms require interconnect bandwidth constraints
-> +        * to be set before enabling interconnect clocks.
-> +        *
-> +        * Set an initial average bandwidth corresponding to GEN1x1(250 MBps)
-> +        * for the pcie to mem path.
-> +        */
-> +       ret = icc_set_bw(pcie_ep->icc_mem, 0, MBps_to_icc(250));
-> +       if (ret) {
-> +               dev_err(pci->dev, "failed to set interconnect bandwidth: %d\n",
-> +                       ret);
-> +               goto err_phy_exit;
-> +       }
-> +
->         return 0;
->
->  err_phy_exit:
-> @@ -550,6 +613,10 @@ static int qcom_pcie_ep_get_resources(struct platform_device *pdev,
->         if (IS_ERR(pcie_ep->phy))
->                 ret = PTR_ERR(pcie_ep->phy);
->
-> +       pcie_ep->icc_mem = devm_of_icc_get(dev, "pcie-mem");
-> +       if (IS_ERR(pcie_ep->icc_mem))
-> +               ret = PTR_ERR(pcie_ep->icc_mem);
-> +
->         return ret;
->  }
->
-> @@ -572,6 +639,7 @@ static irqreturn_t qcom_pcie_ep_global_irq_thread(int irq, void *data)
->         } else if (FIELD_GET(PARF_INT_ALL_BME, status)) {
->                 dev_dbg(dev, "Received BME event. Link is enabled!\n");
->                 pcie_ep->link_status = QCOM_PCIE_EP_LINK_ENABLED;
-> +               qcom_pcie_ep_icc_update(pcie_ep);
->         } else if (FIELD_GET(PARF_INT_ALL_PM_TURNOFF, status)) {
->                 dev_dbg(dev, "Received PM Turn-off event! Entering L23\n");
->                 val = readl_relaxed(pcie_ep->parf + PARF_PM_CTRL);
-> --
-> 2.7.4
->
-
-
--- 
-With best wishes
-Dmitry
+Bjorn
