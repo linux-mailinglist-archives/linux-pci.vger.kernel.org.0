@@ -2,87 +2,73 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 20C80729A2C
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 14:41:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38D90729B31
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 15:13:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240549AbjFIMlR (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 08:41:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47714 "EHLO
+        id S231863AbjFINNG (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 09:13:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37292 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238158AbjFIMlQ (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 08:41:16 -0400
-Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E7FE1BC6
-        for <linux-pci@vger.kernel.org>; Fri,  9 Jun 2023 05:41:14 -0700 (PDT)
-Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2b1badb8f9bso18951471fa.1
-        for <linux-pci@vger.kernel.org>; Fri, 09 Jun 2023 05:41:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686314473; x=1688906473;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yAbk5K5T7EimIImnFE4kZxayLfuVA86dV2h+g48YHm8=;
-        b=wYw/zG/6yf5TloEjQGKFZj4Xmm78ziBJ1uCXesppIT9VereP2CeQ+Jl5ahKzJiuJ7e
-         wBCZJ6w3DndVFgC2/MOBy5vHDR5/1twEMEIJbE9lKTna8lfU1amPfGDyMuxaLkbEpitk
-         v9Xe+zJ5RMHzg+PjcopKrgDb0d7yTPKp+aMLus50vu3awc+DV7+03xfg3tWGIMgBfqwt
-         5CyiymjCZPixxbPNSMx1gMPz2c9Sgc9yrspj/q/Qz1ZRZzpeH20Gp2M3gWkhKjXs4hhP
-         Gx5FCWvroU7gyXvEAv4t1CmAl8LovyGl0lUJGi2KCaLlONNHUjTuXVfpKqWaUS0nBVmY
-         f32w==
+        with ESMTP id S230305AbjFINNF (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 09:13:05 -0400
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3D7E132;
+        Fri,  9 Jun 2023 06:13:04 -0700 (PDT)
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-33be5dbb90cso7462645ab.0;
+        Fri, 09 Jun 2023 06:13:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686314473; x=1688906473;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yAbk5K5T7EimIImnFE4kZxayLfuVA86dV2h+g48YHm8=;
-        b=YeuEkwZWgXGVRIa8WG2NT4GMm+akE7fe90IP7EvvjHZ3VQ73yNMCsCsHw8Z1Gn4Mo/
-         HZe8JFB4jOI7l9Rz25b0jHBijO+6sT7yfcCMIutBZt0n3rJVmx08+/j3azlXdU7l+d8C
-         T3H16iHi39pw2eV7lAJ0pHT88n5EpoS1iizmud0ArCRkaPwqQVufZnL+WCaMP9e3GaYc
-         zEsWxapii8IHEz7x3wriX6cyuYX/lV1VlP/3sOqI9ANIw7+qu/gI1WpdFbo/nBudZCbI
-         W2l/IRy8pT7oULHNr3MAeYQdjjFIKt+nROuUNZEtcj288Sv3RIXUg99K4KzYJGQ30o0t
-         5AEQ==
-X-Gm-Message-State: AC+VfDwkIiMU7ZCpTK9YatViznyRqN6E6jdKPs8Lq19lx+tEL3ZcrMS1
-        UND5q3a6Z0v+JdCApzYk7v93/Q==
-X-Google-Smtp-Source: ACHHUZ5okdIhfZ1lUdCz754l/opk34vtezEoVF1Q6tWPVmnYuJJTAEO+2ROflh8eu+31rfndM/6GOg==
-X-Received: by 2002:a2e:b0e7:0:b0:2af:1844:6fdb with SMTP id h7-20020a2eb0e7000000b002af18446fdbmr907329ljl.5.1686314472624;
-        Fri, 09 Jun 2023 05:41:12 -0700 (PDT)
-Received: from [192.168.1.101] (abyj190.neoplus.adsl.tpnet.pl. [83.9.29.190])
-        by smtp.gmail.com with ESMTPSA id d7-20020a2e96c7000000b002b1ad0e7357sm379857ljj.51.2023.06.09.05.41.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 05:41:12 -0700 (PDT)
-Message-ID: <dbb847c4-1043-081b-f28b-ea57fe5cad2d@linaro.org>
-Date:   Fri, 9 Jun 2023 14:41:10 +0200
+        d=1e100.net; s=20221208; t=1686316384; x=1688908384;
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=M9D35kaOS2C39e0x3xanvuuHggxbq1FnGkrcYzbCLtU=;
+        b=WzG6EWqQUviK0Lgqsexec2C/Fo1Hd59OLpbqa/3tXUBVQQwRctzGR3F8wC1B2hdTwd
+         0+Vfe/vcpS5fgadaTT4xsvIVIqkQUYNtrstjqvZ6oYLdmhheVU9Ou8Kw+QDJZPf+HcJx
+         ynvh9XiY1+k/ZJwvocenrIT6Ii0/5zsGRn6VmjZDd/eD4QIgzcUjzO82MhDqLi7TFg2Y
+         EIN6NuPEZ9Uq7DuigfL32acnzrGIyL1ZHHXX85WSqrqQrDi7jIZRcrWCopIkEC6oyIGN
+         18IuPTsyauQExZlUeLsJBYkhfkY5/1FO/TPh4J5NEz0qTobizh/rpjQTaaFKjxoeyEei
+         j1qw==
+X-Gm-Message-State: AC+VfDw3gK/ZwoDsmitBujmfSku7g0WZeD6yNZc8OoOJ6OnMDRAjo/BO
+        kPnbOK0a2zPZWZNCXQ8t+A==
+X-Google-Smtp-Source: ACHHUZ5j0wP0elCI9OCxxC/oYXvqyZN73d9plY1jTIgztDBrNxHCN2RK5U+QxwWY+4Ul4XsgZoOnag==
+X-Received: by 2002:a92:ddcf:0:b0:335:38b:e734 with SMTP id d15-20020a92ddcf000000b00335038be734mr1479493ilr.28.1686316383875;
+        Fri, 09 Jun 2023 06:13:03 -0700 (PDT)
+Received: from robh_at_kernel.org ([64.188.179.250])
+        by smtp.gmail.com with ESMTPSA id z6-20020a92d186000000b0033d2eba1800sm1086619ilz.15.2023.06.09.06.13.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 06:13:02 -0700 (PDT)
+Received: (nullmailer pid 662840 invoked by uid 1000);
+        Fri, 09 Jun 2023 13:13:00 -0000
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.2
-Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: ep: Add interconnects path
-Content-Language: en-US
-To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>,
-        manivannan.sadhasivam@linaro.org
-Cc:     quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+From:   Rob Herring <robh@kernel.org>
+To:     Krishna chaitanya chundru <quic_krichai@quicinc.com>
+Cc:     Konrad Dybcio <konrad.dybcio@linaro.org>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
         Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "open list:PCIE ENDPOINT DRIVER FOR QUALCOMM" 
-        <linux-pci@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
+        manivannan.sadhasivam@linaro.org,
+        =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+        quic_vbadigan@quicinc.com, quic_ramkri@quicinc.com,
+        Bjorn Andersson <andersson@kernel.org>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        devicetree@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+In-Reply-To: <1686311249-6857-2-git-send-email-quic_krichai@quicinc.com>
 References: <1686311249-6857-1-git-send-email-quic_krichai@quicinc.com>
  <1686311249-6857-2-git-send-email-quic_krichai@quicinc.com>
-From:   Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <1686311249-6857-2-git-send-email-quic_krichai@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-2.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_NONE,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=unavailable autolearn_force=no version=3.4.6
+Message-Id: <168631638078.662811.2470035951687478762.robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: PCI: qcom: ep: Add interconnects
+ path
+Date:   Fri, 09 Jun 2023 07:13:00 -0600
+X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
@@ -90,8 +76,7 @@ List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
 
-
-On 9.06.2023 13:47, Krishna chaitanya chundru wrote:
+On Fri, 09 Jun 2023 17:17:26 +0530, Krishna chaitanya chundru wrote:
 > Some platforms may not boot if a device driver doesn't initialize
 > the interconnect path. Mostly it is handled by the bootloader but
 > we have starting to see cases where bootloader simply ignores them.
@@ -101,51 +86,39 @@ On 9.06.2023 13:47, Krishna chaitanya chundru wrote:
 > 
 > Signed-off-by: Krishna chaitanya chundru <quic_krichai@quicinc.com>
 > ---
-Hi, only patches 1 and 2 made it to both me and linux-arm-msm.
-
-Consider using b4 (https://b4.docs.kernel.org/en/latest/index.html) to
-avoid this.
-
 >  Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml | 11 +++++++++++
 >  1 file changed, 11 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> index b3c22eb..656e362 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml
-> @@ -70,6 +70,13 @@ properties:
->      description: GPIO used as WAKE# output signal
->      maxItems: 1
->  
-> +  interconnects:
-> +    maxItems: 1
-> +
-> +  interconnect-names:
-> +    items:
-> +      - const: pcie-mem
-> +
->    resets:
->      maxItems: 1
->  
-> @@ -97,6 +104,8 @@ required:
->    - interrupts
->    - interrupt-names
->    - reset-gpios
-> +  - interconnects
-> +  - interconnect-names
->    - resets
->    - reset-names
->    - power-domains
-> @@ -194,6 +203,8 @@ examples:
->          interrupt-names = "global", "doorbell";
->          reset-gpios = <&tlmm 57 GPIO_ACTIVE_LOW>;
->          wake-gpios = <&tlmm 53 GPIO_ACTIVE_LOW>;
-> +	interconnects = <&system_noc MASTER_PCIE_0 &mc_virt SLAVE_EBI1>;
-> +	interconnect-names = "pci-mem";
-The indentation is off and my brain compiler says that it will not compile
-without including some headers.
 
-Konrad
->          resets = <&gcc GCC_PCIE_BCR>;
->          reset-names = "core";
->          power-domains = <&gcc PCIE_GDSC>;
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: [error] syntax error: found character '\t' that cannot start any token (syntax)
+
+dtschema/dtc warnings/errors:
+make[1]: *** Deleting file 'Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts'
+Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: found a tab character where an indentation space is expected
+make[1]: *** [Documentation/devicetree/bindings/Makefile:26: Documentation/devicetree/bindings/pci/qcom,pcie-ep.example.dts] Error 1
+make[1]: *** Waiting for unfinished jobs....
+./Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml:206:1: found a tab character where an indentation space is expected
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/pci/qcom,pcie-ep.yaml: ignoring, error parsing file
+make: *** [Makefile:1512: dt_binding_check] Error 2
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/1686311249-6857-2-git-send-email-quic_krichai@quicinc.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
