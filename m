@@ -2,163 +2,152 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 7985072A163
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 19:39:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD28172A180
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 19:43:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229574AbjFIRjp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 13:39:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46684 "EHLO
+        id S229644AbjFIRnz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 13:43:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229537AbjFIRjp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 13:39:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17331B5;
-        Fri,  9 Jun 2023 10:39:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A041665A69;
-        Fri,  9 Jun 2023 17:39:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FC02C433D2;
-        Fri,  9 Jun 2023 17:39:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686332383;
-        bh=BjBmi5dvVDfL4eANifiLaJ+b0e1ynq0rCl7TNY5H4N0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Z8kWRYHlLhrnNe4Jk1duaUAYu2RvNE9vnJfWWl7S84jq3lSfVChTV8WfIhWZXAa4h
-         B5xcBvwP9ZGSnznI8aU4SoG69k5uK92JLJSHujMBLukkKgYPbQ226cX70cYHwhJc5c
-         fjlmJtrZBknwi53/WPaDSS6Ov3npJs0WK9+v5bYwiuXvJvBuayYUuTmAcRNmsxOkUu
-         FGyKGiDt7+abWdUlQmtBSTHdthAgwMUG8ENTr6WN0xeRMYlXSsj+QcuFYlrxw0cyEj
-         HnHRCZmZypsbQ1trGqquC8cdK0XDtCoRbaDTA+dW+/9Y7WZYFNqnBevXv5DaXaO33C
-         FzL4nvCknUHiw==
-Date:   Fri, 9 Jun 2023 12:39:40 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Siddharth Vadapalli <s-vadapalli@ti.com>
-Cc:     tjoseph@cadence.com, lpieralisi@kernel.org, robh@kernel.org,
-        kw@linux.com, bhelgaas@google.com, nadeem@cadence.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, vigneshr@ti.com, srk@ti.com,
-        nm@ti.com
-Subject: Re: [PATCH v3] PCI: cadence: Fix Gen2 Link Retraining process
-Message-ID: <20230609173940.GA1252506@bhelgaas>
+        with ESMTP id S229503AbjFIRny (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 13:43:54 -0400
+Received: from 189.cn (ptr.189.cn [183.61.185.102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E6B5E35B3;
+        Fri,  9 Jun 2023 10:43:44 -0700 (PDT)
+HMM_SOURCE_IP: 10.64.8.43:47690.1937665454
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-114.242.206.180 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id AEDBE100212;
+        Sat, 10 Jun 2023 01:43:39 +0800 (CST)
+Received: from  ([114.242.206.180])
+        by gateway-151646-dep-75648544bd-7vx9t with ESMTP id 0877e90f4b584cbe94a878d807b39f22 for helgaas@kernel.org;
+        Sat, 10 Jun 2023 01:43:43 CST
+X-Transaction-ID: 0877e90f4b584cbe94a878d807b39f22
+X-Real-From: 15330273260@189.cn
+X-Receive-IP: 114.242.206.180
+X-MEDUSA-Status: 0
+Sender: 15330273260@189.cn
+Message-ID: <2cf50ad0-e4fa-17a3-3e22-7fd8d4a316ed@189.cn>
+Date:   Sat, 10 Jun 2023 01:43:39 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230607091427.852473-1-s-vadapalli@ti.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [Intel-gfx] [PATCH v3 4/4] PCI/VGA: introduce is_boot_device
+ function callback to vga_client_register
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Sui Jingfeng <suijingfeng@loongson.cn>
+Cc:     Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
+        Karol Herbst <kherbst@redhat.com>,
+        nouveau@lists.freedesktop.org,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        dri-devel@lists.freedesktop.org, YiPeng Chai <YiPeng.Chai@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Ville Syrjala <ville.syrjala@linux.intel.com>,
+        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
+        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        intel-gfx@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        loongson-kernel@lists.loongnix.cn,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Abhishek Sahu <abhsahu@nvidia.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
+        Yishai Hadas <yishaih@nvidia.com>, Li Yi <liyi@loongson.cn>,
+        Pan Xinhui <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Hawking Zhang <Hawking.Zhang@amd.com>
+References: <20230609164850.GA1251187@bhelgaas>
+Content-Language: en-US
+From:   Sui Jingfeng <15330273260@189.cn>
+In-Reply-To: <20230609164850.GA1251187@bhelgaas>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
+        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
+        FROM_LOCAL_HEX,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 07, 2023 at 02:44:27PM +0530, Siddharth Vadapalli wrote:
-> The Link Retraining process is initiated to account for the Gen2 defect in
-> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
-> is i2085, documented at:
-> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
-> 
-> The existing workaround implemented for the errata waits for the Data Link
-> initialization to complete and assumes that the link retraining process
-> at the Physical Layer has completed. However, it is possible that the
-> Physical Layer training might be ongoing as indicated by the
-> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
-> 
-> Fix the existing workaround, to ensure that the Physical Layer training
-> has also completed, in addition to the Data Link initialization.
-> 
-> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
-> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
-> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-> ---
-> 
-> Hello,
-> 
-> This patch is based on linux-next tagged next-20230606.
-> 
-> v2:
-> https://lore.kernel.org/r/20230315070800.1615527-1-s-vadapalli@ti.com/
-> Changes since v2:
-> - Merge the cdns_pcie_host_training_complete() function with the
->   cdns_pcie_host_wait_for_link() function, as suggested by Bjorn
->   for the v2 patch.
-> - Add dev_err() to notify when Link Training fails, since this is a
->   fatal error and proceeding from this point will almost always crash
->   the kernel.
-> 
-> v1:
-> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com/
-> Changes since v1:
-> - Collect Reviewed-by tag from Vignesh Raghavendra.
-> - Rebase on next-20230315.
-> 
-> Regards,
-> Siddharth.
-> 
->  .../controller/cadence/pcie-cadence-host.c    | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 940c7dd701d6..70a5f581ff4f 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -12,6 +12,8 @@
->  
->  #include "pcie-cadence.h"
->  
-> +#define LINK_RETRAIN_TIMEOUT HZ
-> +
->  static u64 bar_max_size[] = {
->  	[RP_BAR0] = _ULL(128 * SZ_2G),
->  	[RP_BAR1] = SZ_2G,
-> @@ -80,8 +82,26 @@ static struct pci_ops cdns_pcie_host_ops = {
->  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
->  {
->  	struct device *dev = pcie->dev;
-> +	unsigned long end_jiffies;
-> +	u16 link_status;
->  	int retries;
->  
-> +	/* Wait for link training to complete */
-> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
-> +	do {
-> +		link_status = cdns_pcie_rp_readw(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_LNKSTA);
-> +		if (!(link_status & PCI_EXP_LNKSTA_LT))
-> +			break;
-> +		usleep_range(0, 1000);
-> +	} while (time_before(jiffies, end_jiffies));
-> +
-> +	if (!(link_status & PCI_EXP_LNKSTA_LT)) {
-> +		dev_info(dev, "Link training complete\n");
-> +	} else {
-> +		dev_err(dev, "Fatal! Link training incomplete\n");
-> +		return -ETIMEDOUT;
-> +	}
 
-Can I have a brown paper bag, please?  I totally blew it here, and I'm
-sorry.
+On 2023/6/10 00:48, Bjorn Helgaas wrote:
+> On Fri, Jun 09, 2023 at 10:27:39AM +0800, Sui Jingfeng wrote:
+>> On 2023/6/9 03:19, Bjorn Helgaas wrote:
+>>> On Thu, Jun 08, 2023 at 07:43:22PM +0800, Sui Jingfeng wrote:
+>>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>>>
+>>>> The vga_is_firmware_default() function is arch-dependent, which doesn't
+>>>> sound right. At least, it also works on the Mips and LoongArch platforms.
+>>>> Tested with the drm/amdgpu and drm/radeon drivers. However, it's difficult
+>>>> to enumerate all arch-driver combinations. I'm wrong if there is only one
+>>>> exception.
+>>>>
+>>>> With the observation that device drivers typically have better knowledge
+>>>> about which PCI bar contains the firmware framebuffer, which could avoid
+>>>> the need to iterate all of the PCI BARs.
+>>>>
+>>>> But as a PCI function at pci/vgaarb.c, vga_is_firmware_default() is
+>>>> probably not suitable to make such an optimization for a specific device.
+>>>>
+>>>> There are PCI display controllers that don't have a dedicated VRAM bar,
+>>>> this function will lose its effectiveness in such a case. Luckily, the
+>>>> device driver can provide an accurate workaround.
+>>>>
+>>>> Therefore, this patch introduces a callback that allows the device driver
+>>>> to tell the VGAARB if the device is the default boot device. This patch
+>>>> only intends to introduce the mechanism, while the implementation is left
+>>>> to the device driver authors. Also honor the comment: "Clients have two
+>>>> callback mechanisms they can use"
+>>> s/bar/BAR/ (several)
+>>>
+>>> Nothing here uses the callback.  I don't want to merge this until we
+>>> have a user.
+>> This is chicken and egg question.
+>>
+>> If you could help get this merge first, I will show you the first user.
+>>
+>>> I'm not sure why the device driver should know whether its device is
+>>> the default boot device.
+>> It's not that the device driver should know,
+>>
+>> but it's about that the device driver has the right to override.
+>>
+>> Device driver may have better approach to identify the default boot
+>> device.
+> The way we usually handle this is to include the new callback in the
+> same series as the first user of it.  That has two benefits:
+> (1) everybody can review the whole picture and possibly suggest
+> different approaches, and (2) when we merge the infrastructure,
+> we also merge a user of it at the same time, so the whole thing can be
+> tested and we don't end up with unused code.
 
-You took my advice by combining this with the existing
-cdns_pcie_host_wait_for_link(), but I think my advice was poor because
-(a) now this additional wait is not clearly connected with the
-erratum, and (b) it affects devices that don't have the erratum.
+OK, acceptable
 
-IIUC, this is all part of a workaround for the i2085 erratum.  The
-original workaround, 4740b969aaf5 ("PCI: cadence: Retrain Link to work
-around Gen2 training defect"), added this:
+I will try to prepare the user code of this callback and respin the patch.
 
-  if (!ret && rc->quirk_retrain_flag)
-    ret = cdns_pcie_retrain(pcie);
+I may resend it with another patch set in the future, this series 
+already drop it,
 
-I think the wait for link train to complete should also be in
-cdns_pcie_retrain() so it's clearly connected with the quirk, which
-also means we'd only do the wait for devices with the erratum.
+see v5[1]
 
-Which is EXACTLY what your first patch did, and I missed it.  I am
-very sorry.  I guess maybe I thought cdns_pcie_retrain() was a
-general-purpose thing, but in fact it's only used for this quirk.
+[1] https://patchwork.freedesktop.org/series/119134/
 
-Bjorn
+> Bjorn
