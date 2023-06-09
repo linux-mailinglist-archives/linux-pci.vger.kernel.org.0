@@ -2,152 +2,258 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id AD28172A180
-	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 19:43:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8019A72A1BA
+	for <lists+linux-pci@lfdr.de>; Fri,  9 Jun 2023 19:58:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjFIRnz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 13:43:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
+        id S230391AbjFIR6c convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-pci@lfdr.de>); Fri, 9 Jun 2023 13:58:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229503AbjFIRny (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 13:43:54 -0400
-Received: from 189.cn (ptr.189.cn [183.61.185.102])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E6B5E35B3;
-        Fri,  9 Jun 2023 10:43:44 -0700 (PDT)
-HMM_SOURCE_IP: 10.64.8.43:47690.1937665454
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-114.242.206.180 (unknown [10.64.8.43])
-        by 189.cn (HERMES) with SMTP id AEDBE100212;
-        Sat, 10 Jun 2023 01:43:39 +0800 (CST)
-Received: from  ([114.242.206.180])
-        by gateway-151646-dep-75648544bd-7vx9t with ESMTP id 0877e90f4b584cbe94a878d807b39f22 for helgaas@kernel.org;
-        Sat, 10 Jun 2023 01:43:43 CST
-X-Transaction-ID: 0877e90f4b584cbe94a878d807b39f22
-X-Real-From: 15330273260@189.cn
-X-Receive-IP: 114.242.206.180
-X-MEDUSA-Status: 0
-Sender: 15330273260@189.cn
-Message-ID: <2cf50ad0-e4fa-17a3-3e22-7fd8d4a316ed@189.cn>
-Date:   Sat, 10 Jun 2023 01:43:39 +0800
+        with ESMTP id S229464AbjFIR6b (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 13:58:31 -0400
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B963D210E;
+        Fri,  9 Jun 2023 10:58:29 -0700 (PDT)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-9787d11a410so41550566b.0;
+        Fri, 09 Jun 2023 10:58:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686333508; x=1688925508;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=omrMTBTUOeGmnkUD34a5D4yr7A32MkADXoaBKxr36+8=;
+        b=e/N8W2c55zRfXQIIav3B0kwsoyVEJthSuzzvnMQnF/0uybUHf2xWSXOP7kCCyb3hUr
+         z7LqAmpdIqinnGkt7BApY67/qQs4eKBhMc6DqWVJFSWA/n6MyBtLbexspRWKJNAigOR6
+         BNRs26vb1gABfBD3zxMJAX0/4dsgaKZXQMdN2OYFqF4f58t1gQ1BM+jh0wlTg7Tnv6qi
+         InMg8GS1RoyIptWzBN5JZDPO4aKo+Q9lmpQ6XMXb2ljHjaHaB2nIxFuYWODH2E0lJtTT
+         eKBZhFEOub8I+WhctbrSF+tXIbMBYW7XyhOzf3QVKq9riqc+cWw7Egiaa7LJyASSUHgK
+         kMuA==
+X-Gm-Message-State: AC+VfDx3FqGy4YGhEXehdffImLTyBwZUWTpDy3b/7ojjTLDxKYNWGHkb
+        bGx3OF9ngTf90iQWT3/I76/tVn5+bFZEil4u75K7IVY74Wg=
+X-Google-Smtp-Source: ACHHUZ45AQiiCgPcEr0pxDGz4LtscgRjN+5o+OEHYthI7WFNPQnOiUgoD8ZegfXKCk6dsVshggVPfPw62F3oIB+XJdA=
+X-Received: by 2002:a17:906:72c4:b0:974:6025:cc6 with SMTP id
+ m4-20020a17090672c400b0097460250cc6mr2019239ejl.6.1686333507923; Fri, 09 Jun
+ 2023 10:58:27 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [Intel-gfx] [PATCH v3 4/4] PCI/VGA: introduce is_boot_device
- function callback to vga_client_register
+References: <20230609023038.61388-1-zhiren.chen@mediatek.com> <20230609114920.GA1242120@bhelgaas>
+In-Reply-To: <20230609114920.GA1242120@bhelgaas>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 9 Jun 2023 19:58:13 +0200
+Message-ID: <CAJZ5v0iiAGGuzjT1-ZmCaUT9CH4uXaDG9XQ1QmKbp-bnCjEF6w@mail.gmail.com>
+Subject: Re: [PATCH] PCI:PM: Support platforms that do not implement ACPI
 To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Somalapuram Amaranath <Amaranath.Somalapuram@amd.com>,
-        Karol Herbst <kherbst@redhat.com>,
-        nouveau@lists.freedesktop.org,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        dri-devel@lists.freedesktop.org, YiPeng Chai <YiPeng.Chai@amd.com>,
-        Mario Limonciello <mario.limonciello@amd.com>,
-        David Airlie <airlied@gmail.com>,
-        Ville Syrjala <ville.syrjala@linux.intel.com>,
-        Yi Liu <yi.l.liu@intel.com>, kvm@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-pci@vger.kernel.org,
-        Andrey Grodzovsky <andrey.grodzovsky@amd.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Lijo Lazar <lijo.lazar@amd.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Bokun Zhang <Bokun.Zhang@amd.com>,
-        intel-gfx@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        loongson-kernel@lists.loongnix.cn,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Abhishek Sahu <abhsahu@nvidia.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Tvrtko Ursulin <tvrtko.ursulin@linux.intel.com>,
-        Yishai Hadas <yishaih@nvidia.com>, Li Yi <liyi@loongson.cn>,
-        Pan Xinhui <Xinhui.Pan@amd.com>, linux-kernel@vger.kernel.org,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Christian Konig <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>
-References: <20230609164850.GA1251187@bhelgaas>
-Content-Language: en-US
-From:   Sui Jingfeng <15330273260@189.cn>
-In-Reply-To: <20230609164850.GA1251187@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
-        FROM_LOCAL_HEX,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
-        version=3.4.6
+        Zhiren Chen <zhiren.chen@mediatek.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pci@vger.kernel.org,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Spam-Status: No, score=-1.4 required=5.0 tests=BAYES_00,
+        FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Jun 9, 2023 at 1:49 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> [+cc Rafael, linux-pm]
+>
+> On Fri, Jun 09, 2023 at 10:30:38AM +0800, Zhiren Chen wrote:
+> > From: Zhiren Chen <Zhiren.Chen@mediatek.com>
+> >
+> > The platform_pci_choose_state function and other low-level platform
+> > interfaces used by PCI power management processing did not take into
+> > account non-ACPI-supported platforms. This shortcoming can result in
+> > limitations and issues.
+> >
+> > For example, in embedded systems like smartphones, a PCI device can be
+> > shared by multiple processors for different purposes. The PCI device and
+> > some of the processors are controlled by Linux, while the rest of the
+> > processors runs its own operating system.
+> > When Linux initiates system-level sleep, if it does not consider the
+> > working state of the shared PCI device and forcefully sets the PCI device
+> > state to D3, it will affect the functionality of other processors that
+> > are currently using the PCI device.
+> >
+> > To address this problem, an interface should be created for PCI devices
+> > that don't support ACPI to enable accurate reporting of the power state
+> > during the PCI PM handling process.
+> >
+> > Signed-off-by: Zhiren Chen <Zhiren.Chen@mediatek.com>
 
-On 2023/6/10 00:48, Bjorn Helgaas wrote:
-> On Fri, Jun 09, 2023 at 10:27:39AM +0800, Sui Jingfeng wrote:
->> On 2023/6/9 03:19, Bjorn Helgaas wrote:
->>> On Thu, Jun 08, 2023 at 07:43:22PM +0800, Sui Jingfeng wrote:
->>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
->>>>
->>>> The vga_is_firmware_default() function is arch-dependent, which doesn't
->>>> sound right. At least, it also works on the Mips and LoongArch platforms.
->>>> Tested with the drm/amdgpu and drm/radeon drivers. However, it's difficult
->>>> to enumerate all arch-driver combinations. I'm wrong if there is only one
->>>> exception.
->>>>
->>>> With the observation that device drivers typically have better knowledge
->>>> about which PCI bar contains the firmware framebuffer, which could avoid
->>>> the need to iterate all of the PCI BARs.
->>>>
->>>> But as a PCI function at pci/vgaarb.c, vga_is_firmware_default() is
->>>> probably not suitable to make such an optimization for a specific device.
->>>>
->>>> There are PCI display controllers that don't have a dedicated VRAM bar,
->>>> this function will lose its effectiveness in such a case. Luckily, the
->>>> device driver can provide an accurate workaround.
->>>>
->>>> Therefore, this patch introduces a callback that allows the device driver
->>>> to tell the VGAARB if the device is the default boot device. This patch
->>>> only intends to introduce the mechanism, while the implementation is left
->>>> to the device driver authors. Also honor the comment: "Clients have two
->>>> callback mechanisms they can use"
->>> s/bar/BAR/ (several)
->>>
->>> Nothing here uses the callback.  I don't want to merge this until we
->>> have a user.
->> This is chicken and egg question.
->>
->> If you could help get this merge first, I will show you the first user.
->>
->>> I'm not sure why the device driver should know whether its device is
->>> the default boot device.
->> It's not that the device driver should know,
->>
->> but it's about that the device driver has the right to override.
->>
->> Device driver may have better approach to identify the default boot
->> device.
-> The way we usually handle this is to include the new callback in the
-> same series as the first user of it.  That has two benefits:
-> (1) everybody can review the whole picture and possibly suggest
-> different approaches, and (2) when we merge the infrastructure,
-> we also merge a user of it at the same time, so the whole thing can be
-> tested and we don't end up with unused code.
+Something like the pci_platform_pm_ops introduced here had been there
+for several years and the only users of it known to me were ACPI and
+Intel MID, which is why it was dropped.
 
-OK, acceptable
+I would like to see the platform code using these new callbacks in the
+first place.
 
-I will try to prepare the user code of this callback and respin the patch.
-
-I may resend it with another patch set in the future, this series 
-already drop it,
-
-see v5[1]
-
-[1] https://patchwork.freedesktop.org/series/119134/
-
-> Bjorn
+> > ---
+> >  drivers/pci/pci.c   | 24 ++++++++++++++++++++++++
+> >  drivers/pci/pci.h   | 40 ++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/pci.h |  1 +
+> >  3 files changed, 65 insertions(+)
+> >
+> > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > index 5ede93222bc1..9f03406f3081 100644
+> > --- a/drivers/pci/pci.c
+> > +++ b/drivers/pci/pci.c
+> > @@ -1014,6 +1014,9 @@ static void pci_restore_bars(struct pci_dev *dev)
+> >
+> >  static inline bool platform_pci_power_manageable(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->is_manageable)
+> > +             return dev->platform_pm_ops->is_manageable(dev);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return true;
+> >
+> > @@ -1023,6 +1026,9 @@ static inline bool platform_pci_power_manageable(struct pci_dev *dev)
+> >  static inline int platform_pci_set_power_state(struct pci_dev *dev,
+> >                                              pci_power_t t)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->set_state)
+> > +             return dev->platform_pm_ops->set_state(dev, t);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return mid_pci_set_power_state(dev, t);
+> >
+> > @@ -1031,6 +1037,9 @@ static inline int platform_pci_set_power_state(struct pci_dev *dev,
+> >
+> >  static inline pci_power_t platform_pci_get_power_state(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->get_state)
+> > +             return dev->platform_pm_ops->get_state(dev);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return mid_pci_get_power_state(dev);
+> >
+> > @@ -1039,12 +1048,18 @@ static inline pci_power_t platform_pci_get_power_state(struct pci_dev *dev)
+> >
+> >  static inline void platform_pci_refresh_power_state(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->refresh_state)
+> > +             dev->platform_pm_ops->refresh_state(dev);
+> > +
+> >       if (!pci_use_mid_pm())
+> >               acpi_pci_refresh_power_state(dev);
+> >  }
+> >
+> >  static inline pci_power_t platform_pci_choose_state(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->choose_state)
+> > +             return dev->platform_pm_ops->choose_state(dev);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return PCI_POWER_ERROR;
+> >
+> > @@ -1053,6 +1068,9 @@ static inline pci_power_t platform_pci_choose_state(struct pci_dev *dev)
+> >
+> >  static inline int platform_pci_set_wakeup(struct pci_dev *dev, bool enable)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->set_wakeup)
+> > +             return dev->platform_pm_ops->set_wakeup(dev, enable);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return PCI_POWER_ERROR;
+> >
+> > @@ -1061,6 +1079,9 @@ static inline int platform_pci_set_wakeup(struct pci_dev *dev, bool enable)
+> >
+> >  static inline bool platform_pci_need_resume(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->need_resume)
+> > +             return dev->platform_pm_ops->need_resume(dev);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return false;
+> >
+> > @@ -1069,6 +1090,9 @@ static inline bool platform_pci_need_resume(struct pci_dev *dev)
+> >
+> >  static inline bool platform_pci_bridge_d3(struct pci_dev *dev)
+> >  {
+> > +     if (dev->platform_pm_ops && dev->platform_pm_ops->bridge_d3)
+> > +             return dev->platform_pm_ops->bridge_d3(dev);
+> > +
+> >       if (pci_use_mid_pm())
+> >               return false;
+> >
+> > diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> > index 2475098f6518..85154470c083 100644
+> > --- a/drivers/pci/pci.h
+> > +++ b/drivers/pci/pci.h
+> > @@ -71,6 +71,42 @@ struct pci_cap_saved_state *pci_find_saved_ext_cap(struct pci_dev *dev,
+> >   */
+> >  #define PCI_RESET_WAIT               1000    /* msec */
+> >
+> > +/**
+> > + * struct pci_platform_pm_ops - Firmware PM callbacks
+> > + *
+> > + * @is_manageable: returns 'true' if given device is power manageable by the
+> > + *                 platform firmware
+> > + *
+> > + * @set_state: invokes the platform firmware to set the device's power state
+> > + *
+> > + * @get_state: queries the platform firmware for a device's current power state
+> > + *
+> > + * @choose_state: returns PCI power state of given device preferred by the
+> > + *                platform; to be used during system-wide transitions from a
+> > + *                sleeping state to the working state and vice versa
+> > + *
+> > + * @set_wakeup: enables/disables wakeup capability for the device
+> > + *
+> > + * @need_resume: returns 'true' if the given device (which is currently
+> > + *           suspended) needs to be resumed to be configured for system
+> > + *           wakeup.
+> > + *
+> > + * @bridge_d3: return 'true' if given device supoorts D3 when it is a bridge
+> > + *
+> > + * @refresh_state: refresh the given device's power state
+> > + *
+> > + */
+> > +struct pci_platform_pm_ops {
+> > +     bool (*is_manageable)(struct pci_dev *dev);
+> > +     int (*set_state)(struct pci_dev *dev, pci_power_t state);
+> > +     pci_power_t (*get_state)(struct pci_dev *dev);
+> > +     pci_power_t (*choose_state)(struct pci_dev *dev);
+> > +     int (*set_wakeup)(struct pci_dev *dev, bool enable);
+> > +     bool (*need_resume)(struct pci_dev *dev);
+> > +     bool (*bridge_d3)(struct pci_dev *dev);
+> > +     void (*refresh_state)(struct pci_dev *dev);
+> > +};
+> > +
+> >  void pci_update_current_state(struct pci_dev *dev, pci_power_t state);
+> >  void pci_refresh_power_state(struct pci_dev *dev);
+> >  int pci_power_up(struct pci_dev *dev);
+> > @@ -96,6 +132,10 @@ void pci_bridge_d3_update(struct pci_dev *dev);
+> >  void pci_bridge_reconfigure_ltr(struct pci_dev *dev);
+> >  int pci_bridge_wait_for_secondary_bus(struct pci_dev *dev, char *reset_type);
+> >
+> > +static inline void pci_set_platform_pm(struct pci_dev *dev, struct pci_platform_pm_ops *ops)
+> > +{
+> > +     dev->platform_pm_ops = ops;
+> > +}
+> >  static inline void pci_wakeup_event(struct pci_dev *dev)
+> >  {
+> >       /* Wait 100 ms before the system can be put into a sleep state. */
+> > diff --git a/include/linux/pci.h b/include/linux/pci.h
+> > index 60b8772b5bd4..a0171f1abf2f 100644
+> > --- a/include/linux/pci.h
+> > +++ b/include/linux/pci.h
+> > @@ -327,6 +327,7 @@ struct pci_dev {
+> >       void            *sysdata;       /* Hook for sys-specific extension */
+> >       struct proc_dir_entry *procent; /* Device entry in /proc/bus/pci */
+> >       struct pci_slot *slot;          /* Physical slot this device is in */
+> > +     struct pci_platform_pm_ops *platform_pm_ops;
+> >
+> >       unsigned int    devfn;          /* Encoded device & function index */
+> >       unsigned short  vendor;
+> > --
+> > 2.17.0
+> >
