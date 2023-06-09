@@ -2,49 +2,48 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C39EC72A6BE
-	for <lists+linux-pci@lfdr.de>; Sat, 10 Jun 2023 01:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 88C8872A6C5
+	for <lists+linux-pci@lfdr.de>; Sat, 10 Jun 2023 01:35:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230072AbjFIXbk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 9 Jun 2023 19:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33466 "EHLO
+        id S232880AbjFIXft (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 9 Jun 2023 19:35:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232798AbjFIXbA (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 19:31:00 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FF044A2
-        for <linux-pci@vger.kernel.org>; Fri,  9 Jun 2023 16:29:01 -0700 (PDT)
+        with ESMTP id S232888AbjFIXfi (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 9 Jun 2023 19:35:38 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B86403C03
+        for <linux-pci@vger.kernel.org>; Fri,  9 Jun 2023 16:32:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686353341; x=1717889341;
+  t=1686353523; x=1717889523;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=9i1iB8QTmN+++Ljbt+NWvlOM54eMgN2tMAINqKmbbZ4=;
-  b=WzH0S1Ayk8JrEDP4WxhOOingjQ1XSaSCHHjPN++tP0+sFYOYq+5ELLTY
-   /XooXuvrM3hr1RxJamf/ZmE7C1TqzLvW8T0HptJ6bn6uhRUejWMLZuDa6
-   NybWJeVZSw1bJDW9T4s69kVnI/wn9ut/dNaQ5OWslP6RzoT4Mw+565FEr
-   JJU2DzvWPrMFlO2ZtUVqGhszKELt7Tio2w1RkIXlMflRcWhOI01NZvAFM
-   wPKyqxByVxPAgFpBeuBnnlr3xzQ78vICi/6rTOgLmzRPy5bmEkn+6C/11
-   BjzIO4/hzaO9et4SMjJCzd14+5I+k+ioKzYtRx3Ah9Hhe5bFR9X3hhb8z
+  bh=cNEuotPqof+3qOLUkKAUBgZfUl3mBmLrhEhIh4rSReg=;
+  b=XJm5vY7LhA7oAhLtE2igUE/0x8Gk0ZzAqcisbwSlVXpTSDbB2LWV02I0
+   +YM0SZEU0xBjqXMY79Qh0S4kiJdEatJY0il2XbGUqE+wnFXoU8amIqy0C
+   fRWF+ks49E3ABcZCxHMI+uSPyY1EyHYIwJUHYkgJ6tF71Sc0TMtQkyxVY
+   kvzXzhBN+n/Bh2YQoa2rl4yUVzSTOetXpVk5wbL+xfs8q3lAxXxBwdupc
+   TXxzVdjSNFbH/x1fPZhseuZMpgw0kw43AImhUcVNhzyT6SIKfVeJjIAee
+   ulCC4GdoCSltB0Jd976plnhLIG3Y+nWWd+xPGt81PYNdBKWOa7i6Dokee
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="386073437"
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="342382782"
 X-IronPort-AV: E=Sophos;i="6.00,230,1681196400"; 
-   d="scan'208";a="386073437"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 16:29:00 -0700
+   d="scan'208";a="342382782"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 16:32:02 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="710512403"
+X-IronPort-AV: E=McAfee;i="6600,9927,10736"; a="780477580"
 X-IronPort-AV: E=Sophos;i="6.00,230,1681196400"; 
-   d="scan'208";a="710512403"
+   d="scan'208";a="780477580"
 Received: from morganhu-mobl.amr.corp.intel.com (HELO [10.212.133.89]) ([10.212.133.89])
-  by orsmga002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 16:29:00 -0700
-Message-ID: <e4bacb19-3baf-ffa2-4cd1-6db96aca4e23@linux.intel.com>
-Date:   Fri, 9 Jun 2023 16:28:59 -0700
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jun 2023 16:31:59 -0700
+Message-ID: <13746804-10fd-ee48-4063-8112c2ebf61f@linux.intel.com>
+Date:   Fri, 9 Jun 2023 16:31:59 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH v2 3/4] Documentation: PCI: Update cross references to
- .rst files
+Subject: Re: [PATCH v2 4/4] Documentation: PCI: Tidy AER documentation
 Content-Language: en-US
 To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
 Cc:     Dave Jiang <dave.jiang@intel.com>, Stefan Roese <sr@denx.de>,
@@ -53,69 +52,296 @@ Cc:     Dave Jiang <dave.jiang@intel.com>, Stefan Roese <sr@denx.de>,
         Lukas Wunner <lukas@wunner.de>,
         Bjorn Helgaas <bhelgaas@google.com>
 References: <20230609222500.1267795-1-helgaas@kernel.org>
- <20230609222500.1267795-4-helgaas@kernel.org>
+ <20230609222500.1267795-5-helgaas@kernel.org>
 From:   Sathyanarayanan Kuppuswamy 
         <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20230609222500.1267795-4-helgaas@kernel.org>
+In-Reply-To: <20230609222500.1267795-5-helgaas@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,SPF_HELO_NONE,
+        SPF_NONE,T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+Hi,
 
-
-On 6/9/23 3:24 PM, Bjorn Helgaas wrote:
+On 6/9/23 3:25 PM, Bjorn Helgaas wrote:
 > From: Bjorn Helgaas <bhelgaas@google.com>
 > 
-> Change references to *.txt to *.rst to match the current filenames.
+> Consistently use:
+> 
+>   PCIe          previously PCIe, PCI Express, or pci express
+>   Root Port     previously Root Port or root port
+>   Endpoint      previously EndPoint or endpoint
+>   AER           previously AER or aer
+>   please        previously pls
+> 
+> Also update a few awkward wordings.
 > 
 > Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 > ---
 
-Looks good to me.
-
 Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
->  Documentation/PCI/pci-error-recovery.rst | 2 +-
->  Documentation/PCI/pcieaer-howto.rst      | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
+>  Documentation/PCI/pcieaer-howto.rst | 131 ++++++++++++++--------------
+>  1 file changed, 65 insertions(+), 66 deletions(-)
 > 
-> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
-> index 9981d330da8f..c237596f67e3 100644
-> --- a/Documentation/PCI/pci-error-recovery.rst
-> +++ b/Documentation/PCI/pci-error-recovery.rst
-> @@ -364,7 +364,7 @@ Note, however, not all failures are truly "permanent". Some are
->  caused by over-heating, some by a poorly seated card. Many
->  PCI error events are caused by software bugs, e.g. DMA's to
->  wild addresses or bogus split transactions due to programming
-> -errors. See the discussion in powerpc/eeh-pci-error-recovery.txt
-> +errors. See the discussion in Documentation/powerpc/eeh-pci-error-recovery.rst
->  for additional detail on real-life experience of the causes of
->  software errors.
->  
 > diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index c98a229ea9f5..3f91d54af770 100644
+> index 3f91d54af770..e00d63971695 100644
 > --- a/Documentation/PCI/pcieaer-howto.rst
 > +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -160,8 +160,8 @@ when performing error recovery actions.
+> @@ -16,62 +16,61 @@ Overview
+>  About this guide
+>  ----------------
+>  
+> -This guide describes the basics of the PCI Express Advanced Error
+> +This guide describes the basics of the PCI Express (PCIe) Advanced Error
+>  Reporting (AER) driver and provides information on how to use it, as
+> -well as how to enable the drivers of endpoint devices to conform with
+> -PCI Express AER driver.
+> +well as how to enable the drivers of Endpoint devices to conform with
+> +the PCIe AER driver.
+>  
+>  
+> -What is the PCI Express AER Driver?
+> ------------------------------------
+> +What is the PCIe AER Driver?
+> +----------------------------
+>  
+> -PCI Express error signaling can occur on the PCI Express link itself
+> -or on behalf of transactions initiated on the link. PCI Express
+> +PCIe error signaling can occur on the PCIe link itself
+> +or on behalf of transactions initiated on the link. PCIe
+>  defines two error reporting paradigms: the baseline capability and
+>  the Advanced Error Reporting capability. The baseline capability is
+> -required of all PCI Express components providing a minimum defined
+> +required of all PCIe components providing a minimum defined
+>  set of error reporting requirements. Advanced Error Reporting
+> -capability is implemented with a PCI Express advanced error reporting
+> +capability is implemented with a PCIe Advanced Error Reporting
+>  extended capability structure providing more robust error reporting.
+>  
+> -The PCI Express AER driver provides the infrastructure to support PCI
+> -Express Advanced Error Reporting capability. The PCI Express AER
+> -driver provides three basic functions:
+> +The PCIe AER driver provides the infrastructure to support PCIe Advanced
+> +Error Reporting capability. The PCIe AER driver provides three basic
+> +functions:
+>  
+>    - Gathers the comprehensive error information if errors occurred.
+>    - Reports error to the users.
+>    - Performs error recovery actions.
+>  
+> -AER driver only attaches root ports which support PCI-Express AER
+> -capability.
+> +The AER driver only attaches to Root Ports and RCECs that support the PCIe
+> +AER capability.
+>  
+>  
+>  User Guide
+>  ==========
+>  
+> -Include the PCI Express AER Root Driver into the Linux Kernel
+> --------------------------------------------------------------
+> +Include the PCIe AER Root Driver into the Linux Kernel
+> +------------------------------------------------------
+>  
+> -The PCI Express AER Root driver is a Root Port service driver attached
+> -to the PCI Express Port Bus driver. If a user wants to use it, the driver
+> -has to be compiled. Option CONFIG_PCIEAER supports this capability. It
+> -depends on CONFIG_PCIEPORTBUS, so pls. set CONFIG_PCIEPORTBUS=y and
+> -CONFIG_PCIEAER = y.
+> +The PCIe AER driver is a Root Port service driver attached
+> +via the PCIe Port Bus driver. If a user wants to use it, the driver
+> +must be compiled. It is enabled with CONFIG_PCIEAER, which
+> +depends on CONFIG_PCIEPORTBUS.
+>  
+> -Load PCI Express AER Root Driver
+> ---------------------------------
+> +Load PCIe AER Root Driver
+> +-------------------------
+>  
+>  Some systems have AER support in firmware. Enabling Linux AER support at
+> -the same time the firmware handles AER may result in unpredictable
+> +the same time the firmware handles AER would result in unpredictable
+>  behavior. Therefore, Linux does not handle AER events unless the firmware
+> -grants AER control to the OS via the ACPI _OSC method. See the PCI FW 3.0
+> +grants AER control to the OS via the ACPI _OSC method. See the PCI Firmware
+>  Specification for details regarding _OSC usage.
+>  
+>  AER error output
+>  ----------------
+>  
+>  When a PCIe AER error is captured, an error message will be output to
+> -console. If it's a correctable error, it is output as a warning.
+> +console. If it's a correctable error, it is output as an info message.
+>  Otherwise, it is printed as an error. So users could choose different
+>  log level to filter out correctable error messages.
+>  
+> @@ -82,9 +81,9 @@ Below shows an example::
+>    0000:50:00.0:    [20] Unsupported Request    (First)
+>    0000:50:00.0:   TLP Header: 04000001 00200a03 05010000 00050100
+>  
+> -In the example, 'Requester ID' means the ID of the device who sends
+> -the error message to root port. Pls. refer to pci express specs for
+> -other fields.
+> +In the example, 'Requester ID' means the ID of the device that sent
+> +the error message to the Root Port. Please refer to PCIe specs for other
+> +fields.
+>  
+>  AER Statistics / Counters
+>  -------------------------
+> @@ -96,41 +95,41 @@ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+>  Developer Guide
+>  ===============
+>  
+> -To enable AER aware support requires a software driver to provide
+> -callbacks.
+> +To enable error recovery, a software driver must provide callbacks.
+>  
+> -To support AER better, developers need understand how AER does work
+> -firstly.
+> +To support AER better, developers need to understand how AER works.
+>  
+> -PCI Express errors are classified into two types: correctable errors
+> -and uncorrectable errors. This classification is based on the impacts
+> +PCIe errors are classified into two types: correctable errors
+> +and uncorrectable errors. This classification is based on the impact
+>  of those errors, which may result in degraded performance or function
+>  failure.
+>  
+>  Correctable errors pose no impacts on the functionality of the
+> -interface. The PCI Express protocol can recover without any software
+> +interface. The PCIe protocol can recover without any software
+>  intervention or any loss of data. These errors are detected and
+> -corrected by hardware. Unlike correctable errors, uncorrectable
+> +corrected by hardware.
+> +
+> +Unlike correctable errors, uncorrectable
+>  errors impact functionality of the interface. Uncorrectable errors
+> -can cause a particular transaction or a particular PCI Express link
+> +can cause a particular transaction or a particular PCIe link
+>  to be unreliable. Depending on those error conditions, uncorrectable
+>  errors are further classified into non-fatal errors and fatal errors.
+>  Non-fatal errors cause the particular transaction to be unreliable,
+> -but the PCI Express link itself is fully functional. Fatal errors, on
+> +but the PCIe link itself is fully functional. Fatal errors, on
+>  the other hand, cause the link to be unreliable.
+>  
+> -When AER is enabled, a PCI Express device will automatically send an
+> -error message to the PCIe root port above it when the device captures
+> +When PCIe error reporting is enabled, a device will automatically send an
+> +error message to the Root Port above it when it captures
+>  an error. The Root Port, upon receiving an error reporting message,
+> -internally processes and logs the error message in its PCI Express
+> -capability structure. Error information being logged includes storing
+> +internally processes and logs the error message in its AER
+> +Capability structure. Error information being logged includes storing
+>  the error reporting agent's requestor ID into the Error Source
+>  Identification Registers and setting the error bits of the Root Error
+> -Status Register accordingly. If AER error reporting is enabled in Root
+> -Error Command Register, the Root Port generates an interrupt if an
+> +Status Register accordingly. If AER error reporting is enabled in the Root
+> +Error Command Register, the Root Port generates an interrupt when an
+>  error is detected.
+>  
+> -Note that the errors as described above are related to the PCI Express
+> +Note that the errors as described above are related to the PCIe
+>  hierarchy and links. These errors do not include any device specific
+>  errors because device specific errors will still get sent directly to
+>  the device driver.
+> @@ -138,14 +137,14 @@ the device driver.
+>  Provide callbacks
+>  -----------------
+>  
+> -callback reset_link to reset pci express link
+> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> +callback reset_link to reset PCIe link
+> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+> -This callback is used to reset the pci express physical link when a
+> -fatal error happens. The root port aer service driver provides a
+> -default reset_link function, but different upstream ports might
+> -have different specifications to reset pci express link, so all
+> -upstream ports should provide their own reset_link functions.
+> +This callback is used to reset the PCIe physical link when a
+> +fatal error happens. The Root Port AER service driver provides a
+> +default reset_link function, but different Upstream Ports might
+> +have different specifications to reset the PCIe link, so
+> +Upstream Port drivers may provide their own reset_link functions.
+>  
+>  Section 3.2.2.2 provides more detailed info on when to call
+>  reset_link.
+> @@ -153,24 +152,24 @@ reset_link.
+>  PCI error-recovery callbacks
+>  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>  
+> -The PCI Express AER Root driver uses error callbacks to coordinate
+> +The PCIe AER Root driver uses error callbacks to coordinate
+>  with downstream device drivers associated with a hierarchy in question
+>  when performing error recovery actions.
+>  
 >  Data struct pci_driver has a pointer, err_handler, to point to
 >  pci_error_handlers who consists of a couple of callback function
->  pointers. AER driver follows the rules defined in
-> -pci-error-recovery.txt except pci express specific parts (e.g.
-> -reset_link). Pls. refer to pci-error-recovery.txt for detailed
-> +pci-error-recovery.rst except pci express specific parts (e.g.
-> +reset_link). Pls. refer to pci-error-recovery.rst for detailed
+> -pointers. AER driver follows the rules defined in
+> -pci-error-recovery.rst except pci express specific parts (e.g.
+> -reset_link). Pls. refer to pci-error-recovery.rst for detailed
+> +pointers. The AER driver follows the rules defined in
+> +pci-error-recovery.rst except PCIe-specific parts (e.g.
+> +reset_link). Please refer to pci-error-recovery.rst for detailed
 >  definitions of the callbacks.
 >  
->  Below sections specify when to call the error callback functions.
+> -Below sections specify when to call the error callback functions.
+> +The sections below specify when to call the error callback functions.
+>  
+>  Correctable errors
+>  ~~~~~~~~~~~~~~~~~~
+>  
+>  Correctable errors pose no impacts on the functionality of
+> -the interface. The PCI Express protocol can recover without any
+> +the interface. The PCIe protocol can recover without any
+>  software intervention or any loss of data. These errors do not
+>  require any recovery actions. The AER driver clears the device's
+>  correctable error status register accordingly and logs these errors.
+> @@ -181,12 +180,12 @@ Non-correctable (non-fatal and fatal) errors
+>  If an error message indicates a non-fatal error, performing link reset
+>  at upstream is not required. The AER driver calls error_detected(dev,
+>  pci_channel_io_normal) to all drivers associated within a hierarchy in
+> -question. for example::
+> +question. For example::
+>  
+> -  EndPoint<==>DownstreamPort B<==>UpstreamPort A<==>RootPort
+> +  Endpoint <==> Downstream Port B <==> Upstream Port A <==> Root Port
+>  
+> -If Upstream port A captures an AER error, the hierarchy consists of
+> -Downstream port B and EndPoint.
+> +If Upstream Port A captures an AER error, the hierarchy consists of
+> +Downstream Port B and Endpoint.
+>  
+>  A driver may return PCI_ERS_RESULT_CAN_RECOVER,
+>  PCI_ERS_RESULT_DISCONNECT, or PCI_ERS_RESULT_NEED_RESET, depending on
+> @@ -207,7 +206,7 @@ Frequent Asked Questions
+>  ------------------------
+>  
+>  Q:
+> -  What happens if a PCI Express device driver does not provide an
+> +  What happens if a PCIe device driver does not provide an
+>    error recovery handler (pci_driver->err_handler is equal to NULL)?
+>  
+>  A:
+> @@ -244,5 +243,5 @@ from:
+>  
+>      https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
+>  
+> -More information about aer-inject can be found in the document comes
+> -with its source code.
+> +More information about aer-inject can be found in the document in
+> +its source code.
 
 -- 
 Sathyanarayanan Kuppuswamy
