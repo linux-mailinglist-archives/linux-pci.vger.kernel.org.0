@@ -2,126 +2,113 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0931D72CB58
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jun 2023 18:20:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0069972CBB7
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jun 2023 18:41:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234997AbjFLQUT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jun 2023 12:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57680 "EHLO
+        id S232494AbjFLQlb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jun 2023 12:41:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235814AbjFLQTn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jun 2023 12:19:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92ABB1728;
-        Mon, 12 Jun 2023 09:19:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 26D4561DF5;
-        Mon, 12 Jun 2023 16:19:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369B1C4339B;
-        Mon, 12 Jun 2023 16:19:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686586769;
-        bh=OTJAkzUB/kHEz+zDpGNc9vDTw+iMQ7TJ/wo3kRt6WNE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=CCG/J7Hk7a7Pqayi8Dhv4V5Lo1gKzDd2gONXFYj9dZ3ZlZsjrC3VfeL99tkG8oXFv
-         xWdp4qVMK0MopWl4sfLAXlJg2OrAm/XFsPasvOIh6LQCGt7aa7bQd7zpD1TFNkbIU9
-         L1jxyebl9sLVd2W9lZZTRnLyhkOJYK3XZGm6jEO0rnjypc3oze2wFCaSBtLsKc83Gs
-         PboYwpcQKg6IbNC1xzF3lx3VIfAVL0Aa9/tP4w7+I/dUsDNefxPJmfYtREE5tTIKk7
-         Jn1iBRGaC/y9DoMdE+4K1As0RtgR13AwOkAC0v2pyyRAfvbyFCrNiHrhaE2JHkncKF
-         OwBnmjtJoxSCQ==
-Date:   Mon, 12 Jun 2023 11:19:27 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
+        with ESMTP id S229716AbjFLQla (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jun 2023 12:41:30 -0400
+Received: from mail-lf1-x12f.google.com (mail-lf1-x12f.google.com [IPv6:2a00:1450:4864:20::12f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 278A6183;
+        Mon, 12 Jun 2023 09:41:29 -0700 (PDT)
+Received: by mail-lf1-x12f.google.com with SMTP id 2adb3069b0e04-4f629ccb8ebso5357433e87.1;
+        Mon, 12 Jun 2023 09:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686588087; x=1689180087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=jx6/wV4m4BBpnfz/K5lj00yNBxCoPS4eqrXhFxrqWNY=;
+        b=SYrCV3aYzPE5UdqR48D73VeNJ/VqJo6v5Qkeuszdrd5uNDEGfUy2cLpthevFBT/cf7
+         ox+xx+EoTqsMM+aWfDt4p4+GWrFdM+SbYC5YxovFbF7zFD+ysokg3HphzqcwXw9/LpyU
+         ZHS7NhMc4c5OF3T1Rhi0ZcoO7Vwdh+zZbLjyATFnvJeUDb0oIhQ0AxT+TEAaqKlEhtII
+         URuCCMRfHHWOgegCD2fQ/0/FRRwNyYgKRMftGh8rPrlOp80OtkUfU8TbkCyMLXz17uL9
+         6jTDcr6frDAz4Io4PJnOcamrWMFRhZY4XwBrawDGs/3iJsuAoeQkB1DPusmcl5igVe4I
+         /NKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686588087; x=1689180087;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jx6/wV4m4BBpnfz/K5lj00yNBxCoPS4eqrXhFxrqWNY=;
+        b=j+FwKKoz2O/SJ/6OeZnB1BkcmVWdY+oX3daVKmkaxO52j5pXf3SBWwOThj5A/USEEZ
+         PyU9f4XvCijOhlZ1fXWP0DfxLMRgdpx2D1pU2G8dQSKZKkRQerQaO2GlZRhRsTsA2Qq3
+         vi/jmvqIw7uxBvmhGL2WFlNuQk6YKuiH6ZcbWYKuedt6Oan3Lo/rU+ZscqJJ56p8JqH9
+         WSt8L0xLdSQ74n2RuqkLjb+wVxwW0FA5lerBUCvl6TemocYJYBqXX1d+AdGUiDYwH7+d
+         8AaLp7Fzl+IcbFDs0zb/Z9s6ST5lCS9Dy7zXh3CVgPK/htUKAdZqGd3IXjAxxnnx6LVV
+         aYNg==
+X-Gm-Message-State: AC+VfDxpG4w1MO0X3woR7oy5AtcQTREbmCU8JfHQ1O15KtwSO3lqqA/v
+        VH9DnwKEo6LCkSCHXL3Jojw=
+X-Google-Smtp-Source: ACHHUZ4+45STAcne9lCis07zMOF5bck38Vv7+pgogTLaVpEafMv6mzap6UfthmFcrWZVoy65CoQtAw==
+X-Received: by 2002:a05:6512:329c:b0:4f6:3c67:ddfc with SMTP id p28-20020a056512329c00b004f63c67ddfcmr4410805lfe.23.1686588087054;
+        Mon, 12 Jun 2023 09:41:27 -0700 (PDT)
+Received: from mobilestation ([95.79.140.35])
+        by smtp.gmail.com with ESMTPSA id m16-20020ac24250000000b004f1383d57ecsm1490154lfl.202.2023.06.12.09.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 09:41:25 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 19:41:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Joyce Ooi <joyce.ooi@intel.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Jim Quinlan <jim2101024@gmail.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tom Joseph <tjoseph@cadence.com>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        Rahul Tanwar <rtanwar@maxlinear.com>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Serge Semin <Sergey.Semin@baikalelectronics.ru>,
-        Vidya Sagar <vidyas@nvidia.com>,
-        Jisheng Zhang <jszhang@kernel.org>,
-        Miaoqian Lin <linmq006@gmail.com>, Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Jianjun Wang <jianjun.wang@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Sergio Paracuellos <sergio.paracuellos@gmail.com>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Toan Le <toan@os.amperecomputing.com>,
-        Rob Herring <robh@kernel.org>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Broadcom internal kernel review list 
-        <bcm-kernel-feedback-list@broadcom.com>,
-        linux-rpi-kernel@lists.infradead.org, kernel@pengutronix.de,
-        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Subject: Re: [PATCH 00/15] PCI: Convert to platform remove callback returning
- void
-Message-ID: <20230612161927.GA1335109@bhelgaas>
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Rob Herring <robh@kernel.org>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Pavel Parkhomenko <Pavel.Parkhomenko@baikalelectronics.ru>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v7 00/11] PCI: dwc: Relatively simple fixes and
+ cleanups
+Message-ID: <20230612164124.ytqn5lfeaxds6ywq@mobilestation>
+References: <20230611192005.25636-1-Sergey.Semin@baikalelectronics.ru>
+ <20230612154127.GA1335023@bhelgaas>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230611132423.milnj2pnvjqzwino@pali>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+In-Reply-To: <20230612154127.GA1335023@bhelgaas>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 11, 2023 at 03:24:23PM +0200, Pali Rohár wrote:
-> On Friday 02 June 2023 16:37:34 Bjorn Helgaas wrote:
-> > On Tue, May 30, 2023 at 04:07:42PM +0200, Uwe Kleine-König wrote:
-> > > On Tue, Mar 21, 2023 at 08:31:53PM +0100, Uwe Kleine-König wrote:
-> > > > this series adapts the platform drivers below drivers/pci to
-> > > > use the .remove_new() callback. Compared to the traditional
-> > > > .remove() callback .remove_new() returns no value. This is a
-> > > > good thing because the driver core doesn't (and cannot) cope
-> > > > for errors during remove. The only effect of a non-zero return
-> > > > value in .remove() is that the driver core emits a warning.
-> > > > The device is removed anyhow and an early return from
-> > > > .remove() usually yields a resource leak.
-> ...
+On Mon, Jun 12, 2023 at 10:41:27AM -0500, Bjorn Helgaas wrote:
+> On Sun, Jun 11, 2023 at 10:19:54PM +0300, Serge Semin wrote:
+> > It turns out the recent DW PCIe-related patchset was merged in with
+> > several relatively trivial issues left unsettled (noted by Bjorn and
+> > Manivannan). All of these lefovers have been fixed in this patchset.
+> > Namely the series starts with two bug-fixes. The first one concerns the
+> > improper link-mode initialization in case if the CDM-check is enabled. The
+> > second unfortunate mistake I made in the IP-core version type helper. In
+> > particular instead of testing the IP-core version type the macro function
+> > referred to the just IP-core version which obviously wasn't what I
+> > intended.
+> > ...
+> 
 
-> Hello Bjorn, it should be expected that other changes for PCIe drivers
-> sent by other people which were sent to the list before this patch
-> series and are still waiting for the review (because are without
-> comments), would be processed before and patches sent later.
+> I am unable to do anything with this series.
+> 
+> Google's legal team is reviewing this matter under applicable laws and
+> regulations.
 
-I don't think it's necessary to delay simple, easily-reviewed changes
-behind more complicated ones.
+I don't get it, how come Google gets to decide anything about what to
+do with this patchset? Even the driver copyright doesn't belong to
+Google Inc, not to mentioned the GPL v2 license under which the driver
+is released. Could you clarify since when Google (but not the driver
+and subsystem maintainers) has been reviewing the patches submitted to
+the kernel? And how come it is able to block even the subsystem
+maintainers work?
 
-> Also I would like to point out that in past I have sent fixes for PCIe
-> mvebu driver, which is currently in the broken state. And this is also
-> on waiting on the list.
+-Serge(y)
 
-Thanks for this reminder.  Would you mind reposting them?  I poked
-around in patchwork and I must be doing something wrong because I
-can't find *any* patches from you, though obviously there are many.
-
-If you repost them at least we'll know unambiguously what is on the
-table.
-
-Bjorn
+> 
+> Bjorn
