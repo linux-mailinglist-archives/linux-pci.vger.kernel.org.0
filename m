@@ -2,45 +2,54 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 147AF72B93E
-	for <lists+linux-pci@lfdr.de>; Mon, 12 Jun 2023 09:53:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 315BF72BAA3
+	for <lists+linux-pci@lfdr.de>; Mon, 12 Jun 2023 10:30:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235489AbjFLHxz (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Mon, 12 Jun 2023 03:53:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59072 "EHLO
+        id S232029AbjFLIai (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 12 Jun 2023 04:30:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236082AbjFLHxn (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jun 2023 03:53:43 -0400
-Received: from mout-u-107.mailbox.org (mout-u-107.mailbox.org [IPv6:2001:67c:2050:101:465::107])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF8B64239
-        for <linux-pci@vger.kernel.org>; Mon, 12 Jun 2023 00:52:45 -0700 (PDT)
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [10.196.197.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        with ESMTP id S233352AbjFLI3w (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 12 Jun 2023 04:29:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 845DC4206;
+        Mon, 12 Jun 2023 01:29:09 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mout-u-107.mailbox.org (Postfix) with ESMTPS id 4Qfk5C5kxLz9sb8;
-        Mon, 12 Jun 2023 09:36:15 +0200 (CEST)
-Message-ID: <13ef12bb-73c6-6fd8-b6da-8fc34bc345e6@denx.de>
-Date:   Mon, 12 Jun 2023 09:36:14 +0200
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BC0F762125;
+        Mon, 12 Jun 2023 08:29:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A6AC4339B;
+        Mon, 12 Jun 2023 08:29:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686558548;
+        bh=7P7phndunueYEv+4irY6tmeVzrPPEMoV3e4JltrN8Rw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TZo7R6JRjC0MOV6tFurOdHL0XNjkZaXytpxrYL74iiVkqbpO8wZgadPGMuX+enDoV
+         LE/0WDqfxwkF8N8W2EBRuP/aSG6Z3qETCPs6huhJ7feCHoDaAxbMzSpwPrGI2fqPRG
+         TWF57ZXgCjfWRCsh9gOzVGrstinUueN39iuu+WAldr+7iHMr074v1LqKVPEnBJgHnX
+         nRrL3uQVyQPZQe5VVgQuhG3Q8sF95PNkX5fd4OJcrn+XxjwxuIrpfo+9Hv7/L+QeZJ
+         G7C/ffV49s12Orhun54l6WmJ2/sCFaQ6N6A16MHLmnFcQENWAqocOjcqWPXUd5zHCN
+         XxjctW06YkzdA==
+Date:   Mon, 12 Jun 2023 10:29:00 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, tjoseph@cadence.com,
+        robh@kernel.org, kw@linux.com, bhelgaas@google.com,
+        nadeem@cadence.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        vigneshr@ti.com, srk@ti.com, nm@ti.com
+Subject: Re: [PATCH v3] PCI: cadence: Fix Gen2 Link Retraining process
+Message-ID: <ZIbXTMlPKGdLfoRF@lpieralisi>
+References: <20230609173940.GA1252506@bhelgaas>
+ <b91f1df7-7b36-bfee-2182-44ccfb900952@ti.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 4/4] Documentation: PCI: Tidy AER documentation
-Content-Language: en-US
-To:     Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org
-Cc:     Dave Jiang <dave.jiang@intel.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>
-References: <20230609222500.1267795-1-helgaas@kernel.org>
- <20230609222500.1267795-5-helgaas@kernel.org>
-From:   Stefan Roese <sr@denx.de>
-In-Reply-To: <20230609222500.1267795-5-helgaas@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-1.8 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW,
-        SPF_HELO_NONE,SPF_NEUTRAL,T_SCC_BODY_TEXT_LINE autolearn=ham
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b91f1df7-7b36-bfee-2182-44ccfb900952@ti.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -48,286 +57,149 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/10/23 00:25, Bjorn Helgaas wrote:
-> From: Bjorn Helgaas <bhelgaas@google.com>
+On Mon, Jun 12, 2023 at 09:56:27AM +0530, Siddharth Vadapalli wrote:
 > 
-> Consistently use:
 > 
->    PCIe          previously PCIe, PCI Express, or pci express
->    Root Port     previously Root Port or root port
->    Endpoint      previously EndPoint or endpoint
->    AER           previously AER or aer
->    please        previously pls
+> On 09/06/23 23:09, Bjorn Helgaas wrote:
+> > On Wed, Jun 07, 2023 at 02:44:27PM +0530, Siddharth Vadapalli wrote:
+> >> The Link Retraining process is initiated to account for the Gen2 defect in
+> >> the Cadence PCIe controller in J721E SoC. The errata corresponding to this
+> >> is i2085, documented at:
+> >> https://www.ti.com/lit/er/sprz455c/sprz455c.pdf
+> >>
+> >> The existing workaround implemented for the errata waits for the Data Link
+> >> initialization to complete and assumes that the link retraining process
+> >> at the Physical Layer has completed. However, it is possible that the
+> >> Physical Layer training might be ongoing as indicated by the
+> >> PCI_EXP_LNKSTA_LT bit in the PCI_EXP_LNKSTA register.
+> >>
+> >> Fix the existing workaround, to ensure that the Physical Layer training
+> >> has also completed, in addition to the Data Link initialization.
+> >>
+> >> Fixes: 4740b969aaf5 ("PCI: cadence: Retrain Link to work around Gen2 training defect")
+> >> Signed-off-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+> >> Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+> >> ---
+> >>
+> >> Hello,
+> >>
+> >> This patch is based on linux-next tagged next-20230606.
+> >>
+> >> v2:
+> >> https://lore.kernel.org/r/20230315070800.1615527-1-s-vadapalli@ti.com/
+> >> Changes since v2:
+> >> - Merge the cdns_pcie_host_training_complete() function with the
+> >>   cdns_pcie_host_wait_for_link() function, as suggested by Bjorn
+> >>   for the v2 patch.
+> >> - Add dev_err() to notify when Link Training fails, since this is a
+> >>   fatal error and proceeding from this point will almost always crash
+> >>   the kernel.
+> >>
+> >> v1:
+> >> https://lore.kernel.org/r/20230102075656.260333-1-s-vadapalli@ti.com/
+> >> Changes since v1:
+> >> - Collect Reviewed-by tag from Vignesh Raghavendra.
+> >> - Rebase on next-20230315.
+> >>
+> >> Regards,
+> >> Siddharth.
+> >>
+> >>  .../controller/cadence/pcie-cadence-host.c    | 20 +++++++++++++++++++
+> >>  1 file changed, 20 insertions(+)
+> >>
+> >> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> index 940c7dd701d6..70a5f581ff4f 100644
+> >> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> >> @@ -12,6 +12,8 @@
+> >>  
+> >>  #include "pcie-cadence.h"
+> >>  
+> >> +#define LINK_RETRAIN_TIMEOUT HZ
+> >> +
+> >>  static u64 bar_max_size[] = {
+> >>  	[RP_BAR0] = _ULL(128 * SZ_2G),
+> >>  	[RP_BAR1] = SZ_2G,
+> >> @@ -80,8 +82,26 @@ static struct pci_ops cdns_pcie_host_ops = {
+> >>  static int cdns_pcie_host_wait_for_link(struct cdns_pcie *pcie)
+> >>  {
+> >>  	struct device *dev = pcie->dev;
+> >> +	unsigned long end_jiffies;
+> >> +	u16 link_status;
+> >>  	int retries;
+> >>  
+> >> +	/* Wait for link training to complete */
+> >> +	end_jiffies = jiffies + LINK_RETRAIN_TIMEOUT;
+> >> +	do {
+> >> +		link_status = cdns_pcie_rp_readw(pcie, CDNS_PCIE_RP_CAP_OFFSET + PCI_EXP_LNKSTA);
+> >> +		if (!(link_status & PCI_EXP_LNKSTA_LT))
+> >> +			break;
+> >> +		usleep_range(0, 1000);
+> >> +	} while (time_before(jiffies, end_jiffies));
+> >> +
+> >> +	if (!(link_status & PCI_EXP_LNKSTA_LT)) {
+> >> +		dev_info(dev, "Link training complete\n");
+> >> +	} else {
+> >> +		dev_err(dev, "Fatal! Link training incomplete\n");
+> >> +		return -ETIMEDOUT;
+> >> +	}
+> > 
+> > Can I have a brown paper bag, please?  I totally blew it here, and I'm
+> > sorry.
+> > 
+> > You took my advice by combining this with the existing
+> > cdns_pcie_host_wait_for_link(), but I think my advice was poor because
+> > (a) now this additional wait is not clearly connected with the
+> > erratum, and (b) it affects devices that don't have the erratum.
+> > 
+> > IIUC, this is all part of a workaround for the i2085 erratum.  The
+> > original workaround, 4740b969aaf5 ("PCI: cadence: Retrain Link to work
+> > around Gen2 training defect"), added this:
+> > 
+> >   if (!ret && rc->quirk_retrain_flag)
+> >     ret = cdns_pcie_retrain(pcie);
+> > 
+> > I think the wait for link train to complete should also be in
+> > cdns_pcie_retrain() so it's clearly connected with the quirk, which
+> > also means we'd only do the wait for devices with the erratum.
+> > 
+> > Which is EXACTLY what your first patch did, and I missed it.  I am
+> > very sorry.  I guess maybe I thought cdns_pcie_retrain() was a
+> > general-purpose thing, but in fact it's only used for this quirk.
 > 
-> Also update a few awkward wordings.
+> With the current approach implemented in this patch, I could do the following:
+> In the cdns_pcie_host_wait_for_link() function, I obtain the reference to the
+> struct cdns_pcie_rc *rc, using:
+> struct cdns_pcie_rc *rc = container_of(pcie, struct cdns_pcie_rc, pcie);
+> followed by checking if the quirk "quirk_retrain_flag" is set, before proceeding
+> with the Link Training check added by this patch. With this, only the
+> controllers with the quirk will check for the Link Training completion before
+> proceeding. However, the difference with this new approach compared to the
+> approach in the v2 patch is that in this new approach, even in the Link Training
+> Phase, the Link Training check is performed for the controllers with the quirk,
+> unlike the v2 patch where the Link Training check was performed only during the
+> Link Retraining Phase through the cdns_pcie_retrain() function.
 > 
-> Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-
-Reviewed-by: Stefan Roese <sr@denx.de>
-
-Thanks,
-Stefan
-
-> ---
->   Documentation/PCI/pcieaer-howto.rst | 131 ++++++++++++++--------------
->   1 file changed, 65 insertions(+), 66 deletions(-)
+> Also, based on Mani's suggestion, I have measured the latency introduced by the
+> Link Training check for both quirky and non-quirky controllers at:
+> https://lore.kernel.org/r/a63fc8b0-581b-897f-cac6-cb0a0e82c63e@ti.com/
+> If the latency is acceptable, then the current implementation in this v3 patch
+> could be fine too.
 > 
-> diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
-> index 3f91d54af770..e00d63971695 100644
-> --- a/Documentation/PCI/pcieaer-howto.rst
-> +++ b/Documentation/PCI/pcieaer-howto.rst
-> @@ -16,62 +16,61 @@ Overview
->   About this guide
->   ----------------
->   
-> -This guide describes the basics of the PCI Express Advanced Error
-> +This guide describes the basics of the PCI Express (PCIe) Advanced Error
->   Reporting (AER) driver and provides information on how to use it, as
-> -well as how to enable the drivers of endpoint devices to conform with
-> -PCI Express AER driver.
-> +well as how to enable the drivers of Endpoint devices to conform with
-> +the PCIe AER driver.
->   
->   
-> -What is the PCI Express AER Driver?
-> ------------------------------------
-> +What is the PCIe AER Driver?
-> +----------------------------
->   
-> -PCI Express error signaling can occur on the PCI Express link itself
-> -or on behalf of transactions initiated on the link. PCI Express
-> +PCIe error signaling can occur on the PCIe link itself
-> +or on behalf of transactions initiated on the link. PCIe
->   defines two error reporting paradigms: the baseline capability and
->   the Advanced Error Reporting capability. The baseline capability is
-> -required of all PCI Express components providing a minimum defined
-> +required of all PCIe components providing a minimum defined
->   set of error reporting requirements. Advanced Error Reporting
-> -capability is implemented with a PCI Express advanced error reporting
-> +capability is implemented with a PCIe Advanced Error Reporting
->   extended capability structure providing more robust error reporting.
->   
-> -The PCI Express AER driver provides the infrastructure to support PCI
-> -Express Advanced Error Reporting capability. The PCI Express AER
-> -driver provides three basic functions:
-> +The PCIe AER driver provides the infrastructure to support PCIe Advanced
-> +Error Reporting capability. The PCIe AER driver provides three basic
-> +functions:
->   
->     - Gathers the comprehensive error information if errors occurred.
->     - Reports error to the users.
->     - Performs error recovery actions.
->   
-> -AER driver only attaches root ports which support PCI-Express AER
-> -capability.
-> +The AER driver only attaches to Root Ports and RCECs that support the PCIe
-> +AER capability.
->   
->   
->   User Guide
->   ==========
->   
-> -Include the PCI Express AER Root Driver into the Linux Kernel
-> --------------------------------------------------------------
-> +Include the PCIe AER Root Driver into the Linux Kernel
-> +------------------------------------------------------
->   
-> -The PCI Express AER Root driver is a Root Port service driver attached
-> -to the PCI Express Port Bus driver. If a user wants to use it, the driver
-> -has to be compiled. Option CONFIG_PCIEAER supports this capability. It
-> -depends on CONFIG_PCIEPORTBUS, so pls. set CONFIG_PCIEPORTBUS=y and
-> -CONFIG_PCIEAER = y.
-> +The PCIe AER driver is a Root Port service driver attached
-> +via the PCIe Port Bus driver. If a user wants to use it, the driver
-> +must be compiled. It is enabled with CONFIG_PCIEAER, which
-> +depends on CONFIG_PCIEPORTBUS.
->   
-> -Load PCI Express AER Root Driver
-> ---------------------------------
-> +Load PCIe AER Root Driver
-> +-------------------------
->   
->   Some systems have AER support in firmware. Enabling Linux AER support at
-> -the same time the firmware handles AER may result in unpredictable
-> +the same time the firmware handles AER would result in unpredictable
->   behavior. Therefore, Linux does not handle AER events unless the firmware
-> -grants AER control to the OS via the ACPI _OSC method. See the PCI FW 3.0
-> +grants AER control to the OS via the ACPI _OSC method. See the PCI Firmware
->   Specification for details regarding _OSC usage.
->   
->   AER error output
->   ----------------
->   
->   When a PCIe AER error is captured, an error message will be output to
-> -console. If it's a correctable error, it is output as a warning.
-> +console. If it's a correctable error, it is output as an info message.
->   Otherwise, it is printed as an error. So users could choose different
->   log level to filter out correctable error messages.
->   
-> @@ -82,9 +81,9 @@ Below shows an example::
->     0000:50:00.0:    [20] Unsupported Request    (First)
->     0000:50:00.0:   TLP Header: 04000001 00200a03 05010000 00050100
->   
-> -In the example, 'Requester ID' means the ID of the device who sends
-> -the error message to root port. Pls. refer to pci express specs for
-> -other fields.
-> +In the example, 'Requester ID' means the ID of the device that sent
-> +the error message to the Root Port. Please refer to PCIe specs for other
-> +fields.
->   
->   AER Statistics / Counters
->   -------------------------
-> @@ -96,41 +95,41 @@ Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
->   Developer Guide
->   ===============
->   
-> -To enable AER aware support requires a software driver to provide
-> -callbacks.
-> +To enable error recovery, a software driver must provide callbacks.
->   
-> -To support AER better, developers need understand how AER does work
-> -firstly.
-> +To support AER better, developers need to understand how AER works.
->   
-> -PCI Express errors are classified into two types: correctable errors
-> -and uncorrectable errors. This classification is based on the impacts
-> +PCIe errors are classified into two types: correctable errors
-> +and uncorrectable errors. This classification is based on the impact
->   of those errors, which may result in degraded performance or function
->   failure.
->   
->   Correctable errors pose no impacts on the functionality of the
-> -interface. The PCI Express protocol can recover without any software
-> +interface. The PCIe protocol can recover without any software
->   intervention or any loss of data. These errors are detected and
-> -corrected by hardware. Unlike correctable errors, uncorrectable
-> +corrected by hardware.
-> +
-> +Unlike correctable errors, uncorrectable
->   errors impact functionality of the interface. Uncorrectable errors
-> -can cause a particular transaction or a particular PCI Express link
-> +can cause a particular transaction or a particular PCIe link
->   to be unreliable. Depending on those error conditions, uncorrectable
->   errors are further classified into non-fatal errors and fatal errors.
->   Non-fatal errors cause the particular transaction to be unreliable,
-> -but the PCI Express link itself is fully functional. Fatal errors, on
-> +but the PCIe link itself is fully functional. Fatal errors, on
->   the other hand, cause the link to be unreliable.
->   
-> -When AER is enabled, a PCI Express device will automatically send an
-> -error message to the PCIe root port above it when the device captures
-> +When PCIe error reporting is enabled, a device will automatically send an
-> +error message to the Root Port above it when it captures
->   an error. The Root Port, upon receiving an error reporting message,
-> -internally processes and logs the error message in its PCI Express
-> -capability structure. Error information being logged includes storing
-> +internally processes and logs the error message in its AER
-> +Capability structure. Error information being logged includes storing
->   the error reporting agent's requestor ID into the Error Source
->   Identification Registers and setting the error bits of the Root Error
-> -Status Register accordingly. If AER error reporting is enabled in Root
-> -Error Command Register, the Root Port generates an interrupt if an
-> +Status Register accordingly. If AER error reporting is enabled in the Root
-> +Error Command Register, the Root Port generates an interrupt when an
->   error is detected.
->   
-> -Note that the errors as described above are related to the PCI Express
-> +Note that the errors as described above are related to the PCIe
->   hierarchy and links. These errors do not include any device specific
->   errors because device specific errors will still get sent directly to
->   the device driver.
-> @@ -138,14 +137,14 @@ the device driver.
->   Provide callbacks
->   -----------------
->   
-> -callback reset_link to reset pci express link
-> -~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +callback reset_link to reset PCIe link
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   
-> -This callback is used to reset the pci express physical link when a
-> -fatal error happens. The root port aer service driver provides a
-> -default reset_link function, but different upstream ports might
-> -have different specifications to reset pci express link, so all
-> -upstream ports should provide their own reset_link functions.
-> +This callback is used to reset the PCIe physical link when a
-> +fatal error happens. The Root Port AER service driver provides a
-> +default reset_link function, but different Upstream Ports might
-> +have different specifications to reset the PCIe link, so
-> +Upstream Port drivers may provide their own reset_link functions.
->   
->   Section 3.2.2.2 provides more detailed info on when to call
->   reset_link.
-> @@ -153,24 +152,24 @@ reset_link.
->   PCI error-recovery callbacks
->   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->   
-> -The PCI Express AER Root driver uses error callbacks to coordinate
-> +The PCIe AER Root driver uses error callbacks to coordinate
->   with downstream device drivers associated with a hierarchy in question
->   when performing error recovery actions.
->   
->   Data struct pci_driver has a pointer, err_handler, to point to
->   pci_error_handlers who consists of a couple of callback function
-> -pointers. AER driver follows the rules defined in
-> -pci-error-recovery.rst except pci express specific parts (e.g.
-> -reset_link). Pls. refer to pci-error-recovery.rst for detailed
-> +pointers. The AER driver follows the rules defined in
-> +pci-error-recovery.rst except PCIe-specific parts (e.g.
-> +reset_link). Please refer to pci-error-recovery.rst for detailed
->   definitions of the callbacks.
->   
-> -Below sections specify when to call the error callback functions.
-> +The sections below specify when to call the error callback functions.
->   
->   Correctable errors
->   ~~~~~~~~~~~~~~~~~~
->   
->   Correctable errors pose no impacts on the functionality of
-> -the interface. The PCI Express protocol can recover without any
-> +the interface. The PCIe protocol can recover without any
->   software intervention or any loss of data. These errors do not
->   require any recovery actions. The AER driver clears the device's
->   correctable error status register accordingly and logs these errors.
-> @@ -181,12 +180,12 @@ Non-correctable (non-fatal and fatal) errors
->   If an error message indicates a non-fatal error, performing link reset
->   at upstream is not required. The AER driver calls error_detected(dev,
->   pci_channel_io_normal) to all drivers associated within a hierarchy in
-> -question. for example::
-> +question. For example::
->   
-> -  EndPoint<==>DownstreamPort B<==>UpstreamPort A<==>RootPort
-> +  Endpoint <==> Downstream Port B <==> Upstream Port A <==> Root Port
->   
-> -If Upstream port A captures an AER error, the hierarchy consists of
-> -Downstream port B and EndPoint.
-> +If Upstream Port A captures an AER error, the hierarchy consists of
-> +Downstream Port B and Endpoint.
->   
->   A driver may return PCI_ERS_RESULT_CAN_RECOVER,
->   PCI_ERS_RESULT_DISCONNECT, or PCI_ERS_RESULT_NEED_RESET, depending on
-> @@ -207,7 +206,7 @@ Frequent Asked Questions
->   ------------------------
->   
->   Q:
-> -  What happens if a PCI Express device driver does not provide an
-> +  What happens if a PCIe device driver does not provide an
->     error recovery handler (pci_driver->err_handler is equal to NULL)?
->   
->   A:
-> @@ -244,5 +243,5 @@ from:
->   
->       https://git.kernel.org/cgit/linux/kernel/git/gong.chen/aer-inject.git/
->   
-> -More information about aer-inject can be found in the document comes
-> -with its source code.
-> +More information about aer-inject can be found in the document in
-> +its source code.
+> Kindly let me know which approach among the following seems to be the best one:
+> 1. The approach implemented in v2 patch (I will make minor changes to the patch
+> to print out the "Fatal" error, so that users will be informed of the cause of
+> the crash, followed by posting a v4 patch with this change).
+> 2. The current implementation in the v3 patch with a check added to see if the
+> controller has the quirk_retrain_flag set, before proceeding with the Link
+> Training check.
+> 3. The current implementation in the v3 patch as is, without any modification,
+> if the latency introduced is not a concern and the sanity check for Link
+> Training completion for non-quirky controllers appears acceptable.
 
-Viele Grüße,
-Stefan Roese
+The point is, you stated it yourself that the non-quirky path is broken
+too in its *current* form, I don't think there is any other option on
+the table other than (3) (unless we want to rely on probe time timing
+to hide the issue; that to me it is not even considerable as an option).
 
--- 
-DENX Software Engineering GmbH,      Managing Director: Erika Unter
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-51 Fax: (+49)-8142-66989-80 Email: sr@denx.de
+Lorenzo
