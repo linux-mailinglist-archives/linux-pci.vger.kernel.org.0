@@ -2,51 +2,51 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id D614573044A
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jun 2023 17:56:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F1C8730452
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jun 2023 17:56:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236300AbjFNP4L (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jun 2023 11:56:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50750 "EHLO
+        id S245011AbjFNP4r (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jun 2023 11:56:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236766AbjFNP4I (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 11:56:08 -0400
+        with ESMTP id S245176AbjFNP4r (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 11:56:47 -0400
 Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.154.123])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 237691BC
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jun 2023 08:56:08 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370A2D2
+        for <linux-pci@vger.kernel.org>; Wed, 14 Jun 2023 08:56:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1686758167; x=1718294167;
+  t=1686758204; x=1718294204;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=iQVdQ5/Fd7A+l93rxa4YuqFXIveaFWB1LxC6Y87vXmk=;
-  b=L65XuDxuapsBBoDyiwgz9CyggiFV7lt+r1Z55xGTSDoJSx17GDAr63f4
-   0MHiLitLwZzADWRdwVavINdO8zFQjsZ4rkWC9JcSNLEeqn1KLKGjliCon
-   hfC5ZPF3nZZdE7d2X9hZ6SODennzFAQns54ROmWfth5U+dTlJkG+0vj43
-   N67mAVLA9oQthX2QJNfxE3lAnTefdrOSEFsC5L4rt8Cv2ER5vvCjFp+FC
-   e1vNvHY4vP8XCKdXffMnHEoG2voNNePCFmakdW8cjNtMHjtmExuu6w4F2
-   lggxOvSURXxgMcatR4G4Tz1xa9qiaGbiPgmikztjDP/OWd+/hzq09E49p
-   Q==;
+  bh=56EU1//nUi8+2GPEi8I4JHcx+44wHat4IeyEbEwYssU=;
+  b=xc6JX/PKi+CAFKzCbZQdcEJVM+Ru4qfunOMvHOppOU7gOcw1Oj6PGCJs
+   XHpIn72IGWJija/kVjbW/oV640ozG3d90RuCPv29h+iS4FaQ34q8A2w6P
+   GPlkUzPhI9IR9yt2rHCciuQtmaVTpZNigdHyb/Eoylg19+SxQLAGXp69x
+   ExHQhxaqwZAnhH6LajbWhriOxkgrJjElAOEABL5KJYpv+KSlLX3Nji2/U
+   r5bHym/XV5TITNuN9QAaNFtnQlS7y+Jl3kR1M8gyFbXxn0tKclPxRgFOd
+   gGvt2M2StTed1u+cejDly8HhItfCcYVZ7BWUfrwk7fRQdN6Q1/xQKa1t4
+   A==;
 X-IronPort-AV: E=Sophos;i="6.00,242,1681196400"; 
-   d="scan'208";a="156969572"
+   d="scan'208";a="220290982"
 X-Amp-Result: SKIPPED(no attachment in message)
 Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jun 2023 08:56:03 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.85.144) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 14 Jun 2023 08:56:43 -0700
+Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
+ chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 14 Jun 2023 08:56:02 -0700
+ 15.1.2507.21; Wed, 14 Jun 2023 08:56:04 -0700
 Received: from daire-X570.emdalo.com (10.10.115.15) by
  chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.2507.21 via Frontend Transport; Wed, 14 Jun 2023 08:56:01 -0700
+ 15.1.2507.21 via Frontend Transport; Wed, 14 Jun 2023 08:56:03 -0700
 From:   <daire.mcnamara@microchip.com>
 To:     <conor.dooley@microchip.com>, <lpieralisi@kernel.org>,
         <kw@linux.com>, <robh@kernel.org>, <bhelgaas@google.com>,
         <linux-pci@vger.kernel.org>, <linux-riscv@lists.infradead.org>
 CC:     Daire McNamara <daire.mcnamara@microchip.com>
-Subject: [PATCH v1 1/8] PCI: microchip: Correct the DED and SEC interrupt bit offsets
-Date:   Wed, 14 Jun 2023 16:55:49 +0100
-Message-ID: <20230614155556.4095526-2-daire.mcnamara@microchip.com>
+Subject: [PATCH v1 2/8] PCI: microchip: Remove cast warning for devm_add_action_or_reset() arg
+Date:   Wed, 14 Jun 2023 16:55:50 +0100
+Message-ID: <20230614155556.4095526-3-daire.mcnamara@microchip.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230614155556.4095526-1-daire.mcnamara@microchip.com>
 References: <20230614155556.4095526-1-daire.mcnamara@microchip.com>
@@ -65,39 +65,47 @@ X-Mailing-List: linux-pci@vger.kernel.org
 
 From: Daire McNamara <daire.mcnamara@microchip.com>
 
-The SEC and DED interrupt bits were the wrong way round so the SEC
-interrupt handler attempted to mask, unmask, and clear the DED interrupt
-and vice versa. Correct the bit offsets so each interrupt handler
-operates properly.
+The kernel test robot reported that the ugly cast from
+void(*)(struct clk *) to void (*)(void *) converts to incompatible
+function type.  This commit adopts the common convention of creating a
+trivial stub function that takes a void * and passes it to the
+underlying function that expects the more specific type.
 
 Fixes: 6f15a9c9f941 ("PCI: microchip: Add Microchip PolarFire PCIe controller driver")
 Signed-off-by: Daire McNamara <daire.mcnamara@microchip.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- drivers/pci/controller/pcie-microchip-host.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/pci/controller/pcie-microchip-host.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/pci/controller/pcie-microchip-host.c b/drivers/pci/controller/pcie-microchip-host.c
-index 5e710e485464..dd5245904c87 100644
+index dd5245904c87..73046bad1521 100644
 --- a/drivers/pci/controller/pcie-microchip-host.c
 +++ b/drivers/pci/controller/pcie-microchip-host.c
-@@ -167,12 +167,12 @@
- #define EVENT_PCIE_DLUP_EXIT			2
- #define EVENT_SEC_TX_RAM_SEC_ERR		3
- #define EVENT_SEC_RX_RAM_SEC_ERR		4
--#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		5
--#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		6
-+#define EVENT_SEC_PCIE2AXI_RAM_SEC_ERR		5
-+#define EVENT_SEC_AXI2PCIE_RAM_SEC_ERR		6
- #define EVENT_DED_TX_RAM_DED_ERR		7
- #define EVENT_DED_RX_RAM_DED_ERR		8
--#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		9
--#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		10
-+#define EVENT_DED_PCIE2AXI_RAM_DED_ERR		9
-+#define EVENT_DED_AXI2PCIE_RAM_DED_ERR		10
- #define EVENT_LOCAL_DMA_END_ENGINE_0		11
- #define EVENT_LOCAL_DMA_END_ENGINE_1		12
- #define EVENT_LOCAL_DMA_ERROR_ENGINE_0		13
+@@ -848,6 +848,13 @@ static const struct irq_domain_ops event_domain_ops = {
+ 	.map = mc_pcie_event_map,
+ };
+ 
++static inline void mc_pcie_chip_off_action(void *data)
++{
++	struct clk *clk = data;
++
++	clk_disable_unprepare(clk);
++}
++
+ static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
+ {
+ 	struct clk *clk;
+@@ -863,8 +870,7 @@ static inline struct clk *mc_pcie_init_clk(struct device *dev, const char *id)
+ 	if (ret)
+ 		return ERR_PTR(ret);
+ 
+-	devm_add_action_or_reset(dev, (void (*) (void *))clk_disable_unprepare,
+-				 clk);
++	devm_add_action_or_reset(dev, mc_pcie_chip_off_action, clk);
+ 
+ 	return clk;
+ }
 -- 
 2.25.1
 
