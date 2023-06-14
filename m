@@ -2,185 +2,369 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 46DF372FBA4
-	for <lists+linux-pci@lfdr.de>; Wed, 14 Jun 2023 12:50:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D183972FD1C
+	for <lists+linux-pci@lfdr.de>; Wed, 14 Jun 2023 13:40:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232606AbjFNKuk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jun 2023 06:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56204 "EHLO
+        id S231361AbjFNLkh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jun 2023 07:40:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229727AbjFNKuk (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 06:50:40 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1FE8E196;
-        Wed, 14 Jun 2023 03:50:36 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.43])
-        by gateway (Coremail) with SMTP id _____8DxSup7m4lkUhgFAA--.10726S3;
-        Wed, 14 Jun 2023 18:50:35 +0800 (CST)
-Received: from [10.20.42.43] (unknown [10.20.42.43])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK8p6m4lkKIUaAA--.1634S3;
-        Wed, 14 Jun 2023 18:50:34 +0800 (CST)
-Message-ID: <dbf0d89f-717a-1f78-aef2-f30506751d4d@loongson.cn>
-Date:   Wed, 14 Jun 2023 18:50:34 +0800
+        with ESMTP id S244332AbjFNLkC (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 07:40:02 -0400
+Received: from mail-lf1-x130.google.com (mail-lf1-x130.google.com [IPv6:2a00:1450:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BB21BC3;
+        Wed, 14 Jun 2023 04:39:29 -0700 (PDT)
+Received: by mail-lf1-x130.google.com with SMTP id 2adb3069b0e04-4f60a27c4a2so7944326e87.2;
+        Wed, 14 Jun 2023 04:39:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686742767; x=1689334767;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=UufkQX0e5g/FH+9wvBQ0YV2NS3S7wV2gra6qt5MrBTU=;
+        b=DaxHuG5W+hfahOonTPbhO62jO5pm+tIL689UINryXdnGFP37D53bO+W2hoSod7Abik
+         XTPZOziOh1D/y0dzIGhmG3/2/+MzFVuiZLh0Vy799bUrTIn2JJmBXyBAT8ToUqWJoLhN
+         2gqwfrZuR4118B7sNhfyuf7hWIKlJjcTSvJgHoK8ozD0rjf+wjTnhRjN7a8M5iFoJFI3
+         3YcddNhX+BrM5BsOe0MEetNeRA5A3Vbqf7OkV/zrL68M2FMZw0FRk4uvw7Ida2zwiwGi
+         RRbL52ZSrYO6qlxWEtY20BkkHK5Q/sSrv7x7rCmy7fBFHLKJ2qLw/tIJwmRB8oqgNmVB
+         EUVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686742767; x=1689334767;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UufkQX0e5g/FH+9wvBQ0YV2NS3S7wV2gra6qt5MrBTU=;
+        b=Ap8KkCBYgASw0UTycqwtM9ENEzzuhGWlsJ+Ey+k6jMO5XMokLZxi+KqjMAQO1n2nJ8
+         Rcxk3SFQmOkS9EmyQjdwf1DKZ/UOF6Qpp0xAAVv4FKS7iMR4dAGmz9YxK8ikdxYz4KGz
+         7GLZtbrriTW2IPB/h6mYC4o82fu9lyEM7fXMfSjJHx6SE9S1ouP6gtSrRui1xkfZTSD2
+         c+8Y6ZGxAlLte+eg4W5WBJDdVZKX/k+gOkn9dRwLwU6x6MBlkGZDePO5e6HGcEeBg7cO
+         UccDKKx38BsLWVTVL8wCtV7C9asHgIsiGFOWAlG3jNrvRr/TH3C8+/UmODf2h5cknojW
+         yqrw==
+X-Gm-Message-State: AC+VfDx1pT+Ga8ZbwrsRyRT7cUyPmQVgZg/ITIReJxc0CPeyvR18TzIy
+        /xSGNFkXlwUTstn9RDI31BHmRsAne9eKcQ==
+X-Google-Smtp-Source: ACHHUZ7zhdUgxywtq7ISNRdbgoz3sutwkEvC8knHUMgUcmCKdAn7kIn2AnCtaI3FH3bJ5kmejRP4pw==
+X-Received: by 2002:a19:e04a:0:b0:4f3:ab1b:f765 with SMTP id g10-20020a19e04a000000b004f3ab1bf765mr7020872lfj.18.1686742767101;
+        Wed, 14 Jun 2023 04:39:27 -0700 (PDT)
+Received: from mobilestation ([95.79.140.35])
+        by smtp.gmail.com with ESMTPSA id b18-20020ac247f2000000b004f1430ee142sm2096023lfp.17.2023.06.14.04.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Jun 2023 04:39:26 -0700 (PDT)
+Date:   Wed, 14 Jun 2023 14:39:24 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "mani@kernel.org" <mani@kernel.org>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "kw@linux.com" <kw@linux.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "kishon@kernel.org" <kishon@kernel.org>,
+        "marek.vasut+renesas@gmail.com" <marek.vasut+renesas@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH v16 19/22] PCI: rcar-gen4: Add R-Car Gen4 PCIe Host
+ support
+Message-ID: <20230614113924.7ssdcl2njivdienp@mobilestation>
+References: <20230605143908.fcgqzedp7oiarbyu@mobilestation>
+ <TYBPR01MB5341A67CF6DFFCB396F13195D853A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20230607121533.cxvidvdqat5h2tqu@mobilestation>
+ <TYBPR01MB53417E55F5F9E667D679901CD850A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20230608121115.qnilmougdfd6fdyq@mobilestation>
+ <TYBPR01MB5341AD39983D6B39034AF01BD851A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20230609105407.c4olqepv7vuoqktz@mobilestation>
+ <TYBPR01MB53411835ACCD884FCA9ECBE2D854A@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+ <20230612195149.hdnttkcabynmf4kx@mobilestation>
+ <TYBPR01MB534161A79DFF1830B65D303FD85AA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v7 2/8] PCI/VGA: Deal only with VGA class devices
-To:     Sui Jingfeng <15330273260@189.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
-        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org
-References: <20230613030151.216625-1-15330273260@189.cn>
- <20230613030151.216625-3-15330273260@189.cn>
-Content-Language: en-US
-From:   Sui Jingfeng <suijingfeng@loongson.cn>
-Organization: Loongson
-In-Reply-To: <20230613030151.216625-3-15330273260@189.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8DxK8p6m4lkKIUaAA--.1634S3
-X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBj93XoWxXr43WFyxtr4ruFWDXr4xAFc_yoW5tr1xpF
-        yrGa45KrW8Ga4xW3y2qF18ZFy5ZFZ0ka4rtr42k34FkFWqkw1qqF95GFyYq343JrWkJF1I
-        qa1ayrnruanFgabCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUU9ab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx1l5I
-        8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AK
-        xVWxJVW8Jr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-        CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Y
-        z7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zV
-        AF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4l
-        IxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCw
-        CI42IY6I8E87Iv67AKxVWxJVW8Jr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsG
-        vfC2KfnxnUUI43ZEXa7IU88MaUUUUUU==
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TYBPR01MB534161A79DFF1830B65D303FD85AA@TYBPR01MB5341.jpnprd01.prod.outlook.com>
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
+On Wed, Jun 14, 2023 at 02:30:13AM +0000, Yoshihiro Shimoda wrote:
+> Hello Serge,
+> 
+>  From: Serge Semin, Sent: Tuesday, June 13, 2023 4:52 AM
+> > 
+> > On Mon, Jun 12, 2023 at 01:19:02PM +0000, Yoshihiro Shimoda wrote:
+> > > Hello Serge,
+> > >
+> > > > From: Serge Semin, Sent: Friday, June 9, 2023 7:54 PM
+> > > <snip>
+> > > > > > > static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
+> > > > > > > {
+> > > > > > >         struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> > > > > > >         int i;
+> > > > > > >
+> > > > > > >         rcar_gen4_pcie_ltssm_enable(rcar, true);
+> > > > > > >
+> > > > > > >         /*
+> > > > > > >          * Require direct speed change here. Otherwise RDLH_LINK_UP of
+> > > > > > >          * PCIEINTSTS0 which is this controller specific register may not
+> > > > > > >          * be set.
+> > > > > > >          */
+> > > > > >
+> > > > > > >         if (rcar->needs_speed_change) {
+> > > > > >
+> > > > > > Seeing this is specified for the root port only what about
+> > > > > > replacing the statement with just test whether the rcar_gen4_pcie.mode ==
+> > > > > > DW_PCIE_RC_TYPE? Thus you'll be ablt to drop the needs_speed_change field.
+> > > > >
+> > > > > Thank you for the comment. I'll fix it.
+> > > > >
+> > > > > > BTW Just curious. Why is the loop below enabled for the Root Port
+> > > > > > only? What about the end-point controller? It's the same hardware
+> > > > > > after all..
+> > > > >
+> > > > > This is reused from v16 and then it used "link retraining" which is only for
+> > > > > the Root Port. As you mentioned, it seems endpoint controller is also needed
+> > > > > if we use direct speed change.
+> > > > >
+> > > > > > >                 for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
+> > > > > > >                         rcar_gen4_pcie_speed_change(dw);
+> > > > > > >                         msleep(100);
+> > > > > > >                         if (rcar_gen4_pcie_check_current_link(dw))
+> > > > > > >                                 return 0;
+> > > > > > >                 }
+> > > > > >
+> > > > > > Did you trace how many iterations this loop normally takes?
+> > > > >
+> > > > > i = 0 or 1 (if the max-link-speed is suitable for a connected device.)
+> > > > >
+> > > > > > Is it
+> > > > > > constant or varies for the same platform setup and a connected link
+> > > > > > partner? Does the number of iterations depend on the target link speed
+> > > > > > specified via the "max-link-speed" property?
+> > > > >
+> > > >
+> > > > > This is not related to the "max-link-speed". It seems to related to
+> > > > > a link partner.
+> > > > > 		LinkCap	max-link-speed	loop
+> > > > > Device A		4	4		1
+> > > > > Device A		4	3		1
+> > > > > Device B		3	3		0
+> > > >
+> > > > Great! If so I would have just left a single unconditional
+> > > > rcar_gen4_pcie_speed_change() call placed right after the
+> > > > rcar_gen4_pcie_ltssm_enable() method with no delays afterwards. These
+> > > > methods would have been invoked in the framework of
+> > > > dw_pcie_start_link() after which the dw_pcie_wait_for_link() method is
+> > > > called with several checks parted with the ~100ms delay. It will make
+> > > > sure that at least some link is up with the link state printed to the
+> > > > system log. If for some reason the performance degradation happens
+> > > > then it will be up to the system administrator to investigate what was
+> > > > wrong. Your driver did as much is it could to reach the best link gen.
+> > >
+> > > IIUC, is your suggestion like the following code?
+> > > ---
+> > > 	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> > > 	if (!dw_pcie_wait_for_link(dw)) {
+> > > 		rcar_gen4_pcie_speed_change(dw);
+> > > 		return 0;
+> > > 	}
+> > > ---
+> > >
+> > > Unfortunately, it doesn't work correctly...
+> > > The following code can work correctly. The value of i is still 1 on the device A.
+> > > What do you think that the following code is acceptable?
+> > > ---
+> > > 	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> > > 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
+> > > 		msleep(100);
+> > > 		rcar_gen4_pcie_speed_change(dw);
+> > > 		if (dw_pcie_link_up(dw)) {
+> > > 			printk("%s:%d\n", __func__, i);
+> > > 			return 0;
+> > > 		}
+> > > 	}
+> > > ---
+> > 
+> > My idea was to implement something like this:
+> > 
+> > +static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
+> > +{
+> > +	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
+> > +
+> > +	rcar_gen4_pcie_ltssm_enable(rcar, true);
+> > +
+> > +	rcar_gen4_pcie_speed_change(dw);
+> > +
+> > +	return 0;
+> > +}
+> > 
+> > and retain the rcar_gen4_pcie_link_up() method as is.
+> 
+> Unfortunately, such a code doesn't work on my environment...
+> 
+> > * Note: originally your loop used to have the msleep() call performed
+> > after the first rcar_gen4_pcie_speed_change() invocation. Thus the
+> > delay can be dropped if there is only one iteration implemented (see
+> > further to understand why).
+> 
+> Calling rcar_gen4_pcie_speed_change() multiple times is required on
+> my environment. I thought msleep(100) was quite long so that I tried
+> other wait interval like below:
+> 
+>  msleep(1) : about 5 loops is needed for link. (about 5 msec.)
+>  usleep_range(100, 110) : about 400 loops is needed for link. (about 40 msec.)
+>  usleep_range(500, 600) : about 80 loops is needed for link. (about 40 msec.)
+> 
+> The delay timing doesn't seems important. Both cases below can work correctly.
+> --- case 1 ---
+> 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
+> 		rcar_gen4_pcie_speed_change(dw);
+> 		if (dw_pcie_link_up(dw)) {
+> 			printk("%s:%d\n", __func__, i); // will be removed
+> 			return 0;
+> 		}
 
-On 2023/6/13 11:01, Sui Jingfeng wrote:
-> From: Sui Jingfeng <suijingfeng@loongson.cn>
->
-> Deal only with the VGA devcie(pdev->class == 0x0300), so replace the
-> pci_get_subsys() function with pci_get_class(). Filter the non-PCI display
-> device(pdev->class != 0x0300) out. There no need to process the non-display
-> PCI device.
->
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+> 		msleep(1);
+
+Why? Just set it to 5 ms. In anyway please see the next message.
+
+> 	}
 > ---
->   drivers/pci/vgaarb.c | 22 ++++++++++++----------
->   1 file changed, 12 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> index c1bc6c983932..22a505e877dc 100644
-> --- a/drivers/pci/vgaarb.c
-> +++ b/drivers/pci/vgaarb.c
-> @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
->   	struct pci_dev *bridge;
->   	u16 cmd;
->   
-> -	/* Only deal with VGA class devices */
-> -	if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
-> -		return false;
-> -
+> --- case 2 ---
+> 	for (i = 0; i < SPEED_CHANGE_MAX_RETRIES; i++) {
+> 		rcar_gen4_pcie_speed_change(dw);
+> 		msleep(1);
+> 		if (dw_pcie_link_up(dw)) {
+> 			printk("%s:%d\n", __func__, i); // will be removed
+> 			return 0;
+> 		}
+> 	}
+> ---
+> 
+> So, I'll use case 1 for it.
 
-Hi, here is probably a bug fixing.
+Ah. I think I get it now. Your spreadsheet:
 
-For an example, nvidia render only GPU typically has 0x0380.
+                LinkCap max-link-speed  loop
+Device A           4          4           1
+Device A           4          3           1
+Device B           3          3           0
 
-at its PCI class number, but  render only GPU should not participate in 
-the arbitration.
+actually meant (loop+1) iterations. So in case of Gen4 you'll need
+three speed changes (one already enabled in the dw_pcie_setup_rc()
+method and another two ones are performed in your loop). Similarly in
+case of Gen3 you'll need only one iteration. I bet you won't need to
+call rcar_gen4_pcie_speed_change() at all if gen2 needs to be trained.
+Could you try it out?
 
-As it shouldn't snoop the legacy fixed VGA address.
+Anyway based on what you discovered and on my experience working with
+that controller, there should be as many
+GEN2_CTRL_OFF.DIRECT_SPEED_CHANGE flag changes as the target speed
+value, i.e. no flag switch if Gen1 is required, one flag switch if
+Gen2 is required and so on. Although I failed to find any explicit
+statement about that in the HW-manual.
 
-It(render only GPU) can not display anything.
+In addition to the above I've found out that
+GEN2_CTRL_OFF.DIRECT_SPEED_CHANGE field is actually self cleared when
+the speed change occurs (see the register description in the HW
+reference manual). We can use it to implement the
+dw_pcie_link_up()-independent link training algorithm like this:
 
++#define RCAR_RETRAIN_MAX_CHECK		10
++#define RCAR_LINK_SPEED_MAX		4
++
++static bool rcar_gen4_pcie_speed_change(struct dw_pcie *dw)
++{
++	u32 val;
++	int i;
++
++	val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
++	val &= ~PORT_LOGIC_SPEED_CHANGE;
++	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
++
++	val |= PORT_LOGIC_SPEED_CHANGE;
++	dw_pcie_writel_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
++
++	for (i = 0; i < RCAR_SPEED_CHANGE_WAIT_RETRIES; i++) {
++		val = dw_pcie_readl_dbi(dw, PCIE_LINK_WIDTH_SPEED_CONTROL);
++		if (!(val & PORT_LOGIC_SPEED_CHANGE))
++			return true;
++
++		msleep(1);
++	}
++
++	return false;
++}
++
++static int rcar_gen4_pcie_start_link(struct dw_pcie *dw)
++{
++	struct rcar_gen4_pcie *rcar = to_rcar_gen4_pcie(dw);
++	int i, changes;
++
++	rcar_gen4_pcie_ltssm_enable(rcar, true);
++
++	changes = min_not_zero(dw->link_gen, RCAR_LINK_SPEED_MAX);
++	for (i = 0; i < changes; ++i) {
++		if (!rcar_gen4_pcie_speed_change(dw))
++			break;
++	}
++
++	return 0;
++}
 
-But 0x0380 >> 8 = 0x03, the filter  failed.
+Note 1. The actual link state will be checked in the framework of the
+dw_pcie_wait_for_link() function, by means of dw_pcie_link_up().
 
+Note 2. RCAR_LINK_SPEED_MAX is deliberately set to 4 because DW PCIe
+EP core driver doesn't set the PORT_LOGIC_SPEED_CHANGE flag. In case
+of the DW PCIe Root Port at most 3 iterations should be enough.
 
->   	/* Allocate structure */
->   	vgadev = kzalloc(sizeof(struct vga_device), GFP_KERNEL);
->   	if (vgadev == NULL) {
-> @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->   	struct pci_dev *pdev = to_pci_dev(dev);
->   	bool notify = false;
->   
-> -	vgaarb_dbg(dev, "%s\n", __func__);
-> +	/* Only deal with VGA class devices */
-> +	if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
-> +		return 0;
+Note 3. Please use the RCAR_ prefix for the vendor-specific macros.
+It concerns the entire series.
 
-So here we only care 0x0300, my initial intent is to make an optimization,
+Could you try out the code suggested above?
 
-nowadays sane display graphic card should all has 0x0300 as its PCI 
-class number, is this complete right?
+-Serge(y)
 
-```
-
-#define PCI_BASE_CLASS_DISPLAY        0x03
-#define PCI_CLASS_DISPLAY_VGA        0x0300
-#define PCI_CLASS_DISPLAY_XGA        0x0301
-#define PCI_CLASS_DISPLAY_3D        0x0302
-#define PCI_CLASS_DISPLAY_OTHER        0x0380
-
-```
-
-Any ideas ?
-
->   	/* For now we're only intereted in devices added and removed. I didn't
->   	 * test this thing here, so someone needs to double check for the
-> @@ -1510,6 +1508,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->   	else if (action == BUS_NOTIFY_DEL_DEVICE)
->   		notify = vga_arbiter_del_pci_device(pdev);
->   
-> +	vgaarb_dbg(dev, "%s: action = %lu\n", __func__, action);
-> +
->   	if (notify)
->   		vga_arbiter_notify_clients();
->   	return 0;
-> @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device = {
->   
->   static int __init vga_arb_device_init(void)
->   {
-> +	struct pci_dev *pdev = NULL;
->   	int rc;
-> -	struct pci_dev *pdev;
->   
->   	rc = misc_register(&vga_arb_device);
->   	if (rc < 0)
-> @@ -1545,11 +1545,13 @@ static int __init vga_arb_device_init(void)
->   
->   	/* We add all PCI devices satisfying VGA class in the arbiter by
->   	 * default */
-> -	pdev = NULL;
-> -	while ((pdev =
-> -		pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> -			       PCI_ANY_ID, pdev)) != NULL)
-> +	while (1) {
-> +		pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
-> +		if (!pdev)
-> +			break;
-> +
->   		vga_arbiter_add_pci_device(pdev);
-> +	}
->   
->   	pr_info("loaded\n");
->   	return rc;
-
--- 
-Jingfeng
-
+> 
+> > You don't need to wait for the link to actually get up in the
+> > start_link() callback because there is the link_up() callback, which
+> > is called from the dw_pcie_wait_for_link() method during the generic
+> > DWC PCIe setup procedure. See:
+> 
+> Since the procedure will call rcar_gen4_pcie_speed_change() from
+> ->start_link() once, my environment cannot work correctly...
+> 
+> Best regards,
+> Yoshihiro Shimoda
+> 
+> > dw_pcie_host_init():
+> > +-> ops->host_init()
+> > +-> ...
+> > +-> dw_pcie_setup_rc()
+> > |   +-> ...
+> > |   +-> dw_pcie_setup()
+> > |   +-> ...
+> > +-> if !dw_pcie_link_up()
+> > |   |   +-> ops->link_up()
+> > |   +-> dw_pcie_start_link()
+> > |       +-> ops->start_link()
+> > +-> dw_pcie_wait_for_link();   // See, wait-procedure is already performed
+> > |   +-> loop 10 times          // for you in the core driver together
+> > |       +-> dw_pcie_link_up()  // with the delays between the checks
+> > |           +-> ops->link_up()
+> > |       +-> msleep(~100)
+> > +-> ...
+> > 
+> > -Serge(y)
+> > 
+> > >
+> > > Best regards,
+> > > Yoshihiro Shimoda
+> > >
+> > > > -Serge(y)
+> > >
