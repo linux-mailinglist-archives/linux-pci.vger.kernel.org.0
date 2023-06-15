@@ -2,63 +2,55 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D02732136
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 22:58:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 92DB8732149
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 23:05:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229853AbjFOU64 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 16:58:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54416 "EHLO
+        id S236513AbjFOVFK (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 17:05:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229711AbjFOU6z (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 16:58:55 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B296726AA;
-        Thu, 15 Jun 2023 13:58:53 -0700 (PDT)
+        with ESMTP id S234786AbjFOVE5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 17:04:57 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79952193
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jun 2023 14:04:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686862733; x=1718398733;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=u/yF5q/mKuNIIasnmFpVP4NTwMSDM4yMAcvhwIuO2kk=;
-  b=bCZEc/ycpijCdo006at7d0IXwdTvXZpgaQBXMKV7mEdLL9iKnkuBvWeu
-   b/BaAYd2gd5wD4EzzQrCI0Rl4gV9qJcMGj5Zf/Jso0g+tGZKqxulxJmyT
-   XCcSqZFAyG570Wf4aQCpUVqCAVV4NR6bvTLI0SsSxwKNknhUkV4otC7Gq
-   kOOWNOMWeSgB+aWONzAtMStILgrWomDo/nBLFwrakyK74/sr4adh9eHVy
-   ArM/HqBdyEzdCczGOKF+sXiXmhWAhxFYAxs1UUXDYCPzwA6evQt76eAXr
-   Y4JY6FkqcighU9hqVGSVK0SRBw/WzMGtRr45+xo+j5N4MMw5eRHSdNwSP
+  t=1686863096; x=1718399096;
+  h=date:from:to:cc:subject:message-id;
+  bh=gwX+M4TW7UVcNPETiVkRDh1Yg/4AZmREK6vg5FLHSek=;
+  b=KU7WS5SxJSakSse/EG9i01kW7wll0v+Ns1Z53/R3Feoy9b30abuBcEAO
+   lrZ9qWtIJI3aU7GQhxsYVgN4XXBM5qXHyfmu+8UPdTMPIi5+1KEY5s4XX
+   8yCG/XSWfIotnB8xzhg01oJCx09auPdgfclkc7/Dzbpcl5/p3saJEAhxo
+   E0YhpxHPQ8cSxpjh03adFW1AlKhLG9Uim45Y+BC08qRGWbXXxz2ciGeHd
+   1IiuZicaKT6i00AKX+EZP0pC3PBDgyafAsf6ILT7rNlzDBXXNQiH9mVjg
+   qeLc31qjX8N21iHAUYNkSRVVt8iu4aDyRyAS+0fHKfzZi64GWkM9+rVvX
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="422682380"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="343780042"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="422682380"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 13:58:52 -0700
+   d="scan'208";a="343780042"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 14:04:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="1042833189"
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="836778083"
 X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="1042833189"
+   d="scan'208";a="836778083"
 Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Jun 2023 13:58:50 -0700
+  by orsmga004.jf.intel.com with ESMTP; 15 Jun 2023 14:04:50 -0700
 Received: from kbuild by 783282924a45 with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1q9u3N-0000NB-1D;
-        Thu, 15 Jun 2023 20:58:49 +0000
-Date:   Fri, 16 Jun 2023 04:58:15 +0800
+        id 1q9u9B-0000NZ-1v;
+        Thu, 15 Jun 2023 21:04:49 +0000
+Date:   Fri, 16 Jun 2023 05:04:23 +0800
 From:   kernel test robot <lkp@intel.com>
-To:     Lizhi Hou <lizhi.hou@amd.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        robh@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, Lizhi Hou <lizhi.hou@amd.com>,
-        max.zhen@amd.com, sonal.santan@amd.com,
-        stefano.stabellini@xilinx.com
-Subject: Re: [PATCH V9 6/6] of: unittest: Add pci_dt_testdrv pci driver
-Message-ID: <202306160410.HTDpoLQa-lkp@intel.com>
-References: <1686847842-33780-7-git-send-email-lizhi.hou@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1686847842-33780-7-git-send-email-lizhi.hou@amd.com>
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc:     linux-pci@vger.kernel.org
+Subject: [pci:controller/endpoint] BUILD SUCCESS
+ 71d9ca28015cee0bc329bc9e51c41b7a0325c285
+Message-ID: <202306160521.UTNcveXQ-lkp@intel.com>
+User-Agent: s-nail v14.9.24
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_MSPIKE_H2,
         SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -67,79 +59,125 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Lizhi,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/endpoint
+branch HEAD: 71d9ca28015cee0bc329bc9e51c41b7a0325c285  PCI: layerscape: Add the endpoint linkup notifier support
 
-kernel test robot noticed the following build warnings:
+elapsed time: 728m
 
-[auto build test WARNING on pci/next]
-[also build test WARNING on pci/for-linus robh/for-next linus/master v6.4-rc6 next-20230615]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+configs tested: 107
+configs skipped: 6
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lizhi-Hou/of-dynamic-Add-interfaces-for-creating-device-node-dynamically/20230616-005610
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git next
-patch link:    https://lore.kernel.org/r/1686847842-33780-7-git-send-email-lizhi.hou%40amd.com
-patch subject: [PATCH V9 6/6] of: unittest: Add pci_dt_testdrv pci driver
-config: mips-allyesconfig (https://download.01.org/0day-ci/archive/20230616/202306160410.HTDpoLQa-lkp@intel.com/config)
-compiler: mips-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git remote add pci https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git
-        git fetch pci next
-        git checkout pci/next
-        b4 shazam https://lore.kernel.org/r/1686847842-33780-7-git-send-email-lizhi.hou@amd.com
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=mips SHELL=/bin/bash drivers/
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306160410.HTDpoLQa-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   In file included from include/asm-generic/bug.h:22,
-                    from arch/mips/include/asm/bug.h:42,
-                    from include/linux/bug.h:5,
-                    from include/linux/mmdebug.h:5,
-                    from include/linux/mm.h:6,
-                    from include/linux/memblock.h:12,
-                    from drivers/of/unittest.c:8:
-   drivers/of/unittest.c: In function 'unittest_pci_probe':
->> include/linux/kern_levels.h:5:25: warning: format '%llx' expects argument of type 'long long unsigned int', but argument 4 has type 'resource_size_t' {aka 'unsigned int'} [-Wformat=]
-       5 | #define KERN_SOH        "\001"          /* ASCII Start Of Header */
-         |                         ^~~~~~
-   include/linux/printk.h:427:25: note: in definition of macro 'printk_index_wrap'
-     427 |                 _p_func(_fmt, ##__VA_ARGS__);                           \
-         |                         ^~~~
-   include/linux/printk.h:498:9: note: in expansion of macro 'printk'
-     498 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |         ^~~~~~
-   include/linux/kern_levels.h:11:25: note: in expansion of macro 'KERN_SOH'
-      11 | #define KERN_ERR        KERN_SOH "3"    /* error conditions */
-         |                         ^~~~~~~~
-   include/linux/printk.h:498:16: note: in expansion of macro 'KERN_ERR'
-     498 |         printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
-         |                ^~~~~~~~
-   drivers/of/unittest.c:45:17: note: in expansion of macro 'pr_err'
-      45 |                 pr_err("FAIL %s():%i " fmt, __func__, __LINE__, ##__VA_ARGS__); \
-         |                 ^~~~~~
-   drivers/of/unittest.c:3844:9: note: in expansion of macro 'unittest'
-    3844 |         unittest(res->start == exp_addr, "Incorrect translated address %llx, expected %llx\n",
-         |         ^~~~~~~~
-
-
-vim +5 include/linux/kern_levels.h
-
-314ba3520e513a Joe Perches 2012-07-30  4  
-04d2c8c83d0e3a Joe Perches 2012-07-30 @5  #define KERN_SOH	"\001"		/* ASCII Start Of Header */
-04d2c8c83d0e3a Joe Perches 2012-07-30  6  #define KERN_SOH_ASCII	'\001'
-04d2c8c83d0e3a Joe Perches 2012-07-30  7  
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha        buildonly-randconfig-r004-20230615   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r023-20230615   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                  randconfig-r043-20230615   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   gcc  
+arm                  randconfig-r046-20230615   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r003-20230615   gcc  
+csky                                defconfig   gcc  
+hexagon              randconfig-r035-20230615   clang
+hexagon              randconfig-r041-20230615   clang
+hexagon              randconfig-r045-20230615   clang
+i386                             allyesconfig   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230614   clang
+i386                 randconfig-i002-20230614   clang
+i386                 randconfig-i003-20230614   clang
+i386                 randconfig-i004-20230614   clang
+i386                 randconfig-i005-20230614   clang
+i386                 randconfig-i006-20230614   clang
+i386                 randconfig-i011-20230615   clang
+i386                 randconfig-i012-20230615   clang
+i386                 randconfig-i013-20230615   clang
+i386                 randconfig-i014-20230615   clang
+i386                 randconfig-i015-20230615   clang
+i386                 randconfig-i016-20230615   clang
+i386                 randconfig-r024-20230615   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r006-20230615   gcc  
+loongarch            randconfig-r015-20230614   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r033-20230615   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                            ar7_defconfig   gcc  
+mips         buildonly-randconfig-r002-20230615   clang
+mips                           mtx1_defconfig   clang
+nios2                               defconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r025-20230615   gcc  
+parisc               randconfig-r036-20230615   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc               mpc834x_itxgp_defconfig   clang
+powerpc              randconfig-r011-20230614   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r005-20230615   gcc  
+riscv                randconfig-r014-20230614   gcc  
+riscv                randconfig-r042-20230615   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r012-20230614   gcc  
+s390                 randconfig-r021-20230615   clang
+s390                 randconfig-r026-20230615   clang
+s390                 randconfig-r044-20230615   clang
+sh                               allmodconfig   gcc  
+sh           buildonly-randconfig-r001-20230615   gcc  
+sh                   randconfig-r031-20230615   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc        buildonly-randconfig-r003-20230615   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r002-20230615   gcc  
+sparc64      buildonly-randconfig-r005-20230615   gcc  
+sparc64              randconfig-r032-20230615   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                           allyesconfig   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-a001-20230615   gcc  
+x86_64               randconfig-a002-20230615   gcc  
+x86_64               randconfig-a003-20230615   gcc  
+x86_64               randconfig-a004-20230615   gcc  
+x86_64               randconfig-a005-20230615   gcc  
+x86_64               randconfig-a006-20230615   gcc  
+x86_64               randconfig-a011-20230614   gcc  
+x86_64               randconfig-a012-20230614   gcc  
+x86_64               randconfig-a013-20230614   gcc  
+x86_64               randconfig-a014-20230614   gcc  
+x86_64               randconfig-a015-20230614   gcc  
+x86_64               randconfig-a016-20230614   gcc  
+x86_64               randconfig-r022-20230615   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r001-20230615   gcc  
+xtensa               randconfig-r016-20230614   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
