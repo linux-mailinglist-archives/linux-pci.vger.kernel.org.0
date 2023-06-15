@@ -2,75 +2,64 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C382731EB0
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 19:07:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 120C7731EBE
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 19:12:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230028AbjFORH3 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 13:07:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60746 "EHLO
+        id S238198AbjFORMh (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 13:12:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229905AbjFORH2 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 13:07:28 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9AB7123;
-        Thu, 15 Jun 2023 10:07:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686848847; x=1718384847;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=FXV1YChUXwSF8PZCAUD+tpfoEBwKY/uzBtEPKcW5DBo=;
-  b=gXERln9Rg2qQwFDlRCdTAOm8jL3u9SrAqV8OkpEDKFRucJc5AqCzjokb
-   LgRaXKulvFhF4dwmS90c/S2U6mcMaXLnknXo39D7h/wmYsa6GngtcNO8R
-   Zf60P2XEEDKiuUs3WwU0vbHo1e15j3IKSU7TtOg+DP5t87Bk62lBpkStv
-   k9hN4pAjdxtt+pDY4rMijYkGAhkjt3o9IZLDNzlGO8FtRnS6oT+S6dJQF
-   vlS8rkSm0WynrtY5i/pDt4RPMqtqXLnpIJdMrv4zqtlQ9PtePcWNtdDhC
-   jNvtVuNw3V06rdlhHD+2G8tIBn8rPjCu3MjS3YJSkjLYiCdGVxs/I721t
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="387521010"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="387521010"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 10:07:27 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="825368959"
-X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
-   d="scan'208";a="825368959"
-Received: from akcopko-mobl2.amr.corp.intel.com (HELO [10.212.220.19]) ([10.212.220.19])
-  by fmsmga002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 10:07:26 -0700
-Message-ID: <a268fc1c-dd63-cac5-4aec-836a6299ab36@linux.intel.com>
-Date:   Thu, 15 Jun 2023 10:07:26 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.11.0
-Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
-Content-Language: en-US
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>, bhelgaas@google.com
-Cc:     Mario Limonciello <mario.limonciello@amd.com>,
+        with ESMTP id S238165AbjFORMf (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 13:12:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B3062710;
+        Thu, 15 Jun 2023 10:12:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E41856258F;
+        Thu, 15 Jun 2023 17:12:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD5DC433C0;
+        Thu, 15 Jun 2023 17:12:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686849151;
+        bh=Yu7UFn8UHORJtbUOZaZaJhJoJKpKqCUxzownaFRaGWg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=mJLSuMyOMD6h3VD5kwr50W7vI/N8Lu5wfSO+xIG6HomBLTtrD7tVZKk5Rf6u6ujnd
+         f3PgbZe70nppx3fUJAHICs246Y/dYL3Gw+Y7mNCaMxL123xu0JKR/zuOayDY9u02PP
+         b3HQw1EBfF5FWh6M5AFekfDmu2dfw0w7MvPrddad5FzU8hbVhjFHOCfjwxidF5x89e
+         sZ90wFzJunmYZky1Z2r8wvD8JR7WmnO2ZBNxDtQZdHrG0lfwP38ChsMVGo8BPWy6DM
+         PkvwTYaCpFroW2alXBARthJdbGVEOCoTjmq0vAk+BE4fUPxX5pOi0PDsbVqLACH9Mt
+         xV6UHb8q9ELOg==
+Date:   Thu, 15 Jun 2023 12:12:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Mario Limonciello <mario.limonciello@amd.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
         Vidya Sagar <vidyas@nvidia.com>,
         Michael Bottini <michael.a.bottini@linux.intel.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230615070421.1704133-1-kai.heng.feng@canonical.com>
-From:   Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
+Message-ID: <20230615171229.GA1478685@bhelgaas>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 In-Reply-To: <20230615070421.1704133-1-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-
-On 6/15/23 12:04 AM, Kai-Heng Feng wrote:
+On Thu, Jun 15, 2023 at 03:04:20PM +0800, Kai-Heng Feng wrote:
 > When a PCIe device is hotplugged to a Thunderbolt port, ASPM is not
 > enabled for that device. However, when the device is plugged preboot,
 > ASPM is enabled by default.
@@ -80,9 +69,6 @@ On 6/15/23 12:04 AM, Kai-Heng Feng wrote:
 > 
 > So enable ASPM by default for external connected PCIe devices so ASPM
 > settings are consitent between preboot and hotplugged.
-
-Why it has to be consistent? Can you add info about what it solves?
-
 > 
 > On HP Thunderbolt Dock G4, enable ASPM can also fix BadDLLP error:
 > pcieport 0000:00:1d.0: AER: Corrected error received: 0000:07:04.0
@@ -113,10 +99,36 @@ Why it has to be consistent? Can you add info about what it solves?
 > +		return dev_is_removable(&link->downstream->dev) ?
 > +			link->aspm_capable :
 > +			link->aspm_default;
->  	}
->  	return 0;
->  }
 
--- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+I'm a little hesitant because dev_is_removable() is a convenient test
+that covers the current issue, but it doesn't seem tightly connected
+from a PCIe architecture perspective.
+
+I think the current model of compile-time ASPM policy selection:
+
+  CONFIG_PCIEASPM_DEFAULT          /* BIOS default setting */
+  CONFIG_PCIEASPM_PERFORMANCE      /* disable L0s and L1 */
+  CONFIG_PCIEASPM_POWERSAVE        /* enable L0s and L1 */
+  CONFIG_PCIEASPM_POWER_SUPERSAVE  /* enable L1 substates */
+
+is flawed.  As far as I know, there's no technical reason we have to
+select this at kernel build-time.  I suspect the original reason was
+risk avoidance, i.e., we were worried that we might expose hardware
+defects if we enabled ASPM states that BIOS hadn't already enabled.
+
+How do we get out of that model?  We do have sysfs knobs that should
+cover all the functionality (set overall policy as above via
+/sys/module/pcie_aspm/parameters/policy; set device-level exceptions
+via /sys/bus/pci/devices/.../link/*_aspm).
+
+In my opinion, the cleanest solution would be to enable all ASPM
+functionality whenever possible and let users disable it if they need
+to for performance.  If there are device defects when something is
+enabled, deal with it via quirks, as we do for other PCI features.
+
+That feels a little risky, but let's have a conversation about where
+we want to go in the long term.  It's good to avoid risk, but too much
+avoidance leads to its own complexity and an inability to change
+things.
+
+Bjorn
