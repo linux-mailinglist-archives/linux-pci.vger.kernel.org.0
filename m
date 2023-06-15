@@ -2,210 +2,175 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 66136732161
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 23:12:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF8097322F9
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 01:03:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229913AbjFOVMM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 17:12:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58752 "EHLO
+        id S229662AbjFOXD6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 19:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229563AbjFOVML (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 17:12:11 -0400
-Received: from mail-oo1-xc2b.google.com (mail-oo1-xc2b.google.com [IPv6:2607:f8b0:4864:20::c2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02AAEC3;
-        Thu, 15 Jun 2023 14:12:10 -0700 (PDT)
-Received: by mail-oo1-xc2b.google.com with SMTP id 006d021491bc7-55b3b3e2928so1860655eaf.2;
-        Thu, 15 Jun 2023 14:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686863529; x=1689455529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cYFIoxmK6/11WcQGMEd3k+GSDGPqNwcIqNk05D0COTE=;
-        b=Ctj8OnhGP2r2mDaRqVkWYkbCXLxlBOU1XnLMs2rQnEZVFtLbX4y/91GeJfTZJq5ilZ
-         BEBJVQLtXSa74ZV6v9HQtOkzjDigIp47DOIRcrHwGUcKTsqQAhkMdn1UO87Sb7Gpm7ex
-         X45UZ0QhVvOtmv5xonVSE+x+ADmFWyurK8i6hsId3TXKamH0UIU6FCtus2oYmyYc/hXN
-         aKVQWGwGuIgL3W0ZwDOUERyeYftA7rlPAK83m58oUSPJYAdDpFEgGtRYfhALMGIZvZ2b
-         gofXVCoULo3vxmDnvGTZQX+wnBV6wdCwVEVCg+rvInQGzr6Uhq9I2bWmhZs/WkNDiQrK
-         W5gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686863529; x=1689455529;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cYFIoxmK6/11WcQGMEd3k+GSDGPqNwcIqNk05D0COTE=;
-        b=dNtcaH59WEHGWqVkytgnGRWeIUxTzLPyv4qPFosKJw+iCgSWdW9C6j+pd05uwqDPm4
-         Q5Vmdo0rZiCSp6G2f3Vet4ISTvXR+BRu/5zP7FL1xG6ycLlQkNxyrh9de1zN6e7wBD48
-         sX93BPbVFzPCj3Cz4iFeRnRuWJgyXiGXPT9tRNgRNfGVnLhqLLBvNTUo/EMNaIl6W/Qh
-         XZnf+x4JRCb7y0pLs0rccU7Aj/Om7ip2JT6XxJr8898YzZZOdYHFCs9lhK/dJBPlEwL1
-         AxRXOrN9h8NUKefUE1Lkuc9/BLUjV+Y0M6FRmlnkdg1ZaLf5E6BHZ6Mkc8VSHpjMdFQN
-         22Fw==
-X-Gm-Message-State: AC+VfDxa8UGHoIV8PqA7pHLEGrUmaSx0B3G9lLK23G+3x+AHhNeeRCgN
-        6ktk1RStX5rvuz2EAKfWnOWtMdI6zaDBSaeu+Aw=
-X-Google-Smtp-Source: ACHHUZ4RQOzLkRBT57QFtwfdt42rHQTpRvSKNUguWsVJUC9l4YMVkHjXvUxUEmpNf+dIqOqbJjieNSEhAcMqJy+p5M0=
-X-Received: by 2002:a05:6871:6ba6:b0:19f:ad5a:f518 with SMTP id
- zh38-20020a0568716ba600b0019fad5af518mr274084oab.25.1686863529246; Thu, 15
- Jun 2023 14:12:09 -0700 (PDT)
+        with ESMTP id S229511AbjFOXD5 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 19:03:57 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DEEF270E;
+        Thu, 15 Jun 2023 16:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1686870236; x=1718406236;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=9SJ0J7T6a9jiQYsr6lYSjoumu7Hdh9US7+P+SI4SqMw=;
+  b=T80V+A75H8gRVdG5yWxxZNnrgV+y7JoumeN9T4LZh0nE8OGN61xm6lQm
+   FOLGqFR1w3eW2Iz2fcFWb51xZ5MtfhbAFwQxCEJY9zH2nihfO2VUJUCC9
+   JamSoEK67ukS3L9zq/XHwQJQdwdVv17ikpJxV6ysShY2fExGUhKpebvUX
+   mVOHFHaXA7AcDztsHSlJ+Ky3xU2SKZ+7UZ7pXd41IZItjzlpiHn96u4wb
+   tGS3t3ib06Bv5FAseo2lKPGc8PZeEb3cPXiblszenjm/1PC6r0P6WF1X2
+   +hVxIX176/l+kKwdXWkMB753s67vZlVvrHXtVTOfzkkwCsaQBbTeGOkcv
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="357935205"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="357935205"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 16:03:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="857162818"
+X-IronPort-AV: E=Sophos;i="6.00,245,1681196400"; 
+   d="scan'208";a="857162818"
+Received: from brhacker-mobl26.amr.corp.intel.com (HELO [10.212.148.133]) ([10.212.148.133])
+  by fmsmga001-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 16:03:55 -0700
+Message-ID: <713d71dc-c4a5-cd7b-2deb-343c244dd14d@linux.intel.com>
+Date:   Thu, 15 Jun 2023 16:03:54 -0700
 MIME-Version: 1.0
-References: <20230613030151.216625-1-15330273260@189.cn> <20230613030151.216625-3-15330273260@189.cn>
- <dbf0d89f-717a-1f78-aef2-f30506751d4d@loongson.cn>
-In-Reply-To: <dbf0d89f-717a-1f78-aef2-f30506751d4d@loongson.cn>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Thu, 15 Jun 2023 17:11:58 -0400
-Message-ID: <CADnq5_N6vVtzH6tzguZdHnP_TdRoG1G-Cr94O+X03jvtk=vhag@mail.gmail.com>
-Subject: Re: [PATCH v7 2/8] PCI/VGA: Deal only with VGA class devices
-To:     Sui Jingfeng <suijingfeng@loongson.cn>
-Cc:     Sui Jingfeng <15330273260@189.cn>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-fbdev@vger.kernel.org, kvm@vger.kernel.org,
-        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.11.0
+Subject: Re: [PATCH v1] PCI: pciehp: Make sure DPC trigger status is reset in
+ PDC handler
+Content-Language: en-US
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20230615062559.1268404-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20230615183550.GA9773@wunner.de>
+From:   Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+In-Reply-To: <20230615183550.GA9773@wunner.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_EF,NICE_REPLY_A,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 6:50=E2=80=AFAM Sui Jingfeng <suijingfeng@loongson.=
-cn> wrote:
->
-> Hi,
->
-> On 2023/6/13 11:01, Sui Jingfeng wrote:
-> > From: Sui Jingfeng <suijingfeng@loongson.cn>
-> >
-> > Deal only with the VGA devcie(pdev->class =3D=3D 0x0300), so replace th=
-e
-> > pci_get_subsys() function with pci_get_class(). Filter the non-PCI disp=
-lay
-> > device(pdev->class !=3D 0x0300) out. There no need to process the non-d=
-isplay
-> > PCI device.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
-> > ---
-> >   drivers/pci/vgaarb.c | 22 ++++++++++++----------
-> >   1 file changed, 12 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
-> > index c1bc6c983932..22a505e877dc 100644
-> > --- a/drivers/pci/vgaarb.c
-> > +++ b/drivers/pci/vgaarb.c
-> > @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct pci_=
-dev *pdev)
-> >       struct pci_dev *bridge;
-> >       u16 cmd;
-> >
-> > -     /* Only deal with VGA class devices */
-> > -     if ((pdev->class >> 8) !=3D PCI_CLASS_DISPLAY_VGA)
-> > -             return false;
-> > -
->
-> Hi, here is probably a bug fixing.
->
-> For an example, nvidia render only GPU typically has 0x0380.
->
-> at its PCI class number, but  render only GPU should not participate in
-> the arbitration.
->
-> As it shouldn't snoop the legacy fixed VGA address.
->
-> It(render only GPU) can not display anything.
->
->
-> But 0x0380 >> 8 =3D 0x03, the filter  failed.
->
->
-> >       /* Allocate structure */
-> >       vgadev =3D kzalloc(sizeof(struct vga_device), GFP_KERNEL);
-> >       if (vgadev =3D=3D NULL) {
-> > @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block *nb, =
-unsigned long action,
-> >       struct pci_dev *pdev =3D to_pci_dev(dev);
-> >       bool notify =3D false;
-> >
-> > -     vgaarb_dbg(dev, "%s\n", __func__);
-> > +     /* Only deal with VGA class devices */
-> > +     if (pdev->class !=3D PCI_CLASS_DISPLAY_VGA << 8)
-> > +             return 0;
->
-> So here we only care 0x0300, my initial intent is to make an optimization=
-,
->
-> nowadays sane display graphic card should all has 0x0300 as its PCI
-> class number, is this complete right?
->
-> ```
->
-> #define PCI_BASE_CLASS_DISPLAY        0x03
-> #define PCI_CLASS_DISPLAY_VGA        0x0300
-> #define PCI_CLASS_DISPLAY_XGA        0x0301
-> #define PCI_CLASS_DISPLAY_3D        0x0302
-> #define PCI_CLASS_DISPLAY_OTHER        0x0380
->
-> ```
->
-> Any ideas ?
+Hi Lukas,
 
-I'm not quite sure what you are asking about here.  For vga_arb, we
-only care about VGA class devices since those should be on the only
-ones that might have VGA routed to them.  However, as VGA gets
-deprecated, you'll have more non VGA PCI classes for devices which
-could be the pre-OS console device.
+Thanks for the review.
 
-Alex
+On 6/15/23 11:35 AM, Lukas Wunner wrote:
+> On Wed, Jun 14, 2023 at 11:25:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+>> During the EDR-based DPC recovery process, for devices with persistent
+>> issues, the firmware may choose not to handle the DPC error and leave
+>> the port in DPC triggered state. In such scenarios, if the user
+>> replaces the faulty device with a new one, the OS is expected to clear
+>> the DPC trigger status in the hotplug error handler to enable the new
+>> device enumeration.
+> 
+> You're clearing the DPC trigger status upon a PDC event, yet are saying
+> here the purpose is to reset port state for a future hotplugged device.
 
->
-> >       /* For now we're only intereted in devices added and removed. I d=
-idn't
-> >        * test this thing here, so someone needs to double check for the
-> > @@ -1510,6 +1508,8 @@ static int pci_notify(struct notifier_block *nb, =
-unsigned long action,
-> >       else if (action =3D=3D BUS_NOTIFY_DEL_DEVICE)
-> >               notify =3D vga_arbiter_del_pci_device(pdev);
-> >
-> > +     vgaarb_dbg(dev, "%s: action =3D %lu\n", __func__, action);
-> > +
-> >       if (notify)
-> >               vga_arbiter_notify_clients();
-> >       return 0;
-> > @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device =3D {
-> >
-> >   static int __init vga_arb_device_init(void)
-> >   {
-> > +     struct pci_dev *pdev =3D NULL;
-> >       int rc;
-> > -     struct pci_dev *pdev;
-> >
-> >       rc =3D misc_register(&vga_arb_device);
-> >       if (rc < 0)
-> > @@ -1545,11 +1545,13 @@ static int __init vga_arb_device_init(void)
-> >
-> >       /* We add all PCI devices satisfying VGA class in the arbiter by
-> >        * default */
-> > -     pdev =3D NULL;
-> > -     while ((pdev =3D
-> > -             pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
-> > -                            PCI_ANY_ID, pdev)) !=3D NULL)
-> > +     while (1) {
-> > +             pdev =3D pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
-> > +             if (!pdev)
-> > +                     break;
-> > +
-> >               vga_arbiter_add_pci_device(pdev);
-> > +     }
-> >
-> >       pr_info("loaded\n");
-> >       return rc;
->
-> --
-> Jingfeng
->
+Sorry, it is a typo. I meant "hotplug interrupt handler".
+
+The goal is to ensure that when a new device presence is detected, the
+old DPC trigger status is cleared.
+
+> 
+> A PDC event may be synthesized, e.g. to trigger slot bringup via
+> sysfs, so using a PDC event to clear DPC trigger status feels wrong.
+
+IMO, it is harmless. We just want to make sure the previous DPC trigger
+status is cleared before enumerating a new device.
+
+> pciehp_unconfigure_device() seems like a more appropriate place to me.
+> 
+
+I initially thought to add it there. Spec also recommends clearing it
+when removing the device. But I wasn't sure if pciehp_unconfigure_device()
+would be called only during device removal. 
+
+Let me test this path and get back to you.
+
+> 
+>> More details about this issue can be found in PCIe
+>> firmware specification, r3.3, sec titled "DPC Event Handling"
+>> Implementation note.
+> 
+> That Implementation Note contains a lot of text and a fairly complex
+> flow chart. If you could point to specific paragraphs or numbers in
+> the Implementation Note that would make life easier for a reviewer
+> to make the connection between your code and the spec.
+
+It is the text at the end of the flowchart. Copied it here for reference.
+
+For devices with persistent errors, a port may be kept in the DPC triggered
+state (disabled) to keep those devices from continuing to generate errors. For
+hot-plug slots, the errant device may be removed and replaced with a new device.
+If the DPC trigger state is not cleared, then the port above the newly inserted
+device will still be disabled and will be non-operational. Therefore, operating
+systems may need to modify their hot-plug interrupt handling code to clear DPC
+Trigger Status when a device is removed so that a subsequent insertion
+will succeed.
+
+> 
+> 
+>> Similar issue might also happen if the DPC or EDR recovery handler
+>> exits before clearing the trigger status. To fix this issue, clear the
+>> DPC trigger status in PDC interrupt handler.
+> 
+> I was about to ask why the code is added to dpc.c, not edr.c,
+> and why it's not constrained to CONFIG_PCIE_EDR, but I assume
+> that's the reason?  Because it "might" happen for OS-native DPC
+> as well?
+
+Yes. There are code paths in the DPC driver where error recover handler
+can exit before clearing the DPC trigger status. So I think this fix is
+applicable for native code as well.
+
+> 
+> 
+>> +/**
+>> + * pci_reset_trigger - Clear DPC trigger status
+>> + * @pdev: PCI device
+>> + *
+>> + * It is called from the PCIe hotplug driver to clean the DPC
+>> + * trigger status in the PDC interrupt handler.
+>> + */
+>> +void pci_dpc_reset_trigger(struct pci_dev *pdev)
+>> +{
+>> +	if (!pdev->dpc_cap)
+>> +		return;
+>> +
+>> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
+>> +			      PCI_EXP_DPC_STATUS_TRIGGER);
+>> +}
+> 
+> This may run concurrently to dpc_reset_link(), so I'd expect that
+> you need some kind of serialization.  What happens if pciehp clears
+> trigger status behind the DPC driver's back while it is handling an
+> error?
+
+Currently, we only call pci_dpc_reset_trigger() in PDC interrupt handler.
+
+Do you think there would be a race between error handler and PDC handler?
+
+> 
+> Thanks,
+> 
+> Lukas
+
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
