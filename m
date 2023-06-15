@@ -2,180 +2,247 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 9208C73105D
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 09:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BB767311DF
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 10:15:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244523AbjFOHRn (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 03:17:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39418 "EHLO
+        id S243988AbjFOIPW (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 04:15:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244534AbjFOHQb (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 03:16:31 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DCA726A1
-        for <linux-pci@vger.kernel.org>; Thu, 15 Jun 2023 00:16:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686813363; x=1718349363;
-  h=date:from:to:cc:subject:message-id;
-  bh=h/8Ri2BYwXh/6sQ8zgBpk4TBsLYPf2KKzDrh2WXPL00=;
-  b=cALl/T5VQxmtp8dZjVxEh2nSJz8p/Cem0lacyasVtywv220JqfLe+zuM
-   QEXZHmcyni//Us6BeW2zVbjV/fqNYkSizkqgHdvKqOxT693WorJO0LSgv
-   Wa+HRiurxLmc8tUxVR+mN0r5K1YzRJbXVClV0R/+fI1+cBWBKyLnY/w4u
-   sVVdaHA1paI3IZlaM5+7c1o8/T+Knq2z4uuU578iYGkmhjlGJK7wYTz/N
-   JDe8g8c1518y+JlH7IBPFJCpyIpwSa7t2HFn0sOjxHyFf7kepZtJoCNoz
-   vTkUG8H+Hw1h5VdYoeWcnmK3F5DlemwxYi/T0IN5KLY1FOIhJl5llSoRl
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="348504402"
-X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
-   d="scan'208";a="348504402"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 00:16:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="662681983"
-X-IronPort-AV: E=Sophos;i="6.00,244,1681196400"; 
-   d="scan'208";a="662681983"
-Received: from lkp-server02.sh.intel.com (HELO d59cacf64e9e) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 15 Jun 2023 00:16:01 -0700
-Received: from kbuild by d59cacf64e9e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q9hD6-0001ad-1I;
-        Thu, 15 Jun 2023 07:16:00 +0000
-Date:   Thu, 15 Jun 2023 15:15:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:pm] BUILD SUCCESS
- 57c1aae01a2bb33a90c6096fb7f7d6bbabb71322
-Message-ID: <202306151537.TG8DIRyf-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+        with ESMTP id S243790AbjFOIPS (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 04:15:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949CD269A;
+        Thu, 15 Jun 2023 01:15:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31A4960A05;
+        Thu, 15 Jun 2023 08:15:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60323C433C0;
+        Thu, 15 Jun 2023 08:15:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686816910;
+        bh=WeovI7rajZxovg2FExZZodivoJQZzw867iDK5ovAvt0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JSO64BdU/2Fgb8NcsA73faA0Nc3XcsbUpRbaf0zhR8VlmwyaRycq4sYtb4vY7Myl6
+         LKiw02rbIvxObLXBe5MZngfvCiwzrDCDCuKbXjXBG/6n+9PV4XiX1VlvJfJhqYRpom
+         XdDFj3KAfx8tHf0DtVsYB9EoopfnBPkyjpUzZFao3ZnQ6RZOTGOCNlV3RYISj6FAHG
+         XnHKh3NJZXKgkTBA6pl+tJJBVhgDqQCDuyfz+6154YUQz4i1OuDTcXLffa3NLS3mLh
+         1wXWmPn+StnAklSpuB0mh0sCGkD8xsCeb5wrqo0KoSgp7dllezfw69HyfLr8olH6oq
+         0uzOD0jOmMnlQ==
+Date:   Thu, 15 Jun 2023 10:15:04 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     Frank Li <Frank.Li@nxp.com>
+Cc:     manivannan.sadhasivam@linaro.org,
+        Minghuan Lian <minghuan.Lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linuxppc-dev@lists.ozlabs.org>,
+        "open list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-pci@vger.kernel.org>,
+        "moderated list:PCI DRIVER FOR FREESCALE LAYERSCAPE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>, imx@lists.linux.dev
+Subject: Re: [PATCH v4 1/1] PCI: layerscape: Add the endpoint linkup notifier
+ support
+Message-ID: <ZIrIiPLsXAPGlJqX@lpieralisi>
+References: <20230515151049.2797105-1-Frank.Li@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230515151049.2797105-1-Frank.Li@nxp.com>
+X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git pm
-branch HEAD: 57c1aae01a2bb33a90c6096fb7f7d6bbabb71322  PCI/PM: Avoid putting EloPOS E2/S2/H2 PCIe Ports in D3cold
+On Mon, May 15, 2023 at 11:10:49AM -0400, Frank Li wrote:
+> Layerscape has PME interrupt, which can be used as linkup notifier.
+> Set CFG_READY bit of PEX_PF0_CONFIG to enable accesses from root complex
+> when linkup detected.
+> 
+> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> ---
+> Change from v3 to v4
+>  - swap irq and big_endian
+> Change from v2 to v3
+>  - align 80 column
+>  - clear irq firstly
+>  - dev_info to dev_dbg
+>  - remove double space
+>  - update commit message
+> 
+> Change from v1 to v2
+> - pme -> PME
+> - irq -> IRQ
+> - update dev_info message according to Bjorn's suggestion
+> 
+>  .../pci/controller/dwc/pci-layerscape-ep.c    | 102 +++++++++++++++++-
+>  1 file changed, 101 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> index c640db60edc6..5398641b6b7e 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -18,6 +18,20 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> +#define PEX_PF0_CONFIG			0xC0014
+> +#define PEX_PF0_CFG_READY		BIT(0)
+> +
+> +/* PEX PFa PCIE PME and message interrupt registers*/
+> +#define PEX_PF0_PME_MES_DR		0xC0020
+> +#define PEX_PF0_PME_MES_DR_LUD		BIT(7)
+> +#define PEX_PF0_PME_MES_DR_LDD		BIT(9)
+> +#define PEX_PF0_PME_MES_DR_HRD		BIT(10)
+> +
+> +#define PEX_PF0_PME_MES_IER		0xC0028
+> +#define PEX_PF0_PME_MES_IER_LUDIE	BIT(7)
+> +#define PEX_PF0_PME_MES_IER_LDDIE	BIT(9)
+> +#define PEX_PF0_PME_MES_IER_HRDIE	BIT(10)
+> +
+>  #define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+>  
+>  struct ls_pcie_ep_drvdata {
+> @@ -30,8 +44,86 @@ struct ls_pcie_ep {
+>  	struct dw_pcie			*pci;
+>  	struct pci_epc_features		*ls_epc;
+>  	const struct ls_pcie_ep_drvdata *drvdata;
+> +	int				irq;
+> +	bool				big_endian;
+>  };
+>  
+> +static u32 ls_lut_readl(struct ls_pcie_ep *pcie, u32 offset)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +
+> +	if (pcie->big_endian)
+> +		return ioread32be(pci->dbi_base + offset);
+> +	else
+> +		return ioread32(pci->dbi_base + offset);
+> +}
+> +
+> +static void ls_lut_writel(struct ls_pcie_ep *pcie, u32 offset, u32 value)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +
+> +	if (pcie->big_endian)
+> +		iowrite32be(value, pci->dbi_base + offset);
+> +	else
+> +		iowrite32(value, pci->dbi_base + offset);
+> +}
+> +
+> +static irqreturn_t ls_pcie_ep_event_handler(int irq, void *dev_id)
+> +{
+> +	struct ls_pcie_ep *pcie = dev_id;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	u32 val, cfg;
+> +
+> +	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_DR);
+> +	ls_lut_writel(pcie, PEX_PF0_PME_MES_DR, val);
+> +
+> +	if (!val)
+> +		return IRQ_NONE;
+> +
+> +	if (val & PEX_PF0_PME_MES_DR_LUD) {
+> +		cfg = ls_lut_readl(pcie, PEX_PF0_CONFIG);
+> +		cfg |= PEX_PF0_CFG_READY;
+> +		ls_lut_writel(pcie, PEX_PF0_CONFIG, cfg);
+> +		dw_pcie_ep_linkup(&pci->ep);
+> +
+> +		dev_dbg(pci->dev, "Link up\n");
+> +	} else if (val & PEX_PF0_PME_MES_DR_LDD) {
+> +		dev_dbg(pci->dev, "Link down\n");
+> +	} else if (val & PEX_PF0_PME_MES_DR_HRD) {
+> +		dev_dbg(pci->dev, "Hot reset\n");
+> +	}
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int ls_pcie_ep_interrupt_init(struct ls_pcie_ep *pcie,
+> +				     struct platform_device *pdev)
+> +{
+> +	u32 val;
+> +	int ret;
+> +
+> +	pcie->irq = platform_get_irq_byname(pdev, "pme");
+> +	if (pcie->irq < 0) {
+> +		dev_err(&pdev->dev, "Can't get 'pme' IRQ\n");
 
-elapsed time: 727m
+I will remove this log, platform_get_irq_byname() already logs an
+error.
 
-configs tested: 104
-configs skipped: 3
+Lorenzo
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha        buildonly-randconfig-r005-20230614   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r002-20230612   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r016-20230614   gcc  
-arc                  randconfig-r025-20230612   gcc  
-arc                  randconfig-r043-20230612   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230612   gcc  
-arm                  randconfig-r046-20230612   clang
-arm64                            allyesconfig   gcc  
-arm64        buildonly-randconfig-r001-20230614   clang
-arm64                               defconfig   gcc  
-arm64                randconfig-r004-20230612   clang
-arm64                randconfig-r022-20230612   gcc  
-arm64                randconfig-r036-20230612   clang
-csky         buildonly-randconfig-r002-20230614   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r034-20230612   gcc  
-hexagon              randconfig-r031-20230612   clang
-hexagon              randconfig-r041-20230612   clang
-hexagon              randconfig-r045-20230612   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230614   clang
-i386                 randconfig-i002-20230614   clang
-i386                 randconfig-i003-20230614   clang
-i386                 randconfig-i004-20230614   clang
-i386                 randconfig-i005-20230614   clang
-i386                 randconfig-i006-20230614   clang
-i386                 randconfig-i011-20230612   gcc  
-i386                 randconfig-i012-20230612   gcc  
-i386                 randconfig-i013-20230612   gcc  
-i386                 randconfig-i014-20230612   gcc  
-i386                 randconfig-i015-20230612   gcc  
-i386                 randconfig-i016-20230612   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r001-20230612   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r014-20230614   gcc  
-microblaze           randconfig-r011-20230614   gcc  
-microblaze           randconfig-r013-20230614   gcc  
-microblaze           randconfig-r024-20230612   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r032-20230612   gcc  
-openrisc     buildonly-randconfig-r006-20230614   gcc  
-openrisc             randconfig-r012-20230614   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r023-20230612   gcc  
-parisc               randconfig-r035-20230612   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r026-20230612   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv        buildonly-randconfig-r004-20230614   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r015-20230614   gcc  
-riscv                randconfig-r033-20230612   clang
-riscv                randconfig-r042-20230612   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230612   gcc  
-sh                               allmodconfig   gcc  
-sh           buildonly-randconfig-r003-20230614   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r006-20230612   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230612   clang
-x86_64               randconfig-a002-20230612   clang
-x86_64               randconfig-a003-20230612   clang
-x86_64               randconfig-a004-20230612   clang
-x86_64               randconfig-a005-20230612   clang
-x86_64               randconfig-a006-20230612   clang
-x86_64               randconfig-a011-20230612   gcc  
-x86_64               randconfig-a012-20230612   gcc  
-x86_64               randconfig-a013-20230612   gcc  
-x86_64               randconfig-a014-20230612   gcc  
-x86_64               randconfig-a015-20230612   gcc  
-x86_64               randconfig-a016-20230612   gcc  
-x86_64               randconfig-r021-20230612   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +		return pcie->irq;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, pcie->irq, ls_pcie_ep_event_handler,
+> +			       IRQF_SHARED, pdev->name, pcie);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Can't register PCIe IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	/* Enable interrupts */
+> +	val = ls_lut_readl(pcie, PEX_PF0_PME_MES_IER);
+> +	val |=  PEX_PF0_PME_MES_IER_LDDIE | PEX_PF0_PME_MES_IER_HRDIE |
+> +		PEX_PF0_PME_MES_IER_LUDIE;
+> +	ls_lut_writel(pcie, PEX_PF0_PME_MES_IER, val);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct pci_epc_features*
+>  ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
+>  {
+> @@ -125,6 +217,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	struct ls_pcie_ep *pcie;
+>  	struct pci_epc_features *ls_epc;
+>  	struct resource *dbi_base;
+> +	int ret;
+>  
+>  	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+>  	if (!pcie)
+> @@ -144,6 +237,7 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  	pci->ops = pcie->drvdata->dw_pcie_ops;
+>  
+>  	ls_epc->bar_fixed_64bit = (1 << BAR_2) | (1 << BAR_4);
+> +	ls_epc->linkup_notifier = true;
+>  
+>  	pcie->pci = pci;
+>  	pcie->ls_epc = ls_epc;
+> @@ -155,9 +249,15 @@ static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+>  
+>  	pci->ep.ops = &ls_pcie_ep_ops;
+>  
+> +	pcie->big_endian = of_property_read_bool(dev->of_node, "big-endian");
+> +
+>  	platform_set_drvdata(pdev, pcie);
+>  
+> -	return dw_pcie_ep_init(&pci->ep);
+> +	ret = dw_pcie_ep_init(&pci->ep);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return ls_pcie_ep_interrupt_init(pcie, pdev);
+>  }
+>  
+>  static struct platform_driver ls_pcie_ep_driver = {
+> -- 
+> 2.34.1
+> 
