@@ -2,175 +2,220 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D9F6730C70
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 02:58:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4458C730DC9
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 05:56:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229944AbjFOA6T (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Wed, 14 Jun 2023 20:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
+        id S231569AbjFOD4G (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Wed, 14 Jun 2023 23:56:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229558AbjFOA6S (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 20:58:18 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C533926A4
-        for <linux-pci@vger.kernel.org>; Wed, 14 Jun 2023 17:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686790697; x=1718326697;
-  h=date:from:to:cc:subject:message-id;
-  bh=vVrea/I160FYSbIqptsWC0B4yqQBmp+UWokMI3BzeXQ=;
-  b=RrIzkKP6YWp5ONxny1bIGELUVPYYn9qrF85y9gkS9t2th37ZNox8r7c7
-   UAGcaQNKSf6GDv+2f1FAV/MaggAwUy+vO4vIG1zmjJbw0tHyqGF0x857w
-   M3hZK/c4N5mk9peH2Vb2lE+oZHUfkhDaxkJunpeN7NcAl2qZ21LYD3VhJ
-   UmcIDdpn70/vwvBhcADdpn9vXKUDDudEVoNt3fjgUhSaipJZYGZKUfCTc
-   n99A01rKULtq0Nk2N53+MZKP2oP002ABwgJCJdU/2LqjM8+tNfcO9BGQM
-   NcIJw0WfodtL97zUMIdcGQWLXNM2m3OKO/6M8ik9p6xvtA0dOW6LiNSPk
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="422380157"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="422380157"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2023 17:58:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10741"; a="1042427893"
-X-IronPort-AV: E=Sophos;i="6.00,243,1681196400"; 
-   d="scan'208";a="1042427893"
-Received: from lkp-server02.sh.intel.com (HELO d59cacf64e9e) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 14 Jun 2023 17:58:16 -0700
-Received: from kbuild by d59cacf64e9e with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q9bJX-0001Dj-0p;
-        Thu, 15 Jun 2023 00:58:15 +0000
-Date:   Thu, 15 Jun 2023 08:58:13 +0800
-From:   kernel test robot <lkp@intel.com>
+        with ESMTP id S229711AbjFODzs (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Wed, 14 Jun 2023 23:55:48 -0400
+Received: from DM6FTOPR00CU001.outbound.protection.outlook.com (mail-centralusazon11020023.outbound.protection.outlook.com [52.101.61.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 724E22133;
+        Wed, 14 Jun 2023 20:55:46 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=I4nDQLXtBrHKjc50hMe7hGXLLJTrPn//qLKoWrQNZZwpwg3qAZya7R7ccA4h0FMXS+Q9fUk5BUnRR16x88AXOJdrfAS5zTDGKRGvCpl+1SgWnva6Yn4h7VQQEtBXNUkRyqAY3FofQuHhQJWYkxiJ0lzgbBE9yUf/XbRHL+f5v2ErKT8FQ/VrwMYi0Pe+RLCUO2PX/qhZyUQWmf1b9yA2SnxwV58mQuQMA44eHaK1m00hKJctfkqfafeWMuiT6gYfVWXI/nTZZ7g6sCyYwk55gpkfYhzfs86QXBGhbDKA364t8Ikqf9czyLlx3ddTBEZJxW48vCMuHVXMUBX7mTXckQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=JrichSzLPYq+YUu82LbzmuirLDiaXyTwDNkCwoFSZLE=;
+ b=hB7lY8LiD981vVcLYGJlr2YYd45UF4YoDZ6pFWqUk9vWpKLe46HHxNgUT5tMr5WekA3xpAWBtMpiJ9OD/nK99lUzwT5MoWaOd+YLR9IHyOCJ8co51er8svxCkN7TLE8v/Z69CMUdPj7QT2fX4HG7NLSMZ/kI4SFXyE7Bn7MhInu22BjuKaWtof6cG9Bxcd7cQeK0PAo4sv2iLS8Gcy95IjKahmUcKD9HHRR9EF9cz8txRIgAGRpTlkRGmA9qyRRq5Dhl9VZg8Di1cKuChBa8W+TOmJq0874BiIA+kd7HohEzIcyik96PjcKjMdqBM9LkfczjuOkD4mw9n4T8p36SxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JrichSzLPYq+YUu82LbzmuirLDiaXyTwDNkCwoFSZLE=;
+ b=h4EAyzrSBD7xOhmE353to6aQb2m+sMRnhuHD4CJ70eRZUETlyY4WfzaCEjWaExLR9k9KpC/ZMeo2W00eK2qjOQSC54ryNvaoq7fLBub3ZEmAh3Txm5efU8jOdqLXgFdAVPvWskFm9lONFSApIUusmxv2xL2+XeOgEXcBPhhJNDA=
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com (2603:10b6:806:1f2::11)
+ by PH7PR21MB3260.namprd21.prod.outlook.com (2603:10b6:510:1d8::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.6; Thu, 15 Jun
+ 2023 03:55:43 +0000
+Received: from SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::bb03:96fc:3397:6022]) by SA1PR21MB1335.namprd21.prod.outlook.com
+ ([fe80::bb03:96fc:3397:6022%4]) with mapi id 15.20.6521.009; Thu, 15 Jun 2023
+ 03:55:43 +0000
+From:   Dexuan Cui <decui@microsoft.com>
 To:     Lorenzo Pieralisi <lpieralisi@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:controller/endpoint] BUILD SUCCESS
- 27c17132c37c3d9d79969443c5b98c96b1db2ddc
-Message-ID: <202306150811.vXDWAYQO-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jake Oshins <jakeo@microsoft.com>,
+        "kuba@kernel.org" <kuba@kernel.org>, "kw@linux.com" <kw@linux.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Michael Kelley (LINUX)" <mikelley@microsoft.com>,
+        "pabeni@redhat.com" <pabeni@redhat.com>,
+        "robh@kernel.org" <robh@kernel.org>,
+        "saeedm@nvidia.com" <saeedm@nvidia.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        Long Li <longli@microsoft.com>,
+        "boqun.feng@gmail.com" <boqun.feng@gmail.com>,
+        Saurabh Singh Sengar <ssengar@microsoft.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Jose Teuttli Carranco <josete@microsoft.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 1/6] PCI: hv: Fix a race condition bug in
+ hv_pci_query_relations()
+Thread-Topic: [PATCH v3 1/6] PCI: hv: Fix a race condition bug in
+ hv_pci_query_relations()
+Thread-Index: AQHZjuDp3/HWlZZHlUKokFlSLFMUD6+LWp4Q
+Date:   Thu, 15 Jun 2023 03:55:43 +0000
+Message-ID: <SA1PR21MB133577C1859A3B1DCE1ACAA5BF5BA@SA1PR21MB1335.namprd21.prod.outlook.com>
+References: <20230420024037.5921-1-decui@microsoft.com>
+ <20230420024037.5921-2-decui@microsoft.com> <ZG8YzuK/5+8iE8He@lpieralisi>
+In-Reply-To: <ZG8YzuK/5+8iE8He@lpieralisi>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=f554af38-df63-4f69-b441-4d0e85cb67dc;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2023-06-15T03:48:03Z;MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=microsoft.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SA1PR21MB1335:EE_|PH7PR21MB3260:EE_
+x-ms-office365-filtering-correlation-id: 25e9e427-70a1-47fc-b3d2-08db6d546454
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 4kkL3w+St+5wcM5U24X4JfOGqVnN2aZU0/TaGfawHY11PNTWrY3LeufcNx5fhk6Q9mGYx6miT107lZfvm8FJNfDKEnYQH5mjXTFoat5oUUv6zN8KbwLjs8dePylUhsyMoOHEghaLJl4ROVcJbPyWECZ4OqxwxwaBC9dLFWxsvPAQYPdfoRRNFqUvDozQPYH0dnYX4lIK/mLo8oM5sECiNdZiJMN9alHvohc/8qz9i+jmKM0pBRXhqnv0DYYtx8IObvgzN716tf/WoRbwm1KLAFTEOLwh/4SzhiZdEeEUO7dl6CZWpP7SWt5e9kXEt32OyCGNhd47jcCLnG4ixVql6gw5uo4ODe2ucTnF8Ql40ed4OTM6oP7Rex8Z/RADAeaVJBTiO/4iTC3F3kSlX2ls0yqz5DwFim3K3GxZtKReVpZnaL31B1n/VYEW0ckVe/ksL3rT+cYAMghCYnEACb5pn7oWpz+NCi1n6FWtiNlZmN78/D/Jith+4otkIVgrNizDHNM6DatWhcAECSXcRyJuWRiSJZ4fMBAm5UalHLQMJlo1ubMdoNtUlbAJh0tW1L2+S++/7+C6CyEsetcq8OePahJD7c+Z3OUIbMa5+ibjfEUv+ZwKDhG6Usel7tYDQ9Ql/qw1aT9QM6bL16VjJiZcLAfc597ZOLdEHyEfMo8Niuo=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SA1PR21MB1335.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(396003)(346002)(366004)(376002)(451199021)(86362001)(38070700005)(8990500004)(33656002)(7416002)(2906002)(66899021)(55016003)(38100700002)(7696005)(186003)(83380400001)(52536014)(53546011)(9686003)(6506007)(82960400001)(82950400001)(71200400001)(54906003)(122000001)(5660300002)(66476007)(10290500003)(76116006)(316002)(66556008)(6916009)(4326008)(478600001)(64756008)(66946007)(8676002)(41300700001)(66446008)(8936002);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?y08mJpOX6Psi9+Nor0+EqM6W+feECnp/F1qXOrEUuDzAZmhyj5O/otfqgEkD?=
+ =?us-ascii?Q?d72ee/0D6zGqZ8sFr06CcDFUKg8qyhc5G1Q/ym30JxIe7JDkB1uAe3kN90Fe?=
+ =?us-ascii?Q?T6bFOIu1OPqHBhF4paHJa8ssCXEHALHAHSQfaevAQVtMyFI6NOzI/LXyEi3s?=
+ =?us-ascii?Q?t6TnHqVA2yp8tUfydfLkx3UCZD+4Ws7mFGoV0sJn9E8802bZfGY6aqk0lYIV?=
+ =?us-ascii?Q?AsD9n6CvrU9biXrUUQf7Jh247GYXICbFZrQyIh3wWU3CNKy2ouH01ofRw3oQ?=
+ =?us-ascii?Q?jbDZtVfVVGGzVTELQrTno97nZFPMpLSjEzCQ15uO5+GRne2n1Xb4ieoR/zqY?=
+ =?us-ascii?Q?IeDn2/fz/6N8CB9R7w4KNcBGoDseh80PBtne7IC9mRLfLi/z/Jd9RspZnRER?=
+ =?us-ascii?Q?mTWs+8vD+qoEZvQJVExrv8N3zUaL6sQZtPpooZF1vbfH5j66pvBEsBJwgXwF?=
+ =?us-ascii?Q?QlamJXaf/DPOWW0rPMrGzkY19BNV2gDY+fkeGiSpnLBPOVvEuAf/uT/ZKBe3?=
+ =?us-ascii?Q?Jo6yohdPg1TIdiiglnyJUcDwhkanaTybNbmdFvhsaQtPKkvxYtQJs0d5mr7g?=
+ =?us-ascii?Q?ZdrnyBfoL91yc5NkWlyqw+FvA+ixQBuv/Ya7LZWWrAOukSCMfLeAVmeXEAld?=
+ =?us-ascii?Q?jvikpDCxacDpEiSjVVp/f/JFB9cDbOMTQW0DOpdPx5B3b81TY7+qaBl4Zn7j?=
+ =?us-ascii?Q?1Shvv7GDkn/lELFIF+Hirawozf/AFKUpvM1NkXAdqc8kyFSb+ZJPYmkuKFwQ?=
+ =?us-ascii?Q?6zAlMYLM0Um7/cw8m4ETChjqK4vB7tLMbvwAHbjxm8KN9e2z3pz1sTEBbclf?=
+ =?us-ascii?Q?y8B8mPiYNibbSlqUFCPTCmmOUWjpBwC3lXemkxe/57xQwQrRGg+VYyauwzzU?=
+ =?us-ascii?Q?QRtYvBcuZzpvhCXjh46oBm2neWXLautBDJ1ISEbzxRyL+0fUS06Qgv910zAG?=
+ =?us-ascii?Q?AlHkVuYKYyMLmy6yyWe4b0Wn4b2q4vDQ/42LbR7lYbVitSlKNpDTTHUnpc4q?=
+ =?us-ascii?Q?tC4veBlcA79HuFh9jBDherL/ewyYDD3ZFCLbgRi+tTO8FGOdhZZBWC24hntg?=
+ =?us-ascii?Q?POlIDOVmWVNz3I+bAsS7xYwKiUqdaVSq0iqZHuh78WWHfgzBd3yNF+FKemaf?=
+ =?us-ascii?Q?inC5IZfqDFh5RqCxcATc2JCys8aLAWMw45j+OFf2Dy/RSduW/caH41lHQElD?=
+ =?us-ascii?Q?o9owJ4VYEdGbzKbfFQr4oQK3ZhKjPnag+70Sl9QRHQKKmpBUlbiLsI7zsKtx?=
+ =?us-ascii?Q?i7Pe/fLAgCxgQG6GvBNE0syqQco7O0j8vnNIpC5gmL/lH1nPF4aDkM/4Z2Ox?=
+ =?us-ascii?Q?Lt2fe+cESCGXTfK65/WgnCY9AUig6CL4W+n2PGykxo+1AGDHvtzMFDrWjmJV?=
+ =?us-ascii?Q?s2DbRnCzeYanyjrF0X+fCnMaYJgOOs3hrsFXBknXiuJAucAyXCaIqFwnR00u?=
+ =?us-ascii?Q?0dveFmgMVDP2B4SzJhx9LIATD+iNe3QjwknEWvyjR1vRFZwM3J/pagyJD9XW?=
+ =?us-ascii?Q?Ij0c2xoTK9xQ8mVI5vif/hhSzzmnc5Q7eh9P+tvU5+RUbSYu7Uox+qXKpcFw?=
+ =?us-ascii?Q?Sj0tyjI3M6vlj539/0JC8fBEGOhnHgqzxhG8BJO11NbUVapYzjNKVIbpf2VM?=
+ =?us-ascii?Q?N86YFKePOGuhTzFT5wFnlRE=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SA1PR21MB1335.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 25e9e427-70a1-47fc-b3d2-08db6d546454
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2023 03:55:43.0614
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: oQl98l7LPcQ39ZI6GSxjpYf8I0cm4BhUCl78GqJmKN03SrMtKvAa/WmFhfIxiurUypjYUy4wQuNuJx+xp96Rng==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR21MB3260
+X-Spam-Status: No, score=-1.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git controller/endpoint
-branch HEAD: 27c17132c37c3d9d79969443c5b98c96b1db2ddc  PCI: endpoint: pci-epf-vntb: Fix typo in comments
+> From: Lorenzo Pieralisi <lpieralisi@kernel.org>
+> Sent: Thursday, May 25, 2023 1:14 AM
+> To: Dexuan Cui <decui@microsoft.com>
+>=20
+> On Wed, Apr 19, 2023 at 07:40:32PM -0700, Dexuan Cui wrote:
+> > Fix the longstanding race between hv_pci_query_relations() and
+> > survey_child_resources() by flushing the workqueue before we exit from
+> > hv_pci_query_relations().
+>=20
+> "Fix the longstanding race" is vague. Please describe the race
+> succinctly at least to give an idea of what the problem is.
+Hi Lozenzo, I'm sorry for the late response -- finally I'm back on the patc=
+hset...
 
-elapsed time: 724m
+I'll use the below commit message in v4:
+=20
+ Since day 1 of the driver, there has been a race between
+ hv_pci_query_relations() and survey_child_resources(): during fast
+ device hotplug, hv_pci_query_relations() may error out due to
+ device-remove and the stack variable 'comp' is no longer valid;
+ however, pci_devices_present_work() -> survey_child_resources() ->
+ complete() may be running on another CPU and accessing the no-longer-valid
+ 'comp'. Fix the race by flushing the workqueue before we exit from
+ hv_pci_query_relations().
 
-configs tested: 99
-configs skipped: 8
+I'll also update the comment to share more details of the race:
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+--- a/drivers/pci/controller/pci-hyperv.c
++++ b/drivers/pci/controller/pci-hyperv.c
+@@ -3401,6 +3401,24 @@ static int hv_pci_query_relations(struct hv_device *=
+hdev)
+        if (!ret)
+                ret =3D wait_for_response(hdev, &comp);
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r002-20230612   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230612   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm          buildonly-randconfig-r001-20230614   clang
-arm                                 defconfig   gcc  
-arm                  randconfig-r003-20230612   gcc  
-arm                  randconfig-r046-20230612   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                randconfig-r004-20230612   clang
-arm64                randconfig-r036-20230613   gcc  
-csky                                defconfig   gcc  
-hexagon      buildonly-randconfig-r004-20230614   clang
-hexagon              randconfig-r025-20230612   clang
-hexagon              randconfig-r041-20230612   clang
-hexagon              randconfig-r045-20230612   clang
-i386                             allyesconfig   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230614   clang
-i386                 randconfig-i002-20230614   clang
-i386                 randconfig-i003-20230614   clang
-i386                 randconfig-i004-20230614   clang
-i386                 randconfig-i005-20230614   clang
-i386                 randconfig-i006-20230614   clang
-i386                 randconfig-i011-20230612   gcc  
-i386                 randconfig-i012-20230612   gcc  
-i386                 randconfig-i013-20230612   gcc  
-i386                 randconfig-i014-20230612   gcc  
-i386                 randconfig-i015-20230612   gcc  
-i386                 randconfig-i016-20230612   gcc  
-i386                 randconfig-r021-20230612   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r001-20230612   gcc  
-loongarch            randconfig-r024-20230612   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r016-20230614   clang
-nios2                               defconfig   gcc  
-openrisc             randconfig-r035-20230613   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r012-20230614   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r034-20230613   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv        buildonly-randconfig-r003-20230614   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r023-20230612   gcc  
-riscv                randconfig-r042-20230612   gcc  
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r011-20230614   gcc  
-s390                 randconfig-r014-20230614   gcc  
-s390                 randconfig-r044-20230612   gcc  
-sh                               allmodconfig   gcc  
-sh                   randconfig-r033-20230613   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r026-20230612   gcc  
-sparc64              randconfig-r006-20230612   gcc  
-sparc64              randconfig-r032-20230613   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230613   gcc  
-x86_64               randconfig-a002-20230613   gcc  
-x86_64               randconfig-a003-20230613   gcc  
-x86_64               randconfig-a004-20230613   gcc  
-x86_64               randconfig-a005-20230613   gcc  
-x86_64               randconfig-a006-20230613   gcc  
-x86_64               randconfig-a011-20230612   gcc  
-x86_64               randconfig-a012-20230612   gcc  
-x86_64               randconfig-a013-20230612   gcc  
-x86_64               randconfig-a014-20230612   gcc  
-x86_64               randconfig-a015-20230612   gcc  
-x86_64               randconfig-a016-20230612   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r005-20230614   gcc  
-xtensa       buildonly-randconfig-r006-20230614   gcc  
++       /*
++        * In the case of fast device addition/removal, it's possible that
++        * vmbus_sendpacket() or wait_for_response() returns -ENODEV but we
++        * already got a PCI_BUS_RELATIONS* message from the host and the
++        * channel callback already scheduled a work to hbus->wq, which can=
+ be
++        * running pci_devices_present_work() -> survey_child_resources() -=
+>
++        * complete(&hbus->survey_event), even after hv_pci_query_relations=
+()
++        * exits and the stack variable 'comp' is no longer valid; as a res=
+ult,
++        * a hang or a page fault may happen when the complete() calls
++        * raw_spin_lock_irqsave(). Flush hbus->wq before we exit from
++        * hv_pci_query_relations() to avoid the issues. Note: if 'ret' is
++        * -ENODEV, there can't be any more work item scheduled to hbus->wq
++        * after the flush_workqueue(): see vmbus_onoffer_rescind() ->
++        * vmbus_reset_channel_cb(), vmbus_rescind_cleanup() ->
++        * channel->rescind =3D true.
++        */
++       flush_workqueue(hbus->wq);
++
+        return ret;
+ }
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> > +	 * In the case of fast device addition/removal, it's possible that
+> > +	 * vmbus_sendpacket() or wait_for_response() returns -ENODEV but we
+> > +	 * already got a PCI_BUS_RELATIONS* message from the host and the
+> > +	 * channel callback already scheduled a work to hbus->wq, which can
+> >  be
+> > +	 * running survey_child_resources() -> complete(&hbus->survey_event),
+> > +	 * even after hv_pci_query_relations() exits and the stack variable
+> > +	 * 'comp' is no longer valid. This can cause a strange hang issue
+>=20
+> "A strange hang" sounds like we don't understand what's happening, it
+> does not feel like it is a solid understanding of the issue.
+>=20
+> I would remove it - given that you already explain that comp is no
+> longer valid - that is already a bug that needs fixing.
+I share more details in the comment (see the above).
+=20
+> Acked-by: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Thanks!
