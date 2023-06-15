@@ -2,61 +2,78 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6CDD8730FA3
-	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 08:48:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3235F730FE5
+	for <lists+linux-pci@lfdr.de>; Thu, 15 Jun 2023 08:53:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244310AbjFOGr6 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 02:47:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53318 "EHLO
+        id S244533AbjFOGxp (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 02:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237002AbjFOGrW (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 02:47:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEA5E2D71;
-        Wed, 14 Jun 2023 23:45:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 63D9F61E7B;
-        Thu, 15 Jun 2023 06:45:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7533C433CC;
-        Thu, 15 Jun 2023 06:45:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686811540;
-        bh=jUyq9MCR5EFJXwJ9EDYffG16LnNM6FSeWeGUNewIMxU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cbV7kw2ngCC1lmiko6SGKS3SysBzaP00oiq9aYiboSSH5jy/ydr7mnnvI1QCjw/eu
-         fNDPcb/kTDU6NwAFyE56VoS3JYPtyJ8g+A4wHkgA9cTCWaNW8u61tBNEVI7O6PHQQR
-         Tt/lYo/t7AnT52rWNNuzE17ew4dWg95I0+dbSC3ZJf5E1msTZIH/luzE+ZQWw7a4BW
-         x9Ac6dHADeq1R1GK89Ke8rJnOwkc4ivNdetxCHDFrhScGInFmufXa/SmI3cRUNM+2v
-         pmuEEvtft9Sgo8LMBEezWlcr1kM7tHcoKZ3KgfHowofKfMlC25hT8QZjc4LN43quvX
-         I4dyVdSNhHwuQ==
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-519608ddbf7so1702611a12.2;
-        Wed, 14 Jun 2023 23:45:40 -0700 (PDT)
-X-Gm-Message-State: AC+VfDyG9VTsZnwU623tnQMN3Xgq56p07tNgFisQ0E4cf8Fvwe+rO+kq
-        FaSBifSWolMVz4k4pzTJ/ttpSF9RXSxKwCh4dB0=
-X-Google-Smtp-Source: ACHHUZ6ON8hmFkJ8hHDv8k/o/oD3CMjEPAjJX7IUgIb2V3DLHTKtRLfNQSo06ngI8f4EC9aCuLqphXcTzMj0jQAW6Hc=
-X-Received: by 2002:a05:6402:88e:b0:514:964c:4c42 with SMTP id
- e14-20020a056402088e00b00514964c4c42mr11191042edy.8.1686811538874; Wed, 14
- Jun 2023 23:45:38 -0700 (PDT)
+        with ESMTP id S243555AbjFOGxL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 02:53:11 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CF76B2704;
+        Wed, 14 Jun 2023 23:51:52 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8AxV+kGtYpkcXYFAA--.9690S3;
+        Thu, 15 Jun 2023 14:51:50 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxhuQFtYpkQKEbAA--.13222S3;
+        Thu, 15 Jun 2023 14:51:49 +0800 (CST)
+Message-ID: <1b5e3b60-28dc-60f1-b963-2eab2c787244@loongson.cn>
+Date:   Thu, 15 Jun 2023 14:51:49 +0800
 MIME-Version: 1.0
-References: <20230609022047.2195689-1-maobibo@loongson.cn> <CAAhV-H7n1Z58h2qxCASDXMMQBDN6x_vq6bH_utVhB5boYoZDGQ@mail.gmail.com>
- <4cfe93cb-7713-f994-45c3-e99fe34a3f9e@loongson.cn> <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-In-Reply-To: <CAAhV-H7_RYzmuCunn5tMzWwKtzi_0sGqUBc5NV1F=_Hyc2X6jg@mail.gmail.com>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Thu, 15 Jun 2023 14:45:26 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H46Ngj6MewcVor4ebFxJ_P-ET=PqwZXZa9=nNL1vYUntQ@mail.gmail.com>
-Message-ID: <CAAhV-H46Ngj6MewcVor4ebFxJ_P-ET=PqwZXZa9=nNL1vYUntQ@mail.gmail.com>
-Subject: Re: [PATCH v4] PCI: Align pci memory space base address with page size
-To:     "bibo, mao" <maobibo@loongson.cn>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Will Deacon <will@kernel.org>,
-        loongarch@lists.linux.dev, loongson-kernel@lists.loongnix.cn
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v7 7/8] drm/amdgpu: Implement the is_boot_device callback
+ function
+To:     Sui Jingfeng <15330273260@189.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, linux-pci@vger.kernel.org,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Christian Konig <christian.koenig@amd.com>,
+        Pan Xinhui <Xinhui.Pan@amd.com>,
+        David Airlie <airlied@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Hawking Zhang <Hawking.Zhang@amd.com>,
+        Mario Limonciello <mario.limonciello@amd.com>,
+        Lijo Lazar <lijo.lazar@amd.com>,
+        YiPeng Chai <YiPeng.Chai@amd.com>,
+        Bokun Zhang <Bokun.Zhang@amd.com>,
+        Likun Gao <Likun.Gao@amd.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+References: <20230613030151.216625-1-15330273260@189.cn>
+ <20230613030151.216625-8-15330273260@189.cn>
+Content-Language: en-US
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+Organization: Loongson
+In-Reply-To: <20230613030151.216625-8-15330273260@189.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxhuQFtYpkQKEbAA--.13222S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxArWUWw17ZFWDCrWDuF4rJFc_yoWrurW5pw
+        48Ga13Wr48Jr1Skryj9Fn8GF1Y9F95AayDArn7tw18Cr47Ka10qF9Iqa1Yg3ZxAr4IvrnI
+        qrn2y340y34DZagCm3ZEXasCq-sJn29KB7ZKAUJUUUUx529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2kKe7AKxVWUAVWUtwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+        AVWUtwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWx
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUcApnDU
+        UUU
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
@@ -65,233 +82,120 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi, Bjorn,
+Hi,
 
-What's your opinion? This patch indeed fixes a problem on LoongArch,
-and in theory other non-4K page platforms also need it. If someone
-disagrees, maybe we can use the old way: provide a LoongArch-specific
-pcibios_align_resource() at this time.
 
-Huacai
+Does anyone has the bandwidth to review this?
 
-On Fri, Jun 9, 2023 at 12:21=E2=80=AFPM Huacai Chen <chenhuacai@kernel.org>=
- wrote:
+I provide more additional information here, hope it helps.
+
+
+On a non-x86 multiple platform, the discrete AMDGPU fails to override 
+the integrated one.
+
+because the PCI BAR 0 of the AMDGPU gets moved.
+
+Below is the log of 'dmesg | grep vgaarb'.
+
+So relaying on screen_info is not always reliable.
+
+
+[    0.361928] pci 0000:00:06.1: vgaarb: setting as boot VGA device
+[    0.361932] pci 0000:00:06.1: vgaarb: bridge control possible
+[    0.361933] pci 0000:00:06.1: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    0.361940] pci 0000:05:00.0: vgaarb: bridge control possible
+[    0.361941] pci 0000:05:00.0: vgaarb: VGA device added: decodes=io+mem,owns=none,locks=none
+[    0.361943] vgaarb: loaded
+[   11.352087] amdgpu 0000:05:00.0: vgaarb: Set as boot device (dictated by driver)
+[   11.575505] loongson 0000:00:06.1: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=io+mem
+[   11.585100] amdgpu 0000:05:00.0: vgaarb: changed VGA decodes: olddecodes=io+mem,decodes=none:owns=none
+
+
+dmesg | grep efifb:
+
+
+[    0.356355] pci 0000:05:00.0: BAR 0: assigned to efifb
+[    0.375793] efifb: probing for efifb
+[    0.375795] pci 0000:05:00.0: BAR has moved, updating efifb address
+[    0.375803] efifb: framebuffer at 0xe0030000000, using 976k, total 975k
+[    0.375805] efifb: mode is 800x600x16, linelength=1664, pages=1
+[    0.375806] efifb: scrolling: redraw
+[    0.375808] efifb: Truecolor: size=0:5:6:5, shift=0:11:5:0
+
+
+efifb can also prove that "BAR has been moved"
+
+
+ From dmesg |  grep "pci 0000:05:00.0":
+
+
+[    0.356286] pci 0000:05:00.0: [1002:699f] type 00 class 0x030000
+[    0.356303] pci 0000:05:00.0: reg 0x10: [mem 
+0xe0020000000-0xe002fffffff 64bit pref]
+[    0.356315] pci 0000:05:00.0: reg 0x18: [mem 
+0xe0030000000-0xe00301fffff 64bit pref]
+[    0.356323] pci 0000:05:00.0: reg 0x20: [io  0x40000-0x400ff]
+[    0.356331] pci 0000:05:00.0: reg 0x24: [mem 0xe0053100000-0xe005313ffff]
+[    0.356339] pci 0000:05:00.0: reg 0x30: [mem 0xfffe0000-0xffffffff pref]
+[    0.356346] pci 0000:05:00.0: enabling Extended Tags
+[    0.356355] pci 0000:05:00.0: BAR 0: assigned to efifb
+[    0.356421] pci 0000:05:00.0: supports D1 D2
+[    0.356422] pci 0000:05:00.0: PME# supported from D1 D2 D3hot D3cold
+[    0.356858] pci 0000:05:00.0: BAR 0: assigned [mem 
+0xe0030000000-0xe003fffffff 64bit pref]
+[    0.356866] pci 0000:05:00.0: BAR 2: assigned [mem 
+0xe0040000000-0xe00401fffff 64bit pref]
+[    0.356875] pci 0000:05:00.0: BAR 5: assigned [mem 
+0xe0049000000-0xe004903ffff]
+[    0.356878] pci 0000:05:00.0: BAR 6: assigned [mem 
+0xe0049040000-0xe004905ffff pref]
+[    0.356889] pci 0000:05:00.0: BAR 4: assigned [io 0x4000-0x40ff]
+[    0.361940] pci 0000:05:00.0: vgaarb: bridge control possible
+[    0.361941] pci 0000:05:00.0: vgaarb: VGA device added: 
+decodes=io+mem,owns=none,locks=none
+[    0.375795] pci 0000:05:00.0: BAR has moved, updating efifb address
+
+We can see that the Bar 0 of AMDGPU
+
+moved from '0xe0020000000-0xe002fffffff'  to '0xe0030000000-0xe003fffffff'
+
+while the fb location information recorded by the screen_info still 
+belong to '0xe0020000000-0xe002fffffff'
+
+
+I suspect this is also the reason that video/aperture don't relay on the 
+information provided by screen_info
+
+in the contrast, it require the firmware framebuffer driver(efifb) to call
+
+devm_aperture_acquire_from_firmware() function, only in this way 
+video/aperture
+
+could record the correct information about the aperture being used the 
+by the firmware framebuffe.
+
+
+While vgaarb is loaded too early, even before efifb.
+
+so that we can only relay on the pci_notifier call back to us.
+
+
+On 2023/6/13 11:01, Sui Jingfeng wrote:
+> From: Sui Jingfeng <suijingfeng@loongson.cn>
 >
-> On Fri, Jun 9, 2023 at 11:47=E2=80=AFAM bibo, mao <maobibo@loongson.cn> w=
-rote:
-> >
-> >
-> >
-> > =E5=9C=A8 2023/6/9 10:29, Huacai Chen =E5=86=99=E9=81=93:
-> > > Hi, Bibo,
-> > >
-> > > On Fri, Jun 9, 2023 at 10:20=E2=80=AFAM Bibo Mao <maobibo@loongson.cn=
-> wrote:
-> > >>
-> > >> Some PCI devices have only 4K memory space size, it is normal in gen=
-eral
-> > >> machines and aligned with page size. However some architectures whic=
-h
-> > >> support different page size, default page size on LoongArch is 16K, =
-and
-> > >> ARM64 supports page size varying from 4K to 64K. On machines where l=
-arger
-> > >> page size is use, memory space region of two different pci devices m=
-ay be
-> > >> in one page. It is not safe with mmu protection, also VFIO pci devic=
-e
-> > >> driver requires base address of pci memory space page aligned, so th=
-at it
-> > >> can be memory mapped to qemu user space when it is passed-through to=
- vm.
-> > >>
-> > >> It consumes more pci memory resource with page size alignment requir=
-ement,
-> > >> here extra option PCI_MEMRES_PAGE_ALIGN is added, it can be enabled =
-by
-> > >> different architectures.
-> > >>
-> > >> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
-> > >> ---
-> > >> Change history
-> > >> v4: add extra kernel option PCI_MEMRES_PAGE_ALIGN to set memory reso=
-urce
-> > >>     page aligned.
-> > >>
-> > >> v3: move alignment requirement to generic pci code
-> > >>
-> > >> v2: add pci resource alignment requirement in arch specified functio=
-n
-> > >>     pcibios_align_resource on arm64/LoongArch platforms
-> > >>
-> > >> ---
-> > >>  arch/loongarch/Kconfig  | 1 +
-> > >>  drivers/pci/Kconfig     | 3 +++
-> > >>  drivers/pci/setup-res.c | 7 +++++++
-> > >>  3 files changed, 11 insertions(+)
-> > >>
-> > >> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> > >> index d38b066fc931..65b2f6ba9f8e 100644
-> > >> --- a/arch/loongarch/Kconfig
-> > >> +++ b/arch/loongarch/Kconfig
-> > >> @@ -142,6 +142,7 @@ config LOONGARCH
-> > >>         select PCI_LOONGSON
-> > >>         select PCI_MSI_ARCH_FALLBACKS
-> > >>         select PCI_QUIRKS
-> > >> +       select PCI_MEMRES_PAGE_ALIGN
-> > >>         select PERF_USE_VMALLOC
-> > >>         select RTC_LIB
-> > >>         select SMP
-> > >> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> > >> index 9309f2469b41..9be5f85ff9dc 100644
-> > >> --- a/drivers/pci/Kconfig
-> > >> +++ b/drivers/pci/Kconfig
-> > >> @@ -128,6 +128,9 @@ config PCI_LOCKLESS_CONFIG
-> > >>  config PCI_BRIDGE_EMUL
-> > >>         bool
-> > >>
-> > >> +config PCI_MEMRES_PAGE_ALIGN
-> > >> +       bool
-> > >> +
-> > >>  config PCI_IOV
-> > >>         bool "PCI IOV support"
-> > >>         select PCI_ATS
-> > >> diff --git a/drivers/pci/setup-res.c b/drivers/pci/setup-res.c
-> > >> index 967f9a758923..6ad76734a670 100644
-> > >> --- a/drivers/pci/setup-res.c
-> > >> +++ b/drivers/pci/setup-res.c
-> > >> @@ -339,6 +339,13 @@ int pci_assign_resource(struct pci_dev *dev, in=
-t resno)
-> > >>                 return -EINVAL;
-> > >>         }
-> > >>
-> > >> +#ifdef CONFIG_PCI_MEMRES_PAGE_ALIGN
-> > >> +       /*
-> > >> +        * force minimum page alignment for vfio pci usage
-> > >> +        */
-> > >> +       if (res->flags & IORESOURCE_MEM)
-> > >> +               align =3D max_t(resource_size_t, PAGE_SIZE, align);
-> > >> +#endif
-> > > Does this really have its effect? The common version of
-> > > pcibios_align_resource() simply returns res->start, and doesn't care
-> > > about the 'align' parameter.
-> > yes, it works. The is output of command " lspci -vvv | grep Region" on =
-my
-> > 3C5000+7A2000 box. After the patch base address of all pci mem resource
-> > is aligned with 16K.
-> >
-> > output without the patch:
-> >         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045271400 (64-bit, non-prefetchable) [siz=
-e=3D256]
-> >         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [siz=
-e=3D64M]
-> >         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 5: Memory at e0045271000 (32-bit, non-prefetchable) [siz=
-e=3D1K]
-> >         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045269000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526a000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526b000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526d000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526e000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526f000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [siz=
-e=3D16M]
-> >         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [siz=
-e=3D1M]
-> >         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [siz=
-e=3D16K]
-> >
-> > out put with the patch:
-> >         Region 0: Memory at e0045240000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045248000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045250000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045258000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045260000 (64-bit, non-prefetchable) [siz=
-e=3D32K]
-> >         Region 0: Memory at e0045290000 (64-bit, non-prefetchable) [siz=
-e=3D256]
-> >         Region 2: Memory at e0040000000 (64-bit, non-prefetchable) [siz=
-e=3D64M]
-> >         Region 4: Memory at e0045200000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045210000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045220000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 0: Memory at e0045230000 (64-bit, non-prefetchable) [siz=
-e=3D64K]
-> >         Region 5: Memory at e004528c000 (32-bit, non-prefetchable) [siz=
-e=3D1K]
-> >         Region 0: Memory at e0045268000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004526c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045270000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045274000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045278000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e004527c000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045280000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045284000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 0: Memory at e0045288000 (64-bit, non-prefetchable) [siz=
-e=3D4K]
-> >         Region 2: Memory at e0044000000 (64-bit, non-prefetchable) [siz=
-e=3D16M]
-> >         Region 0: Memory at e0045100000 (64-bit, non-prefetchable) [siz=
-e=3D1M]
-> >         Region 0: Memory at e0045000000 (64-bit, non-prefetchable) [siz=
-e=3D16K]
-> OK, thanks.
+> [why]
 >
-> Reviewed-by: Huacai Chen <chenhuacai@loongson.cn>
+> The vga_is_firmware_default() defined in drivers/pci/vgaarb.c is
+> arch-dependent, it's a dummy on non-x86 architectures currently.
+> This made VGAARB lost an important condition for the arbitration.
+> It could still be wrong even if we remove the #ifdef and #endif guards.
+> because the PCI bar will move (resource re-allocation).
 >
-> >
-> > Regards
-> > Bibo, Mao
-> > >
-> > > Huacai
-> > >>         size =3D resource_size(res);
-> > >>         ret =3D _pci_assign_resource(dev, resno, size, align);
-> > >>
-> > >> --
-> > >> 2.27.0
-> > >>
-> >
+> [how]
+>
+> The device that owns the firmware framebuffer should be the default boot
+> device. This patch adds an arch-independent function to enforce this rule
+
+-- 
+Jingfeng
+
