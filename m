@@ -2,73 +2,110 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E98C7323C5
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 01:43:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6570E732511
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 04:12:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239978AbjFOXnQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-pci@lfdr.de>); Thu, 15 Jun 2023 19:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58478 "EHLO
+        id S240087AbjFPCMf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 22:12:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229600AbjFOXnN (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 19:43:13 -0400
-X-Greylist: delayed 1753 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 15 Jun 2023 16:43:10 PDT
-Received: from mail.pcunix.cl (mail.pcunix.cl [201.236.145.134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8056296C;
-        Thu, 15 Jun 2023 16:43:10 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.pcunix.cl (Postfix) with ESMTP id 0D99DA1A0C;
-        Thu, 15 Jun 2023 19:13:56 -0400 (-04)
-Received: from mail.pcunix.cl ([127.0.0.1])
-        by localhost (mail.pcunix.cl [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id yWMpD4Nzv85N; Thu, 15 Jun 2023 19:13:55 -0400 (-04)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.pcunix.cl (Postfix) with ESMTP id C044BA1A10;
-        Thu, 15 Jun 2023 19:13:55 -0400 (-04)
-X-Virus-Scanned: amavisd-new at pcunix.cl
-Received: from mail.pcunix.cl ([127.0.0.1])
-        by localhost (mail.pcunix.cl [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id S410onTkrCf2; Thu, 15 Jun 2023 19:13:55 -0400 (-04)
-Received: from [147.78.103.165] (unknown [192.168.10.1])
-        by mail.pcunix.cl (Postfix) with ESMTP id 20AE6A19D7;
-        Thu, 15 Jun 2023 19:13:50 -0400 (-04)
-Content-Type: text/plain; charset="iso-8859-1"
+        with ESMTP id S240076AbjFPCMe (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 22:12:34 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 923B62967;
+        Thu, 15 Jun 2023 19:12:32 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.116])
+        by gateway (Coremail) with SMTP id _____8Cxd+kPxYtkhMsFAA--.10389S3;
+        Fri, 16 Jun 2023 10:12:31 +0800 (CST)
+Received: from [10.20.42.116] (unknown [10.20.42.116])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauUNxYtkj8AcAA--.16275S3;
+        Fri, 16 Jun 2023 10:12:30 +0800 (CST)
+Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
+ node has status = "disabled"
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     Liu Peibao <liupeibao@loongson.cn>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Rob Herring <robh@kernel.org>,
+        Claudiu Manoil <claudiu.manoil@nxp.com>,
+        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
+        Binbin Zhou <zhoubinbin@loongson.cn>,
+        Huacai Chen <chenhuacai@loongson.cn>
+References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
+ <ZHjaq+TDW/RFcoxW@bhelgaas> <20230601221532.2rfcda4sg5nl7pzp@skbuf>
+ <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
+ <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
+ <20230602101628.jkgq3cmwccgsfb4c@skbuf>
+ <87f2b231-2e16-e7b8-963b-fc86c407bc96@loongson.cn>
+ <20230604085500.ioaos3ydehvqq24i@skbuf>
+ <ad969019-e763-b06f-d557-be4e672c68db@loongson.cn>
+ <20230605093459.gpwtsr5h73eonxt5@skbuf>
+From:   Jianmin Lv <lvjianmin@loongson.cn>
+Message-ID: <ec5039c1-61d7-6958-ef92-bf5b8c8db64d@loongson.cn>
+Date:   Fri, 16 Jun 2023 10:12:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: Loan Offer
-To:     Recipients <capital@tahoo.com>
-From:   capital@tahoo.com
-Date:   Thu, 15 Jun 2023 16:13:45 -0700
-Reply-To: sawdacapital@yahoo.com
-Message-Id: <20230615231351.20AE6A19D7@mail.pcunix.cl>
-X-Spam-Status: No, score=4.2 required=5.0 tests=BAYES_50,
-        FREEMAIL_FORGED_REPLYTO,RCVD_IN_MSPIKE_BL,RCVD_IN_MSPIKE_L5,
-        RCVD_IN_VALIDITY_RPBL,SPF_HELO_NONE,SPF_NONE,T_SCC_BODY_TEXT_LINE
-        autolearn=no autolearn_force=no version=3.4.6
-X-Spam-Level: ****
+In-Reply-To: <20230605093459.gpwtsr5h73eonxt5@skbuf>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8AxauUNxYtkj8AcAA--.16275S3
+X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoW7Ar1UWF43CF4DKw4kXFW3CFX_yoW8Ww15pF
+        43AF4SkFn8Gr4Sy34DZw4ruFyfua93Xw45Jr48J34v93y5WFySvrWYqa1Iqay7Gr18AF1a
+        vFWjqw1vk3WDWagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
+        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
+        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
+        wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
+        CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+        67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
+        IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+        14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+        W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
+        UUUU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hello,
 
-We grant loans to individuals and companies. We are interested in financing of large volume projects and grant loans worldwide.
 
-The interest rate will be 3% annually. The repayment period is 1-25 years.
+On 2023/6/5 下午5:34, Vladimir Oltean wrote:
+> On Mon, Jun 05, 2023 at 08:59:23AM +0800, Jianmin Lv wrote:
+>> For a multi-function device, if func 0 is not allowed to be scanned, as I
+>> said in way of 2, the other funcs of the device will be described as
+>> platform devices instead of pci and be not scanned either, which is
+>> acceptable for Loongson. The main goal by any way for us is to resolve the
+>> problem that shared pins can not be used simultaneously by devices sharing
+>> them. IMO, configure them in DT one by one may be reasonable, but adapting
+>> each driver will be bothered.
+> 
+> Could you give an example of PCIe functions being described as platform
+> devices, and how does that work for Loongson? Are you saying that there
+> will be 2 drivers for the same hardware, one pci_driver and one platform_driver?
+> In the case of the platform_driver, who will do the PCI-specific stuff
+> required by the IP, like function level reset and enabling the memory space?
+> 
 
-We offer:-
+E.g. there are two functions , func0 is HDA controller and func1 is I2S 
+controller and they have shared pins.
+When HDA or I2S is used, both are disabled for PCI enumeration in BIOS 
+(e.g. by filling PCI header with 0xffffffff), and mem space has been 
+reserved from host bridge window for them in BIOS, of cause, reserved 
+space will not be seen by kernel because it has been removed in host 
+bridge mem range when passed to kernel in DT. Then the reserved mem base 
+is passed into kernel by DT, CPU will use remapped address of the mem 
+base, and these devices will not be enumerated in PCI bus. The way is 
+only used for PCI devices (share common pins and exist on bus 0) 
+integrated in Loongson CPU or chipset.
 
-*Project finance
-*Business loans
-*Personal loans
-
-Loan Processing and financing takes about 2 to 3 working days from the day you submit your loan application. For more information reply to this mail.
-
-Kind regards,
-Sawda Team
-
- 
-
-NOTE: If you received this message in your SPAM/JUNK folder, that is because of the restrictions implemented by your Internet Service Provider, treat it genuinely.
