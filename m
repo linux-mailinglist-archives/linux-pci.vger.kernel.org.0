@@ -2,134 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id F346A7337C8
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 19:58:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D9F2733810
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 20:24:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229561AbjFPR6P (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 13:58:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41936 "EHLO
+        id S229538AbjFPSYO (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 14:24:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229587AbjFPR6M (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 13:58:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6933A3AA8;
-        Fri, 16 Jun 2023 10:57:59 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        with ESMTP id S229521AbjFPSYN (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 14:24:13 -0400
+Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C4F835AC;
+        Fri, 16 Jun 2023 11:24:12 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECE0A62D55;
-        Fri, 16 Jun 2023 17:57:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A1C3C433CC;
-        Fri, 16 Jun 2023 17:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686938278;
-        bh=yZ8eEA+x+5gozagiComb31MKFfHvm1oQLeCgj8pDoEM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Q0csU51xJSe3z57XK+uNhWB8+Mjt/9Cjdr+9YejZTkvkjX+brhGBXKl4Gd1kTHeBa
-         qdsfOcz4pxPbtegCYxvv2QztEsOh4/GDC2ihnUuO2OWZqd7HxPSSMyTm+LtGhCdVEe
-         Ybfbp6+WpsLB/bTYCBvZNMS+eYKG85d2rFJtbqBWkUrLq6qlTC4P8OIL1Q3lUJLk1f
-         foI7ZlMiMqGp7qmtlI4S4/GlaLqAhxfOpJKYcUGbGMlTkej/MO/BquYDjpZ9g1UIAm
-         RUvQeHoQ37ZuqhcUmTE3CiyMnAyH1iXmYL0b0BeAyRZqnxoFi/Rfm6Urf4cBrloR7E
-         xq+i601kTs/dg==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-4f84d70bf96so1286575e87.0;
-        Fri, 16 Jun 2023 10:57:58 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwQakx8rH2xvv04sWlGQjGGgGK5IKexCv/MDAaX/HsTBNLICfMn
-        9cRHzIJ2QkpV2wbkyk4J0Vt9T1qPOwKtG7Amvg==
-X-Google-Smtp-Source: ACHHUZ4ibV3Qa76jehM/K30WUyK2tw9YnxpHB+I2hoSJfKa80o9Cg3HiXq9qR+Rp3ZXrDPDqAK9c0zq4XdhEvvCBWUo=
-X-Received: by 2002:a05:6512:33c7:b0:4f8:4b19:9533 with SMTP id
- d7-20020a05651233c700b004f84b199533mr1185954lfg.19.1686938276276; Fri, 16 Jun
- 2023 10:57:56 -0700 (PDT)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id D8190300002D5;
+        Fri, 16 Jun 2023 20:24:09 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id BEFB21E8240; Fri, 16 Jun 2023 20:24:09 +0200 (CEST)
+Date:   Fri, 16 Jun 2023 20:24:09 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
+Message-ID: <20230616182409.GA8894@wunner.de>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-3-Smita.KoralahalliChannabasappa@amd.com>
+ <20230511111902.GA10720@wunner.de>
+ <cc36bb5b-6a4a-258b-6707-4d019154e019@amd.com>
 MIME-Version: 1.0
-References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf> <ZHjaq+TDW/RFcoxW@bhelgaas>
- <20230601221532.2rfcda4sg5nl7pzp@skbuf> <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
- <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn> <20230602101628.jkgq3cmwccgsfb4c@skbuf>
- <87f2b231-2e16-e7b8-963b-fc86c407bc96@loongson.cn> <20230604085500.ioaos3ydehvqq24i@skbuf>
-In-Reply-To: <20230604085500.ioaos3ydehvqq24i@skbuf>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 16 Jun 2023 11:57:43 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLsVYiPLx2kcHkDQ4t=hQVCR7NHziDwi9cCFUFhx48Qow@mail.gmail.com>
-Message-ID: <CAL_JsqLsVYiPLx2kcHkDQ4t=hQVCR7NHziDwi9cCFUFhx48Qow@mail.gmail.com>
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Jianmin Lv <lvjianmin@loongson.cn>,
-        Liu Peibao <liupeibao@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cc36bb5b-6a4a-258b-6707-4d019154e019@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Sun, Jun 4, 2023 at 2:55=E2=80=AFAM Vladimir Oltean <vladimir.oltean@nxp=
-.com> wrote:
->
+Hi Smita,
 
-Sorry, just now seeing this as I've been out the last month.
+My apologies for the delay!
 
-> On Sat, Jun 03, 2023 at 10:35:50AM +0800, Jianmin Lv wrote:
-> > > How about 3. handle of_device_is_available() in the probe function of
-> > > the "loongson, pci-gmac" driver? Would that not work?
-> > >
-> > This way does work only for the specified device. There are other devic=
-es,
-> > such as HDA, I2S, etc, which have shared pins. Then we have to add
-> > of_device_is_available() checking to those drivers one by one. And we a=
-re
-> > not sure if there are other devices in new generation chips in future. =
-So
-> > I'm afraid that the way you mentioned is not suitable for us.
+On Mon, May 22, 2023 at 03:23:31PM -0700, Smita Koralahalli wrote:
+> On 5/11/2023 4:19 AM, Lukas Wunner wrote:
+> > On Tue, Apr 18, 2023 at 09:05:26PM +0000, Smita Koralahalli wrote:
+> > > Clear all capabilities in Device Control 2 register as they are optional
+> > > and it is not determined whether the next device inserted will support
+> > > these capabilities. Moreover, Section 6.13 of the PCIe Base
+> > > Specification [1], recommends clearing the ARI Forwarding Enable bit on
+> > > a hot-plug event as its not guaranteed that the newly added component
+> > > is in fact an ARI device.
+> > 
+> > Clearing ARI Forwarding Enable sounds reasonable, but I don't see
+> > why all the other bits in the Device Control 2 register need to be
+> > cleared.  If there isn't a reason to clear them, I'd be in favor of
+> > leaving them alone.
+> 
+> I understand. The SPEC doesn't "clearly" state to clear the other bits
+> except ARI on a hot-plug event.
+> 
+> But, we came across issues when a device with 10-bit tags was removed and
+> replaced with a device that didn't support 10-bit tags. The device became
+> inaccessible and the port was not able to be recovered without a system
+> reset. So, we thought it would be better to cherry pick all bits that were
+> negotiated between endpoint and root port and decided that we should clear
+> them all on removal. Hence, my first revision of this patch series had aimed
+> to clear only ARI, AtomicOp Requestor and 10 bit tags as these were the
+> negotiated settings between endpoint and root port. Ideally, these settings
+> should be re-negotiated and set up for optimal operation on a hot add.
 
-If we decided that disabled devices should probe, then that is exactly
-what will have to be done. The restriction (of shared pins) is in the
-devices and is potentially per device, so it makes more sense for the
-device's drivers to handle than the host bridge IMO. (Assuming the
-core doesn't handle a per device property.)
+Makes total sense.  I like the approach of clearing only these three
+bits, as you did in v1 of the patch.  I also appreciate the detailed
+explanation that you've provided.  Much of your e-mail can be copy-pasted
+to the commit message, in my opinion it's valuable information to any
+reviewer and future reader of the commit.
 
 
-> Got it, so you have more on-chip PCIe devices than the ones listed in
-> loongson64-2k1000.dtsi, and you don't want to describe them in the
-> device tree just to put status =3D "disabled" for those devices/functions
-> that you don't want Linux to use - although you could, and it wouldn't
-> be that hard or have unintended side effects.
->
-> Though you need to admit, in case you had an on-chip multi-function PCIe
-> device like the NXP ENETC, and you wanted Linux to not use function 0,
-> the strategy you're suggesting here that is acceptable for Loongson
-> would not have worked.
->
-> I believe we need a bit of coordination from PCIe and device tree
-> maintainers, to suggest what would be the encouraged best practices and
-> ways to solve this regression for the ENETC.
+> We had some internal discussions to understand if SPEC has it documented
+> somewhere. And we could see in Section 2.2.6.2, it implies that:
+> [i] If a Requester sends a 10-Bit Tag Request to a Completer that lacks
+> 10-Bit Completer capability, the returned Completion(s) will have Tags with
+> Tag[9:8] equal to 00b. Since the Requester is forbidden to generate these
+> Tag values for 10-Bit Tags, such Completions will be handled as Unexpected
+> Completions, which by default are Advisory Non-Fatal Errors. The Requester
+> must follow standard PCI Express error handling requirements.
+> [ii] In configurations where a Requester with 10-Bit Tag Requester
+> capability needs to target multiple Completers, one needs to ensure that the
+> Requester sends 10-Bit Tag Requests only to Completers that have 10-Bit Tag
+> Completer capability.
+> 
+> Now, we might wonder, why clear them (especially 10-bit tags and AtomicOps)
+> if Linux hasn't enabled them at all as the "10-Bit Tag Requester Enable" bit
+> is not defined in Linux currently. But, these features might be enabled by
+> Platform FW for "performance reasons" if the endpoint supports and now it is
+> the responsibility of the operating system to disable it on a hot remove
+> event.
 
-I think we need to define what behavior is correct for 'status =3D
-"disabled"'. For almost everywhere in DT, it is equivalent to the
-device is not present. A not present device doesn't probe. There are
-unfortunately cases where status got ignored/forgotten and PCI was one
-of those. PCI is a bit different since there are 2 sources of
-information about a device being present. The intent with PCI is DT
-overrides what's discovered. For example, 'vendor-id' overrides what's
-read from the h/w.
+Again, makes total sense.
 
-I think we can fix making the status per function simply by making
-'match_driver' be set based on the status. This would move the check
-later to just before probing. That would not work for a case where
-accessing the config registers is a problem. It doesn't sound like
-that's a problem for Loongson based on the above response, but their
-original solution did prevent that. This change would also mean the
-PCI quirks would run. Perhaps the func0 memory clearing you need could
-be run as a quirk instead?
 
-Rob
+> According to implementation notes in 2.2.6.2: "For platforms where the RC
+> supports 10-Bit Tag Completer capability, it is highly recommended for
+> platform firmware or operating software that configures PCIe hierarchies to
+> Set the 10-Bit Tag Requester Enable bit automatically in Endpoints with
+> 10-Bit Tag Requester capability. This enables the important class of 10-Bit
+> Tag capable adapters that send Memory Read Requests only to host memory." So
+> if the endpoint and root port both support 10-bit tags BIOS is enabling it
+> at boot time..
+> 
+> I ran a quick check to see how DEV_CTL2 registers for root port look on a
+> 10-bit tag supported NVMe device.
+> 
+> pci 0000:80:05.1: DEVCTL2 0x1726 (Bit 12: 10-bit tag is enabled..)
+> pci 0000:80:05.1: DEVCAP2 0x7f19ff
+> 
+> So, it seems like BIOS has enabled 10-bit tags at boot time even though
+> Linux hasn't enabled it.
+> 
+> Some couple of ways we think could be:
+> [1] Check if these bits are enabled by Platform at boot time, clear them
+> only it is set during hotplug flow.
+> [2] Clear them unconditionally as I did..
+> [3] Enable 10-bits tags in Linux when a device is probed just like how we do
+> for ARI..
+> 
+> Similarly call pci_enable_atomic_ops_to_root() during a hot add..
+
+Personally I'm fine with option [2].  If you or Bjorn prefer option [3],
+I'm fine with that as well.
+
+
+> > As for clearing ARI Forwarding Enable, it seems commit b0cc6020e1cc
+> > ("PCI: Enable ARI if dev and upstream bridge support it; disable
+> > otherwise") already solved this problem.  Quoth its commit message:
+[...]
+> > My superficial understanding of that patch is that we do find function 0,
+> > while enumerating it we clear the ARI Forwarding Enable bit and thus the
+> > remaining functions become accessible and are subsequently enumerated.
+> > 
+> > Are you seeing issues when removing an ARI-capable endpoint from a
+> > hotplug slot and replacing it with a non-ARI-capable device?
+> > If you do, the question is why the above-quoted commit doesn't avoid them.
+> 
+> Yeah! Sorry I missed this. ARI is already checked and enabled during device
+> initialization.
+
+It doesn't hurt to additionally clear on hot-removal.
+
+Thanks,
+
+Lukas
