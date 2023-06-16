@@ -2,266 +2,174 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 8040F73370B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 19:01:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E1AA733770
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 19:31:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345570AbjFPRBl (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 13:01:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43514 "EHLO
+        id S244736AbjFPRbr (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 13:31:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345382AbjFPRAp (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 13:00:45 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CE3E30F7;
-        Fri, 16 Jun 2023 10:00:43 -0700 (PDT)
-Received: from jupiter.universe (dyndsl-091-248-215-052.ewe-ip-backbone.de [91.248.215.52])
+        with ESMTP id S229542AbjFPRbo (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 13:31:44 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A0921FD7;
+        Fri, 16 Jun 2023 10:31:41 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 7192F6606F87;
-        Fri, 16 Jun 2023 18:00:41 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1686934841;
-        bh=9mgF9GCwROw6ftx0dsG82gZvHnEiFDB9jVgcEpCCtLw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hkSnKHIN5N2V3Qf8XCSs8gZcfJmWlMdoLvOny4DOPwLr8TRtN56w7iQA+e0h6s6mk
-         L5/Z/7Wl/owHaFypzrKujD+hVA3SgesTG7D+DRBLuoRlIF0+n75XRThCMIf56x7OOM
-         3EWTP7AnY0iTRqA7gssyzXe/zoir/HB2KLzJNmcwTIHkM11Rwi+e1AvDJVgj52XMsl
-         ZTBRjFjfy2lauZGv5y2QqE5KOVd9ZUKYfxRiAej+I2UlRjH5Lm/HvqQwywwk6YXz81
-         TFE26xh0SbT8HhbOIQnhoEESSiPa3n7eac+HT4ieiWsIEOjNthQBGt8UiCfbiNHJXU
-         VJvlr0enVimJQ==
-Received: by jupiter.universe (Postfix, from userid 1000)
-        id 15BA548059A; Fri, 16 Jun 2023 19:00:39 +0200 (CEST)
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
-Cc:     Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?q?Krzysztof=20Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        kernel@collabora.com, Kever Yang <kever.yang@rock-chips.com>
-Subject: [PATCH v1 4/4] arm64: dts: rockchip: rk3588: add PCIe2 support
-Date:   Fri, 16 Jun 2023 19:00:22 +0200
-Message-Id: <20230616170022.76107-5-sebastian.reichel@collabora.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230616170022.76107-1-sebastian.reichel@collabora.com>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 6E19B10029ADF;
+        Fri, 16 Jun 2023 19:31:40 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 3EA371DED81; Fri, 16 Jun 2023 19:31:40 +0200 (CEST)
+Date:   Fri, 16 Jun 2023 19:31:40 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Message-ID: <20230616173140.GA6417@wunner.de>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
+ <20230516101001.GA18952@wunner.de>
+ <8ab986f2-6aa5-401a-aa21-e8b21f68eaad@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,SPF_HELO_NONE,SPF_PASS,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8ab986f2-6aa5-401a-aa21-e8b21f68eaad@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Add all three PCIe2 IP blocks to the RK3588 DT. Note, that RK3588
-also has two PCIe3 IP blocks, that will be handled separately.
+On Mon, May 22, 2023 at 03:23:57PM -0700, Smita Koralahalli wrote:
+> On 5/16/2023 3:10 AM, Lukas Wunner wrote:
+> > On Tue, Apr 18, 2023 at 09:05:25PM +0000, Smita Koralahalli wrote:
+> > > Also, while testing I noticed PCI_STATUS and PCI_EXP_DEVSTA will be set
+> > > on an async remove and will not be cleared while the device is brought
+> > > down. I have included clearing them here in order to mask any kind of
+> > > appearance that there was an error and as well duplicating our BIOS
+> > > functionality. I can remove if its not necessary.
+> > 
+> > Which bits are set exactly?  Can you constrain the register write to
+> > those bits?
+> 
+> Hmm, I was mostly trying to follow the similar approach done for AER.
+> pci_aer_raw_clear_status(), where they clear status registers
+> unconditionally. Also, thought might be better if we are dealing with legacy
+> endpoints or so.
+> 
+> I see these bits set in status registers:
+> PCI_ERR_UNCOR_STATUS 0x20 (Surprise Down)
+> PCI_EXP_DPC_RP_PIO_STATUS 0x10000 (Memory Request received URCompletion)
+> PCI_EXP_DEVSTA 0x604 (fatal error detected)
 
-Co-developed-by: Kever Yang <kever.yang@rock-chips.com>
-Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
----
- arch/arm64/boot/dts/rockchip/rk3588.dtsi  |  54 +++++++++++
- arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 108 ++++++++++++++++++++++
- 2 files changed, 162 insertions(+)
+I'd recommend clearing only PCI_EXP_DEVSTA_FED in PCI_EXP_DEVSTA.
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-index b9508cea34f1..40fee1367b34 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
-@@ -80,6 +80,60 @@ i2s10_8ch: i2s@fde00000 {
- 		status = "disabled";
- 	};
- 
-+	pcie2x1l0: pcie@fe170000 {
-+		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x20 0x2f>;
-+		clocks = <&cru ACLK_PCIE_1L0_MSTR>, <&cru ACLK_PCIE_1L0_SLV>,
-+			 <&cru ACLK_PCIE_1L0_DBI>, <&cru PCLK_PCIE_1L0>,
-+			 <&cru CLK_PCIE_AUX2>, <&cru CLK_PCIE1L0_PIPE>;
-+		clock-names = "aclk_mst", "aclk_slv",
-+			      "aclk_dbi", "pclk",
-+			      "aux", "pipe";
-+		device_type = "pci";
-+		interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie2x1l0_intc 0>,
-+				<0 0 0 2 &pcie2x1l0_intc 1>,
-+				<0 0 0 3 &pcie2x1l0_intc 2>,
-+				<0 0 0 4 &pcie2x1l0_intc 3>;
-+		linux,pci-domain = <2>;
-+		num-ib-windows = <8>;
-+		num-ob-windows = <8>;
-+		num-viewport = <4>;
-+		max-link-speed = <2>;
-+		msi-map = <0x2000 &its0 0x2000 0x1000>;
-+		num-lanes = <1>;
-+		phys = <&combphy1_ps PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy";
-+		power-domains = <&power RK3588_PD_PCIE>;
-+		ranges = <0x01000000 0x0 0xf2100000 0x0 0xf2100000 0x0 0x00100000>,
-+			 <0x02000000 0x0 0xf2200000 0x0 0xf2200000 0x0 0x00e00000>,
-+			 <0x03000000 0x9 0x80000000 0x9 0x80000000 0x0 0x40000000>;
-+		reg = <0xa 0x40800000 0x0 0x00400000>,
-+		      <0x0 0xfe170000 0x0 0x00010000>,
-+		      <0x0 0xf2000000 0x0 0x00100000>;
-+		reg-names = "dbi", "apb", "config";
-+		resets = <&cru SRST_PCIE2_POWER_UP>, <&cru SRST_P_PCIE2>;
-+		reset-names = "pwr", "pipe";
-+		status = "disabled";
-+
-+		pcie2x1l0_intc: legacy-interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 240 IRQ_TYPE_EDGE_RISING 0>;
-+		};
-+	};
-+
- 	gmac0: ethernet@fe1b0000 {
- 		compatible = "rockchip,rk3588-gmac", "snps,dwmac-4.20a";
- 		reg = <0x0 0xfe1b0000 0x0 0x10000>;
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-index a73b17f597af..b5fdc046d8f7 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
-@@ -1670,6 +1670,114 @@ qos_vop_m1: qos@fdf82200 {
- 		reg = <0x0 0xfdf82200 0x0 0x20>;
- 	};
- 
-+	pcie2x1l1: pcie@fe180000 {
-+		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x30 0x3f>;
-+		clocks = <&cru ACLK_PCIE_1L1_MSTR>, <&cru ACLK_PCIE_1L1_SLV>,
-+			 <&cru ACLK_PCIE_1L1_DBI>, <&cru PCLK_PCIE_1L1>,
-+			 <&cru CLK_PCIE_AUX3>, <&cru CLK_PCIE1L1_PIPE>;
-+		clock-names = "aclk_mst", "aclk_slv",
-+			      "aclk_dbi", "pclk",
-+			      "aux", "pipe";
-+		device_type = "pci";
-+		interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie2x1l1_intc 0>,
-+				<0 0 0 2 &pcie2x1l1_intc 1>,
-+				<0 0 0 3 &pcie2x1l1_intc 2>,
-+				<0 0 0 4 &pcie2x1l1_intc 3>;
-+		linux,pci-domain = <3>;
-+		num-ib-windows = <8>;
-+		num-ob-windows = <8>;
-+		num-viewport = <4>;
-+		max-link-speed = <2>;
-+		msi-map = <0x3000 &its0 0x3000 0x1000>;
-+		num-lanes = <1>;
-+		phys = <&combphy2_psu PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy";
-+		power-domains = <&power RK3588_PD_PCIE>;
-+		ranges = <0x01000000 0x0 0xf3100000 0x0 0xf3100000 0x0 0x00100000>,
-+			 <0x02000000 0x0 0xf3200000 0x0 0xf3200000 0x0 0x00e00000>,
-+			 <0x03000000 0x9 0xc0000000 0x9 0xc0000000 0x0 0x40000000>;
-+		reg = <0xa 0x40c00000 0x0 0x00400000>,
-+		      <0x0 0xfe180000 0x0 0x00010000>,
-+		      <0x0 0xf3000000 0x0 0x00100000>;
-+		reg-names = "dbi", "apb", "config";
-+		resets = <&cru SRST_PCIE3_POWER_UP>, <&cru SRST_P_PCIE3>;
-+		reset-names = "pwr", "pipe";
-+		status = "disabled";
-+
-+		pcie2x1l1_intc: legacy-interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 245 IRQ_TYPE_EDGE_RISING 0>;
-+		};
-+	};
-+
-+	pcie2x1l2: pcie@fe190000 {
-+		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x40 0x4f>;
-+		clocks = <&cru ACLK_PCIE_1L2_MSTR>, <&cru ACLK_PCIE_1L2_SLV>,
-+			 <&cru ACLK_PCIE_1L2_DBI>, <&cru PCLK_PCIE_1L2>,
-+			 <&cru CLK_PCIE_AUX4>, <&cru CLK_PCIE1L2_PIPE>;
-+		clock-names = "aclk_mst", "aclk_slv",
-+			      "aclk_dbi", "pclk",
-+			      "aux", "pipe";
-+		device_type = "pci";
-+		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH 0>,
-+			     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH 0>;
-+		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 7>;
-+		interrupt-map = <0 0 0 1 &pcie2x1l2_intc 0>,
-+				<0 0 0 2 &pcie2x1l2_intc 1>,
-+				<0 0 0 3 &pcie2x1l2_intc 2>,
-+				<0 0 0 4 &pcie2x1l2_intc 3>;
-+		linux,pci-domain = <4>;
-+		num-ib-windows = <8>;
-+		num-ob-windows = <8>;
-+		num-viewport = <4>;
-+		max-link-speed = <2>;
-+		msi-map = <0x4000 &its0 0x4000 0x1000>;
-+		num-lanes = <1>;
-+		phys = <&combphy0_ps PHY_TYPE_PCIE>;
-+		phy-names = "pcie-phy";
-+		power-domains = <&power RK3588_PD_PCIE>;
-+		ranges = <0x01000000 0x0 0xf4100000 0x0 0xf4100000 0x0 0x00100000>,
-+			 <0x02000000 0x0 0xf4200000 0x0 0xf4200000 0x0 0x00e00000>,
-+			 <0x03000000 0xa 0x00000000 0xa 0x00000000 0x0 0x40000000>;
-+		reg = <0xa 0x41000000 0x0 0x00400000>,
-+		      <0x0 0xfe190000 0x0 0x00010000>,
-+		      <0x0 0xf4000000 0x0 0x00100000>;
-+		reg-names = "dbi", "apb", "config";
-+		resets = <&cru SRST_PCIE4_POWER_UP>, <&cru SRST_P_PCIE4>;
-+		reset-names = "pwr", "pipe";
-+		status = "disabled";
-+
-+		pcie2x1l2_intc: legacy-interrupt-controller {
-+			interrupt-controller;
-+			#address-cells = <0>;
-+			#interrupt-cells = <1>;
-+			interrupt-parent = <&gic>;
-+			interrupts = <GIC_SPI 250 IRQ_TYPE_EDGE_RISING 0>;
-+		};
-+	};
-+
- 	gmac1: ethernet@fe1c0000 {
- 		compatible = "rockchip,rk3588-gmac", "snps,dwmac-4.20a";
- 		reg = <0x0 0xfe1c0000 0x0 0x10000>;
--- 
-2.39.2
+As for PCI_EXP_DPC_RP_PIO_STATUS, PCIe r6.1 sec 2.9.3 says that
+during DPC, either UR or CA completions are returned depending on
+the DPC Completion Control bit in the DPC Control register.
+The kernel doesn't touch that bit, so it will contain whatever value
+the BIOS has set. It seems fine to me to just clear all bits in
+PCI_EXP_DPC_RP_PIO_STATUS, as you've done in your patch.
 
+However, the RP PIO Status register is present only in Root Ports
+that support RP Extensions for DPC, per PCIe r6.1 sec 7.9.14.6.
+So you need to constrain that to "if (pdev->dpc_rp_extensions)".
+
+
+> > > +	pci_aer_raw_clear_status(pdev);
+> > > +	pci_clear_surpdn_errors(pdev);
+> > > +
+> > > +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
+> > > +			      PCI_EXP_DPC_STATUS_TRIGGER);
+> > > +}
+> > 
+> > Do you need a "wake_up_all(&dpc_completed_waitqueue);" at the end
+> > of the function to wake up a pciehp handler waiting for DPC recovery?
+> 
+> I don't think so. The pciehp handler is however getting invoked
+> simultaneously due to PDSC or DLLSC state change right.. Let me know if I'm
+> missing anything here.
+
+I think you need to follow the procedure in dpc_reset_link().
+
+That function first waits for the link to go down, in accordance with
+PCIe r6.1 sec 6.2.11:
+
+	if (!pcie_wait_for_link(pdev, false))
+	...
+
+Note that the link should not come back up due to a newly hot-added
+device until DPC Trigger Status is cleared.
+
+The function then waits for the Root Port to quiesce:
+
+	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
+	...
+
+And only then does the function clear DPC Trigger Status.
+
+You definitely need to wake_up_all(&dpc_completed_waitqueue) because
+pciehp may be waiting for DPC Trigger Status to clear.
+
+And you need to "clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags)"
+before calling wake_up_all().
+
+
+> > > +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+> > > +{
+> > > +	u16 status;
+> > > +
+> > > +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
+> > > +
+> > > +	if (!(status & PCI_ERR_UNC_SURPDN))
+> > > +		return false;
+> > > +
+> > 
+> > You need an additional check for pdev->is_hotplug_bridge here.
+> > 
+> > And you need to read PCI_EXP_SLTCAP and check for PCI_EXP_SLTCAP_HPS.
+> > 
+> > Return false if either of them isn't set.
+> 
+> Return false, if PCI_EXP_SLTCAP isn't set only correct? PCI_EXP_SLTCAP_HPS
+> should be disabled if DPC is enabled.
+> 
+> Implementation notes in 6.7.6 says that:
+> "The Hot-Plug Surprise (HPS) mechanism, as indicated by the Hot-Plug
+> Surprise bit in the Slot Capabilities Register being Set, is deprecated
+> for use with async hot-plug. DPC is the recommended mechanism for supporting
+> async hot-plug."
+> 
+> Platform FW will disable the SLTCAP_HPS bit at boot time to enable async
+> hotplug on AMD devices.
+
+Huh, is PCI_EXP_SLTCAP_HPS not set on the hotplug port in question?
+
+If it's not set, why do you get Surprise Down Errors in the first place?
+
+How do you bring down the slot without surprise-removal capability?
+Via sysfs?
+
+
+> Probably check if SLTCAP_HPS bit is set and return false?
+
+Quite the opposite!  If it's not set, return false.
+
+
+Thanks,
+
+Lukas
