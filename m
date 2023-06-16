@@ -2,227 +2,149 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E05373349B
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 17:21:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 596C17334B1
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 17:28:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231772AbjFPPVT (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 11:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43122 "EHLO
+        id S1345844AbjFPP2A (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 11:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbjFPPVS (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 11:21:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BDDB359E;
-        Fri, 16 Jun 2023 08:21:15 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27186625B9;
-        Fri, 16 Jun 2023 15:21:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194DEC433CA;
-        Fri, 16 Jun 2023 15:21:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686928874;
-        bh=I2J3TfKfw0KbmKhAvN4x6gXOdCm+sLoYTy4d6M0UgYg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Im9aBa4xcR8gQ6dmW9Xxz5aoqBqjyxRplkHfMhEvD4QjzYI4DrhpGWP4YPN1uazDZ
-         qq5yNgeRZkMCs/EBZaTRitycXMfcL2GoxKP1FitXhb4zOEaQpYgLbsyKYctIUSoK1i
-         91rVQ9Rq4uiAIrTiTIb/62YYzXyo3GCFfJHRNHfvmkQ+jMi/tE/uTalJM/KshKhxpT
-         IPMlKk34ulVtPtrTT3+15Bzn/dNzXdpBCC5zIew3VdddtWG4thE2BPJZsW33GCVm53
-         XEv0tE4diFx4eVa2elrM9TA48UaJSmch7z5LhtszNz1Opjh5PTxqUsuYAErmmD5Xjg
-         XiMqVhG7rrPmw==
-Date:   Fri, 16 Jun 2023 10:21:12 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sharath.kumar.d.m@intel.com
-Cc:     lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
-        bhelgaas@google.com, linux-pci@vger.kernel.org,
-        dinguyen@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] pci: agilex_pci: add pcie rootport support for agilex
-Message-ID: <20230616152112.GA1534746@bhelgaas>
+        with ESMTP id S1345470AbjFPP17 (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 11:27:59 -0400
+Received: from mail-pj1-x1036.google.com (mail-pj1-x1036.google.com [IPv6:2607:f8b0:4864:20::1036])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C52AA30C3;
+        Fri, 16 Jun 2023 08:27:58 -0700 (PDT)
+Received: by mail-pj1-x1036.google.com with SMTP id 98e67ed59e1d1-25ea635570eso703809a91.3;
+        Fri, 16 Jun 2023 08:27:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686929278; x=1689521278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=63uzoQ1syV2Wjj6k2aLXBVP/jt/qcihxF/TXUIXFfKY=;
+        b=R/vvsw6dO5+cd7ZMkmRQW1awaW1LiARa5ShXvyQZiznK439y0ndjzpS1hW4Q/NPfty
+         GujoNKgYSSFSbBaPbO+4OCa53Jobm17h0ZsAhjYFou+2QS2xVVcToyP066k1A3eKMGN+
+         loUIPuql9zflzJn5TL/6D8fKmyz9y89xShKxHGkCliPDd08iIqtt11jSW0teRSlFgLTR
+         3RWM4WfWaJ4wA6Ik1Zv9YqY1fwsRBTm8Q7+gsfJynbBzx7OL5tCfur7rw8EZdHVe3BKs
+         pL6iHWf+WkcF4LDp3osGs5E+yEmzl+hmV9OxXRuNaUo0sVMIavCb1Dnuk0Ymat0T9gqf
+         4uPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686929278; x=1689521278;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=63uzoQ1syV2Wjj6k2aLXBVP/jt/qcihxF/TXUIXFfKY=;
+        b=GZ1H8+CD8YkqulceAjmCwliQeje2N57gImZoBLc29RwMM2guIQOQqHPEawI854i3iL
+         4/shilEdDn66J5F3D4fdXtFVRdt2M0a6luZfqd/9NQWeryk1RYTMRBiEoFfrEyq1K9Fm
+         SFC+fW7iofYlr2dEB78qejX94FS1b/8HdJlz8Vrb5t/lkyH+hwFTU72Y61u5D0HbNA9i
+         5ybm4TlQzl9injx3ub6UmDIV08QWGUqZ+l6YHJ2AcZDIcB/GI5EbBS6sDYD6i4nRpuyi
+         tTx3cVU9yUN3rvPpl4v1YAFR7edlbe8na5NbYdgnD/GfdYaQAPmT9MCWEP+RZWAlWpcD
+         iS1Q==
+X-Gm-Message-State: AC+VfDxZZ2Fa68qXemg4zMhA4nmup7R/YP+8d/fjPz1UtjX5qFcD7atk
+        mpr8KQ750PrCscBzr8Ih9BnzFG1ku/GCd3ZJoZM=
+X-Google-Smtp-Source: ACHHUZ7ggszHILJHBCELxrQm3UBlmG1caxb6nfkSLisF+66VB9JrJhRoC4YcIxZ7claF4N14nncmru4ukHL/5Q8h3T4=
+X-Received: by 2002:a17:90a:6c63:b0:25b:fbdc:dd8 with SMTP id
+ x90-20020a17090a6c6300b0025bfbdc0dd8mr1902431pjj.24.1686929277972; Fri, 16
+ Jun 2023 08:27:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230616063313.862996-2-sharath.kumar.d.m@intel.com>
-X-Spam-Status: No, score=-7.1 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_HI,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <CAKgT0UezciLjHacOx372+v8MZkDf22D5Thn82n-07xxKy_0FTQ@mail.gmail.com>
+ <CAKgT0UfMeVOz6AOqSvVvzpsedGDiXCNQrjM+4KDv7qJJ1orpsw@mail.gmail.com>
+ <a1cff65b-b390-3872-25b5-dd6bbfb3524c@linux.intel.com> <b24a6c7b-27fc-41c0-5c82-15696b4a7dc1@arm.com>
+ <ZIiRK2Dzl2/9Jqle@ziepe.ca> <BN9PR11MB52765C24405D2475CF3CBEBE8C58A@BN9PR11MB5276.namprd11.prod.outlook.com>
+ <ZIxTmGU4a5dniEY3@nvidia.com>
+In-Reply-To: <ZIxTmGU4a5dniEY3@nvidia.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Fri, 16 Jun 2023 08:27:21 -0700
+Message-ID: <CAKgT0UfmdOOPSD5YvpHnh1A02URn9zxVLbyXJM_67On7xojLcA@mail.gmail.com>
+Subject: Re: Question about reserved_regions w/ Intel IOMMU
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Baolu Lu <baolu.lu@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        "iommu@lists.linux.dev" <iommu@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
+        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
+        autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Thanks for your patch.  If/when you revise it, run "git log --oneline
-drivers/pci/controller/pcie-altera.c" and match the style of subject
-lines, e.g.,
+On Fri, Jun 16, 2023 at 5:20=E2=80=AFAM Jason Gunthorpe <jgg@nvidia.com> wr=
+ote:
+>
+> On Fri, Jun 16, 2023 at 08:39:46AM +0000, Tian, Kevin wrote:
+> > +Alex
+> >
+> > > From: Jason Gunthorpe <jgg@nvidia.com>
+> > > Sent: Tuesday, June 13, 2023 11:54 PM
+> > >
+> > > On Thu, Jun 08, 2023 at 04:28:24PM +0100, Robin Murphy wrote:
+> > >
+> > > > > The iova_reserve_pci_windows() you've seen is for kernel DMA inte=
+rfaces
+> > > > > which is not related to peer-to-peer accesses.
+> > > >
+> > > > Right, in general the IOMMU driver cannot be held responsible for
+> > > whatever
+> > > > might happen upstream of the IOMMU input.
+> > >
+> > > The driver yes, but..
+> > >
+> > > > The DMA layer carves PCI windows out of its IOVA space
+> > > > unconditionally because we know that they *might* be problematic,
+> > > > and we don't have any specific constraints on our IOVA layout so
+> > > > it's no big deal to just sacrifice some space for simplicity.
+> > >
+> > > This is a problem for everything using UNMANAGED domains. If the iomm=
+u
+> > > API user picks an IOVA it should be able to expect it to work. If the
+> > > intereconnect fails to allow it to work then this has to be discovere=
+d
+> > > otherwise UNAMANGED domains are not usable at all.
+> > >
+> > > Eg vfio and iommufd are also in trouble on these configurations.
+> > >
+> >
+> > If those PCI windows are problematic e.g. due to ACS they belong to
+> > a single iommu group. If a vfio user opens all the devices in that grou=
+p
+> > then it can discover and reserve those windows in its IOVA space.
+>
+> How? We don't even exclude the single device's BAR if there is no ACS?
 
-  PCI: altera: Add Intel Agilex support
+The issue here was a defective ACS on a PCIe switch.
 
-On Fri, Jun 16, 2023 at 12:03:13PM +0530, sharath.kumar.d.m@intel.com wrote:
-> From: D M Sharath Kumar <sharath.kumar.d.m@intel.com>
+> > The problem is that the user may not open all the devices then
+> > currently there is no way for it to know the windows on those
+> > unopened devices.
+> >
+> > Curious why nobody complains about this gap before this thread...
+>
+> Probably because it only matters if you have a real PCIe switch in the
+> system, which is pretty rare.
 
-Also, please include a commit log.
+So just FYI I am pretty sure we have a partitioned PCIe switch that
+has FW issues. Specifically it doesn't seem to be honoring the
+Redirect Request bit so what is happening is that we are seeing
+requests that are supposed to be going to the root complex/IOMMU
+getting redirected to an NVMe device that was on the same physical
+PCIe switch. We are in the process of getting that sorted out now and
+are using the forcedac option in the meantime to keep the IOMMU out of
+the 32b address space that was causing the issue.
 
-Probably should also update the Kconfig help text to mention Agilex in
-addition to Altera.
-
-> +#include <linux/bitops.h>
-
-I don't think this is needed.
-
-> +static int aglx_rp_read_cfg(struct altera_pcie *pcie, int where,
-> +			   int size, u32 *value)
-> +{
-> +	void __iomem *addr = AGLX_RP_CFG_ADDR(pcie, where);
-> +
-> +	switch (size) {
-> +	case 1:
-> +		*value = readb(addr);
-> +		break;
-> +	case 2:
-> +		*value = readw(addr);
-> +		break;
-> +	default:
-> +		*value = readl(addr);
-> +		break;
-> +	}
-> +
-> +	if (where == 0x3d)
-> +		*value = 0x01;
-> +	if (where == 0x3c)
-> +		*value |= 0x0100;
-
-This magic needs a comment.  Apparently it works around some hardware
-defect?  What happens if this is a single byte read?  Looks like it
-may set more than one byte of *value.
-
-> +static int aglx_ep_write_cfg(struct altera_pcie *pcie, u8 busno,
-> +		unsigned int devfn, int where, int size, u32 value)
-> +{
-> +	cs_writel(pcie, ((busno << 8) | devfn), AGLX_BDF_REG);
-> +	if (busno > AGLX_RP_SECONDARY(pcie)) {
-> +		/* type 1 */
-> +		switch (size) {
-> +		case 1:
-> +			cs_writeb(pcie, value, ((1 << 12) | where));
-> +			break;
-> +		case 2:
-> +			cs_writew(pcie, value, ((1 << 12) | where));
-> +			break;
-> +		default:
-> +			cs_writel(pcie, value, ((1 << 12) | where));
-> +			break;
-> +		}
-> +	} else {
-> +		/* type 0 */
-> +		switch (size) {
-> +		case 1:
-> +			cs_writeb(pcie, value, where);
-> +			break;
-> +		case 2:
-> +			cs_writew(pcie, value, where);
-> +			break;
-> +		default:
-> +			cs_writel(pcie, value, where);
-> +				break;
-> +		}
-> +	}
-
-These switches could be combined, e.g.,
-
-  if (busno > AGLX_RP_SECONDARY(pcie))
-    where |= 1 << 12;
-
-> +	if (status & CFG_AER) {
-> +		ret = generic_handle_domain_irq(pcie->irq_domain, 0);
-> +		if (ret)
-> +			dev_err_ratelimited(dev, "unexpected IRQ,\n");
-
-Spurious "," at end of line.
-
-> @@ -692,11 +904,27 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
->  {
->  	struct platform_device *pdev = pcie->pdev;
->  
-> -	pcie->cra_base = devm_platform_ioremap_resource_byname(pdev, "Cra");
-> -	if (IS_ERR(pcie->cra_base))
-> -		return PTR_ERR(pcie->cra_base);
-> +	if ((pcie->pcie_data->version == ALTERA_PCIE_V1) ||
-> +		(pcie->pcie_data->version == ALTERA_PCIE_V2)) {
-> +		pcie->cra_base =
-> +			devm_platform_ioremap_resource_byname(pdev, "Cra");
-> +		if (IS_ERR(pcie->cra_base))
-> +			return PTR_ERR(pcie->cra_base);
-> +	}
-
-Should be a separate introductory patch since it's not directly
-related to Agilex.
-
-> -	if (pcie->pcie_data->version == ALTERA_PCIE_V2) {
-> +	if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
-> +		pcie->cs_base =
-> +			devm_platform_ioremap_resource_byname(pdev, "Cs");
-> +		if (IS_ERR(pcie->cs_base))
-> +			return PTR_ERR(pcie->cs_base);
-> +		of_property_read_u32(pcie->pdev->dev.of_node, "port_conf_stat",
-> +				&port_conf_off);
-> +		dev_info(&pcie->pdev->dev, "port_conf_stat_off =%x\n",
-> +			port_conf_off);
-> +	}
-> +
-> +	if ((pcie->pcie_data->version == ALTERA_PCIE_V2) ||
-> +		(pcie->pcie_data->version == ALTERA_PCIE_V3)) {
-
-Ditto.
-
->  		pcie->hip_base =
->  			devm_platform_ioremap_resource_byname(pdev, "Hip");
->  		if (IS_ERR(pcie->hip_base))
-> @@ -708,7 +936,8 @@ static int altera_pcie_parse_dt(struct altera_pcie *pcie)
->  	if (pcie->irq < 0)
->  		return pcie->irq;
->  
-> -	irq_set_chained_handler_and_data(pcie->irq, altera_pcie_isr, pcie);
-> +	irq_set_chained_handler_and_data(pcie->irq,
-> +		pcie->pcie_data->ops->rp_isr, pcie);
-
-Ditto (including the new .rp_isr initializations below).
-
-> @@ -721,6 +950,7 @@ static const struct altera_pcie_ops altera_pcie_ops_1_0 = {
->  	.tlp_read_pkt = tlp_read_packet,
->  	.tlp_write_pkt = tlp_write_packet,
->  	.get_link_status = altera_pcie_link_up,
-> +	.rp_isr = altera_pcie_isr,
->  };
-
-> @@ -793,11 +1045,17 @@ static int altera_pcie_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> -	/* clear all interrupts */
-> -	cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
-> -	/* enable all interrupts */
-> -	cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
-> -	altera_pcie_host_init(pcie);
-> +	if ((pcie->pcie_data->version == ALTERA_PCIE_V1) ||
-> +		(pcie->pcie_data->version == ALTERA_PCIE_V2)) {
-> +		/* clear all interrupts */
-> +		cra_writel(pcie, P2A_INT_STS_ALL, P2A_INT_STATUS);
-> +		/* enable all interrupts */
-> +		cra_writel(pcie, P2A_INT_ENA_ALL, P2A_INT_ENABLE);
-> +		altera_pcie_host_init(pcie);
-
-Ditto.
-
-> +	} else if (pcie->pcie_data->version == ALTERA_PCIE_V3) {
-> +		writel(CFG_AER, (pcie->hip_base + port_conf_off
-> +			+ AGLX_ROOT_PORT_IRQ_ENABLE));
-> +	}
->  
->  	bridge->sysdata = pcie;
->  	bridge->busnr = pcie->root_bus_nr;
-> -- 
-> 2.34.1
-> 
+The reason for my original request is more about the user experience
+of trying to figure out what is reserved and what isn't. It seems like
+the IOVA will have reservations that are not visible to the end user.
+So when I go looking through the reserved_regions in sysfs it just
+lists the MSI regions that are reserved, and maybe some regions such
+as the memory for USB. while in reality we may be reserving IOVA
+regions in iova_reserve_pci_windows that will not be exposed without
+having to add probes or adding some printk debugging.
