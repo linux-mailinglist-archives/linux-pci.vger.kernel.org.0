@@ -2,49 +2,49 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0616C733CE6
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 01:31:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4DAC4733CF2
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 01:34:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbjFPXa5 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 19:30:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46382 "EHLO
+        id S234473AbjFPXem (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 19:34:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjFPXa4 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 19:30:56 -0400
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2041.outbound.protection.outlook.com [40.107.236.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC2E3599;
-        Fri, 16 Jun 2023 16:30:55 -0700 (PDT)
+        with ESMTP id S231690AbjFPXeg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 19:34:36 -0400
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2051.outbound.protection.outlook.com [40.107.93.51])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5093AA4;
+        Fri, 16 Jun 2023 16:34:32 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ESKK9AOSR0HbjUN8Td+07uv4ewSNX4ALq+aOUXfSiOMH5PdcMnBWhVMxmZstKrghx4e14uVANvlyptpPZxtQYWXU4bo8SyZuaYoMuyJ7p0G6hERJwSYvP4KhmSok8dphvzS3Xe1/fWO+CVpIot1zGf81JJJbTR1VVN3ZGtT5zX9rt4nJXeexftv+V/AoUVR2cev+pTPkw56kAE3BPtagbY1UsvFd9eWBdVIKHleIdK9ZnEyay5exoKjw7AweQwG4KhVbIWnqfpqrJxfaqLwgkPysxp9aQGhKXb1Wz38tKrIz7vafJXOZruVkSHqxCFPaUUd8CU/3G8TYc0KaXlZnXQ==
+ b=TG5e04RGViv786NvQgkv3flaMzwMsS6ArscIkg8mbZdqkgLVtBXewFGOQsu2LlmzW+9dpjtQ6B2cgriVxt7ewFExS3Dv8YVCeD81huH22P2uBKyiVBeuJyoe7oD36pliPA06RuagGoUNZACwMpJ2ZF4K49lOJukcxEHW+HiGTO92FK06A6MTEPdyAW+LuGnRLiNqwKVhsuCj/7/hy+xi8rzmduXNK/v33vNUlU2d1mYbqNv/VNZ2Ds1Do/CYjaVYvRXdQNf03a/2+gca1HswWkX62aQ2nK0r2F3oCHd+0/t7IXOFk3oBLaC94Ick/ksaUVgER6dIUk5z9Q8wQMRa3Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ub5pnk5JR1NyCf6qLFUsyxnbn5PWDNnBriliRQOo5zo=;
- b=ishYwkAdRnSkKmZtZrBRHxb3c0XxJeTE1PFC+g7zmJzdQQr1pXnxdPDu4CWdrN91KrWR+JF2THQHrpm/jG77xOMEyhg7a2VsmbsEDaAITBVCaZxQ681O/iaHs0NM8hF6kWbF6M4s8EctvDlaDm+dErYwjavoRll78CD+SF2Yh49b14EQD5aFc85pvD7o7QQemH8Y8oEXb18r8C0GWnMnEJ7zsHYMuekZmwM6Uo4arq2o0pP6sYAxv8Ps4hs6VNAEKMwby37jlJBRvkYrycgMtZ4y2M1Z4bhBdWQ/tJ86T4JKSCxkRXufrlOEl9k2DXCoy7lMSj4XYTXUpKqUoRyfbw==
+ bh=WwsehjKgBn8EwaVslg7LCYMbkXi7VBekSL9rG/F2FMQ=;
+ b=f/3JUrdDcfnoPUd+7kp/Qhxig+Jya6lvtp7aRbqu9td9+8EyBxUMLunNnUlrCFdXQxgZP4FIvxfCTqYvRNF0xLPN2vpHlB3pzPLgkhTe/gUtcFM0591bm93lM5wSWl29uDnCUpUSrZjzZf0niF7Li7LHbLVc3S6XCymwzOG4ZAUblzJ/rCPTkt5+GN6DQlFH7rl2s0K6Ioxlxgr0ohNExD8vo8xDK+SJvDX4aV7dhOksFMUQVFt7RPfstH5gxv6goEMOaeiSNoS+rxveQlx1bb66vQK7DNpPL4iHC0BWvjipELSOuScQYcgwa+Y1Nmtf9ttNv4M/9qTqoRL/M9e7lg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ub5pnk5JR1NyCf6qLFUsyxnbn5PWDNnBriliRQOo5zo=;
- b=lmX5bv8H64eCLIu8Q6qrlNF4whVjC8YnfafiexFV2WiqUr6bE4Tv391V0kx6C72YrcIQjIk2lEU+iJukI+nVFpuyvDQWtkLB5pkWJ1mnjev4qmkmIlgmkT5NyHQ0P+Tzr7fxIejhhtEZCGJ2BsiTRomU1HUp7DW8rIdueDwf7CY=
+ bh=WwsehjKgBn8EwaVslg7LCYMbkXi7VBekSL9rG/F2FMQ=;
+ b=C/JDpBGbV0gEYNSZQUUR2Pz1+V5H03r2midkeconHkw9IDYJAOsBpROkHoq3i8vZC/GYBTleOwu17vr+7hLJbPRG2bu+IIvjJkPGxjWk2KpF9wLnf97sSgereGOBSlnZMFTv8mcKGMqKXglvg6FZzjlekOQWxEwxhcX1m1gFOAE=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=amd.com;
 Received: from BYAPR12MB2869.namprd12.prod.outlook.com (2603:10b6:a03:132::30)
- by SA3PR12MB7830.namprd12.prod.outlook.com (2603:10b6:806:315::15) with
+ by PH0PR12MB8798.namprd12.prod.outlook.com (2603:10b6:510:28d::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.25; Fri, 16 Jun
- 2023 23:30:52 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6500.27; Fri, 16 Jun
+ 2023 23:34:29 +0000
 Received: from BYAPR12MB2869.namprd12.prod.outlook.com
  ([fe80::b616:6941:8855:93ad]) by BYAPR12MB2869.namprd12.prod.outlook.com
  ([fe80::b616:6941:8855:93ad%5]) with mapi id 15.20.6500.029; Fri, 16 Jun 2023
- 23:30:52 +0000
-Message-ID: <e967608f-ac8a-7a9c-35c5-821b6842653c@amd.com>
-Date:   Fri, 16 Jun 2023 16:30:49 -0700
+ 23:34:29 +0000
+Message-ID: <d9cf3451-c0c1-ab86-0528-2c05982e7872@amd.com>
+Date:   Fri, 16 Jun 2023 16:34:27 -0700
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
  Thunderbird/91.11.0
-Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
- native AER and DPC/EDR
+Subject: Re: [PATCH v2 2/2] PCI: pciehp: Clear the optional capabilities in
+ DEVCTL2 on a hot-plug
 Content-Language: en-US
 To:     Lukas Wunner <lukas@wunner.de>
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -55,74 +55,74 @@ Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         Yazen Ghannam <yazen.ghannam@amd.com>,
         Fontenot Nathan <Nathan.Fontenot@amd.com>
 References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
- <20230516101001.GA18952@wunner.de>
- <8ab986f2-6aa5-401a-aa21-e8b21f68eaad@amd.com>
- <20230616173140.GA6417@wunner.de>
+ <20230418210526.36514-3-Smita.KoralahalliChannabasappa@amd.com>
+ <20230511111902.GA10720@wunner.de>
+ <cc36bb5b-6a4a-258b-6707-4d019154e019@amd.com>
+ <20230616182409.GA8894@wunner.de>
 From:   Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-In-Reply-To: <20230616173140.GA6417@wunner.de>
+In-Reply-To: <20230616182409.GA8894@wunner.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: BY3PR05CA0041.namprd05.prod.outlook.com
- (2603:10b6:a03:39b::16) To BYAPR12MB2869.namprd12.prod.outlook.com
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR03CA0032.namprd03.prod.outlook.com
+ (2603:10b6:a03:33e::7) To BYAPR12MB2869.namprd12.prod.outlook.com
  (2603:10b6:a03:132::30)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|SA3PR12MB7830:EE_
-X-MS-Office365-Filtering-Correlation-Id: 994185a9-6e3a-4b71-6452-08db6ec1b921
+X-MS-TrafficTypeDiagnostic: BYAPR12MB2869:EE_|PH0PR12MB8798:EE_
+X-MS-Office365-Filtering-Correlation-Id: 97148ce2-933e-46e8-363d-08db6ec23aa4
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: c/oxONrOwudhTg6QZ8eMKsjJ6Zd2saVtej87PR9GZyLOkmhOWvTEQH3i++O7P+u96uim5i7XcZ5HNQDltij14Aajy5+ezhqQvzezKCsZHdkqaLOQ1WmlqrJMXyc1FaGxMsZ1axeIwuXz6DoWRoefl4oS0GBZY2BnYTxtd2WR16WjJdVR5/PysoOhgMI8cbt6d/yMOHtI1DgOUhHozyOTzFv+0+Kuvkd3oHesK9JJW7iGDJ9L2Wh5oYcjXzm8xNX2zajNyXDL2PH8t9v4PbHrU6GxpKjWHxKTyg/3qnRHDjGvFsQkhXuXYx1xhRSU61sabQnp6cqFuq6jANZeIY6xhnn3VxANBOp5xKlo0A3UwUlY6+KpidTfPN3rnDv224ZK9AZJCHssmBNd4uRicZwAdUyoVUqbkTIuNRR3rP8MPXBB9e8IqvdW6t5DhGq4v0fWtvdgt/V41+05wHFZUM/U0nSQbl/Jcb+NEb6kvrX3tXFTLQvhX2Kx6d10aK6shFc26OgA3aLg9y110gbRaTodktiHeSaavQWdltXFYVgAvpFGg7FAqia/ik+aQ8sMsKq2pWTvtqlP+8bkkg1mogVmCBcIB7p+x95c/uTZaEznPEg55bP5Q9WKX+kL1YtwtF4Kciu+jTsuf0MlSGHPDT7NvQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(136003)(376002)(39860400002)(346002)(451199021)(31686004)(86362001)(31696002)(38100700002)(5660300002)(316002)(8936002)(41300700001)(8676002)(66556008)(6916009)(4326008)(66946007)(83380400001)(54906003)(2616005)(66476007)(53546011)(186003)(6512007)(6506007)(478600001)(36756003)(26005)(2906002)(6486002)(6666004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: 2yw/QHJdlUzzjlU8JgUc3A3qAG4juWzRV66soQE4RFsqyjjEkp/kjR+gAEg4UYEJbncE4TT1Y6/Ve8G1nZ9vkmdDe4/l9CFkc+6liM4XhRpwehZqBoEAqU0Akc2d80R4AvmCqh8xTxMm1chn0ctXfTw0PepUJTcbix3fHj/O31vyTycx2aqiObnPXrF9ui2vibK93Mqj8zyEKEVJ1XRER9P7AK63BmxwG9wkn7lD8GFyrN9UBuSWwjsESTxhmrKLNSYj/CCFi/0Nbew52/bVdNE9XWQ2UWlTw9/1PIcM7IM3xCcl7F+WkltKhcJDRQ0+El71MorLlGA0LpvvCWkB6+pvyPH8AAE1PbIK9feVjtNFce3KxTCKZ8RiqRBI8WRcHhSgj/+LPcQalHI0/EAI9WTqgnS03jnpsu1/jTVFyorg51Lr1txtSu80klIfxEtNaE1BHifiGl1qi0peRcHAeZUYAXLyhEWnWjvyLKfirVgm4lJRZjh+RYqnvlOZftnTDGrg9G3Md0lYLzNgAcqfVZV2ryUMJcv/9TPJQysj08G+tIiQJKCIX9kAvoAKOcGWkqKdQh4MH0Ie2XbAioC9f8ZvvO6o8QkNlzgRqB+J5+zhS0NA0zq5q4a8JCHIyWoIzGArlzu6ZTUJ7RGPnXPsvg==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2869.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(366004)(136003)(396003)(346002)(451199021)(5660300002)(31686004)(54906003)(2906002)(41300700001)(8936002)(8676002)(66899021)(66556008)(4326008)(6916009)(66946007)(66476007)(316002)(36756003)(478600001)(6486002)(38100700002)(53546011)(2616005)(86362001)(31696002)(6506007)(186003)(26005)(83380400001)(6512007)(45980500001)(43740500002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?cE13K3N4SjhpZVdFOUxuUFFZVGV4b1lPTXE1Ny9oRzlXTUlkQmUwVW1WRTgx?=
- =?utf-8?B?NWh6b3liVmtURWtZV0drV1NoQlRsYjlobGJ0bGxQeC9PajlBNzlXU0dYNXVo?=
- =?utf-8?B?amswenVvanpRZUIrM0RZYW0xRTBTNHVjUXBSUFAzc0ZKaHEzYlV4K3htSUlQ?=
- =?utf-8?B?WG1IcGxWUFR5QzhxMjhxK1ByUEpRb2xUVkFVRFAwYVpQYllQWUx6VGYxdGFG?=
- =?utf-8?B?L1lVRTAxSzl1SlVTL29lekk5TjE2T2p3VUNpbVB3T0U4TldUQkxrNkVQVzB4?=
- =?utf-8?B?MjdoWjlxUGVneUVmbi9FV0gwMEsyNEF6ZkNldnNIVlE0eTZIRTRDcmxzN2sw?=
- =?utf-8?B?NEtjMDZEeUNHSTdwOVgwcmprbnpjcEZtR3lCN2p3QUZURkJjcEh6WS9OK09M?=
- =?utf-8?B?UlRQR0hDcE5rZ09ZV240ZXdNcWJodWY3ZHdQb1RKd1NnaU5GQ1h0WVRvd292?=
- =?utf-8?B?T2JTS1dNZDRYMFdzZnVQZC9uV1lCcFBKUFhwMUNLT3M4ek81MDdTcmJmV0pa?=
- =?utf-8?B?VllmOFBhcURLVXZaSW1JS2RMelRKY2tvbkxST1pZTHBSTWgzeHhoUm5BaEpk?=
- =?utf-8?B?NGVObVZrOTA2K0VSbEd0RGc4VE83OCtCaytEWk0wUWlaa292dGFhbFFtVkVq?=
- =?utf-8?B?UW15WnQwRkg5eXZXbFdLb0N1QVNKZzNtYWNEdytvV0lxbi9uWVd4bjByUkJx?=
- =?utf-8?B?c01FMU1JZFA0YVRsRytwZFBKRm8xSGlRdmQrZDg1OUszcnc3VGZPSUNFZExz?=
- =?utf-8?B?U0tXTjVqMHR6ZkhQQUNQUVA4T052UDZTN0syZ2E2M0NjaXJqQ1ZRVlUydERa?=
- =?utf-8?B?SUNmbFl4Y3FDVzJsRnRVcC9aMzBNcFBFWUlHeU85bGIvS0NlMkJzS29WdXpw?=
- =?utf-8?B?RWVVQlZ2ZFk0UjREZ21CVnhYVjRvSkVLdzdIZDBiRXdHSkNGZ3l4TFMwQi9z?=
- =?utf-8?B?S3FCWmdCVGxuZWRLTEJwRW5ZbzYrL016bEtYTjUvdHZqQWx4ZWpTSEsrMC9T?=
- =?utf-8?B?b1dXczBHVEF5TE1xS1dnSTZGYnZ6MVBHMVhuSmhTaWltQ09OY2ZnbUhwZlU4?=
- =?utf-8?B?YmUveG4raWRBOEJ4OFN5VHlqVDlta0tid3VSTll4TlhvS3BOWm1YNmcvSkpw?=
- =?utf-8?B?VGsyaHlrZWVYa1J3OGNidDhqZ1RlaGM0WFIzc21LM0QyOHUybjd0MzZjZjNM?=
- =?utf-8?B?bFNnTnpHWDhFVzl3alkvRFl0MUxQSFJTK0ZjbWpZM2t4aXI2S3dxYXh6RWI1?=
- =?utf-8?B?cmgwSStKY0xReEVDdEFDVGNldk5IZEMwKy83anZ6QzNpUXBqTERERmhLbkFa?=
- =?utf-8?B?WG5WdjlqRGNNZjBNS2pOcWp0ZzZwUlppN2tQa3NENVBEVVV5aDZ5L3R0NHFa?=
- =?utf-8?B?bThUVlZwUnFJaEE5WjRaTFBvd2VtS0twVHl5YjZmNnNXeWx0dnRxTGx2L0ho?=
- =?utf-8?B?M1hGZ0thQVh3TEtNMEw0ZFk2eFBIeTFQZ202dU5LOWxzY2ZqcnlqRE9wUi8v?=
- =?utf-8?B?eUpZSmQwdzEzcVV3YXplaTR4Y1ZlQm1JalNJYVFaazVvby92WmNJcy90Nm00?=
- =?utf-8?B?Snh6UnIrYnhWUU5XMC9rU1VEM3RwQWozWEVRU1AyVWk4Z0dRbzRmNkxvQ29T?=
- =?utf-8?B?SmNUaXdFQ1ZDMDNYM0kzY3dNUDlQM2V6akN0c1liTGcxY240QzU0YVJURjhr?=
- =?utf-8?B?UGNYWUtVZklSb2Q2SmZqWGwrOVRGRGNtdnpQWGsyUW1PZWJKakMrSDdtYkRs?=
- =?utf-8?B?Zk9HS2orUWRXWVB2eVRGWHIvMnRTbFU4eW9haHRvY0NYUWZxK3Q5akJ6SDlm?=
- =?utf-8?B?Rk9LVXBONFVDSm16cjlmcDEyOUhEekY1U2lBdHhtNzVpNUQ1L2YyMmtVWEx0?=
- =?utf-8?B?YWNubVRYVGpLTk1wNk0rLzBJcUZnUlhESnVWMmc3djRwTEZ2VzJkWEZuelNz?=
- =?utf-8?B?alg2ZklRWkR1amRrVVdXODdRVmUvWGNVMHI5LzJxWUdOTkxiZFBHa01qY00y?=
- =?utf-8?B?bitIcFVhajRIemRGZi9oQjM0V0RwUnAzWW1SUUFnT09CZWl3RWRyTnZ1bnl3?=
- =?utf-8?B?NXIvaGtYSzdjak02ZHhVV3VGMHlRTFZzVlpWTDlDekl5eFlMbTJvbFlhL1B0?=
- =?utf-8?Q?o6AyEuw6F7cBJkKDnfbaB/mR7?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UnBDdlhZR1IwMXdTUkY4cjdrblBDeXNaRjF5d1ZiZnRmT2duYjFWWlcrM25S?=
+ =?utf-8?B?SSs0OU1aMEJMOGU4UjNUSEZCSEZBbTU4R1RBUkU2SjJ2K09mUjFGbURSUUt3?=
+ =?utf-8?B?NWJDTWRNSE9hOE9CVWFKT3YwTTBObDdlUy9sR1R0UXE4WXlMU2tXaHZVV1lu?=
+ =?utf-8?B?SmhMaVpGTytlVDhHNXpMVnAxbVVlZ3lnbjlPZGxIOUxvdWVQOHQrZkFaV1Mw?=
+ =?utf-8?B?WDFCdVZEMmlsU2V5QXY5Q09qTTlMMDR2MTNReUtNWERSVFZ2bEpidXFiZzZz?=
+ =?utf-8?B?b3djbTJVNGZtZlptS09qVzU0WEx3SlJMVjdKK1E5TWZtSmdQS09BRWFIRVVq?=
+ =?utf-8?B?NUVIU05seitXcVN4NUZLTFIrVHpobHVrREsyc2U4M3pVS01oaGFSZjh6amxD?=
+ =?utf-8?B?NzRmTWFwdWRabU92Z1lTUHFVM1orZUNsNSt1VWRrckFBVW44UE1vSWNOeFFk?=
+ =?utf-8?B?b2hIQ0l1OW9vZXltTm5ORjVFR28xTmhMejdoRmZUOVljSVh1d1pmYkxIZkpU?=
+ =?utf-8?B?TldQK2VYK0hVZGNYQmtqYnNNUnBibGR0YStianBNTVFnUWduNXB5MlpoTzlh?=
+ =?utf-8?B?K0V0RTd5NElVNVp5SUF2Q3NqR0k2N2EvNnZmV1FMVTAvZzZCN09xZERXb1I1?=
+ =?utf-8?B?Vmc0RXlTN0FYa1VpN0NzVC93L1BOZVFlOGZGL3RhZ2xtaFd5VjMyenJiSXNs?=
+ =?utf-8?B?SGFwZndYc3JxM3pCcmlGSlY5anJQcDl3a1ZIUjNKeUlVY1haZ1REY09sb2R4?=
+ =?utf-8?B?L1J0L3BzMHBiSG95VzNyZm9KeENGVGM1ZjhkLys5a1Z5RDFnOVdGT1RhNm5N?=
+ =?utf-8?B?TzMwR1d0UTdNeEZldmhNUjFDSE9nVGRvOEpLZ1JNOHZ4NCs1RVdLeVFYYlhj?=
+ =?utf-8?B?MHhLdFVpWk9VUTM2U1IraGp2ZVBxQytyZ0NLSXlJRDIwUzlFdzZYaVhhUGFl?=
+ =?utf-8?B?NjNZQW9nWHk2TERXdDlpZjF0eUNnSW5ZUVFwWmtwSXF5b29EaUM4V1k3cWMz?=
+ =?utf-8?B?U2R5Z3QzSzFlZ09uWWNsT2dZblNaUFNRYkc2OFAvTzJ0ZHR2ai8zakZ4cHVP?=
+ =?utf-8?B?b0Zkbzl4ZGNOa3QxNi9wZ0VNYXI5ampZMnVJVThoL0VDVmRLRkdvNU9jakpX?=
+ =?utf-8?B?YzN0K2RzSk0zbTRvQ0RZMEhxWmlQODFiejByT0VMTnE2dy9ybzRpcE15eHg4?=
+ =?utf-8?B?WFhORWtpY3FJdGtCT29zYVdJbW9PazN6Wmg2Wk9YN041cGVZV0tmNnEyb1Jt?=
+ =?utf-8?B?OWNtUi91MkppUlR1TTJ6RTRISGVqdkNFOVFuZlFDTlBNUld0cHJCaHlZUEFo?=
+ =?utf-8?B?azNlZXA4VFVsTFZZNHo3bExySlh6SHR4eXdVdHZ1VEdxaE5YQlJ1T2tMaTNQ?=
+ =?utf-8?B?TmFFODM0b29rUFhORGZndnRhMTA1bEpnY3oralNFN3RtM29xSHYrMHB2dlMr?=
+ =?utf-8?B?M2tVVElzNEVqSDhZcHlPVDY2SUIxbjBFTlJlSVBCSDBxZTEvNUQzWEJYcnpK?=
+ =?utf-8?B?SitVaFJWcVJYNFJmZjBreWlEWW9DamtTeURTK081M3NyY01OU2dHOHpEK2xu?=
+ =?utf-8?B?TTNrM2JvRWovSjIvS2xvQTBYQllNOHdMODlzSnFDZmZlZjFLNUtET251dTVz?=
+ =?utf-8?B?ZXBTZm1Wai9jZkVPcGdBcU8vM2ZlZk9ScHRUWVBRUjl1QWhiWllFSmdISUZ3?=
+ =?utf-8?B?ZXI2c25oL2dtSFVFN1FOcWkwRkl1NDBPbFhENTZjSmV4TXA4azluT1V3UWp3?=
+ =?utf-8?B?UjNVcmVYODBPSURrMURsdlBWVks1N0NPci8wYmFZamkxcXZuaHRZWUJMYXBy?=
+ =?utf-8?B?SnBCeTR5RnQ0ZVp2V1RDUmtENDN2TVM1WFRidTJIVHdBMStscVdYNHhqV0hW?=
+ =?utf-8?B?R0Q0NWcwT3lBdFM3Y21nZE9RUEtNMXBHcnJSUUtHOTN4VXAvVVFOeVUwUmtk?=
+ =?utf-8?B?NnRlS1VSejdwSkE5bjZqYjFPR2t2bXBLTEVsVThRWWNNZjdQTVRuVDRPRVFr?=
+ =?utf-8?B?c3hyc1RvU1B2V294a1g0RElDRnI3OGpGNFMzMkMzUldoQmxCOXhqQ1hISG9h?=
+ =?utf-8?B?eXhUQ2tDSFZvWVBBelZtUFU4NjBtM0NIMXlBZWRXY08xSXZDOUgzNlpKVTgr?=
+ =?utf-8?Q?JwE57hd3g7Mg1oM439eQ+XX5+?=
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 994185a9-6e3a-4b71-6452-08db6ec1b921
+X-MS-Exchange-CrossTenant-Network-Message-Id: 97148ce2-933e-46e8-363d-08db6ec23aa4
 X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2869.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 23:30:51.8410
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2023 23:34:29.0928
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xqlJcfzYPeaCtL4w64AqKr/bZawB8aX/3hfm3agqM5fl0YntfKkC7ITM5bmgPIreQyjZyXG2hK8o6tdJ7III/A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA3PR12MB7830
+X-MS-Exchange-CrossTenant-UserPrincipalName: h2Q08c0mzQQvL61o3rcsV5NYbGzka1/bvv4ac2YX4Fq48iNEFxAZy9/595auJYY3/h5ZCB4psoF8mYiUbbsT9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB8798
 X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,DKIM_SIGNED,
         DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,NICE_REPLY_A,
         RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,SPF_HELO_PASS,SPF_NONE,
@@ -134,147 +134,125 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On 6/16/2023 10:31 AM, Lukas Wunner wrote:
-> On Mon, May 22, 2023 at 03:23:57PM -0700, Smita Koralahalli wrote:
->> On 5/16/2023 3:10 AM, Lukas Wunner wrote:
->>> On Tue, Apr 18, 2023 at 09:05:25PM +0000, Smita Koralahalli wrote:
+Hi Lukas,
 
-> 
-> I'd recommend clearing only PCI_EXP_DEVSTA_FED in PCI_EXP_DEVSTA.
-> 
-> As for PCI_EXP_DPC_RP_PIO_STATUS, PCIe r6.1 sec 2.9.3 says that
-> during DPC, either UR or CA completions are returned depending on
-> the DPC Completion Control bit in the DPC Control register.
-> The kernel doesn't touch that bit, so it will contain whatever value
-> the BIOS has set. It seems fine to me to just clear all bits in
-> PCI_EXP_DPC_RP_PIO_STATUS, as you've done in your patch.
-> 
-> However, the RP PIO Status register is present only in Root Ports
-> that support RP Extensions for DPC, per PCIe r6.1 sec 7.9.14.6.
-> So you need to constrain that to "if (pdev->dpc_rp_extensions)".
->
+Thanks for reviewing my patch
 
-Okay will make changes.
-
+On 6/16/2023 11:24 AM, Lukas Wunner wrote:
+> Hi Smita,
 > 
->>>> +	pci_aer_raw_clear_status(pdev);
->>>> +	pci_clear_surpdn_errors(pdev);
->>>> +
->>>> +	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_STATUS,
->>>> +			      PCI_EXP_DPC_STATUS_TRIGGER);
->>>> +}
+> My apologies for the delay!
+> 
+> On Mon, May 22, 2023 at 03:23:31PM -0700, Smita Koralahalli wrote:
+>> On 5/11/2023 4:19 AM, Lukas Wunner wrote:
+>>> On Tue, Apr 18, 2023 at 09:05:26PM +0000, Smita Koralahalli wrote:
+>>>> Clear all capabilities in Device Control 2 register as they are optional
+>>>> and it is not determined whether the next device inserted will support
+>>>> these capabilities. Moreover, Section 6.13 of the PCIe Base
+>>>> Specification [1], recommends clearing the ARI Forwarding Enable bit on
+>>>> a hot-plug event as its not guaranteed that the newly added component
+>>>> is in fact an ARI device.
 >>>
->>> Do you need a "wake_up_all(&dpc_completed_waitqueue);" at the end
->>> of the function to wake up a pciehp handler waiting for DPC recovery?
+>>> Clearing ARI Forwarding Enable sounds reasonable, but I don't see
+>>> why all the other bits in the Device Control 2 register need to be
+>>> cleared.  If there isn't a reason to clear them, I'd be in favor of
+>>> leaving them alone.
 >>
->> I don't think so. The pciehp handler is however getting invoked
->> simultaneously due to PDSC or DLLSC state change right.. Let me know if I'm
->> missing anything here.
-> 
-> I think you need to follow the procedure in dpc_reset_link().
-> 
-> That function first waits for the link to go down, in accordance with
-> PCIe r6.1 sec 6.2.11:
-> 
-> 	if (!pcie_wait_for_link(pdev, false))
-> 	...
-> 
-> Note that the link should not come back up due to a newly hot-added
-> device until DPC Trigger Status is cleared.
-> 
-> The function then waits for the Root Port to quiesce:
-> 
-> 	if (pdev->dpc_rp_extensions && dpc_wait_rp_inactive(pdev))
-> 	...
-> 
-> And only then does the function clear DPC Trigger Status.
-> 
-> You definitely need to wake_up_all(&dpc_completed_waitqueue) because
-> pciehp may be waiting for DPC Trigger Status to clear.
-> 
-> And you need to "clear_bit(PCI_DPC_RECOVERED, &pdev->priv_flags)"
-> before calling wake_up_all().
-> 
->
-
-Okay. I did not consider the fact that pciehp handler "may" wait on DPC
-Trigger Status to be cleared. Because in my case both the handlers were
-invoked due to their respective bit changes and I did not come across 
-the case where pciehp handler was waiting on DPC to complete.
-
-
->>>> +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
->>>> +{
->>>> +	u16 status;
->>>> +
->>>> +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
->>>> +
->>>> +	if (!(status & PCI_ERR_UNC_SURPDN))
->>>> +		return false;
->>>> +
->>>
->>> You need an additional check for pdev->is_hotplug_bridge here.
->>>
->>> And you need to read PCI_EXP_SLTCAP and check for PCI_EXP_SLTCAP_HPS.
->>>
->>> Return false if either of them isn't set.
+>> I understand. The SPEC doesn't "clearly" state to clear the other bits
+>> except ARI on a hot-plug event.
 >>
->> Return false, if PCI_EXP_SLTCAP isn't set only correct? PCI_EXP_SLTCAP_HPS
->> should be disabled if DPC is enabled.
+>> But, we came across issues when a device with 10-bit tags was removed and
+>> replaced with a device that didn't support 10-bit tags. The device became
+>> inaccessible and the port was not able to be recovered without a system
+>> reset. So, we thought it would be better to cherry pick all bits that were
+>> negotiated between endpoint and root port and decided that we should clear
+>> them all on removal. Hence, my first revision of this patch series had aimed
+>> to clear only ARI, AtomicOp Requestor and 10 bit tags as these were the
+>> negotiated settings between endpoint and root port. Ideally, these settings
+>> should be re-negotiated and set up for optimal operation on a hot add.
+> 
+> Makes total sense.  I like the approach of clearing only these three
+> bits, as you did in v1 of the patch.  I also appreciate the detailed
+> explanation that you've provided.  Much of your e-mail can be copy-pasted
+> to the commit message, in my opinion it's valuable information to any
+> reviewer and future reader of the commit.
+> 
+> 
+>> We had some internal discussions to understand if SPEC has it documented
+>> somewhere. And we could see in Section 2.2.6.2, it implies that:
+>> [i] If a Requester sends a 10-Bit Tag Request to a Completer that lacks
+>> 10-Bit Completer capability, the returned Completion(s) will have Tags with
+>> Tag[9:8] equal to 00b. Since the Requester is forbidden to generate these
+>> Tag values for 10-Bit Tags, such Completions will be handled as Unexpected
+>> Completions, which by default are Advisory Non-Fatal Errors. The Requester
+>> must follow standard PCI Express error handling requirements.
+>> [ii] In configurations where a Requester with 10-Bit Tag Requester
+>> capability needs to target multiple Completers, one needs to ensure that the
+>> Requester sends 10-Bit Tag Requests only to Completers that have 10-Bit Tag
+>> Completer capability.
 >>
->> Implementation notes in 6.7.6 says that:
->> "The Hot-Plug Surprise (HPS) mechanism, as indicated by the Hot-Plug
->> Surprise bit in the Slot Capabilities Register being Set, is deprecated
->> for use with async hot-plug. DPC is the recommended mechanism for supporting
->> async hot-plug."
+>> Now, we might wonder, why clear them (especially 10-bit tags and AtomicOps)
+>> if Linux hasn't enabled them at all as the "10-Bit Tag Requester Enable" bit
+>> is not defined in Linux currently. But, these features might be enabled by
+>> Platform FW for "performance reasons" if the endpoint supports and now it is
+>> the responsibility of the operating system to disable it on a hot remove
+>> event.
+> 
+> Again, makes total sense.
+> 
+> 
+>> According to implementation notes in 2.2.6.2: "For platforms where the RC
+>> supports 10-Bit Tag Completer capability, it is highly recommended for
+>> platform firmware or operating software that configures PCIe hierarchies to
+>> Set the 10-Bit Tag Requester Enable bit automatically in Endpoints with
+>> 10-Bit Tag Requester capability. This enables the important class of 10-Bit
+>> Tag capable adapters that send Memory Read Requests only to host memory." So
+>> if the endpoint and root port both support 10-bit tags BIOS is enabling it
+>> at boot time..
 >>
->> Platform FW will disable the SLTCAP_HPS bit at boot time to enable async
->> hotplug on AMD devices.
+>> I ran a quick check to see how DEV_CTL2 registers for root port look on a
+>> 10-bit tag supported NVMe device.
+>>
+>> pci 0000:80:05.1: DEVCTL2 0x1726 (Bit 12: 10-bit tag is enabled..)
+>> pci 0000:80:05.1: DEVCAP2 0x7f19ff
+>>
+>> So, it seems like BIOS has enabled 10-bit tags at boot time even though
+>> Linux hasn't enabled it.
+>>
+>> Some couple of ways we think could be:
+>> [1] Check if these bits are enabled by Platform at boot time, clear them
+>> only it is set during hotplug flow.
+>> [2] Clear them unconditionally as I did..
+>> [3] Enable 10-bits tags in Linux when a device is probed just like how we do
+>> for ARI..
+>>
+>> Similarly call pci_enable_atomic_ops_to_root() during a hot add..
 > 
-> Huh, is PCI_EXP_SLTCAP_HPS not set on the hotplug port in question?
-> 
-> If it's not set, why do you get Surprise Down Errors in the first place?
-> 
-> How do you bring down the slot without surprise-removal capability?
-> Via sysfs?
->
+> Personally I'm fine with option [2].  If you or Bjorn prefer option [3],
+> I'm fine with that as well.
 
-As per SPEC 6.7.6, "Either Downstream Port Containment (DPC) or the 
-Hot-Plug Surprise (HPS) mechanism may be used to support async removal 
-as part of an overall async hot-plug architecture".
-
-Also, the implementation notes below, it conveys that HPS is deprecated 
-and DPC is recommended mechanism. More details can be found in Appendix 
-I, I.1 Async Hot-Plug Initial Configuration:
-...
-If DPC capability then,
-	If HPS bit not Set, use DPC
-	Else attempt to Clear HPS bit (§ Section 6.7.4.4 )
-		If successful, use DPC
-		Else use HPS
-...
-
-So, this is "likely" a new feature support patch where DPC supports 
-async remove. HPS bit will be disabled by BIOS if DPC is chosen as 
-recommended mechanism to handle async removal.
-
-I see the slot is being brought down by PDC or DLLSC event, which is 
-triggered alongside DPC.
-
-pciehp_handle_presence_or_link_change() -> pciehp_disable_slot() -> 
-__pciehp_disable_slot() -> remove_board()..
-
-But I want to clear one thing, are you implying that PDC or DLLSC 
-shouldn't be triggered when HPS is disabled?
+Looking forward for Bjorn comments!
 
 Thanks,
 Smita
-
 > 
->> Probably check if SLTCAP_HPS bit is set and return false?
 > 
-> Quite the opposite!  If it's not set, return false.
+>>> As for clearing ARI Forwarding Enable, it seems commit b0cc6020e1cc
+>>> ("PCI: Enable ARI if dev and upstream bridge support it; disable
+>>> otherwise") already solved this problem.  Quoth its commit message:
+> [...]
+>>> My superficial understanding of that patch is that we do find function 0,
+>>> while enumerating it we clear the ARI Forwarding Enable bit and thus the
+>>> remaining functions become accessible and are subsequently enumerated.
+>>>
+>>> Are you seeing issues when removing an ARI-capable endpoint from a
+>>> hotplug slot and replacing it with a non-ARI-capable device?
+>>> If you do, the question is why the above-quoted commit doesn't avoid them.
+>>
+>> Yeah! Sorry I missed this. ARI is already checked and enabled during device
+>> initialization.
 > 
+> It doesn't hurt to additionally clear on hot-removal.
 > 
 > Thanks,
 > 
