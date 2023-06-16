@@ -2,64 +2,53 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 06128733AD9
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 22:29:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39FD733C0A
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 00:01:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231725AbjFPU3I (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 16:29:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53708 "EHLO
+        id S231690AbjFPWBb (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 18:01:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231403AbjFPU3H (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 16:29:07 -0400
+        with ESMTP id S229952AbjFPWBa (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 18:01:30 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 121C635A6;
-        Fri, 16 Jun 2023 13:29:04 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8379D297E;
+        Fri, 16 Jun 2023 15:01:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8CFCD62C92;
-        Fri, 16 Jun 2023 20:29:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D28CC433C0;
-        Fri, 16 Jun 2023 20:29:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B5F9A61F51;
+        Fri, 16 Jun 2023 22:01:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7494C433C8;
+        Fri, 16 Jun 2023 22:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686947343;
-        bh=gvd+AZX4jPfWnZ3uCqLoz9KHdUprTUE9ZWgZSJAJEeU=;
+        s=k20201202; t=1686952888;
+        bh=lor+9CzJuJ16UAG83X/TrSjJxGuaeIWyzZ4JuzMH5fQ=;
         h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=pqbxAH6IMfvevBErMdfzPcFXUr9ietWlKM3lyqdp4aPvp6tq4RWgXVgk+W5QTwneX
-         lqr8Dib4Y8DezbaOcYxo0DAOlWTIFJv6+2epCmW/a/pXxl7GIoo45bpvrHqxNWY53J
-         irIJLGlmwP9G/lkjjdpMAzDaKemBNRb++f+W4xpE+FGy3vln+rtp53lFK7iO60oGuG
-         PLBOLpxnn+poJcE7cIz1Kwt/+CAGwSUrl+zPFN5wE6rq9xRqIPxFXb868VtHKy62dD
-         81lYxVYRzhAJz93dz9AVo1z+WxEFFm0KWEL6f4dS94AkiCBFGeEYU4ltvUEFfjcgVM
-         7MQ6QjOsNzgiQ==
-Date:   Fri, 16 Jun 2023 15:29:00 -0500
+        b=lZPkTGzs39ZHNiZkaoRWItQiE0QwvxE957VSI9JWquQq4mV90qHPQptOpsBAx+lze
+         xfiHf2HcLRwfopB8TRTD6qhV4NHGBjs+mtLNFejEWYk0sl6RIxowOwbXT8GJzlivg8
+         wpw+MI/FVXVsuxy1n3sqLrOSjqD4HsBX/hbU20KB0vepY8onDtXm4vyrajS0dcR8Ub
+         th22LqZDDA1LOI55A6huIW9/QZ9MeQc6sptqeKTvTdZON67TGfxJdxH+QJH1tGssol
+         +Whion7zGtqqG5VJbz9TjDVzpYXZ/t8hvrEUMtynD+jz9KQw69B6w3xNw4N7TxLMAP
+         naFyJtKNzxD4w==
+Date:   Fri, 16 Jun 2023 17:01:25 -0500
 From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Stefan Roese <sr@denx.de>, Leon Romanovsky <leon@kernel.org>,
-        linux-rdma@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jim Wilson <wilson@tuliptree.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     bhelgaas@google.com, Mario Limonciello <mario.limonciello@amd.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        David Abdurachmanov <david.abdurachmanov@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, netdev@vger.kernel.org,
-        Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>,
-        Saeed Mahameed <saeedm@nvidia.com>
-Subject: Re: [PATCH v9 00/14] pci: Work around ASMedia ASM2824 PCIe link
- training failures
-Message-ID: <20230616202900.GA1540115@bhelgaas>
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
+Message-ID: <20230616220125.GA1555182@bhelgaas>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2306160431470.64925@angie.orcam.me.uk>
+In-Reply-To: <20230615070421.1704133-1-kai.heng.feng@canonical.com>
 X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
         DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
         SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
@@ -70,48 +59,36 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 01:27:52PM +0100, Maciej W. Rozycki wrote:
-> On Thu, 15 Jun 2023, Bjorn Helgaas wrote:
-
->  As per my earlier remark:
+On Thu, Jun 15, 2023 at 03:04:20PM +0800, Kai-Heng Feng wrote:
+> When a PCIe device is hotplugged to a Thunderbolt port, ASPM is not
+> enabled for that device. However, when the device is plugged preboot,
+> ASPM is enabled by default.
 > 
-> > I think making a system halfway-fixed would make little sense, but with
-> > the actual fix actually made last as you suggested I think this can be
-> > split off, because it'll make no functional change by itself.
+> The disparity happens because BIOS doesn't have the ability to program
+> ASPM on hotplugged devices.
 > 
-> I am not perfectly happy with your rearrangement to fold the !PCI_QUIRKS 
-> stub into the change carrying the actual workaround and then have the 
-> reset path update with a follow-up change only, but I won't fight over it.  
-> It's only one tree revision that will be in this halfway-fixed state and 
-> I'll trust your judgement here.
+> So enable ASPM by default for external connected PCIe devices so ASPM
+> settings are consitent between preboot and hotplugged.
+> 
+> On HP Thunderbolt Dock G4, enable ASPM can also fix BadDLLP error:
+> pcieport 0000:00:1d.0: AER: Corrected error received: 0000:07:04.0
+> pcieport 0000:07:04.0: PCIe Bus Error: severity=Corrected, type=Data Link Layer, (Receiver ID)
+> pcieport 0000:07:04.0:   device [8086:0b26] error status/mask=00000080/00002000
+> pcieport 0000:07:04.0:    [ 7] BadDLLP
+> 
+> The root cause is still unclear, but quite likely because the I225 on
+> the dock supports PTM, where ASPM timing is precalculated for the PTM.
 
-Thanks for raising this.  Here's my thought process:
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=217557
 
-  12 PCI: Provide stub failed link recovery for device probing and hot plug
-  13 PCI: Add failed link recovery for device reset events
-  14 PCI: Work around PCIe link training failures
+I know you said this isn't clear yet, but I don't see a connection
+between ASPM being enabled and PTM.  If anything, *disabling* ASPM
+should be safer if there's a timing issue.  
 
-Patch 12 [1] adds calls to pcie_failed_link_retrain(), which does
-nothing and returns false.  Functionally, it's a no-op, but the
-structure is important later.
+I assume the ASPM timing you refer to is the LTR snoop/no snoop
+latency, since that's the only timing difference I see in the lspci
+output in bugzilla?
 
-Patch 13 [2] claims to request failed link recovery after resets, but
-actually doesn't do anything yet because pcie_failed_link_retrain() is
-still a no-op, so this was a bit confusing.
-
-Patch 14 [3] implements pcie_failed_link_retrain(), so the recovery
-mentioned in 12 and 13 actually happens.  But this patch doesn't add
-the call to pcie_failed_link_retrain(), so it's a little bit hard to
-connect the dots.
-
-I agree that as I rearranged it, the workaround doesn't apply in all
-cases simultaneously.  Maybe not ideal, but maybe not terrible either.
-Looking at it again, maybe it would have made more sense to move the
-pcie_wait_for_link_delay() change to the last patch along with the
-pci_dev_wait() change.  I dunno.
+I don't see any PTM differences there.
 
 Bjorn
-
-[1] 12 https://lore.kernel.org/r/alpine.DEB.2.21.2306111619570.64925@angie.orcam.me.uk
-[2] 13 https://lore.kernel.org/r/alpine.DEB.2.21.2306111631050.64925@angie.orcam.me.uk
-[3] 14 https://lore.kernel.org/r/alpine.DEB.2.21.2305310038540.59226@angie.orcam.me.uk
