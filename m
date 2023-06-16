@@ -2,110 +2,150 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 6570E732511
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 04:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C518732551
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 04:38:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240087AbjFPCMf (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Thu, 15 Jun 2023 22:12:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40396 "EHLO
+        id S241103AbjFPCiL (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Thu, 15 Jun 2023 22:38:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240076AbjFPCMe (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 22:12:34 -0400
-Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 923B62967;
-        Thu, 15 Jun 2023 19:12:32 -0700 (PDT)
-Received: from loongson.cn (unknown [10.20.42.116])
-        by gateway (Coremail) with SMTP id _____8Cxd+kPxYtkhMsFAA--.10389S3;
-        Fri, 16 Jun 2023 10:12:31 +0800 (CST)
-Received: from [10.20.42.116] (unknown [10.20.42.116])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxauUNxYtkj8AcAA--.16275S3;
-        Fri, 16 Jun 2023 10:12:30 +0800 (CST)
-Subject: Re: [PATCH pci] PCI: don't skip probing entire device if first fn OF
- node has status = "disabled"
-To:     Vladimir Oltean <vladimir.oltean@nxp.com>
-Cc:     Liu Peibao <liupeibao@loongson.cn>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        netdev@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh@kernel.org>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        Binbin Zhou <zhoubinbin@loongson.cn>,
-        Huacai Chen <chenhuacai@loongson.cn>
-References: <20230601163335.6zw4ojbqxz2ws6vx@skbuf>
- <ZHjaq+TDW/RFcoxW@bhelgaas> <20230601221532.2rfcda4sg5nl7pzp@skbuf>
- <dc430271-8511-e6e4-041b-ede197e7665d@loongson.cn>
- <7a7f78ae-7fd8-b68d-691c-609a38ab3161@loongson.cn>
- <20230602101628.jkgq3cmwccgsfb4c@skbuf>
- <87f2b231-2e16-e7b8-963b-fc86c407bc96@loongson.cn>
- <20230604085500.ioaos3ydehvqq24i@skbuf>
- <ad969019-e763-b06f-d557-be4e672c68db@loongson.cn>
- <20230605093459.gpwtsr5h73eonxt5@skbuf>
-From:   Jianmin Lv <lvjianmin@loongson.cn>
-Message-ID: <ec5039c1-61d7-6958-ef92-bf5b8c8db64d@loongson.cn>
-Date:   Fri, 16 Jun 2023 10:12:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux loongarch64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        with ESMTP id S233770AbjFPCiK (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Thu, 15 Jun 2023 22:38:10 -0400
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28D9297C
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jun 2023 19:38:08 -0700 (PDT)
+Received: from mail-oa1-f70.google.com (mail-oa1-f70.google.com [209.85.160.70])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 0B3BC3F33C
+        for <linux-pci@vger.kernel.org>; Fri, 16 Jun 2023 02:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1686883087;
+        bh=uIgMGFsFWXeYaOH9c0y1e36aMXOPZcT20Gk+4ok8oCc=;
+        h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+         To:Cc:Content-Type;
+        b=XSNvs5SCpjGKZ0i3kFrEva4vIpZ6YUt9TS9d9s1I0bOWhwl17seDoTYWyzMD2eLtf
+         +NyHYFMpbKYigPZnxLnt0Hgy4+gff9NaVU+NUaAbilQiDl9K7JDskunMUEtCtmtcD6
+         34bkgucGN9zlqSSVnpQrs4p+P5HzDa6qfI3+Y8Htgakp8b2OMeRre0Q9Xy4IYUZmgE
+         c5S1oiKxdtxdVmanGQCXPr9SEatcmSoyxRqv4jNmkwm758/uBSkKVoQiBudQf2fuJQ
+         4+qLmzQCCiz6mC2YTzLuVZAZSiwRizd5eU2O/NujTNf/vDPD+zz7OZ4C0URsKIvby5
+         JNpOxm/BA2q6A==
+Received: by mail-oa1-f70.google.com with SMTP id 586e51a60fabf-1a6ba8c60b9so313103fac.2
+        for <linux-pci@vger.kernel.org>; Thu, 15 Jun 2023 19:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686883085; x=1689475085;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uIgMGFsFWXeYaOH9c0y1e36aMXOPZcT20Gk+4ok8oCc=;
+        b=Y44VvzRu0yQf6S+cfDTeXQGnRTK9Uy4A3oVFSplNb+FSZOu2UzvvLC13VfMsIEF6/O
+         avd6UYW32R2F8Fix4GObDBRmChBfs+FgyfPOE1T+iFfhE+JZfVoV7K4DiwYxOJ8kuxVT
+         35hcLjwcU52WP/LoFTAdsvpGZwfb3IBOBG49vXyCyxlcjQdTgdLFGSzDArcSduLBWpHb
+         GurXmgGnQWqHQVGllYOD+SGq0tasLx/aDEkjPqkeD+UekPPaQGLR6TnRPMBGgndse5VY
+         1AlOUN+9fwm6GttYqJxQ6KlYVtIwS4xWZIkg56yZNGFR+NBzQMJiF77AjK/45k70I7pS
+         d+Vg==
+X-Gm-Message-State: AC+VfDz3MuaNvLEokmclVuroFdTJcrePgDuSmCI0vTVGYRnFW3rEaQid
+        oNpLGBHAa+5ThraSWV4RUycJKQEfT6svOJt0gskD+eLlPaxovgGeEzeAiadK0t5E+wFjBpmCC50
+        qVDbzf9tuw46w+8QnIw1EvyzUxslszQ8lTLgO1EMDJZMXBtNfs5DnIw==
+X-Received: by 2002:a05:6870:7384:b0:19f:202:4fb9 with SMTP id z4-20020a056870738400b0019f02024fb9mr909994oam.38.1686883085416;
+        Thu, 15 Jun 2023 19:38:05 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ4wEsFPW+u0iB+6AyrzEBQjw1i5JXF7jPwaWEWYxvfJw+a2b6HYwbzbGkcMFBB9t2GxNKBekMlbH0ftdV3tjLs=
+X-Received: by 2002:a05:6870:7384:b0:19f:202:4fb9 with SMTP id
+ z4-20020a056870738400b0019f02024fb9mr909984oam.38.1686883085177; Thu, 15 Jun
+ 2023 19:38:05 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20230605093459.gpwtsr5h73eonxt5@skbuf>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf8AxauUNxYtkj8AcAA--.16275S3
-X-CM-SenderInfo: 5oymxthqpl0qxorr0wxvrqhubq/
-X-Coremail-Antispam: 1Uk129KBj93XoW7Ar1UWF43CF4DKw4kXFW3CFX_yoW8Ww15pF
-        43AF4SkFn8Gr4Sy34DZw4ruFyfua93Xw45Jr48J34v93y5WFySvrWYqa1Iqay7Gr18AF1a
-        vFWjqw1vk3WDWagCm3ZEXasCq-sJn29KB7ZKAUJUUUU5529EdanIXcx71UUUUU7KY7ZEXa
-        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
-        0xBIdaVrnRJUUUvYb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
-        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
-        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
-        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v2
-        6r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYIkI8VC2zVCFFI0UMc
-        02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAF
-        wI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4
-        CEbIxvr21l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-        67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MI
-        IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-        14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-        W8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07j1WlkU
-        UUUU=
-X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
-        autolearn_force=no version=3.4.6
+References: <20230615070421.1704133-1-kai.heng.feng@canonical.com> <a268fc1c-dd63-cac5-4aec-836a6299ab36@linux.intel.com>
+In-Reply-To: <a268fc1c-dd63-cac5-4aec-836a6299ab36@linux.intel.com>
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+Date:   Fri, 16 Jun 2023 10:37:53 +0800
+Message-ID: <CAAd53p4pNgijypQKWkf-_81B2bCAOShW_Vw4RGOnzz57hfLa=Q@mail.gmail.com>
+Subject: Re: [PATCH] PCI/ASPM: Enable ASPM on external PCIe devices
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     bhelgaas@google.com, Mario Limonciello <mario.limonciello@amd.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Vidya Sagar <vidyas@nvidia.com>,
+        Michael Bottini <michael.a.bottini@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE,
+        URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
+On Fri, Jun 16, 2023 at 1:07=E2=80=AFAM Sathyanarayanan Kuppuswamy
+<sathyanarayanan.kuppuswamy@linux.intel.com> wrote:
+>
+>
+>
+> On 6/15/23 12:04 AM, Kai-Heng Feng wrote:
+> > When a PCIe device is hotplugged to a Thunderbolt port, ASPM is not
+> > enabled for that device. However, when the device is plugged preboot,
+> > ASPM is enabled by default.
+> >
+> > The disparity happens because BIOS doesn't have the ability to program
+> > ASPM on hotplugged devices.
+> >
+> > So enable ASPM by default for external connected PCIe devices so ASPM
+> > settings are consitent between preboot and hotplugged.
+>
+> Why it has to be consistent? Can you add info about what it solves?
 
+It enables ASPM when BIOS can't program LNKCTL.
 
-On 2023/6/5 下午5:34, Vladimir Oltean wrote:
-> On Mon, Jun 05, 2023 at 08:59:23AM +0800, Jianmin Lv wrote:
->> For a multi-function device, if func 0 is not allowed to be scanned, as I
->> said in way of 2, the other funcs of the device will be described as
->> platform devices instead of pci and be not scanned either, which is
->> acceptable for Loongson. The main goal by any way for us is to resolve the
->> problem that shared pins can not be used simultaneously by devices sharing
->> them. IMO, configure them in DT one by one may be reasonable, but adapting
->> each driver will be bothered.
-> 
-> Could you give an example of PCIe functions being described as platform
-> devices, and how does that work for Loongson? Are you saying that there
-> will be 2 drivers for the same hardware, one pci_driver and one platform_driver?
-> In the case of the platform_driver, who will do the PCI-specific stuff
-> required by the IP, like function level reset and enabling the memory space?
-> 
+Enabling ASPM can bring significant power saving for modern CPUs.
 
-E.g. there are two functions , func0 is HDA controller and func1 is I2S 
-controller and they have shared pins.
-When HDA or I2S is used, both are disabled for PCI enumeration in BIOS 
-(e.g. by filling PCI header with 0xffffffff), and mem space has been 
-reserved from host bridge window for them in BIOS, of cause, reserved 
-space will not be seen by kernel because it has been removed in host 
-bridge mem range when passed to kernel in DT. Then the reserved mem base 
-is passed into kernel by DT, CPU will use remapped address of the mem 
-base, and these devices will not be enumerated in PCI bus. The way is 
-only used for PCI devices (share common pins and exist on bus 0) 
-integrated in Loongson CPU or chipset.
+It's also quite nice that it can make the BadDLLP caused by I225 device go =
+away.
 
+Kai-Heng
+
+>
+> >
+> > On HP Thunderbolt Dock G4, enable ASPM can also fix BadDLLP error:
+> > pcieport 0000:00:1d.0: AER: Corrected error received: 0000:07:04.0
+> > pcieport 0000:07:04.0: PCIe Bus Error: severity=3DCorrected, type=3DDat=
+a Link Layer, (Receiver ID)
+> > pcieport 0000:07:04.0:   device [8086:0b26] error status/mask=3D0000008=
+0/00002000
+> > pcieport 0000:07:04.0:    [ 7] BadDLLP
+> >
+> > The root cause is still unclear, but quite likely because the I225 on
+> > the dock supports PTM, where ASPM timing is precalculated for the PTM.
+> >
+> > Cc: Mario Limonciello <mario.limonciello@amd.com>
+> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=3D217557
+> > Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> > ---
+> >  drivers/pci/pcie/aspm.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
+> > index 66d7514ca111..613b0754c9bb 100644
+> > --- a/drivers/pci/pcie/aspm.c
+> > +++ b/drivers/pci/pcie/aspm.c
+> > @@ -119,7 +119,9 @@ static int policy_to_aspm_state(struct pcie_link_st=
+ate *link)
+> >               /* Enable Everything */
+> >               return ASPM_STATE_ALL;
+> >       case POLICY_DEFAULT:
+> > -             return link->aspm_default;
+> > +             return dev_is_removable(&link->downstream->dev) ?
+> > +                     link->aspm_capable :
+> > +                     link->aspm_default;
+> >       }
+> >       return 0;
+> >  }
+>
+> --
+> Sathyanarayanan Kuppuswamy
+> Linux Kernel Developer
