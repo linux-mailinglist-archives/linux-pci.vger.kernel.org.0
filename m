@@ -2,37 +2,37 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 459E573370D
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 19:01:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E149733700
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 19:01:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346060AbjFPRBm (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 13:01:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42952 "EHLO
+        id S1346117AbjFPRB2 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 13:01:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1345381AbjFPRAo (ORCPT
+        with ESMTP id S1344739AbjFPRAo (ORCPT
         <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 13:00:44 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F69230F9;
-        Fri, 16 Jun 2023 10:00:43 -0700 (PDT)
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C37030EF;
+        Fri, 16 Jun 2023 10:00:42 -0700 (PDT)
 Received: from jupiter.universe (dyndsl-091-248-215-052.ewe-ip-backbone.de [91.248.215.52])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
         (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 6D92D6606F86;
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 5C3ED6606F61;
         Fri, 16 Jun 2023 18:00:41 +0100 (BST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
         s=mail; t=1686934841;
-        bh=UUp1ukfBywtwpph0BM+a29Xo/RNDQnnSMjgz7LkN1Zw=;
+        bh=X01oy+ihteZncXuvNTLu0v0W9yQ61BoqL+FIOTAimbo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=msXBX3v/bw9oWUk68ClxuJHLoBW+kShPYmlyil7ZsQbf/tJHHvGSN+qSQs5ZJKBsi
-         riuH9SBaJNosZrohWiM1K0qh6ovjSLSWnB3ziBnxWyRAnIaufz9qXA3p+9w76Pbe6p
-         4ly7dPNMxzq2n04Il8SCtFkNUBgO2qTL7Oeiy+uisz2X+kMyEfSExYcQaw78pGpILN
-         et1warkNVV99NGzB/L8F3SShOrizPsunC3vqBU12DcKMgIz3qw9VmsbNmKKsubFcrt
-         Dpj2qDBkTSamasPhK83nxaA+7TUAKIf1utFYdmAPWiwbx2yGqWqcbBqXa7SOZCuLBi
-         Q5cZpNUmhH/KA==
+        b=WjWItqyG+6JtsUQmPKLZ06/+dqMQmlncIFF+Nkc7IP23kC09kxM99c1opbDaSrV8+
+         Y8/AboL6PR0kAV2/XrwdZt/97XF/WnqxWVJzXP3+4nOUq1oMHZtZ0WC0GzGzDFC3Pp
+         wf5JxqyDKyCky07aT545/1JKhHyhNIIbV1Q6GbJ1nNR70N3VJlKrKszwwT49oYr+ub
+         F8DNTiBQZVp56f4Dx+YMLueaP4cbePxUfoptrxy07mZGAE1I+7SIcMF238l3/p7UUS
+         hbxqZCKJytCBCco+ZtLXypdq54qNpsNHMgh59eyAPXFxhC+uXVll4V2/B5D56F00tg
+         8yOh3YKQ6UqGA==
 Received: by jupiter.universe (Postfix, from userid 1000)
-        id 124BF480596; Fri, 16 Jun 2023 19:00:39 +0200 (CEST)
+        id 14241480598; Fri, 16 Jun 2023 19:00:39 +0200 (CEST)
 From:   Sebastian Reichel <sebastian.reichel@collabora.com>
 To:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org
 Cc:     Jingoo Han <jingoohan1@gmail.com>,
@@ -49,9 +49,9 @@ Cc:     Jingoo Han <jingoohan1@gmail.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         Sebastian Reichel <sebastian.reichel@collabora.com>,
         kernel@collabora.com
-Subject: [PATCH v1 2/4] dt-bindings: PCI: dwc: rockchip: Add missing legacy-interrupt-controller
-Date:   Fri, 16 Jun 2023 19:00:20 +0200
-Message-Id: <20230616170022.76107-3-sebastian.reichel@collabora.com>
+Subject: [PATCH v1 3/4] dt-bindings: PCI: dwc: rockchip: Update for RK3588
+Date:   Fri, 16 Jun 2023 19:00:21 +0200
+Message-Id: <20230616170022.76107-4-sebastian.reichel@collabora.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230616170022.76107-1-sebastian.reichel@collabora.com>
 References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
@@ -67,59 +67,66 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Rockchip RK356x and RK3588 handle legacy interrupts via a ganged
-interrupts. The RK356x DT implements this via a sub-node named
-"legacy-interrupt-controller", just like a couple of other PCIe
-implementations. This adds proper documentation for this and updates
-the example to avoid regressions.
+The PCIe 2.0 controllers on RK3588 need one additional clock,
+one additional reset line and one for ranges entry.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- .../bindings/pci/rockchip-dw-pcie.yaml        | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ .../bindings/pci/rockchip-dw-pcie.yaml           | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-index 98e45d2d8dfe..bf81d306cc80 100644
+index bf81d306cc80..7897af0ec297 100644
 --- a/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
 +++ b/Documentation/devicetree/bindings/pci/rockchip-dw-pcie.yaml
-@@ -67,6 +67,22 @@ properties:
-       - const: legacy
-       - const: err
+@@ -41,20 +41,24 @@ properties:
+       - const: config
  
-+  legacy-interrupt-controller:
-+    description: Interrupt controller node for handling legacy PCI interrupts.
-+    type: object
-+    properties:
-+      "#address-cells":
-+        const: 0
-+
-+      "#interrupt-cells":
-+        const: 1
-+
-+      "interrupt-controller": true
-+
-+      interrupts:
-+        items:
-+          - description: combined legacy interrupt
-+
-   msi-map: true
+   clocks:
++    minItems: 5
+     items:
+       - description: AHB clock for PCIe master
+       - description: AHB clock for PCIe slave
+       - description: AHB clock for PCIe dbi
+       - description: APB clock for PCIe
+       - description: Auxiliary clock for PCIe
++      - description: PIPE clock
  
-   num-lanes: true
-@@ -148,6 +164,14 @@ examples:
-             reset-names = "pipe";
-             #address-cells = <3>;
-             #size-cells = <2>;
-+
-+            legacy-interrupt-controller {
-+                interrupt-controller;
-+                #address-cells = <0>;
-+                #interrupt-cells = <1>;
-+                interrupt-parent = <&gic>;
-+                interrupts = <GIC_SPI 72 IRQ_TYPE_EDGE_RISING>;
-+            };
-         };
-     };
- ...
+   clock-names:
++    minItems: 5
+     items:
+       - const: aclk_mst
+       - const: aclk_slv
+       - const: aclk_dbi
+       - const: pclk
+       - const: aux
++      - const: pipe
+ 
+   interrupts:
+     maxItems: 5
+@@ -97,13 +101,19 @@ properties:
+     maxItems: 1
+ 
+   ranges:
+-    maxItems: 2
++    minItems: 2
++    maxItems: 3
+ 
+   resets:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 2
+ 
+   reset-names:
+-    const: pipe
++    oneOf:
++      - const: pipe
++      - items:
++          - const: pwr
++          - const: pipe
+ 
+   vpcie3v3-supply: true
+ 
 -- 
 2.39.2
 
