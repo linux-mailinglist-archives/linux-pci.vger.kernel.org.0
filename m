@@ -2,187 +2,258 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 31BD0732811
-	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 08:58:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 947BA732882
+	for <lists+linux-pci@lfdr.de>; Fri, 16 Jun 2023 09:11:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233680AbjFPG6Q (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Fri, 16 Jun 2023 02:58:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        id S244306AbjFPHLo (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Fri, 16 Jun 2023 03:11:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239971AbjFPG6P (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 02:58:15 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 657702961
-        for <linux-pci@vger.kernel.org>; Thu, 15 Jun 2023 23:58:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686898694; x=1718434694;
-  h=date:from:to:cc:subject:message-id;
-  bh=mx7B9Xdtr/S/9S0i+7aR+dmwpDPODQTfTkVxMOPrWAE=;
-  b=aAfmf9gj/RVGxVYRTCR1wzRGCgfAFqbd8x7kwF0yp7X+7xAAml8IFAgF
-   UeAHeOuiZURMQ1KDAH8UjLsjnRDStWgDpsCnqazev+myX1i9wpE5XSIL9
-   avTM80ksfLPT32x1EYQsHU3WwxsKXZeLYaAy05fgG6QMA1VhIc9jTHNDu
-   zA0ENtXzKhANtvonDmKQT+Jib74unnufI+pqIIIlfqEQqFU6uYlDYlq/K
-   FXPBFzcb5H2hQnYuceiUL47s5XEkAj7kk3bOyjrkf4+1UgGrGYdpCaoW9
-   oVBiDZqi+BRRtWA1Z2mX6le+TFZLwNCX0oDu+S4bl+xvCHat3JRoi4Tdy
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="361666333"
-X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="361666333"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Jun 2023 23:58:13 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10742"; a="782779597"
-X-IronPort-AV: E=Sophos;i="6.00,246,1681196400"; 
-   d="scan'208";a="782779597"
-Received: from lkp-server01.sh.intel.com (HELO 783282924a45) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 15 Jun 2023 23:58:12 -0700
-Received: from kbuild by 783282924a45 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qA3PQ-0000tX-0T;
-        Fri, 16 Jun 2023 06:58:12 +0000
-Date:   Fri, 16 Jun 2023 14:57:40 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-pci@vger.kernel.org
-Subject: [pci:enumeration] BUILD SUCCESS
- 7bf3ac8f8a883b57320c85f2377a4441737a2ef8
-Message-ID: <202306161438.HjRL30Ep-lkp@intel.com>
-User-Agent: s-nail v14.9.24
-X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
-        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=ham autolearn_force=no
-        version=3.4.6
+        with ESMTP id S234495AbjFPHLM (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Fri, 16 Jun 2023 03:11:12 -0400
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A59E3170E;
+        Fri, 16 Jun 2023 00:11:09 -0700 (PDT)
+Received: from loongson.cn (unknown [10.20.42.43])
+        by gateway (Coremail) with SMTP id _____8Cx+ekMC4xkouAFAA--.12557S3;
+        Fri, 16 Jun 2023 15:11:08 +0800 (CST)
+Received: from [10.20.42.43] (unknown [10.20.42.43])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8AxZuQLC4xk+_0cAA--.16734S3;
+        Fri, 16 Jun 2023 15:11:07 +0800 (CST)
+Message-ID: <3c1c86ab-96ea-aa1c-c9c5-9a4012644fd6@loongson.cn>
+Date:   Fri, 16 Jun 2023 15:11:07 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH v7 2/8] PCI/VGA: Deal only with VGA class devices
+Content-Language: en-US
+To:     Alex Deucher <alexdeucher@gmail.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     Sui Jingfeng <15330273260@189.cn>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-fbdev@vger.kernel.org, kvm@vger.kernel.org,
+        nouveau@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org, linux-pci@vger.kernel.org
+References: <20230613030151.216625-1-15330273260@189.cn>
+ <20230613030151.216625-3-15330273260@189.cn>
+ <dbf0d89f-717a-1f78-aef2-f30506751d4d@loongson.cn>
+ <CADnq5_N6vVtzH6tzguZdHnP_TdRoG1G-Cr94O+X03jvtk=vhag@mail.gmail.com>
+From:   Sui Jingfeng <suijingfeng@loongson.cn>
+Organization: Loongson
+In-Reply-To: <CADnq5_N6vVtzH6tzguZdHnP_TdRoG1G-Cr94O+X03jvtk=vhag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8AxZuQLC4xk+_0cAA--.16734S3
+X-CM-SenderInfo: xvxlyxpqjiv03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBj93XoW3Xw1Utryrury5AF4rCFyrKrX_yoW7Ar48pF
+        WrCay5KrW8JFy7C342qr1kXFyYv3sYya4rJF4rK3sakFZ0yr98WryrKry5u3yxGrZ5GF1I
+        vw4UJF9rua9YqagCm3ZEXasCq-sJn29KB7ZKAUJUUUUr529EdanIXcx71UUUUU7KY7ZEXa
+        sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+        0xBIdaVrnRJUUUPIb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+        IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+        e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+        0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AK
+        xVW8Jr0_Cr1UM2kKe7AKxVWUXVWUAwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07
+        AIYIkI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWU
+        XVWUAwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI4
+        8JMxk0xIA0c2IEe2xFo4CEbIxvr21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vI
+        r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAqx4xG67
+        AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIY
+        rxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14
+        v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8
+        JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07jOa93UUU
+        UU=
+X-Spam-Status: No, score=-2.0 required=5.0 tests=BAYES_00,NICE_REPLY_A,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
+        autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/pci/pci.git enumeration
-branch HEAD: 7bf3ac8f8a883b57320c85f2377a4441737a2ef8  PCI: Add failed link recovery for device reset events
+Hi,
 
-elapsed time: 722m
+On 2023/6/16 05:11, Alex Deucher wrote:
+> On Wed, Jun 14, 2023 at 6:50 AM Sui Jingfeng <suijingfeng@loongson.cn> wrote:
+>> Hi,
+>>
+>> On 2023/6/13 11:01, Sui Jingfeng wrote:
+>>> From: Sui Jingfeng <suijingfeng@loongson.cn>
+>>>
+>>> Deal only with the VGA devcie(pdev->class == 0x0300), so replace the
+>>> pci_get_subsys() function with pci_get_class(). Filter the non-PCI display
+>>> device(pdev->class != 0x0300) out. There no need to process the non-display
+>>> PCI device.
+>>>
+>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>> Signed-off-by: Sui Jingfeng <suijingfeng@loongson.cn>
+>>> ---
+>>>    drivers/pci/vgaarb.c | 22 ++++++++++++----------
+>>>    1 file changed, 12 insertions(+), 10 deletions(-)
+>>>
+>>> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
+>>> index c1bc6c983932..22a505e877dc 100644
+>>> --- a/drivers/pci/vgaarb.c
+>>> +++ b/drivers/pci/vgaarb.c
+>>> @@ -754,10 +754,6 @@ static bool vga_arbiter_add_pci_device(struct pci_dev *pdev)
+>>>        struct pci_dev *bridge;
+>>>        u16 cmd;
+>>>
+>>> -     /* Only deal with VGA class devices */
+>>> -     if ((pdev->class >> 8) != PCI_CLASS_DISPLAY_VGA)
+>>> -             return false;
+>>> -
+>> Hi, here is probably a bug fixing.
+>>
+>> For an example, nvidia render only GPU typically has 0x0380.
+>>
+>> as its PCI class number, but render only GPU should not participate in
+>> the arbitration.
+>>
+>> As it shouldn't snoop the legacy fixed VGA address.
+>>
+>> It(render only GPU) can not display anything.
+>>
+>>
+>> But 0x0380 >> 8 = 0x03, the filter  failed.
+>>
+>>
+>>>        /* Allocate structure */
+>>>        vgadev = kzalloc(sizeof(struct vga_device), GFP_KERNEL);
+>>>        if (vgadev == NULL) {
+>>> @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>>>        struct pci_dev *pdev = to_pci_dev(dev);
+>>>        bool notify = false;
+>>>
+>>> -     vgaarb_dbg(dev, "%s\n", __func__);
+>>> +     /* Only deal with VGA class devices */
+>>> +     if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
+>>> +             return 0;
+>> So here we only care 0x0300, my initial intent is to make an optimization,
+>>
+>> nowadays sane display graphic card should all has 0x0300 as its PCI
+>> class number, is this complete right?
+>>
+>> ```
+>>
+>> #define PCI_BASE_CLASS_DISPLAY        0x03
+>> #define PCI_CLASS_DISPLAY_VGA        0x0300
+>> #define PCI_CLASS_DISPLAY_XGA        0x0301
+>> #define PCI_CLASS_DISPLAY_3D        0x0302
+>> #define PCI_CLASS_DISPLAY_OTHER        0x0380
+>>
+>> ```
+>>
+>> Any ideas ?
+> I'm not quite sure what you are asking about here.
 
-configs tested: 109
-configs skipped: 6
+To be honest, I'm worried about the PCI devices which has a
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+PCI_CLASS_DISPLAY_XGA as its PCI class number.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r003-20230615   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                  randconfig-r043-20230615   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm          buildonly-randconfig-r001-20230614   clang
-arm                                 defconfig   gcc  
-arm                         nhk8815_defconfig   gcc  
-arm                  randconfig-r024-20230615   gcc  
-arm                  randconfig-r046-20230615   gcc  
-arm                         s5pv210_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-hexagon              randconfig-r041-20230615   clang
-hexagon              randconfig-r045-20230615   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r005-20230614   clang
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230615   gcc  
-i386                 randconfig-i002-20230615   gcc  
-i386                 randconfig-i003-20230615   gcc  
-i386                 randconfig-i004-20230615   gcc  
-i386                 randconfig-i005-20230615   gcc  
-i386                 randconfig-i006-20230615   gcc  
-i386                 randconfig-i011-20230615   clang
-i386                 randconfig-i012-20230615   clang
-i386                 randconfig-i013-20230615   clang
-i386                 randconfig-i014-20230615   clang
-i386                 randconfig-i015-20230615   clang
-i386                 randconfig-i016-20230615   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r004-20230615   gcc  
-loongarch            randconfig-r015-20230614   gcc  
-loongarch            randconfig-r021-20230615   gcc  
-loongarch            randconfig-r034-20230615   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r001-20230615   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r005-20230615   gcc  
-nios2                randconfig-r036-20230615   gcc  
-openrisc             randconfig-r035-20230615   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc              randconfig-r011-20230614   gcc  
-powerpc              randconfig-r023-20230615   clang
-powerpc              randconfig-r026-20230615   clang
-powerpc              randconfig-r032-20230615   gcc  
-powerpc                      walnut_defconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv        buildonly-randconfig-r003-20230614   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r014-20230614   gcc  
-riscv                randconfig-r033-20230615   gcc  
-riscv                randconfig-r042-20230615   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390         buildonly-randconfig-r002-20230614   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r012-20230614   gcc  
-s390                 randconfig-r025-20230615   clang
-s390                 randconfig-r044-20230615   clang
-sh                               allmodconfig   gcc  
-sh                                  defconfig   gcc  
-sh                         ecovec24_defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64              randconfig-r002-20230615   gcc  
-sparc64              randconfig-r006-20230615   gcc  
-um                               alldefconfig   clang
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-a001-20230616   clang
-x86_64               randconfig-a002-20230616   clang
-x86_64               randconfig-a003-20230616   clang
-x86_64               randconfig-a004-20230616   clang
-x86_64               randconfig-a005-20230616   clang
-x86_64               randconfig-a006-20230616   clang
-x86_64               randconfig-a011-20230614   gcc  
-x86_64               randconfig-a012-20230614   gcc  
-x86_64               randconfig-a013-20230614   gcc  
-x86_64               randconfig-a014-20230614   gcc  
-x86_64               randconfig-a015-20230614   gcc  
-x86_64               randconfig-a016-20230614   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa       buildonly-randconfig-r006-20230614   gcc  
-xtensa               randconfig-r016-20230614   gcc  
+As those devices are very uncommon in the real world.
 
+
+$ find . -name "*.c" -type f | xargs grep "PCI_CLASS_DISPLAY_XGA"
+
+
+Grep the "PCI_CLASS_DISPLAY_XGA" in the linux kernel tree got ZERO,
+
+there no code reference this macro. So I think it seems safe to ignore 
+the XGA ?
+
+
+PCI_CLASS_DISPLAY_3D and PCI_CLASS_DISPLAY_OTHER are used to annotate 
+the render-only GPU.
+
+And render-only GPU can't decode the fixed VGA address space, it is safe 
+to ignore them.
+
+
+>   For vga_arb, we
+> only care about VGA class devices since those should be on the only
+> ones that might have VGA routed to them.
+
+>   However, as VGA gets deprecated,
+
+We need the vgaarb for a system with multiple video card.
+
+Not only because some Legacy VGA devices implemented
+
+on PCI will typically have the same "hard-decoded" addresses;
+
+But also these video card need to participate in the arbitration,
+
+determine the default boot device.
+
+
+Nowadays, the 'VGA devices' here is stand for the Graphics card
+
+which is capable of display something on the screen.
+
+We still need vgaarb to select the default boot device.
+
+
+> you'll have more non VGA PCI classes for devices which
+> could be the pre-OS console device.
+
+Ah, we still want  do this(by applying this patch) first,
+
+and then we will have the opportunity to see who will crying if 
+something is broken. Will know more then.
+
+But drop this patch or revise it with more consideration is also 
+acceptable.
+
+
+I asking about suggestion and/or review.
+
+> Alex
+>
+>>>        /* For now we're only intereted in devices added and removed. I didn't
+>>>         * test this thing here, so someone needs to double check for the
+>>> @@ -1510,6 +1508,8 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
+>>>        else if (action == BUS_NOTIFY_DEL_DEVICE)
+>>>                notify = vga_arbiter_del_pci_device(pdev);
+>>>
+>>> +     vgaarb_dbg(dev, "%s: action = %lu\n", __func__, action);
+>>> +
+>>>        if (notify)
+>>>                vga_arbiter_notify_clients();
+>>>        return 0;
+>>> @@ -1534,8 +1534,8 @@ static struct miscdevice vga_arb_device = {
+>>>
+>>>    static int __init vga_arb_device_init(void)
+>>>    {
+>>> +     struct pci_dev *pdev = NULL;
+>>>        int rc;
+>>> -     struct pci_dev *pdev;
+>>>
+>>>        rc = misc_register(&vga_arb_device);
+>>>        if (rc < 0)
+>>> @@ -1545,11 +1545,13 @@ static int __init vga_arb_device_init(void)
+>>>
+>>>        /* We add all PCI devices satisfying VGA class in the arbiter by
+>>>         * default */
+>>> -     pdev = NULL;
+>>> -     while ((pdev =
+>>> -             pci_get_subsys(PCI_ANY_ID, PCI_ANY_ID, PCI_ANY_ID,
+>>> -                            PCI_ANY_ID, pdev)) != NULL)
+>>> +     while (1) {
+>>> +             pdev = pci_get_class(PCI_CLASS_DISPLAY_VGA << 8, pdev);
+>>> +             if (!pdev)
+>>> +                     break;
+>>> +
+>>>                vga_arbiter_add_pci_device(pdev);
+>>> +     }
+>>>
+>>>        pr_info("loaded\n");
+>>>        return rc;
+>> --
+>> Jingfeng
+>>
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Jingfeng
+
