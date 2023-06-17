@@ -2,121 +2,168 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id B4447733F3F
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 09:39:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0075F733F54
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 09:59:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346188AbjFQHj1 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jun 2023 03:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50036 "EHLO
+        id S234410AbjFQH7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jun 2023 03:59:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234856AbjFQHj0 (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 03:39:26 -0400
-Received: from mail-lj1-x22b.google.com (mail-lj1-x22b.google.com [IPv6:2a00:1450:4864:20::22b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218311AB;
-        Sat, 17 Jun 2023 00:39:25 -0700 (PDT)
-Received: by mail-lj1-x22b.google.com with SMTP id 38308e7fff4ca-2b1b92845e1so20595911fa.0;
-        Sat, 17 Jun 2023 00:39:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686987563; x=1689579563;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gIdeMrV7gyutB60slM5F7S1vImka4WwXs93FAbGE1gQ=;
-        b=VLEX0Ab5PVUEKm2nBbAf9tQBNzkFwn9nHLx6ZI4C+mhrJh0xkzWPvdyC5swD+uj3oc
-         yg+xhvrzRj9TV7s/bn5+li772Jf1DfclMVSxYW4oRZMPMTktD9/5llLAilETurC+2TcF
-         d7ess5UNH52sbLptLD37Y5y7aXasKsumccGZF4gETCLJpPPP+MGGvH5cenFuiRCyM920
-         i+P/rB/ar+PeQrn7+7n8+lGHYzM8urcYghc53u7H4YlR4tRpyVrA5IH8J9TgEfJynJ/R
-         sF5Hxjp0VNDX/gaXJtQznMdtsI71TdFvCdu9s5fIj0GuAHIvl31VxZJsURNTbjJ7UZlk
-         NwCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686987563; x=1689579563;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gIdeMrV7gyutB60slM5F7S1vImka4WwXs93FAbGE1gQ=;
-        b=fzLdcougIbZ8zbBAK5PMGZ6p34qacojsNMtMDp4jBA4A6MuuJz06ZnykdIyn6ZUypI
-         MDikR8CvLO3W+lFvOPiVuwso3MKkkrVfQuSbFmkd3o2EpjsLUzty3E5xiDNlCCyv4scv
-         pkMYOPApzPzI4oMl309iYXB7tONwtpDAyAu0MovfGCtdn13a4AeYuP71Z1XW22ur0kji
-         WEjB8U0xIn53U47smB+sfpp8SjNvPBe0Tsu/ZPHDtf2Fo4E8aIRbITpTfF3IgnNYnw7A
-         9v7xNfjw9ccc5OwlB91ojOpmOqfmjyigwQaBhWMgyNlE3ukS6lAWE3jRSldgBaGd3r+s
-         AuwQ==
-X-Gm-Message-State: AC+VfDzmDhYxJf+89YEOFEffG2D166S1dMPjv90DYHp9SaL48MMEr0bW
-        3fsmLTIkgXG2AyKgPZpkDRU=
-X-Google-Smtp-Source: ACHHUZ5e3rWd2nxvAUXXdflunP1MwQCYxZ+76Ew7b+IyosbqAsuEl9s4HN4NgZkCl+9TAQsWHwhoKg==
-X-Received: by 2002:a2e:9b5a:0:b0:2b4:6b1f:9a6b with SMTP id o26-20020a2e9b5a000000b002b46b1f9a6bmr247903ljj.23.1686987563033;
-        Sat, 17 Jun 2023 00:39:23 -0700 (PDT)
-Received: from mobilestation ([109.194.233.141])
-        by smtp.gmail.com with ESMTPSA id o19-20020a2e9b53000000b002b45b90385asm585830ljj.55.2023.06.17.00.39.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Jun 2023 00:39:22 -0700 (PDT)
-Date:   Sat, 17 Jun 2023 10:39:19 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@collabora.com
-Subject: Re: [PATCH v1 0/4] RK3588 PCIe2 support
-Message-ID: <20230617073919.h6x32caeznx4q6cp@mobilestation>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
+        with ESMTP id S231929AbjFQH7Y (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 03:59:24 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FCE2720;
+        Sat, 17 Jun 2023 00:59:22 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 3ED7B100D942C;
+        Sat, 17 Jun 2023 09:59:20 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 123051E21DD; Sat, 17 Jun 2023 09:59:20 +0200 (CEST)
+Date:   Sat, 17 Jun 2023 09:59:20 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Yazen Ghannam <yazen.ghannam@amd.com>,
+        Fontenot Nathan <Nathan.Fontenot@amd.com>
+Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
+ native AER and DPC/EDR
+Message-ID: <20230617075920.GA26803@wunner.de>
+References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
+ <20230516101001.GA18952@wunner.de>
+ <8ab986f2-6aa5-401a-aa21-e8b21f68eaad@amd.com>
+ <20230616173140.GA6417@wunner.de>
+ <e967608f-ac8a-7a9c-35c5-821b6842653c@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230616170022.76107-1-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-2.1 required=5.0 tests=BAYES_00,DKIM_SIGNED,
-        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FREEMAIL_FROM,
-        RCVD_IN_DNSWL_NONE,SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE
-        autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e967608f-ac8a-7a9c-35c5-821b6842653c@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
+        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
+        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi Sebastian
+On Fri, Jun 16, 2023 at 04:30:49PM -0700, Smita Koralahalli wrote:
+> On 6/16/2023 10:31 AM, Lukas Wunner wrote:
+> > On Mon, May 22, 2023 at 03:23:57PM -0700, Smita Koralahalli wrote:
+> > > On 5/16/2023 3:10 AM, Lukas Wunner wrote:
+> > > > On Tue, Apr 18, 2023 at 09:05:25PM +0000, Smita Koralahalli wrote:
+> > > > > +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
+> > > > > +{
+> > > > > +	u16 status;
+> > > > > +
+> > > > > +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
+> > > > > +
+> > > > > +	if (!(status & PCI_ERR_UNC_SURPDN))
+> > > > > +		return false;
+> > > > > +
+> > > > 
+> > > > You need an additional check for pdev->is_hotplug_bridge here.
+> > > > 
+> > > > And you need to read PCI_EXP_SLTCAP and check for PCI_EXP_SLTCAP_HPS.
+> > > > 
+> > > > Return false if either of them isn't set.
+> > > 
+> > > Return false, if PCI_EXP_SLTCAP isn't set only correct? PCI_EXP_SLTCAP_HPS
+> > > should be disabled if DPC is enabled.
+> > > 
+> > > Implementation notes in 6.7.6 says that:
+> > > "The Hot-Plug Surprise (HPS) mechanism, as indicated by the Hot-Plug
+> > > Surprise bit in the Slot Capabilities Register being Set, is deprecated
+> > > for use with async hot-plug. DPC is the recommended mechanism for supporting
+> > > async hot-plug."
+> > > 
+> > > Platform FW will disable the SLTCAP_HPS bit at boot time to enable async
+> > > hotplug on AMD devices.
+> > 
+> > Huh, is PCI_EXP_SLTCAP_HPS not set on the hotplug port in question?
+> > 
+> > If it's not set, why do you get Surprise Down Errors in the first place?
+> > 
+> > How do you bring down the slot without surprise-removal capability?
+> > Via sysfs?
+> 
+> As per SPEC 6.7.6, "Either Downstream Port Containment (DPC) or the Hot-Plug
+> Surprise (HPS) mechanism may be used to support async removal as part of an
+> overall async hot-plug architecture".
+> 
+> Also, the implementation notes below, it conveys that HPS is deprecated and
+> DPC is recommended mechanism. More details can be found in Appendix I, I.1
+> Async Hot-Plug Initial Configuration:
+> ...
+> If DPC capability then,
+> 	If HPS bit not Set, use DPC
+> 	Else attempt to Clear HPS bit (§ Section 6.7.4.4 )
+> 		If successful, use DPC
+> 		Else use HPS
+> ...
+> 
+> So, this is "likely" a new feature support patch where DPC supports async
+> remove. HPS bit will be disabled by BIOS if DPC is chosen as recommended
+> mechanism to handle async removal.
+> 
+> I see the slot is being brought down by PDC or DLLSC event, which is
+> triggered alongside DPC.
+> 
+> pciehp_handle_presence_or_link_change() -> pciehp_disable_slot() ->
+> __pciehp_disable_slot() -> remove_board()..
+> 
+> But I want to clear one thing, are you implying that PDC or DLLSC shouldn't
+> be triggered when HPS is disabled?
 
-On Fri, Jun 16, 2023 at 07:00:18PM +0200, Sebastian Reichel wrote:
-> Hi,
-> 
-> This adds PCIe2 support for RK3588. The series has been tested with the
-> onboard RTL8125 network card on Rockchip RK3588 EVB1 (&pcie2x1l1) and
-> Radxa Rock 5B (&pcie2x1l2). The final patch in this series depends on
-> the combo PHY support added by the SATA series [0].
+Sorry, please ignore my advice to check PCI_EXP_SLTCAP_HPS in
+dpc_is_surprise_removal().
 
-Thanks for submitting the patchset. I'll have a closer look at it on
-the next week.
+Instead, only check for pdev->is_hotplug_bridge.  The rationale being
+that Surprise Down errors are par for the course on hotplug ports,
+but they're an anomaly that must be reported on non-hotplug ports.
 
--Sergey(y)
+PCI_EXP_SLTCAP_HPS has no bearing on pciehp's behavior.  If there's
+a hotplug port and hotplug control was granted to the OS, pciehp will
+bind to the device.  pciehp will react to any DLLSC and PDC event.
 
-> 
-> [0] https://lore.kernel.org/all/20230612171337.74576-1-sebastian.reichel@collabora.com/
-> 
-> Thanks,
-> 
-> -- Sebastian
-> 
-> Sebastian Reichel (4):
->   dt-bindings: PCI: dwc: rockchip: Fix interrupt-names issue
->   dt-bindings: PCI: dwc: rockchip: Add missing
->     legacy-interrupt-controller
->   dt-bindings: PCI: dwc: rockchip: Update for RK3588
->   arm64: dts: rockchip: rk3588: add PCIe2 support
-> 
->  .../bindings/pci/rockchip-dw-pcie.yaml        |  58 +++++++++-
->  .../devicetree/bindings/pci/snps,dw-pcie.yaml |  15 ++-
->  arch/arm64/boot/dts/rockchip/rk3588.dtsi      |  54 +++++++++
->  arch/arm64/boot/dts/rockchip/rk3588s.dtsi     | 108 ++++++++++++++++++
->  4 files changed, 231 insertions(+), 4 deletions(-)
-> 
-> -- 
-> 2.39.2
-> 
+I think the target audience for PCIe r6.1 sec 6.7.6 are hardware
+designers and the advice given there is to add DPC capability to
+hotplug ports.  That's fine.  It doesn't affect how Linux handles
+async removal.
+
+I think the wording in the spec to "use DPC" for async removal is
+confusing.  We don't want to duplicate the code for device
+de-/re-enumeration and slot bringup / bringdown in the dpc driver.
+We just continue letting pciehp do that (and thus retain compatibility
+with older, non-DPC-capable hardware).  But we wire up pciehp with
+the dpc driver to add DPC-awareness for hotplug.
+
+One part of the equation was to ignore link changes which occur
+as a side effect of a DPC event from which we've successfully
+recovered.  That was added with commit a97396c6eb13 ("PCI: pciehp:
+Ignore Link Down/Up caused by DPC").
+
+The other part of the equation (which you're adding here) is to
+ignore Surprise Down errors in the dpc driver which occur as a side
+effect of async removal.
+
+I think that makes us compliant with PCIe r6.1 sec 6.7.6, although
+we're interpreting "use DPC" (or async removal) somewhat liberally.
+Actually I'd prefer the term "pragmatically" instead of "liberally". ;)
+
+We don't want to duplicate code just for the sake of being word-by-word
+compliant with the spec.  If it works in the real world, it's fine. :)
+
+Thanks,
+
+Lukas
