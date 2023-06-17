@@ -2,138 +2,301 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 752AC733FA5
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 10:31:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DA8DF73406A
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 13:08:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230169AbjFQIbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jun 2023 04:31:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
+        id S234118AbjFQLIg (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jun 2023 07:08:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230112AbjFQIbL (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 04:31:11 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B019A10CF;
-        Sat, 17 Jun 2023 01:31:10 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-         client-signature RSA-PSS (4096 bits) client-digest SHA256)
-        (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 09213100D941B;
-        Sat, 17 Jun 2023 10:31:09 +0200 (CEST)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id C86FE1D5B80; Sat, 17 Jun 2023 10:31:08 +0200 (CEST)
-Date:   Sat, 17 Jun 2023 10:31:08 +0200
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Sathyanarayanan Kuppuswamy 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Subject: Re: [PATCH v1] PCI: pciehp: Make sure DPC trigger status is reset in
- PDC handler
-Message-ID: <20230617083108.GB26803@wunner.de>
-References: <20230615062559.1268404-1-sathyanarayanan.kuppuswamy@linux.intel.com>
- <20230615183550.GA9773@wunner.de>
- <713d71dc-c4a5-cd7b-2deb-343c244dd14d@linux.intel.com>
- <20230616090635.GA17565@wunner.de>
- <c2d0c925-ffe1-4431-2d39-8cd6919486f0@linux.intel.com>
+        with ESMTP id S229683AbjFQLIg (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 07:08:36 -0400
+Received: from s.wrqvtbkv.outbound-mail.sendgrid.net (s.wrqvtbkv.outbound-mail.sendgrid.net [149.72.123.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 693991722
+        for <linux-pci@vger.kernel.org>; Sat, 17 Jun 2023 04:08:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+        h=mime-version:subject:references:from:in-reply-to:to:cc:content-type:
+        content-transfer-encoding:cc:content-type:from:subject:to;
+        s=s1; bh=kSdb/lHB+3ih+VSQlmzyh6XZ/NXli7OIBoYYuu8Cufw=;
+        b=bcI0QuLnUJTOtgdZTqzhhLRruVnZqsfg/um4ov/DYhsAy/8cp32tX50BVPPTUAbRnJqF
+        ddIYFxIvMpSHcxqglb0JX0arSLrNuvECS5djPQCr2k6aYZk85mzLdXjMHN5ksfZbefo89o
+        SYEDMOJLBZvUSo4glYurft6Q2N9KnH0Mxm8gyZdXNTTqL4phiKRiz1iSyUp/zthMsScqJO
+        JThmslEur6smyncwjfqPWd0WweLSJ/V33pdLt3S0Np3gGPmszBfNtwgUiuXffYCeI8nL89
+        7kEObxdqPagK9Pcx4CGInapTnEbAlAMYljrLUK99S9Li8LyekCRBnXt3gXgf/5IQ==
+Received: by filterdrecv-66949dbc98-2h875 with SMTP id filterdrecv-66949dbc98-2h875-1-648D9430-15
+        2023-06-17 11:08:32.542967934 +0000 UTC m=+3238133.466406997
+Received: from [192.168.1.50] (unknown)
+        by geopod-ismtpd-6 (SG) with ESMTP
+        id 1ayzDbPESH2MEknCWup2WQ
+        Sat, 17 Jun 2023 11:08:32.109 +0000 (UTC)
+Message-ID: <e62fc14e-f06b-e979-8f92-db1451695358@kwiboo.se>
+Date:   Sat, 17 Jun 2023 11:08:32 +0000 (UTC)
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.2
+Subject: Re: [PATCH v1 4/4] arm64: dts: rockchip: rk3588: add PCIe2 support
+References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
+ <20230616170022.76107-5-sebastian.reichel@collabora.com>
+Content-Language: en-US
+From:   Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <20230616170022.76107-5-sebastian.reichel@collabora.com>
+X-SG-EID: =?us-ascii?Q?TdbjyGynYnRZWhH+7lKUQJL+ZxmxpowvO2O9SQF5CwCVrYgcwUXgU5DKUU3QxA?=
+ =?us-ascii?Q?fZekEeQsTe+RrMu3cja6a0h51CekI0YDjjeuLZk?=
+ =?us-ascii?Q?1rLxEDrvM81hUy0jITzmLCj93Zvh1XjElbcsZKX?=
+ =?us-ascii?Q?yL=2FEwnLgHvNPAL81M6wPxoQL4XXG3kVpIYOWFgV?=
+ =?us-ascii?Q?zQHtno7zT=2FGfnV7=2FLwS6sK+AwkAstxkfRms5Zn+?=
+ =?us-ascii?Q?p9aWByBXLDB6d52AkvDrZ5THOR21xoyb186Wrm?=
+To:     Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc:     linux-pci@vger.kernel.org, linux-rockchip@lists.infradead.org,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?iso-8859-2?q?Wilczy=F1ski?= <kw@linux.com>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Simon Xue <xxm@rock-chips.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kernel@collabora.com, Kever Yang <kever.yang@rock-chips.com>
+X-Entity-ID: P7KYpSJvGCELWjBME/J5tg==
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c2d0c925-ffe1-4431-2d39-8cd6919486f0@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
-        T_SCC_BODY_TEXT_LINE autolearn=ham autolearn_force=no version=3.4.6
+Content-Transfer-Encoding: 7bit
+X-Spam-Status: No, score=-0.9 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,NICE_REPLY_A,
+        RCVD_IN_BL_SPAMCOP_NET,RCVD_IN_MSPIKE_H2,SPF_HELO_NONE,SPF_PASS,
+        T_SCC_BODY_TEXT_LINE,URIBL_BLOCKED autolearn=no autolearn_force=no
+        version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
 Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 04:27:33PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> On 6/16/23 2:06 AM, Lukas Wunner wrote:
-> > On Thu, Jun 15, 2023 at 04:03:54PM -0700, Sathyanarayanan Kuppuswamy wrote:
-> >> On 6/15/23 11:35 AM, Lukas Wunner wrote:
-> >>> On Wed, Jun 14, 2023 at 11:25:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
-> >>>> During the EDR-based DPC recovery process, for devices with persistent
-> >>>> issues, the firmware may choose not to handle the DPC error and leave
-> >>>> the port in DPC triggered state. In such scenarios, if the user
-> >>>> replaces the faulty device with a new one, the OS is expected to clear
-> >>>> the DPC trigger status in the hotplug error handler to enable the new
-> >>>> device enumeration.
-> > [...]
-> >>> pciehp_unconfigure_device() seems like a more appropriate place to me.
-> >>
-> >> I initially thought to add it there. Spec also recommends clearing it
-> >> when removing the device. But I wasn't sure if pciehp_unconfigure_device()
-> >> would be called only during device removal.
-> > 
-> > It is.
+Hi Sebastian,
+
+On 2023-06-16 19:00, Sebastian Reichel wrote:
+> Add all three PCIe2 IP blocks to the RK3588 DT. Note, that RK3588
+> also has two PCIe3 IP blocks, that will be handled separately.
 > 
-> Do you know how pciehp_unconfigure_device() will be called when the device is
-> removed? Is it due to a DLLSC event or a PDC state change? If it is DLLSC,
-> pciehp_unconfigure_device() may not be called because we ignore the DLLSC
-> event if there is an active DPC trigger.
-
-A DLLSC event is only ignored by pciehp if successful recovery
-from DPC was possible.  In that case, the device in the slot is
-still the *same*.
-
-And you're saying in the commit message that you seek to fix the
-case when "the user replaces the faulty device with a *new* one".
-
-So for your goal, ignored DLLSC events shouldn't be relevant.
-
-As to your question, pciehp_ist() doesn't really differentiate
-between PDC and DLLSC events.  If either of them occurs,
-the slot is brought down through pciehp_handle_presence_or_link_change().
-
-And that will end up in pciehp_unconfigure_device().
-
-I think right at the end of that function, after
-pci_unlock_rescan_remove() would be a good place to perform
-cleanup of the hotplug port before a newly hotplugged device
-can be handled.
-
-Smita's clearing of ARI Forwarding Enable, AtomicOp Requester Enable
-and 10-Bit Tag Requester Enable could be done as well at the end of
-pciehp_unconfigure_device().
-
-
-> > We need to differentiate between two cases:
-> > 
-> > (1) DPC handled by firmware, hotplug handled by OS:
-> > 
-> >     In this case clearing DPC trigger status from pciehp device removal
-> >     code path seems reasonable.  But it must be constrained to
-> >     !host_bridge->native_dpc.
+> Co-developed-by: Kever Yang <kever.yang@rock-chips.com>
+> Signed-off-by: Kever Yang <kever.yang@rock-chips.com>
+> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3588.dtsi  |  54 +++++++++++
+>  arch/arm64/boot/dts/rockchip/rk3588s.dtsi | 108 ++++++++++++++++++++++
+>  2 files changed, 162 insertions(+)
 > 
-> Agree.
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588.dtsi b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+> index b9508cea34f1..40fee1367b34 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588.dtsi
+> @@ -80,6 +80,60 @@ i2s10_8ch: i2s@fde00000 {
+>  		status = "disabled";
+>  	};
+>  
+> +	pcie2x1l0: pcie@fe170000 {
+> +		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		bus-range = <0x20 0x2f>;
+> +		clocks = <&cru ACLK_PCIE_1L0_MSTR>, <&cru ACLK_PCIE_1L0_SLV>,
+> +			 <&cru ACLK_PCIE_1L0_DBI>, <&cru PCLK_PCIE_1L0>,
+> +			 <&cru CLK_PCIE_AUX2>, <&cru CLK_PCIE1L0_PIPE>;
+> +		clock-names = "aclk_mst", "aclk_slv",
+> +			      "aclk_dbi", "pclk",
+> +			      "aux", "pipe";
+> +		device_type = "pci";
+> +		interrupts = <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 239 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0 0 0 1 &pcie2x1l0_intc 0>,
+> +				<0 0 0 2 &pcie2x1l0_intc 1>,
+> +				<0 0 0 3 &pcie2x1l0_intc 2>,
+> +				<0 0 0 4 &pcie2x1l0_intc 3>;
+> +		linux,pci-domain = <2>;
+> +		num-ib-windows = <8>;
+> +		num-ob-windows = <8>;
+> +		num-viewport = <4>;
+> +		max-link-speed = <2>;
+> +		msi-map = <0x2000 &its0 0x2000 0x1000>;
+> +		num-lanes = <1>;
+> +		phys = <&combphy1_ps PHY_TYPE_PCIE>;
+> +		phy-names = "pcie-phy";
+> +		power-domains = <&power RK3588_PD_PCIE>;
+> +		ranges = <0x01000000 0x0 0xf2100000 0x0 0xf2100000 0x0 0x00100000>,
+> +			 <0x02000000 0x0 0xf2200000 0x0 0xf2200000 0x0 0x00e00000>,
+> +			 <0x03000000 0x9 0x80000000 0x9 0x80000000 0x0 0x40000000>;
 
-The crucial thing here is that the dpc driver isn't bound to the
-port if DPC is handled by firmware.  Hence there's no chance of
-racing with dpc_reset_link() and it's safe to clear DPC trigger
-status from pciehp.
+For the RK356x [1] and for RK3588 in u-boot [2] the pci_addr range was
+changed to be in 32-bit address space, start address at 0x40000000, to
+make the 1 GB region available for 32-bit BARs. Something that possible
+could/should be done here too?
 
+E.g.:
 
-> > (2) DPC handled by OS:
-> > 
-> >     In this case clearing DPC trigger status from pciehp could race with
-> >     the dpc interrupt handler so must not be done.  Instead, I recommend
-> 
-> If we clear the DPC trigger status in the DLLSC state change handler, I
-> agree there could be a race. However, if we clear the DPC trigger in the
-> PDC state change handler, I believe it will not race because the device
-> has already been removed. Is my understanding correct?
+  <0x03000000 0x0 0x40000000 0x9 0x80000000 0x0 0x40000000>
 
-Unfortunately it's not guaranteed that dpc_reset_link() is finished
-when pciehp brings down the slot.
+[1] https://lore.kernel.org/all/20230601132516.153934-1-frattaroli.nicolas@gmail.com/
+[2] https://lore.kernel.org/u-boot/20230517100102.109855-1-eugen.hristev@collabora.com/
 
-So clearing DPC trigger status can only be done safely from the dpc
-driver itself (if DPC is handled natively by the OS).
+> +		reg = <0xa 0x40800000 0x0 0x00400000>,
+> +		      <0x0 0xfe170000 0x0 0x00010000>,
+> +		      <0x0 0xf2000000 0x0 0x00100000>;
+> +		reg-names = "dbi", "apb", "config";
+> +		resets = <&cru SRST_PCIE2_POWER_UP>, <&cru SRST_P_PCIE2>;
+> +		reset-names = "pwr", "pipe";
+> +		status = "disabled";
+> +
+> +		pcie2x1l0_intc: legacy-interrupt-controller {
+> +			interrupt-controller;
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 240 IRQ_TYPE_EDGE_RISING 0>;
+> +		};
+> +	};
+> +
+>  	gmac0: ethernet@fe1b0000 {
+>  		compatible = "rockchip,rk3588-gmac", "snps,dwmac-4.20a";
+>  		reg = <0x0 0xfe1b0000 0x0 0x10000>;
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> index a73b17f597af..b5fdc046d8f7 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3588s.dtsi
+> @@ -1670,6 +1670,114 @@ qos_vop_m1: qos@fdf82200 {
+>  		reg = <0x0 0xfdf82200 0x0 0x20>;
+>  	};
+>  
+> +	pcie2x1l1: pcie@fe180000 {
+> +		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		bus-range = <0x30 0x3f>;
+> +		clocks = <&cru ACLK_PCIE_1L1_MSTR>, <&cru ACLK_PCIE_1L1_SLV>,
+> +			 <&cru ACLK_PCIE_1L1_DBI>, <&cru PCLK_PCIE_1L1>,
+> +			 <&cru CLK_PCIE_AUX3>, <&cru CLK_PCIE1L1_PIPE>;
+> +		clock-names = "aclk_mst", "aclk_slv",
+> +			      "aclk_dbi", "pclk",
+> +			      "aux", "pipe";
+> +		device_type = "pci";
+> +		interrupts = <GIC_SPI 248 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0 0 0 1 &pcie2x1l1_intc 0>,
+> +				<0 0 0 2 &pcie2x1l1_intc 1>,
+> +				<0 0 0 3 &pcie2x1l1_intc 2>,
+> +				<0 0 0 4 &pcie2x1l1_intc 3>;
+> +		linux,pci-domain = <3>;
+> +		num-ib-windows = <8>;
+> +		num-ob-windows = <8>;
+> +		num-viewport = <4>;
+> +		max-link-speed = <2>;
+> +		msi-map = <0x3000 &its0 0x3000 0x1000>;
+> +		num-lanes = <1>;
+> +		phys = <&combphy2_psu PHY_TYPE_PCIE>;
+> +		phy-names = "pcie-phy";
+> +		power-domains = <&power RK3588_PD_PCIE>;
+> +		ranges = <0x01000000 0x0 0xf3100000 0x0 0xf3100000 0x0 0x00100000>,
+> +			 <0x02000000 0x0 0xf3200000 0x0 0xf3200000 0x0 0x00e00000>,
+> +			 <0x03000000 0x9 0xc0000000 0x9 0xc0000000 0x0 0x40000000>;
 
-Thanks,
+And:
 
-Lukas
+  <0x03000000 0x0 0x40000000 0x9 0xc0000000 0x0 0x40000000>
+
+> +		reg = <0xa 0x40c00000 0x0 0x00400000>,
+> +		      <0x0 0xfe180000 0x0 0x00010000>,
+> +		      <0x0 0xf3000000 0x0 0x00100000>;
+> +		reg-names = "dbi", "apb", "config";
+> +		resets = <&cru SRST_PCIE3_POWER_UP>, <&cru SRST_P_PCIE3>;
+> +		reset-names = "pwr", "pipe";
+> +		status = "disabled";
+> +
+> +		pcie2x1l1_intc: legacy-interrupt-controller {
+> +			interrupt-controller;
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 245 IRQ_TYPE_EDGE_RISING 0>;
+> +		};
+> +	};
+> +
+> +	pcie2x1l2: pcie@fe190000 {
+> +		compatible = "rockchip,rk3588-pcie", "rockchip,rk3568-pcie";
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		bus-range = <0x40 0x4f>;
+> +		clocks = <&cru ACLK_PCIE_1L2_MSTR>, <&cru ACLK_PCIE_1L2_SLV>,
+> +			 <&cru ACLK_PCIE_1L2_DBI>, <&cru PCLK_PCIE_1L2>,
+> +			 <&cru CLK_PCIE_AUX4>, <&cru CLK_PCIE1L2_PIPE>;
+> +		clock-names = "aclk_mst", "aclk_slv",
+> +			      "aclk_dbi", "pclk",
+> +			      "aux", "pipe";
+> +		device_type = "pci";
+> +		interrupts = <GIC_SPI 253 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 252 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 251 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 250 IRQ_TYPE_LEVEL_HIGH 0>,
+> +			     <GIC_SPI 249 IRQ_TYPE_LEVEL_HIGH 0>;
+> +		interrupt-names = "sys", "pmc", "msg", "legacy", "err";
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0 0 0 7>;
+> +		interrupt-map = <0 0 0 1 &pcie2x1l2_intc 0>,
+> +				<0 0 0 2 &pcie2x1l2_intc 1>,
+> +				<0 0 0 3 &pcie2x1l2_intc 2>,
+> +				<0 0 0 4 &pcie2x1l2_intc 3>;
+> +		linux,pci-domain = <4>;
+> +		num-ib-windows = <8>;
+> +		num-ob-windows = <8>;
+> +		num-viewport = <4>;
+> +		max-link-speed = <2>;
+> +		msi-map = <0x4000 &its0 0x4000 0x1000>;
+> +		num-lanes = <1>;
+> +		phys = <&combphy0_ps PHY_TYPE_PCIE>;
+> +		phy-names = "pcie-phy";
+> +		power-domains = <&power RK3588_PD_PCIE>;
+> +		ranges = <0x01000000 0x0 0xf4100000 0x0 0xf4100000 0x0 0x00100000>,
+> +			 <0x02000000 0x0 0xf4200000 0x0 0xf4200000 0x0 0x00e00000>,
+> +			 <0x03000000 0xa 0x00000000 0xa 0x00000000 0x0 0x40000000>;
+
+And:
+
+  <0x03000000 0x0 0x40000000 0xa 0x00000000 0x0 0x40000000>
+
+Regards,
+Jonas
+
+> +		reg = <0xa 0x41000000 0x0 0x00400000>,
+> +		      <0x0 0xfe190000 0x0 0x00010000>,
+> +		      <0x0 0xf4000000 0x0 0x00100000>;
+> +		reg-names = "dbi", "apb", "config";
+> +		resets = <&cru SRST_PCIE4_POWER_UP>, <&cru SRST_P_PCIE4>;
+> +		reset-names = "pwr", "pipe";
+> +		status = "disabled";
+> +
+> +		pcie2x1l2_intc: legacy-interrupt-controller {
+> +			interrupt-controller;
+> +			#address-cells = <0>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-parent = <&gic>;
+> +			interrupts = <GIC_SPI 250 IRQ_TYPE_EDGE_RISING 0>;
+> +		};
+> +	};
+> +
+>  	gmac1: ethernet@fe1c0000 {
+>  		compatible = "rockchip,rk3588-gmac", "snps,dwmac-4.20a";
+>  		reg = <0x0 0xfe1c0000 0x0 0x10000>;
+
