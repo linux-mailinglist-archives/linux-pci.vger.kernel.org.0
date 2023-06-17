@@ -2,51 +2,46 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 0075F733F54
-	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 09:59:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 752AC733FA5
+	for <lists+linux-pci@lfdr.de>; Sat, 17 Jun 2023 10:31:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234410AbjFQH7Z (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sat, 17 Jun 2023 03:59:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53426 "EHLO
+        id S230169AbjFQIbM (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Sat, 17 Jun 2023 04:31:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34010 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231929AbjFQH7Y (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 03:59:24 -0400
-Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [IPv6:2a01:4f8:150:2161:1:b009:f23e:0])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39FCE2720;
-        Sat, 17 Jun 2023 00:59:22 -0700 (PDT)
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        with ESMTP id S230112AbjFQIbL (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Sat, 17 Jun 2023 04:31:11 -0400
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B019A10CF;
+        Sat, 17 Jun 2023 01:31:10 -0700 (PDT)
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
          client-signature RSA-PSS (4096 bits) client-digest SHA256)
         (Client CN "*.hostsharing.net", Issuer "RapidSSL Global TLS RSA4096 SHA256 2022 CA1" (verified OK))
-        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 3ED7B100D942C;
-        Sat, 17 Jun 2023 09:59:20 +0200 (CEST)
+        by bmailout3.hostsharing.net (Postfix) with ESMTPS id 09213100D941B;
+        Sat, 17 Jun 2023 10:31:09 +0200 (CEST)
 Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 123051E21DD; Sat, 17 Jun 2023 09:59:20 +0200 (CEST)
-Date:   Sat, 17 Jun 2023 09:59:20 +0200
+        id C86FE1D5B80; Sat, 17 Jun 2023 10:31:08 +0200 (CEST)
+Date:   Sat, 17 Jun 2023 10:31:08 +0200
 From:   Lukas Wunner <lukas@wunner.de>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>, oohall@gmail.com,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Yazen Ghannam <yazen.ghannam@amd.com>,
-        Fontenot Nathan <Nathan.Fontenot@amd.com>
-Subject: Re: [PATCH v2 1/2] PCI: pciehp: Add support for async hotplug with
- native AER and DPC/EDR
-Message-ID: <20230617075920.GA26803@wunner.de>
-References: <20230418210526.36514-1-Smita.KoralahalliChannabasappa@amd.com>
- <20230418210526.36514-2-Smita.KoralahalliChannabasappa@amd.com>
- <20230516101001.GA18952@wunner.de>
- <8ab986f2-6aa5-401a-aa21-e8b21f68eaad@amd.com>
- <20230616173140.GA6417@wunner.de>
- <e967608f-ac8a-7a9c-35c5-821b6842653c@amd.com>
+To:     Sathyanarayanan Kuppuswamy 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Subject: Re: [PATCH v1] PCI: pciehp: Make sure DPC trigger status is reset in
+ PDC handler
+Message-ID: <20230617083108.GB26803@wunner.de>
+References: <20230615062559.1268404-1-sathyanarayanan.kuppuswamy@linux.intel.com>
+ <20230615183550.GA9773@wunner.de>
+ <713d71dc-c4a5-cd7b-2deb-343c244dd14d@linux.intel.com>
+ <20230616090635.GA17565@wunner.de>
+ <c2d0c925-ffe1-4431-2d39-8cd6919486f0@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <e967608f-ac8a-7a9c-35c5-821b6842653c@amd.com>
+In-Reply-To: <c2d0c925-ffe1-4431-2d39-8cd6919486f0@linux.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 X-Spam-Status: No, score=-2.4 required=5.0 tests=BAYES_00,
         HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_LOW,SPF_HELO_NONE,SPF_NONE,
@@ -57,112 +52,87 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-On Fri, Jun 16, 2023 at 04:30:49PM -0700, Smita Koralahalli wrote:
-> On 6/16/2023 10:31 AM, Lukas Wunner wrote:
-> > On Mon, May 22, 2023 at 03:23:57PM -0700, Smita Koralahalli wrote:
-> > > On 5/16/2023 3:10 AM, Lukas Wunner wrote:
-> > > > On Tue, Apr 18, 2023 at 09:05:25PM +0000, Smita Koralahalli wrote:
-> > > > > +static bool dpc_is_surprise_removal(struct pci_dev *pdev)
-> > > > > +{
-> > > > > +	u16 status;
-> > > > > +
-> > > > > +	pci_read_config_word(pdev, pdev->aer_cap + PCI_ERR_UNCOR_STATUS, &status);
-> > > > > +
-> > > > > +	if (!(status & PCI_ERR_UNC_SURPDN))
-> > > > > +		return false;
-> > > > > +
-> > > > 
-> > > > You need an additional check for pdev->is_hotplug_bridge here.
-> > > > 
-> > > > And you need to read PCI_EXP_SLTCAP and check for PCI_EXP_SLTCAP_HPS.
-> > > > 
-> > > > Return false if either of them isn't set.
-> > > 
-> > > Return false, if PCI_EXP_SLTCAP isn't set only correct? PCI_EXP_SLTCAP_HPS
-> > > should be disabled if DPC is enabled.
-> > > 
-> > > Implementation notes in 6.7.6 says that:
-> > > "The Hot-Plug Surprise (HPS) mechanism, as indicated by the Hot-Plug
-> > > Surprise bit in the Slot Capabilities Register being Set, is deprecated
-> > > for use with async hot-plug. DPC is the recommended mechanism for supporting
-> > > async hot-plug."
-> > > 
-> > > Platform FW will disable the SLTCAP_HPS bit at boot time to enable async
-> > > hotplug on AMD devices.
+On Fri, Jun 16, 2023 at 04:27:33PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> On 6/16/23 2:06 AM, Lukas Wunner wrote:
+> > On Thu, Jun 15, 2023 at 04:03:54PM -0700, Sathyanarayanan Kuppuswamy wrote:
+> >> On 6/15/23 11:35 AM, Lukas Wunner wrote:
+> >>> On Wed, Jun 14, 2023 at 11:25:59PM -0700, Kuppuswamy Sathyanarayanan wrote:
+> >>>> During the EDR-based DPC recovery process, for devices with persistent
+> >>>> issues, the firmware may choose not to handle the DPC error and leave
+> >>>> the port in DPC triggered state. In such scenarios, if the user
+> >>>> replaces the faulty device with a new one, the OS is expected to clear
+> >>>> the DPC trigger status in the hotplug error handler to enable the new
+> >>>> device enumeration.
+> > [...]
+> >>> pciehp_unconfigure_device() seems like a more appropriate place to me.
+> >>
+> >> I initially thought to add it there. Spec also recommends clearing it
+> >> when removing the device. But I wasn't sure if pciehp_unconfigure_device()
+> >> would be called only during device removal.
 > > 
-> > Huh, is PCI_EXP_SLTCAP_HPS not set on the hotplug port in question?
+> > It is.
+> 
+> Do you know how pciehp_unconfigure_device() will be called when the device is
+> removed? Is it due to a DLLSC event or a PDC state change? If it is DLLSC,
+> pciehp_unconfigure_device() may not be called because we ignore the DLLSC
+> event if there is an active DPC trigger.
+
+A DLLSC event is only ignored by pciehp if successful recovery
+from DPC was possible.  In that case, the device in the slot is
+still the *same*.
+
+And you're saying in the commit message that you seek to fix the
+case when "the user replaces the faulty device with a *new* one".
+
+So for your goal, ignored DLLSC events shouldn't be relevant.
+
+As to your question, pciehp_ist() doesn't really differentiate
+between PDC and DLLSC events.  If either of them occurs,
+the slot is brought down through pciehp_handle_presence_or_link_change().
+
+And that will end up in pciehp_unconfigure_device().
+
+I think right at the end of that function, after
+pci_unlock_rescan_remove() would be a good place to perform
+cleanup of the hotplug port before a newly hotplugged device
+can be handled.
+
+Smita's clearing of ARI Forwarding Enable, AtomicOp Requester Enable
+and 10-Bit Tag Requester Enable could be done as well at the end of
+pciehp_unconfigure_device().
+
+
+> > We need to differentiate between two cases:
 > > 
-> > If it's not set, why do you get Surprise Down Errors in the first place?
+> > (1) DPC handled by firmware, hotplug handled by OS:
 > > 
-> > How do you bring down the slot without surprise-removal capability?
-> > Via sysfs?
+> >     In this case clearing DPC trigger status from pciehp device removal
+> >     code path seems reasonable.  But it must be constrained to
+> >     !host_bridge->native_dpc.
 > 
-> As per SPEC 6.7.6, "Either Downstream Port Containment (DPC) or the Hot-Plug
-> Surprise (HPS) mechanism may be used to support async removal as part of an
-> overall async hot-plug architecture".
+> Agree.
+
+The crucial thing here is that the dpc driver isn't bound to the
+port if DPC is handled by firmware.  Hence there's no chance of
+racing with dpc_reset_link() and it's safe to clear DPC trigger
+status from pciehp.
+
+
+> > (2) DPC handled by OS:
+> > 
+> >     In this case clearing DPC trigger status from pciehp could race with
+> >     the dpc interrupt handler so must not be done.  Instead, I recommend
 > 
-> Also, the implementation notes below, it conveys that HPS is deprecated and
-> DPC is recommended mechanism. More details can be found in Appendix I, I.1
-> Async Hot-Plug Initial Configuration:
-> ...
-> If DPC capability then,
-> 	If HPS bit not Set, use DPC
-> 	Else attempt to Clear HPS bit (§ Section 6.7.4.4 )
-> 		If successful, use DPC
-> 		Else use HPS
-> ...
-> 
-> So, this is "likely" a new feature support patch where DPC supports async
-> remove. HPS bit will be disabled by BIOS if DPC is chosen as recommended
-> mechanism to handle async removal.
-> 
-> I see the slot is being brought down by PDC or DLLSC event, which is
-> triggered alongside DPC.
-> 
-> pciehp_handle_presence_or_link_change() -> pciehp_disable_slot() ->
-> __pciehp_disable_slot() -> remove_board()..
-> 
-> But I want to clear one thing, are you implying that PDC or DLLSC shouldn't
-> be triggered when HPS is disabled?
+> If we clear the DPC trigger status in the DLLSC state change handler, I
+> agree there could be a race. However, if we clear the DPC trigger in the
+> PDC state change handler, I believe it will not race because the device
+> has already been removed. Is my understanding correct?
 
-Sorry, please ignore my advice to check PCI_EXP_SLTCAP_HPS in
-dpc_is_surprise_removal().
+Unfortunately it's not guaranteed that dpc_reset_link() is finished
+when pciehp brings down the slot.
 
-Instead, only check for pdev->is_hotplug_bridge.  The rationale being
-that Surprise Down errors are par for the course on hotplug ports,
-but they're an anomaly that must be reported on non-hotplug ports.
-
-PCI_EXP_SLTCAP_HPS has no bearing on pciehp's behavior.  If there's
-a hotplug port and hotplug control was granted to the OS, pciehp will
-bind to the device.  pciehp will react to any DLLSC and PDC event.
-
-I think the target audience for PCIe r6.1 sec 6.7.6 are hardware
-designers and the advice given there is to add DPC capability to
-hotplug ports.  That's fine.  It doesn't affect how Linux handles
-async removal.
-
-I think the wording in the spec to "use DPC" for async removal is
-confusing.  We don't want to duplicate the code for device
-de-/re-enumeration and slot bringup / bringdown in the dpc driver.
-We just continue letting pciehp do that (and thus retain compatibility
-with older, non-DPC-capable hardware).  But we wire up pciehp with
-the dpc driver to add DPC-awareness for hotplug.
-
-One part of the equation was to ignore link changes which occur
-as a side effect of a DPC event from which we've successfully
-recovered.  That was added with commit a97396c6eb13 ("PCI: pciehp:
-Ignore Link Down/Up caused by DPC").
-
-The other part of the equation (which you're adding here) is to
-ignore Surprise Down errors in the dpc driver which occur as a side
-effect of async removal.
-
-I think that makes us compliant with PCIe r6.1 sec 6.7.6, although
-we're interpreting "use DPC" (or async removal) somewhat liberally.
-Actually I'd prefer the term "pragmatically" instead of "liberally". ;)
-
-We don't want to duplicate code just for the sake of being word-by-word
-compliant with the spec.  If it works in the real world, it's fine. :)
+So clearing DPC trigger status can only be done safely from the dpc
+driver itself (if DPC is handled natively by the OS).
 
 Thanks,
 
