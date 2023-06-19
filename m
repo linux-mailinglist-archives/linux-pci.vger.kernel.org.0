@@ -2,55 +2,50 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id 26510734ABA
-	for <lists+linux-pci@lfdr.de>; Mon, 19 Jun 2023 05:45:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E67F734C89
+	for <lists+linux-pci@lfdr.de>; Mon, 19 Jun 2023 09:43:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229603AbjFSDph (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Sun, 18 Jun 2023 23:45:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37124 "EHLO
+        id S230197AbjFSHm7 (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Mon, 19 Jun 2023 03:42:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37932 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229554AbjFSDpg (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Sun, 18 Jun 2023 23:45:36 -0400
-Received: from 189.cn (ptr.189.cn [183.61.185.103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id EB454114;
-        Sun, 18 Jun 2023 20:45:33 -0700 (PDT)
-HMM_SOURCE_IP: 10.64.8.43:57978.1471128269
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-114.242.206.180 (unknown [10.64.8.43])
-        by 189.cn (HERMES) with SMTP id 505FA10029B;
-        Mon, 19 Jun 2023 11:45:30 +0800 (CST)
-Received: from  ([114.242.206.180])
-        by gateway-151646-dep-75648544bd-7vx9t with ESMTP id 7239e2ea64ab49028b0edbdbd8b976d0 for macro@orcam.me.uk;
-        Mon, 19 Jun 2023 11:45:32 CST
-X-Transaction-ID: 7239e2ea64ab49028b0edbdbd8b976d0
-X-Real-From: 15330273260@189.cn
-X-Receive-IP: 114.242.206.180
-X-MEDUSA-Status: 0
-Sender: 15330273260@189.cn
-Message-ID: <c53476a4-fbc9-00e9-d47d-51a4ce5b9259@189.cn>
-Date:   Mon, 19 Jun 2023 11:45:30 +0800
+        with ESMTP id S230058AbjFSHmp (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Mon, 19 Jun 2023 03:42:45 -0400
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DE8DE76
+        for <linux-pci@vger.kernel.org>; Mon, 19 Jun 2023 00:42:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple; d=sang-engineering.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=k1; bh=p616TOQ+HzOPu0YrIkat+11cC5Ga
+        Tl1I3cp6P8kXlT4=; b=V0TnQuVi/XA2zRhILOg90KNJNNFAL10T1tLYvLiOTk4s
+        vTKogDiyFJjEaCHfOHpovb5Fg/JwDIxxO+T3vxNdj0+t9F5D7urHF8I+NVLYFN3o
+        YccnAfYf7zfIpt6cR34L3UVWw48zh9ANrJwZDxndNn+1rvysikRmiXtB59R+pVU=
+Received: (qmail 149438 invoked from network); 19 Jun 2023 09:42:29 +0200
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Jun 2023 09:42:29 +0200
+X-UD-Smtp-Session: l3s3148p1@YxQ5rXb+/Ktehh9k
+Date:   Mon, 19 Jun 2023 09:42:29 +0200
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-renesas-soc@vger.kernel.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v3 0/2] KingFisher: support regulators for PCIe
+Message-ID: <ZJAG5aN1vtAJHqHz@ninjato>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+References: <20230512075241.2770-1-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH v7 2/8] PCI/VGA: Deal only with VGA class devices
-Content-Language: en-US
-To:     "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, nouveau@lists.freedesktop.org,
-        linux-pci@vger.kernel.org, kvm@vger.kernel.org,
-        linux-fbdev@vger.kernel.org, Sui Jingfeng <suijingfeng@loongson.cn>
-References: <20230613030151.216625-1-15330273260@189.cn>
- <20230613030151.216625-3-15330273260@189.cn>
- <alpine.DEB.2.21.2306190339590.14084@angie.orcam.me.uk>
-From:   Sui Jingfeng <15330273260@189.cn>
-In-Reply-To: <alpine.DEB.2.21.2306190339590.14084@angie.orcam.me.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Spam-Status: No, score=-1.7 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FROM,FROM_LOCAL_DIGITS,
-        FROM_LOCAL_HEX,NICE_REPLY_A,SPF_HELO_PASS,SPF_PASS,
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zGCe0u+Tq+fUjznm"
+Content-Disposition: inline
+In-Reply-To: <20230512075241.2770-1-wsa+renesas@sang-engineering.com>
+X-Spam-Status: No, score=-0.4 required=5.0 tests=BAYES_00,DKIM_SIGNED,
+        DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,FORGED_SPF_HELO,
+        RCVD_IN_MSPIKE_H3,RCVD_IN_MSPIKE_WL,SPF_HELO_PASS,SPF_NONE,
         T_SCC_BODY_TEXT_LINE autolearn=no autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -58,49 +53,48 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-Hi,
 
-On 2023/6/19 11:02, Maciej W. Rozycki wrote:
-> On Tue, 13 Jun 2023, Sui Jingfeng wrote:
->
->> Deal only with the VGA devcie(pdev->class == 0x0300), so replace the
->   Typo here: s/devcie/device/.
-Thanks a lot,
->> pci_get_subsys() function with pci_get_class(). Filter the non-PCI display
->> device(pdev->class != 0x0300) out. There no need to process the non-display
->> PCI device.
->   I've only come across this patch series now.  Without diving into what
-> this code actually does I have just one question as a matter of interest.
->
->> diff --git a/drivers/pci/vgaarb.c b/drivers/pci/vgaarb.c
->> index c1bc6c983932..22a505e877dc 100644
->> --- a/drivers/pci/vgaarb.c
->> +++ b/drivers/pci/vgaarb.c
->> @@ -1500,7 +1496,9 @@ static int pci_notify(struct notifier_block *nb, unsigned long action,
->>   	struct pci_dev *pdev = to_pci_dev(dev);
->>   	bool notify = false;
->>   
->> -	vgaarb_dbg(dev, "%s\n", __func__);
->> +	/* Only deal with VGA class devices */
->> +	if (pdev->class != PCI_CLASS_DISPLAY_VGA << 8)
->> +		return 0;
->   Hmm, shouldn't this also handle PCI_CLASS_NOT_DEFINED_VGA?
+--zGCe0u+Tq+fUjznm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-If your machine have only one such a VGA card, it probably don't hurt.
+Hiya,
 
-But, such a card will also get ignored originally (before applying this 
-patch).
+On Fri, May 12, 2023 at 09:52:39AM +0200, Wolfram Sang wrote:
+> Here are the patches to make PCIe cards work in the slot CN15 on a
+> KingFisher board. Look at the patches for a changelog, please.
+>=20
+>=20
+> Wolfram Sang (2):
+>   dt-bindings: PCI: rcar-pci-host: add optional regulators
+>   PCI: rcar-host: add support for optional regulators
 
->   As far as I
-> know it is the equivalent of PCI_CLASS_DISPLAY_VGA for PCI <= 2.0 devices
-> that were implemented before the idea of PCI device classes has developed
-> into its current form.
+Is it possible to have this in 6.5? I don't see it in -next as of today.
 
-If multiple video card problems on your machine is matter,
+Happy hacking,
 
-then I think it do deserve another patch to clarify this issue and to 
-explain the rationale.
+   Wolfram
 
->   I may have such a VGA device somewhere.
->
->    Maciej
+
+--zGCe0u+Tq+fUjznm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmSQBuEACgkQFA3kzBSg
+KbaFcg//ci7a7SLs/O+xsnTBL+uszAiaHyBQSmx5WW8eIebPlnX81CMvTwOZZ/QN
+DLF0AFqtJa+umqltP5KsZbldItK7FF4pkHm5tW0ctA5W+zpBPs+oXm68Z87Kanpj
+uBdGpAbPq/Jslhw+7vG9IG8BIHa3z2zglxNsf0m2kXm9mQHLxhxpwBC8EVJcTQaB
+vtP+e3VVc1iGpjqIYlpsXkgarD5J+JiLNM1/EkBxLa1Nqb6ObUvWj9C/rwNh06mf
+sA3NPVNFZihwzW7B8XtstC1QIObpbvP+YyjzCf9Ovk5QiEZuths+4uKiMYSbqCfd
+Pfbahh7WNS7WT3RTYyz92w8Ng3UIR7EMdYQXm5VkdoxWa6guk6obJj44eVeVuAjV
+qQ4TzqswbUBKIVxyUDoxxMPK816wXyJC2Xv+FCu0nWptJXU9edsZi//JDOIs5iyr
+Fsz0VrIyzLnw8c9Ms6kBCx9yxXTP+MZZABix9XWJUgh8vkhDoNBSN8PB69yAdWTa
+bwA4wcxoxipkeL1wil6cdRPMUjtXjTvrDsTz51DuqZw6g6dD4j5RmlBPNI28lXGJ
+tXdKaGEWFI+qpdowagyeDbbAmik9mG6flsdkst/+AGWzOTgi8TAZormviky6HVVk
+fXxKyA4lY/L8khVb1LoTJ6+FtogBsP/dBapwBrzLLOi3xnLtf9A=
+=lYsb
+-----END PGP SIGNATURE-----
+
+--zGCe0u+Tq+fUjznm--
