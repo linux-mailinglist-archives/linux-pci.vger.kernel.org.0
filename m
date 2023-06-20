@@ -2,71 +2,52 @@ Return-Path: <linux-pci-owner@vger.kernel.org>
 X-Original-To: lists+linux-pci@lfdr.de
 Delivered-To: lists+linux-pci@lfdr.de
 Received: from out1.vger.email (out1.vger.email [IPv6:2620:137:e000::1:20])
-	by mail.lfdr.de (Postfix) with ESMTP id DCE1B7372A3
-	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 19:22:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B811737305
+	for <lists+linux-pci@lfdr.de>; Tue, 20 Jun 2023 19:36:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230006AbjFTRWE (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
-        Tue, 20 Jun 2023 13:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56966 "EHLO
+        id S229936AbjFTRgk (ORCPT <rfc822;lists+linux-pci@lfdr.de>);
+        Tue, 20 Jun 2023 13:36:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36574 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229896AbjFTRWD (ORCPT
-        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jun 2023 13:22:03 -0400
-Received: from mail-il1-f171.google.com (mail-il1-f171.google.com [209.85.166.171])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D028DC;
-        Tue, 20 Jun 2023 10:22:02 -0700 (PDT)
-Received: by mail-il1-f171.google.com with SMTP id e9e14a558f8ab-341dd309b6fso23550985ab.1;
-        Tue, 20 Jun 2023 10:22:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687281722; x=1689873722;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZzArzRV9yR1n8VbuBTY+7vvGWbg9qkwrVAJHEY9NNQk=;
-        b=X0uc0P5eStFazRju5uNUCGvgoUQjEXrTuZmAbJ5cHVYeFS7vLlD4EsEUp39H7meU5I
-         2TLlooNX6f+n/Gj7cN6FAQ/TlNSmcjtIiZGLur8ElRlzZEjFmeMao2Khqfe7tZKzN8/D
-         638rhCj82Z3B1py9v0ShR/IzPPCgWJmk9U2UCLoma5jbcUnXfM1YxOpxvnijFuRvtKMz
-         9323Q60oCuO+v415WXWvhw2kWnuJEhdGlR6u4gambwx86kVeAnuVAygepUwsRAUQGDKj
-         8DbuI+wZedzmvQAsjHpEMA501LZePqCDQtkUwwGZs5ts14WXGM6qxt9niZunCG35bjAt
-         pqnA==
-X-Gm-Message-State: AC+VfDxfjMipe1T1bIbh2vUZmwGea9tu4DKD8CvMmD2pGQpJx7gLV5NS
-        La4Qp3NsGvVT1jsI4NhZSA==
-X-Google-Smtp-Source: ACHHUZ6hfk+zVOKl7DLQhfEUaoMDMo+kVVI9ImHz54JzzMg4HMzi6mdhb4jWHiyvv+6DTs38E9XflQ==
-X-Received: by 2002:a92:da83:0:b0:341:da26:d2f4 with SMTP id u3-20020a92da83000000b00341da26d2f4mr12636140iln.23.1687281721777;
-        Tue, 20 Jun 2023 10:22:01 -0700 (PDT)
-Received: from robh_at_kernel.org ([64.188.179.250])
-        by smtp.gmail.com with ESMTPSA id c5-20020a92d3c5000000b0034202d05fadsm718889ilh.72.2023.06.20.10.21.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 10:22:01 -0700 (PDT)
-Received: (nullmailer pid 3851810 invoked by uid 1000);
-        Tue, 20 Jun 2023 17:21:58 -0000
-Date:   Tue, 20 Jun 2023 11:21:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, kernel@collabora.com,
-        Conor Dooley <conor+dt@kernel.org>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Simon Xue <xxm@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-Subject: Re: [PATCH v1 3/4] dt-bindings: PCI: dwc: rockchip: Update for RK3588
-Message-ID: <168728171828.3851756.10954343791219685425.robh@kernel.org>
-References: <20230616170022.76107-1-sebastian.reichel@collabora.com>
- <20230616170022.76107-4-sebastian.reichel@collabora.com>
+        with ESMTP id S229576AbjFTRgh (ORCPT
+        <rfc822;linux-pci@vger.kernel.org>); Tue, 20 Jun 2023 13:36:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D56BCF4
+        for <linux-pci@vger.kernel.org>; Tue, 20 Jun 2023 10:36:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 66DE2612EE
+        for <linux-pci@vger.kernel.org>; Tue, 20 Jun 2023 17:36:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6368C433C8;
+        Tue, 20 Jun 2023 17:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687282594;
+        bh=kP26e6+U6+9ctDVxLVnSc7hcrP2+fq036d7O3k2kgTU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SK4MBuPChPfMGDozATebPjhaGvjqVbt2uC3xUuslL+ItO43MkaoaIHpb7li4Nj935
+         jNmjgu0qMwXCbdtRjs6z844mSaUBbI4W0l/FiLsRJj+DEQH1g9VYrENm+JzMzQuyel
+         n1jeq1ZQAV1bqVq2xpEg2SkyxEUYvMibkp7OfdA0Bmxvp2VbpIoDpUEoXVtPqrfMGw
+         oGVnJHV+jLXXPzHxHQKcDvUGzwvPv2Xy++mYv+6bSjgrCJVuUo7LBRTid4NmavU9U5
+         i9PuVDF0rwdPTUNPlDSp6sWMO7ALWvzgWy8HwZNJJG6hfkpqiw0sL2jqFNDMU1+eg6
+         nK2d0So3DGWRA==
+Date:   Tue, 20 Jun 2023 19:36:30 +0200
+From:   Lorenzo Pieralisi <lpieralisi@kernel.org>
+To:     "Patel, Nirmal" <nirmal.patel@linux.intel.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Subject: Re: [PATCH] PCI: vmd: Fix domain reset operation
+Message-ID: <ZJHjnv4Fzn3EXR40@lpieralisi>
+References: <20230530214706.75700-1-nirmal.patel@linux.intel.com>
+ <605ab332-dade-3ce4-d73b-617d6fa2cd8b@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230616170022.76107-4-sebastian.reichel@collabora.com>
-X-Spam-Status: No, score=-1.2 required=5.0 tests=BAYES_00,
-        FREEMAIL_ENVFROM_END_DIGIT,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-        HEADER_FROM_DIFFERENT_DOMAINS,RCVD_IN_DNSWL_NONE,RCVD_IN_MSPIKE_H2,
-        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=no
+In-Reply-To: <605ab332-dade-3ce4-d73b-617d6fa2cd8b@linux.intel.com>
+X-Spam-Status: No, score=-4.4 required=5.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+        DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,DKIM_VALID_EF,RCVD_IN_DNSWL_MED,
+        SPF_HELO_NONE,SPF_PASS,T_SCC_BODY_TEXT_LINE autolearn=ham
         autolearn_force=no version=3.4.6
 X-Spam-Checker-Version: SpamAssassin 3.4.6 (2021-04-09) on
         lindbergh.monkeyblade.net
@@ -74,16 +55,65 @@ Precedence: bulk
 List-ID: <linux-pci.vger.kernel.org>
 X-Mailing-List: linux-pci@vger.kernel.org
 
-
-On Fri, 16 Jun 2023 19:00:21 +0200, Sebastian Reichel wrote:
-> The PCIe 2.0 controllers on RK3588 need one additional clock,
-> one additional reset line and one for ranges entry.
+On Tue, Jun 20, 2023 at 10:14:10AM -0700, Patel, Nirmal wrote:
+> On 5/30/2023 2:47 PM, Nirmal Patel wrote:
 > 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-> ---
->  .../bindings/pci/rockchip-dw-pcie.yaml           | 16 +++++++++++++---
->  1 file changed, 13 insertions(+), 3 deletions(-)
+> > During domain reset process we are accidentally enabling
+> > the prefetchable memory by writing 0x0 to Prefetchable Memory
+> > Base and Prefetchable Memory Limit registers. As a result certain
+> > platforms failed to boot up.
+> >
+> > Here is the quote from section 7.5.1.3.9 of PCI Express Base 6.0 spec:
+> >
+> >   The Prefetchable Memory Limit register must be programmed to a smaller
+> >   value than the Prefetchable Memory Base register if there is no
+> >   prefetchable memory on the secondary side of the bridge.
+> >
+> > When clearing Prefetchable Memory Base, Prefetchable Memory
+> > Limit and Prefetchable Base Upper 32 bits, the prefetchable
+> > memory range becomes 0x0-0x575000fffff. As a result the
+
+I don't get why the top 32 bits aren't cleared. The patch is
+fine to me.
+
+Lorenzo
+
+> > prefetchable memory is enabled accidentally.
+> >
+> > Implementing correct operation by writing a value to Prefetchable
+> > Base Memory larger than the value of Prefetchable Memory Limit.
+> >
+> > Signed-off-by: Nirmal Patel <nirmal.patel@linux.intel.com>
+> > ---
+> >  drivers/pci/controller/vmd.c | 14 ++++++++++++--
+> >  1 file changed, 12 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/vmd.c b/drivers/pci/controller/vmd.c
+> > index 769eedeb8802..f3eb740e3028 100644
+> > --- a/drivers/pci/controller/vmd.c
+> > +++ b/drivers/pci/controller/vmd.c
+> > @@ -526,8 +526,18 @@ static void vmd_domain_reset(struct vmd_dev *vmd)
+> >  				     PCI_CLASS_BRIDGE_PCI))
+> >  					continue;
+> >  
+> > -				memset_io(base + PCI_IO_BASE, 0,
+> > -					  PCI_ROM_ADDRESS1 - PCI_IO_BASE);
+> > +				writel(0, base + PCI_IO_BASE);
+> > +				writew(0xFFF0, base + PCI_MEMORY_BASE);
+> > +				writew(0, base + PCI_MEMORY_LIMIT);
+> > +
+> > +				writew(0xFFF1, base + PCI_PREF_MEMORY_BASE);
+> > +				writew(0, base + PCI_PREF_MEMORY_LIMIT);
+> > +
+> > +				writel(0xFFFFFFFF, base + PCI_PREF_BASE_UPPER32);
+> > +				writel(0, base + PCI_PREF_LIMIT_UPPER32);
+> > +
+> > +				writel(0, base + PCI_IO_BASE_UPPER16);
+> > +				writeb(0, base + PCI_CAPABILITY_LIST);
+> >  			}
+> >  		}
+> >  	}
 > 
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+> Gentle reminder!
+> Thanks.
+> 
